@@ -1,0 +1,23 @@
+<div id="deleteDraftModal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">
+          <%= t('protocols.delete_draft_modal.title') %>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <p><%= t('protocols.delete_draft_modal.description_1') %></p>
+        <p><b><%= t('protocols.delete_draft_modal.description_2') %></b></p>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary"><%= t('general.cancel') %></button>
+          <%= button_to '', class: "btn btn-danger" do %>
+            <%= t('protocols.delete_draft_modal.confirm') %>
+          <% end %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -549,6 +549,8 @@ Rails.application.routes.draw do
         post :reorder, on: :collection
       end
       member do
+        post :publish
+        post :destroy_draft
         get 'print', to: 'protocols#print'
         get 'linked_children', to: 'protocols#linked_children'
         post 'linked_children_datatable',
@@ -590,7 +592,6 @@ Rails.application.routes.draw do
       collection do
         post 'datatable', to: 'protocols#datatable'
         post 'make_private', to: 'protocols#make_private'
-        post 'publish', to: 'protocols#publish'
         post 'archive', to: 'protocols#archive'
         post 'restore', to: 'protocols#restore'
         post 'import', to: 'protocols#import'

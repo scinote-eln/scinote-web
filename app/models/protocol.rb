@@ -402,36 +402,6 @@ class Protocol < ApplicationRecord
     result
   end
 
-  # This publish action simply moves the protocol from
-  # the private section in the repository into the public
-  # section
-  def publish(user)
-    # Don't update "updated_at" timestamp
-    self.record_timestamps = false
-
-    self.added_by = user
-    self.published_on = Time.now
-    self.archived_by = nil
-    self.archived_on = nil
-    self.restored_by = nil
-    self.restored_on = nil
-    self.protocol_type = Protocol.protocol_types[:in_repository_public]
-    result = save
-
-    if result
-      Activities::CreateActivityService
-        .call(activity_type: :move_protocol_in_repository,
-              owner: user,
-              subject: self,
-              team: team,
-              message_items: {
-                protocol: id,
-                storage: I18n.t('activities.protocols.my_to_team_message')
-              })
-    end
-    result
-  end
-
   def archive(user)
     return nil unless can_destroy?
 

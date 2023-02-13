@@ -47,7 +47,7 @@
             {{ protocol.attributes.name }}
           </span>
         </div>
-        <ProtocolMetadata v-if="protocol.attributes && protocol.attributes.in_repository" :protocol="protocol" @update="updateProtocol"/>
+        <ProtocolMetadata v-if="protocol.attributes && protocol.attributes.in_repository" :protocol="protocol" @update="updateProtocol" @publish="startPublish"/>
         <div :class="inRepository ? 'protocol-section protocol-information' : ''">
           <div v-if="inRepository" id="protocol-description" class="protocol-section-header">
             <div class="protocol-description-container">
@@ -151,6 +151,11 @@
       @reorder="updateStepOrder"
       @close="closeStepReorderModal"
     />
+    <PublishProtocol v-if="publishing"
+      :protocol="protocol"
+      @publish="publishProtocol"
+      @close="closePublishModal"
+    />
   </div>
 </template>
 
@@ -162,6 +167,7 @@
   import ProtocolModals from 'vue/protocol/modals'
   import Tinymce from 'vue/shared/tinymce.vue'
   import ReorderableItemsModal from 'vue/protocol/modals/reorderable_items_modal.vue'
+  import PublishProtocol from 'vue/protocol/modals/publish_protocol.vue'
 
   import UtilsMixin from 'vue/mixins/utils.js'
 
@@ -173,7 +179,7 @@
         required: true
       }
     },
-    components: { Step, InlineEdit, ProtocolModals, ProtocolOptions, Tinymce, ReorderableItemsModal, ProtocolMetadata },
+    components: { Step, InlineEdit, ProtocolModals, ProtocolOptions, Tinymce, ReorderableItemsModal, ProtocolMetadata, PublishProtocol },
     mixins: [UtilsMixin],
     computed: {
       inRepository() {
@@ -189,7 +195,8 @@
           attributes: {}
         },
         steps: [],
-        reordering: false
+        reordering: false,
+        publishing: false
       }
     },
     created() {
@@ -306,8 +313,18 @@
       closeStepReorderModal() {
         this.reordering = false;
       },
+      startPublish() {
+        this.publishing = true;
+      },
+      closePublishModal() {
+        this.publishing = false;
+      },
       scrollToBottom() {
         window.scrollTo(0, document.body.scrollHeight);
+      },
+      publishProtocol(comment) {
+        this.protocol.attributes.version_comment = comment;
+        $.post(this.urls.publish_url, {version_comment: comment, view: 'show'})
       }
     }
   }

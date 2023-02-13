@@ -8,7 +8,7 @@ class ProtocolSerializer < ActiveModel::Serializer
 
   attributes :name, :id, :urls, :description, :description_view, :updated_at, :in_repository,
              :created_at_formatted, :updated_at_formatted, :added_by, :authors, :keywords, :version, :code,
-             :published
+             :published, :version_comment
 
   def updated_at
     object.updated_at.to_i
@@ -68,7 +68,8 @@ class ProtocolSerializer < ActiveModel::Serializer
       update_protocol_description_url: update_protocol_description_url,
       update_protocol_authors_url: update_protocol_authors_url,
       update_protocol_keywords_url: update_protocol_keywords_url,
-      delete_steps_url: delete_steps_url
+      delete_steps_url: delete_steps_url,
+      publish_url: publish_url
     }
   end
 
@@ -161,5 +162,11 @@ class ProtocolSerializer < ActiveModel::Serializer
     return unless can_manage_protocol_in_module?(object) || can_manage_protocol_in_repository?(object)
 
     delete_steps_protocol_path(object)
+  end
+
+  def publish_url
+    return unless can_publish_protocol_in_repository?(object)
+
+    publish_protocol_path(object)
   end
 end

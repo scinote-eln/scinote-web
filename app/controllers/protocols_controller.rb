@@ -37,6 +37,7 @@ class ProtocolsController < ApplicationController
     update_description
     update_version_comment
     update_name
+    destroy_draft
     update_authors
     edit_name_modal
     edit_keywords_modal
@@ -55,7 +56,7 @@ class ProtocolsController < ApplicationController
     update_parent_modal
   )
   before_action :check_manage_all_in_repository_permissions, only:
-    %i(make_private publish archive)
+    %i(make_private archive)
   before_action :check_restore_all_in_repository_permissions, only: :restore
   before_action :check_load_from_repository_views_permissions, only: %i(
     load_from_repository_modal
@@ -71,6 +72,8 @@ class ProtocolsController < ApplicationController
     copy_to_repository
     copy_to_repository_modal
   )
+
+  before_action :check_publish_permission, only: :publish
   before_action :check_import_permissions, only: :import
   before_action :check_export_permissions, only: :export
 
@@ -162,7 +165,23 @@ class ProtocolsController < ApplicationController
   end
 
   def publish
-    move_protocol('publish')
+    @protocol.update(
+      published_by: current_user,
+      published_on: DateTime.now,
+      version_comment: params[:version_comment] || @protocol.version_comment,
+      protocol_type: (@protocol.parent_id.nil? ? :in_repository_published_original : :in_repository_published_version)
+    )
+    if params[:view] == 'show'
+      redirect_to protocol_path(@protocol)
+    else
+      redirect_to protocols_path
+    end
+  end
+
+  def destroy_draft
+    @protocol.destroy
+
+    redirect_to protocols_path
   end
 
   def archive
@@ -1193,6 +1212,12 @@ class ProtocolsController < ApplicationController
     @protocol = Protocol.find_by_id(params[:id])
 
     render_403 if @protocol.blank? || !can_read_protocol_in_module?(@protocol)
+  end
+
+  def check_publish_permission
+    @protocol = Protocol.find_by(id: params[:id])
+
+    render_403 if @protocol.blank? || !can_publish_protocol_in_repository?(@protocol)
   end
 
   def check_load_from_repository_permissions

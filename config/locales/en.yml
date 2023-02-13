@@ -2530,6 +2530,17 @@ en:
         message_ok: "Successfully exported %{nr} protocols."
         row_success: "Exported"
         row_failed: "Failed"
+    delete_draft_modal:
+      title: "Delete draft"
+      description_1: "You’ll loose all content from the draft. We can’t recover it once you delete it."
+      description_2: "Are you sure?"
+      confirm: "Yes, delete"
+    publish_modal:
+      title: "Publish version %{version} of the protocol template"
+      name: "Protocol template name"
+      comment: "Revision comment"
+      comment_placeholder: "What's new in this version?"
+      publish: "Publish"
     header:
       details: 'Details'
       versions: 'Versions'
