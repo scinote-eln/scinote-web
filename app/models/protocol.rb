@@ -18,6 +18,7 @@ class Protocol < ApplicationRecord
   after_save :update_linked_children
   skip_callback :create, :after, :create_users_assignments, if: -> { in_module? }
 
+  enum visibility: { hidden: 0, visible: 1 }
   enum protocol_type: {
     unlinked: 0,
     linked: 1,
@@ -104,6 +105,9 @@ class Protocol < ApplicationRecord
              inverse_of: :protocols,
              optional: true
   belongs_to :team, inverse_of: :protocols
+  belongs_to :default_public_user_role,
+             class_name: 'UserRole',
+             optional: true
   belongs_to :previous_version,
              class_name: 'Protocol',
              inverse_of: :next_version,
@@ -653,11 +657,13 @@ class Protocol < ApplicationRecord
     steps.map(&:can_destroy?).all?
   end
 
-  def add_team_users_as_viewers!(assigned_by)
-    viewer_role = UserRole.find_predefined_viewer_role
-    team.user_assignments.where.not(user: assigned_by).find_each do |user_assignment|
-      new_user_assignment = UserAssignment.find_or_initialize_by(user: user_assignment.user, assignable: self)
-      new_user_assignment.user_role = viewer_role
+  def create_public_user_assignments!(assigned_by)
+    public_role = default_public_user_role || UserRole.find_predefined_viewer_role
+    team.user_assignments.where.not(user: assigned_by).find_each do |team_user_assignment|
+      new_user_assignment = user_assignments.find_or_initialize_by(user: team_user_assignment.user)
+      next if new_user_assignment.manually_assigned?
+
+      new_user_assignment.user_role = public_role
       new_user_assignment.assigned_by = assigned_by
       new_user_assignment.assigned = :automatically
       new_user_assignment.save!
@@ -667,11 +673,10 @@ class Protocol < ApplicationRecord
   private
 
   def update_user_assignments
-    case protocol_type
-    when 'in_repository_public'
-      assigned_by = protocol_type_was == 'in_repository_archived' && restored_by || added_by
-      add_team_users_as_viewers!(assigned_by)
-    when 'in_repository_private', 'in_repository_archived'
+    case visibility
+    when 'visible'
+      create_public_user_assignments!(added_by)
+    when 'hidden'
       automatic_user_assignments.where.not(user: added_by).destroy_all
     end
   end
