@@ -11,6 +11,7 @@ module TinyMceImages
 
     before_validation :extract_base64_images
     before_save :clean_tiny_mce_image_urls
+    after_create :ensure_extracted_image_object_references
 
     def prepare_for_report(field, base64_encoded_imgs = false)
       description = self[field]
@@ -167,6 +168,7 @@ module TinyMceImages
     def extract_base64_images
       # extracts and uploads any base64 encoded images,
       # so they get stored as files instead of directly in the text
+      @extracted_base64_images = []
 
       object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[self.class.name]
       return unless object_field
@@ -190,6 +192,8 @@ module TinyMceImages
             filename: "#{Asset.generate_unique_secure_token}.#{tiny_image.image.type}"
           )
 
+          @extracted_base64_images << tiny_image
+
           encoded_id = Base62.encode(tiny_image.id)
 
           sanitized_text.gsub!(
@@ -199,6 +203,17 @@ module TinyMceImages
         end
 
         assign_attributes(object_field => sanitized_text)
+      end
+    end
+
+    def ensure_extracted_image_object_references
+      # for models that were not yet in database in time of image extraction
+      # we need to update image references after creation
+
+      @extracted_base64_images&.each do |image|
+        next if image.object
+
+        image.update(object: self)
       end
     end
   end
