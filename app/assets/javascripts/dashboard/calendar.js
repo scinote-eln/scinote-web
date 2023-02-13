@@ -19,7 +19,7 @@ var DasboardCalendarWidget = (function() {
                 <% }); %>
                 <% _.each(days, function(day) { %>
                   <% if (day.classes.includes('event')){ %>
-                    <div class="<%= day.classes %> dropdown" id="<%= day.id %>">
+                    <div class="<%= day.classes %> dropdown" id="<%= day.id %>" title="${I18n.t('dashboard.calendar.due_on')} <%= day.date.format(formatJS) %>">
                       <div class="event-day" data-toggle="dropdown"><%= day.day %></div>
                       <div class="dropdown-menu events-container dropdown-menu-right" role="menu">
                         <div class="title">${I18n.t('dashboard.calendar.due_on')} <%= day.date.format(formatJS) %></div>

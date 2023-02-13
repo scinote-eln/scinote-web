@@ -9,7 +9,7 @@ var RepositoryDateTimeColumnType = (function() {
       singleSelect: true,
       selectAppearance: 'simple',
       closeOnSelect: true,
-      title: `datetime reminder unit select ${document.getElementsByClassName('sci-input-field reminder-value')[1].value}`
+      title: `datetime reminder unit select`
     });
   }
 

@@ -324,6 +324,9 @@ var dropdownSelector = (function() {
 
     `).appendTo(dropdownContainer);
 
+    if (dropdownContainer.find('#sitewideDropdownContainer')[0].placeholder)
+      dropdownContainer.find('#sitewideDropdownContainer')[0].title = dropdownContainer.find('#sitewideDropdownContainer')[0].placeholder
+
     // Blank option
     if (selectElement.data('blank')) {
       $(`<div class="dropdown-blank btn">${selectElement.data('blank')}</div>`)
