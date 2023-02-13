@@ -291,6 +291,7 @@ function loadFromRepository() {
   }
 
   if (selectedRow !== null && confirm(confirmMessage)) {
+    modal.find(".modal-footer [data-action='submit']").prop('disabled', true);
     // POST via ajax
     $.ajax({
       url: modal.attr('data-url'),

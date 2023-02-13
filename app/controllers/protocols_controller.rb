@@ -1194,8 +1194,8 @@ class ProtocolsController < ApplicationController
   end
 
   def check_load_from_repository_permissions
-    @protocol = Protocol.find_by_id(params[:id])
-    @source = Protocol.find_by_id(params[:source_id])
+    @protocol = Protocol.find(params[:id])
+    @source = Protocol.find(params[:source_id])&.published_versions&.order(version_number: :desc)&.first
 
     render_403 unless @protocol.present? && @source.present? &&
                       (can_manage_protocol_in_module?(@protocol) &&
