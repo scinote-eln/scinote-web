@@ -1,5 +1,5 @@
 //= require protocols/import_export/import
-/* eslint-disable no-use-before-define, no-underscore-dangle, max-len */
+/* eslint-disable no-use-before-define, no-underscore-dangle, max-len, no-param-reassign */
 /* global ProtocolRepositoryHeader PdfPreview DataTableHelpers importProtocolFromFile _
           dropdownSelector filterDropdown I18n animateSpinner initHandsOnTable inlineEditing HelperModule */
 
@@ -105,7 +105,7 @@ var ProtocolsIndex = (function() {
       protocolsViewSearch = $textFilter.val();
 
       appliedFiltersMark();
-      initProtocolsTable();
+      protocolsDatatable.ajax.reload();
     });
 
     // Clear filters
@@ -139,25 +139,8 @@ var ProtocolsIndex = (function() {
 
   // Initialize protocols DataTable
   function initProtocolsTable() {
-    var requestParams = {
-      published_on_from: publishedOnFromFilter,
-      published_on_to: publishedOnToFilter,
-      modified_on_from: modifiedOnFromFilter,
-      modified_on_to: modifiedOnToFilter,
-      published_by: publishedByFilter,
-      members: accessByFilter,
-      has_draft: hasDraftFilter,
-      archived_on_from: archivedOnFromFilter,
-      archived_on_to: archivedOnToFilter,
-      name_and_keywords: protocolsViewSearch
-
-    };
     protocolsTableEl = $('#protocols-table');
     repositoryType = protocolsTableEl.data('type');
-
-    if (protocolsDatatable) {
-      protocolsDatatable.destroy();
-    }
 
     protocolsDatatable = protocolsTableEl.DataTable({
       order: [[1, 'asc']],
@@ -171,7 +154,20 @@ var ProtocolsIndex = (function() {
       ajax: {
         url: protocolsTableEl.data('source'),
         type: 'POST',
-        data: { ...requestParams }
+        data: function(data) {
+          data.published_on_from = publishedOnFromFilter;
+          data.published_on_to = publishedOnToFilter;
+          data.modified_on_from = modifiedOnFromFilter;
+          data.modified_on_to = modifiedOnToFilter;
+          data.published_by = publishedByFilter;
+          data.members = accessByFilter;
+          data.has_draft = hasDraftFilter;
+          data.archived_on_from = archivedOnFromFilter;
+          data.archived_on_to = archivedOnToFilter;
+          data.name_and_keywords = protocolsViewSearch;
+
+          return data;
+        }
       },
       colReorder: {
         fixedColumnsLeft: 1000000 // Disable reordering
@@ -512,7 +508,7 @@ var ProtocolsIndex = (function() {
       modal.find('.modal-body').html('');
 
       // Simply re-render table
-      initProtocolsTable();
+      protocolsDatatable.ajax.reload();
     }
 
     // Make private modal hidden action
@@ -954,7 +950,7 @@ var ProtocolsIndex = (function() {
       importResultsModal.find('.modal-body').html('');
 
       // Also reload table
-      initProtocolsTable();
+      protocolsDatatable.ajax.reload();
     });
   }
 
@@ -964,7 +960,7 @@ var ProtocolsIndex = (function() {
 
   return {
     reloadTable: function() {
-      initProtocolsTable();
+      protocolsDatatable.ajax.reload();
     }
   };
 }());
