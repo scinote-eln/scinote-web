@@ -35,6 +35,7 @@ class ProtocolsController < ApplicationController
     edit
     update_keywords
     update_description
+    update_version_comment
     update_name
     update_authors
     edit_name_modal
@@ -77,6 +78,7 @@ class ProtocolsController < ApplicationController
                 only: %i(protocolsio_import_create protocolsio_import_save)
 
   before_action :set_importer, only: %i(load_from_file import)
+  before_action :set_inline_name_editing, only: :show
 
   layout 'fluid'
 
@@ -1037,14 +1039,26 @@ class ProtocolsController < ApplicationController
     end
   end
 
+  def update_version_comment
+    respond_to do |format|
+      format.json do
+        if @protocol.update(version_comment: params.require(:protocol)[:version_comment])
+          render json: { version_comment: @protocol.version_comment }
+        else
+          render json: @protocol.errors, status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
   def permissions
-    #if stale?(@protocol)
+    if stale?(@protocol)
       render json: {
         copyable: can_clone_protocol_in_repository?(@protocol),
         archivable: can_manage_protocol_in_repository?(@protocol),
         restorable: can_restore_protocol_in_repository?(@protocol)
       }
-    #end
+    end
   end
 
   private
@@ -1067,26 +1081,10 @@ class ProtocolsController < ApplicationController
 
   def move_protocol(action)
     rollbacked = false
-    results = []
     begin
       Protocol.transaction do
         @protocols.find_each do |protocol|
-          result = {
-            name: protocol.name
-          }
-
-          success = protocol.method(action).call(current_user)
-
-          # Try renaming protocol
-          unless success
-            rename_record(protocol, :name)
-            success = protocol.method(action).call(current_user)
-          end
-
-          result[:new_name] = protocol.name
-          result[:type] = protocol.protocol_type
-          result[:success] = success
-          results << result
+          protocol.method(action).call(current_user)
         end
       end
     rescue
@@ -1100,15 +1098,22 @@ class ProtocolsController < ApplicationController
         end
       else
         format.json do
-          render json: {
-            html: render_to_string({
-              partial: "protocols/index/results_modal_body.html.erb",
-              locals: { results: results, en_action: "#{action}_results" }
-            })
-          }
+          render json: { message: t("protocols.index.#{action}_flash_html", count: @protocols.size) }
         end
       end
     end
+  end
+
+  def set_inline_name_editing
+    return unless can_manage_protocol_in_repository?(@protocol)
+
+    @inline_editable_title_config = {
+      name: 'title',
+      params_group: 'protocol',
+      item_id: @protocol.id,
+      field_to_udpate: 'name',
+      path_to_update: name_protocol_path(@protocol)
+    }
   end
 
   def load_team_and_type

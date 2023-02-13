@@ -13,6 +13,8 @@
       </div>
       <div>
         <%= current_assignee_name(user) %>
+        <br>
+        <small class="text-muted"><%= user_assignment_resource_role_name(user, object) %></small>
       </div>
     </div>
     <div class="user-assignment-controls">

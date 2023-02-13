@@ -11,10 +11,17 @@
   <% end %>
   <% provide(:container_class, 'no-second-nav-container') %>
 
-  <div class="content-pane flexible protocols-index">
+  <div class="content-pane flexible protocols-index <%= @type %>">
     <div class="content-header sticky-header">
       <div class="title-row">
-        <h1><%= t('sidebar.templates.protocol_templates') %></h1>
+        <% if @type == :archived %>
+          <h1>
+            <i class="fas fa-archive"></i>
+            <%= t('protocols.index.head_title_archived') %>
+          </h1>
+        <% else %>
+          <h1><%= t('protocols.index.head_title') %></h1>
+        <% end %>
       </div>
     </div>
     <div class="protocols-container">

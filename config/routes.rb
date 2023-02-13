@@ -556,7 +556,7 @@ Rails.application.routes.draw do
         get 'versions_modal', to: 'protocols#versions_modal'
         get 'preview', to: 'protocols#preview'
         patch 'description', to: 'protocols#update_description'
-        patch 'name', to: 'protocols#update_name'
+        put 'name', to: 'protocols#update_name'
         patch 'authors', to: 'protocols#update_authors'
         patch 'keywords', to: 'protocols#update_keywords'
         post 'clone', to: 'protocols#clone'
@@ -585,6 +585,7 @@ Rails.application.routes.draw do
         get 'edit_description_modal', to: 'protocols#edit_description_modal'
         post 'delete_steps'
         get :permissions
+        put :update_version_comment
       end
       collection do
         post 'datatable', to: 'protocols#datatable'
