@@ -410,6 +410,16 @@ var ProtocolsIndex = (function() {
     });
   }
 
+  function initdeleteDraftModal() {
+    $('.protocols-index').on('click', '#protocol-versions-modal .delete-draft', function(e) {
+      let url = this.dataset.url;
+      let modal = $('#deleteDraftModal');
+      $('#protocol-versions-modal').modal('hide');
+      modal.modal('show');
+      modal.find('form').attr('action', url);
+    });
+  }
+
   function initArchiveMyModules() {
     $('.protocols-index').on('click', '#archiveProtocol', function(e) {
       archiveMyModules(e.currentTarget.dataset.url, rowsSelected);
@@ -942,6 +952,7 @@ var ProtocolsIndex = (function() {
   init();
   initManageAccessButton();
   initArchiveMyModules();
+  initdeleteDraftModal();
 
   return {
     reloadTable: function() {

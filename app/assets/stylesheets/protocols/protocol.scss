@@ -168,6 +168,20 @@
     margin-left: -6px;
     margin-top: 2em;
   }
+
+  .publish-modal {
+    .modal-body {
+      @include font-button;
+    }
+
+    .sci-input-container {
+      margin-bottom: 1em;
+    }
+
+    textarea {
+      min-height: 64px;
+    }
+  }
 }
 
 

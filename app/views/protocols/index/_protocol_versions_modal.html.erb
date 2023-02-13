@@ -22,13 +22,13 @@
             </div>
             <div class="protocol-actions">
               <% if can_manage_protocol_in_repository?(@protocol.draft) %>
-                <button class="btn btn-light publish-draft">
+                <%= button_to publish_protocol_path(@protocol.draft), class: "btn btn-light publish-draft" do %>
                   <%= image_tag 'icon_small/publish.svg' %>
                   <%= t('protocols.index.versions.publish') %>
-                </button>
-                <button class="btn btn-light icon-btn delete-draft">
+                <% end %>
+                <div data-url="<%= destroy_draft_protocol_path(@protocol.draft) %>" class="btn btn-light delete-draft">
                   <i class="fas fa-trash"></i>
-                </button>
+                </div>
               <% end %>
             </div>
             <div class="protocol-version-comment">
