@@ -11,7 +11,6 @@
           <h4 class="modal-title" id="print-protocol-modal-label"><%= t("protocols.print.modal.title") %></h5>
         </div>
         <div class="modal-body">
-          <p><%= t("protocols.print.modal.content") %></p>
           <% if comments_enabled %>
             <div class="sci-checkbox-container">
               <%= check_box_tag :include_comments, 1, true, { class: "sci-checkbox" } %>

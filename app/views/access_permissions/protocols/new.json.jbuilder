@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 json.html controller.render_to_string(
-  partial: 'access_permissions/partials/new_protocol_assignments_form',
+  partial: 'access_permissions/partials/new_assignments_form',
   formats: [:html],
   locals: {
     resource: @protocol,

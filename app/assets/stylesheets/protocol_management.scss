@@ -68,51 +68,6 @@
     border: 0;
     height: calc(100vh - 167px);
   }
-
-  .protocol-users-link {
-    align-items: center;
-    color: $color-silver-chalice;
-    display: flex;
-
-    &:hover {
-      text-decoration: none;
-    }
-  }
-
-  .users-access-cell {
-    a:hover {
-      text-decoration: none;
-    }
-
-    .value {
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    .global-avatar-container {
-      height: 2em;
-      line-height: 2em;
-      margin-right: .25em;
-      width: 2em;
-    }
-
-    .more-users {
-      background: $color-volcano;
-      border-radius: 50%;
-      color: $color-white;
-      height: 2em;
-      line-height: 2em;
-      margin-right: .25em;
-      text-align: center;
-      text-decoration: none;
-      width: 2em;
-    }
-
-    .new-user {
-      background: $color-concrete;
-      text-align: center;
-    }
-  }
 }
 
 .tab-pane.protocolsio {

@@ -1,6 +1,13 @@
 // scss-lint:disable IdSelector SelectorDepth NestingDepth
 
 .protocols-index {
+
+  .title-row {
+    .fas {
+      margin-right: 16px;
+    }
+  }
+
   .protocols-datatable {
     --content-header-size: 5em;
     --protocol-toolbar-size: 4em;
@@ -44,6 +51,58 @@
     .dataTables_scrollBody {
       height: 100%;
     }
+
+    // Cells
+
+    // User access
+    .users-access-cell {
+      .protocol-users-link {
+        align-items: center;
+        color: $color-silver-chalice;
+        display: flex;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+
+      .global-avatar-container {
+        align-items: center;
+        border: 2px solid $color-white;
+        display: flex;
+        height: 32px;
+        justify-content: center;
+        line-height: 28px;
+        margin-right: -.5em;
+        width: 32px;
+      }
+
+      .more-users {
+        background: $color-volcano;
+        border: 2px solid $color-white;
+        border-radius: 50%;
+        color: $color-white;
+        height: 32px;
+        line-height: 28px;
+        margin-right: -.5em;
+        text-align: center;
+        text-decoration: none;
+        width: 32px;
+      }
+
+      .new-user {
+        background: $color-concrete;
+        margin-left: .75em;
+        text-align: center;
+      }
+    }
+
+    .selected {
+      .global-avatar-container,
+      .more-users {
+        border: 2px solid $color-alto;
+      }
+    }
   }
 
   .protocol-filters {
@@ -65,6 +124,18 @@
       }
     }
   }
+
+  &.archived {
+    .only-active {
+      display: none;
+    }
+  }
+
+  &:not(.archived) {
+    .only-archive {
+      display: none;
+    }
+  }
 }
 
 #protocol-versions-modal {
@@ -76,10 +147,74 @@
   .modal-footer {
     border: 0;
   }
-  
+
   .protocol-version-row {
+    align-items: center;
     border-bottom: 1px solid $color-concrete;
+    display: flex;
+    flex-wrap: wrap;
     padding: 1em 0;
+
+    .protocol-actions {
+      margin-left: auto;
+      min-height: 36px;
+    }
+
+    &:not(:hover) {
+      .save-as-draft {
+        display: none;
+      }
+    }
+
+    .protocol-version-comment {
+      flex-basis: 100%;
+      margin-top: .25em;
+
+      .view-mode {
+        border: $border-transparent;
+        cursor: pointer;
+        min-height: 3em;
+        padding: .5em;
+
+        &:empty::before {
+          @include font-button;
+          color: $color-silver-chalice;
+          content: attr(data-placeholder);
+        }
+
+        &:hover {
+          border: $border-tertiary;
+          border-radius: $border-radius-default;
+        }
+      }
+
+      textarea {
+        padding: .5em;
+        width: 100%;
+      }
+
+      .edit-buttons {
+        display: flex;
+        justify-content: end;
+
+        .btn {
+          margin-left: .5em;
+        }
+      }
+
+      .protocol-comment-container {
+        &[data-edit-mode="0"] {
+          .edit-buttons {
+            display: none;
+          }
+        }
+      }
+    }
+
+    .protocol-metadata {
+      @include font-small;
+      margin-left: 16px;
+    }
   }
 
   .protocol-version-link {

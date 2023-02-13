@@ -984,11 +984,14 @@ en:
     protocol:
       title: "Protocol"
       options_dropdown:
-        title: "Protocol options"
+        title: "Protocol actions"
         load_from_repo: "Load from templates"
         import: "Import protocol"
         export: "Export protocol"
-        save_to_repo: "Save to templates"
+        unlink: "Unlink protocol"
+        revert_protocol: "Revert protocol"
+        update_protocol: "New version update"
+        save_to_repo: "Save as new template"
         delete_steps: "Delete all steps"
     description:
       title: "Edit task %{module} description"
@@ -2419,6 +2422,7 @@ en:
       unchangable_error_message: "Predefined roles can not be changed!"
 
   protocols:
+    draft: "Draft"
     no_text_placeholder: 'No protocol description'
     reorder_steps:
         button: "Rearrange steps"
@@ -2428,8 +2432,7 @@ en:
       title: "Print protocol"
       button: "Print"
       modal:
-        title: "Print protocol"
-        content: "Select what to include in the printed version of this protocol."
+        title: "Print options"
         include_comments: "Include comments when printing"
       header:
         printed_from: "Printed from"
@@ -2523,6 +2526,14 @@ en:
         row_success: "Exported"
         row_failed: "Failed"
     header:
+      details: 'Details'
+      versions: 'Versions'
+      protocol_description: 'Protocol description'
+      protocol_steps: 'Protocol steps'
+      publish: 'Publish'
+      save_as_draft: 'Save as draft'
+      version: "Version:"
+      draft: 'Draft'
       created_at: "Created at:"
       updated_at: "Last modified at:"
       added_by: "Added by:"
@@ -2547,7 +2558,8 @@ en:
         title: "Edit description of protocol %{protocol}"
         label: "Description"
     index:
-      head_title: "Protocol management"
+      head_title: "Protocol templates"
+      head_title_archived: "Archived protocol templates"
       default_name: 'New protocol'
       navigation:
         public: "Team protocols"
@@ -2576,6 +2588,7 @@ en:
       make_private: "Move to My Protocols"
       publish: "Move to Team protocols"
       archive_action: "Archive"
+      archive_flash_html: "<b>%{count} protocol</b> template(s) successfully archived."
       thead:
         name: "Name"
         id: "ID"
@@ -2588,7 +2601,7 @@ en:
         archived_by: "Archived by"
         published_on: "Published on"
         created_at: "Created at"
-        archived_on: "Archived at"
+        archived_on: "Archived on"
         updated_at: "Modified on"
       table:
         draft: "Draft"
@@ -2668,10 +2681,13 @@ en:
         row_in_repository_private: "%{protocol} - <i>into My protocols</i>"
       versions:
         title: "%{protocol} versions"
-        draft: "Draft (from Version %{parent_version})"
+        draft_html: "<b>Draft</b> (from Version %{parent_version})"
         draft_modification_info: "Last modified: %{modified_on}, by %{modified_by}"
         revision: "Version %{version}"
         revision_publishing_info: "Published: %{published_on}, by %{published_by}"
+        publish: "Publish"
+        save_as_draft: "Save as draft"
+        comment_placeholder: "Click here to enter revision notes"
       protocolsio:
         search_bar_placeholder: 'Search for protocols'
         protocolsio_title: 'Protocols.io'
@@ -3038,6 +3054,7 @@ en:
     current_assignee: "(you)"
     change_project_role: "Change project role"
     change_protocol_role: "Change protocol role"
+    change_role: "Change role"
     select_default_user_role: "Select default user role"
     change_experiment_role: "Change experiment role"
     change_my_module_role: "Change task role"
@@ -3053,6 +3070,9 @@ en:
 
   access_permissions:
     everyone_else: "Everyone else at %{team_name}"
+    reset: "The inherited role will be applied"
+    remove_access: "Remove access"
+    grant_access: "Grant access"
     create:
       success:
         one: "You have successfully granted access to %{count} member to the project."
@@ -3101,15 +3121,14 @@ en:
       modals:
         show_modal:
           title: "Access to %{resource_name}"
-          new_resource_assignments: "Grant new access to %{resource}"
+        edit_modal:
+          title: "Manage access for %{resource_name}"
     protocols:
       modals:
         show_modal:
           title: "Access to %{resource_name}"
-          new_resource_assignments: "Grant new access to %{resource}"
         edit_modal:
           title: "Manage access for %{resource_name}"
-          new_resource_assignments: "Grant new access to %{resource}"
     experiments:
       modals:
         show_modal:

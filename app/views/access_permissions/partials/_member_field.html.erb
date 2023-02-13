@@ -1,0 +1,48 @@
+<% # frozen_string_literal: true %>
+
+<%
+  object_assignment = object.user_assignments.find_by(user_id: user.id, team: current_team)
+  item_id = dom_id(user, :assignment_member)
+%>
+
+<%= form_with(model: object_assignment, url: update_path, method: :put, remote: true, html: { class: 'member-item', id: item_id, data: { action: 'replace-form autosave-form', object_type: :assignment_member } }) do |f| %>
+  <%= f.hidden_field :user_id, value: f.object.user.id %>
+    <div class="user-assignment-info">
+      <div class="global-avatar-container">
+        <%= image_tag avatar_path(user, :icon_small), title: current_assignee_name(user), class: 'img-circle pull-left' %>
+      </div>
+      <div>
+        <%= current_assignee_name(user) %>
+        <br>
+        <small class="text-muted"><%= user_assignment_resource_role_name(user, object) %></small>
+      </div>
+    </div>
+    <div class="user-assignment-controls">
+      <% unless defined?(with_inherit) && current_user == user %>
+        <div class="dropdown pull-right">
+          <button class="btn btn-light" type="button" id="userAccess_<%= user.id %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <%= f.object.user_role.name %>
+            <span class="caret"></span>
+          </button>
+          <%= f.hidden_field :user_role_id, value: f.object.user_role.id %>
+          <ul class="dropdown-menu dropdown-menu-right user-assignment-dropdown" aria-labelledby="userAccess_<%= user.id %>">
+            <% user_roles_collection(with_inherit: defined? with_inherit).each do |role| %>
+              <li>
+                <a href="#" data-turbolinks="false" class="user-role-selector" data-role-id="<%= role[1] %>">
+                  <%= role[0] %>
+                </a>
+              </li>
+            <% end %>
+            <% if defined?(delete_path) && !object_assignment.last_assignable_owner?  %>
+              <li role="separator" class="divider" data-hook="support-dropdown-separator"></li>
+              <li>
+                <%= link_to delete_path, remote: true, method: :delete, data: { action: 'remote-destroy', target: "##{item_id}" } do %>
+                  <%= t('access_permissions.remove_access') %>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+    </div>
+<% end %>

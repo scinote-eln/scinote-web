@@ -9,44 +9,75 @@
       </div>
       <div class="modal-body">
         <% if @protocol.draft.present? %>
-          <div class="row protocol-version-row">
-            <div class="col-xs-12">
-              <div class="row">
-                <div class="col-xs-12">
-                  <span class="protocol-version-link">
-                    <%= t('protocols.index.versions.draft', parent_version: @protocol.draft.version_number) %>
-                  </span>
-                  <%= t('protocols.index.versions.draft_modification_info', 
-                        modified_on: @protocol.draft.updated_at.present? ? l(@protocol.draft.updated_at, format: :full_date) : '',
-                        modified_by: @protocol.draft.last_modified_by&.full_name) %>
+          <div class="protocol-version-row">
+            <div class="protocol-link">
+              <%= link_to protocol_path(@protocol.draft) do %>
+                <%= t('protocols.index.versions.draft_html', parent_version: @protocol.draft.version_number) %>
+              <% end %>
+            </div>
+            <div class="protocol-metadata">
+              <%= t('protocols.index.versions.draft_modification_info',
+                    modified_on: @protocol.draft.updated_at.present? ? l(@protocol.draft.updated_at, format: :full_date) : '',
+                    modified_by: @protocol.draft.last_modified_by&.full_name) %>
+            </div>
+            <div class="protocol-actions">
+              <% if can_manage_protocol_in_repository?(@protocol.draft) %>
+                <button class="btn btn-light publish-draft">
+                  <%= image_tag 'icon_small/publish.svg' %>
+                  <%= t('protocols.index.versions.publish') %>
+                </button>
+                <button class="btn btn-light icon-btn delete-draft">
+                  <i class="fas fa-trash"></i>
+                </button>
+              <% end %>
+            </div>
+            <div class="protocol-version-comment">
+              <% if can_manage_protocol_in_repository?(@protocol.draft) %>
+                <div
+                    class="protocol-comment-container inline-init-handler"
+                    data-field-to-update="version_comment"
+                    data-params-group="protocol"
+                    data-path-to-update="<%= update_version_comment_protocol_path(@protocol.draft) %>"
+                    data-original-name="<%= @protocol.draft.version_comment %>"
+                    data-response-field="version_comment"
+                    data-edit-mode="0"
+                  >
+                  <div class="protocol-comment-message">
+                    <div class="view-mode" data-placeholder="<%= t('protocols.index.versions.comment_placeholder') %>"><%= @protocol.draft.version_comment %></div>
+                    <%= text_area_tag 'version_comment', @protocol.draft.version_comment, disabled: true, class: 'smart-text-area hidden' %>
+                  </div>
+                  <div class="edit-buttons">
+                    <span class="cancel-button btn btn-secondary"><%= t('general.cancel') %></span>
+                    <span class="save-button btn btn-primary"><%= t('general.save') %></span>
+                  </div>
                 </div>
-              </div>
-              <div class="row protocol-version-comment-row">
-                <div class="col-xs-12">
-                  <%= @protocol.draft.version_comment %>
-                </div>
-              </div>
+              <% else %>
+                <%= @protocol.draft.version_comment %>
+              <% end %>
             </div>
           </div>
         <% end %>
         <% @published_versions.each do |protocol_version| %>
-          <div class="row protocol-version-row">
-            <div class="col-xs-12">
-              <div class="row">
-                <div class="col-xs-12">
-                  <span class="protocol-version-link">
-                    <%= t('protocols.index.versions.revision', version: protocol_version.version_number) %>
-                  </span>
-                  <%= t('protocols.index.versions.revision_publishing_info', 
-                        published_on: protocol_version.published_on.present? ? l(protocol_version.published_on, format: :full_date) : '',
-                        published_by: protocol_version.published_by&.full_name) %>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-xs-12 protocol-version-comment-row">
-                  <%= protocol_version.version_comment %>
-                </div>
-              </div>
+          <div class="protocol-version-row">
+            <div class="protocol-link">
+              <%= link_to protocol_path(protocol_version) do %>
+                <b><%= t('protocols.index.versions.revision', version: protocol_version.version_number) %></b>
+              <% end %>
+            </div>
+            <div class="protocol-metadata">
+              <%= t('protocols.index.versions.revision_publishing_info',
+                    published_on: protocol_version.published_on.present? ? l(protocol_version.published_on, format: :full_date) : '',
+                    published_by: protocol_version.published_by&.full_name) %>
+            </div>
+            <div class="protocol-actions">
+              <% unless @protocol.draft.present? %>
+                <button class="btn btn-light icon-btn save-as-draft" data-placement="left" title="<%= t('protocols.index.versions.save_as_draft') %>" data-toggle="tooltip">
+                  <i class="fas fa-clone"></i>
+                </button>
+              <% end %>
+            </div>
+            <div class="protocol-version-comment">
+              <%= protocol_version.version_comment %>
             </div>
           </div>
         <% end %>

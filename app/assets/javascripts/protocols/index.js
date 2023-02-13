@@ -1,10 +1,10 @@
 //= require protocols/import_export/import
 /* eslint-disable no-use-before-define, no-underscore-dangle, max-len */
 /* global ProtocolRepositoryHeader PdfPreview DataTableHelpers importProtocolFromFile _
-          dropdownSelector filterDropdown I18n animateSpinner initHandsOnTable */
+          dropdownSelector filterDropdown I18n animateSpinner initHandsOnTable inlineEditing HelperModule */
 
 // Global variables
-(function() {
+var ProtocolsIndex = (function() {
   var PERMISSIONS = ['archivable', 'restorable', 'copyable'];
   var rowsSelected = [];
   var protocolsTableEl = null;
@@ -130,6 +130,12 @@
     });
   }
 
+  function initManageAccessButton() {
+    $('.protocols-index').on('click', '#manageProtocolAccess', function() {
+      $(`tr[data-row-id=${rowsSelected[0]}] .protocol-users-link`).click();
+    });
+  }
+
   // Initialize protocols DataTable
   function initProtocolsTable() {
     protocolsTableEl = $('#protocols-table');
@@ -173,14 +179,19 @@
         { data: '2' },
         { data: '3' },
         { data: '4' },
-        {
-          data: '5',
-          visible: repositoryType !== 'archived'
-        },
+        { data: '5' },
         { data: '6' },
         { data: '7' },
         { data: '8' },
-        { data: '9' }
+        { data: '9' },
+        {
+          data: '10',
+          visible: $('.protocols-index').hasClass('archived')
+        },
+        {
+          data: '11',
+          visible: $('.protocols-index').hasClass('archived')
+        }
       ],
       oLanguage: {
         sSearch: I18n.t('general.filter')
@@ -386,6 +397,8 @@
       $.get(this.href, function(data) {
         $(protocolsContainer).append($.parseHTML(data.html));
         $(versionsModal).modal('show');
+        inlineEditing.init();
+        $(versionsModal).find('[data-toggle="tooltip"]').tooltip();
 
         // Remove modal when it gets closed
         $(versionsModal).on('hidden.bs.modal', function() {
@@ -394,6 +407,21 @@
       });
       e.stopPropagation();
       e.preventDefault();
+    });
+  }
+
+  function initArchiveMyModules() {
+    $('.protocols-index').on('click', '#archiveProtocol', function(e) {
+      archiveMyModules(e.currentTarget.dataset.url, rowsSelected);
+    });
+  }
+
+  function archiveMyModules(url, ids) {
+    $.post(url, { protocol_ids: ids }, (data) => {
+      HelperModule.flashAlertMsg(data.message, 'success');
+      protocolsDatatable.ajax.reload();
+    }).error((data) => {
+      HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   }
 
@@ -912,4 +940,12 @@
   }
 
   init();
+  initManageAccessButton();
+  initArchiveMyModules();
+
+  return {
+    reloadTable: function() {
+      protocolsDatatable.ajax.reload();
+    }
+  };
 }());

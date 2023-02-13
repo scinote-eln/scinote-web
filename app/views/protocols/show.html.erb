@@ -2,14 +2,34 @@
 <%= content_for :sidebar do %>
   <%= render partial: "/shared/sidebar/templates_sidebar", locals: {active: :protocol} %>
 <% end %>
+ <% provide(:container_class, 'no-second-nav-container') %>
 <div class="content-pane protocols-show" >
-  <div class="protocol-position-container">
-     <div class="protocol-actions">
-      <a class="btn btn-secondary pull-right" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
-        <span class="fas fa-print" aria-hidden="true"></span>
-        <span><%= t("protocols.print.button") %></span>
-      </a>
+  <div class="content-header">
+    <div id="breadcrumbsWrapper">
+      <div class="breadcrumbs-container">
+        <a href="<%= protocols_path %>" class="breadcrumbs-link">
+          <%= t('sidebar.templates.protocol_templates') %>
+        </a>
+        <span class="delimiter">/</span>
+      </div>
     </div>
+    <div class="title-row">
+      <h1>
+        <% if @inline_editable_title_config.present? %>
+          <%= render partial: "shared/inline_editing",
+                      locals: {
+                        initial_value: @protocol.name,
+                        config: @inline_editable_title_config
+                      } %>
+        <% else %>
+          <div class="name-readonly-placeholder">
+            <%= @protocol.name %>
+          </div>
+        <% end %>
+      </h1>
+    </div>
+  </div>
+  <div class="protocol-position-container">
     <div
       id="protocolContainer"
       data-protocol-url="<%= protocol_path(@protocol) %>"
@@ -25,8 +45,6 @@
 
 <!-- Create new office file modal -->
 <%= render partial: 'assets/wopi/create_wopi_file_modal.html.erb' %>
-
-<%= render partial: "my_modules/protocols/print_protocol_modal", locals: { protocol: @protocol, comments_enabled: false } %>
 
 <%= javascript_include_tag "handsontable.full" %>
 <%= render partial: "shared/formulas_libraries.html.erb" %>

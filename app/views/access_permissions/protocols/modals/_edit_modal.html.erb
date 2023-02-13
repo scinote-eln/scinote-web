@@ -9,14 +9,19 @@
       </div>
       <div class="modal-body">
         <% protocol.assigned_users.order(full_name: :asc).each do |user| %>
-          <%= render('access_permissions/partials/protocol_member_field', user: user, protocol: protocol, update_path: update_path) %>
+          <%= render('access_permissions/partials/member_field',
+                     user: user,
+                     object: protocol,
+                     update_path: update_path,
+                     delete_path: access_permissions_protocol_path(protocol, user_id: user.id)
+                    ) %>
         <% end %>
       </div>
 
       <div class="modal-footer">
         <%= link_to new_resource_path, class: 'btn btn-default pull-left', data: { action: 'swap-remote-container', target: '#user_assignments_modal' } do %>
           <i class="fas fa-plus"></i>
-          <%= t('.new_resource_assignments', resource: protocol.model_name.human.downcase) %>
+          <%= t('access_permissions.grant_access') %>
         <% end %>
       </div>
     </div>

@@ -1,5 +1,5 @@
-<% protocol.user_assignments[0..3].each do |user_assigment| %>
-  <span class="global-avatar-container">
+<% protocol.user_assignments[0..3].each_with_index do |user_assigment, i| %>
+  <span class="global-avatar-container" style="z-index: <%= 5 - i %>">
     <%= image_tag(avatar_path(user_assigment.user, :icon_small), title: user_name_with_role(user_assigment)) %>
   </span>
 <% end %>

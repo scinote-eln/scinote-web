@@ -5,7 +5,8 @@ json.html controller.render_to_string(
   formats: [:html],
   locals: {
     resource: @project,
-    form_object: @form,
+    form_object: @user_assignment,
+    users: @available_users,
     create_path: access_permissions_projects_path(id: @project.id),
     resource_path: edit_access_permissions_project_path(@project)
   },
