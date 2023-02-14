@@ -124,7 +124,7 @@ window.TinyMCE = (() => {
     setTimeout(() => { tinyMCE.activeEditor.execCommand('mceAutoResize') }, 500);
   }
 
-  function initImageToolBar(editor) {
+  function initCssOverrides(editor) {
     const editorIframe = $(`#${editor.id}`).next().find('.tox-edit-area iframe');
     const primaryColor = '#104da9';
     editorIframe.contents().find('head').append(`<style type="text/css">
@@ -141,6 +141,7 @@ window.TinyMCE = (() => {
         h2 {font-size: 18px !important }
         h3 {font-size: 16px !important }
       </style>`);
+    editorIframe.contents().find('head').append($('#font-css-pack').clone());
   }
 
   function draftLocation() {
@@ -316,7 +317,7 @@ window.TinyMCE = (() => {
             }
 
             // Init image toolbar
-            initImageToolBar(editor);
+            initCssOverrides(editor);
 
             // Init save/cancel button wrapper
             $('<div class="tinymce-save-controls"></div>').appendTo(menuBar);
