@@ -1099,23 +1099,18 @@ en:
       load_from_repository_error_locked: "Failed to load the protocol from the templates. One or more files in the protocol are currently being edited."
       load_from_repository_modal:
         title: "Load protocol from templates"
-        text: "Choose the protocol to be loaded to the task."
-        text2: "This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
-        tab_public: "Team protocols"
-        tab_private: "My protocols"
-        tab_recent: "Recent protocols"
-        tab_archive: "Archived protocols"
+        text: "This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
+        text2: "Choose the protocol to be loaded to the task."
+        filter_protocols: "Filter protocols"
         thead_name: "Name"
         thead_keywords: "Keywords"
-        thead_nr_of_linked_children: "No. of linked tasks"
         thead_published_by: "Published by"
-        thead_added_by: "Added by"
-        thead_published_on: "Published at"
-        thead_created_at: "Created at"
-        thead_updated_at: "Last modified at"
+        thead_published_on: "Published on"
+        thead_version: "Ver."
+        thead_id: "ID"
         confirm_message: "Are you sure you wish to load protocol from templates? This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
         import_to_linked_task_rep: "Are you sure you wish to load protocol from templates? This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
-        load: "Load"
+        load: "Load protocol"
       copy_to_repository_modal:
         title: "Save to protocol templates"
         name_label: "Templates protocol name"
@@ -2987,7 +2982,7 @@ en:
         error_flash: "Step %{step} couldn't be deleted. One or more files are locked."
     edit:
       head_title: "Edit protocol"
-    no_keywords: "No keywords"
+    no_keywords: "—"
 
   invite_users:
     to_team:

@@ -420,12 +420,6 @@ mark,.mark {
   padding: 10px;
 }
 
-/** Settings */
-.nav-settings {
-  margin-top: 15px;
-  margin-bottom: 0;
-}
-
 .tab-pane-settings {
   background-color: $color-white;
   padding: 15px;
@@ -848,15 +842,6 @@ ul.content-activities {
       right: -1px;
       top: -1px;
     }
-  }
-}
-
-.load-from-repository-protocols-datatable {
-  clear: right;
-
-  & .dataTables_wrapper .dataTables_filter {
-    float: right;
-    margin-top: 15px;
   }
 }
 

@@ -3,51 +3,29 @@ class LoadFromRepositoryProtocolsDatatable < CustomDatatable
   include ActiveRecord::Sanitization::ClassMethods
   include InputSanitizeHelper
 
-  def initialize(view, team, type, user)
+  def initialize(view, team, user)
     super(view)
     @team = team
-    # :public or :private
-    @type = type
     @user = user
   end
 
   def sortable_columns
     @sortable_columns ||= [
-      "Protocol.name",
-      "protocol_keywords_str",
-      "Protocol.nr_of_linked_children",
-      "full_username_str",
-      timestamp_db_column,
-      "Protocol.updated_at"
+      'Protocol.name',
+      'nr_of_versions',
+      'Protocol.id',
+      'protocol_keywords_str',
+      'full_username_str',
+      'Protocol.published_on'
     ]
   end
 
   def searchable_columns
     @searchable_columns ||= [
-      "Protocol.name",
-      timestamp_db_column,
-      "Protocol.updated_at"
+      'Protocol.name',
+      'Protocol.id',
+      'Protocol.published_on'
     ]
-  end
-
-  # A hack that overrides the new_search_contition method default behavior of the ajax-datatables-rails gem
-  # now the method checks if the column is the created_at or updated_at and generate a custom SQL to parse
-  # it back to the caller method
-  def new_search_condition(column, value)
-    model, column = column.split('.')
-    model = model.constantize
-    case column
-    when 'published_on'
-      casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
-                        [ Arel.sql("to_char( protocols.created_at, '#{ formated_date }' ) AS VARCHAR") ] )
-    when 'updated_at'
-      casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
-                        [ Arel.sql("to_char( protocols.updated_at, '#{ formated_date }' ) AS VARCHAR") ] )
-    else
-      casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
-                        [model.arel_table[column.to_sym].as(typecast)])
-    end
-    casted_column.matches("%#{value}%")
   end
 
   # This hack is needed to display a correct amount of
@@ -70,12 +48,12 @@ class LoadFromRepositoryProtocolsDatatable < CustomDatatable
     records.map do |record|
       {
         'DT_RowId': record.id,
-        '1': escape_input(record.name),
-        '2': keywords_html(record),
-        '3': record.nr_of_linked_children,
+        '0': escape_input(record.name),
+        '1': record.nr_of_versions,
+        '2': record.code,
+        '3': keywords_html(record),
         '4': escape_input(record.full_username_str),
-        '5': timestamp_column_html(record),
-        '6': I18n.l(record.updated_at, format: :full)
+        '5': I18n.l(record.published_on, format: :full)
       }
     end
   end
@@ -84,31 +62,15 @@ class LoadFromRepositoryProtocolsDatatable < CustomDatatable
     records =
       Protocol
       .where(team: @team)
-      .joins('LEFT OUTER JOIN "protocol_protocol_keywords" ON "protocol_protocol_keywords"."protocol_id" = "protocols"."id"')
-      .joins('LEFT OUTER JOIN "protocol_keywords" ON "protocol_protocol_keywords"."protocol_keyword_id" = "protocol_keywords"."id"')
-
-    if @type == :public
-      records =
-        records
-        .joins('LEFT OUTER JOIN users ON users.id = protocols.added_by_id')
-        .where('protocols.protocol_type = ?',
-               Protocol.protocol_types[:in_repository_public])
-    elsif @type == :private
-      records =
-        records
-        .joins('LEFT OUTER JOIN users ON users.id = protocols.added_by_id')
-        .where('protocols.protocol_type = ?',
-               Protocol.protocol_types[:in_repository_private])
-        .where(added_by: @user)
-    else
-      records =
-        records
-        .joins('LEFT OUTER JOIN users ON users.id = protocols.added_by_id')
-        .where('(protocols.protocol_type = ? OR (protocols.protocol_type = ? AND added_by_id = ?))',
-               Protocol.protocol_types[:in_repository_public],
-               Protocol.protocol_types[:in_repository_private],
-               @user.id)
-    end
+      .where(protocols: { protocol_type: Protocol.protocol_types[:in_repository_published_original] })
+      .joins("LEFT OUTER JOIN protocols protocol_versions "\
+             "ON protocol_versions.protocol_type = #{Protocol.protocol_types[:in_repository_published_version]} "\
+             "AND protocol_versions.parent_id = protocols.id")
+      .joins('LEFT OUTER JOIN "protocol_protocol_keywords" '\
+             'ON "protocol_protocol_keywords"."protocol_id" = "protocols"."id"')
+      .joins('LEFT OUTER JOIN "protocol_keywords"'\
+             'ON "protocol_protocol_keywords"."protocol_keyword_id" = "protocol_keywords"."id"')
+      .joins('LEFT OUTER JOIN users ON users.id = protocols.added_by_id').active
 
     records.group('"protocols"."id"')
   end
@@ -118,36 +80,23 @@ class LoadFromRepositoryProtocolsDatatable < CustomDatatable
   # will return json
   def get_raw_records
     get_raw_records_base
-    .select(
-      '"protocols"."id"',
-      '"protocols"."name"',
-      '"protocols"."protocol_type"',
-      'string_agg("protocol_keywords"."name", \', \') AS "protocol_keywords_str"',
-      '"protocols"."nr_of_linked_children"',
-      'max("users"."full_name") AS "full_username_str"', # "Hack" to get single username
-      '"protocols"."created_at"',
-      '"protocols"."updated_at"',
-      '"protocols"."published_on"'
-    )
+      .select(
+        '"protocols".*',
+        'STRING_AGG("protocol_keywords"."name", \', \') AS "protocol_keywords_str"',
+        'COUNT("protocol_versions"."id") + 1 AS "nr_of_versions"',
+        'MAX("users"."full_name") AS "full_username_str"'
+      )
   end
 
   # Various helper methods
 
-  def timestamp_db_column
-    if @type == :public
-      "Protocol.published_on"
-    else
-      "Protocol.created_at"
-    end
-  end
-
   def keywords_html(record)
     if record.protocol_keywords_str.blank?
-      "<i>#{I18n.t("protocols.no_keywords")}</i>"
+      "<i>#{I18n.t('protocols.no_keywords')}</i>"
     else
-      kws = record.protocol_keywords_str.split(", ")
+      kws = record.protocol_keywords_str.split(', ')
       res = []
-      kws.sort_by{ |word| word.downcase }.each do |kw|
+      kws.sort_by(&:downcase).each do |kw|
         res << "<a href='#' data-action='filter' data-param='#{kw}'>#{kw}</a>"
       end
       sanitize_input(res.join(', '))
@@ -179,10 +128,15 @@ class LoadFromRepositoryProtocolsDatatable < CustomDatatable
         'CAST',
         [::Arel::Nodes::SqlLiteral.new("string_agg(\"protocol_keywords\".\"name\", ' ') AS #{typecast}")]
       ).matches("%#{sanitize_sql_like(search_val)}%").to_sql +
-      " OR " +
+      ' OR ' +
       ::Arel::Nodes::NamedFunction.new(
         'CAST',
         [::Arel::Nodes::SqlLiteral.new("max(\"users\".\"full_name\") AS #{typecast}")]
+      ).matches("%#{sanitize_sql_like(search_val)}%").to_sql +
+      ' OR ' +
+      ::Arel::Nodes::NamedFunction.new(
+        'CAST',
+        [::Arel::Nodes::SqlLiteral.new("COUNT(\"protocol_versions\".\"id\") + 1 AS #{typecast}")]
       ).matches("%#{sanitize_sql_like(search_val)}%").to_sql
     ).select(:id)
 
@@ -190,7 +144,6 @@ class LoadFromRepositoryProtocolsDatatable < CustomDatatable
     criteria = super(query)
 
     # Aight, now append another or
-    criteria = criteria.or(Protocol.arel_table[:id].in(records_having.arel))
-    criteria
+    criteria.or(Protocol.arel_table[:id].in(records_having.arel))
   end
 end
