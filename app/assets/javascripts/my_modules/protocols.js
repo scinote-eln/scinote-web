@@ -100,7 +100,7 @@ function initLinkUpdate() {
   $("[data-action='unlink'], [data-action='revert'], [data-action='update-parent'], [data-action='update-self']")
     .on('ajax:success', function(e, data) {
       const modalBodyTemplate = (message, warning) => `<p class="message">${message}</p>
-                                                       <p class="message">${warning || ''}</p>`;
+                                                       <p class="warning">${warning || ''}</p>`;
       const {
         title,
         message,
