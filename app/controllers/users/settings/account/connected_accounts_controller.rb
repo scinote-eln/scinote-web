@@ -9,7 +9,8 @@ module Users
         end
 
         def destroy
-          if Rails.configuration.x.azure_ad_apps.select { |_, v| v[:provider] == params[:provider] }.present?
+          settings = ApplicationSettings.instance
+          if settings.values['azure_ad_apps']&.find { |v| v['provider_name'] == params[:provider] }
             provider = params[:provider]
           else
             flash[:error] = t('users.settings.account.connected_accounts.errors.not_found')
