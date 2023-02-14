@@ -2750,7 +2750,7 @@ en:
         row_file_too_large: "(Protocol too large)"
       confirm_archive:
         title: "Archive protocols"
-        message: "Are you sure you wish to archive the selected protocols? All the task protocols will be unlinked."
+        message: "Are you sure you wish to archive the selected protocols?"
         confirm: "Archive"
       archive_results:
         title: "Archive results"

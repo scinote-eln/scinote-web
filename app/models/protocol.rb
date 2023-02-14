@@ -418,8 +418,7 @@ class Protocol < ApplicationRecord
       Protocol.where(parent: self).find_each do |p|
         p.update(
           parent: nil,
-          parent_updated_at: nil,
-          protocol_type: :unlinked
+          parent_updated_at: nil
         )
       end
 
