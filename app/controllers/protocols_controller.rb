@@ -55,9 +55,9 @@ class ProtocolsController < ApplicationController
     update_parent
     update_parent_modal
   )
-  before_action :check_manage_all_in_repository_permissions, only:
-    %i(make_private archive)
+  before_action :check_manage_all_in_repository_permissions, only: :make_private
   before_action :check_restore_all_in_repository_permissions, only: :restore
+  before_action :check_archive_all_in_repository_permissions, only: :archive
   before_action :check_load_from_repository_views_permissions, only: %i(
     load_from_repository_modal
     load_from_repository_datatable
@@ -1074,7 +1074,7 @@ class ProtocolsController < ApplicationController
     if stale?(@protocol)
       render json: {
         copyable: can_clone_protocol_in_repository?(@protocol),
-        archivable: can_manage_protocol_in_repository?(@protocol),
+        archivable: can_archive_protocol_in_repository?(@protocol),
         restorable: can_restore_protocol_in_repository?(@protocol)
       }
     end
@@ -1192,6 +1192,16 @@ class ProtocolsController < ApplicationController
     @protocols = Protocol.where(id: params[:protocol_ids])
     @protocols.find_each do |protocol|
       unless can_manage_protocol_in_repository?(protocol)
+        respond_to { |f| f.json { render json: {}, status: :unauthorized } }
+        break
+      end
+    end
+  end
+
+  def check_archive_all_in_repository_permissions
+    @protocols = Protocol.where(id: params[:protocol_ids])
+    @protocols.find_each do |protocol|
+      unless can_archive_protocol_in_repository?(protocol)
         respond_to { |f| f.json { render json: {}, status: :unauthorized } }
         break
       end

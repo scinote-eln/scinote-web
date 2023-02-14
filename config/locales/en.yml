@@ -2630,6 +2630,7 @@ en:
       archive:
         description: "Archived protocols can only be seen by you. Restoring protocols will return them to their previous location (team/my protocols)."
       restore: "Restore"
+      restore_flash_html: "<b>%{count} protocol</b> template(s) successfully restored."
       make_private_unauthorized: "You do not have permission to move selected protocols to My protocols."
       make_private_error: "Error occurred while moving selected protocols to My protocols."
       publish_unauthorized: "You do not have permission to move selected protocols to Team protocols."

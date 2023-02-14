@@ -429,9 +429,30 @@ var ProtocolsIndex = (function() {
   function archiveMyModules(url, ids) {
     $.post(url, { protocol_ids: ids }, (data) => {
       HelperModule.flashAlertMsg(data.message, 'success');
+      unselectAllRows();
       protocolsDatatable.ajax.reload();
     }).error((data) => {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+    });
+  }
+
+  function initRestoreProtocols() {
+    $('.protocols-index').on('click', '#restoreProtocol', function(e) {
+      restoreProtocol(e.currentTarget.dataset.url, rowsSelected);
+    });
+  }
+
+  function restoreProtocol(url, ids) {
+    $.post(url, { protocol_ids: ids }, (data) => {
+      HelperModule.flashAlertMsg(data.message, 'success');
+      unselectAllRows();
+      protocolsDatatable.ajax.reload();
+    }).error((error) => {
+      if (error.status === 401) {
+        HelperModule.flashAlertMsg(I18n.t('protocols.index.restore_unauthorized'), 'danger');
+      } else {
+        HelperModule.flashAlertMsg(I18n.t('protocols.index.restore_error'), 'danger');
+      }
     });
   }
 
@@ -534,13 +555,6 @@ var ProtocolsIndex = (function() {
       updateButtons();
     });
 
-    // Restore modal hidden action
-    $('#restore-results-modal').on('hidden.bs.modal', function() {
-      refresh($(this));
-      updateDataTableSelectAllCheckbox();
-      updateButtons();
-    });
-
     // Linked children modal close action
     $('#linked-children-modal').on('hidden.bs.modal', function() {
       $(this).find('.modal-title').html('');
@@ -582,6 +596,11 @@ var ProtocolsIndex = (function() {
         checkboxSelectAll.indeterminate = true;
       }
     }
+  }
+
+  function unselectAllRows() {
+    rowsSelected = [];
+    updateButtons();
   }
 
   function updateButtons() {
@@ -952,6 +971,7 @@ var ProtocolsIndex = (function() {
   init();
   initManageAccessButton();
   initArchiveMyModules();
+  initRestoreProtocols();
   initdeleteDraftModal();
 
   return {
