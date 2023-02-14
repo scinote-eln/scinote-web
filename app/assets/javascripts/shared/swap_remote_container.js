@@ -11,7 +11,7 @@
       $.get(element.getAttribute('href')).then(function({ html, flash }) {
         let targetID = element.getAttribute('data-target');
         let targetElement = $(element).closest(targetID);
-        let newContainer = $(html);
+        let newContainer = $(html).find(targetID).length ? $(html).find(targetID) : $(html);
         targetElement.replaceWith(newContainer);
         newContainer.find('.selectpicker').selectpicker();
 

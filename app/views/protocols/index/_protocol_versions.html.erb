@@ -1,0 +1,10 @@
+<%= link_to versions_modal_protocol_path(protocol), class: 'protocol-versions-link', remote: true do %>
+    <% if protocol.in_repository_published_original? %>
+        <%= protocol.nr_of_versions %>
+        <% if protocol.nr_of_drafts.positive? %>
+            / <%= t("protocols.index.table.draft") %>
+        <% end %>
+    <% elsif protocol.in_repository_draft? %>
+        <%= t("protocols.index.table.draft") %>
+    <% end %>
+<% end %>

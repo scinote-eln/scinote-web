@@ -280,12 +280,14 @@ Rails.application.routes.draw do
     end
 
     namespace :access_permissions do
+      resources :protocols, defaults: { format: 'json' }
       resources :projects, defaults: { format: 'json' } do
         put :update_default_public_user_role, on: :member
         resources :experiments, only: %i(show update edit) do
           resources :my_modules, only: %i(show update edit)
         end
       end
+      resources :protocols, only: %i(show update edit)
     end
 
     resources :projects, except: [:destroy] do
@@ -568,13 +570,16 @@ Rails.application.routes.draw do
         post :reorder, on: :collection
       end
       member do
+        post :publish
+        post :destroy_draft
         get 'print', to: 'protocols#print'
         get 'linked_children', to: 'protocols#linked_children'
         post 'linked_children_datatable',
              to: 'protocols#linked_children_datatable'
+        get 'versions_modal', to: 'protocols#versions_modal'
         get 'preview', to: 'protocols#preview'
         patch 'description', to: 'protocols#update_description'
-        patch 'name', to: 'protocols#update_name'
+        put 'name', to: 'protocols#update_name'
         patch 'authors', to: 'protocols#update_authors'
         patch 'keywords', to: 'protocols#update_keywords'
         post 'clone', to: 'protocols#clone'
@@ -602,11 +607,12 @@ Rails.application.routes.draw do
         get 'edit_authors_modal', to: 'protocols#edit_authors_modal'
         get 'edit_description_modal', to: 'protocols#edit_description_modal'
         post 'delete_steps'
+        get :permissions
+        put :update_version_comment
       end
       collection do
         post 'datatable', to: 'protocols#datatable'
         post 'make_private', to: 'protocols#make_private'
-        post 'publish', to: 'protocols#publish'
         post 'archive', to: 'protocols#archive'
         post 'restore', to: 'protocols#restore'
         post 'import', to: 'protocols#import'
@@ -614,6 +620,7 @@ Rails.application.routes.draw do
              to: 'protocols#protocolsio_import_create'
         post 'protocolsio_import_save', to: 'protocols#protocolsio_import_save'
         get 'export', to: 'protocols#export'
+        get 'protocolsio', to: 'protocols#protocolsio_index'
       end
     end
 

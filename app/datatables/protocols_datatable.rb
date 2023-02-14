@@ -2,6 +2,7 @@ class ProtocolsDatatable < CustomDatatable
   # Needed for sanitize_sql_like method
   include ActiveRecord::Sanitization::ClassMethods
   include InputSanitizeHelper
+  include Rails.application.routes.url_helpers
 
   def_delegator :@view, :can_read_protocol_in_repository?
   def_delegator :@view, :can_manage_protocol_in_repository?
@@ -22,21 +23,25 @@ class ProtocolsDatatable < CustomDatatable
 
   def sortable_columns
     @sortable_columns ||= [
-      "Protocol.name",
-      "Protocol.id",
-      "protocol_keywords_str",
-      "Protocol.nr_of_linked_children",
-      "full_username_str",
-      timestamp_db_column,
-      "Protocol.updated_at"
+      'Protocol.name',
+      'Protocol.id',
+      'nr_of_versions',
+      'protocol_keywords_str',
+      'Protocol.nr_of_linked_children',
+      'nr_of_assigned_users',
+      'full_username_str',
+      'Protocol.archived_on',
+      'Protocol.published_on',
+      'Protocol.updated_at'
     ]
   end
 
   def searchable_columns
     @searchable_columns ||= [
       "Protocol.name",
+      'Protocol.archived_on',
+      'Protocol.published_on',
       "Protocol.#{Protocol::PREFIXED_ID_SQL}",
-      timestamp_db_column,
       "Protocol.updated_at"
     ]
   end
@@ -80,66 +85,62 @@ class ProtocolsDatatable < CustomDatatable
 
   # Returns json of current protocols (already paginated)
   def data
-    result_data = []
-    records.each do |record|
-      protocol = Protocol.find(record.id)
-      result_data << {
-        'DT_RowId': record.id,
-        'DT_CanClone': can_clone_protocol_in_repository?(protocol),
-        'DT_CloneUrl': if can_clone_protocol_in_repository?(protocol)
-                         clone_protocol_path(protocol,
-                                             team: @team,
-                                             type: @type)
-                       end,
-        'DT_CanMakePrivate': can_manage_protocol_in_repository?(protocol),
-        'DT_CanPublish': can_manage_protocol_in_repository?(protocol),
-        'DT_CanArchive': can_manage_protocol_in_repository?(protocol),
-        'DT_CanRestore': can_restore_protocol_in_repository?(protocol),
-        'DT_CanExport': can_read_protocol_in_repository?(protocol),
-        '1': if protocol.in_repository_archived?
-               escape_input(record.name)
-             else
-               name_html(record)
-             end,
-        '2': escape_input(record.code),
-        '3': keywords_html(record),
-        '4': modules_html(record),
-        '5': escape_input(record.full_username_str),
-        '6': timestamp_column_html(record),
-        '7': I18n.l(record.updated_at, format: :full)
+    records.map do |record|
+      {
+        DT_RowId: record.id,
+        DT_RowAttr: {
+          'data-permissions-url': permissions_protocol_path(record)
+        },
+        DT_CanClone: can_clone_protocol_in_repository?(record),
+        DT_CloneUrl: if can_clone_protocol_in_repository?(record)
+                       clone_protocol_path(record, team: @team, type: @type)
+                     end,
+        DT_RowAttr: {
+          'data-permissions-url': permissions_protocol_path(record)
+        },
+        '1': name_html(record),
+        '2': record.code,
+        '3': versions_html(record),
+        '4': keywords_html(record),
+        '5': modules_html(record),
+        '6': access_html(record),
+        '7': escape_input(record.full_username_str),
+        '8': I18n.l(record.published_on || record.created_at, format: :full),
+        '9': I18n.l(record.updated_at, format: :full),
+        '10': escape_input(record.archived_full_username_str),
+        '11': (I18n.l(record.archived_on, format: :full) if record.archived_on)
       }
     end
-    result_data
   end
 
   def get_raw_records_base
     records =
       Protocol
       .where(team: @team)
-      .joins('LEFT OUTER JOIN "protocol_protocol_keywords" ON "protocol_protocol_keywords"."protocol_id" = "protocols"."id"')
-      .joins('LEFT OUTER JOIN "protocol_keywords" ON "protocol_protocol_keywords"."protocol_keyword_id" = "protocol_keywords"."id"')
+      .where('protocols.protocol_type = ? OR protocols.protocol_type = ? AND protocols.parent_id IS NULL',
+             Protocol.protocol_types[:in_repository_published_original],
+             Protocol.protocol_types[:in_repository_draft])
+      .joins('LEFT OUTER JOIN "user_assignments" "all_user_assignments" '\
+             'ON "all_user_assignments"."assignable_type" = \'Protocol\' '\
+             'AND "all_user_assignments"."assignable_id" = "protocols"."id"')
+      .joins("LEFT OUTER JOIN protocols protocol_versions "\
+             "ON protocol_versions.protocol_type = #{Protocol.protocol_types[:in_repository_published_version]} "\
+             "AND protocol_versions.parent_id = protocols.id")
+      .joins("LEFT OUTER JOIN protocols protocol_drafts "\
+             "ON protocol_drafts.protocol_type = #{Protocol.protocol_types[:in_repository_draft]} "\
+             "AND protocol_drafts.parent_id = protocols.id")
+      .joins('LEFT OUTER JOIN "protocol_protocol_keywords" '\
+             'ON "protocol_protocol_keywords"."protocol_id" = "protocols"."id"')
+      .joins('LEFT OUTER JOIN "protocol_keywords" '\
+             'ON "protocol_protocol_keywords"."protocol_keyword_id" = "protocol_keywords"."id"')
+      .with_granted_permissions(@user, ProtocolPermissions::READ)
+      .preload(user_assignments: %i(user user_role))
 
-    if @type == :public
-      records =
-        records
-        .joins('LEFT OUTER JOIN users ON users.id = protocols.added_by_id')
-        .where('protocols.protocol_type = ?',
-               Protocol.protocol_types[:in_repository_public])
-    elsif @type == :private
-      records =
-        records
-        .joins('LEFT OUTER JOIN users ON users.id = protocols.added_by_id')
-        .where('protocols.protocol_type = ?',
-               Protocol.protocol_types[:in_repository_private])
-        .where(added_by: @user)
-    else
-      records =
-        records
-        .joins('LEFT OUTER JOIN users ON users.id = protocols.archived_by_id')
-        .where('protocols.protocol_type = ?',
-               Protocol.protocol_types[:in_repository_archived])
-        .where(added_by: @user)
-    end
+    records = records.joins('LEFT OUTER JOIN "users" "archived_users"
+                             ON "archived_users"."id" = "protocols"."archived_by_id"')
+    records = records.joins('LEFT OUTER JOIN "users" ON "users"."id" = "protocols"."added_by_id"')
+
+    records = @type == :archived ? records.archived : records.active
 
     records.group('"protocols"."id"')
   end
@@ -147,32 +148,18 @@ class ProtocolsDatatable < CustomDatatable
   # Query database for records (this will be later paginated and filtered)
   # after that "data" function will return json
   def get_raw_records
-    get_raw_records_base
-    .select(
-      '"protocols"."id"',
-      '"protocols"."name"',
-      '"protocols"."protocol_type"',
-      'string_agg("protocol_keywords"."name", \', \') AS "protocol_keywords_str"',
-      '"protocols"."nr_of_linked_children"',
-      'max("users"."full_name") AS "full_username_str"', # "Hack" to get single username
-      '"protocols"."created_at"',
-      '"protocols"."updated_at"',
-      '"protocols"."published_on"',
-      '"protocols"."archived_on"'
+    get_raw_records_base.select(
+      '"protocols".*',
+      'STRING_AGG("protocol_keywords"."name", \', \') AS "protocol_keywords_str"',
+      'COUNT("protocol_versions"."id") + 1 AS "nr_of_versions"',
+      'COUNT("protocol_drafts"."id") AS "nr_of_drafts"',
+      'COUNT("user_assignments"."id") AS "nr_of_assigned_users"',
+      'MAX("users"."full_name") AS "full_username_str"', # "Hack" to get single username
+      'MAX("archived_users"."full_name") AS "archived_full_username_str"'
     )
   end
 
   # Various helper methods
-
-  def timestamp_db_column
-    if @type == :public
-      "Protocol.published_on"
-    elsif @type == :private
-      "Protocol.created_at"
-    else
-      "Protocol.archived_on"
-    end
-  end
 
   def name_html(record)
     "<a href='#{protocol_path(record)}'>#{escape_input(record.name)}</a>"
@@ -200,13 +187,20 @@ class ProtocolsDatatable < CustomDatatable
       "</a>"
   end
 
+  def versions_html(record)
+    @view.controller
+         .render_to_string(partial: 'protocols/index/protocol_versions.html.erb', locals: { protocol: record })
+  end
+
+  def access_html(record)
+    @view.controller.render_to_string(partial: 'protocols/index/protocol_access.html.erb', locals: { protocol: record })
+  end
+
   def timestamp_column_html(record)
-    if @type == :public
-      I18n.l(record.published_on, format: :full)
-    elsif @type == :private
-      I18n.l(record.created_at, format: :full)
-    else
+    if @type == :archived
       I18n.l(record.archived_on, format: :full)
+    else
+      I18n.l(record.published_on || record.created_at, format: :full)
     end
   end
 
@@ -218,27 +212,27 @@ class ProtocolsDatatable < CustomDatatable
   # using HAVING keyword (which is the correct way to filter aggregated columns).
   # Another OR is then appended to the WHERE clause, checking if protocol is inside
   # this list of IDs.
-  def build_conditions_for(query)
-    # Inner query to retrieve list of protocol IDs where concatenated
-    # protocol keywords string, or user's full_name contains searched query
-    search_val = dt_params[:search][:value]
-    records_having = get_raw_records_base.having(
-      ::Arel::Nodes::NamedFunction.new(
-        'CAST',
-        [::Arel::Nodes::SqlLiteral.new("string_agg(\"protocol_keywords\".\"name\", ' ') AS #{typecast}")]
-      ).matches("%#{sanitize_sql_like(search_val)}%").to_sql +
-      " OR " +
-      ::Arel::Nodes::NamedFunction.new(
-        'CAST',
-        [::Arel::Nodes::SqlLiteral.new("max(\"users\".\"full_name\") AS #{typecast}")]
-      ).matches("%#{sanitize_sql_like(search_val)}%").to_sql
-    ).select(:id)
+  # def build_conditions_for(query)
+  #   # Inner query to retrieve list of protocol IDs where concatenated
+  #   # protocol keywords string, or user's full_name contains searched query
+  #   search_val = dt_params[:search][:value]
+  #   records_having = get_raw_records_base.having(
+  #     ::Arel::Nodes::NamedFunction.new(
+  #       'CAST',
+  #       [::Arel::Nodes::SqlLiteral.new("string_agg(\"protocol_keywords\".\"name\", ' ') AS #{typecast}")]
+  #     ).matches("%#{sanitize_sql_like(search_val)}%").to_sql +
+  #     " OR " +
+  #     ::Arel::Nodes::NamedFunction.new(
+  #       'CAST',
+  #       [::Arel::Nodes::SqlLiteral.new("max(\"users\".\"full_name\") AS #{typecast}")]
+  #     ).matches("%#{sanitize_sql_like(search_val)}%").to_sql
+  #   ).select(:id)
 
-    # Call parent function
-    criteria = super(query)
+  #   # Call parent function
+  #   criteria = super(query)
 
-    # Aight, now append another or
-    criteria = criteria.or(Protocol.arel_table[:id].in(records_having.arel))
-    criteria
-  end
+  #   # Aight, now append another or
+  #   criteria = criteria.or(Protocol.arel_table[:id].in(records_having.arel))
+  #   criteria
+  # end
 end

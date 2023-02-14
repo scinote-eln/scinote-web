@@ -1,14 +1,15 @@
 <% # frozen_string_literal: true %>
 
-<div class="row member-item">
+<div class="member-item">
   <div class="user-assignment-info">
     <div class="global-avatar-container">
       <%= image_tag avatar_path(user, :icon_small), title: current_assignee_name(user), class: 'img-circle pull-left' %>
     </div>
     <div>
       <%= current_assignee_name(user) %>
-      <br>
-      <small class="text-muted"><%= user_assignment_resource_role_name(user, resource) %></small>
     </div>
+  </div>
+  <div class="user-assignment-controls">
+    <%= resource.user_assignments.find_by(user: user, team: current_team).user_role.name %>
   </div>
 </div>

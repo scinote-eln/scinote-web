@@ -11,7 +11,16 @@ environment.loaders.prepend('vue', vue)
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949
 // Get paths to all engines' folders
-const enginePaths = execSync('ls -d $PWD/addons/*').toString().split('\n').filter((p) => !!p);
+console.log('Including packs from addons...');
+
+let enginePaths = [];
+
+try {
+  enginePaths = execSync('ls -d $PWD/addons/*').toString().split('\n').filter((p) => !!p);
+} catch {
+  console.log('Unable to find any addons.')
+}
+
 enginePaths.forEach((path) => {
   const packsFolderPath = `${path}/app/javascript/packs`;
 

@@ -708,6 +708,7 @@ var dropdownSelector = (function() {
       } else {
         // Or delete specific one
         deleteValue(selector, container, tagLabel.data('ds-tag-id'), tagLabel.data('ds-tag-group'));
+        removeOptionFromSelector(selector, tagLabel.data('ds-tag-id'));
       }
     }, 350);
   }
@@ -871,6 +872,17 @@ var dropdownSelector = (function() {
     return result;
   }
 
+  function appendOptionToSelector(selector, value) {
+    $(selector).append(`<option
+        data-params=${JSON.stringify(value.params)}
+        value='${value.value}'
+        >${value.label}</option>`);
+  }
+
+  function removeOptionFromSelector(selector, id) {
+    $(selector).find(`option[value="${id}"]`).remove();
+  }
+
   // ////////////////////
   // Public functions ///
   // ////////////////////
@@ -987,6 +999,7 @@ var dropdownSelector = (function() {
       currentData = getCurrentData($(selector).next());
       currentData.push(value);
       setData($(selector), currentData, skip_event);
+      appendOptionToSelector(selector, value);
 
       return this;
     },

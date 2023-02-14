@@ -7,10 +7,19 @@ class ProtocolSerializer < ActiveModel::Serializer
   include ActionView::Helpers::TextHelper
 
   attributes :name, :id, :urls, :description, :description_view, :updated_at, :in_repository,
-             :created_at_formatted, :updated_at_formatted, :added_by, :authors, :keywords
+             :created_at_formatted, :updated_at_formatted, :added_by, :authors, :keywords, :version, :code,
+             :published, :version_comment
 
   def updated_at
     object.updated_at.to_i
+  end
+
+  def version
+    object.in_repository_draft? ? I18n.t('protocols.draft') : object.version_number
+  end
+
+  def published
+    object.in_repository_published?
   end
 
   def added_by
@@ -49,7 +58,9 @@ class ProtocolSerializer < ActiveModel::Serializer
       load_from_repo_url: load_from_repo_url,
       save_to_repo_url: save_to_repo_url,
       export_url: export_url,
-      import_url: import_url,
+      unlink_url: unlink_url,
+      revert_protocol_url: revert_protocol_url,
+      update_protocol_url: update_protocol_url,
       steps_url: steps_url,
       reorder_steps_url: reorder_steps_url,
       add_step_url: add_step_url,
@@ -57,7 +68,8 @@ class ProtocolSerializer < ActiveModel::Serializer
       update_protocol_description_url: update_protocol_description_url,
       update_protocol_authors_url: update_protocol_authors_url,
       update_protocol_keywords_url: update_protocol_keywords_url,
-      delete_steps_url: delete_steps_url
+      delete_steps_url: delete_steps_url,
+      publish_url: publish_url
     }
   end
 
@@ -77,12 +89,6 @@ class ProtocolSerializer < ActiveModel::Serializer
     return unless can_read_protocol_in_module?(object) && can_create_protocols_in_repository?(object.team)
 
     copy_to_repository_modal_protocol_path(object, format: :json)
-  end
-
-  def import_url
-    return unless can_manage_protocol_in_module?(object)
-
-    load_from_file_protocol_path(object, format: :json)
   end
 
   def export_url
@@ -107,6 +113,25 @@ class ProtocolSerializer < ActiveModel::Serializer
     return unless can_manage_protocol_in_module?(object) || can_manage_protocol_in_repository?(object)
 
     protocol_steps_path(protocol_id: object.id)
+  end
+
+  def unlink_url
+    return unless can_manage_protocol_in_module?(object) && object.linked?
+
+    unlink_modal_protocol_path(object, format: :json)
+  end
+
+  def revert_protocol_url
+    return unless can_read_protocol_in_module?(object) && object.linked? && object.newer_than_parent?
+
+    revert_modal_protocol_path(object, format: :json)
+  end
+
+  def update_protocol_url
+    return unless can_read_protocol_in_module?(object) && object.linked? &&
+                  (object.parent_newer? || object.parent_and_self_newer?)
+
+    update_from_parent_modal_protocol_path(object, format: :json)
   end
 
   def update_protocol_name_url
@@ -137,5 +162,11 @@ class ProtocolSerializer < ActiveModel::Serializer
     return unless can_manage_protocol_in_module?(object) || can_manage_protocol_in_repository?(object)
 
     delete_steps_protocol_path(object)
+  end
+
+  def publish_url
+    return unless can_publish_protocol_in_repository?(object)
+
+    publish_protocol_path(object)
   end
 end

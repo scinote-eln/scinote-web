@@ -21,6 +21,7 @@ module PermissionExtends
       READ_ARCHIVED
       MANAGE
       USERS_MANAGE
+      MANAGE_DRAFT
     ).each { |permission| const_set(permission, "protocol_#{permission.underscore}") }
   end
 

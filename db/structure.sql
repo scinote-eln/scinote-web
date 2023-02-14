@@ -1372,7 +1372,15 @@ CREATE TABLE public.protocols (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     published_on timestamp without time zone,
-    nr_of_linked_children integer DEFAULT 0
+    nr_of_linked_children integer DEFAULT 0,
+    visibility integer DEFAULT 0,
+    archived boolean DEFAULT false NOT NULL,
+    version_number integer DEFAULT 1,
+    version_comment character varying,
+    default_public_user_role_id bigint,
+    previous_version_id bigint,
+    last_modified_by_id bigint,
+    published_by_id bigint
 );
 
 
@@ -5575,6 +5583,13 @@ CREATE INDEX index_protocols_on_added_by_id ON public.protocols USING btree (add
 
 
 --
+-- Name: index_protocols_on_archived; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_protocols_on_archived ON public.protocols USING btree (archived);
+
+
+--
 -- Name: index_protocols_on_archived_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5589,10 +5604,24 @@ CREATE INDEX index_protocols_on_authors ON public.protocols USING gin (public.tr
 
 
 --
+-- Name: index_protocols_on_default_public_user_role_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_protocols_on_default_public_user_role_id ON public.protocols USING btree (default_public_user_role_id);
+
+
+--
 -- Name: index_protocols_on_description; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_protocols_on_description ON public.protocols USING gin (public.trim_html_tags(description) public.gin_trgm_ops);
+
+
+--
+-- Name: index_protocols_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_protocols_on_last_modified_by_id ON public.protocols USING btree (last_modified_by_id);
 
 
 --
@@ -5617,10 +5646,17 @@ CREATE INDEX index_protocols_on_parent_id ON public.protocols USING btree (paren
 
 
 --
+<<<<<<< HEAD
+-- Name: index_protocols_on_previous_version_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_protocols_on_previous_version_id ON public.protocols USING btree (previous_version_id);
+=======
 -- Name: index_protocols_on_protocol_code; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_protocols_on_protocol_code ON public.protocols USING gin ((('PT'::text || id)) public.gin_trgm_ops);
+>>>>>>> develop
 
 
 --
@@ -5628,6 +5664,13 @@ CREATE INDEX index_protocols_on_protocol_code ON public.protocols USING gin ((('
 --
 
 CREATE INDEX index_protocols_on_protocol_type ON public.protocols USING btree (protocol_type);
+
+
+--
+-- Name: index_protocols_on_published_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_protocols_on_published_by_id ON public.protocols USING btree (published_by_id);
 
 
 --
@@ -5642,6 +5685,13 @@ CREATE INDEX index_protocols_on_restored_by_id ON public.protocols USING btree (
 --
 
 CREATE INDEX index_protocols_on_team_id ON public.protocols USING btree (team_id);
+
+
+--
+-- Name: index_protocols_on_visibility; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_protocols_on_visibility ON public.protocols USING btree (visibility);
 
 
 --
@@ -7023,6 +7073,14 @@ ALTER TABLE ONLY public.repositories
 
 
 --
+-- Name: protocols fk_rails_139478354a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.protocols
+    ADD CONSTRAINT fk_rails_139478354a FOREIGN KEY (published_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: tables fk_rails_147b6eced4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7287,6 +7345,14 @@ ALTER TABLE ONLY public.repository_stock_unit_items
 
 
 --
+-- Name: protocols fk_rails_4c4d4f815a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.protocols
+    ADD CONSTRAINT fk_rails_4c4d4f815a FOREIGN KEY (default_public_user_role_id) REFERENCES public.user_roles(id);
+
+
+--
 -- Name: repository_status_values fk_rails_4cf67f9f1e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7452,6 +7518,14 @@ ALTER TABLE ONLY public.oauth_access_tokens
 
 ALTER TABLE ONLY public.wopi_actions
     ADD CONSTRAINT fk_rails_736b4e5a7d FOREIGN KEY (wopi_app_id) REFERENCES public.wopi_apps(id);
+
+
+--
+-- Name: protocols fk_rails_73d601aab1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.protocols
+    ADD CONSTRAINT fk_rails_73d601aab1 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
 
 
 --
@@ -7892,6 +7966,14 @@ ALTER TABLE ONLY public.tokens
 
 ALTER TABLE ONLY public.repository_list_items
     ADD CONSTRAINT fk_rails_ace46bca57 FOREIGN KEY (repository_column_id) REFERENCES public.repository_columns(id);
+
+
+--
+-- Name: protocols fk_rails_ae930efae7; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.protocols
+    ADD CONSTRAINT fk_rails_ae930efae7 FOREIGN KEY (previous_version_id) REFERENCES public.protocols(id);
 
 
 --
@@ -8598,7 +8680,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221007113010'),
 ('20221028085051'),
 ('20221122132857'),
+('20221125133611'),
 ('20221222123021'),
+('20230120141017'),
 ('20230206095817');
 
 

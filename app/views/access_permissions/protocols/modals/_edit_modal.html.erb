@@ -1,0 +1,29 @@
+<% # frozen_string_literal: true %>
+
+<div class="modal fade user-assignments-modal protocol-assignments-modal" tabindex="-1" role="dialog" data-action="modal-close">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content" id="user_assignments_modal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><%= t '.title', resource_name: protocol.name %></h4>
+      </div>
+      <div class="modal-body">
+        <% protocol.assigned_users.order(full_name: :asc).each do |user| %>
+          <%= render('access_permissions/partials/member_field',
+                     user: user,
+                     object: protocol,
+                     update_path: update_path,
+                     delete_path: access_permissions_protocol_path(protocol, user_id: user.id)
+                    ) %>
+        <% end %>
+      </div>
+
+      <div class="modal-footer">
+        <%= link_to new_resource_path, class: 'btn btn-default pull-left', data: { action: 'swap-remote-container', target: '#user_assignments_modal' } do %>
+          <i class="fas fa-plus"></i>
+          <%= t('access_permissions.grant_access') %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

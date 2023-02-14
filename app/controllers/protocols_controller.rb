@@ -15,16 +15,18 @@ class ProtocolsController < ApplicationController
   before_action :check_clone_permissions, only: [:clone]
   before_action :check_view_permissions, only: %i(
     show
-    edit
+    versions_modal
     protocol_status_bar
     updated_at_label
     preview
     linked_children
     linked_children_datatable
+    permissions
   )
-  before_action :switch_team_with_param, only: :index
+  before_action :switch_team_with_param, only: %i(index protocolsio_index)
   before_action :check_view_all_permissions, only: %i(
     index
+    protocolsio_index
     datatable
   )
   # For update_from_parent and update_from_parent_modal we don't need to check
@@ -32,7 +34,9 @@ class ProtocolsController < ApplicationController
   before_action :check_manage_permissions, only: %i(
     update_keywords
     update_description
+    update_version_comment
     update_name
+    destroy_draft
     update_authors
     edit_name_modal
     edit_keywords_modal
@@ -51,7 +55,7 @@ class ProtocolsController < ApplicationController
     update_parent_modal
   )
   before_action :check_manage_all_in_repository_permissions, only:
-    %i(make_private publish archive)
+    %i(make_private archive)
   before_action :check_restore_all_in_repository_permissions, only: :restore
   before_action :check_load_from_repository_views_permissions, only: %i(
     load_from_repository_modal
@@ -67,6 +71,8 @@ class ProtocolsController < ApplicationController
     copy_to_repository
     copy_to_repository_modal
   )
+
+  before_action :check_publish_permission, only: :publish
   before_action :check_import_permissions, only: :import
   before_action :check_export_permissions, only: :export
 
@@ -74,6 +80,7 @@ class ProtocolsController < ApplicationController
                 only: %i(protocolsio_import_create protocolsio_import_save)
 
   before_action :set_importer, only: %i(load_from_file import)
+  before_action :set_inline_name_editing, only: :show
 
   layout 'fluid'
 
@@ -109,6 +116,15 @@ class ProtocolsController < ApplicationController
         }
       end
     end
+  end
+
+  def versions_modal
+    return render_403 unless @protocol.in_repository_published_original?
+
+    @published_versions = @protocol.published_versions.order(version_number: :desc)
+    render json: {
+      html: render_to_string(partial: 'protocols/index/protocol_versions_modal.html.erb')
+    }
   end
 
   def print
@@ -148,7 +164,23 @@ class ProtocolsController < ApplicationController
   end
 
   def publish
-    move_protocol('publish')
+    @protocol.update(
+      published_by: current_user,
+      published_on: DateTime.now,
+      version_comment: params[:version_comment] || @protocol.version_comment,
+      protocol_type: (@protocol.parent_id.nil? ? :in_repository_published_original : :in_repository_published_version)
+    )
+    if params[:view] == 'show'
+      redirect_to protocol_path(@protocol)
+    else
+      redirect_to protocols_path
+    end
+  end
+
+  def destroy_draft
+    @protocol.destroy
+
+    redirect_to protocols_path
   end
 
   def archive
@@ -226,7 +258,7 @@ class ProtocolsController < ApplicationController
   def create
     @protocol = Protocol.new(
       team: @current_team,
-      protocol_type: Protocol.protocol_types[@type == :public ? :in_repository_public : :in_repository_private],
+      protocol_type: Protocol.protocol_types[:in_repository_draft],
       added_by: current_user,
       name: t('protocols.index.default_name')
     )
@@ -585,6 +617,8 @@ class ProtocolsController < ApplicationController
       end
     end
   end
+
+  def protocolsio_index; end
 
   def import
     protocol = nil
@@ -1016,6 +1050,28 @@ class ProtocolsController < ApplicationController
     end
   end
 
+  def update_version_comment
+    respond_to do |format|
+      format.json do
+        if @protocol.update(version_comment: params.require(:protocol)[:version_comment])
+          render json: { version_comment: @protocol.version_comment }
+        else
+          render json: @protocol.errors, status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
+  def permissions
+    if stale?(@protocol)
+      render json: {
+        copyable: can_clone_protocol_in_repository?(@protocol),
+        archivable: can_manage_protocol_in_repository?(@protocol),
+        restorable: can_restore_protocol_in_repository?(@protocol)
+      }
+    end
+  end
+
   private
 
   def set_importer
@@ -1036,26 +1092,10 @@ class ProtocolsController < ApplicationController
 
   def move_protocol(action)
     rollbacked = false
-    results = []
     begin
       Protocol.transaction do
         @protocols.find_each do |protocol|
-          result = {
-            name: protocol.name
-          }
-
-          success = protocol.method(action).call(current_user)
-
-          # Try renaming protocol
-          unless success
-            rename_record(protocol, :name)
-            success = protocol.method(action).call(current_user)
-          end
-
-          result[:new_name] = protocol.name
-          result[:type] = protocol.protocol_type
-          result[:success] = success
-          results << result
+          protocol.method(action).call(current_user)
         end
       end
     rescue
@@ -1069,21 +1109,28 @@ class ProtocolsController < ApplicationController
         end
       else
         format.json do
-          render json: {
-            html: render_to_string({
-              partial: "protocols/index/results_modal_body.html.erb",
-              locals: { results: results, en_action: "#{action}_results" }
-            })
-          }
+          render json: { message: t("protocols.index.#{action}_flash_html", count: @protocols.size) }
         end
       end
     end
   end
 
+  def set_inline_name_editing
+    return unless can_manage_protocol_in_repository?(@protocol)
+
+    @inline_editable_title_config = {
+      name: 'title',
+      params_group: 'protocol',
+      item_id: @protocol.id,
+      field_to_udpate: 'name',
+      path_to_update: name_protocol_path(@protocol)
+    }
+  end
+
   def load_team_and_type
     @current_team = current_team
     # :public, :private or :archive
-    @type = (params[:type] || 'public').to_sym
+    @type = (params[:type] || 'active').to_sym
   end
 
   def check_view_all_permissions
@@ -1158,6 +1205,12 @@ class ProtocolsController < ApplicationController
     @protocol = Protocol.find_by_id(params[:id])
 
     render_403 if @protocol.blank? || !can_read_protocol_in_module?(@protocol)
+  end
+
+  def check_publish_permission
+    @protocol = Protocol.find_by(id: params[:id])
+
+    render_403 if @protocol.blank? || !can_publish_protocol_in_repository?(@protocol)
   end
 
   def check_load_from_repository_permissions

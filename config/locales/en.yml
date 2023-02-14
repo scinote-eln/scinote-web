@@ -148,6 +148,10 @@ en:
             shared_object_id:
               is_globally_shared: "Inventory is already globally shared"
         protocol:
+          unchangable: "Published protocols can not be changed!"
+          wrong_parent_type: "Protocol can only be linked to published protocol!"
+          wrong_version_name: "Protocol versions should have same name!"
+          wrong_version_number: "Protocol version number should be sequential!"
           attributes:
             step_order:
               invalid: "Invalid step order."
@@ -1002,11 +1006,14 @@ en:
     protocol:
       title: "Protocol"
       options_dropdown:
-        title: "Protocol options"
+        title: "Protocol actions"
         load_from_repo: "Load from templates"
         import: "Import protocol"
         export: "Export protocol"
-        save_to_repo: "Save to templates"
+        unlink: "Unlink protocol"
+        revert_protocol: "Revert protocol"
+        update_protocol: "New version update"
+        save_to_repo: "Save as new template"
         delete_steps: "Delete all steps"
     description:
       title: "Edit task %{module} description"
@@ -2534,6 +2541,7 @@ en:
       unchangable_error_message: "Predefined roles can not be changed!"
 
   protocols:
+    draft: "Draft"
     no_text_placeholder: 'No protocol description'
     reorder_steps:
         button: "Rearrange steps"
@@ -2543,8 +2551,7 @@ en:
       title: "Print protocol"
       button: "Print"
       modal:
-        title: "Print protocol"
-        content: "Select what to include in the printed version of this protocol."
+        title: "Print options"
         include_comments: "Include comments when printing"
       header:
         printed_from: "Printed from"
@@ -2637,7 +2644,26 @@ en:
         message_ok: "Successfully exported %{nr} protocols."
         row_success: "Exported"
         row_failed: "Failed"
+    delete_draft_modal:
+      title: "Delete draft"
+      description_1: "You’ll loose all content from the draft. We can’t recover it once you delete it."
+      description_2: "Are you sure?"
+      confirm: "Yes, delete"
+    publish_modal:
+      title: "Publish version %{version} of the protocol template"
+      name: "Protocol template name"
+      comment: "Revision comment"
+      comment_placeholder: "What's new in this version?"
+      publish: "Publish"
     header:
+      details: 'Details'
+      versions: 'Versions'
+      protocol_description: 'Protocol description'
+      protocol_steps: 'Protocol steps'
+      publish: 'Publish'
+      save_as_draft: 'Save as draft'
+      version: "Version:"
+      draft: 'Draft'
       created_at: "Created at:"
       updated_at: "Last modified at:"
       added_by: "Added by:"
@@ -2662,21 +2688,29 @@ en:
         title: "Edit description of protocol %{protocol}"
         label: "Description"
     index:
-      head_title: "Protocol management"
+      head_title: "Protocol templates"
+      head_title_archived: "Archived protocol templates"
       default_name: 'New protocol'
       navigation:
         public: "Team protocols"
         private: "My protocols"
-        external_protocols: "External protocols"
+        protocolsio: "External protocols"
         archive: "Archive"
+      action_toolbar:
+        versions: "Versions"
+        access: "Manage Access"
+        duplicate: "Duplicate"
+        export: "Export"
+        archive: "Archive"
+        restore: "Restore"
       public_description: "Team protocols are visible and can be used by everyone from the team."
       private_description: "My protocols are only visible to you."
-      create_new: "New"
+      create_new: "New protocol"
       edit: "Edit"
       clone_btn: "Copy"
       import: "Import"
-      import_alt: " from SciNote protocol file(.eln)"
-      import_json: " from protocols.io file"
+      import_alt: "From local file"
+      import_protocols_io: "From Protocols.io"
       modal_import_json_upload: "Upload"
       modal_import_json_title: "Import protocols.io file"
       modal_import_json_notice: "Upload your protocols.io protocol file"
@@ -2684,17 +2718,23 @@ en:
       make_private: "Move to My Protocols"
       publish: "Move to Team protocols"
       archive_action: "Archive"
-      thead_name: "Name"
-      thead_code: "ID"
-      thead_keywords: "Keywords"
-      thead_nr_of_linked_children: "No. of linked tasks"
-      thead_published_by: "Published by"
-      thead_added_by: "Added by"
-      thead_archived_by: "Archived by"
-      thead_published_on: "Published at"
-      thead_created_at: "Created at"
-      thead_archived_on: "Archived at"
-      thead_updated_at: "Last modified at"
+      archive_flash_html: "<b>%{count} protocol</b> template(s) successfully archived."
+      thead:
+        name: "Name"
+        id: "ID"
+        keywords: "Keywords"
+        nr_of_linked_children: "No. of linked tasks"
+        versions: "Versions"
+        access: "Access"
+        published_by: "Published by"
+        added_by: "Added by"
+        archived_by: "Archived by"
+        published_on: "Published on"
+        created_at: "Created at"
+        archived_on: "Archived on"
+        updated_at: "Modified on"
+      table:
+        draft: "Draft"
       preview:
         title: "%{protocol} preview"
       linked_children:
@@ -2769,7 +2809,16 @@ en:
         row_failed: "Failed"
         row_in_repository_public: "%{protocol} - <i>into Team protocols</i>"
         row_in_repository_private: "%{protocol} - <i>into My protocols</i>"
-      external_protocols:
+      versions:
+        title: "%{protocol} versions"
+        draft_html: "<b>Draft</b> (from Version %{parent_version})"
+        draft_modification_info: "Last modified: %{modified_on}, by %{modified_by}"
+        revision: "Version %{version}"
+        revision_publishing_info: "Published: %{published_on}, by %{published_by}"
+        publish: "Publish"
+        save_as_draft: "Save as draft"
+        comment_placeholder: "Click here to enter revision notes"
+      protocolsio:
         search_bar_placeholder: 'Search for protocols'
         protocolsio_title: 'Protocols.io'
         sort_by:
@@ -2815,7 +2864,7 @@ en:
       component_duplicated: "Step content duplicated successfully."
       step_duplication_failed: "Step could not be duplicated, try again later."
       component_duplication_failed: "Step content could not be duplicated, try again later."
-      timestamp: "Created at %{date} by %{user}"
+      timestamp: "Created on %{date} by %{user}"
       status:
         complete: "Mark as done"
         uncomplete: "Unmark as done"
@@ -3136,6 +3185,8 @@ en:
   user_assignment:
     current_assignee: "(you)"
     change_project_role: "Change project role"
+    change_protocol_role: "Change protocol role"
+    change_role: "Change role"
     select_default_user_role: "Select default user role"
     change_experiment_role: "Change experiment role"
     change_my_module_role: "Change task role"
@@ -3151,6 +3202,9 @@ en:
 
   access_permissions:
     everyone_else: "Everyone else at %{team_name}"
+    reset: "The inherited role will be applied"
+    remove_access: "Remove access"
+    grant_access: "Grant access"
     create:
       success:
         one: "You have successfully granted access to %{count} member to the project."
@@ -3169,6 +3223,12 @@ en:
         submit_singular: "Grant access to 1 user"
         submit_plural: "Grant access to {num} users"
         find_people_html: "Find people"
+      new_protocol_assignments_form:
+        title: "Select members"
+        submit: "Grant access"
+        submit_singular: "Grant access to 1 user"
+        submit_plural: "Grant access to {num} users"
+        find_people_html: "Find people"
       experiment_member_field:
         reset: "Inherit role"
         reset_description: "The inherited role from project will be applied"
@@ -3178,6 +3238,9 @@ en:
       project: "Project"
       project_tooltip: "This role was set on this project."
       project_tooltip_inherit: "This role was inherited from the project."
+      protocol: "Protocol"
+      protocol_tooltip: "This role was set on this protocol."
+      protocol_tooltip_inherit: "This role was inherited from the protocol."
       experiment: "Experiment"
       experiment_tooltip: "This role was set on this experiment."
       experiment_tooltip_inherit: "This role was inherited from the experiment."
@@ -3190,7 +3253,14 @@ en:
       modals:
         show_modal:
           title: "Access to %{resource_name}"
-          new_resource_assignments: "Grant new access to %{resource}"
+        edit_modal:
+          title: "Manage access for %{resource_name}"
+    protocols:
+      modals:
+        show_modal:
+          title: "Access to %{resource_name}"
+        edit_modal:
+          title: "Manage access for %{resource_name}"
     experiments:
       modals:
         show_modal:

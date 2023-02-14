@@ -1,4 +1,4 @@
-<div class='external-protocols-tab'>
+<div class='protocolsio-container'>
   <%= form_tag team_list_external_protocol_path(@current_team.id),
     method: :get,
     class: 'protocols-search-bar',
@@ -9,16 +9,16 @@
           <%= image_tag 'external_protocols/protocolsio_logo.png',
             class: 'protocolsio-logo' %>
           <a class='protocolsio-title' href='<%= Constants::PROTOCOLS_IO_URL %>' target='_blank'>
-            <%= t('protocols.index.external_protocols.protocolsio_title') %></a>
+            <%= t('protocols.index.protocolsio.protocolsio_title') %></a>
           <%= hidden_field_tag 'protocol_source', 'protocolsio/v3' %>
           <%= hidden_field_tag 'page_id', 1, id: 'page-id' %>
         </div>
 
         <div class='input-group'>
           <input class='form-control'
-          type='text'
-          name='key'
-          placeholder="<%= t('protocols.index.external_protocols.search_bar_placeholder') %>" >
+                 type='text'
+                 name='key'
+                 placeholder="<%= t('protocols.index.protocolsio.search_bar_placeholder') %>" >
           </input>
 
           <span class='input-group-addon'><i class='fas fa-search '></i></span>
@@ -26,23 +26,23 @@
       </div>
 
       <div class='protocol-sort'>
-        <span><%= t('protocols.index.external_protocols.sort_by.title') %></span>
+        <span><%= t('protocols.index.protocolsio.sort_by.title') %></span>
         <div class='btn-group' data-toggle='buttons'>
           <label class='btn btn-link active'>
             <input type='radio' name='sort_by' id='alphabetically-asc' value='alpha_asc' checked>
-            <%= t('protocols.index.external_protocols.sort_by.alphabetically-asc') %>
+            <%= t('protocols.index.protocolsio.sort_by.alphabetically-asc') %>
           </label>
           <label class='btn btn-link'>
             <input type='radio' name='sort_by' id='alphabetically-desc' value='alpha_desc'>
-            <%= t('protocols.index.external_protocols.sort_by.alphabetically-desc') %>
+            <%= t('protocols.index.protocolsio.sort_by.alphabetically-desc') %>
           </label>
           <label class='btn btn-link'>
             <input type='radio' name='sort_by' id='newest' value='newest'>
-            <%= t('protocols.index.external_protocols.sort_by.newest') %>
+            <%= t('protocols.index.protocolsio.sort_by.newest') %>
           </label>
           <label class='btn btn-link'>
             <input type='radio' name='sort_by' id='oldest' value='oldest'>
-            <%= t('protocols.index.external_protocols.sort_by.oldest') %>
+            <%= t('protocols.index.protocolsio.sort_by.oldest') %>
           </label>
         </div>
       </div>
@@ -54,7 +54,7 @@
     <div class='protocol-list-side-panel'>
 
       <div class='row empty-text'>
-        <%= t('protocols.index.external_protocols.list_panel.empty_text') %>
+        <%= t('protocols.index.protocolsio.list_panel.empty_text') %>
       </div>
 
       <div class='list-wrapper perfect-scrollbar'></div>
@@ -65,7 +65,7 @@
 
         <div class='row'>
           <div class='text-rows protocol-preview-text'>
-            <%= t('protocols.index.external_protocols.preview_panel.empty_title') %>
+            <%= t('protocols.index.protocolsio.preview_panel.empty_title') %>
           </div>
         </div>
 
@@ -75,7 +75,7 @@
 
         <div class='row'>
           <div class='text-rows protocol-preview-subtext'>
-            <%= t('protocols.index.external_protocols.preview_panel.empty_subtext') %>
+            <%= t('protocols.index.protocolsio.preview_panel.empty_subtext') %>
           </div>
         </div>
       </div>
@@ -84,7 +84,7 @@
         <div class='row preview-banner'>
           <div class='col-md-6 txt-holder'>
             <span>
-              <%= t('protocols.index.external_protocols.preview_panel.banner_text') %>
+              <%= t('protocols.index.protocolsio.preview_panel.banner_text') %>
             </span>
           </div>
           <div class='col-md-6 btn-holder'>
@@ -100,4 +100,7 @@
   <div class='footer'></div>
 </div>
 
-<%= javascript_include_tag "protocols/external_protocols_tab.js" %>
+<%= render partial: "protocols/index/protocol_preview_modal.html.erb" %>
+
+<%= javascript_include_tag "protocols/steps" %>
+<%= javascript_include_tag "protocols/protocolsio.js" %>

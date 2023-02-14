@@ -25,7 +25,6 @@
 
 #protocols-index,
 #load-from-repository-modal {
-  padding: 0;
 
   .nav-tabs > li {
     text-transform: uppercase;
@@ -63,14 +62,14 @@
   }
 }
 
-.tab-pane.external_protocols {
+.tab-pane.protocolsio {
   padding-bottom: 0;
 }
 
-.external-protocols-tab {
+.protocolsio-container {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: calc(100vh - var(--navbar-height));
   position: relative;
 
   .ps__rail-y {
@@ -367,7 +366,7 @@
 }
 
 @media (max-width: 900px) {
-  .external-protocols-tab {
+  .protocolsio-container {
     .header {
       .protocol-sort {
         padding-left: 0;

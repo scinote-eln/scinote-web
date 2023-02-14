@@ -1,8 +1,16 @@
 <ul class="sidebar-branch">
   <li class="sidebar-leaf">
+    <i class="fas fa-caret-right toggle-branch collapsed"></i>
     <%= link_to t('sidebar.templates.protocol_templates'),
                 protocols_path,
-                class: "sidebar-link #{'selected' if active == :protocol}" %>
+                class: "sidebar-link #{'selected' if active == :protocol && params[:type] != 'archived'}" %>
+    <ul class="sidebar-branch">
+      <li class="sidebar-leaf">
+      <%= link_to protocols_path(type: :archived), class: "sidebar-link #{'selected' if active == :protocol && params[:type] == 'archived'}" do %>
+        <i class="fas fa-archive"></i>
+        <%= t("protocols.index.navigation.archive") %>
+      <% end %>
+    </ul>
   </li>
   <% if can_view_label_templates?(current_team) %>
     <li class="sidebar-leaf">

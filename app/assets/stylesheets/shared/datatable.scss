@@ -41,7 +41,25 @@
     display: flex;
     flex-wrap: wrap;
     min-height: var(--datatable-pagination-row);
+    position: relative;
     width: 100%;
+
+    .actions-toolbar {
+      align-items: center;
+      background-color: $color-concrete;
+      border-bottom: 1px solid $color-alto;
+      display: none;
+      height: 70px;
+      overflow-x: auto;
+      padding: 0 1em;
+      position: absolute;
+      top: 0;
+      width: 100%;
+
+      .btn {
+        margin-right: .25em;
+      }
+    }
 
     .pagination-info,
     .pagination-actions {
@@ -106,5 +124,32 @@
 
   table > tbody > tr:first-child > td {
     border-top: 0;
+  }
+
+  &.show-actions {
+    --datatable-pagination-row: 139px;
+
+    .pagination-row {
+      padding-top: 71px;
+
+      .actions-toolbar {
+        display: flex;
+      }
+    }
+  }
+
+  @media (max-width: 1000px) {
+    .pagination-row .actions-toolbar {
+      .btn {
+        .button-text {
+          display: none;
+        }
+
+        .fas,
+        img {
+          margin: 0;
+        }
+      }
+    }
   }
 }

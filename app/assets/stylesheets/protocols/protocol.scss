@@ -9,38 +9,96 @@
   margin: 0 -16px;
   min-height: calc(100vh - var(--navbar-height));
   overflow: hidden;
-  padding: 36px 10px 10px;
+  padding: 0 0 10px;
   width: calc(100% + 31px);
+
+  .content-header {
+    padding: 0 2em;
+  }
 
   .protocol-position-container {
     background-color: $color-white;
     box-shadow: $flyout-shadow;
-    margin: 0 auto;
+    margin: 20px auto;
     max-width: 900px;
     padding: 10px 10px 10px 26px;
+  }
+
+  .protocol-section {
+    margin: 16px 0 16px -20px;
+
+    &.protocol-steps-section {
+      margin-left: 0;
+    }
+
+    .protocol-section-caret {
+      color: $color-volcano;
+      display: inline-block;
+      padding: .5em;
+      text-decoration: none;
+
+      .fas {
+        margin-right: 5px;
+      }
+
+      &:not(.collapsed) .fas {
+        @include rotate(90deg);
+      }
+    }
+
+    .protocol-section-title {
+      display: inline-block;
+
+      h2 {
+        display: inline-block;
+        margin: 10px 0;
+      }
+
+      .protocol-code {
+        color: $color-volcano;
+        margin-left: .5em;
+      }
+
+    }
+
+    .protocol-section-header {
+      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+
+      .actions-block {
+        display: flex;
+        flex-grow: 1;
+        justify-content: flex-end;
+
+        .caret {
+          margin-left: 25px;
+        }
+      }
+    }
+
+    .protocol-details {
+      padding-left: 20px;
+    }
   }
 
   .protocol-metadata {
     margin-bottom: 2em;
 
+    .data-block {
+      margin-bottom: 16px;
+    }
+
     .authors-data {
       align-items: center;
       display: flex;
+      margin-top: -12px;
 
       .authors-list {
         flex-basis: calc(100% - 90px);
         flex-grow: 1;
         margin-left: .75em;
-
-        &:hover:not(.editing) {
-          .sci-inline-edit__content {
-            border: $border-focus;
-          }
-        }
-
-        .sci-inline-edit__content {
-          padding-top: .35em;
-        }
+        line-height: 32px;
       }
 
       * {
@@ -51,6 +109,7 @@
     .keywords-data {
       align-items: center;
       display: flex;
+      margin-top: -12px;
 
       .keywords-list {
         flex-basis: calc(100% - 90px);
@@ -108,6 +167,20 @@
   .protocol-step-actions {
     margin-left: -6px;
     margin-top: 2em;
+  }
+
+  .publish-modal {
+    .modal-body {
+      @include font-button;
+    }
+
+    .sci-input-container {
+      margin-bottom: 1em;
+    }
+
+    textarea {
+      min-height: 64px;
+    }
   }
 }
 
