@@ -99,12 +99,23 @@ function initLinkUpdate() {
   var updateBtn = modal.find(".modal-footer [data-action='submit']");
   $("[data-action='unlink'], [data-action='revert'], [data-action='update-parent'], [data-action='update-self']")
     .on('ajax:success', function(e, data) {
-      modalTitle.html(data.title);
-      modalBody.html(data.message);
-      updateBtn.text(data.btn_text);
-      modal.attr('data-url', data.url);
+      const modalBodyTemplate = (message, warning) => `<p class="message">${message}</p>
+                                                       <p class="message">${warning || ''}</p>`;
+      const {
+        title,
+        message,
+        warning,
+        btn_text: btnText,
+        url
+      } = data;
+
+      modalTitle.html(title);
+      modalBody.html(modalBodyTemplate(message, warning));
+      updateBtn.text(btnText);
+      modal.attr('data-url', url);
       modal.modal('show');
     });
+
   modal.on('hidden.bs.modal', function() {
     modalBody.html('');
   });
