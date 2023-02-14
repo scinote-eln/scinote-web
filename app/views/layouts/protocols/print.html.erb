@@ -14,6 +14,7 @@
         $("[data-role='hot-table']").each(function()  {
           var $container = $(this).find("[data-role='step-hot-table']");
           var contents = $(this).find('.hot-contents');
+          var metadata = $(this).find('.hot-metadata');
 
           $container.handsontable({
             startRows: <%= Constants::HANDSONTABLE_INIT_ROWS_CNT %>,
@@ -22,17 +23,15 @@
             colHeaders: true,
             fillHandle: false,
             formulas: true,
+            data: JSON.parse(contents.attr('value')).data,
+            cell: JSON.parse(metadata.val() || '{}').cells || [],
             readOnly: true
           });
           var hot = $container.handsontable('getInstance');
 
-          if (contents.attr("value")) {
-            var data = JSON.parse(contents.attr("value"));
-            if (Array.isArray(data.data)) hot.loadData(data.data);
-            setTimeout(() => {
-              hot.render()
-            }, 0)
-          }
+          setTimeout(() => {
+            hot.render()
+          }, 500)
         });
 
         window.print();
