@@ -13,6 +13,7 @@ import 'tinymce/plugins/advlist';
 import 'tinymce/plugins/codesample';
 import 'tinymce/plugins/autolink';
 import 'tinymce/plugins/lists';
+import 'tinymce/plugins/image';
 import 'tinymce/plugins/charmap';
 import 'tinymce/plugins/anchor';
 import 'tinymce/plugins/searchreplace';
@@ -191,7 +192,7 @@ window.TinyMCE = (() => {
           .before(`<div class="tinymce-placeholder" style="height:${tinyMceInitSize}px"></div>`);
         tinyMceContainer.addClass('hidden');
         const plugins = `
-          table autosave autoresize link advlist codesample autolink lists
+          image table autosave autoresize link advlist codesample autolink lists
           charmap anchor searchreplace wordcount visualblocks visualchars
           insertdatetime nonbreaking save directionality customimageuploader
           marvinjs custom_image_toolbar help quickbars ${window.extraTinyMcePlugins ? window.extraTinyMcePlugins : ''}
