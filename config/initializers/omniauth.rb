@@ -27,6 +27,8 @@ AZURE_SETUP_PROC = lambda do |env|
   env['omniauth.strategy'].options[:tenant_id] = provider_conf['tenant_id']
   env['omniauth.strategy'].options[:sign_in_policy] = provider_conf['sign_in_policy']
   env['omniauth.strategy'].options[:name] = 'customazureactivedirectory'
+  conf_uri = URI.parse(provider_conf['conf_url'])
+  env['omniauth.strategy'].options[:base_azure_url] = "#{conf_uri.scheme || 'https'}://#{conf_uri.host}"
 end
 
 OKTA_SETUP_PROC = lambda do |env|

@@ -8,10 +8,10 @@
     <div class="row">
       <div class="col-xs-12 col-sm-12">
         <h1 class="connected-accounts-title"><%= t('users.settings.account.connected_accounts.title') %></h1>
-
-        <% if @linked_accounts.any? %>
+        <% if @linked_accounts.present? %>
           <% @linked_accounts.each do |provider| %>
-            <% if Rails.configuration.x.azure_ad_apps.find { |_,value| value[:provider] == provider || provider == 'giot_connect'} %>
+            <% settings = ApplicationSettings.instance %>
+            <% if provider == 'giot_connect' || settings.values['azure_ad_apps']&.find { |v| v['provider_name'] == provider } %>
               <% if lookup_context.exists?(provider, 'users/settings/account/connected_accounts', true) %>
                 <%= render partial: provider %>
               <% else %>
