@@ -15,6 +15,7 @@
           v-if="canManage"
           :value="labelTemplate.attributes.name"
           :characterLimit="255"
+          :characterMinLimit="2"
           :allowBlank="false"
           :attributeName="i18n.t('label_templates.show.name_error_prefix')"
           :autofocus="editingName"
@@ -59,7 +60,7 @@
           <InsertFieldDropdown
             v-if="editingContent"
             :labelTemplate="labelTemplate"
-            @insertField="insertField"
+            @insertTag="insertTag"
           />
         </div>
         <template v-if="editingContent">
@@ -293,12 +294,12 @@
       saveCursorPosition() {
         this.cursorPos = $(this.$refs.contentInput).prop('selectionStart');
       },
-      insertField(field) {
+      insertTag(tag) {
         this.enableContentEdit();
         let textBefore = this.newContent.substring(0,  this.cursorPos);
         let textAfter  = this.newContent.substring(this.cursorPos, this.newContent.length);
-        this.newContent = textBefore + field + textAfter;
-        this.cursorPos = this.cursorPos + field.length;
+        this.newContent = textBefore + tag + textAfter;
+        this.cursorPos = this.cursorPos + tag.length;
 
         this.$nextTick(() => {
           $(this.$refs.contentInput).prop('selectionStart', this.cursorPos);

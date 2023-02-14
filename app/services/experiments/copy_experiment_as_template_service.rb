@@ -21,7 +21,7 @@ module Experiments
 
       ActiveRecord::Base.transaction do
         @c_exp = Experiment.new(
-          name: find_uniq_name,
+          name: @exp.next_clone_name,
           description: @exp.description,
           created_by: @user,
           last_modified_by: @user,
@@ -53,15 +53,6 @@ module Experiments
     end
 
     private
-
-    def find_uniq_name
-      experiment_names = @project.experiments.map(&:name)
-      format = 'Clone %d - %s'
-      free_index = 1
-      free_index += 1 while experiment_names
-                            .include?(format(format, free_index, @exp.name))
-      format(format, free_index, @exp.name).truncate(Constants::NAME_MAX_LENGTH)
-    end
 
     def valid?
       unless @exp && @project && @user

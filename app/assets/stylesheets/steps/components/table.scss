@@ -10,8 +10,8 @@
 
     .enable-edit-mode {
       cursor: pointer;
-      display: none;
       justify-content: flex-end;
+      opacity: 0;
       padding: 12px;
       position: absolute;
       right: 0;
@@ -49,6 +49,7 @@
 
         .enable-edit-mode {
           display: flex;
+          opacity: 1;
         }
       }
     }

@@ -16,7 +16,7 @@ module Reports::Docx::DrawMyModule
     end
 
     @docx.p do
-      text I18n.t('projects.reports.elements.module.user_time',
+      text I18n.t('projects.reports.elements.module.user_time', code: my_module.code,
                   timestamp: I18n.l(my_module.created_at, format: :full)), color: color[:gray]
       if my_module.archived?
         text ' | '
@@ -73,7 +73,7 @@ module Reports::Docx::DrawMyModule
     @docx.h4 I18n.t('Results') if my_module.results.any?
     order_results_for_report(my_module.results, @settings.dig('task', 'result_order')).each do |result|
       if result.is_asset && @settings.dig('task', 'file_results')
-        draw_result_asset(result)
+        draw_result_asset(result, @settings)
       elsif result.is_table && @settings.dig('task', 'table_results')
         draw_result_table(result)
       elsif result.is_text && @settings.dig('task', 'text_results')

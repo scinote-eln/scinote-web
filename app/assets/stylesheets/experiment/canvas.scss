@@ -1,0 +1,75 @@
+// scss-lint:disable SelectorDepth NestingDepth IdSelector
+
+#canvas-container,
+#module-archive {
+  .experimnet-name {
+    max-width: calc(100% - 300px);
+  }
+
+  .panel-heading {
+    padding: 10px 15px 4px;
+  }
+
+  .panel-body {
+    padding: 6px 15px;
+
+    .status-label {
+      background-color: var(--state-color);
+      color: $color-white;
+      display: inline-block;
+      margin: 3px 0;
+      max-width: 100%;
+      overflow: hidden;
+      padding: 2px 8px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .panel-footer {
+    .nav > li > a {
+      padding: 6px 15px;
+    }
+
+    .btn {
+      height: 30px;
+    }
+
+    .badge-indicator {
+      background: $brand-accent;
+      border-radius: $border-radius-tag;
+      color: $color-black;
+      font-size: 10px;
+      margin-left: -8px;
+    }
+  }
+}
+
+#canvas-container {
+  margin: 0 -28px;
+}
+
+.canvas-preview-img,
+.canvas-preview-rect {
+  border-radius: 4px;
+  bottom: 24px;
+  box-shadow: 0 0 0 8px $color-white;
+  display: flex;
+  height: 64px;
+  position: absolute;
+  right: 24px;
+  width: 68px;
+  z-index: 9999;
+
+  &.empty {
+    background-color: $color-concrete;
+    box-shadow: inset 0 0 0 2px $brand-primary;
+  }
+
+  &.processing {
+    background-color: $color-concrete;
+    background-image: url("/images/medium/loading.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+}

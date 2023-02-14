@@ -20,6 +20,7 @@ var CommentsSidebar = (function() {
         $(SIDEBAR).find('.comment-input-container').removeClass('hidden');
       } else {
         $(SIDEBAR).find('.comment-input-container').addClass('hidden');
+        $(SIDEBAR).find('.comment-input-container').addClass('update-only');
       }
     });
   }
@@ -28,7 +29,8 @@ var CommentsSidebar = (function() {
     var commentsAmount = $(SIDEBAR).find('.comments-list .comment-container').length;
     if (commentsCounter.length) {
       // Replace the number in comment element
-      commentsCounter.text(commentsCounter.text().replace(/\d+/g, commentsAmount));
+      commentsCounter.text(commentsCounter.text().replace(/[\d\\+]+/g, commentsAmount));
+      commentsCounter.removeClass('hidden');
     }
   }
 
@@ -37,6 +39,7 @@ var CommentsSidebar = (function() {
       commentsCounter = $(`#comment-count-${$(this).data('objectId')}`);
       closeCallback = $(this).data('closeCallback');
       CommentsSidebar.open($(this).data('objectType'), $(this).data('objectId'));
+      $(this).parent().find('.unseen-comments').remove();
       e.preventDefault();
     });
   }
@@ -86,6 +89,9 @@ var CommentsSidebar = (function() {
           }
           $(SIDEBAR).find('.comment-input-field').val('');
           $(SIDEBAR).find('.sidebar-footer').removeClass('update');
+          if ($(SIDEBAR).find('.comment-input-container').hasClass('update-only')) {
+            $(SIDEBAR).find('.comment-input-container').addClass('hidden');
+          }
           $('.error-container').empty();
           updateCounter();
         },
@@ -100,6 +106,9 @@ var CommentsSidebar = (function() {
     $(document).on('click', `${SIDEBAR} .cancel-button`, function() {
       $(SIDEBAR).find('.comment-input-field').val('');
       $(SIDEBAR).find('.sidebar-footer').removeClass('update');
+      if ($(SIDEBAR).find('.comment-input-container').hasClass('update-only')) {
+        $(SIDEBAR).find('.comment-input-container').addClass('hidden');
+      }
     });
   }
 
@@ -127,6 +136,9 @@ var CommentsSidebar = (function() {
       $('.comment-container').removeClass('edit');
       $(this).closest('.comment-container').addClass('edit');
       $(SIDEBAR).find('.sidebar-footer').addClass('update');
+      if ($(SIDEBAR).find('.comment-input-container').hasClass('hidden')) {
+        $(SIDEBAR).find('.comment-input-container').removeClass('hidden');
+      }
       $(SIDEBAR).find('.comment-input-field')
         .val($(this).data('comment-raw'))
         .data('update-url', $(this).data('update-url'));
@@ -152,7 +164,7 @@ var CommentsSidebar = (function() {
     open: function(objectType, objectId) {
       $(SIDEBAR).find('.comments-subject-title').empty();
       $(SIDEBAR).find('.comments-list').empty();
-      $(SIDEBAR).find('.comment-input-field').val('');
+      $(SIDEBAR).find('.comment-input-field').val('').focus();
       $('.error-container').empty();
       $(SIDEBAR).find('.sidebar-footer').removeClass('update');
       $(SIDEBAR).data('object-type', objectType).data('object-id', objectId);

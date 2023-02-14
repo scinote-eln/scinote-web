@@ -27,9 +27,9 @@
     <div data-hook="omniauth-sign-in-links"></div>
   <% end -%>
 
-  <%- if devise_mapping.omniauthable? && Devise.omniauth_configs[:okta].present? %>
+  <%- if sso_enabled? && okta_configured? %>
     <div class="okta-sign-in-actions">
-      <%= form_tag omniauth_authorize_path(resource_name, :okta), method: :post do %>
+      <%= form_tag user_okta_omniauth_authorize_path, method: :post do %>
         <%= submit_tag t('devise.okta.sign_in_label'), class: 'btn btn-okta' %>
       <% end %>
     </div>
@@ -41,7 +41,9 @@
     <% end -%>
   <% end -%>
 
-  <div class="azure-sign-in-actions">
-    <%= render partial: "users/shared/azure_sign_in_links", locals: { resource_name: resource_name } %>
-  </div>
+  <% if sso_enabled? && azure_ad_configured? %>
+    <div class="azure-sign-in-actions">
+      <%= render partial: "users/shared/azure_sign_in_links", locals: { resource_name: resource_name } %>
+    </div>
+  <% end %>
 </div>

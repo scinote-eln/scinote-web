@@ -1,4 +1,10 @@
+# frozen_string_literal: true
+
 class Project < ApplicationRecord
+  ID_PREFIX = 'PR'
+  include PrefixedIdModel
+  SEARCHABLE_ATTRIBUTES = ['projects.name', PREFIXED_ID_SQL].freeze
+
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
@@ -80,7 +86,7 @@ class Project < ApplicationRecord
   )
 
     new_query = Project.viewable_by_user(user, current_team || user.teams)
-                       .where_attributes_like('projects.name', query, options)
+                       .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
     new_query = new_query.active unless include_archived
 
     # Show all results if needed
@@ -127,8 +133,8 @@ class Project < ApplicationRecord
 
   def validate_view_state(view_state)
     if %w(cards table).exclude?(view_state.state.dig('experiments', 'view_type')) ||
-       %w(new old atoz ztoa).exclude?(view_state.state.dig('experiments', 'active', 'sort')) ||
-       %w(new old atoz ztoa archived_new archived_old).exclude?(view_state.state.dig('experiments', 'archived', 'sort'))
+       %w(new old atoz ztoa id_asc id_desc).exclude?(view_state.state.dig('experiments', 'active', 'sort')) ||
+       %w(new old atoz ztoa id_asc id_desc archived_new archived_old).exclude?(view_state.state.dig('experiments', 'archived', 'sort'))
       view_state.errors.add(:state, :wrong_state)
     end
   end
@@ -171,6 +177,8 @@ class Project < ApplicationRecord
            when 'old' then { created_at: :asc }
            when 'atoz' then { name: :asc }
            when 'ztoa' then { name: :desc }
+           when 'id_asc' then { id: :asc }
+           when 'id_desc' then { id: :desc }
            when 'archived_new' then { archived_on: :desc }
            when 'archived_old' then { archived_on: :asc }
            else { created_at: :desc }

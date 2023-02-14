@@ -5,6 +5,9 @@ class Protocol < ApplicationRecord
 
   include ArchivableModel
   include PrefixedIdModel
+  SEARCHABLE_ATTRIBUTES = ['protocols.name', 'protocols.description',
+                           'protocols.authors', 'protocol_keywords.name', PREFIXED_ID_SQL].freeze
+
   include SearchableModel
   include RenamingUtil
   include SearchableByNameModel
@@ -198,15 +201,7 @@ class Protocol < ApplicationRecord
                 .joins('LEFT JOIN protocol_keywords ' \
                        'ON protocol_keywords.id = ' \
                        'protocol_protocol_keywords.protocol_keyword_id')
-                .where_attributes_like(
-                  [
-                    'protocols.name',
-                    'protocols.description',
-                    'protocols.authors',
-                    'protocol_keywords.name'
-                  ],
-                  query, options
-                )
+                .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT

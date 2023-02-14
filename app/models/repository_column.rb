@@ -26,7 +26,7 @@ class RepositoryColumn < ApplicationRecord
 
   enum data_type: Extends::REPOSITORY_DATA_TYPES
 
-  store_accessor :metadata, %i(reminder_delta reminder_value reminder_unit reminder_message)
+  store_accessor :metadata, %i(reminder_value reminder_unit reminder_message)
 
   validates :data_type, uniqueness: { if: :repository_stock_value?, scope: :repository_id }
   validates :data_type, uniqueness: { if: :repository_stock_consumption_value?, scope: :repository_id }
@@ -164,7 +164,7 @@ class RepositoryColumn < ApplicationRecord
   end
 
   def clear_hidden_repository_cell_reminders
-    return unless reminder_delta_changed?
+    return unless reminder_value_changed? || reminder_unit_changed?
 
     HiddenRepositoryCellReminder.joins(repository_cell: :repository_column)
                                 .where(repository_columns: { id: id })

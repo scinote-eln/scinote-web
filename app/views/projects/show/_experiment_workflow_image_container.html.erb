@@ -1,8 +1,4 @@
-<% if experiment.archived_branch? %>
-  <div class="archived-icon-plceholder">
-    <i class="fas fa-archive"></i>
-  </div>
-<% elsif experiment.my_modules.any?(&:active?) %>
+<% if experiment.my_modules.any?(&:active?) %>
   <% if experiment.workflowimg.attached? %>
     <div class="workflowimg-container" data-workflowimg-present="true">
       <%= render partial: 'projects/show/workflow_img', locals: { experiment: experiment } %>

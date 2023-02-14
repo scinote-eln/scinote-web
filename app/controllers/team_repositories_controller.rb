@@ -97,7 +97,7 @@ class TeamRepositoriesController < ApplicationController
       .call(activity_type: type_of,
             owner: current_user,
             subject: team_shared_object.shared_repository,
-            team: current_team,
+            team: @repository.team,
             message_items: { repository: team_shared_object.shared_repository.id,
                              team: team_shared_object.team.id,
                              permission_level:

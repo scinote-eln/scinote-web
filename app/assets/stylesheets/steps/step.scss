@@ -148,6 +148,22 @@
   .step-elements {
     padding-left: calc(var(--left-component-padding) * 2);
 
+    .step-timestamp {
+      position: relative;
+      margin-left: 30px;
+      bottom: 17px;
+      width: 356px;
+      height: 15px;
+      font-family: 'Lato';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 10px;
+      line-height: 14px;
+      flex: none;
+      order: 0;
+      flex-grow: 0;
+    }
+
     .step-element-name {
       .sci-inline-edit__view,
       textarea {

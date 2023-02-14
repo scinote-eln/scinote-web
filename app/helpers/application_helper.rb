@@ -69,8 +69,10 @@ module ApplicationHelper
   def smart_annotation_notification(options = {})
     title = options.fetch(:title) { :title_must_be_present }
     message = options.fetch(:message) { :message_must_be_present }
-    new_text = options.fetch(:new_text) { :new_text_must_be_present }
     old_text = options[:old_text] || ''
+    new_text = options[:new_text]
+    return if new_text.blank?
+
     sa_user = /\[\@(.*?)~([0-9a-zA-Z]+)\]/
     # fetch user ids from the previous text
     old_user_ids = []
@@ -219,6 +221,18 @@ module ApplicationHelper
     'icon_small/missing.png'
   end
 
+  def sso_enabled?
+    ENV['SSO_ENABLED'] == 'true'
+  end
+
+  def okta_configured?
+    ApplicationSettings.instance.values['okta'].present?
+  end
+
+  def azure_ad_configured?
+    ApplicationSettings.instance.values['azure_ad_apps'].present?
+  end
+
   def wopi_enabled?
     ENV['WOPI_ENABLED'] == 'true'
   end
@@ -240,5 +254,11 @@ module ApplicationHelper
               end
     end
     return edit_supported, title
+  end
+
+  def create_2fa_qr_code(user)
+    user.assign_2fa_token!
+    qr_code_url = ROTP::TOTP.new(user.otp_secret, issuer: 'SciNote').provisioning_uri(user.email)
+    RQRCode::QRCode.new(qr_code_url).as_svg(module_size: 4)
   end
 end

@@ -61,6 +61,8 @@
           <li><%= link_to t('general.sort_new.ztoa'), results_my_module_path(@my_module, page: params[:page], order: 'ztoa'), class: (@results_order == 'ztoa' ? 'selected' : '') %></li>
           <li><%= link_to t('general.sort_new.old'), results_my_module_path(@my_module, page: params[:page], order: 'old'), class: (@results_order == 'old' ? 'selected' : '') %></li>
           <li><%= link_to t('general.sort_new.new'), results_my_module_path(@my_module, page: params[:page], order: 'new'), class: (@results_order == 'new' ? 'selected' : '') %></li>
+          <li><%= link_to t('general.sort_new.old_updated'), results_my_module_path(@my_module, page: params[:page], order: 'old_updated'), class: (@results_order == 'old_updated' ? 'selected' : '') %></li>
+          <li><%= link_to t('general.sort_new.new_updated'), results_my_module_path(@my_module, page: params[:page], order: 'new_updated'), class: (@results_order == 'new_updated' ? 'selected' : '') %></li>
         </ul>
       </div>
   </div>
@@ -92,4 +94,6 @@
 <%= javascript_include_tag "results/result_assets" %>
 <%= javascript_pack_tag 'pdfjs/pdf_js' %>
 <%= stylesheet_pack_tag 'pdfjs/pdf_js_styles' %>
+
+<%= render 'shared/tiny_mce_packs' %>
 <%= render partial: 'label_printers/label_printer_modal' %>

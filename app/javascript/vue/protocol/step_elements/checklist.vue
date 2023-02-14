@@ -22,13 +22,13 @@
         />
       </div>
       <div class="step-element-controls">
-        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="editingName = true" tabindex="-1">
+        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="editingName = true" tabindex="0">
           <i class="fas fa-pen"></i>
         </button>
-        <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light" tabindex="-1" @click="duplicateElement">
+        <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light" tabindex="0" @click="duplicateElement">
           <i class="fas fa-clone"></i>
         </button>
-        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
+        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="0">
           <i class="fas fa-trash"></i>
         </button>
       </div>

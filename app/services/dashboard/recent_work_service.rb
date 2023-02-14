@@ -106,6 +106,7 @@ module Dashboard
       ordered_query = ordered_query.where(query_filter) unless @mode == 'all'
 
       recent_objects = ordered_query.as_json.map do |recent_object|
+        object_class = override_subject_type(recent_object).constantize
         recent_object.deep_symbolize_keys!
         recent_object.delete_if { |_k, v| v.nil? }
 
@@ -115,6 +116,10 @@ module Dashboard
         )
         recent_object[:subject_type] = override_subject_type(recent_object)
         recent_object[:name] = escape_input(recent_object[:name])
+        recent_object[:type] = I18n.t("activerecord.models.#{object_class.name.underscore}")
+        if object_class.include?(PrefixedIdModel)
+          recent_object[:code] = object_class::ID_PREFIX + recent_object[:group_id][3..]
+        end
         recent_object[:url] = generate_url(recent_object)
         recent_object
       end
@@ -231,13 +236,13 @@ module Dashboard
     end
 
     def generate_url(recent_object)
-      object_id = recent_object[:group_id].gsub(/[^0-9]/, '')
+      object_id = recent_object.with_indifferent_access[:group_id].gsub(/[^0-9]/, '')
 
       case recent_object[:subject_type]
       when 'MyModule'
         protocols_my_module_path(object_id)
       when 'Experiment'
-        canvas_experiment_path(object_id)
+        my_modules_experiment_path(object_id)
       when 'Project'
         project_path(object_id)
       when 'Protocol'
@@ -250,17 +255,19 @@ module Dashboard
     end
 
     def override_subject_type(recent_object)
-      if recent_object[:group_id].include?('pro')
+      group_id = recent_object.with_indifferent_access[:group_id]
+
+      if group_id.include?('pro')
         'Project'
-      elsif recent_object[:group_id].include?('exp')
+      elsif group_id.include?('exp')
         'Experiment'
-      elsif recent_object[:group_id].include?('tsk')
+      elsif group_id.include?('tsk')
         'MyModule'
-      elsif recent_object[:group_id].include?('prt')
+      elsif group_id.include?('prt')
         'Protocol'
-      elsif recent_object[:group_id].include?('inv')
+      elsif group_id.include?('inv')
         'RepositoryBase'
-      elsif recent_object[:group_id].include?('rpt')
+      elsif group_id.include?('rpt')
         'Report'
       end
     end

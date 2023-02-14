@@ -55,6 +55,17 @@ module StepsActions
     )
   end
 
+  def step_text_annotation(step, step_text, old_text = nil)
+    smart_annotation_notification(
+      old_text: old_text,
+      new_text: step_text.text,
+      title: t('notifications.step_text_title',
+               user: current_user.full_name,
+               step: step.name),
+      message: annotation_message(step)
+    )
+  end
+
   def checklist_name_annotation(step, checklist, old_text = nil)
     smart_annotation_notification(
       old_text: old_text,
@@ -85,7 +96,7 @@ module StepsActions
              ),
              experiment: link_to(
                step.my_module.experiment.name,
-               canvas_experiment_url(step.my_module.experiment)
+               my_modules_experiment_url(step.my_module.experiment)
              ),
              my_module: link_to(
                step.my_module.name,

@@ -9,7 +9,9 @@ module TinyMceImages
              class_name: :TinyMceAsset,
              dependent: :destroy
 
+    before_validation :extract_base64_images
     before_save :clean_tiny_mce_image_urls
+    after_create :ensure_extracted_image_object_references
 
     def prepare_for_report(field, base64_encoded_imgs = false)
       description = self[field]
@@ -55,6 +57,8 @@ module TinyMceImages
 
       description = read_attribute(object_field)
 
+      return unless description
+
       # Check tinymce for old format
       description = TinyMceAsset.update_old_tinymce(description, self)
 
@@ -92,7 +96,7 @@ module TinyMceImages
       target.reassign_tiny_mce_image_references(cloned_img_ids)
     end
 
-    def copy_unknown_tiny_mce_images
+    def copy_unknown_tiny_mce_images(user)
       asset_team_id = Team.search_by_object(self).id
       return unless asset_team_id
 
@@ -101,11 +105,11 @@ module TinyMceImages
       image_changed = false
       parsed_description = Nokogiri::HTML(read_attribute(object_field))
       parsed_description.css('img').each do |image|
-        if image['data-mce-token']
-          asset = TinyMceAsset.find_by_id(Base62.decode(image['data-mce-token']))
+        asset = image['data-mce-token'].presence && TinyMceAsset.find_by(id: Base62.decode(image['data-mce-token']))
 
-          next if asset && (asset.object == self || asset_team_id != asset.team_id)
-
+        if asset
+          next if asset.object == self
+          next unless asset.can_read?(user)
         else
           url = image['src']
           image_type = FastImage.type(url).to_s
@@ -128,7 +132,7 @@ module TinyMceImages
 
         new_asset.transaction do
           new_asset.save!
-          if image['data-mce-token']
+          if asset
             asset.duplicate_file(new_asset)
           else
             new_asset.image.attach(io: new_image, filename: new_image_filename)
@@ -159,6 +163,58 @@ module TinyMceImages
         image_changed = true
       end
       self[object_field] = parsed_description.to_html if image_changed
+    end
+
+    def extract_base64_images
+      # extracts and uploads any base64 encoded images,
+      # so they get stored as files instead of directly in the text
+      @extracted_base64_images = []
+
+      object_field = Extends::RICH_TEXT_FIELD_MAPPINGS[self.class.name]
+      return unless object_field
+
+      sanitized_text = public_send(object_field)
+      return unless sanitized_text
+
+      ActiveRecord::Base.transaction do
+        sanitized_text.scan(/src="(data:image\/[^;]+;base64[^"]+)"/i).flatten.each do |base64_src|
+          base64_data = base64_src.split('base64,').last
+
+          tiny_image = TinyMceAsset.create!(
+            team: Team.search_by_object(self),
+            object_id: id,
+            object_type: self.class.name,
+            saved: true
+          )
+
+          tiny_image.image.attach(
+            io: StringIO.new(Base64.decode64(base64_data)),
+            filename: "#{Asset.generate_unique_secure_token}.#{tiny_image.image.type}"
+          )
+
+          @extracted_base64_images << tiny_image
+
+          encoded_id = Base62.encode(tiny_image.id)
+
+          sanitized_text.gsub!(
+            "#{base64_src}\"",
+            "\" data-mce-token=\"#{encoded_id}\" alt=\"description-#{encoded_id}\""
+          )
+        end
+
+        assign_attributes(object_field => sanitized_text)
+      end
+    end
+
+    def ensure_extracted_image_object_references
+      # for models that were not yet in database in time of image extraction
+      # we need to update image references after creation
+
+      @extracted_base64_images&.each do |image|
+        next if image.object
+
+        image.update(object: self)
+      end
     end
   end
 end
