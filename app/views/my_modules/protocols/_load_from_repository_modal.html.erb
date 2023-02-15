@@ -1,4 +1,4 @@
-<div class="modal" id="load-from-repository-modal" tabindex="-1" role="dialog" aria-labelledby="load-from-repository-modal-label" data-url="<%= load_from_repository_protocol_path(@protocol) %>">
+<div class="modal" onmouseover="addFilterTitle()" id="load-from-repository-modal" tabindex="-1" role="dialog" aria-labelledby="load-from-repository-modal-label" data-url="<%= load_from_repository_protocol_path(@protocol) %>">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -15,3 +15,9 @@
     </div>
   </div>
 </div>
+
+<script>
+  function addFilterTitle() {
+    document.getElementById('recent-protocols-table_filter').querySelector("input[class='form-control input-sm']").title = "protocol name input";
+  }
+</script>

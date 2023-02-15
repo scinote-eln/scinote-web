@@ -1,5 +1,5 @@
 <%= bootstrap_form_for(@new, url: copy_to_repository_protocol_path(@protocol, format: :json), remote: true, data: { role: "copy-to-repository" }) do |f| %>
-  <%= f.text_field :name, value:@protocol.name, label: t("my_modules.protocols.copy_to_repository_modal.name_label"), placeholder: t("my_modules.protocols.copy_to_repository_modal.name_placeholder"), title: @protocol.name || 'repository protocol name' %>
+  <%= f.text_field :name, value:@protocol.name, label: t("my_modules.protocols.copy_to_repository_modal.name_label"), placeholder: t("my_modules.protocols.copy_to_repository_modal.name_placeholder"), title: 'repository protocol name' %>
 
   <div class="form-group">
     <label for="protocol_protocol_type"><%= t("my_modules.protocols.copy_to_repository_modal.type_label") %></label><br>
