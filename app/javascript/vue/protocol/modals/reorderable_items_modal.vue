@@ -81,7 +81,7 @@
         return str.length > 56 ? str.slice(0, 56) + "..." : str;
       },
       nameWithFallbacks(item) {
-        return item.attributes.name || this.getTitle(item);
+        return this.getTitle(item) || item.attributes.name;
       }
     }
   }
