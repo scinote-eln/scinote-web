@@ -420,13 +420,13 @@ var ProtocolsIndex = (function() {
     });
   }
 
-  function initArchiveMyModules() {
+  function initArchiveProtocols() {
     $('.protocols-index').on('click', '#archiveProtocol', function(e) {
-      archiveMyModules(e.currentTarget.dataset.url, rowsSelected);
+      archiveProtocols(e.currentTarget.dataset.url, rowsSelected);
     });
   }
 
-  function archiveMyModules(url, ids) {
+  function archiveProtocols(url, ids) {
     $.post(url, { protocol_ids: ids }, (data) => {
       HelperModule.flashAlertMsg(data.message, 'success');
       protocolsDatatable.ajax.reload();
@@ -434,6 +434,24 @@ var ProtocolsIndex = (function() {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   }
+
+  function initExportProtocols() {
+    $('.protocols-index').on('click', '#exportProtocol', function(e) {
+      exportProtocols(e.currentTarget.dataset.url, rowsSelected);
+    });
+  }
+
+  function exportProtocols(url, ids) {
+    if (ids.length > 0) {
+      let params = '?protocol_ids[]=' + ids[0];
+      for (let i = 1; i < ids.length; i += 1) {
+        params += '&protocol_ids[]=' + ids[i];
+      }
+      params = encodeURI(params);
+      window.location.href = url + params;
+    }
+  }
+
 
   function initLinkedChildrenModal() {
     // Only do this if the repository is public/private
@@ -951,7 +969,8 @@ var ProtocolsIndex = (function() {
 
   init();
   initManageAccessButton();
-  initArchiveMyModules();
+  initArchiveProtocols();
+  initExportProtocols();
   initdeleteDraftModal();
 
   return {
