@@ -1,0 +1,31 @@
+<div class="modal fade" id="modal-move-modules" tabindex="-1" role="dialog" aria-labelledby="modal-move-modules-label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="modal-move-modules-label"><%= t('experiments.table.modal_move_modules.title') %></h4>
+      </div>
+      <div class="modal-body">
+        <% if @experiments.present? %>
+          <%= bootstrap_form_tag do |f| %>
+            <%= f.select :experiment_id, @experiments.collect { |e| [ e.name, e.id ] }, {}, class: "form-control selectpicker", 'data-role': 'clear' %>
+          <% end %>
+        <% else %>
+          <div>
+            <em>
+              <%= t('experiments.table.modal_move_modules.no_experiments') %>
+            </em>
+          </div>
+        <% end %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.cancel') %></button>
+        <% if @experiments.present? %>
+          <button type="button" class="btn btn-primary" data-action="confirm">
+            <%= t('experiments.table.modal_move_modules.confirm') %>
+          </button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

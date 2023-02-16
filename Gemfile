@@ -7,7 +7,7 @@ ruby '2.7.6'
 gem 'bootsnap', require: false
 gem 'bootstrap-sass', '~> 3.4.1'
 gem 'bootstrap_form', '~> 2.7.0'
-gem 'devise', '~> 4.7.1'
+gem 'devise', '~> 4.8.1'
 gem 'devise_invitable'
 gem 'figaro'
 gem 'pg', '~> 1.1'
@@ -19,18 +19,15 @@ gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 6.0'
 gem 'sassc-rails'
 gem 'webpacker', '~> 4.0.0'
-gem 'yomu', git: 'https://github.com/biosistemika/yomu', branch: 'master'
+gem 'yomu', git: 'https://github.com/scinote-eln/yomu', branch: 'master'
 
 # Gems for OAuth2 subsystem
 gem 'doorkeeper', '>= 4.6'
-gem 'omniauth'
-gem 'omniauth-azure-activedirectory'
+gem 'omniauth', '~> 2.1'
+gem 'omniauth-azure-activedirectory-v2'
 gem 'omniauth-linkedin-oauth2'
-gem 'omniauth-okta'
-
-# TODO: remove this when omniauth gem resolves CVE issues
-# Prevents CVE-2015-9284 (https://github.com/omniauth/omniauth/wiki/FAQ#cve-2015-9284-warnings)
-gem 'omniauth-rails_csrf_protection', '~> 0.1'
+gem 'omniauth-okta', git: 'https://github.com/scinote-eln/omniauth-okta', branch: 'org_auth_server_support'
+gem 'omniauth-rails_csrf_protection', '~> 1.0'
 
 # Gems for API implementation
 gem 'active_model_serializers', '~> 0.10.7'
@@ -64,16 +61,16 @@ gem 'aspector' # Aspect-oriented programming for Rails
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces AR
 gem 'bcrypt', '~> 3.1.10'
 gem 'caracal' # Build docx report
-gem 'deface', '~> 1.0'
+gem 'deface', '~> 1.9'
 gem 'down', '~> 5.0'
 gem 'faker' # Generate fake data
 gem 'fastimage' # Light gem to get image resolution
-gem 'httparty', '~> 0.17.3'
+gem 'httparty', '~> 0.21.0'
 gem 'i18n-js', '~> 3.6' # Localization in javascript files
 gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'logging', '~> 2.0.0'
 gem 'nested_form_fields'
-gem 'nokogiri', '~> 1.13.9' # HTML/XML parser
+gem 'nokogiri', '~> 1.13.10' # HTML/XML parser
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'rgl' # Graph framework for project diagram calculations
 gem 'roo', '~> 2.8.2' # Spreadsheet parser
@@ -97,15 +94,12 @@ gem 'devise-async',
     git: 'https://github.com/mhfs/devise-async.git',
     branch: 'devise-4.x'
 gem 'image_processing', '~> 1.12'
+gem 'img2zpl', git: 'https://github.com/scinote-eln/img2zpl'
 gem 'rufus-scheduler', '~> 3.5'
 
 gem 'discard', '~> 1.0'
 
 gem 'graphviz'
-gem 'tinymce-rails', '~> 4.9.10' # Rich text editor - SEE BELOW
-# Any time you update tinymce-rails Gem, also update the cache_suffix parameter
-# in sitewide/tiny_mce.js - to prevent browsers from loading old, cached .js
-# TinyMCE files which might cause errors
 
 gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'

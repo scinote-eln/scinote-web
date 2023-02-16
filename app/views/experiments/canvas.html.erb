@@ -1,56 +1,50 @@
 <% provide(:head_title, t("experiments.canvas.head_title", project: h(@project.name)).html_safe) %>
 <% provide(:sidebar_title, t("sidebar.my_modules.sidebar_title")) %>
 <% provide(:sidebar_url, sidebar_experiment_path(@experiment)) %>
+<% provide(:container_class, 'no-second-nav-container') %>
 
 <%= content_for :sidebar do %>
   <%= render partial: 'shared/sidebar/my_modules.html.erb', locals: { experiment: @experiment, my_modules: @active_modules } %>
 <% end %>
-<%= render partial: 'shared/secondary_navigation', locals: { render_breadcrumbs: true, project: @experiment.project } %>
 
-<div class="content-pane" id="experiment-canvas">
-  <div class="row">
-    <div class="container-fluid">
-      <div id="diagram-buttons">
-        <% if can_manage_experiment?(@experiment) %>
-          <%=link_to canvas_edit_experiment_url(@experiment),
-                remote: true,
-                type: 'button',
-                id: 'edit-canvas-button',
-                data: { action: 'edit' },
-                class: 'ajax btn btn-primary' do %>
-                  <span class="fas fa-pencil-alt"></span>
-                  <span class="hidden-xs"><%=t 'experiments.canvas.canvas_edit' %></span>
-                <% end %>
+<div class="content-pane flexible experiment-new-my_module" id="experiment-canvas">
+  <%= render partial: 'experiments/show_header' %>
+  <div class="toolbar-row" id="diagram-buttons">
+    <div id="toolbar-left-block">
+      <% if can_manage_experiment?(@experiment) %>
+        <%= link_to modules_new_experiment_path(@experiment, view_mode: 'canvas'),
+                    class: 'btn btn-primary new-my-module-button',
+                    data: { view_mode: 'active' },
+                    remote: true do %>
+                <span class="fas fa-plus"></span>
+                <span class="hidden-sm hidden-xs"><%= t('experiments.canvas.new_my_module') %></span>
         <% end %>
-        <% if can_manage_experiment?(@experiment) || can_clone_experiment?(@experiment)  %>
-          <!-- experiment actions -->
-          <span class="dropdown actions-button">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="exActionsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              <span class="hidden-xs"><%= t'experiments.canvas.actions' %></span>
-              <span class="visible-xs-inline"><i class="fas fa-sort"></i></span>
-              <span class="caret"></span>
-            </button>
-            <%= render partial: 'experiments/dropdown_actions.html.erb',
-                                locals: { project: @project, experiment: @experiment } %>
-          </span>
+        <%=link_to canvas_edit_experiment_url(@experiment),
+              remote: true,
+              type: 'button',
+              id: 'edit-canvas-button',
+              data: { action: 'edit' },
+              class: 'ajax btn btn-light' do %>
+                <span class="fas fa-pencil-alt"></span>
+                <span class="hidden-sm hidden-xs"><%= t('experiments.canvas.canvas_edit') %></span>
+              <% end %>
+      <% end %>
+    </div>
+    <div class="toolbar-right-block">
+      <span class="hidden-sm hidden-xs zoom-text"><%=t 'experiments.canvas.zoom' %></span>
+      <div id="zoom-level-buttons" class="sci-toggles-group change-canvas-view" data-toggle="buttons">
+        <input type="radio" name="canvas-format" class="sci-toggle-item" checked>
+        <%=link_to canvas_full_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax sci-toggle-item-label", "data-action" => "full_zoom", "data-toggle" => "button", "aria-pressed" => true do %>
+          <%= render partial: 'experiments/canvas_svg_icons', locals: { type: 'full' } %>
         <% end %>
-        <div class="toolbarButtons">
-          <span class="hidden-xs zoom-text"><%=t 'experiments.canvas.zoom' %></span>
-          <div id="zoom-level-buttons" class="sci-toggles-group change-canvas-view" data-toggle="buttons">
-            <input type="radio" name="canvas-format" class="sci-toggle-item" checked>
-            <%=link_to canvas_full_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax sci-toggle-item-label", "data-action" => "full_zoom", "data-toggle" => "button", "aria-pressed" => true do %>
-              <span class="fas fa-th-large" aria-hidden="true" ></span>
-            <% end %>
-            <input type="radio" name="canvas-format" class="sci-toggle-item" >
-            <%=link_to canvas_medium_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax sci-toggle-item-label", "data-action" => "medium_zoom" do %>
-              <span class="fas fa-th-list" aria-hidden="true"></span>
-            <% end %>
-            <input type="radio" name="canvas-format" class="sci-toggle-item" >
-            <%=link_to canvas_small_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax sci-toggle-item-label", "data-action" => "small_zoom" do %>
-              <span class="fas fa-th" aria-hidden="true"></span>
-            <% end %>
-          </div>
-        </div>
+        <input type="radio" name="canvas-format" class="sci-toggle-item" >
+        <%=link_to canvas_medium_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax sci-toggle-item-label", "data-action" => "medium_zoom" do %>
+          <%= render partial: 'experiments/canvas_svg_icons', locals: { type: 'medium' } %>
+        <% end %>
+        <input type="radio" name="canvas-format" class="sci-toggle-item" >
+        <%=link_to canvas_small_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax sci-toggle-item-label", "data-action" => "small_zoom" do %>
+          <%= render partial: 'experiments/canvas_svg_icons', locals: { type: 'small' } %>
+        <% end %>
       </div>
     </div>
   </div>
@@ -65,6 +59,8 @@
 
 <!-- Initialize dropdown actions -->
 <%= javascript_include_tag("experiments/dropdown_actions") %>
+
+<%= javascript_include_tag("experiments/show") %>
 
 <!-- Include all the neccesary JS libraries -->
 <%= javascript_include_tag("eventPause-min") %>

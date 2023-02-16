@@ -29,7 +29,6 @@ var ProtocolRepositoryHeader = (function() {
       if ($(this).hasClass('record-info-link')) return;
       e.stopPropagation();
     });
-    TinyMCE.initIfHasDraft(viewObject);
   }
 
   return {

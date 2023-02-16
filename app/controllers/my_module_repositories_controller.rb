@@ -135,7 +135,7 @@ class MyModuleRepositoriesController < ApplicationController
         activity_type: :export_inventory_items_assigned_to_task,
         owner: current_user,
         subject: @my_module,
-        team: current_team,
+        team: @repository.team,
         message_items: {
           my_module: @my_module.id,
           repository: @repository.id
@@ -240,7 +240,7 @@ class MyModuleRepositoriesController < ApplicationController
                user: current_user.full_name),
       message: t('notifications.my_module_consumption_comment_annotation_message_html',
                  project: link_to(@my_module.experiment.project.name, project_url(@my_module.experiment.project)),
-                 experiment: link_to(@my_module.experiment.name, canvas_experiment_url(@my_module.experiment)),
+                 experiment: link_to(@my_module.experiment.name, my_modules_experiment_url(@my_module.experiment)),
                  my_module: link_to(@my_module.name, protocols_my_module_url(@my_module)))
     )
   end
@@ -251,7 +251,7 @@ class MyModuleRepositoriesController < ApplicationController
             owner: current_user,
             subject: @my_module,
             team: @repository.team,
-            project: @my_module.experiment.project,
+            project: @my_module.project,
             message_items: {
               repository: @repository.id,
               repository_row: module_repository_row.repository_row_id,

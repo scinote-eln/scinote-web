@@ -42,7 +42,11 @@
   // On init
 
   initHandsOnTable($(document));
-  TinyMCE.highlight();
+
+  $('[class*=language]').each((i, block) => {
+    hljs.highlightBlock(block);
+  });
+
   SmartAnnotation.preventPropagation('.atwho-user-popover');
 
   $(function () {
@@ -116,4 +120,4 @@
 
   reorderAttachmentsInit();
   initAssetViewModeToggle();
-})();
+});

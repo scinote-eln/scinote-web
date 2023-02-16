@@ -5,7 +5,7 @@ module RepositoryDatatable
     include Rails.application.routes.url_helpers
 
     def value
-      asset = object.asset
+      asset = value_object.asset
       {
         id: asset.id,
         url: rails_blob_path(asset.file, disposition: 'attachment'),

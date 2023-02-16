@@ -10,7 +10,7 @@ module Reports::Docx::DrawExperiment
 
     @docx.h2 do
       link  experiment.name,
-            scinote_url + Rails.application.routes.url_helpers.canvas_experiment_path(experiment),
+            scinote_url + Rails.application.routes.url_helpers.my_modules_experiment_path(experiment),
             link_style
     end
 

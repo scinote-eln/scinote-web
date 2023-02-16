@@ -12,12 +12,12 @@ class ExperimentsController < ApplicationController
   before_action :check_read_permissions, except: %i(edit archive clone move new create archive_group restore_group)
   before_action :check_canvas_read_permissions, only: %i(canvas)
   before_action :check_create_permissions, only: %i(new create)
-  before_action :check_manage_permissions, only: %i(edit)
+  before_action :check_manage_permissions, only: %i(edit batch_clone_my_modules)
   before_action :check_update_permissions, only: %i(update)
   before_action :check_archive_permissions, only: :archive
   before_action :check_clone_permissions, only: %i(clone_modal clone)
   before_action :check_move_permissions, only: %i(move_modal move)
-  before_action :set_inline_name_editing, only: %i(canvas module_archive)
+  before_action :set_inline_name_editing, only: %i(canvas table module_archive)
 
   layout 'fluid'
 
@@ -46,7 +46,7 @@ class ExperimentsController < ApplicationController
                           experiment: @experiment.name)
       respond_to do |format|
         format.json do
-          render json: { path: canvas_experiment_url(@experiment) }, status: :ok
+          render json: { path: my_modules_experiment_url(@experiment) }, status: :ok
         end
       end
     else
@@ -86,6 +86,46 @@ class ExperimentsController < ApplicationController
                                  .select('COUNT(DISTINCT users.id) as designated_users_count')
                                  .select('COUNT(DISTINCT comments.id) as task_comments_count')
                                  .select('my_modules.*').group(:id)
+  end
+
+  def table
+    @project = @experiment.project
+    @experiment.current_view_state(current_user)
+    @my_module_visible_table_columns = current_user.my_module_visible_table_columns
+
+    view_state = @experiment.current_view_state(current_user)
+    @current_sort = view_state.state.dig('my_modules', my_modules_view_mode(@project), 'sort') || 'atoz'
+  end
+
+  def my_modules_view_mode(my_module)
+    return 'archived' if  my_module.archived?
+
+    params[:view_mode] == 'archived' ? 'archived' : 'active'
+  end
+
+  def load_table
+    my_modules = @experiment.my_modules.readable_by_user(current_user)
+
+    unless @experiment.archived_branch?
+      my_modules = params[:view_mode] == 'archived' ? my_modules.archived : my_modules.active
+    end
+
+    render json: Experiments::TableViewService.new(@experiment, my_modules, current_user, params).call
+  end
+
+  def my_modules
+    view_state = @experiment.current_view_state(current_user)
+    view_type = view_state.state['my_modules']['view_type'] || 'canvas'
+
+    redirect_to view_mode_redirect_url(view_type)
+  end
+
+  def view_type
+    view_state = @experiment.current_view_state(current_user)
+    view_state.state['my_modules']['view_type'] = view_type_params
+    view_state.save!
+
+    redirect_to view_mode_redirect_url(view_type_params)
   end
 
   def edit
@@ -208,7 +248,8 @@ class ExperimentsController < ApplicationController
       format.json do
         render json: {
           html: render_to_string(
-            partial: 'clone_modal.html.erb'
+            partial: 'clone_modal.html.erb',
+            locals: { view_mode: params[:view_mode] }
           )
         }
       end
@@ -249,6 +290,21 @@ class ExperimentsController < ApplicationController
     end
   end
 
+  def search_tags
+    tags = @experiment.project.tags.where.not(id: JSON.parse(params[:selected_tags]))
+                      .where_attributes_like(:name, params[:query])
+                      .select(:id, :name, :color)
+
+    tags = tags.map do |tag|
+      { value: tag.id, label: sanitize_input(tag.name), params: { color: sanitize_input(tag.color) } }
+    end
+
+    if params[:query].present? && tags.select { |tag| tag[:label] == params[:query] }.blank?
+      tags << { value: 0, label: sanitize_input(params[:query]), params: { color: nil } }
+    end
+    render json: tags
+  end
+
   # POST: move_experiment(id)
   def move
     service = Experiments::MoveToProjectService
@@ -258,17 +314,65 @@ class ExperimentsController < ApplicationController
     if service.succeed?
       flash[:success] = t('experiments.move.success_flash',
                           experiment: @experiment.name)
-      path = canvas_experiment_url(@experiment)
       status = :ok
+      view_state = @experiment.current_view_state(current_user)
+      view_type = view_state.state['my_modules']['view_type'] || 'canvas'
+      path = view_mode_redirect_url(view_type)
     else
-      message = service.errors.values.join(', ')
+      message = "#{service.errors.values.join('. ')}."
       status = :unprocessable_entity
     end
 
     render json: { message: message, path: path }, status: status
   end
 
+  def move_modules_modal
+    @experiments = @experiment.project.experiments.active.where.not(id: @experiment)
+                              .managable_by_user(current_user).order(name: :asc)
+    render json: {
+      html: render_to_string(
+        partial: 'move_modules_modal.html.erb'
+      )
+    }
+  end
+
+  def move_modules
+    modules_to_move = {}
+    dst_experiment = @experiment.project.experiments.find(params[:to_experiment_id])
+    return render_403 unless can_manage_experiment?(dst_experiment)
+
+    @experiment.transaction do
+      params[:my_module_ids].each do |id|
+        my_module = @experiment.my_modules.find(id)
+        return render_403 unless can_move_my_module?(my_module)
+
+        modules_to_move[id] = dst_experiment.id
+      end
+      # Make sure that locks are acquired always in the same order
+      if dst_experiment.id < @experiment.id
+        dst_experiment.lock! && @experiment.lock!
+      else
+        @experiment.lock! && dst_experiment.lock!
+      end
+      @experiment.move_modules(modules_to_move, current_user)
+      @experiment.workflowimg.purge
+
+      render json: { message: t('experiments.table.modal_move_modules.success_flash',
+                                experiment: sanitize_input(dst_experiment.name)) }
+    rescue StandardError => e
+      Rails.logger.error(e.message)
+      Rails.logger.error(e.backtrace.join("\n"))
+      render json: {
+        message: t('experiments.table.modal_move_modules.error_flash', experiment: sanitize_input(dst_experiment.name))
+      }, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
+    end
+  rescue ActiveRecord::RecordNotFound
+    render_404
+  end
+
   def module_archive
+    @project = @experiment.project
     @my_modules = @experiment.archived_branch? ? @experiment.my_modules : @experiment.my_modules.archived
     @my_modules = @my_modules.with_granted_permissions(current_user, MyModulePermissions::READ_ARCHIVED)
                              .left_outer_joins(:designated_users, :task_comments)
@@ -299,11 +403,27 @@ class ExperimentsController < ApplicationController
   end
 
   def sidebar
+    view_state = @experiment.current_view_state(current_user)
+    view_mode = params[:view_mode].presence || 'active'
+    default_sort = view_state.state.dig('my_modules', view_mode, 'sort') || 'atoz'
+    my_modules = if @experiment.archived_branch?
+                   @experiment.my_modules
+                 elsif params[:view_mode] == 'archived'
+                   @experiment.my_modules.archived
+                 else
+                   @experiment.my_modules.active
+                 end
+
+    my_modules = sort_my_modules(my_modules, params[:sort].presence || default_sort)
     respond_to do |format|
       format.json do
         render json: {
           html: render_to_string(
-            partial: 'shared/sidebar/my_modules.html.erb', locals: { experiment: @experiment }
+            partial: if params[:view_mode] == 'archived'
+                       'shared/sidebar/archived_my_modules.html.erb'
+                     else
+                       'shared/sidebar/my_modules.html.erb'
+                     end, locals: { experiment: @experiment, my_modules: my_modules }
           )
         }
       end
@@ -319,6 +439,73 @@ class ExperimentsController < ApplicationController
         )
       }
     end
+  end
+
+  def assigned_users_to_tasks
+    users = current_team.users.where(id: @experiment.my_modules.joins(:user_my_modules).select(:user_id))
+                        .search(false, params[:query]).map do |u|
+      { value: u.id, label: sanitize_input(u.name), params: { avatar_url: avatar_path(u, :icon_small) } }
+    end
+
+    render json: users, status: :ok
+  end
+
+  def archive_my_modules
+    my_modules = @experiment.my_modules.where(id: params[:my_modules])
+    counter = 0
+    my_modules.each do |my_module|
+      next unless can_archive_my_module?(my_module)
+
+      my_module.transaction do
+        connect_my_modules_before_archive(my_module)
+
+        my_module.archive!(current_user)
+        log_my_module_activity(:archive_module, my_module)
+        counter += 1
+      rescue StandardError => e
+        Rails.logger.error e.message
+        raise ActiveRecord::Rollback
+      end
+    end
+    if counter.positive?
+      render json: { message: t('experiments.table.archive_group.success_flash', number: counter) }
+    else
+      render json: { message: t('experiments.table.archive_group.error_flash') }, status: :unprocessable_entity
+    end
+  end
+
+  def batch_clone_my_modules
+    MyModule.transaction do
+      @my_modules =
+        @experiment.my_modules
+                   .readable_by_user(current_user)
+                   .where(id: params[:my_module_ids])
+
+      @my_modules.find_each do |my_module|
+        new_my_module = my_module.dup
+        new_my_module.my_module_status = MyModuleStatus.first
+        new_my_module.update!(
+          {
+            provisioning_status: :in_progress,
+            name: my_module.next_clone_name,
+            created_by: current_user,
+            due_date: nil,
+            started_on: nil,
+            state: 'uncompleted',
+            completed_on: nil
+          }.merge(new_my_module.get_new_position)
+        )
+        new_my_module.designated_users << current_user
+        MyModules::CopyContentJob.perform_later(current_user, my_module.id, new_my_module.id)
+      end
+      @experiment.workflowimg.purge
+    end
+
+    render(
+      json: {
+        provisioning_status_urls: @my_modules.map { |m| provisioning_status_my_module_url(m) }
+      }
+    )
   end
 
   private
@@ -341,10 +528,14 @@ class ExperimentsController < ApplicationController
     params.require(:experiment).require(:project_id)
   end
 
+  def view_type_params
+    params.require(:experiment).require(:view_type)
+  end
+
   def check_read_permissions
     current_team_switch(@experiment.project.team) if current_team != @experiment.project.team
     render_403 unless can_read_experiment?(@experiment) ||
-                      @experiment.archived? && can_read_archived_experiment?(@experiment)
+                      (@experiment.archived? && can_read_archived_experiment?(@experiment))
   end
 
   def check_canvas_read_permissions
@@ -402,7 +593,7 @@ class ExperimentsController < ApplicationController
                  project: link_to(@experiment.project.name,
                                   project_url(@experiment.project)),
                  experiment: link_to(@experiment.name,
-                                     canvas_experiment_url(@experiment)))
+                                     my_modules_experiment_url(@experiment)))
     )
   end
 
@@ -410,9 +601,61 @@ class ExperimentsController < ApplicationController
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
-            team: experiment.project.team,
+            team: experiment.team,
             project: experiment.project,
             subject: experiment,
             message_items: { experiment: experiment.id })
+  end
+
+  def log_my_module_activity(type_of, my_module)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            team: my_module.experiment.project.team,
+            project: my_module.experiment.project,
+            subject: my_module,
+            message_items: { my_module: my_module.id })
+  end
+
+  def view_mode_redirect_url(view_type)
+    if params[:view_mode] == 'archived' || @experiment.archived_branch?
+      case view_type
+      when 'canvas'
+        module_archive_experiment_path(@experiment)
+      else
+        table_experiment_path(@experiment, view_mode: :archived)
+      end
+    else
+      view_type == 'canvas' ? canvas_experiment_path(@experiment) : table_experiment_path(@experiment)
+    end
+  end
+
+  def sort_my_modules(records, sort)
+    case sort
+    when 'due_first'
+      records.order(:due_date, :name)
+    when 'due_last'
+      records.order(Arel.sql("COALESCE(due_date, DATE '2100-01-01') DESC"), :name)
+    when 'atoz'
+      records.order(:name)
+    when 'ztoa'
+      records.order(name: :desc)
+    when 'archived_old'
+      records.order(Arel.sql('COALESCE(my_modules.archived_on, my_modules.archived_on) ASC'))
+    when 'archived_new'
+      records.order(Arel.sql('COALESCE(my_modules.archived_on, my_modules.archived_on) DESC'))
+    else
+      records
+    end
+  end
+
+  def connect_my_modules_before_archive(my_module)
+    return if my_module.my_modules.empty? || my_module.my_module_antecessors.empty?
+
+    my_module.my_modules.each do |destination_my_module|
+      my_module.my_module_antecessors.each do |source_my_module|
+        Connection.create!(input_id: destination_my_module.id, output_id: source_my_module.id)
+      end
+    end
   end
 end

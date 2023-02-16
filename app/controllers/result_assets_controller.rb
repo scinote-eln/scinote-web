@@ -191,8 +191,8 @@ class ResultAssetsController < ApplicationController
       .call(activity_type: type_of,
             owner: current_user,
             subject: result,
-            team: @my_module.experiment.project.team,
-            project: @my_module.experiment.project,
+            team: @my_module.team,
+            project: @my_module.project,
             message_items: {
               result: result.id,
               type_of_result: t('activities.result_type.asset')

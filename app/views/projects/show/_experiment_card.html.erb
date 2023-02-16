@@ -9,16 +9,6 @@
     </div>
   </div>
 
-  <div class="experiment-name-cell table-cell">
-    <div class="workflow-img-wrapper" list-render="true">
-      <%= render partial: 'projects/show/experiment_workflow_image_container', locals: { experiment: experiment } %>
-    </div>
-    <% if experiment.archived_branch? %>
-      <%= link_to experiment.name, module_archive_experiment_path(experiment), title: experiment.name, class: 'name-link' %>
-    <% else %>
-      <%= link_to experiment.name, canvas_experiment_path(experiment), title: experiment.name, class: 'name-link' %>
-    <% end %>
-  </div>
   <div class="experiment-code-cell table-cell">
     <span><%= experiment.code %></span>
   </div>
@@ -30,23 +20,31 @@
       <ul></ul>
     </div>
   </div>
+  <div class="experiment-name-cell table-cell">
+    <div class="workflow-img-wrapper" list-render="true">
+      <%= render partial: 'projects/show/experiment_workflow_image_container', locals: { experiment: experiment } %>
+    </div>
+    <%= link_to experiment.name, my_modules_experiment_path(experiment), title: experiment.name, class: 'name-link' %>
+  </div>
   <div class="dates-and-img-container">
     <div class="dates-container">
       <div class="data-row start-date-cell table-cell">
         <span class="card-label" cards-render="true"><%= t('experiments.card.start_date') %></span>
         <span class="card-value"><%= l(experiment.created_at, format: :full_date) %></span>
       </div>
+
       <div class="data-row modified-date-cell table-cell">
         <span class="card-label" cards-render="true"><%= t('experiments.card.modified_date') %></span>
         <span class="card-value"><%= l(experiment.updated_at, format: :full_date) %></span>
       </div>
+
       <% if experiment.archived_branch? %>
         <div class="data-row archived-date-cell table-cell">
           <span class="card-label" cards-render="true"><%= t('experiments.card.archived_date') %></span>
           <span class="card-value"><%= l(experiment.archived_on || project.archived_on, format: :full_date) %></span>
         </div>
       <% end %>
-      <div class="data-row" cards-render="true" data-view-mode="active">
+      <div class="data-row" cards-render="true">
         <span class="card-label"><%= t('experiments.card.completed_task') %></span>
         <span class="card-value"><%= t('experiments.card.completed_value', completed: experiment.completed_task_count, all: experiment.task_count) %></span>
       </div>

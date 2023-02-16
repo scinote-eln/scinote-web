@@ -5,8 +5,8 @@ module RepositoryDatatable
     include InputSanitizeHelper
     def value
       {
-        id: (object.repository_list_item&.id || ''),
-        text: (escape_input(object.data) || '')
+        id: (value_object.repository_list_item&.id || ''),
+        text: (escape_input(value_object.data) || '')
       }
     end
   end

@@ -38,7 +38,7 @@ class StepsController < ApplicationController
       @asset = @step.assets.create!(
         created_by: current_user,
         last_modified_by: current_user,
-        team: current_team,
+        team: @protocol.team,
         view_mode: @step.assets_view_mode
       )
       @asset.file.attach(params[:signed_blob_id])
@@ -323,7 +323,7 @@ class StepsController < ApplicationController
       .call(activity_type: type_of,
             owner: current_user,
             subject: @protocol,
-            team: current_team,
+            team: @protocol.team,
             project: project,
             message_items: message_items)
   end

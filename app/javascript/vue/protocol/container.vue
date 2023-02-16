@@ -14,14 +14,18 @@
       </div>
       <div class="actions-block">
         <div class="protocol-buttons-group">
-          <a v-if="urls.add_step_url" class="btn btn-primary" @click="addStep(steps.length)" tabindex="0">
+          <a v-if="urls.add_step_url"
+             class="btn btn-primary"
+             @keyup.enter="addStep(steps.length)"
+             @click="addStep(steps.length)"
+             tabindex="0">
               <span class="fas fa-plus" aria-hidden="true"></span>
               <span>{{ i18n.t("protocols.steps.new_step") }}</span>
           </a>
-          <a class="btn btn-secondary" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
+          <button class="btn btn-secondary" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
             <span class="fas fa-print" aria-hidden="true"></span>
             <span>{{ i18n.t("protocols.print.button") }}</span>
-          </a>
+          </button>
           <ProtocolOptions
             v-if="protocol.attributes && protocol.attributes.urls"
             :protocol="protocol"
@@ -239,7 +243,7 @@
         });
       },
       updateDescription(protocol) {
-        this.protocol.attributes = protocol.data.attributes
+        this.protocol.attributes = protocol.attributes
       },
       addStep(position) {
         $.post(this.urls.add_step_url, {position: position}, (result) => {

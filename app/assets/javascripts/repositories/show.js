@@ -152,12 +152,12 @@
     viewSwitch.on('click', '.view-switch-archived', function() {
       $('.repository-show').removeClass('active').addClass('archived');
       $('#manage-repository-column').removeClass('active').addClass('archived');
-      RepositoryDatatable.reload();
+      initTable();
     });
     viewSwitch.on('click', '.view-switch-active', function() {
       $('.repository-show').removeClass('archived').addClass('active');
       $('#manage-repository-column').removeClass('archived').addClass('active');
-      RepositoryDatatable.reload();
+      initTable();
     });
   }
 

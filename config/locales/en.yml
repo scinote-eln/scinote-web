@@ -33,6 +33,7 @@ en:
         password_placeholder: "Enter password"
         remember_me: "Remember me"
         submit: "Log in"
+        azure_ad_submit: "Sign in with Azure AD"
       2fa:
         title: "Two-factor authentication"
         description: "Enter the one-time code found in your authenticator app to log in to SciNote."
@@ -117,6 +118,10 @@ en:
       project: "Project"
       my_module: "Task"
       experiment: "Experiment"
+      repository: "Inventory"
+      repository_base: "Inventory"
+      protocol: "Protocol"
+      report: "Report"
     errors:
       models:
         project:
@@ -458,6 +463,7 @@ en:
       more_comments: "More Comments"
       card:
         start_date: "Start date"
+        id: "ID"
         visibility: "Visible to"
         users: "Members"
         name: "Project name"
@@ -578,6 +584,7 @@ en:
         thead_last_modified_by: "Last modified by"
         thead_created_at: "Creation date"
         thead_updated_at: "Last update date"
+        thead_id: "ID"
         no_reports: "No reports!"
         pdf: "PDF"
         docx: "DOCX"
@@ -648,10 +655,12 @@ en:
           results: "Results"
           all_results: "Include all results"
           order_results: "Order results"
-          atoz: "Alphabetically A to Z"
-          ztoa: "Alphabetically Z to A"
-          new_results: "Newest first"
-          old_results: "Oldest first"
+          atoz: "Name A to Z"
+          ztoa: "Name Z to A"
+          new: "Added last"
+          old: "Added first"
+          new_updated: "Modified last"
+          old_updated: "Modified first"
           file_results: "File results"
           insert_pages_from_pdf: "Insert pages from PDF and docx files into the report"
           pdf_warning: "This may increase report generation time."
@@ -736,10 +745,10 @@ en:
           remove: "Remove report element from the report"
           scinote_link: "SciNote link"
         project_header:
-          user_time: "Project created on %{timestamp}."
+          user_time: "Project %{code} created on %{timestamp}."
           title: "Report for project %{project}"
         module:
-          user_time: "Task created on %{timestamp}."
+          user_time: "Task %{code} created on %{timestamp}."
           started_on: "Start date: %{started_on}"
           status: "Status:"
           no_start_date: "No start date"
@@ -751,7 +760,7 @@ en:
           results: "Results"
           protocol:
             name: 'Protocol'
-            user_time: "Protocol created on %{timestamp}."
+            user_time: "Protocol %{code} created on %{timestamp}."
         experiment:
           user_time: "Experiment %{code} created on %{timestamp}."
           no_description: "No description"
@@ -766,13 +775,13 @@ en:
           no_items: "No items"
         result_asset:
           file_name: "%{file}"
-          user_time: "Uploaded by %{user} on %{timestamp}."
+          user_time: "Added on %{timestamp} by %{user}."
           full_preview_attached: "[full document attached to report]"
         result_table:
           table_name: "%{name}"
-          user_time: "Created by %{user} on %{timestamp}."
+          user_time: "Added on %{timestamp} by %{user}."
         result_text:
-          user_time: "Created by %{user} on %{timestamp}."
+          user_time: "Added on %{timestamp} by %{user}."
         step:
           sidebar_name: "Step %{pos}: %{name}"
           step_pos: "Step %{pos}:"
@@ -848,6 +857,7 @@ en:
         unsupported_key: "Key %{key} is not supported by this label template renderer."
         column_not_found: "This Label template contains placeholders for inventory columns that are not present in this Inventory. Some data might not be printed on the label. Please check the label preview and label template before printing."
         logo_not_supported: "The company logo cannot be printed on the label, as it is not set up in your SciNote. Please upload company logo in Settings."
+        logo_params_error: 'Failed to parse logo parameters!'
     index:
       head_title: 'Label templates'
       search_templates: 'Filter templates'
@@ -872,7 +882,7 @@ en:
         fluics_warning: 'Built-in FLUICS templates can’t be edited, deleted or duplicated'
       delete_modal:
         title: 'Delete Label template(s)'
-        description: 'Are you sure you want to delete the selected Label template(s)?'
+        description: 'Are you sure you want to delete the selected label template(s)?'
     show:
       breadcrumb_index: 'Label templates'
       name_error_prefix: 'Label template name'
@@ -893,6 +903,12 @@ en:
         nothing_found: 'Nothing found…'
         field_code: 'Field code: %{code}'
         search_placeholder: 'Type to search…'
+        logo_modal:
+          title: 'Insert logo into the label'
+          description: 'Please specify width or height, another dimension will adjust proportionally'
+          width: 'Width (%{unit})'
+          height: 'Height (%{unit})'
+          insert: 'Insert'
       buttons:
         refresh: 'Refresh preview'
         save: 'Save template code'
@@ -966,13 +982,19 @@ en:
       start_date: "Start date:"
       no_start_date_placeholder: "+ Add starting date"
       due_date: "Due date:"
+      completed_date: "Completed date:"
       no_due_date_placeholder: "+ Add due date"
+      overdue: "Overdue"
+      due_soon: "Due soon"
+      no_due_date: "not set"
       assigned_users: "Assigned to:"
       no_assigned_users: "+ Assign task to a project member"
       tags: "Tags:"
       no_tags: "+ Add tags"
       manage_tags: "Manage tags"
-      create_new_tag: "create new"
+      create_new_tag: "→ Create new"
+      recent_protocols_from_repository: "Recent protocols from the Repository"
+      code: "ID: "
       recent_protocols_from_repository: "Recent protocols from the Templates"
     notes:
       title: "Notes"
@@ -1077,23 +1099,18 @@ en:
       load_from_repository_error_locked: "Failed to load the protocol from the templates. One or more files in the protocol are currently being edited."
       load_from_repository_modal:
         title: "Load protocol from templates"
-        text: "Choose the protocol to be loaded to the task."
-        text2: "This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
-        tab_public: "Team protocols"
-        tab_private: "My protocols"
-        tab_recent: "Recent protocols"
-        tab_archive: "Archived protocols"
+        text: "This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
+        text2: "Choose the protocol to be loaded to the task."
+        filter_protocols: "Filter protocols"
         thead_name: "Name"
         thead_keywords: "Keywords"
-        thead_nr_of_linked_children: "No. of linked tasks"
         thead_published_by: "Published by"
-        thead_added_by: "Added by"
-        thead_published_on: "Published at"
-        thead_created_at: "Created at"
-        thead_updated_at: "Last modified at"
+        thead_published_on: "Published on"
+        thead_version: "Ver."
+        thead_id: "ID"
         confirm_message: "Are you sure you wish to load protocol from templates? This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
         import_to_linked_task_rep: "Are you sure you wish to load protocol from templates? This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
-        load: "Load"
+        load: "Load protocol"
       copy_to_repository_modal:
         title: "Save to protocol templates"
         name_label: "Templates protocol name"
@@ -1118,7 +1135,7 @@ en:
       new_text_result: "Text"
       new_table_result: "Table"
       new_asset_result: "File"
-      published_on: "Published on <em>%{timestamp}</em> by <em>%{user}</em>"
+      published_on_html: "Added on <em>%{timestamp}</em> by <em>%{user}</em>"
       published_table: "entered a table on %{timestamp}."
       published_text:  "entered a text on %{timestamp}."
       published_asset:  "uploaded a file on %{timestamp}."
@@ -1230,6 +1247,7 @@ en:
   experiments:
     id: "ID"
     experiment_id: "Experiment ID"
+    experiment_actions: "EXPERIMENT ACTIONS"
     header:
       cards: "Cards"
       table: "Table"
@@ -1244,6 +1262,7 @@ en:
       restore_button: "Restore"
     card:
       name: "Experiment"
+      id: "ID"
       start_date: "Start date"
       modified_date: "Modified date"
       archived_date: "Archived date"
@@ -1301,6 +1320,9 @@ en:
       success_flash: 'Successfully duplicated experiment %{experiment} as template.'
       error_flash: 'Could not duplicate the experiment as template.'
       current_project: '(current project)'
+    duplicate_tasks:
+      success: 'Successfully duplicated %{count} task(s) as template.'
+      duplicating: 'Duplicating contents...'
     move:
       modal_title: 'Move experiment %{experiment}'
       notice: 'Moving is possible to projects, where you have permissions to create experiments and tasks.'
@@ -1311,25 +1333,110 @@ en:
       error_flash: ' Could not move the experiment. Experiment name is already in use. '
       task_permission: 'No permission: You don’t have edit access to all experiment tasks.'
       no_projects: 'No projects: You don’t have edit access to any other projects.'
+    table:
+      head_title: "%{experiment} | Overview"
+      column:
+        id_html: 'ID'
+        task_name_html: 'Task name'
+        due_date_html: 'Due date'
+        archived_html: 'Archived'
+        age_html: 'Age'
+        results_html: 'Results'
+        status_html: 'Status'
+        assigned_html: 'Assigned to'
+        tags_html: 'Tags'
+        comments_html: '<i data-toggle="tooltip" data-placement="left" title="Comments" class="fas fa-comment"></i>'
+      modal_move_modules:
+        title: "Move task(s) to experiment"
+        confirm: "Move"
+        no_experiments: "No experiments to move this task to."
+        success_flash: "Successfully moved task(s) to experiment %{experiment}."
+        error_flash: "Failed to move task(s) to experiment %{experiment}."
+      column_display_modal:
+        title: 'Task data display'
+        description: 'Click the eye buttons to hide or show columns in the table'
+        id: 'ID'
+        task_name: 'Task name'
+        due_date: 'Due date'
+        archived: 'Archived'
+        age: 'Age'
+        results: 'Results'
+        status: 'Status'
+        assigned: 'Assigned to'
+        tags: 'Tags'
+        comments: 'Comments'
+      toolbar:
+        new: 'New task'
+        edit: 'Edit'
+        archive: 'Archive'
+        restore: 'Restore'
+        move: 'Move'
+        duplicate: 'Duplicate'
+        task_access: 'Task access'
+        task_data: 'Task data display'
+      my_module_actions:
+        title: 'TASK ACTIONS'
+        edit: 'Edit'
+        duplicate: 'Duplicate as template'
+        move: 'Move to another experiment'
+        access: 'Task access'
+        archive: 'Archive'
+        restore: 'Restore'
+      filters:
+        name: 'Task name'
+        due_date: 'Due date'
+        status: 'Status'
+        status_placeholder: 'Select task status'
+        assigned: 'Assigned to'
+        assigned_placeholder: 'Select a person assigned to a task'
+      view:
+        canvas: 'Canvas'
+        table: 'Table'
+        cards: 'Cards'
+        archived_tasks: 'Go to Archived tasks'
+        active_tasks: 'Go to Active tasks'
+      add_tag: '+ Add tag'
+      search: 'Search...'
+      not_set: 'not set'
+      archive_group:
+        success_flash: "<strong>%{number}</strong> task(s) successfully archived."
+        error_flash: "Failed to archive task(s)."
     canvas:
       archive_confirm: "Are you sure to archive this experiment?"
-      actions: 'Actions'
+      actions: 'Experiment'
+      view: 'View'
       head_title: "%{project} | Overview"
-      canvas_edit: "Edit Experiment"
+      canvas_edit: "Edit workflow"
+      canvas_empty: "It's empty here. Please add some tasks."
+      new_my_module: "New task"
+      new_my_module_modal:
+        title: "Create new task"
+        name: "Task name"
+        name_placeholder: "Enter…"
+        due_date: "Due date (optional)"
+        due_date_placeholder: "Add due date"
+        assigned_tags_label: "Add tags (optional)"
+        assigned_tags_placeholder: "Add tags"
+        assigned_users: "Assign task to (optional)"
+        assigned_users_placeholder: "Assign task to a project member"
+        create: "Create task"
       zoom: "Zoom: "
       reload_on_submit: "Save action is running. Reloading this page may cause unexpected behavior."
       modal_manage_tags:
-        head_title: "Manage tags for"
+        head_title: "Manage tags"
         subtitle: "Showing tags of task %{module}"
         no_tags: "No tags!"
         edit_tag: "Edit tag."
         remove_tag: "Remove tag from task %{module}."
         delete_tag: "Permanently delete tag from all tasks."
+        delete_tag_confirmation: "Deleting a tag will remove it from all tagged tasks. Are you sure you wish to continue?"
+        explanatory_text: "Add a set of tags to mark the tasks inside this project. Changing the tag applies to all tagged tasks. Deleting a tag removes it from all tagged tasks."
         save_tag: "Save tag."
         cancel_tag: "Cancel changes to the tag."
         create: "Add"
         create_new: "New"
       edit:
+        id: "ID:"
         new_module: "New task"
         new_module_hover: "Drag me onto canvas"
         save: "Save workflow"
@@ -1337,20 +1444,22 @@ en:
         cancel: "Cancel"
         unsaved_work: "Are you sure you want to leave this page? All unsaved data will be lost."
         drag_connections: "Drag connection/s from here"
+        no_module_id: "to be assigned after saving"
         options_header: "Options"
         edit_module: "Rename task"
         task_access: "Task access"
-        clone_module: "Copy task as template (only Protocols steps copied)"
-        clone_module_group: "Copy workflow as template (only Protocols steps copied)"
+        clone_module: "Duplicate task as template (only Protocols steps duplicated)"
+        clone_module_group: "Duplicate workflow as template (only Protocols steps duplicated)"
+        clone_prefix: "Clone -"
         move_module: "Move task to another experiment"
         move_module_group: "Move workflow to another experiment"
         delete_module: "Archive task"
         delete_module_group: "Archive workflow"
         modal_new_module:
-          title: "Add new task"
+          title: "Create new task"
           name: "Task name"
           name_placeholder: "My task"
-          confirm: "Add"
+          confirm: "Create task"
         modal_edit_module:
           title: "Rename task"
           name: "Task name"
@@ -2173,7 +2282,7 @@ en:
         email_label: "Email"
         email_title: "Change email"
         new_email_label: "New email"
-        external_id_label: 'External Id'
+        external_id_label: 'External ID'
         external_id_title: 'External Id'
         current_password_label: "Current password"
         password_explanation: "(we need your current password to confirm your changes)"
@@ -2751,6 +2860,7 @@ en:
       component_duplicated: "Step content duplicated successfully."
       step_duplication_failed: "Step could not be duplicated, try again later."
       component_duplication_failed: "Step content could not be duplicated, try again later."
+      timestamp: "Created on %{date} by %{user}"
       status:
         complete: "Mark as done"
         uncomplete: "Unmark as done"
@@ -2873,7 +2983,7 @@ en:
         error_flash: "Step %{step} couldn't be deleted. One or more files are locked."
     edit:
       head_title: "Edit protocol"
-    no_keywords: "No keywords"
+    no_keywords: "—"
 
   invite_users:
     to_team:
@@ -2969,6 +3079,7 @@ en:
     step_comment_annotation_title: "%{user} mentioned you in a comment on step %{step}."
     step_description_title: "%{user} mentioned you in a description on step %{step}."
     checklist_title: "%{user} mentioned you in a checklist on step %{step}."
+    step_text_title: "%{user} mentioned you in a text on step %{step}."
     step_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module} | Step: %{step}"
     result_annotation_title: "%{user} mentioned you in result %{result}."
     result_comment_annotation_title: "%{user} mentioned you in a comment on result %{result}."
@@ -3223,6 +3334,7 @@ en:
     create: 'Create'
     change: "Change"
     remove: "Remove"
+    clone_label: "Clone"
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"
@@ -3233,17 +3345,23 @@ en:
     comment_placeholder_new: "Add new comment…"
     archived: "Archived"
     sort:
-      new_html: "<i class=\"fas fa-sort-numeric-up\"></i>&nbsp;&nbsp;Started last"
+      new_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;Started last"
       old_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Started first"
       atoz_html: "<i class=\"fas fa-sort-alpha-down\"></i>&nbsp;&nbsp;Name A to Z"
-      ztoa_html: "<i class=\"fas fa-sort-alpha-up\"></i>&nbsp;&nbsp;Name Z to A"
-      archived_new_html: "<span class=\"fa-stack\"><i class=\"fas fa-long-arrow-alt-up\"></i><i class=\"fas fa-archive\"></i></span>Archived last"
-      archived_old_html: "<span class=\"fa-stack\"><i class=\"fas fa-long-arrow-alt-down\"></i><i class=\"fas fa-archive\"></i></span>Archived first"
+      ztoa_html: "<i class=\"fas fa-sort-alpha-down-alt\"></i>&nbsp;&nbsp;Name Z to A"
+      archived_new_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;Archived last"
+      archived_old_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Archived first"
+      id_asc_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;ID ascending"
+      id_desc_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;ID descending"
+      due_first_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Due first"
+      due_last_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;Due last"
     sort_new:
-      new: "Newest"
-      old: "Oldest"
-      atoz: "A-Z"
-      ztoa: "Z-A"
+      new: "Added last"
+      old: "Added first"
+      new_updated: "Modified last"
+      old_updated: "Modified first"
+      atoz: "Name A to Z"
+      ztoa: "Name Z to A"
     module:
       one: "task"
       other: "tasks"
@@ -3460,4 +3578,5 @@ en:
   inline_edit:
     errors:
       over_limit: "%{attribute} is too long (maximum number is %{limit} characters)"
+      below_limit: "%{attribute} is too short (minimum number is %{limit} characters)"
       blank: "%{attribute} can't be empty"

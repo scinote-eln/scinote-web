@@ -1,4 +1,4 @@
-Copyright (c) 2016 BioSistemika USA, LLC <info@biosistemika.com>
+Copyright (c) 2016 SciNote, LLC <info@scinote.net>
 
 SciNote is licensed under the following license:
 

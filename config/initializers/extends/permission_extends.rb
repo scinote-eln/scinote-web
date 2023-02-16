@@ -18,6 +18,7 @@ module PermissionExtends
   module ProtocolPermissions
     %w(
       READ
+      READ_ARCHIVED
       MANAGE
       USERS_MANAGE
       MANAGE_DRAFT
@@ -138,6 +139,7 @@ module PermissionExtends
       TeamPermissions::LABEL_TEMPLATES_READ,
       TeamPermissions::LABEL_TEMPLATES_MANAGE,
       ProtocolPermissions::READ,
+      ProtocolPermissions::READ_ARCHIVED,
       ProtocolPermissions::MANAGE,
       ReportPermissions::READ,
       ReportPermissions::MANAGE,
@@ -229,6 +231,7 @@ module PermissionExtends
     VIEWER_PERMISSIONS = [
       TeamPermissions::LABEL_TEMPLATES_READ,
       ProtocolPermissions::READ,
+      ProtocolPermissions::READ_ARCHIVED,
       ReportPermissions::READ,
       ProjectPermissions::READ,
       ProjectPermissions::READ_ARCHIVED,
@@ -243,7 +246,9 @@ module PermissionExtends
       MyModulePermissions::READ,
       MyModulePermissions::USERS_READ,
       MyModulePermissions::READ_ARCHIVED,
-      MyModulePermissions::ACTIVITIES_READ
+      MyModulePermissions::ACTIVITIES_READ,
+      RepositoryPermissions::READ,
+      RepositoryPermissions::READ_ARCHIVED
     ]
   end
 end

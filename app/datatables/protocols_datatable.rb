@@ -41,6 +41,7 @@ class ProtocolsDatatable < CustomDatatable
       "Protocol.name",
       'Protocol.archived_on',
       'Protocol.published_on',
+      "Protocol.#{Protocol::PREFIXED_ID_SQL}",
       "Protocol.updated_at"
     ]
   end
@@ -62,9 +63,11 @@ class ProtocolsDatatable < CustomDatatable
   # now the method checks if the column is the created_at or updated_at and generate a custom SQL to parse
   # it back to the caller method
   def new_search_condition(column, value)
-    model, column = column.split('.')
+    model, column = column.split('.', 2)
     model = model.constantize
     case column
+    when Protocol::PREFIXED_ID_SQL
+      casted_column = ::Arel::Nodes::SqlLiteral.new(Protocol::PREFIXED_ID_SQL)
     when 'published_on'
       casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
                         [ Arel.sql("to_char( protocols.created_at, '#{ formated_date }' ) AS VARCHAR") ] )

@@ -61,8 +61,10 @@ module WopiUtil
       discovery_json[:proof_key_old_mod] = key.xpath('@oldmodulus').first.value
       discovery_json[:proof_key_old_exp] = key.xpath('@oldexponent').first.value
       discovery_json[:actions] = []
+      wopi_net_zone_name = ENV.fetch('WOPI_NET_ZONE_NAME', nil)
+      wopi_apps_path = wopi_net_zone_name.present? ? "//net-zone[@name='#{wopi_net_zone_name}']//app" : '//app'
 
-      @doc.xpath('//app').each do |app|
+      @doc.xpath(wopi_apps_path).each do |app|
         app_name = app.xpath('@name').first.value
         next unless %w(Excel Word PowerPoint WopiTest).include?(app_name)
 

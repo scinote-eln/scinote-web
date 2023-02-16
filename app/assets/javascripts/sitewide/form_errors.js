@@ -42,8 +42,9 @@ var renderFormError = function(ev, input, errMsgs, clearErr, errAttributes) {
     }
 
     var $errSpan = "<span class='help-block'" +
-      errAttributes + '>' + errorText + '</span>';
+      errAttributes + '>' + errorText + '.' + '</span>';
     $(input).after($errSpan);
+    $(input).closest('.modal').modal('handleUpdate');
   }
 
   var $parent;

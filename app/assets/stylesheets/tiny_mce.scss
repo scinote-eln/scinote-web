@@ -1,4 +1,4 @@
-// scss-lint:disable ImportantRule
+// scss-lint:disable ImportantRule SelectorDepth
 @import "constants";
 
 @font-face {
@@ -22,6 +22,11 @@
     color: $color-silver-chalice;
     content: attr(data-placeholder);
   }
+
+  p {
+    margin: 0;
+    padding: 0;
+  }
 }
 
 .mce-tinymce {
@@ -38,6 +43,16 @@
   position: relative !important;
 }
 
+.tox.tox-tinymce {
+  left: -100000px;
+  position: absolute;
+
+  &.tox-tinymce--loaded {
+    left: 0;
+    position: relative;
+  }
+}
+
 .tinymce-placeholder {
   background: $color-concrete;
   opacity: .7;
@@ -45,8 +60,15 @@
   width: 100%;
 }
 
-.tinymce-save-button,
-.tinymce-cancel-button {
+.tox-edit-area {
+  label {
+    color: $color-silver-chalice !important;
+    padding: 5px !important;
+  }
+}
+
+.tinymce-save-button.tox-mbtn,
+.tinymce-cancel-button.tox-mbtn {
   cursor: pointer;
 
   .fas {
@@ -54,6 +76,15 @@
     font-weight: 900;
     margin-top: 3px;
   }
+
+  &:hover {
+    background: transparent !important;
+  }
+}
+
+.tinymce-save-controls {
+  display: flex;
+  margin-left: auto !important;
 }
 
 .tinymce-status-badge {
@@ -69,18 +100,17 @@
   background: $color-white !important;
 }
 
-
-
 .restore-draft-notification {
   align-items: center;
   background: $state-info-bg !important;
   display: flex;
+  flex-basis: 100%;
   height: 30px !important;
-  padding: 0 10px !important;
+  padding: 10px !important;
 
   .notification-text {
     flex-grow: 1;
-    max-width: 75%;
+    max-width: 85%;
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -152,25 +182,6 @@
   &::after {
     display: none;
   }
-
-  .mce-container-body.mce-abs-layout {
-    background: $brand-primary;
-    position: relative;
-    top: -10px;
-
-    .mce-container,
-    .mce-widget {
-      background: transparent !important;
-    }
-
-    .mce-btn:hover {
-      border-color: transparent;
-    }
-
-    .mce-ico {
-      color: $color-white;
-    }
-  }
 }
 
 .mce-window {
@@ -193,4 +204,62 @@
   }
 }
 
-// scss-lint:enable ImportantRule
+// fix for TinyMCE 6 vs Boostrap 3 .show conflict
+.tox.tox-tinymce.show {
+  display: flex !important;
+}
+
+.tox .tox-pop {
+  margin-top: -12px;
+
+  &::after,
+  &::before {
+    display: none !important;
+  }
+
+  .tox-pop__dialog {
+    border: 0;
+    border-radius: 0 0 3px 3px;
+    box-shadow: none;
+  }
+
+  .tox-toolbar {
+    background: $brand-primary !important;
+    top: -10px;
+
+    button {
+      color: $color-white;
+    }
+
+    .tox-icon svg {
+      fill: $color-white;
+    }
+  }
+}
+
+.tox-edit-area__iframe {
+  background-color: transparent !important;
+  z-index: 1;
+}
+
+.tox-sidebar-wrap {
+  flex-direction: column !important;
+
+  .restore-draft-notification {
+    flex-basis: 30px;
+  }
+}
+
+.tox-editor-header {
+  z-index: 2 !important;
+}
+
+.tox-dialog-wrap {
+  .tox-dialog__body-nav {
+    .tox-dialog__body-nav-item:nth-child(3) {
+      display: none;
+    }
+  }
+}
+
+// scss-lint:enable ImportantRule SelectorDepth

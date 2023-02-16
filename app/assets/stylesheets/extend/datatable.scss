@@ -55,6 +55,10 @@
 
     td {
       padding-left: 10px;
+
+      .nowrap {
+        white-space: nowrap;
+      }
     }
 
     .dt-body-center {

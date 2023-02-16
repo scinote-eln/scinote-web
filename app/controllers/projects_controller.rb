@@ -13,7 +13,7 @@ class ProjectsController < ApplicationController
 
   before_action :switch_team_with_param, only: :index
   before_action :load_vars, only: %i(show permissions edit update notifications
-                                     sidebar experiments_cards view_type actions_dropdown)
+                                     sidebar experiments_cards view_type actions_dropdown create_tag)
   before_action :load_current_folder, only: %i(index cards new show)
   before_action :check_view_permissions, except: %i(index cards new create edit update archive_group restore_group
                                                     users_filter actions_dropdown)
@@ -94,7 +94,8 @@ class ProjectsController < ApplicationController
   end
 
   def sidebar
-    @current_sort = @project.current_view_state(current_user).state.dig('experiments', params[:view_mode], 'sort')
+    @current_sort = params[:sort] || @project.current_view_state(current_user)
+                                             .state.dig('experiments', params[:view_mode], 'sort')
     render json: {
       html: render_to_string(
         partial: 'shared/sidebar/experiments', locals: {
@@ -264,6 +265,24 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def create_tag
+    render_403 unless can_manage_project_tags?(@project)
+
+    @tag = @project.tags.create(tag_params.merge({
+                                                   created_by: current_user,
+                                                   last_modified_by: current_user,
+                                                   color: Constants::TAG_COLORS.sample
+                                                 }))
+
+    render json: {
+      tag: {
+        id: @tag.id,
+        name: @tag.name,
+        color: @tag.color
+      }
+    }
+  end
+
   def restore_group
     projects = current_team.projects.archived.where(id: params[:projects_ids])
     counter = 0
@@ -287,9 +306,6 @@ class ProjectsController < ApplicationController
   end
 
   def show
-    # This is the "info" view
-    current_team_switch(@project.team)
-
     view_state = @project.current_view_state(current_user)
     @current_sort = view_state.state.dig('experiments', experiments_view_mode(@project), 'sort') || 'atoz'
     @current_view_type = view_state.state.dig('experiments', 'view_type')
@@ -372,9 +388,13 @@ class ProjectsController < ApplicationController
   end
 
   def load_vars
-    @project = Project.find_by(id: params[:id])
+    @project = Project.find_by(id: params[:id] || params[:project_id])
 
     render_404 unless @project
+  end
+
+  def tag_params
+    params.require(:tag).permit(:name)
   end
 
   def load_current_folder
@@ -386,6 +406,7 @@ class ProjectsController < ApplicationController
   end
 
   def check_view_permissions
+    current_team_switch(@project.team) if current_team != @project.team
     render_403 unless can_read_project?(@project)
   end
 

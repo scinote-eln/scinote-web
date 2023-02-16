@@ -21,7 +21,7 @@ $color-module-hover: $brand-primary;
   align-items: center;
   display: flex;
 
-  #edit-canvas-button {
+  #edit-canvas-button, .new-my-module-button {
     margin-right: 5px;
   }
 
@@ -48,9 +48,8 @@ $color-module-hover: $brand-primary;
 }
 
 #update-canvas {
-
   .canvas-header {
-    margin-bottom: 5px;
+    padding: 1em 2em;
   }
 }
 
@@ -89,6 +88,14 @@ $color-module-hover: $brand-primary;
   overflow: hidden;
   // for IE10+ touch devices
   touch-action: none;
+
+  .empty-canvas {
+    color: $color-volcano;
+    display: flex;
+    font-size: 22px;
+    justify-content: center;
+    margin-top: 48px;
+  }
 }
 
 .diagram {
@@ -192,12 +199,24 @@ path, ._jsPlumb_endpoint {
       left: 0;
     }
   }
+
   .panel-body {
     height: 90px;
   }
 
   .ep {
     font-style: italic;
+
+    .task-card-code {
+      color: $color-volcano;
+      font-style: normal;
+      font-weight: 400;
+      margin-bottom: 4px;
+
+      .new-my-module-canvas {
+        color: $color-silver-chalice;
+      }
+    }
   }
 
   .dropdown {
@@ -530,6 +549,26 @@ li.module-hover {
     margin-right: 15px;
     margin-top: 10px;
   }
+
+  #manage-module-tags-modal-intro {
+    padding-left: 15px;
+    border-top: 0;
+    width: 568px;
+    height: 30px;
+
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 21px;
+
+    color: $color-volcano;
+
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+  }
 }
 
 
@@ -597,17 +636,6 @@ li.module-hover {
         }
       }
     }
-
-    .dropdown-option.users-dropdown-list {
-      padding: 8px 10px;
-
-      .item-avatar {
-        border-radius: 50%;
-        height: 32px;
-        margin: 0 16px 0 0;
-        width: 32px;
-      }
-    }
   }
 
   .projects-toolbar {
@@ -666,7 +694,6 @@ li.module-hover {
             font-weight: bold;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap;
             width: 100%;
           }
 
@@ -689,18 +716,13 @@ li.module-hover {
           .project-name-cell {
             align-items: center;
             display: flex;
-            height: 2em;
-            margin: 0 1.75em;
             overflow: hidden;
 
             a {
               color: inherit;
-              overflow: hidden;
-              white-space: nowrap;
             }
 
             .name {
-              line-height: 2em;
               margin: 0;
               overflow: hidden;
               text-overflow: ellipsis;
@@ -713,6 +735,8 @@ li.module-hover {
             top: .2em;
 
             .project-actions-menu {
+              height: 40px;
+
               a {
                 @include font-button;
                 padding: .5em 1em;
@@ -775,6 +799,7 @@ li.module-hover {
                 height: 2em;
                 line-height: 2em;
                 margin-right: .25em;
+                position: unset;
                 width: 2em;
               }
 
@@ -854,7 +879,8 @@ li.module-hover {
       }
 
       &.list {
-        grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 3), minmax(100px, auto)) max-content max-content;
+        grid-auto-rows: minmax(3em, auto) 1px;
+        grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 2), minmax(100px, auto)) max-content max-content;
 
         .projects-group {
           display: contents;
@@ -902,7 +928,7 @@ li.module-hover {
             }
 
             .name {
-              grid-column: 5 span;
+              grid-column: 6 span;
               line-height: 3em;
 
               &:before {
@@ -926,28 +952,39 @@ li.module-hover {
               grid-column: 2;
               height: 100%;
               margin: 0;
+              padding: 5px 0;
+
+              h3 {
+                line-height: 1.25em;
+              }
 
               a:hover {
                 color: $brand-primary-light;
               }
             }
 
-            .start-date-cell {
+            .project-code-cell {
+              display: flex;
+              align-items: center;
               grid-column: 3;
             }
 
-            .visibility-cell {
+            .start-date-cell {
               grid-column: 4;
             }
 
-            .user-cell {
+            .visibility-cell {
               grid-column: 5;
+            }
+
+            .user-cell {
+              grid-column: 6;
             }
 
             .actions-cell {
               align-items: center;
               display: flex;
-              grid-column: 6;
+              grid-column: 7;
               position: initial;
             }
           }
@@ -1017,8 +1054,11 @@ li.module-hover {
       display: none !important;
     }
 
+
     .projects-container {
       .project-actions-menu {
+        height: 40px;
+
         .btn-light:hover {
           background: $color-alto;
         }
@@ -1026,6 +1066,58 @@ li.module-hover {
 
       .cards-wrapper {
         grid-auto-rows: 2.5em;
+
+        .visibility-cell {
+          .value {
+            color: $color-black;
+          }
+        }
+
+        .start-date-cell {
+          .value {
+            color: $color-black;
+          }
+        }
+
+        .archived-date-cell {
+          z-index: 2;
+
+          .value {
+            color: $color-black;
+          }
+        }
+
+        &.last-page.cards {
+          .project-card {
+            .start-date-cell {
+              top: 36px;
+
+              .value {
+                color: $color-black;
+              }
+            }
+
+            .archived-date-cell {
+              top: 26px;
+
+              .value {
+                color: $color-black;
+              }
+            }
+
+            .visibility-cell {
+              top: 16px;
+
+              .value {
+                color: $color-black;
+              }
+            }
+
+            .user-cell {
+              top: 6px;
+            }
+          }
+        }
 
         .card.project-card {
           .data-row {
@@ -1046,24 +1138,32 @@ li.module-hover {
         }
 
         &.list {
-          --list-columns-number: 7;
-          grid-auto-rows: 3em 1px;
-          grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 2), minmax(100px, auto)) max-content;
+          --list-columns-number: 8;
+          grid-auto-rows: minmax(3em, auto) 1px;
+          grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 3), minmax(100px, auto)) max-content max-content;
 
           .card {
             &.folder-card {
               .name {
-                grid-column: 6 span;
+                grid-column: 7 span;
               }
             }
 
+            .user-cell {
+              grid-column: 7;
+            }
+
             .archived-date-cell {
-              grid-column: 6;
+              grid-column: 5;
             }
 
             .actions-cell {
-              grid-column: 7;
+              grid-column: 8;
               position: initial;
+            }
+
+            .visibility-cell {
+              grid-column: 6;
             }
           }
         }
@@ -1080,5 +1180,58 @@ li.module-hover {
 
   .sci-input-container.left-icon {
     margin: 1em 0;
+  }
+}
+
+.cards-wrapper.cards {
+  grid-gap: 25px;
+
+  .project-card {
+    .project-name-cell {
+      align-items: start !important;
+      top: 12%;
+      min-height: 35px;
+      position: absolute;
+      left: 14px;
+      top: 42px;
+
+      a {
+        color: inherit;
+      }
+
+      .name {
+        -webkit-box-orient: vertical;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+      }
+    }
+
+    .project-code-cell {
+      height: min-content;
+      margin-top: 3px;
+      position: relative;
+    }
+
+    .data-row {
+      position: relative;
+      top: 5%;
+
+      .card-label {
+        color: #808080 !important;
+      }
+
+      &.start-date-cell {
+        top: 30px;
+      }
+
+      &.visibility-cell {
+        top: 18px;
+      }
+
+      &.user-cell {
+        top: 5px;
+      }
+    }
   }
 }
