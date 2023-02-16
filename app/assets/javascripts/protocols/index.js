@@ -38,6 +38,12 @@ var ProtocolsIndex = (function() {
     initVersionsModal();
   }
 
+  function reloadTable() {
+    rowsSelected = [];
+    updateButtons();
+    protocolsDatatable.ajax.reload();
+  }
+
   function selectDate($field) {
     var datePicker = $field.data('DateTimePicker');
     if (datePicker && datePicker.date()) {
@@ -429,9 +435,28 @@ var ProtocolsIndex = (function() {
   function archiveProtocols(url, ids) {
     $.post(url, { protocol_ids: ids }, (data) => {
       HelperModule.flashAlertMsg(data.message, 'success');
-      protocolsDatatable.ajax.reload();
+      reloadTable();
     }).error((data) => {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+    });
+  }
+
+  function initRestoreProtocols() {
+    $('.protocols-index').on('click', '#restoreProtocol', function(e) {
+      restoreProtocol(e.currentTarget.dataset.url, rowsSelected);
+    });
+  }
+
+  function restoreProtocol(url, ids) {
+    $.post(url, { protocol_ids: ids }, (data) => {
+      HelperModule.flashAlertMsg(data.message, 'success');
+      reloadTable();
+    }).error((error) => {
+      if (error.status === 401) {
+        HelperModule.flashAlertMsg(I18n.t('protocols.index.restore_unauthorized'), 'danger');
+      } else {
+        HelperModule.flashAlertMsg(I18n.t('protocols.index.restore_error'), 'danger');
+      }
     });
   }
 
@@ -521,7 +546,7 @@ var ProtocolsIndex = (function() {
       modal.find('.modal-body').html('');
 
       // Simply re-render table
-      protocolsDatatable.ajax.reload();
+      reloadTable();
     }
 
     // Make private modal hidden action
@@ -547,13 +572,6 @@ var ProtocolsIndex = (function() {
 
     // Archive modal hidden action
     $('#archive-results-modal').on('hidden.bs.modal', function() {
-      refresh($(this));
-      updateDataTableSelectAllCheckbox();
-      updateButtons();
-    });
-
-    // Restore modal hidden action
-    $('#restore-results-modal').on('hidden.bs.modal', function() {
       refresh($(this));
       updateDataTableSelectAllCheckbox();
       updateButtons();
@@ -963,19 +981,20 @@ var ProtocolsIndex = (function() {
       importResultsModal.find('.modal-body').html('');
 
       // Also reload table
-      protocolsDatatable.ajax.reload();
+      reloadTable();
     });
   }
 
   init();
   initManageAccessButton();
   initArchiveProtocols();
+  initRestoreProtocols();
   initExportProtocols();
   initdeleteDraftModal();
 
   return {
     reloadTable: function() {
-      protocolsDatatable.ajax.reload();
+      reloadTable();
     }
   };
 }());

@@ -38,7 +38,9 @@ class Protocol < ApplicationRecord
   validates :protocol_type, presence: true
   validate :prevent_update,
            on: :update,
-           if: -> { in_repository_published? && !protocol_type_changed?(from: 'in_repository_draft') }
+           if: lambda {
+             in_repository_published? && !protocol_type_changed?(from: 'in_repository_draft') && !archived_changed?
+           }
 
   with_options if: :in_module? do
     validates :my_module, presence: true
@@ -440,12 +442,8 @@ class Protocol < ApplicationRecord
     self.archived_on = nil
     self.restored_by = user
     self.restored_on = Time.now
-    if published_on.present?
-      self.published_on = Time.now
-      self.protocol_type = Protocol.protocol_types[:in_repository_public]
-    else
-      self.protocol_type = Protocol.protocol_types[:in_repository_private]
-    end
+    self.archived = false
+
     result = save
 
     if result

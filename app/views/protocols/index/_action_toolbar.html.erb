@@ -19,7 +19,7 @@
     <i class="fas fa-archive"></i>
     <span class="button-text"><%= t("protocols.index.action_toolbar.archive") %></span>
   </button>
-  <button id="restoreProtocol" class="btn btn-light multiple-object-action hidden only-archive" data-for="restorable">
+  <button id="restoreProtocol" class="btn btn-light multiple-object-action hidden only-archive" data-url="<%= restore_protocols_path %>" data-for="restorable">
     <i class="fas fa-undo"></i>
     <span class="button-text"><%= t("protocols.index.action_toolbar.restore") %></span>
   </button>
