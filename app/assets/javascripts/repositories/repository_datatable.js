@@ -167,28 +167,28 @@ var RepositoryDatatable = (function(global) {
   function updateDataTableSelectAllCtrl() {
     var $table = TABLE.table().node();
     var $header = TABLE.table().header();
-    var $chkboxAll = $('.repository-row-selector', $table);
-    var $chkboxChecked = $('.repository-row-selector:checked', $table);
-    var chkboxSelectAll = $(SELECT_ALL_SELECTOR, $header).get(0);
+    var $checkboxAll = $('.repository-row-selector', $table);
+    var $checkboxChecked = $('.repository-row-selector:checked', $table);
+    var checkboxSelectAll = $(SELECT_ALL_SELECTOR, $header).get(0);
     // If none of the checkboxes are checked
-    if ($chkboxChecked.length === 0) {
-      chkboxSelectAll.checked = false;
-      if ('indeterminate' in chkboxSelectAll) {
-        chkboxSelectAll.indeterminate = false;
+    if ($checkboxChecked.length === 0) {
+      checkboxSelectAll.checked = false;
+      if ('indeterminate' in checkboxSelectAll) {
+        checkboxSelectAll.indeterminate = false;
       }
 
     // If all of the checkboxes are checked
-    } else if ($chkboxChecked.length === $chkboxAll.length) {
-      chkboxSelectAll.checked = true;
-      if ('indeterminate' in chkboxSelectAll) {
-        chkboxSelectAll.indeterminate = false;
+    } else if ($checkboxChecked.length === $checkboxAll.length) {
+      checkboxSelectAll.checked = true;
+      if ('indeterminate' in checkboxSelectAll) {
+        checkboxSelectAll.indeterminate = false;
       }
 
     // If some of the checkboxes are checked
     } else {
-      chkboxSelectAll.checked = true;
-      if ('indeterminate' in chkboxSelectAll) {
-        chkboxSelectAll.indeterminate = true;
+      checkboxSelectAll.checked = true;
+      if ('indeterminate' in checkboxSelectAll) {
+        checkboxSelectAll.indeterminate = true;
       }
     }
   }
