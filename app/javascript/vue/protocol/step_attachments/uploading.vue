@@ -13,7 +13,7 @@
     <div v-if="!attachment.error" class="progress-container">
       <div class="progress-bar" :style="`width: ${attachment.attributes.progress}%`"></div>
     </div>
-    <div v-if="attachment.error" class="error-container">
+    <div v-if="attachment.error" class="error-container" :title="attachment.error">
       {{ attachment.error }}
     </div>
     <div v-if="attachment.error" class="remove-button" @click="$emit('attachment:delete')">
