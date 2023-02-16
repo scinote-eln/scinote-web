@@ -38,6 +38,12 @@ var ProtocolsIndex = (function() {
     initVersionsModal();
   }
 
+  function reloadTable() {
+    rowsSelected = [];
+    updateButtons();
+    protocolsDatatable.ajax.reload();
+  }
+
   function selectDate($field) {
     var datePicker = $field.data('DateTimePicker');
     if (datePicker && datePicker.date()) {
@@ -429,8 +435,7 @@ var ProtocolsIndex = (function() {
   function archiveMyModules(url, ids) {
     $.post(url, { protocol_ids: ids }, (data) => {
       HelperModule.flashAlertMsg(data.message, 'success');
-      unselectAllRows();
-      protocolsDatatable.ajax.reload();
+      reloadTable();
     }).error((data) => {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
@@ -445,8 +450,7 @@ var ProtocolsIndex = (function() {
   function restoreProtocol(url, ids) {
     $.post(url, { protocol_ids: ids }, (data) => {
       HelperModule.flashAlertMsg(data.message, 'success');
-      unselectAllRows();
-      protocolsDatatable.ajax.reload();
+      reloadTable();
     }).error((error) => {
       if (error.status === 401) {
         HelperModule.flashAlertMsg(I18n.t('protocols.index.restore_unauthorized'), 'danger');
@@ -524,7 +528,7 @@ var ProtocolsIndex = (function() {
       modal.find('.modal-body').html('');
 
       // Simply re-render table
-      protocolsDatatable.ajax.reload();
+      reloadTable();
     }
 
     // Make private modal hidden action
@@ -596,11 +600,6 @@ var ProtocolsIndex = (function() {
         checkboxSelectAll.indeterminate = true;
       }
     }
-  }
-
-  function unselectAllRows() {
-    rowsSelected = [];
-    updateButtons();
   }
 
   function updateButtons() {
@@ -964,7 +963,7 @@ var ProtocolsIndex = (function() {
       importResultsModal.find('.modal-body').html('');
 
       // Also reload table
-      protocolsDatatable.ajax.reload();
+      reloadTable();
     });
   }
 
@@ -976,7 +975,7 @@ var ProtocolsIndex = (function() {
 
   return {
     reloadTable: function() {
-      protocolsDatatable.ajax.reload();
+      reloadTable();
     }
   };
 }());
