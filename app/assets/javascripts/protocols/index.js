@@ -353,29 +353,18 @@ function initModals() {
 }
 
 function updateDataTableSelectAllCheckbox() {
-  var table = protocolsDatatable.table().node();
-  var checkboxesAll = $("tbody input[type='checkbox']", protocolsTableEl);
-  var checkboxesChecked = $("tbody input[type='checkbox']:checked", protocolsTableEl);
-  var checkboxSelectAll = $("thead input[name='select_all']", table).get(0);
+  const tableWrapper = $('.dataTables_wrapper');
+  const checkboxes = $("tbody input[type='checkbox']", protocolsTableEl);
+  const selectedCheckboxes = $("tbody input[type='checkbox']:checked", protocolsTableEl);
+  const selectAllCheckbox = $("thead input[name='select_all']", tableWrapper);
 
-  if (checkboxesChecked.length === 0) {
-    // If none of the checkboxes are checked
-    checkboxSelectAll.checked = false;
-    if("indeterminate" in checkboxSelectAll) {
-      checkboxSelectAll.indeterminate = false;
-    }
-  } else if (checkboxesChecked.length === checkboxesAll.length) {
-    // If all of the checkboxes are checked
-    checkboxSelectAll.checked = true;
-    if ("indeterminate" in checkboxSelectAll) {
-      checkboxSelectAll.indeterminate = false;
-    }
+  selectAllCheckbox.prop('indeterminate', false);
+  if (selectedCheckboxes.length === 0) {
+    selectAllCheckbox.prop('checked', false);
+  } else if (selectedCheckboxes.length === checkboxes.length) {
+    selectAllCheckbox.prop('checked', true);
   } else {
-    // If some of the checkboxes are checked
-    checkboxSelectAll.checked = true;
-    if ("indeterminate" in checkboxSelectAll) {
-      checkboxSelectAll.indeterminate = true;
-    }
+    selectAllCheckbox.prop('indeterminate', true);
   }
 }
 
