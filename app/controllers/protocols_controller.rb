@@ -803,6 +803,7 @@ class ProtocolsController < ApplicationController
 
           # Create folder and xml file for each protocol and populate it
           @protocols.each do |protocol|
+            protocol = protocol.published_versions.order(version_number: :desc).first || protocol
             protocol_dir = get_guid(protocol.id).to_s
             ostream.put_next_entry("#{protocol_dir}/eln.xml")
             ostream.print(generate_protocol_xml(protocol))
