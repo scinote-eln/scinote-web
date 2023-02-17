@@ -639,8 +639,10 @@ var ProjectsIndex = (function() {
 
   function updateSelectAllCheckbox() {
     const tableWrapper = $(cardsWrapper);
-    const checkboxesCount = $('.sci-checkbox.folder-card-selector, .sci-checkbox.project-card-selector',
-      tableWrapper).length;
+    const checkboxesCount = $(
+      '.sci-checkbox.folder-card-selector, .sci-checkbox.project-card-selector',
+      tableWrapper
+    ).length;
     const selectedCheckboxesCount = selectedProjects.length + selectedProjectFolders.length;
     const selectAllCheckbox = $('.sci-checkbox.select-all', tableWrapper);
 
