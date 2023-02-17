@@ -43,6 +43,7 @@
 <%= render partial: "protocols/index/import_results_modal.html.erb" %>
 <%= render partial: "protocols/index/linked_children_modal.html.erb" %>
 <%= render partial: "protocols/index/protocolsio_modal.html.erb" %>
+<%= render partial: "protocols/index/new_protocol_modal.html.erb", locals: {type: 'new'} %>
 
 <%= render partial: "protocols/import_export/import_elements.html.erb" %>
 
@@ -54,5 +55,6 @@
 <%= stylesheet_link_tag 'datatables' %>
 <%= javascript_include_tag "assets/wopi/create_wopi_file" %>
 <%= javascript_include_tag "protocols/index" %>
+<%= javascript_include_tag "protocols/new_protocol" %>
 <%= javascript_pack_tag 'pdfjs/pdf_js' %>
 <%= stylesheet_pack_tag 'pdfjs/pdf_js_styles' %>

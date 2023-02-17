@@ -233,3 +233,27 @@
     width: 90vw;
   }
 }
+
+#newProtocolModal {
+  .description {
+    @include font-button;
+    margin: 1em 0;
+  }
+
+  .default-role-container {
+    @include font-button;
+    display: flex;
+    line-height: 24px;
+    margin: 1em 0;
+
+    .sci-checkbox-container {
+      margin: 4px 8px 4px 0;
+    }
+
+    small {
+      @include font-small;
+      display: block;
+      line-height: 16px;
+    }
+  }
+}
