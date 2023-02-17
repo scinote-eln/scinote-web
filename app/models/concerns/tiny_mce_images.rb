@@ -178,7 +178,12 @@ module TinyMceImages
 
       ActiveRecord::Base.transaction do
         sanitized_text.scan(/src="(data:image\/[^;]+;base64[^"]+)"/i).flatten.each do |base64_src|
-          base64_data = base64_src.split('base64,').last
+          base64_data_parts = base64_src.split('base64,')
+          base64_file_extension =
+            MIME::Types[
+              base64_data_parts.first.split(':').last[0..-2]
+            ].first.preferred_extension
+          base64_data = base64_data_parts.last
 
           tiny_image = TinyMceAsset.create!(
             team: Team.search_by_object(self),
@@ -189,7 +194,7 @@ module TinyMceImages
 
           tiny_image.image.attach(
             io: StringIO.new(Base64.decode64(base64_data)),
-            filename: "#{Asset.generate_unique_secure_token}.#{tiny_image.image.type}"
+            filename: "#{Asset.generate_unique_secure_token}.#{base64_file_extension}"
           )
 
           @extracted_base64_images << tiny_image
