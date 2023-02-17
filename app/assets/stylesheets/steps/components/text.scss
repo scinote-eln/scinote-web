@@ -15,6 +15,11 @@
     flex: 0;
   }
 
+  .img-responsive {
+    display: inline;
+    vertical-align: baseline;
+  }
+
   .view-text-element {
     a {
       pointer-events: initial;
