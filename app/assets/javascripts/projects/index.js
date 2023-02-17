@@ -510,6 +510,9 @@ var ProjectsIndex = (function() {
       },
       error: function() {
         viewContainer.html('Error loading project list');
+      },
+      complete: function() {
+        updateSelectAllCheckbox();
       }
     });
   }
