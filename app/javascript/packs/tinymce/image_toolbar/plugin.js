@@ -1,4 +1,4 @@
-/* global tinymce MarvinJsEditor */
+/* global I18n tinymce MarvinJsEditor */
 tinymce.PluginManager.add('custom_image_toolbar', (editor) => {
 
   editor.ui.registry.addIcon(
@@ -10,6 +10,7 @@ tinymce.PluginManager.add('custom_image_toolbar', (editor) => {
 
   editor.ui.registry.addButton('image_download', {
     icon: 'download',
+    tooltip: I18n.t('general.download'),
     onAction: () => {
       const editorIframe = $(`#${editor.id}`).next().find('.tox-edit-area iframe');
       const image = editorIframe.contents().find('img[data-mce-selected="1"]');
