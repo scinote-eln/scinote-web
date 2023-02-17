@@ -12,8 +12,8 @@
           :data-gallery-view-id="stepId"
           :data-preview-url="attachment.attributes.urls.preview"
         >
-          <span data-toggle="tooltip" 
-               data-placement="bottom" 
+          <span data-toggle="tooltip"
+               data-placement="bottom"
                :title="`${ attachment.attributes.file_name }`">
             {{ attachment.attributes.file_name }}
           </span>
@@ -44,9 +44,8 @@
       <div v-else class="empty-office-file">
         <h2>{{ i18n.t('assets.empty_office_file.description') }}</h2>
         <a :href="attachment.attributes.urls.load_asset"
-           remote="true"
            class="btn btn-primary reload-asset"
-           :params="{asset: {view_mode: attachment.attributes.view_mode}}">
+           @click.prevent="reloadAsset">
           {{ i18n.t('assets.empty_office_file.reload') }}
         </a>
       </div>
@@ -72,6 +71,7 @@
 </template>
 
 <script>
+  import axios from 'axios'
   import ContextMenuMixin from './mixins/context_menu.js';
   import ContextMenu from './context_menu.vue';
   import PdfViewer from '../../shared/pdf_viewer.vue';
@@ -89,6 +89,13 @@
         type: Number,
         required: true
       }
+    },
+    methods: {
+      reloadAsset() {
+        axios.get(this.attachment.attributes.urls.load_asset, {
+          params: { asset: { view_mode: this.attachment.attributes.view_mode } },
+        });
+      },
     },
   }
 </script>
