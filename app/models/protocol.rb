@@ -257,6 +257,10 @@ class Protocol < ApplicationRecord
         .or(team.protocols.in_repository_published_original.where(id: id))
   end
 
+  def latest_published_version
+    published_versions.order(version_number: :desc).first
+  end
+
   def permission_parent
     in_module? ? my_module : team
   end
@@ -608,25 +612,25 @@ class Protocol < ApplicationRecord
       description: description,
       added_by: current_user,
       team: team,
-      protocol_type: protocol_type,
-      published_on: in_repository_public? ? Time.now : nil
+      protocol_type: :in_repository_draft,
+      skip_user_assignments: true
     )
 
     cloned = deep_clone(clone, current_user)
 
     if cloned
+      deep_clone_user_assginments(clone)
       Activities::CreateActivityService
         .call(activity_type: :copy_protocol_in_repository,
-             owner: current_user,
-             subject: self,
-             team: team,
-             project: nil,
-             message_items: {
-               protocol_new: clone.id,
-               protocol_original: id
-             })
+              owner: current_user,
+              subject: self,
+              team: team,
+              project: nil,
+              message_items: {
+                protocol_new: clone.id,
+                protocol_original: id
+              })
     end
-
     cloned
   end
 
