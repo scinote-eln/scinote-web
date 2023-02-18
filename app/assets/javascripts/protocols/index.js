@@ -209,14 +209,10 @@ var ProtocolsIndex = (function() {
         $(row).attr('data-row-id', rowId);
 
         if (data.DT_CanClone) {
-          $(row).attr('data-can-clone', 'true');
           $(row).attr('data-clone-url', data.DT_CloneUrl);
         }
         if (data.DT_CanMakePrivate) { $(row).attr('data-can-make-private', 'true'); }
         if (data.DT_CanPublish) { $(row).attr('data-can-publish', 'true'); }
-        if (data.DT_CanArchive) { $(row).attr('data-can-archive', 'true'); }
-        if (data.DT_CanRestore) { $(row).attr('data-can-restore', 'true'); }
-        if (data.DT_CanExport) { $(row).attr('data-can-export', 'true'); }
 
         // If row ID is in the list of selected row IDs
         if ($.inArray(rowId, rowsSelected) !== -1) {
@@ -475,6 +471,26 @@ var ProtocolsIndex = (function() {
       params = encodeURI(params);
       window.location.href = url + params;
     }
+  }
+
+  function initDuplicateProtocols() {
+    $('.protocols-index').on('click', '#duplicateProtocol', function() {
+      duplicateProtocols(rowsSelected[0]);
+    });
+  }
+
+  function duplicateProtocols(id) {
+    var row = $("tr[data-row-id='" + id + "']");
+    animateSpinner();
+
+    $.post(row.attr('data-clone-url'), (data) => {
+      animateSpinner(null, false);
+      HelperModule.flashAlertMsg(data.message, 'success');
+      reloadTable();
+    }).error((data) => {
+      animateSpinner(null, false);
+      HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+    });
   }
 
 
@@ -990,6 +1006,7 @@ var ProtocolsIndex = (function() {
   initArchiveProtocols();
   initRestoreProtocols();
   initExportProtocols();
+  initDuplicateProtocols();
   initdeleteDraftModal();
 
   return {

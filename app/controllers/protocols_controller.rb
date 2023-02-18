@@ -316,28 +316,19 @@ class ProtocolsController < ApplicationController
   def clone
     cloned = nil
     Protocol.transaction do
-      begin
-        cloned = @original.deep_clone_repository(current_user)
-      rescue Exception
-        raise ActiveRecord:: Rollback
-      end
+      cloned = @original.deep_clone_repository(current_user)
+    rescue StandardError
+      raise ActiveRecord::Rollback
     end
+
     respond_to do |format|
-      if !cloned.nil?
-        flash[:success] = t(
-          'protocols.index.clone.success_flash',
-          original: @original.name,
-          new: cloned.name
-        )
-        flash.keep(:success)
-        format.json { render json: {}, status: :ok }
-      else
-        flash[:error] = t(
-          'protocols.index.clone.error_flash',
-          original: @original.name
-        )
-        flash.keep(:error)
-        format.json { render json: {}, status: :bad_request }
+      format.json do
+        if cloned.present?
+          render json: { message: t('protocols.index.clone.success_flash', original: @original.name, new: cloned.name) }
+        else
+          render json: { message: t('protocols.index.clone.error_flash', original: @original.name) },
+                 status: :bad_request
+        end
       end
     end
   end
@@ -803,7 +794,7 @@ class ProtocolsController < ApplicationController
 
           # Create folder and xml file for each protocol and populate it
           @protocols.each do |protocol|
-            protocol = protocol.published_versions.order(version_number: :desc).first || protocol
+            protocol = protocol.latest_published_version || protocol
             protocol_dir = get_guid(protocol.id).to_s
             ostream.put_next_entry("#{protocol_dir}/eln.xml")
             ostream.print(generate_protocol_xml(protocol))
@@ -1158,7 +1149,8 @@ class ProtocolsController < ApplicationController
 
   def check_clone_permissions
     load_team_and_type
-    @original = Protocol.find_by_id(params[:id])
+    protocol = Protocol.find_by(id: params[:id])
+    @original = protocol.latest_published_version || protocol
 
     if @original.blank? ||
        !can_clone_protocol_in_repository?(@original) || @type == :archive
@@ -1224,7 +1216,7 @@ class ProtocolsController < ApplicationController
 
   def check_load_from_repository_permissions
     @protocol = Protocol.find_by(id: params[:id])
-    @source = Protocol.find_by(id: params[:source_id])&.published_versions&.order(version_number: :desc)&.first
+    @source = Protocol.find_by(id: params[:source_id])&.latest_published_version
 
     render_403 unless @protocol.present? && @source.present? &&
                       (can_manage_protocol_in_module?(@protocol) &&

@@ -2758,8 +2758,8 @@ en:
         message_private: "When you create a new My protocol, it will only be visible to you."
         submit: "Create"
       clone:
-        success_flash: "Successfully copied protocol '%{new}' from protocol '%{original}'."
-        error_flash: "Failed to copied protocol '%{original}'."
+        success_flash: "Successfully duplicated protocol template '%{new}' from '%{original}'."
+        error_flash: "Failed to duplicated protocol template '%{original}'."
       make_private_results:
         title: "Move to My protocols results"
         message_failed: "Failed to move %{nr} protocols to My protocols."
