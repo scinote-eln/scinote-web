@@ -576,6 +576,7 @@ function importProtocolFromFile(
     var contents = tableNode.children('contents').text();
     json.id = tableNode.attr('id');
     json.name = tableNode.children('name').text();
+    json.metadata = tableNode.children('metadata').text();
     contents = hex2a(contents);
     contents = window.btoa(contents);
     json.contents = contents;
