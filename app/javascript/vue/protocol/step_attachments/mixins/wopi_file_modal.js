@@ -16,7 +16,6 @@ export default {
             $wopiModal.modal('hide');
             window.open(data.edit_url, '_blank');
             window.focus();
-            window.location.reload();
           } else {
             HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
           }

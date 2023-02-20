@@ -71,7 +71,6 @@
 </template>
 
 <script>
-  import axios from 'axios'
   import ContextMenuMixin from './mixins/context_menu.js';
   import ContextMenu from './context_menu.vue';
   import PdfViewer from '../../shared/pdf_viewer.vue';
@@ -92,8 +91,12 @@
     },
     methods: {
       reloadAsset() {
-        axios.get(this.attachment.attributes.urls.load_asset, {
-          params: { asset: { view_mode: this.attachment.attributes.view_mode } },
+        $.ajax({
+          method: 'GET',
+          url: this.attachment.attributes.urls.load_asset,
+          data: {
+            asset: { view_mode: this.attachment.attributes.view_mode }
+          }
         });
       },
     },
