@@ -21,6 +21,7 @@ tinymce.PluginManager.add('custom_image_toolbar', (editor) => {
 
   editor.ui.registry.addButton('marvinjs_edit', {
     icon: 'edit-block',
+    tooltip: I18n.t('general.edit'),
     onAction: () => {
       const editorIframe = $(`#${editor.id}`).next().find('.tox-edit-area iframe');
       const image = editorIframe.contents().find('img[data-mce-selected="1"]');
@@ -52,7 +53,6 @@ tinymce.PluginManager.add('custom_image_toolbar', (editor) => {
 
       let toolbarGroups = toxPop.getElementsByClassName('tox-toolbar__group');
       if (toolbarGroups[3]) {
-        toolbarGroups[2].classList.add('hidden');
         toolbarGroups[3].classList.add('hidden');
       }
     });
