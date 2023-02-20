@@ -149,7 +149,7 @@
         manageTagsModal.modal('show');
       })
       .on('ajax:success', '.edit-tags-link', function(e, data) {
-        $('#manage-module-tags-modal-module').text(data.my_module.name);
+        $('#manage-module-tags-modal-module').html(data.my_module.name);
         initTagsModalBody(data);
       });
   }

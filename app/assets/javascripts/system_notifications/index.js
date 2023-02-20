@@ -20,7 +20,7 @@ function bindSystemNotificationAjax() {
     .on('ajax:success', function(ev, data) {
       var SystemNotification = $('.system-notification[data-system-notification-id=' + data.id + ']');
       SystemNotificationModalBody.html(data.modal_body);
-      SystemNotificationModalTitle.text(data.modal_title);
+      SystemNotificationModalTitle.html(data.modal_title);
       $('.dropdown.system-notifications').removeClass('open');
       // Open modal
       SystemNotificationModal.modal('show');

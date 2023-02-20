@@ -12,7 +12,7 @@ var CommentsSidebar = (function() {
       object_id: $(SIDEBAR).data('object-id')
     }, function(result) {
       $(SIDEBAR).removeClass('loading');
-      $(SIDEBAR).find('.comments-subject-title').text(result.object_name);
+      $(SIDEBAR).find('.comments-subject-title').html(result.object_name);
       $(SIDEBAR).find('.comments-subject-url').html(result.object_url);
       $(SIDEBAR).find('.comments-list').html(result.comments);
 

@@ -208,7 +208,7 @@ function initializeNewElement(newEl) {
       data: parentElementId,
       success: function(data, status, jqxhr) {
         // Open modal, set its title, and display module contents
-        addContentsModal.find(".modal-title").text(modalTitle);
+        addContentsModal.find(".modal-title").html(modalTitle);
         addContentsModalBody.html(data.html);
 
         // Add logic for checkbox hierarchies

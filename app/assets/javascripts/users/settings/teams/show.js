@@ -112,7 +112,7 @@
         var modal = $('#destroy-user-team-modal');
         var modalHeading = modal.find('.modal-header').find('.modal-title');
         var modalBody = modal.find('.modal-body');
-        modalHeading.text(data.heading);
+        modalHeading.html(data.heading.trim());
         modalBody.html(data.html);
 
         // Show the modal

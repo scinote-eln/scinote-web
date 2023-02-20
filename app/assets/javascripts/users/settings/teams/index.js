@@ -9,7 +9,7 @@ function initLeaveTeams() {
       var modal = $("#modal-leave-user-team");
       var modalHeading = modal.find(".modal-header").find(".modal-title");
       var modalBody = modal.find(".modal-body");
-      modalHeading.text(data.heading);
+      modalHeading.html(data.heading);
       modalBody.html(data.html);
 
       // Show the modal
