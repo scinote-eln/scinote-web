@@ -1047,6 +1047,8 @@ en:
       head_title: "%{project} | %{module} | Protocols"
       protocol: "Protocol"
       protocol_status_bar:
+        protocol_id_label: "ID:"
+        protocol_version_label: "Version"
         private_parent: "private"
         unlinked: "unlinked"
         linked: "linked"
@@ -1057,10 +1059,13 @@ en:
         no_keywords: "no keywords"
         protocol_created: "Protocol created:"
         template_updated: "Protocol template updated on:"
-        protocol_updated: "Protocol updated on:"
+        protocol_updated: "Protocol modified:"
+        protocol_loaded: "Protocol template loaded:"
+        protocol_published: "Protocol template published:"
+
         messages:
-          template_updated_html: "There is a new version of this protocol available in the protocol templates.<br>Would you like to update it?"
-          protocol_updated: "The version of this protocol in the task is modified, do you wish to save it as a new protocol template?"
+          template_updated_html: "There is a new version of this protocol available in protocol templates."
+          protocol_updated: "Version of this protocol in the task is modified. "
           unlinked: "This protocol is not linked to the templates."
         btns:
           unlink: "Unlink protocol template"
