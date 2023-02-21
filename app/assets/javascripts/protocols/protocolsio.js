@@ -31,7 +31,10 @@ function applyClickCallbackOnProtocolCards() {
           iFrame[0].height = '0px';
           $('.empty-preview-panel').hide();
           $('.full-preview-panel').show();
-          $('.btn-holder').html($(currProtocolCard).find('.external-import-btn').clone());
+          $('.full-preview-panel').attr('data-url', currProtocolCard.data('url'));
+          $('.full-preview-panel').attr('data-protocol-source', currProtocolCard.data('protocol-source'));
+          $('.full-preview-panel').attr('data-id', currProtocolCard.data('id'));
+          $('.convert-protocol').attr('disabled', false);
 
           // Set base tag to account for relative links in the iframe
           baseTag.href = data.base_uri;
@@ -108,6 +111,12 @@ function applySearchCallback() {
   $('input[name="sort_by"]').off('change').on('change', function() {
     $('form.protocols-search-bar').submit();
   });
+
+  $('input[name="sort_by"] + label').off('click').on('click', function(e) {
+    e.stopPropagation();
+    $(this).prev().click();
+  });
+
 
   // Bind ajax calls on the form
   $('form.protocols-search-bar').off('ajax:success').off('ajax:error')
@@ -205,14 +214,8 @@ function handleFormSubmit(modal) {
 }
 
 function initLoadProtocolModalPreview() {
-  $('.external-import-btn').off('click').on('click', function(e) {
-    var link = $(this).parents('.protocol-card');
-
-    // When clicking on the banner button, we have no protocol-card parent
-    if (link.length === 0) {
-      link = $('.protocol-card.active');
-    }
-
+  $('.convert-protocol').off('click').on('click', function(e) {
+    var link = $('.full-preview-panel');
     animateSpinner(null, true);
     $.ajax({
       url: link.data('url'),

@@ -2816,18 +2816,14 @@ en:
         comment_placeholder: "Click here to enter revision notes"
       protocolsio:
         search_bar_placeholder: 'Search for protocols'
-        protocolsio_title: 'Protocols.io'
-        sort_by:
-          title: 'Show first:'
-          alphabetically-asc: 'A-Z'
-          alphabetically-desc: 'Z-A'
-          newest: 'newest'
-          oldest: 'oldest'
+        title: 'Import from Protocols.io'
+        convert: 'Convert for SciNote'
         list_panel:
           empty_text: 'Search for protocols above to list them here'
         preview_panel:
           empty_title: 'PROTOCOL PREVIEW'
           empty_subtext: 'Click on the protocol in the list to preview it here'
+          powered_by: 'Powered by protocols.io'
           banner_text: 'Protocol Preview'
         import:
           public: "Team protocols"
