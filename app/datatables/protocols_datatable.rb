@@ -113,6 +113,37 @@ class ProtocolsDatatable < CustomDatatable
     end
   end
 
+  def filter_protocols_records(records)
+    if params[:name_and_keywords].present?
+      records = records.where_attributes_like(['protocols.name', 'protocol_keywords.name'], params[:name_and_keywords])
+    end
+
+    if params[:published_on_from].present?
+      records = records.where('protocols.published_on > ?', params[:published_on_from])
+    end
+    records = records.where('protocols.published_on < ?', params[:published_on_to]) if params[:published_on_to].present?
+    records = records.where('protocols.updated_at > ?', params[:modified_on_from]) if params[:modified_on_from].present?
+    records = records.where('protocols.updated_at < ?', params[:modified_on_to]) if params[:modified_on_to].present?
+    records = records.where(protocols: { published_by_id: params[:published_by] }) if params[:published_by].present?
+
+    if params[:members].present?
+      records = records.joins(:user_assignments).where(user_assignments: { user_id: params[:members] })
+    end
+
+    if params[:archived_on_from].present?
+      records = records.where('protocols.archived_on > ?', params[:archived_on_from])
+    end
+    records = records.where('protocols.archived_on < ?', params[:archived_on_to]) if params[:archived_on_to].present?
+
+    records = records.where(protocols: { archived_by_id: params[:archived_by] }) if params[:archived_by].present?
+
+    if params[:has_draft].present?
+      records = records.where(protocols: { protocol_type: Protocol.protocol_types[:in_repository_draft] })
+    end
+
+    records
+  end
+
   def get_raw_records_base
     records =
       Protocol
@@ -142,6 +173,7 @@ class ProtocolsDatatable < CustomDatatable
 
     records = @type == :archived ? records.archived : records.active
 
+    records = filter_protocols_records(records)
     records.group('"protocols"."id"')
   end
 

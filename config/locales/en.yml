@@ -3574,6 +3574,7 @@ en:
     title: "Filters"
     text:
       label: "Contains text"
+      label_name_and_keywords: "Name and keywords"
       placeholder: "Enter search terms..."
     from_placeholder: "From"
     to_placeholder: "To"

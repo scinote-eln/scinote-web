@@ -1,5 +1,5 @@
 //= require protocols/import_export/import
-/* eslint-disable no-use-before-define, no-underscore-dangle, max-len */
+/* eslint-disable no-use-before-define, no-underscore-dangle, max-len, no-param-reassign */
 /* global ProtocolRepositoryHeader PdfPreview DataTableHelpers importProtocolFromFile _ PerfectSb
           dropdownSelector filterDropdown I18n animateSpinner initHandsOnTable inlineEditing HelperModule */
 
@@ -111,6 +111,7 @@ var ProtocolsIndex = (function() {
       protocolsViewSearch = $textFilter.val();
 
       appliedFiltersMark();
+      protocolsDatatable.ajax.reload();
     });
 
     // Clear filters
@@ -158,7 +159,21 @@ var ProtocolsIndex = (function() {
       serverSide: true,
       ajax: {
         url: protocolsTableEl.data('source'),
-        type: 'POST'
+        type: 'POST',
+        data: function(data) {
+          data.published_on_from = publishedOnFromFilter;
+          data.published_on_to = publishedOnToFilter;
+          data.modified_on_from = modifiedOnFromFilter;
+          data.modified_on_to = modifiedOnToFilter;
+          data.published_by = publishedByFilter;
+          data.members = accessByFilter;
+          data.has_draft = hasDraftFilter;
+          data.archived_on_from = archivedOnFromFilter;
+          data.archived_on_to = archivedOnToFilter;
+          data.name_and_keywords = protocolsViewSearch;
+
+          return data;
+        }
       },
       colReorder: {
         fixedColumnsLeft: 1000000 // Disable reordering
