@@ -153,6 +153,7 @@
           this.newValue = lines[0];
           this.$emit('multilinePaste', lines);
         }
+        this.update();
       },
       handleInput() {
         this.dirty = true;
