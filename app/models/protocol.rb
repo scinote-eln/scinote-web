@@ -409,10 +409,6 @@ class Protocol < ApplicationRecord
 
   def archive(user)
     return nil unless can_destroy?
-
-    # Don't update "updated_at" timestamp
-    self.record_timestamps = false
-
     # We keep published_on present, so we know (upon restoring)
     # where the protocol was located
 
@@ -439,9 +435,6 @@ class Protocol < ApplicationRecord
   end
 
   def restore(user)
-    # Don't update "updated_at" timestamp
-    self.record_timestamps = false
-
     self.archived_by = nil
     self.archived_on = nil
     self.restored_by = user
@@ -542,9 +535,9 @@ class Protocol < ApplicationRecord
     reload
     self.name = source.name
     self.record_timestamps = false
-    self.updated_at = source.updated_at
+    self.updated_at = source.published_on
     self.parent = source
-    self.parent_updated_at = source.updated_at
+    self.parent_updated_at = source.published_on
     self.added_by = current_user
     self.protocol_type = Protocol.protocol_types[:linked]
     save!
