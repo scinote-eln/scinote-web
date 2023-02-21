@@ -115,10 +115,9 @@ class ProtocolsDatatable < CustomDatatable
 
   def filter_protocols_records(records)
     if params[:name_and_keywords].present?
-      records = records.joins('LEFT OUTER JOIN "protocol_keywords" '\
-                              'ON "protocol_protocol_keywords"."protocol_keyword_id" = "protocol_keywords"."id"')
-                       .where_attributes_like(['protocols.name', 'protocol_keywords.name'], params[:name_and_keywords])
+      records = records.where_attributes_like(['protocols.name', 'protocol_keywords.name'], params[:name_and_keywords])
     end
+
     if params[:published_on_from].present?
       records = records.where('protocols.published_on > ?', params[:published_on_from])
     end
