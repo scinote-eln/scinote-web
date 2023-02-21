@@ -24,7 +24,7 @@
             </a>
           </li>
           <li>
-            <%= link_to t("protocols.index.import_protocols_io"), protocolsio_protocols_path() %>
+            <%= link_to t("protocols.index.import_protocols_io"), '', data: { target: '#protocolsioModal', toggle: 'modal' } %>
           </li>
         </ul>
       <% end %>

@@ -609,7 +609,11 @@ class ProtocolsController < ApplicationController
     end
   end
 
-  def protocolsio_index; end
+  def protocolsio_index
+    render json: {
+      html: render_to_string({ partial: 'protocols/index/protocolsio_modal_body.html.erb' })
+    }
+  end
 
   def import
     protocol = nil
