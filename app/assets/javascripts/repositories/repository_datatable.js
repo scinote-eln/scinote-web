@@ -588,13 +588,11 @@ var RepositoryDatatable = (function(global) {
 
         // Show the current pagination page as "1" when the table is empty
         if (this.api().page() < 1 && $('.paginate_button.active').length === 0) {
-          $('.dataTables_paginate .paginate_button.previous').after(
-            `
+          $('.dataTables_paginate .paginate_button.previous').after(`
             <li class="paginate_button active">
               <a href="#" tabindex="0">1</a>
             </li>
-            `
-          );
+            `);
         }
       },
       preDrawCallback: function() {
