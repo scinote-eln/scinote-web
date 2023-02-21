@@ -585,6 +585,17 @@ var RepositoryDatatable = (function(global) {
         $('#editRepositoryRecord').prop('disabled', !allSelectedRowsAreOnPage());
 
         TABLE.columns([archivedOnIndex, archivedByIndex]).visible(archived);
+
+        // Show the current pagination page as "1" when the table is empty
+        if (this.api().page() < 1 && $('.paginate_button.active').length === 0) {
+          $('.dataTables_paginate .paginate_button.previous').after(
+            `
+            <li class="paginate_button active">
+              <a href="#" tabindex="0">1</a>
+            </li>
+            `
+          );
+        }
       },
       preDrawCallback: function() {
         var archived = $('.repository-show').hasClass('archived');
