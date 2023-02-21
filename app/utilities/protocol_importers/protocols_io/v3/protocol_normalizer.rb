@@ -43,22 +43,39 @@ module ProtocolImporters
 
           # set positions
           if protocol_hash[:steps].any?
-            first_step_id = normalized_data[:steps].find { |s| s[:position].zero? }[:source_id]
+            first_step = normalized_data[:steps].find { |s| s[:position].present? && s[:position].zero? }
+            first_step_id = if first_step.present?
+                              first_step[:source_id]
+                            else
+                              protocol_hash[:steps].min_by do |el|
+                                el[:id]
+                              end[:id]
+                            end
             next_step_id = protocol_hash[:steps].find { |s| s[:previous_id] == first_step_id }.try(:[], :id)
             steps = normalized_data[:steps].map { |s| [s[:source_id], s] }.to_h
-            original_order = protocol_hash[:steps].map { |m| [m[:previous_id], m[:id]] }.to_h
+            original_order = protocol_hash[:steps].map { |m| [m[:previous_id], m[:id]] }
+
+            # Always select minimal id value for next step in case if protocol has multiple steps paths.
+            original_order = original_order.sort_by { |ids| ids[1] }.reverse!.to_h
 
             current_position = 0
+            steps[first_step_id][:position] = current_position
             while next_step_id
               current_position += 1
               steps[next_step_id][:position] = current_position
-              next_step_id = original_order[next_step_id]
+              next_step_id = if original_order[next_step_id] == first_step_id
+                               nil
+                             else
+                               original_order[next_step_id]
+                             end
             end
-
+            # Remove steps without position
+            steps = steps.reject { |_, step| step[:position].nil? }
             # Check if step name are valid
             steps.each do |step|
               step[1][:name] = "Step #{(step[1][:position] + 1)}" if step[1][:name].blank?
             end
+            normalized_data[:steps] = steps.present? ? steps.values : []
           else
             normalized_data[:steps] = []
           end

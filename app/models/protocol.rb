@@ -5,6 +5,9 @@ class Protocol < ApplicationRecord
 
   include ArchivableModel
   include PrefixedIdModel
+  SEARCHABLE_ATTRIBUTES = ['protocols.name', 'protocols.description',
+                           'protocols.authors', 'protocol_keywords.name', PREFIXED_ID_SQL].freeze
+
   include SearchableModel
   include RenamingUtil
   include SearchableByNameModel
@@ -18,6 +21,7 @@ class Protocol < ApplicationRecord
   after_save :update_linked_children
   skip_callback :create, :after, :create_users_assignments, if: -> { in_module? }
 
+  enum visibility: { hidden: 0, visible: 1 }
   enum protocol_type: {
     unlinked: 0,
     linked: 1,
@@ -34,7 +38,9 @@ class Protocol < ApplicationRecord
   validates :protocol_type, presence: true
   validate :prevent_update,
            on: :update,
-           if: -> { in_repository_published? && !protocol_type_changed?(from: 'in_repository_draft') }
+           if: lambda {
+             in_repository_published? && !protocol_type_changed?(from: 'in_repository_draft') && !archived_changed?
+           }
 
   with_options if: :in_module? do
     validates :my_module, presence: true
@@ -104,6 +110,9 @@ class Protocol < ApplicationRecord
              inverse_of: :protocols,
              optional: true
   belongs_to :team, inverse_of: :protocols
+  belongs_to :default_public_user_role,
+             class_name: 'UserRole',
+             optional: true
   belongs_to :previous_version,
              class_name: 'Protocol',
              inverse_of: :next_version,
@@ -194,15 +203,7 @@ class Protocol < ApplicationRecord
                 .joins('LEFT JOIN protocol_keywords ' \
                        'ON protocol_keywords.id = ' \
                        'protocol_protocol_keywords.protocol_keyword_id')
-                .where_attributes_like(
-                  [
-                    'protocols.name',
-                    'protocols.description',
-                    'protocols.authors',
-                    'protocol_keywords.name'
-                  ],
-                  query, options
-                )
+                .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
@@ -254,6 +255,10 @@ class Protocol < ApplicationRecord
         .in_repository_published_version
         .where(parent: self)
         .or(team.protocols.in_repository_published_original.where(id: id))
+  end
+
+  def latest_published_version
+    published_versions.order(version_number: :desc).first
   end
 
   def permission_parent
@@ -402,36 +407,6 @@ class Protocol < ApplicationRecord
     result
   end
 
-  # This publish action simply moves the protocol from
-  # the private section in the repository into the public
-  # section
-  def publish(user)
-    # Don't update "updated_at" timestamp
-    self.record_timestamps = false
-
-    self.added_by = user
-    self.published_on = Time.now
-    self.archived_by = nil
-    self.archived_on = nil
-    self.restored_by = nil
-    self.restored_on = nil
-    self.protocol_type = Protocol.protocol_types[:in_repository_public]
-    result = save
-
-    if result
-      Activities::CreateActivityService
-        .call(activity_type: :move_protocol_in_repository,
-              owner: user,
-              subject: self,
-              team: team,
-              message_items: {
-                protocol: id,
-                storage: I18n.t('activities.protocols.my_to_team_message')
-              })
-    end
-    result
-  end
-
   def archive(user)
     return nil unless can_destroy?
 
@@ -471,12 +446,8 @@ class Protocol < ApplicationRecord
     self.archived_on = nil
     self.restored_by = user
     self.restored_on = Time.now
-    if published_on.present?
-      self.published_on = Time.now
-      self.protocol_type = Protocol.protocol_types[:in_repository_public]
-    else
-      self.protocol_type = Protocol.protocol_types[:in_repository_private]
-    end
+    self.archived = false
+
     result = save
 
     if result
@@ -641,25 +612,25 @@ class Protocol < ApplicationRecord
       description: description,
       added_by: current_user,
       team: team,
-      protocol_type: protocol_type,
-      published_on: in_repository_public? ? Time.now : nil
+      protocol_type: :in_repository_draft,
+      skip_user_assignments: true
     )
 
     cloned = deep_clone(clone, current_user)
 
     if cloned
+      deep_clone_user_assginments(clone)
       Activities::CreateActivityService
         .call(activity_type: :copy_protocol_in_repository,
-             owner: current_user,
-             subject: self,
-             team: team,
-             project: nil,
-             message_items: {
-               protocol_new: clone.id,
-               protocol_original: id
-             })
+              owner: current_user,
+              subject: self,
+              team: team,
+              project: nil,
+              message_items: {
+                protocol_new: clone.id,
+                protocol_original: id
+              })
     end
-
     cloned
   end
 
@@ -683,11 +654,13 @@ class Protocol < ApplicationRecord
     steps.map(&:can_destroy?).all?
   end
 
-  def add_team_users_as_viewers!(assigned_by)
-    viewer_role = UserRole.find_predefined_viewer_role
-    team.user_assignments.where.not(user: assigned_by).find_each do |user_assignment|
-      new_user_assignment = UserAssignment.find_or_initialize_by(user: user_assignment.user, assignable: self)
-      new_user_assignment.user_role = viewer_role
+  def create_public_user_assignments!(assigned_by)
+    public_role = default_public_user_role || UserRole.find_predefined_viewer_role
+    team.user_assignments.where.not(user: assigned_by).find_each do |team_user_assignment|
+      new_user_assignment = user_assignments.find_or_initialize_by(user: team_user_assignment.user)
+      next if new_user_assignment.manually_assigned?
+
+      new_user_assignment.user_role = public_role
       new_user_assignment.assigned_by = assigned_by
       new_user_assignment.assigned = :automatically
       new_user_assignment.save!
@@ -697,11 +670,10 @@ class Protocol < ApplicationRecord
   private
 
   def update_user_assignments
-    case protocol_type
-    when 'in_repository_public'
-      assigned_by = protocol_type_was == 'in_repository_archived' && restored_by || added_by
-      add_team_users_as_viewers!(assigned_by)
-    when 'in_repository_private', 'in_repository_archived'
+    case visibility
+    when 'visible'
+      create_public_user_assignments!(added_by)
+    when 'hidden'
       automatic_user_assignments.where.not(user: added_by).destroy_all
     end
   end

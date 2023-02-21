@@ -66,12 +66,12 @@ module GenerateNotificationModel
       path = Rails.application.routes.url_helpers.project_path(object)
       elements << "#{I18n.t('search.index.project')} <a href='#{path}'>#{object.name}</a>"
     when Experiment
-      path = Rails.application.routes.url_helpers.canvas_experiment_path(object)
+      path = Rails.application.routes.url_helpers.my_modules_experiment_path(object)
       elements << "#{I18n.t('search.index.experiment')} <a href='#{path}'>#{object.name}</a>"
       generate_notification_description_elements(object.project, elements)
     when MyModule
       path = if object.archived?
-               Rails.application.routes.url_helpers.module_archive_experiment_path(object.experiment)
+               Rails.application.routes.url_helpers.my_modules_experiment_path(object.experiment, view_mode: :archived)
              else
                Rails.application.routes.url_helpers.protocols_my_module_path(object)
              end

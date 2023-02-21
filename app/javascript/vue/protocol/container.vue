@@ -14,14 +14,18 @@
       </div>
       <div class="actions-block">
         <div class="protocol-buttons-group">
-          <a v-if="urls.add_step_url" class="btn btn-primary" @click="addStep(steps.length)" tabindex="0">
+          <a v-if="urls.add_step_url"
+             class="btn btn-primary"
+             @keyup.enter="addStep(steps.length)"
+             @click="addStep(steps.length)"
+             tabindex="0">
               <span class="fas fa-plus" aria-hidden="true"></span>
               <span>{{ i18n.t("protocols.steps.new_step") }}</span>
           </a>
-          <a class="btn btn-secondary" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
+          <button class="btn btn-secondary" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
             <span class="fas fa-print" aria-hidden="true"></span>
             <span>{{ i18n.t("protocols.print.button") }}</span>
-          </a>
+          </button>
           <ProtocolOptions
             v-if="protocol.attributes && protocol.attributes.urls"
             :protocol="protocol"
@@ -47,7 +51,7 @@
             {{ protocol.attributes.name }}
           </span>
         </div>
-        <ProtocolMetadata v-if="protocol.attributes && protocol.attributes.in_repository" :protocol="protocol" @update="updateProtocol"/>
+        <ProtocolMetadata v-if="protocol.attributes && protocol.attributes.in_repository" :protocol="protocol" @update="updateProtocol" @publish="startPublish"/>
         <div :class="inRepository ? 'protocol-section protocol-information' : ''">
           <div v-if="inRepository" id="protocol-description" class="protocol-section-header">
             <div class="protocol-description-container">
@@ -151,6 +155,11 @@
       @reorder="updateStepOrder"
       @close="closeStepReorderModal"
     />
+    <PublishProtocol v-if="publishing"
+      :protocol="protocol"
+      @publish="publishProtocol"
+      @close="closePublishModal"
+    />
   </div>
 </template>
 
@@ -162,6 +171,7 @@
   import ProtocolModals from 'vue/protocol/modals'
   import Tinymce from 'vue/shared/tinymce.vue'
   import ReorderableItemsModal from 'vue/protocol/modals/reorderable_items_modal.vue'
+  import PublishProtocol from 'vue/protocol/modals/publish_protocol.vue'
 
   import UtilsMixin from 'vue/mixins/utils.js'
 
@@ -173,7 +183,7 @@
         required: true
       }
     },
-    components: { Step, InlineEdit, ProtocolModals, ProtocolOptions, Tinymce, ReorderableItemsModal, ProtocolMetadata },
+    components: { Step, InlineEdit, ProtocolModals, ProtocolOptions, Tinymce, ReorderableItemsModal, ProtocolMetadata, PublishProtocol },
     mixins: [UtilsMixin],
     computed: {
       inRepository() {
@@ -189,7 +199,8 @@
           attributes: {}
         },
         steps: [],
-        reordering: false
+        reordering: false,
+        publishing: false
       }
     },
     created() {
@@ -232,7 +243,7 @@
         });
       },
       updateDescription(protocol) {
-        this.protocol.attributes = protocol.data.attributes
+        this.protocol.attributes = protocol.attributes
       },
       addStep(position) {
         $.post(this.urls.add_step_url, {position: position}, (result) => {
@@ -306,8 +317,18 @@
       closeStepReorderModal() {
         this.reordering = false;
       },
+      startPublish() {
+        this.publishing = true;
+      },
+      closePublishModal() {
+        this.publishing = false;
+      },
       scrollToBottom() {
         window.scrollTo(0, document.body.scrollHeight);
+      },
+      publishProtocol(comment) {
+        this.protocol.attributes.version_comment = comment;
+        $.post(this.urls.publish_url, {version_comment: comment, view: 'show'})
       }
     }
   }

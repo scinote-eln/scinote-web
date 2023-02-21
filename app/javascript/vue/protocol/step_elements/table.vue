@@ -19,13 +19,13 @@
         />
       </div>
       <div class="step-element-controls">
-        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="enableNameEdit" tabindex="-1">
+        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="enableNameEdit" tabindex="0">
           <i class="fas fa-pen"></i>
         </button>
-        <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light" tabindex="-1" @click="duplicateElement">
+        <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light" tabindex="0" @click="duplicateElement">
           <i class="fas fa-clone"></i>
         </button>
-        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
+        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="0">
           <i class="fas fa-trash"></i>
         </button>
       </div>
@@ -35,7 +35,7 @@
          tabindex="0"
          @keyup.enter="!editingTable && enableTableEdit()">
       <div  class="enable-edit-mode" v-if="!editingTable && element.attributes.orderable.urls.update_url" @click="enableTableEdit">
-        <div class="enable-edit-mode__icon">
+        <div class="enable-edit-mode__icon" tabindex="0">
           <i class="fas fa-pen"></i>
         </div>
       </div>
@@ -158,6 +158,13 @@
 
         let tableData = JSON.stringify({data: this.tableObject.getData()});
         this.element.attributes.orderable.contents = tableData;
+        this.element.attributes.orderable.metadata = {cells: this.tableObject.getCellsMeta().map((x) => {
+           return {
+            col: x.col,
+            row: x.row,
+            className: x.className || ''
+          }
+        })};
         this.update();
         this.editingTable = false;
       },
@@ -167,6 +174,7 @@
       loadTableData() {
         let container = this.$refs.hotTable;
         let data = JSON.parse(this.element.attributes.orderable.contents);
+        let metadata = this.element.attributes.orderable.metadata || {};
         this.tableObject = new Handsontable(container, {
           data: data.data,
           width: '100%',
@@ -174,6 +182,7 @@
           startCols: 5,
           rowHeaders: true,
           colHeaders: true,
+          cell: metadata.cells || [],
           contextMenu: this.editingTable,
           formulas: true,
           preventOverflow: 'horizontal',

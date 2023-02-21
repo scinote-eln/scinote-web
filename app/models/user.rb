@@ -697,6 +697,11 @@ class User < ApplicationRecord
     end
   end
 
+  def my_module_visible_table_columns
+    settings['visible_my_module_table_columns'].presence ||
+      %w(id due_date age results status archived assigned tags comments)
+  end
+
   protected
 
   def confirmation_required?

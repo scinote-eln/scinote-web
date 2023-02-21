@@ -46,6 +46,14 @@ module Assignable
       User.joins(:user_assignments).where(user_assignments: { assignable: self })
     end
 
+    def deep_clone_user_assginments(object)
+      user_assignments.each do |original_assignment|
+        new_assignment = original_assignment.dup
+        new_assignment.assignable = object
+        new_assignment.save!
+      end
+    end
+
     private
 
     def create_users_assignments

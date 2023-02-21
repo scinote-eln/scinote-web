@@ -16,7 +16,7 @@ var RepositoryDatatableRowEditor = (function() {
   function initSmartAnnotation($row) {
     $row.find('[data-object="repository_cell"]').each(function(el) {
       if (el.data('atwho')) {
-        SmartAnnotation.init(el);
+        SmartAnnotation.init(el, true);
       }
     });
   }

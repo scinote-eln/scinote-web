@@ -259,11 +259,10 @@ class Repository < RepositoryBase
 
     Team.where.not(id: team.id).find_each do |team|
       team.users.find_each do |user|
-        team.repository_sharing_user_assignments.create!(
+        team.repository_sharing_user_assignments.find_or_initialize_by(
           user: user,
-          user_role: shared_write? ? normal_user_role : viewer_role,
           assignable: self
-        )
+        ).update!(user_role: shared_write? ? normal_user_role : viewer_role)
       end
     end
   end

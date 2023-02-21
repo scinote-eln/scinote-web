@@ -46,9 +46,9 @@ module UserAssignments
     end
 
     def assign_users_to_protocol(protocol)
-      return unless protocol.in_repository_public?
+      return unless protocol.visible?
 
-      protocol.add_team_users_as_viewers!(@assigned_by)
+      protocol.create_public_user_assignments!(@assigned_by)
     end
 
     def assign_users_to_report(report)

@@ -298,6 +298,8 @@ Rails.application.routes.draw do
       # as well as all activities page for single project (HTML)
       resources :project_activities, path: '/activities', only: [:index]
       resources :tags, only: [:create, :update, :destroy]
+      post :create_tag
+
       resources :reports,
                 path: '/reports',
                 only: %i(edit update create) do
@@ -357,6 +359,12 @@ Rails.application.routes.draw do
       member do
         get 'permissions'
         get 'actions_dropdown'
+        put :view_type
+        get :table
+        get :load_table
+        get :move_modules_modal
+        post :move_modules
+        get :my_modules
         get 'canvas' # Overview/structure for single experiment
         # AJAX-loaded canvas edit mode (from canvas)
         get 'canvas/edit', to: 'canvas#edit'
@@ -373,14 +381,27 @@ Rails.application.routes.draw do
         get 'move_modal' # return modal with move options
         post 'move' # move experiment
         get 'fetch_workflow_img' # Get udated workflow img
+        get 'modules/new', to: 'my_modules#new'
+        post 'modules', to: 'my_modules#create'
         post 'restore_my_modules', to: 'my_modules#restore_group'
         get 'sidebar'
+        get :assigned_users_to_tasks
+        post :archive_my_modules
+        post :batch_clone_my_modules
+        get :search_tags
       end
     end
 
     # Show action is a popup (JSON) for individual module in full-zoom canvas,
     # as well as 'module info' page for single module (HTML)
     resources :my_modules, path: '/modules', only: [:show, :update] do
+      post 'save_table_state', on: :collection, defaults: { format: 'json' }
+
+      member do
+        get :permissions
+        get :actions_dropdown
+        get :provisioning_status
+      end
       resources :my_module_tags, path: '/tags', only: [:index, :create, :destroy] do
         collection do
           get :search_tags
@@ -549,6 +570,8 @@ Rails.application.routes.draw do
         post :reorder, on: :collection
       end
       member do
+        post :publish
+        post :destroy_draft
         get 'print', to: 'protocols#print'
         get 'linked_children', to: 'protocols#linked_children'
         post 'linked_children_datatable',
@@ -590,7 +613,6 @@ Rails.application.routes.draw do
       collection do
         post 'datatable', to: 'protocols#datatable'
         post 'make_private', to: 'protocols#make_private'
-        post 'publish', to: 'protocols#publish'
         post 'archive', to: 'protocols#archive'
         post 'restore', to: 'protocols#restore'
         post 'import', to: 'protocols#import'
@@ -858,6 +880,7 @@ Rails.application.routes.draw do
               end
             end
             resources :project_folders, only: %i(index show create update)
+            resources :users, only: %i(index)
           end
           resources :users, only: %i(show) do
             resources :user_identities,

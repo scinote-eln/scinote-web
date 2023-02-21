@@ -19,7 +19,7 @@ class ExternalProtocolsController < ApplicationController
         page_id: service_call.protocols_list[:pagination][:current_page]
       }
     else
-      render json: { errors: service_call.errors }, status: 400
+      render json: { errors: service_call.errors }, status: :bad_request
     end
   end
 
@@ -43,7 +43,7 @@ class ExternalProtocolsController < ApplicationController
   rescue StandardError => e
     render json: {
       errors: [protocol_html_preview: e.message]
-    }, status: 400
+    }, status: :bad_request
   end
 
   # GET build_online_sources_protocol
@@ -74,7 +74,7 @@ class ExternalProtocolsController < ApplicationController
         validation_errors: { protocol: @protocol.errors.messages }
       }
     else
-      render json: { errors: service_call.errors }, status: 400
+      render json: { errors: service_call.errors }, status: :bad_request
     end
   end
 
@@ -95,7 +95,7 @@ class ExternalProtocolsController < ApplicationController
       render json: { protocol: service_call.protocol,
                      message: message }
     else
-      render json: { errors: service_call.errors }, status: 400
+      render json: { validation_errors: service_call.errors }, status: :bad_request
     end
   end
 

@@ -86,7 +86,7 @@ Canaid::Permissions.register_for(Protocol) do
   # protocol in repository: update, create/update/delete/reorder step,
   #                         toggle private/public visibility, archive
   can :manage_protocol_in_repository do |user, protocol|
-    protocol.protocol_type.in_repository_draft? &&
+    protocol.in_repository_draft? &&
       protocol.permission_granted?(user, ProtocolPermissions::MANAGE)
   end
 
@@ -104,13 +104,18 @@ Canaid::Permissions.register_for(Protocol) do
     protocol.archived? && protocol.permission_granted?(user, ProtocolPermissions::MANAGE)
   end
 
+  can :archive_protocol_in_repository do |user, protocol|
+    protocol.active? && protocol.permission_granted?(user, ProtocolPermissions::MANAGE)
+  end
+
   # protocol in repository: copy
   can :clone_protocol_in_repository do |user, protocol|
     can_read_protocol_in_repository?(user, protocol) && can_create_protocols_in_repository?(user, protocol.team)
   end
 
   can :publish_protocol_in_repository do |user, protocol|
-    protocol.permission_granted?(user, ProtocolPermissions::MANAGE)
+    protocol.in_repository_draft? &&
+      protocol.permission_granted?(user, ProtocolPermissions::MANAGE)
   end
 end
 

@@ -455,19 +455,20 @@
     }
 
   .calendar-input {
+    @include font-button;
     background-color: transparent !important;
+    border-color: $color-silver-chalice;
     box-shadow: none;
     color: inherit;
     cursor: pointer;
-    font-size: 13px;
-    padding-left: 5px;
+    padding-left: 10px;
     padding-right: 34px;
     position: relative;
     width: 100%;
     z-index: 3;
 
     &::placeholder {
-      color: $color-silver-chalice;
+      color: $color-alto;
     }
   }
 }

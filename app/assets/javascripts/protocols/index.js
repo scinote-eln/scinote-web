@@ -38,6 +38,12 @@ var ProtocolsIndex = (function() {
     initVersionsModal();
   }
 
+  function reloadTable() {
+    rowsSelected = [];
+    updateButtons();
+    protocolsDatatable.ajax.reload();
+  }
+
   function selectDate($field) {
     var datePicker = $field.data('DateTimePicker');
     if (datePicker && datePicker.date()) {
@@ -218,14 +224,10 @@ var ProtocolsIndex = (function() {
         $(row).attr('data-row-id', rowId);
 
         if (data.DT_CanClone) {
-          $(row).attr('data-can-clone', 'true');
           $(row).attr('data-clone-url', data.DT_CloneUrl);
         }
         if (data.DT_CanMakePrivate) { $(row).attr('data-can-make-private', 'true'); }
         if (data.DT_CanPublish) { $(row).attr('data-can-publish', 'true'); }
-        if (data.DT_CanArchive) { $(row).attr('data-can-archive', 'true'); }
-        if (data.DT_CanRestore) { $(row).attr('data-can-restore', 'true'); }
-        if (data.DT_CanExport) { $(row).attr('data-can-export', 'true'); }
 
         // If row ID is in the list of selected row IDs
         if ($.inArray(rowId, rowsSelected) !== -1) {
@@ -425,20 +427,87 @@ var ProtocolsIndex = (function() {
     });
   }
 
-  function initArchiveMyModules() {
-    $('.protocols-index').on('click', '#archiveProtocol', function(e) {
-      archiveMyModules(e.currentTarget.dataset.url, rowsSelected);
+  function initdeleteDraftModal() {
+    $('.protocols-index').on('click', '#protocol-versions-modal .delete-draft', function(e) {
+      let url = this.dataset.url;
+      let modal = $('#deleteDraftModal');
+      $('#protocol-versions-modal').modal('hide');
+      modal.modal('show');
+      modal.find('form').attr('action', url);
     });
   }
 
-  function archiveMyModules(url, ids) {
+  function initArchiveProtocols() {
+    $('.protocols-index').on('click', '#archiveProtocol', function(e) {
+      archiveProtocols(e.currentTarget.dataset.url, rowsSelected);
+    });
+  }
+
+  function archiveProtocols(url, ids) {
     $.post(url, { protocol_ids: ids }, (data) => {
       HelperModule.flashAlertMsg(data.message, 'success');
-      protocolsDatatable.ajax.reload();
+      reloadTable();
     }).error((data) => {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   }
+
+  function initRestoreProtocols() {
+    $('.protocols-index').on('click', '#restoreProtocol', function(e) {
+      restoreProtocol(e.currentTarget.dataset.url, rowsSelected);
+    });
+  }
+
+  function restoreProtocol(url, ids) {
+    $.post(url, { protocol_ids: ids }, (data) => {
+      HelperModule.flashAlertMsg(data.message, 'success');
+      reloadTable();
+    }).error((error) => {
+      if (error.status === 401) {
+        HelperModule.flashAlertMsg(I18n.t('protocols.index.restore_unauthorized'), 'danger');
+      } else {
+        HelperModule.flashAlertMsg(I18n.t('protocols.index.restore_error'), 'danger');
+      }
+    });
+  }
+
+  function initExportProtocols() {
+    $('.protocols-index').on('click', '#exportProtocol', function(e) {
+      exportProtocols(e.currentTarget.dataset.url, rowsSelected);
+    });
+  }
+
+  function exportProtocols(url, ids) {
+    if (ids.length > 0) {
+      let params = '?protocol_ids[]=' + ids[0];
+      for (let i = 1; i < ids.length; i += 1) {
+        params += '&protocol_ids[]=' + ids[i];
+      }
+      params = encodeURI(params);
+      window.location.href = url + params;
+    }
+  }
+
+  function initDuplicateProtocols() {
+    $('.protocols-index').on('click', '#duplicateProtocol', function() {
+      duplicateProtocols(rowsSelected[0]);
+    });
+  }
+
+  function duplicateProtocols(id) {
+    var row = $("tr[data-row-id='" + id + "']");
+    animateSpinner();
+
+    $.post(row.attr('data-clone-url'), (data) => {
+      animateSpinner(null, false);
+      HelperModule.flashAlertMsg(data.message, 'success');
+      reloadTable();
+    }).error((data) => {
+      animateSpinner(null, false);
+      HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+    });
+  }
+
 
   function initLinkedChildrenModal() {
     // Only do this if the repository is public/private
@@ -508,7 +577,7 @@ var ProtocolsIndex = (function() {
       modal.find('.modal-body').html('');
 
       // Simply re-render table
-      protocolsDatatable.ajax.reload();
+      reloadTable();
     }
 
     // Make private modal hidden action
@@ -534,13 +603,6 @@ var ProtocolsIndex = (function() {
 
     // Archive modal hidden action
     $('#archive-results-modal').on('hidden.bs.modal', function() {
-      refresh($(this));
-      updateDataTableSelectAllCheckbox();
-      updateButtons();
-    });
-
-    // Restore modal hidden action
-    $('#restore-results-modal').on('hidden.bs.modal', function() {
       refresh($(this));
       updateDataTableSelectAllCheckbox();
       updateButtons();
@@ -950,17 +1012,21 @@ var ProtocolsIndex = (function() {
       importResultsModal.find('.modal-body').html('');
 
       // Also reload table
-      protocolsDatatable.ajax.reload();
+      reloadTable();
     });
   }
 
   init();
   initManageAccessButton();
-  initArchiveMyModules();
+  initArchiveProtocols();
+  initRestoreProtocols();
+  initExportProtocols();
+  initDuplicateProtocols();
+  initdeleteDraftModal();
 
   return {
     reloadTable: function() {
-      protocolsDatatable.ajax.reload();
+      reloadTable();
     }
   };
 }());

@@ -17,7 +17,7 @@
           <span class="fas fa-print" aria-hidden="true"></span>
         </a>
         <button class="btn btn-light">{{ i18n.t("protocols.header.versions") }}</button>
-        <button v-if="!protocol.attributes.published" class="btn btn-primary">{{ i18n.t("protocols.header.publish") }}</button>
+        <button v-if="!protocol.attributes.published" @click="$emit('publish')" class="btn btn-primary">{{ i18n.t("protocols.header.publish") }}</button>
         <button v-else class="btn btn-secondary">{{ i18n.t("protocols.header.save_as_draft") }}</button>
       </div>
     </div>

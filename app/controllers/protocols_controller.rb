@@ -32,11 +32,11 @@ class ProtocolsController < ApplicationController
   # For update_from_parent and update_from_parent_modal we don't need to check
   # read permission for the parent protocol
   before_action :check_manage_permissions, only: %i(
-    edit
     update_keywords
     update_description
     update_version_comment
     update_name
+    destroy_draft
     update_authors
     edit_name_modal
     edit_keywords_modal
@@ -54,9 +54,9 @@ class ProtocolsController < ApplicationController
     update_parent
     update_parent_modal
   )
-  before_action :check_manage_all_in_repository_permissions, only:
-    %i(make_private publish archive)
+  before_action :check_manage_all_in_repository_permissions, only: :make_private
   before_action :check_restore_all_in_repository_permissions, only: :restore
+  before_action :check_archive_all_in_repository_permissions, only: :archive
   before_action :check_load_from_repository_views_permissions, only: %i(
     load_from_repository_modal
     load_from_repository_datatable
@@ -71,6 +71,8 @@ class ProtocolsController < ApplicationController
     copy_to_repository
     copy_to_repository_modal
   )
+
+  before_action :check_publish_permission, only: :publish
   before_action :check_import_permissions, only: :import
   before_action :check_export_permissions, only: :export
 
@@ -162,7 +164,23 @@ class ProtocolsController < ApplicationController
   end
 
   def publish
-    move_protocol('publish')
+    @protocol.update(
+      published_by: current_user,
+      published_on: DateTime.now,
+      version_comment: params[:version_comment] || @protocol.version_comment,
+      protocol_type: (@protocol.parent_id.nil? ? :in_repository_published_original : :in_repository_published_version)
+    )
+    if params[:view] == 'show'
+      redirect_to protocol_path(@protocol)
+    else
+      redirect_to protocols_path
+    end
+  end
+
+  def destroy_draft
+    @protocol.destroy
+
+    redirect_to protocols_path
   end
 
   def archive
@@ -174,14 +192,10 @@ class ProtocolsController < ApplicationController
   end
 
   def edit
-    # Switch to correct team
-    current_team_switch(@protocol.team)
+    render :show
   end
 
   def show
-    # Switch to correct team
-    current_team_switch(@protocol.team)
-
     respond_to do |format|
       format.json { render json: @protocol, serializer: ProtocolSerializer, user: current_user }
       format.html
@@ -269,9 +283,7 @@ class ProtocolsController < ApplicationController
   end
 
   def delete_steps
-    @protocol.my_module.lock!
-
-    Protocol.transaction do
+    @protocol.with_lock do
       team = @protocol.team
       previous_size = 0
       @protocol.steps.each do |step|
@@ -289,7 +301,6 @@ class ProtocolsController < ApplicationController
 
         # skip adjusting positions after destroy as this is a bulk delete
         step.skip_position_adjust = true
-
         step.destroy!
       end
 
@@ -305,28 +316,19 @@ class ProtocolsController < ApplicationController
   def clone
     cloned = nil
     Protocol.transaction do
-      begin
-        cloned = @original.deep_clone_repository(current_user)
-      rescue Exception
-        raise ActiveRecord:: Rollback
-      end
+      cloned = @original.deep_clone_repository(current_user)
+    rescue StandardError
+      raise ActiveRecord::Rollback
     end
+
     respond_to do |format|
-      if !cloned.nil?
-        flash[:success] = t(
-          'protocols.index.clone.success_flash',
-          original: @original.name,
-          new: cloned.name
-        )
-        flash.keep(:success)
-        format.json { render json: {}, status: :ok }
-      else
-        flash[:error] = t(
-          'protocols.index.clone.error_flash',
-          original: @original.name
-        )
-        flash.keep(:error)
-        format.json { render json: {}, status: :bad_request }
+      format.json do
+        if cloned.present?
+          render json: { message: t('protocols.index.clone.success_flash', original: @original.name, new: cloned.name) }
+        else
+          render json: { message: t('protocols.index.clone.error_flash', original: @original.name) },
+                 status: :bad_request
+        end
       end
     end
   end
@@ -637,7 +639,7 @@ class ProtocolsController < ApplicationController
           .call(activity_type: :import_protocol_in_repository,
                 owner: current_user,
                 subject: protocol,
-                team: current_team,
+                team: protocol.team,
                 message_items: {
                   protocol: protocol.id
                 })
@@ -792,6 +794,7 @@ class ProtocolsController < ApplicationController
 
           # Create folder and xml file for each protocol and populate it
           @protocols.each do |protocol|
+            protocol = protocol.latest_published_version || protocol
             protocol_dir = get_guid(protocol.id).to_s
             ostream.put_next_entry("#{protocol_dir}/eln.xml")
             ostream.print(generate_protocol_xml(protocol))
@@ -835,15 +838,15 @@ class ProtocolsController < ApplicationController
           file_name = 'protocols.eln'
         end
 
-        @protocols.each do |p|
+        @protocols.each do |protocol|
           if params[:my_module_id]
             my_module = MyModule.find(params[:my_module_id])
             Activities::CreateActivityService
               .call(activity_type: :export_protocol_from_task,
                     owner: current_user,
-                    project: my_module.experiment.project,
+                    project: my_module.project,
                     subject: my_module,
-                    team: current_team,
+                    team: my_module.team,
                     message_items: {
                       my_module: params[:my_module_id].to_i
                     })
@@ -851,10 +854,10 @@ class ProtocolsController < ApplicationController
             Activities::CreateActivityService
               .call(activity_type: :export_protocol_in_repository,
                     owner: current_user,
-                    subject: p,
-                    team: current_team,
+                    subject: protocol,
+                    team: protocol.team,
                     message_items: {
-                      protocol: p.id
+                      protocol: protocol.id
                     })
           end
         end
@@ -918,13 +921,11 @@ class ProtocolsController < ApplicationController
 
   def load_from_repository_datatable
     @protocol = Protocol.find_by_id(params[:id])
-    @type = (params[:type] || 'public').to_sym
     respond_to do |format|
       format.json do
         render json: ::LoadFromRepositoryProtocolsDatatable.new(
           view_context,
           @protocol.team,
-          @type,
           current_user
         )
       end
@@ -1055,7 +1056,7 @@ class ProtocolsController < ApplicationController
     if stale?(@protocol)
       render json: {
         copyable: can_clone_protocol_in_repository?(@protocol),
-        archivable: can_manage_protocol_in_repository?(@protocol),
+        archivable: can_archive_protocol_in_repository?(@protocol),
         restorable: can_restore_protocol_in_repository?(@protocol)
       }
     end
@@ -1130,6 +1131,7 @@ class ProtocolsController < ApplicationController
 
   def check_view_permissions
     @protocol = Protocol.find_by_id(params[:id])
+    current_team_switch(@protocol.team) if current_team != @protocol.team
     unless @protocol.present? &&
            (can_read_protocol_in_module?(@protocol) ||
            can_read_protocol_in_repository?(@protocol))
@@ -1147,7 +1149,8 @@ class ProtocolsController < ApplicationController
 
   def check_clone_permissions
     load_team_and_type
-    @original = Protocol.find_by_id(params[:id])
+    protocol = Protocol.find_by(id: params[:id])
+    @original = protocol.latest_published_version || protocol
 
     if @original.blank? ||
        !can_clone_protocol_in_repository?(@original) || @type == :archive
@@ -1179,6 +1182,16 @@ class ProtocolsController < ApplicationController
     end
   end
 
+  def check_archive_all_in_repository_permissions
+    @protocols = Protocol.where(id: params[:protocol_ids])
+    @protocols.find_each do |protocol|
+      unless can_archive_protocol_in_repository?(protocol)
+        respond_to { |f| f.json { render json: {}, status: :unauthorized } }
+        break
+      end
+    end
+  end
+
   def check_restore_all_in_repository_permissions
     @protocols = Protocol.where(id: params[:protocol_ids])
     @protocols.find_each do |protocol|
@@ -1195,9 +1208,15 @@ class ProtocolsController < ApplicationController
     render_403 if @protocol.blank? || !can_read_protocol_in_module?(@protocol)
   end
 
+  def check_publish_permission
+    @protocol = Protocol.find_by(id: params[:id])
+
+    render_403 if @protocol.blank? || !can_publish_protocol_in_repository?(@protocol)
+  end
+
   def check_load_from_repository_permissions
-    @protocol = Protocol.find_by_id(params[:id])
-    @source = Protocol.find_by_id(params[:source_id])
+    @protocol = Protocol.find_by(id: params[:id])
+    @source = Protocol.find_by(id: params[:source_id])&.latest_published_version
 
     render_403 unless @protocol.present? && @source.present? &&
                       (can_manage_protocol_in_module?(@protocol) &&
@@ -1260,7 +1279,7 @@ class ProtocolsController < ApplicationController
       .call(activity_type: type_of,
             owner: current_user,
             subject: @protocol,
-            team: current_team,
+            team: @protocol.team,
             project: project,
             message_items: message_items)
   end
@@ -1273,7 +1292,7 @@ class ProtocolsController < ApplicationController
                user: current_user.full_name,
                protocol: @protocol.name),
       message: t('notifications.protocol_description_annotation_message_html',
-                 protocol: link_to(@protocol.name, edit_protocol_url(@protocol)))
+                 protocol: link_to(@protocol.name, protocol_url(@protocol)))
     )
   end
 end

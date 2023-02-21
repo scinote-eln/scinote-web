@@ -21,6 +21,14 @@
     }
   }
 
+  .project-show-toolbar {
+    display: flex;
+
+    .btn {
+      margin-right: .25em;
+    }
+  }
+
   .content-header {
     .project-name {
       align-items: center;
@@ -48,12 +56,13 @@
     .cards-wrapper {
       --card-min-width: 350px;
       --list-columns-number: 8;
+      grid-auto-rows: auto;
 
       .card {
-        grid-row: span 7;
+        align-items: center;
 
         .experiment-code-cell {
-          display: none;
+          display: block;
         }
 
         &.experiment-card {
@@ -85,31 +94,25 @@
 
           .experiment-name-cell {
             @include font-h3;
-            -webkit-box-orient: vertical;
-            display: -webkit-box;
             height: 3em;
-            -webkit-line-clamp: 2;
-            margin: .25em 1.75em -.25em;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            margin-bottom: 1em;
             width: 100%;
 
-            a {
-              color: inherit;
-              display: inline-block;
-              line-height: 21px;
-            }
-          }
 
-          .actions {
-            position: absolute;
-            right: .2em;
-            top: .2em;
+            a {
+              -webkit-box-orient: vertical;
+              color: inherit;
+              display: -webkit-box;
+              height: 3em;
+              -webkit-line-clamp: 2;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
           }
 
           .dates-and-img-container {
             display: flex;
-            height: 7em;
+            height: 6em;
             width: 100%;
 
             .dates-container {
@@ -117,11 +120,16 @@
             }
           }
 
+          .actions-cell {
+            height: 36px;
+            margin-left: auto;
+          }
+
           .data-row {
             display: flex;
-            line-height: 34px;
 
             .card-label {
+              color: $color-silver-chalice;
               width: 7em;
             }
 
@@ -156,18 +164,19 @@
 
               &::after {
                 background: linear-gradient(to right, $color-transparent, $color-white 50%);
-                bottom: .75em;
+                bottom: .4em;
                 content: "";
-                height: 1.75em;
+                height: 1.5em;
                 position: absolute;
                 right: 0;
                 text-align: right;
                 width: 25%;
+                min-width: 75px;
               }
             }
 
             .more-button {
-              bottom: .8em;
+              bottom: .5em;
               position: absolute;
               right: 1em;
             }
@@ -248,7 +257,7 @@
       }
 
       &.list {
-        grid-auto-rows: 1px 5em;
+        grid-auto-rows: 1px minmax(3em, auto);
         grid-template-columns: max-content minmax(100px, auto) minmax(80px, max-content) repeat(calc(var(--list-columns-number) - 4), minmax(100px, auto)) max-content;
         grid-template-rows: 3em;
 
@@ -262,9 +271,10 @@
 
             .workflow-img-wrapper {
               flex-shrink: 0;
-              height: 3.5em;
-              margin: .25em 1em .25em .5em;
-              width: 3.5em;
+              height: 3em;
+              margin: 0 .75em 0 .25em;
+              padding: .25em;
+              width: 3em;
 
               .archived-icon-plceholder {
                 font-size: 2em;
@@ -275,7 +285,7 @@
                 text-align: center;
 
                 img {
-                  max-height: 3em;
+                  max-height: 2.5em;
                 }
               }
             }
@@ -308,6 +318,8 @@
             .experiment-code-cell {
               display: block;
               grid-column: 3;
+              line-height: 1.25em;
+              padding-top: .5em;
             }
 
             .start-date-cell {
@@ -327,8 +339,8 @@
               position: relative;
 
               .description-text {
-                height: 4.5em;
-                -webkit-line-clamp: 3;
+                height: 3em;
+                -webkit-line-clamp: 2;
 
                 &::after {
                   bottom: .5em;
@@ -343,6 +355,7 @@
 
             .actions-cell {
               grid-column: 8;
+              height: 100%;
               padding-top: 3px;
               position: initial;
             }
@@ -422,12 +435,6 @@
         }
       }
 
-      &.readonly {
-        .experiment-name-cell {
-          margin-left: 0 !important;
-        }
-      }
-
       &.last-page {
         padding-bottom: 5em;
         position: relative;
@@ -474,7 +481,10 @@
       .cards-wrapper {
         .card.experiment-card {
           .workflow-img-wrapper {
+            align-items: center;
             background-color: $color-alto;
+            display: flex;
+            justify-content: center;
           }
 
           .progress-bar {
@@ -539,4 +549,29 @@
       overflow: auto;
     }
   }
+}
+
+.tasks-no-results-container {
+  grid-column: 1 / -1;
+  grid-row: 8;
+  display: none;
+}
+
+.no-results-img {
+  display: block;
+  margin: auto;
+  max-height: 230px;
+}
+
+.no-results-title {
+  @include font-h1;
+  margin-bottom: .25em;
+  margin-top: 1.25em;
+  text-align: center;
+}
+
+.no-results-description {
+  @include font-main;
+  color: $color-silver-chalice;
+  text-align: center;
 }

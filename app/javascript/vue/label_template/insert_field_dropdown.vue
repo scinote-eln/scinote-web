@@ -1,5 +1,5 @@
 <template>
-  <div ref="dropdown" class="inser-field-dropdown dropdown">
+  <div ref="dropdown" class="insert-field-dropdown dropdown">
     <a class="open-dropdown-button collapsed" role="button" data-toggle="dropdown" id="fieldsContainer" aria-expanded="false">
       {{ i18n.t('label_templates.show.insert_dropdown.button') }}
       <i class="fas fa-chevron-down"></i>
@@ -22,7 +22,7 @@
             :data-template="tooltipTemplate"
             class="field-element"
             :title="i18n.t('label_templates.show.insert_dropdown.field_code', {code: field.tag})"
-            @click="$emit('insertField', field.tag)"
+            @click="insertTag(field)"
         >
           {{ field.key }}
           <i class="fas fa-plus-square"></i>
@@ -36,8 +36,9 @@
             :data-template="tooltipTemplate"
             class="field-element"
             :title="i18n.t('label_templates.show.insert_dropdown.field_code', {code: field.tag})"
-            @click="$emit('insertField', field.tag)"
+            @click="insertTag(field)"
         >
+          <i v-if="field.icon" :class="field.icon"></i>
           {{ field.key }}
           <i class="fas fa-plus-square"></i>
         </div>
@@ -51,7 +52,7 @@
             :data-template="tooltipTemplate"
             class="field-element"
             :title="i18n.t('label_templates.show.insert_dropdown.field_code', {code: field.tag})"
-            @click="$emit('insertField', field.tag)"
+            @click="insertTag(field)"
           >
             {{ field.key }}
             <i class="fas fa-plus-square"></i>
@@ -62,10 +63,18 @@
         </div>
       </div>
     </div>
+    <LogoInsertModal v-if="openLogoModal"
+                     :unit="labelTemplate.attributes.unit"
+                     :density="labelTemplate.attributes.density"
+                     :dimension="logoDimension"
+                     @insert:tag="insertTag"
+                     @cancel="openLogoModal = false"/>
   </div>
 </template>
 
 <script>
+  import LogoInsertModal from './components/logo_insert_modal.vue'
+
   export default {
     name: 'InsertFieldDropdown',
     props: {
@@ -81,9 +90,12 @@
           common: [],
           repositories: []
         },
+        openLogoModal: false,
+        logoDimension: null,
         searchValue: ''
       }
     },
+    components: {LogoInsertModal},
     computed: {
       tooltipTemplate() {
         return `<div class="tooltip" role="tooltip">
@@ -123,6 +135,11 @@
     },
     mounted() {
       $.get(this.labelTemplate.attributes.urls.fields, (result) => {
+        result.default.map((value) =>  {
+          value.key = this.i18n.t(`label_templates.default_columns.${value.key}`)
+          return value;
+        });
+
         this.fields = result;
         this.$nextTick(() => {
           $('[data-toggle="tooltip"]').tooltip();
@@ -135,6 +152,14 @@
       });
     },
     methods: {
+      insertTag(field) {
+        if (field.id == 'logo') {
+          this.logoDimension = field.dimension
+          this.openLogoModal = true
+          return
+        }
+        this.$emit('insertTag', field.tag)
+      },
       filterArray(array, key) {
         return array.filter(field => field[key].toLowerCase().indexOf(this.searchValue.toLowerCase()) !== -1)
       }

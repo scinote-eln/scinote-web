@@ -3,7 +3,15 @@
 module Api
   module V1
     class UsersController < BaseController
+      before_action :load_team, only: :index
       before_action :load_user, only: :show
+
+      def index
+        users = @team.users
+                     .page(params.dig(:page, :number))
+                     .per(params.dig(:page, :size))
+        render jsonapi: users, each_serializer: UserSerializer
+      end
 
       def show
         render jsonapi: @user, serializer: UserSerializer

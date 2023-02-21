@@ -218,7 +218,7 @@ class AssetsController < ApplicationController
           log_step_activity(
             :task_step_file_deleted,
             @assoc,
-            @assoc.my_module.experiment.project,
+            @assoc.my_module.project,
             my_module: @assoc.my_module.id,
             file: @asset.file_name
           )
@@ -298,7 +298,7 @@ class AssetsController < ApplicationController
       .call(activity_type: type_of,
             owner: current_user,
             subject: step.protocol,
-            team: current_team,
+            team: step.protocol.team,
             project: project,
             message_items: message_items)
   end
@@ -308,8 +308,8 @@ class AssetsController < ApplicationController
       .call(activity_type: type_of,
             owner: current_user,
             subject: result,
-            team: result.my_module.experiment.project.team,
-            project: result.my_module.experiment.project,
+            team: result.my_module.team,
+            project: result.my_module.project,
             message_items: {
               result: result.id,
               type_of_result: t('activities.result_type.text')

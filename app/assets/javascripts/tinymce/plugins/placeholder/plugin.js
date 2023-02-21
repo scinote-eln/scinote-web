@@ -1,11 +1,12 @@
 /* global tinymce */
+
 tinymce.PluginManager.add('placeholder', function(editor) {
   var Label = function() {
     var editorForm = $(editor.getContainer()).closest('form');
     var editorToolbar = editorForm.find('.mce-top-part');
     var placeholderText = editor.getElement().getAttribute('placeholder') || editor.settings.placeholder;
-    var placeholderAttrs = editor.settings.placeholder_attrs || {
-      style: {
+    var placeholderAttrs = {
+      style: `
         position: 'absolute',
         top: (editorToolbar.height()) + 'px',
         left: 0,
@@ -14,7 +15,7 @@ tinymce.PluginManager.add('placeholder', function(editor) {
         width: 'calc(100% - 50px)',
         overflow: 'hidden',
         'white-space': 'pre-wrap'
-      }
+      `
     };
     var contentAreaContainer = editor.getContentAreaContainer();
 

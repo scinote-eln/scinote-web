@@ -1,5 +1,5 @@
 <div class="select-block dropdown-selector-container">
-  <label><%= label %></label>
+  <label><%= defined?(label_text) ? label_text : t('filters_modal.text.label') %></label>
   <div class="input-field dropdown text-search-filter">
     <input id="textSearchFilterInput"
            class="dropdown-toggle search-field"

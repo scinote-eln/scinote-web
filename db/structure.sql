@@ -1031,7 +1031,8 @@ CREATE TABLE public.my_modules (
     my_module_status_id bigint,
     status_changing boolean DEFAULT false,
     changing_from_my_module_status_id bigint,
-    last_transition_error jsonb
+    last_transition_error jsonb,
+    provisioning_status integer
 );
 
 
@@ -1372,9 +1373,11 @@ CREATE TABLE public.protocols (
     updated_at timestamp without time zone NOT NULL,
     published_on timestamp without time zone,
     nr_of_linked_children integer DEFAULT 0,
+    visibility integer DEFAULT 0,
     archived boolean DEFAULT false NOT NULL,
     version_number integer DEFAULT 1,
     version_comment character varying,
+    default_public_user_role_id bigint,
     previous_version_id bigint,
     last_modified_by_id bigint,
     published_by_id bigint
@@ -2687,7 +2690,8 @@ CREATE TABLE public.tables (
     last_modified_by_id bigint,
     data_vector tsvector,
     name character varying DEFAULT ''::character varying,
-    team_id integer
+    team_id integer,
+    metadata jsonb
 );
 
 
@@ -5334,6 +5338,13 @@ CREATE INDEX index_my_modules_on_last_modified_by_id ON public.my_modules USING 
 
 
 --
+-- Name: index_my_modules_on_my_module_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_my_modules_on_my_module_code ON public.my_modules USING gin ((('TA'::text || id)) public.gin_trgm_ops);
+
+
+--
 -- Name: index_my_modules_on_my_module_group_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5509,6 +5520,13 @@ CREATE INDEX index_projects_on_name ON public.projects USING gin (public.trim_ht
 
 
 --
+-- Name: index_projects_on_project_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_projects_on_project_code ON public.projects USING gin ((('PR'::text || id)) public.gin_trgm_ops);
+
+
+--
 -- Name: index_projects_on_project_folder_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5586,6 +5604,13 @@ CREATE INDEX index_protocols_on_authors ON public.protocols USING gin (public.tr
 
 
 --
+-- Name: index_protocols_on_default_public_user_role_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_protocols_on_default_public_user_role_id ON public.protocols USING btree (default_public_user_role_id);
+
+
+--
 -- Name: index_protocols_on_description; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5621,10 +5646,17 @@ CREATE INDEX index_protocols_on_parent_id ON public.protocols USING btree (paren
 
 
 --
+<<<<<<< HEAD
 -- Name: index_protocols_on_previous_version_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_protocols_on_previous_version_id ON public.protocols USING btree (previous_version_id);
+=======
+-- Name: index_protocols_on_protocol_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_protocols_on_protocol_code ON public.protocols USING gin ((('PT'::text || id)) public.gin_trgm_ops);
+>>>>>>> develop
 
 
 --
@@ -5653,6 +5685,13 @@ CREATE INDEX index_protocols_on_restored_by_id ON public.protocols USING btree (
 --
 
 CREATE INDEX index_protocols_on_team_id ON public.protocols USING btree (team_id);
+
+
+--
+-- Name: index_protocols_on_visibility; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_protocols_on_visibility ON public.protocols USING btree (visibility);
 
 
 --
@@ -5772,6 +5811,13 @@ CREATE INDEX index_reports_on_name ON public.reports USING gin (public.trim_html
 --
 
 CREATE INDEX index_reports_on_project_id ON public.reports USING btree (project_id);
+
+
+--
+-- Name: index_reports_on_report_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reports_on_report_code ON public.reports USING gin ((('RP'::text || id)) public.gin_trgm_ops);
 
 
 --
@@ -7299,6 +7345,14 @@ ALTER TABLE ONLY public.repository_stock_unit_items
 
 
 --
+-- Name: protocols fk_rails_4c4d4f815a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.protocols
+    ADD CONSTRAINT fk_rails_4c4d4f815a FOREIGN KEY (default_public_user_role_id) REFERENCES public.user_roles(id);
+
+
+--
 -- Name: repository_status_values fk_rails_4cf67f9f1e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8624,7 +8678,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220818094636'),
 ('20220914124900'),
 ('20221007113010'),
+('20221028085051'),
+('20221122132857'),
 ('20221125133611'),
-('20230120141017');
+('20221222123021'),
+('20230120141017'),
+('20230206095817');
 
 

@@ -35,12 +35,12 @@ class SpreadsheetParser
     end
   end
 
-  def self.first_two_rows(sheet)
+  def self.first_two_rows(sheet, date_format: nil)
     rows = spreadsheet_enumerator(sheet)
     header = []
     columns = []
     rows.take(2).each_with_index do |row_values, i|
-      row = parse_row(row_values, sheet, header: i.zero?)
+      row = parse_row(row_values, sheet, header: i.zero?, date_format: date_format)
       if row && i.zero?
         header = row
       else

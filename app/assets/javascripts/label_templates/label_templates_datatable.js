@@ -237,6 +237,7 @@
     LABEL_TEMPLATE_TABLE = $table.DataTable({
       dom: "R<'label-toolbar'<'label-buttons-container'><'label-search-container'f>>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
       order: [[1, 'desc']],
+      stateSave: true,
       sScrollX: '100%',
       sScrollXInner: '100%',
       processing: true,

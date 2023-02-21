@@ -7,13 +7,13 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <p class="modal-title">
               <template v-if="rows.length == 1">
-                {{ i18n.t('repository_row.modal_print_label.head_title', {repository_row: rows[0].attributes.name}) }}
+                <b>{{ i18n.t('repository_row.modal_print_label.head_title', {repository_row: rows[0].attributes.name}) }}</b>
                 <span class="id-label">
                   {{ i18n.t('repository_row.modal_print_label.id_label', {repository_row_id: rows[0].attributes.code}) }}
                 </span>
               </template>
               <template v-else>
-                {{ i18n.t('repository_row.modal_print_label.head_title_multiple', {repository_rows: rows.length}) }}
+                <b>{{ i18n.t('repository_row.modal_print_label.head_title_multiple', {repository_rows: rows.length}) }}</b>
               </template>
             </p>
           </div>

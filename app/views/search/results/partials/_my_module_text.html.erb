@@ -5,7 +5,7 @@
 <% if my_module.archived? %>
   <span class="label label-warning"><%=t 'search.index.archived' %></span>
   <% if can_restore_my_module?(my_module) %>
-    <%= route_to_other_team module_archive_experiment_url(my_module.experiment),
+    <%= route_to_other_team my_modules_experiment_path(my_module.experiment, view_mode: :archived),
                             my_module.experiment.project.team,
                             text %>
   <% else %>

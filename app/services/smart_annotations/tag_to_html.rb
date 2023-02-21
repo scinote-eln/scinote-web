@@ -2,6 +2,8 @@
 
 module SmartAnnotations
   class TagToHtml
+    REGEX = /\[\#(.*?)~(prj|exp|tsk|rep_item)~([0-9a-zA-Z]+)\]/.freeze
+    USER_REGEX = /\[@(.*?)~([0-9a-zA-Z]+)\]/.freeze
     attr_reader :html
 
     def initialize(user, team, text, preview_repository = false)
@@ -10,7 +12,6 @@ module SmartAnnotations
 
     private
 
-    REGEX = /\[\#(.*?)~(prj|exp|tsk|rep_item)~([0-9a-zA-Z]+)\]/
     OBJECT_MAPPINGS = { prj: Project,
                         exp: Experiment,
                         tsk: MyModule,
