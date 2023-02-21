@@ -3269,6 +3269,7 @@ en:
     change: "Change"
     remove: "Remove"
     clone_label: "Clone"
+    download: "Download"
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"
