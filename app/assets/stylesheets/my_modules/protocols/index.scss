@@ -2,6 +2,7 @@
 // scss-lint:disable NestingDepth
 // scss-lint:disable SelectorFormat
 // scss-lint:disable ImportantRule
+// scss-lint:disable IdSelector
 
 @import "constants";
 @import "mixins";
@@ -666,4 +667,10 @@
 .task-details-code {
   display: inline-block;
   margin-left: 4px;
+}
+
+#confirm-link-update-modal {
+  .warning {
+    margin: 0 15px 15px;
+  }
 }

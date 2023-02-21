@@ -468,41 +468,32 @@ class ProtocolsController < ApplicationController
   end
 
   def update_from_parent
+    protocol_can_destroy = @protocol.can_destroy?
     respond_to do |format|
-      if @protocol.can_destroy?
+      if protocol_can_destroy
         transaction_error = false
         Protocol.transaction do
-          @protocol.update_from_parent(current_user)
+          @protocol.update_from_parent(current_user, latest_version: true)
         rescue StandardError
           transaction_error = true
           raise ActiveRecord::Rollback
         end
+      end
 
-        if transaction_error
-          # Bad request error
-          format.json do
-            render json: {
-              message: t('my_modules.protocols.update_from_parent_error')
-            },
-            status: :bad_request
-          end
+      format.json do
+        if !protocol_can_destroy
+          render json: { message: t('my_modules.protocols.update_from_parent_error_locked') }, status: :bad_request
+        elsif transaction_error
+          render json: { message: t('my_modules.protocols.update_from_parent_error') }, status: :bad_request
         else
-          # Everything good, display flash & render 200
           log_activity(:update_protocol_in_task_from_repository,
                        @protocol.my_module.experiment.project,
                        my_module: @protocol.my_module.id,
                        protocol_repository: @protocol.parent.id)
-          flash[:success] = t(
-            'my_modules.protocols.update_from_parent_flash'
-          )
+
+          flash[:success] = t('my_modules.protocols.update_from_parent_flash')
           flash.keep(:success)
-          format.json { render json: {}, status: :ok }
-        end
-      else
-        format.json do
-          render json: {
-            message: t('my_modules.protocols.update_from_parent_error_locked')
-          }, status: :bad_request
+          render json: {}, status: :ok
         end
       end
     end
@@ -895,7 +886,7 @@ class ProtocolsController < ApplicationController
         render json: {
           title: t('my_modules.protocols.confirm_link_update_modal.update_self_title'),
           message: t('my_modules.protocols.confirm_link_update_modal.update_self_message'),
-          btn_text: t('general.update'),
+          btn_text: t('my_modules.protocols.confirm_link_update_modal.update_self_btn_text'),
           url: update_from_parent_protocol_path(@protocol)
         }
       end
