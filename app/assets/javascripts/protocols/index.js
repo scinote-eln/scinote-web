@@ -1,6 +1,6 @@
 //= require protocols/import_export/import
 /* eslint-disable no-use-before-define, no-underscore-dangle, max-len, no-param-reassign */
-/* global ProtocolRepositoryHeader PdfPreview DataTableHelpers importProtocolFromFile _
+/* global ProtocolRepositoryHeader PdfPreview DataTableHelpers importProtocolFromFile _ PerfectSb
           dropdownSelector filterDropdown I18n animateSpinner initHandsOnTable inlineEditing HelperModule */
 
 // Global variables
@@ -434,6 +434,17 @@ var ProtocolsIndex = (function() {
       $('#protocol-versions-modal').modal('hide');
       modal.modal('show');
       modal.find('form').attr('action', url);
+    });
+  }
+
+  function initProtocolsioModal() {
+    $('#protocolsioModal').on('show.bs.modal', function() {
+      if ($(this).find('.modal-body').length === 0) {
+        $.get(this.dataset.url, function(data) {
+          $('#protocolsioModal').find('.modal-content').html(data.html);
+          PerfectSb().init();
+        });
+      }
     });
   }
 
@@ -1023,6 +1034,7 @@ var ProtocolsIndex = (function() {
   initExportProtocols();
   initDuplicateProtocols();
   initdeleteDraftModal();
+  initProtocolsioModal();
 
   return {
     reloadTable: function() {

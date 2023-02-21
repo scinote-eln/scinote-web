@@ -1,0 +1,104 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <h4 class="modal-title" id="publish-results-modal-label">
+    <%= t('protocols.index.protocolsio.title') %>
+  </h4>
+</div>
+<div class="modal-body">
+  <div class='protocolsio-container'>
+    <div class='main-protocol-panel'>
+      <div class="protocol-menu">
+        <%= form_tag team_list_external_protocol_path(@current_team.id),
+          method: :get,
+          class: 'protocols-search-bar',
+          remote: true do %>
+          <%= hidden_field_tag 'protocol_source', 'protocolsio/v3' %>
+          <%= hidden_field_tag 'page_id', 1, id: 'page-id' %>
+          <div class='header'>
+            <div class='protocols-search-bar-panel'>
+              <div class='sci-input-container left-icon'>
+                <input class='sci-input-field'
+                      type='text'
+                      name='key'
+                      placeholder="<%= t('protocols.index.protocolsio.search_bar_placeholder') %>" />
+                <i class='fas fa-search'></i>
+              </div>
+            </div>
+
+            <div class='protocol-sort'>
+              <div class="dropdown sort-menu">
+                <button class="btn btn-light icon-btn" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                  <span><i class="fas fa-sort-amount-down"></i></span>
+                </button>
+                <ul id="sortMenuDropdown" class="dropdown-menu sort-projects-menu dropdown-menu-right" aria-labelledby="sortMenu">
+                  <% {new: :newest, old: :oldest, atoz: :alpha_asc, ztoa: :alpha_desc}.each do |name, value| %>
+                    <li>
+                      <input type='radio' name='sort_by' value='<%= value %>' <%= name == :new ? 'checked' : '' %> />
+                      <label for="<%= value %>"><%= t("general.sort.#{name.to_s}_html") %></label>
+                    </li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          </div>
+        <% end %>
+        <div class='protocol-list-side-panel'>
+          <div class='row empty-text'>
+            <%= t('protocols.index.protocolsio.list_panel.empty_text') %>
+          </div>
+
+          <div class='list-wrapper perfect-scrollbar'></div>
+        </div>
+      </div>
+      <div class='protocol-preview-panel'>
+        <div class='empty-preview-panel'>
+
+          <div class='row'>
+            <div class='text-rows protocol-preview-text'>
+              <%= t('protocols.index.protocolsio.preview_panel.empty_title') %>
+            </div>
+          </div>
+
+          <div class='row'>
+            <div class='text-separator'> <hr> </div>
+          </div>
+
+          <div class='row'>
+            <div class='text-rows protocol-preview-subtext'>
+              <%= t('protocols.index.protocolsio.preview_panel.empty_subtext') %>
+            </div>
+          </div>
+          <div class='row-bottom'>
+            <div class='text-rows protocol-preview-subtext'>
+              <%= t('protocols.index.protocolsio.preview_panel.powered_by') %>
+            </div>
+          </div>
+        </div>
+
+        <div class='full-preview-panel' style='display: none;'>
+          <div class='row preview-banner'>
+            <div class='col-md-6 txt-holder'>
+              <span>
+                <b><%= t('protocols.index.protocolsio.preview_panel.banner_text') %></b>
+              </span>
+            </div>
+            <div class='col-md-6 btn-holder'>
+            </div>
+          </div>
+          <div class='preview-holder perfect-scrollbar'>
+            <iframe scrolling="no" class='preview-iframe'></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" data-dismiss="modal" class="btn btn-secondary"><%=t('general.cancel') %></button>
+  <button type="button" class="btn btn-primary convert-protocol" disabled><%= t('protocols.index.protocolsio.convert') %></button>
+</div>
+
+<%= render partial: "protocols/index/protocol_preview_modal.html.erb" %>
+
+<%= javascript_include_tag "protocols/steps" %>
+<%= javascript_include_tag "protocols/protocolsio.js" %>

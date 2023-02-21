@@ -19,6 +19,7 @@ class Protocol < ApplicationRecord
   after_update :update_user_assignments, if: -> { saved_change_to_protocol_type? && in_repository? }
   after_destroy :decrement_linked_children
   after_save :update_linked_children
+  after_create :auto_assign_protocol_members, if: :visible?
   skip_callback :create, :after, :create_users_assignments, if: -> { in_module? }
 
   enum visibility: { hidden: 0, visible: 1 }
@@ -409,10 +410,6 @@ class Protocol < ApplicationRecord
 
   def archive(user)
     return nil unless can_destroy?
-
-    # Don't update "updated_at" timestamp
-    self.record_timestamps = false
-
     # We keep published_on present, so we know (upon restoring)
     # where the protocol was located
 
@@ -439,9 +436,6 @@ class Protocol < ApplicationRecord
   end
 
   def restore(user)
-    # Don't update "updated_at" timestamp
-    self.record_timestamps = false
-
     self.archived_by = nil
     self.archived_on = nil
     self.restored_by = user
@@ -542,48 +536,24 @@ class Protocol < ApplicationRecord
     reload
     self.name = source.name
     self.record_timestamps = false
-    self.updated_at = source.updated_at
+    self.updated_at = source.published_on
     self.parent = source
-    self.parent_updated_at = source.updated_at
+    self.parent_updated_at = source.published_on
     self.added_by = current_user
     self.protocol_type = Protocol.protocol_types[:linked]
     save!
   end
 
-  def copy_to_repository(new_name, new_protocol_type, link_protocols, current_user)
-    clone = Protocol.new(
-      name: new_name,
-      description: description,
-      protocol_type: new_protocol_type,
-      added_by: current_user,
-      team: team
-    )
-    clone.published_on = Time.now if clone.in_repository_public?
-
+  def copy_to_repository(clone, current_user)
+    clone.team = team
+    clone.protocol_type = :in_repository_draft
+    clone.added_by = current_user
     # Don't proceed further if clone is invalid
     return clone if clone.invalid?
 
     ActiveRecord::Base.no_touching do
       # Okay, clone seems to be valid: let's clone it
       clone = deep_clone(clone, current_user)
-
-      # If the above operation went well, update published_on
-      # timestamp
-      clone.update(published_on: Time.zone.now) if clone.in_repository_public?
-    end
-
-    # Link protocols if neccesary
-    if link_protocols
-      reload
-      self.name = clone.name
-      self.record_timestamps = false
-      self.added_by = current_user
-      self.parent = clone
-      ts = clone.updated_at
-      self.parent_updated_at = ts
-      self.updated_at = ts
-      self.protocol_type = Protocol.protocol_types[:linked]
-      save!
     end
 
     clone
@@ -668,6 +638,14 @@ class Protocol < ApplicationRecord
   end
 
   private
+
+  def auto_assign_protocol_members
+    UserAssignments::ProtocolGroupAssignmentJob.perform_now(
+      team,
+      self,
+      last_modified_by || created_by
+    )
+  end
 
   def update_user_assignments
     case visibility

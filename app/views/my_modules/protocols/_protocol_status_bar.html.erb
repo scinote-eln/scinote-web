@@ -19,97 +19,48 @@
       <h2 class="protocol-name">
         <%= @protocol.parent&.name || @protocol.name %>
       </h2>
-      <div class="protocol-header-info">
-        <span>ID: <%= @protocol.parent&.code || @protocol.code %></span>
-      </div>
+      <% if @protocol.linked? %>
+        <div class="protocol-header-info">
+          <span><%= t('my_modules.protocols.protocol_status_bar.protocol_id_label') %> <%= @protocol.parent&.code %></span>
+          <span><%= t('my_modules.protocols.protocol_status_bar.protocol_version_label') %> <%= @protocol.parent&.version_number %></span>
+        </div>
+      <% end %>
     </div>
     <div class="dropdown-body">
-      <div class="info-line">
-        <div class="description"><%= t("my_modules.protocols.protocol_status_bar.protocol_created") %></div>
-        <div class="value"><%= I18n.l(@protocol.created_at, format: :full) %></div>
-      </div>
-      <% if @protocol.linked? && can_read_protocol_in_repository?(@protocol.parent) %>
-        <div class="info-line <%= "new-parent-version" if @protocol.parent_newer? || @protocol.parent_and_self_newer? %>">
-          <div class="description"><%= t("my_modules.protocols.protocol_status_bar.template_updated") %></div>
-          <% if @protocol.parent_newer? || @protocol.parent_and_self_newer? %>
-          <% end %>
-          <div class="value"><%= I18n.l(@protocol.parent.updated_at, format: :full) %></div>
+      <% if @protocol.unlinked? %>
+        <div class="info-line">
+          <div class="description"><%= t("my_modules.protocols.protocol_status_bar.protocol_created") %></div>
+          <div class="value"><%= I18n.l(@protocol.created_at, format: :full) %></div>
         </div>
       <% end %>
       <div class="info-line">
         <div class="description"><%= t("my_modules.protocols.protocol_status_bar.protocol_updated") %></div>
         <div class="value"><%= I18n.l(@protocol.updated_at, format: :full) %></div>
       </div>
-      <% if @protocol.parent_newer? || @protocol.parent_and_self_newer? %>
-        <div class="notification-line new-parent-version">
-          <i class="fas fa-sync-alt"></i>
-          <div class="description"><%= t("my_modules.protocols.protocol_status_bar.messages.template_updated_html") %></div>
+      <% if @protocol.linked?%>
+        <div class="info-line">
+          <div class="description"><%= t("my_modules.protocols.protocol_status_bar.protocol_loaded") %></div>
+          <div class="value"></div>
         </div>
-      <% end %>
-      <% if @protocol.newer_than_parent? || @protocol.parent_and_self_newer? %>
-        <div class="notification-line new-protocol-version">
-          <i class="fas fa-info-circle"></i>
-          <div class="description"><%= t("my_modules.protocols.protocol_status_bar.messages.protocol_updated") %></div>
+        <div class="info-line">
+          <div class="description"><%= t("my_modules.protocols.protocol_status_bar.protocol_published") %></div>
+          <div class="value"><%= I18n.l(@protocol&.parent&.published_on, format: :full) %></div>
         </div>
-      <% end %>
-      <% if @protocol.unlinked? %>
-        <div class="notification-line">
-          <i class="fas fa-unlink"></i>
-          <div class="description"><%= t("my_modules.protocols.protocol_status_bar.messages.unlinked") %></div>
-        </div>
-      <% end %>
-    </div>
-    <div class="dropdown-footer">
-      <div class="button-container no-padding">
-        <% if @protocol.linked? && can_manage_protocol_in_module?(@protocol) %>
-          <%= link_to unlink_modal_protocol_path(@protocol, format: :json), remote: true,
-            title: t("my_modules.protocols.protocol_status_bar.btns.unlink_title"),
-            data: { action: "unlink" },
-            class: "btn btn-light" do %>
-              <i class="fas fa-unlink"></i>
-              <%= t("my_modules.protocols.protocol_status_bar.btns.unlink") %>
-          <% end %>
-        <% end %>
-      </div>
-      <div class="button-container no-padding">
-        <% if can_read_protocol_in_module?(@protocol) && can_create_protocols_in_repository?(@protocol.team) && (@protocol.newer_than_parent? || @protocol.parent_and_self_newer? || @protocol.unlinked?) %>
-          <%= link_to copy_to_repository_modal_protocol_path(@protocol, format: :json), remote: true,
-            title: t("my_modules.protocols.protocol_status_bar.btns.save_to_repository_title"),
-            class: "btn btn-light btn-block",
-            data: {
-              action: "copy-to-repository",
-              hook: "protocol-copy-to-repository"
-            } do %>
-            <i class="fas fa-save"></i>
-            <% if @protocol.newer_than_parent? || @protocol.parent_and_self_newer? %>
-              <%= t("my_modules.protocols.protocol_status_bar.btns.save_a_copy_to_repository") %>
-            <% else %>
-              <%= t("my_modules.protocols.protocol_status_bar.btns.save_to_repository") %>
-            <% end %>
-          <% end %>
-        <% end %>
-      </div>
-      <div class="button-container no-padding">
-        <% if @protocol.linked? && can_manage_protocol_in_module?(@protocol) %>
+        <div class="dropdown-footer">
           <% if @protocol.parent_newer? || @protocol.parent_and_self_newer? %>
-            <%= link_to update_from_parent_modal_protocol_path(@protocol, format: :json), remote: true,
-              title: t("my_modules.protocols.protocol_status_bar.btns.update_self_title"),
-              class: "btn btn-light pull-right",
-              data: { action: "update-self" } do %>
-              <i class="fas fa-sync-alt"></i>
-              <%= t("my_modules.protocols.protocol_status_bar.btns.update_self") %>
-            <% end %>
-          <% elsif @protocol.newer_than_parent? %>
-            <%= link_to revert_modal_protocol_path(@protocol, format: :json), remote: true,
-              title: t("my_modules.protocols.protocol_status_bar.btns.revert_title"),
-              class: "btn btn-light pull-right",
-              data: { action: "revert" } do %>
-              <i class="fas fa-undo"></i>
-              <%= t("my_modules.protocols.protocol_status_bar.btns.revert") %>
-            <% end %>
+            <div class="notification-line new-parent-version">
+              <i class="fas fa-info-circle"></i>
+              <div class="description"><%= t("my_modules.protocols.protocol_status_bar.messages.template_updated_html") %></div>
+            </div>
           <% end %>
-        <% end %>
-      </div>
+          <% if @protocol.newer_than_parent? %>
+            <div class="notification-line new-protocol-version">
+              <i class="fas fa-info-circle"></i>
+              <div class="description"><%= t("my_modules.protocols.protocol_status_bar.messages.protocol_updated") %></div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>
