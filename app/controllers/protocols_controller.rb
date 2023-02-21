@@ -256,29 +256,20 @@ class ProtocolsController < ApplicationController
   end
 
   def create
-    @protocol = Protocol.new(
-      team: @current_team,
-      protocol_type: Protocol.protocol_types[:in_repository_draft],
-      added_by: current_user,
-      name: t('protocols.index.default_name')
-    )
-
+    @protocol = Protocol.new(create_params)
     ts = Time.now
+    @protocol.team = current_team
+    @protocol.protocol_type = :in_repository_draft
+    @protocol.added_by = current_user
     @protocol.record_timestamps = false
     @protocol.created_at = ts
     @protocol.updated_at = ts
-    @protocol.published_on = ts if @type == :public
 
-    rename_record(@protocol, :name)
     if @protocol.save
-
       log_activity(:create_protocol_in_repository, nil, protocol: @protocol.id)
-
-      TinyMceAsset.update_images(@protocol, params[:tiny_mce_images], current_user)
       redirect_to protocol_path(@protocol)
     else
-      flash[:error] = @protocol.errors.full_messages.join(', ')
-      redirect_to protocols_path
+      render json: { error: @protocol.errors.full_messages.join(', ') }, status: :unprocessable_entity
     end
   end
 
@@ -334,18 +325,10 @@ class ProtocolsController < ApplicationController
   end
 
   def copy_to_repository
-    link_protocols = params[:link] &&
-                     can_manage_protocol_in_module?(@protocol) &&
-                     can_create_protocols_in_repository?(@protocol.team)
     respond_to do |format|
       transaction_error = false
       Protocol.transaction do
-        @new = @protocol.copy_to_repository(
-          copy_to_repository_params[:name],
-          copy_to_repository_params[:protocol_type],
-          link_protocols,
-          current_user
-        )
+        @new = @protocol.copy_to_repository(Protocol.new(create_params), current_user)
       rescue StandardError => e
         transaction_error = true
         Rails.logger.error(e.message)
@@ -353,23 +336,19 @@ class ProtocolsController < ApplicationController
         raise ActiveRecord::Rollback
       end
 
-      if transaction_error
-        # Bad request error
-        format.json do
+      format.json do
+        if transaction_error
+          # Bad request error
           render json: {
             message: t('my_modules.protocols.copy_to_repository_modal.error_400')
           },
           status: :bad_request
+        elsif @new.invalid?
+          render json: { error: @new.errors.full_messages.join(', ') }, status: :unprocessable_entity
+        else
+          # Everything good, render 200
+          render json: { message: t('my_modules.protocols.copy_to_repository_modal.success_message') }
         end
-      elsif @new.invalid?
-        # Render errors
-        format.json do
-          render json: @new.errors,
-          status: :unprocessable_entity
-        end
-      else
-        # Everything good, render 200
-        format.json { render json: { refresh: link_protocols }, status: :ok }
       end
     end
   end
@@ -1241,7 +1220,7 @@ class ProtocolsController < ApplicationController
   end
 
   def check_copy_to_repository_permissions
-    @protocol = Protocol.find_by_id(params[:id])
+    @protocol = Protocol.find_by(id: params[:id])
     @my_module = @protocol.my_module
 
     render_403 unless @my_module.present? &&
@@ -1271,6 +1250,10 @@ class ProtocolsController < ApplicationController
 
   def copy_to_repository_params
     params.require(:protocol).permit(:name, :protocol_type)
+  end
+
+  def create_params
+    params.require(:protocol).permit(:name, :default_public_user_role_id, :visibility)
   end
 
   def check_protocolsio_import_permissions

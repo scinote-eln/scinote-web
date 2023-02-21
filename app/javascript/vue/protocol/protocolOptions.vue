@@ -31,9 +31,8 @@
         </li>
         <li>
           <a
-            ref="saveProtocol"
-            data-action="copy-to-repository"
-            @click="saveProtocol"
+            data-toggle="modal"
+            data-target="#newProtocolModal"
             :class="{ disabled: !protocol.attributes.urls.save_to_repo_url }"
           >
             <span class="fas fa-save"></span>
@@ -132,7 +131,6 @@ export default {
   mounted() {
     // Legacy global functions from app/assets/javascripts/my_modules/protocols.js
     initLoadFromRepository();
-    initCopyToRepository();
     initImport();
     initLinkUpdate();
   },
@@ -148,11 +146,6 @@ export default {
         this.protocol.attributes.urls.load_from_repo_url + "?type=recent"
       ).success((data) => {
         $(this.$refs.loadProtocol).trigger("ajax:success", data);
-      });
-    },
-    saveProtocol() {
-      $.get(this.protocol.attributes.urls.save_to_repo_url).success((data) => {
-        $(this.$refs.saveProtocol).trigger("ajax:success", data);
       });
     },
     unlinkProtocol() {

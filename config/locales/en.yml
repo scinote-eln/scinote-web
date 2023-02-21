@@ -1127,6 +1127,7 @@ en:
         link_label: "Link task to this protocol in templates"
         link_text: "<strong>Warning!</strong>&nbsp;This will unlink the currently linked protocol."
         error_400: "Due to unknown error, protocol could not be copied to templates."
+        success_message: "New protocol template was successfully saved. You can see it in protocol templates."
         confirm: "Save"
       load_from_file_flash: "Successfully loaded the protocol from the file."
       load_from_file_error: "Failed to load the protocol from file."
@@ -2655,6 +2656,16 @@ en:
       comment: "Revision comment"
       comment_placeholder: "What's new in this version?"
       publish: "Publish"
+    new_protocol_modal:
+      title_new: "Create new protocol template"
+      title_copy: "Save as new protocol template"
+      name_label: "Protocol template name"
+      name_placeholder: "Enter a protocol template name…"
+      description: "You will create a copy of a protocol and save it to Protocol templates."
+      access_label: "Grant access to all team members"
+      role_label: "Default user role"
+      create_new: "Create"
+      create_copy: "Save"
     header:
       details: 'Details'
       versions: 'Versions'
