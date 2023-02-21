@@ -25,7 +25,7 @@ module Activities
     private
 
     def filter_date!
-      @activity_filters =@activity_filters.where(
+      @activity_filters = @activity_filters.where(
         "(CASE "\
         "WHEN (filter ->> 'to_date') = '' " \
         "THEN :date >= '-infinity'::date " \
