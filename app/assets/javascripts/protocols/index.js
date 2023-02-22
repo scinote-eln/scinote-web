@@ -1,5 +1,5 @@
 //= require protocols/import_export/import
-/* global ProtocolRepositoryHeader PdfPreview */
+/* global ProtocolRepositoryHeader PdfPreview decodeHtmlEntities */
 
 // Global variables
 var rowsSelected = [];
@@ -58,11 +58,7 @@ function initProtocolsTable() {
       orderable: true,
       render: function(data) {
         // unescape HTML numbers (e.g. &#39;)
-        const parser = new DOMParser();
-
-        const parsedData = parser.parseFromString(data, 'text/html');
-
-        return parsedData.documentElement.textContent;
+        return decodeHtmlEntities(data);
       }
     }, {
       targets: [2, 3, 4, 5, 6],
