@@ -5,7 +5,7 @@
   <% if RepositoryBase.reminders_enabled? %>
     <div class="col-sm-9 checkbox-selector">
       <span class="sci-checkbox-container">
-        <%= check_box_tag 'range', '', column&.metadata['reminder_delta'], { id: 'datetime-reminder', class: 'sci-checkbox', disabled: column&.repository_date_time_range_value? } %>
+        <%= check_box_tag 'range', '', column&.metadata['reminder_value'], { id: 'datetime-reminder', class: 'sci-checkbox', disabled: column&.repository_date_time_range_value? } %>
         <span class="sci-checkbox-label"></span>
       </span>
       <span class="reminder-label">
@@ -24,8 +24,7 @@
 </div>
 <% if RepositoryBase.reminders_enabled? %>
   <hr/>
-  <div class="form-group reminder-group <%= 'hidden' if column&.metadata['reminder_delta'].blank? %> ">
-    <input type="hidden" class="reminder-delta" value="<%= column&.metadata['reminder_delta'] %>">
+  <div class="form-group reminder-group <%= 'hidden' if column&.metadata['reminder_value'].blank? %> ">
     <label class="control-label col-sm-3">
       <%= t('libraries.manange_modal_column.datetime_type.remind') %>
     </label>

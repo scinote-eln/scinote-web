@@ -137,6 +137,7 @@ class Table < ApplicationRecord
         contents: contents.encode('UTF-8', 'UTF-8'),
         team: step.protocol.team,
         created_by: user,
+        metadata: metadata,
         last_modified_by: user
       )
 

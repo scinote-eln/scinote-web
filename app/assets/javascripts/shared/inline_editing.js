@@ -45,14 +45,7 @@ var inlineEditing = (function() {
     var fieldToUpdate = container.data('field-to-update');
 
     if (inputField(container).val() === container.attr('data-original-name')) {
-      inputField(container)
-        .attr('disabled', true)
-        .addClass('hidden');
-      container
-        .removeClass('error')
-        .attr('data-edit-mode', '0');
-      container.find('.view-mode')
-        .removeClass('hidden');
+      $(`${editBlocks} .cancel-button`).trigger('click');
       return false;
     }
     if (container.data('disabled')) return false;
@@ -187,11 +180,14 @@ var inlineEditing = (function() {
         .removeClass('hidden');
       e.stopPropagation();
     })
-    .on('keyup', `${editBlocks} input`, function(e) {
+    .on('keydown', `${editBlocks} input`, function(e) {
       var container = $(this).closest(editBlocks);
       if (e.keyCode === 13) {
         updateField(container);
+      } else if (e.keyCode === 9) {
+        $(`${editBlocks} .cancel-button`).trigger('click');
       }
+      e.stopPropagation();
     });
 
   $(window).click((e) => {

@@ -72,7 +72,7 @@ module RepositoryZipExport
                      when -1, -2
                        next
                      when -3
-                       row.id
+                       repository.is_a?(RepositorySnapshot) ? row.parent_id : row.id
                      when -4
                        row.name
                      when -5

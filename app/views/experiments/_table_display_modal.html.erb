@@ -12,7 +12,7 @@
         <% Experiments::TableViewService::COLUMNS.each do |col| %>
           <div class="column-container <%= col %> visible">
             <% if col == :archived && params[:view_mode] != 'archived' %>
-              <i class="fas fa-eye disabled" data-column="<%= col %>"></i>
+              <i class="fas fa-eye-slash disabled" data-column="<%= col %>"></i>
             <% elsif col != :task_name %>
               <i class="fas fa-<%= col.to_s.in?(@my_module_visible_table_columns) ? 'eye' : 'eye-slash' %>" data-column="<%= col %>"></i>
             <% end %>

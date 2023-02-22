@@ -94,7 +94,8 @@ class ProjectsController < ApplicationController
   end
 
   def sidebar
-    @current_sort = @project.current_view_state(current_user).state.dig('experiments', params[:view_mode], 'sort')
+    @current_sort = params[:sort] || @project.current_view_state(current_user)
+                                             .state.dig('experiments', params[:view_mode], 'sort')
     render json: {
       html: render_to_string(
         partial: 'shared/sidebar/experiments', locals: {

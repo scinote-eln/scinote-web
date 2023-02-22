@@ -6,8 +6,18 @@
   position: relative;
   width: calc(100% + 16px);
 
+  // TinyMCE table of contents
+  .mce-toc li {
+    list-style-type: none;
+  }
+
   .step-element-grip-placeholder {
     flex: 0;
+  }
+
+  .img-responsive {
+    display: inline;
+    vertical-align: baseline;
   }
 
   .view-text-element {

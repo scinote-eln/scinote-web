@@ -301,23 +301,6 @@ Devise.setup do |config|
 
   Rails.application.config.x.disable_local_passwords = ENV['DISABLE_LOCAL_PASSWORDS'] == 'true'
 
-  if [ENV['OKTA_CLIENT_ID'], ENV['OKTA_CLIENT_SECRET'], ENV['OKTA_DOMAIN'], ENV['OKTA_AUTH_SERVER_ID']].all?(&:present?)
-    config.omniauth(
-      :okta,
-      ENV['OKTA_CLIENT_ID'],
-      ENV['OKTA_CLIENT_SECRET'],
-      scope: 'openid profile email',
-      fields: %w(profile email),
-      client_options: {
-        site: "https://#{ENV['OKTA_DOMAIN']}",
-        authorize_url: "https://#{ENV['OKTA_DOMAIN']}/oauth2/#{ENV['OKTA_AUTH_SERVER_ID']}/v1/authorize",
-        token_url: "https://#{ENV['OKTA_DOMAIN']}/oauth2/#{ENV['OKTA_AUTH_SERVER_ID']}/v1/token",
-        user_info_url: "https://#{ENV['OKTA_DOMAIN']}/oauth2/#{ENV['OKTA_AUTH_SERVER_ID']}/v1/userinfo"
-      },
-      strategy_class: OmniAuth::Strategies::Okta
-    )
-  end
-
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.

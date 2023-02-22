@@ -43,7 +43,7 @@ class Constants
   # data type is used
   INFINITY = 2**32 / 2 - 1
 
-  # Prevents integer overflow for reminder_delta seconds
+  # Prevents integer overflow for reminder delta seconds
   MAX_NUMBER_OF_REMINDER_WEEKS = 816
 
   #=============================================================================
@@ -335,7 +335,7 @@ class Constants
   ).freeze
 
   WHITELISTED_ATTRIBUTES = [
-    'href', 'src', 'width', 'height', 'alt', 'cite', 'datetime', 'title',
+    'id', 'href', 'src', 'width', 'height', 'alt', 'cite', 'datetime', 'title',
     'class', 'name', 'xml:lang', 'abbr', 'style', 'target', :data, 'border', 'contenteditable',
     'colspan', 'rowspan'
   ].freeze

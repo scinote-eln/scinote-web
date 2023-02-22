@@ -567,6 +567,9 @@ var RepositoryDatatable = (function(global) {
         return columns;
       }()),
       drawCallback: function() {
+        var archived = $('.repository-show').hasClass('archived');
+        var archivedOnIndex = TABLE.column('#archived-on').index();
+        var archivedByIndex = TABLE.column('#archived-by').index();
         animateSpinner(this, false);
         changeToViewMode();
         updateDataTableSelectAllCtrl();
@@ -581,9 +584,7 @@ var RepositoryDatatable = (function(global) {
         // Hide edit button if not all selected rows are on the current page
         $('#editRepositoryRecord').prop('disabled', !allSelectedRowsAreOnPage());
 
-        if ($('.repository-show').hasClass('archived')) {
-          TABLE.columns([6, 7]).visible(true);
-        }
+        TABLE.columns([archivedOnIndex, archivedByIndex]).visible(archived);
       },
       preDrawCallback: function() {
         var archived = $('.repository-show').hasClass('archived');
