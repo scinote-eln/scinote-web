@@ -171,7 +171,9 @@
     },
     created() {
       $.get(this.protocolUrl, (result) => {
+        result.data.attributes.name = decodeHtmlEntities(result.data.attributes.name);
         this.protocol = result.data;
+
         $.get(this.urls.steps_url, (result) => {
           this.steps = result.data
         })
