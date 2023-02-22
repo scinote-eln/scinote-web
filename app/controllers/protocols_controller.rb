@@ -164,12 +164,21 @@ class ProtocolsController < ApplicationController
   end
 
   def publish
-    @protocol.update(
-      published_by: current_user,
-      published_on: DateTime.now,
-      version_comment: params[:version_comment] || @protocol.version_comment,
-      protocol_type: (@protocol.parent_id.nil? ? :in_repository_published_original : :in_repository_published_version)
-    )
+    Protocol.transaction do
+      @protocol.update!(
+        published_by: current_user,
+        published_on: DateTime.now,
+        version_comment: params[:version_comment] || @protocol.version_comment,
+        protocol_type: (@protocol.parent_id.nil? ? :in_repository_published_original : :in_repository_published_version)
+      )
+      log_activity(:protocol_template_published,
+                   nil,
+                   protocol: @protocol.id,
+                   version_number: @protocol.version_number)
+    rescue ActiveRecord::RecordInvalid
+      raise ActiveRecord::Rollback
+    end
+
     if params[:view] == 'show'
       redirect_to protocol_path(@protocol)
     else
@@ -178,8 +187,14 @@ class ProtocolsController < ApplicationController
   end
 
   def destroy_draft
-    @protocol.destroy
-
+    Protocol.transaction do
+      parent = @protocol.parent
+      @protocol.destroy!
+      @protocol = parent
+      log_activity(:protocol_template_draft_deleted,
+                   nil,
+                   protocol: @protocol.id)
+    end
     redirect_to protocols_path
   end
 
@@ -329,6 +344,7 @@ class ProtocolsController < ApplicationController
       transaction_error = false
       Protocol.transaction do
         @new = @protocol.copy_to_repository(Protocol.new(create_params), current_user)
+        log_activity(:task_protocol_save_to_template, @my_module.experiment.project, protocol: @protocol.id)
       rescue StandardError => e
         transaction_error = true
         Rails.logger.error(e.message)
@@ -1027,6 +1043,9 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.json do
         if @protocol.update(version_comment: params.require(:protocol)[:version_comment])
+          log_activity(:protocol_template_revision_notes_updated,
+                       nil,
+                       protocol: @protocol.id)
           render json: { version_comment: @protocol.version_comment }
         else
           render json: @protocol.errors, status: :unprocessable_entity

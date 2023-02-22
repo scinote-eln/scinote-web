@@ -35,7 +35,9 @@ module AccessPermissions
         user_id: permitted_update_params[:user_id],
         team: current_team
       )
-      @user_assignment.update(permitted_update_params)
+      @user_assignment.update!(permitted_update_params)
+      log_activity(:protocol_template_access_changed, @user_assignment)
+
       respond_to do |format|
         format.json do
           render :protocol_member
@@ -53,8 +55,9 @@ module AccessPermissions
           user_assignment.team = current_team
           user_assignment.assigned_by = current_user
           user_assignment.save!
-        end
 
+          log_activity(:protocol_template_access_granted, user_assignment)
+        end
         respond_to do |format|
           @message = t('access_permissions.create.success', count: @protocol.user_assignments.count)
           format.json { render :edit }
@@ -72,6 +75,8 @@ module AccessPermissions
       user_assignment = @protocol.user_assignments.find_by(user: user, team: current_team)
       respond_to do |format|
         if user_assignment.destroy
+
+          log_activity(:protocol_template_access_revoked, user_assignment)
           format.json do
             render json: { flash: t('access_permissions.destroy.success', member_name: user.full_name) },
                    status: :ok
@@ -109,6 +114,18 @@ module AccessPermissions
 
     def check_read_permissions
       render_403 unless can_read_protocol_in_repository?(@protocol)
+    end
+
+    def log_activity(type_of, user_assignment)
+      Activities::CreateActivityService
+        .call(activity_type: type_of,
+              owner: current_user,
+              subject: @protocol,
+              team: @protocol.team,
+              project: nil,
+              message_items: { protocol: @protocol.id,
+                               user_target: user_assignment.user.id,
+                               role: user_assignment.user_role.name })
     end
   end
 end
