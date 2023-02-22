@@ -26,7 +26,7 @@ function initProtocolsTable() {
   repositoryType = protocolsTableEl.data("type");
 
   protocolsDatatable = protocolsTableEl.DataTable({
-    order: [[1, "asc"]],
+    order: [[1, 'asc']],
     dom: "RB<'main-actions'lf>t<'pagination-row'ip>",
     stateSave: true,
     sScrollX: '100%',
@@ -35,8 +35,8 @@ function initProtocolsTable() {
     processing: true,
     serverSide: true,
     ajax: {
-      url: protocolsTableEl.data("source"),
-      type: "POST"
+      url: protocolsTableEl.data('source'),
+      type: 'POST'
     },
     colReorder: {
       fixedColumnsLeft: 1000000 // Disable reordering
@@ -45,15 +45,27 @@ function initProtocolsTable() {
       targets: 0,
       searchable: false,
       orderable: false,
-      sWidth: "1%",
-      render: function (data, type, full, meta) {
+      sWidth: '1%',
+      render: function() {
         return `<div class="sci-checkbox-container">
                   <input type="checkbox" class="sci-checkbox">
                   <span class="sci-checkbox-label"></span>
                 </div>`;
       }
     }, {
-      targets: [ 1, 2, 3, 4, 5, 6 ],
+      targets: 1,
+      searchable: true,
+      orderable: true,
+      render: function(data) {
+        // unescape HTML numbers (e.g. &#39;)
+        const parser = new DOMParser();
+
+        const parsedData = parser.parseFromString(data, 'text/html');
+
+        return parsedData.documentElement.textContent;
+      }
+    }, {
+      targets: [2, 3, 4, 5, 6],
       searchable: true,
       orderable: true
     }],
