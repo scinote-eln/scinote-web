@@ -4,7 +4,7 @@ module UserAssignments
   class ProtocolGroupAssignmentJob < ApplicationJob
     queue_as :high_priority
 
-    def perform(team, protocols, assigned_by)
+    def perform(team, protocol, assigned_by)
       @team = team
       @assigned_by = assigned_by
 
@@ -12,7 +12,7 @@ module UserAssignments
         team.users.where.not(id: assigned_by).find_each do |user|
           user_assignment = UserAssignment.find_or_initialize_by(
             user: user,
-            assignable: protocols
+            assignable: protocol
           )
 
           next if user_assignment.manually_assigned?

@@ -244,6 +244,8 @@ class Protocol < ApplicationRecord
   end
 
   def draft
+    return self if in_repository_draft? && parent_id.blank?
+
     return nil unless in_repository_published_original?
 
     team.protocols.in_repository_draft.find_by(parent: self)
@@ -557,6 +559,26 @@ class Protocol < ApplicationRecord
     end
 
     clone
+  end
+
+  def save_as_draft(current_user)
+    version = (parent || self).latest_published_version.version_number + 1
+
+    draft = dup
+    draft.version_number = version
+    draft.protocol_type = :in_repository_draft
+    draft.parent = (parent || self)
+    draft.published_by = nil
+    draft.published_on = nil
+    draft.version_comment = nil
+
+    return draft if draft.invalid?
+
+    ActiveRecord::Base.no_touching do
+      draft = deep_clone(draft, current_user)
+    end
+
+    draft
   end
 
   def deep_clone_my_module(my_module, current_user)

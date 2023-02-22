@@ -223,12 +223,6 @@ var ProtocolsIndex = (function() {
 
         $(row).attr('data-row-id', rowId);
 
-        if (data.DT_CanClone) {
-          $(row).attr('data-clone-url', data.DT_CloneUrl);
-        }
-        if (data.DT_CanMakePrivate) { $(row).attr('data-can-make-private', 'true'); }
-        if (data.DT_CanPublish) { $(row).attr('data-can-publish', 'true'); }
-
         // If row ID is in the list of selected row IDs
         if ($.inArray(rowId, rowsSelected) !== -1) {
           $(row).find("input[type='checkbox']").prop('checked', true);

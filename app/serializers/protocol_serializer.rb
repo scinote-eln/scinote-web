@@ -69,7 +69,8 @@ class ProtocolSerializer < ActiveModel::Serializer
       update_protocol_authors_url: update_protocol_authors_url,
       update_protocol_keywords_url: update_protocol_keywords_url,
       delete_steps_url: delete_steps_url,
-      publish_url: publish_url
+      publish_url: publish_url,
+      save_as_draft_url: save_as_draft_url
     }
   end
 
@@ -168,5 +169,11 @@ class ProtocolSerializer < ActiveModel::Serializer
     return unless can_publish_protocol_in_repository?(object)
 
     publish_protocol_path(object)
+  end
+
+  def save_as_draft_url
+    return unless can_save_protocol_as_draft_in_repository?(object)
+
+    save_as_draft_protocol_path(object)
   end
 end

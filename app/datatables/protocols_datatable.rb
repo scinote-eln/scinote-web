@@ -91,13 +91,6 @@ class ProtocolsDatatable < CustomDatatable
         DT_RowAttr: {
           'data-permissions-url': permissions_protocol_path(record)
         },
-        DT_CanClone: can_clone_protocol_in_repository?(record),
-        DT_CloneUrl: if can_clone_protocol_in_repository?(record)
-                       clone_protocol_path(record, team: @team, type: @type)
-                     end,
-        DT_RowAttr: {
-          'data-permissions-url': permissions_protocol_path(record)
-        },
         '1': name_html(record),
         '2': record.code,
         '3': versions_html(record),

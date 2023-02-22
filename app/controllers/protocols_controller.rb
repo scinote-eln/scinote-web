@@ -36,7 +36,6 @@ class ProtocolsController < ApplicationController
     update_description
     update_version_comment
     update_name
-    destroy_draft
     update_authors
     edit_name_modal
     edit_keywords_modal
@@ -75,6 +74,8 @@ class ProtocolsController < ApplicationController
   before_action :check_publish_permission, only: :publish
   before_action :check_import_permissions, only: :import
   before_action :check_export_permissions, only: :export
+  before_action :check_delete_draft_permissions, only: :destroy_draft
+  before_action :check_save_as_draft_permissions, only: :save_as_draft
 
   before_action :check_protocolsio_import_permissions,
                 only: %i(protocolsio_import_create protocolsio_import_save)
@@ -119,7 +120,8 @@ class ProtocolsController < ApplicationController
   end
 
   def versions_modal
-    return render_403 unless @protocol.in_repository_published_original?
+    return render_403 unless @protocol.in_repository_published_original? ||
+                             (@protocol.in_repository_draft? && @protocol.parent_id.blank?)
 
     @published_versions = @protocol.published_versions.order(version_number: :desc)
     render json: {
@@ -366,6 +368,23 @@ class ProtocolsController < ApplicationController
           render json: { message: t('my_modules.protocols.copy_to_repository_modal.success_message') }
         end
       end
+    end
+  end
+
+  def save_as_draft
+    Protocol.transaction do
+      draft = @protocol.save_as_draft(current_user)
+
+      if draft.invalid?
+        flash[:error] = draft.errors.full_messages.join(', ')
+        redirect_to protocols_path
+      else
+        redirect_to protocol_path(draft)
+      end
+    rescue StandardError => e
+      Rails.logger.error(e.message)
+      Rails.logger.error(e.backtrace.join("\n"))
+      raise ActiveRecord::Rollback
     end
   end
 
@@ -1132,7 +1151,7 @@ class ProtocolsController < ApplicationController
   end
 
   def check_view_permissions
-    @protocol = Protocol.find_by_id(params[:id])
+    @protocol = Protocol.find_by(id: params[:id])
     current_team_switch(@protocol.team) if current_team != @protocol.team
     unless @protocol.present? &&
            (can_read_protocol_in_module?(@protocol) ||
@@ -1161,10 +1180,22 @@ class ProtocolsController < ApplicationController
   end
 
   def check_manage_permissions
-    @protocol = Protocol.find_by_id(params[:id])
+    @protocol = Protocol.find_by(id: params[:id])
     render_403 unless @protocol.present? &&
                       (can_manage_protocol_in_module?(@protocol) ||
                        can_manage_protocol_in_repository?(@protocol))
+  end
+
+  def check_save_as_draft_permissions
+    @protocol = Protocol.find_by(id: params[:id])
+    render_403 unless @protocol.present? &&
+                      can_save_protocol_as_draft_in_repository?(@protocol)
+  end
+
+  def check_delete_draft_permissions
+    @protocol = Protocol.find_by(id: params[:id])
+    render_403 unless @protocol.present? &&
+                      can_delete_protocol_draft_in_repository?(@protocol)
   end
 
   def check_manage_parent_in_repository_permissions
