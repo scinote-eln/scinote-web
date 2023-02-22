@@ -71,9 +71,15 @@
             </div>
             <div class="protocol-actions">
               <% unless @protocol.draft.present? %>
-                <button class="btn btn-light icon-btn save-as-draft" data-placement="left" title="<%= t('protocols.index.versions.save_as_draft') %>" data-toggle="tooltip">
+                <%= button_to save_as_draft_protocol_path(protocol_version),
+                              class: "btn btn-light icon-btn save-as-draft",
+                              title: t('protocols.index.versions.save_as_draft'),
+                              data: {
+                                placement: :left,
+                                toggle: :tooltip
+                              } do %>
                   <i class="fas fa-clone"></i>
-                </button>
+                <% end %>
               <% end %>
             </div>
             <div class="protocol-version-comment">

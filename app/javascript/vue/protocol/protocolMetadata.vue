@@ -18,7 +18,7 @@
         </a>
         <button class="btn btn-light">{{ i18n.t("protocols.header.versions") }}</button>
         <button v-if="!protocol.attributes.published" @click="$emit('publish')" class="btn btn-primary">{{ i18n.t("protocols.header.publish") }}</button>
-        <button v-else class="btn btn-secondary">{{ i18n.t("protocols.header.save_as_draft") }}</button>
+        <button v-else @click="saveAsdraft" class="btn btn-secondary">{{ i18n.t("protocols.header.save_as_draft") }}</button>
       </div>
     </div>
     <div id="details-container" class="protocol-details collapse in">
@@ -91,6 +91,9 @@
       },
     },
     methods: {
+      saveAsdraft() {
+        $.post(this.protocol.attributes.urls.save_as_draft_url)
+      },
       updateAuthors(authors) {
         $.ajax({
           type: 'PATCH',

@@ -117,6 +117,16 @@ Canaid::Permissions.register_for(Protocol) do
     protocol.in_repository_draft? &&
       protocol.permission_granted?(user, ProtocolPermissions::MANAGE)
   end
+
+  can :delete_protocol_draft_in_repository do |user, protocol|
+    protocol.parent_id.present? &&
+      can_manage_protocol_draft_in_repository?(user, protocol)
+  end
+
+  can :save_protocol_as_draft_in_repository do |user, protocol|
+    (protocol.in_repository_published_original? || protocol.in_repository_published_version?) &&
+      can_create_protocols_in_repository?(user, protocol.team)
+  end
 end
 
 Canaid::Permissions.register_for(Report) do
