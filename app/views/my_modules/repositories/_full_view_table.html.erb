@@ -54,6 +54,16 @@
 
 
 <script>
+  setTimeout(function() {
+    const thElements = document.querySelectorAll('th');
+    for (let i = 0; i < thElements.length; i++) {
+      const th = thElements[i];
+        if (th.title.includes(th.parentElement.parentElement.parentElement.parentElement.className) === false)
+          th.title = th.title + " " + th.parentElement.parentElement.parentElement.parentElement.className;
+    }
+  }, 500)
+
+
   function setTitle(element) {
     if (element.title.includes(" sorted"))
       element.title = element.title.replace(" sorted", "")

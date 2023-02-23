@@ -16,8 +16,8 @@
         </span>
       <% end %>
       <div class="action-buttons">
-        <button class="btn btn-light icon-btn full-screen" data-table-url="<%= assigned_repository_full_view_table_path(@my_module, repository) %>?include_stock_consumption=true">
-          <i title="view full assigned items table for <%= repository.name %>" class="fas fa-expand"></i>
+        <button title="view full assigned items table for <%= repository.name %>" class="btn btn-light icon-btn full-screen" data-table-url="<%= assigned_repository_full_view_table_path(@my_module, repository) %>?include_stock_consumption=true">
+          <i class="fas fa-expand"></i>
         </button>
       </div>
     </a>

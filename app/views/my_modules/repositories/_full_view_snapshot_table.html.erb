@@ -14,15 +14,15 @@
   <thead>
     <tr>
       <th class="never"></th>
-      <th id="row-id" onclick="setTitle(this)" title="sort items by row-id"><%= t("repositories.table.id") %></th>
-      <th id="row-name" onclick="setTitle(this)" title="sort items by row-name"><%= t("repositories.table.row_name") %></th>
-      <th id="added-on" onclick="setTitle(this)" title="sort items by added-on"><%= t("repositories.table.added_on") %></th>
-      <th id="added-by" onclick="setTitle(this)" title="sort items by added-by"><%= t("repositories.table.added_by") %></th>
+      <th id="row-id" onclick="setTitle(this)" title="snapshot sort items by row-id"><%= t("repositories.table.id") %></th>
+      <th id="row-name" onclick="setTitle(this)" title="snapshot sort items by row-name"><%= t("repositories.table.row_name") %></th>
+      <th id="added-on" onclick="setTitle(this)" title="snapshot sort items by added-on"><%= t("repositories.table.added_on") %></th>
+      <th id="added-by" onclick="setTitle(this)" title="snapshot sort items by added-by"><%= t("repositories.table.added_by") %></th>
       <% @repository_snapshot.repository_columns.order(:parent_id).each do |column| %>
         <th class="repository-column"
             id="<%= column.id %>"
             onclick="setTitle(this)"
-            title="sort items by <%= column.name %>"
+            title="snapshot sort items by <%= column.name %>"
             data-type="<%= column.data_type %>"
             <% column.metadata.each do |k, v| %>
               <%= "data-metadata-#{k}=#{v}" %>

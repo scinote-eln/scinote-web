@@ -13,9 +13,8 @@
        :data-preview-url="attachment.attributes.urls.preview"
     >
       <span data-toggle="tooltip"
-           data-placement="bottom"
-           :title="`${ attachment.attributes.file_name }`">
-        {{ attachment.attributes.file_name }}
+           data-placement="bottom">
+          <span :title="attachment.attributes.file_name">{{ attachment.attributes.file_name }}</span>
       </span>
     </a>
     <span v-if="attachment.isNewUpload" class="attachment-label-new">
