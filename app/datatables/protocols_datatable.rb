@@ -176,7 +176,7 @@ class ProtocolsDatatable < CustomDatatable
     get_raw_records_base.select(
       '"protocols".*',
       'STRING_AGG("protocol_keywords"."name", \', \') AS "protocol_keywords_str"',
-      'COUNT("protocol_versions"."id") + 1 AS "nr_of_versions"',
+      'COUNT(DISTINCT("protocol_versions"."id")) + 1 AS "nr_of_versions"', # User assignments generate duplicates
       'COUNT("protocol_drafts"."id") AS "nr_of_drafts"',
       'COUNT("user_assignments"."id") AS "nr_of_assigned_users"',
       'MAX("users"."full_name") AS "full_username_str"', # "Hack" to get single username
