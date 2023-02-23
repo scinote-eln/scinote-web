@@ -1,16 +1,16 @@
-<%= form_with(model: project, url: update_default_public_user_role_access_permissions_project_path(project), method: :put, remote: true, html: { class: 'row member-item', id: 'public_assignments', data: { action: 'replace-form autosave-form', object_type: :project } }) do |f| %>
+<%= form_with(model: assignable, url: [:update_default_public_user_role, :access_permissions, assignable], method: :put, remote: true, html: { class: 'row member-item', id: 'public_assignments', data: { action: 'replace-form autosave-form', object_type: assignable.class.name.underscore.to_sym } }) do |f| %>
   <div class="user-assignment-info">
     <div class="global-avatar-container">
       <%= image_tag "icon/team.png", class: 'img-circle pull-left' %>
     </div>
     <div>
-      <%= t('access_permissions.everyone_else', team_name: project.team.name) %>
-      <%= render 'access_permissions/partials/public_members_dropdown', team: project.team, assignable: project %>
+      <%= t('access_permissions.everyone_else', team_name: assignable.team.name) %>
+      <%= render 'access_permissions/partials/public_members_dropdown', team: assignable.team, assignable: assignable %>
       <br>
       <small class="text-muted">
-        <%= project.default_public_user_role.name %>
-        <span class="permission-object-tag" title="<%= t("access_permissions.partials.project_tooltip") %>"">
-          <%= t("access_permissions.partials.project") %>
+        <%= assignable.default_public_user_role.name %>
+        <span class="permission-object-tag" title="<%= t("access_permissions.partials.#{assignable.class.name.underscore}_tooltip") %>"">
+          <%= t("access_permissions.partials.#{assignable.class.name.underscore}") %>
         </span>
       </small>
     </div>
@@ -18,7 +18,7 @@
   <div class="user-assignment-controls">
     <div class="user-assignment-role">
       <% if editable %>
-        <%= f.select :default_public_user_role_id, options_for_select(user_roles_collection, selected: project.default_public_user_role_id), {}, class: 'form-control selectpicker', title: t('user_assignment.change_project_role'), data: { 'selected-text-format' => 'static' } %>
+        <%= f.select :default_public_user_role_id, options_for_select(user_roles_collection, selected: assignable.default_public_user_role_id), {}, class: 'form-control selectpicker', title: t("user_assignment.change_#{assignable.class.name.underscore}_role"), data: { 'selected-text-format' => 'static' } %>
       <% end %>
     </div>
   </div>

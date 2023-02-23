@@ -280,14 +280,16 @@ Rails.application.routes.draw do
     end
 
     namespace :access_permissions do
-      resources :protocols, defaults: { format: 'json' }
       resources :projects, defaults: { format: 'json' } do
         put :update_default_public_user_role, on: :member
-        resources :experiments, only: %i(show update edit) do
-          resources :my_modules, only: %i(show update edit)
-        end
       end
-      resources :protocols, only: %i(show update edit)
+
+      resources :protocols, defaults: { format: 'json' } do
+        put :update_default_public_user_role, on: :member
+      end
+
+      resources :experiments, only: %i(show update edit)
+      resources :my_modules, only: %i(show update edit)
     end
 
     resources :projects, except: [:destroy] do

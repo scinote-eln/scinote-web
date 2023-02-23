@@ -47,19 +47,22 @@ module AccessPermissions
 
     def create
       ActiveRecord::Base.transaction do
+        created_count = 0
         permitted_create_params[:resource_members].each do |_k, user_assignment_params|
           next unless user_assignment_params[:assign] == '1'
 
           user_assignment = UserAssignment.new(user_assignment_params)
           user_assignment.assignable = @protocol
+          user_assignment.assigned = :manually
           user_assignment.team = current_team
           user_assignment.assigned_by = current_user
           user_assignment.save!
 
+          created_count += 1
           log_activity(:protocol_template_access_granted, user_assignment)
         end
         respond_to do |format|
-          @message = t('access_permissions.create.success', count: @protocol.user_assignments.count)
+          @message = t('access_permissions.create.success', count: created_count)
           format.json { render :edit }
         end
       rescue ActiveRecord::RecordInvalid

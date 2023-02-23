@@ -49,6 +49,7 @@ module AccessPermissions
 
     def create
       ActiveRecord::Base.transaction do
+        created_count = 0
         permitted_create_params[:resource_members].each do |_k, user_assignment_params|
           next unless user_assignment_params[:assign] == '1'
 
@@ -65,11 +66,12 @@ module AccessPermissions
           )
 
           log_activity(:assign_user_to_project, user_assignment)
+          created_count += 1
           propagate_job(user_assignment)
         end
 
         respond_to do |format|
-          @message = t('access_permissions.create.success', count: @project.user_assignments.count)
+          @message = t('access_permissions.create.success', count: created_count)
           format.json { render :edit }
         end
       rescue ActiveRecord::RecordInvalid

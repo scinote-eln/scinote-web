@@ -40,7 +40,8 @@ class Protocol < ApplicationRecord
   validate :prevent_update,
            on: :update,
            if: lambda {
-             in_repository_published? && !protocol_type_changed?(from: 'in_repository_draft') && !archived_changed?
+             changes.keys != %w(default_public_user_role_id) && # skip check if only public role changed
+               in_repository_published? && !protocol_type_changed?(from: 'in_repository_draft') && !archived_changed?
            }
 
   with_options if: :in_module? do

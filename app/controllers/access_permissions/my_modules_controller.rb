@@ -2,9 +2,9 @@
 
 module AccessPermissions
   class MyModulesController < ApplicationController
-    before_action :set_project
-    before_action :set_experiment
     before_action :set_my_module
+    before_action :set_experiment
+    before_action :set_project
     before_action :check_read_permissions, only: %i(show)
     before_action :check_manage_permissions, only: %i(edit update)
 
@@ -53,19 +53,15 @@ module AccessPermissions
     end
 
     def set_project
-      @project = current_team.projects.find_by(id: params[:project_id])
-
-      render_404 unless @project
+      @project = @experiment.project
     end
 
     def set_experiment
-      @experiment = @project.experiments.find_by(id: params[:experiment_id])
-
-      render_404 unless @experiment
+      @experiment = @my_module.experiment
     end
 
     def set_my_module
-      @my_module = @experiment.my_modules.includes(user_assignments: %i(user user_role)).find_by(id: params[:id])
+      @my_module = MyModule.includes(user_assignments: %i(user user_role)).find_by(id: params[:id])
 
       render_404 unless @my_module
     end
