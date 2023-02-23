@@ -16,7 +16,7 @@
         <a class="btn btn-light icon-btn pull-right" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
           <span class="fas fa-print" aria-hidden="true"></span>
         </a>
-        <button class="btn btn-light">{{ i18n.t("protocols.header.versions") }}</button>
+        <button class="btn btn-light" @click="openVersionsModal">{{ i18n.t("protocols.header.versions") }}</button>
         <button v-if="!protocol.attributes.published" @click="$emit('publish')" class="btn btn-primary">{{ i18n.t("protocols.header.publish") }}</button>
         <button v-else @click="saveAsdraft" class="btn btn-secondary">{{ i18n.t("protocols.header.save_as_draft") }}</button>
       </div>
@@ -112,6 +112,20 @@
           success: (result) => {
             this.$emit('update', result.data.attributes)
           }
+        });
+      },
+      openVersionsModal() {
+        $.get(this.protocol.attributes.urls.versions_modal_url, (data) => {
+          let versionsModal = '#protocol-versions-modal'
+          $('.protocols-show').append($.parseHTML(data.html));
+          $(versionsModal).modal('show');
+          inlineEditing.init();
+          $(versionsModal).find('[data-toggle="tooltip"]').tooltip();
+
+          // Remove modal when it gets closed
+          $(versionsModal).on('hidden.bs.modal', () => {
+            $(versionsModal).remove();
+          });
         });
       }
     }
