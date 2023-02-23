@@ -42,6 +42,8 @@ class Protocol < ApplicationRecord
            if: lambda {
              in_repository_published? && !protocol_type_changed?(from: 'in_repository_draft') && !archived_changed?
            }
+  # Only one draft can exist for each protocol
+  validates :parent_id, uniqueness: { scope: :protocol_type }, if: -> { parent_id.present? && in_repository_draft? }
 
   with_options if: :in_module? do
     validates :my_module, presence: true
@@ -65,8 +67,6 @@ class Protocol < ApplicationRecord
     validate :versions_same_name_constrain
   end
   with_options if: :in_repository_draft? do
-    # Only one draft can exist for each protocol
-    validates :parent_id, uniqueness: { scope: :protocol_type }, if: -> { parent_id.present? }
     validate :versions_same_name_constrain
   end
   with_options if: -> { in_repository? && active? && !parent } do |protocol|
