@@ -10,7 +10,7 @@
   <% else %>
     <li class="sidebar-leaf">
       <% unless record[:children].blank? %>
-        <i class="fas fa-caret-right toggle-branch collapsed" title="dropdown arrow for folder <% record[:folder].name %>"></i>
+        <i class="fas fa-caret-right toggle-branch collapsed" id="folderDropdownArrow" onclick="setDropdownArrowTitle(this)" title="dropdown arrow for folder <% record[:folder].name %>"></i>
       <% end %>
       <%= link_to project_folder_path(record[:folder]),
           class: "sidebar-link project-folder-link folder #{'selected' if current_folder == record[:folder]}",
@@ -28,3 +28,13 @@
     </li>
   <% end %>
 <% end %>
+
+
+<script>
+  function setDropdownArrowTitle(element) {
+    if ($('#folderDropdownArrow').attr('title').includes(" down") === false)
+        $('#folderDropdownArrow').prop('title', "dropdown arrow for folder down")
+    else
+      $('#folderDropdownArrow').prop('title', "dropdown arrow for folder")
+  }
+</script>

@@ -34,6 +34,7 @@
   function initRepositoriesDataTable(tableContainer, archived = false) {
     var tableTemplate = $('#RepositoriesListTable').html();
     $.get($(tableTemplate).data('source'), { archived: archived }, function(data) {
+      var checkbox_cnt = 0;
       if (REPOSITORIES_TABLE) REPOSITORIES_TABLE.destroy();
       CHECKBOX_SELECTOR = null;
       $('.content-body').html(tableTemplate);
@@ -59,8 +60,13 @@
           searchable: false,
           orderable: false,
           render: function() {
+            var checkbox_title;
+
+            if (data[checkbox_cnt] !== undefined)
+              checkbox_title = data[checkbox_cnt][1];
+            checkbox_cnt += 1;
             return `<div class="sci-checkbox-container">
-                      <input onclick="checkedTitles()" title="repository row selector checkbox ${data[0][1]}" class='repository-row-selector sci-checkbox' type='checkbox'>
+                      <input onclick="checkedTitles()" title="repository row selector checkbox ${checkbox_title}" class='repository-row-selector sci-checkbox' type='checkbox'>
                       <span class='sci-checkbox-label'></span>
                     </div>`;
           }

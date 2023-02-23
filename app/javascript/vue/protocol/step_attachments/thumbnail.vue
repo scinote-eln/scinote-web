@@ -21,9 +21,8 @@
       </div>
       <div class="attachment-label"
            data-toggle="tooltip"
-           data-placement="bottom"
-           :title="`${ attachment.attributes.file_name }`">
-        {{ attachment.attributes.file_name }}
+           data-placement="bottom">
+          <span :title="attachment.attributes.file_name">{{ attachment.attributes.file_name }}</span>
         <span v-if="attachment.isNewUpload" class="attachment-label-new">
           {{ i18n.t('protocols.steps.attachments.new.description') }}
         </span>

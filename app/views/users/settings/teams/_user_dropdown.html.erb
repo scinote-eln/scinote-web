@@ -27,34 +27,34 @@
                              data: { id: 'update-role-form' } do |f| %>
         <input type="hidden" name="user_team[role]" data-field="role" value="" %>
       <% end %>
-      <li title="user dropdown guest item" class="user-team-role <%= 'disabled' if user_team.guest? %>">
+      <li class="user-team-role <%= 'disabled' if user_team.guest? %>">
         <% if user_team.guest? %>
           <span class="fas fa-check"></span>
           <%= UserTeam.new(role: 0).role_str %>
         <% else %>
-          <a href="#" data-action="submit-role" data-value="guest">
+          <a href="#" title="user dropdown guest item" data-action="submit-role" data-value="guest">
             <span class="fas fa-check"></span>
             <%= UserTeam.new(role: 0).role_str %>
           </a>
         <% end %>
       </li>
-      <li title="user dropdown normal user item" class="user-team-role <%= 'disabled' if user_team.normal_user? %>">
+      <li class="user-team-role <%= 'disabled' if user_team.normal_user? %>">
         <% if user_team.normal_user? %>
           <span class="fas fa-check"></span>
           <%= UserTeam.new(role: 1).role_str %>
         <% else %>
-          <a href="#" data-action="submit-role" data-value="normal_user">
+          <a href="#" title="user dropdown normal user item" data-action="submit-role" data-value="normal_user">
             <span class="fas fa-check"></span>
             <%= UserTeam.new(role: 1).role_str %>
           </a>
         <% end %>
       </li>
-      <li title="user dropdown admin item" class="user-team-role <%= 'disabled' if user_team.admin? %>">
+      <li class="user-team-role <%= 'disabled' if user_team.admin? %>">
         <% if user_team.admin? %>
           <span class="fas fa-check"></span>
           <%= UserTeam.new(role: 2).role_str %>
         <% else %>
-          <a href="#" data-action="submit-role" data-value="admin">
+          <a href="#" title="user dropdown admin item" data-action="submit-role" data-value="admin">
             <span class="fas fa-check"></span>
             <%= UserTeam.new(role: 2).role_str %>
           </a>
