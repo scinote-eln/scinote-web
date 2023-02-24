@@ -196,8 +196,12 @@ class ProtocolsController < ApplicationController
       log_activity(:protocol_template_draft_deleted,
                    nil,
                    protocol: @protocol.id)
+      redirect_to protocols_path
+    rescue ActiveRecord::RecordNotDestroyed => e
+      Rails.logger.error e.message
+      render json: { status: 'error' }, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
     end
-    redirect_to protocols_path
   end
 
   def archive

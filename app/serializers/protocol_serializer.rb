@@ -70,7 +70,8 @@ class ProtocolSerializer < ActiveModel::Serializer
       update_protocol_keywords_url: update_protocol_keywords_url,
       delete_steps_url: delete_steps_url,
       publish_url: publish_url,
-      save_as_draft_url: save_as_draft_url
+      save_as_draft_url: save_as_draft_url,
+      versions_modal_url: versions_modal_url
     }
   end
 
@@ -102,6 +103,12 @@ class ProtocolSerializer < ActiveModel::Serializer
     return unless can_read_protocol_in_module?(object) || can_read_protocol_in_repository?(object)
 
     steps_path(protocol_id: object.id)
+  end
+
+  def versions_modal_url
+    return unless can_read_protocol_in_repository?(object)
+
+    versions_modal_protocol_path(object.parent || object)
   end
 
   def reorder_steps_url
