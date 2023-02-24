@@ -23,7 +23,6 @@ var ProtocolsIndex = (function() {
   var archivedOnToFilter;
   var protocolsViewSearch;
 
-
   /**
    * Initializes page
    */
@@ -406,6 +405,23 @@ var ProtocolsIndex = (function() {
 
     protocolsTableEl.on('click', '.protocol-versions-link', function(e) {
       $.get(this.href, function(data) {
+        $(protocolsContainer).append($.parseHTML(data.html));
+        $(versionsModal).modal('show');
+        inlineEditing.init();
+        $(versionsModal).find('[data-toggle="tooltip"]').tooltip();
+
+        // Remove modal when it gets closed
+        $(versionsModal).on('hidden.bs.modal', function() {
+          $(versionsModal).remove();
+        });
+      });
+      e.stopPropagation();
+      e.preventDefault();
+    });
+
+    $(protocolsContainer).on('click', '#protocolVersions', function(e) {
+      const url = `protocols/${rowsSelected[0]}/versions_modal`;
+      $.get(url, function(data) {
         $(protocolsContainer).append($.parseHTML(data.html));
         $(versionsModal).modal('show');
         inlineEditing.init();
