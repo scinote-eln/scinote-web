@@ -756,7 +756,7 @@ class Protocol < ApplicationRecord
   end
 
   def ensure_single_draft
-    if parent.present? && Protocol.where(parent: parent, protocol_type: :in_repository_draft).count > 1
+    if parent&.draft && parent.draft.id != id
       errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_parent_draft_number'))
     end
   end
