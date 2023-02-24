@@ -560,6 +560,7 @@ class Protocol < ApplicationRecord
     draft.published_by = nil
     draft.published_on = nil
     draft.version_comment = nil
+    draft.previous_version = self
 
     return draft if draft.invalid?
 
