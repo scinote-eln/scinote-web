@@ -66,7 +66,7 @@ class Protocol < ApplicationRecord
   end
   with_options if: :in_repository_draft? do
     # Only one draft can exist for each protocol
-    validates :parent_id, uniqueness: { scope: :protocol_type }, if: -> { parent_id.present? }
+    validate :ensure_single_draft
     validate :versions_same_name_constrain
   end
   with_options if: -> { in_repository? && !parent } do |protocol|
@@ -742,6 +742,12 @@ class Protocol < ApplicationRecord
   def version_number_constrain
     if previous_version.present? && version_number != previous_version.version_number + 1
       errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_version_number'))
+    end
+  end
+
+  def ensure_single_draft
+    if parent&.draft && parent.draft.id != id
+      errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_parent_draft_number'))
     end
   end
 end
