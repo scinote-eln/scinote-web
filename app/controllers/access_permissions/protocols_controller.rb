@@ -93,7 +93,21 @@ module AccessPermissions
       end
     end
 
+    def update_default_public_user_role
+      Protocol.transaction do
+        @protocol.visibility = :hidden if permitted_default_public_user_role_params[:default_public_user_role_id].blank?
+        @protocol.assign_attributes(permitted_default_public_user_role_params)
+        @protocol.save!
+
+        UserAssignments::ProjectGroupAssignmentJob.perform_later(current_team, @project, current_user)
+      end
+    end
+
     private
+
+    def permitted_default_public_user_role_params
+      params.require(:protocol).permit(:default_public_user_role_id)
+    end
 
     def permitted_update_params
       params.require(:user_assignment)

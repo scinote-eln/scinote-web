@@ -56,7 +56,7 @@ module UserAssignments
     end
 
     def create_protocols_assignments
-      @team.repository_protocols.in_repository_public.find_each do |protocol|
+      @team.repository_protocols.visible.find_each do |protocol|
         create_or_update_user_assignment(protocol, @viewer_role)
       end
     end
