@@ -152,6 +152,7 @@ en:
           wrong_parent_type: "Protocol can only be linked to published protocol!"
           wrong_version_name: "Protocol versions should have same name!"
           wrong_version_number: "Protocol version number should be sequential!"
+          wrong_parent_draft_number: "Procol can have only 1 draft"
           attributes:
             step_order:
               invalid: "Invalid step order."
