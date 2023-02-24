@@ -2793,8 +2793,8 @@ en:
         row_failed: "Failed"
       import_results:
         title: "Import results"
-        message_failed: "Failed to import %{nr} protocol/s."
-        message_ok: "Successfully imported %{nr} protocol/s."
+        message_failed: "Failed to import protocol template(s)."
+        message_ok_html: "<strong>%{count} protocol</strong> template(s) successfully imported."
         message_ok_pio: "Successfully imported protocol from protocols.io file."
         message_warn_truncated: "Successfully imported protocol from protocols.io file. However, text in some fields was too long so we had to cut it off."
         row_success: "Imported"

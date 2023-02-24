@@ -638,23 +638,16 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       transaction_error = false
       Protocol.transaction do
-        protocol =
-          @importer.import_new_protocol(@protocol_json, @type)
+        protocol = @importer.import_new_protocol(@protocol_json)
       rescue StandardError => e
         Rails.logger.error e.backtrace.join("\n")
         transaction_error = true
         raise ActiveRecord::Rollback
       end
 
-      p_name =
-        if @protocol_json['name'].present?
-          escape_input(@protocol_json['name'])
-        else
-          t('protocols.index.no_protocol_name')
-        end
       if transaction_error
         format.json do
-          render json: { name: p_name, status: :bad_request }, status: :bad_request
+          render json: { status: :bad_request }, status: :bad_request
         end
       else
         Activities::CreateActivityService
@@ -667,10 +660,7 @@ class ProtocolsController < ApplicationController
                 })
 
         format.json do
-          render json: {
-            name: escape_input(p_name), new_name: escape_input(protocol.name), status: :ok
-          },
-          status: :ok
+          render json: { status: :ok }, status: :ok
         end
       end
     end
@@ -769,9 +759,7 @@ class ProtocolsController < ApplicationController
       @protocolsio_general_error = false
       Protocol.transaction do
         begin
-          protocol = @importer.import_new_protocol(
-            @db_json, params[:type].to_sym
-          )
+          protocol = @importer.import_new_protocol(@db_json)
         rescue Exception
           transaction_error = true
           raise ActiveRecord:: Rollback
@@ -1285,12 +1273,7 @@ class ProtocolsController < ApplicationController
   def check_import_permissions
     @protocol_json = params[:protocol]
     @team = Team.find(params[:team_id])
-    @type = params[:type] ? params[:type].to_sym : nil
-    unless @protocol_json.present? && @team.present? &&
-           (@type == :public || @type == :private) &&
-           can_create_protocols_in_repository?(@team)
-      render_403
-    end
+    render_403 unless @protocol_json.present? && @team.present? && can_create_protocols_in_repository?(@team)
   end
 
   def check_export_permissions

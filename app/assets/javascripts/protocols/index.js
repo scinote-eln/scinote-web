@@ -34,7 +34,6 @@ var ProtocolsIndex = (function() {
     initProtocolPreviewModal();
     initLinkedChildrenModal();
     initModals();
-    initImport();
     initVersionsModal();
   }
 
@@ -257,6 +256,7 @@ var ProtocolsIndex = (function() {
         let protocolFilters = $($('#protocolFilters').html());
         $(protocolFilters).prependTo('.protocols-container .protocol-filters');
 
+        initLocalFileImport();
         initProtocolsFilters();
       },
       stateLoadCallback: function() {
@@ -892,7 +892,7 @@ var ProtocolsIndex = (function() {
   */
 
 
-  function initImport() {
+  function initLocalFileImport() {
     // Some templating code duplication. I know, I hate myself
     function newElement(name, values) {
       var template = $("[data-template='" + name + "']").clone();
@@ -913,7 +913,6 @@ var ProtocolsIndex = (function() {
       parentEl.find("[data-hold='" + name + "']").append(childEl);
     }
 
-    let importResultsModal = $('#import-results-modal');
     let fileInput = $("[data-role='import-file-input']");
 
     // Make sure multiple selections of same file
@@ -936,88 +935,22 @@ var ProtocolsIndex = (function() {
         false,
         function(datas) {
           var nrSuccessful = 0;
-          var failed = [];
-          var unchanged = [];
-          var renamed = [];
           _.each(datas, function(data) {
             if (data.status === 'ok') {
               nrSuccessful += 1;
-
-              if (data.name === data.new_name) {
-                unchanged.push(data);
-              } else {
-                renamed.push(data);
-              }
-            } else {
-              failed.push(data);
             }
           });
+          animateSpinner(null, false);
 
-          // Display the results modal by cloning
-          // templates and populating them
-          let modalBody = importResultsModal.find('.modal-body');
-          if (failed.length > 0) {
-            let failedMessageEl = newElement(
-              'import-result-message-error',
-              {
-                message: I18n.t('protocols.index.import_results.message_failed', { nr: failed.length })
-              }
-            );
-            modalBody.append(failedMessageEl);
-            animateSpinner(null, false);
+          if (nrSuccessful) {
+            HelperModule.flashAlertMsg(I18n.t('protocols.index.import_results.message_ok_html', { count: nrSuccessful }), 'success');
+            reloadTable();
+          } else {
+            HelperModule.flashAlertMsg(I18n.t('protocols.index.import_results.message_failed'), 'danger');
           }
-          if (nrSuccessful > 0) {
-            let successMessageEl = newElement(
-              'import-result-message-success',
-              {
-                message: I18n.t('protocols.index.import_results.message_ok', { nr: nrSuccessful })
-              }
-            );
-            modalBody.append(successMessageEl);
-          }
-          let resultsListEl = newElement('import-result-list');
-          modalBody.append(resultsListEl);
-          if (unchanged.length > 0) {
-            _.each(unchanged, function(pr) {
-              var itemEl = newElement(
-                'import-result-unchanged-item',
-                { message: pr.name }
-              );
-              addChildToElement(resultsListEl, 'items', itemEl);
-            });
-          }
-          if (renamed.length > 0) {
-            _.each(renamed, function(pr) {
-              var itemEl = newElement(
-                'import-result-renamed-item',
-                { message: I18n.t('protocols.index.row_renamed_html', { old_name: pr.name, new_name: pr.new_name }) }
-              );
-              addChildToElement(resultsListEl, 'items', itemEl);
-            });
-          }
-          if (failed.length > 0) {
-            _.each(failed, function(pr) {
-              var itemEl = newElement(
-                'import-result-failed-item',
-                {
-                  message: pr.name,
-                  message2: (pr.status === 'size_too_large' ? I18n.t('protocols.index.import_results.row_file_too_large') : '')
-                }
-              );
-              addChildToElement(resultsListEl, 'items', itemEl);
-            });
-          }
-
-          importResultsModal.modal('show');
         }
       );
       $(this).val('');
-    });
-    importResultsModal.on('hidden.bs.modal', function() {
-      importResultsModal.find('.modal-body').html('');
-
-      // Also reload table
-      reloadTable();
     });
   }
 
