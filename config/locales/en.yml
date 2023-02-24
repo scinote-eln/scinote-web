@@ -2823,6 +2823,7 @@ en:
         row_in_repository_private: "%{protocol} - <i>into My protocols</i>"
       versions:
         title: "%{protocol} versions"
+        first_draft_html: "<b>Draft</b>"
         draft_html: "<b>Draft</b> (from Version %{parent_version})"
         draft_modification_info: "Last modified: %{modified_on}, by %{modified_by}"
         revision: "Version %{version}"
