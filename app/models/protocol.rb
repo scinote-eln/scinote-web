@@ -505,13 +505,7 @@ class Protocol < ApplicationRecord
     save!
   end
 
-  def update_from_parent(current_user, latest_version: false)
-    source = if latest_version
-               source_parent = parent.in_repository_published_original? ? parent : parent.parent
-               source_parent.latest_published_version
-             else
-               parent
-             end
+  def update_from_parent(current_user, source)
     ActiveRecord::Base.no_touching do
       # First, destroy step contents
       destroy_contents

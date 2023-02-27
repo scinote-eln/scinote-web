@@ -390,7 +390,7 @@ class ProtocolsController < ApplicationController
         transaction_error = false
         Protocol.transaction do
           # Revert is basically update from parent
-          @protocol.update_from_parent(current_user)
+          @protocol.update_from_parent(current_user, @protocol.parent)
         rescue StandardError
           transaction_error = true
           raise ActiveRecord::Rollback
@@ -473,7 +473,13 @@ class ProtocolsController < ApplicationController
       if protocol_can_destroy
         transaction_error = false
         Protocol.transaction do
-          @protocol.update_from_parent(current_user, latest_version: true)
+          # Find original published protocol template
+          source_parent = if @protocol.parent.in_repository_published_original?
+                            @protocol.parent
+                          else
+                            @protocol.parent.parent
+                          end
+          @protocol.update_from_parent(current_user, source_parent.latest_published_version)
         rescue StandardError
           transaction_error = true
           raise ActiveRecord::Rollback
