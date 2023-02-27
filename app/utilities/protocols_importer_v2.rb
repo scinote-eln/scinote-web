@@ -8,13 +8,12 @@ class ProtocolsImporterV2
     @team = team
   end
 
-  def import_new_protocol(protocol_json, type)
+  def import_new_protocol(protocol_json)
     remove_empty_inputs(protocol_json)
     protocol = Protocol.new(
       name: protocol_json['name'],
       authors: protocol_json['authors'],
-      protocol_type: (type == :public ? :in_repository_public : :in_repository_private),
-      published_on: (type == :public ? Time.now : nil),
+      protocol_type: :in_repository_draft,
       added_by: @user,
       team: @team
     )
