@@ -5,9 +5,9 @@ json.form controller.render_to_string(
   formats: [:html],
   locals: {
     user: @user_assignment.user,
-    object: @experiment,
+    assignable: @experiment,
     with_inherit: true,
-    update_path: access_permissions_project_experiment_path(@project, @experiment)
+    update_path: access_permissions_experiment_path(@experiment)
   },
   layout: false
 )

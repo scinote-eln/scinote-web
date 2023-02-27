@@ -2,8 +2,8 @@
 
 module AccessPermissions
   class ExperimentsController < ApplicationController
-    before_action :set_project
     before_action :set_experiment
+    before_action :set_project
     before_action :check_read_permissions, only: %i(show)
     before_action :check_manage_permissions, only: %i(edit update)
 
@@ -59,13 +59,11 @@ module AccessPermissions
     end
 
     def set_project
-      @project = current_team.projects.find_by(id: params[:project_id])
-
-      render_404 unless @project
+      @project = @experiment.project
     end
 
     def set_experiment
-      @experiment = @project.experiments.includes(user_assignments: %i(user user_role)).find_by(id: params[:id])
+      @experiment = Experiment.includes(user_assignments: %i(user user_role)).find_by(id: params[:id])
 
       render_404 unless @experiment
     end

@@ -16,10 +16,10 @@ class Protocol < ApplicationRecord
   include TinyMceImages
 
   before_validation :assign_version_number, on: :update, if: -> { protocol_type_changed? && in_repository_published? }
-  after_update :update_user_assignments, if: -> { saved_change_to_protocol_type? && in_repository? }
-  after_destroy :decrement_linked_children
-  after_save :update_linked_children
   after_create :auto_assign_protocol_members, if: :visible?
+  after_destroy :decrement_linked_children
+  after_save :update_user_assignments, if: -> { saved_change_to_visibility? && in_repository? }
+  after_save :update_linked_children
   skip_callback :create, :after, :create_users_assignments, if: -> { in_module? }
 
   enum visibility: { hidden: 0, visible: 1 }
@@ -40,7 +40,9 @@ class Protocol < ApplicationRecord
   validate :prevent_update,
            on: :update,
            if: lambda {
-             in_repository_published? && !protocol_type_changed?(from: 'in_repository_draft') && !archived_changed?
+             # skip check if only public role of visibility changed
+             (changes.keys | %w(default_public_user_role_id visibility)).length != 2 &&
+               in_repository_published? && !protocol_type_changed?(from: 'in_repository_draft') && !archived_changed?
            }
 
   with_options if: :in_module? do

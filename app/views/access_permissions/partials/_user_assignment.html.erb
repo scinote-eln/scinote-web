@@ -10,6 +10,6 @@
     </div>
   </div>
   <div class="user-assignment-controls">
-    <%= resource.user_assignments.find_by(user: user, team: current_team).user_role.name %>
+    <%= assignable.user_assignments.find_by(user: user, team: current_team).user_role.name %>
   </div>
 </div>

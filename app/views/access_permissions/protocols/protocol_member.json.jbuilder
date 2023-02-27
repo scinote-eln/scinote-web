@@ -5,7 +5,7 @@ json.form controller.render_to_string(
   formats: [:html],
   locals: {
     user: @user_assignment.user,
-    object: @protocol,
+    assignable: @protocol,
     update_path: access_permissions_protocol_path(@protocol),
     delete_path: access_permissions_protocol_path(@protocol, user_id: @user_assignment.user_id)
   },

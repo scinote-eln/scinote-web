@@ -458,6 +458,8 @@ class Extends
     label_repository: [*216..219]
   }
 
+  TOP_LEVEL_ASSIGNABLES = %w(Project Team Protocol Repository).freeze
+
   SHARED_INVENTORIES_PERMISSION_LEVELS = {
     not_shared: 0,
     shared_read: 1,
