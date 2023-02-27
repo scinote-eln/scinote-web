@@ -39,8 +39,10 @@
   .pagination-row {
     align-items: center;
     display: flex;
+    align-items: center;
     flex-wrap: wrap;
-    min-height: var(--datatable-pagination-row);
+    height: var(--datatable-pagination-row);
+    box-shadow: inset 0px 1px 0px $color-concrete;
     position: relative;
     width: 100%;
 
@@ -48,16 +50,34 @@
       align-items: center;
       background-color: $color-concrete;
       border-bottom: 1px solid $color-alto;
+      box-shadow: 0px -12px 24px -12px rgba(35, 31, 32, 0.2);
+      border-radius: 6px 6px 0px 0px;
       display: none;
       height: 70px;
       overflow-x: auto;
       padding: 0 1em;
       position: absolute;
-      top: 0;
+      bottom: var(--datatable-pagination-row);
       width: 100%;
+      z-index: 10;
 
       .btn {
-        margin-right: .25em;
+        margin-right: .5em;
+
+        &:focus {
+          box-shadow: 0 0 0 4px rgba(96, 159, 255, .5);
+        }
+
+        &:not(.btn-primary) {
+          &:hover {
+            background-color: $color-white;
+          }
+
+          &:active {
+            outline-color: transparent;
+            background-color: $color-alto;
+          }
+        }
       }
     }
 
@@ -127,10 +147,8 @@
   }
 
   &.show-actions {
-    --datatable-pagination-row: 139px;
 
     .pagination-row {
-      padding-top: 71px;
 
       .actions-toolbar {
         display: flex;
