@@ -65,7 +65,7 @@
         margin-right: .5em;
 
         &:focus {
-          box-shadow: 0 0 0 4px rgba(96, 159, 255, .5);
+          box-shadow: 0 0 0 4px $brand-focus;
         }
 
         &:not(.btn-primary) {
