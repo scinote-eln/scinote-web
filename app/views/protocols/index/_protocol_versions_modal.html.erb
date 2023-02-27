@@ -31,9 +31,11 @@
                   <%= image_tag 'icon_small/publish.svg' %>
                   <%= t('protocols.index.versions.publish') %>
                 <% end %>
-                <div data-url="<%= destroy_draft_protocol_path(draft) %>" class="btn btn-light delete-draft">
-                  <i class="fas fa-trash"></i>
-                </div>
+                <% if can_delete_protocol_draft_in_repository?(draft) %>
+                  <div data-url="<%= destroy_draft_protocol_path(draft) %>" class="btn btn-light delete-draft">
+                    <i class="fas fa-trash"></i>
+                  </div>
+                <% end %>
               <% end %>
             </div>
             <div class="protocol-version-comment">
