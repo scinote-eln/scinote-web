@@ -118,10 +118,7 @@ class ProtocolsDatatable < CustomDatatable
     records = records.where('protocols.updated_at > ?', params[:modified_on_from]) if params[:modified_on_from].present?
     records = records.where('protocols.updated_at < ?', params[:modified_on_to]) if params[:modified_on_to].present?
     records = records.where(protocols: { published_by_id: params[:published_by] }) if params[:published_by].present?
-
-    if params[:members].present?
-      records = records.joins(:user_assignments).where(user_assignments: { user_id: params[:members] })
-    end
+    records = records.where(all_user_assignments: { user_id: params[:members] }) if params[:members].present?
 
     if params[:archived_on_from].present?
       records = records.where('protocols.archived_on > ?', params[:archived_on_from])
@@ -162,7 +159,7 @@ class ProtocolsDatatable < CustomDatatable
 
     records = records.joins('LEFT OUTER JOIN "users" "archived_users"
                              ON "archived_users"."id" = "protocols"."archived_by_id"')
-    records = records.joins('LEFT OUTER JOIN "users" ON "users"."id" = "protocols"."added_by_id"')
+    records = records.joins('LEFT OUTER JOIN "users" ON "users"."id" = "protocols"."published_by_id"')
 
     records = @type == :archived ? records.archived : records.active
 
