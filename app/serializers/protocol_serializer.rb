@@ -41,6 +41,10 @@ class ProtocolSerializer < ActiveModel::Serializer
     object.protocol_keywords.map { |i| { label: i.name, value: i.name } }
   end
 
+  def code
+    object&.parent&.code || object.code
+  end
+
   def description_view
     @user = @instance_options[:user]
     custom_auto_link(object.tinymce_render('description'),
