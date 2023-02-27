@@ -39,10 +39,9 @@
   .pagination-row {
     align-items: center;
     display: flex;
-    align-items: center;
     flex-wrap: wrap;
     height: var(--datatable-pagination-row);
-    box-shadow: inset 0px 1px 0px $color-concrete;
+    box-shadow: inset 0 1px 0 $color-concrete;
     position: relative;
     width: 100%;
 
