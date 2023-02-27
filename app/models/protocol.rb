@@ -414,6 +414,18 @@ class Protocol < ApplicationRecord
     # Update all module protocols that had
     # parent set to this protocol
     if result
+      reload
+      Protocol.where(
+        parent: self,
+        protocol_type: %i(in_repository_draft in_repository_published_version)
+      ).update(
+        archived_by: user,
+        archived_on: archived_on,
+        restored_by: nil,
+        restored_on: nil,
+        archived: true
+      )
+
       Activities::CreateActivityService
         .call(activity_type: :archive_protocol_in_repository,
               owner: user,
@@ -436,6 +448,18 @@ class Protocol < ApplicationRecord
     result = save
 
     if result
+      reload
+      Protocol.where(
+        parent: self,
+        protocol_type: %i(in_repository_draft in_repository_published_version)
+      ).update(
+        archived_by: nil,
+        archived_on: nil,
+        restored_by: user,
+        restored_on: restored_on,
+        archived: false
+      )
+
       Activities::CreateActivityService
         .call(activity_type: :restore_protocol_in_repository,
               owner: user,
