@@ -313,7 +313,7 @@ en:
     templates:
       sidebar_title: "TEMPLATES"
       protocol_templates: "Protocol templates"
-      label_templates: "Label Templates"
+      label_templates: "Label templates"
 
   nav2:
     all_projects:

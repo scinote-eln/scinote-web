@@ -149,7 +149,7 @@
       margin-left: -2.5em;
       max-width: var(--wrapper-width);
       overflow: hidden;
-      padding: 1em 2.5em;
+      padding: 1em;
       text-decoration: none;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -162,7 +162,8 @@
       &.selected {
         background: $color-white;
         color: $brand-primary;
-        font-weight: bold;
+        font-weight: normal;
+        padding-left: 2.5em;
       }
 
       .fas {
