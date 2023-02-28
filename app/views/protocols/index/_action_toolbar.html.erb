@@ -7,7 +7,7 @@
     <i class="fas fa-door-open"></i>
     <span class="button-text"><%= t("protocols.index.action_toolbar.access") %></span>
   </button>
-  <button id="duplicateProtocol" class="btn btn-light single-object-action hidden only-active" data-for="copyable">
+  <button id="duplicateProtocol" class="btn btn-light single-object-action hidden only-active" data-url="<%= clone_protocols_path %>" data-for="copyable">
     <i class="fas fa-copy"></i>
     <span class="button-text"><%= t("protocols.index.action_toolbar.duplicate") %></span>
   </button>
