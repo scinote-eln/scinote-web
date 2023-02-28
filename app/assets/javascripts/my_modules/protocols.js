@@ -48,6 +48,7 @@ function initLinkUpdate() {
       modal.attr('data-url', data.url);
       modal.modal('show');
     });
+
   modal.on('hidden.bs.modal', function() {
     modalBody.html('');
   });
