@@ -46,12 +46,24 @@ module Assignable
       User.joins(:user_assignments).where(user_assignments: { assignable: self })
     end
 
+    def deep_clone_user_assginments(object)
+      user_assignments.each do |original_assignment|
+        new_assignment = original_assignment.dup
+        new_assignment.assignable = object
+        new_assignment.save!
+      end
+    end
+
+    def top_level_assignable?
+      self.class.name.in?(Extends::TOP_LEVEL_ASSIGNABLES)
+    end
+
     private
 
     def create_users_assignments
       return if skip_user_assignments
 
-      role = if is_a?(Project) || is_a?(Team)
+      role = if top_level_assignable?
                UserRole.find_predefined_owner_role
              else
                permission_parent.user_assignments.find_by(user: created_by).user_role
@@ -60,7 +72,7 @@ module Assignable
       UserAssignment.create!(
         user: created_by,
         assignable: self,
-        assigned: is_a?(Project) ? :manually : :automatically,
+        assigned: top_level_assignable? ? :manually : :automatically,
         user_role: role
       )
 

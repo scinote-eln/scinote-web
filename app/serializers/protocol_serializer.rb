@@ -41,6 +41,10 @@ class ProtocolSerializer < ActiveModel::Serializer
     object.protocol_keywords.map { |i| { label: i.name, value: i.name } }
   end
 
+  def code
+    object&.parent&.code || object.code
+  end
+
   def description_view
     @user = @instance_options[:user]
     custom_auto_link(object.tinymce_render('description'),
@@ -69,7 +73,9 @@ class ProtocolSerializer < ActiveModel::Serializer
       update_protocol_authors_url: update_protocol_authors_url,
       update_protocol_keywords_url: update_protocol_keywords_url,
       delete_steps_url: delete_steps_url,
-      publish_url: publish_url
+      publish_url: publish_url,
+      save_as_draft_url: save_as_draft_url,
+      versions_modal_url: versions_modal_url
     }
   end
 
@@ -101,6 +107,12 @@ class ProtocolSerializer < ActiveModel::Serializer
     return unless can_read_protocol_in_module?(object) || can_read_protocol_in_repository?(object)
 
     steps_path(protocol_id: object.id)
+  end
+
+  def versions_modal_url
+    return unless can_read_protocol_in_repository?(object)
+
+    versions_modal_protocol_path(object.parent || object)
   end
 
   def reorder_steps_url
@@ -168,5 +180,11 @@ class ProtocolSerializer < ActiveModel::Serializer
     return unless can_publish_protocol_in_repository?(object)
 
     publish_protocol_path(object)
+  end
+
+  def save_as_draft_url
+    return unless can_save_protocol_as_draft_in_repository?(object)
+
+    save_as_draft_protocol_path(object)
   end
 end

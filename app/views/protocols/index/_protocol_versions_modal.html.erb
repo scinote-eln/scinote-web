@@ -9,42 +9,48 @@
       </div>
       <div class="modal-body">
         <% if @protocol.draft.present? %>
+          <% draft = @protocol.draft %>
           <div class="protocol-version-row">
             <div class="protocol-link">
-              <%= link_to protocol_path(@protocol.draft) do %>
-                <%= t('protocols.index.versions.draft_html', parent_version: @protocol.draft.version_number) %>
+              <%= link_to protocol_path(draft) do %>
+                <% if draft.previous_version %>
+                  <%= t('protocols.index.versions.draft_html', parent_version: draft.previous_version.version_number) %>
+                <% else %>
+                  <%= t('protocols.index.versions.first_draft_html') %>
+                <% end %>
               <% end %>
             </div>
             <div class="protocol-metadata">
               <%= t('protocols.index.versions.draft_modification_info',
-                    modified_on: @protocol.draft.updated_at.present? ? l(@protocol.draft.updated_at, format: :full_date) : '',
-                    modified_by: @protocol.draft.last_modified_by&.full_name) %>
+                    modified_on: draft.updated_at.present? ? l(draft.updated_at, format: :full_date) : '',
+                    modified_by: draft.last_modified_by&.full_name) %>
             </div>
             <div class="protocol-actions">
-              <% if can_manage_protocol_in_repository?(@protocol.draft) %>
-                <%= button_to publish_protocol_path(@protocol.draft), class: "btn btn-light publish-draft" do %>
+              <% if can_publish_protocol_in_repository?(draft) %>
+                <%= button_to publish_protocol_path(draft), class: "btn btn-light publish-draft" do %>
                   <%= image_tag 'icon_small/publish.svg' %>
                   <%= t('protocols.index.versions.publish') %>
-                <% end %>
-                <div data-url="<%= destroy_draft_protocol_path(@protocol.draft) %>" class="btn btn-light delete-draft">
+              <% end %>
+              <% if can_delete_protocol_draft_in_repository?(draft) %>
+                <div data-url="<%= destroy_draft_protocol_path(draft) %>" class="btn btn-light delete-draft">
                   <i class="fas fa-trash"></i>
                 </div>
               <% end %>
             </div>
             <div class="protocol-version-comment">
-              <% if can_manage_protocol_in_repository?(@protocol.draft) %>
+              <% if can_manage_protocol_in_repository?(draft) %>
                 <div
                     class="protocol-comment-container inline-init-handler"
                     data-field-to-update="version_comment"
                     data-params-group="protocol"
-                    data-path-to-update="<%= update_version_comment_protocol_path(@protocol.draft) %>"
-                    data-original-name="<%= @protocol.draft.version_comment %>"
+                    data-path-to-update="<%= update_version_comment_protocol_path(draft) %>"
+                    data-original-name="<%= draft.version_comment %>"
                     data-response-field="version_comment"
                     data-edit-mode="0"
                   >
                   <div class="protocol-comment-message">
-                    <div class="view-mode" data-placeholder="<%= t('protocols.index.versions.comment_placeholder') %>"><%= @protocol.draft.version_comment %></div>
-                    <%= text_area_tag 'version_comment', @protocol.draft.version_comment, disabled: true, class: 'smart-text-area hidden' %>
+                    <div class="view-mode" data-placeholder="<%= t('protocols.index.versions.comment_placeholder') %>"><%= draft.version_comment %></div>
+                    <%= text_area_tag 'version_comment', draft.version_comment, disabled: true, class: 'smart-text-area hidden' %>
                   </div>
                   <div class="edit-buttons">
                     <span class="cancel-button btn btn-secondary"><%= t('general.cancel') %></span>
@@ -52,7 +58,7 @@
                   </div>
                 </div>
               <% else %>
-                <%= @protocol.draft.version_comment %>
+                <%= draft.version_comment %>
               <% end %>
             </div>
           </div>
@@ -70,10 +76,16 @@
                     published_by: protocol_version.published_by&.full_name) %>
             </div>
             <div class="protocol-actions">
-              <% unless @protocol.draft.present? %>
-                <button class="btn btn-light icon-btn save-as-draft" data-placement="left" title="<%= t('protocols.index.versions.save_as_draft') %>" data-toggle="tooltip">
+              <% if can_save_protocol_as_draft_in_repository?(protocol_version) %>
+                <%= button_to save_as_draft_protocol_path(protocol_version),
+                              class: "btn btn-light icon-btn save-as-draft",
+                              title: t('protocols.index.versions.save_as_draft'),
+                              data: {
+                                placement: :left,
+                                toggle: :tooltip
+                              } do %>
                   <i class="fas fa-clone"></i>
-                </button>
+                <% end %>
               <% end %>
             </div>
             <div class="protocol-version-comment">

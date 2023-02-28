@@ -43,7 +43,7 @@ module ProtocolImporters
 
     def protocol_attributes
       {
-        protocol_type: :in_repository_public,
+        protocol_type: :in_repository_draft,
         added_by: @user,
         team: @team,
         name: @normalized_protocol_data[:name],

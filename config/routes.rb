@@ -280,14 +280,16 @@ Rails.application.routes.draw do
     end
 
     namespace :access_permissions do
-      resources :protocols, defaults: { format: 'json' }
       resources :projects, defaults: { format: 'json' } do
         put :update_default_public_user_role, on: :member
-        resources :experiments, only: %i(show update edit) do
-          resources :my_modules, only: %i(show update edit)
-        end
       end
-      resources :protocols, only: %i(show update edit)
+
+      resources :protocols, defaults: { format: 'json' } do
+        put :update_default_public_user_role, on: :member
+      end
+
+      resources :experiments, only: %i(show update edit)
+      resources :my_modules, only: %i(show update edit)
     end
 
     resources :projects, except: [:destroy] do
@@ -572,6 +574,7 @@ Rails.application.routes.draw do
       member do
         post :publish
         post :destroy_draft
+        post :save_as_draft
         get 'print', to: 'protocols#print'
         get 'linked_children', to: 'protocols#linked_children'
         post 'linked_children_datatable',
@@ -582,7 +585,6 @@ Rails.application.routes.draw do
         put 'name', to: 'protocols#update_name'
         patch 'authors', to: 'protocols#update_authors'
         patch 'keywords', to: 'protocols#update_keywords'
-        post 'clone', to: 'protocols#clone'
         get 'unlink_modal', to: 'protocols#unlink_modal'
         post 'unlink', to: 'protocols#unlink'
         get 'revert_modal', to: 'protocols#revert_modal'
@@ -615,6 +617,7 @@ Rails.application.routes.draw do
         post 'make_private', to: 'protocols#make_private'
         post 'archive', to: 'protocols#archive'
         post 'restore', to: 'protocols#restore'
+        post 'clone', to: 'protocols#clone'
         post 'import', to: 'protocols#import'
         post 'protocolsio_import_create',
              to: 'protocols#protocolsio_import_create'

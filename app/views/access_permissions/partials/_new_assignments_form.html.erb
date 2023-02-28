@@ -4,13 +4,13 @@
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <h4 class="modal-title">
-      <%= link_to resource_path, remote: true, class: 'pull-left spacer', data: { action: 'swap-remote-container', target: '#user_assignments_modal' } do %>
+      <%= link_to assignable_path, remote: true, class: 'pull-left spacer', data: { action: 'swap-remote-container', target: '#user_assignments_modal' } do %>
         <i class="fas fa-arrow-left"></i>
       <% end %>
-      <%= t '.title', resource_name: resource.name %>
+      <%= t '.title', resource_name: assignable.name %>
     </h4>
   </div>
-  <%= form_with(url: create_path, method: :post, remote: true, html: { id: 'new-user-assignment-form', data: { action: 'replace-form', target: '#user_assignments_modal', object_type: resource.class.to_s.downcase} }) do |f| %>
+  <%= form_with(url: create_path, method: :post, remote: true, html: { id: 'new-user-assignment-form', data: { action: 'replace-form', target: '#user_assignments_modal', object_type: assignable.class.to_s.downcase} }) do |f| %>
     <div class="modal-body">
       <div class="sci-input-container left-icon">
         <%= text_field_tag :search_users, '', placeholder: t('.find_people_html'), class: 'sci-input-field', data: { action: 'filter-list', target: 'new-user-assignment-to-project-form' } %>

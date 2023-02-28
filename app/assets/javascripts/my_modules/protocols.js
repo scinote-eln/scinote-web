@@ -35,63 +35,6 @@ function initEditProtocolDescription() {
   });
 }
 
-function initCopyToRepository() {
-  var link = "[data-action='copy-to-repository']";
-  var modal = '#copy-to-repository-modal';
-  var modalBody = '.modal-body';
-  var submitBtn = ".modal-footer [data-action='submit']";
-  $('.my-modules-protocols-index')
-    .on('ajax:success', link, function(e, data) {
-      $(modal).find(modalBody).html(data.html);
-      $(modal).find(modalBody).find("[data-role='copy-to-repository']")
-        .on('ajax:success', function(e2, data2) {
-          if (data2.refresh !== null) {
-            // Reload page
-            location.reload();
-          } else {
-            // Simply hide the modal
-            $(modal).modal('hide');
-          }
-        })
-        .on('ajax:error', function(e2, data2) {
-          // Display errors in form
-          $(modal).find(submitBtn)[0].disabled = false;
-          if (data2.status === 422) {
-            $(this).renderFormErrors('protocol', data2.responseJSON);
-          } else {
-            // Simply display global error
-            alert(data2.responseJSON.message);
-          }
-        });
-
-      $(modal).modal('show');
-      $(modal).find(submitBtn)[0].disabled = false;
-    })
-    .on('ajax:error', function() {});
-
-  $(modal).on('click', submitBtn, function() {
-    // Submit the embedded form
-    $(modal).find(submitBtn)[0].disabled = true;
-    $(modal).find('form').submit();
-  });
-
-  $(modal).find(modalBody).on('click', "[data-role='link-check']", function() {
-    var text = $(this).closest('.modal-body').find("[data-role='link-text']");
-    if ($(this).prop('checked')) {
-      text.show();
-    } else {
-      text.hide();
-    }
-  });
-
-  $(modal).on('hidden.bs.modal', function() {
-    $(modal).find(modalBody).find("[data-role='copy-to-repository']")
-      .off('ajax:success ajax:error');
-
-    $(modal).find(modalBody).html('');
-  });
-}
-
 function initLinkUpdate() {
   var modal = $('#confirm-link-update-modal');
   var modalTitle = modal.find('.modal-title');

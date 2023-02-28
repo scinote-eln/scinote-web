@@ -7,12 +7,9 @@
 <% end %>
 <% if subject %>
   <% if subject.in_repository? %>
-    <% type = :public if subject.in_repository_public? %>
-    <% type = :private if subject.in_repository_private? %>
-    <% type = :archive if subject.in_repository_archived? %>
     <div class="ga-breadcrumb">
       <span class="fas fa-edit"></span>
-        <%= route_to_other_team protocols_path(team: subject.team, type: type),
+        <%= route_to_other_team protocols_path(team: subject.team),
                                 team,
                                 subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
                                 title: subject.name %>

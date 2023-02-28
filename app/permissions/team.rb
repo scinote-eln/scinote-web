@@ -71,7 +71,11 @@ end
 
 Canaid::Permissions.register_for(Protocol) do
   %i(manage_protocol_in_repository
-     manage_protocol_users)
+     manage_protocol_users
+     clone_protocol_in_repository
+     publish_protocol_in_repository
+     delete_protocol_draft_in_repository
+     save_protocol_as_draft_in_repository)
     .each do |perm|
     can perm do |_, protocol|
       protocol.active?
@@ -104,6 +108,10 @@ Canaid::Permissions.register_for(Protocol) do
     protocol.archived? && protocol.permission_granted?(user, ProtocolPermissions::MANAGE)
   end
 
+  can :archive_protocol_in_repository do |user, protocol|
+    protocol.active? && protocol.permission_granted?(user, ProtocolPermissions::MANAGE)
+  end
+
   # protocol in repository: copy
   can :clone_protocol_in_repository do |user, protocol|
     can_read_protocol_in_repository?(user, protocol) && can_create_protocols_in_repository?(user, protocol.team)
@@ -112,6 +120,16 @@ Canaid::Permissions.register_for(Protocol) do
   can :publish_protocol_in_repository do |user, protocol|
     protocol.in_repository_draft? &&
       protocol.permission_granted?(user, ProtocolPermissions::MANAGE)
+  end
+
+  can :delete_protocol_draft_in_repository do |user, protocol|
+    protocol.parent_id.present? &&
+      can_manage_protocol_draft_in_repository?(user, protocol)
+  end
+
+  can :save_protocol_as_draft_in_repository do |user, protocol|
+    (protocol.in_repository_published_original? || protocol.in_repository_published_version?) &&
+      can_create_protocols_in_repository?(user, protocol.team)
   end
 end
 

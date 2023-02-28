@@ -41,10 +41,13 @@
       />
     </div>
   </div>
+  <%= render partial: "protocols/index/delete_draft_modal.html.erb" %>
 </div>
 
 <!-- Create new office file modal -->
 <%= render partial: 'assets/wopi/create_wopi_file_modal.html.erb' %>
+<%= render partial: "my_modules/protocols/print_protocol_modal", locals: { protocol: @protocol, comments_enabled: true} %>
+
 
 <%= javascript_include_tag "handsontable.full" %>
 <%= render partial: "shared/formulas_libraries.html.erb" %>

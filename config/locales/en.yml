@@ -152,6 +152,7 @@ en:
           wrong_parent_type: "Protocol can only be linked to published protocol!"
           wrong_version_name: "Protocol versions should have same name!"
           wrong_version_number: "Protocol version number should be sequential!"
+          wrong_parent_draft_number: "Procol can have only 1 draft"
           attributes:
             step_order:
               invalid: "Invalid step order."
@@ -1047,6 +1048,8 @@ en:
       head_title: "%{project} | %{module} | Protocols"
       protocol: "Protocol"
       protocol_status_bar:
+        protocol_id_label: "ID:"
+        protocol_version_label: "Version"
         private_parent: "private"
         unlinked: "unlinked"
         linked: "linked"
@@ -1057,10 +1060,13 @@ en:
         no_keywords: "no keywords"
         protocol_created: "Protocol created:"
         template_updated: "Protocol template updated on:"
-        protocol_updated: "Protocol updated on:"
+        protocol_updated: "Protocol modified:"
+        protocol_loaded: "Protocol template loaded:"
+        protocol_published: "Protocol template published:"
+
         messages:
-          template_updated_html: "There is a new version of this protocol available in the protocol templates.<br>Would you like to update it?"
-          protocol_updated: "The version of this protocol in the task is modified, do you wish to save it as a new protocol template?"
+          template_updated_html: "There is a new version of this protocol available in protocol templates."
+          protocol_updated: "Version of this protocol in the task is modified. "
           unlinked: "This protocol is not linked to the templates."
         btns:
           unlink: "Unlink protocol template"
@@ -1076,16 +1082,18 @@ en:
         unlink_title: "Unlink protocol template"
         unlink_message: "This will stop tracking changes of protocol templates. We can’t link it back once you unlink it.<br /><br /><strong>Are you sure?</strong>"
         unlink_btn_text: "Yes, unlink it"
-        revert_title: "Revert protocol"
-        revert_message: "Are you sure you want to revert the task protocol to the templates version? This will override any local changes you made."
-        revert_btn_text: "Revert"
+        revert_title: "Revert protocol template"
+        revert_message: "This will override any changes you made. We can’t recover them once you revert.<br /><br /><strong>Are you sure?</strong>"
+        revert_btn_text: "Yes, revert it"
         update_parent_title: "Update templates version"
         update_parent_message: "Are you sure you want to update the templates protocol with this version? This will override any other changes made in the templates version."
-        update_self_title: "Update from templates"
-        update_self_message: "Are you sure you want to update this protocol with the version from the templates? This will override any local changes you made."
+        update_self_title: "Update from protocol templates"
+        update_self_message: "This will override any changes you made. We can’t recover them once you update this protocol with the new version. "
+        update_self_btn_text: "Yes, update it"
+        warning: "Are you sure?"
       unlink_flash: "Protocol was successfully unlinked."
       unlink_error: "Failed to unlink protocol."
-      revert_flash: "Protocol was successfully reverted to protocol version."
+      revert_flash: "Protocol was successfully reverted."
       revert_error: "Failed to revert protocol."
       revert_error_locked: "Failed to revert protocol. One or more files in the protocol are currently being edited."
       update_parent_flash: "Protocol in templates was successfully updated with the version from the task."
@@ -1122,6 +1130,7 @@ en:
         link_label: "Link task to this protocol in templates"
         link_text: "<strong>Warning!</strong>&nbsp;This will unlink the currently linked protocol."
         error_400: "Due to unknown error, protocol could not be copied to templates."
+        success_message: "New protocol template was successfully saved. You can see it in protocol templates."
         confirm: "Save"
       load_from_file_flash: "Successfully loaded the protocol from the file."
       load_from_file_error: "Failed to load the protocol from file."
@@ -2650,6 +2659,16 @@ en:
       comment: "Revision comment"
       comment_placeholder: "What's new in this version?"
       publish: "Publish"
+    new_protocol_modal:
+      title_new: "Create new protocol template"
+      title_copy: "Save as new protocol template"
+      name_label: "Protocol template name"
+      name_placeholder: "Enter a protocol template name…"
+      description: "You will create a copy of a protocol and save it to Protocol templates."
+      access_label: "Grant access to all team members"
+      role_label: "Default user role"
+      create_new: "Create"
+      create_copy: "Save"
     header:
       details: 'Details'
       versions: 'Versions'
@@ -2739,6 +2758,7 @@ en:
       archive:
         description: "Archived protocols can only be seen by you. Restoring protocols will return them to their previous location (team/my protocols)."
       restore: "Restore"
+      restore_flash_html: "<b>%{count} protocol</b> template(s) successfully restored."
       make_private_unauthorized: "You do not have permission to move selected protocols to My protocols."
       make_private_error: "Error occurred while moving selected protocols to My protocols."
       publish_unauthorized: "You do not have permission to move selected protocols to Team protocols."
@@ -2757,8 +2777,8 @@ en:
         message_private: "When you create a new My protocol, it will only be visible to you."
         submit: "Create"
       clone:
-        success_flash: "Successfully copied protocol '%{new}' from protocol '%{original}'."
-        error_flash: "Failed to copied protocol '%{original}'."
+        success_flash: "Successfully duplicated protocol template '%{new}' from '%{original}'."
+        error_flash: "Failed to duplicated protocol template '%{original}'."
       make_private_results:
         title: "Move to My protocols results"
         message_failed: "Failed to move %{nr} protocols to My protocols."
@@ -2775,8 +2795,8 @@ en:
         row_failed: "Failed"
       import_results:
         title: "Import results"
-        message_failed: "Failed to import %{nr} protocol/s."
-        message_ok: "Successfully imported %{nr} protocol/s."
+        message_failed: "Failed to import protocol template(s)."
+        message_ok_html: "<strong>%{count} protocol</strong> template(s) successfully imported."
         message_ok_pio: "Successfully imported protocol from protocols.io file."
         message_warn_truncated: "Successfully imported protocol from protocols.io file. However, text in some fields was too long so we had to cut it off."
         row_success: "Imported"
@@ -2806,6 +2826,7 @@ en:
         row_in_repository_private: "%{protocol} - <i>into My protocols</i>"
       versions:
         title: "%{protocol} versions"
+        first_draft_html: "<b>Draft</b>"
         draft_html: "<b>Draft</b> (from Version %{parent_version})"
         draft_modification_info: "Last modified: %{modified_on}, by %{modified_by}"
         revision: "Version %{version}"
@@ -2815,18 +2836,14 @@ en:
         comment_placeholder: "Click here to enter revision notes"
       protocolsio:
         search_bar_placeholder: 'Search for protocols'
-        protocolsio_title: 'Protocols.io'
-        sort_by:
-          title: 'Show first:'
-          alphabetically-asc: 'A-Z'
-          alphabetically-desc: 'Z-A'
-          newest: 'newest'
-          oldest: 'oldest'
+        title: 'Import from Protocols.io'
+        convert: 'Convert for SciNote'
         list_panel:
           empty_text: 'Search for protocols above to list them here'
         preview_panel:
           empty_title: 'PROTOCOL PREVIEW'
           empty_subtext: 'Click on the protocol in the list to preview it here'
+          powered_by: 'Powered by protocols.io'
           banner_text: 'Protocol Preview'
         import:
           public: "Team protocols"
@@ -2903,9 +2920,9 @@ en:
           confirm: 'Delete forever'
         delete_steps:
           title: 'Delete all protocol steps'
-          description_1: 'You’re about to delete all protocol steps from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
-          description_2: 'Are you sure you want to delete them?'
-          confirm: 'Delete forever'
+          description_1: 'You’ll loose all protocol steps from your protocol. We can’t recover them once you delete.'
+          description_2: 'Are you sure?'
+          confirm: 'Yes, delete them'
         reorder_elements:
           title: 'Rearrange step %{step_position} content'
       options:
@@ -3561,6 +3578,7 @@ en:
     title: "Filters"
     text:
       label: "Contains text"
+      label_name_and_keywords: "Name and keywords"
       placeholder: "Enter search terms..."
     from_placeholder: "From"
     to_placeholder: "To"

@@ -70,7 +70,7 @@ class LoadFromRepositoryProtocolsDatatable < CustomDatatable
              'ON "protocol_protocol_keywords"."protocol_id" = "protocols"."id"')
       .joins('LEFT OUTER JOIN "protocol_keywords"'\
              'ON "protocol_protocol_keywords"."protocol_keyword_id" = "protocol_keywords"."id"')
-      .joins('LEFT OUTER JOIN users ON users.id = protocols.added_by_id').active
+      .joins('LEFT OUTER JOIN users ON users.id = protocols.published_by_id').active
 
     records.group('"protocols"."id"')
   end

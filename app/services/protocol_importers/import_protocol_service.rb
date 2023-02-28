@@ -6,9 +6,9 @@ module ProtocolImporters
 
     attr_reader :errors, :protocol
 
-    def initialize(protocol_params:, steps_params_json:, team_id:, user_id:)
-      @user = User.find_by_id user_id
-      @team = Team.find_by_id team_id
+    def initialize(protocol_params:, steps_params_json:, team:, user:)
+      @user = user
+      @team = team
       @protocol_params = protocol_params
       @steps_params = JSON.parse(steps_params_json)
       @errors = {}

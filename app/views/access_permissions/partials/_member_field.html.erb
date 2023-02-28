@@ -1,11 +1,11 @@
 <% # frozen_string_literal: true %>
 
 <%
-  object_assignment = object.user_assignments.find_by(user_id: user.id, team: current_team)
+  assignment = assignable.user_assignments.find_by(user_id: user.id, team: current_team)
   item_id = dom_id(user, :assignment_member)
 %>
 
-<%= form_with(model: object_assignment, url: update_path, method: :put, remote: true, html: { class: 'member-item', id: item_id, data: { action: 'replace-form autosave-form', object_type: :assignment_member } }) do |f| %>
+<%= form_with(model: assignment, url: update_path, method: :put, remote: true, html: { class: 'member-item', id: item_id, data: { action: 'replace-form autosave-form', object_type: :assignment_member } }) do |f| %>
   <%= f.hidden_field :user_id, value: f.object.user.id %>
     <div class="user-assignment-info">
       <div class="global-avatar-container">
@@ -14,7 +14,7 @@
       <div>
         <%= current_assignee_name(user) %>
         <br>
-        <small class="text-muted"><%= user_assignment_resource_role_name(user, object) %></small>
+        <small class="text-muted"><%= user_assignment_resource_role_name(user, assignable) %></small>
       </div>
     </div>
     <div class="user-assignment-controls">
@@ -33,7 +33,7 @@
                 </a>
               </li>
             <% end %>
-            <% if defined?(delete_path) && !object_assignment.last_assignable_owner?  %>
+            <% if defined?(delete_path) && !assignment.last_assignable_owner?  %>
               <li role="separator" class="divider" data-hook="support-dropdown-separator"></li>
               <li>
                 <%= link_to delete_path, remote: true, method: :delete, data: { action: 'remote-destroy', target: "##{item_id}" } do %>

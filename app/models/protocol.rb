@@ -16,8 +16,9 @@ class Protocol < ApplicationRecord
   include TinyMceImages
 
   before_validation :assign_version_number, on: :update, if: -> { protocol_type_changed? && in_repository_published? }
-  after_update :update_user_assignments, if: -> { saved_change_to_protocol_type? && in_repository? }
+  after_create :auto_assign_protocol_members, if: :visible?
   after_destroy :decrement_linked_children
+  after_save :update_user_assignments, if: -> { saved_change_to_visibility? && in_repository? }
   after_save :update_linked_children
   skip_callback :create, :after, :create_users_assignments, if: -> { in_module? }
 
@@ -38,7 +39,11 @@ class Protocol < ApplicationRecord
   validates :protocol_type, presence: true
   validate :prevent_update,
            on: :update,
-           if: -> { in_repository_published? && !protocol_type_changed?(from: 'in_repository_draft') }
+           if: lambda {
+             # skip check if only public role of visibility changed
+             (changes.keys | %w(default_public_user_role_id visibility)).length != 2 &&
+               in_repository_published? && !protocol_type_changed?(from: 'in_repository_draft') && !archived_changed?
+           }
 
   with_options if: :in_module? do
     validates :my_module, presence: true
@@ -63,36 +68,25 @@ class Protocol < ApplicationRecord
   end
   with_options if: :in_repository_draft? do
     # Only one draft can exist for each protocol
-    validates :parent_id, uniqueness: { scope: :protocol_type }, if: -> { parent_id.present? }
+    validate :ensure_single_draft
     validate :versions_same_name_constrain
   end
-  with_options if: -> { in_repository? && active? && !parent } do |protocol|
+  with_options if: -> { in_repository? && !parent } do |protocol|
     # Active protocol must have unique name inside its team
     protocol
       .validates_uniqueness_of :name, case_sensitive: false,
                                scope: :team,
                                conditions: lambda {
-                                 active.where(
+                                 where(
                                    protocol_type: [
                                      Protocol.protocol_types[:in_repository_published_original],
                                      Protocol.protocol_types[:in_repository_draft]
-                                   ]
+                                   ],
+                                   parent_id: nil
                                  )
                                }
   end
   with_options if: -> { in_repository? && archived? && !previous_version } do |protocol|
-    # Archived protocol must have unique name inside its team
-    protocol
-      .validates_uniqueness_of :name, case_sensitive: false,
-                               scope: :team,
-                               conditions: lambda {
-                                 archived.where(
-                                   protocol_type: [
-                                     Protocol.protocol_types[:in_repository_published_original],
-                                     Protocol.protocol_types[:in_repository_draft]
-                                   ]
-                                 )
-                               }
     protocol.validates :archived_by, presence: true
     protocol.validates :archived_on, presence: true
   end
@@ -241,6 +235,8 @@ class Protocol < ApplicationRecord
   end
 
   def draft
+    return self if in_repository_draft? && parent_id.blank?
+
     return nil unless in_repository_published_original?
 
     team.protocols.in_repository_draft.find_by(parent: self)
@@ -253,6 +249,10 @@ class Protocol < ApplicationRecord
         .in_repository_published_version
         .where(parent: self)
         .or(team.protocols.in_repository_published_original.where(id: id))
+  end
+
+  def latest_published_version
+    published_versions.order(version_number: :desc).first
   end
 
   def permission_parent
@@ -403,10 +403,6 @@ class Protocol < ApplicationRecord
 
   def archive(user)
     return nil unless can_destroy?
-
-    # Don't update "updated_at" timestamp
-    self.record_timestamps = false
-
     # We keep published_on present, so we know (upon restoring)
     # where the protocol was located
 
@@ -420,6 +416,18 @@ class Protocol < ApplicationRecord
     # Update all module protocols that had
     # parent set to this protocol
     if result
+      reload
+      Protocol.where(
+        parent: self,
+        protocol_type: %i(in_repository_draft in_repository_published_version)
+      ).update(
+        archived_by: user,
+        archived_on: archived_on,
+        restored_by: nil,
+        restored_on: nil,
+        archived: true
+      )
+
       Activities::CreateActivityService
         .call(activity_type: :archive_protocol_in_repository,
               owner: user,
@@ -433,22 +441,27 @@ class Protocol < ApplicationRecord
   end
 
   def restore(user)
-    # Don't update "updated_at" timestamp
-    self.record_timestamps = false
-
     self.archived_by = nil
     self.archived_on = nil
     self.restored_by = user
     self.restored_on = Time.now
-    if published_on.present?
-      self.published_on = Time.now
-      self.protocol_type = Protocol.protocol_types[:in_repository_public]
-    else
-      self.protocol_type = Protocol.protocol_types[:in_repository_private]
-    end
+    self.archived = false
+
     result = save
 
     if result
+      reload
+      Protocol.where(
+        parent: self,
+        protocol_type: %i(in_repository_draft in_repository_published_version)
+      ).update(
+        archived_by: nil,
+        archived_on: nil,
+        restored_by: user,
+        restored_on: restored_on,
+        archived: false
+      )
+
       Activities::CreateActivityService
         .call(activity_type: :restore_protocol_in_repository,
               owner: user,
@@ -509,21 +522,22 @@ class Protocol < ApplicationRecord
     save!
   end
 
-  def update_from_parent(current_user)
+  def update_from_parent(current_user, source)
     ActiveRecord::Base.no_touching do
       # First, destroy step contents
       destroy_contents
 
       # Now, clone parent's step contents
-      Protocol.clone_contents(parent, self, current_user, false)
+      Protocol.clone_contents(source, self, current_user, false)
     end
 
     # Lastly, update the metadata
     reload
     self.record_timestamps = false
-    self.updated_at = parent.updated_at
-    self.parent_updated_at = parent.updated_at
+    self.updated_at = source.published_on
+    self.parent_updated_at = source.published_on
     self.added_by = current_user
+    self.parent = source
     save!
   end
 
@@ -540,51 +554,48 @@ class Protocol < ApplicationRecord
     reload
     self.name = source.name
     self.record_timestamps = false
-    self.updated_at = source.updated_at
+    self.updated_at = source.published_on
     self.parent = source
-    self.parent_updated_at = source.updated_at
+    self.parent_updated_at = source.published_on
     self.added_by = current_user
     self.protocol_type = Protocol.protocol_types[:linked]
     save!
   end
 
-  def copy_to_repository(new_name, new_protocol_type, link_protocols, current_user)
-    clone = Protocol.new(
-      name: new_name,
-      description: description,
-      protocol_type: new_protocol_type,
-      added_by: current_user,
-      team: team
-    )
-    clone.published_on = Time.now if clone.in_repository_public?
-
+  def copy_to_repository(clone, current_user)
+    clone.team = team
+    clone.protocol_type = :in_repository_draft
+    clone.added_by = current_user
     # Don't proceed further if clone is invalid
     return clone if clone.invalid?
 
     ActiveRecord::Base.no_touching do
       # Okay, clone seems to be valid: let's clone it
       clone = deep_clone(clone, current_user)
-
-      # If the above operation went well, update published_on
-      # timestamp
-      clone.update(published_on: Time.zone.now) if clone.in_repository_public?
-    end
-
-    # Link protocols if neccesary
-    if link_protocols
-      reload
-      self.name = clone.name
-      self.record_timestamps = false
-      self.added_by = current_user
-      self.parent = clone
-      ts = clone.updated_at
-      self.parent_updated_at = ts
-      self.updated_at = ts
-      self.protocol_type = Protocol.protocol_types[:linked]
-      save!
     end
 
     clone
+  end
+
+  def save_as_draft(current_user)
+    version = (parent || self).latest_published_version.version_number + 1
+
+    draft = dup
+    draft.version_number = version
+    draft.protocol_type = :in_repository_draft
+    draft.parent = (parent || self)
+    draft.published_by = nil
+    draft.published_on = nil
+    draft.version_comment = nil
+    draft.previous_version = self
+
+    return draft if draft.invalid?
+
+    ActiveRecord::Base.no_touching do
+      draft = deep_clone(draft, current_user)
+    end
+
+    draft
   end
 
   def deep_clone_my_module(my_module, current_user)
@@ -610,25 +621,25 @@ class Protocol < ApplicationRecord
       description: description,
       added_by: current_user,
       team: team,
-      protocol_type: protocol_type,
-      published_on: in_repository_public? ? Time.now : nil
+      protocol_type: :in_repository_draft,
+      skip_user_assignments: true
     )
 
     cloned = deep_clone(clone, current_user)
 
     if cloned
+      deep_clone_user_assginments(clone)
       Activities::CreateActivityService
         .call(activity_type: :copy_protocol_in_repository,
-             owner: current_user,
-             subject: self,
-             team: team,
-             project: nil,
-             message_items: {
-               protocol_new: clone.id,
-               protocol_original: id
-             })
+              owner: current_user,
+              subject: self,
+              team: team,
+              project: nil,
+              message_items: {
+                protocol_new: clone.id,
+                protocol_original: id
+              })
     end
-
     cloned
   end
 
@@ -666,6 +677,14 @@ class Protocol < ApplicationRecord
   end
 
   private
+
+  def auto_assign_protocol_members
+    UserAssignments::ProtocolGroupAssignmentJob.perform_now(
+      team,
+      self,
+      last_modified_by || created_by
+    )
+  end
 
   def update_user_assignments
     case visibility
@@ -750,6 +769,12 @@ class Protocol < ApplicationRecord
   def version_number_constrain
     if previous_version.present? && version_number != previous_version.version_number + 1
       errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_version_number'))
+    end
+  end
+
+  def ensure_single_draft
+    if parent&.draft && parent.draft.id != id
+      errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_parent_draft_number'))
     end
   end
 end

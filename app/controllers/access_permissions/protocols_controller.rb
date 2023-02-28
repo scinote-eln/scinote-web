@@ -35,7 +35,9 @@ module AccessPermissions
         user_id: permitted_update_params[:user_id],
         team: current_team
       )
-      @user_assignment.update(permitted_update_params)
+      @user_assignment.update!(permitted_update_params)
+      log_activity(:protocol_template_access_changed, @user_assignment)
+
       respond_to do |format|
         format.json do
           render :protocol_member
@@ -45,18 +47,22 @@ module AccessPermissions
 
     def create
       ActiveRecord::Base.transaction do
+        created_count = 0
         permitted_create_params[:resource_members].each do |_k, user_assignment_params|
           next unless user_assignment_params[:assign] == '1'
 
           user_assignment = UserAssignment.new(user_assignment_params)
           user_assignment.assignable = @protocol
+          user_assignment.assigned = :manually
           user_assignment.team = current_team
           user_assignment.assigned_by = current_user
           user_assignment.save!
-        end
 
+          created_count += 1
+          log_activity(:protocol_template_access_granted, user_assignment)
+        end
         respond_to do |format|
-          @message = t('access_permissions.create.success', count: @protocol.user_assignments.count)
+          @message = t('access_permissions.create.success', count: created_count)
           format.json { render :edit }
         end
       rescue ActiveRecord::RecordInvalid
@@ -72,6 +78,8 @@ module AccessPermissions
       user_assignment = @protocol.user_assignments.find_by(user: user, team: current_team)
       respond_to do |format|
         if user_assignment.destroy
+
+          log_activity(:protocol_template_access_revoked, user_assignment)
           format.json do
             render json: { flash: t('access_permissions.destroy.success', member_name: user.full_name) },
                    status: :ok
@@ -85,7 +93,21 @@ module AccessPermissions
       end
     end
 
+    def update_default_public_user_role
+      Protocol.transaction do
+        @protocol.visibility = :hidden if permitted_default_public_user_role_params[:default_public_user_role_id].blank?
+        @protocol.assign_attributes(permitted_default_public_user_role_params)
+        @protocol.save!
+
+        UserAssignments::ProtocolGroupAssignmentJob.perform_later(current_team, @protocol, current_user)
+      end
+    end
+
     private
+
+    def permitted_default_public_user_role_params
+      params.require(:protocol).permit(:default_public_user_role_id)
+    end
 
     def permitted_update_params
       params.require(:user_assignment)
@@ -109,6 +131,18 @@ module AccessPermissions
 
     def check_read_permissions
       render_403 unless can_read_protocol_in_repository?(@protocol)
+    end
+
+    def log_activity(type_of, user_assignment)
+      Activities::CreateActivityService
+        .call(activity_type: type_of,
+              owner: current_user,
+              subject: @protocol,
+              team: @protocol.team,
+              project: nil,
+              message_items: { protocol: @protocol.id,
+                               user_target: user_assignment.user.id,
+                               role: user_assignment.user_role.name })
     end
   end
 end

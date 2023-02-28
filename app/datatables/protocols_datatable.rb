@@ -91,13 +91,6 @@ class ProtocolsDatatable < CustomDatatable
         DT_RowAttr: {
           'data-permissions-url': permissions_protocol_path(record)
         },
-        DT_CanClone: can_clone_protocol_in_repository?(record),
-        DT_CloneUrl: if can_clone_protocol_in_repository?(record)
-                       clone_protocol_path(record, team: @team, type: @type)
-                     end,
-        DT_RowAttr: {
-          'data-permissions-url': permissions_protocol_path(record)
-        },
         '1': name_html(record),
         '2': record.code,
         '3': versions_html(record),
@@ -111,6 +104,34 @@ class ProtocolsDatatable < CustomDatatable
         '11': (I18n.l(record.archived_on, format: :full) if record.archived_on)
       }
     end
+  end
+
+  def filter_protocols_records(records)
+    if params[:name_and_keywords].present?
+      records = records.where_attributes_like(['protocols.name', 'protocol_keywords.name'], params[:name_and_keywords])
+    end
+
+    if params[:published_on_from].present?
+      records = records.where('protocols.published_on > ?', params[:published_on_from])
+    end
+    records = records.where('protocols.published_on < ?', params[:published_on_to]) if params[:published_on_to].present?
+    records = records.where('protocols.updated_at > ?', params[:modified_on_from]) if params[:modified_on_from].present?
+    records = records.where('protocols.updated_at < ?', params[:modified_on_to]) if params[:modified_on_to].present?
+    records = records.where(protocols: { published_by_id: params[:published_by] }) if params[:published_by].present?
+    records = records.where(all_user_assignments: { user_id: params[:members] }) if params[:members].present?
+
+    if params[:archived_on_from].present?
+      records = records.where('protocols.archived_on > ?', params[:archived_on_from])
+    end
+    records = records.where('protocols.archived_on < ?', params[:archived_on_to]) if params[:archived_on_to].present?
+
+    records = records.where(protocols: { archived_by_id: params[:archived_by] }) if params[:archived_by].present?
+
+    if params[:has_draft].present?
+      records = records.where(protocols: { protocol_type: Protocol.protocol_types[:in_repository_draft] })
+    end
+
+    records
   end
 
   def get_raw_records_base
@@ -138,10 +159,11 @@ class ProtocolsDatatable < CustomDatatable
 
     records = records.joins('LEFT OUTER JOIN "users" "archived_users"
                              ON "archived_users"."id" = "protocols"."archived_by_id"')
-    records = records.joins('LEFT OUTER JOIN "users" ON "users"."id" = "protocols"."added_by_id"')
+    records = records.joins('LEFT OUTER JOIN "users" ON "users"."id" = "protocols"."published_by_id"')
 
     records = @type == :archived ? records.archived : records.active
 
+    records = filter_protocols_records(records)
     records.group('"protocols"."id"')
   end
 
@@ -150,8 +172,8 @@ class ProtocolsDatatable < CustomDatatable
   def get_raw_records
     get_raw_records_base.select(
       '"protocols".*',
-      'STRING_AGG("protocol_keywords"."name", \', \') AS "protocol_keywords_str"',
-      'COUNT("protocol_versions"."id") + 1 AS "nr_of_versions"',
+      'STRING_AGG(DISTINCT("protocol_keywords"."name"), \', \') AS "protocol_keywords_str"',
+      'COUNT(DISTINCT("protocol_versions"."id")) + 1 AS "nr_of_versions"', # User assignments generate duplicates
       'COUNT("protocol_drafts"."id") AS "nr_of_drafts"',
       'COUNT("user_assignments"."id") AS "nr_of_assigned_users"',
       'MAX("users"."full_name") AS "full_username_str"', # "Hack" to get single username

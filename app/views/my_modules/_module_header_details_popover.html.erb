@@ -51,8 +51,8 @@
     <div class="col-xs-12">
        <%= link_to t('my_modules.details.info_popover.view_task_access'),
                       can_manage_my_module_users?(@my_module) ?
-                        edit_access_permissions_project_experiment_my_module_path(@my_module.experiment.project, @my_module.experiment, @my_module) :
-                        access_permissions_project_experiment_my_module_path(@my_module.experiment.project, @my_module.experiment, @my_module),
+                        edit_access_permissions_my_module_path(@my_module) :
+                        access_permissions_my_module_path(@my_module),
                       data: { action: 'remote-modal'} %>
     </div>
   </div>

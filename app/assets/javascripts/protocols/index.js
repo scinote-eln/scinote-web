@@ -1,6 +1,6 @@
 //= require protocols/import_export/import
-/* eslint-disable no-use-before-define, no-underscore-dangle, max-len */
-/* global ProtocolRepositoryHeader PdfPreview DataTableHelpers importProtocolFromFile _
+/* eslint-disable no-use-before-define, no-underscore-dangle, max-len, no-param-reassign */
+/* global ProtocolRepositoryHeader PdfPreview DataTableHelpers importProtocolFromFile _ PerfectSb
           dropdownSelector filterDropdown I18n animateSpinner initHandsOnTable inlineEditing HelperModule */
 
 // Global variables
@@ -23,7 +23,6 @@ var ProtocolsIndex = (function() {
   var archivedOnToFilter;
   var protocolsViewSearch;
 
-
   /**
    * Initializes page
    */
@@ -34,8 +33,13 @@ var ProtocolsIndex = (function() {
     initProtocolPreviewModal();
     initLinkedChildrenModal();
     initModals();
-    initImport();
     initVersionsModal();
+  }
+
+  function reloadTable() {
+    rowsSelected = [];
+    updateButtons();
+    protocolsDatatable.ajax.reload();
   }
 
   function selectDate($field) {
@@ -105,6 +109,7 @@ var ProtocolsIndex = (function() {
       protocolsViewSearch = $textFilter.val();
 
       appliedFiltersMark();
+      protocolsDatatable.ajax.reload();
     });
 
     // Clear filters
@@ -152,7 +157,21 @@ var ProtocolsIndex = (function() {
       serverSide: true,
       ajax: {
         url: protocolsTableEl.data('source'),
-        type: 'POST'
+        type: 'POST',
+        data: function(data) {
+          data.published_on_from = publishedOnFromFilter;
+          data.published_on_to = publishedOnToFilter;
+          data.modified_on_from = modifiedOnFromFilter;
+          data.modified_on_to = modifiedOnToFilter;
+          data.published_by = publishedByFilter;
+          data.members = accessByFilter;
+          data.has_draft = hasDraftFilter;
+          data.archived_on_from = archivedOnFromFilter;
+          data.archived_on_to = archivedOnToFilter;
+          data.name_and_keywords = protocolsViewSearch;
+
+          return data;
+        }
       },
       colReorder: {
         fixedColumnsLeft: 1000000 // Disable reordering
@@ -202,16 +221,6 @@ var ProtocolsIndex = (function() {
 
         $(row).attr('data-row-id', rowId);
 
-        if (data.DT_CanClone) {
-          $(row).attr('data-can-clone', 'true');
-          $(row).attr('data-clone-url', data.DT_CloneUrl);
-        }
-        if (data.DT_CanMakePrivate) { $(row).attr('data-can-make-private', 'true'); }
-        if (data.DT_CanPublish) { $(row).attr('data-can-publish', 'true'); }
-        if (data.DT_CanArchive) { $(row).attr('data-can-archive', 'true'); }
-        if (data.DT_CanRestore) { $(row).attr('data-can-restore', 'true'); }
-        if (data.DT_CanExport) { $(row).attr('data-can-export', 'true'); }
-
         // If row ID is in the list of selected row IDs
         if ($.inArray(rowId, rowsSelected) !== -1) {
           $(row).find("input[type='checkbox']").prop('checked', true);
@@ -246,6 +255,7 @@ var ProtocolsIndex = (function() {
         let protocolFilters = $($('#protocolFilters').html());
         $(protocolFilters).prependTo('.protocols-container .protocol-filters');
 
+        initLocalFileImport();
         initProtocolsFilters();
       },
       stateLoadCallback: function() {
@@ -408,6 +418,10 @@ var ProtocolsIndex = (function() {
       e.stopPropagation();
       e.preventDefault();
     });
+
+    $(protocolsContainer).on('click', '#protocolVersions', function() {
+      $(`tr[data-row-id=${rowsSelected[0]}] .protocol-versions-link`).click();
+    });
   }
 
   function initdeleteDraftModal() {
@@ -420,17 +434,89 @@ var ProtocolsIndex = (function() {
     });
   }
 
-  function initArchiveMyModules() {
-    $('.protocols-index').on('click', '#archiveProtocol', function(e) {
-      archiveMyModules(e.currentTarget.dataset.url, rowsSelected);
+  function initProtocolsioModal() {
+    $('#protocolsioModal').on('show.bs.modal', function() {
+      if ($(this).find('.modal-body').length === 0) {
+        $.get(this.dataset.url, function(data) {
+          $('#protocolsioModal').find('.modal-content').html(data.html);
+          PerfectSb().init();
+        });
+      }
     });
   }
 
-  function archiveMyModules(url, ids) {
+  function initArchiveProtocols() {
+    $('.protocols-index').on('click', '#archiveProtocol', function(e) {
+      archiveProtocols(e.currentTarget.dataset.url, rowsSelected);
+    });
+  }
+
+  function archiveProtocols(url, ids) {
     $.post(url, { protocol_ids: ids }, (data) => {
       HelperModule.flashAlertMsg(data.message, 'success');
-      protocolsDatatable.ajax.reload();
+      reloadTable();
     }).error((data) => {
+      HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+    });
+  }
+
+  function initRestoreProtocols() {
+    $('.protocols-index').on('click', '#restoreProtocol', function(e) {
+      restoreProtocol(e.currentTarget.dataset.url, rowsSelected);
+    });
+  }
+
+  function restoreProtocol(url, ids) {
+    $.post(url, { protocol_ids: ids }, (data) => {
+      HelperModule.flashAlertMsg(data.message, 'success');
+      reloadTable();
+    }).error((error) => {
+      if (error.status === 401) {
+        HelperModule.flashAlertMsg(I18n.t('protocols.index.restore_unauthorized'), 'danger');
+      } else {
+        HelperModule.flashAlertMsg(I18n.t('protocols.index.restore_error'), 'danger');
+      }
+    });
+  }
+
+  function initExportProtocols() {
+    $('.protocols-index').on('click', '#exportProtocol', function(e) {
+      exportProtocols(e.currentTarget.dataset.url, rowsSelected);
+    });
+  }
+
+  function exportProtocols(url, ids) {
+    if (ids.length > 0) {
+      let params = '?protocol_ids[]=' + ids[0];
+      for (let i = 1; i < ids.length; i += 1) {
+        params += '&protocol_ids[]=' + ids[i];
+      }
+      params = encodeURI(params);
+      window.location.href = url + params;
+    }
+  }
+
+  function initDuplicateProtocols() {
+    $('.protocols-index').on('click', '#duplicateProtocol', function() {
+      duplicateProtocols($(this));
+    });
+  }
+
+  function duplicateProtocols($el) {
+    $.ajax(
+      {
+        type: 'POST',
+        url: $el.data('url'),
+        data: JSON.stringify({ ids: rowsSelected }),
+        contentType: 'application/json'
+      },
+      (data) => {
+        animateSpinner(null, false);
+        HelperModule.flashAlertMsg(data.message, 'success');
+        reloadTable();
+      }
+    ).error((data) => {
+      animateSpinner(null, false);
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   }
@@ -503,7 +589,7 @@ var ProtocolsIndex = (function() {
       modal.find('.modal-body').html('');
 
       // Simply re-render table
-      protocolsDatatable.ajax.reload();
+      reloadTable();
     }
 
     // Make private modal hidden action
@@ -529,13 +615,6 @@ var ProtocolsIndex = (function() {
 
     // Archive modal hidden action
     $('#archive-results-modal').on('hidden.bs.modal', function() {
-      refresh($(this));
-      updateDataTableSelectAllCheckbox();
-      updateButtons();
-    });
-
-    // Restore modal hidden action
-    $('#restore-results-modal').on('hidden.bs.modal', function() {
       refresh($(this));
       updateDataTableSelectAllCheckbox();
       updateButtons();
@@ -820,7 +899,7 @@ var ProtocolsIndex = (function() {
   */
 
 
-  function initImport() {
+  function initLocalFileImport() {
     // Some templating code duplication. I know, I hate myself
     function newElement(name, values) {
       var template = $("[data-template='" + name + "']").clone();
@@ -841,7 +920,6 @@ var ProtocolsIndex = (function() {
       parentEl.find("[data-hold='" + name + "']").append(childEl);
     }
 
-    let importResultsModal = $('#import-results-modal');
     let fileInput = $("[data-role='import-file-input']");
 
     // Make sure multiple selections of same file
@@ -864,99 +942,37 @@ var ProtocolsIndex = (function() {
         false,
         function(datas) {
           var nrSuccessful = 0;
-          var failed = [];
-          var unchanged = [];
-          var renamed = [];
           _.each(datas, function(data) {
             if (data.status === 'ok') {
               nrSuccessful += 1;
-
-              if (data.name === data.new_name) {
-                unchanged.push(data);
-              } else {
-                renamed.push(data);
-              }
-            } else {
-              failed.push(data);
             }
           });
+          animateSpinner(null, false);
 
-          // Display the results modal by cloning
-          // templates and populating them
-          let modalBody = importResultsModal.find('.modal-body');
-          if (failed.length > 0) {
-            let failedMessageEl = newElement(
-              'import-result-message-error',
-              {
-                message: I18n.t('protocols.index.import_results.message_failed', { nr: failed.length })
-              }
-            );
-            modalBody.append(failedMessageEl);
-            animateSpinner(null, false);
+          if (nrSuccessful) {
+            HelperModule.flashAlertMsg(I18n.t('protocols.index.import_results.message_ok_html', { count: nrSuccessful }), 'success');
+            reloadTable();
+          } else {
+            HelperModule.flashAlertMsg(I18n.t('protocols.index.import_results.message_failed'), 'danger');
           }
-          if (nrSuccessful > 0) {
-            let successMessageEl = newElement(
-              'import-result-message-success',
-              {
-                message: I18n.t('protocols.index.import_results.message_ok', { nr: nrSuccessful })
-              }
-            );
-            modalBody.append(successMessageEl);
-          }
-          let resultsListEl = newElement('import-result-list');
-          modalBody.append(resultsListEl);
-          if (unchanged.length > 0) {
-            _.each(unchanged, function(pr) {
-              var itemEl = newElement(
-                'import-result-unchanged-item',
-                { message: pr.name }
-              );
-              addChildToElement(resultsListEl, 'items', itemEl);
-            });
-          }
-          if (renamed.length > 0) {
-            _.each(renamed, function(pr) {
-              var itemEl = newElement(
-                'import-result-renamed-item',
-                { message: I18n.t('protocols.index.row_renamed_html', { old_name: pr.name, new_name: pr.new_name }) }
-              );
-              addChildToElement(resultsListEl, 'items', itemEl);
-            });
-          }
-          if (failed.length > 0) {
-            _.each(failed, function(pr) {
-              var itemEl = newElement(
-                'import-result-failed-item',
-                {
-                  message: pr.name,
-                  message2: (pr.status === 'size_too_large' ? I18n.t('protocols.index.import_results.row_file_too_large') : '')
-                }
-              );
-              addChildToElement(resultsListEl, 'items', itemEl);
-            });
-          }
-
-          importResultsModal.modal('show');
         }
       );
       $(this).val('');
-    });
-    importResultsModal.on('hidden.bs.modal', function() {
-      importResultsModal.find('.modal-body').html('');
-
-      // Also reload table
-      protocolsDatatable.ajax.reload();
     });
   }
 
   init();
   initManageAccessButton();
-  initArchiveMyModules();
+  initArchiveProtocols();
+  initRestoreProtocols();
+  initExportProtocols();
+  initDuplicateProtocols();
   initdeleteDraftModal();
+  initProtocolsioModal();
 
   return {
     reloadTable: function() {
-      protocolsDatatable.ajax.reload();
+      reloadTable();
     }
   };
 }());
