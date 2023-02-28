@@ -23,7 +23,6 @@ var ProtocolsIndex = (function() {
   var archivedOnToFilter;
   var protocolsViewSearch;
 
-
   /**
    * Initializes page
    */
@@ -418,6 +417,10 @@ var ProtocolsIndex = (function() {
       });
       e.stopPropagation();
       e.preventDefault();
+    });
+
+    $(protocolsContainer).on('click', '#protocolVersions', function() {
+      $(`tr[data-row-id=${rowsSelected[0]}] .protocol-versions-link`).click();
     });
   }
 
