@@ -99,7 +99,7 @@ module AccessPermissions
         @protocol.assign_attributes(permitted_default_public_user_role_params)
         @protocol.save!
 
-        UserAssignments::ProjectGroupAssignmentJob.perform_later(current_team, @project, current_user)
+        UserAssignments::ProtocolGroupAssignmentJob.perform_later(current_team, @protocol, current_user)
       end
     end
 
