@@ -26,16 +26,15 @@
                     modified_by: draft.last_modified_by&.full_name) %>
             </div>
             <div class="protocol-actions">
-              <% if can_manage_protocol_in_repository?(draft) %>
+              <% if can_publish_protocol_in_repository?(draft) %>
                 <%= button_to publish_protocol_path(draft), class: "btn btn-light publish-draft" do %>
                   <%= image_tag 'icon_small/publish.svg' %>
                   <%= t('protocols.index.versions.publish') %>
-                <% end %>
-                <% if can_delete_protocol_draft_in_repository?(draft) %>
-                  <div data-url="<%= destroy_draft_protocol_path(draft) %>" class="btn btn-light delete-draft">
-                    <i class="fas fa-trash"></i>
-                  </div>
-                <% end %>
+              <% end %>
+              <% if can_delete_protocol_draft_in_repository?(draft) %>
+                <div data-url="<%= destroy_draft_protocol_path(draft) %>" class="btn btn-light delete-draft">
+                  <i class="fas fa-trash"></i>
+                </div>
               <% end %>
             </div>
             <div class="protocol-version-comment">
@@ -77,7 +76,7 @@
                     published_by: protocol_version.published_by&.full_name) %>
             </div>
             <div class="protocol-actions">
-              <% unless @protocol.draft.present? %>
+              <% if can_save_protocol_as_draft_in_repository?(protocol_version) %>
                 <%= button_to save_as_draft_protocol_path(protocol_version),
                               class: "btn btn-light icon-btn save-as-draft",
                               title: t('protocols.index.versions.save_as_draft'),
