@@ -1074,8 +1074,8 @@ en:
           update_self_title: "Update this protocol with the version stored in the templates"
       confirm_link_update_modal:
         unlink_title: "Unlink protocol template"
-        unlink_message: "This will stop tracking changes of protocol templates. We can’t link it back once you unlink it."
-        unlink_btn_text: "Yes, unlink it"
+        unlink_message: "Are you sure you want to unlink the task protocol from the templates version? This will stop any tracking of changes."
+        unlink_btn_text: "Unlink"
         revert_title: "Revert protocol template"
         revert_message: "This will override any changes you made. We can’t recover them once you revert.<br /><br /><strong>Are you sure?</strong>"
         revert_btn_text: "Yes, revert it"
