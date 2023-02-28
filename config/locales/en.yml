@@ -1075,7 +1075,6 @@ en:
       confirm_link_update_modal:
         unlink_title: "Unlink protocol template"
         unlink_message: "This will stop tracking changes of protocol templates. We can’t link it back once you unlink it."
-        unlink_warning: "Are you sure?"
         unlink_btn_text: "Yes, unlink it"
         revert_title: "Revert protocol template"
         revert_message: "This will override any changes you made. We can’t recover them once you revert.<br /><br /><strong>Are you sure?</strong>"
