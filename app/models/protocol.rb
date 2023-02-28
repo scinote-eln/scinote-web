@@ -7,6 +7,7 @@ class Protocol < ApplicationRecord
   include PrefixedIdModel
   SEARCHABLE_ATTRIBUTES = ['protocols.name', 'protocols.description',
                            'protocols.authors', 'protocol_keywords.name', PREFIXED_ID_SQL].freeze
+  REPOSITORY_TYPES = %i(in_repository_published_original in_repository_draft in_repository_published_version).freeze
 
   include SearchableModel
   include RenamingUtil
@@ -15,7 +16,6 @@ class Protocol < ApplicationRecord
   include PermissionCheckableModel
   include TinyMceImages
 
-  before_validation :assign_version_number, on: :update, if: -> { protocol_type_changed? && in_repository_published? }
   after_create :auto_assign_protocol_members, if: :visible?
   after_destroy :decrement_linked_children
   after_save :update_user_assignments, if: -> { saved_change_to_visibility? && in_repository? }
@@ -61,6 +61,7 @@ class Protocol < ApplicationRecord
     validates :added_by, presence: true
     validates :my_module, absence: true
     validates :parent_updated_at, absence: true
+    validate :version_number_constraint
   end
   with_options if: :in_repository_published_version? do
     validates :parent, presence: true
@@ -731,12 +732,6 @@ class Protocol < ApplicationRecord
     parent.decrement!(:nr_of_linked_children) if parent.present?
   end
 
-  def assign_version_number
-    return if previous_version.blank?
-
-    self.version_number = previous_version.version_number + 1
-  end
-
   def prevent_update
     errors.add(:base, I18n.t('activerecord.errors.models.protocol.unchangable'))
   end
@@ -765,8 +760,11 @@ class Protocol < ApplicationRecord
     end
   end
 
-  def version_number_constrain
-    if previous_version.present? && version_number != previous_version.version_number + 1
+  def version_number_constraint
+    if Protocol.where(protocol_type: Protocol::REPOSITORY_TYPES)
+               .where.not(id: id)
+               .where(version_number: version_number)
+               .where('(parent_id = :parent_id OR id = :parent_id)', parent_id: (parent_id || id)).any?
       errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_version_number'))
     end
   end
