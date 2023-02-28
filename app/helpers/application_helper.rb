@@ -5,6 +5,8 @@ module ApplicationHelper
   include ActionView::Helpers::UrlHelper
   include InputSanitizeHelper
 
+  $current_user_team = nil
+
   def module_page?
     controller_name == 'my_modules' ||
       controller_name == 'my_module_repositories'
@@ -151,6 +153,7 @@ module ApplicationHelper
                             skip_user_status = false,
                             skip_avatar = false,
                             base64_encoded_imgs = false)
+    $current_user_team = team unless team.nil?
     user_still_in_team = user.teams.include?(team)
 
     user_description = %(<div class='col-xs-4'>
@@ -192,7 +195,7 @@ module ApplicationHelper
         'data-placement="top" data-toggle="popover" data-content="') +
       raw(user_description) + raw('" >') + user_name + raw('</a>')
 
-    html << " #{I18n.t('atwho.res.removed')}" unless skip_user_status || user_still_in_team
+    html << " #{I18n.t('atwho.res.removed')}" unless skip_user_status || user.teams.include?($current_user_team)
     html = '<span class="atwho-user-container">' + html + '</span>'
     html
   end
