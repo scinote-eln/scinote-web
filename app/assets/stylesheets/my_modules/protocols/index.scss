@@ -6,8 +6,6 @@
 @import "constants";
 @import "mixins";
 
-$modal-spacing: 16px;
-
 .content-pane.my-modules-protocols-index {
   background-color: $color-alto;
   margin: 0 -16px;
@@ -681,55 +679,4 @@ $modal-spacing: 16px;
 .task-details-code {
   display: inline-block;
   margin-left: 4px;
-}
-
-#confirm-link-update-modal {
-  .modal-content {
-    .modal-header {
-      border-bottom-color: transparent;
-      position: relative;
-      padding: $modal-spacing;
-
-      &::after {
-        border-bottom: 1px solid $color-concrete;
-        bottom: 0;
-        left: $modal-spacing;
-        position: absolute;
-        width: calc(100% - 2* #{$modal-spacing});
-      }
-
-      .close {
-        color: $color-volcano;
-      }
-    }
-
-    .modal-body {
-      padding: $modal-spacing;
-
-      .message {
-        margin-bottom: $modal-spacing;
-      }
-
-      .warning {
-        font-weight: bold;
-        margin: 0;
-      }
-    }
-
-    .modal-footer {
-      border-top-color: transparent;
-      padding: $modal-spacing;
-      position: relative;
-
-      &::after {
-        border-top: 1px solid $color-concrete;
-        left: $modal-spacing;
-        position: absolute;
-        top: 0;
-        width: calc(100% - 2* #{$modal-spacing});
-      }
-    }
-  }
-
-
 }
