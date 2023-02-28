@@ -538,6 +538,7 @@ class Protocol < ApplicationRecord
     self.parent_updated_at = source.published_on
     self.added_by = current_user
     self.parent = source
+    self.linked_at = Time.zone.now
     save!
   end
 
@@ -558,6 +559,7 @@ class Protocol < ApplicationRecord
     self.parent = source
     self.parent_updated_at = source.published_on
     self.added_by = current_user
+    self.linked_at = Time.zone.now
     self.protocol_type = Protocol.protocol_types[:linked]
     save!
   end

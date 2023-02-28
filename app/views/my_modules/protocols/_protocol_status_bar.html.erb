@@ -40,7 +40,7 @@
       <% if @protocol.linked?%>
         <div class="info-line">
           <div class="description"><%= t("my_modules.protocols.protocol_status_bar.protocol_loaded") %></div>
-          <div class="value"></div>
+          <div class="value"><%= @protocol.linked_at ? I18n.l(@protocol.linked_at, format: :full) : '' %></div>
         </div>
         <div class="info-line">
           <div class="description"><%= t("my_modules.protocols.protocol_status_bar.protocol_published") %></div>
