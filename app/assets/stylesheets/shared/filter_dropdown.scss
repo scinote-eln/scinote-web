@@ -29,23 +29,11 @@
       position: relative;
       width: 100%;
 
-      &.folders {
-        align-items: center;
-        column-gap: 8px;
-        display: flex;
-      }
-
       label {
         @include font-small;
         font-weight: bold;
         margin-bottom: .3em;
         user-select: none;
-      }
-
-      .input-field:focus-within,
-      .datetime-picker-container:focus-within {
-        border: 1px solid $brand-focus;
-        border-radius: 4px;
       }
     }
 
