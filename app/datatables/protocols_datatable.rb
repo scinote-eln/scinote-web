@@ -90,7 +90,7 @@ class ProtocolsDatatable < CustomDatatable
         DT_RowId: record.id,
         DT_RowAttr: {
           'data-permissions-url': permissions_protocol_path(record),
-          'data-clone-url': clone_protocol_path(record)
+          'data-clone-url': clone_protocols_path(ids: [record.id])
         },
         '1': name_html(record),
         '2': record.code,
