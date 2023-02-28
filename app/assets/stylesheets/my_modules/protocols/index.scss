@@ -683,12 +683,12 @@ $modal-spacing: 16px;
   margin-left: 4px;
 }
 
-.confirm-link-update-modal {
+#confirm-link-update-modal {
   .modal-content {
     .modal-header {
       border-bottom-color: transparent;
-      padding: $modal-spacing;
       position: relative;
+      padding: $modal-spacing;
 
       &::after {
         border-bottom: 1px solid $color-concrete;
@@ -730,4 +730,6 @@ $modal-spacing: 16px;
       }
     }
   }
+
+
 }
