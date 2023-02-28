@@ -12,6 +12,10 @@
   padding: 0 0 10px;
   width: calc(100% + 31px);
 
+  .title-row h1 {
+    max-width: 100%;
+  }
+
   .content-header {
     padding: 0 2em;
   }
