@@ -498,24 +498,28 @@ var ProtocolsIndex = (function() {
 
   function initDuplicateProtocols() {
     $('.protocols-index').on('click', '#duplicateProtocol', function() {
-      duplicateProtocols(rowsSelected[0]);
+      duplicateProtocols($(this));
     });
   }
 
-  function duplicateProtocols(id) {
-    var row = $("tr[data-row-id='" + id + "']");
-    animateSpinner();
-
-    $.post(row.attr('data-clone-url'), (data) => {
-      animateSpinner(null, false);
-      HelperModule.flashAlertMsg(data.message, 'success');
-      reloadTable();
-    }).error((data) => {
+  function duplicateProtocols($el) {
+    $.ajax(
+      {
+        type: 'POST',
+        url: $el.data('url'),
+        data: JSON.stringify({ ids: rowsSelected }),
+        contentType: 'application/json'
+      },
+      (data) => {
+        animateSpinner(null, false);
+        HelperModule.flashAlertMsg(data.message, 'success');
+        reloadTable();
+      }
+    ).error((data) => {
       animateSpinner(null, false);
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   }
-
 
   function initLinkedChildrenModal() {
     // Only do this if the repository is public/private
