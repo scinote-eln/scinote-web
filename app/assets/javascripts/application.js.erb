@@ -9,7 +9,6 @@
 //= require bootstrap-checkbox.min
 //= require typeahead.bundle.min
 //= require nested_form_fields
-//= require highlight.pack
 //= require jsPlumb-2.0.4-min
 //= require jsnetworkx
 //= require bootstrap-select
@@ -223,11 +222,6 @@ var HelperModule = (function(){
 
 (function() {
   $(document).on('turbolinks:load', function() {
-    // initialize code markup in rich text fields
-    $('[class^=language]').each(function(i, block) {
-      hljs.highlightBlock(block);
-    });
-
     // fix dropdown-menu style throughout the app
     $('.dropdown-header').parent('ul').addClass('custom-dropdown-menu');
   });
