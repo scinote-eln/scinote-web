@@ -895,7 +895,6 @@ class ProtocolsController < ApplicationController
         render json: {
           title: t('my_modules.protocols.confirm_link_update_modal.revert_title'),
           message: t('my_modules.protocols.confirm_link_update_modal.revert_message'),
-          warning: t('my_modules.protocols.confirm_link_update_modal.revert_warning'),
           btn_text: t('my_modules.protocols.confirm_link_update_modal.revert_btn_text'),
           url: revert_protocol_path(@protocol)
         }
