@@ -71,7 +71,11 @@ end
 
 Canaid::Permissions.register_for(Protocol) do
   %i(manage_protocol_in_repository
-     manage_protocol_users)
+     manage_protocol_users
+     clone_protocol_in_repository
+     publish_protocol_in_repository
+     delete_protocol_draft_in_repository
+     save_protocol_as_draft_in_repository)
     .each do |perm|
     can perm do |_, protocol|
       protocol.active?
