@@ -76,7 +76,7 @@
                     published_by: protocol_version.published_by&.full_name) %>
             </div>
             <div class="protocol-actions">
-              <% if can_save_protocol_as_draft_in_repository?(@protocol) %>
+              <% if can_save_protocol_as_draft_in_repository?(protocol_version) %>
                 <%= button_to save_as_draft_protocol_path(protocol_version),
                               class: "btn btn-light icon-btn save-as-draft",
                               title: t('protocols.index.versions.save_as_draft'),
