@@ -2,6 +2,7 @@
 
 class ConnectedDevice < ApplicationRecord
   belongs_to :oauth_access_token, class_name: 'Doorkeeper::AccessToken'
+  validates :uid, presence: true
 
   after_destroy :revoke_token
 
@@ -10,8 +11,10 @@ class ConnectedDevice < ApplicationRecord
   end
 
   def self.from_request_headers(headers, token = nil)
+    return unless headers['Device-Id']
+
     current_token = Doorkeeper::AccessToken.find_by(
-      token: headers['Authorization'].gsub(/Bearer\s/, '')
+      token: headers['Authorization']&.gsub(/Bearer\s/, '')
     )
 
     return unless token || current_token
