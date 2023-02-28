@@ -71,8 +71,10 @@ module ApplicationHelper
   def smart_annotation_notification(options = {})
     title = options.fetch(:title) { :title_must_be_present }
     message = options.fetch(:message) { :message_must_be_present }
-    new_text = options.fetch(:new_text) { :new_text_must_be_present }
     old_text = options[:old_text] || ''
+    new_text = options[:new_text]
+    return if new_text.blank?
+
     sa_user = /\[\@(.*?)~([0-9a-zA-Z]+)\]/
     # fetch user ids from the previous text
     old_user_ids = []
@@ -130,7 +132,7 @@ module ApplicationHelper
              current_user
            end
     team ||= defined?(current_team) ? current_team : nil
-    SmartAnnotations::TagToHtml.new(user, team, text, preview_repository).html
+    sanitize_input(SmartAnnotations::TagToHtml.new(user, team, text, preview_repository).html)
   end
 
   # Check if text have smart annotations of users
@@ -160,23 +162,21 @@ module ApplicationHelper
       <img src='#{user_avatar_absolute_url(user, :thumb, base64_encoded_imgs)}'
        alt='thumb'></div><div class='col-xs-8'>
       <div class='row'><div class='col-xs-9 text-left'><h5>
-      #{user.full_name}</h5></div><div class='col-xs-3 text-right'>
+      #{sanitize_input(user.full_name)}</h5></div><div class='col-xs-3 text-right'>
       <span class='fas fa-times' aria-hidden='true'></span>
       </div></div><div class='row'><div class='col-xs-12'>
-      <p class='silver'>#{user.email}</p>)
+      <p class='silver'>#{sanitize_input(user.email)}</p>)
     if user_still_in_team
       user_team_assignment = user.user_assignments.find_by(assignable: team)
       user_description += %(<p>
         #{I18n.t('atwho.users.popover_html',
-                 role: user_team_assignment.user_role.name.capitalize,
-                 team: user_team_assignment.assignable.name,
+                 role: sanitize_input(user_team_assignment.user_role.name.capitalize),
+                 team: sanitize_input(user_team_assignment.assignable.name),
                  time: I18n.l(user_team_assignment.created_at, format: :full_date))}
         </p></div></div></div>)
     else
       user_description += %(<p></p></div></div></div>)
     end
-
-    user_name = user.full_name
 
     html = if skip_avatar
              ''
@@ -193,11 +193,10 @@ module ApplicationHelper
         'class="atwho-user-popover" data-container="body" ' \
         'data-html="true" tabindex="0" data-trigger="focus" ' \
         'data-placement="top" data-toggle="popover" data-content="') +
-      raw(user_description) + raw('" >') + user_name + raw('</a>')
+      raw(user_description) + raw('" >') + sanitize_input(user.full_name) + raw('</a>')
 
     html << " #{I18n.t('atwho.res.removed')}" unless skip_user_status || user.teams.include?($current_user_team)
-    html = '<span class="atwho-user-container">' + html + '</span>'
-    html
+    "<span class=\"atwho-user-container\">#{html}</span>"
   end
 
   # No more dirty hack
@@ -222,6 +221,18 @@ module ApplicationHelper
     'icon_small/missing.png'
   end
 
+  def sso_enabled?
+    ENV['SSO_ENABLED'] == 'true'
+  end
+
+  def okta_configured?
+    ApplicationSettings.instance.values['okta'].present?
+  end
+
+  def azure_ad_configured?
+    ApplicationSettings.instance.values['azure_ad_apps'].present?
+  end
+
   def wopi_enabled?
     ENV['WOPI_ENABLED'] == 'true'
   end
@@ -243,5 +254,11 @@ module ApplicationHelper
               end
     end
     return edit_supported, title
+  end
+
+  def create_2fa_qr_code(user)
+    user.assign_2fa_token!
+    qr_code_url = ROTP::TOTP.new(user.otp_secret, issuer: 'SciNote').provisioning_uri(user.email)
+    RQRCode::QRCode.new(qr_code_url).as_svg(module_size: 4)
   end
 end

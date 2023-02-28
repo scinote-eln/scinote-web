@@ -36,6 +36,8 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def expire_in
+    return render body: nil, status: :unauthorized if current_user.blank?
+
     if current_user.remember_created_at.nil? || (current_user.remember_created_at + Devise.remember_for).past?
       render plain: (Devise.timeout_in.to_i - (Time.now.to_i - user_session['last_request_at']).round) * 1000
     else

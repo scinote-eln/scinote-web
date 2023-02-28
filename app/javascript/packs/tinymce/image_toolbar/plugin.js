@@ -1,4 +1,4 @@
-/* global tinymce MarvinJsEditor */
+/* global I18n tinymce MarvinJsEditor */
 tinymce.PluginManager.add('custom_image_toolbar', (editor) => {
 
   editor.ui.registry.addIcon(
@@ -10,6 +10,7 @@ tinymce.PluginManager.add('custom_image_toolbar', (editor) => {
 
   editor.ui.registry.addButton('image_download', {
     icon: 'download',
+    tooltip: I18n.t('general.download'),
     onAction: () => {
       const editorIframe = $(`#${editor.id}`).next().find('.tox-edit-area iframe');
       const image = editorIframe.contents().find('img[data-mce-selected="1"]');
@@ -20,6 +21,7 @@ tinymce.PluginManager.add('custom_image_toolbar', (editor) => {
 
   editor.ui.registry.addButton('marvinjs_edit', {
     icon: 'edit-block',
+    tooltip: I18n.t('general.edit'),
     onAction: () => {
       const editorIframe = $(`#${editor.id}`).next().find('.tox-edit-area iframe');
       const image = editorIframe.contents().find('img[data-mce-selected="1"]');
@@ -39,8 +41,32 @@ tinymce.PluginManager.add('custom_image_toolbar', (editor) => {
     return elem.dataset.sourceType === 'marvinjs';
   }
 
+  // This method removes image edit button groups if the selected image is a MarvinJS image
+  // Since there is no appropriate TinyMCE event to catch the render of the toolbar
+  // we need to rely on a MutationObserver, which will watch the TinyMCE context toolbar element,
+  // and then remove the two image editing groups.
+  function removeImageEditButtons() {
+    const tinyMceAuxNode = document.getElementsByClassName('tox-tinymce-aux')[0];
+    const tinyMceAuxNodeObserver = new MutationObserver(() => {
+      let toxPop = document.getElementsByClassName('tox-pop')[0];
+      if (!toxPop) return;
+
+      let toolbarGroups = toxPop.getElementsByClassName('tox-toolbar__group');
+      if (toolbarGroups[3]) {
+        toolbarGroups[3].classList.add('hidden');
+      }
+    });
+
+    tinyMceAuxNodeObserver.observe(tinyMceAuxNode, { attributes: false, childList: true, subtree: false });
+
+    // We can stop observing once the toolbar was loaded and changed.
+    setTimeout(() => { tinyMceAuxNodeObserver.disconnect() }, 100);
+
+    return true;
+  }
+
   editor.ui.registry.addContextToolbar('marvinJsToolbar', {
-    predicate: (node) => isMarvinJs(node),
+    predicate: (node) => isMarvinJs(node) && removeImageEditButtons(),
     items: 'marvinjs_edit',
     position: 'node',
     scope: 'node'

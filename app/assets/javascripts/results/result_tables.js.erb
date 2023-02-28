@@ -8,6 +8,7 @@
           var $container = $(this).find('.hot');
           var data = null;
           var contents = $(this).find('.hot-contents');
+          var metadata = JSON.parse($(this).find('.hot-metadata').val() || '{}');
           if (contents.attr('value')) {
             data = JSON.parse(contents.attr('value')).data;
           }
@@ -21,6 +22,7 @@
             rowHeaders: true,
             colHeaders: true,
             contextMenu: true,
+            cell: metadata.cells || [],
             formulas: true,
             preventOverflow: 'horizontal',
             afterChange: function() {
@@ -34,8 +36,16 @@
         $form.submit(function(){
           var hot = $('.hot').handsontable('getInstance');
           var contents = $('.hot-contents');
+          var metadata = $('.hot-metadata');
           var data = JSON.stringify({data: hot.getData()});
           contents.attr('value', data);
+          metadata.attr('value', JSON.stringify({cells: hot.getCellsMeta().map((x) => {
+            return {
+              col: x.col,
+              row: x.row,
+              className: x.className || ''
+            }
+          })}))
           return true;
         });
       }

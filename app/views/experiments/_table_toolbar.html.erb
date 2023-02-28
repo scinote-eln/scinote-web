@@ -12,7 +12,7 @@
     <% end %>
     <button id="editTask" class="btn btn-light single-object-action hidden only-active" data-for="editable" >
       <i class="fas fa-pen"></i>
-      <span class="button-text"><%= t("experiments.table.toolbar.edit") %></span>  
+      <span class="button-text"><%= t("experiments.table.toolbar.edit") %></span>
     </button>
     <% if can_manage_experiment?(@experiment) %>
       <button id="duplicateTasks" class="btn btn-light multiple-object-action hidden only-active" data-url="<%= batch_clone_my_modules_experiment_path(@experiment) %>">
@@ -20,7 +20,7 @@
         <span class="button-text"><%= t("experiments.table.toolbar.duplicate") %></span>
       </button>
     <% end %>
-    <button id="moveTask" class="btn btn-light multiple-object-action hidden only-active" data-for="moveable">
+    <button id="moveTask" class="btn btn-light multiple-object-action hidden" data-for="moveable">
       <i class="fas fa-arrow-right"></i>
       <span class="button-text"><%= t("experiments.table.toolbar.move") %></span>
     </button>

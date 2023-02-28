@@ -33,6 +33,7 @@ en:
         password_placeholder: "Enter password"
         remember_me: "Remember me"
         submit: "Log in"
+        azure_ad_submit: "Sign in with Azure AD"
       2fa:
         title: "Two-factor authentication"
         description: "Enter the one-time code found in your authenticator app to log in to SciNote."
@@ -1404,7 +1405,7 @@ en:
       view: 'View'
       head_title: "%{project} | Overview"
       canvas_edit: "Edit workflow"
-      canvas_empty: "It's empty here. Please add some tasks"
+      canvas_empty: "It's empty here. Please add some tasks."
       new_my_module: "New task"
       new_my_module_modal:
         title: "Create new task"
@@ -2279,7 +2280,7 @@ en:
         email_label: "Email"
         email_title: "Change email"
         new_email_label: "New email"
-        external_id_label: 'External Id'
+        external_id_label: 'External ID'
         external_id_title: 'External Id'
         current_password_label: "Current password"
         password_explanation: "(we need your current password to confirm your changes)"
@@ -2814,6 +2815,7 @@ en:
       component_duplicated: "Step content duplicated successfully."
       step_duplication_failed: "Step could not be duplicated, try again later."
       component_duplication_failed: "Step content could not be duplicated, try again later."
+      timestamp: "Created on %{date} by %{user}"
       status:
         complete: "Mark as done"
         uncomplete: "Unmark as done"
@@ -3267,6 +3269,7 @@ en:
     change: "Change"
     remove: "Remove"
     clone_label: "Clone"
+    download: "Download"
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"
@@ -3510,4 +3513,5 @@ en:
   inline_edit:
     errors:
       over_limit: "%{attribute} is too long (maximum number is %{limit} characters)"
+      below_limit: "%{attribute} is too short (minimum number is %{limit} characters)"
       blank: "%{attribute} can't be empty"

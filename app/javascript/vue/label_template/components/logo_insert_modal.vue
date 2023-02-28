@@ -35,6 +35,7 @@
     name: 'logoInsertModal',
     props: {
       unit: { type: String, required: true },
+      density: { type: Number, required: true },
       dimension: { type: Array, required: true }
     },
     data() {
@@ -49,8 +50,15 @@
       $(this.$refs.modal).on('hidden.bs.modal', () => {
         this.$emit('cancel');
       });
-      this.width = this.dimension[0]
-      this.height = this.dimension[1]
+      this.width = this.dimension[0] / this.density
+      this.height = this.dimension[1] / this.density
+      if (this.unit == 'in') {
+        this.width = this.width / 25.4
+        this.height = this.height / 25.4
+      }
+
+      this.width = Math.round(this.width * 100) / 100
+      this.height = Math.round(this.height * 100) / 100
       this.ratio = this.dimension[0] / this.dimension[1]
     },
     methods: {

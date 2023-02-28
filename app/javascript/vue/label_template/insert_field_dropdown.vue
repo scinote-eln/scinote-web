@@ -65,6 +65,7 @@
     </div>
     <LogoInsertModal v-if="openLogoModal"
                      :unit="labelTemplate.attributes.unit"
+                     :density="labelTemplate.attributes.density"
                      :dimension="logoDimension"
                      @insert:tag="insertTag"
                      @cancel="openLogoModal = false"/>
@@ -138,7 +139,7 @@
           value.key = this.i18n.t(`label_templates.default_columns.${value.key}`)
           return value;
         });
-  
+
         this.fields = result;
         this.$nextTick(() => {
           $('[data-toggle="tooltip"]').tooltip();

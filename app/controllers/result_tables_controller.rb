@@ -170,7 +170,8 @@ class ResultTablesController < ApplicationController
       :name, :archived,
       table_attributes: [
         :id,
-        :contents
+        :contents,
+        :metadata
       ]
     )
   end

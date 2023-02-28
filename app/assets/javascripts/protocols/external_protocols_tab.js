@@ -152,7 +152,7 @@ function showFormErrors(modal, errors) {
   Object.keys(errors.protocol).forEach(function(key) {
     var input = modal.find('#protocol_' + key);
     var msg;
-    msg = key.charAt(0).toUpperCase() + key.slice(1) + ': ' + errors.protocol[key].join(', ');
+    msg = errors.protocol[key].join(', ');
     if ((input.length > 0) && (errors.protocol[key].length > 0)) {
       input.closest('.form-group').children('span.help-block').html(msg);
       input.closest('.form-group').addClass('has-error');
@@ -195,7 +195,7 @@ function handleFormSubmit(modal) {
         HelperModule.flashAlertMsg(data.message, 'success');
       },
       error: function(data) {
-        showFormErrors(modal, data.responseJSON.errors);
+        showFormErrors(modal, data.responseJSON.validation_errors);
       },
       complete: function() {
         animateSpinner(modal, false);

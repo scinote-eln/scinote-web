@@ -8,8 +8,7 @@ Canaid::Permissions.register_for(Project) do
      archive_project
      create_project_experiments
      create_project_comments
-     manage_project_tags
-     manage_project_users)
+     manage_project_tags)
     .each do |perm|
     can perm do |_, project|
       project.active?

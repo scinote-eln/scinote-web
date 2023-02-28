@@ -100,6 +100,7 @@ module ProtocolsExporterV2
     "<elnTable id=\"#{table.id}\" guid=\"#{get_guid(table.id)}\">\n" \
       "<name>#{table.name}</name>\n" \
       "<contents>#{table.contents.unpack1('H*')}</contents>\n" \
+      "<metadata>#{table.metadata.to_json}</metadata>\n" \
       "</elnTable>\n"
   end
 

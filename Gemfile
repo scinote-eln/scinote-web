@@ -7,7 +7,7 @@ ruby '2.7.6'
 gem 'bootsnap', require: false
 gem 'bootstrap-sass', '~> 3.4.1'
 gem 'bootstrap_form', '~> 2.7.0'
-gem 'devise', '~> 4.7.1'
+gem 'devise', '~> 4.8.1'
 gem 'devise_invitable'
 gem 'figaro'
 gem 'pg', '~> 1.1'
@@ -19,18 +19,15 @@ gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 6.0'
 gem 'sassc-rails'
 gem 'webpacker', '~> 4.0.0'
-gem 'yomu', git: 'https://github.com/biosistemika/yomu', branch: 'master'
+gem 'yomu', git: 'https://github.com/scinote-eln/yomu', branch: 'master'
 
 # Gems for OAuth2 subsystem
 gem 'doorkeeper', '>= 4.6'
-gem 'omniauth'
-gem 'omniauth-azure-activedirectory'
+gem 'omniauth', '~> 2.1'
+gem 'omniauth-azure-activedirectory-v2'
 gem 'omniauth-linkedin-oauth2'
-gem 'omniauth-okta'
-
-# TODO: remove this when omniauth gem resolves CVE issues
-# Prevents CVE-2015-9284 (https://github.com/omniauth/omniauth/wiki/FAQ#cve-2015-9284-warnings)
-gem 'omniauth-rails_csrf_protection', '~> 0.1'
+gem 'omniauth-okta', git: 'https://github.com/scinote-eln/omniauth-okta', branch: 'org_auth_server_support'
+gem 'omniauth-rails_csrf_protection', '~> 1.0'
 
 # Gems for API implementation
 gem 'active_model_serializers', '~> 0.10.7'
