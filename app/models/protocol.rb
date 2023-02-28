@@ -522,21 +522,22 @@ class Protocol < ApplicationRecord
     save!
   end
 
-  def update_from_parent(current_user)
+  def update_from_parent(current_user, source)
     ActiveRecord::Base.no_touching do
       # First, destroy step contents
       destroy_contents
 
       # Now, clone parent's step contents
-      Protocol.clone_contents(parent, self, current_user, false)
+      Protocol.clone_contents(source, self, current_user, false)
     end
 
     # Lastly, update the metadata
     reload
     self.record_timestamps = false
-    self.updated_at = parent.updated_at
-    self.parent_updated_at = parent.updated_at
+    self.updated_at = source.published_on
+    self.parent_updated_at = source.published_on
     self.added_by = current_user
+    self.parent = source
     save!
   end
 
