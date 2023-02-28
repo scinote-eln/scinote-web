@@ -2920,9 +2920,9 @@ en:
           confirm: 'Delete forever'
         delete_steps:
           title: 'Delete all protocol steps'
-          description_1: 'You’re about to delete all protocol steps from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
-          description_2: 'Are you sure you want to delete them?'
-          confirm: 'Delete forever'
+          description_1: 'You’ll loose all protocol steps from your protocol. We can’t recover them once you delete.'
+          description_2: 'Are you sure?'
+          confirm: 'Yes, delete them'
         reorder_elements:
           title: 'Rearrange step %{step_position} content'
       options:
