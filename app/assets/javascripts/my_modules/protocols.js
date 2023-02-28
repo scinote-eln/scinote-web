@@ -99,18 +99,15 @@ function initLinkUpdate() {
   var updateBtn = modal.find(".modal-footer [data-action='submit']");
   $("[data-action='unlink'], [data-action='revert'], [data-action='update-parent'], [data-action='update-self']")
     .on('ajax:success', function(e, data) {
-      const modalBodyTemplate = (message, warning) => `<p class="message">${message}</p>
-                                                       <p class="message">${warning || ''}</p>`;
       const {
         title,
         message,
-        warning,
         btn_text: btnText,
         url
       } = data;
 
       modalTitle.html(title);
-      modalBody.html(modalBodyTemplate(message, warning));
+      modalBody.html(message);
       updateBtn.text(btnText);
       modal.attr('data-url', url);
       modal.modal('show');
