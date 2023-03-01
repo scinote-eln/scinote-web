@@ -30,9 +30,10 @@ class ProtocolsDatatable < CustomDatatable
       'Protocol.nr_of_linked_children',
       'nr_of_assigned_users',
       'full_username_str',
-      'Protocol.archived_on',
       'Protocol.published_on',
-      'Protocol.updated_at'
+      'Protocol.updated_at',
+      'archived_full_username_str',
+      'Protocol.archived_on'
     ]
   end
 
