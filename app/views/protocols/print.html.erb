@@ -34,7 +34,7 @@
         <% step_text = step_element.orderable %>
         <div class="print-step-text">
           <div class="ql-editor">
-          <%= custom_auto_link(step_text.tinymce_render(:text),
+          <%= custom_auto_link(step_text.tinymce_render(:text).gsub(/<p>\S<\/p>/, '').strip,
                                 simple_format: false,
                                 tags: %w(img),
                                 team: current_team,
