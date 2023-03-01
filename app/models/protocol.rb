@@ -129,6 +129,21 @@ class Protocol < ApplicationRecord
            foreign_key: 'previous_version_id',
            inverse_of: :previous_version,
            dependent: :destroy
+  has_one  :latest_published_version,
+           lambda {
+             in_repository_published_version.select('DISTINCT ON (parent_id) *')
+                                            .order(:parent_id, version_number: :desc)
+           },
+           class_name: 'Protocol',
+           foreign_key: 'parent_id'
+  has_one  :draft,
+           -> { in_repository_draft.select('DISTINCT ON (parent_id) *').order(:parent_id) },
+           class_name: 'Protocol',
+           foreign_key: 'parent_id'
+  has_many :published_versions,
+           -> { in_repository_published_version },
+           class_name: 'Protocol',
+           foreign_key: 'parent_id'
   has_many :protocol_protocol_keywords,
            inverse_of: :protocol,
            dependent: :destroy
@@ -213,7 +228,6 @@ class Protocol < ApplicationRecord
                    user_id: user.id))
   end
 
-
   def self.filter_by_teams(teams = [])
     teams.blank? ? self : where(team: teams)
   end
@@ -234,25 +248,11 @@ class Protocol < ApplicationRecord
     in_module? ? my_module.created_by : added_by
   end
 
-  def draft
-    return self if in_repository_draft? && parent_id.blank?
-
-    return nil unless in_repository_published_original?
-
-    team.protocols.in_repository_draft.find_by(parent: self)
-  end
-
-  def published_versions
-    return self.class.none unless in_repository_published_original?
-
+  def published_versions_with_original
     team.protocols
         .in_repository_published_version
         .where(parent: self)
         .or(team.protocols.in_repository_published_original.where(id: id))
-  end
-
-  def latest_published_version
-    published_versions.order(version_number: :desc).first
   end
 
   def permission_parent
