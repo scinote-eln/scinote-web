@@ -40,7 +40,11 @@
 
       th,
       td {
-        padding: 8px;
+        padding: 12px;
+
+        &:first-child {
+          width: 16px !important;
+        }
       }
     }
   }
@@ -55,6 +59,15 @@
 
     td {
       padding-left: 10px;
+
+      &:first-child {
+        display: flex;
+        justify-content: center;
+      }
+
+      &:last-child {
+        display: table-cell;
+      }
     }
 
     .dt-body-center {
