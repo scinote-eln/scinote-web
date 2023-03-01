@@ -123,7 +123,7 @@ class ProtocolsController < ApplicationController
     return render_403 unless @protocol.in_repository_published_original? ||
                              (@protocol.in_repository_draft? && @protocol.parent_id.blank?)
 
-    @published_versions = @protocol.published_versions.order(version_number: :desc)
+    @published_versions = @protocol.published_versions_with_original.order(version_number: :desc)
     render json: {
       html: render_to_string(partial: 'protocols/index/protocol_versions_modal.html.erb')
     }
