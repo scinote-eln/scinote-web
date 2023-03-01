@@ -221,18 +221,18 @@ $.fn.dataTable.render.RepositoryStockValue = function(data) {
   if (data) {
     if (data.value) {
       if (data.stock_managable) {
-        return `<a title="repository stock-${data.stock_status} value: ${data.value.stock_formatted} for ${repositoryRowName}"
+        return `<a title="repository stock-${data.stock_status} value: ${data.value.stock_formatted}"
                    class="manage-repository-stock-value-link stock-value-view-render stock-${data.stock_status}">
                   ${data.value.stock_formatted}
                   </a>`;
       }
-      return `<span title="render stock ${data.displayWarnings ? `-${data.stock_status}` : ''} value ${data.value.stock_formatted} for ${repositoryRowName}" class="stock-value-view-render
+      return `<span title="render stock ${data.displayWarnings ? `-${data.stock_status}` : ''} value ${data.value.stock_formatted}" class="stock-value-view-render
                            ${data.displayWarnings ? `stock-${data.stock_status}` : ''}">
                 ${data.value.stock_formatted}
                 </span>`;
     }
     if (data.stock_managable) {
-      return `<a title="unassigned stock data for ${repositoryRowName}" class="manage-repository-stock-value-link not-assigned-stock">
+      return `<a title="unassigned stock data" class="manage-repository-stock-value-link not-assigned-stock">
                 <i class="fas fa-box-open"></i>
                 ${I18n.t('libraries.manange_modal_column.stock_type.add_stock')}
               </a>`;
