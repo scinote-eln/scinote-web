@@ -49,10 +49,6 @@ class ProtocolsController < ApplicationController
     update_from_parent_modal
     delete_steps
   )
-  before_action :check_manage_parent_in_repository_permissions, only: %i(
-    update_parent
-    update_parent_modal
-  )
   before_action :check_manage_all_in_repository_permissions, only: :make_private
   before_action :check_restore_all_in_repository_permissions, only: :restore
   before_action :check_archive_all_in_repository_permissions, only: :archive
@@ -477,47 +473,6 @@ class ProtocolsController < ApplicationController
     end
   end
 
-  def update_parent
-    respond_to do |format|
-      if @protocol.parent.can_destroy?
-        transaction_error = false
-        Protocol.transaction do
-          @protocol.update_parent(current_user)
-        rescue StandardError
-          transaction_error = true
-          raise ActiveRecord::Rollback
-        end
-
-        if transaction_error
-          # Bad request error
-          format.json do
-            render json: {
-              message: t('my_modules.protocols.update_parent_error')
-            },
-            status: :bad_request
-          end
-        else
-          # Everything good, record activity, display flash & render 200
-          log_activity(:update_protocol_in_repository_from_task,
-                       @protocol.my_module.experiment.project,
-                       my_module: @protocol.my_module.id,
-                       protocol_repository: @protocol.parent.id)
-          flash[:success] = t(
-            'my_modules.protocols.update_parent_flash'
-          )
-          flash.keep(:success)
-          format.json { render json: {}, status: :ok }
-        end
-      else
-        format.json do
-          render json: {
-            message: t('my_modules.protocols.update_parent_error_locked')
-          }, status: :bad_request
-        end
-      end
-    end
-  end
-
   def update_from_parent
     protocol_can_destroy = @protocol.can_destroy?
     respond_to do |format|
@@ -912,19 +867,6 @@ class ProtocolsController < ApplicationController
     end
   end
 
-  def update_parent_modal
-    respond_to do |format|
-      format.json do
-        render json: {
-          title: t('my_modules.protocols.confirm_link_update_modal.update_parent_title'),
-          message: t('my_modules.protocols.confirm_link_update_modal.update_parent_message'),
-          btn_text: t('general.update'),
-          url: update_parent_protocol_path(@protocol)
-        }
-      end
-    end
-  end
-
   def update_from_parent_modal
     respond_to do |format|
       format.json do
@@ -1200,13 +1142,6 @@ class ProtocolsController < ApplicationController
     @protocol = Protocol.find_by(id: params[:id])
     render_403 unless @protocol.present? &&
                       can_delete_protocol_draft_in_repository?(@protocol)
-  end
-
-  def check_manage_parent_in_repository_permissions
-    @protocol = Protocol.find_by_id(params[:id])
-    render_403 unless @protocol.present? &&
-                      can_read_protocol_in_module?(@protocol) &&
-                      can_manage_protocol_in_repository?(@protocol.parent)
   end
 
   def check_manage_all_in_repository_permissions

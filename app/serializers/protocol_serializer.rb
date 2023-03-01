@@ -140,8 +140,7 @@ class ProtocolSerializer < ActiveModel::Serializer
   end
 
   def update_protocol_url
-    return unless can_read_protocol_in_module?(object) && object.linked? &&
-                  (object.parent_newer? || object.parent_and_self_newer?)
+    return unless can_read_protocol_in_module?(object) && object.linked? && object.parent_newer?
 
     update_from_parent_modal_protocol_path(object, format: :json)
   end
