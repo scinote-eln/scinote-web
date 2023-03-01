@@ -30,9 +30,9 @@ class Repository < RepositoryBase
   has_many :repository_table_filters, dependent: :destroy
 
   before_save :sync_name_with_snapshots, if: :name_changed?
-  before_save :assign_globally_shared_inventories, if: -> { permission_level_changed? && globally_shared? }
-  before_save :unassign_globally_shared_inventories, if: -> { permission_level_changed? && !globally_shared? }
   before_destroy :refresh_report_references_on_destroy, prepend: true
+  after_save :assign_globally_shared_inventories, if: -> { saved_change_to_permission_level? && globally_shared? }
+  after_save :unassign_globally_shared_inventories, if: -> { saved_change_to_permission_level? && !globally_shared? }
   after_save :unassign_unshared_items, if: :saved_change_to_permission_level
 
   validates :name,
@@ -200,6 +200,7 @@ class Repository < RepositoryBase
         new_repo = dup
         new_repo.created_by = created_by
         new_repo.name = name
+        new_repo.permission_level = Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:not_shared]
         new_repo.save!
 
         # Clone columns (only if new_repo was saved)
