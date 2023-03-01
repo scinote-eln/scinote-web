@@ -255,6 +255,10 @@ class Protocol < ApplicationRecord
         .or(team.protocols.in_repository_published_original.where(id: id))
   end
 
+  def initial_draft?
+    in_repository_draft? && parent.blank?
+  end
+
   def permission_parent
     in_module? ? my_module : team
   end
