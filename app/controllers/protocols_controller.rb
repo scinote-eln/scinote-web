@@ -231,7 +231,7 @@ class ProtocolsController < ApplicationController
           escape_input(keyword)
         end
       end
-      if @protocol.update_keywords(params[:keywords])
+      if @protocol.update_keywords(params[:keywords], current_user)
         format.json do
           log_activity(:edit_keywords_in_protocol_repository, nil, protocol: @protocol.id)
           render json: @protocol, serializer: ProtocolSerializer, user: current_user
@@ -243,7 +243,7 @@ class ProtocolsController < ApplicationController
   end
 
   def update_authors
-    if @protocol.update(authors: params.require(:protocol)[:authors])
+    if @protocol.update(authors: params.require(:protocol)[:authors], last_modified_by: current_user)
       log_activity(:edit_authors_in_protocol_repository, nil, protocol: @protocol.id)
       render json: @protocol, serializer: ProtocolSerializer, user: current_user
     else
@@ -252,7 +252,7 @@ class ProtocolsController < ApplicationController
   end
 
   def update_name
-    if @protocol.update(name: params.require(:protocol)[:name])
+    if @protocol.update(name: params.require(:protocol)[:name], last_modified_by: current_user)
       log_activity(:edit_protocol_name_in_repository, nil, protocol: @protocol.id)
       render json: {}, status: :ok
     else
@@ -264,7 +264,7 @@ class ProtocolsController < ApplicationController
     old_description = @protocol.description
     respond_to do |format|
       format.json do
-        if @protocol.update(description: params.require(:protocol)[:description])
+        if @protocol.update(description: params.require(:protocol)[:description], last_modified_by: current_user)
           log_activity(:edit_description_in_protocol_repository, nil, protocol: @protocol.id)
           TinyMceAsset.update_images(@protocol, params[:tiny_mce_images], current_user)
           protocol_annotation_notification(old_description)
@@ -285,6 +285,7 @@ class ProtocolsController < ApplicationController
     @protocol.record_timestamps = false
     @protocol.created_at = ts
     @protocol.updated_at = ts
+    @protocol.last_modified_by = current_user
 
     if @protocol.save
       log_activity(:create_protocol_in_repository, nil, protocol: @protocol.id)
