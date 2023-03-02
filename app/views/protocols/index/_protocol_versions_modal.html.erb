@@ -8,8 +8,8 @@
         </h4>
       </div>
       <div class="modal-body">
-        <% if @protocol.draft.present? %>
-          <% draft = @protocol.draft %>
+        <% if @protocol.initial_draft? || @protocol.draft.present? %>
+          <% draft = @protocol.initial_draft? ? @protocol : @protocol.draft %>
           <div class="protocol-version-row">
             <div class="protocol-link">
               <%= link_to protocol_path(draft) do %>
