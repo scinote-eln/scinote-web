@@ -345,7 +345,6 @@ function init() {
   initEditProtocolDescription();
   initLinkUpdate();
   initLoadFromRepository();
-  refreshProtocolStatusBar();
   initImport();
   initProtocolSectionOpenEvent();
   initDetailsDropdown();
