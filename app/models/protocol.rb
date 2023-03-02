@@ -586,7 +586,7 @@ class Protocol < ApplicationRecord
   end
 
   def save_as_draft(current_user)
-    version = (parent || self).latest_published_version.version_number + 1
+    version = (latest_published_version || self).version_number + 1
 
     draft = dup
     draft.version_number = version

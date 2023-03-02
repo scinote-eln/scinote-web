@@ -120,8 +120,7 @@ class ProtocolsController < ApplicationController
   end
 
   def versions_modal
-    return render_403 unless @protocol.in_repository_published_original? ||
-                             (@protocol.in_repository_draft? && @protocol.parent_id.blank?)
+    return render_403 unless @protocol.in_repository_published_original? || @protocol.initial_draft?
 
     @published_versions = @protocol.published_versions_with_original.order(version_number: :desc)
     render json: {
@@ -177,7 +176,8 @@ class ProtocolsController < ApplicationController
                    nil,
                    protocol: @protocol.id,
                    version_number: @protocol.version_number)
-    rescue ActiveRecord::RecordInvalid
+    rescue ActiveRecord::RecordInvalid => e
+      Rails.logger.error e.message
       raise ActiveRecord::Rollback
     end
 
