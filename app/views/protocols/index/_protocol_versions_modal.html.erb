@@ -21,9 +21,14 @@
               <% end %>
             </div>
             <div class="protocol-metadata">
-              <%= t('protocols.index.versions.draft_modification_info',
-                    modified_on: draft.updated_at.present? ? l(draft.updated_at, format: :full_date) : '',
-                    modified_by: draft.last_modified_by&.full_name) %>
+              <% if draft.last_modified_by.present? %>
+                <%= t('protocols.index.versions.draft_full_modification_info',
+                      modified_on: draft.updated_at.present? ? l(draft.updated_at, format: :full_date) : '',
+                      modified_by: draft.last_modified_by&.full_name) %>
+              <% else %>
+                  <%= t('protocols.index.versions.draft_update_modification_info',
+                        modified_on: draft.updated_at.present? ? l(draft.updated_at, format: :full_date) : '') %>
+              <%end%>
             </div>
             <div class="protocol-actions">
               <% if can_publish_protocol_in_repository?(draft) %>
