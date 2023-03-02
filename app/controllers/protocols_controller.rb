@@ -1146,7 +1146,7 @@ class ProtocolsController < ApplicationController
     unless @protocol.present? &&
            (can_read_protocol_in_module?(@protocol) ||
            can_read_protocol_in_repository?(@protocol))
-      respond_to { |f| f.json { render json: {}, status: :unauthorized } }
+      render_403
     end
   end
 
