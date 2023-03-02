@@ -568,6 +568,7 @@ class Protocol < ApplicationRecord
     clone.team = team
     clone.protocol_type = :in_repository_draft
     clone.added_by = current_user
+    clone.description = description
     # Don't proceed further if clone is invalid
     return clone if clone.invalid?
 
