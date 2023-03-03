@@ -29,6 +29,16 @@
           opacity: 1;
         }
 
+        &.sorting::after {
+          opacity: 0;
+        }
+
+        &.sorting:hover {
+          &::after {
+            opacity: 1;
+          }
+        }
+
         &:first-child {
           border-left: 0;
           border-top-left-radius: $border-radius-default;
