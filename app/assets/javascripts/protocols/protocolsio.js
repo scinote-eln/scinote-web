@@ -34,6 +34,7 @@ function applyClickCallbackOnProtocolCards() {
           $('.full-preview-panel').attr('data-url', currProtocolCard.data('url'));
           $('.full-preview-panel').attr('data-protocol-source', currProtocolCard.data('protocol-source'));
           $('.full-preview-panel').attr('data-id', currProtocolCard.data('id'));
+          $('.full-preview-panel').data('id', currProtocolCard.data('id'));
           $('.convert-protocol').attr('disabled', false);
 
           // Set base tag to account for relative links in the iframe
