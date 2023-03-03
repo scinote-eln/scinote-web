@@ -18,6 +18,15 @@
       flex-direction: column;
       height: 100%;
       width: 100%;
+
+      tbody {
+        td:not(:first-child) {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 30rem;
+        }
+      }
     }
 
     .toolbar {
