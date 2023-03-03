@@ -2705,6 +2705,7 @@ en:
       head_title: "Protocol templates"
       head_title_archived: "Archived protocol templates"
       default_name: 'New protocol'
+      back_to_active_protocols: 'Back to active protocols'
       navigation:
         public: "Team protocols"
         private: "My protocols"
