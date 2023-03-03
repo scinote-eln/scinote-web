@@ -29,39 +29,39 @@
 
   .modal-footer {
     .footer {
+      align-items: center;
       display: flex;
       justify-content: space-between;
-      align-items: center;
 
       .left-section {
+        column-gap: 32px;
         display: flex;
         justify-content: space-between;
-        column-gap: 32px;
 
         .default-role-container {
-          display: flex;
           align-items: center;
           column-gap: 8px;
+          display: flex;
         }
 
         .sci-input-container {
           display: flex;
           align-items: center;
-          flex-grow: 1;
           column-gap: 12px;
+          flex-grow: 1;
 
           label {
-            white-space: nowrap;
             margin-bottom: 0;
+            white-space: nowrap;
           }
         }
       }
 
       .right-section {
-        display: flex;
-        justify-content: flex-end;
-        flex-basis: 0;
         column-gap: 8px;
+        display: flex;
+        flex-basis: 0;
+        justify-content: flex-end;
       }
     }
   }
