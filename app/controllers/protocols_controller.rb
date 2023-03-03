@@ -177,6 +177,11 @@ class ProtocolsController < ApplicationController
                    protocol: @protocol.id,
                    version_number: @protocol.version_number)
     rescue ActiveRecord::RecordInvalid => e
+      flash[:error] = e.message
+      Rails.logger.error e.message
+      raise ActiveRecord::Rollback
+    rescue StandardError => e
+      flash[:error] = I18n.t('errors.general')
       Rails.logger.error e.message
       raise ActiveRecord::Rollback
     end
@@ -199,7 +204,11 @@ class ProtocolsController < ApplicationController
       redirect_to protocols_path
     rescue ActiveRecord::RecordNotDestroyed => e
       Rails.logger.error e.message
-      render json: { status: 'error' }, status: :unprocessable_entity
+      render json: { message: e.message }, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
+    rescue StandardError => e
+      render json: { message: I18n.t('errors.general') }, status: :unprocessable_entity
+      Rails.logger.error e.message
       raise ActiveRecord::Rollback
     end
   end
@@ -237,7 +246,7 @@ class ProtocolsController < ApplicationController
           render json: @protocol, serializer: ProtocolSerializer, user: current_user
         end
       else
-        format.json { render json: {}, status: :unprocessable_entity }
+        format.json { render json: I18n.t('errors.general'), status: :unprocessable_entity }
       end
     end
   end
@@ -388,6 +397,8 @@ class ProtocolsController < ApplicationController
     rescue StandardError => e
       Rails.logger.error(e.message)
       Rails.logger.error(e.backtrace.join("\n"))
+      flash[:error] = I18n.t('errors.general')
+      redirect_to protocols_path
       raise ActiveRecord::Rollback
     end
   end
@@ -1105,7 +1116,7 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       if rollbacked
         format.json do
-          render json: {}, status: :bad_request
+          render json: { message: I18n.t('errors.general') }, status: :unprocessable_entity
         end
       else
         format.json do

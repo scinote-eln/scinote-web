@@ -20,6 +20,10 @@ window.initProtocolComponent = () => {
     modal.find('form').attr('action', url);
   });
 
+  $('#deleteDraftModal form').on('ajax:error', function(_ev, data) {
+    HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+  });
+
   new Vue({
     el: '#protocolContainer',
     components: {
