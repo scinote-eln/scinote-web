@@ -144,6 +144,7 @@ class ProtocolsDatatable < CustomDatatable
                                      .select(:id)
     published_versions = @team.protocols
                               .where(protocol_type: Protocol.protocol_types[:in_repository_published_version])
+                              .order(:parent_id, version_number: :desc)
                               .select('DISTINCT ON (parent_id) id')
     new_drafts = @team.protocols
                       .where(protocol_type: Protocol.protocol_types[:in_repository_draft], parent_id: nil)

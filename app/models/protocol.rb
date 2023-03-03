@@ -260,6 +260,10 @@ class Protocol < ApplicationRecord
     in_repository_draft? && parent.blank?
   end
 
+  def latest_published_version_or_self
+    latest_published_version || self
+  end
+
   def permission_parent
     in_module? ? my_module : team
   end

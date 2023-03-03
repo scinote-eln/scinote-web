@@ -530,7 +530,7 @@ class ProtocolsController < ApplicationController
                           else
                             @protocol.parent.parent
                           end
-          @protocol.update_from_parent(current_user, source_parent.latest_published_version)
+          @protocol.update_from_parent(current_user, source_parent.latest_published_version_or_self)
         rescue StandardError
           transaction_error = true
           raise ActiveRecord::Rollback
@@ -813,7 +813,7 @@ class ProtocolsController < ApplicationController
 
           # Create folder and xml file for each protocol and populate it
           @protocols.each do |protocol|
-            protocol = protocol.latest_published_version || protocol
+            protocol = protocol.latest_published_version_or_self
             protocol_dir = get_guid(protocol.id).to_s
             ostream.put_next_entry("#{protocol_dir}/eln.xml")
             ostream.print(generate_protocol_xml(protocol))
@@ -1173,7 +1173,7 @@ class ProtocolsController < ApplicationController
   def check_clone_permissions
     load_team_and_type
     protocol = Protocol.find_by(id: params[:ids][0])
-    @original = protocol.latest_published_version || protocol
+    @original = protocol.latest_published_version_or_self
 
     if @original.blank? ||
        !can_clone_protocol_in_repository?(@original) || @type == :archive
@@ -1251,7 +1251,7 @@ class ProtocolsController < ApplicationController
 
   def check_load_from_repository_permissions
     @protocol = Protocol.find_by(id: params[:id])
-    @source = Protocol.find_by(id: params[:source_id])&.latest_published_version
+    @source = Protocol.find_by(id: params[:source_id])&.latest_published_version_or_self
 
     render_403 unless @protocol.present? && @source.present? &&
                       (can_manage_protocol_in_module?(@protocol) &&
