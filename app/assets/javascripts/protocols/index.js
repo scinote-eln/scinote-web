@@ -425,12 +425,15 @@ var ProtocolsIndex = (function() {
   }
 
   function initdeleteDraftModal() {
-    $('.protocols-index').on('click', '#protocol-versions-modal .delete-draft', function(e) {
+    $('.protocols-index').on('click', '#protocol-versions-modal .delete-draft', function() {
       let url = this.dataset.url;
       let modal = $('#deleteDraftModal');
       $('#protocol-versions-modal').modal('hide');
       modal.modal('show');
       modal.find('form').attr('action', url);
+    });
+    $('#deleteDraftModal form').on('ajax:error', function(_ev, data) {
+      HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   }
 
