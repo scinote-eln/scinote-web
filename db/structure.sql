@@ -1380,7 +1380,8 @@ CREATE TABLE public.protocols (
     default_public_user_role_id bigint,
     previous_version_id bigint,
     last_modified_by_id bigint,
-    published_by_id bigint
+    published_by_id bigint,
+    linked_at timestamp without time zone
 );
 
 
@@ -5646,17 +5647,17 @@ CREATE INDEX index_protocols_on_parent_id ON public.protocols USING btree (paren
 
 
 --
-<<<<<<< HEAD
 -- Name: index_protocols_on_previous_version_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_protocols_on_previous_version_id ON public.protocols USING btree (previous_version_id);
-=======
+
+
+--
 -- Name: index_protocols_on_protocol_code; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_protocols_on_protocol_code ON public.protocols USING gin ((('PT'::text || id)) public.gin_trgm_ops);
->>>>>>> develop
 
 
 --
@@ -8683,6 +8684,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221125133611'),
 ('20221222123021'),
 ('20230120141017'),
-('20230206095817');
+('20230206095817'),
+('20230223142119'),
+('20230227131215');
 
 

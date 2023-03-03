@@ -1,5 +1,5 @@
 <template>
-  <div class="task-protocol">
+  <div v-if="protocol.id" class="task-protocol">
     <div class="task-section-header" v-if="!inRepository">
       <div class="portocol-header-left-part">
         <a class="task-section-caret" tabindex="0" role="button" data-toggle="collapse" href="#protocol-content" aria-expanded="true" aria-controls="protocol-content">
@@ -35,7 +35,7 @@
         </div>
       </div>
     </div>
-    <div v-if="protocol.id" id="protocol-content" class="protocol-content collapse in" aria-expanded="true">
+    <div id="protocol-content" class="protocol-content collapse in" aria-expanded="true">
       <div class="protocol-description">
         <div class="protocol-name" v-if="!inRepository">
           <InlineEdit
@@ -206,6 +206,9 @@
     created() {
       $.get(this.protocolUrl, (result) => {
         this.protocol = result.data;
+        this.$nextTick(() => {
+          this.refreshProtocolStatus();
+        });
         $.get(this.urls.steps_url, (result) => {
           this.steps = result.data
         })

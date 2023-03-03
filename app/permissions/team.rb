@@ -128,8 +128,10 @@ Canaid::Permissions.register_for(Protocol) do
   end
 
   can :save_protocol_as_draft_in_repository do |user, protocol|
-    (protocol.in_repository_published_original? || protocol.in_repository_published_version?) &&
-      can_create_protocols_in_repository?(user, protocol.team)
+    next false unless can_create_protocols_in_repository?(user, protocol.team)
+
+    %(in_repository_published_original in_repository_published_version).include?(protocol.protocol_type) &&
+      (protocol.parent || protocol).draft.blank?
   end
 end
 
