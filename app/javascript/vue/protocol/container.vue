@@ -206,6 +206,9 @@
     created() {
       $.get(this.protocolUrl, (result) => {
         this.protocol = result.data;
+        this.$nextTick(() => {
+          this.refreshProtocolStatus();
+        });
         $.get(this.urls.steps_url, (result) => {
           this.steps = result.data
         })
