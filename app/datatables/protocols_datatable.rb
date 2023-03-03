@@ -120,7 +120,13 @@ class ProtocolsDatatable < CustomDatatable
     records = records.where('protocols.updated_at > ?', params[:modified_on_from]) if params[:modified_on_from].present?
     records = records.where('protocols.updated_at < ?', params[:modified_on_to]) if params[:modified_on_to].present?
     records = records.where(protocols: { published_by_id: params[:published_by] }) if params[:published_by].present?
-    records = records.where(all_user_assignments: { user_id: params[:members] }) if params[:members].present?
+
+    if params[:members].present?
+      records = records.joins('LEFT OUTER JOIN "user_assignments" "all_user_assignments" '\
+                              'ON "all_user_assignments"."assignable_type" = \'Protocol\' '\
+                              'AND "all_user_assignments"."assignable_id" = "protocols"."id"')
+                       .where(all_user_assignments: { user_id: params[:members] })
+    end
 
     if params[:archived_on_from].present?
       records = records.where('protocols.archived_on > ?', params[:archived_on_from])
