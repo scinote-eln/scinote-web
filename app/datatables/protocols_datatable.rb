@@ -54,8 +54,8 @@ class ProtocolsDatatable < CustomDatatable
   def as_json(_options = {})
     {
       draw: dt_params[:draw].to_i,
-      recordsTotal: get_raw_records.length,
-      recordsFiltered: filter_records(get_raw_records).length,
+      recordsTotal: get_raw_records_base.distinct.count,
+      recordsFiltered: records.present? ? records.first.filtered_count : 0,
       data: data
     }
   end
@@ -79,7 +79,7 @@ class ProtocolsDatatable < CustomDatatable
       casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
                         [model.arel_table[column.to_sym].as(typecast)])
     end
-    casted_column.matches("%#{value}%")
+    casted_column.matches("%#{ActiveRecord::Base.sanitize_sql_like(value)}%")
   end
 
   private
@@ -106,6 +106,10 @@ class ProtocolsDatatable < CustomDatatable
         '11': (I18n.l(record.archived_on, format: :full) if record.archived_on)
       }
     end
+  end
+
+  def fetch_records
+    super.select('COUNT("protocols"."id") OVER() AS filtered_count')
   end
 
   def filter_protocols_records(records)
@@ -157,8 +161,16 @@ class ProtocolsDatatable < CustomDatatable
       "(#{new_drafts.to_sql}))"
     )
 
+    records = @type == :archived ? records.archived : records.active
+
+    records.with_granted_permissions(@user, ProtocolPermissions::READ)
+  end
+
+  # Query database for records (this will be later paginated and filtered)
+  # after that "data" function will return json
+  def get_raw_records
     records =
-      records
+      get_raw_records_base
       .preload(:parent, :latest_published_version, :draft, :protocol_keywords, user_assignments: %i(user user_role))
       .joins("LEFT OUTER JOIN protocols protocol_versions " \
              "ON protocol_versions.protocol_type = #{Protocol.protocol_types[:in_repository_published_version]} " \
@@ -167,26 +179,16 @@ class ProtocolsDatatable < CustomDatatable
              'ON "protocol_protocol_keywords"."protocol_id" = "protocols"."id"')
       .joins('LEFT OUTER JOIN "protocol_keywords" ' \
              'ON "protocol_protocol_keywords"."protocol_keyword_id" = "protocol_keywords"."id"')
-      .with_granted_permissions(@user, ProtocolPermissions::READ)
-
-    records = records.joins('LEFT OUTER JOIN "users" "archived_users"
-                             ON "archived_users"."id" = "protocols"."archived_by_id"')
-    records = records.joins('LEFT OUTER JOIN "users" ON "users"."id" = "protocols"."published_by_id"')
-
-    records = @type == :archived ? records.archived : records.active
+      .joins('LEFT OUTER JOIN "users" "archived_users" ON "archived_users"."id" = "protocols"."archived_by_id"')
+      .joins('LEFT OUTER JOIN "users" ON "users"."id" = "protocols"."published_by_id"')
+      .group('"protocols"."id"')
 
     records = filter_protocols_records(records)
-    records.group('"protocols"."id"')
-  end
-
-  # Query database for records (this will be later paginated and filtered)
-  # after that "data" function will return json
-  def get_raw_records
-    get_raw_records_base.select(
+    records.select(
       '"protocols".*',
       'COALESCE("protocols"."parent_id", "protocols"."id") AS adjusted_parent_id',
       'STRING_AGG(DISTINCT("protocol_keywords"."name"), \', \') AS "protocol_keywords_str"',
-      "CASE WHEN protocols.protocol_type = #{Protocol.protocol_types[:in_repository_draft]}" \
+      "CASE WHEN protocols.protocol_type = #{Protocol.protocol_types[:in_repository_draft]} " \
       "THEN COUNT(DISTINCT(\"protocol_versions\".\"id\")) ELSE COUNT(DISTINCT(\"protocol_versions\".\"id\")) + 1 " \
       "END AS nr_of_versions",
       'COUNT("user_assignments"."id") AS "nr_of_assigned_users"',
@@ -251,36 +253,4 @@ class ProtocolsDatatable < CustomDatatable
   def modified_timestamp(record)
     I18n.l(record.updated_at, format: :full)
   end
-
-  # OVERRIDE - This is only called when filtering results;
-  # when using GROUP BY function, SQL cannot perform a WHERE
-  # clause on aggregated columns (protocol keywords & users' full_name), but
-  # since we want those 2 columns to be searchable/filterable, we do an "inner"
-  # query where we select only protocol IDs which are filtered by those 2 columns
-  # using HAVING keyword (which is the correct way to filter aggregated columns).
-  # Another OR is then appended to the WHERE clause, checking if protocol is inside
-  # this list of IDs.
-  # def build_conditions_for(query)
-  #   # Inner query to retrieve list of protocol IDs where concatenated
-  #   # protocol keywords string, or user's full_name contains searched query
-  #   search_val = dt_params[:search][:value]
-  #   records_having = get_raw_records_base.having(
-  #     ::Arel::Nodes::NamedFunction.new(
-  #       'CAST',
-  #       [::Arel::Nodes::SqlLiteral.new("string_agg(\"protocol_keywords\".\"name\", ' ') AS #{typecast}")]
-  #     ).matches("%#{sanitize_sql_like(search_val)}%").to_sql +
-  #     " OR " +
-  #     ::Arel::Nodes::NamedFunction.new(
-  #       'CAST',
-  #       [::Arel::Nodes::SqlLiteral.new("max(\"users\".\"full_name\") AS #{typecast}")]
-  #     ).matches("%#{sanitize_sql_like(search_val)}%").to_sql
-  #   ).select(:id)
-
-  #   # Call parent function
-  #   criteria = super(query)
-
-  #   # Aight, now append another or
-  #   criteria = criteria.or(Protocol.arel_table[:id].in(records_having.arel))
-  #   criteria
-  # end
 end
