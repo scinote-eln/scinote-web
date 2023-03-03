@@ -7,6 +7,7 @@ class UserAssignment < ApplicationRecord
   after_create :assign_team_child_objects, if: -> { assignable.is_a?(Team) }
   after_update :update_team_children_assignments, if: -> { assignable.is_a?(Team) && saved_change_to_user_role_id? }
   before_destroy :unassign_team_child_objects, if: -> { assignable.is_a?(Team) }
+  after_save :call_user_assignment_save_hook
 
   belongs_to :assignable, polymorphic: true, touch: true
   belongs_to :user_role
@@ -23,6 +24,10 @@ class UserAssignment < ApplicationRecord
   end
 
   private
+
+  def call_user_assignment_save_hook
+    assignable.after_user_assignment_save
+  end
 
   def assign_team_child_objects
     UserAssignments::CreateTeamUserAssignmentsService.new(self).call

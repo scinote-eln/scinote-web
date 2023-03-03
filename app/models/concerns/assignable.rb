@@ -58,6 +58,11 @@ module Assignable
       self.class.name.in?(Extends::TOP_LEVEL_ASSIGNABLES)
     end
 
+    def after_user_assignment_save
+      # Optional, redefine in the assignable model.
+      # Will be called when an assignment is saved for the assignable model.
+    end
+
     private
 
     def create_users_assignments
