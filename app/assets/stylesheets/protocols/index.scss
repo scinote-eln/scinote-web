@@ -21,10 +21,10 @@
 
       tbody {
         td:not(:first-child) {
-          white-space: nowrap;
+          max-width: 30rem;
           overflow: hidden;
           text-overflow: ellipsis;
-          max-width: 30rem;
+          white-space: nowrap;
         }
       }
     }
