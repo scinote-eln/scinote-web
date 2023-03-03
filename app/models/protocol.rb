@@ -479,7 +479,7 @@ class Protocol < ApplicationRecord
     result
   end
 
-  def update_keywords(keywords)
+  def update_keywords(keywords, user)
     result = true
     begin
       Protocol.transaction do
@@ -492,6 +492,7 @@ class Protocol < ApplicationRecord
             kw = ProtocolKeyword.find_or_create_by(name: kw_name, team: team)
             protocol_keywords << kw
           end
+          update(last_modified_by: user)
         end
       end
     rescue StandardError
@@ -542,6 +543,7 @@ class Protocol < ApplicationRecord
     self.updated_at = source.published_on
     self.parent_updated_at = source.published_on
     self.added_by = current_user
+    self.last_modified_by = current_user
     self.parent = source
     self.linked_at = Time.zone.now
     save!
@@ -564,6 +566,7 @@ class Protocol < ApplicationRecord
     self.parent = source
     self.parent_updated_at = source.published_on
     self.added_by = current_user
+    self.last_modified_by = current_user
     self.linked_at = Time.zone.now
     self.protocol_type = Protocol.protocol_types[:linked]
     save!
@@ -573,6 +576,7 @@ class Protocol < ApplicationRecord
     clone.team = team
     clone.protocol_type = :in_repository_draft
     clone.added_by = current_user
+    clone.last_modified_by = current_user
     clone.description = description
     # Don't proceed further if clone is invalid
     return clone if clone.invalid?
@@ -597,6 +601,7 @@ class Protocol < ApplicationRecord
     draft.published_on = nil
     draft.version_comment = nil
     draft.previous_version = self
+    draft.last_modified_by = current_user
 
     return draft if draft.invalid?
 
@@ -629,6 +634,7 @@ class Protocol < ApplicationRecord
       authors: authors,
       description: description,
       added_by: current_user,
+      last_modified_by: current_user,
       team: team,
       protocol_type: :in_repository_draft,
       skip_user_assignments: true
