@@ -32,6 +32,8 @@
   <%= f.hidden_field(:published_on, value: protocol.published_on) %>
   <%= f.hidden_field(:description, value: protocol.description) %>
   <%= f.hidden_field(:protocol_type, value: protocol.protocol_type) %>
+  <%= f.hidden_field(:visibility) %>
+  <%= f.hidden_field(:default_public_user_role_id) %>
 
 <% end %>
 

@@ -1,5 +1,5 @@
 /* global animateSpinner PerfectSb initHandsOnTable */
-/* global HelperModule */
+/* global HelperModule dropdownSelector */
 /* eslint-disable no-use-before-define, no-alert */
 
 function applyClickCallbackOnProtocolCards() {
@@ -194,6 +194,16 @@ function handleFormSubmit(modal) {
     e.preventDefault(); // avoid to execute the actual submit of the form.
     e.stopPropagation();
     animateSpinner(modal, true);
+
+    const visibility = $('#protocol-preview-modal .modal-footer #visibility').prop('checked');
+    const defaultPublicUserRoleId = $('#protocol-preview-modal .modal-footer #default_public_user_role_id')
+      .prop('value');
+    const visibilityField = $('#protocol-preview-modal #protocol_visibility');
+    const defaultPublicUserRoleIdField = $('#protocol-preview-modal #protocol_default_public_user_role_id');
+
+    visibilityField.prop('value', visibility ? 'visible' : 'hidden');
+    defaultPublicUserRoleIdField.prop('value', defaultPublicUserRoleId);
+
     $.ajax({
       type: 'POST',
       url: url,
@@ -215,7 +225,7 @@ function handleFormSubmit(modal) {
 
 function initLoadProtocolModalPreview() {
   $('.convert-protocol').off('click').on('click', function(e) {
-    var link = $('.full-preview-panel');
+    const link = $('.full-preview-panel');
     animateSpinner(null, true);
     $.ajax({
       url: link.data('url'),
@@ -226,10 +236,11 @@ function initLoadProtocolModalPreview() {
       },
       dataType: 'json',
       success: function(data) {
-        var modal = $('#protocol-preview-modal');
-        var modalTitle = modal.find('.modal-title');
-        var modalBody = modal.find('.modal-body');
-        var modalFooter = modal.find('.modal-footer');
+        $('#protocolsioModal').modal('hide');
+        const modal = $('#protocol-preview-modal');
+        const modalTitle = modal.find('.modal-title');
+        const modalBody = modal.find('.modal-body');
+        const modalFooter = modal.find('.modal-footer');
 
         modalTitle.html(data.title);
         modalBody.html(data.html);
@@ -243,6 +254,7 @@ function initLoadProtocolModalPreview() {
           showFormErrors(modal, data.validation_errors);
         }
 
+        initProtocolModalPreview();
         initFormSubmits();
         handleFormSubmit(modal);
       },
@@ -272,3 +284,36 @@ applySearchCallback();
 
 // Trigger initial retrieval of latest publications
 $('form.protocols-search-bar').submit();
+
+function initProtocolModalPreview() {
+  $('#protocol-preview-modal').on('change', '#visibility', function() {
+    const checkbox = this;
+    $('#protocol-preview-modal #roleSelectWrapper').toggleClass('hidden', !checkbox.checked);
+  });
+
+
+  const roleSelector = '#protocol-preview-modal #role_selector';
+
+  dropdownSelector.init(roleSelector, {
+    noEmptyOption: true,
+    singleSelect: true,
+    closeOnSelect: true,
+    selectAppearance: 'simple',
+    onChange: function() {
+      $('#protocol-preview-modal #default_public_user_role_id').val(dropdownSelector.getValues(roleSelector));
+    }
+  });
+
+  $('#protocol-preview-modal')
+    .on('ajax:error', 'form', function(e, error) {
+      let msg = error.responseJSON.error;
+      $('#protocol-preview-modal #protocol_name').parent().addClass('error').attr('data-error-text', msg);
+    })
+    .on('ajax:success', 'form', function(e, data) {
+      if (data.message) {
+        HelperModule.flashAlertMsg(data.message, 'success');
+      }
+      $('#protocol-preview-modal #protocol_name').parent().removeClass('error');
+      $('#protocol-preview-modal').modal('hide');
+    });
+}
