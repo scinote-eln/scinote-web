@@ -586,12 +586,13 @@ class Protocol < ApplicationRecord
   end
 
   def save_as_draft(current_user)
-    version = (latest_published_version || self).version_number + 1
+    parent_protocol = parent || self
+    version = (parent_protocol.latest_published_version || self).version_number + 1
 
     draft = dup
     draft.version_number = version
     draft.protocol_type = :in_repository_draft
-    draft.parent = (parent || self)
+    draft.parent = parent_protocol
     draft.published_by = nil
     draft.published_on = nil
     draft.version_comment = nil
