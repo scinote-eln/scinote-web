@@ -26,4 +26,43 @@
   .general-error {
     text-align: center;
   }
+
+  .modal-footer {
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .left-section {
+        display: flex;
+        justify-content: space-between;
+        column-gap: 32px;
+
+        .default-role-container {
+          display: flex;
+          align-items: center;
+          column-gap: 8px;
+        }
+
+        .sci-input-container {
+          display: flex;
+          align-items: center;
+          flex-grow: 1;
+          column-gap: 12px;
+
+          label {
+            white-space: nowrap;
+            margin-bottom: 0;
+          }
+        }
+      }
+
+      .right-section {
+        display: flex;
+        justify-content: flex-end;
+        flex-basis: 0;
+        column-gap: 8px;
+      }
+    }
+  }
 }
