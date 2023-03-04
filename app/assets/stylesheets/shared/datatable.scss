@@ -59,6 +59,20 @@
       .btn {
         margin-right: .25em;
       }
+
+      .btn:focus {
+        box-shadow: 0 0 0 3px $brand-focus;
+      }
+
+      .btn-light {
+        &:active {
+          background-color: $color-alto !important;
+        }
+
+        &:hover {
+          background: $color-white;
+        }
+      }
     }
 
     .pagination-info,
