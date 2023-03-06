@@ -123,6 +123,7 @@ class Protocol < ApplicationRecord
              class_name: 'User',
              inverse_of: :published_protocols, optional: true
   has_many :linked_children,
+           -> { linked },
            class_name: 'Protocol',
            foreign_key: 'parent_id'
   has_one  :next_version,
