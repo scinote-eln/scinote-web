@@ -180,8 +180,8 @@ var ProtocolsIndex = (function() {
         targets: 0,
         searchable: false,
         orderable: false,
-        sWidth: "1%",
-        render: function (data, type, full, meta) {
+        sWidth: '1%',
+        render: function(data, type, full, meta) {
           return `<div class="sci-checkbox-container">
                     <input type="checkbox" class="sci-checkbox">
                     <span class="sci-checkbox-label"></span>
@@ -198,7 +198,10 @@ var ProtocolsIndex = (function() {
         { data: '2' },
         { data: '3' },
         { data: '4' },
-        { data: '5' },
+        {
+          data: '5',
+          title: 'Linked tasks'
+        },
         { data: '6' },
         { data: '7' },
         { data: '8' },
