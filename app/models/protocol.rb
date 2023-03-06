@@ -17,7 +17,6 @@ class Protocol < ApplicationRecord
   include TinyMceImages
 
   after_create :auto_assign_protocol_members, if: :visible?
-  after_create :sync_child_protocol_user_assignments, unless: -> { parent_id }
   after_destroy :decrement_linked_children
   after_save :update_user_assignments, if: -> { saved_change_to_visibility? && in_repository? }
   after_save :update_linked_children
@@ -685,33 +684,48 @@ class Protocol < ApplicationRecord
     end
   end
 
-  def after_user_assignment_save
-    sync_child_protocol_user_assignments
+  def child_version_protocols
+    published_versions.or(Protocol.where(id: draft&.id))
+  end
+
+  def sync_child_protocol_user_assignment(user_assignment, child_protocol_id = nil)
+    # Copy user assignments to child protocol(s)
+
+    Protocol.transaction(requires_new: true) do
+      # Reload to ensure a potential new draft is also included in child versions
+      reload
+
+      (
+        # all or single child version protocol
+        child_protocol_id ? child_version_protocols.where(id: child_protocol_id) : child_version_protocols
+      ).find_each do |child_protocol|
+        child_assignment = child_protocol.user_assignments.find_or_initialize_by(
+          user: user_assignment.user
+        )
+
+        if user_assignment.destroyed?
+          child_assignment.destroy! if child_assignment.persisted?
+          next
+        end
+
+        child_assignment.update!(
+          user_assignment.attributes.slice(
+            'user_role_id',
+            'assigned',
+            'assigned_by_id',
+            'team_id'
+          )
+        )
+      end
+    end
   end
 
   private
 
-  def sync_child_protocol_user_assignments
-    # Copy user assignments to child protocols
+  def after_user_assignment_changed(user_assignment)
+    return unless in_repository_published_original?
 
-    return if parent_id
-
-    Protocol.transaction do
-      user_assignments.find_each do |user_assignment|
-        linked_children.find_each do |child_protocol|
-          child_protocol.user_assignments.find_or_initialize_by(
-            user: user_assignment.user
-          ).update!(
-            user_assignment.attributes.slice(
-              'user_role_id',
-              'assigned',
-              'assigned_by_id',
-              'team_id'
-            )
-          )
-        end
-      end
-    end
+    sync_child_protocol_user_assignment(user_assignment)
   end
 
   def auto_assign_protocol_members

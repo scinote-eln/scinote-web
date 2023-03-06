@@ -7,7 +7,8 @@ class UserAssignment < ApplicationRecord
   after_create :assign_team_child_objects, if: -> { assignable.is_a?(Team) }
   after_update :update_team_children_assignments, if: -> { assignable.is_a?(Team) && saved_change_to_user_role_id? }
   before_destroy :unassign_team_child_objects, if: -> { assignable.is_a?(Team) }
-  after_save :call_user_assignment_save_hook
+  after_destroy :call_user_assignment_changed_hook
+  after_save :call_user_assignment_changed_hook
 
   belongs_to :assignable, polymorphic: true, touch: true
   belongs_to :user_role
@@ -25,8 +26,8 @@ class UserAssignment < ApplicationRecord
 
   private
 
-  def call_user_assignment_save_hook
-    assignable.after_user_assignment_save
+  def call_user_assignment_changed_hook
+    assignable.__send__(:after_user_assignment_changed, self)
   end
 
   def assign_team_child_objects
