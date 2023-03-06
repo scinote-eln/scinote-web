@@ -247,7 +247,7 @@ var ProtocolsIndex = (function() {
       fnInitComplete: function(e) {
         var dataTableWrapper = $(e.nTableWrapper);
         DataTableHelpers.initLengthAppearance(dataTableWrapper);
-        DataTableHelpers.initSearchField(dataTableWrapper, 'Enter...');
+        DataTableHelpers.initSearchField(dataTableWrapper, I18n.t('protocols.index.search_bar_placeholder') );
         dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
 
         let actionToolBar = $($('#protocolActionToolbar').html());
