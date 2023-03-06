@@ -2852,6 +2852,11 @@ en:
           public: "Team protocols"
           private: "My protocols"
           success_flash: 'Protocol <strong>%{name}</strong> successfully imported to %{type}.'
+        sort:
+          new_html: "<i class=\"fas fa-sort-numeric-up\"></i>&nbsp;&nbsp;Newest first"
+          old_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Oldest first"
+          atoz_html: "<i class=\"fas fa-sort-alpha-down\"></i>&nbsp;&nbsp;Name A to Z"
+          ztoa_html: "<i class=\"fas fa-sort-alpha-up\"></i>&nbsp;&nbsp;Name Z to A"
 
     steps:
       placeholder: 'Enter step name'
