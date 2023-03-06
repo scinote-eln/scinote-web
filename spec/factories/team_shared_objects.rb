@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+# frozen_string_literal: true
+
 FactoryBot.define do
-  factory :team_repository do
+  factory :team_shared_object do
     repository
     trait :read do
       permission_level { :shared_read }
