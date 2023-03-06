@@ -158,7 +158,7 @@
     <PublishProtocol v-if="publishing"
       :protocol="protocol"
       @publish="publishProtocol"
-      @close="closePublishModal"
+      @cancel="closePublishModal"
     />
   </div>
 </template>
