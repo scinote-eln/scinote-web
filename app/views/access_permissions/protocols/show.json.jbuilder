@@ -5,6 +5,7 @@ json.modal controller.render_to_string(
   formats: [:html],
   locals: {
     assignable: @protocol,
+    top_level_assignable: @protocol,
     manually_assigned_users: @protocol.manually_assigned_users
   },
   layout: false

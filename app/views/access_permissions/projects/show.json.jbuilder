@@ -6,8 +6,7 @@ json.modal controller.render_to_string(
   locals: {
     assignable: @project,
     manually_assigned_users: @project.manually_assigned_users,
-    top_level_assignable: @project,
-    users: @project.manually_assigned_users
+    top_level_assignable: @project
   },
   layout: false
 )
