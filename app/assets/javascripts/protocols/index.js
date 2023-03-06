@@ -188,9 +188,17 @@ var ProtocolsIndex = (function() {
                   </div>`;
         }
       }, {
-        targets: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        targets: [1, 2, 4, 5, 6, 7, 8, 9],
         searchable: true,
         orderable: true
+      }, {
+        targets: 3,
+        searchable: true,
+        orderable: true,
+        createdCell: function(td, cellData, rowData) {
+          $(td).attr('data-versions-modal-link', `protocols/${rowData.DT_RowId}/versions_modal`);
+          $(td).addClass('versions-cell');
+        }
       }],
       columns: [
         { data: '0' },
@@ -403,8 +411,8 @@ var ProtocolsIndex = (function() {
     let protocolsContainer = '.protocols-container';
     let versionsModal = '#protocol-versions-modal';
 
-    protocolsTableEl.on('click', '.protocol-versions-link', function(e) {
-      $.get(this.href, function(data) {
+    const handleOpenVersionsModal = (path) => {
+      $.get(path, function(data) {
         $(protocolsContainer).append($.parseHTML(data.html));
         $(versionsModal).modal('show');
         inlineEditing.init();
@@ -415,12 +423,19 @@ var ProtocolsIndex = (function() {
           $(versionsModal).remove();
         });
       });
+    };
+
+    protocolsTableEl.on('click', '.protocol-versions-link', function(e) {
+      handleOpenVersionsModal(this.href);
       e.stopPropagation();
       e.preventDefault();
     });
 
-    $(protocolsContainer).on('click', '#protocolVersions', function() {
-      $(`tr[data-row-id=${rowsSelected[0]}] .protocol-versions-link`).click();
+    $(protocolsContainer).on('click', '#protocolVersions', function(e) {
+      const path = $(`tr[data-row-id="${rowsSelected[0]}"]`).find('.versions-cell').attr('data-versions-modal-link');
+      handleOpenVersionsModal(path);
+      e.stopPropagation();
+      e.preventDefault();
     });
   }
 
