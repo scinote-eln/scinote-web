@@ -14,7 +14,7 @@
   <div class="content-pane flexible protocols-index <%= @type %>">
     <div class="content-header sticky-header">
       <div class="title-row">
-        <% if templates_view_mode_archived? %>
+        <% if templates_view_mode_archived?(type: @type) %>
           <h1>
             <i class="fas fa-archive"></i>
             <%= t('protocols.index.head_title_archived') %>
