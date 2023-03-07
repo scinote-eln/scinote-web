@@ -156,6 +156,8 @@ en:
           attributes:
             step_order:
               invalid: "Invalid step order."
+            name:
+              taken: "This protocol template name has to be unique inside a team (this includes the archive)."
         step:
           attributes:
             step_orderable_element_order:

@@ -300,7 +300,7 @@ class ProtocolsController < ApplicationController
       log_activity(:create_protocol_in_repository, nil, protocol: @protocol.id)
       redirect_to protocol_path(@protocol)
     else
-      render json: { error: @protocol.errors.full_messages.join(', ') }, status: :unprocessable_entity
+      render json: { error: @protocol.errors.messages.map { |_k, v| v }.join(', ') }, status: :unprocessable_entity
     end
   end
 
