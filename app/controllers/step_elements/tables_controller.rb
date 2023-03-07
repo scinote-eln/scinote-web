@@ -9,7 +9,8 @@ module StepElements
         Table.new(
           name: t('protocols.steps.table.default_name', position: @step.step_tables.length + 1),
           contents: { data: Array.new(5, Array.new(5, '')) }.to_json,
-          created_by: current_user
+          created_by: current_user,
+          team: @step.protocol.team
         ))
 
       ActiveRecord::Base.transaction do
