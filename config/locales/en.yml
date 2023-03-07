@@ -1087,8 +1087,6 @@ en:
         revert_title: "Revert protocol template"
         revert_message: "This will override any changes you made. We can’t recover them once you revert."
         revert_btn_text: "Yes, revert it"
-        update_parent_title: "Update templates version"
-        update_parent_message: "Are you sure you want to update the templates protocol with this version? This will override any other changes made in the templates version."
         update_self_title: "Update from protocol templates"
         update_self_message: "This will override any changes you made. We can’t recover them once you update this protocol with the new version."
         update_self_btn_text: "Yes, update it"
