@@ -141,7 +141,13 @@ class ProtocolsDatatable < CustomDatatable
     records = records.where(protocols: { archived_by_id: params[:archived_by] }) if params[:archived_by].present?
 
     if params[:has_draft].present?
-      records = records.where(protocols: { protocol_type: Protocol.protocol_types[:in_repository_draft] })
+      records =
+        records
+        .joins("LEFT OUTER JOIN protocols protocol_drafts " \
+               "ON protocol_drafts.protocol_type = #{Protocol.protocol_types[:in_repository_draft]} " \
+               "AND (protocol_drafts.parent_id = protocols.id OR protocol_drafts.parent_id = protocols.parent_id)")
+        .where('protocols.protocol_type = ? OR protocol_drafts.id IS NOT NULL',
+               Protocol.protocol_types[:in_repository_draft])
     end
 
     records
