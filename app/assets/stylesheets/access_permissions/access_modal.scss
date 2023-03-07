@@ -10,6 +10,15 @@
     &:focus {
       box-shadow: none;
     }
+
+    &.disabled {
+      color: $color-black;
+      opacity: 1;
+
+      .caret {
+        opacity: 0;
+      }
+    }
   }
 
   .modal-body {
