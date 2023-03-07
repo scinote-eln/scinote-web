@@ -13,7 +13,7 @@
         </a>
       </div>
       <div class="actions-block">
-        <a class="btn btn-light icon-btn pull-right" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
+        <a class="btn btn-light icon-btn pull-right" :href="protocol.attributes.urls.print_protocol_url" target="_blank">
           <span class="fas fa-print" aria-hidden="true"></span>
         </a>
         <button class="btn btn-light" @click="openVersionsModal">{{ i18n.t("protocols.header.versions") }}</button>
