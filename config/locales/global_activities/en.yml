@@ -257,6 +257,7 @@ en:
       protocol_template_published_html: "%{user} published protocol template %{protocol} version %{version_number}"
       protocol_template_revision_notes_updated_html: "%{user} edited revision notes of %{protocol}"
       protocol_template_draft_deleted_html: "%{user} deleted draft of %{protocol}"
+      protocol_template_draft_created_html: "%{user} created draft of %{protocol}"
       protocol_template_access_granted_html: "%{user} granted access to %{user_target} with user role %{role} to protocol template %{protocol}"
       protocol_template_access_changed_html: "%{user} changed %{user_target}’s role on protocol template %{protocol} to %{role}"
       protocol_template_access_revoked_html: "%{user} removed %{user_target} with user role %{role} from protocol template %{protocol}"
