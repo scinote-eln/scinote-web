@@ -1107,10 +1107,12 @@ class ProtocolsController < ApplicationController
     begin
       Protocol.transaction do
         @protocols.find_each do |protocol|
+          protocol = protocol.parent if protocol.parent_id
           protocol.method(action).call(current_user)
         end
       end
-    rescue
+    rescue StandardError => e
+      Rails.logger.error e.message
       rollbacked = true
     end
 
