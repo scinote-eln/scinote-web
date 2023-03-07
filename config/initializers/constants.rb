@@ -988,7 +988,7 @@ class Constants
     'time' => 0,
     'start' => 0,
     'length' => REPOSITORY_DEFAULT_PAGE_SIZE,
-    'order' => [[2, 'asc']], # Default sorting by 'ID' column
+    'order' => [[3, 'asc']], # Default sorting by 'name' column
     'columns' => [],
     'assigned' => 'assigned',
     'ColReorder' => [*0..7]

@@ -16,6 +16,7 @@
         font-weight: bold;
         overflow: hidden;
         white-space: nowrap;
+        cursor: pointer;
 
         .modal-tooltiptext {
           margin-left: -10px;
@@ -26,6 +27,16 @@
           color: $color-silver-chalice;
           font-weight: normal;
           opacity: 1;
+        }
+
+        &.sorting::after {
+          opacity: 0;
+        }
+
+        &.sorting:hover {
+          &::after {
+            opacity: 1;
+          }
         }
 
         &:first-child {
