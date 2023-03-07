@@ -2641,6 +2641,7 @@ en:
         import: "Load"
         import_to_team_protocols_label: "Import to Team Protocols"
         import_to_private_protocols_label: "Import to My Protocols"
+        import_protocols_label: "Import"
     export:
       export_results:
         title: "Export results"
@@ -2851,7 +2852,7 @@ en:
         import:
           public: "Team protocols"
           private: "My protocols"
-          success_flash: 'Protocol <strong>%{name}</strong> successfully imported to %{type}.'
+          success_flash: 'Protocol <strong>%{name}</strong> successfully imported.'
 
     steps:
       placeholder: 'Enter step name'
