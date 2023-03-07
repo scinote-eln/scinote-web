@@ -695,6 +695,8 @@ var ProtocolsIndex = (function() {
     actionToolbar.find('.btn').removeClass('btn-primary').addClass('btn-light');
     actionToolbar.find('.btn:visible').first().addClass('btn-primary').removeClass('btn-light');
     actionToolbar.find('.btn').removeClass('notransition');
+
+    actionToolbar.find('.emptyPlaceholder').toggleClass('hidden', actionToolbar.find('.btn:visible').length > 0);
   }
 
   /*

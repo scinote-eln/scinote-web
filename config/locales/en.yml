@@ -2720,6 +2720,7 @@ en:
         export: "Export"
         archive: "Archive"
         restore: "Restore"
+        empty_placeholder: "There is no action available"
       public_description: "Team protocols are visible and can be used by everyone from the team."
       private_description: "My protocols are only visible to you."
       create_new: "New protocol"
