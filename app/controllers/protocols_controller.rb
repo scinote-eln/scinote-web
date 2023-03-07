@@ -410,7 +410,7 @@ class ProtocolsController < ApplicationController
       Protocol.transaction do
         begin
           @protocol.unlink
-        rescue Exception
+        rescue StandardError
           transaction_error = true
           raise ActiveRecord::Rollback
         end
@@ -769,9 +769,9 @@ class ProtocolsController < ApplicationController
       Protocol.transaction do
         begin
           protocol = @importer.import_new_protocol(@db_json)
-        rescue Exception
+        rescue StandardError
           transaction_error = true
-          raise ActiveRecord:: Rollback
+          raise ActiveRecord::Rollback
         end
       end
       p_name =
