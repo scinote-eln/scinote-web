@@ -91,7 +91,8 @@ class ProtocolsDatatable < CustomDatatable
       {
         DT_RowId: record.id,
         DT_RowAttr: {
-          'data-permissions-url': permissions_protocol_path(parent)
+          'data-permissions-url': permissions_protocol_path(parent),
+          'data-versions-url': versions_modal_protocol_path(parent)
         },
         '1': name_html(parent),
         '2': parent.code,

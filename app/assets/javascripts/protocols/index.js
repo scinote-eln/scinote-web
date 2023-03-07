@@ -403,8 +403,8 @@ var ProtocolsIndex = (function() {
     let protocolsContainer = '.protocols-container';
     let versionsModal = '#protocol-versions-modal';
 
-    protocolsTableEl.on('click', '.protocol-versions-link', function(e) {
-      $.get(this.href, function(data) {
+    function loadVersionModal(href) {
+      $.get(href, function(data) {
         $(protocolsContainer).append($.parseHTML(data.html));
         $(versionsModal).modal('show');
         inlineEditing.init();
@@ -415,12 +415,16 @@ var ProtocolsIndex = (function() {
           $(versionsModal).remove();
         });
       });
+    }
+
+    protocolsTableEl.on('click', '.protocol-versions-link', function(e) {
+      loadVersionModal(this.href);
       e.stopPropagation();
       e.preventDefault();
     });
 
     $(protocolsContainer).on('click', '#protocolVersions', function() {
-      $(`tr[data-row-id=${rowsSelected[0]}] .protocol-versions-link`).click();
+      loadVersionModal($(`tr[data-row-id=${rowsSelected[0]}]`).data('versions-url'));
     });
   }
 
