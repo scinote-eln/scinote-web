@@ -21,7 +21,7 @@
               </button>
               <%= f.hidden_field :default_public_user_role_id, value: f.object.default_public_user_role.id, class: "default-public-user-role-id" %>
               <ul class="dropdown-menu dropdown-menu-right user-assignment-dropdown" aria-labelledby="defaultPublicUserRole">
-                <% user_roles_collection.each do |role| %>
+                <% user_roles_collection(assignable).each do |role| %>
                   <li>
                     <a href="#" data-turbolinks="false" class="user-role-selector" data-role-id="<%= role[1] %>">
                       <%= role[0] %>
