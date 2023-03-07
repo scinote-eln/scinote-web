@@ -3218,9 +3218,9 @@ en:
 
   access_permissions:
     everyone_else: "Everyone else at %{team_name}"
-    reset: "The inherited role will be applied"
+    reset: "Inherit role"
     remove_access: "Remove access"
-    grant_access: "Grant access"
+    grant_access: "Grant new access"
     create:
       success:
         one: "You have successfully granted access to %{count} member to the project."
@@ -3235,15 +3235,15 @@ en:
         new_resource_assignments: "Grant new access to %{resource}"
       new_assignments_form:
         title: "Select members"
-        submit: "Grant access"
-        submit_singular: "Grant access to 1 user"
-        submit_plural: "Grant access to {num} users"
+        submit: "Grant new access"
+        submit_singular: "Grant access to 1 member"
+        submit_plural: "Grant access to {num} members"
         find_people_html: "Find people"
       new_protocol_assignments_form:
         title: "Select members"
-        submit: "Grant access"
-        submit_singular: "Grant access to 1 user"
-        submit_plural: "Grant access to {num} users"
+        submit: "Grant new access"
+        submit_singular: "Grant access to 1 member"
+        submit_plural: "Grant access to {num} members"
         find_people_html: "Find people"
       experiment_member_field:
         reset: "Inherit role"
