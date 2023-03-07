@@ -22,24 +22,23 @@ class TinyMceAsset < ApplicationRecord
   validates :estimated_size, presence: true
 
   def self.update_images(object, images, current_user)
+    text_field = object.public_send(Extends::RICH_TEXT_FIELD_MAPPINGS[object.class.name]) || ''
     # image ids that are present in text
-    text_images =
-      object.public_send(Extends::RICH_TEXT_FIELD_MAPPINGS[object.class.name])
-            .scan(/data-mce-token="([^"]+)"/)
-            .flatten
-
+    text_images = text_field.scan(/data-mce-token="([^"]+)"/).flatten
     images = JSON.parse(images) + text_images
 
     current_images = object.tiny_mce_assets.pluck(:id)
     images_to_delete = current_images.reject do |x|
       (images.include? Base62.encode(x))
     end
+
     images.each do |image|
       image_to_update = find_by(id: Base62.decode(image))
 
       # if image was pasted from another object, check permission and create a copy
       if image_to_update.object != object && image_to_update.can_read?(current_user)
-        image_to_update = image_to_update.clone_tinymce_asset(object)
+        image_to_update.clone_tinymce_asset(object)
+        image_to_update.reload
       end
 
       next if image_to_update.object
@@ -65,6 +64,13 @@ class TinyMceAsset < ApplicationRecord
 
     description = Nokogiri::HTML(description)
     tm_assets = description.css('img[data-mce-token]')
+
+    # Make same-page anchor links work properly with turbolinks
+    links = description.css('[href]')
+    links.each do |link|
+      link['data-turbolinks'] = false if link['href'].starts_with?('#')
+    end
+
     tm_assets.each do |tm_asset|
       asset_id = tm_asset.attr('data-mce-token')
       new_asset = obj.tiny_mce_assets.find_by(id: Base62.decode(asset_id))

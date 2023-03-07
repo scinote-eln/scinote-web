@@ -15,6 +15,7 @@
           v-if="canManage"
           :value="labelTemplate.attributes.name"
           :characterLimit="255"
+          :characterMinLimit="2"
           :allowBlank="false"
           :attributeName="i18n.t('label_templates.show.name_error_prefix')"
           :autofocus="editingName"

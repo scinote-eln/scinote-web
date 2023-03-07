@@ -68,7 +68,7 @@ module UserAssignments
     end
 
     def create_or_update_user_assignment(object, role = nil)
-      new_user_assignment = object.user_assignments.find_or_initialize_by(user: @user)
+      new_user_assignment = object.user_assignments.find_or_initialize_by(user: @user, team: object.team)
       return if new_user_assignment.manually_assigned?
 
       new_user_assignment.user_role = role || @user_role

@@ -4,7 +4,7 @@ class TableSerializer < ActiveModel::Serializer
   include Canaid::Helpers::PermissionsHelper
   include Rails.application.routes.url_helpers
 
-  attributes :name, :contents, :urls, :icon
+  attributes :name, :contents, :urls, :icon, :metadata
 
   def contents
     object.contents_utf_8

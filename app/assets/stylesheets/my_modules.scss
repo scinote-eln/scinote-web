@@ -6,6 +6,11 @@
 
 @import "constants";
 
+// Fix for elements being scrolled to being hidden behind sticky navigation
+html {
+  scroll-padding-top: 128px;
+}
+
 .protocol-description-content {
   margin: 20px 0 20px 10px;
 }
@@ -159,6 +164,11 @@
       width: 100%;
     }
   }
+}
+
+.mce-toc ul,
+.mce-toc li {
+  list-style-type: none;
 }
 
 // Mobile view

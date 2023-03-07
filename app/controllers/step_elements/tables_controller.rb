@@ -60,7 +60,7 @@ module StepElements
     private
 
     def table_params
-      params.permit(:name, :contents)
+      params.permit(:name, :contents, metadata: {})
     end
 
     def load_table

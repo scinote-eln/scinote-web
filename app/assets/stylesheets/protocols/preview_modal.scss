@@ -13,6 +13,14 @@
     .ql-editor {
       min-height: initial;
     }
+
+    .form-group.has-error {
+      color: $brand-danger;
+
+      .sci-input-field {
+        border: 1px solid $brand-danger;
+      }
+    }
   }
 
   .general-error {

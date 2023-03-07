@@ -1,4 +1,4 @@
-/* global I18n hljs GLOBAL_CONSTANTS HelperModule SmartAnnotation TinyMCE */
+/* global I18n GLOBAL_CONSTANTS HelperModule SmartAnnotation TinyMCE */
 
 import tinyMCE from 'tinymce/tinymce';
 import 'tinymce/models/dom';
@@ -11,8 +11,10 @@ import 'tinymce/plugins/autoresize';
 import 'tinymce/plugins/link';
 import 'tinymce/plugins/advlist';
 import 'tinymce/plugins/codesample';
+import 'tinymce/plugins/code';
 import 'tinymce/plugins/autolink';
 import 'tinymce/plugins/lists';
+import 'tinymce/plugins/image';
 import 'tinymce/plugins/charmap';
 import 'tinymce/plugins/anchor';
 import 'tinymce/plugins/searchreplace';
@@ -37,22 +39,16 @@ import 'raw-loader';
 import contentCss from '!!raw-loader!tinymce/skins/content/default/content.min.css';
 import contentUiCss from '!!raw-loader!tinymce/skins/ui/tinymce-5/content.min.css';
 
-const contentPStyle = 'p { margin: 0; padding: 0 }';
-const contentStyle = [contentCss, contentUiCss, contentPStyle].map((s) => s.toString()).join('\n');
+const contentPStyle = `p { margin: 0; padding: 0;}`;
+const contentBodyStyle = `body { font-family: Lato, "Open Sans", Arial, Helvetica, sans-serif }`;
+const contentStyle = [contentCss, contentUiCss, contentBodyStyle, contentPStyle].map((s) => s.toString()).join('\n');
+
+// Optional pre-initialization method
+if (typeof(window.preTinyMceInit) === 'function') {
+  window.preTinyMceInit();
+}
 
 window.TinyMCE = (() => {
-  function initHighlightjs() {
-    $('[class*=language]').each((i, block) => {
-      hljs.highlightBlock(block);
-    });
-  }
-
-  function initHighlightjsIframe(iframe) {
-    $('[class*=language]', iframe).each((i, block) => {
-      hljs.highlightBlock(block);
-    });
-  }
-
   function makeItDirty(editor) {
     const editorForm = $(editor.getContainer()).closest('form');
     editorForm.find('.tinymce-status-badge').addClass('hidden');
@@ -117,7 +113,7 @@ window.TinyMCE = (() => {
     setTimeout(() => { tinyMCE.activeEditor.execCommand('mceAutoResize') }, 500);
   }
 
-  function initImageToolBar(editor) {
+  function initCssOverrides(editor) {
     const editorIframe = $(`#${editor.id}`).next().find('.tox-edit-area iframe');
     const primaryColor = '#104da9';
     editorIframe.contents().find('head').append(`<style type="text/css">
@@ -130,7 +126,11 @@ window.TinyMCE = (() => {
         .mce-content-body div#mceResizeHandlene{border-right: 2px solid ${primaryColor}; border-top: 2px solid ${primaryColor}}
         .mce-content-body div#mceResizeHandlesw{border-left: 2px solid ${primaryColor}; border-bottom: 2px solid ${primaryColor}}
         .mce-content-body div#mceResizeHandlese{border-right: 2px solid ${primaryColor}; border-bottom: 2px solid ${primaryColor}}
+        h1 {font-size: 24px !important }
+        h2 {font-size: 18px !important }
+        h3 {font-size: 16px !important }
       </style>`);
+    editorIframe.contents().find('head').append($('#font-css-pack').clone());
   }
 
   function draftLocation() {
@@ -182,10 +182,10 @@ window.TinyMCE = (() => {
           .before(`<div class="tinymce-placeholder" style="height:${tinyMceInitSize}px"></div>`);
         tinyMceContainer.addClass('hidden');
         const plugins = `
-          table autosave autoresize link advlist codesample autolink lists
+          image table autosave autoresize link advlist codesample code autolink lists
           charmap anchor searchreplace wordcount visualblocks visualchars
           insertdatetime nonbreaking save directionality customimageuploader
-          marvinjs custom_image_toolbar help quickbars
+          marvinjs custom_image_toolbar help quickbars ${window.extraTinyMcePlugins ? window.extraTinyMcePlugins : ''}
         `;
         // if (typeof (MarvinJsEditor) !== 'undefined') plugins += ' marvinjsplugin';
 
@@ -211,13 +211,16 @@ window.TinyMCE = (() => {
           menu: {
             insert: { title: 'Insert', items: 'link codesample inserttable | charmap hr | nonbreaking anchor | insertdatetime customimageuploader marvinjs' },
           },
+          block_formats: 'Paragraph=p; Header 1=h1; Header 2=h2; Header 3=h3; Preformatted=pre',
           menubar: 'file edit view insert format table',
-          toolbar: 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link | forecolor backcolor | codesample | customimageuploader marvinjs | help',
+          toolbar: window.customTinyMceToolbar || 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link | forecolor backcolor | codesample | customimageuploader marvinjs | help',
           plugins,
+          contextmenu: '',
           autoresize_bottom_margin: 20,
           placeholder: options.placeholder,
           toolbar_sticky: true,
           toolbar_sticky_offset: editorToolbaroffset,
+          codesample_global_prismjs: true,
           codesample_languages: [
             { text: 'R', value: 'r' },
             { text: 'MATLAB', value: 'matlab' },
@@ -254,10 +257,7 @@ window.TinyMCE = (() => {
               items: [
                 { title: 'Header 1', format: 'h1' },
                 { title: 'Header 2', format: 'h2' },
-                { title: 'Header 3', format: 'h3' },
-                { title: 'Header 4', format: 'h4' },
-                { title: 'Header 5', format: 'h5' },
-                { title: 'Header 6', format: 'h6' }
+                { title: 'Header 3', format: 'h3' }
               ]
             },
             {
@@ -307,7 +307,7 @@ window.TinyMCE = (() => {
             }
 
             // Init image toolbar
-            initImageToolBar(editor);
+            initCssOverrides(editor);
 
             // Init save/cancel button wrapper
             $('<div class="tinymce-save-controls"></div>').appendTo(menuBar);
@@ -370,7 +370,6 @@ window.TinyMCE = (() => {
 
             SmartAnnotation.init($(editor.contentDocument.activeElement));
             SmartAnnotation.preventPropagation('.atwho-user-popover');
-            initHighlightjsIframe($(editor.iframeElement).contents());
 
             if (options.afterInitCallback) { options.afterInitCallback(); }
           },
@@ -382,15 +381,6 @@ window.TinyMCE = (() => {
                 return false;
               }
               return true;
-            });
-
-            editor.on('NodeChange', (e) => {
-              const node = e.element;
-              setTimeout(() => {
-                if ($(node).is('pre') && !editor.isHidden()) {
-                  initHighlightjsIframe($(editor.iframeElement).contents());
-                }
-              }, 200);
             });
 
             editor.on('Dirty', () => {
@@ -430,7 +420,6 @@ window.TinyMCE = (() => {
               restoreDraftNotification(selector, editor);
             });
           },
-          codesample_content_css: $(selector).data('highlightjs-path'),
           save_onsavecallback: (editor) => { saveAction(editor); }
         });
       }
@@ -440,7 +429,6 @@ window.TinyMCE = (() => {
     destroyAll: () => {
       if (tinyMCE.activeEditor) {
         tinyMCE.activeEditor.remove();
-        initHighlightjs();
       }
     },
     refresh: () => {
@@ -457,7 +445,6 @@ window.TinyMCE = (() => {
     makeItDirty: (editor) => {
       makeItDirty(editor);
     },
-    highlight: initHighlightjs,
     wrapTables: (container) => {
       container.find('table').toArray().forEach((table) => {
         if ($(table).parent().hasClass('table-wrapper')) return;

@@ -197,11 +197,12 @@ var ExperimnetTable = {
       $('#modal-edit-module').data('id', this.selectedMyModules[0]);
       $('#edit-module-name-input').val($(`#taskName${$('#modal-edit-module').data('id')}`).data('full-name'));
     });
-    $('#modal-edit-module').on('click', 'button[data-action="confirm"]', () => {
+
+    const handleRenameModal = () => {
       let id = $('#modal-edit-module').data('id');
       let newValue = $('#edit-module-name-input').val();
 
-      $(`.my-module-selector[data-my-module="${id}"]`).click();
+      $(`.my-module-selector[data-my-module="${id}"]`).trigger('click');
 
       if (newValue === $(`#taskName${id}`).data('full-name')) {
         $('#modal-edit-module').modal('hide');
@@ -227,8 +228,21 @@ var ExperimnetTable = {
         }
       });
 
+      if ($(`.my-module-selector[data-my-module="${id}"]`).prop('checked')) {
+        $(`.my-module-selector[data-my-module="${id}"]`).trigger('click');
+      }
+
+      this.clearRowTaskSelection();
+
       return true;
-    });
+    };
+
+    $('#modal-edit-module')
+      .on('click', 'button[data-action="confirm"]', handleRenameModal)
+      .on('submit', 'form', (e) => {
+        e.preventDefault();
+        handleRenameModal();
+      });
   },
   initManageUsersDropdown: function() {
     $(this.table).on('show.bs.dropdown', '.assign-users-dropdown', (e) => {

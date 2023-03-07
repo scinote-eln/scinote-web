@@ -176,4 +176,22 @@ namespace :data do
       end
     end
   end
+
+  desc 'Reset repositories user assignments'
+  task reset_repositories_user_assignments: :environment do
+    ActiveRecord::Base.transaction do
+      Team.all.find_each do |team|
+        team.user_assignments.find_each do |team_user_assignment|
+          team.repositories.find_each do |repository|
+            new_user_assignment =
+              repository.automatic_user_assignments.find_or_initialize_by(user: team_user_assignment.user, team: team)
+            new_user_assignment.user_role = team_user_assignment.user_role
+            new_user_assignment.assigned_by = team_user_assignment.assigned_by
+            new_user_assignment.assigned = :automatically
+            new_user_assignment.save!
+          end
+        end
+      end
+    end
+  end
 end

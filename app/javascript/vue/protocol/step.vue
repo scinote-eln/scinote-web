@@ -128,6 +128,7 @@
     </div>
     <div class="collapse in" :id="'stepBody' + step.id">
       <div class="step-elements">
+        <div class="step-timestamp">{{ i18n.t('protocols.steps.timestamp', {date: step.attributes.created_at, user: step.attributes.created_by}) }}</div>
         <template v-for="(element, index) in orderedElements">
           <component
             :is="elements[index].attributes.orderable_type"
@@ -420,7 +421,17 @@
           this.elements.push(result.data)
         }).error(() => {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
-        })
+        }).done(() => {
+          this.$parent.$nextTick(() => {
+            const children = this.$children
+            const lastChild = children[children.length - 1]
+            lastChild.$el.scrollIntoView(false)
+            window.scrollBy({
+              top: 200,
+              behavior: 'smooth'
+            });
+          })
+        });
       },
       addAttachment(attachment) {
         this.attachments.push(attachment);

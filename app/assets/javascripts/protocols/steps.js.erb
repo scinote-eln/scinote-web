@@ -43,10 +43,6 @@
 
   initHandsOnTable($(document));
 
-  $('[class*=language]').each((i, block) => {
-    hljs.highlightBlock(block);
-  });
-
   SmartAnnotation.preventPropagation('.atwho-user-popover');
 
   $(function () {

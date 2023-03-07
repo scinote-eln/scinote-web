@@ -18,7 +18,7 @@ describe Repositories::MultipleShareUpdateService do
     end
 
     it 'adds TeamRepository record' do
-      expect { service_call }.to change { TeamRepository.count }.by(1)
+      expect { service_call }.to change { TeamSharedObject.count }.by(1)
     end
 
     it 'adds Activity record' do
@@ -48,13 +48,13 @@ describe Repositories::MultipleShareUpdateService do
     end
 
     it 'removes TeamRepository record' do
-      create :team_repository, :write, team: team2, repository: repository
+      create :team_shared_object, :write, team: team2, shared_repository: repository
 
       expect { service_call }.to change { TeamRepository.count }.by(-1)
     end
 
     it 'adds Activity record' do
-      create :team_repository, :write, team: team2, repository: repository
+      create :team_shared_object, :write, team: team2, shared_repository: repository
 
       expect { service_call }.to(change { Activity.all.count }.by(1))
     end
@@ -84,13 +84,13 @@ describe Repositories::MultipleShareUpdateService do
     end
 
     it 'updates permission for share record' do
-      tr = create :team_repository, :write, team: team2, repository: repository
+      tr = create :team_shared_object, :write, team: team2, shared_repository: repository
 
       expect { service_call }.to(change { tr.reload.permission_level })
     end
 
     it 'adds Activity record' do
-      create :team_repository, :write, team: team2, repository: repository
+      create :team_shared_object, :write, team: team2, shared_repository: repository
 
       expect { service_call }.to(change { Activity.all.count }.by(1))
     end

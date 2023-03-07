@@ -19,8 +19,6 @@ module Reports::Docx::DrawProjectHeader
       text I18n.t('projects.reports.elements.project_header.user_time', code: project.code,
                   timestamp: I18n.l(project.created_at, format: :full)), color: color[:gray]
       br
-      br
-      br
     end
   end
 end
