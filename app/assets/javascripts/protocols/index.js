@@ -516,13 +516,12 @@ var ProtocolsIndex = (function() {
         url: $el.data('url'),
         data: JSON.stringify({ ids: rowsSelected }),
         contentType: 'application/json'
-      },
-      (data) => {
-        animateSpinner(null, false);
-        HelperModule.flashAlertMsg(data.message, 'success');
-        reloadTable();
       }
-    ).error((data) => {
+    ).success((data) => {
+      animateSpinner(null, false);
+      HelperModule.flashAlertMsg(data.message, 'success');
+      reloadTable();
+    }).error((data) => {
       animateSpinner(null, false);
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
