@@ -1,17 +1,10 @@
+# frozen_string_literal: true
+
 require 'sanitize'
 
 module InputSanitizeHelper
-  # Rails default ActionController::Base.helpers.sanitize method call
-  # the ActiveRecord connecton method on the caller object which in
-  # our cases throws an error when called from not ActiveRecord objects
-  # such as Datatables
-  def sanitize_input(html, tags = [], attributes = [])
-    Sanitize.fragment(
-      html,
-      elements: Constants::WHITELISTED_TAGS + tags,
-      attributes: { all: Constants::WHITELISTED_ATTRIBUTES + attributes },
-      css: Constants::WHITELISTED_CSS_ATTRIBUTES
-    ).html_safe
+  def sanitize_input(html, _tags = [], _attributes = [])
+    Sanitize.fragment(html, Constants::INPUT_SANITIZE_CONFIG)
   end
 
   def escape_input(text)

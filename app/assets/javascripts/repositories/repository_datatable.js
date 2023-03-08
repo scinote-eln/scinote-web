@@ -231,7 +231,7 @@ var RepositoryDatatable = (function(global) {
       ev.stopPropagation();
       updateButtons();
       // Update number of selected records info
-      $('#selected_info').html(' (' + rowsSelected.length + ' entries selected)');
+      $('#selected_info').text(' (' + rowsSelected.length + ' entries selected)');
     });
 
     // Handle click on "Select all" control
@@ -579,7 +579,7 @@ var RepositoryDatatable = (function(global) {
 
         // Show number of selected rows near pages info
         $('#repository-table_info').append('<span id="selected_info"></span>');
-        $('#selected_info').html(' (' + rowsSelected.length + ' entries selected)');
+        $('#selected_info').text(' (' + rowsSelected.length + ' entries selected)');
 
         // Hide edit button if not all selected rows are on the current page
         $('#editRepositoryRecord').prop('disabled', !allSelectedRowsAreOnPage());

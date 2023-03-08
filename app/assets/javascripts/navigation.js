@@ -56,7 +56,7 @@
       success: function(data) {
         notificationCount.html('');
         if (data.notificationNmber > 0) {
-          notificationCount.html(data.notificationNmber);
+          notificationCount.text(data.notificationNmber);
           notificationCount.show();
           toggleNotificationBellPosition(element, icon);
         } else {

@@ -89,7 +89,7 @@ var RepositoryListColumnType = (function() {
     var $btn = $manageModal.find('.column-save-btn');
     var $textarea = $counterContainer.parents('.form-group').find('textarea');
 
-    $counterContainer.find('.items-count').html(number).attr('data-count', number);
+    $counterContainer.find('.items-count').text(number).attr('data-count', number);
 
     if (number > limit) {
       $counterContainer.addClass('error-to-many-items');
