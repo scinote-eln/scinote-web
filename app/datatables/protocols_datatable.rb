@@ -127,10 +127,7 @@ class ProtocolsDatatable < CustomDatatable
     records = records.where(protocols: { published_by_id: params[:published_by] }) if params[:published_by].present?
 
     if params[:members].present?
-      records = records.joins('LEFT OUTER JOIN "user_assignments" "all_user_assignments" '\
-                              'ON "all_user_assignments"."assignable_type" = \'Protocol\' '\
-                              'AND "all_user_assignments"."assignable_id" = "protocols"."id"')
-                       .where(all_user_assignments: { user_id: params[:members] })
+      records = records.where(all_user_assignments: { user_id: params[:members] })
     end
 
     if params[:archived_on_from].present?
@@ -199,6 +196,9 @@ class ProtocolsDatatable < CustomDatatable
              'ON "protocol_protocol_keywords"."protocol_keyword_id" = "protocol_keywords"."id"')
       .joins('LEFT OUTER JOIN "users" "archived_users" ON "archived_users"."id" = "protocols"."archived_by_id"')
       .joins('LEFT OUTER JOIN "users" ON "users"."id" = "protocols"."published_by_id"')
+      .joins('LEFT OUTER JOIN "user_assignments" "all_user_assignments" '\
+        'ON "all_user_assignments"."assignable_type" = \'Protocol\' '\
+        'AND "all_user_assignments"."assignable_id" = "protocols"."id"')
       .group('"protocols"."id"')
 
     records = filter_protocols_records(records)
@@ -212,7 +212,7 @@ class ProtocolsDatatable < CustomDatatable
       '(COUNT(DISTINCT("self_linked_task_protocols"."id")) + ' \
       'COUNT(DISTINCT("parent_linked_task_protocols"."id")) + ' \
       'COUNT(DISTINCT("version_linked_task_protocols"."id"))) AS nr_of_linked_tasks',
-      'COUNT("user_assignments"."id") AS "nr_of_assigned_users"',
+      'COUNT(DISTINCT("all_user_assignments"."id")) AS "nr_of_assigned_users"',
       'MAX("users"."full_name") AS "full_username_str"', # "Hack" to get single username
       'MAX("archived_users"."full_name") AS "archived_full_username_str"'
     )
