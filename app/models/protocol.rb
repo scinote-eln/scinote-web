@@ -230,6 +230,11 @@ class Protocol < ApplicationRecord
     teams.blank? ? self : where(team: teams)
   end
 
+  def original_code
+    # returns linked protocol code, or code of the original version of the linked protocol
+    parent&.parent&.code || parent&.code || code
+  end
+
   def insert_step(step, position)
     ActiveRecord::Base.transaction do
       steps.where('position >= ?', position).desc_order.each do |s|

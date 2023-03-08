@@ -21,7 +21,7 @@
       </h2>
       <% if @protocol.linked? %>
         <div class="protocol-header-info">
-          <span><%= t('my_modules.protocols.protocol_status_bar.protocol_id_label') %> <%= @protocol.parent&.code %></span>
+          <span><%= t('my_modules.protocols.protocol_status_bar.protocol_id_label') %> <%= @protocol.original_code %></span>
           <span><%= t('my_modules.protocols.protocol_status_bar.protocol_version_label') %> <%= @protocol.parent&.version_number %></span>
         </div>
       <% end %>
