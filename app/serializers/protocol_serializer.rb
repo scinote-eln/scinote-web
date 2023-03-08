@@ -8,7 +8,7 @@ class ProtocolSerializer < ActiveModel::Serializer
 
   attributes :name, :id, :urls, :description, :description_view, :updated_at, :in_repository,
              :created_at_formatted, :updated_at_formatted, :added_by, :authors, :keywords, :version, :code,
-             :published, :version_comment
+             :published, :version_comment, :disabled_drafting
 
   def updated_at
     object.updated_at.to_i
@@ -81,6 +81,14 @@ class ProtocolSerializer < ActiveModel::Serializer
 
   def in_repository
     !object.in_module?
+  end
+
+  def disabled_drafting
+    protocol_types = Protocol.where(name: object.name).pluck(:protocol_type)
+    object.protocol_type != 'in_repository_draft' &&
+      !object.archived &&
+      protocol_types.length > 1 &&
+      protocol_types.include?('in_repository_draft')
   end
 
   private
