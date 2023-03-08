@@ -389,6 +389,7 @@ class ProtocolsController < ApplicationController
         flash[:error] = draft.errors.full_messages.join(', ')
         redirect_to protocols_path
       else
+        log_activity(:protocol_template_draft_created, nil, protocol: @protocol.id)
         redirect_to protocol_path(draft)
       end
     rescue StandardError => e
