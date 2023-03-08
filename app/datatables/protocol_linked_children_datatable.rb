@@ -32,6 +32,7 @@ class ProtocolLinkedChildrenDatatable < CustomDatatable
     records.map do |record|
       {
         'DT_RowId' => record.id,
+        'version' => record.parent.version_number,
         '1' => record_html(record)
       }
     end
@@ -40,13 +41,16 @@ class ProtocolLinkedChildrenDatatable < CustomDatatable
   # Query database for records (this will be later paginated and filtered)
   # after that "data" function will return json
   def get_raw_records
-    records =
-      Protocol
+    linked_protocols = Protocol
       .joins(my_module: { experiment: :project })
       .includes(my_module: { experiment: :project })
       .references(my_module: { experiment: :project })
       .where(protocol_type: Protocol.protocol_types[:linked])
+    records = linked_protocols
       .where(parent: @protocol)
+      .or(
+        linked_protocols.where(parent: Protocol.where(parent: @protocol))
+      )
     records.distinct
   end
 

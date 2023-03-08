@@ -550,7 +550,7 @@ var ProtocolsIndex = (function() {
               // Only initialize table if it's present
               childrenTableEl.DataTable({
                 autoWidth: false,
-                dom: 'RBltpi',
+                dom: 'RBtpl',
                 stateSave: false,
                 buttons: [],
                 processing: true,
@@ -570,6 +570,38 @@ var ProtocolsIndex = (function() {
                 columns: [
                   { data: '1' }
                 ],
+                lengthMenu: [[10, 25, 50], ['Show 10 per page', 'Show 25 per page', 'Show 50 per page']],
+                language: {
+                  lengthMenu: '_MENU_'
+                },
+                initComplete: function(settings, json) {
+                  const versionSelector = $('#version-selector');
+                  const table = childrenTableEl.DataTable();
+                  dropdownSelector.init(versionSelector, {
+                    noEmptyOption: true,
+                    singleSelect: true,
+                    selectAppearance: 'simple',
+                    closeOnSelect: true,
+                    onSelect: function() {
+                      const selectedValue = dropdownSelector.getValues(versionSelector);
+                      if (selectedValue === 'All') {
+                        table.rows().eq(0).each(index => {
+                          const row = table.row(index);
+                          row.nodes().to$().show();
+                        });
+                      } else {
+                        table.rows().eq(0).each(index => {
+                          const row = table.row(index);
+                          if (Number(row.data().version) === Number(selectedValue)) {
+                            row.nodes().to$().show();
+                          } else {
+                            row.nodes().to$().hide();
+                          }
+                        });
+                      }
+                    }
+                  });
+                },
                 fnDrawCallback: function() {
                   animateSpinner(this, false);
                 },
