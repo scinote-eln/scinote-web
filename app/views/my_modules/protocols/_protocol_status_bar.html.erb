@@ -9,7 +9,7 @@
     </span>
   <% end %>
   <a href="#" id="my-module-protocol-info-button" class="status-info
-    <%= 'parent-newer' if @protocol.parent_newer? || @protocol.parent_and_self_newer? %>
+    <%= 'parent-newer' if @protocol.parent_newer? %>
     <%= 'protocol-newer' if @protocol.newer_than_parent? %>
     " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <i class="fas fa-info-circle"></i>
@@ -47,7 +47,7 @@
           <div class="value"><%= I18n.l(@protocol&.parent&.published_on, format: :full) %></div>
         </div>
         <div class="dropdown-footer">
-          <% if @protocol.parent_newer? || @protocol.parent_and_self_newer? %>
+          <% if @protocol.parent_newer? %>
             <div class="notification-line new-parent-version">
               <i class="fas fa-info-circle"></i>
               <div class="description"><%= t("my_modules.protocols.protocol_status_bar.messages.template_updated_html") %></div>

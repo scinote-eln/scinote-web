@@ -1,5 +1,6 @@
+<% editable ||= false %>
 <% if assignable.visible? %>
-  <%= form_with(model: assignable, url: [:update_default_public_user_role, :access_permissions, assignable], method: :put, remote: true, html: { class: 'row member-item', id: 'public_assignments', data: { action: 'replace-form autosave-form', object_type: assignable.class.name.underscore.to_sym } }) do |f| %>
+  <%= form_with(model: assignable, url: [:update_default_public_user_role, :access_permissions, assignable], method: :put, remote: true, html: { class: 'member-item', id: 'public_assignments', data: { action: 'replace-form autosave-form', object_type: assignable.class.name.underscore.to_sym } }) do |f| %>
     <div class="user-assignment-info">
       <div class="global-avatar-container">
         <%= image_tag "icon/team.png", class: 'img-circle pull-left' %>
@@ -7,20 +8,43 @@
       <div>
         <%= t('access_permissions.everyone_else', team_name: assignable.team.name) %>
         <%= render 'access_permissions/partials/public_members_dropdown', team: assignable.team, assignable: assignable %>
-        <br>
-        <small class="text-muted">
-          <%= assignable.default_public_user_role.name %>
-          <span class="permission-object-tag" title="<%= t("access_permissions.partials.#{assignable.class.name.underscore}_tooltip") %>"">
-            <%= t("access_permissions.partials.#{assignable.class.name.underscore}") %>
-          </span>
-        </small>
       </div>
     </div>
     <div class="user-assignment-controls">
       <div class="user-assignment-role">
-        <% if editable %>
-          <%= f.select :default_public_user_role_id, options_for_select(user_roles_collection + [[t('access_permissions.remove_access'), nil]], selected: assignable.default_public_user_role_id), {}, class: 'form-control selectpicker', title: t("user_assignment.change_#{assignable.class.name.underscore}_role"), data: { 'selected-text-format' => 'static' } %>
-        <% end %>
+        <div class="user-assignment-controls">
+          <div class="dropdown pull-right">
+            <% if editable %>
+              <button class="btn btn-light btn-role-select" type="button" id="defaultPublicUserRole" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <%= f.object.default_public_user_role.name %>
+                <span class="caret"></span>
+              </button>
+              <%= f.hidden_field :default_public_user_role_id, value: f.object.default_public_user_role.id, class: "default-public-user-role-id" %>
+              <ul class="dropdown-menu dropdown-menu-right user-assignment-dropdown" aria-labelledby="defaultPublicUserRole">
+                <% user_roles_collection.each do |role| %>
+                  <li>
+                    <a href="#" data-turbolinks="false" class="user-role-selector" data-role-id="<%= role[1] %>">
+                      <%= role[0] %>
+                    </a>
+                  </li>
+                <% end %>
+                <% if assignable.top_level_assignable?  %>
+                  <li role="separator" class="divider" data-hook="support-dropdown-separator"></li>
+                  <li>
+                    <a href="#" data-turbolinks="false" class="user-role-selector" data-role-id="">
+                      <%= t('access_permissions.remove_access') %>
+                    </a>
+                  </li>
+                <% end %>
+              </ul>
+            <% else %>
+              <button class="btn btn-light btn-role-select disabled" type="button">
+                <%= f.object.default_public_user_role.name %>
+                <span class="caret"></span>
+              </button>
+            <% end %>
+          </div>
+        </div>
       </div>
     </div>
   <% end %>

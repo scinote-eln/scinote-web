@@ -56,6 +56,11 @@
       top: 0;
       width: 100%;
 
+      .emptyPlaceholder {
+        color: $color-volcano;
+        margin-left: 12px;
+      }
+
       .btn {
         margin-right: .25em;
       }

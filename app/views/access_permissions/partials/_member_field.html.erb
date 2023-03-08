@@ -1,6 +1,7 @@
 <% # frozen_string_literal: true %>
 
 <%
+  with_inherit ||= false
   assignment = assignable.user_assignments.find_by(user_id: user.id, team: current_team)
   item_id = dom_id(user, :assignment_member)
 %>
@@ -18,15 +19,15 @@
       </div>
     </div>
     <div class="user-assignment-controls">
-      <% unless defined?(with_inherit) && current_user == user %>
+      <% unless with_inherit && current_user == user %>
         <div class="dropdown pull-right">
-          <button class="btn btn-light" type="button" id="userAccess_<%= user.id %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <button class="btn btn-light btn-role-select" type="button" id="userAccess_<%= user.id %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <%= f.object.user_role.name %>
             <span class="caret"></span>
           </button>
           <%= f.hidden_field :user_role_id, value: f.object.user_role.id %>
           <ul class="dropdown-menu dropdown-menu-right user-assignment-dropdown" aria-labelledby="userAccess_<%= user.id %>">
-            <% user_roles_collection(with_inherit: defined? with_inherit).each do |role| %>
+            <% user_roles_collection(with_inherit: with_inherit).each do |role| %>
               <li>
                 <a href="#" data-turbolinks="false" class="user-role-selector" data-role-id="<%= role[1] %>">
                   <%= role[0] %>
