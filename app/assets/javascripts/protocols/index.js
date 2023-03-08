@@ -181,7 +181,7 @@ var ProtocolsIndex = (function() {
         searchable: false,
         orderable: false,
         sWidth: '1%',
-        render: function(data, type, full, meta) {
+        render: function() {
           return `<div class="sci-checkbox-container">
                     <input type="checkbox" class="sci-checkbox">
                     <span class="sci-checkbox-label"></span>
@@ -247,7 +247,7 @@ var ProtocolsIndex = (function() {
       fnInitComplete: function(e) {
         var dataTableWrapper = $(e.nTableWrapper);
         DataTableHelpers.initLengthAppearance(dataTableWrapper);
-        DataTableHelpers.initSearchField(dataTableWrapper, I18n.t('protocols.index.search_bar_placeholder') );
+        DataTableHelpers.initSearchField(dataTableWrapper, I18n.t('protocols.index.search_bar_placeholder'));
         dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
 
         let actionToolBar = $($('#protocolActionToolbar').html());
