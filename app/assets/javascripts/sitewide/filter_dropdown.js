@@ -97,12 +97,19 @@ var filterDropdown = (function() {
     });
   }
 
+  function initCloseButton() {
+    $('.close', $filterContainer).click(function() {
+      $(this).closest('.dropdown').removeClass('open');
+    });
+  }
+
   return {
     init: function() {
       $filterContainer = $('.filter-container');
       initClearButton();
       preventDropdownClose();
       initApplyButton();
+      initCloseButton();
       initSearchField();
       return $filterContainer;
     },
