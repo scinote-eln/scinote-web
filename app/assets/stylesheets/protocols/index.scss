@@ -290,10 +290,10 @@
   }
 
   .version-dropdown {
-    display: flex;
     align-items: center;
-    margin-top: 16px;
     column-gap: 8px;
+    display: flex;
+    margin-top: 16px;
 
     label {
       font-size: 14px;

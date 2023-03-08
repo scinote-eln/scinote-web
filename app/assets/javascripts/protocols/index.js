@@ -574,7 +574,7 @@ var ProtocolsIndex = (function() {
                 language: {
                   lengthMenu: '_MENU_'
                 },
-                initComplete: function(settings, json) {
+                initComplete: function() {
                   const versionSelector = $('#version-selector');
                   const table = childrenTableEl.DataTable();
                   dropdownSelector.init(versionSelector, {
