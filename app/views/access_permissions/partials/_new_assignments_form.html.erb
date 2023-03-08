@@ -18,7 +18,7 @@
       </div>
       <% users.each do |user| %>
         <%= f.fields_for :users, UserAssignment.new(user: user) do |user_form| %>
-          <%= render 'access_permissions/partials/user_assignment_field.html.erb', user_form: user_form  %>
+          <%= render 'access_permissions/partials/user_assignment_field.html.erb', user_form: user_form, assignable: assignable  %>
         <% end %>
       <% end %>
     </div>

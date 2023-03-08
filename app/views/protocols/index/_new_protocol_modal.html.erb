@@ -32,7 +32,7 @@
               <%= f.label :default_public_user_role_id, t("protocols.new_protocol_modal.role_label") %>
               <% default_role = UserRole.find_by(name: I18n.t('user_roles.predefined.viewer')).id %>
               <%= f.hidden_field :default_public_user_role_id, value: default_role %>
-              <%= f.select :role_selector, options_for_select(user_roles_collection, default_role) %>
+              <%= f.select :role_selector, options_for_select(team_user_roles_for_select, default_role) %>
             </div>
           </div>
         </div>
