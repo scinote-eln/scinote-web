@@ -61,6 +61,10 @@
     .dataTables_scrollBody {
       height: 100%;
 
+      td:first-child {
+        padding-top: 13px;
+      }
+
       td:not(:first-child) {
         padding: 14px 8px;
       }
