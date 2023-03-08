@@ -403,8 +403,8 @@ var ProtocolsIndex = (function() {
     let protocolsContainer = '.protocols-container';
     let versionsModal = '#protocol-versions-modal';
 
-    protocolsTableEl.on('click', '.protocol-versions-link', function(e) {
-      $.get(this.href, function(data) {
+    function loadVersionModal(href) {
+      $.get(href, function(data) {
         $(protocolsContainer).append($.parseHTML(data.html));
         $(versionsModal).modal('show');
         inlineEditing.init();
@@ -415,12 +415,16 @@ var ProtocolsIndex = (function() {
           $(versionsModal).remove();
         });
       });
+    }
+
+    protocolsTableEl.on('click', '.protocol-versions-link', function(e) {
+      loadVersionModal(this.href);
       e.stopPropagation();
       e.preventDefault();
     });
 
     $(protocolsContainer).on('click', '#protocolVersions', function() {
-      $(`tr[data-row-id=${rowsSelected[0]}] .protocol-versions-link`).click();
+      loadVersionModal($(`tr[data-row-id=${rowsSelected[0]}]`).data('versions-url'));
     });
   }
 
@@ -512,13 +516,12 @@ var ProtocolsIndex = (function() {
         url: $el.data('url'),
         data: JSON.stringify({ ids: rowsSelected }),
         contentType: 'application/json'
-      },
-      (data) => {
-        animateSpinner(null, false);
-        HelperModule.flashAlertMsg(data.message, 'success');
-        reloadTable();
       }
-    ).error((data) => {
+    ).success((data) => {
+      animateSpinner(null, false);
+      HelperModule.flashAlertMsg(data.message, 'success');
+      reloadTable();
+    }).error((data) => {
       animateSpinner(null, false);
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
@@ -691,6 +694,8 @@ var ProtocolsIndex = (function() {
     actionToolbar.find('.btn').removeClass('btn-primary').addClass('btn-light');
     actionToolbar.find('.btn:visible').first().addClass('btn-primary').removeClass('btn-light');
     actionToolbar.find('.btn').removeClass('notransition');
+
+    actionToolbar.find('.emptyPlaceholder').toggleClass('hidden', actionToolbar.find('.btn:visible').length > 0);
   }
 
   /*

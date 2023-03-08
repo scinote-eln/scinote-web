@@ -14,7 +14,7 @@
   <div class="content-pane flexible protocols-index <%= @type %>">
     <div class="content-header sticky-header">
       <div class="title-row">
-        <% if templates_view_mode_archived? %>
+        <% if templates_view_mode_archived?(type: @type) %>
           <h1>
             <i class="fas fa-archive"></i>
             <%= t('protocols.index.head_title_archived') %>
@@ -43,6 +43,7 @@
 <%= render partial: "protocols/index/linked_children_modal.html.erb" %>
 <%= render partial: "protocols/index/protocolsio_modal.html.erb" %>
 <%= render partial: "protocols/index/new_protocol_modal.html.erb", locals: {type: 'new'} %>
+<%= render partial: "protocols/index/protocol_preview_modal.html.erb" %>
 
 <%= render partial: "protocols/import_export/import_elements.html.erb" %>
 

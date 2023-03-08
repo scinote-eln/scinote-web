@@ -7,6 +7,24 @@
 }
 
 .modal {
+  .modal-dialog {
+    .modal-body {
+      padding: 0;
+    }
+
+    .modal-content {
+      padding: 1.15em;
+    }
+
+    .modal-header {
+      padding: 0 0 1.15em 0;
+    }
+
+    .modal-footer {
+      padding: 1.15em 0 0 0;
+    }
+  }
+
   .modal-absolute-close-button {
     position: absolute;
     right: 1em;

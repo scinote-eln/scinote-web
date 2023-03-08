@@ -8,7 +8,7 @@ class ProtocolSerializer < ActiveModel::Serializer
 
   attributes :name, :id, :urls, :description, :description_view, :updated_at, :in_repository,
              :created_at_formatted, :updated_at_formatted, :added_by, :authors, :keywords, :version, :code,
-             :published, :version_comment, :disabled_drafting
+             :published, :version_comment, :archived, :disabled_drafting
 
   def updated_at
     object.updated_at.to_i
@@ -75,7 +75,8 @@ class ProtocolSerializer < ActiveModel::Serializer
       delete_steps_url: delete_steps_url,
       publish_url: publish_url,
       save_as_draft_url: save_as_draft_url,
-      versions_modal_url: versions_modal_url
+      versions_modal_url: versions_modal_url,
+      print_protocol_url: print_protocol_url
     }
   end
 
@@ -123,6 +124,12 @@ class ProtocolSerializer < ActiveModel::Serializer
     versions_modal_protocol_path(object.parent || object)
   end
 
+  def print_protocol_url
+    return unless can_read_protocol_in_repository?(object)
+
+    print_protocol_path(object)
+  end
+
   def reorder_steps_url
     return unless can_manage_protocol_in_module?(object) || can_manage_protocol_in_repository?(object)
 
@@ -148,8 +155,7 @@ class ProtocolSerializer < ActiveModel::Serializer
   end
 
   def update_protocol_url
-    return unless can_read_protocol_in_module?(object) && object.linked? &&
-                  (object.parent_newer? || object.parent_and_self_newer?)
+    return unless can_read_protocol_in_module?(object) && object.linked? && object.parent_newer?
 
     update_from_parent_modal_protocol_path(object, format: :json)
   end

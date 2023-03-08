@@ -1,6 +1,6 @@
 <% # frozen_string_literal: true %>
 
-<div class="modal-content" id="user_assignments_modal" data-action="modal-close" data-target="<%= projects_path %>">
+<div class="modal-content" id="user_assignments_modal" data-action="modal-close" data-target="<%= public_send("#{assignable.class.name.pluralize.underscore}_path") %>">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <h4 class="modal-title">
@@ -18,7 +18,7 @@
       </div>
       <% users.each do |user| %>
         <%= f.fields_for :users, UserAssignment.new(user: user) do |user_form| %>
-          <%= render 'access_permissions/partials/user_assignment_field.html.erb', user_form: user_form  %>
+          <%= render 'access_permissions/partials/user_assignment_field.html.erb', user_form: user_form, assignable: assignable  %>
         <% end %>
       <% end %>
     </div>

@@ -38,7 +38,7 @@ module AccessPermissions
       @user_assignment.update!(permitted_update_params)
 
       log_activity(:change_user_role_on_project, @user_assignment)
-      propagate_job(user_assignment)
+      propagate_job(@user_assignment)
 
       respond_to do |format|
         format.json do
