@@ -14,6 +14,7 @@
         let newContainer = $(html).find(targetID).length ? $(html).find(targetID) : $(html);
         targetElement.replaceWith(newContainer);
         newContainer.find('.selectpicker').selectpicker();
+        newContainer.find('.new-assignment-user-search').focus();
 
         if (flash) {
           HelperModule.flashAlertMsg(flash, 'success');

@@ -15,7 +15,11 @@
           </div>
           <div class="sci-input-container">
             <label>{{ i18n.t('protocols.publish_modal.comment')}}</label>
-            <textarea v-model="protocol.attributes.version_comment" class="sci-input-field" :placeholder="i18n.t('protocols.publish_modal.comment_placeholder')"></textarea>
+            <textarea ref="textarea"
+                      v-model="protocol.attributes.version_comment"
+                      class="sci-input-field"
+                      :placeholder="i18n.t('protocols.publish_modal.comment_placeholder')">
+            </textarea>
           </div>
         </div>
         <div class="modal-footer">
@@ -40,6 +44,7 @@
       $(this.$refs.modal).on('hidden.bs.modal', () => {
         this.$emit('cancel');
       });
+      $(this.$refs.textarea).focus();
     },
     methods: {
       confirm() {
