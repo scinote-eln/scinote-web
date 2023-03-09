@@ -2759,6 +2759,7 @@ en:
         title: "Tasks linked to protocol %{protocol}"
         used_in: "Number of tasks linked to this protocol: %{nr}"
         no_linked_children: "This protocol is not linked to any task."
+        length_menu: "Show %{number} per page"
       archive:
         description: "Archived protocols can only be seen by you. Restoring protocols will return them to their previous location (team/my protocols)."
       restore: "Restore"

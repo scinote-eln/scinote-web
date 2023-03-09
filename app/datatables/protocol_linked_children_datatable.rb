@@ -87,9 +87,9 @@ class ProtocolLinkedChildrenDatatable < CustomDatatable
   def filter_child_records(records)
     if params[:version].present?
       version = params[:version]
-      records = records.joins("LEFT JOIN protocols protocol_parents " \
-                "ON protocols.parent_id = protocol_parents.id ")
-                .where("protocol_parents.version_number = #{version}")
+      records = records.joins('LEFT JOIN protocols protocol_parents ' \
+                       'ON protocols.parent_id = protocol_parents.id ')
+                       .where('protocol_parents.version_number = #{version}')
     end
     records
   end
