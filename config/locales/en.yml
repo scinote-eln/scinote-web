@@ -3207,6 +3207,7 @@ en:
     change_experiment_role: "Change experiment role"
     change_my_module_role: "Change task role"
     select_role: "Select role"
+    assign_all_team_members: "Grant access to all team members"
     from_project: "%{user_role} [from project]"
     from_experiment: "%{user_role} [from experiment]"
     experiment_select_role: "Change experiment role"

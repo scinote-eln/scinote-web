@@ -21,6 +21,7 @@ class Protocol < ApplicationRecord
   after_save :update_user_assignments, if: -> { saved_change_to_visibility? && in_repository? }
   after_save :update_linked_children
   skip_callback :create, :after, :create_users_assignments, if: -> { in_module? }
+  before_update :sync_protocol_assignments, if: :visibility_changed?
 
   enum visibility: { hidden: 0, visible: 1 }
   enum protocol_type: {
@@ -796,6 +797,14 @@ class Protocol < ApplicationRecord
   def ensure_single_draft
     if parent&.draft && parent.draft.id != id
       errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_parent_draft_number'))
+    end
+  end
+
+  def sync_protocol_assignments
+    if visible?
+      auto_assign_protocol_members
+    else
+      user_assignments.where(assigned: :automatically).destroy_all
     end
   end
 end
