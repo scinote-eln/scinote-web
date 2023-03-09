@@ -22,7 +22,8 @@
   }
 
   .modal-body {
-    min-height: calc(100vh - 200px);
+    max-height: calc(100vh - 190px);
+    min-height: 370px;
     overflow: auto;
     padding-top: 0;
   }
