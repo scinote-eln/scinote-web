@@ -1,10 +1,16 @@
 /* global dropdownSelector HelperModule */
 (function() {
-  $('#newProtocolModal').on('change', '#protocol_visibility', function() {
-    $('#roleSelectWrapper').toggleClass('hidden', !$(this)[0].checked);
-  });
+  const protocolModal = '#newProtocolModal';
+  $(protocolModal)
+    .on('change', '#protocol_visibility', function() {
+      $('#roleSelectWrapper').toggleClass('hidden', !$(this)[0].checked);
+    })
+    .on('show.bs.modal', function() {
+      $(`${protocolModal} #protocol_name`).parent().removeClass('error');
+      $(`${protocolModal} form[data-action="new"] #protocol_name`).val('');
+    });
 
-  let roleSelector = '#newProtocolModal #protocol_role_selector';
+  let roleSelector = `${protocolModal} #protocol_role_selector`;
   dropdownSelector.init(roleSelector, {
     noEmptyOption: true,
     singleSelect: true,
@@ -15,16 +21,16 @@
     }
   });
 
-  $('#newProtocolModal')
+  $(protocolModal)
     .on('ajax:error', 'form', function(e, error) {
       let msg = error.responseJSON.error;
-      $('#newProtocolModal #protocol_name').parent().addClass('error').attr('data-error-text', msg);
+      $(`${protocolModal} #protocol_name`).parent().addClass('error').attr('data-error-text', msg);
     })
     .on('ajax:success', 'form', function(e, data) {
       if (data.message) {
         HelperModule.flashAlertMsg(data.message, 'success');
       }
-      $('#newProtocolModal #protocol_name').parent().removeClass('error');
-      $('#newProtocolModal').modal('hide');
+      $(`${protocolModal} #protocol_name`).parent().removeClass('error');
+      $(protocolModal).modal('hide');
     });
 }());
