@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 json.modal controller.render_to_string(
-  partial: 'access_permissions/experiments/modals/show_modal',
+  partial: 'access_permissions/modals/show_modal',
   formats: [:html],
   locals: {
     assignable: @experiment,
