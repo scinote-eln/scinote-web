@@ -38,19 +38,19 @@ function initEditProtocolDescription() {
 function initLinkUpdate() {
   var modal = $('#confirm-link-update-modal');
   var modalTitle = modal.find('.modal-title');
-  var modalBody = modal.find('.modal-body');
+  var modalMessage = modal.find('.modal-body .message');
   var updateBtn = modal.find(".modal-footer [data-action='submit']");
   $("[data-action='unlink'], [data-action='revert'], [data-action='update-parent'], [data-action='update-self']")
     .on('ajax:success', function(e, data) {
       modalTitle.html(data.title);
-      modalBody.html(data.message);
+      modalMessage.html(data.message);
       updateBtn.text(data.btn_text);
       modal.attr('data-url', data.url);
       modal.modal('show');
     });
 
   modal.on('hidden.bs.modal', function() {
-    modalBody.html('');
+    modalMessage.html('');
   });
 
   if (!$._data(updateBtn[0], 'events')) {

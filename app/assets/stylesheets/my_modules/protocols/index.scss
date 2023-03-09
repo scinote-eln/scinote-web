@@ -426,6 +426,7 @@
     left: -125px;
     max-width: 100vw;
     width: 506px;
+    padding: 15px 0;
 
     .dropdown-content {
       padding: 24px;
@@ -673,8 +674,14 @@
   margin-left: 4px;
 }
 
-#confirm-link-update-modal {
+#confirm-link-update-modal,
+.delete-steps-modal {
+  .modal-body p {
+    margin: 1.2em 0;
+  }
+
   .warning {
-    margin: 0 15px 15px;
+    font-weight: bold;
+    margin-bottom: 1.2em;
   }
 }

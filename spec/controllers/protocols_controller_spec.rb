@@ -180,23 +180,6 @@ describe ProtocolsController, type: :controller do
           .to(change { Activity.count })
       end
     end
-
-    describe 'POST update_parent' do
-      let(:action) { put :update_parent, params: params, format: :json }
-
-      it 'calls create activity for updating protocol in repository from task' do
-        expect(Activities::CreateActivityService)
-          .to(receive(:call)
-                .with(hash_including(activity_type:
-                                       :update_protocol_in_repository_from_task)))
-        action
-      end
-
-      it 'adds activity in DB' do
-        expect { action }
-          .to(change { Activity.count })
-      end
-    end
   end
 
   describe 'POST load_from_repository' do

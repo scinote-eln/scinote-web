@@ -38,7 +38,7 @@ module AccessPermissions
       @user_assignment.update!(permitted_update_params)
 
       log_activity(:change_user_role_on_project, @user_assignment)
-      propagate_job(user_assignment)
+      propagate_job(@user_assignment)
 
       respond_to do |format|
         format.json do
@@ -53,21 +53,36 @@ module AccessPermissions
         permitted_create_params[:resource_members].each do |_k, user_assignment_params|
           next unless user_assignment_params[:assign] == '1'
 
-          user_assignment = UserAssignment.find_or_initialize_by(
-            assignable: @project,
-            user_id: user_assignment_params[:user_id],
-            team: current_team
-          )
+          if user_assignment_params[:user_id] == 'all'
+            @project.update!(visibility: :visible, default_public_user_role_id: user_assignment_params[:user_role_id])
+            Activities::CreateActivityService
+              .call(activity_type: :change_project_visibility,
+                    owner: current_user,
+                    subject: @project,
+                    team: @project.team,
+                    project: @project,
+                    message_items: {
+                      project: @project.id,
+                      visibility: t('projects.activity.visibility_visible')
+                    })
+          else
 
-          user_assignment.update!(
-            user_role_id: user_assignment_params[:user_role_id],
-            assigned_by: current_user,
-            assigned: :manually
-          )
+            user_assignment = UserAssignment.find_or_initialize_by(
+              assignable: @project,
+              user_id: user_assignment_params[:user_id],
+              team: current_team
+            )
 
-          log_activity(:assign_user_to_project, user_assignment)
-          created_count += 1
-          propagate_job(user_assignment)
+            user_assignment.update!(
+              user_role_id: user_assignment_params[:user_role_id],
+              assigned_by: current_user,
+              assigned: :manually
+            )
+
+            log_activity(:assign_user_to_project, user_assignment)
+            created_count += 1
+            propagate_job(user_assignment)
+          end
         end
 
         respond_to do |format|

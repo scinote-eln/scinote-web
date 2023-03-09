@@ -5,7 +5,7 @@
   id = dom_id(user, :new_protocol_member)
 %>
 
-<div class="row member-item new-member-item" data-filter-item="<%= user.full_name %>">
+<div class="member-item new-member-item" data-filter-item="<%= user.full_name %>">
   <%= user_form.hidden_field :user_id, value: user.id, name:"access_permissions_new_user_form[resource_members][#{user.id}][user_id]"  %>
   <div class="user-assignment-info">
     <div class="sci-checkbox-container">
@@ -26,7 +26,7 @@
   <div class="user-assignment-controls">
     <div class="user-assignment-role hidden" id="<%= id %>">
       <%= user_form.select :user_role_id,
-                options_for_select(user_roles_collection),
+                options_for_select(user_roles_collection(assignable)),
                 {},
                 name: "access_permissions_new_user_form[resource_members][#{user.id}][user_role_id]",
                 class: 'form-control selectpicker pull-right',

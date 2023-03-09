@@ -49,10 +49,6 @@ class ProtocolsController < ApplicationController
     update_from_parent_modal
     delete_steps
   )
-  before_action :check_manage_parent_in_repository_permissions, only: %i(
-    update_parent
-    update_parent_modal
-  )
   before_action :check_manage_all_in_repository_permissions, only: :make_private
   before_action :check_restore_all_in_repository_permissions, only: :restore
   before_action :check_archive_all_in_repository_permissions, only: :archive
@@ -300,7 +296,7 @@ class ProtocolsController < ApplicationController
       log_activity(:create_protocol_in_repository, nil, protocol: @protocol.id)
       redirect_to protocol_path(@protocol)
     else
-      render json: { error: @protocol.errors.full_messages.join(', ') }, status: :unprocessable_entity
+      render json: { error: @protocol.errors.messages.map { |_k, v| v }.join(', ') }, status: :unprocessable_entity
     end
   end
 
@@ -393,6 +389,7 @@ class ProtocolsController < ApplicationController
         flash[:error] = draft.errors.full_messages.join(', ')
         redirect_to protocols_path
       else
+        log_activity(:protocol_template_draft_created, nil, protocol: @protocol.id)
         redirect_to protocol_path(draft)
       end
     rescue StandardError => e
@@ -410,7 +407,7 @@ class ProtocolsController < ApplicationController
       Protocol.transaction do
         begin
           @protocol.unlink
-        rescue Exception
+        rescue StandardError
           transaction_error = true
           raise ActiveRecord::Rollback
         end
@@ -477,47 +474,6 @@ class ProtocolsController < ApplicationController
     end
   end
 
-  def update_parent
-    respond_to do |format|
-      if @protocol.parent.can_destroy?
-        transaction_error = false
-        Protocol.transaction do
-          @protocol.update_parent(current_user)
-        rescue StandardError
-          transaction_error = true
-          raise ActiveRecord::Rollback
-        end
-
-        if transaction_error
-          # Bad request error
-          format.json do
-            render json: {
-              message: t('my_modules.protocols.update_parent_error')
-            },
-            status: :bad_request
-          end
-        else
-          # Everything good, record activity, display flash & render 200
-          log_activity(:update_protocol_in_repository_from_task,
-                       @protocol.my_module.experiment.project,
-                       my_module: @protocol.my_module.id,
-                       protocol_repository: @protocol.parent.id)
-          flash[:success] = t(
-            'my_modules.protocols.update_parent_flash'
-          )
-          flash.keep(:success)
-          format.json { render json: {}, status: :ok }
-        end
-      else
-        format.json do
-          render json: {
-            message: t('my_modules.protocols.update_parent_error_locked')
-          }, status: :bad_request
-        end
-      end
-    end
-  end
-
   def update_from_parent
     protocol_can_destroy = @protocol.can_destroy?
     respond_to do |format|
@@ -530,7 +486,7 @@ class ProtocolsController < ApplicationController
                           else
                             @protocol.parent.parent
                           end
-          @protocol.update_from_parent(current_user, source_parent.latest_published_version)
+          @protocol.update_from_parent(current_user, source_parent.latest_published_version_or_self)
         rescue StandardError
           transaction_error = true
           raise ActiveRecord::Rollback
@@ -769,9 +725,9 @@ class ProtocolsController < ApplicationController
       Protocol.transaction do
         begin
           protocol = @importer.import_new_protocol(@db_json)
-        rescue Exception
+        rescue StandardError
           transaction_error = true
-          raise ActiveRecord:: Rollback
+          raise ActiveRecord::Rollback
         end
       end
       p_name =
@@ -813,7 +769,7 @@ class ProtocolsController < ApplicationController
 
           # Create folder and xml file for each protocol and populate it
           @protocols.each do |protocol|
-            protocol = protocol.latest_published_version || protocol
+            protocol = protocol.latest_published_version_or_self
             protocol_dir = get_guid(protocol.id).to_s
             ostream.put_next_entry("#{protocol_dir}/eln.xml")
             ostream.print(generate_protocol_xml(protocol))
@@ -907,19 +863,6 @@ class ProtocolsController < ApplicationController
           message: t('my_modules.protocols.confirm_link_update_modal.revert_message'),
           btn_text: t('my_modules.protocols.confirm_link_update_modal.revert_btn_text'),
           url: revert_protocol_path(@protocol)
-        }
-      end
-    end
-  end
-
-  def update_parent_modal
-    respond_to do |format|
-      format.json do
-        render json: {
-          title: t('my_modules.protocols.confirm_link_update_modal.update_parent_title'),
-          message: t('my_modules.protocols.confirm_link_update_modal.update_parent_message'),
-          btn_text: t('general.update'),
-          url: update_parent_protocol_path(@protocol)
         }
       end
     end
@@ -1107,10 +1050,12 @@ class ProtocolsController < ApplicationController
     begin
       Protocol.transaction do
         @protocols.find_each do |protocol|
+          protocol = protocol.parent if protocol.parent_id
           protocol.method(action).call(current_user)
         end
       end
-    rescue
+    rescue StandardError => e
+      Rails.logger.error e.message
       rollbacked = true
     end
 
@@ -1173,7 +1118,7 @@ class ProtocolsController < ApplicationController
   def check_clone_permissions
     load_team_and_type
     protocol = Protocol.find_by(id: params[:ids][0])
-    @original = protocol.latest_published_version || protocol
+    @original = protocol.latest_published_version_or_self
 
     if @original.blank? ||
        !can_clone_protocol_in_repository?(@original) || @type == :archive
@@ -1198,13 +1143,6 @@ class ProtocolsController < ApplicationController
     @protocol = Protocol.find_by(id: params[:id])
     render_403 unless @protocol.present? &&
                       can_delete_protocol_draft_in_repository?(@protocol)
-  end
-
-  def check_manage_parent_in_repository_permissions
-    @protocol = Protocol.find_by_id(params[:id])
-    render_403 unless @protocol.present? &&
-                      can_read_protocol_in_module?(@protocol) &&
-                      can_manage_protocol_in_repository?(@protocol.parent)
   end
 
   def check_manage_all_in_repository_permissions
@@ -1251,7 +1189,7 @@ class ProtocolsController < ApplicationController
 
   def check_load_from_repository_permissions
     @protocol = Protocol.find_by(id: params[:id])
-    @source = Protocol.find_by(id: params[:source_id])&.latest_published_version
+    @source = Protocol.find_by(id: params[:source_id])&.latest_published_version_or_self
 
     render_403 unless @protocol.present? && @source.present? &&
                       (can_manage_protocol_in_module?(@protocol) &&

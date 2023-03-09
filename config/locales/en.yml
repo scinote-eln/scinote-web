@@ -156,6 +156,8 @@ en:
           attributes:
             step_order:
               invalid: "Invalid step order."
+            name:
+              taken: "This protocol template name has to be unique inside a team (this includes the archive)."
         step:
           attributes:
             step_orderable_element_order:
@@ -313,7 +315,7 @@ en:
     templates:
       sidebar_title: "TEMPLATES"
       protocol_templates: "Protocol templates"
-      label_templates: "Label Templates"
+      label_templates: "Label templates"
 
   nav2:
     all_projects:
@@ -1085,8 +1087,6 @@ en:
         revert_title: "Revert protocol template"
         revert_message: "This will override any changes you made. We can’t recover them once you revert."
         revert_btn_text: "Yes, revert it"
-        update_parent_title: "Update templates version"
-        update_parent_message: "Are you sure you want to update the templates protocol with this version? This will override any other changes made in the templates version."
         update_self_title: "Update from protocol templates"
         update_self_message: "This will override any changes you made. We can’t recover them once you update this protocol with the new version."
         update_self_btn_text: "Yes, update it"
@@ -1099,7 +1099,7 @@ en:
       update_parent_flash: "Protocol in templates was successfully updated with the version from the task."
       update_parent_error: "Failed to update templates version of the protocol."
       update_parent_error_locked: "Failed to update templates version of the protocol. One or more files in the protocol are currently being edited."
-      update_from_parent_flash: "Version in the templates was successfully updated."
+      update_from_parent_flash: "Protocol was successfully updated."
       update_from_parent_error: "Failed to update the protocol with the version in the templates."
       update_from_parent_error_locked: "Failed to update the protocol with the version in the templates. One or more files in the protocol are currently being edited."
       load_from_repository_flash: "Successfully loaded the protocol from the templates."
@@ -1130,7 +1130,7 @@ en:
         link_label: "Link task to this protocol in templates"
         link_text: "<strong>Warning!</strong>&nbsp;This will unlink the currently linked protocol."
         error_400: "Due to unknown error, protocol could not be copied to templates."
-        success_message: "New protocol template was successfully saved. You can see it in protocol templates."
+        success_message: "Protocol was successfully saved as a new protocol template."
         confirm: "Save"
       load_from_file_flash: "Successfully loaded the protocol from the file."
       load_from_file_error: "Failed to load the protocol from file."
@@ -2641,6 +2641,7 @@ en:
         import: "Load"
         import_to_team_protocols_label: "Import to Team Protocols"
         import_to_private_protocols_label: "Import to My Protocols"
+        import_protocols_label: "Import"
     export:
       export_results:
         title: "Export results"
@@ -2719,6 +2720,7 @@ en:
         export: "Export"
         archive: "Archive"
         restore: "Restore"
+        empty_placeholder: "There is no action available"
       public_description: "Team protocols are visible and can be used by everyone from the team."
       private_description: "My protocols are only visible to you."
       create_new: "New protocol"
@@ -2851,7 +2853,7 @@ en:
         import:
           public: "Team protocols"
           private: "My protocols"
-          success_flash: 'Protocol <strong>%{name}</strong> successfully imported to %{type}.'
+          success_flash: 'Protocol <strong>%{name}</strong> successfully imported.'
         sort:
           new_html: "<i class=\"fas fa-sort-numeric-up\"></i>&nbsp;&nbsp;Newest first"
           old_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Oldest first"
@@ -3211,6 +3213,7 @@ en:
     change_experiment_role: "Change experiment role"
     change_my_module_role: "Change task role"
     select_role: "Select role"
+    assign_all_team_members: "Grant access to all team members"
     from_project: "%{user_role} [from project]"
     from_experiment: "%{user_role} [from experiment]"
     experiment_select_role: "Change experiment role"
@@ -3222,9 +3225,9 @@ en:
 
   access_permissions:
     everyone_else: "Everyone else at %{team_name}"
-    reset: "The inherited role will be applied"
+    reset: "Inherit role"
     remove_access: "Remove access"
-    grant_access: "Grant access"
+    grant_access: "Grant new access"
     create:
       success:
         one: "You have successfully granted access to %{count} member to the project."
@@ -3239,15 +3242,15 @@ en:
         new_resource_assignments: "Grant new access to %{resource}"
       new_assignments_form:
         title: "Select members"
-        submit: "Grant access"
-        submit_singular: "Grant access to 1 user"
-        submit_plural: "Grant access to {num} users"
+        submit: "Grant new access"
+        submit_singular: "Grant access to 1 member"
+        submit_plural: "Grant access to {num} members"
         find_people_html: "Find people"
       new_protocol_assignments_form:
         title: "Select members"
-        submit: "Grant access"
-        submit_singular: "Grant access to 1 user"
-        submit_plural: "Grant access to {num} users"
+        submit: "Grant new access"
+        submit_singular: "Grant access to 1 member"
+        submit_plural: "Grant access to {num} members"
         find_people_html: "Find people"
       experiment_member_field:
         reset: "Inherit role"

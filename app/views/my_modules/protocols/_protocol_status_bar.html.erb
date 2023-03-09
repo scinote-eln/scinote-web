@@ -9,7 +9,7 @@
     </span>
   <% end %>
   <a href="#" id="my-module-protocol-info-button" class="status-info
-    <%= 'parent-newer' if @protocol.parent_newer? || @protocol.parent_and_self_newer? %>
+    <%= 'parent-newer' if @protocol.parent_newer? %>
     <%= 'protocol-newer' if @protocol.newer_than_parent? %>
     " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <i class="fas fa-info-circle"></i>
@@ -22,7 +22,7 @@
           </h2>
           <% if @protocol.linked? %>
             <div class="protocol-header-info">
-              <span><%= t('my_modules.protocols.protocol_status_bar.protocol_id_label') %> <%= @protocol.parent&.code %></span>
+              <span><%= t('my_modules.protocols.protocol_status_bar.protocol_id_label') %> <%= @protocol.original_code %></span>
               <span><%= t('my_modules.protocols.protocol_status_bar.protocol_version_label') %> <%= @protocol.parent&.version_number %></span>
             </div>
           <% end %>
@@ -51,7 +51,7 @@
         </div>
         <div class="dropdown-footer">
           <% if @protocol.linked? %>
-            <% if @protocol.parent_newer? || @protocol.parent_and_self_newer? %>
+            <% if @protocol.parent_newer? %>
               <div class="notification-line new-parent-version">
                 <i class="fas fa-info-circle"></i>
                 <div class="description"><%= t("my_modules.protocols.protocol_status_bar.messages.template_updated_html") %></div>
