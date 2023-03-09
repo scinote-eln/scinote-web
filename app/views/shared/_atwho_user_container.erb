@@ -1,0 +1,25 @@
+<template id="atwho-user-container">
+  <span class="atwho-user-container">
+    <% unless skip_avatar %>
+      <span class="global-avatar-container smart-annotation">
+        <img
+          src="<%= user_avatar_absolute_url(user, :icon_small, base64_encoded_imgs) %>"
+          alt="avatar" class="atwho-user-img-popover"
+          ref="<%= 'missing-img' unless user.avatar.attached? %>%">
+      </span>
+    <% end %>
+    <a
+      onclick="$(this).popover('show')"
+      class="atwho-user-popover"
+      data-container="body"
+      data-html="true"
+      tabindex="0"
+      data-trigger="focus"
+      data-placement="top"
+      data-toggle="popover"
+      data-original-title=""
+      title=""
+      data-content="<%= render partial: 'shared/user_name_popover', locals: { f: f } %>" 
+    >user@scinote.net</a>
+  </span>
+</template>
