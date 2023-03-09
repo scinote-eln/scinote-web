@@ -670,8 +670,14 @@
   margin-left: 4px;
 }
 
-#confirm-link-update-modal {
+#confirm-link-update-modal,
+.delete-steps-modal {
+  .modal-body p {
+    margin: 1.2em 0;
+  }
+
   .warning {
-    margin: 0 15px 15px;
+    font-weight: bold;
+    margin-bottom: 1.2em;
   }
 }
