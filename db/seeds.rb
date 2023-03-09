@@ -29,4 +29,12 @@ if User.count.zero?
     [],
     Extends::INITIAL_USER_OPTIONS
   )
+
+  if LabelTemplate.count.positive?
+    LabelTemplate.first.update(
+      created_by_id: Team.first.created_by_id,
+      last_modified_by_id: Team.first.created_by_id,
+      team_id: Team.first.id
+    )
+  end
 end

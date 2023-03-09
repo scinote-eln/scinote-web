@@ -8,7 +8,7 @@
       <% end %>
     </h2>
     <div class="user-time">
-      <%= t('projects.reports.elements.project_header.user_time', timestamp: l(project.created_at, format: :full)) %>
+      <%= t('projects.reports.elements.project_header.user_time', code: project.code, timestamp: l(project.created_at, format: :full)) %>
     </div>
   </div>
   <% if defined?(children) %>

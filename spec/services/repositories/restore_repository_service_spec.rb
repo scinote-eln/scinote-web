@@ -4,8 +4,8 @@ require 'rails_helper'
 
 describe Repositories::RestoreRepositoryService do
   let(:user) { create :user }
-  let(:team) { create :team }
-  let(:repository) { create :repository, :archived, team: team }
+  let(:team) { create :team, created_by: user }
+  let(:repository) { create :repository, :archived, team: team, created_by: user }
   let!(:row_1) { create :repository_row, :archived, repository: repository }
   let!(:row_2) { create :repository_row, :archived, repository: repository }
   let!(:row_3) { create :repository_row, :archived, repository: repository }
@@ -30,7 +30,7 @@ describe Repositories::RestoreRepositoryService do
 
   context 'when have invalid repository' do
     let(:second_repository) do
-      r = create :repository, :archived, team: team
+      r = create :repository, :archived, team: team, created_by: user
       r.name = ''
       r.save(validate: false)
       r

@@ -1,6 +1,6 @@
 <button title="close protocol preview modal <%= protocol.name %>" type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.close" %></button>
 <% if can_manage_protocol_in_repository?(@protocol) %>
-  <%= route_to_other_team_btn edit_protocol_path(protocol),
+  <%= route_to_other_team_btn protocol_path(protocol),
                               protocol.team,
                               t('general.edit') %>
 <% end %>

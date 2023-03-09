@@ -9,7 +9,7 @@
   data-label-after='<%= config[:label_after]&.html_safe %>'
   data-placeholder='<%= config[:placeholder] %>'
 >
-  <div class="view-mode" data-placeholder="<%= config[:placeholder] %>"><%= initial_value %></div>
+  <div class="view-mode" data-placeholder="<%= config[:placeholder] %>" tabindex=0><%= initial_value %></div>
   <input title="editing mode for <%= initial_value%>" placeholder="<%= config[:placeholder] %>" class="hidden input-field" type="text" value="<%= initial_value %>" disabled/>
   <div class="button-container">
     <span class="save-button"><i title="<%= config[:title] %> save" class="fas fa-check"></i></span>

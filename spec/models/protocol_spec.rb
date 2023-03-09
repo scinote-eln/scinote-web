@@ -58,8 +58,9 @@ describe Protocol, type: :model do
   end
 
   describe '.archive(user)' do
-    let(:protocol) { create :protocol, :in_public_repository, added_by: user }
     let(:user) { create :user }
+    let(:team) { create :team, created_by: user }
+    let(:protocol) { create :protocol, :in_public_repository, team: team, added_by: user }
 
     it 'calls create activity for archiving protocol' do
       expect(Activities::CreateActivityService)
@@ -76,8 +77,9 @@ describe Protocol, type: :model do
   end
 
   describe '.restore(user)' do
-    let(:protocol) { create :protocol, :in_public_repository, added_by: user }
     let(:user) { create :user }
+    let(:team) { create :team, created_by: user }
+    let(:protocol) { create :protocol, :in_public_repository, team: team, added_by: user }
 
     it 'calls create activity for restoring protocol' do
       expect(Activities::CreateActivityService)
@@ -94,8 +96,9 @@ describe Protocol, type: :model do
   end
 
   describe '.publish(user)' do
-    let(:protocol) { create :protocol, :in_public_repository, added_by: user }
     let(:user) { create :user }
+    let(:team) { create :team, created_by: user }
+    let(:protocol) { create :protocol, :in_public_repository, team: team, added_by: user }
 
     it 'calls create activity for restoring protocol' do
       expect(Activities::CreateActivityService)
@@ -112,8 +115,9 @@ describe Protocol, type: :model do
   end
 
   describe '.make_private(user)' do
-    let(:protocol) { create :protocol, :in_public_repository, added_by: user }
     let(:user) { create :user }
+    let(:team) { create :team, created_by: user }
+    let(:protocol) { create :protocol, :in_public_repository, team: team, added_by: user }
 
     it 'calls create activity for restoring protocol' do
       expect(Activities::CreateActivityService)
@@ -130,8 +134,9 @@ describe Protocol, type: :model do
   end
 
   describe '.deep_clone_repository' do
-    let(:protocol) { create :protocol, :in_public_repository, added_by: user }
     let(:user) { create :user }
+    let(:team) { create :team, created_by: user }
+    let(:protocol) { create :protocol, :in_public_repository, team: team, added_by: user }
 
     it 'calls create activity for protocol copy to repository' do
       expect(Activities::CreateActivityService)

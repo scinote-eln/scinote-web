@@ -1,0 +1,243 @@
+// scss-lint:disable SelectorDepth NestingDepth ImportantRule
+
+.label-templates-show {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--navbar-height));
+  padding-left: 1.5em;
+
+  .title-row {
+    @include font-h1;
+    align-items: end;
+    background: $color-white;
+    border-bottom: $border-tertiary;
+    display: flex;
+    margin-left: -2em;
+    padding: .25em 2em;
+    width: calc(100% + 4em);
+
+    .label-template-icon {
+      flex-shrink: 0;
+      margin-bottom: auto;
+      margin-right: 5px;
+      margin-top: 13px;
+      width: 32px;
+    }
+
+    .sci-inline-edit {
+      flex-grow: 1;
+      max-width: calc(100% - 50px);
+    }
+  }
+
+  .template-descripiton {
+    @include font-button;
+    margin: .5em 0;
+
+    .title {
+      font-weight: bold;
+      line-height: 1.5em;
+    }
+
+    .description {
+      margin: .5em 0 1em;
+      padding-left: 16px;
+    }
+  }
+
+  .label-template-container {
+    display: flex;
+    flex-grow: 1;
+    margin-top: 1em;
+
+    .title {
+      font-weight: bold;
+      line-height: 1.5em;
+    }
+
+    .label-textarea-container {
+      height: calc(100% - 6em);
+
+      .label-textarea {
+        height: 100%;
+        margin-top: .5em;
+        padding: .5em;
+        width: 100%;
+      }
+
+      &.error {
+        .label-textarea {
+          border: 1px solid $brand-danger;
+          height: calc(100% - 2em);
+        }
+
+        .error-message {
+          color: $brand-danger;
+        }
+      }
+    }
+
+    .label-edit-header {
+      align-items: center;
+      display: flex;
+
+      .title {
+        margin-right: auto;
+      }
+    }
+
+    .label-edit-container {
+      flex-basis: 60%;
+      padding-right: 1em;
+
+      .button-container {
+        display: flex;
+        margin-top: 1em;
+
+        .refresh-preview {
+          margin-right: auto;
+        }
+
+        .save-template {
+          margin-left: .5em;
+        }
+      }
+    }
+
+    .label-preview-container {
+      flex-basis: 40%;
+      padding-left: 1em;
+    }
+  }
+
+  .label-view-container {
+    cursor: pointer;
+    height: calc(100% - 3.5em);
+    margin-top: .5em;
+    padding: .5em;
+    position: relative;
+    white-space: pre;
+
+    .fa-pen {
+      display: none;
+      padding: 1em;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+
+    &.read-only {
+      cursor: initial;
+    }
+
+    &:hover:not(.read-only) {
+      background-color: $color-concrete;
+
+      .fa-pen {
+        display: inline-block;
+      }
+    }
+  }
+
+  .insert-field-dropdown {
+    .dimensions-container {
+      align-items: center;
+      display: flex;
+
+      img {
+        margin-top: 27px;
+      }
+    }
+
+    .open-dropdown-button:not(.collapsed) {
+      .fas {
+        @include rotate(-180deg);
+      }
+    }
+
+    .dropdown-menu {
+      @include font-button;
+      padding: 16px;
+      width: 300px;
+    }
+
+    .search-container {
+      margin-bottom: .25em;
+
+      .close-dropdown {
+        float: right;
+      }
+    }
+
+    .fields-container {
+      max-height: 40vh;
+      overflow-y: auto;
+    }
+
+    .field-element {
+      align-items: center;
+      cursor: pointer;
+      display: flex;
+      padding: 10px 10px 10px 24px;
+
+      .fas:not(.fa-plus-square) {
+        margin-left: -1.25em;
+        margin-right: .25em;
+      }
+
+      .fa-plus-square {
+        @include font-main;
+        display: none;
+        margin-left: auto;
+      }
+
+      &:hover {
+        background-color: $color-concrete;
+
+        .fa-plus-square {
+          display: inline-block;
+        }
+      }
+    }
+
+    .block-title {
+      @include font-small;
+      align-items: center;
+      color: $color-silver-chalice;
+      display: flex;
+      padding: 7px 8px;
+
+      &::after {
+        background-color: $color-silver-chalice;
+        content: "";
+        flex-grow: 1;
+        height: 1px;
+        margin-left: .25em;
+        margin-top: 3px;
+      }
+
+      &::before {
+        background-color: $color-silver-chalice;
+        content: "";
+        flex-basis: 5px;
+        height: 1px;
+        margin-right: .25em;
+        margin-top: 3px;
+      }
+    }
+
+    .no-results {
+      color: $color-silver-chalice;
+    }
+
+    .tooltip-body {
+      display: flex;
+      width: 350px;
+
+      .tooltip-inner {
+        max-width: 350px;
+        text-align: left;
+      }
+    }
+  }
+}

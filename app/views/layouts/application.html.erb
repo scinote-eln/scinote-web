@@ -6,12 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="max-file-size" content="<%= Rails.configuration.x.file_max_size_mb %>">
     <meta name="tiny-mce-assets-url" content="<%= tiny_mce_assets_path %>">
-    <meta name="highlightjs-url" content="<%= asset_path('highlightjs-github-theme.css') %>">
+    <% if user_signed_in? %>
+      <meta name="expiration-url" content="<%= users_expire_in_path %>">
+      <meta name="revive-url" content="<%= users_revive_session_path %>">
+    <% end %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
+
+    <%= javascript_include_tag 'jquery_bundle' %>
     <%= javascript_include_tag 'application' %>
     <%= javascript_pack_tag 'application' %>
-
-
+    <%= javascript_include_tag 'session_end' %>
 
     <% if MarvinJsService.enabled? && ENV['MARVINJS_API_KEY'] %>
       <script src="https://marvinjs.chemicalize.com/v1/<%= ENV['MARVINJS_API_KEY'] %>/client-settings.js"></script>
@@ -22,8 +26,10 @@
     <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>
     <%= favicon_link_tag "favicon-32.png", type: "image/png", size: "32x32" %>
     <%= favicon_link_tag "favicon-48.png", type: "image/png", size: "48x48" %>
-    <%= stylesheet_pack_tag 'fonts' %>
+    <%= stylesheet_pack_tag 'fonts', id: 'font-css-pack' %>
     <%= stylesheet_pack_tag 'fontawesome' %>
+
+    <%= stylesheet_pack_tag 'prism' %>
 
     <%= csrf_meta_tags %>
     <% if content_for?(:head) %>
@@ -53,10 +59,12 @@
 
     <% if user_signed_in? %>
       <%= render "shared/about_modal" %>
-      <%= render "shared/file_preview/modal" %>
-      <%= render "shared/file_edit_modal" %>
-      <%= render "shared/marvinjs_modal" %>
-      <%= render "shared/comments/comments_sidebar" %>
+      <%= render "shared/file_preview/modal.html.erb" %>
+      <%= render "shared/file_edit_modal.html.erb" %>
+      <%= render "shared/marvinjs_modal.html.erb" %>
+      <%= render "shared/comments/comments_sidebar.html.erb" %>
+      <%= render "users/sessions/session_expire_modal.html.erb" %>
+      <%= render "users/sessions/session_end_modal.html.erb" %>
     <% end %>
 
     <% if user_signed_in? && flash[:system_notification_modal] && current_user.show_login_system_notification? %>
@@ -88,5 +96,7 @@
       // GLOBALS
       window.IN_REQUEST = false;
     </script>
+
+    <%= javascript_pack_tag 'prism' %>
   </body>
 </html>

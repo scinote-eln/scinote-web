@@ -20,7 +20,7 @@ describe StepsController, type: :controller do
     context 'when in protocol repository' do
       let(:params) do
         { protocol_id: protocol_repo.id,
-          step: { name: 'test', description: 'description' } }
+          step: { name: 'test', description: 'description' }, position: 1 }
       end
 
       it 'calls create activity for creating step in protocol repository' do
@@ -40,7 +40,7 @@ describe StepsController, type: :controller do
     context 'when in protocol on task' do
       let(:params) do
         { protocol_id: my_module.protocol.id,
-          step: { name: 'test', description: 'description' } }
+          step: { name: 'test', description: 'description' }, position: 1 }
       end
 
       it 'calls create activity for creating step in protocol on task' do
@@ -133,55 +133,6 @@ describe StepsController, type: :controller do
         expect(Activities::CreateActivityService)
           .to(receive(:call)
                 .with(hash_including(activity_type: :destroy_step)))
-        action
-      end
-
-      it 'adds activity in DB' do
-        expect { action }
-          .to(change { Activity.count })
-      end
-    end
-  end
-
-  describe 'POST checklistitem_state' do
-    let(:checklist) { create :checklist, step: step }
-    let(:action) { post :checklistitem_state, params: params, format: :json }
-
-    context 'when checking checklist item' do
-      let(:checklist_item) do
-        create :checklist_item, checklist: checklist, checked: false
-      end
-      let(:params) do
-        { id: step.id, checklistitem_id: checklist_item.id, checked: true }
-      end
-
-      it 'calls create activity for checking checklist item on step' do
-        expect(Activities::CreateActivityService)
-          .to(receive(:call)
-                .with(hash_including(activity_type:
-                                       :check_step_checklist_item)))
-        action
-      end
-
-      it 'adds activity in DB' do
-        expect { action }
-          .to(change { Activity.count })
-      end
-    end
-
-    context 'when unchecking checklist item' do
-      let(:checklist_item) do
-        create :checklist_item, checklist: checklist, checked: true
-      end
-      let(:params) do
-        { id: step.id, checklistitem_id: checklist_item.id, checked: false }
-      end
-
-      it 'calls create activity for unchecking checklist item on step' do
-        expect(Activities::CreateActivityService)
-          .to(receive(:call)
-                .with(hash_including(activity_type:
-                                       :uncheck_step_checklist_item)))
         action
       end
 

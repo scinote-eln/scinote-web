@@ -5,19 +5,20 @@ require 'rails_helper'
 RSpec.describe 'Api::V1::ProjectsController', type: :request do
   before :all do
     @user = create(:user)
-    @teams = create_list(:team, 2, created_by: @user)
-    create(:user_team, user: @user, team: @teams.first, role: 2)
-    owner_role = UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
+    @another_user = create(:user)
+    @team1 = create(:team, created_by: @user)
+    @team2 = create(:team, created_by: @another_user)
+
     # valid_projects
     2.times do
-      project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @teams.first)
+      project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @team1)
     end
 
     # unaccessable_projects
     create(:project, name: Faker::Name.unique.name,
-                created_by: @user, team: @teams.second)
+                created_by: @another_user, team: @team2)
     create(:project, name: Faker::Name.unique.name,
-                created_by: @user, team: @teams.second)
+                created_by: @another_user, team: @team2)
 
     @valid_headers =
       { 'Authorization': 'Bearer ' + generate_token(@user.id) }
@@ -26,13 +27,13 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
   describe 'GET projects, #index' do
     it 'Response with correct projects' do
       hash_body = nil
-      get api_v1_team_projects_path(team_id: @teams.first.id),
+      get api_v1_team_projects_path(team_id: @team1.id),
           headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
         JSON.parse(
           ActiveModelSerializers::SerializableResource
-            .new(@teams.first.projects, each_serializer: Api::V1::ProjectSerializer)
+            .new(@team1.projects, each_serializer: Api::V1::ProjectSerializer)
             .to_json
         )['data']
       )
@@ -40,7 +41,7 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
 
     it 'When invalid request, user in not member of the team' do
       hash_body = nil
-      get api_v1_team_projects_path(team_id: @teams.second.id),
+      get api_v1_team_projects_path(team_id: @team2.id),
           headers: @valid_headers
       expect(response).to have_http_status(403)
       expect { hash_body = json }.not_to raise_exception
@@ -59,14 +60,14 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
   describe 'GET project, #show' do
     it 'When valid request, user can read project' do
       hash_body = nil
-      get api_v1_team_project_path(team_id: @teams.first.id,
-                                id: @teams.first.projects.first.id),
+      get api_v1_team_project_path(team_id: @team1.id,
+                                id: @team1.projects.first.id),
           headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data]).to match(
         JSON.parse(
           ActiveModelSerializers::SerializableResource
-            .new(@teams.first.projects.first, serializer: Api::V1::ProjectSerializer)
+            .new(@team1.projects.first, serializer: Api::V1::ProjectSerializer)
             .to_json
         )['data']
       )
@@ -74,8 +75,8 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
 
     it 'When invalid request, user in not member of the team' do
       hash_body = nil
-      get api_v1_team_project_path(team_id: @teams.second.id,
-                                id: @teams.second.projects.first.id),
+      get api_v1_team_project_path(team_id: @team2.id,
+                                id: @team2.projects.first.id),
           headers: @valid_headers
       expect(response).to have_http_status(403)
       expect { hash_body = json }.not_to raise_exception
@@ -84,7 +85,7 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
 
     it 'When invalid request, non existing project' do
       hash_body = nil
-      get api_v1_team_project_path(team_id: @teams.first.id, id: -1),
+      get api_v1_team_project_path(team_id: @team1.id, id: -1),
           headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
@@ -93,8 +94,8 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
 
     it 'When invalid request, project from another team' do
       hash_body = nil
-      get api_v1_team_project_path(team_id: @teams.first.id,
-                                id: @teams.second.projects.first.id),
+      get api_v1_team_project_path(team_id: @team1.id,
+                                id: @team2.projects.first.id),
           headers: @valid_headers
       expect(response).to have_http_status(404)
       expect { hash_body = json }.not_to raise_exception
@@ -108,7 +109,7 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
     end
 
     let(:action) do
-      post(api_v1_team_projects_path(team_id: @teams.first.id), params: request_body.to_json, headers: @valid_headers)
+      post(api_v1_team_projects_path(team_id: @team1.id), params: request_body.to_json, headers: @valid_headers)
     end
 
     context 'when has valid params' do
@@ -160,7 +161,7 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
             }
           }
         end
-        let(:project_folder) { create :project_folder, team: @teams.first }
+        let(:project_folder) { create :project_folder, team: @team1 }
 
         it 'renders 201' do
           action
@@ -170,7 +171,7 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
         end
 
         context 'when folder from a different team' do
-          let(:project_folder) { create :project_folder, team: @teams.last }
+          let(:project_folder) { create :project_folder, team: @team2 }
 
           it do
             action
@@ -262,7 +263,7 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
             }
           }
         end
-        let(:project_folder) { create :project_folder, team: @teams.first }
+        let(:project_folder) { create :project_folder, team: @team1 }
 
         it 'renders 201' do
           action

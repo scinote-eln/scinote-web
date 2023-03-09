@@ -4,9 +4,8 @@ require 'rails_helper'
 
 describe RepositoryColumns::CreateColumnService do
   let(:user) { create :user }
-  let!(:user_team) { create :user_team, :admin, user: user, team: team }
-  let(:team) { create :team }
-  let(:repository) { create :repository, team: team }
+  let(:team) { create :team, created_by: user }
+  let(:repository) { create :repository, team: team, created_by: user }
   let(:column_type) { :RepositoryStatusValue }
   let(:params) do
     {

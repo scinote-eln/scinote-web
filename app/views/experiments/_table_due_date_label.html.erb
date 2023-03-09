@@ -1,0 +1,19 @@
+<span class="due-date-label" data-due-date="<%= my_module.due_date.present? %>" >
+  <% if (my_module.archived_branch? || my_module.completed?) && my_module.due_date %>
+    <%= l(my_module.due_date, format: :full_date) %>
+  <% elsif my_module.is_one_day_prior? && !my_module.completed? %>
+    <%= l(my_module.due_date, format: :full_date) %>
+    <span class="fas fa-exclamation-triangle <%= get_task_alert_color(my_module) %>"></span>
+  <% elsif my_module.is_overdue? && !my_module.completed? %>
+    <%= l(my_module.due_date, format: :full_date) %>
+    <span class="fas fa-exclamation-triangle <%= get_task_alert_color(my_module) %>"></span>
+  <% elsif my_module.due_date %>
+    <%= l(my_module.due_date, format: :full_date) %>
+  <% elsif can_update_my_module_due_date?(user, my_module) %>
+    <a href='#'>
+      <%= t('my_modules.details.no_due_date_placeholder') %>
+    </a>
+  <% else %>
+    <%= t('my_modules.details.no_due_date') %>
+  <% end %>
+</span>

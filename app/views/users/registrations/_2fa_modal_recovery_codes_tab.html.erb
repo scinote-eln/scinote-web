@@ -9,7 +9,8 @@
     <div class="recovery-codes"></div>
   </div>
   <div class="modal-footer">
-    <a href download="scinote_recovery_codes.txt" title="download recovery codes" class="btn btn-secondary download-recovery-codes">
+    <button type="button" id="cancel" class="btn btn-default two-factor-modal-close" data-dismiss="modal"><%=t 'general.close' %></button>
+    <a href download="scinote_recovery_codes.txt" title="download recovery codes" class="btn btn-primary download-recovery-codes">
       <%= t("users.registrations.edit.2fa_modal.step_4.download_codes") %>
     </a>
   </div>

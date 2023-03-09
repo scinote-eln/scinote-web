@@ -3,6 +3,8 @@
 class Team < ApplicationRecord
   include SearchableModel
   include ViewableModel
+  include Assignable
+  include PermissionCheckableModel
   include TeamBySubjectModel
   include TinyMceImages
 
@@ -11,6 +13,7 @@ class Team < ApplicationRecord
   include ActionView::Helpers::NumberHelper
 
   after_create :generate_template_project
+  after_create :create_default_label_templates
   scope :teams_select, -> { select(:id, :name).order(name: :asc) }
   scope :ordered, -> { order('LOWER(name)') }
 
@@ -29,18 +32,44 @@ class Team < ApplicationRecord
              class_name: 'User',
              optional: true
   has_many :user_teams, inverse_of: :team, dependent: :destroy
-  has_many :users, through: :user_teams
+  has_many :users, through: :user_assignments
   has_many :projects, inverse_of: :team
   has_many :project_folders, inverse_of: :team, dependent: :destroy
   has_many :protocols, inverse_of: :team, dependent: :destroy
+  has_many :repository_protocols,
+           (lambda do
+             where(protocol_type: [Protocol.protocol_types[:in_repository_public],
+                                   Protocol.protocol_types[:in_repository_private],
+                                   Protocol.protocol_types[:in_repository_archived]])
+           end),
+           class_name: 'Protocol'
   has_many :protocol_keywords, inverse_of: :team, dependent: :destroy
   has_many :tiny_mce_assets, inverse_of: :team, dependent: :destroy
   has_many :repositories, dependent: :destroy
   has_many :reports, inverse_of: :team, dependent: :destroy
   has_many :activities, inverse_of: :team, dependent: :destroy
   has_many :assets, inverse_of: :team, dependent: :destroy
-  has_many :team_repositories, inverse_of: :team, dependent: :destroy
-  has_many :shared_repositories, through: :team_repositories, source: :repository
+  has_many :label_templates, dependent: :destroy
+  has_many :team_shared_objects, inverse_of: :team, dependent: :destroy
+  has_many :team_shared_repositories,
+           -> { where(shared_object_type: 'RepositoryBase') },
+           class_name: 'TeamSharedObject',
+           inverse_of: :team
+  has_many :shared_repositories, through: :team_shared_objects, source: :shared_object, source_type: 'RepositoryBase'
+  has_many :repository_sharing_user_assignments,
+           (lambda do |team|
+             joins(
+               "INNER JOIN repositories "\
+               "ON user_assignments.assignable_type = 'RepositoryBase' "\
+               "AND user_assignments.assignable_id = repositories.id"
+             ).where(team_id: team.id)
+             .where.not('user_assignments.team_id = repositories.team_id')
+           end),
+           class_name: 'UserAssignment'
+  has_many :shared_by_user_repositories,
+           through: :repository_sharing_user_assignments,
+           source: :assignable,
+           source_type: 'RepositoryBase'
 
   attr_accessor :without_templates
 
@@ -55,8 +84,8 @@ class Team < ApplicationRecord
   end
 
   def validate_view_state(view_state)
-    if %w(new old atoz ztoa).exclude?(view_state.state.dig('projects', 'active', 'sort')) ||
-       %w(new old atoz ztoa archived_new archived_old).exclude?(view_state.state.dig('projects', 'archived', 'sort')) ||
+    if %w(new old atoz ztoa id_asc id_desc).exclude?(view_state.state.dig('projects', 'active', 'sort')) ||
+       %w(new old atoz ztoa id_asc id_desc archived_new archived_old).exclude?(view_state.state.dig('projects', 'archived', 'sort')) ||
        %w(cards table).exclude?(view_state.state.dig('projects', 'view_type'))
       view_state.errors.add(:state, :wrong_state)
     end
@@ -169,5 +198,10 @@ class Team < ApplicationRecord
   def generate_template_project
     return if without_templates
     TemplatesService.new.delay(queue: :templates).update_team(self)
+  end
+
+  def create_default_label_templates
+    ZebraLabelTemplate.default.update(team: self, default: true)
+    FluicsLabelTemplate.default.update(team: self, default: true)
   end
 end

@@ -46,10 +46,18 @@
           "output_id": 2089
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -72,13 +80,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 4261,
                 "name": "Use the online tools",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Paste selected sequence in the selected online tool. <br><br>Parameters that should be considered are:<br>\n</p>\n<ul>\n<li style=\"text-align: justify;\">target length</li>\n<li style=\"text-align: justify;\">the maximum number of tandemly repeated nucleotides</li>\n<li style=\"text-align: justify;\">minimum/maximum GC content. </li>\n</ul>\nSelect a genome to query for potential off-target recognition and analyze it. Evaluate and prioritize targets using sequence identity as well as off-target sequence identity.</body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -88,18 +97,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3391
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Paste selected sequence in the selected online tool. <br><br>Parameters that should be considered are:<br>\n</p>\n<ul>\n<li style=\"text-align: justify;\">target length</li>\n<li style=\"text-align: justify;\">the maximum number of tandemly repeated nucleotides</li>\n<li style=\"text-align: justify;\">minimum/maximum GC content. </li>\n</ul>\nSelect a genome to query for potential off-target recognition and analyze it. Evaluate and prioritize targets using sequence identity as well as off-target sequence identity.</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4571,
                 "name": "Considerations",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Consider choosing <strong>several different target sites</strong>, since not all sgRNAs work equally well. <br>Consider using a <strong>20 bp target site that also contains a recognition site of a commercially available restriction enzyme</strong>. The target site of the restriction enzyme should span the site of Cas9 cleavage (<strong>3 bp</strong> in front of the PAM). This will allow you to use the restriction enzyme length polymorphism assay to detect mutations in your <em>gene of interest.</em></p></body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -109,14 +125,8 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3391
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [
-                {
-                  "id": 3094,
-                  "step_id": 4571,
-                  "asset_id": 3756
-                }
+              "step_comments": [
+
               ],
               "assets": [
                 {
@@ -138,14 +148,19 @@
                   }
                 }
               ],
-              "step_tables": [],
-              "tables": []
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Consider choosing <strong>several different target sites</strong>, since not all sgRNAs work equally well. <br>Consider using a <strong>20 bp target site that also contains a recognition site of a commercially available restriction enzyme</strong>. The target site of the restriction enzyme should span the site of Cas9 cleavage (<strong>3 bp</strong> in front of the PAM). This will allow you to use the restriction enzyme length polymorphism assay to detect mutations in your <em>gene of interest.</em></p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4570,
                 "name": "Selecting genomic DNA region",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Genomic DNA region must correspond to the crRNA sequence of the sgRNA:<br><br><strong>The 3' end of the DNA target sequence must have a PAM sequence</strong>. The <strong>20 nucleotides</strong> upstream of the PAM sequence will be your targeting sequence (crRNA), and Cas9 nuclease will cleave approximately three bases upstream of the PAM.</p>\n<ol>\n<li>The PAM sequence itself is absolutely required for cleavage, but it is NOT part of the sgRNA sequence and therefore should not be included in the sgRNA.</li>\n<li>The target sequence can be on either DNA strand.</li>\n</ol>\n</body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -155,14 +170,8 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3391
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [
-                {
-                  "id": 3093,
-                  "step_id": 4570,
-                  "asset_id": 3755
-                }
+              "step_comments": [
+
               ],
               "assets": [
                 {
@@ -184,13 +193,21 @@
                   }
                 }
               ],
-              "step_tables": [],
-              "tables": []
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Genomic DNA region must correspond to the crRNA sequence of the sgRNA:<br><br><strong>The 3' end of the DNA target sequence must have a PAM sequence</strong>. The <strong>20 nucleotides</strong> upstream of the PAM sequence will be your targeting sequence (crRNA), and Cas9 nuclease will cleave approximately three bases upstream of the PAM.</p>\n<ol>\n<li>The PAM sequence itself is absolutely required for cleavage, but it is NOT part of the sgRNA sequence and therefore should not be included in the sgRNA.</li>\n<li>The target sequence can be on either DNA strand.</li>\n</ol>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -222,10 +239,18 @@
           "output_id": 2090
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -248,13 +273,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 4579,
                 "name": "Verification",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Verify eight <em>E. coli</em> colonies by colony PCR using primer and your protospacer primer with the following setup.<br><br><strong>PCR program:</strong></p>\n<ul>\n<li>95°C 2 min</li>\n<li>(35 cycles) 95°C 30 sec; 51°C 30 sec; 72°C 15 sec </li>\n<li>72°C 15 sec</li>\n<li>72°C 5 min</li>\n<li>20°C </li>\n</ul>\n<br><br>Inoculate positive colony in LB medium supplemented with Amp and grow overnight.</body></html>",
                 "position": 3,
                 "completed": false,
                 "completed_on": null,
@@ -264,28 +290,32 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3393
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [
-                {
-                  "id": 461,
-                  "step_id": 4579,
-                  "table_id": 579
-                }
+              "step_comments": [
+
               ],
-              "tables": [
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
                 {
-                  "id": 579,
-                  "created_at": "2018-11-15T14:54:15.369Z",
-                  "updated_at": "2019-02-20T07:53:32.362Z",
-                  "created_by_id": 202,
-                  "last_modified_by_id": 202,
-                  "name": "Mixture",
-                  "team_id": 1,
-                  "contents": "eyJkYXRhIjpbWyI1eCBSZWFjdGlvbiBidWZmZXIiLCI0IM68TCJdLFsicHJp\nbWVyICgxMM68TSkiLCIxzrxMIl0sWyJwcm90b3NwYWNlciBwcmltZXIgICgx\nMM68TSkiLCIxIM68TCJdLFsiZE5UUHMgKDEwbU0gZWFjaCkiLCIwLjTOvEwi\nXSxbImRkSDIwIiwiMTMuNM68TCJdLFsiVGFxICBwb2x5bWVyYXNlICg1IFUv\nzrxsKSIsIjAuMs68TCJdXX0=\n",
-                  "data_vector": "JzAuMic6MzggJzAuNCc6MjUgJzEnOjExLDE5ICcxMCc6OCwxNiAnMTBtbSc6\nMjMgJzEzLjQnOjI5ICcyNzRsJzo2LDEzLDIxLDI3LDMxLDM3LDQwICcyNzRt\nJzoxMCwxOCAnMzE2Jzo1LDksMTIsMTcsMjAsMjYsMzAsMzYsMzkgJzQnOjQg\nJzUnOjM0ICc1eCc6MSAnYnVmZmVyJzozICdkZGgyMCc6MjggJ2RudHBzJzoy\nMiAnZWFjaCc6MjQgJ3BvbHltZXJhc2UnOjMzICdwcmltZXInOjcsMTUgJ3By\nb3Rvc3BhY2VyJzoxNCAncmVhY3Rpb24nOjIgJ3RhcSc6MzIgJ3UnOjM1\n"
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Verify eight <em>E. coli</em> colonies by colony PCR using primer and your protospacer primer with the following setup.<br><br><strong>PCR program:</strong></p>\n<ul>\n<li>95°C 2 min</li>\n<li>(35 cycles) 95°C 30 sec; 51°C 30 sec; 72°C 15 sec </li>\n<li>72°C 15 sec</li>\n<li>72°C 5 min</li>\n<li>20°C </li>\n</ul>\n<br><br>Inoculate positive colony in LB medium supplemented with Amp and grow overnight.</body></html>"
+                  },
+                  "position": 0
+                },
+                {
+                  "table": {
+                    "id": 579,
+                    "created_at": "2018-11-15T14:54:15.369Z",
+                    "updated_at": "2019-02-20T07:53:32.362Z",
+                    "created_by_id": 202,
+                    "last_modified_by_id": 202,
+                    "name": "Mixture",
+                    "team_id": 1,
+                    "contents": "eyJkYXRhIjpbWyI1eCBSZWFjdGlvbiBidWZmZXIiLCI0IM68TCJdLFsicHJp\nbWVyICgxMM68TSkiLCIxzrxMIl0sWyJwcm90b3NwYWNlciBwcmltZXIgICgx\nMM68TSkiLCIxIM68TCJdLFsiZE5UUHMgKDEwbU0gZWFjaCkiLCIwLjTOvEwi\nXSxbImRkSDIwIiwiMTMuNM68TCJdLFsiVGFxICBwb2x5bWVyYXNlICg1IFUv\nzrxsKSIsIjAuMs68TCJdXX0=\n",
+                    "data_vector": "JzAuMic6MzggJzAuNCc6MjUgJzEnOjExLDE5ICcxMCc6OCwxNiAnMTBtbSc6\nMjMgJzEzLjQnOjI5ICcyNzRsJzo2LDEzLDIxLDI3LDMxLDM3LDQwICcyNzRt\nJzoxMCwxOCAnMzE2Jzo1LDksMTIsMTcsMjAsMjYsMzAsMzYsMzkgJzQnOjQg\nJzUnOjM0ICc1eCc6MSAnYnVmZmVyJzozICdkZGgyMCc6MjggJ2RudHBzJzoy\nMiAnZWFjaCc6MjQgJ3BvbHltZXJhc2UnOjMzICdwcmltZXInOjcsMTUgJ3By\nb3Rvc3BhY2VyJzoxNCAncmVhY3Rpb24nOjIgJ3RhcSc6MzIgJ3UnOjM1\n"
+                  },
+                  "position": 1
                 }
               ]
             },
@@ -293,7 +323,6 @@
               "step": {
                 "id": 4577,
                 "name": "Transformation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Transform competent <em>E. coli </em>cells with the ligation reaction and spread the transformed cells on LB agar plates supplemented with Amp.<br><br><br><strong>Recipe:</strong><br>15 g/L Bacto-tryptone <br>5 g/L yeast extract <br>5 g/L NaCl <br>with 200 μg/mL ampicillin</p></body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -303,18 +332,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3393
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Transform competent <em>E. coli </em>cells with the ligation reaction and spread the transformed cells on LB agar plates supplemented with Amp.<br><br><br><strong>Recipe:</strong><br>15 g/L Bacto-tryptone <br>5 g/L yeast extract <br>5 g/L NaCl <br>with 200 μg/mL ampicillin</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4575,
                 "name": "Digestion",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Digesting plasmid with a restriction enzyme for <strong>3 hours at 37°C</strong>. Run it on an agarose gel and extract the vector backbone from the gel using the DNA Purification Kit.</p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -324,44 +360,46 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3393
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [
-                {
-                  "id": 459,
-                  "step_id": 4575,
-                  "table_id": 577
-                },
-                {
-                  "id": 540,
-                  "step_id": 4575,
-                  "table_id": 677
-                }
+              "step_comments": [
+
               ],
-              "tables": [
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
                 {
-                  "id": 577,
-                  "created_at": "2018-11-15T14:16:48.703Z",
-                  "updated_at": "2019-02-07T13:01:07.192Z",
-                  "created_by_id": 202,
-                  "last_modified_by_id": 202,
-                  "name": "Restriction digest",
-                  "team_id": 1,
-                  "contents": "eyJkYXRhIjpbWyJwbGFzbWlkIiwiM868ZyJdLFsiMTB4IGJ1ZmZlciIsIjXO\nvEwiXSxbImRkSDIwIiwidG8gNDnOvEwiXSxbInJlc3RyaWN0aW9uIGVuenlt\nZSAoMjAgVS/OvGwpIiwiMc68TCJdXX0=\n",
-                  "data_vector": "JzEnOjIxICcxMHgnOjUgJzIwJzoxNyAnMjc0Zyc6NCAnMjc0bCc6OSwxNCwy\nMCwyMyAnMyc6MiAnMzE2JzozLDgsMTMsMTksMjIgJzQ5JzoxMiAnNSc6NyAn\nYnVmZmVyJzo2ICdkZGgyMCc6MTAgJ2VuenltZSc6MTYgJ3BsYXNtaWQnOjEg\nJ3Jlc3RyaWN0aW9uJzoxNSAndG8nOjExICd1JzoxOA==\n"
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Digesting plasmid with a restriction enzyme for <strong>3 hours at 37°C</strong>. Run it on an agarose gel and extract the vector backbone from the gel using the DNA Purification Kit.</p></body></html>"
+                  },
+                  "position": 0
                 },
                 {
-                  "id": 677,
-                  "created_at": "2018-12-19T10:48:05.316Z",
-                  "updated_at": "2019-02-07T13:01:07.218Z",
-                  "created_by_id": 202,
-                  "last_modified_by_id": 202,
-                  "name": "Ligation",
-                  "team_id": 1,
-                  "contents": "eyJkYXRhIjpbWyJ2ZWN0b3IiLCIzMDAgbmciXSxbIkFubmVhbGVkIHByaW1l\ncnMiLCIxzrxMIl0sWyIxMHggbGlnYXRpb24gYnVmZmVyIiwiMs68TCJdLFsi\nZGRIMjAiLCJ0byAxOc68TCJdLFsiRE5BIGxpZ2FzZSIsIjHOvEwiXV19\n",
-                  "data_vector": "JzEnOjYsMjIgJzEweCc6OSAnMTknOjE3ICcyJzoxMiAnMjc0bCc6OCwxNCwx\nOSwyNCAnMzAwJzoyICczMTYnOjcsMTMsMTgsMjMgJ2FubmVhbGVkJzo0ICdi\ndWZmZXInOjExICdkZGgyMCc6MTUgJ2RuYSc6MjAgJ2xpZ2FzZSc6MjEgJ2xp\nZ2F0aW9uJzoxMCAnbmcnOjMgJ3ByaW1lcnMnOjUgJ3RvJzoxNiAndmVjdG9y\nJzox\n"
+                  "table": {
+                    "id": 577,
+                    "created_at": "2018-11-15T14:16:48.703Z",
+                    "updated_at": "2019-02-07T13:01:07.192Z",
+                    "created_by_id": 202,
+                    "last_modified_by_id": 202,
+                    "name": "Restriction digest",
+                    "team_id": 1,
+                    "contents": "eyJkYXRhIjpbWyJwbGFzbWlkIiwiM868ZyJdLFsiMTB4IGJ1ZmZlciIsIjXO\nvEwiXSxbImRkSDIwIiwidG8gNDnOvEwiXSxbInJlc3RyaWN0aW9uIGVuenlt\nZSAoMjAgVS/OvGwpIiwiMc68TCJdXX0=\n",
+                    "data_vector": "JzEnOjIxICcxMHgnOjUgJzIwJzoxNyAnMjc0Zyc6NCAnMjc0bCc6OSwxNCwy\nMCwyMyAnMyc6MiAnMzE2JzozLDgsMTMsMTksMjIgJzQ5JzoxMiAnNSc6NyAn\nYnVmZmVyJzo2ICdkZGgyMCc6MTAgJ2VuenltZSc6MTYgJ3BsYXNtaWQnOjEg\nJ3Jlc3RyaWN0aW9uJzoxNSAndG8nOjExICd1JzoxOA==\n"
+                  },
+                  "position": 1
+                },
+                {
+                  "table": {
+                    "id": 677,
+                    "created_at": "2018-12-19T10:48:05.316Z",
+                    "updated_at": "2019-02-07T13:01:07.218Z",
+                    "created_by_id": 202,
+                    "last_modified_by_id": 202,
+                    "name": "Ligation",
+                    "team_id": 1,
+                    "contents": "eyJkYXRhIjpbWyJ2ZWN0b3IiLCIzMDAgbmciXSxbIkFubmVhbGVkIHByaW1l\ncnMiLCIxzrxMIl0sWyIxMHggbGlnYXRpb24gYnVmZmVyIiwiMs68TCJdLFsi\nZGRIMjAiLCJ0byAxOc68TCJdLFsiRE5BIGxpZ2FzZSIsIjHOvEwiXV19\n",
+                    "data_vector": "JzEnOjYsMjIgJzEweCc6OSAnMTknOjE3ICcyJzoxMiAnMjc0bCc6OCwxNCwx\nOSwyNCAnMzAwJzoyICczMTYnOjcsMTMsMTgsMjMgJ2FubmVhbGVkJzo0ICdi\ndWZmZXInOjExICdkZGgyMCc6MTUgJ2RuYSc6MjAgJ2xpZ2FzZSc6MjEgJ2xp\nZ2F0aW9uJzoxMCAnbmcnOjMgJ3ByaW1lcnMnOjUgJ3RvJzoxNiAndmVjdG9y\nJzox\n"
+                  },
+                  "position": 2
                 }
               ]
             },
@@ -369,7 +407,6 @@
               "step": {
                 "id": 4574,
                 "name": "Generating double stranded DNA",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Order forward and reverse primers for your candidate target sequence N<sub>20</sub> with overlaps for cloning and dilute them to a final concentration of <strong>10 μM</strong>.<br>For example:<br>Forward primer: TTCG-GN<sub>19</sub><br>Reverse primer: AAAC-N19 <br><br>Pipette <strong>10 μL</strong> of each primer dilution into a <strong>1.5 mL</strong> microcentrifuge tube and mix.<br><br><strong>Heat primer mix: </strong></p>\n<ul>\n<li>98 °C for 10 min</li>\n<li>55 °C for 10 min</li>\n<li>afterwards slowly cool down to room temperature  </li>\n</ul>\n<br>By doing so, a double-stranded DNA including your protospacer sequence will be generated.</body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -379,17 +416,27 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3393
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Order forward and reverse primers for your candidate target sequence N<sub>20</sub> with overlaps for cloning and dilute them to a final concentration of <strong>10 μM</strong>.<br>For example:<br>Forward primer: TTCG-GN<sub>19</sub><br>Reverse primer: AAAC-N19 <br><br>Pipette <strong>10 μL</strong> of each primer dilution into a <strong>1.5 mL</strong> microcentrifuge tube and mix.<br><br><strong>Heat primer mix: </strong></p>\n<ul>\n<li>98 °C for 10 min</li>\n<li>55 °C for 10 min</li>\n<li>afterwards slowly cool down to room temperature  </li>\n</ul>\n<br>By doing so, a double-stranded DNA including your protospacer sequence will be generated.</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -421,10 +468,18 @@
           "output_id": 2208
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -447,13 +502,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 4621,
                 "name": "Transformation of E.coli cells",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Transform competent <em>E. coli </em>cells with the reaction mixture and spread the transformed cells on LB agar plates supplemented with Kan.<br><strong><br>LB-medium:</strong></p>\n<ul>\n<li>15 g/L Bacto-tryptone</li>\n<li>5 g/L yeast extract</li>\n<li>5 g/L NaCl</li>\n<li>30μg/mL kanamycin sulfate</li>\n</ul>\n</body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -463,18 +519,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3583
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Transform competent <em>E. coli </em>cells with the reaction mixture and spread the transformed cells on LB agar plates supplemented with Kan.<br><strong><br>LB-medium:</strong></p>\n<ul>\n<li>15 g/L Bacto-tryptone</li>\n<li>5 g/L yeast extract</li>\n<li>5 g/L NaCl</li>\n<li>30μg/mL kanamycin sulfate</li>\n</ul>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4618,
                 "name": "Amplify the sgRNA cassette",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Amplify it from a plasmid with target sequence using primers and polymerase and then extract the sgRNA cassette from the gel. Assemble the plasmid backbone and the sgRNA cassette to generate the final vector using Assembly Master Mix according to the manufacturer’s instruction with an incubation time of <strong>1 h</strong>.<br><br><strong>PCR program: </strong><br><br></p>\n<ul>\n<li>98°C 30 seconds</li>\n<li>35 cycles (98°C 15 sec; 69°C 30 sec; 72°C 20 sec)</li>\n<li>72°C 5 min</li>\n<li>20°C</li>\n</ul>\n</body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -484,28 +547,32 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3583
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [
-                {
-                  "id": 464,
-                  "step_id": 4618,
-                  "table_id": 583
-                }
+              "step_comments": [
+
               ],
-              "tables": [
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
                 {
-                  "id": 583,
-                  "created_at": "2018-11-16T12:13:30.368Z",
-                  "updated_at": "2019-02-19T14:54:39.422Z",
-                  "created_by_id": 202,
-                  "last_modified_by_id": 202,
-                  "name": "Mixture",
-                  "team_id": 1,
-                  "contents": "eyJkYXRhIjpbWyI1eCBQaHVzaW9uIEhGLWJ1ZmZlciIsIjEwzrxMIl0sWyJG\nb3J3YXJkIHByaW1lciAoMTDOvE0pIiwiMi41zrxMIl0sWyJSZXZlcnNlIHBy\naW1lciAoMTDOvE0pIiwiMi41zrxMIl0sWyJkTlRQcyAoMTBtTSBlYWNoKSIs\nIjHOvEwiXSxbImRkSDJPIiwiMzPOvEwiXSxbInBGSDYgd2l0aCB0YXJnZXQg\nc2VxdWVuY2UgKDEwMCBuZy/OvGwpIiwiMC41zrxMIl0sWyJQaHVzaW9uIERO\nQSBwb2x5bWVyYXNlICgyVS/OvGwpIiwiMC41zrxMIl1dfQ==\n",
-                  "data_vector": "JzAuNSc6NDMsNTIgJzEnOjI4ICcxMCc6NiwxMSwxOSAnMTAwJzozOSAnMTBt\nbSc6MjYgJzIuNSc6MTQsMjIgJzI3NGwnOjgsMTYsMjQsMzAsMzQsNDIsNDUs\nNTEsNTQgJzI3NG0nOjEzLDIxICcydSc6NDkgJzMxNic6NywxMiwxNSwyMCwy\nMywyOSwzMyw0MSw0NCw1MCw1MyAnMzMnOjMyICc1eCc6MSAnYnVmZmVyJzo1\nICdkZGgybyc6MzEgJ2RuYSc6NDcgJ2RudHBzJzoyNSAnZWFjaCc6MjcgJ2Zv\ncndhcmQnOjkgJ2hmJzo0ICdoZi1idWZmZXInOjMgJ25nJzo0MCAncGZoNic6\nMzUgJ3BodXNpb24nOjIsNDYgJ3BvbHltZXJhc2UnOjQ4ICdwcmltZXInOjEw\nLDE4ICdyZXZlcnNlJzoxNyAnc2VxdWVuY2UnOjM4ICd0YXJnZXQnOjM3ICd3\naXRoJzozNg==\n"
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Amplify it from a plasmid with target sequence using primers and polymerase and then extract the sgRNA cassette from the gel. Assemble the plasmid backbone and the sgRNA cassette to generate the final vector using Assembly Master Mix according to the manufacturer’s instruction with an incubation time of <strong>1 h</strong>.<br><br><strong>PCR program: </strong><br><br></p>\n<ul>\n<li>98°C 30 seconds</li>\n<li>35 cycles (98°C 15 sec; 69°C 30 sec; 72°C 20 sec)</li>\n<li>72°C 5 min</li>\n<li>20°C</li>\n</ul>\n</body></html>"
+                  },
+                  "position": 0
+                },
+                {
+                  "table": {
+                    "id": 583,
+                    "created_at": "2018-11-16T12:13:30.368Z",
+                    "updated_at": "2019-02-19T14:54:39.422Z",
+                    "created_by_id": 202,
+                    "last_modified_by_id": 202,
+                    "name": "Mixture",
+                    "team_id": 1,
+                    "contents": "eyJkYXRhIjpbWyI1eCBQaHVzaW9uIEhGLWJ1ZmZlciIsIjEwzrxMIl0sWyJG\nb3J3YXJkIHByaW1lciAoMTDOvE0pIiwiMi41zrxMIl0sWyJSZXZlcnNlIHBy\naW1lciAoMTDOvE0pIiwiMi41zrxMIl0sWyJkTlRQcyAoMTBtTSBlYWNoKSIs\nIjHOvEwiXSxbImRkSDJPIiwiMzPOvEwiXSxbInBGSDYgd2l0aCB0YXJnZXQg\nc2VxdWVuY2UgKDEwMCBuZy/OvGwpIiwiMC41zrxMIl0sWyJQaHVzaW9uIERO\nQSBwb2x5bWVyYXNlICgyVS/OvGwpIiwiMC41zrxMIl1dfQ==\n",
+                    "data_vector": "JzAuNSc6NDMsNTIgJzEnOjI4ICcxMCc6NiwxMSwxOSAnMTAwJzozOSAnMTBt\nbSc6MjYgJzIuNSc6MTQsMjIgJzI3NGwnOjgsMTYsMjQsMzAsMzQsNDIsNDUs\nNTEsNTQgJzI3NG0nOjEzLDIxICcydSc6NDkgJzMxNic6NywxMiwxNSwyMCwy\nMywyOSwzMyw0MSw0NCw1MCw1MyAnMzMnOjMyICc1eCc6MSAnYnVmZmVyJzo1\nICdkZGgybyc6MzEgJ2RuYSc6NDcgJ2RudHBzJzoyNSAnZWFjaCc6MjcgJ2Zv\ncndhcmQnOjkgJ2hmJzo0ICdoZi1idWZmZXInOjMgJ25nJzo0MCAncGZoNic6\nMzUgJ3BodXNpb24nOjIsNDYgJ3BvbHltZXJhc2UnOjQ4ICdwcmltZXInOjEw\nLDE4ICdyZXZlcnNlJzoxNyAnc2VxdWVuY2UnOjM4ICd0YXJnZXQnOjM3ICd3\naXRoJzozNg==\n"
+                  },
+                  "position": 1
                 }
               ]
             },
@@ -513,7 +580,6 @@
               "step": {
                 "id": 4623,
                 "name": "Inoculation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Inoculate positive colony into LB medium supplemented with Kan and let grow overnight.<br><br><strong>LB-medium:<br></strong></p>\n<ul>\n<li>15 g/L Bacto-tryptone</li>\n<li>5 g/L yeast extract</li>\n<li>5 g/L NaCl</li>\n<li>With 30μg/mL kanamycin sulfate</li>\n</ul>\n</body></html>",
                 "position": 4,
                 "completed": false,
                 "completed_on": null,
@@ -523,18 +589,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3583
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Inoculate positive colony into LB medium supplemented with Kan and let grow overnight.<br><br><strong>LB-medium:<br></strong></p>\n<ul>\n<li>15 g/L Bacto-tryptone</li>\n<li>5 g/L yeast extract</li>\n<li>5 g/L NaCl</li>\n<li>With 30μg/mL kanamycin sulfate</li>\n</ul>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4616,
                 "name": "Digestion",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Digestion of a plasmid with restriction enzymes.<br><br><strong>Conditions:</strong></p>\n<ul>\n<li>3h</li>\n<li>37°C</li>\n</ul>\n<br>Run it on an agarose gel and extract the vector backbone from the gel using DNA Purification Kit.</body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -544,28 +617,32 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3583
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [
-                {
-                  "id": 463,
-                  "step_id": 4616,
-                  "table_id": 582
-                }
+              "step_comments": [
+
               ],
-              "tables": [
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
                 {
-                  "id": 582,
-                  "created_at": "2018-11-16T10:52:10.520Z",
-                  "updated_at": "2019-02-19T14:53:39.061Z",
-                  "created_by_id": 202,
-                  "last_modified_by_id": 202,
-                  "name": "Digestion mixture",
-                  "team_id": 1,
-                  "contents": "eyJkYXRhIjpbWyJwbGFzbWlkIiwiM868ZyJdLFsiMTB4IGJ1ZmZlciIsIjXO\nvEwiXSxbImRkSDIwIiwidG8gNDjOvEwiXSxbInJlc3RyaWN0aW9uIGVuenlt\nZSAoMjAgVS/OvEwpIiwiMc68TCJdLFsicmVzdHJpY3Rpb24gZW56eW1lKDIw\nIFUvzrxMKSIsIjHOvEwiXV19\n",
-                  "data_vector": "JzEnOjIxLDMwICcxMHgnOjUgJzIwJzoxNywyNiAnMjc0Zyc6NCAnMjc0bCc6\nOSwxNCwyMCwyMywyOSwzMiAnMyc6MiAnMzE2JzozLDgsMTMsMTksMjIsMjgs\nMzEgJzQ4JzoxMiAnNSc6NyAnYnVmZmVyJzo2ICdkZGgyMCc6MTAgJ2Vuenlt\nZSc6MTYsMjUgJ3BsYXNtaWQnOjEgJ3Jlc3RyaWN0aW9uJzoxNSwyNCAndG8n\nOjExICd1JzoxOCwyNw==\n"
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Digestion of a plasmid with restriction enzymes.<br><br><strong>Conditions:</strong></p>\n<ul>\n<li>3h</li>\n<li>37°C</li>\n</ul>\n<br>Run it on an agarose gel and extract the vector backbone from the gel using DNA Purification Kit.</body></html>"
+                  },
+                  "position": 0
+                },
+                {
+                  "table": {
+                    "id": 582,
+                    "created_at": "2018-11-16T10:52:10.520Z",
+                    "updated_at": "2019-02-19T14:53:39.061Z",
+                    "created_by_id": 202,
+                    "last_modified_by_id": 202,
+                    "name": "Digestion mixture",
+                    "team_id": 1,
+                    "contents": "eyJkYXRhIjpbWyJwbGFzbWlkIiwiM868ZyJdLFsiMTB4IGJ1ZmZlciIsIjXO\nvEwiXSxbImRkSDIwIiwidG8gNDjOvEwiXSxbInJlc3RyaWN0aW9uIGVuenlt\nZSAoMjAgVS/OvEwpIiwiMc68TCJdLFsicmVzdHJpY3Rpb24gZW56eW1lKDIw\nIFUvzrxMKSIsIjHOvEwiXV19\n",
+                    "data_vector": "JzEnOjIxLDMwICcxMHgnOjUgJzIwJzoxNywyNiAnMjc0Zyc6NCAnMjc0bCc6\nOSwxNCwyMCwyMywyOSwzMiAnMyc6MiAnMzE2JzozLDgsMTMsMTksMjIsMjgs\nMzEgJzQ4JzoxMiAnNSc6NyAnYnVmZmVyJzo2ICdkZGgyMCc6MTAgJ2Vuenlt\nZSc6MTYsMjUgJ3BsYXNtaWQnOjEgJ3Jlc3RyaWN0aW9uJzoxNSwyNCAndG8n\nOjExICd1JzoxOCwyNw==\n"
+                  },
+                  "position": 1
                 }
               ]
             },
@@ -573,7 +650,6 @@
               "step": {
                 "id": 4622,
                 "name": "Verification",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Verify eight positive colonies by colony PCR.<br><br><strong>PCR program:</strong></p>\n<ul>\n<li>95°C 2min</li>\n<li>35 cycles (95°C 30sec; 52°C 30 sec; 72°C 45 sec)</li>\n<li>72°C 5min</li>\n<li>20°C</li>\n</ul>\n</body></html>",
                 "position": 3,
                 "completed": false,
                 "completed_on": null,
@@ -583,35 +659,41 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3583
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [
-                {
-                  "id": 465,
-                  "step_id": 4622,
-                  "table_id": 584
-                }
+              "step_comments": [
+
               ],
-              "tables": [
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
                 {
-                  "id": 584,
-                  "created_at": "2018-11-16T12:46:27.024Z",
-                  "updated_at": "2019-02-19T14:55:10.586Z",
-                  "created_by_id": 202,
-                  "last_modified_by_id": 202,
-                  "name": "",
-                  "team_id": 1,
-                  "contents": "eyJkYXRhIjpbWyI1eCBSZWFjdGlvbiBCdWZmZXIiLCI0zrxMIl0sWyJGb3J3\nYXJkIHByaW1lciAoMTDOvE0pIiwiMc68TCJdLFsiUmV2ZXJzZSBwcmltZXIg\nKDEwzrxNKSIsIjHOvEwiXSxbImROVFBzICgxMG1NIGVhY2gpIiwiMCw0zrxM\nIl0sWyJkZEgyTyIsIjEzLDTOvEwiXSxbIlRhcSBHMiBwb2x5bWVyYXNlICg1\nVS/OvGwpIiwiMCwyzrxMIl0sWyJQaWNrIGhhbGYgb2YgYSBjb2xvbnkgd2l0\naCBwaXBldHRlIHRpcCBhbmQgc3VzcGVuZCBpdCBpbiB0aGUgUENSIHJlYWN0\naW9uIixudWxsXSxbIk90aGVyIGhhbGYgb2YgdGhlIGNvbG9ueSBpcyB1c2Vk\nIGZvciBpbm9jdWxhdGlvbiIsbnVsbF1dfQ==\n",
-                  "data_vector": "JzAnOjI2LDQxICcxJzoxMiwyMCAnMTAnOjksMTcgJzEwbW0nOjI0ICcxMyc6\nMzEgJzInOjQyICcyNzRsJzo2LDE0LDIyLDI5LDM0LDQwLDQ0ICcyNzRtJzox\nMSwxOSAnMzE2Jzo1LDEwLDEzLDE4LDIxLDI4LDMzLDM5LDQzICc0Jzo0LDI3\nLDMyICc1dSc6MzggJzV4JzoxICdhJzo0OCAnYW5kJzo1MyAnYnVmZmVyJzoz\nICdjb2xvbnknOjQ5LDY1ICdkZGgybyc6MzAgJ2RudHBzJzoyMyAnZWFjaCc6\nMjUgJ2Zvcic6NjggJ2ZvcndhcmQnOjcgJ2cyJzozNiAnaGFsZic6NDYsNjIg\nJ2luJzo1NiAnaW5vY3VsYXRpb24nOjY5ICdpcyc6NjYgJ2l0Jzo1NSAnbnVs\nbCc6NjAsNzAgJ29mJzo0Nyw2MyAnb3RoZXInOjYxICdwY3InOjU4ICdwaWNr\nJzo0NSAncGlwZXR0ZSc6NTEgJ3BvbHltZXJhc2UnOjM3ICdwcmltZXInOjgs\nMTYgJ3JlYWN0aW9uJzoyLDU5ICdyZXZlcnNlJzoxNSAnc3VzcGVuZCc6NTQg\nJ3RhcSc6MzUgJ3RoZSc6NTcsNjQgJ3RpcCc6NTIgJ3VzZWQnOjY3ICd3aXRo\nJzo1MA==\n"
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Verify eight positive colonies by colony PCR.<br><br><strong>PCR program:</strong></p>\n<ul>\n<li>95°C 2min</li>\n<li>35 cycles (95°C 30sec; 52°C 30 sec; 72°C 45 sec)</li>\n<li>72°C 5min</li>\n<li>20°C</li>\n</ul>\n</body></html>"
+                  },
+                  "position": 0
+                },
+                {
+                  "table": {
+                    "id": 584,
+                    "created_at": "2018-11-16T12:46:27.024Z",
+                    "updated_at": "2019-02-19T14:55:10.586Z",
+                    "created_by_id": 202,
+                    "last_modified_by_id": 202,
+                    "name": "Table 1",
+                    "team_id": 1,
+                    "contents": "eyJkYXRhIjpbWyI1eCBSZWFjdGlvbiBCdWZmZXIiLCI0zrxMIl0sWyJGb3J3\nYXJkIHByaW1lciAoMTDOvE0pIiwiMc68TCJdLFsiUmV2ZXJzZSBwcmltZXIg\nKDEwzrxNKSIsIjHOvEwiXSxbImROVFBzICgxMG1NIGVhY2gpIiwiMCw0zrxM\nIl0sWyJkZEgyTyIsIjEzLDTOvEwiXSxbIlRhcSBHMiBwb2x5bWVyYXNlICg1\nVS/OvGwpIiwiMCwyzrxMIl0sWyJQaWNrIGhhbGYgb2YgYSBjb2xvbnkgd2l0\naCBwaXBldHRlIHRpcCBhbmQgc3VzcGVuZCBpdCBpbiB0aGUgUENSIHJlYWN0\naW9uIixudWxsXSxbIk90aGVyIGhhbGYgb2YgdGhlIGNvbG9ueSBpcyB1c2Vk\nIGZvciBpbm9jdWxhdGlvbiIsbnVsbF1dfQ==\n",
+                    "data_vector": "JzAnOjI2LDQxICcxJzoxMiwyMCAnMTAnOjksMTcgJzEwbW0nOjI0ICcxMyc6\nMzEgJzInOjQyICcyNzRsJzo2LDE0LDIyLDI5LDM0LDQwLDQ0ICcyNzRtJzox\nMSwxOSAnMzE2Jzo1LDEwLDEzLDE4LDIxLDI4LDMzLDM5LDQzICc0Jzo0LDI3\nLDMyICc1dSc6MzggJzV4JzoxICdhJzo0OCAnYW5kJzo1MyAnYnVmZmVyJzoz\nICdjb2xvbnknOjQ5LDY1ICdkZGgybyc6MzAgJ2RudHBzJzoyMyAnZWFjaCc6\nMjUgJ2Zvcic6NjggJ2ZvcndhcmQnOjcgJ2cyJzozNiAnaGFsZic6NDYsNjIg\nJ2luJzo1NiAnaW5vY3VsYXRpb24nOjY5ICdpcyc6NjYgJ2l0Jzo1NSAnbnVs\nbCc6NjAsNzAgJ29mJzo0Nyw2MyAnb3RoZXInOjYxICdwY3InOjU4ICdwaWNr\nJzo0NSAncGlwZXR0ZSc6NTEgJ3BvbHltZXJhc2UnOjM3ICdwcmltZXInOjgs\nMTYgJ3JlYWN0aW9uJzoyLDU5ICdyZXZlcnNlJzoxNSAnc3VzcGVuZCc6NTQg\nJ3RhcSc6MzUgJ3RoZSc6NTcsNjQgJ3RpcCc6NTIgJ3VzZWQnOjY3ICd3aXRo\nJzo1MA==\n"
+                  },
+                  "position": 1
                 }
               ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -643,10 +725,18 @@
           "output_id": 2091
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -669,13 +759,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 4267,
                 "name": "Transform competent A. tumefaciens cells",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>With <strong>1 μg</strong> of (pUB-Cas9-gene of interest) and spread the transformed cells on YEP agar plates supplemented with Rif/Gent/Kan.<br><br><strong>Recipe:</strong> </p>\n<ul>\n<li>YEP-medium</li>\n<li>15 g/L yeast extract</li>\n<li>10 g/L Bacto-peptone</li>\n<li>5 g/L NaCl </li>\n</ul>\n<br>With <strong>150 μg/mL</strong> rifampicin, <strong>50 μg/mL</strong> gentamycin sulfate, <strong>50 μg/mL</strong> kanamycin.<br><br><strong>Coculture growth:</strong><br>\n<ul>\n<li>2 days</li>\n<li>30°C.</li>\n</ul>\n</body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -685,18 +776,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3395
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>With <strong>1 μg</strong> of (pUB-Cas9-gene of interest) and spread the transformed cells on YEP agar plates supplemented with Rif/Gent/Kan.<br><br><strong>Recipe:</strong> </p>\n<ul>\n<li>YEP-medium</li>\n<li>15 g/L yeast extract</li>\n<li>10 g/L Bacto-peptone</li>\n<li>5 g/L NaCl </li>\n</ul>\n<br>With <strong>150 μg/mL</strong> rifampicin, <strong>50 μg/mL</strong> gentamycin sulfate, <strong>50 μg/mL</strong> kanamycin.<br><br><strong>Coculture growth:</strong><br>\n<ul>\n<li>2 days</li>\n<li>30°C.</li>\n</ul>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4626,
                 "name": "Verification of plasmid presence",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Verify plasmid presence in at least three colonies by colony PCR.</p>\n<br><strong>PCR program:</strong><br>\n<ul>\n<li>95°C 2min </li>\n<li>35 cycles (95°C 30 sec; 60°C 30 sec; 72°C 1 min)</li>\n<li>72°C 5 min</li>\n<li>20°C</li>\n</ul>\n</body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -706,86 +804,92 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3395
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Verify plasmid presence in at least three colonies by colony PCR.</p>\n<br><strong>PCR program:</strong><br>\n<ul>\n<li>95°C 2min </li>\n<li>35 cycles (95°C 30 sec; 60°C 30 sec; 72°C 1 min)</li>\n<li>72°C 5 min</li>\n<li>20°C</li>\n</ul>\n</body></html>"
+                  },
+                  "position": 0
+                },
+                {
+                  "table": {
+                    "id": 585,
+                    "created_at": "2018-11-16T14:34:51.901Z",
+                    "updated_at": "2019-02-20T07:53:56.770Z",
+                    "created_by_id": 202,
+                    "last_modified_by_id": 202,
+                    "name": "PCR mixture",
+                    "team_id": 1,
+                    "contents": "eyJkYXRhIjpbWyI1eCBSZWFjdGlvbiBidWZmZXIiLCI0zrxMIl0sWyJGb3J3\nYXJkIFByaW1lciAoMTDOvE0pIiwiMc68TCJdLFsiUmV2ZXJzZSBwcmltZXIg\nKDEwzrxNKSIsIjHOvEwiXSxbImROVFBzICgxMG1NIGVhY2gpIiwiMC40zrxM\nIl0sWyJkZEgyMCIsIjExLjTOvEwiXSxbIkROQSB0ZW1wbGF0ZSIsIjLOvEwi\nXSxbIlRhcSBwb2x5bWVyYXNlICg1VS/OvGwpIiwiMC4yzrxMIl1dfQ==\n",
+                    "data_vector": "JzAuMic6NDMgJzAuNCc6MjYgJzEnOjEyLDIwICcxMCc6OSwxNyAnMTBtbSc6\nMjQgJzExLjQnOjMwICcyJzozNSAnMjc0bCc6NiwxNCwyMiwyOCwzMiwzNyw0\nMiw0NSAnMjc0bSc6MTEsMTkgJzMxNic6NSwxMCwxMywxOCwyMSwyNywzMSwz\nNiw0MSw0NCAnNCc6NCAnNXUnOjQwICc1eCc6MSAnYnVmZmVyJzozICdkZGgy\nMCc6MjkgJ2RuYSc6MzMgJ2RudHBzJzoyMyAnZWFjaCc6MjUgJ2ZvcndhcmQn\nOjcgJ3BvbHltZXJhc2UnOjM5ICdwcmltZXInOjgsMTYgJ3JlYWN0aW9uJzoy\nICdyZXZlcnNlJzoxNSAndGFxJzozOCAndGVtcGxhdGUnOjM0\n"
+                  },
+                  "position": 1
+                },
                 {
                   "checklist": {
-                    "id": 971,
-                    "name": "Guideline:",
-                    "step_id": 4626,
-                    "created_at": "2018-12-21T14:16:54.698Z",
-                    "updated_at": "2018-12-21T14:16:54.698Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 971,
+                      "name": "Guideline:",
+                      "step_id": 4626,
+                      "created_at": "2018-12-21T14:16:54.698Z",
+                      "updated_at": "2018-12-21T14:16:54.698Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3998,
+                        "text": "In order to verify colony, pick half of a colony with a pipette tip and suspend cells in a 1.5 mL microcentrifuge tube containing 100 μL ddH2O.",
+                        "checked": false,
+                        "checklist_id": 971,
+                        "created_at": "2018-12-21T14:16:54.700Z",
+                        "updated_at": "2018-12-21T14:16:54.700Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 3999,
+                        "text": "Heat to 98 °C for 10 min and use 2 μL as DNA template for the PCR.",
+                        "checked": false,
+                        "checklist_id": 971,
+                        "created_at": "2018-12-21T14:16:54.707Z",
+                        "updated_at": "2018-12-21T14:16:54.707Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 4000,
+                        "text": "Streak the other half of the colony on a fresh YEP agar plate supplemented with Rif/Gent/Kan.",
+                        "checked": false,
+                        "checklist_id": 971,
+                        "created_at": "2018-12-21T14:16:54.715Z",
+                        "updated_at": "2018-12-21T14:16:54.715Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 4001,
+                        "text": "Grow cells at 30 °C for one day and then store at 4 °C.",
+                        "checked": false,
+                        "checklist_id": 971,
+                        "created_at": "2018-12-21T14:16:54.721Z",
+                        "updated_at": "2018-12-21T14:16:54.721Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 3998,
-                      "text": "In order to verify colony, pick half of a colony with a pipette tip and suspend cells in a 1.5 mL microcentrifuge tube containing 100 μL ddH2O.",
-                      "checked": false,
-                      "checklist_id": 971,
-                      "created_at": "2018-12-21T14:16:54.700Z",
-                      "updated_at": "2018-12-21T14:16:54.700Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 3999,
-                      "text": "Heat to 98 °C for 10 min and use 2 μL as DNA template for the PCR.",
-                      "checked": false,
-                      "checklist_id": 971,
-                      "created_at": "2018-12-21T14:16:54.707Z",
-                      "updated_at": "2018-12-21T14:16:54.707Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 4000,
-                      "text": "Streak the other half of the colony on a fresh YEP agar plate supplemented with Rif/Gent/Kan.",
-                      "checked": false,
-                      "checklist_id": 971,
-                      "created_at": "2018-12-21T14:16:54.715Z",
-                      "updated_at": "2018-12-21T14:16:54.715Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 4001,
-                      "text": "Grow cells at 30 °C for one day and then store at 4 °C.",
-                      "checked": false,
-                      "checklist_id": 971,
-                      "created_at": "2018-12-21T14:16:54.721Z",
-                      "updated_at": "2018-12-21T14:16:54.721Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    }
-                  ]
-                }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [
-                {
-                  "id": 466,
-                  "step_id": 4626,
-                  "table_id": 585
-                }
-              ],
-              "tables": [
-                {
-                  "id": 585,
-                  "created_at": "2018-11-16T14:34:51.901Z",
-                  "updated_at": "2019-02-20T07:53:56.770Z",
-                  "created_by_id": 202,
-                  "last_modified_by_id": 202,
-                  "name": "PCR mixture",
-                  "team_id": 1,
-                  "contents": "eyJkYXRhIjpbWyI1eCBSZWFjdGlvbiBidWZmZXIiLCI0zrxMIl0sWyJGb3J3\nYXJkIFByaW1lciAoMTDOvE0pIiwiMc68TCJdLFsiUmV2ZXJzZSBwcmltZXIg\nKDEwzrxNKSIsIjHOvEwiXSxbImROVFBzICgxMG1NIGVhY2gpIiwiMC40zrxM\nIl0sWyJkZEgyMCIsIjExLjTOvEwiXSxbIkROQSB0ZW1wbGF0ZSIsIjLOvEwi\nXSxbIlRhcSBwb2x5bWVyYXNlICg1VS/OvGwpIiwiMC4yzrxMIl1dfQ==\n",
-                  "data_vector": "JzAuMic6NDMgJzAuNCc6MjYgJzEnOjEyLDIwICcxMCc6OSwxNyAnMTBtbSc6\nMjQgJzExLjQnOjMwICcyJzozNSAnMjc0bCc6NiwxNCwyMiwyOCwzMiwzNyw0\nMiw0NSAnMjc0bSc6MTEsMTkgJzMxNic6NSwxMCwxMywxOCwyMSwyNywzMSwz\nNiw0MSw0NCAnNCc6NCAnNXUnOjQwICc1eCc6MSAnYnVmZmVyJzozICdkZGgy\nMCc6MjkgJ2RuYSc6MzMgJ2RudHBzJzoyMyAnZWFjaCc6MjUgJ2ZvcndhcmQn\nOjcgJ3BvbHltZXJhc2UnOjM5ICdwcmltZXInOjgsMTYgJ3JlYWN0aW9uJzoy\nICdyZXZlcnNlJzoxNSAndGFxJzozOCAndGVtcGxhdGUnOjM0\n"
+                  "position": 2
                 }
               ]
             },
@@ -793,7 +897,6 @@
               "step": {
                 "id": 4627,
                 "name": "Transformation of the plants",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Transform plants using <em>Agrobacterium</em>-mediated T-DNA transfer with <strong>the floral dipping method</strong>.<br>Simple dipping of developing floral tissues into a solution containing <em>Agrobacterium tumefaciens</em>, <strong>5%</strong> sucrose and <strong>500</strong> microliters per litre of surfactant Silwet L‐77. Sucrose and surfactant are critical to the success of the floral dip method. Plants inoculated when numerous immature floral buds and few siliques are present produce transformed progeny at the highest rate. </p></body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -803,14 +906,8 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3395
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [
-                {
-                  "id": 3095,
-                  "step_id": 4627,
-                  "asset_id": 3757
-                }
+              "step_comments": [
+
               ],
               "assets": [
                 {
@@ -832,13 +929,21 @@
                   }
                 }
               ],
-              "step_tables": [],
-              "tables": []
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Transform plants using <em>Agrobacterium</em>-mediated T-DNA transfer with <strong>the floral dipping method</strong>.<br>Simple dipping of developing floral tissues into a solution containing <em>Agrobacterium tumefaciens</em>, <strong>5%</strong> sucrose and <strong>500</strong> microliters per litre of surfactant Silwet L‐77. Sucrose and surfactant are critical to the success of the floral dip method. Plants inoculated when numerous immature floral buds and few siliques are present produce transformed progeny at the highest rate. </p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -863,11 +968,21 @@
         "state": "uncompleted",
         "completed_on": null
       },
-      "outputs": [],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "outputs": [
+
+      ],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -890,13 +1005,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 5234,
                 "name": "Screening of transformed plants",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>PCR/RE Genotyping: Genotyping of clones with targeted mutation<br>DNA sequencing</p></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -906,18 +1022,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3399
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>PCR/RE Genotyping: Genotyping of clones with targeted mutation<br>DNA sequencing</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4270,
                 "name": "Selection of genetically edited plant with desired modification",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>The transgene free homozygous mutants with desired genetic modifications at the targeted loci could be selected by selfing of GE0 generation plants and after segregation of the transgene in the next GE1 generation. The GE plants could be selected by PCR/RE genotyping and DNA sequencing of clones and negatively selecting for the transgene free plants with desired modification in the first generation only.</p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -927,14 +1050,8 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3399
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [
-                {
-                  "id": 3096,
-                  "step_id": 4270,
-                  "asset_id": 3758
-                }
+              "step_comments": [
+
               ],
               "assets": [
                 {
@@ -956,13 +1073,21 @@
                   }
                 }
               ],
-              "step_tables": [],
-              "tables": []
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>The transgene free homozygous mutants with desired genetic modifications at the targeted loci could be selected by selfing of GE0 generation plants and after segregation of the transgene in the next GE1 generation. The GE plants could be selected by PCR/RE genotyping and DNA sequencing of clones and negatively selecting for the transgene free plants with desired modification in the first generation only.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     }
   ],
   "my_module_groups": [

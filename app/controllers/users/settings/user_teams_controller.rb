@@ -3,45 +3,34 @@ module Users
     class UserTeamsController < ApplicationController
       include NotificationsHelper
       include InputSanitizeHelper
+      include UserRolesHelper
 
-      before_action :load_user, only: :destroy
-
-      before_action :load_user_team, only: [
-        :update,
-        :leave_html,
-        :destroy_html,
-        :destroy
-      ]
+      before_action :load_user_assignment, only: %i(update leave_html destroy_html destroy)
+      before_action :check_manage_permissions, except: %i(leave_html destroy_html destroy)
+      before_action :check_destroy_permissions, only: %i(leave_html destroy_html destroy)
 
       def update
         respond_to do |format|
-          if @user_t.update(update_params)
-            # If user is administrator of team,
-            # and he/she changes his/her role
-            # he/she should be redirected to teams page
-            new_path = teams_path if @user_t.user == @current_user &&
-                                     @user_t.role != 'admin'
-
+          if @user_assignment.update(update_params)
             Activities::CreateActivityService
               .call(activity_type: :change_users_role_on_team,
                     owner: current_user,
-                    subject: @user_t.team,
-                    team: @user_t.team,
+                    subject: @user_assignment.assignable,
+                    team: @user_assignment.assignable,
                     message_items: {
-                      team: @user_t.team.id,
-                      user_changed: @user_t.user.id,
-                      role: @user_t.role_str
+                      team: @user_assignment.assignable.id,
+                      user_changed: @user_assignment.user.id,
+                      role: @user_assignment.user_role.name
                     })
 
             format.json do
               render json: {
-                status: :ok,
-                new_path: new_path
+                status: :ok
               }
             end
           else
             format.json do
-              render json: @user_t.errors,
+              render json: @user_assignment.errors,
               status: :unprocessable_entity
             end
           end
@@ -53,14 +42,12 @@ module Users
           format.json do
             render json: {
               html: render_to_string(
-                partial:
-                  'users/settings/user_teams/' \
-                  'leave_user_team_modal_body.html.erb',
-                locals: { user_team: @user_t }
+                partial: 'users/settings/user_teams/leave_user_team_modal_body.html.erb',
+                locals: { user_assignment: @user_assignment }
               ),
               heading: I18n.t(
                 'users.settings.user_teams.leave_uo_heading',
-                team: escape_input(@user_t.team.name)
+                team: escape_input(@user_assignment.assignable.name)
               )
             }
           end
@@ -74,12 +61,12 @@ module Users
               html: render_to_string(
                 partial: 'users/settings/user_teams/' \
                          'destroy_user_team_modal_body.html.erb',
-                locals: { user_team: @user_t }
+                locals: { user_assignment: @user_assignment }
               ),
               heading: I18n.t(
                 'users.settings.user_teams.destroy_uo_heading',
-                user: escape_input(@user_t.user.full_name),
-                team: escape_input(@user_t.team.name)
+                user: escape_input(@user_assignment.user.full_name),
+                team: escape_input(@user_assignment.assignable.name)
               )
             }
           end
@@ -90,35 +77,35 @@ module Users
         # If user is last administrator of team,
         # he/she cannot be deleted from it.
         invalid =
-          @user_t.admin? &&
-          @user_t
-          .team
-          .user_teams
-          .where(role: 2)
+          managing_team_user_roles_collection.include?(@user_assignment.user_role) &&
+          @user_assignment
+          .assignable
+          .user_assignments
+          .where(user_role: managing_team_user_roles_collection)
           .count <= 1
 
         unless invalid
           begin
-            UserTeam.transaction do
+            @user_assignment.transaction do
               # If user leaves on his/her own accord,
               # new owner for projects is the first
               # administrator of team
               if params[:leave]
                 new_owner =
-                  @user_t
-                  .team
-                  .user_teams
-                  .where(role: 2)
-                  .where.not(id: @user_t.id)
+                  @user_assignment
+                  .assignable
+                  .user_assignments
+                  .where(user_role: managing_team_user_roles_collection)
+                  .where.not(id: @user_assignment.id)
                   .first
                   .user
                 Activities::CreateActivityService
                   .call(activity_type: :user_leave_team,
                         owner: current_user,
-                        subject: @user_t.team,
-                        team: @user_t.team,
+                        subject: @user_assignment.assignable,
+                        team: @user_assignment.assignable,
                         message_items: {
-                          team: @user_t.team.id
+                          team: @user_assignment.assignable.id
                         })
               else
                 # Otherwise, the new owner for projects is
@@ -126,18 +113,18 @@ module Users
                 # the user from the team)
                 new_owner = current_user
                 Activities::CreateActivityService
-                .call(activity_type: :remove_user_from_team,
-                      owner: current_user,
-                      subject: @user_t.team,
-                      team: @user_t.team,
-                      message_items: {
-                        team: @user_t.team.id,
-                        user_removed: @user_t.user.id
-                      })
+                  .call(activity_type: :remove_user_from_team,
+                        owner: current_user,
+                        subject: @user_assignment.assignable,
+                        team: @user_assignment.assignable,
+                        message_items: {
+                          team: @user_assignment.assignable.id,
+                          user_removed: @user_assignment.user.id
+                        })
               end
-              reset_user_current_team(@user_t)
+              reset_user_current_team(@user_assignment)
 
-              @user_t.destroy(new_owner)
+              remove_user_from_team!(@user_assignment, new_owner)
             end
           rescue StandardError => e
             Rails.logger.error e.message
@@ -150,18 +137,18 @@ module Users
             if params[:leave]
               flash[:notice] = I18n.t(
                 'users.settings.user_teams.leave_flash',
-                team: @user_t.team.name
+                team: @user_assignment.assignable.name
               )
               flash.keep(:notice)
             end
             generate_notification(current_user,
-                                  @user_t.user,
-                                  @user_t.team,
+                                  @user_assignment.user,
+                                  @user_assignment.assignable,
                                   false)
             format.json { render json: { status: :ok } }
           else
             format.json do
-              render json: @user_t.errors,
+              render json: @user_assignment.errors,
               status: :unprocessable_entity
             end
           end
@@ -170,32 +157,54 @@ module Users
 
       private
 
-      def load_user
-        @user = current_user
+      def load_user_assignment
+        @user_assignment = UserAssignment.find_by(id: params[:id])
       end
 
-      def load_user_team
-        @user_t = UserTeam.find_by_id(params[:id])
-        @team = @user_t.team
-        # Don't allow the user to modify UserTeam-s if he's not admin,
-        # unless he/she is modifying his/her UserTeam
-        if current_user != @user_t.user &&
-           !can_manage_team_users?(@user_t.team)
-          render_403
+      def check_manage_permissions
+        render_403 unless can_manage_team_users?(@user_assignment.assignable)
+      end
+
+      def check_destroy_permissions
+        if params[:leave]
+          render_403 unless @user_assignment.user == current_user
+        else
+          render_403 unless can_manage_team_users?(@user_assignment.assignable)
         end
       end
 
       def update_params
-        params.require(:user_team).permit(
-          :role
-        )
+        params.require(:user_assignment).permit(:user_role_id)
       end
 
-      def reset_user_current_team(user_team)
-        ids = user_team.user.teams_ids
-        ids -= [user_team.team.id]
-        user_team.user.current_team_id = ids.first
-        user_team.user.save
+      def reset_user_current_team(user_assignment)
+        ids = user_assignment.user.teams_ids
+        ids -= [user_assignment.assignable.id]
+        user_assignment.user.current_team_id = ids.first
+        user_assignment.user.save
+      end
+
+      def remove_user_from_team!(user_assignment, new_owner)
+        return user_assignment.destroy! unless new_owner
+
+        # Also, make new owner author of all protocols that belong
+        # to the departing user and belong to this team.
+        p_ids = user_assignment.user.added_protocols.where(team: user_assignment.assignable).pluck(:id)
+        Protocol.where(id: p_ids).find_each do |protocol|
+          protocol.record_timestamps = false
+          protocol.added_by = new_owner
+          protocol.archived_by = new_owner unless protocol.archived_by.nil?
+          protocol.restored_by = new_owner unless protocol.restored_by.nil?
+          protocol.save!
+          protocol.user_assignments.find_by(user: new_owner)&.destroy!
+          protocol.user_assignments.create!(user: new_owner, user_role: UserRole.find_predefined_owner_role)
+        end
+
+        # Make new owner author of all inventory items that were added
+        # by departing user and belong to this team.
+        RepositoryRow.change_owner(user_assignment.assignable, user_assignment.user, new_owner)
+
+        user_assignment.destroy!
       end
     end
   end

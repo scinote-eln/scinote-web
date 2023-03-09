@@ -14,7 +14,7 @@
     </div>
     <div class="comment-footer">
       <div class="comment-create-date">
-        <%= I18n.l(comment.created_at, format: :full_date) %>
+        <%= I18n.l(comment.created_at, format: :full) %>
       </div>
       <% if comment_editable?(comment) %>
         <div class="dropdown comment-menu-container">

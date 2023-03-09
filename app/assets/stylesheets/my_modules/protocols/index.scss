@@ -91,6 +91,9 @@
         }
 
         .repositories-dropdown-menu {
+          max-height: 250px;
+          overflow: auto;
+
           .repository {
             @include font-button;
             cursor: pointer;
@@ -129,16 +132,6 @@
         }
       }
     }
-  }
-}
-
-.complete-button-container {
-  display: inline;
-  float: right;
-  width: 260px;
-
-  .my_module-state-buttons {
-    padding-top: 0;
   }
 }
 
@@ -246,15 +239,21 @@
       }
 
       .my-module-tags-color {
+        align-items: center;
         border-radius: 8px;
-        display: inline-block;
+        display: inline-flex;
         height: 16px;
+        justify-content: center;
         margin-right: 5px;
         width: 16px;
+
+        &.new {
+          color: $color-silver-chalice;
+        }
       }
 
       .my-module-tags-create-new {
-        opacity: .6;
+        margin-left: 3px;
       }
 
       .input-field {
@@ -427,9 +426,31 @@
     max-width: 100vw;
     width: 650px;
 
+    .dropdown-header,
+    .dropdown-body {
+      padding: 10px 32px;
+    }
+
+    .dropdown-header {
+      background: $color-white;
+      border-bottom: $border-tertiary;
+
+      .protocol-name {
+        color: $color-black;
+        margin-top: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .protocol-header-info {
+        color: $color-black;
+        font-size: .875em;
+        font-weight: 400;
+      }
+    }
+
     .dropdown-body {
       border-bottom: $border-tertiary;
-      padding: 10px 32px;
 
       .info-line {
         align-items: center;
@@ -653,4 +674,9 @@
       grid-row: 2 / span 1;
     }
   }
+}
+
+.task-details-code {
+  display: inline-block;
+  margin-left: 4px;
 }

@@ -7,6 +7,7 @@
   function initializeHandsonTable(el) {
     var input = el.siblings('input.hot-table-contents');
     var inputObj = JSON.parse(input.attr('value'));
+    var metadata = el.siblings('input.hot-table-metadata');
     var data = inputObj.data;
     var headers;
     var parentEl;
@@ -25,9 +26,10 @@
         columnSorting: false,
         editor: false,
         copyPaste: false,
-        formulas: true
+        formulas: true,
+        data: data
       });
-      el.handsontable('getInstance').loadData(data);
+
       el.handsontable('getInstance').getPlugin('columnSorting').sort(3, order);
     } else {
       el.handsontable({
@@ -36,9 +38,10 @@
         colHeaders: true,
         editor: false,
         copyPaste: false,
-        formulas: true
+        formulas: true,
+        data: data,
+        cell: JSON.parse(metadata.val() || '{}').cells || []
       });
-      el.handsontable('getInstance').loadData(data);
     }
   }
 

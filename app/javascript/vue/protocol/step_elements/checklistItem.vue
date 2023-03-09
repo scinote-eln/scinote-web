@@ -41,24 +41,26 @@
         </div>
       </div>
       <div class="step-element-controls">
-        <button v-if="!checklistItem.attributes.urls || updateUrl" class="btn icon-btn btn-light" @click="enableTextEdit" tabindex="-1">
+        <button v-if="!checklistItem.attributes.urls || updateUrl" class="btn icon-btn btn-light" @click="enableTextEdit" tabindex="0">
           <i :title="`edit checklist item ${checklistItem.attributes.text}`" class="fas fa-pen"></i>
         </button>
-        <button v-if="!checklistItem.attributes.urls || deleteUrl" class="btn icon-btn btn-light" @click="deleteElement" tabindex="-1">
+        <button v-if="!checklistItem.attributes.urls || deleteUrl" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="0">
           <i :title="`delete checklist item ${checklistItem.attributes.text}`" class="fas fa-trash"></i>
         </button>
       </div>
     </div>
+    <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @cancel="closeDeleteModal"/>
   </div>
 </template>
 
  <script>
   import DeleteMixin from 'vue/protocol/mixins/components/delete.js'
   import InlineEdit from 'vue/shared/inline_edit.vue'
+  import deleteElementModal from 'vue/protocol/modals/delete_element.vue'
 
   export default {
     name: 'ChecklistItem',
-    components: { InlineEdit },
+    components: { InlineEdit, deleteElementModal },
     mixins: [DeleteMixin],
     props: {
       checklistItem: {

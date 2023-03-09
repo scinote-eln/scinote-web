@@ -237,7 +237,12 @@ class TeamZipExport < ZipExport
         file_data = preview.image.download
       else
         file_name = preview.filename.to_s
-        file_data = preview.processed.service.download(preview.key)
+
+        begin
+          file_data = preview.processed.service.download(preview.key)
+        rescue Vips::Error # handle files not processable by Vips (no preview available)
+          return nil
+        end
       end
 
       {

@@ -1,4 +1,4 @@
-/* global TinyMCE I18n animateSpinner importProtocolFromFile truncateLongString */
+/* global TinyMCE Prism I18n animateSpinner importProtocolFromFile */
 /* global HelperModule GLOBAL_CONSTANTS */
 /* eslint-disable no-use-before-define, no-alert, no-restricted-globals, no-underscore-dangle */
 
@@ -13,61 +13,32 @@ function initEditMyModuleDescription() {
   var viewObject = $('#my_module_description_view');
   viewObject.on('click', function(e) {
     if ($(e.target).hasClass('record-info-link')) return;
-    TinyMCE.init('#my_module_description_textarea');
+    TinyMCE.init(
+      '#my_module_description_textarea',
+      {
+        onSaveCallback: () => {
+          Prism.highlightAllUnder(viewObject.get(0));
+        }
+      }
+    );
   }).on('click', 'a', function(e) {
     if ($(this).hasClass('record-info-link')) return;
     e.stopPropagation();
   });
-  TinyMCE.initIfHasDraft(viewObject);
+
+  setTimeout(function() {
+    TinyMCE.wrapTables(viewObject);
+  }, 100);
 }
 
 function initEditProtocolDescription() {
   var viewObject = $('#protocol_description_view');
   viewObject.on('click', function(e) {
     if ($(e.target).hasClass('record-info-link')) return;
-    TinyMCE.init('#protocol_description_textarea', refreshProtocolStatusBar);
+    TinyMCE.init('#protocol_description_textarea', { afterInitCallback: refreshProtocolStatusBar });
   }).on('click', 'a', function(e) {
     if ($(this).hasClass('record-info-link')) return;
     e.stopPropagation();
-  });
-  TinyMCE.initIfHasDraft(viewObject);
-}
-
-// Initialize edit description modal window
-function initEditDescription() {
-  var editDescriptionModal = $('#manage-module-description-modal');
-  var editDescriptionModalBody = editDescriptionModal.find('.modal-body');
-  $('.description-link')
-    .on('ajax:success', function(ev, data) {
-      var descriptionLink = $('.description-refresh');
-
-      // Set modal body & title
-      editDescriptionModalBody.html(data.html);
-      editDescriptionModal
-        .find('#manage-module-description-modal-label')
-        .text(data.title);
-
-      editDescriptionModalBody.find('form')
-        .on('ajax:success', function(ev2, data2) {
-          // Update module's description in the tab
-          descriptionLink.html(data2.description_label);
-
-          // Close modal
-          editDescriptionModal.modal('hide');
-        })
-        .on('ajax:error', function(ev2, data2) {
-          // Display errors if needed
-          $(this).renderFormErrors('my_module', data2.responseJSON);
-        });
-
-      // Show modal
-      editDescriptionModal.modal('show');
-    });
-
-
-  editDescriptionModal.on('hidden.bs.modal', function() {
-    editDescriptionModalBody.find('form').off('ajax:success ajax:error');
-    editDescriptionModalBody.html('');
   });
 }
 
@@ -464,7 +435,6 @@ function initProtocolSectionOpenEvent() {
 function init() {
   initEditMyModuleDescription();
   initEditProtocolDescription();
-  initEditDescription();
   initLinkUpdate();
   initLoadFromRepository();
   refreshProtocolStatusBar();

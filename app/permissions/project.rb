@@ -8,8 +8,7 @@ Canaid::Permissions.register_for(Project) do
      archive_project
      create_project_experiments
      create_project_comments
-     manage_project_tags
-     manage_project_users)
+     manage_project_tags)
     .each do |perm|
     can perm do |_, project|
       project.active?
@@ -20,7 +19,8 @@ Canaid::Permissions.register_for(Project) do
      export_project)
     .each do |perm|
     can perm do |user, project|
-      user.is_admin_of_team?(project.team) || project.permission_granted?(user, ProjectPermissions::READ)
+      project.permission_granted?(user, ProjectPermissions::READ) ||
+        project.team.permission_granted?(user, TeamPermissions::MANAGE)
     end
   end
 
@@ -52,7 +52,8 @@ Canaid::Permissions.register_for(Project) do
   end
 
   can :manage_project_users do |user, project|
-    user.is_admin_of_team?(project.team) || project.permission_granted?(user, ProjectPermissions::USERS_MANAGE)
+    project.permission_granted?(user, ProjectPermissions::USERS_MANAGE) ||
+      project.team.permission_granted?(user, TeamPermissions::MANAGE)
   end
 
   can :archive_project do |user, project|

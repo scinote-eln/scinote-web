@@ -50,24 +50,6 @@ var DasboardCurrentTasksWidget = (function() {
     }
   }
 
-  function initInfiniteScroll() {
-    InfiniteScroll.init('.current-tasks-list-wrapper', {
-      url: $('.current-tasks-list').data('tasksListUrl'),
-      customResponse: (json, container) => {
-        appendTasksList(json, container);
-      },
-      customParams: (params) => {
-        params.project_id = dropdownSelector.getValues(projectFilter);
-        params.experiment_id = dropdownSelector.getValues(experimentFilter);
-        params.sort = dropdownSelector.getValues(sortFilter);
-        params.statuses = dropdownSelector.getValues(statusFilter);
-        params.query = $('.current-tasks-widget .task-search-field').val();
-        params.mode = $('.current-tasks-navbar .active').data('mode');
-        return params;
-      }
-    });
-  }
-
   function filterStateSave() {
     var teamId = $('.current-tasks-filters').data('team-id');
     var filterState = {
@@ -117,7 +99,7 @@ var DasboardCurrentTasksWidget = (function() {
 
   function loadCurrentTasksList(newList) {
     var $currentTasksList = $('.current-tasks-list');
-    var params = {
+    var requestParams = {
       project_id: dropdownSelector.getValues(projectFilter),
       experiment_id: dropdownSelector.getValues(experimentFilter),
       sort: dropdownSelector.getValues(sortFilter),
@@ -126,7 +108,7 @@ var DasboardCurrentTasksWidget = (function() {
       mode: $('.current-tasks-navbar .active').data('mode')
     };
     animateSpinner($currentTasksList, true);
-    $.get($currentTasksList.data('tasksListUrl'), params, function(result) {
+    $.get($currentTasksList.data('tasksListUrl'), requestParams, function(result) {
       $currentTasksList.empty();
       // Toggle empty state
       if (result.data.length === 0) {
@@ -140,6 +122,18 @@ var DasboardCurrentTasksWidget = (function() {
       appendTasksList(result, '.current-tasks-list-wrapper');
       PerfectSb().update_all();
       if (newList) InfiniteScroll.resetScroll('.current-tasks-list-wrapper');
+
+      InfiniteScroll.init('.current-tasks-list-wrapper', {
+        url: $currentTasksList.data('tasksListUrl'),
+        lastPage: !result.next_page,
+        customResponse: (json, container) => {
+          appendTasksList(json, container);
+        },
+        customParams: (params) => {
+          return { ...params, ...requestParams };
+        }
+      });
+
       animateSpinner($currentTasksList, false);
     }).error(function(error) {
       // If error is 403, it is possible that the user was removed from project/experiment,
@@ -259,7 +253,6 @@ var DasboardCurrentTasksWidget = (function() {
         initSearch();
         filterStateLoad();
         loadCurrentTasksList();
-        initInfiniteScroll();
       }
     }
   };

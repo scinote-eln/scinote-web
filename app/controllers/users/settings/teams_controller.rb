@@ -30,12 +30,7 @@ module Users
       layout 'fluid'
 
       def index
-        @user_teams =
-          @user
-          .user_teams
-          .includes(team: :users)
-          .order(created_at: :asc)
-        @member_of = @user_teams.count
+        @member_of = @user.teams.count
       end
 
       def datatable
@@ -55,14 +50,6 @@ module Users
         @new_team.created_by = @user
 
         if @new_team.save
-          # Okay, team is created, now
-          # add the current user as admin
-          UserTeam.create(
-            user: @user,
-            team: @new_team,
-            role: 2
-          )
-
           # Redirect to new team page
           redirect_to team_path(@new_team)
         else
@@ -156,7 +143,7 @@ module Users
 
       def load_team
         @team = Team.find_by_id(params[:id])
-        render_403 unless can_update_team?(@team)
+        render_403 unless can_manage_team?(@team)
       end
 
       def create_params

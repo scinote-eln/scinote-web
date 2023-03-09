@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 describe RepositoryTableStateColumnUpdateService do
-  let!(:team) { create :team }
   let!(:user_1) { create :user, email: 'user_one@asdf.com' }
   let!(:user_2) { create :user, email: 'user_two@asdf.com' }
+  let!(:team) { create :team, created_by: user_1 }
   let!(:repository) do
     create :repository, name: 'my repo',
                         created_by: user_1,

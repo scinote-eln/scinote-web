@@ -4,11 +4,11 @@
       <%= image_tag "icon/team.png", class: 'img-circle pull-left' %>
     </div>
     <div>
-      <%= t('access_permissions.everyone_else', team_name: f.object.team.name) %>
-      <%= render 'access_permissions/partials/public_members_dropdown', team: f.object.team, project: project %>
+      <%= t('access_permissions.everyone_else', team_name: project.team.name) %>
+      <%= render 'access_permissions/partials/public_members_dropdown', team: project.team, project: project %>
       <br>
       <small class="text-muted">
-        <%= f.object.default_public_user_role.name %>
+        <%= project.default_public_user_role.name %>
         <span class="permission-object-tag" title="<%= t("access_permissions.partials.project_tooltip") %>"">
           <%= t("access_permissions.partials.project") %>
         </span>
@@ -18,7 +18,7 @@
   <div class="user-assignment-controls" onclick="addTitlesToOptions(this.getElementsByClassName('dropdown-menu inner')[0])">
     <div class="user-assignment-role">
       <% if editable %>
-        <%= f.select :default_public_user_role_id, options_for_select(user_roles_collection, selected: f.object.default_public_user_role_id), {}, class: 'form-control selectpicker', title: "Project #{project.name}: change project public role", data: { 'selected-text-format' => 'static' } %>
+        <%= f.select :default_public_user_role_id, options_for_select(user_roles_collection, selected: project.default_public_user_role_id), {}, class: 'form-control selectpicker', title: "Project #{project.name}: change project public role", data: { 'selected-text-format' => 'static' } %>
       <% end %>
     </div>
     <div class="user-assignment-remove">

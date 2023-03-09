@@ -6,7 +6,9 @@ describe ProjectsOverviewService do
   PROJECTS_CNT = 26
   time = Time.new(2015, 8, 1, 14, 35, 0)
   let!(:user) { create :user }
-  let!(:team) { create :team }
+  let!(:another_user) { create :user }
+  let!(:team) { create :team, created_by: user }
+  let!(:another_team) { create :team, created_by: another_user }
   before do
     @projects_overview = ProjectsOverviewService.new(team, user, nil, params)
   end
@@ -32,9 +34,10 @@ describe ProjectsOverviewService do
                      archived: true, created_at: time.advance(hours: 5), created_by: user
   end
   let!(:project_6) do
-    create :project, name: 'test project F', visibility: 0, team: team,
-                     archived: false, created_at: time.advance(hours: 4)
+    create :project, name: 'test project F', visibility: 0, team: another_team,
+                     archived: false, created_at: time.advance(hours: 4), created_by: another_user
   end
+
   (7..PROJECTS_CNT).each do |i|
     let!("project_#{i}") do
       create :project, name: "test project #{(64 + i).chr}",

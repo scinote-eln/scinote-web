@@ -34,8 +34,8 @@ class ProjectFolder < ApplicationRecord
     new_query = if current_team
                   current_team.project_folders.where_attributes_like(:name, query, options)
                 else
-                  distinct.joins(team: :user_teams)
-                          .where(teams: { user_teams: { user: user } })
+                  distinct.joins(team: :users)
+                          .where(teams: { user_assignments: { user: user } })
                           .where_attributes_like('project_folders.name', query, options)
                 end
 

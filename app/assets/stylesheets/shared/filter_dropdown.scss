@@ -44,6 +44,20 @@
       }
     }
 
+    .item-avatar {
+      border-radius: 50%;
+    }
+
+    .dropdown-option.users-dropdown-list {
+      padding: 8px 10px;
+
+      .item-avatar {
+        height: 32px;
+        margin: 0 16px 0 0;
+        width: 32px;
+      }
+    }
+
     .recent-searches {
       border-top-left-radius: 0;
       border-top-right-radius: 0;

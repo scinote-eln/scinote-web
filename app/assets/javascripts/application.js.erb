@@ -1,21 +1,6 @@
 // turbolinks MUST BE THE LAST inclusion
-//= require jquery
-//= require jquery_ujs
-//= require jquery.mousewheel.min
-//= require jquery.scrollTo
-//= require jquery.autosize
-//= require jquery-ui/widget
-//= require jquery-ui/widgets/mouse
-//= require jquery-ui/widgets/draggable
-//= require jquery-ui/widgets/droppable
-//= require jquery.ui.touch-punch.min
-//= require jquery-ui/effects/effect-slide
-//= require jquery.caret.min
-//= require jquery.atwho.min
 //= require hammer
 //= require js.cookie
-//= require spin
-//= require jquery.spin
 //= require bootstrap-sprockets
 //= require moment
 //= require bootstrap-datetimepicker
@@ -24,9 +9,6 @@
 //= require bootstrap-checkbox.min
 //= require typeahead.bundle.min
 //= require nested_form_fields
-//= require highlight.pack
-//= require tinymce-jquery
-//= require_tree ./tinymce/plugins
 //= require jsPlumb-2.0.4-min
 //= require jsnetworkx
 //= require bootstrap-select
@@ -240,11 +222,6 @@ var HelperModule = (function(){
 
 (function() {
   $(document).on('turbolinks:load', function() {
-    // initialize code markup in rich text fields
-    $('[class^=language]').each(function(i, block) {
-      hljs.highlightBlock(block);
-    });
-
     // fix dropdown-menu style throughout the app
     $('.dropdown-header').parent('ul').addClass('custom-dropdown-menu');
   });
@@ -257,9 +234,6 @@ var HelperModule = (function(){
   $(document).on('turbolinks:load', function() {
     /* Fix .selectpicker (bootstrap-select) to work with Turbolinks 5.x */
     $(window).trigger('load.bs.select.data-api');
-
-    /* Clean up TinyMCE */
-    tinymce.remove();
   });
 
   // Show warning if page has unsaved data
@@ -319,8 +293,8 @@ window.I18n = I18n
 
 // Multiple modal support
 // https://stackoverflow.com/a/24914782
-$(document).on('show.bs.modal', '.modal', function() {
-  const zIndex = 1040 + 10 * $('.modal:visible').length;
+$(document).on('shown.bs.modal', '.modal', function() {
+  const zIndex = 2040 + 10 * $('.modal:visible').length;
   $(this).css('z-index', zIndex);
   setTimeout(() => $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack'));
 });

@@ -6,6 +6,11 @@
 
 @import "constants";
 
+// Fix for elements being scrolled to being hidden behind sticky navigation
+html {
+  scroll-padding-top: 128px;
+}
+
 .protocol-description-content {
   margin: 20px 0 20px 10px;
 }
@@ -52,6 +57,21 @@
 }
 
 .module-large {
+
+  .nav-tabs {
+    display: flex;
+  }
+
+  .task-code {
+    align-items: center;
+    color: $color-volcano;
+    display: flex;
+    height: 30px;
+    margin-left: auto;
+    padding-right: .5em;
+    text-align: end;
+  }
+
   .description-label {
     word-break: break-all;
     word-wrap: break-word;
@@ -61,6 +81,12 @@
     word-break: break-all;
     word-wrap: break-word;
   }
+}
+
+.archived-task-card-code {
+  bottom: 30px;
+  position: absolute;
+  right: 25px;
 }
 
 // Create wopi file
@@ -140,6 +166,11 @@
   }
 }
 
+.mce-toc ul,
+.mce-toc li {
+  list-style-type: none;
+}
+
 // Mobile view
 @media (max-width: 700px) {
   .task-section {
@@ -214,15 +245,14 @@
 }
 
 
-#experiment-canvas {
-  [data-view-mode="archived"] {
-    display: none;
-  }
-}
 
 #module-archive {
   [data-view-mode="active"] {
     display: none;
+  }
+
+  .toolbar {
+    margin-top: 1em;
   }
 
   .module-container {

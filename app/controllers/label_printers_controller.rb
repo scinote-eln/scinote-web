@@ -3,12 +3,26 @@
 class LabelPrintersController < ApplicationController
   include InputSanitizeHelper
 
-  before_action :check_manage_permissions, except: %i(index update_progress_modal)
+  before_action :check_manage_permissions, except: %i(index index_zebra update_progress_modal)
   before_action :find_label_printer, only: %i(edit update destroy)
 
   def index
     @label_printers = LabelPrinter.all
     @fluics_api_key = @label_printers.any? ? @label_printers.first.fluics_api_key : nil
+    @printer_type = 'fluics'
+    respond_to do |format|
+      format.json do
+        render json: @label_printers, each_serializer: LabelPrinterSerializer, user: current_user
+      end
+      format.html do
+        render 'index'
+      end
+    end
+  end
+
+  def index_zebra
+    @printer_type = 'zebra'
+    render 'index'
   end
 
   def new

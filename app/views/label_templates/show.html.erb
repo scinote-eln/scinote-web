@@ -1,0 +1,21 @@
+<% provide(:sidebar_title, t('sidebar.templates.sidebar_title')) %>
+<% provide(:container_class, "no-second-nav-container") %>
+<%= content_for :sidebar do %>
+  <%= render partial: "/shared/sidebar/templates_sidebar", locals: {active: :label} %>
+<% end %>
+
+<div id="labelTemplateContainer"
+     data-label-template-url="<%= label_template_path(params[:id], format: :json) %>"
+     data-label-templates-url="<%= label_templates_path %>"
+     data-preview-url="<%= zpl_preview_label_templates_path %>"
+     data-new-label="<%= params[:new_label] || false %>"
+  >
+  <label-template-container
+    :label-template-url="labelTemplateUrl"
+    :label-templates-url="labelTemplatesUrl"
+    :preview-url="previewUrl"
+    :new-label="newLabel"
+  />
+</div>
+
+<%= javascript_pack_tag 'vue/label_template' %>

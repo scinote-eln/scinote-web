@@ -299,22 +299,7 @@ Devise.setup do |config|
     config.omniauth :linkedin, ENV['LINKEDIN_KEY'], ENV['LINKEDIN_SECRET'], scope: 'r_liteprofile r_emailaddress'
   end
 
-  if [ENV['OKTA_CLIENT_ID'], ENV['OKTA_CLIENT_SECRET'], ENV['OKTA_DOMAIN'], ENV['OKTA_AUTH_SERVER_ID']].all?(&:present?)
-    config.omniauth(
-      :okta,
-      ENV['OKTA_CLIENT_ID'],
-      ENV['OKTA_CLIENT_SECRET'],
-      scope: 'openid profile email',
-      fields: %w(profile email),
-      client_options: {
-        site: "https://#{ENV['OKTA_DOMAIN']}",
-        authorize_url: "https://#{ENV['OKTA_DOMAIN']}/oauth2/#{ENV['OKTA_AUTH_SERVER_ID']}/v1/authorize",
-        token_url: "https://#{ENV['OKTA_DOMAIN']}/oauth2/#{ENV['OKTA_AUTH_SERVER_ID']}/v1/token",
-        user_info_url: "https://#{ENV['OKTA_DOMAIN']}/oauth2/#{ENV['OKTA_AUTH_SERVER_ID']}/v1/userinfo"
-      },
-      strategy_class: OmniAuth::Strategies::Okta
-    )
-  end
+  Rails.application.config.x.disable_local_passwords = ENV['DISABLE_LOCAL_PASSWORDS'] == 'true'
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

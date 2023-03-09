@@ -1,12 +1,14 @@
-<% unless current_user.is_guest_of_team?(current_team) %>
-  <div class="quick-start-buttons">
-    <div class="new-task btn btn-secondary" title="dashboard new task button"><i class="fas fa-plus"></i><%= t("dashboard.quick_start.new_task") %></div>
-    <%= button_to protocols_path(type: :in_repository_public), title: 'dashboard new protocol button', disabled: !can_create_protocols_in_repository?(@current_team), class: 'btn btn-secondary' do %>
+<div class="quick-start-buttons">
+  <div class="new-task btn btn-secondary" title="dashboard new task button"><i class="fas fa-plus"></i><%= t("dashboard.quick_start.new_task") %></div>
+  <% if can_create_protocols_in_repository?(current_team) %>
+    <%= button_to protocols_path(type: :public), title: 'dashboard new protocol button', class: 'btn btn-secondary' do %>
       <i class="fas fa-edit"></i><%= t("dashboard.quick_start.new_protocol") %>
     <% end %>
+  <% end %>
+  <% if can_create_reports?(current_team) %>
     <%= link_to new_report_path, {class: "new-report btn btn-secondary", title: "dashboard new report button"} do %>
       <i class="fas fa-clipboard-check"></i><%= t("dashboard.quick_start.new_report") %>
     <% end %>
-  </div>
-  <%= render "create_task_modal" %>
-<% end %>
+  <% end %>
+</div>
+<%= render "create_task_modal" %>

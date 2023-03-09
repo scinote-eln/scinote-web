@@ -133,7 +133,7 @@ class GlobalActivitiesController < ApplicationController
       end
     filter_teams =
       if subject_search_params[:users].present?
-        User.where(id: subject_search_params[:users]).joins(:user_teams).group(:team_id).pluck(:team_id)
+        User.where(id: subject_search_params[:users]).joins(:teams).group(:team_id).pluck(:team_id)
       elsif subject_search_params[:teams].present?
         subject_search_params[:teams]
       else

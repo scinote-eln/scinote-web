@@ -33,18 +33,17 @@ module Repositories
       if !@shared_with_all.nil? && !@shared_permission_level.nil?
         old_permission_level = @repository.permission_level
         @repository.permission_level = @shared_with_all ? @shared_permission_level : :not_shared
-        if @repository.changed?
-          log_activity_share_all(@repository.permission_level, old_permission_level, @repository) if @repository.save
+        if @repository.changed? && @repository.save
+          log_activity_share_all(@repository.permission_level, old_permission_level, @repository)
         end
       end
 
       @team_ids_for_share.each do |share|
-        team_repository = TeamRepository.new(repository: @repository,
-                                             team_id: share[:id],
-                                             permission_level: share[:permission_level])
+        team_shared_object =
+          @repository.team_shared_objects.new(team_id: share[:id], permission_level: share[:permission_level])
 
-        if team_repository.save
-          log_activity(:share_inventory, team_repository)
+        if team_shared_object.save
+          log_activity(:share_inventory, team_shared_object)
         else
           warnings << I18n.t('repositories.multiple_share_service.unable_to_share',
                              repository: @repository.name, team: share[:id])
@@ -52,23 +51,25 @@ module Repositories
       end
 
       @team_ids_for_unshare.each do |team_id|
-        team_repository = TeamRepository.where(repository: @repository, team_id: team_id).first
-
-        if team_repository
-          log_activity(:unshare_inventory, team_repository)
-          team_repository.destroy
-        else
+        @repository.transaction do
+          team_shared_object = @repository.team_shared_objects.find_by!(team_id: team_id)
+          log_activity(:unshare_inventory, team_shared_object)
+          team_shared_object.destroy!
+        rescue StandardError => e
+          Rails.logger.error(e.message)
+          Rails.logger.error(e.backtrace.join("\n"))
           warnings << I18n.t('repositories.multiple_share_service.unable_to_unshare',
                              repository: @repository.name, team: team_id)
+          raise ActiveRecord::Rollback
         end
       end
 
       @team_ids_for_update.each do |update|
-        team_repository = TeamRepository.where(repository: @repository, team_id: update[:id]).first
-        team_repository.permission_level = update[:permission_level] if team_repository
+        team_shared_object = @repository.team_shared_objects.find_by(team_id: update[:id])
+        team_shared_object.permission_level = update[:permission_level] if team_shared_object
 
-        if team_repository&.save
-          log_activity(:update_share_inventory, team_repository)
+        if team_shared_object&.save
+          log_activity(:update_share_inventory, team_shared_object)
         else
           warnings << I18n.t('repositories.multiple_share_service.unable_to_update',
                              repository: @repository.name, team: update[:id])
@@ -98,16 +99,16 @@ module Repositories
       true
     end
 
-    def log_activity(type_of, team_repository)
+    def log_activity(type_of, team_shared_object)
       Activities::CreateActivityService
         .call(activity_type: type_of,
               owner: @user,
-              subject: team_repository.repository,
+              subject: team_shared_object.shared_object,
               team: @team,
-              message_items: { repository: team_repository.repository.id,
-                               team: team_repository.team.id,
+              message_items: { repository: team_shared_object.shared_object.id,
+                               team: team_shared_object.team.id,
                                permission_level:
-                                 Extends::SHARED_INVENTORIES_PL_MAPPINGS[team_repository.permission_level.to_sym] })
+                                 Extends::SHARED_INVENTORIES_PL_MAPPINGS[team_shared_object.permission_level.to_sym] })
     end
 
     def log_activity_share_all(permission_level, old_permission_level, repository)

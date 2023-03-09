@@ -1,0 +1,26 @@
+<% provide(:sidebar_title, t('sidebar.templates.sidebar_title')) %>
+<% provide(:container_class, "no-second-nav-container") %>
+<%= content_for :sidebar do %>
+  <%= render partial: "/shared/sidebar/templates_sidebar", locals: {active: :label} %>
+<% end %>
+
+<div class="content-pane flexible label-templates-promo">
+  <div class="content-header sticky-header">
+    <div class="title-row">
+      <h1>
+        <%= t('label_templates.promo.head_title') %>
+      </h1>
+    </div>
+  <div class="content-label-templates-promo">
+    <div class="promo-container">
+      <div class="promo-image">
+        <%= image_tag 'printers/labels_promo.png' %>
+      </div>
+      <div class="promo-text">
+        <h1 class="title">
+          <%= t('label_templates.promo.promo_title') %>
+        </h1>
+      </div>
+    </div>
+  </div>
+</div>

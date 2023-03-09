@@ -6,16 +6,19 @@ class TeamRepositoriesController < ApplicationController
 
   # DELETE :team_id/repositories/:repository_id/team_repositories/:id
   def destroy
-    team_repository = @repository.team_repositories.find_by_id(destory_params[:id])
-
-    if team_repository
-      log_activity(:unshare_inventory, team_repository)
-      team_repository.destroy
-      render json: {}, status: :no_content
-    else
-      render json: { message: I18n.t('repositories.multiple_share_service.nothing_to_delete') },
-             status: :unprocessable_entity
+    team_shared_object = @repository.team_shared_objects.find(destory_params[:id])
+    ActiveRecord::Base.transaction do
+      log_activity(:unshare_inventory, team_shared_object)
+      team_shared_object.destroy!
     end
+    render json: {}, status: :no_content
+  rescue ActiveRecord::RecordNotFound
+    render json: { message: I18n.t('repositories.multiple_share_service.nothing_to_delete') },
+           status: :unprocessable_entity
+  rescue StandardError => e
+    Rails.logger.error(e.message)
+    Rails.logger.error(e.backtrace.join("\n"))
+    render json: { message: I18n.t('general.error') }, status: :unprocessable_entity
   end
 
   # POST :team_id/repositories/:repository_id/update
@@ -89,14 +92,14 @@ class TeamRepositoriesController < ApplicationController
     }
   end
 
-  def log_activity(type_of, team_repository)
+  def log_activity(type_of, team_shared_object)
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
-            subject: team_repository.repository,
-            team: current_team,
-            message_items: { repository: team_repository.repository.id,
-                             team: team_repository.team.id,
+            subject: team_shared_object.shared_repository,
+            team: @repository.team,
+            message_items: { repository: team_shared_object.shared_repository.id,
+                             team: team_shared_object.team.id,
                              permission_level:
                                Extends::SHARED_INVENTORIES_PL_MAPPINGS[team_repository.permission_level.to_sym] })
   end

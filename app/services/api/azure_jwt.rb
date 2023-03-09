@@ -9,14 +9,16 @@ module Api
     def self.fetch_rsa_key(k_id, app_id)
       cache_key = "api_azure_ad_rsa_key_#{k_id}"
       Rails.cache.fetch(cache_key, expires_in: KEYS_CACHING_PERIOD) do
-        conf_url = Rails.configuration.x.azure_ad_apps[app_id][:conf_url]
+        settings = ApplicationSettings.instance
+        provider_conf = settings.values['azure_ad_apps']&.find { |v| v['app_id'] == app_id }
+        raise JWT::VerificationError, 'Azure AD: No application configured with such ID' unless provider_conf
+
+        conf_url = provider_conf['conf_url']
         keys_url = JSON.parse(Net::HTTP.get(URI(conf_url)))['jwks_uri']
         data = JSON.parse(Net::HTTP.get(URI.parse(keys_url)))
         verif_key = data['keys'].find { |key| key['kid'] == k_id }
-        unless verif_key
-          raise JWT::VerificationError,
-                'Azure AD: No keys from key endpoint match the key in the token'
-        end
+        raise JWT::VerificationError, 'Azure AD: No keys from key endpoint match the key in the token' unless verif_key
+
         JSON::JWK.new(verif_key).to_key.to_s
       end
     end
@@ -29,17 +31,13 @@ module Api
       unverified_token = JWT.decode(token, nil, false)
 
       k_id = unverified_token[1]['kid']
-      unless k_id
-        raise JWT::VerificationError, 'Azure AD: No Key ID in token header'
-      end
+      raise JWT::VerificationError, 'Azure AD: No Key ID in token header' unless k_id
 
       # Now search for matching app variables in configuration
       app_id = unverified_token[0]['aud']
-      app_config = Rails.configuration.x.azure_ad_apps[app_id]
-      unless app_config
-        raise JWT::VerificationError,
-              'Azure AD: No application configured with such ID'
-      end
+      settings = ApplicationSettings.instance
+      provider_conf = settings.values['azure_ad_apps']&.find { |v| v['app_id'] == app_id }
+      raise JWT::VerificationError, 'Azure AD: No application configured with such ID' unless provider_conf
 
       # Decode token payload and verify it's signature.
       payload, header = JWT.decode(
@@ -51,7 +49,7 @@ module Api
         verify_aud: true,
         aud: app_id,
         verify_iss: true,
-        iss: app_config[:iss],
+        iss: provider_conf['iss'],
         nbf_leeway: LEEWAY
       )
       [HashWithIndifferentAccess.new(payload), HashWithIndifferentAccess.new(header)]

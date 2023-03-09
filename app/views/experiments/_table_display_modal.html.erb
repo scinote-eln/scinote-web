@@ -1,0 +1,26 @@
+<div class="modal table-display-modal" id="tableDisplayModal" tabindex="-1" role="dialog" data-column-state-url="<%= save_table_state_my_modules_path %>">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">
+          <%= t("experiments.table.column_display_modal.title") %>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <p><%= t("experiments.table.column_display_modal.description") %></p>
+        <% Experiments::TableViewService::COLUMNS.each do |col| %>
+          <div class="column-container <%= col %> visible">
+            <% if col == :archived && params[:view_mode] != 'archived' %>
+              <i class="fas fa-eye-slash disabled" data-column="<%= col %>"></i>
+            <% elsif col != :task_name %>
+              <i class="fas fa-<%= col.to_s.in?(@my_module_visible_table_columns) ? 'eye' : 'eye-slash' %>" data-column="<%= col %>"></i>
+            <% end %>
+            <%= t("experiments.table.column_display_modal.#{col}") %>
+          </div>
+
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -16,8 +16,9 @@
     <p class="sci-input-container">
       <%= f.label :password, t("devise.passwords.edit.password") %>
       <% if @minimum_password_length %>
-      <em><%= t("devise.passwords.edit.password_length", min_length: @minimum_password_length) %></em>
-      <% end %><br />
+        <em><%= t("devise.passwords.edit.password_length", min_length: @minimum_password_length) %></em>
+      <% end %>
+      <br>
       <%= f.password_field :password, autofocus: true, autocomplete: "off", class: "sci-input-field", title: t("devise.passwords.edit.password") %>
     </p>
 

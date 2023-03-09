@@ -17,6 +17,7 @@ en:
       timeout: "Your session expired. Please log in again to continue."
       unauthenticated: "You need to log in or sign up before continuing."
       unconfirmed: "You have to confirm your email address before continuing."
+      auth_method_disabled: "This authentication method is disabled."
     mailer:
       confirmation_instructions:
         subject: "Confirmation instructions"

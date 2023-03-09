@@ -1,7 +1,7 @@
 #  Example
 #
 #  include_context 'reference_project_structure', {
-#    role: :owner,
+#    team_role: :owner,
 #    result_asset: true,
 #    step: true,
 #    team: @team,
@@ -16,18 +16,26 @@ RSpec.shared_context 'reference_project_structure' do |config|
   config ||= {}
 
   let!(:user) { subject.current_user }
-  let!(:role) do
-    if config[:role]
-      UserRole.find_by(name: I18n.t("user_roles.predefined.#{config[:role]}")) || create("#{config[:role]}_role")
-    else
-      UserRole.find_by(name: I18n.t("user_roles.predefined.owner")) || UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
-    end
-  end
-  let!(:team) { config[:team] || (create :team, created_by: user) }
-  let!(:user_team) { create :user_team, config[:team_role] || :admin, user: user, team: team }
+  let!(:team) { config[:team] || (create :team, created_by: user, skip_user_assignments: true) }
+  let!(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
+  let!(:normal_user_role) { create :normal_user_role }
+  let!(:viewer_role) { create :viewer_role }
 
-  let!(:project) { role && create(:project, team: team, created_by: user) }
-  let!(:projects) { role && create_list(:project, config[:projects], team: team, created_by: user) } if config[:projects]
+  if config[:team_role].present?
+    case config[:team_role]
+    when :owner
+      let!(:team_assignment) { create :user_assignment, user: user, assignable: team, user_role: owner_role }
+    when :normal_user
+      let!(:team_assignment) { create :user_assignment, user: user, assignable: team, user_role: normal_user_role }
+    when :viewer
+      let!(:team_assignment) { create :user_assignment, user: user, assignable: team, user_role: viewer_role }
+    end
+  else
+    let!(:team_assignment) { create :user_assignment, user: user, assignable: team, user_role: owner_role }
+  end
+
+  let!(:project) { create(:project, team: team, created_by: user) }
+  let!(:projects) { create_list(:project, config[:projects], team: team, created_by: user) } if config[:projects]
 
   let!(:experiment) { create :experiment, project: project, created_by: project.created_by} unless config[:skip_experiment]
   let!(:experiments) { create_list :experiment, config[:experiments], project: project, created_by: project.created_by } if config[:experiments]

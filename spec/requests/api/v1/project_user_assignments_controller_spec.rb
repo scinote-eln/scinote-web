@@ -7,12 +7,11 @@ RSpec.describe "Api::V1::ProjectUserAssignmentsController", type: :request do
     @user = create(:user)
     @another_user = create(:user)
     @team = create(:team, created_by: @user)
-    create(:user_team, user: @user, team: @team, role: :normal_user)
-    create(:user_team, user: @another_user, team: @team, role: :normal_user)
+    @normal_user_role = create :normal_user_role
+    create_user_assignment(@team, @normal_user_role, @another_user)
     @own_project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @team)
     @invalid_project =
       create(:project, name: Faker::Name.unique.name, created_by: @another_user, team: @team, visibility: :hidden)
-    @normal_user_role = create :normal_user_role
 
     @valid_headers = { 'Authorization': 'Bearer ' + generate_token(@user.id) }
   end
@@ -173,7 +172,6 @@ RSpec.describe "Api::V1::ProjectUserAssignmentsController", type: :request do
   describe 'PATCH #update' do
     before :all do
       @valid_headers['Content-Type'] = 'application/json'
-      create(:user_project, user: @another_user, project: @own_project)
       @technician_user_role = create :technician_role
     end
 
@@ -182,7 +180,7 @@ RSpec.describe "Api::V1::ProjectUserAssignmentsController", type: :request do
         api_v1_team_project_user_path(
           team_id: @own_project.team.id,
           project_id: @own_project.id,
-          id: UserAssignment.first.id
+          id: @own_project.user_assignments.first.id
         ),
         params: request_body.to_json,
         headers: @valid_headers

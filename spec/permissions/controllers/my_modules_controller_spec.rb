@@ -19,7 +19,8 @@ describe MyModulesController, type: :controller do
     results: { id: 1 },
     archive: { id: 1 },
     restore_group: { id: 1 },
-    update_state: { id: 1 }
+    update_state: { id: 1 },
+    canvas_dropdown_menu: { id: 1 }
   }, []
 
   login_user
@@ -123,6 +124,12 @@ describe MyModulesController, type: :controller do
           end
         end
       end
+    end
+
+    it_behaves_like "a controller action with permissions checking", :get, :canvas_dropdown_menu do
+      let(:testable) { my_module }
+      let(:permissions) { [MyModulePermissions::READ] }
+      let(:action_params) { { id: my_module.id } }
     end
   end
 end

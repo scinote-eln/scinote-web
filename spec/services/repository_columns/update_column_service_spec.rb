@@ -4,11 +4,11 @@ require 'rails_helper'
 
 describe RepositoryColumns::UpdateColumnService do
   let(:user) { create :user }
-  let!(:user_team) { create :user_team, :admin, user: user, team: team }
-  let(:team) { create :team }
-  let(:repository) { create :repository, team: team }
-  let(:column) { create :repository_column, :status_type }
+  let(:team) { create :team, created_by: user }
+  let(:repository) { create :repository, team: team, created_by: user }
+  let(:column) { create :repository_column, :status_type, repository: repository }
   let(:status_item) { create(:repository_status_item, repository_column: column) }
+  let(:list_item) { create(:repository_list_item, repository_column: column) }
   let(:service_call) do
     RepositoryColumns::UpdateColumnService.call(column: column,
                                                       user: user,
@@ -79,9 +79,6 @@ describe RepositoryColumns::UpdateColumnService do
   end
 
   context 'when updates column\'s list items' do
-    let(:column) { create :repository_column, :list_type }
-    let(:list_item) { create(:repository_list_item, repository_column: column) }
-
     let(:params) do
       {
         repository_list_items_attributes: [

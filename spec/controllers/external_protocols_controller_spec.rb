@@ -7,7 +7,6 @@ describe ExternalProtocolsController, type: :controller do
 
   let(:user) { subject.current_user }
   let(:team) { create :team, created_by: user }
-  let!(:user_team) { create :user_team, :admin, user: user, team: team }
 
   describe 'GET index' do
     let(:params) do

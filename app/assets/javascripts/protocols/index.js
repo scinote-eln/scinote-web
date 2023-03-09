@@ -53,7 +53,7 @@ function initProtocolsTable() {
                 </div>`;
       }
     }, {
-      targets: [ 1, 2, 3, 4, 5 ],
+      targets: [ 1, 2, 3, 4, 5, 6 ],
       searchable: true,
       orderable: true
     }],
@@ -61,13 +61,14 @@ function initProtocolsTable() {
       { data: "0" },
       { data: "1" },
       { data: "2" },
+      { data: "3" },
       {
-        data: "3",
+        data: "4",
         visible: repositoryType != "archive"
       },
-      { data: "4" },
       { data: "5" },
-      { data: "6" }
+      { data: "6" },
+      { data: "7" }
     ],
     oLanguage: {
       sSearch: I18n.t('general.filter')
@@ -78,11 +79,6 @@ function initProtocolsTable() {
 
       $(row).attr("data-row-id", rowId);
 
-      // Append URLs if they exist
-      if (data["DT_CanEdit"]) {
-        $(row).attr("data-can-edit", "true");
-        $(row).attr("data-edit-url", data["DT_EditUrl"]);
-      }
       if (data["DT_CanClone"]) {
         $(row).attr("data-can-clone", "true");
         $(row).attr("data-clone-url", data["DT_CloneUrl"]);
@@ -394,7 +390,6 @@ function updateDataTableSelectAllCheckbox() {
 }
 
 function updateButtons() {
-  var editBtn = $("[data-action='edit']");
   var cloneBtn = $("[data-action='clone']");
   var makePrivateBtn = $("[data-action='make-private']");
   var publishBtn = $("[data-action='publish']");
@@ -406,13 +401,6 @@ function updateButtons() {
 
   if (rowsSelected.length === 1) {
     // 1 ROW SELECTED
-    if (row.is('[data-can-edit]')) {
-      editBtn.removeClass('disabled hidden');
-      editBtn.off('click').on('click', function() { editSelectedProtocol(); });
-    } else {
-      editBtn.removeClass('hidden').addClass('disabled');
-      editBtn.off('click');
-    }
     if (row.is('[data-can-clone]')) {
       cloneBtn.removeClass('disabled hidden');
       cloneBtn.off('click').on('click', function() { cloneSelectedProtocol(); });
@@ -457,8 +445,6 @@ function updateButtons() {
     }
   } else if (rowsSelected.length === 0) {
     // 0 ROWS SELECTED
-    editBtn.addClass('disabled hidden');
-    editBtn.off('click');
     cloneBtn.addClass('disabled hidden');
     cloneBtn.off('click');
     makePrivateBtn.addClass('disabled hidden');
@@ -480,8 +466,6 @@ function updateButtons() {
 
     // Only enable button if all selected rows can
     // be published/archived/restored/exported
-    editBtn.removeClass('hidden').addClass('disabled');
-    editBtn.off('click');
     cloneBtn.removeClass('hidden').addClass('disabled');
     cloneBtn.off('click');
     if (!rows.is(':not([data-can-make-private])')) {
@@ -531,15 +515,6 @@ function exportProtocols(ids) {
     params = encodeURI(params);
     window.location.href = $("[data-action='export']")
                              .data('export-url') + params;
-  }
-}
-
-function editSelectedProtocol() {
-  if (rowsSelected.length && rowsSelected.length == 1) {
-    var row = $("tr[data-row-id='" + rowsSelected[0] + "']");
-
-    // Redirect to edit page
-    $(location).attr("href", row.attr("data-edit-url"));
   }
 }
 

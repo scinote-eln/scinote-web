@@ -3,19 +3,19 @@
 require 'rails_helper'
 
 describe Experiments::CopyExperimentAsTemplateService do
-  let(:team) { create :team, :with_members }
-  let(:user_project) { create :user_project, :normal_user, user: user }
+  let(:user) { create :user }
+  let(:team) { create :team, created_by: user }
 
   let(:project) do
-    create :project, team: team
+    create :project, team: team, created_by: user
   end
   let(:new_project) do
-    create :project, team: team, user_projects: [user_project]
+    create :project, team: team, created_by: user
   end
   let(:experiment) do
     create :experiment, :with_tasks, name: 'MyExp', project: project
   end
-  let(:user) { create :user }
+
   let(:service_call) do
     Experiments::CopyExperimentAsTemplateService.call(experiment: experiment, project: new_project, user: user)
   end

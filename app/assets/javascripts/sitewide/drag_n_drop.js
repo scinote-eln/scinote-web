@@ -1,6 +1,6 @@
 /* global Promise ActiveStorage animateSpinner copyFromClipboard I18n
    Results ResultAssets FilePreviewModal Comments truncateLongString
-   DragNDropSteps DragNDropResults initFormSubmitLinks dragNdropAssetsInit
+   DragNDropResults initFormSubmitLinks dragNdropAssetsInit
    GLOBAL_CONSTANTS */
 
 (function(global) {
@@ -9,7 +9,6 @@
   // Copy from clipboard
   global.copyFromClipboard = (function() {
     var UPLOADED_IMAGE = {};
-    var LOCATION = '';
 
     function retrieveImageFromClipboardAsBlob(pasteEvent, callback) {
       if (pasteEvent.clipboardData === false) {
@@ -72,12 +71,7 @@
 
         // close modal
         closeModal();
-        // reuse file upload from drag'n drop :)
-        if (LOCATION === 'steps') {
-          DragNDropSteps.init(inputArray);
-        } else {
-          DragNDropResults.init(inputArray);
-        }
+        DragNDropResults.init(inputArray);
         // clear all uploaded images
         UPLOADED_IMAGE = {};
       });
@@ -155,8 +149,7 @@
       });
     }
 
-    function init(location) {
-      LOCATION = location;
+    function init() {
       global.addEventListener('paste', listener, false);
     }
 
@@ -167,194 +160,6 @@
     return Object.freeze({
       init: init,
       destroy: destroy
-    });
-  }());
-
-  // Module to handle file uploading in Steps
-  global.DragNDropSteps = (function() {
-    var droppedFiles = [];
-    var filesValid = true;
-    var totalSize = 0;
-    var fileMaxSizeMb;
-    var fileMaxSize;
-
-    // return the status of files if they are ready to submit
-    function filesStatus() {
-      return filesValid;
-    }
-
-    function clearFiles() {
-      droppedFiles = [];
-    }
-
-    function dragNdropAssetsOff() {
-      $('body').off('drag dragstart dragend dragover dragenter dragleave drop');
-      $('.is-dragover').hide();
-      // remove listeners for clipboard images
-      copyFromClipboard.destroy();
-    }
-
-    // append the files to the form before submit
-    function appendFilesToForm(ev) {
-      return new Promise((resolve, reject) => {
-        const form = $(ev.target).closest('form').get(0);
-        const url = $(form).find('#drag-n-drop-assets').data('directUploadUrl');
-        const regex = /step\[assets_attributes\]\[[0-9]*\]\[id\]/;
-        const lastIndex = droppedFiles.length - 1;
-        let prevEls = $('input').filter(function() {
-          return this.name.match(regex);
-        });
-
-        let fd = new FormData(form);
-        let index = 0;
-
-        fd.delete('step[file][]');
-
-        if (droppedFiles.length === 0) {
-          resolve(fd);
-          return;
-        }
-
-        const uploadFile = (file) => {
-          let upload = new ActiveStorage.DirectUpload(file, url);
-
-          upload.create(function(error, blob) {
-            if (error) {
-              reject(error);
-            } else {
-              fd.append('step[assets_attributes][' + (index + prevEls.length) + '][signed_blob_id]', blob.signed_id);
-              if (index === lastIndex) {
-                resolve(fd);
-                return;
-              }
-              index += 1;
-              uploadFile(droppedFiles[index]);
-            }
-          });
-        };
-
-        uploadFile(droppedFiles[index]);
-
-        filesValid = true;
-        totalSize = 0;
-        dragNdropAssetsOff();
-      });
-    }
-
-    function disableSubmitButton() {
-      $('.step-save').prop('disabled', true);
-    }
-
-    function enableSubmitButton() {
-      $('.step-save').prop('disabled', false);
-    }
-
-    function filerAndCheckFiles() {
-      for (let i = 0; i < droppedFiles.length; i += 1) {
-        if (droppedFiles[i].isValid === false) {
-          return false;
-        }
-      }
-      return (droppedFiles.length > 0);
-    }
-
-    function validateFilesSize(file) {
-      var fileSize = file.size;
-      totalSize += parseInt(fileSize, 10);
-      if (fileSize > fileMaxSize) {
-        file.isValid = false;
-        disableSubmitButton();
-        return "<p class='dnd-error' title='file size error'>" + I18n.t('general.file.size_exceeded', { file_size: fileMaxSizeMb }) + '</p>';
-      }
-      return '';
-    }
-
-    function validateTotalSize() {
-      if (totalSize > fileMaxSize) {
-        filesValid = false;
-        disableSubmitButton();
-        $.each($('.attachment-placeholder.new'), function() {
-          if (!$(this).find('p').hasClass('dnd-error')) {
-            $(this).append("<p class='dnd-total-error' title='file size total error'>" + I18n.t('general.file.total_size', { size: fileMaxSizeMb }) + '</p>');
-          }
-        });
-      } else {
-        $('.dnd-total-error').remove();
-        if (filerAndCheckFiles()) {
-          filesValid = true;
-          enableSubmitButton();
-        }
-      }
-    }
-
-    function uploadedAssetPreview(asset, i) {
-      var html = `<div class="attachment-container pull-left new">
-                    <div class="attachment-preview no-shadow new %>">
-                      <i class="fas fa-image"></i>
-                    </div>
-                    <div class="attachment-label">
-                      ${truncateLongString(asset.name, GLOBAL_CONSTANTS.FILENAME_TRUNCATION_LENGTH)}
-                    </div>
-                    <div class="attachment-metadata"></div>
-                    <div class="remove-icon pull-right">
-                      <a data-item-id="${i}" href="#">
-                        <span class="fas fa-trash"></span>
-                      </a>
-                    </div>
-                    ${validateFilesSize(asset)}
-                  </div>`;
-
-      return html;
-    }
-
-    function removeItemHandler(id, callback) {
-      $('[data-item-id="' + id + '"]').off('click').on('click', function(e) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        e.stopPropagation();
-        let $el = $(this);
-        let index = $el.data('item-id');
-        totalSize -= parseInt(droppedFiles[index].size, 10);
-        droppedFiles.splice(index, 1);
-        callback();
-      });
-    }
-
-    // loops through a list of files and display each file in a separate panel
-    function listItems() {
-      totalSize = 0;
-      enableSubmitButton();
-      $('.attachment-container.new').remove();
-      dragNdropAssetsOff();
-
-      for (let i = 0; i < droppedFiles.length; i += 1) {
-        $('.attachments.edit')
-          .append(uploadedAssetPreview(droppedFiles[i], i))
-          .promise()
-          .done(function() {
-            removeItemHandler(i, listItems);
-          });
-      }
-      validateTotalSize();
-      dragNdropAssetsInit('steps');
-    }
-
-    function init(files) {
-      fileMaxSizeMb = GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB;
-      fileMaxSize = fileMaxSizeMb * 1024 * 1024;
-      for (let i = 0; i < files.length; i += 1) {
-        files[i].uuid = Math.random().toString(36);
-        droppedFiles.push(files[i]);
-      }
-      listItems();
-    }
-
-    return Object.freeze({
-      init: init,
-      appendFilesToForm: appendFilesToForm,
-      listItems: listItems,
-      filesStatus: filesStatus,
-      clearFiles: clearFiles
     });
   }());
 
@@ -444,7 +249,6 @@
         },
         error: function() {
           animateSpinner();
-          location.reload();
         }
       });
     }
@@ -584,7 +388,7 @@
             });
         }
         validateTotalSize();
-        dragNdropAssetsInit('results');
+        dragNdropAssetsInit();
       }
     }
 
@@ -609,7 +413,7 @@
     });
   }());
 
-  global.dragNdropAssetsInit = function(location) {
+  global.dragNdropAssetsInit = function() {
     var inWindow = true;
 
     $('body')
@@ -632,13 +436,9 @@
       .on('drop', function(e) {
         $('.is-dragover').hide();
         let files = e.originalEvent.dataTransfer.files;
-        if (location === 'steps') {
-          DragNDropSteps.init(files);
-        } else {
-          DragNDropResults.init(files);
-        }
+        DragNDropResults.init(files);
       });
 
-    copyFromClipboard.init(location);
+    copyFromClipboard.init();
   };
 }(window));

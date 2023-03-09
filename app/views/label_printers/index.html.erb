@@ -14,89 +14,19 @@
     </div>
     <div class="title-row">
       <h1 class="printer-title">
-        <%= t("users.settings.account.label_printer.fluics_printer") %>
+        <% if @printer_type == 'fluics' %>
+          <%= t("users.settings.account.label_printer.fluics_printer") %>
+        <% elsif @printer_type == 'zebra' && LabelPrinter.zebra_print_enabled? %>
+          <%= t("users.settings.account.label_printer.zebra_printer") %>
+        <% end %>
       </h1>
     </div>
   </div>
 
-  <ul>
-    <li>
-      <div class="collapse-row">
-        <i class="fas fa-caret-down" data-toggle="collapse" href="#InstructionsSection" aria-expanded="false"></i>
-        <div class="row-title"><%= t("users.settings.account.label_printer.instructions") %></div>
-      </div>
-      <ul class="collapse in" id="InstructionsSection">
-        <li>
-          <%= t("users.settings.account.label_printer.fluics_instruction.p1") %>
-        </li>
-        <li>
-          <%= t("users.settings.account.label_printer.fluics_instruction.p2_html", link: Constants::SCINOTE_FLUICS_URL) %>
-        </li>
-        <li>
-          <%= t("users.settings.account.label_printer.fluics_instruction.p3") %>
-        </li>
-        <li>
-          <%= t("users.settings.account.label_printer.fluics_instruction.p4") %>
-        </li>
-        <li>
-          <%= t("users.settings.account.label_printer.fluics_instruction.p5") %>
-        </li>
-      </ul>
-    </li>
-  <% if can_manage_label_printers? %>
-    <li>
-      <div class="collapse-row">
-        <i class="fas fa-caret-down" data-toggle="collapse" href="#SettingsSection" aria-expanded="false"></i>
-        <div class="row-title"><%= t("users.settings.account.label_printer.settings") %></div>
-      </div>
-      <ul class="collapse in" id="SettingsSection">
-        <%= form_with scope: :label_printer, url: create_fluics_label_printers_path do |form| %>
-          <div class="api-key-container" data-warning="<%= t("users.settings.account.label_printer.api_key_warning") %>">
-            <div class="sci-input-container <%= 'error' if flash[:error] %>" data-error-text="<%= flash[:error] %>">
-              <%= form.label :fluics_api_key, t("users.settings.account.label_printer.api_key_label") %>
-
-              <%= form.text_field :fluics_api_key, class: "sci-input-field api-key-input", value: @fluics_api_key, data: {original_value: @fluics_api_key, } %>
-            </div>
-
-            <%= form.submit t('general.save'), class: "save-button btn btn-primary #{'hidden' if @fluics_api_key}" %>
-            <%= button_tag class: "saved-button btn btn-secondary #{'hidden' if !@fluics_api_key}", disabled: true do %>
-              <i class="fas fa-check"></i>
-              <%= t("users.settings.account.label_printer.saved") %>
-            <% end %>
-          </div>
-        <% end %>
-      </ul>
-    </li>
+  <% if @printer_type == 'fluics' %>
+    <%= render "fluics_settings" %>
+  <% elsif @printer_type == 'zebra' && LabelPrinter.zebra_print_enabled? %>
+     <%= render "zebra_settings" %>
   <% end %>
-    <li>
-      <div class="collapse-row">
-        <i class="fas fa-caret-down" data-toggle="collapse" href="#PrintersSection" aria-expanded="false"></i>
-        <div class="row-title">Printers</div>
-        <% if can_manage_label_printers? %>
-          <div class="update-printers">
-            <%= form_with scope: :label_printer, url: create_fluics_label_printers_path do |form| %>
-              <%= form.hidden_field :fluics_api_key, value: @fluics_api_key %>
-              <%= button_tag type: 'submit', class: "btn btn-light", disabled: @fluics_api_key.blank? do %>
-                <i class="fas fa-sync"></i>
-                <%= t("users.settings.account.label_printer.update_printers") %>
-              <% end %>
-            <% end %>
-          </div>
-        <% end %>
-      </div>
-      <ul class="collapse in" id="PrintersSection">
-        <% if @label_printers.any? %>
-          <% @label_printers.each do |printer| %>
-            <li>
-              <b><%= printer.name %></b> • <%= printer.description %>
-            </li>
-          <% end %>
-        <% else %>
-          <li>
-            <%= t("users.settings.account.label_printer.no_printers_available") %>
-          </li>
-        <% end %>
-      </ul>
-  </ul>
 </div>
 <%= javascript_include_tag "label_printers/index" %>

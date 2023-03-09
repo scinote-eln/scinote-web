@@ -5,8 +5,8 @@ require 'rails_helper'
 describe Activities::ActivityFilterMatchingService do
   let(:user) { create :user }
   let(:user_2) { create :user }
-  let(:team) { create :team, :with_members }
-  let(:team_2) { create :team }
+  let(:team) { create :team, created_by: user }
+  let(:team_2) { create :team, created_by: user_2 }
   let(:project) do
     create :project, team: team, user_projects: []
   end

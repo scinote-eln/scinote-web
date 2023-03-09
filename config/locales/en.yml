@@ -33,6 +33,7 @@ en:
         password_placeholder: "Enter password"
         remember_me: "Remember me"
         submit: "Log in"
+        azure_ad_submit: "Sign in with Azure AD"
       2fa:
         title: "Two-factor authentication"
         description: "Enter the one-time code found in your authenticator app to log in to SciNote."
@@ -49,6 +50,17 @@ en:
         not_correct_code: "Not correct recovery code"
       create:
         team_name: "%{user}'s projects"
+      expire_modal:
+        why_see_this: 'Why am I seeing this?'
+        session_end_in:
+          header: 'Your session will end in %{time}'
+          description: 'To keep the data you entered into the fields without clicking the Save button, please revive your session and save them.'
+          paragraph1: 'To keep your work secure, SciNote times out sessions after 3 hours of inactivity. '
+          paragraph2: 'To proceed working after the session ends, you’ll have to log in again, starting a new working session.'
+          revive_session: 'Revive my session'
+        session_ended:
+          header: 'To proceed working, please log in again'
+          description: 'If you have any unsaved data, please close this message, copy your text, and paste it back after you log in again.'
     unlocks:
       new:
         head_title: "Resend unlock instructions"
@@ -106,6 +118,10 @@ en:
       project: "Project"
       my_module: "Task"
       experiment: "Experiment"
+      repository: "Inventory"
+      repository_base: "Inventory"
+      protocol: "Protocol"
+      report: "Report"
     errors:
       models:
         project:
@@ -125,10 +141,12 @@ en:
               not_unique: "State already exists for this user and parent object"
             state:
               wrong_state: "Wrong parameters"
-        team_repository:
+        team_shared_object:
           attributes:
             team_id:
               same_team: "Inventory can't be shared to the same team as it belongs to"
+            shared_object_id:
+              is_globally_shared: "Inventory is already globally shared"
         protocol:
           attributes:
             step_order:
@@ -149,6 +167,10 @@ en:
               different_flow: "Should belong to the same flow"
             previous_status:
               different_flow: "Should belong to the same flow"
+        label_template:
+          attributes:
+            default:
+              already_exist: "Default template already exist"
         asset:
           attributes:
             file:
@@ -240,7 +262,7 @@ en:
     dashboard: "Overview"
     projects: "Projects"
     repositories: "Inventories"
-    templates: "Protocols"
+    templates: "Templates"
     reports: "Reports"
     settings: "Settings"
     activities: "Activities"
@@ -283,6 +305,10 @@ en:
       archive: "Archived results"
     repositories:
       sidebar_title: "INVENTORIES"
+    templates:
+      sidebar_title: "TEMPLATES"
+      protocol_templates: "Protocol templates"
+      label_templates: "Label Templates"
 
   nav2:
     all_projects:
@@ -433,6 +459,7 @@ en:
       more_comments: "More Comments"
       card:
         start_date: "Start date"
+        id: "ID"
         visibility: "Visible to"
         users: "Members"
         name: "Project name"
@@ -553,6 +580,7 @@ en:
         thead_last_modified_by: "Last modified by"
         thead_created_at: "Creation date"
         thead_updated_at: "Last update date"
+        thead_id: "ID"
         no_reports: "No reports!"
         pdf: "PDF"
         docx: "DOCX"
@@ -623,10 +651,12 @@ en:
           results: "Results"
           all_results: "Include all results"
           order_results: "Order results"
-          atoz: "Alphabetically A to Z"
-          ztoa: "Alphabetically Z to A"
-          new_results: "Newest first"
-          old_results: "Oldest first"
+          atoz: "Name A to Z"
+          ztoa: "Name Z to A"
+          new: "Added last"
+          old: "Added first"
+          new_updated: "Modified last"
+          old_updated: "Modified first"
           file_results: "File results"
           insert_pages_from_pdf: "Insert pages from PDF and docx files into the report"
           pdf_warning: "This may increase report generation time."
@@ -711,10 +741,10 @@ en:
           remove: "Remove report element from the report"
           scinote_link: "SciNote link"
         project_header:
-          user_time: "Project created on %{timestamp}."
+          user_time: "Project %{code} created on %{timestamp}."
           title: "Report for project %{project}"
         module:
-          user_time: "Task created on %{timestamp}."
+          user_time: "Task %{code} created on %{timestamp}."
           started_on: "Start date: %{started_on}"
           status: "Status:"
           no_start_date: "No start date"
@@ -726,7 +756,7 @@ en:
           results: "Results"
           protocol:
             name: 'Protocol'
-            user_time: "Protocol created on %{timestamp}."
+            user_time: "Protocol %{code} created on %{timestamp}."
         experiment:
           user_time: "Experiment %{code} created on %{timestamp}."
           no_description: "No description"
@@ -741,13 +771,13 @@ en:
           no_items: "No items"
         result_asset:
           file_name: "%{file}"
-          user_time: "Uploaded by %{user} on %{timestamp}."
+          user_time: "Added on %{timestamp} by %{user}."
           full_preview_attached: "[full document attached to report]"
         result_table:
           table_name: "%{name}"
-          user_time: "Created by %{user} on %{timestamp}."
+          user_time: "Added on %{timestamp} by %{user}."
         result_text:
-          user_time: "Created by %{user} on %{timestamp}."
+          user_time: "Added on %{timestamp} by %{user}."
         step:
           sidebar_name: "Step %{pos}: %{name}"
           step_pos: "Step %{pos}:"
@@ -807,6 +837,97 @@ en:
       add_user_generic_error: "An error occurred. "
       can_add_user_to_project: "Can not add user to the project."
 
+  label_templates:
+    types:
+      fluics_label_template: 'Fluics'
+      zebra_label_template: 'ZPL'
+    default_zebra_name: 'SciNote Item (ZPL)'
+    default_fluics_name: 'SciNote Item (Fluics)'
+    new_label_template: 'New label'
+    fluics:
+      sync:
+        success: 'Fluics label templates successfully updated'
+        error: 'Update of Fluics label templates was unsuccessful'
+    repository_row:
+      errors:
+        unsupported_key: "Key %{key} is not supported by this label template renderer."
+        column_not_found: "This Label template contains placeholders for inventory columns that are not present in this Inventory. Some data might not be printed on the label. Please check the label preview and label template before printing."
+        logo_not_supported: "The company logo cannot be printed on the label, as it is not set up in your SciNote. Please upload company logo in Settings."
+        logo_params_error: 'Failed to parse logo parameters!'
+    index:
+      head_title: 'Label templates'
+      search_templates: 'Filter templates'
+      thead_name: 'Name'
+      format: 'Format'
+      description: 'Description'
+      updated_by: 'Last updated by'
+      updated_at: 'Last updated on'
+      created_by: 'Created by'
+      created_at: 'Created on'
+      templates_duplicated: '[%{count}] Label template(s) successfully copied'
+      templates_deleted: 'Successfully deleted Label template(s)'
+      template_set_as_default: 'Successfully set template as default'
+      toolbar:
+        new: 'New template'
+        check_for_updates: 'Check for updates'
+        edit: 'Edit'
+        duplicate: 'Duplicate'
+        delete: 'Delete'
+        set_zpl_default: 'Set as default ZPL label'
+        set_fluics_default: 'Set as default Fluics label'
+        fluics_warning: 'Built-in FLUICS templates can’t be edited, deleted or duplicated'
+      delete_modal:
+        title: 'Delete Label template(s)'
+        description: 'Are you sure you want to delete the selected label template(s)?'
+    show:
+      breadcrumb_index: 'Label templates'
+      name_error_prefix: 'Label template name'
+      description_error_prefix: 'Label template description'
+      description_title: 'Template description'
+      description_placeholder: 'Enter the template description (optional)'
+      description_empty: 'No template description'
+      content_title: '%{format} template code'
+      preview_title: 'Template preview'
+      view_content_tooltip: 'Click to edit template code'
+      code_errors:
+        empty: 'ZPL template code cannot be empty'
+        too_long: 'ZPL template code has exceeded the maximum of 10.000 characters'
+        invalid: 'ZPL template code invalid'
+      insert_dropdown:
+        button: 'Insert field code'
+        common_fields: 'Common custom fields'
+        nothing_found: 'Nothing found…'
+        field_code: 'Field code: %{code}'
+        search_placeholder: 'Type to search…'
+        logo_modal:
+          title: 'Insert logo into the label'
+          description: 'Please specify width or height, another dimension will adjust proportionally'
+          width: 'Width (%{unit})'
+          height: 'Height (%{unit})'
+          insert: 'Insert'
+      buttons:
+        refresh: 'Refresh preview'
+        save: 'Save template code'
+    default_columns:
+      item_id: 'Item ID'
+      name: 'Name'
+      added_on: 'Added On'
+      added_by: 'Added by'
+    label_preview:
+      title: 'Preview'
+      options: 'Options'
+      units: 'Measurement units'
+      height: 'Height'
+      width: 'Width'
+      density: 'Density'
+      refresh_preview: 'Refresh preview'
+      mm: 'Millimeters (mm) 1 cm = 10 mm'
+      in: 'Inches (in)'
+      error_html: 'Label cannot be previewed:<br>the ZPL code might be invalid, or the preview generator is down. Please double-check your code, save it and reload the page.'
+    promo:
+      head_title: 'Label templates'
+      promo_title: 'This feature is disabled by default in open source SciNote'
+
   label_printers:
     create:
       success: "Successfully added %{printer_name}"
@@ -817,7 +938,29 @@ en:
     delete:
       success: "Successfully deleted %{printer_name}."
       error: "Could not delete %{printer_name}."
-
+    fluics:
+      statuses:
+        ready: 'Ready'
+        busy: 'Busy'
+        out_of_labels: 'Out of labels'
+        unreachable: 'Offline'
+        error: 'Error'
+    modal_printing_status:
+      printer_status:
+        ready: "Ready"
+        not_ready: "Not Ready"
+        out_of_labels: "Out of labels"
+        error: "Printer error"
+        unreachable: "Printer offline"
+        offline: "Offline"
+      multiple_items: "%{item_count}/%{starting_item_count} labels"
+      printing_status:
+        done: "Done"
+        printing: "Printing"
+        out_of_labels: "Waiting for labels. Please, insert labels."
+        error: "There is an issue with the printer."
+        unreachable: "Printer is offline"
+        search: "Checking printer status"
 
   my_modules:
     details:
@@ -835,14 +978,20 @@ en:
       start_date: "Start date:"
       no_start_date_placeholder: "+ Add starting date"
       due_date: "Due date:"
+      completed_date: "Completed date:"
       no_due_date_placeholder: "+ Add due date"
+      overdue: "Overdue"
+      due_soon: "Due soon"
+      no_due_date: "not set"
       assigned_users: "Assigned to:"
       no_assigned_users: "+ Assign task to a project member"
       tags: "Tags:"
       no_tags: "+ Add tags"
       manage_tags: "Manage tags"
-      create_new_tag: "create new"
+      create_new_tag: "→ Create new"
       recent_protocols_from_repository: "Recent protocols from the Repository"
+      code: "ID: "
+      recent_protocols_from_repository: "Recent protocols from the Templates"
     notes:
       title: "Notes"
       no_description: "No task description"
@@ -854,10 +1003,10 @@ en:
       title: "Protocol"
       options_dropdown:
         title: "Protocol options"
-        load_from_repo: "Load from repository"
+        load_from_repo: "Load from templates"
         import: "Import protocol"
         export: "Export protocol"
-        save_to_repo: "Save to repository"
+        save_to_repo: "Save to templates"
         delete_steps: "Delete all steps"
     description:
       title: "Edit task %{module} description"
@@ -903,48 +1052,48 @@ en:
         template_updated: "Protocol template updated on:"
         protocol_updated: "Protocol updated on:"
         messages:
-          template_updated_html: "There is a new version of this protocol available in the protocol repository.<br>Would you like to update it?"
+          template_updated_html: "There is a new version of this protocol available in the protocol templates.<br>Would you like to update it?"
           protocol_updated: "The version of this protocol in the task is modified, do you wish to save it as a new protocol template?"
-          unlinked: "This protocol is not linked to the repository."
+          unlinked: "This protocol is not linked to the templates."
         btns:
           unlink: "Unlink protocol template"
-          unlink_title: "Unlink this protocol from the parent in the repository"
+          unlink_title: "Unlink this protocol from the parent in the templates"
           revert: "Revert protocol"
-          revert_title: "Revert the protocol to the repository version. This will discard any local changes."
-          save_to_repository: "Save to repository"
-          save_a_copy_to_repository: "Save a copy to repository"
-          save_to_repository_title: "Copy this protocol to repository"
-          update_self: "Update from repository"
-          update_self_title: "Update this protocol with the version stored in the repository"
+          revert_title: "Revert the protocol to the templates version. This will discard any local changes."
+          save_to_repository: "Save to templates"
+          save_a_copy_to_repository: "Save a copy to templates"
+          save_to_repository_title: "Copy this protocol to templates"
+          update_self: "Update from templates"
+          update_self_title: "Update this protocol with the version stored in the templates"
       confirm_link_update_modal:
         unlink_title: "Unlink protocol template"
-        unlink_message: "Are you sure you want to unlink the task protocol from the repository version? This will stop any tracking of changes."
+        unlink_message: "Are you sure you want to unlink the task protocol from the templates version? This will stop any tracking of changes."
         unlink_btn_text: "Unlink"
         revert_title: "Revert protocol"
-        revert_message: "Are you sure you want to revert the task protocol to the repository version? This will override any local changes you made."
+        revert_message: "Are you sure you want to revert the task protocol to the templates version? This will override any local changes you made."
         revert_btn_text: "Revert"
-        update_parent_title: "Update repository version"
-        update_parent_message: "Are you sure you want to update the repository protocol with this version? This will override any other changes made in the repository version."
-        update_self_title: "Update from repository"
-        update_self_message: "Are you sure you want to update this protocol with the version from the repository? This will override any local changes you made."
+        update_parent_title: "Update templates version"
+        update_parent_message: "Are you sure you want to update the templates protocol with this version? This will override any other changes made in the templates version."
+        update_self_title: "Update from templates"
+        update_self_message: "Are you sure you want to update this protocol with the version from the templates? This will override any local changes you made."
       unlink_flash: "Protocol was successfully unlinked."
       unlink_error: "Failed to unlink protocol."
       revert_flash: "Protocol was successfully reverted to protocol version."
       revert_error: "Failed to revert protocol."
       revert_error_locked: "Failed to revert protocol. One or more files in the protocol are currently being edited."
-      update_parent_flash: "Protocol in repository was successfully updated with the version from the task."
-      update_parent_error: "Failed to update repository version of the protocol."
-      update_parent_error_locked: "Failed to update repository version of the protocol. One or more files in the protocol are currently being edited."
-      update_from_parent_flash: "Version in the repository was successfully updated."
-      update_from_parent_error: "Failed to update the protocol with the version in the repository."
-      update_from_parent_error_locked: "Failed to update the protocol with the version in the repository. One or more files in the protocol are currently being edited."
-      load_from_repository_flash: "Successfully loaded the protocol from the repository."
-      load_from_repository_error: "Failed to load the protocol from the repository."
-      load_from_repository_error_locked: "Failed to load the protocol from the repository. One or more files in the protocol are currently being edited."
+      update_parent_flash: "Protocol in templates was successfully updated with the version from the task."
+      update_parent_error: "Failed to update templates version of the protocol."
+      update_parent_error_locked: "Failed to update templates version of the protocol. One or more files in the protocol are currently being edited."
+      update_from_parent_flash: "Version in the templates was successfully updated."
+      update_from_parent_error: "Failed to update the protocol with the version in the templates."
+      update_from_parent_error_locked: "Failed to update the protocol with the version in the templates. One or more files in the protocol are currently being edited."
+      load_from_repository_flash: "Successfully loaded the protocol from the templates."
+      load_from_repository_error: "Failed to load the protocol from the templates."
+      load_from_repository_error_locked: "Failed to load the protocol from the templates. One or more files in the protocol are currently being edited."
       load_from_repository_modal:
-        title: "Load protocol from repository"
+        title: "Load protocol from templates"
         text: "Choose the protocol to be loaded to the task."
-        text2: "This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
+        text2: "This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
         tab_public: "Team protocols"
         tab_private: "My protocols"
         tab_recent: "Recent protocols"
@@ -957,20 +1106,20 @@ en:
         thead_published_on: "Published at"
         thead_created_at: "Created at"
         thead_updated_at: "Last modified at"
-        confirm_message: "Are you sure you wish to load protocol from repository? This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
-        import_to_linked_task_rep: "Are you sure you wish to load protocol from repository? This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
+        confirm_message: "Are you sure you wish to load protocol from templates? This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
+        import_to_linked_task_rep: "Are you sure you wish to load protocol from templates? This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
         load: "Load"
       copy_to_repository_modal:
-        title: "Save to protocol repository"
-        name_label: "Repository protocol name"
+        title: "Save to protocol templates"
+        name_label: "Templates protocol name"
         name_placeholder: "My protocol"
         type_label: "Save to"
         type_public: "Team protocols"
         type_private: "My protocols"
         type_text: "You can make a copy of a protocol and save it to Team protocols or My protocols. Team protocols are visible to all team members, My protocols are for personal usage only."
-        link_label: "Link task to this protocol in repository"
+        link_label: "Link task to this protocol in templates"
         link_text: "<strong>Warning!</strong>&nbsp;This will unlink the currently linked protocol."
-        error_400: "Due to unknown error, protocol could not be copied to repository."
+        error_400: "Due to unknown error, protocol could not be copied to templates."
         confirm: "Save"
       load_from_file_flash: "Successfully loaded the protocol from the file."
       load_from_file_error: "Failed to load the protocol from file."
@@ -984,7 +1133,7 @@ en:
       new_text_result: "Text"
       new_table_result: "Table"
       new_asset_result: "File"
-      published_on: "Published on <em>%{timestamp}</em> by <em>%{user}</em>"
+      published_on_html: "Added on <em>%{timestamp}</em> by <em>%{user}</em>"
       published_table: "entered a table on %{timestamp}."
       published_text:  "entered a text on %{timestamp}."
       published_asset:  "uploaded a file on %{timestamp}."
@@ -1096,6 +1245,7 @@ en:
   experiments:
     id: "ID"
     experiment_id: "Experiment ID"
+    experiment_actions: "EXPERIMENT ACTIONS"
     header:
       cards: "Cards"
       table: "Table"
@@ -1110,6 +1260,7 @@ en:
       restore_button: "Restore"
     card:
       name: "Experiment"
+      id: "ID"
       start_date: "Start date"
       modified_date: "Modified date"
       archived_date: "Archived date"
@@ -1167,6 +1318,9 @@ en:
       success_flash: 'Successfully duplicated experiment %{experiment} as template.'
       error_flash: 'Could not duplicate the experiment as template.'
       current_project: '(current project)'
+    duplicate_tasks:
+      success: 'Successfully duplicated %{count} task(s) as template.'
+      duplicating: 'Duplicating contents...'
     move:
       modal_title: 'Move experiment %{experiment}'
       notice: 'Moving is possible to projects, where you have permissions to create experiments and tasks.'
@@ -1177,25 +1331,110 @@ en:
       error_flash: ' Could not move the experiment. Experiment name is already in use. '
       task_permission: 'No permission: You don’t have edit access to all experiment tasks.'
       no_projects: 'No projects: You don’t have edit access to any other projects.'
+    table:
+      head_title: "%{experiment} | Overview"
+      column:
+        id_html: 'ID'
+        task_name_html: 'Task name'
+        due_date_html: 'Due date'
+        archived_html: 'Archived'
+        age_html: 'Age'
+        results_html: 'Results'
+        status_html: 'Status'
+        assigned_html: 'Assigned to'
+        tags_html: 'Tags'
+        comments_html: '<i data-toggle="tooltip" data-placement="left" title="Comments" class="fas fa-comment"></i>'
+      modal_move_modules:
+        title: "Move task(s) to experiment"
+        confirm: "Move"
+        no_experiments: "No experiments to move this task to."
+        success_flash: "Successfully moved task(s) to experiment %{experiment}."
+        error_flash: "Failed to move task(s) to experiment %{experiment}."
+      column_display_modal:
+        title: 'Task data display'
+        description: 'Click the eye buttons to hide or show columns in the table'
+        id: 'ID'
+        task_name: 'Task name'
+        due_date: 'Due date'
+        archived: 'Archived'
+        age: 'Age'
+        results: 'Results'
+        status: 'Status'
+        assigned: 'Assigned to'
+        tags: 'Tags'
+        comments: 'Comments'
+      toolbar:
+        new: 'New task'
+        edit: 'Edit'
+        archive: 'Archive'
+        restore: 'Restore'
+        move: 'Move'
+        duplicate: 'Duplicate'
+        task_access: 'Task access'
+        task_data: 'Task data display'
+      my_module_actions:
+        title: 'TASK ACTIONS'
+        edit: 'Edit'
+        duplicate: 'Duplicate as template'
+        move: 'Move to another experiment'
+        access: 'Task access'
+        archive: 'Archive'
+        restore: 'Restore'
+      filters:
+        name: 'Task name'
+        due_date: 'Due date'
+        status: 'Status'
+        status_placeholder: 'Select task status'
+        assigned: 'Assigned to'
+        assigned_placeholder: 'Select a person assigned to a task'
+      view:
+        canvas: 'Canvas'
+        table: 'Table'
+        cards: 'Cards'
+        archived_tasks: 'Go to Archived tasks'
+        active_tasks: 'Go to Active tasks'
+      add_tag: '+ Add tag'
+      search: 'Search...'
+      not_set: 'not set'
+      archive_group:
+        success_flash: "<strong>%{number}</strong> task(s) successfully archived."
+        error_flash: "Failed to archive task(s)."
     canvas:
       archive_confirm: "Are you sure to archive this experiment?"
-      actions: 'Actions'
+      actions: 'Experiment'
+      view: 'View'
       head_title: "%{project} | Overview"
-      canvas_edit: "Edit Experiment"
+      canvas_edit: "Edit workflow"
+      canvas_empty: "It's empty here. Please add some tasks."
+      new_my_module: "New task"
+      new_my_module_modal:
+        title: "Create new task"
+        name: "Task name"
+        name_placeholder: "Enter…"
+        due_date: "Due date (optional)"
+        due_date_placeholder: "Add due date"
+        assigned_tags_label: "Add tags (optional)"
+        assigned_tags_placeholder: "Add tags"
+        assigned_users: "Assign task to (optional)"
+        assigned_users_placeholder: "Assign task to a project member"
+        create: "Create task"
       zoom: "Zoom: "
       reload_on_submit: "Save action is running. Reloading this page may cause unexpected behavior."
       modal_manage_tags:
-        head_title: "Manage tags for"
+        head_title: "Manage tags"
         subtitle: "Showing tags of task %{module}"
         no_tags: "No tags!"
         edit_tag: "Edit tag."
         remove_tag: "Remove tag from task %{module}."
         delete_tag: "Permanently delete tag from all tasks."
+        delete_tag_confirmation: "Deleting a tag will remove it from all tagged tasks. Are you sure you wish to continue?"
+        explanatory_text: "Add a set of tags to mark the tasks inside this project. Changing the tag applies to all tagged tasks. Deleting a tag removes it from all tagged tasks."
         save_tag: "Save tag."
         cancel_tag: "Cancel changes to the tag."
         create: "Add"
         create_new: "New"
       edit:
+        id: "ID:"
         new_module: "New task"
         new_module_hover: "Drag me onto canvas"
         save: "Save workflow"
@@ -1203,20 +1442,22 @@ en:
         cancel: "Cancel"
         unsaved_work: "Are you sure you want to leave this page? All unsaved data will be lost."
         drag_connections: "Drag connection/s from here"
+        no_module_id: "to be assigned after saving"
         options_header: "Options"
         edit_module: "Rename task"
         task_access: "Task access"
-        clone_module: "Copy task as template (only Protocols steps copied)"
-        clone_module_group: "Copy workflow as template (only Protocols steps copied)"
+        clone_module: "Duplicate task as template (only Protocols steps duplicated)"
+        clone_module_group: "Duplicate workflow as template (only Protocols steps duplicated)"
+        clone_prefix: "Clone -"
         move_module: "Move task to another experiment"
         move_module_group: "Move workflow to another experiment"
         delete_module: "Archive task"
         delete_module_group: "Archive workflow"
         modal_new_module:
-          title: "Add new task"
+          title: "Create new task"
           name: "Task name"
           name_placeholder: "My task"
-          confirm: "Add"
+          confirm: "Create task"
         modal_edit_module:
           title: "Rename task"
           name: "Task name"
@@ -1634,7 +1875,8 @@ en:
         errors:
           too_long: "Item name is too long (maximum is %{max_length} characters)"
           is_empty: "Item name should be filled"
-
+    pagination_edit_overlay_html: "Please <a class=\"repository-save-changes-link\">save your changes</a> before you go to another page"
+    toolbar_edit_overlay_html: "Please <a class=\"repository-save-changes-link\">save your changes</a> first to use filters"
     add_new_record: "New item"
     parse_sheet:
       help_text: "Match the columns of your uploaded file with already existing columns in database."
@@ -1712,7 +1954,7 @@ en:
     create:
       success_flash: "Successfully added item <strong>%{record}</strong> to inventory <strong>%{repository}</strong>"
     update:
-      success_flash: "Successfully updated item <strong>%{record}</strong> in inventory <strong>%{repository}</strong>"
+      success_flash: "Inventory items were successfully updated."
     destroy:
       success_flash: "%{records_number} item(s) successfully deleted."
       contains_other_records_flash: "%{records_number} item(s) successfully deleted. %{other_records_number} of the selected item(s) were created by other users and were not deleted."
@@ -1922,8 +2164,11 @@ en:
       head_title_multiple: "Print label - %{repository_rows} rows"
       id_label: "ID: %{repository_row_id}"
       printer: "Printer"
+      label: "Label template"
       number_of_copies: "Number of copies"
       print_label: "Print label"
+      print_anyway: "Print anyway"
+      label_preview: "Label preview"
       no_printers:
         title: "There seems to be no printer available"
         description: "To learn more about printing labels and label printers please visit our blog."
@@ -1937,21 +2182,6 @@ en:
       date_expiration_html: "This item is expiring in <strong>%{date_expiration}</strong>."
       item_expired: "This item has expired."
       day: "day"
-  label_printers:
-    modal_printing_status:
-      printer_status:
-        ready: "Ready"
-        not_ready: "Not Ready"
-        out_of_labels: "Out of labels"
-        error: "Printer error"
-        unreachable: "Printer offline"
-      multiple_items: "%{item_count}/%{starting_item_count} labels"
-      printing_status:
-        done: "Done"
-        printing: "Printing"
-        out_of_labels: "Waiting for labels. Please, insert labels."
-        error: "There is an issue with the printer."
-        unreachable: "Printer is offline"
   activities:
     index:
       global_activities_title: "Global activities"
@@ -2050,7 +2280,7 @@ en:
         email_label: "Email"
         email_title: "Change email"
         new_email_label: "New email"
-        external_id_label: 'External Id'
+        external_id_label: 'External ID'
         external_id_title: 'External Id'
         current_password_label: "Current password"
         password_explanation: "(we need your current password to confirm your changes)"
@@ -2149,13 +2379,19 @@ en:
             ready: "Ready"
             not_ready: "Not ready"
             printer_details: "Printer details"
+            details: "Details"
             enter_api_key: "Enter API key"
             enabled: "Enabled"
           fluics_printer:
             title: "FLUICS Print"
             description: "Truly a plug & play label printing solution."
+          zebra_printer:
+            title: 'Zebra label printers'
+            description: 'Print labels of custom styles and sizes in seconds flat from your PC or Mac via your Zebra printer connected via USB, Internet or LAN.'
+            details: 'Details'
         label_printer:
           fluics_printer: "FLUICS Print: Label printers"
+          zebra_printer: 'Zebra label printers'
           instructions: "Instructions"
           fluics_instruction:
             p1: "To make it work, please follow these steps:"
@@ -2163,6 +2399,27 @@ en:
             p3: "2. Plug the online printer to a power outlet and connect it to the internet with a LAN cable."
             p4: "3. Enter the API key into the field below."
             p5: "4. SciNote will find your printer and connect to it automatically. You can start printing labels."
+          zebra_instruction:
+            general_html: "Make sure your Zebra printer model is supported by Zebra Browser print technology on the official Zebra page: <a href='%{link}' target='_blank'>official Browser print page.</a>"
+            contact_html: "For more detailed instructions please check the <a href='%{link_blog}' target='_blank'>SciNote blog post</a> and <a href='%{link_zebra_support}' target='_blank'>Zebra printer support.</a>"
+            usb:
+              header: 'Connect a Zebra printer via USB cable'
+              p1: 'Make sure your Zebra printer is connected to power, turned on, and connected to the computer by USB cable.'
+              p2_html: "In order to print labels from SciNote, you need to download and install the Zebra Browser Print application according to your operating system: <a href='%{link}' target='_blank'>official downloads page.</a>. During installation, you might be prompted to install a specific Zebra printer driver."
+              p3: 'Update printers with the “Update printers” option on the right side of this SciNote screen.'
+              p4: 'Your Zebra printer should now be listed in SciNote.'
+              p5: 'Go to inventories, select a label template and start printing.'
+            network:
+              header: 'Connect a Zebra printer via network (LAN or WiFi)'
+              disclaimer: 'Some Zebra printers support connection via LAN or WiFi network. Check your printer documentation or official Zebra product page for this information.'
+              p1: 'Make sure your Zebra printer is connected to power and turned on.'
+              p2: 'Make sure your computer and Zebra printer are connected to the local network (by LAN or Wi-fi).'
+              p3_html: "In order to print labels from SciNote, you need to download the Zebra Browser Print application according to your operating system: <a href='%{link}' target='_blank'>official downloads page.</a>"
+              p4: 'Install the Zebra Browser Print application.'
+              p5: 'Open the Zebra Browser Print application and set the IP address and Port number of the printer. The printer IP address should be set as “Static” (you might need to contact your IT administrator for help).'
+              p6: 'Update printers with the “Update printers” option on the right side of this SciNote screen.'
+              p7: 'Your Zebra printer should now be listed in SciNote.'
+              p8: 'Go to inventories, set the label content, and start printing.'
           settings: "Settings"
           api_key_label: "API key"
           api_key_warning: "API key change will lead to printer list refresh"
@@ -2171,6 +2428,7 @@ en:
           saved: "Saved"
           update_printers: "Update printers"
           no_printers_available: "No printers available"
+          looking_for_printers: "Looking for connected printers…"
 
 
         connected_accounts:
@@ -2357,7 +2615,7 @@ en:
         title_import_into_protocol_protocols_io: "Load protocol from protocols.io file"
         import_into_protocol_message: "This will overwrite the current protocol!"
         import_into_protocol_confirm: "Are you sure you wish to load protocol from file? This action will overwrite the current protocol."
-        import_to_linked_task_file: "Are you sure you wish to load protocol from file? This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
+        import_to_linked_task_file: "Are you sure you wish to load protocol from file? This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
         name_label: "Protocol name"
         authors_label: "Authors"
         description_label: "Description"
@@ -2427,6 +2685,7 @@ en:
       publish: "Move to Team protocols"
       archive_action: "Archive"
       thead_name: "Name"
+      thead_code: "ID"
       thead_keywords: "Keywords"
       thead_nr_of_linked_children: "No. of linked tasks"
       thead_published_by: "Published by"
@@ -2552,12 +2811,18 @@ en:
       drop_message: "Drop file to add to step %{position}"
       space_used_label: '%{used} / %{limit} space used.'
       space_used_label_unlimited: '%{used} / unlimited space used.'
+      step_duplicated: "Step duplicated successfully."
+      component_duplicated: "Step content duplicated successfully."
+      step_duplication_failed: "Step could not be duplicated, try again later."
+      component_duplication_failed: "Step content could not be duplicated, try again later."
+      timestamp: "Created on %{date} by %{user}"
       status:
         complete: "Mark as done"
         uncomplete: "Unmark as done"
       options_dropdown:
         title: 'Step options'
         rearrange: 'Rearrange content'
+        duplicate: 'Duplicate'
         delete: 'Delete'
       insert:
         button: 'Insert'
@@ -2690,6 +2955,7 @@ en:
     input_subtitle: "You can enter one or more emails."
     invite_to_team_heading: "Invite users to my team:"
     invite_btn: "Invite members"
+    invite_as: "As %{role}"
     invite_guest: "As Guests"
     invite_user: "As Normal Users"
     invite_admin: "As Administrators"
@@ -2715,6 +2981,7 @@ en:
   date:
     formats:
       full: "%{date_format}"
+      full_date: "%{date_format}"
   time:
     formats:
       full_js: "D.M.YYYY HH:mm"
@@ -2767,6 +3034,7 @@ en:
     step_comment_annotation_title: "%{user} mentioned you in a comment on step %{step}."
     step_description_title: "%{user} mentioned you in a description on step %{step}."
     checklist_title: "%{user} mentioned you in a checklist on step %{step}."
+    step_text_title: "%{user} mentioned you in a text on step %{step}."
     step_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module} | Step: %{step}"
     result_annotation_title: "%{user} mentioned you in result %{result}."
     result_comment_annotation_title: "%{user} mentioned you in a comment on result %{result}."
@@ -3000,6 +3268,8 @@ en:
     create: 'Create'
     change: "Change"
     remove: "Remove"
+    clone_label: "Clone"
+    download: "Download"
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"
@@ -3010,17 +3280,23 @@ en:
     comment_placeholder_new: "Add new comment…"
     archived: "Archived"
     sort:
-      new_html: "<i class=\"fas fa-sort-numeric-up\"></i>&nbsp;&nbsp;Started last"
+      new_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;Started last"
       old_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Started first"
       atoz_html: "<i class=\"fas fa-sort-alpha-down\"></i>&nbsp;&nbsp;Name A to Z"
-      ztoa_html: "<i class=\"fas fa-sort-alpha-up\"></i>&nbsp;&nbsp;Name Z to A"
-      archived_new_html: "<span class=\"fa-stack\"><i class=\"fas fa-long-arrow-alt-up\"></i><i class=\"fas fa-archive\"></i></span>Archived last"
-      archived_old_html: "<span class=\"fa-stack\"><i class=\"fas fa-long-arrow-alt-down\"></i><i class=\"fas fa-archive\"></i></span>Archived first"
+      ztoa_html: "<i class=\"fas fa-sort-alpha-down-alt\"></i>&nbsp;&nbsp;Name Z to A"
+      archived_new_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;Archived last"
+      archived_old_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Archived first"
+      id_asc_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;ID ascending"
+      id_desc_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;ID descending"
+      due_first_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Due first"
+      due_last_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;Due last"
     sort_new:
-      new: "Newest"
-      old: "Oldest"
-      atoz: "A-Z"
-      ztoa: "Z-A"
+      new: "Added last"
+      old: "Added first"
+      new_updated: "Modified last"
+      old_updated: "Modified first"
+      atoz: "Name A to Z"
+      ztoa: "Name Z to A"
     module:
       one: "task"
       other: "tasks"
@@ -3237,4 +3513,5 @@ en:
   inline_edit:
     errors:
       over_limit: "%{attribute} is too long (maximum number is %{limit} characters)"
+      below_limit: "%{attribute} is too short (minimum number is %{limit} characters)"
       blank: "%{attribute} can't be empty"

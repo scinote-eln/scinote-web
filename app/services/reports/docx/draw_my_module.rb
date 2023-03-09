@@ -6,7 +6,7 @@ module Reports::Docx::DrawMyModule
     link_style = @link_style
     scinote_url = @scinote_url
     my_module = subject.my_module
-    tags = my_module.tags
+    tags = my_module.tags.order(:id)
     return unless can_read_my_module?(@user, my_module)
 
     @docx.h3 do
@@ -16,7 +16,7 @@ module Reports::Docx::DrawMyModule
     end
 
     @docx.p do
-      text I18n.t('projects.reports.elements.module.user_time',
+      text I18n.t('projects.reports.elements.module.user_time', code: my_module.code,
                   timestamp: I18n.l(my_module.created_at, format: :full)), color: color[:gray]
       if my_module.archived?
         text ' | '
@@ -48,10 +48,10 @@ module Reports::Docx::DrawMyModule
       end
     end
 
-    if tags.any?
+    if tags.present?
       @docx.p do
         text I18n.t('projects.reports.elements.module.tags_header')
-        my_module.tags.each do |tag|
+        tags.each do |tag|
           text ' '
           text "[#{tag.name}]", color: tag.color.delete('#')
         end
@@ -73,7 +73,7 @@ module Reports::Docx::DrawMyModule
     @docx.h4 I18n.t('Results') if my_module.results.any?
     order_results_for_report(my_module.results, @settings.dig('task', 'result_order')).each do |result|
       if result.is_asset && @settings.dig('task', 'file_results')
-        draw_result_asset(result)
+        draw_result_asset(result, @settings)
       elsif result.is_table && @settings.dig('task', 'table_results')
         draw_result_table(result)
       elsif result.is_text && @settings.dig('task', 'text_results')

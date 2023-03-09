@@ -134,6 +134,9 @@
       uploadFiles() {
         this.$emit('files', this.$refs.fileSelector.files);
         $(this.$refs.modal).modal('hide');
+        this.$parent.$parent.$nextTick(() => {
+          this.$parent.$el.scrollIntoView(false)
+        });
       },
       openMarvinJsModal() {
       },

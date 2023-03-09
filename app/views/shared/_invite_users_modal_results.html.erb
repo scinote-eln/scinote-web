@@ -15,24 +15,24 @@
     <strong><%= result[:email] %></strong>
     &nbsp;-&nbsp;
     <%= t('invite_users.results.user_exists_and_in_team',
-          team: result[:team].name,
-          role: t("user_teams.enums.role.#{result[:user_team].role}")) %>
+          team: result[:team_name],
+          role: result[:user_role_name]) %>
   </div>
 <%   elsif result[:status] == :user_exists_unconfirmed_invited_to_team %>
   <div class="alert alert-info" role="alert">
     <strong><%= result[:email] %></strong>
     &nbsp;-&nbsp;
     <%= t('invite_users.results.user_exists_unconfirmed_invited_to_team',
-          team: result[:team].name,
-          role: t("user_teams.enums.role.#{result[:user_team].role}")) %>
+          team: result[:team_name],
+          role: result[:user_role_name]) %>
   </div>
 <%   elsif result[:status] == :user_exists_invited_to_team %>
   <div class="alert alert-info" role="alert">
     <strong><%= result[:email] %></strong>
     &nbsp;-&nbsp;
     <%= t('invite_users.results.user_exists_invited_to_team',
-          team: result[:team].name,
-          role: t("user_teams.enums.role.#{result[:user_team].role}")) %>
+          team: result[:team_name],
+          role: result[:user_role_name]) %>
 </div>
 <%   elsif result[:status] == :user_created %>
   <div class="alert alert-success" role="alert">
@@ -45,8 +45,8 @@
     <strong><%= result[:email] %></strong>
     &nbsp;-&nbsp;
     <%= t('invite_users.results.user_created_invited_to_team',
-          team: result[:team].name,
-          role: t("user_teams.enums.role.#{result[:user_team].role}")) %>
+          team: result[:team_name],
+          role: result[:user_role_name]) %>
 </div>
 <%   elsif result[:status] == :user_invalid %>
   <div class="alert alert-danger" role="alert" title="<%= result[:email] %>  <%= t('invite_users.results.user_invalid') %>">

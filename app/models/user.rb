@@ -4,7 +4,6 @@ class User < ApplicationRecord
   include SearchableModel
   include SettingsModel
   include VariablesModel
-  include User::TeamRoles
   include TeamBySubjectModel
   include InputSanitizeHelper
   include ActiveStorageConcerns
@@ -60,9 +59,9 @@ class User < ApplicationRecord
   # Relations
   has_many :user_identities, inverse_of: :user
   has_many :user_teams, inverse_of: :user
-  has_many :teams, through: :user_teams
   has_many :user_assignments, dependent: :destroy
   has_many :user_projects, inverse_of: :user
+  has_many :teams, through: :user_assignments, source: :assignable, source_type: 'Team'
   has_many :projects, through: :user_assignments, source: :assignable, source_type: 'Project'
   has_many :user_my_modules, inverse_of: :user
   has_many :my_modules, through: :user_assignments, source: :assignable, source_type: 'MyModule'
@@ -389,6 +388,10 @@ class User < ApplicationRecord
       .take
   end
 
+  def member_of_team?(team)
+    team.user_assignments.exists?(user: self)
+  end
+
   # Search all active users for username & email. Can
   # also specify which team to ignore.
   def self.search(
@@ -400,7 +403,7 @@ class User < ApplicationRecord
     result = result.where.not(confirmed_at: nil) if active_only
 
     if team_to_ignore.present?
-      ignored_ids = UserTeam.select(:user_id).where(team_id: team_to_ignore.id)
+      ignored_ids = UserAssignment.select(:user_id).where(assignable: team_to_ignore)
       result = result.where.not(users: { id: ignored_ids })
     end
 
@@ -536,18 +539,16 @@ class User < ApplicationRecord
   end
 
   def self.from_azure_jwt_token(token_payload)
-    includes(:user_identities)
-      .where(
-        'user_identities.provider=? AND user_identities.uid=?',
-        Rails.configuration.x.azure_ad_apps[token_payload[:aud]][:provider],
-        token_payload[:sub]
-      )
-      .references(:user_identities)
-      .take
+    settings = ApplicationSettings.instance
+    provider_conf = settings.values['azure_ad_apps']&.find { |v| v['app_id'] == token_payload[:aud] }
+    return nil unless provider_conf
+
+    joins(:user_identities)
+      .find_by(user_identities: { provider: provider_conf['provider_name'], uid: token_payload[:sub] })
   end
 
   def has_linked_account?(provider)
-    user_identities.where(provider: provider).exists?
+    user_identities.exists?(provider: provider)
   end
 
   # This method must be overwriten for addons that will be installed
@@ -626,7 +627,7 @@ class User < ApplicationRecord
     query_teams = teams.pluck(:id)
     query_teams &= filters[:teams].map(&:to_i) if filters[:teams]
     query_teams &= User.team_by_subject(filters[:subjects]) if filters[:subjects]
-    User.where(id: UserTeam.where(team_id: query_teams).select(:user_id))
+    User.where(id: UserAssignment.where(assignable_id: query_teams, assignable_type: 'Team').select(:user_id))
         .search(false, search_query)
         .select(:full_name, :id)
         .map { |i| { label: escape_input(i[:full_name]), value: i[:id] } }
@@ -681,6 +682,17 @@ class User < ApplicationRecord
       end
     end
     false
+  end
+
+  def after_database_authentication
+    if Rails.application.config.x.disable_local_passwords
+      throw(:warden, message: I18n.t('devise.failure.auth_method_disabled'))
+    end
+  end
+
+  def my_module_visible_table_columns
+    settings['visible_my_module_table_columns'].presence ||
+      %w(id due_date age results status archived assigned tags comments)
   end
 
   protected

@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class MyModule < ApplicationRecord
-  SEARCHABLE_ATTRIBUTES = ['my_modules.name', 'my_modules.description']
+  ID_PREFIX = 'TA'
+  include PrefixedIdModel
+  SEARCHABLE_ATTRIBUTES = ['my_modules.name', 'my_modules.description', PREFIXED_ID_SQL].freeze
 
   include ArchivableModel
   include SearchableModel
@@ -9,10 +11,12 @@ class MyModule < ApplicationRecord
   include TinyMceImages
   include PermissionCheckableModel
   include Assignable
+  include Cloneable
 
   attr_accessor :transition_error_rollback
 
   enum state: Extends::TASKS_STATES
+  enum provisioning_status: { done: 0, in_progress: 1, failed: 2 }
 
   before_validation :archiving_and_restoring_extras, on: :update, if: :archived_changed?
   before_save -> { report_elements.destroy_all }, if: -> { !new_record? && experiment_id_changed? }
@@ -43,6 +47,7 @@ class MyModule < ApplicationRecord
   belongs_to :restored_by, foreign_key: 'restored_by_id', class_name: 'User', optional: true
   belongs_to :experiment, inverse_of: :my_modules, touch: true
   has_one :project, through: :experiment, autosave: false
+  delegate :team, to: :project
   belongs_to :my_module_group, inverse_of: :my_modules, optional: true
   belongs_to :my_module_status, optional: true
   belongs_to :changing_from_my_module_status, optional: true, class_name: 'MyModuleStatus'
@@ -123,6 +128,10 @@ class MyModule < ApplicationRecord
     joins(experiment: :project).where(experiment: { projects: { team: teams } })
   end
 
+  def parent
+    experiment
+  end
+
   def navigable?
     !experiment.archived? && experiment.navigable?
   end
@@ -187,12 +196,7 @@ class MyModule < ApplicationRecord
   end
 
   def unassigned_tags
-    Tag.find_by_sql(
-      "SELECT DISTINCT tags.id, tags.name, tags.color FROM tags " +
-      "INNER JOIN experiments ON experiments.project_id = tags.project_id " +
-      "WHERE experiments.id = #{experiment_id.to_s} AND tags.id NOT IN " +
-      "(SELECT DISTINCT tag_id FROM my_module_tags WHERE my_module_tags.my_module_id = #{id.to_s})"
-      )
+    experiment.project.tags.where.not(id: tags)
   end
 
   def last_activities(count = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
@@ -385,25 +389,29 @@ class MyModule < ApplicationRecord
 
     clone.assign_user(current_user)
 
+    copy_content(current_user, clone)
+
+    clone
+  end
+
+  def copy_content(current_user, target_my_module)
     # Remove the automatically generated protocol,
     # & clone the protocol instead
-    clone.protocol.destroy
-    clone.reload
+    target_my_module.protocol.destroy
+    target_my_module.reload
 
     # Update the cloned protocol if neccesary
-    clone_tinymce_assets(clone, clone.experiment.project.team)
-    clone.protocols << protocol.deep_clone_my_module(self, current_user)
-    clone.reload
+    clone_tinymce_assets(target_my_module, target_my_module.experiment.project.team)
+    target_my_module.protocols << protocol.deep_clone_my_module(self, current_user)
+    target_my_module.reload
 
     # fixes linked protocols
-    clone.protocols.each do |protocol|
+    target_my_module.protocols.each do |protocol|
       next unless protocol.linked?
 
       protocol.updated_at = protocol.parent_updated_at
       protocol.save
     end
-
-    clone
   end
 
   # Find an empty position for the restored module. It's

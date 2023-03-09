@@ -5,9 +5,9 @@ module RepositoryDatatable
     include InputSanitizeHelper
     def value
       {
-        id: object.repository_status_item.id,
-        icon: object.repository_status_item.icon,
-        status: escape_input(object.repository_status_item.status)
+        id: value_object.repository_status_item.id,
+        icon: value_object.repository_status_item.icon,
+        status: escape_input(value_object.repository_status_item.status)
       }
     end
   end

@@ -3,14 +3,14 @@
     <div class="tinymce-container" :class="{ 'error': error }">
       <form class="tiny-mce-editor" role="form" :action="updateUrl" accept-charset="UTF-8" data-remote="true" method="post">
         <input type="hidden" name="_method" value="patch">
-        <div class="hidden tinymce-cancel-button mce-widget mce-btn mce-menubtn mce-flow-layout-item mce-btn-has-text pull-right" tabindex="-1">
-          <button type="button" tabindex="-1">
-            <span class="fas fa-times"></span>
-            <span :title="`cancel tinymce ${getTitle(value_html)} edit`" class="mce-txt">{{ i18n.t('general.cancel')  }}</span>
-          </button>
+        <div class="hidden tinymce-cancel-button tox-mbtn" tabindex="-1">
+        <button type="button" tabindex="-1">
+          <span class="fas fa-times"></span>
+          <span :title="`cancel tinymce ${getTitle(value_html)} edit`" class="mce-txt">{{ i18n.t('general.cancel') }}</span>
+        </button>
         </div>
-        <div class="hidden tinymce-save-button mce-widget mce-btn mce-menubtn mce-flow-layout-item mce-btn-has-text mce-last pull-right" tabindex="-1">
-          <button type="button" tabindex="-1">
+        <div class="hidden tinymce-save-button tox-mbtn" tabindex="-1">
+          <button type="button" tabindex="-1" >
             <span class="fas fa-check"></span>
             <span :title="`save tinymce ${getTitle(value_html)} edit`" class="mce-txt">{{ i18n.t('general.save') }}</span>
           </button>
@@ -19,6 +19,7 @@
           <i class="fas fa-check-circle"></i>
           <span>{{ i18n.t('tiny_mce.saved_label') }}</span>
         </div>
+
         <div :id="`${objectType}_view_${objectId}`"
             :title="getTitle(value_html || placeholder)"
             @click="initTinymce"
@@ -34,7 +35,6 @@
                     :data-tinymce-object="`tinymce-${objectType}-description-${objectId}`"
                     :data-object-type="objectType"
                     :data-object-id="objectId"
-                    :data-highlightjs-path="this.getStaticUrl('highlightjs-url')"
                     :data-last-updated="lastUpdated * 1000"
                     :data-tinymce-asset-path="this.getStaticUrl('tiny-mce-assets-url')"
                     :placeholder="placeholder"
@@ -44,7 +44,7 @@
                     :name="fieldName"
                     aria-hidden="true">
           </textarea>
-          <input type="hidden" id="tiny-mce-images" name="tiny_mce_images" value="[]">
+          <input type="hidden" class="tiny-mce-images" name="tiny_mce_images" value="[]">
         </div>
       </form>
     </div>
@@ -86,7 +86,11 @@
       inEditMode() {
         if (this.inEditMode) {
           this.initTinymce();
+        } else {
+          this.wrapTables();
         }
+
+        this.initCodeHighlight();
       },
       characterCount() {
         if (this.editorInstance()) {
@@ -114,7 +118,11 @@
     mounted() {
       if (this.inEditMode) {
         this.initTinymce();
+      } else {
+        this.wrapTables();
       }
+
+      this.initCodeHighlight();
     },
     methods: {
       initTinymce(e) {
@@ -126,17 +134,23 @@
         if (e && $(e.target).hasClass('record-info-link')) return
         if (e && $(e.target).parent().hasClass('atwho-inserted')) return
 
-        TinyMCE.init(textArea, (data) => {
-
-          if (data) {
-            this.$emit('update', data)
+        TinyMCE.init(textArea, {
+            onSaveCallback: (data) => {
+              if (data.data) {
+                this.$emit('update', data.data)
+              }
+              this.$emit('editingDisabled');
+              this.wrapTables();
+              this.initCodeHighlight();
+            },
+            afterInitCallback: () => {
+              this.active = true;
+              this.initCharacterCount();
+              this.$emit('editingEnabled');
+            },
+            placeholder: this.placeholder
           }
-          this.$emit('editingDisabled')
-        }).then(() => {
-          this.active = true;
-          this.initCharacterCount();
-          this.$emit('editingEnabled');
-        });
+        )
       },
       getStaticUrl(name) {
         return $(`meta[name=\'${name}\']`).attr('content');
@@ -147,12 +161,17 @@
       getTitle(str) {
         return str.replace(/<[^>]+>/g, "").substring(0, 10);
       },
+      wrapTables() {
+        this.$nextTick(() => {
+          TinyMCE.wrapTables($(this.$el).find('.tinymce-view'));
+        });
+      },
       initCharacterCount() {
         if (!this.editorInstance()) return;
 
-        this.characterCount = $(this.editorInstance().getContent()).text().length;
+        this.characterCount = this.editorInstance().plugins.wordcount.body.getCharacterCount();
         this.editorInstance().on('input change paste keydown', (e) => {
-          e.currentTarget && (this.characterCount = (e.currentTarget).innerText.length);
+          e.currentTarget && (this.characterCount = this.editorInstance().plugins.wordcount.body.getCharacterCount());
         });
 
         this.editorInstance().on('remove', () => this.active = false);
@@ -163,7 +182,12 @@
         });
       },
       editorInstance() {
-        return tinyMCE.editors[0];
+        return tinyMCE.activeEditor;
+      },
+      initCodeHighlight() {
+        this.$nextTick(() => {
+          Prism.highlightAllUnder(this.$el);
+        });
       }
     }
   }

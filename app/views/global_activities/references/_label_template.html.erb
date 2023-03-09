@@ -1,0 +1,15 @@
+<%= render partial: "global_activities/references/team.html.erb",
+           locals: { team: team, subject: team, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
+<div class="ga-breadcrumb">
+  <span class="fas fa-tag"></span>
+  <% if subject %>
+    <%= route_to_other_team(label_template_path(subject),
+                            team,
+                            subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
+                            title: subject.name) %>
+  <% else %>
+    <span title="<%= breadcrumbs['label_template'] %>">
+      <%= breadcrumbs['label_template']&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
+    </span>
+  <% end %>
+</div>

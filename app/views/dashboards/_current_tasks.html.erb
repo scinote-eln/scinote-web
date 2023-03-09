@@ -85,9 +85,7 @@
   <div class="widget-placeholder">
     <p class="widget-placeholder-title team"><%= I18n.t('dashboard.current_tasks.no_tasks.team_tasks.title') %></p>
     <p class="widget-placeholder-title assigned"><%= I18n.t('dashboard.current_tasks.no_tasks.assigned_tasks.title') %></p>
-    <% unless current_user.is_guest_of_team?(current_team) %>
-      <p class="widget-placeholder-description"><%= I18n.t('dashboard.current_tasks.no_tasks.assigned_tasks.description') %></p>
-    <% end %>
+    <p class="widget-placeholder-description"><%= I18n.t('dashboard.current_tasks.no_tasks.assigned_tasks.description') %></p>
   </div>
 </template>
 

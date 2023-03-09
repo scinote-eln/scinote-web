@@ -1,8 +1,14 @@
-(function() {
+var PrintProgressModal = (function() {
+  'use strict';
+
   function updateProgressModal() {
     var modal = $('.label-printing-progress-modal');
 
     if (modal.length === 0) return;
+
+    $(document).on('click', '.label-printing-progress-modal .close', function() {
+      $(this).closest('.label-printing-progress-modal').remove();
+    });
 
     $.getJSON(
       modal.data('progress-url'), function(data) {
@@ -15,11 +21,7 @@
     );
   }
 
-  $(document).on('click', '.label-printing-progress-modal .close', function() {
-    $(this).closest('.label-printing-progress-modal').remove();
-  });
-
-  $(document).on('ajax:success', '.print-label-form', function(e, data) {
+  function initialize(data) {
     var modal = $('.label-printing-progress-modal');
     if (modal.length) {
       modal.replaceWith(data.html);
@@ -27,7 +29,10 @@
       $('body').append($(data.html));
     }
 
-    updateProgressModal();
-    $('#modal-print-repository-row-label').modal('hide');
+    setTimeout(updateProgressModal, 3000);
+  }
+
+  return Object.freeze({
+    init: initialize
   });
 }());

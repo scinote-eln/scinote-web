@@ -5,11 +5,11 @@ require 'rails_helper'
 RSpec.describe 'Api::V1::InventoryStatusItemsController', type: :request do
   before :all do
     @user = create(:user)
+    @another_user = create(:user)
     @team1 = create(:team, created_by: @user)
-    @team2 = create(:team, created_by: @user)
-    @user_team = create(:user_team, :admin, user: @user, team: @team1)
+    @team2 = create(:team, created_by: @another_user)
     @inventory = create(:repository, name: Faker::Name.unique.name, created_by: @user, team: @team1)
-    @wrong_inventory = create(:repository, name: Faker::Name.unique.name, created_by: @user, team: @team2)
+    @wrong_inventory = create(:repository, name: Faker::Name.unique.name, created_by: @another_user, team: @team2)
     @status_column = create(:repository_column, name: Faker::Name.unique.name, repository: @inventory,
                             data_type: :RepositoryStatusValue)
     create_list(:repository_status_item, 10, repository_column: @status_column)
@@ -18,6 +18,7 @@ RSpec.describe 'Api::V1::InventoryStatusItemsController', type: :request do
     @wrong_column = create(:repository_column, name: Faker::Name.unique.name, repository: @wrong_inventory,
                            data_type: :RepositoryStatusValue)
     @wrong_status_item = create(:repository_status_item, repository_column: @wrong_column)
+    @viewer_role = create(:viewer_role)
     @valid_headers =
       { 'Authorization': 'Bearer ' + generate_token(@user.id) }
   end
@@ -231,7 +232,7 @@ RSpec.describe 'Api::V1::InventoryStatusItemsController', type: :request do
 
     context 'when user does not has manage permissions' do
       it 'renders 403' do
-        @user_team.reload.update!(role: :guest)
+        @inventory.user_assignments.reload.update(user_role: @viewer_role)
 
         action
 
@@ -239,7 +240,7 @@ RSpec.describe 'Api::V1::InventoryStatusItemsController', type: :request do
       end
 
       it 'does not creats an item' do
-        @user_team.reload.update!(role: :guest)
+        @inventory.user_assignments.reload.update(user_role: @viewer_role)
 
         expect { action }.not_to(change { RepositoryStatusItem.count })
       end
@@ -367,7 +368,7 @@ RSpec.describe 'Api::V1::InventoryStatusItemsController', type: :request do
 
     context 'when user does not has manage permissions' do
       it 'renders 403' do
-        @user_team.reload.update!(role: :guest)
+        @inventory.user_assignments.reload.update(user_role: @viewer_role)
 
         action
 
@@ -444,7 +445,7 @@ RSpec.describe 'Api::V1::InventoryStatusItemsController', type: :request do
 
     context 'when user does not has manage permissions' do
       it 'renders 403' do
-        @user_team.reload.update!(role: :guest)
+        @inventory.user_assignments.reload.update(user_role: @viewer_role)
 
         action
 
@@ -452,7 +453,7 @@ RSpec.describe 'Api::V1::InventoryStatusItemsController', type: :request do
       end
 
       it 'does not delets any item' do
-        @user_team.reload.update!(role: :guest)
+        @inventory.user_assignments.reload.update(user_role: @viewer_role)
 
         expect { action }.not_to(change { RepositoryStatusItem.count })
       end

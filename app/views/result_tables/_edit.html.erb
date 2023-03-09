@@ -5,7 +5,8 @@
 		<%= f.text_field :name, style: "margin-top: 10px;", title: 'edit result table name field' %><br />
 		<div class="editable-table">
 			<%= f.fields_for :table do |ff| %>
-				<%= ff.hidden_field(:contents, value: ff.object.contents_utf_8, class: "hot-contents") %>
+				<%= ff.hidden_field(:contents, value: ff.object.contents_utf_8, class: "hot-contents" ) %>
+				<%= ff.hidden_field(:metadata, value: ff.object.metadata, class: "hot-metadata" ) %>
 				<div class="hot" title= "edit result table table field">
 				</div>
 			<% end %>

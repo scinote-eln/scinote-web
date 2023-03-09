@@ -1,4 +1,4 @@
-<% if can_manage_reports?(current_team) %>
+<% if can_create_reports?(current_team) %>
   <div class="sci-btn-group">
     <%= link_to new_report_path, class: 'btn btn-primary', id: 'new-report-btn', title: 'new report' do %>
       <span class="fas fa-plus" aria-hidden="true"></span>

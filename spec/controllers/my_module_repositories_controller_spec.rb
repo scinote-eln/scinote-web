@@ -4,9 +4,7 @@ require 'rails_helper'
 
 describe MyModuleRepositoriesController, type: :controller do
   login_user
-  include_context 'reference_project_structure' , {
-    role: :normal_user
-  }
+  include_context 'reference_project_structure'
   let!(:repository) { create :repository, created_by: user, team: team }
   let!(:repository_row) do
     create :repository_row, created_by: user, repository: repository
