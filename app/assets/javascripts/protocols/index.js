@@ -616,7 +616,14 @@ var ProtocolsIndex = (function() {
                 columns: [
                   { data: '1' }
                 ],
-                lengthMenu: [[10, 25, 50], ['Show 10 per page', 'Show 25 per page', 'Show 50 per page']],
+                lengthMenu: [
+                  [10, 25, 50],
+                  [
+                    I18n.t('protocols.index.linked_children.length_menu', { number: 10 }),
+                    I18n.t('protocols.index.linked_children.length_menu', { number: 25 }),
+                    I18n.t('protocols.index.linked_children.length_menu', { number: 50 })
+                  ]
+                ],
                 language: {
                   lengthMenu: '_MENU_'
                 },
