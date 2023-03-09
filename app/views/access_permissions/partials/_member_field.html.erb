@@ -27,7 +27,7 @@
           </button>
           <%= f.hidden_field :user_role_id, value: f.object.user_role.id %>
           <ul class="dropdown-menu dropdown-menu-right user-assignment-dropdown" aria-labelledby="userAccess_<%= user.id %>">
-            <% user_roles_collection(with_inherit: with_inherit).each do |role| %>
+            <% user_roles_collection(assignable, with_inherit: with_inherit).each do |role| %>
               <li>
                 <a href="#" data-turbolinks="false" class="user-role-selector" data-role-id="<%= role[1] %>">
                   <%= role[0] %>

@@ -16,9 +16,14 @@
         <%= text_field_tag :search_users, '', placeholder: t('.find_people_html'), class: 'sci-input-field', data: { action: 'filter-list', target: 'new-user-assignment-to-project-form' } %>
         <i class="fas fa-search"></i>
       </div>
+      <% if assignable.visibility && assignable.visibility == 'hidden' %>
+        <%= f.fields_for :users, UserAssignment.new do |user_form| %>
+          <%= render 'access_permissions/partials/public_assignment_field.html.erb', user_form: user_form, assignable: assignable  %>
+        <% end %>
+      <% end %>
       <% users.each do |user| %>
         <%= f.fields_for :users, UserAssignment.new(user: user) do |user_form| %>
-          <%= render 'access_permissions/partials/user_assignment_field.html.erb', user_form: user_form  %>
+          <%= render 'access_permissions/partials/user_assignment_field.html.erb', user_form: user_form, assignable: assignable  %>
         <% end %>
       <% end %>
     </div>

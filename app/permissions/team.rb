@@ -105,11 +105,11 @@ Canaid::Permissions.register_for(Protocol) do
 
   # protocol in repository: restore
   can :restore_protocol_in_repository do |user, protocol|
-    protocol.archived? && protocol.permission_granted?(user, ProtocolPermissions::MANAGE)
+    protocol.archived? && protocol.permission_granted?(user, ProtocolPermissions::RESTORE)
   end
 
   can :archive_protocol_in_repository do |user, protocol|
-    protocol.active? && protocol.permission_granted?(user, ProtocolPermissions::MANAGE)
+    protocol.active? && protocol.permission_granted?(user, ProtocolPermissions::ARCHIVE)
   end
 
   # protocol in repository: copy
@@ -119,7 +119,7 @@ Canaid::Permissions.register_for(Protocol) do
 
   can :publish_protocol_in_repository do |user, protocol|
     protocol.in_repository_draft? &&
-      protocol.permission_granted?(user, ProtocolPermissions::MANAGE)
+      protocol.permission_granted?(user, ProtocolPermissions::PUBLISH)
   end
 
   can :delete_protocol_draft_in_repository do |user, protocol|

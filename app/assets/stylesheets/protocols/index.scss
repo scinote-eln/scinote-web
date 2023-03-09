@@ -27,6 +27,18 @@
           white-space: nowrap;
         }
       }
+
+      .table.dataTable .sorting {
+        &::after {
+          opacity: 0;
+        }
+
+        &:hover {
+          &::after {
+            opacity: 1;
+          }
+        }
+      }
     }
 
     .toolbar {
@@ -60,6 +72,10 @@
 
     .dataTables_scrollBody {
       height: 100%;
+
+      td:first-child {
+        padding-top: 13px;
+      }
 
       td:not(:first-child) {
         padding: 14px 8px;

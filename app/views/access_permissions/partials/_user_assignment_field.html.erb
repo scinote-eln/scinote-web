@@ -26,7 +26,7 @@
   <div class="user-assignment-controls">
     <div class="user-assignment-role hidden" id="<%= id %>">
       <%= user_form.select :user_role_id,
-                options_for_select(user_roles_collection),
+                options_for_select(user_roles_collection(assignable)),
                 {},
                 name: "access_permissions_new_user_form[resource_members][#{user.id}][user_role_id]",
                 class: 'form-control selectpicker pull-right',

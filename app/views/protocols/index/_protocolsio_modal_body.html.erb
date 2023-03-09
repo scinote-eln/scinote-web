@@ -31,10 +31,10 @@
                   <span><i class="fas fa-sort-amount-down"></i></span>
                 </button>
                 <ul id="sortMenuDropdown" class="dropdown-menu sort-projects-menu dropdown-menu-right" aria-labelledby="sortMenu">
-                  <% {new: :newest, old: :oldest, atoz: :alpha_asc, ztoa: :alpha_desc}.each do |name, value| %>
+                  <% {atoz: :alpha_asc, ztoa: :alpha_desc, new: :newest, old: :oldest}.each do |name, value| %>
                     <li>
                       <input type='radio' name='sort_by' value='<%= value %>' <%= name == :new ? 'checked' : '' %> />
-                      <label for="<%= value %>"><%= t("general.sort.#{name.to_s}_html") %></label>
+                      <label for="<%= value %>"><%= t("protocols.index.protocolsio.sort.#{name.to_s}_html") %></label>
                     </li>
                   <% end %>
                 </ul>
