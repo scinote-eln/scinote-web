@@ -14,7 +14,7 @@
         <%= label_tag :default_public_user_role_id, t("protocols.new_protocol_modal.role_label") %>
         <% default_role = UserRole.find_by(name: I18n.t('user_roles.predefined.viewer')).id %>
         <%= hidden_field_tag :default_public_user_role_id, value: default_role %>
-        <%= select_tag :role_selector, options_for_select(user_roles_collection, default_role) %>
+        <%= select_tag :role_selector, options_for_select(user_roles_collection(@protocol), default_role) %>
       </div>
     </div>
   </div>
