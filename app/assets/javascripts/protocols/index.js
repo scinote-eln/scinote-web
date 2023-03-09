@@ -211,7 +211,7 @@ function initProtocolPreviewModal() {
           var modalTitle = modal.find(".modal-title");
           var modalBody = modal.find(".modal-body");
           var modalFooter = modal.find(".modal-footer");
-          modalTitle.html(data.title);
+          modalTitle.text(data.title);
           modalBody.html(data.html);
           modalFooter.html(data.footer);
           initHandsOnTable(modalBody);
@@ -243,7 +243,7 @@ function initLinkedChildrenModal() {
           var modal = $("#linked-children-modal");
           var modalTitle = modal.find(".modal-title");
           var modalBody = modal.find(".modal-body");
-          modalTitle.html(data.title);
+          modalTitle.text(data.title);
           modalBody.html(data.html);
           modal.modal("show");
 

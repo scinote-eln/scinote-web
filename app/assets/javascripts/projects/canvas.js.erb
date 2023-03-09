@@ -1129,7 +1129,7 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
 
   var panelHeading = module.find(".panel-heading");
 
-  module.find(".panel-title").html(name);
+  module.find(".panel-title").text(name);
 
   module.find(".ep").html($("#drag-connections-placeholder").html());
 
@@ -1471,7 +1471,7 @@ function initEditModules() {
       // Update the module's name in GUI
       moduleEl.attr('data-module-name', newName);
       moduleEl.find('.panel-heading .panel-title').attr('title', newName);
-      moduleEl.find('.panel-heading .panel-title').html(newName);
+      moduleEl.find('.panel-heading .panel-title').text(newName);
 
       // Add this information to form
       var formAddInput = $('#update-canvas form input#add');
