@@ -428,9 +428,14 @@
     width: 506px;
     padding: 15px 0;
 
+    .dropdown-content {
+      padding: 24px;
+    }
+
     .dropdown-header,
-    .dropdown-body {
-      padding: 10px 24px;
+    .dropdown-body,
+    .dropdown-footer {
+      padding: 12px 0;
     }
 
     .dropdown-header {
@@ -508,7 +513,6 @@
 
     .dropdown-footer {
       border-top: $border-tertiary;
-      padding: 12px 0 0;
     }
   }
 }

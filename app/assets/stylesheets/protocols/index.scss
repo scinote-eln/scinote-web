@@ -27,6 +27,18 @@
           white-space: nowrap;
         }
       }
+
+      .table.dataTable .sorting {
+        &::after {
+          opacity: 0;
+        }
+
+        &:hover {
+          &::after {
+            opacity: 1;
+          }
+        }
+      }
     }
 
     .toolbar {
