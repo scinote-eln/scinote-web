@@ -12,32 +12,34 @@
         </div>
       <% end -%>
 
-      <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-        <div class="input-group sci-input-container">
-          <%= f.label :email, t("devise.sessions.new.email_field") %>
-          <%= f.email_field :email, autofocus: true, class: "form-control sci-input-field", title: "email sign in form", placeholder: t("devise.sessions.new.email_placeholder") %>
-        </div>
+      <% unless Rails.application.config.x.disable_local_passwords %>
+        <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+          <div class="input-group sci-input-container">
+            <%= f.label :email, t("devise.sessions.new.email_field") %>
+            <%= f.email_field :email, autofocus: true, class: "form-control sci-input-field", title: "email sign in form", placeholder: t("devise.sessions.new.email_placeholder") %>
+          </div>
 
-        <div class="input-group sci-input-container">
-          <%= f.label :password, t("devise.sessions.new.password_field") %>
-          <%= f.password_field :password, autocomplete: "off", class: "form-control sci-input-field", title: "password sign in form", placeholder: t("devise.sessions.new.password_placeholder") %>
-        </div>
+          <div class="input-group sci-input-container">
+            <%= f.label :password, t("devise.sessions.new.password_field") %>
+            <%= f.password_field :password, autocomplete: "off", class: "form-control sci-input-field", title: "password sign in form", placeholder: t("devise.sessions.new.password_placeholder") %>
+          </div>
 
-        <% if devise_mapping.rememberable? && !@simple_sign_in %>
-          <div class="field remember-me">
-            <div class="sci-checkbox-container">
-              <%= f.check_box :remember_me, class: "sci-checkbox", title:"remember me checkbox" %>
-              <span class="sci-checkbox-label"></span>
+          <% if devise_mapping.rememberable? && !@simple_sign_in %>
+            <div class="field remember-me">
+              <div class="sci-checkbox-container">
+                <%= f.check_box :remember_me, class: "sci-checkbox", title:"remember me checkbox" %>
+                <span class="sci-checkbox-label"></span>
+              </div>
+              <%= f.label :remember_me, t("devise.sessions.new.remember_me") %>
             </div>
-            <%= f.label :remember_me, t("devise.sessions.new.remember_me") %>
+          <% end %>
+
+          <%= hidden_field_tag(:simple_sign_in, @simple_sign_in) %>
+
+          <div class="actions" style="margin-top: 10px; margin-bottom: 10px;">
+            <%= f.button t("devise.sessions.new.submit"), class: "btn btn-primary log-in-button", title: "log in button" %>
           </div>
         <% end %>
-
-        <%= hidden_field_tag(:simple_sign_in, @simple_sign_in) %>
-
-        <div class="actions" style="margin-top: 10px; margin-bottom: 10px;">
-          <%= f.button t("devise.sessions.new.submit"), class: "btn btn-primary log-in-button", title: "log in button" %>
-        </div>
       <% end %>
 
       <%= render partial: "users/shared/links", locals: {linkedin_skip: true} unless @simple_sign_in %>

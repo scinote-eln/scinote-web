@@ -4,8 +4,8 @@ require 'rails_helper'
 
 describe RepositoryActions::RestoreRowsService do
   let(:user) { create :user }
-  let(:team) { create :team }
-  let(:repository) { create :repository, team: team }
+  let(:team) { create :team, created_by: user }
+  let(:repository) { create :repository, team: team, created_by: user }
   let(:row_1) { create :repository_row, :archived, repository: repository }
   let(:row_2) { create :repository_row, :archived, repository: repository }
   let(:row_3) { create :repository_row, :archived, repository: repository }

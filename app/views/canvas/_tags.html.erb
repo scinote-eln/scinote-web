@@ -1,5 +1,5 @@
 <div class="tags-container pull-right">
-  <% tags2 = my_module.tags[0..3] %>
+  <% tags2 = my_module.tags.order(:id).take(4) %>
   <% tags2.each do |tag| %>
     <div style="color: <%= tag.color %>"
          class="<%= "last" if tag == tags2[-1] %>">

@@ -3,7 +3,7 @@
 class StepComment < Comment
   before_create :fill_unseen_by
 
-  belongs_to :step, foreign_key: :associated_id, inverse_of: :step_comments, touch: true
+  belongs_to :step, foreign_key: :associated_id, inverse_of: :step_comments
 
   validates :step, presence: true
 

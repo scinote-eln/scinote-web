@@ -30,6 +30,7 @@ class ChecklistSerializer < ActiveModel::Serializer
     return {} if object.destroyed? || !can_manage_step?(scope[:user] || @instance_options[:user], object.step)
 
     {
+      duplicate_url: duplicate_step_checklist_path(object.step, object),
       delete_url: step_checklist_path(object.step, object),
       update_url: step_checklist_path(object.step, object),
       reorder_url: reorder_step_checklist_checklist_items_path(object.step, object),

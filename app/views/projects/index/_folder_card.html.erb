@@ -1,11 +1,11 @@
 <div class="card folder-card"
      data-id="<%= folder.id %>"
      data-edit-url="<%= edit_project_folder_path(folder) %>"
-     data-editable="<%= can_update_team?(current_team) %>"
-     data-moveable="<%= can_update_team?(current_team) %>"
+     data-editable="<%= can_manage_team?(current_team) %>"
+     data-moveable="<%= can_manage_team?(current_team) %>"
      data-archivable="false"
      data-restorable="false"
-     data-deletable="<%= can_delete_project_folder?(folder) && can_update_team?(current_team) %>">
+     data-deletable="<%= can_delete_project_folder?(folder) && can_manage_team?(current_team) %>">
   <div class="checkbox-cell table-cell">
     <div class="sci-checkbox-container">
       <input value="1" type="checkbox" class="sci-checkbox folder-card-selector" title="folder <%= folder.name %> checkbox">

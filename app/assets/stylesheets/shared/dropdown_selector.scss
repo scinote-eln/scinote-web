@@ -38,6 +38,7 @@
     .right-icon {
       color: $color-volcano;
       cursor: pointer;
+      height: 18px;
       line-height: 18px;
       position: absolute;
       right: 12px;
@@ -59,7 +60,7 @@
       line-height: 28px;
       min-width: 0;
       outline: 0;
-      padding: 0 0 0 5px;
+      padding: 0 0 0 10px;
 
       &::placeholder {
         opacity: .7;
@@ -444,6 +445,12 @@
       position: absolute;
       white-space: nowrap;
       width: 100%;
+    }
+  }
+
+  &.warning {
+    .input-field {
+      border-color: $brand-warning;
     }
   }
 }

@@ -52,8 +52,7 @@
           <% end %>
         </li>
         <li class="<%= "active" if templates_are_selected? %>">
-          <%= link_to protocols_path, id: "templates-link", title: t('left_menu_bar.templates'),
-                                      data: { turbolinks: false } do %>
+          <%= link_to protocols_path, id: "templates-link", title: t('left_menu_bar.templates') do %>
             <span class="fas fa-edit"></span>
             <span><%= t('left_menu_bar.templates') %></span>
           <% end %>

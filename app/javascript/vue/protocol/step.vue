@@ -58,12 +58,12 @@
         </button>
       </div>
       <div class="step-actions-container">
-        <div ref="actionsDropdownButton" v-if="urls.update_url"  class="dropdown">
+        <div ref="elementsDropdownButton" v-if="urls.update_url"  class="dropdown">
           <button :title="`step ${step.attributes.name} insert menu`" class="btn btn-light dropdown-toggle insert-button" type="button" :id="'stepInserMenu_' + step.id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             {{ i18n.t('protocols.steps.insert.button') }}
             <span class="caret"></span>
           </button>
-          <ul ref="actionsDropdown" class="dropdown-menu insert-element-dropdown dropdown-menu-right" :aria-labelledby="'stepInserMenu_' + step.id">
+          <ul ref="elementsDropdown" class="dropdown-menu insert-element-dropdown dropdown-menu-right" :aria-labelledby="'stepInserMenu_' + step.id">
             <li class="title">
               {{ i18n.t('protocols.steps.insert.title') }}
             </li>
@@ -79,7 +79,7 @@
               <i class="fas fa-font"></i>
               {{ i18n.t('protocols.steps.insert.text') }}
             </li>
-            <li :title="`insert step ${step.attributes.name} attachment`" class="action"  @click="showFileModal = true">
+            <li :title="`insert step ${step.attributes.name} attachment`" v-if="attachmentsReady" class="action"  @click="showFileModal = true">
               <i class="fas fa-paperclip"></i>
               {{ i18n.t('protocols.steps.insert.attachment') }}
             </li>
@@ -104,17 +104,21 @@
           </span>
         </a>
         <div v-if="urls.update_url" class="step-actions-container">
-          <div class="dropdown">
+          <div ref="actionsDropdownButton" class="dropdown">
             <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'stepOptionsMenu_' + step.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
               <i class="fas fa-ellipsis-h" :title="`step ${step.attributes.name} options menu`"></i>
             </button>
-            <ul class="dropdown-menu dropdown-menu-right insert-element-dropdown" :aria-labelledby="'stepOptionsMenu_' + step.id">
+            <ul ref="actionsDropdown" class="dropdown-menu dropdown-menu-right insert-element-dropdown" :aria-labelledby="'stepOptionsMenu_' + step.id">
               <li class="title">
                 {{ i18n.t('protocols.steps.options_dropdown.title') }}
               </li>
               <li :title="`rearrange step ${step.attributes.name} content`" v-if="urls.reorder_elements_url" class="action"  @click="openReorderModal" :class="{ 'disabled': elements.length < 2 }">
                 <i class="fas fas-rotated-90 fa-exchange-alt"></i>
                 {{ i18n.t('protocols.steps.options_dropdown.rearrange') }}
+              </li>
+              <li v-if="urls.duplicate_step_url" class="action" @click="duplicateStep">
+                <i class="fas fa-clone"></i>
+                {{ i18n.t('protocols.steps.options_dropdown.duplicate') }}
               </li>
               <li :title="`delete step ${step.attributes.name}`" v-if="urls.delete_url" class="action" @click="showDeleteModal">
                 <i class="fas fa-trash"></i>
@@ -127,7 +131,8 @@
     </div>
     <div class="collapse in" :id="'stepBody' + step.id">
       <div class="step-elements">
-        <template v-for="(element, index) in elements">
+        <div class="step-timestamp">{{ i18n.t('protocols.steps.timestamp', {date: step.attributes.created_at, user: step.attributes.created_by}) }}</div>
+        <template v-for="(element, index) in orderedElements">
           <component
             :is="elements[index].attributes.orderable_type"
             :key="index"
@@ -138,11 +143,13 @@
             @component:delete="deleteElement"
             @update="updateElement"
             @reorder="openReorderModal"
+            @component:insert="insertElement"
           />
         </template>
         <Attachments v-if="attachments.length"
                     :step="step"
                     :attachments="attachments"
+                    :attachmentsReady="attachmentsReady"
                     @attachments:openFileModal="showFileModal = true"
                     @attachment:deleted="attachmentDeleted"
                     @attachment:uploaded="loadAttachments"
@@ -215,6 +222,7 @@
       return {
         elements: [],
         attachments: [],
+        attachmentsReady: false,
         confirmingDelete: false,
         showFileModal: false,
         showClipboardPasteModal: false,
@@ -245,11 +253,19 @@
     mounted() {
       $(this.$refs.comments).data('closeCallback', this.closeCommentsSidebar);
       $(this.$refs.comments).data('openCallback', this.closeCommentsSidebar);
-      $(this.$refs.actionsDropdownButton).on('shown.bs.dropdown hidden.bs.dropdown', this.handleDropdownPosition);
+      $(this.$refs.actionsDropdownButton).on('shown.bs.dropdown hidden.bs.dropdown', () => {
+        this.handleDropdownPosition(this.$refs.actionsDropdownButton, this.$refs.actionsDropdown)
+      });
+      $(this.$refs.elementsDropdownButton).on('shown.bs.dropdown hidden.bs.dropdown', () => {
+        this.handleDropdownPosition(this.$refs.elementsDropdownButton, this.$refs.elementsDropdown)
+      });
     },
     computed: {
       reorderableElements() {
-        return this.elements.map((e) => { return { id: e.id, attributes: e.attributes.orderable } })
+        return this.orderedElements.map((e) => { return { id: e.id, attributes: e.attributes.orderable } })
+      },
+      orderedElements() {
+        return this.elements.sort((a, b) => a.attributes.position - b.attributes.position);
       },
       urls() {
         return this.step.attributes.urls || {}
@@ -267,8 +283,18 @@
         }
       },
       loadAttachments() {
+        this.attachmentsReady = false
+
         $.get(this.urls.attachments_url, (result) => {
           this.attachments = result.data
+
+          if (this.attachments.findIndex((e) => e.attributes.attached === false) >= 0) {
+            setTimeout(() => {
+              this.loadAttachments()
+            }, 10000)
+          } else {
+            this.attachmentsReady = true
+          }
         });
         this.showFileModal = false;
       },
@@ -327,7 +353,6 @@
           }
           return e;
         })
-        this.reorderElements(unorderedElements)
         this.$emit('stepUpdated')
       },
       updateElement(element, skipRequest=false, callback) {
@@ -356,9 +381,6 @@
           })
         }
       },
-      reorderElements(elements) {
-        this.elements = elements.sort((a, b) => a.attributes.position - b.attributes.position);
-      },
       updateElementOrder(orderedElements) {
         orderedElements.forEach((element, position) => {
           let index = this.elements.findIndex((e) => e.id === element.id);
@@ -382,8 +404,6 @@
           error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')),
           success: (() => this.$emit('stepUpdated'))
         });
-
-        this.reorderElements(this.elements);
       },
       updateName(newName) {
         $.ajax({
@@ -404,7 +424,17 @@
           this.elements.push(result.data)
         }).error(() => {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
-        })
+        }).done(() => {
+          this.$parent.$nextTick(() => {
+            const children = this.$children
+            const lastChild = children[children.length - 1]
+            lastChild.$el.scrollIntoView(false)
+            window.scrollBy({
+              top: 200,
+              behavior: 'smooth'
+            });
+          })
+        });
       },
       addAttachment(attachment) {
         this.attachments.push(attachment);
@@ -427,8 +457,8 @@
       closeReorderModal() {
         this.reordering = false;
       },
-      handleDropdownPosition() {
-        this.$refs.actionsDropdownButton.classList.toggle("dropup", !this.isInViewport(this.$refs.actionsDropdown));
+      handleDropdownPosition(refButton, refDropdown) {
+        refButton.classList.toggle("dropup", !this.isInViewport(refDropdown));
       },
       isInViewport(el) {
           let rect = el.getBoundingClientRect();
@@ -443,6 +473,24 @@
       copyPasteImageModal(pasteImages) {
         this.pasteImages = pasteImages;
         this.showClipboardPasteModal = true;
+      },
+      insertElement(element) {
+        let position = element.attributes.position;
+        this.elements = this.elements.map( s => {
+          if (s.attributes.position >= position) {
+              s.attributes.position += 1;
+          }
+          return s;
+        })
+        this.elements.push(element);
+      },
+      duplicateStep() {
+        $.post(this.urls.duplicate_step_url, (result) => {
+          this.$emit('step:insert', result.data);
+          HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.step_duplicated'), 'success');
+        }).error(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.step_duplication_failed'), 'danger');
+        });
       }
     }
   }

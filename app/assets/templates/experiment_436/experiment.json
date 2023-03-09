@@ -39,11 +39,21 @@
         "state": "uncompleted",
         "completed_on": null
       },
-      "outputs": [],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "outputs": [
+
+      ],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -66,13 +76,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 5189,
                 "name": "Obtaining single colonies",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>For each electroporation, <strong>2.5, 25</strong> and <strong>250 pl</strong> of cells, each in duplicate, were spread on LB plates containing <strong>12.5 mg/mL</strong> chloramphenicol. For transformations of ligations with the vector, plates contained <strong>50 µg/mL</strong> X-gal and <strong>25 µg/mL</strong> IPTG.<br><br><br><strong>Growth conditions:</strong></p>\n<ul>\n<li>37°C</li>\n<li>24 hours</li>\n</ul>\n<br>Scoring of colonies.</body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -82,18 +93,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3508
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>For each electroporation, <strong>2.5, 25</strong> and <strong>250 pl</strong> of cells, each in duplicate, were spread on LB plates containing <strong>12.5 mg/mL</strong> chloramphenicol. For transformations of ligations with the vector, plates contained <strong>50 µg/mL</strong> X-gal and <strong>25 µg/mL</strong> IPTG.<br><br><br><strong>Growth conditions:</strong></p>\n<ul>\n<li>37°C</li>\n<li>24 hours</li>\n</ul>\n<br>Scoring of colonies.</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 5190,
                 "name": "Analysis",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>There are many factors that can influence transformation efficiency. Therefore after each transformation, an assessment of efficiency is needed.<br><br><strong>For gene expression common methods used: </strong></p>\n<ol>\n<li>Flow Cytometry </li>\n<li>qPCR</li>\n</ol>\n<strong>For protein expression common methods are:<br></strong><br>\n<ol>\n<li>Western blot analysis (<a href=\"https://www.protocols.io/view/12-sds-page-western-blot-rwrd7d6\" target=\"_blank\" rel=\"noopener\">Click here</a>)</li>\n<li>Microscopy (visualization of cells with your gene of interest)</li>\n</ol>\n</body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -103,17 +121,27 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3508
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>There are many factors that can influence transformation efficiency. Therefore after each transformation, an assessment of efficiency is needed.<br><br><strong>For gene expression common methods used: </strong></p>\n<ol>\n<li>Flow Cytometry </li>\n<li>qPCR</li>\n</ol>\n<strong>For protein expression common methods are:<br></strong><br>\n<ol>\n<li>Western blot analysis (<a href=\"https://www.protocols.io/view/12-sds-page-western-blot-rwrd7d6\" target=\"_blank\" rel=\"noopener\">Click here</a>)</li>\n<li>Microscopy (visualization of cells with your gene of interest)</li>\n</ol>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -145,10 +173,18 @@
           "output_id": 2162
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -171,13 +207,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 4435,
                 "name": "Collection and storage",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Culture samples are aliquoted to microfuge tubes (<strong>100-200 µL/tube</strong>) and frozen quickly in a dry ice-ethanol bath. Store at <strong>-70°C</strong> until use.</p></body></html>",
                 "position": 3,
                 "completed": false,
                 "completed_on": null,
@@ -187,18 +224,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3504
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Culture samples are aliquoted to microfuge tubes (<strong>100-200 µL/tube</strong>) and frozen quickly in a dry ice-ethanol bath. Store at <strong>-70°C</strong> until use.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4438,
                 "name": "Centrifugation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the steps for centrifugation below.</p></body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -208,87 +252,96 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3504
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the steps for centrifugation below.</p></body></html>"
+                  },
+                  "position": 0
+                },
                 {
                   "checklist": {
-                    "id": 954,
-                    "name": "Guidelines:",
-                    "step_id": 4438,
-                    "created_at": "2018-12-21T07:49:43.577Z",
-                    "updated_at": "2018-12-21T07:49:43.577Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 954,
+                      "name": "Guidelines:",
+                      "step_id": 4438,
+                      "created_at": "2018-12-21T07:49:43.577Z",
+                      "updated_at": "2018-12-21T07:49:43.577Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3917,
+                        "text": "Centrifuge samples for 10 min at 5000 r.p.m.",
+                        "checked": false,
+                        "checklist_id": 954,
+                        "created_at": "2018-12-21T07:49:43.580Z",
+                        "updated_at": "2018-12-21T07:49:43.580Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 3918,
+                        "text": "Resuspension in a volume of cold 10% sterile glycerol equal to the original culture volume.",
+                        "checked": false,
+                        "checklist_id": 954,
+                        "created_at": "2018-12-21T07:49:43.588Z",
+                        "updated_at": "2018-12-21T07:49:43.588Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 3919,
+                        "text": "Cells are collected by spinning for 10 min at 5000 r.p.m. at 4°C.",
+                        "checked": false,
+                        "checklist_id": 954,
+                        "created_at": "2018-12-21T07:49:43.595Z",
+                        "updated_at": "2018-12-21T07:49:43.595Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 3920,
+                        "text": "After decanting the supernatant, cells are resuspended in the volume of glycerol remaining in the centrifiuge bottles and spun for 10 min at 7000 r.p.m. in a centrifuge.",
+                        "checked": false,
+                        "checklist_id": 954,
+                        "created_at": "2018-12-21T07:49:43.604Z",
+                        "updated_at": "2018-12-21T07:49:43.604Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      },
+                      {
+                        "id": 3921,
+                        "text": "After decanting the supernatant, cells are resuspended in 10% glycerol, using a volume of between 2 and 2.25 m/L initial culture.",
+                        "checked": false,
+                        "checklist_id": 954,
+                        "created_at": "2018-12-21T07:49:43.611Z",
+                        "updated_at": "2018-12-21T07:49:43.611Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 4
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 3917,
-                      "text": "Centrifuge samples for 10 min at 5000 r.p.m.",
-                      "checked": false,
-                      "checklist_id": 954,
-                      "created_at": "2018-12-21T07:49:43.580Z",
-                      "updated_at": "2018-12-21T07:49:43.580Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 3918,
-                      "text": "Resuspension in a volume of cold 10% sterile glycerol equal to the original culture volume.",
-                      "checked": false,
-                      "checklist_id": 954,
-                      "created_at": "2018-12-21T07:49:43.588Z",
-                      "updated_at": "2018-12-21T07:49:43.588Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 3919,
-                      "text": "Cells are collected by spinning for 10 min at 5000 r.p.m. at 4°C.",
-                      "checked": false,
-                      "checklist_id": 954,
-                      "created_at": "2018-12-21T07:49:43.595Z",
-                      "updated_at": "2018-12-21T07:49:43.595Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 3920,
-                      "text": "After decanting the supernatant, cells are resuspended in the volume of glycerol remaining in the centrifiuge bottles and spun for 10 min at 7000 r.p.m. in a centrifuge.",
-                      "checked": false,
-                      "checklist_id": 954,
-                      "created_at": "2018-12-21T07:49:43.604Z",
-                      "updated_at": "2018-12-21T07:49:43.604Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    },
-                    {
-                      "id": 3921,
-                      "text": "After decanting the supernatant, cells are resuspended in 10% glycerol, using a volume of between 2 and 2.25 m/L initial culture.",
-                      "checked": false,
-                      "checklist_id": 954,
-                      "created_at": "2018-12-21T07:49:43.611Z",
-                      "updated_at": "2018-12-21T07:49:43.611Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 4
-                    }
-                  ]
+                  "position": 1
                 }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              ]
             },
             {
               "step": {
                 "id": 4437,
                 "name": "Incubation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><ul>\n<li>Grown at 37°C </li>\n<li>Shaking at 200 r.p.m. to an OD550 of 0.7</li>\n</ul></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -298,18 +351,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3504
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><ul>\n<li>Grown at 37°C </li>\n<li>Shaking at 200 r.p.m. to an OD550 of 0.7</li>\n</ul></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4434,
                 "name": "Inoculation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>A fresh overnight culture of <span class=\"TextRun SCXO206656968\" lang=\"EN-US\" xml:lang=\"EN-US\"><span class=\"NormalTextRun SCXO206656968\"><em>Escherichia coli</em> </span></span>is diluted <strong>1:1000</strong> for growth in SOB medium. <br>Incubation until density is <strong>10<sup>8 </sup>- 2x10</strong><sup><strong>8</strong> </sup>.<br><br><br><strong>SOB medium:</strong></p>\n<ul>\n<li>2% (w/v) Bacto Tryptone</li>\n<li>0,5% (w/v) yeast extract</li>\n<li>10mM NaCl</li>\n<li>2,5 mM KCl</li>\n<li>10 mM MgCl2</li>\n<li>10 mM MgS04</li>\n<li>Autoclaved</li>\n</ul>\n</body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -319,17 +379,27 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3504
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>A fresh overnight culture of <span class=\"TextRun SCXO206656968\" lang=\"EN-US\" xml:lang=\"EN-US\"><span class=\"NormalTextRun SCXO206656968\"><em>Escherichia coli</em> </span></span>is diluted <strong>1:1000</strong> for growth in SOB medium. <br>Incubation until density is <strong>10<sup>8 </sup>- 2x10</strong><sup><strong>8</strong> </sup>.<br><br><br><strong>SOB medium:</strong></p>\n<ul>\n<li>2% (w/v) Bacto Tryptone</li>\n<li>0,5% (w/v) yeast extract</li>\n<li>10mM NaCl</li>\n<li>2,5 mM KCl</li>\n<li>10 mM MgCl2</li>\n<li>10 mM MgS04</li>\n<li>Autoclaved</li>\n</ul>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -361,10 +431,18 @@
           "output_id": 2165
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -387,13 +465,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 4444,
                 "name": "Preparation of material",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Mark the required number of microcentrifuge tubes. Place the required number of cuvettes (<strong>0.1 cm</strong> gap) on ice. Before use remove the bacteria and aliquots of DNA from the freezer, thaw briefly at room temperature, then place on ice before electroporation. A mixture of cells and DNA: <strong>30µL</strong> of cells and<strong> 2 µL</strong> DNA is added to microfuge tubes.<br><br></p></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -403,18 +482,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3507
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Mark the required number of microcentrifuge tubes. Place the required number of cuvettes (<strong>0.1 cm</strong> gap) on ice. Before use remove the bacteria and aliquots of DNA from the freezer, thaw briefly at room temperature, then place on ice before electroporation. A mixture of cells and DNA: <strong>30µL</strong> of cells and<strong> 2 µL</strong> DNA is added to microfuge tubes.<br><br></p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4449,
                 "name": "After electroporation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<div style=\"text-align: justify;\">Inoculate samples in cuvettes with <strong>0.5 mL</strong> SOC is immediately after electroporation. </div>\n<div style=\"text-align: justify;\">Content is transferred to sterile glass culture tubes.</div>\n<ul>\n<li>\n<div style=\"text-align: justify;\">45 minutes</div>\n</li>\n<li>Shaking</li>\n<li>37°C </li>\n</ul>\n</body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -424,18 +510,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3507
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<div style=\"text-align: justify;\">Inoculate samples in cuvettes with <strong>0.5 mL</strong> SOC is immediately after electroporation. </div>\n<div style=\"text-align: justify;\">Content is transferred to sterile glass culture tubes.</div>\n<ul>\n<li>\n<div style=\"text-align: justify;\">45 minutes</div>\n</li>\n<li>Shaking</li>\n<li>37°C </li>\n</ul>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4448,
                 "name": "Electroporation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Using a micropipette, pipette <strong>20 µL</strong> of the cell-DNA mixture in cuvettes. Do not leave an air bubble in the droplet of cells; the pressure of a bubble may cause arcing and loss of the sample. Place the chamber in a slot and note its position. <br>Repeat the process if more than one sample is to be pulsed. Handle the cuvettes gently to avoid accidentally displacing the sample. Close the lid and secure it with the draw latch. Set the electroporation settings.<span style=\"background-color: #f6d5d9;\"><br></span><br>Electroporations are performed in duplicate.<br><br><strong>Conditions:</strong></p>\n<ul>\n<li style=\"text-align: justify;\">100Ω</li>\n<li style=\"text-align: justify;\">1.8 kV</li>\n<li style=\"text-align: justify;\">25µF</li>\n</ul>\n</body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -445,14 +538,8 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3507
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [
-                {
-                  "id": 3082,
-                  "step_id": 4448,
-                  "asset_id": 3744
-                }
+              "step_comments": [
+
               ],
               "assets": [
                 {
@@ -474,13 +561,21 @@
                   }
                 }
               ],
-              "step_tables": [],
-              "tables": []
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Using a micropipette, pipette <strong>20 µL</strong> of the cell-DNA mixture in cuvettes. Do not leave an air bubble in the droplet of cells; the pressure of a bubble may cause arcing and loss of the sample. Place the chamber in a slot and note its position. <br>Repeat the process if more than one sample is to be pulsed. Handle the cuvettes gently to avoid accidentally displacing the sample. Close the lid and secure it with the draw latch. Set the electroporation settings.<span style=\"background-color: #f6d5d9;\"><br></span><br>Electroporations are performed in duplicate.<br><br><strong>Conditions:</strong></p>\n<ul>\n<li style=\"text-align: justify;\">100Ω</li>\n<li style=\"text-align: justify;\">1.8 kV</li>\n<li style=\"text-align: justify;\">25µF</li>\n</ul>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -512,10 +607,18 @@
           "output_id": 2163
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -538,13 +641,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 4441,
                 "name": "Resuspension and storage",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>The plasmids were resuspended in <strong>20µL</strong> TE (<strong>10 mM</strong> tris-CI <strong>pH 8.0</strong>, <strong>1 mM EDTA</strong>) and store in aliquots at <strong>-20°C</strong>.  <br>DNA concentration is measured in two ways:</p>\n<ol>\n<li>Measuring <strong>ABS<sub>260</sub></strong> and calculating the concentration assuming a molar extinction coefficient of <strong>1.3 x 10<sup>4</sup> L mol<sup>-1</sup> cm<sup>-1</sup></strong> (<strong>1 ABS<sub>260</sub> unit = 50 µg/mL</strong>). </li>\n<li>Linearizing the plasmid DNA by restriction digestion and comparison of band intensity on an ethidium bromide-stained agarose gel with that of several other linear DNA species of known mass.</li>\n</ol>\n</body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -554,18 +658,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3505
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>The plasmids were resuspended in <strong>20µL</strong> TE (<strong>10 mM</strong> tris-CI <strong>pH 8.0</strong>, <strong>1 mM EDTA</strong>) and store in aliquots at <strong>-20°C</strong>.  <br>DNA concentration is measured in two ways:</p>\n<ol>\n<li>Measuring <strong>ABS<sub>260</sub></strong> and calculating the concentration assuming a molar extinction coefficient of <strong>1.3 x 10<sup>4</sup> L mol<sup>-1</sup> cm<sup>-1</sup></strong> (<strong>1 ABS<sub>260</sub> unit = 50 µg/mL</strong>). </li>\n<li>Linearizing the plasmid DNA by restriction digestion and comparison of band intensity on an ethidium bromide-stained agarose gel with that of several other linear DNA species of known mass.</li>\n</ol>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 5186,
                 "name": "Growth of clones",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Plasmid DNA isolation procedure by Birnboim and Doly (1979). The method has been used principally with plasmid <strong>pBR322</strong> and its derivatives in E.coli strains <strong>HB101</strong>, <strong>RRI</strong> and <strong>SK 15921</strong>. <br><br></p></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -575,65 +686,74 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3505
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Plasmid DNA isolation procedure by Birnboim and Doly (1979). The method has been used principally with plasmid <strong>pBR322</strong> and its derivatives in E.coli strains <strong>HB101</strong>, <strong>RRI</strong> and <strong>SK 15921</strong>. <br><br></p></body></html>"
+                  },
+                  "position": 0
+                },
                 {
                   "checklist": {
-                    "id": 955,
-                    "name": "Guidelines:",
-                    "step_id": 5186,
-                    "created_at": "2018-12-21T09:14:37.947Z",
-                    "updated_at": "2018-12-21T09:14:37.947Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 955,
+                      "name": "Guidelines:",
+                      "step_id": 5186,
+                      "created_at": "2018-12-21T09:14:37.947Z",
+                      "updated_at": "2018-12-21T09:14:37.947Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3922,
+                        "text": "Selected clones are grown in 2.5 ml of L-broth containing 100 ug/ml ampicillin in 6-ml vials.",
+                        "checked": false,
+                        "checklist_id": 955,
+                        "created_at": "2018-12-21T09:14:37.950Z",
+                        "updated_at": "2018-12-21T09:14:37.950Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 3923,
+                        "text": "After 18 h incubation, 0.5 ml of culture is transferred to a 1.5 ml Eppendorf tube for plasmid extraction.",
+                        "checked": false,
+                        "checklist_id": 955,
+                        "created_at": "2018-12-21T09:14:37.957Z",
+                        "updated_at": "2018-12-21T09:14:37.957Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 3924,
+                        "text": "The remainder is stored at -20°C after the addition of glycerol to 40%.",
+                        "checked": false,
+                        "checklist_id": 955,
+                        "created_at": "2018-12-21T09:14:37.964Z",
+                        "updated_at": "2018-12-21T09:14:37.964Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 3922,
-                      "text": "Selected clones are grown in 2.5 ml of L-broth containing 100 ug/ml ampicillin in 6-ml vials.",
-                      "checked": false,
-                      "checklist_id": 955,
-                      "created_at": "2018-12-21T09:14:37.950Z",
-                      "updated_at": "2018-12-21T09:14:37.950Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 3923,
-                      "text": "After 18 h incubation, 0.5 ml of culture is transferred to a 1.5 ml Eppendorf tube for plasmid extraction.",
-                      "checked": false,
-                      "checklist_id": 955,
-                      "created_at": "2018-12-21T09:14:37.957Z",
-                      "updated_at": "2018-12-21T09:14:37.957Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 3924,
-                      "text": "The remainder is stored at -20°C after the addition of glycerol to 40%.",
-                      "checked": false,
-                      "checklist_id": 955,
-                      "created_at": "2018-12-21T09:14:37.964Z",
-                      "updated_at": "2018-12-21T09:14:37.964Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    }
-                  ]
+                  "position": 1
                 }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              ]
             },
             {
               "step": {
                 "id": 5187,
                 "name": "Plasmid DNA isolation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>All manipulations are carried out at room temperature unless otherwise indicated. <br><br></p>\n<br><strong>Lysozyme solution:</strong><br><br>\n<ul>\n<li>Prepare fresh daily from crystalline lysozyme and stock solutions of the other components.</li>\n<li>Store at 0°C.</li>\n<li>2 mg/ml lysozyme.</li>\n<li>50 mM glucose.</li>\n<li>10 mM CDTA.</li>\n<li>25 mM Tris-HC1 (pH 8.0). </li>\n</ul>\n<br><br><strong>Alkaline SDS solution:</strong><br>\n<ul>\n<li>Store at room temperature</li>\n<li>Stable for about 1 week</li>\n<li>0.2 N NaOH</li>\n<li>1% sodium dodecyl sulfate (SDS)</li>\n</ul>\n <br><strong>High salt solution:</strong><br><br>\n<ul>\n<li>Store at room temperature.</li>\n<li>3 M sodium acetate (pH 4.8).</li>\n<li>Adjusting to pH 4.8 with glacial acetic acid.</li>\n<li>Adjusting volume to 1 L.</li>\n</ul>\n</body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -643,130 +763,142 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3505
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>All manipulations are carried out at room temperature unless otherwise indicated. <br><br></p>\n<br><strong>Lysozyme solution:</strong><br><br>\n<ul>\n<li>Prepare fresh daily from crystalline lysozyme and stock solutions of the other components.</li>\n<li>Store at 0°C.</li>\n<li>2 mg/ml lysozyme.</li>\n<li>50 mM glucose.</li>\n<li>10 mM CDTA.</li>\n<li>25 mM Tris-HC1 (pH 8.0). </li>\n</ul>\n<br><br><strong>Alkaline SDS solution:</strong><br>\n<ul>\n<li>Store at room temperature</li>\n<li>Stable for about 1 week</li>\n<li>0.2 N NaOH</li>\n<li>1% sodium dodecyl sulfate (SDS)</li>\n</ul>\n <br><strong>High salt solution:</strong><br><br>\n<ul>\n<li>Store at room temperature.</li>\n<li>3 M sodium acetate (pH 4.8).</li>\n<li>Adjusting to pH 4.8 with glacial acetic acid.</li>\n<li>Adjusting volume to 1 L.</li>\n</ul>\n</body></html>"
+                  },
+                  "position": 0
+                },
                 {
                   "checklist": {
-                    "id": 956,
-                    "name": "Guidelines:",
-                    "step_id": 5187,
-                    "created_at": "2018-12-21T09:22:56.932Z",
-                    "updated_at": "2018-12-21T09:22:56.932Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 956,
+                      "name": "Guidelines:",
+                      "step_id": 5187,
+                      "created_at": "2018-12-21T09:22:56.932Z",
+                      "updated_at": "2018-12-21T09:22:56.932Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3925,
+                        "text": "The tube is centrifuged for 15 seconds. The supernatant is carefully removed with a fine-tip aspirator and the cell pellet is thoroughly suspended in 100 ul of lysozyme solution.",
+                        "checked": false,
+                        "checklist_id": 956,
+                        "created_at": "2018-12-21T09:22:56.934Z",
+                        "updated_at": "2018-12-21T09:22:56.934Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 3926,
+                        "text": "After a 30 minute period of incubation at 0°C, 200 ml of alkaline SDS solution is added and the tube is gently vortexed. The suspension should become almost clear and slightly viscous.",
+                        "checked": false,
+                        "checklist_id": 956,
+                        "created_at": "2018-12-21T09:22:56.942Z",
+                        "updated_at": "2018-12-21T09:22:56.942Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 3927,
+                        "text": "The tube is maintained for 5 min at 0°C and then 150 ul of high-salt solution added. The contents of the tube are gently mixed by inversion for a few seconds during which time a clot of DNA forms.",
+                        "checked": false,
+                        "checklist_id": 956,
+                        "created_at": "2018-12-21T09:22:56.949Z",
+                        "updated_at": "2018-12-21T09:22:56.949Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 3928,
+                        "text": "The tube is maintained at 0°C for 60 min to allow most of the protein, high molecular weight RNA and chromosomal DNA to precipitate.",
+                        "checked": false,
+                        "checklist_id": 956,
+                        "created_at": "2018-12-21T09:22:56.957Z",
+                        "updated_at": "2018-12-21T09:22:56.957Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      },
+                      {
+                        "id": 3929,
+                        "text": "Centrifugation for 5 min yields an almost clear supernatant. Four-tenths of a ml of the supernatant is removed and transferred to a second centrifuge tube. Small amounts of floating material may be carried over at this time.",
+                        "checked": false,
+                        "checklist_id": 956,
+                        "created_at": "2018-12-21T09:22:56.964Z",
+                        "updated_at": "2018-12-21T09:22:56.964Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 4
+                      },
+                      {
+                        "id": 3930,
+                        "text": "One ml of cold ethanol is added and the tube is held at -20°C for 30 min.",
+                        "checked": false,
+                        "checklist_id": 956,
+                        "created_at": "2018-12-21T09:22:56.971Z",
+                        "updated_at": "2018-12-21T09:22:56.971Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 5
+                      },
+                      {
+                        "id": 3931,
+                        "text": "The precipitate is collected by centrifugation for 2 min and the supernatant removed by aspiration.",
+                        "checked": false,
+                        "checklist_id": 956,
+                        "created_at": "2018-12-21T09:22:56.977Z",
+                        "updated_at": "2018-12-21T09:22:56.977Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 6
+                      },
+                      {
+                        "id": 3932,
+                        "text": "The pellet is dissolved in 100 ul of 0.1 M sodium acetate/0.05 M Tris-HCl (pH 8) and reprecipitated with 2 volumes of cold ethanol.",
+                        "checked": false,
+                        "checklist_id": 956,
+                        "created_at": "2018-12-21T09:22:56.984Z",
+                        "updated_at": "2018-12-21T09:22:56.984Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 7
+                      },
+                      {
+                        "id": 3933,
+                        "text": "Redissolve once more in 100 ul of 0.1 M sodium acetate/0.05 M Tris-HCl (pH 8) and reprecipitated with 2 volumes of cold ethanol.",
+                        "checked": false,
+                        "checklist_id": 956,
+                        "created_at": "2018-12-21T09:22:56.992Z",
+                        "updated_at": "2018-12-21T09:22:56.992Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 8
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 3925,
-                      "text": "The tube is centrifuged for 15 seconds. The supernatant is carefully removed with a fine-tip aspirator and the cell pellet is thoroughly suspended in 100 ul of lysozyme solution.",
-                      "checked": false,
-                      "checklist_id": 956,
-                      "created_at": "2018-12-21T09:22:56.934Z",
-                      "updated_at": "2018-12-21T09:22:56.934Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 3926,
-                      "text": "After a 30 minute period of incubation at 0°C, 200 ml of alkaline SDS solution is added and the tube is gently vortexed. The suspension should become almost clear and slightly viscous.",
-                      "checked": false,
-                      "checklist_id": 956,
-                      "created_at": "2018-12-21T09:22:56.942Z",
-                      "updated_at": "2018-12-21T09:22:56.942Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 3927,
-                      "text": "The tube is maintained for 5 min at 0°C and then 150 ul of high-salt solution added. The contents of the tube are gently mixed by inversion for a few seconds during which time a clot of DNA forms.",
-                      "checked": false,
-                      "checklist_id": 956,
-                      "created_at": "2018-12-21T09:22:56.949Z",
-                      "updated_at": "2018-12-21T09:22:56.949Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 3928,
-                      "text": "The tube is maintained at 0°C for 60 min to allow most of the protein, high molecular weight RNA and chromosomal DNA to precipitate.",
-                      "checked": false,
-                      "checklist_id": 956,
-                      "created_at": "2018-12-21T09:22:56.957Z",
-                      "updated_at": "2018-12-21T09:22:56.957Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    },
-                    {
-                      "id": 3929,
-                      "text": "Centrifugation for 5 min yields an almost clear supernatant. Four-tenths of a ml of the supernatant is removed and transferred to a second centrifuge tube. Small amounts of floating material may be carried over at this time.",
-                      "checked": false,
-                      "checklist_id": 956,
-                      "created_at": "2018-12-21T09:22:56.964Z",
-                      "updated_at": "2018-12-21T09:22:56.964Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 4
-                    },
-                    {
-                      "id": 3930,
-                      "text": "One ml of cold ethanol is added and the tube is held at -20°C for 30 min.",
-                      "checked": false,
-                      "checklist_id": 956,
-                      "created_at": "2018-12-21T09:22:56.971Z",
-                      "updated_at": "2018-12-21T09:22:56.971Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 5
-                    },
-                    {
-                      "id": 3931,
-                      "text": "The precipitate is collected by centrifugation for 2 min and the supernatant removed by aspiration.",
-                      "checked": false,
-                      "checklist_id": 956,
-                      "created_at": "2018-12-21T09:22:56.977Z",
-                      "updated_at": "2018-12-21T09:22:56.977Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 6
-                    },
-                    {
-                      "id": 3932,
-                      "text": "The pellet is dissolved in 100 ul of 0.1 M sodium acetate/0.05 M Tris-HCl (pH 8) and reprecipitated with 2 volumes of cold ethanol.",
-                      "checked": false,
-                      "checklist_id": 956,
-                      "created_at": "2018-12-21T09:22:56.984Z",
-                      "updated_at": "2018-12-21T09:22:56.984Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 7
-                    },
-                    {
-                      "id": 3933,
-                      "text": "Redissolve once more in 100 ul of 0.1 M sodium acetate/0.05 M Tris-HCl (pH 8) and reprecipitated with 2 volumes of cold ethanol.",
-                      "checked": false,
-                      "checklist_id": 956,
-                      "created_at": "2018-12-21T09:22:56.992Z",
-                      "updated_at": "2018-12-21T09:22:56.992Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 8
-                    }
-                  ]
+                  "position": 1
                 }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     }
   ],
   "my_module_groups": [

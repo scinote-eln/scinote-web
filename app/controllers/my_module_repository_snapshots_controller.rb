@@ -71,12 +71,7 @@ class MyModuleRepositorySnapshotsController < ApplicationController
   end
 
   def full_view_sidebar
-    @repository = Repository.find_by(id: params[:repository_id])
-
-    if @repository
-      return render_403 unless can_read_repository?(@repository)
-    end
-
+    @repository = Repository.viewable_by_user(current_user, current_team).find_by(id: params[:repository_id])
     @repository_snapshots = @my_module.repository_snapshots
                                       .where(parent_id: params[:repository_id])
                                       .order(created_at: :desc)
@@ -114,7 +109,7 @@ class MyModuleRepositorySnapshotsController < ApplicationController
         activity_type: :export_inventory_snapshot_items_assigned_to_task,
         owner: current_user,
         subject: @my_module,
-        team: current_team,
+        team: @my_module.team,
         message_items: {
           my_module: @my_module.id,
           repository_snapshot: @repository_snapshot.id,

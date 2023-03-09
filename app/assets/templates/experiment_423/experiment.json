@@ -46,10 +46,18 @@
           "output_id": 2097
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -72,13 +80,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 4287,
                 "name": "Before applying a new sample",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Re-equilibrate column with buffer until the baseline of the monitored signal is stable. Proteins can be monitored at<strong> 280 nm.</strong></p></body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -88,18 +97,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3407
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Re-equilibrate column with buffer until the baseline of the monitored signal is stable. Proteins can be monitored at<strong> 280 nm.</strong></p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4290,
                 "name": "Polishing",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p><strong>Equilibrate with 2 column volumes of the buffer</strong> at a recommended flow rate (See the table). Apply a sample volume equivalent to between <strong>0.3%</strong> and <strong>4%</strong> of the bed volume. For most applications, the sample volume should not exceed <strong>2%</strong> to achieve high resolution. Smaller sample volumes generally lead to an improved resolution. <br><strong>Elute with 1 column volume of buffer solution</strong> (<strong>10</strong> to <strong>50 mM</strong> sodium phosphate, <strong>150 mM</strong> sodium chloride, <strong>pH 7.0</strong> to <strong>7.4</strong>, or select the buffer in which the sample should be stored or solubilized for the next step). The sample should be fully dissolved. Centrifuge or filter to remove particulate matter.</p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -109,28 +125,32 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3407
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [
-                {
-                  "id": 439,
-                  "step_id": 4290,
-                  "table_id": 555
-                }
+              "step_comments": [
+
               ],
-              "tables": [
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
                 {
-                  "id": 555,
-                  "created_at": "2018-11-08T10:28:49.522Z",
-                  "updated_at": "2019-02-07T10:46:31.797Z",
-                  "created_by_id": 202,
-                  "last_modified_by_id": 202,
-                  "name": "Separation options",
-                  "team_id": 1,
-                  "contents": "eyJkYXRhIjpbWyJGcmFjdGlvbmF0aW9uIHJhbmdlLCBNciAoZ2xvYnVsYXIg\ncHJvdGVpbnMpIiwiU2FtcGxlIHZvbHVtZSBjYXBhY2l0eSAowrVMKSIsIlR5\ncGljYWwgcHJlc3N1cmUgZHJvcCBvdmVyIHRoZSBwYWNrZWQgYmVkIChNUGEp\nIiwiUmVjb21tZW5kZWQgb3BlcmF0aW5nIGZsb3cgcmF0ZSAobUwvbWluKSJd\nLFsiMSDDlyAxMDIgdG8gNyDDlyAxMDMiLCIyNSB0byA1MDAgIiwiMyIsIjAs\nOCJdLFsiMSDDlyAxMDIgdG8gNyDDlyAxMDMiLCI0IHRvIDUwIiwiMiIsIjAs\nMDc1Il0sWyIzIMOXIDEwMiB0byA3IMOXIDEwMyIsIjI1IHRvIDUwMCIsIjMi\nLCIwLDgiXSxbIjPDlyAxMDIgdG8gNyDDlyAxMDMiLCI0IHRvIDUwICIsIjMi\nLCIwLDQ1Il0sWyIzw5cgMTAyIHRvIDcgw5cgMTAzIiwiNCB0byA1MCAiLCIy\nIiwiMCw3NSJdLFsiMSDDlyAxMDIgdG8gNiDDlyAxMDMiLCIyNSB0byA1MDAg\nIiwiMyIsIjAsNzUiXSxbIjEgw5cgMTAyIHRvIDYgw5cgMTAzIiwiNCB0byA1\nMCAiLCIzIiwiMCw0NSJdLFsiMSDDlyAxMDIgdG8gNiDDlyAxMDMiLCI0IHRv\nIDUwICIsIjIiLCIwLDA3NSJdXX0=\n",
-                  "data_vector": "JzAnOjM3LDUyLDY3LDgyLDk3LDExMiwxMjcsMTQyICcwNzUnOjUzLDE0MyAn\nMSc6MjQsMzksOTksMTE0LDEyOSAnMTAyJzoyNyw0Miw1Nyw3Miw4NywxMDIs\nMTE3LDEzMiAnMTAzJzozMiw0Nyw2Miw3Nyw5MiwxMDcsMTIyLDEzNyAnMic6\nNTEsOTYsMTQxICcyMjcnOjI2LDMxLDQxLDQ2LDU2LDYxLDcxLDc2LDg2LDkx\nLDEwMSwxMDYsMTE2LDEyMSwxMzEsMTM2ICcyNSc6MzMsNjMsMTA4ICcyNjVs\nJzoxMCAnMyc6MzYsNTQsNjYsNjksODEsODQsMTExLDEyNiAnMzAyJzo5ICcz\nMDMnOjI1LDMwLDQwLDQ1LDU1LDYwLDcwLDc1LDg1LDkwLDEwMCwxMDUsMTE1\nLDEyMCwxMzAsMTM1ICc0Jzo0OCw3OCw5MywxMjMsMTM4ICc0NSc6ODMsMTI4\nICc1MCc6NTAsODAsOTUsMTI1LDE0MCAnNTAwJzozNSw2NSwxMTAgJzYnOjEw\nNCwxMTksMTM0ICc3JzoyOSw0NCw1OSw3NCw4OSAnNzUnOjk4LDExMyAnOCc6\nMzgsNjggJ2JlZCc6MTcgJ2NhcGFjaXR5Jzo4ICdkcm9wJzoxMyAnZmxvdyc6\nMjEgJ2ZyYWN0aW9uYXRpb24nOjEgJ2dsb2J1bGFyJzo0ICdtbC9taW4nOjIz\nICdtcGEnOjE4ICdtcic6MyAnb3BlcmF0aW5nJzoyMCAnb3Zlcic6MTQgJ3Bh\nY2tlZCc6MTYgJ3ByZXNzdXJlJzoxMiAncHJvdGVpbnMnOjUgJ3JhbmdlJzoy\nICdyYXRlJzoyMiAncmVjb21tZW5kZWQnOjE5ICdzYW1wbGUnOjYgJ3RoZSc6\nMTUgJ3RvJzoyOCwzNCw0Myw0OSw1OCw2NCw3Myw3OSw4OCw5NCwxMDMsMTA5\nLDExOCwxMjQsMTMzLDEzOSAndHlwaWNhbCc6MTEgJ3ZvbHVtZSc6Nw==\n"
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p><strong>Equilibrate with 2 column volumes of the buffer</strong> at a recommended flow rate (See the table). Apply a sample volume equivalent to between <strong>0.3%</strong> and <strong>4%</strong> of the bed volume. For most applications, the sample volume should not exceed <strong>2%</strong> to achieve high resolution. Smaller sample volumes generally lead to an improved resolution. <br><strong>Elute with 1 column volume of buffer solution</strong> (<strong>10</strong> to <strong>50 mM</strong> sodium phosphate, <strong>150 mM</strong> sodium chloride, <strong>pH 7.0</strong> to <strong>7.4</strong>, or select the buffer in which the sample should be stored or solubilized for the next step). The sample should be fully dissolved. Centrifuge or filter to remove particulate matter.</p></body></html>"
+                  },
+                  "position": 0
+                },
+                {
+                  "table": {
+                    "id": 555,
+                    "created_at": "2018-11-08T10:28:49.522Z",
+                    "updated_at": "2019-02-07T10:46:31.797Z",
+                    "created_by_id": 202,
+                    "last_modified_by_id": 202,
+                    "name": "Separation options",
+                    "team_id": 1,
+                    "contents": "eyJkYXRhIjpbWyJGcmFjdGlvbmF0aW9uIHJhbmdlLCBNciAoZ2xvYnVsYXIg\ncHJvdGVpbnMpIiwiU2FtcGxlIHZvbHVtZSBjYXBhY2l0eSAowrVMKSIsIlR5\ncGljYWwgcHJlc3N1cmUgZHJvcCBvdmVyIHRoZSBwYWNrZWQgYmVkIChNUGEp\nIiwiUmVjb21tZW5kZWQgb3BlcmF0aW5nIGZsb3cgcmF0ZSAobUwvbWluKSJd\nLFsiMSDDlyAxMDIgdG8gNyDDlyAxMDMiLCIyNSB0byA1MDAgIiwiMyIsIjAs\nOCJdLFsiMSDDlyAxMDIgdG8gNyDDlyAxMDMiLCI0IHRvIDUwIiwiMiIsIjAs\nMDc1Il0sWyIzIMOXIDEwMiB0byA3IMOXIDEwMyIsIjI1IHRvIDUwMCIsIjMi\nLCIwLDgiXSxbIjPDlyAxMDIgdG8gNyDDlyAxMDMiLCI0IHRvIDUwICIsIjMi\nLCIwLDQ1Il0sWyIzw5cgMTAyIHRvIDcgw5cgMTAzIiwiNCB0byA1MCAiLCIy\nIiwiMCw3NSJdLFsiMSDDlyAxMDIgdG8gNiDDlyAxMDMiLCIyNSB0byA1MDAg\nIiwiMyIsIjAsNzUiXSxbIjEgw5cgMTAyIHRvIDYgw5cgMTAzIiwiNCB0byA1\nMCAiLCIzIiwiMCw0NSJdLFsiMSDDlyAxMDIgdG8gNiDDlyAxMDMiLCI0IHRv\nIDUwICIsIjIiLCIwLDA3NSJdXX0=\n",
+                    "data_vector": "JzAnOjM3LDUyLDY3LDgyLDk3LDExMiwxMjcsMTQyICcwNzUnOjUzLDE0MyAn\nMSc6MjQsMzksOTksMTE0LDEyOSAnMTAyJzoyNyw0Miw1Nyw3Miw4NywxMDIs\nMTE3LDEzMiAnMTAzJzozMiw0Nyw2Miw3Nyw5MiwxMDcsMTIyLDEzNyAnMic6\nNTEsOTYsMTQxICcyMjcnOjI2LDMxLDQxLDQ2LDU2LDYxLDcxLDc2LDg2LDkx\nLDEwMSwxMDYsMTE2LDEyMSwxMzEsMTM2ICcyNSc6MzMsNjMsMTA4ICcyNjVs\nJzoxMCAnMyc6MzYsNTQsNjYsNjksODEsODQsMTExLDEyNiAnMzAyJzo5ICcz\nMDMnOjI1LDMwLDQwLDQ1LDU1LDYwLDcwLDc1LDg1LDkwLDEwMCwxMDUsMTE1\nLDEyMCwxMzAsMTM1ICc0Jzo0OCw3OCw5MywxMjMsMTM4ICc0NSc6ODMsMTI4\nICc1MCc6NTAsODAsOTUsMTI1LDE0MCAnNTAwJzozNSw2NSwxMTAgJzYnOjEw\nNCwxMTksMTM0ICc3JzoyOSw0NCw1OSw3NCw4OSAnNzUnOjk4LDExMyAnOCc6\nMzgsNjggJ2JlZCc6MTcgJ2NhcGFjaXR5Jzo4ICdkcm9wJzoxMyAnZmxvdyc6\nMjEgJ2ZyYWN0aW9uYXRpb24nOjEgJ2dsb2J1bGFyJzo0ICdtbC9taW4nOjIz\nICdtcGEnOjE4ICdtcic6MyAnb3BlcmF0aW5nJzoyMCAnb3Zlcic6MTQgJ3Bh\nY2tlZCc6MTYgJ3ByZXNzdXJlJzoxMiAncHJvdGVpbnMnOjUgJ3JhbmdlJzoy\nICdyYXRlJzoyMiAncmVjb21tZW5kZWQnOjE5ICdzYW1wbGUnOjYgJ3RoZSc6\nMTUgJ3RvJzoyOCwzNCw0Myw0OSw1OCw2NCw3Myw3OSw4OCw5NCwxMDMsMTA5\nLDExOCwxMjQsMTMzLDEzOSAndHlwaWNhbCc6MTEgJ3ZvbHVtZSc6Nw==\n"
+                  },
+                  "position": 1
                 }
               ]
             },
@@ -138,7 +158,6 @@
               "step": {
                 "id": 5224,
                 "name": "For the first time use",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<div style=\"text-align: justify;\">Remove storage solution. Applying <strong>2 column</strong> volume of distilled water at room temperature. Use a low flow rate to avoid gap formation. Perform a column performance test (see below) and <strong>determine the limit for maximum pressure over the packed bed is recommended.</strong> If this has already been done, go to <strong>Step 2.</strong><br><br><strong>Column efficiency test (the efficiency and peak asymmetry can be determined as follows): </strong><br><br>\n</div>\n<ol>\n<li style=\"text-align: justify;\">\n<div>Equilibrate the packed column in distilled water or buffer at the flow rate recommended in the product instructions. </div>\n</li>\n<li style=\"text-align: justify;\">\n<div>Inject <strong>2%</strong> acetone (<strong>20mg/mL</strong> in water) in a volume equivalent to <strong>0.2%</strong> to <strong>0.4%</strong> of the geometrical bed volume. </div>\n</li>\n<li style=\"text-align: justify;\">\n<div>Monitor UV absorbance at 280 nm and determine the elution volume for acetone. </div>\n</li>\n<li style=\"text-align: justify;\">\n<div>\n<strong>Calculate column efficiency</strong>, that is, the number of theoretical plates per meter (N/m). <strong>N/m= 5.54 x (<span style=\"color: inherit; font-size: inherit;\">Ve x </span>W<sub>1/2</sub>)<sup>2</sup> x 1/L</strong> ; where V<sub>e</sub> =peak elution (retention) volume; W<sub>1/2</sub>=peak width at half peak height; L= bed height (m)</div>\n</li>\n<li>\n<div style=\"text-align: justify;\">\n<strong>Calculate the asymmetry factor</strong> A<sub>s</sub>= b/a; where a=first half width at <strong>10%</strong> peak height and b=second half width at <strong>10%</strong> peak height</div>\n</li>\n</ol>\n<div> </div>\n</body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -148,14 +167,8 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3407
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [
-                {
-                  "id": 3092,
-                  "step_id": 5224,
-                  "asset_id": 3754
-                }
+              "step_comments": [
+
               ],
               "assets": [
                 {
@@ -177,13 +190,21 @@
                   }
                 }
               ],
-              "step_tables": [],
-              "tables": []
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<div style=\"text-align: justify;\">Remove storage solution. Applying <strong>2 column</strong> volume of distilled water at room temperature. Use a low flow rate to avoid gap formation. Perform a column performance test (see below) and <strong>determine the limit for maximum pressure over the packed bed is recommended.</strong> If this has already been done, go to <strong>Step 2.</strong><br><br><strong>Column efficiency test (the efficiency and peak asymmetry can be determined as follows): </strong><br><br>\n</div>\n<ol>\n<li style=\"text-align: justify;\">\n<div>Equilibrate the packed column in distilled water or buffer at the flow rate recommended in the product instructions. </div>\n</li>\n<li style=\"text-align: justify;\">\n<div>Inject <strong>2%</strong> acetone (<strong>20mg/mL</strong> in water) in a volume equivalent to <strong>0.2%</strong> to <strong>0.4%</strong> of the geometrical bed volume. </div>\n</li>\n<li style=\"text-align: justify;\">\n<div>Monitor UV absorbance at 280 nm and determine the elution volume for acetone. </div>\n</li>\n<li style=\"text-align: justify;\">\n<div>\n<strong>Calculate column efficiency</strong>, that is, the number of theoretical plates per meter (N/m). <strong>N/m= 5.54 x (<span style=\"color: inherit; font-size: inherit;\">Ve x </span>W<sub>1/2</sub>)<sup>2</sup> x 1/L</strong> ; where V<sub>e</sub> =peak elution (retention) volume; W<sub>1/2</sub>=peak width at half peak height; L= bed height (m)</div>\n</li>\n<li>\n<div style=\"text-align: justify;\">\n<strong>Calculate the asymmetry factor</strong> A<sub>s</sub>= b/a; where a=first half width at <strong>10%</strong> peak height and b=second half width at <strong>10%</strong> peak height</div>\n</li>\n</ol>\n<div> </div>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -215,10 +236,18 @@
           "output_id": 2096
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -241,13 +270,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 4286,
                 "name": "Preparation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the preparation guidelines for capture task.</p></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -257,65 +287,74 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3405
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the preparation guidelines for capture task.</p></body></html>"
+                  },
+                  "position": 0
+                },
                 {
                   "checklist": {
-                    "id": 968,
-                    "name": "Guideline:",
-                    "step_id": 4286,
-                    "created_at": "2018-12-21T13:27:09.411Z",
-                    "updated_at": "2018-12-21T13:27:09.411Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 968,
+                      "name": "Guideline:",
+                      "step_id": 4286,
+                      "created_at": "2018-12-21T13:27:09.411Z",
+                      "updated_at": "2018-12-21T13:27:09.411Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3984,
+                        "text": "Equilibrate all materials to the temperature at which the separation will be performed.",
+                        "checked": false,
+                        "checklist_id": 968,
+                        "created_at": "2018-12-21T13:27:09.413Z",
+                        "updated_at": "2018-12-21T13:27:09.413Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 3985,
+                        "text": "Eliminate air by flushing column end pieces with buffer. Ensure no air is trapped under the column net. Close column outlet leaving 1–2 cm of the buffer in the column.",
+                        "checked": false,
+                        "checklist_id": 968,
+                        "created_at": "2018-12-21T13:27:09.421Z",
+                        "updated_at": "2018-12-21T13:27:09.421Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 3986,
+                        "text": "Gently resuspend the medium. For media not supplied in suspension, use a medium: buffer ratio of approximately 1:2 to produce a suspension for mixing during rehydration. Avoid using magnetic stirrers since they may damage the matrix.",
+                        "checked": false,
+                        "checklist_id": 968,
+                        "created_at": "2018-12-21T13:27:09.427Z",
+                        "updated_at": "2018-12-21T13:27:09.427Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 3984,
-                      "text": "Equilibrate all materials to the temperature at which the separation will be performed.",
-                      "checked": false,
-                      "checklist_id": 968,
-                      "created_at": "2018-12-21T13:27:09.413Z",
-                      "updated_at": "2018-12-21T13:27:09.413Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 3985,
-                      "text": "Eliminate air by flushing column end pieces with buffer. Ensure no air is trapped under the column net. Close column outlet leaving 1–2 cm of the buffer in the column.",
-                      "checked": false,
-                      "checklist_id": 968,
-                      "created_at": "2018-12-21T13:27:09.421Z",
-                      "updated_at": "2018-12-21T13:27:09.421Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 3986,
-                      "text": "Gently resuspend the medium. For media not supplied in suspension, use a medium: buffer ratio of approximately 1:2 to produce a suspension for mixing during rehydration. Avoid using magnetic stirrers since they may damage the matrix.",
-                      "checked": false,
-                      "checklist_id": 968,
-                      "created_at": "2018-12-21T13:27:09.427Z",
-                      "updated_at": "2018-12-21T13:27:09.427Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    }
-                  ]
+                  "position": 1
                 }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              ]
             },
             {
               "step": {
                 "id": 4279,
                 "name": "Stop the pump and close the column outlet.",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p style=\"text-align: justify;\">Remove the top piece and carefully fill the rest of the column with buffer to form an upward meniscus at the top. Insert the adaptor into the column at an angle, ensuring that no air is trapped under the net. Slide the adaptor slowly down the column (the outlet of the adaptor should be open) until the mark is reached. Lock the adaptor in position. Connect the column to the pump and begin equilibration. Re-position the adaptor if necessary.</p></body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -325,18 +364,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3405
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p style=\"text-align: justify;\">Remove the top piece and carefully fill the rest of the column with buffer to form an upward meniscus at the top. Insert the adaptor into the column at an angle, ensuring that no air is trapped under the net. Slide the adaptor slowly down the column (the outlet of the adaptor should be open) until the mark is reached. Lock the adaptor in position. Connect the column to the pump and begin equilibration. Re-position the adaptor if necessary.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4283,
                 "name": "Column fill and setting the column outlet.",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p style=\"text-align: justify;\">Estimate the amount of resuspended medium required and our the required volume of the medium into the column. Pouring down a glass rod held against the wall of the column will minimize the introduction of air bubbles. <strong>Immediately fill the column with buffer</strong>. Mount the column top piece and connect to a pump. Open the column outlet and set the pump to the desired flow rate. If the recommended flow rate cannot be obtained, use the maximum flow rate the pump can deliver. <strong>Do not exceed the maximum operating pressure of the medium or column.</strong> Maintain the packing flow rate for at least <strong>3 column volumes</strong> after a constant bed height is obtained. Mark the bed height on the column. Do not exceed <strong>75%</strong> of the packing flow rate during any purification.</p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -346,17 +392,27 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3405
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p style=\"text-align: justify;\">Estimate the amount of resuspended medium required and our the required volume of the medium into the column. Pouring down a glass rod held against the wall of the column will minimize the introduction of air bubbles. <strong>Immediately fill the column with buffer</strong>. Mount the column top piece and connect to a pump. Open the column outlet and set the pump to the desired flow rate. If the recommended flow rate cannot be obtained, use the maximum flow rate the pump can deliver. <strong>Do not exceed the maximum operating pressure of the medium or column.</strong> Maintain the packing flow rate for at least <strong>3 column volumes</strong> after a constant bed height is obtained. Mark the bed height on the column. Do not exceed <strong>75%</strong> of the packing flow rate during any purification.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -388,10 +444,18 @@
           "output_id": 2095
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -414,13 +478,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 4273,
                 "name": "Buffer exchange and desalting",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p><strong>Fill the syringe with buffer.</strong> To avoid introducing air into the column, connect the column \"drop to drop\" to the syringe (via the adapter). Wash the column. Use <strong>25 mL</strong> buffer at <strong>5 mL/min</strong> to remove completely the <strong>20%</strong> ethanol (supplied as storage buffer). If air is trapped in the column, wash with degassed buffer until the air disappears. Air bubbles introduced onto the column by accident during sample application do not influence the separation.<br><br><strong>Applying the sample.</strong> Use a<strong> 2–5 mL</strong> syringe at a flow rate between <strong>1–10 mL/min</strong>. Discard the liquid eluted from the column. If the sample volume is less than <strong>1.5 mL</strong>, change to buffer and proceed with the injection until a total of <strong>1.5 mL</strong> has been eluted. Discard the eluted liquid.pter). Elute the protein with the appropriate volume.<br><br><strong>Select volume from the table.</strong></p></body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -430,14 +495,8 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3403
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [
-                {
-                  "id": 3091,
-                  "step_id": 4273,
-                  "asset_id": 3753
-                }
+              "step_comments": [
+
               ],
               "assets": [
                 {
@@ -459,24 +518,26 @@
                   }
                 }
               ],
-              "step_tables": [
+              "step_orderable_elements": [
                 {
-                  "id": 438,
-                  "step_id": 4273,
-                  "table_id": 554
-                }
-              ],
-              "tables": [
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p><strong>Fill the syringe with buffer.</strong> To avoid introducing air into the column, connect the column \"drop to drop\" to the syringe (via the adapter). Wash the column. Use <strong>25 mL</strong> buffer at <strong>5 mL/min</strong> to remove completely the <strong>20%</strong> ethanol (supplied as storage buffer). If air is trapped in the column, wash with degassed buffer until the air disappears. Air bubbles introduced onto the column by accident during sample application do not influence the separation.<br><br><strong>Applying the sample.</strong> Use a<strong> 2–5 mL</strong> syringe at a flow rate between <strong>1–10 mL/min</strong>. Discard the liquid eluted from the column. If the sample volume is less than <strong>1.5 mL</strong>, change to buffer and proceed with the injection until a total of <strong>1.5 mL</strong> has been eluted. Discard the eluted liquid.pter). Elute the protein with the appropriate volume.<br><br><strong>Select volume from the table.</strong></p></body></html>"
+                  },
+                  "position": 0
+                },
                 {
-                  "id": 554,
-                  "created_at": "2018-11-08T10:28:48.787Z",
-                  "updated_at": "2018-12-20T13:33:54.646Z",
-                  "created_by_id": 202,
-                  "last_modified_by_id": 202,
-                  "name": "",
-                  "team_id": 1,
-                  "contents": "eyJkYXRhIjpbWyJTYW1wbGUgbG9hZCAobUwpIiwiQWRkIGJ1ZmZlciAobUwp\nIiwiRWx1dGUgYW5kIGNvbGxlY3QgKG1MKSIsIllpZWxkICglKSIsIlJlbWFp\nbmluZyBzYWx0ICglKSIsIkRpbHV0aW9uIGZhY3RvciAoJSkiXSxbIjAsMjUi\nLCIxLDI1IiwiMSwwIiwiPjk1IiwiMCwwIiwiNCwwIl0sWyIwLDUwIiwiMSww\nIiwiMSw1IiwiPjk1IiwiPDAsMSIsIjMsMCJdLFsiMSwwMCIsIjAsNSIsIjIs\nMCIsIj45NSIsIjwwLDIiLCIyLDAiXSxbIjEsNTAiLCIwIiwiMiwwIiwiPjk1\nIiwiPDAsMiIsIjEsMyJdXX0=\n",
-                  "data_vector": "JzAnOjE2LDIxLDIzLDI0LDI2LDI3LDMwLDM0LDM3LDQwLDQzLDQ1LDQ4LDUx\nLDUzLDU1ICcwMCc6MzkgJzEnOjE4LDIwLDI5LDMxLDM1LDM4LDQ5LDU3ICcy\nJzo0Miw0Niw0Nyw1Miw1NiAnMjUnOjE3LDE5ICczJzozNiw1OCAnNCc6MjUg\nJzUnOjMyLDQxICc1MCc6MjgsNTAgJzk1JzoyMiwzMyw0NCw1NCAnYWRkJzo0\nICdhbmQnOjggJ2J1ZmZlcic6NSAnY29sbGVjdCc6OSAnZGlsdXRpb24nOjE0\nICdlbHV0ZSc6NyAnZmFjdG9yJzoxNSAnbG9hZCc6MiAnbWwnOjMsNiwxMCAn\ncmVtYWluaW5nJzoxMiAnc2FsdCc6MTMgJ3NhbXBsZSc6MSAneWllbGQnOjEx\n"
+                  "table": {
+                    "id": 554,
+                    "created_at": "2018-11-08T10:28:48.787Z",
+                    "updated_at": "2018-12-20T13:33:54.646Z",
+                    "created_by_id": 202,
+                    "last_modified_by_id": 202,
+                    "name": "Table 1",
+                    "team_id": 1,
+                    "contents": "eyJkYXRhIjpbWyJTYW1wbGUgbG9hZCAobUwpIiwiQWRkIGJ1ZmZlciAobUwp\nIiwiRWx1dGUgYW5kIGNvbGxlY3QgKG1MKSIsIllpZWxkICglKSIsIlJlbWFp\nbmluZyBzYWx0ICglKSIsIkRpbHV0aW9uIGZhY3RvciAoJSkiXSxbIjAsMjUi\nLCIxLDI1IiwiMSwwIiwiPjk1IiwiMCwwIiwiNCwwIl0sWyIwLDUwIiwiMSww\nIiwiMSw1IiwiPjk1IiwiPDAsMSIsIjMsMCJdLFsiMSwwMCIsIjAsNSIsIjIs\nMCIsIj45NSIsIjwwLDIiLCIyLDAiXSxbIjEsNTAiLCIwIiwiMiwwIiwiPjk1\nIiwiPDAsMiIsIjEsMyJdXX0=\n",
+                    "data_vector": "JzAnOjE2LDIxLDIzLDI0LDI2LDI3LDMwLDM0LDM3LDQwLDQzLDQ1LDQ4LDUx\nLDUzLDU1ICcwMCc6MzkgJzEnOjE4LDIwLDI5LDMxLDM1LDM4LDQ5LDU3ICcy\nJzo0Miw0Niw0Nyw1Miw1NiAnMjUnOjE3LDE5ICczJzozNiw1OCAnNCc6MjUg\nJzUnOjMyLDQxICc1MCc6MjgsNTAgJzk1JzoyMiwzMyw0NCw1NCAnYWRkJzo0\nICdhbmQnOjggJ2J1ZmZlcic6NSAnY29sbGVjdCc6OSAnZGlsdXRpb24nOjE0\nICdlbHV0ZSc6NyAnZmFjdG9yJzoxNSAnbG9hZCc6MiAnbWwnOjMsNiwxMCAn\ncmVtYWluaW5nJzoxMiAnc2FsdCc6MTMgJ3NhbXBsZSc6MSAneWllbGQnOjEx\n"
+                  },
+                  "position": 1
                 }
               ]
             },
@@ -484,7 +545,6 @@
               "step": {
                 "id": 5209,
                 "name": "Centrifuge set up",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow guidelines for centrifuge set up.</p></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -494,87 +554,96 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3403
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow guidelines for centrifuge set up.</p></body></html>"
+                  },
+                  "position": 0
+                },
                 {
                   "checklist": {
-                    "id": 934,
-                    "name": "Before use:",
-                    "step_id": 5209,
-                    "created_at": "2018-12-18T14:10:46.321Z",
-                    "updated_at": "2018-12-18T14:10:46.321Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 934,
+                      "name": "Before use:",
+                      "step_id": 5209,
+                      "created_at": "2018-12-18T14:10:46.321Z",
+                      "updated_at": "2018-12-18T14:10:46.321Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3838,
+                        "text": "Check the inside of the centrifuge and the rotors to ensure that everything is dry.",
+                        "checked": false,
+                        "checklist_id": 934,
+                        "created_at": "2018-12-18T14:10:46.323Z",
+                        "updated_at": "2018-12-21T12:47:12.263Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 3839,
+                        "text": "Check that shock-absorbing pads are in the bottom of the centrifuge buckets.",
+                        "checked": false,
+                        "checklist_id": 934,
+                        "created_at": "2018-12-18T14:10:46.331Z",
+                        "updated_at": "2018-12-18T14:10:46.331Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 3840,
+                        "text": "Balance the opposing buckets by weighing them with their tubes on an open two-pan balance.",
+                        "checked": false,
+                        "checklist_id": 934,
+                        "created_at": "2018-12-18T14:10:46.337Z",
+                        "updated_at": "2018-12-18T14:10:46.337Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 3841,
+                        "text": "Never fill centrifuge tubes to more than three-quarters capacity.",
+                        "checked": false,
+                        "checklist_id": 934,
+                        "created_at": "2018-12-18T14:10:46.344Z",
+                        "updated_at": "2018-12-18T14:10:46.344Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      },
+                      {
+                        "id": 3842,
+                        "text": "Symmetrically distribute balanced tubes in opposing buckets. Always operate the centrifuge with all buckets in place, even if two opposing buckets are empty.",
+                        "checked": false,
+                        "checklist_id": 934,
+                        "created_at": "2018-12-18T14:10:46.354Z",
+                        "updated_at": "2018-12-18T14:10:46.354Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 4
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 3838,
-                      "text": "Check the inside of the centrifuge and the rotors to ensure that everything is dry.",
-                      "checked": false,
-                      "checklist_id": 934,
-                      "created_at": "2018-12-18T14:10:46.323Z",
-                      "updated_at": "2018-12-21T12:47:12.263Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 3839,
-                      "text": "Check that shock-absorbing pads are in the bottom of the centrifuge buckets.",
-                      "checked": false,
-                      "checklist_id": 934,
-                      "created_at": "2018-12-18T14:10:46.331Z",
-                      "updated_at": "2018-12-18T14:10:46.331Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 3840,
-                      "text": "Balance the opposing buckets by weighing them with their tubes on an open two-pan balance.",
-                      "checked": false,
-                      "checklist_id": 934,
-                      "created_at": "2018-12-18T14:10:46.337Z",
-                      "updated_at": "2018-12-18T14:10:46.337Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 3841,
-                      "text": "Never fill centrifuge tubes to more than three-quarters capacity.",
-                      "checked": false,
-                      "checklist_id": 934,
-                      "created_at": "2018-12-18T14:10:46.344Z",
-                      "updated_at": "2018-12-18T14:10:46.344Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    },
-                    {
-                      "id": 3842,
-                      "text": "Symmetrically distribute balanced tubes in opposing buckets. Always operate the centrifuge with all buckets in place, even if two opposing buckets are empty.",
-                      "checked": false,
-                      "checklist_id": 934,
-                      "created_at": "2018-12-18T14:10:46.354Z",
-                      "updated_at": "2018-12-18T14:10:46.354Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 4
-                    }
-                  ]
+                  "position": 1
                 }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              ]
             },
             {
               "step": {
                 "id": 5210,
                 "name": "Centrifugation of samples",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p style=\"text-align: justify;\">Switch on and follow the manufacturer's instructions to set the centrifugation conditions.<br>For small sample volumes or proteins that adsorb non-specifically to filters, centrifuge at <strong>10 000 x g</strong> for <strong>15 minutes</strong>. For cell lysates, centrifuge at<strong> 40 000–50 000 x g</strong> for <strong>30 minutes</strong>. Close and lock the lid and then start the centrifuge cycle. If excessive vibration occurs, or if a crack is heard or tube breakage is suspected, switch off the unit. Open the centrifuge only after the signal for the end of centrifugation is seen. Remove the sealed buckets (not tubes) slowly and carefully to prevent re-suspension. </p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -584,17 +653,27 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3403
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p style=\"text-align: justify;\">Switch on and follow the manufacturer's instructions to set the centrifugation conditions.<br>For small sample volumes or proteins that adsorb non-specifically to filters, centrifuge at <strong>10 000 x g</strong> for <strong>15 minutes</strong>. For cell lysates, centrifuge at<strong> 40 000–50 000 x g</strong> for <strong>30 minutes</strong>. Close and lock the lid and then start the centrifuge cycle. If excessive vibration occurs, or if a crack is heard or tube breakage is suspected, switch off the unit. Open the centrifuge only after the signal for the end of centrifugation is seen. Remove the sealed buckets (not tubes) slowly and carefully to prevent re-suspension. </p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -619,11 +698,21 @@
         "state": "uncompleted",
         "completed_on": null
       },
-      "outputs": [],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "outputs": [
+
+      ],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -646,13 +735,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 5226,
                 "name": "Purity analysis: SDS PAGE",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<em><strong>Sodium dodecyl </strong></em>sulfate polyacrylamide<em><strong> gel electrophoresis (SDS-PAGE) is a technology commonly used in protein purification and analysis.</strong> <strong>SDS-PAGE can separate proteins according to the differences in the charge and the different mobility due to different molecular sizes</strong></em>. If the protein sample has been highly purified and contains only one protein, the results would show a single protein band after SDS-PAGE separation. However, when there are multiple proteins in the protein samples, different proteins can be separated into multiple protein bands through SDS-PAGE. Therefore, SDS-PAGE technology provides a direct way to analyze the purity of protein samples.</body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -662,76 +752,85 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3409
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<em><strong>Sodium dodecyl </strong></em>sulfate polyacrylamide<em><strong> gel electrophoresis (SDS-PAGE) is a technology commonly used in protein purification and analysis.</strong> <strong>SDS-PAGE can separate proteins according to the differences in the charge and the different mobility due to different molecular sizes</strong></em>. If the protein sample has been highly purified and contains only one protein, the results would show a single protein band after SDS-PAGE separation. However, when there are multiple proteins in the protein samples, different proteins can be separated into multiple protein bands through SDS-PAGE. Therefore, SDS-PAGE technology provides a direct way to analyze the purity of protein samples.</body></html>"
+                  },
+                  "position": 0
+                },
                 {
                   "checklist": {
-                    "id": 970,
-                    "name": "Guideline:",
-                    "step_id": 5226,
-                    "created_at": "2018-12-21T13:36:26.307Z",
-                    "updated_at": "2018-12-21T13:36:26.307Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 970,
+                      "name": "Guideline:",
+                      "step_id": 5226,
+                      "created_at": "2018-12-21T13:36:26.307Z",
+                      "updated_at": "2018-12-21T13:36:26.307Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3994,
+                        "text": "Add 2 µL of 6X SDS loading buffer to 5–10 µL of supernatant from crude extracts, cell lysates or purified fractions as appropriate.",
+                        "checked": false,
+                        "checklist_id": 970,
+                        "created_at": "2018-12-21T13:36:26.308Z",
+                        "updated_at": "2018-12-21T13:36:26.308Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 3995,
+                        "text": "Vortex briefly and heat for 5 minutes at +90 to +100 °C.",
+                        "checked": false,
+                        "checklist_id": 970,
+                        "created_at": "2018-12-21T13:36:26.316Z",
+                        "updated_at": "2018-12-21T13:36:26.316Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 3996,
+                        "text": "Load the samples onto an SDS-polyacrylamide gel.",
+                        "checked": false,
+                        "checklist_id": 970,
+                        "created_at": "2018-12-21T13:36:26.323Z",
+                        "updated_at": "2018-12-21T13:36:26.323Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 3997,
+                        "text": "Run the gel and stain with Coomassie Blue or silver.",
+                        "checked": false,
+                        "checklist_id": 970,
+                        "created_at": "2018-12-21T13:36:26.329Z",
+                        "updated_at": "2018-12-21T13:36:26.329Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 3994,
-                      "text": "Add 2 µL of 6X SDS loading buffer to 5–10 µL of supernatant from crude extracts, cell lysates or purified fractions as appropriate.",
-                      "checked": false,
-                      "checklist_id": 970,
-                      "created_at": "2018-12-21T13:36:26.308Z",
-                      "updated_at": "2018-12-21T13:36:26.308Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 3995,
-                      "text": "Vortex briefly and heat for 5 minutes at +90 to +100 °C.",
-                      "checked": false,
-                      "checklist_id": 970,
-                      "created_at": "2018-12-21T13:36:26.316Z",
-                      "updated_at": "2018-12-21T13:36:26.316Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 3996,
-                      "text": "Load the samples onto an SDS-polyacrylamide gel.",
-                      "checked": false,
-                      "checklist_id": 970,
-                      "created_at": "2018-12-21T13:36:26.323Z",
-                      "updated_at": "2018-12-21T13:36:26.323Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 3997,
-                      "text": "Run the gel and stain with Coomassie Blue or silver.",
-                      "checked": false,
-                      "checklist_id": 970,
-                      "created_at": "2018-12-21T13:36:26.329Z",
-                      "updated_at": "2018-12-21T13:36:26.329Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    }
-                  ]
+                  "position": 1
                 }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              ]
             },
             {
               "step": {
                 "id": 5233,
                 "name": "Protein Identity Analysis: Mass Spectromety",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<div>Select the appropriate MS Instrument. Samples are measured according to Mass Spectrometer manual. After the MS data is collected, the next step is to<strong> perform a database search to identify the proteins and/or peptides analyzed by MS</strong>. A number of parameters can affect the outcome of a database search, and, ultimately, search parameters should consider the history of the sample, <strong>such as organism, enzymatic or chemical digestion, and reduction/alkylation steps</strong>. Differences among search engines can include the scoring algorithm, whether it considers data quality, and whether it considers all fragment ion types or only a subset. Often, the best way to select an algorithm is to examine the details regarding data-format compatibility and necessary features, test it on a data set, and compare the results to what is expected. </div>\n<br>\n<div class=\"row\" style=\"text-align: justify;\">\n<div class=\"col-xs-12\">\n<div class=\"ql-editor\"> </div>\n</div>\n</div>\n<div class=\"row\" style=\"text-align: justify;\"> </div>\n</body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -741,28 +840,32 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3409
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [
-                {
-                  "id": 539,
-                  "step_id": 5233,
-                  "table_id": 676
-                }
+              "step_comments": [
+
               ],
-              "tables": [
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
                 {
-                  "id": 676,
-                  "created_at": "2018-12-19T09:32:37.619Z",
-                  "updated_at": "2018-12-21T13:38:06.147Z",
-                  "created_by_id": 202,
-                  "last_modified_by_id": 202,
-                  "name": "Commonly used mass spectrometers and their characteristics",
-                  "team_id": 1,
-                  "contents": "eyJkYXRhIjpbWyJJbnN0cnVtZW50IiwiTWFzcyByZXNvbHV0aW9uIiwiTWFz\ncyBhY2N1cmFjeSIsIlNlbnNpdGl2aXR5IiwibS96IHJhbmdlIiwiU2NhbiBy\nYXRlIiwiRHluYW1pYyByYW5nZSIsIk1TL01TIGNhcGFiaWxpdHkiLCJJb24g\nU291cmNlIiwiTWFpbiBhcHBsaWNhdGlvbnMiXSxbIlFJVCIsIjEwMDAiLCIx\nMDDigJMxMDAwIHBwbSIsInBpY29tb2xlIiwiNTDigJMyMDAwOyAyMDDigJM0\nMDAwIiwibW9kZXJhdGUiLCIxIEUzIiwiTVMiLCJFU0kiLCJwcm90ZWluIGlk\nZW50aWZpY2F0aW9uIG9mIGxvdyBjb21wbGV4IHNhbXBsZXM7IFBUTSBpZGVu\ndGlmaWNhdGlvbiJdLFsiVE9GIiwiMTAsMDAw4oCTMjAsMDAwIiwiMTDigJMy\nMCBwcG1iOyA8NSBwcG1jIiwiZmVtdG9tb2xlIiwibm8gdXBwZXIgbGltaXQi\nLCJmYXN0IiwiMSBFNCIsIm4vYWUiLCJNQUxESSIsInByb3RlaW4gaWRlbnRp\nZmljYXRpb24gZnJvbSBpbi1nZWwgZGlnZXN0aW9uIG9mIGdlbCBzZXBhcmF0\nZWQgcHJvdGVpbiBiYW5kIGJ5IHBlcHRpZGUgbWFzcyBmaW5nZXJwcmludGlu\nZyJdLFsiVE9GLVRPRiIsIjEwLDAwMOKAkzIwLDAwMCIsIjEw4oCTMjAgcHBt\nYjsgPDUgcHBtYyIsImZlbXRvbW9sZSIsIm5vIHVwcGVyIGxpbWl0IiwiZmFz\ndCIsIjEgRTQiLCJNUy9NUyIsIk1BTERJIiwicHJvdGVpbiBpZGVudGlmaWNh\ndGlvbiBmcm9tIGluLWdlbCBkaWdlc3Rpb24gb2YgZ2VsIHNlcGFyYXRlZCBw\ncm90ZWluIGJhbmQgYnkgcGVwdGlkZSBtYXNzIGZpbmdlcnByaW50aW5nIG9y\nIHNlcXVlbmNlIHRhZ2dpbmcgdmlhIENJRCBNUy9NUy4iXSxbIlEtcS1UT0Yi\nLCIxMCwwMDDigJMyMCwwMDAiLCIxMOKAkzIwIHBwbWI7IDw1IHBwbWMiLCJm\nZW10b21vbGUiLCJubyB1cHBlciBsaW1pdCIsIm1vZGVyYXRlIHRvIGZhc3Qi\nLCIxIEU0IiwiTVMvTVMiLCJNQUxESTsgRVNJIiwicHJvdGVpbiBpZGVudGlm\naWNhdGlvbiBmcm9tIGNvbXBsZXggcGVwdGlkZSBtaXh0dXJlczsgaW50YWN0\nIHByb3RlaW4gYW5hbHlzaXM7IFBUTSBpZGVudGlmaWNhdGlvbiJdXX0=\n",
-                  "data_vector": "JzAwMCc6NTAsNTQsOTEsOTUsMTM5LDE0MyAnMSc6MzYsNjcsMTA4LDE1OCAn\nMTAnOjQ5LDU1LDkwLDk2LDEzOCwxNDQgJzEwMCc6MjEgJzEwMDAnOjIwICcy\nMDAnOjIzLDI5LDMxLDMzLDUyLDU3LDkzLDk4LDE0MSwxNDYgJzIyMzEwMDAn\nOjI0ICcyMjMyMCc6NTMsNTgsOTQsOTksMTQyLDE0NyAnMjIzMjAwMCc6MzAg\nJzIyMzQwMDAnOjM0ICczNDInOjIyLDI4LDMyLDUxLDU2LDkyLDk3LDE0MCwx\nNDUgJzUnOjYwLDEwMSwxNDkgJzUwJzoyNyAnYWNjdXJhY3knOjUgJ2FuYWx5\nc2lzJzoxNzEgJ2FwcGxpY2F0aW9ucyc6MTggJ2JhbmQnOjgyLDEyMyAnYnkn\nOjgzLDEyNCAnY2FwYWJpbGl0eSc6MTQgJ2NpZCc6MTMyICdjb21wbGV4Jzo0\nNCwxNjYgJ2RpZ2VzdGlvbic6NzcsMTE4ICdkeW5hbWljJzoxMSAnZTMnOjM3\nICdlNCc6NjgsMTA5LDE1OSAnZXNpJzozOSwxNjIgJ2Zhc3QnOjY2LDEwNywx\nNTcgJ2ZlbXRvbW9sZSc6NjIsMTAzLDE1MSAnZmluZ2VycHJpbnRpbmcnOjg2\nLDEyNyAnZnJvbSc6NzMsMTE0LDE2NSAnZ2VsJzo3Niw3OSwxMTcsMTIwICdp\nZGVudGlmaWNhdGlvbic6NDEsNDcsNzIsMTEzLDE2NCwxNzMgJ2luJzo3NSwx\nMTYgJ2luLWdlbCc6NzQsMTE1ICdpbnN0cnVtZW50JzoxICdpbnRhY3QnOjE2\nOSAnaW9uJzoxNSAnbGltaXQnOjY1LDEwNiwxNTQgJ2xvdyc6NDMgJ20veic6\nNyAnbWFpbic6MTcgJ21hbGRpJzo3MCwxMTEsMTYxICdtYXNzJzoyLDQsODUs\nMTI2ICdtaXh0dXJlcyc6MTY4ICdtb2RlcmF0ZSc6MzUsMTU1ICdtcyc6Mzgg\nJ21zL21zJzoxMywxMTAsMTMzLDE2MCAnbi9hZSc6NjkgJ25vJzo2MywxMDQs\nMTUyICdvZic6NDIsNzgsMTE5ICdvcic6MTI4ICdwZXB0aWRlJzo4NCwxMjUs\nMTY3ICdwaWNvbW9sZSc6MjYgJ3BwbSc6MjUgJ3BwbWInOjU5LDEwMCwxNDgg\nJ3BwbWMnOjYxLDEwMiwxNTAgJ3Byb3RlaW4nOjQwLDcxLDgxLDExMiwxMjIs\nMTYzLDE3MCAncHRtJzo0NiwxNzIgJ3EnOjEzNSwxMzYgJ3EtcS10b2YnOjEz\nNCAncWl0JzoxOSAncmFuZ2UnOjgsMTIgJ3JhdGUnOjEwICdyZXNvbHV0aW9u\nJzozICdzYW1wbGVzJzo0NSAnc2Nhbic6OSAnc2Vuc2l0aXZpdHknOjYgJ3Nl\ncGFyYXRlZCc6ODAsMTIxICdzZXF1ZW5jZSc6MTI5ICdzb3VyY2UnOjE2ICd0\nYWdnaW5nJzoxMzAgJ3RvJzoxNTYgJ3RvZic6NDgsODgsODksMTM3ICd0b2Yt\ndG9mJzo4NyAndXBwZXInOjY0LDEwNSwxNTMgJ3ZpYSc6MTMx\n"
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<div>Select the appropriate MS Instrument. Samples are measured according to Mass Spectrometer manual. After the MS data is collected, the next step is to<strong> perform a database search to identify the proteins and/or peptides analyzed by MS</strong>. A number of parameters can affect the outcome of a database search, and, ultimately, search parameters should consider the history of the sample, <strong>such as organism, enzymatic or chemical digestion, and reduction/alkylation steps</strong>. Differences among search engines can include the scoring algorithm, whether it considers data quality, and whether it considers all fragment ion types or only a subset. Often, the best way to select an algorithm is to examine the details regarding data-format compatibility and necessary features, test it on a data set, and compare the results to what is expected. </div>\n<br>\n<div class=\"row\" style=\"text-align: justify;\">\n<div class=\"col-xs-12\">\n<div class=\"ql-editor\"> </div>\n</div>\n</div>\n<div class=\"row\" style=\"text-align: justify;\"> </div>\n</body></html>"
+                  },
+                  "position": 0
+                },
+                {
+                  "table": {
+                    "id": 676,
+                    "created_at": "2018-12-19T09:32:37.619Z",
+                    "updated_at": "2018-12-21T13:38:06.147Z",
+                    "created_by_id": 202,
+                    "last_modified_by_id": 202,
+                    "name": "Commonly used mass spectrometers and their characteristics",
+                    "team_id": 1,
+                    "contents": "eyJkYXRhIjpbWyJJbnN0cnVtZW50IiwiTWFzcyByZXNvbHV0aW9uIiwiTWFz\ncyBhY2N1cmFjeSIsIlNlbnNpdGl2aXR5IiwibS96IHJhbmdlIiwiU2NhbiBy\nYXRlIiwiRHluYW1pYyByYW5nZSIsIk1TL01TIGNhcGFiaWxpdHkiLCJJb24g\nU291cmNlIiwiTWFpbiBhcHBsaWNhdGlvbnMiXSxbIlFJVCIsIjEwMDAiLCIx\nMDDigJMxMDAwIHBwbSIsInBpY29tb2xlIiwiNTDigJMyMDAwOyAyMDDigJM0\nMDAwIiwibW9kZXJhdGUiLCIxIEUzIiwiTVMiLCJFU0kiLCJwcm90ZWluIGlk\nZW50aWZpY2F0aW9uIG9mIGxvdyBjb21wbGV4IHNhbXBsZXM7IFBUTSBpZGVu\ndGlmaWNhdGlvbiJdLFsiVE9GIiwiMTAsMDAw4oCTMjAsMDAwIiwiMTDigJMy\nMCBwcG1iOyA8NSBwcG1jIiwiZmVtdG9tb2xlIiwibm8gdXBwZXIgbGltaXQi\nLCJmYXN0IiwiMSBFNCIsIm4vYWUiLCJNQUxESSIsInByb3RlaW4gaWRlbnRp\nZmljYXRpb24gZnJvbSBpbi1nZWwgZGlnZXN0aW9uIG9mIGdlbCBzZXBhcmF0\nZWQgcHJvdGVpbiBiYW5kIGJ5IHBlcHRpZGUgbWFzcyBmaW5nZXJwcmludGlu\nZyJdLFsiVE9GLVRPRiIsIjEwLDAwMOKAkzIwLDAwMCIsIjEw4oCTMjAgcHBt\nYjsgPDUgcHBtYyIsImZlbXRvbW9sZSIsIm5vIHVwcGVyIGxpbWl0IiwiZmFz\ndCIsIjEgRTQiLCJNUy9NUyIsIk1BTERJIiwicHJvdGVpbiBpZGVudGlmaWNh\ndGlvbiBmcm9tIGluLWdlbCBkaWdlc3Rpb24gb2YgZ2VsIHNlcGFyYXRlZCBw\ncm90ZWluIGJhbmQgYnkgcGVwdGlkZSBtYXNzIGZpbmdlcnByaW50aW5nIG9y\nIHNlcXVlbmNlIHRhZ2dpbmcgdmlhIENJRCBNUy9NUy4iXSxbIlEtcS1UT0Yi\nLCIxMCwwMDDigJMyMCwwMDAiLCIxMOKAkzIwIHBwbWI7IDw1IHBwbWMiLCJm\nZW10b21vbGUiLCJubyB1cHBlciBsaW1pdCIsIm1vZGVyYXRlIHRvIGZhc3Qi\nLCIxIEU0IiwiTVMvTVMiLCJNQUxESTsgRVNJIiwicHJvdGVpbiBpZGVudGlm\naWNhdGlvbiBmcm9tIGNvbXBsZXggcGVwdGlkZSBtaXh0dXJlczsgaW50YWN0\nIHByb3RlaW4gYW5hbHlzaXM7IFBUTSBpZGVudGlmaWNhdGlvbiJdXX0=\n",
+                    "data_vector": "JzAwMCc6NTAsNTQsOTEsOTUsMTM5LDE0MyAnMSc6MzYsNjcsMTA4LDE1OCAn\nMTAnOjQ5LDU1LDkwLDk2LDEzOCwxNDQgJzEwMCc6MjEgJzEwMDAnOjIwICcy\nMDAnOjIzLDI5LDMxLDMzLDUyLDU3LDkzLDk4LDE0MSwxNDYgJzIyMzEwMDAn\nOjI0ICcyMjMyMCc6NTMsNTgsOTQsOTksMTQyLDE0NyAnMjIzMjAwMCc6MzAg\nJzIyMzQwMDAnOjM0ICczNDInOjIyLDI4LDMyLDUxLDU2LDkyLDk3LDE0MCwx\nNDUgJzUnOjYwLDEwMSwxNDkgJzUwJzoyNyAnYWNjdXJhY3knOjUgJ2FuYWx5\nc2lzJzoxNzEgJ2FwcGxpY2F0aW9ucyc6MTggJ2JhbmQnOjgyLDEyMyAnYnkn\nOjgzLDEyNCAnY2FwYWJpbGl0eSc6MTQgJ2NpZCc6MTMyICdjb21wbGV4Jzo0\nNCwxNjYgJ2RpZ2VzdGlvbic6NzcsMTE4ICdkeW5hbWljJzoxMSAnZTMnOjM3\nICdlNCc6NjgsMTA5LDE1OSAnZXNpJzozOSwxNjIgJ2Zhc3QnOjY2LDEwNywx\nNTcgJ2ZlbXRvbW9sZSc6NjIsMTAzLDE1MSAnZmluZ2VycHJpbnRpbmcnOjg2\nLDEyNyAnZnJvbSc6NzMsMTE0LDE2NSAnZ2VsJzo3Niw3OSwxMTcsMTIwICdp\nZGVudGlmaWNhdGlvbic6NDEsNDcsNzIsMTEzLDE2NCwxNzMgJ2luJzo3NSwx\nMTYgJ2luLWdlbCc6NzQsMTE1ICdpbnN0cnVtZW50JzoxICdpbnRhY3QnOjE2\nOSAnaW9uJzoxNSAnbGltaXQnOjY1LDEwNiwxNTQgJ2xvdyc6NDMgJ20veic6\nNyAnbWFpbic6MTcgJ21hbGRpJzo3MCwxMTEsMTYxICdtYXNzJzoyLDQsODUs\nMTI2ICdtaXh0dXJlcyc6MTY4ICdtb2RlcmF0ZSc6MzUsMTU1ICdtcyc6Mzgg\nJ21zL21zJzoxMywxMTAsMTMzLDE2MCAnbi9hZSc6NjkgJ25vJzo2MywxMDQs\nMTUyICdvZic6NDIsNzgsMTE5ICdvcic6MTI4ICdwZXB0aWRlJzo4NCwxMjUs\nMTY3ICdwaWNvbW9sZSc6MjYgJ3BwbSc6MjUgJ3BwbWInOjU5LDEwMCwxNDgg\nJ3BwbWMnOjYxLDEwMiwxNTAgJ3Byb3RlaW4nOjQwLDcxLDgxLDExMiwxMjIs\nMTYzLDE3MCAncHRtJzo0NiwxNzIgJ3EnOjEzNSwxMzYgJ3EtcS10b2YnOjEz\nNCAncWl0JzoxOSAncmFuZ2UnOjgsMTIgJ3JhdGUnOjEwICdyZXNvbHV0aW9u\nJzozICdzYW1wbGVzJzo0NSAnc2Nhbic6OSAnc2Vuc2l0aXZpdHknOjYgJ3Nl\ncGFyYXRlZCc6ODAsMTIxICdzZXF1ZW5jZSc6MTI5ICdzb3VyY2UnOjE2ICd0\nYWdnaW5nJzoxMzAgJ3RvJzoxNTYgJ3RvZic6NDgsODgsODksMTM3ICd0b2Yt\ndG9mJzo4NyAndXBwZXInOjY0LDEwNSwxNTMgJ3ZpYSc6MTMx\n"
+                  },
+                  "position": 1
                 }
               ]
             },
@@ -770,7 +873,6 @@
               "step": {
                 "id": 4643,
                 "name": "Quantity analysis: Bradford Assay",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow guidelines below to perform a Bradford assay. </p></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -780,108 +882,120 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3409
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow guidelines below to perform a Bradford assay. </p></body></html>"
+                  },
+                  "position": 0
+                },
                 {
                   "checklist": {
-                    "id": 969,
-                    "name": "Guideline:",
-                    "step_id": 4643,
-                    "created_at": "2018-12-21T13:35:09.660Z",
-                    "updated_at": "2018-12-21T13:35:09.660Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 969,
+                      "name": "Guideline:",
+                      "step_id": 4643,
+                      "created_at": "2018-12-21T13:35:09.660Z",
+                      "updated_at": "2018-12-21T13:35:09.660Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3987,
+                        "text": "Prepare five to eight dilutions of BSA standard with a range of 5 to 100 µg protein.",
+                        "checked": false,
+                        "checklist_id": 969,
+                        "created_at": "2018-12-21T13:35:09.662Z",
+                        "updated_at": "2018-12-21T13:35:09.662Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 3988,
+                        "text": "Dilute protein samples to obtain 5-100 µg protein/30 µL.",
+                        "checked": false,
+                        "checklist_id": 969,
+                        "created_at": "2018-12-21T13:35:09.669Z",
+                        "updated_at": "2018-12-21T13:35:09.669Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 3989,
+                        "text": "Set two blank tubes. For the standard curve, add 30 µL of water instead of the standard solution. For the unknown protein samples, add 30 µL protein preparation buffer instead. Protein solutions are normally assayed in duplicate or triplicate.",
+                        "checked": false,
+                        "checklist_id": 969,
+                        "created_at": "2018-12-21T13:35:09.675Z",
+                        "updated_at": "2018-12-21T13:35:09.675Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 3990,
+                        "text": "Add 1.5 mL of Bradford reagent to each tube and mix well.",
+                        "checked": false,
+                        "checklist_id": 969,
+                        "created_at": "2018-12-21T13:35:09.682Z",
+                        "updated_at": "2018-12-21T13:35:09.682Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      },
+                      {
+                        "id": 3991,
+                        "text": "Incubate at room temperature for at least 5 min.",
+                        "checked": false,
+                        "checklist_id": 969,
+                        "created_at": "2018-12-21T13:35:09.688Z",
+                        "updated_at": "2018-12-21T13:35:09.688Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 4
+                      },
+                      {
+                        "id": 3992,
+                        "text": "Absorbance will increase over time; samples should incubate at RT for no more than 1 h.",
+                        "checked": false,
+                        "checklist_id": 969,
+                        "created_at": "2018-12-21T13:35:09.703Z",
+                        "updated_at": "2018-12-21T13:35:09.703Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 5
+                      },
+                      {
+                        "id": 3993,
+                        "text": "Measure absorbance at 595 nm.",
+                        "checked": false,
+                        "checklist_id": 969,
+                        "created_at": "2018-12-21T13:35:09.710Z",
+                        "updated_at": "2018-12-21T13:35:09.710Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 6
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 3987,
-                      "text": "Prepare five to eight dilutions of BSA standard with a range of 5 to 100 µg protein.",
-                      "checked": false,
-                      "checklist_id": 969,
-                      "created_at": "2018-12-21T13:35:09.662Z",
-                      "updated_at": "2018-12-21T13:35:09.662Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 3988,
-                      "text": "Dilute protein samples to obtain 5-100 µg protein/30 µL.",
-                      "checked": false,
-                      "checklist_id": 969,
-                      "created_at": "2018-12-21T13:35:09.669Z",
-                      "updated_at": "2018-12-21T13:35:09.669Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 3989,
-                      "text": "Set two blank tubes. For the standard curve, add 30 µL of water instead of the standard solution. For the unknown protein samples, add 30 µL protein preparation buffer instead. Protein solutions are normally assayed in duplicate or triplicate.",
-                      "checked": false,
-                      "checklist_id": 969,
-                      "created_at": "2018-12-21T13:35:09.675Z",
-                      "updated_at": "2018-12-21T13:35:09.675Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 3990,
-                      "text": "Add 1.5 mL of Bradford reagent to each tube and mix well.",
-                      "checked": false,
-                      "checklist_id": 969,
-                      "created_at": "2018-12-21T13:35:09.682Z",
-                      "updated_at": "2018-12-21T13:35:09.682Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    },
-                    {
-                      "id": 3991,
-                      "text": "Incubate at room temperature for at least 5 min.",
-                      "checked": false,
-                      "checklist_id": 969,
-                      "created_at": "2018-12-21T13:35:09.688Z",
-                      "updated_at": "2018-12-21T13:35:09.688Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 4
-                    },
-                    {
-                      "id": 3992,
-                      "text": "Absorbance will increase over time; samples should incubate at RT for no more than 1 h.",
-                      "checked": false,
-                      "checklist_id": 969,
-                      "created_at": "2018-12-21T13:35:09.703Z",
-                      "updated_at": "2018-12-21T13:35:09.703Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 5
-                    },
-                    {
-                      "id": 3993,
-                      "text": "Measure absorbance at 595 nm.",
-                      "checked": false,
-                      "checklist_id": 969,
-                      "created_at": "2018-12-21T13:35:09.710Z",
-                      "updated_at": "2018-12-21T13:35:09.710Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 6
-                    }
-                  ]
+                  "position": 1
                 }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     }
   ],
   "my_module_groups": [

@@ -6,7 +6,6 @@ RSpec.describe 'Api::V1::ProjectFoldersController', type: :request do
   let(:user) { create :user }
   let(:valid_headers) { { 'Authorization': 'Bearer ' + generate_token(user.id) } }
   let(:team) { create :team, created_by: user }
-  let!(:user_team) { create :user_team, team: team, user: user }
   let(:project_folder) do
     create :project_folder, team: team
   end

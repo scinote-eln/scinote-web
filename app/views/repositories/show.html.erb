@@ -49,7 +49,7 @@
       </div>
       <div class="repo-datatables-buttons">
         <div class="share-repository-button" data-view-mode="active">
-          <% if can_share_repository?(@repository) && current_user.teams.count > 1 %>
+          <% if can_share_repository?(@repository) %>
             <%= link_to team_repository_share_modal_path(current_team, repository_id: @repository),
                         class: 'btn btn-light share-repo-option', remote: true, id: 'shareRepoBtn' do %>
               <span class="fas fa-user-plus"></span>
@@ -85,6 +85,8 @@
   <!-- These buttons are appended to table in javascript, after table initialization -->
   <div class="toolbar-filter-buttons" style="display:none">
   </div>
+
+  <%= render partial: 'label_printers/label_printer_modal' %>
 
   <%= render partial: "repositories/repository_table",
              locals: {

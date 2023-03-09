@@ -3,7 +3,7 @@
 class ResultComment < Comment
   before_create :fill_unseen_by
 
-  belongs_to :result, foreign_key: :associated_id, inverse_of: :result_comments, touch: true
+  belongs_to :result, foreign_key: :associated_id, inverse_of: :result_comments
 
   validates :result, presence: true
 

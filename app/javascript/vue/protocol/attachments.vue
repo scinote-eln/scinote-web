@@ -4,7 +4,7 @@
       <div class="title">
         <h3>{{ i18n.t('protocols.steps.files', {count: attachments.length}) }}</h3>
       </div>
-      <div class="actions" v-if="step.attributes.attachments_manageble">
+      <div class="actions" v-if="step.attributes.attachments_manageble && attachmentsReady">
         <div ref="actionsDropdownButton" class="dropdown sci-dropdown">
           <button :title="`manage step ${step.attributes.name} attachments`" class="btn btn-light dropdown-toggle" type="button" id="dropdownAttachmentsOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <span>{{ i18n.t("protocols.steps.attachments.manage") }}</span>
@@ -100,6 +100,7 @@
   import inlineAttachment from 'vue/protocol/step_attachments/inline.vue'
   import thumbnailAttachment from 'vue/protocol/step_attachments/thumbnail.vue'
   import uploadingAttachment from 'vue/protocol/step_attachments/uploading.vue'
+  import emptyAttachment from 'vue/protocol/step_attachments/empty.vue'
   import marvinjsIcon from 'images/icon_small/marvinjs.svg'
   import bioEddieIcon from 'images/icon_small/bio_eddie.png'
 
@@ -114,6 +115,10 @@
       },
       step: {
         type: Object,
+        required: true
+      },
+      attachmentsReady: {
+        type: Boolean,
         required: true
       }
     },
@@ -130,7 +135,8 @@
       thumbnailAttachment,
       inlineAttachment,
       listAttachment,
-      uploadingAttachment
+      uploadingAttachment,
+      emptyAttachment
     },
     computed: {
       attachmentsOrdered() {
@@ -169,6 +175,8 @@
       attachment_view_mode(attachment) {
         if (attachment.attributes.uploading) {
           return 'uploadingAttachment'
+        } else if (!attachment.attributes.attached) {
+          return 'emptyAttachment'
         }
         return `${attachment.attributes.view_mode}Attachment`
       },

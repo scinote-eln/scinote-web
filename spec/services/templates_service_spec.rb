@@ -4,21 +4,17 @@ require 'rails_helper'
 require 'fileutils'
 
 describe TemplatesService do
-  let!(:main_team) { create :team }
-  let!(:admin_user) { create :user }
+  let!(:user) { create :user }
+  let!(:team) { create :team, created_by: user }
 
   describe '#update_project' do
     context 'update templates project' do
       it 'experiment is added to templates project' do
-        create(:user_team, user: admin_user, team: main_team)
         dj_worker = Delayed::Worker.new
-        templates_project =
-          create :project, name: 'Templates', template: true, team: main_team
-        create(
-          :user_project, :owner, project: templates_project, user: admin_user
-        )
+        templates_project = create :project, name: 'Templates', template: true, team: team, created_by: user
+
         ts = TemplatesService.new
-        ts.update_team(main_team)
+        ts.update_team(team)
         Delayed::Job.all.each { |job| dj_worker.run(job) }
         tmpl_exp = templates_project.experiments.find_by(name: 'Polymerase chain reaction')
 

@@ -135,7 +135,7 @@
     if (data.archived) {
       $(row).addClass('archived');
     }
-    if (data['3'].processing || data['4'].processing) {
+    if (data['4'].processing || data['5'].processing) {
       $(row).addClass('processing');
     }
   }
@@ -225,8 +225,9 @@
     var $table = $('#reports-table');
     REPORTS_TABLE = $table.DataTable({
       dom: "Rt<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
-      order: [[8, 'desc']],
+      order: [[9, 'desc']],
       sScrollX: '100%',
+      stateSave: true,
       sScrollXInner: '100%',
       processing: true,
       serverSide: true,
@@ -244,13 +245,13 @@
         render: renderCheckboxHTML
       },
       {
-        targets: 3,
+        targets: 4,
         searchable: false,
         sWidth: '60',
         render: renderPdfFile
       },
       {
-        targets: 4,
+        targets: 5,
         searchable: false,
         sWidth: '60',
         render: renderDocxFile

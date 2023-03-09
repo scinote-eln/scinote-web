@@ -18,7 +18,7 @@
       root.find('div.hot-table').each(function() {
         var $container = $(this).find('.step-result-hot-table');
         var contents = $(this).find('.hot-contents');
-
+        var metadata = $(this).find('.hot-metadata');
         $container.handsontable({
           width: '100%',
           startRows: 5,
@@ -27,23 +27,14 @@
           colHeaders: true,
           fillHandle: false,
           formulas: true,
-          cells: function(row, col) {
-            var cellProperties = {};
-
-            if (col >= 0) {
-              cellProperties.readOnly = true;
-            } else {
-              cellProperties.readOnly = false;
-            }
-            return cellProperties;
-          }
+          data: JSON.parse(contents.attr('value')).data,
+          cell: JSON.parse(metadata.val() || '{}').cells || [],
+          readOnly: true
         });
         let hot = $container.handsontable('getInstance');
-        let data = JSON.parse(contents.attr('value'));
-        if (Array.isArray(data.data)) hot.loadData(data.data);
         setTimeout(() => {
-          hot.render()
-        }, 0)
+          hot.render();
+        }, 500);
       });
     }
 
@@ -138,6 +129,7 @@
     }
 
     function processResult(ev, resultTypeEnum) {
+      var textWithoutImages;
       var $form = $(ev.target.form);
       $form.clearFormErrors();
 
@@ -153,9 +145,11 @@
             .removeClass(GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME);
           break;
         case ResultTypeEnum.TEXT:
+          textWithoutImages = TinyMCE.getContent().replaceAll(/src="(data:image\/[^;]+;base64[^"]+)"/i, '');
+
           textValidator(
             ev, $form.find('#result_text_attributes_textarea'), 1,
-            $form.data('rich-text-max-length'), false, TinyMCE.getContent()
+            $form.data('rich-text-max-length'), false, textWithoutImages
           );
           break;
         default:

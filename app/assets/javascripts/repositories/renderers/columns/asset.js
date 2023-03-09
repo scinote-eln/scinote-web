@@ -32,12 +32,13 @@ var AssetColumnHelper = (function() {
           } else {
             $el
               .prev('.file-hidden-field-container')
-              .html(`<input type="hidden" 
-                     form="${$el.attr('form')}" 
-                     name="repository_cells[${$el.data('col-id')}]" 
+              .html(`<input type="hidden"
+                     form="${$el.attr('form')}"
+                     name="repository_cells[${$el.data('col-id')}]"
                      value="${blob.signed_id}"/>`);
 
             filesUploadedCntr += 1;
+
             if (filesUploadedCntr === filesToUploadCntr) {
               resolve('done');
             }
@@ -52,13 +53,14 @@ var AssetColumnHelper = (function() {
     let empty = $cell.is(':empty');
     let fileName = $cell.find('a.file-preview-link').text();
     let placeholder = I18n.t('repositories.table.assets.select_file_btn', { max_size: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB });
+    let rowId = $cell.parent().attr('id');
 
     $cell.html(`
       <div class="file-editing">
         <div class="file-hidden-field-container hidden"></div>
         <input class=""
                title="render cell: ${columnId}"
-               id="repository_file_${columnId}"
+               id="repository_file_${columnId}_${rowId}"
                form="${formId}"
                type="file"
                data-col-id="${columnId}"
@@ -67,7 +69,7 @@ var AssetColumnHelper = (function() {
                data-type="RepositoryAssetValue">
         <div class="file-upload-button ${empty ? 'new-file' : ''}">
           <i class="fas fa-paperclip icon"></i>
-          <label title="new repository file row input field" data-placeholder="${placeholder}" for="repository_file_${columnId}">${fileName}</label>
+          <label title="new repository file row input field" data-placeholder="${placeholder}" for="repository_file_${columnId}_${rowId}">${fileName}</label>
           <span class="delete-action fas fa-trash"> </span>
         </div>
       </div>`);

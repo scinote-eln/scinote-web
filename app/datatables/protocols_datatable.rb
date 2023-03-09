@@ -23,6 +23,7 @@ class ProtocolsDatatable < CustomDatatable
   def sortable_columns
     @sortable_columns ||= [
       "Protocol.name",
+      "Protocol.id",
       "protocol_keywords_str",
       "Protocol.nr_of_linked_children",
       "full_username_str",
@@ -34,6 +35,7 @@ class ProtocolsDatatable < CustomDatatable
   def searchable_columns
     @searchable_columns ||= [
       "Protocol.name",
+      "Protocol.#{Protocol::PREFIXED_ID_SQL}",
       timestamp_db_column,
       "Protocol.updated_at"
     ]
@@ -56,9 +58,11 @@ class ProtocolsDatatable < CustomDatatable
   # now the method checks if the column is the created_at or updated_at and generate a custom SQL to parse
   # it back to the caller method
   def new_search_condition(column, value)
-    model, column = column.split('.')
+    model, column = column.split('.', 2)
     model = model.constantize
     case column
+    when Protocol::PREFIXED_ID_SQL
+      casted_column = ::Arel::Nodes::SqlLiteral.new(Protocol::PREFIXED_ID_SQL)
     when 'published_on'
       casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
                         [ Arel.sql("to_char( protocols.created_at, '#{ formated_date }' ) AS VARCHAR") ] )
@@ -81,12 +85,6 @@ class ProtocolsDatatable < CustomDatatable
       protocol = Protocol.find(record.id)
       result_data << {
         'DT_RowId': record.id,
-        'DT_CanEdit': can_manage_protocol_in_repository?(protocol),
-        'DT_EditUrl': if can_manage_protocol_in_repository?(protocol)
-                        edit_protocol_path(protocol,
-                                           team: @team,
-                                           type: @type)
-                      end,
         'DT_CanClone': can_clone_protocol_in_repository?(protocol),
         'DT_CloneUrl': if can_clone_protocol_in_repository?(protocol)
                          clone_protocol_path(protocol,
@@ -103,11 +101,12 @@ class ProtocolsDatatable < CustomDatatable
              else
                name_html(record)
              end,
-        '2': keywords_html(record),
-        '3': modules_html(record),
-        '4': escape_input(record.full_username_str),
-        '5': timestamp_column_html(record),
-        '6': I18n.l(record.updated_at, format: :full)
+        '2': escape_input(record.code),
+        '3': keywords_html(record),
+        '4': modules_html(record),
+        '5': escape_input(record.full_username_str),
+        '6': timestamp_column_html(record),
+        '7': I18n.l(record.updated_at, format: :full)
       }
     end
     result_data

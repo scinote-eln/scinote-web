@@ -24,9 +24,14 @@ class Step < ApplicationRecord
   before_destroy :cascade_before_destroy
   after_destroy :adjust_positions_after_destroy, unless: -> { skip_position_adjust }
 
+  # conditional touch excluding step completion updates
+  after_destroy :touch_protocol
+  after_save :touch_protocol
+  after_touch :touch_protocol
+
   belongs_to :user, inverse_of: :steps
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User', optional: true
-  belongs_to :protocol, inverse_of: :steps, touch: true
+  belongs_to :protocol, inverse_of: :steps
   has_many :step_orderable_elements, inverse_of: :step, dependent: :destroy
   has_many :checklists, inverse_of: :step, dependent: :destroy
   has_many :step_comments, foreign_key: :associated_id, dependent: :destroy
@@ -125,24 +130,6 @@ class Step < ApplicationRecord
     st
   end
 
-  def asset_position(asset)
-    assets.order(:updated_at).each_with_index do |step_asset, i|
-      return { count: assets.count, pos: i } if asset.id == step_asset.id
-    end
-  end
-
-  def move_up
-    return if position.zero?
-
-    move_in_protocol(:up)
-  end
-
-  def move_down
-    return if position == protocol.steps.count - 1
-
-    move_in_protocol(:down)
-  end
-
   def comments
     step_comments
   end
@@ -151,32 +138,57 @@ class Step < ApplicationRecord
     step_texts.order(created_at: :asc).first
   end
 
+  def duplicate(protocol, user, step_position: nil, step_name: nil)
+    ActiveRecord::Base.transaction do
+      assets_to_clone = []
+
+      new_step = protocol.steps.new(
+        name: step_name || name,
+        position: step_position || protocol.steps.length,
+        completed: false,
+        user: user
+      )
+      new_step.save!
+
+      # Copy texts
+      step_texts.each do |step_text|
+        step_text.duplicate(new_step, step_text.step_orderable_element.position)
+      end
+
+      # Copy checklists
+      checklists.asc.each do |checklist|
+        checklist.duplicate(new_step, user, checklist.step_orderable_element.position)
+      end
+
+      # "Shallow" Copy assets
+      assets.each do |asset|
+        new_asset = asset.dup
+        new_asset.save!
+        new_step.assets << new_asset
+        assets_to_clone << [asset.id, new_asset.id]
+      end
+
+      # Copy tables
+      tables.each do |table|
+        table.duplicate(new_step, user, table.step_table.step_orderable_element.position)
+      end
+
+      # Call clone helper
+      Protocol.delay(queue: :assets).deep_clone_assets(assets_to_clone)
+
+      new_step
+    end
+  end
+
   private
 
-  def move_in_protocol(direction)
-    transaction do
-      re_index_following_steps
+  def touch_protocol
+    # if only step completion attributes were changed, do not touch protocol
+    return if saved_changes.keys.sort == %w(completed completed_on updated_at)
 
-      case direction
-      when :up
-        new_position = position - 1
-      when :down
-        new_position = position + 1
-      else
-        return
-      end
-
-      step_to_swap = protocol.steps.find_by(position: new_position)
-      position_to_swap = position
-
-      if step_to_swap
-        step_to_swap.update!(position: -1)
-        update!(position: new_position)
-        step_to_swap.update!(position: position_to_swap)
-      else
-        update!(position: new_position)
-      end
-    end
+    # rubocop:disable Rails/SkipsModelValidations
+    protocol.touch
+    # rubocop:enable Rails/SkipsModelValidations
   end
 
   def adjust_positions_after_destroy

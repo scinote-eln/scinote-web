@@ -6,6 +6,7 @@
 		<div class="editable-table" title="new result table table field" style="margin-bottom: 25px;">
 			<%= f.fields_for :table do |ff| %>
 				<%= ff.hidden_field(:contents, value: ff.object.contents, class: "hot-contents" ) %>
+				<%= ff.hidden_field(:metadata, value: ff.object.metadata, class: "hot-metadata" ) %>
 				<div class="hot">
 				</div>
 			<% end %>

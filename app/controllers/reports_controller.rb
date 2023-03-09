@@ -4,25 +4,20 @@ class ReportsController < ApplicationController
   include ReportsHelper
   include StringUtility
 
-  BEFORE_ACTION_METHODS = %i(
-    create
-    edit
-    update
-    generate_pdf
-    generate_docx
-    new_template_values
-    project_contents
-  ).freeze
-
   before_action :load_vars, only: %i(edit update document_preview generate_pdf generate_docx status
                                      save_pdf_to_inventory_modal save_pdf_to_inventory_item)
-  before_action :load_vars_nested, only: BEFORE_ACTION_METHODS
+  before_action :load_vars_nested, only: %i(create edit update generate_pdf
+                                            generate_docx new_template_values project_contents)
   before_action :load_wizard_vars, only: %i(new edit)
   before_action :load_available_repositories, only: %i(index save_pdf_to_inventory_modal available_repositories)
-
-  before_action :check_manage_permissions, only: BEFORE_ACTION_METHODS
+  before_action :check_project_read_permissions, only: %i(create edit update generate_pdf
+                                                          generate_docx new_template_values project_contents)
+  before_action :check_read_permissions, except: %i(index datatable new create edit update destroy generate_pdf
+                                                    generate_docx new_template_values project_contents
+                                                    available_repositories)
+  before_action :check_create_permissions, only: %i(new create)
+  before_action :check_manage_permissions, only: %i(edit update generate_pdf generate_docx)
   before_action :switch_team_with_param, only: :index
-
   after_action :generate_pdf_report, only: %i(create update generate_pdf)
 
   # Index showing all reports of a single project
@@ -54,7 +49,13 @@ class ReportsController < ApplicationController
     end
 
     report = current_team.reports.where(project: @project).find_by(id: params[:report_id])
-    report ||= current_team.reports.new(project: @project)
+    if report.present?
+      return render_403 unless can_manage_report?(report)
+    else
+      return render_403 unless can_create_reports?(current_team)
+
+      report = current_team.reports.new(project: @project)
+    end
 
     respond_to do |format|
       format.json do
@@ -109,7 +110,8 @@ class ReportsController < ApplicationController
     @project_contents = {
       experiments: @report.report_elements.order(:position).experiment.pluck(:experiment_id),
       my_modules: @report.report_elements.order(:position).my_module.pluck(:my_module_id),
-      repositories: @report.report_elements.my_module_repository.distinct(:repository_id).pluck(:repository_id)
+      repositories: @report.settings.dig(:task, :repositories) ||
+                    @report.report_elements.my_module_repository.distinct(:repository_id).pluck(:repository_id)
     }
     render :new
   end
@@ -147,8 +149,8 @@ class ReportsController < ApplicationController
     end
 
     report_ids.each do |report_id|
-      report = Report.find_by_id(report_id)
-      next unless report.present? && can_manage_reports?(report.project.team)
+      report = current_team.reports.find_by(id: report_id)
+      next unless report.present? && can_manage_report?(report)
 
       # record an activity
       log_activity(:delete_report, report)
@@ -311,7 +313,7 @@ class ReportsController < ApplicationController
     render json: {
       html: render_to_string(
         partial: 'reports/wizard/project_contents.html.erb',
-        locals: { project: @project, report: nil}
+        locals: { project: @project, report: nil }
       )
     }
   end
@@ -337,13 +339,11 @@ class ReportsController < ApplicationController
   def load_vars
     @report = current_team.reports.find_by(id: params[:id])
     render_404 unless @report
-    render_403 unless can_read_project?(@report.project)
   end
 
   def load_vars_nested
     @project = current_team.projects.find_by(id: params[:project_id])
     render_404 unless @project
-    render_403 unless can_read_project?(@project)
   end
 
   def load_wizard_vars
@@ -364,8 +364,20 @@ class ReportsController < ApplicationController
                                     .select(:id, :name)
   end
 
+  def check_project_read_permissions
+    render_403 unless can_read_project?(@project)
+  end
+
+  def check_read_permissions
+    render_403 unless can_read_report?(@report)
+  end
+
+  def check_create_permissions
+    render_403 unless can_create_reports?(current_team)
+  end
+
   def check_manage_permissions
-    render_403 unless can_manage_reports?(@project.team)
+    render_403 unless can_manage_report?(@report)
   end
 
   def load_available_repositories

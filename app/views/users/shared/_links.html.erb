@@ -1,33 +1,35 @@
 <div class="sign-in-up-links">
-  <%- if controller_name != 'sessions' %>
-    <% login = t("devise.links.login") %>
-    <% login = t("devise.links.login_with_provider") if action_name.in? %w(new_with_provider create_with_provider) %>
-    <%= link_to login, new_session_path(resource_name), title: 'log in link' %><br />
-  <% end -%>
+  <% unless Rails.application.config.x.disable_local_passwords %>
+    <%- if controller_name != 'sessions' %>
+      <% login = t("devise.links.login") %>
+      <% login = t("devise.links.login_with_provider") if action_name.in? %w(new_with_provider create_with_provider) %>
+      <%= link_to login, new_session_path(resource_name), title: 'log in link' %><br />
+    <% end -%>
 
-  <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
-    <%= link_to t("devise.links.forgot"), new_password_path(resource_name), class: 'forgot-password-link', title: 'forgot password link' %><br />
-  <% end -%>
+    <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
+      <%= link_to t("devise.links.forgot"), new_password_path(resource_name), class: 'forgot-password-link', title: 'forgot password link' %><br />
+    <% end -%>
 
-  <%- if devise_mapping.registerable? && Rails.configuration.x.enable_user_registration && controller_name != 'registrations' %>
-    <%= link_to t("devise.links.signup"), new_registration_path(resource_name), class: 'signup-link', title: 'sign up link' %><br />
-  <% end -%>
+    <%- if devise_mapping.registerable? && Rails.configuration.x.enable_user_registration && controller_name != 'registrations' %>
+      <%= link_to t("devise.links.signup"), new_registration_path(resource_name), class: 'signup-link', title: 'sign up link' %><br />
+    <% end -%>
 
-  <%- if Rails.configuration.x.enable_email_confirmations && devise_mapping.confirmable? && controller_name != 'confirmations' %>
-    <%= link_to t("devise.links.not_receive_confirmation"), new_confirmation_path(resource_name) %><br />
-  <% end -%>
+    <%- if Rails.configuration.x.enable_email_confirmations && devise_mapping.confirmable? && controller_name != 'confirmations' %>
+      <%= link_to t("devise.links.not_receive_confirmation"), new_confirmation_path(resource_name) %><br />
+    <% end -%>
 
-  <%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' && flash[:alert] == t('devise.failure.locked') %>
-    <%= link_to t("devise.links.not_receive_unlock"), new_unlock_path(resource_name) %><br />
-  <% end -%>
+    <%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' && flash[:alert] == t('devise.failure.locked') %>
+      <%= link_to t("devise.links.not_receive_unlock"), new_unlock_path(resource_name) %><br />
+    <% end -%>
+<% end %>
 
   <%- if devise_mapping.omniauthable? && resource_class.omniauth_providers.any? %>
     <div data-hook="omniauth-sign-in-links"></div>
   <% end -%>
 
-  <%- if devise_mapping.omniauthable? && Devise.omniauth_configs[:okta].present? %>
+  <%- if sso_enabled? && okta_configured? %>
     <div class="okta-sign-in-actions">
-      <%= form_tag omniauth_authorize_path(resource_name, :okta), method: :post do %>
+      <%= form_tag user_okta_omniauth_authorize_path, method: :post do %>
         <%= submit_tag t('devise.okta.sign_in_label'), class: 'btn btn-okta' %>
       <% end %>
     </div>
@@ -39,7 +41,9 @@
     <% end -%>
   <% end -%>
 
-  <div class="azure-sign-in-actions">
-    <%= render partial: "users/shared/azure_sign_in_links", locals: { resource_name: resource_name } %>
-  </div>
+  <% if sso_enabled? && azure_ad_configured? %>
+    <div class="azure-sign-in-actions">
+      <%= render partial: "users/shared/azure_sign_in_links", locals: { resource_name: resource_name } %>
+    </div>
+  <% end %>
 </div>

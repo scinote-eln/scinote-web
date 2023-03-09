@@ -70,7 +70,7 @@
       });
     });
 
-    dropdownSelector.init('#role', {
+    dropdownSelector.init(roleInput, {
       noEmptyOption: true,
       singleSelect: true,
       closeOnSelect: true,
@@ -138,7 +138,7 @@
         var data = {
           emails: dropdownSelector.getValues(emailsInput),
           team_ids: dropdownSelector.getValues(teamsInput),
-          role: dropdownSelector.getValues(roleInput),
+          role_id: dropdownSelector.getValues(roleInput),
           'g-recaptcha-response': $('.g-recaptcha-response').val()
         };
 
@@ -147,11 +147,10 @@
         switch (type) {
           case 'invite_to_team':
             data.team_ids = [modal.attr('data-team-id')];
-            data.role = $(this).attr('data-team-role');
+            data.role_id = $(this).attr('data-team-role-id');
             break;
           case 'invite_to_team_with_role':
             data.team_ids = [modal.attr('data-team-id')];
-            data.role = modal.attr('data-team-role');
             break;
           case 'invite':
             data.team_ids = [];
@@ -159,13 +158,13 @@
           case 'invite_with_team_selector':
             if (teamSelectorCheckbox.is(':checked')) {
               data.team_ids = [teamSelectorDropdown.val()];
-              data.role = $(this).attr('data-team-role');
+              data.role_id = $(this).attr('data-team-role-id');
             }
             break;
           case 'invite_with_team_selector_and_role':
             if (teamSelectorCheckbox.is(':checked')) {
               data.team_ids = [teamSelectorDropdown.val()];
-              data.role = modal.attr('data-team-role');
+              data.role_id = modal.attr('data-team-role-id');
             }
             break;
           default:

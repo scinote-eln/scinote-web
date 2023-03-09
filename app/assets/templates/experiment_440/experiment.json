@@ -56,10 +56,18 @@
           "output_id": 2192
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -82,13 +90,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 4533,
                 "name": "Examine the plates",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the guidelines below. </p></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -98,65 +107,74 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3548
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the guidelines below. </p></body></html>"
+                  },
+                  "position": 0
+                },
                 {
                   "checklist": {
-                    "id": 924,
-                    "name": "Guideline:",
-                    "step_id": 4533,
-                    "created_at": "2018-12-12T07:16:14.619Z",
-                    "updated_at": "2018-12-24T08:23:09.400Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 924,
+                      "name": "Guideline:",
+                      "step_id": 4533,
+                      "created_at": "2018-12-12T07:16:14.619Z",
+                      "updated_at": "2018-12-24T08:23:09.400Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3812,
+                        "text": "Monitor refrigerator temperature and record it in Results.",
+                        "checked": false,
+                        "checklist_id": 924,
+                        "created_at": "2018-12-12T07:16:14.622Z",
+                        "updated_at": "2018-12-12T07:16:14.622Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 3813,
+                        "text": "Contact plates and/or Settle plates are taken to the room temperature.  They will be used depending on the surface of the sampling.",
+                        "checked": false,
+                        "checklist_id": 924,
+                        "created_at": "2018-12-12T07:16:14.634Z",
+                        "updated_at": "2018-12-12T07:16:14.634Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 3814,
+                        "text": "Examine the plates for contamination prior to use. If any plates are contaminated they should be discarded according to protocol.",
+                        "checked": false,
+                        "checklist_id": 924,
+                        "created_at": "2018-12-12T07:16:14.641Z",
+                        "updated_at": "2018-12-12T07:16:14.641Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 3812,
-                      "text": "Monitor refrigerator temperature and record it in Results.",
-                      "checked": false,
-                      "checklist_id": 924,
-                      "created_at": "2018-12-12T07:16:14.622Z",
-                      "updated_at": "2018-12-12T07:16:14.622Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 3813,
-                      "text": "Contact plates and/or Settle plates are taken to the room temperature.  They will be used depending on the surface of the sampling.",
-                      "checked": false,
-                      "checklist_id": 924,
-                      "created_at": "2018-12-12T07:16:14.634Z",
-                      "updated_at": "2018-12-12T07:16:14.634Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 3814,
-                      "text": "Examine the plates for contamination prior to use. If any plates are contaminated they should be discarded according to protocol.",
-                      "checked": false,
-                      "checklist_id": 924,
-                      "created_at": "2018-12-12T07:16:14.641Z",
-                      "updated_at": "2018-12-12T07:16:14.641Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    }
-                  ]
+                  "position": 1
                 }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              ]
             },
             {
               "step": {
                 "id": 4535,
                 "name": "Preincubation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Preincubate the empty plates in incubator <strong>30°C-35°C</strong> for <strong>48 hours</strong> to check for any accidental contamination. Check for contamination again. If there is contamination record it and discard according to appropriate procedures. Take contamination-free plates to room temperature an hour before exposure.<br><br></p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -166,17 +184,27 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3548
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Preincubate the empty plates in incubator <strong>30°C-35°C</strong> for <strong>48 hours</strong> to check for any accidental contamination. Check for contamination again. If there is contamination record it and discard according to appropriate procedures. Take contamination-free plates to room temperature an hour before exposure.<br><br></p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -201,11 +229,21 @@
         "state": "uncompleted",
         "completed_on": null
       },
-      "outputs": [],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "outputs": [
+
+      ],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -228,13 +266,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 5174,
                 "name": "Discarding plates",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>All samples (contaminated or not) should be disposed of according to procedures.</p></body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -244,18 +283,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3564
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>All samples (contaminated or not) should be disposed of according to procedures.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 5173,
                 "name": "Counting colonies and recording",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>After appropriate incubation microbiological contamination should grow into discrete macroscopic colonies that can be enumerated and the number of discrete colonies forming units (CFU) can be counted on each sample. <br>Record the number (per unit surface area) on the results tab. Separate colony counts may be tabulated for mould and bacteria.<br><br>Colony types may be identified if this is considered appropriate.</p></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -265,14 +311,8 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3564
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [
-                {
-                  "id": 3070,
-                  "step_id": 5173,
-                  "asset_id": 3732
-                }
+              "step_comments": [
+
               ],
               "assets": [
                 {
@@ -294,14 +334,19 @@
                   }
                 }
               ],
-              "step_tables": [],
-              "tables": []
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>After appropriate incubation microbiological contamination should grow into discrete macroscopic colonies that can be enumerated and the number of discrete colonies forming units (CFU) can be counted on each sample. <br>Record the number (per unit surface area) on the results tab. Separate colony counts may be tabulated for mould and bacteria.<br><br>Colony types may be identified if this is considered appropriate.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4567,
                 "name": "Action to be taken",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<div style=\"text-align: justify;\">Recording of data provides oversight for microbiological cleanliness. In order for results to provide meaningful data, it is of key importance that alert and action limits are established. <em><strong>Alert levels ensure that any excursion of the parameter can be detected early. Action levels deviate more from the standard. If the alert level is exceeded repeatedly, this is considered equivalent to exceeding the action level.</strong></em> In practice, several statistical methods including normal, Poisson, and negative binomial modelling have been routinely used to set these limits. <br><br>Exceeding action levels on isolated occasions may not require more action than an examination of control systems. However, the frequency of exceeding the limit should be examined and should be low. <strong>If the frequency is high or shows an upward trend then action should be taken which may include an increase in the frequency of testing, observation of operator technique or investigation of cleaning procedures.<br><br></strong>\n</div>\n<div style=\"text-align: justify;\">Identification of the causative microorganism(s) may aid tracing the <strong>source of the contamination</strong>. Successive results greater than the action levels demand that appropriate action is taken to reduce contamination to within limits. Where a problem has been observed the contaminating microorganisms should be identified. Isolated instances require no more action than an examination of control systems. If repeated contamination appears an investigation into the problem should take place and<strong> corrective action should be carried out which will rectify the problem</strong>. The corrective action should investigate the root cause of the problem and identify steps, with the timescale, that will be taken to reduce the contamination levels to \"normal\". A record of all action taken should be made in an \"Abnormal Event Log\".</div>\n<div style=\"text-align: justify;\">The following areas should be examined where action levels are repeatedly breached:<br><br><strong>Identify:</strong>\n</div>\n<ul>\n<li>Possible cause</li>\n<li>Contaminating microorganisms</li>\n</ul>\n<strong>Investigate:</strong><br>\n<ul>\n<li>Whether an isolated sample or whole area involved</li>\n<li>Personnel - operator status (grade), level of training, health, technique, wash up</li>\n<li>Cleaning procedures</li>\n<li>Changing procedure</li>\n<li>HEPA filter integrity of room/clean air device</li>\n<li>Processes carried out</li>\n<li>Previous test results for trends or other identified problems.</li>\n</ul>\n<strong>Liase with:</strong> <br>\n<ul>\n<li>Aseptic personnel</li>\n<li>Microbiology personnel</li>\n<li>QA/QC personnel</li>\n</ul>\n</body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -311,17 +356,27 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3564
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<div style=\"text-align: justify;\">Recording of data provides oversight for microbiological cleanliness. In order for results to provide meaningful data, it is of key importance that alert and action limits are established. <em><strong>Alert levels ensure that any excursion of the parameter can be detected early. Action levels deviate more from the standard. If the alert level is exceeded repeatedly, this is considered equivalent to exceeding the action level.</strong></em> In practice, several statistical methods including normal, Poisson, and negative binomial modelling have been routinely used to set these limits. <br><br>Exceeding action levels on isolated occasions may not require more action than an examination of control systems. However, the frequency of exceeding the limit should be examined and should be low. <strong>If the frequency is high or shows an upward trend then action should be taken which may include an increase in the frequency of testing, observation of operator technique or investigation of cleaning procedures.<br><br></strong>\n</div>\n<div style=\"text-align: justify;\">Identification of the causative microorganism(s) may aid tracing the <strong>source of the contamination</strong>. Successive results greater than the action levels demand that appropriate action is taken to reduce contamination to within limits. Where a problem has been observed the contaminating microorganisms should be identified. Isolated instances require no more action than an examination of control systems. If repeated contamination appears an investigation into the problem should take place and<strong> corrective action should be carried out which will rectify the problem</strong>. The corrective action should investigate the root cause of the problem and identify steps, with the timescale, that will be taken to reduce the contamination levels to \"normal\". A record of all action taken should be made in an \"Abnormal Event Log\".</div>\n<div style=\"text-align: justify;\">The following areas should be examined where action levels are repeatedly breached:<br><br><strong>Identify:</strong>\n</div>\n<ul>\n<li>Possible cause</li>\n<li>Contaminating microorganisms</li>\n</ul>\n<strong>Investigate:</strong><br>\n<ul>\n<li>Whether an isolated sample or whole area involved</li>\n<li>Personnel - operator status (grade), level of training, health, technique, wash up</li>\n<li>Cleaning procedures</li>\n<li>Changing procedure</li>\n<li>HEPA filter integrity of room/clean air device</li>\n<li>Processes carried out</li>\n<li>Previous test results for trends or other identified problems.</li>\n</ul>\n<strong>Liase with:</strong> <br>\n<ul>\n<li>Aseptic personnel</li>\n<li>Microbiology personnel</li>\n<li>QA/QC personnel</li>\n</ul>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -353,10 +408,18 @@
           "output_id": 2190
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -379,13 +442,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 5448,
                 "name": "Labeling of plates",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Assemble the plates required and label them. Ensure that correct information about sampling is written on the base of the plate with a permanent ink marker.<br>The following sampling details should be recorded on the plate:<br><br></p>\n<ul>\n<li>Initials of a person who is sampling</li>\n<li>Sampling location code</li>\n<li>Date and time of the day of sampling/plating </li>\n</ul>\n</body></html>",
                 "position": 3,
                 "completed": false,
                 "completed_on": null,
@@ -395,18 +459,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3544
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Assemble the plates required and label them. Ensure that correct information about sampling is written on the base of the plate with a permanent ink marker.<br>The following sampling details should be recorded on the plate:<br><br></p>\n<ul>\n<li>Initials of a person who is sampling</li>\n<li>Sampling location code</li>\n<li>Date and time of the day of sampling/plating </li>\n</ul>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4523,
                 "name": "Collect all the swabs",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>After all the samples are taken, collect all sample swabs together, remove them from the sampling area and plate them as directed in the next step. Complete and enclose all the necessary documentation in <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#countin\">[#Counting and recording...~tsk~ZU]</span>.</p></body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -416,18 +487,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3544
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>After all the samples are taken, collect all sample swabs together, remove them from the sampling area and plate them as directed in the next step. Complete and enclose all the necessary documentation in <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#countin\">[#Counting and recording...~tsk~ZU]</span>.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4521,
                 "name": "Sampling with a swab",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p><strong>Sampling:</strong> Wipe the swab over the sample area in close parallel streaks, using firm even pressure and rotating the swab between fingers to maximise sample pick-up. The swab should be held at a <strong>30°</strong> angle to the contact surface. With the same swab, repeat this process at right angles to the first streaks to ensure that the entire sample area is swabbed. Replace swab into transport tube ensuring that swab comes into contact with the transport medium by pushing down hard. Clean the surface tested with disinfectant.</p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -437,76 +515,85 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3544
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p><strong>Sampling:</strong> Wipe the swab over the sample area in close parallel streaks, using firm even pressure and rotating the swab between fingers to maximise sample pick-up. The swab should be held at a <strong>30°</strong> angle to the contact surface. With the same swab, repeat this process at right angles to the first streaks to ensure that the entire sample area is swabbed. Replace swab into transport tube ensuring that swab comes into contact with the transport medium by pushing down hard. Clean the surface tested with disinfectant.</p></body></html>"
+                  },
+                  "position": 0
+                },
                 {
                   "checklist": {
-                    "id": 809,
-                    "name": "Sample locations:",
-                    "step_id": 4521,
-                    "created_at": "2018-11-15T09:56:30.495Z",
-                    "updated_at": "2018-11-15T09:56:30.495Z",
-                    "created_by_id": 202,
-                    "last_modified_by_id": 202
+                    "checklist": {
+                      "id": 809,
+                      "name": "Sample locations:",
+                      "step_id": 4521,
+                      "created_at": "2018-11-15T09:56:30.495Z",
+                      "updated_at": "2018-11-15T09:56:30.495Z",
+                      "created_by_id": 202,
+                      "last_modified_by_id": 202
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3405,
+                        "text": "Filling needle",
+                        "checked": false,
+                        "checklist_id": 809,
+                        "created_at": "2018-11-15T09:56:30.509Z",
+                        "updated_at": "2018-11-15T10:08:47.925Z",
+                        "created_by_id": 202,
+                        "last_modified_by_id": 202,
+                        "position": 0
+                      },
+                      {
+                        "id": 3406,
+                        "text": "Interior of the stopper chute",
+                        "checked": false,
+                        "checklist_id": 809,
+                        "created_at": "2018-11-15T09:56:30.522Z",
+                        "updated_at": "2018-11-15T10:08:47.935Z",
+                        "created_by_id": 202,
+                        "last_modified_by_id": 202,
+                        "position": 1
+                      },
+                      {
+                        "id": 3407,
+                        "text": "Helix/in-fed worm",
+                        "checked": false,
+                        "checklist_id": 809,
+                        "created_at": "2018-11-15T09:56:30.534Z",
+                        "updated_at": "2018-11-15T10:08:47.944Z",
+                        "created_by_id": 202,
+                        "last_modified_by_id": 202,
+                        "position": 2
+                      },
+                      {
+                        "id": 3408,
+                        "text": "In-feed belt",
+                        "checked": false,
+                        "checklist_id": 809,
+                        "created_at": "2018-11-15T09:56:30.546Z",
+                        "updated_at": "2018-11-15T10:08:47.954Z",
+                        "created_by_id": 202,
+                        "last_modified_by_id": 202,
+                        "position": 3
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 3405,
-                      "text": "Filling needle",
-                      "checked": false,
-                      "checklist_id": 809,
-                      "created_at": "2018-11-15T09:56:30.509Z",
-                      "updated_at": "2018-11-15T10:08:47.925Z",
-                      "created_by_id": 202,
-                      "last_modified_by_id": 202,
-                      "position": 0
-                    },
-                    {
-                      "id": 3406,
-                      "text": "Interior of the stopper chute",
-                      "checked": false,
-                      "checklist_id": 809,
-                      "created_at": "2018-11-15T09:56:30.522Z",
-                      "updated_at": "2018-11-15T10:08:47.935Z",
-                      "created_by_id": 202,
-                      "last_modified_by_id": 202,
-                      "position": 1
-                    },
-                    {
-                      "id": 3407,
-                      "text": "Helix/in-fed worm",
-                      "checked": false,
-                      "checklist_id": 809,
-                      "created_at": "2018-11-15T09:56:30.534Z",
-                      "updated_at": "2018-11-15T10:08:47.944Z",
-                      "created_by_id": 202,
-                      "last_modified_by_id": 202,
-                      "position": 2
-                    },
-                    {
-                      "id": 3408,
-                      "text": "In-feed belt",
-                      "checked": false,
-                      "checklist_id": 809,
-                      "created_at": "2018-11-15T09:56:30.546Z",
-                      "updated_at": "2018-11-15T10:08:47.954Z",
-                      "created_by_id": 202,
-                      "last_modified_by_id": 202,
-                      "position": 3
-                    }
-                  ]
+                  "position": 1
                 }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              ]
             },
             {
               "step": {
                 "id": 5172,
                 "name": "Plating of swabs",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the guidelines below for plating of swabs.</p></body></html>",
                 "position": 4,
                 "completed": false,
                 "completed_on": null,
@@ -516,98 +603,107 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3544
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the guidelines below for plating of swabs.</p></body></html>"
+                  },
+                  "position": 0
+                },
                 {
                   "checklist": {
-                    "id": 952,
-                    "name": "Guidelines:",
-                    "step_id": 5172,
-                    "created_at": "2018-12-21T06:58:27.768Z",
-                    "updated_at": "2018-12-21T06:58:27.768Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 952,
+                      "name": "Guidelines:",
+                      "step_id": 5172,
+                      "created_at": "2018-12-21T06:58:27.768Z",
+                      "updated_at": "2018-12-21T06:58:27.768Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3906,
+                        "text": "Prepare a safe and sterile workspace: Sterilize all instruments, solutions, and media prior to using them for plating procedures. Clear away all materials cluttering your work area on the laboratory bench. Clean work area with disinfectant to minimize possible contamination.",
+                        "checked": false,
+                        "checklist_id": 952,
+                        "created_at": "2018-12-21T06:58:27.770Z",
+                        "updated_at": "2018-12-21T06:58:27.770Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 3907,
+                        "text": "Set up a Bunsen burner: Work slowly, carefully, and deliberately within the sterile field area created by the updraft of the flame.",
+                        "checked": false,
+                        "checklist_id": 952,
+                        "created_at": "2018-12-21T06:58:27.777Z",
+                        "updated_at": "2018-12-21T06:58:27.777Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 3908,
+                        "text": "Prepare lab equipment and settle plates.",
+                        "checked": false,
+                        "checklist_id": 952,
+                        "created_at": "2018-12-21T06:58:27.784Z",
+                        "updated_at": "2018-12-21T06:58:27.784Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 3909,
+                        "text": "Arrange all the supplies needed for the procedure on the laboratory bench near the sterile field. Make sure all the materials are properly labelled.",
+                        "checked": false,
+                        "checklist_id": 952,
+                        "created_at": "2018-12-21T06:58:27.791Z",
+                        "updated_at": "2018-12-21T06:58:27.791Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      },
+                      {
+                        "id": 3910,
+                        "text": "Carefully open the lid of the plate. A standard streaking out method should be used when plating out the swab. The method should ensure that the swab is rotated as it is run over the surface of the media to ensure that any microorganisms recovered from the surface sample are deposited onto the surface of the plate.\r\nReplace the lid.",
+                        "checked": false,
+                        "checklist_id": 952,
+                        "created_at": "2018-12-21T06:58:27.797Z",
+                        "updated_at": "2018-12-21T06:58:27.797Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 4
+                      },
+                      {
+                        "id": 3911,
+                        "text": "Complete and enclose all the necessary documentation.",
+                        "checked": false,
+                        "checklist_id": 952,
+                        "created_at": "2018-12-21T06:58:27.804Z",
+                        "updated_at": "2018-12-21T06:58:27.804Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 5
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 3906,
-                      "text": "Prepare a safe and sterile workspace: Sterilize all instruments, solutions, and media prior to using them for plating procedures. Clear away all materials cluttering your work area on the laboratory bench. Clean work area with disinfectant to minimize possible contamination.",
-                      "checked": false,
-                      "checklist_id": 952,
-                      "created_at": "2018-12-21T06:58:27.770Z",
-                      "updated_at": "2018-12-21T06:58:27.770Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 3907,
-                      "text": "Set up a Bunsen burner: Work slowly, carefully, and deliberately within the sterile field area created by the updraft of the flame.",
-                      "checked": false,
-                      "checklist_id": 952,
-                      "created_at": "2018-12-21T06:58:27.777Z",
-                      "updated_at": "2018-12-21T06:58:27.777Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 3908,
-                      "text": "Prepare lab equipment and settle plates.",
-                      "checked": false,
-                      "checklist_id": 952,
-                      "created_at": "2018-12-21T06:58:27.784Z",
-                      "updated_at": "2018-12-21T06:58:27.784Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 3909,
-                      "text": "Arrange all the supplies needed for the procedure on the laboratory bench near the sterile field. Make sure all the materials are properly labelled.",
-                      "checked": false,
-                      "checklist_id": 952,
-                      "created_at": "2018-12-21T06:58:27.791Z",
-                      "updated_at": "2018-12-21T06:58:27.791Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    },
-                    {
-                      "id": 3910,
-                      "text": "Carefully open the lid of the plate. A standard streaking out method should be used when plating out the swab. The method should ensure that the swab is rotated as it is run over the surface of the media to ensure that any microorganisms recovered from the surface sample are deposited onto the surface of the plate.\r\nReplace the lid.",
-                      "checked": false,
-                      "checklist_id": 952,
-                      "created_at": "2018-12-21T06:58:27.797Z",
-                      "updated_at": "2018-12-21T06:58:27.797Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 4
-                    },
-                    {
-                      "id": 3911,
-                      "text": "Complete and enclose all the necessary documentation.",
-                      "checked": false,
-                      "checklist_id": 952,
-                      "created_at": "2018-12-21T06:58:27.804Z",
-                      "updated_at": "2018-12-21T06:58:27.804Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 5
-                    }
-                  ]
+                  "position": 1
                 }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              ]
             },
             {
               "step": {
                 "id": 4519,
                 "name": "Preparation of swabs before sampling",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Make sure the sampling surface it is dry. Assemble the needle and <strong>10 mL</strong> syringe. Open the ampoule of <strong>0.9%</strong> NaCl Injection BP and draw up the contents. Push a small amount of liquid (about<strong> 0.5 mL</strong>) from the syringe directly onto the swab. Do not allow the needle tip to come into contact with the swab.</p></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -617,17 +713,27 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3544
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Make sure the sampling surface it is dry. Assemble the needle and <strong>10 mL</strong> syringe. Open the ampoule of <strong>0.9%</strong> NaCl Injection BP and draw up the contents. Push a small amount of liquid (about<strong> 0.5 mL</strong>) from the syringe directly onto the swab. Do not allow the needle tip to come into contact with the swab.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -664,10 +770,18 @@
           "output_id": 2195
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -690,13 +804,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 4553,
                 "name": "Incubation for growing bacteria",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<span style=\"color: #ff0000;\"><strong>Important!:</strong> </span>If the medium is dropped or touched by a person performing the sampling then this should be reported, the sample should be marked accordingly and treated as usual. Under no circumstances should samples that have been taken be refrigerated.<br><br>Following testing, the samples should be incubated as soon as possible and should be held at room temperature with the medium uppermost until incubated or manipulated.<br><br><strong>Incubation of samples:</strong><br>\n<ul>\n<li>Inverted plates</li>\n<li>30 - 35°C</li>\n<li>At least 2 days </li>\n</ul>\nIncubation conditions should be monitored to ensure that the appropriate incubation temperature is maintained throughout the incubation phase.</body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -706,18 +821,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3554
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<span style=\"color: #ff0000;\"><strong>Important!:</strong> </span>If the medium is dropped or touched by a person performing the sampling then this should be reported, the sample should be marked accordingly and treated as usual. Under no circumstances should samples that have been taken be refrigerated.<br><br>Following testing, the samples should be incubated as soon as possible and should be held at room temperature with the medium uppermost until incubated or manipulated.<br><br><strong>Incubation of samples:</strong><br>\n<ul>\n<li>Inverted plates</li>\n<li>30 - 35°C</li>\n<li>At least 2 days </li>\n</ul>\nIncubation conditions should be monitored to ensure that the appropriate incubation temperature is maintained throughout the incubation phase.</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4552,
                 "name": "Incubation for growing fungi",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<span style=\"color: #ff0000;\"><strong>Important!:</strong> </span>If the medium is dropped or touched by a person performing the sampling then this should be reported, the sample should be marked accordingly and treated as usual. Under no circumstances should samples that have been taken be refrigerated.<br><br>Following testing, the samples should be incubated as soon as possible and should be held at room temperature with the medium uppermost until incubated or manipulated.<br><br><strong>Incubation of samples:</strong><br>\n<ul>\n<li>Inverted plates</li>\n<li>20 - 25°C</li>\n<li>At least 5 days </li>\n</ul>\n<br>Incubation conditions should be monitored to ensure that the appropriate incubation temperature is maintained throughout the incubation phase.</body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -727,17 +849,27 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3554
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<span style=\"color: #ff0000;\"><strong>Important!:</strong> </span>If the medium is dropped or touched by a person performing the sampling then this should be reported, the sample should be marked accordingly and treated as usual. Under no circumstances should samples that have been taken be refrigerated.<br><br>Following testing, the samples should be incubated as soon as possible and should be held at room temperature with the medium uppermost until incubated or manipulated.<br><br><strong>Incubation of samples:</strong><br>\n<ul>\n<li>Inverted plates</li>\n<li>20 - 25°C</li>\n<li>At least 5 days </li>\n</ul>\n<br>Incubation conditions should be monitored to ensure that the appropriate incubation temperature is maintained throughout the incubation phase.</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -762,11 +894,21 @@
         "state": "uncompleted",
         "completed_on": null
       },
-      "outputs": [],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "outputs": [
+
+      ],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -789,13 +931,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 5496,
                 "name": "Tube test",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the guidelines: </p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -805,65 +948,74 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 4196
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the guidelines: </p></body></html>"
+                  },
+                  "position": 0
+                },
                 {
                   "checklist": {
-                    "id": 1014,
-                    "name": "Guidelines:",
-                    "step_id": 5496,
-                    "created_at": "2019-02-04T13:30:56.249Z",
-                    "updated_at": "2019-02-04T13:30:56.249Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 1014,
+                      "name": "Guidelines:",
+                      "step_id": 5496,
+                      "created_at": "2019-02-04T13:30:56.249Z",
+                      "updated_at": "2019-02-04T13:30:56.249Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 4149,
+                        "text": "Add 4 to 5 drops of 3% H2O2 to in a test tube.",
+                        "checked": false,
+                        "checklist_id": 1014,
+                        "created_at": "2019-02-04T13:30:56.251Z",
+                        "updated_at": "2019-02-04T13:30:56.251Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 4150,
+                        "text": "Using a wooden applicator stick, collect a small amount of organism from a well-isolated 18- to 24-hour colony and place into the test tube (Note: Be careful not to pick up any agar).",
+                        "checked": false,
+                        "checklist_id": 1014,
+                        "created_at": "2019-02-04T13:30:56.260Z",
+                        "updated_at": "2019-02-04T13:30:56.260Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 4151,
+                        "text": "Place the tube against a dark background and observe for immediate bubble formation at the end of the wooden applicator stick.",
+                        "checked": false,
+                        "checklist_id": 1014,
+                        "created_at": "2019-02-04T13:30:56.267Z",
+                        "updated_at": "2019-02-04T13:30:56.267Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 4149,
-                      "text": "Add 4 to 5 drops of 3% H2O2 to in a test tube.",
-                      "checked": false,
-                      "checklist_id": 1014,
-                      "created_at": "2019-02-04T13:30:56.251Z",
-                      "updated_at": "2019-02-04T13:30:56.251Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 4150,
-                      "text": "Using a wooden applicator stick, collect a small amount of organism from a well-isolated 18- to 24-hour colony and place into the test tube (Note: Be careful not to pick up any agar).",
-                      "checked": false,
-                      "checklist_id": 1014,
-                      "created_at": "2019-02-04T13:30:56.260Z",
-                      "updated_at": "2019-02-04T13:30:56.260Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 4151,
-                      "text": "Place the tube against a dark background and observe for immediate bubble formation at the end of the wooden applicator stick.",
-                      "checked": false,
-                      "checklist_id": 1014,
-                      "created_at": "2019-02-04T13:30:56.267Z",
-                      "updated_at": "2019-02-04T13:30:56.267Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    }
-                  ]
+                  "position": 1
                 }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              ]
             },
             {
               "step": {
                 "id": 5495,
                 "name": "Slide test",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the guidelines below. </p></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -873,76 +1025,85 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 4196
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the guidelines below. </p></body></html>"
+                  },
+                  "position": 0
+                },
                 {
                   "checklist": {
-                    "id": 1013,
-                    "name": "Guidelines:",
-                    "step_id": 5495,
-                    "created_at": "2019-02-04T13:18:55.138Z",
-                    "updated_at": "2019-02-04T13:18:55.138Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 1013,
+                      "name": "Guidelines:",
+                      "step_id": 5495,
+                      "created_at": "2019-02-04T13:18:55.138Z",
+                      "updated_at": "2019-02-04T13:18:55.138Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 4145,
+                        "text": "Transfer a small amount of bacterial colony to a surface of clean, dry glass slide using a loop",
+                        "checked": false,
+                        "checklist_id": 1013,
+                        "created_at": "2019-02-04T13:18:55.140Z",
+                        "updated_at": "2019-02-04T13:18:55.140Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 4146,
+                        "text": "Place a drop of 3% H2O2 on to the slide and mix.",
+                        "checked": false,
+                        "checklist_id": 1013,
+                        "created_at": "2019-02-04T13:18:55.155Z",
+                        "updated_at": "2019-02-04T13:18:55.155Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 4147,
+                        "text": "Look for a rapid evolution of oxygen (within 5-10 seconds) as evidenced by bubbling.",
+                        "checked": false,
+                        "checklist_id": 1013,
+                        "created_at": "2019-02-04T13:18:55.163Z",
+                        "updated_at": "2019-02-04T13:18:55.163Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 4148,
+                        "text": "Dispose of your slide in the biohazard glass disposal container.",
+                        "checked": false,
+                        "checklist_id": 1013,
+                        "created_at": "2019-02-04T13:21:32.881Z",
+                        "updated_at": "2019-02-04T13:21:32.881Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 4145,
-                      "text": "Transfer a small amount of bacterial colony to a surface of clean, dry glass slide using a loop",
-                      "checked": false,
-                      "checklist_id": 1013,
-                      "created_at": "2019-02-04T13:18:55.140Z",
-                      "updated_at": "2019-02-04T13:18:55.140Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 4146,
-                      "text": "Place a drop of 3% H2O2 on to the slide and mix.",
-                      "checked": false,
-                      "checklist_id": 1013,
-                      "created_at": "2019-02-04T13:18:55.155Z",
-                      "updated_at": "2019-02-04T13:18:55.155Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 4147,
-                      "text": "Look for a rapid evolution of oxygen (within 5-10 seconds) as evidenced by bubbling.",
-                      "checked": false,
-                      "checklist_id": 1013,
-                      "created_at": "2019-02-04T13:18:55.163Z",
-                      "updated_at": "2019-02-04T13:18:55.163Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 4148,
-                      "text": "Dispose of your slide in the biohazard glass disposal container.",
-                      "checked": false,
-                      "checklist_id": 1013,
-                      "created_at": "2019-02-04T13:21:32.881Z",
-                      "updated_at": "2019-02-04T13:21:32.881Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    }
-                  ]
+                  "position": 1
                 }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              ]
             },
             {
               "step": {
                 "id": 5497,
                 "name": "Results interpretation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<em><strong>Catalase is an enzyme, which is produced by microorganisms that live in oxygenated environments to neutralize toxic forms of oxygen metabolites.</strong></em> Anaerobes generally lack the catalase enzyme. Catalase enzyme hydrolyzes the hydrogen peroxide and forms bubbles. <strong><br><br>Immediate effervescence (bubble formation): </strong>Catalase positive reactions<strong><br>No bubble formation: </strong>Catalase Negative reaction<strong><br></strong>\n</body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -952,17 +1113,27 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 4196
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<em><strong>Catalase is an enzyme, which is produced by microorganisms that live in oxygenated environments to neutralize toxic forms of oxygen metabolites.</strong></em> Anaerobes generally lack the catalase enzyme. Catalase enzyme hydrolyzes the hydrogen peroxide and forms bubbles. <strong><br><br>Immediate effervescence (bubble formation): </strong>Catalase positive reactions<strong><br>No bubble formation: </strong>Catalase Negative reaction<strong><br></strong>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -987,11 +1158,21 @@
         "state": "uncompleted",
         "completed_on": null
       },
-      "outputs": [],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "outputs": [
+
+      ],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -1014,13 +1195,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 5492,
                 "name": "Oxidase test",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the guidelines below: </p></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -1030,76 +1212,85 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 4195
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the guidelines below: </p></body></html>"
+                  },
+                  "position": 0
+                },
                 {
                   "checklist": {
-                    "id": 1012,
-                    "name": "Guidelines:",
-                    "step_id": 5492,
-                    "created_at": "2019-02-01T14:49:04.452Z",
-                    "updated_at": "2019-02-01T14:49:04.452Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 1012,
+                      "name": "Guidelines:",
+                      "step_id": 5492,
+                      "created_at": "2019-02-01T14:49:04.452Z",
+                      "updated_at": "2019-02-01T14:49:04.452Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 4141,
+                        "text": "Take a filter paper soaked with the substrate tetramethyl-p-phenylenediamine dihydrochloride.",
+                        "checked": false,
+                        "checklist_id": 1012,
+                        "created_at": "2019-02-01T14:49:04.454Z",
+                        "updated_at": "2019-02-01T14:49:04.454Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 4142,
+                        "text": "Moisten the paper with a sterile distilled water.",
+                        "checked": false,
+                        "checklist_id": 1012,
+                        "created_at": "2019-02-01T14:49:04.462Z",
+                        "updated_at": "2019-02-01T14:49:04.462Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 4143,
+                        "text": "Pick the colony to be tested with wooden or platinum loop and smear in the filter paper.",
+                        "checked": false,
+                        "checklist_id": 1012,
+                        "created_at": "2019-02-01T14:49:04.469Z",
+                        "updated_at": "2019-02-01T14:49:04.469Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 4144,
+                        "text": "Observe inoculated area of paper for a color change to deep blue or purple within 10-30 seconds.",
+                        "checked": false,
+                        "checklist_id": 1012,
+                        "created_at": "2019-02-01T14:49:04.475Z",
+                        "updated_at": "2019-02-01T14:49:04.475Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 4141,
-                      "text": "Take a filter paper soaked with the substrate tetramethyl-p-phenylenediamine dihydrochloride.",
-                      "checked": false,
-                      "checklist_id": 1012,
-                      "created_at": "2019-02-01T14:49:04.454Z",
-                      "updated_at": "2019-02-01T14:49:04.454Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 4142,
-                      "text": "Moisten the paper with a sterile distilled water.",
-                      "checked": false,
-                      "checklist_id": 1012,
-                      "created_at": "2019-02-01T14:49:04.462Z",
-                      "updated_at": "2019-02-01T14:49:04.462Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 4143,
-                      "text": "Pick the colony to be tested with wooden or platinum loop and smear in the filter paper.",
-                      "checked": false,
-                      "checklist_id": 1012,
-                      "created_at": "2019-02-01T14:49:04.469Z",
-                      "updated_at": "2019-02-01T14:49:04.469Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 4144,
-                      "text": "Observe inoculated area of paper for a color change to deep blue or purple within 10-30 seconds.",
-                      "checked": false,
-                      "checklist_id": 1012,
-                      "created_at": "2019-02-01T14:49:04.475Z",
-                      "updated_at": "2019-02-01T14:49:04.475Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    }
-                  ]
+                  "position": 1
                 }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              ]
             },
             {
               "step": {
                 "id": 5493,
                 "name": "Results interpretation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Oxidase test is used for identification of <em>Pseudomonas</em> spp, <em>Aeromonas</em> spp,  <em>Neisserias</em> spp, <em>Vibrio</em> spp and <em>Pasteurella</em> spp, all of which produces oxidase enzyme. <br><br><strong><span style=\"color: #333399;\">Blue-purple colour:</span></strong> Oxidase positive<br>No purple colour: Oxidase negative</p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -1109,17 +1300,27 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 4195
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Oxidase test is used for identification of <em>Pseudomonas</em> spp, <em>Aeromonas</em> spp,  <em>Neisserias</em> spp, <em>Vibrio</em> spp and <em>Pasteurella</em> spp, all of which produces oxidase enzyme. <br><br><strong><span style=\"color: #333399;\">Blue-purple colour:</span></strong> Oxidase positive<br>No purple colour: Oxidase negative</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -1144,11 +1345,21 @@
         "state": "uncompleted",
         "completed_on": null
       },
-      "outputs": [],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "outputs": [
+
+      ],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -1171,13 +1382,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 5489,
                 "name": "Preparation of smear",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Wipe the slides with spirit or alcohol. After cleaning, dry the slides and place them on laboratory towels until ready for use. Drawing a circle on the underside of the slide using a glassware-marking pen may be helpful to clearly designate the area in which you will prepare the smear.  You may also label the slide with the initials of the name of the organism on the edge of the slide. <br>With a sterile cooled loop, place a drop of sterile water or saline solution on the slide. <strong>Sterilize and cool the loop again and pick up a very small sample of a bacterial colony and gently stir into the drop of water/saline on the slide to create an emulsion.</strong></p></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -1187,18 +1399,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 4194
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Wipe the slides with spirit or alcohol. After cleaning, dry the slides and place them on laboratory towels until ready for use. Drawing a circle on the underside of the slide using a glassware-marking pen may be helpful to clearly designate the area in which you will prepare the smear.  You may also label the slide with the initials of the name of the organism on the edge of the slide. <br>With a sterile cooled loop, place a drop of sterile water or saline solution on the slide. <strong>Sterilize and cool the loop again and pick up a very small sample of a bacterial colony and gently stir into the drop of water/saline on the slide to create an emulsion.</strong></p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 5490,
                 "name": "Heat-fixing",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Heat fixing kills the bacteria in the smear, firmly adheres the smear to the slide, and allows the sample to more readily take up stains.<br>Allow the smear to air dry. After the smear has air-dried, hold the slide at one end and pass the entire slide through the flame of a Bunsen burner <strong>two to three times with the smear-side up.</strong></p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -1208,18 +1427,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 4194
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Heat fixing kills the bacteria in the smear, firmly adheres the smear to the slide, and allows the sample to more readily take up stains.<br>Allow the smear to air dry. After the smear has air-dried, hold the slide at one end and pass the entire slide through the flame of a Bunsen burner <strong>two to three times with the smear-side up.</strong></p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 5491,
                 "name": "Acid-Fast Staining",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the guidelines below:<br><br><strong><span style=\"color: #ff0000;\">Important: </span></strong><span style=\"color: #000000;\"> Great care must be taken when heating the carbol fuchsin especially if staining is carried out over a tray or other container in which highly flammable chemicals have collected from the previous staining. Only a small flame should be applied under the slides using an ignited swab previously dampened with a few drops of acid alcohol or 70% v/v ethanol or methanol. Do not use a large ethanol soaked swab because this is a fire risk.</span></p></body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -1229,127 +1455,8 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 4194
               },
-              "checklists": [
-                {
-                  "checklist": {
-                    "id": 1011,
-                    "name": "Guideline:",
-                    "step_id": 5491,
-                    "created_at": "2019-02-01T14:33:15.225Z",
-                    "updated_at": "2019-02-01T14:33:15.225Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
-                  },
-                  "checklist_items": [
-                    {
-                      "id": 4132,
-                      "text": "Cover the smear with carbol fuchsin stain.",
-                      "checked": false,
-                      "checklist_id": 1011,
-                      "created_at": "2019-02-01T14:33:15.227Z",
-                      "updated_at": "2019-02-01T14:33:15.227Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 4133,
-                      "text": "Heat the stain until vapour just begins to rise (i.e. about 60°C). Do not overheat. Allow the heated stain to remain on the slide for 5 minutes.",
-                      "checked": false,
-                      "checklist_id": 1011,
-                      "created_at": "2019-02-01T14:33:15.235Z",
-                      "updated_at": "2019-02-01T14:33:15.235Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 4134,
-                      "text": "Wash off the stain with distilled water.",
-                      "checked": false,
-                      "checklist_id": 1011,
-                      "created_at": "2019-02-01T14:33:15.244Z",
-                      "updated_at": "2019-02-01T14:41:45.127Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 4135,
-                      "text": "Cover the smear with 3% v/v acid alcohol for 5 minutes or until the smear is sufficiently decolorized, i.e. pale pink.",
-                      "checked": false,
-                      "checklist_id": 1011,
-                      "created_at": "2019-02-01T14:33:15.252Z",
-                      "updated_at": "2019-02-01T14:33:15.252Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    },
-                    {
-                      "id": 4136,
-                      "text": "Wash well with distilled water.",
-                      "checked": false,
-                      "checklist_id": 1011,
-                      "created_at": "2019-02-01T14:33:15.259Z",
-                      "updated_at": "2019-02-01T14:41:45.136Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 4
-                    },
-                    {
-                      "id": 4137,
-                      "text": "Cover the smear with methylene blue dye for 1–2 minutes.",
-                      "checked": false,
-                      "checklist_id": 1011,
-                      "created_at": "2019-02-01T14:33:15.266Z",
-                      "updated_at": "2019-02-01T14:41:45.144Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 5
-                    },
-                    {
-                      "id": 4138,
-                      "text": "Wash off the stain with distilled water.",
-                      "checked": false,
-                      "checklist_id": 1011,
-                      "created_at": "2019-02-01T14:33:15.273Z",
-                      "updated_at": "2019-02-01T14:41:45.151Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 6
-                    },
-                    {
-                      "id": 4139,
-                      "text": "Wipe the back of the slide clean, and place it in a draining rack for the smear to air-dry (do not blot dry).",
-                      "checked": false,
-                      "checklist_id": 1011,
-                      "created_at": "2019-02-01T14:33:15.280Z",
-                      "updated_at": "2019-02-01T14:33:15.280Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 7
-                    },
-                    {
-                      "id": 4140,
-                      "text": "Examine the smear microscopically, using the 100 X oil immersion objective.",
-                      "checked": false,
-                      "checklist_id": 1011,
-                      "created_at": "2019-02-01T14:33:15.286Z",
-                      "updated_at": "2019-02-01T14:33:15.286Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 8
-                    }
-                  ]
-                }
-              ],
-              "step_comments": [],
-              "step_assets": [
-                {
-                  "id": 3080,
-                  "step_id": 5491,
-                  "asset_id": 3742
-                }
+              "step_comments": [
+
               ],
               "assets": [
                 {
@@ -1371,14 +1478,134 @@
                   }
                 }
               ],
-              "step_tables": [],
-              "tables": []
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the guidelines below:<br><br><strong><span style=\"color: #ff0000;\">Important: </span></strong><span style=\"color: #000000;\"> Great care must be taken when heating the carbol fuchsin especially if staining is carried out over a tray or other container in which highly flammable chemicals have collected from the previous staining. Only a small flame should be applied under the slides using an ignited swab previously dampened with a few drops of acid alcohol or 70% v/v ethanol or methanol. Do not use a large ethanol soaked swab because this is a fire risk.</span></p></body></html>"
+                  },
+                  "position": 0
+                },
+                {
+                  "checklist": {
+                    "checklist": {
+                      "id": 1011,
+                      "name": "Guideline:",
+                      "step_id": 5491,
+                      "created_at": "2019-02-01T14:33:15.225Z",
+                      "updated_at": "2019-02-01T14:33:15.225Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 4132,
+                        "text": "Cover the smear with carbol fuchsin stain.",
+                        "checked": false,
+                        "checklist_id": 1011,
+                        "created_at": "2019-02-01T14:33:15.227Z",
+                        "updated_at": "2019-02-01T14:33:15.227Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 4133,
+                        "text": "Heat the stain until vapour just begins to rise (i.e. about 60°C). Do not overheat. Allow the heated stain to remain on the slide for 5 minutes.",
+                        "checked": false,
+                        "checklist_id": 1011,
+                        "created_at": "2019-02-01T14:33:15.235Z",
+                        "updated_at": "2019-02-01T14:33:15.235Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 4134,
+                        "text": "Wash off the stain with distilled water.",
+                        "checked": false,
+                        "checklist_id": 1011,
+                        "created_at": "2019-02-01T14:33:15.244Z",
+                        "updated_at": "2019-02-01T14:41:45.127Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 4135,
+                        "text": "Cover the smear with 3% v/v acid alcohol for 5 minutes or until the smear is sufficiently decolorized, i.e. pale pink.",
+                        "checked": false,
+                        "checklist_id": 1011,
+                        "created_at": "2019-02-01T14:33:15.252Z",
+                        "updated_at": "2019-02-01T14:33:15.252Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      },
+                      {
+                        "id": 4136,
+                        "text": "Wash well with distilled water.",
+                        "checked": false,
+                        "checklist_id": 1011,
+                        "created_at": "2019-02-01T14:33:15.259Z",
+                        "updated_at": "2019-02-01T14:41:45.136Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 4
+                      },
+                      {
+                        "id": 4137,
+                        "text": "Cover the smear with methylene blue dye for 1–2 minutes.",
+                        "checked": false,
+                        "checklist_id": 1011,
+                        "created_at": "2019-02-01T14:33:15.266Z",
+                        "updated_at": "2019-02-01T14:41:45.144Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 5
+                      },
+                      {
+                        "id": 4138,
+                        "text": "Wash off the stain with distilled water.",
+                        "checked": false,
+                        "checklist_id": 1011,
+                        "created_at": "2019-02-01T14:33:15.273Z",
+                        "updated_at": "2019-02-01T14:41:45.151Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 6
+                      },
+                      {
+                        "id": 4139,
+                        "text": "Wipe the back of the slide clean, and place it in a draining rack for the smear to air-dry (do not blot dry).",
+                        "checked": false,
+                        "checklist_id": 1011,
+                        "created_at": "2019-02-01T14:33:15.280Z",
+                        "updated_at": "2019-02-01T14:33:15.280Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 7
+                      },
+                      {
+                        "id": 4140,
+                        "text": "Examine the smear microscopically, using the 100 X oil immersion objective.",
+                        "checked": false,
+                        "checklist_id": 1011,
+                        "created_at": "2019-02-01T14:33:15.286Z",
+                        "updated_at": "2019-02-01T14:33:15.286Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 8
+                      }
+                    ]
+                  },
+                  "position": 1
+                }
+              ]
             },
             {
               "step": {
                 "id": 5494,
                 "name": "Result interpretation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<strong>Some</strong><em><strong> bacteria contain a waxy lipid, mycolic acid, in their cell wall.</strong></em> This lipid makes the cells more durable and is commonly associated with pathogens.<br><br><br><strong><span style=\"color: #ff0000;\">RED: </span></strong><span style=\"color: #000000;\">Acid fast organisms <br><strong><span style=\"color: #0000ff;\">BLUE:</span></strong><span style=\"color: #0000ff;\"> <span style=\"color: #000000;\">Non-acid fast organisms</span></span></span>\n</body></html>",
                 "position": 3,
                 "completed": false,
                 "completed_on": null,
@@ -1388,17 +1615,27 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 4194
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<strong>Some</strong><em><strong> bacteria contain a waxy lipid, mycolic acid, in their cell wall.</strong></em> This lipid makes the cells more durable and is commonly associated with pathogens.<br><br><br><strong><span style=\"color: #ff0000;\">RED: </span></strong><span style=\"color: #000000;\">Acid fast organisms <br><strong><span style=\"color: #0000ff;\">BLUE:</span></strong><span style=\"color: #0000ff;\"> <span style=\"color: #000000;\">Non-acid fast organisms</span></span></span>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -1423,11 +1660,21 @@
         "state": "uncompleted",
         "completed_on": null
       },
-      "outputs": [],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "outputs": [
+
+      ],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -1450,13 +1697,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 5488,
                 "name": "Gram staining",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the guidelines below.</p></body></html>",
                 "position": 3,
                 "completed": false,
                 "completed_on": null,
@@ -1466,116 +1714,8 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 4193
               },
-              "checklists": [
-                {
-                  "checklist": {
-                    "id": 1010,
-                    "name": "Guidelines:",
-                    "step_id": 5488,
-                    "created_at": "2019-02-01T14:18:22.724Z",
-                    "updated_at": "2019-02-01T14:18:22.724Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
-                  },
-                  "checklist_items": [
-                    {
-                      "id": 4124,
-                      "text": "Flood air-dried, heat-fixed smear of cells for 1 minute with crystal violet staining reagent. Please note that the quality of the smear (too heavy or too light cell concentration) will affect the Gram Stain results.",
-                      "checked": false,
-                      "checklist_id": 1010,
-                      "created_at": "2019-02-01T14:18:22.727Z",
-                      "updated_at": "2019-02-01T14:18:22.727Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 4125,
-                      "text": "Wash slide in a gentle and indirect stream of tap water for 2 seconds.",
-                      "checked": false,
-                      "checklist_id": 1010,
-                      "created_at": "2019-02-01T14:18:22.742Z",
-                      "updated_at": "2019-02-01T14:18:22.742Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 4126,
-                      "text": "Flood slide with the mordant: Gram's iodine. Wait 1 minute.",
-                      "checked": false,
-                      "checklist_id": 1010,
-                      "created_at": "2019-02-01T14:18:22.753Z",
-                      "updated_at": "2019-02-01T14:18:22.753Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 4127,
-                      "text": "Wash slide in a gentle and indirect stream of tap water for 2 seconds.",
-                      "checked": false,
-                      "checklist_id": 1010,
-                      "created_at": "2019-02-01T14:18:22.764Z",
-                      "updated_at": "2019-02-01T14:18:22.764Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    },
-                    {
-                      "id": 4128,
-                      "text": "Flood slide with decolorizing agent. Wait 15 seconds or add drop by drop to slide until decolorizing agent running from the slide runs clear.",
-                      "checked": false,
-                      "checklist_id": 1010,
-                      "created_at": "2019-02-01T14:18:22.771Z",
-                      "updated_at": "2019-02-01T14:18:22.771Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 4
-                    },
-                    {
-                      "id": 4129,
-                      "text": "Flood slide with counterstain, safranin. Wait 30 seconds to 1 minute.",
-                      "checked": false,
-                      "checklist_id": 1010,
-                      "created_at": "2019-02-01T14:18:22.779Z",
-                      "updated_at": "2019-02-01T14:18:22.779Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 5
-                    },
-                    {
-                      "id": 4130,
-                      "text": "Wash slide in a gentile and indirect stream of tap water until no color appears in the effluent and then blot dry with absorbent paper.",
-                      "checked": false,
-                      "checklist_id": 1010,
-                      "created_at": "2019-02-01T14:18:22.786Z",
-                      "updated_at": "2019-02-01T14:18:22.786Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 6
-                    },
-                    {
-                      "id": 4131,
-                      "text": "Observe the results of the staining procedure under oil immersion using a Brightfield microscope. At the completion of the Gram Stain, gram-negative bacteria will stain pink/red and gram-positive bacteria will stain blue/purple.",
-                      "checked": false,
-                      "checklist_id": 1010,
-                      "created_at": "2019-02-01T14:18:22.793Z",
-                      "updated_at": "2019-02-01T14:18:22.793Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 7
-                    }
-                  ]
-                }
-              ],
-              "step_comments": [],
-              "step_assets": [
-                {
-                  "id": 3081,
-                  "step_id": 5488,
-                  "asset_id": 3743
-                }
+              "step_comments": [
+
               ],
               "assets": [
                 {
@@ -1597,14 +1737,123 @@
                   }
                 }
               ],
-              "step_tables": [],
-              "tables": []
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the guidelines below.</p></body></html>"
+                  },
+                  "position": 0
+                },
+                {
+                  "checklist": {
+                    "checklist": {
+                      "id": 1010,
+                      "name": "Guidelines:",
+                      "step_id": 5488,
+                      "created_at": "2019-02-01T14:18:22.724Z",
+                      "updated_at": "2019-02-01T14:18:22.724Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 4124,
+                        "text": "Flood air-dried, heat-fixed smear of cells for 1 minute with crystal violet staining reagent. Please note that the quality of the smear (too heavy or too light cell concentration) will affect the Gram Stain results.",
+                        "checked": false,
+                        "checklist_id": 1010,
+                        "created_at": "2019-02-01T14:18:22.727Z",
+                        "updated_at": "2019-02-01T14:18:22.727Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 4125,
+                        "text": "Wash slide in a gentle and indirect stream of tap water for 2 seconds.",
+                        "checked": false,
+                        "checklist_id": 1010,
+                        "created_at": "2019-02-01T14:18:22.742Z",
+                        "updated_at": "2019-02-01T14:18:22.742Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 4126,
+                        "text": "Flood slide with the mordant: Gram's iodine. Wait 1 minute.",
+                        "checked": false,
+                        "checklist_id": 1010,
+                        "created_at": "2019-02-01T14:18:22.753Z",
+                        "updated_at": "2019-02-01T14:18:22.753Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 4127,
+                        "text": "Wash slide in a gentle and indirect stream of tap water for 2 seconds.",
+                        "checked": false,
+                        "checklist_id": 1010,
+                        "created_at": "2019-02-01T14:18:22.764Z",
+                        "updated_at": "2019-02-01T14:18:22.764Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      },
+                      {
+                        "id": 4128,
+                        "text": "Flood slide with decolorizing agent. Wait 15 seconds or add drop by drop to slide until decolorizing agent running from the slide runs clear.",
+                        "checked": false,
+                        "checklist_id": 1010,
+                        "created_at": "2019-02-01T14:18:22.771Z",
+                        "updated_at": "2019-02-01T14:18:22.771Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 4
+                      },
+                      {
+                        "id": 4129,
+                        "text": "Flood slide with counterstain, safranin. Wait 30 seconds to 1 minute.",
+                        "checked": false,
+                        "checklist_id": 1010,
+                        "created_at": "2019-02-01T14:18:22.779Z",
+                        "updated_at": "2019-02-01T14:18:22.779Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 5
+                      },
+                      {
+                        "id": 4130,
+                        "text": "Wash slide in a gentile and indirect stream of tap water until no color appears in the effluent and then blot dry with absorbent paper.",
+                        "checked": false,
+                        "checklist_id": 1010,
+                        "created_at": "2019-02-01T14:18:22.786Z",
+                        "updated_at": "2019-02-01T14:18:22.786Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 6
+                      },
+                      {
+                        "id": 4131,
+                        "text": "Observe the results of the staining procedure under oil immersion using a Brightfield microscope. At the completion of the Gram Stain, gram-negative bacteria will stain pink/red and gram-positive bacteria will stain blue/purple.",
+                        "checked": false,
+                        "checklist_id": 1010,
+                        "created_at": "2019-02-01T14:18:22.793Z",
+                        "updated_at": "2019-02-01T14:18:22.793Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 7
+                      }
+                    ]
+                  },
+                  "position": 1
+                }
+              ]
             },
             {
               "step": {
                 "id": 5475,
                 "name": "Reagents",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Reagents below can be made or purchased.<br><strong><br>Crystal Violet Staining Reagent:<br></strong><span style=\"text-decoration: underline;\"><br>Solution A for crystal violet staining reagent</span></p>\n<ul>\n<li>Crystal violet (certified 90% dye content), 2g </li>\n<li>Ethanol, 95% (vol/vol), 20 mL</li>\n</ul>\n<span style=\"text-decoration: underline;\">Solution B for crystal violet staining reagent<br></span>\n<ul>\n<li>Ammonium oxalate, 0.8 g</li>\n<li>Distilled water, 80 mL</li>\n</ul>\nMix A and B to obtain crystal violet staining reagent. Store for<strong> 24 h</strong> and filter through paper prior to use.<br><br><strong>Gram's Iodine:<br></strong><br>\n<ul>\n<li>Iodine, 1.0 g</li>\n<li>Potassium iodide, 2.0 g</li>\n<li>Distilled water, 300 mL</li>\n</ul>\nGrind the iodine and potassium iodide in a mortar and add water slowly with continuous grinding until the iodine is dissolved. Store in amber bottles.<br><br><strong>Safranin:<br><br></strong><span style=\"text-decoration-line: underline;\">Stock solution:</span><br>\n<ul>\n<li>2.5g Safranin O</li>\n<li>100 ml 95% Ethanol</li>\n</ul>\n<p><span style=\"text-decoration: underline;\">Working Solution:</span></p>\n<ul>\n<li>10 mL Stock Solution </li>\n<li>90 mL Distilled water</li>\n</ul>\n</body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -1614,18 +1863,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 4193
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Reagents below can be made or purchased.<br><strong><br>Crystal Violet Staining Reagent:<br></strong><span style=\"text-decoration: underline;\"><br>Solution A for crystal violet staining reagent</span></p>\n<ul>\n<li>Crystal violet (certified 90% dye content), 2g </li>\n<li>Ethanol, 95% (vol/vol), 20 mL</li>\n</ul>\n<span style=\"text-decoration: underline;\">Solution B for crystal violet staining reagent<br></span>\n<ul>\n<li>Ammonium oxalate, 0.8 g</li>\n<li>Distilled water, 80 mL</li>\n</ul>\nMix A and B to obtain crystal violet staining reagent. Store for<strong> 24 h</strong> and filter through paper prior to use.<br><br><strong>Gram's Iodine:<br></strong><br>\n<ul>\n<li>Iodine, 1.0 g</li>\n<li>Potassium iodide, 2.0 g</li>\n<li>Distilled water, 300 mL</li>\n</ul>\nGrind the iodine and potassium iodide in a mortar and add water slowly with continuous grinding until the iodine is dissolved. Store in amber bottles.<br><br><strong>Safranin:<br><br></strong><span style=\"text-decoration-line: underline;\">Stock solution:</span><br>\n<ul>\n<li>2.5g Safranin O</li>\n<li>100 ml 95% Ethanol</li>\n</ul>\n<p><span style=\"text-decoration: underline;\">Working Solution:</span></p>\n<ul>\n<li>10 mL Stock Solution </li>\n<li>90 mL Distilled water</li>\n</ul>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 5476,
                 "name": "Preparation of  smear",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Wipe the slides with spirit or alcohol. After cleaning, dry the slides and place them on laboratory towels until ready for use. Drawing a circle on the underside of the slide using a glassware-marking pen may be helpful to clearly designate the area in which you will prepare the smear.  You may also label the slide with the initials of the name of the organism on the edge of the slide. <br>With a sterile cooled loop, place a drop of sterile water or saline solution on the slide. <strong>Sterilize and cool the loop again and pick up a very small sample of a bacterial colony and gently stir into the drop of water/saline on the slide to create an emulsion.</strong></p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -1635,18 +1891,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 4193
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Wipe the slides with spirit or alcohol. After cleaning, dry the slides and place them on laboratory towels until ready for use. Drawing a circle on the underside of the slide using a glassware-marking pen may be helpful to clearly designate the area in which you will prepare the smear.  You may also label the slide with the initials of the name of the organism on the edge of the slide. <br>With a sterile cooled loop, place a drop of sterile water or saline solution on the slide. <strong>Sterilize and cool the loop again and pick up a very small sample of a bacterial colony and gently stir into the drop of water/saline on the slide to create an emulsion.</strong></p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 5487,
                 "name": "Heat fixing",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Heat fixing kills the bacteria in the smear, firmly adheres the smear to the slide, and allows the sample to more readily take up stains.<br>Allow the smear to air dry. After the smear has air-dried, hold the slide at one end and pass the entire slide through the flame of a Bunsen burner <strong>two to three times with the smear-side up.</strong></p>\n<p> </p>\n<p> </p>\n</body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -1656,17 +1919,27 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 4193
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Heat fixing kills the bacteria in the smear, firmly adheres the smear to the slide, and allows the sample to more readily take up stains.<br>Allow the smear to air dry. After the smear has air-dried, hold the slide at one end and pass the entire slide through the flame of a Bunsen burner <strong>two to three times with the smear-side up.</strong></p>\n<p> </p>\n<p> </p>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -1698,10 +1971,18 @@
           "output_id": 2188
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -1724,13 +2005,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 4511,
                 "name": "Collect all the plates",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>After all the samples are taken, collect all sample plates together, remove them from the sampling area and incubate as directed. Complete and enclose the necessary documentation <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#coun\">[#Counting and recording...~tsk~ZU]</span>.</p></body></html>",
                 "position": 3,
                 "completed": false,
                 "completed_on": null,
@@ -1740,18 +2022,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3540
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>After all the samples are taken, collect all sample plates together, remove them from the sampling area and incubate as directed. Complete and enclose the necessary documentation <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#coun\">[#Counting and recording...~tsk~ZU]</span>.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 5449,
                 "name": "Labeling of plates",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Assemble the plates required and label them. Ensure that correct information about sampling is written on the base of the plate with a permanent ink marker.<br>The following sampling details should be recorded on the plate:<br><br></p>\n<ul>\n<li>Initials of a person who is sampling</li>\n<li>Sampling location code</li>\n<li>Date and time of the day of sampling/plating </li>\n</ul>\n</body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -1761,18 +2050,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3540
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Assemble the plates required and label them. Ensure that correct information about sampling is written on the base of the plate with a permanent ink marker.<br>The following sampling details should be recorded on the plate:<br><br></p>\n<ul>\n<li>Initials of a person who is sampling</li>\n<li>Sampling location code</li>\n<li>Date and time of the day of sampling/plating </li>\n</ul>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4515,
                 "name": "Passive Air Sampling with settle plates",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><div style=\"text-align: justify;\">Transfer the contact plates into the area to be tested. Enter the area according to the procedures. <br><strong>Sampling:</strong> Place the plates to the appropriate location with lids still on. Raise lids to expose the surface of the medium, rest the lid on the very edge of the plate so the entire agar surface is completely exposed. Take care not to put fingers on plates and avoid passing anything over the top of plates being exposed. Leave plates exposed for the full shift and/or <strong>4 hours</strong>. The exposure time should be recorded before sending plates for incubation. After exposure, replace the lids of the plates. Clean the surface, where the plates were placed.</div></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -1782,87 +2078,96 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3540
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><div style=\"text-align: justify;\">Transfer the contact plates into the area to be tested. Enter the area according to the procedures. <br><strong>Sampling:</strong> Place the plates to the appropriate location with lids still on. Raise lids to expose the surface of the medium, rest the lid on the very edge of the plate so the entire agar surface is completely exposed. Take care not to put fingers on plates and avoid passing anything over the top of plates being exposed. Leave plates exposed for the full shift and/or <strong>4 hours</strong>. The exposure time should be recorded before sending plates for incubation. After exposure, replace the lids of the plates. Clean the surface, where the plates were placed.</div></body></html>"
+                  },
+                  "position": 0
+                },
                 {
                   "checklist": {
-                    "id": 808,
-                    "name": "Sampling locations (examples):",
-                    "step_id": 4515,
-                    "created_at": "2018-11-15T09:56:29.965Z",
-                    "updated_at": "2018-12-12T09:33:45.454Z",
-                    "created_by_id": 202,
-                    "last_modified_by_id": 202
+                    "checklist": {
+                      "id": 808,
+                      "name": "Sampling locations (examples):",
+                      "step_id": 4515,
+                      "created_at": "2018-11-15T09:56:29.965Z",
+                      "updated_at": "2018-12-12T09:33:45.454Z",
+                      "created_by_id": 202,
+                      "last_modified_by_id": 202
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3399,
+                        "text": "Door to pass trough",
+                        "checked": false,
+                        "checklist_id": 808,
+                        "created_at": "2018-11-15T09:56:29.981Z",
+                        "updated_at": "2018-11-15T10:21:48.064Z",
+                        "created_by_id": 202,
+                        "last_modified_by_id": 202,
+                        "position": 0
+                      },
+                      {
+                        "id": 3401,
+                        "text": "In front of the door",
+                        "checked": false,
+                        "checklist_id": 808,
+                        "created_at": "2018-11-15T09:56:30.054Z",
+                        "updated_at": "2019-01-29T12:36:43.082Z",
+                        "created_by_id": 202,
+                        "last_modified_by_id": 202,
+                        "position": 1
+                      },
+                      {
+                        "id": 3402,
+                        "text": "Inside the curtain",
+                        "checked": false,
+                        "checklist_id": 808,
+                        "created_at": "2018-11-15T09:56:30.070Z",
+                        "updated_at": "2019-01-29T12:36:43.092Z",
+                        "created_by_id": 202,
+                        "last_modified_by_id": 202,
+                        "position": 2
+                      },
+                      {
+                        "id": 3403,
+                        "text": "Inside the middle of the pass trough",
+                        "checked": false,
+                        "checklist_id": 808,
+                        "created_at": "2018-11-15T09:56:30.083Z",
+                        "updated_at": "2019-01-29T12:36:43.101Z",
+                        "created_by_id": 202,
+                        "last_modified_by_id": 202,
+                        "position": 3
+                      },
+                      {
+                        "id": 3404,
+                        "text": "Behind the fill machine",
+                        "checked": false,
+                        "checklist_id": 808,
+                        "created_at": "2018-11-15T09:56:30.096Z",
+                        "updated_at": "2019-01-29T12:36:43.107Z",
+                        "created_by_id": 202,
+                        "last_modified_by_id": 202,
+                        "position": 4
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 3399,
-                      "text": "Door to pass trough",
-                      "checked": false,
-                      "checklist_id": 808,
-                      "created_at": "2018-11-15T09:56:29.981Z",
-                      "updated_at": "2018-11-15T10:21:48.064Z",
-                      "created_by_id": 202,
-                      "last_modified_by_id": 202,
-                      "position": 0
-                    },
-                    {
-                      "id": 3401,
-                      "text": "In front of the door",
-                      "checked": false,
-                      "checklist_id": 808,
-                      "created_at": "2018-11-15T09:56:30.054Z",
-                      "updated_at": "2019-01-29T12:36:43.082Z",
-                      "created_by_id": 202,
-                      "last_modified_by_id": 202,
-                      "position": 1
-                    },
-                    {
-                      "id": 3402,
-                      "text": "Inside the curtain",
-                      "checked": false,
-                      "checklist_id": 808,
-                      "created_at": "2018-11-15T09:56:30.070Z",
-                      "updated_at": "2019-01-29T12:36:43.092Z",
-                      "created_by_id": 202,
-                      "last_modified_by_id": 202,
-                      "position": 2
-                    },
-                    {
-                      "id": 3403,
-                      "text": "Inside the middle of the pass trough",
-                      "checked": false,
-                      "checklist_id": 808,
-                      "created_at": "2018-11-15T09:56:30.083Z",
-                      "updated_at": "2019-01-29T12:36:43.101Z",
-                      "created_by_id": 202,
-                      "last_modified_by_id": 202,
-                      "position": 3
-                    },
-                    {
-                      "id": 3404,
-                      "text": "Behind the fill machine",
-                      "checked": false,
-                      "checklist_id": 808,
-                      "created_at": "2018-11-15T09:56:30.096Z",
-                      "updated_at": "2019-01-29T12:36:43.107Z",
-                      "created_by_id": 202,
-                      "last_modified_by_id": 202,
-                      "position": 4
-                    }
-                  ]
+                  "position": 1
                 }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              ]
             },
             {
               "step": {
                 "id": 5167,
                 "name": "Active Air Sampling with settle plates",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p style=\"text-align: justify;\"><strong>Preparation of sampling location and air sampler:</strong> Ensure air sampler is fully charged. Sanitize the external surfaces of the unit with sterile <strong>70%</strong> isopropyl alcohol. Press the black colour button on the bottom side to start the air sampler. <br><strong>Sampling:</strong> Select standard mode and press confirm. Select <strong>10 000L</strong> of air volume and press enter key to confirm. After pressing the enter key START FOR 10 000 will appear on display. Carefully remove the cover from the sieve. Place the settle plate on the air sampler and screw the sieve head. Start the air sampler by pressing enter. Sampling should last around <strong>10 minutes</strong>. <br><strong>After air sampling is finished: </strong>Unscrew the sieve head of the air sampler. Carefully remove the agar plate and cover it with lid. Swab areas where plates have been exposed with a suitable disinfectant to remove any trace of media or condensation from the lids, which may contaminate the room. Swab areas where plates have been exposed with a suitable disinfectant to remove any trace of media or condensation from the lids, which may contaminate the clean room.</p></body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -1872,75 +2177,87 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3540
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p style=\"text-align: justify;\"><strong>Preparation of sampling location and air sampler:</strong> Ensure air sampler is fully charged. Sanitize the external surfaces of the unit with sterile <strong>70%</strong> isopropyl alcohol. Press the black colour button on the bottom side to start the air sampler. <br><strong>Sampling:</strong> Select standard mode and press confirm. Select <strong>10 000L</strong> of air volume and press enter key to confirm. After pressing the enter key START FOR 10 000 will appear on display. Carefully remove the cover from the sieve. Place the settle plate on the air sampler and screw the sieve head. Start the air sampler by pressing enter. Sampling should last around <strong>10 minutes</strong>. <br><strong>After air sampling is finished: </strong>Unscrew the sieve head of the air sampler. Carefully remove the agar plate and cover it with lid. Swab areas where plates have been exposed with a suitable disinfectant to remove any trace of media or condensation from the lids, which may contaminate the room. Swab areas where plates have been exposed with a suitable disinfectant to remove any trace of media or condensation from the lids, which may contaminate the clean room.</p></body></html>"
+                  },
+                  "position": 0
+                },
                 {
                   "checklist": {
-                    "id": 925,
-                    "name": "Sample location (examples):",
-                    "step_id": 5167,
-                    "created_at": "2018-12-12T10:08:05.163Z",
-                    "updated_at": "2018-12-12T10:08:05.163Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 925,
+                      "name": "Sample location (examples):",
+                      "step_id": 5167,
+                      "created_at": "2018-12-12T10:08:05.163Z",
+                      "updated_at": "2018-12-12T10:08:05.163Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3817,
+                        "text": "In front of the door",
+                        "checked": false,
+                        "checklist_id": 925,
+                        "created_at": "2018-12-12T10:08:05.165Z",
+                        "updated_at": "2018-12-12T10:08:05.165Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 3818,
+                        "text": "Inside the curtain",
+                        "checked": false,
+                        "checklist_id": 925,
+                        "created_at": "2018-12-12T10:08:05.173Z",
+                        "updated_at": "2018-12-12T10:08:05.173Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 3819,
+                        "text": "Behind the fill machine",
+                        "checked": false,
+                        "checklist_id": 925,
+                        "created_at": "2018-12-12T10:08:05.179Z",
+                        "updated_at": "2018-12-12T10:08:05.179Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 3820,
+                        "text": "In front of pass trough",
+                        "checked": false,
+                        "checklist_id": 925,
+                        "created_at": "2018-12-12T10:08:05.185Z",
+                        "updated_at": "2018-12-12T10:08:05.185Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 3817,
-                      "text": "In front of the door",
-                      "checked": false,
-                      "checklist_id": 925,
-                      "created_at": "2018-12-12T10:08:05.165Z",
-                      "updated_at": "2018-12-12T10:08:05.165Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 3818,
-                      "text": "Inside the curtain",
-                      "checked": false,
-                      "checklist_id": 925,
-                      "created_at": "2018-12-12T10:08:05.173Z",
-                      "updated_at": "2018-12-12T10:08:05.173Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 3819,
-                      "text": "Behind the fill machine",
-                      "checked": false,
-                      "checklist_id": 925,
-                      "created_at": "2018-12-12T10:08:05.179Z",
-                      "updated_at": "2018-12-12T10:08:05.179Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 3820,
-                      "text": "In front of pass trough",
-                      "checked": false,
-                      "checklist_id": 925,
-                      "created_at": "2018-12-12T10:08:05.185Z",
-                      "updated_at": "2018-12-12T10:08:05.185Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    }
-                  ]
+                  "position": 1
                 }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -1987,10 +2304,18 @@
           "output_id": 2196
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -2013,13 +2338,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 5177,
                 "name": "Discarding plates",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>All samples should be discarded according to procedures. </p></body></html>",
                 "position": 4,
                 "completed": false,
                 "completed_on": null,
@@ -2029,18 +2355,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3556
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>All samples should be discarded according to procedures. </p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4558,
                 "name": "Streak plate procedure",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow streaking procedure as displayed on image and guidelines below.</p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -2050,83 +2383,8 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3556
               },
-              "checklists": [
-                {
-                  "checklist": {
-                    "id": 953,
-                    "name": "Guidelines:",
-                    "step_id": 4558,
-                    "created_at": "2018-12-21T07:19:34.041Z",
-                    "updated_at": "2018-12-21T07:19:34.041Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
-                  },
-                  "checklist_items": [
-                    {
-                      "id": 3912,
-                      "text": "Label the base of the plate. Open the lids and flame metal loop using a Bunsen burner before obtaining the inoculum for the plate.",
-                      "checked": false,
-                      "checklist_id": 953,
-                      "created_at": "2018-12-21T07:19:34.043Z",
-                      "updated_at": "2018-12-21T07:19:34.043Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 3913,
-                      "text": "The metal should become red hot. Move the wire so the flame approaches the loop. Spread sample over about one-quarter of the surface of the medium using a rapid, smooth, back-and-forth motion.",
-                      "checked": false,
-                      "checklist_id": 953,
-                      "created_at": "2018-12-21T07:19:34.053Z",
-                      "updated_at": "2018-12-21T07:19:34.053Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 3914,
-                      "text": "Lift the bottom half of an inverted plate from the bench. Move the loop back and forth many times across the agar surface from the rim to the centre of the plate. Reflame the metal loop. Turn the Petri dish 90 ° to streak the second quadrant. Using the back-and-forth pattern, cross over the last half of the streaks in the first quadrant then move into the empty second quadrant. Repeat until all 4 quadrants are done.",
-                      "checked": false,
-                      "checklist_id": 953,
-                      "created_at": "2018-12-21T07:19:34.060Z",
-                      "updated_at": "2018-12-21T07:19:34.060Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 3915,
-                      "text": "Cover all the plates with their lids.",
-                      "checked": false,
-                      "checklist_id": 953,
-                      "created_at": "2018-12-21T07:19:34.067Z",
-                      "updated_at": "2018-12-21T07:19:34.067Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    },
-                    {
-                      "id": 3916,
-                      "text": "Clean the area with disinfectant.",
-                      "checked": false,
-                      "checklist_id": 953,
-                      "created_at": "2018-12-21T07:19:34.073Z",
-                      "updated_at": "2018-12-21T07:19:34.073Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 4
-                    }
-                  ]
-                }
-              ],
-              "step_comments": [],
-              "step_assets": [
-                {
-                  "id": 3079,
-                  "step_id": 4558,
-                  "asset_id": 3741
-                }
+              "step_comments": [
+
               ],
               "assets": [
                 {
@@ -2148,14 +2406,90 @@
                   }
                 }
               ],
-              "step_tables": [],
-              "tables": []
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow streaking procedure as displayed on image and guidelines below.</p></body></html>"
+                  },
+                  "position": 0
+                },
+                {
+                  "checklist": {
+                    "checklist": {
+                      "id": 953,
+                      "name": "Guidelines:",
+                      "step_id": 4558,
+                      "created_at": "2018-12-21T07:19:34.041Z",
+                      "updated_at": "2018-12-21T07:19:34.041Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3912,
+                        "text": "Label the base of the plate. Open the lids and flame metal loop using a Bunsen burner before obtaining the inoculum for the plate.",
+                        "checked": false,
+                        "checklist_id": 953,
+                        "created_at": "2018-12-21T07:19:34.043Z",
+                        "updated_at": "2018-12-21T07:19:34.043Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 3913,
+                        "text": "The metal should become red hot. Move the wire so the flame approaches the loop. Spread sample over about one-quarter of the surface of the medium using a rapid, smooth, back-and-forth motion.",
+                        "checked": false,
+                        "checklist_id": 953,
+                        "created_at": "2018-12-21T07:19:34.053Z",
+                        "updated_at": "2018-12-21T07:19:34.053Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 3914,
+                        "text": "Lift the bottom half of an inverted plate from the bench. Move the loop back and forth many times across the agar surface from the rim to the centre of the plate. Reflame the metal loop. Turn the Petri dish 90 ° to streak the second quadrant. Using the back-and-forth pattern, cross over the last half of the streaks in the first quadrant then move into the empty second quadrant. Repeat until all 4 quadrants are done.",
+                        "checked": false,
+                        "checklist_id": 953,
+                        "created_at": "2018-12-21T07:19:34.060Z",
+                        "updated_at": "2018-12-21T07:19:34.060Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 3915,
+                        "text": "Cover all the plates with their lids.",
+                        "checked": false,
+                        "checklist_id": 953,
+                        "created_at": "2018-12-21T07:19:34.067Z",
+                        "updated_at": "2018-12-21T07:19:34.067Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      },
+                      {
+                        "id": 3916,
+                        "text": "Clean the area with disinfectant.",
+                        "checked": false,
+                        "checklist_id": 953,
+                        "created_at": "2018-12-21T07:19:34.073Z",
+                        "updated_at": "2018-12-21T07:19:34.073Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 4
+                      }
+                    ]
+                  },
+                  "position": 1
+                }
+              ]
             },
             {
               "step": {
                 "id": 5175,
                 "name": "Incubation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the protocol for incubation in <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#inc\">[#Incubation~tsk~ZP]</span> </p></body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -2165,18 +2499,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3556
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the protocol for incubation in <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#inc\">[#Incubation~tsk~ZP]</span> </p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4559,
                 "name": "Prepare a safe and sterile workspace",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><div class=\"row\" style=\"text-align: justify;\">Prepare a safe and sterile workspace: Sterilize all instruments, solutions, and media prior to using them for plating procedures. Clear away all materials cluttering your work area on the laboratory bench. Clean work area with disinfectant to minimize possible contamination. Set up a Bunsen burner. Work slowly, carefully, and deliberately within the sterile field area created by the updraft of the flame. Arrange all the supplies needed for the procedure on the laboratory bench near the sterile field. Make sure all the materials are properly labelled. Prepare new settle plates and settle plates from where you are isolating colonies.</div></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -2186,18 +2527,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3556
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><div class=\"row\" style=\"text-align: justify;\">Prepare a safe and sterile workspace: Sterilize all instruments, solutions, and media prior to using them for plating procedures. Clear away all materials cluttering your work area on the laboratory bench. Clean work area with disinfectant to minimize possible contamination. Set up a Bunsen burner. Work slowly, carefully, and deliberately within the sterile field area created by the updraft of the flame. Arrange all the supplies needed for the procedure on the laboratory bench near the sterile field. Make sure all the materials are properly labelled. Prepare new settle plates and settle plates from where you are isolating colonies.</div></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 5176,
                 "name": "Identification",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Use different tests to identify microorganisms:</p>\n<ul>\n<li style=\"text-align: justify;\">The Gram stain test, which is used to determine if the organism is Gram-negative or Gram-positive <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#gram\">[#Gram Stain Test~tsk~f6]</span> </li>\n<li style=\"text-align: justify;\">The acid-fast test, which identifies Mycobacterium <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#aci\">[#Acid-Fast Stain Test~tsk~f7]</span> </li>\n<li style=\"text-align: justify;\">The oxidase test, which identifies organisms that produce the enzyme cytochrome oxidase <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#oxi\">[#Oxidase Test~tsk~f8]</span> </li>\n<li style=\"text-align: justify;\">The catalase test, which differentiates Staphylococci (a catalase positive organism) from Streptococci (a catalase negative organism) <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#cata\">[#Catalase Test~tsk~f9]</span> </li>\n<li style=\"text-align: justify;\">The starch hydrolysis test, which evaluates the organism’s ability to synthesize and secrete enzymes to break down starch into smaller subunits to be used by the organism</li>\n<li style=\"text-align: justify;\">The mannitol and glucose fermentation test, which investigates how an organism metabolizes sugars</li>\n<li style=\"text-align: justify;\">The Voges-Proskauer test, which tests the organism’s ability to produce non-acidic end products from the metabolism of glucose and is helpful in differentiating the Enterobacteriaceae</li>\n<li style=\"text-align: justify;\">The citrate test, which studies the organism’s ability to apply citrate as a carbon source and is also helpful in differentiating the Enterobacteriaceae;</li>\n<li style=\"text-align: justify;\">The nitrate reductase test, which investigates bacteria’s ability or inability to reduce nitrate to nitrite</li>\n<li style=\"text-align: justify;\">The novobiocin sensitivity test, which evaluates an organism’s susceptibility to novobiocin, an antibiotic that obstructs DNA replication and is helpful in differentiating among Gram-positive cocci</li>\n</ul>\n</body></html>",
                 "position": 3,
                 "completed": false,
                 "completed_on": null,
@@ -2207,17 +2555,27 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3556
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Use different tests to identify microorganisms:</p>\n<ul>\n<li style=\"text-align: justify;\">The Gram stain test, which is used to determine if the organism is Gram-negative or Gram-positive <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#gram\">[#Gram Stain Test~tsk~f6]</span> </li>\n<li style=\"text-align: justify;\">The acid-fast test, which identifies Mycobacterium <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#aci\">[#Acid-Fast Stain Test~tsk~f7]</span> </li>\n<li style=\"text-align: justify;\">The oxidase test, which identifies organisms that produce the enzyme cytochrome oxidase <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#oxi\">[#Oxidase Test~tsk~f8]</span> </li>\n<li style=\"text-align: justify;\">The catalase test, which differentiates Staphylococci (a catalase positive organism) from Streptococci (a catalase negative organism) <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#cata\">[#Catalase Test~tsk~f9]</span> </li>\n<li style=\"text-align: justify;\">The starch hydrolysis test, which evaluates the organism’s ability to synthesize and secrete enzymes to break down starch into smaller subunits to be used by the organism</li>\n<li style=\"text-align: justify;\">The mannitol and glucose fermentation test, which investigates how an organism metabolizes sugars</li>\n<li style=\"text-align: justify;\">The Voges-Proskauer test, which tests the organism’s ability to produce non-acidic end products from the metabolism of glucose and is helpful in differentiating the Enterobacteriaceae</li>\n<li style=\"text-align: justify;\">The citrate test, which studies the organism’s ability to apply citrate as a carbon source and is also helpful in differentiating the Enterobacteriaceae;</li>\n<li style=\"text-align: justify;\">The nitrate reductase test, which investigates bacteria’s ability or inability to reduce nitrate to nitrite</li>\n<li style=\"text-align: justify;\">The novobiocin sensitivity test, which evaluates an organism’s susceptibility to novobiocin, an antibiotic that obstructs DNA replication and is helpful in differentiating among Gram-positive cocci</li>\n</ul>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -2249,10 +2607,18 @@
           "output_id": 2194
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -2275,13 +2641,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 4549,
                 "name": "Collect all the plates",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>After all the samples are taken, collect all sample plates together, remove them from the sampling area and incubate as directed. Complete and enclose the necessary documentation <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#coun\">[#Counting and recording...~tsk~ZU]</span>.</p></body></html>",
                 "position": 3,
                 "completed": false,
                 "completed_on": null,
@@ -2291,18 +2658,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3552
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>After all the samples are taken, collect all sample plates together, remove them from the sampling area and incubate as directed. Complete and enclose the necessary documentation <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#coun\">[#Counting and recording...~tsk~ZU]</span>.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 5447,
                 "name": "Labeling of plates",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Assemble the plates required and label them. Ensure that correct information about sampling is written on the base of the plate with a permanent ink marker.<br>The following sampling details should be recorded on the plate:<br><br></p>\n<ul>\n<li>Initials of a person who is sampling</li>\n<li>Sampling location code</li>\n<li>Date and time of the day of sampling/plating </li>\n</ul>\n</body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -2312,18 +2686,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3552
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p>Assemble the plates required and label them. Ensure that correct information about sampling is written on the base of the plate with a permanent ink marker.<br>The following sampling details should be recorded on the plate:<br><br></p>\n<ul>\n<li>Initials of a person who is sampling</li>\n<li>Sampling location code</li>\n<li>Date and time of the day of sampling/plating </li>\n</ul>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4551,
                 "name": "Surface sampling with contact plates",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p style=\"text-align: justify;\">Transfer the contact plates into the area to be tested. Enter the area according to the procedures. Ensure that the testing area is dry. <br><br>When sampling surfaces with contact plates, remove the lid and place the agar surface in maximum contact with the sampling site for <strong>10 seconds</strong> by applying a constant force spread evenly over the whole contact plate without twisting or sliding and avoiding the creation of bubbles. After contact with the sample surface, remove and replace the lid, avoiding any unnecessary hand movement near or over the agar surface. Clean it with disinfectant to remove any possible traces of agar.</p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -2333,131 +2714,140 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3552
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p style=\"text-align: justify;\">Transfer the contact plates into the area to be tested. Enter the area according to the procedures. Ensure that the testing area is dry. <br><br>When sampling surfaces with contact plates, remove the lid and place the agar surface in maximum contact with the sampling site for <strong>10 seconds</strong> by applying a constant force spread evenly over the whole contact plate without twisting or sliding and avoiding the creation of bubbles. After contact with the sample surface, remove and replace the lid, avoiding any unnecessary hand movement near or over the agar surface. Clean it with disinfectant to remove any possible traces of agar.</p></body></html>"
+                  },
+                  "position": 0
+                },
                 {
                   "checklist": {
-                    "id": 810,
-                    "name": "Sample locations (examples):",
-                    "step_id": 4551,
-                    "created_at": "2018-11-15T09:56:31.809Z",
-                    "updated_at": "2018-12-12T07:32:30.595Z",
-                    "created_by_id": 202,
-                    "last_modified_by_id": 202
+                    "checklist": {
+                      "id": 810,
+                      "name": "Sample locations (examples):",
+                      "step_id": 4551,
+                      "created_at": "2018-11-15T09:56:31.809Z",
+                      "updated_at": "2018-12-12T07:32:30.595Z",
+                      "created_by_id": 202,
+                      "last_modified_by_id": 202
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3410,
+                        "text": "Filling machine control panel",
+                        "checked": false,
+                        "checklist_id": 810,
+                        "created_at": "2018-11-15T09:56:31.836Z",
+                        "updated_at": "2018-12-12T07:29:55.968Z",
+                        "created_by_id": 202,
+                        "last_modified_by_id": 202,
+                        "position": 0
+                      },
+                      {
+                        "id": 3411,
+                        "text": "Surface of Balance Table",
+                        "checked": false,
+                        "checklist_id": 810,
+                        "created_at": "2018-11-15T09:56:31.847Z",
+                        "updated_at": "2018-12-12T07:29:55.975Z",
+                        "created_by_id": 202,
+                        "last_modified_by_id": 202,
+                        "position": 1
+                      },
+                      {
+                        "id": 3412,
+                        "text": "Surface of table",
+                        "checked": false,
+                        "checklist_id": 810,
+                        "created_at": "2018-11-15T09:56:31.860Z",
+                        "updated_at": "2018-12-12T07:29:55.981Z",
+                        "created_by_id": 202,
+                        "last_modified_by_id": 202,
+                        "position": 2
+                      },
+                      {
+                        "id": 3413,
+                        "text": "Surface of door to pass trough",
+                        "checked": false,
+                        "checklist_id": 810,
+                        "created_at": "2018-11-15T09:56:31.872Z",
+                        "updated_at": "2018-12-12T07:29:55.990Z",
+                        "created_by_id": 202,
+                        "last_modified_by_id": 202,
+                        "position": 3
+                      },
+                      {
+                        "id": 3414,
+                        "text": "Surface of door",
+                        "checked": false,
+                        "checklist_id": 810,
+                        "created_at": "2018-11-15T09:56:31.885Z",
+                        "updated_at": "2018-12-12T07:29:55.997Z",
+                        "created_by_id": 202,
+                        "last_modified_by_id": 202,
+                        "position": 4
+                      },
+                      {
+                        "id": 3417,
+                        "text": "Surface of the wall",
+                        "checked": false,
+                        "checklist_id": 810,
+                        "created_at": "2018-11-15T09:56:31.923Z",
+                        "updated_at": "2018-12-12T07:32:44.480Z",
+                        "created_by_id": 202,
+                        "last_modified_by_id": 202,
+                        "position": 5
+                      },
+                      {
+                        "id": 3420,
+                        "text": "Surface of solid curtain",
+                        "checked": false,
+                        "checklist_id": 810,
+                        "created_at": "2018-11-15T09:56:31.960Z",
+                        "updated_at": "2018-12-12T07:32:44.487Z",
+                        "created_by_id": 202,
+                        "last_modified_by_id": 202,
+                        "position": 6
+                      },
+                      {
+                        "id": 3815,
+                        "text": "Stopper bowl",
+                        "checked": false,
+                        "checklist_id": 810,
+                        "created_at": "2018-12-12T07:32:30.611Z",
+                        "updated_at": "2018-12-12T07:32:44.494Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 7
+                      },
+                      {
+                        "id": 3816,
+                        "text": "Plexiglass barrier",
+                        "checked": false,
+                        "checklist_id": 810,
+                        "created_at": "2018-12-12T07:32:30.618Z",
+                        "updated_at": "2018-12-12T07:32:44.501Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 8
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 3410,
-                      "text": "Filling machine control panel",
-                      "checked": false,
-                      "checklist_id": 810,
-                      "created_at": "2018-11-15T09:56:31.836Z",
-                      "updated_at": "2018-12-12T07:29:55.968Z",
-                      "created_by_id": 202,
-                      "last_modified_by_id": 202,
-                      "position": 0
-                    },
-                    {
-                      "id": 3411,
-                      "text": "Surface of Balance Table",
-                      "checked": false,
-                      "checklist_id": 810,
-                      "created_at": "2018-11-15T09:56:31.847Z",
-                      "updated_at": "2018-12-12T07:29:55.975Z",
-                      "created_by_id": 202,
-                      "last_modified_by_id": 202,
-                      "position": 1
-                    },
-                    {
-                      "id": 3412,
-                      "text": "Surface of table",
-                      "checked": false,
-                      "checklist_id": 810,
-                      "created_at": "2018-11-15T09:56:31.860Z",
-                      "updated_at": "2018-12-12T07:29:55.981Z",
-                      "created_by_id": 202,
-                      "last_modified_by_id": 202,
-                      "position": 2
-                    },
-                    {
-                      "id": 3413,
-                      "text": "Surface of door to pass trough",
-                      "checked": false,
-                      "checklist_id": 810,
-                      "created_at": "2018-11-15T09:56:31.872Z",
-                      "updated_at": "2018-12-12T07:29:55.990Z",
-                      "created_by_id": 202,
-                      "last_modified_by_id": 202,
-                      "position": 3
-                    },
-                    {
-                      "id": 3414,
-                      "text": "Surface of door",
-                      "checked": false,
-                      "checklist_id": 810,
-                      "created_at": "2018-11-15T09:56:31.885Z",
-                      "updated_at": "2018-12-12T07:29:55.997Z",
-                      "created_by_id": 202,
-                      "last_modified_by_id": 202,
-                      "position": 4
-                    },
-                    {
-                      "id": 3417,
-                      "text": "Surface of the wall",
-                      "checked": false,
-                      "checklist_id": 810,
-                      "created_at": "2018-11-15T09:56:31.923Z",
-                      "updated_at": "2018-12-12T07:32:44.480Z",
-                      "created_by_id": 202,
-                      "last_modified_by_id": 202,
-                      "position": 5
-                    },
-                    {
-                      "id": 3420,
-                      "text": "Surface of solid curtain",
-                      "checked": false,
-                      "checklist_id": 810,
-                      "created_at": "2018-11-15T09:56:31.960Z",
-                      "updated_at": "2018-12-12T07:32:44.487Z",
-                      "created_by_id": 202,
-                      "last_modified_by_id": 202,
-                      "position": 6
-                    },
-                    {
-                      "id": 3815,
-                      "text": "Stopper bowl",
-                      "checked": false,
-                      "checklist_id": 810,
-                      "created_at": "2018-12-12T07:32:30.611Z",
-                      "updated_at": "2018-12-12T07:32:44.494Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 7
-                    },
-                    {
-                      "id": 3816,
-                      "text": "Plexiglass barrier",
-                      "checked": false,
-                      "checklist_id": 810,
-                      "created_at": "2018-12-12T07:32:30.618Z",
-                      "updated_at": "2018-12-12T07:32:44.501Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 8
-                    }
-                  ]
+                  "position": 1
                 }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              ]
             },
             {
               "step": {
                 "id": 5165,
                 "name": "Sampling guidlines for glove and gowning test",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p><strong>Testing conditions:</strong> Sampling should take place at the end of a work session, but before the person would carry out any cleaning. Before performing the test the person should ensure that gloves are dry and free of any disinfectant. <br><br><strong>Glove test:</strong> The person doing the sampling should lift the lid of the plate, with the opposite hand to that being tested, and keeping hold of the lid in the other hand, touch the agar surface with the tips of all fingers then the thumb (in the gap on the plate behind where fingers were tested) on the hand being tested. A firm and even pressure should be applied for approximately <strong>5 to 10 seconds</strong>, taking care not to damage the agar surface. Replace the lid of the plate. Repeat for the other hand. Ensure that the glove surfaces tested are cleaned with a suitable disinfectant to remove any possible traces of agar before performing any other operations.<br><br><strong>Gowning test:</strong> The person doing the sampling should lift the lid of the plate and keep hold of the lid, touch the gown in the chest and clavicle area with agar surface. A firm and even pressure should be applied for approximately <strong>5 to 10 seconds</strong>, taking care not to damage the agar surface. Replace the lid of the plate. Ensure that the gown surfaces tested are cleaned with a suitable disinfectant to remove any possible traces of agar before performing any other operations.</p></body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -2467,17 +2857,27 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3552
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p><strong>Testing conditions:</strong> Sampling should take place at the end of a work session, but before the person would carry out any cleaning. Before performing the test the person should ensure that gloves are dry and free of any disinfectant. <br><br><strong>Glove test:</strong> The person doing the sampling should lift the lid of the plate, with the opposite hand to that being tested, and keeping hold of the lid in the other hand, touch the agar surface with the tips of all fingers then the thumb (in the gap on the plate behind where fingers were tested) on the hand being tested. A firm and even pressure should be applied for approximately <strong>5 to 10 seconds</strong>, taking care not to damage the agar surface. Replace the lid of the plate. Repeat for the other hand. Ensure that the glove surfaces tested are cleaned with a suitable disinfectant to remove any possible traces of agar before performing any other operations.<br><br><strong>Gowning test:</strong> The person doing the sampling should lift the lid of the plate and keep hold of the lid, touch the gown in the chest and clavicle area with agar surface. A firm and even pressure should be applied for approximately <strong>5 to 10 seconds</strong>, taking care not to damage the agar surface. Replace the lid of the plate. Ensure that the gown surfaces tested are cleaned with a suitable disinfectant to remove any possible traces of agar before performing any other operations.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     }
   ],
   "my_module_groups": [

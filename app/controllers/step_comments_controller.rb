@@ -78,8 +78,8 @@ class StepCommentsController < ApplicationController
       .call(activity_type: type_of,
             owner: current_user,
             subject: @protocol,
-            team: current_team,
-            project: @step.my_module.experiment.project,
+            team: @step.my_module.team,
+            project: @step.my_module.project,
             message_items: {
               my_module: @step.my_module.id,
               step: @step.id,

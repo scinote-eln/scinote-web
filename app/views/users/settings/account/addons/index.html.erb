@@ -20,6 +20,25 @@
     <div class="row printer-settings">
       <div class="col-xs-12 col-sm-12">
         <h2 class="addons-subtitle"><%= t('users.settings.account.addons.label_printers') %></h2>
+        <% if LabelPrinter.zebra_print_enabled? %>
+          <div class="printers-container">
+            <div class="printer">
+              <div class="header">
+                <div class="title">
+                  <%= t('users.settings.account.addons.zebra_printer.title') %>
+                </div>
+                <div class="control">
+                  <%= t('users.settings.account.addons.printers.enabled') %>
+                  <i class="fas fa-check"></i>
+                </div>
+              </div>
+              <div class="description">
+                <%= t('users.settings.account.addons.zebra_printer.description') %>
+              </div>
+               <%= link_to t('users.settings.account.addons.printers.details'), zebra_settings_path(), class: 'printer-details' %>
+            </div>
+          </div>
+        <% end %>
         <div class="printers-container">
           <div class="printer">
             <div class="header">

@@ -8,6 +8,10 @@
       <span class="sci-checkbox-label"></span>
     </div>
   </div>
+    <div class="project-code-cell table-cell">
+    <span><%= project.code %></span>
+  </div>
+
   <div class="project-name-cell table-cell">
     <% if project.archived? %>
       <%= link_to project_url(project, view_mode: :archived) do %>
@@ -40,6 +44,14 @@
     <span class="value cell-value"> <%= l(project.created_at, format: :full_with_comma) %></span>
   </div>
 
+  <% if project.archived? %>
+    <div class="data-row archived-date-cell table-cell">
+      <span class="card-label"><%= t('projects.index.card.archived_date') %></span>
+      <span class="value card-value"> <%= l(project.archived_on, format: :full_date) %></span>
+      <span class="value cell-value"> <%= l(project.archived_on, format: :full_with_comma) %></span>
+    </div>
+  <% end %>
+
   <div class="data-row visibility-cell table-cell">
     <span class="card-label"><%= t('projects.index.card.visibility') %></span>
     <span class="value" title="<%= project.name %> <%= project.hidden? ? t('projects.index.hidden') : t('projects.index.visible') %>">
@@ -68,12 +80,4 @@
       <% end %>
     </div>
   </div>
-
-  <% if project.archived? %>
-    <div class="data-row archived-date-cell table-cell">
-      <span class="card-label"><%= t('projects.index.card.archived_date') %></span>
-      <span class="value card-value"> <%= l(project.archived_on, format: :full_date) %></span>
-      <span class="value cell-value"> <%= l(project.archived_on, format: :full_with_comma) %></span>
-    </div>
-  <% end %>
 </div>

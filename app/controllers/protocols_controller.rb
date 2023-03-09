@@ -1,4 +1,3 @@
-
 class ProtocolsController < ApplicationController
   include RenamingUtil
   include ActionView::Helpers::TextHelper
@@ -16,6 +15,7 @@ class ProtocolsController < ApplicationController
   before_action :check_clone_permissions, only: [:clone]
   before_action :check_view_permissions, only: %i(
     show
+    edit
     protocol_status_bar
     updated_at_label
     preview
@@ -30,7 +30,6 @@ class ProtocolsController < ApplicationController
   # For update_from_parent and update_from_parent_modal we don't need to check
   # read permission for the parent protocol
   before_action :check_manage_permissions, only: %i(
-    edit
     update_keywords
     update_description
     update_name
@@ -75,6 +74,8 @@ class ProtocolsController < ApplicationController
                 only: %i(protocolsio_import_create protocolsio_import_save)
 
   before_action :set_importer, only: %i(load_from_file import)
+
+  layout 'fluid'
 
   def index; end
 
@@ -159,14 +160,10 @@ class ProtocolsController < ApplicationController
   end
 
   def edit
-    # Switch to correct team
-    current_team_switch(@protocol.team)
+    render :show
   end
 
   def show
-    # Switch to correct team
-    current_team_switch(@protocol.team)
-
     respond_to do |format|
       format.json { render json: @protocol, serializer: ProtocolSerializer, user: current_user }
       format.html
@@ -254,9 +251,7 @@ class ProtocolsController < ApplicationController
   end
 
   def delete_steps
-    @protocol.my_module.lock!
-
-    Protocol.transaction do
+    @protocol.with_lock do
       team = @protocol.team
       previous_size = 0
       @protocol.steps.each do |step|
@@ -274,7 +269,6 @@ class ProtocolsController < ApplicationController
 
         # skip adjusting positions after destroy as this is a bulk delete
         step.skip_position_adjust = true
-
         step.destroy!
       end
 
@@ -620,7 +614,7 @@ class ProtocolsController < ApplicationController
           .call(activity_type: :import_protocol_in_repository,
                 owner: current_user,
                 subject: protocol,
-                team: current_team,
+                team: protocol.team,
                 message_items: {
                   protocol: protocol.id
                 })
@@ -818,15 +812,15 @@ class ProtocolsController < ApplicationController
           file_name = 'protocols.eln'
         end
 
-        @protocols.each do |p|
+        @protocols.each do |protocol|
           if params[:my_module_id]
             my_module = MyModule.find(params[:my_module_id])
             Activities::CreateActivityService
               .call(activity_type: :export_protocol_from_task,
                     owner: current_user,
-                    project: my_module.experiment.project,
+                    project: my_module.project,
                     subject: my_module,
-                    team: current_team,
+                    team: my_module.team,
                     message_items: {
                       my_module: params[:my_module_id].to_i
                     })
@@ -834,10 +828,10 @@ class ProtocolsController < ApplicationController
             Activities::CreateActivityService
               .call(activity_type: :export_protocol_in_repository,
                     owner: current_user,
-                    subject: p,
-                    team: current_team,
+                    subject: protocol,
+                    team: protocol.team,
                     message_items: {
-                      protocol: p.id
+                      protocol: protocol.id
                     })
           end
         end
@@ -1100,6 +1094,7 @@ class ProtocolsController < ApplicationController
 
   def check_view_permissions
     @protocol = Protocol.find_by_id(params[:id])
+    current_team_switch(@protocol.team) if current_team != @protocol.team
     unless @protocol.present? &&
            (can_read_protocol_in_module?(@protocol) ||
            can_read_protocol_in_repository?(@protocol))
@@ -1230,7 +1225,7 @@ class ProtocolsController < ApplicationController
       .call(activity_type: type_of,
             owner: current_user,
             subject: @protocol,
-            team: current_team,
+            team: @protocol.team,
             project: project,
             message_items: message_items)
   end
@@ -1243,7 +1238,7 @@ class ProtocolsController < ApplicationController
                user: current_user.full_name,
                protocol: @protocol.name),
       message: t('notifications.protocol_description_annotation_message_html',
-                 protocol: link_to(@protocol.name, edit_protocol_url(@protocol)))
+                 protocol: link_to(@protocol.name, protocol_url(@protocol)))
     )
   end
 end

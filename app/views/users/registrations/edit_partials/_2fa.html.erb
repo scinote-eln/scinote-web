@@ -3,7 +3,7 @@
     <b><%= t("users.registrations.edit.2fa_title") %></b>
     <% if current_user.two_factor_auth_enabled? %>
       <span class="enabled">
-        <i class="fas fa-shield-alt"></i>
+        <i class="fas fa-check-circle"></i>
         <%= t("users.registrations.edit.2fa_enabled") %>
       </span>
     <% end %>
@@ -11,6 +11,9 @@
   <div class="description">
     <%= t("users.registrations.edit.2fa_description") %>
   </div>
+</div>
+
+<div class="two-factor-auth-button">
   <% if current_user.two_factor_auth_enabled? %>
     <button class="btn btn-secondary" title="disable two factor authentication" id="twoFactorAuthenticationDisable"><%= t("users.registrations.edit.2fa_button_disable") %></button>
   <% else %>

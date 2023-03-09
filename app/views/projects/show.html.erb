@@ -17,12 +17,10 @@
       <!-- list -->
       <div class="table-header">
         <div class="table-header-cell select-all-checkboxes">
-          <% if @project_is_managable %>
-            <div class="sci-checkbox-container">
-              <input title="checkbox for all experiments" value="1" type="checkbox" class="sci-checkbox select-all">
-              <span class="sci-checkbox-label"></span>
-            </div>
-          <% end %>
+          <div class="sci-checkbox-container">
+            <input title="checkbox for all experiments" value="1" type="checkbox" class="sci-checkbox select-all">
+            <span class="sci-checkbox-label"></span>
+          </div>
         </div>
         <div class="table-header-cell"><%= t('experiments.card.name') %></div>
         <div class="table-header-cell"><%= t('experiments.id') %></div>

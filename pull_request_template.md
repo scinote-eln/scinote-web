@@ -1,4 +1,4 @@
-Jira ticket: [SCI-xxxx](https://biosistemika.atlassian.net/browse/SCI-xxxx)
+Jira ticket: [SCI-xxxx](https://scinote.atlassian.net/browse/SCI-xxxx)
 
 ### What was done
 _In a sentence or two describe what was done, focus on the tech aspect_

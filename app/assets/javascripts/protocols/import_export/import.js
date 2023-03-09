@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-unused-vars, lines-around-comment, no-undef, no-alert */
 /* eslint-disable no-use-before-define, no-restricted-globals */
 //= require protocols/import_export/eln_table.js
@@ -48,10 +49,18 @@ function importProtocolFromFile(
     return (parseInt($(a).attr('position'), 10) - parseInt($(b).attr('position'), 10));
   }
 
+  function cleanFilePath(filePath) {
+    if (filePath.slice(-1) === '.') {
+      filePath = filePath.substring(0, filePath.length - 1);
+    }
+
+    return filePath;
+  }
+
   function getAssetBytes(folder, stepGuid, fileRef) {
     var stepPath = stepGuid ? stepGuid + '/' : '';
     var filePath = folder + stepPath + fileRef;
-    var assetBytes = zipFiles.files[filePath].asBinary();
+    var assetBytes = zipFiles.files[cleanFilePath(filePath)].asBinary();
     return window.btoa(assetBytes);
   }
 
@@ -72,20 +81,8 @@ function importProtocolFromFile(
     return template;
   }
 
-  function addChildToPreviewElement(parentEl, name, childEl) {
-    parentEl.find("[data-hold='" + name + "']").append(childEl);
-  }
-
-  function hidePartOfElement(element, name) {
-    element.find("[data-toggle='" + name + "']").hide();
-  }
-
-  function showPartOfElement(element, name) {
-    element.find("[data-toggle='" + name + "']").show();
-  }
-
   function newAssetElement(folder, stepGuid, fileRef, fileName, fileType) {
-    var html = '<li>';
+    var html = '<li class="col-xs-12">';
     var assetBytes;
     if ($.inArray(fileType, ['image/png', 'image/jpeg', 'image/gif', 'image/bmp']) > 0) {
       assetBytes = getAssetBytes(folder, stepGuid, fileRef);
@@ -176,6 +173,8 @@ function importProtocolFromFile(
       var stepName = node.children('name').text();
       var checklistNodes;
       var tableNodes;
+      var assetNodes;
+      var fileHeader;
       var stepDescription = displayTinyMceAssetInDescription(
         node,
         protocolFolders[position],
@@ -191,39 +190,6 @@ function importProtocolFromFile(
         }
       );
 
-      // Iterate through step assets
-      var assetNodes = node.find('assets > asset');
-      if (assetNodes.length > 0) {
-        assetNodes.each(function() {
-          var fileRef = $(this).attr('fileRef');
-          var fileName = $(this).children('fileName').text();
-          var fileType = $(this).children('fileType').text();
-
-          var assetEl = newAssetElement(
-            protocolFolders[position],
-            stepGuid,
-            fileRef,
-            fileName,
-            fileType
-          );
-
-          // Append asset element to step
-          addChildToPreviewElement(stepEl, 'assets', assetEl);
-        });
-      } else {
-        hidePartOfElement(stepEl, 'assets');
-      }
-
-      // Iterate through step tables
-      tableNodes = node.find('elnTables > elnTable');
-      if (tableNodes.length > 0) {
-        tableNodes.each(function() {
-          addTablePreview(stepEl, this);
-        });
-      } else {
-        hidePartOfElement(stepEl, 'tables');
-      }
-
       // Iterate through step checklists
       checklistNodes = node.find('checklists > checklist');
       if (checklistNodes.length > 0) {
@@ -232,27 +198,58 @@ function importProtocolFromFile(
         });
       }
 
+      // Iterate through step tables
+      tableNodes = node.find('elnTables > elnTable');
+      if (tableNodes.length > 0) {
+        tableNodes.each(function() {
+          addTablePreview(stepEl, this);
+        });
+      }
+
       // Parse step elements
-      $(this).find('stepElements > stepElement').each(function() {
+      $(this).find('stepElements > stepElement').sort(stepComparator).each(function() {
         $element = $(this);
         switch ($(this).attr('type')) {
           case 'Checklist':
             addChecklistPreview(stepEl, $(this).find('checklist'));
-            showPartOfElement(stepEl, 'checklists');
             break;
           case 'StepTable':
             addTablePreview(stepEl, $(this).find('elnTable'));
-            showPartOfElement(stepEl, 'tables');
             break;
           case 'StepText':
             addStepTextPreview(stepEl, $(this).find('stepText'), protocolFolders[position], stepGuid);
-            showPartOfElement(stepEl, 'step-texts');
             break;
           default:
             // nothing to do
             break;
         }
       });
+
+      // Iterate through step assets
+      assetNodes = node.find('assets > asset');
+      if (assetNodes.length > 0) {
+        fileHeader = newPreviewElement('asset-file-name', null);
+
+        stepEl.append(fileHeader);
+
+        assetNodes.each(function() {
+          var fileRef = $(this).attr('fileRef');
+          var fileName = $(this).children('fileName').text();
+          var fileType = $(this).children('fileType').text();
+          var assetEl;
+
+          assetEl = newAssetElement(
+            protocolFolders[position],
+            stepGuid,
+            fileRef,
+            fileName,
+            fileType
+          );
+
+          // Append asset element to step
+          stepEl.append(assetEl);
+        });
+      }
 
       // Append step element to preview container
       previewContainer.append(stepEl);
@@ -270,10 +267,10 @@ function importProtocolFromFile(
       { name: tableName }
     );
     var elnTableEl = generateElnTable(tableId, tableContent);
-    addChildToPreviewElement(tableEl, 'table', elnTableEl);
+    tableEl.append(elnTableEl);
 
     // Now, append table element to step
-    addChildToPreviewElement(stepEl, 'tables', tableEl);
+    stepEl.append(tableEl);
   }
 
   function addChecklistPreview(stepEl, checklistNode) {
@@ -294,11 +291,11 @@ function importProtocolFromFile(
         'checklist-item',
         { text: itemText }
       );
-      addChildToPreviewElement(checklistEl, 'checklist-items', itemEl);
+      checklistEl.append(itemEl);
     });
 
     // Now, add checklist item to step
-    addChildToPreviewElement(stepEl, 'checklists', checklistEl);
+    stepEl.append(stepEl, checklistEl);
   }
 
   function addStepTextPreview(stepEl, stepTextNode, folder, stepGuid) {
@@ -311,7 +308,7 @@ function importProtocolFromFile(
       { text: itemText }
     );
 
-    addChildToPreviewElement(stepEl, 'step-texts', textEl);
+    stepEl.append(textEl);
   }
 
   // display tiny_mce_assets in step description
@@ -588,6 +585,7 @@ function importProtocolFromFile(
     var contents = tableNode.children('contents').text();
     json.id = tableNode.attr('id');
     json.name = tableNode.children('name').text();
+    json.metadata = tableNode.children('metadata').text();
     contents = hex2a(contents);
     contents = window.btoa(contents);
     json.contents = contents;
@@ -743,7 +741,7 @@ function importProtocolFromFile(
       // Parse step elements
       stepJson.stepElements = [];
 
-      $(this).find('stepElements > stepElement').each(function() {
+      $(this).find('stepElements > stepElement').sort(stepComparator).each(function() {
         stepJson.stepElements.push(stepElementJson($(this), index, stepGuid));
       });
 

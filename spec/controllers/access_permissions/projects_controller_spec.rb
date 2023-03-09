@@ -7,18 +7,16 @@ describe AccessPermissions::ProjectsController, type: :controller do
 
   let!(:user) { subject.current_user }
   let!(:team) { create :team, created_by: user }
-  let!(:user_team) { create :user_team, :admin, user: user, team: team }
   let!(:project) { create :project, team: team, created_by: user }
   let!(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
   let!(:normal_user_role) { create :normal_user_role }
   let!(:technician_role) { create :technician_role }
   let!(:user_project) { create :user_project, user: user, project: project }
   let!(:normal_user) { create :user, confirmed_at: Time.zone.now }
-  let!(:normal_user_team) do
-    create :user_team,
-           :normal_user,
-           user: normal_user,
-           team: team
+
+  before do
+    create_user_assignment(team, owner_role, user)
+    create_user_assignment(team, normal_user_role, normal_user)
   end
 
   describe 'GET #new' do

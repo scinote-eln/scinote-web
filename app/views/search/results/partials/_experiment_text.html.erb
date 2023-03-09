@@ -5,7 +5,7 @@
   <span class="label label-warning"><%= t('search.index.archived') %></span>
 <% end %>
 <% if can_read_experiment?(experiment) %>
-  <%= route_to_other_team(canvas_experiment_path(experiment), experiment.project.team, text, title: "experiment search result show link #{experiment.name}") %>
+  <%= route_to_other_team(my_modules_experiment_path(experiment), experiment.project.team, text, title: "experiment search result show link #{experiment.name}") %>
 <% else %>
   <%= text %>
 <% end %>

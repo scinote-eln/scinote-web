@@ -21,7 +21,7 @@ class ProtocolsImporterV2
 
     # Try to rename record
     rename_record(protocol, :name) if protocol.invalid?
-
+    protocol_json['name'] = protocol.name
     # Okay, now save the protocol
     protocol.save!
 
@@ -144,6 +144,7 @@ class ProtocolsImporterV2
       table: Table.new(
         name: params['name'],
         contents: Base64.decode64(params['contents']),
+        metadata: JSON.parse(params['metadata'].presence || '{}'),
         created_by: @user,
         last_modified_by: @user,
         team: @team

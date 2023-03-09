@@ -1,26 +1,28 @@
 <% provide(:head_title, t("experiments.module_archive.head_title", experiment: h(@experiment.name)).html_safe) %>
 <% provide(:sidebar_title, t("sidebar.my_modules.sidebar_title_archived")) %>
 <% provide(:sidebar_url, sidebar_experiment_path(@experiment)) %>
+<% provide(:container_class, 'no-second-nav-container') %>
 
 <%= content_for :sidebar do %>
   <%= render partial: 'shared/sidebar/archived_my_modules.html.erb', locals: { experiment: @experiment, my_modules: @my_modules } %>
 <% end %>
-<%= render partial: 'shared/secondary_navigation', locals: { render_breadcrumbs: true, project: @experiment.project } %>
-
-<div class="content-pane" id="module-archive">
-  <% if @my_modules.present? %>
-    <% if can_manage_experiment?(@experiment) %>
-      <div class="restore-button-container collapse">
-        <%= button_to restore_my_modules_experiment_path(@experiment), class: 'btn btn-light', title: 'restore button for archived tasks', method: :post do %>
-          <span class="fas fa-undo"></span>
-          <%= t('experiments.module_archive.restore_option') %>
-        <% end %>
-      </div>
-    <% end %>
+<div class="content-pane flexible" id="module-archive">
+  <%= render partial: 'experiments/show_header' %>
+  <div class="toolbar">
+    <% if @my_modules.present? %>
+      <% if can_manage_experiment?(@experiment) %>
+        <div class="restore-button-container collapse">
+          <%= button_to restore_my_modules_experiment_path(@experiment), class: 'btn btn-light', title: 'restore button for archived tasks', method: :post do %>
+            <span class="fas fa-undo"></span>
+            <%= t('experiments.module_archive.restore_option') %>
+          <% end %>
+        </div>
+      <% end %>
+  </div>
 
     <div class="row" style="margin-top: 10px;">
       <% @my_modules.each_with_index do |my_module, i| %>
-        <div class="module-container col-lg-3 col-md-4 col-sm-12">
+        <div class="module-container col-lg-4 col-md-5 col-sm-12">
           <%= render partial: 'canvas/full_zoom/my_module', locals: {experiment: @experiment, my_module: my_module} %>
         </div>
       <% end %>

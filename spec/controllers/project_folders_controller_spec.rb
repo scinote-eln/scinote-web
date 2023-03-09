@@ -31,12 +31,6 @@ describe ProjectFoldersController, type: :controller do
       create :project, name: 'test project C', team: team, project_folder: project_folder_3, created_by: user
     end
 
-    before do
-      3.times do |i|
-        create_user_assignment(public_send("project_#{i+1}"), role, user)
-      end
-    end
-
     context 'in JSON format' do
       let(:action) { post :move_to, params: params, format: :json }
       let(:params) do

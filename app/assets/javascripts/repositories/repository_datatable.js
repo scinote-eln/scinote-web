@@ -43,12 +43,24 @@ var RepositoryDatatable = (function(global) {
       return value;
     });
 
+  function allSelectedRowsAreOnPage() {
+    let visibleRowIds = $(
+      `#repository-table-${$(TABLE_ID).data('repository-id')} tbody tr`
+    ).toArray().map((r) => parseInt(r.id, 10));
+
+    return rowsSelected.every(r => visibleRowIds.includes(r));
+  }
+
   // Enable/disable edit button
   function updateButtons() {
     if (currentMode === 'viewMode') {
       $(TABLE_WRAPPER_ID).removeClass('editing');
+      $('.repository-save-changes-link').off('click');
+      $('.repository-edit-overlay').hide();
       $('#saveCancel').hide();
       $('.manage-repo-column-index').prop('disabled', false);
+      $('#shareRepoBtn').removeClass('disabled');
+      $('#viewSwitchButton').removeClass('disabled');
       $('#addRepositoryRecord').prop('disabled', false);
       $('.dataTables_length select').prop('disabled', false);
       $('#repository-acitons-dropdown').prop('disabled', false);
@@ -72,11 +84,7 @@ var RepositoryDatatable = (function(global) {
         $('#editDeleteCopy').hide();
         $('#toolbarPrintLabel').hide();
       } else {
-        if (rowsSelected.length === 1) {
-          $('#editRepositoryRecord').prop('disabled', false);
-        } else {
-          $('#editRepositoryRecord').prop('disabled', true);
-        }
+        $('#editRepositoryRecord').prop('disabled', !allSelectedRowsAreOnPage());
         $('#exportRepositoriesButton').removeClass('disabled');
         $('#archiveRepositoryRecordsButton').prop('disabled', false);
         $('#copyRepositoryRecords').prop('disabled', false);
@@ -91,8 +99,13 @@ var RepositoryDatatable = (function(global) {
         $('#editDeleteCopy').show();
         $('#toolbarPrintLabel').show();
       }
+      $('#team-switch').css({ 'pointer-events': 'auto', opacity: 1 });
+      $('#navigationGoBtn').prop('disabled', false);
     } else if (currentMode === 'editMode') {
       $(TABLE_WRAPPER_ID).addClass('editing');
+      $('.repository-save-changes-link').on('click', function() {
+        $('#saveRecord').click();
+      });
       $('#importRecordsButton').hide();
       $('#editDeleteCopy').hide();
       $('#addRepositoryRecord').hide();
@@ -102,6 +115,8 @@ var RepositoryDatatable = (function(global) {
       }
       $('#saveCancel').show();
       $('.manage-repo-column-index').prop('disabled', true);
+      $('#shareRepoBtn').addClass('disabled');
+      $('#viewSwitchButton').addClass('disabled');
       $('#repository-acitons-dropdown').prop('disabled', true);
       $('.dataTables_length select').prop('disabled', true);
       $('#addRepositoryRecord').prop('disabled', true);
@@ -114,9 +129,10 @@ var RepositoryDatatable = (function(global) {
       $('.repository-row-selector').prop('disabled', true);
       $('.dataTables_filter input').prop('disabled', true);
       $('#toolbarPrintLabel').hide();
+      $('.repository-edit-overlay').show();
+      $('#team-switch').css({ 'pointer-events': 'none', opacity: 0.6 });
+      $('#navigationGoBtn').prop('disabled', true);
     }
-
-    $('#toolbarPrintLabel').data('rows', JSON.stringify(rowsSelected));
   }
 
   function clearRowSelection() {
@@ -143,10 +159,8 @@ var RepositoryDatatable = (function(global) {
 
   function changeToEditMode() {
     currentMode = 'editMode';
-    // Table specific stuff
-    TABLE.button(0).enable(false);
+
     clearRowSelection();
-    $(TABLE_WRAPPER_ID).find('tr:not(.editing)').addClass('blocked');
     updateButtons();
   }
 
@@ -157,7 +171,6 @@ var RepositoryDatatable = (function(global) {
     var $chkboxAll = $('.repository-row-selector', $table);
     var $chkboxChecked = $('.repository-row-selector:checked', $table);
     var chkboxSelectAll = $(SELECT_ALL_SELECTOR, $header).get(0);
-
     // If none of the checkboxes are checked
     if ($chkboxChecked.length === 0) {
       chkboxSelectAll.checked = false;
@@ -263,9 +276,8 @@ var RepositoryDatatable = (function(global) {
 
       checkAvailableColumns();
 
-      $(TABLE_ID).find('.repository-row-edit-icon').remove();
-
       RepositoryDatatableRowEditor.switchRowToEditMode(row);
+
       changeToEditMode();
     });
   }
@@ -401,10 +413,10 @@ var RepositoryDatatable = (function(global) {
   // Adjust columns width in table header
   function adjustTableHeader() {
     TABLE.columns.adjust();
-    $('.dropdown-menu').parent()
-      .on('shown.bs.dropdown hidden.bs.dropdown', function() {
-        TABLE.columns.adjust();
-      });
+    // $('.dropdown-menu').parent()
+    //   .on('shown.bs.dropdown hidden.bs.dropdown', function() {
+    //     TABLE.columns.adjust();
+    //   });
 
     // E2E
     $('.dataTables_empty').attr('title', $('.dataTables_empty').text());
@@ -564,6 +576,9 @@ var RepositoryDatatable = (function(global) {
         return columns;
       }()),
       drawCallback: function() {
+        var archived = $('.repository-show').hasClass('archived');
+        var archivedOnIndex = TABLE.column('#archived-on').index();
+        var archivedByIndex = TABLE.column('#archived-by').index();
         animateSpinner(this, false);
         changeToViewMode();
         updateDataTableSelectAllCtrl();
@@ -579,9 +594,11 @@ var RepositoryDatatable = (function(global) {
         // Show number of selected rows near pages info
         $('#repository-table_info').append('<span id="selected_info"></span>');
         $('#selected_info').html(' (' + rowsSelected.length + ' entries selected)');
-        if ($('.repository-show').hasClass('archived')) {
-          TABLE.columns([6, 7]).visible(true);
-        }
+
+        // Hide edit button if not all selected rows are on the current page
+        $('#editRepositoryRecord').prop('disabled', !allSelectedRowsAreOnPage());
+
+        TABLE.columns([archivedOnIndex, archivedByIndex]).visible(archived);
       },
       preDrawCallback: function() {
         var archived = $('.repository-show').hasClass('archived');
@@ -668,9 +685,9 @@ var RepositoryDatatable = (function(global) {
 
         initActiveRemindersFilter();
         renderFiltersDropdown();
-        setTimeout(function() {
-          adjustTableHeader();
-        }, 500);
+        // setTimeout(function() {
+        //   adjustTableHeader();
+        // }, 500);
       }
     });
 
@@ -703,11 +720,11 @@ var RepositoryDatatable = (function(global) {
     })
 
     initRowSelection();
-    $(window).resize(() => {
-      setTimeout(() => {
-        adjustTableHeader();
-      }, 500);
-    });
+    // $(window).resize(() => {
+    //   setTimeout(() => {
+    //     adjustTableHeader();
+    //   }, 500);
+    // });
 
     return TABLE;
   }
@@ -740,6 +757,7 @@ var RepositoryDatatable = (function(global) {
       checkAvailableColumns();
       RepositoryDatatableRowEditor.addNewRow(TABLE);
       changeToEditMode();
+      $('.tooltip').remove();
     })
     .on('click', '#copyRepositoryRecords', function() {
       animateSpinner();
@@ -818,17 +836,14 @@ var RepositoryDatatable = (function(global) {
     .on('click', '#editRepositoryRecord', function() {
       checkAvailableColumns();
 
-      if (rowsSelected.length !== 1) {
-        return;
-      }
-
-      let row = TABLE.row('#' + rowsSelected[0]);
-
       $(TABLE_ID).find('.repository-row-edit-icon').remove();
 
-      RepositoryDatatableRowEditor.switchRowToEditMode(row);
+      rowsSelected.forEach(function(rowNumber) {
+        RepositoryDatatableRowEditor.switchRowToEditMode(TABLE.row('#' + rowNumber));
+      });
+
       changeToEditMode();
-      adjustTableHeader();
+      // adjustTableHeader();
     })
     .on('click', '#deleteRepositoryRecords', function() {
       $('#deleteRepositoryRecord').modal('show');
@@ -848,6 +863,7 @@ var RepositoryDatatable = (function(global) {
         success: function() {
           $('#hideRepositoryReminders').remove();
           TABLE.ajax.reload();
+          $('.tooltip').remove();
         }
       });
     });
@@ -914,9 +930,9 @@ var RepositoryDatatable = (function(global) {
       document.documentElement.style.setProperty('--repository-sidebar-margin', '363px');
     });
 
-    $('#wrapper').on('sideBar::hidden sideBar::shown', function() {
-      adjustTableHeader();
-    });
+    // $('#wrapper').on('sideBar::hidden sideBar::shown', function() {
+    //   adjustTableHeader();
+    // });
   }
 
   function renderFiltersDropdown() {
@@ -932,6 +948,7 @@ var RepositoryDatatable = (function(global) {
       TABLE.ajax.reload();
       clearRowSelection();
     },
+    selectedRows: () => { return rowsSelected; },
     redrawTableOnSidebarToggle: redrawTableOnSidebarToggle,
     checkAvailableColumns: checkAvailableColumns
   });

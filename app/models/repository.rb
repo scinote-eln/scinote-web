@@ -3,6 +3,8 @@
 class Repository < RepositoryBase
   include SearchableModel
   include SearchableByNameModel
+  include Assignable
+  include PermissionCheckableModel
   include RepositoryImportParser
   include ArchivableModel
 
@@ -18,8 +20,8 @@ class Repository < RepositoryBase
              class_name: 'User',
              inverse_of: :restored_repositories,
              optional: true
-  has_many :team_repositories, inverse_of: :repository, dependent: :destroy
-  has_many :teams_shared_with, through: :team_repositories, source: :team
+  has_many :team_shared_objects, as: :shared_object, dependent: :destroy
+  has_many :teams_shared_with, through: :team_shared_objects, source: :team
   has_many :repository_snapshots,
            class_name: 'RepositorySnapshot',
            foreign_key: :parent_id,
@@ -28,8 +30,10 @@ class Repository < RepositoryBase
   has_many :repository_table_filters, dependent: :destroy
 
   before_save :sync_name_with_snapshots, if: :name_changed?
-  after_save :unassign_unshared_items, if: :saved_change_to_permission_level
   before_destroy :refresh_report_references_on_destroy, prepend: true
+  after_save :assign_globally_shared_inventories, if: -> { saved_change_to_permission_level? && globally_shared? }
+  after_save :unassign_globally_shared_inventories, if: -> { saved_change_to_permission_level? && !globally_shared? }
+  after_save :unassign_unshared_items, if: :saved_change_to_permission_level
 
   validates :name,
             presence: true,
@@ -38,13 +42,14 @@ class Repository < RepositoryBase
 
   scope :active, -> { where(archived: false) }
   scope :archived, -> { where(archived: true) }
+  scope :globally_shared, -> { where(permission_level: %i(shared_read shared_write)) }
 
   scope :accessible_by_teams, lambda { |teams|
-    accessible_repositories = left_outer_joins(:team_repositories)
+    accessible_repositories = left_outer_joins(:team_shared_objects)
     accessible_repositories =
       accessible_repositories
       .where(team: teams)
-      .or(accessible_repositories.where(team_repositories: { team: teams }))
+      .or(accessible_repositories.where(team_shared_objects: { team: teams }))
       .or(accessible_repositories
             .where(permission_level: [Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:shared_read],
                                       Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:shared_write]]))
@@ -103,6 +108,10 @@ class Repository < RepositoryBase
     teams.blank? ? self : where(team: teams)
   end
 
+  def permission_parent
+    team
+  end
+
   def default_table_state
     Constants::REPOSITORY_TABLE_DEFAULT_STATE
   end
@@ -127,8 +136,12 @@ class Repository < RepositoryBase
     shared_with_anybody? && self.team == team
   end
 
+  def globally_shared?
+    shared_read? || shared_write?
+  end
+
   def shared_with_anybody?
-    (!not_shared? || team_repositories.any?)
+    (!not_shared? || team_shared_objects.any?)
   end
 
   def shared_with?(team)
@@ -146,15 +159,15 @@ class Repository < RepositoryBase
   def shared_with_read?(team)
     return false if self.team == team
 
-    shared_read? || team_repositories.where(team: team, permission_level: :shared_read).any?
+    shared_read? || team_shared_objects.where(team: team, permission_level: :shared_read).any?
   end
 
   def private_shared_with?(team)
-    team_repositories.where(team: team).any?
+    team_shared_objects.where(team: team).any?
   end
 
   def private_shared_with_write?(team)
-    team_repositories.where(team: team, permission_level: :shared_write).any?
+    team_shared_objects.where(team: team, permission_level: :shared_write).any?
   end
 
   def self.viewable_by_user(_user, teams)
@@ -187,6 +200,7 @@ class Repository < RepositoryBase
         new_repo = dup
         new_repo.created_by = created_by
         new_repo.name = name
+        new_repo.permission_level = Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:not_shared]
         new_repo.save!
 
         # Clone columns (only if new_repo was saved)
@@ -236,6 +250,26 @@ class Repository < RepositoryBase
 
   def sync_name_with_snapshots
     repository_snapshots.update(name: name)
+  end
+
+  def assign_globally_shared_inventories
+    viewer_role = UserRole.find_by(name: UserRole.public_send('viewer_role').name)
+    normal_user_role = UserRole.find_by(name: UserRole.public_send('normal_user_role').name)
+
+    team_shared_objects.find_each(&:destroy!)
+
+    Team.where.not(id: team.id).find_each do |team|
+      team.users.find_each do |user|
+        team.repository_sharing_user_assignments.find_or_initialize_by(
+          user: user,
+          assignable: self
+        ).update!(user_role: shared_write? ? normal_user_role : viewer_role)
+      end
+    end
+  end
+
+  def unassign_globally_shared_inventories
+    user_assignments.where.not(team: team).find_each(&:destroy!)
   end
 
   def refresh_report_references_on_destroy

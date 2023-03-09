@@ -4,22 +4,6 @@
   <div class="panel panel-default">
     <div class="panel-heading step-heading">
       <div class="left-floats">
-        <% if !import && !preview && @protocol.my_module %>
-          <button data-action="uncomplete-step"
-                  data-link-url="<%= toggle_step_state_step_path(step)%>"
-                  class="btn icon-btn btn-light toggle-step-complete
-                  <%= 'hidden' unless step.completed? %>"
-                  <%= 'disabled' if !can_complete_or_checkbox_step?(@protocol) || preview %>>
-            <span class="fas fa-check-circle"></span>
-          </button>
-          <button data-action="complete-step"
-                  data-link-url="<%= toggle_step_state_step_path(step)%>"
-                  class="btn icon-btn btn-light toggle-step-complete
-                  <%= 'hidden' if step.completed? %>"
-                  <%= 'disabled' if !can_complete_or_checkbox_step?(@protocol) || preview %>>
-            <span class="far fa-check-circle"></span>
-          </button>
-        <% end %>
         <a class="step-panel-collapse-link"
            href="#step-panel-<%= step.id || step.position %>"
            data-toggle="collapse"
@@ -44,56 +28,6 @@
       </div>
 
       <div class="panel-options pull-right">
-        <% if !preview && @protocol.my_module %>
-          <button data-action="uncomplete-step"
-                  title="<%= t("protocols.steps.options.uncomplete_title") %>"
-                  data-link-url="<%= toggle_step_state_step_path(step)%>"
-                  class="btn btn-secondary button-step-complete
-                  <%= 'hidden' if !step.completed? || !can_complete_or_checkbox_step?(@protocol) || preview %>">
-            <span class="fas fa-undo"></span>
-            <%= t("protocols.steps.options.uncomplete_title") %>
-          </button>
-          <button data-action="complete-step"
-                  title="<%= t("protocols.steps.options.complete_title") %>"
-                  data-link-url="<%= toggle_step_state_step_path(step)%>"
-                  class="btn btn-secondary button-step-complete
-                  <%= 'hidden' if step.completed? || !can_complete_or_checkbox_step?(@protocol) || preview %>">
-            <span class="far fa-check-circle"></span>
-            <%= t("protocols.steps.options.complete_title") %>
-          </button>
-        <% end %>
-        <% if (can_manage_protocol_in_module?(@protocol) || can_manage_protocol_in_repository?(@protocol)) && !(preview) %>
-          <%= link_to(move_up_step_path(step),
-                      class: 'btn btn-light icon-btn',
-                      title: t('protocols.steps.options.up_arrow_title'),
-                      remote: true,
-                      method: :put,
-                      data: { action: 'move-step', direction: :up }) do %>
-            <span class="fas fa-arrow-up"></span>
-          <% end %>
-          <%= link_to(move_down_step_path(step),
-                      class: 'btn btn-light icon-btn',
-                      title: t('protocols.steps.options.down_arrow_title'),
-                      remote: true,
-                      method: :put,
-                      data: { action: 'move-step', direction: :down }) do %>
-            <span class="fas fa-arrow-down"></span>
-          <% end %>
-          <%= link_to(edit_step_path(step),
-                      title: t('protocols.steps.options.edit_title'),
-                      class: 'btn btn-light icon-btn',
-                      remote: true,
-                      data: { action: 'edit-step' }) do %>
-            <span class="fas fa-pencil-alt"></span>
-          <% end %>
-          <%= link_to(step_path(step),
-                      title: t('protocols.steps.options.delete_title'),
-                      method: :delete,
-                      class: 'btn btn-light icon-btn',
-                      data: { action: 'delete-step', confirm: t('protocols.steps.destroy.confirm', step: step.name) }) do %>
-            <span class="fas fa-trash-alt"></span>
-          <% end %>
-        <% end %>
       </div>
     </div>
     <div class="panel-collapse collapse" id="step-panel-<%= step.id || step.position %>" role="tabpanel">
@@ -148,19 +82,12 @@
                   </br>
                 <% else %>
                   <% ordered_checklist_items(checklist).each do |checklist_item| %>
-                    <div class="checkbox" <%= @protocol.in_module? ? "data-action=check-item" : "" %>>
+                    <div class="checkbox">
                       <label>
-                        <% if @protocol.in_module? && can_complete_or_checkbox_step?(@protocol) %>
-                          <input type="checkbox"
-                                 value=""
-                                 data-link-url="<%=checklistitem_state_step_path(step) %>"
-                                 data-id="<%= checklist_item.id %>" <%= "checked" if checklist_item.checked? %> />
-                        <% else %>
-                          <input type="checkbox"
-                                 value=""
-                                 disabled="disabled"
-                                 <%= "checked" if checklist_item.checked? %> />
-                        <% end %>
+                        <input type="checkbox"
+                               value=""
+                               disabled="disabled"
+                               <%= "checked" if checklist_item.checked? %> />
                         <%= custom_auto_link(checklist_item.text, team: current_team) %>
                       </label>
                     </div>

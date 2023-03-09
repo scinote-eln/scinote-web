@@ -40,6 +40,10 @@
         border-color: $brand-danger;
         color: $color-white;
       }
+
+      &[data-status="search"] {
+        visibility: hidden;
+      }
     }
   }
 

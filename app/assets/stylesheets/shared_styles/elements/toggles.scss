@@ -95,6 +95,11 @@ input[type="checkbox"].sci-toggle-checkbox {
       transition: .2s;
       width: 48px;
 
+      svg,
+      svg path {
+        fill: $color-black;
+      }
+
       &:first-of-type {
         border-left-color: $color-silver-chalice;
         border-radius: $border-radius-default 0 0 $border-radius-default;
@@ -109,6 +114,11 @@ input[type="checkbox"].sci-toggle-checkbox {
       background: $brand-primary;
       border: 1px solid $brand-primary;
       color: $color-white;
+
+      svg,
+      svg path {
+        fill: $color-white;
+      }
     }
   }
 }

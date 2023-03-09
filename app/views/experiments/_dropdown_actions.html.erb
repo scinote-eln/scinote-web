@@ -1,8 +1,13 @@
-<ul class="dropdown-menu dropdown-experiment-actions"
+<% archived = params[:view_mode] == 'archived' || action_name == 'module_archive' %>
+<ul class="dropdown-menu dropdown-menu-right dropdown-experiment-actions"
   aria-labelledby="exActionsMenu-<%= experiment.id %>"
   data-id="<%= experiment.id %>">
 
-  <% if can_manage_experiment?(experiment) %>
+  <div class="divider-label">
+    <%= t('experiments.experiment_actions') %>
+  </div>
+
+  <% if can_manage_experiment?(experiment) && !archived %>
     <li>
       <%= link_to edit_experiment_url(experiment),
                   remote: true,
@@ -11,28 +16,28 @@
                   class: 'edit-experiment', title: "edit experiment #{experiment.name} details" do %>
         <i class="fas fa-pen"></i>
         <span><%= t('experiments.edit.label_title') %></span>
-      <% end %>          
+      <% end %>
     </li>
   <% end %>
-  <li data-hook="experiment-actions-second-child"></li>
-  <% if can_clone_experiment?(experiment) %>
+
+  <% if can_clone_experiment?(experiment) && !archived %>
     <li>
       <%= link_to clone_modal_experiment_url(experiment),
                   remote: true, type: 'button',
                   class: 'clone-experiment', title: "clone experiment #{experiment.name}" do %>
         <i class="fas fa-copy"></i>
         <span><%= t('experiments.clone.label_title') %></span>
-      <% end %>   
+      <% end %>
     </li>
   <% end %>
-  <% if can_move_experiment?(experiment) %>
+  <% if can_move_experiment?(experiment) && !archived %>
     <li>
       <%= link_to move_modal_experiment_url(experiment),
                   remote: true, type: 'button',
                   class: 'move-experiment', title: "move experiment #{experiment.name} details" do %>
         <i class="fas fa-arrow-right"></i>
         <span><%= t('experiments.move.label_title') %></span>
-      <% end %>   
+      <% end %>
     </li>
   <% end %>
   <!-- Set or view user experiment assignments -->
@@ -51,7 +56,7 @@
       <% end %>
     </li>
   <% end %>
-  <% if can_archive_experiment?(experiment) %>
+  <% if can_archive_experiment?(experiment) && !archived %>
     <li>
       <%= link_to archive_experiment_url(experiment),
                   type: 'button',
@@ -59,7 +64,7 @@
                   data: { confirm: t('experiments.canvas.archive_confirm') }, title: "archive experiment #{experiment.name}" do %>
         <i class="fas fa-archive"></i>
         <span><%= t('experiments.archive.label_title') %></span>
-      <% end %>   
+      <% end %>
     </li>
   <% end %>
   <% if can_restore_experiment?(experiment) %>
@@ -71,9 +76,8 @@
     <li><a title="restore <%= experiment.name %> details" href="#" class="form-submit-link" data-turbolinks="false" data-submit-form="<%= experiment_form.options[:html][:id] %>">
           <i class="fas fa-undo"></i><%= t "projects.experiment_archive.restore_option" %></a></li>
   <% end %>
-  <li class="form-dropdown-item">
-    <div class="form-dropdown-item-info">
-      <small title="experiment <%= experiment.name %>"><%= t('experiments.experiment_id') %>: <strong><%= experiment.code %></strong></small>
-    </div>
-  </li>
+
+  <div class="divider-label footer">
+    <span title="experiment <%= experiment.name %>"><%= t('experiments.experiment_id') %>: <strong><%= experiment.code %></strong></span>
+  </div>
 </ul>

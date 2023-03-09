@@ -1,0 +1,39 @@
+
+// scss-lint:disable NestingDepth ImportantRule
+
+.session-modal {
+  .modal-body {
+    padding-bottom: 0;
+  }
+
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+
+    li {
+      padding: .25em 0;
+    }
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+
+  .instruction-session-collapse {
+    cursor: pointer;
+    margin-bottom: .5em;
+    margin-top: 20px;
+
+    .fa-angle-up {
+      margin-left: .5em;
+    }
+
+    &.collapsed {
+
+      .fa-angle-up {
+        @include rotate(-180deg);
+      }
+    }
+  }
+
+}

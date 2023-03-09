@@ -33,7 +33,7 @@
       <a title="<%= result.name %> result panel collapse/expand button" class="result-panel-collapse-link" href="#result-panel-<%= result.id %>" data-toggle="collapse">
         <span class="fas fa-caret-right"></span>
         <strong><%= result.name %></strong> |
-        <span><%= t('my_modules.results.published_on', timestamp: l(result.created_at, format: :full), user: h(result.user.full_name)).html_safe %></span>
+        <span><%= t('my_modules.results.published_on_html', timestamp: l(result.created_at, format: :full), user: h(result.user.full_name)) %></span>
       </a>
     </div>
     <div class="panel-collapse collapse" id="result-panel-<%= result.id %>" role="tabpanel">

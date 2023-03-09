@@ -9,7 +9,6 @@ RSpec.describe 'Api::V1::StepsController', type: :request do
     @project = create(:project, team: @team, created_by: @user)
     @experiment = create(:experiment, :with_tasks, project: @project, created_by: @user)
     @task = @experiment.my_modules.first
-    create(:user_team, user: @user, team: @team)
 
     @valid_headers =
       { 'Authorization': 'Bearer ' + generate_token(@user.id) }

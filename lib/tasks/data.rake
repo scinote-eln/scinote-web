@@ -24,16 +24,14 @@ namespace :data do
 
       User.transaction do
         begin
-          # Destroy user_team, and possibly team
+          # Destroy user team assignments, and possibly team
           if user.teams.count > 0
             oids = user.teams.pluck(:id)
             oids.each do |oid|
               team = Team.find(oid)
-              user_team = user.user_teams.where(team: team).first
+              team_assignment = user.user_assignments.where(assignable: team).take
               destroy_team = (team.users.count == 1 && team.created_by == user)
-              if !user_team.destroy(nil) then
-                raise Exception
-              end
+              team_assignment.destroy!
               team.destroy! if destroy_team
             end
           end
@@ -174,6 +172,24 @@ namespace :data do
           # rubocop:enable Rails/SkipsModelValidations
         else
           reference_role.save!
+        end
+      end
+    end
+  end
+
+  desc 'Reset repositories user assignments'
+  task reset_repositories_user_assignments: :environment do
+    ActiveRecord::Base.transaction do
+      Team.all.find_each do |team|
+        team.user_assignments.find_each do |team_user_assignment|
+          team.repositories.find_each do |repository|
+            new_user_assignment =
+              repository.automatic_user_assignments.find_or_initialize_by(user: team_user_assignment.user, team: team)
+            new_user_assignment.user_role = team_user_assignment.user_role
+            new_user_assignment.assigned_by = team_user_assignment.assigned_by
+            new_user_assignment.assigned = :automatically
+            new_user_assignment.save!
+          end
         end
       end
     end

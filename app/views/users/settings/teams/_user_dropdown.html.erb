@@ -1,10 +1,10 @@
-<% if user_team.user == user %>
+<% if user_assignment.user == user %>
   <div class="btn btn-default btn-xs" type="button" disabled="disabled">
     <span class="fas fa-user-cog"></span>
     <span class="caret"></span>
   </div>
 <% else %>
-  <% id = "user-#{user_team.user.id}-dropdown" %>
+  <% id = "user-#{user_assignment.user.id}-dropdown" %>
   <div class="dropdown dropdown-teams-user">
     <div class="btn btn-default btn-xs"
          type="button"
@@ -20,46 +20,27 @@
       <li class="dropdown-header">
         <%= t("users.settings.teams.edit.user_dropdown.role_label") %>
       </li>
-      <%= bootstrap_form_for user_team,
+      <%= bootstrap_form_for user_assignment,
                              url: update_role_path,
                              method: :put,
                              remote: true,
                              data: { id: 'update-role-form' } do |f| %>
-        <input type="hidden" name="user_team[role]" data-field="role" value="" %>
+        <input type="hidden" name="user_assignment[user_role_id]" data-field="role" value="" %>
       <% end %>
-      <li class="user-team-role <%= 'disabled' if user_team.guest? %>">
-        <% if user_team.guest? %>
-          <span class="fas fa-check"></span>
-          <%= UserTeam.new(role: 0).role_str %>
-        <% else %>
-          <a href="#" title="user dropdown guest item" data-action="submit-role" data-value="guest">
+      <% team_user_roles_collection.each do |user_role| %>
+        <% same_role = user_assignment.user_role_id == user_role.id %>
+        <li class="user-team-role <%= 'disabled' if same_role %>">
+          <% if same_role %>
             <span class="fas fa-check"></span>
-            <%= UserTeam.new(role: 0).role_str %>
-          </a>
-        <% end %>
-      </li>
-      <li class="user-team-role <%= 'disabled' if user_team.normal_user? %>">
-        <% if user_team.normal_user? %>
-          <span class="fas fa-check"></span>
-          <%= UserTeam.new(role: 1).role_str %>
-        <% else %>
-          <a href="#" title="user dropdown normal user item" data-action="submit-role" data-value="normal_user">
-            <span class="fas fa-check"></span>
-            <%= UserTeam.new(role: 1).role_str %>
-          </a>
-        <% end %>
-      </li>
-      <li class="user-team-role <%= 'disabled' if user_team.admin? %>">
-        <% if user_team.admin? %>
-          <span class="fas fa-check"></span>
-          <%= UserTeam.new(role: 2).role_str %>
-        <% else %>
-          <a href="#" title="user dropdown admin item" data-action="submit-role" data-value="admin">
-            <span class="fas fa-check"></span>
-            <%= UserTeam.new(role: 2).role_str %>
-          </a>
-        <% end %>
-      </li>
+            <%= user_role.name %>
+          <% else %>
+            <a href="#" title="<%= "user dropdown #{user_role.name.downcase} item" %>" data-action="submit-role" data-value="<%= user_role.id %>">
+              <span class="fas fa-check"></span>
+              <%= user_role.name %>
+            </a>
+          <% end %>
+        </li>
+      <% end %>
       <li role="separator" class="divider"></li>
       <li title="user dropdown remove user item">
         <%= destroy_uo_link %>

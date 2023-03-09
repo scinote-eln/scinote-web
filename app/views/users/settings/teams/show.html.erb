@@ -16,7 +16,7 @@
 
     <!-- TITLE -->
     <h1 id="team-name" class="settings-team-name" data-current-team="<%= current_team == @team %>">
-      <% if can_update_team?(@team) %>
+      <% if can_manage_team?(@team) %>
         <%= render partial: "shared/inline_editing",
                    locals: {
                      initial_value: @team.name,
@@ -57,7 +57,7 @@
     </div>
 
     <div class="team-description">
-      <% if can_update_team?(@team) %>
+      <% if can_manage_team?(@team) %>
         <div
           class="inline-init-handler"
           data-field-to-update="description"
@@ -89,7 +89,7 @@
         </div>
         <%= render(partial: 'shared/invite_users_modal.html.erb',
                    locals: { modal_id: 'team-invite-users-modal',
-                             type: 'invite_to_team',
+                             type: 'invite_to_team_with_role',
                              team: @team } ) %>
       <% end %>
       <table id="users-table" class="table" data-source="<%= team_users_datatable_path(@team, format: :json) %>">

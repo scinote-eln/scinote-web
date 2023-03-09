@@ -4,6 +4,7 @@ class Users::SessionsController < Devise::SessionsController
   layout :session_layout
   after_action :after_sign_in, only: %i(create authenticate_with_two_factor)
   before_action :remove_authenticate_mesasge_if_root_path, only: :new
+  prepend_before_action :skip_timeout, only: :expire_in
 
   rescue_from ActionController::InvalidAuthenticityToken do
     redirect_to new_user_session_path
@@ -33,6 +34,19 @@ class Users::SessionsController < Devise::SessionsController
     end
     generate_templates_project
   end
+
+  def expire_in
+    return render body: nil, status: :unauthorized if current_user.blank?
+
+    if current_user.remember_created_at.nil? || (current_user.remember_created_at + Devise.remember_for).past?
+      render plain: (Devise.timeout_in.to_i - (Time.now.to_i - user_session['last_request_at']).round) * 1000
+    else
+      render plain: [(Devise.remember_for - (Time.now.to_i - current_user.remember_created_at.to_i).round) * 1000,
+                     (Devise.timeout_in.to_i - (Time.now.to_i - user_session['last_request_at']).round) * 1000].max
+    end
+  end
+
+  def revive_session; end
 
   def two_factor_recovery
     unless session[:otp_user_id]
@@ -91,6 +105,10 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   private
+
+  def skip_timeout
+    request.env['devise.skip_trackable'] = true
+  end
 
   def remove_authenticate_mesasge_if_root_path
     if session[:user_return_to] == root_path && flash[:alert] == I18n.t('devise.failure.unauthenticated')

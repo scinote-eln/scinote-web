@@ -5,7 +5,11 @@
 <% provide(:head_title, t("protocols.index.head_title")) %>
 
 <% if current_team %>
-  <div class="content-pane" id="protocols-index">
+  <% provide(:sidebar_title, t('sidebar.templates.sidebar_title')) %>
+  <%= content_for :sidebar do %>
+   <%= render partial: "/shared/sidebar/templates_sidebar", locals: {active: :protocol} %>
+  <% end %>
+  <div class="content-pane flexible" id="protocols-index">
     <ul class="nav nav-tabs nav-settings">
       <li role="presentation" class="<%= "active" if @type == :public %>">
         <%= link_to t("protocols.index.navigation.public"), protocols_path(team: @current_team, type: :public), title: "public protocols tab" %>

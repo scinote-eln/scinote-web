@@ -15,7 +15,7 @@ class ExperimentsOverviewService
     # Update sort if changed
     @sort = @view_state.state.dig('experiments', @view_mode, 'sort') || 'atoz'
     if @params[:sort] && @sort != @params[:sort] &&
-       %w(new old atoz ztoa archived_old archived_new).include?(@params[:sort])
+       %w(new old atoz ztoa id_asc id_desc archived_old archived_new).include?(@params[:sort])
       @view_state.state['experiments'].merge!(Hash[@view_mode, { 'sort': @params[:sort] }.stringify_keys])
       @view_state.save!
       @sort = @view_state.state.dig('experiments', @view_mode, 'sort')
@@ -85,6 +85,10 @@ class ExperimentsOverviewService
       records.order(:name)
     when 'ztoa'
       records.order(name: :desc)
+    when 'id_asc'
+      records.order(id: :asc)
+    when 'id_desc'
+      records.order(id: :desc)
     when 'archived_old'
       records.group('projects.archived_on')
              .order(Arel.sql('COALESCE(experiments.archived_on, projects.archived_on) ASC'))

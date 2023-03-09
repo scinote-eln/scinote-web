@@ -6,8 +6,19 @@
   position: relative;
   width: calc(100% + 16px);
 
+  // TinyMCE table of contents
+  .mce-toc ul,
+  .mce-toc li {
+    list-style-type: none;
+  }
+
   .step-element-grip-placeholder {
     flex: 0;
+  }
+
+  .img-responsive {
+    display: inline;
+    vertical-align: baseline;
   }
 
   .view-text-element {
@@ -28,7 +39,7 @@
       $color-concrete 100%
     );
     border-radius: 4px;
-    display: none;
+    opacity: 0;
     padding-left: 2em;
     position: absolute;
     right: 0;
@@ -55,6 +66,7 @@
 
     .buttons-container {
       display: flex;
+      opacity: 1;
     }
 
     .step-element-grip {

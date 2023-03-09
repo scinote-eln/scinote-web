@@ -82,8 +82,7 @@
                         <a href="#"
                           title="change team to <%= team.name %>"
                           data-id="<%= team.id %>"
-                          class="text-center change-team"
-                          data-turbolinks="false">
+                          class="text-center change-team">
                           <% if current_team == team %>
                             <span class="fas fa-check-circle"></span> <strong><%= team.name %></strong>
                           <% else %>
@@ -124,7 +123,7 @@
                        name="q"
                        placeholder="<%= t('nav.search') %>" />
                 <span class="input-group-btn">
-                  <button title="go button for global search" class="btn btn-default" type="submit"><%= t 'nav.search_button' %></button>
+                  <button title="go button for global search" class="btn btn-default" id="navigationGoBtn" type="submit"><%= t 'nav.search_button' %></button>
                 </span>
               </div>
           <% end %>

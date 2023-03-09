@@ -39,11 +39,21 @@
         "state": "uncompleted",
         "completed_on": null
       },
-      "outputs": [],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "outputs": [
+
+      ],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -66,13 +76,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 4388,
                 "name": "Troubleshooting table",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Look at the table for troubleshooting.</p></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -82,35 +93,41 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3461
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [
-                {
-                  "id": 479,
-                  "step_id": 4388,
-                  "table_id": 600
-                }
+              "step_comments": [
+
               ],
-              "tables": [
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
                 {
-                  "id": 600,
-                  "created_at": "2018-11-22T09:34:27.270Z",
-                  "updated_at": "2019-02-07T13:04:03.738Z",
-                  "created_by_id": 202,
-                  "last_modified_by_id": 202,
-                  "name": "",
-                  "team_id": 1,
-                  "contents": "eyJkYXRhIjpbWyJQcm9ibGVtIiwiUG9zc2libGUgcmVhc29uIiwiU29sdXRp\nb24iXSxbIk1pY3JvYmlhbCBncm93dGggaW4gc3RlcmlsaXR5IGNvbnRyb2wi\nLCJCcm90aCB3YXMgY29udGFtaW5hdGVkIiwiTWFrZSBzdXJlIHRvIHVzZSBh\nbiB1bm9wZW5lZCBiYXRjaCBvZiBzdGVyaWxpemVkIGJyb3RoIl0sW251bGws\nIlBpcGV0dGVzL3BpcGV0dGUgdGlwcyB1c2VkIHdlcmUgbm90IHN0ZXJpbGUi\nLCJNYWtlIHN1cmUgdG8gdXNlIHN0ZXJpbGUgcGlwZXR0ZXMvcGlwZXR0ZSB0\naXBzIl0sW251bGwsIkNvbnRhaW5lcnMgdG8gaG9sZCBzb2x1dGlvbnMgd2Vy\nZSBub3Qgc3RlcmlsZSIsIk1ha2Ugc3VyZSB0byB1c2Ugc3RlcmlsZSBjb250\nYWluZXJzIl0sW251bGwsIkZvciBtaWNyb2RpbHV0aW9uOiBDb250YW1pbmF0\naW9uIHdpdGggbWljcm9iZXMiLCJBdm9pZCBzcGlsbHMgYW5kIGFlcm9zb2wg\nZm9ybWF0aW9uIHdoZW4gcGlwZXR0aW5nIHRoZSBiYWN0ZXJpYWwgc29sdXRp\nb24iXSxbIk5vIGdyb3d0aCBpbiBncm93dGggY29udHJvbCIsIklub2N1bHVt\nIHdhcyB0b28gbG93IiwiRGV0ZXJtaW5lIHRoZSBjZWxsIGNvdW50IG9mIHRo\nZSBiYWN0ZXJpYWwgc3VzcGVuc2lvbiBmb3IgZXZlcnkgdGVzdCBpc29sYXRl\nIHVzZWQiXSxbbnVsbCwiR3Jvd3RoIGNvbmRpdGlvbnMgd2VyZSBub3QgYXBw\ncm9wcmlhdGUgZm9yIG1pY3JvYmlhbCBncm93dGgiLCJDaGVjayBpZiB1c2Vk\nIGJyb3RoIGFuZCBpbmN1YmF0aW9uIHRlbXBlcmF0dXJlIGlzIHN1ZmZpY2ll\nbnQgZm9yIG1pY3JvYmlhbCBncm93dGgiXV19\n",
-                  "data_vector": "J2Flcm9zb2wnOjYwICdhbic6MTcgJ2FuZCc6NTksMTAyICdhcHByb3ByaWF0\nZSc6OTQgJ2F2b2lkJzo1NyAnYmFjdGVyaWFsJzo2NSw4MiAnYmF0Y2gnOjE5\nICdicm90aCc6MTAsMjIsMTAxICdjZWxsJzo3OCAnY2hlY2snOjk4ICdjb25k\naXRpb25zJzo5MSAnY29udGFpbmVycyc6MzgsNTAgJ2NvbnRhbWluYXRlZCc6\nMTIgJ2NvbnRhbWluYXRpb24nOjU0ICdjb250cm9sJzo5LDcxICdjb3VudCc6\nNzkgJ2RldGVybWluZSc6NzYgJ2V2ZXJ5Jzo4NSAnZm9yJzo1Miw4NCw5NSwx\nMDcgJ2Zvcm1hdGlvbic6NjEgJ2dyb3d0aCc6Niw2OCw3MCw5MCw5NywxMDkg\nJ2hvbGQnOjQwICdpZic6OTkgJ2luJzo3LDY5ICdpbmN1YmF0aW9uJzoxMDMg\nJ2lub2N1bHVtJzo3MiAnaXMnOjEwNSAnaXNvbGF0ZSc6ODcgJ2xvdyc6NzUg\nJ21ha2UnOjEzLDMwLDQ1ICdtaWNyb2Jlcyc6NTYgJ21pY3JvYmlhbCc6NSw5\nNiwxMDggJ21pY3JvZGlsdXRpb24nOjUzICdubyc6NjcgJ25vdCc6MjgsNDMs\nOTMgJ251bGwnOjIzLDM3LDUxLDg5ICdvZic6MjAsODAgJ3BpcGV0dGVzL3Bp\ncGV0dGUnOjI0LDM1ICdwaXBldHRpbmcnOjYzICdwb3NzaWJsZSc6MiAncHJv\nYmxlbSc6MSAncmVhc29uJzozICdzb2x1dGlvbic6NCw2NiAnc29sdXRpb25z\nJzo0MSAnc3BpbGxzJzo1OCAnc3RlcmlsZSc6MjksMzQsNDQsNDkgJ3N0ZXJp\nbGl0eSc6OCAnc3RlcmlsaXplZCc6MjEgJ3N1ZmZpY2llbnQnOjEwNiAnc3Vy\nZSc6MTQsMzEsNDYgJ3N1c3BlbnNpb24nOjgzICd0ZW1wZXJhdHVyZSc6MTA0\nICd0ZXN0Jzo4NiAndGhlJzo2NCw3Nyw4MSAndGlwcyc6MjUsMzYgJ3RvJzox\nNSwzMiwzOSw0NyAndG9vJzo3NCAndW5vcGVuZWQnOjE4ICd1c2UnOjE2LDMz\nLDQ4ICd1c2VkJzoyNiw4OCwxMDAgJ3dhcyc6MTEsNzMgJ3dlcmUnOjI3LDQy\nLDkyICd3aGVuJzo2MiAnd2l0aCc6NTU=\n"
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Look at the table for troubleshooting.</p></body></html>"
+                  },
+                  "position": 0
+                },
+                {
+                  "table": {
+                    "id": 600,
+                    "created_at": "2018-11-22T09:34:27.270Z",
+                    "updated_at": "2019-02-07T13:04:03.738Z",
+                    "created_by_id": 202,
+                    "last_modified_by_id": 202,
+                    "name": "Table 1",
+                    "team_id": 1,
+                    "contents": "eyJkYXRhIjpbWyJQcm9ibGVtIiwiUG9zc2libGUgcmVhc29uIiwiU29sdXRp\nb24iXSxbIk1pY3JvYmlhbCBncm93dGggaW4gc3RlcmlsaXR5IGNvbnRyb2wi\nLCJCcm90aCB3YXMgY29udGFtaW5hdGVkIiwiTWFrZSBzdXJlIHRvIHVzZSBh\nbiB1bm9wZW5lZCBiYXRjaCBvZiBzdGVyaWxpemVkIGJyb3RoIl0sW251bGws\nIlBpcGV0dGVzL3BpcGV0dGUgdGlwcyB1c2VkIHdlcmUgbm90IHN0ZXJpbGUi\nLCJNYWtlIHN1cmUgdG8gdXNlIHN0ZXJpbGUgcGlwZXR0ZXMvcGlwZXR0ZSB0\naXBzIl0sW251bGwsIkNvbnRhaW5lcnMgdG8gaG9sZCBzb2x1dGlvbnMgd2Vy\nZSBub3Qgc3RlcmlsZSIsIk1ha2Ugc3VyZSB0byB1c2Ugc3RlcmlsZSBjb250\nYWluZXJzIl0sW251bGwsIkZvciBtaWNyb2RpbHV0aW9uOiBDb250YW1pbmF0\naW9uIHdpdGggbWljcm9iZXMiLCJBdm9pZCBzcGlsbHMgYW5kIGFlcm9zb2wg\nZm9ybWF0aW9uIHdoZW4gcGlwZXR0aW5nIHRoZSBiYWN0ZXJpYWwgc29sdXRp\nb24iXSxbIk5vIGdyb3d0aCBpbiBncm93dGggY29udHJvbCIsIklub2N1bHVt\nIHdhcyB0b28gbG93IiwiRGV0ZXJtaW5lIHRoZSBjZWxsIGNvdW50IG9mIHRo\nZSBiYWN0ZXJpYWwgc3VzcGVuc2lvbiBmb3IgZXZlcnkgdGVzdCBpc29sYXRl\nIHVzZWQiXSxbbnVsbCwiR3Jvd3RoIGNvbmRpdGlvbnMgd2VyZSBub3QgYXBw\ncm9wcmlhdGUgZm9yIG1pY3JvYmlhbCBncm93dGgiLCJDaGVjayBpZiB1c2Vk\nIGJyb3RoIGFuZCBpbmN1YmF0aW9uIHRlbXBlcmF0dXJlIGlzIHN1ZmZpY2ll\nbnQgZm9yIG1pY3JvYmlhbCBncm93dGgiXV19\n",
+                    "data_vector": "J2Flcm9zb2wnOjYwICdhbic6MTcgJ2FuZCc6NTksMTAyICdhcHByb3ByaWF0\nZSc6OTQgJ2F2b2lkJzo1NyAnYmFjdGVyaWFsJzo2NSw4MiAnYmF0Y2gnOjE5\nICdicm90aCc6MTAsMjIsMTAxICdjZWxsJzo3OCAnY2hlY2snOjk4ICdjb25k\naXRpb25zJzo5MSAnY29udGFpbmVycyc6MzgsNTAgJ2NvbnRhbWluYXRlZCc6\nMTIgJ2NvbnRhbWluYXRpb24nOjU0ICdjb250cm9sJzo5LDcxICdjb3VudCc6\nNzkgJ2RldGVybWluZSc6NzYgJ2V2ZXJ5Jzo4NSAnZm9yJzo1Miw4NCw5NSwx\nMDcgJ2Zvcm1hdGlvbic6NjEgJ2dyb3d0aCc6Niw2OCw3MCw5MCw5NywxMDkg\nJ2hvbGQnOjQwICdpZic6OTkgJ2luJzo3LDY5ICdpbmN1YmF0aW9uJzoxMDMg\nJ2lub2N1bHVtJzo3MiAnaXMnOjEwNSAnaXNvbGF0ZSc6ODcgJ2xvdyc6NzUg\nJ21ha2UnOjEzLDMwLDQ1ICdtaWNyb2Jlcyc6NTYgJ21pY3JvYmlhbCc6NSw5\nNiwxMDggJ21pY3JvZGlsdXRpb24nOjUzICdubyc6NjcgJ25vdCc6MjgsNDMs\nOTMgJ251bGwnOjIzLDM3LDUxLDg5ICdvZic6MjAsODAgJ3BpcGV0dGVzL3Bp\ncGV0dGUnOjI0LDM1ICdwaXBldHRpbmcnOjYzICdwb3NzaWJsZSc6MiAncHJv\nYmxlbSc6MSAncmVhc29uJzozICdzb2x1dGlvbic6NCw2NiAnc29sdXRpb25z\nJzo0MSAnc3BpbGxzJzo1OCAnc3RlcmlsZSc6MjksMzQsNDQsNDkgJ3N0ZXJp\nbGl0eSc6OCAnc3RlcmlsaXplZCc6MjEgJ3N1ZmZpY2llbnQnOjEwNiAnc3Vy\nZSc6MTQsMzEsNDYgJ3N1c3BlbnNpb24nOjgzICd0ZW1wZXJhdHVyZSc6MTA0\nICd0ZXN0Jzo4NiAndGhlJzo2NCw3Nyw4MSAndGlwcyc6MjUsMzYgJ3RvJzox\nNSwzMiwzOSw0NyAndG9vJzo3NCAndW5vcGVuZWQnOjE4ICd1c2UnOjE2LDMz\nLDQ4ICd1c2VkJzoyNiw4OCwxMDAgJ3dhcyc6MTEsNzMgJ3dlcmUnOjI3LDQy\nLDkyICd3aGVuJzo2MiAnd2l0aCc6NTU=\n"
+                  },
+                  "position": 1
                 }
               ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -135,11 +152,21 @@
         "state": "uncompleted",
         "completed_on": null
       },
-      "outputs": [],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "outputs": [
+
+      ],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -162,13 +189,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 4375,
                 "name": "Sampling",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>To confirm that the size of the bacterial inoculum was appropriate, determine the viable count of the bacterial suspension used for preparing the initial inoculum. <br><br><br></p></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -178,65 +206,74 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3455
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>To confirm that the size of the bacterial inoculum was appropriate, determine the viable count of the bacterial suspension used for preparing the initial inoculum. <br><br><br></p></body></html>"
+                  },
+                  "position": 0
+                },
                 {
                   "checklist": {
-                    "id": 967,
-                    "name": "Guidelines:",
-                    "step_id": 4375,
-                    "created_at": "2018-12-21T12:05:41.323Z",
-                    "updated_at": "2018-12-21T12:05:41.323Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 967,
+                      "name": "Guidelines:",
+                      "step_id": 4375,
+                      "created_at": "2018-12-21T12:05:41.323Z",
+                      "updated_at": "2018-12-21T12:05:41.323Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3981,
+                        "text": "Dilute this suspension 1:100 by pipetting 10 µL into sterile capped Eppendorf tubes containing 990 µL nutrient-rich broth or sterile saline solution (10-2)",
+                        "checked": false,
+                        "checklist_id": 967,
+                        "created_at": "2018-12-21T12:05:41.325Z",
+                        "updated_at": "2018-12-21T12:05:41.325Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 3982,
+                        "text": "Dilute this solution sequentially 1:10 three times until you reach a dilution of 10–5.",
+                        "checked": false,
+                        "checklist_id": 967,
+                        "created_at": "2018-12-21T12:05:41.338Z",
+                        "updated_at": "2018-12-21T12:05:41.338Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 3983,
+                        "text": "Plate 100 mL of the last two 1:10 dilutions (10–4 to 10–5) evenly onto antibiotic-free nutrient-rich agar plates using a sterile cell spreader.",
+                        "checked": false,
+                        "checklist_id": 967,
+                        "created_at": "2018-12-21T12:05:41.345Z",
+                        "updated_at": "2018-12-21T12:05:41.345Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 3981,
-                      "text": "Dilute this suspension 1:100 by pipetting 10 µL into sterile capped Eppendorf tubes containing 990 µL nutrient-rich broth or sterile saline solution (10-2)",
-                      "checked": false,
-                      "checklist_id": 967,
-                      "created_at": "2018-12-21T12:05:41.325Z",
-                      "updated_at": "2018-12-21T12:05:41.325Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 3982,
-                      "text": "Dilute this solution sequentially 1:10 three times until you reach a dilution of 10–5.",
-                      "checked": false,
-                      "checklist_id": 967,
-                      "created_at": "2018-12-21T12:05:41.338Z",
-                      "updated_at": "2018-12-21T12:05:41.338Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 3983,
-                      "text": "Plate 100 mL of the last two 1:10 dilutions (10–4 to 10–5) evenly onto antibiotic-free nutrient-rich agar plates using a sterile cell spreader.",
-                      "checked": false,
-                      "checklist_id": 967,
-                      "created_at": "2018-12-21T12:05:41.345Z",
-                      "updated_at": "2018-12-21T12:05:41.345Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    }
-                  ]
+                  "position": 1
                 }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              ]
             },
             {
               "step": {
                 "id": 4377,
                 "name": "Colonies count",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Count colonies on plates (taking into account only plates with up to <strong>500</strong> colonies).<br>It is best to determine the relationship between <strong>OD600</strong> and the microbial number basing the calculation on plates displaying a number of colonies between <strong>100</strong> and <strong>400</strong>. <strong>Higher numbers do not accurately represent the original suspension as errors created by coincidence of colonies and nutrient limitation lead to numbers that are lower than expected.</strong> Relying on fewer than <strong>100</strong> colonies might, on the other hand, lead to incorrect conclusions due to the addition of statistical and methodological errors while performing the dilutions.</p></body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -246,18 +283,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3455
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Count colonies on plates (taking into account only plates with up to <strong>500</strong> colonies).<br>It is best to determine the relationship between <strong>OD600</strong> and the microbial number basing the calculation on plates displaying a number of colonies between <strong>100</strong> and <strong>400</strong>. <strong>Higher numbers do not accurately represent the original suspension as errors created by coincidence of colonies and nutrient limitation lead to numbers that are lower than expected.</strong> Relying on fewer than <strong>100</strong> colonies might, on the other hand, lead to incorrect conclusions due to the addition of statistical and methodological errors while performing the dilutions.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4376,
                 "name": "Incubation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p><strong>Incubation parameters:</strong></p>\n<ul>\n<li>37°C</li>\n<li>16-20h</li>\n</ul>\n</body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -267,18 +311,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3455
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p><strong>Incubation parameters:</strong></p>\n<ul>\n<li>37°C</li>\n<li>16-20h</li>\n</ul>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4378,
                 "name": "Calculation of CFU",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Calculate the CFU per mL that were in the overnight culture according to the following formula, where <strong>N=(Cx10)/10<sup>-D</sup> (CFU/mL)</strong>; C= number of colonies per plate; D= number of 1:10 dilution.<br><br>Average the results from three tests performed with the microbial isolate and correlate this number with the OD600 value obtained from the overnight culture. This relationship holds true for subsequent cultures of the same bacterium grown in the same way.</p></body></html>",
                 "position": 3,
                 "completed": false,
                 "completed_on": null,
@@ -288,17 +339,27 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3455
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Calculate the CFU per mL that were in the overnight culture according to the following formula, where <strong>N=(Cx10)/10<sup>-D</sup> (CFU/mL)</strong>; C= number of colonies per plate; D= number of 1:10 dilution.<br><br>Average the results from three tests performed with the microbial isolate and correlate this number with the OD600 value obtained from the overnight culture. This relationship holds true for subsequent cultures of the same bacterium grown in the same way.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -323,11 +384,21 @@
         "state": "uncompleted",
         "completed_on": null
       },
-      "outputs": [],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "outputs": [
+
+      ],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -350,13 +421,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 4387,
                 "name": "Interpretation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>In order for the test to be valid, the agar plates for the cell count have to be checked to verify that the right number of CFU were used. The presence of around <strong>100–200 colonies</strong> on the lower of the two dilutions<strong> (10<sup>-5</sup>)</strong> of the initial bacterial suspension is expected when using the correct bacterial suspension density of <strong>1–2x10<sup>8</sup> CFU/mL</strong>. If the cell numbers are within the desired range, the test can be analyzed to determine the MIC. Also, check the antibiotic-free growth control plate. Visible growth needs to occur for the test to be valid.<br><br><em><strong>The MIC is defined as the lowest concentration of the antimicrobial substance that inhibits visible growth of the tested isolate.</strong></em> The growth of a single colony or faint film caused by the inoculum should be disregarded. When growth of the tested organism occurs on all agar plates with antimicrobial agent, the MIC is recorded as greater than the highest concentration tested. The MIC is recorded as less than or equal to the lowest concentration when no growth occurs on any of the agar plates but the growth control.</p></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -366,14 +438,8 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3460
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [
-                {
-                  "id": 3090,
-                  "step_id": 4387,
-                  "asset_id": 3752
-                }
+              "step_comments": [
+
               ],
               "assets": [
                 {
@@ -395,13 +461,21 @@
                   }
                 }
               ],
-              "step_tables": [],
-              "tables": []
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>In order for the test to be valid, the agar plates for the cell count have to be checked to verify that the right number of CFU were used. The presence of around <strong>100–200 colonies</strong> on the lower of the two dilutions<strong> (10<sup>-5</sup>)</strong> of the initial bacterial suspension is expected when using the correct bacterial suspension density of <strong>1–2x10<sup>8</sup> CFU/mL</strong>. If the cell numbers are within the desired range, the test can be analyzed to determine the MIC. Also, check the antibiotic-free growth control plate. Visible growth needs to occur for the test to be valid.<br><br><em><strong>The MIC is defined as the lowest concentration of the antimicrobial substance that inhibits visible growth of the tested isolate.</strong></em> The growth of a single colony or faint film caused by the inoculum should be disregarded. When growth of the tested organism occurs on all agar plates with antimicrobial agent, the MIC is recorded as greater than the highest concentration tested. The MIC is recorded as less than or equal to the lowest concentration when no growth occurs on any of the agar plates but the growth control.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -433,10 +507,18 @@
           "output_id": 2132
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -459,13 +541,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 5200,
                 "name": "Agar plates",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p style=\"text-align: justify;\"><strong>Bacterial suspension preparation:</strong> Mix the bacterial suspension, adjusted to <strong>1x10<sup>8</sup> CFU/mL</strong> from <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#grow\">[#Growth method~tsk~YI]</span>  or  <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#colo\">[#Colony suspension~tsk~YH]</span>  by vortexing and dilute it <strong>1:10</strong> into a cavity of a sterile<strong> 96-well</strong> microtiter plate by pipetting <strong>10 mL</strong> into a well containing <strong>90 mL</strong> of sterile broth or saline. Repeat for each bacterial isolate to be tested. Be sure to make a note of the content of each well and to inoculate the microtiter plate in a way that the inocula can be transferred to the agar plates using a <strong>48-pin</strong> replicator. For up to <strong>48 tests</strong>, inoculate only within rows A–H, columns <strong>1–6</strong> of the microtiter plate. As an alternative to the replicator, a multichannel micropipette set at <strong>1µL</strong> can be used to deliver the spots. Make sure that the required number of bacterial cells is going to be transferred. A <strong>48-pin</strong> replicator with <strong>1.5 mm</strong> pins delivers <strong>1 µL</strong>. The final inoculum for a spot with a size of<strong> 5–8 mm</strong> should deliver the desired cell density of around <strong>10<sup>4</sup> CFU</strong> per spot. <br><br><strong>Inoculation:</strong> Sterilize the <strong>48-pin</strong> replicator by soaking the pins in <strong>95%</strong> ethanol and passing them through a Bunsen burner flame. Hold the pins in an upright position until the flame extinguishes. Let the pins cool in an inverted position to maintain sterility. Place the sterilized replicator into the microtiter plate to soak the pins and transfer it onto the agar plate. Start by inoculating a growth control plate without antibiotic. Make sure that each agar plate has the same orientation while inoculating and to make a note of the orientation so that spots on the agar plate can be assigned to the respective isolate tested. Inoculate the antibiotic-containing agar plates starting with the lowest concentration. Let the inoculum spots dry at room temperature before inverting the plates. Plate <strong>100 µL</strong> of the last two <strong>1:10</strong> dilutions (<strong>10<sup>–4</sup> to 10<sup>–5</sup></strong>) evenly onto antibiotic-free nutrient-rich agar plates using a sterile cell spreader.</p>\n<strong>Incubation:<br></strong>\n<ul>\n<li>37°C</li>\n<li>16-20h</li>\n</ul>\nCount colonies the next day ( <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#coun\">[#Cell count~tsk~YL]</span> )</body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -475,14 +558,8 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3458
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [
-                {
-                  "id": 3089,
-                  "step_id": 5200,
-                  "asset_id": 3751
-                }
+              "step_comments": [
+
               ],
               "assets": [
                 {
@@ -504,14 +581,19 @@
                   }
                 }
               ],
-              "step_tables": [],
-              "tables": []
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p style=\"text-align: justify;\"><strong>Bacterial suspension preparation:</strong> Mix the bacterial suspension, adjusted to <strong>1x10<sup>8</sup> CFU/mL</strong> from <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#grow\">[#Growth method~tsk~YI]</span>  or  <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#colo\">[#Colony suspension~tsk~YH]</span>  by vortexing and dilute it <strong>1:10</strong> into a cavity of a sterile<strong> 96-well</strong> microtiter plate by pipetting <strong>10 mL</strong> into a well containing <strong>90 mL</strong> of sterile broth or saline. Repeat for each bacterial isolate to be tested. Be sure to make a note of the content of each well and to inoculate the microtiter plate in a way that the inocula can be transferred to the agar plates using a <strong>48-pin</strong> replicator. For up to <strong>48 tests</strong>, inoculate only within rows A–H, columns <strong>1–6</strong> of the microtiter plate. As an alternative to the replicator, a multichannel micropipette set at <strong>1µL</strong> can be used to deliver the spots. Make sure that the required number of bacterial cells is going to be transferred. A <strong>48-pin</strong> replicator with <strong>1.5 mm</strong> pins delivers <strong>1 µL</strong>. The final inoculum for a spot with a size of<strong> 5–8 mm</strong> should deliver the desired cell density of around <strong>10<sup>4</sup> CFU</strong> per spot. <br><br><strong>Inoculation:</strong> Sterilize the <strong>48-pin</strong> replicator by soaking the pins in <strong>95%</strong> ethanol and passing them through a Bunsen burner flame. Hold the pins in an upright position until the flame extinguishes. Let the pins cool in an inverted position to maintain sterility. Place the sterilized replicator into the microtiter plate to soak the pins and transfer it onto the agar plate. Start by inoculating a growth control plate without antibiotic. Make sure that each agar plate has the same orientation while inoculating and to make a note of the orientation so that spots on the agar plate can be assigned to the respective isolate tested. Inoculate the antibiotic-containing agar plates starting with the lowest concentration. Let the inoculum spots dry at room temperature before inverting the plates. Plate <strong>100 µL</strong> of the last two <strong>1:10</strong> dilutions (<strong>10<sup>–4</sup> to 10<sup>–5</sup></strong>) evenly onto antibiotic-free nutrient-rich agar plates using a sterile cell spreader.</p>\n<strong>Incubation:<br></strong>\n<ul>\n<li>37°C</li>\n<li>16-20h</li>\n</ul>\nCount colonies the next day ( <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#coun\">[#Cell count~tsk~YL]</span> )</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 5198,
                 "name": "Broth macrodilutions",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p><strong>Broth dilutions preparation:</strong> Add <strong>1 mL</strong> of each antibiotic dilution into one test tube for each isolate to be tested. Fill the control tubes with <strong>1 mL</strong> sterile broth without an antimicrobial agent. Mix the bacterial suspension well. The suspension should be adjusted to <strong>1x10<sup>8</sup> CFU mL/L</strong> from <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#grow\">[#Growth method~tsk~YI]</span>  and <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#colo\">[#Colony suspension~tsk~YH]</span>  by vortexing, and dilute it by a factor of <strong>1:100</strong> by adding <strong>200 µL</strong> bacterial suspension to <strong>19.8 mL</strong> sterile MHB in a sterile <strong>50 mL</strong> Erlenmeyer flask to prepare a <strong>20 mL</strong> inoculum. Adjust volumes if necessary. <br><strong>Inoculation:</strong> Inoculate each test tube containing the antibiotic solution and one control test tube (growth control) with<strong> 1 mL</strong> of the bacterial suspension. This results in the final desired inoculum of <strong>5x10<sup>5</sup> CFU mL/L</strong>.<br><br><strong>Incubation:</strong></p>\n<ul>\n<li>37°C</li>\n<li>16-20h</li>\n<li>Shaking at 225 r.p.m.</li>\n</ul>\n<strong>Count colonies</strong> the next day( <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#coun\">[#Cell count~tsk~YL]</span> ).</body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -521,17 +603,27 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3458
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p><strong>Broth dilutions preparation:</strong> Add <strong>1 mL</strong> of each antibiotic dilution into one test tube for each isolate to be tested. Fill the control tubes with <strong>1 mL</strong> sterile broth without an antimicrobial agent. Mix the bacterial suspension well. The suspension should be adjusted to <strong>1x10<sup>8</sup> CFU mL/L</strong> from <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#grow\">[#Growth method~tsk~YI]</span>  and <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#colo\">[#Colony suspension~tsk~YH]</span>  by vortexing, and dilute it by a factor of <strong>1:100</strong> by adding <strong>200 µL</strong> bacterial suspension to <strong>19.8 mL</strong> sterile MHB in a sterile <strong>50 mL</strong> Erlenmeyer flask to prepare a <strong>20 mL</strong> inoculum. Adjust volumes if necessary. <br><strong>Inoculation:</strong> Inoculate each test tube containing the antibiotic solution and one control test tube (growth control) with<strong> 1 mL</strong> of the bacterial suspension. This results in the final desired inoculum of <strong>5x10<sup>5</sup> CFU mL/L</strong>.<br><br><strong>Incubation:</strong></p>\n<ul>\n<li>37°C</li>\n<li>16-20h</li>\n<li>Shaking at 225 r.p.m.</li>\n</ul>\n<strong>Count colonies</strong> the next day( <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#coun\">[#Cell count~tsk~YL]</span> ).</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -563,10 +655,18 @@
           "output_id": 2131
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -589,13 +689,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 4382,
                 "name": "Prepare antibiotic dilutions",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Prepare antibiotic dilutions following steps below.</p></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -605,97 +706,103 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3457
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Prepare antibiotic dilutions following steps below.</p></body></html>"
+                  },
+                  "position": 0
+                },
+                {
+                  "table": {
+                    "id": 683,
+                    "created_at": "2018-12-21T11:38:45.382Z",
+                    "updated_at": "2018-12-21T11:48:45.258Z",
+                    "created_by_id": 202,
+                    "last_modified_by_id": 202,
+                    "name": "Table 1",
+                    "team_id": 1,
+                    "contents": "eyJkYXRhIjpbWyJTdGFnZSIsIkFudGltaWNyb2JpYWwgY29uY2VudHJhdGlv\nbiAobWcvbUwpIiwiU291cmNlIiwiVm9sdW1lIG9mIGFudGliaW90aWMgc3Rv\nY2sgc29sdXRpb24gKG1MKSIsIlZvbHVtZSBzdGVyaWxlIGJyb3RoIChtTCki\nLCJBbnRpbWljcm9iaWFsIGNvbmNlbnRyYXRpb24gb2J0YWluZWQgKG1nL21M\nKSIsIkZpbmFsIGNvbmNlbnRyYXRpb24gaW4gdGVzdCAobWcvbUwpIl0sWyIx\nIiwiMTI4MCIsIlN0b2NrIiwiMSIsIjkiLCIxMjgiLCI2NCJdLFsiMiIsIjEy\nOCIsIlN0YWdlIDEiLCIxIiwiMSIsIjY0IiwiMzIiXSxbIjMiLCIxMjgiLCJT\ndGFnZSAxIiwiMSIsIjMiLCIzMiIsIjE2Il0sWyI0IiwiMTI4IiwiU3RhZ2Ug\nMSIsIjEiLCI3IiwiMTYiLCI4Il0sWyI1IiwiMTYiLCJTdGFnZSA0IiwiMSIs\nIjEiLCI4IiwiNCJdLFsiNiIsIjE2IiwiU3RhZ2UgNCIsIjEiLCIzIiwiNCIs\nIjIiXSxbIjciLCIxNiIsIlN0YWdlIDQiLCIxIiwiNyIsIjIiLCIxIl0sWyI4\nIiwiMiIsIlNhdGdlIDciLCIxIiwiMSIsIjEiLCIwLjUiXSxbIjkiLCIyIiwi\nU2F0Z2UgNyIsIjEiLCIzIiwiMC41IiwiMC4yNSJdLFsiMTAiLCIyIiwiU2F0\nZ2UgNyIsIjEiLCI3IiwiMC4yNSIsIjAuMTI1Il0sWyIxMSIsIjAuMjUiLCJT\ndGFnZSAxMCIsIjEiLCIxIiwiMC4xMjUiLCIwLjA2Il0sWyIxMiIsIjAuMjUi\nLCJTdGFnZSAxMCIsIjEiLCIzIiwiMC4wNiIsIjAuMDMiXV19\n",
+                    "data_vector": "JzAuMDMnOjExOSAnMC4wNic6MTExLDExOCAnMC4xMjUnOjEwMywxMTAgJzAu\nMjUnOjk1LDEwMiwxMDUsMTEzICcwLjUnOjg3LDk0ICcxJzoyNSwyOCwzNSwz\nNiwzNyw0Myw0NCw1MSw1Miw2MCw2MSw2OCw3Niw3OSw4NCw4NSw4Niw5Miwx\nMDAsMTA4LDEwOSwxMTYgJzEwJzo5NiwxMDcsMTE1ICcxMSc6MTA0ICcxMic6\nMTEyICcxMjgnOjMwLDMzLDQxLDQ5ICcxMjgwJzoyNiAnMTYnOjQ3LDU0LDU3\nLDY1LDczICcyJzozMiw3MSw3OCw4MSw4OSw5NyAnMyc6NDAsNDUsNjksOTMs\nMTE3ICczMic6MzksNDYgJzQnOjQ4LDU5LDYzLDY3LDcwLDc1ICc1Jzo1NiAn\nNic6NjQgJzY0JzozMSwzOCAnNyc6NTMsNzIsNzcsODMsOTEsOTksMTAxICc4\nJzo1NSw2Miw4MCAnOSc6MjksODggJ2FudGliaW90aWMnOjggJ2FudGltaWNy\nb2JpYWwnOjIsMTYgJ2Jyb3RoJzoxNCAnY29uY2VudHJhdGlvbic6MywxNywy\nMSAnZmluYWwnOjIwICdpbic6MjIgJ21nL21sJzo0LDE5LDI0ICdtbCc6MTEs\nMTUgJ29idGFpbmVkJzoxOCAnb2YnOjcgJ3NhdGdlJzo4Miw5MCw5OCAnc29s\ndXRpb24nOjEwICdzb3VyY2UnOjUgJ3N0YWdlJzoxLDM0LDQyLDUwLDU4LDY2\nLDc0LDEwNiwxMTQgJ3N0ZXJpbGUnOjEzICdzdG9jayc6OSwyNyAndGVzdCc6\nMjMgJ3ZvbHVtZSc6NiwxMg==\n"
+                  },
+                  "position": 1
+                },
                 {
                   "checklist": {
-                    "id": 965,
-                    "name": "Guideline:",
-                    "step_id": 4382,
-                    "created_at": "2018-12-21T11:38:45.338Z",
-                    "updated_at": "2018-12-21T11:38:45.338Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 965,
+                      "name": "Guideline:",
+                      "step_id": 4382,
+                      "created_at": "2018-12-21T11:38:45.338Z",
+                      "updated_at": "2018-12-21T11:38:45.338Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3970,
+                        "text": "Prepare antibiotic dilutions in sterile MHB in sterile test tubes according to table.",
+                        "checked": false,
+                        "checklist_id": 965,
+                        "created_at": "2018-12-21T11:38:45.340Z",
+                        "updated_at": "2018-12-21T11:38:45.340Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 3971,
+                        "text": "As the antibiotic solution is later inoculated with an equal amount of bacteria in broth, the dilutions are prepared at a concentration twice the desired final concentration.",
+                        "checked": false,
+                        "checklist_id": 965,
+                        "created_at": "2018-12-21T11:38:45.347Z",
+                        "updated_at": "2018-12-21T11:38:45.347Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 3972,
+                        "text": "Start by dispensing sterile broth into twelve sterile 13x100 mm tubes closed with metal caps. A single 10 mL pipette can be used to pipette the 9 mL and 3 mL volumes of broth into the respective tubes. Use a single 1 mL pipette for pipetting the 1 mL of broth in stages 2, 5, 8 and 11.",
+                        "checked": false,
+                        "checklist_id": 965,
+                        "created_at": "2018-12-21T11:38:45.354Z",
+                        "updated_at": "2018-12-21T11:38:45.354Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 3973,
+                        "text": "It is possible to use the same pipette for pipetting 1 mL of the antibiotic stock solution into the first test tube. Mix thoroughly using a vortex mixer.",
+                        "checked": false,
+                        "checklist_id": 965,
+                        "created_at": "2018-12-21T11:38:45.361Z",
+                        "updated_at": "2018-12-21T11:38:45.361Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      },
+                      {
+                        "id": 3974,
+                        "text": "Use separate pipettes/pipette tips when preparing each of the other antibiotic solutions. Mix thoroughly using a vortex mixer.",
+                        "checked": false,
+                        "checklist_id": 965,
+                        "created_at": "2018-12-21T11:38:45.371Z",
+                        "updated_at": "2018-12-21T11:38:45.371Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 4
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 3970,
-                      "text": "Prepare antibiotic dilutions in sterile MHB in sterile test tubes according to table.",
-                      "checked": false,
-                      "checklist_id": 965,
-                      "created_at": "2018-12-21T11:38:45.340Z",
-                      "updated_at": "2018-12-21T11:38:45.340Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 3971,
-                      "text": "As the antibiotic solution is later inoculated with an equal amount of bacteria in broth, the dilutions are prepared at a concentration twice the desired final concentration.",
-                      "checked": false,
-                      "checklist_id": 965,
-                      "created_at": "2018-12-21T11:38:45.347Z",
-                      "updated_at": "2018-12-21T11:38:45.347Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 3972,
-                      "text": "Start by dispensing sterile broth into twelve sterile 13x100 mm tubes closed with metal caps. A single 10 mL pipette can be used to pipette the 9 mL and 3 mL volumes of broth into the respective tubes. Use a single 1 mL pipette for pipetting the 1 mL of broth in stages 2, 5, 8 and 11.",
-                      "checked": false,
-                      "checklist_id": 965,
-                      "created_at": "2018-12-21T11:38:45.354Z",
-                      "updated_at": "2018-12-21T11:38:45.354Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 3973,
-                      "text": "It is possible to use the same pipette for pipetting 1 mL of the antibiotic stock solution into the first test tube. Mix thoroughly using a vortex mixer.",
-                      "checked": false,
-                      "checklist_id": 965,
-                      "created_at": "2018-12-21T11:38:45.361Z",
-                      "updated_at": "2018-12-21T11:38:45.361Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    },
-                    {
-                      "id": 3974,
-                      "text": "Use separate pipettes/pipette tips when preparing each of the other antibiotic solutions. Mix thoroughly using a vortex mixer.",
-                      "checked": false,
-                      "checklist_id": 965,
-                      "created_at": "2018-12-21T11:38:45.371Z",
-                      "updated_at": "2018-12-21T11:38:45.371Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 4
-                    }
-                  ]
-                }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [
-                {
-                  "id": 546,
-                  "step_id": 4382,
-                  "table_id": 683
-                }
-              ],
-              "tables": [
-                {
-                  "id": 683,
-                  "created_at": "2018-12-21T11:38:45.382Z",
-                  "updated_at": "2018-12-21T11:48:45.258Z",
-                  "created_by_id": 202,
-                  "last_modified_by_id": 202,
-                  "name": "",
-                  "team_id": 1,
-                  "contents": "eyJkYXRhIjpbWyJTdGFnZSIsIkFudGltaWNyb2JpYWwgY29uY2VudHJhdGlv\nbiAobWcvbUwpIiwiU291cmNlIiwiVm9sdW1lIG9mIGFudGliaW90aWMgc3Rv\nY2sgc29sdXRpb24gKG1MKSIsIlZvbHVtZSBzdGVyaWxlIGJyb3RoIChtTCki\nLCJBbnRpbWljcm9iaWFsIGNvbmNlbnRyYXRpb24gb2J0YWluZWQgKG1nL21M\nKSIsIkZpbmFsIGNvbmNlbnRyYXRpb24gaW4gdGVzdCAobWcvbUwpIl0sWyIx\nIiwiMTI4MCIsIlN0b2NrIiwiMSIsIjkiLCIxMjgiLCI2NCJdLFsiMiIsIjEy\nOCIsIlN0YWdlIDEiLCIxIiwiMSIsIjY0IiwiMzIiXSxbIjMiLCIxMjgiLCJT\ndGFnZSAxIiwiMSIsIjMiLCIzMiIsIjE2Il0sWyI0IiwiMTI4IiwiU3RhZ2Ug\nMSIsIjEiLCI3IiwiMTYiLCI4Il0sWyI1IiwiMTYiLCJTdGFnZSA0IiwiMSIs\nIjEiLCI4IiwiNCJdLFsiNiIsIjE2IiwiU3RhZ2UgNCIsIjEiLCIzIiwiNCIs\nIjIiXSxbIjciLCIxNiIsIlN0YWdlIDQiLCIxIiwiNyIsIjIiLCIxIl0sWyI4\nIiwiMiIsIlNhdGdlIDciLCIxIiwiMSIsIjEiLCIwLjUiXSxbIjkiLCIyIiwi\nU2F0Z2UgNyIsIjEiLCIzIiwiMC41IiwiMC4yNSJdLFsiMTAiLCIyIiwiU2F0\nZ2UgNyIsIjEiLCI3IiwiMC4yNSIsIjAuMTI1Il0sWyIxMSIsIjAuMjUiLCJT\ndGFnZSAxMCIsIjEiLCIxIiwiMC4xMjUiLCIwLjA2Il0sWyIxMiIsIjAuMjUi\nLCJTdGFnZSAxMCIsIjEiLCIzIiwiMC4wNiIsIjAuMDMiXV19\n",
-                  "data_vector": "JzAuMDMnOjExOSAnMC4wNic6MTExLDExOCAnMC4xMjUnOjEwMywxMTAgJzAu\nMjUnOjk1LDEwMiwxMDUsMTEzICcwLjUnOjg3LDk0ICcxJzoyNSwyOCwzNSwz\nNiwzNyw0Myw0NCw1MSw1Miw2MCw2MSw2OCw3Niw3OSw4NCw4NSw4Niw5Miwx\nMDAsMTA4LDEwOSwxMTYgJzEwJzo5NiwxMDcsMTE1ICcxMSc6MTA0ICcxMic6\nMTEyICcxMjgnOjMwLDMzLDQxLDQ5ICcxMjgwJzoyNiAnMTYnOjQ3LDU0LDU3\nLDY1LDczICcyJzozMiw3MSw3OCw4MSw4OSw5NyAnMyc6NDAsNDUsNjksOTMs\nMTE3ICczMic6MzksNDYgJzQnOjQ4LDU5LDYzLDY3LDcwLDc1ICc1Jzo1NiAn\nNic6NjQgJzY0JzozMSwzOCAnNyc6NTMsNzIsNzcsODMsOTEsOTksMTAxICc4\nJzo1NSw2Miw4MCAnOSc6MjksODggJ2FudGliaW90aWMnOjggJ2FudGltaWNy\nb2JpYWwnOjIsMTYgJ2Jyb3RoJzoxNCAnY29uY2VudHJhdGlvbic6MywxNywy\nMSAnZmluYWwnOjIwICdpbic6MjIgJ21nL21sJzo0LDE5LDI0ICdtbCc6MTEs\nMTUgJ29idGFpbmVkJzoxOCAnb2YnOjcgJ3NhdGdlJzo4Miw5MCw5OCAnc29s\ndXRpb24nOjEwICdzb3VyY2UnOjUgJ3N0YWdlJzoxLDM0LDQyLDUwLDU4LDY2\nLDc0LDEwNiwxMTQgJ3N0ZXJpbGUnOjEzICdzdG9jayc6OSwyNyAndGVzdCc6\nMjMgJ3ZvbHVtZSc6NiwxMg==\n"
+                  "position": 2
                 }
               ]
             },
@@ -703,7 +810,6 @@
               "step": {
                 "id": 4383,
                 "name": "Labeling of test tubes",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>For every bacterial isolate, label twelve sterile <strong>13x100 mm</strong> test tubes closed with cotton buds or metal caps with the respective antibiotic concentration to be tested. <br>Label control tubes for bacterial growth and a single tube for sterility control for the entire measurement.</p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -713,17 +819,27 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3457
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>For every bacterial isolate, label twelve sterile <strong>13x100 mm</strong> test tubes closed with cotton buds or metal caps with the respective antibiotic concentration to be tested. <br>Label control tubes for bacterial growth and a single tube for sterility control for the entire measurement.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -755,10 +871,18 @@
           "output_id": 2127
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -781,13 +905,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 4369,
                 "name": "Dilute antibiotic stock",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Dilute the <strong>10 mg/mL</strong> antibiotic stock solution <strong>1:10</strong> in sterile broth or water to achieve a <strong>1 mg/mL</strong> solution.<br>Dilute the <strong>1 mg/mL</strong> solution <strong>1:10</strong> in sterile broth or water to achieve a <strong>0.1 mg/mL</strong> solution</p></body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -797,18 +922,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3453
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Dilute the <strong>10 mg/mL</strong> antibiotic stock solution <strong>1:10</strong> in sterile broth or water to achieve a <strong>1 mg/mL</strong> solution.<br>Dilute the <strong>1 mg/mL</strong> solution <strong>1:10</strong> in sterile broth or water to achieve a <strong>0.1 mg/mL</strong> solution</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4370,
                 "name": "Prepare agar plates",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Prepare agar plates following guidelines below.</p></body></html>",
                 "position": 3,
                 "completed": false,
                 "completed_on": null,
@@ -818,108 +950,114 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3453
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Prepare agar plates following guidelines below.</p></body></html>"
+                  },
+                  "position": 0
+                },
+                {
+                  "table": {
+                    "id": 682,
+                    "created_at": "2018-12-20T13:07:47.021Z",
+                    "updated_at": "2018-12-24T09:08:20.452Z",
+                    "created_by_id": 202,
+                    "last_modified_by_id": 202,
+                    "name": "Table 1",
+                    "team_id": 1,
+                    "contents": "eyJkYXRhIjpbWyJBbnRpbWljcm9iaWFsIGNvbmNlbnRyYXRpb24gKG1nL0wp\nIiwiVm9sdW1lIG9mIGFudGliaW90aWMgc3RvY2sgc29sdXRpb24gKM68TCki\nLCJGaW5hbCBjb25jZW50cmF0aW9uIHdoZW4gYWRkaW5nIDI1bUwgb2YgYWdh\nciJdLFsiMTAiLCIzMjAiLCIxMjgiXSxbIjEwIiwiMTYwIiwiNjQiXSxbIjEw\nIiwiODAiLCIzMiJdLFsiMTAiLCI0MCIsIjE2Il0sWyIxIiwiMjAwIiwiOCJd\nLFsiMSIsIjEwMCIsIjQiXSxbIjEiLCI1MCIsIjIiXSxbIjAuMSIsIjI1MCIs\nIjEiXSxbIjAuMSIsIjEyNSIsIjAuNSJdLFsiMC4xIiwiNjIuNSIsIjAuMjUi\nXSxbIjAuMSIsIjMxLjI1IiwiMS4xMjUiXV19\n",
+                    "data_vector": "JzAuMSc6MzksNDIsNDUsNDggJzAuMjUnOjQ3ICcwLjUnOjQ0ICcxJzozMCwz\nMywzNiw0MSAnMS4xMjUnOjUwICcxMCc6MTgsMjEsMjQsMjcgJzEwMCc6MzQg\nJzEyNSc6NDMgJzEyOCc6MjAgJzE2JzoyOSAnMTYwJzoyMiAnMic6MzggJzIw\nMCc6MzEgJzI1MCc6NDAgJzI1bWwnOjE1ICcyNzRsJzoxMCAnMzEuMjUnOjQ5\nICczMTYnOjkgJzMyJzoyNiAnMzIwJzoxOSAnNCc6MzUgJzQwJzoyOCAnNTAn\nOjM3ICc2Mi41Jzo0NiAnNjQnOjIzICc4JzozMiAnODAnOjI1ICdhZGRpbmcn\nOjE0ICdhZ2FyJzoxNyAnYW50aWJpb3RpYyc6NiAnYW50aW1pY3JvYmlhbCc6\nMSAnY29uY2VudHJhdGlvbic6MiwxMiAnZmluYWwnOjExICdtZy9sJzozICdv\nZic6NSwxNiAnc29sdXRpb24nOjggJ3N0b2NrJzo3ICd2b2x1bWUnOjQgJ3do\nZW4nOjEz\n"
+                  },
+                  "position": 1
+                },
                 {
                   "checklist": {
-                    "id": 966,
-                    "name": "Guidelines:",
-                    "step_id": 4370,
-                    "created_at": "2018-12-21T11:52:37.302Z",
-                    "updated_at": "2018-12-21T11:52:37.302Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 966,
+                      "name": "Guidelines:",
+                      "step_id": 4370,
+                      "created_at": "2018-12-21T11:52:37.302Z",
+                      "updated_at": "2018-12-21T11:52:37.302Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3975,
+                        "text": "Dispense appropriate amounts of antibiotic solution into the respective containers. Follow table steps.",
+                        "checked": false,
+                        "checklist_id": 966,
+                        "created_at": "2018-12-21T11:52:37.304Z",
+                        "updated_at": "2018-12-21T11:52:37.304Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 3976,
+                        "text": "For each agar plate, add 25 mL agar (now at a temperature of 50°C) into the container, mix well (avoid bubbles) and pour 25 ml into a petri dish labelled with the respective antibiotic concentration.",
+                        "checked": false,
+                        "checklist_id": 966,
+                        "created_at": "2018-12-21T11:52:37.311Z",
+                        "updated_at": "2018-12-21T11:52:37.311Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 3977,
+                        "text": "Pour a control agar plate without any antibiotic. Adjust the number if necessary.",
+                        "checked": false,
+                        "checklist_id": 966,
+                        "created_at": "2018-12-21T11:52:37.317Z",
+                        "updated_at": "2018-12-21T11:52:37.317Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 3978,
+                        "text": "Allow agar to set.",
+                        "checked": false,
+                        "checklist_id": 966,
+                        "created_at": "2018-12-21T11:52:37.324Z",
+                        "updated_at": "2018-12-21T11:52:37.324Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      },
+                      {
+                        "id": 3979,
+                        "text": "Dry the surface of the agar plates either in an incubator or in a laminar airflow hood for 30 min. Leave the lid ajar.",
+                        "checked": false,
+                        "checklist_id": 966,
+                        "created_at": "2018-12-21T11:52:37.330Z",
+                        "updated_at": "2018-12-21T11:52:37.330Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 4
+                      },
+                      {
+                        "id": 3980,
+                        "text": "Mark the bottom of the agar plates to define an orientation.",
+                        "checked": false,
+                        "checklist_id": 966,
+                        "created_at": "2018-12-21T11:52:37.336Z",
+                        "updated_at": "2018-12-21T11:52:37.336Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 5
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 3975,
-                      "text": "Dispense appropriate amounts of antibiotic solution into the respective containers. Follow table steps.",
-                      "checked": false,
-                      "checklist_id": 966,
-                      "created_at": "2018-12-21T11:52:37.304Z",
-                      "updated_at": "2018-12-21T11:52:37.304Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 3976,
-                      "text": "For each agar plate, add 25 mL agar (now at a temperature of 50°C) into the container, mix well (avoid bubbles) and pour 25 ml into a petri dish labelled with the respective antibiotic concentration.",
-                      "checked": false,
-                      "checklist_id": 966,
-                      "created_at": "2018-12-21T11:52:37.311Z",
-                      "updated_at": "2018-12-21T11:52:37.311Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 3977,
-                      "text": "Pour a control agar plate without any antibiotic. Adjust the number if necessary.",
-                      "checked": false,
-                      "checklist_id": 966,
-                      "created_at": "2018-12-21T11:52:37.317Z",
-                      "updated_at": "2018-12-21T11:52:37.317Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 3978,
-                      "text": "Allow agar to set.",
-                      "checked": false,
-                      "checklist_id": 966,
-                      "created_at": "2018-12-21T11:52:37.324Z",
-                      "updated_at": "2018-12-21T11:52:37.324Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    },
-                    {
-                      "id": 3979,
-                      "text": "Dry the surface of the agar plates either in an incubator or in a laminar airflow hood for 30 min. Leave the lid ajar.",
-                      "checked": false,
-                      "checklist_id": 966,
-                      "created_at": "2018-12-21T11:52:37.330Z",
-                      "updated_at": "2018-12-21T11:52:37.330Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 4
-                    },
-                    {
-                      "id": 3980,
-                      "text": "Mark the bottom of the agar plates to define an orientation.",
-                      "checked": false,
-                      "checklist_id": 966,
-                      "created_at": "2018-12-21T11:52:37.336Z",
-                      "updated_at": "2018-12-21T11:52:37.336Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 5
-                    }
-                  ]
-                }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [
-                {
-                  "id": 545,
-                  "step_id": 4370,
-                  "table_id": 682
-                }
-              ],
-              "tables": [
-                {
-                  "id": 682,
-                  "created_at": "2018-12-20T13:07:47.021Z",
-                  "updated_at": "2018-12-24T09:08:20.452Z",
-                  "created_by_id": 202,
-                  "last_modified_by_id": 202,
-                  "name": "",
-                  "team_id": 1,
-                  "contents": "eyJkYXRhIjpbWyJBbnRpbWljcm9iaWFsIGNvbmNlbnRyYXRpb24gKG1nL0wp\nIiwiVm9sdW1lIG9mIGFudGliaW90aWMgc3RvY2sgc29sdXRpb24gKM68TCki\nLCJGaW5hbCBjb25jZW50cmF0aW9uIHdoZW4gYWRkaW5nIDI1bUwgb2YgYWdh\nciJdLFsiMTAiLCIzMjAiLCIxMjgiXSxbIjEwIiwiMTYwIiwiNjQiXSxbIjEw\nIiwiODAiLCIzMiJdLFsiMTAiLCI0MCIsIjE2Il0sWyIxIiwiMjAwIiwiOCJd\nLFsiMSIsIjEwMCIsIjQiXSxbIjEiLCI1MCIsIjIiXSxbIjAuMSIsIjI1MCIs\nIjEiXSxbIjAuMSIsIjEyNSIsIjAuNSJdLFsiMC4xIiwiNjIuNSIsIjAuMjUi\nXSxbIjAuMSIsIjMxLjI1IiwiMS4xMjUiXV19\n",
-                  "data_vector": "JzAuMSc6MzksNDIsNDUsNDggJzAuMjUnOjQ3ICcwLjUnOjQ0ICcxJzozMCwz\nMywzNiw0MSAnMS4xMjUnOjUwICcxMCc6MTgsMjEsMjQsMjcgJzEwMCc6MzQg\nJzEyNSc6NDMgJzEyOCc6MjAgJzE2JzoyOSAnMTYwJzoyMiAnMic6MzggJzIw\nMCc6MzEgJzI1MCc6NDAgJzI1bWwnOjE1ICcyNzRsJzoxMCAnMzEuMjUnOjQ5\nICczMTYnOjkgJzMyJzoyNiAnMzIwJzoxOSAnNCc6MzUgJzQwJzoyOCAnNTAn\nOjM3ICc2Mi41Jzo0NiAnNjQnOjIzICc4JzozMiAnODAnOjI1ICdhZGRpbmcn\nOjE0ICdhZ2FyJzoxNyAnYW50aWJpb3RpYyc6NiAnYW50aW1pY3JvYmlhbCc6\nMSAnY29uY2VudHJhdGlvbic6MiwxMiAnZmluYWwnOjExICdtZy9sJzozICdv\nZic6NSwxNiAnc29sdXRpb24nOjggJ3N0b2NrJzo3ICd2b2x1bWUnOjQgJ3do\nZW4nOjEz\n"
+                  "position": 2
                 }
               ]
             },
@@ -927,7 +1065,6 @@
               "step": {
                 "id": 5197,
                 "name": "Preparation and autoclaving of media",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<div class=\"row\">\n<div class=\"col-xs-12\">\n<div class=\"ql-editor\">\n<p>Prepare MHA medium following manufacturer’s instructions. Autoclaving at <strong>121.1°C for 15 minutes at 1 bar</strong>. Cool medium to <strong>50°C</strong> after that. Around <strong>25 mL</strong> is necessary to pour one <strong>15 100 mm</strong> petri dish to produce the required depth of <strong>3–4 mm</strong>. <br><br><br></p>\n</div>\n</div>\n</div>\n<div class=\"row\"> </div>\n</body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -937,18 +1074,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3453
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<div class=\"row\">\n<div class=\"col-xs-12\">\n<div class=\"ql-editor\">\n<p>Prepare MHA medium following manufacturer’s instructions. Autoclaving at <strong>121.1°C for 15 minutes at 1 bar</strong>. Cool medium to <strong>50°C</strong> after that. Around <strong>25 mL</strong> is necessary to pour one <strong>15 100 mm</strong> petri dish to produce the required depth of <strong>3–4 mm</strong>. <br><br><br></p>\n</div>\n</div>\n</div>\n<div class=\"row\"> </div>\n</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4367,
                 "name": "Calculate the amount of antibiotic solutions",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p style=\"text-align: justify;\">As the medium cools down, calculate the amount of antibiotic solutions (<strong>10, 1 and 0.1 mg/L</strong>) needed. The table is an example of the volumes needed for a concentration range between <strong>0.125 and 128 mg/L for one 25 mL</strong> agar plate per concentration. Adjust if a different concentration range is needed. The volumes of antibiotic and agar can also be varied depending on the number of plates to be poured. As each agar plate can be used for up to 48 tests, more than one plate might be necessary if a larger amount of isolates is going to be tested.<br><br>Label sterile containers appropriately (glass Erlenmeyer flasks closed with metal caps, tinfoil caps or cotton buds) with the final antibiotic concentration.<br><br></p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -958,35 +1102,41 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3453
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [
-                {
-                  "id": 544,
-                  "step_id": 4367,
-                  "table_id": 681
-                }
+              "step_comments": [
+
               ],
-              "tables": [
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
                 {
-                  "id": 681,
-                  "created_at": "2018-12-20T13:03:47.611Z",
-                  "updated_at": "2019-02-19T14:43:10.075Z",
-                  "created_by_id": 202,
-                  "last_modified_by_id": 202,
-                  "name": "",
-                  "team_id": 1,
-                  "contents": "eyJkYXRhIjpbWyJBbnRpbWljcm9iaWFsIGNvbmNlbnRyYXRpb24gKG1nL0wp\nIiwiVm9sdW1lIG9mIGFudGliaW90aWMgc3RvY2sgc29sdXRpb24gKM68TCki\nLCJGaW5hbCBjb25jZW50cmF0aW9uIHdoZW4gYWRkaW5nIDI1bUwgb2YgYWdh\nciJdLFsiMTAiLCIzMjAiLCIxMjgiXSxbIjEwIiwiMTYwIiwiNjQiXSxbIjEw\nIiwiODAiLCIzMiJdLFsiMTAiLCI0MCIsIjE2Il0sWyIxIiwiMjAwIiwiOCJd\nLFsiMSIsIjEwMCIsIjQiXSxbIjEiLCI1MCIsIjIiXSxbIjAuMSIsIjI1MCIs\nIjEiXSxbIjAuMSIsIjEyNSIsIjAuNSJdLFsiMC4xIiwiNjIuNSIsIjAuMjUi\nXSxbIjAuMSIsIjMxLjI1IiwiMS4xMjUiXV19\n",
-                  "data_vector": "JzAuMSc6MzksNDIsNDUsNDggJzAuMjUnOjQ3ICcwLjUnOjQ0ICcxJzozMCwz\nMywzNiw0MSAnMS4xMjUnOjUwICcxMCc6MTgsMjEsMjQsMjcgJzEwMCc6MzQg\nJzEyNSc6NDMgJzEyOCc6MjAgJzE2JzoyOSAnMTYwJzoyMiAnMic6MzggJzIw\nMCc6MzEgJzI1MCc6NDAgJzI1bWwnOjE1ICcyNzRsJzoxMCAnMzEuMjUnOjQ5\nICczMTYnOjkgJzMyJzoyNiAnMzIwJzoxOSAnNCc6MzUgJzQwJzoyOCAnNTAn\nOjM3ICc2Mi41Jzo0NiAnNjQnOjIzICc4JzozMiAnODAnOjI1ICdhZGRpbmcn\nOjE0ICdhZ2FyJzoxNyAnYW50aWJpb3RpYyc6NiAnYW50aW1pY3JvYmlhbCc6\nMSAnY29uY2VudHJhdGlvbic6MiwxMiAnZmluYWwnOjExICdtZy9sJzozICdv\nZic6NSwxNiAnc29sdXRpb24nOjggJ3N0b2NrJzo3ICd2b2x1bWUnOjQgJ3do\nZW4nOjEz\n"
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p style=\"text-align: justify;\">As the medium cools down, calculate the amount of antibiotic solutions (<strong>10, 1 and 0.1 mg/L</strong>) needed. The table is an example of the volumes needed for a concentration range between <strong>0.125 and 128 mg/L for one 25 mL</strong> agar plate per concentration. Adjust if a different concentration range is needed. The volumes of antibiotic and agar can also be varied depending on the number of plates to be poured. As each agar plate can be used for up to 48 tests, more than one plate might be necessary if a larger amount of isolates is going to be tested.<br><br>Label sterile containers appropriately (glass Erlenmeyer flasks closed with metal caps, tinfoil caps or cotton buds) with the final antibiotic concentration.<br><br></p></body></html>"
+                  },
+                  "position": 0
+                },
+                {
+                  "table": {
+                    "id": 681,
+                    "created_at": "2018-12-20T13:03:47.611Z",
+                    "updated_at": "2019-02-19T14:43:10.075Z",
+                    "created_by_id": 202,
+                    "last_modified_by_id": 202,
+                    "name": "Table 2",
+                    "team_id": 1,
+                    "contents": "eyJkYXRhIjpbWyJBbnRpbWljcm9iaWFsIGNvbmNlbnRyYXRpb24gKG1nL0wp\nIiwiVm9sdW1lIG9mIGFudGliaW90aWMgc3RvY2sgc29sdXRpb24gKM68TCki\nLCJGaW5hbCBjb25jZW50cmF0aW9uIHdoZW4gYWRkaW5nIDI1bUwgb2YgYWdh\nciJdLFsiMTAiLCIzMjAiLCIxMjgiXSxbIjEwIiwiMTYwIiwiNjQiXSxbIjEw\nIiwiODAiLCIzMiJdLFsiMTAiLCI0MCIsIjE2Il0sWyIxIiwiMjAwIiwiOCJd\nLFsiMSIsIjEwMCIsIjQiXSxbIjEiLCI1MCIsIjIiXSxbIjAuMSIsIjI1MCIs\nIjEiXSxbIjAuMSIsIjEyNSIsIjAuNSJdLFsiMC4xIiwiNjIuNSIsIjAuMjUi\nXSxbIjAuMSIsIjMxLjI1IiwiMS4xMjUiXV19\n",
+                    "data_vector": "JzAuMSc6MzksNDIsNDUsNDggJzAuMjUnOjQ3ICcwLjUnOjQ0ICcxJzozMCwz\nMywzNiw0MSAnMS4xMjUnOjUwICcxMCc6MTgsMjEsMjQsMjcgJzEwMCc6MzQg\nJzEyNSc6NDMgJzEyOCc6MjAgJzE2JzoyOSAnMTYwJzoyMiAnMic6MzggJzIw\nMCc6MzEgJzI1MCc6NDAgJzI1bWwnOjE1ICcyNzRsJzoxMCAnMzEuMjUnOjQ5\nICczMTYnOjkgJzMyJzoyNiAnMzIwJzoxOSAnNCc6MzUgJzQwJzoyOCAnNTAn\nOjM3ICc2Mi41Jzo0NiAnNjQnOjIzICc4JzozMiAnODAnOjI1ICdhZGRpbmcn\nOjE0ICdhZ2FyJzoxNyAnYW50aWJpb3RpYyc6NiAnYW50aW1pY3JvYmlhbCc6\nMSAnY29uY2VudHJhdGlvbic6MiwxMiAnZmluYWwnOjExICdtZy9sJzozICdv\nZic6NSwxNiAnc29sdXRpb24nOjggJ3N0b2NrJzo3ICd2b2x1bWUnOjQgJ3do\nZW4nOjEz\n"
+                  },
+                  "position": 1
                 }
               ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -1018,10 +1168,18 @@
           "output_id": 2125
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -1044,13 +1202,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 5202,
                 "name": "Take samples for cell count",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the protocol in <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#coun\">[#Cell count~tsk~YL]</span> </p></body></html>",
                 "position": 4,
                 "completed": false,
                 "completed_on": null,
@@ -1060,18 +1219,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3450
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the protocol in <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#coun\">[#Cell count~tsk~YL]</span> </p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4357,
                 "name": "Isolate preparation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the guidelines below to prepare an isolate.</p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -1081,87 +1247,96 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3450
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow the guidelines below to prepare an isolate.</p></body></html>"
+                  },
+                  "position": 0
+                },
                 {
                   "checklist": {
-                    "id": 962,
-                    "name": "Guidelines",
-                    "step_id": 4357,
-                    "created_at": "2018-12-21T11:09:29.266Z",
-                    "updated_at": "2018-12-21T11:09:29.266Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 962,
+                      "name": "Guidelines",
+                      "step_id": 4357,
+                      "created_at": "2018-12-21T11:09:29.266Z",
+                      "updated_at": "2018-12-21T11:09:29.266Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3957,
+                        "text": "For each isolate, select three to five morphologically similar colonies from the fresh agar plate from task",
+                        "checked": false,
+                        "checklist_id": 962,
+                        "created_at": "2018-12-21T11:09:29.268Z",
+                        "updated_at": "2018-12-21T11:09:29.268Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 3958,
+                        "text": "Plate preparation",
+                        "checked": false,
+                        "checklist_id": 962,
+                        "created_at": "2018-12-21T11:09:29.276Z",
+                        "updated_at": "2018-12-21T11:09:29.276Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 3959,
+                        "text": "Touch the top of each selected colony using a sterile loop or cotton swab.",
+                        "checked": false,
+                        "checklist_id": 962,
+                        "created_at": "2018-12-21T11:09:29.287Z",
+                        "updated_at": "2018-12-21T11:09:29.287Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 3960,
+                        "text": "Transfer the growth into a sterile capped glass tube containing sterile broth or saline solution.",
+                        "checked": false,
+                        "checklist_id": 962,
+                        "created_at": "2018-12-21T11:09:29.300Z",
+                        "updated_at": "2019-02-07T09:10:36.760Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      },
+                      {
+                        "id": 3961,
+                        "text": "Mix using a vortex mixer.",
+                        "checked": false,
+                        "checklist_id": 962,
+                        "created_at": "2018-12-21T11:09:29.307Z",
+                        "updated_at": "2018-12-21T11:09:29.307Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 4
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 3957,
-                      "text": "For each isolate, select three to five morphologically similar colonies from the fresh agar plate from task",
-                      "checked": false,
-                      "checklist_id": 962,
-                      "created_at": "2018-12-21T11:09:29.268Z",
-                      "updated_at": "2018-12-21T11:09:29.268Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 3958,
-                      "text": "Plate preparation",
-                      "checked": false,
-                      "checklist_id": 962,
-                      "created_at": "2018-12-21T11:09:29.276Z",
-                      "updated_at": "2018-12-21T11:09:29.276Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 3959,
-                      "text": "Touch the top of each selected colony using a sterile loop or cotton swab.",
-                      "checked": false,
-                      "checklist_id": 962,
-                      "created_at": "2018-12-21T11:09:29.287Z",
-                      "updated_at": "2018-12-21T11:09:29.287Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 3960,
-                      "text": "Transfer the growth into a sterile capped glass tube containing sterile broth or saline solution.",
-                      "checked": false,
-                      "checklist_id": 962,
-                      "created_at": "2018-12-21T11:09:29.300Z",
-                      "updated_at": "2019-02-07T09:10:36.760Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    },
-                    {
-                      "id": 3961,
-                      "text": "Mix using a vortex mixer.",
-                      "checked": false,
-                      "checklist_id": 962,
-                      "created_at": "2018-12-21T11:09:29.307Z",
-                      "updated_at": "2018-12-21T11:09:29.307Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 4
-                    }
-                  ]
+                  "position": 1
                 }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              ]
             },
             {
               "step": {
                 "id": 5195,
                 "name": "Pure cultures of bacterial isolates",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p><strong>Growth conditions:</strong></p>\n<ul>\n<li>37°C</li>\n<li>18-24h</li>\n</ul>\n</body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -1171,61 +1346,8 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3450
               },
-              "checklists": [
-                {
-                  "checklist": {
-                    "id": 961,
-                    "name": "Guidelines:",
-                    "step_id": 5195,
-                    "created_at": "2018-12-21T10:50:36.576Z",
-                    "updated_at": "2018-12-21T10:50:36.576Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
-                  },
-                  "checklist_items": [
-                    {
-                      "id": 3954,
-                      "text": "Prepare media (store at 4°C)",
-                      "checked": false,
-                      "checklist_id": 961,
-                      "created_at": "2018-12-21T10:50:36.577Z",
-                      "updated_at": "2018-12-21T10:50:36.577Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 3955,
-                      "text": "Prepare antibiotic stock solutions",
-                      "checked": false,
-                      "checklist_id": 961,
-                      "created_at": "2018-12-21T10:50:36.584Z",
-                      "updated_at": "2018-12-21T10:50:36.584Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 3956,
-                      "text": "Streak the bacterial isolates to be tested onto nutrient-rich agar plates without inhibitor to obtain single colonies",
-                      "checked": false,
-                      "checklist_id": 961,
-                      "created_at": "2018-12-21T10:50:36.592Z",
-                      "updated_at": "2018-12-21T10:50:36.592Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    }
-                  ]
-                }
-              ],
-              "step_comments": [],
-              "step_assets": [
-                {
-                  "id": 3088,
-                  "step_id": 5195,
-                  "asset_id": 3750
-                }
+              "step_comments": [
+
               ],
               "assets": [
                 {
@@ -1247,14 +1369,68 @@
                   }
                 }
               ],
-              "step_tables": [],
-              "tables": []
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p><strong>Growth conditions:</strong></p>\n<ul>\n<li>37°C</li>\n<li>18-24h</li>\n</ul>\n</body></html>"
+                  },
+                  "position": 0
+                },
+                {
+                  "checklist": {
+                    "checklist": {
+                      "id": 961,
+                      "name": "Guidelines:",
+                      "step_id": 5195,
+                      "created_at": "2018-12-21T10:50:36.576Z",
+                      "updated_at": "2018-12-21T10:50:36.576Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3954,
+                        "text": "Prepare media (store at 4°C)",
+                        "checked": false,
+                        "checklist_id": 961,
+                        "created_at": "2018-12-21T10:50:36.577Z",
+                        "updated_at": "2018-12-21T10:50:36.577Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 3955,
+                        "text": "Prepare antibiotic stock solutions",
+                        "checked": false,
+                        "checklist_id": 961,
+                        "created_at": "2018-12-21T10:50:36.584Z",
+                        "updated_at": "2018-12-21T10:50:36.584Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 3956,
+                        "text": "Streak the bacterial isolates to be tested onto nutrient-rich agar plates without inhibitor to obtain single colonies",
+                        "checked": false,
+                        "checklist_id": 961,
+                        "created_at": "2018-12-21T10:50:36.592Z",
+                        "updated_at": "2018-12-21T10:50:36.592Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      }
+                    ]
+                  },
+                  "position": 1
+                }
+              ]
             },
             {
               "step": {
                 "id": 4358,
                 "name": "Assessment of turbidity",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p><strong>Turbidity can be assessed visually by comparing the test and the McFarland Standard.</strong> <br><br>Mix the McFarland <strong>0.5 BaSO<sub>4</sub></strong> standard vigorously using a vortex mixer. The turbidity is verified measuring the absorbance of the suspension spectrophotometrically. The absorbance should be in the same range as that of the McFarland standard<strong> 0.5</strong> (<strong>OD625 nm</strong> should be at <strong>0.08–0.13</strong>).</p></body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -1264,18 +1440,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3450
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p><strong>Turbidity can be assessed visually by comparing the test and the McFarland Standard.</strong> <br><br>Mix the McFarland <strong>0.5 BaSO<sub>4</sub></strong> standard vigorously using a vortex mixer. The turbidity is verified measuring the absorbance of the suspension spectrophotometrically. The absorbance should be in the same range as that of the McFarland standard<strong> 0.5</strong> (<strong>OD625 nm</strong> should be at <strong>0.08–0.13</strong>).</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4359,
                 "name": "Adjustment of suspension turbidity",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Adjust the suspension’s turbidity to that of a McFarland Standard <strong>0.5</strong> by adding sterile distilled water, saline or broth, if the turbidity is too high, or by adding more bacterial material if is too low.<br><br>Go back to step 3.</p></body></html>",
                 "position": 3,
                 "completed": false,
                 "completed_on": null,
@@ -1285,17 +1468,27 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3450
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Adjust the suspension’s turbidity to that of a McFarland Standard <strong>0.5</strong> by adding sterile distilled water, saline or broth, if the turbidity is too high, or by adding more bacterial material if is too low.<br><br>Go back to step 3.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     },
     {
       "my_module": {
@@ -1327,10 +1520,18 @@
           "output_id": 2126
         }
       ],
-      "my_module_tags": [],
-      "task_comments": [],
-      "my_module_repository_rows": [],
-      "user_my_modules": [],
+      "my_module_tags": [
+
+      ],
+      "task_comments": [
+
+      ],
+      "my_module_repository_rows": [
+
+      ],
+      "user_my_modules": [
+
+      ],
       "protocols": [
         {
           "protocol": {
@@ -1353,13 +1554,14 @@
             "published_on": null,
             "nr_of_linked_children": 0
           },
-          "protocol_protocol_keywords": [],
+          "protocol_protocol_keywords": [
+
+          ],
           "steps": [
             {
               "step": {
                 "id": 5201,
                 "name": "Take samples for cell count",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Take samples for cell count and follow protocol in <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#cou\">[#Cell count~tsk~YL]</span>.</p></body></html>",
                 "position": 5,
                 "completed": false,
                 "completed_on": null,
@@ -1369,18 +1571,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3452
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Take samples for cell count and follow protocol in <span class=\"atwho-inserted\" contenteditable=\"false\" data-atwho-at-query=\"#cou\">[#Cell count~tsk~YL]</span>.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4360,
                 "name": "Adjustment of suspension turbidity",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Adjust the suspension’s turbidity to that of a McFarland Standard<strong> 0.5</strong> by adding sterile distilled water, saline or broth, if the turbidity is too high, or by adding more bacterial material if is too low.<br><br>Go back to <strong>step 4</strong>.</p></body></html>",
                 "position": 4,
                 "completed": false,
                 "completed_on": null,
@@ -1390,18 +1599,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3452
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Adjust the suspension’s turbidity to that of a McFarland Standard<strong> 0.5</strong> by adding sterile distilled water, saline or broth, if the turbidity is too high, or by adding more bacterial material if is too low.<br><br>Go back to <strong>step 4</strong>.</p></body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4362,
                 "name": "Isolate preparation",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow steps below for isolate preparation.</p></body></html>",
                 "position": 1,
                 "completed": false,
                 "completed_on": null,
@@ -1411,87 +1627,96 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3452
               },
-              "checklists": [
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Follow steps below for isolate preparation.</p></body></html>"
+                  },
+                  "position": 0
+                },
                 {
                   "checklist": {
-                    "id": 964,
-                    "name": "Guidelines:",
-                    "step_id": 4362,
-                    "created_at": "2018-12-21T11:14:19.776Z",
-                    "updated_at": "2018-12-21T11:14:19.776Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
+                    "checklist": {
+                      "id": 964,
+                      "name": "Guidelines:",
+                      "step_id": 4362,
+                      "created_at": "2018-12-21T11:14:19.776Z",
+                      "updated_at": "2018-12-21T11:14:19.776Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3965,
+                        "text": "For each isolate, select three to five morphologically similar colonies from the fresh agar plate from task .",
+                        "checked": false,
+                        "checklist_id": 964,
+                        "created_at": "2018-12-21T11:14:19.778Z",
+                        "updated_at": "2018-12-21T11:14:19.778Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 3966,
+                        "text": "Plate preparation.",
+                        "checked": false,
+                        "checklist_id": 964,
+                        "created_at": "2018-12-21T11:14:19.785Z",
+                        "updated_at": "2018-12-21T11:14:19.785Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 3967,
+                        "text": "Touch the top of each selected colony using a sterile loop or cotton swab.",
+                        "checked": false,
+                        "checklist_id": 964,
+                        "created_at": "2018-12-21T11:14:19.791Z",
+                        "updated_at": "2018-12-21T11:14:19.791Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      },
+                      {
+                        "id": 3968,
+                        "text": "Transfer into a tube containing 3–4 mL of a suitable nutrient-rich medium.",
+                        "checked": false,
+                        "checklist_id": 964,
+                        "created_at": "2018-12-21T11:14:19.798Z",
+                        "updated_at": "2018-12-21T11:14:19.798Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 3
+                      },
+                      {
+                        "id": 3969,
+                        "text": "Mix using a vortex mixer.",
+                        "checked": false,
+                        "checklist_id": 964,
+                        "created_at": "2018-12-21T11:14:19.805Z",
+                        "updated_at": "2018-12-21T11:14:19.805Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 4
+                      }
+                    ]
                   },
-                  "checklist_items": [
-                    {
-                      "id": 3965,
-                      "text": "For each isolate, select three to five morphologically similar colonies from the fresh agar plate from task .",
-                      "checked": false,
-                      "checklist_id": 964,
-                      "created_at": "2018-12-21T11:14:19.778Z",
-                      "updated_at": "2018-12-21T11:14:19.778Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 3966,
-                      "text": "Plate preparation.",
-                      "checked": false,
-                      "checklist_id": 964,
-                      "created_at": "2018-12-21T11:14:19.785Z",
-                      "updated_at": "2018-12-21T11:14:19.785Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 3967,
-                      "text": "Touch the top of each selected colony using a sterile loop or cotton swab.",
-                      "checked": false,
-                      "checklist_id": 964,
-                      "created_at": "2018-12-21T11:14:19.791Z",
-                      "updated_at": "2018-12-21T11:14:19.791Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    },
-                    {
-                      "id": 3968,
-                      "text": "Transfer into a tube containing 3–4 mL of a suitable nutrient-rich medium.",
-                      "checked": false,
-                      "checklist_id": 964,
-                      "created_at": "2018-12-21T11:14:19.798Z",
-                      "updated_at": "2018-12-21T11:14:19.798Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 3
-                    },
-                    {
-                      "id": 3969,
-                      "text": "Mix using a vortex mixer.",
-                      "checked": false,
-                      "checklist_id": 964,
-                      "created_at": "2018-12-21T11:14:19.805Z",
-                      "updated_at": "2018-12-21T11:14:19.805Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 4
-                    }
-                  ]
+                  "position": 1
                 }
-              ],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              ]
             },
             {
               "step": {
                 "id": 4363,
                 "name": "Pure cultures of bacterial isolates",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Following guidelines below will get you to obtain bacterial isolates.</p></body></html>",
                 "position": 0,
                 "completed": false,
                 "completed_on": null,
@@ -1501,61 +1726,8 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3452
               },
-              "checklists": [
-                {
-                  "checklist": {
-                    "id": 963,
-                    "name": "Guidelines:",
-                    "step_id": 4363,
-                    "created_at": "2018-12-21T11:12:20.820Z",
-                    "updated_at": "2018-12-21T11:12:20.820Z",
-                    "created_by_id": null,
-                    "last_modified_by_id": null
-                  },
-                  "checklist_items": [
-                    {
-                      "id": 3962,
-                      "text": "Prepare media (store at 4°C).",
-                      "checked": false,
-                      "checklist_id": 963,
-                      "created_at": "2018-12-21T11:12:20.822Z",
-                      "updated_at": "2018-12-21T11:12:20.822Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 0
-                    },
-                    {
-                      "id": 3963,
-                      "text": "Prepare antibiotic stock solutions.",
-                      "checked": false,
-                      "checklist_id": 963,
-                      "created_at": "2018-12-21T11:12:20.831Z",
-                      "updated_at": "2018-12-21T11:12:20.831Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 1
-                    },
-                    {
-                      "id": 3964,
-                      "text": "Streak the bacterial isolates to be tested onto nutrient-rich agar plates without inhibitor to obtain single colonies",
-                      "checked": false,
-                      "checklist_id": 963,
-                      "created_at": "2018-12-21T11:12:20.838Z",
-                      "updated_at": "2018-12-21T11:12:20.838Z",
-                      "created_by_id": null,
-                      "last_modified_by_id": null,
-                      "position": 2
-                    }
-                  ]
-                }
-              ],
-              "step_comments": [],
-              "step_assets": [
-                {
-                  "id": 3087,
-                  "step_id": 4363,
-                  "asset_id": 3749
-                }
+              "step_comments": [
+
               ],
               "assets": [
                 {
@@ -1577,14 +1749,68 @@
                   }
                 }
               ],
-              "step_tables": [],
-              "tables": []
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>Following guidelines below will get you to obtain bacterial isolates.</p></body></html>"
+                  },
+                  "position": 0
+                },
+                {
+                  "checklist": {
+                    "checklist": {
+                      "id": 963,
+                      "name": "Guidelines:",
+                      "step_id": 4363,
+                      "created_at": "2018-12-21T11:12:20.820Z",
+                      "updated_at": "2018-12-21T11:12:20.820Z",
+                      "created_by_id": null,
+                      "last_modified_by_id": null
+                    },
+                    "checklist_items": [
+                      {
+                        "id": 3962,
+                        "text": "Prepare media (store at 4°C).",
+                        "checked": false,
+                        "checklist_id": 963,
+                        "created_at": "2018-12-21T11:12:20.822Z",
+                        "updated_at": "2018-12-21T11:12:20.822Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 0
+                      },
+                      {
+                        "id": 3963,
+                        "text": "Prepare antibiotic stock solutions.",
+                        "checked": false,
+                        "checklist_id": 963,
+                        "created_at": "2018-12-21T11:12:20.831Z",
+                        "updated_at": "2018-12-21T11:12:20.831Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 1
+                      },
+                      {
+                        "id": 3964,
+                        "text": "Streak the bacterial isolates to be tested onto nutrient-rich agar plates without inhibitor to obtain single colonies",
+                        "checked": false,
+                        "checklist_id": 963,
+                        "created_at": "2018-12-21T11:12:20.838Z",
+                        "updated_at": "2018-12-21T11:12:20.838Z",
+                        "created_by_id": null,
+                        "last_modified_by_id": null,
+                        "position": 2
+                      }
+                    ]
+                  },
+                  "position": 1
+                }
+              ]
             },
             {
               "step": {
                 "id": 4364,
                 "name": "Incubate the broth",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p><strong>Incubation conditions:</strong></p>\n<ul>\n<li>35–37°C</li>\n<li>Shaker set at 225 r.p.m. until it reaches turbidity that is equal to or greater than the turbidity of a McFarland Standard 0.5.</li>\n</ul>\n<br>Culture growth will require 2–6 h depending on the growth rate of the bacteria to be tested. This pause period can be used to prepare the antibiotic or peptide dilutions.</body></html>",
                 "position": 2,
                 "completed": false,
                 "completed_on": null,
@@ -1594,18 +1820,25 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3452
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<p><strong>Incubation conditions:</strong></p>\n<ul>\n<li>35–37°C</li>\n<li>Shaker set at 225 r.p.m. until it reaches turbidity that is equal to or greater than the turbidity of a McFarland Standard 0.5.</li>\n</ul>\n<br>Culture growth will require 2–6 h depending on the growth rate of the bacteria to be tested. This pause period can be used to prepare the antibiotic or peptide dilutions.</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             },
             {
               "step": {
                 "id": 4361,
                 "name": "Assessment of turbidity",
-                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<strong>Turbidity can be assessed visually by comparing the test and the McFarland Standard.</strong> <br><br>Mix the McFarland <strong>0.5 BaSO<sub>4</sub></strong> standard vigorously using a vortex mixer. The turbidity is verified measuring the absorbance of the suspension spectrophotometrically. The absorbance should be in the same range as that of the McFarland standard <strong>0.5</strong> (<strong>OD625 nm</strong> should be at <strong>0.08–0.13</strong>).</body></html>",
                 "position": 3,
                 "completed": false,
                 "completed_on": null,
@@ -1615,17 +1848,27 @@
                 "last_modified_by_id": 202,
                 "protocol_id": 3452
               },
-              "checklists": [],
-              "step_comments": [],
-              "step_assets": [],
-              "assets": [],
-              "step_tables": [],
-              "tables": []
+              "step_comments": [
+
+              ],
+              "assets": [
+
+              ],
+              "step_orderable_elements": [
+                {
+                  "step_text": {
+                    "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body>\n<strong>Turbidity can be assessed visually by comparing the test and the McFarland Standard.</strong> <br><br>Mix the McFarland <strong>0.5 BaSO<sub>4</sub></strong> standard vigorously using a vortex mixer. The turbidity is verified measuring the absorbance of the suspension spectrophotometrically. The absorbance should be in the same range as that of the McFarland standard <strong>0.5</strong> (<strong>OD625 nm</strong> should be at <strong>0.08–0.13</strong>).</body></html>"
+                  },
+                  "position": 0
+                }
+              ]
             }
           ]
         }
       ],
-      "results": []
+      "results": [
+
+      ]
     }
   ],
   "my_module_groups": [

@@ -5,14 +5,15 @@ require 'rails_helper'
 RSpec.describe 'Api::V1::ResultsController', type: :request do
   before :all do
     @user = create(:user)
-    @teams = create_list(:team, 2, created_by: @user)
-    create(:user_team, user: @user, team: @teams.first, role: 2)
+    @another_user = create(:user)
+    @team1 = create(:team, created_by: @user)
+    @team2 = create(:team, created_by: @another_user)
 
     @valid_project = create(:project, name: Faker::Name.unique.name,
-                            created_by: @user, team: @teams.first)
+                            created_by: @user, team: @team1)
 
     @unaccessible_project = create(:project, name: Faker::Name.unique.name,
-                                   created_by: @user, team: @teams.second)
+                                   created_by: @user, team: @team2)
 
     @valid_experiment = create(:experiment, created_by: @user,
       last_modified_by: @user, project: @valid_project)
@@ -60,7 +61,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
     it 'Response with correct results' do
       hash_body = nil
       get api_v1_team_project_experiment_task_results_path(
-        team_id: @teams.first.id,
+        team_id: @team1.id,
         project_id: @valid_project,
         experiment_id: @valid_experiment,
         task_id: @valid_task
@@ -78,7 +79,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
     it 'When invalid request, task from another experiment' do
       hash_body = nil
       get api_v1_team_project_experiment_task_results_path(
-        team_id: @teams.first.id,
+        team_id: @team1.id,
         project_id: @valid_project,
         experiment_id: @valid_experiment,
         task_id: @unaccessible_task
@@ -91,7 +92,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
     it 'When invalid request, user in not member of the team' do
       hash_body = nil
       get api_v1_team_project_experiment_task_results_path(
-        team_id: @teams.second.id,
+        team_id: @team2.id,
         project_id: @valid_project,
         experiment_id: @valid_experiment,
         task_id: @valid_task
@@ -104,7 +105,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
     it 'When invalid request, non existing task' do
       hash_body = nil
       get api_v1_team_project_experiment_task_results_path(
-        team_id: @teams.first.id,
+        team_id: @team1.id,
         project_id: @valid_project,
         experiment_id: @valid_experiment,
         task_id: -1
@@ -145,7 +146,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
     it 'Response with correct text result' do
       hash_body = nil
       post api_v1_team_project_experiment_task_results_path(
-        team_id: @teams.first.id,
+        team_id: @team1.id,
         project_id: @valid_project,
         experiment_id: @valid_experiment,
         task_id: @valid_task
@@ -171,7 +172,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
     it 'Response with correct text result and TinyMCE images' do
       hash_body = nil
       post api_v1_team_project_experiment_task_results_path(
-        team_id: @teams.first.id,
+        team_id: @team1.id,
         project_id: @valid_project,
         experiment_id: @valid_experiment,
         task_id: @valid_task
@@ -199,7 +200,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
       hash_body = nil
       @valid_tinymce_hash_body[:included][0][:attributes][:text] = 'Result text 1 [~tiny_mce_id:a1]'
       post api_v1_team_project_experiment_task_results_path(
-        team_id: @teams.first.id,
+        team_id: @team1.id,
         project_id: @valid_project,
         experiment_id: @valid_experiment,
         task_id: @valid_task
@@ -213,7 +214,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
       invalid_hash_body = @valid_tinymce_hash_body
       invalid_hash_body[:included][1][:attributes][:file_token] = 'a2'
       post api_v1_team_project_experiment_task_results_path(
-        team_id: @teams.first.id,
+        team_id: @team1.id,
         project_id: @valid_project,
         experiment_id: @valid_experiment,
         task_id: @valid_task
@@ -225,7 +226,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
       invalid_hash_body = @valid_tinymce_hash_body
       invalid_hash_body[:included][0][:attributes][:text] = 'Result text 1'
       post api_v1_team_project_experiment_task_results_path(
-        team_id: @teams.first.id,
+        team_id: @team1.id,
         project_id: @valid_project,
         experiment_id: @valid_experiment,
         task_id: @valid_task
@@ -236,7 +237,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
     it 'When invalid request, non existing task' do
       hash_body = nil
       post api_v1_team_project_experiment_task_results_path(
-        team_id: @teams.first.id,
+        team_id: @team1.id,
         project_id: @valid_project,
         experiment_id: @valid_experiment,
         task_id: -1
@@ -249,7 +250,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
     it 'When invalid request, user in not member of the team' do
       hash_body = nil
       post api_v1_team_project_experiment_task_results_path(
-        team_id: @teams.second.id,
+        team_id: @team2.id,
         project_id: @unaccessible_project,
         experiment_id: @unaccessible_experiment,
         task_id: @unaccessible_task
@@ -262,7 +263,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
     it 'When invalid request, task from another experiment' do
       hash_body = nil
       post api_v1_team_project_experiment_task_results_path(
-        team_id: @teams.first.id,
+        team_id: @team1.id,
         project_id: @valid_project,
         experiment_id: @valid_experiment,
         task_id: @unaccessible_task
@@ -287,7 +288,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
 
       let(:action) do
         post(api_v1_team_project_experiment_task_results_path(
-          team_id: @teams.first.id,
+          team_id: @team1.id,
           project_id: @valid_project,
           experiment_id: @valid_experiment,
           task_id: @valid_task
@@ -340,7 +341,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
     it 'When valid request, user can read result' do
       hash_body = nil
       get api_v1_team_project_experiment_task_result_path(
-        team_id: @teams.first.id,
+        team_id: @team1.id,
         project_id: @valid_project,
         experiment_id: @valid_experiment,
         task_id: @valid_task,
@@ -359,7 +360,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
     it 'When invalid request, user in not member of the team' do
       hash_body = nil
       get api_v1_team_project_experiment_task_result_path(
-        team_id: @teams.second.id,
+        team_id: @team2.id,
         project_id: @valid_project,
         experiment_id: @valid_experiment,
         task_id: @valid_task,
@@ -373,7 +374,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
     it 'When invalid request, non existing result' do
       hash_body = nil
       get api_v1_team_project_experiment_task_result_path(
-        team_id: @teams.first.id,
+        team_id: @team1.id,
         project_id: @valid_project,
         experiment_id: @valid_experiment,
         task_id: @valid_task,
@@ -387,7 +388,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
     it 'When invalid request, result from unaccessible task' do
       hash_body = nil
       get api_v1_team_project_experiment_task_result_path(
-        team_id: @teams.first.id,
+        team_id: @team1.id,
         project_id: @valid_project,
         experiment_id: @valid_experiment,
         task_id: @unaccessible_task,
@@ -421,7 +422,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
       end
       let(:action) do
         put(api_v1_team_project_experiment_task_result_path(
-          team_id: @teams.first.id,
+          team_id: @team1.id,
           project_id: @valid_project,
           experiment_id: @valid_experiment,
           task_id: @valid_task,
@@ -446,7 +447,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
       context 'when has new image for update' do
         let(:action) do
           put(api_v1_team_project_experiment_task_result_path(
-            team_id: @teams.first.id,
+            team_id: @team1.id,
             project_id: @valid_project,
             experiment_id: @valid_experiment,
             task_id: @valid_task,
@@ -508,7 +509,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
 
         it 'returns 204' do
           put(api_v1_team_project_experiment_task_result_path(
-            team_id: @teams.first.id,
+            team_id: @team1.id,
             project_id: @valid_project,
             experiment_id: @valid_experiment,
             task_id: @valid_task,
@@ -526,7 +527,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
     #   let(:result_text) { @valid_task.results.first }
     #   let(:action) do
     #     put(api_v1_team_project_experiment_task_result_path(
-    #           team_id: @teams.first.id,
+    #           team_id: @team1.id,
     #           project_id: @valid_project,
     #           experiment_id: @valid_experiment,
     #           task_id: @valid_task,

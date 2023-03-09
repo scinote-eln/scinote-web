@@ -16,7 +16,7 @@ var RepositoryDatatableRowEditor = (function() {
   function initSmartAnnotation($row) {
     $row.find('[data-object="repository_cell"]').each(function(el) {
       if (el.data('atwho')) {
-        SmartAnnotation.init(el);
+        SmartAnnotation.init(el, true);
       }
     });
   }
@@ -26,7 +26,7 @@ var RepositoryDatatableRowEditor = (function() {
     let $row = $form.closest('tr');
     let valid = true;
     let directUrl = $table.data('direct-upload-url');
-    let $files = $row.find('input[type=file]');
+    let $files = $table.find('input[type=file]');
     $row.find('.has-error').removeClass('has-error').find('span').remove();
 
     // Validations here

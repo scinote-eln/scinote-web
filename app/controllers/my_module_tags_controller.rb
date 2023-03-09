@@ -7,7 +7,7 @@ class MyModuleTagsController < ApplicationController
 
   def index_edit
     @my_module_tags = @my_module.my_module_tags.order(:id)
-    @unassigned_tags = @my_module.unassigned_tags
+    @unassigned_tags = @my_module.unassigned_tags.order(:id)
     @new_mmt = MyModuleTag.new(my_module: @my_module)
     @new_tag = Tag.new(project: @my_module.experiment.project)
 
@@ -70,9 +70,8 @@ class MyModuleTagsController < ApplicationController
       .call(activity_type: :add_task_tag,
             owner: current_user,
             subject: my_module,
-            project:
-              my_module.experiment.project,
-            team: current_team,
+            project: my_module.project,
+            team: my_module.team,
             message_items: {
               my_module: my_module.id,
               tag: @mt.tag.id
@@ -95,9 +94,8 @@ class MyModuleTagsController < ApplicationController
       .call(activity_type: :remove_task_tag,
             owner: current_user,
             subject: @mt.my_module,
-            project:
-              @mt.my_module.experiment.project,
-            team: current_team,
+            project: @mt.my_module.project,
+            team: @mt.my_module.team,
             message_items: {
               my_module: @mt.my_module.id,
               tag: @mt.tag.id
@@ -139,9 +137,8 @@ class MyModuleTagsController < ApplicationController
       .call(activity_type: :remove_task_tag,
             owner: current_user,
             subject: tag.my_module,
-            project:
-              tag.my_module.experiment.project,
-            team: current_team,
+            project: tag.my_module.project,
+            team: tag.my_module.team,
             message_items: {
               my_module: tag.my_module.id,
               tag: tag.tag.id

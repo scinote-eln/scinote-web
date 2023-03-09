@@ -18,12 +18,12 @@ describe TeamImporter do
         # when importing to avoid any defaults
         create :user
         @user = create :user
-        @team = create :team
+        @team = create :team, created_by: @user
         create :project, name: 'Temp project', visibility: 1,
-          team: @team, archived: false, created_at: time
+          team: @team, archived: false, created_at: time , created_by: @user
 
         @project = create :project, name: 'Project', visibility: 1, team: @team,
-          archived: false, created_at: time
+          archived: false, created_at: time , created_by: @user
 
         # Reassign if multiple tests are run
         PROJECT_ID = @project.id
@@ -180,9 +180,6 @@ describe TeamImporter do
             )
             expect(db_protocol.updated_at).to eq(
               json_protocol['updated_at'].to_time
-            )
-            expect(db_protocol.added_by_id).to eq(
-              json_protocol.dig('added_by_id')
             )
             expect(db_protocol.archived_by_id).to be_nil
             expect(db_protocol.archived_on).to be_nil

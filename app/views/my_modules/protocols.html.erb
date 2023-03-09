@@ -1,3 +1,5 @@
+<%= render 'shared/tiny_mce_packs' %>
+
 <% if flash["repository_snapshot_error"] %>
   <%= render 'shared/dialog',
             id: "snapshot-error",
@@ -68,6 +70,9 @@
               <%= render partial: "module_header_details_popover.html.erb" %>
             </div>
           </span>
+          <span class="task-details-code">
+            <%= @my_module.code %>
+          </span>
         </div>
       </div>
       <div id="details-container" class="task-details collapse">
@@ -107,7 +112,7 @@
                 <span title="assign from repositories button"><%= t('my_modules.assigned_items.assign_from') %></span>
                 <span class="caret pull-right"></span>
               </a>
-              <ul class="dropdown-menu repositories-dropdown-menu" aria-labelledby="repositories-assign-button">
+              <ul class="dropdown-menu repositories-dropdown-menu perfect-scrollbar" aria-labelledby="repositories-assign-button">
               </ul>
             </div>
           <% end %>
@@ -119,6 +124,7 @@
       </div>
       <%= render partial: "my_modules/repositories/full_view_modal" %>
       <%= render partial: "my_modules/modals/update_repository_records_modal" %>
+      <%= render partial: 'label_printers/label_printer_modal' %>
     </div>
     <!-- Protocol -->
     <div class="task-section">
@@ -171,6 +177,7 @@
 <%= render partial: "shared/formulas_libraries.html.erb" %>
 <%= javascript_include_tag("my_modules/protocols") %>
 <%= javascript_include_tag("my_modules/status_flow") %>
+<%= javascript_include_tag("my_modules/tags") %>
 <%= javascript_pack_tag 'emoji_button' %>
 <%= javascript_include_tag("my_modules/repositories") %>
 <%= javascript_include_tag("my_modules/pwa_mobile_app") %>

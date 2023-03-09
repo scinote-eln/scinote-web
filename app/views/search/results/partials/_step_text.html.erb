@@ -13,7 +13,7 @@
                           text %>
   <% end %>
 <% elsif can_manage_protocol_in_repository?(step.protocol) %>
-  <%= route_to_other_team edit_protocol_path(step.protocol),
+  <%= route_to_other_team protocol_path(step.protocol),
                           step.protocol.team,
                           text %>
 <% else %>

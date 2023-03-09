@@ -9,12 +9,15 @@ class Experiment < ApplicationRecord
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
+  include ViewableModel
   include PermissionCheckableModel
   include Assignable
+  include Cloneable
 
   before_save -> { report_elements.destroy_all }, if: -> { !new_record? && project_id_changed? }
 
   belongs_to :project, inverse_of: :experiments, touch: true
+  delegate :team, to: :project
   belongs_to :created_by,
              class_name: 'User'
   belongs_to :last_modified_by,
@@ -90,6 +93,35 @@ class Experiment < ApplicationRecord
     return self if teams.blank?
 
     joins(:project).where(project: { team: teams })
+  end
+
+  def default_view_state
+    {
+      my_modules: {
+        active: { sort: 'atoz' },
+        archived: { sort: 'atoz' },
+        view_type: 'canvas'
+      }
+    }
+  end
+
+  def validate_view_state(view_state)
+    if %w(canvas table).exclude?(view_state.state.dig('my_modules', 'view_type')) ||
+       %w(atoz ztoa due_first due_last).exclude?(view_state.state.dig('my_modules', 'active', 'sort')) ||
+       %w(atoz ztoa due_first due_last
+          archived_old archived_new).exclude?(view_state.state.dig('my_modules', 'archived', 'sort'))
+      view_state.errors.add(:state, :wrong_state)
+    end
+  end
+
+  def connections
+    Connection.joins(
+      'LEFT JOIN my_modules AS inputs ON input_id = inputs.id'
+    ).joins(
+      'LEFT JOIN my_modules AS outputs ON output_id = outputs.id'
+    ).where(
+      'inputs.experiment_id = ? OR outputs.experiment_id = ?', id, id
+    )
   end
 
   def archived_branch?
@@ -213,11 +245,13 @@ class Experiment < ApplicationRecord
            .with_granted_permissions(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
   end
 
-  def permission_parent
+  def parent
     project
   end
 
-  private
+  def permission_parent
+    project
+  end
 
   # Archive all modules. Receives an array of module integer IDs
   # and current user.
@@ -508,6 +542,8 @@ class Experiment < ApplicationRecord
     my_module_groups.reload
     true
   end
+
+  private
 
   def log_activity(type_of, current_user, my_module)
     Activities::CreateActivityService

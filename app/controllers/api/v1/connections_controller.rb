@@ -42,14 +42,7 @@ module Api
       private
 
       def load_connections
-        @connections = Connection.joins(
-          'LEFT JOIN my_modules AS inputs ON input_id = inputs.id'
-        ).joins(
-          'LEFT JOIN my_modules AS outputs ON output_id = outputs.id'
-        ).where(
-          'inputs.experiment_id = ? OR outputs.experiment_id = ?',
-          @experiment.id, @experiment.id
-        )
+        @connections = @experiment.connections
       end
 
       def load_connection

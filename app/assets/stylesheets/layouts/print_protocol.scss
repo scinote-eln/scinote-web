@@ -1,3 +1,6 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
 @import "../shared_styles/constants/*";
 @import "../constants";
 
@@ -55,7 +58,7 @@ hr {
 }
 
 .print-step {
-  margin: 5em 0;
+  margin: 2em 0;
 }
 
 .step-check-circle {
@@ -108,7 +111,6 @@ hr {
 .print-table {
   table {
     border-collapse: collapse;
-    text-align: center;
     width: 100%;
 
     &,
@@ -128,6 +130,34 @@ hr {
 
     td {
       padding: .15em .3em;
+
+      &.htLeft {
+        text-align: left;
+      }
+
+      &.htCenter {
+        text-align: center;
+      }
+
+      &.htRight {
+        text-align: right;
+      }
+
+      &.htJustify {
+        text-align: justify;
+      }
+
+      &.htTop {
+        vertical-align: top;
+      }
+
+      &.htMiddle {
+        vertical-align: middle;
+      }
+
+      &.htBottom {
+        vertical-align: bottom;
+      }
     }
   }
 }

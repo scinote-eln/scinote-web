@@ -15,7 +15,7 @@ class TeamsDatatable < CustomDatatable
   def sortable_columns
     @sortable_columns ||= [
       'Team.name',
-      'UserTeam.role',
+      'UserRole.name',
       MEMEBERS_SORT_COL
     ]
   end
@@ -27,16 +27,16 @@ class TeamsDatatable < CustomDatatable
     records.map do |record|
       {
         'DT_RowId': record.id,
-        '0': if record.admin?
-               link_to(escape_input(record.team.name), team_path(record.team), title: record.team.name)
+        '0': if current_user_team_role(record)&.owner?
+               link_to(escape_input(record.name), team_path(record), title: record.team.name)
              else
-               escape_input(record.team.name)
+               escape_input(record.name)
              end,
-        '1': escape_input(record.role_str),
-        '2': if record.guest?
+        '1': escape_input(current_user_team_role(record)&.name),
+        '2': if current_user_team_role(record)&.viewer?
                I18n.t('users.settings.teams.index.na')
              else
-               record.team.users.count
+               record.users.count
              end,
         '3': leave_team_button(record)
       }
@@ -57,15 +57,22 @@ class TeamsDatatable < CustomDatatable
   # which is calculated in code and not present in DB
   def sort_records(records)
     if sort_column(order_params) == MEMEBERS_SORT_COL
-      records = records.sort_by(&proc { |ut| ut.team.users.count })
+      records = records.sort_by(&proc { |team| team.users.count })
       if order_params['dir'] == 'asc'
-        return records
+        records
       elsif order_params['dir'] == 'desc'
-        return records.reverse
+        records.reverse
       end
-    elsif sort_column(order_params) == 'user_teams.role'
-      records_with_role = records.where(user: @user).order(role: :asc)
-      records_with_no_role = records.where.not(user: @user)
+    elsif sort_column(order_params) == 'user_roles.name'
+      records_with_role = records.joins(user_assignments: :user)
+                                 .where(user_assignments: { user: @user })
+                                 .sort_by(&proc { |team| current_user_team_role(team)&.name })
+      records_with_no_role =
+        records.joins("LEFT OUTER JOIN user_assignments AS current_user_assignments "\
+                      "ON current_user_assignments.assignable_type = 'Team' "\
+                      "AND current_user_assignments.assignable_id = teams.id "\
+                      "AND current_user_assignments.user_id = #{@user.id}")
+               .where(current_user_assignments: { id: nil })
       records = records_with_no_role + records_with_role
       if order_params['dir'] == 'asc'
         records
@@ -79,20 +86,20 @@ class TeamsDatatable < CustomDatatable
 
   # If user is last admin of team, don't allow
   # him/her to leave team
-  def leave_team_button(user_team)
+  def leave_team_button(record)
     button = "<span class=\"fas fa-sign-out-alt\"></span>
               <span class=\"hidden-xs\">
                 #{I18n.t('users.settings.teams.index.leave')}
               </span>"
-    team = user_team.team
-    if user_team.admin? && team.user_teams.where(role: 2).count <= 1
+    owner_role = UserRole.find_by(name: UserRole.public_send('owner_role').name)
+    if current_user_team_role(record)&.owner? && record.user_assignments.where(user_role: owner_role).none?
       button.prepend('<div class="btn btn-default btn-xs"
                       type="button" disabled="disabled">')
       button << '</div>'
     else
       button = link_to(
         button.html_safe,
-        leave_user_team_html_path(user_team, format: :json),
+        leave_user_team_html_path(current_user_team_assignment(record), format: :json, leave: true),
         remote: true, class: 'btn btn-default btn-xs', type: 'button',
         data: { action: 'leave-user-team' }
       )
@@ -103,9 +110,16 @@ class TeamsDatatable < CustomDatatable
   # Query database for records (this will be later paginated and filtered)
   # after that "data" function will return json
   def get_raw_records
-    UserTeam
-      .includes(:team)
-      .references(:team)
-      .where(user: @user)
+    @user.teams
+         .preload(user_assignments: %i(user user_role))
+         .distinct
+  end
+
+  def current_user_team_assignment(team)
+    team.user_assignments.find { |ua| ua.user == @user }
+  end
+
+  def current_user_team_role(team)
+    current_user_team_assignment(team)&.user_role
   end
 end

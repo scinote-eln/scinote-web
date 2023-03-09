@@ -107,7 +107,7 @@ class ProjectFoldersController < ApplicationController
     project_folders = current_team.project_folders.where(id: params[:project_folders_ids])
     counter = 0
     project_folders.each do |folder|
-      next if folder.projects.exists? || folder.project_folders.exists? || !can_update_team?(current_team)
+      next if folder.projects.exists? || folder.project_folders.exists? || !can_manage_team?(current_team)
 
       folder.transaction do
         log_activity(:delete_project_folder, folder, project_folder: folder.id)
@@ -158,7 +158,7 @@ class ProjectFoldersController < ApplicationController
   end
 
   def check_manage_permissions
-    render_403 unless can_update_team?(current_team)
+    render_403 unless can_manage_team?(current_team)
   end
 
   def move_projects(destination_folder)

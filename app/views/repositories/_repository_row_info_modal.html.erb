@@ -113,8 +113,7 @@
       </div>
       <div class="modal-footer">
         <button title="close repository row info modal" type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.close')%></button>
-        <button title="save repository row info modal" type="button" class="btn btn-primary print-label-button" data-dismiss="modal" data-url="<%= print_modal_repository_repository_rows_path(@repository_row.repository) %>"  data-rows="[<%= @repository_row.id %>]"><%= t('repository_row.modal_print_label.print_label') %></button>
-
+        <button title="save repository row info modal" type="button" class="btn btn-primary print-label-button"  data-rows="[<%= @repository_row.id %>]"><%= t('repository_row.modal_print_label.print_label') %></button>
       </div>
     </div>
   </div>

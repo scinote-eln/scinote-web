@@ -7,11 +7,10 @@ describe RepositoriesController, type: :controller do
 
   let!(:user) { controller.current_user }
   let!(:team) { create :team, created_by: user }
-  let!(:user_team) { create :user_team, :admin, user: user, team: team }
   let(:action) { post :create, params: params, format: :json }
 
   describe 'index' do
-    let(:repository) { create :repository, team: team }
+    let(:repository) { create :repository, team: team, created_by: user }
     let(:action) { get :index, format: :json }
 
     it 'correct JSON format' do
@@ -42,11 +41,12 @@ describe RepositoriesController, type: :controller do
   end
 
   describe 'DELETE destroy' do
-    let(:repository) { create :repository, team: team }
+    let(:repository) { create :repository, team: team, created_by: user }
     let(:params) { { id: repository.id, team_id: team.id } }
     let(:action) { delete :destroy, params: params }
 
     it 'calls create activity for deleting inventory' do
+      repository.archive!(user)
       expect(Activities::CreateActivityService)
         .to(receive(:call)
               .with(hash_including(activity_type: :delete_inventory)))
@@ -55,13 +55,14 @@ describe RepositoriesController, type: :controller do
     end
 
     it 'adds activity in DB' do
+      repository.archive!(user)
       expect { action }
         .to(change { Activity.count })
     end
   end
 
   describe 'PUT update' do
-    let(:repository) { create :repository, team: team }
+    let(:repository) { create :repository, team: team, created_by: user }
     let(:params) do
       { id: repository.id, team_id: team.id, repository: { name: 'new_name' } }
     end
@@ -82,7 +83,7 @@ describe RepositoriesController, type: :controller do
   end
 
   describe 'POST export_repository' do
-    let(:repository) { create :repository, team: team }
+    let(:repository) { create :repository, team: team, created_by: user }
     let(:repository_row) { create :repository_row, repository: repository }
     let(:repository_column) do
       create :repository_column, repository: repository
@@ -116,7 +117,7 @@ describe RepositoriesController, type: :controller do
   end
 
   describe 'POST import_records' do
-    let(:repository) { create :repository, team: team }
+    let(:repository) { create :repository, team: team, created_by: user }
     let(:mappings) do
       { '0': '-1', '1': '', '2': '', '3': '', '4': '', '5': '' }
     end

@@ -5,10 +5,13 @@
     </div>
     <div v-else class="step-element-grip-placeholder"></div>
     <div class="buttons-container">
-      <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" tabindex="-1" @click="enableEditMode($event)">
+      <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" tabindex="0" @click="enableEditMode($event)">
         <i :title="`edit text ${element.attributes.orderable.name || element.attributes.orderable.text}`" class="fas fa-pen"></i>
       </button>
-      <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="-1">
+      <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light" tabindex="0" @click="duplicateElement">
+        <i class="fas fa-clone"></i>
+      </button>
+      <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="0">
         <i :title="`delete text ${element.attributes.orderable.name || element.attributes.orderable.text}`" class="fas fa-trash"></i>
       </button>
     </div>
@@ -38,13 +41,14 @@
 
  <script>
   import DeleteMixin from 'vue/protocol/mixins/components/delete.js'
+  import DuplicateMixin from 'vue/protocol/mixins/components/duplicate.js'
   import deleteElementModal from 'vue/protocol/modals/delete_element.vue'
   import Tinymce from 'vue/shared/tinymce.vue'
 
   export default {
     name: 'StepText',
     components: { deleteElementModal, Tinymce },
-    mixins: [DeleteMixin],
+    mixins: [DeleteMixin, DuplicateMixin],
     props: {
       element: {
         type: Object,
@@ -69,23 +73,23 @@
     },
     mounted() {
       if (this.isNew) {
-        this.enableEditMode()
+        this.enableEditMode();
       }
     },
     methods: {
       enableEditMode() {
         if (!this.element.attributes.orderable.urls.update_url) return
-        if (this.inEditMode == true) return
+        if (this.inEditMode) return
         this.inEditMode = true
       },
       disableEditMode() {
         this.inEditMode = false
       },
       update(data) {
-        this.element.attributes.orderable.text_view = data.data.attributes.text_view
-        this.element.attributes.orderable.text = data.data.attributes.text
-        this.element.attributes.orderable.name = data.data.attributes.name
-        this.element.attributes.orderable.updated_at = data.data.attributes.updated_at
+        this.element.attributes.orderable.text_view = data.attributes.text_view
+        this.element.attributes.orderable.text = data.attributes.text
+        this.element.attributes.orderable.name = data.attributes.name
+        this.element.attributes.orderable.updated_at = data.attributes.updated_at
         this.$emit('update', this.element, true)
       }
     }

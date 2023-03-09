@@ -5,10 +5,10 @@
     </li>
   <% else %>
     <li class="sidebar-leaf">
-      <%= link_to t('sidebar.my_modules.back_to_active_button'), canvas_experiment_url(experiment), class: 'sidebar-link back-button', title: 'back to active tasks' %>
+      <%= link_to t('sidebar.my_modules.back_to_active_button'), my_modules_experiment_path(experiment), class: 'sidebar-link back-button', title: 'back to active tasks' %>
     </li>
   <% end %>
-  <% my_modules.each do |my_module| %>
+  <% my_modules&.each do |my_module| %>
     <li class="sidebar-leaf">
       <%= link_to my_module.name,
                   protocols_my_module_url(my_module),

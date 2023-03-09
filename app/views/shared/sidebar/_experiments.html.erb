@@ -11,9 +11,9 @@
   <% project.sorted_experiments(current_user, @current_sort, view_mode == 'archived').each do |experiment| %>
     <li class="sidebar-leaf">
       <% if view_mode == 'archived'  %>
-        <%= link_to experiment.name, module_archive_experiment_path(experiment), title: 'sidebar: ' + experiment.name, class: 'sidebar-link' %>
+        <%= link_to experiment.name, my_modules_experiment_path(experiment, view_mode: :archived), title: 'sidebar: ' + experiment.name, class: 'sidebar-link' %>
       <% else %>
-        <%= link_to experiment.name, canvas_experiment_path(experiment), title: 'sidebar: ' + experiment.name, class: 'sidebar-link' %>
+        <%= link_to experiment.name, my_modules_experiment_path(experiment), title: 'sidebar: ' + experiment.name, class: 'sidebar-link' %>
       <% end %>
     </li>
   <% end %>

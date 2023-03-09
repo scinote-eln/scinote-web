@@ -48,14 +48,16 @@
           <% end %>
         </li>
 
-        <div role="separator" class="divider"></div>
-        <li title="go to active experiments" class="view-switch-active archive-switch" data-view-mode="archived" data-url="<%= project_path(@project) %>">
-          <i class="fas fa-rocket button-icon"></i> <%= t('experiments.header.active_experiments') %>
-        </li>
+        <% unless @project.archived?%>
+          <div role="separator" class="divider"></div>
+          <li title="go to active experiments" class="view-switch-active archive-switch" data-view-mode="archived" data-url="<%= project_path(@project) %>">
+            <i class="fas fa-rocket button-icon"></i> <%= t('experiments.header.active_experiments') %>
+          </li>
 
-        <li title="go to archived experiments" class="view-switch-archived archive-switch" data-view-mode="active" data-url="<%= project_path(@project, view_mode: 'archived') %>">
-          <i class="fas fa-archive button-icon"></i> <%= t('experiments.header.archived_experiments') %>
-        </li>
+          <li title="go to archived experiments" class="view-switch-archived archive-switch" data-view-mode="active" data-url="<%= project_path(@project, view_mode: 'archived') %>">
+            <i class="fas fa-archive button-icon"></i> <%= t('experiments.header.archived_experiments') %>
+          </li>
+        <% end %>
       <% end %>
       <%= render layout: 'shared/filter_dropdown', locals: {
         container_class: 'experiments-filters',
@@ -74,9 +76,9 @@
           <i class="fas fa-sort-amount-up"></i>
         </button>
         <ul id="sortMenuDropdown" class="dropdown-menu sort-experiments-menu dropdown-menu-right" aria-labelledby="sortMenu">
-            <% %w(new old atoz ztoa archived_new archived_old).each_with_index do |sort, i| %>
+            <% %w(archived_new archived_old new old atoz ztoa id_asc id_desc).each_with_index do |sort, i| %>
               <% if i.even? && i.positive? %>
-                <li class="divider" <%= i > 3 ? 'data-view-mode=archived' : '' %>></li>
+                <li class="divider" <%= i == 2 ? 'data-view-mode=archived' : '' %>></li>
               <% end %>
               <li title="experiment sorting option: <%= sort %> <%= 'selected' if @current_sort == sort %>" <%= %w(archived_new archived_old).include?(sort) ? 'data-view-mode=archived' : '' %>>
                 <a class="<%= 'selected' if @current_sort == sort %>"

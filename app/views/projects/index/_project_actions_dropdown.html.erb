@@ -47,17 +47,15 @@
     </li>
   <% end %>
   <!-- Project members access -->
-  <% if can_read_project?(project) %>
-    <li class="form-dropdown-item">
-      <%= link_to can_manage_project_users?(project) ? edit_access_permissions_project_path(project) : access_permissions_project_path(project),
-                  class: 'btn btn-light',
-                  title: "edit project #{project.name} permissions",
-                  data: { action: 'remote-modal'} do %>
-        <i class="fas fa-door-open"></i>
-        <%= I18n.t('projects.index.project_members_access') %>
-      <% end  %>
-    </li>
-  <% end %>
+  <li class="form-dropdown-item">
+    <%= link_to can_manage_project_users?(project) ? edit_access_permissions_project_path(project) : access_permissions_project_path(project),
+                class: 'btn btn-light',
+                title: "edit project #{project.name} permissions",
+                data: { action: 'remote-modal'} do %>
+      <i class="fas fa-door-open"></i>
+      <%= I18n.t('projects.index.project_members_access') %>
+    <% end  %>
+  </li>
   <!-- Show comments -->
   <li>
     <a href="#"

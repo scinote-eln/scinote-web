@@ -19,21 +19,16 @@
           />
         </div>
       </div>
-      <button class="btn btn-light clear-filters-btn prevent-shrink" @click="clearFilters()" title="close filter modal">
-        <i class="fas fa-times-circle"></i>
-        {{ i18n.t('repositories.show.filters.clear') }}
+      <button type="button" class="close" @click="$emit('hide-dropdown')" aria-label="<%= t('general.close') %>" title="close filter modal">
+        <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    <div class="filters-list">
-      <FilterElement
-        v-for="(filter, index) in filters"
-        :key="filter.id"
-        :filter.sync="filters[index]"
-        :my_modules.sync= "my_modules"
-        @filter:update="updateFilter"
-        @filter:delete="filters.splice(index, 1)"
-      />
-    </div>
+    <FiltersList 
+      :filters="filters" 
+      :my_modules="my_modules" 
+      :key="filterListKey ? 1 : 0"
+      @filter:update="updateFilter"
+      @filter:delete="deleteFilter" />
     <div class="footer">
       <div id="filtersColumnsDropdown" class="dropup filters-columns-dropdown" @click="toggleColumnsFilters">
         <button class="btn btn-secondary add-filter prevent-shrink" title="add filter">
@@ -50,6 +45,9 @@
           />
         </div>
       </div>
+      <button class="btn btn-secondary clear-filters-btn prevent-shrink" @click="clearFilters">
+        {{ i18n.t('repositories.show.filters.clear') }}
+      </button>
       <button @click="$emit('filters:apply')" class="btn btn-primary apply-button prevent-shrink" title="show results">
         {{ i18n.t('repositories.show.filters.apply') }}
       </button>
@@ -59,7 +57,7 @@
 
  <script>
   import ColumnElement from 'vue/repository_filter/column.vue'
-  import FilterElement from 'vue/repository_filter/filter.vue'
+  import FiltersList from 'vue/repository_filter/filters_list.vue'
   import SavedFilterElement from 'vue/repository_filter/saved_filter.vue'
 
   export default {
@@ -76,10 +74,11 @@
     data() {
       return {
         filters: this.defaultFilters,
-        savedFilterScrollbar: null
+        savedFilterScrollbar: null,
+        filterListKey: true
       }
     },
-    components: { ColumnElement, FilterElement, SavedFilterElement },
+    components: { ColumnElement, FiltersList, SavedFilterElement },
     methods: {
       addFilter(column) {
         const id = this.filters.length ? this.filters[this.filters.length - 1].id + 1 : 1
@@ -92,8 +91,11 @@
         this.$emit("filters:update", this.filters);
       },
       clearFilters() {
-        this.filters = [];
         this.$emit('filters:clear');
+        this.filterListKey = !this.filterListKey;
+      },
+      deleteFilter(index) {
+        this.filters.splice(index, 1);
       },
       closeDropdowns() {
         this.closeColumnsFilters();
