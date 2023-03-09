@@ -32,7 +32,6 @@ class ProtocolLinkedChildrenDatatable < CustomDatatable
     records.map do |record|
       {
         'DT_RowId' => record.id,
-        'version' => record.parent.version_number,
         '1' => record_html(record)
       }
     end
@@ -46,11 +45,15 @@ class ProtocolLinkedChildrenDatatable < CustomDatatable
       .includes(my_module: { experiment: :project })
       .references(my_module: { experiment: :project })
       .where(protocol_type: Protocol.protocol_types[:linked])
+
     records = linked_protocols
       .where(parent: @protocol)
       .or(
         linked_protocols.where(parent: Protocol.where(parent: @protocol))
       )
+
+    records = filter_child_records(records)
+
     records.distinct
   end
 
@@ -79,5 +82,15 @@ class ProtocolLinkedChildrenDatatable < CustomDatatable
     res += '</li>'
     res += '</ol>'
     res
+  end
+
+  def filter_child_records(records)
+    if params[:version].present?
+      version = params[:version]
+      records = records.joins("LEFT JOIN protocols protocol_parents " \
+                "ON protocols.parent_id = protocol_parents.id ")
+                .where("protocol_parents.version_number = #{version}")
+    end
+    records
   end
 end

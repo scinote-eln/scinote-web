@@ -5,6 +5,7 @@
 
 // Global variables
 var ProtocolsIndex = (function() {
+  const ALL_VERSIONS_VALUE = 'All';
   var PERMISSIONS = ['archivable', 'restorable', 'copyable'];
   var rowsSelected = [];
   var protocolsTableEl = null;
@@ -566,10 +567,27 @@ var ProtocolsIndex = (function() {
             modal.modal('show');
 
             let childrenTableEl = modalBody.find('#linked-children-table');
+            let versionFromDropdown = ALL_VERSIONS_VALUE;
+
+            const initVersionsDropdown = (childrenDatatable) => {
+              const versionSelector = $('#version-selector');
+              dropdownSelector.init(versionSelector, {
+                noEmptyOption: true,
+                singleSelect: true,
+                selectAppearance: 'simple',
+                closeOnSelect: true,
+                onSelect: function() {
+                  versionFromDropdown = dropdownSelector.getValues(versionSelector);
+                  childrenDatatable.ajax.reload();
+                }
+              });
+            };
+
+            let childrenDatatable;
 
             if (childrenTableEl) {
               // Only initialize table if it's present
-              childrenTableEl.DataTable({
+              childrenDatatable = childrenTableEl.DataTable({
                 autoWidth: false,
                 dom: 'RBtpl',
                 stateSave: false,
@@ -578,7 +596,14 @@ var ProtocolsIndex = (function() {
                 serverSide: true,
                 ajax: {
                   url: childrenTableEl.data('source'),
-                  type: 'POST'
+                  type: 'POST',
+                  data: function(d) {
+                    if (versionFromDropdown !== ALL_VERSIONS_VALUE) {
+                      d.version = versionFromDropdown;
+                    }
+
+                    return d;
+                  }
                 },
                 colReorder: {
                   fixedColumnsLeft: 1000000 // Disable reordering
@@ -595,34 +620,6 @@ var ProtocolsIndex = (function() {
                 language: {
                   lengthMenu: '_MENU_'
                 },
-                initComplete: function() {
-                  const versionSelector = $('#version-selector');
-                  const table = childrenTableEl.DataTable();
-                  dropdownSelector.init(versionSelector, {
-                    noEmptyOption: true,
-                    singleSelect: true,
-                    selectAppearance: 'simple',
-                    closeOnSelect: true,
-                    onSelect: function() {
-                      const selectedValue = dropdownSelector.getValues(versionSelector);
-                      if (selectedValue === 'All') {
-                        table.rows().eq(0).each(index => {
-                          const row = table.row(index);
-                          row.nodes().to$().show();
-                        });
-                      } else {
-                        table.rows().eq(0).each(index => {
-                          const row = table.row(index);
-                          if (Number(row.data().version) === Number(selectedValue)) {
-                            row.nodes().to$().show();
-                          } else {
-                            row.nodes().to$().hide();
-                          }
-                        });
-                      }
-                    }
-                  });
-                },
                 fnDrawCallback: function() {
                   animateSpinner(this, false);
                 },
@@ -631,6 +628,8 @@ var ProtocolsIndex = (function() {
                 }
               });
             }
+
+            initVersionsDropdown(childrenDatatable);
           },
           error: function() {
             // TODO
