@@ -2739,7 +2739,7 @@ en:
         name: "Name"
         id: "ID"
         keywords: "Keywords"
-        nr_of_linked_children: "No. of linked tasks"
+        nr_of_linked_children: "Linked tasks"
         versions: "Versions"
         access: "Access"
         published_by: "Published by"

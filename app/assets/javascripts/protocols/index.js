@@ -198,10 +198,7 @@ var ProtocolsIndex = (function() {
         { data: '2' },
         { data: '3' },
         { data: '4' },
-        {
-          data: '5',
-          title: 'Linked tasks'
-        },
+        { data: '5' },
         { data: '6' },
         { data: '7' },
         { data: '8' },
