@@ -19,9 +19,6 @@ module PermissionExtends
     %w(
       READ
       READ_ARCHIVED
-      ARCHIVE
-      RESTORE
-      PUBLISH
       MANAGE
       USERS_MANAGE
       MANAGE_DRAFT
