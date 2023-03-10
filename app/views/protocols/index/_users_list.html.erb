@@ -6,7 +6,7 @@
 
 <% more_users = protocol.user_assignments[3..-1].to_a %>
 <% if more_users.any? %>
-  <span class="more-users" title="<%== user_names_with_roles(more_users) %>">
+  <span class="more-users" title="<%= user_names_with_roles(more_users) %>">
      +<%= more_users.size %>
   </span>
 <% end %>
