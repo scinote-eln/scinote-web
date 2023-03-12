@@ -3,7 +3,7 @@
 
 <% if protocol.nr_of_linked_children > 0 %>
   <div class="version-dropdown">
-    <%= label_tag "version-selector".to_sym, "Show version" %>
+    <%= label_tag "version-selector".to_sym, t("protocols.index.linked_children.show_version") %>
     <%= select_tag "version",
       options_for_select(
         ['All'].concat(
