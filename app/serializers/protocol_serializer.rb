@@ -8,7 +8,7 @@ class ProtocolSerializer < ActiveModel::Serializer
 
   attributes :name, :id, :urls, :description, :description_view, :updated_at, :in_repository,
              :created_at_formatted, :updated_at_formatted, :added_by, :authors, :keywords, :version, :code,
-             :published, :version_comment, :archived
+             :published, :version_comment, :archived, :linked
 
   def updated_at
     object.updated_at.to_i
@@ -82,6 +82,10 @@ class ProtocolSerializer < ActiveModel::Serializer
 
   def in_repository
     !object.in_module?
+  end
+
+  def linked
+    object.linked?
   end
 
   private
