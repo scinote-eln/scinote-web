@@ -89,12 +89,17 @@
       padding-left: 20px;
     }
   }
+
   .protocol-details {
     .protocol-metadata {
       margin-bottom: 2em;
 
       .data-block {
         margin-bottom: 16px;
+
+        :nth-child(2) {
+          margin-left: 8px;
+        }
       }
 
       .authors-data {
@@ -106,7 +111,7 @@
           flex-basis: calc(100% - 90px);
           flex-grow: 1;
           line-height: 32px;
-          margin-left: .75em;
+          margin-left: 8px;
         }
 
         * {
@@ -126,6 +131,11 @@
 
           .dropdown-selector-container {
             padding-right: 10px;
+            margin-left: 0;
+
+            .input-field {
+              margin-left: 0;
+            }
 
             &:not(.active) {
               .input-field {
