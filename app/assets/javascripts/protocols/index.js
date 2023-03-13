@@ -137,28 +137,9 @@ var ProtocolsIndex = (function() {
 
   function initManageAccess() {
     let protocolsContainer = '.protocols-container';
-    let manageAccessModal = '.protocol-assignments-modal';
-
-    function loadManageAccessModal(href) {
-      $.get(href, function(data) {
-        $(protocolsContainer).append($.parseHTML(data.html));
-        $(manageAccessModal).modal('show');
-
-        // Remove modal when it gets closed
-        $(manageAccessModal).on('hidden.bs.modal', function() {
-          $(manageAccessModal).remove();
-        });
-      });
-    }
-
-    protocolsTableEl.on('click', '.protocol-users-link', function(e) {
-      loadManageAccessModal(this.href);
-      e.stopPropagation();
-      e.preventDefault();
-    });
 
     $(protocolsContainer).on('click', '#manageProtocolAccess', function() {
-      loadManageAccessModal($(`tr[data-row-id=${rowsSelected[0]}] .protocol-users-link`).attr('href'));
+      $(`tr[data-row-id=${rowsSelected[0]}] .protocol-users-link`).click();
     });
   }
 

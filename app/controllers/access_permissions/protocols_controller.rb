@@ -52,7 +52,7 @@ module AccessPermissions
           next unless user_assignment_params[:assign] == '1'
 
           if user_assignment_params[:user_id] == 'all'
-            @protocol.update!(visibility: :visible, default_public_user_role_id: user_assignment_params[:user_role_id])
+            @protocol.update!(default_public_user_role_id: user_assignment_params[:user_role_id])
           else
             user_assignment = UserAssignment.find_or_initialize_by(
               assignable: @protocol,
@@ -87,31 +87,28 @@ module AccessPermissions
     def destroy
       user = @protocol.assigned_users.find(params[:user_id])
       user_assignment = @protocol.user_assignments.find_by(user: user, team: current_team)
-      respond_to do |format|
-        if user_assignment.destroy
 
-          log_activity(:protocol_template_access_revoked, user_assignment)
-          format.json do
-            render json: { flash: t('access_permissions.destroy.success', member_name: user.full_name) },
-                   status: :ok
-          end
+      Protocol.transaction do
+        if @protocol.visible?
+          user_assignment.update!(
+            user_role: @protocol.default_public_user_role,
+            assigned: :automatically
+          )
         else
-          format.json do
-            render json: { flash: t('access_permissions.destroy.failure') },
-                   status: :unprocessable_entity
-          end
+          user_assignment.destroy!
         end
+        log_activity(:protocol_template_access_revoked, user_assignment)
       end
+
+      render json: { flash: t('access_permissions.destroy.success', member_name: user.full_name) }
+    rescue ActiveRecord::RecordInvalid => e
+      Rails.logger.error e.message
+      render json: { flash: t('access_permissions.destroy.failure') }, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
     end
 
     def update_default_public_user_role
-      Protocol.transaction do
-        @protocol.visibility = :hidden if permitted_default_public_user_role_params[:default_public_user_role_id].blank?
-        @protocol.assign_attributes(permitted_default_public_user_role_params)
-        @protocol.save!
-
-        UserAssignments::ProtocolGroupAssignmentJob.perform_later(current_team, @protocol, current_user)
-      end
+      @protocol.update!(permitted_default_public_user_role_params)
     end
 
     private
@@ -134,6 +131,8 @@ module AccessPermissions
       @protocol = current_team.protocols.includes(user_assignments: %i(user user_role)).find_by(id: params[:id])
 
       render_404 unless @protocol
+
+      @protocol = @protocol.parent if @protocol.parent_id
     end
 
     def check_manage_permissions
