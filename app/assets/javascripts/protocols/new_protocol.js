@@ -7,7 +7,7 @@
     })
     .on('show.bs.modal', function() {
       $(`${protocolModal} #protocol_name`).parent().removeClass('error');
-      $(`${protocolModal} form[data-action="new"] #protocol_name`).val('');
+      $(`${protocolModal} #protocol_name`).val('');
     });
 
   let roleSelector = `${protocolModal} #protocol_role_selector`;
