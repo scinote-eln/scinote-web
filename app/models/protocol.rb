@@ -27,9 +27,12 @@ class Protocol < ApplicationRecord
   enum protocol_type: {
     unlinked: 0,
     linked: 1,
-    in_repository_published_original: 2,
-    in_repository_draft: 3,
-    in_repository_published_version: 4
+    in_repository_private: 2, # Deprecated
+    in_repository_public: 3, # Deprecated
+    in_repository_archived: 4, # Deprecated
+    in_repository_published_original: 5,
+    in_repository_draft: 6,
+    in_repository_published_version: 7
   }
 
   auto_strip_attributes :name, :description, nullify: false

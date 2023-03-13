@@ -140,7 +140,7 @@ module PermissionExtends
       TeamPermissions::LABEL_TEMPLATES_MANAGE,
       ProtocolPermissions::READ,
       ProtocolPermissions::READ_ARCHIVED,
-      ProtocolPermissions::MANAGE,
+      ProtocolPermissions::MANAGE_DRAFT,
       ReportPermissions::READ,
       ReportPermissions::MANAGE,
       ProjectPermissions::READ,
