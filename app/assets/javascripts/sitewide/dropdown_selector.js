@@ -727,16 +727,17 @@ var dropdownSelector = (function() {
       // Select element appearance
       var tagAppearance = selector.data('config').selectAppearance === 'simple' ? 'ds-simple' : 'ds-tags';
       var label = customLabel ? customLabel(data) : data.label;
+      var title = (data.params && data.params.tooltip) || $('<span>' + label + '</span>').text().trim();
       // Add new tag before search field
       var tag = $(`<div class="${tagAppearance} ${customClass}" style="${customStyle ? customStyle(data) : ''}" >
                   <div class="tag-label"
-                    title="${(data.params && data.params.tooltip) || $('<span>' + label + '</span>').text().trim()}"
                     data-ds-tag-group="${data.group}"
                     data-ds-tag-id="${data.value}">
                   </div>
                   <i class="fas fa-times ${selector.data('config').singleSelect ? 'hidden' : ''}"></i>
                 </div>`).insertBefore(container.find('.input-field .search-field'));
 
+      tag.find('.tag-label').attr('title', title);
       if (selector.data('config').labelHTML) {
         tag.find('.tag-label').html(label);
       } else {
