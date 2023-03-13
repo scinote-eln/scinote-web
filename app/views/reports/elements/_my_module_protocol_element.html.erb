@@ -10,7 +10,7 @@
       <% end %>
     </h4>
     <div class="user-time">
-      <%= t('projects.reports.elements.module.protocol.user_time', code: protocol.code, timestamp: l(protocol.created_at, format: :full)) %>
+      <%= t('projects.reports.elements.module.protocol.user_time', code: protocol.original_code, timestamp: l(protocol.created_at, format: :full)) %>
     </div>
     <div class="row module-protocol-description">
       <% if @settings.dig('task', 'protocol', 'description') && protocol.description.present? %>
