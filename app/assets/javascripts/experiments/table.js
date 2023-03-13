@@ -635,17 +635,17 @@ var ExperimnetTable = {
 };
 
 ExperimnetTable.render.task_name = function(data) {
-  let tooltip = ` title="${data.name}" data-toggle="tooltip" data-placement="bottom"`;
+  let tooltip = ` title="${_.escape(data.name)}" data-toggle="tooltip" data-placement="bottom"`;
   if (data.provisioning_status === 'in_progress') {
-    return `<span data-full-name="${data.name}">${data.name}</span>`;
+    return `<span data-full-name="${_.escape(data.name)}">${data.name}</span>`;
   }
 
   return `<a
     href="${data.url}"
     ${tooltip}
-    title="${data.name}"
+    title="${_.escape(data.name)}"
     id="taskName${data.id}"
-    data-full-name="${data.name}">${data.name}</a>`;
+    data-full-name="${_.escape(data.name)}">${data.name}</a>`;
 };
 
 ExperimnetTable.render.id = function(data) {
