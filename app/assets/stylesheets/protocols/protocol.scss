@@ -22,6 +22,7 @@
 
   .protocol-position-container {
     background-color: $color-white;
+    border-radius: 2px;
     box-shadow: $flyout-shadow;
     margin: 20px auto;
     max-width: 900px;
@@ -74,6 +75,7 @@
         display: flex;
         flex-grow: 1;
         justify-content: flex-end;
+        padding: 0 25px;
 
         .btn {
           margin-left: .25em;
@@ -81,6 +83,11 @@
 
         .caret {
           margin-left: 25px;
+        }
+
+        button,
+        a {
+          margin-right: 5px;
         }
       }
     }
