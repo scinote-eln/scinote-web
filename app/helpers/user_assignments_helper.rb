@@ -7,7 +7,7 @@ module UserAssignmentsHelper
                    else
                      assignee.name
                    end
-    sanitize_input(display_name)
+    escape_input(display_name)
   end
 
   def user_assignment_resource_role_name(user, resource, inherit = '')
@@ -17,7 +17,7 @@ module UserAssignmentsHelper
       return user_assignment_resource_role_name(user, parent, '_inherit')
     end
 
-    "#{user_assignment.user_role.name}
+    "#{escape_input(user_assignment.user_role.name)}
             <span class='permission-object-tag'
               title='#{t("access_permissions.partials.#{resource.class.to_s.downcase}_tooltip#{inherit}")}'>
               #{t("access_permissions.partials.#{resource.class.to_s.downcase}")}

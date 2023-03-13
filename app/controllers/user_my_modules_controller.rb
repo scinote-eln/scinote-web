@@ -134,7 +134,7 @@ class UserMyModulesController < ApplicationController
 
       user_hash = {
         value: user.id,
-        label: sanitize_input(user.full_name),
+        label: escape_input(user.full_name),
         params: {
           avatar_url: avatar_path(user, :icon_small),
           designated: user.designated,

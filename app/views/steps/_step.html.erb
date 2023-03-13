@@ -20,9 +20,9 @@
           <span class="name-block"><strong><%= step.name %></strong></span>
           <% unless step.new_record? %>
             <span class="delimiter">|</span>
-            <span class="author-block"><%= sanitize_input t('protocols.steps.published_on',
-                                       timestamp: l(step.created_at, format: :full),
-                                       user: h(step.user.full_name)) %></span>
+            <span class="author-block">
+              <%= t('protocols.steps.published_on_html', timestamp: l(step.created_at, format: :full), user: step.user.full_name) %>
+            </span>
           <% end %>
         </a>
       </div>

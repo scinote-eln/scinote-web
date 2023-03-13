@@ -8,9 +8,9 @@
   <%= select_tag "activity",
   options_for_select(my_module.tags.order(:id).map { |i|
     [
-      i[:name],
-      i[:id],
-      {'data-params' => {color: i[:color]}.to_json}
+      escape_input(i[:name]),
+      escape_input(i[:id]),
+      {'data-params' => {color: escape_input(i[:color])}.to_json}
    ]
   }),
   {

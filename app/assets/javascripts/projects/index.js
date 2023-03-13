@@ -476,7 +476,7 @@ var ProjectsIndex = (function() {
       data: { ...requestParams, ...{ page: 1 } },
       success: function(data) {
         $('#breadcrumbsWrapper').html(data.breadcrumbs_html);
-        $(projectsWrapper).find('.projects-title').text(data.title);
+        $(projectsWrapper).find('.projects-title').html(data.title_html);
         $(toolbarWrapper).html(data.toolbar_html);
         viewContainer.data('projects-cards-url', data.projects_cards_url);
         viewContainer.removeClass('no-results');
