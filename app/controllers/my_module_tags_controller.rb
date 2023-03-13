@@ -120,11 +120,11 @@ class MyModuleTagsController < ApplicationController
                    .limit(6)
 
     tags = tags.map do |tag|
-      { value: tag.id, label: sanitize_input(tag.name), params: { color: sanitize_input(tag.color) } }
+      { value: tag.id, label: escape_input(tag.name), params: { color: escape_input(tag.color) } }
     end
 
     if params[:query].present? && tags.select { |tag| tag[:label] == params[:query] }.blank?
-      tags << { value: 0, label: sanitize_input(params[:query]), params: { color: nil } }
+      tags << { value: 0, label: escape_input(params[:query]), params: { color: nil } }
     end
 
     render json: tags

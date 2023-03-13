@@ -185,7 +185,7 @@ class ProtocolsDatatable < CustomDatatable
       kws = record.protocol_keywords_str.split(", ")
       res = []
       kws.sort_by{ |word| word.downcase }.each do |kw|
-        sanitized_kw = sanitize_input(kw)
+        sanitized_kw = escape_input(kw)
         res << "<a href='#' data-action='filter' " \
           "data-param='#{sanitized_kw}'>#{sanitized_kw}</a>"
       end

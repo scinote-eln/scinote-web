@@ -1669,7 +1669,7 @@ en:
         name_label: "Inventory name"
         name_placeholder: "My inventory"
         submit: "Create"
-        success_flash: "Inventory <strong>%{name}</strong> successfully created."
+        success_flash_html: "Inventory <strong>%{name}</strong> successfully created."
       modal_share:
         title: "Share Inventory"
         submit: "Save sharing options"
@@ -2799,7 +2799,7 @@ en:
       new_step: "New step"
       subtitle: "Protocol Steps"
       no_steps: "Protocol has no steps."
-      published_on: "Published on <em>%{timestamp}</em> by <em>%{user}</em>"
+      published_on_html: "Published on <em>%{timestamp}</em> by <em>%{user}</em>"
       info_tab: "Info"
       comments_tab: "Comments"
       no_description: "This step has no description."

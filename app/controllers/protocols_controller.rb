@@ -696,18 +696,18 @@ class ProtocolsController < ApplicationController
     @db_json = {}
     @toolong = false
     @db_json['name'] = pio_eval_title_len(
-      sanitize_input(not_null(params['protocol']['name']))
+      escape_input(not_null(params['protocol']['name']))
     )
     # since scinote only has description field, and protocols.io has many others
     # ,here i am putting everything important from protocols.io into description
     @db_json['authors'] = pio_eval_title_len(
-      sanitize_input(not_null(params['protocol']['authors']))
+      escape_input(not_null(params['protocol']['authors']))
     )
     @db_json['created_at'] = pio_eval_title_len(
-      sanitize_input(not_null(params['protocol']['created_at']))
+      escape_input(not_null(params['protocol']['created_at']))
     )
     @db_json['updated_at'] = pio_eval_title_len(
-      sanitize_input(not_null(params['protocol']['last_modified']))
+      escape_input(not_null(params['protocol']['last_modified']))
     )
     @db_json['steps'] = {}
 

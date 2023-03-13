@@ -6,7 +6,7 @@
 
 <% more_users = project.user_assignments[4..-1].to_a %>
 <% if more_users.any? %>
-  <span class="more-users" title='<%= sanitize_input(user_names_with_roles(more_users)) %>'>
+  <span class="more-users" title='<%= user_names_with_roles(more_users) %>'>
      +<%= more_users.size %>
   </span>
 <% end %>
