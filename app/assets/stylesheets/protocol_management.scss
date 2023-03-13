@@ -33,12 +33,12 @@
 }
 
 .dropdown-menu {
-  border: none;
+  border: 0;
 }
 
 .import-protocols-io {
-  margin-top: 9px;
   margin-bottom: 4px;
+  margin-top: 9px;
 }
 
 #protocols-index,
@@ -53,10 +53,10 @@
 
   .footer-separator {
     border-top: 1px solid $modal-header-border-color;
+    bottom: 17px;
     margin-left: -1.15em;
     margin-right: -1.15em;
     position: relative;
-    bottom: 17px;
   }
 
   .load-warning-message {
