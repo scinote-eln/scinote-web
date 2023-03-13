@@ -97,7 +97,7 @@
       .data-block {
         margin-bottom: 16px;
 
-        :nth-child(2) {
+        & > :nth-child(2) {
           margin-left: 8px;
         }
       }
@@ -112,10 +112,16 @@
           flex-grow: 1;
           line-height: 32px;
           margin-left: 8px;
+          font-weight: bold;
         }
 
         * {
           flex-shrink: 0;
+        }
+
+        .sci-inline-edit__view,
+        textarea {
+          padding-left: 10px;
         }
       }
 
@@ -149,7 +155,7 @@
 
             &.active {
               .input-field {
-                border: 1px solid $color-alto;
+                border: 1px solid $brand-focus;
               }
             }
           }
