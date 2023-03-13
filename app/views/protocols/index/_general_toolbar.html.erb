@@ -26,7 +26,7 @@
               <%= 'disabled="disabled"' unless can_create_protocols_in_repository?(@current_team) %>>
             </a>
           </li>
-          <li>
+          <li class="import-protocols-io">
             <%= link_to t("protocols.index.import_protocols_io"), '', data: { target: '#protocolsioModal', toggle: 'modal' } %>
           </li>
         </ul>

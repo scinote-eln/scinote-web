@@ -124,8 +124,11 @@
         background: $color-concrete;
         margin-left: .75em;
         text-align: center;
+        line-height: 24px;
+        height: 28px;
+        width: 28px;
       }
-    }
+  }
 
     .selected {
       .global-avatar-container,

@@ -12,6 +12,8 @@
 .btn-open-file {
   overflow: hidden;
   position: relative;
+  margin-top: 9px;
+  margin-bottom: 4px;
 
   > input[type=file] {
     background: $color-white;
@@ -30,8 +32,36 @@
   }
 }
 
+.dropdown-menu {
+  border: none;
+}
+
+.import-protocols-io {
+  margin-top: 9px;
+  margin-bottom: 4px;
+}
+
 #protocols-index,
 #load-from-repository-modal {
+  .header-separator {
+    border-bottom: 1px solid $modal-header-border-color;
+    margin-left: -1.15em;
+    margin-right: -1.15em;
+    position: relative;
+    top: 17px;
+  }
+
+  .footer-separator {
+    border-top: 1px solid $modal-header-border-color;
+    margin-left: -1.15em;
+    margin-right: -1.15em;
+    position: relative;
+    bottom: 17px;
+  }
+
+  .load-warning-message {
+    margin-top: 20px;
+  }
 
   tbody {
     tr {
