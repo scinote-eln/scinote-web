@@ -159,7 +159,7 @@ module Users
 
       teams.select { |team| can_invite_team_users?(team) }
 
-      render json: teams.map { |t| { value: t.id, label: t.name } }.to_json
+      render json: teams.map { |t| { value: t.id, label: escape_input(t.name) } }.to_json
     end
 
     private
