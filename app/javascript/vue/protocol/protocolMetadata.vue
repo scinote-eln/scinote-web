@@ -13,11 +13,11 @@
         </a>
       </div>
       <div class="actions-block">
-        <a class="btn btn-light icon-btn pull-right" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
+        <a class="btn btn-light icon-btn pull-right" :href="protocol.attributes.urls.print_protocol_url" target="_blank">
           <span class="fas fa-print" aria-hidden="true"></span>
         </a>
         <button class="btn btn-light" @click="openVersionsModal">{{ i18n.t("protocols.header.versions") }}</button>
-        <button v-if="!protocol.attributes.published" @click="$emit('publish')" class="btn btn-primary">{{ i18n.t("protocols.header.publish") }}</button>
+        <button v-if="protocol.attributes.urls.publish_url" @click="$emit('publish')" class="btn btn-primary">{{ i18n.t("protocols.header.publish") }}</button>
         <button v-if="protocol.attributes.urls.save_as_draft_url" @click="saveAsdraft" class="btn btn-secondary">{{ i18n.t("protocols.header.save_as_draft") }}</button>
       </div>
     </div>

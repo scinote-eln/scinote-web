@@ -135,9 +135,30 @@ var ProtocolsIndex = (function() {
     });
   }
 
-  function initManageAccessButton() {
-    $('.protocols-index').on('click', '#manageProtocolAccess', function() {
-      $(`tr[data-row-id=${rowsSelected[0]}] .protocol-users-link`).click();
+  function initManageAccess() {
+    let protocolsContainer = '.protocols-container';
+    let manageAccessModal = '.protocol-assignments-modal';
+
+    function loadManageAccessModal(href) {
+      $.get(href, function(data) {
+        $(protocolsContainer).append($.parseHTML(data.html));
+        $(manageAccessModal).modal('show');
+
+        // Remove modal when it gets closed
+        $(manageAccessModal).on('hidden.bs.modal', function() {
+          $(manageAccessModal).remove();
+        });
+      });
+    }
+
+    protocolsTableEl.on('click', '.protocol-users-link', function(e) {
+      loadManageAccessModal(this.href);
+      e.stopPropagation();
+      e.preventDefault();
+    });
+
+    $(protocolsContainer).on('click', '#manageProtocolAccess', function() {
+      loadManageAccessModal($(`tr[data-row-id=${rowsSelected[0]}] .protocol-users-link`).attr('href'));
     });
   }
 
@@ -180,8 +201,8 @@ var ProtocolsIndex = (function() {
         targets: 0,
         searchable: false,
         orderable: false,
-        sWidth: "1%",
-        render: function (data, type, full, meta) {
+        sWidth: '1%',
+        render: function() {
           return `<div class="sci-checkbox-container">
                     <input type="checkbox" class="sci-checkbox">
                     <span class="sci-checkbox-label"></span>
@@ -244,7 +265,7 @@ var ProtocolsIndex = (function() {
       fnInitComplete: function(e) {
         var dataTableWrapper = $(e.nTableWrapper);
         DataTableHelpers.initLengthAppearance(dataTableWrapper);
-        DataTableHelpers.initSearchField(dataTableWrapper, 'Enter...');
+        DataTableHelpers.initSearchField(dataTableWrapper, I18n.t('protocols.index.search_bar_placeholder'));
         dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
 
         let actionToolBar = $($('#protocolActionToolbar').html());
@@ -403,8 +424,8 @@ var ProtocolsIndex = (function() {
     let protocolsContainer = '.protocols-container';
     let versionsModal = '#protocol-versions-modal';
 
-    protocolsTableEl.on('click', '.protocol-versions-link', function(e) {
-      $.get(this.href, function(data) {
+    function loadVersionModal(href) {
+      $.get(href, function(data) {
         $(protocolsContainer).append($.parseHTML(data.html));
         $(versionsModal).modal('show');
         inlineEditing.init();
@@ -415,22 +436,29 @@ var ProtocolsIndex = (function() {
           $(versionsModal).remove();
         });
       });
+    }
+
+    protocolsTableEl.on('click', '.protocol-versions-link', function(e) {
+      loadVersionModal(this.href);
       e.stopPropagation();
       e.preventDefault();
     });
 
     $(protocolsContainer).on('click', '#protocolVersions', function() {
-      $(`tr[data-row-id=${rowsSelected[0]}] .protocol-versions-link`).click();
+      loadVersionModal($(`tr[data-row-id=${rowsSelected[0]}]`).data('versions-url'));
     });
   }
 
   function initdeleteDraftModal() {
-    $('.protocols-index').on('click', '#protocol-versions-modal .delete-draft', function(e) {
+    $('.protocols-index').on('click', '#protocol-versions-modal .delete-draft', function() {
       let url = this.dataset.url;
       let modal = $('#deleteDraftModal');
       $('#protocol-versions-modal').modal('hide');
       modal.modal('show');
       modal.find('form').attr('action', url);
+    });
+    $('#deleteDraftModal form').on('ajax:error', function(_ev, data) {
+      HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   }
 
@@ -509,13 +537,12 @@ var ProtocolsIndex = (function() {
         url: $el.data('url'),
         data: JSON.stringify({ ids: rowsSelected }),
         contentType: 'application/json'
-      },
-      (data) => {
-        animateSpinner(null, false);
-        HelperModule.flashAlertMsg(data.message, 'success');
-        reloadTable();
       }
-    ).error((data) => {
+    ).success((data) => {
+      animateSpinner(null, false);
+      HelperModule.flashAlertMsg(data.message, 'success');
+      reloadTable();
+    }).error((data) => {
       animateSpinner(null, false);
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
@@ -637,29 +664,18 @@ var ProtocolsIndex = (function() {
   }
 
   function updateDataTableSelectAllCheckbox() {
-    var table = protocolsDatatable.table().node();
-    var checkboxesAll = $("tbody input[type='checkbox']", protocolsTableEl);
-    var checkboxesChecked = $("tbody input[type='checkbox']:checked", protocolsTableEl);
-    var checkboxSelectAll = $("thead input[name='select_all']", table).get(0);
+    var table = $('.protocols-datatable');
+    var checkboxes = table.find("tbody input[type='checkbox']");
+    var selectedCheckboxes = table.find("tbody input[type='checkbox']:checked");
+    var selectAllCheckbox = table.find("thead input[name='select_all']");
 
-    if (checkboxesChecked.length === 0) {
-      // If none of the checkboxes are checked
-      checkboxSelectAll.checked = false;
-      if ('indeterminate' in checkboxSelectAll) {
-        checkboxSelectAll.indeterminate = false;
-      }
-    } else if (checkboxesChecked.length === checkboxesAll.length) {
-      // If all of the checkboxes are checked
-      checkboxSelectAll.checked = true;
-      if ('indeterminate' in checkboxSelectAll) {
-        checkboxSelectAll.indeterminate = false;
-      }
+    selectAllCheckbox.prop('indeterminate', false);
+    if (selectedCheckboxes.length === 0) {
+      selectAllCheckbox.prop('checked', false);
+    } else if (selectedCheckboxes.length === checkboxes.length) {
+      selectAllCheckbox.prop('checked', true);
     } else {
-      // If some of the checkboxes are checked
-      checkboxSelectAll.checked = true;
-      if ('indeterminate' in checkboxSelectAll) {
-        checkboxSelectAll.indeterminate = true;
-      }
+      selectAllCheckbox.prop('indeterminate', true);
     }
   }
 
@@ -688,6 +704,8 @@ var ProtocolsIndex = (function() {
     actionToolbar.find('.btn').removeClass('btn-primary').addClass('btn-light');
     actionToolbar.find('.btn:visible').first().addClass('btn-primary').removeClass('btn-light');
     actionToolbar.find('.btn').removeClass('notransition');
+
+    actionToolbar.find('.emptyPlaceholder').toggleClass('hidden', actionToolbar.find('.btn:visible').length > 0);
   }
 
   /*
@@ -962,7 +980,7 @@ var ProtocolsIndex = (function() {
   }
 
   init();
-  initManageAccessButton();
+  initManageAccess();
   initArchiveProtocols();
   initRestoreProtocols();
   initExportProtocols();

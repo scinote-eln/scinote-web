@@ -22,6 +22,9 @@
                         config: @inline_editable_title_config
                       } %>
         <% else %>
+          <% if @protocol.archived %>
+            <i class="fas fa-archive"></i>&nbsp;
+          <% end %>
           <div class="name-readonly-placeholder">
             <%= @protocol.name %>
           </div>

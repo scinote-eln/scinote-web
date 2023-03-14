@@ -8,7 +8,7 @@
       let submitBtn = $(this).find('input[type="submit"]');
 
       $(this).find('input:checked').each((_, el) => {
-        let select = $(el).closest('.row').find('select');
+        let select = $(el).closest('.new-member-item').find('select');
         let selectValue = parseInt(select.val(), 10);
         values.push(selectValue);
         count += 1;
@@ -48,7 +48,7 @@
 
     $(document).on('click', '.user-assignment-dropdown .user-role-selector', function() {
       let roleId = $(this).data('role-id');
-      $(this).closest('.dropdown').find('#user_assignment_user_role_id').val(roleId);
+      $(this).closest('.dropdown').find('#user_assignment_user_role_id, .default-public-user-role-id').val(roleId);
       $(this).closest('form').trigger('submit');
     });
   }

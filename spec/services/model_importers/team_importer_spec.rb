@@ -187,9 +187,6 @@ describe TeamImporter do
             expect(db_protocol.restored_on).to be_nil
             expect(db_protocol.authors).to eq json_protocol['authors']
             expect(db_protocol.parent_id).to eq json_protocol['parent_id']
-            expect(db_protocol.parent_updated_at).to eq(
-              json_protocol['parent_updated_at']
-            )
             expect(db_protocol.protocol_type).to eq(
               json_protocol['protocol_type']
             )

@@ -30,7 +30,7 @@ class ProtocolsDatatable < CustomDatatable
       'adjusted_parent_id',
       'nr_of_versions',
       'protocol_keywords_str',
-      'nr_of_linked_children',
+      'nr_of_linked_tasks',
       'nr_of_assigned_users',
       'full_username_str',
       'published_on',
@@ -54,8 +54,8 @@ class ProtocolsDatatable < CustomDatatable
   def as_json(_options = {})
     {
       draw: dt_params[:draw].to_i,
-      recordsTotal: get_raw_records.length,
-      recordsFiltered: filter_records(get_raw_records).length,
+      recordsTotal: get_raw_records_base.distinct.count,
+      recordsFiltered: records.present? ? records.first.filtered_count : 0,
       data: data
     }
   end
@@ -79,7 +79,7 @@ class ProtocolsDatatable < CustomDatatable
       casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
                         [model.arel_table[column.to_sym].as(typecast)])
     end
-    casted_column.matches("%#{value}%")
+    casted_column.matches("%#{ActiveRecord::Base.sanitize_sql_like(value)}%")
   end
 
   private
@@ -91,7 +91,8 @@ class ProtocolsDatatable < CustomDatatable
       {
         DT_RowId: record.id,
         DT_RowAttr: {
-          'data-permissions-url': permissions_protocol_path(parent)
+          'data-permissions-url': permissions_protocol_path(parent),
+          'data-versions-url': versions_modal_protocol_path(parent)
         },
         '1': name_html(parent),
         '2': parent.code,
@@ -108,6 +109,10 @@ class ProtocolsDatatable < CustomDatatable
     end
   end
 
+  def fetch_records
+    super.select('COUNT("protocols"."id") OVER() AS filtered_count')
+  end
+
   def filter_protocols_records(records)
     if params[:name_and_keywords].present?
       records = records.where_attributes_like(['protocols.name', 'protocol_keywords.name'], params[:name_and_keywords])
@@ -120,7 +125,10 @@ class ProtocolsDatatable < CustomDatatable
     records = records.where('protocols.updated_at > ?', params[:modified_on_from]) if params[:modified_on_from].present?
     records = records.where('protocols.updated_at < ?', params[:modified_on_to]) if params[:modified_on_to].present?
     records = records.where(protocols: { published_by_id: params[:published_by] }) if params[:published_by].present?
-    records = records.where(all_user_assignments: { user_id: params[:members] }) if params[:members].present?
+
+    if params[:members].present?
+      records = records.where(all_user_assignments: { user_id: params[:members] })
+    end
 
     if params[:archived_on_from].present?
       records = records.where('protocols.archived_on > ?', params[:archived_on_from])
@@ -130,7 +138,13 @@ class ProtocolsDatatable < CustomDatatable
     records = records.where(protocols: { archived_by_id: params[:archived_by] }) if params[:archived_by].present?
 
     if params[:has_draft].present?
-      records = records.where(protocols: { protocol_type: Protocol.protocol_types[:in_repository_draft] })
+      records =
+        records
+        .joins("LEFT OUTER JOIN protocols protocol_drafts " \
+               "ON protocol_drafts.protocol_type = #{Protocol.protocol_types[:in_repository_draft]} " \
+               "AND (protocol_drafts.parent_id = protocols.id OR protocol_drafts.parent_id = protocols.parent_id)")
+        .where('protocols.protocol_type = ? OR protocol_drafts.id IS NOT NULL',
+               Protocol.protocol_types[:in_repository_draft])
     end
 
     records
@@ -144,6 +158,7 @@ class ProtocolsDatatable < CustomDatatable
                                      .select(:id)
     published_versions = @team.protocols
                               .where(protocol_type: Protocol.protocol_types[:in_repository_published_version])
+                              .order(:parent_id, version_number: :desc)
                               .select('DISTINCT ON (parent_id) id')
     new_drafts = @team.protocols
                       .where(protocol_type: Protocol.protocol_types[:in_repository_draft], parent_id: nil)
@@ -157,39 +172,53 @@ class ProtocolsDatatable < CustomDatatable
       "(#{new_drafts.to_sql}))"
     )
 
-    records =
-      records
-      .preload(:parent, :latest_published_version, :draft, :protocol_keywords, user_assignments: %i(user user_role))
-      .joins("LEFT OUTER JOIN protocols protocol_versions " \
-             "ON protocol_versions.protocol_type = #{Protocol.protocol_types[:in_repository_published_version]} " \
-             "AND protocol_versions.parent_id = protocols.parent_id")
-      .joins('LEFT OUTER JOIN "protocol_protocol_keywords" ' \
-             'ON "protocol_protocol_keywords"."protocol_id" = "protocols"."id"')
-      .joins('LEFT OUTER JOIN "protocol_keywords" ' \
-             'ON "protocol_protocol_keywords"."protocol_keyword_id" = "protocol_keywords"."id"')
-      .with_granted_permissions(@user, ProtocolPermissions::READ)
-
-    records = records.joins('LEFT OUTER JOIN "users" "archived_users"
-                             ON "archived_users"."id" = "protocols"."archived_by_id"')
-    records = records.joins('LEFT OUTER JOIN "users" ON "users"."id" = "protocols"."published_by_id"')
-
     records = @type == :archived ? records.archived : records.active
 
-    records = filter_protocols_records(records)
-    records.group('"protocols"."id"')
+    records.with_granted_permissions(@user, ProtocolPermissions::READ)
   end
 
   # Query database for records (this will be later paginated and filtered)
   # after that "data" function will return json
   def get_raw_records
-    get_raw_records_base.select(
+    records =
+      get_raw_records_base
+      .preload(:parent, :latest_published_version, :draft, :protocol_keywords, user_assignments: %i(user user_role))
+      .joins("LEFT OUTER JOIN protocols protocol_versions " \
+             "ON protocol_versions.protocol_type = #{Protocol.protocol_types[:in_repository_published_version]} " \
+             "AND protocol_versions.parent_id = protocols.parent_id")
+      .joins("LEFT OUTER JOIN protocols self_linked_task_protocols " \
+             "ON self_linked_task_protocols.protocol_type = #{Protocol.protocol_types[:linked]} " \
+             "AND self_linked_task_protocols.parent_id = protocols.id")
+      .joins("LEFT OUTER JOIN protocols parent_linked_task_protocols " \
+             "ON parent_linked_task_protocols.protocol_type = #{Protocol.protocol_types[:linked]} " \
+             "AND parent_linked_task_protocols.parent_id = protocols.parent_id")
+      .joins("LEFT OUTER JOIN protocols version_linked_task_protocols " \
+             "ON version_linked_task_protocols.protocol_type = #{Protocol.protocol_types[:linked]} " \
+             "AND version_linked_task_protocols.parent_id = protocol_versions.id " \
+             "AND version_linked_task_protocols.parent_id != protocols.id")
+      .joins('LEFT OUTER JOIN "protocol_protocol_keywords" ' \
+             'ON "protocol_protocol_keywords"."protocol_id" = "protocols"."id"')
+      .joins('LEFT OUTER JOIN "protocol_keywords" ' \
+             'ON "protocol_protocol_keywords"."protocol_keyword_id" = "protocol_keywords"."id"')
+      .joins('LEFT OUTER JOIN "users" "archived_users" ON "archived_users"."id" = "protocols"."archived_by_id"')
+      .joins('LEFT OUTER JOIN "users" ON "users"."id" = "protocols"."published_by_id"')
+      .joins('LEFT OUTER JOIN "user_assignments" "all_user_assignments" '\
+        'ON "all_user_assignments"."assignable_type" = \'Protocol\' '\
+        'AND "all_user_assignments"."assignable_id" = "protocols"."id"')
+      .group('"protocols"."id"')
+
+    records = filter_protocols_records(records)
+    records.select(
       '"protocols".*',
       'COALESCE("protocols"."parent_id", "protocols"."id") AS adjusted_parent_id',
       'STRING_AGG(DISTINCT("protocol_keywords"."name"), \', \') AS "protocol_keywords_str"',
-      "CASE WHEN protocols.protocol_type = #{Protocol.protocol_types[:in_repository_draft]}" \
-      "THEN COUNT(DISTINCT(\"protocol_versions\".\"id\")) ELSE COUNT(DISTINCT(\"protocol_versions\".\"id\")) + 1 " \
+      "CASE WHEN protocols.protocol_type = #{Protocol.protocol_types[:in_repository_draft]} " \
+      "THEN 0 ELSE COUNT(DISTINCT(\"protocol_versions\".\"id\")) + 1 " \
       "END AS nr_of_versions",
-      'COUNT("user_assignments"."id") AS "nr_of_assigned_users"',
+      '(COUNT(DISTINCT("self_linked_task_protocols"."id")) + ' \
+      'COUNT(DISTINCT("parent_linked_task_protocols"."id")) + ' \
+      'COUNT(DISTINCT("version_linked_task_protocols"."id"))) AS nr_of_linked_tasks',
+      'COUNT(DISTINCT("all_user_assignments"."id")) AS "nr_of_assigned_users"',
       'MAX("users"."full_name") AS "full_username_str"', # "Hack" to get single username
       'MAX("archived_users"."full_name") AS "archived_full_username_str"'
     )
@@ -222,8 +251,8 @@ class ProtocolsDatatable < CustomDatatable
 
   def modules_html(record)
     "<a href='#' data-action='load-linked-children'" \
-      "data-url='#{linked_children_protocol_path(record)}'>" \
-      "#{record.nr_of_linked_children}" \
+      "data-url='#{linked_children_protocol_path(record.parent || record)}'>" \
+      "#{record.nr_of_linked_tasks}" \
       "</a>"
   end
 
@@ -251,36 +280,4 @@ class ProtocolsDatatable < CustomDatatable
   def modified_timestamp(record)
     I18n.l(record.updated_at, format: :full)
   end
-
-  # OVERRIDE - This is only called when filtering results;
-  # when using GROUP BY function, SQL cannot perform a WHERE
-  # clause on aggregated columns (protocol keywords & users' full_name), but
-  # since we want those 2 columns to be searchable/filterable, we do an "inner"
-  # query where we select only protocol IDs which are filtered by those 2 columns
-  # using HAVING keyword (which is the correct way to filter aggregated columns).
-  # Another OR is then appended to the WHERE clause, checking if protocol is inside
-  # this list of IDs.
-  # def build_conditions_for(query)
-  #   # Inner query to retrieve list of protocol IDs where concatenated
-  #   # protocol keywords string, or user's full_name contains searched query
-  #   search_val = dt_params[:search][:value]
-  #   records_having = get_raw_records_base.having(
-  #     ::Arel::Nodes::NamedFunction.new(
-  #       'CAST',
-  #       [::Arel::Nodes::SqlLiteral.new("string_agg(\"protocol_keywords\".\"name\", ' ') AS #{typecast}")]
-  #     ).matches("%#{sanitize_sql_like(search_val)}%").to_sql +
-  #     " OR " +
-  #     ::Arel::Nodes::NamedFunction.new(
-  #       'CAST',
-  #       [::Arel::Nodes::SqlLiteral.new("max(\"users\".\"full_name\") AS #{typecast}")]
-  #     ).matches("%#{sanitize_sql_like(search_val)}%").to_sql
-  #   ).select(:id)
-
-  #   # Call parent function
-  #   criteria = super(query)
-
-  #   # Aight, now append another or
-  #   criteria = criteria.or(Protocol.arel_table[:id].in(records_having.arel))
-  #   criteria
-  # end
 end

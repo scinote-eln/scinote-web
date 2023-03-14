@@ -26,7 +26,7 @@
     <div class="row <%= f.object.hidden? ? 'hidden' : '' %>" id="role_select_wrapper">
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <%= f.select :default_public_user_role_id,
-                     options_for_select(user_roles_collection, selected: f.object.default_public_user_role_id),
+                     options_for_select(user_roles_collection(@project), selected: f.object.default_public_user_role_id),
                      { label: t('user_assignment.select_default_user_role') },
                      class: 'form-control selectpicker'%>
       </div>

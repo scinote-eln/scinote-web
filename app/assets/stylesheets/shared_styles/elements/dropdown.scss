@@ -2,6 +2,10 @@
 
 @import "constants";
 
+.dropdown-menu .divider {
+  margin: 5px 0;
+}
+
 .sci-dropdown {
   [data-toggle="dropdown"] {
     .caret {

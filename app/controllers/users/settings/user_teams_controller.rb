@@ -193,9 +193,9 @@ module Users
         Protocol.where(id: p_ids).find_each do |protocol|
           protocol.record_timestamps = false
           protocol.added_by = new_owner
-          protocol.archived_by = new_owner unless protocol.archived_by.nil?
-          protocol.restored_by = new_owner unless protocol.restored_by.nil?
-          protocol.save!
+          protocol.archived_by = new_owner if protocol.archived_by == user_assignment.user
+          protocol.restored_by = new_owner if protocol.restored_by == user_assignment.user
+          protocol.save!(validate: false)
           protocol.user_assignments.find_by(user: new_owner)&.destroy!
           protocol.user_assignments.create!(user: new_owner, user_role: UserRole.find_predefined_owner_role)
         end

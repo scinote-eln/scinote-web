@@ -233,6 +233,10 @@
     float: left;
     margin: 2px 4px 2px 0;
 
+    .fas {
+      margin-right: 8px;
+    }
+
     &:nth-last-child(1) {
       margin-right: 0;
     }

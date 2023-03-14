@@ -18,6 +18,27 @@
       flex-direction: column;
       height: 100%;
       width: 100%;
+
+      tbody {
+        td:not(:first-child) {
+          max-width: 30rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+
+      .table.dataTable .sorting {
+        &::after {
+          opacity: 0;
+        }
+
+        &:hover {
+          &::after {
+            opacity: 1;
+          }
+        }
+      }
     }
 
     .toolbar {
@@ -46,10 +67,19 @@
       flex-direction: column;
       flex-grow: 1;
       height: calc(100% - var(--datatable-pagination-row) - var(--protocol-toolbar-size));
+      padding-bottom: 12px;
     }
 
     .dataTables_scrollBody {
       height: 100%;
+
+      td:first-child {
+        padding-top: 13px;
+      }
+
+      td:not(:first-child) {
+        padding: 14px 8px;
+      }
     }
 
     // Cells
@@ -122,6 +152,18 @@
         margin: 0 16px 0 0;
         width: 32px;
       }
+    }
+
+    .select-block.has-draft {
+      align-items: center;
+      column-gap: 8px;
+      display: flex;
+    }
+
+    .input-field:focus-within,
+    .datetime-picker-container:focus-within {
+      border: 1px solid $brand-focus;
+      border-radius: 4px;
     }
   }
 

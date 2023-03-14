@@ -436,7 +436,8 @@ class Extends
     protocol_template_access_granted: 233,
     protocol_template_access_changed: 234,
     protocol_template_access_revoked: 235,
-    task_protocol_save_to_template: 236
+    task_protocol_save_to_template: 236,
+    protocol_template_draft_created: 237
   }
 
   ACTIVITY_GROUPS = {
@@ -453,7 +454,7 @@ class Extends
                   78, 96, 107, 113, 114, *133..136, 180, 181, 182],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 170, 173, 179, 187, 186,
-                          190, 191, *204..215, 220, 221, 223, 227, 228, 229, *230..235],
+                          190, 191, *204..215, 220, 221, 223, 227, 228, 229, *230..235, 237],
     team: [92, 94, 93, 97, 104],
     label_repository: [*216..219]
   }

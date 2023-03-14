@@ -26,7 +26,7 @@
           <div class="row hidden" id="role_select_wrapper">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
               <%= f.select :default_public_user_role_id,
-                           options_for_select(user_roles_collection, UserRole.find_by(name: I18n.t('user_roles.predefined.viewer')).id),
+                           options_for_select(user_roles_collection(@project), UserRole.find_by(name: I18n.t('user_roles.predefined.viewer')).id),
                            class: 'form-control selectpicker'%>
             </div>
           </div>
