@@ -44,6 +44,11 @@
             <% end %>
           </ul>
         </div>
+      <% else %>
+        <button class="btn btn-light btn-role-select disabled" type="button">
+          <%= f.object.user_role.name %>
+          <span class="caret"></span>
+        </button>
       <% end %>
     </div>
 <% end %>
