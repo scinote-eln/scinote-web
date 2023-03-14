@@ -189,6 +189,9 @@
       inRepository() {
         return this.protocol.attributes.in_repository
       },
+      linked() {
+        return this.protocol.attributes.linked;
+      },
       urls() {
         return this.protocol.attributes.urls || {}
       }
@@ -232,21 +235,34 @@
         if (this.inRepository) return
         // legacy method from app/assets/javascripts/my_modules/protocols.js
         refreshProtocolStatusBar();
+
+        // Update protocol options drowpdown for linked tasks
+        this.refreshProtocolDropdownOptions();
+      },
+      refreshProtocolDropdownOptions() {
+        if (!this.linked && this.inRepository) return
+
+        $.get(this.protocolUrl, (result) => {
+          this.protocol.attributes.urls = result.data.attributes.urls;
+        });
       },
       updateProtocol(attributes) {
         this.protocol.attributes = attributes
       },
       updateName(newName) {
         this.protocol.attributes.name = newName;
-        this.refreshProtocolStatus();
         $.ajax({
           type: 'PATCH',
           url: this.urls.update_protocol_name_url,
-          data: { protocol: { name: newName } }
+          data: { protocol: { name: newName } },
+          success: () => {
+            this.refreshProtocolStatus();
+          }
         });
       },
       updateDescription(protocol) {
         this.protocol.attributes = protocol.attributes
+        this.refreshProtocolStatus();
       },
       addStep(position) {
         $.post(this.urls.add_step_url, {position: position}, (result) => {
@@ -257,8 +273,8 @@
           if(position === this.steps.length - 1) {
             this.$nextTick(() => this.scrollToBottom());
           }
+          this.refreshProtocolStatus();
         })
-        this.refreshProtocolStatus();
       },
       updateStepsPosition(step, action = 'add') {
         let position = step.attributes.position;

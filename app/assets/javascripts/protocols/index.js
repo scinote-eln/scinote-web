@@ -51,7 +51,7 @@ var ProtocolsIndex = (function() {
   }
 
   function initProtocolsFilters() {
-    var $filterDropdown = filterDropdown.init();
+    var $filterDropdown = filterDropdown.init(filtersEnabled);
     let $protocolsFilter = $('.protocols-index .protocols-filters');
     let $publishedByFilter = $('.published-by-filter', $protocolsFilter);
     let $accessByFilter = $('.access-by-filter', $protocolsFilter);
@@ -64,18 +64,36 @@ var ProtocolsIndex = (function() {
     let $archivedOnToFilter = $('.archived-on-filter .to-date', $protocolsFilter);
     let $textFilter = $('#textSearchFilterInput', $protocolsFilter);
 
+    function getFilterValues() {
+      publishedOnFromFilter = selectDate($publishedOnFromFilter);
+      publishedOnToFilter = selectDate($publishedOnToFilter);
+      modifiedOnFromFilter = selectDate($modifiedOnFromFilter);
+      modifiedOnToFilter = selectDate($modifiedOnToFilter);
+      publishedByFilter = dropdownSelector.getValues($('.published-by-filter'));
+      accessByFilter = dropdownSelector.getValues($('.access-by-filter'));
+      hasDraftFilter = $hasDraft.prop('checked') ? 'true' : '';
+      archivedOnFromFilter = selectDate($archivedOnFromFilter);
+      archivedOnToFilter = selectDate($archivedOnToFilter);
+      protocolsViewSearch = $textFilter.val();
+    }
+
+    function filtersEnabled() {
+      getFilterValues();
+
+      return protocolsViewSearch
+             || publishedOnFromFilter
+             || publishedOnToFilter
+             || modifiedOnFromFilter
+             || modifiedOnToFilter
+             || (publishedByFilter && publishedByFilter.length !== 0)
+             || (accessByFilter && accessByFilter.length !== 0)
+             || hasDraftFilter
+             || archivedOnFromFilter
+             || archivedOnToFilter;
+    }
+
     function appliedFiltersMark() {
-      let filtersEnabled = protocolsViewSearch
-        || publishedOnFromFilter
-        || publishedOnToFilter
-        || modifiedOnFromFilter
-        || modifiedOnToFilter
-        || (publishedByFilter && publishedByFilter.length !== 0)
-        || (accessByFilter && accessByFilter.length !== 0)
-        || hasDraftFilter
-        || archivedOnFromFilter
-        || archivedOnToFilter;
-      filterDropdown.toggleFilterMark($filterDropdown, filtersEnabled);
+      filterDropdown.toggleFilterMark($filterDropdown, filtersEnabled());
     }
 
     $.each([$publishedByFilter, $accessByFilter], function(_i, selector) {
@@ -97,17 +115,6 @@ var ProtocolsIndex = (function() {
     });
 
     $filterDropdown.on('filter:apply', function() {
-      publishedOnFromFilter = selectDate($publishedOnFromFilter);
-      publishedOnToFilter = selectDate($publishedOnToFilter);
-      modifiedOnFromFilter = selectDate($modifiedOnFromFilter);
-      modifiedOnToFilter = selectDate($modifiedOnToFilter);
-      publishedByFilter = dropdownSelector.getValues($('.published-by-filter'));
-      accessByFilter = dropdownSelector.getValues($('.access-by-filter'));
-      hasDraftFilter = $hasDraft.prop('checked') ? 'true' : '';
-      archivedOnFromFilter = selectDate($archivedOnFromFilter);
-      archivedOnToFilter = selectDate($archivedOnToFilter);
-      protocolsViewSearch = $textFilter.val();
-
       appliedFiltersMark();
       protocolsDatatable.ajax.reload();
     });

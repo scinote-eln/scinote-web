@@ -147,7 +147,7 @@
   }
 
   function initExperimentsFilters() {
-    var $filterDropdown = filterDropdown.init();
+    var $filterDropdown = filterDropdown.init(filtersEnabled);
 
     let $experimentsFilter = $('.experiments-filters');
     let $startedOnFromFilter = $('.started-on-filter .from-date', $experimentsFilter);
@@ -158,18 +158,7 @@
     let $archivedOnToFilter = $('.archived-on-filter .to-date', $experimentsFilter);
     let $textFilter = $('#textSearchFilterInput', $experimentsFilter);
 
-    function appliedFiltersMark() {
-      let filtersEnabled = experimentsViewSearch
-        || startedOnFromFilter
-        || startedOnToFilter
-        || modifiedOnFromFilter
-        || modifiedOnToFilter
-        || archivedOnFromFilter
-        || archivedOnToFilter;
-      filterDropdown.toggleFilterMark($filterDropdown, filtersEnabled);
-    }
-
-    $filterDropdown.on('filter:apply', function() {
+    function getFilterValues() {
       startedOnFromFilter = selectDate($startedOnFromFilter);
       startedOnToFilter = selectDate($startedOnToFilter);
       modifiedOnFromFilter = selectDate($modifiedOnFromFilter);
@@ -177,6 +166,26 @@
       archivedOnFromFilter = selectDate($archivedOnFromFilter);
       archivedOnToFilter = selectDate($archivedOnToFilter);
       experimentsViewSearch = $textFilter.val();
+    }
+
+    function filtersEnabled() {
+      getFilterValues();
+
+      return experimentsViewSearch
+             || startedOnFromFilter
+             || startedOnToFilter
+             || modifiedOnFromFilter
+             || modifiedOnToFilter
+             || archivedOnFromFilter
+             || archivedOnToFilter;
+    }
+
+
+    function appliedFiltersMark() {
+      filterDropdown.toggleFilterMark($filterDropdown, filtersEnabled());
+    }
+
+    $filterDropdown.on('filter:apply', function() {
       appliedFiltersMark();
       refreshCurrentView();
     });
