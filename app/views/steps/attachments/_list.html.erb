@@ -11,7 +11,7 @@
     </h4>
   </div>
   <% if !(preview) && (can_manage_protocol_in_module?(@protocol) ||
-                             can_manage_protocol_in_repository?(@protocol)) %>
+                             can_manage_protocol_draft_in_repository?(@protocol)) %>
     <div class="actions">
       <div class="dropdown sci-dropdown">
         <button class="btn btn-light dropdown-toggle" type="button" id="dropdownAttachmentsOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
