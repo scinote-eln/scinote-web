@@ -85,11 +85,15 @@ class ProtocolSerializer < ActiveModel::Serializer
   end
 
   def disabled_drafting
-    protocol_types = Protocol.where(name: object.name).pluck(:protocol_type)
-    object.protocol_type != 'in_repository_draft' &&
-      !object.archived &&
-      protocol_types.length > 1 &&
-      protocol_types.include?('in_repository_draft')
+    return true if object.in_repository_draft? || object.archived?
+
+    if object.in_repository_published_version?
+      object.parent.draft.present?
+    elsif object.in_repository_published_original?
+      object.draft.present?
+    else
+      true
+    end
   end
 
   private
