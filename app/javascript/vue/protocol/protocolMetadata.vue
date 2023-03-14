@@ -24,19 +24,19 @@
     <div id="details-container" class="protocol-details collapse in">
       <div class="protocol-metadata">
         <p class="data-block">
-          {{ i18n.t("protocols.header.version") }}
+          <span>{{ i18n.t("protocols.header.version") }}</span>
           <b>{{ protocol.attributes.version }}</b>
         </p>
         <p class="data-block">
-          {{ i18n.t("protocols.header.updated_at") }}
+          <span>{{ i18n.t("protocols.header.updated_at") }}</span>
           <b>{{ protocol.attributes.updated_at_formatted }}</b>
         </p>
         <p class="data-block">
-          {{ i18n.t("protocols.header.created_at") }}
+          <span>{{ i18n.t("protocols.header.created_at") }}</span>
           <b>{{ protocol.attributes.created_at_formatted }}</b>
         </p>
         <p class="data-block">
-          {{ i18n.t("protocols.header.added_by") }}
+          <span>{{ i18n.t("protocols.header.added_by") }}</span>
           <img :src="protocol.attributes.added_by.avatar"/>
           {{ protocol.attributes.added_by.name }}
         </p>
