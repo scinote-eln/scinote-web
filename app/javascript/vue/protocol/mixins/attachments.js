@@ -86,7 +86,9 @@ export default {
               });
               filesUploadedCntr += 1;
               if (filesUploadedCntr === filesToUploadCntr) {
-                this.$emit('stepUpdated');
+                setTimeout(() => {
+                  this.$emit('stepUpdated');
+                }, 1000);
                 resolve('done');
               }
             }

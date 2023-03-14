@@ -419,6 +419,7 @@
         $.post(this.urls[`create_${elementType}_url`], (result) => {
           result.data.isNew = true;
           this.elements.push(result.data)
+          this.$emit('stepUpdated')
         }).error(() => {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         })
