@@ -17,7 +17,7 @@ module Experiments
         splines: true,
         center: true,
         pack: true,
-        bgcolor: Constants::COLOR_CONCRETE
+        bgcolor: 'transparent'
       }
       @node_params = {
         color: Constants::COLOR_VOLCANO,
