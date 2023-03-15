@@ -135,13 +135,6 @@ Canaid::Permissions.register_for(Protocol) do
     %(in_repository_published_original in_repository_published_version).include?(protocol.protocol_type) &&
       (protocol.parent || protocol).draft.blank?
   end
-
-  can :save_protocol_as_disabled_draft_in_repository do |user, protocol|
-    next false unless can_create_protocols_in_repository?(user, protocol.team)
-
-    %(in_repository_published_original in_repository_published_version).include?(protocol.protocol_type) &&
-      (protocol.parent || protocol).draft.present? && !object.archived
-  end
 end
 
 Canaid::Permissions.register_for(Report) do

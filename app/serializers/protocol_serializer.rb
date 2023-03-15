@@ -85,9 +85,12 @@ class ProtocolSerializer < ActiveModel::Serializer
   end
 
   def disabled_drafting
-    can_save_protocol_as_disabled_draft_in_repository?(object)
+    return false unless can_create_protocols_in_repository?(object.team)
+
+    %(in_repository_published_original in_repository_published_version).include?(object.protocol_type) &&
+      (object.parent || object).draft.present? && !object.archived
   end
-  
+
   def linked
     object.linked?
   end
