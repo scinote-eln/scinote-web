@@ -5,6 +5,7 @@
 
 // Global variables
 var ProtocolsIndex = (function() {
+  const ALL_VERSIONS_VALUE = 'All';
   var PERMISSIONS = ['archivable', 'restorable', 'copyable'];
   var rowsSelected = [];
   var protocolsTableEl = null;
@@ -554,19 +555,43 @@ var ProtocolsIndex = (function() {
             modal.modal('show');
 
             let childrenTableEl = modalBody.find('#linked-children-table');
+            let versionFromDropdown = ALL_VERSIONS_VALUE;
+
+            const initVersionsDropdown = (childrenDatatable) => {
+              const versionSelector = $('#version-selector');
+              dropdownSelector.init(versionSelector, {
+                noEmptyOption: true,
+                singleSelect: true,
+                selectAppearance: 'simple',
+                closeOnSelect: true,
+                onSelect: function() {
+                  versionFromDropdown = dropdownSelector.getValues(versionSelector);
+                  childrenDatatable.ajax.reload();
+                }
+              });
+            };
+
+            let childrenDatatable;
 
             if (childrenTableEl) {
               // Only initialize table if it's present
-              childrenTableEl.DataTable({
+              childrenDatatable = childrenTableEl.DataTable({
                 autoWidth: false,
-                dom: 'RBltpi',
+                dom: 'RBtpl',
                 stateSave: false,
                 buttons: [],
                 processing: true,
                 serverSide: true,
                 ajax: {
                   url: childrenTableEl.data('source'),
-                  type: 'POST'
+                  type: 'POST',
+                  data: function(d) {
+                    if (versionFromDropdown !== ALL_VERSIONS_VALUE) {
+                      d.version = versionFromDropdown;
+                    }
+
+                    return d;
+                  }
                 },
                 colReorder: {
                   fixedColumnsLeft: 1000000 // Disable reordering
@@ -579,6 +604,17 @@ var ProtocolsIndex = (function() {
                 columns: [
                   { data: '1' }
                 ],
+                lengthMenu: [
+                  [10, 25, 50],
+                  [
+                    I18n.t('protocols.index.linked_children.length_menu', { number: 10 }),
+                    I18n.t('protocols.index.linked_children.length_menu', { number: 25 }),
+                    I18n.t('protocols.index.linked_children.length_menu', { number: 50 })
+                  ]
+                ],
+                language: {
+                  lengthMenu: '_MENU_'
+                },
                 fnDrawCallback: function() {
                   animateSpinner(this, false);
                 },
@@ -587,6 +623,8 @@ var ProtocolsIndex = (function() {
                 }
               });
             }
+
+            initVersionsDropdown(childrenDatatable);
           },
           error: function() {
             // TODO

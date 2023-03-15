@@ -310,3 +310,29 @@
     }
   }
 }
+
+#linked-children-modal {
+  .dataTables_length .form-control {
+    width: 160px;
+  }
+
+  .version-dropdown {
+    align-items: center;
+    column-gap: 8px;
+    display: flex;
+    margin-top: 16px;
+
+    label {
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    .dropdown-selector-container {
+      width: 86px;
+    }
+  }
+
+  .linked-children-datatable {
+    margin-bottom: 16px;
+  }
+}

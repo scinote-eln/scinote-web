@@ -100,6 +100,12 @@ var filterDropdown = (function() {
     });
   }
 
+  function initCloseButton() {
+    $('.close', $filterContainer).click(function() {
+      $(this).closest('.dropdown').removeClass('open');
+    });
+  }
+
   return {
     init: function(filtersEnabledFunction) {
       $filterContainer = $('.filter-container');
@@ -107,6 +113,7 @@ var filterDropdown = (function() {
       initClearButton();
       preventDropdownClose();
       initApplyButton();
+      initCloseButton();
       initSearchField(filtersEnabledFunction);
       return $filterContainer;
     },
