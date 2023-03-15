@@ -5,6 +5,7 @@ class StepSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
   include ApplicationHelper
   include CommentHelper
+  include InputSanitizeHelper
 
   attributes :name, :position, :completed, :attachments_manageble, :urls, :assets_view_mode, :assets_order,
              :marvinjs_enabled, :bio_eddie_service_enabled, :bio_eddie_context, :marvinjs_context,
@@ -106,6 +107,6 @@ class StepSerializer < ActiveModel::Serializer
   end
 
   def created_by
-    object.user.full_name
+    escape_input(object.user.full_name)
   end
 end
