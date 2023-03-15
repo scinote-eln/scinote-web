@@ -20,10 +20,10 @@ module InputSanitizeHelper
     format_opt = wrapper_tag.merge(sanitize: false)
     base64_encoded_imgs = options.fetch(:base64_encoded_imgs, false)
     text = simple_format(text, {}, format_opt) if simple_f
+    text = sanitize_input(text, tags)
     if text =~ SmartAnnotations::TagToHtml::USER_REGEX || text =~ SmartAnnotations::TagToHtml::REGEX
       text = smart_annotation_parser(text, team, base64_encoded_imgs, preview_repository)
     end
-    text = sanitize_input(text, tags)
     auto_link(
       text,
       html: { target: '_blank' },
