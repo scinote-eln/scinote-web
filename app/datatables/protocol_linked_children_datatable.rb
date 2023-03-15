@@ -40,21 +40,16 @@ class ProtocolLinkedChildrenDatatable < CustomDatatable
   # Query database for records (this will be later paginated and filtered)
   # after that "data" function will return json
   def get_raw_records
-    linked_protocols = Protocol
-      .joins(my_module: { experiment: :project })
-      .includes(my_module: { experiment: :project })
-      .references(my_module: { experiment: :project })
-      .where(protocol_type: Protocol.protocol_types[:linked])
-
-    records = linked_protocols
-      .where(parent: @protocol)
-      .or(
-        linked_protocols.where(parent: Protocol.where(parent: @protocol))
-      )
-
-    records = filter_child_records(records)
-
-    records.distinct
+    if params[:version].present?
+      records = @protocol.published_versions_with_original
+                         .find_by!(version_number: params[:version])
+                         .linked_children
+    else
+      records = Protocol.where(protocol_type: Protocol.protocol_types[:linked])
+      records = records.where(parent_id: @protocol.published_versions)
+                       .or(records.where(parent_id: @protocol.id))
+    end
+    records.preload(my_module: { experiment: :project }).distinct
   end
 
   # Helper methods
@@ -82,12 +77,5 @@ class ProtocolLinkedChildrenDatatable < CustomDatatable
     res += '</li>'
     res += '</ol>'
     res
-  end
-
-  def filter_child_records(records)
-    if params[:version].present?
-      records = records.left_outer_joins(:parent).where(parent: { version_number: params[:version] })
-    end
-    records
   end
 end
