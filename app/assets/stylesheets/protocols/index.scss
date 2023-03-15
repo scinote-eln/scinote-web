@@ -20,6 +20,14 @@
       width: 100%;
 
       tbody {
+        td {
+          vertical-align: middle;
+        }
+
+        td:first-child {
+          padding-top: 4px;
+        }
+
         td:not(:first-child) {
           max-width: 30rem;
           overflow: hidden;
@@ -78,7 +86,7 @@
       }
 
       td:not(:first-child) {
-        padding: 14px 8px;
+        padding: 12px 8px;
       }
     }
 
@@ -124,8 +132,11 @@
         background: $color-concrete;
         margin-left: .75em;
         text-align: center;
+        line-height: 24px;
+        height: 28px;
+        width: 28px;
       }
-    }
+  }
 
     .selected {
       .global-avatar-container,

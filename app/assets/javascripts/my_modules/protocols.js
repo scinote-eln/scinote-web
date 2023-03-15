@@ -40,8 +40,9 @@ function initLinkUpdate() {
   var modalTitle = modal.find('.modal-title');
   var modalMessage = modal.find('.modal-body .message');
   var updateBtn = modal.find(".modal-footer [data-action='submit']");
-  $("[data-action='unlink'], [data-action='revert'], [data-action='update-parent'], [data-action='update-self']")
-    .on('ajax:success', function(e, data) {
+  $('.protocol-options-dropdown')
+    .on('ajax:success', "[data-action='unlink'], [data-action='revert'], [data-action='update-parent'],"
+        + "[data-action='update-self']", function(e, data) {
       modalTitle.html(data.title);
       modalMessage.html(data.message);
       updateBtn.text(data.btn_text);

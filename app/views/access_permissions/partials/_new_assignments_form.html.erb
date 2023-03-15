@@ -13,7 +13,10 @@
   <%= form_with(url: create_path, method: :post, remote: true, html: { id: 'new-user-assignment-form', data: { action: 'replace-form', target: '#user_assignments_modal', object_type: assignable.class.to_s.downcase} }) do |f| %>
     <div class="modal-body">
       <div class="sci-input-container left-icon">
-        <%= text_field_tag :search_users, '', placeholder: t('.find_people_html'), class: 'sci-input-field', data: { action: 'filter-list', target: 'new-user-assignment-to-project-form' } %>
+        <%= text_field_tag :search_users, '', 
+                           placeholder: t('.find_people_html'), 
+                           class: 'sci-input-field new-assignment-user-search', 
+                           data: { action: 'filter-list', target: 'new-user-assignment-to-project-form' } %>
         <i class="fas fa-search"></i>
       </div>
       <% if assignable.visibility && assignable.visibility == 'hidden' %>

@@ -19,9 +19,6 @@ module PermissionExtends
     %w(
       READ
       READ_ARCHIVED
-      ARCHIVE
-      RESTORE
-      PUBLISH
       MANAGE
       USERS_MANAGE
       MANAGE_DRAFT
@@ -143,7 +140,7 @@ module PermissionExtends
       TeamPermissions::LABEL_TEMPLATES_MANAGE,
       ProtocolPermissions::READ,
       ProtocolPermissions::READ_ARCHIVED,
-      ProtocolPermissions::MANAGE,
+      ProtocolPermissions::MANAGE_DRAFT,
       ReportPermissions::READ,
       ReportPermissions::MANAGE,
       ProjectPermissions::READ,

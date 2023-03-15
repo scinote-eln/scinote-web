@@ -1,5 +1,6 @@
 var filterDropdown = (function() {
   var $filterContainer = '';
+  var $filtersEnabled = false;
 
   function initClearButton() {
     $('.clear-button', $filterContainer).click(function(e) {
@@ -21,7 +22,7 @@ var filterDropdown = (function() {
     });
   }
 
-  function initSearchField() {
+  function initSearchField(filtersEnabledFunction) {
     var $textFilter = $('#textSearchFilterInput', $filterContainer);
 
     $filterContainer.on('show.bs.dropdown', function() {
@@ -47,7 +48,9 @@ var filterDropdown = (function() {
     }).on('hide.bs.dropdown', function(e) {
       if (e.target === e.currentTarget) {
         $('#textSearchFilterHistory').hide();
-        $('.apply-filters', $filterContainer).click();
+        if (filtersEnabledFunction() || $filtersEnabled) {
+          $('.apply-filters', $filterContainer).click();
+        }
       }
     });
 
@@ -104,16 +107,18 @@ var filterDropdown = (function() {
   }
 
   return {
-    init: function() {
+    init: function(filtersEnabledFunction) {
       $filterContainer = $('.filter-container');
+      $filtersEnabled = false;
       initClearButton();
       preventDropdownClose();
       initApplyButton();
       initCloseButton();
-      initSearchField();
+      initSearchField(filtersEnabledFunction);
       return $filterContainer;
     },
     toggleFilterMark: function(filterContainer, filtersEnabled) {
+      $filtersEnabled = filtersEnabled;
       if (filtersEnabled) {
         filterContainer.addClass('filters-applied');
       } else {

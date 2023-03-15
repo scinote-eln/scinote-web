@@ -22,6 +22,7 @@
 
   .protocol-position-container {
     background-color: $color-white;
+    border-radius: 2px;
     box-shadow: $flyout-shadow;
     margin: 20px auto;
     max-width: 900px;
@@ -74,6 +75,7 @@
         display: flex;
         flex-grow: 1;
         justify-content: flex-end;
+        padding: 0 25px;
 
         .btn {
           margin-left: .25em;
@@ -82,6 +84,11 @@
         .caret {
           margin-left: 25px;
         }
+
+        button,
+        a {
+          margin-right: 5px;
+        }
       }
     }
 
@@ -89,12 +96,17 @@
       padding-left: 20px;
     }
   }
+
   .protocol-details {
     .protocol-metadata {
       margin-bottom: 2em;
 
       .data-block {
         margin-bottom: 16px;
+
+        > :nth-child(2) {
+          margin-left: 8px;
+        }
       }
 
       .authors-data {
@@ -106,11 +118,17 @@
           flex-basis: calc(100% - 90px);
           flex-grow: 1;
           line-height: 32px;
-          margin-left: .75em;
+          margin-left: 8px;
+          font-weight: bold;
         }
 
         * {
           flex-shrink: 0;
+        }
+
+        .sci-inline-edit__view,
+        textarea {
+          padding-left: 10px;
         }
       }
 
@@ -126,6 +144,11 @@
 
           .dropdown-selector-container {
             padding-right: 10px;
+            margin-left: 0;
+
+            .input-field {
+              margin-left: 0;
+            }
 
             &:not(.active) {
               .input-field {
@@ -139,7 +162,7 @@
 
             &.active {
               .input-field {
-                border: 1px solid $color-alto;
+                border: 1px solid $brand-focus;
               }
             }
           }
