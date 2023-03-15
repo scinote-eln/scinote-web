@@ -69,7 +69,7 @@ module AccessPermissions
       respond_to do |format|
         if project_member.destroy
           format.json do
-            render json: { flash: t('access_permissions.destroy.success', member_name: user.full_name) },
+            render json: { flash: t('access_permissions.destroy.success', member_name: escape_input(user.full_name)) },
                    status: :ok
           end
         else
