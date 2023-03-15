@@ -107,6 +107,6 @@ class StepSerializer < ActiveModel::Serializer
   end
 
   def created_by
-    escape_input(object.user.full_name)
+    object.user.full_name
   end
 end

@@ -17,7 +17,7 @@ class ProtocolSerializer < ActiveModel::Serializer
   def added_by
     {
       avatar: object.added_by&.avatar_url(:icon_small),
-      name: escape_input(object.added_by&.full_name)
+      name: object.added_by&.full_name
     }
   end
 
