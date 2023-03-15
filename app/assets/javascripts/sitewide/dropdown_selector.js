@@ -541,16 +541,22 @@ var dropdownSelector = (function() {
       var customLabel = selector2.data('config').optionLabel;
       var customClass = params.optionClass || selector2.data('config').optionClass || '';
       var customStyle = selector2.data('config').optionStyle;
-      return $(`
-        <div class="dropdown-option ${customClass}" style="${customStyle ? customStyle(option) : ''}"
-          title="${(option.params && option.params.tooltip) || ''}"
-          data-params='${JSON.stringify(option.params || {})}'
-          data-label="${option.label}"
-          data-group="${group ? group.value : ''}"
-          data-value="${option.value}">
-            ${customLabel ? customLabel(option) : option.label}
-        </div>"
+      var optionElement = $(`
+        <div class="dropdown-option ${customClass}" style="${customStyle ? customStyle(option) : ''}">
+        </div>
       `);
+      optionElement
+        .attr('title', (option.params && option.params.tooltip) || '')
+        .attr('data-params', JSON.stringify(option.params || {}))
+        .attr('data-label', option.label)
+        .attr('data-group', group ? group.value : '')
+        .attr('data-value', option.value);
+      if (customLabel) {
+        optionElement.html(customLabel(option));
+      } else {
+        optionElement.html(option.label);
+      }
+      return optionElement;
     }
 
     // Draw delimiter object
