@@ -236,7 +236,7 @@ var MyModuleRepositories = (function() {
         var repositoryContainer = $(this).closest('.assigned-repository-container');
         repositoryContainer.find('.table.dataTable').removeClass('hidden');
         repositoryContainer.find('.dataTables_scrollBody').css('overflow', 'initial');
-        repositoryContainer.find('.version-label').text(tableContainer.data('version-label'));
+        repositoryContainer.find('.version-label').html(tableContainer.data('version-label'));
         SIMPLE_TABLE.columns.adjust();
       },
       createdRow: function(row, data) {
@@ -680,8 +680,8 @@ var MyModuleRepositories = (function() {
       version = I18n.t('my_modules.repository.full_view.modal_live_header');
     }
     FULL_VIEW_MODAL.find('.repository-title').data('repository-name', repositoryName);
-    FULL_VIEW_MODAL.find('.repository-title').text(title);
-    FULL_VIEW_MODAL.find('.repository-version').text(version);
+    FULL_VIEW_MODAL.find('.repository-title').html(title);
+    FULL_VIEW_MODAL.find('.repository-version').html(version);
   }
 
   function initRepositoryAssignView() {

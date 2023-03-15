@@ -7,7 +7,7 @@ var DasboardRecentWorkWidget = (function() {
       var recentWorkItem = $($('#recent-work-item-template').html());
       var recentWorkItemType = recentWorkItem.find('.object-type span');
       recentWorkItem.attr('href', item.url);
-      recentWorkItem.find('.object-name').text(item.name);
+      recentWorkItem.find('.object-name').html(item.name);
       recentWorkItemType.text(item.code || item.type);
       recentWorkItem.find('.object-changed').text(item.last_change);
       container.append(recentWorkItem);

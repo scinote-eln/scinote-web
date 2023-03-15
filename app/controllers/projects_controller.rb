@@ -63,6 +63,7 @@ class ProjectsController < ApplicationController
       else
         breadcrumbs_html = ''
         projects_cards_url = cards_projects_url
+        title_html = title
       end
 
       cards = Kaminari.paginate_array(overview_service.project_and_folder_cards)

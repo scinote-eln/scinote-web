@@ -1129,7 +1129,7 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
 
   var panelHeading = module.find(".panel-heading");
 
-  module.find(".panel-title").text(name);
+  module.find(".panel-title").html(name);
 
   module.find(".ep").html($("#drag-connections-placeholder").html());
 
