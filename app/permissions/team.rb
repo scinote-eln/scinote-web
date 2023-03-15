@@ -71,6 +71,7 @@ end
 
 Canaid::Permissions.register_for(Protocol) do
   %i(manage_protocol_in_repository
+     manage_protocol_draft_in_repository
      manage_protocol_users
      clone_protocol_in_repository
      publish_protocol_in_repository
@@ -95,7 +96,8 @@ Canaid::Permissions.register_for(Protocol) do
   end
 
   can :manage_protocol_draft_in_repository do |user, protocol|
-    protocol.permission_granted?(user, ProtocolPermissions::MANAGE_DRAFT)
+    protocol.in_repository_draft? &&
+      protocol.permission_granted?(user, ProtocolPermissions::MANAGE_DRAFT)
   end
 
   can :manage_protocol_users do |user, protocol|
