@@ -172,12 +172,6 @@ class ProtocolsController < ApplicationController
 
   def update_keywords
     respond_to do |format|
-      # sanitize user input
-      if params[:keywords]
-        params[:keywords].collect! do |keyword|
-          escape_input(keyword)
-        end
-      end
       if @protocol.update_keywords(params[:keywords])
         format.json do
           log_activity(:edit_keywords_in_protocol_repository, nil, protocol: @protocol.id)
