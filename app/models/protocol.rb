@@ -385,30 +385,6 @@ class Protocol < ApplicationRecord
     st
   end
 
-  def make_private(user)
-    self.added_by = user
-    self.published_on = nil
-    self.archived_by = nil
-    self.archived_on = nil
-    self.restored_by = nil
-    self.restored_on = nil
-    self.protocol_type = Protocol.protocol_types[:in_repository_private]
-    result = save
-
-    if result
-      Activities::CreateActivityService
-        .call(activity_type: :move_protocol_in_repository,
-              owner: user,
-              subject: self,
-              team: team,
-              message_items: {
-                protocol: id,
-                storage: I18n.t('activities.protocols.team_to_my_message')
-              })
-    end
-    result
-  end
-
   def archive(user)
     return nil unless can_destroy?
     # We keep published_on present, so we know (upon restoring)

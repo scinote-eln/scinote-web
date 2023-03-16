@@ -58,7 +58,6 @@ class ProtocolsController < ApplicationController
   ]
   before_action :check_copy_to_repository_permissions, only: %i(
     copy_to_repository
-    copy_to_repository_modal
   )
 
   before_action :check_publish_permission, only: :publish
@@ -872,20 +871,6 @@ class ProtocolsController < ApplicationController
         render json: {
           html: render_to_string({
             partial: "my_modules/protocols/load_from_repository_modal_body.html.erb"
-          })
-        }
-      end
-    end
-  end
-
-  def copy_to_repository_modal
-    @new = Protocol.new
-    @original = Protocol.find(params[:id])
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string({
-            partial: "my_modules/protocols/copy_to_repository_modal_body.html.erb"
           })
         }
       end
