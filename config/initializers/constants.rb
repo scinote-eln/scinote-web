@@ -330,7 +330,9 @@ class Constants
   ).freeze
 
   config = Sanitize::Config::RELAXED.deep_dup
-  config[:attributes]['a'] << 'id'
+  config[:attributes][:all] << 'id'
+  config[:attributes][:all] << 'contenteditable'
+  config[:attributes][:all] << :data
   INPUT_SANITIZE_CONFIG = Sanitize::Config.freeze_config(config)
 
   REPOSITORY_DEFAULT_PAGE_SIZE = 10
