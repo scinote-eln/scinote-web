@@ -580,7 +580,6 @@ Rails.application.routes.draw do
         post 'linked_children_datatable',
              to: 'protocols#linked_children_datatable'
         get 'versions_modal', to: 'protocols#versions_modal'
-        get 'preview', to: 'protocols#preview'
         patch 'description', to: 'protocols#update_description'
         put 'name', to: 'protocols#update_name'
         patch 'authors', to: 'protocols#update_authors'
@@ -604,17 +603,12 @@ Rails.application.routes.draw do
         post 'copy_to_repository', to: 'protocols#copy_to_repository'
         get 'protocol_status_bar', to: 'protocols#protocol_status_bar'
         get 'updated_at_label', to: 'protocols#updated_at_label'
-        get 'edit_name_modal', to: 'protocols#edit_name_modal'
-        get 'edit_keywords_modal', to: 'protocols#edit_keywords_modal'
-        get 'edit_authors_modal', to: 'protocols#edit_authors_modal'
-        get 'edit_description_modal', to: 'protocols#edit_description_modal'
         post 'delete_steps'
         get :permissions
         put :update_version_comment
       end
       collection do
         post 'datatable', to: 'protocols#datatable'
-        post 'make_private', to: 'protocols#make_private'
         post 'archive', to: 'protocols#archive'
         post 'restore', to: 'protocols#restore'
         post 'clone', to: 'protocols#clone'
