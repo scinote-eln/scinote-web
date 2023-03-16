@@ -122,6 +122,14 @@
         .sci-inline-edit__view,
         textarea {
           padding-left: 10px;
+
+          &::placeholder {
+            font-weight: normal;
+          }
+        }
+
+        .sci-inline-edit__view.blank {
+          font-weight: normal;
         }
       }
 
@@ -143,19 +151,29 @@
               margin-left: 0;
             }
 
-            &:not(.active) {
-              .input-field {
-                border-color: transparent;
+            &:not(.disabled) {
+              &:not(.active) {
+                .input-field {
+                  border-color: transparent;
 
-                &:hover {
-                  border: 1px solid $color-alto;
+                  &:hover {
+                    border: 1px solid $color-alto;
+                  }
+                }
+              }
+
+              &.active {
+                .input-field {
+                  border: 1px solid $brand-focus;
                 }
               }
             }
 
-            &.active {
-              .input-field {
-                border: 1px solid $brand-focus;
+            &.disabled {
+              .input-field,
+              .input-field:hover,
+              .input-field:active {
+                border-color: transparent;
               }
             }
           }
