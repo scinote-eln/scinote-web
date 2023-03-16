@@ -162,61 +162,24 @@ class Protocol < ApplicationRecord
                   page = 1,
                   _current_team = nil,
                   options = {})
-    team_ids = Team.joins(:user_teams)
-                   .where(user_teams: { user_id: user.id })
-                   .distinct
-                   .pluck(:id)
+    repository_protocols = latest_available_versions(user.teams)
+                           .with_granted_permissions(user, ProtocolPermissions::READ)
+                           .select(:id)
+    repository_protocols = repository_protocols.active unless include_archived
 
-    module_ids = MyModule.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-                         .pluck(:id)
+    module_ids = MyModule.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT).pluck(:id)
 
-    where_str =
-      '(protocol_type IN (?) AND my_module_id IN (?)) OR ' \
-      '(protocol_type = ? AND protocols.team_id IN (?) AND ' \
-      'added_by_id = ?) OR (protocol_type = ? AND protocols.team_id IN (?))'
+    new_query = Protocol
+                .where(
+                  '(protocol_type IN (?) AND my_module_id IN (?)) OR (protocols.id IN (?))',
+                  [Protocol.protocol_types[:unlinked], Protocol.protocol_types[:linked]],
+                  module_ids,
+                  repository_protocols
+                )
 
-    if include_archived
-      where_str +=
-        ' OR (protocol_type = ? AND protocols.team_id IN (?) ' \
-        'AND added_by_id = ?)'
-      new_query = Protocol
-                  .where(
-                    where_str,
-                    [Protocol.protocol_types[:unlinked],
-                     Protocol.protocol_types[:linked]],
-                    module_ids,
-                    Protocol.protocol_types[:in_repository_private],
-                    team_ids,
-                    user.id,
-                    Protocol.protocol_types[:in_repository_public],
-                    team_ids,
-                    Protocol.protocol_types[:in_repository_archived],
-                    team_ids,
-                    user.id
-                  )
-    else
-      new_query = Protocol
-                  .where(
-                    where_str,
-                    [Protocol.protocol_types[:unlinked],
-                     Protocol.protocol_types[:linked]],
-                    module_ids,
-                    Protocol.protocol_types[:in_repository_private],
-                    team_ids,
-                    user.id,
-                    Protocol.protocol_types[:in_repository_public],
-                    team_ids
-                  )
-    end
-
-    new_query = new_query
-                .distinct
-                .joins('LEFT JOIN protocol_protocol_keywords ON ' \
-                       'protocols.id = protocol_protocol_keywords.protocol_id')
-                .joins('LEFT JOIN protocol_keywords ' \
-                       'ON protocol_keywords.id = ' \
-                       'protocol_protocol_keywords.protocol_keyword_id')
-                .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
+    new_query = new_query.left_outer_joins(:protocol_keywords)
+                         .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
+                         .distinct
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
@@ -224,6 +187,25 @@ class Protocol < ApplicationRecord
     else
       new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
     end
+  end
+
+  def self.latest_available_versions(teams)
+    team_protocols = where(team: teams)
+
+    original_without_versions = team_protocols
+                                .left_outer_joins(:published_versions)
+                                .where(protocol_type: Protocol.protocol_types[:in_repository_published_original])
+                                .where(published_versions: { id: nil })
+                                .select(:id)
+    published_versions = team_protocols
+                         .where(protocol_type: Protocol.protocol_types[:in_repository_published_version])
+                         .order(:parent_id, version_number: :desc)
+                         .select('DISTINCT ON (parent_id) id')
+    new_drafts = team_protocols
+                 .where(protocol_type: Protocol.protocol_types[:in_repository_draft], parent_id: nil)
+                 .select(:id)
+
+    where('protocols.id IN ((?) UNION (?) UNION (?))', original_without_versions, published_versions, new_drafts)
   end
 
   def self.viewable_by_user(user, teams)
@@ -286,15 +268,15 @@ class Protocol < ApplicationRecord
   end
 
   def linked_modules
-    MyModule.joins(:protocols).where('protocols.parent_id = ?', id)
+    MyModule.joins(:protocols).where(protocols: { parent_id: id })
   end
 
   def linked_experiments(linked_mod)
-    Experiment.where('id IN (?)', linked_mod.pluck(:experiment_id).uniq)
+    Experiment.where(id: linked_mod.distinct.select(:experiment_id))
   end
 
   def linked_projects(linked_exp)
-    Project.where('id IN (?)', linked_exp.pluck(:project_id).uniq)
+    Project.where(id: linked_exp.distinct.select(:project_id))
   end
 
   def self.new_blank_for_module(my_module)

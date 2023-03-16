@@ -344,6 +344,7 @@ en:
       public: "Public"
       private: "Private"
       archived: "Archived"
+      in_repository: "Protocol templates"
       created_by: "Created by: "
       created_at: "Created at: "
       last_modified_by: "Last modified by: "
