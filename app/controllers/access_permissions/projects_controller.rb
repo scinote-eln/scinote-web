@@ -110,7 +110,7 @@ module AccessPermissions
         user_assignment.destroy!
       end
 
-      propagate_job(user_assignment)
+      propagate_job(user_assignment, destroy: true)
       log_activity(:unassign_user_from_project, user_assignment)
 
       render json: { flash: t('access_permissions.destroy.success', member_name: user.full_name) },
@@ -152,12 +152,13 @@ module AccessPermissions
       render_404 unless @project
     end
 
-    def propagate_job(user_assignment)
+    def propagate_job(user_assignment, destroy: false)
       UserAssignments::PropagateAssignmentJob.perform_later(
         @project,
         user_assignment.user,
         user_assignment.user_role,
-        current_user
+        current_user,
+        destroy: destroy
       )
     end
 

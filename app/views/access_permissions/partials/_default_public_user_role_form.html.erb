@@ -31,7 +31,7 @@
                 <% if assignable.top_level_assignable?  %>
                   <li role="separator" class="divider" data-hook="support-dropdown-separator"></li>
                   <li>
-                    <a href="#" data-turbolinks="false" class="user-role-selector" data-role-id="">
+                    <a href="#" data-turbolinks="false" class="user-role-selector" data-role-id="" data-action='remote-destroy' data-target="#">
                       <%= t('access_permissions.remove_access') %>
                     </a>
                   </li>

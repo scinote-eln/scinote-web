@@ -19,6 +19,7 @@
         <button class="btn btn-light" @click="openVersionsModal">{{ i18n.t("protocols.header.versions") }}</button>
         <button v-if="protocol.attributes.urls.publish_url" @click="$emit('publish')" class="btn btn-primary">{{ i18n.t("protocols.header.publish") }}</button>
         <button v-if="protocol.attributes.urls.save_as_draft_url" @click="saveAsdraft" class="btn btn-secondary">{{ i18n.t("protocols.header.save_as_draft") }}</button>
+        <button v-bind:disabled="protocol.attributes.disabled_drafting" v-if="protocol.attributes.disabled_drafting" @click="saveAsdraft" class="btn btn-secondary">{{ i18n.t("protocols.header.save_as_draft") }}</button>
       </div>
     </div>
     <div id="details-container" class="protocol-details collapse in">

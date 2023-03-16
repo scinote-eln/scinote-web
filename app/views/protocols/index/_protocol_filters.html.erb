@@ -7,7 +7,6 @@
     <%= render partial: 'shared/filter_dropdown/text_search', locals: {container_class: '', label_text: t('filters_modal.text.label_name_and_keywords')} %>
     <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'published-on-filter', label: 'Published on', view_mode: nil } %>
     <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'modified-on-filter', label: 'Modified on', view_mode: nil } %>
-    <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'archived-on-filter', label: 'Archived on', view_mode: 'archived' } %>
     <div class="select-block">
       <label>Published by</label>
       <select class="published-by-filter"

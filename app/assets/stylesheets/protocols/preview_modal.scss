@@ -54,6 +54,14 @@
             margin-bottom: 0;
             white-space: nowrap;
           }
+
+          .dropdown-selector-container {
+            width: 170px;
+
+            .search-field {
+              padding-left: 8px;
+            }
+          }
         }
       }
 

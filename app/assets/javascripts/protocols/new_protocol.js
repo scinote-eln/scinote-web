@@ -7,7 +7,8 @@
     })
     .on('show.bs.modal', function() {
       $(`${protocolModal} #protocol_name`).parent().removeClass('error');
-      $(`${protocolModal} form[data-action="new"] #protocol_name`).val('');
+      $(`${protocolModal} #protocol_name`).val('');
+      $(this).find('.sci-input-field').focus();
     });
 
   let roleSelector = `${protocolModal} #protocol_role_selector`;
@@ -22,6 +23,9 @@
   });
 
   $(protocolModal)
+    .on('shown.bs.modal', function() {
+      $(this).find('.sci-input-field').focus();
+    })
     .on('ajax:error', 'form', function(e, error) {
       let msg = error.responseJSON.error;
       $(`${protocolModal} #protocol_name`).parent().addClass('error').attr('data-error-text', msg);

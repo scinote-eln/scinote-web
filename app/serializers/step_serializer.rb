@@ -79,7 +79,7 @@ class StepSerializer < ActiveModel::Serializer
       urls_list[:state_url] = toggle_step_state_step_path(object)
     end
 
-    if can_manage_protocol_in_module?(object.protocol) || can_manage_protocol_in_repository?(object.protocol)
+    if can_manage_protocol_in_module?(object.protocol) || can_manage_protocol_draft_in_repository?(object.protocol)
       urls_list[:duplicate_step_url] = duplicate_step_path(object)
     end
 

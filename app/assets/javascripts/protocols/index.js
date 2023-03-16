@@ -5,6 +5,7 @@
 
 // Global variables
 var ProtocolsIndex = (function() {
+  const ALL_VERSIONS_VALUE = 'All';
   var PERMISSIONS = ['archivable', 'restorable', 'copyable'];
   var rowsSelected = [];
   var protocolsTableEl = null;
@@ -51,7 +52,7 @@ var ProtocolsIndex = (function() {
   }
 
   function initProtocolsFilters() {
-    var $filterDropdown = filterDropdown.init();
+    var $filterDropdown = filterDropdown.init(filtersEnabled);
     let $protocolsFilter = $('.protocols-index .protocols-filters');
     let $publishedByFilter = $('.published-by-filter', $protocolsFilter);
     let $accessByFilter = $('.access-by-filter', $protocolsFilter);
@@ -64,18 +65,36 @@ var ProtocolsIndex = (function() {
     let $archivedOnToFilter = $('.archived-on-filter .to-date', $protocolsFilter);
     let $textFilter = $('#textSearchFilterInput', $protocolsFilter);
 
+    function getFilterValues() {
+      publishedOnFromFilter = selectDate($publishedOnFromFilter);
+      publishedOnToFilter = selectDate($publishedOnToFilter);
+      modifiedOnFromFilter = selectDate($modifiedOnFromFilter);
+      modifiedOnToFilter = selectDate($modifiedOnToFilter);
+      publishedByFilter = dropdownSelector.getValues($('.published-by-filter'));
+      accessByFilter = dropdownSelector.getValues($('.access-by-filter'));
+      hasDraftFilter = $hasDraft.prop('checked') ? 'true' : '';
+      archivedOnFromFilter = selectDate($archivedOnFromFilter);
+      archivedOnToFilter = selectDate($archivedOnToFilter);
+      protocolsViewSearch = $textFilter.val();
+    }
+
+    function filtersEnabled() {
+      getFilterValues();
+
+      return protocolsViewSearch
+             || publishedOnFromFilter
+             || publishedOnToFilter
+             || modifiedOnFromFilter
+             || modifiedOnToFilter
+             || (publishedByFilter && publishedByFilter.length !== 0)
+             || (accessByFilter && accessByFilter.length !== 0)
+             || hasDraftFilter
+             || archivedOnFromFilter
+             || archivedOnToFilter;
+    }
+
     function appliedFiltersMark() {
-      let filtersEnabled = protocolsViewSearch
-        || publishedOnFromFilter
-        || publishedOnToFilter
-        || modifiedOnFromFilter
-        || modifiedOnToFilter
-        || (publishedByFilter && publishedByFilter.length !== 0)
-        || (accessByFilter && accessByFilter.length !== 0)
-        || hasDraftFilter
-        || archivedOnFromFilter
-        || archivedOnToFilter;
-      filterDropdown.toggleFilterMark($filterDropdown, filtersEnabled);
+      filterDropdown.toggleFilterMark($filterDropdown, filtersEnabled());
     }
 
     $.each([$publishedByFilter, $accessByFilter], function(_i, selector) {
@@ -97,17 +116,6 @@ var ProtocolsIndex = (function() {
     });
 
     $filterDropdown.on('filter:apply', function() {
-      publishedOnFromFilter = selectDate($publishedOnFromFilter);
-      publishedOnToFilter = selectDate($publishedOnToFilter);
-      modifiedOnFromFilter = selectDate($modifiedOnFromFilter);
-      modifiedOnToFilter = selectDate($modifiedOnToFilter);
-      publishedByFilter = dropdownSelector.getValues($('.published-by-filter'));
-      accessByFilter = dropdownSelector.getValues($('.access-by-filter'));
-      hasDraftFilter = $hasDraft.prop('checked') ? 'true' : '';
-      archivedOnFromFilter = selectDate($archivedOnFromFilter);
-      archivedOnToFilter = selectDate($archivedOnToFilter);
-      protocolsViewSearch = $textFilter.val();
-
       appliedFiltersMark();
       protocolsDatatable.ajax.reload();
     });
@@ -137,28 +145,9 @@ var ProtocolsIndex = (function() {
 
   function initManageAccess() {
     let protocolsContainer = '.protocols-container';
-    let manageAccessModal = '.protocol-assignments-modal';
-
-    function loadManageAccessModal(href) {
-      $.get(href, function(data) {
-        $(protocolsContainer).append($.parseHTML(data.html));
-        $(manageAccessModal).modal('show');
-
-        // Remove modal when it gets closed
-        $(manageAccessModal).on('hidden.bs.modal', function() {
-          $(manageAccessModal).remove();
-        });
-      });
-    }
-
-    protocolsTableEl.on('click', '.protocol-users-link', function(e) {
-      loadManageAccessModal(this.href);
-      e.stopPropagation();
-      e.preventDefault();
-    });
 
     $(protocolsContainer).on('click', '#manageProtocolAccess', function() {
-      loadManageAccessModal($(`tr[data-row-id=${rowsSelected[0]}] .protocol-users-link`).attr('href'));
+      $(`tr[data-row-id=${rowsSelected[0]}] .protocol-users-link`).click();
     });
   }
 
@@ -566,19 +555,43 @@ var ProtocolsIndex = (function() {
             modal.modal('show');
 
             let childrenTableEl = modalBody.find('#linked-children-table');
+            let versionFromDropdown = ALL_VERSIONS_VALUE;
+
+            const initVersionsDropdown = (childrenDatatable) => {
+              const versionSelector = $('#version-selector');
+              dropdownSelector.init(versionSelector, {
+                noEmptyOption: true,
+                singleSelect: true,
+                selectAppearance: 'simple',
+                closeOnSelect: true,
+                onSelect: function() {
+                  versionFromDropdown = dropdownSelector.getValues(versionSelector);
+                  childrenDatatable.ajax.reload();
+                }
+              });
+            };
+
+            let childrenDatatable;
 
             if (childrenTableEl) {
               // Only initialize table if it's present
-              childrenTableEl.DataTable({
+              childrenDatatable = childrenTableEl.DataTable({
                 autoWidth: false,
-                dom: 'RBltpi',
+                dom: 'RBtpl',
                 stateSave: false,
                 buttons: [],
                 processing: true,
                 serverSide: true,
                 ajax: {
                   url: childrenTableEl.data('source'),
-                  type: 'POST'
+                  type: 'POST',
+                  data: function(d) {
+                    if (versionFromDropdown !== ALL_VERSIONS_VALUE) {
+                      d.version = versionFromDropdown;
+                    }
+
+                    return d;
+                  }
                 },
                 colReorder: {
                   fixedColumnsLeft: 1000000 // Disable reordering
@@ -591,6 +604,17 @@ var ProtocolsIndex = (function() {
                 columns: [
                   { data: '1' }
                 ],
+                lengthMenu: [
+                  [10, 25, 50],
+                  [
+                    I18n.t('protocols.index.linked_children.length_menu', { number: 10 }),
+                    I18n.t('protocols.index.linked_children.length_menu', { number: 25 }),
+                    I18n.t('protocols.index.linked_children.length_menu', { number: 50 })
+                  ]
+                ],
+                language: {
+                  lengthMenu: '_MENU_'
+                },
                 fnDrawCallback: function() {
                   animateSpinner(this, false);
                 },
@@ -599,6 +623,8 @@ var ProtocolsIndex = (function() {
                 }
               });
             }
+
+            initVersionsDropdown(childrenDatatable);
           },
           error: function() {
             // TODO

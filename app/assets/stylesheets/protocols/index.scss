@@ -132,8 +132,11 @@
         background: $color-concrete;
         margin-left: .75em;
         text-align: center;
+        line-height: 24px;
+        height: 28px;
+        width: 28px;
       }
-    }
+  }
 
     .selected {
       .global-avatar-container,
@@ -305,5 +308,31 @@
       display: block;
       line-height: 16px;
     }
+  }
+}
+
+#linked-children-modal {
+  .dataTables_length .form-control {
+    width: 160px;
+  }
+
+  .version-dropdown {
+    align-items: center;
+    column-gap: 8px;
+    display: flex;
+    margin-top: 16px;
+
+    label {
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    .dropdown-selector-container {
+      width: 86px;
+    }
+  }
+
+  .linked-children-datatable {
+    margin-bottom: 16px;
   }
 }

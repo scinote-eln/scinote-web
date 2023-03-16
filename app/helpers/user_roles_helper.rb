@@ -6,7 +6,11 @@ module UserRolesHelper
     permissions = permission_group.constants.map { |const| permission_group.const_get(const) }
 
     roles = user_roles_subset_by_permissions(permissions).order(id: :asc).pluck(:name, :id)
-    roles = [[t('access_permissions.reset'), 'reset']] + roles if with_inherit
+    if with_inherit
+      roles = [[t('access_permissions.reset'), 'reset',
+                t("access_permissions.partials.#{object.class.name.underscore}_member_field.reset_description")]] +
+              roles
+    end
     roles
   end
 
