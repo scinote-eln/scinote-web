@@ -211,8 +211,8 @@ class Constants
   #=============================================================================
 
   HTTP = 'http://'.freeze
-  TUTORIALS_URL = (HTTP + 'goo.gl/YH3fXA').freeze
-  SUPPORT_URL = 'https://scinote-3850750.hs-sites.com/en/knowledge'.freeze
+  TUTORIALS_URL = ENV.fetch('VIDEO_TUTORIALS_URL', "#{HTTP}goo.gl/YH3fXA").freeze
+  SUPPORT_URL = ENV.fetch('KNOWLEDGE_CENTER_URL', 'https://scinote-3850750.hs-sites.com/en/knowledge').freeze
   # Default user picture avatar
   DEFAULT_AVATAR_URL = '/images/:style/missing.png'.freeze
 
@@ -335,7 +335,7 @@ class Constants
   ).freeze
 
   WHITELISTED_ATTRIBUTES = [
-    'href', 'src', 'width', 'height', 'alt', 'cite', 'datetime', 'title',
+    'id', 'href', 'src', 'width', 'height', 'alt', 'cite', 'datetime', 'title',
     'class', 'name', 'xml:lang', 'abbr', 'style', 'target', :data, 'border', 'contenteditable',
     'colspan', 'rowspan'
   ].freeze
@@ -988,7 +988,7 @@ class Constants
     'time' => 0,
     'start' => 0,
     'length' => REPOSITORY_DEFAULT_PAGE_SIZE,
-    'order' => [[2, 'asc']], # Default sorting by 'ID' column
+    'order' => [[3, 'asc']], # Default sorting by 'name' column
     'columns' => [],
     'assigned' => 'assigned',
     'ColReorder' => [*0..7]

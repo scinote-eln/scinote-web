@@ -544,18 +544,16 @@ class User < ApplicationRecord
   end
 
   def self.from_azure_jwt_token(token_payload)
-    includes(:user_identities)
-      .where(
-        'user_identities.provider=? AND user_identities.uid=?',
-        Rails.configuration.x.azure_ad_apps[token_payload[:aud]][:provider],
-        token_payload[:sub]
-      )
-      .references(:user_identities)
-      .take
+    settings = ApplicationSettings.instance
+    provider_conf = settings.values['azure_ad_apps']&.find { |v| v['app_id'] == token_payload[:aud] }
+    return nil unless provider_conf
+
+    joins(:user_identities)
+      .find_by(user_identities: { provider: provider_conf['provider_name'], uid: token_payload[:sub] })
   end
 
   def has_linked_account?(provider)
-    user_identities.where(provider: provider).exists?
+    user_identities.exists?(provider: provider)
   end
 
   # This method must be overwriten for addons that will be installed

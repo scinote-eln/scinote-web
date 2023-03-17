@@ -7,7 +7,7 @@
     </div>
     <div class="items">
       <% experiment_group[:experiments].each do |experiment| %>
-        <li class="item" data-name="<%= experiment.name %>" data-id="<%= experiment.id.base62_encode %>" data-type="exp">
+        <li class="item" data-name="<%= sanitize_input(experiment.name) %>" data-id="<%= experiment.id.base62_encode %>" data-type="exp">
           <span class='sa-type'>Exp</span>
           <span class="item-text"><%= experiment.name %></span>
         </li>

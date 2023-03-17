@@ -1,7 +1,7 @@
 <% limit_reached = projects.length == Constants::ATWHO_SEARCH_LIMIT + 1 %>
 <div class="atwho-scroll-container">
   <% projects.limit(Constants::ATWHO_SEARCH_LIMIT).each do |project| %>
-    <li class="item" data-name="<%= project.name %>" data-id="<%= project.id.base62_encode %>" data-type="prj">
+    <li class="item" data-name="<%= sanitize_input(project.name) %>" data-id="<%= project.id.base62_encode %>" data-type="prj">
       <span class='sa-type'>Prj</span>
       <span class="item-text"><%= project.name %></span>
     </li>

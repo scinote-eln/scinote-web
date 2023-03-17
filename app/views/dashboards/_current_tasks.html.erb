@@ -7,7 +7,7 @@
         <div class="dropdown-menu current-tasks-filters" role="menu" data-team-id="<%= current_team.id %>">
           <div class="header">
             <div class="title"><%= t("dashboard.current_tasks.filter.title") %></div>
-            <div class="btn btn-light clear-button"><i class="fas fa-times-circle"></i><%= t("dashboard.current_tasks.filter.clear") %></div>
+            <button type="button" class="close-dropdown close" aria-label="close">&times;</button>
           </div>
           <div class="select-block">
             <label><%= t("dashboard.current_tasks.filter.sort") %></label>
@@ -52,7 +52,8 @@
                     data-placeholder="<%= t("dashboard.current_tasks.filter.select_experiment") %>"></select>
           </div>
           <div class="footer center">
-            <div class="btn btn-primary apply-filters"><%= t("dashboard.current_tasks.filter.apply") %></div>
+            <div class="btn btn-light clear-button"><%= t("dashboard.current_tasks.filter.clear") %></div>
+            <div class="btn btn-primary apply-filters"><%= t("dashboard.current_tasks.filter.show_results") %></div>
           </div>
         </div>
       </div>

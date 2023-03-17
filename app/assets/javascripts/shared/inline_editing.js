@@ -180,15 +180,14 @@ var inlineEditing = (function() {
         .removeClass('hidden');
       e.stopPropagation();
     })
-    .on('keyup', `${editBlocks} input`, function(e) {
+    .on('keydown', `${editBlocks} input`, function(e) {
       var container = $(this).closest(editBlocks);
       if (e.keyCode === 13) {
         updateField(container);
+      } else if (e.keyCode === 9) {
+        $(`${editBlocks} .cancel-button`).trigger('click');
       }
       e.stopPropagation();
-    })
-    .on('blur', `${editBlocks} input`, function() {
-      $(`${editBlocks} .cancel-button`).trigger('click');
     });
 
   $(window).click((e) => {

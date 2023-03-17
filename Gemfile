@@ -75,7 +75,7 @@ gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'rgl' # Graph framework for project diagram calculations
 gem 'roo', '~> 2.8.2' # Spreadsheet parser
 gem 'rotp'
-gem 'rqrcode' # QR code generator
+gem 'rqrcode', '~> 2.0' # QR code generator
 gem 'rubyzip'
 gem 'scenic', '~> 1.4'
 gem 'sdoc', '~> 1.0', group: :doc

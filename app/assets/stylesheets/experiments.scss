@@ -87,7 +87,7 @@
 
               img {
                 border-radius: 4px;
-                max-height: 76px;
+                max-height: 70px;
               }
             }
           }
@@ -482,7 +482,8 @@
         .card.experiment-card {
           .workflow-img-wrapper {
             align-items: center;
-            background-color: $color-alto;
+            background-color: $color-concrete;
+            border: 1px solid $color-silver-chalice;
             display: flex;
             justify-content: center;
           }

@@ -95,7 +95,7 @@ var InfiniteScroll = (function() {
 
   // Check when load next page
   function scrollHitBottom(con) {
-    return scrollHeight(con) - containerPosition(con) <= 0;
+    return scrollHeight(con) - containerPosition(con) <= 100;
   }
 
   function removeScroll(con) {

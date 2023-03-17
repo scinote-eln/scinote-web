@@ -422,7 +422,17 @@
           this.$emit('stepUpdated')
         }).error(() => {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
-        })
+        }).done(() => {
+          this.$parent.$nextTick(() => {
+            const children = this.$children
+            const lastChild = children[children.length - 1]
+            lastChild.$el.scrollIntoView(false)
+            window.scrollBy({
+              top: 200,
+              behavior: 'smooth'
+            });
+          })
+        });
       },
       addAttachment(attachment) {
         this.attachments.push(attachment);

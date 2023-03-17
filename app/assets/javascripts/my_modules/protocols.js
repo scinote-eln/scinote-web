@@ -1,4 +1,4 @@
-/* global TinyMCE I18n animateSpinner importProtocolFromFile */
+/* global TinyMCE Prism I18n animateSpinner importProtocolFromFile */
 /* global HelperModule DataTableHelpers GLOBAL_CONSTANTS */
 /* eslint-disable no-use-before-define, no-alert, no-restricted-globals, no-underscore-dangle */
 
@@ -13,7 +13,14 @@ function initEditMyModuleDescription() {
   var viewObject = $('#my_module_description_view');
   viewObject.on('click', function(e) {
     if ($(e.target).hasClass('record-info-link')) return;
-    TinyMCE.init('#my_module_description_textarea');
+    TinyMCE.init(
+      '#my_module_description_textarea',
+      {
+        onSaveCallback: () => {
+          Prism.highlightAllUnder(viewObject.get(0));
+        }
+      }
+    );
   }).on('click', 'a', function(e) {
     if ($(this).hasClass('record-info-link')) return;
     e.stopPropagation();

@@ -56,7 +56,7 @@
       border: 1px solid $color-white;
       display: flex;
       height: 3em;
-      padding: 0 .5em;
+      padding: 0 calc((3em - var(--sci-checkbox-size))/2);
       position: sticky;
       position: -webkit-sticky;
       top: 0;
@@ -83,6 +83,11 @@
 
     .table-body {
       display: contents;
+
+      .table-body-cell {
+        display: flex;
+        justify-content: center;
+      }
     }
 
     .loading-overlay {
