@@ -17,8 +17,6 @@ class ProtocolsController < ApplicationController
     show
     versions_modal
     protocol_status_bar
-    updated_at_label
-    preview
     linked_children
     linked_children_datatable
     permissions
@@ -37,10 +35,6 @@ class ProtocolsController < ApplicationController
     update_version_comment
     update_name
     update_authors
-    edit_name_modal
-    edit_keywords_modal
-    edit_authors_modal
-    edit_description_modal
     unlink
     unlink_modal
     revert
@@ -64,7 +58,6 @@ class ProtocolsController < ApplicationController
   ]
   before_action :check_copy_to_repository_permissions, only: %i(
     copy_to_repository
-    copy_to_repository_modal
   )
 
   before_action :check_publish_permission, only: :publish
@@ -92,25 +85,6 @@ class ProtocolsController < ApplicationController
           @type,
           current_user
         )
-      end
-    end
-  end
-
-  def preview
-    respond_to do |format|
-      format.json do
-        render json: {
-          title: I18n.t('protocols.index.preview.title',
-                        protocol: escape_input(@protocol.name)),
-          html: render_to_string(
-            partial: 'protocols/index/protocol_preview_modal_body.html.erb',
-            locals: { protocol: @protocol }
-          ),
-          footer: render_to_string(
-            partial: 'protocols/index/protocol_preview_modal_footer.html.erb',
-            locals: { protocol: @protocol }
-          )
-        }
       end
     end
   end
@@ -154,10 +128,6 @@ class ProtocolsController < ApplicationController
         )
       end
     end
-  end
-
-  def make_private
-    move_protocol('make_private')
   end
 
   def publish
@@ -907,95 +877,12 @@ class ProtocolsController < ApplicationController
     end
   end
 
-  def copy_to_repository_modal
-    @new = Protocol.new
-    @original = Protocol.find(params[:id])
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string({
-            partial: "my_modules/protocols/copy_to_repository_modal_body.html.erb"
-          })
-        }
-      end
-    end
-  end
-
   def protocol_status_bar
     respond_to do |format|
       format.json do
         render json: {
           html: render_to_string({
             partial: "my_modules/protocols/protocol_status_bar.html.erb"
-          })
-        }
-      end
-    end
-  end
-
-  def updated_at_label
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string({
-            partial: "protocols/header/updated_at_label.html.erb"
-          })
-        }
-      end
-    end
-  end
-
-  def edit_name_modal
-    respond_to do |format|
-      format.json do
-        render json: {
-          title: I18n.t('protocols.header.edit_name_modal.title',
-                        protocol: escape_input(@protocol.name)),
-                        html: render_to_string({
-                          partial: "protocols/header/edit_name_modal_body.html.erb"
-                        })
-        }
-      end
-    end
-  end
-
-  def edit_keywords_modal
-    respond_to do |format|
-      format.json do
-        render json: {
-          title: I18n.t('protocols.header.edit_keywords_modal.title',
-                        protocol: escape_input(@protocol.name)),
-                        html: render_to_string({
-                          partial: "protocols/header/edit_keywords_modal_body.html.erb"
-                        }),
-          keywords: @protocol.team.protocol_keywords_list
-        }
-      end
-    end
-  end
-
-  def edit_authors_modal
-    respond_to do |format|
-      format.json do
-        render json: {
-          title: I18n.t('protocols.header.edit_authors_modal.title',
-                        protocol: escape_input(@protocol.name)),
-                        html: render_to_string({
-                          partial: "protocols/header/edit_authors_modal_body.html.erb"
-                        })
-        }
-      end
-    end
-  end
-
-  def edit_description_modal
-    respond_to do |format|
-      format.json do
-        render json: {
-          title: I18n.t('protocols.header.edit_description_modal.title',
-                        protocol: escape_input(@protocol.name)),
-          html: render_to_string({
-            partial: "protocols/header/edit_description_modal_body.html.erb"
           })
         }
       end

@@ -58,8 +58,7 @@ module Dashboard
                       .where('projects.archived IS NOT TRUE')
                       .where('experiments.archived IS NOT TRUE')
                       .where('my_modules.archived IS NOT TRUE')
-                      .where('protocols.protocol_type != ? OR protocols.protocol_type IS NULL',
-                             Protocol.protocol_types[:in_repository_archived])
+                      .where('protocols.archived IS NOT TRUE')
                       .select('
                         CASE
                         WHEN my_modules.id IS NOT NULL THEN

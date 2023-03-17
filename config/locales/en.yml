@@ -2710,9 +2710,6 @@ en:
       back_to_active_protocols: 'Back to active protocols'
       search_bar_placeholder: 'Filter protocols'
       navigation:
-        public: "Team protocols"
-        private: "My protocols"
-        protocolsio: "External protocols"
         archive: "Archive"
       action_toolbar:
         versions: "Versions"
@@ -2762,8 +2759,6 @@ en:
         no_linked_children: "This protocol is not linked to any task."
         length_menu: "Show %{number} per page"
         show_version: "Show version"
-      archive:
-        description: "Archived protocols can only be seen by you. Restoring protocols will return them to their previous location (team/my protocols)."
       restore: "Restore"
       restore_flash_html: "<b>%{count} protocol</b> template(s) successfully restored."
       make_private_unauthorized: "You do not have permission to move selected protocols to My protocols."
@@ -2786,20 +2781,6 @@ en:
       clone:
         success_flash: "Successfully duplicated protocol template '%{new}' from '%{original}'."
         error_flash: "Failed to duplicated protocol template '%{original}'."
-      make_private_results:
-        title: "Move to My protocols results"
-        message_failed: "Failed to move %{nr} protocols to My protocols."
-        message_ok: "Successfully moved %{nr} protocols to My protocols."
-        row_success: "Moved to My protocols"
-        row_renamed: "Moved to My protocols & renamed"
-        row_failed: "Failed"
-      publish_results:
-        title: "Move to Team protocols results"
-        message_failed: "Failed to move %{nr} protocols to Team protocols."
-        message_ok: "Successfully moved %{nr} protocols to Team protocols."
-        row_success: "Moved to Team protocols"
-        row_renamed: "Moved to Team protocols & renamed"
-        row_failed: "Failed"
       import_results:
         title: "Import results"
         message_failed: "Failed to import protocol template(s)."
@@ -2810,27 +2791,6 @@ en:
         row_renamed: "Imported & renamed"
         row_failed: "Failed"
         row_file_too_large: "(Protocol too large)"
-      confirm_archive:
-        title: "Archive protocols"
-        message: "Are you sure you wish to archive the selected protocols? All the task protocols will be unlinked."
-        confirm: "Archive"
-      archive_results:
-        title: "Archive results"
-        message_failed: "Failed to archive %{nr} protocols."
-        message_ok: "Successfully archived %{nr} protocols."
-        row_success: "Archived"
-        row_renamed: "Archived & renamed"
-        row_failed: "Failed"
-        preview: "View"
-      restore_results:
-        title: "Restore results"
-        message_failed: "Failed to restore %{nr} protocols."
-        message_ok: "Successfully restored %{nr} protocols."
-        row_success: "Restored"
-        row_renamed: "Restored & renamed"
-        row_failed: "Failed"
-        row_in_repository_public: "%{protocol} - <i>into Team protocols</i>"
-        row_in_repository_private: "%{protocol} - <i>into My protocols</i>"
       versions:
         title: "%{protocol} versions"
         first_draft_html: "<b>Draft</b>"
