@@ -119,6 +119,18 @@
   }
 }
 
+.device-revocation-modal {
+  .modal-dialog {
+    height: 216px;
+    width: 370px;
+  }
+}
+
+.manage-devices {
+  position: relative;
+  top: 30px;
+}
+
 @media (max-width: 700px) {
   .user-settings {
     .two-factor-container {

@@ -1,0 +1,46 @@
+<%# mobile_app_devices = [['Lenovo ProBook', '07/12/2022'], ['iPhone', '06/12/2022'], ['iMac', '02/12/2022'], ['Acer Air Pro', '01/12/2022']]%>
+<% mobile_app_devices = [] %>
+
+<!-- temporary variable for storing dummy data -->
+
+<div class="connected-devices-description">
+  <h3><%= t("users.registrations.edit.connected_devices.title") %></h3>
+  <% if mobile_app_devices.present? %>
+    <p><%= t("users.registrations.edit.connected_devices.description") %></p>
+    <div id="devicesTable">
+      <div class="devices-table-container">
+        <div class="devices-table">
+          <div class="table-header">
+            <div class="table-header-cell">
+              <%= t("users.registrations.edit.devices_table.device_name") %>
+            </div>
+            <div class="table-header-cell">
+              <%= t("users.registrations.edit.devices_table.added_on") %>
+            </div>
+            <div class="table-header-cell">
+            </div>
+          </div>
+          <div class="table-body">
+            <% mobile_app_devices.each do |device| %>
+              <div class="table-row">
+                <div class="table-body-cell">
+                    <%= device[0] %>
+                </div>
+                <div class="table-body-cell">
+                    <%= device[1] %>
+                </div>
+                <div class="table-body-cell">
+                  <button class="x-button" id="revokeDeviceBtn" data-toggle="modal" data-target="#deviceRevocationModal"><i class="fas fa-times"></i></button>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <p><%= t("users.registrations.edit.connected_devices.empty_state") %></p>
+  <% end %>
+</div>
+
+<%= render partial: 'device_revocation_modal' %>

@@ -38,6 +38,11 @@
    </div>
   </div>
 
+<!-- Manage devices -->
+<div class="manage-devices">
+  <%= render partial: 'users/registrations/manage_devices' %>
+<div>
+
   <!-- User statistics -->
   <div class="row">
     <div class="col-md-12">
@@ -70,6 +75,7 @@
 </div>
 
 <%= render partial: '2fa_modal' %>
+
 <%= render partial: 'users/shared/user_avatars_modal' %>
 
 <%= javascript_pack_tag 'custom/croppie' %>
