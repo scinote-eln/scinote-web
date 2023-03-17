@@ -12,7 +12,7 @@
           <% user_assignment = assignable.user_assignments.find_by(user: user) %>
           <%= render partial: 'access_permissions/partials/user_assignment', locals: { user_assignment: user_assignment, user: user, assignable: assignable } %>
         <% end %>
-        <%= render('access_permissions/partials/default_public_user_role_form', assignable: assignable, editable: false) if assignable.respond_to?(:visible?) && assignable.visible? %>
+        <%= render('access_permissions/partials/default_public_user_role_form', assignable: top_level_assignable, editable: false) if top_level_assignable.respond_to?(:visible?) && top_level_assignable.visible? %>
       </div>
     </div>
   </div>

@@ -13,12 +13,8 @@
     }
 
     &.disabled {
-      color: $color-black;
+      color: $color-volcano;
       opacity: 1;
-
-      .caret {
-        opacity: 0;
-      }
     }
   }
 
@@ -60,7 +56,7 @@
     margin-left: auto;
 
     .caret {
-      margin-left: 20px;
+      margin-left: .75em;
     }
   }
 
