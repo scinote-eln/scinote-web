@@ -2,9 +2,9 @@
 
 module AccessPermissions
   class MyModulesController < ApplicationController
-    before_action :set_project
-    before_action :set_experiment
     before_action :set_my_module
+    before_action :set_experiment
+    before_action :set_project
     before_action :check_read_permissions, only: %i(show)
     before_action :check_manage_permissions, only: %i(edit update)
 
@@ -21,13 +21,22 @@ module AccessPermissions
     end
 
     def update
-      @my_module_member = MyModuleMember.new(current_user, @my_module, @experiment, @project)
+      user_id = permitted_update_params[:user_id]
+      @user_assignment = @my_module.user_assignments.find_by(user_id: user_id, team: current_team)
 
       if permitted_update_params[:user_role_id] == 'reset'
-        @my_module_member.reset(permitted_update_params)
+        @user_assignment.update!(
+          user_role_id: @experiment.user_assignments.find_by(user_id: user_id, team: current_team).user_role_id,
+          assigned: :automatically
+        )
       else
-        @my_module_member.update(permitted_update_params)
+        @user_assignment.update!(
+          user_role_id: permitted_update_params[:user_role_id],
+          assigned: :manually
+        )
       end
+
+      log_change_activity
 
       respond_to do |format|
         format.json do
@@ -39,24 +48,20 @@ module AccessPermissions
     private
 
     def permitted_update_params
-      params.require(:my_module_member)
+      params.require(:user_assignment)
             .permit(%i(user_role_id user_id))
     end
 
     def set_project
-      @project = current_team.projects.find_by(id: params[:project_id])
-
-      render_404 unless @project
+      @project = @experiment.project
     end
 
     def set_experiment
-      @experiment = @project.experiments.find_by(id: params[:experiment_id])
-
-      render_404 unless @experiment
+      @experiment = @my_module.experiment
     end
 
     def set_my_module
-      @my_module = @experiment.my_modules.includes(user_assignments: %i(user user_role)).find_by(id: params[:id])
+      @my_module = MyModule.includes(user_assignments: %i(user user_role)).find_by(id: params[:id])
 
       render_404 unless @my_module
     end
@@ -67,6 +72,21 @@ module AccessPermissions
 
     def check_read_permissions
       render_403 unless can_read_my_module?(@my_module)
+    end
+
+    def log_change_activity
+      Activities::CreateActivityService.call(
+        activity_type: :change_user_role_on_my_module,
+        owner: current_user,
+        subject: @my_module,
+        team: @project.team,
+        project: @project,
+        message_items: {
+          my_module: @my_module.id,
+          user_target: @user_assignment.user_id,
+          role: @user_assignment.user_role.name
+        }
+      )
     end
   end
 end

@@ -38,9 +38,9 @@ class Team < ApplicationRecord
   has_many :protocols, inverse_of: :team, dependent: :destroy
   has_many :repository_protocols,
            (lambda do
-             where(protocol_type: [Protocol.protocol_types[:in_repository_public],
-                                   Protocol.protocol_types[:in_repository_private],
-                                   Protocol.protocol_types[:in_repository_archived]])
+             where(protocol_type: %i(in_repository_published_original
+                                     in_repository_draft
+                                     in_repository_published_version))
            end),
            class_name: 'Protocol'
   has_many :protocol_keywords, inverse_of: :team, dependent: :destroy

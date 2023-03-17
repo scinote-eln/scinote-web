@@ -21,6 +21,7 @@ module PermissionExtends
       READ_ARCHIVED
       MANAGE
       USERS_MANAGE
+      MANAGE_DRAFT
     ).each { |permission| const_set(permission, "protocol_#{permission.underscore}") }
   end
 
@@ -139,7 +140,7 @@ module PermissionExtends
       TeamPermissions::LABEL_TEMPLATES_MANAGE,
       ProtocolPermissions::READ,
       ProtocolPermissions::READ_ARCHIVED,
-      ProtocolPermissions::MANAGE,
+      ProtocolPermissions::MANAGE_DRAFT,
       ReportPermissions::READ,
       ReportPermissions::MANAGE,
       ProjectPermissions::READ,

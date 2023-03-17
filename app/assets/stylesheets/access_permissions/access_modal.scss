@@ -1,16 +1,33 @@
 #user_assignments_modal {
+
+  .btn-role-select {
+    padding: 0 0 0 16px;
+
+    &:hover {
+      background-color: $color-concrete;
+    }
+
+    &:focus {
+      box-shadow: none;
+      outline: none;
+    }
+
+    &.disabled {
+      color: $color-volcano;
+      opacity: 1;
+    }
+  }
+
   .modal-body {
-    max-height: 400px;
-    min-height: 250px;
+    max-height: calc(100vh - 190px);
+    min-height: 370px;
     overflow: auto;
     padding-top: 0;
   }
 
   .member-item {
     border-bottom: 1px solid $modal-header-border-color;
-
-    margin: 0 .5em;
-    padding: .5em;
+    padding: .5em 0;
   }
 
   .user-assignment-role .dropdown-toggle,
@@ -29,10 +46,24 @@
   .user-assignment-controls {
     align-items: center;
     display: flex;
+
+    .text-muted {
+      color: $color-silver-chalice;
+    }
   }
 
   .user-assignment-controls {
     margin-left: auto;
+
+    .caret {
+      margin-left: .75em;
+    }
+  }
+
+  .user-assignment-dropdown {
+    a {
+      padding: 8px 16px;
+    }
   }
 
   .global-avatar-container {

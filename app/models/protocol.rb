@@ -2,9 +2,12 @@
 
 class Protocol < ApplicationRecord
   ID_PREFIX = 'PT'
+
+  include ArchivableModel
   include PrefixedIdModel
   SEARCHABLE_ATTRIBUTES = ['protocols.name', 'protocols.description',
                            'protocols.authors', 'protocol_keywords.name', PREFIXED_ID_SQL].freeze
+  REPOSITORY_TYPES = %i(in_repository_published_original in_repository_draft in_repository_published_version).freeze
 
   include SearchableModel
   include RenamingUtil
@@ -13,17 +16,24 @@ class Protocol < ApplicationRecord
   include PermissionCheckableModel
   include TinyMceImages
 
-  after_update :update_user_assignments, if: -> { saved_change_to_protocol_type? && in_repository? }
+  after_create :auto_assign_protocol_members, if: :visible?
   after_destroy :decrement_linked_children
+  after_save :update_user_assignments, if: -> { saved_change_to_visibility? && in_repository? }
   after_save :update_linked_children
   skip_callback :create, :after, :create_users_assignments, if: -> { in_module? }
+  before_update :change_visibility, if: :default_public_user_role_id_changed?
+  after_update :sync_protocol_assignments, if: :visibility_changed?
 
+  enum visibility: { hidden: 0, visible: 1 }
   enum protocol_type: {
     unlinked: 0,
     linked: 1,
-    in_repository_private: 2,
-    in_repository_public: 3,
-    in_repository_archived: 4
+    in_repository_private: 2, # Deprecated
+    in_repository_public: 3, # Deprecated
+    in_repository_archived: 4, # Deprecated
+    in_repository_published_original: 5,
+    in_repository_draft: 6,
+    in_repository_published_version: 7
   }
 
   auto_strip_attributes :name, :description, nullify: false
@@ -32,91 +42,112 @@ class Protocol < ApplicationRecord
   validates :description, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
   validates :team, presence: true
   validates :protocol_type, presence: true
+  validate :prevent_update,
+           on: :update,
+           if: lambda {
+             # skip check if only public role of visibility changed
+             (changes.keys | %w(default_public_user_role_id visibility)).length != 2 &&
+               in_repository_published? && !protocol_type_changed?(from: 'in_repository_draft') && !archived_changed?
+           }
 
-  with_options if: :in_module? do |protocol|
-    protocol.validates :my_module, presence: true
-    protocol.validates :published_on, absence: true
-    protocol.validates :archived_by, absence: true
-    protocol.validates :archived_on, absence: true
+  with_options if: :in_module? do
+    validates :my_module, presence: true
+    validates :archived_by, absence: true
+    validates :archived_on, absence: true
   end
-  with_options if: :linked? do |protocol|
-    protocol.validates :added_by, presence: true
-    protocol.validates :parent, presence: true
-    protocol.validates :parent_updated_at, presence: true
+  with_options if: :linked? do
+    validate :linked_parent_type_constrain
+    validates :added_by, presence: true
+    validates :parent, presence: true
   end
-
-  with_options if: :in_repository? do |protocol|
-    protocol.validates :name, presence: true
-    protocol.validates :added_by, presence: true
-    protocol.validates :my_module, absence: true
-    protocol.validates :parent, absence: true
-    protocol.validates :parent_updated_at, absence: true
+  with_options if: :in_repository? do
+    validates :name, presence: true
+    validates :added_by, presence: true
+    validates :my_module, absence: true
+    validate :version_number_constraint
   end
-  with_options if: :in_repository_public? do |protocol|
-    # Public protocol must have unique name inside its team
+  with_options if: :in_repository_published_version? do
+    validates :parent, presence: true
+    validate :parent_type_constraint
+    validate :versions_same_name_constraint
+  end
+  with_options if: :in_repository_draft? do
+    # Only one draft can exist for each protocol
+    validate :ensure_single_draft
+    validate :versions_same_name_constraint
+  end
+  with_options if: -> { in_repository? && !parent } do |protocol|
+    # Active protocol must have unique name inside its team
     protocol
       .validates_uniqueness_of :name, case_sensitive: false,
                                scope: :team,
                                conditions: lambda {
                                  where(
-                                   protocol_type:
-                                     Protocol
-                                      .protocol_types[:in_repository_public]
-                                 )
-                               }
-    protocol.validates :published_on, presence: true
-  end
-  with_options if: :in_repository_private? do |protocol|
-    # Private protocol must have unique name inside its team & user scope
-    protocol
-      .validates_uniqueness_of :name, case_sensitive: false,
-                               scope: %i(team added_by),
-                               conditions: lambda {
-                                 where(
-                                   protocol_type:
-                                     Protocol
-                                       .protocol_types[:in_repository_private]
+                                   protocol_type: [
+                                     Protocol.protocol_types[:in_repository_published_original],
+                                     Protocol.protocol_types[:in_repository_draft]
+                                   ],
+                                   parent_id: nil
                                  )
                                }
   end
-  with_options if: :in_repository_archived? do |protocol|
-    # Archived protocol must have unique name inside its team & user scope
-    protocol
-      .validates_uniqueness_of :name, case_sensitive: false,
-                               scope: %i(team added_by),
-                               conditions: lambda {
-                                 where(
-                                   protocol_type:
-                                    Protocol
-                                      .protocol_types[:in_repository_archived]
-                                 )
-                               }
+  with_options if: -> { in_repository? && archived? && !previous_version } do |protocol|
     protocol.validates :archived_by, presence: true
     protocol.validates :archived_on, presence: true
   end
 
   belongs_to :added_by,
-             foreign_key: 'added_by_id',
              class_name: 'User',
              inverse_of: :added_protocols,
+             optional: true
+  belongs_to :last_modified_by,
+             class_name: 'User',
              optional: true
   belongs_to :my_module,
              inverse_of: :protocols,
              optional: true
   belongs_to :team, inverse_of: :protocols
+  belongs_to :default_public_user_role,
+             class_name: 'UserRole',
+             optional: true
+  belongs_to :previous_version,
+             class_name: 'Protocol',
+             inverse_of: :next_version,
+             optional: true
   belongs_to :parent,
-             foreign_key: 'parent_id',
              class_name: 'Protocol',
              optional: true
   belongs_to :archived_by,
-             foreign_key: 'archived_by_id',
              class_name: 'User',
              inverse_of: :archived_protocols, optional: true
   belongs_to :restored_by,
-             foreign_key: 'restored_by_id',
              class_name: 'User',
              inverse_of: :restored_protocols, optional: true
+  belongs_to :published_by,
+             class_name: 'User',
+             inverse_of: :published_protocols, optional: true
   has_many :linked_children,
+           -> { linked },
+           class_name: 'Protocol',
+           foreign_key: 'parent_id'
+  has_one  :next_version,
+           class_name: 'Protocol',
+           foreign_key: 'previous_version_id',
+           inverse_of: :previous_version,
+           dependent: :destroy
+  has_one  :latest_published_version,
+           lambda {
+             in_repository_published_version.select('DISTINCT ON (parent_id) *')
+                                            .order(:parent_id, version_number: :desc)
+           },
+           class_name: 'Protocol',
+           foreign_key: 'parent_id'
+  has_one  :draft,
+           -> { in_repository_draft.select('DISTINCT ON (parent_id) *').order(:parent_id) },
+           class_name: 'Protocol',
+           foreign_key: 'parent_id'
+  has_many :published_versions,
+           -> { in_repository_published_version },
            class_name: 'Protocol',
            foreign_key: 'parent_id'
   has_many :protocol_protocol_keywords,
@@ -131,61 +162,24 @@ class Protocol < ApplicationRecord
                   page = 1,
                   _current_team = nil,
                   options = {})
-    team_ids = Team.joins(:user_teams)
-                   .where(user_teams: { user_id: user.id })
-                   .distinct
-                   .pluck(:id)
+    repository_protocols = latest_available_versions(user.teams)
+                           .with_granted_permissions(user, ProtocolPermissions::READ)
+                           .select(:id)
+    repository_protocols = repository_protocols.active unless include_archived
 
-    module_ids = MyModule.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-                         .pluck(:id)
+    module_ids = MyModule.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT).pluck(:id)
 
-    where_str =
-      '(protocol_type IN (?) AND my_module_id IN (?)) OR ' \
-      '(protocol_type = ? AND protocols.team_id IN (?) AND ' \
-      'added_by_id = ?) OR (protocol_type = ? AND protocols.team_id IN (?))'
+    new_query = Protocol
+                .where(
+                  '(protocol_type IN (?) AND my_module_id IN (?)) OR (protocols.id IN (?))',
+                  [Protocol.protocol_types[:unlinked], Protocol.protocol_types[:linked]],
+                  module_ids,
+                  repository_protocols
+                )
 
-    if include_archived
-      where_str +=
-        ' OR (protocol_type = ? AND protocols.team_id IN (?) ' \
-        'AND added_by_id = ?)'
-      new_query = Protocol
-                  .where(
-                    where_str,
-                    [Protocol.protocol_types[:unlinked],
-                     Protocol.protocol_types[:linked]],
-                    module_ids,
-                    Protocol.protocol_types[:in_repository_private],
-                    team_ids,
-                    user.id,
-                    Protocol.protocol_types[:in_repository_public],
-                    team_ids,
-                    Protocol.protocol_types[:in_repository_archived],
-                    team_ids,
-                    user.id
-                  )
-    else
-      new_query = Protocol
-                  .where(
-                    where_str,
-                    [Protocol.protocol_types[:unlinked],
-                     Protocol.protocol_types[:linked]],
-                    module_ids,
-                    Protocol.protocol_types[:in_repository_private],
-                    team_ids,
-                    user.id,
-                    Protocol.protocol_types[:in_repository_public],
-                    team_ids
-                  )
-    end
-
-    new_query = new_query
-                .distinct
-                .joins('LEFT JOIN protocol_protocol_keywords ON ' \
-                       'protocols.id = protocol_protocol_keywords.protocol_id')
-                .joins('LEFT JOIN protocol_keywords ' \
-                       'ON protocol_keywords.id = ' \
-                       'protocol_protocol_keywords.protocol_keyword_id')
-                .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
+    new_query = new_query.left_outer_joins(:protocol_keywords)
+                         .where_attributes_like(SEARCHABLE_ATTRIBUTES, query, options)
+                         .distinct
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
@@ -195,17 +189,37 @@ class Protocol < ApplicationRecord
     end
   end
 
-  def self.viewable_by_user(user, teams)
-    where(my_module: MyModule.viewable_by_user(user, teams))
-      .or(where(team: teams)
-            .where('protocol_type = 3 OR '\
-                   '(protocol_type = 2 AND added_by_id = :user_id)',
-                   user_id: user.id))
+  def self.latest_available_versions(teams)
+    team_protocols = where(team: teams)
+
+    original_without_versions = team_protocols
+                                .left_outer_joins(:published_versions)
+                                .where(protocol_type: Protocol.protocol_types[:in_repository_published_original])
+                                .where(published_versions: { id: nil })
+                                .select(:id)
+    published_versions = team_protocols
+                         .where(protocol_type: Protocol.protocol_types[:in_repository_published_version])
+                         .order(:parent_id, version_number: :desc)
+                         .select('DISTINCT ON (parent_id) id')
+    new_drafts = team_protocols
+                 .where(protocol_type: Protocol.protocol_types[:in_repository_draft], parent_id: nil)
+                 .select(:id)
+
+    where('protocols.id IN ((?) UNION (?) UNION (?))', original_without_versions, published_versions, new_drafts)
   end
 
+  def self.viewable_by_user(user, teams)
+    where(team: teams, protocol_type: REPOSITORY_TYPES).with_granted_permissions(user, ProtocolPermissions::READ)
+                                                       .or(where(my_module: MyModule.viewable_by_user(user, teams)))
+  end
 
   def self.filter_by_teams(teams = [])
     teams.blank? ? self : where(team: teams)
+  end
+
+  def original_code
+    # returns linked protocol code, or code of the original version of the linked protocol
+    parent&.parent&.code || parent&.code || code
   end
 
   def insert_step(step, position)
@@ -224,20 +238,45 @@ class Protocol < ApplicationRecord
     in_module? ? my_module.created_by : added_by
   end
 
+  def published_versions_with_original
+    team.protocols
+        .in_repository_published_version
+        .where(parent: self)
+        .or(team.protocols.in_repository_published_original.where(id: id))
+  end
+
+  def initial_draft?
+    in_repository_draft? && parent.blank?
+  end
+
+  def newer_published_version_present?
+    if in_repository_published_original?
+      published_versions.any?
+    elsif in_repository_published_version?
+      parent.published_versions.where('version_number > ?', version_number).any?
+    else
+      false
+    end
+  end
+
+  def latest_published_version_or_self
+    latest_published_version || self
+  end
+
   def permission_parent
     in_module? ? my_module : team
   end
 
   def linked_modules
-    MyModule.joins(:protocols).where('protocols.parent_id = ?', id)
+    MyModule.joins(:protocols).where(protocols: { parent_id: id })
   end
 
   def linked_experiments(linked_mod)
-    Experiment.where('id IN (?)', linked_mod.pluck(:experiment_id).uniq)
+    Experiment.where(id: linked_mod.distinct.select(:experiment_id))
   end
 
   def linked_projects(linked_exp)
-    Project.where('id IN (?)', linked_exp.pluck(:project_id).uniq)
+    Project.where(id: linked_exp.distinct.select(:project_id))
   end
 
   def self.new_blank_for_module(my_module)
@@ -285,38 +324,27 @@ class Protocol < ApplicationRecord
   end
 
   def in_repository_active?
-    in_repository_private? || in_repository_public?
+    in_repository? && active?
   end
 
   def in_repository?
-    in_repository_active? || in_repository_archived?
+    in_repository_published? || in_repository_draft?
+  end
+
+  def in_repository_published?
+    in_repository_published_original? || in_repository_published_version?
   end
 
   def in_module?
     unlinked? || linked?
   end
 
-  def linked_no_diff?
-    linked? &&
-      updated_at == parent_updated_at &&
-      parent.updated_at == parent_updated_at
-  end
-
   def newer_than_parent?
-    linked? && parent.updated_at == parent_updated_at &&
-      updated_at > parent_updated_at
+    linked? && updated_at > parent.published_on
   end
 
   def parent_newer?
-    linked? &&
-      updated_at == parent_updated_at &&
-      parent.updated_at > parent_updated_at
-  end
-
-  def parent_and_self_newer?
-    linked? &&
-      parent.updated_at > parent_updated_at &&
-      updated_at > parent_updated_at
+    linked? && parent.newer_published_version_present?
   end
 
   def number_of_steps
@@ -339,69 +367,8 @@ class Protocol < ApplicationRecord
     st
   end
 
-  def make_private(user)
-    # Don't update "updated_at" timestamp
-    self.record_timestamps = false
-
-    self.added_by = user
-    self.published_on = nil
-    self.archived_by = nil
-    self.archived_on = nil
-    self.restored_by = nil
-    self.restored_on = nil
-    self.protocol_type = Protocol.protocol_types[:in_repository_private]
-    result = save
-
-    if result
-      Activities::CreateActivityService
-        .call(activity_type: :move_protocol_in_repository,
-              owner: user,
-              subject: self,
-              team: team,
-              message_items: {
-                protocol: id,
-                storage: I18n.t('activities.protocols.team_to_my_message')
-              })
-    end
-    result
-  end
-
-  # This publish action simply moves the protocol from
-  # the private section in the repository into the public
-  # section
-  def publish(user)
-    # Don't update "updated_at" timestamp
-    self.record_timestamps = false
-
-    self.added_by = user
-    self.published_on = Time.now
-    self.archived_by = nil
-    self.archived_on = nil
-    self.restored_by = nil
-    self.restored_on = nil
-    self.protocol_type = Protocol.protocol_types[:in_repository_public]
-    result = save
-
-    if result
-      Activities::CreateActivityService
-        .call(activity_type: :move_protocol_in_repository,
-              owner: user,
-              subject: self,
-              team: team,
-              message_items: {
-                protocol: id,
-                storage: I18n.t('activities.protocols.my_to_team_message')
-              })
-    end
-    result
-  end
-
   def archive(user)
     return nil unless can_destroy?
-
-    # Don't update "updated_at" timestamp
-    self.record_timestamps = false
-
     # We keep published_on present, so we know (upon restoring)
     # where the protocol was located
 
@@ -409,19 +376,23 @@ class Protocol < ApplicationRecord
     self.archived_on = Time.now
     self.restored_by = nil
     self.restored_on = nil
-    self.protocol_type = Protocol.protocol_types[:in_repository_archived]
+    self.archived = true
     result = save
 
     # Update all module protocols that had
     # parent set to this protocol
     if result
-      Protocol.where(parent: self).find_each do |p|
-        p.update(
-          parent: nil,
-          parent_updated_at: nil,
-          protocol_type: :unlinked
-        )
-      end
+      reload
+      Protocol.where(
+        parent: self,
+        protocol_type: %i(in_repository_draft in_repository_published_version)
+      ).update(
+        archived_by: user,
+        archived_on: archived_on,
+        restored_by: nil,
+        restored_on: nil,
+        archived: true
+      )
 
       Activities::CreateActivityService
         .call(activity_type: :archive_protocol_in_repository,
@@ -436,22 +407,27 @@ class Protocol < ApplicationRecord
   end
 
   def restore(user)
-    # Don't update "updated_at" timestamp
-    self.record_timestamps = false
-
     self.archived_by = nil
     self.archived_on = nil
     self.restored_by = user
     self.restored_on = Time.now
-    if published_on.present?
-      self.published_on = Time.now
-      self.protocol_type = Protocol.protocol_types[:in_repository_public]
-    else
-      self.protocol_type = Protocol.protocol_types[:in_repository_private]
-    end
+    self.archived = false
+
     result = save
 
     if result
+      reload
+      Protocol.where(
+        parent: self,
+        protocol_type: %i(in_repository_draft in_repository_published_version)
+      ).update(
+        archived_by: nil,
+        archived_on: nil,
+        restored_by: user,
+        restored_on: restored_on,
+        archived: false
+      )
+
       Activities::CreateActivityService
         .call(activity_type: :restore_protocol_in_repository,
               owner: user,
@@ -464,12 +440,10 @@ class Protocol < ApplicationRecord
     result
   end
 
-  def update_keywords(keywords)
+  def update_keywords(keywords, user)
     result = true
     begin
       Protocol.transaction do
-        self.record_timestamps = false
-
         # First, destroy all keywords
         protocol_protocol_keywords.destroy_all
         if keywords.present?
@@ -477,6 +451,7 @@ class Protocol < ApplicationRecord
             kw = ProtocolKeyword.find_or_create_by(name: kw_name, team: team)
             protocol_keywords << kw
           end
+          update(last_modified_by: user)
         end
       end
     rescue StandardError
@@ -487,46 +462,28 @@ class Protocol < ApplicationRecord
 
   def unlink
     self.parent = nil
-    self.parent_updated_at = nil
+    self.linked_at = nil
     self.protocol_type = Protocol.protocol_types[:unlinked]
     save!
   end
 
-  def update_parent(current_user)
-    ActiveRecord::Base.no_touching do
-      # First, destroy parent's step contents
-      parent.destroy_contents
-      parent.reload
-
-      # Now, clone step contents
-      Protocol.clone_contents(self, parent, current_user, false)
-    end
-
-    # Lastly, update the metadata
-    parent.reload
-    parent.record_timestamps = false
-    parent.updated_at = updated_at
-    parent.save!
-    self.record_timestamps = false
-    self.parent_updated_at = updated_at
-    save!
-  end
-
-  def update_from_parent(current_user)
+  def update_from_parent(current_user, source)
     ActiveRecord::Base.no_touching do
       # First, destroy step contents
       destroy_contents
 
       # Now, clone parent's step contents
-      Protocol.clone_contents(parent, self, current_user, false)
+      Protocol.clone_contents(source, self, current_user, false)
     end
 
     # Lastly, update the metadata
     reload
     self.record_timestamps = false
-    self.updated_at = parent.updated_at
-    self.parent_updated_at = parent.updated_at
+    self.updated_at = source.published_on
     self.added_by = current_user
+    self.last_modified_by = current_user
+    self.parent = source
+    self.linked_at = Time.zone.now
     save!
   end
 
@@ -543,51 +500,53 @@ class Protocol < ApplicationRecord
     reload
     self.name = source.name
     self.record_timestamps = false
-    self.updated_at = source.updated_at
+    self.updated_at = source.published_on
     self.parent = source
-    self.parent_updated_at = source.updated_at
     self.added_by = current_user
+    self.last_modified_by = current_user
+    self.linked_at = Time.zone.now
     self.protocol_type = Protocol.protocol_types[:linked]
     save!
   end
 
-  def copy_to_repository(new_name, new_protocol_type, link_protocols, current_user)
-    clone = Protocol.new(
-      name: new_name,
-      description: description,
-      protocol_type: new_protocol_type,
-      added_by: current_user,
-      team: team
-    )
-    clone.published_on = Time.now if clone.in_repository_public?
-
+  def copy_to_repository(clone, current_user)
+    clone.team = team
+    clone.protocol_type = :in_repository_draft
+    clone.added_by = current_user
+    clone.last_modified_by = current_user
+    clone.description = description
     # Don't proceed further if clone is invalid
     return clone if clone.invalid?
 
     ActiveRecord::Base.no_touching do
       # Okay, clone seems to be valid: let's clone it
       clone = deep_clone(clone, current_user)
-
-      # If the above operation went well, update published_on
-      # timestamp
-      clone.update(published_on: Time.zone.now) if clone.in_repository_public?
-    end
-
-    # Link protocols if neccesary
-    if link_protocols
-      reload
-      self.name = clone.name
-      self.record_timestamps = false
-      self.added_by = current_user
-      self.parent = clone
-      ts = clone.updated_at
-      self.parent_updated_at = ts
-      self.updated_at = ts
-      self.protocol_type = Protocol.protocol_types[:linked]
-      save!
     end
 
     clone
+  end
+
+  def save_as_draft(current_user)
+    parent_protocol = parent || self
+    version = (parent_protocol.latest_published_version || self).version_number + 1
+
+    draft = dup
+    draft.version_number = version
+    draft.protocol_type = :in_repository_draft
+    draft.parent = parent_protocol
+    draft.published_by = nil
+    draft.published_on = nil
+    draft.version_comment = nil
+    draft.previous_version = self
+    draft.last_modified_by = current_user
+
+    return draft if draft.invalid?
+
+    ActiveRecord::Base.no_touching do
+      draft = deep_clone(draft, current_user)
+    end
+
+    draft
   end
 
   def deep_clone_my_module(my_module, current_user)
@@ -600,7 +559,6 @@ class Protocol < ApplicationRecord
     if linked?
       clone.added_by = current_user
       clone.parent = parent
-      clone.parent_updated_at = parent_updated_at
     end
 
     deep_clone(clone, current_user)
@@ -612,26 +570,27 @@ class Protocol < ApplicationRecord
       authors: authors,
       description: description,
       added_by: current_user,
+      last_modified_by: current_user,
       team: team,
-      protocol_type: protocol_type,
-      published_on: in_repository_public? ? Time.now : nil
+      protocol_type: :in_repository_draft,
+      skip_user_assignments: true
     )
 
     cloned = deep_clone(clone, current_user)
 
     if cloned
+      deep_clone_user_assginments(clone)
       Activities::CreateActivityService
         .call(activity_type: :copy_protocol_in_repository,
-             owner: current_user,
-             subject: self,
-             team: team,
-             project: nil,
-             message_items: {
-               protocol_new: clone.id,
-               protocol_original: id
-             })
+              owner: current_user,
+              subject: self,
+              team: team,
+              project: nil,
+              message_items: {
+                protocol_new: clone.id,
+                protocol_original: id
+              })
     end
-
     cloned
   end
 
@@ -655,25 +614,76 @@ class Protocol < ApplicationRecord
     steps.map(&:can_destroy?).all?
   end
 
-  def add_team_users_as_viewers!(assigned_by)
-    viewer_role = UserRole.find_predefined_viewer_role
-    team.user_assignments.where.not(user: assigned_by).find_each do |user_assignment|
-      new_user_assignment = UserAssignment.find_or_initialize_by(user: user_assignment.user, assignable: self)
-      new_user_assignment.user_role = viewer_role
+  def create_public_user_assignments!(assigned_by)
+    public_role = default_public_user_role || UserRole.find_predefined_viewer_role
+    team.user_assignments.where.not(user: assigned_by).find_each do |team_user_assignment|
+      new_user_assignment = user_assignments.find_or_initialize_by(user: team_user_assignment.user)
+      next if new_user_assignment.manually_assigned?
+
+      new_user_assignment.user_role = public_role
       new_user_assignment.assigned_by = assigned_by
       new_user_assignment.assigned = :automatically
       new_user_assignment.save!
     end
   end
 
+  def child_version_protocols
+    published_versions.or(Protocol.where(id: draft&.id))
+  end
+
+  def sync_child_protocol_user_assignment(user_assignment, child_protocol_id = nil)
+    # Copy user assignments to child protocol(s)
+
+    Protocol.transaction(requires_new: true) do
+      # Reload to ensure a potential new draft is also included in child versions
+      reload
+
+      (
+        # all or single child version protocol
+        child_protocol_id ? child_version_protocols.where(id: child_protocol_id) : child_version_protocols
+      ).find_each do |child_protocol|
+        child_assignment = child_protocol.user_assignments.find_or_initialize_by(
+          user: user_assignment.user
+        )
+
+        if user_assignment.destroyed?
+          child_assignment.destroy! if child_assignment.persisted?
+          next
+        end
+
+        child_assignment.update!(
+          user_assignment.attributes.slice(
+            'user_role_id',
+            'assigned',
+            'assigned_by_id',
+            'team_id'
+          )
+        )
+      end
+    end
+  end
+
   private
 
+  def after_user_assignment_changed(user_assignment)
+    return unless in_repository_published_original?
+
+    sync_child_protocol_user_assignment(user_assignment)
+  end
+
+  def auto_assign_protocol_members
+    UserAssignments::ProtocolGroupAssignmentJob.perform_now(
+      team,
+      self,
+      last_modified_by || created_by
+    )
+  end
+
   def update_user_assignments
-    case protocol_type
-    when 'in_repository_public'
-      assigned_by = protocol_type_was == 'in_repository_archived' && restored_by || added_by
-      add_team_users_as_viewers!(assigned_by)
-    when 'in_repository_private', 'in_repository_archived'
+    case visibility
+    when 'visible'
+      create_public_user_assignments!(added_by)
+    when 'hidden'
       automatic_user_assignments.where.not(user: added_by).destroy_all
     end
   end
@@ -713,5 +723,54 @@ class Protocol < ApplicationRecord
 
   def decrement_linked_children
     parent.decrement!(:nr_of_linked_children) if parent.present?
+  end
+
+  def prevent_update
+    errors.add(:base, I18n.t('activerecord.errors.models.protocol.unchangable'))
+  end
+
+  def linked_parent_type_constrain
+    unless parent.in_repository_published?
+      errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_parent_type'))
+    end
+  end
+
+  def parent_type_constraint
+    unless parent.in_repository_published_original?
+      errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_parent_type'))
+    end
+  end
+
+  def versions_same_name_constraint
+    if parent.present? && !parent.name.eql?(name)
+      errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_version_name'))
+    end
+  end
+
+  def version_number_constraint
+    if Protocol.where(protocol_type: Protocol::REPOSITORY_TYPES)
+               .where.not(id: id)
+               .where(version_number: version_number)
+               .where('(parent_id = :parent_id OR id = :parent_id)', parent_id: (parent_id || id)).any?
+      errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_version_number'))
+    end
+  end
+
+  def ensure_single_draft
+    if parent&.draft && parent.draft.id != id
+      errors.add(:base, I18n.t('activerecord.errors.models.protocol.wrong_parent_draft_number'))
+    end
+  end
+
+  def change_visibility
+    self.visibility = default_public_user_role_id.present? ? :visible : :hidden
+  end
+
+  def sync_protocol_assignments
+    if visible?
+      auto_assign_protocol_members
+    else
+      user_assignments.where(assigned: :automatically).destroy_all
+    end
   end
 end

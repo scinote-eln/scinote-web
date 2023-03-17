@@ -1,23 +1,19 @@
 <% query ||= nil %>
-<% text = query.present? ? highlight(protocol.name, query.strip.split(/\s+/)) : (protocol.name.blank? ? t("search.index.no_name") : protocol.name) %>
+<% text = query.present? ? highlight(escape_input(protocol.name), query.strip.split(/\s+/)) : (protocol.name.blank? ? t('search.index.no_name') : escape_input(protocol.name)) %>
 
-<% if protocol.in_repository_public? %>
+<% if protocol.in_repository? %>
   <span class="label label-info">
-    <%=t "search.index.public" %>
-  </span>
-  &nbsp;
-<% elsif protocol.in_repository_private? %>
-  <span class="label label-info">
-    <%=t "search.index.private" %>
-  </span>
-  &nbsp;
-<% elsif protocol.in_repository_archived? %>
-  <span class="label label-warning">
-    <%=t "search.index.archived" %>
+    <%= t('search.index.in_repository') %>
   </span>
   &nbsp;
 <% end %>
-<% if can_read_protocol_in_module?(protocol) || can_read_protocol_in_repository?(protocol) %>
+<% if protocol.archived? %>
+  <span class="label label-warning">
+    <%= t('search.index.archived') %>
+  </span>
+  &nbsp;
+<% end %>
+<% if protocol.in_module? && can_read_protocol_in_module?(protocol) || protocol.in_repository? && can_read_protocol_in_repository?(protocol) %>
   <%= link_to text, '#', 'data-action': 'protocol-preview', 'data-url': preview_protocol_path(protocol) %>
 
   <%= javascript_include_tag "handsontable.full" %>

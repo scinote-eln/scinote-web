@@ -5,7 +5,10 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="confirm-link-update-modal-label"></h4>
       </div>
-      <div class="modal-body"></div>
+      <div class="modal-body">
+        <p class="message"></p>
+        <p class="warning"><%= t('my_modules.protocols.confirm_link_update_modal.warning') %></p>
+      </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.cancel") %></button>
         <button type="button" class="btn btn-success" data-action="submit"></button>

@@ -64,7 +64,7 @@
     tr {
       &.selected,
       .selected {
-        background-color: $color-alto;
+        background-color: $color-concrete;
       }
     }
 
@@ -78,6 +78,10 @@
 
       &:last-child {
         display: table-cell;
+      }
+
+      .nowrap {
+        white-space: nowrap;
       }
     }
 
@@ -127,7 +131,10 @@
     }
 
     &.active {
+      min-height: 36px;
       a {
+        min-width: 36px;
+        min-height: 36px;
         background-color: inherit;
         border: 1px solid $brand-primary;
         color: inherit;

@@ -420,12 +420,6 @@ mark,.mark {
   padding: 10px;
 }
 
-/** Settings */
-.nav-settings {
-  margin-top: 15px;
-  margin-bottom: 0;
-}
-
 .tab-pane-settings {
   background-color: $color-white;
   padding: 15px;
@@ -523,22 +517,6 @@ mark,.mark {
 }
 
 .protocols-datatable {
-  .dataTables_wrapper {
-    clear: both;
-
-    .main-actions,
-    .pagination-row {
-      display: flex;
-    }
-
-    .dataTables_filter,
-    .dataTables_info,
-    .dataTables_paginate,
-    .dataTables_length {
-      flex-grow: 1;
-    }
-  }
-
   table {
     tbody tr.selected {
       & > td:nth-child(3), td:nth-child(4) {
@@ -576,9 +554,12 @@ mark,.mark {
 
   table tbody tr .breadcrumb {
     padding: 0 5px;
+    position: relative;
+    right: 15px;
 
     & li + li::before {
-      content: "> ";
+      color: $color-volcano;
+      content: "/ ";
     }
   }
 
@@ -593,6 +574,10 @@ mark,.mark {
   .dataTables_info {
     padding-top: 8px;
   }
+}
+
+.no-linked-children {
+  padding: 16px 0;
 }
 
 a.edit-name-link small {
@@ -864,15 +849,6 @@ ul.content-activities {
       right: -1px;
       top: -1px;
     }
-  }
-}
-
-.load-from-repository-protocols-datatable {
-  clear: right;
-
-  & .dataTables_wrapper .dataTables_filter {
-    float: right;
-    margin-top: 15px;
   }
 }
 

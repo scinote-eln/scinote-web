@@ -429,7 +429,15 @@ class Extends
     task_step_checklist_duplicated: 226,
     protocol_step_text_duplicated: 227,
     protocol_step_table_duplicated: 228,
-    protocol_step_checklist_duplicated: 229
+    protocol_step_checklist_duplicated: 229,
+    protocol_template_published: 230,
+    protocol_template_revision_notes_updated: 231,
+    protocol_template_draft_deleted: 232,
+    protocol_template_access_granted: 233,
+    protocol_template_access_changed: 234,
+    protocol_template_access_revoked: 235,
+    task_protocol_save_to_template: 236,
+    protocol_template_draft_created: 237
   }
 
   ACTIVITY_GROUPS = {
@@ -438,7 +446,7 @@ class Extends
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
            *146..148, 166],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
-                    217, 168, 171, 177, 184, 185, 188, 189, *192..203, 222, 224, 225, 226],
+                    217, 168, 171, 177, 184, 185, 188, 189, *192..203, 222, 224, 225, 226, 236],
     task_inventory: [55, 56, 146, 147, 183],
     experiment: [*27..31, 57, 141, 165],
     reports: [48, 50, 49, 163, 164],
@@ -446,10 +454,12 @@ class Extends
                   78, 96, 107, 113, 114, *133..136, 180, 181, 182],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 170, 173, 179, 187, 186,
-                          190, 191, *204..215, 220, 221, 223, 227, 228, 229],
+                          190, 191, *204..215, 220, 221, 223, 227, 228, 229, *230..235, 237],
     team: [92, 94, 93, 97, 104],
     label_repository: [*216..219]
   }
+
+  TOP_LEVEL_ASSIGNABLES = %w(Project Team Protocol Repository).freeze
 
   SHARED_INVENTORIES_PERMISSION_LEVELS = {
     not_shared: 0,

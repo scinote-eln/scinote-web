@@ -295,7 +295,7 @@ class StepsController < ApplicationController
   end
 
   def check_protocol_manage_permissions
-    render_403 unless can_manage_protocol_in_module?(@protocol) || can_manage_protocol_in_repository?(@protocol)
+    render_403 unless can_manage_protocol_in_module?(@protocol) || can_manage_protocol_draft_in_repository?(@protocol)
   end
 
   def check_manage_permissions
@@ -306,7 +306,7 @@ class StepsController < ApplicationController
     if @my_module
       render_403 unless can_manage_my_module_steps?(@my_module)
     else
-      render_403 unless can_manage_protocol_in_repository?(@protocol)
+      render_403 unless can_manage_protocol_draft_in_repository?(@protocol)
     end
   end
 

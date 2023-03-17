@@ -7,10 +7,19 @@ class ProtocolSerializer < ActiveModel::Serializer
   include ActionView::Helpers::TextHelper
 
   attributes :name, :id, :urls, :description, :description_view, :updated_at, :in_repository,
-             :created_at_formatted, :updated_at_formatted, :added_by, :authors, :keywords
+             :created_at_formatted, :updated_at_formatted, :added_by, :authors, :keywords, :version, :code,
+             :published, :version_comment, :archived, :linked, :disabled_drafting
 
   def updated_at
     object.updated_at.to_i
+  end
+
+  def version
+    object.in_repository_draft? ? I18n.t('protocols.draft') : object.version_number
+  end
+
+  def published
+    object.in_repository_published?
   end
 
   def added_by
@@ -32,6 +41,10 @@ class ProtocolSerializer < ActiveModel::Serializer
     object.protocol_keywords.map { |i| { label: i.name, value: i.name } }
   end
 
+  def code
+    object&.parent&.code || object.code
+  end
+
   def description_view
     @user = @instance_options[:user]
     custom_auto_link(object.tinymce_render('description'),
@@ -49,7 +62,9 @@ class ProtocolSerializer < ActiveModel::Serializer
       load_from_repo_url: load_from_repo_url,
       save_to_repo_url: save_to_repo_url,
       export_url: export_url,
-      import_url: import_url,
+      unlink_url: unlink_url,
+      revert_protocol_url: revert_protocol_url,
+      update_protocol_url: update_protocol_url,
       steps_url: steps_url,
       reorder_steps_url: reorder_steps_url,
       add_step_url: add_step_url,
@@ -57,12 +72,27 @@ class ProtocolSerializer < ActiveModel::Serializer
       update_protocol_description_url: update_protocol_description_url,
       update_protocol_authors_url: update_protocol_authors_url,
       update_protocol_keywords_url: update_protocol_keywords_url,
-      delete_steps_url: delete_steps_url
+      delete_steps_url: delete_steps_url,
+      publish_url: publish_url,
+      save_as_draft_url: save_as_draft_url,
+      versions_modal_url: versions_modal_url,
+      print_protocol_url: print_protocol_url
     }
   end
 
   def in_repository
     !object.in_module?
+  end
+
+  def disabled_drafting
+    return false unless can_create_protocols_in_repository?(object.team)
+
+    %(in_repository_published_original in_repository_published_version).include?(object.protocol_type) &&
+      (object.parent || object).draft.present? && !object.archived
+  end
+
+  def linked
+    object.linked?
   end
 
   private
@@ -79,12 +109,6 @@ class ProtocolSerializer < ActiveModel::Serializer
     copy_to_repository_modal_protocol_path(object, format: :json)
   end
 
-  def import_url
-    return unless can_manage_protocol_in_module?(object)
-
-    load_from_file_protocol_path(object, format: :json)
-  end
-
   def export_url
     return unless can_read_protocol_in_module?(object)
 
@@ -97,20 +121,50 @@ class ProtocolSerializer < ActiveModel::Serializer
     steps_path(protocol_id: object.id)
   end
 
+  def versions_modal_url
+    return unless can_read_protocol_in_repository?(object)
+
+    versions_modal_protocol_path(object.parent || object)
+  end
+
+  def print_protocol_url
+    return unless can_read_protocol_in_repository?(object)
+
+    print_protocol_path(object)
+  end
+
   def reorder_steps_url
-    return unless can_manage_protocol_in_module?(object) || can_manage_protocol_in_repository?(object)
+    return unless can_manage_protocol_in_module?(object) || can_manage_protocol_draft_in_repository?(object)
 
     reorder_protocol_steps_url(protocol_id: object.id)
   end
 
   def add_step_url
-    return unless can_manage_protocol_in_module?(object) || can_manage_protocol_in_repository?(object)
+    return unless can_manage_protocol_in_module?(object) || can_manage_protocol_draft_in_repository?(object)
 
     protocol_steps_path(protocol_id: object.id)
   end
 
+  def unlink_url
+    return unless can_manage_protocol_in_module?(object) && object.linked?
+
+    unlink_modal_protocol_path(object, format: :json)
+  end
+
+  def revert_protocol_url
+    return unless can_read_protocol_in_module?(object) && object.linked? && object.newer_than_parent?
+
+    revert_modal_protocol_path(object, format: :json)
+  end
+
+  def update_protocol_url
+    return unless can_read_protocol_in_module?(object) && object.linked? && object.parent_newer?
+
+    update_from_parent_modal_protocol_path(object, format: :json)
+  end
+
   def update_protocol_name_url
-    if in_repository && can_manage_protocol_in_repository?(object)
+    if in_repository && can_manage_protocol_draft_in_repository?(object)
       name_protocol_path(object)
     elsif can_manage_protocol_in_module?(object)
       protocol_my_module_path(object.my_module)
@@ -118,7 +172,7 @@ class ProtocolSerializer < ActiveModel::Serializer
   end
 
   def update_protocol_description_url
-    if in_repository && can_manage_protocol_in_repository?(object)
+    if in_repository && can_manage_protocol_draft_in_repository?(object)
       description_protocol_path(object)
     elsif can_manage_protocol_in_module?(object)
       protocol_my_module_path(object.my_module)
@@ -126,16 +180,28 @@ class ProtocolSerializer < ActiveModel::Serializer
   end
 
   def update_protocol_authors_url
-    authors_protocol_path(object) if in_repository && can_manage_protocol_in_repository?(object)
+    authors_protocol_path(object) if in_repository && can_manage_protocol_draft_in_repository?(object)
   end
 
   def update_protocol_keywords_url
-    keywords_protocol_path(object) if in_repository && can_manage_protocol_in_repository?(object)
+    keywords_protocol_path(object) if in_repository && can_manage_protocol_draft_in_repository?(object)
   end
 
   def delete_steps_url
-    return unless can_manage_protocol_in_module?(object) || can_manage_protocol_in_repository?(object)
+    return unless can_manage_protocol_in_module?(object) || can_manage_protocol_draft_in_repository?(object)
 
     delete_steps_protocol_path(object)
+  end
+
+  def publish_url
+    return unless can_publish_protocol_in_repository?(object)
+
+    publish_protocol_path(object)
+  end
+
+  def save_as_draft_url
+    return unless can_save_protocol_as_draft_in_repository?(object)
+
+    save_as_draft_protocol_path(object)
   end
 end

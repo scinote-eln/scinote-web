@@ -13,7 +13,7 @@
       display: flex;
       height: 2.75em;
       margin-bottom: 1em;
-      padding: 0  .3em 0 1em;
+      padding: 1em;
 
       .title {
         @include font-h2;
@@ -117,7 +117,7 @@
     }
 
     .footer:not(.center) {
-      .btn:last-child {
+      :last-child {
         margin-left: auto;
       }
     }
