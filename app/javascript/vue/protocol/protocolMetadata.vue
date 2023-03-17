@@ -58,7 +58,9 @@
         </p>
         <p class="data-block keywords-data">
           <span>{{ i18n.t("protocols.header.keywords") }}</span>
-          <span class="keywords-list">
+          <span
+            class="keywords-list"
+            v-if="protocol.attributes.urls.update_protocol_authors_url || protocol.attributes.keywords.length">
             <DropdownSelector
               :inputTagMode="true"
               :options="this.protocol.attributes.keywords"
