@@ -1007,6 +1007,8 @@ en:
     assigned_items:
       title: "Assigned items"
       assign_from: "Assign from"
+      direct_assign:
+        success: “Successfully assigned an item to the task.”
     protocol:
       title: "Protocol"
       options_dropdown:
