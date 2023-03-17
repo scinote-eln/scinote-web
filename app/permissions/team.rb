@@ -116,7 +116,7 @@ Canaid::Permissions.register_for(Protocol) do
 
   # protocol in repository: copy
   can :clone_protocol_in_repository do |user, protocol|
-    can_read_protocol_in_repository?(user, protocol) && can_create_protocols_in_repository?(user, protocol.team)
+    protocol.permission_granted?(user, ProtocolPermissions::MANAGE_DRAFT)
   end
 
   can :publish_protocol_in_repository do |user, protocol|
