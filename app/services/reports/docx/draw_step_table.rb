@@ -10,7 +10,9 @@ module Reports::Docx::DrawStepTable
       if table.metadata
         table.metadata['cells'].each do |cell|
           data = cell[1]
-          cell_style rows[data['row'].to_i][data['col'].to_i], align: obj.table_cell_alignment(data['className'])
+          next unless data.present? && data['row'].present? && data['col'].present? && data['className'].present?
+
+          cell_style rows.dig(data['row'].to_i, data['col'].to_i), align: obj.table_cell_alignment(data['className'])
         end
       end
     end
