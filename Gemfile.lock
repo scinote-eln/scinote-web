@@ -468,7 +468,7 @@ GEM
       nio4r (~> 2.0)
     raabro (1.4.0)
     racc (1.6.2)
-    rack (2.2.6.2)
+    rack (2.2.6.4)
     rack-attack (6.4.0)
       rack (>= 1.0, < 3)
     rack-cors (1.1.1)
@@ -752,7 +752,7 @@ DEPENDENCIES
   rubocop-rails
   rubyzip
   rufus-scheduler (~> 3.5)
-  sanitize (~> 6.0)
+  sanitize
   sassc-rails
   scenic (~> 1.4)
   sdoc (~> 1.0)

@@ -41,7 +41,7 @@
             let newNumber;
             existingLastDay.find('.activities-group').append(newFirstDay.find('.activities-group').html());
             newNumber = existingLastDay.find('.activity-card').length;
-            existingLastDay.find('.activities-counter-label strong').html(newNumber);
+            existingLastDay.find('.activities-counter-label strong').text(newNumber);
             newFirstDay.remove();
           }
 

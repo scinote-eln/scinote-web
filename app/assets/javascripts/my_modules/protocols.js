@@ -99,8 +99,8 @@ function initLinkUpdate() {
   var updateBtn = modal.find(".modal-footer [data-action='submit']");
   $("[data-action='unlink'], [data-action='revert'], [data-action='update-parent'], [data-action='update-self']")
     .on('ajax:success', function(e, data) {
-      modalTitle.html(data.title);
-      modalBody.html(data.message);
+      modalTitle.text(data.title);
+      modalBody.text(data.message);
       updateBtn.text(data.btn_text);
       modal.attr('data-url', data.url);
       modal.modal('show');

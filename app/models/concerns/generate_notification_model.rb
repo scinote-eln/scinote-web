@@ -16,8 +16,8 @@ module GenerateNotificationModel
 
     notification = Notification.create(
       type_of: notification_type,
-      title: sanitize_input(message, %w(strong a)),
-      message: sanitize_input(description, %w(strong a)),
+      title: sanitize_input(message),
+      message: sanitize_input(description),
       generator_user_id: owner.id
     )
 

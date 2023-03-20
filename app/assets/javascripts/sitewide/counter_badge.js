@@ -7,7 +7,7 @@ var CounterBadge = (function() {
         '-badge-indicator[data-linked-id="' +
         linkedId + '"]').first();
     if (badge.length) {
-      badge.html(count);
+      badge.text(count);
       if (count > 0) {
         badge.removeClass('hidden');
       } else {

@@ -6,6 +6,7 @@ class AssetSerializer < ActiveModel::Serializer
   include Webpacker::Helper
   include FileIconsHelper
   include ActionView::Helpers::NumberHelper
+  include InputSanitizeHelper
   include ApplicationHelper
 
   attributes :file_name, :view_mode, :icon, :urls, :updated_at_formatted,
@@ -18,7 +19,7 @@ class AssetSerializer < ActiveModel::Serializer
   end
 
   def file_name
-    object.render_file_name
+    escape_input(object.render_file_name)
   end
 
   def updated_at

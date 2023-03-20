@@ -189,7 +189,7 @@ var ProjectsIndex = (function() {
         },
         success: function(data) {
           // Update modal title
-          exportProjectsModalHeader.html(data.title);
+          exportProjectsModalHeader.text(data.title);
 
           // Set modal body
           exportProjectsModalBody.html(data.html);
@@ -476,7 +476,7 @@ var ProjectsIndex = (function() {
       data: { ...requestParams, ...{ page: 1 } },
       success: function(data) {
         $('#breadcrumbsWrapper').html(data.breadcrumbs_html);
-        $(projectsWrapper).find('.projects-title').html(data.title);
+        $(projectsWrapper).find('.projects-title').html(data.title_html);
         $(toolbarWrapper).html(data.toolbar_html);
         viewContainer.data('projects-cards-url', data.projects_cards_url);
         viewContainer.removeClass('no-results');
