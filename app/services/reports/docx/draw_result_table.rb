@@ -9,9 +9,9 @@ module Reports::Docx::DrawResultTable
     @docx.p
     @docx.table JSON.parse(table.contents_utf_8)['data'], border_size: Constants::REPORT_DOCX_TABLE_BORDER_SIZE do
       JSON.parse(table.metadata)['cells'].each do |cell|
-        if rows[cell['row'].to_i].present?
-          cell_style rows[cell['row']][cell['col']], align: obj.table_cell_alignment(cell['className'])
-        end
+        next unless cell.present? && cell['row'].present? && cell['col'].present? && cell['className'].present?
+
+        cell_style rows.dig(cell['row'].to_i, cell['col'].to_i), align: obj.table_cell_alignment(cell['className'])
       end
     end
     @docx.p do
