@@ -221,6 +221,7 @@
     }
 
     .protocol-version-comment {
+      @include font-button;
       flex-basis: 100%;
       margin-top: .25em;
 
@@ -243,6 +244,7 @@
       }
 
       textarea {
+        min-height: 5em;
         padding: .5em;
         width: 100%;
       }
@@ -268,6 +270,7 @@
     .protocol-metadata {
       @include font-small;
       margin-left: 16px;
+      max-width: 220px;
     }
   }
 
