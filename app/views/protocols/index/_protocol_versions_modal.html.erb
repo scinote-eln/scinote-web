@@ -44,7 +44,7 @@
               <% end %>
             </div>
             <div class="protocol-version-comment">
-              <% if can_manage_protocol_in_repository?(draft) %>
+              <% if can_publish_protocol_in_repository?(draft) %>
                 <div
                     class="protocol-comment-container inline-init-handler"
                     data-field-to-update="version_comment"
@@ -56,7 +56,7 @@
                   >
                   <div class="protocol-comment-message">
                     <div class="view-mode" data-placeholder="<%= t('protocols.index.versions.comment_placeholder') %>"><%= draft.version_comment %></div>
-                    <%= text_area_tag 'version_comment', draft.version_comment, disabled: can_publish_protocol_in_repository?(@protocol), class: 'smart-text-area hidden' %>
+                    <%= text_area_tag 'version_comment', draft.version_comment, disabled: true, class: 'smart-text-area hidden' %>
                   </div>
                   <div class="edit-buttons">
                     <span class="cancel-button btn btn-secondary"><%= t('general.cancel') %></span>
