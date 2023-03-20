@@ -119,7 +119,7 @@
 
       if ($('#experimentTable').length) {
         let tags = $('.tag-show').length;
-        $(`#myModuleTags${$('#tags_modal_my_module_id').val()}`).html(
+        $(`#myModuleTags${$('#tags_modal_my_module_id').val()}`).text(
           tags === 0 ? I18n.t('experiments.table.add_tag') : tags
         );
       }

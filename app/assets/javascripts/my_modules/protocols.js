@@ -50,8 +50,8 @@ function initLinkUpdate() {
   $('.protocol-options-dropdown')
     .on('ajax:success', "[data-action='unlink'], [data-action='revert'], [data-action='update-parent'],"
         + "[data-action='update-self']", function(e, data) {
-      modalTitle.html(data.title);
-      modalMessage.html(data.message);
+      modalTitle.text(data.title);
+      modalMessage.text(data.message);
       updateBtn.text(data.btn_text);
       modal.attr('data-url', data.url);
       modal.modal('show');

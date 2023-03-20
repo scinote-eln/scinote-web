@@ -7,7 +7,7 @@ module UserAssignmentsHelper
                    else
                      assignee.name
                    end
-    sanitize_input(display_name)
+    escape_input(display_name)
   end
 
   def user_assignment_resource_role_name(user, resource, inherit = '')

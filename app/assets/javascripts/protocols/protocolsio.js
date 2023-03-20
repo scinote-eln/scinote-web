@@ -243,7 +243,7 @@ function initLoadProtocolModalPreview() {
         const modalBody = modal.find('.modal-body');
         const modalFooter = modal.find('.modal-footer');
 
-        modalTitle.html(data.title);
+        modalTitle.text(data.title);
         modalBody.html(data.html);
         modalFooter.html(data.footer);
         initHandsOnTable(modalBody);

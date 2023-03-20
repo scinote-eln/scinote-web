@@ -36,11 +36,11 @@ class LabelTemplateDatatable < CustomDatatable
         '0' => record.id,
         '1' => record.default,
         '2' => append_format_icon(record),
-        '3' => sanitize_input(record.label_format),
-        '4' => sanitize_input(record.description),
-        '5' => sanitize_input(record.modified_by),
+        '3' => escape_input(record.label_format),
+        '4' => escape_input(record.description),
+        '5' => escape_input(record.modified_by),
         '6' => I18n.l(record.updated_at, format: :full),
-        '7' => sanitize_input(record.created_by_user),
+        '7' => escape_input(record.created_by_user),
         '8' => I18n.l(record.created_at, format: :full),
         'recordInfoUrl' => '',
         'DT_RowAttr': {
@@ -60,7 +60,7 @@ class LabelTemplateDatatable < CustomDatatable
           "label_template_icons/#{record.icon}.svg",
           class: 'label-template-icon'
         ),
-      name: sanitize_input(record.name)
+      name: escape_input(record.name)
     }
   end
 

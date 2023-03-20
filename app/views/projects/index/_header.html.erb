@@ -7,7 +7,7 @@
         <h1 data-view-mode="active" class="projects-title">
           <%= render partial: "shared/inline_editing",
                      locals: {
-                        initial_value: current_folder&.name,
+                        initial_value: current_folder.name,
                         config: @inline_editable_title_config
                      } %>
         </h1>

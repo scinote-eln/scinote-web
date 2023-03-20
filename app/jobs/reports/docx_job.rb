@@ -26,8 +26,8 @@ module Reports
         type_of: :deliver_error,
         title: I18n.t('projects.reports.index.generation.error_docx_notification_title'),
         message: I18n.t('projects.reports.index.generation.error_notification_message',
-                        report_link: "<a href='#{report_path}'>#{sanitize_input(report.name)}</a>",
-                        team_name: sanitize_input(report.team.name))
+                        report_link: "<a href='#{report_path}'>#{escape_input(report.name)}</a>",
+                        team_name: escape_input(report.team.name))
       )
       notification.create_user_notification(user)
       Rails.logger.error("Couldn't generate DOCX for Report with id: #{report.id}. Error:\n #{error}")
@@ -49,8 +49,8 @@ module Reports
           type_of: :deliver,
           title: I18n.t('projects.reports.index.generation.completed_docx_notification_title'),
           message: I18n.t('projects.reports.index.generation.completed_notification_message',
-                          report_link: "<a href='#{report_path}'>#{sanitize_input(report.name)}</a>",
-                          team_name: sanitize_input(report.team.name))
+                          report_link: "<a href='#{report_path}'>#{escape_input(report.name)}</a>",
+                          team_name: escape_input(report.team.name))
         )
 
         Reports::DocxPreviewJob.perform_now(report.id)

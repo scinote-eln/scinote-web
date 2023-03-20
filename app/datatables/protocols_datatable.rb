@@ -223,7 +223,7 @@ class ProtocolsDatatable < CustomDatatable
     else
       res = []
       record.protocol_keywords.sort_by { |kw| kw.name.downcase }.each do |kw|
-        sanitized_kw = sanitize_input(kw.name)
+        sanitized_kw = escape_input(kw.name)
         res << "<a href='#' data-action='filter' data-param='#{sanitized_kw}'>#{sanitized_kw}</a>"
       end
       res.join(', ')

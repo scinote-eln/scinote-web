@@ -158,13 +158,19 @@
 
         let tableData = JSON.stringify({data: this.tableObject.getData()});
         this.element.attributes.orderable.contents = tableData;
-        this.element.attributes.orderable.metadata = {cells: this.tableObject.getCellsMeta().map((x) => {
-           return {
-            col: x.col,
-            row: x.row,
-            className: x.className || ''
-          }
-        })};
+        this.element.attributes.orderable.metadata = {cells: this.tableObject.getCellsMeta().map(
+          (x) => {
+            if (x) {
+              return {
+                col: x.col,
+                row: x.row,
+                className: x.className || ''
+              }
+            } else {
+              return null
+            }
+          }).filter(e => { return e !== null})
+        };
         this.update();
         this.editingTable = false;
       },

@@ -1,5 +1,5 @@
 FROM ruby:2.7.6-bullseye
-MAINTAINER BioSistemika <info@biosistemika.com>
+MAINTAINER SciNote <info@scinote.net>
 
 ARG WKHTMLTOPDF_PACKAGE_URL=https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.buster_amd64.deb
 
@@ -30,9 +30,6 @@ RUN apt-get update -qq && \
   npm install -g yarn && \
   ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so && \
   rm -rf /var/lib/apt/lists/*
-
-# heroku tools
-RUN wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh
 
 ENV BUNDLE_PATH /usr/local/bundle/
 

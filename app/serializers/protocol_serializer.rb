@@ -5,6 +5,7 @@ class ProtocolSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
+  include InputSanitizeHelper
 
   attributes :name, :id, :urls, :description, :description_view, :updated_at, :in_repository,
              :created_at_formatted, :updated_at_formatted, :added_by, :authors, :keywords, :version, :code,
@@ -38,7 +39,7 @@ class ProtocolSerializer < ActiveModel::Serializer
   end
 
   def keywords
-    object.protocol_keywords.map { |i| { label: i.name, value: i.name } }
+    object.protocol_keywords.map { |i| { label: escape_input(i.name), value: escape_input(i.name) } }
   end
 
   def code

@@ -103,7 +103,7 @@ module Experiments
     def task_name_presenter(my_module)
       {
         id: my_module.id,
-        name: my_module.name,
+        name: escape_input(my_module.name),
         provisioning_status: my_module.provisioning_status,
         url: protocols_my_module_path(my_module)
       }
@@ -147,8 +147,8 @@ module Experiments
 
     def status_presenter(my_module)
       {
-        name: my_module.my_module_status.name,
-        color: my_module.my_module_status.color
+        name: escape_input(my_module.my_module_status.name),
+        color: escape_input(my_module.my_module_status.color)
       }
     end
 
