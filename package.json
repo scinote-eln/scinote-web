@@ -78,7 +78,7 @@
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.35",
     "node-gyp": "^3.8.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "path-complete-extname": "^0.1.0",
     "pdfjs-dist": "^2.5.207",
     "postcss-loader": "^2.1.6",
