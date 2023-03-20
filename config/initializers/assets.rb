@@ -97,6 +97,7 @@ Rails.application.config.assets.precompile += %w(reports/save_pdf_to_inventory.j
 Rails.application.config.assets.precompile += %w(reports/content.js)
 Rails.application.config.assets.precompile += %w(session_end.js)
 Rails.application.config.assets.precompile += %w(label_templates/label_templates_datatable.js)
+Rails.application.config.assets.precompile += %w(users/connected_devices.js)
 Rails.application.config.assets.precompile += %w(BrowserPrint-3.0.216.min.js)
 Rails.application.config.assets.precompile += %w(BrowserPrint-Zebra-1.0.216.min.js)
 
