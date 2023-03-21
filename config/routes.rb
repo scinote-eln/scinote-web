@@ -734,6 +734,8 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :connected_devices, controller: 'users/connected_devices', only: %i(destroy)
+
     get 'search' => 'search#index'
     get 'search/new' => 'search#new', as: :new_search
 

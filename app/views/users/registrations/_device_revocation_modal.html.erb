@@ -11,7 +11,7 @@
       </div>
         <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.cancel') %></button>
-        <%= link_to t("users.registrations.edit.device_revocation_modal.remove"), '#', id: "confirm-device-remove", method: :delete, type: 'button', class: 'btn btn-primary' %>
+        <%= link_to t("users.registrations.edit.device_revocation_modal.remove"), '#', id: "confirm-device-remove", remote:true ,method: :delete, type: 'button', class: 'btn btn-primary' %>
       </div>
     </div>
   </div>
