@@ -7,14 +7,14 @@ class UserMyModulesController < ApplicationController
   before_action :check_view_permissions, except: %i(create destroy)
   before_action :check_manage_permissions, only: %i(create destroy)
 
-  def assignees
+  def designated_users
     @user_my_modules = @my_module.user_my_modules
 
     respond_to do |format|
       format.json do
         render json: {
           html: render_to_string(
-            partial: 'assignees.html.erb'
+            partial: 'designated_users.html.erb'
           ),
           my_module_id: @my_module.id,
           counter: @my_module.designated_users.count # Used for counter badge
