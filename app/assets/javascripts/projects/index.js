@@ -42,6 +42,7 @@ var ProjectsIndex = (function() {
   // Init new project folder modal function
   function initNewProjectFolderModal() {
     var newProjectFolderModal = '#new-project-folder-modal';
+
     // Modal's submit handler function
     $(projectsWrapper)
       .on('ajax:success', newProjectFolderModal, function(ev, data) {
@@ -327,13 +328,6 @@ var ProjectsIndex = (function() {
       $.get(url, function(result) {
         $(editProjectModal).find('.modal-content').html(result.html);
         $(editProjectModal).modal('show');
-        // focusing at the end of the field
-        ['project_name', 'project_folder_name'].forEach(function(inputId) {
-          var inputField = $('#' + inputId);
-          var value = inputField.val();
-          inputField.focus().val('').val(value);
-        });
-
         $(editProjectModal).find('.selectpicker').selectpicker();
         $(editProjectModal).find('form')
           .on('ajax:success', function(ev, data) {
@@ -418,7 +412,7 @@ var ProjectsIndex = (function() {
         $(moveToModal).find('.modal-content').html(result.html);
         $(moveToModal).modal('show');
         initializeJSTree($(moveToModal).find('#moveToFolders'));
-        $('#searchFolderTree').focus();
+
         $(moveToModal).find('form')
           .on('ajax:before', function() {
             $('<input>').attr({
