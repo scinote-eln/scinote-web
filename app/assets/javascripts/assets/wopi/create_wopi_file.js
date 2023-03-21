@@ -9,6 +9,7 @@ function applyCreateWopiFileCallback() {
     $modal.find('#element_id').val($(this).data('id'));
     $modal.find('#element_type').val($(this).data('type'));
     $modal.modal('show');
+    $($modal).find('#new-wopi-file-name').focus();
 
     return false;
   });
