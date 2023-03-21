@@ -1,7 +1,6 @@
 $(document).on('turbolinks:load', function() {
   $(document).on('click', '#twoFactorAuthenticationDisable', function() {
     $('#twoFactorAuthenticationModal').modal('show');
-    $('#password').focus();
   });
 
   $(document).on('click', '#twoFactorAuthenticationEnable', function() {
@@ -34,9 +33,6 @@ $(document).on('turbolinks:load', function() {
   });
 
   $('#twoFactorAuthenticationModal').on('click', '.btn-next-step', function() {
-    setTimeout(() => {
-      $('#submit_code').focus();
-    }, 500);
     $('#twoFactorAuthenticationModal').find(`[href="${$(this).data('step')}"]`).tab('show');
   });
 });

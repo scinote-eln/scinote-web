@@ -157,7 +157,6 @@ var RepositoryDatatable = (function(global) {
   }
 
   function changeToEditMode() {
-    $('#newRepoNameField').focus();
     currentMode = 'editMode';
 
     clearRowSelection();
