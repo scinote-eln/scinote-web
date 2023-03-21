@@ -328,7 +328,7 @@
                     <div class="panel-body">
                       <div class="form-group">
                         <label class="control-label">Name</label>
-                        <input type="text" class="form-control" autofocus onChange="DragNDropResults.validateTextSize(this)"
+                        <input type="text" class="form-control" onChange="DragNDropResults.validateTextSize(this)"
                                rel="results[name]" name="results[name][${i}]">
                       </div>
                       <div class="form-group">

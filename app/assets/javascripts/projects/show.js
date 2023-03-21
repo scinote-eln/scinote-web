@@ -323,12 +323,6 @@
       });
   }
 
-  $(document).on('shown.bs.modal', function() {
-    var inputField = $('#experiment-name');
-    var value = inputField.val();
-    inputField.focus().val('').val(value);
-  });
-
   function initNewExperimentToolbarButton() {
     let forms = '.new-experiment-form';
     $(experimentsPage)

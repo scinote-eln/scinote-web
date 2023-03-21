@@ -1522,9 +1522,7 @@ function initEditModules() {
   })
   .on("shown.bs.modal", function(event) {
     // Focus the text element
-    var inputField = $('#edit-module-name-input');
-    var value = inputField.val();
-    inputField.focus().val('').val(value);
+    $(this).find("#edit-module-name-input").focus();
   })
   .on("hide.bs.modal", function (event) {
     // Remove potential error classes
@@ -2962,7 +2960,7 @@ function drawRoundRectangle(ctx, xPos, yPos, width, height, radius) {
   height = Math.max(height, 0)
   if (width < 2 * radius) radius = width / 2;
   if (height < 2 * radius) radius = height / 2;
-
+  
   ctx.beginPath();
   ctx.lineWidth = 4;
   ctx.strokeStyle = '#104DA9';
