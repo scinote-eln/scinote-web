@@ -111,7 +111,7 @@ class ProtocolsController < ApplicationController
           title: I18n.t('protocols.index.linked_children.title',
                         protocol: escape_input(@protocol.name)),
           html: render_to_string(partial: 'protocols/index/linked_children_modal_body.html.erb',
-                                   locals: { protocol: @protocol })
+                                 locals: { protocol: @protocol })
         }
       end
     end
@@ -1016,8 +1016,7 @@ class ProtocolsController < ApplicationController
 
   def check_save_as_draft_permissions
     @protocol = Protocol.find_by(id: params[:id])
-    render_403 unless @protocol.present? &&
-                      can_save_protocol_as_draft_in_repository?(@protocol)
+    render_403 unless @protocol.present? && can_save_protocol_version_as_draft?(@protocol)
   end
 
   def check_delete_draft_permissions

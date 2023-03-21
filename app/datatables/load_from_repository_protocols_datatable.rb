@@ -53,7 +53,7 @@ class LoadFromRepositoryProtocolsDatatable < CustomDatatable
         '1': record.version_number,
         '2': parent.code,
         '3': keywords_html(record),
-        '4': escape_input(record.published_by.full_name),
+        '4': escape_input(record.published_by&.full_name),
         '5': I18n.l(record.published_on, format: :full)
       }
     end

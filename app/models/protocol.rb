@@ -16,13 +16,10 @@ class Protocol < ApplicationRecord
   include PermissionCheckableModel
   include TinyMceImages
 
-  after_create :auto_assign_protocol_members, if: :visible?
-  after_destroy :decrement_linked_children
-  after_save :update_user_assignments, if: -> { saved_change_to_visibility? && in_repository? }
-  after_save :update_linked_children
-  skip_callback :create, :after, :create_users_assignments, if: -> { in_module? }
+  after_create :update_automatic_user_assignments, if: -> { visible? && in_repository? && parent.blank? }
   before_update :change_visibility, if: :default_public_user_role_id_changed?
-  after_update :sync_protocol_assignments, if: :visibility_changed?
+  after_update :update_automatic_user_assignments, if: -> { saved_change_to_visibility? && in_repository? }
+  skip_callback :create, :after, :create_users_assignments, if: -> { in_module? }
 
   enum visibility: { hidden: 0, visible: 1 }
   enum protocol_type: {
@@ -238,11 +235,21 @@ class Protocol < ApplicationRecord
     in_module? ? my_module.created_by : added_by
   end
 
+  # Only for original published protocol
   def published_versions_with_original
+    return Protocol.none unless in_repository_published_original?
+
     team.protocols
         .in_repository_published_version
         .where(parent: self)
         .or(team.protocols.in_repository_published_original.where(id: id))
+  end
+
+  # Only for original published protocol
+  def all_linked_children
+    return Protocol.none unless in_repository_published_original?
+
+    Protocol.linked.where(parent: published_versions_with_original)
   end
 
   def initial_draft?
@@ -539,11 +546,16 @@ class Protocol < ApplicationRecord
     draft.version_comment = nil
     draft.previous_version = self
     draft.last_modified_by = current_user
+    draft.skip_user_assignments = true
 
     return draft if draft.invalid?
 
     ActiveRecord::Base.no_touching do
       draft = deep_clone(draft, current_user)
+    end
+
+    parent_protocol.user_assignments.each do |parent_user_assignment|
+      parent_protocol.sync_child_protocol_user_assignment(parent_user_assignment, draft.id)
     end
 
     draft
@@ -671,15 +683,7 @@ class Protocol < ApplicationRecord
     sync_child_protocol_user_assignment(user_assignment)
   end
 
-  def auto_assign_protocol_members
-    UserAssignments::ProtocolGroupAssignmentJob.perform_now(
-      team,
-      self,
-      last_modified_by || created_by
-    )
-  end
-
-  def update_user_assignments
+  def update_automatic_user_assignments
     case visibility
     when 'visible'
       create_public_user_assignments!(added_by)
@@ -704,25 +708,6 @@ class Protocol < ApplicationRecord
 
     clone.reload
     clone
-  end
-
-  def update_linked_children
-    # Increment/decrement the parent's nr of linked children
-    if saved_change_to_parent_id?
-      unless parent_id_before_last_save.nil?
-        p = Protocol.find_by_id(parent_id_before_last_save)
-        p.record_timestamps = false
-        p.decrement!(:nr_of_linked_children)
-      end
-      unless parent_id.nil?
-        parent.record_timestamps = false
-        parent.increment!(:nr_of_linked_children)
-      end
-    end
-  end
-
-  def decrement_linked_children
-    parent.decrement!(:nr_of_linked_children) if parent.present?
   end
 
   def prevent_update
@@ -764,13 +749,5 @@ class Protocol < ApplicationRecord
 
   def change_visibility
     self.visibility = default_public_user_role_id.present? ? :visible : :hidden
-  end
-
-  def sync_protocol_assignments
-    if visible?
-      auto_assign_protocol_members
-    else
-      user_assignments.where(assigned: :automatically).destroy_all
-    end
   end
 end

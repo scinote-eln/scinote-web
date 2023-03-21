@@ -1,7 +1,6 @@
-<% linked_children = protocol.linked_children %>
 <% published_versions = protocol.published_versions_with_original.order(version_number: :desc)%>
 
-<% if protocol.nr_of_linked_children > 0 %>
+<% if protocol.all_linked_children.any? %>
   <div class="version-dropdown">
     <%= label_tag "version-selector".to_sym, t("protocols.index.linked_children.show_version") %>
     <%= select_tag "version",

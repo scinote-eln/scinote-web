@@ -9,7 +9,7 @@ class ProtocolSerializer < ActiveModel::Serializer
 
   attributes :name, :id, :urls, :description, :description_view, :updated_at, :in_repository,
              :created_at_formatted, :updated_at_formatted, :added_by, :authors, :keywords, :version, :code,
-             :published, :version_comment, :archived, :linked, :disabled_drafting
+             :published, :version_comment, :archived, :linked, :has_draft
 
   def updated_at
     object.updated_at.to_i
@@ -85,12 +85,13 @@ class ProtocolSerializer < ActiveModel::Serializer
     !object.in_module?
   end
 
-  def disabled_drafting
-    return false unless can_create_protocols_in_repository?(object.team)
+  # rubocop:disable Naming/PredicateName
+  def has_draft
+    return false unless object.in_repository_published?
 
-    %(in_repository_published_original in_repository_published_version).include?(object.protocol_type) &&
-      (object.parent || object).draft.present? && !object.archived
+    (object.parent || object).draft.present?
   end
+  # rubocop:enable Naming/PredicateName
 
   def linked
     object.linked?
@@ -201,7 +202,7 @@ class ProtocolSerializer < ActiveModel::Serializer
   end
 
   def save_as_draft_url
-    return unless can_save_protocol_as_draft_in_repository?(object)
+    return unless can_save_protocol_version_as_draft?(object)
 
     save_as_draft_protocol_path(object)
   end
