@@ -9,6 +9,9 @@ function initAssignedTasksDropdown(table) {
   }
 
   $(table).on('show.bs.dropdown', '.assign-counter-container', function() {
+    $(document).on('shown.bs.dropdown', function() {
+      $('#searchAssignedTasks').focus();
+    });
     var cell = $(this);
     loadTasks(cell);
   });

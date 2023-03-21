@@ -197,6 +197,12 @@
     }
   });
 
+  $(document).on('shown.bs.modal', function() {
+    var inputField = $('#repository_name');
+    var value = inputField.val();
+    inputField.focus().val('').val(value);
+  });
+
   $('.create-new-repository').initSubmitModal('#create-repo-modal', 'repository');
   if (notTurbolinksPreview()) {
     initRepositoriesDataTable('#repositoriesList', $('.repositories-index').hasClass('archived'));
