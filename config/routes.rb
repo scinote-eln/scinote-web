@@ -19,6 +19,12 @@ Rails.application.routes.draw do
 
     root 'dashboards#show'
 
+    resources :navigations, only: [] do
+      collection do
+        get :top_menu
+      end
+    end
+
     resources :activities, only: [:index]
 
     get '/jobs/:id/status', to: 'active_jobs#status'
@@ -86,11 +92,6 @@ Rails.application.routes.draw do
          as: 'update_togglable_settings',
          defaults: { format: 'json' }
 
-    # Change user's current team
-    post 'users/settings/user_current_team',
-         to: 'users/settings#user_current_team',
-         as: 'user_current_team'
-
     get 'users/settings/teams',
         to: 'users/settings/teams#index',
         as: 'teams'
@@ -137,6 +138,11 @@ Rails.application.routes.draw do
 
     namespace :users do
       namespace :settings do
+        resources :teams, only: [] do
+          member do
+            post :switch
+          end
+        end
         resources :webhooks, only: %i(index create update destroy) do
           collection do
             post :destroy_filter

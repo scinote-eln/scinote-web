@@ -1,0 +1,37 @@
+// scss-lint:disable SelectorDepth unknownProperties
+// scss-lint:disable NestingDepth SelectorFormat
+
+.sci--layout--left-menu-container {
+  background-color: $color-white;
+  box-shadow: $flyout-shadow;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1em 0;
+  width: 100%;
+
+  .sci--layout--menu-item {
+    align-items: center;
+    color: $color-black;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    height: 60px;
+    justify-content: center;
+    text-decoration: none;
+    width: 100%;
+
+    &[data-active='true'] {
+      background-color: $color-gainsboro;
+      box-shadow: inset 4px 0 0 $brand-primary;
+    }
+
+    &[data-disabled='true'] {
+      background-color: initial;
+      box-shadow: none;
+      cursor: not-allowed;
+      opacity: .65;
+      pointer-events: none;
+    }
+  }
+}

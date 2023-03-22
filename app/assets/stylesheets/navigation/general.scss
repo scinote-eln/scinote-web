@@ -27,7 +27,7 @@
     height: var(--top-navigation);
     position: fixed;
     width: 100vw;
-    z-index: 600;
+    z-index: 610;
   }
 
   .sci--layout-navigation-left {
@@ -65,5 +65,6 @@
   .sci--layout-content {
     grid-area: content;
     padding: 0 1em;
+    width: calc(100vw - var(--left-navigation) - var(--navigator-navigation));
   }
 }
