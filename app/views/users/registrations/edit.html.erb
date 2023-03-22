@@ -38,10 +38,12 @@
    </div>
   </div>
 
-<!-- Manage devices -->
-<div class="manage-devices">
-  <%= render partial: 'users/registrations/manage_devices' %>
-<div>
+<% if Rails.application.config.x.connected_devices_enabled %>
+  <!-- Manage devices -->
+  <div class="manage-devices">
+    <%= render partial: 'users/registrations/manage_devices' %>
+  <div>
+<% end %>
 
   <!-- User statistics -->
   <div class="row">
