@@ -260,7 +260,7 @@ class RepositoryRowsController < ApplicationController
                                                          team: current_team)
 
     if service.succeed?
-      render json: { flash: t('repositories.archive_records.success_flash', repository: @repository.name) }, status: :ok
+      render json: { flash: t('repositories.archive_records.success_flash', repository: escape_input(@repository.name)) }
     else
       render json: { error: service.error_message }, status: :unprocessable_entity
     end
@@ -273,7 +273,7 @@ class RepositoryRowsController < ApplicationController
                                                          team: current_team)
 
     if service.succeed?
-      render json: { flash: t('repositories.restore_records.success_flash', repository: @repository.name) }, status: :ok
+      render json: { flash: t('repositories.restore_records.success_flash', repository: escape_input(@repository.name)) }
     else
       render json: { error: service.error_message }, status: :unprocessable_entity
     end

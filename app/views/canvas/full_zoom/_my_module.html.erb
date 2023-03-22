@@ -9,7 +9,7 @@
   data-module-x="<%= my_module.x %>"
   data-module-y="<%= my_module.y %>"
   data-module-conns="<%= construct_module_connections(my_module) %>"
-  data-module-users-tab-url="<%=  index_old_my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>"
+  data-module-users-tab-url="<%=  designated_users_my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>"
   data-module-tags-url="<%= my_module_tags_experiment_path(my_module.experiment, format: :json) %>">
 
   <div data-view-mode="active">
@@ -77,7 +77,7 @@
   <div class="panel-footer panel-footer-scinote buttons-container">
     <ul class="nav nav-tabs nav-tabs-less" role="tablist">
       <li role="presentation">
-        <a class="btn btn-link task-card-view-users" href="<%= index_old_my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_users" role="tab" data-remote="true">
+        <a class="btn btn-link task-card-view-users" href="<%= designated_users_my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_users" role="tab" data-remote="true">
           <span class="fas fa-users" aria-hidden="true"></span>
           <span class="badge badge-indicator users-badge-indicator <%= 'hidden' unless my_module.designated_users_count.positive? %>"
                 data-linked-id="<%= my_module.id %>">

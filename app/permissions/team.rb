@@ -76,7 +76,7 @@ Canaid::Permissions.register_for(Protocol) do
      clone_protocol_in_repository
      publish_protocol_in_repository
      delete_protocol_draft_in_repository
-     save_protocol_as_draft_in_repository)
+     save_protocol_version_as_draft)
     .each do |perm|
     can perm do |_, protocol|
       protocol.active?
@@ -129,11 +129,10 @@ Canaid::Permissions.register_for(Protocol) do
       can_manage_protocol_draft_in_repository?(user, protocol)
   end
 
-  can :save_protocol_as_draft_in_repository do |user, protocol|
-    next false unless can_create_protocols_in_repository?(user, protocol.team)
+  can :save_protocol_version_as_draft do |user, protocol|
+    next false unless protocol.in_repository_published?
 
-    %(in_repository_published_original in_repository_published_version).include?(protocol.protocol_type) &&
-      (protocol.parent || protocol).draft.blank?
+    protocol.permission_granted?(user, ProtocolPermissions::MANAGE_DRAFT)
   end
 end
 

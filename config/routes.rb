@@ -414,7 +414,7 @@ Rails.application.routes.draw do
       end
       resources :user_my_modules, path: '/users', only: %i(index create destroy) do
         collection do
-          get :index_old
+          get :designated_users
         end
         member do
           get :search

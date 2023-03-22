@@ -44,7 +44,7 @@
               <% end %>
             </div>
             <div class="protocol-version-comment">
-              <% if can_manage_protocol_in_repository?(draft) %>
+              <% if can_publish_protocol_in_repository?(draft) %>
                 <div
                     class="protocol-comment-container inline-init-handler"
                     data-field-to-update="version_comment"
@@ -56,7 +56,7 @@
                   >
                   <div class="protocol-comment-message sci-input-container">
                     <div class="view-mode" data-placeholder="<%= t('protocols.index.versions.comment_placeholder') %>"><%= draft.version_comment %></div>
-                    <%= text_area_tag 'version_comment', draft.version_comment, disabled: can_publish_protocol_in_repository?(@protocol), class: 'smart-text-area hidden sci-input-field' %>
+                    <%= text_area_tag 'version_comment', draft.version_comment, disabled: true, class: 'smart-text-area hidden sci-input-field' %>
                   </div>
                   <div class="edit-buttons">
                     <span class="cancel-button btn btn-secondary"><%= t('general.cancel') %></span>
@@ -82,11 +82,11 @@
                     published_by: protocol_version.published_by&.full_name) %>
             </div>
             <div class="protocol-actions">
-              <% if @protocol.active? %>
+              <% if can_save_protocol_version_as_draft?(@protocol) %>
                 <%= button_to save_as_draft_protocol_path(protocol_version),
                               class: "btn btn-light icon-btn save-as-draft",
                               title: t('protocols.index.versions.save_as_draft'),
-                              disabled: !can_save_protocol_as_draft_in_repository?(protocol_version),
+                              disabled: @protocol.draft.present?,
                               data: {
                                 placement: :left,
                                 toggle: :tooltip

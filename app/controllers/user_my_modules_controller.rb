@@ -7,14 +7,14 @@ class UserMyModulesController < ApplicationController
   before_action :check_view_permissions, except: %i(create destroy)
   before_action :check_manage_permissions, only: %i(create destroy)
 
-  def index_old
+  def designated_users
     @user_my_modules = @my_module.user_my_modules
 
     respond_to do |format|
       format.json do
         render json: {
           html: render_to_string(
-            partial: 'index_old.html.erb'
+            partial: 'designated_users.html.erb'
           ),
           my_module_id: @my_module.id,
           counter: @my_module.designated_users.count # Used for counter badge
@@ -134,7 +134,7 @@ class UserMyModulesController < ApplicationController
 
       user_hash = {
         value: user.id,
-        label: sanitize_input(user.full_name),
+        label: escape_input(user.full_name),
         params: {
           avatar_url: avatar_path(user, :icon_small),
           designated: user.designated,

@@ -2,6 +2,8 @@
 
 module AccessPermissions
   class ProjectsController < ApplicationController
+    include InputSanitizeHelper
+
     before_action :set_project
     before_action :check_read_permissions, only: %i(show)
     before_action :check_manage_permissions, except: %i(show)
@@ -113,7 +115,7 @@ module AccessPermissions
       propagate_job(user_assignment, destroy: true)
       log_activity(:unassign_user_from_project, user_assignment)
 
-      render json: { flash: t('access_permissions.destroy.success', member_name: user.full_name) },
+      render json: { flash: t('access_permissions.destroy.success', member_name: escape_input(user.full_name)) },
              status: :ok
     rescue ActiveRecord::RecordInvalid
       render json: { flash: t('access_permissions.destroy.failure') },

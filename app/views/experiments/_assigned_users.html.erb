@@ -10,7 +10,7 @@
         </span>
       <% end %>
       <% if users.length > 4 %>
-        <span class="more-users avatar-container" title="<%= sanitize_input(users[4..].map(&:full_name).join('&#013;')) %>">
+        <span class="more-users avatar-container" title="<%= users[4..].map(&:full_name).join('&#013;') %>">
           +<%= users.length - 4 %>
         </span>
       <% end %>

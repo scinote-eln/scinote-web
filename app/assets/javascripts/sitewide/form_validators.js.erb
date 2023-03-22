@@ -29,9 +29,6 @@ function textValidator(ev, textInput, textLimitMin, textLimitMax, clearErr, tiny
     var text = tinyMCEInput;
   } else {
     var text = $(textInput).val().trim();
-    $(textInput).val(text);
-    var text_from_html = $("<div/>").html(text).text();
-    if (text_from_html.length < text.length) text = text_from_html;
   }
 
   var nameTooShort = text.length < textLimitMin;

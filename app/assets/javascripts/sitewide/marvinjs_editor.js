@@ -197,7 +197,7 @@ var MarvinJsEditorApi = (function() {
         } else {
           $('#modal_link' + json.id + ' img').attr('src', json.url);
           $('#modal_link' + json.id + ' img').css('opacity', '0');
-          $('#modal_link' + json.id + ' .attachment-label').html(json.file_name);
+          $('#modal_link' + json.id + ' .attachment-label').text(json.file_name);
         }
         $(marvinJsModal).modal('hide');
         config.button.dataset.inProgress = false;

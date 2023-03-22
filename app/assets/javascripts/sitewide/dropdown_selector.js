@@ -128,7 +128,7 @@ var dropdownSelector = (function() {
   function refreshDropdownSelection(selector, container) {
     container.find('.dropdown-option, .dropdown-group').removeClass('select');
     $.each(getCurrentData(container), function(i, selectedOption) {
-      container.find(`.dropdown-option[data-value="${selectedOption.value}"][data-group="${selectedOption.group || ''}"]`)
+      container.find(`.dropdown-option[data-value="${_.escape(selectedOption.value)}"][data-group="${selectedOption.group || ''}"]`)
         .addClass('select');
     });
     if (selector.data('select-by-group')) {
@@ -541,16 +541,22 @@ var dropdownSelector = (function() {
       var customLabel = selector2.data('config').optionLabel;
       var customClass = params.optionClass || selector2.data('config').optionClass || '';
       var customStyle = selector2.data('config').optionStyle;
-      return $(`
-        <div class="dropdown-option ${customClass}" style="${customStyle ? customStyle(option) : ''}"
-          title="${(option.params && option.params.tooltip) || ''}"
-          data-params='${JSON.stringify(option.params || {})}'
-          data-label="${option.label}"
-          data-group="${group ? group.value : ''}"
-          data-value="${option.value}">
-            ${customLabel ? customLabel(option) : option.label}
-        </div>"
+      var optionElement = $(`
+        <div class="dropdown-option ${customClass}" style="${customStyle ? customStyle(option) : ''}">
+        </div>
       `);
+      optionElement
+        .attr('title', (option.params && option.params.tooltip) || '')
+        .attr('data-params', JSON.stringify(option.params || {}))
+        .attr('data-label', option.label)
+        .attr('data-group', group ? group.value : '')
+        .attr('data-value', option.value);
+      if (customLabel) {
+        optionElement.html(customLabel(option));
+      } else {
+        optionElement.html(option.label);
+      }
+      return optionElement;
     }
 
     // Draw delimiter object
@@ -728,16 +734,19 @@ var dropdownSelector = (function() {
       // Select element appearance
       var tagAppearance = selector.data('config').selectAppearance === 'simple' ? 'ds-simple' : 'ds-tags';
       var label = customLabel ? customLabel(data) : data.label;
+      var title = (data.params && data.params.tooltip) || $('<span>' + label + '</span>').text().trim();
       // Add new tag before search field
       var tag = $(`<div class="${tagAppearance} ${customClass}" style="${customStyle ? customStyle(data) : ''}" >
-                  <div class="tag-label"
-                    title="${(data.params && data.params.tooltip) || $('<span>' + label + '</span>').text().trim()}"
-                    data-ds-tag-group="${data.group}"
-                    data-ds-tag-id="${data.value}">
+                  <div class="tag-label">
                   </div>
                   <i class="fas fa-times ${selector.data('config').singleSelect ? 'hidden' : ''}"></i>
                 </div>`).insertBefore(container.find('.input-field .search-field'));
 
+
+      tag.find('.tag-label')
+        .attr('data-ds-tag-group', data.group)
+        .attr('data-ds-tag-id', data.value)
+        .attr('title', title);
       if (selector.data('config').labelHTML) {
         tag.find('.tag-label').html(label);
       } else {
