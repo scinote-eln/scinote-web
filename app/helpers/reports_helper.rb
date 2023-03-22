@@ -7,9 +7,9 @@ module ReportsHelper
   def render_report_element(element, provided_locals = nil)
     case element.type_of
     when 'experiment'
-      return unless can_read_experiment?(element.report.user, element.experiment)
+      return unless can_read_experiment?(element.experiment)
     when 'my_module'
-      return unless can_read_my_module?(element.report.user, element.my_module)
+      return unless can_read_my_module?(element.my_module)
     end
 
     # Determine partial
