@@ -84,7 +84,6 @@ gem 'sneaky-save', git: 'https://github.com/einzige/sneaky-save'
 gem 'turbolinks', '~> 5.1.1'
 gem 'underscore-rails'
 gem 'wicked_pdf'
-gem 'wkhtmltopdf-heroku', '2.12.5'
 
 gem 'aws-sdk-lambda'
 gem 'aws-sdk-rails'
