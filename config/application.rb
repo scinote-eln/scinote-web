@@ -57,6 +57,8 @@ module Scinote
 
     config.x.webhooks_enabled = ENV['ENABLE_WEBHOOKS'] == 'true'
 
+    config.x.connected_devices_enabled = ENV['CONNECTED_DEVICES_ENABLED'] == 'true'
+
     # Logging
     config.log_formatter = proc do |severity, datetime, progname, msg|
       "[#{datetime}] #{severity}: #{msg}\n"
