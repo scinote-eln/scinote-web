@@ -54,9 +54,9 @@
                     data-response-field="version_comment"
                     data-edit-mode="0"
                   >
-                  <div class="protocol-comment-message">
+                  <div class="protocol-comment-message sci-input-container">
                     <div class="view-mode" data-placeholder="<%= t('protocols.index.versions.comment_placeholder') %>"><%= draft.version_comment %></div>
-                    <%= text_area_tag 'version_comment', draft.version_comment, disabled: true, class: 'smart-text-area hidden' %>
+                    <%= text_area_tag 'version_comment', draft.version_comment, disabled: true, class: 'smart-text-area hidden sci-input-field' %>
                   </div>
                   <div class="edit-buttons">
                     <span class="cancel-button btn btn-secondary"><%= t('general.cancel') %></span>
