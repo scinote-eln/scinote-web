@@ -51,11 +51,7 @@
 
       th,
       td {
-        padding: 12px;
-
-        &:first-child {
-          width: 16px !important;
-        }
+        padding: 8px 6px;
       }
     }
   }
@@ -116,6 +112,8 @@
       border: 1px solid transparent;
       border-radius: $border-radius-default;
       color: inherit;
+      min-height: 36px;
+      min-width: 36px;
       outline: 0;
 
       &:hover,
