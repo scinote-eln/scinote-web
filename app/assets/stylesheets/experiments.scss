@@ -8,6 +8,9 @@
 
 .projects-show {
   .experiment-actions-menu {
+    height: 36px;
+    width: 36px;
+
     .dropdown-menu {
       a,
       button {
@@ -473,6 +476,9 @@
 
     .project-show-container {
       .experiment-actions-menu {
+        height: 36px;
+        width: 36px;
+
         .btn-light:hover {
           background: $color-alto;
         }
