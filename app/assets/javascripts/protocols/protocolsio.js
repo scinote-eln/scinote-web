@@ -1,4 +1,4 @@
-/* global animateSpinner PerfectSb initHandsOnTable */
+/* global animateSpinner PerfectSb initHandsOnTable ProtocolsIndex */
 /* global HelperModule dropdownSelector */
 /* eslint-disable no-use-before-define, no-alert */
 
@@ -213,6 +213,7 @@ function handleFormSubmit(modal) {
         animateSpinner(modal, false);
         modal.modal('hide');
         HelperModule.flashAlertMsg(data.message, 'success');
+        ProtocolsIndex.reloadTable();
       },
       error: function(data) {
         showFormErrors(modal, data.responseJSON.validation_errors);
