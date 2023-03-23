@@ -17,6 +17,7 @@
     <%= javascript_pack_tag 'application' %>
     <%= javascript_include_tag 'session_end' %>
 
+
     <% if MarvinJsService.enabled? && ENV['MARVINJS_API_KEY'] %>
       <script src="https://marvinjs.chemicalize.com/v1/<%= ENV['MARVINJS_API_KEY'] %>/client-settings.js"></script>
       <script src="https://marvinjs.chemicalize.com/v1/client.js"></script>
@@ -38,6 +39,7 @@
 
     <%= javascript_pack_tag 'tui_image_editor' %>
     <%= stylesheet_pack_tag 'tui_image_editor_styles' %>
+    <%= javascript_pack_tag 'vue/navigation/top_menu' %>
   </head>
   <body
     class="<%= yield :body_class %>"
@@ -57,7 +59,7 @@
 
 
     <div class="sci--layout" data-breadcrumbs-collapsed="true" data-navigator-collapsed="<%= !content_for?(:sidebar_title) %>">
-      <div class="sci--layout-navigation-top">
+      <div class="sci--layout-navigation-top" >
         <%= render "shared/navigation/top" %>
       </div>
       <div class="sci--layout-navigation-left">
