@@ -26,12 +26,15 @@ end
 
 hosts = Rails.application.config.hosts
 
+external_services = %w(https://www.protocols.io/)
+
 Rails.application.config.content_security_policy do |policy|
   policy.default_src :self, :https
-  policy.font_src    :self, :https
-  policy.img_src     :self, :https
+  policy.base_uri    :self, *external_services
+  policy.font_src    :self, :https, :data
+  policy.img_src     :self, :https, :data
   policy.object_src  :none
-  policy.script_src  :self, :https
+  policy.script_src  :self, :unsafe_eval
   policy.style_src   :self, :https, :unsafe_inline
 
   if Rails.env.development?
@@ -40,9 +43,9 @@ Rails.application.config.content_security_policy do |policy|
     end.select { |url| valid_url?(url)}
 
 
-    policy.connect_src :self, :data, *hosts_urls
+    policy.connect_src :self, :data, *hosts_urls, "http://127.0.0.1:9100/available"
   else
-    policy.connect_src :self, :data
+    policy.connect_src :self, :data, "http://127.0.0.1:9100/available"
   end
 
   # Specify URI for violation reports

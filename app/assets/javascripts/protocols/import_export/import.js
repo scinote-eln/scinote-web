@@ -807,3 +807,22 @@ function importProtocolFromFile(
   };
   fileReader.readAsArrayBuffer(fileHandle);
 }
+
+(function() {
+  $('#pio_submit_btn_id').on('click', function(e) {
+    e.preventDefault();
+    $('#protocols_io_form').submit();
+  });
+  $('#protocols_io_form').on('submit', function(e) {
+    e.preventDefault();
+    const form = document.querySelector('#protocols_io_form'); // Find the <form> element
+    const formData = new FormData(form); // Wrap form contents
+    $.ajax({
+      url: 'protocols/protocolsio_import_create',
+      type: 'POST',
+      data: formData,
+      contentType: false,
+      processData: false
+    });
+  });
+}());

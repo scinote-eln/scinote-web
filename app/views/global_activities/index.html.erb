@@ -1,6 +1,7 @@
 <% provide :head_title, t('nav.label.activities') %>
 
 <div class="global-activities-container">
+  <div id="filters" data-filters='<%= raw @filters.to_json %>' ></div>
   <div class="ga-top">
     <%= render partial: "top_pane" %>
   </div>
@@ -34,7 +35,4 @@
 
 <%= render partial: 'save_filter_modal' %>
 
-<script>
-  var gaUrlQueryParams= <%= raw @filters.to_json %>
-</script>
 <%= javascript_include_tag 'global_activities/index.js' %>
