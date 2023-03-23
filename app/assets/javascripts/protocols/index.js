@@ -239,7 +239,6 @@ var ProtocolsIndex = (function() {
       },
       fnDrawCallback: function() {
         animateSpinner(this, false);
-        initRowSelection();
       },
       preDrawCallback: function() {
         animateSpinner(this);
@@ -267,6 +266,7 @@ var ProtocolsIndex = (function() {
 
         initLocalFileImport();
         initProtocolsFilters();
+        initRowSelection();
       },
       stateLoadCallback: function() {
         // Load the table state for the current team
@@ -309,8 +309,10 @@ var ProtocolsIndex = (function() {
     let protocolsTableScrollHead = protocolsTableEl.closest('.dataTables_scroll').find('.dataTables_scrollHead');
 
     // Handle click on table cells with checkboxes
-    protocolsTableEl.on('click', 'tbody td, thead th:first-child', function() {
-      $(this).parent().find("input[type='checkbox']").trigger('click');
+    protocolsTableEl.on('click', 'tbody td, thead th:first-child', function(ev) {
+      if (ev.target === ev.currentTarget) {
+        $(this).parent().find("input[type='checkbox']").trigger('click');
+      }
     });
 
     // Handle clicks on checkbox

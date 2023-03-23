@@ -219,7 +219,7 @@ class ProtocolsDatatable < CustomDatatable
 
   def keywords_html(record)
     if record.protocol_keywords.blank?
-      "<i>#{I18n.t('protocols.no_keywords')}</i>"
+      I18n.t('protocols.no_keywords')
     else
       res = []
       record.protocol_keywords.sort_by { |kw| kw.name.downcase }.each do |kw|
