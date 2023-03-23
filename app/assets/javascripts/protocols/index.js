@@ -239,7 +239,6 @@ var ProtocolsIndex = (function() {
       },
       fnDrawCallback: function() {
         animateSpinner(this, false);
-        initRowSelection();
       },
       preDrawCallback: function() {
         animateSpinner(this);
@@ -267,6 +266,7 @@ var ProtocolsIndex = (function() {
 
         initLocalFileImport();
         initProtocolsFilters();
+        initRowSelection();
       },
       stateLoadCallback: function() {
         // Load the table state for the current team
