@@ -35,6 +35,14 @@ module AccessPermissions
         user_id: permitted_update_params[:user_id],
         team: current_team
       )
+
+      # prevent role change if it would result in no users having the user management permission
+      new_user_role = UserRole.find(permitted_update_params[:user_role_id])
+      if !new_user_role.has_permission?(ProtocolPermissions::USERS_MANAGE) &&
+         @user_assignment.last_with_permission?(ProtocolPermissions::USERS_MANAGE)
+        raise ActiveRecord::RecordInvalid
+      end
+
       @user_assignment.update!(permitted_update_params)
       log_activity(:protocol_template_access_changed, @user_assignment)
 
@@ -87,6 +95,9 @@ module AccessPermissions
     def destroy
       user = @protocol.assigned_users.find(params[:user_id])
       user_assignment = @protocol.user_assignments.find_by(user: user, team: current_team)
+
+      # prevent deletion of last user that can manage users
+      raise ActiveRecord::RecordInvalid if user_assignment.last_with_permission?(ProtocolPermissions::USERS_MANAGE)
 
       Protocol.transaction do
         if @protocol.visible?
