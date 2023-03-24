@@ -150,7 +150,7 @@
     .selected {
       .global-avatar-container,
       .more-users {
-        border: 2px solid $color-alto;
+        border: 2px solid $color-concrete;
       }
     }
   }
@@ -261,6 +261,7 @@
       .edit-buttons {
         display: flex;
         justify-content: end;
+        margin-top: .25em;
 
         .btn {
           margin-left: .5em;

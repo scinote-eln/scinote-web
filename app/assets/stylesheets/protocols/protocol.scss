@@ -20,6 +20,10 @@
     padding: 0 2em;
   }
 
+  .protocol-breadcrumbs {
+    padding: .75em 0;
+  }
+
   .protocol-position-container {
     background-color: $color-white;
     border-radius: 2px;
@@ -113,6 +117,7 @@
         align-items: center;
         display: flex;
         margin-top: -12px;
+        min-height: 36px;
 
         .authors-list {
           flex-basis: calc(100% - 90px);
@@ -137,6 +142,10 @@
 
         .sci-inline-edit__view.blank {
           font-weight: normal;
+
+          &:hover {
+            border: $border-default;
+          }
         }
       }
 
@@ -144,6 +153,7 @@
         align-items: center;
         display: flex;
         margin-top: -12px;
+        min-height: 36px;
 
         .keywords-list {
           flex-basis: calc(100% - 90px);
