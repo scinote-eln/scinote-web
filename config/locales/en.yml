@@ -2671,7 +2671,7 @@ en:
     publish_modal:
       title: "Publish version %{version} of the protocol template"
       name: "Protocol template name"
-      comment: "Revision comment"
+      comment: "Revision notes"
       comment_placeholder: "What's new in this version?"
       publish: "Publish"
     new_protocol_modal:
