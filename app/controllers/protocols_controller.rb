@@ -43,7 +43,6 @@ class ProtocolsController < ApplicationController
     update_from_parent_modal
     delete_steps
   )
-  before_action :check_manage_all_in_repository_permissions, only: :make_private
   before_action :check_restore_all_in_repository_permissions, only: :restore
   before_action :check_archive_all_in_repository_permissions, only: :archive
   before_action :check_load_from_repository_views_permissions, only: %i(
@@ -1011,7 +1010,7 @@ class ProtocolsController < ApplicationController
     @protocol = Protocol.find_by(id: params[:id])
     render_403 unless @protocol.present? &&
                       (can_manage_protocol_in_module?(@protocol) ||
-                       can_manage_protocol_in_repository?(@protocol))
+                       can_manage_protocol_draft_in_repository?(@protocol))
   end
 
   def check_save_as_draft_permissions
@@ -1023,16 +1022,6 @@ class ProtocolsController < ApplicationController
     @protocol = Protocol.find_by(id: params[:id])
     render_403 unless @protocol.present? &&
                       can_delete_protocol_draft_in_repository?(@protocol)
-  end
-
-  def check_manage_all_in_repository_permissions
-    @protocols = Protocol.where(id: params[:protocol_ids])
-    @protocols.find_each do |protocol|
-      unless can_manage_protocol_in_repository?(protocol)
-        respond_to { |f| f.json { render json: {}, status: :unauthorized } }
-        break
-      end
-    end
   end
 
   def check_archive_all_in_repository_permissions
