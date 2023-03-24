@@ -23,6 +23,13 @@ class AddProtocolVersioningPermissions < ActiveRecord::Migration[6.1]
         @normal_user_role.permissions = @normal_user_role.permissions - REMOVED_NORMAL_USER_PERMISSIONS
         @owner_role.save(validate: false)
         @normal_user_role.save(validate: false)
+
+        # properly assign protocol owners, who must always be marked as assigned manually
+        UserAssignment.where(
+          assignable_type: 'Protocol',
+          user_role: UserRole.find_predefined_owner_role,
+          assigned: :automatically
+        ).update_all(assigned: :manually)
       end
 
       dir.down do

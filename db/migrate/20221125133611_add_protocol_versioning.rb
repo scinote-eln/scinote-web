@@ -14,7 +14,7 @@ class AddProtocolVersioning < ActiveRecord::Migration[6.1]
     end
 
     execute(
-      'UPDATE "protocols" SET "protocol_type" = 6, "archived" = TRUE WHERE "protocols"."protocol_type" = 4;'
+      'UPDATE "protocols" SET "protocol_type" = 6, "archived" = TRUE, "published_on" = NULL WHERE "protocols"."protocol_type" = 4;'
     )
     execute(
       'UPDATE "protocols" SET "visibility" = 1 WHERE "protocols"."protocol_type" = 3;'
@@ -28,7 +28,7 @@ class AddProtocolVersioning < ActiveRecord::Migration[6.1]
       ');'
     )
     execute(
-      'UPDATE "protocols" SET "protocol_type" = 6 ' \
+      'UPDATE "protocols" SET "protocol_type" = 6, "published_on" = NULL ' \
       'WHERE "id" IN (' \
       'SELECT DISTINCT "protocols"."id" FROM "protocols" ' \
       'LEFT OUTER JOIN "protocols" "linked_children" ON "linked_children"."parent_id" = "protocols"."id" ' \
@@ -39,6 +39,13 @@ class AddProtocolVersioning < ActiveRecord::Migration[6.1]
       'UPDATE "protocols" SET "published_on" = "created_at", "published_by_id" = "added_by_id" ' \
       'WHERE "protocols"."protocol_type" = 5 ' \
       'AND "protocols"."published_on" IS NULL;'
+    )
+
+    execute(
+      'UPDATE "protocols" SET "published_by_id" = "added_by_id" ' \
+      'WHERE "protocols"."protocol_type" = 5 ' \
+      'AND "protocols"."visibility" = 1' \
+      'AND "protocols"."published_by_id" IS NULL;'
     )
   end
 

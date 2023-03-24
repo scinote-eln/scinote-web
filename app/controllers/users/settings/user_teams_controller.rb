@@ -197,7 +197,11 @@ module Users
           protocol.restored_by = new_owner if protocol.restored_by == user_assignment.user
           protocol.save!(validate: false)
           protocol.user_assignments.find_by(user: new_owner)&.destroy!
-          protocol.user_assignments.create!(user: new_owner, user_role: UserRole.find_predefined_owner_role)
+          protocol.user_assignments.create!(
+            user: new_owner,
+            user_role: UserRole.find_predefined_owner_role,
+            assigned: :manually
+          )
         end
 
         # Make new owner author of all inventory items that were added
