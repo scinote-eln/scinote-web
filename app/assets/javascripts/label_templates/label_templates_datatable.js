@@ -39,7 +39,7 @@
     return `${data.icon_image_tag}<a
       href='${row.DT_RowAttr['data-edit-url']}'
       class='record-info-link'
-      onclick='window.open(this.href, "_blank")'
+      onclick='window.location.href = this.href; return false;'
     >${data.name}</a>`;
   }
 
