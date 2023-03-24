@@ -85,17 +85,9 @@
       height: 100%;
 
       td {
+        padding: 8px;
         vertical-align: middle;
         white-space: nowrap;
-      }
-
-
-      td:first-child {
-        padding: 16px 0;
-      }
-
-      td:not(:first-child) {
-        padding: 8px;
       }
     }
 

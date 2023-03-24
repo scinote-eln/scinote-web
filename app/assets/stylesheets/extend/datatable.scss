@@ -67,15 +67,6 @@
     td {
       padding-left: 10px;
 
-      &:first-child {
-        display: flex;
-        justify-content: center;
-      }
-
-      &:last-child {
-        display: table-cell;
-      }
-
       .nowrap {
         white-space: nowrap;
       }
