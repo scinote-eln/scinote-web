@@ -57,6 +57,8 @@ module Scinote
 
     config.x.webhooks_enabled = ENV['ENABLE_WEBHOOKS'] == 'true'
 
+    config.x.connected_devices_enabled = ENV['CONNECTED_DEVICES_ENABLED'] == 'true'
+
     # Logging
     config.log_formatter = proc do |severity, datetime, progname, msg|
       "[#{datetime}] #{severity}: #{msg}\n"
@@ -69,6 +71,19 @@ module Scinote
     config.to_prepare do
       # Only Authorization endpoint
       Doorkeeper::AuthorizationsController.layout 'sign_in_halt'
+
+      # Add Connected Device logging
+      Doorkeeper::TokensController.class_eval do
+        after_action :log_connected_device, only: :create
+
+        private
+
+        def log_connected_device
+          return if @authorize_response.is_a?(Doorkeeper::OAuth::ErrorResponse)
+
+          ConnectedDevice.from_request_headers(request.headers, @authorize_response&.token)
+        end
+      end
     end
 
     config.action_view.field_error_proc = Proc.new { |html_tag, instance|

@@ -2338,6 +2338,19 @@ en:
         2fa_errors:
           wrong_submit_code: "Not correct code"
           wrong_password: "Not correct password"
+        connected_devices:
+          title: "Manage connected devices"
+          description: "When you remove a device, you will be logged out from the selected device."
+          empty_state: "No connected devices."
+        devices_table:
+          device_name: "Device Name"
+          added_on: "Added on"
+        device_revocation_modal:
+          title: "Remove connected device"
+          description: "This device will lose access to your SciNote account."
+          validation: "Are you sure you want to remove it?"
+          cancel: "Cancel"
+          remove: "Remove"
       new:
         head_title: "Sign up"
         team_name_label: "Team name"

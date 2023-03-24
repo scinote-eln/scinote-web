@@ -3,6 +3,8 @@ Rails.application.routes.draw do
     skip_controllers :applications, :authorized_applications, :token_info
   end
 
+  post 'access_tokens/revoke', to: 'doorkeeper/access_tokens#revoke'
+
   # Addons
 
   def draw(routes_name)
@@ -735,6 +737,8 @@ Rails.application.routes.draw do
         end
       end
     end
+
+    resources :connected_devices, controller: 'users/connected_devices', only: %i(destroy)
 
     get 'search' => 'search#index'
     get 'search/new' => 'search#new', as: :new_search
