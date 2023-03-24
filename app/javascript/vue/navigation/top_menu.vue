@@ -48,9 +48,12 @@
         </li>
       </ul>
     </div>
-    <button v-if="user" class="btn btn-light icon-btn" data-toggle="dropdown">
-      <i class="fas fa-bell"></i>
-    </button>
+    <div v-if="user" class="sci--navigation--notificaitons-flyout-container">
+      <button class="btn btn-light icon-btn" data-toggle="dropdown" @click="notificationsOpened = !notificationsOpened">
+        <i class="fas fa-bell"></i>
+      </button>
+      <NotificationsFlyout v-if="notificationsOpened" :notifications_url="notificationsUrl" @close="notificationsOpened = false" />
+    </div>
     <div v-if="user" class="dropdown">
       <div class="sci--navigation--top-menu-user" data-toggle="dropdown">
         {{ i18n.t('nav.user_greeting', { full_name: user.name })}}
@@ -73,12 +76,14 @@
 </template>
 
 <script>
+  import NotificationsFlyout from 'vue/navigation/notifications/notifications_flyout.vue'
   import DropdownSelector from 'vue/shared/dropdown_selector.vue'
 
   export default {
     name: 'TopMenuContainer',
     components: {
-      DropdownSelector
+      DropdownSelector,
+      NotificationsFlyout
     },
     props: {
       url: String
@@ -95,6 +100,8 @@
         settingsMenu: null,
         userMenu: null,
         showAboutModal: false,
+        notificationsOpened: false,
+        notificationsUrl: 'test'
       }
     },
     created() {
