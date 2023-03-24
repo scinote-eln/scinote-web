@@ -2693,9 +2693,9 @@ en:
       save_as_draft: 'Save as draft'
       version: "Version:"
       draft: 'Draft'
-      created_at: "Created at:"
-      updated_at: "Last modified at:"
-      added_by: "Added by:"
+      created_at: "Created on:"
+      updated_at: "Last modified on:"
+      added_by: "Created by:"
       keywords: "Keywords:"
       authors: "Authors:"
       no_authors: "No authors"
