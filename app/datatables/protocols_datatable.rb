@@ -8,12 +8,6 @@ class ProtocolsDatatable < CustomDatatable
 
   PREFIXED_ID_SQL = "('#{Protocol::ID_PREFIX}' || COALESCE(\"protocols\".\"parent_id\", \"protocols\".\"id\"))"
 
-  def_delegator :@view, :can_read_protocol_in_repository?
-  def_delegator :@view, :can_manage_protocol_in_repository?
-  def_delegator :@view, :edit_protocol_path
-  def_delegator :@view, :can_restore_protocol_in_repository?
-  def_delegator :@view, :can_clone_protocol_in_repository?
-  def_delegator :@view, :clone_protocol_path
   def_delegator :@view, :linked_children_protocol_path
   def_delegator :@view, :protocol_path
 
