@@ -899,7 +899,7 @@ class ProtocolsController < ApplicationController
   end
 
   def permissions
-    if stale?(@protocol)
+    if stale?([@protocol, @protocol.team.user_assignments])
       render json: {
         copyable: can_clone_protocol_in_repository?(@protocol),
         archivable: can_archive_protocol_in_repository?(@protocol),
