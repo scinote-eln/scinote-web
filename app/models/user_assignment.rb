@@ -24,6 +24,15 @@ class UserAssignment < ApplicationRecord
     assignable_owners.count == 1 && user_role.owner?
   end
 
+  def last_with_permission?(permission)
+    return false if user_role.permissions.exclude?(permission)
+
+    assignable.user_assignments.joins(:user_role)
+              .where.not(user: user)
+              .where('? = ANY(user_roles.permissions)', permission)
+              .none?
+  end
+
   private
 
   def call_user_assignment_changed_hook
