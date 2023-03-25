@@ -123,29 +123,29 @@ module BootstrapFormHelper
     #
     #   Specify custom CSS classes on the element
     #   # => color_picker_select(:tag, :color, colors: ["#ff0000", "#00ff00"], class: "class1 class2")
-    def color_picker_select(name, colors, options = {})
-      id = "#{@object_name}_#{name.to_s}"
-      input_name = "#{@object_name}[#{name.to_s}]"
+    # def color_picker_select(name, colors, options = {})
+    #   id = "#{@object_name}_#{name.to_s}"
+    #   input_name = "#{@object_name}[#{name.to_s}]"
 
-      style_str = ""
-      if options[:style] then
-        style_str = "style='#{options[:style]}'"
-      end
+    #   style_str = ""
+    #   if options[:style] then
+    #     style_str = "style='#{options[:style]}'"
+    #   end
 
-      class_str = ""
-      if options[:class] then
-        class_str = "class='#{options[:class]}'"
-      end
+    #   class_str = ""
+    #   if options[:class] then
+    #     class_str = "class='#{options[:class]}'"
+    #   end
 
-      res = ""
-      res << "<select name='#{input_name}' id='#{id}' #{style_str} #{class_str}>"
-      colors.each do |color|
-          res << "<option value='#{color}' data-color='#{color}'></option>"
-      end
-      res << "</select>"
-      res << "<script>$(function() { $('select##{id}').colorselector(); });</script>"
-      res.html_safe
-    end
+    #   res = ""
+    #   res << "<select name='#{input_name}' id='#{id}' #{style_str} #{class_str}>"
+    #   colors.each do |color|
+    #       res << "<option value='#{color}' data-color='#{color}'></option>"
+    #   end
+    #   res << "</select>"
+    #   res << "<script>$(function() { $('select##{id}').colorselector(); });</script>"
+    #   res.html_safe
+    # end
 
     # Returns color picker as a button group of color buttons, tailored for accessing a specified color
     # attribute (identified by +name+) on an object assigned to the template (identified by +object+).
@@ -168,66 +168,66 @@ module BootstrapFormHelper
     #
     #   Specify custom CSS class on the element
     #   # => color_picker_btn_group(:tag, :color, colors: ["#ff0000", "#00ff00"], class: "custom")
-    def color_picker_btn_group(name, colors, options = {})
-      id = "#{@object_name}_#{name.to_s}"
-      input_name = "#{@object_name}[#{name.to_s}]"
+    # def color_picker_btn_group(name, colors, options = {})
+    #   id = "#{@object_name}_#{name.to_s}"
+    #   input_name = "#{@object_name}[#{name.to_s}]"
 
-      icon_str = '<span class="fas fa-check" aria-hidden="true"></span>'
-      icon_str_hidden = '<span class="fas fa-check" aria-hidden="true" style="display: none;"></span>'
+    #   icon_str = '<span class="fas fa-check" aria-hidden="true"></span>'
+    #   icon_str_hidden = '<span class="fas fa-check" aria-hidden="true" style="display: none;"></span>'
 
-      label = name.to_s.humanize
-      if options[:label] then
-        label = options[:label]
-      end
+    #   label = name.to_s.humanize
+    #   if options[:label] then
+    #     label = options[:label]
+    #   end
 
-      group_str = "btn-group"
-      if options[:vertical] and options[:vertical] == true then
-        group_str << "-vertical"
-      end
-      if options[:size] then
-        if options[:size] == :large
-          group_str << " btn-group-lg"
-        elsif options[:size] == :small
-          group_str << " btn-group-sm"
-        elsif options[:size] == :extra_small
-          group_str << " btn-group-xs"
-        end
-      end
+    #   group_str = "btn-group"
+    #   if options[:vertical] and options[:vertical] == true then
+    #     group_str << "-vertical"
+    #   end
+    #   if options[:size] then
+    #     if options[:size] == :large
+    #       group_str << " btn-group-lg"
+    #     elsif options[:size] == :small
+    #       group_str << " btn-group-sm"
+    #     elsif options[:size] == :extra_small
+    #       group_str << " btn-group-xs"
+    #     end
+    #   end
 
-      style_str = ""
-      if options[:style] then
-        style_str = "style='#{options[:style]}'"
-      end
+    #   style_str = ""
+    #   if options[:style] then
+    #     style_str = "style='#{options[:style]}'"
+    #   end
 
-      class_str = ""
-      if options[:class] then
-        class_str = "#{options[:class]}"
-      end
+    #   class_str = ""
+    #   if options[:class] then
+    #     class_str = "#{options[:class]}"
+    #   end
 
-      res = ""
-      res << "<div class='form-group #{class_str}' #{style_str}>"
-      res << "<label class='control-label required' for='#{id}'>#{label}</label>"
-      res << "<div class='#{group_str}' role='group' data-toggle='buttons' aria-label='#{label}' #{style_str}>"
-      colors.each_with_index do |color, i|
-        active = i == 0 ? " active" : ""
-        checked = i == 0 ? " checked='checked'" : ""
-        contents = i == 0 ? icon_str : icon_str_hidden
+    #   res = ""
+    #   res << "<div class='form-group #{class_str}' #{style_str}>"
+    #   res << "<label class='control-label required' for='#{id}'>#{label}</label>"
+    #   res << "<div class='#{group_str}' role='group' data-toggle='buttons' aria-label='#{label}' #{style_str}>"
+    #   colors.each_with_index do |color, i|
+    #     active = i == 0 ? " active" : ""
+    #     checked = i == 0 ? " checked='checked'" : ""
+    #     contents = i == 0 ? icon_str : icon_str_hidden
 
-        res << "<label class='btn color-picker btn-primary#{active}' style='background-color: #{color}; min-width: 60px;'>"
-        res << "<input type='radio' value='#{color}'#{checked} name='#{input_name}' id='#{id}_#{color}'>"
-        res << "#{contents}&nbsp;"
-        res << "</label>"
-      end
-      res << "</div>"
-      res << "<script type='text/javascript'>$(function () {"
-      res << "$('.btn.btn-primary.color-picker').click(function() {"
-      res << "var els = $('.btn.btn-primary.color-picker'); for (var i = 0; i < els.length; i++) {"
-      res << "var el = $(els[i]); el.find('span').hide(); }"
-      res << "$(this).find('span').show(); });"
-      res << "});</script>"
-      res << "</div>"
-      res.html_safe
-    end
+    #     res << "<label class='btn color-picker btn-primary#{active}' style='background-color: #{color}; min-width: 60px;'>"
+    #     res << "<input type='radio' value='#{color}'#{checked} name='#{input_name}' id='#{id}_#{color}'>"
+    #     res << "#{contents}&nbsp;"
+    #     res << "</label>"
+    #   end
+    #   res << "</div>"
+    #   res << "<script type='text/javascript'>$(function () {"
+    #   res << "$('.btn.btn-primary.color-picker').click(function() {"
+    #   res << "var els = $('.btn.btn-primary.color-picker'); for (var i = 0; i < els.length; i++) {"
+    #   res << "var el = $(els[i]); el.find('span').hide(); }"
+    #   res << "$(this).find('span').show(); });"
+    #   res << "});</script>"
+    #   res << "</div>"
+    #   res.html_safe
+    # end
 
     # Returns smart <textarea> that dynamically resizes depending on the user
     # input. Also has an option 'single_line: true' to render it as a one-line

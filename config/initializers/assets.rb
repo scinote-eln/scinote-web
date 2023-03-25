@@ -102,6 +102,7 @@ Rails.application.config.assets.precompile += %w(BrowserPrint-Zebra-1.0.216.min.
 Rails.application.config.assets.precompile += %w(users/login_disclaimer.js)
 Rails.application.config.assets.precompile += %w(assets/office_form.js)
 Rails.application.config.assets.precompile += %w(global_activities/date_picker.js)
+Rails.application.config.assets.precompile += %w(shared/color_picker_select.js)
 
 # Libraries needed for Handsontable formulas
 Rails.application.config.assets.precompile += %w(jquery.js)
