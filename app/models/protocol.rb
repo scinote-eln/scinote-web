@@ -351,7 +351,11 @@ class Protocol < ApplicationRecord
   end
 
   def parent_newer?
-    linked? && parent.newer_published_version_present?
+    linked? && (
+      parent.newer_published_version_present? ||
+        # backward compatibility with original implementation
+        parent.published_on > updated_at
+    )
   end
 
   def number_of_steps

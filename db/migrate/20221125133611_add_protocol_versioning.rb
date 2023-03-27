@@ -36,9 +36,8 @@ class AddProtocolVersioning < ActiveRecord::Migration[6.1]
       ');'
     )
     execute(
-      'UPDATE "protocols" SET "published_on" = "created_at", "published_by_id" = "added_by_id" ' \
-      'WHERE "protocols"."protocol_type" = 5 ' \
-      'AND "protocols"."published_on" IS NULL;'
+      'UPDATE "protocols" SET "published_on" = "updated_at", "published_by_id" = "added_by_id" ' \
+      'WHERE "protocols"."protocol_type" = 5;'
     )
 
     execute(
