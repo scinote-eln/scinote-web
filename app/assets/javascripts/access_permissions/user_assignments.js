@@ -1,3 +1,5 @@
+/* global HelperModule */
+
 (function() {
   'use strict';
 
@@ -44,6 +46,10 @@
       $('.modal-backdrop').remove();
       $('.user-assignments-modal').replaceWith(data.html);
       $('.user-assignments-modal').modal('show');
+    });
+
+    $(document).on('ajax:error', 'form.member-item', function(_e, data) {
+      HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
     });
 
     $(document).on('click', '.user-assignment-dropdown .user-role-selector', function() {

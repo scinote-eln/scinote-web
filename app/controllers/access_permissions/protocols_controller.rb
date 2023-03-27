@@ -51,6 +51,8 @@ module AccessPermissions
           render :protocol_member
         end
       end
+    rescue ActiveRecord::RecordInvalid
+      render json: { flash: t('access_permissions.update.failure') }, status: :unprocessable_entity
     end
 
     def create
