@@ -379,9 +379,7 @@ class Protocol < ApplicationRecord
   end
 
   def archive(user)
-    return nil unless can_destroy?
-    # We keep published_on present, so we know (upon restoring)
-    # where the protocol was located
+    return false unless can_destroy?
 
     self.archived_by = user
     self.archived_on = Time.now

@@ -179,11 +179,11 @@ class ProtocolsController < ApplicationController
   end
 
   def archive
-    move_protocol('archive')
+    move_protocols('archive')
   end
 
   def restore
-    move_protocol('restore')
+    move_protocols('restore')
   end
 
   def edit
@@ -925,31 +925,20 @@ class ProtocolsController < ApplicationController
     return false
   end
 
-  def move_protocol(action)
-    rollbacked = false
-    begin
-      Protocol.transaction do
-        @protocols.find_each do |protocol|
-          protocol = protocol.parent if protocol.parent_id
-          protocol.method(action).call(current_user)
-        end
-      end
-    rescue StandardError => e
-      Rails.logger.error e.message
-      rollbacked = true
-    end
-
-    respond_to do |format|
-      if rollbacked
-        format.json do
-          render json: { message: I18n.t('errors.general') }, status: :unprocessable_entity
-        end
-      else
-        format.json do
-          render json: { message: t("protocols.index.#{action}_flash_html", count: @protocols.size) }
+  def move_protocols(action)
+    Protocol.transaction do
+      @protocols.find_each do |protocol|
+        protocol = protocol.parent if protocol.parent_id
+        unless protocol.method(action).call(current_user)
+          raise StandardError, protocol.errors&.messages&.values&.join(' ') || I18n.t('errors.general')
         end
       end
     end
+    render json: { message: t("protocols.index.#{action}_flash_html", count: @protocols.size) }
+  rescue StandardError => e
+    Rails.logger.error(e.message)
+    Rails.logger.error(e.backtrace.join("\n"))
+    render json: { message: e.message }, status: :unprocessable_entity
   end
 
   def set_inline_name_editing
