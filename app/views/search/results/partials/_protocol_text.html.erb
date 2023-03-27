@@ -13,17 +13,10 @@
   </span>
   &nbsp;
 <% end %>
-<% if protocol.in_module? && can_read_protocol_in_module?(protocol) || protocol.in_repository? && can_read_protocol_in_repository?(protocol) %>
-  <%= link_to text, '#', 'data-action': 'protocol-preview', 'data-url': preview_protocol_path(protocol) %>
-
-  <%= javascript_include_tag "handsontable.full" %>
-
-  <!-- Libraries for formulas -->
-  <%= render partial: "shared/formulas_libraries.html.erb" %>
-
-  <%= stylesheet_link_tag 'datatables' %>
-  <%= javascript_include_tag "protocols/index" %>
-  <%= javascript_include_tag "protocols/steps" %>
+<% if protocol.in_module? && can_read_protocol_in_module?(protocol) %>
+  <%= link_to text, protocols_my_module_path(protocol.my_module) %>
+<% elsif protocol.in_repository? && can_read_protocol_in_repository?(protocol) %>
+  <%= link_to text, protocol_path(protocol) %>
 <% else %>
   <%= text %>
 <% end %>
