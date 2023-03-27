@@ -516,19 +516,6 @@ mark,.mark {
   }
 }
 
-.protocols-datatable {
-  table {
-    tbody tr.selected {
-      & > td:nth-child(3), td:nth-child(4) {
-        color: $color-emperor;
-        & a {
-          color: $color-emperor;
-        }
-      }
-    }
-  }
-}
-
 .well-protocols-results {
   margin-top: 15px;
   margin-bottom: 0;

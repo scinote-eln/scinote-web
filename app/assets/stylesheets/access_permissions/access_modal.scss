@@ -1,3 +1,5 @@
+// scss-lint:disable IdSelector SelectorDepth NestingDepth ImportantRule
+
 #user_assignments_modal {
 
   .btn-role-select {
@@ -36,9 +38,14 @@
   }
 
   .new-member-item .user-assignment-role .dropdown-toggle {
-    border-width: 1px;
     border-color: $color-volcano;
+    border-width: 1px;
     width: 200px;
+
+    &.btn:focus {
+      box-shadow: none;
+      outline: none !important;
+   }
   }
 
   .member-item,
