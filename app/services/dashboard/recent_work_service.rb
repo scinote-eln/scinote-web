@@ -68,7 +68,7 @@ module Dashboard
                         WHEN projects.id IS NOT NULL THEN
                           CONCAT(\'pro\', projects.id)
                         WHEN protocols.id IS NOT NULL THEN
-                          CONCAT(\'prt\', protocols.id)
+                          CONCAT(\'prt\', COAlESCE(protocols.parent_id, protocols.id))
                         WHEN repositories.id IS NOT NULL THEN
                           CONCAT(\'inv\', repositories.id)
                         WHEN reports.id IS NOT NULL THEN
