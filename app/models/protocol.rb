@@ -18,7 +18,8 @@ class Protocol < ApplicationRecord
 
   after_create :update_automatic_user_assignments, if: -> { visible? && in_repository? && parent.blank? }
   before_update :change_visibility, if: :default_public_user_role_id_changed?
-  after_update :update_automatic_user_assignments, if: -> { saved_change_to_visibility? && in_repository? }
+  after_update :update_automatic_user_assignments,
+               if: -> { saved_change_to_default_public_user_role_id? && in_repository? }
   skip_callback :create, :after, :create_users_assignments, if: -> { in_module? }
 
   enum visibility: { hidden: 0, visible: 1 }
@@ -626,7 +627,7 @@ class Protocol < ApplicationRecord
     steps.map(&:can_destroy?).all?
   end
 
-  def create_public_user_assignments!(assigned_by)
+  def create_or_update_public_user_assignments!(assigned_by)
     public_role = default_public_user_role || UserRole.find_predefined_viewer_role
     team.user_assignments.where.not(user: assigned_by).find_each do |team_user_assignment|
       new_user_assignment = user_assignments.find_or_initialize_by(user: team_user_assignment.user)
@@ -686,7 +687,7 @@ class Protocol < ApplicationRecord
   def update_automatic_user_assignments
     case visibility
     when 'visible'
-      create_public_user_assignments!(added_by)
+      create_or_update_public_user_assignments!(added_by)
     when 'hidden'
       automatic_user_assignments.where.not(user: added_by).destroy_all
     end
