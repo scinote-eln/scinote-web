@@ -209,15 +209,40 @@
     flex-wrap: wrap;
     padding: 1em 0;
 
-    .protocol-actions {
+    .protocol-version-metadata {
       display: flex;
-      margin-left: auto;
-      min-height: 36px;
+      flex-wrap: nowrap;
+      width: 100%;
+
+      .protocol-link {
+        @include font-button;
+        flex-shrink: 0;
+      }
+
+      .protocol-actions {
+        display: flex;
+        margin-left: auto;
+        min-height: 36px;
+      }
+
+      .edit-buttons {
+        margin-top: .25em;
+
+        .btn {
+          margin-left: .5em;
+        }
+      }
+
+      .protocol-metadata {
+        @include font-small;
+        margin-left: 16px;
+      }
     }
 
     &:not(:hover) {
       .save-as-draft {
-        display: none;
+        opacity: 0;
+        pointer-events: none;
       }
     }
 
@@ -250,16 +275,6 @@
         width: 100%;
       }
 
-      .edit-buttons {
-        display: flex;
-        justify-content: end;
-        margin-top: .25em;
-
-        .btn {
-          margin-left: .5em;
-        }
-      }
-
       .protocol-comment-container {
         &[data-edit-mode="0"] {
           .edit-buttons {
@@ -267,12 +282,6 @@
           }
         }
       }
-    }
-
-    .protocol-metadata {
-      @include font-small;
-      margin-left: 16px;
-      max-width: 220px;
     }
   }
 
