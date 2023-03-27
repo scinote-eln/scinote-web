@@ -234,6 +234,14 @@ en:
     advanced_search: "Advanced search"
     title: "SciNote"
     academy_tooltip: "SciNote Academy"
+    notifications:
+      title: "Notifications"
+      all: "All"
+      message: "Message"
+      system: "System"
+      today: "Today"
+      older: "Older"
+      read_more: "Read more"
     user:
       settings: "Settings"
       logout: "Log out"

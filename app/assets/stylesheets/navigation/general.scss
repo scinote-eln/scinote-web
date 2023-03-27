@@ -11,7 +11,7 @@
   grid-template-rows: var(--top-navigation) var(--breadcrumbs-navigation) auto;
   height: 100vh;
   position: relative;
-  transition: .4s $timing-function-standard;
+  transition: .4s $timing-function-sharp;
   width: 100%;
 
   &[data-breadcrumbs-collapsed="true"] {

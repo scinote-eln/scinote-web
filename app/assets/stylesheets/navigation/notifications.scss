@@ -1,0 +1,94 @@
+// scss-lint:disable SelectorDepth unknownProperties
+// scss-lint:disable NestingDepth SelectorFormat
+
+.sci--navigation--notificaitons-flyout-container {
+  position: relative;
+
+  .sci--navigation--notificaitons-flyout {
+    background-color: $color-white;
+    border-radius: 0 0  $border-radius-default $border-radius-default;
+    box-shadow: $flyout-shadow;
+    height: calc(100vh - var(--top-navigation) - 2em);
+    padding: 24px;
+    position: absolute;
+    right: 0;
+    top: calc(var(--top-navigation) - .5em);
+    width: 400px;
+
+    .sci--navigation--notificaitons-flyout-title {
+      @include font-h2;
+      align-items: center;
+      display: flex;
+      margin-bottom: 10px;
+
+      .fas {
+        @include font-button;
+        cursor: pointer;
+        margin-left: auto;
+      }
+    }
+
+    .sci--navigation--notificaitons-flyout-tabs {
+      align-items: center;
+      display: flex;
+      gap: 44px;
+      height: 40px;
+    }
+
+    .sci--navigation--notificaitons-flyout-tab {
+      cursor: pointer;
+
+      &.active {
+        color: $brand-focus;
+      }
+    }
+
+    hr {
+      margin: 10px 0;
+    }
+
+    .sci-navigation--notificaitons-flyout-subtitle {
+      @include font-main;
+      line-height: 38px;
+      margin-bottom: 10px;
+    }
+
+    .sci-navigation--notificaitons-flyout-notification {
+      border-bottom: $border-tertiary;
+      display: grid;
+      grid-template-columns: max-content auto;
+      padding: 18px 0;
+
+      .sci-navigation--notificaitons-flyout-notification-icon {
+        align-items: center;
+        background-color: $brand-primary;
+        border-radius: 50%;
+        color: $color-white;
+        display: flex;
+        grid-row: 1 / 4;
+        height: 30px;
+        justify-content: center;
+        margin-right: 12px;
+        width: 30px;
+
+        &.deliver {
+          background-color: $brand-warning;
+        }
+
+        &.system {
+          background-color: $brand-success;
+        }
+      }
+
+      .sci-navigation--notificaitons-flyout-notification-date {
+        @include font-small;
+        color: $color-silver-chalice;
+      }
+
+      .sci-navigation--notificaitons-flyout-notification-title {
+        font-weight: bold;
+        margin: 5px 0;
+      }
+    }
+  }
+}
