@@ -158,16 +158,22 @@ en:
               invalid: "Invalid step order."
             name:
               taken: "This protocol template name has to be unique inside a team (this includes the archive)."
+            description:
+              too_long: 'Text is too long'
         step:
           attributes:
             step_orderable_element_order:
               invalid: "Invalid step element order"
+            description:
+              too_long: 'Text is too long'
         my_module:
           attributes:
             my_module_status_id:
               not_correct_order: "Status can be changed only on next or previous status."
             position:
               not_unique: "X and Y position has already been taken by another task in the experiment."
+            description:
+              too_long: 'Text is too long'
         my_module_status:
           attributes:
             next_status:
@@ -211,12 +217,24 @@ en:
               disabled: 'Webhooks are disabled'
             url:
               not_valid: 'Not valid URL'
+        result_text:
+          attributes:
+            text:
+              too_long: 'Text is too long'
+        step_text:
+          attributes:
+            text:
+              too_long: 'Text is too long'
+        system_notification:
+          attributes:
+            modal_body: 'Text is too long'
         connection:
           attributes:
             output_id:
               creates_cycle: "mustn't create cycle"
   errors:
     general: "Something went wrong."
+    general_text_too_long: 'Text is too long'
   storage:
     limit_reached: "Storage limit has been reached."
   helpers:
