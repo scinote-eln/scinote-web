@@ -3212,6 +3212,8 @@ en:
     destroy:
       success: "You have successfully removed %{member_name} from the project."
       failure: "Something went wrong"
+    update:
+      failure: "Something went wrong"
     partials:
       edit_assignments_content:
         title: "Manage access for %{resource_name}"
