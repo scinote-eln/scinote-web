@@ -43,21 +43,6 @@
 
 #protocols-index,
 #load-from-repository-modal {
-  .header-separator {
-    border-bottom: 1px solid $modal-header-border-color;
-    margin-left: -1.15em;
-    margin-right: -1.15em;
-    position: relative;
-    top: 17px;
-  }
-
-  .footer-separator {
-    border-top: 1px solid $modal-header-border-color;
-    bottom: 17px;
-    margin-left: -1.15em;
-    margin-right: -1.15em;
-    position: relative;
-  }
 
   .load-warning-message {
     margin-top: 20px;
