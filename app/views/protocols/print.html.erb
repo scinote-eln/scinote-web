@@ -6,7 +6,7 @@
   <span><%= t('.header.print_info', datetime: l(DateTime.current, format: :full), full_name: current_user.full_name) %></span>
 </p>
 
-<h1><%= @protocol.linked? ? protocol_name(@protocol.parent) : @protocol.name || @protocol.my_module.name %></h1>
+<h1><%= @protocol.name || @protocol.my_module&.name %></h1>
 <div>
   <% if @protocol.description.present? %>
     <%= custom_auto_link(@protocol.tinymce_render(:description),
