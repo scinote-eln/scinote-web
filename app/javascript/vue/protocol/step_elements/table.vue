@@ -156,9 +156,8 @@
       updateTable() {
         if (this.editingTable == false) return;
 
-        let tableData = JSON.stringify({data: this.tableObject.getData()});
-        this.element.attributes.orderable.contents = tableData;
-        this.element.attributes.orderable.metadata = {cells: this.tableObject.getCellsMeta().map(
+        this.element.attributes.orderable.contents = JSON.stringify({ data: this.tableObject.getData() });
+        this.element.attributes.orderable.metadata = JSON.stringify({ cells: this.tableObject.getCellsMeta().map(
           (x) => {
             if (x) {
               return {
@@ -169,8 +168,8 @@
             } else {
               return null
             }
-          }).filter(e => { return e !== null})
-        };
+          }).filter(e => { return e !== null })
+        });
         this.update();
         this.editingTable = false;
       },
