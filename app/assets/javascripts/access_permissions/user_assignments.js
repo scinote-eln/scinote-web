@@ -43,9 +43,8 @@
     });
 
     $(document).on('ajax:success', 'form#new-user-assignment-form', function(_e, data) {
-      $('.modal-backdrop').remove();
-      $('.user-assignments-modal').replaceWith(data.html);
-      $('.user-assignments-modal').modal('show');
+      $('#user_assignments_modal').replaceWith($(data.html).find('#user_assignments_modal'));
+      HelperModule.flashAlertMsg(data.flash, 'success');
     });
 
     $(document).on('ajax:error', 'form.member-item', function(_e, data) {

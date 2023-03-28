@@ -10,7 +10,7 @@
       <%= t '.title', resource_name: assignable.name %>
     </h4>
   </div>
-  <%= form_with(url: create_path, method: :post, remote: true, html: { id: 'new-user-assignment-form', data: { action: 'replace-form', target: '#user_assignments_modal', object_type: assignable.class.to_s.downcase} }) do |f| %>
+  <%= form_with(url: create_path, method: :post, remote: true, html: { id: 'new-user-assignment-form', data: { object_type: assignable.class.to_s.downcase } }) do |f| %>
     <div class="modal-body">
       <div class="sci-input-container left-icon">
         <%= text_field_tag :search_users, '',
