@@ -25,7 +25,13 @@ module StepElements
 
     def update
       ActiveRecord::Base.transaction do
-        @table.update!(table_params)
+        @table.assign_attributes(table_params.except(:metadata))
+        begin
+          @table.metadata = JSON.parse(table_params[:metadata])
+        rescue JSON::ParserError
+          @table.metadata = {}
+        end
+        @table.save!
         log_step_activity(:table_edited, { table_name: @table.name })
       end
 
@@ -61,7 +67,7 @@ module StepElements
     private
 
     def table_params
-      params.permit(:name, :contents, metadata: {})
+      params.permit(:name, :contents, :metadata)
     end
 
     def load_table
