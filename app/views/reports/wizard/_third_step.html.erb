@@ -71,7 +71,7 @@
                 <span class="sci-checkbox-container">
                   <input type="checkbox"
                          class="sci-checkbox repositories-setting"
-                         value="<%= repository.id %>"
+                         value="<%= repository.is_a?(RepositorySnapshot) ? repository.parent_id : repository.id %>"
                          <%= 'checked' if report.new_record? ||
                                           @project_contents[:repositories].include?(repository.id) ||
                                           (repository.is_a?(Repository) && repository.repository_snapshots.exists?(id: @project_contents[:repositories])) %> />
