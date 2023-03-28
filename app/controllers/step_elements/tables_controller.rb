@@ -27,7 +27,7 @@ module StepElements
       ActiveRecord::Base.transaction do
         @table.assign_attributes(table_params.except(:metadata))
         begin
-          @table.metadata = JSON.parse(table_params[:metadata])
+          @table.metadata = JSON.parse(table_params[:metadata]) if table_params[:metadata].present?
         rescue JSON::ParserError
           @table.metadata = {}
         end
