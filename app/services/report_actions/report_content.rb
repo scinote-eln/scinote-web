@@ -82,7 +82,7 @@ module ReportActions
         my_module_element = save_element!({ 'my_module_id' => my_module.id }, :my_module, experiment_element)
 
         my_module.live_and_snapshot_repositories_list.each do |repository|
-          next unless @repositories.include?(repository.id)
+          next unless @repositories.include?(repository.parent_id || repository.id)
 
           save_element!(
             { 'my_module_id' => my_module.id, 'repository_id' => repository.id },
