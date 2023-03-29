@@ -3,7 +3,9 @@
   const protocolModal = '#newProtocolModal';
   $(protocolModal)
     .on('change', '#protocol_visibility', function() {
-      $('#roleSelectWrapper').toggleClass('hidden', !$(this)[0].checked);
+      let checked = $(this)[0].checked;
+      $('#roleSelectWrapper').toggleClass('hidden', !checked);
+      $('#protocol_default_public_user_role_id').prop('disabled', !checked);
     })
     .on('show.bs.modal', function() {
       $(`${protocolModal} #protocol_name`).parent().removeClass('error');
