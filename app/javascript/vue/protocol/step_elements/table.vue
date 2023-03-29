@@ -156,25 +156,25 @@
       updateTable() {
         if (this.editingTable == false) return;
 
-        let tableData = JSON.stringify({data: this.tableObject.getData()});
-        this.element.attributes.orderable.contents = tableData;
-        this.element.attributes.orderable.metadata = {cells: this.tableObject.getCellsMeta().map(
-          (x) => {
-            if (x) {
-              return {
-                col: x.col,
-                row: x.row,
-                className: x.className || ''
-              }
-            } else {
-              return null
-            }
-          }).filter(e => { return e !== null})
-        };
         this.update();
         this.editingTable = false;
       },
       update() {
+        this.element.attributes.orderable.contents = JSON.stringify({ data: this.tableObject.getData() });
+        this.element.attributes.orderable.metadata = JSON.stringify({
+         cells: this.tableObject.getCellsMeta().map(
+           (x) => {
+             if (x) {
+               return {
+                 col: x.col,
+                 row: x.row,
+                 className: x.className || ''
+               }
+             } else {
+               return null
+             }
+           }).filter(e => { return e !== null })
+        });
         this.$emit('update', this.element)
       },
       loadTableData() {
