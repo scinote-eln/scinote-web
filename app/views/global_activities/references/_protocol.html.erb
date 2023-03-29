@@ -1,4 +1,4 @@
-<% if subject.in_repository? %>
+<% if !subject || subject.in_repository? %>
   <%= render partial: "global_activities/references/team.html.erb",
              locals: { team: team, subject: team, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
 <% else %>
