@@ -116,8 +116,8 @@
 
  <script>
 
- import InlineEdit from 'vue/shared/inline_edit.vue'
- import InsertFieldDropdown from 'vue/label_template/insert_field_dropdown.vue'
+ import InlineEdit from '../shared/inline_edit.vue'
+ import InsertFieldDropdown from './insert_field_dropdown.vue'
  import LabelPreview from './components/label_preview.vue'
 
   export default {

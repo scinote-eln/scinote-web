@@ -82,7 +82,7 @@
 </template>
 
  <script>
-import DeleteStepsModals from 'vue/protocol/modals/delete_steps'
+import DeleteStepsModals from './modals/delete_steps'
 
 export default {
 

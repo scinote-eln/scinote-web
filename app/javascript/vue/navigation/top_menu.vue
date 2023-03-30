@@ -76,8 +76,8 @@
 </template>
 
 <script>
-  import NotificationsFlyout from 'vue/navigation/notifications/notifications_flyout.vue'
-  import DropdownSelector from 'vue/shared/dropdown_selector.vue'
+  import NotificationsFlyout from './notifications/notifications_flyout.vue'
+  import DropdownSelector from '../shared/dropdown_selector.vue'
 
   export default {
     name: 'TopMenuContainer',

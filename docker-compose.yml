@@ -25,36 +25,17 @@ services:
       - "3000:3000"
     command: >
       bash -c "rm -f /usr/src/app/tmp/pids/server.pid &&
+               yarn install &&
                (bundle check || bundle install) &&
-               bundle exec rails s -b 0.0.0.0"
+               ./bin/dev"
     environment:
       - RAILS_ENV=development
-      - WEBPACKER_DEV_SERVER_HOST=webpack
+      - NODE_ENV=development
     volumes:
       - .:/usr/src/app
       - scinote_development_bundler:/usr/local/bundle/
       - scinote_development_files:/usr/src/app/public/system
       - scinote_development_storage:/usr/src/app/storage
-
-  webpack:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: scinote_web_development
-    container_name: scinote_webpack_development
-    stdin_open: true
-    tty: true
-    ports:
-      - "8080:8080"
-    command: >
-      bash -c "./bin/webpack-dev-server"
-    environment:
-      - RAILS_ENV=development
-      - WORKER=true
-    volumes:
-      - .:/usr/src/app
-      - scinote_development_bundler:/usr/local/bundle/
-      - scinote_development_files:/usr/src/app/public/system
 
 volumes:
   scinote_development_postgres:

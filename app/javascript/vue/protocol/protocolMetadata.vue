@@ -54,8 +54,8 @@
 </template>
 <script>
 
-  import InlineEdit from 'vue/shared/inline_edit.vue'
-  import DropdownSelector from 'vue/shared/dropdown_selector.vue'
+  import InlineEdit from '../shared/inline_edit.vue'
+  import DropdownSelector from '../shared/dropdown_selector.vue'
 
   export default {
     name: 'ProtocolMetadata',
