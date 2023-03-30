@@ -186,6 +186,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def edit
     @connected_devices = ConnectedDevice.for_user(current_user)
+    @user_statistics = current_user.statistics
     super
   end
 
