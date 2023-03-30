@@ -240,9 +240,6 @@ var ProtocolsIndex = (function() {
       fnDrawCallback: function() {
         animateSpinner(this, false);
       },
-      preDrawCallback: function() {
-        animateSpinner(this);
-      },
       stateSaveCallback: function(settings, data) {
         // Set a cookie with the table state using the team id
         localStorage.setItem(
