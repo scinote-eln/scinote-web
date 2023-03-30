@@ -26,6 +26,7 @@ class ProjectsController < ApplicationController
   layout 'fluid'
 
   def index
+    @breadcrumbs_items = breadcrumbs_items
     if current_team
       view_state = current_team.current_view_state(current_user)
       @current_sort = view_state.state.dig('projects', projects_view_mode, 'sort') || 'atoz'
@@ -306,6 +307,7 @@ class ProjectsController < ApplicationController
   end
 
   def show
+    @breadcrumbs_items = breadcrumbs_items
     view_state = @project.current_view_state(current_user)
     @current_sort = view_state.state.dig('experiments', experiments_view_mode(@project), 'sort') || 'atoz'
     @current_view_type = view_state.state.dig('experiments', 'view_type')
@@ -475,5 +477,32 @@ class ProjectsController < ApplicationController
             team: project.team,
             project: project,
             message_items: message_items)
+  end
+
+  def breadcrumbs_items
+    breadcrumbs_items = []
+    folders = helpers.tree_ordered_parent_folders(current_folder)
+    breadcrumbs_items.push({
+                 label: t('projects.index.breadcrumbs_root'),
+                 url: projects_path,
+                 class: 'project-folder-link'
+               })
+
+    folders&.each do |project_folder|
+      breadcrumbs_items.push({
+                   label: project_folder.name,
+                   url: project_folder_path(project_folder),
+                   class: 'project-folder-link'
+                 })
+    end
+
+    if @project
+      breadcrumbs_items.push({
+                   label: @project.name,
+                   url: project_path(@project)
+                 })
+    end
+
+    breadcrumbs_items
   end
 end
