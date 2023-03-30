@@ -44,7 +44,8 @@ module AccessPermissions
       end
 
       @user_assignment.update!(permitted_update_params)
-      log_activity(:protocol_template_access_changed, @user_assignment)
+      log_activity(:protocol_template_access_changed, { user_target: @user_assignment.user.id,
+                                                        role: @user_assignment.user_role.name })
 
       respond_to do |format|
         format.json do
@@ -63,6 +64,8 @@ module AccessPermissions
 
           if user_assignment_params[:user_id] == 'all'
             @protocol.update!(default_public_user_role_id: user_assignment_params[:user_role_id])
+            log_activity(:protocol_template_access_granted_all_team_members,
+                         { team: @protocol.team.id, role: @protocol.default_public_user_role&.name })
           else
             user_assignment = UserAssignment.find_or_initialize_by(
               assignable: @protocol,
@@ -77,7 +80,8 @@ module AccessPermissions
             )
 
             created_count += 1
-            log_activity(:protocol_template_access_granted, user_assignment)
+            log_activity(:protocol_template_access_granted, { user_target: user_assignment.user.id,
+                                                              role: user_assignment.user_role.name })
           end
         end
 
@@ -110,7 +114,8 @@ module AccessPermissions
         else
           user_assignment.destroy!
         end
-        log_activity(:protocol_template_access_revoked, user_assignment)
+        log_activity(:protocol_template_access_revoked, { user_target: user_assignment.user.id,
+                                                          role: user_assignment.user_role.name })
       end
 
       render json: { flash: t('access_permissions.destroy.success', member_name: user.full_name) }
@@ -121,7 +126,15 @@ module AccessPermissions
     end
 
     def update_default_public_user_role
+      current_role = @protocol.default_public_user_role.name
       @protocol.update!(permitted_default_public_user_role_params)
+      type_of = if @protocol.default_public_user_role.present?
+                  :protocol_template_access_changed_all_team_members
+                else
+                  :protocol_template_access_revoked_all_team_members
+                end
+
+      log_activity(type_of, { team: @protocol.team.id, role: @protocol.default_public_user_role&.name || current_role })
     end
 
     private
@@ -156,16 +169,16 @@ module AccessPermissions
       render_403 unless can_read_protocol_in_repository?(@protocol)
     end
 
-    def log_activity(type_of, user_assignment)
+    def log_activity(type_of, message_items = {})
+      message_items = { protocol: @protocol.id }.merge(message_items)
+
       Activities::CreateActivityService
         .call(activity_type: type_of,
               owner: current_user,
               subject: @protocol,
               team: @protocol.team,
               project: nil,
-              message_items: { protocol: @protocol.id,
-                               user_target: user_assignment.user.id,
-                               role: user_assignment.user_role.name })
+              message_items: message_items)
     end
   end
 end

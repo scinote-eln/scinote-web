@@ -261,7 +261,11 @@ en:
       protocol_template_access_granted_html: "%{user} granted with access %{user_target} with user role %{role} to protocol template %{protocol}."
       protocol_template_access_changed_html: "%{user} changed %{user_target}’s role on protocol template %{protocol} to %{role}."
       protocol_template_access_revoked_html: "%{user} removed %{user_target} with user role %{role} from protocol template %{protocol}."
+      protocol_template_access_granted_all_team_members_html: "%{user} granted with access all team members of %{team} team with user role %{role} to protocol template %{protocol}."
+      protocol_template_access_changed_all_team_members_html: "%{user} changed %{team}’s role on protocol template %{protocol} to %{role}."
+      protocol_template_access_revoked_all_team_members_html: "%{user} removed %{team} team members with user role %{role} from protocol template %{protocol}."
       task_protocol_save_to_template_html: "%{user} created a new protocol template %{protocol} from a task."
+      project_access_changed_all_team_members_html: "%{user} changed %{team}’s role on project %{project} to %{role}."
     activity_name:
       create_project: "Project created"
       rename_project: "Project renamed"
@@ -478,6 +482,10 @@ en:
       protocol_template_access_changed: "User role changed on a protocol"
       protocol_template_access_revoked: "User removed from a protocol"
       task_protocol_save_to_template: "Save as new protocol template"
+      protocol_template_access_granted_all_team_members: "Grant access to all team members"
+      protocol_template_access_changed_all_team_members: "Change role of all team members"
+      protocol_template_access_revoked_all_team_members: "Remove access from all team members"
+      project_access_changed_all_team_members: "Change role of all team members"
     activity_group:
       projects: "Projects"
       task_results: "Task results"
