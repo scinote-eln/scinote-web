@@ -18,6 +18,7 @@ class ExperimentsController < ApplicationController
   before_action :check_clone_permissions, only: %i(clone_modal clone)
   before_action :check_move_permissions, only: %i(move_modal move)
   before_action :set_inline_name_editing, only: %i(canvas table module_archive)
+  before_action :set_breadcrumbs_items, only: %i(canvas table module_archive)
 
   layout 'fluid'
 
@@ -77,7 +78,6 @@ class ExperimentsController < ApplicationController
   end
 
   def canvas
-    @breadcrumbs_items = breadcrumbs_items
     redirect_to module_archive_experiment_path(@experiment) if @experiment.archived_branch?
     @project = @experiment.project
     @active_modules = @experiment.my_modules.active.order(:name)
@@ -90,7 +90,6 @@ class ExperimentsController < ApplicationController
   end
 
   def table
-    @breadcrumbs_items = breadcrumbs_items
     @project = @experiment.project
     @experiment.current_view_state(current_user)
     @my_module_visible_table_columns = current_user.my_module_visible_table_columns
@@ -374,7 +373,6 @@ class ExperimentsController < ApplicationController
   end
 
   def module_archive
-    @breadcrumbs_items = breadcrumbs_items
     @project = @experiment.project
     @my_modules = @experiment.archived_branch? ? @experiment.my_modules : @experiment.my_modules.archived
     @my_modules = @my_modules.with_granted_permissions(current_user, MyModulePermissions::READ_ARCHIVED)
@@ -662,7 +660,7 @@ class ExperimentsController < ApplicationController
     end
   end
 
-  def breadcrumbs_items
+  def set_breadcrumbs_items
     experiment = @experiment
     project = experiment.project
     current_folder = project&.project_folder
@@ -693,6 +691,6 @@ class ExperimentsController < ApplicationController
                              url: my_modules_experiment_path(experiment)
                             })
 
-    breadcrumbs_items
+    @breadcrumbs_items = breadcrumbs_items
   end
 end

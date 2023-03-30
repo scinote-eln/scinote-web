@@ -22,11 +22,11 @@ class ProjectsController < ApplicationController
   before_action :load_exp_sort_var, only: :show
   before_action :reset_invalid_view_state, only: %i(index cards show)
   before_action :set_folder_inline_name_editing, only: %i(index cards)
+  before_action :set_breadcrumbs_items, only: %i(index show)
 
   layout 'fluid'
 
   def index
-    @breadcrumbs_items = breadcrumbs_items
     if current_team
       view_state = current_team.current_view_state(current_user)
       @current_sort = view_state.state.dig('projects', projects_view_mode, 'sort') || 'atoz'
@@ -307,7 +307,6 @@ class ProjectsController < ApplicationController
   end
 
   def show
-    @breadcrumbs_items = breadcrumbs_items
     view_state = @project.current_view_state(current_user)
     @current_sort = view_state.state.dig('experiments', experiments_view_mode(@project), 'sort') || 'atoz'
     @current_view_type = view_state.state.dig('experiments', 'view_type')
@@ -479,7 +478,7 @@ class ProjectsController < ApplicationController
             message_items: message_items)
   end
 
-  def breadcrumbs_items
+  def set_breadcrumbs_items
     breadcrumbs_items = []
     folders = helpers.tree_ordered_parent_folders(current_folder)
     breadcrumbs_items.push({
@@ -503,6 +502,6 @@ class ProjectsController < ApplicationController
                  })
     end
 
-    breadcrumbs_items
+    @breadcrumbs_items = breadcrumbs_items
   end
 end
