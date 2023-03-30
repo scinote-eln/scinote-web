@@ -1,4 +1,5 @@
 <% if @breadcrumbs_items&.length %>
+  <% @breadcrumbs_items.each { |item| item[:label] = "(A) #{item[:label]}" if item[:archived] }%>
   <% shortened = @breadcrumbs_items.length > 4 %>
 
   <% if shortened %>

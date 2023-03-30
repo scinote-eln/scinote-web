@@ -633,16 +633,20 @@ class MyModulesController < ApplicationController
 
     breadcrumbs_items.push({
                              label: project.name,
-                             url: project_path(project)
+                             url: project_path(project),
+                             archived: project.archived?
                            })
 
     breadcrumbs_items.push({
                              label: experiment.name,
-                             url: my_modules_experiment_path(experiment)
+                             url: my_modules_experiment_path(experiment),
+                             archived: experiment.archived?
                            })
+
     breadcrumbs_items.push({
                              label: my_module.name,
-                             url: my_module_path(my_module)
+                             url: my_module_path(my_module),
+                             archived: my_module.archived?
                            })
 
     @breadcrumbs_items = breadcrumbs_items

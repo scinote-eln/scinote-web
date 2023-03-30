@@ -1257,7 +1257,8 @@ class ProtocolsController < ApplicationController
     if protocol
       breadcrumbs_items.push({
                               label: protocol.name,
-                              url: protocol_path(protocol)
+                              url: protocol_path(protocol),
+                              archived: protocol.archived?
                              })
     end
   end

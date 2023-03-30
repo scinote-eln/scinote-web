@@ -683,12 +683,14 @@ class ExperimentsController < ApplicationController
 
     breadcrumbs_items.push({
                               label: project.name,
-                              url: project_path(project)
+                              url: project_path(project),
+                              archived: project.archived?
                             })
     
     breadcrumbs_items.push({
                              label: experiment.name,
-                             url: my_modules_experiment_path(experiment)
+                             url: my_modules_experiment_path(experiment),
+                             archived: experiment.archived?
                             })
 
     @breadcrumbs_items = breadcrumbs_items

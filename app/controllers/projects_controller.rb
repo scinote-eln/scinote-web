@@ -479,6 +479,7 @@ class ProjectsController < ApplicationController
   end
 
   def set_breadcrumbs_items
+    project = @project
     breadcrumbs_items = []
     folders = helpers.tree_ordered_parent_folders(current_folder)
     breadcrumbs_items.push({
@@ -495,10 +496,11 @@ class ProjectsController < ApplicationController
                  })
     end
 
-    if @project
+    if project
       breadcrumbs_items.push({
-                   label: @project.name,
-                   url: project_path(@project)
+                   label: project.name,
+                   url: project_path(project),
+                   archived: project.archived?
                  })
     end
 

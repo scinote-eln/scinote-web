@@ -540,7 +540,8 @@ class RepositoriesController < ApplicationController
     if repository
       breadcrumbs_items.push({
                               label: repository.name,
-                              url: repository_path(repository)
+                              url: repository_path(repository),
+                              archived: repository.archived?
                              })
     end
   end
