@@ -19,6 +19,7 @@ class MyModulesController < ApplicationController
   before_action :check_update_state_permissions, only: :update_state
   before_action :set_inline_name_editing, only: %i(protocols results activities archive)
   before_action :load_experiment_my_modules, only: %i(protocols results activities archive)
+  before_action :set_breadcrumbs_items, only: %i(results protocols activities signatures)
 
   layout 'fluid'.freeze
 
@@ -606,5 +607,44 @@ class MyModulesController < ApplicationController
                  experiment: link_to(@my_module.experiment.name, my_modules_experiment_url(@my_module.experiment)),
                  my_module: link_to(@my_module.name, protocols_my_module_url(@my_module)))
     )
+  end
+
+  def set_breadcrumbs_items
+    my_module = @my_module
+    experiment = my_module.experiment
+    project = experiment.project
+    current_folder = project&.project_folder
+    breadcrumbs_items = []
+    folders = helpers.tree_ordered_parent_folders(current_folder)
+
+    breadcrumbs_items.push({
+                             label: t('projects.index.breadcrumbs_root'),
+                             url: projects_path,
+                             class: 'project-folder-link'
+                           })
+
+    folders&.each do |project_folder|
+      breadcrumbs_items.push({
+                               label: project_folder.name,
+                               url: project_folder_path(project_folder),
+                               class: 'project-folder-link'
+                             })
+    end
+
+    breadcrumbs_items.push({
+                             label: project.name,
+                             url: project_path(project)
+                           })
+
+    breadcrumbs_items.push({
+                             label: experiment.name,
+                             url: my_modules_experiment_path(experiment)
+                           })
+    breadcrumbs_items.push({
+                             label: my_module.name,
+                             url: my_module_path(my_module)
+                           })
+
+    @breadcrumbs_items = breadcrumbs_items
   end
 end

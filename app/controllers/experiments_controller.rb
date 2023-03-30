@@ -77,6 +77,7 @@ class ExperimentsController < ApplicationController
   end
 
   def canvas
+    @breadcrumbs_items = breadcrumbs_items
     redirect_to module_archive_experiment_path(@experiment) if @experiment.archived_branch?
     @project = @experiment.project
     @active_modules = @experiment.my_modules.active.order(:name)
@@ -89,6 +90,7 @@ class ExperimentsController < ApplicationController
   end
 
   def table
+    @breadcrumbs_items = breadcrumbs_items
     @project = @experiment.project
     @experiment.current_view_state(current_user)
     @my_module_visible_table_columns = current_user.my_module_visible_table_columns
@@ -372,6 +374,7 @@ class ExperimentsController < ApplicationController
   end
 
   def module_archive
+    @breadcrumbs_items = breadcrumbs_items
     @project = @experiment.project
     @my_modules = @experiment.archived_branch? ? @experiment.my_modules : @experiment.my_modules.archived
     @my_modules = @my_modules.with_granted_permissions(current_user, MyModulePermissions::READ_ARCHIVED)
@@ -657,5 +660,39 @@ class ExperimentsController < ApplicationController
         Connection.create!(input_id: destination_my_module.id, output_id: source_my_module.id)
       end
     end
+  end
+
+  def breadcrumbs_items
+    experiment = @experiment
+    project = experiment.project
+    current_folder = project&.project_folder
+    breadcrumbs_items = []
+    folders = helpers.tree_ordered_parent_folders(current_folder)
+
+    breadcrumbs_items.push({
+                             label: t('projects.index.breadcrumbs_root'),
+                             url: projects_path,
+                             class: 'project-folder-link'
+                           })
+
+    folders&.each do |project_folder|
+      breadcrumbs_items.push({
+                               label: project_folder.name,
+                               url: project_folder_path(project_folder),
+                               class: 'project-folder-link'
+                             })
+    end
+
+    breadcrumbs_items.push({
+                              label: project.name,
+                              url: project_path(project)
+                            })
+    
+    breadcrumbs_items.push({
+                             label: experiment.name,
+                             url: my_modules_experiment_path(experiment)
+                            })
+
+    breadcrumbs_items
   end
 end
