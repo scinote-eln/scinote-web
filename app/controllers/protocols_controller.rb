@@ -74,6 +74,7 @@ class ProtocolsController < ApplicationController
                 only: %i(protocolsio_import_create protocolsio_import_save)
 
   before_action :set_importer, only: %i(load_from_file import)
+  before_action :set_breadcrumbs_items, only: %i(index show)
 
   layout 'fluid'
 
@@ -1240,5 +1241,24 @@ class ProtocolsController < ApplicationController
       message: t('notifications.protocol_description_annotation_message_html',
                  protocol: link_to(@protocol.name, protocol_url(@protocol)))
     )
+  end
+
+  def set_breadcrumbs_items
+    protocol = @protocol || nil
+    breadcrumbs_items = []
+
+    breadcrumbs_items.push({
+                             label: t('breadcrumbs.protocols'),
+                             url: protocols_path
+                           })
+
+    @breadcrumbs_items = breadcrumbs_items
+
+    if protocol
+      breadcrumbs_items.push({
+                              label: protocol.name,
+                              url: protocol_path(protocol)
+                             })
+    end
   end
 end

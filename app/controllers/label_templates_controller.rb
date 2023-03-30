@@ -8,6 +8,7 @@ class LabelTemplatesController < ApplicationController
   before_action :check_manage_permissions, only: %i(create duplicate set_default delete update)
   before_action :load_label_templates, only: %i(index datatable)
   before_action :load_label_template, only: %i(show set_default update template_tags)
+  before_action :set_breadcrumbs_items, only: %i(index show)
 
   layout 'fluid'
 
@@ -185,5 +186,24 @@ class LabelTemplatesController < ApplicationController
             subject: label_template,
             team: label_template.team,
             message_items: message_items)
+  end
+
+  def set_breadcrumbs_items
+    label = @label_template || nil
+    breadcrumbs_items = []
+
+    breadcrumbs_items.push({
+                             label: t('breadcrumbs.labels'),
+                             url: label_templates_path
+                           })
+
+    @breadcrumbs_items = breadcrumbs_items
+
+    if label
+      breadcrumbs_items.push({
+                               label: label.name,
+                               url: label_template_path(label)
+                             })
+    end
   end
 end
