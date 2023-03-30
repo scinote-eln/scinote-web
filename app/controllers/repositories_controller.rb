@@ -22,6 +22,7 @@ class RepositoriesController < ApplicationController
   before_action :check_create_permissions, only: %i(create_modal create)
   before_action :check_copy_permissions, only: %i(copy_modal copy)
   before_action :set_inline_name_editing, only: %i(show)
+  before_action :set_breadcrumbs_items, only: %i(index show)
 
   layout 'fluid'
 
@@ -523,5 +524,24 @@ class RepositoriesController < ApplicationController
             subject: @repository,
             team: @repository.team,
             message_items: message_items)
+  end
+
+  def set_breadcrumbs_items
+    repository = @repository
+    breadcrumbs_items = []
+
+    breadcrumbs_items.push({
+                             label: t('breadcrumbs.inventories'),
+                             url: repositories_path
+                           })
+
+    @breadcrumbs_items = breadcrumbs_items
+
+    if repository
+      breadcrumbs_items.push({
+                              label: repository.name,
+                              url: repository_path(repository)
+                             })
+    end
   end
 end
