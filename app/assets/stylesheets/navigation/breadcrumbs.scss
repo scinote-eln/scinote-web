@@ -1,0 +1,24 @@
+.sci--layout-navigation-breadcrumbs {
+  --max-breadcrumbs-link-width: 180px;
+  padding: 14px 24px 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 14px;
+
+  .breadcrumbs-link {
+    color: var(--sn-blue);
+    max-width: var(--max-breadcrumbs-link-width);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &:last-child {
+      color: var(--sn-grey);
+    }
+  }
+
+  .delimiter {
+    color: var(--sn-grey);
+  }
+}
