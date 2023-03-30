@@ -47,7 +47,8 @@ module AccessPermissions
 
       @user_assignment.update!(permitted_update_params)
 
-      log_activity(:change_user_role_on_project, @user_assignment)
+      log_activity(:change_user_role_on_project, { user_target: @user_assignment.user.id,
+                                                   role: @user_assignment.user_role.name })
       propagate_job(@user_assignment)
 
       respond_to do |format|
@@ -67,16 +68,7 @@ module AccessPermissions
 
           if user_assignment_params[:user_id] == 'all'
             @project.update!(visibility: :visible, default_public_user_role_id: user_assignment_params[:user_role_id])
-            Activities::CreateActivityService
-              .call(activity_type: :change_project_visibility,
-                    owner: current_user,
-                    subject: @project,
-                    team: @project.team,
-                    project: @project,
-                    message_items: {
-                      project: @project.id,
-                      visibility: t('projects.activity.visibility_visible')
-                    })
+            log_activity(:change_project_visibility, { visibility: t('projects.activity.visibility_visible') })
           else
 
             user_assignment = UserAssignment.find_or_initialize_by(
@@ -91,7 +83,8 @@ module AccessPermissions
               assigned: :manually
             )
 
-            log_activity(:assign_user_to_project, user_assignment)
+            log_activity(:assign_user_to_project, { user_target: user_assignment.user.id,
+                                                    role: user_assignment.user_role.name })
             created_count += 1
             propagate_job(user_assignment)
           end
@@ -126,7 +119,8 @@ module AccessPermissions
       end
 
       propagate_job(user_assignment, destroy: true)
-      log_activity(:unassign_user_from_project, user_assignment)
+      log_activity(:unassign_user_from_project, { user_target: user_assignment.user.id,
+                                                  role: user_assignment.user_role.name })
 
       render json: { flash: t('access_permissions.destroy.success', member_name: escape_input(user.full_name)) },
              status: :ok
@@ -140,6 +134,13 @@ module AccessPermissions
         @project.visibility = :hidden if permitted_default_public_user_role_params[:default_public_user_role_id].blank?
         @project.assign_attributes(permitted_default_public_user_role_params)
         @project.save!
+
+        if permitted_default_public_user_role_params[:default_public_user_role_id].blank?
+          log_activity(:change_project_visibility, { visibility: t('projects.activity.visibility_hidden') })
+        else
+          log_activity(:project_access_changed_all_team_members,
+                       { team: @project.team.id, role: @project.default_public_user_role&.name })
+        end
 
         UserAssignments::ProjectGroupAssignmentJob.perform_later(current_team, @project, current_user)
       end
@@ -194,16 +195,16 @@ module AccessPermissions
       )
     end
 
-    def log_activity(type_of, user_assignment)
+    def log_activity(type_of, message_items = {})
+      message_items = { project: @project.id }.merge(message_items)
+
       Activities::CreateActivityService
         .call(activity_type: type_of,
               owner: current_user,
               subject: @project,
               team: @project.team,
               project: @project,
-              message_items: { project: @project.id,
-                               user_target: user_assignment.user.id,
-                               role: user_assignment.user_role.name })
+              message_items: message_items)
     end
   end
 end
