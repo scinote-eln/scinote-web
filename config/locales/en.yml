@@ -3206,11 +3206,11 @@ en:
     grant_access: "Grant access"
     create:
       success:
-        one: "You have successfully granted access to %{count} member to the project."
-        other: "You have successfully granted access to %{count} members to the project."
+        one: "You have successfully granted access to %{count} member."
+        other: "You have successfully granted access to %{count} members."
       failure: "Something went wrong"
     destroy:
-      success: "You have successfully removed %{member_name} from the project."
+      success: "You have successfully removed %{member_name}."
       failure: "Something went wrong"
     update:
       failure: "Something went wrong"
