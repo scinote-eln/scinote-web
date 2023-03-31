@@ -319,7 +319,7 @@ class ProtocolsController < ApplicationController
       transaction_error = false
       Protocol.transaction do
         @new = @protocol.copy_to_repository(Protocol.new(create_params), current_user)
-        log_activity(:task_protocol_save_to_template, @my_module.experiment.project, protocol: @protocol.id)
+        log_activity(:task_protocol_save_to_template, @my_module.experiment.project, protocol: @new.id)
       rescue StandardError => e
         transaction_error = true
         Rails.logger.error(e.message)
