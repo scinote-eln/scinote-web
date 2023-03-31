@@ -581,7 +581,7 @@ class Protocol < ApplicationRecord
   end
 
   def set_linked_at
-    self.linked_at = self.created_at
+    linked_at = created_at
     self.save!
   end
 
