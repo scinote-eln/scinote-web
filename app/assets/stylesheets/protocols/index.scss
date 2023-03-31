@@ -79,6 +79,7 @@
       flex-grow: 1;
       height: calc(100% - var(--datatable-pagination-row) - var(--protocol-toolbar-size));
       padding-bottom: 12px;
+      z-index: 1;
     }
 
     .dataTables_scrollBody {
