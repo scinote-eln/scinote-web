@@ -16,6 +16,7 @@ class Protocol < ApplicationRecord
   include PermissionCheckableModel
   include TinyMceImages
 
+  after_create :set_linked_at, if: -> { linked? && linked_at.blank? }
   after_create :update_automatic_user_assignments, if: -> { visible? && in_repository? && parent.blank? }
   before_update :change_visibility, if: :default_public_user_role_id_changed?
   after_update :update_automatic_user_assignments,
@@ -577,6 +578,11 @@ class Protocol < ApplicationRecord
     end
 
     deep_clone(clone, current_user)
+  end
+
+  def set_linked_at
+    self.linked_at = self.created_at
+    self.save!
   end
 
   def deep_clone_repository(current_user)
