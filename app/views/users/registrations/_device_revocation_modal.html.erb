@@ -1,0 +1,19 @@
+<div class="modal device-revocation-modal" id="deviceRevocationModal" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+        <h2 class="modal-title"><%= t("users.registrations.edit.device_revocation_modal.title") %></h2>
+      </div>
+      <div class="modal-body">
+        <p><%= t("users.registrations.edit.device_revocation_modal.description") %></p>
+        <h3><%= t("users.registrations.edit.device_revocation_modal.validation") %></h3>
+      </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.cancel') %></button>
+        <%= link_to t("users.registrations.edit.device_revocation_modal.remove"), '#', id: "confirm-device-remove", remote:true ,method: :delete, type: 'button', class: 'btn btn-primary' %>
+      </div>
+    </div>
+  </div>
+</div>
+

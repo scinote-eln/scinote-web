@@ -129,7 +129,7 @@
         border: 1px solid $color-white;
         display: flex;
         height: 3em;
-        padding: 0 calc((3em - var(--sci-checkbox-size))/2);
+        padding: 0 .5em;
         position: sticky;
         position: -webkit-sticky;
         top: calc(var(--content-header-size) + var(--navbar-height));

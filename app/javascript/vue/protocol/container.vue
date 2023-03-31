@@ -1,5 +1,5 @@
 <template>
-  <div class="task-protocol">
+  <div v-if="protocol.id" class="task-protocol">
     <div class="task-section-header" v-if="!inRepository">
       <div class="portocol-header-left-part">
         <a class="task-section-caret" tabindex="0" role="button" data-toggle="collapse" href="#protocol-content" aria-expanded="true" aria-controls="protocol-content">
@@ -35,9 +35,9 @@
         </div>
       </div>
     </div>
-    <div v-if="protocol.id" id="protocol-content" class="protocol-content collapse in" aria-expanded="true">
+    <div id="protocol-content" class="protocol-content collapse in" aria-expanded="true">
       <div class="protocol-description">
-        <div class="protocol-name">
+        <div class="protocol-name" v-if="!inRepository">
           <InlineEdit
             v-if="urls.update_protocol_name_url"
             :value="protocol.attributes.name"
@@ -51,74 +51,101 @@
             {{ protocol.attributes.name }}
           </span>
         </div>
-        <ProtocolMetadata v-if="protocol.attributes && protocol.attributes.in_repository" :protocol="protocol" @update="updateProtocol"/>
-        <div v-if="urls.update_protocol_description_url">
-          <Tinymce
-            :value="protocol.attributes.description"
-            :value_html="protocol.attributes.description_view"
-            :placeholder="i18n.t('my_modules.protocols.protocol_status_bar.empty_description_edit_label')"
-            :updateUrl="urls.update_protocol_description_url"
-            :objectType="'Protocol'"
-            :objectId="parseInt(protocol.id)"
-            :fieldName="'protocol[description]'"
-            :lastUpdated="protocol.attributes.updated_at"
-            :characterLimit="100000"
-            @update="updateDescription"
-          />
-        </div>
-        <div v-else-if="protocol.attributes.description_view" v-html="protocol.attributes.description_view"></div>
-        <div v-else class="empty-protocol-description">
-          {{ i18n.t("protocols.no_text_placeholder") }}
-        </div>
-      </div>
-      <a v-if="urls.add_step_url && protocol.attributes.in_repository" class="btn btn-primary repository-new-step"
-          @keyup.enter="addStep(steps.length)" @click="addStep(steps.length)" tabindex="0">
-        <span class="fas fa-plus" aria-hidden="true"></span>
-        <span>{{ i18n.t("protocols.steps.new_step") }}</span>
-      </a>
-      <div v-if="steps.length > 0" class="protocol-step-actions">
-        <button class="btn btn-light" @click="collapseSteps" tabindex="0">
-          <span class="fas fa-caret-up"></span>
-          {{ i18n.t("protocols.steps.collapse_label") }}
-        </button>
-        <button class="btn btn-light" @click="expandSteps" tabindex="0">
-          <span class="fas fa-caret-down"></span>
-          {{ i18n.t("protocols.steps.expand_label") }}
-        </button>
-        <a v-if="urls.reorder_steps_url"
-           class="btn btn-light"
-           data-toggle="modal"
-           @click="startStepReorder"
-           @keyup.enter="startStepReorder"
-           :class="{'disabled': steps.length == 1}"
-           tabindex="0" >
-            <i class="fas fas-rotated-90 fa-exchange-alt" aria-hidden="true"></i>
-            <span>{{ i18n.t("protocols.reorder_steps.button") }}</span>
-        </a>
-      </div>
-      <div class="protocol-steps">
-        <template v-for="(step, index) in steps">
-          <div class="step-block" :key="step.id">
-            <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)">
-              <i class="fas fa-plus"></i>
+        <ProtocolMetadata v-if="protocol.attributes && protocol.attributes.in_repository" :protocol="protocol" @update="updateProtocol" @publish="startPublish"/>
+        <div :class="inRepository ? 'protocol-section protocol-information' : ''">
+          <div v-if="inRepository" id="protocol-description" class="protocol-section-header">
+            <div class="protocol-description-container">
+              <a class="protocol-section-caret" role="button" data-toggle="collapse" href="#protocol-description-container" aria-expanded="false" aria-controls="protocol-description-container">
+                <i class="fas fa-caret-right"></i>
+                <span id="protocolDescriptionLabel" class="protocol-section-title">
+                  <h2>
+                    {{ i18n.t("protocols.header.protocol_description") }}
+                  </h2>
+                </span>
+              </a>
             </div>
-            <Step
-              :step.sync="steps[index]"
-              @reorder="startStepReorder"
-              :inRepository="inRepository"
-              @step:delete="updateStepsPosition"
-              @step:update="updateStep"
-              @stepUpdated="refreshProtocolStatus"
-              @step:insert="updateStepsPosition"
-              :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
-            />
           </div>
-        </template>
+          <div id="protocol-description-container" :class=" inRepository ? 'protocol-description collapse in' : ''" >
+            <div v-if="urls.update_protocol_description_url">
+              <Tinymce
+                :value="protocol.attributes.description"
+                :value_html="protocol.attributes.description_view"
+                :placeholder="i18n.t('my_modules.protocols.protocol_status_bar.empty_description_edit_label')"
+                :updateUrl="urls.update_protocol_description_url"
+                :objectType="'Protocol'"
+                :objectId="parseInt(protocol.id)"
+                :fieldName="'protocol[description]'"
+                :lastUpdated="protocol.attributes.updated_at"
+                :characterLimit="100000"
+                @update="updateDescription"
+              />
+            </div>
+            <div v-else-if="protocol.attributes.description_view" v-html="protocol.attributes.description_view"></div>
+            <div v-else class="empty-protocol-description">
+              {{ i18n.t("protocols.no_text_placeholder") }}
+            </div>
+          </div>
+        </div>
       </div>
-      <button v-if="steps.length > 0 && urls.add_step_url" class="btn btn-primary" @click="addStep(steps.length)">
-        <i class="fas fa-plus"></i>
-        {{ i18n.t("protocols.steps.new_step") }}
-      </button>
+      <div :class="inRepository ? 'protocol-section protocol-steps-section protocol-information' : ''">
+        <div v-if="inRepository" id="protocol-steps" class="protocol-section-header">
+          <div class="protocol-steps-container">
+            <a class="protocol-section-caret" role="button" data-toggle="collapse" href="#protocol-steps-container" aria-expanded="false" aria-controls="protocol-steps-container">
+              <i class="fas fa-caret-right"></i>
+              <span id="protocolStepsLabel" class="protocol-section-title">
+                <h2>
+                  {{ i18n.t("protocols.header.protocol_steps") }}
+                </h2>
+              </span>
+            </a>
+          </div>
+        </div>
+        <div id="protocol-steps-container" :class=" inRepository ? 'protocol-steps collapse in' : ''">
+          <div v-if="steps.length > 0" class="protocol-step-actions">
+            <button class="btn btn-light" @click="collapseSteps" tabindex="0">
+              <span class="fas fa-caret-up"></span>
+              {{ i18n.t("protocols.steps.collapse_label") }}
+            </button>
+            <button class="btn btn-light" @click="expandSteps" tabindex="0">
+              <span class="fas fa-caret-down"></span>
+              {{ i18n.t("protocols.steps.expand_label") }}
+            </button>
+            <a v-if="urls.reorder_steps_url"
+              class="btn btn-light"
+              data-toggle="modal"
+              @click="startStepReorder"
+              @keyup.enter="startStepReorder"
+              :class="{'disabled': steps.length == 1}"
+              tabindex="0" >
+                <i class="fas fas-rotated-90 fa-exchange-alt" aria-hidden="true"></i>
+                <span>{{ i18n.t("protocols.reorder_steps.button") }}</span>
+            </a>
+          </div>
+          <div class="protocol-steps">
+            <template v-for="(step, index) in steps">
+              <div class="step-block" :key="step.id">
+                <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)">
+                  <i class="fas fa-plus"></i>
+                </div>
+                <Step
+                  :step.sync="steps[index]"
+                  @reorder="startStepReorder"
+                  :inRepository="inRepository"
+                  @step:delete="updateStepsPosition"
+                  @step:update="updateStep"
+                  @stepUpdated="refreshProtocolStatus"
+                  @step:insert="updateStepsPosition"
+                  :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
+                />
+              </div>
+            </template>
+          </div>
+          <button v-if="(steps.length > 0 || inRepository) && urls.add_step_url" :class="!inRepository ? 'btn btn-primary' : 'btn btn-secondary'" @click="addStep(steps.length)">
+            <i class="fas fa-plus"></i>
+            {{ i18n.t("protocols.steps.new_step") }}
+          </button>
+        </div>
+      </div>
     </div>
     <ProtocolModals/>
     <ReorderableItemsModal v-if="reordering"
@@ -127,6 +154,11 @@
       :includeNumbers="true"
       @reorder="updateStepOrder"
       @close="closeStepReorderModal"
+    />
+    <PublishProtocol v-if="publishing"
+      :protocol="protocol"
+      @publish="publishProtocol"
+      @cancel="closePublishModal"
     />
   </div>
 </template>
@@ -139,6 +171,7 @@
   import ProtocolModals from './modals'
   import Tinymce from '../shared/tinymce.vue'
   import ReorderableItemsModal from './modals/reorderable_items_modal.vue'
+  import PublishProtocol from './modals/publish_protocol.vue'
 
   import UtilsMixin from '../mixins/utils.js'
 
@@ -150,11 +183,14 @@
         required: true
       }
     },
-    components: { Step, InlineEdit, ProtocolModals, ProtocolOptions, Tinymce, ReorderableItemsModal, ProtocolMetadata },
+    components: { Step, InlineEdit, ProtocolModals, ProtocolOptions, Tinymce, ReorderableItemsModal, ProtocolMetadata, PublishProtocol },
     mixins: [UtilsMixin],
     computed: {
       inRepository() {
         return this.protocol.attributes.in_repository
+      },
+      linked() {
+        return this.protocol.attributes.linked;
       },
       urls() {
         return this.protocol.attributes.urls || {}
@@ -166,12 +202,16 @@
           attributes: {}
         },
         steps: [],
-        reordering: false
+        reordering: false,
+        publishing: false
       }
     },
     created() {
       $.get(this.protocolUrl, (result) => {
         this.protocol = result.data;
+        this.$nextTick(() => {
+          this.refreshProtocolStatus();
+        });
         $.get(this.urls.steps_url, (result) => {
           this.steps = result.data
         })
@@ -195,21 +235,34 @@
         if (this.inRepository) return
         // legacy method from app/assets/javascripts/my_modules/protocols.js
         refreshProtocolStatusBar();
+
+        // Update protocol options drowpdown for linked tasks
+        this.refreshProtocolDropdownOptions();
+      },
+      refreshProtocolDropdownOptions() {
+        if (!this.linked && this.inRepository) return
+
+        $.get(this.protocolUrl, (result) => {
+          this.protocol.attributes.urls = result.data.attributes.urls;
+        });
       },
       updateProtocol(attributes) {
         this.protocol.attributes = attributes
       },
       updateName(newName) {
         this.protocol.attributes.name = newName;
-        this.refreshProtocolStatus();
         $.ajax({
           type: 'PATCH',
           url: this.urls.update_protocol_name_url,
-          data: { protocol: { name: newName } }
+          data: { protocol: { name: newName } },
+          success: () => {
+            this.refreshProtocolStatus();
+          }
         });
       },
       updateDescription(protocol) {
         this.protocol.attributes = protocol.attributes
+        this.refreshProtocolStatus();
       },
       addStep(position) {
         $.post(this.urls.add_step_url, {position: position}, (result) => {
@@ -220,8 +273,8 @@
           if(position === this.steps.length - 1) {
             this.$nextTick(() => this.scrollToBottom());
           }
+          this.refreshProtocolStatus();
         })
-        this.refreshProtocolStatus();
       },
       updateStepsPosition(step, action = 'add') {
         let position = step.attributes.position;
@@ -283,8 +336,18 @@
       closeStepReorderModal() {
         this.reordering = false;
       },
+      startPublish() {
+        this.publishing = true;
+      },
+      closePublishModal() {
+        this.publishing = false;
+      },
       scrollToBottom() {
         window.scrollTo(0, document.body.scrollHeight);
+      },
+      publishProtocol(comment) {
+        this.protocol.attributes.version_comment = comment;
+        $.post(this.urls.publish_url, {version_comment: comment, view: 'show'})
       }
     }
   }

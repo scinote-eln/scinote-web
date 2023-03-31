@@ -63,17 +63,17 @@
           data-field-to-update="description"
           data-params-group="team"
           data-path-to-update="<%= update_team_path(@team, format: :json) %>"
-          data-original-name="<%= sanitize_input(@team.description) %>"
+          data-original-name="<%= @team.description %>"
         >
-          <div class="view-mode" data-placeholder="<%= t("users.settings.teams.show.enter_description") %>"><%= sanitize_input(@team.description) %></div>
-          <textarea placeholder="<%= t("users.settings.teams.show.enter_description") %>" class="hidden input-field smart-text-area" type="text" value="<%= sanitize_input(@team.description) %>" disabled><%= sanitize_input(@team.description) %></textarea>
+          <div class="view-mode" data-placeholder="<%= t("users.settings.teams.show.enter_description") %>"><%= @team.description %></div>
+          <textarea placeholder="<%= t("users.settings.teams.show.enter_description") %>" class="hidden input-field smart-text-area" type="text" value="<%= @team.description %>" disabled><%= @team.description %></textarea>
           <div class="button-container">
             <span class="cancel-button inline-field-button"><%= t('general.cancel') %></span>
             <span class="save-button inline-field-button"><%= t('general.save') %></span>
           </div>
         </div>
       <% else %>
-        <span class="view-mode disable-select"><%= @team.description.blank? ? t('users.settings.teams.edit.header_no_description') : sanitize_input(@team.description)  %></span>
+        <span class="view-mode disable-select"><%= @team.description.blank? ? t('users.settings.teams.edit.header_no_description') : @team.description %></span>
       <% end %>
     </div>
     <!-- End of HEADER -->

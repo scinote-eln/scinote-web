@@ -1,9 +1,9 @@
 <div class="quick-start-buttons">
   <div class="new-task btn btn-secondary"><i class="fas fa-plus"></i><%= t("dashboard.quick_start.new_task") %></div>
   <% if can_create_protocols_in_repository?(current_team) %>
-    <%= button_to protocols_path(type: :public), class: 'btn btn-secondary' do %>
+    <button data-toggle="modal" data-target="#newProtocolModal" class="btn btn-secondary">
       <i class="fas fa-edit"></i><%= t("dashboard.quick_start.new_protocol") %>
-    <% end %>
+    </button>
   <% end %>
   <% if can_create_reports?(current_team) %>
     <%= link_to new_report_path, {class: "new-report btn btn-secondary"} do %>
@@ -12,3 +12,6 @@
   <% end %>
 </div>
 <%= render "create_task_modal" %>
+
+<%= render partial: "protocols/index/new_protocol_modal.html.erb", locals: {type: 'new'} %>
+<%= javascript_include_tag "protocols/new_protocol" %>

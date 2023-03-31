@@ -58,8 +58,7 @@ module Dashboard
                       .where('projects.archived IS NOT TRUE')
                       .where('experiments.archived IS NOT TRUE')
                       .where('my_modules.archived IS NOT TRUE')
-                      .where('protocols.protocol_type != ? OR protocols.protocol_type IS NULL',
-                             Protocol.protocol_types[:in_repository_archived])
+                      .where('protocols.archived IS NOT TRUE')
                       .select('
                         CASE
                         WHEN my_modules.id IS NOT NULL THEN
@@ -69,7 +68,7 @@ module Dashboard
                         WHEN projects.id IS NOT NULL THEN
                           CONCAT(\'pro\', projects.id)
                         WHEN protocols.id IS NOT NULL THEN
-                          CONCAT(\'prt\', protocols.id)
+                          CONCAT(\'prt\', COAlESCE(protocols.parent_id, protocols.id))
                         WHEN repositories.id IS NOT NULL THEN
                           CONCAT(\'inv\', repositories.id)
                         WHEN reports.id IS NOT NULL THEN

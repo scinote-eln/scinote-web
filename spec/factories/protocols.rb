@@ -15,7 +15,6 @@ FactoryBot.define do
       protocol_type { :linked }
       parent { create :protocol }
       added_by { create :user }
-      parent_updated_at { Time.now }
     end
   end
 end

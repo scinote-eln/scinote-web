@@ -216,6 +216,12 @@ var DasboardCurrentTasksWidget = (function() {
       e.preventDefault();
     });
 
+    $('.current-tasks-filters').on('click', '.close-dropdown', (e) => {
+      $('.current-tasks-filters').dropdown('toggle');
+      e.stopPropagation();
+      e.preventDefault();
+    });
+
     $('.filter-container').on('hide.bs.dropdown', () => {
       loadCurrentTasksList(true);
       filterStateSave();

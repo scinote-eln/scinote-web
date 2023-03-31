@@ -15,7 +15,7 @@ describe ProtocolImporters::ImportProtocolService do
 
   let(:service_call) do
     ProtocolImporters::ImportProtocolService
-      .call(protocol_params: protocol_params, steps_params_json: steps_params, user_id: user.id, team_id: team.id)
+      .call(protocol_params: protocol_params, steps_params_json: steps_params, user: user, team: team)
   end
 
   context 'when have invalid arguments' do
@@ -33,7 +33,7 @@ describe ProtocolImporters::ImportProtocolService do
 
       s = ProtocolImporters::ImportProtocolService.call(protocol_params: protocol_params,
                                                         steps_params_json: steps_invalid_params,
-                                                        user_id: user.id, team_id: team.id)
+                                                        user: user, team: team)
       expect(s.protocol).to be_invalid
     end
   end

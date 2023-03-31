@@ -1,0 +1,19 @@
+<% # frozen_string_literal: true %>
+
+<div class="modal fade <%= assignable.class.name.parameterize(separator: '-') %>-assignments-modal" tabindex="-1" role="dialog" data-action="modal-close">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" id="user_assignments_modal">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><%= t("access_permissions.#{assignable.class.name.pluralize.underscore}.modals.show_modal.title", resource_name: assignable.name) %></h4>
+      </div>
+      <div class="modal-body">
+        <% manually_assigned_users.order(full_name: :asc).each do |user| %>
+          <% user_assignment = assignable.user_assignments.find_by(user: user) %>
+          <%= render partial: 'access_permissions/partials/user_assignment', locals: { user_assignment: user_assignment, user: user, assignable: assignable } %>
+        <% end %>
+        <%= render('access_permissions/partials/default_public_user_role_form', assignable: top_level_assignable, editable: false) if top_level_assignable.respond_to?(:visible?) && top_level_assignable.visible? %>
+      </div>
+    </div>
+  </div>
+</div>
