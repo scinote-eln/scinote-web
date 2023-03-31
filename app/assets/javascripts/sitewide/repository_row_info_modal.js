@@ -5,9 +5,14 @@
 
   $(document).on('click', '.record-info-link', function(e) {
     var that = $(this);
+    let params = {};
+    if ($('.my-modules-protocols-index').length) {
+      params.my_module_id = $('.my-modules-protocols-index').data('task-id');
+    }
     $.ajax({
       method: 'GET',
       url: that.attr('href'),
+      data: params,
       dataType: 'json'
     }).done(function(xhr, settings, data) {
       if ($('#modal-info-repository-row').length) {
@@ -16,6 +21,7 @@
         $('.modal-backdrop').remove();
       }
       $('body').append($.parseHTML(data.responseJSON.html));
+      $('[data-toggle="tooltip"]').tooltip();
       $('#modal-info-repository-row').modal('show', {
         backdrop: true,
         keyboard: false
