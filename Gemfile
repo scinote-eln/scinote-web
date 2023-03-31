@@ -18,7 +18,6 @@ gem 'view_component', require: 'view_component/engine'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 6.0'
 gem 'sassc-rails'
-gem 'webpacker', '~> 4.0.0'
 gem 'yomu', git: 'https://github.com/scinote-eln/yomu', branch: 'master'
 
 # Gems for OAuth2 subsystem
@@ -100,6 +99,8 @@ gem 'rufus-scheduler', '~> 3.5'
 gem 'discard', '~> 1.0'
 
 gem 'graphviz'
+
+gem 'jsbundling-rails'
 
 gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'

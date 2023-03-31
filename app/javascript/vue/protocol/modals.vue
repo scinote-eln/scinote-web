@@ -3,7 +3,7 @@
   </div>
 </template>
 <script>
-  import deleteElementModal from 'vue/protocol/modals/delete_element.vue'
+  import deleteElementModal from './modals/delete_element.vue'
 
   export default {
     name: 'ProtocolModals',

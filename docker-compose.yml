@@ -29,7 +29,6 @@ services:
                bundle exec rails s -b 0.0.0.0"
     environment:
       - RAILS_ENV=development
-      - WEBPACKER_DEV_SERVER_HOST=webpack
     volumes:
       - .:/usr/src/app
       - scinote_development_bundler:/usr/local/bundle/
@@ -44,13 +43,10 @@ services:
     container_name: scinote_webpack_development
     stdin_open: true
     tty: true
-    ports:
-      - "3035:3035"
     command: >
-      bash -c "./bin/webpack-dev-server"
+      bash -c "yarn install && yarn build --watch"
     environment:
-      - RAILS_ENV=development
-      - WORKER=true
+      - NODE_ENV=development
     volumes:
       - .:/usr/src/app
       - scinote_development_bundler:/usr/local/bundle/

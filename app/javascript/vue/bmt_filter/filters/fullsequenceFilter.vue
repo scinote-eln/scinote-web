@@ -28,7 +28,7 @@
 </template>
 
 <script>
-  import FilterMixin from 'vue/bmt_filter/mixins/filter.js'
+  import FilterMixin from '../mixins/filter.js'
   export default {
     name: 'fullsequenceFilter',
     mixins: [FilterMixin],
