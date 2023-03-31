@@ -16,7 +16,6 @@ class Protocol < ApplicationRecord
   include PermissionCheckableModel
   include TinyMceImages
 
-  after_create :set_linked_at, if: -> { linked? && linked_at.blank? }
   after_create :update_automatic_user_assignments, if: -> { visible? && in_repository? && parent.blank? }
   before_update :change_visibility, if: :default_public_user_role_id_changed?
   after_update :update_automatic_user_assignments,
@@ -349,7 +348,7 @@ class Protocol < ApplicationRecord
   end
 
   def newer_than_parent?
-    linked? && updated_at > parent.published_on
+    linked? && updated_at > linked_at
   end
 
   def parent_newer?
@@ -490,11 +489,11 @@ class Protocol < ApplicationRecord
     # Lastly, update the metadata
     reload
     self.record_timestamps = false
-    self.updated_at = source.published_on
     self.added_by = current_user
     self.last_modified_by = current_user
     self.parent = source
-    self.linked_at = Time.zone.now
+    self.updated_at = Time.zone.now
+    self.linked_at = updated_at
     save!
   end
 
@@ -511,12 +510,12 @@ class Protocol < ApplicationRecord
     reload
     self.name = source.name
     self.record_timestamps = false
-    self.updated_at = source.published_on
     self.parent = source
     self.added_by = current_user
     self.last_modified_by = current_user
-    self.linked_at = Time.zone.now
     self.protocol_type = Protocol.protocol_types[:linked]
+    self.updated_at = Time.zone.now
+    self.linked_at = updated_at
     save!
   end
 
@@ -577,12 +576,17 @@ class Protocol < ApplicationRecord
       clone.parent = parent
     end
 
-    deep_clone(clone, current_user)
-  end
+    ActiveRecord::Base.no_touching do
+      clone = deep_clone(clone, current_user)
+    end
 
-  def set_linked_at
-    self.linked_at = created_at
-    self.save!
+    if linked?
+      clone.updated_at = Time.zone.now
+      clone.linked_at = clone.updated_at
+      clone.save
+    end
+
+    clone
   end
 
   def deep_clone_repository(current_user)
