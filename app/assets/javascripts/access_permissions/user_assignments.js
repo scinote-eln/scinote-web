@@ -51,6 +51,12 @@
       HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
     });
 
+    $(document).on('ajax:success', 'form.member-item', function(_e, data) {
+      if (data.flash) {
+        HelperModule.flashAlertMsg(data.flash, 'success');
+      }
+    });
+
     $(document).on('click', '.user-assignment-dropdown .user-role-selector', function() {
       let roleId = $(this).data('role-id');
       $(this).closest('.dropdown').find('#user_assignment_user_role_id, .default-public-user-role-id').val(roleId);

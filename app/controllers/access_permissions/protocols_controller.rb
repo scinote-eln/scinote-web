@@ -128,13 +128,17 @@ module AccessPermissions
     def update_default_public_user_role
       current_role = @protocol.default_public_user_role.name
       @protocol.update!(permitted_default_public_user_role_params)
-      type_of = if @protocol.default_public_user_role.present?
-                  :protocol_template_access_changed_all_team_members
-                else
-                  :protocol_template_access_revoked_all_team_members
-                end
 
-      log_activity(type_of, { team: @protocol.team.id, role: @protocol.default_public_user_role&.name || current_role })
+      # revoke all team members access
+      if permitted_default_public_user_role_params[:default_public_user_role_id].blank?
+        log_activity(:protocol_template_access_revoked_all_team_members,
+                     { team: @protocol.team.id, role: current_role })
+        render json: { flash: t('access_permissions.update.revoke_all_team_members') }, status: :ok
+      else
+        # update all team members access
+        log_activity(:protocol_template_access_changed_all_team_members,
+                     { team: @protocol.team.id, role: @protocol.default_public_user_role&.name })
+      end
     end
 
     private

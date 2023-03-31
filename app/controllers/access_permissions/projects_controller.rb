@@ -135,14 +135,17 @@ module AccessPermissions
         @project.assign_attributes(permitted_default_public_user_role_params)
         @project.save!
 
+        UserAssignments::ProjectGroupAssignmentJob.perform_later(current_team, @project, current_user)
+
+        # revoke all team members access
         if permitted_default_public_user_role_params[:default_public_user_role_id].blank?
           log_activity(:change_project_visibility, { visibility: t('projects.activity.visibility_hidden') })
+          render json: { flash: t('access_permissions.update.revoke_all_team_members') }, status: :ok
         else
+          # update all team members access
           log_activity(:project_access_changed_all_team_members,
                        { team: @project.team.id, role: @project.default_public_user_role&.name })
         end
-
-        UserAssignments::ProjectGroupAssignmentJob.perform_later(current_team, @project, current_user)
       end
     end
 
