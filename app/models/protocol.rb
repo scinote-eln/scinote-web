@@ -348,7 +348,7 @@ class Protocol < ApplicationRecord
   end
 
   def newer_than_parent?
-    linked? && updated_at > parent.published_on
+    linked? && updated_at > linked_at
   end
 
   def parent_newer?
@@ -489,11 +489,11 @@ class Protocol < ApplicationRecord
     # Lastly, update the metadata
     reload
     self.record_timestamps = false
-    self.updated_at = source.published_on
     self.added_by = current_user
     self.last_modified_by = current_user
     self.parent = source
-    self.linked_at = Time.zone.now
+    self.updated_at = Time.zone.now
+    self.linked_at = updated_at
     save!
   end
 
@@ -510,12 +510,12 @@ class Protocol < ApplicationRecord
     reload
     self.name = source.name
     self.record_timestamps = false
-    self.updated_at = source.published_on
     self.parent = source
     self.added_by = current_user
     self.last_modified_by = current_user
-    self.linked_at = Time.zone.now
     self.protocol_type = Protocol.protocol_types[:linked]
+    self.updated_at = Time.zone.now
+    self.linked_at = updated_at
     save!
   end
 
@@ -576,7 +576,17 @@ class Protocol < ApplicationRecord
       clone.parent = parent
     end
 
-    deep_clone(clone, current_user)
+    ActiveRecord::Base.no_touching do
+      clone = deep_clone(clone, current_user)
+    end
+
+    if linked?
+      clone.updated_at = Time.zone.now
+      clone.linked_at = clone.updated_at
+      clone.save
+    end
+
+    clone
   end
 
   def deep_clone_repository(current_user)
