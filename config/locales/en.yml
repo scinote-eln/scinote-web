@@ -2669,7 +2669,7 @@ en:
       description_2: "Are you sure?"
       confirm: "Yes, delete"
     publish_modal:
-      title: "Publish version %{version} of the protocol template"
+      title: "Publish protocol template"
       name: "Protocol template name"
       comment: "Revision notes"
       comment_placeholder: "What's new in this version?"
