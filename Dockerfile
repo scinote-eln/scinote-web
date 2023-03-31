@@ -3,21 +3,14 @@ MAINTAINER BioSistemika <info@biosistemika.com>
 
 ARG WKHTMLTOPDF_PACKAGE_URL=https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.buster_amd64.deb
 
-# install nvm and node
-ENV NODE_VERSION=16.13.0
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-ENV NVM_DIR=/root/.nvm
-RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
-RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
-RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
-ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
-
 # additional dependecies
 # libreoffice for file preview generation
 RUN apt-get update -qq && \
   apt-get install -y \
   libjemalloc2 \
   libssl-dev \
+  nodejs \
+  npm \
   postgresql-client \
   default-jre-headless \
   poppler-utils \
