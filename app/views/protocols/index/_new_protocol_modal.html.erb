@@ -1,0 +1,46 @@
+<div class="modal" id="newProtocolModal" tabindex="-1" role="dialog">
+  <%= form_with model: @protocol || Protocol.new, url: type == 'new' ? protocols_path : copy_to_repository_protocol_path(@protocol), method: :post, data: { action: type }  do |f| %>
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">
+            <%= t("protocols.new_protocol_modal.title_#{type}") %>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="sci-input-container">
+            <%= f.label :name, t("protocols.new_protocol_modal.name_label") %>
+            <%= f.text_field :name, placeholder: t("protocols.new_protocol_modal.name_placeholder"), class: 'sci-input-field' %>
+          </div>
+          <% if type == 'copy' %>
+          <p class="description">
+            <%= t("protocols.new_protocol_modal.description") %>
+          </p>
+          <% end %>
+          <div class="default-role-container">
+            <div class="sci-checkbox-container">
+              <%= f.check_box :visibility, { class: 'sci-checkbox'},:visible, :hidden %>
+              <span class="sci-checkbox-label"></span>
+            </div>
+            <div class="default-role-description">
+              <%= t("protocols.new_protocol_modal.access_label") %>
+            </div>
+          </div>
+          <div class="hidden" id="roleSelectWrapper">
+            <div class="sci-input-container">
+              <%= f.label :default_public_user_role_id, t("protocols.new_protocol_modal.role_label") %>
+              <% default_role = UserRole.find_by(name: I18n.t('user_roles.predefined.viewer')).id %>
+              <%= f.hidden_field :default_public_user_role_id, value: nil, disabled: true %>
+              <%= f.select :role_selector, options_for_select(team_user_roles_for_select, default_role) %>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.cancel') %></button>
+          <%= f.button t("protocols.new_protocol_modal.create_#{type}") , class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -56,13 +56,13 @@ class ReportDatatable < CustomDatatable
     records.map do |record|
       {
         '0' => record.id,
-        '1' => sanitize_input(record.project_name),
-        '2' => sanitize_input(record.name),
-        '3' => sanitize_input(record.code),
+        '1' => escape_input(record.project_name),
+        '2' => escape_input(record.name),
+        '3' => escape_input(record.code),
         '4' => pdf_file(record),
         '5' => docx_file(record),
-        '6' => sanitize_input(record.created_by_name),
-        '7' => sanitize_input(record.modified_by_name),
+        '6' => escape_input(record.created_by_name),
+        '7' => escape_input(record.modified_by_name),
         '8' => I18n.l(record.created_at, format: :full),
         '9' => I18n.l(record.updated_at, format: :full),
         'archived' => record.project.archived?,

@@ -14,6 +14,10 @@
     align-items: baseline;
     display: flex;
 
+    a:first-of-type:focus {
+      outline: none;
+    }
+
     .task-section-caret {
       padding-right: .25em;
     }

@@ -297,11 +297,11 @@ class ExperimentsController < ApplicationController
                       .select(:id, :name, :color)
 
     tags = tags.map do |tag|
-      { value: tag.id, label: sanitize_input(tag.name), params: { color: sanitize_input(tag.color) } }
+      { value: tag.id, label: escape_input(tag.name), params: { color: escape_input(tag.color) } }
     end
 
     if params[:query].present? && tags.select { |tag| tag[:label] == params[:query] }.blank?
-      tags << { value: 0, label: sanitize_input(params[:query]), params: { color: nil } }
+      tags << { value: 0, label: escape_input(params[:query]), params: { color: nil } }
     end
     render json: tags
   end
@@ -359,12 +359,12 @@ class ExperimentsController < ApplicationController
       @experiment.workflowimg.purge
 
       render json: { message: t('experiments.table.modal_move_modules.success_flash',
-                                experiment: sanitize_input(dst_experiment.name)) }
+                                experiment: escape_input(dst_experiment.name)) }
     rescue StandardError => e
       Rails.logger.error(e.message)
       Rails.logger.error(e.backtrace.join("\n"))
       render json: {
-        message: t('experiments.table.modal_move_modules.error_flash', experiment: sanitize_input(dst_experiment.name))
+        message: t('experiments.table.modal_move_modules.error_flash', experiment: escape_input(dst_experiment.name))
       }, status: :unprocessable_entity
       raise ActiveRecord::Rollback
     end
@@ -445,7 +445,7 @@ class ExperimentsController < ApplicationController
   def assigned_users_to_tasks
     users = current_team.users.where(id: @experiment.my_modules.joins(:user_my_modules).select(:user_id))
                         .search(false, params[:query]).map do |u|
-      { value: u.id, label: sanitize_input(u.name), params: { avatar_url: avatar_path(u, :icon_small) } }
+      { value: u.id, label: escape_input(u.name), params: { avatar_url: avatar_path(u, :icon_small) } }
     end
 
     render json: users, status: :ok

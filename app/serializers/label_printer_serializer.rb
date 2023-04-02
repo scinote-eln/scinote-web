@@ -12,7 +12,7 @@ class LabelPrinterSerializer < ActiveModel::Serializer
   end
 
   def display_name
-    object.description.present? ? sanitize_input("#{object.name} • #{object.description}") : sanitize_input(object.name)
+    object.description.present? ? escape_input("#{object.name} • #{object.description}") : escape_input(object.name)
   end
 
   def status

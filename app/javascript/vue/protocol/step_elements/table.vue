@@ -59,11 +59,11 @@
 </template>
 
  <script>
-  import DeleteMixin from 'vue/protocol/mixins/components/delete.js'
-  import DuplicateMixin from 'vue/protocol/mixins/components/duplicate.js'
-  import deleteElementModal from 'vue/protocol/modals/delete_element.vue'
-  import InlineEdit from 'vue/shared/inline_edit.vue'
-  import TableNameModal from 'vue/protocol/modals/table_name_modal.vue'
+  import DeleteMixin from '../mixins/components/delete.js'
+  import DuplicateMixin from '../mixins/components/duplicate.js'
+  import deleteElementModal from '../modals/delete_element.vue'
+  import InlineEdit from '../../shared/inline_edit.vue'
+  import TableNameModal from '../modals/table_name_modal.vue'
 
   export default {
     name: 'StepTable',
@@ -156,19 +156,25 @@
       updateTable() {
         if (this.editingTable == false) return;
 
-        let tableData = JSON.stringify({data: this.tableObject.getData()});
-        this.element.attributes.orderable.contents = tableData;
-        this.element.attributes.orderable.metadata = {cells: this.tableObject.getCellsMeta().map((x) => {
-           return {
-            col: x.col,
-            row: x.row,
-            className: x.className || ''
-          }
-        })};
         this.update();
         this.editingTable = false;
       },
       update() {
+        this.element.attributes.orderable.contents = JSON.stringify({ data: this.tableObject.getData() });
+        this.element.attributes.orderable.metadata = JSON.stringify({
+         cells: this.tableObject.getCellsMeta().map(
+           (x) => {
+             if (x) {
+               return {
+                 col: x.col,
+                 row: x.row,
+                 className: x.className || ''
+               }
+             } else {
+               return null
+             }
+           }).filter(e => { return e !== null })
+        });
         this.$emit('update', this.element)
       },
       loadTableData() {

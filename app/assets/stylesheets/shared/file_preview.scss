@@ -1,10 +1,10 @@
-// scss-lint:disable ImportantRule PropertyUnits NestingDepth SelectorDepth
+// scss-lint:disable IdSelector PropertyUnits NestingDepth SelectorDepth
 
 // Image preview modal
-.modal-file-preview {
+#filePreviewModal {
   background: transparent;
   font-size: $font-size-base;
-  padding: 0 !important;
+  padding: 0;
   z-index: 1060;
 
   .modal-dialog {
@@ -21,6 +21,7 @@
     border-radius: 0;
     height: auto;
     min-height: 100%;
+    padding: 0;
   }
 
   .file-preview-container {
@@ -142,6 +143,12 @@
           margin-left: auto;
         }
       }
+    }
+  }
+
+  .btn-light:not(.file-download-link) {
+    .fas {
+      margin-right: 0;
     }
   }
 }

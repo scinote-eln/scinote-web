@@ -1,6 +1,7 @@
-$(function(){
-  $('body').tooltip( {selector: '[data-toggle=tooltip]'} );
+$(function() {
+  $('body').tooltip({ selector: '[data-toggle=tooltip]' });
 });
-$(function () {
+
+$(function() {
   $('[data-toggle="popover"]').popover();
 });

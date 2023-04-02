@@ -26,6 +26,7 @@ en:
         experiment: "Experiment"
         select_experiment: "All Experiments"
         apply: "Apply"
+        show_results: "Show results"
       no_tasks:
         assigned_tasks:
           title: "There are no tasks assigned to you at the moment."

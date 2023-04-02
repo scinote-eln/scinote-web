@@ -15,7 +15,7 @@
 <% end %>
 <li>
   <%= link_to t('experiments.canvas.edit.task_access'),
-              can_manage_my_module_users?(my_module) ? edit_access_permissions_project_experiment_my_module_path(my_module.experiment.project, my_module.experiment, my_module) : access_permissions_project_experiment_my_module_path(my_module.experiment.project, my_module.experiment, my_module),
+              can_manage_my_module_users?(my_module) ? edit_access_permissions_my_module_path(my_module) : access_permissions_my_module_path(my_module),
               data: { action: 'remote-modal'} %>
 </li>
 <% if can_archive_my_module?(my_module) %>

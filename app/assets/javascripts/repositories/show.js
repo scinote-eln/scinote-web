@@ -257,7 +257,7 @@
           $overwriteLink.removeClass('hidden');
           $modal.data('repositoryTableFilterId', response.data.id);
           $modal.data('repositoryTableFilterName', response.data.attributes.name);
-          $('#currentFilterName').html(response.data.attributes.name);
+          $('#currentFilterName').text(response.data.attributes.name);
 
 
           if (existingFilterIndex > -1) {

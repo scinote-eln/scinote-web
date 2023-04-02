@@ -31,25 +31,14 @@
         </li>
         <li>
           <a
-            ref="saveProtocol"
-            data-action="copy-to-repository"
-            @click="saveProtocol"
+            data-toggle="modal"
+            data-target="#newProtocolModal"
             :class="{ disabled: !protocol.attributes.urls.save_to_repo_url }"
           >
-            <span class="fas fa-check"></span>
+            <span class="fas fa-save"></span>
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.save_to_repo")
             }}</span>
-          </a>
-        </li>
-        <li>
-          <a data-action="load-from-file"
-              class="btn-open-file"
-              :data-import-url="protocol.attributes.urls.import_url"
-              :class="{ disabled: !protocol.attributes.urls.import_url }">
-            <span class="fas fa-download"></span>
-            <span>{{ i18n.t("my_modules.protocol.options_dropdown.import") }}</span>
-            <input type="file" value="" accept=".eln" data-turbolinks="false">
           </a>
         </li>
         <li>
@@ -61,6 +50,42 @@
             <span class="fas fa-upload"></span>
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.export")
+            }}</span>
+          </a>
+        </li>
+        <li v-if="protocol.attributes.urls.update_protocol_url">
+          <a
+            ref="updateProtocol"
+            data-action="update-self"
+            @click="updateProtocol"
+          >
+            <span class="fas fa-sync-alt"></span>
+            <span>{{
+              i18n.t("my_modules.protocol.options_dropdown.update_protocol")
+            }}</span>
+          </a>
+        </li>
+        <li v-if="protocol.attributes.urls.unlink_url">
+          <a
+            ref="unlinkProtocol"
+            data-action="unlink"
+            @click="unlinkProtocol"
+          >
+            <span class="fas fa-unlink"></span>
+            <span>{{
+              i18n.t("my_modules.protocol.options_dropdown.unlink")
+            }}</span>
+          </a>
+        </li>
+        <li v-if="protocol.attributes.urls.revert_protocol_url">
+          <a
+            ref="revertProtocol"
+            data-action="revert"
+            @click="revertProtocol"
+          >
+            <span class="fas fa-undo"></span>
+            <span>{{
+              i18n.t("my_modules.protocol.options_dropdown.revert_protocol")
             }}</span>
           </a>
         </li>
@@ -82,7 +107,7 @@
 </template>
 
  <script>
-import DeleteStepsModals from 'vue/protocol/modals/delete_steps'
+import DeleteStepsModals from './modals/delete_steps'
 
 export default {
 
@@ -106,8 +131,8 @@ export default {
   mounted() {
     // Legacy global functions from app/assets/javascripts/my_modules/protocols.js
     initLoadFromRepository();
-    initCopyToRepository();
     initImport();
+    initLinkUpdate();
   },
   methods: {
     openStepsDeletingModal() {
@@ -123,9 +148,19 @@ export default {
         $(this.$refs.loadProtocol).trigger("ajax:success", data);
       });
     },
-    saveProtocol() {
-      $.get(this.protocol.attributes.urls.save_to_repo_url).success((data) => {
-        $(this.$refs.saveProtocol).trigger("ajax:success", data);
+    unlinkProtocol() {
+      $.get(this.protocol.attributes.urls.unlink_url).success((data) => {
+        $(this.$refs.unlinkProtocol).trigger("ajax:success", data);
+      });
+    },
+    updateProtocol() {
+      $.get(this.protocol.attributes.urls.update_protocol_url).success((data) => {
+        $(this.$refs.updateProtocol).trigger("ajax:success", data);
+      });
+    },
+    revertProtocol() {
+      $.get(this.protocol.attributes.urls.revert_protocol_url).success((data) => {
+        $(this.$refs.revertProtocol).trigger("ajax:success", data);
       });
     },
     deleteSteps() {

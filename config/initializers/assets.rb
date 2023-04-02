@@ -5,8 +5,6 @@ Rails.application.config.assets.version = '1.0'
 
 # Add additional assets to the asset load path.
 # Rails.application.config.assets.paths << Emoji.images_path
-# Add Yarn node_modules folder to the asset load path.
-Rails.application.config.assets.paths << Rails.root.join('node_modules')
 
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in the app/assets
@@ -57,9 +55,10 @@ Rails.application.config.assets.precompile += %w(experiments/table.js)
 Rails.application.config.assets.precompile += %w(experiments/show.js)
 Rails.application.config.assets.precompile += %w(reports/new.js)
 Rails.application.config.assets.precompile += %w(protocols/index.js)
-Rails.application.config.assets.precompile += %w(protocols/external_protocols_tab.js)
+Rails.application.config.assets.precompile += %w(protocols/protocolsio.js)
 Rails.application.config.assets.precompile += %w(protocols/header.js)
 Rails.application.config.assets.precompile += %w(protocols/steps.js)
+Rails.application.config.assets.precompile += %w(protocols/new_protocol.js)
 Rails.application.config.assets.precompile += %w(protocols/edit.js)
 Rails.application.config.assets.precompile += %w(protocols/import_export/eln_table.js)
 Rails.application.config.assets.precompile += %w(protocols/import_export/import.js)
@@ -96,6 +95,7 @@ Rails.application.config.assets.precompile += %w(reports/save_pdf_to_inventory.j
 Rails.application.config.assets.precompile += %w(reports/content.js)
 Rails.application.config.assets.precompile += %w(session_end.js)
 Rails.application.config.assets.precompile += %w(label_templates/label_templates_datatable.js)
+Rails.application.config.assets.precompile += %w(users/connected_devices.js)
 Rails.application.config.assets.precompile += %w(BrowserPrint-3.0.216.min.js)
 Rails.application.config.assets.precompile += %w(BrowserPrint-Zebra-1.0.216.min.js)
 

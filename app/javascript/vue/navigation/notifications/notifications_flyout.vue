@@ -37,7 +37,7 @@
 
 <script>
 
-import NotificationItem from 'vue/navigation/notifications/notification_item.vue'
+import NotificationItem from './notification_item.vue'
 
 export default {
   name: 'NotificationsFlyout',

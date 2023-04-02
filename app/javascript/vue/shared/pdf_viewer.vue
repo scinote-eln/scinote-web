@@ -55,7 +55,7 @@
 </template>
 
 <script>
-  import blockedIcon from 'images/pdf_js/blocked.svg'
+  import blockedIcon from '../images/pdf_js/blocked.svg'
 
   export default {
     name: 'PdfViewer',

@@ -132,10 +132,8 @@ class RepositoriesController < ApplicationController
         if @repository.save
           log_activity(:create_inventory)
 
-          flash[:success] = t('repositories.index.modal_create.success_flash',
-                              name: @repository.name)
-          render json: { url: repository_path(@repository) },
-            status: :ok
+          flash[:success] = t('repositories.index.modal_create.success_flash_html', name: @repository.name)
+          render json: { url: repository_path(@repository) }
         else
           render json: @repository.errors,
             status: :unprocessable_entity
@@ -456,7 +454,10 @@ class RepositoriesController < ApplicationController
       item_id: @repository.id,
       field_to_udpate: 'name',
       path_to_update: team_repository_path(@repository),
-      label_after: "<span class=\"repository-share-icon\">#{inventory_shared_status_icon(@repository, current_team)}</span>"
+      label_after:
+        sanitize_input(
+          "<span class=\"repository-share-icon\">#{inventory_shared_status_icon(@repository, current_team)}</span>"
+        )
     }
   end
 

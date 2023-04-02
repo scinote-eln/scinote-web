@@ -14,11 +14,12 @@ module ProjectsHelper
   end
 
   def user_names_with_roles(user_assignments)
-    user_assignments.map { |up| user_name_with_role(up) }.join('&#013;')
+    names_with_roles = user_assignments.map { |up| user_name_with_role(up) }.join('&#013;')
+    sanitize_input(names_with_roles)
   end
 
   def user_name_with_role(user_assignment)
-    "#{sanitize_input(user_assignment.user.name)} - #{user_assignment.user_role.name}"
+    "#{escape_input(user_assignment.user.name)} - #{escape_input(user_assignment.user_role.name)}"
   end
 
   def construct_module_connections(my_module)

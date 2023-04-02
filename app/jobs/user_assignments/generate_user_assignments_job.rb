@@ -46,9 +46,19 @@ module UserAssignments
     end
 
     def assign_users_to_protocol(protocol)
-      return unless protocol.in_repository_public?
+      if protocol.parent_id && protocol.in_repository_draft?
+        Protocol.transaction(requires_new: true) do
+          protocol.parent.user_assignments.find_each do |user_assignment|
+            protocol.parent.sync_child_protocol_user_assignment(user_assignment, protocol.id)
+          end
+        end
 
-      protocol.add_team_users_as_viewers!(@assigned_by)
+        return
+      end
+
+      return unless protocol.visible?
+
+      protocol.create_public_user_assignments!(@assigned_by)
     end
 
     def assign_users_to_report(report)

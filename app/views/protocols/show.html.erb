@@ -2,14 +2,37 @@
 <%= content_for :sidebar do %>
   <%= render partial: "/shared/sidebar/templates_sidebar", locals: {active: :protocol} %>
 <% end %>
+ <% provide(:container_class, 'no-second-nav-container') %>
 <div class="content-pane protocols-show" >
-  <div class="protocol-position-container">
-     <div class="protocol-actions">
-      <button class="btn btn-secondary pull-right" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
-        <span class="fas fa-print" aria-hidden="true"></span>
-        <span><%= t("protocols.print.button") %></span>
-      </button>
+  <div class="content-header">
+    <div id="breadcrumbsWrapper">
+      <div class="breadcrumbs-container protocol-breadcrumbs">
+        <a href="<%= protocols_path %>" class="breadcrumbs-link">
+          <%= t('sidebar.templates.protocol_templates') %>
+        </a>
+        <span class="delimiter">/</span>
+      </div>
     </div>
+    <div class="title-row">
+      <h1>
+        <% if @inline_editable_title_config.present? %>
+          <%= render partial: "shared/inline_editing",
+                      locals: {
+                        initial_value: @protocol.name,
+                        config: @inline_editable_title_config
+                      } %>
+        <% else %>
+          <% if @protocol.archived %>
+            <i class="fas fa-archive"></i>&nbsp;
+          <% end %>
+          <div class="name-readonly-placeholder">
+            <%= @protocol.name %>
+          </div>
+        <% end %>
+      </h1>
+    </div>
+  </div>
+  <div class="protocol-position-container">
     <div
       id="protocolContainer"
       data-protocol-url="<%= protocol_path(@protocol) %>"
@@ -21,18 +44,19 @@
       />
     </div>
   </div>
+  <%= render partial: "protocols/index/delete_draft_modal.html.erb" %>
 </div>
 
 <!-- Create new office file modal -->
 <%= render partial: 'assets/wopi/create_wopi_file_modal.html.erb' %>
+<%= render partial: "my_modules/protocols/print_protocol_modal", locals: { protocol: @protocol, comments_enabled: true} %>
 
-<%= render partial: "my_modules/protocols/print_protocol_modal", locals: { protocol: @protocol, comments_enabled: false } %>
 
 <%= javascript_include_tag "handsontable.full" %>
 <%= render partial: "shared/formulas_libraries.html.erb" %>
-<%= javascript_pack_tag 'pdfjs/pdf_js' %>
-<%= stylesheet_pack_tag 'pdfjs/pdf_js_styles' %>
+<%= javascript_include_tag 'pdf_js' %>
+<%= stylesheet_link_tag 'pdf_js_styles' %>
 
 <%= render 'shared/tiny_mce_packs' %>
-<%= javascript_pack_tag 'vue/protocol' %>
+<%= javascript_include_tag 'vue_protocol' %>
 <%= render partial: 'label_printers/label_printer_modal' %>

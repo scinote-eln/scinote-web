@@ -61,6 +61,10 @@ class UserRole < ApplicationRecord
     predefined.find_by(name: UserRole.public_send('viewer_role').name)
   end
 
+  def has_permission?(permission)
+    permissions.include?(permission)
+  end
+
   def owner?
     predefined? && name == I18n.t('user_roles.predefined.owner')
   end

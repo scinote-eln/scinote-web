@@ -93,13 +93,13 @@
   </div>
 </template>
 <script>
-  import listAttachment from 'vue/protocol/step_attachments/list.vue'
-  import inlineAttachment from 'vue/protocol/step_attachments/inline.vue'
-  import thumbnailAttachment from 'vue/protocol/step_attachments/thumbnail.vue'
-  import uploadingAttachment from 'vue/protocol/step_attachments/uploading.vue'
-  import emptyAttachment from 'vue/protocol/step_attachments/empty.vue'
-  import marvinjsIcon from 'images/icon_small/marvinjs.svg'
-  import bioEddieIcon from 'images/icon_small/bio_eddie.png'
+  import listAttachment from './step_attachments/list.vue'
+  import inlineAttachment from './step_attachments/inline.vue'
+  import thumbnailAttachment from './step_attachments/thumbnail.vue'
+  import uploadingAttachment from './step_attachments/uploading.vue'
+  import emptyAttachment from './step_attachments/empty.vue'
+  import marvinjsIcon from '../images/marvinjs.svg'
+  import bioEddieIcon from '../images/bio_eddie.png'
 
   import WopiFileModal from './step_attachments/mixins/wopi_file_modal.js'
 

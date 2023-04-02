@@ -14,7 +14,7 @@
 
     <%= javascript_include_tag 'jquery_bundle' %>
     <%= javascript_include_tag 'application' %>
-    <%= javascript_pack_tag 'application' %>
+    <%= javascript_include_tag 'application_pack' %>
     <%= javascript_include_tag 'session_end' %>
 
 
@@ -27,19 +27,19 @@
     <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>
     <%= favicon_link_tag "favicon-32.png", type: "image/png", size: "32x32" %>
     <%= favicon_link_tag "favicon-48.png", type: "image/png", size: "48x48" %>
-    <%= stylesheet_pack_tag 'fonts', id: 'font-css-pack' %>
-    <%= stylesheet_pack_tag 'fontawesome' %>
+    <%= stylesheet_link_tag 'fonts', id: 'font-css-pack' %>
+    <%= stylesheet_link_tag 'fontawesome' %>
 
-    <%= stylesheet_pack_tag 'prism' %>
+    <%= stylesheet_link_tag 'prism' %>
 
     <%= csrf_meta_tags %>
     <% if content_for?(:head) %>
       <%= yield(:head) %>
     <% end %>
 
-    <%= javascript_pack_tag 'tui_image_editor' %>
-    <%= stylesheet_pack_tag 'tui_image_editor_styles' %>
-    <%= javascript_pack_tag 'vue/navigation/top_menu' %>
+    <%= javascript_include_tag 'tui_image_editor' %>
+    <%= stylesheet_link_tag 'tui_image_editor_styles' %>
+    <%= javascript_include_tag 'vue_navigation_top_menu' %>
   </head>
   <body
     class="<%= yield :body_class %>"
@@ -109,6 +109,6 @@
       window.IN_REQUEST = false;
     </script>
 
-    <%= javascript_pack_tag 'prism' %>
+    <%= javascript_include_tag 'prism' %>
   </body>
 </html>

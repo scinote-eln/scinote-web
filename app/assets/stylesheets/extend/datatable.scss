@@ -51,11 +51,7 @@
 
       th,
       td {
-        padding: 12px;
-
-        &:first-child {
-          width: 16px !important;
-        }
+        padding: 8px 6px;
       }
     }
   }
@@ -64,20 +60,15 @@
     tr {
       &.selected,
       .selected {
-        background-color: $color-alto;
+        background-color: $color-concrete;
       }
     }
 
     td {
       padding-left: 10px;
 
-      &:first-child {
-        display: flex;
-        justify-content: center;
-      }
-
-      &:last-child {
-        display: table-cell;
+      .nowrap {
+        white-space: nowrap;
       }
     }
 
@@ -112,6 +103,8 @@
       border: 1px solid transparent;
       border-radius: $border-radius-default;
       color: inherit;
+      min-height: 36px;
+      min-width: 36px;
       outline: 0;
 
       &:hover,
@@ -127,7 +120,10 @@
     }
 
     &.active {
+      min-height: 36px;
       a {
+        min-width: 36px;
+        min-height: 36px;
         background-color: inherit;
         border: 1px solid $brand-primary;
         color: inherit;

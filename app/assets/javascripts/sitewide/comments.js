@@ -4,7 +4,7 @@ var Comments = (function() {
   function changeCounter(comment, value) {
     var currentCount = $('#comment-counter-' + comment.closest('.comments-container').attr('data-object-id'));
     var newValue = parseInt(currentCount.html(), 10) + value;
-    currentCount.html(newValue);
+    currentCount.text(newValue);
     if (newValue === 0) {
       currentCount.addClass('hidden');
     } else {
@@ -92,7 +92,7 @@ var Comments = (function() {
             if (error.status === 403) {
               HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
             }
-            errorField.html(error.responseJSON.errors.message);
+            errorField.text(error.responseJSON.errors.message);
             newButton.disable = false;
           });
       });

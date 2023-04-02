@@ -38,6 +38,13 @@
    </div>
   </div>
 
+<% if Rails.application.config.x.connected_devices_enabled %>
+  <!-- Manage devices -->
+  <div class="manage-devices">
+    <%= render partial: 'users/registrations/manage_devices' %>
+  <div>
+<% end %>
+
   <!-- User statistics -->
   <div class="row">
     <div class="col-md-12">
@@ -46,20 +53,20 @@
           <h3><%=t "users.statistics.title" %></h3>
           <ul class="list-inline">
             <li class="label label-primary">
-              <h2><%= @user.statistics[:number_of_teams]%></h2>
-              <%= t("users.statistics.team").pluralize(@user.statistics[:number_of_teams]) %>
+              <h2><%= @user_statistics[:number_of_teams]%></h2>
+              <%= t("users.statistics.team").pluralize(@user_statistics[:number_of_teams]) %>
             </li>
             <li class="label label-primary">
-              <h2><%= @user.statistics[:number_of_projects] %></h2>
-              <%= t("users.statistics.project").pluralize(@user.statistics[:number_of_projects]) %>
+              <h2><%= @user_statistics[:number_of_projects] %></h2>
+              <%= t("users.statistics.project").pluralize(@user_statistics[:number_of_projects]) %>
             </li>
             <li class="label label-primary">
-              <h2><%= @user.statistics[:number_of_experiments] %></h2>
-              <%= t("users.statistics.experiment").pluralize(@user.statistics[:number_of_experiments]) %>
+              <h2><%= @user_statistics[:number_of_experiments] %></h2>
+              <%= t("users.statistics.experiment").pluralize(@user_statistics[:number_of_experiments]) %>
             </li>
             <li class="label label-primary">
-              <h2><%= @user.statistics[:number_of_protocols] %></h2>
-              <%= t("users.statistics.protocol").pluralize(@user.statistics[:number_of_protocols]) %>
+              <h2><%= @user_statistics[:number_of_protocols] %></h2>
+              <%= t("users.statistics.protocol").pluralize(@user_statistics[:number_of_protocols]) %>
             </li>
           </ul>
         </div>
@@ -70,8 +77,9 @@
 </div>
 
 <%= render partial: '2fa_modal' %>
+
 <%= render partial: 'users/shared/user_avatars_modal' %>
 
-<%= javascript_pack_tag 'custom/croppie' %>
-<%= stylesheet_pack_tag 'custom/croppie_styles' %>
+<%= javascript_include_tag 'croppie' %>
+<%= stylesheet_link_tag 'croppie_styles' %>
 <%= javascript_include_tag "users/registrations/edit" %>

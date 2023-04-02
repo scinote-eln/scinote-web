@@ -133,7 +133,7 @@ class TinyMceAssetsController < ApplicationController
       return render_403 unless can_manage_step?(@assoc.step)
     when Protocol
       return render_403 unless can_manage_protocol_in_module?(@protocol) ||
-                               can_manage_protocol_in_repository?(@protocol)
+                               can_manage_protocol_draft_in_repository?(@protocol)
     when ResultText, MyModule
       return render_403 unless can_manage_my_module?(@my_module)
     else

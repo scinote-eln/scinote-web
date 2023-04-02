@@ -148,9 +148,16 @@ en:
             shared_object_id:
               is_globally_shared: "Inventory is already globally shared"
         protocol:
+          unchangable: "Published protocols can not be changed!"
+          wrong_parent_type: "Protocol can only be linked to published protocol!"
+          wrong_version_name: "Protocol versions should have same name!"
+          wrong_version_number: "Protocol version number should be sequential!"
+          wrong_parent_draft_number: "Procol can have only 1 draft"
           attributes:
             step_order:
               invalid: "Invalid step order."
+            name:
+              taken: "This protocol template name has to be unique inside a team (this includes the archive)."
         step:
           attributes:
             step_orderable_element_order:
@@ -316,7 +323,7 @@ en:
     templates:
       sidebar_title: "TEMPLATES"
       protocol_templates: "Protocol templates"
-      label_templates: "Label Templates"
+      label_templates: "Label templates"
 
   nav2:
     all_projects:
@@ -345,6 +352,7 @@ en:
       public: "Public"
       private: "Private"
       archived: "Archived"
+      in_repository: "Protocol templates"
       created_by: "Created by: "
       created_at: "Created at: "
       last_modified_by: "Last modified by: "
@@ -1010,11 +1018,14 @@ en:
     protocol:
       title: "Protocol"
       options_dropdown:
-        title: "Protocol options"
+        title: "Protocol actions"
         load_from_repo: "Load from templates"
         import: "Import protocol"
         export: "Export protocol"
-        save_to_repo: "Save to templates"
+        unlink: "Unlink protocol"
+        revert_protocol: "Revert protocol"
+        update_protocol: "New version update"
+        save_to_repo: "Save as new template"
         delete_steps: "Delete all steps"
     description:
       title: "Edit task %{module} description"
@@ -1048,6 +1059,8 @@ en:
       head_title: "%{project} | %{module} | Protocols"
       protocol: "Protocol"
       protocol_status_bar:
+        protocol_id_label: "ID:"
+        protocol_version_label: "Version"
         private_parent: "private"
         unlinked: "unlinked"
         linked: "linked"
@@ -1058,10 +1071,13 @@ en:
         no_keywords: "no keywords"
         protocol_created: "Protocol created:"
         template_updated: "Protocol template updated on:"
-        protocol_updated: "Protocol updated on:"
+        protocol_updated: "Protocol modified:"
+        protocol_loaded: "Protocol template loaded:"
+        protocol_published: "Protocol template published:"
+
         messages:
-          template_updated_html: "There is a new version of this protocol available in the protocol templates.<br>Would you like to update it?"
-          protocol_updated: "The version of this protocol in the task is modified, do you wish to save it as a new protocol template?"
+          template_updated_html: "There is a new version of this protocol available in protocol templates."
+          protocol_updated: "Version of this protocol in the task is modified. "
           unlinked: "This protocol is not linked to the templates."
         btns:
           unlink: "Unlink protocol template"
@@ -1075,24 +1091,24 @@ en:
           update_self_title: "Update this protocol with the version stored in the templates"
       confirm_link_update_modal:
         unlink_title: "Unlink protocol template"
-        unlink_message: "Are you sure you want to unlink the task protocol from the templates version? This will stop any tracking of changes."
-        unlink_btn_text: "Unlink"
-        revert_title: "Revert protocol"
-        revert_message: "Are you sure you want to revert the task protocol to the templates version? This will override any local changes you made."
-        revert_btn_text: "Revert"
-        update_parent_title: "Update templates version"
-        update_parent_message: "Are you sure you want to update the templates protocol with this version? This will override any other changes made in the templates version."
-        update_self_title: "Update from templates"
-        update_self_message: "Are you sure you want to update this protocol with the version from the templates? This will override any local changes you made."
+        unlink_message: "This will stop tracking changes of protocol templates. We can’t link it back once you unlink it."
+        unlink_btn_text: "Yes, unlink it"
+        revert_title: "Revert protocol template"
+        revert_message: "This will override any changes you made. We can’t recover them once you revert."
+        revert_btn_text: "Yes, revert it"
+        update_self_title: "Update from protocol templates"
+        update_self_message: "This will override any changes you made. We can’t recover them once you update this protocol with the new version."
+        update_self_btn_text: "Yes, update it"
+        warning: "Are you sure?"
       unlink_flash: "Protocol was successfully unlinked."
       unlink_error: "Failed to unlink protocol."
-      revert_flash: "Protocol was successfully reverted to protocol version."
+      revert_flash: "Protocol was successfully reverted."
       revert_error: "Failed to revert protocol."
       revert_error_locked: "Failed to revert protocol. One or more files in the protocol are currently being edited."
       update_parent_flash: "Protocol in templates was successfully updated with the version from the task."
       update_parent_error: "Failed to update templates version of the protocol."
       update_parent_error_locked: "Failed to update templates version of the protocol. One or more files in the protocol are currently being edited."
-      update_from_parent_flash: "Version in the templates was successfully updated."
+      update_from_parent_flash: "Protocol was successfully updated."
       update_from_parent_error: "Failed to update the protocol with the version in the templates."
       update_from_parent_error_locked: "Failed to update the protocol with the version in the templates. One or more files in the protocol are currently being edited."
       load_from_repository_flash: "Successfully loaded the protocol from the templates."
@@ -1100,23 +1116,18 @@ en:
       load_from_repository_error_locked: "Failed to load the protocol from the templates. One or more files in the protocol are currently being edited."
       load_from_repository_modal:
         title: "Load protocol from templates"
-        text: "Choose the protocol to be loaded to the task."
-        text2: "This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
-        tab_public: "Team protocols"
-        tab_private: "My protocols"
-        tab_recent: "Recent protocols"
-        tab_archive: "Archived protocols"
+        text: "This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
+        text2: "Choose the protocol to be loaded to the task."
+        filter_protocols: "Filter protocols"
         thead_name: "Name"
         thead_keywords: "Keywords"
-        thead_nr_of_linked_children: "No. of linked tasks"
         thead_published_by: "Published by"
-        thead_added_by: "Added by"
-        thead_published_on: "Published at"
-        thead_created_at: "Created at"
-        thead_updated_at: "Last modified at"
+        thead_published_on: "Published on"
+        thead_version: "Ver."
+        thead_id: "ID"
         confirm_message: "Are you sure you wish to load protocol from templates? This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
         import_to_linked_task_rep: "Are you sure you wish to load protocol from templates? This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
-        load: "Load"
+        load: "Load protocol"
       copy_to_repository_modal:
         title: "Save to protocol templates"
         name_label: "Templates protocol name"
@@ -1128,6 +1139,7 @@ en:
         link_label: "Link task to this protocol in templates"
         link_text: "<strong>Warning!</strong>&nbsp;This will unlink the currently linked protocol."
         error_400: "Due to unknown error, protocol could not be copied to templates."
+        success_message: "Protocol was successfully saved as a new protocol template."
         confirm: "Save"
       load_from_file_flash: "Successfully loaded the protocol from the file."
       load_from_file_error: "Failed to load the protocol from file."
@@ -1677,7 +1689,7 @@ en:
         name_label: "Inventory name"
         name_placeholder: "My inventory"
         submit: "Create"
-        success_flash: "Inventory <strong>%{name}</strong> successfully created."
+        success_flash_html: "Inventory <strong>%{name}</strong> successfully created."
       modal_share:
         title: "Share Inventory"
         submit: "Save sharing options"
@@ -2334,6 +2346,19 @@ en:
         2fa_errors:
           wrong_submit_code: "Not correct code"
           wrong_password: "Not correct password"
+        connected_devices:
+          title: "Manage connected devices"
+          description: "When you remove a device, you will be logged out from the selected device."
+          empty_state: "No connected devices."
+        devices_table:
+          device_name: "Device Name"
+          added_on: "Added on"
+        device_revocation_modal:
+          title: "Remove connected device"
+          description: "This device will lose access to your SciNote account."
+          validation: "Are you sure you want to remove it?"
+          cancel: "Cancel"
+          remove: "Remove"
       new:
         head_title: "Sign up"
         team_name_label: "Team name"
@@ -2542,6 +2567,7 @@ en:
       unchangable_error_message: "Predefined roles can not be changed!"
 
   protocols:
+    draft: "Draft"
     no_text_placeholder: 'No protocol description'
     reorder_steps:
         button: "Rearrange steps"
@@ -2551,8 +2577,7 @@ en:
       title: "Print protocol"
       button: "Print"
       modal:
-        title: "Print protocol"
-        content: "Select what to include in the printed version of this protocol."
+        title: "Print options"
         include_comments: "Include comments when printing"
       header:
         printed_from: "Printed from"
@@ -2638,6 +2663,7 @@ en:
         import: "Load"
         import_to_team_protocols_label: "Import to Team Protocols"
         import_to_private_protocols_label: "Import to My Protocols"
+        import_protocols_label: "Import"
     export:
       export_results:
         title: "Export results"
@@ -2645,10 +2671,39 @@ en:
         message_ok: "Successfully exported %{nr} protocols."
         row_success: "Exported"
         row_failed: "Failed"
+    delete_draft_modal:
+      title: "Delete draft"
+      description_1: "You’ll loose all content from the draft. We can’t recover it once you delete it."
+      description_2: "Are you sure?"
+      confirm: "Yes, delete"
+    publish_modal:
+      title: "Publish protocol template"
+      name: "Protocol template name"
+      comment: "Revision notes"
+      comment_placeholder: "What's new in this version?"
+      publish: "Publish"
+    new_protocol_modal:
+      title_new: "Create new protocol template"
+      title_copy: "Save as new protocol template"
+      name_label: "Protocol template name"
+      name_placeholder: "Enter a protocol template name…"
+      description: "You will create a copy of a protocol and save it to Protocol templates."
+      access_label: "Grant access to all team members"
+      role_label: "Default user role"
+      create_new: "Create"
+      create_copy: "Save"
     header:
-      created_at: "Created at:"
-      updated_at: "Last modified at:"
-      added_by: "Added by:"
+      details: 'Details'
+      versions: 'Versions'
+      protocol_description: 'Protocol description'
+      protocol_steps: 'Protocol steps'
+      publish: 'Publish'
+      save_as_draft: 'Save as draft'
+      version: "Version:"
+      draft: 'Draft'
+      created_at: "Created on:"
+      updated_at: "Last modified on:"
+      added_by: "Created by:"
       keywords: "Keywords:"
       authors: "Authors:"
       no_authors: "No authors"
@@ -2670,21 +2725,29 @@ en:
         title: "Edit description of protocol %{protocol}"
         label: "Description"
     index:
-      head_title: "Protocol management"
+      head_title: "Protocol templates"
+      head_title_archived: "Archived protocol templates"
       default_name: 'New protocol'
+      back_to_active_protocols: 'Back to active protocols'
+      search_bar_placeholder: 'Filter protocols'
       navigation:
-        public: "Team protocols"
-        private: "My protocols"
-        external_protocols: "External protocols"
         archive: "Archive"
+      action_toolbar:
+        versions: "Versions"
+        access: "Manage Access"
+        duplicate: "Duplicate"
+        export: "Export"
+        archive: "Archive"
+        restore: "Restore"
+        empty_placeholder: "There is no action available"
       public_description: "Team protocols are visible and can be used by everyone from the team."
       private_description: "My protocols are only visible to you."
-      create_new: "New"
+      create_new: "New protocol"
       edit: "Edit"
       clone_btn: "Copy"
       import: "Import"
-      import_alt: " from SciNote protocol file(.eln)"
-      import_json: " from protocols.io file"
+      import_alt: "From local file"
+      import_protocols_io: "From Protocols.io"
       modal_import_json_upload: "Upload"
       modal_import_json_title: "Import protocols.io file"
       modal_import_json_notice: "Upload your protocols.io protocol file"
@@ -2692,26 +2755,33 @@ en:
       make_private: "Move to My Protocols"
       publish: "Move to Team protocols"
       archive_action: "Archive"
-      thead_name: "Name"
-      thead_code: "ID"
-      thead_keywords: "Keywords"
-      thead_nr_of_linked_children: "No. of linked tasks"
-      thead_published_by: "Published by"
-      thead_added_by: "Added by"
-      thead_archived_by: "Archived by"
-      thead_published_on: "Published at"
-      thead_created_at: "Created at"
-      thead_archived_on: "Archived at"
-      thead_updated_at: "Last modified at"
+      archive_flash_html: "<b>%{count} protocol</b> template(s) successfully archived."
+      thead:
+        name: "Name"
+        id: "ID"
+        keywords: "Keywords"
+        nr_of_linked_children: "Linked tasks"
+        versions: "Versions"
+        access: "Access"
+        published_by: "Published by"
+        added_by: "Added by"
+        archived_by: "Archived by"
+        published_on: "Published on"
+        created_at: "Created at"
+        archived_on: "Archived on"
+        updated_at: "Modified on"
+      table:
+        draft: "Draft"
       preview:
         title: "%{protocol} preview"
       linked_children:
         title: "Tasks linked to protocol %{protocol}"
         used_in: "Number of tasks linked to this protocol: %{nr}"
         no_linked_children: "This protocol is not linked to any task."
-      archive:
-        description: "Archived protocols can only be seen by you. Restoring protocols will return them to their previous location (team/my protocols)."
+        length_menu: "Show %{number} per page"
+        show_version: "Show version"
       restore: "Restore"
+      restore_flash_html: "<b>%{count} protocol</b> template(s) successfully restored."
       make_private_unauthorized: "You do not have permission to move selected protocols to My protocols."
       make_private_error: "Error occurred while moving selected protocols to My protocols."
       publish_unauthorized: "You do not have permission to move selected protocols to Team protocols."
@@ -2730,72 +2800,49 @@ en:
         message_private: "When you create a new My protocol, it will only be visible to you."
         submit: "Create"
       clone:
-        success_flash: "Successfully copied protocol '%{new}' from protocol '%{original}'."
-        error_flash: "Failed to copied protocol '%{original}'."
-      make_private_results:
-        title: "Move to My protocols results"
-        message_failed: "Failed to move %{nr} protocols to My protocols."
-        message_ok: "Successfully moved %{nr} protocols to My protocols."
-        row_success: "Moved to My protocols"
-        row_renamed: "Moved to My protocols & renamed"
-        row_failed: "Failed"
-      publish_results:
-        title: "Move to Team protocols results"
-        message_failed: "Failed to move %{nr} protocols to Team protocols."
-        message_ok: "Successfully moved %{nr} protocols to Team protocols."
-        row_success: "Moved to Team protocols"
-        row_renamed: "Moved to Team protocols & renamed"
-        row_failed: "Failed"
+        success_flash: "Successfully duplicated protocol template '%{new}' from '%{original}'."
+        error_flash: "Failed to duplicated protocol template '%{original}'."
       import_results:
         title: "Import results"
-        message_failed: "Failed to import %{nr} protocol/s."
-        message_ok: "Successfully imported %{nr} protocol/s."
+        message_failed: "Failed to import protocol template(s)."
+        message_ok_html: "<strong>%{count} protocol</strong> template(s) successfully imported."
         message_ok_pio: "Successfully imported protocol from protocols.io file."
         message_warn_truncated: "Successfully imported protocol from protocols.io file. However, text in some fields was too long so we had to cut it off."
         row_success: "Imported"
         row_renamed: "Imported & renamed"
         row_failed: "Failed"
         row_file_too_large: "(Protocol too large)"
-      confirm_archive:
-        title: "Archive protocols"
-        message: "Are you sure you wish to archive the selected protocols? All the task protocols will be unlinked."
-        confirm: "Archive"
-      archive_results:
-        title: "Archive results"
-        message_failed: "Failed to archive %{nr} protocols."
-        message_ok: "Successfully archived %{nr} protocols."
-        row_success: "Archived"
-        row_renamed: "Archived & renamed"
-        row_failed: "Failed"
-        preview: "View"
-      restore_results:
-        title: "Restore results"
-        message_failed: "Failed to restore %{nr} protocols."
-        message_ok: "Successfully restored %{nr} protocols."
-        row_success: "Restored"
-        row_renamed: "Restored & renamed"
-        row_failed: "Failed"
-        row_in_repository_public: "%{protocol} - <i>into Team protocols</i>"
-        row_in_repository_private: "%{protocol} - <i>into My protocols</i>"
-      external_protocols:
+      versions:
+        title: "%{protocol} versions"
+        first_draft_html: "<b>Draft</b>"
+        draft_html: "<b>Draft</b> (from Version %{parent_version})"
+        draft_full_modification_info: "Modified on %{modified_on}, by %{modified_by}"
+        draft_update_modification_info: "Modified on %{modified_on}"
+        revision: "Version %{version}"
+        revision_publishing_info: "Published on %{published_on}, by %{published_by}"
+        publish: "Publish"
+        save_as_draft: "Save as draft"
+        comment_placeholder: "Click here to enter revision notes"
+      protocolsio:
         search_bar_placeholder: 'Search for protocols'
-        protocolsio_title: 'Protocols.io'
-        sort_by:
-          title: 'Show first:'
-          alphabetically-asc: 'A-Z'
-          alphabetically-desc: 'Z-A'
-          newest: 'newest'
-          oldest: 'oldest'
+        title: 'Import from Protocols.io'
+        convert: 'Convert for SciNote'
         list_panel:
           empty_text: 'Search for protocols above to list them here'
         preview_panel:
           empty_title: 'PROTOCOL PREVIEW'
           empty_subtext: 'Click on the protocol in the list to preview it here'
+          powered_by: 'Powered by protocols.io'
           banner_text: 'Protocol Preview'
         import:
           public: "Team protocols"
           private: "My protocols"
-          success_flash: 'Protocol <strong>%{name}</strong> successfully imported to %{type}.'
+          success_flash: 'Protocol <strong>%{name}</strong> successfully imported.'
+        sort:
+          new_html: "<i class=\"fas fa-sort-numeric-up\"></i>&nbsp;&nbsp;Newest first"
+          old_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Oldest first"
+          atoz_html: "<i class=\"fas fa-sort-alpha-down\"></i>&nbsp;&nbsp;Name A to Z"
+          ztoa_html: "<i class=\"fas fa-sort-alpha-up\"></i>&nbsp;&nbsp;Name Z to A"
 
     steps:
       placeholder: 'Enter step name'
@@ -2807,7 +2854,7 @@ en:
       new_step: "New step"
       subtitle: "Protocol Steps"
       no_steps: "Protocol has no steps."
-      published_on: "Published on <em>%{timestamp}</em> by <em>%{user}</em>"
+      published_on_html: "Published on <em>%{timestamp}</em> by <em>%{user}</em>"
       info_tab: "Info"
       comments_tab: "Comments"
       no_description: "This step has no description."
@@ -2867,9 +2914,9 @@ en:
           confirm: 'Delete forever'
         delete_steps:
           title: 'Delete all protocol steps'
-          description_1: 'You’re about to delete all protocol steps from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
-          description_2: 'Are you sure you want to delete them?'
-          confirm: 'Delete forever'
+          description_1: 'You’ll loose all protocol steps from your protocol. We can’t recover them once you delete.'
+          description_2: 'Are you sure?'
+          confirm: 'Yes, delete them'
         reorder_elements:
           title: 'Rearrange step %{step_position} content'
       options:
@@ -2946,7 +2993,7 @@ en:
         error_flash: "Step %{step} couldn't be deleted. One or more files are locked."
     edit:
       head_title: "Edit protocol"
-    no_keywords: "No keywords"
+    no_keywords: "—"
 
   invite_users:
     to_team:
@@ -3144,10 +3191,13 @@ en:
   user_assignment:
     current_assignee: "(you)"
     change_project_role: "Change project role"
+    change_protocol_role: "Change protocol role"
+    change_role: "Change role"
     select_default_user_role: "Select default user role"
     change_experiment_role: "Change experiment role"
     change_my_module_role: "Change task role"
     select_role: "Select role"
+    assign_all_team_members: "Grant access to all team members"
     from_project: "%{user_role} [from project]"
     from_experiment: "%{user_role} [from experiment]"
     experiment_select_role: "Change experiment role"
@@ -3159,6 +3209,9 @@ en:
 
   access_permissions:
     everyone_else: "Everyone else at %{team_name}"
+    reset: "Inherit role"
+    remove_access: "Remove access"
+    grant_access: "Grant access"
     create:
       success:
         one: "You have successfully granted access to %{count} member to the project."
@@ -3167,6 +3220,8 @@ en:
     destroy:
       success: "You have successfully removed %{member_name} from the project."
       failure: "Something went wrong"
+    update:
+      failure: "Something went wrong"
     partials:
       edit_assignments_content:
         title: "Manage access for %{resource_name}"
@@ -3174,8 +3229,14 @@ en:
       new_assignments_form:
         title: "Select members"
         submit: "Grant access"
-        submit_singular: "Grant access to 1 user"
-        submit_plural: "Grant access to {num} users"
+        submit_singular: "Grant access to 1 member"
+        submit_plural: "Grant access to {num} members"
+        find_people_html: "Find people"
+      new_protocol_assignments_form:
+        title: "Select members"
+        submit: "Grant access"
+        submit_singular: "Grant access to 1 member"
+        submit_plural: "Grant access to {num} members"
         find_people_html: "Find people"
       experiment_member_field:
         reset: "Inherit role"
@@ -3186,6 +3247,9 @@ en:
       project: "Project"
       project_tooltip: "This role was set on this project."
       project_tooltip_inherit: "This role was inherited from the project."
+      protocol: "Protocol"
+      protocol_tooltip: "This role was set on this protocol."
+      protocol_tooltip_inherit: "This role was inherited from the protocol."
       experiment: "Experiment"
       experiment_tooltip: "This role was set on this experiment."
       experiment_tooltip_inherit: "This role was inherited from the experiment."
@@ -3198,7 +3262,14 @@ en:
       modals:
         show_modal:
           title: "Access to %{resource_name}"
-          new_resource_assignments: "Grant new access to %{resource}"
+        edit_modal:
+          title: "Manage access for %{resource_name}"
+    protocols:
+      modals:
+        show_modal:
+          title: "Access to %{resource_name}"
+        edit_modal:
+          title: "Manage access for %{resource_name}"
     experiments:
       modals:
         show_modal:
@@ -3510,6 +3581,7 @@ en:
     title: "Filters"
     text:
       label: "Contains text"
+      label_name_and_keywords: "Name and keywords"
       placeholder: "Enter search terms..."
     from_placeholder: "From"
     to_placeholder: "To"

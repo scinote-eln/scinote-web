@@ -39,13 +39,19 @@
           var metadata = $('.hot-metadata');
           var data = JSON.stringify({data: hot.getData()});
           contents.attr('value', data);
-          metadata.attr('value', JSON.stringify({cells: hot.getCellsMeta().map((x) => {
-            return {
-              col: x.col,
-              row: x.row,
-              className: x.className || ''
-            }
-          })}))
+          metadata.attr('value', JSON.stringify({cells: hot.getCellsMeta().map(
+            (x) => {
+              if (x) {
+                return {
+                  col: x.col,
+                  row: x.row,
+                  className: x.className || ''
+                }
+              } else {
+                return null
+              }
+            }).filter(e => { return e !== null})
+          }))
           return true;
         });
       }

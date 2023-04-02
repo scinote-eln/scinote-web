@@ -7,7 +7,7 @@ module SearchableByNameModel
     def self.search_by_name(user, teams = [], query = nil, options = {})
       return if user.blank? || teams.blank?
 
-      sql_q = viewable_by_user(user, teams)
+      sql_q = self
 
       if options[:intersect]
         query_array = query.gsub(/[[:space:]]+/, ' ').split(' ')
@@ -17,6 +17,8 @@ module SearchableByNameModel
       else
         sql_q = sql_q.where_attributes_like("#{table_name}.name", query, options)
       end
+
+      sql_q = sql_q.where(id: viewable_by_user(user, teams))
 
       sql_q.limit(Constants::SEARCH_LIMIT)
     end

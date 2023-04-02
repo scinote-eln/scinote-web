@@ -1,14 +1,30 @@
 <ul class="sidebar-branch">
-  <li class="sidebar-leaf">
-    <%= link_to t('sidebar.templates.protocol_templates'),
-                protocols_path,
-                class: "sidebar-link #{'selected' if active == :protocol}" %>
-  </li>
-  <% if can_view_label_templates?(current_team) %>
+  <% if templates_view_mode_archived?(type: @type, protocol: @protocol) %>
     <li class="sidebar-leaf">
-      <%= link_to t('sidebar.templates.label_templates'),
-                  label_templates_path,
-                  class: "sidebar-link #{'selected' if active == :label}" %>
+      <%= link_to protocols_path, class: "sidebar-link back-button" do %>
+        <%= t("protocols.index.back_to_active_protocols") %>
+      <% end %>
     </li>
+  <% else %>
+    <li class="sidebar-leaf">
+      <i class="fas fa-caret-right toggle-branch collapsed"></i>
+      <%= link_to t('sidebar.templates.protocol_templates'),
+                  protocols_path,
+                  class: "sidebar-link #{'selected' if active == :protocol && params[:type] != 'archived'}" %>
+      <ul class="sidebar-branch">
+        <li class="sidebar-leaf">
+        <%= link_to protocols_path(type: :archived), class: "sidebar-link #{'selected' if active == :protocol && params[:type] == 'archived'}" do %>
+          <i class="fas fa-archive"></i>
+          <%= t("protocols.index.navigation.archive") %>
+        <% end %>
+      </ul>
+    </li>
+    <% if can_view_label_templates?(current_team) %>
+      <li class="sidebar-leaf">
+        <%= link_to t('sidebar.templates.label_templates'),
+                    label_templates_path,
+                    class: "sidebar-link #{'selected' if active == :label}" %>
+      </li>
+    <% end %>
   <% end %>
 </ul>

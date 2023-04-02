@@ -52,18 +52,19 @@ class ProjectsController < ApplicationController
         breadcrumbs_html = render_to_string(partial: 'projects/index/breadcrumbs.html.erb',
                                             locals: { target_folder: current_folder, folder_page: true })
         projects_cards_url = project_folder_cards_url(current_folder)
-        title = if @inline_editable_title_config.present?
-                  render_to_string(partial: 'shared/inline_editing',
-                    locals: {
-                      initial_value: current_folder&.name,
-                      config: @inline_editable_title_config
-                    })
-                else
-                  current_folder.name
-                end
+        title_html = if @inline_editable_title_config.present?
+                       render_to_string(partial: 'shared/inline_editing',
+                                        locals: {
+                                          initial_value: current_folder&.name,
+                                          config: @inline_editable_title_config
+                                        })
+                     else
+                       escape_input(current_folder.name)
+                     end
       else
         breadcrumbs_html = ''
         projects_cards_url = cards_projects_url
+        title_html = title
       end
 
       cards = Kaminari.paginate_array(overview_service.project_and_folder_cards)
@@ -72,7 +73,7 @@ class ProjectsController < ApplicationController
       render json: {
         projects_cards_url: projects_cards_url,
         breadcrumbs_html: breadcrumbs_html,
-        title: title,
+        title_html: title_html,
         next_page: cards.next_page,
         toolbar_html: render_to_string(partial: 'projects/index/toolbar.html.erb'),
         cards_html: render_to_string(
@@ -348,7 +349,7 @@ class ProjectsController < ApplicationController
 
   def users_filter
     users = current_team.users.search(false, params[:query]).map do |u|
-      { value: u.id, label: sanitize_input(u.name), params: { avatar_url: avatar_path(u, :icon_small) } }
+      { value: u.id, label: escape_input(u.name), params: { avatar_url: avatar_path(u, :icon_small) } }
     end
 
     render json: users, status: :ok

@@ -186,19 +186,19 @@
     'StepTable': 'fa-table'
   }
 
-  import InlineEdit from 'vue/shared/inline_edit.vue'
-  import StepTable from 'vue/protocol/step_elements/table.vue'
-  import StepText from 'vue/protocol/step_elements/text.vue'
-  import Checklist from 'vue/protocol/step_elements/checklist.vue'
-  import deleteStepModal from 'vue/protocol/modals/delete_step.vue'
-  import Attachments from 'vue/protocol/attachments.vue'
-  import fileModal from 'vue/protocol/step_attachments/file_modal.vue'
-  import clipboardPasteModal from 'vue/protocol/step_attachments/clipboard_paste_modal.vue'
-  import ReorderableItemsModal from 'vue/protocol/modals/reorderable_items_modal.vue'
+  import InlineEdit from '../shared/inline_edit.vue'
+  import StepTable from './step_elements/table.vue'
+  import StepText from './step_elements/text.vue'
+  import Checklist from './step_elements/checklist.vue'
+  import deleteStepModal from './modals/delete_step.vue'
+  import Attachments from './attachments.vue'
+  import fileModal from './step_attachments/file_modal.vue'
+  import clipboardPasteModal from './step_attachments/clipboard_paste_modal.vue'
+  import ReorderableItemsModal from './modals/reorderable_items_modal.vue'
 
-  import UtilsMixin from 'vue/mixins/utils.js'
-  import AttachmentsMixin from 'vue/protocol/mixins/attachments.js'
-  import StorageUsage from 'vue/protocol/storage_usage.vue'
+  import UtilsMixin from '../mixins/utils.js'
+  import AttachmentsMixin from './mixins/attachments.js'
+  import StorageUsage from './storage_usage.vue'
 
   export default {
     name: 'StepContainer',
@@ -419,6 +419,7 @@
         $.post(this.urls[`create_${elementType}_url`], (result) => {
           result.data.isNew = true;
           this.elements.push(result.data)
+          this.$emit('stepUpdated')
         }).error(() => {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         }).done(() => {

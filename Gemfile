@@ -16,9 +16,8 @@ gem 'rails', '~> 6.1.5'
 gem 'psych', '< 4.0'
 gem 'view_component', require: 'view_component/engine'
 gem 'recaptcha', require: 'recaptcha/rails'
-gem 'sanitize', '~> 6.0'
+gem 'sanitize'
 gem 'sassc-rails'
-gem 'webpacker', '~> 4.0.0'
 gem 'yomu', git: 'https://github.com/scinote-eln/yomu', branch: 'master'
 
 # Gems for OAuth2 subsystem
@@ -84,7 +83,6 @@ gem 'sneaky-save', git: 'https://github.com/einzige/sneaky-save'
 gem 'turbolinks', '~> 5.1.1'
 gem 'underscore-rails'
 gem 'wicked_pdf'
-gem 'wkhtmltopdf-heroku', '2.12.5'
 
 gem 'aws-sdk-lambda'
 gem 'aws-sdk-rails'
@@ -100,6 +98,8 @@ gem 'rufus-scheduler', '~> 3.5'
 gem 'discard', '~> 1.0'
 
 gem 'graphviz'
+
+gem 'jsbundling-rails'
 
 gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'

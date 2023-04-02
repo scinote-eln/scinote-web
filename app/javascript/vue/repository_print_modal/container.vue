@@ -91,8 +91,8 @@
 </template>
 
 <script>
-  import DropdownSelector from 'vue/shared/dropdown_selector.vue'
-  import LabelPreview from 'vue/label_template/components/label_preview.vue'
+  import DropdownSelector from '../shared/dropdown_selector.vue'
+  import LabelPreview from '../label_template/components/label_preview.vue'
 
   export default {
     name: 'PrintModalContainer',
