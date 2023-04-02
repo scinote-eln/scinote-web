@@ -7,6 +7,7 @@
   column-gap: 14px;
 
   .breadcrumbs-link {
+    display: inline-block;
     color: var(--sn-blue);
     max-width: var(--max-breadcrumbs-link-width);
     white-space: nowrap;
@@ -19,6 +20,23 @@
   }
 
   .delimiter {
-    color: var(--sn-grey);
+    padding-bottom: 4px;
+  }
+
+  .breadcrumbs-collapsed-container {
+    color: var(--sn-blue);
+    position: relative;
+
+    .show-breadcrumbs {
+      align-items: center;
+      cursor: pointer;
+      display: flex;
+      position: relative;
+    }
+
+    a {
+      @include font-button;
+      color: var(--sn-blue);
+    }
   }
 }
