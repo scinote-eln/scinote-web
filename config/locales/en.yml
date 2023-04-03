@@ -3214,6 +3214,7 @@ en:
       failure: "Something went wrong"
     update:
       failure: "Something went wrong"
+      revoke_all_team_members: "You have successfully removed access from all team members"
     partials:
       edit_assignments_content:
         title: "Manage access for %{resource_name}"
