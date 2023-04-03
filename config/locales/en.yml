@@ -274,10 +274,12 @@ en:
     addon_versions: "Addon versions"
 
   left_menu_bar:
-    dashboard: "Overview"
+    dashboard: "Dashboard"
     projects: "Projects"
     repositories: "Inventories"
     templates: "Templates"
+    protocol: "Protocol"
+    label: "Label"
     reports: "Reports"
     settings: "Settings"
     activities: "Activities"
