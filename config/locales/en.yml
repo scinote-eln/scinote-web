@@ -2691,8 +2691,10 @@ en:
       protocol_steps: 'Protocol steps'
       publish: 'Publish'
       save_as_draft: 'Save as draft'
-      version: "Version:"
       draft: 'Draft'
+      version: "Version:"
+      published_on: "Published on:"
+      published_by: "Published by:"
       created_at: "Created on:"
       updated_at: "Last modified on:"
       added_by: "Created by:"
