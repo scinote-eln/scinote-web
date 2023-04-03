@@ -1,18 +1,18 @@
 .sci--layout-navigation-breadcrumbs {
   --max-breadcrumbs-link-width: 180px;
-  padding: 14px 24px 8px;
-  display: flex;
-  flex-wrap: wrap;
   align-items: center;
   column-gap: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 14px 24px 8px;
 
   .breadcrumbs-link {
-    display: inline-block;
     color: var(--sn-blue);
+    display: inline-block;
     max-width: var(--max-breadcrumbs-link-width);
-    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 
     &:last-child {
       color: var(--sn-grey);
