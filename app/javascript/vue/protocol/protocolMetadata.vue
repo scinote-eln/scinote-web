@@ -27,11 +27,11 @@
           <span>{{ i18n.t("protocols.header.version") }}</span>
           <b>{{ protocol.attributes.version }}</b>
         </p>
-        <p class="data-block">
+        <p class="data-block" v-if="protocol.attributes.published">
           <span>{{ i18n.t("protocols.header.published_on") }}</span>
           <b>{{ protocol.attributes.published_on_formatted }}</b>
         </p>
-        <p class="data-block">
+        <p class="data-block" v-if="protocol.attributes.published">
           <span>{{ i18n.t("protocols.header.published_by") }}</span>
           <img :src="protocol.attributes.published_by.avatar"/>
           {{ protocol.attributes.published_by.name }}
