@@ -343,6 +343,8 @@ window.TinyMCE = (() => {
                 editor.setProgressState(0);
                 if (data.status === 403) {
                   HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+                } else if (data.status === 422) {
+                  HelperModule.flashAlertMsg(data.responseJSON ? Object.values(data.responseJSON).join(', ') : I18n.t('errors.general'), 'danger');
                 }
               });
 
