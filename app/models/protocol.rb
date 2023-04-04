@@ -574,18 +574,12 @@ class Protocol < ApplicationRecord
     if linked?
       clone.added_by = current_user
       clone.parent = parent
+      clone.linked_at = linked_at
     end
 
     ActiveRecord::Base.no_touching do
       clone = deep_clone(clone, current_user)
     end
-
-    if linked?
-      clone.updated_at = Time.zone.now
-      clone.linked_at = clone.updated_at
-      clone.save
-    end
-
     clone
   end
 
