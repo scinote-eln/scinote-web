@@ -166,7 +166,7 @@ module AccessPermissions
     def set_protocol
       @protocol = current_team.protocols.includes(user_assignments: %i(user user_role)).find_by(id: params[:id])
 
-      render_404 unless @protocol
+      return render_404 unless @protocol
 
       @protocol = @protocol.parent if @protocol.parent_id
     end
