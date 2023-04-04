@@ -91,7 +91,13 @@ module AccessPermissions
         end
 
         respond_to do |format|
-          @message = t('access_permissions.create.success', count: created_count)
+          @message = if created_count.zero?
+                       t('access_permissions.create.success.other', count: :'all team')
+                     elsif created_count == 1
+                       t('access_permissions.create.success.one', count: created_count)
+                     else
+                       t('access_permissions.create.success.other', count: created_count)
+                     end
           format.json { render :edit }
         end
       rescue ActiveRecord::RecordInvalid
