@@ -598,7 +598,9 @@ class Protocol < ApplicationRecord
       last_modified_by: current_user,
       team: team,
       protocol_type: :in_repository_draft,
-      skip_user_assignments: true
+      skip_user_assignments: true,
+      visibility: visibility,
+      default_public_user_role_id: default_public_user_role_id
     )
 
     cloned = deep_clone(clone, current_user)
@@ -697,6 +699,8 @@ class Protocol < ApplicationRecord
   end
 
   def update_automatic_user_assignments
+    return if skip_user_assignments
+
     case visibility
     when 'visible'
       create_or_update_public_user_assignments!(added_by)
