@@ -348,6 +348,8 @@ class Protocol < ApplicationRecord
   end
 
   def newer_than_parent?
+    return linked? if linked_at.nil?
+
     linked? && updated_at > linked_at
   end
 
