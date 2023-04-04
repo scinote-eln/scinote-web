@@ -3200,14 +3200,13 @@ en:
     general_error: "Something went wrong"
 
   access_permissions:
+    all_team: "all team"
     everyone_else: "Everyone else at %{team_name}"
     reset: "Inherit role"
     remove_access: "Remove access"
     grant_access: "Grant access"
     create:
-      success:
-        one: "You have successfully granted access to %{count} member."
-        other: "You have successfully granted access to %{count} members."
+      success: "You have successfully granted access to %{count} member(s)."
       failure: "Something went wrong"
     destroy:
       success: "You have successfully removed %{member_name}."

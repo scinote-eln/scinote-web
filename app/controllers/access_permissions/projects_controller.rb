@@ -92,11 +92,9 @@ module AccessPermissions
 
         respond_to do |format|
           @message = if created_count.zero?
-                       t('access_permissions.create.success.other', count: :'all team')
-                     elsif created_count == 1
-                       t('access_permissions.create.success.one', count: created_count)
+                       t('access_permissions.create.success', count: t('access_permissions.all_team'))
                      else
-                       t('access_permissions.create.success.other', count: created_count)
+                       t('access_permissions.create.success', count: created_count)
                      end
           format.json { render :edit }
         end
