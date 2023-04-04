@@ -91,7 +91,7 @@ module AccessPermissions
         end
 
         respond_to do |format|
-          @message = if created_count == 0
+          @message = if created_count.zero?
                        t('access_permissions.create.success.other', count: :'all team')
                      elsif created_count == 1
                        t('access_permissions.create.success.one', count: created_count)
