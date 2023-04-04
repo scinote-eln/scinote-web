@@ -593,16 +593,12 @@ class Protocol < ApplicationRecord
       added_by: current_user,
       last_modified_by: current_user,
       team: team,
-      protocol_type: :in_repository_draft,
-      skip_user_assignments: true,
-      visibility: visibility,
-      default_public_user_role_id: default_public_user_role_id
+      protocol_type: :in_repository_draft
     )
 
     cloned = deep_clone(clone, current_user)
 
     if cloned
-      deep_clone_user_assginments(clone)
       Activities::CreateActivityService
         .call(activity_type: :copy_protocol_in_repository,
               owner: current_user,
