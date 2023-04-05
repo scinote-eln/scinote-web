@@ -176,6 +176,14 @@
            }).filter(e => { return e !== null })
         });
         this.$emit('update', this.element)
+        this.ajax_update_url()
+      },
+      ajax_update_url() {
+        $.ajax({
+          url: this.element.attributes.orderable.urls.update_url,
+          method: 'PUT',
+          data: this.element.attributes.orderable,
+        })
       },
       loadTableData() {
         let container = this.$refs.hotTable;
