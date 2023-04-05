@@ -7,6 +7,7 @@ class ProjectsController < ApplicationController
   include ProjectsHelper
   include CardsViewHelper
   include ExperimentsHelper
+  include Breadcrumbs
 
   attr_reader :current_folder
   helper_method :current_folder
@@ -477,34 +478,5 @@ class ProjectsController < ApplicationController
             team: project.team,
             project: project,
             message_items: message_items)
-  end
-
-  def set_breadcrumbs_items
-    project = @project
-    breadcrumbs_items = []
-    folders = helpers.tree_ordered_parent_folders(current_folder)
-    breadcrumbs_items.push({
-                 label: t('projects.index.breadcrumbs_root'),
-                 url: projects_path,
-                 class: 'project-folder-link'
-               })
-
-    folders&.each do |project_folder|
-      breadcrumbs_items.push({
-                   label: project_folder.name,
-                   url: project_folder_path(project_folder),
-                   class: 'project-folder-link'
-                 })
-    end
-
-    if project
-      breadcrumbs_items.push({
-                   label: project.name,
-                   url: project_path(project),
-                   archived: project.archived?
-                 })
-    end
-
-    @breadcrumbs_items = breadcrumbs_items
   end
 end

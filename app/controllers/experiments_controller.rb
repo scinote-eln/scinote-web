@@ -6,6 +6,7 @@ class ExperimentsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
   include Rails.application.routes.url_helpers
+  include Breadcrumbs
 
   before_action :load_project, only: %i(new create archive_group restore_group)
   before_action :load_experiment, except: %i(new create archive_group restore_group)
@@ -658,41 +659,5 @@ class ExperimentsController < ApplicationController
         Connection.create!(input_id: destination_my_module.id, output_id: source_my_module.id)
       end
     end
-  end
-
-  def set_breadcrumbs_items
-    experiment = @experiment
-    project = experiment.project
-    current_folder = project&.project_folder
-    breadcrumbs_items = []
-    folders = helpers.tree_ordered_parent_folders(current_folder)
-
-    breadcrumbs_items.push({
-                             label: t('projects.index.breadcrumbs_root'),
-                             url: projects_path,
-                             class: 'project-folder-link'
-                           })
-
-    folders&.each do |project_folder|
-      breadcrumbs_items.push({
-                               label: project_folder.name,
-                               url: project_folder_path(project_folder),
-                               class: 'project-folder-link'
-                             })
-    end
-
-    breadcrumbs_items.push({
-                              label: project.name,
-                              url: project_path(project),
-                              archived: project.archived?
-                            })
-    
-    breadcrumbs_items.push({
-                             label: experiment.name,
-                             url: my_modules_experiment_path(experiment),
-                             archived: experiment.archived?
-                            })
-
-    @breadcrumbs_items = breadcrumbs_items
   end
 end
