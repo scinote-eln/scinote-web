@@ -62,7 +62,6 @@ class MyModuleRepositoriesController < ApplicationController
       status = :bad_request
     end
 
-
     respond_to do |format|
       format.json do
         render json: {
