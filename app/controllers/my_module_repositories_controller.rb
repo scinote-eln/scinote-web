@@ -42,34 +42,35 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def create
-    repository_row = RepositoryRow.find(params[:row_to_assign])
-    repository = repository_row.repository
-    user = current_user
+    ActiveRecord::Base.transaction do
+      repository_row = RepositoryRow.find(params[:repository_row_id])
+      repository = repository_row.repository
 
-    if @my_module.my_module_repository_rows.create!(repository_row: repository_row, assigned_by: user)
+      unless can_read_repository?(repository)
+        render_403
+        return
+      end
+
+      @my_module.my_module_repository_rows.create!(repository_row: repository_row, assigned_by: current_user)
+
       Activities::CreateActivityService.call(activity_type: :assign_repository_record,
-                                             owner: user,
+                                             owner: current_user,
                                              team: @my_module.experiment.project.team,
                                              project: @my_module.experiment.project,
                                              subject: @my_module,
                                              message_items: { my_module: @my_module.id,
                                                               repository: repository.id,
                                                               record_names: repository_row.name })
-      flash = t('my_modules.assigned_items.direct_assign.success')
-      status = :ok
-    else
-      flash = t('my_modules.repository.flash.update_error')
-      status = :bad_request
-    end
 
-    respond_to do |format|
-      format.json do
-        render json: {
-          flash: flash,
-          repository_id: repository.repository_snapshots.find_by(selected: true)&.id || repository.id
-        }, status: status
-      end
+      render json: {
+        flash: t('my_modules.assigned_items.direct_assign.success')
+      }, status: :ok
     end
+  rescue StandardError => e
+    Rails.logger.error e.message
+    render json: {
+      flash: t('my_modules.repository.flash.update_error')
+    }, status: :bad_request
   end
 
   def update
