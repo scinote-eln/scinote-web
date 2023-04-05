@@ -18,7 +18,7 @@ class Constants
   # Max characters for long text fields
   TEXT_MAX_LENGTH = 10000
   # Max characters for rich text fields (in html format)
-  RICH_TEXT_MAX_LENGTH = 100000
+  RICH_TEXT_MAX_LENGTH = 1000000
   # Max characters for color field (given in HEX format)
   COLOR_MAX_LENGTH = 7
   # Max characters for text in dropdown list element

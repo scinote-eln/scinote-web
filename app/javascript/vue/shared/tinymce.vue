@@ -101,14 +101,8 @@
       error() {
         if(this.characterLimit && this.characterCount > this.characterLimit) {
           return(
-            this.i18n.t(
-              'inline_edit.errors.over_limit',
-              {
-                attribute: this.i18n.t('general.text.name'),
-                limit: this.numberWithSpaces(this.characterLimit)
-              }
-            )
-          )
+            this.i18n.t('errors.general_text_too_long')
+          );
         }
 
         return false
