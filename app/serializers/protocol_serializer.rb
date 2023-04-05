@@ -8,8 +8,9 @@ class ProtocolSerializer < ActiveModel::Serializer
   include InputSanitizeHelper
 
   attributes :name, :id, :urls, :description, :description_view, :updated_at, :in_repository,
-             :created_at_formatted, :updated_at_formatted, :added_by, :authors, :keywords, :version, :code,
-             :published, :version_comment, :archived, :linked, :has_draft
+             :created_at_formatted, :updated_at_formatted, :added_by, :authors, :keywords, :version,
+             :code, :published, :version_comment, :archived, :linked, :has_draft,
+             :published_on_formatted, :published_by
 
   def updated_at
     object.updated_at.to_i
@@ -21,6 +22,19 @@ class ProtocolSerializer < ActiveModel::Serializer
 
   def published
     object.in_repository_published?
+  end
+
+  def published_on_formatted
+    return if object.published_on.blank?
+
+    I18n.l(object.published_on, format: :full)
+  end
+
+  def published_by
+    {
+      avatar: object.published_by&.avatar_url(:icon_small),
+      name: object.published_by&.full_name
+    }
   end
 
   def added_by
