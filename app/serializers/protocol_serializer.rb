@@ -25,7 +25,7 @@ class ProtocolSerializer < ActiveModel::Serializer
   end
 
   def published_on_formatted
-    return unless object.published_on.present?
+    return if object.published_on.blank?
 
     I18n.l(object.published_on, format: :full)
   end
