@@ -8,9 +8,7 @@ module Breadcrumbs
       my_module = @my_module
       experiment = my_module&.experiment || @experiment
       project = experiment&.project || @project
-      p '====================='
-      p @project
-      current_folder = project&.project_folder
+      current_folder = project&.project_folder || @current_folder
       @breadcrumbs_items = []
 
       folders = helpers.tree_ordered_parent_folders(current_folder)
@@ -29,29 +27,39 @@ module Breadcrumbs
                                 })
       end
 
-      if project
-        @breadcrumbs_items.push({
-                                  label: project.name,
-                                  url: project_path(project),
-                                  archived: project.archived?
-                                })
-      end
+      include_project(project) if project
 
-      if experiment
-        @breadcrumbs_items.push({
-                                  label: experiment.name,
-                                  url: my_modules_experiment_path(experiment),
-                                  archived: experiment.archived?
-                                })
-      end
+      include_experiment(experiment) if experiment
 
-      if my_module
-        @breadcrumbs_items.push({
-                                  label: my_module.name,
-                                  url: my_module_path(my_module),
-                                  archived: my_module.archived?
-                                })
-      end
+      include_my_module(my_module) if my_module
+
+      @breadcrumbs_items
     end
+  end
+
+  private
+
+  def include_project(project)
+    @breadcrumbs_items.push({
+                              label: project.name,
+                              url: project_path(project),
+                              archived: project.archived?
+                            })
+  end
+
+  def include_experiment(experiment)
+    @breadcrumbs_items.push({
+                              label: experiment.name,
+                              url: my_modules_experiment_path(experiment),
+                              archived: experiment.archived?
+                            })
+  end
+
+  def include_my_module(my_module)
+    @breadcrumbs_items.push({
+                              label: my_module.name,
+                              url: my_module_path(my_module),
+                              archived: my_module.archived?
+                            })
   end
 end
