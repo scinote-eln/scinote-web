@@ -20,7 +20,7 @@ describe StepsController, type: :controller do
     context 'when in protocol repository' do
       let(:params) do
         { protocol_id: protocol_repo.id,
-          step: { name: 'test', description: 'description' } }
+          step: { name: 'test', description: 'description' }, position: 1 }
       end
 
       it 'calls create activity for creating step in protocol repository' do
@@ -40,7 +40,7 @@ describe StepsController, type: :controller do
     context 'when in protocol on task' do
       let(:params) do
         { protocol_id: my_module.protocol.id,
-          step: { name: 'test', description: 'description' } }
+          step: { name: 'test', description: 'description' }, position: 1 }
       end
 
       it 'calls create activity for creating step in protocol on task' do

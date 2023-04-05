@@ -1,3 +1,25 @@
-<button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
-<button type="button" class="btn btn-primary" data-action="import_protocol" data-import_type="in_repository_public"><%=t "protocols.import_export.import_modal.import_to_team_protocols_label" %></button>
-<button type="button" class="btn btn-primary" data-action="import_protocol" data-import_type="in_repository_private"><%=t "protocols.import_export.import_modal.import_to_private_protocols_label" %></button>
+<div class="footer">
+  <div class="left-section">
+    <div class="default-role-container">
+      <div class="sci-checkbox-container">
+        <%= check_box_tag "visibility", "visible", false, class: "sci-checkbox" %>
+        <span class="sci-checkbox-label"></span>
+      </div>
+      <div class="default-role-description">
+        <%= t("protocols.new_protocol_modal.access_label") %>
+      </div>
+    </div>
+    <div class="hidden" id="roleSelectWrapper">
+      <div class="sci-input-container">
+        <%= label_tag :default_public_user_role_id, t("protocols.new_protocol_modal.role_label") %>
+        <% default_role = UserRole.find_by(name: I18n.t('user_roles.predefined.viewer')).id %>
+        <%= hidden_field_tag :default_public_user_role_id, value: default_role %>
+        <%= select_tag :role_selector, options_for_select(user_roles_collection(@protocol), default_role) %>
+      </div>
+    </div>
+  </div>
+  <div class="right-section">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
+    <button type="button" class="btn btn-primary" data-action="import_protocol" data-import_type="in_repository_draft"><%=t "protocols.import_export.import_modal.import_protocols_label" %></button>
+  </div>
+</div>

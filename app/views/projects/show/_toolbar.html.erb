@@ -36,7 +36,7 @@
   <%= button_to move_modal_experiments_path(),
                 class: 'btn btn-light move-experiment-btn single-object-action hidden',
                 form_class: 'move-experiments-form',
-                data: { for: :moveable, view_mode: 'active' },
+                data: { for: :moveable },
                 remote: true,
                 method: :get do %>
     <span class="fas fa-arrow-right" aria-hidden="true"></span>

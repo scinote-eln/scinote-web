@@ -9,21 +9,19 @@
               <span class="sci-checkbox-label"></span>
             </div>
           </th>
-          <th id="protocol-name"><%= t("protocols.index.thead_name") %></th>
-          <th id="protocol-code"><%= t("protocols.index.thead_code") %></th>
-          <th id="protocol-keywords"><%= t("protocols.index.thead_keywords") %></th>
-          <th id="protocol-nr-of-linked-children"><%= t("protocols.index.thead_nr_of_linked_children") %></th>
-          <% if @type == :public %>
-            <th id="protocol-published-by"><%= t("protocols.index.thead_published_by") %></th>
-            <th id="protocol-published-on"><%= t("protocols.index.thead_published_on") %></th>
-          <% elsif @type == :private %>
-            <th id="protocol-added-by"><%= t("protocols.index.thead_added_by") %></th>
-            <th id="protocol-created-at"><%= t("protocols.index.thead_created_at") %></th>
-          <% else %>
-            <th id="protocol-archived-by"><%= t("protocols.index.thead_archived_by") %></th>
-            <th id="protocol-archived-on"><%= t("protocols.index.thead_archived_on") %></th>
+          <th id="protocol-name"><%= t("protocols.index.thead.name") %></th>
+          <th id="protocol-id"><%= t("protocols.index.thead.id") %></th>
+          <th id="protocol-versions"><%= t("protocols.index.thead.versions") %></th>
+          <th id="protocol-keywords"><%= t("protocols.index.thead.keywords") %></th>
+          <th id="protocol-nr-of-linked-children"><%= t("protocols.index.thead.nr_of_linked_children") %></th>
+          <th id="protocol-access"><%= t("protocols.index.thead.access") %></th>
+          <th id="protocol-published-by"><%= t("protocols.index.thead.published_by") %></th>
+          <th id="protocol-published-on"><%= t("protocols.index.thead.published_on") %></th>
+          <th id="protocol-updated-at"><%= t("protocols.index.thead.updated_at") %></th>
+          <% if @type == :archived %>
+            <th id="protocol-archived-by"><%= t("protocols.index.thead.archived_by") %></th>
+            <th id="protocol-archived-on"><%= t("protocols.index.thead.archived_on") %></th>
           <% end %>
-          <th id="protocol-updated-at"><%= t("protocols.index.thead_updated_at") %></th>
         </tr>
       </thead>
       <tbody></tbody>

@@ -491,29 +491,37 @@ var ExperimnetTable = {
       }
     });
   },
-  initFilters: function() {
-    this.filterDropdown = filterDropdown.init();
+  getFilterValues: function() {
     let $experimentFilter = $('#experimentTable .my-modules-filters');
+    $.each(this.filters, (_i, filter) => {
+      this.activeFilters[filter.name] = filter.apply($experimentFilter);
+    });
+
+    // filters are active if they have any non-empty value
+    let filtersEmpty = Object.values(this.activeFilters).every(value => /^\s+$/.test(value)
+                                                                                || value === null
+                                                                                || value === undefined
+                                                                                || (value && value.length === 0));
+    this.filtersActive = !filtersEmpty;
+  },
+  filtersEnabled: function() {
+    this.getFilterValues();
+
+    return this.filters.some((filter) => {
+      return filter.active(this.activeFilters[filter.name]);
+    });
+  },
+  initFilters: function() {
+    let $experimentFilter = $('#experimentTable .my-modules-filters');
+
+    this.filterDropdown = filterDropdown.init(() => this.filtersEnabled());
 
     $.each(this.filters, (_i, filter) => {
       filter.init($experimentFilter);
     });
 
     this.filterDropdown.on('filter:apply', () => {
-      $.each(this.filters, (_i, filter) => {
-        this.activeFilters[filter.name] = filter.apply($experimentFilter);
-      });
-
-      // filters are active if they have any non-empty value
-      let filtersEmpty = Object.values(this.activeFilters).every(value => /^\s+$/.test(value) || value === null || value === undefined || value && value.length === 0);
-      this.filtersActive = !filtersEmpty;
-
-      filterDropdown.toggleFilterMark(
-        this.filterDropdown,
-        this.filters.some((filter) => {
-          return filter.active(this.activeFilters[filter.name]);
-        })
-      );
+      filterDropdown.toggleFilterMark(this.filterDropdown, this.filtersEnabled());
 
       this.loadTable();
     });

@@ -402,16 +402,8 @@ class MyModule < ApplicationRecord
 
     # Update the cloned protocol if neccesary
     clone_tinymce_assets(target_my_module, target_my_module.experiment.project.team)
-    target_my_module.protocols << protocol.deep_clone_my_module(self, current_user)
+    protocol.deep_clone_my_module(target_my_module, current_user)
     target_my_module.reload
-
-    # fixes linked protocols
-    target_my_module.protocols.each do |protocol|
-      next unless protocol.linked?
-
-      protocol.updated_at = protocol.parent_updated_at
-      protocol.save
-    end
   end
 
   # Find an empty position for the restored module. It's

@@ -83,6 +83,14 @@
 
     .table-body {
       display: contents;
+
+      .table-body-cell {
+        display: flex;
+      }
+
+      .table-body-cell:nth-child(1) {
+        justify-content: center;
+      }
     }
 
     .loading-overlay {

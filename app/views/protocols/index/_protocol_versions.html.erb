@@ -1,0 +1,16 @@
+<% if protocol.in_repository_published_original? || protocol.in_repository_published_version? %>
+    <% parent = protocol.parent || protocol %>
+    <%= link_to versions_modal_protocol_path(parent), class: 'protocol-versions-link', remote: true do %>
+        <%= protocol.nr_of_versions %>
+    <% end %>
+    <% if parent.draft.present? %>
+        / 
+        <%= link_to protocol_path(parent.draft) do %>
+            <%= t("protocols.index.table.draft") %>
+        <% end %>
+    <% end %>
+<% elsif protocol.in_repository_draft? %>
+    <%= link_to protocol_path(protocol) do %>
+        <%= t("protocols.index.table.draft") %>
+    <% end %>
+<% end %>

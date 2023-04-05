@@ -1,4 +1,4 @@
-/* global I18n hljs GLOBAL_CONSTANTS HelperModule SmartAnnotation TinyMCE */
+/* global I18n GLOBAL_CONSTANTS HelperModule SmartAnnotation TinyMCE */
 
 import tinyMCE from 'tinymce/tinymce';
 import 'tinymce/models/dom';
@@ -49,18 +49,6 @@ if (typeof(window.preTinyMceInit) === 'function') {
 }
 
 window.TinyMCE = (() => {
-  function initHighlightjs() {
-    $('[class*=language]').each((i, block) => {
-      hljs.highlightBlock(block);
-    });
-  }
-
-  function initHighlightjsIframe(iframe) {
-    $('[class*=language]', iframe).each((i, block) => {
-      hljs.highlightBlock(block);
-    });
-  }
-
   function makeItDirty(editor) {
     const editorForm = $(editor.getContainer()).closest('form');
     editorForm.find('.tinymce-status-badge').addClass('hidden');
@@ -232,6 +220,7 @@ window.TinyMCE = (() => {
           placeholder: options.placeholder,
           toolbar_sticky: true,
           toolbar_sticky_offset: editorToolbaroffset,
+          codesample_global_prismjs: true,
           codesample_languages: [
             { text: 'R', value: 'r' },
             { text: 'MATLAB', value: 'matlab' },
@@ -258,6 +247,9 @@ window.TinyMCE = (() => {
           elementpath: false,
           quickbars_insert_toolbar: false,
           default_link_target: '_blank',
+          mobile: {
+            menubar: 'file edit view insert format table'
+          },
           target_list: [
             { title: 'New page', value: '_blank' },
             { title: 'Same page', value: '_self' }
@@ -351,6 +343,8 @@ window.TinyMCE = (() => {
                 editor.setProgressState(0);
                 if (data.status === 403) {
                   HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+                } else if (data.status === 422) {
+                  HelperModule.flashAlertMsg(data.responseJSON ? Object.values(data.responseJSON).join(', ') : I18n.t('errors.general'), 'danger');
                 }
               });
 
@@ -381,7 +375,6 @@ window.TinyMCE = (() => {
 
             SmartAnnotation.init($(editor.contentDocument.activeElement));
             SmartAnnotation.preventPropagation('.atwho-user-popover');
-            initHighlightjsIframe($(editor.iframeElement).contents());
 
             if (options.afterInitCallback) { options.afterInitCallback(); }
           },
@@ -393,15 +386,6 @@ window.TinyMCE = (() => {
                 return false;
               }
               return true;
-            });
-
-            editor.on('NodeChange', (e) => {
-              const node = e.element;
-              setTimeout(() => {
-                if ($(node).is('pre') && !editor.isHidden()) {
-                  initHighlightjsIframe($(editor.iframeElement).contents());
-                }
-              }, 200);
             });
 
             editor.on('Dirty', () => {
@@ -441,7 +425,6 @@ window.TinyMCE = (() => {
               restoreDraftNotification(selector, editor);
             });
           },
-          codesample_content_css: $(selector).data('highlightjs-path'),
           save_onsavecallback: (editor) => { saveAction(editor); }
         });
       }
@@ -451,7 +434,6 @@ window.TinyMCE = (() => {
     destroyAll: () => {
       if (tinyMCE.activeEditor) {
         tinyMCE.activeEditor.remove();
-        initHighlightjs();
       }
     },
     refresh: () => {
@@ -468,7 +450,6 @@ window.TinyMCE = (() => {
     makeItDirty: (editor) => {
       makeItDirty(editor);
     },
-    highlight: initHighlightjs,
     wrapTables: (container) => {
       container.find('table').toArray().forEach((table) => {
         if ($(table).parent().hasClass('table-wrapper')) return;

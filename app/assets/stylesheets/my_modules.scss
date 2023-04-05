@@ -166,6 +166,11 @@ html {
   }
 }
 
+.mce-toc ul,
+.mce-toc li {
+  list-style-type: none;
+}
+
 // Mobile view
 @media (max-width: 700px) {
   .task-section {
@@ -313,5 +318,11 @@ html {
         }
       }
     }
+  }
+}
+
+.print-protocol-form {
+  .sci-checkbox-container {
+    margin-right: .25em;
   }
 }

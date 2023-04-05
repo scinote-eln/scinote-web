@@ -184,6 +184,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def edit
+    @connected_devices = ConnectedDevice.for_user(current_user)
+    @user_statistics = current_user.statistics
+    super
+  end
+
   def two_factor_enable
     user = current_user || User.find_by(id: session[:otp_user_id])
     if user.valid_otp?(params[:submit_code])

@@ -75,7 +75,7 @@ gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'rgl' # Graph framework for project diagram calculations
 gem 'roo', '~> 2.8.2' # Spreadsheet parser
 gem 'rotp'
-gem 'rqrcode' # QR code generator
+gem 'rqrcode', '~> 2.0' # QR code generator
 gem 'rubyzip'
 gem 'scenic', '~> 1.4'
 gem 'sdoc', '~> 1.0', group: :doc
@@ -84,7 +84,6 @@ gem 'sneaky-save', git: 'https://github.com/einzige/sneaky-save'
 gem 'turbolinks', '~> 5.1.1'
 gem 'underscore-rails'
 gem 'wicked_pdf'
-gem 'wkhtmltopdf-heroku', '2.12.5'
 
 gem 'aws-sdk-lambda'
 gem 'aws-sdk-rails'

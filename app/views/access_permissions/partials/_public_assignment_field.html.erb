@@ -1,0 +1,31 @@
+<% # frozen_string_literal: true %>
+
+<div class="member-item new-member-item">
+  <%= user_form.hidden_field :user_id, value: :all, name:"access_permissions_new_user_form[resource_members][0][user_id]"  %>
+  <div class="user-assignment-info">
+    <div class="sci-checkbox-container">
+      <%= user_form.check_box :assign,
+                        name: "access_permissions_new_user_form[resource_members][0][assign]",
+                        data: { action: 'toggle-visibility', target: 'usersAll' },
+                        class: "sci-checkbox"
+        %>
+      <span class="sci-checkbox-label"></span>
+    </div>
+    <div class="global-avatar-container">
+        <%= image_tag "icon/team.png", class: 'img-circle pull-left' %>
+      </div>
+    <div>
+      <%= t('user_assignment.assign_all_team_members') %>
+    </div>
+  </div>
+  <div class="user-assignment-controls">
+    <div class="user-assignment-role hidden" id="usersAll">
+      <%= user_form.select :user_role_id,
+                options_for_select(user_roles_collection(assignable)),
+                {},
+                name: "access_permissions_new_user_form[resource_members][0][user_role_id]",
+                class: 'form-control selectpicker pull-right',
+                title: t('user_assignment.select_role')  %>
+    </div>
+  </div>
+</div>

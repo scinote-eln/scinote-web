@@ -187,6 +187,7 @@ class Step < ApplicationRecord
     return if saved_changes.keys.sort == %w(completed completed_on updated_at)
 
     # rubocop:disable Rails/SkipsModelValidations
+    protocol.update(last_modified_by: last_modified_by) if last_modified_by
     protocol.touch
     # rubocop:enable Rails/SkipsModelValidations
   end

@@ -43,14 +43,14 @@
   <!-- Set or view user experiment assignments -->
   <% if can_manage_experiment_users?(experiment) %>
     <li>
-      <%= link_to edit_access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'} do %>
+      <%= link_to edit_access_permissions_experiment_path(experiment), data: { action: 'remote-modal'} do %>
         <i class="fas fa-door-open"></i>
         <span><%= t('experiments.index.experiment_access') %></span>
       <% end %>
     </li>
   <% else %>
     <li>
-      <%= link_to access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'} do %>
+      <%= link_to access_permissions_experiment_path(experiment), data: { action: 'remote-modal'} do %>
         <i class="fas fa-door-open"></i>
         <span><%= t('experiments.index.experiment_access') %></span>
       <% end %>

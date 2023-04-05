@@ -1,24 +1,32 @@
 <% # frozen_string_literal: true %>
 
-<div class="modal-content" id="user_assignments_modal" data-action="modal-close" data-target="<%= projects_path %>">
+<div class="modal-content" id="user_assignments_modal" data-action="modal-close" data-target="<%= public_send("#{assignable.class.name.pluralize.underscore}_path") %>">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <h4 class="modal-title">
-      <%= link_to resource_path, remote: true, class: 'pull-left spacer', data: { action: 'swap-remote-container', target: '#user_assignments_modal' } do %>
+      <%= link_to assignable_path, remote: true, class: 'pull-left spacer', data: { action: 'swap-remote-container', target: '#user_assignments_modal' } do %>
         <i class="fas fa-arrow-left"></i>
       <% end %>
-      <%= t '.title', resource_name: resource.name %>
+      <%= t '.title', resource_name: assignable.name %>
     </h4>
   </div>
-  <%= form_with(model: form_object, url: create_path, method: :post, remote: true, html: { id: 'new-user-assignment-to-project-form', data: { action: 'replace-form', target: '#user_assignments_modal', object_type: resource.class.to_s.downcase} }) do |f| %>
+  <%= form_with(url: create_path, method: :post, remote: true, html: { id: 'new-user-assignment-form', data: { object_type: assignable.class.to_s.downcase } }) do |f| %>
     <div class="modal-body">
       <div class="sci-input-container left-icon">
-        <%= text_field_tag :search_users, '', placeholder: t('.find_people_html'), class: 'sci-input-field', data: { action: 'filter-list', target: 'new-user-assignment-to-project-form' } %>
+        <%= text_field_tag :search_users, '',
+                           placeholder: t('.find_people_html'),
+                           class: 'sci-input-field new-assignment-user-search',
+                           data: { action: 'filter-list', target: 'new-user-assignment-form' } %>
         <i class="fas fa-search"></i>
       </div>
-      <% f.object.resource_members.each do |member| %>
-        <%= f.fields_for :resource_members, member do |member_form| %>
-          <%= render 'access_permissions/partials/user_assignment_field.html.erb', f: member_form  %>
+      <% if assignable.visibility && assignable.visibility == 'hidden' %>
+        <%= f.fields_for :users, UserAssignment.new do |user_form| %>
+          <%= render 'access_permissions/partials/public_assignment_field.html.erb', user_form: user_form, assignable: assignable  %>
+        <% end %>
+      <% end %>
+      <% users.each do |user| %>
+        <%= f.fields_for :users, UserAssignment.new(user: user) do |user_form| %>
+          <%= render 'access_permissions/partials/user_assignment_field.html.erb', user_form: user_form, assignable: assignable  %>
         <% end %>
       <% end %>
     </div>
