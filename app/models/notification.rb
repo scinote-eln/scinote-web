@@ -7,11 +7,6 @@ class Notification < ApplicationRecord
 
   enum type_of: Extends::NOTIFICATIONS_TYPES
 
-  def already_seen(user)
-    UserNotification.where(notification: self, user: user)
-                    .pick(:checked)
-  end
-
   def create_user_notification(user)
     return if user == generator_user
     return unless can_send_to_user?(user)
