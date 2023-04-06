@@ -98,11 +98,11 @@ module AccessPermissions
                      end
           format.json { render :edit }
         end
-      rescue ActiveRecord::RecordInvalid
-        respond_to do |format|
-          @message = t('access_permissions.create.failure')
-          format.json { render :new }
-        end
+      rescue ActiveRecord::RecordInvalid => e
+        Rails.logger.error e.message
+        errors = @project.errors ? @project.errors&.map(&:message)&.join(',') : e.message
+        render json: { flash: errors }, status: :unprocessable_entity
+        raise ActiveRecord::Rollback
       end
     end
 
@@ -152,6 +152,10 @@ module AccessPermissions
           log_activity(:project_access_changed_all_team_members,
                        { team: @project.team.id, role: @project.default_public_user_role&.name })
         end
+      rescue ActiveRecord::RecordInvalid => e
+        Rails.logger.error e.message
+        render json: { flash: @project.errors&.map(&:message)&.join(',') }, status: :unprocessable_entity
+        raise ActiveRecord::Rollback
       end
     end
 

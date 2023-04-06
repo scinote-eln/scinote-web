@@ -2798,10 +2798,6 @@ en:
       make_private_error: "Error occurred while moving selected protocols to My protocols."
       publish_unauthorized: "You do not have permission to move selected protocols to Team protocols."
       publish_error: "Error occurred while moving selected protocols to Team protocols."
-      archive_unauthorized: "You do not have permission to archive selected protocols."
-      archive_error: "Error occurred while archiving selected protocols."
-      restore_unauthorized: "You do not have permission to restore selected protocols."
-      restore_error: "Error occurred while restoring selected protocols."
       row_renamed_html: "%{old_name}<i> to </i>%{new_name}"
       no_protocol_name: "(no name)"
       create:
