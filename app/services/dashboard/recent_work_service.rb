@@ -245,7 +245,7 @@ module Dashboard
       when 'Project'
         project_path(object_id)
       when 'Protocol'
-        protocol_path(object_id)
+        protocol_path(Protocol.find(object_id).latest_published_version_or_self.id)
       when 'RepositoryBase'
         repository_path(object_id)
       when 'Report'
