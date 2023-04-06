@@ -535,7 +535,7 @@ class RepositoriesController < ApplicationController
                               url: repositories_path
                             })
 
-    if @repository.present?
+    if @repository
       @breadcrumbs_items.push({
                                 label: @repository.name,
                                 url: repository_path(@repository),

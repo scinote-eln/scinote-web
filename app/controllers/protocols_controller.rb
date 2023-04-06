@@ -1135,7 +1135,7 @@ class ProtocolsController < ApplicationController
                               url: protocols_path
                             })
 
-    if @protocol.present?
+    if @protocol
       @breadcrumbs_items.push({
                                 label: @protocol.name,
                                 url: protocol_path(@protocol),

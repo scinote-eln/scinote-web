@@ -196,7 +196,7 @@ class LabelTemplatesController < ApplicationController
                               url: label_templates_path
                             })
 
-    if @label_template.present?
+    if @label_template
       @breadcrumbs_items.push({
                                 label: @label_template.name,
                                 url: label_template_path(@label_template)
