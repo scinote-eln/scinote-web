@@ -48,6 +48,11 @@
     margin-left: .75em;
   }
 
+  .dropdown-menu li a {
+    line-height: 1rem;
+    padding: .625rem 1rem;
+  }
+
   @media(max-width: 1200px) {
     .sci--navigation--top-menu-logo {
       .logo {
