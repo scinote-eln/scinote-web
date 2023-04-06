@@ -1,5 +1,5 @@
 /*
-  globals HelperModule animateSpinner SmartAnnotation AssetColumnHelper GLOBAL_CONSTANTS I18n Promise
+  globals HelperModule animateSpinner SmartAnnotation AssetColumnHelper GLOBAL_CONSTANTS I18n
 */
 /* eslint-disable no-alert no-unused-vars */
 /* eslint-disable no-alert */
