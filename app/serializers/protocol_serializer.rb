@@ -168,13 +168,15 @@ class ProtocolSerializer < ActiveModel::Serializer
   end
 
   def revert_protocol_url
-    return unless can_read_protocol_in_module?(object) && object.linked? && object.newer_than_parent?
+    return unless can_manage_protocol_in_module?(object) && object.linked? &&
+                  object.parent.active? && object.newer_than_parent?
 
     revert_modal_protocol_path(object, format: :json)
   end
 
   def update_protocol_url
-    return unless can_read_protocol_in_module?(object) && object.linked? && object.parent_newer?
+    return unless can_manage_protocol_in_module?(object) && object.linked? &&
+                  object.parent.active? && object.parent_newer?
 
     update_from_parent_modal_protocol_path(object, format: :json)
   end
