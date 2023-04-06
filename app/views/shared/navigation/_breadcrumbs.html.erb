@@ -6,9 +6,8 @@
     <% first_breadcrumb_item = @breadcrumbs_items.shift
       last_breadcrumb_items = @breadcrumbs_items.pop(2) %>
     <%= link_to(first_breadcrumb_item[:label], first_breadcrumb_item[:url],
-                  class: "breadcrumbs-link #{first_breadcrumb_item[:class]}",
-                  title: first_breadcrumb_item[:label],
-                  data: first_breadcrumb_item[:data]) %>
+                  class: "breadcrumbs-link",
+                  title: first_breadcrumb_item[:label]) %>
     <span class="delimiter">
       <%= image_tag "icon_small/navigate_next.svg",
                     alt: "navigate next",
@@ -22,8 +21,7 @@
         <ul class="dropdown-menu breadcrumbs-dropdown" role="menu">
           <% @breadcrumbs_items.each do |item| %>
             <li>
-              <%= link_to(item[:label], item[:url],
-                          data: item[:data]) %>
+              <%= link_to(item[:label], item[:url]) %>
             </li>
           <% end %>
         </ul>
@@ -35,23 +33,22 @@
     </span>
     <% item = last_breadcrumb_items.first %>
     <%= link_to(item[:label], item[:url],
-                class: "breadcrumbs-link #{item[:class]}",
-                title: item[:label],
-                data: item[:data]) %>
+                class: "breadcrumbs-link",
+                title: item[:label]) %>
     <span class="delimiter">
       <%= image_tag "icon_small/navigate_next.svg",
                     alt: "navigate next",
                     class: "navigate_next" %>
     </span>
     <% last_item = last_breadcrumb_items.last %>
-    <span class="breadcrumbs-link <%= last_item[:class] %>" title="<%= last_item[:label] %>">
+    <span class="breadcrumbs-link" title="<%= last_item[:label] %>">
       <%= last_item[:label] %>
     </span>
   <% else %>
     <% last_item = @breadcrumbs_items.pop %>
     <% @breadcrumbs_items.each do |item| %>
       <%= link_to(item[:label], item[:url],
-                  class: "breadcrumbs-link #{item[:class]}",
+                  class: "breadcrumbs-link",
                   title: item[:label]) %>
       <span class="delimiter">
         <img src="<%= asset_path "icon_small/navigate_next.svg"%>"
