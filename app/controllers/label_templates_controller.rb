@@ -190,20 +190,18 @@ class LabelTemplatesController < ApplicationController
 
   def set_breadcrumbs_items
     label = @label_template || nil
-    breadcrumbs_items = []
+    @breadcrumbs_items = []
 
-    breadcrumbs_items.push({
-                             label: t('breadcrumbs.labels'),
-                             url: label_templates_path
-                           })
-
-    @breadcrumbs_items = breadcrumbs_items
+    @breadcrumbs_items.push({
+                              label: t('breadcrumbs.labels'),
+                              url: label_templates_path
+                            })
 
     if label
-      breadcrumbs_items.push({
-                               label: label.name,
-                               url: label_template_path(label)
-                             })
+      @breadcrumbs_items.push({
+                                label: label.name,
+                                url: label_template_path(label)
+                              })
     end
   end
 end

@@ -10,9 +10,9 @@
                   title: first_breadcrumb_item[:label],
                   data: first_breadcrumb_item[:data]) %>
     <span class="delimiter">
-      <img src="<%= asset_path "icon_small/navigate_next.svg"%>"
-           alt="navigate next"
-           class="navigate_next">
+      <%= image_tag "icon_small/navigate_next.svg",
+                    alt: "navigate next",
+                    class: "navigate_next" %>
     </span>
     <span class="breadcrumbs-collapsed-container">
         <span class="show-breadcrumbs" data-toggle="dropdown" title="<%= t('projects.index.breadcrumbs_collapsed') %>">
@@ -29,9 +29,9 @@
         </ul>
     </span>
     <span class="delimiter">
-      <img src="<%= asset_path "icon_small/navigate_next.svg"%>"
-           alt="navigate next"
-           class="navigate_next">
+      <%= image_tag "icon_small/navigate_next.svg",
+                    alt: "navigate next",
+                    class: "navigate_next" %>
     </span>
     <% item = last_breadcrumb_items.first %>
     <%= link_to(item[:label], item[:url],
@@ -39,9 +39,9 @@
                 title: item[:label],
                 data: item[:data]) %>
     <span class="delimiter">
-      <img src="<%= asset_path "icon_small/navigate_next.svg"%>"
-           alt="navigate next"
-           class="navigate_next">
+      <%= image_tag "icon_small/navigate_next.svg",
+                    alt: "navigate next",
+                    class: "navigate_next" %>
     </span>
     <% last_item = last_breadcrumb_items.last %>
     <span class="breadcrumbs-link <%= last_item[:class] %>" title="<%= last_item[:label] %>">
@@ -52,8 +52,7 @@
     <% @breadcrumbs_items.each do |item| %>
       <%= link_to(item[:label], item[:url],
                   class: "breadcrumbs-link #{item[:class]}",
-                  title: item[:label],
-                  data: item[:data]) %>
+                  title: item[:label]) %>
       <span class="delimiter">
         <img src="<%= asset_path "icon_small/navigate_next.svg"%>"
              alt="navigate next"
@@ -61,7 +60,7 @@
       </span>
 
     <% end %>
-    <span class="breadcrumbs-link <%= last_item[:class] %>" title="<%= last_item[:label] %>">
+    <span class="breadcrumbs-link" title="<%= last_item[:label] %>">
       <%= last_item[:label] %>
     </span>
   <% end %>

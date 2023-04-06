@@ -1129,21 +1129,19 @@ class ProtocolsController < ApplicationController
 
   def set_breadcrumbs_items
     protocol = @protocol || nil
-    breadcrumbs_items = []
+    @breadcrumbs_items = []
 
-    breadcrumbs_items.push({
-                             label: t('breadcrumbs.protocols'),
-                             url: protocols_path
-                           })
-
-    @breadcrumbs_items = breadcrumbs_items
+    @breadcrumbs_items.push({
+                              label: t('breadcrumbs.protocols'),
+                              url: protocols_path
+                            })
 
     if protocol
-      breadcrumbs_items.push({
-                              label: protocol.name,
-                              url: protocol_path(protocol),
-                              archived: protocol.archived?
-                             })
+      @breadcrumbs_items.push({
+                                label: protocol.name,
+                                url: protocol_path(protocol),
+                                archived: protocol.archived?
+                              })
     end
   end
 end

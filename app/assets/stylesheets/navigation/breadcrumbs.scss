@@ -1,10 +1,10 @@
 .sci--layout-navigation-breadcrumbs {
-  --max-breadcrumbs-link-width: 180px;
+  --max-breadcrumbs-link-width: 11.25rem;
   align-items: center;
-  column-gap: 14px;
+  column-gap: .875rem;
   display: flex;
   flex-wrap: wrap;
-  padding: 14px 24px 8px;
+  padding: .875rem 1.5rem .5rem;
 
   .breadcrumbs-link {
     color: var(--sn-blue);
@@ -20,7 +20,7 @@
   }
 
   .delimiter {
-    padding-bottom: 4px;
+    padding-bottom: .25rem;
   }
 
   .breadcrumbs-collapsed-container {

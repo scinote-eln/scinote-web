@@ -529,21 +529,19 @@ class RepositoriesController < ApplicationController
 
   def set_breadcrumbs_items
     repository = @repository
-    breadcrumbs_items = []
+    @breadcrumbs_items = []
 
-    breadcrumbs_items.push({
-                             label: t('breadcrumbs.inventories'),
-                             url: repositories_path
-                           })
-
-    @breadcrumbs_items = breadcrumbs_items
+    @breadcrumbs_items.push({
+                              label: t('breadcrumbs.inventories'),
+                              url: repositories_path
+                            })
 
     if repository
-      breadcrumbs_items.push({
-                              label: repository.name,
-                              url: repository_path(repository),
-                              archived: repository.archived?
-                             })
+      @breadcrumbs_items.push({
+                                label: repository.name,
+                                url: repository_path(repository),
+                                archived: repository.archived?
+                              })
     end
   end
 end

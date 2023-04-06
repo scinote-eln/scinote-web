@@ -15,15 +15,13 @@ module Breadcrumbs
 
       @breadcrumbs_items.push({
                                 label: t('projects.index.breadcrumbs_root'),
-                                url: projects_path,
-                                class: 'project-folder-link'
+                                url: projects_path
                               })
 
       folders&.each do |project_folder|
         @breadcrumbs_items.push({
                                   label: project_folder.name,
-                                  url: project_folder_path(project_folder),
-                                  class: 'project-folder-link'
+                                  url: project_folder_path(project_folder)
                                 })
       end
 
