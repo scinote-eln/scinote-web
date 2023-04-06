@@ -1,5 +1,5 @@
 /*
-  globals HelperModule animateSpinner SmartAnnotation AssetColumnHelper GLOBAL_CONSTANTS I18n
+  globals HelperModule animateSpinner SmartAnnotation AssetColumnHelper GLOBAL_CONSTANTS I18n Promise
 */
 /* eslint-disable no-alert no-unused-vars */
 /* eslint-disable no-alert */
@@ -47,7 +47,30 @@ var RepositoryDatatableRowEditor = (function() {
     // Submission here
     uploadPromise
       .then(function() {
-        $form.submit();
+        let formsCount = $form.length;
+        $form.each(function() {
+          const form = $(this);
+          form.submit(function(event) {
+            event.preventDefault();
+            $.ajax({
+              url: form.attr('action'),
+              type: form.attr('method'),
+              data: form.serialize(),
+              complete: function() {
+                formsCount -= 1;
+
+                if (formsCount === 0) {
+                  const dataTable = $table.dataTable().api();
+                  dataTable.ajax.reload(() => {
+                    animateSpinner(null, false);
+                    $('html, body').animate({ scrollLeft: 0 }, 300);
+                  }, false);
+                }
+              }
+            });
+          }).trigger('submit');
+        });
+
         return false;
       }).catch((reason) => {
         if (reason.includes('Status: 403')) {
@@ -107,14 +130,11 @@ var RepositoryDatatableRowEditor = (function() {
 
     $table.on('ajax:success', `.${EDIT_FORM_CLASS_NAME}`, function(ev, data) {
       TABLE.ajax.reload(() => {
-        animateSpinner(null, false);
         HelperModule.flashAlertMsg(data.flash, 'success');
-        $('html, body').animate({ scrollLeft: 0 }, 300);
       }, false);
     });
 
     $table.on('ajax:error', `.${EDIT_FORM_CLASS_NAME}`, function(ev, data) {
-      animateSpinner(null, false);
       $(TABLE.nodes()).find('.spinner').remove();
       HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
     });
