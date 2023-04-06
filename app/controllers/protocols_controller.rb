@@ -1128,7 +1128,6 @@ class ProtocolsController < ApplicationController
   end
 
   def set_breadcrumbs_items
-    protocol = @protocol || nil
     @breadcrumbs_items = []
 
     @breadcrumbs_items.push({
@@ -1136,11 +1135,11 @@ class ProtocolsController < ApplicationController
                               url: protocols_path
                             })
 
-    if protocol
+    if @protocol.present?
       @breadcrumbs_items.push({
-                                label: protocol.name,
-                                url: protocol_path(protocol),
-                                archived: protocol.archived?
+                                label: @protocol.name,
+                                url: protocol_path(@protocol),
+                                archived: @protocol.archived?
                               })
     end
   end

@@ -528,7 +528,6 @@ class RepositoriesController < ApplicationController
   end
 
   def set_breadcrumbs_items
-    repository = @repository
     @breadcrumbs_items = []
 
     @breadcrumbs_items.push({
@@ -536,11 +535,11 @@ class RepositoriesController < ApplicationController
                               url: repositories_path
                             })
 
-    if repository
+    if @repository.present?
       @breadcrumbs_items.push({
-                                label: repository.name,
-                                url: repository_path(repository),
-                                archived: repository.archived?
+                                label: @repository.name,
+                                url: repository_path(@repository),
+                                archived: @repository.archived?
                               })
     end
   end
