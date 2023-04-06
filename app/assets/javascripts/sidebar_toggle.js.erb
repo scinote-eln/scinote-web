@@ -23,6 +23,7 @@ var SideBarToggle = (function() {
     $(WRAPPER).one("transitionend", function() {
       $(WRAPPER).trigger('sideBar::shown');
     })
+    $('.sci--layout').attr('data-navigator-collapsed', false);
   }
 
   function hide() {
@@ -40,6 +41,7 @@ var SideBarToggle = (function() {
     $(WRAPPER).one("transitionend", function() {
       $(WRAPPER).trigger('sideBar::hidden');
     })
+    $('.sci--layout').attr('data-navigator-collapsed', true);
   }
 
   function isToggledStorage() {
