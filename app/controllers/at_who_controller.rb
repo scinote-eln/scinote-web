@@ -40,7 +40,7 @@ class AtWhoController < ApplicationController
       end
     if repository && can_read_repository?(repository)
       items = SmartAnnotation.new(current_user, current_team, @query)
-                             .repository_rows(repository)
+                             .repository_rows(repository, params[:assignable_my_module_id])
       repository_id = repository.id
     else
       items = []
@@ -51,7 +51,7 @@ class AtWhoController < ApplicationController
         render json: {
           res: [
             render_to_string(partial: 'shared/smart_annotation/repository_items.html.erb',
-                             locals: { repository_rows: items })
+                             locals: { repository_rows: items, repository: repository })
           ],
           repository: repository_id,
           team: current_team.id

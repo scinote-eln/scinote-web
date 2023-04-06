@@ -3159,6 +3159,9 @@ en:
       repository_rows: "Items with this name were not found"
       users: "Users with this name were not found"
       description: "Please make sure there are no typos, or erase letters one by one unless you see some results"
+    buttons:
+      insert: "Insert"
+      assign: "Assign to this task"
     projects: PROJECTS
     experiments: EXPERIMENTS
     tasks: TASKS
@@ -3167,7 +3170,7 @@ en:
     users:
       title: "People"
       header: "Type the name or email of the user you want to mention (they will be notified)"
-      help: "Navigate: ↑ ↓    •    Submit: Enter / Tab    •    Dismiss: Esc"
+      help: "Navigate: ↑ ↓    •    Insert: Enter / Tab    •    Dismiss: Esc"
       popover_html: "<span class='silver'>Team:</span>&nbsp;%{team} <br> <span class='silver'>Role:</span>&nbsp;%{role} <br> <span class='silver'>Joined:</span>&nbsp;%{time}"
     res:
       archived: "(archived)"

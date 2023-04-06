@@ -144,7 +144,7 @@
             this.$refs.input.select();
           }
           if (this.smartAnnotation) {
-            SmartAnnotation.init($(this.$refs.input));
+            SmartAnnotation.init($(this.$refs.input), false);
           }
         })
         this.$emit('editingEnabled');

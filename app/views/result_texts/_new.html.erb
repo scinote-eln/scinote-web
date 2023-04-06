@@ -9,6 +9,7 @@
                              autocomplete: 'off',
                              data: { object_type: 'result_text',
                                      object_id: @result.result_text.id,
+                                     my_module_id: @result.my_module_id,
                                      last_updated: @result.updated_at.to_i * 1000 }) %>
     <% end %><br />
     <div class="align-right">
