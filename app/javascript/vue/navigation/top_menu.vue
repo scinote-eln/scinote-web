@@ -52,7 +52,7 @@
       <button class="btn btn-light icon-btn" data-toggle="dropdown" @click="notificationsOpened = !notificationsOpened">
         <i class="fas fa-bell"></i>
       </button>
-      <NotificationsFlyout v-if="notificationsOpened" :notifications_url="notificationsUrl" @close="notificationsOpened = false" />
+      <NotificationsFlyout v-if="notificationsOpened" :notifications-url="notificationsUrl" @close="notificationsOpened = false" />
     </div>
     <div v-if="user" class="dropdown">
       <div class="sci--navigation--top-menu-user" data-toggle="dropdown">
@@ -86,7 +86,8 @@
       NotificationsFlyout
     },
     props: {
-      url: String
+      url: String,
+      notificationsUrl: String
     },
     data() {
       return {
@@ -100,8 +101,7 @@
         settingsMenu: null,
         userMenu: null,
         showAboutModal: false,
-        notificationsOpened: false,
-        notificationsUrl: 'test'
+        notificationsOpened: false
       }
     },
     created() {

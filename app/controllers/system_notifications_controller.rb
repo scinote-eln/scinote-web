@@ -1,22 +1,6 @@
 # frozen_string_literal: true
 
 class SystemNotificationsController < ApplicationController
-  before_action :prepare_notifications, only: :index
-
-  def index
-    respond_to do |format|
-      format.json do
-        render json: {
-          more_url: @system_notifications.fetch(:more_notifications_url),
-          html: render_to_string(
-            partial: 'list.html.erb', locals: @system_notifications
-          )
-        }
-      end
-      format.html
-    end
-  end
-
   def show
     render json: current_user.system_notifications.modals
                              .find_by_id(params[:id]) || {}

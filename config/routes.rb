@@ -166,16 +166,6 @@ Rails.application.routes.draw do
     end
 
     # Notifications
-    get 'users/:id/recent_notifications',
-        to: 'user_notifications#recent_notifications',
-        as: 'recent_notifications',
-        defaults: { format: 'json' }
-
-    get 'users/:id/unseen_notification',
-        to: 'user_notifications#unseen_notification',
-        as: 'unseen_notification',
-        defaults: { format: 'json' }
-
     get 'users/notifications',
         to: 'user_notifications#index',
         as: 'notifications'
