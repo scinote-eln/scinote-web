@@ -10,7 +10,7 @@ class ProtocolSerializer < ActiveModel::Serializer
   attributes :name, :id, :urls, :description, :description_view, :updated_at, :in_repository,
              :created_at_formatted, :updated_at_formatted, :added_by, :authors, :keywords, :version,
              :code, :published, :version_comment, :archived, :linked, :has_draft,
-             :published_on_formatted, :published_by
+             :published_on_formatted, :published_by, :next_version_number
 
   def updated_at
     object.updated_at.to_i
@@ -18,6 +18,14 @@ class ProtocolSerializer < ActiveModel::Serializer
 
   def version
     object.in_repository_draft? ? I18n.t('protocols.draft') : object.version_number
+  end
+
+  def next_version_number
+    return unless object.in_repository_draft?
+
+    return object.previous_version&.version_number + 1 if object.previous_version
+
+    return 1
   end
 
   def published
