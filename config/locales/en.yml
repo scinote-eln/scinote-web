@@ -1125,7 +1125,7 @@ en:
       load_from_repository_error: "Failed to load the protocol from the templates."
       load_from_repository_error_locked: "Failed to load the protocol from the templates. One or more files in the protocol are currently being edited."
       load_from_repository_modal:
-        title: "Load protocol from templates"
+        title: "Load protocol template"
         text: "This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
         text2: "Choose the protocol to be loaded to the task."
         filter_protocols: "Filter protocols"
