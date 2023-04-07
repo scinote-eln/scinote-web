@@ -577,6 +577,7 @@ Rails.application.routes.draw do
         post :publish
         post :destroy_draft
         post :save_as_draft
+        get 'version_comment', to: 'protocols#version_comment'
         get 'print', to: 'protocols#print'
         get 'linked_children', to: 'protocols#linked_children'
         post 'linked_children_datatable',

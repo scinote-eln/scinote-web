@@ -91,6 +91,7 @@ class ProtocolSerializer < ActiveModel::Serializer
       publish_url: publish_url,
       save_as_draft_url: save_as_draft_url,
       versions_modal_url: versions_modal_url,
+      version_comment_url: version_comment_url,
       print_protocol_url: print_protocol_url
     }
   end
@@ -213,6 +214,12 @@ class ProtocolSerializer < ActiveModel::Serializer
     return unless can_publish_protocol_in_repository?(object)
 
     publish_protocol_path(object)
+  end
+
+  def version_comment_url
+    return unless can_publish_protocol_in_repository?(object)
+
+    version_comment_protocol_path(object)
   end
 
   def save_as_draft_url
