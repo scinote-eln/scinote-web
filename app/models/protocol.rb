@@ -34,7 +34,9 @@ class Protocol < ApplicationRecord
     in_repository_published_version: 7
   }
 
-  auto_strip_attributes :name, :description, nullify: false
+  auto_strip_attributes :name, :description, nullify: false, if: lambda {
+                                                                   name_changed? || description_changed?
+                                                                 }
   # Name is required when its actually specified (i.e. :in_repository? is true)
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :description, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
