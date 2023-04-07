@@ -2705,6 +2705,7 @@ en:
     header:
       details: 'Details'
       versions: 'Versions'
+      draft_with_from_version: 'Draft (from Version %{nr})'
       protocol_description: 'Protocol description'
       protocol_steps: 'Protocol steps'
       publish: 'Publish'

@@ -25,7 +25,13 @@
       <div class="protocol-metadata">
         <p class="data-block">
           <span>{{ i18n.t("protocols.header.version") }}</span>
-          <b>{{ protocol.attributes.version }}</b>
+            <b>{{
+              this.protocol.attributes.next_version_number === 1
+                ? version
+                : i18n.t("protocols.header.draft_with_from_version", {
+                    nr: this.protocol.attributes.next_version_number - 1
+                  })
+            }}</b>
         </p>
         <p class="data-block" v-if="protocol.attributes.published">
           <span>{{ i18n.t("protocols.header.published_on") }}</span>
