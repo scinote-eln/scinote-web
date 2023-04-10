@@ -327,7 +327,8 @@
           contentType: "application/json",
           dataType: "json",
           error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')),
-          success: (() => this.reorderSteps(this.steps))
+          success: (() => this.reorderSteps(this.steps)),
+          complete: (() => this.closeStepReorderModal())
         });
       },
       startStepReorder() {
