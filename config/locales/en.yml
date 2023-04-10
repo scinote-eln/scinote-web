@@ -2361,8 +2361,8 @@ en:
           description: "When you remove a device, you will be logged out from the selected device."
           empty_state: "No connected devices."
         devices_table:
-          device_name: "Device Name"
-          added_on: "Added on"
+          device_name: "Device name"
+          last_seen: "Last seen"
         device_revocation_modal:
           title: "Remove connected device"
           description: "This device will lose access to your SciNote account."
