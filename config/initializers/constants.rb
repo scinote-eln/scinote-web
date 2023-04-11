@@ -278,7 +278,7 @@ class Constants
       },
       publications: {
         default_query_params: {
-          latest: 50
+          latest: 20
         }
       }
     },
