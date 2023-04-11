@@ -22,7 +22,7 @@
       </div>
     </div>
     <hr>
-    <div class="sci--navigation--notificaitons-flyout-notifications">
+    <perfect-scrollbar ref="scrollContainer" class="sci--navigation--notificaitons-flyout-notifications">
       <div class="sci-navigation--notificaitons-flyout-subtitle" v-if="todayNotifications.length" >
         {{ i18n.t('nav.notifications.today') }}
       </div>
@@ -31,7 +31,10 @@
         {{ i18n.t('nav.notifications.older') }}
       </div>
       <NotificationItem v-for="notification in olderNotifications" :key="notification.type_of + '-' + notification.id" :notification="notification" />
-    </div>
+      <div class="next-page-loader">
+        <img src="/images/medium/loading.svg" v-if="loadingPage"/>
+      </div>
+    </perfect-scrollbar>
   </div>
 </template>
 
@@ -51,11 +54,19 @@ export default {
     return {
       notifications: [],
       activeTab: 'all',
-      nextPage: 2
+      nextPage: 1,
+      scrollBar: null,
+      loadingPage: false
     }
   },
   created() {
     this.loadNotifications();
+  },
+  mounted() {
+    let container = this.$refs.scrollContainer.$el
+    container.addEventListener('ps-y-reach-end', (e) => {
+      this.loadNotifications();
+    })
   },
   computed: {
     filteredNotifications() {
@@ -76,8 +87,13 @@ export default {
       this.loadNotifications();
     },
     loadNotifications() {
-      $.getJSON(this.notificationsUrl, { type: this.activeTab }, (result) => {
-        this.notifications = result.notifications;
+      if (this.nextPage == null || this.loadingPage) return;
+
+      this.loadingPage = true;
+      $.getJSON(this.notificationsUrl, { type: this.activeTab, page: this.nextPage }, (result) => {
+        this.notifications = this.notifications.concat(result.notifications);
+        this.nextPage = result.next_page;
+        this.loadingPage = false;
       });
     }
   }
