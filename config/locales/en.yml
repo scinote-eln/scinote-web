@@ -2688,7 +2688,7 @@ en:
       description_2: "Are you sure?"
       confirm: "Yes, delete"
     publish_modal:
-      title: "Publish protocol template"
+      title: "Publish version %{nr} of the protocol template"
       name: "Protocol template name"
       comment: "Revision notes"
       comment_placeholder: "What's new in this version?"
@@ -2706,6 +2706,7 @@ en:
     header:
       details: 'Details'
       versions: 'Versions'
+      draft_with_from_version: 'Draft (from Version %{nr})'
       protocol_description: 'Protocol description'
       protocol_steps: 'Protocol steps'
       publish: 'Publish'

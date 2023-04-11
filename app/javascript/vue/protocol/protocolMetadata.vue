@@ -25,7 +25,7 @@
       <div class="protocol-metadata">
         <p class="data-block">
           <span>{{ i18n.t("protocols.header.version") }}</span>
-          <b>{{ protocol.attributes.version }}</b>
+          <b>{{ titleVersion }}</b>
         </p>
         <p class="data-block" v-if="protocol.attributes.published">
           <span>{{ i18n.t("protocols.header.published_on") }}</span>
@@ -100,6 +100,21 @@
         type: Object,
         required: true
       },
+    },
+    computed: {
+      titleVersion() {
+        const version = this.protocol.attributes.version;
+
+        if (this.protocol.attributes.published) {
+          return version;
+        }
+
+        if (version > 1) {
+          return this.i18n.t('protocols.header.draft_with_from_version', {nr: version});
+        }
+
+        return this.i18n.t('protocols.draft')
+      }
     },
     methods: {
       saveAsdraft() {
