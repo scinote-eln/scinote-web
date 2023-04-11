@@ -335,7 +335,7 @@ class ProtocolsController < ApplicationController
           },
           status: :bad_request
         elsif @new_protocol.invalid?
-          render json: { error: @new_protocol.errors.full_messages.join(', ') }, status: :unprocessable_entity
+          render json: { error: @new_protocol.errors.messages.map { |key, value| value }.join(' ') }, status: :unprocessable_entity
         else
           # Everything good, render 200
           render json: { message: t('my_modules.protocols.copy_to_repository_modal.success_message') }
