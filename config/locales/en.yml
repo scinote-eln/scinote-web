@@ -2578,6 +2578,7 @@ en:
 
   protocols:
     draft: "Draft"
+    draft_name: "(Draft) %{name}"
     no_text_placeholder: 'No protocol description'
     reorder_steps:
         button: "Rearrange steps"
