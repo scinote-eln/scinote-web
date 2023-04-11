@@ -109,11 +109,11 @@
           return version;
         }
 
-        if (version > 1) {
-          return this.i18n.t('protocols.header.draft_with_from_version', {nr: version});
+        if (version === this.i18n.t('protocols.draft')) {
+          return version;
         }
 
-        return this.i18n.t('protocols.draft')
+        return this.i18n.t('protocols.header.draft_with_from_version', {nr: version});
       }
     },
     methods: {

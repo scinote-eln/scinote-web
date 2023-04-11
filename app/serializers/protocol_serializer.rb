@@ -19,9 +19,9 @@ class ProtocolSerializer < ActiveModel::Serializer
   def version
     return object.version_number unless object.in_repository_draft?
 
-    return object.previous_version.version_number + 1 if object.previous_version
+    return object.previous_version.version_number if object.previous_version
 
-    1
+    I18n.t('protocols.draft')
   end
 
   def published
