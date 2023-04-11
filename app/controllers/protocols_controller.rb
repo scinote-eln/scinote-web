@@ -59,7 +59,7 @@ class ProtocolsController < ApplicationController
     copy_to_repository
   )
 
-  before_action :check_publish_permission, only: :publish
+  before_action :check_publish_permission, only: %i(publish version_comment update_version_comment)
   before_action :check_import_permissions, only: :import
   before_action :check_export_permissions, only: :export
   before_action :check_delete_draft_permissions, only: :destroy_draft
@@ -878,6 +878,14 @@ class ProtocolsController < ApplicationController
             partial: "my_modules/protocols/protocol_status_bar.html.erb"
           })
         }
+      end
+    end
+  end
+
+  def version_comment
+    respond_to do |format|
+      format.json do
+        render json: { version_comment: @protocol.version_comment }
       end
     end
   end

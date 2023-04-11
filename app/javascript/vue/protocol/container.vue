@@ -338,7 +338,16 @@
         this.reordering = false;
       },
       startPublish() {
-        this.publishing = true;
+        $.ajax({
+          type: "GET",
+          url: this.urls.version_comment_url,
+          contentType: "application/json",
+          dataType: "json",
+          success: (result) => {
+            this.protocol.attributes.version_comment = result.version_comment;
+            this.publishing = true;
+          }
+        });
       },
       closePublishModal() {
         this.publishing = false;
