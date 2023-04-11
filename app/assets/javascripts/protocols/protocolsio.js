@@ -123,7 +123,7 @@ function applySearchCallback() {
   $('form.protocols-search-bar').off('ajax:success').off('ajax:error')
     .bind('ajax:success', function(evt, data) {
       var listWrapper = $('.list-wrapper');
-      if (data.page_id > 1) {
+      if (data.page_id > 2) {
         // Remove old load more button since we will append a new one
         $('.show-more-protocols-btn').remove();
         $('.list-wrapper').append(data.html);
