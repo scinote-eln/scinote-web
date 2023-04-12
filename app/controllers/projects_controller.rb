@@ -7,7 +7,6 @@ class ProjectsController < ApplicationController
   include ProjectsHelper
   include CardsViewHelper
   include ExperimentsHelper
-  include Breadcrumbs
 
   attr_reader :current_folder
   helper_method :current_folder
@@ -23,7 +22,6 @@ class ProjectsController < ApplicationController
   before_action :load_exp_sort_var, only: :show
   before_action :reset_invalid_view_state, only: %i(index cards show)
   before_action :set_folder_inline_name_editing, only: %i(index cards)
-  before_action :set_breadcrumbs_items, only: %i(index show)
 
   layout 'fluid'
 

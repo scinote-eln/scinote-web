@@ -1,4 +1,7 @@
 <div class="content-header sticky-header">
+  <div id="breadcrumbsWrapper">
+    <%= render partial: 'projects/index/breadcrumbs', locals: { target_folder: current_folder, folder_page: true } if current_folder %>
+  </div>
   <div class="title-row">
       <% if current_folder&.name && @inline_editable_title_config.present? %>
         <h1 data-view-mode="active" class="projects-title">

@@ -1,4 +1,7 @@
 <div class="content-header sticky-header">
+  <div id="breadcrumbsWrapper">
+    <%= render partial: 'projects/index/breadcrumbs', locals: { target_folder: @project.project_folder } %>
+  </div>
   <div class="title-row">
     <h1 class="project-name">
       <% if @project.archived? %>

@@ -6,7 +6,6 @@ class MyModulesController < ApplicationController
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
   include MyModulesHelper
-  include Breadcrumbs
 
   before_action :load_vars, except: %i(restore_group create new save_table_state)
   before_action :load_experiment, only: %i(create new)
@@ -20,7 +19,6 @@ class MyModulesController < ApplicationController
   before_action :check_update_state_permissions, only: :update_state
   before_action :set_inline_name_editing, only: %i(protocols results activities archive)
   before_action :load_experiment_my_modules, only: %i(protocols results activities archive)
-  before_action :set_breadcrumbs_items, only: %i(results protocols activities)
 
   layout 'fluid'.freeze
 
