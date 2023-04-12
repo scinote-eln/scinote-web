@@ -57,7 +57,8 @@
     <span style="display: none;" data-hook="body-js"></span>
     <span style="display: none;" data-hook="application-body-html"></span>
 
-    <div class="sci--layout" data-breadcrumbs-collapsed="<%= !@breadcrumbs_items.present? %>" data-navigator-collapsed="<%= !content_for?(:sidebar_title) %>">
+
+    <div class="sci--layout" data-breadcrumbs-collapsed="true" data-navigator-collapsed="<%= !content_for?(:sidebar_title) %>">
       <div class="sci--layout-navigation-top" >
         <%= render "shared/navigation/top" %>
       </div>
