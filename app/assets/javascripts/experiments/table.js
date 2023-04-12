@@ -374,6 +374,21 @@ var ExperimnetTable = {
 
     return allMyModules;
   },
+  updateSelectAllCheckbox: function() {
+    const tableWrapper = $(this.table);
+    const checkboxesCount = $('.sci-checkbox.my-module-selector', tableWrapper).length;
+    const selectedCheckboxesCount = this.selectedMyModules.length;
+    const selectAllCheckbox = $('.select-all-checkboxes .sci-checkbox', tableWrapper);
+
+    selectAllCheckbox.prop('indeterminate', false);
+    if (selectedCheckboxesCount === 0) {
+      selectAllCheckbox.prop('checked', false);
+    } else if (selectedCheckboxesCount === checkboxesCount) {
+      selectAllCheckbox.prop('checked', true);
+    } else {
+      selectAllCheckbox.prop('indeterminate', true);
+    }
+  },
   initSelectAllCheckbox: function() {
     $(this.table).on('click', '.select-all-checkboxes .sci-checkbox', (e1) => {
       $.each($('.my-module-selector'), (_i, e2) => {
@@ -405,6 +420,8 @@ var ExperimnetTable = {
         $(checkbox).closest('.table-row').removeClass('selected');
         this.selectedMyModules.splice(index, 1);
       }
+
+      this.updateSelectAllCheckbox();
 
       if (checkbox.checked) {
         this.loadPermission(myModuleId);
@@ -471,7 +488,7 @@ var ExperimnetTable = {
   },
   clearRowTaskSelection: function() {
     this.selectedMyModules = [];
-    $('.select-all-checkboxes .sci-checkbox').prop('checked', false);
+    this.updateSelectAllCheckbox();
     this.updateExperimentToolbar();
   },
   initNewTaskModal: function(table) {
