@@ -65,6 +65,10 @@
   .sci--layout-content {
     grid-area: content;
     padding: 0 1em;
-    width: calc(100vw - var(--left-navigation) - var(--navigator-navigation));
+    width: 100%;
+
+    .container-fluid {
+      padding: 0; // override bootstrap
+    }
   }
 }
