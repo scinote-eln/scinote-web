@@ -70,8 +70,26 @@
               <i class="fas fa-table"></i>
               {{ i18n.t('protocols.steps.insert.table') }}
             </li>
-            <li class="action" @click="createElement('checklist')">
-              <i class="fas fa-list"></i>
+            <li class="action" @click="createElement('table', [2, 3])">
+              {{ i18n.t('protocols.steps.insert.well_plate_options.2_x_3') }}
+            </li>
+            <li class="action" @click="createElement('table', [6, 4])">
+              {{ i18n.t('protocols.steps.insert.well_plate_options.6_x_4') }}
+            </li>
+            <li class="action" @click="createElement('table', [6, 8])">
+              {{ i18n.t('protocols.steps.insert.well_plate_options.6_x_8') }}
+            </li>
+            <li class="action" @click="createElement('table', [8, 12])">
+              {{ i18n.t('protocols.steps.insert.well_plate_options.8_x_12') }}
+            </li>
+            <li class="action" @click="createElement('table', [16, 24])">
+              {{ i18n.t('protocols.steps.insert.well_plate_options.16_x_24') }}
+            </li>
+            <li class="action" @click="createElement('table', [32, 48])">
+              {{ i18n.t('protocols.steps.insert.well_plate_options.32_x_48') }}
+            </li>
+            <li class="action"  @click="createElement('checklist')">
+            <i class="fas fa-list"></i>
               {{ i18n.t('protocols.steps.insert.checklist') }}
             </li>
             <li class="action"  @click="createElement('text')">
@@ -415,8 +433,8 @@
           }
         });
       },
-      createElement(elementType) {
-        $.post(this.urls[`create_${elementType}_url`], (result) => {
+      createElement(elementType, tableDimensions = [5,5]) {
+        $.post(this.urls[`create_${elementType}_url`], { tableDimensions: tableDimensions }, (result) => {
           result.data.isNew = true;
           this.elements.push(result.data)
           this.$emit('stepUpdated')
