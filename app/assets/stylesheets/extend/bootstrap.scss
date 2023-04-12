@@ -137,8 +137,9 @@
         outline: 0;
       }
 
-      &:hover, &:focus {
-        opacity: 0.2;
+      &:hover,
+      &:focus {
+        opacity: .2;
       }
     }
   }
