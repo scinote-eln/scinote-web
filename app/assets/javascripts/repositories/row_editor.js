@@ -22,12 +22,40 @@ var RepositoryDatatableRowEditor = (function() {
   }
 
   function validateAndSubmit($table, $submitButton) {
-    let $form = $table.find(`.${EDIT_FORM_CLASS_NAME}`);
-    let $row = $form.closest('tr');
+    let $forms = $table.find(`.${EDIT_FORM_CLASS_NAME}`);
+    let $row = $forms.closest('tr');
     let valid = true;
     let directUrl = $table.data('direct-upload-url');
     let $files = $table.find('input[type=file]');
     $row.find('.has-error').removeClass('has-error').find('span').remove();
+
+    // register submits event for row forms
+    let formsCount = $forms.length;
+    $forms.each(function() {
+      const form = $(this);
+      form.off().on('submit', function(event) {
+        event.preventDefault();
+        $.ajax({
+          url: form.attr('action'),
+          type: form.attr('method'),
+          data: form.serialize(),
+          success: function() {
+            formsCount -= 1;
+          },
+          error: function() {
+            formsCount += 1;
+          },
+          complete: function() {
+            $('html, body').animate({ scrollLeft: 0 }, 300);
+            if (formsCount === 0) {
+              TABLE.ajax.reload(() => {
+                animateSpinner(null, false);
+              }, false);
+            }
+          }
+        });
+      });
+    });
 
     // Validations here
     $row.find('input').each(function() {
@@ -47,29 +75,7 @@ var RepositoryDatatableRowEditor = (function() {
     // Submission here
     uploadPromise
       .then(function() {
-        let formsCount = $form.length;
-        $form.each(function() {
-          const form = $(this);
-          form.submit(function(event) {
-            event.preventDefault();
-            $.ajax({
-              url: form.attr('action'),
-              type: form.attr('method'),
-              data: form.serialize(),
-              complete: function() {
-                formsCount -= 1;
-
-                if (formsCount === 0) {
-                  const dataTable = $table.dataTable().api();
-                  dataTable.ajax.reload(() => {
-                    animateSpinner(null, false);
-                    $('html, body').animate({ scrollLeft: 0 }, 300);
-                  }, false);
-                }
-              }
-            });
-          }).trigger('submit');
-        });
+        $forms.submit();
 
         return false;
       }).catch((reason) => {
@@ -129,9 +135,7 @@ var RepositoryDatatableRowEditor = (function() {
     let $table = $(TABLE.table().node());
 
     $table.on('ajax:success', `.${EDIT_FORM_CLASS_NAME}`, function(ev, data) {
-      TABLE.ajax.reload(() => {
-        HelperModule.flashAlertMsg(data.flash, 'success');
-      }, false);
+      HelperModule.flashAlertMsg(data.flash, 'success');
     });
 
     $table.on('ajax:error', `.${EDIT_FORM_CLASS_NAME}`, function(ev, data) {
