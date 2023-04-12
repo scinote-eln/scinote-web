@@ -25,7 +25,7 @@ export default {
       switch(this.notification.type_of) {
         case 'deliver':
           return 'fa-truck';
-        case 'system':
+        case 'system_message':
           return 'fa-gift';
         case 'assignment':
           return 'fa-list-alt';

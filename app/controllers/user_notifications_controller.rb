@@ -13,7 +13,20 @@ class UserNotificationsController < ApplicationController
         }
       end
     end
-    UserNotification.seen_by_user(current_user)
+
+    UserNotification.where(
+      notification_id: notifications.where.not(type_of: 2).select(:id)
+    ).seen_by_user(current_user)
+
+    current_user.user_system_notifications.where(
+      system_notification_id: notifications.where(type_of: 2).select(:id)
+    ).mark_as_seen
+  end
+
+  def unseen_counter
+    render json: {
+      unseen: load_notifications.where(checked: false).size
+    }
   end
 
   private
