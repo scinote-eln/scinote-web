@@ -25,7 +25,7 @@
           <'page-info'i>
           <'page-selector'p>
         >`,
-      order: [[1, 'asc']],
+      order: [[0, 'asc']],
       stateSave: true,
       buttons: [],
       processing: true,
@@ -178,10 +178,10 @@
   function initNameUpdateEvent() {
     $('.settings-team-name').off('inlineEditing:fieldUpdated', '.inline-editing-container')
       .on('inlineEditing:fieldUpdated', '.inline-editing-container', function() {
-        var newName = $(this).find('.view-mode').html();
-        $('.breadcrumb-teams .active').html(newName);
+        var newName = $(this).find('.view-mode').text();
+        $('.breadcrumb-teams .active').text(newName);
         if ($('.settings-team-name').data('current-team')) {
-          $('#team-switch .selected-team').html(newName);
+          $('#team-switch .selected-team').text(newName);
         }
       });
   }

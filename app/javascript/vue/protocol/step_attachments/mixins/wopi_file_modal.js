@@ -21,10 +21,24 @@ export default {
           }
           requestCallback(e, data, status);
         }
-      ).on(
-        'ajax:error',
-        (e, data, status) => requestCallback(e, data, status)
-      );
+      ).on('ajax:error', function(ev, response) {
+        var element;
+        var msg;
+
+        $(this).clearFormErrors();
+
+        if (response.status === 400) {
+          element = $(this).find('#new-wopi-file-name');
+          msg = response.responseJSON.message.file.toString();
+        } else if (response.status === 403) {
+          element = $(this).find('#other-wopi-errors');
+          msg = I18n.t('assets.create_wopi_file.errors.forbidden');
+        } else if (response.status === 404) {
+          element = $(this).find('#other-wopi-errors');
+          msg = I18n.t('assets.create_wopi_file.errors.not_found');
+        }
+        renderFormError(undefined, element, msg);
+      });
     }
   }
 };

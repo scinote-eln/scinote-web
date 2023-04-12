@@ -9,7 +9,8 @@ module StepElements
         Table.new(
           name: t('protocols.steps.table.default_name', position: @step.step_tables.length + 1),
           contents: { data: Array.new(5, Array.new(5, '')) }.to_json,
-          created_by: current_user
+          created_by: current_user,
+          team: @step.protocol.team
         ))
 
       ActiveRecord::Base.transaction do
@@ -24,7 +25,13 @@ module StepElements
 
     def update
       ActiveRecord::Base.transaction do
-        @table.update!(table_params)
+        @table.assign_attributes(table_params.except(:metadata))
+        begin
+          @table.metadata = JSON.parse(table_params[:metadata]) if table_params[:metadata].present?
+        rescue JSON::ParserError
+          @table.metadata = {}
+        end
+        @table.save!
         log_step_activity(:table_edited, { table_name: @table.name })
       end
 
@@ -60,7 +67,7 @@ module StepElements
     private
 
     def table_params
-      params.permit(:name, :contents, metadata: {})
+      params.permit(:name, :contents, :metadata)
     end
 
     def load_table

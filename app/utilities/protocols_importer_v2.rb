@@ -8,13 +8,12 @@ class ProtocolsImporterV2
     @team = team
   end
 
-  def import_new_protocol(protocol_json, type)
+  def import_new_protocol(protocol_json)
     remove_empty_inputs(protocol_json)
     protocol = Protocol.new(
       name: protocol_json['name'],
       authors: protocol_json['authors'],
-      protocol_type: (type == :public ? :in_repository_public : :in_repository_private),
-      published_on: (type == :public ? Time.now : nil),
+      protocol_type: :in_repository_draft,
       added_by: @user,
       team: @team
     )
@@ -144,6 +143,7 @@ class ProtocolsImporterV2
       table: Table.new(
         name: params['name'],
         contents: Base64.decode64(params['contents']),
+        metadata: JSON.parse(params['metadata'].presence || '{}'),
         created_by: @user,
         last_modified_by: @user,
         team: @team

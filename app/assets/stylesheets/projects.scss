@@ -735,7 +735,8 @@ li.module-hover {
             top: .2em;
 
             .project-actions-menu {
-              height: 40px;
+              height: 36px;
+              width: 36px;
 
               a {
                 @include font-button;
@@ -952,7 +953,7 @@ li.module-hover {
               grid-column: 2;
               height: 100%;
               margin: 0;
-              padding: 5px 0;
+              padding: 5px .5em;
 
               h3 {
                 line-height: 1.25em;
@@ -1057,7 +1058,8 @@ li.module-hover {
 
     .projects-container {
       .project-actions-menu {
-        height: 40px;
+        height: 36px;
+        width: 36px;
 
         .btn-light:hover {
           background: $color-alto;

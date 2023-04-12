@@ -10,7 +10,7 @@
   <%= render partial: 'shared/comments/comments.html.erb', locals: {
     object: step,
     comments: comments,
-    can_create_comments: can_create_my_module_comments?(@protocol.my_module),
+    can_create_comments: can_create_comments_in_my_module_steps?(@protocol.my_module),
     create_url: step_step_comments_path(step, format: :json),
     more_url: step_step_comments_path(step, format: :json, from: comments.first&.id)
   } %>

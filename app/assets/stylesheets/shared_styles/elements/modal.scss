@@ -12,4 +12,10 @@
     right: 1em;
     top: .5em;
   }
+
+  .modal-footer {
+    form {
+      display: inline-block;
+    }
+  }
 }

@@ -68,7 +68,6 @@ module Experiments
         end
 
         experiment = my_module.experiment
-        project = experiment.project
 
         result.push({ id: my_module.id,
                       columns: prepared_my_module,
@@ -81,7 +80,7 @@ module Experiments
                         provisioning_status:
                           my_module.provisioning_status == 'in_progress' &&
                             provisioning_status_my_module_url(my_module),
-                        access: access_url(project, experiment, my_module)
+                        access: access_url(my_module)
                       } })
       end
 
@@ -93,18 +92,18 @@ module Experiments
 
     private
 
-    def access_url(project, experiment, my_module)
+    def access_url(my_module)
       if can_manage_my_module_users?(@user, my_module)
-        edit_access_permissions_project_experiment_my_module_path(project, experiment, my_module)
+        edit_access_permissions_my_module_path(my_module)
       else
-        access_permissions_project_experiment_my_module_path(project, experiment, my_module)
+        access_permissions_my_module_path(my_module)
       end
     end
 
     def task_name_presenter(my_module)
       {
         id: my_module.id,
-        name: my_module.name,
+        name: escape_input(my_module.name),
         provisioning_status: my_module.provisioning_status,
         url: protocols_my_module_path(my_module)
       }
@@ -148,8 +147,8 @@ module Experiments
 
     def status_presenter(my_module)
       {
-        name: my_module.my_module_status.name,
-        color: my_module.my_module_status.color
+        name: escape_input(my_module.my_module_status.name),
+        color: escape_input(my_module.my_module_status.color)
       }
     end
 

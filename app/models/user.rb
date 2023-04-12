@@ -184,6 +184,11 @@ class User < ApplicationRecord
            class_name: 'Protocol',
            foreign_key: 'restored_by_id',
            inverse_of: :restored_by
+  has_many :published_protocols,
+           class_name: 'Protocol',
+           foreign_key: 'published_by_id',
+           inverse_of: :published_by,
+           dependent: :nullify
   has_many :archived_repositories,
            class_name: 'Repository',
            foreign_key: 'archived_by_id',
@@ -377,6 +382,14 @@ class User < ApplicationRecord
     Team.find_by_id(self.current_team_id)
   end
 
+  def permission_team=(team)
+    @permission_team = teams.find(team.id)
+  end
+
+  def permission_team
+    @permission_team || current_team
+  end
+
   def self.from_omniauth(auth)
     includes(:user_identities)
       .where(
@@ -527,14 +540,10 @@ class User < ApplicationRecord
       number_of_experiments += pr.experiments.count
     end
     statistics[:number_of_experiments] = number_of_experiments
-    statistics[:number_of_protocols] =
-      added_protocols.where(
-        protocol_type: Protocol.protocol_types.slice(
-          :in_repository_private,
-          :in_repository_public,
-          :in_repository_archived
-        ).values
-      ).count
+    statistics[:number_of_protocols] = added_protocols.where(
+      "(protocol_type=#{Protocol.protocol_types[:in_repository_published_original]}
+       OR protocol_type=#{Protocol.protocol_types[:in_repository_draft]}) AND protocols.parent_id IS NULL"
+    ).count
     statistics
   end
 

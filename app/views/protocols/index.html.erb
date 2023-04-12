@@ -9,124 +9,37 @@
   <%= content_for :sidebar do %>
    <%= render partial: "/shared/sidebar/templates_sidebar", locals: {active: :protocol} %>
   <% end %>
-  <div class="content-pane flexible" id="protocols-index">
-    <ul class="nav nav-tabs nav-settings">
-      <li role="presentation" class="<%= "active" if @type == :public %>">
-        <%= link_to t("protocols.index.navigation.public"), protocols_path(team: @current_team, type: :public) %>
-      </li>
-      <li role="presentation" class="<%= "active" if @type == :private %>">
-        <%= link_to t("protocols.index.navigation.private"), protocols_path(team: @current_team, type: :private) %>
-      </li>
-      <li role="presentation" class="<%= "active" if @type == :external_protocols %>">
-        <%= link_to t("protocols.index.navigation.external_protocols"),
-              protocols_path(team: @current_team, type: :external_protocols) %>
-      </li>
-      <li role="presentation" class="<%= "active" if @type == :archive %>">
-        <%= link_to t("protocols.index.navigation.archive"), protocols_path(team: @current_team, type: :archive) %>
-      </li>
-    </ul>
-    <div class="tab-content">
-      <div class="tab-pane tab-pane-settings tab-pane-protocols active <%= @type %>" role="tabpanel">
-        <!-- Buttons container -->
-        <% if @type.in? [:public, :private] %>
-          <div class="protocols-description">
-            <%= t(@type == :public ? "protocols.index.public_description" : "protocols.index.private_description") %>
-          </div>
-          <div class="sci-btn-group" role="group">
-            <%= button_to protocols_path(type: @type), disabled: !can_create_protocols_in_repository?(@current_team), class: 'btn btn-primary' do %>
-              <span class="fas fa-plus"></span>
-              <span class="hidden-xs">&nbsp;<%= t("protocols.index.create_new") %></span>
-            <% end %>
-            <button class="btn btn-light disabled hidden" data-action="clone">
-              <span class="fas fa-copy"></span>
-              <span class="hidden-xs">&nbsp;<%= t("protocols.index.clone_btn") %></span>
-            </button>
-            <% if @type == :public %>
-              <button class="btn btn-light disabled hidden" data-action="make-private" data-url="<%= make_private_protocols_path %>">
-                <span class="fas fa-eye-slash"></span>
-                <span class="hidden-xs">&nbsp;<%= t("protocols.index.make_private") %></span>
-              </button>
-            <% elsif @type == :private %>
-              <button class="btn btn-light disabled hidden" data-action="publish" data-url="<%= publish_protocols_path %>">
-                <span class="fas fa-eye"></span>
-                <span class="hidden-xs">&nbsp;<%= t("protocols.index.publish") %></span>
-              </button>
-            <% end %>
-          </div>
-          <div id="import-export-protocols" class="sci-btn-group" role="group">
-            <button class="btn btn-light btn-open-file <%= 'disabled hidden' unless can_create_protocols_in_repository?(@current_team) %>"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false">
-              <span class="fas fa-download"></span><span class="hidden-xs">&nbsp;<%= t("protocols.index.import") %></span>
-            </button>
-            <% if can_create_protocols_in_repository?(@current_team) %>
-              <ul class="dropdown-menu">
-                <li>
-                  <a class="btn-link-alt btn-default-link btn-open-file" <%= can_create_protocols_in_repository?(@current_team) ? 'data-action="import"' : 'disabled="disabled"' %>>
-                    <span class="fas fa-paperclip"></span>
-                    <span class="hidden-xs"><%= t("protocols.index.import_alt") %></span>
-                    <input type="file" value="" accept=".eln" data-role="import-file-input"
-                    data-team-id="<%= @current_team.id %>"
-                    data-type="<%= @type %>" data-import-url="<%= import_protocols_path %>"
-                    <%= 'disabled="disabled"' unless can_create_protocols_in_repository?(@current_team) %>>
-                  </a>
-                </li>
-                <li>
-                <%= link_to "#modal-import-json-protocol", data: { toggle: 'modal' } do %>
-                  <span class="fas fa-paperclip"></span>
-                  <span class="hidden-xs"><%= t("protocols.index.import_json") %></span>
-                <% end %>
-                </li>
-              </ul>
-            <% end %>
-            <button class="btn btn-light disabled hidden" data-action="export" data-export-url="<%= export_protocols_path() %>">
-              <span class="fas fa-upload"></span>
-              <span class="hidden-xs">&nbsp;<%= t("protocols.index.export") %></span>
-            </button>
-          </div>
+  <% provide(:container_class, 'no-second-nav-container') %>
 
-          <div class="sci-btn-group" role="group">
-            <button class="btn btn-light disabled hidden" data-action="archive" data-url="<%= archive_protocols_path %>">
-              <span class="fas fa-archive"></span>
-              <span class="hidden-xs">&nbsp;<%= t("protocols.index.archive_action") %></span>
-            </button>
-          </div>
-        <% elsif @type == :archive %>
-          <div class="protocols-description">
-            <%= t("protocols.index.archive.description") %>
-          </div>
-          <div class="sci-btn-group" role="group">
-            <button class="btn btn-light disabled hidden" data-action="restore" data-url="<%= restore_protocols_path %>">
-              <span class="fas fa-sync-alt"></span>
-              <span class="hidden-xs">&nbsp;<%= t("protocols.index.restore") %></span>
-            </button>
-          </div>
-        <% end %>
-
-        <%# Main tab content %>
-        <% if @type == :external_protocols %>
-          <%= render partial: "protocols/index/external_protocols_tab.html.erb" %>
+  <div class="content-pane flexible protocols-index <%= @type %>">
+    <div class="content-header sticky-header">
+      <div class="title-row">
+        <% if templates_view_mode_archived?(type: @type) %>
+          <h1>
+            <i class="fas fa-archive"></i>
+            <%= t('protocols.index.head_title_archived') %>
+          </h1>
         <% else %>
-          <%= render partial: "protocols/index/protocols_datatable.html.erb" %>
+          <h1><%= t('protocols.index.head_title') %></h1>
         <% end %>
-
       </div>
+    </div>
+    <div class="protocols-container">
+      <%= render partial: "protocols/index/protocols_datatable.html.erb" %>
     </div>
   </div>
 <% end %>
 
 <div id="protocolsio-preview-modal-target"></div>
 <%= render partial: "protocols/import_export/import_json_protocol_modal.html.erb" %>
-
-<%= render partial: "protocols/index/make_private_results_modal.html.erb" %>
-<%= render partial: "protocols/index/publish_results_modal.html.erb" %>
-<%= render partial: "protocols/index/confirm_archive_modal.html.erb" %>
-<%= render partial: "protocols/index/archive_results_modal.html.erb" %>
-<%= render partial: "protocols/index/restore_results_modal.html.erb" %>
-<%= render partial: "protocols/index/import_results_modal.html.erb" %>
+<%= render partial: "protocols/index/general_toolbar.html.erb" %>
+<%= render partial: "protocols/index/action_toolbar.html.erb" %>
+<%= render partial: "protocols/index/protocol_filters.html.erb" %>
+<%= render partial: "protocols/index/delete_draft_modal.html.erb" %>
 <%= render partial: "protocols/index/linked_children_modal.html.erb" %>
 <%= render partial: "protocols/index/protocol_preview_modal.html.erb" %>
+<%= render partial: "protocols/index/protocolsio_modal.html.erb" %>
+<%= render partial: "protocols/index/new_protocol_modal.html.erb", locals: {type: 'new'} %>
 
 <%= render partial: "protocols/import_export/import_elements.html.erb" %>
 
@@ -138,6 +51,6 @@
 <%= stylesheet_link_tag 'datatables' %>
 <%= javascript_include_tag "assets/wopi/create_wopi_file" %>
 <%= javascript_include_tag "protocols/index" %>
-<%= javascript_include_tag "protocols/steps" %>
+<%= javascript_include_tag "protocols/new_protocol" %>
 <%= javascript_pack_tag 'pdfjs/pdf_js' %>
 <%= stylesheet_pack_tag 'pdfjs/pdf_js_styles' %>

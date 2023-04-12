@@ -83,17 +83,13 @@ class ExternalProtocolsController < ApplicationController
     service_call = ProtocolImporters::ImportProtocolService.call(
       protocol_params: create_protocol_params,
       steps_params_json: create_steps_params[:steps],
-      user_id: current_user.id,
-      team_id: @team.id
+      user: current_user,
+      team: @team
     )
 
     if service_call.succeed?
-      protocol_type = service_call.protocol.in_repository_public? ? 'public' : 'private'
-      message = t('protocols.index.external_protocols.import.success_flash',
-                  name: service_call.protocol.name,
-                  type: t("protocols.index.external_protocols.import.#{protocol_type}"))
-      render json: { protocol: service_call.protocol,
-                     message: message }
+      message = t('protocols.index.protocolsio.import.success_flash', name: service_call.protocol.name)
+      render json: { protocol: service_call.protocol, message: message }
     else
       render json: { validation_errors: service_call.errors }, status: :bad_request
     end
@@ -120,7 +116,10 @@ class ExternalProtocolsController < ApplicationController
   end
 
   def create_protocol_params
-    params.require(:protocol).permit(:name, :authors, :published_on, :protocol_type, :description).except(:steps)
+    params
+      .require(:protocol)
+      .permit(:name, :authors, :published_on, :protocol_type, :description, :visibility, :default_public_user_role_id)
+      .except(:steps)
   end
 
   def create_steps_params

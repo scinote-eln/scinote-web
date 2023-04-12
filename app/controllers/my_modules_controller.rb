@@ -348,7 +348,7 @@ class MyModulesController < ApplicationController
 
     render json: protocol, serializer: ProtocolSerializer, user: current_user
   rescue ActiveRecord::RecordInvalid
-    head :unprocessable_entity
+    render json: protocol.errors, status: :unprocessable_entity
   end
 
   def results

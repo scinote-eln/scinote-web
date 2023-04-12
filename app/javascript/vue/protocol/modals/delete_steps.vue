@@ -1,6 +1,6 @@
 <template>
   <div ref="modal" @keydown.esc="cancel" class="modal delete-steps-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -10,8 +10,7 @@
         </div>
         <div class="modal-body">
           <p>{{ i18n.t('protocols.steps.modals.delete_steps.description_1')}}</p>
-          <p><b>{{ i18n.t('protocols.steps.modals.delete_steps.description_2')}}</b></p>
-
+          <p class="warning">{{ i18n.t('protocols.steps.modals.delete_steps.description_2')}}</p>
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" @click="cancel">{{ i18n.t('general.cancel') }}</button>

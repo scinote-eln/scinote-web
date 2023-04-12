@@ -130,7 +130,7 @@ module ApplicationHelper
              current_user
            end
     team ||= defined?(current_team) ? current_team : nil
-    SmartAnnotations::TagToHtml.new(user, team, text, preview_repository).html
+    sanitize_input(SmartAnnotations::TagToHtml.new(user, team, text, preview_repository).html)
   end
 
   # Check if text have smart annotations of users
@@ -159,23 +159,21 @@ module ApplicationHelper
       <img src='#{user_avatar_absolute_url(user, :thumb, base64_encoded_imgs)}'
        alt='thumb'></div><div class='col-xs-8'>
       <div class='row'><div class='col-xs-9 text-left'><h5>
-      #{user.full_name}</h5></div><div class='col-xs-3 text-right'>
+      #{escape_input(user.full_name)}</h5></div><div class='col-xs-3 text-right'>
       <span class='fas fa-times' aria-hidden='true'></span>
       </div></div><div class='row'><div class='col-xs-12'>
-      <p class='silver'>#{user.email}</p>)
+      <p class='silver'>#{escape_input(user.email)}</p>)
     if user_still_in_team
       user_team_assignment = user.user_assignments.find_by(assignable: team)
       user_description += %(<p>
         #{I18n.t('atwho.users.popover_html',
-                 role: user_team_assignment.user_role.name.capitalize,
-                 team: user_team_assignment.assignable.name,
+                 role: escape_input(user_team_assignment.user_role.name.capitalize),
+                 team: escape_input(user_team_assignment.assignable.name),
                  time: I18n.l(user_team_assignment.created_at, format: :full_date))}
         </p></div></div></div>)
     else
       user_description += %(<p></p></div></div></div>)
     end
-
-    user_name = user.full_name
 
     html = if skip_avatar
              ''
@@ -192,11 +190,10 @@ module ApplicationHelper
         'class="atwho-user-popover" data-container="body" ' \
         'data-html="true" tabindex="0" data-trigger="focus" ' \
         'data-placement="top" data-toggle="popover" data-content="') +
-      raw(user_description) + raw('" >') + user_name + raw('</a>')
+      raw(user_description) + raw('" >') + escape_input(user.full_name) + raw('</a>')
 
     html << " #{I18n.t('atwho.res.removed')}" unless skip_user_status || user_still_in_team
-    html = '<span class="atwho-user-container">' + html + '</span>'
-    html
+    "<span class=\"atwho-user-container\">#{html}</span>"
   end
 
   # No more dirty hack

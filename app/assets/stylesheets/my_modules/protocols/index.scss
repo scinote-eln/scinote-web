@@ -2,6 +2,7 @@
 // scss-lint:disable NestingDepth
 // scss-lint:disable SelectorFormat
 // scss-lint:disable ImportantRule
+// scss-lint:disable IdSelector
 
 @import "constants";
 @import "mixins";
@@ -424,11 +425,17 @@
   .status-info-dropdown {
     left: -125px;
     max-width: 100vw;
-    width: 650px;
+    width: 506px;
+    padding: 0;
+
+    .dropdown-content {
+      padding: 12px 24px;
+    }
 
     .dropdown-header,
-    .dropdown-body {
-      padding: 10px 32px;
+    .dropdown-body,
+    .dropdown-footer {
+      padding: 12px 0;
     }
 
     .dropdown-header {
@@ -444,13 +451,14 @@
 
       .protocol-header-info {
         color: $color-black;
+        display: flex;
         font-size: .875em;
         font-weight: 400;
+        justify-content: space-between;
       }
     }
 
     .dropdown-body {
-      border-bottom: $border-tertiary;
 
       .info-line {
         align-items: center;
@@ -481,16 +489,19 @@
           }
         }
       }
+    }
+
+    .dropdown-footer {
+      border-top: $border-tertiary;
 
       .notification-line {
         @include font-button;
         color: $color-silver-chalice;
         display: flex;
-        margin: 8px 0;
 
         .fas {
           line-height: 21px;
-          margin-right: 3px;
+          margin-right: 11px;
         }
 
         &.new-parent-version {
@@ -500,16 +511,6 @@
         &.new-protocol-version {
           color: $brand-focus;
         }
-      }
-    }
-
-    .dropdown-footer {
-      display: flex;
-      padding: 16px;
-
-      .button-container {
-        margin-left: auto;
-        margin-right: auto;
       }
     }
   }
@@ -648,15 +649,6 @@
 
       .dropdown-footer {
         display: block;
-
-        .button-container {
-          display: flex;
-
-          .btn {
-            margin: 5px auto;
-            width: 230px;
-          }
-        }
       }
     }
   }
@@ -679,4 +671,16 @@
 .task-details-code {
   display: inline-block;
   margin-left: 4px;
+}
+
+#confirm-link-update-modal,
+.delete-steps-modal {
+  .modal-body p {
+    margin: 1.2em 0;
+  }
+
+  .warning {
+    font-weight: bold;
+    margin-bottom: 1.2em;
+  }
 }

@@ -58,30 +58,32 @@ var dropdownSelector = (function() {
   // Change direction of dropdown depends of container position
   function updateDropdownDirection(selector, container) {
     var windowHeight = $(window).height();
-    var containerPosition = container[0].getBoundingClientRect().top;
+    var containerPositionTop = container[0].getBoundingClientRect().top;
     var containerPositionLeft = container[0].getBoundingClientRect().left;
     var containerHeight = container[0].getBoundingClientRect().height;
     var containerWidth = container[0].getBoundingClientRect().width;
     var bottomSpace;
     var modalContainer = container.closest('.modal-dialog');
     var modalContainerBottom = 0;
+    var modalContainerTop = 0;
     var maxHeight = 0;
-    const bottomTreshold = 280;
+    const bottomThreshold = 280;
 
     if (modalContainer.length && windowHeight !== modalContainer.height()) {
       let modalClientRect = modalContainer[0].getBoundingClientRect();
       windowHeight = modalContainer.height() + modalClientRect.top;
       containerPositionLeft -= modalClientRect.left;
-      modalContainerBottom = windowHeight + modalClientRect.bottom;
+      modalContainerBottom = $(window).height() - modalClientRect.bottom;
+      modalContainerTop = modalClientRect.top;
       maxHeight += modalContainerBottom;
     }
-    bottomSpace = windowHeight - containerPosition - containerHeight;
+    bottomSpace = windowHeight - containerPositionTop - containerHeight;
 
-    if ((modalContainerBottom + bottomSpace) < bottomTreshold) {
+    if ((modalContainerBottom + bottomSpace) < bottomThreshold) {
       container.addClass('inverse');
-      maxHeight = Math.min(containerPosition - 122 + maxHeight, MAX_DROPDOWN_HEIGHT);
+      maxHeight = Math.min(containerPositionTop - 122 + maxHeight, MAX_DROPDOWN_HEIGHT);
       container.find('.dropdown-container').css('max-height', `${maxHeight}px`)
-        .css('margin-bottom', `${(containerPosition * -1)}px`)
+        .css('margin-bottom', `${((containerPositionTop - modalContainerTop) * -1)}px`)
         .css('left', `${containerPositionLeft}px`)
         .css('width', `${containerWidth}px`);
     } else {
@@ -128,7 +130,7 @@ var dropdownSelector = (function() {
   function refreshDropdownSelection(selector, container) {
     container.find('.dropdown-option, .dropdown-group').removeClass('select');
     $.each(getCurrentData(container), function(i, selectedOption) {
-      container.find(`.dropdown-option[data-value="${selectedOption.value}"][data-group="${selectedOption.group || ''}"]`)
+      container.find(`.dropdown-option[data-value="${_.escape(selectedOption.value)}"][data-group="${selectedOption.group || ''}"]`)
         .addClass('select');
     });
     if (selector.data('select-by-group')) {
@@ -541,16 +543,22 @@ var dropdownSelector = (function() {
       var customLabel = selector2.data('config').optionLabel;
       var customClass = params.optionClass || selector2.data('config').optionClass || '';
       var customStyle = selector2.data('config').optionStyle;
-      return $(`
-        <div class="dropdown-option ${customClass}" style="${customStyle ? customStyle(option) : ''}"
-          title="${(option.params && option.params.tooltip) || ''}"
-          data-params='${JSON.stringify(option.params || {})}'
-          data-label="${option.label}"
-          data-group="${group ? group.value : ''}"
-          data-value="${option.value}">
-            ${customLabel ? customLabel(option) : option.label}
-        </div>"
+      var optionElement = $(`
+        <div class="dropdown-option ${customClass}" style="${customStyle ? customStyle(option) : ''}">
+        </div>
       `);
+      optionElement
+        .attr('title', (option.params && option.params.tooltip) || '')
+        .attr('data-params', JSON.stringify(option.params || {}))
+        .attr('data-label', option.label)
+        .attr('data-group', group ? group.value : '')
+        .attr('data-value', option.value);
+      if (customLabel) {
+        optionElement.html(customLabel(option));
+      } else {
+        optionElement.html(option.label);
+      }
+      return optionElement;
     }
 
     // Draw delimiter object
@@ -708,6 +716,7 @@ var dropdownSelector = (function() {
       } else {
         // Or delete specific one
         deleteValue(selector, container, tagLabel.data('ds-tag-id'), tagLabel.data('ds-tag-group'));
+        removeOptionFromSelector(selector, tagLabel.data('ds-tag-id'));
       }
     }, 350);
   }
@@ -727,16 +736,19 @@ var dropdownSelector = (function() {
       // Select element appearance
       var tagAppearance = selector.data('config').selectAppearance === 'simple' ? 'ds-simple' : 'ds-tags';
       var label = customLabel ? customLabel(data) : data.label;
+      var title = (data.params && data.params.tooltip) || $('<span>' + label + '</span>').text().trim();
       // Add new tag before search field
       var tag = $(`<div class="${tagAppearance} ${customClass}" style="${customStyle ? customStyle(data) : ''}" >
-                  <div class="tag-label"
-                    title="${(data.params && data.params.tooltip) || $('<span>' + label + '</span>').text().trim()}"
-                    data-ds-tag-group="${data.group}"
-                    data-ds-tag-id="${data.value}">
+                  <div class="tag-label">
                   </div>
                   <i class="fas fa-times ${selector.data('config').singleSelect ? 'hidden' : ''}"></i>
                 </div>`).insertBefore(container.find('.input-field .search-field'));
 
+
+      tag.find('.tag-label')
+        .attr('data-ds-tag-group', data.group)
+        .attr('data-ds-tag-id', data.value)
+        .attr('title', title);
       if (selector.data('config').labelHTML) {
         tag.find('.tag-label').html(label);
       } else {
@@ -871,6 +883,17 @@ var dropdownSelector = (function() {
     return result;
   }
 
+  function appendOptionToSelector(selector, value) {
+    $(selector).append(`<option
+        data-params=${JSON.stringify(value.params)}
+        value='${value.value}'
+        >${value.label}</option>`);
+  }
+
+  function removeOptionFromSelector(selector, id) {
+    $(selector).find(`option[value="${id}"]`).remove();
+  }
+
   // ////////////////////
   // Public functions ///
   // ////////////////////
@@ -987,6 +1010,7 @@ var dropdownSelector = (function() {
       currentData = getCurrentData($(selector).next());
       currentData.push(value);
       setData($(selector), currentData, skip_event);
+      appendOptionToSelector(selector, value);
 
       return this;
     },

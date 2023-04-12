@@ -16,6 +16,7 @@
         font-weight: bold;
         overflow: hidden;
         white-space: nowrap;
+        cursor: pointer;
 
         .modal-tooltiptext {
           margin-left: -10px;
@@ -26,6 +27,16 @@
           color: $color-silver-chalice;
           font-weight: normal;
           opacity: 1;
+        }
+
+        &.sorting::after {
+          opacity: 0;
+        }
+
+        &.sorting:hover {
+          &::after {
+            opacity: 1;
+          }
         }
 
         &:first-child {
@@ -40,7 +51,7 @@
 
       th,
       td {
-        padding: 8px;
+        padding: 8px 6px;
       }
     }
   }
@@ -49,12 +60,16 @@
     tr {
       &.selected,
       .selected {
-        background-color: $color-alto;
+        background-color: $color-concrete;
       }
     }
 
     td {
       padding-left: 10px;
+
+      .nowrap {
+        white-space: nowrap;
+      }
     }
 
     .dt-body-center {
@@ -88,6 +103,8 @@
       border: 1px solid transparent;
       border-radius: $border-radius-default;
       color: inherit;
+      min-height: 36px;
+      min-width: 36px;
       outline: 0;
 
       &:hover,
@@ -103,7 +120,10 @@
     }
 
     &.active {
+      min-height: 36px;
       a {
+        min-width: 36px;
+        min-height: 36px;
         background-color: inherit;
         border: 1px solid $brand-primary;
         color: inherit;

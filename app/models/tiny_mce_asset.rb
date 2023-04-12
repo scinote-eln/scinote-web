@@ -64,6 +64,13 @@ class TinyMceAsset < ApplicationRecord
 
     description = Nokogiri::HTML(description)
     tm_assets = description.css('img[data-mce-token]')
+
+    # Make same-page anchor links work properly with turbolinks
+    links = description.css('[href]')
+    links.each do |link|
+      link['data-turbolinks'] = false if link['href'].starts_with?('#')
+    end
+
     tm_assets.each do |tm_asset|
       asset_id = tm_asset.attr('data-mce-token')
       new_asset = obj.tiny_mce_assets.find_by(id: Base62.decode(asset_id))
@@ -158,7 +165,7 @@ class TinyMceAsset < ApplicationRecord
   end
 
   def clone_tinymce_asset(obj)
-    team_id = Team.search_by_object(object)&.id
+    team_id = Team.search_by_object(obj)&.id
 
     return false unless team_id
 

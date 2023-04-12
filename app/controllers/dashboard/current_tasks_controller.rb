@@ -10,47 +10,8 @@ module Dashboard
     before_action :check_task_view_permissions, only: :show
 
     def show
-      tasks = if @experiment
-                @experiment.my_modules.active
-              elsif @project
-                MyModule.active.where(projects: { id: @project.id })
-              else
-                MyModule.active
-              end
-
-      tasks = tasks.viewable_by_user(current_user, current_team)
-
-      tasks = tasks.joins(experiment: :project)
-                   .where(experiments: { archived: false })
-                   .where(projects: { archived: false })
-
-      if task_filters[:mode] == 'assigned'
-        tasks = tasks.left_outer_joins(:user_my_modules).where(user_my_modules: { user_id: current_user.id })
-      end
-
-      tasks = tasks.where(my_module_status_id: task_filters[:statuses]) if task_filters[:statuses].present?
-
-      case task_filters[:sort]
-      when 'start_date'
-        tasks = tasks.order('my_modules.started_on': :asc).order('my_modules.name': :asc)
-      when 'due_date'
-        tasks = tasks.order('my_modules.due_date': :asc).order('my_modules.name': :asc)
-      when 'atoz'
-        tasks = tasks.order('my_modules.name': :asc)
-      when 'ztoa'
-        tasks = tasks.order('my_modules.name': :desc)
-      else
-        tasks
-      end
-
       page = (params[:page] || 1).to_i
-      tasks = tasks.search_by_name(current_user, current_team, task_filters[:query]) if task_filters[:query].present?
-      tasks = tasks.joins(:my_module_status)
-                   .select(
-                     'my_modules.*',
-                     'my_module_statuses.name AS status_name',
-                     'my_module_statuses.color AS status_color'
-                   ).preload(experiment: :project).page(page).per(Constants::INFINITE_SCROLL_LIMIT)
+      tasks = load_tasks.page(page).per(Constants::INFINITE_SCROLL_LIMIT).without_count
 
       tasks_list = tasks.map do |task|
         render_to_string(partial: 'dashboards/current_tasks/task', locals: { task: task })
@@ -124,6 +85,49 @@ module Dashboard
 
     def load_experiment
       @experiment = @project.experiments.find_by(id: params[:experiment_id]) if @project
+    end
+
+    def load_tasks
+      tasks = if @experiment
+                @experiment.my_modules.active
+              elsif @project
+                MyModule.active.where(projects: { id: @project.id })
+              else
+                MyModule.active
+              end
+
+      tasks = tasks.viewable_by_user(current_user, current_team)
+
+      tasks = tasks.joins(experiment: :project)
+                   .where(experiments: { archived: false })
+                   .where(projects: { archived: false })
+
+      if task_filters[:mode] == 'assigned'
+        tasks = tasks.joins(:user_my_modules).where(user_my_modules: { user_id: current_user.id })
+      end
+
+      tasks = tasks.where(my_module_status_id: task_filters[:statuses]) if task_filters[:statuses].present?
+
+      case task_filters[:sort]
+      when 'start_date'
+        tasks = tasks.order('my_modules.started_on': :asc).order('my_modules.name': :asc)
+      when 'due_date'
+        tasks = tasks.order('my_modules.due_date': :asc).order('my_modules.name': :asc)
+      when 'atoz'
+        tasks = tasks.order('my_modules.name': :asc)
+      when 'ztoa'
+        tasks = tasks.order('my_modules.name': :desc)
+      end
+
+      tasks = tasks.search_by_name(current_user, current_team, task_filters[:query]) if task_filters[:query].present?
+      tasks.joins(:my_module_status)
+           .select(
+             'my_modules.*',
+             'my_module_statuses.name AS status_name',
+             'my_module_statuses.color AS status_color',
+             'projects.name AS project_name',
+             'experiments.name AS experiment_name'
+           )
     end
 
     def check_task_view_permissions

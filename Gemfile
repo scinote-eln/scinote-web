@@ -16,7 +16,7 @@ gem 'rails', '~> 6.1.5'
 gem 'psych', '< 4.0'
 gem 'view_component', require: 'view_component/engine'
 gem 'recaptcha', require: 'recaptcha/rails'
-gem 'sanitize', '~> 6.0'
+gem 'sanitize'
 gem 'sassc-rails'
 gem 'webpacker', '~> 4.0.0'
 gem 'yomu', git: 'https://github.com/scinote-eln/yomu', branch: 'master'
@@ -60,7 +60,9 @@ gem 'ajax-datatables-rails', '~> 0.3.1'
 gem 'aspector' # Aspect-oriented programming for Rails
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces AR
 gem 'bcrypt', '~> 3.1.10'
-gem 'caracal' # Build docx report
+# gem 'caracal'
+gem 'caracal',
+    git: 'https://github.com/scinote-eln/caracal.git', branch: 'rubyzip2' # Build docx report
 gem 'deface', '~> 1.9'
 gem 'down', '~> 5.0'
 gem 'faker' # Generate fake data
@@ -75,8 +77,9 @@ gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'rgl' # Graph framework for project diagram calculations
 gem 'roo', '~> 2.8.2' # Spreadsheet parser
 gem 'rotp'
-gem 'rqrcode' # QR code generator
-gem 'rubyzip'
+gem 'rqrcode', '~> 2.0' # QR code generator
+gem 'rubyzip', '>= 2.3.0' # will load new rubyzip version
+gem 'zip-zip' # will load compatibility for old rubyzip API.
 gem 'scenic', '~> 1.4'
 gem 'sdoc', '~> 1.0', group: :doc
 gem 'silencer' # Silence certain Rails logs
@@ -84,7 +87,6 @@ gem 'sneaky-save', git: 'https://github.com/einzige/sneaky-save'
 gem 'turbolinks', '~> 5.1.1'
 gem 'underscore-rails'
 gem 'wicked_pdf'
-gem 'wkhtmltopdf-heroku', '2.12.5'
 
 gem 'aws-sdk-lambda'
 gem 'aws-sdk-rails'

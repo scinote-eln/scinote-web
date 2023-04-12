@@ -1,5 +1,5 @@
 /* global I18n GLOBAL_CONSTANTS InfiniteScroll
-          initBSTooltips filterDropdown dropdownSelector Sidebar HelperModule notTurbolinksPreview */
+          initBSTooltips filterDropdown dropdownSelector Sidebar HelperModule notTurbolinksPreview _ */
 
 var ExperimnetTable = {
   permissions: ['editable', 'archivable', 'restorable', 'moveable'],
@@ -508,29 +508,37 @@ var ExperimnetTable = {
       }
     });
   },
-  initFilters: function() {
-    this.filterDropdown = filterDropdown.init();
+  getFilterValues: function() {
     let $experimentFilter = $('#experimentTable .my-modules-filters');
+    $.each(this.filters, (_i, filter) => {
+      this.activeFilters[filter.name] = filter.apply($experimentFilter);
+    });
+
+    // filters are active if they have any non-empty value
+    let filtersEmpty = Object.values(this.activeFilters).every(value => /^\s+$/.test(value)
+                                                                                || value === null
+                                                                                || value === undefined
+                                                                                || (value && value.length === 0));
+    this.filtersActive = !filtersEmpty;
+  },
+  filtersEnabled: function() {
+    this.getFilterValues();
+
+    return this.filters.some((filter) => {
+      return filter.active(this.activeFilters[filter.name]);
+    });
+  },
+  initFilters: function() {
+    let $experimentFilter = $('#experimentTable .my-modules-filters');
+
+    this.filterDropdown = filterDropdown.init(() => this.filtersEnabled());
 
     $.each(this.filters, (_i, filter) => {
       filter.init($experimentFilter);
     });
 
     this.filterDropdown.on('filter:apply', () => {
-      $.each(this.filters, (_i, filter) => {
-        this.activeFilters[filter.name] = filter.apply($experimentFilter);
-      });
-
-      // filters are active if they have any non-empty value
-      let filtersEmpty = Object.values(this.activeFilters).every(value => /^\s+$/.test(value) || value === null || value === undefined || value && value.length === 0);
-      this.filtersActive = !filtersEmpty;
-
-      filterDropdown.toggleFilterMark(
-        this.filterDropdown,
-        this.filters.some((filter) => {
-          return filter.active(this.activeFilters[filter.name]);
-        })
-      );
+      filterDropdown.toggleFilterMark(this.filterDropdown, this.filtersEnabled());
 
       this.loadTable();
     });
@@ -652,17 +660,17 @@ var ExperimnetTable = {
 };
 
 ExperimnetTable.render.task_name = function(data) {
-  let tooltip = ` title="${data.name}" data-toggle="tooltip" data-placement="bottom"`;
+  let tooltip = ` title="${_.escape(data.name)}" data-toggle="tooltip" data-placement="bottom"`;
   if (data.provisioning_status === 'in_progress') {
-    return `<span data-full-name="${data.name}">${data.name}</span>`;
+    return `<span data-full-name="${_.escape(data.name)}">${data.name}</span>`;
   }
 
   return `<a
     href="${data.url}"
     ${tooltip}
-    title="${data.name}"
+    title="${_.escape(data.name)}"
     id="taskName${data.id}"
-    data-full-name="${data.name}">${data.name}</a>`;
+    data-full-name="${_.escape(data.name)}">${data.name}</a>`;
 };
 
 ExperimnetTable.render.id = function(data) {

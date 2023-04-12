@@ -1,0 +1,61 @@
+// scss-lint:disable SelectorDepth NestingDepth IdSelector
+#devicesTable {
+  .devices-table {
+    display: grid;
+    grid-auto-rows: 3em 1px;
+    grid-template-columns: 200px 150px 50px;
+    min-width: 100%;
+
+    .table-header-cell {
+      align-items: center;
+      background-color: $color-concrete;
+      display: flex;
+      height: 3em;
+      padding: 0 .5em;
+      z-index: 2;
+    }
+
+    .table-header {
+      display: contents;
+
+      &::after {
+        content: "";
+        grid-column: 1/-1;
+      }
+    }
+
+    .table-body {
+      display: contents;
+    }
+
+    .table-body-cell {
+      align-items: center;
+      display: flex;
+      padding: 0 .5em;
+    }
+
+    .x-button {
+      background: 0;
+      border: 0;
+      margin-left: 5px;
+    }
+
+    .table-row {
+      display: contents;
+
+      &:hover {
+        .table-body-cell {
+          background-color: $color-concrete;
+        }
+      }
+
+      &::after {
+        background: $color-concrete;
+        content: "";
+        display: inline-block;
+        grid-column: 1/-1;
+        height: 1px;
+      }
+    }
+  }
+}

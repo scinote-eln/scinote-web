@@ -34,7 +34,6 @@
                     :data-tinymce-object="`tinymce-${objectType}-description-${objectId}`"
                     :data-object-type="objectType"
                     :data-object-id="objectId"
-                    :data-highlightjs-path="this.getStaticUrl('highlightjs-url')"
                     :data-last-updated="lastUpdated * 1000"
                     :data-tinymce-asset-path="this.getStaticUrl('tiny-mce-assets-url')"
                     :placeholder="placeholder"
@@ -89,6 +88,8 @@
         } else {
           this.wrapTables();
         }
+
+        this.initCodeHighlight();
       },
       characterCount() {
         if (this.editorInstance()) {
@@ -100,14 +101,8 @@
       error() {
         if(this.characterLimit && this.characterCount > this.characterLimit) {
           return(
-            this.i18n.t(
-              'inline_edit.errors.over_limit',
-              {
-                attribute: this.i18n.t('general.text.name'),
-                limit: this.numberWithSpaces(this.characterLimit)
-              }
-            )
-          )
+            this.i18n.t('errors.general_text_too_long')
+          );
         }
 
         return false
@@ -119,6 +114,8 @@
       } else {
         this.wrapTables();
       }
+
+      this.initCodeHighlight();
     },
     methods: {
       initTinymce(e) {
@@ -137,6 +134,7 @@
               }
               this.$emit('editingDisabled');
               this.wrapTables();
+              this.initCodeHighlight();
             },
             afterInitCallback: () => {
               this.active = true;
@@ -172,6 +170,11 @@
       },
       editorInstance() {
         return tinyMCE.activeEditor;
+      },
+      initCodeHighlight() {
+        this.$nextTick(() => {
+          Prism.highlightAllUnder(this.$el);
+        });
       }
     }
   }

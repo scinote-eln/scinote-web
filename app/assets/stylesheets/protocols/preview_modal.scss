@@ -26,4 +26,51 @@
   .general-error {
     text-align: center;
   }
+
+  .modal-footer {
+    .footer {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+
+      .left-section {
+        column-gap: 32px;
+        display: flex;
+        justify-content: space-between;
+
+        .default-role-container {
+          align-items: center;
+          column-gap: 8px;
+          display: flex;
+        }
+
+        .sci-input-container {
+          display: flex;
+          align-items: center;
+          column-gap: 12px;
+          flex-grow: 1;
+
+          label {
+            margin-bottom: 0;
+            white-space: nowrap;
+          }
+
+          .dropdown-selector-container {
+            width: 170px;
+
+            .search-field {
+              padding-left: 7px;
+            }
+          }
+        }
+      }
+
+      .right-section {
+        column-gap: 8px;
+        display: flex;
+        flex-basis: 0;
+        justify-content: flex-end;
+      }
+    }
+  }
 }

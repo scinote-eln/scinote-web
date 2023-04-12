@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-unused-vars, lines-around-comment, no-undef, no-alert */
 /* eslint-disable no-use-before-define, no-restricted-globals */
 //= require protocols/import_export/eln_table.js
@@ -48,10 +49,18 @@ function importProtocolFromFile(
     return (parseInt($(a).attr('position'), 10) - parseInt($(b).attr('position'), 10));
   }
 
+  function cleanFilePath(filePath) {
+    if (filePath.slice(-1) === '.') {
+      filePath = filePath.substring(0, filePath.length - 1);
+    }
+
+    return filePath;
+  }
+
   function getAssetBytes(folder, stepGuid, fileRef) {
     var stepPath = stepGuid ? stepGuid + '/' : '';
     var filePath = folder + stepPath + fileRef;
-    var assetBytes = zipFiles.files[filePath].asBinary();
+    var assetBytes = zipFiles.files[cleanFilePath(filePath)].asBinary();
     return window.btoa(assetBytes);
   }
 
@@ -576,6 +585,7 @@ function importProtocolFromFile(
     var contents = tableNode.children('contents').text();
     json.id = tableNode.attr('id');
     json.name = tableNode.children('name').text();
+    json.metadata = tableNode.children('metadata').text();
     contents = hex2a(contents);
     contents = window.btoa(contents);
     json.contents = contents;

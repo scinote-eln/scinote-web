@@ -1,5 +1,3 @@
-require 'zip'
-
 module ProtocolsExporterV2
   include ProtocolsExporter
 
@@ -9,6 +7,7 @@ module ProtocolsExporterV2
     envelope_xml = "<envelope xmlns=\"http://www.scinote.net\" " \
                    "version=\"1.1\">\n"
     protocols.each do |protocol|
+      protocol = protocol.latest_published_version_or_self
       protocol_name = get_protocol_name(protocol)
       envelope_xml << "<protocol id=\"#{protocol.id}\" " \
                       "guid=\"#{get_guid(protocol.id)}\">#{protocol_name}" \
@@ -100,6 +99,7 @@ module ProtocolsExporterV2
     "<elnTable id=\"#{table.id}\" guid=\"#{get_guid(table.id)}\">\n" \
       "<name>#{table.name}</name>\n" \
       "<contents>#{table.contents.unpack1('H*')}</contents>\n" \
+      "<metadata>#{table.metadata.to_json}</metadata>\n" \
       "</elnTable>\n"
   end
 

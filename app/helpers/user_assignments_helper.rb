@@ -7,20 +7,19 @@ module UserAssignmentsHelper
                    else
                      assignee.name
                    end
-    sanitize_input(display_name)
+    escape_input(display_name)
   end
 
   def user_assignment_resource_role_name(user, resource, inherit = '')
     user_assignment = resource.user_assignments.find_by(user: user)
-    if resource.class != Project && user_assignment.automatically_assigned?
+
+    return '' if [Project, Protocol].include?(resource.class) && inherit.blank?
+
+    if user_assignment.automatically_assigned? && resource.permission_parent.present?
       parent = resource.permission_parent
       return user_assignment_resource_role_name(user, parent, '_inherit')
     end
 
-    "#{user_assignment.user_role.name}
-            <span class='permission-object-tag'
-              title='#{t("access_permissions.partials.#{resource.class.to_s.downcase}_tooltip#{inherit}")}'>
-              #{t("access_permissions.partials.#{resource.class.to_s.downcase}")}
-            </span>".html_safe
+    t("access_permissions.partials.#{resource.class.to_s.downcase}_tooltip#{inherit}")
   end
 end

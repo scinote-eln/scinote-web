@@ -1,0 +1,44 @@
+<div class="connected-devices-description">
+  <h3><%= t("users.registrations.edit.connected_devices.title") %></h3>
+  <% if @connected_devices.present? %>
+    <div class="connected-devices-container">
+      <p><%= t("users.registrations.edit.connected_devices.description") %></p>
+      <div id="devicesTable">
+        <div class="devices-table-container">
+          <div class="devices-table">
+            <div class="table-header">
+              <div class="table-header-cell">
+                <%= t("users.registrations.edit.devices_table.device_name") %>
+              </div>
+              <div class="table-header-cell">
+                <%= t("users.registrations.edit.devices_table.last_seen") %>
+              </div>
+              <div class="table-header-cell">
+              </div>
+            </div>
+            <div class="table-body">
+              <% @connected_devices.each do |device| %>
+                <div class="table-row" data-id=<%= device.id%>>
+                  <div class="table-body-cell">
+                      <%= device.name %>
+                  </div>
+                  <div class="table-body-cell">
+                      <%= l(device.last_seen_at, format: :full_date) %>
+                  </div>
+                  <div class="table-body-cell">
+                    <button class="x-button" id="revokeDeviceBtn" data-toggle="modal" data-url=<%=  connected_device_path(device.id) %> data-target="#deviceRevocationModal"><i class="fas fa-times"></i></button>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <p><%= t("users.registrations.edit.connected_devices.empty_state") %></p>
+  <% end %>
+</div>
+
+<%= render partial: 'device_revocation_modal' %>
+<%= javascript_include_tag 'users/connected_devices' %>

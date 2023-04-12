@@ -1,5 +1,5 @@
 FROM ruby:2.7.6-bullseye
-MAINTAINER BioSistemika <info@biosistemika.com>
+MAINTAINER SciNote <info@scinote.net>
 
 ARG WKHTMLTOPDF_PACKAGE_URL=https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.buster_amd64.deb
 
@@ -50,7 +50,6 @@ COPY . .
 RUN rm -f $APP_HOME/config/application.yml $APP_HOME/production.env
 
 RUN DATABASE_URL=postgresql://postgres@db/scinote_production \
-  PAPERCLIP_HASH_SECRET=dummy \
   SECRET_KEY_BASE=dummy \
   DEFACE_ENABLED=true \
   bash -c "rake assets:precompile && rake deface:precompile"

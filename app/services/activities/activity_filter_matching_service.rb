@@ -4,7 +4,7 @@ module Activities
   class ActivityFilterMatchingService
     # invert the children hash to get a hash defining parents
     ACTIVITY_SUBJECT_PARENTS = Extends::ACTIVITY_SUBJECT_CHILDREN.invert.map do |k, v|
-      k&.map { |s| [s.to_s.singularize.camelize, v] }
+      k&.map { |s| [s.to_s.classify, v.to_s.classify.constantize.reflect_on_association(s)&.inverse_of&.name || v] }
     end.compact.sum.to_h.freeze
 
     def initialize(activity)
@@ -26,9 +26,18 @@ module Activities
 
     def filter_date!
       @activity_filters = @activity_filters.where(
-        "((filter ->> 'from_date') = '' AND (filter ->> 'to_date') = '') OR " \
-        "((?)::date BETWEEN (filter ->> 'from_date')::date AND (filter ->> 'to_date')::date)",
-        @activity.created_at.to_date
+        "(CASE "\
+        "WHEN (filter ->> 'to_date') = '' " \
+        "THEN :date >= '-infinity'::date " \
+        "ELSE :date >= (filter ->> 'to_date')::date " \
+        "END) " \
+        " AND " \
+        "(CASE "\
+        "WHEN (filter ->> 'from_date') = '' " \
+        "THEN :date <= 'infinity'::date " \
+        "ELSE :date <=  (filter ->> 'from_date')::date "\
+        "END)",
+        date: @activity.created_at.to_date
       )
     end
 

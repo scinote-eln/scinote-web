@@ -8,8 +8,8 @@ var DasboardRecentWorkWidget = (function() {
       var recentWorkItemType = recentWorkItem.find('.object-type span');
       recentWorkItem.attr('href', item.url);
       recentWorkItem.find('.object-name').html(item.name);
-      recentWorkItemType.html(item.code || item.type);
-      recentWorkItem.find('.object-changed').html(item.last_change);
+      recentWorkItemType.text(item.code || item.type);
+      recentWorkItem.find('.object-changed').text(item.last_change);
       container.append(recentWorkItem);
 
       if (item.code) {

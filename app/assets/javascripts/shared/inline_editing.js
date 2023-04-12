@@ -10,6 +10,10 @@ var inlineEditing = (function() {
     if (container.data('label-after')) {
       $(container.data('label-after')).appendTo(container.find('.view-mode'));
     }
+
+    if ($(container).data('params-group') === 'protocol' && $(container).hasClass('inline-editing-container')) {
+      $('.view-mode').text(I18n.t('protocols.draft_name', { name: $('.view-mode').text() }));
+    }
   }
 
   function inputField(container) {

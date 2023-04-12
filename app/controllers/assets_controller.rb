@@ -235,7 +235,7 @@ class AssetsController < ApplicationController
         log_result_activity(:edit_result, @assoc)
       end
 
-      render json: { flash: I18n.t('assets.file_deleted', file_name: @asset.file_name) }
+      render json: { flash: I18n.t('assets.file_deleted', file_name: escape_input(@asset.file_name)) }
     else
       render json: {}, status: :unprocessable_entity
     end

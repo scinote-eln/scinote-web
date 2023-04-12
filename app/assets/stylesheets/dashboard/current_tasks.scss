@@ -75,7 +75,7 @@
         display: flex;
         height: 44px;
         margin-bottom: 16px;
-        padding: 0  5px 0 16px;
+        padding: 0 16px;
 
         .title {
           @include font-h2;
@@ -105,9 +105,13 @@
         border-top: $border-default;
         display: flex;
         height: 68px;
-        justify-content: center;
+        justify-content: flex-end;
         position: relative;
-        width: 100%;
+        padding: 16px;
+
+        .clear-button {
+          margin-right: 8px;
+        }
       }
     }
 

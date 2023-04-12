@@ -8,6 +8,9 @@
 
 .projects-show {
   .experiment-actions-menu {
+    height: 36px;
+    width: 36px;
+
     .dropdown-menu {
       a,
       button {
@@ -87,7 +90,7 @@
 
               img {
                 border-radius: 4px;
-                max-height: 76px;
+                max-height: 70px;
               }
             }
           }
@@ -473,6 +476,9 @@
 
     .project-show-container {
       .experiment-actions-menu {
+        height: 36px;
+        width: 36px;
+
         .btn-light:hover {
           background: $color-alto;
         }
@@ -482,7 +488,8 @@
         .card.experiment-card {
           .workflow-img-wrapper {
             align-items: center;
-            background-color: $color-alto;
+            background-color: $color-concrete;
+            border: 1px solid $color-silver-chalice;
             display: flex;
             justify-content: center;
           }

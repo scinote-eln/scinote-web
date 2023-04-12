@@ -13,7 +13,8 @@
         @blur="handleBlur"
         @keyup.escape="cancelEdit"
       ></textarea>
-      <div v-else @click="enableEdit($event)" class="sci-inline-edit__view" v-html="(smartAnnotation ? sa_value : newValue) || placeholder" :class="{ 'blank': isBlank }"></div>
+      <div v-else-if="smartAnnotation" @click="enableEdit($event)" class="sci-inline-edit__view" v-html="sa_value || placeholder" :class="{ 'blank': isBlank }"></div>
+      <div v-else @click="enableEdit($event)" class="sci-inline-edit__view" :class="{ 'blank': isBlank }">{{newValue || placeholder}}</div>
       <div v-if="editing && error" class="sci-inline-edit__error">
         {{ error }}
       </div>
@@ -164,6 +165,7 @@
           this.newValue = lines[0];
           this.$emit('multilinePaste', lines);
         }
+        this.update();
       },
       handleInput() {
         this.dirty = true;

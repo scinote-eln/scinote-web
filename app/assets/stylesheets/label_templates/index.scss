@@ -73,6 +73,10 @@
       .dataTables_scrollHead {
         flex-shrink: 0;
       }
+
+      .dataTables_scrollBody {
+        height: 100%;
+      }
     }
 
     .pagination-row {

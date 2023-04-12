@@ -1,75 +1,24 @@
-<div>
-  <p>
-    <%= t("my_modules.protocols.load_from_repository_modal.text") %>
-  </p>
-  <p style="font-weight: bold;">
-    <%= t("my_modules.protocols.load_from_repository_modal.text2") %>
-  </p>
+<div class="load-warning-message">
+  <p style="font-weight: bold;"><%= t("my_modules.protocols.load_from_repository_modal.text") %></p>
 </div>
 
-<ul class="nav nav-tabs nav-settings" role="tablist">
-  <li role="presentation" class="active"><a href="#recent-tab" aria-controls="recent-tab" role="tab" data-toggle="tab"><%= t("my_modules.protocols.load_from_repository_modal.tab_recent") %></a></li>
-  <li role="presentation"><a href="#public-tab" aria-controls="public-tab" role="tab" data-toggle="tab"><%= t("my_modules.protocols.load_from_repository_modal.tab_public") %></a></li>
-  <li role="presentation"><a href="#private-tab" aria-controls="private-tab" role="tab" data-toggle="tab"><%= t("my_modules.protocols.load_from_repository_modal.tab_private") %></a></li>
-</ul>
   <!-- Tab panes -->
-  <div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="recent-tab">
-      <div class="protocols-datatable load-from-repository-protocols-datatable">
-        <table id="recent-protocols-table" class="table" data-role="datatable"
-          data-type="recent"
-          data-source="<%= load_from_repository_datatable_protocol_path(@protocol, type: :recent) %>"
-          data-default-order='[[6,"desc"]]'
-        >
-          <thead>
-            <tr>
-              <th class="all"></th>
-              <th class="all" id="protocol-name"><%= t("my_modules.protocols.load_from_repository_modal.thead_name") %></th>
-              <th class="min-tablet-p" id="protocol-keywords"><%= t("my_modules.protocols.load_from_repository_modal.thead_keywords") %></th>
-              <th class="min-tablet-l" id="protocol-nr-of-linked-children"><%= t("my_modules.protocols.load_from_repository_modal.thead_nr_of_linked_children") %></th>
-              <th class="min-tablet-l" id="protocol-published-by"><%= t("my_modules.protocols.load_from_repository_modal.thead_added_by") %></th>
-              <th class="min-desktop" id="protocol-published-on"><%= t("my_modules.protocols.load_from_repository_modal.thead_published_on") %></th>
-              <th class="min-desktop" id="protocol-updated-at"><%= t("my_modules.protocols.load_from_repository_modal.thead_updated_at") %></th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
-    <div role="tabpanel" class="tab-pane" id="public-tab">
-      <div class="protocols-datatable load-from-repository-protocols-datatable">
-        <table id="public-protocols-table" class="table" data-role="datatable" data-type="public" data-source="<%= load_from_repository_datatable_protocol_path(@protocol, type: :public) %>">
-          <thead>
-            <tr>
-              <th class="all"></th>
-              <th class="all" id="protocol-name"><%= t("my_modules.protocols.load_from_repository_modal.thead_name") %></th>
-              <th class="min-tablet-p" id="protocol-keywords"><%= t("my_modules.protocols.load_from_repository_modal.thead_keywords") %></th>
-              <th class="min-tablet-l" id="protocol-nr-of-linked-children"><%= t("my_modules.protocols.load_from_repository_modal.thead_nr_of_linked_children") %></th>
-              <th class="min-tablet-l" id="protocol-published-by"><%= t("my_modules.protocols.load_from_repository_modal.thead_published_by") %></th>
-              <th class="min-desktop" id="protocol-published-on"><%= t("my_modules.protocols.load_from_repository_modal.thead_published_on") %></th>
-              <th class="min-desktop" id="protocol-updated-at"><%= t("my_modules.protocols.load_from_repository_modal.thead_updated_at") %></th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
-    <div role="tabpanel" class="tab-pane" id="private-tab">
-      <div class="protocols-datatable load-from-repository-protocols-datatable">
-        <table id="private-protocols-table" class="table" data-role="datatable" data-type="private" data-protocol-id="<%= @protocol.id %>" data-source="<%= load_from_repository_datatable_protocol_path(@protocol, type: :private) %>">
-          <thead>
-            <tr>
-              <th class="all"></th>
-              <th class="all" id="protocol-name"><%= t("my_modules.protocols.load_from_repository_modal.thead_name") %></th>
-              <th class="min-tablet-p" id="protocol-keywords"><%= t("my_modules.protocols.load_from_repository_modal.thead_keywords") %></th>
-              <th class="min-tablet-l" id="protocol-nr-of-linked-children"><%= t("my_modules.protocols.load_from_repository_modal.thead_nr_of_linked_children") %></th>
-              <th class="min-tablet-l" id="protocol-added-by"><%= t("my_modules.protocols.load_from_repository_modal.thead_added_by") %></th>
-              <th class="min-desktop" id="protocol-created-at"><%= t("my_modules.protocols.load_from_repository_modal.thead_created_at") %></th>
-              <th class="min-desktop" id="protocol-updated-at"><%= t("my_modules.protocols.load_from_repository_modal.thead_updated_at") %></th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
+<div id="load-protocols-datatable">
+  <div class="load-protocols-datatable tab-pane active">
+    <table id="protocols-table" class="table datatable"
+           data-role="datatable"
+           data-source="<%= load_from_repository_datatable_protocol_path(@protocol) %>">
+      <thead>
+          <tr>
+            <th class="all" id="protocol-name"><%= t("my_modules.protocols.load_from_repository_modal.thead_name") %></th>
+            <th class="min-tablet-p" id="protocol-versions"><%= t("my_modules.protocols.load_from_repository_modal.thead_version") %></th>
+            <th class="min-tablet-l" id="protocol-id"><%= t("my_modules.protocols.load_from_repository_modal.thead_id") %></th>
+            <th class="min-tablet-l" id="protocol-keywords"><%= t("my_modules.protocols.load_from_repository_modal.thead_keywords") %></th>
+            <th class="min-desktop" id="protocol-published-by"><%= t("my_modules.protocols.load_from_repository_modal.thead_published_by") %></th>
+            <th class="min-desktop" id="protocol-published-on"><%= t("my_modules.protocols.load_from_repository_modal.thead_published_on") %></th>
+          </tr>
+        </thead>
+      <tbody></tbody>
+    </table>
   </div>
+</div>

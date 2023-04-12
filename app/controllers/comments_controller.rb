@@ -102,9 +102,9 @@ class CommentsController < ApplicationController
     when MyModule
       render_403 and return unless can_create_my_module_comments?(@commentable)
     when Step
-      render_403 and return unless can_create_my_module_comments?(@commentable.protocol.my_module)
+      render_403 and return unless can_create_comments_in_my_module_steps?(@commentable.protocol.my_module)
     when Result
-      render_403 and return unless can_create_my_module_comments?(@commentable.my_module)
+      render_403 and return unless can_create_my_module_result_comments?(@commentable.my_module)
     else
       render_403 and return
     end
