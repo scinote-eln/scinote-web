@@ -11,6 +11,7 @@
   width: 100%;
 
   .sci--layout--menu-item {
+    @include font-small;
     align-items: center;
     color: $color-black;
     cursor: pointer;
@@ -20,6 +21,10 @@
     justify-content: center;
     text-decoration: none;
     width: 100%;
+
+    .fas {
+      font-size: 1.125rem;
+    }
 
     &[data-active='true'] {
       background-color: $color-gainsboro;

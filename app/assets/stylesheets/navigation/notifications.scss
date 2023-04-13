@@ -4,6 +4,14 @@
 .sci--navigation--notificaitons-flyout-container {
   position: relative;
 
+  .sci--navigation--notificaitons-flyout-backdrop {
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: var(--top-navigation);
+  }
+
   .sci--navigation--notificaitons-flyout {
     background-color: $color-white;
     border-radius: 0 0  $border-radius-default $border-radius-default;
@@ -57,7 +65,10 @@
     }
 
     .sci--navigation--notificaitons-flyout-notifications {
+      margin-left: -1.5rem;
+      padding: 0 1.5rem;
       position: relative;
+      width: calc(100% + 3rem);
 
       .next-page-loader {
         align-items: center;
