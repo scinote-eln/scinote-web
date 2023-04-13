@@ -274,6 +274,8 @@
             this.$nextTick(() => this.scrollToBottom());
           }
           this.refreshProtocolStatus();
+        }).error((data) => {
+          HelperModule.flashAlertMsg(data.responseJSON.error ? Object.values(data.responseJSON.error).join(', ') : I18n.t('errors.general'), 'danger');
         })
       },
       updateStepsPosition(step, action = 'add') {

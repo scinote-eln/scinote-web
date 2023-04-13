@@ -112,6 +112,9 @@
           data: { protocol: { authors: authors } },
           success: (result) => {
             this.$emit('update', result.data.attributes)
+          },
+          error: (data) => {
+            HelperModule.flashAlertMsg(data.responseJSON ? Object.values(data.responseJSON).join(', ') : I18n.t('errors.general'), 'danger');
           }
         });
       },

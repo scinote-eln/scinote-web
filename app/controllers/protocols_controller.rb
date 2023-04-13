@@ -142,7 +142,7 @@ class ProtocolsController < ApplicationController
                    protocol: @protocol.id,
                    version_number: @protocol.version_number)
     rescue ActiveRecord::RecordInvalid => e
-      flash[:error] = e.message
+      flash[:error] = @protocol.errors&.map(&:message)&.join(',')
       Rails.logger.error e.message
       raise ActiveRecord::Rollback
     rescue StandardError => e
