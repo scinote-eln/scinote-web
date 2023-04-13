@@ -165,10 +165,11 @@ Rails.application.routes.draw do
           as: 'invitable_teams'
     end
 
-    # Notifications
-    get 'users/notifications',
-        to: 'user_notifications#index',
-        as: 'notifications'
+    resources :user_notifications, only: :index do
+      collection do
+        get :unseen_counter
+      end
+    end
 
     # Get Zip Export
     get 'zip_exports/download/:id',
@@ -573,6 +574,7 @@ Rails.application.routes.draw do
         post :publish
         post :destroy_draft
         post :save_as_draft
+        get 'version_comment', to: 'protocols#version_comment'
         get 'print', to: 'protocols#print'
         get 'linked_children', to: 'protocols#linked_children'
         post 'linked_children_datatable',

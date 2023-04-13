@@ -1,4 +1,4 @@
-/* global HelperModule */
+/* global HelperModule I18n */
 
 (function() {
   'use strict';
@@ -45,6 +45,11 @@
     $(document).on('ajax:success', 'form#new-user-assignment-form', function(_e, data) {
       $('#user_assignments_modal').replaceWith($(data.html).find('#user_assignments_modal'));
       HelperModule.flashAlertMsg(data.flash, 'success');
+    });
+
+    $(document).on('ajax:error', 'form#new-user-assignment-form', function(_e, data) {
+      HelperModule.flashAlertMsg(data.responseJSON.flash
+        ? data.responseJSON.flash : I18n.t('errors.general'), 'danger');
     });
 
     $(document).on('ajax:error', 'form.member-item', function(_e, data) {

@@ -47,7 +47,6 @@ class TeamImporter
 
   def import_from_dir(import_dir)
     MyModule.skip_callback(:create, :before, :create_blank_protocol)
-    Protocol.skip_callback(:save, :after, :update_linked_children)
     Activity.skip_callback(:create, :before, :add_user)
     Activity.skip_callback(:initialize, :after, :init_default_values)
     @user_roles = UserRole.all
@@ -151,7 +150,6 @@ class TeamImporter
       puts "Imported label templates: #{@label_template_counter}"
 
       MyModule.set_callback(:create, :before, :create_blank_protocol)
-      Protocol.set_callback(:save, :after, :update_linked_children)
       Activity.set_callback(:create, :before, :add_user)
       Activity.set_callback(:initialize, :after, :init_default_values)
     end
@@ -161,7 +159,6 @@ class TeamImporter
                                           user_id)
     # Remove callbacks that can cause problems when importing
     MyModule.skip_callback(:create, :before, :create_blank_protocol)
-    Protocol.skip_callback(:save, :after, :update_linked_children)
 
     @import_dir = import_dir
     @is_template = true
@@ -202,7 +199,6 @@ class TeamImporter
   ensure
     # Reset callbacks
     MyModule.set_callback(:create, :before, :create_blank_protocol)
-    Protocol.set_callback(:save, :after, :update_linked_children)
   end
 
   private

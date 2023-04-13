@@ -5,6 +5,14 @@
  <% provide(:container_class, 'no-second-nav-container') %>
 <div class="content-pane protocols-show" >
   <div class="content-header">
+    <div id="breadcrumbsWrapper">
+      <div class="breadcrumbs-container protocol-breadcrumbs">
+        <a href="<%= protocols_path %>" class="breadcrumbs-link">
+          <%= t('sidebar.templates.protocol_templates') %>
+        </a>
+        <span class="delimiter">/</span>
+      </div>
+    </div>
     <div class="title-row">
       <h1>
         <% if @inline_editable_title_config.present? %>
@@ -18,7 +26,11 @@
             <i class="fas fa-archive"></i>&nbsp;
           <% end %>
           <div class="name-readonly-placeholder">
-            <%= @protocol.name %>
+            <% if @protocol.in_repository_draft? %>
+              <%= t('protocols.draft_name', name: @protocol.name ) %>
+            <% else %>
+              <%= @protocol.name %>
+            <% end %>
           </div>
         <% end %>
       </h1>

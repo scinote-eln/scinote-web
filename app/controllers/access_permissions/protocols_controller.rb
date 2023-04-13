@@ -36,10 +36,10 @@ module AccessPermissions
         team: current_team
       )
 
-      # prevent role change if it would result in no users having the user management permission
+      # prevent role change if it would result in no manually assigned users having the user management permission
       new_user_role = UserRole.find(permitted_update_params[:user_role_id])
       if !new_user_role.has_permission?(ProtocolPermissions::USERS_MANAGE) &&
-         @user_assignment.last_with_permission?(ProtocolPermissions::USERS_MANAGE)
+         @user_assignment.last_with_permission?(ProtocolPermissions::USERS_MANAGE, assigned: :manually)
         raise ActiveRecord::RecordInvalid
       end
 
@@ -86,15 +86,19 @@ module AccessPermissions
         end
 
         respond_to do |format|
-          @message = t('access_permissions.create.success', count: created_count)
+          @message = if created_count.zero?
+                       t('access_permissions.create.success', count: t('access_permissions.all_team'))
+                     else
+                       t('access_permissions.create.success', count: created_count)
+                     end
           format.json { render :edit }
         end
 
-      rescue ActiveRecord::RecordInvalid
-        respond_to do |format|
-          @message = t('access_permissions.create.failure')
-          format.json { render :new }
-        end
+      rescue ActiveRecord::RecordInvalid => e
+        Rails.logger.error e.message
+        errors = @protocol.errors ? @protocol.errors&.map(&:message)&.join(',') : e.message
+        render json: { flash: errors }, status: :unprocessable_entity
+        raise ActiveRecord::Rollback
       end
     end
 
@@ -102,8 +106,10 @@ module AccessPermissions
       user = @protocol.assigned_users.find(params[:user_id])
       user_assignment = @protocol.user_assignments.find_by(user: user, team: current_team)
 
-      # prevent deletion of last user that can manage users
-      raise ActiveRecord::RecordInvalid if user_assignment.last_with_permission?(ProtocolPermissions::USERS_MANAGE)
+      # prevent deletion of last manually assigned user that can manage users
+      if user_assignment.last_with_permission?(ProtocolPermissions::USERS_MANAGE, assigned: :manually)
+        raise ActiveRecord::RecordInvalid
+      end
 
       Protocol.transaction do
         if @protocol.visible?
@@ -126,18 +132,24 @@ module AccessPermissions
     end
 
     def update_default_public_user_role
-      current_role = @protocol.default_public_user_role.name
-      @protocol.update!(permitted_default_public_user_role_params)
+      ActiveRecord::Base.transaction do
+        current_role = @protocol.default_public_user_role.name
+        @protocol.update!(permitted_default_public_user_role_params)
 
-      # revoke all team members access
-      if permitted_default_public_user_role_params[:default_public_user_role_id].blank?
-        log_activity(:protocol_template_access_revoked_all_team_members,
-                     { team: @protocol.team.id, role: current_role })
-        render json: { flash: t('access_permissions.update.revoke_all_team_members') }, status: :ok
-      else
-        # update all team members access
-        log_activity(:protocol_template_access_changed_all_team_members,
-                     { team: @protocol.team.id, role: @protocol.default_public_user_role&.name })
+        # revoke all team members access
+        if permitted_default_public_user_role_params[:default_public_user_role_id].blank?
+          log_activity(:protocol_template_access_revoked_all_team_members,
+                       { team: @protocol.team.id, role: current_role })
+          render json: { flash: t('access_permissions.update.revoke_all_team_members') }, status: :ok
+        else
+          # update all team members access
+          log_activity(:protocol_template_access_changed_all_team_members,
+                       { team: @protocol.team.id, role: @protocol.default_public_user_role&.name })
+        end
+      rescue ActiveRecord::RecordInvalid => e
+        Rails.logger.error e.message
+        render json: { flash: @protocol&.errors&.map(&:message)&.join(',') }, status: :unprocessable_entity
+        raise ActiveRecord::Rollback
       end
     end
 
@@ -160,7 +172,7 @@ module AccessPermissions
     def set_protocol
       @protocol = current_team.protocols.includes(user_assignments: %i(user user_role)).find_by(id: params[:id])
 
-      render_404 unless @protocol
+      return render_404 unless @protocol
 
       @protocol = @protocol.parent if @protocol.parent_id
     end

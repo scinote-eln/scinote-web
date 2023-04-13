@@ -76,7 +76,7 @@
                 :objectId="parseInt(protocol.id)"
                 :fieldName="'protocol[description]'"
                 :lastUpdated="protocol.attributes.updated_at"
-                :characterLimit="100000"
+                :characterLimit="1000000"
                 @update="updateDescription"
               />
             </div>
@@ -274,6 +274,8 @@
             this.$nextTick(() => this.scrollToBottom());
           }
           this.refreshProtocolStatus();
+        }).error((data) => {
+          HelperModule.flashAlertMsg(data.responseJSON.error ? Object.values(data.responseJSON.error).join(', ') : I18n.t('errors.general'), 'danger');
         })
       },
       updateStepsPosition(step, action = 'add') {
@@ -327,7 +329,8 @@
           contentType: "application/json",
           dataType: "json",
           error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')),
-          success: (() => this.reorderSteps(this.steps))
+          success: (() => this.reorderSteps(this.steps)),
+          complete: (() => this.closeStepReorderModal())
         });
       },
       startStepReorder() {
@@ -337,7 +340,16 @@
         this.reordering = false;
       },
       startPublish() {
-        this.publishing = true;
+        $.ajax({
+          type: "GET",
+          url: this.urls.version_comment_url,
+          contentType: "application/json",
+          dataType: "json",
+          success: (result) => {
+            this.protocol.attributes.version_comment = result.version_comment;
+            this.publishing = true;
+          }
+        });
       },
       closePublishModal() {
         this.publishing = false;

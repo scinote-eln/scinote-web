@@ -18,12 +18,12 @@ module ProtocolImporters
         end
 
         # Query params available are:
-        #   filter (optional): {public|user_public|user_private|shared_with_user}
+        #   filter (required): {public|user_public|user_private|shared_with_user}
         #     Which type of protocols to filter.
         #     default is public and requires no auth token.
         #     user_public requires public token.
         #     user_private|shared_with_user require private auth token.
-        #   key (optional): string
+        #   key (required): string
         #     Search key to search for in protocol name, description, authors.
         #     default: ''
         #   order_field (optional): {activity|date|name|id}

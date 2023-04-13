@@ -7,7 +7,9 @@
   grid-template-areas: "top top top"
                        "left breadcrumbs breadcrumbs"
                        "left navigator content";
-  grid-template-columns: var(--left-navigation) var(--navigator-navigation) auto;
+  grid-template-columns: var(--left-navigation)
+                         var(--navigator-navigation)
+                         calc(100% - var(--left-navigation) - var(--navigator-navigation));
   grid-template-rows: var(--top-navigation) var(--breadcrumbs-navigation) auto;
   height: 100vh;
   position: relative;
@@ -65,7 +67,11 @@
   .sci--layout-content {
     grid-area: content;
     padding: 0 1em;
-    width: calc(100vw - var(--left-navigation) - var(--navigator-navigation));
+    width: 100%;
+
+    .container-fluid {
+      padding: 0; // override bootstrap
+    }
   }
 }
 

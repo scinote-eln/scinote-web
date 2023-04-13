@@ -49,14 +49,23 @@
       </ul>
     </div>
     <div v-if="user" class="sci--navigation--notificaitons-flyout-container">
-      <button class="btn btn-light icon-btn" data-toggle="dropdown" @click="notificationsOpened = !notificationsOpened">
+      <button class="btn btn-light icon-btn"
+              :class="{ 'has-unseen': unseenNotificationsCount > 0 }"
+              :data-unseen="unseenNotificationsCount"
+              data-toggle="dropdown"
+              @click="notificationsOpened = !notificationsOpened">
         <i class="fas fa-bell"></i>
       </button>
-      <NotificationsFlyout v-if="notificationsOpened" :notifications-url="notificationsUrl" @close="notificationsOpened = false" />
+      <div v-if="notificationsOpened" class="sci--navigation--notificaitons-flyout-backdrop" @click="notificationsOpened = false"></div>
+      <NotificationsFlyout
+        v-if="notificationsOpened"
+        :notificationsUrl="notificationsUrl"
+        :unseenNotificationsCount="unseenNotificationsCount"
+        @close="notificationsOpened = false" />
     </div>
     <div v-if="user" class="dropdown">
       <div class="sci--navigation--top-menu-user" data-toggle="dropdown">
-        {{ i18n.t('nav.user_greeting', { full_name: user.name })}}
+        <span>{{ i18n.t('nav.user_greeting', { full_name: user.name })}}</span>
         <img class="avatar" :src="user.avatar_url">
       </div>
       <div class="dropdown-menu dropdown-menu-right">
@@ -87,7 +96,8 @@
     },
     props: {
       url: String,
-      notificationsUrl: String
+      notificationsUrl: String,
+      unseenNotificationsUrl: String
     },
     data() {
       return {
@@ -101,7 +111,8 @@
         settingsMenu: null,
         userMenu: null,
         showAboutModal: false,
-        notificationsOpened: false
+        notificationsOpened: false,
+        unseenNotificationsCount: 0
       }
     },
     created() {
@@ -116,6 +127,13 @@
         this.userMenu = result.user_menu;
         this.user = result.user;
       })
+
+      this.checkUnseenNotifications();
+
+      $(document).on('turbolinks:load', () => {
+        this.notificationsOpened = false;
+        this.checkUnseenNotifications();
+      })
     },
     methods: {
       switchTeam(team) {
@@ -129,8 +147,13 @@
           HelperModule.flashAlertMsg(msg.responseJSON.message, 'danger');
         });
       },
-       searchValue(e) {
+      searchValue(e) {
         window.open(`${this.searchUrl}?q=${e.target.value}`, '_self')
+      },
+      checkUnseenNotifications() {
+        $.get(this.unseenNotificationsUrl, (result) => {
+          this.unseenNotificationsCount = result.unseen;
+        })
       }
     }
   }

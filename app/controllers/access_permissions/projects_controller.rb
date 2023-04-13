@@ -38,10 +38,10 @@ module AccessPermissions
         team: current_team
       )
 
-      # prevent role change if it would result in no users having the user management permission
+      # prevent role change if it would result in no manually assigned users having the user management permission
       new_user_role = UserRole.find(permitted_update_params[:user_role_id])
       if !new_user_role.has_permission?(ProjectPermissions::USERS_MANAGE) &&
-         @user_assignment.last_with_permission?(ProjectPermissions::USERS_MANAGE)
+         @user_assignment.last_with_permission?(ProjectPermissions::USERS_MANAGE, assigned: :manually)
         raise ActiveRecord::RecordInvalid
       end
 
@@ -91,14 +91,18 @@ module AccessPermissions
         end
 
         respond_to do |format|
-          @message = t('access_permissions.create.success', count: created_count)
+          @message = if created_count.zero?
+                       t('access_permissions.create.success', count: t('access_permissions.all_team'))
+                     else
+                       t('access_permissions.create.success', count: created_count)
+                     end
           format.json { render :edit }
         end
-      rescue ActiveRecord::RecordInvalid
-        respond_to do |format|
-          @message = t('access_permissions.create.failure')
-          format.json { render :new }
-        end
+      rescue ActiveRecord::RecordInvalid => e
+        Rails.logger.error e.message
+        errors = @project.errors ? @project.errors&.map(&:message)&.join(',') : e.message
+        render json: { flash: errors }, status: :unprocessable_entity
+        raise ActiveRecord::Rollback
       end
     end
 
@@ -106,8 +110,10 @@ module AccessPermissions
       user = @project.assigned_users.find(params[:user_id])
       user_assignment = @project.user_assignments.find_by(user: user, team: current_team)
 
-      # prevent deletion of last user that can manage users
-      raise ActiveRecord::RecordInvalid if user_assignment.last_with_permission?(ProjectPermissions::USERS_MANAGE)
+      # prevent deletion of last manually assigned user that can manage users
+      if user_assignment.last_with_permission?(ProjectPermissions::USERS_MANAGE, assigned: :manually)
+        raise ActiveRecord::RecordInvalid
+      end
 
       if @project.visible?
         user_assignment.update!(
@@ -146,6 +152,10 @@ module AccessPermissions
           log_activity(:project_access_changed_all_team_members,
                        { team: @project.team.id, role: @project.default_public_user_role&.name })
         end
+      rescue ActiveRecord::RecordInvalid => e
+        Rails.logger.error e.message
+        render json: { flash: @project.errors&.map(&:message)&.join(',') }, status: :unprocessable_entity
+        raise ActiveRecord::Rollback
       end
     end
 

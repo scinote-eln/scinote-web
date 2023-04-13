@@ -46,6 +46,13 @@
     display: flex;
     gap: 1em;
     margin-left: .75em;
+
+    span {
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 
   .dropdown-menu li a {

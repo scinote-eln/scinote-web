@@ -50,6 +50,14 @@
   }
 }
 
+.well {
+  .align-right {
+    column-gap: 8px;
+    display: flex;
+    flex-direction: row-reverse;
+  }
+}
+
 .result {
   .panel {
     margin-left: 4.25em !important;

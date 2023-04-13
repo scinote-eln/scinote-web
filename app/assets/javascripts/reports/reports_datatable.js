@@ -1,63 +1,21 @@
-/* global I18n DataTableHelpers animateSpinner HelperModule  Promise */
+/* global I18n DataTableHelpers DataTableCheckboxes animateSpinner HelperModule  Promise */
 
 (function() {
   'use strict';
 
   const RETRY_COUNT = 25;
   const START_POLLING_INTERVAL = 10000;
-  var CHECKED_REPORTS = [];
   var REPORTS_TABLE;
-
-  function tableDrowCallback() {
-    checkboxToggleCallback();
-    initToggleAllCheckboxes();
-    updateButtons();
-  }
-
-  function appendSearchResults(data) {
-    var items = [];
-    if (data.hasOwnProperty('projects')) {
-      $.each(data.projects, function(index, el) {
-        items.push(
-          {
-            value: el.path,
-            text: el.name,
-            disabled: false
-          }
-        )
-      });
-    }
-    return items;
-  }
-
-  function initToggleAllCheckboxes() {
-    $('input[name="select_all"]').change(function() {
-      if ($(this).is(':checked')) {
-        $("[data-action='toggle']").prop('checked', true);
-        $('.report-row').addClass('selected');
-        addAllItems();
-      } else {
-        $("[data-action='toggle']").prop('checked', false);
-        $('.report-row').removeClass('selected');
-        removeAllItems();
-      }
-      updateButtons();
-    });
-  }
-
-  function addAllItems() {
-    $.each($("[data-action='toggle']"), function(i, el) {
-      CHECKED_REPORTS.push($(el).data('report-id'));
-    })
-  }
-
-  function removeAllItems() {
-    CHECKED_REPORTS = [];
-  }
+  let CHECKBOX_SELECTOR;
 
   function renderCheckboxHTML(data) {
     return `<div class="sci-checkbox-container">
-              <input type="checkbox" class="sci-checkbox" data-action='toggle' data-report-id="${data}">
+              <input
+                type="checkbox"
+                class="sci-checkbox report-row-selector"
+                data-action='toggle'
+                data-report-id="${data}"
+              >
               <span class="sci-checkbox-label"></span>
             </div>`;
   }
@@ -131,7 +89,8 @@
       .attr('data-generate-docx-path', data.generate_docx)
       .attr('data-retry-count', 0)
       .attr('data-save-to-inventory-path', data.save_to_inventory)
-      .attr('data-id', data['0']);
+      .attr('data-id', data['0'])
+      .attr('id', data['0']);
     if (data.archived) {
       $(row).addClass('archived');
     }
@@ -140,30 +99,14 @@
     }
   }
 
-  function checkboxToggleCallback() {
-    $("[data-action='toggle']").change(function() {
-      var id = $(this).data('report-id');
-      if ($(this).is(':checked')) {
-        $(this).closest('.report-row').addClass('selected');
-        CHECKED_REPORTS.push(id);
-      } else {
-        let index = CHECKED_REPORTS.indexOf(id);
-        $(this).closest('.report-row').removeClass('selected');
-        if (index !== -1) {
-          CHECKED_REPORTS.splice(index, 1);
-        }
-      }
-      updateButtons();
-    });
-  }
-
   function updateButtons() {
-    if (CHECKED_REPORTS.length === 0) {
+    const rowsCount = CHECKBOX_SELECTOR.selectedRows.length;
+    if (rowsCount === 0) {
       $('.single-object-action, .multiple-object-action').addClass('disabled hidden');
-    } else if (CHECKED_REPORTS.length === 1) {
+    } else if (rowsCount === 1) {
       $('.single-object-action, .multiple-object-action').removeClass('disabled hidden');
 
-      let $row = $(`.report-row[data-id=${CHECKED_REPORTS[0]}]`);
+      let $row = $(`.report-row[data-id=${CHECKBOX_SELECTOR.selectedRows[0]}]`);
       let archived = $row.hasClass('archived');
       let pdfProcessing = $row.has('.processing.pdf').length > 0;
       let docxProcessing = $row.has('.processing.docx').length > 0;
@@ -223,6 +166,7 @@
 
   function initDatatable() {
     var $table = $('#reports-table');
+    CHECKBOX_SELECTOR = null;
     REPORTS_TABLE = $table.DataTable({
       dom: "Rt<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
       order: [[9, 'desc']],
@@ -259,27 +203,33 @@
       oLanguage: {
         sSearch: I18n.t('general.filter')
       },
-      fnDrawCallback: tableDrowCallback,
       createdRow: addAttributesToRow,
-      fnInitComplete: function() {
+      initComplete: function(settings) {
+        const { nTableWrapper: dataTableWrapper } = settings;
+        CHECKBOX_SELECTOR = new DataTableCheckboxes(dataTableWrapper, {
+          checkboxSelector: '.report-row-selector',
+          selectAllSelector: '.dataTables_scrollHead input[name="select_all"]',
+          onChanged: () => updateButtons()
+        });
+
         DataTableHelpers.initLengthAppearance($table.closest('.dataTables_wrapper'));
         $('.pagination-row').removeClass('hidden');
         $('.report-row.processing').each(function() {
           setTimeout(() => { checkProcessingStatus($(this).data('id')); }, START_POLLING_INTERVAL);
         });
+      },
+      drawCallback: function() {
+        if (CHECKBOX_SELECTOR) CHECKBOX_SELECTOR.checkSelectAllStatus();
+      },
+      rowCallback: function(row) {
+        if (CHECKBOX_SELECTOR) CHECKBOX_SELECTOR.checkRowStatus(row);
       }
     });
   }
 
-  function reloadTable() {
-    REPORTS_TABLE.ajax.reload(null, false);
-    removeAllItems();
-    updateButtons();
-  }
-
   function generateReportRequest(pathAttrName, id) {
-    if (CHECKED_REPORTS.length === 1 || id) {
-      let row = $(".report-row[data-id='" + (id || CHECKED_REPORTS[0]) + "']");
+    if (CHECKBOX_SELECTOR.selectedRows.length === 1 || id) {
+      let row = $(".report-row[data-id='" + (id || CHECKBOX_SELECTOR.selectedRows[0]) + "']");
       animateSpinner();
       $.post(row.data(pathAttrName), function(response) {
         animateSpinner(null, false);
@@ -342,8 +292,8 @@
     $('#edit-report-btn').click(function(e) {
       e.preventDefault();
       animateSpinner();
-      if (CHECKED_REPORTS.length === 1) {
-        let id = CHECKED_REPORTS[0];
+      if (CHECKBOX_SELECTOR.selectedRows.length === 1) {
+        let id = CHECKBOX_SELECTOR.selectedRows[0];
         let row = $(".report-row[data-id='" + id + "']");
         let url = row.attr('data-edit-path');
         $(location).attr('href', url);
@@ -356,7 +306,7 @@
       ev.preventDefault();
       ev.stopPropagation();
 
-      let id = CHECKED_REPORTS[0];
+      let id = CHECKBOX_SELECTOR.selectedRows[0];
       let row = $(`.report-row[data-id='${id}']`);
       let url = row.attr('data-save-to-inventory-path');
       $.get(url, function(result) {
@@ -373,8 +323,8 @@
 
   function initDeleteReports() {
     $('#delete-reports-btn').click(function() {
-      if (CHECKED_REPORTS.length > 0) {
-        $('#report-ids').attr('value', '[' + CHECKED_REPORTS + ']');
+      if (CHECKBOX_SELECTOR.selectedRows.length > 0) {
+        $('#report-ids').attr('value', '[' + CHECKBOX_SELECTOR.selectedRows + ']');
         $('#delete-reports-modal').modal('show');
       }
     });

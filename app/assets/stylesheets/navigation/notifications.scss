@@ -4,12 +4,40 @@
 .sci--navigation--notificaitons-flyout-container {
   position: relative;
 
+  .sci--navigation--notificaitons-flyout-backdrop {
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: var(--top-navigation);
+  }
+
+  .has-unseen {
+    &::after {
+      align-items: center;
+      background-color: $brand-focus;
+      border-radius: .5rem;
+      color: $color-white;
+      content: attr(data-unseen);
+      display: flex;
+      font-size: 10px;
+      height: 1rem;
+      justify-content: center;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 1rem;
+    }
+  }
+
   .sci--navigation--notificaitons-flyout {
     background-color: $color-white;
     border-radius: 0 0  $border-radius-default $border-radius-default;
     box-shadow: $flyout-shadow;
+    display: flex;
+    flex-direction: column;
     height: calc(100vh - var(--top-navigation) - 2em);
-    padding: 24px;
+    padding: 1.5rem;
     position: absolute;
     right: 0;
     top: calc(var(--top-navigation) - .5em);
@@ -19,7 +47,7 @@
       @include font-h2;
       align-items: center;
       display: flex;
-      margin-bottom: 10px;
+      margin-bottom: .625rem;
 
       .fas {
         @include font-button;
@@ -31,12 +59,15 @@
     .sci--navigation--notificaitons-flyout-tabs {
       align-items: center;
       display: flex;
-      gap: 44px;
-      height: 40px;
+      flex-basis: 2.5rem;
+      flex-shrink: 0;
+      gap: 3rem;
     }
 
     .sci--navigation--notificaitons-flyout-tab {
       cursor: pointer;
+      padding: .5rem .625rem;
+      position: relative;
 
       &.active {
         color: $brand-focus;
@@ -44,20 +75,34 @@
     }
 
     hr {
-      margin: 10px 0;
+      margin: .625rem 0;
     }
 
     .sci-navigation--notificaitons-flyout-subtitle {
       @include font-main;
-      line-height: 38px;
-      margin-bottom: 10px;
+      line-height: 2.25rem;
+      margin-bottom: .625rem;
+    }
+
+    .sci--navigation--notificaitons-flyout-notifications {
+      margin-left: -1.5rem;
+      padding: 0 1.5rem;
+      position: relative;
+      width: calc(100% + 3rem);
+
+      .next-page-loader {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        margin: 1rem 0;
+      }
     }
 
     .sci-navigation--notificaitons-flyout-notification {
       border-bottom: $border-tertiary;
       display: grid;
       grid-template-columns: max-content auto;
-      padding: 18px 0;
+      padding: 1rem 0;
 
       .sci-navigation--notificaitons-flyout-notification-icon {
         align-items: center;
@@ -66,10 +111,10 @@
         color: $color-white;
         display: flex;
         grid-row: 1 / 4;
-        height: 30px;
+        height: 2rem;
         justify-content: center;
-        margin-right: 12px;
-        width: 30px;
+        margin-right: .75rem;
+        width: 2rem;
 
         &.deliver {
           background-color: $brand-warning;
@@ -87,7 +132,7 @@
 
       .sci-navigation--notificaitons-flyout-notification-title {
         font-weight: bold;
-        margin: 5px 0;
+        margin: .25rem 0;
       }
     }
   }

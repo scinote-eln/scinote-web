@@ -57,14 +57,16 @@
     <span style="display: none;" data-hook="body-js"></span>
     <span style="display: none;" data-hook="application-body-html"></span>
 
-    <div class="sci--layout" data-breadcrumbs-collapsed="<%= !@breadcrumbs_items.present? %>" data-navigator-collapsed="<%= !content_for?(:sidebar_title) %>">
+
+    <div class="sci--layout" data-breadcrumbs-collapsed="true" data-navigator-collapsed="<%= !content_for?(:sidebar_title) %>">
       <div class="sci--layout-navigation-top" >
         <%= render "shared/navigation/top" %>
       </div>
       <div class="sci--layout-navigation-left">
         <%= render "shared/navigation/left" if user_signed_in? %>
       </div>
-      <div class="sci--layout-navigation-navigator">
+      <!-- temporary fix for sidebar (#wrapper) -->
+      <div id="wrapper" class="sci--layout-navigation-navigator">
         <%= render "shared/navigation/navigator" %>
       </div>
       <div class="sci--layout-navigation-breadcrumbs">

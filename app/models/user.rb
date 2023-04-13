@@ -382,6 +382,14 @@ class User < ApplicationRecord
     Team.find_by_id(self.current_team_id)
   end
 
+  def permission_team=(team)
+    @permission_team = teams.find(team.id)
+  end
+
+  def permission_team
+    @permission_team || current_team
+  end
+
   def self.from_omniauth(auth)
     includes(:user_identities)
       .where(

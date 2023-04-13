@@ -34,7 +34,7 @@
                 </a>
               </li>
             <% end %>
-            <% if defined?(delete_path) && !assignment.last_assignable_owner?  %>
+            <% if defined?(delete_path) && !assignment.last_with_permission?(ProjectPermissions::USERS_MANAGE, assigned: :manually) %>
               <li role="separator" class="divider" data-hook="support-dropdown-separator"></li>
               <li>
                 <%= link_to delete_path, remote: true, method: :delete, data: { action: 'remote-destroy', target: "##{item_id}" } do %>

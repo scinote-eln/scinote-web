@@ -154,8 +154,7 @@ module Users
                           .where(user_assignments: { user: current_user })
                           .where('? = ANY(user_roles.permissions)', TeamPermissions::USERS_MANAGE)
                           .distinct
-
-      teams = teams.where_attributes_like(:name, params[:query]) if params[:query].present?
+      teams = teams.where_attributes_like('teams.name', params[:query]) if params[:query].present?
 
       teams.select { |team| can_invite_team_users?(team) }
 
