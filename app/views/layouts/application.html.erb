@@ -14,8 +14,9 @@
 
     <%= javascript_include_tag 'jquery_bundle' %>
     <%= javascript_include_tag 'application' %>
-    <%= javascript_pack_tag 'application' %>
+    <%= javascript_include_tag 'application_pack' %>
     <%= javascript_include_tag 'session_end' %>
+
 
     <% if MarvinJsService.enabled? && ENV['MARVINJS_API_KEY'] %>
       <script src="https://marvinjs.chemicalize.com/v1/<%= ENV['MARVINJS_API_KEY'] %>/client-settings.js"></script>
@@ -26,18 +27,19 @@
     <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>
     <%= favicon_link_tag "favicon-32.png", type: "image/png", size: "32x32" %>
     <%= favicon_link_tag "favicon-48.png", type: "image/png", size: "48x48" %>
-    <%= stylesheet_pack_tag 'fonts', id: 'font-css-pack' %>
-    <%= stylesheet_pack_tag 'fontawesome' %>
+    <%= stylesheet_link_tag 'fonts', id: 'font-css-pack' %>
+    <%= stylesheet_link_tag 'fontawesome' %>
 
-    <%= stylesheet_pack_tag 'prism' %>
+    <%= stylesheet_link_tag 'prism' %>
 
     <%= csrf_meta_tags %>
     <% if content_for?(:head) %>
       <%= yield(:head) %>
     <% end %>
 
-    <%= javascript_pack_tag 'tui_image_editor' %>
-    <%= stylesheet_pack_tag 'tui_image_editor_styles' %>
+    <%= javascript_include_tag 'tui_image_editor' %>
+    <%= stylesheet_link_tag 'tui_image_editor_styles' %>
+    <%= javascript_include_tag 'vue_navigation_top_menu' %>
   </head>
   <body
     class="<%= yield :body_class %>"
@@ -55,7 +57,35 @@
     <span style="display: none;" data-hook="body-js"></span>
     <span style="display: none;" data-hook="application-body-html"></span>
 
-    <%= render "shared/navigation" %>
+
+    <div class="sci--layout" data-breadcrumbs-collapsed="true" data-navigator-collapsed="<%= !content_for?(:sidebar_title) %>">
+      <div class="sci--layout-navigation-top" >
+        <%= render "shared/navigation/top" %>
+      </div>
+      <div class="sci--layout-navigation-left">
+        <%= render "shared/navigation/left" if user_signed_in? %>
+      </div>
+      <div class="sci--layout-navigation-navigator">
+        <%= render "shared/navigation/navigator" %>
+      </div>
+      <div class="sci--layout-navigation-breadcrumbs">
+        <%= render "shared/navigation/breadcrumbs" %>
+      </div>
+      <div class="sci--layout-content">
+        <% if user_signed_in? && current_user.teams.blank? && !(activities_are_selected? || settings_are_selected?) %>
+          <!-- If member of no teams -->
+          <div id="no-teams-jumbotron" class="jumbotron">
+            <h2><%=t 'general.no_teams.title' %></h2>
+            <p data-hook="general-no-teams-text"><%=t 'general.no_teams.text' %></p>
+          </div>
+        <% else %>
+          <%= yield :content %>
+        <% end %>
+      </div>
+    </div>
+
+    <%= render partial: 'shared/flash_alerts',
+                 locals: { flash: flash, notice: notice, alert: alert } %>
 
     <% if user_signed_in? %>
       <%= render "shared/about_modal" %>
@@ -73,23 +103,6 @@
       <%= render partial: "/system_notifications/system_notification_modal", locals: { notification: nil} %>
     <% end %>
 
-    <%= render partial: 'shared/flash_alerts',
-                 locals: { flash: flash, notice: notice, alert: alert } %>
-
-    <%= render "shared/left_menu_bar" if user_signed_in? %>
-
-    <div id="content-wrapper">
-      <% if user_signed_in? && current_user.teams.blank? && !(activities_are_selected? || settings_are_selected?) %>
-        <!-- If member of no teams -->
-        <div id="no-teams-jumbotron" class="jumbotron">
-          <h2><%=t 'general.no_teams.title' %></h2>
-          <p data-hook="general-no-teams-text"><%=t 'general.no_teams.text' %></p>
-        </div>
-      <% else %>
-        <%= yield :content %>
-      <% end %>
-    </div>
-
     <span style="display: none;" data-hook="application-body-end-html"></span>
 
     <script data-hook="footer-js">
@@ -97,6 +110,6 @@
       window.IN_REQUEST = false;
     </script>
 
-    <%= javascript_pack_tag 'prism' %>
+    <%= javascript_include_tag 'prism' %>
   </body>
 </html>

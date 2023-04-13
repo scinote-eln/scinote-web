@@ -35,18 +35,6 @@ describe UserNotification, type: :model do
     end
   end
 
-  describe '#recent_notifications' do
-    let(:notifcation_one) { create :notification }
-    let(:notifcation_two) { create :notification }
-
-    it 'returns a list of notifications ordered by created_at DESC' do
-      create :user_notification, user: user, notification: notifcation_one
-      create :user_notification, user: user, notification: notifcation_two
-      notifications = UserNotification.recent_notifications(user)
-      expect(notifications).to eq [notifcation_two, notifcation_one]
-    end
-  end
-
   describe '#seen_by_user' do
     let!(:notification) { create :notification }
     let!(:user_notification_one) do

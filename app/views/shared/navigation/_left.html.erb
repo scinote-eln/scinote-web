@@ -1,0 +1,10 @@
+<div class="sci--layout--left-menu-container">
+  <% left_menu_elements.each do |item| %>
+    <%= link_to item[:url], title: item[:name], class:"sci--layout--menu-item", data: { active: item[:active], disabled: current_user.teams.blank? } do %>
+      <i class="fas <%= item[:icon] %>"></i>
+      <%= item[:name] %>
+    <% end %>
+  <% end %>
+</div>
+
+<%= javascript_include_tag("sidebar_toggle") %>

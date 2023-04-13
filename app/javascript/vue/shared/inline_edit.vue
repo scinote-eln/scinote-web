@@ -31,7 +31,7 @@
 </template>
 
 <script>
-  import UtilsMixin from 'vue/mixins/utils.js';
+  import UtilsMixin from '../mixins/utils.js';
 
   export default {
     name: 'InlineEdit',

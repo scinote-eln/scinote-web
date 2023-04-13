@@ -6,6 +6,7 @@
 
 :root {
   --repository-sidebar-margin: 363px;
+  --repository-content-pane-margin: 108px;
 }
 
 .repository-show {
@@ -14,7 +15,7 @@
   margin: 0;
   padding: 0 2em;
   position: absolute;
-  top: var(--navbar-height);
+  top: var(--repository-content-pane-margin);
   transition: .4s $timing-function-sharp;
   width: calc(100vw - var(--repository-sidebar-margin));
 

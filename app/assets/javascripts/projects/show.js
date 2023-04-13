@@ -298,7 +298,7 @@
   }
 
   function appendActionModal(modal) {
-    $('#content-wrapper').append(modal);
+    $('#projectShowWrapper').append(modal);
     modal.modal('show');
     modal.find('.selectpicker').selectpicker();
     // Remove modal when it gets closed
@@ -383,11 +383,11 @@
   }
 
   function init() {
-    $('#content-wrapper').on('ajax:success', '.experiment-action-link', function(ev, data) {
+    $('#projectShowWrapper').on('ajax:success', '.experiment-action-link', function(ev, data) {
       appendActionModal($(data.html));
     });
 
-    $('#content-wrapper')
+    $('#projectShowWrapper')
       .on('ajax:beforeSend', '.experiment-action-form', function() {
         animateSpinner();
       })
@@ -410,7 +410,7 @@
     initEditMoveDuplicateToolbarButton();
     initNewExperimentToolbarButton();
     initSelectAllCheckbox();
-    AsyncDropdown.init($('#content-wrapper'));
+    AsyncDropdown.init($('#projectShowWrapper'));
   }
 
   init();

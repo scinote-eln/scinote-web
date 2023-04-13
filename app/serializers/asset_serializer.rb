@@ -3,7 +3,6 @@
 class AssetSerializer < ActiveModel::Serializer
   include Canaid::Helpers::PermissionsHelper
   include Rails.application.routes.url_helpers
-  include Webpacker::Helper
   include FileIconsHelper
   include ActionView::Helpers::NumberHelper
   include InputSanitizeHelper
@@ -80,7 +79,7 @@ class AssetSerializer < ActiveModel::Serializer
     {
       url: object.pdf? ? asset_download_path(object) : asset_pdf_preview_path(object),
       size: !object.pdf? && object.pdf_preview_ready? ? object.file_pdf_preview&.blob&.byte_size : object.file_size,
-      worker_url: asset_pack_path('pdfjs/pdf_js_worker.js')
+      worker_url: asset_path('pdf_js_worker.js')
     }
   end
 

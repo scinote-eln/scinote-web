@@ -40,6 +40,8 @@
 }
 
 .dropdown-menu {
+  @include font-button;
+
   .form-dropdown-break hr {
     margin: 0;
   }

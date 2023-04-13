@@ -306,7 +306,7 @@ var ProjectsIndex = (function() {
     }
   }
 
-  $('#content-wrapper').on('click', '.project-folder-link', function(event) {
+  $('#projectsWrapper').on('click', '.project-folder-link', function(event) {
     event.preventDefault();
     event.stopPropagation();
     $(cardsWrapper).data('projectsCardsUrl', $(this).data('projectsCardsUrl'));

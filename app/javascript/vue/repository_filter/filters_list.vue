@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  import FilterElement from 'vue/repository_filter/filter.vue'
+  import FilterElement from './filter.vue'
 
     export default {
     name: 'FiltersList',

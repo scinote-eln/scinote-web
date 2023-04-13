@@ -27,8 +27,8 @@
 </template>
 
 <script>
-  import FilterMixin from 'vue/repository_filter/mixins/filter.js'
-  import DropdownSelector from 'vue/shared/dropdown_selector.vue'
+  import FilterMixin from '../mixins/filter.js'
+  import DropdownSelector from '../../shared/dropdown_selector.vue'
   export default {
     name: 'RepositoryChecklistValue',
     mixins: [FilterMixin],

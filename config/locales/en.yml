@@ -253,12 +253,20 @@ en:
     notice: "You need to enable JavaScript to run this app."
   nav:
     team_switch_title: "Switch team"
-    search: "Search for something..."
+    search: "Search"
     search_button: 'Go!'
     user_greeting: "Hi, %{full_name}"
     advanced_search: "Advanced search"
     title: "SciNote"
     academy_tooltip: "SciNote Academy"
+    notifications:
+      title: "Notifications"
+      all: "All"
+      message: "Message"
+      system: "System"
+      today: "Today"
+      older: "Older"
+      read_more: "Read more"
     user:
       settings: "Settings"
       logout: "Log out"
@@ -296,7 +304,7 @@ en:
     support_links:
       support: "Knowledge center"
       tutorials: "Video tutorials"
-      core_version: "SciNote Core ver. %{version} |"
+      core_version: "SciNote version"
       about: "about"
 
   sidebar:

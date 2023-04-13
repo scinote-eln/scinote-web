@@ -23,10 +23,10 @@
 </template>
 
 <script>
-  import FilterMixin from 'vue/repository_filter/mixins/filter.js'
-  import DateTimeFilterMixin from 'vue/repository_filter/mixins/filters/date_time_filter.js'
-  import DropdownSelector from 'vue/shared/dropdown_selector.vue'
-  import DateTimePicker from 'vue/shared/date_time_picker.vue'
+  import FilterMixin from '../mixins/filter.js'
+  import DateTimeFilterMixin from '../mixins/filters/date_time_filter.js'
+  import DropdownSelector from '../../shared/dropdown_selector.vue'
+  import DateTimePicker from '../../shared/date_time_picker.vue'
 
   export default {
     name: 'RepositoryDateValue',

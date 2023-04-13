@@ -29,17 +29,17 @@
 
 <script>
   // Filter types
-  import additionalDataFilter from 'vue/bmt_filter/filters/additionalDataFilter.vue'
-  import entityTypeFilter from 'vue/bmt_filter/filters/entityTypeFilter.vue'
-  import monomerTypeFilter from 'vue/bmt_filter/filters/monomerTypeFilter.vue'
-  import subsequenceFilter from 'vue/bmt_filter/filters/subsequenceFilter.vue'
-  import variantSequenceFilter from 'vue/bmt_filter/filters/variantSequenceFilter.vue'
-  import fullsequenceFilter from 'vue/bmt_filter/filters/fullsequenceFilter.vue'
-  import monomerSubstructureSearchFilter from 'vue/bmt_filter/filters/monomerSubstructureSearchFilter.vue'
-  import cidFilter from 'vue/bmt_filter/filters/cidFilter.vue'
+  import additionalDataFilter from './filters/additionalDataFilter.vue'
+  import entityTypeFilter from './filters/entityTypeFilter.vue'
+  import monomerTypeFilter from './filters/monomerTypeFilter.vue'
+  import subsequenceFilter from './filters/subsequenceFilter.vue'
+  import variantSequenceFilter from './filters/variantSequenceFilter.vue'
+  import fullsequenceFilter from './filters/fullsequenceFilter.vue'
+  import monomerSubstructureSearchFilter from './filters/monomerSubstructureSearchFilter.vue'
+  import cidFilter from './filters/cidFilter.vue'
 
   // Other components
-  import DropdownSelector from 'vue/shared/dropdown_selector.vue'
+  import DropdownSelector from '../shared/dropdown_selector.vue'
 
   export default {
     props: {
