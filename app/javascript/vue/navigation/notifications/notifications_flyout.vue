@@ -6,8 +6,9 @@
     </div>
     <div class="sci--navigation--notificaitons-flyout-tabs">
       <div class="sci--navigation--notificaitons-flyout-tab"
+           :data-unseen="unseenNotificationsCount"
            @click="setActiveTab('all')"
-           :class="{'active': activeTab == 'all'}">
+           :class="{'active': activeTab == 'all', 'has-unseen': unseenNotificationsCount > 0}">
         {{ i18n.t('nav.notifications.all') }}
       </div>
       <div class="sci--navigation--notificaitons-flyout-tab"
@@ -48,7 +49,8 @@ export default {
     NotificationItem
   },
   props: {
-    notificationsUrl: String
+    notificationsUrl: String,
+    unseenNotificationsCount: Number
   },
   data() {
     return {
@@ -84,6 +86,8 @@ export default {
   methods: {
     setActiveTab(selection) {
       this.activeTab = selection;
+      this.nextPage = 1;
+      this.notifications = [];
       this.loadNotifications();
     },
     loadNotifications() {

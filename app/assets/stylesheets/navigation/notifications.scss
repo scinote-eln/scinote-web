@@ -12,6 +12,24 @@
     top: var(--top-navigation);
   }
 
+  .has-unseen {
+    &::after {
+      align-items: center;
+      background-color: $brand-focus;
+      border-radius: .5rem;
+      color: $color-white;
+      content: attr(data-unseen);
+      display: flex;
+      font-size: 10px;
+      height: 1rem;
+      justify-content: center;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 1rem;
+    }
+  }
+
   .sci--navigation--notificaitons-flyout {
     background-color: $color-white;
     border-radius: 0 0  $border-radius-default $border-radius-default;
@@ -48,6 +66,8 @@
 
     .sci--navigation--notificaitons-flyout-tab {
       cursor: pointer;
+      padding: .5rem .625rem;
+      position: relative;
 
       &.active {
         color: $brand-focus;

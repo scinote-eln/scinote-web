@@ -165,10 +165,11 @@ Rails.application.routes.draw do
           as: 'invitable_teams'
     end
 
-    # Notifications
-    get 'users/notifications',
-        to: 'user_notifications#index',
-        as: 'notifications'
+    resources :user_notifications, only: :index do
+      collection do
+        get :unseen_counter
+      end
+    end
 
     # Get Zip Export
     get 'zip_exports/download/:id',
