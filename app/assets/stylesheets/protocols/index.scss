@@ -287,6 +287,12 @@
             display: none;
           }
         }
+
+        .edit-buttons {
+          column-gap: 8px;
+          display: flex;
+          justify-content: end;
+        }
       }
     }
   }
