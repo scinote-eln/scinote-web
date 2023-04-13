@@ -42,14 +42,11 @@ class MyModuleRepositoriesController < ApplicationController
   end
 
   def create
-    ActiveRecord::Base.transaction do
-      repository_row = RepositoryRow.find(params[:repository_row_id])
-      repository = repository_row.repository
+    repository_row = RepositoryRow.find(params[:repository_row_id])
+    repository = repository_row.repository
 
-      unless can_read_repository?(repository)
-        render_403
-        return
-      end
+    ActiveRecord::Base.transaction do
+      return render_403 unless can_read_repository?(repository)
 
       @my_module.my_module_repository_rows.create!(repository_row: repository_row, assigned_by: current_user)
 
