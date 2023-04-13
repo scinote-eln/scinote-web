@@ -76,23 +76,8 @@
               <span class="caret"></span>
 
               <ul class="dropdown-submenu">
-                <li class="action" @click="createElement('table', [2, 3])">
-                  {{ i18n.t('protocols.steps.insert.well_plate_options.2_x_3') }}
-                </li>
-                <li class="action" @click="createElement('table', [6, 4])">
-                  {{ i18n.t('protocols.steps.insert.well_plate_options.6_x_4') }}
-                </li>
-                <li class="action" @click="createElement('table', [6, 8])">
-                  {{ i18n.t('protocols.steps.insert.well_plate_options.6_x_8') }}
-                </li>
-                <li class="action" @click="createElement('table', [8, 12])">
-                  {{ i18n.t('protocols.steps.insert.well_plate_options.8_x_12') }}
-                </li>
-                <li class="action" @click="createElement('table', [16, 24])">
-                  {{ i18n.t('protocols.steps.insert.well_plate_options.16_x_24') }}
-                </li>
-                <li class="action" @click="createElement('table', [32, 48])">
-                  {{ i18n.t('protocols.steps.insert.well_plate_options.32_x_48') }}
+                <li v-for="option in wellPlateOptions" :key="option.dimensions.toString()" class="action" @click="createElement('table', option.dimensions)">
+                  {{ i18n.t(option.label) }}
                 </li>
               </ul>
             </li>
@@ -253,7 +238,15 @@
         dragingFile: false,
         reordering: false,
         isCollapsed: false,
-        editingName: false
+        editingName: false,
+        wellPlateOptions: [
+          { label: 'protocols.steps.insert.well_plate_options.32_x_48', dimensions: [32, 48] },
+          { label: 'protocols.steps.insert.well_plate_options.16_x_24', dimensions: [16, 24] },
+          { label: 'protocols.steps.insert.well_plate_options.8_x_12', dimensions: [8, 12] },
+          { label: 'protocols.steps.insert.well_plate_options.6_x_8', dimensions: [6, 8] },
+          { label: 'protocols.steps.insert.well_plate_options.6_x_4', dimensions: [6, 4] },
+          { label: 'protocols.steps.insert.well_plate_options.2_x_3', dimensions: [2, 3] }
+        ]
       }
     },
     mixins: [UtilsMixin, AttachmentsMixin],
