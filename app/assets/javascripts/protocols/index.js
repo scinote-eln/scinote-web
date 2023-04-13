@@ -448,7 +448,13 @@ var ProtocolsIndex = (function() {
       modal.modal('show');
       modal.find('form').attr('action', url);
     });
-    $('#deleteDraftModal form').on('ajax:error', function(_ev, data) {
+
+    $('#deleteDraftModal form').on('ajax:success', function(_ev, data) {
+      HelperModule.flashAlertMsg(data.message, 'success');
+      setTimeout(function() {
+        window.location.href = data.redirect_url;
+      }, 300);
+    }).on('ajax:error', function(_ev, data) {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   }
@@ -693,7 +699,6 @@ var ProtocolsIndex = (function() {
   }
 
   function initLocalFileImport() {
-
     let fileInput = $("[data-role='import-file-input']");
 
     // Make sure multiple selections of same file

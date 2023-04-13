@@ -100,6 +100,7 @@ class ProtocolsController < ApplicationController
   def print
     @protocol = Protocol.find(params[:id])
     render_403 && return unless @protocol.my_module.blank? || can_read_protocol_in_module?(@protocol)
+
     render layout: 'protocols/print'
   end
 
@@ -166,7 +167,8 @@ class ProtocolsController < ApplicationController
       log_activity(:protocol_template_draft_deleted,
                    nil,
                    protocol: @protocol.id)
-      redirect_to protocols_path
+      render json: { message: I18n.t('protocols.delete_draft_modal.success'),
+                     redirect_url: protocols_path }, status: :ok
     rescue ActiveRecord::RecordNotDestroyed => e
       Rails.logger.error e.message
       render json: { message: e.message }, status: :unprocessable_entity
