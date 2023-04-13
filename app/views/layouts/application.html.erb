@@ -65,7 +65,8 @@
       <div class="sci--layout-navigation-left">
         <%= render "shared/navigation/left" if user_signed_in? %>
       </div>
-      <div class="sci--layout-navigation-navigator">
+      <!-- temporary fix for sidebar (#wrapper) -->
+      <div id="wrapper" class="sci--layout-navigation-navigator">
         <%= render "shared/navigation/navigator" %>
       </div>
       <div class="sci--layout-navigation-breadcrumbs">
