@@ -68,3 +68,11 @@
     width: calc(100vw - var(--left-navigation) - var(--navigator-navigation));
   }
 }
+
+.sign-in-layout,
+.sign-up-layout,
+.forgot-password-layout {
+  .sci--layout {
+    --left-navigation: 0;
+  }
+}

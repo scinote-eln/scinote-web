@@ -1,3 +1,14 @@
-<div id="sciNavigationTopMenuContainer" data-turbolinks-permanent data-behaviour="vue">
-  <top-menu-container url="<%= top_menu_navigations_path %>" notifications-url="<%= notifications_path %>" />
-</div>
+<% unless user_signed_in? %>
+  <div class="sci--navigation--top-menu-container">
+    <div class="sci--navigation--top-menu-logo">
+      <a title="SciNote" href="/">
+        <img src="/images/sn-icon.svg" class="logo small">
+        <img src="/images/scinote_icon.svg" class="logo large">
+      </a>
+    </div>
+  </div>
+<% else %>
+  <div id="sciNavigationTopMenuContainer" data-turbolinks-permanent data-behaviour="vue">
+    <top-menu-container url="<%= top_menu_navigations_path %>" notifications-url="<%= notifications_path %>" />
+  </div>
+<% end %>
