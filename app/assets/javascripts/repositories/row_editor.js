@@ -29,34 +29,6 @@ var RepositoryDatatableRowEditor = (function() {
     let $files = $table.find('input[type=file]');
     $row.find('.has-error').removeClass('has-error').find('span').remove();
 
-    // register submits event for row forms
-    let formsCount = $forms.length;
-    $forms.each(function() {
-      const form = $(this);
-      form.off().on('submit', function(event) {
-        event.preventDefault();
-        $.ajax({
-          url: form.attr('action'),
-          type: form.attr('method'),
-          data: form.serialize(),
-          success: function() {
-            formsCount -= 1;
-          },
-          error: function() {
-            formsCount += 1;
-          },
-          complete: function() {
-            $('html, body').animate({ scrollLeft: 0 }, 300);
-            if (formsCount === 0) {
-              TABLE.ajax.reload(() => {
-                animateSpinner(null, false);
-              }, false);
-            }
-          }
-        });
-      });
-    });
-
     // Validations here
     $row.find('input').each(function() {
       let dataType = $(this).data('type');
