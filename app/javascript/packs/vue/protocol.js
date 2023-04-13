@@ -1,4 +1,4 @@
-/* global I18n */
+/* global I18n HelperModule */
 
 import TurbolinksAdapter from 'vue-turbolinks';
 import Vue from 'vue/dist/vue.esm';
@@ -20,12 +20,14 @@ window.initProtocolComponent = () => {
     modal.find('form').attr('action', url);
   });
 
-  $('#deleteDraftModal form').on('ajax:success', function(_ev, data) {
-      HelperModule.flashAlertMsg(data.message, 'success');
-      setTimeout(function() {
-        window.location.href = data.redirect_url;
-      }, 300);
-    }).on('ajax:error', function(_ev, data) {
+  $('#deleteDraftModal form')
+    .on('ajax:success', function(_ev, data) {
+        HelperModule.flashAlertMsg(data.message, 'success');
+        setTimeout(function() {
+          window.location.href = data.redirect_url;
+        }, 300);
+    })
+    .on('ajax:error', function(_ev, data) {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
 
