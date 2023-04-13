@@ -450,15 +450,15 @@ var ProtocolsIndex = (function() {
     });
 
     $('#deleteDraftModal form')
-      .on('ajax:success', function(_ev, data) {
-        HelperModule.flashAlertMsg(data.message, 'success');
-        setTimeout(function() {
-          window.location.href = data.redirect_url;
-        }, 300);
-      })
-      .on('ajax:error', function(_ev, data) {
-        HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
-      });
+    .on('ajax:success', function(_ev, data) {
+      HelperModule.flashAlertMsg(data.message, 'success');
+      setTimeout(function() {
+        window.location.href = data.redirect_url;
+      }, 300);
+    })
+    .on('ajax:error', function(_ev, data) {
+      HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+    });
   }
 
   function initProtocolsioModal() {

@@ -1,4 +1,4 @@
-/* global I18n HelperModule */
+/* global HelperModule */
 
 import TurbolinksAdapter from 'vue-turbolinks';
 import Vue from 'vue/dist/vue.esm';
@@ -21,15 +21,15 @@ window.initProtocolComponent = () => {
   });
 
   $('#deleteDraftModal form')
-    .on('ajax:success', function(_ev, data) {
-        HelperModule.flashAlertMsg(data.message, 'success');
-        setTimeout(function() {
-          window.location.href = data.redirect_url;
-        }, 300);
-    })
-    .on('ajax:error', function(_ev, data) {
-      HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
-    });
+  .on('ajax:success', function(_ev, data) {
+      HelperModule.flashAlertMsg(data.message, 'success');
+      setTimeout(function() {
+        window.location.href = data.redirect_url;
+      }, 300);
+  })
+  .on('ajax:error', function(_ev, data) {
+    HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+  });
 
   new Vue({
     el: '#protocolContainer',
