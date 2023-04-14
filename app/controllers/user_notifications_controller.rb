@@ -15,11 +15,11 @@ class UserNotificationsController < ApplicationController
     end
 
     UserNotification.where(
-      notification_id: notifications.where.not(type_of: 2).select(:id)
+      notification_id: notifications.except(:select).where.not(type_of: 2).select(:id)
     ).seen_by_user(current_user)
 
     current_user.user_system_notifications.where(
-      system_notification_id: notifications.where(type_of: 2).select(:id)
+      system_notification_id: notifications.except(:select).where(type_of: 2).select(:id)
     ).mark_as_seen
   end
 
