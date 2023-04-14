@@ -107,10 +107,13 @@ var inlineEditing = (function() {
         var error = response.responseJSON[fieldToUpdate];
         if (response.status === 403) {
           HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+        } else if (response.status === 422) {
+          HelperModule.flashAlertMsg(response.responseJSON.errors
+            ? Object.values(response.responseJSON.errors).join(', ') : I18n.t('errors.general'), 'danger');
         }
         if (!error) error = response.responseJSON.errors[fieldToUpdate];
         container.addClass('error');
-        container.find('.error-block').html(error.join(', '));
+        if (error) container.find('.error-block').html(error.join(', '));
         inputField(container).focus();
         container.data('disabled', false);
         $('.tooltip').hide();

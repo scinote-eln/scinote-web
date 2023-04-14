@@ -899,7 +899,7 @@ class ProtocolsController < ApplicationController
                        protocol: @protocol.id)
           render json: { version_comment: @protocol.version_comment }
         else
-          render json: @protocol.errors, status: :unprocessable_entity
+          render json: { errors: @protocol.errors }, status: :unprocessable_entity
         end
       end
     end

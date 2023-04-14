@@ -129,7 +129,7 @@ class StepsController < ApplicationController
       end
       render json: @step, serializer: StepSerializer, user: current_user
     else
-      render json: {}, status: :unprocessable_entity
+      render json: @protocol.errors ? { errors: @protocol.errors } : {}, status: :unprocessable_entity
     end
   end
 
