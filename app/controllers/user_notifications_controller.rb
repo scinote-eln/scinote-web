@@ -8,7 +8,7 @@ class UserNotificationsController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          notifications: notifications,
+          notifications: notification_serializer(notifications),
           next_page: notifications.next_page
         }
       end
@@ -55,5 +55,18 @@ class UserNotificationsController < ApplicationController
         )
       end
     notifications.order(created_at: :desc)
+  end
+
+  def notification_serializer(notifications)
+    notifications.map do |notification|
+      {
+        id: notification.id,
+        type_of: notification.type_of,
+        title: notification.title,
+        message: notification.message,
+        created_at: I18n.l(notification.created_at, format: :full),
+        checked: notification.checked
+      }
+    end
   end
 end
