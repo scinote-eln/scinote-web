@@ -164,8 +164,8 @@
         if (lines.length > 1) {
           this.newValue = lines[0];
           this.$emit('multilinePaste', lines);
+          this.update();
         }
-        this.update();
       },
       handleInput() {
         this.dirty = true;
