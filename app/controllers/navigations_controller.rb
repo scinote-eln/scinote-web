@@ -69,10 +69,12 @@ class NavigationsController < ApplicationController
         name: I18n.t('users.settings.sidebar.teams'), url: teams_path
       }, {
         name: I18n.t('users.settings.sidebar.account_nav.addons'), url: addons_path
-      }, {
-        name: I18n.t('users.settings.sidebar.webhooks'), url: users_settings_webhooks_path
       }
     ]
+
+    if can_create_acitivity_filters?
+      links.push({ name: I18n.t('users.settings.sidebar.webhooks'), url: users_settings_webhooks_path })
+    end
 
     private_methods.select { |i| i.to_s[/^settings_menu_links_[a-z]*_extension$/] }.each do |method|
       links = __send__(method, links)
