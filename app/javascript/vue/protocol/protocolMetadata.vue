@@ -103,17 +103,17 @@
     },
     computed: {
       titleVersion() {
-        const version = this.protocol.attributes.version;
+        const createdFromVersion = this.protocol.attributes.created_from_version;
 
         if (this.protocol.attributes.published) {
-          return version;
+          return this.protocol.attributes.version;
         }
 
-        if (version === this.i18n.t('protocols.draft')) {
-          return version;
+        if (!createdFromVersion) {
+          return this.i18n.t('protocols.draft');
         }
 
-        return this.i18n.t('protocols.header.draft_with_from_version', {nr: version});
+        return this.i18n.t('protocols.header.draft_with_from_version', {nr: createdFromVersion});
       }
     },
     methods: {
