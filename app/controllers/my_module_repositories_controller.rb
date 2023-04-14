@@ -44,10 +44,9 @@ class MyModuleRepositoriesController < ApplicationController
   def create
     repository_row = RepositoryRow.find(params[:repository_row_id])
     repository = repository_row.repository
+    return render_403 unless can_read_repository?(repository)
 
     ActiveRecord::Base.transaction do
-      return render_403 unless can_read_repository?(repository)
-
       @my_module.my_module_repository_rows.create!(repository_row: repository_row, assigned_by: current_user)
 
       Activities::CreateActivityService.call(activity_type: :assign_repository_record,
@@ -61,7 +60,7 @@ class MyModuleRepositoriesController < ApplicationController
 
       render json: {
         flash: t('my_modules.assigned_items.direct_assign.success')
-      }, status: :ok
+      }
     end
   rescue StandardError => e
     Rails.logger.error e.message
