@@ -65,6 +65,7 @@ class UserNotificationsController < ApplicationController
         title: notification.title,
         message: notification.message,
         created_at: I18n.l(notification.created_at, format: :full),
+        today: notification.created_at.today?,
         checked: notification.checked
       }
     end
