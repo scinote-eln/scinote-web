@@ -10,8 +10,10 @@
   grid-template-columns: var(--left-navigation)
                          var(--navigator-navigation)
                          calc(100% - var(--left-navigation) - var(--navigator-navigation));
-  grid-template-rows: var(--top-navigation) var(--breadcrumbs-navigation) auto;
-  height: 100vh;
+  grid-template-rows: var(--top-navigation)
+                      var(--breadcrumbs-navigation)
+                      calc(100% - var(--top-navigation) - var(--breadcrumbs-navigation));
+  height: 100%;
   position: relative;
   transition: .4s $timing-function-sharp;
   width: 100%;
@@ -28,13 +30,13 @@
     grid-area: top;
     height: var(--top-navigation);
     position: fixed;
-    width: 100vw;
+    width: 100%;
     z-index: 610;
   }
 
   .sci--layout-navigation-left {
     grid-area: left;
-    height: calc(100vh - var(--top-navigation));
+    height: calc(100% - var(--top-navigation));
     left: 0;
     position: fixed;
     top: var(--top-navigation);
@@ -44,7 +46,7 @@
 
   .sci--layout-navigation-navigator {
     grid-area: navigator;
-    height: calc(100vh - var(--top-navigation) - var(--breadcrumbs-navigation));
+    height: calc(100% - var(--top-navigation) - var(--breadcrumbs-navigation));
     left: var(--left-navigation);
     position: fixed;
     top: calc(var(--top-navigation) + var(--breadcrumbs-navigation));
@@ -60,7 +62,7 @@
     position: fixed;
     top: var(--top-navigation);
     transition: .4s $timing-function-standard;
-    width: calc(100vw - var(--left-navigation));
+    width: calc(100% - var(--left-navigation));
     z-index: 600;
   }
 

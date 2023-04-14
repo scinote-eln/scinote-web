@@ -24,6 +24,7 @@ Rails.application.routes.draw do
     resources :navigations, only: [] do
       collection do
         get :top_menu
+        post :navigator_state
       end
     end
 

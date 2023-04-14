@@ -18,6 +18,10 @@ class NavigationsController < ApplicationController
     }
   end
 
+  def navigator_state
+    session[:navigator_collapsed] = params[:state] == 'collapsed'
+  end
+
   private
 
   def logo
