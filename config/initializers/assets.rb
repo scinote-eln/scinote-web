@@ -98,6 +98,7 @@ Rails.application.config.assets.precompile += %w(label_templates/label_templates
 Rails.application.config.assets.precompile += %w(users/connected_devices.js)
 Rails.application.config.assets.precompile += %w(BrowserPrint-3.0.216.min.js)
 Rails.application.config.assets.precompile += %w(BrowserPrint-Zebra-1.0.216.min.js)
+Rails.application.config.assets.precompile += %w(users/login_disclaimer.js)
 
 # Libraries needed for Handsontable formulas
 Rails.application.config.assets.precompile += %w(jquery.js)

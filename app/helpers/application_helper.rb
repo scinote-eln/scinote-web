@@ -258,4 +258,9 @@ module ApplicationHelper
     qr_code_url = ROTP::TOTP.new(user.otp_secret, issuer: 'SciNote').provisioning_uri(user.email)
     RQRCode::QRCode.new(qr_code_url).as_svg(module_size: 4)
   end
+
+  def login_disclaimer
+    # login_disclaimer: { title: "...", body: "...", action: "..." }
+    ApplicationSettings.instance.values['login_disclaimer']
+  end
 end
