@@ -34,7 +34,7 @@ class NavigationsController < ApplicationController
   def teams
     current_user.teams.order(:name).map do |t|
       {
-        label: escape_input(t.name),
+        label: t.name,
         value: t.id,
         params: { switch_url: switch_users_settings_team_path(t) }
       }
@@ -43,7 +43,7 @@ class NavigationsController < ApplicationController
 
   def user
     {
-      name: escape_input(current_user.full_name),
+      name: current_user.full_name,
       avatar_url: avatar_path(current_user, :icon_small),
       sign_out_url: destroy_user_session_path
     }

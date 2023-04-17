@@ -68,11 +68,10 @@
 
   .sci--layout-content {
     grid-area: content;
-    padding: 0 1em;
     width: 100%;
 
     .container-fluid {
-      padding: 0; // override bootstrap
+      padding: 0 1em; // override bootstrap and old pages support
     }
   }
 }
