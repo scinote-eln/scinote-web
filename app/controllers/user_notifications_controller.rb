@@ -66,7 +66,8 @@ class UserNotificationsController < ApplicationController
         message: notification.message,
         created_at: I18n.l(notification.created_at, format: :full),
         today: notification.created_at.today?,
-        checked: notification.checked
+        checked: notification.checked,
+        action_url: (system_notification_path(notification.id) if notification.type_of == 'system_message')
       }
     end
   end

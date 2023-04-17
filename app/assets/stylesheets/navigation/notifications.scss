@@ -9,7 +9,7 @@
     left: 0;
     position: fixed;
     right: 0;
-    top: var(--top-navigation);
+    top: 0;
   }
 
   .has-unseen {
@@ -131,8 +131,17 @@
       }
 
       .sci-navigation--notificaitons-flyout-notification-title {
-        font-weight: bold;
         margin: .25rem 0;
+
+        &:not([data-seen="true"]) {
+          font-weight: bold;
+        }
+      }
+
+      .sci-navigation--notificaitons-flyout-notification-message {
+        &[data-notification="system"] {
+          cursor: pointer;
+        }
       }
     }
   }

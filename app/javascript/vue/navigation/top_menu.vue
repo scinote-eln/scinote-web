@@ -61,6 +61,7 @@
         v-if="notificationsOpened"
         :notificationsUrl="notificationsUrl"
         :unseenNotificationsCount="unseenNotificationsCount"
+        @update:unseenNotificationsCount="checkUnseenNotifications()"
         @close="notificationsOpened = false" />
     </div>
     <div v-if="user" class="dropdown">
