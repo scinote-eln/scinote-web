@@ -15,7 +15,6 @@
   padding: 0 2em;
   position: absolute;
   top: var(--navbar-height);
-  transition: .4s $timing-function-sharp;
   width: calc(100vw - var(--repository-sidebar-margin));
 
   &.active {
@@ -140,11 +139,6 @@
 
       .table.dataTable {
         margin-top: 0 !important;
-        transition: .4s $timing-function-sharp;
-
-        th {
-          transition: width .2s;
-        }
       }
     }
 
