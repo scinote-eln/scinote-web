@@ -75,12 +75,10 @@ export default {
       this.loadNotifications();
     },
     todayNotifications() {
-      let startOfDay = (new Date()).setUTCHours(0, 0, 0, 0);
-      return this.notifications.filter(n => moment(n.created_at) >= startOfDay);
+      return this.notifications.filter(n => n.today);
     },
     olderNotifications() {
-      let startOfDay = (new Date()).setUTCHours(0, 0, 0, 0);
-      return this.notifications.filter(n => moment(n.created_at) < startOfDay);
+      return this.notifications.filter(n => !n.today);
     }
   },
   methods: {
