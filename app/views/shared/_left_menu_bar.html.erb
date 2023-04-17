@@ -40,7 +40,7 @@
           <% end %>
         </li>
         <li class="<%= "active" if projects_are_selected? %>">
-          <%= link_to projects_path, id: "projects-link", title: t('left_menu_bar.projects') do %>
+          <%= link_to projects_path, id: "projects-link", title: 'Project' do %>
             <span class="fas fa-folder"></span>
             <span><%= t('left_menu_bar.projects') %></span>
           <% end %>
@@ -52,7 +52,7 @@
           <% end %>
         </li>
         <li class="<%= "active" if templates_are_selected? %>">
-          <%= link_to protocols_path, id: "templates-link", title: t('left_menu_bar.templates') do %>
+          <%= link_to protocols_path, id: "templates-link", title: 'Template' do %>
             <span class="fas fa-edit"></span>
             <span><%= t('left_menu_bar.templates') %></span>
           <% end %>

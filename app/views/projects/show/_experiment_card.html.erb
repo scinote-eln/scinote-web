@@ -24,7 +24,7 @@
     <div class="workflow-img-wrapper" list-render="true">
       <%= render partial: 'projects/show/experiment_workflow_image_container', locals: { experiment: experiment } %>
     </div>
-    <%= link_to experiment.name, my_modules_experiment_path(experiment), title: experiment.name, class: 'name-link' %>
+    <%= link_to experiment.name, my_modules_experiment_path(experiment), title: "Experiment: #{experiment.name}", class: 'name-link' %>
   </div>
   <div class="dates-and-img-container">
     <div class="dates-container">
