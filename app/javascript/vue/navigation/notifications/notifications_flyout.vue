@@ -96,6 +96,7 @@ export default {
         this.notifications = this.notifications.concat(result.notifications);
         this.nextPage = result.next_page;
         this.loadingPage = false;
+        this.$emit('update:unseenNotificationsCount');
       });
     }
   }

@@ -2,6 +2,7 @@
 
 class SystemNotificationsController < ApplicationController
   def show
+    current_user.user_system_notifications.mark_as_read(params[:id])
     render json: current_user.system_notifications.modals
                              .find_by_id(params[:id]) || {}
   end
