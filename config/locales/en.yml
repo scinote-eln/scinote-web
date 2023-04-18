@@ -1555,6 +1555,7 @@ en:
       head_title: "%{experiment} | Archived tasks"
       no_archived_modules: "No archived tasks!"
       restore_option: "Restore"
+      move_option: "Move"
       archived_on: "Archived on"
       archived_on_title: "Task archived on %{date} at %{time}."
 
