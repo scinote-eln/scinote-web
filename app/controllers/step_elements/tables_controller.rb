@@ -5,10 +5,19 @@ module StepElements
     before_action :load_table, only: %i(update destroy duplicate)
 
     def create
+      predefined_table_dimensions = params[:tableDimensions].map(&:to_i)
+      name = if predefined_table_dimensions[0] == predefined_table_dimensions[1]
+               t('protocols.steps.table.default_name',
+                 position: @step.step_tables.length + 1)
+             else
+               t('protocols.steps.plate.default_name',
+                 position: @step.step_tables.length + 1)
+             end
       step_table = @step.step_tables.new(table:
         Table.new(
-          name: t('protocols.steps.table.default_name', position: @step.step_tables.length + 1),
-          contents: { data: Array.new(5, Array.new(5, '')) }.to_json,
+          name: name,
+          contents: { data: Array.new(predefined_table_dimensions[0],
+                                      Array.new(predefined_table_dimensions[1], '')) }.to_json,
           created_by: current_user,
           team: @step.protocol.team
         ))
