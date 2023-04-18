@@ -1,3 +1,5 @@
+/* global HelperModule */
+
 (function() {
   let selectedTasks = [];
 
@@ -19,7 +21,7 @@
     let taskId = $(this).closest('.task-selector-container').data('task-id');
     let index = $.inArray(taskId, selectedTasks);
     const restoreTasksButton = $('.restore-button-container');
-    const moveTasksButton = $('.move-button-container')
+    const moveTasksButton = $('.move-button-container');
 
     // If checkbox is checked and row ID is not in list of selected folder IDs
     if (this.checked && index === -1) {
@@ -38,11 +40,10 @@
   });
 
   function initMoveButton() {
-    $('.move-button-container').on('click', 'button', function(e) {
+    $('.move-button-container').on('click', 'button', function() {
       const cardsContainer = $('#cards-container');
       $.get(cardsContainer.data('move-modules-modal-url'), (modalData) => {
         if ($('#modal-move-modules').length > 0) {
-          console.log('replaced');
           $('#modal-move-modules').replaceWith(modalData.html);
         } else {
           $('#module-archive').append(modalData.html);
@@ -53,7 +54,6 @@
         });
 
         $('#modal-move-modules').on('click', 'button[data-action="confirm"]', () => {
-          console.log('clicked!')
           const moveParams = {
             to_experiment_id: $('#modal-move-modules').find('.selectpicker').val(),
             my_module_ids: selectedTasks
@@ -68,7 +68,7 @@
         });
 
         $('#modal-move-modules').modal('show');
-        });
+      });
     });
   }
 
