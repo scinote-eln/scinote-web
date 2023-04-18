@@ -10,6 +10,7 @@
       <meta name="expiration-url" content="<%= users_expire_in_path %>">
       <meta name="revive-url" content="<%= users_revive_session_path %>">
     <% end %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
 
     <%= javascript_include_tag 'jquery_bundle' %>
