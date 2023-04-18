@@ -36,7 +36,7 @@
                 :data-sketch-container="`.attachments[data-step-id=${step.id}]`"
               >
                 <span class="new-marvinjs-upload-icon">
-                  <img v-bind:src="marvinjsIcon">
+                  <img :src="step.attributes.marvinjs_context.icon">
                 </span>
                   {{ i18n.t('protocols.steps.attachments.menu.chemical_drawing') }}
               </a>
@@ -98,7 +98,6 @@
   import thumbnailAttachment from './step_attachments/thumbnail.vue'
   import uploadingAttachment from './step_attachments/uploading.vue'
   import emptyAttachment from './step_attachments/empty.vue'
-  import marvinjsIcon from '../images/marvinjs.svg'
   import bioEddieIcon from '../images/bio_eddie.png'
 
   import WopiFileModal from './step_attachments/mixins/wopi_file_modal.js'
@@ -121,7 +120,6 @@
     },
     data() {
       return {
-        marvinjsIcon,
         bioEddieIcon,
         viewModeOptions: ['inline', 'thumbnail', 'list'],
         orderOptions: ['new', 'old', 'atoz', 'ztoa']
