@@ -272,7 +272,7 @@ class Constants
           order_field: :activity,
           order_dir: :desc,
           page_size: 50,
-          page_id: 1,
+          page_id: 0,
           fields: 'id,title,authors,created_on,uri,stats,published_on'
         }
       },
