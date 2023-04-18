@@ -62,6 +62,7 @@
          data-breadcrumbs-collapsed="true"
          data-navigator-collapsed="<%= !content_for?(:sidebar_title) || session[:navigator_collapsed] %>"
          data-navitgator-state-url="<%= navigator_state_navigations_path %>"
+         data-left-navigation-collapsed=<%= !user_signed_in? %>
     >
       <div class="sci--layout-navigation-top" >
         <%= render "shared/navigation/top" %>
