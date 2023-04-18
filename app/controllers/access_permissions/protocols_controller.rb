@@ -96,7 +96,7 @@ module AccessPermissions
 
       rescue ActiveRecord::RecordInvalid => e
         Rails.logger.error e.message
-        errors = @protocol.errors ? @protocol.errors&.map(&:message)&.join(',') : e.message
+        errors = @protocol.errors.present? ? @protocol.errors&.map(&:message)&.join(',') : e.message
         render json: { flash: errors }, status: :unprocessable_entity
         raise ActiveRecord::Rollback
       end
