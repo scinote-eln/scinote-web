@@ -26,6 +26,10 @@
     --navigator-navigation: 0px;
   }
 
+  &[data-left-navigation-collapsed="true"] {
+    --left-navigation: 0px;
+  }
+
   .sci--layout-navigation-top {
     grid-area: top;
     height: var(--top-navigation);
