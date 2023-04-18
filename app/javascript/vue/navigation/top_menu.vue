@@ -12,6 +12,7 @@
         :options="teams"
         :disableSearch="true"
         :selectorId="`sciNavigationTeamSelector`"
+        :labelHTML="true"
         @dropdown:changed="switchTeam"
       />
     </div>
