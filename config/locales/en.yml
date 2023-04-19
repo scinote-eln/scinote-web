@@ -308,7 +308,8 @@ en:
       tutorials: "Video tutorials"
       core_version: "SciNote version"
       about: "about"
-
+  navigator:
+    title: "Navigator"
   sidebar:
     title: "Navigation"
     branch_expand: "Expand this branch"

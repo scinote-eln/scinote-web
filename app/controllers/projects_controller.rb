@@ -24,6 +24,7 @@ class ProjectsController < ApplicationController
   before_action :reset_invalid_view_state, only: %i(index cards show)
   before_action :set_folder_inline_name_editing, only: %i(index cards)
   before_action :set_breadcrumbs_items, only: %i(index show)
+  before_action :set_navigator, only: %i(index show)
 
   layout 'fluid'
 
@@ -478,5 +479,9 @@ class ProjectsController < ApplicationController
             team: project.team,
             project: project,
             message_items: message_items)
+  end
+
+  def set_navigator
+    @navigator = true
   end
 end

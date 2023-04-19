@@ -31,7 +31,8 @@ const entryList = {
   vue_protocol: './app/javascript/packs/vue/protocol.js',
   vue_repository_filter: './app/javascript/packs/vue/repository_filter.js',
   vue_repository_print_modal: './app/javascript/packs/vue/repository_print_modal.js',
-  vue_navigation_top_menu: './app/javascript/packs/vue/navigation/top_menu.js'
+  vue_navigation_top_menu: './app/javascript/packs/vue/navigation/top_menu.js',
+  vue_navigation_navigator: './app/javascript/packs/vue/navigation/navigator.js'
 }
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949

@@ -1,5 +1,6 @@
 <div class="content-header sticky-header">
   <div class="title-row">
+      <i class="fas fa-bars sci--layout--navigator-open p-2 cursor-pointer"></i>
       <% if current_folder&.name && @inline_editable_title_config.present? %>
         <h1 data-view-mode="active" class="projects-title">
           <%= render partial: "shared/inline_editing",

@@ -20,6 +20,7 @@ class ExperimentsController < ApplicationController
   before_action :check_move_permissions, only: %i(move_modal move)
   before_action :set_inline_name_editing, only: %i(canvas table module_archive)
   before_action :set_breadcrumbs_items, only: %i(canvas table module_archive)
+  before_action :set_navigator, only: %i(canvas archive)
 
   layout 'fluid'
 
@@ -659,5 +660,9 @@ class ExperimentsController < ApplicationController
         Connection.create!(input_id: destination_my_module.id, output_id: source_my_module.id)
       end
     end
+  end
+
+  def set_navigator
+    @navigator = true
   end
 end
