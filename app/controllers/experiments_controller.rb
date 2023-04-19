@@ -6,6 +6,7 @@ class ExperimentsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
   include Rails.application.routes.url_helpers
+  include Breadcrumbs
 
   before_action :load_project, only: %i(new create archive_group restore_group)
   before_action :load_experiment, except: %i(new create archive_group restore_group)
@@ -18,6 +19,7 @@ class ExperimentsController < ApplicationController
   before_action :check_clone_permissions, only: %i(clone_modal clone)
   before_action :check_move_permissions, only: %i(move_modal move)
   before_action :set_inline_name_editing, only: %i(canvas table module_archive)
+  before_action :set_breadcrumbs_items, only: %i(canvas table module_archive)
 
   layout 'fluid'
 
