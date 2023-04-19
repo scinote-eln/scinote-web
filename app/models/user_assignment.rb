@@ -20,17 +20,23 @@ class UserAssignment < ApplicationRecord
 
   validates :user, uniqueness: { scope: %i(assignable team_id) }
 
+  scope :with_permission, ->(permission) { joins(:user_role).where('? = ANY(user_roles.permissions)', permission) }
+
   def last_assignable_owner?
     assignable_owners.count == 1 && user_role.owner?
   end
 
-  def last_with_permission?(permission)
+  def last_with_permission?(permission, assigned: nil)
     return false if user_role.permissions.exclude?(permission)
 
-    assignable.user_assignments.joins(:user_role)
-              .where.not(user: user)
-              .where('? = ANY(user_roles.permissions)', permission)
-              .none?
+    user_assignments =
+      assignable.user_assignments.joins(:user_role)
+                .where.not(user: user)
+                .with_permission(permission)
+
+    user_assignments = user_assignments.where(assigned: assigned) if assigned
+
+    user_assignments.none?
   end
 
   private

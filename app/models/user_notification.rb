@@ -8,26 +8,6 @@ class UserNotification < ApplicationRecord
 
   after_create :send_email
 
-  def self.last_notifications(
-    user,
-    last_notification_id = nil,
-    per_page = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT
-  )
-    last_notification_id = Constants::INFINITY if last_notification_id < 1
-    Notification.joins(:user_notifications)
-                .where('user_notifications.user_id = ?', user.id)
-                .where('notifications.id < ?', last_notification_id)
-                .order(created_at: :DESC)
-                .limit(per_page)
-  end
-
-  def self.recent_notifications(user)
-    Notification.joins(:user_notifications)
-                .where('user_notifications.user_id = ?', user.id)
-                .order(created_at: :DESC)
-                .limit(Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
-  end
-
   def self.unseen_notification_count(user)
     where('user_id = ? AND checked = false', user.id).count
   end

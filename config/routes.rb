@@ -24,6 +24,7 @@ Rails.application.routes.draw do
     resources :navigations, only: [] do
       collection do
         get :top_menu
+        post :navigator_state
       end
     end
 
@@ -165,20 +166,11 @@ Rails.application.routes.draw do
           as: 'invitable_teams'
     end
 
-    # Notifications
-    get 'users/:id/recent_notifications',
-        to: 'user_notifications#recent_notifications',
-        as: 'recent_notifications',
-        defaults: { format: 'json' }
-
-    get 'users/:id/unseen_notification',
-        to: 'user_notifications#unseen_notification',
-        as: 'unseen_notification',
-        defaults: { format: 'json' }
-
-    get 'users/notifications',
-        to: 'user_notifications#index',
-        as: 'notifications'
+    resources :user_notifications, only: :index do
+      collection do
+        get :unseen_counter
+      end
+    end
 
     # Get Zip Export
     get 'zip_exports/download/:id',
@@ -583,6 +575,7 @@ Rails.application.routes.draw do
         post :publish
         post :destroy_draft
         post :save_as_draft
+        get 'version_comment', to: 'protocols#version_comment'
         get 'print', to: 'protocols#print'
         get 'linked_children', to: 'protocols#linked_children'
         post 'linked_children_datatable',

@@ -46,6 +46,22 @@
     display: flex;
     gap: 1em;
     margin-left: .75em;
+
+    span {
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .avatar {
+      border-radius: 50%;
+    }
+  }
+
+  .dropdown-menu li a {
+    line-height: 1rem;
+    padding: .625rem 1rem;
   }
 
   @media(max-width: 1200px) {

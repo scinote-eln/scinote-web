@@ -306,7 +306,7 @@ var ProjectsIndex = (function() {
     }
   }
 
-  $('#content-wrapper').on('click', '.project-folder-link', function(event) {
+  $('#projectsWrapper').on('click', '.project-folder-link', function(event) {
     event.preventDefault();
     event.stopPropagation();
     $(cardsWrapper).data('projectsCardsUrl', $(this).data('projectsCardsUrl'));
@@ -510,6 +510,9 @@ var ProjectsIndex = (function() {
       },
       error: function() {
         viewContainer.html('Error loading project list');
+      },
+      complete: function() {
+        updateSelectAllCheckbox();
       }
     });
   }
@@ -641,6 +644,25 @@ var ProjectsIndex = (function() {
     });
   }
 
+  function updateSelectAllCheckbox() {
+    const tableWrapper = $(cardsWrapper);
+    const checkboxesCount = $(
+      '.sci-checkbox.folder-card-selector, .sci-checkbox.project-card-selector',
+      tableWrapper
+    ).length;
+    const selectedCheckboxesCount = selectedProjects.length + selectedProjectFolders.length;
+    const selectAllCheckbox = $('.sci-checkbox.select-all', tableWrapper);
+
+    selectAllCheckbox.prop('indeterminate', false);
+    if (selectedCheckboxesCount === 0) {
+      selectAllCheckbox.prop('checked', false);
+    } else if (selectedCheckboxesCount === checkboxesCount) {
+      selectAllCheckbox.prop('checked', true);
+    } else {
+      selectAllCheckbox.prop('indeterminate', true);
+    }
+  }
+
   /**
    * Initializes cards view
    */
@@ -679,6 +701,7 @@ var ProjectsIndex = (function() {
         selectedProjectFolders.splice(index, 1);
       }
 
+      updateSelectAllCheckbox();
       updateProjectsToolbar();
     });
 
@@ -697,6 +720,8 @@ var ProjectsIndex = (function() {
         $(this).closest('.project-card').removeClass('selected');
         selectedProjects.splice(index, 1);
       }
+
+      updateSelectAllCheckbox();
 
       if (this.checked) {
         $.get(projectCard.data('permissions-url'), function(result) {

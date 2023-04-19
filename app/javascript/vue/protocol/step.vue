@@ -412,6 +412,9 @@
               name: result.data.attributes.name,
               position: this.step.attributes.position
             })
+          },
+          error: (data) => {
+            HelperModule.flashAlertMsg(data.responseJSON.errors ? Object.values(data.responseJSON.errors).join(', ') : I18n.t('errors.general'), 'danger');
           }
         });
       },

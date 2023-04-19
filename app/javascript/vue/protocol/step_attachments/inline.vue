@@ -12,8 +12,8 @@
           :data-gallery-view-id="stepId"
           :data-preview-url="attachment.attributes.urls.preview"
         >
-          <span data-toggle="tooltip" 
-               data-placement="bottom" 
+          <span data-toggle="tooltip"
+               data-placement="bottom"
                :title="`${ attachment.attributes.file_name }`">
             {{ attachment.attributes.file_name }}
           </span>
@@ -44,8 +44,8 @@
       <div v-else class="empty-office-file">
         <h2>{{ i18n.t('assets.empty_office_file.description') }}</h2>
         <a :href="attachment.attributes.urls.load_asset"
-           remote="true"
            class="btn btn-primary reload-asset"
+           @click.prevent="reloadAsset"
            :params="{asset: {view_mode: attachment.attributes.view_mode}}">
           {{ i18n.t('assets.empty_office_file.reload') }}
         </a>
@@ -88,6 +88,14 @@
       stepId: {
         type: Number,
         required: true
+      }
+    },
+    methods: {
+      reloadAsset() {
+        $.ajax({
+          method: 'GET',
+          url: this.attachment.attributes.urls.load_asset
+        });
       }
     },
   }

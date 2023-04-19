@@ -11,6 +11,7 @@
   width: 100%;
 
   .sci--layout--menu-item {
+    @include font-small;
     align-items: center;
     color: $color-black;
     cursor: pointer;

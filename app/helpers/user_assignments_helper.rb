@@ -15,7 +15,7 @@ module UserAssignmentsHelper
 
     return '' if [Project, Protocol].include?(resource.class) && inherit.blank?
 
-    if user_assignment.automatically_assigned?
+    if user_assignment.automatically_assigned? && resource.permission_parent.present?
       parent = resource.permission_parent
       return user_assignment_resource_role_name(user, parent, '_inherit')
     end

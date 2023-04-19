@@ -10,12 +10,14 @@
       <meta name="expiration-url" content="<%= users_expire_in_path %>">
       <meta name="revive-url" content="<%= users_revive_session_path %>">
     <% end %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
 
     <%= javascript_include_tag 'jquery_bundle' %>
     <%= javascript_include_tag 'application' %>
     <%= javascript_include_tag 'application_pack' %>
     <%= javascript_include_tag 'session_end' %>
+    <%= javascript_include_tag 'sidebar_toggle' %>
 
 
     <% if MarvinJsService.enabled? && ENV['MARVINJS_API_KEY'] %>
@@ -57,15 +59,20 @@
     <span style="display: none;" data-hook="body-js"></span>
     <span style="display: none;" data-hook="application-body-html"></span>
 
-
-    <div class="sci--layout" data-breadcrumbs-collapsed="true" data-navigator-collapsed="<%= !content_for?(:sidebar_title) %>">
+    <div class="sci--layout"
+         data-breadcrumbs-collapsed="true"
+         data-navigator-collapsed="<%= !content_for?(:sidebar_title) || session[:navigator_collapsed] %>"
+         data-navitgator-state-url="<%= navigator_state_navigations_path %>"
+         data-left-navigation-collapsed=<%= !user_signed_in? %>
+    >
       <div class="sci--layout-navigation-top" >
         <%= render "shared/navigation/top" %>
       </div>
       <div class="sci--layout-navigation-left">
         <%= render "shared/navigation/left" if user_signed_in? %>
       </div>
-      <div class="sci--layout-navigation-navigator">
+      <!-- temporary fix for sidebar (#wrapper) -->
+      <div id="wrapper" class="sci--layout-navigation-navigator">
         <%= render "shared/navigation/navigator" %>
       </div>
       <div class="sci--layout-navigation-breadcrumbs">

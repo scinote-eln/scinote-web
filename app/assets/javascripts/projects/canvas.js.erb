@@ -178,6 +178,7 @@ function initializeEdit() {
   $("#wrapper").css("paddingLeft", "0");
   $(".navbar-secondary").addClass("navbar-without-sidebar");
   $(".show-sidebar").addClass("invisible");
+  $('.sci--layout').attr('data-navigator-collapsed', true);
 
   // Also, hide zoom levels button group
   $("#diagram-buttons").hide();
@@ -2960,7 +2961,7 @@ function drawRoundRectangle(ctx, xPos, yPos, width, height, radius) {
   height = Math.max(height, 0)
   if (width < 2 * radius) radius = width / 2;
   if (height < 2 * radius) radius = height / 2;
-  
+
   ctx.beginPath();
   ctx.lineWidth = 4;
   ctx.strokeStyle = '#104DA9';

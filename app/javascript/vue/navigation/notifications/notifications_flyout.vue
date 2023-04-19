@@ -6,32 +6,36 @@
     </div>
     <div class="sci--navigation--notificaitons-flyout-tabs">
       <div class="sci--navigation--notificaitons-flyout-tab"
-           @click="activeTab = 'all'"
-           :class="{'active': activeTab == 'all'}">
+           :data-unseen="unseenNotificationsCount"
+           @click="setActiveTab('all')"
+           :class="{'active': activeTab == 'all', 'has-unseen': unseenNotificationsCount > 0}">
         {{ i18n.t('nav.notifications.all') }}
       </div>
       <div class="sci--navigation--notificaitons-flyout-tab"
-           @click="activeTab = 'message'"
+           @click="setActiveTab('message')"
            :class="{'active': activeTab == 'message'}">
         {{ i18n.t('nav.notifications.message') }}
       </div>
       <div class="sci--navigation--notificaitons-flyout-tab"
-           @click="activeTab = 'system'"
+           @click="setActiveTab('system')"
            :class="{'active': activeTab == 'system'}">
         {{ i18n.t('nav.notifications.system') }}
       </div>
     </div>
     <hr>
-    <div class="sci--navigation--notificaitons-flyout-notifications">
+    <perfect-scrollbar ref="scrollContainer" class="sci--navigation--notificaitons-flyout-notifications">
       <div class="sci-navigation--notificaitons-flyout-subtitle" v-if="todayNotifications.length" >
         {{ i18n.t('nav.notifications.today') }}
       </div>
-      <NotificationItem v-for="notification in todayNotifications" :key="notification.id" :notification="notification" />
+      <NotificationItem v-for="notification in todayNotifications" :key="notification.type_of + '-' + notification.id" :notification="notification" />
       <div class="sci-navigation--notificaitons-flyout-subtitle" v-if="olderNotifications.length" >
         {{ i18n.t('nav.notifications.older') }}
       </div>
-      <NotificationItem v-for="notification in olderNotifications" :key="notification.id" :notification="notification" />
-    </div>
+      <NotificationItem v-for="notification in olderNotifications" :key="notification.type_of + '-' + notification.id" :notification="notification" />
+      <div class="next-page-loader">
+        <img src="/images/medium/loading.svg" v-if="loadingPage"/>
+      </div>
+    </perfect-scrollbar>
   </div>
 </template>
 
@@ -45,41 +49,55 @@ export default {
     NotificationItem
   },
   props: {
-    notificationsUrl: String
+    notificationsUrl: String,
+    unseenNotificationsCount: Number
   },
   data() {
     return {
       notifications: [],
       activeTab: 'all',
-      nextPage: 2
+      nextPage: 1,
+      scrollBar: null,
+      loadingPage: false
     }
   },
+  created() {
+    this.loadNotifications();
+  },
   mounted() {
-    // fake notifications
-    this.notifications = [
-      { id: 'N1', type_of: 'assignment', title: 'Project assigned', created_at: new Date(), message: "Project:  <a href=\"/projects/1\">test</a>" },
-      { id: 'SN1', type_of: 'system', title: 'New Scinote Version', created_at: new Date(), url: '/system_notificiatons' },
-      { id: 'N2',type_of: 'deliver', title: 'New report', created_at: (new Date('2022-12-17T03:24:00')), message: "Report:  <a href=\"/reports/1\">test</a>" }
-    ]
+    let container = this.$refs.scrollContainer.$el
+    container.addEventListener('ps-y-reach-end', (e) => {
+      this.loadNotifications();
+    })
   },
   computed: {
     filteredNotifications() {
-      switch(this.activeTab) {
-        case 'all':
-          return this.notifications;
-        case 'system':
-          return this.notifications.filter(n => n.type_of === 'system');
-        case 'message':
-          return this.notifications.filter(n => n.type_of !== 'system');
-      }
+      this.loadNotifications();
     },
     todayNotifications() {
-      let startOfDay = (new Date()).setUTCHours(0, 0, 0, 0);
-      return this.filteredNotifications.filter(n => n.created_at >= startOfDay);
+      return this.notifications.filter(n => n.today);
     },
     olderNotifications() {
-      let startOfDay = (new Date()).setUTCHours(0, 0, 0, 0);
-      return this.filteredNotifications.filter(n => n.created_at < startOfDay);
+      return this.notifications.filter(n => !n.today);
+    }
+  },
+  methods: {
+    setActiveTab(selection) {
+      this.activeTab = selection;
+      this.nextPage = 1;
+      this.notifications = [];
+      this.loadNotifications();
+    },
+    loadNotifications() {
+      if (this.nextPage == null || this.loadingPage) return;
+
+      this.loadingPage = true;
+      $.getJSON(this.notificationsUrl, { type: this.activeTab, page: this.nextPage }, (result) => {
+        this.notifications = this.notifications.concat(result.notifications);
+        this.nextPage = result.next_page;
+        this.loadingPage = false;
+        this.$emit('update:unseenNotificationsCount');
+      });
     }
   }
 }

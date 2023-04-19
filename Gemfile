@@ -59,7 +59,9 @@ gem 'ajax-datatables-rails', '~> 0.3.1'
 gem 'aspector' # Aspect-oriented programming for Rails
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces AR
 gem 'bcrypt', '~> 3.1.10'
-gem 'caracal' # Build docx report
+# gem 'caracal'
+gem 'caracal',
+    git: 'https://github.com/scinote-eln/caracal.git', branch: 'rubyzip2' # Build docx report
 gem 'deface', '~> 1.9'
 gem 'down', '~> 5.0'
 gem 'faker' # Generate fake data
@@ -69,13 +71,14 @@ gem 'i18n-js', '~> 3.6' # Localization in javascript files
 gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'logging', '~> 2.0.0'
 gem 'nested_form_fields'
-gem 'nokogiri', '~> 1.13.10' # HTML/XML parser
+gem 'nokogiri', '~> 1.14.3' # HTML/XML parser
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'rgl' # Graph framework for project diagram calculations
 gem 'roo', '~> 2.8.2' # Spreadsheet parser
 gem 'rotp'
 gem 'rqrcode', '~> 2.0' # QR code generator
-gem 'rubyzip'
+gem 'rubyzip', '>= 2.3.0' # will load new rubyzip version
+gem 'zip-zip' # will load compatibility for old rubyzip API.
 gem 'scenic', '~> 1.4'
 gem 'sdoc', '~> 1.0', group: :doc
 gem 'silencer' # Silence certain Rails logs
@@ -100,6 +103,8 @@ gem 'discard', '~> 1.0'
 gem 'graphviz'
 
 gem 'jsbundling-rails'
+
+gem 'tailwindcss-rails', '~> 2.0'
 
 gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'

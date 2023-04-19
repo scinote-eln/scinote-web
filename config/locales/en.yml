@@ -158,16 +158,22 @@ en:
               invalid: "Invalid step order."
             name:
               taken: "This protocol template name has to be unique inside a team (this includes the archive)."
+            description:
+              too_long: 'Text is too long'
         step:
           attributes:
             step_orderable_element_order:
               invalid: "Invalid step element order"
+            description:
+              too_long: 'Text is too long'
         my_module:
           attributes:
             my_module_status_id:
               not_correct_order: "Status can be changed only on next or previous status."
             position:
               not_unique: "X and Y position has already been taken by another task in the experiment."
+            description:
+              too_long: 'Text is too long'
         my_module_status:
           attributes:
             next_status:
@@ -211,12 +217,24 @@ en:
               disabled: 'Webhooks are disabled'
             url:
               not_valid: 'Not valid URL'
+        result_text:
+          attributes:
+            text:
+              too_long: 'Text is too long'
+        step_text:
+          attributes:
+            text:
+              too_long: 'Text is too long'
+        system_notification:
+          attributes:
+            modal_body: 'Text is too long'
         connection:
           attributes:
             output_id:
               creates_cycle: "mustn't create cycle"
   errors:
     general: "Something went wrong."
+    general_text_too_long: 'Text is too long'
   storage:
     limit_reached: "Storage limit has been reached."
   helpers:
@@ -1117,7 +1135,7 @@ en:
       load_from_repository_error: "Failed to load the protocol from the templates."
       load_from_repository_error_locked: "Failed to load the protocol from the templates. One or more files in the protocol are currently being edited."
       load_from_repository_modal:
-        title: "Load protocol from templates"
+        title: "Load protocol template"
         text: "This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
         text2: "Choose the protocol to be loaded to the task."
         filter_protocols: "Filter protocols"
@@ -2353,8 +2371,8 @@ en:
           description: "When you remove a device, you will be logged out from the selected device."
           empty_state: "No connected devices."
         devices_table:
-          device_name: "Device Name"
-          added_on: "Added on"
+          device_name: "Device name"
+          last_seen: "Last seen"
         device_revocation_modal:
           title: "Remove connected device"
           description: "This device will lose access to your SciNote account."
@@ -2570,6 +2588,7 @@ en:
 
   protocols:
     draft: "Draft"
+    draft_name: "(Draft) %{name}"
     no_text_placeholder: 'No protocol description'
     reorder_steps:
         button: "Rearrange steps"
@@ -2679,7 +2698,7 @@ en:
       description_2: "Are you sure?"
       confirm: "Yes, delete"
     publish_modal:
-      title: "Publish protocol template"
+      title: "Publish version %{nr} of the protocol template"
       name: "Protocol template name"
       comment: "Revision notes"
       comment_placeholder: "What's new in this version?"
@@ -2697,12 +2716,15 @@ en:
     header:
       details: 'Details'
       versions: 'Versions'
+      draft_with_from_version: 'Draft (from Version %{nr})'
       protocol_description: 'Protocol description'
       protocol_steps: 'Protocol steps'
       publish: 'Publish'
       save_as_draft: 'Save as draft'
-      version: "Version:"
       draft: 'Draft'
+      version: "Version:"
+      published_on: "Published on:"
+      published_by: "Published by:"
       created_at: "Created on:"
       updated_at: "Last modified on:"
       added_by: "Created by:"
@@ -2788,10 +2810,6 @@ en:
       make_private_error: "Error occurred while moving selected protocols to My protocols."
       publish_unauthorized: "You do not have permission to move selected protocols to Team protocols."
       publish_error: "Error occurred while moving selected protocols to Team protocols."
-      archive_unauthorized: "You do not have permission to archive selected protocols."
-      archive_error: "Error occurred while archiving selected protocols."
-      restore_unauthorized: "You do not have permission to restore selected protocols."
-      restore_error: "Error occurred while restoring selected protocols."
       row_renamed_html: "%{old_name}<i> to </i>%{new_name}"
       no_protocol_name: "(no name)"
       create:
@@ -3210,20 +3228,20 @@ en:
     general_error: "Something went wrong"
 
   access_permissions:
+    all_team: "all team"
     everyone_else: "Everyone else at %{team_name}"
     reset: "Inherit role"
     remove_access: "Remove access"
-    grant_access: "Grant access"
+    grant_access: "Grant new access"
     create:
-      success:
-        one: "You have successfully granted access to %{count} member to the project."
-        other: "You have successfully granted access to %{count} members to the project."
+      success: "You have successfully granted access to %{count} member(s)."
       failure: "Something went wrong"
     destroy:
-      success: "You have successfully removed %{member_name} from the project."
+      success: "You have successfully removed %{member_name}."
       failure: "Something went wrong"
     update:
       failure: "Something went wrong"
+      revoke_all_team_members: "You have successfully removed access from all team members"
     partials:
       edit_assignments_content:
         title: "Manage access for %{resource_name}"

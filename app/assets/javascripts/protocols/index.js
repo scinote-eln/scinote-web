@@ -489,12 +489,8 @@ var ProtocolsIndex = (function() {
     $.post(url, { protocol_ids: ids }, (data) => {
       HelperModule.flashAlertMsg(data.message, 'success');
       reloadTable();
-    }).error((error) => {
-      if (error.status === 401) {
-        HelperModule.flashAlertMsg(I18n.t('protocols.index.restore_unauthorized'), 'danger');
-      } else {
-        HelperModule.flashAlertMsg(I18n.t('protocols.index.restore_error'), 'danger');
-      }
+    }).error((data) => {
+      HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   }
 

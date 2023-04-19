@@ -82,6 +82,7 @@
     "vue-loader": "^15.9.1",
     "vue-template-compiler": "^2.6.12",
     "vue-turbolinks": "^2.2.1",
+    "vue2-perfect-scrollbar": "^1.5.56",
     "vuedraggable": "^2.24.3",
     "webpack": "^5.64.4",
     "webpack-cli": "^4.10.0",
