@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'cgi'
 class Protocol < ApplicationRecord
   ID_PREFIX = 'PT'
 
@@ -21,6 +22,7 @@ class Protocol < ApplicationRecord
   after_update :update_automatic_user_assignments,
                if: -> { saved_change_to_default_public_user_role_id? && in_repository? }
   skip_callback :create, :after, :create_users_assignments, if: -> { in_module? }
+  after_find :unescape_html_title
 
   enum visibility: { hidden: 0, visible: 1 }
   enum protocol_type: {
@@ -763,5 +765,9 @@ class Protocol < ApplicationRecord
 
   def change_visibility
     self.visibility = default_public_user_role_id.present? ? :visible : :hidden
+  end
+
+  def unescape_html_title
+    self.name = CGI.unescapeHTML(self.name)
   end
 end
