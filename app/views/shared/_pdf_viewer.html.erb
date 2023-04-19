@@ -13,7 +13,7 @@
     <div class="layers-container">
       <canvas class="pdf-canvas <%= 'ready' unless blocked %>"
         data-pdf-url="<%= pdf_url %>"
-        data-pdf-worker-url="<%= asset_pack_path('pdfjs/pdf_js_worker.js') %>"
+        data-pdf-worker-url="<%= asset_path('pdf_js_worker.js') %>"
       ></canvas>
       <div class="textLayer"></div>
     </div>

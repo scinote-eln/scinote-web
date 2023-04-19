@@ -1,0 +1,81 @@
+.sci--layout {
+  --breadcrumbs-navigation: 56px;
+  --left-navigation: 83px;
+  --navigator-navigation: 280px;
+  --top-navigation: 52px;
+  display: grid;
+  grid-template-areas: "top top top"
+                       "left breadcrumbs breadcrumbs"
+                       "left navigator content";
+  grid-template-columns: var(--left-navigation)
+                         var(--navigator-navigation)
+                         calc(100% - var(--left-navigation) - var(--navigator-navigation));
+  grid-template-rows: var(--top-navigation)
+                      var(--breadcrumbs-navigation)
+                      calc(100% - var(--top-navigation) - var(--breadcrumbs-navigation));
+  height: 100%;
+  position: relative;
+  transition: .4s $timing-function-sharp;
+  width: 100%;
+
+  &[data-breadcrumbs-collapsed="true"] {
+    --breadcrumbs-navigation: 0px;
+  }
+
+  &[data-navigator-collapsed="true"] {
+    --navigator-navigation: 0px;
+  }
+
+  &[data-left-navigation-collapsed="true"] {
+    --left-navigation: 0px;
+  }
+
+  .sci--layout-navigation-top {
+    grid-area: top;
+    height: var(--top-navigation);
+    position: fixed;
+    width: 100%;
+    z-index: 610;
+  }
+
+  .sci--layout-navigation-left {
+    grid-area: left;
+    height: calc(100% - var(--top-navigation));
+    left: 0;
+    position: fixed;
+    top: var(--top-navigation);
+    width: var(--left-navigation);
+    z-index: 600;
+  }
+
+  .sci--layout-navigation-navigator {
+    grid-area: navigator;
+    height: calc(100% - var(--top-navigation) - var(--breadcrumbs-navigation));
+    left: var(--left-navigation);
+    position: fixed;
+    top: calc(var(--top-navigation) + var(--breadcrumbs-navigation));
+    transition: .4s $timing-function-standard;
+    width: var(--navigator-navigation);
+    z-index: 550;
+  }
+
+  .sci--layout-navigation-breadcrumbs {
+    grid-area: breadcrumbs;
+    height: var(--breadcrumbs-navigation);
+    left: var(--left-navigation);
+    position: fixed;
+    top: var(--top-navigation);
+    transition: .4s $timing-function-standard;
+    width: calc(100% - var(--left-navigation));
+    z-index: 600;
+  }
+
+  .sci--layout-content {
+    grid-area: content;
+    width: 100%;
+
+    .container-fluid {
+      padding: 0 1em; // override bootstrap and old pages support
+    }
+  }
+}

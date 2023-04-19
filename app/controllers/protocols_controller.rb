@@ -59,7 +59,7 @@ class ProtocolsController < ApplicationController
     copy_to_repository
   )
 
-  before_action :check_publish_permission, only: :publish
+  before_action :check_publish_permission, only: %i(publish version_comment update_version_comment)
   before_action :check_import_permissions, only: :import
   before_action :check_export_permissions, only: :export
   before_action :check_delete_draft_permissions, only: :destroy_draft
@@ -142,7 +142,7 @@ class ProtocolsController < ApplicationController
                    protocol: @protocol.id,
                    version_number: @protocol.version_number)
     rescue ActiveRecord::RecordInvalid => e
-      flash[:error] = e.message
+      flash[:error] = @protocol.errors&.map(&:message)&.join(',')
       Rails.logger.error e.message
       raise ActiveRecord::Rollback
     rescue StandardError => e
@@ -335,7 +335,7 @@ class ProtocolsController < ApplicationController
           },
           status: :bad_request
         elsif @new_protocol.invalid?
-          render json: { error: @new_protocol.errors.full_messages.join(', ') }, status: :unprocessable_entity
+          render json: { error: @new_protocol.errors.messages.map { |_, value| value }.join(' ') }, status: :unprocessable_entity
         else
           # Everything good, render 200
           render json: { message: t('my_modules.protocols.copy_to_repository_modal.success_message') }
@@ -882,6 +882,14 @@ class ProtocolsController < ApplicationController
     end
   end
 
+  def version_comment
+    respond_to do |format|
+      format.json do
+        render json: { version_comment: @protocol.version_comment }
+      end
+    end
+  end
+
   def update_version_comment
     respond_to do |format|
       format.json do
@@ -891,7 +899,7 @@ class ProtocolsController < ApplicationController
                        protocol: @protocol.id)
           render json: { version_comment: @protocol.version_comment }
         else
-          render json: @protocol.errors, status: :unprocessable_entity
+          render json: { errors: @protocol.errors }, status: :unprocessable_entity
         end
       end
     end

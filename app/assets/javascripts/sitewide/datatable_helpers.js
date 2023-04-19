@@ -58,6 +58,7 @@ function DataTableCheckboxes(tableWrapper, config) {
   /* config = {
     checkboxSelector: selector for checkboxes,
     selectAllSelector: selector for select all checkbox
+    onChanged: callback when the state of the checkbox is changed
   }*/
 
   this.selectedRows = [];
@@ -138,7 +139,7 @@ DataTableCheckboxes.prototype.initSelectAllCheckbox = function() {
       var checkbox = $(row).find(this.config.checkboxSelector);
       if (checkbox.prop('checked') === selectAllCheckbox.prop('checked') || checkbox.attr('disabled')) return;
 
-      checkbox.prop('checked', !checkbox.prop('checked'));
+      checkbox.prop('checked', selectAllCheckbox.prop('checked'));
       this.selectRow(row);
     });
   });

@@ -36,7 +36,7 @@
 
     <% if @member_of > 0 %>
       <div class="teams-datatable">
-        <table id="teams-table" class="table" data-source="<%= teams_datatable_path(format: :json) %>">
+        <table id="teams-table" class="table" data-source="<%= teams_datatable_path(format: :json) %>" style="width:100%">
           <thead>
             <tr>
               <th id="team-name"><%= t("users.settings.teams.index.thead_name") %></th>

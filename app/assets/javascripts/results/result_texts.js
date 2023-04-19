@@ -83,7 +83,6 @@
         var data = xhr.responseJSON;
         var $el;
         $form.renderFormErrors('result', data);
-        TinyMCE.highlight();
         if (data['result_text.text']) {
           $el = $form.find(
             'textarea[name=result\\[result_text_attributes\\]\\[text\\]]'

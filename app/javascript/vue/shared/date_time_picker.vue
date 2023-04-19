@@ -6,8 +6,8 @@
 </template>
 
 <script>
-  import TimePicker from 'vue/shared/time_picker.vue'
-  import DatePicker from 'vue/shared/date_picker.vue'
+  import TimePicker from './time_picker.vue'
+  import DatePicker from './date_picker.vue'
 
   export default {
     name: 'DateTimePicker',

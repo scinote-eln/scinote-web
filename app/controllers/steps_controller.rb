@@ -85,6 +85,10 @@ class StepsController < ApplicationController
     )
 
     @step = @protocol.insert_step(@step, params[:position])
+    if @protocol.in_repository? && @protocol.errors.present?
+      return render json: { error: @protocol.errors }, status: :unprocessable_entity
+    end
+
     # Generate activity
     if @protocol.in_module?
       log_activity(:create_step, @my_module.experiment.project, { my_module: @my_module.id }.merge(step_message_items))
@@ -125,7 +129,7 @@ class StepsController < ApplicationController
       end
       render json: @step, serializer: StepSerializer, user: current_user
     else
-      render json: {}, status: :unprocessable_entity
+      render json: @protocol.errors.present? ? { errors: @protocol.errors } : {}, status: :unprocessable_entity
     end
   end
 

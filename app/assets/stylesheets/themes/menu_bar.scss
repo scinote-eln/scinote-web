@@ -7,13 +7,6 @@
 
 .menu-bar {
   background-color: $color-white;
-  box-shadow: $flyout-shadow;
-  height: 100%;
-  left: 0;
-  padding-bottom: 50px;
-  position: fixed;
-  width: var(--menu-bar-width);
-  z-index: 1001;
 
   .scroll-wrapper {
     height: 100%;

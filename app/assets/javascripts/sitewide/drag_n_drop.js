@@ -176,7 +176,7 @@
     }
 
     function enableSubmitButton() {
-      $('.save-result').prop('disabled', false);
+      $('.save-result').prop('disabled', false).focus();
     }
 
     function filerAndCheckFiles() {

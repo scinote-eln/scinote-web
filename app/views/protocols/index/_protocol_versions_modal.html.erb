@@ -46,7 +46,7 @@
               </div>
             </div>
             <div class="protocol-version-comment">
-              <% if can_manage_protocol_draft_in_repository?(draft) %>
+              <% if can_manage_protocol_draft_in_repository?(draft) && can_publish_protocol_in_repository?(draft) %>
                 <div
                     class="protocol-comment-container inline-init-handler"
                     data-field-to-update="version_comment"

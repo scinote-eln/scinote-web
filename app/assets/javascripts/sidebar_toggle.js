@@ -1,13 +1,15 @@
 var SideBarToggle = (function() {
-  var STORAGE_TOGGLE_KEY = "scinote-sidebar-toggled";
+  var LAYOUT = ".sci--layout";
   var WRAPPER = '#wrapper'
   var SIDEBAR_CONTAINER = ".sidebar-container"
 
+
   function show() {
+    $(LAYOUT).attr("data-navigator-collapsed", false);
     $(SIDEBAR_CONTAINER).removeClass('collapsed');
     $(WRAPPER).css('paddingLeft', 'var(--wrapper-width)');
     $('.navbar-secondary').removeClass("navbar-without-sidebar");
-    sessionStorage.setItem(STORAGE_TOGGLE_KEY, "un-toggled");
+    $.post($(LAYOUT).data('navitgator-state-url'), {state: 'open'});
     $(WRAPPER).trigger('sideBar::show');
     $(WRAPPER).one("transitionend", function() {
       $(WRAPPER).trigger('sideBar::shown');
@@ -15,45 +17,33 @@ var SideBarToggle = (function() {
   }
 
   function hide() {
+    $(LAYOUT).attr("data-navigator-collapsed", true);
     $(SIDEBAR_CONTAINER).addClass('collapsed');
     $(WRAPPER).css('paddingLeft', '0');
     $('.navbar-secondary').addClass("navbar-without-sidebar");
-    sessionStorage.setItem(STORAGE_TOGGLE_KEY, "toggled");
+    $.post($(LAYOUT).data('navitgator-state-url'), {state: 'collapsed'});
     $(WRAPPER).trigger('sideBar::hide');
     $(WRAPPER).one("transitionend", function() {
       $(WRAPPER).trigger('sideBar::hidden');
     })
   }
 
-  function isToggledStorage() {
-    var val = sessionStorage.getItem(STORAGE_TOGGLE_KEY);
-    if (val === null) {
-      return null;
-    }
-    return val === "toggled";
-  }
-
-  function init() {
-    $(document).on('click', `${SIDEBAR_CONTAINER} .close-sidebar`, function() {
+  $(document).on('click', `.sidebar-container .close-sidebar`, function() {
+    hide();
+  }).on('click', `.sidebar-container .show-sidebar`, function() {
+    show();
+  }).on('turbolinks:load', function() {
+    if ($(LAYOUT).attr("data-navigator-collapsed") === "true") {
       hide();
-    }).on('click', `${SIDEBAR_CONTAINER} .show-sidebar`, function() {
+    } else {
       show();
-    }).on('turbolinks:load', function() {
-      if (isToggledStorage()) {
-        hide();
-      } else {
-        show();
-      }
-      $(WRAPPER).show();
-    })
-  }
+    }
+    $(WRAPPER).show();
+  })
 
   return Object.freeze({
-    init: init,
     show: show,
-    hide: hide,
-    isToggledStorage: isToggledStorage
+    hide: hide
   })
 }());
 
-SideBarToggle.init();

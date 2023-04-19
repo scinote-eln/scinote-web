@@ -20,8 +20,8 @@
 </template>
 
 <script>
-  import DropdownSelector from 'vue/shared/dropdown_selector.vue'
-  import FilterMixin from 'vue/bmt_filter/mixins/filter.js'
+  import DropdownSelector from '../../shared/dropdown_selector.vue'
+  import FilterMixin from '../mixins/filter.js'
 
   export default {
     name: 'additionalDataFilter',

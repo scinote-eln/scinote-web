@@ -123,7 +123,7 @@ function applySearchCallback() {
   $('form.protocols-search-bar').off('ajax:success').off('ajax:error')
     .bind('ajax:success', function(evt, data) {
       var listWrapper = $('.list-wrapper');
-      if (data.page_id > 1) {
+      if (data.page_id > 2) {
         // Remove old load more button since we will append a new one
         $('.show-more-protocols-btn').remove();
         $('.list-wrapper').append(data.html);
@@ -136,7 +136,7 @@ function applySearchCallback() {
       }
       PerfectSb().update_all();
       // Reset page id after every request
-      $('form.protocols-search-bar #page-id').val(1);
+      $('form.protocols-search-bar #page-id').val(0);
 
       // Apply all callbacks on new elements
       applyClickCallbackOnProtocolCards();

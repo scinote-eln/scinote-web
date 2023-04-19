@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'zip'
 require 'fileutils'
 require 'csv'
 

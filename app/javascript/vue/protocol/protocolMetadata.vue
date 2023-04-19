@@ -25,7 +25,16 @@
       <div class="protocol-metadata">
         <p class="data-block">
           <span>{{ i18n.t("protocols.header.version") }}</span>
-          <b>{{ protocol.attributes.version }}</b>
+          <b>{{ titleVersion }}</b>
+        </p>
+        <p class="data-block" v-if="protocol.attributes.published">
+          <span>{{ i18n.t("protocols.header.published_on") }}</span>
+          <b>{{ protocol.attributes.published_on_formatted }}</b>
+        </p>
+        <p class="data-block" v-if="protocol.attributes.published">
+          <span>{{ i18n.t("protocols.header.published_by") }}</span>
+          <img :src="protocol.attributes.published_by.avatar"/>
+          {{ protocol.attributes.published_by.name }}
         </p>
         <p class="data-block">
           <span>{{ i18n.t("protocols.header.updated_at") }}</span>
@@ -80,8 +89,8 @@
 </template>
 <script>
 
-  import InlineEdit from 'vue/shared/inline_edit.vue'
-  import DropdownSelector from 'vue/shared/dropdown_selector.vue'
+  import InlineEdit from '../shared/inline_edit.vue'
+  import DropdownSelector from '../shared/dropdown_selector.vue'
 
   export default {
     name: 'ProtocolMetadata',
@@ -91,6 +100,21 @@
         type: Object,
         required: true
       },
+    },
+    computed: {
+      titleVersion() {
+        const createdFromVersion = this.protocol.attributes.created_from_version;
+
+        if (this.protocol.attributes.published) {
+          return this.protocol.attributes.version;
+        }
+
+        if (!createdFromVersion) {
+          return this.i18n.t('protocols.draft');
+        }
+
+        return this.i18n.t('protocols.header.draft_with_from_version', {nr: createdFromVersion});
+      }
     },
     methods: {
       saveAsdraft() {
@@ -103,6 +127,9 @@
           data: { protocol: { authors: authors } },
           success: (result) => {
             this.$emit('update', result.data.attributes)
+          },
+          error: (data) => {
+            HelperModule.flashAlertMsg(data.responseJSON ? Object.values(data.responseJSON).join(', ') : I18n.t('errors.general'), 'danger');
           }
         });
       },

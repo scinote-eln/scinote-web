@@ -34,7 +34,9 @@ class Protocol < ApplicationRecord
     in_repository_published_version: 7
   }
 
-  auto_strip_attributes :name, :description, nullify: false
+  auto_strip_attributes :name, :description, nullify: false, if: lambda {
+                                                                   name_changed? || description_changed?
+                                                                 }
   # Name is required when its actually specified (i.e. :in_repository? is true)
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :description, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
@@ -74,7 +76,7 @@ class Protocol < ApplicationRecord
     validate :ensure_single_draft
     validate :versions_same_name_constraint
   end
-  with_options if: -> { in_repository? && !parent } do |protocol|
+  with_options if: -> { in_repository? && !parent && !archived_changed?(from: false) } do |protocol|
     # Active protocol must have unique name inside its team
     protocol
       .validates_uniqueness_of :name, case_sensitive: false,
@@ -228,6 +230,9 @@ class Protocol < ApplicationRecord
       step.position = position
       step.protocol = self
       step.save!
+    rescue ActiveRecord::RecordInvalid => e
+      Rails.logger.error e.message
+      raise ActiveRecord::Rollback
     end
     step
   end

@@ -31,7 +31,7 @@ module StepElements
 
       render json: @step_text, serializer: StepTextSerializer, user: current_user
     rescue ActiveRecord::RecordInvalid
-      head :unprocessable_entity
+      render json: @step_text.errors, status: :unprocessable_entity
     end
 
     def destroy
