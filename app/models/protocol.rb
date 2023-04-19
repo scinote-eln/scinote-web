@@ -768,6 +768,6 @@ class Protocol < ApplicationRecord
   end
 
   def unescape_html_title
-    self.name = CGI.unescapeHTML(self.name)
+    name = CGI.unescapeHTML(self.name)
   end
 end
