@@ -1,7 +1,7 @@
 .sci--layout {
   --breadcrumbs-navigation: 56px;
-  --left-navigation: 180px;
-  --navigator-navigation: 280px;
+  --left-navigation: 204px;
+  --navigator-navigation: 288px;
   --top-navigation: 52px;
   display: grid;
   grid-template-areas: "top top top"
@@ -18,12 +18,20 @@
   transition: .4s $timing-function-sharp;
   width: 100%;
 
+  .sci--layout--navigator-open {
+    display: none;
+  }
+
   &[data-breadcrumbs-collapsed="true"] {
     --breadcrumbs-navigation: 0px;
   }
 
   &[data-navigator-collapsed="true"] {
     --navigator-navigation: 0px;
+
+    .sci--layout--navigator-open {
+      display: inline-block;
+    }
   }
 
   &[data-left-navigation-collapsed="true"] {
@@ -54,7 +62,7 @@
     left: var(--left-navigation);
     position: fixed;
     top: calc(var(--top-navigation) + var(--breadcrumbs-navigation));
-    transition: .4s $timing-function-standard;
+    transition: .4s $timing-function-sharp;
     width: var(--navigator-navigation);
     z-index: 550;
   }
@@ -65,7 +73,7 @@
     left: var(--left-navigation);
     position: fixed;
     top: var(--top-navigation);
-    transition: .4s $timing-function-standard;
+    transition: .4s $timing-function-sharp;
     width: calc(100% - var(--left-navigation));
     z-index: 600;
   }

@@ -14,3 +14,7 @@ $(document).on('click', '.sci--layout--menu-item[data-submenu=true]', (e) => {
     submenu.attr('data-collapsed', true);
   }
 });
+
+$(document).on('click', '.sci--layout--navigator-open', (e) => {
+  navigatorContainer.$data.navigatorCollapsed = false
+});

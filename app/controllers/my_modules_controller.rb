@@ -21,6 +21,7 @@ class MyModulesController < ApplicationController
   before_action :set_inline_name_editing, only: %i(protocols results activities archive)
   before_action :load_experiment_my_modules, only: %i(protocols results activities archive)
   before_action :set_breadcrumbs_items, only: %i(results protocols activities)
+  before_action :set_navigator, only: %i(protocols results activities archive)
 
   layout 'fluid'.freeze
 
@@ -608,5 +609,9 @@ class MyModulesController < ApplicationController
                  experiment: link_to(@my_module.experiment.name, my_modules_experiment_url(@my_module.experiment)),
                  my_module: link_to(@my_module.name, protocols_my_module_url(@my_module)))
     )
+  end
+
+  def set_navigator
+    @navigator = true
   end
 end

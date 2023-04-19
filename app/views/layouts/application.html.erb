@@ -42,6 +42,7 @@
     <%= javascript_include_tag 'tui_image_editor' %>
     <%= stylesheet_link_tag 'tui_image_editor_styles' %>
     <%= javascript_include_tag 'vue_navigation_top_menu' %>
+    <%= javascript_include_tag 'vue_navigation_navigator' %>
   </head>
   <body
     class="<%= yield :body_class %>"
@@ -61,8 +62,7 @@
 
     <div class="sci--layout"
          data-breadcrumbs-collapsed="<%= !@breadcrumbs_items.present? %>"
-         data-navigator-collapsed="<%= !content_for?(:sidebar_title) || session[:navigator_collapsed] %>"
-         data-navitgator-state-url="<%= navigator_state_navigations_path %>"
+         data-navigator-collapsed="<%= !@navigator || session[:navigator_collapsed] %>"
          data-left-navigation-collapsed=<%= !user_signed_in? %>
     >
       <div class="sci--layout-navigation-top" >
@@ -71,8 +71,7 @@
       <div class="sci--layout-navigation-left">
         <%= render "shared/navigation/left" if user_signed_in? %>
       </div>
-      <!-- temporary fix for sidebar (#wrapper) -->
-      <div id="wrapper" class="sci--layout-navigation-navigator">
+      <div class="sci--layout-navigation-navigator pb-3 overflow-hidden relative">
         <%= render "shared/navigation/navigator" %>
       </div>
       <div class="sci--layout-navigation-breadcrumbs">

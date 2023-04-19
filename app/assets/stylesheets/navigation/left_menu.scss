@@ -3,11 +3,10 @@
 
 .sci--layout--left-menu-container {
   background-color: $color-white;
-  box-shadow: $flyout-shadow;
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 1em 0;
+  padding: 1rem 1.5rem 1rem 0;
   width: 100%;
 
   .sci--layout--menu-item {
@@ -25,6 +24,7 @@
 
     .fas {
       display: inline-block;
+      font-size: 1.125rem;
       width: 16px;
     }
 
