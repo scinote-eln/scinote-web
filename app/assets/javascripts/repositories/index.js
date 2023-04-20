@@ -143,14 +143,28 @@
   }
 
   function initRepositoryViewSwitcher() {
+    $('.view-switch-active').addClass('form-dropdown-state-item');
+
     var viewSwitch = $('.view-switch');
     viewSwitch.on('click', '.view-switch-archived', function() {
       $('.repositories-index').removeClass('active').addClass('archived');
+
+      $('.view-switch-btn-name').text($('.view-switch-archived').text());
+
+      $('.view-switch-active').removeClass('form-dropdown-state-item');
+      $('.view-switch-archived').addClass('form-dropdown-state-item');
+
       initRepositoriesDataTable('#repositoriesList', true);
       reloadSidebar();
     });
     viewSwitch.on('click', '.view-switch-active', function() {
       $('.repositories-index').removeClass('archived').addClass('active');
+
+      $('.view-switch-btn-name').text($('.view-switch-active').text());
+
+      $('.view-switch-active').addClass('form-dropdown-state-item');
+      $('.view-switch-archived').removeClass('form-dropdown-state-item');
+
       initRepositoriesDataTable('#repositoriesList');
       reloadSidebar();
     });

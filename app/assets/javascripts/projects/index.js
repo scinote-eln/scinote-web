@@ -519,12 +519,26 @@ var ProjectsIndex = (function() {
 
   function initProjectsViewModeSwitch() {
     let projectsPageSelector = '.projects-index';
+    $('.view-switch-btn-name').text($('.button-to.selected').text());
+    $('.button-to.selected').removeClass('btn-light');
+    $('.button-to.selected').addClass('form-dropdown-state-item');
+    $('.button-to.selected .view-switch-list-span').css('color', 'white');
+    $('.button-to.selected').removeClass('selected');
 
     $(projectsPageSelector)
       .on('ajax:success', '.change-projects-view-type-form', function(ev, data) {
+        $('.view-switch-btn-name').text($(ev.target).find('.button-to').text());
+
         $(cardsWrapper).removeClass('list cards').addClass(data.cards_view_type_class);
-        $(projectsPageSelector).find('.cards-switch .button-to').removeClass('selected');
-        $(ev.target).find('.button-to').addClass('selected');
+
+        $(projectsPageSelector).find('.cards-switch .button-to').removeClass('form-dropdown-state-item');
+        $(projectsPageSelector).find('.cards-switch .button-to').addClass('btn-light');
+        $(projectsPageSelector).find('.cards-switch .button-to .view-switch-list-span').css('color', 'black');
+
+        $(ev.target).find('.button-to').removeClass('btn-light');
+        $(ev.target).find('.button-to').addClass('form-dropdown-state-item');
+        $(ev.target).find('.button-to .view-switch-list-span').css('color', 'white');
+
         $(ev.target).parents('.dropdown.view-switch').removeClass('open');
         InfiniteScroll.loadMore(cardsWrapper);
       })
