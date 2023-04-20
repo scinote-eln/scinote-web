@@ -3595,3 +3595,9 @@ en:
       over_limit: "%{attribute} is too long (maximum number is %{limit} characters)"
       below_limit: "%{attribute} is too short (minimum number is %{limit} characters)"
       blank: "%{attribute} can't be empty"
+  toolbar:
+    table_view: "Table View"
+    cards_view: "Card View"
+    canvas_view: "Canvas View"
+    active_state: "Active State"
+    archived_state: "Archived State"

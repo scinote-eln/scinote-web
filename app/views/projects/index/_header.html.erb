@@ -22,19 +22,7 @@
     </h1>
 
     <div class="sci-btn-group header-actions">
-      <%= render layout: 'shared/view_switch', locals: { disabled: false } do %>
-        <li class="view-switch-list cards-switch form-dropdown-item">
-          <%= button_to(view_type_projects_path(format: :json),
-                        method: :put,
-                        remote: true,
-                        class: "btn btn-light button-to #{ @current_view_type == 'cards' ? 'selected' : ''}",
-                        form_class: 'change-projects-view-type-form',
-                        params: { projects: { view_type: 'cards' } }) do %>
-            <i class="fas fa-th-large"></i>
-            <%= t('projects.index.header.cards') %>
-          <% end %>
-        </li>
-
+      <%= render layout: 'shared/view_switch', locals: { disabled: false, name: t("toolbar.#{@current_view_type}_view") } do %>
         <li class="view-switch-list cards-switch form-dropdown-item">
           <%= button_to(view_type_projects_path(format: :json),
                         method: :put,
@@ -42,19 +30,38 @@
                         class: "btn btn-light button-to #{ @current_view_type == 'table' ? 'selected' : ''}",
                         form_class: 'change-projects-view-type-form',
                         params: { projects: { view_type: 'table' } }) do %>
-            <i class="fas fa-list"></i>
-            <%= t('projects.index.header.table') %>
+            <span class="view-switch-list-span table-switch"><%= t('toolbar.table_view') %></span>
           <% end %>
         </li>
-        <div role="separator" class="divider"></div>
-        <li class="view-switch-active archive-switch" data-view-mode="archived" data-url="<%= projects_path %>">
-          <i class="fas fa-rocket button-icon"></i> <%= t('projects.index.header.active_projects') %>
-        </li>
-
-        <li class="view-switch-archived archive-switch" data-view-mode="active" data-url="<%= projects_path(view_mode: 'archived') %>">
-          <i class="fas fa-archive button-icon"></i> <%= t('projects.index.header.archived_projects') %>
+        <li class="view-switch-list cards-switch form-dropdown-item">
+          <%= button_to(view_type_projects_path(format: :json),
+                        method: :put,
+                        remote: true,
+                        class: "btn btn-light button-to #{ @current_view_type == 'cards' ? 'selected' : ''}",
+                        form_class: 'change-projects-view-type-form',
+                        params: { projects: { view_type: 'cards' } }) do %>
+            <span class="view-switch-list-span cards-switch"><%= t('toolbar.cards_view') %></span>
+          <% end %>
         </li>
       <% end %>
+
+      <%= render layout: 'shared/state_view_switch', locals: { disabled: false } do %>
+        <li class="view-switch-list cards-switch form-dropdown-item">
+          <%= button_tag class: "btn btn-#{params[:view_mode] ? 'light' : 'primary'} state-view-switch archive-switch", data: { url: projects_path } do %>
+            <span class="<%= params[:view_mode] ? 'text-dark' : 'text-light' %>">
+              <%= t('toolbar.active_state') %>
+            </span>
+          <% end %>
+        </li>
+        <li class="view-switch-list cards-switch form-dropdown-item">
+          <%= button_tag class: "btn btn-#{params[:view_mode] ? 'primary' : 'light'} state-view-switch archive-switch", data: { url: projects_path(view_mode: 'archived') } do %>
+            <span class="<%= params[:view_mode] ? 'text-light' : 'text-dark' %>">
+              <%= t('toolbar.archived_state') %>
+            </span>
+          <% end %>
+        </li>
+      <% end %>
+      
       <%= render layout: 'shared/filter_dropdown', locals: {
         container_class: 'projects-filters',
         dropdown_title: t("filters_modal.title"),

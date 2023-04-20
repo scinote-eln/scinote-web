@@ -64,14 +64,12 @@
           <span class="fas fa-cog"></span>&nbsp;<%= t('repositories.index.columns') %>
         </button>
           <% unless @repository.is_a?(BmtRepository) %>
-            <%= render layout: "shared/view_switch", locals: {disabled: @repository.archived?} do %>
-              <li class="view-switch-archived" data-view-mode="active">
-                <i class="fas fa-archive button-icon"></i>
-                <%= t('repositories.show.show_archived_items') %>
+            <%= render layout: "shared/view_switch", locals: {disabled: @repository.archived?, name: params[:archived] ? t('toolbar.archived_state') : t('toolbar.active_state') } do %>
+              <li class="view-switch-active">
+                <%= t('toolbar.active_state') %>
               </li>
-              <li class="view-switch-active" data-view-mode="archived">
-                <i class="fas fa-rocket button-icon"></i>
-                <%= t('repositories.show.show_active_items') %>
+              <li class="view-switch-archived">
+                <%= t('toolbar.archived_state') %>
               </li>
             <% end %>
           <% end %>
