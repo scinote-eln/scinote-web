@@ -136,7 +136,7 @@ function applySearchCallback() {
       }
       PerfectSb().update_all();
       // Reset page id after every request
-      $('form.protocols-search-bar #page-id').val(1);
+      $('form.protocols-search-bar #page-id').val(0);
 
       // Apply all callbacks on new elements
       applyClickCallbackOnProtocolCards();
