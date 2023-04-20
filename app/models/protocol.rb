@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'cgi'
 class Protocol < ApplicationRecord
   ID_PREFIX = 'PT'
 
   include ArchivableModel
   include PrefixedIdModel
+  include ActionView::Helpers::SanitizeHelper
   SEARCHABLE_ATTRIBUTES = ['protocols.name', 'protocols.description',
                            'protocols.authors', 'protocol_keywords.name', PREFIXED_ID_SQL].freeze
   REPOSITORY_TYPES = %i(in_repository_published_original in_repository_draft in_repository_published_version).freeze
@@ -768,6 +768,6 @@ class Protocol < ApplicationRecord
   end
 
   def unescape_html_title
-    self.name = CGI.unescapeHTML(name)
+    self.name = strip_tags(name)
   end
 end

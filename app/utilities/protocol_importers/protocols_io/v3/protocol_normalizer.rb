@@ -4,7 +4,7 @@ module ProtocolImporters
   module ProtocolsIo
     module V3
       class ProtocolNormalizer < ProtocolImporters::ProtocolNormalizer
-        include InputSanitizeHelper
+        include ActionView::Helpers::SanitizeHelper
 
         def normalize_protocol(client_data)
           # client_data is HttpParty ApiReponse object
@@ -17,7 +17,7 @@ module ProtocolImporters
             published_on: protocol_hash[:published_on],
             version: protocol_hash[:version_id],
             source_id: protocol_hash[:id],
-            name: sanitize_input(protocol_hash[:title]),
+            name: strip_tags(protocol_hash[:title]),
             description: {
               body: protocol_hash[:description],
               image: protocol_hash[:image][:source],
@@ -110,7 +110,7 @@ module ProtocolImporters
           normalized_data[:protocols] = protocols_hash.map do |e|
             {
               id: e[:id],
-              title: sanitize_input(e[:title]),
+              title: strip_tags(e[:title]),
               source: Constants::PROTOCOLS_IO_V3_API[:source_id],
               created_on: e[:created_on],
               published_on: e[:published_on],
