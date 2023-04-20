@@ -5,7 +5,6 @@ class Protocol < ApplicationRecord
 
   include ArchivableModel
   include PrefixedIdModel
-  include ActionView::Helpers::SanitizeHelper
   SEARCHABLE_ATTRIBUTES = ['protocols.name', 'protocols.description',
                            'protocols.authors', 'protocol_keywords.name', PREFIXED_ID_SQL].freeze
   REPOSITORY_TYPES = %i(in_repository_published_original in_repository_draft in_repository_published_version).freeze
@@ -22,7 +21,6 @@ class Protocol < ApplicationRecord
   after_update :update_automatic_user_assignments,
                if: -> { saved_change_to_default_public_user_role_id? && in_repository? }
   skip_callback :create, :after, :create_users_assignments, if: -> { in_module? }
-  after_find :unescape_html_title
 
   enum visibility: { hidden: 0, visible: 1 }
   enum protocol_type: {
@@ -765,9 +763,5 @@ class Protocol < ApplicationRecord
 
   def change_visibility
     self.visibility = default_public_user_role_id.present? ? :visible : :hidden
-  end
-
-  def unescape_html_title
-    self.name = strip_tags(name)
   end
 end

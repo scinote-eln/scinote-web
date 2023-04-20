@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'cgi'
 module ProtocolImporters
   module ProtocolsIo
     module V3
@@ -17,7 +18,7 @@ module ProtocolImporters
             published_on: protocol_hash[:published_on],
             version: protocol_hash[:version_id],
             source_id: protocol_hash[:id],
-            name: strip_tags(protocol_hash[:title]),
+            name: unescape(protocol_hash[:title]),
             description: {
               body: protocol_hash[:description],
               image: protocol_hash[:image][:source],
@@ -110,7 +111,7 @@ module ProtocolImporters
           normalized_data[:protocols] = protocols_hash.map do |e|
             {
               id: e[:id],
-              title: strip_tags(e[:title]),
+              title: unescape(e[:title]),
               source: Constants::PROTOCOLS_IO_V3_API[:source_id],
               created_on: e[:created_on],
               published_on: e[:published_on],
@@ -140,6 +141,12 @@ module ProtocolImporters
           normalized_data
         rescue StandardError => e
           raise ProtocolImporters::ProtocolsIo::V3::NormalizerError.new(e.class.to_s.downcase.to_sym), e.message
+        end
+
+        private
+
+        def unescape(title)
+          CGI::unescapeHTML(strip_tags(title))
         end
       end
     end
