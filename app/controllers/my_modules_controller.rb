@@ -612,6 +612,9 @@ class MyModulesController < ApplicationController
   end
 
   def set_navigator
-    @navigator = true
+    @navigator = {
+      url: tree_navigator_my_module_path(@my_module),
+      id: @my_module.code
+    }
   end
 end

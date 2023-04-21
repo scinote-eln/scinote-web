@@ -1,4 +1,6 @@
 <% if @navigator %>
+  <%= hidden_field_tag :active_navigator_item, @navigator[:id] %>
+  <%= hidden_field_tag :active_navigator_url, @navigator[:url] %>
   <div id="sciNavigationNavigatorContainer"
        class="contents"
        data-navigator-state-url="<%= navigator_state_navigations_path %>"

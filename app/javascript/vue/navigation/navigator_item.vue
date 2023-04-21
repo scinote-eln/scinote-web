@@ -1,15 +1,19 @@
 <template>
-  <div class="sn-color-primary pl-7 pt-4 flex items-center flex-wrap">
-    <div class="w-5 mr-2 flex justify-start">
-      <i v-if="haveChildren"
-        class="fas cursor-pointer"
-        :class="{'fa-chevron-right': !childrenOpen, 'fa-chevron-down': childrenOpen }"
-        @click="childrenOpen = !childrenOpen"></i>
+  <div class="sn-color-primary pl-7 w-64 flex justify-center flex-col" :navigator-item-id="item.id">
+    <div class="p-2 flex items-center whitespace-nowrap" :class="{ 'sn-background-background-violet': activeItem }">
+      <div class="w-5 mr-2 flex justify-start shrink-0">
+        <i v-if="hasChildren"
+          class="fas cursor-pointer"
+          :class="{'fa-chevron-right': !childrenExpanded, 'fa-chevron-down': childrenExpanded }"
+          @click="toggleChildren"></i>
+      </div>
+      <i v-if="itemIcon" class="mr-2" :class="itemIcon"></i>
+      <a :href="item.url" class="text-ellipsis overflow-hidden">
+        {{ item.name }}
+      </a>
     </div>
-    <i v-if="item.icon" class="mr-2" :class="item.icon"></i>
-    {{ item.name }}
-    <div v-if="childrenOpen" class="basis-full">
-      <NavigatorItem v-for="item in sortedMenuItems" :key="item.id" :item="item" />
+    <div class="basis-full" :class="{'hidden': !childrenExpanded}">
+      <NavigatorItem v-for="item in sortedMenuItems" @item:expand="treeExpand" :key="item.id" :currentItemId="currentItemId" :item="item" />
     </div>
   </div>
 </template>
@@ -18,20 +22,67 @@
 export default {
   name: 'NavigatorItem',
   props: {
-    item: Object
+    item: Object,
+    currentItemId: String
   },
   data: function() {
     return {
-      childrenOpen: false
-    }
+      childrenExpanded: false,
+      children: []
+    };
   },
   computed: {
-    haveChildren: function() {
-      return this.item.children && this.item.children.length > 0
+    hasChildren: function() {
+      return this.item.has_children;
     },
     sortedMenuItems: function() {
-      if (!this.haveChildren) return []
-      return this.item.children.sort((a, b) => a.name - b.name)
+      return this.children.sort((a, b) => a.name - b.name);
+    },
+    activeItem: function() {
+      return this.item.id == this.currentItemId;
+    },
+    itemIcon: function() {
+      switch(this.item.type) {
+        case 'folder':
+          return 'fas fa-folder';
+        default:
+          return null;
+      }
+    }
+  },
+  created: function() {
+    if (this.item.children) this.children = this.item.children;
+  },
+  mounted: function() {
+    this.selectItem();
+  },
+  watch: {
+    currentItemId: function() {
+      this.selectItem();
+    }
+  },
+  methods: {
+    toggleChildren: function() {
+      this.childrenExpanded = !this.childrenExpanded;
+      if (this.childrenExpanded) this.loadChildren();
+    },
+    loadChildren: function() {
+      $.get(this.item.children_url, {archived: false}, (data) => {
+        this.children = data.items;
+      });
+    },
+    treeExpand: function() {
+      this.childrenExpanded = true;
+      this.$emit('item:expand');
+    },
+    selectItem: function() {
+      if (this.activeItem && !this.childrenExpanded) {
+        this.$emit('item:expand');
+        if (this.hasChildren) {
+          this.childrenExpanded = true;
+          this.loadChildren();
+        }
+      }
     }
   },
 }

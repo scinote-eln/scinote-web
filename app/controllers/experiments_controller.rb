@@ -663,6 +663,9 @@ class ExperimentsController < ApplicationController
   end
 
   def set_navigator
-    @navigator = true
+    @navigator = {
+      url: tree_navigator_experiment_path(@experiment),
+      id: @experiment.code
+    }
   end
 end

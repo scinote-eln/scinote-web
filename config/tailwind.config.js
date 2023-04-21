@@ -15,6 +15,10 @@ module.exports = {
       },
     },
   },
+  blocklist: [
+    'collapse',
+    'container'
+  ],
   plugins: [
     require('@tailwindcss/forms'),
     require('@tailwindcss/aspect-ratio'),
