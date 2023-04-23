@@ -25,16 +25,10 @@ class ProjectsController < ApplicationController
   before_action :set_folder_inline_name_editing, only: %i(index cards)
   before_action :set_breadcrumbs_items, only: %i(index show)
   before_action :set_navigator, only: %i(index show)
-
+  before_action :set_current_projects_view_type, only: %i(index cards)
   layout 'fluid'
 
-  def index
-    if current_team
-      view_state = current_team.current_view_state(current_user)
-      @current_sort = view_state.state.dig('projects', projects_view_mode, 'sort') || 'atoz'
-      @current_view_type = view_state.state.dig('projects', 'view_type')
-    end
-  end
+  def index; end
 
   def cards
     overview_service = ProjectsOverviewService.new(current_team, current_user, current_folder, params)
@@ -483,5 +477,13 @@ class ProjectsController < ApplicationController
 
   def set_navigator
     @navigator = true
+  end
+
+  def set_current_projects_view_type
+    if current_team
+      view_state = current_team.current_view_state(current_user)
+      @current_sort = view_state.state.dig('projects', projects_view_mode, 'sort') || 'atoz'
+      @current_view_type = view_state.state.dig('projects', 'view_type')
+    end
   end
 end
