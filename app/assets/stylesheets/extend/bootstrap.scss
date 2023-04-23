@@ -129,17 +129,13 @@
 
     .close {
       color: $color-volcano;
+      opacity: 1;
       line-height: 25px;
       margin: 0;
 
       &:active {
         border: 0;
         outline: 0;
-      }
-
-      &:hover,
-      &:focus {
-        opacity: .2;
       }
     }
   }
