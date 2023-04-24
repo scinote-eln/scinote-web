@@ -44,6 +44,7 @@
         white-space: nowrap;
       }
     }
+
     .header-actions {
       align-items: center;
       display: flex;
@@ -51,9 +52,11 @@
       margin-left: auto;
     }
 
-    .view-switch, .filter-container {
+    .view-switch,
+    .filter-container {
       display: inline-block;
     }
+
     .view-switch {
       margin-left: auto;
 

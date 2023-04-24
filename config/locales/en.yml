@@ -1310,14 +1310,14 @@ en:
       description: "Description"
       more: "more"
     index:
-      edit_option: "Edit details"
-      clone_option: "Duplicate as template"
+      edit_option: "Edit"
+      clone_option: "Duplicate"
       move_option: "Move"
       archive_option: "Archive"
       archive_confirm: "Are you sure you want to archive this project?"
       restore_option: "Restore"
       more_link: "More"
-      experiment_access: "Experiment access"
+      experiment_access: "Access"
       details_modal:
         description: "%{name} description"
     new:

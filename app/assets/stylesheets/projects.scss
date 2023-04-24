@@ -640,13 +640,14 @@ li.module-hover {
 
   .projects-toolbar {
     .project-actions {
+      align-items: center;
       display: flex;
       justify-content: space-between;
-      align-items: center;
 
       .btn {
         margin-right: .25em;
       }
+
       .left {
         align-self: flex-start;
       }
@@ -659,7 +660,9 @@ li.module-hover {
         align-self: flex-end;
         margin-right: 25px;
       }
+
     }
+
     .form-group {
       width: 100%;
     }
