@@ -21,6 +21,12 @@
     max-width: 900px;
     padding: 10px;
   }
+
+  .dropdown {
+    .dropdown-menu {
+      z-index: 100;
+    }
+  }
 }
 
 .content-pane.protocols-repository-edit-view {

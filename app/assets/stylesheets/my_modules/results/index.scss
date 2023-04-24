@@ -73,3 +73,11 @@
     width: 3em;
   }
 }
+
+.content-pane {
+  .dropdown {
+    .dropdown-menu {
+      z-index: 100;
+    }
+  }
+}
