@@ -482,6 +482,20 @@ class ProjectsController < ApplicationController
   end
 
   def set_navigator
-    @navigator = true
+    @navigator = if @project
+                   {
+                     url: tree_navigator_project_path(@project),
+                     id: @project.code
+                   }
+                 elsif current_folder
+                   {
+                     url: tree_navigator_project_folder_path(current_folder),
+                     id: current_folder.code
+                   }
+                 else
+                   {
+                     url: navigator_projects_path
+                   }
+                 end
   end
 end

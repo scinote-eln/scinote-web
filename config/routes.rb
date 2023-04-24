@@ -292,6 +292,32 @@ Rails.application.routes.draw do
       resources :my_modules, only: %i(show update edit)
     end
 
+    namespace :navigator do
+      resources :project_folders, only: %i(show) do
+        member do
+          get :tree
+        end
+      end
+
+      resources :projects, only: %i(show index) do
+        member do
+          get :tree
+        end
+      end
+
+      resources :experiments, only: %i(show) do
+        member do
+          get :tree
+        end
+      end
+
+      resources :my_modules, only: %i(show) do
+        member do
+          get :tree
+        end
+      end
+    end
+
     resources :projects, except: [:destroy] do
       resources :project_comments,
                 path: '/comments',

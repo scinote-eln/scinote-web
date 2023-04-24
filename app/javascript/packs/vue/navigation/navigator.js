@@ -8,7 +8,10 @@ Vue.use(PerfectScrollbar);
 
 Vue.prototype.i18n = window.I18n;
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('turbolinks:load', () => {
+  if ($('#sciNavigationNavigatorContainer').length === 0) return;
+  if ($('.navigator-container').length > 0) return;
+
   const navigator = new Vue({
     el: '#sciNavigationNavigatorContainer',
     components: {
