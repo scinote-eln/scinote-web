@@ -7,6 +7,10 @@ module RepositoryDatatableHelper
     has_stock_management = repository.has_stock_management?
     reminders_enabled = Repository.reminders_enabled?
     repository_rows = reminders_enabled ? with_reminders_status(repository_rows, repository) : repository_rows
+    stock_managable = has_stock_management && !options[:disable_stock_management] &&
+                      can_manage_repository_stock?(repository)
+    stock_consumption_permitted = has_stock_management && options[:include_stock_consumption] && options[:my_module] &&
+                                  stock_consumption_permitted?(repository, options[:my_module])
 
     repository_rows.map do |record|
       row = public_send("#{repository.class.name.underscore}_default_columns", record)
@@ -26,22 +30,6 @@ module RepositoryDatatableHelper
         row['hasActiveReminders'] = record.has_active_stock_reminders || record.has_active_datetime_reminders
       end
 
-      if has_stock_management
-        row['manageStockUrl'] = if record.has_stock?
-                                  Rails.application.routes.url_helpers
-                                       .edit_repository_stock_repository_repository_row_url(
-                                         repository,
-                                         record
-                                       )
-                                else
-                                  Rails.application.routes.url_helpers
-                                       .new_repository_stock_repository_repository_row_url(
-                                         repository,
-                                         record
-                                       )
-                                end
-      end
-
       unless options[:view_mode]
         row['recordUpdateUrl'] =
           Rails.application.routes.url_helpers.repository_repository_row_path(repository, record)
@@ -58,42 +46,55 @@ module RepositoryDatatableHelper
           display_cell_value(cell, team, repository, reminders_enabled: reminders_enabled)
       end
 
-      stock_cell = record.repository_cells.find { |cell| cell.value_type == 'RepositoryStockValue' }
-      stock_managable = has_stock_management &&
-                        !options[:disable_stock_management] &&
-                        can_manage_repository_stock?(record.repository)
+      if has_stock_management
+        row['manageStockUrl'] = if record.has_stock?
+                                  Rails.application.routes.url_helpers
+                                       .edit_repository_stock_repository_repository_row_url(
+                                         repository,
+                                         record
+                                       )
+                                else
+                                  Rails.application.routes.url_helpers
+                                       .new_repository_stock_repository_repository_row_url(
+                                         repository,
+                                         record
+                                       )
+                                end
 
-      # always add stock cell, even if empty
-      row['stock'] = stock_cell.present? ? display_cell_value(record.repository_stock_cell, team, repository) : {}
-      row['stock'][:stock_managable] = stock_managable
-      row['stock']['displayWarnings'] = display_stock_warnings?(repository)
-      row['stock'][:stock_status] = stock_cell&.value&.status
+        stock_cell = record.repository_cells.find { |cell| cell.value_type == 'RepositoryStockValue' }
 
-      row['stock']['value_type'] = 'RepositoryStockValue'
+        # always add stock cell, even if empty
+        row['stock'] = stock_cell.present? ? display_cell_value(record.repository_stock_cell, team, repository) : {}
+        row['stock'][:stock_managable] = stock_managable
+        row['stock']['displayWarnings'] = display_stock_warnings?(repository)
+        row['stock'][:stock_status] = stock_cell&.value&.status
 
-      if options[:include_stock_consumption] && has_stock_management && options[:my_module]
-        consumption_managable = stock_consumption_managable?(record, repository, options[:my_module])
-        consumed_stock_formatted =
-          number_with_precision(
-            record.consumed_stock,
-            precision: (record.repository.repository_stock_column.metadata['decimals'].to_i || 0),
-            strip_insignificant_zeros: true
-          )
-        row['consumedStock'] = {
-          stock_present: stock_cell.present?,
-          consumptionPermitted: stock_consumption_permitted?(repository, options[:my_module]),
-          consumptionManagable: consumption_managable,
-          updateStockConsumptionUrl: Rails.application.routes.url_helpers.consume_modal_my_module_repository_path(
-            options[:my_module],
-            record.repository,
-            row_id: record.id
-          ),
-          value: {
-            consumed_stock: record.consumed_stock,
-            consumed_stock_formatted:
-              "#{consumed_stock_formatted || 0} #{record.repository_stock_value&.repository_stock_unit_item&.data}"
+        row['stock']['value_type'] = 'RepositoryStockValue'
+
+        if options[:include_stock_consumption] && options[:my_module]
+          consumption_managable = stock_consumption_managable?(record, repository, options[:my_module])
+          consumed_stock_formatted =
+            number_with_precision(
+              record.consumed_stock,
+              precision: (repository.repository_stock_column.metadata['decimals'].to_i || 0),
+              strip_insignificant_zeros: true
+            )
+          row['consumedStock'] = {
+            stock_present: stock_cell.present?,
+            consumptionPermitted: stock_consumption_permitted,
+            consumptionManagable: consumption_managable,
+            updateStockConsumptionUrl: Rails.application.routes.url_helpers.consume_modal_my_module_repository_path(
+              options[:my_module],
+              repository,
+              row_id: record.id
+            ),
+            value: {
+              consumed_stock: record.consumed_stock,
+              consumed_stock_formatted:
+                "#{consumed_stock_formatted || 0} #{record.repository_stock_value&.repository_stock_unit_item&.data}"
+            }
           }
-        }
+        end
       end
 
       row
@@ -104,6 +105,9 @@ module RepositoryDatatableHelper
     has_stock_management = repository.has_stock_management?
     reminders_enabled = Repository.reminders_enabled?
     repository_rows = reminders_enabled ? with_reminders_status(repository_rows, repository) : repository_rows
+    # Always disabled in a simple view
+    stock_managable = false
+    stock_consumption_permitted = has_stock_management && stock_consumption_permitted?(repository, options[:my_module])
 
     repository_rows.map do |record|
       row = {
@@ -125,8 +129,6 @@ module RepositoryDatatableHelper
 
       if has_stock_management
         stock_present = record.repository_stock_cell.present?
-        # Always disabled in a simple view
-        stock_managable = false
 
         consumption_managable = stock_consumption_managable?(record, repository, my_module)
 
@@ -164,7 +166,7 @@ module RepositoryDatatableHelper
         end
 
         row['consumedStock']['stock_present'] = stock_present
-        row['consumedStock']['consumptionPermitted'] = stock_consumption_permitted?(repository, my_module)
+        row['consumedStock']['consumptionPermitted'] = stock_consumption_permitted
         row['consumedStock']['consumptionManagable'] = consumption_managable
       end
 
