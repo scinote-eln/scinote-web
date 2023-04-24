@@ -1188,6 +1188,8 @@ en:
         new_comment: "New comment"
         edit_title: "Edit result"
         archive_title: "Archive result"
+    archive_results:
+      preview: "View"
     activities:
       head_title: "%{project} | %{module} | Activity"
       no_activities: "There are no activities for this task."
