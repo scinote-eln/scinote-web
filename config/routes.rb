@@ -531,7 +531,7 @@ Rails.application.routes.draw do
     end
 
     # System notifications routes
-    resources :system_notifications, only: %i(index show) do
+    resources :system_notifications, only: %i(show) do
       collection do
         post 'mark_as_seen'
         get 'unseen_counter'
