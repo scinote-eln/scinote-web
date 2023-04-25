@@ -485,16 +485,19 @@ class ProjectsController < ApplicationController
     @navigator = if @project
                    {
                      url: tree_navigator_project_path(@project),
+                     archived: params[:view_mode] == 'archived',
                      id: @project.code
                    }
                  elsif current_folder
                    {
                      url: tree_navigator_project_folder_path(current_folder),
+                     archived: params[:view_mode] == 'archived',
                      id: current_folder.code
                    }
                  else
                    {
-                     url: navigator_projects_path
+                     url: navigator_projects_path,
+                     archived: params[:view_mode] == 'archived'
                    }
                  end
   end

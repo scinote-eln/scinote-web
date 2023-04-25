@@ -8,7 +8,11 @@
       <i @click="$emit('navigator:colapse')" class="fas fa-times ml-auto cursor-pointer"></i>
     </div>
     <perfect-scrollbar class="grow px-2 py-4 relative">
-      <NavigatorItem v-for="item in sortedMenuItems" :key="item.id" :currentItemId="currentItemId" :item="item" />
+      <NavigatorItem v-for="item in sortedMenuItems"
+                     :key="item.id"
+                     :currentItemId="currentItemId"
+                     :item="item"
+                     :archived="archived" />
     </perfect-scrollbar>
   </div>
 </template>
@@ -27,17 +31,17 @@ export default {
       menuItems: [],
       navigatorCollapsed: false,
       navigatorUrl: null,
-      currentItemId: null
+      currentItemId: null,
+      archived: null
     }
   },
   computed: {
     sortedMenuItems() {
-      return this.menuItems.sort((a, b) => a.name - b.name)
+      return this.menuItems.sort((a, b) => a.name - b.name);
     }
   },
   created() {
     this.changePage();
-    this.loadTree();
 
     $(document).on('turbolinks:load', () => {
       this.changePage();
@@ -46,16 +50,25 @@ export default {
       }
     });
   },
+  watch: {
+    archived() {
+      this.loadTree();
+    }
+  },
   methods: {
     changePage() {
       this.navigatorUrl = $('#active_navigator_url').val();
       this.currentItemId = $('#active_navigator_item').val();
+      this.archived = $('#active_navigator_archived').val() === 'true';
     },
     loadTree() {
       if (!this.navigatorUrl) return;
 
-      $.get(this.navigatorUrl, {archived: false}, (data) => {
-        this.menuItems = data.items
+      $.get(this.navigatorUrl, {archived: this.archived}, (data) => {
+        this.menuItems = [];
+        this.$nextTick(() => {
+          this.menuItems = data.items;
+        });
       })
     }
   },
