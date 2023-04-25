@@ -173,7 +173,8 @@ module ApplicationHelper
             :thumb,
             base64_encoded_imgs
           )
-        })
+        }
+      )
   end
 
   # No more dirty hack
