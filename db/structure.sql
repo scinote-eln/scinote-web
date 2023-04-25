@@ -279,7 +279,7 @@ CREATE TABLE public.assets (
     updated_at timestamp without time zone NOT NULL,
     created_by_id bigint,
     last_modified_by_id bigint,
-    estimated_size integer DEFAULT 0 NOT NULL,
+    estimated_size bigint DEFAULT 0 NOT NULL,
     lock character varying(1024),
     lock_ttl integer,
     version integer DEFAULT 1,
@@ -2844,7 +2844,7 @@ ALTER SEQUENCE public.temp_files_id_seq OWNED BY public.temp_files.id;
 
 CREATE TABLE public.tiny_mce_assets (
     id bigint NOT NULL,
-    estimated_size integer DEFAULT 0 NOT NULL,
+    estimated_size bigint DEFAULT 0 NOT NULL,
     team_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
@@ -8686,6 +8686,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230120141017'),
 ('20230206095817'),
 ('20230223142119'),
-('20230227131215');
+('20230227131215'),
+('20230414091215');
 
 
