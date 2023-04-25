@@ -8,7 +8,7 @@ $.fn.dataTable.render.RowNameValidator = function($input) {
   if (value === '') {
     errorText = I18n.t('repositories.table.name.errors.is_empty');
   } else if (value.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH) {
-    errorText = I18n.t('repositories.table.name.errors.too_long', { max_length: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB });
+    errorText = I18n.t('repositories.table.name.errors.too_long', { max_length: GLOBAL_CONSTANTS.NAME_MAX_LENGTH });
   }
 
   if (errorText) {
