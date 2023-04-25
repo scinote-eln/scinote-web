@@ -469,6 +469,7 @@ var ProjectsIndex = (function() {
         $('#breadcrumbsWrapper').html(data.breadcrumbs_html);
         $(projectsWrapper).find('.projects-title').html(data.title_html);
         $(toolbarWrapper).html(data.toolbar_html);
+        initProjectsViewModeSwitch();
         viewContainer.data('projects-cards-url', data.projects_cards_url);
         viewContainer.removeClass('no-results');
         viewContainer.find('.card, .projects-group, .no-results-container').remove();
