@@ -2173,6 +2173,10 @@ en:
       no_tasks: "This item in not assigned to any task."
       amount: "Amount: %{value}"
       unit: "Unit: %{unit}"
+      assign_to_task: "Assign to this task"
+      assign_to_task_error:
+        no_access: "You can only view this task"
+        already_assigned: "This item is already assigned to this task"
     modal_print_label:
       head_title: "Print label - %{repository_row}"
       head_title_multiple: "Print label - %{repository_rows} rows"
