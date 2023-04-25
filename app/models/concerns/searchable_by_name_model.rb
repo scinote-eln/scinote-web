@@ -38,10 +38,13 @@ module SearchableByNameModel
     def self.search_by_name_and_id(user, teams = [], query = nil)
       return if user.blank? || teams.blank?
 
+      sanitized_query = ActiveRecord::Base.sanitize_sql_like(query.to_s)
+
       sql_q = viewable_by_user(user, teams).where(
-        "trim_html_tags(#{table_name}.name) ILIKE '%#{query}%' OR " \
-        "(#{self::PREFIXED_ID_SQL} ILIKE '#{self::ID_PREFIX}%' AND " \
-        " #{self::PREFIXED_ID_SQL} ILIKE '#{query}%') "
+        "trim_html_tags(#{table_name}.name) ILIKE ? OR " \
+        "(#{self::PREFIXED_ID_SQL} ILIKE ? AND " \
+        " #{self::PREFIXED_ID_SQL} ILIKE ?) ",
+        "%#{sanitized_query}%", "#{self::ID_PREFIX}%", "#{sanitized_query}%"
       )
 
       sql_q.limit(Constants::SEARCH_LIMIT)

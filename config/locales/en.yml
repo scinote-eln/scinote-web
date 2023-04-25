@@ -3183,7 +3183,7 @@ en:
       experiments: "Experiments with this name/ID were not found"
       my_modules: "Tasks with this name/ID were not found"
       repository_rows: "Items with this name/ID were not found"
-      users: "Users with this name/ID were not found"
+      users: "Users with this name were not found"
       description: "Please make sure there are no typos, or erase letters one by one unless you see some results"
     projects: PROJECTS
     experiments: EXPERIMENTS
