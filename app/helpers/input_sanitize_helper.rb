@@ -13,7 +13,7 @@ module InputSanitizeHelper
   end
 
   def unescape_input(text)
-    CGI::unescapeHTML(text)
+    CGI.unescapeHTML(text)
   end
 
   def custom_auto_link(text, options = {})
