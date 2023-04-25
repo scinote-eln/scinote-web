@@ -6,6 +6,7 @@ module ProtocolImporters
     module V3
       class ProtocolNormalizer < ProtocolImporters::ProtocolNormalizer
         include ActionView::Helpers::SanitizeHelper
+        include InputSanitizeHelper
 
         def normalize_protocol(client_data)
           # client_data is HttpParty ApiReponse object
@@ -146,7 +147,7 @@ module ProtocolImporters
         private
 
         def unescape(title)
-          CGI::unescapeHTML(strip_tags(title))
+          strip_tags(unescape_input(title))
         end
       end
     end

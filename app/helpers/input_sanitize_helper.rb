@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'sanitize'
+require 'cgi'
 
 module InputSanitizeHelper
   def sanitize_input(html, _tags = [], _attributes = [])
@@ -9,6 +10,10 @@ module InputSanitizeHelper
 
   def escape_input(text)
     ERB::Util.html_escape(text)
+  end
+
+  def unescape_input(text)
+    CGI::unescapeHTML(text)
   end
 
   def custom_auto_link(text, options = {})
