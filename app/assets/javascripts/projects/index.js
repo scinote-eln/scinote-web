@@ -306,15 +306,6 @@ var ProjectsIndex = (function() {
     }
   }
 
-  $('#projectsWrapper').on('click', '.project-folder-link', function(event) {
-    event.preventDefault();
-    event.stopPropagation();
-    $(cardsWrapper).data('projectsCardsUrl', $(this).data('projectsCardsUrl'));
-    history.replaceState({}, '', this.href);
-    $('.sidebar-container').data('sidebarUrl', $(this).data('sidebarUrl'));
-    refreshCurrentView();
-  });
-
   function refreshCurrentView() {
     loadCardsView();
     Sidebar.reload({

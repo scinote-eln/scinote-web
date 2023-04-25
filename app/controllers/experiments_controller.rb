@@ -20,7 +20,7 @@ class ExperimentsController < ApplicationController
   before_action :check_move_permissions, only: %i(move_modal move)
   before_action :set_inline_name_editing, only: %i(canvas table module_archive)
   before_action :set_breadcrumbs_items, only: %i(canvas table module_archive)
-  before_action :set_navigator, only: %i(canvas archive)
+  before_action :set_navigator, only: %i(canvas module_archive table)
 
   layout 'fluid'
 
@@ -665,6 +665,7 @@ class ExperimentsController < ApplicationController
   def set_navigator
     @navigator = {
       url: tree_navigator_experiment_path(@experiment),
+      archived: (action_name == 'module_archive' || params[:view_mode] == 'archived'),
       id: @experiment.code
     }
   end

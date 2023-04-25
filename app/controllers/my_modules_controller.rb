@@ -614,6 +614,7 @@ class MyModulesController < ApplicationController
   def set_navigator
     @navigator = {
       url: tree_navigator_my_module_path(@my_module),
+      archived: @my_module.archived? || @my_module.experiment.archived_branch?,
       id: @my_module.code
     }
   end

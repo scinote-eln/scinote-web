@@ -1,19 +1,30 @@
 <template>
-  <div class="sn-color-primary pl-7 w-64 flex justify-center flex-col" :navigator-item-id="item.id">
-    <div class="p-2 flex items-center whitespace-nowrap" :class="{ 'sn-background-background-violet': activeItem }">
+  <div class="sn-color--sn-blue pl-7 w-64 flex justify-center flex-col" :navigator-item-id="item.id">
+    <div class="p-2 flex items-center whitespace-nowrap" :class="{ 'sn-background--sn-light-grey': activeItem }">
       <div class="w-5 mr-2 flex justify-start shrink-0">
         <i v-if="hasChildren"
           class="fas cursor-pointer"
           :class="{'fa-chevron-right': !childrenExpanded, 'fa-chevron-down': childrenExpanded }"
           @click="toggleChildren"></i>
       </div>
-      <i v-if="itemIcon" class="mr-2" :class="itemIcon"></i>
-      <a :href="item.url" class="text-ellipsis overflow-hidden">
+      <a :href="item.url"
+          class="text-ellipsis overflow-hidden hover:no-underline"
+          :class="{
+            'pointer-events-none': (!item.archived && archived),
+            'sn-color--sn-grey': (!item.archived && archived)
+          }">
+        <i v-if="itemIcon" class="mr-2" :class="itemIcon"></i>
+        <template v-if="item.archived">(A)</template>
         {{ item.name }}
       </a>
     </div>
     <div class="basis-full" :class="{'hidden': !childrenExpanded}">
-      <NavigatorItem v-for="item in sortedMenuItems" @item:expand="treeExpand" :key="item.id" :currentItemId="currentItemId" :item="item" />
+      <NavigatorItem v-for="item in sortedMenuItems"
+                     @item:expand="treeExpand"
+                     :key="item.id"
+                     :currentItemId="currentItemId"
+                     :item="item"
+                     :archived="archived" />
     </div>
   </div>
 </template>
@@ -23,7 +34,8 @@ export default {
   name: 'NavigatorItem',
   props: {
     item: Object,
-    currentItemId: String
+    currentItemId: String,
+    archived: Boolean
   },
   data: function() {
     return {
@@ -67,7 +79,7 @@ export default {
       if (this.childrenExpanded) this.loadChildren();
     },
     loadChildren: function() {
-      $.get(this.item.children_url, {archived: false}, (data) => {
+      $.get(this.item.children_url, {archived: this.archived}, (data) => {
         this.children = data.items;
       });
     },

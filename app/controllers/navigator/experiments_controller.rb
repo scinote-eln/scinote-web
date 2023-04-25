@@ -12,10 +12,10 @@ module Navigator
 
     def tree
       my_modules = my_module_level_branch(@experiment, params[:archived] == 'true')
-      experiments = experiment_level_branch(@experiment.project, params[:archived] == 'true')
+      experiments = experiment_level_branch(@experiment, params[:archived] == 'true')
       experiments.find { |i| i[:id] == @experiment.code }[:children] = my_modules
 
-      tree = project_level_branch(@experiment.project.project_folder, params[:archived] == 'true')
+      tree = project_level_branch(@experiment.project, params[:archived] == 'true')
       tree.find { |i| i[:id] == @experiment.project.code }[:children] = experiments
 
       tree = build_folder_tree(@experiment.project.project_folder, tree) if @experiment.project.project_folder

@@ -16,9 +16,7 @@ module Navigator
     end
 
     def tree
-      experiments = experiment_level_branch(@project, params[:archived] == 'true')
-      tree = project_level_branch(@project.project_folder, params[:archived] == 'true')
-      tree.find { |i| i[:id] == @project.code }[:children] = experiments
+      tree = project_level_branch(@project, params[:archived] == 'true')
 
       tree = build_folder_tree(@project.project_folder, tree) if @project.project_folder
 

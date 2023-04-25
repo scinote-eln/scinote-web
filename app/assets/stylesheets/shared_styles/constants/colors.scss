@@ -113,10 +113,14 @@ $color-dd-hover: #f5f5f5;
   --sn-background-bloo: #E2F0FF;
 }
 
-.sn-color-primary {
+.sn-color--sn-blue {
   color: var(--sn-blue);
 }
 
-.sn-background-background-violet {
+.sn-color--sn-grey {
+  color: var(--sn-grey);
+}
+
+.sn-background--sn-light-grey {
   background-color: var(--sn-light-grey);
 }
