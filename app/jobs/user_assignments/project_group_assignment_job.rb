@@ -8,8 +8,10 @@ module UserAssignments
       @team = team
       @assigned_by = assigned_by
 
+      return unless project.visible?
+
       ActiveRecord::Base.transaction do
-        team.users.where.not(id: assigned_by).find_each do |user|
+        team.users.find_each do |user|
           user_assignment = UserAssignment.find_or_initialize_by(
             user: user,
             assignable: project
