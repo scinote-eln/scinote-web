@@ -134,6 +134,37 @@ var RepositoryDatatable = (function(global) {
     }
   }
 
+  function initEditRowForms() {
+    let $forms = $(TABLE_ID).find('.repository-row-edit-form');
+
+    let formsCount = $forms.length;
+    $forms.each(function() {
+      const form = $(this);
+      form.on('submit', function(event) {
+        event.preventDefault();
+        $.ajax({
+          url: form.attr('action'),
+          type: form.attr('method'),
+          data: form.serialize(),
+          success: function() {
+            formsCount -= 1;
+          },
+          error: function() {
+            formsCount += 1;
+          },
+          complete: function() {
+            $('html, body').animate({ scrollLeft: 0 }, 300);
+            if (formsCount === 0) {
+              $(TABLE_ID).dataTable().api().ajax.reload(() => {
+                animateSpinner(null, false);
+              }, false);
+            }
+          }
+        });
+      });
+    });
+  }
+
   function clearRowSelection() {
     $('.dt-body-center .repository-row-selector').prop('checked', false);
     $('.dt-body-center .repository-row-selector').closest('tr').removeClass('selected');
@@ -161,6 +192,7 @@ var RepositoryDatatable = (function(global) {
 
     clearRowSelection();
     updateButtons();
+    initEditRowForms();
   }
 
   // Updates "Select all" control in a data table
