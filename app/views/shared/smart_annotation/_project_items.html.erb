@@ -4,6 +4,7 @@
     <li class="item" data-name="<%= project.name %>" data-id="<%= project.id.base62_encode %>" data-type="prj">
       <span class='sa-type'>Prj</span>
       <span class="item-text"><%= project.name %></span>
+      <%= render partial: 'shared/smart_annotation/atwho_control_buttons.html.erb' %>
     </li>
   <% end %>
   <% if limit_reached %>

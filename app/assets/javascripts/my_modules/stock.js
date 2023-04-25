@@ -25,7 +25,7 @@ var MyModuleStockConsumption = (function() {
           $manageModal.find('.modal-content').html(result.html);
           $manageModal.modal('show');
           focusStockConsumption();
-          SmartAnnotation.init($(CONSUMPTION_MODAL + ' #comment')[0]);
+          SmartAnnotation.init($(CONSUMPTION_MODAL + ' #comment')[0], false);
 
           $('#stock_consumption').on('input', function() {
             let initialValue = new Decimal($(this).data('initial-value') || 0);

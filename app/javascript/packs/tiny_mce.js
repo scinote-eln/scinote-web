@@ -368,7 +368,7 @@ window.TinyMCE = (() => {
             editor.selection.select(editor.getBody(), true);
             editor.selection.collapse(false);
 
-            SmartAnnotation.init($(editor.contentDocument.activeElement));
+            SmartAnnotation.init($(editor.contentDocument.activeElement), false, options.assignableMyModuleId);
             SmartAnnotation.preventPropagation('.atwho-user-popover');
 
             if (options.afterInitCallback) { options.afterInitCallback(); }

@@ -10,6 +10,7 @@
         <li class="item" data-name="<%= experiment.name %>" data-id="<%= experiment.id.base62_encode %>" data-type="exp">
           <span class='sa-type'>Exp</span>
           <span class="item-text"><%= experiment.name %></span>
+          <%= render partial: 'shared/smart_annotation/atwho_control_buttons.html.erb' %>
         </li>
       <% end %>
     </div>

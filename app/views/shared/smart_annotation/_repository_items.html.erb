@@ -4,6 +4,7 @@
     <li class="item" data-name="<%= row[:name] %>" data-id="<%= row[:id] %>" data-type="rep_item">
       <span class='sa-type'><%= row[:repository_tag] %></span>
       <span class="item-text"><%= row[:name] %></span>
+      <%= render partial: 'shared/smart_annotation/atwho_control_buttons.html.erb', locals: { row: row, repository: repository } %>
     </li>
   <% end %>
   <% if limit_reached %>
