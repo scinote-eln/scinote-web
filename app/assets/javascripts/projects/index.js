@@ -652,6 +652,8 @@ var ProjectsIndex = (function() {
     exportProjectsModalHeader = exportProjectsModal.find('.modal-title');
     exportProjectsModalBody = exportProjectsModal.find('.modal-body');
 
+    window.initActionToolbar();
+
     updateSelectedCards();
     initNewProjectFolderModal();
     initNewProjectModal();

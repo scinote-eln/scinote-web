@@ -384,6 +384,7 @@ Rails.application.routes.draw do
         get 'edit', action: :edit
         get 'clone_modal', action: :clone_modal
         get 'move_modal', action: :move_modal
+        get 'actions_toolbar'
       end
       member do
         get 'permissions'
