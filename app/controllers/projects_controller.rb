@@ -17,7 +17,7 @@ class ProjectsController < ApplicationController
                                      sidebar experiments_cards view_type actions_dropdown create_tag)
   before_action :load_current_folder, only: %i(index cards new show)
   before_action :check_view_permissions, except: %i(index cards new create edit update archive_group restore_group
-                                                    users_filter actions_dropdown)
+                                                    users_filter actions_dropdown actions_toolbar)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
   before_action :load_exp_sort_var, only: :show
@@ -242,7 +242,7 @@ class ProjectsController < ApplicationController
   end
 
   def archive_group
-    projects = current_team.projects.active.where(id: params[:projects_ids])
+    projects = current_team.projects.active.where(id: params[:project_ids])
     counter = 0
     projects.each do |project|
       next unless can_archive_project?(project)
@@ -282,7 +282,7 @@ class ProjectsController < ApplicationController
   end
 
   def restore_group
-    projects = current_team.projects.archived.where(id: params[:projects_ids])
+    projects = current_team.projects.archived.where(id: params[:project_ids])
     counter = 0
     projects.each do |project|
       next unless can_restore_project?(project)
@@ -368,6 +368,17 @@ class ProjectsController < ApplicationController
         )
       }
     end
+  end
+
+  def actions_toolbar
+    render json: {
+      actions:
+        Toolbars::ProjectsService.new(
+          current_user,
+          project_ids: params[:project_ids].split(','),
+          project_folder_ids: params[:project_folder_ids].split(',')
+        ).actions
+    }
   end
 
   private
