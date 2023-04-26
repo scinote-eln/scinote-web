@@ -12,6 +12,8 @@
                      :key="item.id"
                      :currentItemId="currentItemId"
                      :item="item"
+                     :reloadCurrentLevel="reloadCurrentLevel"
+                     :reloadChildrenLevel="reloadChildrenLevel"
                      :archived="archived" />
     </perfect-scrollbar>
   </div>
@@ -35,9 +37,21 @@ export default {
       archived: null
     }
   },
+  props: {
+    reloadCurrentLevel: Boolean,
+    reloadChildrenLevel: Boolean
+  },
   computed: {
     sortedMenuItems() {
-      return this.menuItems.sort((a, b) => a.name - b.name);
+      return this.menuItems.sort((a, b) => {
+        if (a.name < b.name) {
+          return -1;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      });
     }
   },
   created() {
@@ -53,6 +67,14 @@ export default {
   watch: {
     archived() {
       this.loadTree();
+    },
+    reloadCurrentLevel: function() {
+      if (this.reloadCurrentLevel && (
+            this.currentItemId.length == 0 ||
+            this.menuItems.filter(item => item.id == this.currentItemId)
+          )) {
+        this.loadTree();
+      }
     }
   },
   methods: {

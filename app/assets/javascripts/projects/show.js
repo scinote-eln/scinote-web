@@ -150,10 +150,6 @@
 
   function refreshCurrentView() {
     loadCardsView();
-    Sidebar.reload({
-      sort: experimentsCurrentSort,
-      view_mode: $(experimentsPage).data('view-mode')
-    });
   }
 
   function selectDate($field) {

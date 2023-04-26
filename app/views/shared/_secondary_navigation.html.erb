@@ -100,13 +100,16 @@
       </ul>
 
       <!-- Secondary navigation title -->
-      <h1 class="nav-name <%= @inline_editable_title_config.present? ? 'editable' : '' %>" data-hook="secondary-navigation-title-name">
+      <h1 class="nav-name title-row flex <%= @inline_editable_title_config.present? ? 'editable' : '' %>" data-hook="secondary-navigation-title-name">
+        <% if defined?(with_navigator) && with_navigator %>
+          <i class="fas fa-bars sci--layout--navigator-open p-2 cursor-pointer text-base"></i>
+        <% end %>
         <% if @inline_editable_title_config.present? %>
           <%= render partial: "shared/inline_editing",
-                     locals: {
+                    locals: {
                         initial_value: title_element.name,
                         config: @inline_editable_title_config
-                     } %>
+                    } %>
         <% else %>
           <% if title_element.archived_branch? %>
             <i class="fas fa-archive"></i>&nbsp;
@@ -114,7 +117,6 @@
           <%= title_element.name %>
         <% end %>
       </h1>
-
     </div>
   </div>
 </nav>

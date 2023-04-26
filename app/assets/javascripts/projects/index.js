@@ -308,10 +308,7 @@ var ProjectsIndex = (function() {
 
   function refreshCurrentView() {
     loadCardsView();
-    Sidebar.reload({
-      sort: projectsCurrentSort,
-      view_mode: $('.projects-index').data('view-mode')
-    });
+    window.navigatorContainer.reloadCurrentLevel = true
   }
 
   function initEditButton() {
@@ -552,7 +549,7 @@ var ProjectsIndex = (function() {
       if (projectsCurrentSort !== $(this).data('sort')) {
         $('#sortMenuDropdown a').removeClass('selected');
         projectsCurrentSort = $(this).data('sort');
-        refreshCurrentView();
+        loadCardsView();
         $(this).addClass('selected');
         $('#sortMenu').dropdown('toggle');
       }
@@ -627,7 +624,7 @@ var ProjectsIndex = (function() {
 
     $filterDropdown.on('filter:apply', function() {
       appliedFiltersMark();
-      refreshCurrentView();
+      loadCardsView();
     });
 
     // Clear filters

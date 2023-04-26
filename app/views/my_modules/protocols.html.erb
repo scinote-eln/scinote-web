@@ -37,7 +37,7 @@
   %>
 <% end %>
 <%= render partial: 'shared/drag_n_drop_overlay' %>
-<%= render partial: 'shared/secondary_navigation', locals: { render_breadcrumbs: false, project: @experiment.project, experiment: @experiment } %>
+<%= render partial: 'shared/secondary_navigation', locals: { render_breadcrumbs: false, project: @experiment.project, experiment: @experiment, with_navigator: true } %>
 
 <div class="content-pane my-modules-protocols-index" data-task-id="<%= @my_module.id %>">
   <div class="my-module-position-container">

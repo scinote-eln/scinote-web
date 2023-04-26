@@ -166,6 +166,7 @@ var ExperimnetTable = {
   duplicateMyModules: function(url, ids) {
     $.post(url, { my_module_ids: ids }, () => {
       this.loadTable();
+      window.navigatorContainer.reloadChildrenLevel = true
     }).error((data) => {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
@@ -179,6 +180,7 @@ var ExperimnetTable = {
     $.post(url, { my_modules: ids }, (data) => {
       HelperModule.flashAlertMsg(data.message, 'success');
       this.loadTable();
+      window.navigatorContainer.reloadChildrenLevel = true;
     }).error((data) => {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
@@ -357,6 +359,7 @@ var ExperimnetTable = {
         $.post(table.data('move-modules-url'), moveParams, (data) => {
           HelperModule.flashAlertMsg(data.message, 'success');
           this.loadTable();
+          window.navigatorContainer.reloadChildrenLevel = true
         }).error((data) => {
           HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
         });
@@ -494,6 +497,7 @@ var ExperimnetTable = {
   initNewTaskModal: function(table) {
     $('.experiment-new-my_module').on('ajax:success', '#new-my-module-modal', function() {
       table.loadTable();
+      window.navigatorContainer.reloadChildrenLevel = true
     });
   },
   initSorting: function(table) {
@@ -563,11 +567,6 @@ var ExperimnetTable = {
     var dataUrl = $(this.table).data('my-modules-url');
     $(this.table).find('.table-row').remove();
     this.loadPlaceholder();
-
-    Sidebar.reload({
-      sort: this.myModulesCurrentSort,
-      view_mode: $('#experimentTable').hasClass('archived') ? 'archived' : ''
-    });
 
     $.get(dataUrl, tableParams, (result) => {
       $(this.table).find('.table-row-placeholder, .table-row-placeholder-divider').remove();

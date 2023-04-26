@@ -9,5 +9,7 @@
       data-turbolinks-permanent data-behaviour="vue">
   <navigator-container
     @navigator:colapse="navigatorCollapsed = true"
+    :reload-current-level="reloadCurrentLevel"
+    :reload-children-level="reloadChildrenLevel"
   />
 </div>

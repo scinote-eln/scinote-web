@@ -98,6 +98,7 @@ input[type="checkbox"].sci-toggle-checkbox {
       svg,
       svg path {
         fill: $color-black;
+        display: initial;
       }
 
       &:first-of-type {
