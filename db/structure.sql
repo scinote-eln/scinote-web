@@ -454,6 +454,41 @@ ALTER SEQUENCE public.comments_id_seq OWNED BY public.comments.id;
 
 
 --
+-- Name: connected_devices; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.connected_devices (
+    id bigint NOT NULL,
+    uid character varying,
+    name character varying,
+    oauth_access_token_id bigint NOT NULL,
+    metadata json,
+    last_seen_at timestamp without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: connected_devices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.connected_devices_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: connected_devices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.connected_devices_id_seq OWNED BY public.connected_devices.id;
+
+
+--
 -- Name: connections; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3515,6 +3550,13 @@ ALTER TABLE ONLY public.comments ALTER COLUMN id SET DEFAULT nextval('public.com
 
 
 --
+-- Name: connected_devices id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.connected_devices ALTER COLUMN id SET DEFAULT nextval('public.connected_devices_id_seq'::regclass);
+
+
+--
 -- Name: connections id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4182,6 +4224,14 @@ ALTER TABLE ONLY public.checklists
 
 ALTER TABLE ONLY public.comments
     ADD CONSTRAINT comments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: connected_devices connected_devices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.connected_devices
+    ADD CONSTRAINT connected_devices_pkey PRIMARY KEY (id);
 
 
 --
@@ -5098,6 +5148,13 @@ CREATE INDEX index_comments_on_type ON public.comments USING btree (type);
 --
 
 CREATE INDEX index_comments_on_user_id ON public.comments USING btree (user_id);
+
+
+--
+-- Name: index_connected_devices_on_oauth_access_token_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_connected_devices_on_oauth_access_token_id ON public.connected_devices USING btree (oauth_access_token_id);
 
 
 --
@@ -8274,6 +8331,14 @@ ALTER TABLE ONLY public.protocols
 
 
 --
+-- Name: connected_devices fk_rails_de3eb01e9e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.connected_devices
+    ADD CONSTRAINT fk_rails_de3eb01e9e FOREIGN KEY (oauth_access_token_id) REFERENCES public.oauth_access_tokens(id);
+
+
+--
 -- Name: bmt_filters fk_rails_de5b654b84; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8685,8 +8750,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221222123021'),
 ('20230120141017'),
 ('20230206095817'),
+('20230207140811'),
 ('20230223142119'),
 ('20230227131215'),
-('20230414091215');
+('20230414091215'),
+('20230426112548');
 
 
