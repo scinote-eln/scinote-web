@@ -164,8 +164,8 @@ module Navigator
     end
 
     def build_folder_tree(folder, children, archived = false)
-      tree = fetch_projects(folder, archived).map { |i| project_serializer(i) } +
-             fetch_project_folders(folder, archived).map { |i| folder_serializer(i) }
+      tree = fetch_projects(folder.parent_folder, archived).map { |i| project_serializer(i) } +
+             fetch_project_folders(folder.parent_folder, archived).map { |i| folder_serializer(i) }
       tree.find { |i| i[:id] == folder.code }[:children] = children
       tree = build_folder_tree(folder.parent_folder, tree, archived) if folder.parent_folder.present?
       tree

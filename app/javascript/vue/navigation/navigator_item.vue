@@ -23,6 +23,8 @@
                      @item:expand="treeExpand"
                      :key="item.id"
                      :currentItemId="currentItemId"
+                     :reloadCurrentLevel="reloadCurrentLevel"
+                     :reloadChildrenLevel="reloadChildrenLevel"
                      :item="item"
                      :archived="archived" />
     </div>
@@ -35,7 +37,9 @@ export default {
   props: {
     item: Object,
     currentItemId: String,
-    archived: Boolean
+    archived: Boolean,
+    reloadCurrentLevel: Boolean,
+    reloadChildrenLevel: Boolean
   },
   data: function() {
     return {
@@ -48,7 +52,15 @@ export default {
       return this.item.has_children;
     },
     sortedMenuItems: function() {
-      return this.children.sort((a, b) => a.name - b.name);
+      return this.children.sort((a, b) => {
+        if (a.name < b.name) {
+          return -1;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      });
     },
     activeItem: function() {
       return this.item.id == this.currentItemId;
@@ -71,6 +83,16 @@ export default {
   watch: {
     currentItemId: function() {
       this.selectItem();
+    },
+    reloadChildrenLevel: function() {
+      if (this.reloadChildrenLevel && this.item.id == this.currentItemId) {
+        this.loadChildren();
+      }
+    },
+    reloadCurrentLevel: function() {
+      if (this.reloadCurrentLevel && this.children.find((item) => item.id == this.currentItemId)) {
+        this.loadChildren();
+      }
     }
   },
   methods: {

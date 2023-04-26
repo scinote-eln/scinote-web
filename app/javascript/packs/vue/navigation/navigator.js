@@ -17,12 +17,32 @@ window.addEventListener('DOMContentLoaded', () => {
     data() {
       return {
         navigatorCollapsed: false,
+        reloadCurrentLevel: false,
+        reloadChildrenLevel: false
       }
     },
     created() {
       this.navigatorCollapsed = $('.sci--layout').attr('data-navigator-collapsed');
+
+      $(document).on('inlineEditing:fieldUpdated', '.title-row .inline-editing-container', () => {
+        this.reloadCurrentLevel = true;
+      })
     },
     watch: {
+      reloadCurrentLevel: function () {
+        if (this.reloadCurrentLevel) {
+          this.$nextTick(() => {
+            this.reloadCurrentLevel = false;
+          });
+        }
+      },
+      reloadChildrenLevel: function () {
+        if (this.reloadChildrenLevel) {
+          this.$nextTick(() => {
+            this.reloadChildrenLevel = false;
+          });
+        }
+      },
       navigatorCollapsed: function () {
         let stateUrl = $('#sciNavigationNavigatorContainer').attr('data-navigator-state-url');
         $('.sci--layout').attr('data-navigator-collapsed', this.navigatorCollapsed);

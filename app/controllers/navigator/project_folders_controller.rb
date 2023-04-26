@@ -10,7 +10,10 @@ module Navigator
     end
 
     def tree
-      tree = build_folder_tree(@project_folder, nil, params[:archived] == 'true')
+      project_and_folders = project_level_branch(@project_folder, params[:archived] == 'true')
+      if @project_folder.parent_folder
+        tree = build_folder_tree(@project_folder, project_and_folders, params[:archived] == 'true')
+      end
       render json: { items: tree }
     end
 
