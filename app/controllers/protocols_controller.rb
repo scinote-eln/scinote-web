@@ -167,8 +167,9 @@ class ProtocolsController < ApplicationController
       log_activity(:protocol_template_draft_deleted,
                    nil,
                    protocol: @protocol.id)
-      render json: { message: I18n.t('protocols.delete_draft_modal.success'),
-                     redirect_url: protocols_path }, status: :ok
+
+      flash[:success] = I18n.t('protocols.delete_draft_modal.success')
+      redirect_to protocols_path
     rescue ActiveRecord::RecordNotDestroyed => e
       Rails.logger.error e.message
       render json: { message: e.message }, status: :unprocessable_entity
