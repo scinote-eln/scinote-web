@@ -19,8 +19,8 @@
                    .assets_manifest
                    .find_sources(js_asset)
                    .first
-                   .force_encoding(Encoding::UTF_8)
-                   .html_safe, nonce: true %>
+                   .force_encoding(Encoding::UTF_8),
+                   nonce: true %>
     <% end %>
 
     <!-- Init Handsontables -->

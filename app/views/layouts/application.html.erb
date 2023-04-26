@@ -39,9 +39,9 @@
       <%= yield(:head) %>
     <% end %>
 
-    <%= javascript_include_tag 'tui_image_editor' %>
+    <%= javascript_include_tag 'tui_image_editor', nonce: true %>
     <%= stylesheet_link_tag 'tui_image_editor_styles' %>
-    <%= javascript_include_tag 'vue_navigation_top_menu' %>
+    <%= javascript_include_tag 'vue_navigation_top_menu', nonce: true %>
   </head>
   <body
     class="<%= yield :body_class %>"
@@ -114,6 +114,6 @@
 
     <span style="display: none;" data-hook="application-body-end-html"></span>
 
-    <%= javascript_pack_tag 'prism' %>
+    <%= javascript_include_tag 'prism' %>
   </body>
 </html>
