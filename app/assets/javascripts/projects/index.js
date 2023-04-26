@@ -11,7 +11,6 @@
 /* eslint-disable no-use-before-define */
 
 var ProjectsIndex = (function() {
-  const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable', 'deletable'];
   var projectsWrapper = '#projectsWrapper';
   var toolbarWrapper = '#toolbarWrapper';
   var cardsWrapper = '#cardsWrapper';
@@ -180,7 +179,7 @@ var ProjectsIndex = (function() {
       ev.preventDefault();
       // Load HTML to refresh users list
       $.ajax({
-        url: $(exportProjectsBtn).data('export-projects-modal-url'),
+        url: $(exportProjectsBtn).data('url'),
         type: 'GET',
         dataType: 'json',
         data: {
@@ -276,34 +275,13 @@ var ProjectsIndex = (function() {
   }
 
   function updateProjectsToolbar() {
-    let projectsToolbar = $('#projectsToolbar');
-
-    if (selectedProjects.length === 0 && selectedProjectFolders.length === 0) {
-      projectsToolbar.find('.single-object-action, .multiple-object-action').addClass('hidden');
-    } else {
-      if (selectedProjects.length + selectedProjectFolders.length === 1) {
-        projectsToolbar.find('.single-object-action, .multiple-object-action').removeClass('hidden');
-        if (selectedProjectFolders.length === 1) {
-          projectsToolbar.find('.project-only-action').addClass('hidden');
-        } else {
-          projectsToolbar.find('.folders-only-action').addClass('hidden');
-        }
-      } else {
-        projectsToolbar.find('.single-object-action').addClass('hidden');
-        projectsToolbar.find('.multiple-object-action').removeClass('hidden');
-        if (selectedProjectFolders.length > 0) {
-          projectsToolbar.find('.project-only-action').addClass('hidden');
-        }
-        if (selectedProjects.length > 0) {
-          projectsToolbar.find('.folder-only-action').addClass('hidden');
-        }
+    window.actionToolbarComponent.fetchActions(
+      {
+        project_ids: selectedProjects,
+        project_folder_ids: selectedProjectFolders
       }
-      PERMISSIONS.forEach((permission) => {
-        if (!checkActionPermission(permission)) {
-          projectsToolbar.find(`.btn[data-for="${permission}"]`).addClass('hidden');
-        }
-      });
-    }
+    );
+    window.actionToolbarComponent.setReloadCallback(refreshCurrentView);
   }
 
   function refreshCurrentView() {
@@ -332,7 +310,7 @@ var ProjectsIndex = (function() {
       });
     }
 
-    $(toolbarWrapper).on('click', '.edit-btn', function(ev) {
+    $(projectsWrapper).on('click', '.edit-btn', function(ev) {
       var editUrl = $(`.project-card[data-id=${selectedProjects[0]}]`).data('edit-url') ||
         $(`.folder-card[data-id=${selectedProjectFolders[0]}]`).data('edit-url');
       ev.stopPropagation();
@@ -725,17 +703,7 @@ var ProjectsIndex = (function() {
       }
 
       updateSelectAllCheckbox();
-
-      if (this.checked) {
-        $.get(projectCard.data('permissions-url'), function(result) {
-          PERMISSIONS.forEach((permission) => {
-            projectCard.data(permission, result[permission]);
-          });
-          updateProjectsToolbar();
-        });
-      } else {
-        updateProjectsToolbar();
-      }
+      updateProjectsToolbar();
     });
   }
 

@@ -113,52 +113,6 @@
           </div>
         </div>
       </span>
-
-      <!--
-      <a href="#" class="btn btn-light edit-btn single-object-action hidden" data-for="editable">
-        <span class="fas fa-pencil-alt" aria-hidden="true"></span>
-        <span class="hidden-xs"><%= t('projects.index.edit_button') %></span>
-      </a>
-      <a href="#" class="btn btn-light move-projects-btn multiple-object-action hidden" data-for="moveable" data-url="<%= move_to_modal_project_folders_url %>">
-        <span class="fas fa-arrow-right" aria-hidden="true"></span>
-        <span class="hidden-xs"><%= t('projects.index.move_button') %></span>
-      </a>
-      <%= button_to archive_group_projects_path,
-                    class: 'btn btn-light archive-projects-btn multiple-object-action project-only-action hidden',
-                    form_class: 'archive-projects-form',
-                    data: { for: :archivable, view_mode: 'active' },
-                    remote: true,
-                    method: :post do %>
-        <span class="fas fa-archive" aria-hidden="true"></span>
-        <span class="hidden-xs"><%= t('projects.index.archive_button') %></span>
-      <% end %>
-      <%= button_to restore_group_projects_path,
-                    class: 'btn btn-light restore-projects-btn multiple-object-action project-only-action hidden',
-                    form_class: 'restore-projects-form',
-                    data: { for: :restorable, view_mode: 'archived' },
-                    remote: true,
-                    method: :post do %>
-        <span class="fas fa-undo" aria-hidden="true"></span>
-        <span class="hidden-xs"><%= t('projects.index.restore_button') %></span>
-      <% end %>
-      <%= button_to destroy_modal_project_folders_url,
-                    class: 'btn btn-light multiple-object-action folders-only-action hidden',
-                    form_class: 'delete-folders-btn',
-                    data: { for: :deletable },
-                    remote: true,
-                    method: :post do %>
-        <span class="fas fa-trash" aria-hidden="true"></span>
-        <span class="hidden-xs"><%= t('projects.index.delete_button') %></span>
-      <% end %> -->
-
-      <!-- export projects button -->
-      <!--
-      <a href="#" class="btn btn-light export-projects-btn multiple-object-action hidden"
-                  data-export-projects-modal-url="<%= export_projects_modal_team_path(current_team) %>">
-        <span class="fas fa-file-export"></span>
-        <span class="hidden-xs-custom"><%= t('projects.export_projects.export_button') %></span>
-      </a>
-      -->
     </div>
   </div>
 </div>
