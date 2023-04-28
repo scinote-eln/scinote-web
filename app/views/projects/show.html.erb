@@ -33,6 +33,9 @@
       </div>
     </div>
   </div>
+  <div id="actionToolbar" data-behaviour="vue">
+    <action-toolbar actions-url="<%= actions_toolbar_experiments_url(project_id: params[:project_id]) %>" />
+  </div>
 </div>
 
 <template id="experimentPlaceholder">
@@ -59,5 +62,7 @@
   </div>
 </template>
 
+<%= javascript_include_tag "vue_components_action_toolbar" %>
 <%= javascript_include_tag("projects/show") %>
+
 <i data-hook="project-show-js"></i>

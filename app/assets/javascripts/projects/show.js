@@ -1,7 +1,6 @@
-/* global animateSpinner filterDropdown Sidebar Turbolinks HelperModule InfiniteScroll AsyncDropdown GLOBAL_CONSTANTS */
+/* global animateSpinner filterDropdown Turbolinks HelperModule InfiniteScroll AsyncDropdown GLOBAL_CONSTANTS */
 /* eslint-disable no-use-before-define */
 (function() {
-  const PERMISSIONS = ['editable', 'archivable', 'restorable', 'moveable', 'duplicable'];
   const pageSize = GLOBAL_CONSTANTS.DEFAULT_ELEMENTS_PER_PAGE;
   var cardsWrapper = '#cardsWrapper';
   var experimentsPage = '#projectShowWrapper';
@@ -17,39 +16,9 @@
   let archivedOnFromFilter;
   let archivedOnToFilter;
 
-
-  function checkActionPermission(permission) {
-    return selectedExperiments.every(function(experimentId) {
-      return $(`.experiment-card[data-id="${experimentId}"]`).data(permission);
-    });
-  }
-
   function updateExperimentsToolbar() {
-    let experimentsToolbar = $('#projectShowToolbar');
-    let toolbarVisible = false;
-
-    if (selectedExperiments.length === 0) {
-      experimentsToolbar.find('.single-object-action, .multiple-object-action').addClass('hidden');
-    }
-
-    if (selectedExperiments.length === 1) {
-      experimentsToolbar.find('.single-object-action, .multiple-object-action').removeClass('hidden');
-    } else if (selectedExperiments.length > 1) {
-      experimentsToolbar.find('.single-object-action').addClass('hidden');
-      experimentsToolbar.find('.multiple-object-action').removeClass('hidden');
-    }
-    PERMISSIONS.forEach((permission) => {
-      if (!checkActionPermission(permission)) {
-        experimentsToolbar.find(`.btn[data-for="${permission}"]`).addClass('hidden');
-      }
-    });
-
-    $.each($('#projectShowToolbar').find('.btn'), (i, btn) => {
-      if (window.getComputedStyle(btn).display !== 'none') {
-        toolbarVisible = true;
-      }
-    });
-    $(experimentsPage).attr('data-toolbar-visible', toolbarVisible);
+    window.actionToolbarComponent.fetchActions({ experiment_ids: selectedExperiments });
+    window.actionToolbarComponent.setReloadCallback(refreshCurrentView);
   }
 
   function initProjectsViewModeSwitch() {
@@ -262,17 +231,7 @@
       }
 
       updateSelectAllCheckbox();
-
-      if (this.checked) {
-        $.get(card.data('permissions-url'), function(result) {
-          PERMISSIONS.forEach((permission) => {
-            card.data(permission, result[permission]);
-          });
-          updateExperimentsToolbar();
-        });
-      } else {
-        updateExperimentsToolbar();
-      }
+      updateExperimentsToolbar();
     });
   }
 
@@ -283,29 +242,6 @@
         if (this.checked !== selectAll) this.click();
       });
     });
-  }
-
-  function initArchiveRestoreToolbarButtons() {
-    $(experimentsPage)
-      .on('ajax:before', '.archive-experiments-form, .restore-experiments-form', function() {
-        let buttonForm = $(this);
-        buttonForm.find('input[name="experiments_ids[]"]').remove();
-        selectedExperiments.forEach(function(id) {
-          $('<input>').attr({
-            type: 'hidden',
-            name: 'experiments_ids[]',
-            value: id
-          }).appendTo(buttonForm);
-        });
-      })
-      .on('ajax:success', '.archive-experiments-form, .restore-experiments-form', function(ev, data) {
-        HelperModule.flashAlertMsg(data.message, 'success');
-        // Project saved, reload view
-        refreshCurrentView();
-      })
-      .on('ajax:error', '.archive-experiments-form, .restore-experiments-form', function(ev, data) {
-        HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
-      });
   }
 
   function appendActionModal(modal) {
@@ -332,27 +268,6 @@
         renderFormError(e, form.find('#experiment_project_id'), msg.message.toString());
       });
     }
-  }
-
-
-  function initEditMoveDuplicateToolbarButton() {
-    let forms = '.edit-experiments-form, .move-experiments-form, .clone-experiments-form';
-    $(experimentsPage)
-      .on('ajax:before', forms, function() {
-        let buttonForm = $(this);
-        buttonForm.find('input[name="id"]').remove();
-        $('<input>').attr({
-          type: 'hidden',
-          name: 'id',
-          value: selectedExperiments[0]
-        }).appendTo(buttonForm);
-      })
-      .on('ajax:success', forms, function(ev, data) {
-        appendActionModal($(data.html));
-      })
-      .on('ajax:error', forms, function(ev, data) {
-        HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
-      });
   }
 
   function initNewExperimentToolbarButton() {
@@ -412,13 +327,13 @@
         $(this).renderFormErrors('experiment', data.responseJSON);
       });
 
+    window.initActionToolbar();
+
     initExperimentsFilters();
     initSorting();
     loadCardsView();
     initProjectsViewModeSwitch();
     initExperimentsSelector();
-    initArchiveRestoreToolbarButtons();
-    initEditMoveDuplicateToolbarButton();
     initNewExperimentToolbarButton();
     initSelectAllCheckbox();
     AsyncDropdown.init($('#projectShowWrapper'));
