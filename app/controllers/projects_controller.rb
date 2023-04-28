@@ -200,6 +200,14 @@ class ProjectsController < ApplicationController
                            end
     end
 
+    default_public_user_name = nil
+    if (project_params.include? :visibility) &&
+       (project_params[:visibility] == 'visible') &&
+       (project_params.include? :default_public_user_role_id) &&
+       (project_params[:default_public_user_role_id] != @project.default_public_user_role_id)
+      default_public_user_name = UserRole.find(project_params[:default_public_user_role_id])&.name
+    end
+
     @project.last_modified_by = current_user
     if !return_error && @project.update(project_params)
       # Add activities if needed
@@ -208,6 +216,12 @@ class ProjectsController < ApplicationController
       log_activity(:rename_project) if message_renamed.present?
       log_activity(:archive_project) if project_params[:archived] == 'true'
       log_activity(:restore_project) if project_params[:archived] == 'false'
+
+      if default_public_user_name.present?
+        log_activity(:project_access_changed_all_team_members,
+                     @project,
+                     { team: @project.team.id, role: default_public_user_name })
+      end
 
       flash_success = t('projects.update.success_flash', name: escape_input(@project.name))
       if project_params[:archived] == 'true'
