@@ -9,8 +9,8 @@ class ExperimentsController < ApplicationController
   include Breadcrumbs
 
   before_action :load_project, only: %i(new create archive_group restore_group)
-  before_action :load_experiment, except: %i(new create archive_group restore_group)
-  before_action :check_read_permissions, except: %i(edit archive clone move new create archive_group restore_group)
+  before_action :load_experiment, except: %i(new create archive_group restore_group actions_toolbar)
+  before_action :check_read_permissions, except: %i(edit archive clone move new create archive_group restore_group actions_toolbar)
   before_action :check_canvas_read_permissions, only: %i(canvas)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: %i(edit batch_clone_my_modules)
@@ -199,7 +199,7 @@ class ExperimentsController < ApplicationController
   end
 
   def archive_group
-    experiments = @project.experiments.active.where(id: params[:experiments_ids])
+    experiments = @project.experiments.active.where(id: params[:experiment_ids])
     counter = 0
     experiments.each do |experiment|
       next unless can_archive_experiment?(experiment)
@@ -222,7 +222,7 @@ class ExperimentsController < ApplicationController
   end
 
   def restore_group
-    experiments = @project.experiments.archived.where(id: params[:experiments_ids])
+    experiments = @project.experiments.archived.where(id: params[:experiment_ids])
     counter = 0
     experiments.each do |experiment|
       next unless can_restore_experiment?(experiment)
@@ -509,6 +509,16 @@ class ExperimentsController < ApplicationController
         provisioning_status_urls: @my_modules.map { |m| provisioning_status_my_module_url(m) }
       }
     )
+  end
+
+  def actions_toolbar
+    render json: {
+      actions:
+        Toolbars::ExperimentsService.new(
+          current_user,
+          experiment_ids: params[:experiment_ids].split(',')
+        ).actions
+    }
   end
 
   private

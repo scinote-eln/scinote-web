@@ -6,11 +6,11 @@ import ActionToolbar from '../../vue/components/action_toolbar.vue';
 
 Vue.use(TurbolinksAdapter);
 
-window.addEventListener('turbolinks:load', () => {
+window.initActionToolbar = () => {
   new Vue({
     el: '#actionToolbar',
     components: {
       ActionToolbar
     }
   });
-});
+}
