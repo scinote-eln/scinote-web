@@ -364,7 +364,7 @@
       $('.panel-result-attachment-new').each(function() {
         const panel = $(this);
         itemsNames[panel.data('item-uuid')] = panel.find('input[rel="results[name]"]').val();
-      })
+      });
     }
 
     function removeItemHandler(uuid) {
