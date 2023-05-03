@@ -31,6 +31,7 @@ const entryList = {
   vue_protocol: './app/javascript/packs/vue/protocol.js',
   vue_repository_filter: './app/javascript/packs/vue/repository_filter.js',
   vue_repository_print_modal: './app/javascript/packs/vue/repository_print_modal.js',
+  vue_repository_assign_items_to_task_modal: './app/javascript/packs/vue/assign_items_to_task_modal.js',
   vue_navigation_top_menu: './app/javascript/packs/vue/navigation/top_menu.js'
 }
 
