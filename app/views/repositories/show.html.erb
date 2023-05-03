@@ -48,31 +48,11 @@
         <% end %>
       </div>
       <div class="repo-datatables-buttons">
-        <div class="share-repository-button" data-view-mode="active">
-          <% if can_share_repository?(@repository) %>
-            <%= link_to team_repository_share_modal_path(current_team, repository_id: @repository),
-                        class: 'btn btn-light share-repo-option', remote: true, id: 'shareRepoBtn' do %>
-              <span class="fas fa-user-plus"></span>
-              <span class="hidden-xs"><%= t('repositories.index.share_inventory') %></span>
-            <% end %>
-          <% end %>
-        </div>
-
         <button class="btn btn-light manage-repo-column-index"
                 data-modal-url="<%= repository_repository_columns_path(@repository) %>"
                 data-action="new">
-          <span class="fas fa-cog"></span>&nbsp;<%= t('repositories.index.columns') %>
+          <span class="fas fa-columns">
         </button>
-          <% unless @repository.is_a?(BmtRepository) %>
-            <%= render layout: "shared/view_switch", locals: {disabled: @repository.archived?, name: params[:archived] ? t('toolbar.archived_state') : t('toolbar.active_state') } do %>
-              <li class="view-switch-active">
-                <%= t('toolbar.active_state') %>
-              </li>
-              <li class="view-switch-archived">
-                <%= t('toolbar.archived_state') %>
-              </li>
-            <% end %>
-          <% end %>
       </div>
       <div class="toolbar-delimiter"></div>
     </div>
