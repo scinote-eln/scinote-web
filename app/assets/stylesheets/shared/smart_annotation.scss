@@ -183,6 +183,10 @@
   .atwho-user-popover {
     cursor: pointer;
   }
+
+  .atwho-user-popover:focus {
+    outline: none;
+  }
 }
 
 .atwho-inserted,

@@ -289,7 +289,7 @@ $(document).keyup(function(e) {
   }
 });
 
-window.I18n = I18n
+window.I18n = I18n;
 
 // Multiple modal support
 // https://stackoverflow.com/a/24914782
@@ -297,4 +297,50 @@ $(document).on('shown.bs.modal', '.modal', function() {
   const zIndex = 2040 + 10 * $('.modal:visible').length;
   $(this).css('z-index', zIndex);
   setTimeout(() => $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack'));
+});
+
+// User Name popover sitewide support
+let userNamePopover;
+const renderUserNamePopover = (url, fullName, email, html) => {
+  return `<div class="user-name-popover-wrapper">
+            <div class='col-xs-4'>
+              <img
+                class='avatar'
+                src='${url}'
+                alt='thumb'>
+            </div>
+            <div class='col-xs-8'>
+              <div class='row'>
+                <div class='col-xs-9 text-left'>
+                  <h5 class='full-name'>${fullName}</h5>
+                </div>
+                <div class='col-xs-3 text-right'>
+                  <span class='fas fa-times' aria-hidden='true'></span>
+                </div>
+              </div>
+              <div class='row'>
+                <div class='col-xs-12'>
+                  <p class='silver email'>${email}</p>
+                  <p>${html}</p>
+                </div>
+              </div>
+            </div>
+          </div>`;
+};
+
+$(document).on('focus', '.atwho-user-popover', function() {
+  if (!userNamePopover) {
+    const atwhoUserName = $(this);
+
+    const url = atwhoUserName.data('user-avatar-popover-absolute-url');
+    const fullName = atwhoUserName.data('full-name');
+    const email = atwhoUserName.data('email');
+    const html = atwhoUserName.data('popover-html');
+
+    atwhoUserName.attr('data-content', renderUserNamePopover(url, fullName, email, html));
+  }
+
+  $(this).popover('show');
+}).on('blur', '.atwho-user-popover', function() {
+  $(this).popover('hide');
 });
