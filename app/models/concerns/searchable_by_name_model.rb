@@ -30,9 +30,8 @@ module SearchableByNameModel
 
       sql_q = viewable_by_user(user, teams).where(
         "trim_html_tags(#{table_name}.name) ILIKE ? OR " \
-        "(#{self::PREFIXED_ID_SQL} ILIKE ? AND " \
-        " #{self::PREFIXED_ID_SQL} ILIKE ?) ",
-        "%#{sanitized_query}%", "#{self::ID_PREFIX}%", "#{sanitized_query}%"
+        " #{self::PREFIXED_ID_SQL} ILIKE ? ",
+        "%#{sanitized_query}%", "%#{sanitized_query}%"
       )
 
       sql_q.limit(Constants::SEARCH_LIMIT)
