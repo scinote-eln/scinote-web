@@ -101,8 +101,8 @@
       }
     }
 
-    .sa-type {
-      font-size: 8px;
+    .dot {
+      margin: 0 5px;
     }
 
     .item {
@@ -167,12 +167,9 @@
 }
 
 .sa-type {
-  font-size: 10px;
-  font-weight: 600;
   padding-left: 2px;
   text-decoration: none;
   text-transform: uppercase;
-  vertical-align: super;
 
   &:hover {
     text-decoration: none;

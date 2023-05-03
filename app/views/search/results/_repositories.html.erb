@@ -8,7 +8,7 @@
   <p>
     <span>
       <%=t 'repository_row.modal_info.ID' %>
-      <%= repository_row.code %>
+      <%= highlight repository_row.code, @search_query.strip.split(/\s+/)  %>
     </span>
     <br />
     <span>

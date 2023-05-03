@@ -363,6 +363,7 @@ en:
     whole_word: "Match any whole word"
     whole_phrase: "Match whole phrase"
     match_case: "Match case sensitive"
+    object_id: "ID:"
     index:
       head_title: "Search"
       page_title: "Search"
