@@ -5172,6 +5172,13 @@ CREATE INDEX index_connections_on_output_id ON public.connections USING btree (o
 
 
 --
+-- Name: index_experiments_on_archived; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_experiments_on_archived ON public.experiments USING btree (archived);
+
+
+--
 -- Name: index_experiments_on_archived_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5361,6 +5368,13 @@ CREATE INDEX index_my_module_tags_on_tag_id ON public.my_module_tags USING btree
 
 
 --
+-- Name: index_my_modules_on_archived; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_my_modules_on_archived ON public.my_modules USING btree (archived);
+
+
+--
 -- Name: index_my_modules_on_archived_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5522,6 +5536,13 @@ CREATE INDEX index_on_repository_table_filter_id ON public.repository_table_filt
 
 
 --
+-- Name: index_project_folders_on_archived; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_project_folders_on_archived ON public.project_folders USING btree (archived);
+
+
+--
 -- Name: index_project_folders_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5540,6 +5561,13 @@ CREATE INDEX index_project_folders_on_parent_folder_id ON public.project_folders
 --
 
 CREATE INDEX index_project_folders_on_team_id ON public.project_folders USING btree (team_id);
+
+
+--
+-- Name: index_projects_on_archived; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_projects_on_archived ON public.projects USING btree (archived);
 
 
 --
@@ -5893,6 +5921,13 @@ CREATE INDEX index_reports_on_user_id ON public.reports USING btree (user_id);
 
 
 --
+-- Name: index_repositories_on_archived; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repositories_on_archived ON public.repositories USING btree (archived);
+
+
+--
 -- Name: index_repositories_on_archived_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6201,6 +6236,13 @@ CREATE INDEX index_repository_number_values_on_last_modified_by_id ON public.rep
 
 
 --
+-- Name: index_repository_rows_on_archived; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_rows_on_archived ON public.repository_rows USING btree (archived);
+
+
+--
 -- Name: index_repository_rows_on_archived_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6429,6 +6471,13 @@ CREATE INDEX index_result_texts_on_result_id ON public.result_texts USING btree 
 --
 
 CREATE INDEX index_result_texts_on_text ON public.result_texts USING gin (public.trim_html_tags((text)::text) public.gin_trgm_ops);
+
+
+--
+-- Name: index_results_on_archived; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_results_on_archived ON public.results USING btree (archived);
 
 
 --
