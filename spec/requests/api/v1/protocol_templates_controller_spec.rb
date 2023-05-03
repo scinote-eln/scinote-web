@@ -30,7 +30,7 @@ RSpec.describe 'Api::V1::ProtocolTemplateController', type: :request do
       expect(hash_body[:data]).to match(
         JSON.parse(
           ActiveModelSerializers::SerializableResource
-            .new(Protocol.latest_available_versions(@team), each_serializer: Api::V1::ProtocolSerializer)
+            .new(Protocol.latest_available_versions(@team), each_serializer: Api::V1::ProtocolTemplateSerializer)
             .to_json
         )['data']
       )
@@ -66,7 +66,7 @@ RSpec.describe 'Api::V1::ProtocolTemplateController', type: :request do
       expect(hash_body[:data]).to match(
         JSON.parse(
           ActiveModelSerializers::SerializableResource
-            .new(@protocol_published_original, serializer: Api::V1::ProtocolSerializer)
+            .new(@protocol_published_original, serializer: Api::V1::ProtocolTemplateSerializer)
             .to_json
         )['data']
       )

@@ -17,12 +17,12 @@ module Api
                                      .per(params.dig(:page, :size))
 
         render jsonapi: protocol_templates,
-               each_serializer: ProtocolSerializer, rte_rendering: render_rte?, team: @team
+               each_serializer: ProtocolTemplateSerializer, rte_rendering: render_rte?, team: @team
       end
 
       def show
         render jsonapi: @protocol,
-               serializer: ProtocolSerializer,
+               serializer: ProtocolTemplateSerializer,
                include: include_params,
                rte_rendering: render_rte?,
                team: @team
