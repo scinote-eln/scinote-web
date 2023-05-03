@@ -260,13 +260,14 @@ function importProtocolFromFile(
     var tableId = $(tableNode).attr('id');
     var tableName = $(tableNode).children('name').text();
     var tableContent = $(tableNode).children('contents').text();
+    var tableMetadata = JSON.parse($(tableNode).children('metadata').text()) || {};
 
     // Generate table element
     var tableEl = newPreviewElement(
       'table',
       { name: tableName }
     );
-    var elnTableEl = generateElnTable(tableId, tableContent);
+    var elnTableEl = generateElnTable(tableContent, tableMetadata);
     tableEl.append(elnTableEl);
 
     // Now, append table element to step
