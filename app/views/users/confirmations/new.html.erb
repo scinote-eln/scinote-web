@@ -21,15 +21,11 @@
 
 
 <% if resource.errors.present? %>
-<script>
-(function () {
-  var formErrors = {};
+  <%= form_errors = {} %>
 
-  <% resource.errors.each do |err, m| %>
-  formErrors["<%= err %>"] = ("<%= m %>" == 'not found') ? ["Email not found"] : ["<%= m %>"];
+  <% resource.errors.each do |err, msg| %>
+    <% form_errors[err] = (msg == "not found") ? ["Email not found"] : [msg] %>
   <% end %>
-
-  $("form").render_form_errors("user", formErrors, false);
-}());
-</script>
+  <div class="hidden" id="form-error-data" data-form-errors="<%= form_errors.to_json %>"></div>
+  <%= javascript_include_tag 'users/confirmation/new', nonce: true %>
 <% end %>

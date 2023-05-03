@@ -548,6 +548,8 @@ class Extends
     'ZebraLabelTemplate' => 'ZPL',
     'FluicsLabelTemplate' => 'Fluics'
   }
+
+  EXTERNAL_SERVICES = %w(https://www.protocols.io/ http://127.0.0.1:9100/available)
 end
 
 # rubocop:enable Style/MutableConstant
