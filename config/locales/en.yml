@@ -2697,6 +2697,7 @@ en:
       description_1: "You’ll loose all content from the draft. We can’t recover it once you delete it."
       description_2: "Are you sure?"
       confirm: "Yes, delete"
+      success: "Draft was successfully deleted."
     publish_modal:
       title: "Publish version %{nr} of the protocol template"
       name: "Protocol template name"
