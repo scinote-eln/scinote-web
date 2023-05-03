@@ -11,6 +11,12 @@
   <div class="toolbar">
     <% if @my_modules.present? %>
       <% if can_manage_experiment?(@experiment) %>
+        <div class="move-button-container collapse">
+          <button class="btn btn-light">
+            <span class="fas fa-arrow-right"></span>
+            <%= t('experiments.module_archive.move_option') %>
+          </button>
+        </div>
         <div class="restore-button-container collapse">
           <%= button_to restore_my_modules_experiment_path(@experiment), class: 'btn btn-light', method: :post do %>
             <span class="fas fa-undo"></span>
@@ -20,7 +26,11 @@
       <% end %>
   </div>
 
-    <div class="row" style="margin-top: 10px;">
+    <div class="row"
+         id="cards-container"
+         data-move-modules-modal-url="<%= move_modules_modal_experiment_path(@experiment) %>"
+         data-move-modules-url="<%= move_modules_experiment_path(@experiment) %>"
+         >
       <% @my_modules.each_with_index do |my_module, i| %>
         <div class="module-container col-lg-4 col-md-5 col-sm-12">
           <%= render partial: 'canvas/full_zoom/my_module', locals: {experiment: @experiment, my_module: my_module} %>
