@@ -374,7 +374,7 @@ Rails.application.routes.draw do
         post 'move_to', to: 'project_folders#move_to', defaults: { format: 'json' }
         get 'move_to_modal', to: 'project_folders#move_to_modal', defaults: { format: 'json' }
         post 'destroy', to: 'project_folders#destroy', as: 'destroy', defaults: { format: 'json' }
-        post 'destroy_modal', to: 'project_folders#destroy_modal', defaults: { format: 'json' }
+        get 'destroy_modal', to: 'project_folders#destroy_modal', defaults: { format: 'json' }
       end
     end
     get 'project_folders/:project_folder_id', to: 'projects#index', as: :project_folder_projects

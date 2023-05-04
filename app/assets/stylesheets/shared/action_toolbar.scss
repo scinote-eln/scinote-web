@@ -1,5 +1,6 @@
 .sn-action-toolbar {
   background: $color-concrete;
+  z-index: 2;
 
   .btn:hover {
     background: $color-white;

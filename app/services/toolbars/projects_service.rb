@@ -38,7 +38,8 @@ module Toolbars
         archive_action,
         restore_action,
         comments_action,
-        activities_action
+        activities_action,
+        delete_folder_action
       ].compact
     end
 
@@ -116,7 +117,7 @@ module Toolbars
 
     def archive_action
       return unless @items.all? do |item|
-        item.is_a?(Project) ? can_archive_project?(item) : can_manage_team?(item.team)
+        item.is_a?(Project) && can_archive_project?(item)
       end
 
       {
@@ -132,7 +133,7 @@ module Toolbars
 
     def restore_action
       return unless @items.all? do |item|
-        item.is_a?(Project) ? can_restore_project?(item) : item.archived? && can_manage_team?(item.team)
+        item.is_a?(Project) && can_restore_project?(item)
       end
 
       {
@@ -148,7 +149,7 @@ module Toolbars
 
     def delete_folder_action
       return unless @items.all? do |item|
-        item.is_a?(Folder) && can_delete_project_folder?(item)
+        item.is_a?(ProjectFolder) && can_delete_project_folder?(item)
       end
 
       {
@@ -156,9 +157,8 @@ module Toolbars
         label: I18n.t('general.delete'),
         icon: 'fas fa-trash',
         button_class: 'delete-folders-btn',
-        path: destroy_modal_project_folders_url,
-        type: :request,
-        request_method: :post
+        path: destroy_modal_project_folders_path(project_folder_ids: @items.map(&:id)),
+        type: 'remote-modal'
       }
     end
 
