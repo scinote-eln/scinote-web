@@ -259,21 +259,6 @@ var ProjectsIndex = (function() {
     });
   }
 
-  function checkActionPermission(permission) {
-    let allProjects;
-    let allFolders;
-
-    allProjects = selectedProjects.every(function(projectId) {
-      return $(`.project-card[data-id="${projectId}"]`).data(permission);
-    });
-
-    allFolders = selectedProjectFolders.every(function(projectFolderId) {
-      return $(`.folder-card[data-id="${projectFolderId}"]`).data(permission);
-    });
-
-    return allProjects && allFolders;
-  }
-
   function updateProjectsToolbar() {
     window.actionToolbarComponent.fetchActions(
       {
