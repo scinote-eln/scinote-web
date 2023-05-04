@@ -58,7 +58,7 @@ module Toolbars
       {
         name: 'edit',
         label: I18n.t('experiments.table.toolbar.edit'),
-        icon: 'fa fa-pen',
+        icon: 'fa fa-pencil-alt',
         button_id: 'editTask',
         type: :legacy
       }

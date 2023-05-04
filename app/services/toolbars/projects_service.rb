@@ -31,12 +31,12 @@ module Toolbars
       return [] if @item_type == :none
 
       [
+        restore_action,
         edit_action,
         access_action,
         move_action,
         export_action,
         archive_action,
-        restore_action,
         comments_action,
         activities_action,
         delete_folder_action
@@ -48,20 +48,33 @@ module Toolbars
     def edit_action
       return unless @single
 
-      return unless @item_type == :project
+      if @items.first.is_a?(Project)
+        project = @items.first
 
-      project = @items.first
+        return unless can_manage_project?(project)
 
-      return unless can_manage_project?(project)
+        {
+          name: 'edit',
+          label: I18n.t('projects.index.edit_option'),
+          icon: 'fas fa-pencil-alt',
+          button_class: 'edit-btn',
+          path: edit_project_path(project),
+          type: :legacy
+        }
+      else
+        project_folder = @items.first
 
-      {
-        name: 'edit',
-        label: I18n.t('projects.index.edit_option'),
-        icon: 'fa fa-pen',
-        button_class: 'edit-btn',
-        path: edit_project_path(project),
-        type: :legacy
-      }
+        return unless can_create_project_folders?(project_folder.team)
+
+        {
+          name: 'edit',
+          label: I18n.t('projects.index.edit_option'),
+          icon: 'fas fa-pencil-alt',
+          button_class: 'edit-btn',
+          path: edit_project_folder_path(project_folder),
+          type: :legacy
+        }
+      end
     end
 
     def access_action
@@ -82,7 +95,7 @@ module Toolbars
       {
         name: 'access',
         label: I18n.t('general.access'),
-        icon: 'fa fa-door-open',
+        icon: 'fas fa-door-open',
         button_class: 'access-btn',
         path: path,
         type: 'remote-modal'
