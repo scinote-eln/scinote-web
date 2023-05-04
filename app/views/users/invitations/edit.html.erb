@@ -53,35 +53,28 @@
 </div>
 
 <% if resource && resource.errors.present? %>
-<script>
-(function () {
-  var formErrors = {};
+  <%= form_errors = {} %>
 
   <% resource.errors.as_json.each do |err, messages| %>
-  formErrors["<%= err %>"]=[]
+    <% form_errors[err] = [] %>
     <% messages.each do |message| %>
-      formErrors["<%= err %>"].push('<%= message %>');
+      <% form_errors[err].push(message) %>
     <% end %>
   <% end %>
-
-  $("form").renderFormErrors("user", formErrors, false);
-}());
-</script>
+  <div class="hidden" id="resource-error-data" data-form-errors="<%= form_errors.to_json %>"></div>
+  <%= javascript_include_tag 'users/invitations/resource_errors', nonce: true %>
 <% end %>
 
 <% if @team && @team.errors.present? %>
-<script>
-(function () {
-  var formErrors = {};
+
+  <%= form_errors = {} %>
 
   <% @team.errors.as_json.each do |err, messages| %>
-  formErrors["<%= err %>"]=[]
+    <% form_errors[err] = [] %>
     <% messages.each do |message| %>
-      formErrors["<%= err %>"].push('<%= message %>');
+      <% form_errors[err].push(message) %>
     <% end %>
   <% end %>
-
-  $("form").renderFormErrors("team", formErrors, false);
-}());
-</script>
+  <div class="hidden" id="team-error-data" data-form-errors="<%= form_errors.to_json %>"></div>
+  <%= javascript_include_tag 'users/invitations/team_errors', nonce: true %>
 <% end %>

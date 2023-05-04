@@ -88,3 +88,6 @@ public/marvin4js-license.cxl
 
 # Ignore JetBrains
 .idea/
+
+/app/assets/builds/*
+!/app/assets/builds/.keep

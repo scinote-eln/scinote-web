@@ -63,16 +63,13 @@
     mounted() {
       $(this.$refs.modal).modal('show');
       $(this.$refs.modal).on('hidden.bs.modal', () => {
-        this.$emit('close');
-      });
+        this.close();
+      })
     },
     methods: {
       close() {
         this.$emit('reorder', this.reorderedItems);
-
-        this.$nextTick(() => {
-          $(this.$refs.modal).modal('hide');
-        });
+        this.$emit('close');
       },
       getTitle(item) {
         let $item_html = $(item.attributes.text);

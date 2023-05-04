@@ -1,0 +1,39 @@
+<span class="atwho-user-container">
+  <% user_still_in_team = user.teams.include?(team) %>
+  <% popover_html = "" %>
+  <% if user_still_in_team %>
+    <% user_team_assignment = user.user_assignments.find_by(assignable: team) %>
+    <% popover_html = I18n.t('atwho.users.popover_html',
+                              role: user_team_assignment.user_role.name.capitalize,
+                              team: user_team_assignment.assignable.name,
+                              time: I18n.l(user_team_assignment.created_at, format: :full_date)) %>
+  <% end %>
+  <a
+    role="button"
+    class="atwho-user-popover"
+    data-container="body"
+    data-html="true"
+    tabindex="0"
+    data-trigger="manual"
+    data-placement="top"
+    data-toggle="popover"
+    data-content=""
+    data-full-name="<%= user.full_name %>"
+    data-email="<%= user.email %>"
+    data-popover-html="<%= popover_html %>"
+    data-user-avatar-popover-absolute-url="<%= user_avatar_popover_absolute_url %>"
+  >
+    <% unless skip_avatar %>
+      <span class="global-avatar-container smart-annotation">
+        <img
+          src="<%= user_avatar_absolute_url %>"
+          alt="avatar" class="atwho-user-img-popover"
+          ref="<%= 'missing-img' unless user.avatar.attached? %>%">
+      </span>
+    <% end %>
+    <%= user.full_name %>
+  </a>
+  <% unless skip_user_status || user_still_in_team %>
+    <%= I18n.t('atwho.res.removed') %>
+  <% end %>
+</span>

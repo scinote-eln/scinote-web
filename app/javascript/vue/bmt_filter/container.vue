@@ -49,8 +49,8 @@
 </template>
 
  <script>
-  import FilterElement from 'vue/bmt_filter/filter.vue'
-  import SavedFilterElement from 'vue/bmt_filter/saved_filter.vue'
+  import FilterElement from './filter.vue'
+  import SavedFilterElement from './saved_filter.vue'
 
   export default {
     name: 'FilterContainer',

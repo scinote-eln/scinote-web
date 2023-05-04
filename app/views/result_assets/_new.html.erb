@@ -19,14 +19,15 @@
     </div>
     <br />
     <div class="align-right">
+      <%= f.button t('result_assets.new.create'),
+                class: 'btn btn-primary save-result',
+                onclick: 'DragNDropResults.processResult(event);',
+                data: { href: my_module_result_assets_path(page: params[:page], order: params[:order], format: :json) } %>
       <%= f.button t('general.cancel'),
                    class: 'btn btn-secondary cancel-new',
-                   onclick: 'DragNDropResults.destroyAll();' %>
-      <%= f.button t('result_assets.new.create'),
-                   class: 'btn btn-primary save-result',
-                   onclick: 'DragNDropResults.processResult(event);',
-                   disabled: true,
-                   data: { href: my_module_result_assets_path(page: params[:page], order: params[:order], format: :json) } %>
+                   onclick: 'DragNDropResults.destroyAll();',
+                   type: 'button '%>
+
     </div>
   <% end %>
 </div>

@@ -1,3 +1,5 @@
+// scss-lint:disable ImportantRule
+
 $font-family-lato: Lato, "Open Sans", Arial, Helvetica, sans-serif;
 $font-family-sans-serif: "Open Sans", Arial, Helvetica, sans-serif;
 $font-family-serif: Georgia, "Times New Roman", Times, serif;
@@ -55,6 +57,10 @@ $font-fas-plus: "\f02b";
 @mixin font-awesome {
   font-family: "Font Awesome 5 Free";
   font-weight: 501;
+}
+
+html {
+  font-size: 16px !important;
 }
 
 // $font-size-large: ceil(($font-size-base * 1.1)); //16px

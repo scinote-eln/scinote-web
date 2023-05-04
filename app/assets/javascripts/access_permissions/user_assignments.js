@@ -1,4 +1,4 @@
-/* global HelperModule */
+/* global HelperModule I18n */
 
 (function() {
   'use strict';
@@ -47,8 +47,19 @@
       HelperModule.flashAlertMsg(data.flash, 'success');
     });
 
+    $(document).on('ajax:error', 'form#new-user-assignment-form', function(_e, data) {
+      HelperModule.flashAlertMsg(data.responseJSON.flash
+        ? data.responseJSON.flash : I18n.t('errors.general'), 'danger');
+    });
+
     $(document).on('ajax:error', 'form.member-item', function(_e, data) {
       HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
+    });
+
+    $(document).on('ajax:success', 'form.member-item', function(_e, data) {
+      if (data.flash) {
+        HelperModule.flashAlertMsg(data.flash, 'success');
+      }
     });
 
     $(document).on('click', '.user-assignment-dropdown .user-role-selector', function() {

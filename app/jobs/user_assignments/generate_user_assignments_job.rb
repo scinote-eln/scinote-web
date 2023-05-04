@@ -58,7 +58,7 @@ module UserAssignments
 
       return unless protocol.visible?
 
-      protocol.create_public_user_assignments!(@assigned_by)
+      protocol.create_or_update_public_user_assignments!(@assigned_by)
     end
 
     def assign_users_to_report(report)

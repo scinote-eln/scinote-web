@@ -108,7 +108,7 @@
 
 <% if @repository.is_a?(BmtRepository) %>
   <%= render partial: 'save_bmt_filter_modal' %>
-  <%= javascript_pack_tag 'vue/bmt_filter' %>
+  <%= javascript_include_tag 'vue_bmt_filter' %>
 <% else %>
   <%= render partial: 'repository_filters' %>
   <%= render partial: 'save_repository_filter_modal' %>
@@ -117,13 +117,7 @@
 <%= javascript_include_tag 'repositories/edit' %>
 <%= javascript_include_tag 'repositories/repository_datatable' %>
 <%= javascript_include_tag "repositories/show" %>
-<%= javascript_pack_tag 'custom/inputmask' %>
-<%= javascript_pack_tag 'emoji_button' %>
-<%= javascript_pack_tag 'pdfjs/pdf_js' %>
-<%= stylesheet_pack_tag 'pdfjs/pdf_js_styles' %>
-
-
-
-<script type="text/javascript" charset="utf-8">
-  var formatJS = "<%= datetime_picker_format_date_only %>"
-</script>
+<%= javascript_include_tag 'inputmask' %>
+<%= javascript_include_tag 'emoji_button' %>
+<%= javascript_include_tag 'pdf_js' %>
+<%= stylesheet_link_tag 'pdf_js_styles' %>

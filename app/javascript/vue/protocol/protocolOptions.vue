@@ -18,12 +18,11 @@
         class="dropdown-menu dropdown-menu-right"
         aria-labelledby="dropdownProtocolOptions"
       >
-        <li>
+        <li v-if="protocol.attributes.urls.load_from_repo_url">
           <a
             ref="loadProtocol"
             data-action="load-from-repository"
             @click="loadProtocol"
-            :class="{ disabled: !protocol.attributes.urls.load_from_repo_url }"
           >
             <span class="fas fa-edit"></span>
             <span>{{ i18n.t("my_modules.protocol.options_dropdown.load_from_repo") }}</span>
@@ -107,7 +106,7 @@
 </template>
 
  <script>
-import DeleteStepsModals from 'vue/protocol/modals/delete_steps'
+import DeleteStepsModals from './modals/delete_steps'
 
 export default {
 

@@ -24,11 +24,6 @@ function bindSystemNotificationAjax() {
       $('.dropdown.system-notifications').removeClass('open');
       // Open modal
       SystemNotificationModal.modal('show');
-      if (SystemNotification[0].dataset.unread === '1') {
-        $.each(SystemNotification, (index, e) => { e.dataset.unread = '0'; });
-        SystemNotification.find('.status-icon').addClass('seen');
-        $.post('/system_notifications/' + data.id + '/mark_as_read');
-      }
     });
 }
 

@@ -23,9 +23,9 @@
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    <FiltersList 
-      :filters="filters" 
-      :my_modules="my_modules" 
+    <FiltersList
+      :filters="filters"
+      :my_modules="my_modules"
       :key="filterListKey ? 1 : 0"
       @filter:update="updateFilter"
       @filter:delete="deleteFilter" />
@@ -56,9 +56,9 @@
 </template>
 
  <script>
-  import ColumnElement from 'vue/repository_filter/column.vue'
-  import FiltersList from 'vue/repository_filter/filters_list.vue'
-  import SavedFilterElement from 'vue/repository_filter/saved_filter.vue'
+  import ColumnElement from './column.vue'
+  import FiltersList from './filters_list.vue'
+  import SavedFilterElement from './saved_filter.vue'
 
   export default {
     name: 'FilterContainer',

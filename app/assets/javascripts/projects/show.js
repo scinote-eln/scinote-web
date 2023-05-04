@@ -105,7 +105,7 @@
         if (viewContainer.find('.no-results-container').length) {
           viewContainer.addClass('no-results');
         }
-        selectedExperiments.length = 0;
+        selectedExperiments = [];
         updateExperimentsToolbar();
         loadExperimentWorkflowImages();
 
@@ -126,6 +126,9 @@
       },
       error: function() {
         viewContainer.html('Error loading project list');
+      },
+      complete: function() {
+        updateSelectAllCheckbox();
       }
     });
   }
@@ -214,6 +217,22 @@
     });
   }
 
+  function updateSelectAllCheckbox() {
+    const tableWrapper = $(cardsWrapper);
+    const checkboxesCount = $('.sci-checkbox.experiment-card-selector', tableWrapper).length;
+    const selectedCheckboxesCount = selectedExperiments.length;
+    const selectAllCheckbox = $('.sci-checkbox.select-all', tableWrapper);
+
+    selectAllCheckbox.prop('indeterminate', false);
+    if (selectedCheckboxesCount === 0) {
+      selectAllCheckbox.prop('checked', false);
+    } else if (selectedCheckboxesCount === checkboxesCount) {
+      selectAllCheckbox.prop('checked', true);
+    } else {
+      selectAllCheckbox.prop('indeterminate', true);
+    }
+  }
+
   function initExperimentsSelector() {
     $(cardsWrapper).on('click', '.experiment-card-selector', function() {
       let card = $(this).closest('.experiment-card');
@@ -230,6 +249,8 @@
         $(this).closest('.experiment-card').removeClass('selected');
         selectedExperiments.splice(index, 1);
       }
+
+      updateSelectAllCheckbox();
 
       if (this.checked) {
         $.get(card.data('permissions-url'), function(result) {
@@ -277,14 +298,14 @@
   }
 
   function appendActionModal(modal) {
-    $('#content-wrapper').append(modal);
+    $('#projectShowWrapper').append(modal);
     modal.modal('show');
     modal.find('.selectpicker').selectpicker();
     // Remove modal when it gets closed
     modal.on('hidden.bs.modal', function() {
       $(this).remove();
     });
-    validateMoveModal(modal)
+    validateMoveModal(modal);
   }
 
   function validateMoveModal(modal) {
@@ -362,11 +383,11 @@
   }
 
   function init() {
-    $('#content-wrapper').on('ajax:success', '.experiment-action-link', function(ev, data) {
+    $('#projectShowWrapper').on('ajax:success', '.experiment-action-link', function(ev, data) {
       appendActionModal($(data.html));
     });
 
-    $('#content-wrapper')
+    $('#projectShowWrapper')
       .on('ajax:beforeSend', '.experiment-action-form', function() {
         animateSpinner();
       })
@@ -389,7 +410,7 @@
     initEditMoveDuplicateToolbarButton();
     initNewExperimentToolbarButton();
     initSelectAllCheckbox();
-    AsyncDropdown.init($('#content-wrapper'));
+    AsyncDropdown.init($('#projectShowWrapper'));
   }
 
   init();

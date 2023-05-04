@@ -26,7 +26,11 @@
             <i class="fas fa-archive"></i>&nbsp;
           <% end %>
           <div class="name-readonly-placeholder">
-            <%= @protocol.name %>
+            <% if @protocol.in_repository_draft? %>
+              <%= t('protocols.draft_name', name: @protocol.name ) %>
+            <% else %>
+              <%= @protocol.name %>
+            <% end %>
           </div>
         <% end %>
       </h1>
@@ -54,9 +58,9 @@
 
 <%= javascript_include_tag "handsontable.full" %>
 <%= render partial: "shared/formulas_libraries.html.erb" %>
-<%= javascript_pack_tag 'pdfjs/pdf_js' %>
-<%= stylesheet_pack_tag 'pdfjs/pdf_js_styles' %>
+<%= javascript_include_tag 'pdf_js' %>
+<%= stylesheet_link_tag 'pdf_js_styles' %>
 
 <%= render 'shared/tiny_mce_packs' %>
-<%= javascript_pack_tag 'vue/protocol' %>
+<%= javascript_include_tag 'vue_protocol' %>
 <%= render partial: 'label_printers/label_printer_modal' %>

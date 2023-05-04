@@ -58,30 +58,32 @@ var dropdownSelector = (function() {
   // Change direction of dropdown depends of container position
   function updateDropdownDirection(selector, container) {
     var windowHeight = $(window).height();
-    var containerPosition = container[0].getBoundingClientRect().top;
+    var containerPositionTop = container[0].getBoundingClientRect().top;
     var containerPositionLeft = container[0].getBoundingClientRect().left;
     var containerHeight = container[0].getBoundingClientRect().height;
     var containerWidth = container[0].getBoundingClientRect().width;
     var bottomSpace;
     var modalContainer = container.closest('.modal-dialog');
     var modalContainerBottom = 0;
+    var modalContainerTop = 0;
     var maxHeight = 0;
-    const bottomTreshold = 280;
+    const bottomThreshold = 280;
 
     if (modalContainer.length && windowHeight !== modalContainer.height()) {
       let modalClientRect = modalContainer[0].getBoundingClientRect();
       windowHeight = modalContainer.height() + modalClientRect.top;
       containerPositionLeft -= modalClientRect.left;
-      modalContainerBottom = windowHeight + modalClientRect.bottom;
+      modalContainerBottom = $(window).height() - modalClientRect.bottom;
+      modalContainerTop = modalClientRect.top;
       maxHeight += modalContainerBottom;
     }
-    bottomSpace = windowHeight - containerPosition - containerHeight;
+    bottomSpace = windowHeight - containerPositionTop - containerHeight;
 
-    if ((modalContainerBottom + bottomSpace) < bottomTreshold) {
+    if ((modalContainerBottom + bottomSpace) < bottomThreshold) {
       container.addClass('inverse');
-      maxHeight = Math.min(containerPosition - 122 + maxHeight, MAX_DROPDOWN_HEIGHT);
+      maxHeight = Math.min(containerPositionTop - 122 + maxHeight, MAX_DROPDOWN_HEIGHT);
       container.find('.dropdown-container').css('max-height', `${maxHeight}px`)
-        .css('margin-bottom', `${(containerPosition * -1)}px`)
+        .css('margin-bottom', `${((containerPositionTop - modalContainerTop) * -1)}px`)
         .css('left', `${containerPositionLeft}px`)
         .css('width', `${containerWidth}px`);
     } else {

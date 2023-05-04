@@ -131,6 +131,18 @@ module Users
         redirect_to action: :index
       end
 
+      def switch
+        team = current_user.teams.find_by(id: params[:id])
+
+        if team && current_user.update(current_team_id: team.id)
+          flash[:success] = t('users.settings.changed_team_flash',
+                              team: current_user.current_team.name)
+          render json: { current_team: team.id }
+        else
+          render json: { message: t('users.settings.changed_team_error_flash') }, status: :unprocessable_entity
+        end
+      end
+
       private
 
       def check_create_team_permission

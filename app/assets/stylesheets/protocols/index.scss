@@ -79,6 +79,7 @@
       flex-grow: 1;
       height: calc(100% - var(--datatable-pagination-row) - var(--protocol-toolbar-size));
       padding-bottom: 12px;
+      z-index: 1;
     }
 
     .dataTables_scrollBody {
@@ -213,6 +214,7 @@
       display: flex;
       flex-wrap: nowrap;
       width: 100%;
+      align-items: center;
 
       .protocol-link {
         @include font-button;
@@ -276,10 +278,20 @@
       }
 
       .protocol-comment-container {
+        .sci-input-field {
+          margin-bottom: 8px;
+        }
+
         &[data-edit-mode="0"] {
           .edit-buttons {
             display: none;
           }
+        }
+
+        .edit-buttons {
+          column-gap: 8px;
+          display: flex;
+          justify-content: end;
         }
       }
     }

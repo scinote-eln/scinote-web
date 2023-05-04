@@ -41,10 +41,10 @@
 </template>
 
  <script>
-  import DeleteMixin from 'vue/protocol/mixins/components/delete.js'
-  import DuplicateMixin from 'vue/protocol/mixins/components/duplicate.js'
-  import deleteElementModal from 'vue/protocol/modals/delete_element.vue'
-  import Tinymce from 'vue/shared/tinymce.vue'
+  import DeleteMixin from '../mixins/components/delete.js'
+  import DuplicateMixin from '../mixins/components/duplicate.js'
+  import deleteElementModal from '../modals/delete_element.vue'
+  import Tinymce from '../../shared/tinymce.vue'
 
   export default {
     name: 'StepText',

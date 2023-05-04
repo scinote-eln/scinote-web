@@ -5,8 +5,6 @@ Rails.application.config.assets.version = '1.0'
 
 # Add additional assets to the asset load path.
 # Rails.application.config.assets.paths << Emoji.images_path
-# Add Yarn node_modules folder to the asset load path.
-Rails.application.config.assets.paths << Rails.root.join('node_modules')
 
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in the app/assets
@@ -65,6 +63,7 @@ Rails.application.config.assets.precompile += %w(protocols/edit.js)
 Rails.application.config.assets.precompile += %w(protocols/import_export/eln_table.js)
 Rails.application.config.assets.precompile += %w(protocols/import_export/import.js)
 Rails.application.config.assets.precompile += %w(protocols/import_export/export.js)
+Rails.application.config.assets.precompile += %w(protocols/handson.js)
 Rails.application.config.assets.precompile += %w(layouts/print_protocol.css)
 Rails.application.config.assets.precompile += %w(datatables.js)
 Rails.application.config.assets.precompile += %w(search/index.js)
@@ -100,6 +99,18 @@ Rails.application.config.assets.precompile += %w(label_templates/label_templates
 Rails.application.config.assets.precompile += %w(users/connected_devices.js)
 Rails.application.config.assets.precompile += %w(BrowserPrint-3.0.216.min.js)
 Rails.application.config.assets.precompile += %w(BrowserPrint-Zebra-1.0.216.min.js)
+Rails.application.config.assets.precompile += %w(users/login_disclaimer.js)
+Rails.application.config.assets.precompile += %w(assets/office_form.js)
+Rails.application.config.assets.precompile += %w(global_activities/date_picker.js)
+Rails.application.config.assets.precompile += %w(shared/color_picker_select.js)
+Rails.application.config.assets.precompile += %w(system_notifications/system_notification_modal.js)
+Rails.application.config.assets.precompile += %w(users/confirmation/new.js)
+Rails.application.config.assets.precompile += %w(users/invitations/team_errors.js)
+Rails.application.config.assets.precompile += %w(users/invitations/resource_errors.js)
+Rails.application.config.assets.precompile += %w(users/registrations/team_errors.js)
+Rails.application.config.assets.precompile += %w(users/registrations/resource_errors.js)
+Rails.application.config.assets.precompile += %w(users/registrations/new_with_provider.js)
+Rails.application.config.assets.precompile += %w(team_zip_exports/load_handson.js)
 
 # Libraries needed for Handsontable formulas
 Rails.application.config.assets.precompile += %w(jquery.js)

@@ -162,7 +162,7 @@ module TinyMceImages
         image['class'] = 'img-responsive'
         image_changed = true
       end
-      self[object_field] = parsed_description.to_html if image_changed
+      self[object_field] = parsed_description.to_html.strip if image_changed
     end
 
     def extract_base64_images

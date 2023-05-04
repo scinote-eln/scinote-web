@@ -437,11 +437,15 @@ class Extends
     protocol_template_access_changed: 234,
     protocol_template_access_revoked: 235,
     task_protocol_save_to_template: 236,
-    protocol_template_draft_created: 237
+    protocol_template_draft_created: 237,
+    protocol_template_access_granted_all_team_members: 238,
+    protocol_template_access_changed_all_team_members: 239,
+    protocol_template_access_revoked_all_team_members: 240,
+    project_access_changed_all_team_members: 241
   }
 
   ACTIVITY_GROUPS = {
-    projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162],
+    projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162, 241],
     task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, 169, 172, 178],
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
            *146..148, 166],
@@ -454,7 +458,7 @@ class Extends
                   78, 96, 107, 113, 114, *133..136, 180, 181, 182],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 170, 173, 179, 187, 186,
-                          190, 191, *204..215, 220, 221, 223, 227, 228, 229, *230..235, 237],
+                          190, 191, *204..215, 220, 221, 223, 227, 228, 229, *230..235, *237..240],
     team: [92, 94, 93, 97, 104],
     label_repository: [*216..219]
   }
@@ -544,6 +548,8 @@ class Extends
     'ZebraLabelTemplate' => 'ZPL',
     'FluicsLabelTemplate' => 'Fluics'
   }
+
+  EXTERNAL_SERVICES = %w(https://www.protocols.io/ http://127.0.0.1:9100/available)
 end
 
 # rubocop:enable Style/MutableConstant

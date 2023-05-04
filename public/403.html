@@ -22,7 +22,7 @@
       top: 0%;
     }
 
-    div.navbar > img {
+    div.navbar img {
       width: 121px;
       height: 24px;
       left: 21px;
@@ -98,10 +98,12 @@
   </style>
 </head>
 
-<body>
+<body data-turbolinks="false">
   <!-- This file lives in public/403.html -->
   <div class="navbar">
-    <img id="logo" src="/images/scinote_icon.svg" title="SciNote">
+    <a href="/">
+      <img id="logo" src="/images/scinote_icon.svg" title="SciNote">
+    </a>
   </div>
   <div class="dialog">
     <img src="/images/undraw_through_the_park.svg" class="illustration">

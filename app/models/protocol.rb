@@ -34,7 +34,9 @@ class Protocol < ApplicationRecord
     in_repository_published_version: 7
   }
 
-  auto_strip_attributes :name, :description, nullify: false
+  auto_strip_attributes :name, :description, nullify: false, if: lambda {
+                                                                   name_changed? || description_changed?
+                                                                 }
   # Name is required when its actually specified (i.e. :in_repository? is true)
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :description, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
@@ -74,7 +76,7 @@ class Protocol < ApplicationRecord
     validate :ensure_single_draft
     validate :versions_same_name_constraint
   end
-  with_options if: -> { in_repository? && !parent } do |protocol|
+  with_options if: -> { in_repository? && !parent && !archived_changed?(from: false) } do |protocol|
     # Active protocol must have unique name inside its team
     protocol
       .validates_uniqueness_of :name, case_sensitive: false,
@@ -228,6 +230,9 @@ class Protocol < ApplicationRecord
       step.position = position
       step.protocol = self
       step.save!
+    rescue ActiveRecord::RecordInvalid => e
+      Rails.logger.error e.message
+      raise ActiveRecord::Rollback
     end
     step
   end
@@ -348,7 +353,9 @@ class Protocol < ApplicationRecord
   end
 
   def newer_than_parent?
-    linked? && updated_at > parent.published_on
+    return linked? if linked_at.nil?
+
+    linked? && updated_at > linked_at
   end
 
   def parent_newer?
@@ -489,11 +496,11 @@ class Protocol < ApplicationRecord
     # Lastly, update the metadata
     reload
     self.record_timestamps = false
-    self.updated_at = source.published_on
     self.added_by = current_user
     self.last_modified_by = current_user
     self.parent = source
-    self.linked_at = Time.zone.now
+    self.updated_at = Time.zone.now
+    self.linked_at = updated_at
     save!
   end
 
@@ -510,12 +517,12 @@ class Protocol < ApplicationRecord
     reload
     self.name = source.name
     self.record_timestamps = false
-    self.updated_at = source.published_on
     self.parent = source
     self.added_by = current_user
     self.last_modified_by = current_user
-    self.linked_at = Time.zone.now
     self.protocol_type = Protocol.protocol_types[:linked]
+    self.updated_at = Time.zone.now
+    self.linked_at = updated_at
     save!
   end
 
@@ -574,9 +581,13 @@ class Protocol < ApplicationRecord
     if linked?
       clone.added_by = current_user
       clone.parent = parent
+      clone.linked_at = linked_at
     end
 
-    deep_clone(clone, current_user)
+    ActiveRecord::Base.no_touching do
+      clone = deep_clone(clone, current_user)
+    end
+    clone
   end
 
   def deep_clone_repository(current_user)
@@ -587,14 +598,12 @@ class Protocol < ApplicationRecord
       added_by: current_user,
       last_modified_by: current_user,
       team: team,
-      protocol_type: :in_repository_draft,
-      skip_user_assignments: true
+      protocol_type: :in_repository_draft
     )
 
     cloned = deep_clone(clone, current_user)
 
     if cloned
-      deep_clone_user_assginments(clone)
       Activities::CreateActivityService
         .call(activity_type: :copy_protocol_in_repository,
               owner: current_user,
@@ -687,6 +696,8 @@ class Protocol < ApplicationRecord
   end
 
   def update_automatic_user_assignments
+    return if skip_user_assignments
+
     case visibility
     when 'visible'
       create_or_update_public_user_assignments!(added_by)

@@ -166,16 +166,16 @@
 </template>
 
  <script>
-  import InlineEdit from 'vue/shared/inline_edit.vue'
-  import Step from 'vue/protocol/step'
-  import ProtocolMetadata from 'vue/protocol/protocolMetadata'
-  import ProtocolOptions from 'vue/protocol/protocolOptions'
-  import ProtocolModals from 'vue/protocol/modals'
-  import Tinymce from 'vue/shared/tinymce.vue'
-  import ReorderableItemsModal from 'vue/protocol/modals/reorderable_items_modal.vue'
-  import PublishProtocol from 'vue/protocol/modals/publish_protocol.vue'
+  import InlineEdit from '../shared/inline_edit.vue'
+  import Step from './step'
+  import ProtocolMetadata from './protocolMetadata'
+  import ProtocolOptions from './protocolOptions'
+  import ProtocolModals from './modals'
+  import Tinymce from '../shared/tinymce.vue'
+  import ReorderableItemsModal from './modals/reorderable_items_modal.vue'
+  import PublishProtocol from './modals/publish_protocol.vue'
 
-  import UtilsMixin from 'vue/mixins/utils.js'
+  import UtilsMixin from '../mixins/utils.js'
 
   export default {
     name: 'ProtocolContainer',
@@ -276,6 +276,8 @@
             this.$nextTick(() => this.scrollToBottom());
           }
           this.refreshProtocolStatus();
+        }).error((data) => {
+          HelperModule.flashAlertMsg(data.responseJSON.error ? Object.values(data.responseJSON.error).join(', ') : I18n.t('errors.general'), 'danger');
         })
       },
       updateStepsPosition(step, action = 'add') {
@@ -339,7 +341,16 @@
         this.reordering = false;
       },
       startPublish() {
-        this.publishing = true;
+        $.ajax({
+          type: "GET",
+          url: this.urls.version_comment_url,
+          contentType: "application/json",
+          dataType: "json",
+          success: (result) => {
+            this.protocol.attributes.version_comment = result.version_comment;
+            this.publishing = true;
+          }
+        });
       },
       closePublishModal() {
         this.publishing = false;

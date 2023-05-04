@@ -38,16 +38,17 @@ module AccessPermissions
         team: current_team
       )
 
-      # prevent role change if it would result in no users having the user management permission
+      # prevent role change if it would result in no manually assigned users having the user management permission
       new_user_role = UserRole.find(permitted_update_params[:user_role_id])
       if !new_user_role.has_permission?(ProjectPermissions::USERS_MANAGE) &&
-         @user_assignment.last_with_permission?(ProjectPermissions::USERS_MANAGE)
+         @user_assignment.last_with_permission?(ProjectPermissions::USERS_MANAGE, assigned: :manually)
         raise ActiveRecord::RecordInvalid
       end
 
       @user_assignment.update!(permitted_update_params)
 
-      log_activity(:change_user_role_on_project, @user_assignment)
+      log_activity(:change_user_role_on_project, { user_target: @user_assignment.user.id,
+                                                   role: @user_assignment.user_role.name })
       propagate_job(@user_assignment)
 
       respond_to do |format|
@@ -67,18 +68,8 @@ module AccessPermissions
 
           if user_assignment_params[:user_id] == 'all'
             @project.update!(visibility: :visible, default_public_user_role_id: user_assignment_params[:user_role_id])
-            Activities::CreateActivityService
-              .call(activity_type: :change_project_visibility,
-                    owner: current_user,
-                    subject: @project,
-                    team: @project.team,
-                    project: @project,
-                    message_items: {
-                      project: @project.id,
-                      visibility: t('projects.activity.visibility_visible')
-                    })
+            log_activity(:change_project_visibility, { visibility: t('projects.activity.visibility_visible') })
           else
-
             user_assignment = UserAssignment.find_or_initialize_by(
               assignable: @project,
               user_id: user_assignment_params[:user_id],
@@ -91,21 +82,26 @@ module AccessPermissions
               assigned: :manually
             )
 
-            log_activity(:assign_user_to_project, user_assignment)
+            log_activity(:assign_user_to_project, { user_target: user_assignment.user.id,
+                                                    role: user_assignment.user_role.name })
             created_count += 1
             propagate_job(user_assignment)
           end
         end
 
         respond_to do |format|
-          @message = t('access_permissions.create.success', count: created_count)
+          @message = if created_count.zero?
+                       t('access_permissions.create.success', count: t('access_permissions.all_team'))
+                     else
+                       t('access_permissions.create.success', count: created_count)
+                     end
           format.json { render :edit }
         end
-      rescue ActiveRecord::RecordInvalid
-        respond_to do |format|
-          @message = t('access_permissions.create.failure')
-          format.json { render :new }
-        end
+      rescue ActiveRecord::RecordInvalid => e
+        Rails.logger.error e.message
+        errors = @project.errors.present? ? @project.errors&.map(&:message)&.join(',') : e.message
+        render json: { flash: errors }, status: :unprocessable_entity
+        raise ActiveRecord::Rollback
       end
     end
 
@@ -113,8 +109,10 @@ module AccessPermissions
       user = @project.assigned_users.find(params[:user_id])
       user_assignment = @project.user_assignments.find_by(user: user, team: current_team)
 
-      # prevent deletion of last user that can manage users
-      raise ActiveRecord::RecordInvalid if user_assignment.last_with_permission?(ProjectPermissions::USERS_MANAGE)
+      # prevent deletion of last manually assigned user that can manage users
+      if user_assignment.last_with_permission?(ProjectPermissions::USERS_MANAGE, assigned: :manually)
+        raise ActiveRecord::RecordInvalid
+      end
 
       if @project.visible?
         user_assignment.update!(
@@ -126,7 +124,8 @@ module AccessPermissions
       end
 
       propagate_job(user_assignment, destroy: true)
-      log_activity(:unassign_user_from_project, user_assignment)
+      log_activity(:unassign_user_from_project, { user_target: user_assignment.user.id,
+                                                  role: user_assignment.user_role.name })
 
       render json: { flash: t('access_permissions.destroy.success', member_name: escape_input(user.full_name)) },
              status: :ok
@@ -137,11 +136,26 @@ module AccessPermissions
 
     def update_default_public_user_role
       Project.transaction do
-        @project.visibility = :hidden if permitted_default_public_user_role_params[:default_public_user_role_id].blank?
-        @project.assign_attributes(permitted_default_public_user_role_params)
-        @project.save!
-
-        UserAssignments::ProjectGroupAssignmentJob.perform_later(current_team, @project, current_user)
+        @project.visibility_will_change!
+        @project.last_modified_by = current_user
+        if permitted_default_public_user_role_params[:default_public_user_role_id].blank?
+          # revoke all team members access
+          @project.visibility = :hidden
+          @project.save!
+          log_activity(:change_project_visibility, { visibility: t('projects.activity.visibility_hidden') })
+          render json: { flash: t('access_permissions.update.revoke_all_team_members') }
+        else
+          # update all team members access
+          @project.visibility = :visible
+          @project.assign_attributes(permitted_default_public_user_role_params)
+          @project.save!
+          log_activity(:project_access_changed_all_team_members,
+                       { team: @project.team.id, role: @project.default_public_user_role&.name })
+        end
+      rescue ActiveRecord::RecordInvalid => e
+        Rails.logger.error e.message
+        render json: { flash: @project.errors&.map(&:message)&.join(',') }, status: :unprocessable_entity
+        raise ActiveRecord::Rollback
       end
     end
 
@@ -194,16 +208,16 @@ module AccessPermissions
       )
     end
 
-    def log_activity(type_of, user_assignment)
+    def log_activity(type_of, message_items = {})
+      message_items = { project: @project.id }.merge(message_items)
+
       Activities::CreateActivityService
         .call(activity_type: type_of,
               owner: current_user,
               subject: @project,
               team: @project.team,
               project: @project,
-              message_items: { project: @project.id,
-                               user_target: user_assignment.user.id,
-                               role: user_assignment.user_role.name })
+              message_items: message_items)
     end
   end
 end

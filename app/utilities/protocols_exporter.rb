@@ -1,6 +1,3 @@
-
-require 'zip'
-
 module ProtocolsExporter
   private
 

@@ -247,6 +247,9 @@ window.TinyMCE = (() => {
           elementpath: false,
           quickbars_insert_toolbar: false,
           default_link_target: '_blank',
+          mobile: {
+            menubar: 'file edit view insert format table'
+          },
           target_list: [
             { title: 'New page', value: '_blank' },
             { title: 'Same page', value: '_self' }
@@ -336,10 +339,16 @@ window.TinyMCE = (() => {
                 if (options.onSaveCallback) { options.onSaveCallback(data); }
               }).on('ajax:error', (_ev, data) => {
                 const model = editor.getElement().dataset.objectType;
-                $(this).renderFormErrors(model, data.responseJSON);
+                let form = $(editor.getElement().closest('.form-group'));
+                form.renderFormErrors(model, data.responseJSON);
+
+                // to show bottom of the tinyMce editor instead at the top
+                form.find('.help-block').insertAfter(form.children().last());
                 editor.setProgressState(0);
                 if (data.status === 403) {
                   HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+                } else if (data.status === 422) {
+                  HelperModule.flashAlertMsg(data.responseJSON ? Object.values(data.responseJSON).join(', ') : I18n.t('errors.general'), 'danger');
                 }
               });
 

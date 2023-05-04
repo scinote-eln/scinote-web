@@ -1,5 +1,3 @@
-require 'zip'
-
 module ProtocolsExporterV2
   include ProtocolsExporter
 

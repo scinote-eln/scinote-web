@@ -21,6 +21,13 @@ Rails.application.routes.draw do
 
     root 'dashboards#show'
 
+    resources :navigations, only: [] do
+      collection do
+        get :top_menu
+        post :navigator_state
+      end
+    end
+
     resources :activities, only: [:index]
 
     get '/jobs/:id/status', to: 'active_jobs#status'
@@ -88,11 +95,6 @@ Rails.application.routes.draw do
          as: 'update_togglable_settings',
          defaults: { format: 'json' }
 
-    # Change user's current team
-    post 'users/settings/user_current_team',
-         to: 'users/settings#user_current_team',
-         as: 'user_current_team'
-
     get 'users/settings/teams',
         to: 'users/settings/teams#index',
         as: 'teams'
@@ -139,6 +141,11 @@ Rails.application.routes.draw do
 
     namespace :users do
       namespace :settings do
+        resources :teams, only: [] do
+          member do
+            post :switch
+          end
+        end
         resources :webhooks, only: %i(index create update destroy) do
           collection do
             post :destroy_filter
@@ -159,20 +166,11 @@ Rails.application.routes.draw do
           as: 'invitable_teams'
     end
 
-    # Notifications
-    get 'users/:id/recent_notifications',
-        to: 'user_notifications#recent_notifications',
-        as: 'recent_notifications',
-        defaults: { format: 'json' }
-
-    get 'users/:id/unseen_notification',
-        to: 'user_notifications#unseen_notification',
-        as: 'unseen_notification',
-        defaults: { format: 'json' }
-
-    get 'users/notifications',
-        to: 'user_notifications#index',
-        as: 'notifications'
+    resources :user_notifications, only: :index do
+      collection do
+        get :unseen_counter
+      end
+    end
 
     # Get Zip Export
     get 'zip_exports/download/:id',
@@ -577,6 +575,7 @@ Rails.application.routes.draw do
         post :publish
         post :destroy_draft
         post :save_as_draft
+        get 'version_comment', to: 'protocols#version_comment'
         get 'print', to: 'protocols#print'
         get 'linked_children', to: 'protocols#linked_children'
         post 'linked_children_datatable',

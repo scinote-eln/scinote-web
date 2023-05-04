@@ -8,19 +8,37 @@ class ProtocolSerializer < ActiveModel::Serializer
   include InputSanitizeHelper
 
   attributes :name, :id, :urls, :description, :description_view, :updated_at, :in_repository,
-             :created_at_formatted, :updated_at_formatted, :added_by, :authors, :keywords, :version, :code,
-             :published, :version_comment, :archived, :linked, :has_draft, :assignable_my_module_id
+             :created_at_formatted, :updated_at_formatted, :added_by, :authors, :keywords, :version,
+             :code, :published, :version_comment, :archived, :linked, :has_draft,
+             :published_on_formatted, :published_by, :created_from_version, :assignable_my_module_id
 
   def updated_at
     object.updated_at.to_i
   end
 
   def version
-    object.in_repository_draft? ? I18n.t('protocols.draft') : object.version_number
+    object.version_number
+  end
+
+  def created_from_version
+    object.previous_version&.version_number
   end
 
   def published
     object.in_repository_published?
+  end
+
+  def published_on_formatted
+    return if object.published_on.blank?
+
+    I18n.l(object.published_on, format: :full)
+  end
+
+  def published_by
+    {
+      avatar: object.published_by&.avatar_url(:icon_small),
+      name: object.published_by&.full_name
+    }
   end
 
   def added_by
@@ -77,6 +95,7 @@ class ProtocolSerializer < ActiveModel::Serializer
       publish_url: publish_url,
       save_as_draft_url: save_as_draft_url,
       versions_modal_url: versions_modal_url,
+      version_comment_url: version_comment_url,
       print_protocol_url: print_protocol_url
     }
   end
@@ -160,13 +179,17 @@ class ProtocolSerializer < ActiveModel::Serializer
   end
 
   def revert_protocol_url
-    return unless can_read_protocol_in_module?(object) && object.linked? && object.newer_than_parent?
+    return unless can_manage_protocol_in_module?(object) && object.linked? &&
+                  object.parent.active? && object.newer_than_parent? &&
+                  can_read_protocol_in_repository?(object.parent)
 
     revert_modal_protocol_path(object, format: :json)
   end
 
   def update_protocol_url
-    return unless can_read_protocol_in_module?(object) && object.linked? && object.parent_newer?
+    return unless can_manage_protocol_in_module?(object) && object.linked? &&
+                  object.parent.active? && object.parent_newer? &&
+                  can_read_protocol_in_repository?(object.parent)
 
     update_from_parent_modal_protocol_path(object, format: :json)
   end
@@ -205,6 +228,12 @@ class ProtocolSerializer < ActiveModel::Serializer
     return unless can_publish_protocol_in_repository?(object)
 
     publish_protocol_path(object)
+  end
+
+  def version_comment_url
+    return unless can_publish_protocol_in_repository?(object)
+
+    version_comment_protocol_path(object)
   end
 
   def save_as_draft_url

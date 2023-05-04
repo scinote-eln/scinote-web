@@ -6,6 +6,11 @@
 
   <p>
     <span>
+      <%=t 'search.object_id' %>
+      <%= highlight report.code, @search_query.strip.split(/\s+/)  %>
+    </span>
+    <br>
+    <span>
       <%=t "search.index.description" %>
       <% if report.description.present? %>
         <%= highlight report.description, @search_query.strip.split(/\s+/)  %>

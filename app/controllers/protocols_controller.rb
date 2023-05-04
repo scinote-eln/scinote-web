@@ -27,8 +27,6 @@ class ProtocolsController < ApplicationController
     protocolsio_index
     datatable
   )
-  # For update_from_parent and update_from_parent_modal we don't need to check
-  # read permission for the parent protocol
   before_action :check_manage_permissions, only: %i(
     update_keywords
     update_description
@@ -37,11 +35,14 @@ class ProtocolsController < ApplicationController
     update_authors
     unlink
     unlink_modal
+    delete_steps
+  )
+
+  before_action :check_manage_with_read_protocol_permissions, only: %i(
     revert
     revert_modal
     update_from_parent
     update_from_parent_modal
-    delete_steps
   )
   before_action :check_restore_all_in_repository_permissions, only: :restore
   before_action :check_archive_all_in_repository_permissions, only: :archive
@@ -59,7 +60,7 @@ class ProtocolsController < ApplicationController
     copy_to_repository
   )
 
-  before_action :check_publish_permission, only: :publish
+  before_action :check_publish_permission, only: %i(publish version_comment update_version_comment)
   before_action :check_import_permissions, only: :import
   before_action :check_export_permissions, only: :export
   before_action :check_delete_draft_permissions, only: :destroy_draft
@@ -100,6 +101,7 @@ class ProtocolsController < ApplicationController
   def print
     @protocol = Protocol.find(params[:id])
     render_403 && return unless @protocol.my_module.blank? || can_read_protocol_in_module?(@protocol)
+
     render layout: 'protocols/print'
   end
 
@@ -142,7 +144,7 @@ class ProtocolsController < ApplicationController
                    protocol: @protocol.id,
                    version_number: @protocol.version_number)
     rescue ActiveRecord::RecordInvalid => e
-      flash[:error] = e.message
+      flash[:error] = @protocol.errors&.map(&:message)&.join(',')
       Rails.logger.error e.message
       raise ActiveRecord::Rollback
     rescue StandardError => e
@@ -166,6 +168,8 @@ class ProtocolsController < ApplicationController
       log_activity(:protocol_template_draft_deleted,
                    nil,
                    protocol: @protocol.id)
+
+      flash[:success] = I18n.t('protocols.delete_draft_modal.success')
       redirect_to protocols_path
     rescue ActiveRecord::RecordNotDestroyed => e
       Rails.logger.error e.message
@@ -318,8 +322,8 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       transaction_error = false
       Protocol.transaction do
-        @new = @protocol.copy_to_repository(Protocol.new(create_params), current_user)
-        log_activity(:task_protocol_save_to_template, @my_module.experiment.project, protocol: @protocol.id)
+        @new_protocol = @protocol.copy_to_repository(Protocol.new(create_params), current_user)
+        log_activity(:task_protocol_save_to_template, @my_module.experiment.project, protocol: @new_protocol.id)
       rescue StandardError => e
         transaction_error = true
         Rails.logger.error(e.message)
@@ -334,8 +338,8 @@ class ProtocolsController < ApplicationController
             message: t('my_modules.protocols.copy_to_repository_modal.error_400')
           },
           status: :bad_request
-        elsif @new.invalid?
-          render json: { error: @new.errors.full_messages.join(', ') }, status: :unprocessable_entity
+        elsif @new_protocol.invalid?
+          render json: { error: @new_protocol.errors.messages.map { |_, value| value }.join(' ') }, status: :unprocessable_entity
         else
           # Everything good, render 200
           render json: { message: t('my_modules.protocols.copy_to_repository_modal.success_message') }
@@ -882,6 +886,14 @@ class ProtocolsController < ApplicationController
     end
   end
 
+  def version_comment
+    respond_to do |format|
+      format.json do
+        render json: { version_comment: @protocol.version_comment }
+      end
+    end
+  end
+
   def update_version_comment
     respond_to do |format|
       format.json do
@@ -891,7 +903,7 @@ class ProtocolsController < ApplicationController
                        protocol: @protocol.id)
           render json: { version_comment: @protocol.version_comment }
         else
-          render json: @protocol.errors, status: :unprocessable_entity
+          render json: { errors: @protocol.errors }, status: :unprocessable_entity
         end
       end
     end
@@ -1000,6 +1012,13 @@ class ProtocolsController < ApplicationController
     render_403 unless @protocol.present? &&
                       (can_manage_protocol_in_module?(@protocol) ||
                        can_manage_protocol_draft_in_repository?(@protocol))
+  end
+
+  def check_manage_with_read_protocol_permissions
+    @protocol = Protocol.find_by(id: params[:id])
+    render_403 unless @protocol.present? && @protocol.parent.present? &&
+                      (can_manage_protocol_in_module?(@protocol) &&
+                       can_read_protocol_in_repository?(@protocol.parent))
   end
 
   def check_save_as_draft_permissions

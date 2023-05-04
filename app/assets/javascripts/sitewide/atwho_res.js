@@ -24,7 +24,7 @@ var SmartAnnotation = (function() {
 
     function matchHighlighter(html, query) {
       var $html = $(html);
-      var $liText = $html.find('.item-text');
+      var $liText = $html.find('.item-text, .sa-type');
       if ($liText.length === 0 || !query) return html;
 
       $.each($liText, function(i, item) {

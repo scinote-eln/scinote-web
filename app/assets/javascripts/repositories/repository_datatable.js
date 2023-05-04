@@ -134,6 +134,37 @@ var RepositoryDatatable = (function(global) {
     }
   }
 
+  function initEditRowForms() {
+    let $forms = $(TABLE_ID).find('.repository-row-edit-form');
+
+    let formsCount = $forms.length;
+    $forms.each(function() {
+      const form = $(this);
+      form.on('submit', function(event) {
+        event.preventDefault();
+        $.ajax({
+          url: form.attr('action'),
+          type: form.attr('method'),
+          data: form.serialize(),
+          success: function() {
+            formsCount -= 1;
+          },
+          error: function() {
+            formsCount += 1;
+          },
+          complete: function() {
+            $('html, body').animate({ scrollLeft: 0 }, 300);
+            if (formsCount === 0) {
+              $(TABLE_ID).dataTable().api().ajax.reload(() => {
+                animateSpinner(null, false);
+              }, false);
+            }
+          }
+        });
+      });
+    });
+  }
+
   function clearRowSelection() {
     $('.dt-body-center .repository-row-selector').prop('checked', false);
     $('.dt-body-center .repository-row-selector').closest('tr').removeClass('selected');
@@ -161,34 +192,35 @@ var RepositoryDatatable = (function(global) {
 
     clearRowSelection();
     updateButtons();
+    initEditRowForms();
   }
 
   // Updates "Select all" control in a data table
   function updateDataTableSelectAllCtrl() {
     var $table = TABLE.table().node();
     var $header = TABLE.table().header();
-    var $chkboxAll = $('.repository-row-selector', $table);
-    var $chkboxChecked = $('.repository-row-selector:checked', $table);
-    var chkboxSelectAll = $(SELECT_ALL_SELECTOR, $header).get(0);
+    var $checkboxAll = $('.repository-row-selector', $table);
+    var $checkboxChecked = $('.repository-row-selector:checked', $table);
+    var checkboxSelectAll = $(SELECT_ALL_SELECTOR, $header).get(0);
     // If none of the checkboxes are checked
-    if ($chkboxChecked.length === 0) {
-      chkboxSelectAll.checked = false;
-      if ('indeterminate' in chkboxSelectAll) {
-        chkboxSelectAll.indeterminate = false;
+    if ($checkboxChecked.length === 0) {
+      checkboxSelectAll.checked = false;
+      if ('indeterminate' in checkboxSelectAll) {
+        checkboxSelectAll.indeterminate = false;
       }
 
     // If all of the checkboxes are checked
-    } else if ($chkboxChecked.length === $chkboxAll.length) {
-      chkboxSelectAll.checked = true;
-      if ('indeterminate' in chkboxSelectAll) {
-        chkboxSelectAll.indeterminate = false;
+    } else if ($checkboxChecked.length === $checkboxAll.length) {
+      checkboxSelectAll.checked = true;
+      if ('indeterminate' in checkboxSelectAll) {
+        checkboxSelectAll.indeterminate = false;
       }
 
     // If some of the checkboxes are checked
     } else {
-      chkboxSelectAll.checked = true;
-      if ('indeterminate' in chkboxSelectAll) {
-        chkboxSelectAll.indeterminate = true;
+      checkboxSelectAll.checked = true;
+      if ('indeterminate' in checkboxSelectAll) {
+        checkboxSelectAll.indeterminate = true;
       }
     }
   }
