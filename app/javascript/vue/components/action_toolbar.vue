@@ -1,5 +1,5 @@
 <template>
-  <div v-if="actions.length" class="sn-action-toolbar p-4 bg-sn-sleepy-grey w-full fixed bottom-0 rounded-t-md shadow-[0_-12px_24px_-12px_rgba(35,31,32,0.2)]" :style="`width: ${width}px`">
+  <div v-if="actions.length" class="sn-action-toolbar p-4 sn-background--sn-sleepy-grey w-full fixed bottom-0 rounded-t-md shadow-[0_-12px_24px_-12px_rgba(35,31,32,0.2)]" :style="`width: ${width}px`">
     <div class="sn-action-toolbar__actions flex">
       <div v-for="action in actions" :key="action.name" class="sn-action-toolbar__action">
         <a :class="`btn btn-light ${action.button_class}`"
