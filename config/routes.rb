@@ -427,6 +427,10 @@ Rails.application.routes.draw do
     resources :my_modules, path: '/modules', only: [:show, :update] do
       post 'save_table_state', on: :collection, defaults: { format: 'json' }
 
+      collection do
+        get 'actions_toolbar'
+      end
+
       member do
         get :permissions
         get :actions_dropdown
