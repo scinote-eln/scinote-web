@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SmartAnnotation
-  include ActionView::Helpers::InputSanitizeHelper
+  include InputSanitizeHelper
   include ActionView::Helpers::TextHelper
 
   attr_writer :current_user, :current_team, :query
