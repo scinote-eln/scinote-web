@@ -44,12 +44,13 @@ export default {
   data: function() {
     return {
       childrenExpanded: false,
+      childrenLoaded: false,
       children: []
     };
   },
   computed: {
     hasChildren: function() {
-      return this.item.has_children;
+      return this.item.has_children || this.children.length > 0;
     },
     sortedMenuItems: function() {
       return this.children.sort((a, b) => {
@@ -93,6 +94,13 @@ export default {
       if (this.reloadCurrentLevel && this.children.find((item) => item.id == this.currentItemId)) {
         this.loadChildren();
       }
+    },
+    children: function() {
+      if (this.children.length > 0) {
+        this.childrenExpanded = true;
+      } else if (this.childrenLoaded) {
+        this.item.has_children = false;
+      }
     }
   },
   methods: {
@@ -103,6 +111,7 @@ export default {
     loadChildren: function() {
       $.get(this.item.children_url, {archived: this.archived}, (data) => {
         this.children = data.items;
+        this.childrenLoaded = true;
       });
     },
     treeExpand: function() {
