@@ -112,6 +112,8 @@ class ProjectsController < ApplicationController
                       .search(current_user, false, params[:query], 1, current_team)
                       .pluck(:id, :name)
 
+    return render plain: [].to_json if projects.blank?
+
     render json: projects
   end
 
