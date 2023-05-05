@@ -8,7 +8,7 @@ Vue.prototype.i18n = window.I18n;
 function initAssignItemsToTaskModalComponent() {
   const container = $('.assign-items-to-task-modal-container');
   if (container.length) {
-    window.AssignItemsToTaskModalComponent = new Vue({
+    window.AssignItemsToTaskModalComponentContainer = new Vue({
       el: '.assign-items-to-task-modal-container',
       name: 'AssignItemsToTaskModalComponent',
       components: {

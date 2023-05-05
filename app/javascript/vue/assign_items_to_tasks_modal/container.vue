@@ -7,7 +7,7 @@
     role="dialog"
     aria-labelledby="assignItemsToTaskModalLabel"
   >
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-sm" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title">
@@ -29,23 +29,39 @@
             }}
           </div>
 
-          <div class="project-selector">
+          <div class="project-selector level-selector">
             <label>
-              {{ i18n.t("repositories.modal_assign_items_to_task.body.project_select.label") }}
+              {{
+                i18n.t(
+                  "repositories.modal_assign_items_to_task.body.project_select.label"
+                )
+              }}
             </label>
 
             <SelectSearch
               ref="projectsSelector"
               @change="changeProject"
               :options="projects"
-              :placeholder="i18n.t('repositories.modal_assign_items_to_task.body.project_select.placeholder')"
-              :searchPlaceholder="i18n.t('repositories.modal_assign_items_to_task.body.project_select.placeholder')"
+              :placeholder="
+                i18n.t(
+                  'repositories.modal_assign_items_to_task.body.project_select.placeholder'
+                )
+              "
+              :searchPlaceholder="
+                i18n.t(
+                  'repositories.modal_assign_items_to_task.body.project_select.placeholder'
+                )
+              "
             />
           </div>
 
-          <div class="experiment-selector">
+          <div class="experiment-selector level-selector">
             <label>
-              {{ i18n.t("repositories.modal_assign_items_to_task.body.experiment_select.label") }}
+              {{
+                i18n.t(
+                  "repositories.modal_assign_items_to_task.body.experiment_select.label"
+                )
+              }}
             </label>
 
             <SelectSearch
@@ -54,13 +70,21 @@
               @change="changeExperiment"
               :options="experiments"
               :placeholder="experimentsSelectorPlaceholder"
-              :searchPlaceholder="i18n.t('repositories.modal_assign_items_to_task.body.experiment_select.placeholder')"
+              :searchPlaceholder="
+                i18n.t(
+                  'repositories.modal_assign_items_to_task.body.experiment_select.placeholder'
+                )
+              "
             />
           </div>
 
-          <div class="task-selector">
+          <div class="task-selector level-selector">
             <label>
-              {{ i18n.t("repositories.modal_assign_items_to_task.body.task_select.label") }}
+              {{
+                i18n.t(
+                  "repositories.modal_assign_items_to_task.body.task_select.label"
+                )
+              }}
             </label>
 
             <SelectSearch
@@ -68,16 +92,28 @@
               ref="tasksSelector"
               @change="changeTask"
               :options="tasks"
-              :placeholder="i18n.t('repositories.modal_assign_items_to_task.body.task_select.disabled_placeholder')"
-              :searchPlaceholder="i18n.t('repositories.modal_assign_items_to_task.body.task_select.placeholder')"
+              :placeholder="
+                i18n.t(
+                  'repositories.modal_assign_items_to_task.body.task_select.disabled_placeholder'
+                )
+              "
+              :searchPlaceholder="
+                i18n.t(
+                  'repositories.modal_assign_items_to_task.body.task_select.placeholder'
+                )
+              "
             />
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal">
-            {{
-              i18n.t("repositories.modal_assign_items_to_task.assign")
-            }}
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-dismiss="modal"
+            :disabled="!selectedTask"
+            @click="assign"
+          >
+            {{ i18n.t("repositories.modal_assign_items_to_task.assign") }}
           </button>
         </div>
       </div>
@@ -86,77 +122,90 @@
 </template>
 
 <script>
-import SelectSearch from '../shared/select_search.vue'
+import SelectSearch from "../shared/select_search.vue";
 
 export default {
   name: "AssignItemsToTaskModalContainer",
   props: {
     visibility: Boolean,
-    urls: Object,
+    urls: Object
   },
   data() {
     return {
-      projects: [
-        [1, "project1"],
-        [2, "project2"],
-        [3, "project3"],
-        [4, "project4"],
-        [5, "project5"],
-        [6, "project6"],
-        [7, "project7"],
-        [8, "project8"],
-      ],
-      experiments: [
-        [1, "experiment1"],
-        [2, "experiment2"],
-        [3, "experiment3"],
-        [4, "experiment4"],
-        [5, "experiment5"],
-        [6, "experiment6"],
-        [7, "experiment7"],
-        [8, "experiment8"],
-      ],
-      tasks: [
-        [1, "task1"],
-        [2, "task2"],
-        [3, "task3"],
-        [4, "task4"],
-        [5, "task5"],
-        [6, "task6"],
-        [7, "task7"],
-        [8, "task8"],
-      ],
+      rowsToAssign: [],
+      projects: [],
+      experiments: [],
+      tasks: [],
       selectedProject: null,
       selectedExperiment: null,
-      selectedTask: null
+      selectedTask: null,
+      showCallback: null
     };
   },
   components: {
     SelectSearch
   },
+  created() {
+    window.AssignItemsToTaskModalComponent = this;
+  },
   mounted() {
-    $.get(this.urls.projects)
-    $(this.$refs.modal).on('hidden.bs.modal', () => {
-      this.$emit('close');
+    $(this.$refs.modal).on("shown.bs.modal", () => {
+      $.get(this.projectURL, data => {
+        if (Array.isArray(data)) {
+          this.projects = data;
+          return false;
+        }
+        this.projects = [];
+      });
     });
+
+
+    $(this.$refs.modal).on("hidden.bs.modal", () => {
+      this.$emit("close");
+    });
+  },
+  beforeDestroy() {
+    delete window.AssignItemsToTaskModalComponent;
   },
   computed: {
     experimentsSelectorPlaceholder() {
       if (this.selectedProject) {
-        return this.i18n.t('repositories.modal_assign_items_to_task.body.experiment_select.placeholder');
+        return this.i18n.t(
+          "repositories.modal_assign_items_to_task.body.experiment_select.placeholder"
+        );
       }
-      return this.i18n.t('repositories.modal_assign_items_to_task.body.experiment_select.disabled_placeholder')
+      return this.i18n.t(
+        "repositories.modal_assign_items_to_task.body.experiment_select.disabled_placeholder"
+      );
     },
     tasksSelectorPlaceholder() {
       if (this.selectedExperiment) {
-        return this.i18n.t('repositories.modal_assign_items_to_task.body.task_select.placeholder');
+        return this.i18n.t(
+          "repositories.modal_assign_items_to_task.body.task_select.placeholder"
+        );
       }
-      return this.i18n.t('repositories.modal_assign_items_to_task.body.task_select.disabled_placeholder')
+      return this.i18n.t(
+        "repositories.modal_assign_items_to_task.body.task_select.disabled_placeholder"
+      );
+    },
+    projectURL() {
+      return `${this.urls.projects}`;
+    },
+    experimentURL() {
+      return `${this.urls.experiments}?project_id=${this.selectedProject ||
+        ""}`;
+    },
+    taskURL() {
+      return `${this.urls.tasks}?experiment_id=${this.selectedExperiment ||
+        ""}`;
+    },
+    assignURL() {
+      return this.urls.assign.replace(":module_id", this.selectedTask);
     }
   },
   watch: {
-    visibility(newVal) {
-      if (newVal) {
+    visibility() {
+      if (this.visibility) {
         this.showModal();
       } else {
         this.hideModal();
@@ -165,33 +214,76 @@ export default {
   },
   methods: {
     showModal() {
-      $(this.$refs.modal).modal('show');
+      $(this.$refs.modal).modal("show");
+
+      this.rowsToAssign = this.showCallback();
     },
-    hideModal(){
-      $(this.$refs.modal).modal('hide');
+    hideModal() {
+      $(this.$refs.modal).modal("hide");
     },
     changeProject(value) {
-      const newProjectVal = value;
-      this.selectedProject = null;
-      this.selectedExperiment = null;
-      this.selectedTask = null;
+      this.selectedProject = value;
+      this.resetExperimentSelector();
+      this.resetTaskSelector();
 
-      setTimeout(() => {
-        this.experiments = [
-          [1, 'ex1'],
-          [2, 'ex2'],
-          [3, 'ex3'],
-          [4, 'ex4']
-        ];
-        this.selectedProject = newProjectVal;
-      }, 2000);
-
+      $.get(this.experimentURL, data => {
+        if (Array.isArray(data)) {
+          this.experiments = data;
+          return false;
+        }
+        this.experiments = [];
+      });
     },
     changeExperiment(value) {
       this.selectedExperiment = value;
+      this.resetTaskSelector();
+
+      $.get(this.taskURL, data => {
+        if (Array.isArray(data)) {
+          this.tasks = data;
+          return false;
+        }
+        this.tasks = [];
+      });
     },
     changeTask(value) {
       this.selectedTask = value;
+    },
+    resetProjectSelector() {
+      this.projects = [];
+      this.selectedProject = null;
+    },
+    resetExperimentSelector() {
+      this.experiments = [];
+      this.selectedExperiment = null;
+    },
+    resetTaskSelector() {
+      this.tasks = [];
+      this.selectedTask = null;
+    },
+    resetSelectors() {
+      this.resetTaskSelector();
+      this.resetExperimentSelector();
+      this.resetProjectSelector();
+    },
+    assign() {
+      if (!this.selectedTask) return;
+
+      $.ajax({
+        url: this.assignURL,
+        type: "PATCH",
+        dataType: "json",
+        data: { rows_to_assign: this.rowsToAssign }
+      }).always(() => {
+        this.resetSelectors();
+        this.deselectRows();
+      });
+    },
+    setShowCallback(callback) {
+      this.showCallback = callback;
+    },
+    deselectRows() {
+      $('.repository-row-selector:checked').trigger('click');
     }
   }
 };

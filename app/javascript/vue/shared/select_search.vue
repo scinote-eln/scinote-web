@@ -42,16 +42,20 @@
         } else {
           this.currentOptions = this.options.filter((o) => o[1].toLowerCase().includes(this.query.toLowerCase()));
         }
+      },
+      options() {
+        this.currentOptions = this.options;
       }
     },
     computed: {
       valueLabel() {
-        let option = this.options.find((o) => o[0] === this.value);
+        let option = this.currentOptions.find((o) => o[0] === this.value);
         return option && option[1];
       }
     },
     methods: {
       blur() {
+        this.isOpen = false;
         this.$emit('blur');
       },
       change(value) {
@@ -68,7 +72,7 @@
         this.$emit('close');
       },
       fetchOptions() {
-        $.get(`/${this.optionsUrl}?query=${this.query}`,
+        $.get(`${this.optionsUrl}?query=${this.query || ''}`,
           (data) => {
             this.currentOptions = data;
           }
