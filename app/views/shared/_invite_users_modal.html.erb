@@ -96,7 +96,7 @@ invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_sele
               <h4 class="heading">
                 <span><%= t('invite_users.select_team_role') %></span>
               </h4>
-              <div class="form-select">
+              <div class="relative">
                 <% normal_user_role = UserRole.find_predefined_normal_user_role %>
                 <%= select_tag "role-id",
                   options_for_select(
@@ -129,7 +129,7 @@ invite_with_team_selector = type.in?(%w(invite_new_members invite_with_team_sele
                   <h4 class="heading">
                     <span><%= t('invite_users.select_team_role') %></span>
                   </h4>
-                  <div class="form-select">
+                  <div class="relative">
                     <% normal_user_role = UserRole.find_predefined_normal_user_role %>
                     <%= select_tag "role-id",
                       options_for_select(
