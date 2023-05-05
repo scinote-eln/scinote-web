@@ -447,7 +447,7 @@ class MyModulesController < ApplicationController
     return render plain: [].to_json if experiment.blank?
 
     my_modules = experiment.my_modules
-                           .readable_by_user(current_user)
+                           .managable_by_user(current_user)
                            .search(current_user, false, params[:query], 1, current_team)
                            .pluck(:id, :name)
 
