@@ -9,7 +9,8 @@ class ExperimentsController < ApplicationController
 
   before_action :load_project, only: %i(new create archive_group restore_group)
   before_action :load_experiment, except: %i(new create archive_group restore_group experiment_filter)
-  before_action :check_read_permissions, except: %i(edit archive clone move new create archive_group restore_group experiment_filter)
+  before_action :check_read_permissions, except: %i(edit archive clone move new create
+                                                    archive_group restore_group experiment_filter)
   before_action :check_canvas_read_permissions, only: %i(canvas)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: %i(edit batch_clone_my_modules)
