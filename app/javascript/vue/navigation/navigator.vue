@@ -1,5 +1,5 @@
 <template>
-  <div class="w-72 h-full border rounded sn-background--sn-white flex flex-col right-0 absolute navigator-container">
+  <div class="w-72 h-full border rounded bg-sn-white flex flex-col right-0 absolute navigator-container">
     <div class="p-3 flex items-center">
       <i class="fas fa-bars p-2 cursor-pointer"></i>
       <div class="font-bold text-base">

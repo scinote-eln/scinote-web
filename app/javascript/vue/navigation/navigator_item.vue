@@ -1,6 +1,6 @@
 <template>
-  <div class="sn-color--sn-blue pl-7 w-64 flex justify-center flex-col" :navigator-item-id="item.id">
-    <div class="p-2 flex items-center whitespace-nowrap" :class="{ 'sn-background--sn-light-grey': activeItem }">
+  <div class="text-sn-blue pl-7 w-64 flex justify-center flex-col" :navigator-item-id="item.id">
+    <div class="p-2 flex items-center whitespace-nowrap" :class="{ 'bg-sn-light-grey': activeItem }">
       <div class="w-5 mr-2 flex justify-start shrink-0">
         <i v-if="hasChildren"
           class="fas cursor-pointer"
@@ -11,7 +11,7 @@
           class="text-ellipsis overflow-hidden hover:no-underline"
           :class="{
             'pointer-events-none': (!item.archived && archived),
-            'sn-color--sn-grey': (!item.archived && archived)
+            'text-sn-grey': (!item.archived && archived)
           }">
         <i v-if="itemIcon" class="mr-2" :class="itemIcon"></i>
         <template v-if="item.archived">(A)</template>
