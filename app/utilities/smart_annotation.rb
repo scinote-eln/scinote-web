@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SmartAnnotation
-  include ActionView::Helpers::InputSanitizeHelper
+  include InputSanitizeHelper
   include ActionView::Helpers::TextHelper
 
   attr_writer :current_user, :current_team, :query
@@ -46,7 +46,7 @@ class SmartAnnotation
       res = res.joins('LEFT OUTER JOIN "my_module_repository_rows" "current_my_module_repository_rows"'\
                       'ON "current_my_module_repository_rows"."repository_row_id" = "repository_rows"."id" '\
                       'AND "current_my_module_repository_rows"."my_module_id" = ' + my_module_id.to_s)
-               .select('repository_rows.id', 'repository_rows.name',
+               .select('repository_rows.*',
                        'CASE WHEN current_my_module_repository_rows.id IS NOT NULL '\
                        'THEN true ELSE false END as row_assigned')
     end
