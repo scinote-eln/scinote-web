@@ -23,10 +23,12 @@
       font-size: 10px;
       height: 1rem;
       justify-content: center;
+      left: 1.25rem;
+      min-width: 1rem;
+      padding: 0 .25rem;
       position: absolute;
-      right: 0;
       top: 0;
-      width: 1rem;
+      white-space: nowrap;
     }
   }
 
