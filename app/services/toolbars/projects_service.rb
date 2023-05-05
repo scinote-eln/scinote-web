@@ -31,12 +31,12 @@ module Toolbars
       return [] if @item_type == :none
 
       [
+        restore_action,
         edit_action,
         access_action,
         move_action,
         export_action,
         archive_action,
-        restore_action,
         comments_action,
         activities_action
       ].compact

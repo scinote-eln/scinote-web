@@ -177,14 +177,17 @@ var ProjectsIndex = (function() {
     $(projectsWrapper).on('click', exportProjectsBtn, function(ev) {
       ev.stopPropagation();
       ev.preventDefault();
+
+      const projectId = $(this).data('projectId');
+
       // Load HTML to refresh users list
       $.ajax({
         url: $(exportProjectsBtn).data('url'),
         type: 'GET',
         dataType: 'json',
         data: {
-          project_ids: selectedProjects,
-          project_folder_ids: selectedProjectFolders
+          project_ids: projectId ? [projectId] : selectedProjects,
+          project_folder_ids: projectId ? [] : selectedProjectFolders
         },
         success: function(data) {
           // Update modal title
@@ -343,21 +346,32 @@ var ProjectsIndex = (function() {
       });
     }
 
-    function loadMoveToModal(url) {
+    function loadMoveToModal(url, projectId) {
       let items;
       let projects;
       let folders;
 
-      if ((selectedProjects.length) && (selectedProjectFolders.length)) {
+      if (projectId) {
+        items = 'projects';
+      } else if ((selectedProjects.length) && (selectedProjectFolders.length)) {
         items = 'project_and_folders';
       } else if (selectedProjectFolders.length) {
         items = 'folders';
       } else {
         items = 'projects';
       }
-      projects = selectedProjects.map(e => ({ id: e, type: 'project' }));
-      folders = selectedProjectFolders.map(e => ({ id: e, type: 'project_folder' }));
-      let movables = projects.concat(folders);
+
+      let movables;
+      if (projectId) {
+        movables = [{
+          id: projectId,
+          type: 'project'
+        }];
+      } else {
+        projects = selectedProjects.map(e => ({ id: e, type: 'project' }));
+        folders = selectedProjectFolders.map(e => ({ id: e, type: 'project_folder' }));
+        movables = projects.concat(folders);
+      }
 
       $.get(url, { items: items, sort: projectsCurrentSort, view_mode: $('.projects-index').data('view-mode') }, function(result) {
         $(moveToModal).find('.modal-content').html(result.html);
@@ -392,7 +406,7 @@ var ProjectsIndex = (function() {
 
     $(projectsWrapper).on('click', '.move-projects-btn', function(e) {
       e.preventDefault();
-      loadMoveToModal($(this).data('url'));
+      loadMoveToModal($(this).data('url'), $(this).data('projectId'));
     });
   }
 

@@ -489,9 +489,10 @@ en:
       archive_option: "Archive"
       archive_confirm: "Are you sure you want to archive this project?"
       restore_option: "Restore"
-      project_members_access: "Project members access"
-      comments_option: "Show comments (%{comments_count})"
-      activities_option: "Open activities"
+      project_members_access: "Access"
+      comments_option: "Comments"
+      comments_option_with_unread: "Comments (%{comments_count})"
+      activities_option: "Activities"
       comment_placeholder: "Your Message"
       more_comments: "More Comments"
       card:
