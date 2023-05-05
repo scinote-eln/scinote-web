@@ -56,7 +56,7 @@ module Toolbars
       {
         name: 'edit',
         label: I18n.t('experiments.index.edit_option'),
-        icon: 'fa fa-pen',
+        icon: 'fa fa-pencil-alt',
         button_class: 'edit-btn',
         path: edit_experiment_path(experiment),
         type: 'remote-modal'
