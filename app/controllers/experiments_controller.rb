@@ -8,8 +8,8 @@ class ExperimentsController < ApplicationController
   include Rails.application.routes.url_helpers
 
   before_action :load_project, only: %i(new create archive_group restore_group)
-  before_action :load_experiment, except: %i(new create archive_group restore_group)
-  before_action :check_read_permissions, except: %i(edit archive clone move new create archive_group restore_group)
+  before_action :load_experiment, except: %i(new create archive_group restore_group experiment_filter)
+  before_action :check_read_permissions, except: %i(edit archive clone move new create archive_group restore_group experiment_filter)
   before_action :check_canvas_read_permissions, only: %i(canvas)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: %i(edit batch_clone_my_modules)
@@ -428,6 +428,18 @@ class ExperimentsController < ApplicationController
         }
       end
     end
+  end
+
+  def experiment_filter
+    project = Project.readable_by_user(current_user).find_by(id: params[:project_id])
+    return render plain: [].to_json if project.blank?
+
+    experiments = project.experiments
+                         .readable_by_user(current_user)
+                         .search(current_user, false, params[:query], 1, current_team)
+                         .pluck(:id, :name)
+
+    render json: experiments
   end
 
   def actions_dropdown
