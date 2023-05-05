@@ -149,7 +149,7 @@ class ProtocolsDatatable < CustomDatatable
 
     records = @type == :archived ? records.archived : records.active
 
-    records.with_granted_permissions(@user, ProtocolPermissions::READ)
+    records.viewable_by_user(@user, @team)
   end
 
   # Query database for records (this will be later paginated and filtered)
