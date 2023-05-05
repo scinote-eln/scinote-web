@@ -6,13 +6,19 @@ module Reports::Docx::DrawResultTable
     timestamp = table.created_at
     color = @color
     obj = self
+    table_data = JSON.parse(table.contents_utf_8)['data']
+    table_data = obj.add_headers_to_table(table_data, false)
     @docx.p
-    @docx.table JSON.parse(table.contents_utf_8)['data'], border_size: Constants::REPORT_DOCX_TABLE_BORDER_SIZE do
+    @docx.table table_data, border_size: Constants::REPORT_DOCX_TABLE_BORDER_SIZE do
+      cell_style rows[0], bold: true, background: color[:concrete]
+      cell_style cols[0], bold: true, background: color[:concrete]
+
       if table.metadata.present?
         JSON.parse(table.metadata)['cells']&.each do |cell|
           next unless cell.present? && cell['row'].present? && cell['col'].present? && cell['className'].present?
 
-          cell_style rows.dig(cell['row'].to_i, cell['col'].to_i), align: obj.table_cell_alignment(cell['className'])
+          cell_style rows.dig(cell['row'].to_i + 1, cell['col'].to_i + 1),
+                     align: obj.table_cell_alignment(cell['className'])
         end
       end
     end

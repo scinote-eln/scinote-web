@@ -91,7 +91,8 @@ module Reports::Docx::PrivateMethods
 
     @color = {
       gray: 'a0a0a0',
-      green: '2dbe61'
+      green: '2dbe61',
+      concrete: 'f0f0f6'
     }
   end
 end
