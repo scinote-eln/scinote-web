@@ -444,12 +444,14 @@ class MyModulesController < ApplicationController
 
   def my_module_filter
     experiment = Experiment.readable_by_user(current_user).find_by(id: params[:experiment_id])
-    return render plain: [].to_json if experiment.blank?
+    return render_404 if experiment.blank?
 
     my_modules = experiment.my_modules
-                           .managable_by_user(current_user)
+                           .readable_by_user(current_user)
                            .search(current_user, false, params[:query], 1, current_team)
                            .pluck(:id, :name)
+
+    return render plain: [].to_json if my_modules.blank?
 
     render json: my_modules
   end
