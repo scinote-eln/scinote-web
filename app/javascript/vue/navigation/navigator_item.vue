@@ -1,6 +1,6 @@
 <template>
   <div class="sn-color--sn-blue pl-7 w-64 flex justify-center flex-col" :navigator-item-id="item.id">
-    <div class="p-2 flex items-center whitespace-nowrap" :class="{ 'sn-background--sn-light-grey': activeItem }">
+    <div class="p-2 flex items-center whitespace-nowrap" :title="itemToolTip" :class="{ 'sn-background--sn-light-grey': activeItem }">
       <div class="w-5 mr-2 flex justify-start shrink-0">
         <i v-if="hasChildren"
           class="fas cursor-pointer"
@@ -72,6 +72,27 @@ export default {
         default:
           return null;
       }
+    },
+    itemToolTip: function() {
+      let prefix = '';
+
+      switch (this.item.type) {
+        case 'folder':
+          return this.item.name;
+        case 'project':
+          prefix = '(Project) ';
+          break;
+        case 'experiment':
+          prefix = '(Experiment) ';
+          break;
+        case 'my_module':
+          prefix = '(Task) ';
+          break;
+        default:
+          break;
+      }
+
+      return prefix + this.item.name;
     }
   },
   created: function() {
