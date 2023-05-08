@@ -21,7 +21,7 @@ function initAssignItemsToTaskModalComponent() {
             assign: container.data('assign-url'),
             projects: container.data('projects-url'),
             experiments: container.data('experiments-url'),
-            tasks: container.data('tasks-url'),
+            tasks: container.data('tasks-url')
           }
         };
       },
