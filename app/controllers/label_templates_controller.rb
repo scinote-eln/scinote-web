@@ -63,7 +63,8 @@ class LabelTemplatesController < ApplicationController
 
   def update
     @label_template.transaction do
-      @label_template.update!(label_template_params)
+      update_label_template_params = label_template_params.merge(last_modified_by_id: current_user.id)
+      @label_template.update!(update_label_template_params)
       log_activity(:label_template_edited, @label_template)
     end
     render json: @label_template, serializer: LabelTemplateSerializer, user: current_user
