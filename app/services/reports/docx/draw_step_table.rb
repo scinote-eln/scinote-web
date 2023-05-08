@@ -12,8 +12,8 @@ module Reports::Docx::DrawStepTable
       cell_style rows[0], bold: true, background: color[:concrete]
       cell_style cols[0], bold: true, background: color[:concrete]
 
-      if table.metadata
-        table.metadata['cells'].each do |cell|
+      if table.metadata.present?
+        table.metadata['cells']&.each do |cell|
           data = cell[1]
           next unless data.present? && data['row'].present? && data['col'].present? && data['className'].present?
 

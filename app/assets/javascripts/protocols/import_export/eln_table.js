@@ -37,7 +37,6 @@ function generateElnTable(content, tableMetadata) {
   }
 
   const decodedContent = hex2a(content);
-  const isPlateTemplate = tableMetadata.plateTemplate === 'true';
   const tableData = JSON.parse(decodedContent);
   const numRows = tableData.data.length + 1;
   const numCols = tableData.data[0].length + 1;
@@ -54,9 +53,9 @@ function generateElnTable(content, tableMetadata) {
       if (i > 0 && j > 0 && tableData.data[i - 1][j - 1] !== null) {
         cellData = tableData.data[i - 1][j - 1];
       } else if (i === 0 && j !== 0) {
-        cellData = isPlateTemplate ? j.toString() : colName(j - 1);
+        cellData = tableMetadata.plateTemplate ? j.toString() : colName(j - 1);
       } else if (j === 0 && i !== 0) {
-        cellData = isPlateTemplate ? colName(i - 1) : i.toString();
+        cellData = tableMetadata.plateTemplate ? colName(i - 1) : i.toString();
       }
 
       tableCells = `${tableCells}<td ${cellClass ? `class="${cellClass}"` : ''}>${cellData}</td>`;

@@ -18,9 +18,9 @@
     <% step.step_orderable_elements.order(:position).each do |e| %>
       <% if e.orderable_type == 'StepTable' %>
         <% if e.orderable.table.metadata.present? %>
-          <% if @settings.dig('task', 'protocol', 'step_well_plates') && e.orderable.table.metadata['plateTemplate'] == 'true' %>
+          <% if @settings.dig('task', 'protocol', 'step_well_plates') && e.orderable.table.metadata['plateTemplate'] %>
             <%= render partial: 'reports/elements/step_table_element.html.erb', locals: { table: e.orderable.table, export_all: export_all, table_type: 'step_well_plates_table' } %>
-          <% elsif @settings.dig('task', 'protocol', 'step_tables') && e.orderable.table.metadata['plateTemplate'] != 'true' %>
+          <% elsif @settings.dig('task', 'protocol', 'step_tables') && !e.orderable.table.metadata['plateTemplate'] %>
             <%= render partial: 'reports/elements/step_table_element.html.erb', locals: { table: e.orderable.table, export_all: export_all, table_type: 'step_table' } %>
           <% end %>
         <% elsif @settings.dig('task', 'protocol', 'step_tables') %>

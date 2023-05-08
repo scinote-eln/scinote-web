@@ -51,10 +51,9 @@ module Reports::Docx::DrawStep
     has_step_tables = @settings.dig('task', 'protocol', 'step_tables')
 
     if table.metadata.present?
-      is_plate_template_table = table.metadata['plateTemplate'] == 'true'
-      if has_step_well_plates && is_plate_template_table
+      if has_step_well_plates && table.metadata['plateTemplate']
         draw_step_table(table, 'step_well_plates_table')
-      elsif has_step_tables && !is_plate_template_table
+      elsif has_step_tables && !table.metadata['plateTemplate']
         draw_step_table(table, 'step_table')
       end
     elsif has_step_tables
