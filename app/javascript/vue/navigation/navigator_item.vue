@@ -1,6 +1,6 @@
 <template>
   <div class="sn-color--sn-blue pl-7 w-64 flex justify-center flex-col" :navigator-item-id="item.id">
-    <div class="p-2 flex items-center whitespace-nowrap" :title="itemToolTip" :class="{ 'sn-background--sn-light-grey': activeItem }">
+    <div class="p-2 flex items-center whitespace-nowrap" :title="this.itemToolTip" :class="{ 'sn-background--sn-light-grey': activeItem }">
       <div class="w-5 mr-2 flex justify-start shrink-0">
         <i v-if="hasChildren"
           class="fas cursor-pointer"
@@ -74,25 +74,9 @@ export default {
       }
     },
     itemToolTip: function() {
-      let prefix = '';
-
-      switch (this.item.type) {
-        case 'folder':
-          return this.item.name;
-        case 'project':
-          prefix = '(Project) ';
-          break;
-        case 'experiment':
-          prefix = '(Experiment) ';
-          break;
-        case 'my_module':
-          prefix = '(Task) ';
-          break;
-        default:
-          break;
-      }
-
-      return prefix + this.item.name;
+      if (this.item.type == 'folder')
+        return this.item.name;
+      return this.i18n.t('sidebar.elements_tooltip', { type: this.i18n.t(`activerecord.models.${this.item.type}`), name: this.item.name});
     }
   },
   created: function() {

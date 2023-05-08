@@ -312,6 +312,7 @@ en:
     title: "Navigator"
   sidebar:
     title: "Navigation"
+    elements_tooltip: "(%{type}) %{name}"
     branch_expand: "Expand this branch"
     branch_collapse: "Collapse this branch"
     no_module_group: "No workflow"
