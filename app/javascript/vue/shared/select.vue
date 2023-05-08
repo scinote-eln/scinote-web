@@ -71,11 +71,21 @@
         this.$emit('change', this.value);
       },
       updateOptionPosition() {
-        const rect = this.$refs.container.getBoundingClientRect();
-        const top = rect.height;
-        const width = rect.width;
+        const container = this.$refs.container;
+        const rect = container.getBoundingClientRect();
+        let width = rect.width;
+        let top = rect.top + rect.height;
+        let left = rect.left;
 
-        this.optionPositionStyle = `position: absolute; top: ${top}px; width: ${width}px`
+        const modal = $(container).parent('.modal-content');
+
+        if (modal.length > 0) {
+          const modalRect = modal.get(0).getBoundingClientRect();
+          top -= modalRect.top;
+          left -= modalRect.left;
+        }
+
+        this.optionPositionStyle = `position: fixed; top: ${top}px; left: ${left}px; width: ${width}px`
       }
     }
   }
