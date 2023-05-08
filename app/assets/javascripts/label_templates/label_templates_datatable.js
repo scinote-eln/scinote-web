@@ -47,6 +47,13 @@
       .attr('data-id', data['0']);
   }
 
+  function initNameClick() {
+    $('.label-info-link', '.dataTables_scrollBody').on('click', function() {
+      window.location.href = this.href;
+      return false;
+    });
+  }
+
   function initToggleAllCheckboxes() {
     $('input[name="select_all"]').change(function() {
       if ($(this).is(':checked')) {
@@ -134,6 +141,7 @@
   function tableDrawCallback() {
     initToggleAllCheckboxes();
     initRowSelection();
+    initNameClick();
   }
 
   function updateButtons() {
