@@ -59,9 +59,11 @@
       if ($(this).is(':checked')) {
         $("[data-action='toggle']").prop('checked', true);
         $('.label-template-row').addClass('selected');
+        $('.label-template-row [data-action="toggle"]').change();
       } else {
         $("[data-action='toggle']").prop('checked', false);
         $('.label-template-row').removeClass('selected');
+        $('.label-template-row [data-action="toggle"]').change();
       }
     });
   }
@@ -149,6 +151,7 @@
       $('.selected-actions').addClass('hidden');
       $('.nonselected-actions').removeClass('hidden');
       $('.fluics-warning').addClass('hidden');
+      $('.selected-one-actions').addClass('hidden');
     } else {
       $('.fluics-warning').addClass('hidden');
       $('.selected-actions').removeClass('hidden');
