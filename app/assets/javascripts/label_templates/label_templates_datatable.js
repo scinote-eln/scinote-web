@@ -38,8 +38,7 @@
   function renderNameHTML(data, type, row) {
     return `${data.icon_image_tag}<a
       href='${row.DT_RowAttr['data-edit-url']}'
-      class='record-info-link'
-      onclick='window.location.href = this.href; return false;'
+      class='label-info-link'
     >${data.name}</a>`;
   }
 
@@ -75,6 +74,14 @@
         }).error((response) => {
           HelperModule.flashAlertMsg(response.responseJSON.error, 'danger');
         });
+      }
+    });
+  }
+
+  function initEditButton() {
+    $('#editTemplate').on('click', function() {
+      if (rowsSelected.length === 1) {
+        window.location.href = rowsSelected[0].editUrl;
       }
     });
   }
@@ -138,6 +145,7 @@
       $('.fluics-warning').addClass('hidden');
       $('.selected-actions').removeClass('hidden');
       $('.nonselected-actions').addClass('hidden');
+      $('.selected-one-actions').toggleClass('hidden', (rowsSelected.length > 1));
       if (labelFormats() === 'ZPL') {
         $('#deleteLabelTemplate').toggleClass('hidden', defaultSelected());
         $('#setZplDefaultLabelTemplate').toggleClass('hidden', (rowsSelected.length > 1 || defaultSelected()));
@@ -149,6 +157,7 @@
         $('#setFluicsDefaultLabelTemplate').toggleClass('hidden', (rowsSelected.length > 1 || defaultSelected()));
         $('.fluics-warning').removeClass('hidden');
       } else {
+        $('.selected-one-actions').addClass('hidden');
         $('.fluics-warning').removeClass('hidden');
         $('.selected-actions').addClass('hidden');
       }
@@ -281,6 +290,7 @@
         let toolBar = $($('#labelTemplatesToolbar').html());
         $('.label-buttons-container').html(toolBar);
         initCreateButton();
+        initEditButton();
         initSetDefaultButton();
         initDuplicateButton();
         initDeleteModal();

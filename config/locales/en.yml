@@ -911,6 +911,7 @@ en:
         set_zpl_default: 'Set as default ZPL label'
         set_fluics_default: 'Set as default Fluics label'
         fluics_warning: 'Built-in FLUICS templates can’t be edited, deleted or duplicated'
+        edit_template: 'Edit'
       delete_modal:
         title: 'Delete Label template(s)'
         description: 'Are you sure you want to delete the selected label template(s)?'

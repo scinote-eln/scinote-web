@@ -10,6 +10,10 @@
     <%= image_tag 'label_template_icons/fluics_update.svg' %>
     <span class="button-text"><%= t('label_templates.index.toolbar.check_for_updates') %></span>
   </button>
+  <div class="btn btn-light hidden selected-one-actions  auto-shrink-button"  id="editTemplate"  title="<%= t('label_templates.index.toolbar.edit_template') %>">
+    <i class="fas fa-pencil-alt"></i>
+    <span class="button-text"><%= t('label_templates.index.toolbar.edit_template') %></span>
+  </div>
   <div class="btn btn-light hidden selected-actions  auto-shrink-button"
        title="<%= t('label_templates.index.toolbar.duplicate') %>"
        data-url="<%= duplicate_label_templates_path %>"
