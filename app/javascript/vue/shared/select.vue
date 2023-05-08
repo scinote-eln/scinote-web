@@ -67,7 +67,6 @@
       },
       setValue(value) {
         this.value = value;
-        this.toggle
         this.$emit('change', this.value);
       },
       updateOptionPosition() {
