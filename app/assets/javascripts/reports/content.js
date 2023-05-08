@@ -44,7 +44,6 @@
     var parentEl;
     var order;
     var metadata;
-    var isPlateTemplate;
 
     // Special handling if this is a repository table
     if (input.hasClass('hot-repository-items')) {
@@ -66,11 +65,10 @@
       el.handsontable('getInstance').getPlugin('columnSorting').sort(3, order);
     } else {
       metadata = JSON.parse(metadataJson.val() || '{}');
-      isPlateTemplate = metadata.plateTemplate === 'true';
       el.handsontable({
         disableVisualSelection: true,
-        rowHeaders: tableRowHeaders(isPlateTemplate),
-        colHeaders: tableColHeaders(isPlateTemplate),
+        rowHeaders: tableRowHeaders(metadata.plateTemplate),
+        colHeaders: tableColHeaders(metadata.plateTemplate),
         editor: false,
         copyPaste: false,
         formulas: true,

@@ -181,15 +181,14 @@
         let container = this.$refs.hotTable;
         let data = JSON.parse(this.element.attributes.orderable.contents);
         let metadata = this.element.attributes.orderable.metadata || {};
-        let isPlateTemplate = metadata.plateTemplate === 'true';
 
         this.tableObject = new Handsontable(container, {
           data: data.data,
           width: '100%',
           startRows: 5,
           startCols: 5,
-          rowHeaders: tableColRowName.tableRowHeaders(isPlateTemplate),
-          colHeaders: tableColRowName.tableColHeaders(isPlateTemplate),
+          rowHeaders: tableColRowName.tableRowHeaders(metadata.plateTemplate),
+          colHeaders: tableColRowName.tableColHeaders(metadata.plateTemplate),
           cell: metadata.cells || [],
           contextMenu: this.editingTable,
           formulas: true,

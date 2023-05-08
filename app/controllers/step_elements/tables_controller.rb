@@ -18,7 +18,7 @@ module StepElements
           name: name,
           contents: { data: Array.new(predefined_table_dimensions[0],
                                       Array.new(predefined_table_dimensions[1], '')) }.to_json,
-          metadata: { plateTemplate: create_table_params[:plateTemplate] },
+          metadata: { plateTemplate: create_table_params[:plateTemplate] == 'true' },
           created_by: current_user,
           team: @step.protocol.team
         ))

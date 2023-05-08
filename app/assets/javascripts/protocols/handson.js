@@ -11,13 +11,12 @@
     var contents = $(this).find('.hot-contents');
     var metadataJson = $(this).find('.hot-metadata');
     var metadata = JSON.parse(metadataJson.val() || '{}');
-    var isPlateTemplate = metadata.plateTemplate === 'true';
 
     $container.handsontable({
       startRows: HANDSONTABLE_INIT_ROWS_CNT,
       startCols: HANDSONTABLE_INIT_COLS_CNT,
-      rowHeaders: tableColRowName.tableRowHeaders(isPlateTemplate),
-      colHeaders: tableColRowName.tableColHeaders(isPlateTemplate),
+      rowHeaders: tableColRowName.tableRowHeaders(metadata.plateTemplate),
+      colHeaders: tableColRowName.tableColHeaders(metadata.plateTemplate),
       fillHandle: false,
       formulas: true,
       data: JSON.parse(contents.attr('value')).data,
