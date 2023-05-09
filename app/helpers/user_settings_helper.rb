@@ -15,7 +15,8 @@ module UserSettingsHelper
   end
 
   def on_settings_account_addons_page?
-    controller_name == 'addons'
+    controller_name == 'addons' ||
+      (controller_name == 'label_printers' && action_name == 'index_zebra')
   end
 
   def on_settings_team_page?
