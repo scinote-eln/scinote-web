@@ -1012,7 +1012,7 @@ en:
         modified_label: "Modified"
         modified_value: "%{date} by %{full_name}"
         modified_value_without_user: "%{date}"
-        view_task_access: "View task access"
+        view_task_access: "Access"
       start_date: "Start date:"
       no_start_date_placeholder: "+ Add starting date"
       due_date: "Due date:"
@@ -1417,9 +1417,9 @@ en:
       my_module_actions:
         title: 'TASK ACTIONS'
         edit: 'Edit'
-        duplicate: 'Duplicate as template'
-        move: 'Move to another experiment'
-        access: 'Task access'
+        duplicate: 'Duplicate'
+        move: 'Move'
+        access: 'Access'
         archive: 'Archive'
         restore: 'Restore'
       filters:
@@ -1681,7 +1681,7 @@ en:
       snapshot_provisioning_in_progress: 'Editing is disabled while a snapshot is being created. This will only take a moment.'
 
       options_dropdown:
-        import_items: 'Import items'
+        import_items: 'Import'
         export_items: 'Export'
         rename: "Rename inventory"
         copy: "Duplicate inventory"
@@ -1747,7 +1747,7 @@ en:
         export: "Export"
         print_label: "Print label"
         archive: "Archive"
-        import: "Import items"
+        import: "Import"
         filters: "Filters"
         search: "Quick search"
       filters:

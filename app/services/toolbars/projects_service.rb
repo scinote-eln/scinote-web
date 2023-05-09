@@ -31,39 +31,79 @@ module Toolbars
       return [] if @item_type == :none
 
       [
-        edit_action(@items),
-        move_action(@items),
-        export_action(@items),
-        archive_action(@items),
-        restore_action(@items),
-        comments_action(@items),
-        activities_action(@items)
+        restore_action,
+        edit_action,
+        access_action,
+        move_action,
+        export_action,
+        archive_action,
+        comments_action,
+        activities_action,
+        delete_folder_action
       ].compact
     end
 
     private
 
-    def edit_action(items)
+    def edit_action
+      return unless @single
+
+      if @items.first.is_a?(Project)
+        project = @items.first
+
+        return unless can_manage_project?(project)
+
+        {
+          name: 'edit',
+          label: I18n.t('projects.index.edit_option'),
+          icon: 'fas fa-pencil-alt',
+          button_class: 'edit-btn',
+          path: edit_project_path(project),
+          type: :legacy
+        }
+      else
+        project_folder = @items.first
+
+        return unless can_create_project_folders?(project_folder.team)
+
+        {
+          name: 'edit',
+          label: I18n.t('projects.index.edit_option'),
+          icon: 'fas fa-pencil-alt',
+          button_class: 'edit-btn',
+          path: edit_project_folder_path(project_folder),
+          type: :legacy
+        }
+      end
+    end
+
+    def access_action
       return unless @single
 
       return unless @item_type == :project
 
-      project = items.first
+      project = @items.first
 
-      return unless can_manage_project?(project)
+      return unless can_read_project?(project)
+
+      path = if can_manage_project_users?(project)
+               edit_access_permissions_project_path(project)
+             else
+               access_permissions_project_path(project)
+             end
 
       {
-        name: 'edit',
-        label: I18n.t('projects.index.edit_option'),
-        icon: 'fa fa-pen',
-        button_class: 'edit-btn',
-        path: edit_project_path(project),
-        type: :legacy
+        name: 'access',
+        label: I18n.t('general.access'),
+        icon: 'fas fa-door-open',
+        button_class: 'access-btn',
+        path: path,
+        type: 'remote-modal'
       }
     end
 
-    def move_action(items)
-      return unless can_manage_team?(items.first.team)
+    def move_action
+      return unless can_manage_team?(@items.first.team)
 
       {
         name: 'move',
@@ -75,22 +115,22 @@ module Toolbars
       }
     end
 
-    def export_action(items)
-      return unless items.all? { |item| item.is_a?(Project) ? can_export_project?(item) : true }
+    def export_action
+      return unless @items.all? { |item| item.is_a?(Project) ? can_export_project?(item) : true }
 
       {
         name: 'export',
         label: I18n.t('projects.export_projects.export_button'),
         icon: 'fas fa-file-export',
         button_class: 'export-projects-btn',
-        path: export_projects_modal_team_path(items.first.team),
+        path: export_projects_modal_team_path(@items.first.team),
         type: :legacy
       }
     end
 
-    def archive_action(items)
-      return unless items.all? do |item|
-        item.is_a?(Project) ? can_archive_project?(item) : can_manage_team?(item.team)
+    def archive_action
+      return unless @items.all? do |item|
+        item.is_a?(Project) && can_archive_project?(item)
       end
 
       {
@@ -104,9 +144,9 @@ module Toolbars
       }
     end
 
-    def restore_action(items)
-      return unless items.all? do |item|
-        item.is_a?(Project) ? can_restore_project?(item) : item.archived? && can_manage_team?(item.team)
+    def restore_action
+      return unless @items.all? do |item|
+        item.is_a?(Project) && can_restore_project?(item)
       end
 
       {
@@ -120,9 +160,9 @@ module Toolbars
       }
     end
 
-    def delete_folder_action(items)
-      return unless items.all? do |item|
-        item.is_a?(Folder) && can_delete_project_folder?(item)
+    def delete_folder_action
+      return unless @items.all? do |item|
+        item.is_a?(ProjectFolder) && can_delete_project_folder?(item)
       end
 
       {
@@ -130,18 +170,17 @@ module Toolbars
         label: I18n.t('general.delete'),
         icon: 'fas fa-trash',
         button_class: 'delete-folders-btn',
-        path: destroy_modal_project_folders_url,
-        type: :request,
-        request_method: :post
+        path: destroy_modal_project_folders_path(project_folder_ids: @items.map(&:id)),
+        type: 'remote-modal'
       }
     end
 
-    def comments_action(items)
+    def comments_action
       return unless @single
 
       return unless @item_type == :project
 
-      project = items.first
+      project = @items.first
 
       return unless can_read_project?(project)
 
@@ -156,12 +195,12 @@ module Toolbars
       }
     end
 
-    def activities_action(items)
+    def activities_action
       return unless @single
 
       return unless @item_type == :project
 
-      project = items.first
+      project = @items.first
 
       return unless can_read_project?(project)
 

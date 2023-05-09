@@ -119,6 +119,7 @@
 
   function refreshCurrentView() {
     loadCardsView();
+    window.navigatorContainer.reloadChildrenLevel = true;
   }
 
   function selectDate($field) {

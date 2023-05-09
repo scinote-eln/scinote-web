@@ -101,30 +101,7 @@ var ProjectsIndex = (function() {
 
   // init delete project folders
   function initDeleteFoldersToolbarButton() {
-    $(projectsWrapper)
-      .on('ajax:before', '.delete-folders-btn', function() {
-        let buttonForm = $(this);
-        buttonForm.find('input[name="project_folders_ids[]"]').remove();
-        selectedProjectFolders.forEach(function(id) {
-          $('<input>').attr({
-            type: 'hidden',
-            name: 'project_folders_ids[]',
-            value: id
-          }).appendTo(buttonForm);
-        });
-      })
-      .on('ajax:success', '.delete-folders-btn', function(ev, data) {
-        // Add and show modal
-        let deleteModal = $(data.html);
-        $(projectsWrapper).append(deleteModal);
-        deleteModal.modal('show');
-        // Remove modal when it gets closed
-        deleteModal.on('hidden.bs.modal', function() {
-          $(this).remove();
-        });
-      });
-
-    $(projectsWrapper)
+    $(document)
       .on('ajax:success', '.delete-folders-form', function(ev, data) {
         $('.modal-project-folder-delete').modal('hide');
         HelperModule.flashAlertMsg(data.message, 'success');
@@ -257,21 +234,6 @@ var ProjectsIndex = (function() {
       let selectedCard = $('.project-card[data-id="' + value + '"]');
       selectedCard.addClass('selected');
     });
-  }
-
-  function checkActionPermission(permission) {
-    let allProjects;
-    let allFolders;
-
-    allProjects = selectedProjects.every(function(projectId) {
-      return $(`.project-card[data-id="${projectId}"]`).data(permission);
-    });
-
-    allFolders = selectedProjectFolders.every(function(projectFolderId) {
-      return $(`.folder-card[data-id="${projectFolderId}"]`).data(permission);
-    });
-
-    return allProjects && allFolders;
   }
 
   function updateProjectsToolbar() {

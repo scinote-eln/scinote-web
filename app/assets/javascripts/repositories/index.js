@@ -110,6 +110,12 @@
           DataTableHelpers.initSearchField(dataTableWrapper, I18n.t('repositories.index.filter_inventory'));
           $('.content-body .toolbar').html($('#repositoriesListButtons').html());
           dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
+          var childHtml = $('.repo-view-switch').detach().html();
+          $('.main-actions').append(childHtml);
+          var removedDivs = $('.main-actions .filter-container').detach();
+          $('.main-actions').append(removedDivs);
+          initRepositoryViewSwitcher();
+
           $('#createRepoBtn').initSubmitModal('#create-repo-modal', 'repository');
           $('#deleteRepoBtn').initSubmitModal('#delete-repo-modal', 'repository');
           $('#renameRepoBtn').initSubmitModal('#rename-repo-modal', 'repository');
@@ -143,7 +149,13 @@
   }
 
   function initRepositoryViewSwitcher() {
-    $('.view-switch-active').addClass('form-dropdown-state-item');
+    if ($('.repositories-index').hasClass('active')) {
+      $('.view-switch-btn-name').text(I18n.t('toolbar.active_state'));
+      $('.view-switch-active').addClass('form-dropdown-state-item');
+    } else {
+      $('.view-switch-btn-name').text(I18n.t('toolbar.archived_state'));
+      $('.view-switch-archived').addClass('form-dropdown-state-item');
+    }
 
     var viewSwitch = $('.view-switch');
     viewSwitch.on('click', '.view-switch-archived', function() {

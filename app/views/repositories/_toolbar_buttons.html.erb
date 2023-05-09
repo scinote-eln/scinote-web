@@ -25,6 +25,7 @@
           <span class="button-text"><%= t('repositories.index.options_dropdown.import_items') %></span>
         </button>
       <% end %>
+      <!--
       <%= render partial: 'repositories/toolbar/row_actions' %>
       <% if @repository.repository_rows.with_active_reminders(current_user).any? %>
         <button type="button" data-toggle="tooltip" data-placement="bottom" title="<%= t("repositories.hide_reminders") %>"
@@ -47,10 +48,25 @@
       <%= render partial: 'repositories/toolbar/save_filters' %>
     </div>
   <% end %>
+  -->
+  </div>
+
+  <div class="toolbar-middle-block">
+    <% unless @repository.is_a?(BmtRepository) %>
+      <%= render layout: "shared/view_switch", locals: {disabled: @repository.archived?, name: params[:archived] ? t('toolbar.archived_state') : t('toolbar.active_state') } do %>
+        <li class="view-switch-active">
+          <%= t('toolbar.active_state') %>
+        </li>
+        <li class="view-switch-archived">
+          <%= t('toolbar.archived_state') %>
+        </li>
+      <% end %>
+    <% end %>
   </div>
 
   <!-- RIGHT TOOLBAR BLOCK -->
   <div class="toolbar-right-block">
+    <div class="toolbar-search"></div>
     <% if RepositoryBase.stock_management_enabled? %>
       <div class="active-reminders-filter"
           title="<%= t('repositories.index.active_reminders.description') %>"
@@ -73,6 +89,5 @@
         <%= render partial: 'repositories/toolbar/bmt' %>
       </div>
     <% end %>
-    <div class="toolbar-search"></div>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
-  <div class="sn-color--sn-blue pl-7 w-64 flex justify-center flex-col" :navigator-item-id="item.id">
-    <div class="p-2 flex items-center whitespace-nowrap" :title="this.itemToolTip" :class="{ 'sn-background--sn-light-grey': activeItem }">
+  <div class="text-sn-blue pl-7 w-64 flex justify-center flex-col" :navigator-item-id="item.id">
+    <div class="p-2 flex items-center whitespace-nowrap" :title="this.itemToolTip" :class="{ 'bg-sn-light-grey': activeItem }">
       <div class="w-5 mr-2 flex justify-start shrink-0">
         <i v-if="hasChildren"
           class="fas cursor-pointer"
@@ -11,7 +11,7 @@
           class="text-ellipsis overflow-hidden hover:no-underline"
           :class="{
             'pointer-events-none': (!item.archived && archived),
-            'sn-color--sn-grey': (!item.archived && archived)
+            'text-sn-grey': (!item.archived && archived)
           }">
         <i v-if="itemIcon" class="mr-2" :class="itemIcon"></i>
         <template v-if="item.archived">(A)</template>
@@ -44,12 +44,13 @@ export default {
   data: function() {
     return {
       childrenExpanded: false,
+      childrenLoaded: false,
       children: []
     };
   },
   computed: {
     hasChildren: function() {
-      return this.item.has_children;
+      return this.item.has_children || this.children.length > 0;
     },
     sortedMenuItems: function() {
       return this.children.sort((a, b) => {
@@ -98,6 +99,13 @@ export default {
       if (this.reloadCurrentLevel && this.children.find((item) => item.id == this.currentItemId)) {
         this.loadChildren();
       }
+    },
+    children: function() {
+      if (this.children.length > 0) {
+        this.childrenExpanded = true;
+      } else if (this.childrenLoaded) {
+        this.item.has_children = false;
+      }
     }
   },
   methods: {
@@ -108,6 +116,7 @@ export default {
     loadChildren: function() {
       $.get(this.item.children_url, {archived: this.archived}, (data) => {
         this.children = data.items;
+        this.childrenLoaded = true;
       });
     },
     treeExpand: function() {

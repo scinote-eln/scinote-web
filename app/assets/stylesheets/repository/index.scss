@@ -1,4 +1,9 @@
 .repositories-index {
+
+  .toolbar-wrapper {
+    display: flex;
+    justify-content: space-between;
+  }
   &.active {
     [data-view-mode="archived"] {
       display: none !important;
@@ -42,7 +47,88 @@
   }
 }
 
+.dataTables_wrapper {
+  .main-actions {
+    .toolbar {
+      flex-grow: 0 !important;
+    }
+  }
+}
+
 .main-actions {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+
+  .view-switch {
+    .caret {
+      margin: 8px 0 8px 8px;
+    }
+
+    &.open {
+      .caret {
+        transform: rotateX(180deg);
+      }
+    }
+
+    .dropdown-menu {
+      @include font-button;
+      min-width: 100%;
+
+      .divider-label {
+        @include font-small;
+        color: $color-silver-chalice;
+        padding: .25em 1em;
+      }
+
+      .divider {
+        margin: 0;
+      }
+
+      li {
+        cursor: pointer;
+        padding: .5em 1em;
+        white-space: nowrap;
+
+        .button-icon {
+          margin-right: .5em;
+        }
+
+        &:hover:not(.divider-label) {
+          background: $color-concrete;
+        }
+
+        .btn {
+          height: 36px;
+        }
+
+        a {
+          display: inline-block;
+          margin: -1em;
+          padding: .5em 1em;
+          width: calc(100% + 2em);
+
+          &.selected::after {
+            @include font-awesome;
+            content: $font-fas-check;
+            margin-left: auto;
+            position: absolute;
+            right: 1em;
+          }
+        }
+      }
+    }
+
+    .cards-switch {
+      &.active::after {
+        @include font-awesome;
+        content: "\f00c";
+        position: absolute;
+        right: 1em;
+      }
+    }
+  }
+
   .dropdown-menu {
     font-size: 14px;
   }

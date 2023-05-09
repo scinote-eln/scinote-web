@@ -1,10 +1,6 @@
 @import 'constants';
 @import "mixins";
 
-:root {
-  --navbar-height: 51px;
-}
-
 #main-nav {
   box-shadow: $flyout-shadow;
   margin-bottom: 0;
