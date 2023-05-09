@@ -72,10 +72,19 @@
 
       .dataTables_scrollHead {
         flex-shrink: 0;
+
+        th:first-child {
+          text-align: center;
+          vertical-align: middle;
+        }
       }
 
       .dataTables_scrollBody {
         height: 100%;
+
+        td:nth-child(2) {
+          text-align: center;
+        }
       }
     }
 
@@ -85,7 +94,9 @@
   }
 
   #label-template-selected {
-    padding-right: 0;
+    padding-right: 6px;
+    vertical-align: middle;
+    text-align: center;
 
     &::after {
       display: none;
