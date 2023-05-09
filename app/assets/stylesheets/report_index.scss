@@ -19,11 +19,47 @@
     }
   }
 
+  .toolbar-row {
+    display: flex;
+    justify-content: space-between;
+  }
+
   .search-report-container {
-    display: inline-block;
     float: right;
     margin-right: 2em;
     width: 200px;
+  }
+
+  .sci-input-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 200px;
+  }
+
+  .flex-row-reverse {
+    flex-direction: row-reverse;
+  }
+
+  .search-icon {
+    cursor: pointer;
+  }
+
+  .report-search {
+    position: absolute;
+    top: 0;
+    left: auto;
+    right: 100%;
+    width: 100%;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .search-input-field {
+    position: relative;
+    left: 5px;
   }
 }
 
