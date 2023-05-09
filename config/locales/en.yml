@@ -450,7 +450,7 @@ en:
         create_new_button: "New Project"
         no_permission_title: "You don't have permission to create new project. Please contact your team administrator."
       new: "New Project"
-      new_folder: "Create folder"
+      new_folder: "New folder"
       visibility_private: "Project is visible to project members only."
       visibility_public: "Project is visible to all team members."
       user_project: "%{user} joined on %{timestamp}."
