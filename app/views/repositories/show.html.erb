@@ -7,12 +7,9 @@
 <% provide(:container_class, "no-second-nav-container") %>
 <% provide(:sidebar_url, sidebar_repositories_path) %>
 <% provide(:sidebar_title, t('sidebar.repositories.sidebar_title')) %>
-<%= content_for :sidebar do %>
-  <%= render partial: "sidebar", locals: { repositories: @repositories, archived: @repository.archived? } %>
-<% end %>
 <div id="alert-container"></div>
 
-<div class="content-pane repository-show <%=  @repository.active? ? "active" : "archived" %>" data-table-url="<%= load_table_repository_path(@repository) %>">
+<div class="content-pane repository-show <%=  @repository.archived? || params[:archived] ? "archived" : "active" %>" data-table-url="<%= load_table_repository_path(@repository) %>">
   <div id="repository-toolbar" class="content-header">
     <div class="title-row">
       <% if @repository.active? %>

@@ -1,5 +1,5 @@
 <template>
-  <div class="text-sn-blue pl-7 w-64 flex justify-center flex-col" :navigator-item-id="item.id">
+  <div class="text-sn-blue pl-7 w-[196px]  flex justify-center flex-col" :navigator-item-id="item.id">
     <div class="p-2 flex items-center whitespace-nowrap" :title="this.itemToolTip" :class="{ 'bg-sn-light-grey': activeItem }">
       <div class="w-5 mr-2 flex justify-start shrink-0">
         <i v-if="hasChildren"

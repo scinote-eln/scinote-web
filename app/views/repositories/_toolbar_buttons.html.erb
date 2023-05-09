@@ -53,14 +53,13 @@
 
   <div class="toolbar-middle-block">
     <% unless @repository.is_a?(BmtRepository) %>
-      <%= render layout: "shared/view_switch", locals: {disabled: @repository.archived?, name: params[:archived] ? t('toolbar.archived_state') : t('toolbar.active_state') } do %>
-        <li class="view-switch-active">
-          <%= t('toolbar.active_state') %>
-        </li>
-        <li class="view-switch-archived">
-          <%= t('toolbar.archived_state') %>
-        </li>
-      <% end %>
+      <%= render partial: 'shared/state_view_switch', locals: {
+          disabled: @repository.archived?,
+          switchable: true,
+          archived: params[:archived],
+          active_url: repository_path(@repository),
+          archived_url: repository_path(@repository, archived: true),
+        } %>
     <% end %>
   </div>
 

@@ -1,5 +1,9 @@
 .repositories-index {
 
+  .view-switch {
+    margin: 0 auto;
+  }
+
   .toolbar-wrapper {
     display: flex;
     justify-content: space-between;
@@ -44,14 +48,6 @@
 #new_repository {
   .modal-footer {
     text-align: center;
-  }
-}
-
-.dataTables_wrapper {
-  .main-actions {
-    .toolbar {
-      flex-grow: 0 !important;
-    }
   }
 }
 

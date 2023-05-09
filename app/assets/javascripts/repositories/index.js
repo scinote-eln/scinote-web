@@ -110,11 +110,6 @@
           DataTableHelpers.initSearchField(dataTableWrapper, I18n.t('repositories.index.filter_inventory'));
           $('.content-body .toolbar').html($('#repositoriesListButtons').html());
           dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
-          var childHtml = $('.repo-view-switch').detach().html();
-          $('.main-actions').append(childHtml);
-          var removedDivs = $('.main-actions .filter-container').detach();
-          $('.main-actions').append(removedDivs);
-          initRepositoryViewSwitcher();
 
           $('#createRepoBtn').initSubmitModal('#create-repo-modal', 'repository');
           $('#deleteRepoBtn').initSubmitModal('#delete-repo-modal', 'repository');
@@ -145,40 +140,6 @@
     }, function(data) {
       slidePanel.find('.sidebar-body').html(data.html);
       $('.create-new-repository').initSubmitModal('#create-repo-modal', 'repository');
-    });
-  }
-
-  function initRepositoryViewSwitcher() {
-    if ($('.repositories-index').hasClass('active')) {
-      $('.view-switch-btn-name').text(I18n.t('toolbar.active_state'));
-      $('.view-switch-active').addClass('form-dropdown-state-item');
-    } else {
-      $('.view-switch-btn-name').text(I18n.t('toolbar.archived_state'));
-      $('.view-switch-archived').addClass('form-dropdown-state-item');
-    }
-
-    var viewSwitch = $('.view-switch');
-    viewSwitch.on('click', '.view-switch-archived', function() {
-      $('.repositories-index').removeClass('active').addClass('archived');
-
-      $('.view-switch-btn-name').text($('.view-switch-archived').text());
-
-      $('.view-switch-active').removeClass('form-dropdown-state-item');
-      $('.view-switch-archived').addClass('form-dropdown-state-item');
-
-      initRepositoriesDataTable('#repositoriesList', true);
-      reloadSidebar();
-    });
-    viewSwitch.on('click', '.view-switch-active', function() {
-      $('.repositories-index').removeClass('archived').addClass('active');
-
-      $('.view-switch-btn-name').text($('.view-switch-active').text());
-
-      $('.view-switch-active').addClass('form-dropdown-state-item');
-      $('.view-switch-archived').removeClass('form-dropdown-state-item');
-
-      initRepositoriesDataTable('#repositoriesList');
-      reloadSidebar();
     });
   }
 
@@ -227,5 +188,4 @@
   if (notTurbolinksPreview()) {
     initRepositoriesDataTable('#repositoriesList', $('.repositories-index').hasClass('archived'));
   }
-  initRepositoryViewSwitcher();
 }());
