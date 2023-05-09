@@ -1,6 +1,6 @@
 <template>
   <div class="text-sn-blue pl-7 w-64 flex justify-center flex-col" :navigator-item-id="item.id">
-    <div class="p-2 flex items-center whitespace-nowrap" :class="{ 'bg-sn-light-grey': activeItem }">
+    <div class="p-2 flex items-center whitespace-nowrap" :title="this.itemToolTip" :class="{ 'bg-sn-light-grey': activeItem }">
       <div class="w-5 mr-2 flex justify-start shrink-0">
         <i v-if="hasChildren"
           class="fas cursor-pointer"
@@ -73,6 +73,11 @@ export default {
         default:
           return null;
       }
+    },
+    itemToolTip: function() {
+      if (this.item.type == 'folder')
+        return this.item.name;
+      return this.i18n.t('sidebar.elements_tooltip', { type: this.i18n.t(`activerecord.models.${this.item.type}`), name: this.item.name});
     }
   },
   created: function() {
