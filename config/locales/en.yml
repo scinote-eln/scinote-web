@@ -1680,7 +1680,7 @@ en:
       snapshot_provisioning_in_progress: 'Editing is disabled while a snapshot is being created. This will only take a moment.'
 
       options_dropdown:
-        import_items: 'Import items'
+        import_items: 'Import'
         export_items: 'Export'
         rename: "Rename inventory"
         copy: "Duplicate inventory"
@@ -1746,7 +1746,7 @@ en:
         export: "Export"
         print_label: "Print label"
         archive: "Archive"
-        import: "Import items"
+        import: "Import"
         filters: "Filters"
         search: "Quick search"
       filters:

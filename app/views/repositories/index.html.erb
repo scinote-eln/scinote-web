@@ -46,6 +46,19 @@
     <span class="hidden-xs"><%= t('libraries.index.no_libraries.create_new_button') %></span>
   </a>
 <% end %>
+
+<div class="content-header repo-view-switch">
+  <%= render layout: "shared/view_switch", locals: { disabled: false, name: params[:archived] ? t('toolbar.archived_state') : t('toolbar.active_state') } do %>
+    <li class="view-switch-active">
+      <%= t('toolbar.active_state') %>
+    </li>
+    <li class="view-switch-archived">
+      <%= t('toolbar.archived_state') %>
+    </li>
+  <% end %>
+</div>
+
+  <!--
   <a id="renameRepoBtn" class="btn btn-light disabled hidden" data-view-mode="active" href="#" data-action-mode="single" data-remote="true">
     <span class="fas fa-pencil-alt"></span>
     <%= t('libraries.index.buttons.edit') %>
@@ -76,6 +89,7 @@
     <span class="fas fa-trash"></span>
     <%= t('libraries.index.buttons.delete') %>
   </a>
+  -->
 </template>
 
 <%= javascript_include_tag "repositories/index" %>
