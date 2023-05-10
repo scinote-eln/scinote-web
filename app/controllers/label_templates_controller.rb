@@ -153,6 +153,16 @@ class LabelTemplatesController < ApplicationController
     render json: { error: t('label_templates.fluics.sync.error') }, status: :unprocessable_entity
   end
 
+  def actions_toolbar
+    render json: {
+      actions:
+        Toolbars::LabelTemplatesService.new(
+          current_user,
+          label_template_ids: params[:label_template_ids].split(',')
+        ).actions
+    }
+  end
+
   private
 
   def check_feature_enabled

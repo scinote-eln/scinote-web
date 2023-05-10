@@ -11,18 +11,6 @@
     return rowsSelected.map(i => i.id);
   }
 
-  function defaultSelected() {
-    return rowsSelected.findIndex(v => v.default === 'true') >= 0;
-  }
-
-  function labelFormats() {
-    let uniqueFormats = rowsSelected.map(i => i.format).filter((v, i, a) => a.indexOf(v) === i);
-    if (uniqueFormats.length > 1) {
-      return 'mixed';
-    }
-    return uniqueFormats[0];
-  }
-
   function renderCheckboxHTML(data) {
     return `<div class="sci-checkbox-container">
               <input type="checkbox" class="sci-checkbox label-row-checkbox" data-action='toggle'
@@ -75,7 +63,10 @@
   }
 
   function initSetDefaultButton() {
-    $('#setZplDefaultLabelTemplate, #setFluicsDefaultLabelTemplate').on('click', function() {
+    $(document).on('click', '#setZplDefaultLabelTemplate, #setFluicsDefaultLabelTemplate', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
       if (rowsSelected.length === 1) {
         $.post(rowsSelected[0].setDefaultUrl, function(response) {
           reloadTable();
@@ -96,7 +87,10 @@
   }
 
   function initDuplicateButton() {
-    $('#duplicateLabelTemplate').on('click', function() {
+    $(document).on('click', '#duplicateLabelTemplate', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
       if (rowsSelected.length > 0) {
         $.post(this.dataset.url, { selected_ids: rowsSelectedIDs() }, function(response) {
           reloadTable();
@@ -109,7 +103,10 @@
   }
 
   function initDeleteModal() {
-    $('#deleteLabelTemplate').on('click', function() {
+    $(document).on('click', '#deleteLabelTemplate', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
       $('#deleteLabelTemplatesModal').modal('show');
     });
   }
@@ -147,32 +144,7 @@
   }
 
   function updateButtons() {
-    if (rowsSelected.length === 0) {
-      $('.selected-actions').addClass('hidden');
-      $('.nonselected-actions').removeClass('hidden');
-      $('.fluics-warning').addClass('hidden');
-      $('.selected-one-actions').addClass('hidden');
-    } else {
-      $('.fluics-warning').addClass('hidden');
-      $('.selected-actions').removeClass('hidden');
-      $('.nonselected-actions').addClass('hidden');
-      $('.selected-one-actions').toggleClass('hidden', (rowsSelected.length > 1));
-      if (labelFormats() === 'ZPL') {
-        $('#deleteLabelTemplate').toggleClass('hidden', defaultSelected());
-        $('#setZplDefaultLabelTemplate').toggleClass('hidden', (rowsSelected.length > 1 || defaultSelected()));
-        $('#setFluicsDefaultLabelTemplate').addClass('hidden');
-      } else if (labelFormats() === 'Fluics') {
-        $('#duplicateLabelTemplate').addClass('hidden');
-        $('#deleteLabelTemplate').addClass('hidden');
-        $('#setZplDefaultLabelTemplate').addClass('hidden');
-        $('#setFluicsDefaultLabelTemplate').toggleClass('hidden', (rowsSelected.length > 1 || defaultSelected()));
-        $('.fluics-warning').removeClass('hidden');
-      } else {
-        $('.selected-one-actions').addClass('hidden');
-        $('.fluics-warning').removeClass('hidden');
-        $('.selected-actions').addClass('hidden');
-      }
-    }
+    window.actionToolbarComponent.fetchActions({ label_template_ids: rowsSelectedIDs() });
   }
 
   function reloadTable() {
@@ -300,12 +272,14 @@
 
         let toolBar = $($('#labelTemplatesToolbar').html());
         $('.label-buttons-container').html(toolBar);
+
         initCreateButton();
         initEditButton();
         initSetDefaultButton();
         initDuplicateButton();
         initDeleteModal();
         initRefreshFluicsButton();
+        window.initActionToolbar();
       }
     });
   }
