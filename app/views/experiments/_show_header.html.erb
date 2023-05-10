@@ -84,20 +84,13 @@
           <% end %>
         <% end %>
 
-        <%= render layout: 'shared/state_view_switch', locals: { disabled: false } do %>
-          <% unless @experiment.archived_branch? %>
-            <li>
-              <%= link_to my_modules_experiment_path(@experiment), class: "#{'form-dropdown-state-item' unless (action_name == 'module_archive' || params[:view_mode] == 'archived')}" do %>
-                <%= t('toolbar.active_state') %>
-              <% end %>
-            </li>
-            <li>
-              <%= link_to my_modules_experiment_path(@experiment, view_mode: :archived), class: "#{'form-dropdown-state-item' if (action_name == 'module_archive' || params[:view_mode] == 'archived')}"  do %>
-                <%= t('toolbar.archived_state') %>
-              <% end %>
-            </li>
-          <% end %>
-        <% end %>
+        <%= render partial: 'shared/state_view_switch', locals: {
+          disabled: false,
+          switchable: !@experiment.archived_branch?,
+          archived: action_name == 'module_archive' || params[:view_mode] == 'archived',
+          active_url: my_modules_experiment_path(@experiment),
+          archived_url: my_modules_experiment_path(@experiment, view_mode: :archived),
+        } %>
 
       <% if action_name == 'table' %>
         <%= render partial: 'table_filters.html.erb' %>

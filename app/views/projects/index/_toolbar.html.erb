@@ -46,22 +46,13 @@
             <% end %>
           </li>
         <% end %>
-        <%= render layout: 'shared/state_view_switch', locals: { disabled: false } do %>
-          <li class="view-switch-list cards-switch form-dropdown-item">
-            <%= button_tag class: "btn btn-#{params[:view_mode] == 'active' ? 'primary' : 'light'} state-view-switch archive-switch", data: { url: projects_path } do %>
-              <span class="<%= params[:view_mode] == 'active' ? 'text-light' : 'text-dark' %>">
-                <%= t('toolbar.active_state') %>
-              </span>
-            <% end %>
-          </li>
-          <li class="view-switch-list cards-switch form-dropdown-item">
-            <%= button_tag class: "btn btn-#{params[:view_mode] =='archived' ? 'primary' : 'light'} state-view-switch archive-switch", data: { url: projects_path(view_mode: 'archived') } do %>
-              <span class="<%= params[:view_mode] =='archived'  ? 'text-light' : 'text-dark' %>">
-                <%= t('toolbar.archived_state') %>
-              </span>
-            <% end %>
-          </li>
-        <% end %>
+        <%= render partial: 'shared/state_view_switch', locals: {
+          disabled: false,
+          switchable: true,
+          archived: params[:view_mode] =='archived',
+          active_url: projects_path(view_mode: :active),
+          archived_url: projects_path(view_mode: :archived),
+        } %>
       </span>
 
       <span class="right">
