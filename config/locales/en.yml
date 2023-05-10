@@ -678,6 +678,7 @@ en:
           step_checklists: "Step checklists"
           step_files: "Step files"
           step_tables: "Step tables"
+          step_well_plates: "Step well plates"
           step_comments: "Step comments"
           assigned_items: "Assigned items"
           assigned_items_description: "Inventories selected below will only contain the items that you assigned to the tasks directly."
@@ -823,6 +824,9 @@ en:
         step_table:
           table_name: "%{name}"
           user_time: "Table created on %{timestamp}."
+        step_well_plates_table:
+          table_name: "%{name}"
+          user_time: "Well plate created on %{timestamp}."
         step_asset:
           file_name: "%{file}"
           sidebar_name: "File %{file}"

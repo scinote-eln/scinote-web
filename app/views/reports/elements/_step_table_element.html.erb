@@ -19,7 +19,7 @@
       <% end %>
     </div>
     <div class="user-time">
-      <%= t('projects.reports.elements.step_table.user_time', timestamp: l(timestamp, format: :full)) %>
+      <%= t("projects.reports.elements.#{table_type}.user_time", timestamp: l(timestamp, format: :full)) %>
     </div>
   </div>
   <div class="report-element-body">
