@@ -7,14 +7,14 @@ class MyModulesController < ApplicationController
   include ApplicationHelper
   include MyModulesHelper
 
-  before_action :load_vars, except: %i(restore_group create new save_table_state)
+  before_action :load_vars, except: %i(restore_group create new save_table_state my_module_filter)
   before_action :load_experiment, only: %i(create new)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_archive_permissions, only: %i(update)
   before_action :check_manage_permissions, only: %i(
     description due_date update_description update_protocol_description update_protocol
   )
-  before_action :check_read_permissions, except: %i(create new update update_description
+  before_action :check_read_permissions, except: %i(create new update update_description my_module_filter
                                                     update_protocol_description restore_group save_table_state)
   before_action :check_update_state_permissions, only: :update_state
   before_action :set_inline_name_editing, only: %i(protocols results activities archive)
@@ -440,6 +440,20 @@ class MyModulesController < ApplicationController
 
   def provisioning_status
     render json: { provisioning_status: @my_module.provisioning_status }
+  end
+
+  def my_module_filter
+    experiment = Experiment.readable_by_user(current_user).find_by(id: params[:experiment_id])
+    return render_404 if experiment.blank?
+
+    my_modules = experiment.my_modules
+                           .readable_by_user(current_user)
+                           .search(current_user, false, params[:query], 1, current_team)
+                           .pluck(:id, :name)
+
+    return render plain: [].to_json if my_modules.blank?
+
+    render json: my_modules
   end
 
   private
