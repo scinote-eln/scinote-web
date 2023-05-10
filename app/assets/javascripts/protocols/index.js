@@ -6,7 +6,7 @@
 // Global variables
 var ProtocolsIndex = (function() {
   const ALL_VERSIONS_VALUE = 'All';
-  var PERMISSIONS = ['archivable', 'restorable', 'copyable'];
+  var PERMISSIONS = ['archivable', 'restorable', 'copyable', 'readable'];
   var rowsSelected = [];
   var protocolsTableEl = null;
   var protocolsDatatable = null;
