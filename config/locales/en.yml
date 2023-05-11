@@ -1735,6 +1735,7 @@ en:
         archived_on: "Inventory archived on"
         archived_by: "by"
       filter_inventory_items: "Filter items"
+      filter_inventory_items_with_ean: "Search with EAN code"
       no_items: "No items here"
       no_items_matched: "No items here"
       no_archived_items: "No archived items here"

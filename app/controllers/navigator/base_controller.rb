@@ -71,7 +71,7 @@ module Navigator
                          end
       current_team.projects
                   .where(project_folder_id: folder)
-                  .viewable_by_user(current_user, current_team)
+                  .visible_to(current_user, current_team)
                   .with_children_viewable_by_user(current_user)
                   .where('
                     projects.archived = :archived OR
