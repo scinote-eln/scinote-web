@@ -57,11 +57,15 @@
     return false;
   });
 
-  $(document).on('click', '.print-label-button', function() {
+  $(document).on('click', '.print-label-button', function(e) {
     var selectedRows = $(this).data('rows');
+
+    e.preventDefault();
+    e.stopPropagation();
+
     if (typeof PrintModalComponent !== 'undefined') {
       PrintModalComponent.showModal = true;
-      if (selectedRows.length) {
+      if (selectedRows && selectedRows.length) {
         $('#modal-info-repository-row').modal('hide');
         PrintModalComponent.row_ids = selectedRows;
       } else {

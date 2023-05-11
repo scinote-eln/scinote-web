@@ -1955,6 +1955,8 @@ en:
     delete_record: "Delete"
     archive_record: "Archive"
     restore_record: "Restore"
+    print_label: "Print label"
+    export_record: "Export"
     save_record: "Save"
     cancel_save: "Cancel"
     hide_reminders: "Clear all reminders"
