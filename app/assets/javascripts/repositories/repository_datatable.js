@@ -880,6 +880,8 @@ var RepositoryDatatable = (function(global) {
       });
     });
 
+    $('#deleteRepositoryRecord').on('click', '.delete-record-modal-button', () => onClickDeleteRecord());
+
   // Handle enter key
   $(document).off('keypress').keypress(function(event) {
     var keycode = (event.keyCode ? event.keyCode : event.which);
