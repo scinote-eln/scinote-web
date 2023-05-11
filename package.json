@@ -80,7 +80,6 @@
     "tui-color-picker": "^2.2.0",
     "tui-image-editor": "github:biosistemika/tui.image-editor#3_15_2_updated",
     "twemoji": "^12.1.4",
-    "typeface-lato": "^0.0.75",
     "vue": "^2.6.11",
     "vue-loader": "^15.9.1",
     "vue-template-compiler": "^2.6.12",
