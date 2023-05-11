@@ -181,6 +181,12 @@
       }
     }
 
+    function initArchive() {
+      $('#results').on('click', '.form-submit-link', function(event) {
+        archive(event, this);
+      });
+    }
+
     function init() {
       initHandsOnTables($(document));
       expandAllResults();
@@ -200,6 +206,8 @@
         let target = '#' + getParam('ctarget');
         $(target).find('a.comment-tab-link').click();
       }
+
+      initArchive();
     }
 
     let publicAPI = Object.freeze({
