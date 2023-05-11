@@ -907,7 +907,7 @@ en:
       templates_deleted: 'Successfully deleted Label template(s)'
       template_set_as_default: 'Successfully set template as default'
       toolbar:
-        new: 'New template'
+        new: 'New label template'
         check_for_updates: 'Check for updates'
         edit: 'Edit'
         duplicate: 'Duplicate'
