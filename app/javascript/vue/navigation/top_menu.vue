@@ -16,7 +16,7 @@
         @dropdown:changed="switchTeam"
       />
     </div>
-    <div v-if="user" :class="`sci--navigation--top-menu-search left-icon sci-input-container ${current_team ? '' : 'disabled'}`">
+    <div v-if="user" class="sci--navigation--top-menu-search left-icon sci-input-container" :class="{'disabled' : !current_team}">
       <input type="text" class="sci-input-field" :placeholder="i18n.t('nav.search')" @change="searchValue"/>
       <i class="fas fa-search"></i>
     </div>
