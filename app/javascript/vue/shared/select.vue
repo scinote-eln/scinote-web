@@ -76,7 +76,7 @@
         let top = rect.top + rect.height;
         let left = rect.left;
 
-        const modal = $(container).parent('.modal-content');
+        const modal = $(container).parents('.modal-content');
 
         if (modal.length > 0) {
           const modalRect = modal.get(0).getBoundingClientRect();
