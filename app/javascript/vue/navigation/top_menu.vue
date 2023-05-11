@@ -8,7 +8,7 @@
     </div>
     <div v-if="teams" class="sci--navigation--top-menu-teams">
       <DropdownSelector
-        :selectedValue="current_team"
+        :selectedValue="currentTeam"
         :options="teams"
         :disableSearch="true"
         :selectorId="`sciNavigationTeamSelector`"
@@ -105,7 +105,7 @@
       return {
         rootUrl: null,
         logo: null,
-        current_team: null,
+        currentTeam: null,
         teams: null,
         searchUrl: null,
         user: null,
@@ -118,32 +118,37 @@
       }
     },
     created() {
-      $.get(this.url, (result) => {
-        this.rootUrl = result.root_url;
-        this.logo = result.logo;
-        this.current_team = result.current_team;
-        this.teams = result.teams;
-        this.searchUrl = result.search_url;
-        this.helpMenu = result.help_menu;
-        this.settingsMenu = result.settings_menu;
-        this.userMenu = result.user_menu;
-        this.user = result.user;
-      })
-
+      this.fetchData();
       this.checkUnseenNotifications();
 
       $(document).on('turbolinks:load', () => {
         this.notificationsOpened = false;
         this.checkUnseenNotifications();
       })
+
+      // Track name update in user profile settings
+      $(document).on('inlineEditing::updated', '.inline-editing-container[data-field-to-update="full_name"]', this.fetchData);
     },
     methods: {
+      fetchData() {
+        $.get(this.url, (result) => {
+          this.rootUrl = result.root_url;
+          this.logo = result.logo;
+          this.currentTeam = result.current_team;
+          this.teams = result.teams;
+          this.searchUrl = result.search_url;
+          this.helpMenu = result.help_menu;
+          this.settingsMenu = result.settings_menu;
+          this.userMenu = result.user_menu;
+          this.user = result.user;
+        })
+      },
       switchTeam(team) {
-        if (this.current_team == team) return;
+        if (this.currentTeam == team) return;
 
         $.post(this.teams.find(e => e.value == team).params.switch_url, (result) => {
-          this.current_team = result.current_team
-          dropdownSelector.selectValues('#sciNavigationTeamSelector', this.current_team);
+          this.currentTeam = result.current_team
+          dropdownSelector.selectValues('#sciNavigationTeamSelector', this.currentTeam);
           window.open(this.rootUrl, '_self')
         }).error((msg) => {
           HelperModule.flashAlertMsg(msg.responseJSON.message, 'danger');
