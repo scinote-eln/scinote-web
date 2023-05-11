@@ -1,4 +1,4 @@
-/* global bwipjs PrintModalComponent RepositoryDatatable */
+/* global bwipjs PrintModalComponent RepositoryDatatable HelperModule MyModuleRepositories */
 
 (function() {
   'use strict';
@@ -74,5 +74,28 @@
         PrintModalComponent.row_ids = [...RepositoryDatatable.selectedRows()];
       }
     }
+  });
+
+  $(document).on('click', '.assign-inventory-button', function(e) {
+    e.preventDefault();
+    let assignUrl = $(this).data('assignUrl');
+    let repositoryRowId = $(this).data('repositoryRowId');
+
+    $.ajax({
+      url: assignUrl,
+      type: 'POST',
+      data: { repository_row_id: repositoryRowId },
+      dataType: 'json',
+      success: function(data) {
+        HelperModule.flashAlertMsg(data.flash, 'success');
+        $('#modal-info-repository-row').modal('hide');
+        if (typeof MyModuleRepositories !== 'undefined') {
+          MyModuleRepositories.reloadRepositoriesList(repositoryRowId);
+        }
+      },
+      error: function(error) {
+        HelperModule.flashAlertMsg(error.responseJSON.flash, 'danger');
+      }
+    });
   });
 }());
