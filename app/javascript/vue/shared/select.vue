@@ -48,7 +48,7 @@
         setTimeout(() => {
           this.isOpen = false;
           this.$emit('blur');
-        }, 100)
+        }, 200)
       },
       toggle() {
         this.isOpen = !this.isOpen;
@@ -70,10 +70,19 @@
         this.$emit('change', this.value);
       },
       updateOptionPosition() {
-        let rect = this.$refs.container.getBoundingClientRect();
-        let top =rect.top + rect.height;
-        let left = rect.left;
+        const container = this.$refs.container;
+        const rect = container.getBoundingClientRect();
         let width = rect.width;
+        let top = rect.top + rect.height;
+        let left = rect.left;
+
+        const modal = $(container).parent('.modal-content');
+
+        if (modal.length > 0) {
+          const modalRect = modal.get(0).getBoundingClientRect();
+          top -= modalRect.top;
+          left -= modalRect.left;
+        }
 
         this.optionPositionStyle = `position: fixed; top: ${top}px; left: ${left}px; width: ${width}px`
       }

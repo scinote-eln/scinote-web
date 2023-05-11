@@ -1,0 +1,15 @@
+<div
+  class="assign-items-to-task-modal-container"
+  data-assign-url="<%= my_module_repository_path(":module_id") %>"
+  data-projects-url="<%= project_filter_projects_path %>"
+  data-experiments-url="<%= experiment_filter_experiments_path %>"
+  data-tasks-url="<%= module_filter_my_modules_path %>"
+     >
+  <assign-items-to-task-modal-container
+    :visibility="visibility"
+    :urls="urls"
+    @close="closeModal"
+  />
+</div>
+
+<%= javascript_include_tag 'vue_repository_assign_items_to_task_modal' %>

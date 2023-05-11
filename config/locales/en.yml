@@ -1966,6 +1966,22 @@ en:
     columns_delete: "Delete"
     columns_changed: "Someone removed/added a new column to the inventory in use. To prevent data inconsistency we will reload this page for you."
     columns_visibility: "Visible columns"
+    modal_assign_items_to_task:
+      title: "Assign to task"
+      body:
+        description: "Type in the fields below to find the right task."
+        project_select:
+          label: "Project"
+          placeholder: "Enter project name"
+        experiment_select:
+          label: "Experiment"
+          placeholder: "Enter Experiment name"
+          disabled_placeholder: "Select Project to enable Experiment"
+        task_select:
+          label: "Task"
+          placeholder: "Enter Task name"
+          disabled_placeholder: "Select Experiment to enable Task"
+      assign: "Assign to this task"
     modal_delete_record:
       title: "Delete items"
       notice: "Are you sure you want to delete the selected item(s)?"
