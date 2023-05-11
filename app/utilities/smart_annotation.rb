@@ -54,7 +54,8 @@ class SmartAnnotation
 
     res.each do |rep_row|
       rep_item = {}
-      rep_item[:id] = rep_row.id.base62_encode
+      rep_item[:id] = rep_row.id
+      rep_item[:id_encoded] = rep_row.id.base62_encode
       rep_item[:name] = escape_input(rep_row.name)
       rep_item[:code] = escape_input(rep_row.code)
       if my_module_id.present?
