@@ -262,7 +262,7 @@ en:
     notifications:
       title: "Notifications"
       all: "All"
-      message: "Message"
+      message: "Messages"
       system: "System"
       today: "Today"
       older: "Older"
@@ -2412,7 +2412,7 @@ en:
           profile: "My profile"
           preferences: "My preferences"
           addons: "Add-ons"
-          connected_accounts: "Connected Accounts"
+          connected_accounts: "Connected accounts"
       account:
         preferences:
           head_title: "Settings | My preferences"
