@@ -117,6 +117,7 @@ Rails.application.config.assets.precompile += %w(assets/asset_inline.js)
 Rails.application.config.assets.precompile += %w(assets/asset_thumbnail.js)
 Rails.application.config.assets.precompile += %w(results/new.js)
 Rails.application.config.assets.precompile += %w(results/edit.js)
+Rails.application.config.assets.precompile += %w(shared/file_preview.js)
 
 # Libraries needed for Handsontable formulas
 Rails.application.config.assets.precompile += %w(jquery.js)
