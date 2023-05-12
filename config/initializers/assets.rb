@@ -113,6 +113,8 @@ Rails.application.config.assets.precompile += %w(users/registrations/new_with_pr
 Rails.application.config.assets.precompile += %w(team_zip_exports/load_handson.js)
 Rails.application.config.assets.precompile += %w(repository_columns/manage_column_partials/number.js)
 Rails.application.config.assets.precompile += %w(repository_columns/manage_column_partials/stock.js)
+Rails.application.config.assets.precompile += %w(assets/asset_inline.js)
+Rails.application.config.assets.precompile += %w(assets/asset_thumbnail.js)
 
 # Libraries needed for Handsontable formulas
 Rails.application.config.assets.precompile += %w(jquery.js)
