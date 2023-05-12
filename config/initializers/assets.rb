@@ -115,8 +115,12 @@ Rails.application.config.assets.precompile += %w(repository_columns/manage_colum
 Rails.application.config.assets.precompile += %w(repository_columns/manage_column_partials/stock.js)
 Rails.application.config.assets.precompile += %w(assets/asset_inline.js)
 Rails.application.config.assets.precompile += %w(assets/asset_thumbnail.js)
-Rails.application.config.assets.precompile += %w(results/new.js)
-Rails.application.config.assets.precompile += %w(results/edit.js)
+Rails.application.config.assets.precompile += %w(results/result_assets/new.js)
+Rails.application.config.assets.precompile += %w(results/result_assets/edit.js)
+Rails.application.config.assets.precompile += %w(results/result_tables/new.js)
+Rails.application.config.assets.precompile += %w(results/result_tables/edit.js)
+Rails.application.config.assets.precompile += %w(results/result_texts/new.js)
+Rails.application.config.assets.precompile += %w(results/result_texts/edit.js)
 Rails.application.config.assets.precompile += %w(shared/file_preview.js)
 
 # Libraries needed for Handsontable formulas
