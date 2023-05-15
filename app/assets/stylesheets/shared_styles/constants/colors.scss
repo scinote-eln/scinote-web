@@ -48,6 +48,10 @@ $colors:  ("sn-white": "#FFFFFF",
   .text-#{$color} {
     color: var(--#{$color});
   }
+
+  .border-#{$color} {
+    border-color: var(--#{$color});
+  }
 }
 
 
