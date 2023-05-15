@@ -45,7 +45,7 @@
     var modal = $('#parse-records-modal');
     var form = $('#form-records-file');
     var submitBtn = form.find('input[type="submit"]');
-    var closeBtn = modal.find('.close-button')
+    var closeBtn = modal.find('.close-button');
     form.on('ajax:success', function(ev, data) {
       $('#modal-import-records').modal('hide');
       $(data.html).appendTo('body').promise().done(function() {

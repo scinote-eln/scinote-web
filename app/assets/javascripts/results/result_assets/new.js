@@ -10,7 +10,6 @@
     });
 
   $('#new-result-assets-select').on('change', '#drag-n-drop-assets', function() {
-    console.log(this);
     DragNDropResults.init(this.files);
   });
-})();
+}());
