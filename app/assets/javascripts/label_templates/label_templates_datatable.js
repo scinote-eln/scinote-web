@@ -267,7 +267,7 @@
         targets: 1,
         searchable: false,
         orderable: true,
-        sWidth: '1%',
+        width: '1.5rem',
         render: renderDefaultTemplateHTML
       }, {
         targets: 2,
