@@ -8,7 +8,15 @@
 @import "mixins";
 
 .content-pane.my-modules-protocols-index {
-  padding: 0 10px 10px;
+  background-color: $color-alto;
+  margin-left: calc(-1rem - 2px) !important;
+  padding: 0 1rem 1rem !important;
+  width: calc(100% + 2rem);
+
+  .title-row {
+    margin-left: -1rem !important;
+    width: calc(100% + 2rem) !important;
+  }
 
   .my-module-position-container {
     background-color: $color-white;
@@ -16,17 +24,7 @@
     margin: 1rem auto;
     max-width: 900px;
     padding: 10px;
-    position: relative;
     z-index: 2;
-  }
-
-  .my-module-background {
-    background-color: $color-alto;
-    height: 100%;
-    left: 0;
-    position: fixed;
-    top: 0;
-    width: 100%;
   }
 }
 

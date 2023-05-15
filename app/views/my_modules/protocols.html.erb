@@ -38,7 +38,6 @@
 <% end %>
 <%= render partial: 'shared/drag_n_drop_overlay' %>
 <div class="content-pane flexible my-modules-protocols-index" data-task-id="<%= @my_module.id %>">
-  <div class="my-module-background"></div>
   <%= render partial: 'my_modules/header' %>
   <div class="my-module-position-container">
     <!-- Details -->
@@ -130,10 +129,10 @@
           data-date-format="<%= datetime_picker_format_date_only %>"
           data-user-utc-offset="<%= ActiveSupport::TimeZone.find_tzinfo(current_user.time_zone).utc_offset %>"
       >
-      <protocol-container
-        :protocol-url="protocolUrl"
-      />
-    </div>
+        <protocol-container
+          :protocol-url="protocolUrl"
+        />
+      </div>
     </div>
   </div>
 </div>
