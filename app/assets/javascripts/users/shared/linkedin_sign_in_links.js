@@ -13,5 +13,5 @@
     })
     .on('click', () => {
       linkedinSignInButton.attr('src', clickSrc);
-    })
-})();
+    });
+}());
