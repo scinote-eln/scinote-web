@@ -10,7 +10,6 @@
       <a :href="item.url"
           class="text-ellipsis overflow-hidden hover:no-underline"
           :class="{
-            'pointer-events-none': (!item.archived && archived),
             'text-sn-grey': (!item.archived && archived)
           }">
         <i v-if="itemIcon" class="mr-2" :class="itemIcon"></i>
