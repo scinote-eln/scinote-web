@@ -6,8 +6,9 @@ class MyModulesController < ApplicationController
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
   include MyModulesHelper
+  include Breadcrumbs
 
-  before_action :load_vars, except: %i(restore_group create new save_table_state my_module_filter)
+  before_action :load_vars, except: %i(restore_group create new save_table_state my_module_filter actions_toolbar)
   before_action :load_experiment, only: %i(create new)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_archive_permissions, only: %i(update)
@@ -15,10 +16,13 @@ class MyModulesController < ApplicationController
     description due_date update_description update_protocol_description update_protocol
   )
   before_action :check_read_permissions, except: %i(create new update update_description my_module_filter
-                                                    update_protocol_description restore_group save_table_state)
+                                                    update_protocol_description restore_group
+                                                    save_table_state actions_toolbar)
   before_action :check_update_state_permissions, only: :update_state
   before_action :set_inline_name_editing, only: %i(protocols results activities archive)
   before_action :load_experiment_my_modules, only: %i(protocols results activities archive)
+  before_action :set_breadcrumbs_items, only: %i(results protocols activities)
+  before_action :set_navigator, only: %i(protocols results activities archive)
 
   layout 'fluid'.freeze
 
@@ -438,6 +442,16 @@ class MyModulesController < ApplicationController
     end
   end
 
+  def actions_toolbar
+    render json: {
+      actions:
+        Toolbars::MyModulesService.new(
+          current_user,
+          my_module_ids: params[:my_module_ids].split(',')
+        ).actions
+    }
+  end
+
   def provisioning_status
     render json: { provisioning_status: @my_module.provisioning_status }
   end
@@ -620,5 +634,13 @@ class MyModulesController < ApplicationController
                  experiment: link_to(@my_module.experiment.name, my_modules_experiment_url(@my_module.experiment)),
                  my_module: link_to(@my_module.name, protocols_my_module_url(@my_module)))
     )
+  end
+
+  def set_navigator
+    @navigator = {
+      url: tree_navigator_my_module_path(@my_module),
+      archived: @my_module.archived? || @my_module.experiment.archived_branch?,
+      id: @my_module.code
+    }
   end
 end

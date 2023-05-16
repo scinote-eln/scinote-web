@@ -639,6 +639,30 @@ li.module-hover {
   }
 
   .projects-toolbar {
+    .project-actions {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+
+      .btn {
+        margin-right: .25em;
+      }
+
+      .left {
+        align-self: flex-start;
+      }
+
+      .middle {
+        align-self: center;
+      }
+
+      .right {
+        align-self: flex-end;
+        margin-right: 25px;
+      }
+
+    }
+
     .form-group {
       width: 100%;
     }
@@ -744,6 +768,8 @@ li.module-hover {
 
                 .fas {
                   margin-right: .4em;
+                  text-align: left;
+                  width: 1.1em;
                 }
               }
 

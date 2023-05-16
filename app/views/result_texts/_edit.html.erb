@@ -13,13 +13,13 @@
                                      my_module_id: @result.my_module_id,
                                      last_updated: @result.updated_at.to_i * 1000 }) %>
     <% end %><br />
-    <div class="align-right">
+    <div class="align-right edit-result-texts-buttons'">
       <button type="button" class="btn btn-secondary cancel-edit">
         <%= t("general.cancel")%>
       </button>
       <%= f.button t("general.save"),
-                   class: 'btn btn-primary save-result',
-                   onclick: "Results.processResult(event, Results.ResultTypeEnum.TEXT);" %>
+                   class: 'btn btn-primary save-result' %>
+      <%= javascript_include_tag 'results/result_texts/edit', nonce: true %>
     </div>
   <% end %>
 </div>

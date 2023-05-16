@@ -1,0 +1,20 @@
+<div class="dropdown view-switch" >
+  <a href="#" class="btn btn-light view-switch-button prevent-shrink <%= "disabled" if disabled %>" id="viewSwitchButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    <span class="state-view-switch-btn-name"><%= archived ? t('toolbar.archived_state') : t('toolbar.active_state') %></span>
+    <span class="caret pull-right"></span>
+  </a>
+  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="viewSwitchButton">
+    <% if switchable %>
+      <li>
+        <%= link_to active_url, class: "#{ 'form-dropdown-state-item' unless archived }" do %>
+          <%= t('toolbar.active_state') %>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to archived_url, class: "#{ 'form-dropdown-state-item' if archived }"  do %>
+          <%= t('toolbar.archived_state') %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</div>

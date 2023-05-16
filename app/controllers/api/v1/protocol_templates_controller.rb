@@ -12,7 +12,7 @@ module Api
 
       def index
         protocol_templates = Protocol.latest_available_versions(@team)
-                                     .with_granted_permissions(current_user, ProtocolPermissions::READ)
+                                     .viewable_by_user(current_user, @team)
                                      .page(params.dig(:page, :number))
                                      .per(params.dig(:page, :size))
 
