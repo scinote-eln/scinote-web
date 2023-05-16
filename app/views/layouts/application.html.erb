@@ -10,6 +10,7 @@
       <meta name="expiration-url" content="<%= users_expire_in_path %>">
       <meta name="revive-url" content="<%= users_revive_session_path %>">
     <% end %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
 
     <%= javascript_include_tag 'jquery_bundle' %>
@@ -41,6 +42,7 @@
 
     <%= javascript_include_tag 'tui_image_editor', nonce: true %>
     <%= stylesheet_link_tag 'tui_image_editor_styles' %>
+    <%= javascript_include_tag 'vue_navigation_navigator' %>
     <%= javascript_include_tag 'vue_navigation_top_menu', nonce: true %>
   </head>
   <body
@@ -62,9 +64,8 @@
     <span style="display: none;" data-hook="application-body-html"></span>
 
     <div class="sci--layout"
-         data-breadcrumbs-collapsed="true"
-         data-navigator-collapsed="<%= !content_for?(:sidebar_title) || session[:navigator_collapsed] %>"
-         data-navitgator-state-url="<%= navigator_state_navigations_path %>"
+         data-breadcrumbs-collapsed="<%= !@breadcrumbs_items.present? %>"
+         data-navigator-collapsed="<%= !@navigator || session[:navigator_collapsed] %>"
          data-left-navigation-collapsed=<%= !user_signed_in? %>
     >
       <div class="sci--layout-navigation-top" >
@@ -73,8 +74,7 @@
       <div class="sci--layout-navigation-left">
         <%= render "shared/navigation/left" if user_signed_in? %>
       </div>
-      <!-- temporary fix for sidebar (#wrapper) -->
-      <div id="wrapper" class="sci--layout-navigation-navigator">
+      <div class="sci--layout-navigation-navigator pb-3 overflow-hidden relative">
         <%= render "shared/navigation/navigator" %>
       </div>
       <div class="sci--layout-navigation-breadcrumbs">
@@ -91,6 +91,8 @@
           <%= yield :content %>
         <% end %>
       </div>
+
+      <%= render "shared/comments/comments_sidebar.html.erb" %>
     </div>
 
     <%= render partial: 'shared/flash_alerts',
@@ -101,7 +103,6 @@
       <%= render "shared/file_preview/modal.html.erb" %>
       <%= render "shared/file_edit_modal.html.erb" %>
       <%= render "shared/marvinjs_modal.html.erb" %>
-      <%= render "shared/comments/comments_sidebar.html.erb" %>
       <%= render "users/sessions/session_expire_modal.html.erb" %>
       <%= render "users/sessions/session_end_modal.html.erb" %>
     <% end %>

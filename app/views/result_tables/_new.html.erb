@@ -11,13 +11,13 @@
 				</div>
 			<% end %>
 		</div>
-		<div class="align-right">
+		<div class="align-right new-result-tables-buttons">
 			<button type="button" class="btn btn-secondary cancel-new">
 				<%= t("general.cancel")%>
 			</button>
 			<%= f.button t("result_tables.new.create"),
-									 class: 'btn btn-primary save-result',
-									 onclick: "Results.processResult(event, Results.ResultTypeEnum.TABLE);" %>
+									 class: 'btn btn-primary save-result' %>
+			<%= javascript_include_tag 'results/result_tables/new', nonce: true %>
     </div>
 	<% end %>
 </div>

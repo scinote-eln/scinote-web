@@ -1,17 +1,15 @@
-<% if content_for?(:sidebar_title) %>
-  <div id="sidebar-wrapper" class="sidebar-container <%= yield :sidebar_wrapper_class %>" data-sidebar-url="<%= yield :sidebar_url %>">
-    <div class="sidebar-header">
-      <div class="sidebar-title">
-        <%= yield :sidebar_title %>
-      </div>
-      <i class="fas fa-times close-sidebar"></i>
-    </div>
-    <div class="fas fa-angle-double-right show-sidebar"></div>
-    <div class="sidebar-body">
-      <%= yield :sidebar %>
-    </div>
-    <div class="sidebar-footer">
-      <%= yield :sidebar_footer %>
-    </div>
-  </div>
+<% if @navigator %>
+  <%= hidden_field_tag :active_navigator_item, @navigator[:id] %>
+  <%= hidden_field_tag :active_navigator_url, @navigator[:url] %>
+  <%= hidden_field_tag :active_navigator_archived, @navigator[:archived] %>
 <% end %>
+<div id="sciNavigationNavigatorContainer"
+      class="contents"
+      data-navigator-state-url="<%= navigator_state_navigations_path %>"
+      data-turbolinks-permanent data-behaviour="vue">
+  <navigator-container
+    @navigator:colapse="navigatorCollapsed = true"
+    :reload-current-level="reloadCurrentLevel"
+    :reload-children-level="reloadChildrenLevel"
+  />
+</div>

@@ -25,8 +25,8 @@
         <i class="fas fa-question-circle"></i>
       </button>
       <ul v-if="user" class="dropdown-menu dropdown-menu-right">
-        <li v-for="(item, i) in helpMenu" :key="item.name">
-          <a :key="i" :href="item.url">
+        <li v-for="(item, i) in helpMenu" :key="i">
+          <a :href="item.url" target="_blank">
             {{ item.name }}
           </a>
         </li>
@@ -37,8 +37,8 @@
         <i class="fas fa-cog"></i>
       </button>
       <ul class="dropdown-menu dropdown-menu-right">
-        <li v-for="(item, i) in settingsMenu" :key="item.name">
-          <a :key="i" :href="item.url">
+        <li v-for="(item, i) in settingsMenu" :key="i">
+          <a :href="item.url">
             {{ item.name }}
           </a>
         </li>
@@ -71,8 +71,8 @@
         <img class="avatar" :src="user.avatar_url">
       </div>
       <div class="dropdown-menu dropdown-menu-right">
-        <li v-for="(item, i) in userMenu" :key="item.name">
-          <a :key="i" :href="item.url">
+        <li v-for="(item, i) in userMenu" :key="i">
+          <a :href="item.url">
             {{ item.name }}
           </a>
         </li>
@@ -118,18 +118,7 @@
       }
     },
     created() {
-      $.get(this.url, (result) => {
-        this.rootUrl = result.root_url;
-        this.logo = result.logo;
-        this.currentTeam = result.current_team;
-        this.teams = result.teams;
-        this.searchUrl = result.search_url;
-        this.helpMenu = result.help_menu;
-        this.settingsMenu = result.settings_menu;
-        this.userMenu = result.user_menu;
-        this.user = result.user;
-      })
-
+      this.fetchData();
       this.checkUnseenNotifications();
 
       $(document).on('turbolinks:load', () => {
@@ -137,8 +126,24 @@
         this.checkUnseenNotifications();
         this.refreshCurrentTeam();
       })
+
+      // Track name update in user profile settings
+      $(document).on('inlineEditing::updated', '.inline-editing-container[data-field-to-update="full_name"]', this.fetchData);
     },
     methods: {
+      fetchData() {
+        $.get(this.url, (result) => {
+          this.rootUrl = result.root_url;
+          this.logo = result.logo;
+          this.currentTeam = result.current_team;
+          this.teams = result.teams;
+          this.searchUrl = result.search_url;
+          this.helpMenu = result.help_menu;
+          this.settingsMenu = result.settings_menu;
+          this.userMenu = result.user_menu;
+          this.user = result.user;
+        })
+      },
       switchTeam(team) {
         if (this.currentTeam == team) return;
 

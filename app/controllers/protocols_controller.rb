@@ -71,6 +71,7 @@ class ProtocolsController < ApplicationController
 
   before_action :set_importer, only: %i(load_from_file import)
   before_action :set_inline_name_editing, only: :show
+  before_action :set_breadcrumbs_items, only: %i(index show)
 
   layout 'fluid'
 
@@ -914,7 +915,8 @@ class ProtocolsController < ApplicationController
       render json: {
         copyable: can_clone_protocol_in_repository?(@protocol),
         archivable: can_archive_protocol_in_repository?(@protocol),
-        restorable: can_restore_protocol_in_repository?(@protocol)
+        restorable: can_restore_protocol_in_repository?(@protocol),
+        readable: can_read_protocol_in_repository?(@protocol)
       }
     end
   end
@@ -983,7 +985,8 @@ class ProtocolsController < ApplicationController
     current_team_switch(@protocol.team) if current_team != @protocol.team
     unless @protocol.present? &&
            (can_read_protocol_in_module?(@protocol) ||
-           can_read_protocol_in_repository?(@protocol))
+           can_read_protocol_in_repository?(@protocol) ||
+           (@protocol.in_repository? && can_manage_team?(@protocol.team)))
       render_403
     end
   end
@@ -1143,5 +1146,22 @@ class ProtocolsController < ApplicationController
       message: t('notifications.protocol_description_annotation_message_html',
                  protocol: link_to(@protocol.name, protocol_url(@protocol)))
     )
+  end
+
+  def set_breadcrumbs_items
+    @breadcrumbs_items = []
+
+    @breadcrumbs_items.push({
+                              label: t('breadcrumbs.protocols'),
+                              url: protocols_path
+                            })
+
+    if @protocol
+      @breadcrumbs_items.push({
+                                label: @protocol.name,
+                                url: protocol_path(@protocol),
+                                archived: @protocol.archived?
+                              })
+    end
   end
 end

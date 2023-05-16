@@ -292,6 +292,32 @@ Rails.application.routes.draw do
       resources :my_modules, only: %i(show update edit)
     end
 
+    namespace :navigator do
+      resources :project_folders, only: %i(show) do
+        member do
+          get :tree
+        end
+      end
+
+      resources :projects, only: %i(show index) do
+        member do
+          get :tree
+        end
+      end
+
+      resources :experiments, only: %i(show) do
+        member do
+          get :tree
+        end
+      end
+
+      resources :my_modules, only: %i(show) do
+        member do
+          get :tree
+        end
+      end
+    end
+
     resources :projects, except: [:destroy] do
       resources :project_comments,
                 path: '/comments',
@@ -337,6 +363,7 @@ Rails.application.routes.draw do
         post 'archive_group'
         post 'restore_group'
         put 'view_type', to: 'teams#view_type'
+        get 'actions_toolbar'
       end
     end
 
@@ -347,7 +374,7 @@ Rails.application.routes.draw do
         post 'move_to', to: 'project_folders#move_to', defaults: { format: 'json' }
         get 'move_to_modal', to: 'project_folders#move_to_modal', defaults: { format: 'json' }
         post 'destroy', to: 'project_folders#destroy', as: 'destroy', defaults: { format: 'json' }
-        post 'destroy_modal', to: 'project_folders#destroy_modal', defaults: { format: 'json' }
+        get 'destroy_modal', to: 'project_folders#destroy_modal', defaults: { format: 'json' }
       end
     end
     get 'project_folders/:project_folder_id', to: 'projects#index', as: :project_folder_projects
@@ -357,6 +384,7 @@ Rails.application.routes.draw do
         get 'edit', action: :edit
         get 'clone_modal', action: :clone_modal
         get 'move_modal', action: :move_modal
+        get 'actions_toolbar'
       end
       member do
         get 'permissions'
@@ -398,6 +426,10 @@ Rails.application.routes.draw do
     # as well as 'module info' page for single module (HTML)
     resources :my_modules, path: '/modules', only: [:show, :update] do
       post 'save_table_state', on: :collection, defaults: { format: 'json' }
+
+      collection do
+        get 'actions_toolbar'
+      end
 
       member do
         get :permissions
@@ -531,7 +563,7 @@ Rails.application.routes.draw do
     end
 
     # System notifications routes
-    resources :system_notifications, only: %i(index show) do
+    resources :system_notifications, only: %i(show) do
       collection do
         post 'mark_as_seen'
         get 'unseen_counter'

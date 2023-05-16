@@ -47,14 +47,23 @@
       .attr('data-id', data['0']);
   }
 
+  function initNameClick() {
+    $('.label-info-link', '.dataTables_scrollBody').on('click', function() {
+      window.location.href = this.href;
+      return false;
+    });
+  }
+
   function initToggleAllCheckboxes() {
     $('input[name="select_all"]').change(function() {
       if ($(this).is(':checked')) {
         $("[data-action='toggle']").prop('checked', true);
         $('.label-template-row').addClass('selected');
+        $('.label-template-row [data-action="toggle"]').change();
       } else {
         $("[data-action='toggle']").prop('checked', false);
         $('.label-template-row').removeClass('selected');
+        $('.label-template-row [data-action="toggle"]').change();
       }
     });
   }
@@ -134,6 +143,7 @@
   function tableDrawCallback() {
     initToggleAllCheckboxes();
     initRowSelection();
+    initNameClick();
   }
 
   function updateButtons() {
@@ -141,6 +151,7 @@
       $('.selected-actions').addClass('hidden');
       $('.nonselected-actions').removeClass('hidden');
       $('.fluics-warning').addClass('hidden');
+      $('.selected-one-actions').addClass('hidden');
     } else {
       $('.fluics-warning').addClass('hidden');
       $('.selected-actions').removeClass('hidden');
@@ -267,7 +278,7 @@
         targets: 1,
         searchable: false,
         orderable: true,
-        sWidth: '1%',
+        width: '1.5rem',
         render: renderDefaultTemplateHTML
       }, {
         targets: 2,

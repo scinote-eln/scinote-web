@@ -10,9 +10,10 @@
     }
   %>
 <% end %>
-<%= render partial: "shared/secondary_navigation" %>
 
-<div class="content-pane" id="result-archive">
+<% provide(:container_class, 'no-second-nav-container') %>
+<div class="content-pane flexible">
+  <%= render partial: 'my_modules/header' %>
   <div class="row">
     <% if @archived_results.any? %>
       <% @archived_results.each do |result| %>
