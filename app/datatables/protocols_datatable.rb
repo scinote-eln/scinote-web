@@ -5,6 +5,7 @@ class ProtocolsDatatable < CustomDatatable
   include ActiveRecord::Sanitization::ClassMethods
   include InputSanitizeHelper
   include Rails.application.routes.url_helpers
+  include Canaid::Helpers::PermissionsHelper
 
   PREFIXED_ID_SQL = "('#{Protocol::ID_PREFIX}' || COALESCE(\"protocols\".\"parent_id\", \"protocols\".\"id\"))"
 
@@ -208,7 +209,13 @@ class ProtocolsDatatable < CustomDatatable
       else
         protocol_path(record)
       end
-    "<a href='#{path}'>#{escape_input(record.name)}</a>"
+
+    if can_read_protocol_in_repository?(@user, record)
+      "<a href='#{path}'>#{escape_input(record.name)}</a>"
+    else
+      # team admin can only see recod name
+      "<span class='not-clickable-record'>#{escape_input(record.name)}</span>"
+    end
   end
 
   def keywords_html(record)
@@ -233,7 +240,8 @@ class ProtocolsDatatable < CustomDatatable
 
   def versions_html(record)
     @view.controller
-         .render_to_string(partial: 'protocols/index/protocol_versions.html.erb', locals: { protocol: record })
+         .render_to_string(partial: 'protocols/index/protocol_versions.html.erb',
+                           locals: { protocol: record, readable: can_read_protocol_in_repository?(@user, record) })
   end
 
   def access_html(record)

@@ -915,7 +915,8 @@ class ProtocolsController < ApplicationController
       render json: {
         copyable: can_clone_protocol_in_repository?(@protocol),
         archivable: can_archive_protocol_in_repository?(@protocol),
-        restorable: can_restore_protocol_in_repository?(@protocol)
+        restorable: can_restore_protocol_in_repository?(@protocol),
+        readable: can_read_protocol_in_repository?(@protocol)
       }
     end
   end
@@ -984,7 +985,8 @@ class ProtocolsController < ApplicationController
     current_team_switch(@protocol.team) if current_team != @protocol.team
     unless @protocol.present? &&
            (can_read_protocol_in_module?(@protocol) ||
-           can_read_protocol_in_repository?(@protocol))
+           can_read_protocol_in_repository?(@protocol) ||
+           (@protocol.in_repository? && can_manage_team?(@protocol.team)))
       render_403
     end
   end
