@@ -6,6 +6,16 @@
   .experimnet-name {
     max-width: calc(100% - 300px);
   }
+
+  .toolbar {
+    align-items: center;
+    column-gap: .5rem;
+    display: flex;
+
+    .collapse {
+      margin: .5rem 0;
+    }
+  }
 }
 
 #experimentTable {

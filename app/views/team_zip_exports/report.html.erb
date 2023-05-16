@@ -15,36 +15,16 @@
     <% ['handsontable.full.js', 'lodash.js', 'numeral.js', 'numeric.js',
         'md5.js', 'jstat.js', 'formula.js', 'parser.js', 'ruleJS.js',
         'handsontable.formula.js', 'big.min.js' ].each do |js_asset| %>
-        <script type="text/javascript">
-          <%= j Rails.application
+        <%= javascript_tag Rails.application
                    .assets_manifest
                    .find_sources(js_asset)
                    .first
-                   .to_s
-                   .force_encoding(Encoding::UTF_8)
-                   .html_safe %>
-        </script>
+                   .force_encoding(Encoding::UTF_8),
+                   nonce: true %>
     <% end %>
 
     <!-- Init Handsontables -->
-    <script>
-      window.onload = function() {
-        var tables = document.getElementsByClassName('hot-table-container');
-        var tableVals = document.getElementsByClassName('hot-table-contents');
-
-        for (i = 0; i < tables.length; i++) {
-          tables[i].innerHTML=''
-          new Handsontable(tables[i], {
-              data: JSON.parse(tableVals[i].value).data,
-              rowHeaders: true,
-              colHeaders: true,
-              filters: true,
-              dropdownMenu: true,
-              formulas: true
-          });
-        }
-      };
-    </script>
+    <%= javascript_include_tag 'team_zip_exports/load_handson', nonce: true %>
 
     <title><%= title %></title>
   </head>

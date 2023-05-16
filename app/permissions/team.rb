@@ -101,7 +101,8 @@ Canaid::Permissions.register_for(Protocol) do
   end
 
   can :manage_protocol_users do |user, protocol|
-    protocol.permission_granted?(user, ProtocolPermissions::USERS_MANAGE)
+    protocol.permission_granted?(user, ProtocolPermissions::USERS_MANAGE) ||
+      protocol.team.permission_granted?(user, TeamPermissions::MANAGE)
   end
 
   # protocol in repository: restore

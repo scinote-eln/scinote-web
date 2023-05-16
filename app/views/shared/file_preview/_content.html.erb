@@ -71,8 +71,7 @@
         <%= render partial: 'shared/pdf_viewer.html.erb', locals: { asset: asset, report_document: false } %>
       <% else %>
         <%= image_tag asset.large_preview,
-            onerror: 'ActiveStoragePreviews.reCheckPreview(event)',
-            onload: 'ActiveStoragePreviews.showPreview(event)',
+            class: 'asset-image',
             style: 'opacity: 0' %>
       <% end %>
     <% else %>
@@ -91,8 +90,7 @@
           data: {id: previous_asset.id, gallery_elements: gallery} do %>
           <% if previous_asset.previewable? %>
             <%= image_tag previous_asset.medium_preview,
-                onerror: 'ActiveStoragePreviews.reCheckPreview(event)',
-                onload: 'ActiveStoragePreviews.showPreview(event)',
+                class: 'asset-image',
                 style: 'opacity: 0' %>
           <% else %>
             <i class="fas <%= file_fa_icon_class(previous_asset) if previous_asset.file_name %>"></i>
@@ -112,8 +110,7 @@
           <i class="fas fa-angle-right"></i>
           <% if next_asset.previewable? %>
             <%= image_tag next_asset.medium_preview,
-                onerror: 'ActiveStoragePreviews.reCheckPreview(event)',
-                onload: 'ActiveStoragePreviews.showPreview(event)',
+                class: 'asset-image',
                 style: 'opacity: 0' %>
           <% else %>
             <i class="fas <%= file_fa_icon_class(next_asset) if next_asset.file_name %>"></i>
@@ -123,3 +120,5 @@
     </div>
   <% end %>
 </div>
+
+<%= javascript_include_tag 'shared/file_preview', nonce: true %>

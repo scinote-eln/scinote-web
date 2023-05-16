@@ -16,5 +16,23 @@ FactoryBot.define do
       parent { create :protocol }
       added_by { create :user }
     end
+
+    trait :in_repository_draft do
+      my_module { nil }
+      protocol_type { :in_repository_draft }
+    end
+
+    trait :in_repository_published_original do
+      my_module { nil }
+      protocol_type { :in_repository_published_original }
+      version_number { 1 }
+      published_on { Time.now }
+    end
+
+    trait :in_repository_published_version do
+      my_module { nil }
+      protocol_type { :in_repository_published_version }
+      published_on { Time.now }
+    end
   end
 end

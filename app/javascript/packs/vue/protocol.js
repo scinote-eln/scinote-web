@@ -1,4 +1,4 @@
-/* global I18n */
+/* global HelperModule */
 
 import TurbolinksAdapter from 'vue-turbolinks';
 import Vue from 'vue/dist/vue.esm';

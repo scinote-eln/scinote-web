@@ -124,6 +124,7 @@
       $(document).on('turbolinks:load', () => {
         this.notificationsOpened = false;
         this.checkUnseenNotifications();
+        this.refreshCurrentTeam();
       })
 
       // Track name update in user profile settings
@@ -146,9 +147,14 @@
       switchTeam(team) {
         if (this.currentTeam == team) return;
 
-        $.post(this.teams.find(e => e.value == team).params.switch_url, (result) => {
-          this.currentTeam = result.current_team
+        let newTeam = this.teams.find(e => e.value == team);
+
+        if (!newTeam) return;
+
+        $.post(newTeam.params.switch_url, (result) => {
+          this.currentTeam = result.currentTeam
           dropdownSelector.selectValues('#sciNavigationTeamSelector', this.currentTeam);
+          $('body').attr('data-current-team-id', this.currentTeam);
           window.open(this.rootUrl, '_self')
         }).error((msg) => {
           HelperModule.flashAlertMsg(msg.responseJSON.message, 'danger');
@@ -161,6 +167,13 @@
         $.get(this.unseenNotificationsUrl, (result) => {
           this.unseenNotificationsCount = result.unseen;
         })
+      },
+      refreshCurrentTeam() {
+        let newTeam = parseInt($('body').attr('data-current-team-id'));
+        if (newTeam !== this.currentTeam) {
+          this.currentTeam = newTeam;
+          dropdownSelector.selectValues('#sciNavigationTeamSelector', this.currentTeam);
+        }
       }
     }
   }

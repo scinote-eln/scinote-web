@@ -901,25 +901,6 @@ ul.content-activities {
   }
 
 }
-// Protocolsio Preview protocol modal
-@media (min-width: 768px) {
-  #modal-import-json-protocol-preview .modal-dialog {
-    width: 70%;
-
-  }
-}
-
-#modal-import-json-protocol-preview .modal-dialog {
-  .modal-body {
-    max-height: 75vh;
-    overflow-y: auto;
-    width: 100%;
-
-    .ql-editor {
-      min-height: initial;
-    }
-  }
-}
 
 .badge-icon {
   background-color: $color-silver;

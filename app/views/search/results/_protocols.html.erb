@@ -10,6 +10,11 @@
 
   <% if has_description || has_authors || has_keywords %>
     <p>
+      <span>
+        <%=t 'search.object_id' %>
+        <%= highlight protocol.code, @search_query.strip.split(/\s+/)  %>
+      </span>
+      <br>
       <% if has_description %>
         <span>
           <%= t('search.index.description') %>

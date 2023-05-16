@@ -4,19 +4,23 @@
     <%= render partial: "search/results/partials/my_module_text.html.erb", locals: { my_module: mod, query: search_query } %>
   </h5>
 
-  <% if mod.description.present? %>
-    <p>
-      <span>
-        <%=t "search.index.description" %>
-        <%= highlight custom_auto_link(mod.tinymce_render(:description),
-                             simple_format: false,
-                             tags: %w(img),
-                             team: current_team), search_query.strip.split(/\s+/) %>
-      </span>
-    <p>
-  <% end %>
-
   <p>
+    <span>
+      <%=t 'search.object_id' %>
+      <%= highlight mod.code, @search_query.strip.split(/\s+/)  %>
+    </span>
+    <br>
+    <% if mod.description.present? %>
+      <p>
+        <span>
+          <%=t "search.index.description" %>
+          <%= highlight custom_auto_link(mod.tinymce_render(:description),
+                              simple_format: false,
+                              tags: %w(img),
+                              team: current_team), search_query.strip.split(/\s+/) %>
+        </span>
+      <p>
+    <% end %>
     <span>
       <%=t "search.index.created_at" %>
       <%=l mod.created_at, format: :full %>

@@ -2,7 +2,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onClick="pageReload()"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title"><%= t('repositories.modal_import.title') %></h4>
         <%= t("repositories.modal_import.notice") %>
       </div>
@@ -19,7 +19,7 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal" onClick="pageReload()"><%= t('general.cancel')%></button>
+        <button type="button" class="btn btn-default close-button" data-dismiss="modal"><%= t('general.cancel')%></button>
         <input type="submit" class="btn btn-success" value="<%= t("repositories.modal_import.upload") %>">
       </div>
       <% end %>

@@ -88,12 +88,12 @@
 <!-- Libraries for formulas -->
 <%= render partial: "shared/formulas_libraries.html.erb" %>
 
-<%= javascript_include_tag "assets/wopi/create_wopi_file" %>
-<%= javascript_include_tag "my_modules/results" %>
-<%= javascript_include_tag "results/result_texts" %>
-<%= javascript_include_tag "results/result_tables" %>
-<%= javascript_include_tag "results/result_assets" %>
-<%= javascript_include_tag 'pdf_js' %>
+<%= javascript_include_tag "assets/wopi/create_wopi_file", nonce: true %>
+<%= javascript_include_tag "my_modules/results", nonce: true %>
+<%= javascript_include_tag "results/result_texts", nonce: true %>
+<%= javascript_include_tag "results/result_tables", nonce: true %>
+<%= javascript_include_tag "results/result_assets", nonce: true %>
+<%= javascript_include_tag 'pdf_js', nonce: true %>
 <%= stylesheet_link_tag 'pdf_js_styles' %>
 
 <%= render 'shared/tiny_mce_packs' %>
