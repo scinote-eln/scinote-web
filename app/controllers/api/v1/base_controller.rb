@@ -59,6 +59,12 @@ module Api
                      :bad_request)
       end
 
+      rescue_from ActionController::BadRequest do |e|
+        render_error(
+          I18n.t('api.core.errors.parameter_incorrect.title'), e.message, :bad_request
+        )
+      end
+
       rescue_from ActionController::ParameterMissing do |e|
         render_error(
           I18n.t('api.core.errors.parameter.title'), e.message, :bad_request

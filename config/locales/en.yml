@@ -3461,6 +3461,8 @@ en:
           detail: "Something went wrong, please contact resource owner"
         parameter:
           title: "Missing parameter"
+        parameter_incorrect:
+          title: "Incorrect parameters"
         validation:
           title: "Validation error"
         read_permission:
@@ -3509,6 +3511,9 @@ en:
           detail: "Text contains reference to nonexisting TinyMCE image"
         result_wrong_tinymce:
           detail: "Image reference not found in the text"
+        table:
+          metadata:
+            detail_too_many_cells: "Wrong number of cells in the metadata field"
     service:
       errors:
         missing_task_ids: "Missing task_ids"

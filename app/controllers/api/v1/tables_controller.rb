@@ -54,12 +54,44 @@ module Api
       def table_params
         raise TypeError unless params.require(:data).require(:type) == 'tables'
 
-        params.require(:data).require(:attributes).permit(:name, :contents)
+        attributes_params = params.require(:data).require(:attributes).permit(
+          :name,
+          :contents,
+          metadata: [
+            :plateTemplate,
+            { cells: %i(col row className) }
+          ]
+        )
+
+        convert_plate_template(attributes_params[:metadata])
+        validate_metadata_params(attributes_params)
+        attributes_params
       end
 
       def load_table_for_managing
         @table = @step.tables.find(params.require(:id))
         raise PermissionError.new(Protocol, :manage) unless can_manage_protocol_in_module?(@protocol)
+      end
+
+      def convert_plate_template(metadata_params)
+        if metadata_params.present? && metadata_params['plateTemplate']
+          metadata_params['plateTemplate'] = ActiveRecord::Type::Boolean.new.cast(metadata_params['plateTemplate'])
+        end
+      end
+
+      def validate_metadata_params(attributes_params)
+        metadata = attributes_params[:metadata]
+        contents = JSON.parse(attributes_params[:contents] || '{}')
+
+        if metadata.present? && metadata[:cells].present? && contents.present?
+          metadata_cells = metadata[:cells]
+          data = contents['data']
+
+          if data.present? && data[0].present? && (data.size * data[0].size) < metadata_cells.size
+            error_message = I18n.t('api.core.errors.table.metadata.detail_too_many_cells')
+            raise ActionController::BadRequest, error_message
+          end
+        end
       end
     end
   end
