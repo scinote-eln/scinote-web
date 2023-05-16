@@ -1,25 +1,17 @@
 <li class="divider-label"><%= t("experiments.table.my_module_actions.title") %></li>
+<% if can_restore_my_module?(my_module) %>
+  <li>
+    <a href="<%= restore_my_modules_experiment_path(my_module.experiment) %>" class="restore-my-module" data-id="<%= my_module.id %>">
+      <i class="fas fa-undo"></i>
+      <%= t("experiments.table.my_module_actions.restore") %>
+    </a>
+  </li>
+<% end %>
 <% if can_manage_my_module?(my_module) %>
   <li>
     <a href="" class="edit-my-module" data-id="<%= my_module.id %>">
       <i class="fas fa-pen"></i>
       <%= t("experiments.table.my_module_actions.edit") %>
-    </a>
-  </li>
-<% end %>
-<% if can_manage_experiment?(my_module.experiment) && my_module.active? %>
-<li>
-  <a href="" class="duplicate-my-module" data-id="<%= my_module.id %>">
-    <i class="fas fa-copy"></i>
-    <%= t("experiments.table.my_module_actions.duplicate") %>
-  </a>
-</li>
-<% end %>
-<% if can_move_my_module?(my_module) %>
-  <li>
-    <a href="" class="move-my-module" data-id="<%= my_module.id %>">
-      <i class="fas fa-arrow-right"></i>
-      <%= t("experiments.table.my_module_actions.move") %>
     </a>
   </li>
 <% end %>
@@ -34,19 +26,27 @@
     <%= t("experiments.table.my_module_actions.access") %>
   </a>
 </li>
+<% if can_move_my_module?(my_module) %>
+  <li>
+    <a href="" class="move-my-module" data-id="<%= my_module.id %>">
+      <i class="fas fa-arrow-right"></i>
+      <%= t("experiments.table.my_module_actions.move") %>
+    </a>
+  </li>
+<% end %>
+<% if can_manage_experiment?(my_module.experiment) && my_module.active? %>
+<li>
+  <a href="" class="duplicate-my-module" data-id="<%= my_module.id %>">
+    <i class="fas fa-copy"></i>
+    <%= t("experiments.table.my_module_actions.duplicate") %>
+  </a>
+</li>
+<% end %>
 <% if can_archive_my_module?(my_module) %>
   <li>
     <a href="<%= archive_my_modules_experiment_path(my_module.experiment) %>" class="archive-my-module" data-id="<%= my_module.id %>">
       <i class="fas fa-archive"></i>
       <%= t("experiments.table.my_module_actions.archive") %>
-    </a>
-  </li>
-<% end %>
-<% if can_restore_my_module?(my_module) %>
-  <li>
-    <a href="<%= restore_my_modules_experiment_path(my_module.experiment) %>" class="restore-my-module" data-id="<%= my_module.id %>">
-      <i class="fas fa-undo"></i>
-      <%= t("experiments.table.my_module_actions.restore") %>
     </a>
   </li>
 <% end %>

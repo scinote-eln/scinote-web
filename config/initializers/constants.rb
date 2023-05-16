@@ -172,25 +172,16 @@ class Constants
   # full syntax!
   #=============================================================================
 
-  TAG_COLORS = [
-    '#6C159E',
-    '#159B5E',
-    '#FF4500',
-    '#008B8B',
-    '#757575',
-    '#2CB72C',
-    '#F5AD00',
-    '#0ECDC0',
-    '#15369E',
-    '#FF69B4',
-    '#CD5C5C',
-    '#ADADAD',
-    '#6495ED',
-    '#DC143C',
-    '#FF8C00',
-    '#C71585',
-    '#000000'
-  ].freeze
+  TAG_COLORS = %i(
+    #104DA9
+    #5EC66F
+    #6F2DC1
+    #E9A845
+    #DF3562
+    #46C3C8
+    #3B99FD
+    #98A2B3
+  ).freeze
 
   # Theme colors
   BRAND_PRIMARY = '#104da9'.freeze # $brand-primary

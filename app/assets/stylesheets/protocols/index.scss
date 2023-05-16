@@ -53,12 +53,17 @@
     }
 
     .toolbar {
+      align-items: center;
       display: flex;
 
       .left-general-toolbar {
         align-items: center;
         column-gap: .5em;
         display: flex;
+      }
+
+      .view-switch {
+        margin: 0 auto;
       }
 
       .right-general-toolbar {
@@ -145,6 +150,10 @@
       .more-users {
         border: 2px solid $color-concrete;
       }
+    }
+
+    .not-clickable-record {
+      color: $color-alto;
     }
   }
 

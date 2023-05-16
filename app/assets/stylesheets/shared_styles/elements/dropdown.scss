@@ -60,6 +60,9 @@
     button {
       color: $color-black !important;
     }
+    .text-light {
+      color: $color-white;
+    }
 
     .form-dropdown-item-info {
       color: $color-silver-chalice !important;
@@ -98,6 +101,28 @@
           float: right;
         }
       }
+    }
+  }
+
+  .form-dropdown-state-item {
+    background: $brand-primary;
+    border: 1px solid $brand-primary;
+    color: $color-white;
+
+    &:hover {
+      background: $brand-primary-hover !important;
+      color: $color-white;
+    }
+
+    &:active,
+    &.active {
+      background: $brand-primary-press;
+      color: $color-white;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 1px $brand-complementary;
+      color: $color-white;
     }
   }
 }

@@ -30,6 +30,11 @@
       <div class="table-body"></div>
     </div>
     <%= render partial: 'experiments/no_task_results.html.erb' %>
+
+
+    <div id="actionToolbar" data-behaviour="vue">
+      <action-toolbar actions-url="<%= actions_toolbar_my_modules_url %>" />
+    </div>
   </div>
   <%= render partial: "my_modules/modals/manage_module_tags_modal", locals: { my_module: nil } %>
 </div>
@@ -59,6 +64,7 @@
 <%= render partial: "canvas/edit/modal/edit_module" %>
 <%= render partial: "experiments/table_display_modal"%>
 
+<%= javascript_include_tag "vue_components_action_toolbar" %>
 <%= javascript_include_tag("my_modules/tags") %>
 <%= javascript_include_tag("experiments/table") %>
 <%= javascript_include_tag("experiments/dropdown_actions") %>
