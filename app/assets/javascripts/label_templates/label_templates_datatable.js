@@ -11,18 +11,6 @@
     return rowsSelected.map(i => i.id);
   }
 
-  function defaultSelected() {
-    return rowsSelected.findIndex(v => v.default === 'true') >= 0;
-  }
-
-  function labelFormats() {
-    let uniqueFormats = rowsSelected.map(i => i.format).filter((v, i, a) => a.indexOf(v) === i);
-    if (uniqueFormats.length > 1) {
-      return 'mixed';
-    }
-    return uniqueFormats[0];
-  }
-
   function renderCheckboxHTML(data) {
     return `<div class="sci-checkbox-container">
               <input type="checkbox" class="sci-checkbox label-row-checkbox" data-action='toggle'
@@ -38,8 +26,7 @@
   function renderNameHTML(data, type, row) {
     return `${data.icon_image_tag}<a
       href='${row.DT_RowAttr['data-edit-url']}'
-      class='record-info-link'
-      onclick='window.open(this.href, "_blank")'
+      class='label-info-link'
     >${data.name}</a>`;
   }
 
@@ -48,14 +35,23 @@
       .attr('data-id', data['0']);
   }
 
+  function initNameClick() {
+    $('.label-info-link', '.dataTables_scrollBody').on('click', function() {
+      window.location.href = this.href;
+      return false;
+    });
+  }
+
   function initToggleAllCheckboxes() {
     $('input[name="select_all"]').change(function() {
       if ($(this).is(':checked')) {
         $("[data-action='toggle']").prop('checked', true);
         $('.label-template-row').addClass('selected');
+        $('.label-template-row [data-action="toggle"]').change();
       } else {
         $("[data-action='toggle']").prop('checked', false);
         $('.label-template-row').removeClass('selected');
+        $('.label-template-row [data-action="toggle"]').change();
       }
     });
   }
@@ -67,7 +63,10 @@
   }
 
   function initSetDefaultButton() {
-    $('#setZplDefaultLabelTemplate, #setFluicsDefaultLabelTemplate').on('click', function() {
+    $(document).on('click', '#setZplDefaultLabelTemplate, #setFluicsDefaultLabelTemplate', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
       if (rowsSelected.length === 1) {
         $.post(rowsSelected[0].setDefaultUrl, function(response) {
           reloadTable();
@@ -79,8 +78,19 @@
     });
   }
 
+  function initEditButton() {
+    $('#editTemplate').on('click', function() {
+      if (rowsSelected.length === 1) {
+        window.location.href = rowsSelected[0].editUrl;
+      }
+    });
+  }
+
   function initDuplicateButton() {
-    $('#duplicateLabelTemplate').on('click', function() {
+    $(document).on('click', '#duplicateLabelTemplate', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
       if (rowsSelected.length > 0) {
         $.post(this.dataset.url, { selected_ids: rowsSelectedIDs() }, function(response) {
           reloadTable();
@@ -93,7 +103,10 @@
   }
 
   function initDeleteModal() {
-    $('#deleteLabelTemplate').on('click', function() {
+    $(document).on('click', '#deleteLabelTemplate', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
       $('#deleteLabelTemplatesModal').modal('show');
     });
   }
@@ -127,32 +140,11 @@
   function tableDrawCallback() {
     initToggleAllCheckboxes();
     initRowSelection();
+    initNameClick();
   }
 
   function updateButtons() {
-    if (rowsSelected.length === 0) {
-      $('.selected-actions').addClass('hidden');
-      $('.nonselected-actions').removeClass('hidden');
-      $('.fluics-warning').addClass('hidden');
-    } else {
-      $('.fluics-warning').addClass('hidden');
-      $('.selected-actions').removeClass('hidden');
-      $('.nonselected-actions').addClass('hidden');
-      if (labelFormats() === 'ZPL') {
-        $('#deleteLabelTemplate').toggleClass('hidden', defaultSelected());
-        $('#setZplDefaultLabelTemplate').toggleClass('hidden', (rowsSelected.length > 1 || defaultSelected()));
-        $('#setFluicsDefaultLabelTemplate').addClass('hidden');
-      } else if (labelFormats() === 'Fluics') {
-        $('#duplicateLabelTemplate').addClass('hidden');
-        $('#deleteLabelTemplate').addClass('hidden');
-        $('#setZplDefaultLabelTemplate').addClass('hidden');
-        $('#setFluicsDefaultLabelTemplate').toggleClass('hidden', (rowsSelected.length > 1 || defaultSelected()));
-        $('.fluics-warning').removeClass('hidden');
-      } else {
-        $('.fluics-warning').removeClass('hidden');
-        $('.selected-actions').addClass('hidden');
-      }
-    }
+    window.actionToolbarComponent.fetchActions({ label_template_ids: rowsSelectedIDs() });
   }
 
   function reloadTable() {
@@ -258,7 +250,7 @@
         targets: 1,
         searchable: false,
         orderable: true,
-        sWidth: '1%',
+        width: '1.5rem',
         render: renderDefaultTemplateHTML
       }, {
         targets: 2,
@@ -280,11 +272,14 @@
 
         let toolBar = $($('#labelTemplatesToolbar').html());
         $('.label-buttons-container').html(toolBar);
+
         initCreateButton();
+        initEditButton();
         initSetDefaultButton();
         initDuplicateButton();
         initDeleteModal();
         initRefreshFluicsButton();
+        window.initActionToolbar();
       }
     });
   }

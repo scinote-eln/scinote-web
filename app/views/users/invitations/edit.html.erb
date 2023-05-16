@@ -4,7 +4,7 @@
 
 <h2><%= t 'devise.invitations.edit.header' %></h2>
 
-<%= form_for (resource or :user), as: resource_name, url: invitation_path(resource_name), html: { method: :put } do |f| %>
+<%= form_for (resource or :user), as: resource_name, url: invitation_path(resource_name), html: { method: :put, id: 'invitation-form' } do |f| %>
 
   <%= f.hidden_field :invitation_token %>
 
@@ -46,42 +46,38 @@
   <%= recaptcha_input_tag %>
 
   <div class="form-group" data-hook="confirm-invitation-form-submit">
-    <%= f.submit "Sign Up", class: "btn btn-primary" %>
+    <%= f.submit "Sign Up", class: "btn btn-primary invitation-submit" %>
   </div>
 
 <% end %>
 </div>
 
+
+<%= render partial: 'users/sessions/login_disclaimer'%>
+
 <% if resource && resource.errors.present? %>
-<script>
-(function () {
-  var formErrors = {};
+  <%= form_errors = {} %>
 
   <% resource.errors.as_json.each do |err, messages| %>
-  formErrors["<%= err %>"]=[]
+    <% form_errors[err] = [] %>
     <% messages.each do |message| %>
-      formErrors["<%= err %>"].push('<%= message %>');
+      <% form_errors[err].push(message) %>
     <% end %>
   <% end %>
-
-  $("form").renderFormErrors("user", formErrors, false);
-}());
-</script>
+  <div class="hidden" id="resource-error-data" data-form-errors="<%= form_errors.to_json %>"></div>
+  <%= javascript_include_tag 'users/invitations/resource_errors', nonce: true %>
 <% end %>
 
 <% if @team && @team.errors.present? %>
-<script>
-(function () {
-  var formErrors = {};
+
+  <%= form_errors = {} %>
 
   <% @team.errors.as_json.each do |err, messages| %>
-  formErrors["<%= err %>"]=[]
+    <% form_errors[err] = [] %>
     <% messages.each do |message| %>
-      formErrors["<%= err %>"].push('<%= message %>');
+      <% form_errors[err].push(message) %>
     <% end %>
   <% end %>
-
-  $("form").renderFormErrors("team", formErrors, false);
-}());
-</script>
+  <div class="hidden" id="team-error-data" data-form-errors="<%= form_errors.to_json %>"></div>
+  <%= javascript_include_tag 'users/invitations/team_errors', nonce: true %>
 <% end %>

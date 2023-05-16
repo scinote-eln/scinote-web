@@ -11,13 +11,13 @@
                                      object_id: @result.result_text.id,
                                      last_updated: @result.updated_at.to_i * 1000 }) %>
     <% end %><br />
-    <div class="align-right">
+    <div class="align-right new-result-texts-buttons'">
       <button type="button" class="btn btn-secondary cancel-new">
         <%= t("general.cancel")%>
       </button>
       <%= f.button t("result_texts.new.create"),
-                   class: 'btn btn-primary save-result',
-                   onclick: "Results.processResult(event, Results.ResultTypeEnum.TEXT);" %>
+                   class: 'btn btn-primary save-result' %>
+      <%= javascript_include_tag 'results/result_texts/new', nonce: true %>
     </div>
   <% end %>
 </div>

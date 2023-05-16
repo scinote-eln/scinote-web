@@ -3,7 +3,7 @@
 <div class="center-block center-block-narrow">
   <h2><%=t "devise.passwords.edit.title" %></h2>
 
-  <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
+  <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, id: 'forgot-password-form' }) do |f| %>
 
     <% if resource.errors.present? %>
       <div class="alert alert-danger" id="alert-flash">
@@ -28,9 +28,11 @@
     </p>
 
     <div class="form-group">
-      <%= f.button t("devise.passwords.edit.submit"), class: "btn btn-primary" %>
+      <%= f.button t("devise.passwords.edit.submit"), class: "btn btn-primary forgot-password-submit" %>
     </div>
   <% end %>
 
   <%= render "users/shared/links" %>
 </div>
+
+<%= render partial: 'users/sessions/login_disclaimer'%>

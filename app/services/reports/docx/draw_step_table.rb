@@ -7,8 +7,8 @@ module Reports::Docx::DrawStepTable
     obj = self
     @docx.p
     @docx.table JSON.parse(table.contents_utf_8)['data'], border_size: Constants::REPORT_DOCX_TABLE_BORDER_SIZE do
-      if table.metadata
-        table.metadata['cells'].each do |cell|
+      if table.metadata.present?
+        table.metadata['cells']&.each do |cell|
           data = cell[1]
           next unless data.present? && data['row'].present? && data['col'].present? && data['className'].present?
 

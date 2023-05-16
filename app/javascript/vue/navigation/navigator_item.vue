@@ -1,16 +1,18 @@
 <template>
-  <div class="text-sn-blue pl-7 w-[196px]  flex justify-center flex-col" :navigator-item-id="item.id">
-    <div class="p-2 flex items-center whitespace-nowrap" :title="this.itemToolTip" :class="{ 'bg-sn-light-grey': activeItem }">
-      <div class="w-5 mr-2 flex justify-start shrink-0">
+  <div class="text-sn-blue max-w-[196px] flex justify-center flex-col"
+       :class="{ 'pl-5': !firstLevel }"
+       :navigator-item-id="item.id"
+  >
+    <div class="p-2 menu-item flex items-center whitespace-nowrap" :title="this.itemToolTip" :class="{ 'bg-sn-light-grey active': activeItem }">
+      <div class="w-5 flex justify-start shrink-0">
         <i v-if="hasChildren"
           class="fas cursor-pointer"
           :class="{'fa-chevron-right': !childrenExpanded, 'fa-chevron-down': childrenExpanded }"
           @click="toggleChildren"></i>
       </div>
       <a :href="item.url"
-          class="text-ellipsis overflow-hidden hover:no-underline"
+          class="text-ellipsis overflow-hidden hover:no-underline pr-3"
           :class="{
-            'pointer-events-none': (!item.archived && archived),
             'text-sn-grey': (!item.archived && archived)
           }">
         <i v-if="itemIcon" class="mr-2" :class="itemIcon"></i>
@@ -35,6 +37,10 @@
 export default {
   name: 'NavigatorItem',
   props: {
+    firstLevel: {
+      type: Boolean,
+      default: false
+    },
     item: Object,
     currentItemId: String,
     archived: Boolean,

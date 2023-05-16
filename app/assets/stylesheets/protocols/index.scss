@@ -151,6 +151,10 @@
         border: 2px solid $color-concrete;
       }
     }
+
+    .not-clickable-record {
+      color: $color-alto;
+    }
   }
 
   .protocol-filters {

@@ -65,6 +65,7 @@ Rails.application.routes.draw do
         get :template_tags
         get :zpl_preview
         post :sync_fluics_templates
+        get :actions_toolbar
       end
     end
 

@@ -3,12 +3,12 @@ $(document).on(
   'textarea.smart-text-area:not([readonly]):not([disabled])',
   function() {
     var $this = $(this);
-    var height = $this.css('height');
+    var height = $this.height();
 
     if ($this.hasClass('textarea-sm-present')) {
       $this
-      .removeClass('textarea-sm-present')
-      .addClass('textarea-sm');
+        .removeClass('textarea-sm-present')
+        .addClass('textarea-sm');
       $this.attr('rows', '1');
     } else if ($this.hasClass('textarea-sm')) {
       // Set the nr. of rows to 1 if small textarea
@@ -19,10 +19,10 @@ $(document).on(
 
     // Initialize autosize plugin if it's not initialized yet
     if (_.isUndefined($this.data('autosize'))) {
-      $this.autosize({append: ''});
+      $this.autosize({ append: '' });
 
       // Restore previous height!
-      $this.css('height', height);
+      $this.height(height);
     }
 
     $this.trigger('autosize.resize');

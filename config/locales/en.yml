@@ -367,6 +367,7 @@ en:
     whole_word: "Match any whole word"
     whole_phrase: "Match whole phrase"
     match_case: "Match case sensitive"
+    object_id: "ID:"
     index:
       head_title: "Search"
       page_title: "Search"
@@ -908,13 +909,15 @@ en:
       template_set_as_default: 'Successfully set template as default'
       toolbar:
         new: 'New label template'
-        check_for_updates: 'Check for updates'
+        update_fluics_labels: 'Update Fluics labels'
         edit: 'Edit'
         duplicate: 'Duplicate'
         delete: 'Delete'
-        set_zpl_default: 'Set as default ZPL label'
+        set_FluicsLabelTemplate_default: 'Set as default Fluics label'
+        set_ZebraLabelTemplate_default: 'Set as default ZPL label'
         set_fluics_default: 'Set as default Fluics label'
         fluics_warning: 'Built-in FLUICS templates can’t be edited, deleted or duplicated'
+        edit_template: 'Edit'
       delete_modal:
         title: 'Delete Label template(s)'
         description: 'Are you sure you want to delete the selected label template(s)?'
@@ -1386,7 +1389,7 @@ en:
         status_html: 'Status'
         assigned_html: 'Assigned to'
         tags_html: 'Tags'
-        comments_html: '<i data-toggle="tooltip" data-placement="left" title="Comments" class="fas fa-comment"></i>'
+        comments_html: 'Comments'
       modal_move_modules:
         title: "Move task(s) to experiment"
         confirm: "Move"
@@ -1560,6 +1563,7 @@ en:
       head_title: "%{experiment} | Archived tasks"
       no_archived_modules: "No archived tasks!"
       restore_option: "Restore"
+      move_option: "Move"
       archived_on: "Archived on"
       archived_on_title: "Task archived on %{date} at %{time}."
 
@@ -1674,7 +1678,7 @@ en:
       share_inventory: "Share"
       view_only_permission_label: "You have view-only permission"
       show_per_page: "Show %{number} per page"
-      filter_inventory: "Filter inventories"
+      filter_inventory: "Search inventories"
       no_inventories:  "No inventories here"
       no_inventories_matched: "No inventories matched your search request"
       no_archived_inventories:  "No archived inventories here"
@@ -2701,6 +2705,7 @@ en:
       description_1: "You’ll loose all content from the draft. We can’t recover it once you delete it."
       description_2: "Are you sure?"
       confirm: "Yes, delete"
+      success: "Draft was successfully deleted."
     publish_modal:
       title: "Publish version %{nr} of the protocol template"
       name: "Protocol template name"
@@ -3185,10 +3190,10 @@ en:
 
   atwho:
     no_results:
-      projects: "Projects with this name were not found"
-      experiments: "Experiments with this name were not found"
-      my_modules: "Tasks with this name were not found"
-      repository_rows: "Items with this name were not found"
+      projects: "Projects with this name/ID were not found"
+      experiments: "Experiments with this name/ID were not found"
+      my_modules: "Tasks with this name/ID were not found"
+      repository_rows: "Items with this name/ID were not found"
       users: "Users with this name were not found"
       description: "Please make sure there are no typos, or erase letters one by one unless you see some results"
     projects: PROJECTS
@@ -3374,6 +3379,7 @@ en:
     clone_label: "Clone"
     download: "Download"
     access: "Access"
+    select: "Select"
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"

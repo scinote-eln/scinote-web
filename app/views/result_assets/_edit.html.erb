@@ -10,13 +10,13 @@
       <%= ff.file_field :file, direct_upload: true %>
     <% end %>
     <hr>
-    <div class="align-right">
+    <div class="align-right edit-result-assets-buttons">
       <button type="button" class="btn btn-secondary cancel-edit">
         <%= t("general.cancel")%>
       </button>
       <%= f.button t("general.save"),
-                   class: 'btn btn-primary save-result',
-                   onclick: "Results.processResult(event, Results.ResultTypeEnum.FILE);" %>
+                   class: 'btn btn-primary save-result' %>
     </div>
   <% end %>
+  <%= javascript_include_tag 'results/result_assets/edit', nonce: true %>
 </div>

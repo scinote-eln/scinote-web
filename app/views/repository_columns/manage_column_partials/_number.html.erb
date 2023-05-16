@@ -5,8 +5,12 @@
     <%= t('libraries.manange_modal_column.number_type.decimals_label') %>
   </label>
   <div class="col-sm-3">
-    <%= number_field_tag('decimals', selected_decimals, between: 0...Constants::REPOSITORY_NUMBER_TYPE_MAX_DECIMALS,
-                         class: 'form-control',
-                         oninput: "this.value = numberMinMaxValidator(this.value, 0, #{Constants::REPOSITORY_NUMBER_TYPE_MAX_DECIMALS})" ) %>
+    <%= number_field_tag('decimals',
+                         selected_decimals,
+                         between: 0...Constants::REPOSITORY_NUMBER_TYPE_MAX_DECIMALS,
+                         class: 'form-control number-column',
+                         data: { min: 0, max: Constants::REPOSITORY_NUMBER_TYPE_MAX_DECIMALS }) %>
   </div>
+
+  <%= javascript_include_tag 'repository_columns/manage_column_partials/number', nonce: true %>
 </div>

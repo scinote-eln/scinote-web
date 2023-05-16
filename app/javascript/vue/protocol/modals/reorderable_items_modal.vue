@@ -69,6 +69,7 @@
     methods: {
       close() {
         this.$emit('reorder', this.reorderedItems);
+        this.$emit('close');
       },
       getTitle(item) {
         let $item_html = $(item.attributes.text);
