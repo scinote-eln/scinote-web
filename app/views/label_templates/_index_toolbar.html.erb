@@ -1,40 +1,14 @@
 <template id="labelTemplatesToolbar">
   <% if can_manage_label_templates?(current_team) %>
-  <button data-url="<%= label_templates_path %>" title="<%= t('label_templates.index.toolbar.new') %>"
-     class="btn btn-primary  auto-shrink-button" id="newLabelTemplate">
-    <i class="fas fa-plus"></i>
-    <span class="button-text"><%= t('label_templates.index.toolbar.new') %></span>
-  </button>
-  <button title="<%= t('label_templates.index.toolbar.check_for_updates') %>"
-          class="btn btn-light auto-shrink-button nonselected-actions" id="syncFluicsTemplates" data-url="<%= sync_fluics_templates_label_templates_path %>">
-    <%= image_tag 'label_template_icons/fluics_update.svg' %>
-    <span class="button-text"><%= t('label_templates.index.toolbar.check_for_updates') %></span>
-  </button>
-  <div class="btn btn-light hidden selected-one-actions  auto-shrink-button"  id="editTemplate"  title="<%= t('label_templates.index.toolbar.edit_template') %>">
-    <i class="fas fa-pencil-alt"></i>
-    <span class="button-text"><%= t('label_templates.index.toolbar.edit_template') %></span>
-  </div>
-  <div class="btn btn-light hidden selected-actions  auto-shrink-button"
-       title="<%= t('label_templates.index.toolbar.duplicate') %>"
-       data-url="<%= duplicate_label_templates_path %>"
-       id="duplicateLabelTemplate">
-    <i class="fas fa-clone"></i>
-    <span class="button-text"><%= t('label_templates.index.toolbar.duplicate') %></span>
-  </div>
-  <div class="btn btn-light hidden selected-actions  auto-shrink-button"  id="setZplDefaultLabelTemplate"  title="<%= t('label_templates.index.toolbar.set_zpl_default') %>">
-    <i class="fas fa-thumbtack"></i>
-    <span class="button-text"><%= t('label_templates.index.toolbar.set_zpl_default') %></span>
-  </div>
-  <div class="btn btn-light hidden selected-actions  auto-shrink-button"  id="setFluicsDefaultLabelTemplate"  title="<%= t('label_templates.index.toolbar.set_fluics_default') %>">
-    <i class="fas fa-thumbtack"></i>
-    <span class="button-text"><%= t('label_templates.index.toolbar.set_fluics_default') %></span>
-  </div>
-  <div class="btn btn-light hidden selected-actions  auto-shrink-button"  id="deleteLabelTemplate"  title="<%= t('label_templates.index.toolbar.delete') %>">
-    <i class="fas fa-trash"></i>
-    <span class="button-text"><%= t('label_templates.index.toolbar.delete') %></span>
-  </div>
-  <div class="fluics-warning hidden">
-    <%= t('label_templates.index.toolbar.fluics_warning') %>
-  </div>
-  <% end%>
+    <button data-url="<%= label_templates_path %>" title="<%= t('label_templates.index.toolbar.new') %>"
+      class="btn btn-primary  auto-shrink-button" id="newLabelTemplate">
+      <i class="fas fa-plus"></i>
+      <span class="button-text"><%= t('label_templates.index.toolbar.new') %></span>
+    </button>
+    <button title="<%= t('label_templates.index.toolbar.update_fluics_labels') %>"
+            class="btn btn-light" id="syncFluicsTemplates" data-url="<%= sync_fluics_templates_label_templates_path %>">
+      <i class="fas fa-sync"></i>
+      <span class="button-text"><%= t('label_templates.index.toolbar.update_fluics_labels') %></span>
+    </button>
+  <% end %>
 </template>
