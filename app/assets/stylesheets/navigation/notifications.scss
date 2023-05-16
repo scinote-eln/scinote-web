@@ -23,10 +23,12 @@
       font-size: 10px;
       height: 1rem;
       justify-content: center;
+      left: 1.25rem;
+      min-width: 1rem;
+      padding: 0 .25rem;
       position: absolute;
-      right: 0;
       top: 0;
-      width: 1rem;
+      white-space: nowrap;
     }
   }
 
@@ -36,11 +38,11 @@
     box-shadow: $flyout-shadow;
     display: flex;
     flex-direction: column;
-    height: calc(100vh - var(--top-navigation) - 2em);
+    height: calc(100vh - var(--top-navigation-height) - 2em);
     padding: 1.5rem;
     position: absolute;
     right: 0;
-    top: calc(var(--top-navigation) - .5em);
+    top: calc(var(--top-navigation-height) - .5em);
     width: 400px;
 
     .sci--navigation--notificaitons-flyout-title {

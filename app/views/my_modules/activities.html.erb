@@ -10,41 +10,43 @@
     }
   %>
 <% end %>
-<%= render partial: "shared/secondary_navigation" %>
-
-<div class="global-activities-container container-flex task-activities">
-    <div class="ga-top ">
-      <%= render partial: "my_modules/activities/top_pane" %>
-    </div>
-
-    <div class="ga-bottom">
-
-      <div class="ga-main">
-        <div class="activities-container perfect-scrollbar">
-          <div class="no-activities-message text-center <%= 'hidden' if @grouped_activities.keys.any? %>">
-            <p><%= t('activities.index.no_activities_task_message') %></p>
-          </div>
-          <div class="ga-activities-list"
-               data-activities-url="<%= activities_my_module_path(@my_module) %>"
-               data-starting-timestamp="<%= @starting_timestamp %>">
-            <%= render partial: "global_activities/activity_list.html.erb" %>
-          </div>
-          <div class="text-center">
-            <a class="btn btn-default btn-more-activities <%= 'hidden' unless @next_page %>"
-               data-next-page="<%= @next_page %>">
-              <%= t'activities.index.more_activities' %>
-            </a>
-          </div>
-          <div id="ga-more-activities-placeholder" class="hidden"></div>
-        </div>
+<% provide(:container_class, 'no-second-nav-container') %>
+<div class="content-pane flexible">
+  <%= render partial: 'my_modules/header' %>
+  <div class="global-activities-container container-flex task-activities">
+      <div class="ga-top ">
+        <%= render partial: "my_modules/activities/top_pane" %>
       </div>
 
-      <div class="ga-side">
-        <div class="filters-container perfect-scrollbar">
-          <%= render partial: "my_modules/activities/side_filters" %>
+      <div class="ga-bottom">
+
+        <div class="ga-main">
+          <div class="activities-container perfect-scrollbar">
+            <div class="no-activities-message text-center <%= 'hidden' if @grouped_activities.keys.any? %>">
+              <p><%= t('activities.index.no_activities_task_message') %></p>
+            </div>
+            <div class="ga-activities-list"
+                data-activities-url="<%= activities_my_module_path(@my_module) %>"
+                data-starting-timestamp="<%= @starting_timestamp %>">
+              <%= render partial: "global_activities/activity_list.html.erb" %>
+            </div>
+            <div class="text-center">
+              <a class="btn btn-default btn-more-activities <%= 'hidden' unless @next_page %>"
+                data-next-page="<%= @next_page %>">
+                <%= t'activities.index.more_activities' %>
+              </a>
+            </div>
+            <div id="ga-more-activities-placeholder" class="hidden"></div>
+          </div>
+        </div>
+
+        <div class="ga-side">
+          <div class="filters-container perfect-scrollbar">
+            <%= render partial: "my_modules/activities/side_filters" %>
+          </div>
         </div>
       </div>
-    </div>
+  </div>
 </div>
 
 <%= javascript_include_tag 'global_activities/index.js' %>

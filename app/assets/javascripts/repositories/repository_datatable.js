@@ -462,6 +462,13 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
+  function addRepositorySearch() {
+    $(`<div id="inventorySearchComponent">
+      <repository_search_container/>
+    </div>`).appendTo('.repository-search-container');
+    initRepositorySearch();
+  }
+
   function dataTableInit() {
     TABLE = $(TABLE_ID).DataTable({
       dom: "R<'repository-toolbar hidden'<'repository-search-container'f>>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
@@ -673,11 +680,10 @@ var RepositoryDatatable = (function(global) {
         initSaveButton();
         initCancelButton();
         initBSTooltips();
-
         DataTableHelpers.initLengthAppearance($(TABLE_ID).closest('.dataTables_wrapper'));
 
-        $('<img class="barcode-scanner" src="/images/icon_small/barcode.png"></img>').appendTo($('.search-container'));
-
+        $('.dataTables_filter').addClass('hidden');
+        addRepositorySearch();
         if ($('.repository-show').length) {
           $('.dataTables_scrollBody, .dataTables_scrollHead').css('overflow', '');
         }

@@ -46,6 +46,15 @@
     <span class="hidden-xs"><%= t('libraries.index.no_libraries.create_new_button') %></span>
   </a>
 <% end %>
+
+<%= render partial: 'shared/state_view_switch', locals: {
+        disabled: false,
+        switchable: true,
+        archived: params[:archived],
+        active_url: repositories_path,
+        archived_url: repositories_path(archived: true),
+      } %>
+  <!--
   <a id="renameRepoBtn" class="btn btn-light disabled hidden" data-view-mode="active" href="#" data-action-mode="single" data-remote="true">
     <span class="fas fa-pencil-alt"></span>
     <%= t('libraries.index.buttons.edit') %>
@@ -76,6 +85,7 @@
     <span class="fas fa-trash"></span>
     <%= t('libraries.index.buttons.delete') %>
   </a>
+  -->
 </template>
 
 <%= javascript_include_tag "repositories/index" %>

@@ -1,17 +1,76 @@
+$colors:  ("sn-white": "#FFFFFF",
+          "sn-super-light-grey": "#F9F9F9",
+          "sn-light-grey": "#EAECF0",
+          "sn-sleepy-grey": "#D0D5DD",
+          "sn-grey": "#98A2B3",
+          "sn-dark-grey": "#475467",
+          "sn-black": "#1D2939",
+          "sn-blue": "#104DA9",
+          "sn-science-blue": "#3B99FD",
+          "sn-super-light-blue": "#F0F8FF",
+          "sn-blue-hover": "#2D5FAA",
+          "sn-science-blue-hover": "#79B4F3",
+          "sn-alert-green": "#5EC66F",
+          "sn-alert-violet": "#6F2DC1",
+          "sn-alert-brittlebush": "#E9A845",
+          "sn-alert-passion": "#DF3562",
+          "sn-alert-turqoise": "#46C3C8",
+          "sn-alert-bloo": "#3070ED",
+          "sn-alert-blue-disabled": "#87A6D4",
+          "sn-alert-green-disabled": "#AEE3B7",
+          "sn-alert-violet-disabled": "#B796E0",
+          "sn-alert-brittlebush-disabled": "#F4D3A2",
+          "sn-alert-passion-disabled": "#EF9AB0",
+          "sn-alert-turqoise-disabled": "#A2E1E3",
+          "sn-alert-science-blue-disabled": "#9DCCFE",
+          "sn-delete-red": "#CE0C24",
+          "sn-delete-red-hover": "#AD0015",
+          "sn-coral": "#FB565B",
+          "sn-background-blue": "#DBE4F2",
+          "sn-background-green": "#E7F7E9",
+          "sn-background-violet": "#E9DFF6",
+          "sn-background-brittlebush": "#FCF2E3",
+          "sn-background-passion": "#FAE1E7",
+          "sn-background-turqoise": "#E3F6F7",
+          "sn-background-bloo": "#E2F0FF");
+
+:root {
+  @each $color, $value in $colors {
+    --#{$color}: #{$value};
+  }
+}
+
+@each $color, $value in $colors {
+  .bg-#{$color} {
+    background-color: var(--#{$color});
+  }
+
+  .text-#{$color} {
+    color: var(--#{$color});
+  }
+
+  .border-#{$color} {
+    border-color: var(--#{$color});
+  }
+}
+
+
+// LEGACY COLORS
+
 // Grayscale colors
 $color-white: #fff;
-$color-concrete: #f0f0f6;
-$color-alto: #d0d0d8;
-$color-silver-chalice: #a0a0a8;
-$color-volcano: #404048;
-$color-black: #231f20;
+$color-concrete: #eaecf0;
+$color-alto: #d0d5dd;
+$color-silver-chalice: #98a2b3;
+$color-volcano: #475467;
+$color-black: #1d2939;
 $color-transparent: rgba(255, 255, 255, 0);
 $color-gray: #adadad;
 
 
 // Theme colors
 $brand-primary: #104da9;
-$brand-primary-hover: #0c3a80;
+$brand-primary-hover: #2d5faa;
 $brand-primary-press: #07244f;
 $brand-primary-light: #7094cb;
 
@@ -20,14 +79,14 @@ $brand-academy-dark: #8c1b58;
 
 $brand-accent: #ffcf26;
 
-$brand-focus: #609fff;
-$brand-focus-light: #dfecff;
+$brand-focus: #3b99fd;
+$brand-focus-light: #f0f8ff;
 
-$brand-success: #2dbe61;
+$brand-success: #5ec66f;
 $brand-success-light: #cbefd7;
 
-$brand-danger: #e72525;
-$brand-danger-hover: #b21d1d;
+$brand-danger: #ce0c24;
+$brand-danger-hover: #ad0015;
 $brand-danger-press: #801515;
 $brand-danger-light: #f9c9c9;
 
@@ -48,7 +107,7 @@ $bio-eddie-color: #ffa000;
 
 $pdf-color: #f40f02;
 
-// Don't use them
+// Don"t use them
 $color-alabaster: $color-concrete;
 $color-gainsboro: $color-concrete;
 $color-silver: $color-alto;
@@ -62,53 +121,3 @@ $brand-light-blue: $brand-focus-light;
 
 // This color was removed from constants, but it is still in use for DD hover. Need it for button in DD
 $color-dd-hover: #f5f5f5;
-
-// pure css variables
-:root {
-  // main colors
-  --sn-white: #FFFFFF;
-  --sn-super-light-grey: #F9F9F9;
-  --sn-light-grey: #EAECF0;
-  --sn-sleepy-grey: #EAECF0;
-  --sn-grey: #98A2B3;
-  --sn-dark-grey: #475467;
-  --sn-black: #1D2939;
-  --sn-blue: #104DA9;
-  --sn-science-blue: #3B99FD;
-  --sn-super-light-blue: #F0F8FF;
-  --sn-blue-hover: #2D5FAA;
-  --sn-science-blue-hover: #79B4F3;
-
-  // alert colors
-  --sn-alert-green: #5EC66F;
-  --sn-alert-violet: #6F2DC1;
-  --sn-alert-brittlebush: #E9A845;
-  --sn-alert-passion: #DF3562;
-  --sn-alert-turqoise: #46C3C8;
-  --sn-alert-bloo: #3070ED;
-
-  // disabled alert colors
-  --sn-alert-blue-disabled: #87A6D4;
-  --sn-alert-green-disabled: #AEE3B7;
-  --sn-alert-violet-disabled: #B796E0;
-  --sn-alert-brittlebush-disabled: #F4D3A2;
-  --sn-alert-passion-disabled: #EF9AB0;
-  --sn-alert-turqoise-disabled: #A2E1E3;
-  --sn-alert-science-blue-disabled: #9DCCFE;
-
-  // delete colors
-  --sn-delete-red: #CE0C24;
-  --sn-delete-red-hover: #AD0015;
-
-  // notification sn-science-blue included
-  --sn-coral: #FB565B;
-
-  // background colors
-  --sn-background-blue: #DBE4F2;
-  --sn-background-green: #E7F7E9;
-  --sn-background-violet: #E9DFF6;
-  --sn-background-brittlebush: #FCF2E3;
-  --sn-background-passion: #FAE1E7;
-  --sn-background-turqoise: #E3F6F7;
-  --sn-background-bloo: #E2F0FF;
-}

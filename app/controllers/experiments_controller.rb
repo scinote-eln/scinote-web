@@ -6,10 +6,11 @@ class ExperimentsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
   include Rails.application.routes.url_helpers
+  include Breadcrumbs
 
   before_action :load_project, only: %i(new create archive_group restore_group)
-  before_action :load_experiment, except: %i(new create archive_group restore_group)
-  before_action :check_read_permissions, except: %i(edit archive clone move new create archive_group restore_group)
+  before_action :load_experiment, except: %i(new create archive_group restore_group actions_toolbar)
+  before_action :check_read_permissions, except: %i(edit archive clone move new create archive_group restore_group actions_toolbar)
   before_action :check_canvas_read_permissions, only: %i(canvas)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: %i(edit batch_clone_my_modules)
@@ -18,6 +19,8 @@ class ExperimentsController < ApplicationController
   before_action :check_clone_permissions, only: %i(clone_modal clone)
   before_action :check_move_permissions, only: %i(move_modal move)
   before_action :set_inline_name_editing, only: %i(canvas table module_archive)
+  before_action :set_breadcrumbs_items, only: %i(canvas table module_archive)
+  before_action :set_navigator, only: %i(canvas module_archive table)
 
   layout 'fluid'
 
@@ -196,7 +199,7 @@ class ExperimentsController < ApplicationController
   end
 
   def archive_group
-    experiments = @project.experiments.active.where(id: params[:experiments_ids])
+    experiments = @project.experiments.active.where(id: params[:experiment_ids])
     counter = 0
     experiments.each do |experiment|
       next unless can_archive_experiment?(experiment)
@@ -219,7 +222,7 @@ class ExperimentsController < ApplicationController
   end
 
   def restore_group
-    experiments = @project.experiments.archived.where(id: params[:experiments_ids])
+    experiments = @project.experiments.archived.where(id: params[:experiment_ids])
     counter = 0
     experiments.each do |experiment|
       next unless can_restore_experiment?(experiment)
@@ -508,6 +511,16 @@ class ExperimentsController < ApplicationController
     )
   end
 
+  def actions_toolbar
+    render json: {
+      actions:
+        Toolbars::ExperimentsService.new(
+          current_user,
+          experiment_ids: params[:experiment_ids].split(',')
+        ).actions
+    }
+  end
+
   private
 
   def load_experiment
@@ -657,5 +670,13 @@ class ExperimentsController < ApplicationController
         Connection.create!(input_id: destination_my_module.id, output_id: source_my_module.id)
       end
     end
+  end
+
+  def set_navigator
+    @navigator = {
+      url: tree_navigator_experiment_path(@experiment),
+      archived: (action_name == 'module_archive' || params[:view_mode] == 'archived'),
+      id: @experiment.code
+    }
   end
 end

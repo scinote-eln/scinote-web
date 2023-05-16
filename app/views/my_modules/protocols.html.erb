@@ -24,7 +24,7 @@
   </span>
 <% end %>
 
-<% provide(:sidebar_title, t("sidebar.my_module.sidebar_title")) %>
+<% provide(:container_class, 'no-second-nav-container') %>
 
 
 <%= content_for :sidebar do %>
@@ -37,9 +37,8 @@
   %>
 <% end %>
 <%= render partial: 'shared/drag_n_drop_overlay' %>
-<%= render partial: 'shared/secondary_navigation', locals: { render_breadcrumbs: true, project: @experiment.project, experiment: @experiment } %>
-
-<div class="content-pane my-modules-protocols-index" data-task-id="<%= @my_module.id %>">
+<div class="content-pane flexible my-modules-protocols-index" data-task-id="<%= @my_module.id %>">
+  <%= render partial: 'my_modules/header' %>
   <div class="my-module-position-container">
     <!-- Details -->
     <div class="task-section task-information hidden">
@@ -121,9 +120,6 @@
           data-repositories-list-url="<%= my_module_repositories_list_html_path(@my_module) %>">
         <%= render partial: "my_modules/repositories/repositories_list" %>
       </div>
-      <%= render partial: "my_modules/repositories/full_view_modal" %>
-      <%= render partial: "my_modules/modals/update_repository_records_modal" %>
-      <%= render partial: 'label_printers/label_printer_modal' %>
     </div>
     <!-- Protocol -->
     <div class="task-section">
@@ -133,13 +129,17 @@
           data-date-format="<%= datetime_picker_format_date_only %>"
           data-user-utc-offset="<%= ActiveSupport::TimeZone.find_tzinfo(current_user.time_zone).utc_offset %>"
       >
-      <protocol-container
-        :protocol-url="protocolUrl"
-      />
-    </div>
+        <protocol-container
+          :protocol-url="protocolUrl"
+        />
+      </div>
     </div>
   </div>
 </div>
+
+<%= render partial: "my_modules/repositories/full_view_modal" %>
+<%= render partial: "my_modules/modals/update_repository_records_modal" %>
+<%= render partial: 'label_printers/label_printer_modal' %>
 
 <%= render partial: "my_modules/protocols/print_protocol_modal", locals: { protocol: @protocol, comments_enabled: true} %>
 

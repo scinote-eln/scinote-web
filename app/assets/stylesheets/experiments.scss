@@ -26,9 +26,23 @@
 
   .project-show-toolbar {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
 
     .btn {
       margin-right: .25em;
+    }
+    .left {
+      align-self: flex-start;
+    }
+
+    .middle {
+      align-self: center;
+    }
+
+    .right {
+      align-self: flex-end;
+      margin-right: 25px;
     }
   }
 

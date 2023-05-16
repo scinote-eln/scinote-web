@@ -99,12 +99,12 @@ class ProjectFoldersController < ApplicationController
   def destroy_modal
     render json: {
       html: render_to_string(partial: 'projects/index/modals/project_folder_delete.html.erb',
-                             locals: { project_folders_ids: params[:project_folders_ids] })
+                             locals: { project_folder_ids: params[:project_folder_ids] })
     }
   end
 
   def destroy
-    project_folders = current_team.project_folders.where(id: params[:project_folders_ids])
+    project_folders = current_team.project_folders.where(id: params[:project_folder_ids])
     counter = 0
     project_folders.each do |folder|
       next if folder.projects.exists? || folder.project_folders.exists? || !can_manage_team?(current_team)

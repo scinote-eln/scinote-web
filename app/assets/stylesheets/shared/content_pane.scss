@@ -43,115 +43,73 @@
         text-overflow: ellipsis;
         white-space: nowrap;
       }
+    }
 
-      .header-actions {
-        align-items: center;
-        display: flex;
-        flex-shrink: 0;
-        margin-left: auto;
+    .header-actions {
+      align-items: center;
+      display: flex;
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+
+    .view-switch,
+    .filter-container {
+      display: inline-block;
+    }
+
+    .view-switch {
+      margin-left: auto;
+
+      .view-switch-button {
+        outline: 1px solid $color-alto;
       }
 
-      .view-switch {
-        margin-left: auto;
+      .caret {
+        margin: 8px 0 8px 8px;
+      }
 
+      &.open {
         .caret {
-          margin: 8px 0 8px 8px;
-        }
-
-        &.open {
-          .caret {
-            transform: rotateX(180deg);
-          }
-        }
-
-        .dropdown-menu {
-          @include font-button;
-          min-width: 190px;
-
-          .divider-label {
-            @include font-small;
-            color: $color-silver-chalice;
-            padding: .25em 1em;
-          }
-
-          .divider {
-            margin: 0;
-          }
-
-          li {
-            cursor: pointer;
-            padding: .5em 1em;
-            white-space: nowrap;
-
-            .button-icon {
-              margin-right: .5em;
-            }
-
-            &:hover:not(.divider-label) {
-              background: $color-concrete;
-            }
-
-            .btn {
-              height: 36px;
-            }
-
-            a {
-              display: inline-block;
-              margin: -1em;
-              padding: .5em 1em;
-              width: calc(100% + 2em);
-
-              &.selected::after {
-                @include font-awesome;
-                content: $font-fas-check;
-                margin-left: auto;
-                position: absolute;
-                right: 1em;
-              }
-            }
-          }
-        }
-
-        .cards-switch {
-          &.active::after {
-            @include font-awesome;
-            content: "\f00c";
-            position: absolute;
-            right: 1em;
-          }
+          transform: rotateX(180deg);
         }
       }
 
-      .sort-menu {
-        display: inline-block;
+      .dropdown-menu {
+        @include font-button;
+        min-width: 100%;
 
-        #sortMenu {
-          background: $color-white;
+        .divider-label {
+          @include font-small;
+          color: $color-silver-chalice;
+          padding: .25em 1em;
+        }
 
-          &:focus,
-          &:active {
-            box-shadow: none;
+        .divider {
+          margin: 0;
+        }
+
+        li {
+          cursor: pointer;
+          padding: .5em 1em;
+          white-space: nowrap;
+
+          .button-icon {
+            margin-right: .5em;
           }
 
-          &:hover {
+          &:hover:not(.divider-label) {
             background: $color-concrete;
           }
-        }
 
-        .dropdown-menu {
-          @include font-button;
-          min-width: 200px;
-          padding: .5em 0;
+          .btn {
+            height: 36px;
+          }
 
           a {
-            border-radius: unset;
-            cursor: pointer;
+            display: inline-block;
+            margin: -1em;
             padding: .5em 1em;
-            text-align: left;
-
-            &:hover {
-              background: $color-concrete;
-            }
+            width: calc(100% + 2em);
 
             &.selected::after {
               @include font-awesome;
@@ -161,10 +119,61 @@
               right: 1em;
             }
           }
+        }
+      }
 
-          .fa-stack {
-            width: 2em;
+      .cards-switch {
+        &.active::after {
+          @include font-awesome;
+          content: "\f00c";
+          position: absolute;
+          right: 1em;
+        }
+      }
+    }
+
+    .sort-menu {
+      display: inline-block;
+
+      #sortMenu {
+        background: $color-white;
+
+        &:focus,
+        &:active {
+          box-shadow: none;
+        }
+
+        &:hover {
+          background: $color-concrete;
+        }
+      }
+
+      .dropdown-menu {
+        @include font-button;
+        min-width: 200px;
+        padding: .5em 0;
+
+        a {
+          border-radius: unset;
+          cursor: pointer;
+          padding: .5em 1em;
+          text-align: left;
+
+          &:hover {
+            background: $color-concrete;
           }
+
+          &.selected::after {
+            @include font-awesome;
+            content: $font-fas-check;
+            margin-left: auto;
+            position: absolute;
+            right: 1em;
+          }
+        }
+
+        .fa-stack {
+          width: 2em;
         }
       }
     }

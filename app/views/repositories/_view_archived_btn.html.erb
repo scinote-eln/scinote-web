@@ -4,16 +4,6 @@
     <div class="title-row">
       <h1 data-view-mode="active"><%= t('libraries.index.head_title') %></h1>
       <h1 data-view-mode="archived"><i class="fas fa-archive"></i>&nbsp;<%= t('libraries.index.head_title_archived') %></h1>
-      <%= render layout: "shared/view_switch", locals: { disabled: false } do %>
-        <li class="view-switch-archived" data-view-mode="active">
-          <i class="fas fa-archive button-icon"></i>
-          <%= t('libraries.index.switch_view.archived') %>
-        </li>
-        <li class="view-switch-active" data-view-mode="archived">
-          <i class="fas fa-rocket button-icon"></i>
-          <%= t('libraries.index.switch_view.active') %>
-        </li>
-      <% end %>
     </div>
   </div>
   <div class="content-body">
