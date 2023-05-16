@@ -113,7 +113,7 @@
             :disabled="!selectedTask"
             @click="assign"
           >
-            {{ i18n.t("repositories.modal_assign_items_to_task.assign") }}
+            {{ i18n.t("repositories.modal_assign_items_to_task.assign.text") }}
           </button>
         </div>
       </div>
@@ -274,6 +274,16 @@ export default {
         type: "PATCH",
         dataType: "json",
         data: { rows_to_assign: this.rowsToAssign }
+      }).done(({assigned_count}) => {
+        const skipped_count = this.rowsToAssign.length - assigned_count;
+        console.log(skipped_count);
+        if (skipped_count) {
+          HelperModule.flashAlertMsg(this.i18n.t('repositories.modal_assign_items_to_task.assign.flash_some_assignments_success', {assigned_count: assigned_count, skipped_count: skipped_count }), 'success');
+        } else {
+          HelperModule.flashAlertMsg(this.i18n.t('repositories.modal_assign_items_to_task.assign.flash_all_assignments_success', {count: assigned_count}), 'success');
+        }
+      }).fail(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('repositories.modal_assign_items_to_task.assign.flash_assignments_failure'), 'danger');
       }).always(() => {
         this.resetSelectors();
         this.deselectRows();
