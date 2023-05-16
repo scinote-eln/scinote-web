@@ -1,9 +1,13 @@
 <template id="protocolActionToolbar">
+  <button id="restoreProtocol" class="btn btn-light multiple-object-action hidden only-archive" data-url="<%= restore_protocols_path %>" data-for="restorable">
+    <i class="fas fa-undo"></i>
+    <span class="button-text"><%= t("protocols.index.action_toolbar.restore") %></span>
+  </button>
   <button id="protocolVersions" class="btn btn-light single-object-action hidden only-active" data-for="readable">
     <%= image_tag 'icon/versions.svg' %>
     <span class="button-text"><%= t("protocols.index.action_toolbar.versions") %></span>
   </button>
-  <button id="manageProtocolAccess" class="btn btn-light single-object-action hidden only-active">
+  <button id="manageProtocolAccess" class="btn btn-light single-object-action hidden">
     <i class="fas fa-door-open"></i>
     <span class="button-text"><%= t("protocols.index.action_toolbar.access") %></span>
   </button>
@@ -18,10 +22,6 @@
   <button id="archiveProtocol" class="btn btn-light multiple-object-action hidden only-active" data-url="<%= archive_protocols_path %>" data-for="archivable">
     <i class="fas fa-archive"></i>
     <span class="button-text"><%= t("protocols.index.action_toolbar.archive") %></span>
-  </button>
-  <button id="restoreProtocol" class="btn btn-light multiple-object-action hidden only-archive" data-url="<%= restore_protocols_path %>" data-for="restorable">
-    <i class="fas fa-undo"></i>
-    <span class="button-text"><%= t("protocols.index.action_toolbar.restore") %></span>
   </button>
   <div class="emptyPlaceholder hidden">
     <%= t("protocols.index.action_toolbar.empty_placeholder") %>

@@ -182,7 +182,7 @@ module AccessPermissions
     end
 
     def check_read_permissions
-      render_403 unless can_read_protocol_in_repository?(@protocol)
+      render_403 unless can_read_protocol_in_repository?(@protocol) || can_manage_team?(@protocol.team)
     end
 
     def log_activity(type_of, message_items = {})
