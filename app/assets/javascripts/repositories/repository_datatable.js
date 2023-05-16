@@ -741,7 +741,7 @@ var RepositoryDatatable = (function(global) {
     return TABLE;
   }
 
-  global.onClickDeleteRecord = function() {
+  function onClickDeleteRecord() {
     animateSpinner();
     $.ajax({
       url: $('table' + TABLE_ID).data('delete-record'),
@@ -879,6 +879,8 @@ var RepositoryDatatable = (function(global) {
         }
       });
     });
+
+    $('#deleteRepositoryRecord').on('click', '.delete-record-modal-button', onClickDeleteRecord);
 
   // Handle enter key
   $(document).off('keypress').keypress(function(event) {
