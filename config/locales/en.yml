@@ -1674,7 +1674,7 @@ en:
       share_inventory: "Share"
       view_only_permission_label: "You have view-only permission"
       show_per_page: "Show %{number} per page"
-      filter_inventory: "Filter inventories"
+      filter_inventory: "Search inventories"
       no_inventories:  "No inventories here"
       no_inventories_matched: "No inventories matched your search request"
       no_archived_inventories:  "No archived inventories here"
