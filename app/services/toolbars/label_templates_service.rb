@@ -15,9 +15,10 @@ module Toolbars
     end
 
     def actions
-      return [] if @label_templates.none? || @label_templates.any? { |lt| lt.type == 'FluicsLabelTemplate' }
+      return [] if @label_templates.none?
 
       [
+        edit_action,
         duplicate_action,
         set_as_default_action,
         delete_action
@@ -25,6 +26,22 @@ module Toolbars
     end
 
     private
+
+    def any_fluics?
+      @label_templates.any? { |lt| lt.type == 'FluicsLabelTemplate' }
+    end
+
+    def edit_action
+      return unless @single
+
+      {
+        name: 'edit',
+        label: I18n.t('label_templates.index.toolbar.edit'),
+        icon: 'fas fa-pencil-alt',
+        path: label_template_path(@label_templates.first),
+        type: :link
+      }
+    end
 
     def set_as_default_action
       return unless @single
@@ -35,7 +52,7 @@ module Toolbars
 
       {
         name: 'set_as_default',
-        label: I18n.t('label_templates.index.toolbar.set_zpl_default'),
+        label: I18n.t("label_templates.index.toolbar.set_#{@label_templates.first.type}_default"),
         icon: 'fas fa-thumbtack',
         button_id: 'setZplDefaultLabelTemplate',
         type: :legacy
@@ -43,6 +60,8 @@ module Toolbars
     end
 
     def duplicate_action
+      return if any_fluics?
+
       return unless can_manage_label_templates?(current_user.current_team)
 
       {
@@ -56,6 +75,8 @@ module Toolbars
     end
 
     def delete_action
+      return if any_fluics?
+
       return unless can_manage_label_templates?(current_user.current_team)
 
       return unless @label_templates.none?(&:default)
