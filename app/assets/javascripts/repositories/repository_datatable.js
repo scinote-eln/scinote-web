@@ -471,16 +471,7 @@ var RepositoryDatatable = (function(global) {
       stateDuration: 0,
       colReorder: {
         fixedColumnsLeft: 2,
-        disabledClass: 'dt-colresizable-hover',
         realtime: false
-      },
-      colResize: {
-        hoverClass: 'dt-colresizable-hover',
-        isResizable: (column) => {
-          return column.idx >= 2;
-        },
-        enable: true,
-        saveState: true
       },
       destroy: true,
       ajax: {
