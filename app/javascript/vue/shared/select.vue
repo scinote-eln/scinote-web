@@ -18,6 +18,7 @@
   export default {
     name: 'Select',
     props: {
+      value: { type: [String, Number] },
       options: { type: Array, default: () => [] },
       initialValue: { type: [String, Number] },
       placeholder: { type: String },
@@ -25,7 +26,6 @@
     },
     data() {
       return {
-        value: null,
         isOpen: false,
         optionPositionStyle: ''
       }
@@ -66,8 +66,7 @@
         }
       },
       setValue(value) {
-        this.value = value;
-        this.$emit('change', this.value);
+        this.$emit('change', value);
       },
       updateOptionPosition() {
         const container = this.$refs.container;

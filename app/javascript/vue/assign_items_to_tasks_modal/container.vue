@@ -39,6 +39,7 @@
             </label>
 
             <SelectSearch
+              :value="selectedProject"
               ref="projectsSelector"
               @change="changeProject"
               :options="projects"
@@ -65,6 +66,7 @@
             </label>
 
             <SelectSearch
+              :value="selectedExperiment"
               :disabled="!selectedProject"
               ref="experimentsSelector"
               @change="changeExperiment"
@@ -88,6 +90,7 @@
             </label>
 
             <SelectSearch
+              :value="selectedTask"
               :disabled="!selectedExperiment"
               ref="tasksSelector"
               @change="changeTask"

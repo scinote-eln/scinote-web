@@ -1,5 +1,5 @@
 <template>
-  <Select class="sn-select--search" :options="currentOptions" :placeholder="placeholder" v-bind:disabled="disabled" @change="change" @blur="blur" @open="open" @close="close">
+  <Select class="sn-select--search" :value="value" :options="currentOptions" :placeholder="placeholder" v-bind:disabled="disabled" @change="change" @blur="blur" @open="open" @close="close">
     <input ref="focusElement" v-model="query" type="text" class="sn-select__search-input" :placeholder="searchPlaceholder" />
     <span class="sn-select__value">{{ valueLabel || (placeholder || i18n.t('general.select')) }}</span>
     <span class="sn-select__caret caret"></span>
@@ -12,6 +12,7 @@
   export default {
     name: 'SelectSearch',
     props: {
+      value: { type: [String, Number] },
       options: { type: Array, default: () => [] },
       optionsUrl: { type: String },
       placeholder: { type: String },
@@ -21,7 +22,6 @@
     components: { Select },
     data() {
       return {
-        value: null,
         query: null,
         currentOptions: null,
         isOpen: false
@@ -59,15 +59,15 @@
         this.$emit('blur');
       },
       change(value) {
-        this.value = value;
         this.isOpen = false;
-        this.$emit('change', this.value);
+        this.$emit('change', value);
       },
       open() {
         this.isOpen = true;
         this.$emit('open');
       },
       close() {
+        this.query = '';
         this.isOpen = false;
         this.$emit('close');
       },
