@@ -2789,9 +2789,9 @@ en:
       search_bar_placeholder: 'Filter protocols'
       navigation:
         archive: "Archive"
-      action_toolbar:
+      toolbar:
         versions: "Versions"
-        access: "Manage Access"
+        access: "Access"
         duplicate: "Duplicate"
         export: "Export"
         archive: "Archive"

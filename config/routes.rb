@@ -655,6 +655,7 @@ Rails.application.routes.draw do
         post 'protocolsio_import_save', to: 'protocols#protocolsio_import_save'
         get 'export', to: 'protocols#export'
         get 'protocolsio', to: 'protocols#protocolsio_index'
+        get 'actions_toolbar', to: 'protocols#actions_toolbar'
       end
     end
 

@@ -26,13 +26,16 @@
     </div>
     <div class="protocols-container">
       <%= render partial: "protocols/index/protocols_datatable.html.erb" %>
+
+      <div id="actionToolbar" data-behaviour="vue">
+        <action-toolbar actions-url="<%= actions_toolbar_protocols_url %>" />
+      </div>
     </div>
   </div>
 <% end %>
 
 <div id="protocolsio-preview-modal-target"></div>
 <%= render partial: "protocols/index/general_toolbar.html.erb" %>
-<%= render partial: "protocols/index/action_toolbar.html.erb" %>
 <%= render partial: "protocols/index/protocol_filters.html.erb" %>
 <%= render partial: "protocols/index/delete_draft_modal.html.erb" %>
 <%= render partial: "protocols/index/linked_children_modal.html.erb" %>
@@ -41,7 +44,7 @@
 <%= render partial: "protocols/index/new_protocol_modal.html.erb", locals: {type: 'new'} %>
 
 <%= render partial: "protocols/import_export/import_elements.html.erb" %>
-
+<%= javascript_include_tag "vue_components_action_toolbar" %>
 <%= javascript_include_tag "handsontable.full" %>
 
 <!-- Libraries for formulas -->
