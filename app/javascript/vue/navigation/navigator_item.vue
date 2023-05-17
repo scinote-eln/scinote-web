@@ -1,21 +1,21 @@
 <template>
   <div class="text-sn-blue max-w-[196px] flex justify-center flex-col"
-       :class="{ 'pl-5': !firstLevel }"
+       :class="{ 'pl-6': !firstLevel }"
        :navigator-item-id="item.id"
   >
-    <div class="p-2 menu-item flex items-center whitespace-nowrap" :title="this.itemToolTip" :class="{ 'bg-sn-light-grey active': activeItem }">
-      <div class="w-5 flex justify-start shrink-0">
+    <div class="py-1.5 px-1 menu-item flex items-center whitespace-nowrap" :title="this.itemToolTip" :class="{ 'bg-sn-light-grey active': activeItem }">
+      <div class="w-6 h-6 flex justify-start shrink-0 mr-1.5">
         <i v-if="hasChildren"
-          class="fas cursor-pointer"
-          :class="{'fa-chevron-right': !childrenExpanded, 'fa-chevron-down': childrenExpanded }"
+          class="sn-icon cursor-pointer"
+          :class="{'sn-icon-right': !childrenExpanded, 'sn-icon-down': childrenExpanded }"
           @click="toggleChildren"></i>
       </div>
+      <i v-if="itemIcon" class="mr-1" :class="itemIcon"></i>
       <a :href="item.url"
           class="text-ellipsis overflow-hidden hover:no-underline pr-3"
           :class="{
             'text-sn-grey': (!item.archived && archived)
           }">
-        <i v-if="itemIcon" class="mr-2" :class="itemIcon"></i>
         <template v-if="item.archived">(A)</template>
         {{ item.name }}
       </a>
@@ -75,7 +75,7 @@ export default {
     itemIcon: function() {
       switch(this.item.type) {
         case 'folder':
-          return 'fas fa-folder';
+          return 'sn-icon mini sn-icon-mini-folder-left';
         default:
           return null;
       }
