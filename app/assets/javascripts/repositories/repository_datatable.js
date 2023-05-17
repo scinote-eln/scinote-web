@@ -52,6 +52,10 @@ var RepositoryDatatable = (function(global) {
 
   // Enable/disable edit button
   function updateButtons() {
+    if (window.actionToolbarComponent) {
+      window.actionToolbarComponent.fetchActions({ repository_row_ids: rowsSelected });
+    }
+
     if (currentMode === 'viewMode') {
       $(TABLE_WRAPPER_ID).removeClass('editing');
       $('.repository-save-changes-link').off('click');
@@ -73,22 +77,9 @@ var RepositoryDatatable = (function(global) {
       }
       $('#hideRepositoryReminders').show();
       $('#importRecordsButton').show();
-      if (rowsSelected.length === 0) {
-        $('#exportRepositoriesButton').addClass('disabled');
-        $('#copyRepositoryRecords').prop('disabled', true);
-        $('#editRepositoryRecord').prop('disabled', true);
-        $('#archiveRepositoryRecordsButton').prop('disabled', true);
-        $('#restoreRepositoryRecords').prop('disabled', true);
-        $('#deleteRepositoryRecords').prop('disabled', true);
-        $('#editDeleteCopy').hide();
-        $('#toolbarPrintLabel').hide();
-      } else {
+
+      if (rowsSelected.length !== 0) {
         $('#editRepositoryRecord').prop('disabled', !allSelectedRowsAreOnPage());
-        $('#exportRepositoriesButton').removeClass('disabled');
-        $('#archiveRepositoryRecordsButton').prop('disabled', false);
-        $('#copyRepositoryRecords').prop('disabled', false);
-        $('#restoreRepositoryRecords').prop('disabled', false);
-        $('#deleteRepositoryRecords').prop('disabled', false);
         $('#importRecordsButton').hide();
 
         if (rowsSelected.some(r=> rowsLocked.indexOf(r) >= 0)) { // Some selected rows is rowsLocked
@@ -119,15 +110,12 @@ var RepositoryDatatable = (function(global) {
       $('#repository-acitons-dropdown').prop('disabled', true);
       $('.dataTables_length select').prop('disabled', true);
       $('#addRepositoryRecord').prop('disabled', true);
-      $('#editRepositoryRecord').prop('disabled', true);
-      $('#archiveRepositoryRecordsButton').prop('disabled', true);
       $('#assignRepositoryRecords').prop('disabled', true);
       $('#unassignRepositoryRecords').prop('disabled', true);
       $('#repository-columns-dropdown').find('.dropdown-toggle').prop('disabled', true);
       $('th').addClass('disable-click');
       $('.repository-row-selector').prop('disabled', true);
       $('.dataTables_filter input').prop('disabled', true);
-      $('#toolbarPrintLabel').hide();
       $('.repository-edit-overlay').show();
       $('#team-switch').css({ 'pointer-events': 'none', opacity: 0.6 });
       $('#navigationGoBtn').prop('disabled', true);
@@ -398,10 +386,12 @@ var RepositoryDatatable = (function(global) {
   }
 
   function initExportActions() {
-    $('#exportRepositoriesButton').on('click', function() {
+    $(document).on('click', '#exportRepositoriesButton', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
       $('#exportRepositoryModal').modal('show');
     });
-
 
     $('form#form-export').off().submit(function() {
       var form = this;
@@ -661,6 +651,8 @@ var RepositoryDatatable = (function(global) {
         });
       },
       fnInitComplete: function() {
+        window.initActionToolbar();
+
         initHeaderTooltip();
         disableCheckboxToggleOnCheckboxPreview();
 
@@ -777,7 +769,10 @@ var RepositoryDatatable = (function(global) {
       changeToEditMode();
       $('.tooltip').remove();
     })
-    .on('click', '#copyRepositoryRecords', function() {
+    .on('click', '#copyRepositoryRecords', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
       animateSpinner();
       $.ajax({
         url: $('table' + TABLE_ID).data('copy-records'),
@@ -799,7 +794,10 @@ var RepositoryDatatable = (function(global) {
         }
       });
     })
-    .on('click', '#archiveRepositoryRecordsButton', function() {
+    .on('click', '#archiveRepositoryRecordsButton', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
       animateSpinner();
       $.ajax({
         url: $('table' + TABLE_ID).data('archive-records'),
@@ -825,7 +823,10 @@ var RepositoryDatatable = (function(global) {
         }
       });
     })
-    .on('click', '#restoreRepositoryRecords', function() {
+    .on('click', '#restoreRepositoryRecords', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
       animateSpinner();
       $.ajax({
         url: $('table' + TABLE_ID).data('restore-records'),
@@ -851,7 +852,10 @@ var RepositoryDatatable = (function(global) {
         }
       });
     })
-    .on('click', '#editRepositoryRecord', function() {
+    .on('click', '#editRepositoryRecord', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
       checkAvailableColumns();
 
       $(TABLE_ID).find('.repository-row-edit-icon').remove();
@@ -863,13 +867,19 @@ var RepositoryDatatable = (function(global) {
       changeToEditMode();
       // adjustTableHeader();
     })
-    .on('click', '#deleteRepositoryRecords', function() {
+    .on('click', '#deleteRepositoryRecords', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
       $('#deleteRepositoryRecord').modal('show');
     })
-    .on('click', '#hideRepositoryReminders', function() {
+    .on('click', '#hideRepositoryReminders', function(e) {
       var visibleReminderRepositoryRowIds = $('.row-reminders-dropdown').map(
         function() { return $(this).closest('[role=row]').attr('id'); }
       ).toArray();
+
+      e.preventDefault();
+      e.stopPropagation();
 
       $.ajax({
         type: 'POST',

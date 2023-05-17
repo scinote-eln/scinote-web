@@ -664,6 +664,10 @@ Rails.application.routes.draw do
         get :print_zpl
         post :validate_label_template_columns
       end
+
+      collection do
+        get :actions_toolbar
+      end
     end
 
     resources :repositories do

@@ -5,13 +5,15 @@ class RepositoryRowsController < ApplicationController
   include MyModulesHelper
 
   MAX_PRINTABLE_ITEM_NAME_LENGTH = 64
-  before_action :load_repository, except: %i(show print rows_to_print print_zpl validate_label_template_columns)
+  before_action :load_repository, except: %i(show print rows_to_print print_zpl
+                                             validate_label_template_columns actions_toolbar)
   before_action :load_repository_row_print, only: %i(print rows_to_print print_zpl validate_label_template_columns)
   before_action :load_repository_or_snapshot, only: %i(print rows_to_print print_zpl validate_label_template_columns)
   before_action :load_repository_row, only: %i(update assigned_task_list active_reminder_repository_cells)
   before_action :check_read_permissions, except: %i(show create update delete_records
                                                     copy_records reminder_repository_cells
-                                                    delete_records archive_records restore_records)
+                                                    delete_records archive_records restore_records
+                                                    actions_toolbar)
   before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
   before_action :check_create_permissions, only: :create
   before_action :check_delete_permissions, only: %i(delete_records archive_records restore_records)
@@ -285,6 +287,16 @@ class RepositoryRowsController < ApplicationController
       html: render_to_string(partial: 'shared/repository_row_reminder.html.erb', locals: {
                                reminders: reminder_cells
                              })
+    }
+  end
+
+  def actions_toolbar
+    render json: {
+      actions:
+        Toolbars::RepositoryRowsService.new(
+          current_user,
+          repository_row_ids: params[:repository_row_ids].split(',')
+        ).actions
     }
   end
 

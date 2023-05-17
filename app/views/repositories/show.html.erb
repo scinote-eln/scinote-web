@@ -67,6 +67,10 @@
                repository_index_link: repository_table_index_path(@repository)
              }
   %>
+
+  <div id="actionToolbar" data-behaviour="vue">
+    <action-toolbar actions-url="<%= actions_toolbar_repository_rows_url %>" />
+  </div>
 </div>
 
 <%= render partial: 'repositories/import_repository_records_modal',
@@ -89,6 +93,7 @@
   <%= render partial: 'save_repository_filter_modal' %>
 <% end %>
 
+<%= javascript_include_tag 'vue_components_action_toolbar' %>
 <%= javascript_include_tag 'vue_repository_search' %>
 <%= javascript_include_tag 'repositories/edit', nonce: true %>
 <%= javascript_include_tag 'repositories/repository_datatable', nonce: true %>
