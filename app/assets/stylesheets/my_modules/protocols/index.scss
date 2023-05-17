@@ -9,13 +9,11 @@
 
 .content-pane.my-modules-protocols-index {
   background-color: $color-alto;
-  margin-left: calc(-1rem - 2px) !important;
   padding: 0 1rem 1rem !important;
-  width: calc(100% + 2rem);
 
   .title-row {
-    margin-left: -1rem !important;
-    width: calc(100% + 2rem) !important;
+    margin-left: -1rem;
+    width: calc(100% + 2rem);
   }
 
   .my-module-position-container {

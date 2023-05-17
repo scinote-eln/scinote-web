@@ -1,8 +1,8 @@
 .sci--layout {
   --breadcrumbs-navigation-height: 56px;
-  --left-navigation-width: 204px;
+  --left-navigation-width: 192px;
   --navbar-height: calc(var(--top-navigation-height) + var(--breadcrumbs-navigation-height));
-  --navigator-navigation-width: 216px;
+  --navigator-navigation-width: 240px;
   --top-navigation-height: 52px;
   display: grid;
   grid-template-areas: "top top top"
@@ -81,10 +81,11 @@
 
   .sci--layout-content {
     grid-area: content;
+    padding: 0 1.5rem;
     width: 100%;
 
     .container-fluid {
-      padding: 0 1em; // override bootstrap and old pages support
+      padding: 1em; // override bootstrap and old pages support
     }
   }
 }
