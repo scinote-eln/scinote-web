@@ -30,6 +30,7 @@ module Toolbars
       [
         restore_action,
         edit_action,
+        assign_action,
         duplicate_action,
         export_action,
         print_label_action,
@@ -64,6 +65,19 @@ module Toolbars
         icon: 'fas fa-pencil-alt',
         button_class: 'edit-repository-row-btn',
         button_id: 'editRepositoryRecord',
+        type: :legacy
+      }
+    end
+
+    def assign_action
+      return unless can_manage_repository_rows?(@repository)
+
+      {
+        name: 'assign',
+        label: I18n.t('repositories.assign_record'),
+        icon: 'fas fa-paperclip',
+        button_class: 'assign-repository-rows-btn',
+        button_id: 'assignRepositoryRecords',
         type: :legacy
       }
     end
