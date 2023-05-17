@@ -276,7 +276,7 @@ export default {
         data: { rows_to_assign: this.rowsToAssign }
       }).done(({assigned_count}) => {
         const skipped_count = this.rowsToAssign.length - assigned_count;
-        console.log(skipped_count);
+
         if (skipped_count) {
           HelperModule.flashAlertMsg(this.i18n.t('repositories.modal_assign_items_to_task.assign.flash_some_assignments_success', {assigned_count: assigned_count, skipped_count: skipped_count }), 'success');
         } else {
