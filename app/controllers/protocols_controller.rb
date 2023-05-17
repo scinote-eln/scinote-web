@@ -921,6 +921,16 @@ class ProtocolsController < ApplicationController
     end
   end
 
+  def actions_toolbar
+    render json: {
+      actions:
+        Toolbars::ProtocolsService.new(
+          current_user,
+          protocol_ids: params[:protocol_ids].split(',')
+        ).actions
+    }
+  end
+
   private
 
   def set_importer
@@ -1001,7 +1011,7 @@ class ProtocolsController < ApplicationController
 
   def check_clone_permissions
     load_team_and_type
-    protocol = Protocol.find_by(id: params[:ids][0])
+    protocol = Protocol.find_by(id: params[:protocol_ids].split(','))
     @original = protocol.latest_published_version_or_self
 
     if @original.blank? ||

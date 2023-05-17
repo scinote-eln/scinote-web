@@ -6,7 +6,6 @@
 // Global variables
 var ProtocolsIndex = (function() {
   const ALL_VERSIONS_VALUE = 'All';
-  var PERMISSIONS = ['archivable', 'restorable', 'copyable', 'readable'];
   var rowsSelected = [];
   var protocolsTableEl = null;
   var protocolsDatatable = null;
@@ -28,6 +27,10 @@ var ProtocolsIndex = (function() {
    * Initializes page
    */
   function init() {
+    window.initActionToolbar();
+    window.actionToolbarComponent.setReloadCallback(reloadTable);
+    // make room for pagination
+    window.actionToolbarComponent.setBottomOffset(75);
     updateButtons();
     initProtocolsTable();
     initKeywordFiltering();
@@ -256,9 +259,7 @@ var ProtocolsIndex = (function() {
         DataTableHelpers.initSearchField(dataTableWrapper, I18n.t('protocols.index.search_bar_placeholder'));
         dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
 
-        let actionToolBar = $($('#protocolActionToolbar').html());
         let generalToolbar = $($('#protocolGeneralToolbar').html());
-        $('.protocols-container .actions-toolbar').html(actionToolBar);
         $('.protocols-container .toolbar').html(generalToolbar);
 
         let protocolFilters = $($('#protocolFilters').html());
@@ -282,26 +283,6 @@ var ProtocolsIndex = (function() {
       if (protocolsDatatable) {
         protocolsDatatable.columns.adjust();
       }
-    });
-  }
-
-  function checkActionPermission(permission) {
-    let allProtocols;
-
-    allProtocols = rowsSelected.every((id) => {
-      return protocolsTableEl.find(`tbody tr#${id}`).data(permission);
-    });
-
-    return allProtocols;
-  }
-
-  function loadPermission(id) {
-    let row = protocolsTableEl.find(`tbody tr#${id}`);
-    $.get(row.data('permissions-url'), (result) => {
-      PERMISSIONS.forEach((permission) => {
-        row.data(permission, result[permission]);
-      });
-      updateButtons();
     });
   }
 
@@ -335,13 +316,12 @@ var ProtocolsIndex = (function() {
 
       updateDataTableSelectAllCheckbox();
       if (this.checked) {
-        loadPermission(rowId);
         row.addClass('selected');
       } else {
         row.removeClass('selected');
-        updateButtons();
       }
 
+      updateButtons();
       e.stopPropagation();
     });
 
@@ -435,7 +415,8 @@ var ProtocolsIndex = (function() {
       e.preventDefault();
     });
 
-    $(protocolsContainer).on('click', '#protocolVersions', function() {
+    $(protocolsContainer).on('click', '#protocolVersions', function(e) {
+      e.stopPropagation();
       loadVersionModal($(`tr[data-row-id=${rowsSelected[0]}]`).data('versions-url'));
     });
   }
@@ -663,34 +644,7 @@ var ProtocolsIndex = (function() {
   }
 
   function updateButtons() {
-    let actionToolbar = $('.protocols-container .actions-toolbar');
-    $('.dataTables_wrapper').addClass('show-actions');
-
-    if (rowsSelected.length === 0) {
-      $('.dataTables_wrapper').removeClass('show-actions');
-    } else if (rowsSelected.length === 1) {
-      actionToolbar.find('.single-object-action, .multiple-object-action').removeClass('hidden');
-    } else {
-      actionToolbar.find('.single-object-action').addClass('hidden');
-      actionToolbar.find('.multiple-object-action').removeClass('hidden');
-    }
-
-    PERMISSIONS.forEach((permission) => {
-      if (!checkActionPermission(permission)) {
-        actionToolbar.find(`.btn[data-for="${permission}"]`).addClass('hidden');
-      }
-    });
-
-    if (protocolsDatatable) protocolsDatatable.columns.adjust();
-
-    actionToolbar.find('.btn').addClass('notransition');
-    actionToolbar.find('.btn').removeClass('btn-primary').addClass('btn-light');
-    actionToolbar.find('.btn:visible').first().addClass('btn-primary').removeClass('btn-light');
-    setTimeout(function() {
-      actionToolbar.find('.btn').removeClass('notransition');
-    }, 500);
-
-    actionToolbar.find('.emptyPlaceholder').toggleClass('hidden', actionToolbar.find('.btn:visible').length > 0);
+    window.actionToolbarComponent.fetchActions({ protocol_ids: rowsSelected.join(',') });
   }
 
   function initLocalFileImport() {

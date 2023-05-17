@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loading || actions.length" class="sn-action-toolbar p-4 w-full fixed bottom-0 rounded-t-md shadow-[0_-12px_24px_-12px_rgba(35,31,32,0.2)]" :style="`width: ${width}px`">
+  <div v-if="loading || actions.length" class="sn-action-toolbar p-4 w-full fixed bottom-0 rounded-t-md shadow-[0_-12px_24px_-12px_rgba(35,31,32,0.2)]" :style="`width: ${width}px; bottom: ${bottom}px;`">
     <div class="sn-action-toolbar__actions flex">
       <div v-if="loading && !actions.length" class="sn-action-toolbar__action">
         <a class="btn btn-light"></a>
@@ -12,9 +12,9 @@
           :data-object-type="action.item_type"
           :data-object-id="action.item_id"
           :data-action="action.type"
-          @click="doAction(action)">
+          @click="doAction(action, $event)">
           <i class="mr-1" :class="action.icon"></i>
-          {{ action.label }}
+          <span class="sn-action-toolbar__button-text">{{ action.label }}</span>
         </a>
       </div>
     </div>
@@ -37,7 +37,8 @@
         params: {},
         reloadCallback: null,
         loading: false,
-        width: 0
+        width: 0,
+        bottom: 0
       }
     },
     created() {
@@ -51,7 +52,7 @@
           this.actions = data.actions;
           this.loading = false;
         });
-      }, 200);
+      }, 10);
     },
     mounted() {
       this.setWidth();
@@ -63,6 +64,9 @@
       setWidth() {
         this.width = $(this.$el).parent().width();
       },
+      setBottomOffset(pixels) {
+        this.bottom = pixels;
+      },
       fetchActions(params) {
         this.loading = true;
         this.debouncedFetchActions(params);
@@ -70,7 +74,7 @@
       setReloadCallback(func) {
         this.reloadCallback = func;
       },
-      doAction(action) {
+      doAction(action, event) {
         switch(action.type) {
           case 'legacy':
             // do nothing, this is handled by legacy code based on the button class
@@ -81,7 +85,13 @@
           case 'remote-modal':
             // do nothing, handled by the data-action="remote-modal" binding
             break;
+          case 'download':
+            event.stopPropagation();
+            window.location.href = action.path;
+            break;
           case 'request':
+            event.stopPropagation();
+
             $.ajax({
               type: action.request_method,
               url: action.path,
