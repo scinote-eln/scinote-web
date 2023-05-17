@@ -250,6 +250,7 @@ Rails.application.routes.draw do
       end
       collection do
         get :project_contents
+        get 'actions_toolbar'
       end
     end
     get 'reports/datatable', to: 'reports#datatable'

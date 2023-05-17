@@ -100,6 +100,10 @@
   }
 
   function updateButtons() {
+    if (window.actionToolbarComponent) {
+      window.actionToolbarComponent.fetchActions({ report_ids: CHECKBOX_SELECTOR.selectedRows });
+    }
+
     const rowsCount = CHECKBOX_SELECTOR.selectedRows.length;
     if (rowsCount === 0) {
       $('.single-object-action, .multiple-object-action').addClass('disabled hidden');
@@ -205,6 +209,8 @@
       },
       createdRow: addAttributesToRow,
       initComplete: function(settings) {
+        initActionToolbar();
+
         const { nTableWrapper: dataTableWrapper } = settings;
         CHECKBOX_SELECTOR = new DataTableCheckboxes(dataTableWrapper, {
           checkboxSelector: '.report-row-selector',
@@ -240,7 +246,7 @@
   }
 
   function initUpdatePDFReport() {
-    $('#updatePdf').click(function(ev) {
+    $(document).on('click', '#updatePdf', function(ev) {
       ev.stopPropagation();
       ev.preventDefault();
 
@@ -260,7 +266,7 @@
   }
 
   function initGenerateDocxReport() {
-    $('#requestDocx').click(function(ev) {
+    $(document).on('click', '#requestDocx', function(ev) {
       ev.stopPropagation();
       ev.preventDefault();
       $(this).closest('.dropdown-menu').dropdown('toggle');
@@ -269,7 +275,7 @@
   }
 
   function initUpdateDocxReport() {
-    $('#updateDocx').click(function(ev) {
+    $(document).on('click', '#updateDocx', function(ev) {
       ev.stopPropagation();
       ev.preventDefault();
 
@@ -302,7 +308,7 @@
   }
 
   function initSaveReportPDFToInventory() {
-    $('#savePdfToInventoryButton').click(function(ev) {
+    $(document).on('click', '#savePdfToInventoryButton', function(ev) {
       ev.preventDefault();
       ev.stopPropagation();
 
@@ -322,14 +328,14 @@
   }
 
   function initDeleteReports() {
-    $('#delete-reports-btn').click(function() {
+    $(document).on('click', '#delete-reports-btn', function() {
       if (CHECKBOX_SELECTOR.selectedRows.length > 0) {
         $('#report-ids').attr('value', '[' + CHECKBOX_SELECTOR.selectedRows + ']');
         $('#delete-reports-modal').modal('show');
       }
     });
 
-    $('#confirm-delete-reports-btn').click(function() {
+    $(document).on('click', '#confirm-delete-reports-btn', function() {
       animateLoading();
     });
   }
