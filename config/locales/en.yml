@@ -1991,7 +1991,11 @@ en:
           label: "Task"
           placeholder: "Enter Task name"
           disabled_placeholder: "Select Experiment to enable Task"
-      assign: "Assign to this task"
+      assign:
+        text: "Assign to this task"
+        flash_all_assignments_success: "Successfully assigned %{count} item(s) to the task."
+        flash_some_assignments_success: "Successfully assigned %{assigned_count} item(s) to the task. %{skipped_count} item(s) were already assigned to the task."
+        flash_assignments_failure: "Failed to assign item(s) to task."
     modal_delete_record:
       title: "Delete items"
       notice: "Are you sure you want to delete the selected item(s)?"

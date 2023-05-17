@@ -74,9 +74,7 @@ class MyModuleRepositoriesController < ApplicationController
                                                                  repository: @repository,
                                                                  user: current_user,
                                                                  params: params)
-    if service.succeed? &&
-       (service.assigned_rows_count.positive? ||
-         service.unassigned_rows_count.positive?)
+    if service.succeed?
       flash = update_flash_message(service)
       status = :ok
     else
@@ -89,6 +87,7 @@ class MyModuleRepositoriesController < ApplicationController
         render json: {
           flash: flash,
           rows_count: @my_module.repository_rows_count(@repository),
+          assigned_count: service.assigned_rows_count,
           repository_id: @repository.repository_snapshots.find_by(selected: true)&.id || @repository.id
         }, status: status
       end
