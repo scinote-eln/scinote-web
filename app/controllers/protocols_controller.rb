@@ -27,8 +27,6 @@ class ProtocolsController < ApplicationController
     protocolsio_index
     datatable
   )
-  # For update_from_parent and update_from_parent_modal we don't need to check
-  # read permission for the parent protocol
   before_action :check_manage_permissions, only: %i(
     update_keywords
     update_description
@@ -37,11 +35,14 @@ class ProtocolsController < ApplicationController
     update_authors
     unlink
     unlink_modal
+    delete_steps
+  )
+
+  before_action :check_manage_with_read_protocol_permissions, only: %i(
     revert
     revert_modal
     update_from_parent
     update_from_parent_modal
-    delete_steps
   )
   before_action :check_restore_all_in_repository_permissions, only: :restore
   before_action :check_archive_all_in_repository_permissions, only: :archive
@@ -101,6 +102,7 @@ class ProtocolsController < ApplicationController
   def print
     @protocol = Protocol.find(params[:id])
     render_403 && return unless @protocol.my_module.blank? || can_read_protocol_in_module?(@protocol)
+
     render layout: 'protocols/print'
   end
 
@@ -167,6 +169,8 @@ class ProtocolsController < ApplicationController
       log_activity(:protocol_template_draft_deleted,
                    nil,
                    protocol: @protocol.id)
+
+      flash[:success] = I18n.t('protocols.delete_draft_modal.success')
       redirect_to protocols_path
     rescue ActiveRecord::RecordNotDestroyed => e
       Rails.logger.error e.message
@@ -911,7 +915,8 @@ class ProtocolsController < ApplicationController
       render json: {
         copyable: can_clone_protocol_in_repository?(@protocol),
         archivable: can_archive_protocol_in_repository?(@protocol),
-        restorable: can_restore_protocol_in_repository?(@protocol)
+        restorable: can_restore_protocol_in_repository?(@protocol),
+        readable: can_read_protocol_in_repository?(@protocol)
       }
     end
   end
@@ -980,7 +985,8 @@ class ProtocolsController < ApplicationController
     current_team_switch(@protocol.team) if current_team != @protocol.team
     unless @protocol.present? &&
            (can_read_protocol_in_module?(@protocol) ||
-           can_read_protocol_in_repository?(@protocol))
+           can_read_protocol_in_repository?(@protocol) ||
+           (@protocol.in_repository? && can_manage_team?(@protocol.team)))
       render_403
     end
   end
@@ -1009,6 +1015,13 @@ class ProtocolsController < ApplicationController
     render_403 unless @protocol.present? &&
                       (can_manage_protocol_in_module?(@protocol) ||
                        can_manage_protocol_draft_in_repository?(@protocol))
+  end
+
+  def check_manage_with_read_protocol_permissions
+    @protocol = Protocol.find_by(id: params[:id])
+    render_403 unless @protocol.present? && @protocol.parent.present? &&
+                      (can_manage_protocol_in_module?(@protocol) &&
+                       can_read_protocol_in_repository?(@protocol.parent))
   end
 
   def check_save_as_draft_permissions

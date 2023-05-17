@@ -21,8 +21,7 @@
              class="btn btn-light icon-btn form-submit-link"
              data-form-id="result-archive-form-<%= result.id %>"
              data-confirm-text="<%= t('my_modules.results.archive_confirm') %>"
-             title="<%= t'my_modules.results.options.archive_title' %>"
-             onclick="Results.archive(event, this);">
+             title="<%= t'my_modules.results.options.archive_title' %>">
             <span class="fas fa-briefcase"></span>
           </a>
           <%= form_for :result, url: result_path_of_type(result), method: :patch, html: {id: 'result-archive-form-' + result.id.to_s } do |f| %>

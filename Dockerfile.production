@@ -1,57 +1,108 @@
-FROM ruby:2.7.6-bullseye
+# Building stage
+FROM ruby:2.7.6-bullseye AS builder
+
+RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
+RUN \
+  --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt,sharing=locked \
+  DEBIAN_FRONTEND=noninteractive \
+  apt-get update -qq && \
+  apt-get install -y --no-install-recommends \
+  libssl-dev \
+  nodejs \
+  npm \
+  postgresql-client && \
+  npm install -g yarn
+
+ENV APP_HOME /usr/src/app
+ENV RAILS_ENV=production
+ENV GEM_HOME=$APP_HOME/vendor/bundle/ruby/2.7.0
+ENV PATH=$GEM_HOME/bin:$PATH
+ENV BUNDLE_APP_CONFIG=.bundle
+ENV BUNDLE_BUILD__SASSC=--disable-march-tune-native
+
+COPY . $APP_HOME
+RUN rm -f $APP_HOME/config/application.yml $APP_HOME/production.env
+WORKDIR $APP_HOME
+RUN \
+  --mount=target=$APP_HOME/tmp/bundle,type=cache \
+  bundle config set without 'development test' && \
+  bundle config set path '/usr/src/app/tmp/bundle' && \
+  bundle install --jobs `nproc` && \
+  cp -r tmp/bundle/ vendor && \
+  rm -rf vendor/bundle/ruby/2.7.0/cache && \
+  find vendor/bundle/ruby -type d -name '.git' -exec rm -rf {} + && \
+  bundle config --local path vendor/bundle
+
+RUN \
+  --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=locked \
+  --mount=type=cache,target=$APP_HOME/node_modules,sharing=locked \
+  DATABASE_URL=postgresql://postgres@db/scinote_production \
+  SECRET_KEY_BASE=dummy \
+  DEFACE_ENABLED=true \
+  bash -c "rake assets:precompile && rake deface:precompile"
+
+# Final stage
+FROM ruby:2.7.6-bullseye AS runner
 MAINTAINER SciNote <info@scinote.net>
 
 ARG WKHTMLTOPDF_PACKAGE_URL=https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.buster_amd64.deb
 
-# additional dependecies
-# libreoffice for file preview generation
-RUN apt-get update -qq && \
-  apt-get install -y \
-  libjemalloc2 \
-  libssl-dev \
-  nodejs \
-  npm \
-  groff-base \
-  awscli \
-  postgresql-client \
-  netcat \
-  default-jre-headless \
-  poppler-utils \
-  librsvg2-2 \
-  libvips42 \
-  sudo graphviz --no-install-recommends \
-  libreoffice \
+RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
+RUN \
+  --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt,sharing=locked \
+  wget -q -O /tmp/wkhtmltox_amd64.deb $WKHTMLTOPDF_PACKAGE_URL && \
+  DEBIAN_FRONTEND=noninteractive \
+  apt-get update -qq && \
+  apt-get install -y --no-install-recommends \
   fonts-droid-fallback \
   fonts-noto-mono \
   fonts-wqy-microhei \
   fonts-wqy-zenhei \
+  /tmp/wkhtmltox_amd64.deb && \
+  rm /tmp/wkhtmltox_amd64.deb
+
+RUN \
+  --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt,sharing=locked \
+  DEBIAN_FRONTEND=noninteractive \
+  apt-get update -qq && \
+  apt-get install -y --no-install-recommends \
+  libjemalloc2 \
+  groff-base \
+  postgresql-client \
+  netcat \
+  npm \
+  default-jre-headless \
+  poppler-utils \
+  librsvg2-2 \
+  libvips42 \
+  graphviz \
+  libreoffice-calc \
+  libreoffice-impress \
+  libreoffice-writer \
   libfile-mimeinfo-perl && \
-  wget -q -O /tmp/wkhtmltox_amd64.deb $WKHTMLTOPDF_PACKAGE_URL && \
-  apt-get install -y /tmp/wkhtmltox_amd64.deb && \
-  rm /tmp/wkhtmltox_amd64.deb && \
-  npm install -g yarn && \
-  ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so && \
+  ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so
+
+ARG BUILD_TIMESTAMP=1
+RUN \
+  --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt,sharing=locked \
+  touch /etc/build-${BUILD_TIMESTAMP} && \
+  DEBIAN_FRONTEND=noninteractive \
+  apt-get update -qq && \
+  apt-get upgrade -y && \
   rm -rf /var/lib/apt/lists/*
 
-ENV RAILS_ENV production
-ENV BUNDLE_BUILD__SASSC=--disable-march-tune-native
-
-# install gems
-COPY Gemfile* /usr/src/bundle/
-COPY addons /usr/src/bundle/addons
-WORKDIR /usr/src/bundle
-RUN bundle install
-
-# create app directory
 ENV APP_HOME /usr/src/app
-RUN mkdir $APP_HOME
-WORKDIR $APP_HOME
-COPY . .
-RUN rm -f $APP_HOME/config/application.yml $APP_HOME/production.env
+ENV RAILS_ENV=production
+ENV GEM_HOME=$APP_HOME/vendor/bundle/ruby/2.7.0
+ENV PATH=$GEM_HOME/bin:$PATH
+ENV BUNDLE_APP_CONFIG=.bundle
 
-RUN DATABASE_URL=postgresql://postgres@db/scinote_production \
-  SECRET_KEY_BASE=dummy \
-  DEFACE_ENABLED=true \
-  bash -c "rake assets:precompile && rake deface:precompile"
+COPY --from=builder $APP_HOME $APP_HOME
+
+WORKDIR $APP_HOME
 
 CMD rails s -b 0.0.0.0

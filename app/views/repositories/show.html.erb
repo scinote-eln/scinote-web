@@ -93,18 +93,16 @@
   <%= render partial: 'save_repository_filter_modal' %>
 <% end %>
 
-<%= javascript_include_tag 'repositories/edit' %>
-<%= javascript_include_tag 'repositories/repository_datatable' %>
-<%= javascript_include_tag "repositories/show" %>
-<%= javascript_include_tag 'inputmask' %>
-<%= javascript_include_tag 'emoji_button' %>
-<%= javascript_include_tag 'pdf_js' %>
+<%= javascript_include_tag 'vue_components_action_toolbar' %>
+<%= javascript_include_tag 'vue_repository_search' %>
+<%= javascript_include_tag 'repositories/edit', nonce: true %>
+<%= javascript_include_tag 'repositories/repository_datatable', nonce: true %>
+<%= javascript_include_tag "repositories/show", nonce: true %>
+<%= javascript_include_tag 'inputmask', nonce: true %>
+<%= javascript_include_tag 'emoji_button', nonce: true %>
+<%= javascript_include_tag 'pdf_js', nonce: true %>
 <%= stylesheet_link_tag 'pdf_js_styles' %>
-
-
 
 <script type="text/javascript" charset="utf-8">
   var formatJS = "<%= datetime_picker_format_date_only %>"
 </script>
-
-<%= javascript_include_tag "vue_components_action_toolbar" %>

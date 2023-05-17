@@ -1,17 +1,18 @@
 <template>
   <div class="w-[216px] h-full border rounded bg-sn-white flex flex-col right-0 absolute navigator-container">
-    <div class="p-3 flex items-center">
+    <div class="px-3 py-2 flex items-center relative leading-4">
       <i class="fas fa-bars cursor-pointer"></i>
-      <div class="font-bold text-base p-2">
+      <div class="font-bold text-base pl-2">
         {{ i18n.t('navigator.title') }}
       </div>
-      <i @click="$emit('navigator:colapse')" class="fas fa-times ml-auto cursor-pointer"></i>
+      <i @click="$emit('navigator:colapse')" class="fas fa-times ml-auto cursor-pointer absolute right-4 top-3"></i>
     </div>
-    <perfect-scrollbar class="grow py-4 relative">
+    <perfect-scrollbar class="grow py-4 relative pl-3">
       <NavigatorItem v-for="item in sortedMenuItems"
                      :key="item.id"
                      :currentItemId="currentItemId"
                      :item="item"
+                     :firstLevel="true"
                      :reloadCurrentLevel="reloadCurrentLevel"
                      :reloadChildrenLevel="reloadChildrenLevel"
                      :archived="archived" />
@@ -44,10 +45,10 @@ export default {
   computed: {
     sortedMenuItems() {
       return this.menuItems.sort((a, b) => {
-        if (a.name < b.name) {
+        if (a.name.toLowerCase() < b.name.toLowerCase()) {
           return -1;
         }
-        if (a.name > b.name) {
+        if (a.name.toLowerCase() > b.name.toLowerCase()) {
           return 1;
         }
         return 0;

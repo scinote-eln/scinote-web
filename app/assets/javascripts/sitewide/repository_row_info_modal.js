@@ -69,7 +69,7 @@
         $('#modal-info-repository-row').modal('hide');
         PrintModalComponent.row_ids = selectedRows;
       } else {
-        PrintModalComponent.row_ids = RepositoryDatatable.selectedRows();
+        PrintModalComponent.row_ids = [...RepositoryDatatable.selectedRows()];
       }
     }
   });

@@ -319,8 +319,8 @@ class RepositoryRowsController < ApplicationController
   end
 
   def load_repository_or_snapshot
-    @repository = Repository.accessible_by_teams(current_team).find_by(id: @repository_row.first.repository_id)
-    @repository ||= RepositorySnapshot.find_by(id: @repository_row.first.repository_id)
+    @repository = Repository.accessible_by_teams(current_team).find_by(id: @repository_row&.first&.repository_id)
+    @repository ||= RepositorySnapshot.find_by(id: @repository_row&.first&.repository_id)
 
     render_404 unless @repository
   end

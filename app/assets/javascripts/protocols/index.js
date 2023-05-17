@@ -6,7 +6,7 @@
 // Global variables
 var ProtocolsIndex = (function() {
   const ALL_VERSIONS_VALUE = 'All';
-  var PERMISSIONS = ['archivable', 'restorable', 'copyable'];
+  var PERMISSIONS = ['archivable', 'restorable', 'copyable', 'readable'];
   var rowsSelected = [];
   var protocolsTableEl = null;
   var protocolsDatatable = null;
@@ -448,6 +448,7 @@ var ProtocolsIndex = (function() {
       modal.modal('show');
       modal.find('form').attr('action', url);
     });
+
     $('#deleteDraftModal form').on('ajax:error', function(_ev, data) {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
@@ -693,7 +694,6 @@ var ProtocolsIndex = (function() {
   }
 
   function initLocalFileImport() {
-
     let fileInput = $("[data-role='import-file-input']");
 
     // Make sure multiple selections of same file

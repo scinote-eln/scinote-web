@@ -1,14 +1,13 @@
-<div class="datetime-picker-container" id="<%= id %>">
+<div class="datetime-picker-container"
+     id="<%= id %>"
+     data-id="<%= id %>"
+     data-use-current="<%= use_current %>">
   <% if label %>
     <label class="control-label required" for="calendar-<%= id %>"><%= label %></label>
   <% end %>
   <span class="fas fa-calendar-alt"></span>
   <input type="datetime" class="form-control calendar-input" name="calendar[<%= id %>]" id="calendar-<%= id %>" readonly="" data-ts="" placeholder="<%= placeholder %>" value="<%= defined?(setDate) ? setDate : '' %>"/>
 
-  <script type="text/javascript">
-    $(function () {
-      var dt = $('#calendar-<%= id %>');
-      dt.datetimepicker({ useCurrent: <%= use_current %>, ignoreReadonly: true, locale: '<%= I18n.locale %>', format: '<%= datetime_picker_format_date_only %>' });
-    });
-  </script>
+  <%= javascript_include_tag 'global_activities/date_picker', nonce: true %>
+
 </div>

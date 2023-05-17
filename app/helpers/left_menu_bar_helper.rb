@@ -22,7 +22,7 @@ module LeftMenuBarHelper
         active: repositories_are_selected?,
         submenu: []
       }, {
-        url: nil,
+        url: "#",
         name: t('left_menu_bar.templates'),
         icon: 'fa-edit',
         active: protocols_are_selected? || label_templates_are_selected?,

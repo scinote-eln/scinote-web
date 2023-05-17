@@ -13,7 +13,7 @@
           :data-object-id="action.item_id"
           :data-action="action.type"
           @click="doAction(action)">
-          <i :class="action.icon"></i>
+          <i class="mr-1" :class="action.icon"></i>
           {{ action.label }}
         </a>
       </div>
