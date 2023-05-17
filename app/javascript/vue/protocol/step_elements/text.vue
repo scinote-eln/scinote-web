@@ -27,7 +27,7 @@
       :fieldName="'step_text[text]'"
       :lastUpdated="element.attributes.orderable.updated_at"
       :assignableMyModuleId="assignableMyModuleId"
-      :characterLimit="100000"
+      :characterLimit="1000000"
       @update="update"
       @editingDisabled="disableEditMode"
       @editingEnabled="enableEditMode"

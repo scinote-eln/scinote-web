@@ -77,7 +77,7 @@
                 :fieldName="'protocol[description]'"
                 :lastUpdated="protocol.attributes.updated_at"
                 :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
-                :characterLimit="100000"
+                :characterLimit="1000000"
                 @update="updateDescription"
               />
             </div>
