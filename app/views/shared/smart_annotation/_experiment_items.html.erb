@@ -11,6 +11,7 @@
           <span class='sa-type'><%= experiment.code %></span>
           <span class="dot">&middot;</span>
           <span class="item-text"><%= experiment.name %></span>
+          <%= render partial: 'shared/smart_annotation/atwho_control_buttons.html.erb' %>
         </li>
       <% end %>
     </div>

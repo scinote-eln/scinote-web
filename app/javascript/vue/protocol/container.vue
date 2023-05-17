@@ -76,6 +76,7 @@
                 :objectId="parseInt(protocol.id)"
                 :fieldName="'protocol[description]'"
                 :lastUpdated="protocol.attributes.updated_at"
+                :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
                 :characterLimit="1000000"
                 @update="updateDescription"
               />
@@ -136,6 +137,7 @@
                   @stepUpdated="refreshProtocolStatus"
                   @step:insert="updateStepsPosition"
                   :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
+                  :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
                 />
               </div>
             </template>

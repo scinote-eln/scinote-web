@@ -1,13 +1,18 @@
-/* global bwipjs PrintModalComponent RepositoryDatatable */
+/* global bwipjs PrintModalComponent RepositoryDatatable HelperModule MyModuleRepositories */
 
 (function() {
   'use strict';
 
   $(document).on('click', '.record-info-link', function(e) {
     var that = $(this);
+    let params = {};
+    if ($('.my-modules-protocols-index').length) {
+      params.my_module_id = $('.my-modules-protocols-index').data('task-id');
+    }
     $.ajax({
       method: 'GET',
       url: that.attr('href'),
+      data: params,
       dataType: 'json'
     }).done(function(xhr, settings, data) {
       if ($('#modal-info-repository-row').length) {
@@ -16,6 +21,7 @@
         $('.modal-backdrop').remove();
       }
       $('body').append($.parseHTML(data.responseJSON.html));
+      $('[data-toggle="tooltip"]').tooltip();
       $('#modal-info-repository-row').modal('show', {
         backdrop: true,
         keyboard: false
@@ -72,5 +78,28 @@
         PrintModalComponent.row_ids = [...RepositoryDatatable.selectedRows()];
       }
     }
+  });
+
+  $(document).on('click', '.assign-inventory-button', function(e) {
+    e.preventDefault();
+    let assignUrl = $(this).data('assignUrl');
+    let repositoryRowId = $(this).data('repositoryRowId');
+
+    $.ajax({
+      url: assignUrl,
+      type: 'POST',
+      data: { repository_row_id: repositoryRowId },
+      dataType: 'json',
+      success: function(data) {
+        HelperModule.flashAlertMsg(data.flash, 'success');
+        $('#modal-info-repository-row').modal('hide');
+        if (typeof MyModuleRepositories !== 'undefined') {
+          MyModuleRepositories.reloadRepositoriesList(repositoryRowId);
+        }
+      },
+      error: function(error) {
+        HelperModule.flashAlertMsg(error.responseJSON.flash, 'danger');
+      }
+    });
   });
 }());

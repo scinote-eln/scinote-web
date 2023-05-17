@@ -17,7 +17,7 @@ class ProjectsController < ApplicationController
                                      sidebar experiments_cards view_type actions_dropdown create_tag)
   before_action :load_current_folder, only: %i(index cards new show)
   before_action :check_view_permissions, except: %i(index cards new create edit update archive_group restore_group
-                                                    users_filter actions_dropdown actions_toolbar)
+                                                    users_filter actions_dropdown project_filter actions_toolbar)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
   before_action :load_exp_sort_var, only: :show
@@ -102,6 +102,16 @@ class ProjectsController < ApplicationController
         }
       )
     }
+  end
+
+  def project_filter
+    projects = Project.readable_by_user(current_user)
+                      .search(current_user, false, params[:query], 1, current_team)
+                      .pluck(:id, :name)
+
+    return render plain: [].to_json if projects.blank?
+
+    render json: projects
   end
 
   def new

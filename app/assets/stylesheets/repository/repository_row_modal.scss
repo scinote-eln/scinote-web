@@ -3,4 +3,15 @@
     display: flex;
     justify-content: flex-end;
   }
+
+  .modal-footer[data-assign-item-button="true"] {
+    align-items: center;
+    display: flex;
+    gap: .5em;
+    width: 100%;
+
+    .print-label-button {
+      margin-right: auto;
+    }
+  }
 }

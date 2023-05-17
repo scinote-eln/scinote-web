@@ -1041,6 +1041,8 @@ en:
     assigned_items:
       title: "Assigned items"
       assign_from: "Assign from"
+      direct_assign:
+        success: "Successfully assigned an item to the task."
     protocol:
       title: "Protocol"
       options_dropdown:
@@ -1974,6 +1976,22 @@ en:
     columns_delete: "Delete"
     columns_changed: "Someone removed/added a new column to the inventory in use. To prevent data inconsistency we will reload this page for you."
     columns_visibility: "Visible columns"
+    modal_assign_items_to_task:
+      title: "Assign to task"
+      body:
+        description: "Type in the fields below to find the right task."
+        project_select:
+          label: "Project"
+          placeholder: "Enter project name"
+        experiment_select:
+          label: "Experiment"
+          placeholder: "Enter Experiment name"
+          disabled_placeholder: "Select Project to enable Experiment"
+        task_select:
+          label: "Task"
+          placeholder: "Enter Task name"
+          disabled_placeholder: "Select Experiment to enable Task"
+      assign: "Assign to this task"
     modal_delete_record:
       title: "Delete items"
       notice: "Are you sure you want to delete the selected item(s)?"
@@ -2209,6 +2227,10 @@ en:
       no_tasks: "This item in not assigned to any task."
       amount: "Amount: %{value}"
       unit: "Unit: %{unit}"
+      assign_to_task: "Assign to this task"
+      assign_to_task_error:
+        no_access: "You can only view this task"
+        already_assigned: "This item is already assigned to this task"
     modal_print_label:
       head_title: "Print label - %{repository_row}"
       head_title_multiple: "Print label - %{repository_rows} rows"
@@ -3198,6 +3220,9 @@ en:
       repository_rows: "Items with this name/ID were not found"
       users: "Users with this name were not found"
       description: "Please make sure there are no typos, or erase letters one by one unless you see some results"
+    buttons:
+      insert: "Insert"
+      assign: "Assign to this task"
     projects: PROJECTS
     experiments: EXPERIMENTS
     tasks: TASKS
@@ -3206,7 +3231,7 @@ en:
     users:
       title: "People"
       header: "Type the name or email of the user you want to mention (they will be notified)"
-      help: "Navigate: ↑ ↓    •    Submit: Enter / Tab    •    Dismiss: Esc"
+      help: "Navigate: ↑ ↓    •    Insert: Enter / Tab    •    Dismiss: Esc"
       popover_html: "<span class='silver'>Team:</span>&nbsp;%{team} <br> <span class='silver'>Role:</span>&nbsp;%{role} <br> <span class='silver'>Joined:</span>&nbsp;%{time}"
     res:
       archived: "(archived)"

@@ -13,6 +13,7 @@
           <span class='sa-type'><%= task.code %></span>
           <span class="dot">&middot;</span>
           <span class="item-text"><%= task.name %></span>
+          <%= render partial: 'shared/smart_annotation/atwho_control_buttons.html.erb' %>
         </li>
       <% end %>
     </div>

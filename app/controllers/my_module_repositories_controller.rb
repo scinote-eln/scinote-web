@@ -4,11 +4,11 @@ class MyModuleRepositoriesController < ApplicationController
   include ApplicationHelper
 
   before_action :load_my_module
-  before_action :load_repository, except: %i(repositories_dropdown_list repositories_list_html)
+  before_action :load_repository, except: %i(repositories_dropdown_list repositories_list_html create)
   before_action :check_my_module_view_permissions, except: %i(update consume_modal update_consumption)
-  before_action :check_repository_view_permissions, except: %i(repositories_dropdown_list repositories_list_html)
+  before_action :check_repository_view_permissions, except: %i(repositories_dropdown_list repositories_list_html create)
   before_action :check_repository_row_consumption_permissions, only: %i(consume_modal update_consumption)
-  before_action :check_assign_repository_records_permissions, only: :update
+  before_action :check_assign_repository_records_permissions, only: %i(update create)
 
   def index_dt
     @draw = params[:draw].to_i
@@ -39,6 +39,34 @@ class MyModuleRepositoriesController < ApplicationController
     @repository_rows = repository_rows.page(page).per(per_page)
 
     render rows_view
+  end
+
+  def create
+    repository_row = RepositoryRow.find(params[:repository_row_id])
+    repository = repository_row.repository
+    return render_403 unless can_read_repository?(repository)
+
+    ActiveRecord::Base.transaction do
+      @my_module.my_module_repository_rows.create!(repository_row: repository_row, assigned_by: current_user)
+
+      Activities::CreateActivityService.call(activity_type: :assign_repository_record,
+                                             owner: current_user,
+                                             team: @my_module.experiment.project.team,
+                                             project: @my_module.experiment.project,
+                                             subject: @my_module,
+                                             message_items: { my_module: @my_module.id,
+                                                              repository: repository.id,
+                                                              record_names: repository_row.name })
+
+      render json: {
+        flash: t('my_modules.assigned_items.direct_assign.success')
+      }
+    end
+  rescue StandardError => e
+    Rails.logger.error e.message
+    render json: {
+      flash: t('my_modules.repository.flash.update_error')
+    }, status: :bad_request
   end
 
   def update

@@ -5,6 +5,7 @@
       <span class='sa-type'><%= project.code %></span>
       <span class="dot">&middot;</span>
       <span class="item-text"><%= project.name %></span>
+      <%= render partial: 'shared/smart_annotation/atwho_control_buttons.html.erb' %>
     </li>
   <% end %>
   <% if limit_reached %>

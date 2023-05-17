@@ -841,6 +841,9 @@ var MyModuleRepositories = (function() {
     reloadFullViewTable: () => {
       if (!FULL_VIEW_TABLE) return;
       FULL_VIEW_TABLE.ajax.reload(null, false);
+    },
+    reloadRepositoriesList: (repositoryId, expand = false) => {
+      reloadRepositoriesList(repositoryId, expand);
     }
   };
 }());

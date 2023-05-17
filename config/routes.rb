@@ -344,8 +344,8 @@ Rails.application.routes.draw do
       end
       resources :experiments, only: %i(new create), defaults: { format: 'json' } do
         collection do
-          post 'archive_group' # archive group of experements
-          post 'restore_group' # restore group of experementss
+          post 'archive_group' # archive group of experiments
+          post 'restore_group' # restore group of experiments
         end
       end
       member do
@@ -359,6 +359,7 @@ Rails.application.routes.draw do
       end
 
       collection do
+        get 'project_filter'
         get 'cards', to: 'projects#cards'
         get 'users_filter'
         post 'archive_group'
@@ -382,6 +383,7 @@ Rails.application.routes.draw do
 
     resources :experiments, only: %i(show edit update) do
       collection do
+        get 'experiment_filter'
         get 'edit', action: :edit
         get 'clone_modal', action: :clone_modal
         get 'move_modal', action: :move_modal
@@ -411,7 +413,7 @@ Rails.application.routes.draw do
         post 'clone' # clone experiment
         get 'move_modal' # return modal with move options
         post 'move' # move experiment
-        get 'fetch_workflow_img' # Get udated workflow img
+        get 'fetch_workflow_img' # Get updated workflow img
         get 'modules/new', to: 'my_modules#new'
         post 'modules', to: 'my_modules#create'
         post 'restore_my_modules', to: 'my_modules#restore_group'
@@ -427,6 +429,7 @@ Rails.application.routes.draw do
     # as well as 'module info' page for single module (HTML)
     resources :my_modules, path: '/modules', only: [:show, :update] do
       post 'save_table_state', on: :collection, defaults: { format: 'json' }
+      get 'module_filter', to: 'my_modules#my_module_filter', on: :collection, defaults: { format: 'json' }
 
       collection do
         get 'actions_toolbar'
@@ -463,7 +466,7 @@ Rails.application.routes.draw do
       get :repositories_dropdown_list, controller: :my_module_repositories
       get :repositories_list_html, controller: :my_module_repositories
 
-      resources :repositories, controller: :my_module_repositories, only: :update do
+      resources :repositories, controller: :my_module_repositories, only: %i(update create) do
         member do
           get :full_view_table
           post :index_dt
