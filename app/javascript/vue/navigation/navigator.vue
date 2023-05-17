@@ -1,13 +1,13 @@
 <template>
-  <div class="w-[216px] h-full border rounded bg-sn-white flex flex-col right-0 absolute navigator-container">
+  <div class="w-[216px] h-full border rounded relative bg-sn-white flex flex-col right-0 absolute navigator-container">
     <div class="px-3 py-2 flex items-center relative leading-4">
-      <i class="fas fa-bars cursor-pointer"></i>
+      <i class="sn-icon sn-icon-navigator"></i>
       <div class="font-bold text-base pl-2">
         {{ i18n.t('navigator.title') }}
       </div>
-      <i @click="$emit('navigator:colapse')" class="fas fa-times ml-auto cursor-pointer absolute right-4 top-3"></i>
+      <i @click="$emit('navigator:colapse')" class="sn-icon sn-icon-close ml-auto cursor-pointer absolute right-3 top-2"></i>
     </div>
-    <perfect-scrollbar class="grow py-4 relative pl-3">
+    <perfect-scrollbar class="grow py-4 relative px-3">
       <NavigatorItem v-for="item in sortedMenuItems"
                      :key="item.id"
                      :currentItemId="currentItemId"
