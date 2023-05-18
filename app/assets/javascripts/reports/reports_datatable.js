@@ -359,6 +359,25 @@
     generateReportRequest('generate-pdf-path', reportId);
   });
 
+  // Search container logic
+  const $searchIcon = $('.search-icon');
+  const $searchInput = $('.report-search');
+
+  $searchIcon.click(function() {
+    $searchIcon.addClass('hidden');
+    $searchInput.removeClass('hidden').addClass('search-input-field');
+  });
+
+  $(document).click(function(event) {
+    const isClickInside = $searchInput.is(event.target) || $searchIcon.is(event.target);
+    if (!isClickInside) {
+      if ($searchInput.val().trim() === '') {
+        $searchIcon.removeClass('hidden');
+        $searchInput.addClass('hidden').removeClass('search-input-field');
+      }
+    }
+  });
+
   $('#show_report_preview').click();
 
   initDatatable();
