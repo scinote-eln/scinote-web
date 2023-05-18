@@ -59,6 +59,8 @@ module Toolbars
     def edit_action
       return unless can_manage_repository_rows?(@repository)
 
+      return unless @repository_rows.all?(&:active?)
+
       {
         name: 'edit',
         label: I18n.t('repositories.edit_record'),
@@ -72,6 +74,8 @@ module Toolbars
     def assign_action
       return unless can_manage_repository_rows?(@repository)
 
+      return unless @repository_rows.all?(&:active?)
+
       {
         name: 'assign',
         label: I18n.t('repositories.assign_record'),
@@ -84,6 +88,8 @@ module Toolbars
 
     def duplicate_action
       return unless can_create_repository_rows?(@repository)
+
+      return unless @repository_rows.all?(&:active?)
 
       {
         name: 'duplicate',
