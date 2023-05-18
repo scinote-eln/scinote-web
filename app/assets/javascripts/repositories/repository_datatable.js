@@ -54,6 +54,7 @@ var RepositoryDatatable = (function(global) {
   function updateButtons() {
     if (window.actionToolbarComponent) {
       window.actionToolbarComponent.fetchActions({ repository_row_ids: rowsSelected });
+      $('.dataTables_scrollBody').css('padding-bottom', `${rowsSelected.length > 0 ? 68 : 0}px`);
     }
 
     if (currentMode === 'viewMode') {
@@ -656,7 +657,7 @@ var RepositoryDatatable = (function(global) {
       },
       fnInitComplete: function() {
         window.initActionToolbar();
-
+        window.actionToolbarComponent.setBottomOffset(70);
         initHeaderTooltip();
         disableCheckboxToggleOnCheckboxPreview();
 

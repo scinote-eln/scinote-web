@@ -32,9 +32,9 @@ Rails.application.config.content_security_policy_nonce_directives = %w(script-sr
 # Whitelist AWS buckets
 Rails.application.configure do
   config.after_initialize do
-    return unless ActiveStorage::Blob.service.name == :amazon
-
-    Extends::EXTERNAL_SERVICES += [ActiveStorage::Blob.service.bucket.url]
-    Rails.application.config.content_security_policy.connect_src :self, :data, *Extends::EXTERNAL_SERVICES
+    if ActiveStorage::Blob.service.name == :amazon
+      Extends::EXTERNAL_SERVICES += [ActiveStorage::Blob.service.bucket.url]
+      Rails.application.config.content_security_policy.connect_src :self, :data, *Extends::EXTERNAL_SERVICES
+    end
   end
 end
