@@ -15,7 +15,7 @@
 
     <% if ::NewRelic::Agent.instance.started? %>
       <%= ::NewRelic::Agent.browser_timing_header("nonce") %>
-    <%end%>
+    <% end %>
     <%= javascript_include_tag 'jquery_bundle' %>
     <%= javascript_include_tag 'application' %>
     <%= javascript_include_tag 'application_pack' %>
