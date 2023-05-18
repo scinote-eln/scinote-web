@@ -263,7 +263,7 @@ var ProtocolsIndex = (function() {
         $('.protocols-container .toolbar').html(generalToolbar);
 
         let protocolFilters = $($('#protocolFilters').html());
-        $(protocolFilters).prependTo('.protocols-container .protocol-filters');
+        $(protocolFilters).appendTo('.protocols-container .protocol-filters');
 
         initLocalFileImport();
         initProtocolsFilters();
