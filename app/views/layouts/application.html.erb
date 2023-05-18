@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <%= ::NewRelic::Agent.browser_timing_header("nonce") %>
     <meta data-hook="head-js">
     <title><%=t "head.title", title: (yield :head_title) %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -14,6 +13,7 @@
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
 
+    <%= ::NewRelic::Agent.browser_timing_header("nonce") %>
     <%= javascript_include_tag 'jquery_bundle' %>
     <%= javascript_include_tag 'application' %>
     <%= javascript_include_tag 'application_pack' %>
