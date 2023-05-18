@@ -584,10 +584,16 @@ var ExperimnetTable = {
   handleNoResults: function() {
     let tableRowLength = document.getElementsByClassName('table-row').length;
     let noResultsContainer = document.getElementById('tasksNoResultsContainer');
+    $('.no-data-container').hide();
     if (this.filtersActive && tableRowLength === 0) {
       noResultsContainer.style.display = 'block';
+    } else if (tableRowLength === 0) {
+      $(this.table).find('.table-header').hide();
+      $(this.table).addClass('no-data');
+      $('.no-data-container').show();
     } else {
       noResultsContainer.style.display = 'none';
+      $(this.table).find('.table-header').show();
     }
   },
   pollProvisioningStatuses: function(provisioningStatusUrls) {

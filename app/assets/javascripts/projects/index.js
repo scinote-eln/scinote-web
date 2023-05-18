@@ -395,6 +395,27 @@ var ProjectsIndex = (function() {
     $(palceholder).insertAfter($(cardsWrapper).find('.table-header'));
   }
 
+  function initCardData(viewContainer, data) {
+    viewContainer.data('projects-cards-url', data.projects_cards_url);
+    viewContainer.removeClass('no-results no-data');
+    viewContainer.find('.card, .projects-group, .no-results-container, .no-data-container').remove();
+
+    if (viewContainer.find('.list').length) {
+      viewContainer.find('.table-header').show();
+    }
+
+    viewContainer.append(data.cards_html);
+
+    if (viewContainer.find('.no-results-container').length) {
+      viewContainer.addClass('no-results');
+    }
+
+    if (viewContainer.find('.no-data-container').length) {
+      viewContainer.addClass('no-data');
+      viewContainer.find('.table-header').hide();
+    }
+  }
+
   function loadCardsView() {
     var requestParams = {
       view_mode: $('.projects-index').data('view-mode'),
@@ -421,13 +442,7 @@ var ProjectsIndex = (function() {
         $(projectsWrapper).find('.projects-title').html(data.title_html);
         $(toolbarWrapper).html(data.toolbar_html);
         initProjectsViewModeSwitch();
-        viewContainer.data('projects-cards-url', data.projects_cards_url);
-        viewContainer.removeClass('no-results');
-        viewContainer.find('.card, .projects-group, .no-results-container').remove();
-        viewContainer.append(data.cards_html);
-        if (viewContainer.find('.no-results-container').length) {
-          viewContainer.addClass('no-results');
-        }
+        initCardData(viewContainer, data);
 
         selectedProjects.length = 0;
         selectedProjectFolders.length = 0;
