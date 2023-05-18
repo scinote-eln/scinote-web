@@ -65,9 +65,9 @@ var SmartAnnotation = (function() {
             if (filterType.tag === 'sa-repositories') {
               let repositoryTab = $currentAtWho.find('[data-object-type="REPOSITORY"]');
               let activeRepository = repositoryTab.find('.btn-primary');
+              params.assignable_my_module_id = assignableMyModuleId;
               if (activeRepository.length) {
                 params.repository_id = activeRepository.data('object-id');
-                params.assignable_my_module_id = assignableMyModuleId;
               }
             }
             $.getJSON(filterType.dataUrl, params, function(data) {
