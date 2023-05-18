@@ -550,7 +550,7 @@ class Extends
   }
 
   s3 = Rails.application.config.active_storage.bucket_url
-  p Rails.application.config.active_storage.bucket_url
+
   EXTERNAL_SERVICES = %w(
     https://www.protocols.io/
     http://127.0.0.1:9100/available
