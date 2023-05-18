@@ -1,5 +1,5 @@
 <% content_for :content do %>
-  <div class="container-fluid <%= yield :container_class %>" id="fluid-content">
+  <div class="<%= yield :container_class %>" id="fluid-content">
     <%= yield %>
   </div>
 <% end %>

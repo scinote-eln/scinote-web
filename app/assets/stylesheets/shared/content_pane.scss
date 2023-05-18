@@ -5,11 +5,9 @@
   --content-header-size: 9.5em;
   background-color: $color-white;
   margin: 20px 0;
-  padding: 25px 20px;
 
   &.flexible {
     margin: 0;
-    padding: 0 1em;
   }
 
   .content-header {
@@ -24,12 +22,9 @@
     .title-row {
       align-items: center;
       background: $color-white;
-      border-bottom: $border-tertiary;
       display: flex;
       height: 4em;
-      margin-left: -2em;
-      padding: 0 2em;
-      width: calc(100% + 4em);
+      padding: 0;
 
       h1 {
         align-items: center;
@@ -180,7 +175,6 @@
 
     .toolbar-row {
       background: $color-white;
-      border-bottom: $border-tertiary;
       margin-left: -2em;
       padding: 1em 0;
       padding-left: 2em;
