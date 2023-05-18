@@ -1,10 +1,10 @@
 <template>
   <div v-if="loading || actions.length" class="sn-action-toolbar p-4 w-full fixed bottom-0 rounded-t-md shadow-[0_-12px_24px_-12px_rgba(35,31,32,0.2)]" :style="`width: ${width}px; bottom: ${bottom}px;`">
     <div class="sn-action-toolbar__actions flex">
-      <div v-if="loading && !actions.length" class="sn-action-toolbar__action">
+      <div v-if="loading && !actions.length" class="sn-action-toolbar__action mr-1.5">
         <a class="btn btn-light"></a>
       </div>
-      <div v-for="action in actions" :key="action.name" class="sn-action-toolbar__action">
+      <div v-for="action in actions" :key="action.name" class="sn-action-toolbar__action mr-1.5">
         <a :class="`btn btn-light ${action.button_class}`"
           :href="(['link', 'remote-modal']).includes(action.type) ? action.path : '#'"
           :id="action.button_id"
