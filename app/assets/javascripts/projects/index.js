@@ -462,7 +462,6 @@ var ProjectsIndex = (function() {
 
   function initProjectsViewModeSwitch() {
     let projectsPageSelector = '.projects-index';
-    $('.view-switch-btn-name').text($('.button-to.selected').text());
     $('.button-to.selected').removeClass('btn-light');
     $('.button-to.selected').addClass('form-dropdown-state-item');
     $('.button-to.selected .view-switch-list-span').css('color', 'white');
