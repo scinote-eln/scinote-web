@@ -76,7 +76,7 @@
               <span class="caret"></span>
 
               <ul class="dropdown-submenu">
-                <li v-for="option in wellPlateOptions" :key="option.dimensions.toString()" class="action" @click="createElement('table', option.dimensions)">
+                <li v-for="option in wellPlateOptions" :key="option.dimensions.toString()" class="action" @click="createElement('table', option.dimensions, true)">
                   {{ i18n.t(option.label) }}
                 </li>
               </ul>
@@ -437,8 +437,8 @@
           }
         });
       },
-      createElement(elementType, tableDimensions = [5,5]) {
-        $.post(this.urls[`create_${elementType}_url`], { tableDimensions: tableDimensions }, (result) => {
+      createElement(elementType, tableDimensions = [5,5], plateTemplate = false) {
+        $.post(this.urls[`create_${elementType}_url`], { tableDimensions: tableDimensions, plateTemplate: plateTemplate }, (result) => {
           result.data.isNew = true;
           this.elements.push(result.data)
           this.$emit('stepUpdated')
