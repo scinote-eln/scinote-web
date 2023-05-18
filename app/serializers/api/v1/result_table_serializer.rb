@@ -4,7 +4,7 @@ module Api
   module V1
     class ResultTableSerializer < ActiveModel::Serializer
       type :result_tables
-      attributes :table_id, :table_contents
+      attributes :table_id, :table_contents, :metadata
 
       def table_id
         object.table&.id

@@ -11,9 +11,9 @@
     <body>
       <%= yield %>
       <div id="handson"
-           data-init-rows-cnt="<%= Constants::HANDSONTABLE_INIT_ROWS_CNT %>"
-           data-init-cols-cnt="<%= Constants::HANDSONTABLE_INIT_COLS_CNT %>"
-           ></div>
+        data-init-rows-cnt="<%= Constants::HANDSONTABLE_INIT_ROWS_CNT %>"
+        data-init-cols-cnt="<%= Constants::HANDSONTABLE_INIT_COLS_CNT %>"
+      ></div>
       <%= javascript_include_tag 'protocols/handson', nonce: true %>
     </body>
 </html>

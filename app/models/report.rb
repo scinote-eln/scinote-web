@@ -52,7 +52,8 @@ class Report < ApplicationRecord
         step_checklists: true,
         step_files: true,
         step_tables: true,
-        step_comments: true
+        step_comments: true,
+        step_well_plates: true
       },
       file_results: true,
       file_results_previews: false,

@@ -33,7 +33,7 @@
           <%= t("projects.reports.wizard.third_step.protocol_step") %>
           <div class="divider"></div>
           <ul class="step-contents report-protocol-settings">
-            <% %i(completed_steps uncompleted_steps step_texts step_checklists step_files step_tables step_comments).each do |step_content| %>
+            <% %i(completed_steps uncompleted_steps step_texts step_checklists step_files step_tables step_well_plates step_comments).each do |step_content| %>
               <li>
                 <span class="sci-checkbox-container">
                   <input type="checkbox" class="sci-checkbox protocol-setting" value="<%= step_content %>" <%= 'checked' if report.settings.dig(:task, :protocol, step_content) %> />

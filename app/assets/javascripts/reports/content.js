@@ -1,4 +1,35 @@
 (function() {
+
+  function tableColHeaders(isPlateTemplate) {
+    if (isPlateTemplate) {
+      return function(visualColumnIndex) {
+        return visualColumnIndex + 1;
+      };
+    }
+
+    return true;
+  }
+
+  function tableRowHeaders(isPlateTemplate) {
+    if (isPlateTemplate) {
+      return function(visualColumnIndex) {
+        var ordA = 'A'.charCodeAt(0);
+        var ordZ = 'Z'.charCodeAt(0);
+        var len = (ordZ - ordA) + 1;
+        var num = visualColumnIndex;
+
+        var colName = '';
+        while (num >= 0) {
+          colName = String.fromCharCode((num % len) + ordA) + colName;
+          num = Math.floor(num / len) - 1;
+        }
+        return colName;
+      };
+    }
+
+    return true;
+  }
+
   /**
    * Initialize the hands on table on the given
    * element with the specified data.
@@ -7,11 +38,12 @@
   function initializeHandsonTable(el) {
     var input = el.siblings('input.hot-table-contents');
     var inputObj = JSON.parse(input.attr('value'));
-    var metadata = el.siblings('input.hot-table-metadata');
+    var metadataJson = el.siblings('input.hot-table-metadata');
     var data = inputObj.data;
     var headers;
     var parentEl;
     var order;
+    var metadata;
 
     // Special handling if this is a repository table
     if (input.hasClass('hot-repository-items')) {
@@ -32,15 +64,16 @@
 
       el.handsontable('getInstance').getPlugin('columnSorting').sort(3, order);
     } else {
+      metadata = JSON.parse(metadataJson.val() || '{}');
       el.handsontable({
         disableVisualSelection: true,
-        rowHeaders: true,
-        colHeaders: true,
+        rowHeaders: tableRowHeaders(metadata.plateTemplate),
+        colHeaders: tableColHeaders(metadata.plateTemplate),
         editor: false,
         copyPaste: false,
         formulas: true,
         data: data,
-        cell: JSON.parse(metadata.val() || '{}').cells || []
+        cell: metadata.cells || []
       });
     }
   }

@@ -684,6 +684,7 @@ en:
           step_checklists: "Step checklists"
           step_files: "Step files"
           step_tables: "Step tables"
+          step_well_plates: "Step well plates"
           step_comments: "Step comments"
           assigned_items: "Assigned items"
           assigned_items_description: "Inventories selected below will only contain the items that you assigned to the tasks directly."
@@ -829,6 +830,9 @@ en:
         step_table:
           table_name: "%{name}"
           user_time: "Table created on %{timestamp}."
+        step_well_plates_table:
+          table_name: "%{name}"
+          user_time: "Well plate created on %{timestamp}."
         step_asset:
           file_name: "%{file}"
           sidebar_name: "File %{file}"
@@ -2940,11 +2944,19 @@ en:
       insert:
         button: 'Insert'
         title: 'Insert step content'
-        table: 'Add table'
-        text: 'Add text'
-        checklist: 'Add checklist'
-        attachment: 'Add file'
+        table: 'Table'
+        well_plate: 'Well plate'
+        text: 'Text'
+        checklist: 'Checklist'
+        attachment: 'File'
         checklist_item: 'Add a new checklist item...'
+        well_plate_options:
+          32_x_48: '1536 (32 x 48)'
+          16_x_24: '384 (16 x 24)'
+          8_x_12: '96 (8 x 12)'
+          6_x_8: '48 (6 x 8 )'
+          6_x_4: '24 (6 x 4)'
+          2_x_3: '6 (2 x 3)'
       table:
         default_name: 'Table %{position}'
         edit_message: 'Use right click for table options'
@@ -2959,6 +2971,8 @@ en:
       text:
         placeholder: 'Enter step text'
         empty_text: 'No text entered'
+      plate:
+        default_name: "Plate %{position}"
       modals:
         delete_element:
           title: 'Delete content'
@@ -3492,6 +3506,8 @@ en:
           detail: "Something went wrong, please contact resource owner"
         parameter:
           title: "Missing parameter"
+        parameter_incorrect:
+          title: "Incorrect parameters"
         validation:
           title: "Validation error"
         read_permission:
@@ -3540,6 +3556,9 @@ en:
           detail: "Text contains reference to nonexisting TinyMCE image"
         result_wrong_tinymce:
           detail: "Image reference not found in the text"
+        table:
+          metadata:
+            detail_too_many_cells: "Wrong number of cells in the metadata field"
     service:
       errors:
         missing_task_ids: "Missing task_ids"

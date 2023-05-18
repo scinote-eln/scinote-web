@@ -1,76 +1,68 @@
+/* eslint-disable no-unused-vars */
+
 function hex2a(hexx) {
-  var hex = hexx.toString(); // Force conversion
-  var str = "";
-  for (var i = 0; i < hex.length; i += 2) {
-    str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+  const hexString = hexx.toString(); // Force conversion
+  let asciiString = '';
+  for (let i = 0; i < hexString.length; i += 2) {
+    asciiString += String.fromCharCode(parseInt(hexString.substr(i, 2), 16));
   }
-  return str;
+  return asciiString;
 }
 
-function generateElnTable(id, content) {
-  /*********************************************/
-  /* INNER FUNCTIONS                           */
-  /*********************************************/
-  function colName(n) {
-    var ordA = "A".charCodeAt(0);
-    var ordZ = "Z".charCodeAt(0);
-    var len = ordZ - ordA + 1;
+function getMetadataCellValue(jsonData, row, col) {
+  if (jsonData == null) return '';
 
-    var s = "";
-    while(n >= 0) {
-      s = String.fromCharCode(n % len + ordA) + s;
+  const key = `${row}:${col}`;
+  for (let i = 0; i < jsonData.length; i += 1) {
+    const item = jsonData[i];
+    const itemKey = `${item.row}:${item.col}`;
+    if (itemKey === key) {
+      return item.className;
+    }
+  }
+  return null;
+}
+
+function generateElnTable(content, tableMetadata) {
+  function colName(n) {
+    const asciiA = 'A'.charCodeAt(0);
+    const asciiZ = 'Z'.charCodeAt(0);
+    const len = (asciiZ - asciiA) + 1;
+    let name = '';
+    while (n >= 0) {
+      name = String.fromCharCode((n % len) + asciiA) + name;
       n = Math.floor(n / len) - 1;
     }
-    return s;
+    return name;
   }
 
-  /*********************************************/
-  /* ACTUAL FUNCTION CODE                      */
-  /*********************************************/
-  var txt = hex2a(content);
-  var jstr = JSON.parse(txt);
+  const decodedContent = hex2a(content);
+  const tableData = JSON.parse(decodedContent);
+  const numRows = tableData.data.length + 1;
+  const numCols = tableData.data[0].length + 1;
 
-  var rows = jstr.data.length + 1;
-  var cols = jstr.data[0].length + 1;
+  let tableRows = '';
 
-  var str = rows + "|" + cols;
+  for (let i = 0; i < numRows; i += 1) {
+    let tableCells = '';
 
-  var html_s = "<table class='table table-bordered eln-table'><tbody>";
-  var html_e = "</tbody></table>";
+    for (let j = 0; j < numCols; j += 1) {
+      let cellData = '';
+      let cellClass = getMetadataCellValue(tableMetadata.cells, i - 1, j - 1);
 
-  var tr = "";
-  for (var i = 0; i < rows; i++) {
-    var tr_s = "<tr>";
-    var th = "";
-    var d = "";
-    var d_str = "";
-    for (var j = 0; j < cols; j++) {
-      if ((i > 0) && (j > 0)) {
-        if (jstr.data[i - 1][j - 1] !== null) {
-          d = jstr.data[i - 1][j - 1];
-          d_str = "<td>" + d;
-        } else {
-          d = "";
-          d_str = "<td>" + d;
-        }
-      } else {
-        if ((i == 0) && (j == 0)) {
-          d = "";
-          d_str = "<td>" + d;
-        } else if (i == 0) {
-          d = colName(j - 1);
-          d_str = "<td>" + d;
-        } else {
-          d = i.toString();
-          d_str = "<td style='width: 60px;'>" + d;
-        }
+      if (i > 0 && j > 0 && tableData.data[i - 1][j - 1] !== null) {
+        cellData = tableData.data[i - 1][j - 1];
+      } else if (i === 0 && j !== 0) {
+        cellData = tableMetadata.plateTemplate ? j.toString() : colName(j - 1);
+      } else if (j === 0 && i !== 0) {
+        cellData = tableMetadata.plateTemplate ? colName(i - 1) : i.toString();
       }
 
-      th = th + d_str + "</td>";
+      tableCells = `${tableCells}<td ${cellClass ? `class="${cellClass}"` : ''}>${cellData}</td>`;
     }
-    var tr_e = "</tr>";
-    tr = tr + tr_s + th + tr_e;
+
+    tableRows = `${tableRows}<tr>${tableCells}</tr>`;
   }
-  var html = html_s + tr + html_e;
-  return $.parseHTML(html);
+
+  return $.parseHTML(`<table class="table table-bordered eln-table"><tbody>${tableRows}</tbody></table>`);
 }

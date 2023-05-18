@@ -1,0 +1,33 @@
+.dropdown-submenu {
+  background: $color-white;
+  box-shadow: $flyout-shadow;
+  display: none;
+  left: 100%;
+  list-style: none;
+  min-width: 230px;
+  padding-left: 0;
+  position: absolute;
+  top: 0;
+}
+
+.dropdown-menu li {
+  position: relative;
+
+  .caret {
+    position: absolute;
+    right: 1em;
+    top: 1.1em;
+    transform: rotate(90deg);
+  }
+
+  &:hover .dropdown-submenu,
+  &.active .dropdown-submenu {
+    display: block;
+  }
+
+  &.active {
+    .caret {
+      transform: rotate(180deg);
+    }
+  }
+}

@@ -1,3 +1,5 @@
+/* global tableColRowName*/
+
 (function() {
   const handsontableInitDataElem = $('#handson');
   const HANDSONTABLE_INIT_ROWS_CNT = handsontableInitDataElem.data('init-rows-cnt');
@@ -7,17 +9,18 @@
     var hot;
     var $container = $(this).find("[data-role='step-hot-table']");
     var contents = $(this).find('.hot-contents');
-    var metadata = $(this).find('.hot-metadata');
+    var metadataJson = $(this).find('.hot-metadata');
+    var metadata = JSON.parse(metadataJson.val() || '{}');
 
     $container.handsontable({
       startRows: HANDSONTABLE_INIT_ROWS_CNT,
       startCols: HANDSONTABLE_INIT_COLS_CNT,
-      rowHeaders: true,
-      colHeaders: true,
+      rowHeaders: tableColRowName.tableRowHeaders(metadata.plateTemplate),
+      colHeaders: tableColRowName.tableColHeaders(metadata.plateTemplate),
       fillHandle: false,
       formulas: true,
       data: JSON.parse(contents.attr('value')).data,
-      cell: JSON.parse(metadata.val() || '{}').cells || [],
+      cell: metadata.cells || [],
       readOnly: true
     });
 

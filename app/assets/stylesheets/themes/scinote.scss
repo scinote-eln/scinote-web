@@ -1,3 +1,6 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
 @import "constants";
 @import "mixins";
 @import "main_navigation";
@@ -863,8 +866,34 @@ ul.content-activities {
   width: 100%;
 
   .eln-table {
-    text-align: center;
     height: 21px;
+
+    tr:first-child {
+      text-align: center;
+    }
+
+    td {
+      &.htCenter,
+      &:first-child {
+        text-align: center;
+      }
+
+      &.htRight {
+        text-align: right;
+      }
+
+      &.htJustify {
+        text-align: justify;
+      }
+
+      &.htMiddle {
+        vertical-align: middle;
+      }
+
+      &.htBottom {
+        vertical-align: bottom;
+      }
+    }
   }
 
   .badge-preview {
