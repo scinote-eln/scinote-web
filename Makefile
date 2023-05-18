@@ -1,10 +1,9 @@
 APP_HOME="/usr/src/app"
 DB_IP=$(shell docker inspect scinote_db_development | grep "\"IPAddress\": " | awk '{ match($$0, /"IPAddress": "([0-9\.]*)",/, a); print a[1] }')
-PAPERCLIP_HASH_SECRET=$(shell openssl rand -base64 128 | tr -d '\n')
+BUILD_TIMESTAMP=$(shell date +%s)
 
 define PRODUCTION_CONFIG_BODY
 SECRET_KEY_BASE=$(shell openssl rand -hex 64)
-PAPERCLIP_HASH_SECRET=$(shell openssl rand -base64 128 | tr -d '\n')
 DATABASE_URL=postgresql://postgres:mysecretpassword@db/scinote_production
 ACTIVESTORAGE_SERVICE=local
 ENABLE_RECAPTCHA=false
@@ -26,7 +25,7 @@ docker:
 	@docker-compose build
 
 docker-production:
-	@docker-compose -f docker-compose.production.yml build
+	@docker-compose -f docker-compose.production.yml build --build-arg BUILD_TIMESTAMP=$(BUILD_TIMESTAMP)
 
 config-production:
 ifeq (production.env,$(wildcard production.env))
@@ -85,7 +84,7 @@ tests-ci:
 	@docker-compose run --rm web bash -c "bundle install && yarn install"
 	@docker-compose up -d webpack
 	@docker-compose ps
-	@docker-compose run -e ENABLE_EMAIL_CONFIRMATIONS=false -e MAIL_FROM=MAIL_FROM -e MAIL_REPLYTO=MAIL_REPLYTO -e RAILS_ENV=test -e PAPERCLIP_HASH_SECRET=PAPERCLIP_HASH_SECRET -e MAIL_SERVER_URL=localhost:3000 -e ENABLE_RECAPTCHA=false -e ENABLE_USER_CONFIRMATION=false -e ENABLE_USER_REGISTRATION=true -e CORE_API_RATE_LIMIT=1000000 --rm web bash -c "rake db:create && rake db:migrate && yarn install && bundle exec rspec"
+	@docker-compose run -e ENABLE_EMAIL_CONFIRMATIONS=false -e MAIL_FROM=MAIL_FROM -e MAIL_REPLYTO=MAIL_REPLYTO -e RAILS_ENV=test -e MAIL_SERVER_URL=localhost:3000 -e ENABLE_RECAPTCHA=false -e ENABLE_USER_CONFIRMATION=false -e ENABLE_USER_REGISTRATION=true -e CORE_API_RATE_LIMIT=1000000 --rm web bash -c "rake db:create && rake db:migrate && yarn install && bundle exec rspec"
 
 console:
 	@$(MAKE) rails cmd="rails console"

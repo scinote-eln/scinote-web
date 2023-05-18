@@ -83,6 +83,10 @@
       },
       isNew: {
         type: Boolean, default: false
+      },
+      assignableMyModuleId: {
+        type: Number,
+        required: false
       }
     },
     data() {
@@ -162,20 +166,33 @@
       update() {
         this.element.attributes.orderable.contents = JSON.stringify({ data: this.tableObject.getData() });
         this.element.attributes.orderable.metadata = JSON.stringify({
-         cells: this.tableObject.getCellsMeta().map(
-           (x) => {
-             if (x) {
-               return {
-                 col: x.col,
-                 row: x.row,
-                 className: x.className || ''
-               }
-             } else {
-               return null
-             }
-           }).filter(e => { return e !== null })
+          cells: this.tableObject
+                     .getCellsMeta()
+                     .filter(e => !!e)
+                     .map((x) => {
+                          const {row, col} = x;
+                          const plugins = this.tableObject.plugin;
+                          const cellId = plugins.utils.translateCellCoords({row, col});
+                          const calculated = plugins.matrix.getItem(cellId)?.value ||
+                            this.tableObject.getDataAtCell(row, col) ||
+                            null;
+                          return {
+                            row: row,
+                            col: col,
+                            className: x.className || '',
+                            calculated: calculated
+                          }
+                      })
         });
         this.$emit('update', this.element)
+        this.ajax_update_url()
+      },
+      ajax_update_url() {
+        $.ajax({
+          url: this.element.attributes.orderable.urls.update_url,
+          method: 'PUT',
+          data: this.element.attributes.orderable,
+        })
       },
       loadTableData() {
         let container = this.$refs.hotTable;

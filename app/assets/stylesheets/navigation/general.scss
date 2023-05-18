@@ -1,38 +1,47 @@
 .sci--layout {
-  --breadcrumbs-navigation: 56px;
-  --left-navigation: 83px;
-  --navigator-navigation: 280px;
-  --top-navigation: 52px;
+  --breadcrumbs-navigation-height: 56px;
+  --left-navigation-width: 192px;
+  --navbar-height: calc(var(--top-navigation-height) + var(--breadcrumbs-navigation-height));
+  --navigator-navigation-width: 240px;
+  --top-navigation-height: 52px;
   display: grid;
   grid-template-areas: "top top top"
                        "left breadcrumbs breadcrumbs"
                        "left navigator content";
-  grid-template-columns: var(--left-navigation)
-                         var(--navigator-navigation)
-                         calc(100% - var(--left-navigation) - var(--navigator-navigation));
-  grid-template-rows: var(--top-navigation)
-                      var(--breadcrumbs-navigation)
-                      calc(100% - var(--top-navigation) - var(--breadcrumbs-navigation));
+  grid-template-columns: var(--left-navigation-width)
+                         var(--navigator-navigation-width)
+                         calc(100% - var(--left-navigation-width) - var(--navigator-navigation-width));
+  grid-template-rows: var(--top-navigation-height)
+                      var(--breadcrumbs-navigation-height)
+                      calc(100% - var(--top-navigation-height) - var(--breadcrumbs-navigation-height));
   height: 100%;
   position: relative;
   transition: .4s $timing-function-sharp;
   width: 100%;
 
+  .sci--layout--navigator-open {
+    display: none;
+  }
+
   &[data-breadcrumbs-collapsed="true"] {
-    --breadcrumbs-navigation: 0px;
+    --breadcrumbs-navigation-height: 0px;
   }
 
   &[data-navigator-collapsed="true"] {
-    --navigator-navigation: 0px;
+    --navigator-navigation-width: 0px;
+
+    .sci--layout--navigator-open {
+      display: inline-block;
+    }
   }
 
   &[data-left-navigation-collapsed="true"] {
-    --left-navigation: 0px;
+    --left-navigation-width: 0px;
   }
 
   .sci--layout-navigation-top {
     grid-area: top;
-    height: var(--top-navigation);
+    height: var(--top-navigation-height);
     position: fixed;
     width: 100%;
     z-index: 610;
@@ -40,42 +49,43 @@
 
   .sci--layout-navigation-left {
     grid-area: left;
-    height: calc(100% - var(--top-navigation));
+    height: calc(100% - var(--top-navigation-height));
     left: 0;
     position: fixed;
-    top: var(--top-navigation);
-    width: var(--left-navigation);
+    top: var(--top-navigation-height);
+    width: var(--left-navigation-width);
     z-index: 600;
   }
 
   .sci--layout-navigation-navigator {
     grid-area: navigator;
-    height: calc(100% - var(--top-navigation) - var(--breadcrumbs-navigation));
-    left: var(--left-navigation);
+    height: calc(100% - var(--top-navigation-height) - var(--breadcrumbs-navigation-height));
+    left: var(--left-navigation-width);
     position: fixed;
-    top: calc(var(--top-navigation) + var(--breadcrumbs-navigation));
-    transition: .4s $timing-function-standard;
-    width: var(--navigator-navigation);
+    top: calc(var(--top-navigation-height) + var(--breadcrumbs-navigation-height));
+    transition: .4s $timing-function-sharp;
+    width: var(--navigator-navigation-width);
     z-index: 550;
   }
 
   .sci--layout-navigation-breadcrumbs {
     grid-area: breadcrumbs;
-    height: var(--breadcrumbs-navigation);
-    left: var(--left-navigation);
+    height: var(--breadcrumbs-navigation-height);
+    left: var(--left-navigation-width);
     position: fixed;
-    top: var(--top-navigation);
-    transition: .4s $timing-function-standard;
-    width: calc(100% - var(--left-navigation));
+    top: var(--top-navigation-height);
+    transition: .4s $timing-function-sharp;
+    width: calc(100% - var(--left-navigation-width));
     z-index: 600;
   }
 
   .sci--layout-content {
     grid-area: content;
+    padding: 0 1.5rem;
     width: 100%;
 
     .container-fluid {
-      padding: 0 1em; // override bootstrap and old pages support
+      padding: 1em; // override bootstrap and old pages support
     }
   }
 }

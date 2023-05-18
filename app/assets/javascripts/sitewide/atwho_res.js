@@ -1,4 +1,4 @@
-/* global _ */
+/* global PerfectScrollbar MyModuleRepositories HelperModule _ */
 
 var SmartAnnotation = (function() {
   'use strict';
@@ -11,7 +11,7 @@ var SmartAnnotation = (function() {
     });
   }
 
-  function SetAtWho(field, deferred) {
+  function SetAtWho(field, deferred, assignableMyModuleId) {
     var FilterTypeEnum = Object.freeze({
       USER: { tag: 'users', dataUrl: $(document.body).attr('data-atwho-users-url') },
       TASK: { tag: 'sa-tasks', dataUrl: $(document.body).attr('data-atwho-task-url') },
@@ -24,7 +24,7 @@ var SmartAnnotation = (function() {
 
     function matchHighlighter(html, query) {
       var $html = $(html);
-      var $liText = $html.find('.item-text');
+      var $liText = $html.find('.item-text, .sa-type');
       if ($liText.length === 0 || !query) return html;
 
       $.each($liText, function(i, item) {
@@ -67,6 +67,7 @@ var SmartAnnotation = (function() {
               let activeRepository = repositoryTab.find('.btn-primary');
               if (activeRepository.length) {
                 params.repository_id = activeRepository.data('object-id');
+                params.assignable_my_module_id = assignableMyModuleId;
               }
             }
             $.getJSON(filterType.dataUrl, params, function(data) {
@@ -80,6 +81,10 @@ var SmartAnnotation = (function() {
               if (data.repository) {
                 $currentAtWho.find(`.repository-object[data-object-id="${data.repository}"]`)
                   .addClass('btn-primary').removeClass('btn-light');
+              }
+              if ($('.atwho-scroll-container')[0]) {
+                // eslint-disable-next-line no-new
+                new PerfectScrollbar($('.atwho-scroll-container')[0]);
               }
             });
             return true;
@@ -140,6 +145,24 @@ var SmartAnnotation = (function() {
             .addClass('btn-light');
           $(this).addClass('btn-primary').removeClass('btn-light');
           $(field).click().focus();
+        });
+        $currentAtWho.on('click', '.atwho-assign-button', function() {
+          let el = $(this);
+          $.ajax({
+            method: 'POST',
+            url: el.data('assign-url'),
+            data: { repository_row_id: el.data('repository-row-id') },
+            dataType: 'json',
+            success: function(data) {
+              if (typeof MyModuleRepositories !== 'undefined') {
+                MyModuleRepositories.reloadRepositoriesList(el.data('repository-id'));
+              }
+              HelperModule.flashAlertMsg(data.flash, 'success');
+            },
+            error: function(response) {
+              HelperModule.flashAlertMsg(response.responseJSON.flash, 'danger');
+            }
+          });
         });
 
         if ($currentAtWho.find('.tab-pane.active').length === 0) {
@@ -223,8 +246,8 @@ var SmartAnnotation = (function() {
     $('.atwho-header-res').find('.fa-times').click();
   }
 
-  function initialize(field, deferred) {
-    var atWho = new SetAtWho(field, deferred);
+  function initialize(field, deferred, assignableMyModuleId) {
+    var atWho = new SetAtWho(field, deferred, assignableMyModuleId);
     atWho.init();
   }
 
@@ -240,7 +263,7 @@ var SmartAnnotation = (function() {
 (function() {
   $(document).on('focus', '[data-atwho-edit]', function() {
     if (_.isUndefined($(this).data('atwho'))) {
-      SmartAnnotation.init(this);
+      SmartAnnotation.init(this, false);
     }
   });
 

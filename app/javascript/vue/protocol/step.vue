@@ -147,6 +147,7 @@
             :element.sync="elements[index]"
             :inRepository="inRepository"
             :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
+            :assignableMyModuleId="assignableMyModuleId"
             :isNew="element.isNew"
             @component:delete="deleteElement"
             @update="updateElement"
@@ -223,6 +224,10 @@
         required: true
       },
       reorderStepUrl: {
+        required: false
+      },
+      assignableMyModuleId: {
+        type: Number,
         required: false
       }
     },

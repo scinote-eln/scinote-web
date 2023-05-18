@@ -309,7 +309,7 @@ mark,.mark {
   #secondary-menu {
     background: $color-white;
     border-bottom: 1px solid $color-gainsboro;
-    padding-left: 29px;
+    padding-left: 0;
     padding-top: 15px;
 
     .open > a,
@@ -929,25 +929,6 @@ ul.content-activities {
     top: -10px;
   }
 
-}
-// Protocolsio Preview protocol modal
-@media (min-width: 768px) {
-  #modal-import-json-protocol-preview .modal-dialog {
-    width: 70%;
-
-  }
-}
-
-#modal-import-json-protocol-preview .modal-dialog {
-  .modal-body {
-    max-height: 75vh;
-    overflow-y: auto;
-    width: 100%;
-
-    .ql-editor {
-      min-height: initial;
-    }
-  }
 }
 
 .badge-icon {

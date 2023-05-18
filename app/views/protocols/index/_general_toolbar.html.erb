@@ -32,4 +32,11 @@
       </div>
     <% end %>
   </div>
+  <%= render partial: 'shared/state_view_switch', locals: {
+        disabled: false,
+        switchable: true,
+        archived: templates_view_mode_archived?(type: @type),
+        active_url: protocols_path(type: :active),
+        archived_url: protocols_path(type: :archived),
+      } %>
 </template>

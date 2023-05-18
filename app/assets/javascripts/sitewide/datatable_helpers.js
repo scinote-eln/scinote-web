@@ -32,7 +32,7 @@ var DataTableHelpers = (function() {
                   title="${I18n.t('repositories.show.button_tooltip.search')}">
             <i class="fas fa-search"></i>
           </button>
-          <div class="sci-input-container left-icon search-container">
+          <div class="sci-input-container right-icon search-container">
             <i class="fas fa-search"></i>
           </div>`).find('.sci-input-container').prepend(tableFilterInput);
       $('.dataTables_filter').find('label').remove();
@@ -109,7 +109,7 @@ DataTableCheckboxes.prototype.clearSelection = function() {
 DataTableCheckboxes.prototype.initCheckboxes = function() {
   this.tableWrapper.on('click', '.table tbody tr', (e) => {
     var checkbox = $(e.currentTarget).find(this.config.checkboxSelector);
-    if (checkbox.attr('disabled')) return;
+    if (checkbox.attr('disabled') || $(e.target).is('a')) return;
     checkbox.prop('checked', !checkbox.prop('checked'));
     this.selectRow(e.currentTarget);
   }).on('click', this.config.checkboxSelector, (e) => {

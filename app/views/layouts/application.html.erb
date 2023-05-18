@@ -10,6 +10,7 @@
       <meta name="expiration-url" content="<%= users_expire_in_path %>">
       <meta name="revive-url" content="<%= users_revive_session_path %>">
     <% end %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
 
     <%= javascript_include_tag 'jquery_bundle' %>
@@ -20,8 +21,9 @@
 
 
     <% if MarvinJsService.enabled? && ENV['MARVINJS_API_KEY'] %>
-      <script src="https://marvinjs.chemicalize.com/v1/<%= ENV['MARVINJS_API_KEY'] %>/client-settings.js"></script>
-      <script src="https://marvinjs.chemicalize.com/v1/client.js"></script>
+    <%= javascript_include_tag "https://marvinjs.chemicalize.com/v1/#{ ENV['MARVINJS_API_KEY'] }/client-settings.js",
+                                nonce: true %>
+    <%= javascript_include_tag 'https://marvinjs.chemicalize.com/v1/client.js', nonce: true %>
     <% end %>
 
     <%= favicon_link_tag "favicon.ico" %>
@@ -38,13 +40,15 @@
       <%= yield(:head) %>
     <% end %>
 
-    <%= javascript_include_tag 'tui_image_editor' %>
+    <%= javascript_include_tag 'tui_image_editor', nonce: true %>
     <%= stylesheet_link_tag 'tui_image_editor_styles' %>
-    <%= javascript_include_tag 'vue_navigation_top_menu' %>
+    <%= javascript_include_tag 'vue_navigation_navigator' %>
+    <%= javascript_include_tag 'vue_navigation_top_menu', nonce: true %>
   </head>
   <body
     class="<%= yield :body_class %>"
     <% if user_signed_in? && current_team.present? %>
+    data-current-team-id="<%= current_team.id %>"
     data-atwho-users-url="<%= atwho_users_team_path(current_team) %>"
     data-atwho-task-url="<%= atwho_my_modules_team_path(current_team) %>"
     data-atwho-project-url="<%= atwho_projects_team_path(current_team) %>"
@@ -52,6 +56,7 @@
     data-atwho-repositories-url="<%= atwho_menu_team_path(current_team) %>"
     data-atwho-rep-items-url="<%= atwho_rep_items_team_path(current_team) %>"
     data-atwho-menu-items="<%= atwho_menu_items_team_path(current_team) %>"
+    data-datetime-picker-format-date-only="<%= datetime_picker_format_date_only %>"
     <% end %>
   >
 
@@ -59,9 +64,8 @@
     <span style="display: none;" data-hook="application-body-html"></span>
 
     <div class="sci--layout"
-         data-breadcrumbs-collapsed="true"
-         data-navigator-collapsed="<%= !content_for?(:sidebar_title) || session[:navigator_collapsed] %>"
-         data-navitgator-state-url="<%= navigator_state_navigations_path %>"
+         data-breadcrumbs-collapsed="<%= !@breadcrumbs_items.present? %>"
+         data-navigator-collapsed="<%= !@navigator || session[:navigator_collapsed] %>"
          data-left-navigation-collapsed=<%= !user_signed_in? %>
     >
       <div class="sci--layout-navigation-top" >
@@ -70,8 +74,7 @@
       <div class="sci--layout-navigation-left">
         <%= render "shared/navigation/left" if user_signed_in? %>
       </div>
-      <!-- temporary fix for sidebar (#wrapper) -->
-      <div id="wrapper" class="sci--layout-navigation-navigator">
+      <div class="sci--layout-navigation-navigator pb-3 overflow-hidden relative">
         <%= render "shared/navigation/navigator" %>
       </div>
       <div class="sci--layout-navigation-breadcrumbs">
@@ -88,6 +91,8 @@
           <%= yield :content %>
         <% end %>
       </div>
+
+      <%= render "shared/comments/comments_sidebar.html.erb" %>
     </div>
 
     <%= render partial: 'shared/flash_alerts',
@@ -98,7 +103,6 @@
       <%= render "shared/file_preview/modal.html.erb" %>
       <%= render "shared/file_edit_modal.html.erb" %>
       <%= render "shared/marvinjs_modal.html.erb" %>
-      <%= render "shared/comments/comments_sidebar.html.erb" %>
       <%= render "users/sessions/session_expire_modal.html.erb" %>
       <%= render "users/sessions/session_end_modal.html.erb" %>
     <% end %>
@@ -110,11 +114,6 @@
     <% end %>
 
     <span style="display: none;" data-hook="application-body-end-html"></span>
-
-    <script data-hook="footer-js">
-      // GLOBALS
-      window.IN_REQUEST = false;
-    </script>
 
     <%= javascript_include_tag 'prism' %>
   </body>

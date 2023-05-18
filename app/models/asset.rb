@@ -295,14 +295,8 @@ class Asset < ApplicationRecord
       mjs_doc.remove_namespaces!
       text_data = mjs_doc.search("//Field[@name='text']").collect(&:text).join(' ')
     else
-      # Start Tika as a server
-      Yomu.server(:text)
-      begin
-        blob.open do |tmp_file|
-          text_data = Yomu.new(tmp_file.path).text
-        end
-      ensure
-        Yomu.kill_server!
+      blob.open do |tmp_file|
+        text_data = Yomu.new(tmp_file.path).text
       end
     end
 

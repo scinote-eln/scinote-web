@@ -1,0 +1,41 @@
+@font-face {
+  font-family: 'SN-icon-font';
+  src:
+    url('fonts/SN-icon-font.ttf?uw0o3v') format('truetype'),
+    url('fonts/SN-icon-font.woff?uw0o3v') format('woff'),
+    url('fonts/SN-icon-font.svg?uw0o3v#SN-icon-font') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+.sn-icon {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'SN-icon-font' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.sn-icon-navigator:before {
+  content: "\e900";
+}
+.sn-icon-close:before {
+  content: "\e901";
+}
+.sn-icon-right:before {
+  content: "\e902";
+}
+.sn-icon-down:before {
+  content: "\e903";
+}
+.sn-icon-mini-folder-left:before {
+  content: "\e904";
+}

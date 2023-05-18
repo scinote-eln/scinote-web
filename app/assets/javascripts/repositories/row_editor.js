@@ -22,8 +22,8 @@ var RepositoryDatatableRowEditor = (function() {
   }
 
   function validateAndSubmit($table, $submitButton) {
-    let $form = $table.find(`.${EDIT_FORM_CLASS_NAME}`);
-    let $row = $form.closest('tr');
+    let $forms = $table.find(`.${EDIT_FORM_CLASS_NAME}`);
+    let $row = $forms.closest('tr');
     let valid = true;
     let directUrl = $table.data('direct-upload-url');
     let $files = $table.find('input[type=file]');
@@ -47,7 +47,8 @@ var RepositoryDatatableRowEditor = (function() {
     // Submission here
     uploadPromise
       .then(function() {
-        $form.submit();
+        $forms.submit();
+
         return false;
       }).catch((reason) => {
         if (reason.includes('Status: 403')) {
@@ -106,15 +107,10 @@ var RepositoryDatatableRowEditor = (function() {
     let $table = $(TABLE.table().node());
 
     $table.on('ajax:success', `.${EDIT_FORM_CLASS_NAME}`, function(ev, data) {
-      TABLE.ajax.reload(() => {
-        animateSpinner(null, false);
-        HelperModule.flashAlertMsg(data.flash, 'success');
-        $('html, body').animate({ scrollLeft: 0 }, 300);
-      }, false);
+      HelperModule.flashAlertMsg(data.flash, 'success');
     });
 
     $table.on('ajax:error', `.${EDIT_FORM_CLASS_NAME}`, function(ev, data) {
-      animateSpinner(null, false);
       $(TABLE.nodes()).find('.spinner').remove();
       HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
     });

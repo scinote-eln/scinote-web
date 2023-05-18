@@ -4,19 +4,16 @@
 @import "constants";
 @import "layouts/reminders";
 
-:root {
-  --repository-sidebar-margin: 363px;
-}
 
 .repository-show {
   height: calc(100vh - var(--navbar-height));
-  left: var(--repository-sidebar-margin);
+  left: var(--left-navigation-width);
   margin: 0;
   padding: 0 2em;
   position: absolute;
   top: var(--navbar-height);
   transition: .4s $timing-function-sharp;
-  width: calc(100vw - var(--repository-sidebar-margin));
+  width: calc(100% - var(--left-navigation-width));
 
   &.active {
     [data-view-mode="archived"] {
@@ -37,12 +34,12 @@
       background-color: $color-white;
       border: 0;
       display: flex;
-      left: var(--repository-sidebar-margin);
+      left: var(--left-navigation-width);
       margin-left: 0em;
       padding: 0 2em;
       position: fixed;
       transition: .4s $timing-function-sharp;
-      width: calc(100% - var(--repository-sidebar-margin));
+      width: calc(100% - var(--left-navigation-width));
       z-index: 100;
 
       .toolbar-delimiter {
@@ -161,11 +158,11 @@
     bottom: 0;
     display: flex;
     height: 5em;
-    left: var(--repository-sidebar-margin);
+    left: var(--left-navigation-width);
     padding: 0 2em;
     position: fixed;
     transition: .4s $timing-function-sharp;
-    width: calc(100% - var(--repository-sidebar-margin));
+    width: calc(100% - var(--left-navigation-width));
     z-index: 90;
 
     .pagination-info,
@@ -572,7 +569,7 @@
     padding: .5em;
     position: fixed;
     text-align: center;
-    width: calc(100% - var(--repository-sidebar-margin));
+    width: calc(100% - var(--left-navigation-width));
 
     hr {
       margin-top: -2.5em;

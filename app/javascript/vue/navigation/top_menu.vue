@@ -8,7 +8,7 @@
     </div>
     <div v-if="teams" class="sci--navigation--top-menu-teams">
       <DropdownSelector
-        :selectedValue="current_team"
+        :selectedValue="currentTeam"
         :options="teams"
         :disableSearch="true"
         :selectorId="`sciNavigationTeamSelector`"
@@ -25,8 +25,8 @@
         <i class="fas fa-question-circle"></i>
       </button>
       <ul v-if="user" class="dropdown-menu dropdown-menu-right">
-        <li v-for="(item, i) in helpMenu">
-          <a :key="i" :href="item.url">
+        <li v-for="(item, i) in helpMenu" :key="i">
+          <a :href="item.url" target="_blank">
             {{ item.name }}
           </a>
         </li>
@@ -37,8 +37,8 @@
         <i class="fas fa-cog"></i>
       </button>
       <ul class="dropdown-menu dropdown-menu-right">
-        <li v-for="(item, i) in settingsMenu">
-          <a :key="i" :href="item.url">
+        <li v-for="(item, i) in settingsMenu" :key="i">
+          <a :href="item.url">
             {{ item.name }}
           </a>
         </li>
@@ -71,8 +71,8 @@
         <img class="avatar" :src="user.avatar_url">
       </div>
       <div class="dropdown-menu dropdown-menu-right">
-        <li v-for="(item, i) in userMenu">
-          <a :key="i" :href="item.url">
+        <li v-for="(item, i) in userMenu" :key="i">
+          <a :href="item.url">
             {{ item.name }}
           </a>
         </li>
@@ -105,7 +105,7 @@
       return {
         rootUrl: null,
         logo: null,
-        current_team: null,
+        currentTeam: null,
         teams: null,
         searchUrl: null,
         user: null,
@@ -118,32 +118,43 @@
       }
     },
     created() {
-      $.get(this.url, (result) => {
-        this.rootUrl = result.root_url;
-        this.logo = result.logo;
-        this.current_team = result.current_team;
-        this.teams = result.teams;
-        this.searchUrl = result.search_url;
-        this.helpMenu = result.help_menu;
-        this.settingsMenu = result.settings_menu;
-        this.userMenu = result.user_menu;
-        this.user = result.user;
-      })
-
+      this.fetchData();
       this.checkUnseenNotifications();
 
       $(document).on('turbolinks:load', () => {
         this.notificationsOpened = false;
         this.checkUnseenNotifications();
+        this.refreshCurrentTeam();
       })
+
+      // Track name update in user profile settings
+      $(document).on('inlineEditing::updated', '.inline-editing-container[data-field-to-update="full_name"]', this.fetchData);
     },
     methods: {
+      fetchData() {
+        $.get(this.url, (result) => {
+          this.rootUrl = result.root_url;
+          this.logo = result.logo;
+          this.currentTeam = result.current_team;
+          this.teams = result.teams;
+          this.searchUrl = result.search_url;
+          this.helpMenu = result.help_menu;
+          this.settingsMenu = result.settings_menu;
+          this.userMenu = result.user_menu;
+          this.user = result.user;
+        })
+      },
       switchTeam(team) {
-        if (this.current_team == team) return;
+        if (this.currentTeam == team) return;
 
-        $.post(this.teams.find(e => e.value == team).params.switch_url, (result) => {
-          this.current_team = result.current_team
-          dropdownSelector.selectValues('#sciNavigationTeamSelector', this.current_team);
+        let newTeam = this.teams.find(e => e.value == team);
+
+        if (!newTeam) return;
+
+        $.post(newTeam.params.switch_url, (result) => {
+          this.currentTeam = result.currentTeam
+          dropdownSelector.selectValues('#sciNavigationTeamSelector', this.currentTeam);
+          $('body').attr('data-current-team-id', this.currentTeam);
           window.open(this.rootUrl, '_self')
         }).error((msg) => {
           HelperModule.flashAlertMsg(msg.responseJSON.message, 'danger');
@@ -156,6 +167,13 @@
         $.get(this.unseenNotificationsUrl, (result) => {
           this.unseenNotificationsCount = result.unseen;
         })
+      },
+      refreshCurrentTeam() {
+        let newTeam = parseInt($('body').attr('data-current-team-id'));
+        if (newTeam !== this.currentTeam) {
+          this.currentTeam = newTeam;
+          dropdownSelector.selectValues('#sciNavigationTeamSelector', this.currentTeam);
+        }
       }
     }
   }

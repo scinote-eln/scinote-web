@@ -12,7 +12,7 @@ class ReportsController < ApplicationController
   before_action :load_available_repositories, only: %i(index save_pdf_to_inventory_modal available_repositories)
   before_action :check_project_read_permissions, only: %i(create edit update generate_pdf
                                                           generate_docx new_template_values project_contents)
-  before_action :check_read_permissions, except: %i(index datatable new create edit update destroy generate_pdf
+  before_action :check_read_permissions, except: %i(index datatable new create edit update destroy actions_toolbar generate_pdf
                                                     generate_docx new_template_values project_contents
                                                     available_repositories)
   before_action :check_create_permissions, only: %i(new create)
@@ -330,6 +330,16 @@ class ReportsController < ApplicationController
         report_type: params[:report_type]
       }
     ) }
+  end
+
+  def actions_toolbar
+    render json: {
+      actions:
+        Toolbars::ReportsService.new(
+          current_user,
+          report_ids: params[:report_ids].split(',')
+        ).actions
+    }
   end
 
   private
