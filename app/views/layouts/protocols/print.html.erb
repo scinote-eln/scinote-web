@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <%= ::NewRelic::Agent.browser_timing_header("nonce") %>
     <title><%= t("protocols.print.title") %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <%= javascript_include_tag 'jquery_bundle' %>
