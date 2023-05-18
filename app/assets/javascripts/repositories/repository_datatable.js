@@ -872,6 +872,12 @@ var RepositoryDatatable = (function(global) {
       changeToEditMode();
       // adjustTableHeader();
     })
+    .on('click', '#assignRepositoryRecords', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      window.AssignItemsToTaskModalComponentContainer.showModal();
+    })
     .on('click', '#deleteRepositoryRecords', function(e) {
       e.preventDefault();
       e.stopPropagation();

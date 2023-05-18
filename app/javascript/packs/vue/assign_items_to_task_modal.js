@@ -26,6 +26,9 @@ function initAssignItemsToTaskModalComponent() {
         };
       },
       methods: {
+        showModal() {
+          this.visibility = true;
+        },
         closeModal() {
           this.visibility = false;
         }

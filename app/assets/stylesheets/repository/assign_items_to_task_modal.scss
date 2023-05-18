@@ -22,7 +22,10 @@
       display: flex;
       flex-direction: column;
       row-gap: .25rem;
+    }
 
+    .sn-select__search-input:focus {
+      box-shadow: none;
     }
 
     label {
