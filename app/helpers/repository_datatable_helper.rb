@@ -107,7 +107,7 @@ module RepositoryDatatableHelper
     repository_rows = reminders_enabled ? with_reminders_status(repository_rows, repository) : repository_rows
     # Always disabled in a simple view
     stock_managable = false
-    stock_consumption_permitted = has_stock_management && stock_consumption_permitted?(repository, options[:my_module])
+    stock_consumption_permitted = has_stock_management && stock_consumption_permitted?(repository, my_module)
 
     repository_rows.map do |record|
       row = {
