@@ -5,13 +5,6 @@
 @import "bootstrap/mixins/buttons";
 /** Layout **/
 
-body,
-#main-nav,
-#notifications,
-#notifications .alert {
-  min-width: 320px;
-}
-
 // Word wrapping everywhere, except for table header of "datatables.js"
 body,
 table.dataTable td {
