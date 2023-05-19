@@ -14,7 +14,7 @@
     <%= stylesheet_link_tag 'application', media: 'all' %>
 
     <% if ::NewRelic::Agent.instance.started? %>
-      <%= ::NewRelic::Agent.browser_timing_header("nonce") %>
+      <%= ::NewRelic::Agent.browser_timing_header(controller.request.content_security_policy_nonce) %>
     <% end %>
     <%= javascript_include_tag 'jquery_bundle' %>
     <%= javascript_include_tag 'application' %>
