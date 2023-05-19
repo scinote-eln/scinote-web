@@ -1,3 +1,7 @@
+body {
+  min-width: 900px;
+}
+
 .sci--layout {
   --breadcrumbs-navigation-height: 56px;
   --left-navigation-width: 192px;
@@ -42,16 +46,18 @@
   .sci--layout-navigation-top {
     grid-area: top;
     height: var(--top-navigation-height);
-    position: fixed;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
     width: 100%;
     z-index: 610;
   }
 
   .sci--layout-navigation-left {
     grid-area: left;
-    height: calc(100% - var(--top-navigation-height));
-    left: 0;
-    position: fixed;
+    height: calc(100vh - var(--top-navigation-height));
+    position: sticky;
+    position: -webkit-sticky;
     top: var(--top-navigation-height);
     width: var(--left-navigation-width);
     z-index: 600;
@@ -59,9 +65,9 @@
 
   .sci--layout-navigation-navigator {
     grid-area: navigator;
-    height: calc(100% - var(--top-navigation-height) - var(--breadcrumbs-navigation-height));
-    left: var(--left-navigation-width);
-    position: fixed;
+    height: calc(100vh - var(--top-navigation-height) - var(--breadcrumbs-navigation-height) - 1rem);
+    position: sticky;
+    position: -webkit-sticky;
     top: calc(var(--top-navigation-height) + var(--breadcrumbs-navigation-height));
     transition: .4s $timing-function-sharp;
     width: var(--navigator-navigation-width);
@@ -71,11 +77,11 @@
   .sci--layout-navigation-breadcrumbs {
     grid-area: breadcrumbs;
     height: var(--breadcrumbs-navigation-height);
-    left: var(--left-navigation-width);
-    position: fixed;
+    position: sticky;
+    position: -webkit-sticky;
     top: var(--top-navigation-height);
     transition: .4s $timing-function-sharp;
-    width: calc(100% - var(--left-navigation-width));
+    width: 100%;
     z-index: 600;
   }
 
