@@ -59,7 +59,7 @@ class Experiment < ApplicationRecord
                                       'SELECT 1 FROM my_modules '\
                                       'WHERE experiments.id = my_modules.experiment_id '\
                                       'AND my_modules.archived = false )'
-                                      )
+                                    )
                                   })
 
   scope :experiment_search_scope, lambda { |project_ids, user|
