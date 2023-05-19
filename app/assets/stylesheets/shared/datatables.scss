@@ -1,0 +1,19 @@
+table.dataTable thead th.dt-colresizable-hover {
+  cursor: col-resize;
+  position: relative;
+
+  + th {
+    cursor: col-resize;
+  }
+
+  &::before {
+    background-color: $color-silver-chalice;
+    content: "";
+    display: block;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 2px;
+  }
+}
