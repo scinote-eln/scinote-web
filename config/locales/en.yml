@@ -3504,6 +3504,9 @@ en:
         general:
           title: "Error"
           detail: "Something went wrong, please contact resource owner"
+        filter_parameter:
+          title: "Filter parameter error"
+          detail: "Filter parameter contains incorrect value"
         parameter:
           title: "Missing parameter"
         parameter_incorrect:

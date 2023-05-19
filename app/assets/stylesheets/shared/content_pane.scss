@@ -24,7 +24,10 @@
       background: $color-white;
       display: flex;
       height: 4em;
-      padding: 0;
+      margin-left: -1.5rem;
+      padding: 0 1.5rem;
+      width: calc(100% + 3rem);
+
 
       h1 {
         align-items: center;
@@ -175,10 +178,9 @@
 
     .toolbar-row {
       background: $color-white;
-      margin-left: -2em;
-      padding: 1em 0;
-      padding-left: 2em;
-      width: calc(100% + 4em);
+      margin-left: -1.5rem;
+      padding: 1em 1.5rem;
+      width: calc(100% + 3rem);
     }
   }
 

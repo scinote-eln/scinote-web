@@ -149,7 +149,12 @@ class Protocol < ApplicationRecord
   has_many :published_versions,
            -> { in_repository_published_version },
            class_name: 'Protocol',
-           foreign_key: 'parent_id'
+           foreign_key: 'parent_id',
+           inverse_of: :parent,
+           dependent: :destroy
+  has_many :linked_my_modules,
+           through: :linked_children,
+           source: :my_module
   has_many :protocol_protocol_keywords,
            inverse_of: :protocol,
            dependent: :destroy
