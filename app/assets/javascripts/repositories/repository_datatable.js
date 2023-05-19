@@ -464,6 +464,25 @@ var RepositoryDatatable = (function(global) {
     initRepositorySearch();
   }
 
+  function saveState(state) {
+    // Send an Ajax request to the server with the state object
+    let repositoryId = $(TABLE_ID).data('repository-id');
+    var viewType = $('.repository-show').hasClass('archived') ? 'archived' : 'active';
+
+    localStorage.setItem(
+      `datatables_repositories_state/${repositoryId}/${viewType}`,
+      JSON.stringify(state)
+    );
+
+    $.ajax({
+      url: '/repositories/' + repositoryId + '/state_save',
+      contentType: 'application/json',
+      data: JSON.stringify({ state: state }),
+      dataType: 'json',
+      type: 'POST'
+    });
+  }
+
   function dataTableInit() {
     TABLE = $(TABLE_ID).DataTable({
       dom: "R<'repository-toolbar hidden'<'repository-search-container'f>>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
@@ -476,7 +495,26 @@ var RepositoryDatatable = (function(global) {
       stateDuration: 0,
       colReorder: {
         fixedColumnsLeft: 2,
-        realtime: false
+        realtime: false,
+        disabledClass: 'dt-colresizable-hover'
+      },
+      colResize: {
+        isEnabled: true,
+        saveState: true,
+        hasBoundCheck: false,
+        isResizable: (column) => {
+          return column.idx > 1;
+        },
+        stateSaveCallback: (_, data) => {
+          $(TABLE_ID).data('col-sizes', data);
+          let state = TABLE.state();
+          state.ColSizes = data;
+          saveState(state);
+        },
+        stateLoadCallback: () => {
+          return TABLE.ColSizes;
+        },
+        hoverClass: 'dt-colresizable-hover'
       },
       destroy: true,
       ajax: {
@@ -644,27 +682,13 @@ var RepositoryDatatable = (function(global) {
             if (json.state.columns[7]) json.state.columns[7].visible = archived;
             if (json.state.search) delete json.state.search;
 
+            TABLE.ColSizes = json.state.ColSizes;
             callback(json.state);
           }
         });
       },
       stateSaveCallback: function(settings, data) {
-        // Send an Ajax request to the server with the state object
-        let repositoryId = $(TABLE_ID).data('repository-id');
-        var viewType = $('.repository-show').hasClass('archived') ? 'archived' : 'active';
-
-        localStorage.setItem(
-          `datatables_repositories_state/${repositoryId}/${viewType}`,
-          JSON.stringify(data)
-        );
-
-        $.ajax({
-          url: '/repositories/' + repositoryId + '/state_save',
-          contentType: 'application/json',
-          data: JSON.stringify({ state: data }),
-          dataType: 'json',
-          type: 'POST'
-        });
+        saveState({ ...data, ColSizes: TABLE.ColSizes });
       },
       fnInitComplete: function() {
         window.initActionToolbar();
@@ -711,6 +735,8 @@ var RepositoryDatatable = (function(global) {
         // setTimeout(function() {
         //   adjustTableHeader();
         // }, 500);
+
+        TABLE.colResize.restore();
       }
     });
 
