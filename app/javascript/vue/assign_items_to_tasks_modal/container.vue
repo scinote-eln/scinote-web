@@ -95,11 +95,7 @@
               ref="tasksSelector"
               @change="changeTask"
               :options="tasks"
-              :placeholder="
-                i18n.t(
-                  'repositories.modal_assign_items_to_task.body.task_select.disabled_placeholder'
-                )
-              "
+              :placeholder="tasksSelectorPlaceholder"
               :searchPlaceholder="
                 i18n.t(
                   'repositories.modal_assign_items_to_task.body.task_select.placeholder'
@@ -162,8 +158,8 @@ export default {
       });
     });
 
-
     $(this.$refs.modal).on("hidden.bs.modal", () => {
+      this.resetSelectors();
       this.$emit("close");
     });
   },
