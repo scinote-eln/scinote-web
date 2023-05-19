@@ -13,6 +13,9 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
     2.times do
       project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @team1)
     end
+    2.times do
+      project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @teams.first, archived: true)
+    end
 
     # unaccessable_projects
     create(:project, name: Faker::Name.unique.name,
@@ -34,6 +37,36 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
         JSON.parse(
           ActiveModelSerializers::SerializableResource
             .new(@team1.projects, each_serializer: Api::V1::ProjectSerializer)
+            .to_json
+        )['data']
+      )
+    end
+
+    it 'Response with correct projects, only active' do
+      hash_body = nil
+      get api_v1_team_projects_path(team_id: @teams.first.id, filter: { archived: false }),
+          headers: @valid_headers
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data].pluck('attributes').pluck('archived').none?).to be(true)
+      expect(hash_body[:data]).to match(
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@teams.first.projects.active, each_serializer: Api::V1::ProjectSerializer)
+            .to_json
+        )['data']
+      )
+    end
+
+    it 'Response with correct projects, only archived' do
+      hash_body = nil
+      get api_v1_team_projects_path(team_id: @teams.first.id, filter: { archived: true }),
+          headers: @valid_headers
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data].pluck('attributes').pluck('archived').all?).to be(true)
+      expect(hash_body[:data]).to match(
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@teams.first.projects.archived, each_serializer: Api::V1::ProjectSerializer)
             .to_json
         )['data']
       )
