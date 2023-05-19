@@ -105,7 +105,7 @@ class ProjectsController < ApplicationController
   end
 
   def project_filter
-    projects = Project.readable_by_user(current_user)
+    projects = Project.managable_by_user(current_user)
                       .search(current_user, false, params[:query], 1, current_team)
                       .pluck(:id, :name)
 

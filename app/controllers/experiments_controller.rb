@@ -435,11 +435,11 @@ class ExperimentsController < ApplicationController
   end
 
   def experiment_filter
-    project = Project.readable_by_user(current_user).find_by(id: params[:project_id])
+    project = Project.managable_by_user(current_user).find_by(id: params[:project_id])
     return render_404 if project.blank?
 
     experiments = project.experiments
-                         .readable_by_user(current_user)
+                         .managable_by_user(current_user)
                          .search(current_user, false, params[:query], 1, current_team)
                          .pluck(:id, :name)
 

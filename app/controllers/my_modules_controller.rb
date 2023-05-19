@@ -457,11 +457,11 @@ class MyModulesController < ApplicationController
   end
 
   def my_module_filter
-    experiment = Experiment.readable_by_user(current_user).find_by(id: params[:experiment_id])
+    experiment = Experiment.managable_by_user(current_user).find_by(id: params[:experiment_id])
     return render_404 if experiment.blank?
 
     my_modules = experiment.my_modules
-                           .readable_by_user(current_user)
+                           .managable_by_user(current_user)
                            .search(current_user, false, params[:query], 1, current_team)
                            .pluck(:id, :name)
 
