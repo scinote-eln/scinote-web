@@ -549,7 +549,13 @@ class Extends
     'FluicsLabelTemplate' => 'Fluics'
   }
 
-  EXTERNAL_SERVICES = %w(https://www.protocols.io/ http://127.0.0.1:9100/available)
+  s3 = Rails.application.config.active_storage.bucket_url
+
+  EXTERNAL_SERVICES = %w(
+    https://www.protocols.io/
+    http://127.0.0.1:9100/available
+  )
+  EXTERNAL_SERVICES += [s3] if s3
 end
 
 # rubocop:enable Style/MutableConstant
