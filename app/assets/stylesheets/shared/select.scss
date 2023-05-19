@@ -92,6 +92,11 @@
       padding: .5em;
     }
 
+    .sn-select__no-options {
+      padding: .5em;
+      color: var(--sn-grey);
+    }
+
     .sn-select__option:hover {
       background: var(--sn-blue);
       color: var(--sn-white);

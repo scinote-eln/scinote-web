@@ -96,6 +96,11 @@
               @change="changeTask"
               :options="tasks"
               :placeholder="tasksSelectorPlaceholder"
+              :no-options-placeholder="
+                i18n.t(
+                  'repositories.modal_assign_items_to_task.body.task_select.no_options_placeholder'
+                )
+              "
               :searchPlaceholder="
                 i18n.t(
                   'repositories.modal_assign_items_to_task.body.task_select.placeholder'
