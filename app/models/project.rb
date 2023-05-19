@@ -73,6 +73,17 @@ class Project < ApplicationRecord
 
   scope :templates, -> { where(template: true) }
 
+  scope :with_active_my_modules, (lambda {
+                                    where(
+                                      'EXISTS ( '\
+                                      'SELECT 1 FROM my_modules '\
+                                      'INNER JOIN experiments '\
+                                      'ON my_modules.experiment_id = experiments.id '\
+                                      'WHERE projects.id = experiments.project_id '\
+                                      'AND my_modules.archived = false )'
+                                    )
+                                  })
+
   after_create :auto_assign_project_members, if: :visible?
   before_update :sync_project_assignments, if: :visibility_changed?
 

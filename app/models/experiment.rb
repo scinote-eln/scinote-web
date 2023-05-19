@@ -53,6 +53,15 @@ class Experiment < ApplicationRecord
     end
   }
 
+  scope :with_active_my_modules, (lambda {
+                                    where(
+                                      'EXISTS ( '\
+                                      'SELECT 1 FROM my_modules '\
+                                      'WHERE experiments.id = my_modules.experiment_id '\
+                                      'AND my_modules.archived = false )'
+                                      )
+                                  })
+
   scope :experiment_search_scope, lambda { |project_ids, user|
     joins(:user_assignments).where(
       project: project_ids,

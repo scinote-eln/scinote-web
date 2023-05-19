@@ -440,6 +440,7 @@ class ExperimentsController < ApplicationController
 
     experiments = project.experiments
                          .managable_by_user(current_user)
+                         .with_active_my_modules
                          .search(current_user, false, params[:query], 1, current_team)
                          .pluck(:id, :name)
 
