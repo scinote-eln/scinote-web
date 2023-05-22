@@ -1,7 +1,7 @@
 <% results.each do |table| %>
   <h5>
     <span class="fas fa-table"></span>
-    <%= highlight search_query, search_query.strip.split(/\s+/) %>
+    <%= highlight table.name, search_query.strip.split(/\s+/) %>
   </h5>
 
   <p>
