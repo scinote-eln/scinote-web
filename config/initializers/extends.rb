@@ -554,6 +554,7 @@ class Extends
   EXTERNAL_SERVICES = %w(
     https://www.protocols.io/
     http://127.0.0.1:9100/available
+    https://marvinjs.chemicalize.com/
   )
   EXTERNAL_SERVICES += [s3] if s3
 end
