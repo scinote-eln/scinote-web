@@ -58,7 +58,8 @@ module Toolbars
         name: 'save_pdf_to_inventory',
         label: I18n.t('projects.reports.index.save_pdf_to_inventory'),
         icon: 'fas fa-save',
-        button_id: 'savePdfToInventoryButton'
+        button_id: 'savePdfToInventoryButton',
+        type: 'remote-modal'
       }
     end
 
