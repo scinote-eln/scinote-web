@@ -89,5 +89,13 @@ module Scinote
     config.action_view.field_error_proc = Proc.new { |html_tag, instance|
       "<div class=\"field_with_errors sci-input-container\">#{html_tag}</div>".html_safe
     }
+
+    # Whitelist AWS buckets
+    config.after_initialize do
+      return unless ActiveStorage::Blob.service.name == :amazon
+
+      Extends::EXTERNAL_SERVICES += [ActiveStorage::Blob.service.bucket.url]
+      Rails.application.config.content_security_policy.connect_src :self, :data, *Extends::EXTERNAL_SERVICES
+    end
   end
 end
