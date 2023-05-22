@@ -10,6 +10,7 @@
 .content-pane.my-modules-protocols-index {
   background-color: $color-alto;
   padding: 0 1rem 1rem !important;
+  min-height: calc(100vh - var(--navbar-height));
 
   .title-row {
     margin-left: -1rem;
