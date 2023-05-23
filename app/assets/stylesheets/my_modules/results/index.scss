@@ -74,6 +74,13 @@
   }
 }
 
+.edit-text-result {
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
 .content-pane {
   .dropdown {
     .dropdown-menu {
