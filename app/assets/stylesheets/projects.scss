@@ -757,6 +757,10 @@ li.module-hover {
             right: .2em;
             top: .2em;
 
+            .dropdown-menu {
+              z-index: 9;
+            }
+
             .project-actions-menu {
               height: 36px;
               width: 36px;
