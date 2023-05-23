@@ -30,8 +30,12 @@ const entryList = {
   vue_label_template: './app/javascript/packs/vue/label_template.js',
   vue_protocol: './app/javascript/packs/vue/protocol.js',
   vue_repository_filter: './app/javascript/packs/vue/repository_filter.js',
+  vue_repository_search: './app/javascript/packs/vue/repository_search.js',
   vue_repository_print_modal: './app/javascript/packs/vue/repository_print_modal.js',
-  vue_navigation_top_menu: './app/javascript/packs/vue/navigation/top_menu.js'
+  vue_repository_assign_items_to_task_modal: './app/javascript/packs/vue/assign_items_to_task_modal.js',
+  vue_navigation_top_menu: './app/javascript/packs/vue/navigation/top_menu.js',
+  vue_navigation_navigator: './app/javascript/packs/vue/navigation/navigator.js',
+  vue_components_action_toolbar: './app/javascript/packs/vue/action_toolbar.js'
 }
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949

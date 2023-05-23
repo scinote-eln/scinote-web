@@ -147,7 +147,7 @@ var CommentsSidebar = (function() {
 
   function initInputField() {
     if ($(SIDEBAR).find('.comment-input-field').length) {
-      SmartAnnotation.init($(SIDEBAR).find('.comment-input-field'));
+      SmartAnnotation.init($(SIDEBAR).find('.comment-input-field'), false);
     }
   }
 

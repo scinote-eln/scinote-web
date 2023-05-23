@@ -1,3 +1,6 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
 .atwho-view {
   background: $color_white;
   border-radius: $border-radius-default;
@@ -101,21 +104,55 @@
       }
     }
 
-    .sa-type {
-      font-size: 8px;
+    .dot {
+      margin: 0 5px;
     }
 
     .item {
       cursor: pointer;
-      margin-left: -.5em;
+      line-height: 2.25em;
       overflow: hidden;
-      padding: .25em .5em;
+      padding: 0 .5em;
+      position: relative;
       text-overflow: ellipsis;
-      width: calc(100% + 1em);
+      vertical-align: middle;
       white-space: nowrap;
+      width: 100%;
+
+      .atwho-button-container {
+        background: linear-gradient(90deg,
+                                    transparent,
+                                    $color-concrete 15%,
+                                    $color-concrete 100%);
+        display: inline;
+        opacity: 0;
+        padding-left: 2em;
+        position: absolute;
+        right: 0;
+
+        .atwho-assign-button-form {
+          display: inline;
+        }
+
+        .atwho-insert-button,
+        .atwho-assign-button {
+          background: $color-concrete;
+          color: $brand-primary;
+          height: 2.25em;
+          margin-right: .5em;
+          padding: 0 .5em;
+          text-align: center;
+          width: auto;
+        }
+      }
 
       &.cur {
         background: $color-concrete;
+        color: $brand-primary;
+
+        .atwho-button-container {
+          opacity: 1;
+        }
       }
 
       .atwho-highlight {
@@ -146,6 +183,8 @@
       display: inline-block;
       height: 30px;
       width: 30px;
+      margin-left: .5rem;
+      border-radius: 50%;
     }
 
     .user-info {
@@ -167,12 +206,9 @@
 }
 
 .sa-type {
-  font-size: 10px;
-  font-weight: 600;
   padding-left: 2px;
   text-decoration: none;
   text-transform: uppercase;
-  vertical-align: super;
 
   &:hover {
     text-decoration: none;
@@ -182,6 +218,10 @@
 .atwho-user-container {
   .atwho-user-popover {
     cursor: pointer;
+  }
+
+  .atwho-user-popover:focus {
+    outline: none;
   }
 }
 

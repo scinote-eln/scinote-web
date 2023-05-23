@@ -52,6 +52,24 @@ services:
       - scinote_development_bundler:/usr/local/bundle/
       - scinote_development_files:/usr/src/app/public/system
 
+  tailwind:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: scinote_web_development
+    container_name: scinote_tailwind_development
+    stdin_open: true
+    tty: true
+    command: >
+      bash -c "rails tailwindcss:watch"
+    environment:
+      - RAILS_ENV=development
+      - NODE_ENV=development
+    volumes:
+      - .:/usr/src/app
+      - scinote_development_bundler:/usr/local/bundle/
+      - scinote_development_files:/usr/src/app/public/system
+
 volumes:
   scinote_development_postgres:
   scinote_development_bundler:

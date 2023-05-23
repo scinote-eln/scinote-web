@@ -9,7 +9,6 @@ var SideBarToggle = (function() {
     $(SIDEBAR_CONTAINER).removeClass('collapsed');
     $(WRAPPER).css('paddingLeft', 'var(--wrapper-width)');
     $('.navbar-secondary').removeClass("navbar-without-sidebar");
-    $.post($(LAYOUT).data('navitgator-state-url'), {state: 'open'});
     $(WRAPPER).trigger('sideBar::show');
     $(WRAPPER).one("transitionend", function() {
       $(WRAPPER).trigger('sideBar::shown');
@@ -21,7 +20,6 @@ var SideBarToggle = (function() {
     $(SIDEBAR_CONTAINER).addClass('collapsed');
     $(WRAPPER).css('paddingLeft', '0');
     $('.navbar-secondary').addClass("navbar-without-sidebar");
-    $.post($(LAYOUT).data('navitgator-state-url'), {state: 'collapsed'});
     $(WRAPPER).trigger('sideBar::hide');
     $(WRAPPER).one("transitionend", function() {
       $(WRAPPER).trigger('sideBar::hidden');

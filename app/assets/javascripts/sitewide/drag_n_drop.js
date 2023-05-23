@@ -329,7 +329,7 @@
                     <div class="panel-body">
                       <div class="form-group">
                         <label class="control-label">Name</label>
-                        <input type="text" class="form-control" onChange="DragNDropResults.validateTextSize(this)"
+                        <input type="text" class="form-control"
                                rel="results[name]" name="results[name][${i}]">
                       </div>
                       <div class="form-group">
@@ -404,6 +404,9 @@
               const uuid = droppedFiles[i].uuid;
               removeItemHandler(uuid);
               restoreItemName(uuid);
+              $('.panel-result-attachment-new').on('change', 'input[rel="results[name]"]', function() {
+                DragNDropResults.validateTextSize(this);
+              });
             });
         }
         validateTotalSize();

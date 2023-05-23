@@ -10,31 +10,10 @@
     <%= stylesheet_link_tag 'layouts/print_protocol', media: 'print, screen' %>
     <body>
       <%= yield %>
-      <script>
-        $("[data-role='hot-table']").each(function()  {
-          var $container = $(this).find("[data-role='step-hot-table']");
-          var contents = $(this).find('.hot-contents');
-          var metadata = $(this).find('.hot-metadata');
-
-          $container.handsontable({
-            startRows: <%= Constants::HANDSONTABLE_INIT_ROWS_CNT %>,
-            startCols: <%= Constants::HANDSONTABLE_INIT_COLS_CNT %>,
-            rowHeaders: true,
-            colHeaders: true,
-            fillHandle: false,
-            formulas: true,
-            data: JSON.parse(contents.attr('value')).data,
-            cell: JSON.parse(metadata.val() || '{}').cells || [],
-            readOnly: true
-          });
-          var hot = $container.handsontable('getInstance');
-
-          setTimeout(() => {
-            hot.render()
-          }, 500)
-        });
-
-        window.print();
-      </script>
+      <div id="handson"
+        data-init-rows-cnt="<%= Constants::HANDSONTABLE_INIT_ROWS_CNT %>"
+        data-init-cols-cnt="<%= Constants::HANDSONTABLE_INIT_COLS_CNT %>"
+      ></div>
+      <%= javascript_include_tag 'protocols/handson', nonce: true %>
     </body>
 </html>

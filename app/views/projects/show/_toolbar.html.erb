@@ -1,65 +1,83 @@
 <div id="projectShowToolbar" class="project-show-toolbar">
   <!-- new experiment button -->
-  <% if can_create_project_experiments?(@project) %>
-    <%= button_to new_project_experiment_url(@project),
-                  remote: true,
-                  form_class: 'new-experiment-form',
-                  data: {view_mode: :active},
-                  id: 'new-experiment',
-                  method: :get,
-                  class: 'btn btn-primary' do %>
-      <span class="fas fa-plus" aria-hidden="true"></span>
-      <span class="hidden-xs"><%= t('experiments.toolbar.new_button') %></span>
+  <span class="left">
+    <% if can_create_project_experiments?(@project) %>
+      <%= button_to new_project_experiment_url(@project),
+                    remote: true,
+                    form_class: 'new-experiment-form',
+                    data: {view_mode: :active},
+                    id: 'new-experiment',
+                    method: :get,
+                    class: 'btn btn-primary' do %>
+        <span class="fas fa-plus" aria-hidden="true"></span>
+        <span class="hidden-xs"><%= t('experiments.toolbar.new_button') %></span>
+      <% end %>
     <% end %>
-  <% end %>
+  </span>
 
-  <%= button_to edit_experiments_path(),
-                class: 'btn btn-light edit-experiment-btn single-object-action hidden',
-                form_class: 'edit-experiments-form',
-                data: { for: :editable, view_mode: 'active' },
-                remote: true,
-                method: :get do %>
-    <span class="fas fa-pencil-alt" aria-hidden="true"></span>
-    <span class="hidden-xs"><%= t('experiments.toolbar.edit_button') %></span>
-  <% end %>
+  <span class="middle">
+    <%= render layout: 'shared/view_switch', locals: { disabled: false, name:  t("toolbar.#{@current_view_type}_view") } do %>
+      <li class="view-switch-list cards-switch form-dropdown-item">
+        <%= button_to(view_type_project_path(@project, format: :json),
+                      method: :put,
+                      remote: true,
+                      class: "btn btn-light button-to #{ @current_view_type == 'table' ? 'selected' : ''}",
+                      form_class: 'change-experiments-view-type-form',
+                      params: { project: { view_type: 'table', project_id: @project.id } }) do %>
+          <span class="view-switch-list-span table-switch"><%= t('toolbar.table_view') %></span>
+        <% end %>
+      </li>
+      <li class="view-switch-list cards-switch form-dropdown-item">
+        <%= button_to(view_type_project_path(@project, format: :json),
+                      method: :put,
+                      remote: true,
+                      class: "btn btn-light button-to #{ @current_view_type == 'cards' ? 'selected' : ''}",
+                      form_class: 'change-experiments-view-type-form',
+                      params: { project: { view_type: 'cards', project_id: @project.id } }) do %>
+          <span class="view-switch-list-span cards-switch"><%= t('toolbar.cards_view') %></span>
+        <% end %>
+      </li>
+    <% end %>
 
-  <%= button_to clone_modal_experiments_path(),
-                class: 'btn btn-light clone-experiment-btn single-object-action hidden',
-                form_class: 'clone-experiments-form',
-                data: { for: :duplicable, view_mode: 'active' },
-                remote: true,
-                method: :get do %>
-    <span class="fas fa-copy" aria-hidden="true"></span>
-    <span class="hidden-xs"><%= t('experiments.toolbar.duplicate_button') %></span>
-  <% end %>
+    <%= render partial: 'shared/state_view_switch', locals: {
+          disabled: false,
+          switchable: true,
+          archived: params[:view_mode] =='archived',
+          active_url: project_path(@project, view_mode: :active),
+          archived_url: project_path(@project, view_mode: :archived),
+        } %>
+  </span>
 
-  <%= button_to move_modal_experiments_path(),
-                class: 'btn btn-light move-experiment-btn single-object-action hidden',
-                form_class: 'move-experiments-form',
-                data: { for: :moveable },
-                remote: true,
-                method: :get do %>
-    <span class="fas fa-arrow-right" aria-hidden="true"></span>
-    <span class="hidden-xs"><%= t('experiments.toolbar.move_button') %></span>
-  <% end %>
+  <span class="right">
+    <%= render layout: 'shared/filter_dropdown', locals: {
+      container_class: 'experiments-filters',
+      dropdown_title: t("filters_modal.title"),
+      search_field_history_key: 'experiment_filters_per_team'
+    } do %>
+      <%= render partial: 'shared/filter_dropdown/text_search', locals: {container_class: ''} %>
+      <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'started-on-filter', label: t("filters_modal.created_on.label"), view_mode: nil } %>
+      <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'modified-on-filter', label: t("filters_modal.updated_on.label"), view_mode: nil } %>
+      <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'archived-on-filter', label: t("filters_modal.archived_on.label"), view_mode: 'archived' } %>
 
-  <%= button_to archive_group_project_experiments_path(@project),
-                class: 'btn btn-light archive-experiments-btn multiple-object-action hidden',
-                form_class: 'archive-experiments-form',
-                data: { for: :archivable, view_mode: 'active' },
-                remote: true,
-                method: :post do %>
-    <span class="fas fa-archive" aria-hidden="true"></span>
-    <span class="hidden-xs"><%= t('projects.index.archive_button') %></span>
-  <% end %>
-
-  <%= button_to restore_group_project_experiments_path(@project),
-                class: 'btn btn-light restore-experiments-btn multiple-object-action hidden',
-                form_class: 'restore-experiments-form',
-                data: { for: :restorable, view_mode: 'archived' },
-                remote: true,
-                method: :post do %>
-    <span class="fas fa-undo" aria-hidden="true"></span>
-    <span class="hidden-xs"><%= t('experiments.toolbar.restore_button') %></span>
-  <% end %>
+    <% end %>
+    <!-- Sort menu dropdown -->
+    <div class="dropdown sort-menu">
+      <button class="btn btn-light icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <i class="fas fa-sort-amount-up"></i>
+      </button>
+      <ul id="sortMenuDropdown" class="dropdown-menu sort-experiments-menu dropdown-menu-right" aria-labelledby="sortMenu">
+        <% %w(archived_new archived_old new old atoz ztoa id_asc id_desc).each_with_index do |sort, i| %>
+          <% if i.even? && i.positive? %>
+            <li class="divider" <%= i == 2 ? 'data-view-mode=archived' : '' %>></li>
+          <% end %>
+          <li <%= %w(archived_new archived_old).include?(sort) ? 'data-view-mode=archived' : '' %>>
+            <a class="<%= 'selected' if @current_sort == sort %>"
+              data-sort="<%= sort %>" >
+              <%= t("general.sort.#{sort}_html") %>
+            </a>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </span>
 </div>

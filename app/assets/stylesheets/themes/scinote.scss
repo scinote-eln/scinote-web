@@ -1,16 +1,12 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
 @import "constants";
 @import "mixins";
 @import "main_navigation";
 @import "repositories";
 @import "bootstrap/mixins/buttons";
 /** Layout **/
-
-body,
-#main-nav,
-#notifications,
-#notifications .alert {
-  min-width: 320px;
-}
 
 // Word wrapping everywhere, except for table header of "datatables.js"
 body,
@@ -306,7 +302,7 @@ mark,.mark {
   #secondary-menu {
     background: $color-white;
     border-bottom: 1px solid $color-gainsboro;
-    padding-left: 29px;
+    padding-left: 0;
     padding-top: 15px;
 
     .open > a,
@@ -863,8 +859,34 @@ ul.content-activities {
   width: 100%;
 
   .eln-table {
-    text-align: center;
     height: 21px;
+
+    tr:first-child {
+      text-align: center;
+    }
+
+    td {
+      &.htCenter,
+      &:first-child {
+        text-align: center;
+      }
+
+      &.htRight {
+        text-align: right;
+      }
+
+      &.htJustify {
+        text-align: justify;
+      }
+
+      &.htMiddle {
+        vertical-align: middle;
+      }
+
+      &.htBottom {
+        vertical-align: bottom;
+      }
+    }
   }
 
   .badge-preview {
@@ -900,25 +922,6 @@ ul.content-activities {
     top: -10px;
   }
 
-}
-// Protocolsio Preview protocol modal
-@media (min-width: 768px) {
-  #modal-import-json-protocol-preview .modal-dialog {
-    width: 70%;
-
-  }
-}
-
-#modal-import-json-protocol-preview .modal-dialog {
-  .modal-body {
-    max-height: 75vh;
-    overflow-y: auto;
-    width: 100%;
-
-    .ql-editor {
-      min-height: initial;
-    }
-  }
 }
 
 .badge-icon {

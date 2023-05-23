@@ -17,6 +17,8 @@ RSpec.describe "Api::V1::ExperimentsController", type: :request do
 
     create_list(:experiment, 3, created_by: @user, last_modified_by: @user,
                 project: @valid_project)
+    create_list(:experiment, 2, created_by: @user, last_modified_by: @user,
+                project: @valid_project, archived: true)
     create_list(:experiment, 3, created_by: @user, last_modified_by: @user,
                 project: @unaccessible_project)
 
@@ -34,6 +36,38 @@ RSpec.describe "Api::V1::ExperimentsController", type: :request do
         JSON.parse(
           ActiveModelSerializers::SerializableResource
             .new(@valid_project.experiments,
+                 each_serializer: Api::V1::ExperimentSerializer)
+            .to_json
+        )['data']
+      )
+    end
+
+    it 'Response with correct experiments, only active' do
+      hash_body = nil
+      get api_v1_team_project_experiments_path(team_id: @teams.first.id,
+        project_id: @valid_project, filter: { archived: false }), headers: @valid_headers
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data].pluck('attributes').pluck('archived').none?).to be(true)
+      expect(hash_body[:data]).to match(
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@valid_project.experiments.active,
+                 each_serializer: Api::V1::ExperimentSerializer)
+            .to_json
+        )['data']
+      )
+    end
+
+    it 'Response with correct experiments, only archived' do
+      hash_body = nil
+      get api_v1_team_project_experiments_path(team_id: @teams.first.id,
+        project_id: @valid_project, filter: { archived: true }), headers: @valid_headers
+      expect { hash_body = json }.not_to raise_exception
+      expect(hash_body[:data].pluck('attributes').pluck('archived').all?).to be(true)
+      expect(hash_body[:data]).to match(
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(@valid_project.experiments.archived,
                  each_serializer: Api::V1::ExperimentSerializer)
             .to_json
         )['data']

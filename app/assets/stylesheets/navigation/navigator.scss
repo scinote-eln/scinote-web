@@ -1,0 +1,9 @@
+.sci--layout-navigation-navigator {
+  .menu-item:not(.active):hover {
+    background-color: var(--sn-super-light-grey);
+
+    a {
+      color: var(--sn-blue);
+    }
+  }
+}

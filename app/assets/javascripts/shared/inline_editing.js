@@ -22,7 +22,7 @@ var inlineEditing = (function() {
 
   function initSmartAnnotation(container) {
     if (container.data('smart-annotation')) {
-      SmartAnnotation.init(inputField(container));
+      SmartAnnotation.init(inputField(container), false);
     }
   }
 

@@ -32,7 +32,7 @@ var DataTableHelpers = (function() {
                   title="${I18n.t('repositories.show.button_tooltip.search')}">
             <i class="fas fa-search"></i>
           </button>
-          <div class="sci-input-container left-icon search-container">
+          <div class="sci-input-container right-icon search-container">
             <i class="fas fa-search"></i>
           </div>`).find('.sci-input-container').prepend(tableFilterInput);
       $('.dataTables_filter').find('label').remove();

@@ -383,7 +383,7 @@ class User < ApplicationRecord
   end
 
   def permission_team=(team)
-    @permission_team = teams.find(team.id)
+    @permission_team = teams.find_by(id: team.id)
   end
 
   def permission_team

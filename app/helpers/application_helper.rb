@@ -153,47 +153,28 @@ module ApplicationHelper
                             skip_user_status = false,
                             skip_avatar = false,
                             base64_encoded_imgs = false)
-    user_still_in_team = user.teams.include?(team)
 
-    user_description = %(<div class='col-xs-4'>
-      <img src='#{user_avatar_absolute_url(user, :thumb, base64_encoded_imgs)}'
-       alt='thumb'></div><div class='col-xs-8'>
-      <div class='row'><div class='col-xs-9 text-left'><h5>
-      #{escape_input(user.full_name)}</h5></div><div class='col-xs-3 text-right'>
-      <span class='fas fa-times' aria-hidden='true'></span>
-      </div></div><div class='row'><div class='col-xs-12'>
-      <p class='silver'>#{escape_input(user.email)}</p>)
-    if user_still_in_team
-      user_team_assignment = user.user_assignments.find_by(assignable: team)
-      user_description += %(<p>
-        #{I18n.t('atwho.users.popover_html',
-                 role: escape_input(user_team_assignment.user_role.name.capitalize),
-                 team: escape_input(user_team_assignment.assignable.name),
-                 time: I18n.l(user_team_assignment.created_at, format: :full_date))}
-        </p></div></div></div>)
-    else
-      user_description += %(<p></p></div></div></div>)
-    end
-
-    html = if skip_avatar
-             ''
-           else
-             raw("<span class=\"global-avatar-container smart-annotation\">" \
-                  "<img src='#{user_avatar_absolute_url(user, :icon_small, base64_encoded_imgs)}'" \
-                  "alt='avatar' class='atwho-user-img-popover'" \
-                  " ref='#{'missing-img' unless user.avatar.attached?}'></span>")
-           end
-
-    html =
-      raw(html) +
-      raw('<a onClick="$(this).popover(\'show\')" ' \
-        'class="atwho-user-popover" data-container="body" ' \
-        'data-html="true" tabindex="0" data-trigger="focus" ' \
-        'data-placement="top" data-toggle="popover" data-content="') +
-      raw(user_description) + raw('" >') + escape_input(user.full_name) + raw('</a>')
-
-    html << " #{I18n.t('atwho.res.removed')}" unless skip_user_status || user_still_in_team
-    "<span class=\"atwho-user-container\">#{html}</span>"
+    (defined?(controller) ? controller : ActionController::Base.new)
+      .render_to_string(
+        partial: 'shared/atwho_user_container',
+        locals: {
+          user: user,
+          skip_avatar: skip_avatar,
+          skip_user_status: skip_user_status,
+          team: team,
+          base64_encoded_imgs: base64_encoded_imgs,
+          user_avatar_absolute_url: user_avatar_absolute_url(
+            user,
+            :icon_small,
+            base64_encoded_imgs
+          ),
+          user_avatar_popover_absolute_url: user_avatar_absolute_url(
+            user,
+            :thumb,
+            base64_encoded_imgs
+          )
+        }
+      )
   end
 
   # No more dirty hack

@@ -16,9 +16,9 @@
     <div class="attachment-preview <%= asset.file.attached? ? asset.file.metadata['asset_type'] : '' %>">
       <% if asset.previewable? %>
         <%= image_tag asset.medium_preview,
-            onerror: 'ActiveStoragePreviews.reCheckPreview(event)',
-            onload: 'ActiveStoragePreviews.showPreview(event)',
+            class: 'asset-thumbnail-image',
             style: 'opacity: 0' %>
+        <%= javascript_include_tag 'assets/asset_thumbnail', nonce: true %>
       <% else %>
         <i class="fas <%= file_fa_icon_class(asset) if asset.file_name %>"></i>
       <% end %>

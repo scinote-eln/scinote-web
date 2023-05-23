@@ -68,6 +68,7 @@
       fieldName: String,
       lastUpdated: Number,
       inEditMode: Boolean,
+      assignableMyModuleId: Number,
       characterLimit: {
         type: Number,
         default: null
@@ -141,7 +142,8 @@
               this.initCharacterCount();
               this.$emit('editingEnabled');
             },
-            placeholder: this.placeholder
+            placeholder: this.placeholder,
+            assignableMyModuleId: this.assignableMyModuleId
           }
         )
       },

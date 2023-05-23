@@ -104,6 +104,10 @@
       isNew: {
         type: Boolean,
         default: false
+      },
+      assignableMyModuleId: {
+        type: Number,
+        required: false
       }
     },
     data() {

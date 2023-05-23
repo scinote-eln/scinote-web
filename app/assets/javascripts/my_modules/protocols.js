@@ -18,7 +18,8 @@ function initEditMyModuleDescription() {
       {
         onSaveCallback: () => {
           Prism.highlightAllUnder(viewObject.get(0));
-        }
+        },
+        assignableMyModuleId: $('#my_module_description_textarea').data('object-id')
       }
     );
   }).on('click', 'a', function(e) {

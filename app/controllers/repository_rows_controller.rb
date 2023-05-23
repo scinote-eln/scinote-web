@@ -5,13 +5,15 @@ class RepositoryRowsController < ApplicationController
   include MyModulesHelper
 
   MAX_PRINTABLE_ITEM_NAME_LENGTH = 64
-  before_action :load_repository, except: %i(show print rows_to_print print_zpl validate_label_template_columns)
+  before_action :load_repository, except: %i(show print rows_to_print print_zpl
+                                             validate_label_template_columns actions_toolbar)
   before_action :load_repository_row_print, only: %i(print rows_to_print print_zpl validate_label_template_columns)
   before_action :load_repository_or_snapshot, only: %i(print rows_to_print print_zpl validate_label_template_columns)
   before_action :load_repository_row, only: %i(update assigned_task_list active_reminder_repository_cells)
   before_action :check_read_permissions, except: %i(show create update delete_records
                                                     copy_records reminder_repository_cells
-                                                    delete_records archive_records restore_records)
+                                                    delete_records archive_records restore_records
+                                                    actions_toolbar)
   before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
   before_action :check_create_permissions, only: :create
   before_action :check_delete_permissions, only: %i(delete_records archive_records restore_records)
@@ -62,9 +64,19 @@ class RepositoryRowsController < ApplicationController
 
   def show
     @repository_row = RepositoryRow.find_by(id: params[:id])
+    @my_module = MyModule.find_by(id: params[:my_module_id])
     return render_404 unless @repository_row
     return render_404 unless @repository_row.repository_id == params[:repository_id].to_i
     return render_403 unless can_read_repository?(@repository_row.repository)
+    return render_403 if @my_module && !can_read_my_module?(@my_module)
+
+    if @my_module
+      @my_module_assign_error = if !can_assign_my_module_repository_rows?(@my_module)
+                                  I18n.t('repository_row.modal_info.assign_to_task_error.no_access')
+                                elsif @repository_row.my_modules.where(id: @my_module.id).any?
+                                  I18n.t('repository_row.modal_info.assign_to_task_error.already_assigned')
+                                end
+    end
 
     @assigned_modules = @repository_row.my_modules.joins(experiment: :project)
     @viewable_modules = @assigned_modules.viewable_by_user(current_user, current_user.teams)
@@ -285,6 +297,16 @@ class RepositoryRowsController < ApplicationController
       html: render_to_string(partial: 'shared/repository_row_reminder.html.erb', locals: {
                                reminders: reminder_cells
                              })
+    }
+  end
+
+  def actions_toolbar
+    render json: {
+      actions:
+        Toolbars::RepositoryRowsService.new(
+          current_user,
+          repository_row_ids: params[:repository_row_ids].split(',')
+        ).actions
     }
   end
 

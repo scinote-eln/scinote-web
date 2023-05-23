@@ -1,17 +1,17 @@
 //= require repositories/import/records_importer.js
 
 /*
-  global pageReload animateSpinner repositoryRecordsImporter I18n
+  global animateSpinner repositoryRecordsImporter I18n
   RepositoryDatatable PerfectScrollbar HelperModule repositoryFilterObject
 */
 
 (function(global) {
   'use strict';
 
-  global.pageReload = function() {
+  function pageReload() {
     animateSpinner();
     location.reload();
-  };
+  }
 
   function handleErrorSubmit(XHR) {
     var formGroup = $('#form-records-file').find('.form-group');
@@ -42,8 +42,10 @@
   }
 
   function initParseRecordsModal() {
+    var modal = $('#parse-records-modal');
     var form = $('#form-records-file');
     var submitBtn = form.find('input[type="submit"]');
+    var closeBtn = modal.find('.close-button');
     form.on('ajax:success', function(ev, data) {
       $('#modal-import-records').modal('hide');
       $(data.html).appendTo('body').promise().done(function() {
@@ -78,6 +80,8 @@
         contentType: false
       });
     });
+
+    closeBtn.on('click', pageReload);
   }
 
   function initImportRecordsModal() {
@@ -85,6 +89,9 @@
       $('#modal-import-records').modal('show');
       initParseRecordsModal();
     });
+
+    const closeBtn = $('#modal-import-records').find('.close-button');
+    closeBtn.on('click', pageReload);
   }
 
   function initShareModal() {
@@ -144,20 +151,6 @@
           $('.share-repo-modal').modal('hide');
         }
       });
-    });
-  }
-
-  function initRepositoryViewSwitcher() {
-    var viewSwitch = $('.view-switch');
-    viewSwitch.on('click', '.view-switch-archived', function() {
-      $('.repository-show').removeClass('active').addClass('archived');
-      $('#manage-repository-column').removeClass('active').addClass('archived');
-      RepositoryDatatable.reload();
-    });
-    viewSwitch.on('click', '.view-switch-active', function() {
-      $('.repository-show').removeClass('archived').addClass('active');
-      $('#manage-repository-column').removeClass('archived').addClass('active');
-      RepositoryDatatable.reload();
     });
   }
 
@@ -282,7 +275,6 @@
 
   initImportRecordsModal();
   initTable();
-  initRepositoryViewSwitcher();
   initArchivingActionsInDropdown();
   initFilterSaving();
 }(window));

@@ -1,8 +1,19 @@
 <div class="sci--layout--left-menu-container">
-  <% left_menu_elements.each do |item| %>
-    <%= link_to item[:url], title: item[:name], class:"sci--layout--menu-item", data: { active: item[:active], disabled: current_user.teams.blank? } do %>
+  <% left_menu_elements.each_with_index do |item, index| %>
+    <%= link_to item[:url], title: item[:name], class:"sci--layout--menu-item", data: { active: item[:submenu].blank? && item[:active], disabled: current_user.teams.blank?, submenu: item[:submenu].any? } do %>
       <i class="fas <%= item[:icon] %>"></i>
       <%= item[:name] %>
+      <i class="fas <%= item[:active] ? 'fa-caret-down' : 'fa-caret-right' %> show-submenu"></i>
+    <% end %>
+    <% if item[:submenu].any? %>
+    <div class="sci--layout--menu-submenu" data-id="<%= index %>" data-collapsed="<%= !item[:active] %>" style="--submenu-items:<%= item[:submenu].length %>">
+      <% item[:submenu].each do |subitem| %>
+        <%= link_to subitem[:url], title: subitem[:name], class:"sci--layout--menu-item", data: { active: subitem[:active], disabled: current_user.teams.blank? } do %>
+          <i class="dot"></i>
+          <%= subitem[:name] %>
+        <% end %>
+      <% end %>
+    </div>
     <% end %>
   <% end %>
 </div>
