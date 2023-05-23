@@ -10,6 +10,7 @@ class ProjectsController < ApplicationController
   include Breadcrumbs
 
   attr_reader :current_folder
+
   helper_method :current_folder
 
   before_action :switch_team_with_param, only: :index
@@ -110,7 +111,7 @@ class ProjectsController < ApplicationController
 
     projects = Project.readable_by_user(current_user)
                       .joins(experiments: :my_modules)
-                      .where(experiments: {id: readable_experiments_ids})
+                      .where(experiments: { id: readable_experiments_ids })
                       .where(my_modules: { id: managable_active_my_modules_ids })
                       .search(current_user, false, params[:query], 1, current_team)
                       .distinct
@@ -218,9 +219,7 @@ class ProjectsController < ApplicationController
           # Redirect URL for archive view is different as for other views.
           if project_params[:archived] == 'false'
             # The project should be restored
-            unless @project.archived
-              @project.restore(current_user)
-            end
+            @project.restore(current_user) unless @project.archived
           elsif @project.archived
             # The project should be archived
             @project.archive(current_user)
@@ -346,17 +345,17 @@ class ProjectsController < ApplicationController
 
   def notifications
     @modules = @project
-      .assigned_modules(current_user)
-      .order(due_date: :desc)
+               .assigned_modules(current_user)
+               .order(due_date: :desc)
     respond_to do |format|
-      #format.html
-      format.json {
-        render :json => {
-          :html => render_to_string({
-            :partial => "notifications.html.erb"
-          })
+      # format.html
+      format.json do
+        render json: {
+          html: render_to_string({
+                                   partial: 'notifications.html.erb'
+                                 })
         }
-      }
+      end
     end
   end
 
