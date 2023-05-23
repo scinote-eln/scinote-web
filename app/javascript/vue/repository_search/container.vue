@@ -1,9 +1,9 @@
 <template>
-  <div class="flex items-center">
+  <div class="flex items-center mr-3 flex-nowrap">
     <button v-if="!searchOpened" class="btn btn-light icon-btn" @click="openSearch">
       <i class="fas fa-search"></i>
     </button>
-    <div v-if="searchOpened || barcodeSearchOpened" class="w-52">
+    <div v-if="searchOpened || barcodeSearchOpened" class="w-52 flex">
       <div v-if="searchOpened" class="sci-input-container right-icon">
         <input
           ref="searchInput"
@@ -82,12 +82,17 @@ export default {
     },
     closeBarcodeSearch() {
       if (this.barcodeValue.length == 0) {
-        this.barcodeSearchOpened = false;
+        setTimeout(() => {
+          this.barcodeSearchOpened = false;
+        }, 100);
+
       }
     },
     closeSearch() {
       if (this.value.length == 0) {
-        this.searchOpened = false;
+        setTimeout(() => {
+          this.searchOpened = false;
+        }, 100);
       }
     },
     updateRepositoySearch() {
