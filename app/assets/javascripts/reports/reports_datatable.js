@@ -102,6 +102,7 @@
   function updateButtons() {
     if (window.actionToolbarComponent) {
       window.actionToolbarComponent.fetchActions({ report_ids: CHECKBOX_SELECTOR.selectedRows });
+      $('.dataTables_scrollBody').css('padding-bottom', `${CHECKBOX_SELECTOR.selectedRows.length > 0 ? 68 : 0}px`);
     }
 
     const rowsCount = CHECKBOX_SELECTOR.selectedRows.length;
@@ -210,6 +211,7 @@
       createdRow: addAttributesToRow,
       initComplete: function(settings) {
         initActionToolbar();
+        actionToolbarComponent.setBottomOffset(75);
 
         const { nTableWrapper: dataTableWrapper } = settings;
         CHECKBOX_SELECTOR = new DataTableCheckboxes(dataTableWrapper, {
