@@ -67,6 +67,10 @@
     }
   }
 
+  .dropdown-menu {
+    top: calc(var(--top-navigation-height) - 0.5em);
+  }
+
   .dropdown-menu li a {
     line-height: 1rem;
     padding: .625rem 1rem;
