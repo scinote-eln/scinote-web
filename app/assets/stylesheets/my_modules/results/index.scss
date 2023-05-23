@@ -81,10 +81,8 @@
   }
 }
 
-.content-pane {
-  .dropdown {
-    .dropdown-menu {
-      z-index: 100;
-    }
+#results-toolbar {
+  .dropdown-menu {
+    z-index: 9;
   }
 }
