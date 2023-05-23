@@ -67,9 +67,4 @@ module Breadcrumbs
                               archived: my_module.archived?
                             })
   end
-
-  def archived_state
-    archived_exists = @breadcrumbs_items.any? { |item| item[:archived] }
-    archived_exists || request.fullpath.include?('archived')
-  end
 end
