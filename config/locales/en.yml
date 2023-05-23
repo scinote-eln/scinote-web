@@ -451,7 +451,7 @@ en:
         title: "Please create your Project"
         create_new_button: "New Project"
         no_permission_title: "You don't have permission to create new project. Please contact your team administrator."
-      new: "New Project"
+      new: "New project"
       new_folder: "New folder"
       visibility_private: "Project is visible to project members only."
       visibility_public: "Project is visible to all team members."
@@ -2221,7 +2221,7 @@ en:
         restore: "Restore"
         delete: "Delete"
       no_libraries:
-        create_new_button: "New Inventory"
+        create_new_button: "New inventory"
     show:
       head_title: "Inventories | %{library}"
   repository_row:
@@ -2555,7 +2555,7 @@ en:
             one: "Currently you are member of %{count} team."
             other: "Currently you are member of %{count} teams."
           no_teams: "You are not a member of any team."
-          new_team: "New Team"
+          new_team: "New team"
           thead_name: "Team"
           thead_role: "Role"
           thead_created_at: "Created at"
@@ -3686,8 +3686,8 @@ en:
       below_limit: "%{attribute} is too short (minimum number is %{limit} characters)"
       blank: "%{attribute} can't be empty"
   toolbar:
-    table_view: "Table View"
-    cards_view: "Card View"
-    canvas_view: "Canvas View"
-    active_state: "Active State"
-    archived_state: "Archived State"
+    table_view: "Table view"
+    cards_view: "Card view"
+    canvas_view: "Canvas view"
+    active_state: "Active state"
+    archived_state: "Archived state"
