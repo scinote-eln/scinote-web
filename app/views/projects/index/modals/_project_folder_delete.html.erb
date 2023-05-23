@@ -8,7 +8,7 @@
         <h2 class="modal-title"><%= t('projects.index.modal_delete_folders.title') %></h2>
       </div>
       <div class="modal-body">
-        <p><%= t('projects.index.modal_delete_folders.description_1_html', number: project_folders_ids.size) %></p>
+        <p><%= t('projects.index.modal_delete_folders.description_1_html', number: project_folder_ids.size) %></p>
         <p><%= t('projects.index.modal_delete_folders.description_2') %></p>
       </div>
       <div class="modal-footer">
@@ -17,7 +17,7 @@
                       destroy_project_folders_path,
                       class: 'btn btn-danger',
                       form_class: 'delete-folders-form',
-                      params: { project_folders_ids: project_folders_ids },
+                      params: { project_folder_ids: project_folder_ids },
                       remote: true %>
       </div>
     </div>

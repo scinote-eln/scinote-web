@@ -262,7 +262,7 @@ en:
     notifications:
       title: "Notifications"
       all: "All"
-      message: "Message"
+      message: "Messages"
       system: "System"
       today: "Today"
       older: "Older"
@@ -292,10 +292,12 @@ en:
     addon_versions: "Addon versions"
 
   left_menu_bar:
-    dashboard: "Overview"
+    dashboard: "Dashboard"
     projects: "Projects"
     repositories: "Inventories"
     templates: "Templates"
+    protocol: "Protocol"
+    label: "Label"
     reports: "Reports"
     settings: "Settings"
     activities: "Activities"
@@ -306,9 +308,11 @@ en:
       tutorials: "Video tutorials"
       core_version: "SciNote version"
       about: "about"
-
+  navigator:
+    title: "Navigator"
   sidebar:
     title: "Navigation"
+    elements_tooltip: "(%{type}) %{name}"
     branch_expand: "Expand this branch"
     branch_collapse: "Collapse this branch"
     no_module_group: "No workflow"
@@ -363,6 +367,7 @@ en:
     whole_word: "Match any whole word"
     whole_phrase: "Match whole phrase"
     match_case: "Match case sensitive"
+    object_id: "ID:"
     index:
       head_title: "Search"
       page_title: "Search"
@@ -446,8 +451,8 @@ en:
         title: "Please create your Project"
         create_new_button: "New Project"
         no_permission_title: "You don't have permission to create new project. Please contact your team administrator."
-      new: "New Project"
-      new_folder: "Create folder"
+      new: "New project"
+      new_folder: "New folder"
       visibility_private: "Project is visible to project members only."
       visibility_public: "Project is visible to all team members."
       user_project: "%{user} joined on %{timestamp}."
@@ -486,9 +491,10 @@ en:
       archive_option: "Archive"
       archive_confirm: "Are you sure you want to archive this project?"
       restore_option: "Restore"
-      project_members_access: "Project members access"
-      comments_option: "Show comments (%{comments_count})"
-      activities_option: "Open activities"
+      project_members_access: "Access"
+      comments_option: "Comments"
+      comments_option_with_unread: "Comments (%{comments_count})"
+      activities_option: "Activities"
       comment_placeholder: "Your Message"
       more_comments: "More Comments"
       card:
@@ -601,10 +607,10 @@ en:
         new: "New report"
         report_button: "Report"
         update_pdf: "Update PDF"
-        save_pdf_to_inventory: "Save PDF to Inventory"
+        save_pdf_to_inventory: "Save PDF to inventory"
         search_reports: "Filter reports"
-        request_docx: "Generate DOCX"
-        update_docx: "Update DOCX"
+        request_docx: "Generate .DOCX"
+        update_docx: "Update .DOCX"
         edit: "Edit"
         delete: "Delete"
         deleted: "(Deleted)"
@@ -678,6 +684,7 @@ en:
           step_checklists: "Step checklists"
           step_files: "Step files"
           step_tables: "Step tables"
+          step_well_plates: "Step well plates"
           step_comments: "Step comments"
           assigned_items: "Assigned items"
           assigned_items_description: "Inventories selected below will only contain the items that you assigned to the tasks directly."
@@ -823,6 +830,9 @@ en:
         step_table:
           table_name: "%{name}"
           user_time: "Table created on %{timestamp}."
+        step_well_plates_table:
+          table_name: "%{name}"
+          user_time: "Well plate created on %{timestamp}."
         step_asset:
           file_name: "%{file}"
           sidebar_name: "File %{file}"
@@ -902,14 +912,16 @@ en:
       templates_deleted: 'Successfully deleted Label template(s)'
       template_set_as_default: 'Successfully set template as default'
       toolbar:
-        new: 'New template'
-        check_for_updates: 'Check for updates'
+        new: 'New label template'
+        update_fluics_labels: 'Update Fluics labels'
         edit: 'Edit'
         duplicate: 'Duplicate'
         delete: 'Delete'
-        set_zpl_default: 'Set as default ZPL label'
+        set_FluicsLabelTemplate_default: 'Set as default Fluics label'
+        set_ZebraLabelTemplate_default: 'Set as default ZPL label'
         set_fluics_default: 'Set as default Fluics label'
         fluics_warning: 'Built-in FLUICS templates can’t be edited, deleted or duplicated'
+        edit_template: 'Edit'
       delete_modal:
         title: 'Delete Label template(s)'
         description: 'Are you sure you want to delete the selected label template(s)?'
@@ -1008,7 +1020,7 @@ en:
         modified_label: "Modified"
         modified_value: "%{date} by %{full_name}"
         modified_value_without_user: "%{date}"
-        view_task_access: "View task access"
+        view_task_access: "Access"
       start_date: "Start date:"
       no_start_date_placeholder: "+ Add starting date"
       due_date: "Due date:"
@@ -1033,6 +1045,8 @@ en:
     assigned_items:
       title: "Assigned items"
       assign_from: "Assign from"
+      direct_assign:
+        success: "Successfully assigned an item to the task."
     protocol:
       title: "Protocol"
       options_dropdown:
@@ -1309,14 +1323,14 @@ en:
       description: "Description"
       more: "more"
     index:
-      edit_option: "Edit details"
-      clone_option: "Duplicate as template"
+      edit_option: "Edit"
+      clone_option: "Duplicate"
       move_option: "Move"
       archive_option: "Archive"
       archive_confirm: "Are you sure you want to archive this project?"
       restore_option: "Restore"
       more_link: "More"
-      experiment_access: "Experiment access"
+      experiment_access: "Access"
       details_modal:
         description: "%{name} description"
     new:
@@ -1383,7 +1397,7 @@ en:
         status_html: 'Status'
         assigned_html: 'Assigned to'
         tags_html: 'Tags'
-        comments_html: '<i data-toggle="tooltip" data-placement="left" title="Comments" class="fas fa-comment"></i>'
+        comments_html: 'Comments'
       modal_move_modules:
         title: "Move task(s) to experiment"
         confirm: "Move"
@@ -1415,9 +1429,9 @@ en:
       my_module_actions:
         title: 'TASK ACTIONS'
         edit: 'Edit'
-        duplicate: 'Duplicate as template'
-        move: 'Move to another experiment'
-        access: 'Task access'
+        duplicate: 'Duplicate'
+        move: 'Move'
+        access: 'Access'
         archive: 'Archive'
         restore: 'Restore'
       filters:
@@ -1485,11 +1499,11 @@ en:
         no_module_id: "to be assigned after saving"
         options_header: "Options"
         edit_module: "Rename task"
-        task_access: "Task access"
+        task_access: "Access"
         clone_module: "Duplicate task as template (only Protocols steps duplicated)"
         clone_module_group: "Duplicate workflow as template (only Protocols steps duplicated)"
         clone_prefix: "Clone -"
-        move_module: "Move task to another experiment"
+        move_module: "Move"
         move_module_group: "Move workflow to another experiment"
         delete_module: "Archive task"
         delete_module_group: "Archive workflow"
@@ -1557,6 +1571,7 @@ en:
       head_title: "%{experiment} | Archived tasks"
       no_archived_modules: "No archived tasks!"
       restore_option: "Restore"
+      move_option: "Move"
       archived_on: "Archived on"
       archived_on_title: "Task archived on %{date} at %{time}."
 
@@ -1671,7 +1686,7 @@ en:
       share_inventory: "Share"
       view_only_permission_label: "You have view-only permission"
       show_per_page: "Show %{number} per page"
-      filter_inventory: "Filter inventories"
+      filter_inventory: "Search inventories"
       no_inventories:  "No inventories here"
       no_inventories_matched: "No inventories matched your search request"
       no_archived_inventories:  "No archived inventories here"
@@ -1679,7 +1694,7 @@ en:
       snapshot_provisioning_in_progress: 'Editing is disabled while a snapshot is being created. This will only take a moment.'
 
       options_dropdown:
-        import_items: 'Import items'
+        import_items: 'Import'
         export_items: 'Export'
         rename: "Rename inventory"
         copy: "Duplicate inventory"
@@ -1732,6 +1747,7 @@ en:
         archived_on: "Inventory archived on"
         archived_by: "by"
       filter_inventory_items: "Filter items"
+      filter_inventory_items_with_ean: "Search with EAN code"
       no_items: "No items here"
       no_items_matched: "No items here"
       no_archived_items: "No archived items here"
@@ -1745,7 +1761,7 @@ en:
         export: "Export"
         print_label: "Print label"
         archive: "Archive"
-        import: "Import items"
+        import: "Import"
         filters: "Filters"
         search: "Quick search"
       filters:
@@ -1948,10 +1964,13 @@ en:
         errors_list_title: "Items were not imported because one or more errors were found:"
         no_repository_name: "Item name is required!"
     edit_record: "Edit"
+    assign_record: "Assign to task"
     copy_record: "Duplicate"
     delete_record: "Delete"
     archive_record: "Archive"
     restore_record: "Restore"
+    print_label: "Print label"
+    export_record: "Export"
     save_record: "Save"
     cancel_save: "Cancel"
     hide_reminders: "Clear all reminders"
@@ -1964,6 +1983,26 @@ en:
     columns_delete: "Delete"
     columns_changed: "Someone removed/added a new column to the inventory in use. To prevent data inconsistency we will reload this page for you."
     columns_visibility: "Visible columns"
+    modal_assign_items_to_task:
+      title: "Assign to task"
+      body:
+        description: "Type in the fields below to find the right task."
+        project_select:
+          label: "Project"
+          placeholder: "Enter project name"
+        experiment_select:
+          label: "Experiment"
+          placeholder: "Enter Experiment name"
+          disabled_placeholder: "Select Project to enable Experiment"
+        task_select:
+          label: "Task"
+          placeholder: "Enter Task name"
+          disabled_placeholder: "Select Experiment to enable Task"
+      assign:
+        text: "Assign to this task"
+        flash_all_assignments_success: "Successfully assigned %{count} item(s) to the task."
+        flash_some_assignments_success: "Successfully assigned %{assigned_count} item(s) to the task. %{skipped_count} item(s) were already assigned to the task."
+        flash_assignments_failure: "Failed to assign item(s) to task."
     modal_delete_record:
       title: "Delete items"
       notice: "Are you sure you want to delete the selected item(s)?"
@@ -2184,7 +2223,7 @@ en:
         restore: "Restore"
         delete: "Delete"
       no_libraries:
-        create_new_button: "New Inventory"
+        create_new_button: "New inventory"
     show:
       head_title: "Inventories | %{library}"
   repository_row:
@@ -2199,6 +2238,10 @@ en:
       no_tasks: "This item in not assigned to any task."
       amount: "Amount: %{value}"
       unit: "Unit: %{unit}"
+      assign_to_task: "Assign to this task"
+      assign_to_task_error:
+        no_access: "You can only view this task"
+        already_assigned: "This item is already assigned to this task"
     modal_print_label:
       head_title: "Print label - %{repository_row}"
       head_title_multiple: "Print label - %{repository_rows} rows"
@@ -2409,7 +2452,7 @@ en:
           profile: "My profile"
           preferences: "My preferences"
           addons: "Add-ons"
-          connected_accounts: "Connected Accounts"
+          connected_accounts: "Connected accounts"
       account:
         preferences:
           head_title: "Settings | My preferences"
@@ -2514,7 +2557,7 @@ en:
             one: "Currently you are member of %{count} team."
             other: "Currently you are member of %{count} teams."
           no_teams: "You are not a member of any team."
-          new_team: "New Team"
+          new_team: "New team"
           thead_name: "Team"
           thead_role: "Role"
           thead_created_at: "Created at"
@@ -2697,6 +2740,7 @@ en:
       description_1: "You’ll loose all content from the draft. We can’t recover it once you delete it."
       description_2: "Are you sure?"
       confirm: "Yes, delete"
+      success: "Draft was successfully deleted."
     publish_modal:
       title: "Publish version %{nr} of the protocol template"
       name: "Protocol template name"
@@ -2756,9 +2800,9 @@ en:
       search_bar_placeholder: 'Filter protocols'
       navigation:
         archive: "Archive"
-      action_toolbar:
+      toolbar:
         versions: "Versions"
-        access: "Manage Access"
+        access: "Access"
         duplicate: "Duplicate"
         export: "Export"
         archive: "Archive"
@@ -2766,7 +2810,7 @@ en:
         empty_placeholder: "There is no action available"
       public_description: "Team protocols are visible and can be used by everyone from the team."
       private_description: "My protocols are only visible to you."
-      create_new: "New protocol"
+      create_new: "New protocol template"
       edit: "Edit"
       clone_btn: "Copy"
       import: "Import"
@@ -2902,11 +2946,19 @@ en:
       insert:
         button: 'Insert'
         title: 'Insert step content'
-        table: 'Add table'
-        text: 'Add text'
-        checklist: 'Add checklist'
-        attachment: 'Add file'
+        table: 'Table'
+        well_plate: 'Well plate'
+        text: 'Text'
+        checklist: 'Checklist'
+        attachment: 'File'
         checklist_item: 'Add a new checklist item...'
+        well_plate_options:
+          32_x_48: '1536 (32 x 48)'
+          16_x_24: '384 (16 x 24)'
+          8_x_12: '96 (8 x 12)'
+          6_x_8: '48 (6 x 8 )'
+          6_x_4: '24 (6 x 4)'
+          2_x_3: '6 (2 x 3)'
       table:
         default_name: 'Table %{position}'
         edit_message: 'Use right click for table options'
@@ -2921,6 +2973,8 @@ en:
       text:
         placeholder: 'Enter step text'
         empty_text: 'No text entered'
+      plate:
+        default_name: "Plate %{position}"
       modals:
         delete_element:
           title: 'Delete content'
@@ -3181,12 +3235,15 @@ en:
 
   atwho:
     no_results:
-      projects: "Projects with this name were not found"
-      experiments: "Experiments with this name were not found"
-      my_modules: "Tasks with this name were not found"
-      repository_rows: "Items with this name were not found"
+      projects: "Projects with this name/ID were not found"
+      experiments: "Experiments with this name/ID were not found"
+      my_modules: "Tasks with this name/ID were not found"
+      repository_rows: "Items with this name/ID were not found"
       users: "Users with this name were not found"
       description: "Please make sure there are no typos, or erase letters one by one unless you see some results"
+    buttons:
+      insert: "Insert"
+      assign: "Assign to this task"
     projects: PROJECTS
     experiments: EXPERIMENTS
     tasks: TASKS
@@ -3195,7 +3252,7 @@ en:
     users:
       title: "People"
       header: "Type the name or email of the user you want to mention (they will be notified)"
-      help: "Navigate: ↑ ↓    •    Submit: Enter / Tab    •    Dismiss: Esc"
+      help: "Navigate: ↑ ↓    •    Insert: Enter / Tab    •    Dismiss: Esc"
       popover_html: "<span class='silver'>Team:</span>&nbsp;%{team} <br> <span class='silver'>Role:</span>&nbsp;%{role} <br> <span class='silver'>Joined:</span>&nbsp;%{time}"
     res:
       archived: "(archived)"
@@ -3369,6 +3426,8 @@ en:
     remove: "Remove"
     clone_label: "Clone"
     download: "Download"
+    access: "Access"
+    select: "Select"
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"
@@ -3447,8 +3506,13 @@ en:
         general:
           title: "Error"
           detail: "Something went wrong, please contact resource owner"
+        filter_parameter:
+          title: "Filter parameter error"
+          detail: "Filter parameter contains incorrect value"
         parameter:
           title: "Missing parameter"
+        parameter_incorrect:
+          title: "Incorrect parameters"
         validation:
           title: "Validation error"
         read_permission:
@@ -3497,6 +3561,9 @@ en:
           detail: "Text contains reference to nonexisting TinyMCE image"
         result_wrong_tinymce:
           detail: "Image reference not found in the text"
+        table:
+          metadata:
+            detail_too_many_cells: "Wrong number of cells in the metadata field"
     service:
       errors:
         missing_task_ids: "Missing task_ids"
@@ -3504,6 +3571,11 @@ en:
         url:
           not_valid: "Not valid URL"
 
+  breadcrumbs:
+    projects: "Projects"
+    inventories: "Inventories"
+    protocols: "Protocol templates"
+    labels: "Label templates"
 
   Add: "Add"
   Asset: "File"
@@ -3615,3 +3687,9 @@ en:
       over_limit: "%{attribute} is too long (maximum number is %{limit} characters)"
       below_limit: "%{attribute} is too short (minimum number is %{limit} characters)"
       blank: "%{attribute} can't be empty"
+  toolbar:
+    table_view: "Table view"
+    cards_view: "Card view"
+    canvas_view: "Canvas view"
+    active_state: "Active state"
+    archived_state: "Archived state"

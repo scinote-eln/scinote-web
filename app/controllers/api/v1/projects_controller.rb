@@ -11,10 +11,9 @@ module Api
       before_action :load_project_for_managing, only: %i(update)
 
       def index
-        projects = @team.projects
-                        .visible_to(current_user, @team)
-                        .page(params.dig(:page, :number))
-                        .per(params.dig(:page, :size))
+        projects = @team.projects.visible_to(current_user, @team)
+        projects = archived_filter(projects).page(params.dig(:page, :number))
+                                            .per(params.dig(:page, :size))
 
         render jsonapi: projects, each_serializer: ProjectSerializer, include: include_params
       end

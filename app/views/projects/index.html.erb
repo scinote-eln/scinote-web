@@ -36,6 +36,10 @@
         <div class="table-header-cell"></div>
       </div>
     </div>
+
+    <div id="actionToolbar" data-behaviour="vue">
+      <action-toolbar actions-url="<%= actions_toolbar_projects_url %>" />
+    </div>
   </div>
 </div>
 
@@ -58,4 +62,6 @@
   </div>
 </template>
 
+<%= javascript_include_tag "vue_components_action_toolbar" %>
 <%= javascript_include_tag "projects/index" %>
+

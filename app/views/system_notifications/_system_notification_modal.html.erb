@@ -15,7 +15,5 @@
 </div>
 
 <% if notification %>
-  <script>
-    $('#manage-module-system-notification-modal').modal('show')
-  </script>
+  <%= javascript_include_tag 'system_notifications/system_notification_modal', nonce: true %>
 <% end %>

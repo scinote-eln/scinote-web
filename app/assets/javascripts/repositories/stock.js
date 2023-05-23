@@ -120,7 +120,7 @@ var RepositoryStockValues = (function() {
             this.value = formatDecimalValue(this.value, decimals);
           });
 
-          SmartAnnotation.init($('#repository-stock-value-comment')[0]);
+          SmartAnnotation.init($('#repository-stock-value-comment')[0], false);
 
           $('#repository-stock-value-comment').on('input', function() {
             $(this).closest('.sci-input-container').toggleClass(

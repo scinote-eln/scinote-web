@@ -12,11 +12,6 @@ var Sidebar = (function() {
 
   function reloadSidebar(params) {
     let url = $(SIDEBAR_CONTAINER).data('sidebar-url');
-    $.get(url, params, function(result) {
-      $(SIDEBAR_CONTAINER).find('.sidebar-body').html(result.html);
-      showSelectedLeaf();
-      $(SIDEBAR_CONTAINER).data('scrollBar').update();
-    });
   }
 
   function initSideBar() {

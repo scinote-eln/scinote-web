@@ -4,19 +4,9 @@
 @import "constants";
 @import "layouts/reminders";
 
-:root {
-  --repository-sidebar-margin: 363px;
-}
 
 .repository-show {
-  height: calc(100vh - var(--navbar-height));
-  left: var(--repository-sidebar-margin);
   margin: 0;
-  padding: 0 2em;
-  position: absolute;
-  top: var(--navbar-height);
-  transition: .4s $timing-function-sharp;
-  width: calc(100vw - var(--repository-sidebar-margin));
 
   &.active {
     [data-view-mode="archived"] {
@@ -37,21 +27,7 @@
       background-color: $color-white;
       border: 0;
       display: flex;
-      left: var(--repository-sidebar-margin);
-      margin-left: 0em;
-      padding: 0 2em;
-      position: fixed;
-      transition: .4s $timing-function-sharp;
-      width: calc(100% - var(--repository-sidebar-margin));
       z-index: 100;
-
-      .toolbar-delimiter {
-        border-bottom: $border-tertiary;
-        bottom: 0;
-        margin-left: -2em;
-        position: absolute;
-        width: 100%;
-      }
 
       .repository-share-icon {
         flex-shrink: 0;
@@ -129,23 +105,15 @@
   }
 
   .dataTables_scroll {
-    padding-bottom: 5em;
-    padding-top: 10em;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    height: calc(100% - var(--datatable-pagination-row) - var(--repository-top-toolbar-height));
+    padding-bottom: 12px;
+    z-index: 1;
 
     .dataTables_scrollHead {
-      position: -webkit-sticky !important;
-      position: sticky !important;
-      top: calc(10em + var(--navbar-height));
       z-index: 90;
-
-      .table.dataTable {
-        margin-top: 0 !important;
-        transition: .4s $timing-function-sharp;
-
-        th {
-          transition: width .2s;
-        }
-      }
     }
 
     .dataTables_scrollBody {
@@ -158,14 +126,8 @@
   .pagination-row {
     align-items: center;
     background-color: $color-white;
-    bottom: 0;
     display: flex;
     height: 5em;
-    left: var(--repository-sidebar-margin);
-    padding: 0 2em;
-    position: fixed;
-    transition: .4s $timing-function-sharp;
-    width: calc(100% - var(--repository-sidebar-margin));
     z-index: 90;
 
     .pagination-info,
@@ -566,13 +528,10 @@
   }
 
   .repository-edit-overlay--pagination {
-    bottom: 0;
     height: 5em;
     line-height: 5em;
     padding: .5em;
-    position: fixed;
     text-align: center;
-    width: calc(100% - var(--repository-sidebar-margin));
 
     hr {
       margin-top: -2.5em;

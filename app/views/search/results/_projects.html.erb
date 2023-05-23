@@ -7,6 +7,11 @@
 
   <p>
     <span>
+      <%=t 'search.object_id' %>
+      <%= highlight project.code, @search_query.strip.split(/\s+/)  %>
+    </span>
+    <br>
+    <span>
       <%=t 'search.index.created_at' %>
       <%=l project.created_at, format: :full %>
     </span>

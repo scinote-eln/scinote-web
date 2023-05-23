@@ -10,7 +10,7 @@
 <div class="content-pane flexible experiment-new-my_module" id="experiment-canvas">
   <%= render partial: 'experiments/show_header' %>
   <div class="toolbar-row" id="diagram-buttons">
-    <div id="toolbar-left-block">
+    <span class="left" id="toolbar-left-block">
       <% if can_manage_experiment?(@experiment) %>
         <%= link_to modules_new_experiment_path(@experiment, view_mode: 'canvas'),
                     class: 'btn btn-primary new-my-module-button',
@@ -29,10 +29,13 @@
                 <span class="hidden-sm hidden-xs"><%= t('experiments.canvas.canvas_edit') %></span>
               <% end %>
       <% end %>
-    </div>
-    <div class="toolbar-right-block">
-      <span class="hidden-sm hidden-xs zoom-text"><%=t 'experiments.canvas.zoom' %></span>
+    </span>
+
+    <%= render partial: 'task_view_dropdowns.html.erb' %>
+
+    <span class="right">
       <div id="zoom-level-buttons" class="sci-toggles-group change-canvas-view" data-toggle="buttons">
+      <span class="hidden-sm hidden-xs zoom-text"><%=t 'experiments.canvas.zoom' %></span>
         <input type="radio" name="canvas-format" class="sci-toggle-item" checked>
         <%=link_to canvas_full_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax sci-toggle-item-label", "data-action" => "full_zoom", "data-toggle" => "button", "aria-pressed" => true do %>
           <%= render partial: 'experiments/canvas_svg_icons', locals: { type: 'full' } %>
@@ -46,7 +49,7 @@
           <%= render partial: 'experiments/canvas_svg_icons', locals: { type: 'small' } %>
         <% end %>
       </div>
-    </div>
+    </span>
   </div>
 
   <div id="canvas-container" data-project-id="<%= @project.id %>" data-module-tags-url="<%= my_module_tags_experiment_path(@experiment, format: :json) %>">
@@ -63,6 +66,6 @@
 <%= javascript_include_tag("experiments/show") %>
 
 <!-- Include all the neccesary JS libraries -->
-<%= javascript_include_tag("eventPause-min") %>
+<%= javascript_include_tag("eventPause-min", nonce: true) %>
 
 <%= javascript_include_tag("projects/canvas") %>

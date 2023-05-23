@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class ProjectFolder < ApplicationRecord
+  ID_PREFIX = 'PF'
+  include PrefixedIdModel
+
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel

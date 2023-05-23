@@ -3,8 +3,11 @@
         <%= image_tag('linkedin/Sign-in-Large---Default.png',
                       class: 'linkedin-signin-button',
                       alt: "Sign in with LinkedIn",
-                      onmouseover: "src='#{image_path('linkedin/Sign-in-Large---Hover.png')}'",
-                      onmouseout: "src='#{image_path('linkedin/Sign-in-Large---Default.png')}'",
-                      onclick: "src='#{image_path('linkedin/Sign-in-Large---Active.png')}'") %>
+                      data: {
+                        'hover-src': image_path('linkedin/Sign-in-Large---Hover.png'),
+                        'default-src': image_path('linkedin/Sign-in-Large---Default.png'),
+                        'click-src': image_path('linkedin/Sign-in-Large---Active.png')
+                      }) %>
+        <%= javascript_include_tag 'users/shared/linkedin_sign_in_links', nonce: true %>
   <% end -%>
 <% end -%>

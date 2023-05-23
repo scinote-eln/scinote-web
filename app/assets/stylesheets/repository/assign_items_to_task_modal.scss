@@ -1,0 +1,41 @@
+.assign-items-to-task-modal-container {
+  .modal-header {
+    color: $color-volcano;
+    display: flex;
+    font-size: $font-size-h2;
+    font-weight: bold;
+    padding: 1rem;
+
+    .close {
+      margin-left: auto;
+    }
+  }
+
+  .modal-body {
+    color: $color-volcano;
+    display: flex;
+    flex-direction: column;
+    font-size: $font-size-base;
+    row-gap: 1rem;
+
+    .level-selector {
+      display: flex;
+      flex-direction: column;
+      row-gap: .25rem;
+    }
+
+    .sn-select__search-input:focus {
+      box-shadow: none;
+    }
+
+    label {
+      font-size: $font-size-h6;
+      font-weight: bold;
+      margin-bottom: 0;
+    }
+  }
+
+  .modal-footer {
+    padding: 1rem;
+  }
+}

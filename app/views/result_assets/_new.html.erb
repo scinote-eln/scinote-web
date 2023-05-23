@@ -2,8 +2,8 @@
   <%= form_for(@result, url: my_module_result_assets_path(format: :json), data: { type: :json }) do |f| %>
     <div id="new-result-assets-select" class="text-center new-asset-box">
       <span>
-        <%= t('assets.drag_n_drop.label_html') %>
         <label>
+        <h2 class="inline-block font-normal"><%= t('assets.drag_n_drop.label_html') %></h2>
           <span class="btn btn-default new-asset-upload-button">
             <span class="fas fa-file-upload new-asset-upload-icon"></span>
             <%= t('assets.drag_n_drop.browse_label') %>
@@ -12,22 +12,20 @@
                            id: 'drag-n-drop-assets',
                            class: 'drag-n-drop-file-input',
                            direct_upload: true,
-                           multiple: true,
-                           onchange: "DragNDropResults.init(this.files);" %>
+                           multiple: true %>
         </label>
       </span>
     </div>
     <br />
-    <div class="align-right">
+    <div class="align-right new-result-assets-buttons">
       <%= f.button t('result_assets.new.create'),
                 class: 'btn btn-primary save-result',
-                onclick: 'DragNDropResults.processResult(event);',
                 data: { href: my_module_result_assets_path(page: params[:page], order: params[:order], format: :json) } %>
       <%= f.button t('general.cancel'),
                    class: 'btn btn-secondary cancel-new',
-                   onclick: 'DragNDropResults.destroyAll();',
                    type: 'button '%>
 
     </div>
   <% end %>
+  <%= javascript_include_tag 'results/result_assets/new', nonce: true %>
 </div>

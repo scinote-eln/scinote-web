@@ -1,14 +1,6 @@
 <template>
   <div class="label-templates-show">
     <div class="header">
-      <div id="breadcrumbsWrapper">
-        <div class="breadcrumbs-container">
-          <a :href="labelTemplatesUrl" class="breadcrumbs-link">
-            {{ i18n.t('label_templates.show.breadcrumb_index') }}
-          </a>
-          <span class="delimiter">/</span>
-        </div>
-      </div>
       <div v-if="labelTemplate.id" class="title-row">
         <img :src="labelTemplate.attributes.icon_url" class="label-template-icon"/>
         <InlineEdit

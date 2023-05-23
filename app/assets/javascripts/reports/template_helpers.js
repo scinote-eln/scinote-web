@@ -22,3 +22,5 @@ function pageNumbers() {
     }
   });
 }
+
+$('#reports-footer-header-template').on('load', pageNumbers);
