@@ -3608,23 +3608,6 @@ en:
   by: 'by'
   name: 'name'
 
-  client_api:
-    permission_error: "You don't have permission for this action."
-    invalid_arguments: "Invalid arguments"
-    generic_error_message: "Something went wrong! Please try again later."
-    user_teams:
-      permission_error: "You don't have permission to manage users."
-      leave_team_error: "An error occurred."
-      leave_flash: "Successfully left team %{team}."
-    teams:
-      create_permission_error: "You don't have permission to create team."
-      update_permission_error: "You don't have permission to edit this team."
-    user:
-      current_password_invalid: "incorrect password"
-      password_confirmation_not_match: "doesn't match"
-    invite_users:
-      permission_error: "You don't have permission to invite additional users to this team. Contact its administrator/s."
-
   bio_eddie:
     new_molecule: "New Molecule"
     new_button: "Biomolecule"
