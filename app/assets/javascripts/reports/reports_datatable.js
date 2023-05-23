@@ -317,15 +317,17 @@
       let url = row.attr('data-save-to-inventory-path');
       $.get(url, function(result) {
         let modal = $(result.html);
-        $('#content-reports-index').append(modal);
-        modal.modal('show');
-        // Remove modal when it gets closed
-        modal.on('hidden.bs.modal', function() {
-          $(this).remove();
-        });
+        if ($('#content-reports-index').find('.modal').length === 0) {
+          $('#content-reports-index').append(modal);
+          modal.modal('show');
+          // Remove modal when it gets closed
+          modal.on('hidden.bs.modal', function() {
+            $(this).remove();
+          });
+        }
       });
     });
-  }
+  }  
 
   function initDeleteReports() {
     $(document).on('click', '#delete-reports-btn', function() {
