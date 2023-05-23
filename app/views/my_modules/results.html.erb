@@ -70,7 +70,7 @@
 
   <div style="height: 15px;"></div>
 
-  <div id="results" data-module-id="<%= @my_module.id %>">
+  <div id="results" data-module-id="<%= @my_module.id %>" data-task-id="<%= @my_module.id %>">
   <% @results.each do |result| %>
     <%= render partial: "result", locals: { result: result } %>
   <% end %>
