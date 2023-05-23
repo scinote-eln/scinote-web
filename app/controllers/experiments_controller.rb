@@ -435,13 +435,23 @@ class ExperimentsController < ApplicationController
   end
 
   def experiment_filter
-    project = Project.managable_by_user(current_user).find_by(id: params[:project_id])
+    readable_experiments_ids = Experiment.readable_by_user(current_user).pluck(:id)
+    managable_active_my_modules_ids = MyModule.managable_by_user(current_user).active.pluck(:id)
+
+    project = Project.readable_by_user(current_user)
+                     .joins(experiments: :my_modules)
+                     .where(experiments: { id: readable_experiments_ids })
+                     .where(my_modules: { id: managable_active_my_modules_ids })
+                     .find_by(id: params[:project_id])
+
     return render_404 if project.blank?
 
     experiments = project.experiments
-                         .managable_by_user(current_user)
-                         .with_active_my_modules
+                         .joins(:my_modules)
+                         .where(experiments: { id: readable_experiments_ids })
+                         .where(my_modules: { id: managable_active_my_modules_ids })
                          .search(current_user, false, params[:query], 1, current_team)
+                         .distinct
                          .pluck(:id, :name)
 
     return render plain: [].to_json if experiments.blank?

@@ -105,9 +105,15 @@ class ProjectsController < ApplicationController
   end
 
   def project_filter
-    projects = Project.managable_by_user(current_user)
-                      .with_active_my_modules
+    readable_experiments_ids = Experiment.readable_by_user(current_user).pluck(:id)
+    managable_active_my_modules_ids = MyModule.managable_by_user(current_user).active.pluck(:id)
+
+    projects = Project.readable_by_user(current_user)
+                      .joins(experiments: :my_modules)
+                      .where(experiments: {id: readable_experiments_ids})
+                      .where(my_modules: { id: managable_active_my_modules_ids })
                       .search(current_user, false, params[:query], 1, current_team)
+                      .distinct
                       .pluck(:id, :name)
 
     return render plain: [].to_json if projects.blank?

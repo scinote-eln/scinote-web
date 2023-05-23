@@ -457,11 +457,20 @@ class MyModulesController < ApplicationController
   end
 
   def my_module_filter
-    experiment = Experiment.managable_by_user(current_user).find_by(id: params[:experiment_id])
+    readable_experiments_ids = Experiment.readable_by_user(current_user).pluck(:id)
+    managable_active_my_modules_ids = MyModule.managable_by_user(current_user).active.pluck(:id)
+
+    experiment = Experiment.readable_by_user(current_user)
+                           .joins(:my_modules)
+                           .where(experiments: { id: readable_experiments_ids })
+                           .where(my_modules: { id: managable_active_my_modules_ids })
+                           .find_by(id: params[:experiment_id])
+
     return render_404 if experiment.blank?
 
     my_modules = experiment.my_modules
-                           .managable_by_user(current_user)
+                           .where(my_modules: { id: managable_active_my_modules_ids })
+                           .distinct
                            .search(current_user, false, params[:query], 1, current_team)
                            .pluck(:id, :name)
 
