@@ -1,4 +1,4 @@
-<div class="well">
+<div class="well edit-text-result">
   <%= bootstrap_form_for(@result, url: result_text_path(format: :json),
                                   data: { 'name-max-length': Constants::NAME_MAX_LENGTH, 'rich-text-max-length': Constants::RICH_TEXT_MAX_LENGTH },
                                   remote: :true) do |f| %>

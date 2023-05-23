@@ -27,7 +27,7 @@
             :data-placeholder="placeholder"
             :data-tinymce-init="`tinymce-${objectType}-description-${objectId}`">
         </div>
-        <div class="form-group">
+        <div class="flex">
           <textarea :id="`${objectType}_textarea_${objectId}`"
                     class="form-control hidden"
                     autocomplete="off"
