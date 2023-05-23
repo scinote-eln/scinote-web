@@ -5,7 +5,21 @@
 @import "layouts/reminders";
 
 .repository-table {
+  --content-header-size: 5em;
+  --repository-top-toolbar-height: 4.25rem;
+  height: calc(100vh - var(--navbar-height) - var(--content-header-size));
   position: relative;
+
+  .dataTables_wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+  }
+
+  .dataTables_scrollHead {
+    flex-shrink: 0;
+  }
 
   .dataTables_filter {
     display: flex;
