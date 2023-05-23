@@ -1,6 +1,4 @@
 <% if @breadcrumbs_items&.length %>
-  <% archived_exists = @breadcrumbs_items.any? { |item| item[:archived] } %>
-  <% @breadcrumbs_items.each { |item| item[:label] = "(A) #{item[:label]}" if archived_exists || request.fullpath.include?('archived') } %>
   <% shortened = @breadcrumbs_items.length > 4 %>
 
   <% if shortened %>
@@ -58,7 +56,6 @@
       </span>
 
     <% end %>
-    <% last_item[:label] = "(A) #{last_item[:label]}" if request.fullpath.include?('archived') && !last_item[:label].include?("(A)") %>
     <span class="breadcrumbs-link" title="<%= last_item[:label] %>">
       <%= last_item[:label] %>
     </span>

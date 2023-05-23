@@ -542,5 +542,13 @@ class RepositoriesController < ApplicationController
                                 archived: @repository.archived?
                               })
     end
+
+    archived_exists = @breadcrumbs_items.any? { |item| item[:archived] == true }
+
+    if params[:archived] == 'true' || archived_exists
+      @breadcrumbs_items.each do |item|
+        item[:label] = "(A) #{item[:label]}"
+      end
+    end
   end
 end
