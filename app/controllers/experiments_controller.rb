@@ -109,7 +109,7 @@ class ExperimentsController < ApplicationController
   end
 
   def load_table
-    active_view_mode = params[:view_mode] == 'active'
+    active_view_mode = params[:view_mode] != 'archived'
     my_modules = nil
 
     unless @experiment.archived_branch? && active_view_mode
