@@ -7,6 +7,14 @@
 @import "constants";
 @import "mixins";
 
+.my-module-header {
+  .title-row {
+    .my_module-name {
+      max-width: calc(100% - 38rem);
+    }
+  }
+}
+
 .content-pane.my-modules-protocols-index {
   background-color: $color-alto;
   padding: 0 1rem 1rem !important;
