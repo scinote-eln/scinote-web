@@ -31,6 +31,13 @@ module Breadcrumbs
 
       include_my_module(my_module) if my_module
 
+      archived_exists = @breadcrumbs_items.any? { |item| item[:archived] == true }
+
+      if params[:view_mode] == 'archived' || archived_exists
+        @breadcrumbs_items.each do |item|
+          item[:label] = "(A) #{item[:label]}"
+        end
+      end
       @breadcrumbs_items
     end
   end
