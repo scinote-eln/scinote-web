@@ -594,6 +594,10 @@ li.module-hover {
 }
 
 .projects-index {
+  .content-header {
+    height: var(--content-header-size)
+  }
+
   .project-users-list {
     hr {
       margin: .5em 0;
@@ -676,7 +680,7 @@ li.module-hover {
   }
 
   .projects-container {
-    margin: 1.5em 0;
+    margin: 0;
 
     .cards-wrapper {
       --card-min-width: 291px;
