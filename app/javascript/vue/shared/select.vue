@@ -7,9 +7,22 @@
       <span class="sn-select__caret caret"></span>
     </slot>
     <div ref="optionsContainer" class="sn-select__options" :style="optionPositionStyle">
-      <div v-for="option in options" :key="option[0]" @click="setValue(option[0])" class="sn-select__option">
-        {{ option[1] }}
-      </div>
+      <template v-if="options.length">
+        <div
+          v-for="option in options"
+          :key="option[0]" @click="setValue(option[0])"
+          class="sn-select__option"
+        >
+          {{ option[1] }}
+        </div>
+      </template>
+      <template v-else>
+        <div
+          class="sn-select__no-options"
+        >
+          {{ this.noOptionsPlaceholder }}
+        </div>
+      </template> 
     </div>
   </div>
 </template>
@@ -22,6 +35,7 @@
       options: { type: Array, default: () => [] },
       initialValue: { type: [String, Number] },
       placeholder: { type: String },
+      noOptionsPlaceholder: { type: String },
       disabled: { type: Boolean, default: false }
     },
     data() {

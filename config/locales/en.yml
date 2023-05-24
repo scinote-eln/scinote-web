@@ -1996,6 +1996,7 @@ en:
           label: "Task"
           placeholder: "Enter Task name"
           disabled_placeholder: "Select Experiment to enable Task"
+          no_options_placeholder: "No tasks available to assign items"
       assign:
         text: "Assign to this task"
         flash_all_assignments_success: "Successfully assigned %{count} item(s) to the task."

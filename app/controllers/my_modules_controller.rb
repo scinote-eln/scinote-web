@@ -74,13 +74,13 @@ class MyModulesController < ApplicationController
 
   def show
     respond_to do |format|
-      format.json {
-        render :json => {
-          :html => render_to_string({
-            :partial => "show.html.erb"
-          })
+      format.json do
+        render json: {
+          html: render_to_string({
+                                   partial: 'show.html.erb'
+                                 })
         }
-      }
+      end
     end
   end
 
@@ -88,15 +88,15 @@ class MyModulesController < ApplicationController
   def description
     respond_to do |format|
       format.html
-      format.json {
+      format.json do
         render json: {
           html: render_to_string({
-            partial: "description.html.erb"
-          }),
+                                   partial: 'description.html.erb'
+                                 }),
           title: t('my_modules.description.title',
                    module: escape_input(@my_module.name))
         }
-      }
+      end
     end
   end
 
@@ -164,13 +164,13 @@ class MyModulesController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json {
-        render :json => {
-          :html => render_to_string({
-            :partial => "activities.html.erb"
-          })
+      format.json do
+        render json: {
+          html: render_to_string({
+                                   partial: 'activities.html.erb'
+                                 })
         }
-      }
+      end
     end
   end
 
@@ -178,15 +178,15 @@ class MyModulesController < ApplicationController
   def due_date
     respond_to do |format|
       format.html
-      format.json {
+      format.json do
         render json: {
           html: render_to_string({
-            partial: "due_date.html.erb"
-          }),
+                                   partial: 'due_date.html.erb'
+                                 }),
           title: t('my_modules.due_date.title',
                    module: escape_input(@my_module.name))
         }
-      }
+      end
     end
   end
 
@@ -198,21 +198,13 @@ class MyModulesController < ApplicationController
     start_date_changes = @my_module.changes[:started_on]
     due_date_changes = @my_module.changes[:due_date]
 
-    if @my_module.completed_on_changed? && !can_complete_my_module?(@my_module)
-      render_403 && return
-    end
+    render_403 && return if @my_module.completed_on_changed? && !can_complete_my_module?(@my_module)
 
-    if description_changed && !can_update_my_module_description?(@my_module)
-      render_403 && return
-    end
+    render_403 && return if description_changed && !can_update_my_module_description?(@my_module)
 
-    if start_date_changes.present? && !can_update_my_module_start_date?(@my_module)
-      render_403 && return
-    end
+    render_403 && return if start_date_changes.present? && !can_update_my_module_start_date?(@my_module)
 
-    if due_date_changes.present? && !can_update_my_module_start_date?(@my_module)
-      render_403 && return
-    end
+    render_403 && return if due_date_changes.present? && !can_update_my_module_start_date?(@my_module)
 
     if @my_module.archived_changed?(from: false, to: true)
       saved = @my_module.archive(current_user)
@@ -273,7 +265,7 @@ class MyModulesController < ApplicationController
       else
         format.json do
           render json: @my_module.errors,
-            status: :unprocessable_entity
+                 status: :unprocessable_entity
         end
       end
     end
@@ -281,6 +273,7 @@ class MyModulesController < ApplicationController
 
   def update_description
     render_403 && return unless can_update_my_module_description?(@my_module)
+
     old_description = @my_module.description
     respond_to do |format|
       format.json do
@@ -414,7 +407,7 @@ class MyModulesController < ApplicationController
       log_activity(:change_status_on_task_flow, @my_module, my_module_status_old: old_status_id,
                    my_module_status_new: @my_module.my_module_status.id)
 
-      return redirect_to protocols_my_module_path(@my_module)
+      redirect_to protocols_my_module_path(@my_module)
     else
       render json: { errors: @my_module.errors.messages.values.flatten.join('\n') }, status: :unprocessable_entity
     end
@@ -457,11 +450,20 @@ class MyModulesController < ApplicationController
   end
 
   def my_module_filter
-    experiment = Experiment.readable_by_user(current_user).find_by(id: params[:experiment_id])
+    readable_experiments = Experiment.readable_by_user(current_user)
+    managable_active_my_modules = MyModule.managable_by_user(current_user).active
+
+    experiment = Experiment.readable_by_user(current_user)
+                           .joins(:my_modules)
+                           .where(experiments: { id: readable_experiments })
+                           .where(my_modules: { id: managable_active_my_modules })
+                           .find_by(id: params[:experiment_id])
+
     return render_404 if experiment.blank?
 
     my_modules = experiment.my_modules
-                           .readable_by_user(current_user)
+                           .where(my_modules: { id: managable_active_my_modules })
+                           .distinct
                            .search(current_user, false, params[:query], 1, current_team)
                            .pluck(:id, :name)
 
