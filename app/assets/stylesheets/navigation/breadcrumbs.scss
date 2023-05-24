@@ -8,6 +8,7 @@
   padding-left: 1.5rem;
 
   .breadcrumbs-link {
+    @include font-small;
     color: var(--sn-blue);
     display: inline-block;
     max-width: var(--max-breadcrumbs-link-width);
