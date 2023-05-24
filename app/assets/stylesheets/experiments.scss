@@ -7,11 +7,17 @@
 // New experiments page
 
 .projects-show {
+  .content-header {
+    height: var(--content-header-size);
+  }
+
   .experiment-actions-menu {
     height: 36px;
     width: 36px;
 
     .dropdown-menu {
+      z-index: 9;
+
       a,
       button {
         @include font-button;
@@ -67,7 +73,7 @@
   }
 
   .project-show-container {
-    margin: 1.5em 0;
+    margin: 0;
 
     .cards-wrapper {
       --card-min-width: 350px;
