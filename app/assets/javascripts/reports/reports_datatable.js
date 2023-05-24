@@ -213,7 +213,10 @@
         });
 
         DataTableHelpers.initLengthAppearance($table.closest('.dataTables_wrapper'));
-        DataTableHelpers.initSearchField($table.closest('.dataTables_wrapper'), I18n.t('projects.reports.index.search_reports'));
+        DataTableHelpers.initSearchField(
+          $table.closest('.dataTables_wrapper'),
+          I18n.t('projects.reports.index.search_reports')
+        );
         $('.pagination-row').removeClass('hidden');
         $('.report-row.processing').each(function() {
           setTimeout(() => { checkProcessingStatus($(this).data('id')); }, START_POLLING_INTERVAL);
@@ -221,8 +224,6 @@
 
         let topToolbar = $('#toolbarWrapper').detach().html();
         $('.reports-datatable .reports-toolbar').prepend(topToolbar);
-        
-
       },
       drawCallback: function() {
         if (CHECKBOX_SELECTOR) CHECKBOX_SELECTOR.checkSelectAllStatus();
