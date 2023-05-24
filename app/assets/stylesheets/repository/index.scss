@@ -133,3 +133,22 @@
     font-size: 14px;
   }
 }
+
+.content-body {
+  height: calc(100vh - var(--navbar-height) - 5em);
+}
+
+#repositoriesList_wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+  .dataTables_scroll {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    height: calc(100% - var(--datatable-pagination-row) - 4em);
+    padding-bottom: 12px;
+    z-index: 1;
+  }
+}
