@@ -1,6 +1,0 @@
-json.timeZone user.time_zone
-json.assignments_notification user.assignments_notification
-json.assignments_email_notification user.assignments_email_notification
-json.recent_notification user.recent_notification
-json.recent_email_notification user.recent_email_notification
-json.system_message_email_notification user.system_message_email_notification
