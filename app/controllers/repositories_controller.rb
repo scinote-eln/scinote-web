@@ -9,12 +9,13 @@ class RepositoriesController < ApplicationController
   include RepositoriesDatatableHelper
   include MyModulesHelper
 
-  before_action :load_repository, except: %i(index create create_modal sidebar archive restore)
+  before_action :load_repository, except: %i(index create create_modal sidebar archive restore actions_toolbar)
   before_action :load_repositories, only: %i(index show sidebar)
   before_action :load_repositories_for_archiving, only: :archive
   before_action :load_repositories_for_restoring, only: :restore
   before_action :check_view_all_permissions, only: %i(index sidebar)
-  before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet import_records sidebar archive restore)
+  before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet import_records
+                                                    sidebar archive restore actions_toolbar)
   before_action :check_manage_permissions, only: %i(rename_modal update)
   before_action :check_delete_permissions, only: %i(destroy destroy_modal)
   before_action :check_archive_permissions, only: %i(archive restore)
@@ -408,6 +409,17 @@ class RepositoriesController < ApplicationController
                               }
                             }
                           end }
+  end
+
+  def actions_toolbar
+    render json: {
+      actions:
+        Toolbars::RepositoriesService.new(
+          current_user,
+          current_team,
+          repository_ids: params[:repository_ids].split(',')
+        ).actions
+    }
   end
 
   private
