@@ -12,8 +12,9 @@ module Toolbars
       @current_team = current_team
       @repositories = Repository.readable_by_user(current_user)
                                 .where(id: repository_ids)
-      @repository = @repositories.length == 1 ? @repositories.first : nil
+      @repository = @repositories.first
       @archived_state = @repositories.all.any?(&:archived?)
+      @single = @repositories.uniq.length == 1
     end
 
     def actions
@@ -29,7 +30,7 @@ module Toolbars
     private
 
     def rename_action
-      return unless @repository
+      return unless @single && can_manage_repository?(@repository)
 
       {
         name: 'rename',
@@ -42,7 +43,7 @@ module Toolbars
     end
 
     def duplicate_action
-      return unless @repository && can_create_repositories?(@current_team)
+      return unless @single && can_create_repositories?(@current_team)
 
       {
         name: 'duplicate',
@@ -69,7 +70,7 @@ module Toolbars
     end
 
     def share_action
-      return unless @repository && can_share_repository?(@repository)
+      return unless @single && can_share_repository?(@repository)
 
       {
         name: 'share',
@@ -96,7 +97,7 @@ module Toolbars
     end
 
     def delete_action
-      return unless @repository
+      return unless @single && can_delete_repository?(@repository)
 
       {
         name: 'delete',
