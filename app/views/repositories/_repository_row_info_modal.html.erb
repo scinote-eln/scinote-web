@@ -121,10 +121,10 @@
                   title="<%= @my_module_assign_error %>"
                 <% end %>
           >
-            <button type="button" class="btn btn-primary assign-inventory-button" 
+            <button type="button" class="btn btn-primary assign-inventory-button"
                     data-assign-url=<%= my_module_repositories_path(@my_module) %>
                     data-repository-row-id=<%= @repository_row.id %>
-                    <%= 'disabled' if @my_module_assign_error.present? %>> 
+                    <%= 'disabled' if @my_module_assign_error.present? %>>
               <%= t('repository_row.modal_info.assign_to_task') %>
             </button>
           </span>
