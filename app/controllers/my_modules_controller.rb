@@ -21,7 +21,7 @@ class MyModulesController < ApplicationController
   before_action :check_update_state_permissions, only: :update_state
   before_action :set_inline_name_editing, only: %i(protocols results activities archive)
   before_action :load_experiment_my_modules, only: %i(protocols results activities archive)
-  before_action :set_breadcrumbs_items, only: %i(results protocols activities)
+  before_action :set_breadcrumbs_items, only: %i(results protocols activities archive)
   before_action :set_navigator, only: %i(protocols results activities archive)
 
   layout 'fluid'.freeze
