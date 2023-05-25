@@ -76,5 +76,12 @@
         <%= render partial: 'repositories/toolbar/bmt' %>
       </div>
     <% end %>
+    <div class="repo-datatables-buttons">
+      <button class="btn btn-light manage-repo-column-index"
+              data-modal-url="<%= repository_repository_columns_path(@repository) %>"
+              data-action="new">
+        <span class="fas fa-columns">
+      </button>
+    </div>
   </div>
 </template>

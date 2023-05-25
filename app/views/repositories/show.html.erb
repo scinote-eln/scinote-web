@@ -44,13 +44,6 @@
           <%= t('repositories.show.archived_inventory_items', repository_name: @repository.name) %>
         <% end %>
       </div>
-      <div class="repo-datatables-buttons">
-        <button class="btn btn-light manage-repo-column-index"
-                data-modal-url="<%= repository_repository_columns_path(@repository) %>"
-                data-action="new">
-          <span class="fas fa-columns">
-        </button>
-      </div>
       <div class="toolbar-delimiter"></div>
     </div>
   </div>
