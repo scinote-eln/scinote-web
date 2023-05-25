@@ -72,7 +72,7 @@ module Toolbars
     end
 
     def assign_action
-      return unless can_manage_repository_rows?(@repository)
+      return unless can_read_repository?(@repository)
 
       return unless @repository_rows.all?(&:active?)
 
