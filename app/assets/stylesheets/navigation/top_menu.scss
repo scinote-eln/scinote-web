@@ -69,6 +69,11 @@
 
   .dropdown-menu {
     top: calc(50px - 0.5em);
+    border-radius: 0px;
+  }
+
+  .top-menu-user-dropdown {
+    top: calc(47px - 0.5em);  
   }
 
   .dropdown-menu li a {
