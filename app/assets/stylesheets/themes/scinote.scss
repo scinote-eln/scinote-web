@@ -540,6 +540,10 @@ mark,.mark {
     position: relative;
     right: 15px;
 
+    img {
+      display: inline-block;
+    }
+
     & li + li::before {
       color: $color-volcano;
       content: "/ ";
