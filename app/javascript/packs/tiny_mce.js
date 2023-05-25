@@ -371,6 +371,8 @@ window.TinyMCE = (() => {
 
                 updateScrollPosition(editorForm);
                 if (options.onSaveCallback) { options.onSaveCallback($(selector).val()); }
+
+                SmartAnnotation.closePopup()
               })
               .removeClass('hidden');
 
