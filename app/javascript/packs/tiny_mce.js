@@ -323,6 +323,7 @@ window.TinyMCE = (() => {
               .on('click', (event) => {
                 event.preventDefault();
                 saveAction(editor);
+                SmartAnnotation.closePopup();
               });
 
             // After save action
