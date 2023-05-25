@@ -83,8 +83,8 @@
         this.$emit('change', value);
       },
       updateOptionPosition() {
-        const container = this.$refs.container;
-        const rect = container.getBoundingClientRect();
+        const container = $(this.$refs.container);
+        const rect = container.get(0).getBoundingClientRect();
         let width = rect.width;
         let top = rect.top + rect.height;
         let left = rect.left;
