@@ -1521,7 +1521,9 @@ function initEditModules() {
   })
   .on("shown.bs.modal", function(event) {
     // Focus the text element
-    $(this).find("#edit-module-name-input").focus();
+    var inputField = $('#edit-module-name-input');
+    var value = inputField.val();
+    inputField.focus().val('').val(value);
   })
   .on("hide.bs.modal", function (event) {
     // Remove potential error classes
