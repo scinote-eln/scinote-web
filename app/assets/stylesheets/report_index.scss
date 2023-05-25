@@ -18,13 +18,6 @@
       }
     }
   }
-
-  .search-report-container {
-    display: inline-block;
-    float: right;
-    margin-right: 2em;
-    width: 200px;
-  }
 }
 
 .reports-datatable {
@@ -34,6 +27,12 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+
+    .reports-toolbar {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 1em;
+    }
 
     .dataTables_scroll {
       display: flex;

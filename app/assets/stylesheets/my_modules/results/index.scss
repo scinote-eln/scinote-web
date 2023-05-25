@@ -73,3 +73,10 @@
     width: 3em;
   }
 }
+
+.edit-text-result {
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+}

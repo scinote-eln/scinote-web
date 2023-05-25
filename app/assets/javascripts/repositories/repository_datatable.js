@@ -656,7 +656,7 @@ var RepositoryDatatable = (function(global) {
       },
       fnInitComplete: function() {
         window.initActionToolbar();
-        window.actionToolbarComponent.setBottomOffset(70);
+        window.actionToolbarComponent.setBottomOffset(75);
         initHeaderTooltip();
         disableCheckboxToggleOnCheckboxPreview();
 
@@ -680,9 +680,6 @@ var RepositoryDatatable = (function(global) {
 
         $('.dataTables_filter').addClass('hidden');
         addRepositorySearch();
-        if ($('.repository-show').length) {
-          $('.dataTables_scrollBody, .dataTables_scrollHead').css('overflow', '');
-        }
 
         $('.repository-toolbar, .pagination-row').removeClass('hidden');
 

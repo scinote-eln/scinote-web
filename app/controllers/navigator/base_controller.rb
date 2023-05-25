@@ -40,12 +40,12 @@ module Navigator
       }
     end
 
-    def my_module_serializer(my_module)
+    def my_module_serializer(my_module, archived)
       {
         id: my_module.code,
         name: my_module.name,
         type: :my_module,
-        url: protocols_my_module_path(my_module),
+        url: protocols_my_module_path(my_module, view_mode: archived ? 'archived' : 'active'),
         archived: my_module.archived_branch?,
         has_children: false
       }
@@ -185,7 +185,7 @@ module Navigator
 
     def my_module_level_branch(experiment, archived = false)
       fetch_my_modules(experiment, archived)
-        .map { |i| my_module_serializer(i) }
+        .map { |i| my_module_serializer(i, archived) }
     end
   end
 end

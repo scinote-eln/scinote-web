@@ -5,17 +5,11 @@
   .repository-toolbar {
     background-color: $color-white;
     display: flex;
-    flex-grow: 1;
     flex-wrap: nowrap;
-    height: 6em;
-    left: var(--left-navigation-width);
-    padding: 1em 2em 0;
-    position: fixed;
-    top: calc(4em + var(--navbar-height));
-    transition: .4s $timing-function-sharp;
-    width: calc(100% - var(--left-navigation-width));
-    z-index: 99;
     justify-content: space-between;
+    padding: 1rem 0;
+    z-index: 99;
+
 
     .view-switch,
     .filter-container {
@@ -108,20 +102,12 @@
     .toolbar-right-block {
       display: flex;
       flex-shrink: 0;
-
-      >* {
-        margin-right: .25em;
-
-        &:nth-last-child(1) {
-          margin-right: 0;
-        }
-      }
+      gap: .25rem;
 
       .active-reminders-filter {
         align-items: center;
         cursor: pointer;
         display: flex;
-        margin-right: 1em;
 
         .sci-checkbox-container {
           margin-right: .5em;

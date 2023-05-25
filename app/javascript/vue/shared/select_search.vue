@@ -1,5 +1,16 @@
 <template>
-  <Select class="sn-select--search" :value="value" :options="currentOptions" :placeholder="placeholder" v-bind:disabled="disabled" @change="change" @blur="blur" @open="open" @close="close">
+  <Select
+    class="sn-select--search"
+    :value="value"
+    :options="currentOptions"
+    :placeholder="placeholder"
+    :noOptionsPlaceholder="noOptionsPlaceholder"
+    v-bind:disabled="disabled"
+    @change="change"
+    @blur="blur"
+    @open="open"
+    @close="close"
+  >
     <input ref="focusElement" v-model="query" type="text" class="sn-select__search-input" :placeholder="searchPlaceholder" />
     <span class="sn-select__value">{{ valueLabel || (placeholder || i18n.t('general.select')) }}</span>
     <span class="sn-select__caret caret"></span>
@@ -17,6 +28,7 @@
       optionsUrl: { type: String },
       placeholder: { type: String },
       searchPlaceholder: { type: String },
+      noOptionsPlaceholder: { type: String },
       disabled: { type: Boolean }
     },
     components: { Select },

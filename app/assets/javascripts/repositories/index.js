@@ -7,6 +7,11 @@
   var CHECKBOX_SELECTOR;
 
   function updateActionButtons() {
+    if (window.actionToolbarComponent) {
+      window.actionToolbarComponent.fetchActions({ repository_ids: CHECKBOX_SELECTOR.selectedRows });
+      $('.dataTables_scrollBody').css('padding-bottom', `${CHECKBOX_SELECTOR.selectedRows.length > 0 ? 68 : 0}px`);
+    }
+
     var rowsCount = CHECKBOX_SELECTOR.selectedRows.length;
     var row;
     $('#renameRepoBtn').attr('href', '#');
@@ -98,6 +103,9 @@
           }
         }],
         fnInitComplete: function(e) {
+          initActionToolbar();
+          actionToolbarComponent.setBottomOffset(75);
+
           var dataTableWrapper = $(e.nTableWrapper);
           CHECKBOX_SELECTOR = new DataTableCheckboxes(dataTableWrapper, {
             checkboxSelector: '.repository-row-selector',

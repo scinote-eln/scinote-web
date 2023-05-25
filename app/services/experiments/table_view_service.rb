@@ -44,6 +44,12 @@ module Experiments
     end
 
     def call
+      if @my_modules.nil?
+        return {
+          next_page: nil,
+          data: []
+        }
+      end
       result = []
       my_module_list = @my_modules
       @filters.each do |name, value|

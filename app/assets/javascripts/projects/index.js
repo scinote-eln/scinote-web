@@ -240,13 +240,13 @@ var ProjectsIndex = (function() {
   }
 
   function updateProjectsToolbar() {
-    window.actionToolbarComponent.fetchActions(
-      {
+    if (window.actionToolbarComponent) {
+      window.actionToolbarComponent.fetchActions({
         project_ids: selectedProjects,
         project_folder_ids: selectedProjectFolders
-      }
-    );
-    window.actionToolbarComponent.setReloadCallback(refreshCurrentView);
+      });
+      window.actionToolbarComponent.setReloadCallback(refreshCurrentView);
+    }
   }
 
   function refreshCurrentView() {

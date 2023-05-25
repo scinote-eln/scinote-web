@@ -1,6 +1,4 @@
 <% if @breadcrumbs_items&.length %>
-  <% archived_exists = @breadcrumbs_items.any? { |item| item[:archived] } %>
-  <% @breadcrumbs_items.each { |item| item[:label] = "(A) #{item[:label]}" if archived_exists } %>
   <% shortened = @breadcrumbs_items.length > 4 %>
 
   <% if shortened %>

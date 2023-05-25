@@ -68,7 +68,7 @@
       display: flex;
       flex-direction: column;
       flex-grow: 1;
-      height: calc(100% - var(--datatable-pagination-row));
+      height: calc(100% - var(--datatable-pagination-row) - 3.5rem);
 
       .dataTables_scrollHead {
         flex-shrink: 0;
@@ -81,6 +81,10 @@
 
       .dataTables_scrollBody {
         height: 100%;
+
+        td {
+          white-space: nowrap;
+        }
 
         td:nth-child(2) {
           text-align: center;
@@ -106,6 +110,12 @@
 
 .label-template-name {
   vertical-align: middle;
+
+  .label-info-link {
+    max-width: 16rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .label-template-icon {

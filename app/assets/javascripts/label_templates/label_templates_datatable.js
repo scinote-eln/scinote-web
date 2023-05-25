@@ -24,10 +24,10 @@
   }
 
   function renderNameHTML(data, type, row) {
-    return `${data.icon_image_tag}<a
+    return `<div class="flex gap-2">${data.icon_image_tag}<a
       href='${row.DT_RowAttr['data-edit-url']}'
       class='label-info-link'
-    >${data.name}</a>`;
+    >${data.name}</a></div>`;
   }
 
   function addAttributesToRow(row, data) {

@@ -6,18 +6,16 @@
 
 .content-pane.protocols-show {
   background-color: $color-alto;
-  margin: 0 -16px;
   min-height: calc(100vh - var(--navbar-height));
   overflow: hidden;
   padding: 0 0 10px;
-  width: calc(100% + 31px);
 
   .title-row h1 {
     max-width: 100%;
   }
 
   .content-header {
-    padding: 0 2em;
+    padding: 0 1.5rem;
   }
 
   .protocol-breadcrumbs {
@@ -106,11 +104,9 @@
       margin-bottom: 2em;
 
       .data-block {
+        display: flex;
+        gap: .5rem;
         margin-bottom: 16px;
-
-        > :nth-child(2) {
-          margin-left: 8px;
-        }
       }
 
       .authors-data {

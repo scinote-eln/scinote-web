@@ -6,9 +6,10 @@
   $(document).on('click', '.record-info-link', function(e) {
     var that = $(this);
     let params = {};
-    if ($('.my-modules-protocols-index').length) {
-      params.my_module_id = $('.my-modules-protocols-index').data('task-id');
+    if ($('.my-modules-protocols-index, #results').length) {
+      params.my_module_id = $('.my-modules-protocols-index, #results').data('task-id');
     }
+
     $.ajax({
       method: 'GET',
       url: that.attr('href'),
