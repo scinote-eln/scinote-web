@@ -21,6 +21,7 @@
 
   .sn-select__value {
     all: unset;
+    display: inline-block;
     overflow: hidden;
     padding-right: 1em;
     text-overflow: ellipsis;
@@ -90,6 +91,10 @@
 
     .sn-select__option {
       padding: .5em;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: calc(100%);
     }
 
     .sn-select__no-options {
