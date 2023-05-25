@@ -70,7 +70,7 @@
         <span>{{ i18n.t('nav.user_greeting', { full_name: user.name })}}</span>
         <img class="avatar" :src="user.avatar_url">
       </div>
-      <div class="dropdown-menu dropdown-menu-right">
+      <div class="dropdown-menu dropdown-menu-right top-menu-user-dropdown">
         <li v-for="(item, i) in userMenu" :key="i">
           <a :href="item.url">
             {{ item.name }}
