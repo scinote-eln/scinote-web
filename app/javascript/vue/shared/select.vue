@@ -62,7 +62,7 @@
         setTimeout(() => {
           this.isOpen = false;
           this.$emit('blur');
-        }, 200)
+        }, 200);
       },
       toggle() {
         this.isOpen = !this.isOpen;
