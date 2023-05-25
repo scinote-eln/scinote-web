@@ -281,7 +281,7 @@
         initDeleteModal();
         initRefreshFluicsButton();
         window.initActionToolbar();
-        window.actionToolbarComponent.setBottomOffset(75);
+        window.actionToolbarComponent.setBottomOffset(68);
       }
     });
   }

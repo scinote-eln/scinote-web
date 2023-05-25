@@ -104,7 +104,7 @@
         }],
         fnInitComplete: function(e) {
           initActionToolbar();
-          actionToolbarComponent.setBottomOffset(75);
+          actionToolbarComponent.setBottomOffset(68);
 
           var dataTableWrapper = $(e.nTableWrapper);
           CHECKBOX_SELECTOR = new DataTableCheckboxes(dataTableWrapper, {
