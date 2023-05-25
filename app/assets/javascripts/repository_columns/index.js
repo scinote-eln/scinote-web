@@ -170,9 +170,10 @@ var RepositoryColumns = (function() {
         labelHTML: true
       };
       $.get(modalUrl, (data) => {
-        $manageModal.find('.modal-content').html(data.html)
-          .find('#repository-column-name')
-          .focus();
+        var inputField = $manageModal.find('.modal-content').html(data.html)
+          .find('#repository-column-name');
+        var value = inputField.val()
+        inputField.focus().val('').val(value);
 
         if (button.data('action') !== 'destroy') {
           columnType = $('#repository-column-data-type').val();
