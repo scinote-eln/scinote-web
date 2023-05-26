@@ -387,7 +387,6 @@ var RepositoryColumns = (function() {
 
   function initColumnsButton() {
     $(document).on('click', '.manage-repo-column-index', function() {
-      console.log('aaa')
       var button = $(this);
       initManageColumnModal(button);
     });
