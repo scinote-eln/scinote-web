@@ -1,6 +1,8 @@
 <template>
   <div class="text-sn-blue max-w-[196px] flex justify-center flex-col"
-       :class="{ 'pl-6': !firstLevel }"
+       :class="{
+         'pl-6': !firstLevel
+       }"
        :navigator-item-id="item.id"
   >
     <div class="py-1.5 px-1 menu-item flex items-center whitespace-nowrap" :title="this.itemToolTip" :class="{ 'bg-sn-light-grey active': activeItem }">
@@ -14,7 +16,8 @@
       <a :href="item.url"
           class="text-ellipsis overflow-hidden hover:no-underline pr-3"
           :class="{
-            'text-sn-science-blue-hover': (!item.archived && archived)
+            'text-sn-science-blue-hover': (!item.archived && archived),
+            'no-hover': (!item.archived && archived)
           }">
         <template v-if="item.archived">(A)</template>
         {{ item.name }}
