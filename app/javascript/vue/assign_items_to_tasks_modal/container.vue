@@ -77,6 +77,11 @@
               @change="changeExperiment"
               :options="experiments"
               :placeholder="experimentsSelectorPlaceholder"
+              :no-options-placeholder="
+                i18n.t(
+                  'repositories.modal_assign_items_to_task.body.experiment_select.no_options_placeholder'
+                )
+              "
               :searchPlaceholder="
                 i18n.t(
                   'repositories.modal_assign_items_to_task.body.experiment_select.placeholder'
