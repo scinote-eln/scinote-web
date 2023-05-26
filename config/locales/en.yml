@@ -1992,6 +1992,7 @@ en:
           label: "Experiment"
           placeholder: "Enter Experiment name"
           disabled_placeholder: "Select Project to enable Experiment"
+          no_options_placeholder: "No experiments available to select"
         task_select:
           label: "Task"
           placeholder: "Enter Task name"
