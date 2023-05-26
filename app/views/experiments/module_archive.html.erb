@@ -51,10 +51,8 @@
 
 </div>
 <% unless  @my_modules.present? %>
-  <div class="row">
-    <div class="flex justify-center items-center pt-10">
-      <em><%= t('experiments.module_archive.no_archived_modules') %></em>
-    </div>
+  <div class="pt-10">
+    <em><%= t('experiments.empty_state.no_archived_modules') %></em>
   </div>
 <% end %>
 

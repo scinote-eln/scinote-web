@@ -4,6 +4,16 @@
     <div class="no-results-title"><%= t('projects.index.no_results_found') %></div>
     <div class="no-results-description"><%= t('projects.index.no_results_description') %></div>
   </div>
+<% elsif cards.blank? || (@project.archived? && view_mode == 'active') %>
+  <div class="no-data-container">
+    <% if view_mode == 'archived' %>
+      <em><%= t('projects.show.empty_state.no_archived_experiments') %></em>
+    <% elsif  @project.archived? %>
+      <em><%= t('projects.show.empty_state.no_active_experiment_archived_project') %></em>
+    <% else %>
+      <em><%= t('projects.show.empty_state.no_active_experiments') %></em>
+    <% end %>
+  </div>
 <% else %>
   <% cards.each do |card| %>
     <% cache [current_user, @project, card] do %>

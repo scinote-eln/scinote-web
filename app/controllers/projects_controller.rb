@@ -75,7 +75,7 @@ class ProjectsController < ApplicationController
         toolbar_html: render_to_string(partial: 'projects/index/toolbar.html.erb'),
         cards_html: render_to_string(
           partial: 'projects/index/team_projects.html.erb',
-          locals: { cards: cards }
+          locals: { cards: cards, view_mode: params[:view_mode] }
         )
       }
     end
@@ -338,6 +338,7 @@ class ProjectsController < ApplicationController
       cards_html: render_to_string(
         partial: 'projects/show/experiments_list',
         locals: { cards: cards,
+                  view_mode: params[:view_mode],
                   filters_included: filters_included? }
       )
     }

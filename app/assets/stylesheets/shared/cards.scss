@@ -17,6 +17,10 @@
     display: none;
   }
 
+  &.no-data {
+    display: block;
+  }
+
   &.no-results {
     .no-results-container {
       grid-column: 1 / -1;

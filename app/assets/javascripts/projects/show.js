@@ -60,6 +60,25 @@
     $(palceholder).insertAfter($(cardsWrapper).find('.table-header'));
   }
 
+  function initCardData(viewContainer, data) {
+    viewContainer.find('.card, .no-results-container, .no-data-container').remove();
+    viewContainer.removeClass('no-results no-data');
+
+    if (viewContainer.find('.list').length) {
+      viewContainer.find('.table-header').show();
+    }
+
+    viewContainer.append(data.cards_html);
+    if (viewContainer.find('.no-results-container').length) {
+      viewContainer.addClass('no-results');
+    }
+
+    if (viewContainer.find('.no-data-container').length) {
+      viewContainer.addClass('no-data');
+      viewContainer.find('.table-header').hide();
+    }
+  }
+
   function loadCardsView() {
     var requestParams = {
       view_mode: $(experimentsPage).data('view-mode'),
@@ -82,13 +101,7 @@
       dataType: 'json',
       data: requestParams,
       success: function(data) {
-        viewContainer.find('.card, .no-results-container').remove();
-        viewContainer.removeClass('no-results');
-        viewContainer.append(data.cards_html);
-        if (viewContainer.find('.no-results-container').length) {
-          viewContainer.addClass('no-results');
-        }
-        selectedExperiments = [];
+        initCardData(viewContainer, data);
         updateExperimentsToolbar();
         loadExperimentWorkflowImages();
 

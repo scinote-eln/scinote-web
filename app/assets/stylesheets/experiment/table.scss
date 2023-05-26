@@ -411,6 +411,10 @@
     &.last-page {
       padding-bottom: 5em;
       position: relative;
+
+      &.no-data {
+        padding-bottom: 0;
+      }
     }
 
     .experiment-table-list-end-placeholder {
@@ -529,6 +533,10 @@
     span {
       color: $color-silver-chalice;
     }
+  }
+
+  .no-data-container {
+    display: none;
   }
 }
 
