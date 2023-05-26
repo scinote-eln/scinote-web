@@ -211,7 +211,7 @@
       createdRow: addAttributesToRow,
       initComplete: function(settings) {
         initActionToolbar();
-        actionToolbarComponent.setBottomOffset(70);
+        actionToolbarComponent.setBottomOffset(68);
 
         const { nTableWrapper: dataTableWrapper } = settings;
         CHECKBOX_SELECTOR = new DataTableCheckboxes(dataTableWrapper, {
