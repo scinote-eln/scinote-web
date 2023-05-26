@@ -1,5 +1,5 @@
 <template>
-  <div class="text-sn-blue max-w-[196px] flex justify-center flex-col"
+  <div class="text-sn-blue min-w-[170px] w-full flex justify-center flex-col"
        :class="{ 'pl-6': !firstLevel }"
        :navigator-item-id="item.id"
   >
