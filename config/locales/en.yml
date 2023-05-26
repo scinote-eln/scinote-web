@@ -1998,6 +1998,7 @@ en:
         project_select:
           label: "Project"
           placeholder: "Enter project name"
+          no_options_placeholder: "No projects available to select"
         experiment_select:
           label: "Experiment"
           placeholder: "Enter Experiment name"
