@@ -15,7 +15,7 @@ module Breadcrumbs
 
       @breadcrumbs_items.push({
                                 label: t('projects.index.breadcrumbs_root'),
-                                url: projects_path
+                                url: projects_path(view_mode: project&.archived? ? :archived : :active)
                               })
 
       folders&.each do |project_folder|
