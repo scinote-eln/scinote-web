@@ -8,6 +8,7 @@
         <a :class="`btn btn-light ${action.button_class}`"
           :href="(['link', 'remote-modal']).includes(action.type) ? action.path : '#'"
           :id="action.button_id"
+          :title="action.label"
           :data-url="action.path"
           :data-object-type="action.item_type"
           :data-object-id="action.item_id"
