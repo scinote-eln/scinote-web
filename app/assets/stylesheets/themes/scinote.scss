@@ -39,7 +39,12 @@ table {
 }
 
 #no-teams-jumbotron {
-  padding-left: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  top: 100px;
+  justify-content: center;
 }
 
 #alert-container {
