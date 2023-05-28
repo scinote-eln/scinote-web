@@ -124,7 +124,7 @@ var RepositoryDatatable = (function(global) {
   }
 
   function initEditRowForms() {
-    let $forms = $(TABLE_ID).find('.repository-row-edit-form');
+    let $forms = $(TABLE_ID).find('.repository-row-edit-form:not(#repositoryNewRowForm)');
 
     let formsCount = $forms.length;
     $forms.each(function() {
