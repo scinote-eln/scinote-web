@@ -522,15 +522,18 @@
     position: absolute;
     right: 0;
     text-align: right;
-    top: 2em;
-    width: 50%;
+    top: 0;
+    width: 30%;
   }
 
   .repository-edit-overlay--pagination {
+    bottom: 0;
     height: 5em;
     line-height: 5em;
     padding: .5em;
+    position: absolute;
     text-align: center;
+    width: 100%;
 
     hr {
       margin-top: -2.5em;
