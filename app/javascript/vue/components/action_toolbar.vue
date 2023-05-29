@@ -71,9 +71,8 @@
         this.loading = true;
         this.debouncedFetchActions(params);
       },
-      setReloadCallback(func, params = null) {
+      setReloadCallback(func) {
         this.reloadCallback = func;
-        this.reloadCallbackParams = params;
       },
       doAction(action, event) {
         switch(action.type) {
@@ -102,9 +101,7 @@
             }).fail((data) => {
               HelperModule.flashAlertMsg(data.responseJSON && data.responseJSON.message || data.message, 'danger');
             }).complete(() => {
-              if (this.reloadCallback) {
-                this.reloadCallbackParams ? this.reloadCallback(...this.reloadCallbackParams) : this.reloadCallback();
-              }
+              if (this.reloadCallback) this.reloadCallback();
             });
             break;
         }
