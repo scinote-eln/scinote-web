@@ -387,7 +387,7 @@ var RepositoryColumns = (function() {
   }
 
   function initColumnsButton() {
-    $('.repo-datatables-buttons').on('click', '.manage-repo-column-index', function() {
+    $(document).on('click', '.manage-repo-column-index', function() {
       var button = $(this);
       initManageColumnModal(button);
     });
@@ -395,21 +395,19 @@ var RepositoryColumns = (function() {
 
   return {
     init: () => {
-      if ($('.repo-datatables-buttons').length > 0) {
-        initColumnTypeSelector();
-        initCreateSubmitAction();
-        initEditSubmitAction();
-        initDeleteSubmitAction();
-        initBackToManageColumns();
-        initColumnsButton();
-        initManageColumnAction();
-        RepositoryListColumnType.init();
-        RepositoryStatusColumnType.init();
-        RepositoryStockColumnType.init();
-        RepositoryChecklistColumnType.init();
-        RepositoryDateTimeColumnType.init();
-        RepositoryDateColumnType.init();
-      }
+      initColumnTypeSelector();
+      initCreateSubmitAction();
+      initEditSubmitAction();
+      initDeleteSubmitAction();
+      initBackToManageColumns();
+      initColumnsButton();
+      initManageColumnAction();
+      RepositoryListColumnType.init();
+      RepositoryStatusColumnType.init();
+      RepositoryStockColumnType.init();
+      RepositoryChecklistColumnType.init();
+      RepositoryDateTimeColumnType.init();
+      RepositoryDateColumnType.init();
     }
   };
 }());

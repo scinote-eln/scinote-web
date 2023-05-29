@@ -81,7 +81,6 @@ var RepositoryDatatable = (function(global) {
 
       if (rowsSelected.length !== 0) {
         $('#editRepositoryRecord').prop('disabled', !allSelectedRowsAreOnPage());
-        $('#importRecordsButton').hide();
 
         if (rowsSelected.some(r=> rowsLocked.indexOf(r) >= 0)) { // Some selected rows is rowsLocked
           $('#editRepositoryRecord').prop('disabled', true);
