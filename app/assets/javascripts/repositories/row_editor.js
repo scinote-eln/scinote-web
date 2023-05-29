@@ -168,7 +168,7 @@ var RepositoryDatatableRowEditor = (function() {
       TABLE.ajax.reload(() => {
         animateSpinner(null, false);
       }, false);
-      });
+    });
 
     TABLE.columns.adjust();
   }
