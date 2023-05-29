@@ -6,7 +6,7 @@
         <img class="logo large" :src="logo.large_url">
       </a>
     </div>
-    <div v-if="current_team" class="sci--navigation--top-menu-teams">
+    <div v-if="currentTeam" class="sci--navigation--top-menu-teams">
       <DropdownSelector
         :selectedValue="currentTeam"
         :options="teams"
@@ -16,7 +16,7 @@
         @dropdown:changed="switchTeam"
       />
     </div>
-    <div v-if="user" class="sci--navigation--top-menu-search left-icon sci-input-container" :class="{'disabled' : !current_team}">
+    <div v-if="user" class="sci--navigation--top-menu-search left-icon sci-input-container" :class="{'disabled' : !currentTeam}">
       <input type="text" class="sci-input-field" :placeholder="i18n.t('nav.search')" @change="searchValue"/>
       <i class="fas fa-search"></i>
     </div>
