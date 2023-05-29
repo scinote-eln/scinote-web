@@ -343,6 +343,13 @@ var ExperimnetTable = {
       }
     });
   },
+  initModalInputFocus: function() {
+    $(document).on('shown.bs.modal', function() {
+      var inputField = $('#edit-module-name-input');
+      var value = inputField.val();
+      inputField.focus().val('').val(value);
+    });
+  },
   initMoveModulesModal: function() {
     $(this.tableContainer).on('click', '#moveTask', (e) => {
       e.stopPropagation();
@@ -639,6 +646,7 @@ var ExperimnetTable = {
     this.initMyModuleActions();
     this.initRestoreMyModules();
     this.initManageUsersDropdown();
+    this.initModalInputFocus();
   }
 };
 
