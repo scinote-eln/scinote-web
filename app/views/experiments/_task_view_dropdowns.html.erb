@@ -56,7 +56,7 @@
   
   <%= render partial: 'shared/state_view_switch', locals: {
     disabled: false,
-    switchable: !@experiment.archived_branch?,
+    switchable: true,
     archived: action_name == 'module_archive' || params[:view_mode] == 'archived',
     active_url: my_modules_experiment_path(@experiment),
     archived_url: my_modules_experiment_path(@experiment, view_mode: :archived),

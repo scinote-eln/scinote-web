@@ -30,7 +30,7 @@ var ProtocolsIndex = (function() {
     window.initActionToolbar();
     window.actionToolbarComponent.setReloadCallback(reloadTable);
     // make room for pagination
-    window.actionToolbarComponent.setBottomOffset(75);
+    window.actionToolbarComponent.setBottomOffset(68);
     updateButtons();
     initProtocolsTable();
     initKeywordFiltering();
@@ -645,6 +645,7 @@ var ProtocolsIndex = (function() {
 
   function updateButtons() {
     window.actionToolbarComponent.fetchActions({ protocol_ids: rowsSelected.join(',') });
+    $('.dataTables_scrollBody').css('padding-bottom', `${rowsSelected.length > 0 ? 68 : 0}px`);
   }
 
   function initLocalFileImport() {

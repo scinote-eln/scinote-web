@@ -1,4 +1,8 @@
 .repositories-index {
+  .content-body {
+    --content-header-size: 3.5rem;
+    height: calc(100vh - var(--navbar-height) - var(--content-header-size));
+  }
 
   .view-switch {
     margin: 0 auto;
@@ -131,5 +135,25 @@
 
   .dropdown-menu {
     font-size: 14px;
+  }
+}
+
+
+#repositoriesList_wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+
+  .dataTables_scroll {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    height: calc(100% - var(--datatable-pagination-row) - 4rem);
+    z-index: 1;
+  }
+
+  .dataTables_scrollHead {
+    flex-shrink: 0;
   }
 }

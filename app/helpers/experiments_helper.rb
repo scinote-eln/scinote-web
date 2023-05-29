@@ -2,8 +2,6 @@
 
 module ExperimentsHelper
   def experiments_view_mode(project)
-    return 'archived' if project.archived?
-
     params[:view_mode] == 'archived' ? 'archived' : 'active'
   end
 

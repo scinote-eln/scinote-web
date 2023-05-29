@@ -8,6 +8,7 @@ export default {
       $wopiModal.find('#element_id').val(step.id);
       $wopiModal.find('#element_type').val('Step');
       $wopiModal.modal('show');
+      $($wopiModal).find('#new-wopi-file-name').focus();
 
       $wopiModal.find('form').on(
         'ajax:success',

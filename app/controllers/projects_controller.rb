@@ -10,6 +10,7 @@ class ProjectsController < ApplicationController
   include Breadcrumbs
 
   attr_reader :current_folder
+
   helper_method :current_folder
 
   before_action :switch_team_with_param, only: :index
@@ -74,7 +75,7 @@ class ProjectsController < ApplicationController
         toolbar_html: render_to_string(partial: 'projects/index/toolbar.html.erb'),
         cards_html: render_to_string(
           partial: 'projects/index/team_projects.html.erb',
-          locals: { cards: cards }
+          locals: { cards: cards, view_mode: params[:view_mode] }
         )
       }
     end
@@ -105,8 +106,15 @@ class ProjectsController < ApplicationController
   end
 
   def project_filter
+    readable_experiments = Experiment.readable_by_user(current_user)
+    managable_active_my_modules = MyModule.managable_by_user(current_user).active
+
     projects = Project.readable_by_user(current_user)
+                      .joins(experiments: :my_modules)
+                      .where(experiments: { id: readable_experiments })
+                      .where(my_modules: { id: managable_active_my_modules })
                       .search(current_user, false, params[:query], 1, current_team)
+                      .distinct
                       .pluck(:id, :name)
 
     return render plain: [].to_json if projects.blank?
@@ -211,9 +219,7 @@ class ProjectsController < ApplicationController
           # Redirect URL for archive view is different as for other views.
           if project_params[:archived] == 'false'
             # The project should be restored
-            unless @project.archived
-              @project.restore(current_user)
-            end
+            @project.restore(current_user) unless @project.archived
           elsif @project.archived
             # The project should be archived
             @project.archive(current_user)
@@ -332,6 +338,7 @@ class ProjectsController < ApplicationController
       cards_html: render_to_string(
         partial: 'projects/show/experiments_list',
         locals: { cards: cards,
+                  view_mode: params[:view_mode],
                   filters_included: filters_included? }
       )
     }
@@ -339,17 +346,17 @@ class ProjectsController < ApplicationController
 
   def notifications
     @modules = @project
-      .assigned_modules(current_user)
-      .order(due_date: :desc)
+               .assigned_modules(current_user)
+               .order(due_date: :desc)
     respond_to do |format|
-      #format.html
-      format.json {
-        render :json => {
-          :html => render_to_string({
-            :partial => "notifications.html.erb"
-          })
+      # format.html
+      format.json do
+        render json: {
+          html: render_to_string({
+                                   partial: 'notifications.html.erb'
+                                 })
         }
-      }
+      end
     end
   end
 

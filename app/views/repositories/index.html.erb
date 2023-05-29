@@ -37,56 +37,30 @@
 
 <!-- Repositories action buttons -->
 <template id="repositoriesListButtons">
-<% if can_create_repositories?(current_team) %>
-  <a id="createRepoBtn" class="btn btn-primary"
-    data-remote="true"
-    data-view-mode="active"
-    href="<%= create_modal_team_repositories_path(current_team) %>">
-    <span class="fas fa-plus"></span>
-    <span class="hidden-xs"><%= t('libraries.index.no_libraries.create_new_button') %></span>
-  </a>
-<% end %>
-
-<%= render partial: 'shared/state_view_switch', locals: {
-        disabled: false,
-        switchable: true,
-        archived: params[:archived],
-        active_url: repositories_path,
-        archived_url: repositories_path(archived: true),
-      } %>
-  <!--
-  <a id="renameRepoBtn" class="btn btn-light disabled hidden" data-view-mode="active" href="#" data-action-mode="single" data-remote="true">
-    <span class="fas fa-pencil-alt"></span>
-    <%= t('libraries.index.buttons.edit') %>
-  </a>
   <% if can_create_repositories?(current_team) %>
-    <a id="copyRepoBtn" class="btn btn-light disabled hidden" data-view-mode="active" href="#" data-action-mode="single" data-remote="true">
-      <span class="fas fa-copy"></span>
-      <%= t('libraries.index.buttons.duplicate') %>
+    <a id="createRepoBtn" class="btn btn-primary"
+      data-remote="true"
+      data-view-mode="active"
+      href="<%= create_modal_team_repositories_path(current_team) %>">
+      <span class="fas fa-plus"></span>
+      <span class="hidden-xs"><%= t('libraries.index.no_libraries.create_new_button') %></span>
     </a>
   <% end %>
-  <a id="archiveRepoBtn"
-     class="btn btn-light disabled hidden"
-     data-view-mode="active"
-     data-action-mode="multiple"
-     data-archive-repositories="<%= archive_team_repositories_path(current_team) %>">
-    <span class="fas fa-archive"></span>
-    <%= t('libraries.index.buttons.archive') %>
-  </a>
-  <a id="restoreRepoBtn"
-     class="btn btn-light disabled hidden"
-     data-view-mode="archived"
-     data-action-mode="multiple"
-     data-restore-repositories="<%= restore_team_repositories_path(current_team) %>">
-    <span class="fas fa-undo"></span>
-    <%= t('libraries.index.buttons.restore') %>
-  </a>
-  <a id="deleteRepoBtn" class="btn btn-light disabled hidden" data-view-mode="archived" href="#" data-action-mode="single" data-remote="true">
-    <span class="fas fa-trash"></span>
-    <%= t('libraries.index.buttons.delete') %>
-  </a>
-  -->
+
+  <%= render partial: 'shared/state_view_switch', locals: {
+          disabled: false,
+          switchable: true,
+          archived: params[:archived],
+          active_url: repositories_path,
+          archived_url: repositories_path(archived: true),
+        } %>
+  </div>
 </template>
+
+<div id="actionToolbar" data-behaviour="vue">
+  <action-toolbar actions-url="<%= actions_toolbar_team_repositories_url(current_team) %>" />
+</div>
 
 <%= javascript_include_tag "repositories/index" %>
 <%= stylesheet_link_tag 'datatables' %>
+<%= javascript_include_tag "vue_components_action_toolbar" %>

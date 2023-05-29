@@ -1173,5 +1173,13 @@ class ProtocolsController < ApplicationController
                                 archived: @protocol.archived?
                               })
     end
+
+    archived_exists = @breadcrumbs_items.any? { |item| item[:archived] == true }
+
+    if params[:type] == 'archived' || archived_exists
+      @breadcrumbs_items.each do |item|
+        item[:label] = "(A) #{item[:label]}"
+      end
+    end
   end
 end

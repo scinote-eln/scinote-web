@@ -291,6 +291,9 @@ en:
     core_version: "SciNote core version"
     addon_versions: "Addon versions"
 
+  action_toolbar:
+    no_actions: "There is no action available"
+
   left_menu_bar:
     dashboard: "Dashboard"
     projects: "Projects"
@@ -451,7 +454,7 @@ en:
         title: "Please create your Project"
         create_new_button: "New Project"
         no_permission_title: "You don't have permission to create new project. Please contact your team administrator."
-      new: "New Project"
+      new: "New project"
       new_folder: "New folder"
       visibility_private: "Project is visible to project members only."
       visibility_public: "Project is visible to all team members."
@@ -462,6 +465,9 @@ en:
       manage_users: "Manage users"
       no_notifications: "There are no overdue tasks at the moment"
       no_results_found: "No results found..."
+      empty_state:
+        no_archived_projects: "No archived projects"
+        no_active_projects: "No active projects"
       no_results_description: "Try resetting your filter or choose a different search query"
       module_overdue_html: "Task <em>%{module}</em> is overdue (%{days})."
       module_overdue_days:
@@ -600,6 +606,10 @@ en:
       error_flash: "Failed to delete project folder(s)."
     show:
       head_title: "%{project}"
+      empty_state:
+        no_archived_experiments: "This project has no archived experiments."
+        no_active_experiments: "This project has no active experiments."
+        no_active_experiment_archived_project: "This project is archived and can’t have active experiments."
     reports:
       print_title: "%{project} | Report"
       index:
@@ -1567,11 +1577,14 @@ en:
         success_flash: "Experiment successfully updated."
     module_archive:
       head_title: "%{experiment} | Archived tasks"
-      no_archived_modules: "No archived tasks!"
       restore_option: "Restore"
       move_option: "Move"
       archived_on: "Archived on"
       archived_on_title: "Task archived on %{date} at %{time}."
+    empty_state:
+      no_archived_modules: "This experiment has no archived tasks."
+      no_active_modules: "This experiment has no active tasks."
+      no_active_modules_archived_branch: "This experiment is archived and can’t have active tasks."
 
   tags:
     new:
@@ -1988,14 +2001,17 @@ en:
         project_select:
           label: "Project"
           placeholder: "Enter project name"
+          no_options_placeholder: "No projects available to select"
         experiment_select:
           label: "Experiment"
           placeholder: "Enter Experiment name"
           disabled_placeholder: "Select Project to enable Experiment"
+          no_options_placeholder: "No experiments available to select"
         task_select:
           label: "Task"
           placeholder: "Enter Task name"
           disabled_placeholder: "Select Experiment to enable Task"
+          no_options_placeholder: "No tasks available to assign items"
       assign:
         text: "Assign to this task"
         flash_all_assignments_success: "Successfully assigned %{count} item(s) to the task."
@@ -2221,7 +2237,7 @@ en:
         restore: "Restore"
         delete: "Delete"
       no_libraries:
-        create_new_button: "New Inventory"
+        create_new_button: "New inventory"
     show:
       head_title: "Inventories | %{library}"
   repository_row:
@@ -2555,7 +2571,7 @@ en:
             one: "Currently you are member of %{count} team."
             other: "Currently you are member of %{count} teams."
           no_teams: "You are not a member of any team."
-          new_team: "New Team"
+          new_team: "New team"
           thead_name: "Team"
           thead_role: "Role"
           thead_created_at: "Created at"
@@ -3611,23 +3627,6 @@ en:
   by: 'by'
   name: 'name'
 
-  client_api:
-    permission_error: "You don't have permission for this action."
-    invalid_arguments: "Invalid arguments"
-    generic_error_message: "Something went wrong! Please try again later."
-    user_teams:
-      permission_error: "You don't have permission to manage users."
-      leave_team_error: "An error occurred."
-      leave_flash: "Successfully left team %{team}."
-    teams:
-      create_permission_error: "You don't have permission to create team."
-      update_permission_error: "You don't have permission to edit this team."
-    user:
-      current_password_invalid: "incorrect password"
-      password_confirmation_not_match: "doesn't match"
-    invite_users:
-      permission_error: "You don't have permission to invite additional users to this team. Contact its administrator/s."
-
   bio_eddie:
     new_molecule: "New Molecule"
     new_button: "Biomolecule"
@@ -3686,8 +3685,8 @@ en:
       below_limit: "%{attribute} is too short (minimum number is %{limit} characters)"
       blank: "%{attribute} can't be empty"
   toolbar:
-    table_view: "Table View"
-    cards_view: "Card View"
-    canvas_view: "Canvas View"
-    active_state: "Active State"
-    archived_state: "Archived State"
+    table_view: "Table view"
+    cards_view: "Card view"
+    canvas_view: "Canvas view"
+    active_state: "Active state"
+    archived_state: "Archived state"

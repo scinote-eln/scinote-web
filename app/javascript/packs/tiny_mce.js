@@ -323,6 +323,7 @@ window.TinyMCE = (() => {
               .on('click', (event) => {
                 event.preventDefault();
                 saveAction(editor);
+                SmartAnnotation.closePopup();
               });
 
             // After save action
@@ -371,6 +372,8 @@ window.TinyMCE = (() => {
 
                 updateScrollPosition(editorForm);
                 if (options.onSaveCallback) { options.onSaveCallback($(selector).val()); }
+
+                SmartAnnotation.closePopup();
               })
               .removeClass('hidden');
 

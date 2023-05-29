@@ -7,9 +7,26 @@
 @import "constants";
 @import "mixins";
 
+.my-module-header {
+  .my-module-title-row {
+    align-items: center;
+    background: $color-white;
+    display: flex;
+    height: 4em;
+    margin-left: -1.5rem;
+    padding: 0 0.5rem;
+    width: calc(100% + 3rem);
+
+    .my_module-name {
+      max-width: calc(100% - 38rem);
+    }
+  }
+}
+
 .content-pane.my-modules-protocols-index {
   background-color: $color-alto;
   padding: 0 1rem 1rem !important;
+  min-height: calc(100vh - var(--navbar-height));
 
   .title-row {
     margin-left: -1rem;

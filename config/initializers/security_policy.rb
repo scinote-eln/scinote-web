@@ -28,3 +28,13 @@ Rails.application.config.content_security_policy_nonce_directives = %w(script-sr
 # For further information see the following documentation:
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy-Report-Only
 # Rails.application.config.content_security_policy_report_only = true
+
+# Whitelist AWS buckets
+Rails.application.configure do
+  config.after_initialize do
+    if ActiveStorage::Blob.service.name == :amazon
+      Extends::EXTERNAL_SERVICES += [ActiveStorage::Blob.service.bucket.url]
+      Rails.application.config.content_security_policy.connect_src :self, :data, *Extends::EXTERNAL_SERVICES
+    end
+  end
+end

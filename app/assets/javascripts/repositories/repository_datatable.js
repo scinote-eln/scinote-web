@@ -54,6 +54,7 @@ var RepositoryDatatable = (function(global) {
   function updateButtons() {
     if (window.actionToolbarComponent) {
       window.actionToolbarComponent.fetchActions({ repository_row_ids: rowsSelected });
+      $('.dataTables_scrollBody').css('padding-bottom', `${rowsSelected.length > 0 ? 68 : 0}px`);
     }
 
     if (currentMode === 'viewMode') {
@@ -123,7 +124,7 @@ var RepositoryDatatable = (function(global) {
   }
 
   function initEditRowForms() {
-    let $forms = $(TABLE_ID).find('.repository-row-edit-form');
+    let $forms = $(TABLE_ID).find('.repository-row-edit-form:not(#repositoryNewRowForm)');
 
     let formsCount = $forms.length;
     $forms.each(function() {
@@ -176,6 +177,7 @@ var RepositoryDatatable = (function(global) {
   }
 
   function changeToEditMode() {
+    $('#newRepoNameField').focus();
     currentMode = 'editMode';
 
     clearRowSelection();
@@ -635,9 +637,14 @@ var RepositoryDatatable = (function(global) {
           type: 'POST',
           success: function(json) {
             var archived = $('.repository-show').hasClass('archived');
+            var viewType = archived ? 'archived' : 'active';
+            var state = localStorage.getItem(`datatables_repositories_state/${repositoryId}/${viewType}`);
+
+            json.state.start = state !== null ? JSON.parse(state).start : 0;
             if (json.state.columns[6]) json.state.columns[6].visible = archived;
             if (json.state.columns[7]) json.state.columns[7].visible = archived;
             if (json.state.search) delete json.state.search;
+
             callback(json.state);
           }
         });
@@ -645,6 +652,12 @@ var RepositoryDatatable = (function(global) {
       stateSaveCallback: function(settings, data) {
         // Send an Ajax request to the server with the state object
         let repositoryId = $(TABLE_ID).data('repository-id');
+        var viewType = $('.repository-show').hasClass('archived') ? 'archived' : 'active';
+
+        localStorage.setItem(
+          `datatables_repositories_state/${repositoryId}/${viewType}`,
+          JSON.stringify(data)
+        );
 
         $.ajax({
           url: '/repositories/' + repositoryId + '/state_save',
@@ -656,7 +669,7 @@ var RepositoryDatatable = (function(global) {
       },
       fnInitComplete: function() {
         window.initActionToolbar();
-
+        window.actionToolbarComponent.setBottomOffset(68);
         initHeaderTooltip();
         disableCheckboxToggleOnCheckboxPreview();
 
@@ -680,9 +693,6 @@ var RepositoryDatatable = (function(global) {
 
         $('.dataTables_filter').addClass('hidden');
         addRepositorySearch();
-        if ($('.repository-show').length) {
-          $('.dataTables_scrollBody, .dataTables_scrollHead').css('overflow', '');
-        }
 
         $('.repository-toolbar, .pagination-row').removeClass('hidden');
 

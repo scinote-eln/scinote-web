@@ -24,10 +24,10 @@
   }
 
   function renderNameHTML(data, type, row) {
-    return `${data.icon_image_tag}<a
+    return `<div class="flex gap-2">${data.icon_image_tag}<a
       href='${row.DT_RowAttr['data-edit-url']}'
       class='label-info-link'
-    >${data.name}</a>`;
+    >${data.name}</a></div>`;
   }
 
   function addAttributesToRow(row, data) {
@@ -145,6 +145,7 @@
 
   function updateButtons() {
     window.actionToolbarComponent.fetchActions({ label_template_ids: rowsSelectedIDs() });
+    $('.dataTables_scrollBody').css('padding-bottom', `${rowsSelectedIDs().length > 0 ? 68 : 0}px`);
   }
 
   function reloadTable() {
@@ -280,6 +281,7 @@
         initDeleteModal();
         initRefreshFluicsButton();
         window.initActionToolbar();
+        window.actionToolbarComponent.setBottomOffset(68);
       }
     });
   }

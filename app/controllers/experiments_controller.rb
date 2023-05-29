@@ -81,15 +81,16 @@ class ExperimentsController < ApplicationController
   end
 
   def canvas
-    redirect_to module_archive_experiment_path(@experiment) if @experiment.archived_branch?
     @project = @experiment.project
-    @active_modules = @experiment.my_modules.active.order(:name)
-                                 .left_outer_joins(:designated_users, :task_comments)
-                                 .preload(:tags, outputs: :to)
-                                 .preload(:my_module_status, :my_module_group, user_assignments: %i(user user_role))
-                                 .select('COUNT(DISTINCT users.id) as designated_users_count')
-                                 .select('COUNT(DISTINCT comments.id) as task_comments_count')
-                                 .select('my_modules.*').group(:id)
+    @active_modules = unless @experiment.archived_branch?
+                        @experiment.my_modules.active.order(:name)
+                                   .left_outer_joins(:designated_users, :task_comments)
+                                   .preload(:tags, outputs: :to)
+                                   .preload(:my_module_status, :my_module_group, user_assignments: %i(user user_role))
+                                   .select('COUNT(DISTINCT users.id) as designated_users_count')
+                                   .select('COUNT(DISTINCT comments.id) as task_comments_count')
+                                   .select('my_modules.*').group(:id)
+                      end
   end
 
   def table
@@ -108,10 +109,19 @@ class ExperimentsController < ApplicationController
   end
 
   def load_table
-    my_modules = @experiment.my_modules.readable_by_user(current_user)
+    active_view_mode = params[:view_mode] != 'archived'
+    my_modules = nil
 
-    unless @experiment.archived_branch?
-      my_modules = params[:view_mode] == 'archived' ? my_modules.archived : my_modules.active
+    unless @experiment.archived_branch? && active_view_mode
+      my_modules = @experiment.my_modules.readable_by_user(current_user)
+
+      unless @experiment.archived_branch?
+        my_modules = if active_view_mode
+                       my_modules.active
+                     else
+                       my_modules.archived
+                     end
+      end
     end
 
     render json: Experiments::TableViewService.new(@experiment, my_modules, current_user, params).call
@@ -435,12 +445,23 @@ class ExperimentsController < ApplicationController
   end
 
   def experiment_filter
-    project = Project.readable_by_user(current_user).find_by(id: params[:project_id])
+    readable_experiments = Experiment.readable_by_user(current_user)
+    managable_active_my_modules = MyModule.managable_by_user(current_user).active
+
+    project = Project.readable_by_user(current_user)
+                     .joins(experiments: :my_modules)
+                     .where(experiments: { id: readable_experiments })
+                     .where(my_modules: { id: managable_active_my_modules })
+                     .find_by(id: params[:project_id])
+
     return render_404 if project.blank?
 
     experiments = project.experiments
-                         .readable_by_user(current_user)
+                         .joins(:my_modules)
+                         .where(experiments: { id: readable_experiments })
+                         .where(my_modules: { id: managable_active_my_modules })
                          .search(current_user, false, params[:query], 1, current_team)
+                         .distinct
                          .pluck(:id, :name)
 
     return render plain: [].to_json if experiments.blank?
@@ -646,7 +667,7 @@ class ExperimentsController < ApplicationController
   end
 
   def view_mode_redirect_url(view_type)
-    if params[:view_mode] == 'archived' || @experiment.archived_branch?
+    if params[:view_mode] == 'archived'
       case view_type
       when 'canvas'
         module_archive_experiment_path(@experiment)

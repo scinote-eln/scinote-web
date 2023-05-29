@@ -102,6 +102,7 @@
   function updateButtons() {
     if (window.actionToolbarComponent) {
       window.actionToolbarComponent.fetchActions({ report_ids: CHECKBOX_SELECTOR.selectedRows });
+      $('.dataTables_scrollBody').css('padding-bottom', `${CHECKBOX_SELECTOR.selectedRows.length > 0 ? 68 : 0}px`);
     }
 
     const rowsCount = CHECKBOX_SELECTOR.selectedRows.length;
@@ -172,7 +173,7 @@
     var $table = $('#reports-table');
     CHECKBOX_SELECTOR = null;
     REPORTS_TABLE = $table.DataTable({
-      dom: "Rt<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
+      dom: "R<'reports-toolbar'f>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
       order: [[9, 'desc']],
       sScrollX: '100%',
       stateSave: true,
@@ -210,6 +211,7 @@
       createdRow: addAttributesToRow,
       initComplete: function(settings) {
         initActionToolbar();
+        actionToolbarComponent.setBottomOffset(68);
 
         const { nTableWrapper: dataTableWrapper } = settings;
         CHECKBOX_SELECTOR = new DataTableCheckboxes(dataTableWrapper, {
@@ -219,10 +221,17 @@
         });
 
         DataTableHelpers.initLengthAppearance($table.closest('.dataTables_wrapper'));
+        DataTableHelpers.initSearchField(
+          $table.closest('.dataTables_wrapper'),
+          I18n.t('projects.reports.index.search_reports')
+        );
         $('.pagination-row').removeClass('hidden');
         $('.report-row.processing').each(function() {
           setTimeout(() => { checkProcessingStatus($(this).data('id')); }, START_POLLING_INTERVAL);
         });
+
+        let topToolbar = $('#toolbarWrapper').detach().html();
+        $('.reports-datatable .reports-toolbar').prepend(topToolbar);
       },
       drawCallback: function() {
         if (CHECKBOX_SELECTOR) CHECKBOX_SELECTOR.checkSelectAllStatus();
@@ -341,11 +350,6 @@
       animateLoading();
     });
   }
-
-
-  $('.reports-index').on('keyup', '.report-search', function() {
-    REPORTS_TABLE.search($(this).val()).draw();
-  });
 
   $('.reports-index').on('click', '.generate-docx', function(e) {
     var reportId = $(this).closest('.report-row').attr('data-id');

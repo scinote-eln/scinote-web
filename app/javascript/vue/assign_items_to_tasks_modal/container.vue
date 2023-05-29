@@ -48,6 +48,11 @@
                   'repositories.modal_assign_items_to_task.body.project_select.placeholder'
                 )
               "
+              :no-options-placeholder="
+                i18n.t(
+                  'repositories.modal_assign_items_to_task.body.project_select.no_options_placeholder'
+                )
+              "
               :searchPlaceholder="
                 i18n.t(
                   'repositories.modal_assign_items_to_task.body.project_select.placeholder'
@@ -72,6 +77,11 @@
               @change="changeExperiment"
               :options="experiments"
               :placeholder="experimentsSelectorPlaceholder"
+              :no-options-placeholder="
+                i18n.t(
+                  'repositories.modal_assign_items_to_task.body.experiment_select.no_options_placeholder'
+                )
+              "
               :searchPlaceholder="
                 i18n.t(
                   'repositories.modal_assign_items_to_task.body.experiment_select.placeholder'
@@ -95,9 +105,10 @@
               ref="tasksSelector"
               @change="changeTask"
               :options="tasks"
-              :placeholder="
+              :placeholder="tasksSelectorPlaceholder"
+              :no-options-placeholder="
                 i18n.t(
-                  'repositories.modal_assign_items_to_task.body.task_select.disabled_placeholder'
+                  'repositories.modal_assign_items_to_task.body.task_select.no_options_placeholder'
                 )
               "
               :searchPlaceholder="
@@ -162,8 +173,8 @@ export default {
       });
     });
 
-
     $(this.$refs.modal).on("hidden.bs.modal", () => {
+      this.resetSelectors();
       this.$emit("close");
     });
   },

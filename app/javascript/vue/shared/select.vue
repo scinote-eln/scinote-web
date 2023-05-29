@@ -7,9 +7,22 @@
       <span class="sn-select__caret caret"></span>
     </slot>
     <div ref="optionsContainer" class="sn-select__options" :style="optionPositionStyle">
-      <div v-for="option in options" :key="option[0]" @click="setValue(option[0])" class="sn-select__option">
-        {{ option[1] }}
-      </div>
+      <template v-if="options.length">
+        <div
+          v-for="option in options"
+          :key="option[0]" @click="setValue(option[0])"
+          class="sn-select__option"
+        >
+          {{ option[1] }}
+        </div>
+      </template>
+      <template v-else>
+        <div
+          class="sn-select__no-options"
+        >
+          {{ this.noOptionsPlaceholder }}
+        </div>
+      </template> 
     </div>
   </div>
 </template>
@@ -22,6 +35,7 @@
       options: { type: Array, default: () => [] },
       initialValue: { type: [String, Number] },
       placeholder: { type: String },
+      noOptionsPlaceholder: { type: String },
       disabled: { type: Boolean, default: false }
     },
     data() {
@@ -48,7 +62,7 @@
         setTimeout(() => {
           this.isOpen = false;
           this.$emit('blur');
-        }, 200)
+        }, 200);
       },
       toggle() {
         this.isOpen = !this.isOpen;
@@ -69,13 +83,13 @@
         this.$emit('change', value);
       },
       updateOptionPosition() {
-        const container = this.$refs.container;
-        const rect = container.getBoundingClientRect();
+        const container = $(this.$refs.container);
+        const rect = container.get(0).getBoundingClientRect();
         let width = rect.width;
         let top = rect.top + rect.height;
         let left = rect.left;
 
-        const modal = $(container).parents('.modal-content');
+        const modal = container.parents('.modal-content');
 
         if (modal.length > 0) {
           const modalRect = modal.get(0).getBoundingClientRect();

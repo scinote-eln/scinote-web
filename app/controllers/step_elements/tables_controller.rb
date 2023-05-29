@@ -38,7 +38,12 @@ module StepElements
         @table.assign_attributes(table_params.except(:metadata))
         begin
           if table_params[:metadata].present?
-            @table.metadata = @table.metadata.merge(JSON.parse(table_params[:metadata]))
+
+            @table.metadata = if @table.metadata
+                                @table.metadata.merge(JSON.parse(table_params[:metadata]))
+                              else
+                                JSON.parse(table_params[:metadata])
+                              end
           end
         rescue JSON::ParserError
           @table.metadata = {}

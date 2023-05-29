@@ -196,6 +196,7 @@ Rails.application.routes.draw do
               defaults: { format: 'json' }
           get 'create_modal', to: 'repositories#create_modal',
               defaults: { format: 'json' }
+          get 'actions_toolbar'
         end
         get 'destroy_modal', to: 'repositories#destroy_modal',
             defaults: { format: 'json' }
@@ -923,6 +924,7 @@ Rails.application.routes.draw do
             end
             resources :project_folders, only: %i(index show create update)
             resources :users, only: %i(index)
+            resources :protocol_templates, only: %i(index show)
           end
           resources :users, only: %i(show) do
             resources :user_identities,

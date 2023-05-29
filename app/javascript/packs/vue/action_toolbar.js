@@ -1,4 +1,4 @@
-/* global I18n */
+/* global notTurbolinksPreview */
 
 import TurbolinksAdapter from 'vue-turbolinks';
 import Vue from 'vue/dist/vue.esm';
@@ -8,11 +8,12 @@ Vue.use(TurbolinksAdapter);
 
 window.initActionToolbar = () => {
   if (window.actionToolbarComponent) return;
-
-  new Vue({
-    el: '#actionToolbar',
-    components: {
-      ActionToolbar
-    }
-  });
+  if (notTurbolinksPreview()) {
+    new Vue({
+      el: '#actionToolbar',
+      components: {
+        ActionToolbar
+      }
+    });
+  }
 }

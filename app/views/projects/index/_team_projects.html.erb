@@ -1,9 +1,19 @@
-<% cards.each  do |card| %>
-  <% cache [current_user, card] do %>
-    <% if card.is_a? Project %>
-      <%= render partial: 'projects/index/project_card', locals: { project: card } %>
+<% if cards.blank? %>
+  <div class="no-data-container">
+    <% if view_mode == 'archived' %>
+      <em><%= t('projects.index.empty_state.no_archived_projects') %></em>
     <% else %>
-      <%= render partial: 'projects/index/folder_card', locals: { folder: card } %>
+      <em><%= t('projects.index.empty_state.no_active_projects') %></em>
+    <% end %>
+  </div>
+<% else %>
+  <% cards.each  do |card| %>
+    <% cache [current_user, card] do %>
+      <% if card.is_a? Project %>
+        <%= render partial: 'projects/index/project_card', locals: { project: card } %>
+      <% else %>
+        <%= render partial: 'projects/index/folder_card', locals: { folder: card } %>
+      <% end %>
     <% end %>
   <% end %>
 <% end %>

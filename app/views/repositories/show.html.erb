@@ -7,7 +7,6 @@
 <% provide(:container_class, "no-second-nav-container") %>
 <% provide(:sidebar_url, sidebar_repositories_path) %>
 <% provide(:sidebar_title, t('sidebar.repositories.sidebar_title')) %>
-<div id="alert-container"></div>
 
 <div class="content-pane repository-show <%=  @repository.archived? || params[:archived] ? "archived" : "active" %>" data-table-url="<%= load_table_repository_path(@repository) %>">
   <div id="repository-toolbar" class="content-header">
@@ -45,13 +44,12 @@
         <% end %>
       </div>
       <div class="repo-datatables-buttons">
-        <button class="btn btn-light manage-repo-column-index"
+        <button class="btn btn-light manage-repo-column-index icon-btn"
                 data-modal-url="<%= repository_repository_columns_path(@repository) %>"
                 data-action="new">
           <span class="fas fa-columns">
         </button>
       </div>
-      <div class="toolbar-delimiter"></div>
     </div>
   </div>
 

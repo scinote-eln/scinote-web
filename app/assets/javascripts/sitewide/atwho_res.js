@@ -82,9 +82,9 @@ var SmartAnnotation = (function() {
                 $currentAtWho.find(`.repository-object[data-object-id="${data.repository}"]`)
                   .addClass('btn-primary').removeClass('btn-light');
               }
-              if ($('.atwho-scroll-container')[0]) {
+              if ($('.atwho-scroll-container').last()[0]) {
                 // eslint-disable-next-line no-new
-                new PerfectScrollbar($('.atwho-scroll-container')[0]);
+                new PerfectScrollbar($('.atwho-scroll-container').last()[0]);
               }
             });
             return true;
@@ -220,10 +220,6 @@ var SmartAnnotation = (function() {
         displayTimeout: 120000
       })
         .atwho(atWhoSettings('#'));
-      // .atwho(atWhoSettings('task#', FilterTypeEnum.TASK))   Waiting for better times
-      // .atwho(atWhoSettings('project#', FilterTypeEnum.PROJECT))
-      // .atwho(atWhoSettings('experiment#', FilterTypeEnum.EXPERIMENT))
-      // .atwho(atWhoSettings('sample#', FilterTypeEnum.REPOSITORY));
 
       $(this).data('atwho-initialized', true);
     }
