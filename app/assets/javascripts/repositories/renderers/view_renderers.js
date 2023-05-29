@@ -183,7 +183,7 @@ $.fn.dataTable.render.AssignedTasksValue = function(data, row) {
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">${data.tasks}</a>
               <div class="dropdown-menu" role="menu">
                 <div class="sci-input-container right-icon">
-                  <input type="text" class="sci-input-field search-tasks"
+                  <input id="searchAssignedTasks" type="text" class="sci-input-field search-tasks"
                     placeholder="${I18n.t('repositories.table.assigned_search')}"></input>
                   <i class="fas fa-times-circle clear-search"></i>
                 </div>

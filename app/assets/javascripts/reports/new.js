@@ -1054,6 +1054,10 @@ function reportHandsonTableConverter() {
     return reportData;
   }
 
+  function initNameContainerFocus() {
+    $('.report-name').focus()
+  }
+
   function initGenerateButton() {
     $('.reports-new').on('click', '.generate-button', function() {
       $.ajax({
@@ -1440,7 +1444,8 @@ function reportHandsonTableConverter() {
 
   $('#reportWizardEditWarning').modal('show');
   $('.experiment-contents').sortable();
-
+  
+  initNameContainerFocus();
   initGenerateButton();
   initReportWizard();
   initDropdowns();
