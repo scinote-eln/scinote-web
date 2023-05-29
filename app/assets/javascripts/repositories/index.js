@@ -104,7 +104,8 @@
         }],
         fnInitComplete: function(e) {
           initActionToolbar();
-          actionToolbarComponent.setBottomOffset(68);
+          window.actionToolbarComponent.setReloadCallback(initRepositoriesDataTable, ['#repositoriesList', archived]);
+          window.actionToolbarComponent.setBottomOffset(68);
 
           var dataTableWrapper = $(e.nTableWrapper);
           CHECKBOX_SELECTOR = new DataTableCheckboxes(dataTableWrapper, {
@@ -114,6 +115,8 @@
               updateActionButtons();
             }
           });
+
+          updateActionButtons();
           DataTableHelpers.initLengthAppearance(dataTableWrapper);
           DataTableHelpers.initSearchField(dataTableWrapper, I18n.t('repositories.index.filter_inventory'));
           $('.content-body .toolbar').html($('#repositoriesListButtons').html());
@@ -140,51 +143,6 @@
       });
     });
   }
-
-  function reloadSidebar() {
-    var slidePanel = $('.sidebar-container');
-    $.get(slidePanel.data('sidebar-url'), {
-      archived: $('.repositories-index').hasClass('archived')
-    }, function(data) {
-      slidePanel.find('.sidebar-body').html(data.html);
-      $('.create-new-repository').initSubmitModal('#create-repo-modal', 'repository');
-    });
-  }
-
-  $('.repositories-index')
-    .on('click', '#archiveRepoBtn', function() {
-      $.post($('#archiveRepoBtn').data('archive-repositories'), {
-        repository_ids: CHECKBOX_SELECTOR.selectedRows
-      }, function(data) {
-        HelperModule.flashAlertMsg(data.flash, 'success');
-        initRepositoriesDataTable('#repositoriesList');
-        reloadSidebar();
-      }).fail(function(ev) {
-        if (ev.status === 403) {
-          HelperModule.flashAlertMsg(I18n.t('repositories.js.permission_error'), ev.responseJSON.style);
-        } else if (ev.status === 422) {
-          HelperModule.flashAlertMsg(ev.responseJSON.error, 'danger');
-        }
-        animateSpinner(null, false);
-      });
-    })
-    .on('click', '#restoreRepoBtn', function() {
-      $.post($('#restoreRepoBtn').data('restore-repositories'), {
-        repository_ids: CHECKBOX_SELECTOR.selectedRows
-      }, function(data) {
-        HelperModule.flashAlertMsg(data.flash, 'success');
-        initRepositoriesDataTable('#repositoriesList', true);
-        reloadSidebar();
-      }).fail(function(ev) {
-        if (ev.status === 403) {
-          HelperModule.flashAlertMsg(I18n.t('repositories.js.permission_error'), ev.responseJSON.style);
-        } else if (ev.status === 422) {
-          HelperModule.flashAlertMsg(ev.responseJSON.error, 'danger');
-        }
-        animateSpinner(null, false);
-      });
-    });
-
 
   $('#wrapper').on('sideBar::hidden sideBar::shown', function() {
     if (REPOSITORIES_TABLE) {

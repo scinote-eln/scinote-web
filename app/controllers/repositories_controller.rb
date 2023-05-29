@@ -160,9 +160,9 @@ class RepositoriesController < ApplicationController
                                                           user: current_user,
                                                           team: current_team)
     if service.succeed?
-      render json: { flash: t('repositories.archive_inventories.success_flash') }, status: :ok
+      render json: { message: t('repositories.archive_inventories.success_flash') }, status: :ok
     else
-      render json: { error: service.error_message }, status: :unprocessable_entity
+      render json: { message: service.error_message }, status: :unprocessable_entity
     end
   end
 
@@ -171,9 +171,9 @@ class RepositoriesController < ApplicationController
                                                           user: current_user,
                                                           team: current_team)
     if service.succeed?
-      render json: { flash: t('repositories.restore_inventories.success_flash') }, status: :ok
+      render json: { message: t('repositories.restore_inventories.success_flash') }, status: :ok
     else
-      render json: { error: service.error_message }, status: :unprocessable_entity
+      render json: { message: service.error_message }, status: :unprocessable_entity
     end
   end
 
