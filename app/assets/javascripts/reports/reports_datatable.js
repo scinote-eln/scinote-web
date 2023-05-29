@@ -317,7 +317,7 @@
       let url = row.attr('data-save-to-inventory-path');
       $.get(url, function(result) {
         let modal = $(result.html);
-        if ($('#content-reports-index').find('.modal').length === 0) {
+        if ($('#content-reports-index').find('#savePDFtoInventory').length === 0) {
           $('#content-reports-index').append(modal);
           modal.modal('show');
           // Remove modal when it gets closed
@@ -327,7 +327,7 @@
         }
       });
     });
-  }  
+  }
 
   function initDeleteReports() {
     $(document).on('click', '#delete-reports-btn', function() {
