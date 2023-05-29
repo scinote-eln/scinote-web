@@ -44,7 +44,7 @@
       <%= render partial: 'shared/state_view_switch', locals: {
           disabled: @repository.archived?,
           switchable: true,
-          archived: params[:archived],
+          archived: params[:archived] || @repository.archived?,
           active_url: repository_path(@repository),
           archived_url: repository_path(@repository, archived: true),
         } %>
