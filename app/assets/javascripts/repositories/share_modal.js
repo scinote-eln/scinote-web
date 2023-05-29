@@ -1,5 +1,6 @@
-/* global ShareModal */
+/* global HelperModule PerfectScrollbar */
 
+// eslint-disable-next-line no-unused-vars
 var ShareModal = (function(){
   function init() {
     var form = $('.share-repo-modal').find('form');
@@ -63,5 +64,5 @@ var ShareModal = (function(){
 
   return {
     init: init
-  }
-}())
+  };
+}());

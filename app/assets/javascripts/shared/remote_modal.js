@@ -1,4 +1,4 @@
-/* global animateSpinner ProtocolsIndex ProjectsIndex shareModal */
+/* global animateSpinner ProtocolsIndex ProjectsIndex ShareModal */
 (function() {
   'use strict';
 
