@@ -1,4 +1,4 @@
-/* global animateSpinner ProtocolsIndex ProjectsIndex */
+/* global animateSpinner ProtocolsIndex ProjectsIndex shareModal */
 (function() {
   'use strict';
 
@@ -21,6 +21,10 @@
               $(this).on('ajax:success', 'form', function() {
                 ProtocolsIndex.reloadTable();
               });
+            }
+            if ($(this).hasClass('share-repo-modal')) {
+              animateSpinner(null, false);
+              ShareModal.init();
             }
             $(this).find('.selectpicker').selectpicker();
           })
