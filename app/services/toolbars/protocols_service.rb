@@ -33,6 +33,8 @@ module Toolbars
     def versions_action
       return unless @single
 
+      return unless can_read_protocol_in_repository?(@protocols.first)
+
       {
         name: 'versions',
         label: I18n.t('protocols.index.toolbar.versions'),
@@ -81,6 +83,8 @@ module Toolbars
 
     def export_action
       return unless @single
+
+      return unless can_read_protocol_in_repository?(@protocols.first)
 
       {
         name: 'export',
