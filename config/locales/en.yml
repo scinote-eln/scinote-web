@@ -291,6 +291,9 @@ en:
     core_version: "SciNote core version"
     addon_versions: "Addon versions"
 
+  action_toolbar:
+    no_actions: "There is no action available"
+
   left_menu_bar:
     dashboard: "Dashboard"
     projects: "Projects"
