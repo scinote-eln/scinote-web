@@ -216,16 +216,16 @@ class Protocol < ApplicationRecord
   def self.viewable_by_user(user, teams)
     # Team owners see all protocol templates in the team
     owner_role = UserRole.find_predefined_owner_role
-    protocols = Protocol.left_outer_joins(:team, user_assignments: :user_role)
-                        .joins("LEFT OUTER JOIN user_assignments team_user_assignments " \
-                               "ON team_user_assignments.assignable_type = 'Team' " \
-                               "AND team_user_assignments.assignable_id = team.id")
-                        .where(team: teams)
-    protocols
-      .where(
-        protocol_type: REPOSITORY_TYPES, team: { team_user_assignments: { user_id: user, user_role_id: owner_role } }
-      )
-      .or(protocols.with_granted_permissions(user, ProtocolPermissions::READ)).distinct
+    protocols = Protocol.where(team: teams)
+                        .where(protocol_type: REPOSITORY_TYPES)
+    viewable_as_team_owner = protocols.joins("INNER JOIN user_assignments team_user_assignments " \
+                                             "ON team_user_assignments.assignable_type = 'Team' " \
+                                             "AND team_user_assignments.assignable_id = protocols.team_id")
+                                      .where(team_user_assignments: { user_id: user, user_role_id: owner_role })
+                                      .select(:id)
+    viewable_as_assigned = protocols.with_granted_permissions(user, ProtocolPermissions::READ).select(:id)
+
+    where('protocols.id IN ((?) UNION (?))', viewable_as_team_owner, viewable_as_assigned)
   end
 
   def self.filter_by_teams(teams = [])
