@@ -8,7 +8,15 @@
 @import "mixins";
 
 .my-module-header {
-  .title-row {
+  .my-module-title-row {
+    align-items: center;
+    background: $color-white;
+    display: flex;
+    height: 4em;
+    margin-left: -1.5rem;
+    padding: 0 0.5rem;
+    width: calc(100% + 3rem);
+
     .my_module-name {
       max-width: calc(100% - 38rem);
     }
