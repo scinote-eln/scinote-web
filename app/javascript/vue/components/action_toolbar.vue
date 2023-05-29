@@ -1,8 +1,11 @@
 <template>
-  <div v-if="loading || actions.length" class="sn-action-toolbar p-4 w-full fixed bottom-0 rounded-t-md shadow-[0_-12px_24px_-12px_rgba(35,31,32,0.2)]" :style="`width: ${width}px; bottom: ${bottom}px;`">
+  <div v-if="!paramsAreBlank" class="sn-action-toolbar p-4 w-full fixed bottom-0 rounded-t-md shadow-[0_-12px_24px_-12px_rgba(35,31,32,0.2)]" :style="`width: ${width}px; bottom: ${bottom}px;`">
     <div class="sn-action-toolbar__actions flex">
       <div v-if="loading && !actions.length" class="sn-action-toolbar__action mr-1.5">
         <a class="btn btn-light"></a>
+      </div>
+      <div v-if="!loading && actions.length === 0" class="sn-action-toolbar__message">
+        {{ i18n.t('action_toolbar.no_actions') }}
       </div>
       <div v-for="action in actions" :key="action.name" class="sn-action-toolbar__action mr-1.5">
         <a :class="`btn btn-light ${action.button_class}`"
@@ -36,6 +39,7 @@
         multiple: false,
         params: {},
         reloadCallback: null,
+        loaded: false,
         loading: false,
         width: 0,
         bottom: 0
@@ -59,6 +63,15 @@
     },
     beforeDestroy() {
       delete window.actionToolbarComponent;
+    },
+    computed: {
+      paramsAreBlank() {
+        let values = Object.values(this.params);
+
+        if (values.length === 0) return true;
+
+        return values.map((v) => !v.length).reduce((v) => v);
+      }
     },
     methods: {
       setWidth() {
