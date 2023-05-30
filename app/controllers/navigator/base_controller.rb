@@ -99,6 +99,7 @@ module Navigator
                  object&.project_folder
                end
       current_team.project_folders.where(parent_folder: folder)
+                  .where(project_folders: { archived: archived })
                   .left_outer_joins(:projects, project_folders: {})
                   .joins(
                     "LEFT OUTER JOIN (#{Project.viewable_by_user(current_user, current_team).to_sql}) " \
