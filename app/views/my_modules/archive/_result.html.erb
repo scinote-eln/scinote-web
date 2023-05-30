@@ -8,7 +8,7 @@
       <li>
         <% option_text = t("my_modules.module_archive.option_download") %>
         <% if result.is_asset %>
-          <%= link_to t('protocols.index.archive_results.preview'), rails_blob_path(result.asset.file, disposition: 'attachment'),
+          <%= link_to t('my_modules.archive_results.preview'), rails_blob_path(result.asset.file, disposition: 'attachment'),
               class: 'file-preview-link',
               id: "modal_link#{result.asset.id}",
               data: { turbolinks: false, id: true, status: 'asset-present', 'preview-url': asset_file_preview_path(result.asset) } %>

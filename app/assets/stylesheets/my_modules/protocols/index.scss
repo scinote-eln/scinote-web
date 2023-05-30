@@ -42,6 +42,12 @@
     padding: 10px;
     z-index: 2;
   }
+
+  .dropdown {
+    .dropdown-menu {
+      z-index: 9;
+    }
+  }
 }
 
 .content-pane.protocols-repository-edit-view {

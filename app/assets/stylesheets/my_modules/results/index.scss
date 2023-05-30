@@ -10,6 +10,10 @@
   align-items: center;
   display: flex;
 
+  .dropdown-menu {
+    z-index: 9;
+  }
+
   .add-result-dropdown {
     li {
       cursor: pointer;
@@ -80,3 +84,4 @@
     flex-direction: column;
   }
 }
+
