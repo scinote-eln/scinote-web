@@ -14,7 +14,8 @@
       <a :href="item.url"
           class="text-ellipsis overflow-hidden hover:no-underline pr-3"
           :class="{
-            'text-sn-science-blue-hover': (!item.archived && archived)
+            'text-sn-science-blue-hover': (!item.archived && archived),
+            'no-hover': (!item.archived && archived)
           }">
         <template v-if="item.archived">(A)</template>
         {{ item.name }}
