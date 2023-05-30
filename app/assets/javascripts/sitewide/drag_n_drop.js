@@ -329,7 +329,7 @@
                     <div class="panel-body">
                       <div class="form-group">
                         <label class="control-label">Name</label>
-                        <input type="text" class="form-control"
+                        <input type="text" class="form-control" autofocus
                                rel="results[name]" name="results[name][${i}]">
                       </div>
                       <div class="form-group">

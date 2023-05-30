@@ -79,6 +79,7 @@
       .dropdown-menu {
         @include font-button;
         min-width: 100%;
+        padding: 0;
 
         .divider-label {
           @include font-small;
@@ -411,6 +412,10 @@
     &.last-page {
       padding-bottom: 5em;
       position: relative;
+
+      &.no-data {
+        padding-bottom: 0;
+      }
     }
 
     .experiment-table-list-end-placeholder {
@@ -529,6 +534,10 @@
     span {
       color: $color-silver-chalice;
     }
+  }
+
+  .no-data-container {
+    display: none;
   }
 }
 

@@ -8,9 +8,18 @@
 @import "mixins";
 
 .my-module-header {
-  .title-row {
+  .my-module-title-row {
+    align-items: center;
+    background: $color-white;
+    display: flex;
+    height: 4em;
+    margin-left: -1.5rem;
+    padding: 0 0.5rem;
+    width: calc(100% + 3rem);
+
     .my_module-name {
-      max-width: calc(100% - 38rem);
+      min-width: 5rem;
+      width: 100%;
     }
   }
 }
@@ -32,6 +41,12 @@
     max-width: 900px;
     padding: 10px;
     z-index: 2;
+  }
+
+  .dropdown {
+    .dropdown-menu {
+      z-index: 9;
+    }
   }
 }
 

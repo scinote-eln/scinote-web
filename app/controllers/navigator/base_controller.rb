@@ -93,24 +93,23 @@ module Navigator
     end
 
     def fetch_project_folders(object = nil, archived = false)
-      folder = if object&.is_a?(ProjectFolder)
+      folder = if object.is_a?(ProjectFolder)
                  object
                else
                  object&.project_folder
                end
       current_team.project_folders.where(parent_folder: folder)
-                  .left_outer_joins(projects: { user_assignments: :user_role }, project_folders: {})
                   .where(project_folders: { archived: archived })
-                  .where('
-                    user_assignments.user_id = ? AND
-                    user_roles.permissions @> ARRAY[?]::varchar[] OR
-                    projects.id IS NULL
-                  ', current_user.id, ProjectPermissions::READ)
+                  .left_outer_joins(:projects, project_folders: {})
+                  .joins(
+                    "LEFT OUTER JOIN (#{Project.viewable_by_user(current_user, current_team).to_sql}) " \
+                    "viewable_projects ON viewable_projects.project_folder_id = project_folders.id"
+                  )
                   .select(
                     'project_folders.id',
                     'project_folders.name',
                     'project_folders.archived',
-                    'SUM(CASE WHEN projects.id IS NOT NULL OR project_folders_project_folders.id IS NOT NULL
+                    'SUM(CASE WHEN viewable_projects.id IS NOT NULL OR project_folders_project_folders.id IS NOT NULL
                               THEN 1 ELSE 0 END) > 0 AS has_children'
                   ).group('project_folders.id')
     end

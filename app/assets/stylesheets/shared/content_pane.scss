@@ -16,7 +16,7 @@
       position: sticky;
       position: -webkit-sticky;
       top: var(--navbar-height);
-      z-index: 10;
+      z-index: 150;
     }
 
     .title-row {
@@ -75,6 +75,7 @@
       .dropdown-menu {
         @include font-button;
         min-width: 100%;
+        padding: 0;
 
         .divider-label {
           @include font-small;

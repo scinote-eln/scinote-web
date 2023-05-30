@@ -211,7 +211,7 @@
       createdRow: addAttributesToRow,
       initComplete: function(settings) {
         initActionToolbar();
-        actionToolbarComponent.setBottomOffset(70);
+        actionToolbarComponent.setBottomOffset(68);
 
         const { nTableWrapper: dataTableWrapper } = settings;
         CHECKBOX_SELECTOR = new DataTableCheckboxes(dataTableWrapper, {
@@ -326,12 +326,14 @@
       let url = row.attr('data-save-to-inventory-path');
       $.get(url, function(result) {
         let modal = $(result.html);
-        $('#content-reports-index').append(modal);
-        modal.modal('show');
-        // Remove modal when it gets closed
-        modal.on('hidden.bs.modal', function() {
-          $(this).remove();
-        });
+        if ($('#content-reports-index').find('#savePDFtoInventory').length === 0) {
+          $('#content-reports-index').append(modal);
+          modal.modal('show');
+          // Remove modal when it gets closed
+          modal.on('hidden.bs.modal', function() {
+            $(this).remove();
+          });
+        }
       });
     });
   }

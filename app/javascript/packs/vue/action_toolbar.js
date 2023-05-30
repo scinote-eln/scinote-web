@@ -5,6 +5,7 @@ import Vue from 'vue/dist/vue.esm';
 import ActionToolbar from '../../vue/components/action_toolbar.vue';
 
 Vue.use(TurbolinksAdapter);
+Vue.prototype.i18n = window.I18n;
 
 window.initActionToolbar = () => {
   if (window.actionToolbarComponent) return;

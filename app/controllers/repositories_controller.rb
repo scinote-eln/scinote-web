@@ -30,7 +30,7 @@ class RepositoriesController < ApplicationController
   def index
     respond_to do |format|
       format.html do
-        render 'empty_index' if @repositories.blank?
+        render 'index'
       end
       format.json do
         render json: prepare_repositories_datatable(@repositories, current_team, params)
@@ -160,9 +160,9 @@ class RepositoriesController < ApplicationController
                                                           user: current_user,
                                                           team: current_team)
     if service.succeed?
-      render json: { flash: t('repositories.archive_inventories.success_flash') }, status: :ok
+      render json: { message: t('repositories.archive_inventories.success_flash') }, status: :ok
     else
-      render json: { error: service.error_message }, status: :unprocessable_entity
+      render json: { message: service.error_message }, status: :unprocessable_entity
     end
   end
 
@@ -171,9 +171,9 @@ class RepositoriesController < ApplicationController
                                                           user: current_user,
                                                           team: current_team)
     if service.succeed?
-      render json: { flash: t('repositories.restore_inventories.success_flash') }, status: :ok
+      render json: { message: t('repositories.restore_inventories.success_flash') }, status: :ok
     else
-      render json: { error: service.error_message }, status: :unprocessable_entity
+      render json: { message: service.error_message }, status: :unprocessable_entity
     end
   end
 

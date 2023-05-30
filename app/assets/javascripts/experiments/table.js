@@ -343,6 +343,13 @@ var ExperimnetTable = {
       }
     });
   },
+  initModalInputFocus: function() {
+    $(document).on('shown.bs.modal', function() {
+      var inputField = $('#edit-module-name-input');
+      var value = inputField.val();
+      inputField.focus().val('').val(value);
+    });
+  },
   initMoveModulesModal: function() {
     $(this.tableContainer).on('click', '#moveTask', (e) => {
       e.stopPropagation();
@@ -584,10 +591,16 @@ var ExperimnetTable = {
   handleNoResults: function() {
     let tableRowLength = document.getElementsByClassName('table-row').length;
     let noResultsContainer = document.getElementById('tasksNoResultsContainer');
+    $('.no-data-container').hide();
     if (this.filtersActive && tableRowLength === 0) {
       noResultsContainer.style.display = 'block';
+    } else if (tableRowLength === 0) {
+      $(this.table).find('.table-header').hide();
+      $(this.table).addClass('no-data');
+      $('.no-data-container').show();
     } else {
       noResultsContainer.style.display = 'none';
+      $(this.table).find('.table-header').show();
     }
   },
   pollProvisioningStatuses: function(provisioningStatusUrls) {
@@ -633,6 +646,7 @@ var ExperimnetTable = {
     this.initMyModuleActions();
     this.initRestoreMyModules();
     this.initManageUsersDropdown();
+    this.initModalInputFocus();
   }
 };
 

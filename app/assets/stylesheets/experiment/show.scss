@@ -4,7 +4,7 @@
 #experiment-canvas,
 #module-archive {
   .experimnet-name {
-    max-width: calc(100% - 300px);
+    max-width: calc(100% - 2rem);
   }
 
   .toolbar {
@@ -74,6 +74,7 @@
       .dropdown-menu {
         @include font-button;
         min-width: 100%;
+        padding: 0;
 
         .divider-label {
           @include font-small;

@@ -1,8 +1,6 @@
 <template>
-  <div class="text-sn-blue max-w-[196px] flex justify-center flex-col"
-       :class="{
-         'pl-6': !firstLevel
-       }"
+  <div class="text-sn-blue min-w-[170px] w-full flex justify-center flex-col"
+       :class="{ 'pl-6': !firstLevel }"
        :navigator-item-id="item.id"
   >
     <div class="py-1.5 px-1 menu-item flex items-center whitespace-nowrap" :title="this.itemToolTip" :class="{ 'bg-sn-light-grey active': activeItem }">

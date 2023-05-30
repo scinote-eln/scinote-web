@@ -291,6 +291,9 @@ en:
     core_version: "SciNote core version"
     addon_versions: "Addon versions"
 
+  action_toolbar:
+    no_actions: "There is no action available"
+
   left_menu_bar:
     dashboard: "Dashboard"
     projects: "Projects"
@@ -462,6 +465,9 @@ en:
       manage_users: "Manage users"
       no_notifications: "There are no overdue tasks at the moment"
       no_results_found: "No results found..."
+      empty_state:
+        no_archived_projects: "No archived projects"
+        no_active_projects: "No active projects"
       no_results_description: "Try resetting your filter or choose a different search query"
       module_overdue_html: "Task <em>%{module}</em> is overdue (%{days})."
       module_overdue_days:
@@ -600,6 +606,10 @@ en:
       error_flash: "Failed to delete project folder(s)."
     show:
       head_title: "%{project}"
+      empty_state:
+        no_archived_experiments: "This project has no archived experiments."
+        no_active_experiments: "This project has no active experiments."
+        no_active_experiment_archived_project: "This project is archived and can’t have active experiments."
     reports:
       print_title: "%{project} | Report"
       index:
@@ -1202,6 +1212,8 @@ en:
         new_comment: "New comment"
         edit_title: "Edit result"
         archive_title: "Archive result"
+    archive_results:
+      preview: "View"
     activities:
       head_title: "%{project} | %{module} | Activity"
       no_activities: "There are no activities for this task."
@@ -1567,11 +1579,14 @@ en:
         success_flash: "Experiment successfully updated."
     module_archive:
       head_title: "%{experiment} | Archived tasks"
-      no_archived_modules: "No archived tasks!"
       restore_option: "Restore"
       move_option: "Move"
       archived_on: "Archived on"
       archived_on_title: "Task archived on %{date} at %{time}."
+    empty_state:
+      no_archived_modules: "This experiment has no archived tasks."
+      no_active_modules: "This experiment has no active tasks."
+      no_active_modules_archived_branch: "This experiment is archived and can’t have active tasks."
 
   tags:
     new:
@@ -1744,7 +1759,7 @@ en:
         active: "These are individually archived items from the %{repository_name} inventory. The inventory itself is active."
         archived_on: "Inventory archived on"
         archived_by: "by"
-      filter_inventory_items: "Filter items"
+      filter_inventory_items: "Search items"
       filter_inventory_items_with_ean: "Search with EAN code"
       no_items: "No items here"
       no_items_matched: "No items here"
@@ -1988,10 +2003,12 @@ en:
         project_select:
           label: "Project"
           placeholder: "Enter project name"
+          no_options_placeholder: "No projects available to select"
         experiment_select:
           label: "Experiment"
           placeholder: "Enter Experiment name"
           disabled_placeholder: "Select Project to enable Experiment"
+          no_options_placeholder: "No experiments available to select"
         task_select:
           label: "Task"
           placeholder: "Enter Task name"

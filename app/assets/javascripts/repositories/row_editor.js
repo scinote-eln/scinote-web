@@ -118,7 +118,6 @@ var RepositoryDatatableRowEditor = (function() {
 
   function addNewRow(table) {
     TABLE = table;
-
     let $row = $(TABLE_ROW);
     const formId = 'repositoryNewRowForm';
     let actionUrl = $(TABLE.table().node()).data('createRecord');
@@ -163,6 +162,13 @@ var RepositoryDatatableRowEditor = (function() {
 
     initSmartAnnotation($row);
     initAssetCellActions($row);
+
+    $(`#${formId}`).on('ajax:complete', function() {
+      $('html, body').animate({ scrollLeft: 0 }, 300);
+      TABLE.ajax.reload(() => {
+        animateSpinner(null, false);
+      }, false);
+    });
 
     TABLE.columns.adjust();
   }

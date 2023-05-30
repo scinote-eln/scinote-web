@@ -30,7 +30,7 @@ var ProtocolsIndex = (function() {
     window.initActionToolbar();
     window.actionToolbarComponent.setReloadCallback(reloadTable);
     // make room for pagination
-    window.actionToolbarComponent.setBottomOffset(70);
+    window.actionToolbarComponent.setBottomOffset(68);
     updateButtons();
     initProtocolsTable();
     initKeywordFiltering();
