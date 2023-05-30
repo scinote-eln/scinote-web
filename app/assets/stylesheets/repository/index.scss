@@ -78,6 +78,7 @@
     .dropdown-menu {
       @include font-button;
       min-width: 100%;
+      padding: 0;
 
       .divider-label {
         @include font-small;
