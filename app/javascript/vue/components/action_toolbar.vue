@@ -79,7 +79,7 @@
 
         if (values.length === 0) return true;
 
-        return values.map((v) => !v.length).reduce((v) => v);
+        return !values.some((v) => v.length);
       }
     },
     methods: {
