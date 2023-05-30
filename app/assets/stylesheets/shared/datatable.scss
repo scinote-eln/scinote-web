@@ -43,6 +43,7 @@
     min-height: var(--datatable-pagination-row);
     position: relative;
     width: 100%;
+    z-index: 101;
 
     .actions-toolbar {
       align-items: center;
