@@ -32,6 +32,7 @@ var ProjectsIndex = (function() {
   let lookInsideFolders;
   let archivedOnFromFilter;
   let archivedOnToFilter;
+  let currentFilters;
 
   // Arrays with selected project and folder IDs shared between both views
   var selectedProjects = [];
@@ -251,7 +252,7 @@ var ProjectsIndex = (function() {
 
   function refreshCurrentView() {
     loadCardsView();
-    window.navigatorContainer.reloadCurrentLevel = true
+    window.navigatorContainer.reloadCurrentLevel = true;
   }
 
   function initEditButton() {
@@ -453,7 +454,10 @@ var ProjectsIndex = (function() {
 
         selectedProjects.length = 0;
         selectedProjectFolders.length = 0;
+
         updateProjectsToolbar();
+        initProjectsFilters();
+
         if (data.filtered) {
           InfiniteScroll.removeScroll(cardsWrapper);
         } else {
@@ -560,6 +564,32 @@ var ProjectsIndex = (function() {
       projectsViewSearch = $textFilter.val();
     }
 
+    function saveCurrentFilters() {
+      getFilterValues();
+
+      currentFilters = {
+        createdOnFromFilter: selectDate($createdOnFromFilter),
+        createdOnToFilter: selectDate($createdOnToFilter),
+        membersFilter: dropdownSelector.getData($('.members-filter')),
+        lookInsideFolders: $foldersCB.prop('checked') ? 'true' : '',
+        archivedOnFromFilter: selectDate($archivedOnFromFilter),
+        archivedOnToFilter: selectDate($archivedOnToFilter),
+        projectsViewSearch: $textFilter.val()
+      };
+    }
+
+    function loadCurrentFilters() {
+      if (!currentFilters) return;
+
+      $createdOnFromFilter.val(currentFilters.createdOnFromFilter);
+      $createdOnToFilter.val(currentFilters.createdOnToFilter);
+      $foldersCB.val(currentFilters.lookInsideFolders);
+      dropdownSelector.setData($('.members-filter'), currentFilters.membersFilter);
+      $archivedOnFromFilter.val(currentFilters.archivedOnFromFilter);
+      $archivedOnToFilter.val(currentFilters.archivedOnToFilter);
+      $textFilter.val(currentFilters.projectsViewSearch);
+    }
+
     function filtersEnabled() {
       getFilterValues();
 
@@ -598,12 +628,15 @@ var ProjectsIndex = (function() {
     });
 
     $filterDropdown.on('filter:apply', function() {
+      saveCurrentFilters();
       appliedFiltersMark();
       loadCardsView();
     });
 
     // Clear filters
     $filterDropdown.on('filter:clear', function() {
+      currentFilters = null;
+
       dropdownSelector.clearData($membersFilter);
       if ($createdOnFromFilter.data('DateTimePicker')) $createdOnFromFilter.data('DateTimePicker').clear();
       if ($createdOnToFilter.data('DateTimePicker')) $createdOnToFilter.data('DateTimePicker').clear();
@@ -620,6 +653,9 @@ var ProjectsIndex = (function() {
       dropdownSelector.closeDropdown($membersFilter);
       $('#folderSearchInfo').hide();
     });
+
+    loadCurrentFilters();
+    appliedFiltersMark();
   }
 
   function updateSelectAllCheckbox() {
@@ -663,7 +699,6 @@ var ProjectsIndex = (function() {
     initProjectsViewModeSwitch();
     initSorting();
     initSelectAllCheckbox();
-    initProjectsFilters();
     initArchiveRestoreButton();
     loadCardsView();
     AsyncDropdown.init($(projectsWrapper));
