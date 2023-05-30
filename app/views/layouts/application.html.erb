@@ -89,7 +89,7 @@
           <div id="no-teams-jumbotron" class="jumbotron">
             <%= image_tag "empty-screen-illustration.png", size: "500x500" %>
             <h2><%=t 'general.no_teams.title' %></h2>
-            <p data-hook="general-no-teams-text"><%=t 'general.no_teams.text' %></p>
+            <p class="no-teams-info"><%=t 'general.no_teams.text' %></p>
           </div>
         <% else %>
           <%= yield :content %>

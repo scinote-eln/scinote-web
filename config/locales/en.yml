@@ -3501,7 +3501,7 @@ en:
     filter: "Filter:"
     no_teams:
       title: "Your dashboard is empty!"
-      text: "It seems you're not a member of any team."
+      text: "You should request access from your team administrators."
 
   api:
     core:
