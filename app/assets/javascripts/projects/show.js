@@ -17,8 +17,10 @@
   let archivedOnToFilter;
 
   function updateExperimentsToolbar() {
-    window.actionToolbarComponent.fetchActions({ experiment_ids: selectedExperiments });
-    window.actionToolbarComponent.setReloadCallback(refreshCurrentView);
+    if (window.actionToolbarComponent) {
+      window.actionToolbarComponent.fetchActions({ experiment_ids: selectedExperiments });
+      window.actionToolbarComponent.setReloadCallback(refreshCurrentView);
+    }
   }
 
   function initProjectsViewModeSwitch() {
@@ -104,6 +106,8 @@
         initCardData(viewContainer, data);
         updateExperimentsToolbar();
         loadExperimentWorkflowImages();
+
+        selectedExperiments.length = 0;
 
         InfiniteScroll.init(cardsWrapper, {
           url: cardsUrl,
