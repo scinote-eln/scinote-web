@@ -1,7 +1,7 @@
 /* global HelperModule PerfectScrollbar */
 
 // eslint-disable-next-line no-unused-vars
-var ShareModal = (function(){
+var ShareModal = (function() {
   function init() {
     var form = $('.share-repo-modal').find('form');
     var sharedCBs = form.find("input[name='share_team_ids[]']");
