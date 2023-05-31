@@ -607,8 +607,8 @@ en:
     show:
       head_title: "%{project}"
       empty_state:
-        no_archived_experiments: "This project has no archived experiments."
-        no_active_experiments: "This project has no active experiments."
+        no_archived_experiments: "This project has no archived experiments or you do not have permission to access."
+        no_active_experiments: "This project has no active experiments or you do not have permission to access."
         no_active_experiment_archived_project: "This project is archived and can’t have active experiments."
     reports:
       print_title: "%{project} | Report"
