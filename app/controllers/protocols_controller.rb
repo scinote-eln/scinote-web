@@ -1011,7 +1011,7 @@ class ProtocolsController < ApplicationController
 
   def check_clone_permissions
     load_team_and_type
-    protocol = Protocol.find_by(id: params[:protocol_ids].split(','))
+    protocol = Protocol.find_by(id: params[:protocol_ids])
     @original = protocol.latest_published_version_or_self
 
     if @original.blank? ||

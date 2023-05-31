@@ -644,7 +644,7 @@ var ProtocolsIndex = (function() {
   }
 
   function updateButtons() {
-    window.actionToolbarComponent.fetchActions({ protocol_ids: rowsSelected.join(',') });
+    window.actionToolbarComponent.fetchActions({ protocol_ids: rowsSelected });
     $('.dataTables_scrollBody').css('padding-bottom', `${rowsSelected.length > 0 ? 68 : 0}px`);
   }
 
