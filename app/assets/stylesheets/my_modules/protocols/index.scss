@@ -18,9 +18,16 @@
     width: calc(100% + 3rem);
 
     .my_module-name {
+      display: flex;
       min-width: 5rem;
       width: 100%;
     }
+  }
+
+  .name-readonly-placeholder {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
