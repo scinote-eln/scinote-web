@@ -329,7 +329,7 @@
                     <div class="panel-body">
                       <div class="form-group">
                         <label class="control-label">Name</label>
-                        <input type="text" class="form-control" autofocus
+                        <input type="text" class="form-control file-name-field"
                                rel="results[name]" name="results[name][${i}]">
                       </div>
                       <div class="form-group">
@@ -411,6 +411,9 @@
         }
         validateTotalSize();
         dragNdropAssetsInit();
+        setTimeout(() => {
+          $('.file-name-field').focus();
+        }, 200);
       }
     }
 
