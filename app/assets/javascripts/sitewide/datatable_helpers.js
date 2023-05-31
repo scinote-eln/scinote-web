@@ -109,7 +109,7 @@ DataTableCheckboxes.prototype.clearSelection = function() {
 DataTableCheckboxes.prototype.initCheckboxes = function() {
   this.tableWrapper.on('click', '.table tbody tr', (e) => {
     var checkbox = $(e.currentTarget).find(this.config.checkboxSelector);
-    if (checkbox.attr('disabled') || $(e.target).is('a')) return;
+    if (checkbox.attr('disabled') || $(e.target).is('a') || $(e.target).attr('class') === 'dataTables_empty') return;
     checkbox.prop('checked', !checkbox.prop('checked'));
     this.selectRow(e.currentTarget);
   }).on('click', this.config.checkboxSelector, (e) => {
