@@ -458,6 +458,12 @@ var ProjectsIndex = (function() {
         updateProjectsToolbar();
         initProjectsFilters();
 
+        // set current sort item
+        if (projectsCurrentSort) {
+          $('#sortMenuDropdown a').removeClass('selected');
+          $(`#sortMenuDropdown a[data-sort="${projectsCurrentSort}"]`).addClass('selected');
+        }
+
         if (data.filtered) {
           InfiniteScroll.removeScroll(cardsWrapper);
         } else {
@@ -524,7 +530,7 @@ var ProjectsIndex = (function() {
   }
 
   function initSorting() {
-    $('#sortMenuDropdown a').click(function() {
+    $(document).on('click', '#sortMenuDropdown a', function() {
       if (projectsCurrentSort !== $(this).data('sort')) {
         $('#sortMenuDropdown a').removeClass('selected');
         projectsCurrentSort = $(this).data('sort');
