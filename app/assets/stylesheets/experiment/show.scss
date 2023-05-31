@@ -224,3 +224,21 @@
     }
   }
 }
+
+.narrow {
+  .btn:not(.prevent-shrink) {
+    padding: 7px;
+    width: 36px;
+  }
+
+  .hidden-xs {
+    display: none;
+  }
+
+  .left,
+  .middle,
+  .right {
+    flex-direction: inherit;
+    display: flex;
+  }
+}
