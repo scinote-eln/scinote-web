@@ -58,7 +58,7 @@ GIT
 
 GIT
   remote: https://github.com/scinote-eln/yomu
-  revision: 019e7cf6e29c066f0a35100be2031947324f4b2b
+  revision: 020ab670b2919f3b436e926a890d1dad23d75676
   branch: master
   specs:
     yomu (0.2.4)
