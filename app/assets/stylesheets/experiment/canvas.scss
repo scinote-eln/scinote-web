@@ -6,6 +6,14 @@
     max-width: calc(100% - 2rem);
   }
 
+  .toolbar {
+    .left {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+  }
+
   .panel-heading {
     padding: 10px 15px 4px;
   }
