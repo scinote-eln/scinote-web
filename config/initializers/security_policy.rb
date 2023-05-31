@@ -18,8 +18,15 @@ Rails.application.config.content_security_policy do |policy|
   # policy.report_uri "/csp-violation-report-endpoint"
 end
 
-# If you are using UJS then enable automatic nonce generation
-Rails.application.config.content_security_policy_nonce_generator = ->_request { SecureRandom.base64(16) }
+# https://discuss.rubyonrails.org/t/turbolinks-broken-by-default-with-a-secure-csp/74790
+Rails.application.config.content_security_policy_nonce_generator = ->(request) do
+  # use the same csp nonce for turbolinks requests
+  if request.env['HTTP_TURBOLINKS_REFERRER'].present?
+    request.env['HTTP_X_TURBOLINKS_NONCE']
+  else
+    SecureRandom.base64(16)
+  end
+end
 
 # Set the nonce only to specific directives
 Rails.application.config.content_security_policy_nonce_directives = %w(script-src)
