@@ -250,6 +250,22 @@ var HelperModule = (function(){
 
     return exit;
   });
+
+  const RESIZE_OBSERVER = new ResizeObserver(function(entries) {
+    entries.forEach((entry) => {
+      if (entry.target.offsetWidth <= parseInt(entry.target.getAttribute('data-width-breakpoint'))) {
+        entry.target.classList.add('narrow');
+      } else {
+        entry.target.classList.remove('narrow');
+      }
+    });
+  });
+
+  $(document).on('turbolinks:load', function() {
+    $('[data-width-breakpoint]').each(function() {
+      RESIZE_OBSERVER.observe(this);
+    });
+  });
 }());
 
 // Check that loaded page, not turbolinks preview
