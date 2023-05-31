@@ -7,7 +7,7 @@
       </div>
       <i @click="$emit('navigator:colapse')" class="sn-icon sn-icon-close ml-auto cursor-pointer absolute right-3 top-2"></i>
     </div>
-    <perfect-scrollbar @ps-scroll-y="onScroll" ref="scrollContainer" class="grow py-4 relative px-3">
+    <perfect-scrollbar @ps-scroll-y="onScrollY" @ps-scroll-x="onScrollX" ref="scrollContainer" class="grow py-4 relative px-3">
       <NavigatorItem v-for="item in sortedMenuItems"
                      :key="item.id"
                      :currentItemId="currentItemId"
@@ -35,6 +35,7 @@ export default {
       navigatorCollapsed: false,
       navigatorUrl: null,
       navigatorYScroll: 0,
+      navigatorXScroll: 0,
       currentItemId: null,
       archived: null
     }
@@ -60,6 +61,8 @@ export default {
     this.changePage();
     $(document).on('turbolinks:load', () => {
       this.$refs.scrollContainer.$el.scrollTop = this.navigatorYScroll;
+      this.$refs.scrollContainer.$el.scrollLeft = this.navigatorXScroll;
+
       this.changePage();
       if ($(`[navigator-item-id="${this.currentItemId}"]`).length === 0) {
         this.loadTree();
@@ -95,9 +98,12 @@ export default {
         });
       })
     },
-    onScroll({target}) {
+    onScrollY({target}) {
       this.navigatorYScroll = target.scrollTop;
     },
+    onScrollX({target}) {
+      this.navigatorXScroll = target.scrollLeft;
+    }
   },
 }
 </script>
