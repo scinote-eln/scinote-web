@@ -19,7 +19,7 @@ Rails.application.config.content_security_policy do |policy|
 end
 
 # https://discuss.rubyonrails.org/t/turbolinks-broken-by-default-with-a-secure-csp/74790
-Rails.application.config.content_security_policy_nonce_generator = -> (request) do
+Rails.application.config.content_security_policy_nonce_generator = ->(request) do
   # use the same csp nonce for turbolinks requests
   if request.env['HTTP_TURBOLINKS_REFERRER'].present?
     request.env['HTTP_X_TURBOLINKS_NONCE']
