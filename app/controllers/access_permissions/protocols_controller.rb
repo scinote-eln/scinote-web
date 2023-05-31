@@ -96,7 +96,7 @@ module AccessPermissions
 
       rescue ActiveRecord::RecordInvalid => e
         Rails.logger.error e.message
-        errors = @protocol.errors ? @protocol.errors&.map(&:message)&.join(',') : e.message
+        errors = @protocol.errors.present? ? @protocol.errors&.map(&:message)&.join(',') : e.message
         render json: { flash: errors }, status: :unprocessable_entity
         raise ActiveRecord::Rollback
       end
@@ -182,7 +182,7 @@ module AccessPermissions
     end
 
     def check_read_permissions
-      render_403 unless can_read_protocol_in_repository?(@protocol)
+      render_403 unless can_read_protocol_in_repository?(@protocol) || can_manage_team?(@protocol.team)
     end
 
     def log_activity(type_of, message_items = {})

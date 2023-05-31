@@ -1,4 +1,4 @@
-<div class="well">
+<div class="well edit-text-result">
   <%= bootstrap_form_for(@result, url: my_module_result_texts_path(format: :json, page: params[:page], order: params[:order]),
                                   data: { 'name-max-length': Constants::NAME_MAX_LENGTH, 'rich-text-max-length': Constants::RICH_TEXT_MAX_LENGTH },
                                   remote: true) do |f| %>
@@ -9,15 +9,16 @@
                              autocomplete: 'off',
                              data: { object_type: 'result_text',
                                      object_id: @result.result_text.id,
+                                     my_module_id: @result.my_module_id,
                                      last_updated: @result.updated_at.to_i * 1000 }) %>
     <% end %><br />
-    <div class="align-right">
+    <div class="align-right new-result-texts-buttons'">
       <button type="button" class="btn btn-secondary cancel-new">
         <%= t("general.cancel")%>
       </button>
       <%= f.button t("result_texts.new.create"),
-                   class: 'btn btn-primary save-result',
-                   onclick: "Results.processResult(event, Results.ResultTypeEnum.TEXT);" %>
+                   class: 'btn btn-primary save-result' %>
+      <%= javascript_include_tag 'results/result_texts/new', nonce: true %>
     </div>
   <% end %>
 </div>

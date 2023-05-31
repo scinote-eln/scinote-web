@@ -27,7 +27,7 @@
             :data-placeholder="placeholder"
             :data-tinymce-init="`tinymce-${objectType}-description-${objectId}`">
         </div>
-        <div class="form-group">
+        <div class="flex">
           <textarea :id="`${objectType}_textarea_${objectId}`"
                     class="form-control hidden"
                     autocomplete="off"
@@ -68,6 +68,7 @@
       fieldName: String,
       lastUpdated: Number,
       inEditMode: Boolean,
+      assignableMyModuleId: Number,
       characterLimit: {
         type: Number,
         default: null
@@ -141,7 +142,8 @@
               this.initCharacterCount();
               this.$emit('editingEnabled');
             },
-            placeholder: this.placeholder
+            placeholder: this.placeholder,
+            assignableMyModuleId: this.assignableMyModuleId
           }
         )
       },

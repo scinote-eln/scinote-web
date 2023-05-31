@@ -7,12 +7,8 @@
 <% provide(:container_class, "no-second-nav-container") %>
 <% provide(:sidebar_url, sidebar_repositories_path) %>
 <% provide(:sidebar_title, t('sidebar.repositories.sidebar_title')) %>
-<%= content_for :sidebar do %>
-  <%= render partial: "sidebar", locals: { repositories: @repositories, archived: @repository.archived? } %>
-<% end %>
-<div id="alert-container"></div>
 
-<div class="content-pane repository-show <%=  @repository.active? ? "active" : "archived" %>" data-table-url="<%= load_table_repository_path(@repository) %>">
+<div class="content-pane repository-show <%=  @repository.archived? || params[:archived] ? "archived" : "active" %>" data-table-url="<%= load_table_repository_path(@repository) %>">
   <div id="repository-toolbar" class="content-header">
     <div class="title-row">
       <% if @repository.active? %>
@@ -47,36 +43,6 @@
           <%= t('repositories.show.archived_inventory_items', repository_name: @repository.name) %>
         <% end %>
       </div>
-      <div class="repo-datatables-buttons">
-        <div class="share-repository-button" data-view-mode="active">
-          <% if can_share_repository?(@repository) %>
-            <%= link_to team_repository_share_modal_path(current_team, repository_id: @repository),
-                        class: 'btn btn-light share-repo-option', remote: true, id: 'shareRepoBtn' do %>
-              <span class="fas fa-user-plus"></span>
-              <span class="hidden-xs"><%= t('repositories.index.share_inventory') %></span>
-            <% end %>
-          <% end %>
-        </div>
-
-        <button class="btn btn-light manage-repo-column-index"
-                data-modal-url="<%= repository_repository_columns_path(@repository) %>"
-                data-action="new">
-          <span class="fas fa-cog"></span>&nbsp;<%= t('repositories.index.columns') %>
-        </button>
-          <% unless @repository.is_a?(BmtRepository) %>
-            <%= render layout: "shared/view_switch", locals: {disabled: @repository.archived?} do %>
-              <li class="view-switch-archived" data-view-mode="active">
-                <i class="fas fa-archive button-icon"></i>
-                <%= t('repositories.show.show_archived_items') %>
-              </li>
-              <li class="view-switch-active" data-view-mode="archived">
-                <i class="fas fa-rocket button-icon"></i>
-                <%= t('repositories.show.show_active_items') %>
-              </li>
-            <% end %>
-          <% end %>
-      </div>
-      <div class="toolbar-delimiter"></div>
     </div>
   </div>
 
@@ -92,6 +58,10 @@
                repository_index_link: repository_table_index_path(@repository)
              }
   %>
+
+  <div id="actionToolbar" data-behaviour="vue">
+    <action-toolbar actions-url="<%= actions_toolbar_repository_rows_url %>" />
+  </div>
 </div>
 
 <%= render partial: 'repositories/import_repository_records_modal',
@@ -105,6 +75,7 @@
 <%= render partial: 'repository_columns/manage_column_modal', locals: { my_module_page: false } %>
 <%= render partial: "repository_stock_values/manage_modal" %>
 <%= render partial: "toolbar_buttons" %>
+<%= render partial: "assign_items_to_task_modal" %>
 
 <% if @repository.is_a?(BmtRepository) %>
   <%= render partial: 'save_bmt_filter_modal' %>
@@ -114,16 +85,12 @@
   <%= render partial: 'save_repository_filter_modal' %>
 <% end %>
 
-<%= javascript_include_tag 'repositories/edit' %>
-<%= javascript_include_tag 'repositories/repository_datatable' %>
-<%= javascript_include_tag "repositories/show" %>
-<%= javascript_include_tag 'inputmask' %>
-<%= javascript_include_tag 'emoji_button' %>
-<%= javascript_include_tag 'pdf_js' %>
+<%= javascript_include_tag 'vue_components_action_toolbar' %>
+<%= javascript_include_tag 'vue_repository_search' %>
+<%= javascript_include_tag 'repositories/edit', nonce: true %>
+<%= javascript_include_tag 'repositories/repository_datatable', nonce: true %>
+<%= javascript_include_tag "repositories/show", nonce: true %>
+<%= javascript_include_tag 'inputmask', nonce: true %>
+<%= javascript_include_tag 'emoji_button', nonce: true %>
+<%= javascript_include_tag 'pdf_js', nonce: true %>
 <%= stylesheet_link_tag 'pdf_js_styles' %>
-
-
-
-<script type="text/javascript" charset="utf-8">
-  var formatJS = "<%= datetime_picker_format_date_only %>"
-</script>

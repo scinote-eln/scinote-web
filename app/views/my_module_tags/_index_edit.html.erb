@@ -36,7 +36,10 @@
               <%= f.text_field :name, hide_label: true %>
             </div>
             <div class="pull-right">
-              <%= f.color_picker_select :color, Constants::TAG_COLORS, class: "edit-tag-color" %>
+              <%= render partial: 'shared/color_picker_select.erb',
+                         locals: { name: :color, colors: Constants::TAG_COLORS,
+                                   classes: "edit-tag-color", styles: "",
+                                   object_name: :tag} %>
               <%= f.button class: "btn btn-link save-tag-link", title: t("experiments.canvas.modal_manage_tags.save_tag") do %>
                 <span class="fas fa-check"></span>
               <% end %>

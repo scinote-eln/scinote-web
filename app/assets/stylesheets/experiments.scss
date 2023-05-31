@@ -7,11 +7,17 @@
 // New experiments page
 
 .projects-show {
+  .content-header {
+    height: var(--content-header-size);
+  }
+
   .experiment-actions-menu {
     height: 36px;
     width: 36px;
 
     .dropdown-menu {
+      z-index: 9;
+
       a,
       button {
         @include font-button;
@@ -26,9 +32,22 @@
 
   .project-show-toolbar {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
 
     .btn {
       margin-right: .25em;
+    }
+    .left {
+      align-self: flex-start;
+    }
+
+    .middle {
+      align-self: center;
+    }
+
+    .right {
+      align-self: flex-end;
     }
   }
 
@@ -36,7 +55,7 @@
     .project-name {
       align-items: center;
       display: flex;
-      max-width: calc(100% - 7em);
+      max-width: calc(100% - 2rem);
 
       .fas {
         margin-right: .5em;
@@ -54,7 +73,7 @@
   }
 
   .project-show-container {
-    margin: 1.5em 0;
+    margin: 0;
 
     .cards-wrapper {
       --card-min-width: 350px;

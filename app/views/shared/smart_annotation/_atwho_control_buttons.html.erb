@@ -1,0 +1,12 @@
+<div class="atwho-button-container">
+  <button type="button" class="btn icon-btn btn-light atwho-insert-button"><%= I18n.t("atwho.buttons.insert") %></button>
+  <% if defined?(row) && !row[:row_assigned] && row[:my_module_id].present? %>
+    <button type="button"
+            class="btn icon-btn btn-light atwho-assign-button"
+            data-assign-url= <%= my_module_repositories_path(row[:my_module_id]) %>
+            data-repository-id=<%= repository[:id] %>
+            data-repository-row-id=<%= row[:id] %>>
+            <%= I18n.t("atwho.buttons.assign") %>
+    </button>
+  <%end%>
+</div>

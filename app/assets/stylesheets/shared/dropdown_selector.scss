@@ -102,7 +102,8 @@
       }
 
       .tag-label {
-        display: inline-block;
+        align-items: center;
+        display: flex;
         margin-right: 5px;
         max-width: 240px;
         overflow: hidden;
@@ -322,6 +323,10 @@
 
           &[data-ds-tag-id=""] {
             opacity: .7;
+          }
+
+          img {
+            display: inline;
           }
         }
 

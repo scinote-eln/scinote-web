@@ -138,6 +138,8 @@ var hammertime;
  * Initializes page
  */
 function init() {
+  if ($("#canvas-container").length === 0) return;
+
   if($('#module-archive').length) {
     bindFullZoomAjaxTabs();
     bindEditTagsAjax($("div.module-large"));
@@ -148,6 +150,7 @@ function init() {
     initializeGraph(".diagram .module-large");
     initializeFullZoom();
   }
+  window.navigatorContainer.reloadChildrenLevel = true;
 }
 
 jsPlumb.ready(function () {
@@ -174,11 +177,8 @@ function initializeEdit() {
   $("#canvas-container").addClass("canvas-container-edit-mode");
 
   // Hide sidebar & also its toggle button
-  $(".sidebar-container").addClass("collapsed");
   $("#wrapper").css("paddingLeft", "0");
   $(".navbar-secondary").addClass("navbar-without-sidebar");
-  $(".show-sidebar").addClass("invisible");
-  $('.sci--layout').attr('data-navigator-collapsed', true);
 
   // Also, hide zoom levels button group
   $("#diagram-buttons").hide();
@@ -1523,7 +1523,9 @@ function initEditModules() {
   })
   .on("shown.bs.modal", function(event) {
     // Focus the text element
-    $(this).find("#edit-module-name-input").focus();
+    var inputField = $('#edit-module-name-input');
+    var value = inputField.val();
+    inputField.focus().val('').val(value);
   })
   .on("hide.bs.modal", function (event) {
     // Remove potential error classes

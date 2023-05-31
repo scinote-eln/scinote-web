@@ -65,6 +65,7 @@ Rails.application.routes.draw do
         get :template_tags
         get :zpl_preview
         post :sync_fluics_templates
+        get :actions_toolbar
       end
     end
 
@@ -195,6 +196,7 @@ Rails.application.routes.draw do
               defaults: { format: 'json' }
           get 'create_modal', to: 'repositories#create_modal',
               defaults: { format: 'json' }
+          get 'actions_toolbar'
         end
         get 'destroy_modal', to: 'repositories#destroy_modal',
             defaults: { format: 'json' }
@@ -249,6 +251,7 @@ Rails.application.routes.draw do
       end
       collection do
         get :project_contents
+        get 'actions_toolbar'
       end
     end
     get 'reports/datatable', to: 'reports#datatable'
@@ -292,6 +295,32 @@ Rails.application.routes.draw do
       resources :my_modules, only: %i(show update edit)
     end
 
+    namespace :navigator do
+      resources :project_folders, only: %i(show) do
+        member do
+          get :tree
+        end
+      end
+
+      resources :projects, only: %i(show index) do
+        member do
+          get :tree
+        end
+      end
+
+      resources :experiments, only: %i(show) do
+        member do
+          get :tree
+        end
+      end
+
+      resources :my_modules, only: %i(show) do
+        member do
+          get :tree
+        end
+      end
+    end
+
     resources :projects, except: [:destroy] do
       resources :project_comments,
                 path: '/comments',
@@ -317,8 +346,8 @@ Rails.application.routes.draw do
       end
       resources :experiments, only: %i(new create), defaults: { format: 'json' } do
         collection do
-          post 'archive_group' # archive group of experements
-          post 'restore_group' # restore group of experementss
+          post 'archive_group' # archive group of experiments
+          post 'restore_group' # restore group of experiments
         end
       end
       member do
@@ -332,11 +361,13 @@ Rails.application.routes.draw do
       end
 
       collection do
+        get 'project_filter'
         get 'cards', to: 'projects#cards'
         get 'users_filter'
         post 'archive_group'
         post 'restore_group'
         put 'view_type', to: 'teams#view_type'
+        get 'actions_toolbar'
       end
     end
 
@@ -347,16 +378,18 @@ Rails.application.routes.draw do
         post 'move_to', to: 'project_folders#move_to', defaults: { format: 'json' }
         get 'move_to_modal', to: 'project_folders#move_to_modal', defaults: { format: 'json' }
         post 'destroy', to: 'project_folders#destroy', as: 'destroy', defaults: { format: 'json' }
-        post 'destroy_modal', to: 'project_folders#destroy_modal', defaults: { format: 'json' }
+        get 'destroy_modal', to: 'project_folders#destroy_modal', defaults: { format: 'json' }
       end
     end
     get 'project_folders/:project_folder_id', to: 'projects#index', as: :project_folder_projects
 
     resources :experiments, only: %i(show edit update) do
       collection do
+        get 'experiment_filter'
         get 'edit', action: :edit
         get 'clone_modal', action: :clone_modal
         get 'move_modal', action: :move_modal
+        get 'actions_toolbar'
       end
       member do
         get 'permissions'
@@ -382,7 +415,7 @@ Rails.application.routes.draw do
         post 'clone' # clone experiment
         get 'move_modal' # return modal with move options
         post 'move' # move experiment
-        get 'fetch_workflow_img' # Get udated workflow img
+        get 'fetch_workflow_img' # Get updated workflow img
         get 'modules/new', to: 'my_modules#new'
         post 'modules', to: 'my_modules#create'
         post 'restore_my_modules', to: 'my_modules#restore_group'
@@ -398,6 +431,11 @@ Rails.application.routes.draw do
     # as well as 'module info' page for single module (HTML)
     resources :my_modules, path: '/modules', only: [:show, :update] do
       post 'save_table_state', on: :collection, defaults: { format: 'json' }
+      get 'module_filter', to: 'my_modules#my_module_filter', on: :collection, defaults: { format: 'json' }
+
+      collection do
+        get 'actions_toolbar'
+      end
 
       member do
         get :permissions
@@ -430,7 +468,7 @@ Rails.application.routes.draw do
       get :repositories_dropdown_list, controller: :my_module_repositories
       get :repositories_list_html, controller: :my_module_repositories
 
-      resources :repositories, controller: :my_module_repositories, only: :update do
+      resources :repositories, controller: :my_module_repositories, only: %i(update create) do
         member do
           get :full_view_table
           post :index_dt
@@ -531,7 +569,7 @@ Rails.application.routes.draw do
     end
 
     # System notifications routes
-    resources :system_notifications, only: %i(index show) do
+    resources :system_notifications, only: %i(show) do
       collection do
         post 'mark_as_seen'
         get 'unseen_counter'
@@ -619,6 +657,7 @@ Rails.application.routes.draw do
         post 'protocolsio_import_save', to: 'protocols#protocolsio_import_save'
         get 'export', to: 'protocols#export'
         get 'protocolsio', to: 'protocols#protocolsio_index'
+        get 'actions_toolbar', to: 'protocols#actions_toolbar'
       end
     end
 
@@ -630,6 +669,10 @@ Rails.application.routes.draw do
         post :print
         get :print_zpl
         post :validate_label_template_columns
+      end
+
+      collection do
+        get :actions_toolbar
       end
     end
 
@@ -881,6 +924,7 @@ Rails.application.routes.draw do
             end
             resources :project_folders, only: %i(index show create update)
             resources :users, only: %i(index)
+            resources :protocol_templates, only: %i(index show)
           end
           resources :users, only: %i(show) do
             resources :user_identities,

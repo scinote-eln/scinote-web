@@ -2,9 +2,9 @@
           initBSTooltips filterDropdown dropdownSelector Sidebar HelperModule notTurbolinksPreview _ */
 
 var ExperimnetTable = {
-  permissions: ['editable', 'archivable', 'restorable', 'moveable'],
   selectedId: [],
   table: '.experiment-table',
+  tableContainer: '.experiment-table-container',
   render: {},
   selectedMyModules: [],
   activeFilters: {},
@@ -132,22 +132,26 @@ var ExperimnetTable = {
 
     $(this.table).on('click', '.archive-my-module', (e) => {
       e.preventDefault();
+      e.stopPropagation();
       this.archiveMyModules(e.currentTarget.href, e.currentTarget.dataset.id);
     });
 
 
     $(this.table).on('click', '.restore-my-module', (e) => {
       e.preventDefault();
+      e.stopPropagation();
       this.restoreMyModules(e.currentTarget.href, e.currentTarget.dataset.id);
     });
 
     $(this.table).on('click', '.duplicate-my-module', (e) => {
       e.preventDefault();
+      e.stopPropagation();
       this.duplicateMyModules($('#duplicateTasks').data('url'), e.currentTarget.dataset.id);
     });
 
     $(this.table).on('click', '.move-my-module', (e) => {
       e.preventDefault();
+      e.stopPropagation();
       this.openMoveModulesModal([e.currentTarget.dataset.id]);
     });
 
@@ -159,19 +163,22 @@ var ExperimnetTable = {
     });
   },
   initDuplicateMyModules: function() {
-    $('#duplicateTasks').on('click', (e) => {
+    $(this.tableContainer).on('click', '#duplicateTasks', (e) => {
+      e.stopPropagation();
       this.duplicateMyModules(e.currentTarget.dataset.url, this.selectedMyModules);
     });
   },
   duplicateMyModules: function(url, ids) {
     $.post(url, { my_module_ids: ids }, () => {
       this.loadTable();
+      window.navigatorContainer.reloadChildrenLevel = true;
     }).error((data) => {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   },
   initArchiveMyModules: function() {
-    $('#archiveTask').on('click', (e) => {
+    $(this.tableContainer).on('click', '#archiveTask', (e) => {
+      e.stopPropagation();
       this.archiveMyModules(e.currentTarget.dataset.url, this.selectedMyModules);
     });
   },
@@ -179,12 +186,14 @@ var ExperimnetTable = {
     $.post(url, { my_modules: ids }, (data) => {
       HelperModule.flashAlertMsg(data.message, 'success');
       this.loadTable();
+      window.navigatorContainer.reloadChildrenLevel = true;
     }).error((data) => {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   },
   initRestoreMyModules: function() {
-    $('#restoreTask').on('click', (e) => {
+    $(this.tableContainer).on('click', '#restoreTask', (e) => {
+      e.stopPropagation();
       this.restoreMyModules(e.currentTarget.dataset.url, this.selectedMyModules);
     });
   },
@@ -192,7 +201,8 @@ var ExperimnetTable = {
     $.post(url, { my_modules_ids: ids, view: 'table' });
   },
   initRenameModal: function() {
-    $('#editTask').on('click', () => {
+    $(this.tableContainer).on('click', '#editTask', (e) => {
+      e.preventDefault();
       $('#modal-edit-module').modal('show');
       $('#modal-edit-module').data('id', this.selectedMyModules[0]);
       $('#edit-module-name-input').val($(`#taskName${$('#modal-edit-module').data('id')}`).data('full-name'));
@@ -333,8 +343,16 @@ var ExperimnetTable = {
       }
     });
   },
+  initModalInputFocus: function() {
+    $(document).on('shown.bs.modal', function() {
+      var inputField = $('#edit-module-name-input');
+      var value = inputField.val();
+      inputField.focus().val('').val(value);
+    });
+  },
   initMoveModulesModal: function() {
-    $('#moveTask').on('click', () => {
+    $(this.tableContainer).on('click', '#moveTask', (e) => {
+      e.stopPropagation();
       this.openMoveModulesModal(this.selectedMyModules);
     });
   },
@@ -357,6 +375,7 @@ var ExperimnetTable = {
         $.post(table.data('move-modules-url'), moveParams, (data) => {
           HelperModule.flashAlertMsg(data.message, 'success');
           this.loadTable();
+          window.navigatorContainer.reloadChildrenLevel = true;
         }).error((data) => {
           HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
         });
@@ -396,15 +415,6 @@ var ExperimnetTable = {
       });
     });
   },
-  loadPermission: function(id) {
-    let row = $(`.table-row[data-id="${id}"]`);
-    $.get(this.getUrls(id).permissions, (result) => {
-      this.permissions.forEach((permission) => {
-        row.data(permission, result[permission]);
-      });
-      this.updateExperimentToolbar();
-    });
-  },
   initSelector: function() {
     $(this.table).on('click', '.my-module-selector', (e) => {
       let checkbox = e.target;
@@ -422,35 +432,11 @@ var ExperimnetTable = {
       }
 
       this.updateSelectAllCheckbox();
-
-      if (checkbox.checked) {
-        this.loadPermission(myModuleId);
-      } else {
-        this.updateExperimentToolbar();
-      }
+      this.updateExperimentToolbar();
     });
   },
   updateExperimentToolbar: function() {
-    let experimentToolbar = $('.toolbar-row');
-
-    if (this.selectedMyModules.length === 0) {
-      experimentToolbar.find('.single-object-action, .multiple-object-action').addClass('hidden');
-    } else if (this.selectedMyModules.length === 1) {
-      experimentToolbar.find('.single-object-action, .multiple-object-action').removeClass('hidden');
-    } else {
-      experimentToolbar.find('.single-object-action').addClass('hidden');
-      experimentToolbar.find('.multiple-object-action').removeClass('hidden');
-    }
-
-    this.permissions.forEach((permission) => {
-      if (!this.checkActionPermission(permission)) {
-        experimentToolbar.find(`.btn[data-for="${permission}"]`).addClass('hidden');
-      }
-    });
-
-    if ($('#experimentTable').hasClass('archived')) {
-      experimentToolbar.find('.only-active').addClass('hidden');
-    }
+    window.actionToolbarComponent.fetchActions({ my_module_ids: this.selectedMyModules });
   },
   selectDate: function($field) {
     var datePicker = $field.data('DateTimePicker');
@@ -494,6 +480,7 @@ var ExperimnetTable = {
   initNewTaskModal: function(table) {
     $('.experiment-new-my_module').on('ajax:success', '#new-my-module-modal', function() {
       table.loadTable();
+      window.navigatorContainer.reloadChildrenLevel = true;
     });
   },
   initSorting: function(table) {
@@ -564,11 +551,6 @@ var ExperimnetTable = {
     $(this.table).find('.table-row').remove();
     this.loadPlaceholder();
 
-    Sidebar.reload({
-      sort: this.myModulesCurrentSort,
-      view_mode: $('#experimentTable').hasClass('archived') ? 'archived' : ''
-    });
-
     $.get(dataUrl, tableParams, (result) => {
       $(this.table).find('.table-row-placeholder, .table-row-placeholder-divider').remove();
       this.appendRows(result.data);
@@ -609,10 +591,16 @@ var ExperimnetTable = {
   handleNoResults: function() {
     let tableRowLength = document.getElementsByClassName('table-row').length;
     let noResultsContainer = document.getElementById('tasksNoResultsContainer');
+    $('.no-data-container').hide();
     if (this.filtersActive && tableRowLength === 0) {
       noResultsContainer.style.display = 'block';
+    } else if (tableRowLength === 0) {
+      $(this.table).find('.table-header').hide();
+      $(this.table).addClass('no-data');
+      $('.no-data-container').show();
     } else {
       noResultsContainer.style.display = 'none';
+      $(this.table).find('.table-header').show();
     }
   },
   pollProvisioningStatuses: function(provisioningStatusUrls) {
@@ -642,6 +630,8 @@ var ExperimnetTable = {
     }
   },
   init: function() {
+    window.initActionToolbar();
+
     this.initSelector();
     this.initSelectAllCheckbox();
     this.initFilters();
@@ -656,6 +646,7 @@ var ExperimnetTable = {
     this.initMyModuleActions();
     this.initRestoreMyModules();
     this.initManageUsersDropdown();
+    this.initModalInputFocus();
   }
 };
 

@@ -106,7 +106,7 @@
     }
 
     &:focus {
-      box-shadow: 0 0 0 1px $brand-focus;
+      border-color: $brand-focus;
       color: $color-volcano;
     }
   }
@@ -184,6 +184,10 @@
     width: 36px;
 
     .fas {
+      margin: 0;
+    }
+
+    img {
       margin: 0;
     }
   }

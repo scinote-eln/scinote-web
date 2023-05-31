@@ -1,0 +1,28 @@
+.sn-action-toolbar {
+  background: $color-concrete;
+  z-index: 100;
+
+  .btn.btn-light:hover {
+    background: $color-white;
+  }
+
+  .icon-versions {
+    display: inline-block;
+    height: 14px;
+    background-image: image-url("icon_small/versions-black.svg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    margin-bottom: -2px;
+    width: 16px;
+  }
+
+  .sn-action-toolbar__message {
+    padding: 8px;
+  }
+}
+
+.sn-action-toolbar--button-overflow {
+  .sn-action-toolbar__button-text {
+    display: none;
+  }
+}

@@ -170,9 +170,10 @@ var RepositoryColumns = (function() {
         labelHTML: true
       };
       $.get(modalUrl, (data) => {
-        $manageModal.find('.modal-content').html(data.html)
-          .find('#repository-column-name')
-          .focus();
+        var inputField = $manageModal.find('.modal-content').html(data.html)
+          .find('#repository-column-name');
+        var value = inputField.val()
+        inputField.focus().val('').val(value);
 
         if (button.data('action') !== 'destroy') {
           columnType = $('#repository-column-data-type').val();
@@ -386,7 +387,7 @@ var RepositoryColumns = (function() {
   }
 
   function initColumnsButton() {
-    $('.repo-datatables-buttons').on('click', '.manage-repo-column-index', function() {
+    $(document).on('click', '.manage-repo-column-index', function() {
       var button = $(this);
       initManageColumnModal(button);
     });
@@ -394,21 +395,19 @@ var RepositoryColumns = (function() {
 
   return {
     init: () => {
-      if ($('.repo-datatables-buttons').length > 0) {
-        initColumnTypeSelector();
-        initCreateSubmitAction();
-        initEditSubmitAction();
-        initDeleteSubmitAction();
-        initBackToManageColumns();
-        initColumnsButton();
-        initManageColumnAction();
-        RepositoryListColumnType.init();
-        RepositoryStatusColumnType.init();
-        RepositoryStockColumnType.init();
-        RepositoryChecklistColumnType.init();
-        RepositoryDateTimeColumnType.init();
-        RepositoryDateColumnType.init();
-      }
+      initColumnTypeSelector();
+      initCreateSubmitAction();
+      initEditSubmitAction();
+      initDeleteSubmitAction();
+      initBackToManageColumns();
+      initColumnsButton();
+      initManageColumnAction();
+      RepositoryListColumnType.init();
+      RepositoryStatusColumnType.init();
+      RepositoryStockColumnType.init();
+      RepositoryChecklistColumnType.init();
+      RepositoryDateTimeColumnType.init();
+      RepositoryDateColumnType.init();
     }
   };
 }());

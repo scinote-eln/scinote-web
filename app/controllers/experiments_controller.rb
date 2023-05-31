@@ -6,10 +6,12 @@ class ExperimentsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
   include Rails.application.routes.url_helpers
+  include Breadcrumbs
 
   before_action :load_project, only: %i(new create archive_group restore_group)
-  before_action :load_experiment, except: %i(new create archive_group restore_group)
-  before_action :check_read_permissions, except: %i(edit archive clone move new create archive_group restore_group)
+  before_action :load_experiment, except: %i(new create archive_group restore_group experiment_filter actions_toolbar)
+  before_action :check_read_permissions, except: %i(edit archive clone move new create
+                                                    archive_group restore_group experiment_filter actions_toolbar)
   before_action :check_canvas_read_permissions, only: %i(canvas)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: %i(edit batch_clone_my_modules)
@@ -18,6 +20,8 @@ class ExperimentsController < ApplicationController
   before_action :check_clone_permissions, only: %i(clone_modal clone)
   before_action :check_move_permissions, only: %i(move_modal move)
   before_action :set_inline_name_editing, only: %i(canvas table module_archive)
+  before_action :set_breadcrumbs_items, only: %i(canvas table module_archive)
+  before_action :set_navigator, only: %i(canvas module_archive table)
 
   layout 'fluid'
 
@@ -77,15 +81,16 @@ class ExperimentsController < ApplicationController
   end
 
   def canvas
-    redirect_to module_archive_experiment_path(@experiment) if @experiment.archived_branch?
     @project = @experiment.project
-    @active_modules = @experiment.my_modules.active.order(:name)
-                                 .left_outer_joins(:designated_users, :task_comments)
-                                 .preload(:tags, outputs: :to)
-                                 .preload(:my_module_status, :my_module_group, user_assignments: %i(user user_role))
-                                 .select('COUNT(DISTINCT users.id) as designated_users_count')
-                                 .select('COUNT(DISTINCT comments.id) as task_comments_count')
-                                 .select('my_modules.*').group(:id)
+    @active_modules = unless @experiment.archived_branch?
+                        @experiment.my_modules.active.order(:name)
+                                   .left_outer_joins(:designated_users, :task_comments)
+                                   .preload(:tags, outputs: :to)
+                                   .preload(:my_module_status, :my_module_group, user_assignments: %i(user user_role))
+                                   .select('COUNT(DISTINCT users.id) as designated_users_count')
+                                   .select('COUNT(DISTINCT comments.id) as task_comments_count')
+                                   .select('my_modules.*').group(:id)
+                      end
   end
 
   def table
@@ -104,10 +109,19 @@ class ExperimentsController < ApplicationController
   end
 
   def load_table
-    my_modules = @experiment.my_modules.readable_by_user(current_user)
+    active_view_mode = params[:view_mode] != 'archived'
+    my_modules = nil
 
-    unless @experiment.archived_branch?
-      my_modules = params[:view_mode] == 'archived' ? my_modules.archived : my_modules.active
+    unless @experiment.archived_branch? && active_view_mode
+      my_modules = @experiment.my_modules.readable_by_user(current_user)
+
+      unless @experiment.archived_branch?
+        my_modules = if active_view_mode
+                       my_modules.active
+                     else
+                       my_modules.archived
+                     end
+      end
     end
 
     render json: Experiments::TableViewService.new(@experiment, my_modules, current_user, params).call
@@ -196,7 +210,7 @@ class ExperimentsController < ApplicationController
   end
 
   def archive_group
-    experiments = @project.experiments.active.where(id: params[:experiments_ids])
+    experiments = @project.experiments.active.where(id: params[:experiment_ids])
     counter = 0
     experiments.each do |experiment|
       next unless can_archive_experiment?(experiment)
@@ -219,7 +233,7 @@ class ExperimentsController < ApplicationController
   end
 
   def restore_group
-    experiments = @project.experiments.archived.where(id: params[:experiments_ids])
+    experiments = @project.experiments.archived.where(id: params[:experiment_ids])
     counter = 0
     experiments.each do |experiment|
       next unless can_restore_experiment?(experiment)
@@ -430,6 +444,31 @@ class ExperimentsController < ApplicationController
     end
   end
 
+  def experiment_filter
+    readable_experiments = Experiment.readable_by_user(current_user)
+    managable_active_my_modules = MyModule.managable_by_user(current_user).active
+
+    project = Project.readable_by_user(current_user)
+                     .joins(experiments: :my_modules)
+                     .where(experiments: { id: readable_experiments })
+                     .where(my_modules: { id: managable_active_my_modules })
+                     .find_by(id: params[:project_id])
+
+    return render_404 if project.blank?
+
+    experiments = project.experiments
+                         .joins(:my_modules)
+                         .where(experiments: { id: readable_experiments })
+                         .where(my_modules: { id: managable_active_my_modules })
+                         .search(current_user, false, params[:query], 1, current_team)
+                         .distinct
+                         .pluck(:id, :name)
+
+    return render plain: [].to_json if experiments.blank?
+
+    render json: experiments
+  end
+
   def actions_dropdown
     if stale?([@experiment, @experiment.project])
       render json: {
@@ -506,6 +545,16 @@ class ExperimentsController < ApplicationController
         provisioning_status_urls: @my_modules.map { |m| provisioning_status_my_module_url(m) }
       }
     )
+  end
+
+  def actions_toolbar
+    render json: {
+      actions:
+        Toolbars::ExperimentsService.new(
+          current_user,
+          experiment_ids: params[:experiment_ids].split(',')
+        ).actions
+    }
   end
 
   private
@@ -618,7 +667,7 @@ class ExperimentsController < ApplicationController
   end
 
   def view_mode_redirect_url(view_type)
-    if params[:view_mode] == 'archived' || @experiment.archived_branch?
+    if params[:view_mode] == 'archived'
       case view_type
       when 'canvas'
         module_archive_experiment_path(@experiment)
@@ -657,5 +706,13 @@ class ExperimentsController < ApplicationController
         Connection.create!(input_id: destination_my_module.id, output_id: source_my_module.id)
       end
     end
+  end
+
+  def set_navigator
+    @navigator = {
+      url: tree_navigator_experiment_path(@experiment),
+      archived: (action_name == 'module_archive' || params[:view_mode] == 'archived'),
+      id: @experiment.code
+    }
   end
 end

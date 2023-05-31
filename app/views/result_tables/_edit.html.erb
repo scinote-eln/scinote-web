@@ -12,13 +12,13 @@
 			<% end %>
 		</div>
     <hr>
-		<div class="align-right">
+		<div class="align-right edit-result-tables-buttons">
 			<button type="button" class="btn btn-secondary cancel-edit">
 				<%= t("general.cancel")%>
 			</button>
 			<%= f.button t("general.save"),
-									 class: 'btn btn-primary save-result',
-									 onclick: "Results.processResult(event, Results.ResultTypeEnum.TABLE);" %>
+									 class: 'btn btn-primary save-result' %>
+			<%= javascript_include_tag 'results/result_tables/edit', nonce: true %>
 		</div>
 	<% end %>
 </div>

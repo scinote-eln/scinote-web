@@ -1,8 +1,5 @@
 <% provide(:sidebar_title, t('sidebar.templates.sidebar_title')) %>
 <% provide(:container_class, "no-second-nav-container") %>
-<%= content_for :sidebar do %>
-  <%= render partial: "/shared/sidebar/templates_sidebar", locals: {active: :label} %>
-<% end %>
 
 <div id="labelTemplateContainer"
      data-label-template-url="<%= label_template_path(params[:id], format: :json) %>"
@@ -18,4 +15,4 @@
   />
 </div>
 
-<%= javascript_include_tag 'vue_label_template' %>
+<%= javascript_include_tag 'vue_label_template', nonce: true %>

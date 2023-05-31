@@ -1,0 +1,44 @@
+.sci--layout-navigation-breadcrumbs {
+  --max-breadcrumbs-link-width: 11.25rem;
+  align-items: center;
+  background-color: $color-white;
+  column-gap: .875rem;
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 1.5rem;
+
+  .breadcrumbs-link {
+    @include font-small;
+    color: var(--sn-blue);
+    display: inline-block;
+    max-width: var(--max-breadcrumbs-link-width);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &:last-child {
+      color: var(--sn-grey);
+    }
+  }
+
+  .delimiter {
+    padding-bottom: .25rem;
+  }
+
+  .breadcrumbs-collapsed-container {
+    color: var(--sn-blue);
+    position: relative;
+
+    .show-breadcrumbs {
+      align-items: center;
+      cursor: pointer;
+      display: flex;
+      position: relative;
+    }
+
+    a {
+      @include font-button;
+      color: var(--sn-blue);
+    }
+  }
+}

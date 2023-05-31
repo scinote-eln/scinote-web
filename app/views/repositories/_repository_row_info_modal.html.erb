@@ -111,10 +111,27 @@
           <% end %>
         <% end %>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.close')%></button>
-        <button type="button" class="btn btn-primary print-label-button"  data-rows="[<%= @repository_row.id %>]"><%= t('repository_row.modal_print_label.print_label') %></button>
-
+      <div class="modal-footer" data-assign-item-button="<%= @my_module.present? %>">
+        <% if @my_module %>
+          <button type="button" class="btn btn-secondary print-label-button"  data-rows="[<%= @repository_row.id %>]"><%= t('repository_row.modal_print_label.print_label') %></button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.close')%></button>
+          <span <% if @my_module_assign_error.present? %>
+                  data-toggle="tooltip"
+                  data-placement="bottom"
+                  title="<%= @my_module_assign_error %>"
+                <% end %>
+          >
+            <button type="button" class="btn btn-primary assign-inventory-button"
+                    data-assign-url=<%= my_module_repositories_path(@my_module) %>
+                    data-repository-row-id=<%= @repository_row.id %>
+                    <%= 'disabled' if @my_module_assign_error.present? %>>
+              <%= t('repository_row.modal_info.assign_to_task') %>
+            </button>
+          </span>
+        <% else %>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.close')%></button>
+          <button type="button" class="btn btn-primary print-label-button"  data-rows="[<%= @repository_row.id %>]"><%= t('repository_row.modal_print_label.print_label') %></button>
+        <% end %>
       </div>
     </div>
   </div>

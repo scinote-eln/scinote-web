@@ -70,7 +70,6 @@ module AccessPermissions
             @project.update!(visibility: :visible, default_public_user_role_id: user_assignment_params[:user_role_id])
             log_activity(:change_project_visibility, { visibility: t('projects.activity.visibility_visible') })
           else
-
             user_assignment = UserAssignment.find_or_initialize_by(
               assignable: @project,
               user_id: user_assignment_params[:user_id],
@@ -100,7 +99,7 @@ module AccessPermissions
         end
       rescue ActiveRecord::RecordInvalid => e
         Rails.logger.error e.message
-        errors = @project.errors ? @project.errors&.map(&:message)&.join(',') : e.message
+        errors = @project.errors.present? ? @project.errors&.map(&:message)&.join(',') : e.message
         render json: { flash: errors }, status: :unprocessable_entity
         raise ActiveRecord::Rollback
       end
@@ -137,18 +136,19 @@ module AccessPermissions
 
     def update_default_public_user_role
       Project.transaction do
-        @project.visibility = :hidden if permitted_default_public_user_role_params[:default_public_user_role_id].blank?
-        @project.assign_attributes(permitted_default_public_user_role_params)
-        @project.save!
-
-        UserAssignments::ProjectGroupAssignmentJob.perform_later(current_team, @project, current_user)
-
-        # revoke all team members access
+        @project.visibility_will_change!
+        @project.last_modified_by = current_user
         if permitted_default_public_user_role_params[:default_public_user_role_id].blank?
+          # revoke all team members access
+          @project.visibility = :hidden
+          @project.save!
           log_activity(:change_project_visibility, { visibility: t('projects.activity.visibility_hidden') })
-          render json: { flash: t('access_permissions.update.revoke_all_team_members') }, status: :ok
+          render json: { flash: t('access_permissions.update.revoke_all_team_members') }
         else
           # update all team members access
+          @project.visibility = :visible
+          @project.assign_attributes(permitted_default_public_user_role_params)
+          @project.save!
           log_activity(:project_access_changed_all_team_members,
                        { team: @project.team.id, role: @project.default_public_user_role&.name })
         end

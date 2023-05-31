@@ -89,6 +89,21 @@ class Experiment < ApplicationRecord
       .where(project: Project.viewable_by_user(user, teams))
   end
 
+  def self.with_children_viewable_by_user(user)
+    joins("
+      LEFT OUTER JOIN my_modules ON my_modules.experiment_id = experiments.id
+      LEFT OUTER JOIN user_assignments my_module_user_assignments
+        ON my_module_user_assignments.assignable_id = my_modules.id AND
+           my_module_user_assignments.assignable_type = 'MyModule'
+      LEFT OUTER JOIN user_roles my_module_user_roles
+        ON my_module_user_roles.id = my_module_user_assignments.user_role_id
+    ")
+      .where('
+        (my_module_user_assignments.user_id = ? AND my_module_user_roles.permissions @> ARRAY[?]::varchar[]
+          OR my_modules.id IS NULL)
+      ', user.id, MyModulePermissions::READ)
+  end
+
   def self.filter_by_teams(teams = [])
     return self if teams.blank?
 

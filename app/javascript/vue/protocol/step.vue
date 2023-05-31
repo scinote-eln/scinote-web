@@ -70,7 +70,18 @@
               <i class="fas fa-table"></i>
               {{ i18n.t('protocols.steps.insert.table') }}
             </li>
-            <li class="action" @click="createElement('checklist')">
+            <li class="action dropdown-submenu-item">
+              <i class="fas fa-table"></i>
+              {{ i18n.t('protocols.steps.insert.well_plate') }}
+              <span class="caret"></span>
+
+              <ul class="dropdown-submenu">
+                <li v-for="option in wellPlateOptions" :key="option.dimensions.toString()" class="action" @click="createElement('table', option.dimensions, true)">
+                  {{ i18n.t(option.label) }}
+                </li>
+              </ul>
+            </li>
+            <li class="action"  @click="createElement('checklist')">
               <i class="fas fa-list"></i>
               {{ i18n.t('protocols.steps.insert.checklist') }}
             </li>
@@ -136,6 +147,7 @@
             :element.sync="elements[index]"
             :inRepository="inRepository"
             :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
+            :assignableMyModuleId="assignableMyModuleId"
             :isNew="element.isNew"
             @component:delete="deleteElement"
             @update="updateElement"
@@ -213,6 +225,10 @@
       },
       reorderStepUrl: {
         required: false
+      },
+      assignableMyModuleId: {
+        type: Number,
+        required: false
       }
     },
     data() {
@@ -227,7 +243,15 @@
         dragingFile: false,
         reordering: false,
         isCollapsed: false,
-        editingName: false
+        editingName: false,
+        wellPlateOptions: [
+          { label: 'protocols.steps.insert.well_plate_options.32_x_48', dimensions: [32, 48] },
+          { label: 'protocols.steps.insert.well_plate_options.16_x_24', dimensions: [16, 24] },
+          { label: 'protocols.steps.insert.well_plate_options.8_x_12', dimensions: [8, 12] },
+          { label: 'protocols.steps.insert.well_plate_options.6_x_8', dimensions: [6, 8] },
+          { label: 'protocols.steps.insert.well_plate_options.6_x_4', dimensions: [6, 4] },
+          { label: 'protocols.steps.insert.well_plate_options.2_x_3', dimensions: [2, 3] }
+        ]
       }
     },
     mixins: [UtilsMixin, AttachmentsMixin],
@@ -418,8 +442,8 @@
           }
         });
       },
-      createElement(elementType) {
-        $.post(this.urls[`create_${elementType}_url`], (result) => {
+      createElement(elementType, tableDimensions = [5,5], plateTemplate = false) {
+        $.post(this.urls[`create_${elementType}_url`], { tableDimensions: tableDimensions, plateTemplate: plateTemplate }, (result) => {
           result.data.isNew = true;
           this.elements.push(result.data)
           this.$emit('stepUpdated')

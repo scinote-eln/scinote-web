@@ -9,12 +9,13 @@ class RepositoriesController < ApplicationController
   include RepositoriesDatatableHelper
   include MyModulesHelper
 
-  before_action :load_repository, except: %i(index create create_modal sidebar archive restore)
+  before_action :load_repository, except: %i(index create create_modal sidebar archive restore actions_toolbar)
   before_action :load_repositories, only: %i(index show sidebar)
   before_action :load_repositories_for_archiving, only: :archive
   before_action :load_repositories_for_restoring, only: :restore
   before_action :check_view_all_permissions, only: %i(index sidebar)
-  before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet import_records sidebar archive restore)
+  before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet import_records
+                                                    sidebar archive restore actions_toolbar)
   before_action :check_manage_permissions, only: %i(rename_modal update)
   before_action :check_delete_permissions, only: %i(destroy destroy_modal)
   before_action :check_archive_permissions, only: %i(archive restore)
@@ -22,13 +23,14 @@ class RepositoriesController < ApplicationController
   before_action :check_create_permissions, only: %i(create_modal create)
   before_action :check_copy_permissions, only: %i(copy_modal copy)
   before_action :set_inline_name_editing, only: %i(show)
+  before_action :set_breadcrumbs_items, only: %i(index show)
 
   layout 'fluid'
 
   def index
     respond_to do |format|
       format.html do
-        render 'empty_index' if @repositories.blank?
+        render 'index'
       end
       format.json do
         render json: prepare_repositories_datatable(@repositories, current_team, params)
@@ -158,9 +160,9 @@ class RepositoriesController < ApplicationController
                                                           user: current_user,
                                                           team: current_team)
     if service.succeed?
-      render json: { flash: t('repositories.archive_inventories.success_flash') }, status: :ok
+      render json: { message: t('repositories.archive_inventories.success_flash') }, status: :ok
     else
-      render json: { error: service.error_message }, status: :unprocessable_entity
+      render json: { message: service.error_message }, status: :unprocessable_entity
     end
   end
 
@@ -169,9 +171,9 @@ class RepositoriesController < ApplicationController
                                                           user: current_user,
                                                           team: current_team)
     if service.succeed?
-      render json: { flash: t('repositories.restore_inventories.success_flash') }, status: :ok
+      render json: { message: t('repositories.restore_inventories.success_flash') }, status: :ok
     else
-      render json: { error: service.error_message }, status: :unprocessable_entity
+      render json: { message: service.error_message }, status: :unprocessable_entity
     end
   end
 
@@ -409,6 +411,17 @@ class RepositoriesController < ApplicationController
                           end }
   end
 
+  def actions_toolbar
+    render json: {
+      actions:
+        Toolbars::RepositoriesService.new(
+          current_user,
+          current_team,
+          repository_ids: params[:repository_ids].split(',')
+        ).actions
+    }
+  end
+
   private
 
   def repostiory_import_actions
@@ -524,5 +537,30 @@ class RepositoriesController < ApplicationController
             subject: @repository,
             team: @repository.team,
             message_items: message_items)
+  end
+
+  def set_breadcrumbs_items
+    @breadcrumbs_items = []
+
+    @breadcrumbs_items.push({
+                              label: t('breadcrumbs.inventories'),
+                              url: repositories_path
+                            })
+
+    if @repository
+      @breadcrumbs_items.push({
+                                label: @repository.name,
+                                url: repository_path(@repository),
+                                archived: @repository.archived?
+                              })
+    end
+
+    archived_exists = @breadcrumbs_items.any? { |item| item[:archived] == true }
+
+    if params[:archived] == 'true' || archived_exists
+      @breadcrumbs_items.each do |item|
+        item[:label] = "(A) #{item[:label]}"
+      end
+    end
   end
 end

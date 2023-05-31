@@ -4,19 +4,9 @@
 @import "constants";
 @import "layouts/reminders";
 
-:root {
-  --repository-sidebar-margin: 363px;
-}
 
 .repository-show {
-  height: calc(100vh - var(--navbar-height));
-  left: var(--repository-sidebar-margin);
   margin: 0;
-  padding: 0 2em;
-  position: absolute;
-  top: var(--navbar-height);
-  transition: .4s $timing-function-sharp;
-  width: calc(100vw - var(--repository-sidebar-margin));
 
   &.active {
     [data-view-mode="archived"] {
@@ -37,21 +27,7 @@
       background-color: $color-white;
       border: 0;
       display: flex;
-      left: var(--repository-sidebar-margin);
-      margin-left: 0em;
-      padding: 0 2em;
-      position: fixed;
-      transition: .4s $timing-function-sharp;
-      width: calc(100% - var(--repository-sidebar-margin));
       z-index: 100;
-
-      .toolbar-delimiter {
-        border-bottom: $border-tertiary;
-        bottom: 0;
-        margin-left: -2em;
-        position: absolute;
-        width: 100%;
-      }
 
       .repository-share-icon {
         flex-shrink: 0;
@@ -129,23 +105,14 @@
   }
 
   .dataTables_scroll {
-    padding-bottom: 5em;
-    padding-top: 10em;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    height: calc(100% - var(--datatable-pagination-row) - var(--repository-top-toolbar-height));
+    z-index: 1;
 
     .dataTables_scrollHead {
-      position: -webkit-sticky !important;
-      position: sticky !important;
-      top: calc(10em + var(--navbar-height));
       z-index: 90;
-
-      .table.dataTable {
-        margin-top: 0 !important;
-        transition: .4s $timing-function-sharp;
-
-        th {
-          transition: width .2s;
-        }
-      }
     }
 
     .dataTables_scrollBody {
@@ -158,15 +125,8 @@
   .pagination-row {
     align-items: center;
     background-color: $color-white;
-    bottom: 0;
     display: flex;
     height: 5em;
-    left: var(--repository-sidebar-margin);
-    padding: 0 2em;
-    position: fixed;
-    transition: .4s $timing-function-sharp;
-    width: calc(100% - var(--repository-sidebar-margin));
-    z-index: 90;
 
     .pagination-info,
     .pagination-actions {
@@ -464,66 +424,6 @@
   }
 }
 
-.empty-sidebar-container {
-  padding: 1em 2.5em 2em 2em;
-
-  .repo-template {
-    border-radius: $border-radius-modal;
-    box-shadow: $modal-shadow;
-    font-weight: bold;
-    list-style-type: none;
-    padding-inline-start: 0;
-
-    li {
-      padding: 1em;
-    }
-
-    .fas-custom {
-      float: right;
-    }
-  }
-
-  .instructions {
-    @include font-main;
-    padding: .75em .25em;
-  }
-}
-
-.empty-repositories {
-  .content-header {
-    align-items: center;
-    border-bottom: $border-tertiary;
-    display: flex;
-    height: 4em;
-    margin-left: -2em;
-    padding-left: 2em;
-    width: calc(100% + 4em);
-
-    h1 {
-      margin: 0;
-    }
-  }
-
-  .content-body {
-    text-align: center;
-
-    .description {
-      @include font-main;
-      color: $color-silver-chalice;
-      margin: auto;
-      margin-bottom: 2em;
-      max-width: 570px;
-    }
-  }
-
-  .empty-inventory-img {
-    display: block;
-    margin: auto;
-    margin-top: 60px;
-    max-height: 290px;
-  }
-}
-
 .barcode-scanner {
   cursor: pointer;
   position: absolute;
@@ -561,8 +461,8 @@
     position: absolute;
     right: 0;
     text-align: right;
-    top: 2em;
-    width: 50%;
+    top: 0;
+    width: 30%;
   }
 
   .repository-edit-overlay--pagination {
@@ -570,9 +470,9 @@
     height: 5em;
     line-height: 5em;
     padding: .5em;
-    position: fixed;
+    position: absolute;
     text-align: center;
-    width: calc(100% - var(--repository-sidebar-margin));
+    width: 100%;
 
     hr {
       margin-top: -2.5em;

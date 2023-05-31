@@ -16,8 +16,16 @@
   </div>
   <div class="report-element-children">
     <% step.step_orderable_elements.order(:position).each do |e| %>
-      <% if e.orderable_type == 'StepTable' && @settings.dig('task', 'protocol', 'step_tables') %>
-        <%= render partial: 'reports/elements/step_table_element.html.erb', locals: { table: e.orderable.table, export_all: export_all } %>
+      <% if e.orderable_type == 'StepTable' %>
+        <% if e.orderable.table.metadata.present? %>
+          <% if @settings.dig('task', 'protocol', 'step_well_plates') && e.orderable.table.metadata['plateTemplate'] %>
+            <%= render partial: 'reports/elements/step_table_element.html.erb', locals: { table: e.orderable.table, export_all: export_all, table_type: 'step_well_plates_table' } %>
+          <% elsif @settings.dig('task', 'protocol', 'step_tables') && !e.orderable.table.metadata['plateTemplate'] %>
+            <%= render partial: 'reports/elements/step_table_element.html.erb', locals: { table: e.orderable.table, export_all: export_all, table_type: 'step_table' } %>
+          <% end %>
+        <% elsif @settings.dig('task', 'protocol', 'step_tables') %>
+          <%= render partial: 'reports/elements/step_table_element.html.erb', locals: { table: e.orderable.table, export_all: export_all, table_type: 'step_table' } %>
+        <% end %>
       <% end %>
       <% if e.orderable_type == 'Checklist' && @settings.dig('task', 'protocol', 'step_checklists') %>
         <%= render partial: 'reports/elements/step_checklist_element.html.erb', locals: { checklist: e.orderable, export_all: export_all } %>

@@ -25,32 +25,35 @@
           <span class="button-text"><%= t('repositories.index.options_dropdown.import_items') %></span>
         </button>
       <% end %>
-      <%= render partial: 'repositories/toolbar/row_actions' %>
-      <% if @repository.repository_rows.with_active_reminders(current_user).any? %>
-        <button type="button" data-toggle="tooltip" data-placement="bottom" title="<%= t("repositories.hide_reminders") %>"
-                class="btn btn-light auto-shrink-button"
-                id="hideRepositoryReminders"
-                data-view-mode="active"
-                data-hide-reminders-url="<%= team_repository_hide_reminders_url(@current_team, @repository) %>">
-          <span class="fas fa-bell-slash"></span>
-          <span class="button-text"><%= t("repositories.hide_reminders") %></span>
+
+      <span id="saveCancel" data-toggle="buttons" style="display:none">
+        <button type="button" class="btn btn-success prevent-shrink" id="saveRecord" data-view-mode="active">
+          <span class="fas fa-save"></span>
+          <%= t("repositories.save_record") %>
         </button>
-      <% end %>
-    <% else %>
-      <%= render partial: 'repositories/toolbar/print_label_button' %>
+        <button type="button" class="btn btn-light prevent-shrink" id="cancelSave" data-view-mode="active">
+          <span class="fas fa-times-circle"></span>
+          <%= t("repositories.cancel_save") %>
+        </button>
+      </span>
     <% end %>
-    <div class="archived-label" data-view-mode="archived">
-      <%= render partial: 'repositories/toolbar/archive_label' %>
-    </div>
-    <% if can_manage_repository_filters?(@repository) %>
-    <div class="toolbar-save-filters">
-      <%= render partial: 'repositories/toolbar/save_filters' %>
-    </div>
-  <% end %>
+  </div>
+
+  <div class="toolbar-middle-block">
+    <% unless @repository.is_a?(BmtRepository) %>
+      <%= render partial: 'shared/state_view_switch', locals: {
+          disabled: @repository.archived?,
+          switchable: true,
+          archived: params[:archived] || @repository.archived?,
+          active_url: repository_path(@repository),
+          archived_url: repository_path(@repository, archived: true),
+        } %>
+    <% end %>
   </div>
 
   <!-- RIGHT TOOLBAR BLOCK -->
   <div class="toolbar-right-block">
+    <div class="toolbar-search"></div>
     <% if RepositoryBase.stock_management_enabled? %>
       <div class="active-reminders-filter"
           title="<%= t('repositories.index.active_reminders.description') %>"
@@ -73,6 +76,12 @@
         <%= render partial: 'repositories/toolbar/bmt' %>
       </div>
     <% end %>
-    <div class="toolbar-search"></div>
+    <div class="repo-datatables-buttons">
+      <button class="btn btn-light manage-repo-column-index"
+              data-modal-url="<%= repository_repository_columns_path(@repository) %>"
+              data-action="new">
+        <span class="fas fa-columns">
+      </button>
+    </div>
   </div>
 </template>

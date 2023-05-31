@@ -26,6 +26,7 @@
       :objectId="element.attributes.orderable.id"
       :fieldName="'step_text[text]'"
       :lastUpdated="element.attributes.orderable.updated_at"
+      :assignableMyModuleId="assignableMyModuleId"
       :characterLimit="1000000"
       @update="update"
       @editingDisabled="disableEditMode"
@@ -64,6 +65,10 @@
       isNew: {
         type: Boolean,
         default: false
+      },
+      assignableMyModuleId: {
+        type: Number,
+        required: false
       }
     },
     data() {

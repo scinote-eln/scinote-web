@@ -1,7 +1,4 @@
 <% content_for :content do %>
-  <%= yield :secondary_navigation %>
-  <div class="container-fluid <%= yield :container_class %>" id="fluid-content">
-    <%= yield %>
-  </div>
+  <%= yield %>
 <% end %>
 <%= render template: 'layouts/application' %>

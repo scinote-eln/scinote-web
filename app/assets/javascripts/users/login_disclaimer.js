@@ -14,4 +14,7 @@
   initDisclaimer('.log-in-button', '#new_user');
   initDisclaimer('.btn-okta', '#oktaForm');
   initDisclaimer('.btn-azure-ad', '.azureAdForm');
+  initDisclaimer('.sign-up-button', '#sign-up-form');
+  initDisclaimer('.forgot-password-submit', '#forgot-password-form');
+  initDisclaimer('.invitation-submit', '#invitation-form');
 }());

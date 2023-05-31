@@ -594,6 +594,10 @@ li.module-hover {
 }
 
 .projects-index {
+  .content-header {
+    height: var(--content-header-size);
+  }
+
   .project-users-list {
     hr {
       margin: .5em 0;
@@ -639,6 +643,29 @@ li.module-hover {
   }
 
   .projects-toolbar {
+    .project-actions {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+
+      .btn {
+        margin-right: .25em;
+      }
+
+      .left {
+        align-self: flex-start;
+      }
+
+      .middle {
+        align-self: center;
+      }
+
+      .right {
+        align-self: flex-end;
+      }
+
+    }
+
     .form-group {
       width: 100%;
     }
@@ -653,7 +680,7 @@ li.module-hover {
   }
 
   .projects-container {
-    margin: 1.5em 0;
+    margin: 0;
 
     .cards-wrapper {
       --card-min-width: 291px;
@@ -734,6 +761,10 @@ li.module-hover {
             right: .2em;
             top: .2em;
 
+            .dropdown-menu {
+              z-index: 9;
+            }
+
             .project-actions-menu {
               height: 36px;
               width: 36px;
@@ -744,6 +775,8 @@ li.module-hover {
 
                 .fas {
                   margin-right: .4em;
+                  text-align: left;
+                  width: 1.1em;
                 }
               }
 

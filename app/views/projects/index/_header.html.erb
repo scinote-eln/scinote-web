@@ -1,8 +1,6 @@
 <div class="content-header sticky-header">
-  <div id="breadcrumbsWrapper">
-    <%= render partial: 'projects/index/breadcrumbs', locals: { target_folder: current_folder, folder_page: true } if current_folder %>
-  </div>
   <div class="title-row">
+      <i class="sn-icon sn-icon-navigator sci--layout--navigator-open cursor-pointer p-1.5 border rounded border-sn-light-grey mr-4"></i>
       <% if current_folder&.name && @inline_editable_title_config.present? %>
         <h1 data-view-mode="active" class="projects-title">
           <%= render partial: "shared/inline_editing",
@@ -20,89 +18,6 @@
       <i class="fas fa-archive"></i>&nbsp;
       <span class="projects-title name-readonly-placeholder"><%= current_folder&.name || t('projects.index.head_title_archived') %></span>
     </h1>
-
-    <div class="sci-btn-group header-actions">
-      <%= render layout: 'shared/view_switch', locals: { disabled: false } do %>
-        <li class="view-switch-list cards-switch form-dropdown-item">
-          <%= button_to(view_type_projects_path(format: :json),
-                        method: :put,
-                        remote: true,
-                        class: "btn btn-light button-to #{ @current_view_type == 'cards' ? 'selected' : ''}",
-                        form_class: 'change-projects-view-type-form',
-                        params: { projects: { view_type: 'cards' } }) do %>
-            <i class="fas fa-th-large"></i>
-            <%= t('projects.index.header.cards') %>
-          <% end %>
-        </li>
-
-        <li class="view-switch-list cards-switch form-dropdown-item">
-          <%= button_to(view_type_projects_path(format: :json),
-                        method: :put,
-                        remote: true,
-                        class: "btn btn-light button-to #{ @current_view_type == 'table' ? 'selected' : ''}",
-                        form_class: 'change-projects-view-type-form',
-                        params: { projects: { view_type: 'table' } }) do %>
-            <i class="fas fa-list"></i>
-            <%= t('projects.index.header.table') %>
-          <% end %>
-        </li>
-        <div role="separator" class="divider"></div>
-        <li class="view-switch-active archive-switch" data-view-mode="archived" data-url="<%= projects_path %>">
-          <i class="fas fa-rocket button-icon"></i> <%= t('projects.index.header.active_projects') %>
-        </li>
-
-        <li class="view-switch-archived archive-switch" data-view-mode="active" data-url="<%= projects_path(view_mode: 'archived') %>">
-          <i class="fas fa-archive button-icon"></i> <%= t('projects.index.header.archived_projects') %>
-        </li>
-      <% end %>
-      <%= render layout: 'shared/filter_dropdown', locals: {
-        container_class: 'projects-filters',
-        dropdown_title: t("filters_modal.title"),
-        search_field_history_key: 'project_filters_per_team'
-      } do %>
-        <%= render partial: 'shared/filter_dropdown/text_search', locals: {container_class: ''} %>
-        <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'created-on-filter', label: t("filters_modal.created_on.label"), view_mode: nil } %>
-        <div class="select-block">
-          <label><%= t("projects.index.filters_modal.members.label") %></label>
-          <select class="members-filter"
-                  data-ajax-url="<%= users_filter_projects_path %>"
-                  data-placeholder="<%= t('projects.index.filters_modal.members.placeholder') %>">
-          </select>
-        </div>
-        <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'archived-on-filter', label: t("filters_modal.archived_on.label"), view_mode: 'archived' } %>
-        <div class="select-block folders">
-          <span class="sci-checkbox-container">
-            <%= check_box_tag :folder_search, 'accepted', false, {class: "sci-checkbox"} %>
-            <span class="sci-checkbox-label"></span>
-          </span>
-          <span class="folder-search-label"><%= t("projects.index.filters_modal.folders.label") %></span>
-          <div class="dropdown folder-search-info">
-            <a class="fas fa-info-circle" id="folderSearchInfoBtn" data-toggle="dropdown"></a>
-            <div id="folderSearchInfo" class="dropdown-menu folder-search-popover" aria-labelledby="folderSearchInfo">
-              <%= t("projects.index.filters_modal.folders.popover_html") %>
-            </div>
-          </div>
-        <% end %>
-        <div class="dropdown sort-menu">
-          <button class="btn btn-light dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            <span><i class="fas fa-sort-amount-down"></i></span>
-          </button>
-          <ul id="sortMenuDropdown" class="dropdown-menu sort-projects-menu dropdown-menu-right" aria-labelledby="sortMenu">
-            <% %w(archived_new archived_old new old atoz ztoa id_asc id_desc).each_with_index do |sort, i| %>
-              <% if i.even? && i.positive? %>
-                <li class="divider" <%= i == 2 ? 'data-view-mode=archived' : '' %>></li>
-              <% end %>
-              <li <%= %w(archived_new archived_old).include?(sort) ? 'data-view-mode=archived' : '' %>>
-                <a class="<%= 'selected' if @current_sort == sort %>"
-                   data-sort="<%= sort %>" >
-                  <%= t("general.sort.#{sort}_html") %>
-                </a>
-              </li>
-            <% end %>
-          </ul>
-        </div>
-      </div>
-    </div>
   </div>
   <div id="toolbarWrapper" class="toolbar-row">
   </div>

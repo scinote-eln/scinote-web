@@ -19,40 +19,42 @@
         <%= t('label_templates.index.head_title') %>
       </h1>
     </div>
+  </div>
   <div id="content-label-templates-index">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="label-templates-datatable">
-          <table id="label-templates-table"
-                 class="table"
-                 data-source="<%= datatable_label_templates_path(format: :json) %>">
-            <thead>
-              <tr>
-                <th id="select-all">
-                  <div class="sci-checkbox-container">
-                  <input name="select_all" type="checkbox" class="sci-checkbox">
-                    <span class="sci-checkbox-label"></span>
-                  </div>
-                </th>
-                <th id="label-template-selected"><i class="fas fa-thumbtack"></i></th>
-                <th id="label-template-name"><%= t('label_templates.index.thead_name') %></th>
-                <th id="label-template-format"><%= t('label_templates.index.format') %></th>
-                <th id="label-template-description"><%= t('label_templates.index.description') %></th>
-                <th id="label-template-updated-by"><%= t('label_templates.index.updated_by') %></th>
-                <th id="label-template-updated-at"><%= t('label_templates.index.updated_at') %></th>
-                <th id="label-template-created-by"><%= t('label_templates.index.created_by') %></th>
-                <th id="label-template-created-at"><%= t('label_templates.index.created_at') %></th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
+    <div class="label-templates-datatable">
+      <table id="label-templates-table"
+              class="table"
+              data-source="<%= datatable_label_templates_path(format: :json) %>">
+        <thead>
+          <tr>
+            <th id="select-all">
+              <div class="sci-checkbox-container">
+              <input name="select_all" type="checkbox" class="sci-checkbox">
+                <span class="sci-checkbox-label"></span>
+              </div>
+            </th>
+            <th id="label-template-selected"><i class="fas fa-thumbtack"></i></th>
+            <th id="label-template-name"><%= t('label_templates.index.thead_name') %></th>
+            <th id="label-template-format"><%= t('label_templates.index.format') %></th>
+            <th id="label-template-description"><%= t('label_templates.index.description') %></th>
+            <th id="label-template-updated-by"><%= t('label_templates.index.updated_by') %></th>
+            <th id="label-template-updated-at"><%= t('label_templates.index.updated_at') %></th>
+            <th id="label-template-created-by"><%= t('label_templates.index.created_by') %></th>
+            <th id="label-template-created-at"><%= t('label_templates.index.created_at') %></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div id="actionToolbar" data-behaviour="vue">
+      <action-toolbar actions-url="<%= actions_toolbar_label_templates_url %>" />
     </div>
   </div>
 </div>
 
   <%= render partial: "index_toolbar" %>
   <%= render partial: "delete_modal" %>
-  <%= javascript_include_tag 'label_templates/label_templates_datatable' %>
+  <%= javascript_include_tag 'label_templates/label_templates_datatable', nonce: true %>
+  <%= javascript_include_tag 'vue_components_action_toolbar', nonce: true %>
 <% end %>

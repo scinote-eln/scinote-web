@@ -10,8 +10,10 @@
     <div class="items">
       <% task_group[:tasks].each do |task| %>
         <li class="item" data-name="<%= task.name %>" data-id="<%= task.id.base62_encode %>" data-type="tsk">
-          <span class='sa-type'>Tsk</span>
+          <span class='sa-type'><%= task.code %></span>
+          <span class="dot">&middot;</span>
           <span class="item-text"><%= task.name %></span>
+          <%= render partial: 'shared/smart_annotation/atwho_control_buttons.html.erb' %>
         </li>
       <% end %>
     </div>

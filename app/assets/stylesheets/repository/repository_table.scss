@@ -5,7 +5,21 @@
 @import "layouts/reminders";
 
 .repository-table {
+  --content-header-size: 3.5rem;
+  --repository-top-toolbar-height: 3.5rem;
+  height: calc(100vh - var(--navbar-height) - var(--content-header-size));
   position: relative;
+
+  .dataTables_wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+  }
+
+  .dataTables_scrollHead {
+    flex-shrink: 0;
+  }
 
   .dataTables_filter {
     display: flex;
@@ -204,6 +218,7 @@
 
   .repository-status-value-icon {
     .emoji {
+      display: inline;
       height: 24px;
       margin-right: 5px;
       min-width: 24px;

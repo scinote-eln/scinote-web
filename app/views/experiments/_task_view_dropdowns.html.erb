@@ -1,0 +1,64 @@
+
+<span class="middle">
+  <%= render layout: 'shared/view_switch', locals: { disabled: false, name: t("toolbar.#{action_name == 'module_archive' ? 'cards' : action_name }_view") } do %>
+    <% if params[:view_mode] == 'archived' || params[:action] == "module_archive" %>
+      <li class="form-dropdown-item">
+        <%= button_to(view_type_experiment_path(@experiment, view_mode: 'archived'),
+                      method: :put,
+                      remote: true,
+                      class: "btn button-to #{ action_name == 'table' ? 'btn-primary' : 'btn-light' }",
+                      form_class: 'change-my-modules-view-type-form',
+                      params: { experiment: { view_type: 'table', id: @experiment.id  } }) do %>
+          <span class="<%= 'text-light' if action_name == 'table' %>">
+            <%= t('toolbar.table_view') %>
+          </span>
+        <% end %>
+      </li>
+      <li class="form-dropdown-item">
+        <%= button_to(view_type_experiment_path(@experiment, view_mode: 'archived'),
+                      method: :put,
+                      remote: true,
+                      class: "btn button-to #{ action_name == 'module_archive' ? 'btn-primary' : 'btn-light'}",
+                      form_class: 'change-my-modules-view-type-form',
+                      params: { experiment: { view_type: 'canvas', id: @experiment.id } }) do %>
+          <span class="<%= 'text-light' if action_name == 'module_archive' %>">
+            <%= t('toolbar.cards_view') %>
+          </span>
+        <% end %>
+      </li>
+    <% else %>
+      <li class="form-dropdown-item">
+        <%= button_to(view_type_experiment_path(@experiment),
+                      method: :put,
+                      remote: true,
+                      class: "btn button-to #{ action_name == 'table' ? 'btn-primary text-light' : 'btn-light' }",
+                      form_class: 'change-my-modules-view-type-form',
+                      params: { experiment: { view_type: 'table', id: @experiment.id  } }) do %>
+          <span class="<%= 'text-light' if action_name == 'table' %>">
+            <%= t('toolbar.table_view') %>
+          </span>
+        <% end %>
+      </li>
+      <li class="form-dropdown-item">
+      <%= button_to(view_type_experiment_path(@experiment),
+                    method: :put,
+                    remote: true,
+                    class: "btn button-to #{ action_name == 'canvas' ? 'btn-primary text-light' : 'btn-light'}",
+                    form_class: 'change-my-modules-view-type-form',
+                    params: { experiment: { view_type: 'canvas', id: @experiment.id } }) do %>
+          <span class="<%= 'text-light' if action_name == 'canvas' %>">
+            <%= t('toolbar.canvas_view') %>
+          </span>
+        <% end %>
+      </li>
+    <% end %>
+  <% end %>
+  
+  <%= render partial: 'shared/state_view_switch', locals: {
+    disabled: false,
+    switchable: true,
+    archived: action_name == 'module_archive' || params[:view_mode] == 'archived',
+    active_url: my_modules_experiment_path(@experiment),
+    archived_url: my_modules_experiment_path(@experiment, view_mode: :archived),
+  } %>
+</span>

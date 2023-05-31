@@ -3,7 +3,7 @@
 #canvas-container,
 #module-archive {
   .experimnet-name {
-    max-width: calc(100% - 300px);
+    max-width: calc(100% - 2rem);
   }
 
   .panel-heading {
@@ -45,9 +45,6 @@
   }
 }
 
-#canvas-container {
-  margin: 0 -28px;
-}
 
 .canvas-preview-img,
 .canvas-preview-rect {

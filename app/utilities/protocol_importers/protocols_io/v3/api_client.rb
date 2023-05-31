@@ -37,7 +37,7 @@ module ProtocolImporters
         #     Default 10.
         #   page_id (optional): int (1..n)
         #     id of page.
-        #     Default is 1.
+        #     Default is 1. (the first page_id: 0)
         def protocol_list(query_params = {})
           local_sorting = false
           response = with_handle_network_errors do

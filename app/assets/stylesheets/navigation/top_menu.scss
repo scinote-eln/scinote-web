@@ -38,6 +38,14 @@
     margin-left: auto;
     margin-right: 1em;
     width: 240px;
+
+    input {
+      border-color: $color-alto;
+    }
+
+    .fas {
+      color: $color-silver-chalice;
+    }
   }
 
   .sci--navigation--top-menu-user {
@@ -57,6 +65,10 @@
     .avatar {
       border-radius: 50%;
     }
+  }
+
+  .dropdown-menu {
+    top: calc(50px - 0.5em);
   }
 
   .dropdown-menu li a {

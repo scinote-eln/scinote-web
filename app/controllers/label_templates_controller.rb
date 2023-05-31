@@ -2,12 +2,14 @@
 
 class LabelTemplatesController < ApplicationController
   include InputSanitizeHelper
+  include TeamsHelper
 
   before_action :check_feature_enabled, except: :index
-  before_action :check_view_permissions, except: %i(create duplicate set_default delete update)
-  before_action :check_manage_permissions, only: %i(create duplicate set_default delete update)
   before_action :load_label_templates, only: %i(index datatable)
   before_action :load_label_template, only: %i(show set_default update template_tags)
+  before_action :check_view_permissions, except: %i(create duplicate set_default delete update)
+  before_action :check_manage_permissions, only: %i(create duplicate set_default delete update)
+  before_action :set_breadcrumbs_items, only: %i(index show)
 
   layout 'fluid'
 
@@ -63,7 +65,8 @@ class LabelTemplatesController < ApplicationController
 
   def update
     @label_template.transaction do
-      @label_template.update!(label_template_params)
+      update_label_template_params = label_template_params.merge(last_modified_by_id: current_user.id)
+      @label_template.update!(update_label_template_params)
       log_activity(:label_template_edited, @label_template)
     end
     render json: @label_template, serializer: LabelTemplateSerializer, user: current_user
@@ -150,6 +153,16 @@ class LabelTemplatesController < ApplicationController
     render json: { error: t('label_templates.fluics.sync.error') }, status: :unprocessable_entity
   end
 
+  def actions_toolbar
+    render json: {
+      actions:
+        Toolbars::LabelTemplatesService.new(
+          current_user,
+          label_template_ids: params[:label_template_ids].split(',')
+        ).actions
+    }
+  end
+
   private
 
   def check_feature_enabled
@@ -169,7 +182,9 @@ class LabelTemplatesController < ApplicationController
   end
 
   def load_label_template
-    @label_template = LabelTemplate.where(team_id: current_team.id).find(params[:id])
+    @label_template = LabelTemplate.find(params[:id])
+
+    current_team_switch(@label_template.team) if current_team != @label_template.team
   end
 
   def label_template_params
@@ -185,5 +200,21 @@ class LabelTemplatesController < ApplicationController
             subject: label_template,
             team: label_template.team,
             message_items: message_items)
+  end
+
+  def set_breadcrumbs_items
+    @breadcrumbs_items = []
+
+    @breadcrumbs_items.push({
+                              label: t('breadcrumbs.labels'),
+                              url: label_templates_path
+                            })
+
+    if @label_template
+      @breadcrumbs_items.push({
+                                label: @label_template.name,
+                                url: label_template_path(@label_template)
+                              })
+    end
   end
 end

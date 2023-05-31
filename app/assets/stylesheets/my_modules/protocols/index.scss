@@ -7,19 +7,53 @@
 @import "constants";
 @import "mixins";
 
+.my-module-header {
+  .my-module-title-row {
+    align-items: center;
+    background: $color-white;
+    display: flex;
+    height: 4em;
+    margin-left: -1.5rem;
+    padding: 0 0.5rem;
+    width: calc(100% + 3rem);
+
+    .my_module-name {
+      display: flex;
+      min-width: 5rem;
+      width: 100%;
+    }
+  }
+
+  .name-readonly-placeholder {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
 .content-pane.my-modules-protocols-index {
   background-color: $color-alto;
-  margin: 0 -16px;
-  min-height: calc(100vh - var(--navbar-height) * 2);
-  padding: 36px 10px 10px;
-  width: calc(100% + 31px);
+  padding: 0 1rem 1rem !important;
+  min-height: calc(100vh - var(--navbar-height));
+
+  .title-row {
+    margin-left: -1rem;
+    width: calc(100% + 2rem);
+  }
 
   .my-module-position-container {
     background-color: $color-white;
     box-shadow: $flyout-shadow;
-    margin: 0 auto;
+    margin: 1rem auto;
     max-width: 900px;
     padding: 10px;
+    z-index: 2;
+  }
+
+  .dropdown {
+    .dropdown-menu {
+      z-index: 9;
+    }
   }
 }
 

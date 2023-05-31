@@ -9,6 +9,8 @@ module Api
 
       class IncludeNotSupportedError < StandardError; end
 
+      class FilterParamError < StandardError; end
+
       class PermissionError < StandardError
         attr_reader :klass, :mode
 
@@ -23,6 +25,14 @@ module Api
         logger.error e.backtrace.join("\n")
         render_error(I18n.t('api.core.errors.general.title'),
                      I18n.t('api.core.errors.general.detail'),
+                     :bad_request)
+      end
+
+      rescue_from FilterParamError do |e|
+        logger.error e.message
+        logger.error e.backtrace.join("\n")
+        render_error(I18n.t('api.core.errors.filter_parameter.title'),
+                     I18n.t('api.core.errors.filter_parameter.detail'),
                      :bad_request)
       end
 
@@ -57,6 +67,12 @@ module Api
         render_error(I18n.t('api.core.errors.include_not_supported.title'),
                      I18n.t('api.core.errors.include_not_supported.detail'),
                      :bad_request)
+      end
+
+      rescue_from ActionController::BadRequest do |e|
+        render_error(
+          I18n.t('api.core.errors.parameter_incorrect.title'), e.message, :bad_request
+        )
       end
 
       rescue_from ActionController::ParameterMissing do |e|
@@ -214,6 +230,19 @@ module Api
 
       def load_workflow(key = :workflow_id)
         @workflow = MyModuleStatusFlow.find(params.require(key))
+      end
+
+      def archived_filter(archivable_collection)
+        return archivable_collection if params.dig(:filter, :archived).blank?
+
+        case params.dig(:filter, :archived)
+        when 'false'
+          archivable_collection.active
+        when 'true'
+          archivable_collection.archived
+        else
+          raise FilterParamError
+        end
       end
     end
   end

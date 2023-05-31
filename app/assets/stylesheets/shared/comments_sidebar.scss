@@ -3,13 +3,13 @@
 .comments-sidebar {
   --comments-sidebar-width: 280px;
   animation-timing-function: $timing-function-sharp;
-  height: calc(100vh - var(--navbar-height));
+  height: calc(100vh - var(--top-navigation-height));
   position: fixed;
   right: 0;
-  top: var(--navbar-height);
+  top: var(--top-navigation-height);
   transition: width .3s;
   width: 0;
-  z-index: 10000;
+  z-index: 609;
 
   &.open {
     width: var(--comments-sidebar-width);

@@ -4,50 +4,5 @@
       <span class="fas fa-plus" aria-hidden="true"></span>
       <span class="hidden-xs"><%= t("projects.reports.index.new") %></span>
     <% end %>
-    <div class="report-actions-dropdown sci-dropdown">
-      <button class="btn btn-light dropdown-toggle single-object-action disabled hidden" type="button" id="reportMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-        <i class="fas fa-file"></i>
-        <%= t("projects.reports.index.report_button") %>
-        <span class="caret pull-right"></span>
-      </button>
-      <ul id="reportMenuDropdown" class="dropdown-menu report-actions-menu" aria-labelledby="reportMenu">
-        <li>
-          <%= link_to '#', remote: true, id: 'updatePdf' do %>
-            <i class="fas fa-file-pdf"></i>
-            <%= t("projects.reports.index.update_pdf") %>
-          <% end %>
-        </li>
-        <li>
-          <%= link_to '#savePdfToInventory', remote: true, id: 'savePdfToInventoryButton' do %>
-            <i class="fas fa-save"></i>
-            <%= t("projects.reports.index.save_pdf_to_inventory") %>
-          <% end %>
-        </li>
-        <li>
-          <%= link_to '#', remote: true, id: 'requestDocx', class: 'generate-docx' do %>
-            <i class="fas fa-file-word"></i>
-            <%= t("projects.reports.index.request_docx") %>
-          <% end %>
-        </li>
-        <li>
-          <%= link_to '#', remote: true, id: 'updateDocx', class: 'generate-docx' do %>
-            <i class="fas fa-file-word"></i>
-            <%= t("projects.reports.index.update_docx") %>
-          <% end %>
-        </li>
-      </ul>
-    </div>
-    <%= link_to "", remote: true, class: "btn btn-light disabled hidden single-object-action", id: "edit-report-btn" do %>
-      <span class="fas fa-pencil-alt" aria-hidden="true"></span>
-      <span class="hidden-xs"><%=t "projects.reports.index.edit" %></span>
-    <% end %>
-    <%= link_to "", remote: true, class: "btn btn-light disabled hidden multiple-object-action", id: "delete-reports-btn" do %>
-      <span class="fas fa-trash" aria-hidden="true"></span>
-      <span class="hidden-xs"><%=t "projects.reports.index.delete" %></span>
-    <% end %>
-  </div>
-  <div class="sci-input-container left-icon search-report-container">
-    <input type="text" class="sci-input-field report-search" placeholder="<%= t("projects.reports.index.search_reports") %>"></input>
-    <i class="fas fa-search"></i>
   </div>
 <% end %>

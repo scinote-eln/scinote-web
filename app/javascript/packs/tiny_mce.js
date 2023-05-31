@@ -323,6 +323,7 @@ window.TinyMCE = (() => {
               .on('click', (event) => {
                 event.preventDefault();
                 saveAction(editor);
+                SmartAnnotation.closePopup();
               });
 
             // After save action
@@ -339,7 +340,11 @@ window.TinyMCE = (() => {
                 if (options.onSaveCallback) { options.onSaveCallback(data); }
               }).on('ajax:error', (_ev, data) => {
                 const model = editor.getElement().dataset.objectType;
-                $(this).renderFormErrors(model, data.responseJSON);
+                let form = $(editor.getElement().closest('.form-group'));
+                form.renderFormErrors(model, data.responseJSON);
+
+                // to show bottom of the tinyMce editor instead at the top
+                form.find('.help-block').insertAfter(form.children().last());
                 editor.setProgressState(0);
                 if (data.status === 403) {
                   HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
@@ -367,13 +372,15 @@ window.TinyMCE = (() => {
 
                 updateScrollPosition(editorForm);
                 if (options.onSaveCallback) { options.onSaveCallback($(selector).val()); }
+
+                SmartAnnotation.closePopup();
               })
               .removeClass('hidden');
 
             editor.selection.select(editor.getBody(), true);
             editor.selection.collapse(false);
 
-            SmartAnnotation.init($(editor.contentDocument.activeElement));
+            SmartAnnotation.init($(editor.contentDocument.activeElement), false, options.assignableMyModuleId);
             SmartAnnotation.preventPropagation('.atwho-user-popover');
 
             if (options.afterInitCallback) { options.afterInitCallback(); }

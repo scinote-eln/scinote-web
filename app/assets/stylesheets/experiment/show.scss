@@ -4,7 +4,17 @@
 #experiment-canvas,
 #module-archive {
   .experimnet-name {
-    max-width: calc(100% - 300px);
+    max-width: calc(100% - 2rem);
+  }
+
+  .toolbar {
+    align-items: center;
+    column-gap: .5rem;
+    display: flex;
+
+    .collapse {
+      margin: .5rem 0;
+    }
   }
 
   .toolbar {
@@ -36,6 +46,7 @@
   .toolbar-row {
     align-items: center;
     display: flex;
+    justify-content: space-between;
     margin: 10px 0;
 
     .toolbar-right-block {
@@ -46,6 +57,87 @@
 
     .zoom-text {
       margin-right: .5em;
+    }
+
+    .view-switch-button {
+      outline: 1px solid $color-alto;
+    }
+
+    .view-switch,
+    .filter-container {
+      display: inline-block;
+    }
+
+    .view-switch {
+      margin-left: auto;
+
+      .caret {
+        margin: 8px 0 8px 8px;
+      }
+
+      &.open {
+        .caret {
+          transform: rotateX(180deg);
+        }
+      }
+
+      .dropdown-menu {
+        @include font-button;
+        min-width: 100%;
+        padding: 0;
+
+        .divider-label {
+          @include font-small;
+          color: $color-silver-chalice;
+          padding: .25em 1em;
+        }
+
+        .divider {
+          margin: 0;
+        }
+
+        li {
+          cursor: pointer;
+          padding: .5em 1em;
+          white-space: nowrap;
+
+          .button-icon {
+            margin-right: .5em;
+          }
+
+          &:hover:not(.divider-label) {
+            background: $color-concrete;
+          }
+
+          .btn {
+            height: 36px;
+          }
+
+          a {
+            display: inline-block;
+            margin: -1em;
+            padding: .5em 1em;
+            width: calc(100% + 2em);
+
+            &.selected::after {
+              @include font-awesome;
+              content: $font-fas-check;
+              margin-left: auto;
+              position: absolute;
+              right: 1em;
+            }
+          }
+        }
+      }
+
+      .cards-switch {
+        &.active::after {
+          @include font-awesome;
+          content: "\f00c";
+          position: absolute;
+          right: 1em;
+        }
+      }
     }
   }
 }

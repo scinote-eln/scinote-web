@@ -10,12 +10,13 @@
     }
   %>
 <% end %>
-<%= render partial: "shared/secondary_navigation" %>
 <%= render partial: 'shared/drag_n_drop_overlay' %>
 <%= render partial: 'assets/wopi/create_wopi_file_modal' %>
+<% provide(:container_class, 'no-second-nav-container') %>
 
-<div class="content-pane">
-  <div id="results-toolbar">
+<div class="content-pane flexible">
+  <%= render partial: 'my_modules/header' %>
+  <div class="mt-5" id="results-toolbar">
     <% if can_manage_my_module?(@my_module) %>
       <div class="add-result-dropdown dropdown sci-dropdown">
         <a href="#" id="add-result-button" class="btn btn-secondary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -69,7 +70,7 @@
 
   <div style="height: 15px;"></div>
 
-  <div id="results" data-module-id="<%= @my_module.id %>">
+  <div id="results" data-module-id="<%= @my_module.id %>" data-task-id="<%= @my_module.id %>">
   <% @results.each do |result| %>
     <%= render partial: "result", locals: { result: result } %>
   <% end %>
@@ -87,12 +88,12 @@
 <!-- Libraries for formulas -->
 <%= render partial: "shared/formulas_libraries.html.erb" %>
 
-<%= javascript_include_tag "assets/wopi/create_wopi_file" %>
-<%= javascript_include_tag "my_modules/results" %>
-<%= javascript_include_tag "results/result_texts" %>
-<%= javascript_include_tag "results/result_tables" %>
-<%= javascript_include_tag "results/result_assets" %>
-<%= javascript_include_tag 'pdf_js' %>
+<%= javascript_include_tag "assets/wopi/create_wopi_file", nonce: true %>
+<%= javascript_include_tag "my_modules/results", nonce: true %>
+<%= javascript_include_tag "results/result_texts", nonce: true %>
+<%= javascript_include_tag "results/result_tables", nonce: true %>
+<%= javascript_include_tag "results/result_assets", nonce: true %>
+<%= javascript_include_tag 'pdf_js', nonce: true %>
 <%= stylesheet_link_tag 'pdf_js_styles' %>
 
 <%= render 'shared/tiny_mce_packs' %>

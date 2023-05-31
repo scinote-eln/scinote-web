@@ -1,16 +1,29 @@
 <% if protocol.in_repository_published_original? || protocol.in_repository_published_version? %>
-    <% parent = protocol.parent || protocol %>
+  <% parent = protocol.parent || protocol %>
+  <% if readable %>
     <%= link_to versions_modal_protocol_path(parent), class: 'protocol-versions-link', remote: true do %>
-        <%= protocol.nr_of_versions %>
+      <%= protocol.nr_of_versions %>
     <% end %>
-    <% if parent.draft.present? %>
-        / 
-        <%= link_to protocol_path(parent.draft) do %>
-            <%= t("protocols.index.table.draft") %>
-        <% end %>
-    <% end %>
-<% elsif protocol.in_repository_draft? %>
-    <%= link_to protocol_path(protocol) do %>
+  <% else %>
+    <span class="not-clickable-record"><%= protocol.nr_of_versions %></span>
+  <% end %>
+  <% if parent.draft.present? %>
+    <% if readable %>
+      /
+      <%= link_to protocol_path(parent.draft) do %>
         <%= t("protocols.index.table.draft") %>
+      <% end %>
+    <% else %>
+      <span class="not-clickable-record">/</span>
+      <span class="not-clickable-record"><%= t("protocols.index.table.draft") %></span>
     <% end %>
+  <% end %>
+<% elsif protocol.in_repository_draft? %>
+  <% if readable %>
+    <%= link_to protocol_path(protocol) do %>
+      <%= t("protocols.index.table.draft") %>
+    <% end %>
+  <% else %>
+    <span class="not-clickable-record"><%= t("protocols.index.table.draft") %></span>
+  <% end %>
 <% end %>

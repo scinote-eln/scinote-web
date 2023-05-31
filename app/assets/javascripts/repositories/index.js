@@ -7,6 +7,11 @@
   var CHECKBOX_SELECTOR;
 
   function updateActionButtons() {
+    if (window.actionToolbarComponent) {
+      window.actionToolbarComponent.fetchActions({ repository_ids: CHECKBOX_SELECTOR.selectedRows });
+      $('.dataTables_scrollBody').css('padding-bottom', `${CHECKBOX_SELECTOR.selectedRows.length > 0 ? 68 : 0}px`);
+    }
+
     var rowsCount = CHECKBOX_SELECTOR.selectedRows.length;
     var row;
     $('#renameRepoBtn').attr('href', '#');
@@ -98,6 +103,11 @@
           }
         }],
         fnInitComplete: function(e) {
+          initActionToolbar();
+          window.actionToolbarComponent.setReloadCallback(() =>
+            initRepositoriesDataTable('#repositoriesList', archived));
+          window.actionToolbarComponent.setBottomOffset(68);
+
           var dataTableWrapper = $(e.nTableWrapper);
           CHECKBOX_SELECTOR = new DataTableCheckboxes(dataTableWrapper, {
             checkboxSelector: '.repository-row-selector',
@@ -106,10 +116,13 @@
               updateActionButtons();
             }
           });
+
+          updateActionButtons();
           DataTableHelpers.initLengthAppearance(dataTableWrapper);
           DataTableHelpers.initSearchField(dataTableWrapper, I18n.t('repositories.index.filter_inventory'));
           $('.content-body .toolbar').html($('#repositoriesListButtons').html());
           dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
+
           $('#createRepoBtn').initSubmitModal('#create-repo-modal', 'repository');
           $('#deleteRepoBtn').initSubmitModal('#delete-repo-modal', 'repository');
           $('#renameRepoBtn').initSubmitModal('#rename-repo-modal', 'repository');
@@ -132,74 +145,20 @@
     });
   }
 
-  function reloadSidebar() {
-    var slidePanel = $('.sidebar-container');
-    $.get(slidePanel.data('sidebar-url'), {
-      archived: $('.repositories-index').hasClass('archived')
-    }, function(data) {
-      slidePanel.find('.sidebar-body').html(data.html);
-      $('.create-new-repository').initSubmitModal('#create-repo-modal', 'repository');
-    });
-  }
-
-  function initRepositoryViewSwitcher() {
-    var viewSwitch = $('.view-switch');
-    viewSwitch.on('click', '.view-switch-archived', function() {
-      $('.repositories-index').removeClass('active').addClass('archived');
-      initRepositoriesDataTable('#repositoriesList', true);
-      reloadSidebar();
-    });
-    viewSwitch.on('click', '.view-switch-active', function() {
-      $('.repositories-index').removeClass('archived').addClass('active');
-      initRepositoriesDataTable('#repositoriesList');
-      reloadSidebar();
-    });
-  }
-
-  $('.repositories-index')
-    .on('click', '#archiveRepoBtn', function() {
-      $.post($('#archiveRepoBtn').data('archive-repositories'), {
-        repository_ids: CHECKBOX_SELECTOR.selectedRows
-      }, function(data) {
-        HelperModule.flashAlertMsg(data.flash, 'success');
-        initRepositoriesDataTable('#repositoriesList');
-        reloadSidebar();
-      }).fail(function(ev) {
-        if (ev.status === 403) {
-          HelperModule.flashAlertMsg(I18n.t('repositories.js.permission_error'), ev.responseJSON.style);
-        } else if (ev.status === 422) {
-          HelperModule.flashAlertMsg(ev.responseJSON.error, 'danger');
-        }
-        animateSpinner(null, false);
-      });
-    })
-    .on('click', '#restoreRepoBtn', function() {
-      $.post($('#restoreRepoBtn').data('restore-repositories'), {
-        repository_ids: CHECKBOX_SELECTOR.selectedRows
-      }, function(data) {
-        HelperModule.flashAlertMsg(data.flash, 'success');
-        initRepositoriesDataTable('#repositoriesList', true);
-        reloadSidebar();
-      }).fail(function(ev) {
-        if (ev.status === 403) {
-          HelperModule.flashAlertMsg(I18n.t('repositories.js.permission_error'), ev.responseJSON.style);
-        } else if (ev.status === 422) {
-          HelperModule.flashAlertMsg(ev.responseJSON.error, 'danger');
-        }
-        animateSpinner(null, false);
-      });
-    });
-
-
   $('#wrapper').on('sideBar::hidden sideBar::shown', function() {
     if (REPOSITORIES_TABLE) {
       REPOSITORIES_TABLE.columns.adjust();
     }
   });
 
+  $(document).on('shown.bs.modal', function() {
+    var inputField = $('#repository_name');
+    var value = inputField.val();
+    inputField.focus().val('').val(value);
+  });
+  
   $('.create-new-repository').initSubmitModal('#create-repo-modal', 'repository');
   if (notTurbolinksPreview()) {
     initRepositoriesDataTable('#repositoriesList', $('.repositories-index').hasClass('archived'));
   }
-  initRepositoryViewSwitcher();
 }());

@@ -10,6 +10,8 @@
     padding: 1em 0;
 
     .toolbar {
+      align-items: center;
+      display: flex;
       flex-grow: 1;
     }
   }
@@ -19,14 +21,12 @@
       display: none;
     }
 
-    @media (max-width: 900px) {
-      .search-icon:not(.collapsed) {
-        display: initial;
-      }
+    .search-icon:not(.collapsed) {
+      display: initial;
+    }
 
-      .search-container:not(.expand) {
-        display: none;
-      }
+    .search-container:not(.expand) {
+      display: none;
     }
   }
 
@@ -43,6 +43,7 @@
     min-height: var(--datatable-pagination-row);
     position: relative;
     width: 100%;
+    z-index: 101;
 
     .actions-toolbar {
       align-items: center;

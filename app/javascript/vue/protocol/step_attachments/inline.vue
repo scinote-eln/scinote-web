@@ -51,7 +51,7 @@
         </a>
       </div>
     </template>
-    <template v-else-if="attachment.attributes.pdf_previewable">
+    <template v-else-if="attachment.attributes.pdf_previewable && attachment.attributes.pdf !== null">
       <PdfViewer :pdf="attachment.attributes.pdf" />
     </template>
     <template v-else-if="attachment.attributes.large_preview !== null">

@@ -149,7 +149,12 @@ class Protocol < ApplicationRecord
   has_many :published_versions,
            -> { in_repository_published_version },
            class_name: 'Protocol',
-           foreign_key: 'parent_id'
+           foreign_key: 'parent_id',
+           inverse_of: :parent,
+           dependent: :destroy
+  has_many :linked_my_modules,
+           through: :linked_children,
+           source: :my_module
   has_many :protocol_protocol_keywords,
            inverse_of: :protocol,
            dependent: :destroy
@@ -209,8 +214,18 @@ class Protocol < ApplicationRecord
   end
 
   def self.viewable_by_user(user, teams)
-    where(team: teams, protocol_type: REPOSITORY_TYPES).with_granted_permissions(user, ProtocolPermissions::READ)
-                                                       .or(where(my_module: MyModule.viewable_by_user(user, teams)))
+    # Team owners see all protocol templates in the team
+    owner_role = UserRole.find_predefined_owner_role
+    protocols = Protocol.where(team: teams)
+                        .where(protocol_type: REPOSITORY_TYPES)
+    viewable_as_team_owner = protocols.joins("INNER JOIN user_assignments team_user_assignments " \
+                                             "ON team_user_assignments.assignable_type = 'Team' " \
+                                             "AND team_user_assignments.assignable_id = protocols.team_id")
+                                      .where(team_user_assignments: { user_id: user, user_role_id: owner_role })
+                                      .select(:id)
+    viewable_as_assigned = protocols.with_granted_permissions(user, ProtocolPermissions::READ).select(:id)
+
+    where('protocols.id IN ((?) UNION (?))', viewable_as_team_owner, viewable_as_assigned)
   end
 
   def self.filter_by_teams(teams = [])

@@ -27,6 +27,14 @@ $font-fas-exclamation-circle: "\f06a";
 $font-fas-caret-up: "\f0d8";
 $font-fas-plus: "\f02b";
 
+.sn-icon {
+  font-size: 24px !important;
+
+  &.mini {
+    font-size: 16px !important;
+  }
+}
+
 @mixin font-h1 {
   font-size: 24px;
   font-weight: bold;

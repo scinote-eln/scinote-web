@@ -1,7 +1,7 @@
 <div class="modal" id="edit-experiment-modal-<%= @experiment.id %>" tabindex="-1" role="dialog" aria-labelledby="edit-experiment-modal-label">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <%= bootstrap_form_for [@project, @experiment], remote: true, html: { class: 'experiment-action-form' } do |f| %>
+      <%= bootstrap_form_for [@project, @experiment], html: { class: 'experiment-action-form' } do |f| %>
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="edit-eperiment-modal-label">

@@ -1,0 +1,63 @@
+<div class="content-header sticky-header my-module-header">
+  <div class="my-module-title-row">
+    <i class="sn-icon sn-icon-navigator sci--layout--navigator-open cursor-pointer p-1.5 border rounded border-sn-light-grey mr-4"></i>
+    <h1 class="my_module-name" data-toggle="tooltip" data-placement="bottom" title="<%= @my_module.name %>">
+      <% if @my_module.archived? %>
+        <i class="fas fa-archive" data-view-mode="archived"></i>
+      <% end %>
+      <% if @inline_editable_title_config.present? %>
+              <%= render partial: "shared/inline_editing",
+                         locals: {
+                            initial_value: @my_module.name,
+                            config: @inline_editable_title_config
+                         } %>
+      <% else %>
+        <div class="name-readonly-placeholder">
+          <%= @my_module.name %>
+        </div>
+      <% end %>
+    </h1>
+    <div class="header-actions">
+      <div class="flex items-center uppercase text-bold">
+        <% if can_read_experiment?(@my_module.experiment) %>
+          <a class="p-4 border-b-4 border-transparent text-sn-grey hover:no-underline <%= "border-sn-blue" if is_module_protocols? %>"
+             href="<%= protocols_my_module_url(@my_module) %>"
+             title="<%= t("nav2.modules.steps") %>"
+          >
+            <%=t "nav2.modules.steps" %>
+          </a>
+          <a class="p-4 border-b-4 border-transparent text-sn-grey hover:no-underline <%= "border-sn-blue" if is_module_results? %>"
+             href="<%= results_my_module_url(@my_module) %>"
+             title="<%= t("nav2.modules.results") %>"
+          >
+            <%= t("nav2.modules.results") %>
+            <% @active_results_size = @my_module.results.where(archived:false).size %>
+            <% if @active_results_size.positive? %>
+              <sup class="navigation-results-counter"><%= @my_module.archived_branch? ? @my_module.results.size : @active_results_size %></sup>
+            <% end %>
+          </a>
+          <a class="p-4 border-b-4 border-transparent text-sn-grey hover:no-underline <%= "border-sn-blue" if is_module_activities? %>"
+             href="<%= activities_my_module_url(@my_module) %>"
+             title="<%= t("nav2.modules.activities") %>"
+          >
+            <%= t("nav2.modules.activities") %>
+          </a>
+        <% end %>
+
+        <div data-hook="secondary-navigation-tabs"></div>
+        <% if can_read_experiment?(@my_module.experiment) && !@my_module.archived_branch? %>
+          <a class="p-4 border-b-4 border-transparent text-sn-grey hover:no-underline <%= "border-sn-blue" if is_module_archive? %>"
+             href="<%= archive_my_module_url(@my_module) %>"
+             title="<%= t'nav2.modules.archive' %>"
+          >
+            <%= t("nav2.modules.archive") %>
+            <% @archived_results_size = @my_module.results.where(archived:true).size %>
+            <% if @archived_results_size.positive? %>
+              <sup class="navigation-results-counter"><%= @archived_results_size %></sup>
+            <% end %>
+          </a>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

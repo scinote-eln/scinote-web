@@ -7,6 +7,7 @@ $.fn.dataTable.render.newRowName = function(formId, $cell) {
   $cell.html(`
     <div class="sci-input-container text-field error-icon">
       <input class="sci-input-field"
+             id="newRepoNameField"
              form="${formId}"
              type="text"
              name="repository_row[name]"
@@ -33,7 +34,7 @@ $.fn.dataTable.render.newRepositoryTextValue = function(formId, columnId, $cell)
              data-type="RepositoryTextValue">
     </div>`);
 
-  SmartAnnotation.init($cell.find('input'));
+  SmartAnnotation.init($cell.find('input'), false);
 };
 
 $.fn.dataTable.render.newRepositoryListValue = function(formId, columnId, $cell) {

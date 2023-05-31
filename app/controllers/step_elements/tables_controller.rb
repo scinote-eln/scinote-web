@@ -5,10 +5,20 @@ module StepElements
     before_action :load_table, only: %i(update destroy duplicate)
 
     def create
+      predefined_table_dimensions = create_table_params[:tableDimensions].map(&:to_i)
+      name = if predefined_table_dimensions[0] == predefined_table_dimensions[1]
+               t('protocols.steps.table.default_name',
+                 position: @step.step_tables.length + 1)
+             else
+               t('protocols.steps.plate.default_name',
+                 position: @step.step_tables.length + 1)
+             end
       step_table = @step.step_tables.new(table:
         Table.new(
-          name: t('protocols.steps.table.default_name', position: @step.step_tables.length + 1),
-          contents: { data: Array.new(5, Array.new(5, '')) }.to_json,
+          name: name,
+          contents: { data: Array.new(predefined_table_dimensions[0],
+                                      Array.new(predefined_table_dimensions[1], '')) }.to_json,
+          metadata: { plateTemplate: create_table_params[:plateTemplate] == 'true' },
           created_by: current_user,
           team: @step.protocol.team
         ))
@@ -27,7 +37,14 @@ module StepElements
       ActiveRecord::Base.transaction do
         @table.assign_attributes(table_params.except(:metadata))
         begin
-          @table.metadata = JSON.parse(table_params[:metadata]) if table_params[:metadata].present?
+          if table_params[:metadata].present?
+
+            @table.metadata = if @table.metadata
+                                @table.metadata.merge(JSON.parse(table_params[:metadata]))
+                              else
+                                JSON.parse(table_params[:metadata])
+                              end
+          end
         rescue JSON::ParserError
           @table.metadata = {}
         end
@@ -68,6 +85,10 @@ module StepElements
 
     def table_params
       params.permit(:name, :contents, :metadata)
+    end
+
+    def create_table_params
+      params.permit(:plateTemplate, tableDimensions: [])
     end
 
     def load_table

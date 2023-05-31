@@ -53,12 +53,21 @@
     }
 
     .toolbar {
+      align-items: center;
       display: flex;
 
       .left-general-toolbar {
         align-items: center;
         column-gap: .5em;
         display: flex;
+
+        .dropdown-menu {
+          min-width: 150px;
+        }
+      }
+
+      .view-switch {
+        margin: 0 auto;
       }
 
       .right-general-toolbar {
@@ -66,10 +75,6 @@
         display: flex;
         margin-left: auto;
         margin-right: .5em;
-      }
-
-      .dropdown-menu {
-        min-width: 150px;
       }
     }
 
@@ -145,6 +150,10 @@
       .more-users {
         border: 2px solid $color-concrete;
       }
+    }
+
+    .not-clickable-record {
+      color: $color-alto;
     }
   }
 

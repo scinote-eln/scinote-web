@@ -170,6 +170,7 @@
     var totalSize = 0;
     var fileMaxSizeMb;
     var fileMaxSize;
+    var itemsNames = {};
 
     function disableSubmitButton() {
       $('.save-result').prop('disabled', true);
@@ -315,7 +316,7 @@
     }
 
     function uploadedAssetPreview(asset, i) {
-      var html = `<div class="panel panel-default panel-result-attachment-new">
+      var html = `<div class="panel panel-default panel-result-attachment-new" data-item-uuid="${asset.uuid}">
                     <div class="panel-heading">
                       <span class="fas fa-paperclip"></span>
                       ${I18n.t('assets.drag_n_drop.file_label')}
@@ -328,7 +329,7 @@
                     <div class="panel-body">
                       <div class="form-group">
                         <label class="control-label">Name</label>
-                        <input type="text" class="form-control" onChange="DragNDropResults.validateTextSize(this)"
+                        <input type="text" class="form-control" autofocus
                                rel="results[name]" name="results[name][${i}]">
                       </div>
                       <div class="form-group">
@@ -354,6 +355,18 @@
       }
     }
 
+    function restoreItemName(uuid) {
+      $(`.panel-result-attachment-new[data-item-uuid="${uuid}"]`)
+        .find('input[rel="results[name]"]').val((itemsNames[uuid] || ''));
+    }
+
+    function saveItemsNames() {
+      $('.panel-result-attachment-new').each(function() {
+        const panel = $(this);
+        itemsNames[panel.data('item-uuid')] = panel.find('input[rel="results[name]"]').val();
+      });
+    }
+
     function removeItemHandler(uuid) {
       $('[data-item-id="' + uuid + '"]').off('click').on('click', function(e) {
         e.preventDefault();
@@ -373,6 +386,10 @@
     // loops through a list of files and display each file in a separate panel
     function listItems() {
       totalSize = 0;
+      itemsNames = {};
+
+      saveItemsNames();
+
       $('.panel-result-attachment-new').remove();
       if (droppedFiles.length < 1) {
         disableSubmitButton();
@@ -384,7 +401,12 @@
             .after(uploadedAssetPreview(droppedFiles[i], i))
             .promise()
             .done(function() {
-              removeItemHandler(droppedFiles[i].uuid);
+              const uuid = droppedFiles[i].uuid;
+              removeItemHandler(uuid);
+              restoreItemName(uuid);
+              $('.panel-result-attachment-new').on('change', 'input[rel="results[name]"]', function() {
+                DragNDropResults.validateTextSize(this);
+              });
             });
         }
         validateTotalSize();

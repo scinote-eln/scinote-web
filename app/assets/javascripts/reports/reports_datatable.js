@@ -100,6 +100,11 @@
   }
 
   function updateButtons() {
+    if (window.actionToolbarComponent) {
+      window.actionToolbarComponent.fetchActions({ report_ids: CHECKBOX_SELECTOR.selectedRows });
+      $('.dataTables_scrollBody').css('padding-bottom', `${CHECKBOX_SELECTOR.selectedRows.length > 0 ? 68 : 0}px`);
+    }
+
     const rowsCount = CHECKBOX_SELECTOR.selectedRows.length;
     if (rowsCount === 0) {
       $('.single-object-action, .multiple-object-action').addClass('disabled hidden');
@@ -168,7 +173,7 @@
     var $table = $('#reports-table');
     CHECKBOX_SELECTOR = null;
     REPORTS_TABLE = $table.DataTable({
-      dom: "Rt<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
+      dom: "R<'reports-toolbar'f>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
       order: [[9, 'desc']],
       sScrollX: '100%',
       stateSave: true,
@@ -205,6 +210,9 @@
       },
       createdRow: addAttributesToRow,
       initComplete: function(settings) {
+        initActionToolbar();
+        actionToolbarComponent.setBottomOffset(68);
+
         const { nTableWrapper: dataTableWrapper } = settings;
         CHECKBOX_SELECTOR = new DataTableCheckboxes(dataTableWrapper, {
           checkboxSelector: '.report-row-selector',
@@ -213,10 +221,17 @@
         });
 
         DataTableHelpers.initLengthAppearance($table.closest('.dataTables_wrapper'));
+        DataTableHelpers.initSearchField(
+          $table.closest('.dataTables_wrapper'),
+          I18n.t('projects.reports.index.search_reports')
+        );
         $('.pagination-row').removeClass('hidden');
         $('.report-row.processing').each(function() {
           setTimeout(() => { checkProcessingStatus($(this).data('id')); }, START_POLLING_INTERVAL);
         });
+
+        let topToolbar = $('#toolbarWrapper').detach().html();
+        $('.reports-datatable .reports-toolbar').prepend(topToolbar);
       },
       drawCallback: function() {
         if (CHECKBOX_SELECTOR) CHECKBOX_SELECTOR.checkSelectAllStatus();
@@ -240,7 +255,7 @@
   }
 
   function initUpdatePDFReport() {
-    $('#updatePdf').click(function(ev) {
+    $(document).on('click', '#updatePdf', function(ev) {
       ev.stopPropagation();
       ev.preventDefault();
 
@@ -260,7 +275,7 @@
   }
 
   function initGenerateDocxReport() {
-    $('#requestDocx').click(function(ev) {
+    $(document).on('click', '#requestDocx', function(ev) {
       ev.stopPropagation();
       ev.preventDefault();
       $(this).closest('.dropdown-menu').dropdown('toggle');
@@ -269,7 +284,7 @@
   }
 
   function initUpdateDocxReport() {
-    $('#updateDocx').click(function(ev) {
+    $(document).on('click', '#updateDocx', function(ev) {
       ev.stopPropagation();
       ev.preventDefault();
 
@@ -302,7 +317,7 @@
   }
 
   function initSaveReportPDFToInventory() {
-    $('#savePdfToInventoryButton').click(function(ev) {
+    $(document).on('click', '#savePdfToInventoryButton', function(ev) {
       ev.preventDefault();
       ev.stopPropagation();
 
@@ -311,33 +326,30 @@
       let url = row.attr('data-save-to-inventory-path');
       $.get(url, function(result) {
         let modal = $(result.html);
-        $('#content-reports-index').append(modal);
-        modal.modal('show');
-        // Remove modal when it gets closed
-        modal.on('hidden.bs.modal', function() {
-          $(this).remove();
-        });
+        if ($('#content-reports-index').find('#savePDFtoInventory').length === 0) {
+          $('#content-reports-index').append(modal);
+          modal.modal('show');
+          // Remove modal when it gets closed
+          modal.on('hidden.bs.modal', function() {
+            $(this).remove();
+          });
+        }
       });
     });
   }
 
   function initDeleteReports() {
-    $('#delete-reports-btn').click(function() {
+    $(document).on('click', '#delete-reports-btn', function() {
       if (CHECKBOX_SELECTOR.selectedRows.length > 0) {
         $('#report-ids').attr('value', '[' + CHECKBOX_SELECTOR.selectedRows + ']');
         $('#delete-reports-modal').modal('show');
       }
     });
 
-    $('#confirm-delete-reports-btn').click(function() {
+    $(document).on('click', '#confirm-delete-reports-btn', function() {
       animateLoading();
     });
   }
-
-
-  $('.reports-index').on('keyup', '.report-search', function() {
-    REPORTS_TABLE.search($(this).val()).draw();
-  });
 
   $('.reports-index').on('click', '.generate-docx', function(e) {
     var reportId = $(this).closest('.report-row').attr('data-id');

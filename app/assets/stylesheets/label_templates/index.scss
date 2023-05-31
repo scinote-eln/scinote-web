@@ -55,7 +55,7 @@
 }
 
 .label-templates-datatable {
-  --content-header-size: 5em;
+  --content-header-size: 3.5rem;
   height: calc(100vh - var(--navbar-height) - var(--content-header-size));
 
   #label-templates-table_wrapper {
@@ -68,14 +68,27 @@
       display: flex;
       flex-direction: column;
       flex-grow: 1;
-      height: calc(100% - var(--datatable-pagination-row));
+      height: calc(100% - var(--datatable-pagination-row) - 3.5rem);
 
       .dataTables_scrollHead {
         flex-shrink: 0;
+
+        th:first-child {
+          text-align: center;
+          vertical-align: middle;
+        }
       }
 
       .dataTables_scrollBody {
         height: 100%;
+
+        td {
+          white-space: nowrap;
+        }
+
+        td:nth-child(2) {
+          text-align: center;
+        }
       }
     }
 
@@ -85,7 +98,9 @@
   }
 
   #label-template-selected {
-    padding-right: 0;
+    padding-right: 6px;
+    text-align: center;
+    vertical-align: middle;
 
     &::after {
       display: none;
@@ -94,8 +109,13 @@
 }
 
 .label-template-name {
-  align-items: center;
-  display: flex;
+  vertical-align: middle;
+
+  .label-info-link {
+    max-width: 16rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .label-template-icon {

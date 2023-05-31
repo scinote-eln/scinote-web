@@ -6,19 +6,23 @@ class MyModulesController < ApplicationController
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
   include MyModulesHelper
+  include Breadcrumbs
 
-  before_action :load_vars, except: %i(restore_group create new save_table_state)
+  before_action :load_vars, except: %i(restore_group create new save_table_state my_module_filter actions_toolbar)
   before_action :load_experiment, only: %i(create new)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_archive_permissions, only: %i(update)
   before_action :check_manage_permissions, only: %i(
     description due_date update_description update_protocol_description update_protocol
   )
-  before_action :check_read_permissions, except: %i(create new update update_description
-                                                    update_protocol_description restore_group save_table_state)
+  before_action :check_read_permissions, except: %i(create new update update_description my_module_filter
+                                                    update_protocol_description restore_group
+                                                    save_table_state actions_toolbar)
   before_action :check_update_state_permissions, only: :update_state
   before_action :set_inline_name_editing, only: %i(protocols results activities archive)
   before_action :load_experiment_my_modules, only: %i(protocols results activities archive)
+  before_action :set_breadcrumbs_items, only: %i(results protocols activities archive)
+  before_action :set_navigator, only: %i(protocols results activities archive)
 
   layout 'fluid'.freeze
 
@@ -70,13 +74,13 @@ class MyModulesController < ApplicationController
 
   def show
     respond_to do |format|
-      format.json {
-        render :json => {
-          :html => render_to_string({
-            :partial => "show.html.erb"
-          })
+      format.json do
+        render json: {
+          html: render_to_string({
+                                   partial: 'show.html.erb'
+                                 })
         }
-      }
+      end
     end
   end
 
@@ -84,15 +88,15 @@ class MyModulesController < ApplicationController
   def description
     respond_to do |format|
       format.html
-      format.json {
+      format.json do
         render json: {
           html: render_to_string({
-            partial: "description.html.erb"
-          }),
+                                   partial: 'description.html.erb'
+                                 }),
           title: t('my_modules.description.title',
                    module: escape_input(@my_module.name))
         }
-      }
+      end
     end
   end
 
@@ -160,13 +164,13 @@ class MyModulesController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json {
-        render :json => {
-          :html => render_to_string({
-            :partial => "activities.html.erb"
-          })
+      format.json do
+        render json: {
+          html: render_to_string({
+                                   partial: 'activities.html.erb'
+                                 })
         }
-      }
+      end
     end
   end
 
@@ -174,15 +178,15 @@ class MyModulesController < ApplicationController
   def due_date
     respond_to do |format|
       format.html
-      format.json {
+      format.json do
         render json: {
           html: render_to_string({
-            partial: "due_date.html.erb"
-          }),
+                                   partial: 'due_date.html.erb'
+                                 }),
           title: t('my_modules.due_date.title',
                    module: escape_input(@my_module.name))
         }
-      }
+      end
     end
   end
 
@@ -194,21 +198,13 @@ class MyModulesController < ApplicationController
     start_date_changes = @my_module.changes[:started_on]
     due_date_changes = @my_module.changes[:due_date]
 
-    if @my_module.completed_on_changed? && !can_complete_my_module?(@my_module)
-      render_403 && return
-    end
+    render_403 && return if @my_module.completed_on_changed? && !can_complete_my_module?(@my_module)
 
-    if description_changed && !can_update_my_module_description?(@my_module)
-      render_403 && return
-    end
+    render_403 && return if description_changed && !can_update_my_module_description?(@my_module)
 
-    if start_date_changes.present? && !can_update_my_module_start_date?(@my_module)
-      render_403 && return
-    end
+    render_403 && return if start_date_changes.present? && !can_update_my_module_start_date?(@my_module)
 
-    if due_date_changes.present? && !can_update_my_module_start_date?(@my_module)
-      render_403 && return
-    end
+    render_403 && return if due_date_changes.present? && !can_update_my_module_start_date?(@my_module)
 
     if @my_module.archived_changed?(from: false, to: true)
       saved = @my_module.archive(current_user)
@@ -269,7 +265,7 @@ class MyModulesController < ApplicationController
       else
         format.json do
           render json: @my_module.errors,
-            status: :unprocessable_entity
+                 status: :unprocessable_entity
         end
       end
     end
@@ -277,6 +273,7 @@ class MyModulesController < ApplicationController
 
   def update_description
     render_403 && return unless can_update_my_module_description?(@my_module)
+
     old_description = @my_module.description
     respond_to do |format|
       format.json do
@@ -410,7 +407,7 @@ class MyModulesController < ApplicationController
       log_activity(:change_status_on_task_flow, @my_module, my_module_status_old: old_status_id,
                    my_module_status_new: @my_module.my_module_status.id)
 
-      return redirect_to protocols_my_module_path(@my_module)
+      redirect_to protocols_my_module_path(@my_module)
     else
       render json: { errors: @my_module.errors.messages.values.flatten.join('\n') }, status: :unprocessable_entity
     end
@@ -438,8 +435,41 @@ class MyModulesController < ApplicationController
     end
   end
 
+  def actions_toolbar
+    render json: {
+      actions:
+        Toolbars::MyModulesService.new(
+          current_user,
+          my_module_ids: params[:my_module_ids].split(',')
+        ).actions
+    }
+  end
+
   def provisioning_status
     render json: { provisioning_status: @my_module.provisioning_status }
+  end
+
+  def my_module_filter
+    readable_experiments = Experiment.readable_by_user(current_user)
+    managable_active_my_modules = MyModule.managable_by_user(current_user).active
+
+    experiment = Experiment.readable_by_user(current_user)
+                           .joins(:my_modules)
+                           .where(experiments: { id: readable_experiments })
+                           .where(my_modules: { id: managable_active_my_modules })
+                           .find_by(id: params[:experiment_id])
+
+    return render_404 if experiment.blank?
+
+    my_modules = experiment.my_modules
+                           .where(my_modules: { id: managable_active_my_modules })
+                           .distinct
+                           .search(current_user, false, params[:query], 1, current_team)
+                           .pluck(:id, :name)
+
+    return render plain: [].to_json if my_modules.blank?
+
+    render json: my_modules
   end
 
   private
@@ -606,5 +636,13 @@ class MyModulesController < ApplicationController
                  experiment: link_to(@my_module.experiment.name, my_modules_experiment_url(@my_module.experiment)),
                  my_module: link_to(@my_module.name, protocols_my_module_url(@my_module)))
     )
+  end
+
+  def set_navigator
+    @navigator = {
+      url: tree_navigator_my_module_path(@my_module),
+      archived: params[:view_mode] == 'archived',
+      id: @my_module.code
+    }
   end
 end

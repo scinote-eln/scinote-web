@@ -1,0 +1,23 @@
+.sci--layout-navigation-navigator {
+  .menu-item:not(.active):hover {
+    background-color: var(--sn-super-light-grey);
+
+    a:not(.no-hover) {
+      color: var(--sn-blue);
+    }
+
+    a.no-hover {
+      color: var(--sn-science-blue-hover);
+    }
+  }
+
+  .menu-item.active:hover {
+    a:not(.no-hover) {
+      color: var(--sn-blue);
+    }
+
+    a.no-hover {
+      color: var(--sn-science-blue-hover);
+    }
+  }
+}

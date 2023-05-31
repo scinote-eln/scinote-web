@@ -1,4 +1,17 @@
 .repositories-index {
+  .content-body {
+    --content-header-size: 3.5rem;
+    height: calc(100vh - var(--navbar-height) - var(--content-header-size));
+  }
+
+  .view-switch {
+    margin: 0 auto;
+  }
+
+  .toolbar-wrapper {
+    display: flex;
+    justify-content: space-between;
+  }
   &.active {
     [data-view-mode="archived"] {
       display: none !important;
@@ -43,7 +56,105 @@
 }
 
 .main-actions {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+
+  .view-switch {
+    .caret {
+      margin: 8px 0 8px 8px;
+    }
+
+    .view-switch-button {
+      outline: 1px solid $color-alto;
+    }
+
+    &.open {
+      .caret {
+        transform: rotateX(180deg);
+      }
+    }
+
+    .dropdown-menu {
+      @include font-button;
+      min-width: 100%;
+      padding: 0;
+
+      .divider-label {
+        @include font-small;
+        color: $color-silver-chalice;
+        padding: .25em 1em;
+      }
+
+      .divider {
+        margin: 0;
+      }
+
+      li {
+        cursor: pointer;
+        padding: .5em 1em;
+        white-space: nowrap;
+
+        .button-icon {
+          margin-right: .5em;
+        }
+
+        &:hover:not(.divider-label) {
+          background: $color-concrete;
+        }
+
+        .btn {
+          height: 36px;
+        }
+
+        a {
+          display: inline-block;
+          margin: -1em;
+          padding: .5em 1em;
+          width: calc(100% + 2em);
+
+          &.selected::after {
+            @include font-awesome;
+            content: $font-fas-check;
+            margin-left: auto;
+            position: absolute;
+            right: 1em;
+          }
+        }
+      }
+    }
+
+    .cards-switch {
+      &.active::after {
+        @include font-awesome;
+        content: "\f00c";
+        position: absolute;
+        right: 1em;
+      }
+    }
+  }
+
   .dropdown-menu {
     font-size: 14px;
+  }
+}
+
+
+#repositoriesList_wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+
+  .dataTables_scroll {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    height: calc(100% - var(--datatable-pagination-row) - 4rem);
+    z-index: 1;
+  }
+
+  .dataTables_scrollHead {
+    flex-shrink: 0;
   }
 }

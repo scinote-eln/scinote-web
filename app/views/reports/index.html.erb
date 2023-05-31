@@ -11,35 +11,31 @@
 <div class="content-pane flexible reports-index">
   <%= render partial: 'reports/index_header' %>
   <div id="content-reports-index">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="reports-datatable">
-          <table id="reports-table"
-                 class="table"
-                 data-source="<%= reports_datatable_path(format: :json) %>">
-            <thead>
-              <tr>
-                <th id="select-all">
-                  <div class="sci-checkbox-container">
-                    <input name="select_all" type="checkbox" class="sci-checkbox">
-                    <span class="sci-checkbox-label"></span>
-                  </div>
-                </th>
-                <th id="project-name"><%= t('projects.reports.index.thead_project_name') %></th>
-                <th id="report-name"><%= t('projects.reports.index.thead_name') %></th>
-                <th id="report-id"><%= t('projects.reports.index.thead_id') %></th>
-                <th id="report-pdf"><%= t('projects.reports.index.pdf') %></th>
-                <th id="report-docx"><%= t('projects.reports.index.docx') %></th>
-                <th id="report-created-by"><%= t('projects.reports.index.thead_created_by') %></th>
-                <th id="report-last-modified-by"><%= t('projects.reports.index.thead_last_modified_by') %></th>
-                <th id="report-created-at"><%= t('projects.reports.index.thead_created_at') %></th>
-                <th id="report-updated-at"><%= t('projects.reports.index.thead_updated_at') %></th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
+    <div class="reports-datatable">
+      <table id="reports-table"
+              class="table"
+              data-source="<%= reports_datatable_path(format: :json) %>">
+        <thead>
+          <tr>
+            <th id="select-all">
+              <div class="sci-checkbox-container">
+                <input name="select_all" type="checkbox" class="sci-checkbox">
+                <span class="sci-checkbox-label"></span>
+              </div>
+            </th>
+            <th id="project-name"><%= t('projects.reports.index.thead_project_name') %></th>
+            <th id="report-name"><%= t('projects.reports.index.thead_name') %></th>
+            <th id="report-id"><%= t('projects.reports.index.thead_id') %></th>
+            <th id="report-pdf"><%= t('projects.reports.index.pdf') %></th>
+            <th id="report-docx"><%= t('projects.reports.index.docx') %></th>
+            <th id="report-created-by"><%= t('projects.reports.index.thead_created_by') %></th>
+            <th id="report-last-modified-by"><%= t('projects.reports.index.thead_last_modified_by') %></th>
+            <th id="report-created-at"><%= t('projects.reports.index.thead_created_at') %></th>
+            <th id="report-updated-at"><%= t('projects.reports.index.thead_updated_at') %></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
   </div>
 </div>
@@ -66,9 +62,14 @@
   <% end %>
 </div>
 
+<div id="actionToolbar" data-behaviour="vue">
+  <action-toolbar actions-url="<%= actions_toolbar_reports_url %>" />
+</div>
+
 <%= render partial: 'reports/modals/regenerate' %>
 
 <%= javascript_include_tag 'reports/save_pdf_to_inventory' %>
 <%= javascript_include_tag 'reports/reports_datatable' %>
 <%= javascript_include_tag 'pdf_js' %>
 <%= stylesheet_link_tag 'pdf_js_styles' %>
+<%= javascript_include_tag "vue_components_action_toolbar" %>

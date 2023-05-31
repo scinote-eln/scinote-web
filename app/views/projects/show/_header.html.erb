@@ -1,8 +1,6 @@
 <div class="content-header sticky-header">
-  <div id="breadcrumbsWrapper">
-    <%= render partial: 'projects/index/breadcrumbs', locals: { target_folder: @project.project_folder } %>
-  </div>
   <div class="title-row">
+    <i class="sn-icon sn-icon-navigator sci--layout--navigator-open cursor-pointer p-1.5 border rounded border-sn-light-grey mr-4"></i>
     <h1 class="project-name">
       <% if @project.archived? %>
         <i class="fas fa-archive" data-view-mode="archived"></i>
@@ -19,75 +17,6 @@
         </div>
       <% end %>
     </h1>
-    <div class="sci-btn-group header-actions">
-      <!-- View switch dropdown -->
-      <%= render layout: 'shared/view_switch', locals: { disabled: false } do %>
-        <li class="view-switch-list cards-switch form-dropdown-item">
-          <%= button_to(view_type_project_path(@project, format: :json),
-                        method: :put,
-                        remote: true,
-                        class: "btn btn-light button-to #{ @current_view_type == 'cards' ? 'selected' : ''}",
-                        form_class: 'change-experiments-view-type-form',
-                        params: { project: { view_type: 'cards', project_id: @project.id } }) do %>
-            <i class="fas fa-th-large"></i>
-            <%= t('projects.index.header.cards') %>
-          <% end %>
-        </li>
-
-        <li class="view-switch-list cards-switch form-dropdown-item">
-          <%= button_to(view_type_project_path(@project, format: :json),
-                        method: :put,
-                        remote: true,
-                        class: "btn btn-light button-to #{ @current_view_type == 'table' ? 'selected' : ''}",
-                        form_class: 'change-experiments-view-type-form',
-                        params: { project: { view_type: 'table', project_id: @project.id } }) do %>
-            <i class="fas fa-list"></i>
-            <%= t('projects.index.header.table') %>
-          <% end %>
-        </li>
-
-        <% unless @project.archived?%>
-          <div role="separator" class="divider"></div>
-          <li class="view-switch-active archive-switch" data-view-mode="archived" data-url="<%= project_path(@project) %>">
-            <i class="fas fa-rocket button-icon"></i> <%= t('experiments.header.active_experiments') %>
-          </li>
-
-          <li class="view-switch-archived archive-switch" data-view-mode="active" data-url="<%= project_path(@project, view_mode: 'archived') %>">
-            <i class="fas fa-archive button-icon"></i> <%= t('experiments.header.archived_experiments') %>
-          </li>
-        <% end %>
-      <% end %>
-      <%= render layout: 'shared/filter_dropdown', locals: {
-        container_class: 'experiments-filters',
-        dropdown_title: t("filters_modal.title"),
-        search_field_history_key: 'experiment_filters_per_team'
-      } do %>
-        <%= render partial: 'shared/filter_dropdown/text_search', locals: {container_class: ''} %>
-        <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'started-on-filter', label: t("filters_modal.created_on.label"), view_mode: nil } %>
-        <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'modified-on-filter', label: t("filters_modal.updated_on.label"), view_mode: nil } %>
-        <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'archived-on-filter', label: t("filters_modal.archived_on.label"), view_mode: 'archived' } %>
-
-      <% end %>
-      <!-- Sort menu dropdown -->
-      <div class="dropdown sort-menu">
-        <button class="btn btn-light icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-          <i class="fas fa-sort-amount-up"></i>
-        </button>
-        <ul id="sortMenuDropdown" class="dropdown-menu sort-experiments-menu dropdown-menu-right" aria-labelledby="sortMenu">
-            <% %w(archived_new archived_old new old atoz ztoa id_asc id_desc).each_with_index do |sort, i| %>
-              <% if i.even? && i.positive? %>
-                <li class="divider" <%= i == 2 ? 'data-view-mode=archived' : '' %>></li>
-              <% end %>
-              <li <%= %w(archived_new archived_old).include?(sort) ? 'data-view-mode=archived' : '' %>>
-                <a class="<%= 'selected' if @current_sort == sort %>"
-                   data-sort="<%= sort %>" >
-                  <%= t("general.sort.#{sort}_html") %>
-                </a>
-              </li>
-            <% end %>
-          </ul>
-      </div>
-    </div>
   </div>
   <div id="toolbarWrapper" class="toolbar-row">
     <%= render partial: 'projects/show/toolbar' %>

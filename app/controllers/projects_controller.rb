@@ -7,8 +7,10 @@ class ProjectsController < ApplicationController
   include ProjectsHelper
   include CardsViewHelper
   include ExperimentsHelper
+  include Breadcrumbs
 
   attr_reader :current_folder
+
   helper_method :current_folder
 
   before_action :switch_team_with_param, only: :index
@@ -16,22 +18,18 @@ class ProjectsController < ApplicationController
                                      sidebar experiments_cards view_type actions_dropdown create_tag)
   before_action :load_current_folder, only: %i(index cards new show)
   before_action :check_view_permissions, except: %i(index cards new create edit update archive_group restore_group
-                                                    users_filter actions_dropdown)
+                                                    users_filter actions_dropdown project_filter actions_toolbar)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
   before_action :load_exp_sort_var, only: :show
   before_action :reset_invalid_view_state, only: %i(index cards show)
   before_action :set_folder_inline_name_editing, only: %i(index cards)
-
+  before_action :set_breadcrumbs_items, only: %i(index show)
+  before_action :set_navigator, only: %i(index show)
+  before_action :set_current_projects_view_type, only: %i(index cards)
   layout 'fluid'
 
-  def index
-    if current_team
-      view_state = current_team.current_view_state(current_user)
-      @current_sort = view_state.state.dig('projects', projects_view_mode, 'sort') || 'atoz'
-      @current_view_type = view_state.state.dig('projects', 'view_type')
-    end
-  end
+  def index; end
 
   def cards
     overview_service = ProjectsOverviewService.new(current_team, current_user, current_folder, params)
@@ -77,7 +75,7 @@ class ProjectsController < ApplicationController
         toolbar_html: render_to_string(partial: 'projects/index/toolbar.html.erb'),
         cards_html: render_to_string(
           partial: 'projects/index/team_projects.html.erb',
-          locals: { cards: cards }
+          locals: { cards: cards, view_mode: params[:view_mode] }
         )
       }
     end
@@ -105,6 +103,23 @@ class ProjectsController < ApplicationController
         }
       )
     }
+  end
+
+  def project_filter
+    readable_experiments = Experiment.readable_by_user(current_user)
+    managable_active_my_modules = MyModule.managable_by_user(current_user).active
+
+    projects = Project.readable_by_user(current_user)
+                      .joins(experiments: :my_modules)
+                      .where(experiments: { id: readable_experiments })
+                      .where(my_modules: { id: managable_active_my_modules })
+                      .search(current_user, false, params[:query], 1, current_team)
+                      .distinct
+                      .pluck(:id, :name)
+
+    return render plain: [].to_json if projects.blank?
+
+    render json: projects
   end
 
   def new
@@ -204,9 +219,7 @@ class ProjectsController < ApplicationController
           # Redirect URL for archive view is different as for other views.
           if project_params[:archived] == 'false'
             # The project should be restored
-            unless @project.archived
-              @project.restore(current_user)
-            end
+            @project.restore(current_user) unless @project.archived
           elsif @project.archived
             # The project should be archived
             @project.archive(current_user)
@@ -245,7 +258,7 @@ class ProjectsController < ApplicationController
   end
 
   def archive_group
-    projects = current_team.projects.active.where(id: params[:projects_ids])
+    projects = current_team.projects.active.where(id: params[:project_ids])
     counter = 0
     projects.each do |project|
       next unless can_archive_project?(project)
@@ -285,7 +298,7 @@ class ProjectsController < ApplicationController
   end
 
   def restore_group
-    projects = current_team.projects.archived.where(id: params[:projects_ids])
+    projects = current_team.projects.archived.where(id: params[:project_ids])
     counter = 0
     projects.each do |project|
       next unless can_restore_project?(project)
@@ -325,6 +338,7 @@ class ProjectsController < ApplicationController
       cards_html: render_to_string(
         partial: 'projects/show/experiments_list',
         locals: { cards: cards,
+                  view_mode: params[:view_mode],
                   filters_included: filters_included? }
       )
     }
@@ -332,17 +346,17 @@ class ProjectsController < ApplicationController
 
   def notifications
     @modules = @project
-      .assigned_modules(current_user)
-      .order(due_date: :desc)
+               .assigned_modules(current_user)
+               .order(due_date: :desc)
     respond_to do |format|
-      #format.html
-      format.json {
-        render :json => {
-          :html => render_to_string({
-            :partial => "notifications.html.erb"
-          })
+      # format.html
+      format.json do
+        render json: {
+          html: render_to_string({
+                                   partial: 'notifications.html.erb'
+                                 })
         }
-      }
+      end
     end
   end
 
@@ -371,6 +385,17 @@ class ProjectsController < ApplicationController
         )
       }
     end
+  end
+
+  def actions_toolbar
+    render json: {
+      actions:
+        Toolbars::ProjectsService.new(
+          current_user,
+          project_ids: params[:project_ids].split(','),
+          project_folder_ids: params[:project_folder_ids].split(',')
+        ).actions
+    }
   end
 
   private
@@ -476,5 +501,34 @@ class ProjectsController < ApplicationController
             team: project.team,
             project: project,
             message_items: message_items)
+  end
+
+  def set_navigator
+    @navigator = if @project
+                   {
+                     url: tree_navigator_project_path(@project),
+                     archived: params[:view_mode] == 'archived',
+                     id: @project.code
+                   }
+                 elsif current_folder
+                   {
+                     url: tree_navigator_project_folder_path(current_folder),
+                     archived: params[:view_mode] == 'archived',
+                     id: current_folder.code
+                   }
+                 else
+                   {
+                     url: navigator_projects_path,
+                     archived: params[:view_mode] == 'archived'
+                   }
+                 end
+  end
+
+  def set_current_projects_view_type
+    if current_team
+      view_state = current_team.current_view_state(current_user)
+      @current_sort = view_state.state.dig('projects', projects_view_mode, 'sort') || 'atoz'
+      @current_view_type = view_state.state.dig('projects', 'view_type')
+    end
   end
 end

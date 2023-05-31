@@ -24,14 +24,15 @@ module Reports::Docx::DrawStep
       ), color: color[:gray]
     end
 
-    step.step_orderable_elements.order(:position).each do |e|
-      if e.orderable_type == 'StepTable' && @settings.dig('task', 'protocol', 'step_tables')
-        draw_step_table(e.orderable.table)
+    step.step_orderable_elements.order(:position).each do |element|
+      case element.orderable_type
+      when 'StepTable'
+        handle_step_table(element.orderable.table)
+      when 'Checklist'
+        handle_checklist(element.orderable)
+      when 'StepText'
+        handle_step_text(element.orderable)
       end
-      if e.orderable_type == 'Checklist' && @settings.dig('task', 'protocol', 'step_checklists')
-        draw_step_checklist(e.orderable)
-      end
-      draw_step_text(e.orderable) if e.orderable_type == 'StepText' && @settings.dig('task', 'protocol', 'step_texts')
     end
     if @settings.dig('task', 'protocol', 'step_files')
       step.assets.each do |asset|
@@ -43,5 +44,28 @@ module Reports::Docx::DrawStep
 
     @docx.p
     @docx.p
+  end
+
+  def handle_step_table(table)
+    has_step_well_plates = @settings.dig('task', 'protocol', 'step_well_plates')
+    has_step_tables = @settings.dig('task', 'protocol', 'step_tables')
+
+    if table.metadata.present?
+      if has_step_well_plates && table.metadata['plateTemplate']
+        draw_step_table(table, 'step_well_plates_table')
+      elsif has_step_tables && !table.metadata['plateTemplate']
+        draw_step_table(table, 'step_table')
+      end
+    elsif has_step_tables
+      draw_step_table(table, 'step_table')
+    end
+  end
+
+  def handle_checklist(checklist)
+    draw_step_checklist(checklist) if @settings.dig('task', 'protocol', 'step_checklists')
+  end
+
+  def handle_step_text(text)
+    draw_step_text(text) if @settings.dig('task', 'protocol', 'step_texts')
   end
 end

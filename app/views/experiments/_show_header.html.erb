@@ -1,8 +1,6 @@
 <div class="content-header sticky-header">
-  <div id="breadcrumbsWrapper">
-    <%= render partial: 'projects/index/breadcrumbs', locals: {target_folder: @experiment.project.project_folder, project: @experiment.project, experiment: @experiment} %>
-  </div>
   <div class="title-row">
+    <i class="sn-icon sn-icon-navigator sci--layout--navigator-open cursor-pointer p-1.5 border rounded border-sn-light-grey mr-4"></i>
     <h1 class="experimnet-name" data-toggle="tooltip" data-placement="bottom" title="<%= @experiment.name %>">
       <% if @experiment.archived? %>
         <i class="fas fa-archive" data-view-mode="archived"></i>
@@ -19,110 +17,5 @@
         </div>
       <% end %>
     </h1>
-    <div class="header-actions experiment-header">
-      <% if can_manage_experiment?(@experiment) || can_clone_experiment?(@experiment)  %>
-        <!-- experiment actions -->
-        <span class="dropdown actions-button">
-          <button class="btn btn-light dropdown-toggle" type="button" id="exActionsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            <span class="hidden-xs"><%= t('experiments.canvas.actions') %></span>
-            <span class="visible-xs-inline"><i class="fas fa-sort"></i></span>
-            <span class="caret"></span>
-          </button>
-          <%= render partial: 'experiments/dropdown_actions.html.erb',
-                              locals: { project: @project, experiment: @experiment, action_name: action_name } %>
-      </span>
-      <% end %>
-      <%= render layout: 'shared/view_switch', locals: { disabled: false } do %>
-          <% if params[:view_mode] == 'archived' || params[:action] == "module_archive" %>
-            <li class="form-dropdown-item">
-              <%= button_to(view_type_experiment_path(@experiment, view_mode: 'archived'),
-                            method: :put,
-                            remote: true,
-                            class: "btn btn-light button-to #{ 'selected' if action_name == 'module_archive' }",
-                            form_class: 'change-my-modules-view-type-form',
-                            params: { experiment: { view_type: 'canvas', id: @experiment.id } }) do %>
-                <i class="fas fa-th-large fa-fw"></i>&nbsp;
-                <%= t('experiments.table.view.cards') %>
-              <% end %>
-            </li>
-            <li class="form-dropdown-item">
-              <%= button_to(view_type_experiment_path(@experiment, view_mode: 'archived'),
-                            method: :put,
-                            remote: true,
-                            class: "btn btn-light button-to #{ 'selected' if action_name == 'table' }",
-                            form_class: 'change-my-modules-view-type-form',
-                            params: { experiment: { view_type: 'table', id: @experiment.id  } }) do %>
-                <i class="fas fa-list fa-fw"></i>&nbsp;
-                <%= t('experiments.table.view.table') %>
-              <% end %>
-            </li>
-          <% else %>
-            <li class="form-dropdown-item">
-            <%= button_to(view_type_experiment_path(@experiment),
-                          method: :put,
-                          remote: true,
-                          class: "btn btn-light button-to #{'selected' if action_name == 'canvas'}",
-                          form_class: 'change-my-modules-view-type-form',
-                          params: { experiment: { view_type: 'canvas', id: @experiment.id } }) do %>
-                <i class="fas fa-dice-four button-icon"></i>
-                <%= t('experiments.table.view.canvas') %>
-              <% end %>
-            </li>
-            <li class="form-dropdown-item">
-              <%= button_to(view_type_experiment_path(@experiment),
-                            method: :put,
-                            remote: true,
-                            class: "btn btn-light button-to #{ 'selected' if action_name == 'table' }",
-                            form_class: 'change-my-modules-view-type-form',
-                            params: { experiment: { view_type: 'table', id: @experiment.id  } }) do %>
-                <i class="fas fa-list button-icon"></i>
-                <%= t('experiments.table.view.table') %>
-              <% end %>
-            </li>
-          <% end %>
-
-          <% if (action_name == 'module_archive' || params[:view_mode] == 'archived') %>
-            <% unless @experiment.archived_branch? %>
-              <div role="separator" class="divider"></div>
-              <li>
-                <%= link_to my_modules_experiment_path(@experiment) do %>
-                  <i class="fas fa-rocket button-icon"></i>
-                  <%= t('experiments.table.view.active_tasks') %>
-                <% end %>
-              </li>
-            <% end %>
-          <% else %>
-            <div role="separator" class="divider"></div>
-            <li>
-              <%= link_to my_modules_experiment_path(@experiment, view_mode: :archived) do %>
-                <i class="fas fa-archive button-icon"></i>
-                <%= t('experiments.table.view.archived_tasks') %>
-              <% end %>
-            </li>
-          <% end %>
-      <% end %>
-      <% if action_name == 'table' %>
-        <%= render partial: 'table_filters.html.erb' %>
-
-        <div class="dropdown sort-menu">
-          <button class="btn btn-light icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            <i class="fas fa-sort-amount-up"></i>
-          </button>
-          <ul id="sortMenuDropdown" class="dropdown-menu sort-task-menu <%= params[:view_mode] %> dropdown-menu-right" aria-labelledby="sortMenu">
-              <% %w(atoz ztoa due_first due_last archived_old archived_new).each_with_index do |sort, i| %>
-                <% if i.even? && i.positive? %>
-                  <li class="divider" <%= i > 3 ? 'data-view-mode=archived' : '' %>></li>
-                <% end %>
-                <li <%= %w(archived_new archived_old).include?(sort) ? 'data-view-mode=archived' : '' %>>
-                  <a class="<%= 'selected' if @current_sort == sort %>"
-                    data-sort="<%= sort %>" >
-                    <%= t("general.sort.#{sort}_html") %>
-                  </a>
-                </li>
-              <% end %>
-            </ul>
-        </div>
-      <% end %>
-    </div>
   </div>
 </div>

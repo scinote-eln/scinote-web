@@ -1,0 +1,115 @@
+.sn-select {
+  border: 1px solid;
+  border-color: var(--sn-grey);
+  border-radius: 4px;
+  cursor: pointer;
+  padding: .5em;
+  position: relative;
+
+  &.sn-select--blank {
+    .sn-select__value {
+      color: var(--sn-grey);
+      font-style: italic;
+    }
+  }
+
+  &.sn-select--search.sn-select--open {
+    .sn-select__value {
+      display: none;
+    }
+  }
+
+  &.sn-select--search:not(.sn-select--open) {
+    line-height: normal;
+  }
+
+  .sn-select__value {
+    all: unset;
+    display: inline-block;
+    overflow: hidden;
+    padding-right: 1.5em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: calc(100% - 1.5em);
+  }
+
+  &:hover {
+    background: var(--sn-sleepy-grey);
+  }
+
+  &.disabled {
+    background: var(--sn-sleepy-grey);
+    cursor: default;
+    pointer-events: none;
+
+    .caret {
+      border-top-color: var(--sn-grey);
+    }
+  }
+
+  .sn-select__options {
+    display: none;
+  }
+
+  .sn-select__caret {
+    position: absolute;
+    right: 1em;
+    top: 1.1em;
+  }
+
+  .sn-select__search-input {
+    background: transparent;
+    border: 0;
+    display: none;
+    outline: 0;
+    width: calc(100% - 1.5em);
+  }
+
+  &.sn-select--open {
+    background: $color-white;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-color: var(--sn-science-blue);
+
+    .sn-select__search-input {
+      display: block;
+    }
+
+    .sn-select__caret {
+      transform: rotate(180deg);
+    }
+
+    .sn-select__options {
+      background: var(--sn-white);
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 4px;
+      box-shadow: $flyout-shadow;
+      display: block;
+      left: 0;
+      max-height: 300px;
+      overflow: hidden;
+      overflow-y: scroll;
+      top: 2.5em;
+      width: 100%;
+      z-index: 9999;
+    }
+
+    .sn-select__option {
+      padding: .5em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: calc(100%);
+    }
+
+    .sn-select__no-options {
+      color: var(--sn-grey);
+      padding: .5em;
+    }
+
+    .sn-select__option:hover {
+      background: var(--sn-blue);
+      color: var(--sn-white);
+    }
+  }
+}

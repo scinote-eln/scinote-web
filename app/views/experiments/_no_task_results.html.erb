@@ -3,3 +3,13 @@
   <div class="no-results-title"><%= t('projects.index.no_results_found') %></div>
   <div class="no-results-description"><%= t('projects.index.no_results_description') %></div>
 </div>
+
+<div class="no-data-container pt-10">
+  <% if params[:view_mode] == 'archived' %>
+    <em><%= t('experiments.empty_state.no_archived_modules') %></em>
+  <% elsif  @experiment.archived_branch? %>
+    <em><%= t('experiments.empty_state.no_active_modules_archived_branch') %></em>
+  <% else %>
+    <em><%= t('experiments.empty_state.no_active_modules') %></em>
+  <% end %>
+</div>
