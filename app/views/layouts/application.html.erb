@@ -12,7 +12,7 @@
     <% end %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
-
+    <%= csp_meta_tag %>
     <% if ::NewRelic::Agent.instance.started? %>
       <%= ::NewRelic::Agent.browser_timing_header(controller.request.content_security_policy_nonce) %>
     <% end %>
