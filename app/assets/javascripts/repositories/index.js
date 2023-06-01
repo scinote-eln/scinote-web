@@ -1,5 +1,6 @@
 /* global I18n animateSpinner HelperModule
           DataTableHelpers DataTableCheckboxes notTurbolinksPreview */
+/* eslint-disable no-param-reassign */
 (function() {
   'use strict';
 
@@ -140,6 +141,9 @@
           }
 
           if (CHECKBOX_SELECTOR) CHECKBOX_SELECTOR.checkRowStatus(row);
+        },
+        stateLoadParams: function(_, state) {
+          state.search.search = '';
         }
       });
     });
