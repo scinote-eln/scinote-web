@@ -6,12 +6,12 @@
   <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="viewSwitchButton">
     <% if switchable %>
       <li>
-        <%= link_to active_url, class: "#{ 'form-dropdown-state-item' unless archived }" do %>
+        <%= link_to active_url, class: "#{ 'form-dropdown-state-item prevent-shrink' unless archived }" do %>
           <%= t('toolbar.active_state') %>
         <% end %>
       </li>
       <li>
-        <%= link_to archived_url, class: "#{ 'form-dropdown-state-item' if archived }"  do %>
+        <%= link_to archived_url, class: "#{ 'form-dropdown-state-item prevent-shrink' if archived }"  do %>
           <%= t('toolbar.archived_state') %>
         <% end %>
       </li>

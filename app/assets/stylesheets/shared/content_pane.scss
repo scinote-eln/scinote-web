@@ -184,6 +184,24 @@
       padding: 1em 1.5rem;
       width: calc(100% + 3rem);
     }
+
+    .narrow {
+      .btn:not(.prevent-shrink) {
+        padding: 7px;
+        width: 36px;
+      }
+
+      .hidden-xs {
+        display: none;
+      }
+
+      .left,
+      .middle,
+      .right {
+        display: flex;
+        flex-direction: inherit;
+      }
+    }
   }
 
   &[data-toolbar-visible="false"] {
