@@ -80,7 +80,7 @@
 
     modal.off('show.bs.modal').on('show.bs.modal', function() {
       setTimeout(() => {
-        $('.modal-invite-users').find('.search-field')[0].focus()
+        $('.modal-invite-users').find('.search-field')[0].focus();
       }, 200);
       // This cannot be scoped outside this function
       // because it is generated via JS

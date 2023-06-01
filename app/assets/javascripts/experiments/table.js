@@ -257,8 +257,8 @@ var ExperimnetTable = {
   initManageUsersDropdown: function() {
     $(this.table).on('show.bs.dropdown', '.assign-users-dropdown', (e) => {
       setTimeout(() => {
-        $('.sci-input-field.user-search').each(function(index) {
-          this.focus()
+        $('.sci-input-field.user-search').each(function() {
+          this.focus();
         });
       }, 200);
       let usersList = $(e.target).find('.users-list');
