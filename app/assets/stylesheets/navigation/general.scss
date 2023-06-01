@@ -1,4 +1,8 @@
 body {
+  min-width: 1140px;
+}
+
+body.navigator-collapsed {
   min-width: 900px;
 }
 

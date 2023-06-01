@@ -46,7 +46,11 @@ window.addEventListener('DOMContentLoaded', () => {
       navigatorCollapsed: function () {
         let stateUrl = $('#sciNavigationNavigatorContainer').attr('data-navigator-state-url');
         $('.sci--layout').attr('data-navigator-collapsed', this.navigatorCollapsed);
+        $('body').toggleClass('navigator-collapsed', this.navigatorCollapsed);
         $.post(stateUrl, {state: this.navigatorCollapsed ? 'collapsed' : 'open'});
+
+        // refresh action toolbar width on navigator toggle, take into account transition time of .4s
+        if (window.actionToolbarComponent) setTimeout(window.actionToolbarComponent.setWidth, 401);
       }
     }
   });
