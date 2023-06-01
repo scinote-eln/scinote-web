@@ -1,5 +1,5 @@
 /* global I18n DataTableHelpers HelperModule */
-/* eslint-disable no-use-before-define */
+/* eslint-disable no-use-before-define no-param-reassign */
 
 (function() {
   'use strict';
@@ -282,6 +282,9 @@
         initRefreshFluicsButton();
         window.initActionToolbar();
         window.actionToolbarComponent.setBottomOffset(68);
+      },
+      stateLoadParams: function(_, state) {
+        state.search.search = '';
       }
     });
   }
