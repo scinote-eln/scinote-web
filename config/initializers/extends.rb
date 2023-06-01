@@ -555,6 +555,7 @@ class Extends
     https://marvinjs.chemicalize.com/
     newrelic.com
     *.newrelic.com
+    *.nr-data.net
   )
 end
 
