@@ -314,6 +314,11 @@ var ExperimnetTable = {
   },
   initManageUsersDropdown: function() {
     $(this.table).on('show.bs.dropdown', '.assign-users-dropdown', (e) => {
+      setTimeout(() => {
+        $('.sci-input-field.user-search').each(function() {
+          this.focus();
+        });
+      }, 200);
       let usersList = $(e.target).find('.users-list');
       let isArchivedView = $('#experimentTable').hasClass('archived');
       let viewOnly = $(e.target).data('view-only');
