@@ -1160,18 +1160,19 @@ class ProtocolsController < ApplicationController
 
   def set_breadcrumbs_items
     @breadcrumbs_items = []
+    archived_branch = params[:type] == 'archived' || @protocol&.archived?
 
     @breadcrumbs_items.push({
                               label: t('breadcrumbs.protocols'),
-                              url: protocols_path,
-                              archived: params[:type] == 'archived' || @protocol&.archived?
+                              url: archived_branch ? protocols_path(type: :archived) : protocols_path,
+                              archived: archived_branch
                             })
 
     if @protocol
       @breadcrumbs_items.push({
                                 label: @protocol.name,
                                 url: protocol_path(@protocol),
-                                archived: @protocol.archived?
+                                archived: archived_branch
                               })
     end
 

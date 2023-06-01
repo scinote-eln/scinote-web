@@ -42,26 +42,35 @@ module Breadcrumbs
   private
 
   def include_project(project)
-    @breadcrumbs_items.push({
-                              label: project.name,
-                              url: project_path(view_mode: project.archived? ? :archived : :active),
-                              archived: project.archived?
-                            })
+    archived_branch = project.archived?
+    @breadcrumbs_items.push(
+      {
+        label: project.name,
+        url: project_path(project, view_mode: archived_branch ? :archived : :active),
+        archived: archived_branch
+      }
+    )
   end
 
   def include_experiment(experiment)
-    @breadcrumbs_items.push({
-                              label: experiment.name,
-                              url: my_modules_experiment_path(experiment),
-                              archived: experiment.archived_branch?
-                            })
+    archived_branch = experiment.archived_branch?
+    @breadcrumbs_items.push(
+      {
+        label: experiment.name,
+        url: archived_branch ? module_archive_experiment_path(experiment) : my_modules_experiment_path(experiment),
+        archived: archived_branch
+      }
+    )
   end
 
   def include_my_module(my_module)
-    @breadcrumbs_items.push({
-                              label: my_module.name,
-                              url: my_module_path(my_module),
-                              archived: my_module.archived_branch?
-                            })
+    archived_branch = my_module.archived_branch?
+    @breadcrumbs_items.push(
+      {
+        label: my_module.name,
+        url: my_module_path(my_module),
+        archived: archived_branch
+      }
+    )
   end
 end
