@@ -15,7 +15,8 @@ module Breadcrumbs
 
       @breadcrumbs_items.push({
                                 label: t('projects.index.breadcrumbs_root'),
-                                url: projects_path(view_mode: project&.archived? ? :archived : :active)
+                                url: projects_path(view_mode: project&.archived? ? :archived : :active),
+                                archived: project&.archived? || (!project && params[:view_mode] == 'archived')
                               })
 
       folders&.each do |project_folder|
@@ -31,12 +32,8 @@ module Breadcrumbs
 
       include_my_module(my_module) if my_module
 
-      archived_exists = @breadcrumbs_items.any? { |item| item[:archived] == true }
-
-      if params[:view_mode] == 'archived' || archived_exists
-        @breadcrumbs_items.each do |item|
-          item[:label] = "(A) #{item[:label]}"
-        end
+      @breadcrumbs_items.each do |item|
+        item[:label] = "(A) #{item[:label]}" if item[:archived]
       end
       @breadcrumbs_items
     end
@@ -47,7 +44,7 @@ module Breadcrumbs
   def include_project(project)
     @breadcrumbs_items.push({
                               label: project.name,
-                              url: project_path(project),
+                              url: project_path(view_mode: project.archived? ? :archived : :active),
                               archived: project.archived?
                             })
   end
@@ -56,7 +53,7 @@ module Breadcrumbs
     @breadcrumbs_items.push({
                               label: experiment.name,
                               url: my_modules_experiment_path(experiment),
-                              archived: experiment.archived?
+                              archived: experiment.archived_branch?
                             })
   end
 
@@ -64,7 +61,7 @@ module Breadcrumbs
     @breadcrumbs_items.push({
                               label: my_module.name,
                               url: my_module_path(my_module),
-                              archived: my_module.archived?
+                              archived: my_module.archived_branch?
                             })
   end
 end

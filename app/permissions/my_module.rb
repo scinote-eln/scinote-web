@@ -4,6 +4,7 @@ Canaid::Permissions.register_for(MyModule) do
   # Module, its experiment and its project must be active for all the specified
   # permissions
   %i(manage_my_module
+     archive_my_module
      manage_my_module_protocol
      manage_my_module_users
      manage_my_module_designated_users
@@ -48,7 +49,7 @@ Canaid::Permissions.register_for(MyModule) do
   end
 
   can :archive_my_module do |user, my_module|
-    !my_module.archived? && my_module.permission_granted?(user, MyModulePermissions::MANAGE)
+    my_module.permission_granted?(user, MyModulePermissions::MANAGE)
   end
 
   can :move_my_module do |user, my_module|
