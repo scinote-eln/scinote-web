@@ -5,13 +5,71 @@ var ExperimnetTable = {
   selectedId: [],
   table: '.experiment-table',
   tableContainer: '.experiment-table-container',
-  render: {},
   selectedMyModules: [],
   activeFilters: {},
   filters: [], // Filter {name: '', init(), closeFilter(), apply(), active(), clearFilter()}
   myModulesCurrentSort: '',
   pageSize: GLOBAL_CONSTANTS.DEFAULT_ELEMENTS_PER_PAGE,
   provisioningStatusTimeout: '',
+  render: {
+    task_name: function(data) {
+      let tooltip = ` title="${_.escape(data.name)}" data-toggle="tooltip" data-placement="bottom"`;
+      if (data.provisioning_status === 'in_progress') {
+        return `<span data-full-name="${_.escape(data.name)}">${data.name}</span>`;
+      }
+
+      return `<a
+        href="${data.url}"
+        ${tooltip}
+        title="${_.escape(data.name)}"
+        id="taskName${data.id}"
+        data-full-name="${_.escape(data.name)}">${data.name}</a>`;
+    },
+    id: function(data) {
+      return `
+        <div>${data.id}</div>
+      `;
+    },
+    due_date: function(data) {
+      return data.data;
+    },
+    archived: function(data) {
+      return data;
+    },
+    age: function(data) {
+      return data;
+    },
+    results: function(data) {
+      return `<a href="${data.url}">${data.count}</a>`;
+    },
+    status: function(data) {
+      return `<div class="my-module-status" style="background-color: ${data.color}">${data.name}</div>`;
+    },
+    assigned: function(data) {
+      return data.html;
+    },
+    tags: function(data) {
+      const value = parseInt(data.tags, 10) === 0 ? I18n.t('experiments.table.add_tag') : data.tags;
+
+      if (data.tags === 0 && !data.can_create) {
+        return `<span class="disabled">${I18n.t('experiments.table.not_set')}</span>`;
+      }
+
+      return `<a href="${data.edit_url}"
+                id="myModuleTags${data.my_module_id}"
+                data-remote="true"
+                class="edit-tags-link">${value}</a>`;
+    },
+    comments: function(data) {
+      if (data.count === 0 && !data.can_create) return '<span class="disabled">0</span>';
+      return `<a href="#"
+        class="open-comments-sidebar" tabindex=0 id="comment-count-${data.id}"
+        data-object-type="MyModule" data-object-id="${data.id}">
+          ${data.count > 0 ? data.count : '+'}
+          ${data.count_unseen > 0 ? `<span class="unseen-comments"> ${data.count_unseen} </span>` : ''}
+      </a>`;
+    }
+  },
   getUrls: function(id) {
     return $(`.table-row[data-id="${id}"]`).data('urls');
   },
@@ -648,73 +706,6 @@ var ExperimnetTable = {
     this.initManageUsersDropdown();
     this.initModalInputFocus();
   }
-};
-
-ExperimnetTable.render.task_name = function(data) {
-  let tooltip = ` title="${_.escape(data.name)}" data-toggle="tooltip" data-placement="bottom"`;
-  if (data.provisioning_status === 'in_progress') {
-    return `<span data-full-name="${_.escape(data.name)}">${data.name}</span>`;
-  }
-
-  return `<a
-    href="${data.url}"
-    ${tooltip}
-    title="${_.escape(data.name)}"
-    id="taskName${data.id}"
-    data-full-name="${_.escape(data.name)}">${data.name}</a>`;
-};
-
-ExperimnetTable.render.id = function(data) {
-  return `
-    <div>${data.id}</div>
-  `;
-};
-
-ExperimnetTable.render.due_date = function(data) {
-  return data.data;
-};
-
-ExperimnetTable.render.archived = function(data) {
-  return data;
-};
-
-ExperimnetTable.render.age = function(data) {
-  return data;
-};
-
-ExperimnetTable.render.results = function(data) {
-  return `<a href="${data.url}">${data.count}</a>`;
-};
-
-ExperimnetTable.render.status = function(data) {
-  return `<div class="my-module-status" style="background-color: ${data.color}">${data.name}</div>`;
-};
-
-ExperimnetTable.render.assigned = function(data) {
-  return data.html;
-};
-
-ExperimnetTable.render.tags = function(data) {
-  const value = parseInt(data.tags, 10) === 0 ? I18n.t('experiments.table.add_tag') : data.tags;
-
-  if (data.tags === 0 && !data.can_create) {
-    return `<span class="disabled">${I18n.t('experiments.table.not_set')}</span>`;
-  }
-
-  return `<a href="${data.edit_url}"
-             id="myModuleTags${data.my_module_id}"
-             data-remote="true"
-             class="edit-tags-link">${value}</a>`;
-};
-
-ExperimnetTable.render.comments = function(data) {
-  if (data.count === 0 && !data.can_create) return '<span class="disabled">0</span>';
-  return `<a href="#"
-    class="open-comments-sidebar" tabindex=0 id="comment-count-${data.id}"
-    data-object-type="MyModule" data-object-id="${data.id}">
-      ${data.count > 0 ? data.count : '+'}
-      ${data.count_unseen > 0 ? `<span class="unseen-comments"> ${data.count_unseen} </span>` : ''}
-  </a>`;
 };
 
 // Filters
