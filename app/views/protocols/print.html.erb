@@ -98,7 +98,7 @@
         <div class="print-asset thumbnail">
           <div class="print-asset-image">
             <% if asset.previewable? %>
-              <%= image_tag asset.blob.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT).processed %>
+              <%= image_tag asset.medium_preview %>
             <% end %>
             <p><%= asset.render_file_name %></p>
           </div>
