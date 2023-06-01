@@ -269,6 +269,9 @@ var ProtocolsIndex = (function() {
         initProtocolsFilters();
         initRowSelection();
       },
+      stateLoadParams: function(_, state) {
+        state.search.search = '';
+      },
       stateLoadCallback: function() {
         // Load the table state for the current team
         var state = localStorage.getItem(`datatables_protocols_state/${protocolsTableEl.data('team-id')}/${repositoryType}`);

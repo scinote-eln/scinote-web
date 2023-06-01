@@ -49,7 +49,7 @@
     <%= javascript_include_tag 'vue_navigation_top_menu', nonce: true %>
   </head>
   <body
-    class="<%= yield :body_class %>"
+    class="<%= yield :body_class %> <%= 'navigator-collapsed' if !@navigator || session[:navigator_collapsed] %>"
     <% if user_signed_in? && current_team.present? %>
     data-current-team-id="<%= current_team.id %>"
     data-atwho-users-url="<%= atwho_users_team_path(current_team) %>"
@@ -89,7 +89,7 @@
           <div id="no-teams-jumbotron" class="jumbotron">
             <%= image_tag "empty-screen-illustration.png", size: "500x500" %>
             <h2><%=t 'general.no_teams.title' %></h2>
-            <p data-hook="general-no-teams-text"><%=t 'general.no_teams.text' %></p>
+            <p class="no-teams-info"><%=t 'general.no_teams.text' %></p>
           </div>
         <% else %>
           <%= yield :content %>

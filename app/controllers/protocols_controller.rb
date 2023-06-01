@@ -1163,7 +1163,8 @@ class ProtocolsController < ApplicationController
 
     @breadcrumbs_items.push({
                               label: t('breadcrumbs.protocols'),
-                              url: protocols_path
+                              url: protocols_path,
+                              archived: params[:type] == 'archived' || @protocol&.archived?
                             })
 
     if @protocol
@@ -1174,12 +1175,8 @@ class ProtocolsController < ApplicationController
                               })
     end
 
-    archived_exists = @breadcrumbs_items.any? { |item| item[:archived] == true }
-
-    if params[:type] == 'archived' || archived_exists
-      @breadcrumbs_items.each do |item|
-        item[:label] = "(A) #{item[:label]}"
-      end
+    @breadcrumbs_items.each do |item|
+      item[:label] = "(A) #{item[:label]}" if item[:archived]
     end
   end
 end

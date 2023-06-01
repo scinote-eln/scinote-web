@@ -544,7 +544,8 @@ class RepositoriesController < ApplicationController
 
     @breadcrumbs_items.push({
                               label: t('breadcrumbs.inventories'),
-                              url: repositories_path
+                              url: repositories_path,
+                              archived: params[:archived] == 'true' || @repository&.archived?
                             })
 
     if @repository
@@ -555,12 +556,8 @@ class RepositoriesController < ApplicationController
                               })
     end
 
-    archived_exists = @breadcrumbs_items.any? { |item| item[:archived] == true }
-
-    if params[:archived] == 'true' || archived_exists
-      @breadcrumbs_items.each do |item|
-        item[:label] = "(A) #{item[:label]}"
-      end
+    @breadcrumbs_items.each do |item|
+      item[:label] = "(A) #{item[:label]}" if item[:archived]
     end
   end
 end

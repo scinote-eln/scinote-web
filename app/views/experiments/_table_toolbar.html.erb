@@ -1,4 +1,4 @@
-<div class="toolbar-row">
+<div class="toolbar-row" data-width-breakpoint="600">
   <span class="left">
     <% if can_manage_experiment?(@experiment) %>
       <%= link_to modules_new_experiment_path(@experiment, view_mode:'table'),
@@ -15,33 +15,31 @@
   <%= render partial: 'task_view_dropdowns.html.erb' %>
 
   <div class="content-header sticky-header">
-    <div class="title-row">
-      <div class="header-actions experiment-header">
-        <% if action_name == 'table' %>
-          <%= render partial: 'table_filters.html.erb' %>
-        <button id="taskDataDisplay" class="btn btn-light" data-toggle="modal" data-target="#tableDisplayModal">
-          <i class="fas fa-columns"></i>
-        </button>
-          <div class="dropdown sort-menu">
-            <button class="btn btn-light icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              <i class="fas fa-sort-amount-up"></i>
-            </button>
-            <ul id="sortMenuDropdown" class="dropdown-menu sort-task-menu <%= params[:view_mode] %> dropdown-menu-right" aria-labelledby="sortMenu">
-                <% %w(atoz ztoa due_first due_last archived_old archived_new).each_with_index do |sort, i| %>
-                  <% if i.even? && i.positive? %>
-                    <li class="divider" <%= i > 3 ? 'data-view-mode=archived' : '' %>></li>
-                  <% end %>
-                  <li <%= %w(archived_new archived_old).include?(sort) ? 'data-view-mode=archived' : '' %>>
-                    <a class="<%= 'selected' if @current_sort == sort %>"
-                      data-sort="<%= sort %>" >
-                      <%= t("general.sort.#{sort}_html") %>
-                    </a>
-                  </li>
+    <div class="header-actions experiment-header">
+      <% if action_name == 'table' %>
+        <%= render partial: 'table_filters.html.erb' %>
+      <button id="taskDataDisplay" class="btn btn-light" data-toggle="modal" data-target="#tableDisplayModal">
+        <i class="fas fa-columns"></i>
+      </button>
+        <div class="dropdown sort-menu">
+          <button class="btn btn-light icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <i class="fas fa-sort-amount-up"></i>
+          </button>
+          <ul id="sortMenuDropdown" class="dropdown-menu sort-task-menu <%= params[:view_mode] %> dropdown-menu-right" aria-labelledby="sortMenu">
+              <% %w(atoz ztoa due_first due_last archived_old archived_new).each_with_index do |sort, i| %>
+                <% if i.even? && i.positive? %>
+                  <li class="divider" <%= i > 3 ? 'data-view-mode=archived' : '' %>></li>
                 <% end %>
-              </ul>
-          </div>
-        <% end %>
-      </div>
+                <li <%= %w(archived_new archived_old).include?(sort) ? 'data-view-mode=archived' : '' %>>
+                  <a class="<%= 'selected' if @current_sort == sort %>"
+                    data-sort="<%= sort %>" >
+                    <%= t("general.sort.#{sort}_html") %>
+                  </a>
+                </li>
+              <% end %>
+            </ul>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>
