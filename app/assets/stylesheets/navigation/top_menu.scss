@@ -68,7 +68,12 @@
   }
 
   .dropdown-menu {
-    top: calc(50px - 0.5em);
+    top: 43px;
+    border-radius: 0;
+  }
+
+  .top-menu-user-dropdown {
+    top: 40px;
   }
 
   .dropdown-menu li a {
