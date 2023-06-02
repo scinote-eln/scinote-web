@@ -35,7 +35,9 @@
 
   <div class="panel-heading">
     <h3 class="panel-title">
-      <%= link_to my_module.name, protocols_my_module_path(my_module), title: my_module.name, class: 'my-module-title' %>
+      <%= link_to my_module.name, protocols_my_module_path(my_module, 
+                                                           view_mode: my_module.archived_branch? ? 'archived' : 'active'),
+            title: my_module.name, class: 'my-module-title' %>
     </h3>
   </div>
 
