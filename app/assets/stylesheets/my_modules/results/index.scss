@@ -11,7 +11,11 @@
   display: flex;
 
   .dropdown-menu {
-    z-index: 9;
+    z-index: 102;
+  }
+
+  .dropdown-backdrop {
+    z-index: 101;
   }
 
   .add-result-dropdown {
