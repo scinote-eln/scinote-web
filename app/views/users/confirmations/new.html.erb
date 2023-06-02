@@ -21,7 +21,7 @@
 
 
 <% if resource.errors.present? %>
-  <%= form_errors = {} %>
+  <% form_errors = {} %>
 
   <% resource.errors.each do |err, msg| %>
     <% form_errors[err] = (msg == "not found") ? ["Email not found"] : [msg] %>
