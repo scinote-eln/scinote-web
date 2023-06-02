@@ -16,7 +16,7 @@
       <div class="title-row">
         <% if templates_view_mode_archived?(type: @type) %>
           <h1>
-            <i class="fas fa-archive"></i>
+            <span><%= t('labels.archived')%></span>&nbsp;
             <%= t('protocols.index.head_title_archived') %>
           </h1>
         <% else %>
