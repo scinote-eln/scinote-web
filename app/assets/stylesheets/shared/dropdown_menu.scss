@@ -25,9 +25,8 @@
     display: block;
   }
 
-  &.active {
-    .caret {
-      transform: rotate(180deg);
-    }
+  .caret {
+    transform: rotate(90deg);
   }
+
 }

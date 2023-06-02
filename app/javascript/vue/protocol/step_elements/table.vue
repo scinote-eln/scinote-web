@@ -165,25 +165,42 @@
       },
       update() {
         this.element.attributes.orderable.contents = JSON.stringify({ data: this.tableObject.getData() });
-        this.element.attributes.orderable.metadata = JSON.stringify({
-          cells: this.tableObject
-                     .getCellsMeta()
-                     .filter(e => !!e)
-                     .map((x) => {
-                          const {row, col} = x;
-                          const plugins = this.tableObject.plugin;
-                          const cellId = plugins.utils.translateCellCoords({row, col});
-                          const calculated = plugins.matrix.getItem(cellId)?.value ||
-                            this.tableObject.getDataAtCell(row, col) ||
-                            null;
-                          return {
-                            row: row,
-                            col: col,
-                            className: x.className || '',
-                            calculated: calculated
-                          }
-                      })
-        });
+        let metadata = this.element.attributes.orderable.metadata || {};
+        if (metadata.plateTemplate) {
+            this.element.attributes.orderable.metadata = JSON.stringify({
+              cells: this.tableObject
+                         .getCellsMeta()
+                         .filter(e => !!e)
+                         .map((x) => {
+                              const {row, col} = x;
+                              return {
+                                row: row,
+                                col: col,
+                                className: x.className || '',
+                              }
+                          })
+            });
+          } else {
+            this.element.attributes.orderable.metadata = JSON.stringify({
+              cells: this.tableObject
+                         .getCellsMeta()
+                         .filter(e => !!e)
+                         .map((x) => {
+                              const {row, col} = x;
+                              const plugins = this.tableObject.plugin;
+                              const cellId = plugins.utils.translateCellCoords({row, col});
+                              const calculated = plugins.matrix.getItem(cellId)?.value ||
+                                this.tableObject.getDataAtCell(row, col) ||
+                                null;
+                              return {
+                                row: row,
+                                col: col,
+                                className: x.className || '',
+                                calculated: calculated
+                              }
+                          })
+            });
+        }
         this.$emit('update', this.element)
         this.ajax_update_url()
       },
@@ -198,6 +215,7 @@
         let container = this.$refs.hotTable;
         let data = JSON.parse(this.element.attributes.orderable.contents);
         let metadata = this.element.attributes.orderable.metadata || {};
+        let formulasEnabled = metadata.plateTemplate ? false : true;
 
         this.tableObject = new Handsontable(container, {
           data: data.data,
@@ -208,7 +226,7 @@
           colHeaders: tableColRowName.tableColHeaders(metadata.plateTemplate),
           cell: metadata.cells || [],
           contextMenu: this.editingTable,
-          formulas: true,
+          formulas: formulasEnabled,
           preventOverflow: 'horizontal',
           readOnly: !this.editingTable,
           afterUnlisten: () => setTimeout(this.updateTable, 100) // delay makes cancel button work
