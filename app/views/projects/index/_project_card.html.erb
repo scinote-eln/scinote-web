@@ -13,14 +13,18 @@
   </div>
 
   <div class="project-name-cell table-cell">
+    <% 
+      disabled = ''
+      disabled = 'disabled' unless can_read_project?(project)
+    %>
     <% if project.archived? %>
-      <%= link_to project_url(project, view_mode: :archived) do %>
+      <%= link_to project_url(project, view_mode: :archived), class: disabled  do %>
         <h3 class="name" title="<%= project.name %>">
           <%= project.name %>
         </h3>
       <% end %>
     <% else %>
-      <%= link_to project_url(project) do %>
+      <%= link_to project_url(project), class: 'disabled' do %>
         <h3 class="name" title="<%= project.name %>">
           <%= project.name %>
         </h3>
