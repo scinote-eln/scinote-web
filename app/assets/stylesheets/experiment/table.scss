@@ -440,7 +440,7 @@
 
   .unseen-comments {
     align-items: center;
-    background-color: $brand-complementary;
+    background-color: var(--sn-science-blue);
     border: 2px solid $color-white;
     border-radius: 50%;
     color: $color-black;
