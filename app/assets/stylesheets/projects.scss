@@ -747,6 +747,12 @@ li.module-hover {
 
             a {
               color: inherit;
+
+              &.disabled {
+                pointer-events: none;
+                color: $color-alto;
+                text-decoration: none;
+              }
             }
 
             .name {
