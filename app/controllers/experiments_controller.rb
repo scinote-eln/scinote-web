@@ -9,9 +9,11 @@ class ExperimentsController < ApplicationController
   include Breadcrumbs
 
   before_action :load_project, only: %i(new create archive_group restore_group)
-  before_action :load_experiment, except: %i(new create archive_group restore_group experiment_filter actions_toolbar)
-  before_action :check_read_permissions, except: %i(edit archive clone move new create
-                                                    archive_group restore_group experiment_filter actions_toolbar)
+  before_action :load_experiment, except: %i(new create archive_group restore_group
+                                             inventory_assigning_experiment_filter actions_toolbar)
+  before_action :check_read_permissions, except: %i(edit archive clone move new
+                                                    create archive_group restore_group
+                                                    inventory_assigning_experiment_filter actions_toolbar)
   before_action :check_canvas_read_permissions, only: %i(canvas)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: %i(edit batch_clone_my_modules)
@@ -444,14 +446,14 @@ class ExperimentsController < ApplicationController
     end
   end
 
-  def experiment_filter
+  def inventory_assigning_experiment_filter
     readable_experiments = Experiment.readable_by_user(current_user)
-    managable_active_my_modules = MyModule.managable_by_user(current_user).active
+    assignable_my_modules = MyModule.repository_row_assignable_by_user(current_user)
 
     project = Project.readable_by_user(current_user)
                      .joins(experiments: :my_modules)
                      .where(experiments: { id: readable_experiments })
-                     .where(my_modules: { id: managable_active_my_modules })
+                     .where(my_modules: { id: assignable_my_modules })
                      .find_by(id: params[:project_id])
 
     return render_404 if project.blank?
@@ -459,7 +461,7 @@ class ExperimentsController < ApplicationController
     experiments = project.experiments
                          .joins(:my_modules)
                          .where(experiments: { id: readable_experiments })
-                         .where(my_modules: { id: managable_active_my_modules })
+                         .where(my_modules: { id: assignable_my_modules })
                          .search(current_user, false, params[:query], 1, current_team)
                          .distinct
                          .pluck(:id, :name)
