@@ -97,7 +97,7 @@ class Step < ApplicationRecord
   end
 
   def self.viewable_by_user(user, teams)
-    where(protocol: Protocol.viewable_by_user(user, teams))
+    joins(:protocol).where(protocol: { my_module: MyModule.viewable_by_user(user, teams) })
   end
 
   def can_destroy?
