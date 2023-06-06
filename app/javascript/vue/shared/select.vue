@@ -77,7 +77,7 @@
             this.isOpen = false;
             this.$emit('blur');
           }
-        }, 200);
+        }, 100);
       },
       toggle() {
         if (this.isOpen && this.blurPrevented) {
@@ -93,10 +93,7 @@
           });
           this.$refs.optionsContainer.scrollTop = 0;
           this.updateOptionPosition();
-          setTimeout(() => {
-            this.$refs.optionsContainer.$el.querySelector('.ps__thumb-y').addEventListener('mousedown', this.preventBlur);
-            this.$refs.optionsContainer.$el.querySelector('.ps__thumb-y').addEventListener('mouseup', this.allowBlur);
-          }, 100);
+          this.setUpBlurHandlers();
         } else {
           this.optionPositionStyle = '';
           this.$emit('close');
@@ -121,6 +118,13 @@
         }
 
         this.optionPositionStyle = `position: fixed; top: ${top}px; left: ${left}px; width: ${width}px`
+      },
+      setUpBlurHandlers() {
+        setTimeout(() => {
+          this.$refs.optionsContainer.$el.querySelector('.ps__thumb-y').addEventListener('mousedown', this.preventBlur);
+          this.$refs.optionsContainer.$el.querySelector('.ps__thumb-y').addEventListener('mouseup', this.allowBlur);
+          document.addEventListener('mouseup', this.allowBlur);
+        }, 100);
       }
     }
   }
