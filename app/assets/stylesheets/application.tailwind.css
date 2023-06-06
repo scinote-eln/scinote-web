@@ -6,3 +6,8 @@
 html {
   font-size: 16px;
 }
+
+.border {
+  border-style: solid;
+  border-color: theme('borderColor.DEFAULT', currentColor);
+}
