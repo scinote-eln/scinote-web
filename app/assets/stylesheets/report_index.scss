@@ -34,6 +34,10 @@
       justify-content: space-between;
       height: 3.5rem;
       padding-bottom: 1em;
+
+      #reports-table_filter {
+        margin-left: auto;
+      }
     }
 
     .dataTables_scroll {

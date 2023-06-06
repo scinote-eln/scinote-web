@@ -236,6 +236,7 @@
       },
       drawCallback: function() {
         if (CHECKBOX_SELECTOR) CHECKBOX_SELECTOR.checkSelectAllStatus();
+        setTimeout(() => { REPORTS_TABLE.columns.adjust(); }, 0);
       },
       rowCallback: function(row) {
         if (CHECKBOX_SELECTOR) CHECKBOX_SELECTOR.checkRowStatus(row);
