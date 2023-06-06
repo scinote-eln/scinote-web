@@ -19,6 +19,8 @@
   }
 
   .add-result-dropdown {
+    z-index: 200;
+
     li {
       cursor: pointer;
       padding: .5em 1em;
