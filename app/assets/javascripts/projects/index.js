@@ -577,7 +577,7 @@ var ProjectsIndex = (function() {
         createdOnFromFilter: selectDate($createdOnFromFilter),
         createdOnToFilter: selectDate($createdOnToFilter),
         membersFilter: dropdownSelector.getData($('.members-filter')),
-        lookInsideFolders: $foldersCB.prop('checked') ? 'true' : '',
+        lookInsideFolders: !!$foldersCB.prop('checked'),
         archivedOnFromFilter: selectDate($archivedOnFromFilter),
         archivedOnToFilter: selectDate($archivedOnToFilter),
         projectsViewSearch: $textFilter.val()
@@ -589,7 +589,7 @@ var ProjectsIndex = (function() {
 
       $createdOnFromFilter.val(currentFilters.createdOnFromFilter);
       $createdOnToFilter.val(currentFilters.createdOnToFilter);
-      $foldersCB.val(currentFilters.lookInsideFolders);
+      $foldersCB.attr('checked', currentFilters.lookInsideFolders);
       dropdownSelector.setData($('.members-filter'), currentFilters.membersFilter);
       $archivedOnFromFilter.val(currentFilters.archivedOnFromFilter);
       $archivedOnToFilter.val(currentFilters.archivedOnToFilter);
