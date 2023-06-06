@@ -83,6 +83,8 @@ var DasboardCalendarWidget = (function() {
   };
 }());
 
+var formatJS;
 $(document).on('turbolinks:load', function() {
   DasboardCalendarWidget.init();
+  formatJS = $('body').data('datetime-picker-format');
 });

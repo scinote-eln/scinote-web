@@ -59,11 +59,6 @@ function initFormSubmitLinks(el) {
   });
 }
 
-var formatJS;
-$(document).on("turbolinks:load", function () {
-  formatJS = $('body').data("datetime-picker-format");
-});
-
 /* Enable loading bars */
 $(document)
   .bind("ajaxSend", function(){
