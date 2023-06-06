@@ -1,8 +1,11 @@
 import TurbolinksAdapter from 'vue-turbolinks';
 import Vue from 'vue/dist/vue.esm';
 import AssignItemsToTaskModalContainer from '../../vue/assign_items_to_tasks_modal/container.vue';
+import PerfectScrollbar from 'vue2-perfect-scrollbar';
+import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css';
 
 Vue.use(TurbolinksAdapter);
+Vue.use(PerfectScrollbar);
 Vue.prototype.i18n = window.I18n;
 
 function initAssignItemsToTaskModalComponent() {

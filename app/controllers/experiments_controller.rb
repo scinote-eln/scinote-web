@@ -462,7 +462,7 @@ class ExperimentsController < ApplicationController
                          .joins(:my_modules)
                          .where(experiments: { id: readable_experiments })
                          .where(my_modules: { id: assignable_my_modules })
-                         .search(current_user, false, params[:query], 1, current_team)
+                         .search(current_user, false, params[:query], -1, current_team)
                          .distinct
                          .pluck(:id, :name)
 

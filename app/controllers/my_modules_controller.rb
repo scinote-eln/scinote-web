@@ -466,7 +466,7 @@ class MyModulesController < ApplicationController
     my_modules = experiment.my_modules
                            .where(my_modules: { id: assignable_my_modules })
                            .distinct
-                           .search(current_user, false, params[:query], 1, current_team)
+                           .search(current_user, false, params[:query], -1, current_team)
                            .pluck(:id, :name)
 
     return render plain: [].to_json if my_modules.blank?
