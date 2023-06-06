@@ -88,6 +88,13 @@ class MyModule < ApplicationRecord
     ).distinct
   }
 
+  scope :repository_row_assignable_by_user, lambda { |user|
+    active
+      .joins(user_assignments: :user_role)
+      .where(user_assignments: { user: user })
+      .where('? = ANY(user_roles.permissions)', MyModulePermissions::REPOSITORY_ROWS_ASSIGN)
+  }
+
   # A module takes this much space in canvas (x, y) in database
   WIDTH = 30
   HEIGHT = 14

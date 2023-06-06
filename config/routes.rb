@@ -361,7 +361,7 @@ Rails.application.routes.draw do
       end
 
       collection do
-        get 'project_filter'
+        get 'inventory_assigning_project_filter'
         get 'cards', to: 'projects#cards'
         get 'users_filter'
         post 'archive_group'
@@ -385,7 +385,7 @@ Rails.application.routes.draw do
 
     resources :experiments, only: %i(show edit update) do
       collection do
-        get 'experiment_filter'
+        get 'inventory_assigning_experiment_filter'
         get 'edit', action: :edit
         get 'clone_modal', action: :clone_modal
         get 'move_modal', action: :move_modal
@@ -431,10 +431,10 @@ Rails.application.routes.draw do
     # as well as 'module info' page for single module (HTML)
     resources :my_modules, path: '/modules', only: [:show, :update] do
       post 'save_table_state', on: :collection, defaults: { format: 'json' }
-      get 'module_filter', to: 'my_modules#my_module_filter', on: :collection, defaults: { format: 'json' }
 
       collection do
         get 'actions_toolbar'
+        get 'inventory_assigning_my_module_filter'
       end
 
       member do
