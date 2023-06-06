@@ -8,6 +8,9 @@ module.exports = {
     './app/javascript/**/*.vue',
     './app/views/**/*.{erb,haml,html,slim}'
   ],
+  corePlugins: {
+    preflight: false
+  },
   theme: {
     extend: {
       fontFamily: {
