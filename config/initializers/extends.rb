@@ -551,7 +551,7 @@ class Extends
 
   EXTERNAL_SERVICES = %w(
     https://www.protocols.io/
-    http://127.0.0.1:9100/available
+    http://127.0.0.1:9100/
     https://marvinjs.chemicalize.com/
     newrelic.com
     *.newrelic.com
