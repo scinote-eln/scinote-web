@@ -28,17 +28,16 @@
             }
             if (['rename-repo-modal', 'copy-repo-modal'].includes($(this).attr('id'))) {
               $(this).find('form')
-              .on('ajax:success', function(_e, data) {
-                if (data.url) {
-                  window.location = data.url;
-                } else {
-                  window.location.reload();
-                }
-              })
-              .on('ajax:error', function(_e, data) {
-                $(this).renderFormErrors('repository', data.responseJSON);
-              })
-
+                .on('ajax:success', function(_e, data) {
+                  if (data.url) {
+                    window.location = data.url;
+                  } else {
+                    window.location.reload();
+                  }
+                })
+                .on('ajax:error', function(_e, data) {
+                  $(this).renderFormErrors('repository', data.responseJSON);
+                });
             }
             $(this).find('.selectpicker').selectpicker();
           })
