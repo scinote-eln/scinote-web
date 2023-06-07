@@ -748,10 +748,14 @@ li.module-hover {
             a {
               color: inherit;
 
-              &.disabled {
+              &.disabled-link {
                 pointer-events: none;
                 color: $color-alto;
                 text-decoration: none;
+
+                .name {
+                  color: $color-alto;
+                }
               }
             }
 
