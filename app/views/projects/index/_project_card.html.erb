@@ -14,17 +14,16 @@
 
   <div class="project-name-cell table-cell">
     <% 
-      disabled = ''
-      disabled = 'disabled' unless can_read_project?(project)
+      disabled_link = 'disabled-link' unless project.permission_granted?(current_user, ProjectPermissions::READ)
     %>
     <% if project.archived? %>
-      <%= link_to project_url(project, view_mode: :archived), class: disabled  do %>
+      <%= link_to project_url(project, view_mode: :archived), class: disabled_link  do %>
         <h3 class="name" title="<%= project.name %>">
           <%= project.name %>
         </h3>
       <% end %>
     <% else %>
-      <%= link_to project_url(project), class: 'disabled' do %>
+      <%= link_to project_url(project), class: disabled_link do %>
         <h3 class="name" title="<%= project.name %>">
           <%= project.name %>
         </h3>
