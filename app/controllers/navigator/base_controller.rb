@@ -95,22 +95,22 @@ module Navigator
 
       if current_team.permission_granted?(current_user, TeamPermissions::MANAGE)
         projects_unassigned_to_team_admin = current_team.projects
-                                          .where(project_folder_id: folder)
-                                          .where('
-                                            projects.archived = :archived OR
-                                            projects.id = :project_id
-                                          ', archived: archived, project_id: project&.id || -1)
-                                          .select(
-                                            'projects.id',
-                                            'projects.name',
-                                            'projects.archived',
-                                            'FALSE AS has_children',
-                                            'TRUE AS disabled'
-                                          ).group('projects.id')
-        projects_unassigned_to_team_admin = projects_unassigned_to_team_admin.select do |p|
-          !p.permission_granted?(current_user, ProjectPermissions::READ)
+                                                        .where(project_folder_id: folder)
+                                                        .where('
+                                                          projects.archived = :archived OR
+                                                          projects.id = :project_id
+                                                        ', archived: archived, project_id: project&.id || -1)
+                                                        .select(
+                                                          'projects.id',
+                                                          'projects.name',
+                                                          'projects.archived',
+                                                          'FALSE AS has_children',
+                                                          'TRUE AS disabled'
+                                                        ).group('projects.id')
+        projects_unassigned_to_team_admin = projects_unassigned_to_team_admin.reject do |p|
+          p.permission_granted?(current_user, ProjectPermissions::READ)
         end
-        fetched_projects = fetched_projects + projects_unassigned_to_team_admin
+        fetched_projects += projects_unassigned_to_team_admin
       end
       fetched_projects
     end
