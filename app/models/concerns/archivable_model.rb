@@ -48,6 +48,11 @@ module ArchivableModel
     save!
   end
 
+  def name_with_label
+    raise NotImplementedError, "Archivable model must implement the '.archived_branch?' method!" unless respond_to?(:archived_branch?)
+    I18n.t("labels.archived") if self.archived_branch?
+  end
+
   protected
 
   def set_archive_timestamp

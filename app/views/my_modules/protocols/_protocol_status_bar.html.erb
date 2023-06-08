@@ -18,7 +18,7 @@
     <div class="dropdown-content">
         <div class="dropdown-header">
           <h2 class="protocol-name">
-            <%= t("labels.archived") if @protocol.archived? || @protocol.parent&.archived? %>&nbsp;<%= @protocol.parent&.name || @protocol.name %>
+            <%= @protocol.name_with_label %>&nbsp;<%= @protocol.parent&.name || @protocol.name %>
           </h2>
           <% if @protocol.linked? %>
             <div class="protocol-header-info">
