@@ -28,7 +28,7 @@
     <% if rows_to_assign.values.any? %>
       <div class="rows-to-assign">
         <p class="header">
-          <i class="fas fa-plus"></i>
+          <i class="sn-icon sn-icon-new-task"></i>
           <%= t('my_modules.modals.update_repository_record.newly_assigned_items') %>
         </p>
         <ul class="rows-list">
@@ -41,7 +41,7 @@
     <% if rows_to_unassign.values.any? %>
       <div class="rows-to-unassign">
         <p class="header">
-          <i class="fas fa-minus"></i>
+          <i class="sn-icon sn-icon-minus"></i>
           <%= t('my_modules.modals.update_repository_record.items_will_be_removed') %>
         </p>
         <ul class="rows-list">
@@ -78,7 +78,7 @@
 </div>
 <div class="modal-footer">
   <a class="btn btn-light" data-dismiss="modal">
-    <i class="fas fa-times"></i>
+    <i class="sn-icon sn-icon-close-remove"></i>
     <%= t('general.cancel') %>
   </a>
   <% if downstream %>

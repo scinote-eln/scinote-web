@@ -45,7 +45,7 @@
       tagClass: 'users-dropdown-list',
       inputTagMode: true,
       selectKeys: [13, 32, 44, 188],
-      customDropdownIcon: () => { return '<i class="fas fa-search right-icon"></i>'; },
+      customDropdownIcon: () => { return '<i class="sn-icon sn-icon-search right-icon"></i>'; },
       onChange: () => {
         let values = dropdownSelector.getValues(emailsInput);
         if (values.length > 0) {

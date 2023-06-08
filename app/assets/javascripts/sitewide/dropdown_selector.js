@@ -218,7 +218,7 @@ var dropdownSelector = (function() {
     if (config.customDropdownIcon) {
       return config.customDropdownIcon();
     }
-    return '<i class="fas fa-caret-down right-icon"></i><i class="fas fa-search right-icon simple-dropdown"></i>';
+    return '<i class="sn-icon sn-icon-close-hide right-icon"></i><i class="sn-icon sn-icon-search right-icon simple-dropdown"></i>';
   }
 
   // Set new data
@@ -741,7 +741,7 @@ var dropdownSelector = (function() {
       var tag = $(`<div class="${tagAppearance} ${customClass}" style="${customStyle ? customStyle(data) : ''}" >
                   <div class="tag-label">
                   </div>
-                  <i class="fas fa-times ${selector.data('config').singleSelect ? 'hidden' : ''}"></i>
+                  <i class="sn-icon sn-icon-close-remove ${selector.data('config').singleSelect ? 'hidden' : ''}"></i>
                 </div>`).insertBefore(container.find('.input-field .search-field'));
 
 

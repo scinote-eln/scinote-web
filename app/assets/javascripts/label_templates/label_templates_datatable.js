@@ -20,7 +20,7 @@
   }
 
   function renderDefaultTemplateHTML(data) {
-    return data ? '<i class="fas fa-thumbtack"></i>' : '';
+    return data ? '<i class="sn-icon sn-icon-dashboard"></i>' : '';
   }
 
   function renderNameHTML(data, type, row) {

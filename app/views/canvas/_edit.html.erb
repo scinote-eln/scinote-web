@@ -12,7 +12,7 @@
     <% if @experiment_managable %>
       <%=link_to "", type: "button", class: "btn btn-primary", id: "canvas-new-module" do %>
         <span class="hbtn-default">
-          <span class="fas fa-plus"></span>
+          <span class="sn-icon sn-icon-new-task"></span>
           <%= t("experiments.canvas.edit.new_module") %>
         </span>
         <span class="hbtn-hover">
@@ -24,7 +24,7 @@
     <div class="sci-btn-group pull-right" role="group">
       <%= link_to canvas_experiment_path(@experiment), type: "button", class: "btn btn-secondary cancel-edit-canvas" do %>
         <span class="hidden-xs"><%= t("experiments.canvas.edit.cancel") %></span>
-        <span class="fas fa-times visible-xs" style="height: 16px;margin-top: 4px;">&nbsp;</span>
+        <span class="sn-icon sn-icon-close-remove visible-xs" style="height: 16px;margin-top: 4px;">&nbsp;</span>
       <% end %>
       <%= f.submit class: "btn btn-primary", id: "canvas-save" do %>
         <span class="visibile-xs"><%= t("experiments.canvas.edit.save_short") %></span>

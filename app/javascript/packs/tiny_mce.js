@@ -74,7 +74,7 @@ window.TinyMCE = (() => {
     const lastUpdated = $(selector).data('last-updated');
     let notificationBar;
     const restoreBtn = $('<button class="btn restore-draft-btn">Restore Draft</button>');
-    const cancelBtn = $('<span class="fas fa-times"></span>');
+    const cancelBtn = $('<span class="sn-icon sn-icon-close-remove"></span>');
 
     // Check whether we have draft stored
 

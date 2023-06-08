@@ -38,7 +38,9 @@
 //= require_directory ./access_permissions
 //= require sidebar
 //= require turbolinks
-
+//= require scinote/enterprise/organization_management/application
+//= require scinote/enterprise/audit_trails/application
+//= require scinote/enterprise/electronic_signatures/application
 // Initialize links for submitting forms. This is useful for submitting
 // forms with clicking on links outside form in cases when other than
 // GET method is used.
@@ -334,7 +336,7 @@ const renderUserNamePopover = (url, fullName, email, html) => {
                   <h5 class='full-name'>${fullName}</h5>
                 </div>
                 <div class='col-xs-3 text-right'>
-                  <span class='fas fa-times' aria-hidden='true'></span>
+                  <span class='sn-icon sn-icon-close-remove' aria-hidden='true'></span>
                 </div>
               </div>
               <div class='row'>

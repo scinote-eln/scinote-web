@@ -5,7 +5,7 @@
         <input type="hidden" name="_method" value="patch">
         <div class="hidden tinymce-cancel-button tox-mbtn" tabindex="-1">
         <button type="button" tabindex="-1">
-          <span class="fas fa-times"></span>
+          <span class="sn-icon sn-icon-close-remove"></span>
           <span class="mce-txt">{{ i18n.t('general.cancel') }}</span>
         </button>
         </div>

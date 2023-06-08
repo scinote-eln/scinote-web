@@ -8,16 +8,16 @@
           %>/>
           <span class="sci-checkbox-label"></span>
         </span>
-        <i class="fas fa-caret-down " data-toggle="collapse" href="#experimentContentContainer<%= experiment.id %>" aria-expanded="false"></i>
+        <i class="sn-icon sn-icon-close-hide " data-toggle="collapse" href="#experimentContentContainer<%= experiment.id %>" aria-expanded="false"></i>
         <span class="experiment-name" title="<%= experiment.name %>">
           <%= experiment.name %>
         </span>
         <div class="move-buttons sci-btn-group">
            <button class="btn btn-light icon-btn move-up">
-              <i class="fas fa-arrow-up"></i>
+              <i class="sn-icon sn-icon-sort-up"></i>
            </button>
            <button class="btn btn-light icon-btn move-down">
-              <i class="fas fa-arrow-down"></i>
+              <i class="sn-icon sn-icon-sort-down"></i>
            </button>
         </div>
       </div>
@@ -33,7 +33,7 @@
             <span class="my-module-name" title="<%= my_module.name %>">
               <%= my_module.name %>
             </span>
-            <i class="fas fa-grip-vertical"></i>
+            <i class="sn-icon sn-icon-drag"></i>
           </li>
         <% end %>
       </ul>

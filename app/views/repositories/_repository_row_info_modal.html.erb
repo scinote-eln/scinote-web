@@ -11,7 +11,7 @@
 
       <div class="modal-body">
         <ol class="breadcrumb breadcrumb-repository">
-          <span class="fas fa-list-alt" aria-hidden="true"></span>
+          <span class="sn-icon sn-icon-inventory" aria-hidden="true"></span>
           <%= t('repositories.repository', name: @repository_row.repository.name) %>
           <%= @repository_row.repository.archived? ? I18n.t('atwho.res.archived') : '' %>
         </ol>
@@ -72,7 +72,7 @@
                       <td class="sorting_1">
                         <ol class='breadcrumb'>
                           <li>
-                            <span class='fas fa-users'></span>&nbsp;
+                            <span class='sn-icon sn-icon sn-icon-users'></span>&nbsp;
                             <%= render partial: 'search/results/partials/team_text.html.erb',
                                        locals: { team: my_module.experiment.project.team } %>
                           </li>

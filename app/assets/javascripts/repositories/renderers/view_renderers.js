@@ -185,7 +185,7 @@ $.fn.dataTable.render.AssignedTasksValue = function(data, row) {
                 <div class="sci-input-container right-icon">
                   <input id="searchAssignedTasks" type="text" class="sci-input-field search-tasks"
                     placeholder="${I18n.t('repositories.table.assigned_search')}"></input>
-                  <i class="fas fa-times-circle clear-search"></i>
+                  <i class="sn-icon sn-icon-close-remove clear-search"></i>
                 </div>
                 <div class="tasks"></div>
               </div>
@@ -195,7 +195,7 @@ $.fn.dataTable.render.AssignedTasksValue = function(data, row) {
   }
   if (row.hasActiveReminders) {
     return `<div class="dropdown row-reminders-dropdown" data-row-reminders-url="${row.rowRemindersUrl}" tabindex='-1'>
-              <i class="fas fa-bell dropdown-toggle row-reminders-icon" data-toggle="dropdown"
+              <i class="sn-icon sn-icon-notifications dropdown-toggle row-reminders-icon" data-toggle="dropdown"
                 id="rowReminders${row.DT_RowId}}"></i>
               <ul class="dropdown-menu" role="menu" aria-labelledby="rowReminders${row.DT_RowId}">
               </ul>

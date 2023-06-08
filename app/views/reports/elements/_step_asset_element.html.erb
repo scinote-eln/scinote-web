@@ -20,7 +20,7 @@
           <% if asset.file.metadata && asset.file.metadata[:asset_type] == 'bio_eddie' %>
             <%= truncate("#{asset.file.metadata[:name]}.helm", length: Constants::FILENAME_TRUNCATION_LENGTH) %>
             <a class="btn btn-light file-download-link" href="data:text/plain;charset=utf-8,<%= asset.file.metadata[:description] %>" download="<%= asset.file.metadata[:name] %>.helm" data-turbolinks="false">
-              <span class="fas fa-download"></span> <%= t('Download')%>
+              <span class="sn-icon sn-icon-export"></span> <%= t('Download')%>
             </a>
           <% else %>
             <%= truncate(asset.file_name, length: Constants::FILENAME_TRUNCATION_LENGTH) %>

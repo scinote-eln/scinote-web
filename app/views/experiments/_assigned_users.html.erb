@@ -16,14 +16,14 @@
       <% end %>
       <% if can_manage_my_module_designated_users?(user, my_module) %>
         <span class="new-user avatar-container">
-          <i class="fas fa-plus"></i>
+          <i class="sn-icon sn-icon-new-task"></i>
         </span>
       <% end %>
     </div>
     <div class="dropdown-menu">
       <div class="sci-input-container left-icon">
         <input type="text" class="sci-input-field user-search" placeholder="<%= I18n.t('experiments.table.search') %>">
-        <i class="fas fa-search"></i>
+        <i class="sn-icon sn-icon-search"></i>
       </div>
       <div class="users-list"
           data-list-url="<%= search_my_module_user_my_module_path(my_module, my_module_id: my_module.id, skip_unassigned: skip_unassigned) %>">

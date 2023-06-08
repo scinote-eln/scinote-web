@@ -2,7 +2,7 @@
   <div class="sci--navigation--notificaitons-flyout">
     <div class="sci--navigation--notificaitons-flyout-title">
       {{ i18n.t('nav.notifications.title') }}
-      <i class="fas fa-times" @click="$emit('close')"></i>
+      <i class="sn-icon sn-icon-close-remove" @click="$emit('close')"></i>
     </div>
     <div class="sci--navigation--notificaitons-flyout-tabs">
       <div class="sci--navigation--notificaitons-flyout-tab"

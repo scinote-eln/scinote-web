@@ -19,7 +19,7 @@
       </div>
       <div class="filter-remove">
         <button class="btn btn-light icon-btn " @click="$emit('filter:delete')">
-          <i class="fas fa-trash"></i>
+          <i class="sn-icon sn-icon-delete"></i>
         </button>
       </div>
       <hr>

@@ -1,7 +1,7 @@
 <% limit_reached = users.length == Constants::ATWHO_SEARCH_LIMIT + 1 %>
 <div class="atwho-header">
   <span><%= t("atwho.users.header") %></span>
-  <div class="dismiss"><span class="fas fa-times"></span></div>
+  <div class="dismiss"><span class="sn-icon sn-icon-close-remove"></span></div>
 </div>
 <div class="atwho-scroll-container">
   <% users.limit(Constants::ATWHO_SEARCH_LIMIT).each do |user| %>

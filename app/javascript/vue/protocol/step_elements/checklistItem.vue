@@ -2,7 +2,7 @@
   <div class="step-checklist-item" :class="{ 'step-element--locked': !checklistItem.attributes.isNew && !(updateUrl || toggleUrl) }">
     <div class="step-element-header" :class="{ 'locked': locked || editingText, 'editing-name': editingText }">
       <div v-if="reorderChecklistItemUrl" class="step-element-grip step-element-grip--draggable" :class="{ 'step-element-grip--disabled': !draggable }">
-        <i class="fas fa-grip-vertical"></i>
+        <i class="sn-icon sn-icon-drag"></i>
       </div>
       <div v-else class="step-element-grip-placeholder"></div>
       <div class="step-element-name" :class="{ 'done': checklistItem.attributes.checked }">
@@ -43,7 +43,7 @@
           <i class="fas fa-pen"></i>
         </button>
         <button v-if="!checklistItem.attributes.urls || deleteUrl" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="0">
-          <i class="fas fa-trash"></i>
+          <i class="sn-icon sn-icon-delete"></i>
         </button>
       </div>
     </div>

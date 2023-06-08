@@ -87,7 +87,7 @@ class TeamsDatatable < CustomDatatable
   # If user is last admin of team, don't allow
   # him/her to leave team
   def leave_team_button(record)
-    button = "<span class=\"fas fa-sign-out-alt\"></span>
+    button = "<span class=\"sn-icon sn-icon-sign-out\"></span>
               <span class=\"hidden-xs\">
                 #{I18n.t('users.settings.teams.index.leave')}
               </span>"

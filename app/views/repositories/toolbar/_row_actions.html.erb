@@ -4,7 +4,7 @@
       <button type="button" title="<%= t('repositories.show.button_tooltip.edit') %>"
               class="btn btn-light editAdd auto-shrink-button"
               id="editRepositoryRecord" data-view-mode="active">
-        <span class="fas fa-pencil-alt"></span>
+        <span class="sn-icon sn-icon-edit"></span>
         <span class="button-text"><%= t("repositories.edit_record") %></span>
       </button>
     <% end %>
@@ -17,7 +17,7 @@
               title="<%= t('repositories.show.button_tooltip.duplicate') %>"
               class="btn btn-light copyRow auto-shrink-button"
               id="copyRepositoryRecords" disabled data-view-mode="active">
-        <span class="fas fa-copy"></span>
+        <span class="sn-icon sn-icon-duplicate"></span>
         <span class="button-text"><%= t("repositories.copy_record") %></span>
       </button>
     <% end %>
@@ -26,7 +26,7 @@
             data-placement="bottom"
             title="<%= t('repositories.show.button_tooltip.export') %>"
             id="exportRepositoriesButton">
-      <span class="fas fa-download"></span>
+      <span class="sn-icon sn-icon-export"></span>
       <span class="button-text"><%= t("repositories.index.options_dropdown.export_items") %></span>
     </button>
     <%= render partial: 'repositories/toolbar/print_label_button' %>
@@ -37,17 +37,17 @@
               title="<%= t('repositories.show.button_tooltip.archive') %>"
               class="btn btn-light auto-shrink-button"
               id="archiveRepositoryRecordsButton"  disabled data-view-mode="active">
-        <span class="fas fa-archive"></span>
+        <span class="sn-icon sn-icon-archive"></span>
         <span class="button-text"><%= t'repositories.archive_record' %></span>
       </button>
     <% end %>
       <button type="button" class="btn btn-light auto-shrink-button" id="restoreRepositoryRecords" disabled  data-view-mode="archived">
-        <span class="fas fa-undo"></span>
+        <span class="sn-icon sn-icon-restore"></span>
         <span class="button-text"><%= t("repositories.restore_record") %></span>
       </button>
     <% if can_delete_repository_rows?(@repository) %>
       <button type="button" class="btn btn-light auto-shrink-buttons" id="deleteRepositoryRecords" disabled  data-view-mode="archived">
-        <span class="fas fa-trash"></span>
+        <span class="sn-icon sn-icon-delete"></span>
         <span class="button-text"><%= t("repositories.delete_record") %></span>
       </button>
     <% end %>
@@ -59,7 +59,7 @@
       <%= t("repositories.save_record") %>
     </button>
     <button type="button" class="btn btn-light prevent-shrink" id="cancelSave" data-view-mode="active">
-      <span class="fas fa-times-circle"></span>
+      <span class="sn-icon sn-icon-close-remove"></span>
       <%= t("repositories.cancel_save") %>
     </button>
   </span>

@@ -25,7 +25,7 @@
             @click="insertTag(field)"
         >
           {{ field.key }}
-          <i class="fas fa-plus-square"></i>
+          <i class="sn-icon sn-icon-plus-square"></i>
         </div>
         <div v-if="filteredFields.common.length" class="block-title">
           {{ i18n.t('label_templates.show.insert_dropdown.common_fields') }}
@@ -40,7 +40,7 @@
         >
           <i v-if="field.icon" :class="field.icon"></i>
           {{ field.key }}
-          <i class="fas fa-plus-square"></i>
+          <i class="sn-icon sn-icon-plus-square"></i>
         </div>
         <template v-for="(repository, index) in filteredFields.repositories">
           <div :key="`repository_${index}`" class="block-title">
@@ -55,7 +55,7 @@
             @click="insertTag(field)"
           >
             {{ field.key }}
-            <i class="fas fa-plus-square"></i>
+            <i class="sn-icon sn-icon-plus-square"></i>
           </div>
         </template>
         <div class="no-results" v-if="this.noResults">
