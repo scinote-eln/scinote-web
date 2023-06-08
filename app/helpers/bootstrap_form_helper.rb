@@ -42,7 +42,7 @@ module BootstrapFormHelper
 
       if options[:clear]
         res << "<span class='input-group-addon' data-toggle='clear-date-time-picker' data-target='#{id}'>" \
-               "<i class='sn-icon sn-icon-close-remove'></i></span></div>"
+               "<i class='sn-icon sn-icon-close'></i></span></div>"
       end
 
       res << '</div></div></div></div>'

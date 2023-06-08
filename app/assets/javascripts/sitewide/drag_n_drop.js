@@ -322,7 +322,7 @@
                       ${I18n.t('assets.drag_n_drop.file_label')}
                       <div class="pull-right">
                         <a data-item-id="${asset.uuid}" href="#">
-                          <span class="sn-icon sn-icon-close-remove"></span>
+                          <span class="sn-icon sn-icon-close"></span>
                         </a>
                       </div>
                     </div>

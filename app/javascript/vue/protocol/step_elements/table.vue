@@ -50,7 +50,7 @@
         <i class="fas fa-check"></i>
       </button>
       <button class="btn icon-btn btn-light" @click="disableTableEdit">
-        <i class="sn-icon sn-icon-close-remove"></i>
+        <i class="sn-icon sn-icon-close"></i>
       </button>
     </div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @cancel="closeDeleteModal"/>

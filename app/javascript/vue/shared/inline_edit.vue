@@ -24,7 +24,7 @@
         <i class="fas fa-check"></i>
       </div>
       <div class="sci-inline-edit__control btn btn-light icon-btn" @mousedown="cancelEdit">
-        <i class="sn-icon sn-icon-close-remove"></i>
+        <i class="sn-icon sn-icon-close"></i>
       </div>
     </template>
   </div>

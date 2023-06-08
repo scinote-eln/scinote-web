@@ -18,7 +18,7 @@
         </div>
       </div>
       <button class="btn btn-light clear-filters-btn" @click="closeSavedFilters() && clearFilters()">
-        <i class="sn-icon sn-icon-close-remove"></i>
+        <i class="sn-icon sn-icon-close"></i>
         {{ i18n.t('repositories.show.bmt_search.clear_all') }}
       </button>
     </div>

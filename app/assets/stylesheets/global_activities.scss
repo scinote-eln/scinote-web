@@ -54,7 +54,7 @@
           width: 100%;
         }
 
-        .fa-search {
+        .sn-icon-search {
           color: $color-silver-chalice;
           font-size: 18px;
           left: 0;
@@ -443,14 +443,14 @@
 .datetime-picker-container {
   position: relative;
 
-  .fa-calendar-alt {
+  .sn-icon-calendar {
     color: $color-silver-chalice;
     font-size: 18px;
     line-height: 34px;
     position: absolute;
     right: 0;
     text-align: center;
-    top: 0;
+    top: 4px;
     width: 34px;
     }
 

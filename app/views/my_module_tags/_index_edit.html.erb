@@ -17,7 +17,7 @@
                 <span class="sn-icon sn-icon-edit"></span>
               <% end %>
               <%= link_to my_module_my_module_tag_path(@my_module, mmt, format: :json), method: :delete, remote: true, class: 'btn btn-link remove-tag-link', title: t("experiments.canvas.modal_manage_tags.remove_tag", module: @my_module.name), data: {tag_id: tag.id} do %>
-                <span class="sn-icon sn-icon-close-remove"></span>
+                <span class="sn-icon sn-icon-close"></span>
               <% end %>
               <%= bootstrap_form_for tag, remote: true, url: project_tag_path(@my_module.experiment.project, tag, format: :json), data: {tag_id: tag.id}, method: :delete, html: { class: "delete-tag-form"} do |f| %>
                 <%= hidden_field_tag :my_module_id, @my_module.id %>
@@ -44,7 +44,7 @@
                 <span class="fas fa-check"></span>
               <% end %>
               <%= link_to "", remote: true, class: 'btn btn-link cancel-tag-link', title: t("experiments.canvas.modal_manage_tags.cancel_tag") do %>
-                <span class="sn-icon sn-icon-close-remove"></span>
+                <span class="sn-icon sn-icon-close"></span>
               <% end %>
             </div>
           <% end %>

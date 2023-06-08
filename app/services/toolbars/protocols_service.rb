@@ -38,7 +38,7 @@ module Toolbars
       {
         name: 'versions',
         label: I18n.t('protocols.index.toolbar.versions'),
-        icon: 'icon-versions',
+        icon: 'sn-icon sn-icon-versions',
         button_id: 'protocolVersions',
         type: :legacy
       }

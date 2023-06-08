@@ -185,7 +185,7 @@ $.fn.dataTable.render.AssignedTasksValue = function(data, row) {
                 <div class="sci-input-container right-icon">
                   <input id="searchAssignedTasks" type="text" class="sci-input-field search-tasks"
                     placeholder="${I18n.t('repositories.table.assigned_search')}"></input>
-                  <i class="sn-icon sn-icon-close-remove clear-search"></i>
+                  <i class="sn-icon sn-icon-close clear-search"></i>
                 </div>
                 <div class="tasks"></div>
               </div>
