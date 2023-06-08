@@ -431,7 +431,7 @@ en:
     step_url: "Go to step"
 
   labels:
-    archived: "(A)"
+    archived: "(A) "
 
   projects:
     index:
