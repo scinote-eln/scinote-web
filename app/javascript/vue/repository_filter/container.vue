@@ -6,7 +6,7 @@
           <span class="filter-name">
             {{ filterName || i18n.t('repositories.show.filters.title') }}
           </span>
-          <i v-if="savedFilters.length" class="sn-icon sn-icon-close-hide"></i>
+          <i v-if="savedFilters.length" class="sn-icon sn-icon-down"></i>
         </div>
         <div v-if="savedFilters.length" class="dropdown-menu saved-filters-list">
           <SavedFilterElement

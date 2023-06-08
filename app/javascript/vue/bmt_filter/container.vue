@@ -4,7 +4,7 @@
       <div id="savedFiltersContainer" class="dropdown saved-filters-container" @click="toggleSavedFilters">
         <div class="title" id="savedFilterDropdown">
           {{ i18n.t('repositories.show.bmt_search.title') }}
-          <i v-if="savedFilters.length" class="sn-icon sn-icon-close-hide"></i>
+          <i v-if="savedFilters.length" class="sn-icon sn-icon-down"></i>
         </div>
         <div v-if="savedFilters.length" class="dropdown-menu saved-filters-list">
           <SavedFilterElement

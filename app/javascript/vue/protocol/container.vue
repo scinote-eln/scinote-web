@@ -108,7 +108,7 @@
               {{ i18n.t("protocols.steps.collapse_label") }}
             </button>
             <button class="btn btn-light" @click="expandSteps" tabindex="0">
-              <span class="sn-icon sn-icon-close-hide"></span>
+              <span class="sn-icon sn-icon-down"></span>
               {{ i18n.t("protocols.steps.expand_label") }}
             </button>
             <a v-if="urls.reorder_steps_url"
