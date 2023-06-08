@@ -2,22 +2,34 @@
   .menu-item:not(.active):hover {
     background-color: var(--sn-super-light-grey);
 
-    a:not(.no-hover) {
+    :not(.no-hover) {
       color: var(--sn-blue);
     }
 
-    a.no-hover {
+    .no-hover {
       color: var(--sn-science-blue-hover);
     }
   }
 
   .menu-item.active:hover {
-    a:not(.no-hover) {
+    :not(.no-hover) {
       color: var(--sn-blue);
     }
 
-    a.no-hover {
+    .no-hover {
       color: var(--sn-science-blue-hover);
+    }
+  }
+
+  .menu-item,
+  .menu-item:not(.active):hover,
+  .menu-item.active:hover {
+    .disabled-link,
+    .disabled-link:not(.no-hover):hover,
+    .disabled-link.no-hover:hover {
+      color: $color-alto;
+      pointer-events: none;
+      text-decoration: none;
     }
   }
 }

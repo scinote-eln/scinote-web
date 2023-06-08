@@ -15,7 +15,8 @@
           class="text-ellipsis overflow-hidden hover:no-underline pr-3"
           :class="{
             'text-sn-science-blue-hover': (!item.archived && archived),
-            'no-hover': (!item.archived && archived)
+            'no-hover': (!item.archived && archived),
+            'disabled-link': item.disabled,
           }">
         <template v-if="item.archived">(A)</template>
         {{ item.name }}

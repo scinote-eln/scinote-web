@@ -12,7 +12,8 @@ module Navigator
         archived: project.archived,
         type: :project,
         has_children: project.has_children,
-        children_url: navigator_project_path(project)
+        children_url: navigator_project_path(project),
+        disabled: project.disabled
       }
     end
 
@@ -69,27 +70,49 @@ module Navigator
                                           (projects.archived IS TRUE AND experiments.id IS  NOT NULL)
                                      THEN 1 ELSE 0 END) > 0 AS has_children'
                          end
-      current_team.projects
-                  .where(project_folder_id: folder)
-                  .visible_to(current_user, current_team)
-                  .with_children_viewable_by_user(current_user)
-                  .where('
-                    projects.archived = :archived OR
-                    (
-                      (
-                        experiments.archived = :archived OR
-                        my_modules.archived = :archived
-                      ) AND
-                      :archived IS TRUE
-                    ) OR
-                    projects.id = :project_id
-                  ', archived: archived, project_id: project&.id || -1)
-                  .select(
-                    'projects.id',
-                    'projects.name',
-                    'projects.archived',
-                    has_children_sql
-                  ).group('projects.id')
+      fetched_projects = current_team.projects
+                                     .where(project_folder_id: folder)
+                                     .visible_to(current_user, current_team)
+                                     .with_children_viewable_by_user(current_user)
+                                     .where('
+                                        projects.archived = :archived OR
+                                        (
+                                          (
+                                            experiments.archived = :archived OR
+                                            my_modules.archived = :archived
+                                          ) AND
+                                          :archived IS TRUE
+                                        ) OR
+                                        projects.id = :project_id
+                                      ', archived: archived, project_id: project&.id || -1)
+                                     .select(
+                                       'projects.id',
+                                       'projects.name',
+                                       'projects.archived',
+                                       'FALSE AS disabled',
+                                       has_children_sql
+                                     ).group('projects.id')
+
+      if current_team.permission_granted?(current_user, TeamPermissions::MANAGE)
+        projects_unassigned_to_team_admin = current_team.projects
+                                          .where(project_folder_id: folder)
+                                          .where('
+                                            projects.archived = :archived OR
+                                            projects.id = :project_id
+                                          ', archived: archived, project_id: project&.id || -1)
+                                          .select(
+                                            'projects.id',
+                                            'projects.name',
+                                            'projects.archived',
+                                            'FALSE AS has_children',
+                                            'TRUE AS disabled'
+                                          ).group('projects.id')
+        projects_unassigned_to_team_admin = projects_unassigned_to_team_admin.select do |p|
+          !p.permission_granted?(current_user, ProjectPermissions::READ)
+        end
+        fetched_projects = fetched_projects + projects_unassigned_to_team_admin
+      end
+      fetched_projects
     end
 
     def fetch_project_folders(object = nil, archived = false)
