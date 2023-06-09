@@ -27,7 +27,7 @@
     .disabled-link,
     .disabled-link:not(.no-hover):hover,
     .disabled-link.no-hover:hover {
-      color: var(--sn-sleepy-grey);
+      color: var(--sn-grey);
       pointer-events: none;
       text-decoration: none;
     }

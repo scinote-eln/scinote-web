@@ -58,7 +58,7 @@ export default {
   },
   computed: {
     hasChildren: function() {
-      return this.item.has_children || this.children.length > 0;
+      return !this.item.disabled && (this.item.has_children || this.children.length > 0);
     },
     sortedMenuItems: function() {
       return this.children.sort((a, b) => {

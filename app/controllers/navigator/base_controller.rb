@@ -70,49 +70,37 @@ module Navigator
                                           (projects.archived IS TRUE AND experiments.id IS  NOT NULL)
                                      THEN 1 ELSE 0 END) > 0 AS has_children'
                          end
-      fetched_projects = current_team.projects
-                                     .where(project_folder_id: folder)
-                                     .visible_to(current_user, current_team)
-                                     .with_children_viewable_by_user(current_user)
-                                     .where('
-                                        projects.archived = :archived OR
-                                        (
-                                          (
-                                            experiments.archived = :archived OR
-                                            my_modules.archived = :archived
-                                          ) AND
-                                          :archived IS TRUE
-                                        ) OR
-                                        projects.id = :project_id
-                                      ', archived: archived, project_id: project&.id || -1)
-                                     .select(
-                                       'projects.id',
-                                       'projects.name',
-                                       'projects.archived',
-                                       'FALSE AS disabled',
-                                       has_children_sql
-                                     ).group('projects.id')
+      disabled_sql = 'SUM(CASE WHEN project_user_roles IS NULL THEN 0 ELSE 1 END) < 1 AS disabled'
 
-      if current_team.permission_granted?(current_user, TeamPermissions::MANAGE)
-        projects_unassigned_to_team_admin = current_team.projects
-                                                        .where(project_folder_id: folder)
-                                                        .where('
-                                                          projects.archived = :archived OR
-                                                          projects.id = :project_id
-                                                        ', archived: archived, project_id: project&.id || -1)
-                                                        .select(
-                                                          'projects.id',
-                                                          'projects.name',
-                                                          'projects.archived',
-                                                          'FALSE AS has_children',
-                                                          'TRUE AS disabled'
-                                                        ).group('projects.id')
-        projects_unassigned_to_team_admin = projects_unassigned_to_team_admin.reject do |p|
-          can_read_project?(p)
-        end
-        fetched_projects += projects_unassigned_to_team_admin
-      end
-      fetched_projects
+      current_team.projects
+                  .where(project_folder_id: folder)
+                  .visible_to(current_user, current_team)
+                  .with_children_viewable_by_user(current_user)
+                  .joins("LEFT OUTER JOIN user_assignments project_user_assignments
+                            ON project_user_assignments.assignable_type = 'Project'
+                            AND project_user_assignments.assignable_id = projects.id
+                            AND project_user_assignments.user_id = #{current_user.id}
+                          LEFT OUTER JOIN user_roles project_user_roles
+                            ON project_user_roles.id = project_user_assignments.user_role_id
+                            AND project_user_roles.permissions @> ARRAY['#{ProjectPermissions::READ}']::varchar[]")
+                  .where('projects.archived = :archived OR
+                          (
+                            (
+                              experiments.archived = :archived OR
+                              my_modules.archived = :archived
+                            ) AND
+                            :archived IS TRUE
+                          ) OR
+                          projects.id = :project_id',
+                         archived: archived,
+                         project_id: project&.id || -1)
+                  .select(
+                    'projects.id',
+                    'projects.name',
+                    'projects.archived',
+                    disabled_sql,
+                    has_children_sql
+                  ).group('projects.id')
     end
 
     def fetch_project_folders(object = nil, archived = false)
