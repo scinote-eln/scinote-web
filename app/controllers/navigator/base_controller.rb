@@ -108,7 +108,7 @@ module Navigator
                                                           'TRUE AS disabled'
                                                         ).group('projects.id')
         projects_unassigned_to_team_admin = projects_unassigned_to_team_admin.reject do |p|
-          p.permission_granted?(current_user, ProjectPermissions::READ)
+          can_read_project?(p)
         end
         fetched_projects += projects_unassigned_to_team_admin
       end

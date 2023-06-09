@@ -14,7 +14,7 @@
 
   <div class="project-name-cell table-cell">
     <% 
-      disabled_link = 'disabled-link' unless project.permission_granted?(current_user, ProjectPermissions::READ)
+      disabled_link = 'disabled-link' unless can_read_project?(project)
     %>
     <% if project.archived? %>
       <%= link_to project_url(project, view_mode: :archived), class: disabled_link  do %>
