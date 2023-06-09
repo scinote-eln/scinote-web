@@ -447,22 +447,22 @@ class ExperimentsController < ApplicationController
   end
 
   def inventory_assigning_experiment_filter
-    readable_experiments = Experiment.readable_by_user(current_user)
+    viewable_experiments = Experiment.viewable_by_user(current_user, current_team)
     assignable_my_modules = MyModule.repository_row_assignable_by_user(current_user)
 
-    project = Project.readable_by_user(current_user)
+    project = Project.viewable_by_user(current_user, current_team)
                      .joins(experiments: :my_modules)
-                     .where(experiments: { id: readable_experiments })
+                     .where(experiments: { id: viewable_experiments })
                      .where(my_modules: { id: assignable_my_modules })
                      .find_by(id: params[:project_id])
 
     return render_404 if project.blank?
 
     experiments = project.experiments
+                         .active
                          .joins(:my_modules)
-                         .where(experiments: { id: readable_experiments })
+                         .where(experiments: { id: viewable_experiments })
                          .where(my_modules: { id: assignable_my_modules })
-                         .search(current_user, false, params[:query], -1, current_team)
                          .distinct
                          .pluck(:id, :name)
 
