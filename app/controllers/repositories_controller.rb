@@ -382,6 +382,16 @@ class RepositoriesController < ApplicationController
     end
   end
 
+  def export_repositories
+    repositories = Repository.viewable_by_user(current_user, current_team).where(id: params[:repository_ids])
+    if repositories.present?
+      RepositoriesExportJob.perform_later(repositories.pluck(:id), current_user, current_team)
+      render json: { message: t('zip_export.export_request_success') }
+    else
+      render json: { message: t('zip_export.export_error') }, status: :unprocessable_entity
+    end
+  end
+
   def assigned_my_modules
     my_modules = MyModule.joins(:repository_rows).where(repository_rows: { repository: @repository })
                          .readable_by_user(current_user).distinct
