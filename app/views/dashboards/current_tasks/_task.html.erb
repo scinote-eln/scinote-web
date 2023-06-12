@@ -11,7 +11,7 @@
   </div>
   <div class="task-due-date row-border <%= task_date[:span_class]%>">
     <% if task_date[:date] %>
-      <i class="fas fa-calendar-day"></i>
+      <i class="sn-icon sn-icon-calendar-small"></i>
       <%= t("dashboard.current_tasks.#{task_date[:translation_key]}", date: l(task_date[:date], format: :full_date)) %>
     <% end %>
   </div>

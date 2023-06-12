@@ -18,7 +18,7 @@ module GlobalActivitiesHelper
         end
 
       if key == 'comment' && parameters[key].strip.present?
-        parameters[key] = '<i class="fas fa-comment"></i>' + parameters[key]
+        parameters[key] = '<i class="sn-icon sn-icon-comments"></i>' + parameters[key]
       end
     end
 

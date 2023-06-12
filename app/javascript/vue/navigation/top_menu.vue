@@ -18,11 +18,11 @@
     </div>
     <div v-if="user" class="sci--navigation--top-menu-search left-icon sci-input-container" :class="{'disabled' : !currentTeam}">
       <input type="text" class="sci-input-field" :placeholder="i18n.t('nav.search')" @change="searchValue"/>
-      <i class="fas fa-search"></i>
+      <i class="sn-icon sn-icon-search"></i>
     </div>
     <div v-if="user" class="dropdown">
       <button class="btn btn-light icon-btn" data-toggle="dropdown">
-        <i class="fas fa-question-circle"></i>
+        <i class="sn-icon sn-icon-help"></i>
       </button>
       <ul v-if="user" class="dropdown-menu dropdown-menu-right">
         <li v-for="(item, i) in helpMenu" :key="i">
@@ -34,7 +34,7 @@
     </div>
     <div v-if="user" class="dropdown">
       <button class="btn btn-light icon-btn" data-toggle="dropdown">
-        <i class="fas fa-cog"></i>
+        <i class="sn-icon sn-icon-settings"></i>
       </button>
       <ul class="dropdown-menu dropdown-menu-right">
         <li v-for="(item, i) in settingsMenu" :key="i">
@@ -55,7 +55,7 @@
               :data-unseen="unseenNotificationsCount"
               data-toggle="dropdown"
               @click="notificationsOpened = !notificationsOpened">
-        <i class="fas fa-bell"></i>
+        <i class="sn-icon sn-icon-notifications"></i>
       </button>
       <div v-if="notificationsOpened" class="sci--navigation--notificaitons-flyout-backdrop" @click="notificationsOpened = false"></div>
       <NotificationsFlyout

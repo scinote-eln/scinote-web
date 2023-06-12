@@ -29,7 +29,7 @@
           <div class="comment-actions">
             <div class="edit-buttons">
               <span class="save-button"><i class="fas fa-save"></i><%= t('general.save') %></span>
-              <span class="cancel-button"><i class="fas fa-times"></i></span>
+              <span class="cancel-button"><i class="sn-icon sn-icon-close"></i></span>
             </div>
             <div class="view-buttons">
               <span class="edit-button"><i class="fas fa-pen"></i><%= t('general.edit') %></span>
@@ -38,7 +38,7 @@
                 data-url="<%= comment_action_url(comment) %>"
                 data-confirm-message="<%= t('comments.delete_confirm') %>"
                 data-turbolinks="false">
-                <span class="fas fa-trash action-icon-delete"></span>
+                <span class="sn-icon sn-icon-delete action-icon-delete"></span>
               </a>
             </div>
           </div>

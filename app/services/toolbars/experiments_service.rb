@@ -38,7 +38,7 @@ module Toolbars
       {
         name: 'restore',
         label: I18n.t('experiments.toolbar.restore_button'),
-        icon: 'fas fa-undo',
+        icon: 'sn-icon sn-icon-restore',
         button_class: 'restore-experiments-btn',
         path: restore_group_project_experiments_path(project_id: @experiments.first.project_id),
         type: :request,
@@ -56,7 +56,7 @@ module Toolbars
       {
         name: 'edit',
         label: I18n.t('experiments.index.edit_option'),
-        icon: 'fa fa-pencil-alt',
+        icon: 'sn-icon sn-icon-edit',
         button_class: 'edit-btn',
         path: edit_experiment_path(experiment),
         type: 'remote-modal'
@@ -96,7 +96,7 @@ module Toolbars
       {
         name: 'move',
         label: I18n.t('experiments.toolbar.move_button'),
-        icon: 'fas fa-arrow-right',
+        icon: 'sn-icon sn-icon-move',
         button_class: 'move-experiments-btn',
         path: move_modal_experiments_path(id: experiment.id),
         type: 'remote-modal'
@@ -113,7 +113,7 @@ module Toolbars
       {
         name: 'duplicate',
         label: I18n.t('experiments.toolbar.duplicate_button'),
-        icon: 'fas fa-copy',
+        icon: 'sn-icon sn-icon-duplicate',
         button_class: 'clone-experiment-btn',
         path: clone_modal_experiments_path(id: experiment.id),
         type: 'remote-modal',
@@ -127,7 +127,7 @@ module Toolbars
       {
         name: 'archive',
         label: I18n.t('experiments.toolbar.archive_button'),
-        icon: 'fas fa-archive',
+        icon: 'sn-icon sn-icon-archive',
         button_class: 'archive-experiments-btn',
         path: archive_group_project_experiments_path(project_id: @experiments.first.project_id),
         type: :request,

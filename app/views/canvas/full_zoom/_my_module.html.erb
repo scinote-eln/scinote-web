@@ -80,7 +80,7 @@
     <ul class="nav nav-tabs nav-tabs-less" role="tablist">
       <li role="presentation">
         <a class="btn btn-link task-card-view-users" href="<%= designated_users_my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_users" role="tab" data-remote="true">
-          <span class="fas fa-users" aria-hidden="true"></span>
+          <span class="sn-icon sn-icon-users" aria-hidden="true"></span>
           <span class="badge badge-indicator users-badge-indicator <%= 'hidden' unless my_module.designated_users_count.positive? %>"
                 data-linked-id="<%= my_module.id %>">
             <%= my_module.designated_users_count %>
@@ -89,13 +89,13 @@
       </li>
       <li role="presentation">
         <a class="btn btn-link task-card-view-activities" href="<%= activities_my_module_url(id: my_module.id) %>" aria-controls="<%= my_module.id %>_activities" role="tab">
-          <span class="fas fa-list" aria-hidden="true"></span>
+          <span class="sn-icon sn-icon-activities" aria-hidden="true"></span>
         </a>
       </li>
       <li role="presentation">
         <a href="#" class="btn btn-link open-comments-sidebar" tabindex=0
            data-object-type="MyModule" data-object-id="<%= my_module.id %>">
-          <span class="fas fa-comment" aria-hidden="true"></span>
+          <span class="sn-icon sn-icon-comments" aria-hidden="true"></span>
           <span id="comment-count-<%= my_module.id %>" class="badge badge-indicator comments-badge-indicator <%= 'hidden' unless my_module.task_comments_count.positive? %>">
             <%= my_module.task_comments_count %>
           </span>

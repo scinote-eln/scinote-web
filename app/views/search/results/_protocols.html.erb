@@ -4,7 +4,7 @@
   <% has_keywords = protocol.in_repository? && protocol.protocol_keywords.count > 0 %>
 
   <h5>
-    <span class="fas fa-edit"></span>
+    <span class="sn-icon sn-icon-protocols-templates"></span>
     <%= render partial: "search/results/partials/protocol_text.html.erb", locals: { protocol: protocol, query: search_query } %>
   </h5>
 

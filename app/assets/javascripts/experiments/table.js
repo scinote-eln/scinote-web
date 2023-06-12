@@ -119,7 +119,7 @@ var ExperimnetTable = {
           <div ref="dropdown" class="dropdown my-module-menu" data-url="${data.urls.actions_dropdown}">
             <div class="btn btn-ligh icon-btn open-my-module-menu" tabindex="0"
                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" >
-              <i class="fas fa-ellipsis-h"></i>
+              <i class="sn-icon sn-icon-more-hori"></i>
             </div>
             <div class="dropdown-menu dropdown-menu-right">
               <a class="open-access-modal hidden" data-action="remote-modal" href="${data.urls.access}"></a>
