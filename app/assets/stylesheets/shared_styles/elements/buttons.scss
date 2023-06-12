@@ -3,24 +3,21 @@
 .btn{
   @include font-button;
   animation-timing-function: $timing-function-sharp;
+  align-items: center;
   border-radius: $border-radius-default;
   cursor: pointer;
-  display: inline-block;
+  display: inline-flex;
+  justify-content: center;
+  gap: .25em;
   height: 36px;
   line-height: 20px;
   outline: 0;
-  padding: 7px 16px;
+  padding: .5rem;
   position: relative;
   text-align: center;
   text-decoration: none;
   transition: .3s;
   user-select: none;
-
-  .fas,
-  img {
-    color: inherit;
-    margin-right: .25em;
-  }
 
   img {
     padding-bottom: 3px;
@@ -180,12 +177,8 @@
   }
 
   &.icon-btn {
-    padding: 7px;
+    padding: 0;
     width: 36px;
-
-    .fas {
-      margin: 0;
-    }
 
     img {
       margin: 0;

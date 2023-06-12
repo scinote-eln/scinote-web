@@ -6,7 +6,6 @@ class NavigationsController < ApplicationController
   def top_menu
     render json:  {
       root_url: root_path,
-      logo: logo,
       current_team: current_team&.id,
       search_url: search_path,
       teams: teams,
@@ -23,13 +22,6 @@ class NavigationsController < ApplicationController
   end
 
   private
-
-  def logo
-    {
-      large_url: image_path('/images/scinote_icon.svg'),
-      small_url: image_path('/images/sn-icon.svg')
-    }
-  end
 
   def teams
     current_user.teams.order(:name).map do |t|

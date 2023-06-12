@@ -13,7 +13,7 @@ body.navigator-collapsed {
   --navigator-navigation-width: 240px;
   --top-navigation-height: 52px;
   display: grid;
-  grid-template-areas: "top top top"
+  grid-template-areas: "left top top"
                        "left breadcrumbs breadcrumbs"
                        "left navigator content";
   grid-template-columns: var(--left-navigation-width)
@@ -59,10 +59,10 @@ body.navigator-collapsed {
 
   .sci--layout-navigation-left {
     grid-area: left;
-    height: calc(100vh - var(--top-navigation-height));
+    height: 100vh;
     position: sticky;
     position: -webkit-sticky;
-    top: var(--top-navigation-height);
+    top: 0;
     width: var(--left-navigation-width);
     z-index: 600;
   }
