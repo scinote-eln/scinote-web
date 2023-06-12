@@ -11,7 +11,9 @@
     padding-bottom: 1rem;
     z-index: 99;
 
-
+    .btn {
+      height: 40px;
+    }
     .view-switch,
     .filter-container {
       display: inline-block;

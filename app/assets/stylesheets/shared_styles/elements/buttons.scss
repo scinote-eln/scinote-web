@@ -42,12 +42,12 @@
   }
 
   &.btn-primary {
-    background: $brand-primary;
-    border: 1px solid $brand-primary;
+    background: var(--sn-blue);
+    border: 1px solid var(--sn-blue);
     color: $color-white;
 
     &:hover {
-      background: $brand-primary-hover;
+      background: var(--sn-blue-hover);
       color: $color-white;
     }
 
@@ -58,20 +58,19 @@
     }
 
     &:focus {
-      box-shadow: 0 0 0 1px $brand-complementary;
+      box-shadow: 0px 0px 0px 4px var(--sn-science-blue-hover);
       color: $color-white;
     }
   }
 
   &.btn-secondary {
-    background: $color-white;
-    border: $border-default;
-    color: $color-volcano;
+    background: var(--sn-white);
+    color: var(--sn-blue);
 
     &:hover {
-      background: $color-concrete;
+      background: var(--sn-white);
       border: $border-secondary;
-      color: $color-volcano;
+      color: var(--sn-blue-hover);
     }
 
     &:active,
@@ -86,6 +85,53 @@
       color: $color-volcano;
     }
   }
+
+  &.btn-tertiary {
+    background: var(--sn-white);
+    color: var(--sn-blue);
+    text-decoration-line: underline;
+
+    &:hover {
+      background: var(--sn-white);
+      color: var(--sn-blue-hover);
+    }
+
+    &:active,
+    &.active {
+      background: var(--sn-white);
+      border: $border-secondary;
+      color: $color-volcano;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 1px $brand-focus;
+      color: $color-volcano;
+    }
+  }
+
+  &.btn-tertiary-black {
+    background: var(--sn-white);
+    color: var(--sn-black);
+    text-decoration-line: underline;
+
+    &:hover {
+      background: var(--sn-white);
+      color: var(--sn-blue-hover);
+    }
+
+    &:active,
+    &.active {
+      background: var(--sn-white);
+      border: $border-secondary;
+      color: $color-volcano;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 1px $brand-focus;
+      color: $color-volcano;
+    }
+  }
+
 
   &.btn-light {
     background: transparent;
@@ -136,13 +182,13 @@
   }
 
   &.btn-danger {
-    background: $brand-danger;
+    background: var(--sn-delete-red);
     border: $border-danger;
-    color: $color-white;
+    color: var(--sn-white);
 
     &:hover {
-      background: $brand-danger-hover;
-      color: $color-white;
+      background: var(--sn-delete-red-hover);
+      color: var(--sn-white);
     }
 
     &:active,
@@ -200,14 +246,24 @@
 
   &.disabled,
   &:disabled {
-    color: $color-silver-chalice;
     cursor: auto;
     opacity: .5;
     pointer-events: none;
 
-    &.btn-primary,
+    &.btn-primary {
+      background: var(--sn-super-light-grey);
+      color: var(--sn-sleepy-grey);
+      border: $border-tertiary;
+
+      &:hover {
+        border: $border-tertiary;
+        color: $color-silver-chalice;
+      }
+    }
+
     &.btn-danger {
-      background: $color-alto;
+      background: var(--sn-delete-red-disabled);
+      color: var(--sn-white);
       border: $border-tertiary;
 
       &:hover {
@@ -217,15 +273,30 @@
     }
 
     &.btn-secondary,
+    &.btn-tertiary,
     &.btn-light,
     &.btn-light-link,
     &.btn-dark-background {
-      background: $color-white;
+      background: var(--sn-white);
+      color: var(--sn-sleepy-grey);
+      text-decoration-line: none;
 
       &:hover {
         color: $color-silver-chalice;
       }
     }
+  }
+
+  &.medium {
+    height: 40px;
+  }
+
+  &.small {
+    height: 36px;
+  }
+
+  &.x-small {
+    height: 30px;
   }
 }
 
@@ -245,4 +316,15 @@
       margin-right: 0;
     }
   }
+}
+
+.main-actions,
+.label-toolbar,
+.reports-toolbar,
+.project-actions,
+.project-show-toolbar,
+.toolbar-row {
+ .btn {
+  height: 40px;
+ }
 }
