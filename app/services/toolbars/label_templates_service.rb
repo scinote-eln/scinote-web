@@ -55,7 +55,7 @@ module Toolbars
       {
         name: 'set_as_default',
         label: I18n.t("label_templates.index.toolbar.set_#{@label_templates.first.type}_default"),
-        icon: 'sn-icon sn-icon-dashboard',
+        icon: 'fas fa-thumbtack',
         button_id: 'setZplDefaultLabelTemplate',
         type: :legacy
       }

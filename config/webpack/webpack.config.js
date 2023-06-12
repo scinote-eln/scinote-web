@@ -11,6 +11,7 @@ const mode = process.env.NODE_ENV === 'development' ? 'development' : 'productio
 
 const entryList = {
   application_pack: './app/javascript/packs/application.js',
+  fonts: './app/javascript/packs/fonts.js',
   emoji_button: './app/javascript/packs/emoji_button.js',
   fontawesome: './app/javascript/packs/fontawesome.scss',
   prism: './app/javascript/packs/prism.js',
