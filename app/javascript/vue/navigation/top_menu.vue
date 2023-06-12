@@ -1,11 +1,5 @@
 <template>
   <div class="sci--navigation--top-menu-container">
-    <div class="sci--navigation--top-menu-logo">
-      <a v-if="rootUrl && logo" :title="i18n.t('nav.label.scinote')" :href="rootUrl">
-        <img class="logo small" :src="logo.small_url">
-        <img class="logo large" :src="logo.large_url">
-      </a>
-    </div>
     <div v-if="currentTeam" class="sci--navigation--top-menu-teams">
       <DropdownSelector
         :selectedValue="currentTeam"
@@ -104,7 +98,6 @@
     data() {
       return {
         rootUrl: null,
-        logo: null,
         currentTeam: null,
         teams: null,
         searchUrl: null,
@@ -134,7 +127,6 @@
       fetchData() {
         $.get(this.url, (result) => {
           this.rootUrl = result.root_url;
-          this.logo = result.logo;
           this.currentTeam = result.current_team;
           this.teams = result.teams;
           this.searchUrl = result.search_url;
