@@ -11,7 +11,7 @@ body.navigator-collapsed {
   --left-navigation-width: 192px;
   --navbar-height: calc(var(--top-navigation-height) + var(--breadcrumbs-navigation-height));
   --navigator-navigation-width: 240px;
-  --top-navigation-height: 52px;
+  --top-navigation-height: 72px;
   display: grid;
   grid-template-areas: "left top top"
                        "left breadcrumbs breadcrumbs"

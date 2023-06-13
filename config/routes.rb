@@ -143,7 +143,7 @@ Rails.application.routes.draw do
     namespace :users do
       namespace :settings do
         resources :teams, only: [] do
-          member do
+          collection do
             post :switch
           end
         end

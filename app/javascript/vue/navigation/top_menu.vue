@@ -1,17 +1,18 @@
 <template>
   <div class="sci--navigation--top-menu-container">
-    <div v-if="currentTeam" class="sci--navigation--top-menu-teams">
-      <DropdownSelector
-        :selectedValue="currentTeam"
+
+    <div v-if="currentTeam" class="w-64">
+      <Select
+        :value="currentTeam"
         :options="teams"
-        :disableSearch="true"
-        :selectorId="`sciNavigationTeamSelector`"
-        :labelHTML="true"
-        @dropdown:changed="switchTeam"
-      />
+        :placeholder="'test'"
+        :noOptionsPlaceholder="'test'"
+        v-bind:disabled="false"
+        @change="switchTeam"
+      ></Select>
     </div>
-    <div v-if="user" class="sci--navigation--top-menu-search left-icon sci-input-container" :class="{'disabled' : !currentTeam}">
-      <input type="text" class="sci-input-field" :placeholder="i18n.t('nav.search')" @change="searchValue"/>
+    <div v-if="user" class="sci--navigation--top-menu-search left-icon sci-input-container-v2" :class="{'disabled' : !currentTeam}">
+      <input type="text" :placeholder="i18n.t('nav.search')" @change="searchValue"/>
       <i class="sn-icon sn-icon-search"></i>
     </div>
     <div v-if="user" class="dropdown">
@@ -83,12 +84,14 @@
 <script>
   import NotificationsFlyout from './notifications/notifications_flyout.vue'
   import DropdownSelector from '../shared/dropdown_selector.vue'
+  import Select from "../shared/select.vue";
 
   export default {
     name: 'TopMenuContainer',
     components: {
       DropdownSelector,
-      NotificationsFlyout
+      NotificationsFlyout,
+      Select
     },
     props: {
       url: String,
@@ -98,6 +101,7 @@
     data() {
       return {
         rootUrl: null,
+        teamSwitchUrl: null,
         currentTeam: null,
         teams: null,
         searchUrl: null,
@@ -127,6 +131,7 @@
       fetchData() {
         $.get(this.url, (result) => {
           this.rootUrl = result.root_url;
+          this.teamSwitchUrl = result.team_switch_url;
           this.currentTeam = result.current_team;
           this.teams = result.teams;
           this.searchUrl = result.search_url;
@@ -139,11 +144,12 @@
       switchTeam(team) {
         if (this.currentTeam == team) return;
 
-        let newTeam = this.teams.find(e => e.value == team);
+        let newTeam = this.teams.find(e => e[0] == team);
+        console.log(newTeam)
 
         if (!newTeam) return;
 
-        $.post(newTeam.params.switch_url, (result) => {
+        $.post(this.teamSwitchUrl, {team_id: team}, (result) => {
           this.currentTeam = result.currentTeam
           dropdownSelector.selectValues('#sciNavigationTeamSelector', this.currentTeam);
           $('body').attr('data-current-team-id', this.currentTeam);

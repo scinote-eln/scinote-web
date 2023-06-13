@@ -28,24 +28,10 @@
     }
   }
 
-  .sci--navigation--top-menu-teams {
-    height: 36px;
-    margin-left: 2em;
-    width: 220px;
-  }
-
   .sci--navigation--top-menu-search {
     margin-left: auto;
     margin-right: 1em;
     width: 240px;
-
-    input {
-      border-color: $color-alto;
-    }
-
-    .sn-icon {
-      color: $color-silver-chalice;
-    }
   }
 
   .sci--navigation--top-menu-user {
