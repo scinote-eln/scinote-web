@@ -1,7 +1,10 @@
 <template>
   <div class="sci--navigation--top-menu-container">
-
-    <div v-if="currentTeam" class="w-64">
+    <div v-if="user" class="sci--navigation--top-menu-search left-icon sci-input-container-v2" :class="{'disabled' : !currentTeam}">
+      <input type="text" :placeholder="i18n.t('nav.search')" @change="searchValue"/>
+      <i class="sn-icon sn-icon-search"></i>
+    </div>
+    <div v-if="currentTeam" class="mr-auto w-64">
       <Select
         :value="currentTeam"
         :options="teams"
@@ -10,10 +13,6 @@
         v-bind:disabled="false"
         @change="switchTeam"
       ></Select>
-    </div>
-    <div v-if="user" class="sci--navigation--top-menu-search left-icon sci-input-container-v2" :class="{'disabled' : !currentTeam}">
-      <input type="text" :placeholder="i18n.t('nav.search')" @change="searchValue"/>
-      <i class="sn-icon sn-icon-search"></i>
     </div>
     <div v-if="user" class="dropdown">
       <button class="btn btn-light icon-btn" data-toggle="dropdown">
@@ -61,9 +60,8 @@
         @close="notificationsOpened = false" />
     </div>
     <div v-if="user" class="dropdown">
-      <div class="sci--navigation--top-menu-user" data-toggle="dropdown">
-        <span>{{ i18n.t('nav.user_greeting', { full_name: user.name })}}</span>
-        <img class="avatar" :src="user.avatar_url">
+      <div class="sci--navigation--top-menu-user btn btn-light icon-btn" data-toggle="dropdown">
+        <img class="avatar w-6 h-6" :src="user.avatar_url">
       </div>
       <div class="dropdown-menu dropdown-menu-right top-menu-user-dropdown">
         <li v-for="(item, i) in userMenu" :key="i">
@@ -145,7 +143,6 @@
         if (this.currentTeam == team) return;
 
         let newTeam = this.teams.find(e => e[0] == team);
-        console.log(newTeam)
 
         if (!newTeam) return;
 

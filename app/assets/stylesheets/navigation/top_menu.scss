@@ -8,11 +8,11 @@
 .sci--navigation--top-menu-container {
   align-items: center;
   background-color: $color-white;
-  box-shadow: $flyout-shadow;
+  border-bottom: 1px solid var(--sn-sleepy-grey);
   display: flex;
-  gap: .5em;
+  gap: 1rem;
   height: 100%;
-  padding: 0 2em;
+  padding: 0 1rem;
 
   .sci--navigation--top-menu-logo {
     a {
@@ -29,25 +29,10 @@
   }
 
   .sci--navigation--top-menu-search {
-    margin-left: auto;
-    margin-right: 1em;
-    width: 240px;
+    width: 300px;
   }
 
   .sci--navigation--top-menu-user {
-    align-items: center;
-    cursor: pointer;
-    display: flex;
-    gap: 1em;
-    margin-left: .75em;
-
-    span {
-      max-width: 200px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
     .avatar {
       border-radius: 50%;
     }
