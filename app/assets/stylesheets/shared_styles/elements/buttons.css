@@ -1,0 +1,256 @@
+@import 'application.tailwind.css';
+
+.btn {
+  @apply font-button;
+  @apply animation-timing-function-$timing-function-sharp;
+  @apply border-radius-$border-radius-default;
+  @apply cursor-pointer inline-block h-36 leading-20 outline-0 py-7 px-16 relative text-center no-select;
+
+  .fas,
+  img {
+    color: inherit;
+    @apply mr-1 pb-3;
+  }
+
+  &:hover {
+    @apply no-underline;
+  }
+
+  &:active,
+  &.active {
+    @apply shadow-none no-underline;
+  }
+
+  &:focus {
+    @apply outline-none no-underline;
+  }
+
+  &.btn-primary {
+    @apply bg-sn-blue border-1 border-sn-blue text-white;
+
+    &:hover {
+      @apply bg-sn-blue-hover;
+    }
+
+    &:active,
+    &.active {
+      @apply bg-brand-primary-press;
+    }
+
+    &:focus {
+      @apply shadow-sn-science-blue-hover;
+    }
+  }
+
+  &.btn-secondary {
+    @apply bg-sn-white text-sn-blue;
+
+    &:hover {
+      @apply bg-sn-white border-$border-secondary text-sn-blue-hover;
+    }
+
+    &:active,
+    &.active {
+      @apply bg-color-alto border-$border-secondary text-color-volcano;
+    }
+
+    &:focus {
+      @apply shadow-brand-focus text-color-volcano;
+    }
+  }
+
+  &.btn-tertiary {
+    @apply bg-sn-white text-sn-blue underline;
+
+    &:hover {
+      @apply bg-sn-white text-sn-blue-hover;
+    }
+
+    &:active,
+    &.active {
+      @apply bg-sn-white border-$border-secondary text-color-volcano;
+    }
+
+    &:focus {
+      @apply shadow-brand-focus text-color-volcano;
+    }
+  }
+
+  &.btn-tertiary-black {
+    @apply bg-sn-white text-sn-black underline;
+
+    &:hover {
+      @apply bg-sn-white text-sn-blue-hover;
+    }
+
+    &:active,
+    &.active {
+      @apply bg-sn-white border-$border-secondary text-color-volcano;
+    }
+
+    &:focus {
+      @apply shadow-brand-focus text-color-volcano;
+    }
+  }
+
+  &.btn-light {
+    @apply bg-transparent border-$border-transparent text-color-volcano;
+
+    &:hover {
+      @apply bg-color-concrete border-$border-transparent text-color-volcano;
+    }
+
+    &:active,
+    &.active {
+      @apply bg-color-alto border-$border-transparent text-color-volcano;
+    }
+
+    &:focus {
+      @apply border-color-brand-focus text-color-volcano;
+    }
+  }
+
+  &.btn-light-link {
+    @apply bg-transparent border-$border-transparent text-brand-primary;
+
+    &:hover {
+      @apply bg-color-concrete border-$border-transparent text-brand-primary;
+    }
+
+    &:active,
+    &.active {
+      @apply bg-color-alto border-$border-transparent text-brand-primary;
+    }
+
+    &:focus {
+      @apply shadow-brand-focus text-brand-primary;
+    }
+  }
+
+  &.btn-danger {
+    @apply bg-sn-delete-red border-$border-danger text-white;
+
+    &:hover {
+      @apply bg-sn-delete-red-hover text-white;
+    }
+
+    &:active,
+    &.active {
+      @apply bg-brand-danger-press text-color-white;
+    }
+
+    &:focus {
+      @apply shadow-brand-focus text-color-white;
+    }
+  }
+
+  &.btn-dark-background {
+    @apply bg-color-white border-$border-default text-brand-primary;
+
+    &:hover {
+      @apply bg-color-concrete text-brand-primary-hover;
+    }
+
+    &:active,
+    &.active {
+      @apply bg-color-alto text-brand-primary-press;
+    }
+
+    &:focus {
+      @apply shadow-brand-focus text-brand-primary;
+    }
+  }
+
+  &.icon-btn {
+    @apply py-7;
+    @apply w-36;
+
+    .fas {
+      @apply m-0;
+    }
+
+    img {
+      @apply m-0;
+    }
+  }
+
+  &.btn-large {
+    @apply text-h2;
+    @apply h-3.1em;
+    @apply py-1em px-3em;
+  }
+
+  &.disabled,
+  &:disabled {
+    @apply cursor-auto opacity-50 pointer-events-none;
+
+    &.btn-primary {
+      @apply bg-sn-super-light-grey text-sn-sleepy-grey border-$border-tertiary;
+
+      &:hover {
+        @apply border-$border-tertiary text-color-silver-chalice;
+      }
+    }
+
+    &.btn-danger {
+      @apply bg-sn-delete-red-disabled text-white border-$border-tertiary;
+
+      &:hover {
+        @apply border-$border-tertiary text-color-silver-chalice;
+      }
+    }
+
+    &.btn-secondary,
+    &.btn-tertiary,
+    &.btn-light,
+    &.btn-light-link,
+    &.btn-dark-background {
+      @apply bg-sn-white text-sn-sleepy-grey no-underline;
+
+      &:hover {
+        @apply text-color-silver-chalice;
+      }
+    }
+  }
+
+  &.medium {
+    @apply h-40;
+  }
+
+  &.small {
+    @apply h-36;
+  }
+
+  &.x-small {
+    @apply h-30;
+  }
+}
+
+.sci-btn-group {
+  @apply inline-block;
+  @apply relative;
+
+  .btn {
+    float: left;
+    @apply m-2;
+
+    .fas {
+      @apply mr-8;
+    }
+
+    &:nth-last-child(1) {
+      @apply mr-0;
+    }
+  }
+}
+
+.main-actions,
+.label-toolbar,
+.reports-toolbar,
+.project-actions,
+.project-show-toolbar,
+.toolbar-row {
+  .btn {
+    @apply h-40;
+  }
+}

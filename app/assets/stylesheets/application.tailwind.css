@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@import 'shared_styles/elements/buttons.css';
 
 html {
   font-size: 16px;
