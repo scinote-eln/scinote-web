@@ -1,15 +1,17 @@
 .sn-select {
-  border: 1px solid;
-  border-color: var(--sn-grey);
-  border-radius: 4px;
+  align-items: center;
+  border: $border-default;
+  border-color: var(--sn-light-grey);
+  border-radius: $border-radius-default;
+  box-sizing: border-box;
   cursor: pointer;
-  padding: .5em;
+  display: flex;
+  padding: .5rem .625rem .5rem 1rem;
   position: relative;
 
   &.sn-select--blank {
     .sn-select__value {
       color: var(--sn-grey);
-      font-style: italic;
     }
   }
 
@@ -26,11 +28,11 @@
   .sn-select__value {
     all: unset;
     display: inline-block;
+    flex-grow: 1;
+    line-height: 1.625rem;
     overflow: hidden;
-    padding-right: 1.5em;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: calc(100% - 1.5em);
   }
 
   &:hover {
@@ -51,12 +53,6 @@
     display: none;
   }
 
-  .sn-select__caret {
-    position: absolute;
-    right: 1em;
-    top: 1.1em;
-  }
-
   .sn-select__search-input {
     background: transparent;
     border: 0;
@@ -75,10 +71,6 @@
       display: block;
     }
 
-    .sn-select__caret {
-      transform: rotate(180deg);
-    }
-
     .sn-select__options {
       background: var(--sn-white);
       border-bottom-left-radius: 4px;
@@ -88,15 +80,15 @@
       left: 0;
       max-height: 300px;
       overflow: hidden;
-      overflow-y: scroll;
-      top: 2.5em;
+      top: 2.5rem;
       width: 100%;
       z-index: 9999;
     }
 
     .sn-select__option {
-      padding: .5em;
+      line-height: 1.75rem;
       overflow: hidden;
+      padding: .5rem 1rem;
       text-overflow: ellipsis;
       white-space: nowrap;
       width: calc(100%);
@@ -108,8 +100,7 @@
     }
 
     .sn-select__option:hover {
-      background: var(--sn-blue);
-      color: var(--sn-white);
+      background: var(--sn-super-light-grey);
     }
   }
 }

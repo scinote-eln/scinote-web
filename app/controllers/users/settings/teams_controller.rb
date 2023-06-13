@@ -132,7 +132,7 @@ module Users
       end
 
       def switch
-        team = current_user.teams.find_by(id: params[:id])
+        team = current_user.teams.find_by(id: params[:team_id])
 
         if team && current_user.update(current_team_id: team.id)
           flash[:success] = t('users.settings.changed_team_flash',
