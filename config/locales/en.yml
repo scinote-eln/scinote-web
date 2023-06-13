@@ -430,6 +430,9 @@ en:
     delete_error: "Error occurred while deleting comment."
     step_url: "Go to step"
 
+  labels:
+    archived: "(A)"
+
   projects:
     index:
       header:
