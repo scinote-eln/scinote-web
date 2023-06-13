@@ -336,17 +336,15 @@
       appendActionModal($(data.html));
     });
 
-    $('#projectShowWrapper')
-      .on('ajax:beforeSend', '.experiment-action-form', function() {
-        animateSpinner();
-      })
-      .on('ajax:success', '.experiment-action-form', function() {
+    $(document)
+      .on('ajax:success', '.experiment-action-form', function(_event, data) {
         $(this).closest('.modal').modal('hide');
+        if (data.path) {
+          window.location.replace(data.path);
+        }
         refreshCurrentView();
-        animateSpinner(null, false);
       })
       .on('ajax:error', '.experiment-action-form', function(ev, data) {
-        animateSpinner(null, false);
         $(this).renderFormErrors('experiment', data.responseJSON);
       });
 

@@ -21,6 +21,10 @@
       display: flex;
       min-width: 5rem;
       width: 100%;
+
+      .fas {
+        margin-right: .5em;
+      }
     }
   }
 
@@ -53,6 +57,10 @@
   .dropdown {
     .dropdown-menu {
       z-index: 102;
+    }
+
+    .dropdown-backdrop {
+      z-index: 101;
     }
   }
 }

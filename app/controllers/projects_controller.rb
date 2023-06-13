@@ -18,7 +18,8 @@ class ProjectsController < ApplicationController
                                      sidebar experiments_cards view_type actions_dropdown create_tag)
   before_action :load_current_folder, only: %i(index cards new show)
   before_action :check_view_permissions, except: %i(index cards new create edit update archive_group restore_group
-                                                    users_filter actions_dropdown project_filter actions_toolbar)
+                                                    users_filter actions_dropdown inventory_assigning_project_filter
+                                                    actions_toolbar)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
   before_action :load_exp_sort_var, only: :show
@@ -105,15 +106,15 @@ class ProjectsController < ApplicationController
     }
   end
 
-  def project_filter
-    readable_experiments = Experiment.readable_by_user(current_user)
-    managable_active_my_modules = MyModule.managable_by_user(current_user).active
+  def inventory_assigning_project_filter
+    viewable_experiments = Experiment.viewable_by_user(current_user, current_team)
+    assignable_my_modules = MyModule.repository_row_assignable_by_user(current_user)
 
-    projects = Project.readable_by_user(current_user)
+    projects = Project.viewable_by_user(current_user, current_team)
+                      .active
                       .joins(experiments: :my_modules)
-                      .where(experiments: { id: readable_experiments })
-                      .where(my_modules: { id: managable_active_my_modules })
-                      .search(current_user, false, params[:query], 1, current_team)
+                      .where(experiments: { id: viewable_experiments })
+                      .where(my_modules: { id: assignable_my_modules })
                       .distinct
                       .pluck(:id, :name)
 

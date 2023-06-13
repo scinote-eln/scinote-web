@@ -76,17 +76,25 @@ var ProjectsIndex = (function() {
 
     // Modal's submit handler function
     $(projectsWrapper)
-      .on('ajax:success', newProjectModal, function(ev, data) {
+      .on('submit', '#new_project', function() {
+        $('#project_name').prop('disabled', true);
+        $('#new-project-modal button[type="submit"]').prop('disabled', true);
+      })
+      .on('ajax:complete', '#new_project', function() {
+        $('#project_name').prop('disabled', false);
+        $('#new-project-modal button[type="submit"]').prop('disabled', false);
+      })
+      .on('ajax:success', newProjectModal, function(_ev, data) {
         $(newProjectModal).modal('hide');
         HelperModule.flashAlertMsg(data.message, 'success');
         refreshCurrentView();
       })
-      .on('ajax:error', newProjectModal, function(ev, data) {
+      .on('ajax:error', newProjectModal, function(_ev, data) {
         $(this).renderFormErrors('project', data.responseJSON);
       });
 
     $(projectsWrapper)
-      .on('ajax:success', '.new-project-btn', function(ev, data) {
+      .on('ajax:success', '.new-project-btn', function(_ev, data) {
         // Add and show modal
         $(projectsWrapper).append($.parseHTML(data.html));
         $(newProjectModal).modal('show');
@@ -577,7 +585,7 @@ var ProjectsIndex = (function() {
         createdOnFromFilter: selectDate($createdOnFromFilter),
         createdOnToFilter: selectDate($createdOnToFilter),
         membersFilter: dropdownSelector.getData($('.members-filter')),
-        lookInsideFolders: $foldersCB.prop('checked') ? 'true' : '',
+        lookInsideFolders: !!$foldersCB.prop('checked'),
         archivedOnFromFilter: selectDate($archivedOnFromFilter),
         archivedOnToFilter: selectDate($archivedOnToFilter),
         projectsViewSearch: $textFilter.val()
@@ -589,7 +597,7 @@ var ProjectsIndex = (function() {
 
       $createdOnFromFilter.val(currentFilters.createdOnFromFilter);
       $createdOnToFilter.val(currentFilters.createdOnToFilter);
-      $foldersCB.val(currentFilters.lookInsideFolders);
+      $foldersCB.attr('checked', currentFilters.lookInsideFolders);
       dropdownSelector.setData($('.members-filter'), currentFilters.membersFilter);
       $archivedOnFromFilter.val(currentFilters.archivedOnFromFilter);
       $archivedOnToFilter.val(currentFilters.archivedOnToFilter);

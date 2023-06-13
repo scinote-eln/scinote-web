@@ -3447,6 +3447,7 @@ en:
     download: "Download"
     access: "Access"
     select: "Select"
+    loading: "Loading..."
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"

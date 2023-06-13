@@ -25,9 +25,16 @@
     display: block;
   }
 
-  &.active {
+  .caret {
+    transform: rotate(-90deg);
+  }
+
+}
+
+.dropup {
+  .dropdown-menu {
     .caret {
-      transform: rotate(180deg);
+      transform: rotate(90deg);
     }
   }
 }

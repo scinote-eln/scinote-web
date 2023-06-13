@@ -1,4 +1,4 @@
 (function() {
-  const formErrors = JSON.parse($('#resource-error-data').data('form-errors'));
-  $('form').render_form_errors('user', formErrors, false);
+  const formErrors = $('#resource-error-data').data('form-errors');
+  $('form').renderFormErrors('user', formErrors, false);
 }());

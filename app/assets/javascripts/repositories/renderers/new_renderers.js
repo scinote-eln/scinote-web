@@ -50,20 +50,31 @@ $.fn.dataTable.render.newRepositoryChecklistValue = function(formId, columnId, $
 };
 
 $.fn.dataTable.render.newRepositoryNumberValue = function(formId, columnId, $cell, $header) {
-  let decimals = $header.data('metadata-decimals');
+  const decimals = $header.data('metadata-decimals');
 
-  $cell.html(`
-    <div class="sci-input-container text-field  error-icon">
-      <input class="sci-input-field"
-             form="${formId}"
-             type="text"
-             oninput="this.value = this.value.replace(/[^0-9.]/g, '');
-                      this.value = this.value.match(/^\\d*(\\.\\d{0,${decimals}})?/)[0];"
-             name="repository_cells[${columnId}]"
-             value=""
-             placeholder="${I18n.t('repositories.table.number.enter_number')}"
-             data-type="RepositoryNumberValue">
-    </div>`);
+  let $input = $('<input>', {
+    class: 'sci-input-field',
+    form: formId,
+    type: 'text',
+    name: 'repository_cells[' + columnId + ']',
+    value: '',
+    placeholder: I18n.t('repositories.table.number.enter_number'),
+    'data-type': 'RepositoryNumberValue'
+  });
+
+  $input.on('input', function() {
+    const decimalsRegex = new RegExp(`^\\d*(\\.\\d{0,${decimals}})?`);
+    let value = this.value;
+    value = value.replace(/[^0-9.]/g, '');
+    value = value.match(decimalsRegex)[0];
+    this.value = value;
+  });
+
+  let $div = $('<div>', {
+    class: 'sci-input-container text-field error-icon'
+  }).append($input);
+
+  $cell.html($div);
 };
 
 $.fn.dataTable.render.newRepositoryDateTimeValue = function(formId, columnId, $cell) {

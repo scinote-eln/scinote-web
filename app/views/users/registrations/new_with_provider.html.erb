@@ -23,11 +23,11 @@
 </div>
 
 <% if @team && @team.errors.present? %>
-  <%= form_errors = {} %>
+  <% form_errors = {} %>
 
   <% @team.errors.each do |err, msg| %>
     <% form_errors[err] = [msg] %>
   <% end %>
   <div class="hidden" id="form-error-data" data-form-errors="<%= form_errors.to_json %>"></div>
-  <%= javascript_include_tag 'users/registrations/new_with_provider.js', nonce: true %>
+  <%= javascript_include_tag 'users/registrations/new_with_provider', nonce: true %>
 <% end %>

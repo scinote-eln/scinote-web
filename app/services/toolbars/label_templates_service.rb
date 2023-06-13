@@ -34,6 +34,8 @@ module Toolbars
     def edit_action
       return unless @single
 
+      return unless can_manage_label_templates?(current_user.current_team)
+
       {
         name: 'edit',
         label: I18n.t('label_templates.index.toolbar.edit'),

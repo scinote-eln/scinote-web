@@ -6,11 +6,15 @@
       </button>
       <span class="sn-select__caret caret"></span>
     </slot>
-    <div ref="optionsContainer" class="sn-select__options" :style="optionPositionStyle">
+    <perfect-scrollbar
+      ref="optionsContainer"
+      class="sn-select__options"
+      :style="optionPositionStyle"
+    >
       <template v-if="options.length">
         <div
           v-for="option in options"
-          :key="option[0]" @click="setValue(option[0])"
+          :key="option[0]" @mousedown.stop="setValue(option[0])"
           class="sn-select__option"
         >
           {{ option[1] }}
@@ -22,8 +26,8 @@
         >
           {{ this.noOptionsPlaceholder }}
         </div>
-      </template> 
-    </div>
+      </template>
+    </perfect-scrollbar>
   </div>
 </template>
 
@@ -41,7 +45,8 @@
     data() {
       return {
         isOpen: false,
-        optionPositionStyle: ''
+        optionPositionStyle: '',
+        blurPrevented: false
       }
     },
     computed: {
@@ -58,13 +63,27 @@
       document.addEventListener("scroll", this.updateOptionPosition);
     },
     methods: {
+      preventBlur() {
+        this.blurPrevented = true;
+      },
+      allowBlur() {
+        setTimeout(() => { this.blurPrevented = false }, 200);
+      },
       blur() {
         setTimeout(() => {
-          this.isOpen = false;
-          this.$emit('blur');
-        }, 200);
+          if (this.blurPrevented) {
+            this.focusElement.focus();
+          } else {
+            this.isOpen = false;
+            this.$emit('blur');
+          }
+        }, 100);
       },
       toggle() {
+        if (this.isOpen && this.blurPrevented) {
+          return;
+        }
+
         this.isOpen = !this.isOpen;
 
         if (this.isOpen) {
@@ -74,6 +93,7 @@
           });
           this.$refs.optionsContainer.scrollTop = 0;
           this.updateOptionPosition();
+          this.setUpBlurHandlers();
         } else {
           this.optionPositionStyle = '';
           this.$emit('close');
@@ -98,6 +118,13 @@
         }
 
         this.optionPositionStyle = `position: fixed; top: ${top}px; left: ${left}px; width: ${width}px`
+      },
+      setUpBlurHandlers() {
+        setTimeout(() => {
+          this.$refs.optionsContainer.$el.querySelector('.ps__thumb-y').addEventListener('mousedown', this.preventBlur);
+          this.$refs.optionsContainer.$el.querySelector('.ps__thumb-y').addEventListener('mouseup', this.allowBlur);
+          document.addEventListener('mouseup', this.allowBlur);
+        }, 100);
       }
     }
   }
