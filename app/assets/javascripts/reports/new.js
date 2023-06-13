@@ -1065,9 +1065,15 @@ function reportHandsonTableConverter() {
         type: 'POST',
         data: JSON.stringify(getReportData()),
         contentType: 'application/json; charset=utf-8',
+        beforeSend: function() {
+          $('.generate-button').prop('disabled', true);
+        },
         success: function() {},
         error: function(jqxhr) {
           HelperModule.flashAlertMsg(jqxhr.responseJSON.join(' '), 'danger');
+        },
+        ajaxComplete: function() {
+          $('.generate-button').prop('disabled', false);
         }
       });
     });
