@@ -3588,10 +3588,11 @@ en:
           not_valid: "Not valid URL"
 
   breadcrumbs:
+    templates: "Templates"
     projects: "Projects"
     inventories: "Inventories"
     protocols: "Protocol templates"
-    labels: "Label templates"
+    labels: "Label"
 
   Add: "Add"
   Asset: "File"
