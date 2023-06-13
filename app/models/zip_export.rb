@@ -36,19 +36,27 @@ class ZipExport < ApplicationRecord
     zip_file.blob&.filename&.to_s
   end
 
+  def zip!(input_dir, output_file)
+    entries = Dir.glob('**/*', base: input_dir)
+    Zip::File.open(output_file, create: true) do |zipfile|
+      entries.each do |entry|
+        zipfile.add(entry, "#{input_dir}/#{entry}")
+      end
+    end
+  end
+
   def generate_exportable_zip(user, data, type, options = {})
     I18n.backend.date_format = user.settings[:date_format] || Constants::DEFAULT_DATE_FORMAT
     zip_input_dir = FileUtils.mkdir_p(File.join(Rails.root, "tmp/temp_zip_#{Time.now.to_i}")).first
     tmp_zip_dir = FileUtils.mkdir_p(File.join(Rails.root, 'tmp/zip-ready')).first
-    tmp_zip_name = "export_#{Time.now.strftime('%F %H-%M-%S_UTC')}.zip"
-    tmp_zip_file = File.new(File.join(tmp_zip_dir, tmp_zip_name), 'w+')
+    tmp_full_zip_name = File.join(tmp_zip_dir, "export_#{Time.now.strftime('%F %H-%M-%S_UTC')}.zip")
 
     fill_content(zip_input_dir, data, type, options)
     zip!(zip_input_dir, tmp_zip_file)
-    zip_file.attach(io: File.open(tmp_zip_file), filename: tmp_zip_name)
+    zip_file.attach(io: File.open(tmp_full_zip_name), filename: tmp_zip_name)
     generate_notification(user) if save
   ensure
-    FileUtils.rm_rf([zip_input_dir, tmp_zip_file], secure: true)
+    FileUtils.rm_rf([zip_input_dir, tmp_full_zip_name], secure: true)
   end
 
   handle_asynchronously :generate_exportable_zip
@@ -60,14 +68,14 @@ class ZipExport < ApplicationRecord
              .delete_expired_export(id)
   end
 
-  def method_missing(m, *args, &block)
-    puts 'Method is missing! To use this zip_export you have to ' \
-         'define a method: generate_( type )_zip.'
-    object.public_send(m, *args, &block)
+  def method_missing(method_name, *args, &block)
+    return super unless method_name.to_s.start_with?('generate_')
+
+    raise StandardError, 'Method is missing! To use this zip_export you have to define a method: generate_( type )_zip.'
   end
 
   def respond_to_missing?(method_name, include_private = false)
-    method_name.to_s.start_with?(' generate_') || super
+    method_name.to_s.start_with?('generate_') || super
   end
 
   def fill_content(dir, data, type, options = {})
@@ -87,16 +95,6 @@ class ZipExport < ApplicationRecord
                 "#{zip_file_name}</a>"
     )
     UserNotification.create(notification: notification, user: user)
-  end
-
-  def zip!(input_dir, output_file)
-    files = Dir.entries(input_dir)
-    files.delete_if { |el| el == '..' || el == '.' }
-    Zip::File.open(output_file.path, Zip::File::CREATE) do |zipfile|
-      files.each do |filename|
-        zipfile.add(filename, input_dir + '/' + filename)
-      end
-    end
   end
 
   def generate_repositories_zip(tmp_dir, data, _options = {})

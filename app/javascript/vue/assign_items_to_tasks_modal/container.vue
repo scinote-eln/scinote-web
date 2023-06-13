@@ -43,6 +43,7 @@
               ref="projectsSelector"
               @change="changeProject"
               :options="projects"
+              :isLoading="projectsLoading"
               :placeholder="
                 i18n.t(
                   'repositories.modal_assign_items_to_task.body.project_select.placeholder'
@@ -76,6 +77,7 @@
               ref="experimentsSelector"
               @change="changeExperiment"
               :options="experiments"
+              :isLoading="experimentsLoading"
               :placeholder="experimentsSelectorPlaceholder"
               :no-options-placeholder="
                 i18n.t(
@@ -105,6 +107,7 @@
               ref="tasksSelector"
               @change="changeTask"
               :options="tasks"
+              :isLoading="tasksLoading"
               :placeholder="tasksSelectorPlaceholder"
               :no-options-placeholder="
                 i18n.t(
@@ -153,6 +156,9 @@ export default {
       selectedProject: null,
       selectedExperiment: null,
       selectedTask: null,
+      projectsLoading: null,
+      experimentsLoading: null,
+      tasksLoading: null,
       showCallback: null
     };
   },
@@ -164,12 +170,16 @@ export default {
   },
   mounted() {
     $(this.$refs.modal).on("shown.bs.modal", () => {
+      this.projectsLoading = true;
+
       $.get(this.projectURL, data => {
         if (Array.isArray(data)) {
           this.projects = data;
           return false;
         }
         this.projects = [];
+      }).always(() => {
+        this.projectsLoading = false;
       });
     });
 
@@ -240,24 +250,30 @@ export default {
       this.resetExperimentSelector();
       this.resetTaskSelector();
 
+      this.experimentsLoading = true;
       $.get(this.experimentURL, data => {
         if (Array.isArray(data)) {
           this.experiments = data;
           return false;
         }
         this.experiments = [];
+      }).always(() => {
+        this.experimentsLoading = false;
       });
     },
     changeExperiment(value) {
       this.selectedExperiment = value;
       this.resetTaskSelector();
 
+      this.tasksLoading = true;
       $.get(this.taskURL, data => {
         if (Array.isArray(data)) {
           this.tasks = data;
           return false;
         }
         this.tasks = [];
+      }).always(() => {
+        this.tasksLoading = false;
       });
     },
     changeTask(value) {

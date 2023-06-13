@@ -19,8 +19,7 @@ Canaid::Permissions.register_for(Project) do
      export_project)
     .each do |perm|
     can perm do |user, project|
-      project.permission_granted?(user, ProjectPermissions::READ) ||
-        project.team.permission_granted?(user, TeamPermissions::MANAGE)
+      project.permission_granted?(user, ProjectPermissions::READ)
     end
   end
 

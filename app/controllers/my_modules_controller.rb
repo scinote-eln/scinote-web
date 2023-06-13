@@ -452,12 +452,12 @@ class MyModulesController < ApplicationController
   end
 
   def inventory_assigning_my_module_filter
-    readable_experiments = Experiment.readable_by_user(current_user)
+    viewable_experiments = Experiment.viewable_by_user(current_user, current_team)
     assignable_my_modules = MyModule.repository_row_assignable_by_user(current_user)
 
-    experiment = Experiment.readable_by_user(current_user)
+    experiment = Experiment.viewable_by_user(current_user, current_team)
                            .joins(:my_modules)
-                           .where(experiments: { id: readable_experiments })
+                           .where(experiments: { id: viewable_experiments })
                            .where(my_modules: { id: assignable_my_modules })
                            .find_by(id: params[:experiment_id])
 
@@ -465,8 +465,6 @@ class MyModulesController < ApplicationController
 
     my_modules = experiment.my_modules
                            .where(my_modules: { id: assignable_my_modules })
-                           .distinct
-                           .search(current_user, false, params[:query], -1, current_team)
                            .pluck(:id, :name)
 
     return render plain: [].to_json if my_modules.blank?
