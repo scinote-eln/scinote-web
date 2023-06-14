@@ -200,34 +200,38 @@ class ProjectsController < ApplicationController
                          'restore'
                        end
 
-    default_public_user_name = nil
+    default_public_user_role_name = nil
     if !@project.visibility_changed? && @project.default_public_user_role_id_changed?
-      default_public_user_name = UserRole.find(project_params[:default_public_user_role_id]).name
+      default_public_user_role_name = UserRole.find(project_params[:default_public_user_role_id]).name
     end
 
     @project.last_modified_by = current_user
     if !return_error && @project.save
 
       # Add activities if needed
-      log_activity(:project_grant_access_to_all_team_members,
-                   @project,
-                   { visibility: message_visibility,
-                     role: UserRole.find(@project.default_public_user_role_id).name,
-                     team: @project.team.id }) if message_visibility.present? && @project.visible?
-      log_activity(:project_remove_access_from_all_team_members,
-                   @project,
-                   { visibility: message_visibility,
-                     role: UserRole.find(@project.default_public_user_role_id).name,
-                     team: @project.team.id }) if message_visibility.present? && !@project.visible?
+      if message_visibility.present? && @project.visible?
+        log_activity(:project_grant_access_to_all_team_members,
+                     @project,
+                     { visibility: message_visibility,
+                       role: @project.default_public_user_role.name,
+                       team: @project.team.id })
+      end
+      if message_visibility.present? && !@project.visible?
+        log_activity(:project_remove_access_from_all_team_members,
+                     @project,
+                     { visibility: message_visibility,
+                       role: @project.default_public_user_role.name,
+                       team: @project.team.id })
+      end
 
       log_activity(:rename_project) if message_renamed.present?
       log_activity(:archive_project) if message_archived == 'archive'
       log_activity(:restore_project) if message_archived == 'restore'
 
-      if default_public_user_name.present?
+      if default_public_user_role_name.present?
         log_activity(:project_access_changed_all_team_members,
                      @project,
-                     { team: @project.team.id, role: default_public_user_name })
+                     { team: @project.team.id, role: default_public_user_role_name })
       end
 
       flash_success = t('projects.update.success_flash', name: escape_input(@project.name))

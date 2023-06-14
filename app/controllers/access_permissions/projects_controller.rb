@@ -70,7 +70,7 @@ module AccessPermissions
             @project.update!(visibility: :visible, default_public_user_role_id: user_assignment_params[:user_role_id])
             log_activity(:project_grant_access_to_all_team_members,
                          { visibility: t('projects.activity.visibility_visible'),
-                           role: UserRole.find(@project.default_public_user_role_id).name,
+                           role: @project.default_public_user_role.name,
                            team: @project.team.id })
           else
             user_assignment = UserAssignment.find_or_initialize_by(
@@ -144,10 +144,12 @@ module AccessPermissions
         if permitted_default_public_user_role_params[:default_public_user_role_id].blank?
           # revoke all team members access
           @project.visibility = :hidden
+          previous_user_role_name = @project.default_public_user_role.name
+          @project.default_public_user_role_id = nil
           @project.save!
           log_activity(:project_remove_access_from_all_team_members,
                        { visibility: t('projects.activity.visibility_hidden'),
-                         role: UserRole.find(@project.default_public_user_role_id).name,
+                         role: previous_user_role_name,
                          team: @project.team.id })
           render json: { flash: t('access_permissions.update.revoke_all_team_members') }
         else

@@ -272,6 +272,8 @@ en:
       create_project: "Project created"
       rename_project: "Project renamed"
       change_project_visibility: "Project visibility changed"
+      project_grant_access_to_all_team_members: "Grant access to all team members"
+      project_remove_access_from_all_team_members: "Remove access from all team members"
       archive_project: "Project archived"
       restore_project: "Project restored"
       add_comment_to_project: "Project comment added"
