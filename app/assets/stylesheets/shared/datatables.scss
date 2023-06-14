@@ -17,3 +17,7 @@ table.dataTable thead th.dt-colresizable-hover {
     width: 2px;
   }
 }
+
+table.dataTable.table--resizable-columns {
+  table-layout: fixed;
+}

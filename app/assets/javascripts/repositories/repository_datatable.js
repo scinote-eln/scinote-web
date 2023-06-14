@@ -20,6 +20,7 @@ var RepositoryDatatable = (function(global) {
 
   var rowsSelected = [];
   var rowsLocked = [];
+  var colSizeMap = {};
 
   // Tells whether we're currently viewing or editing table
   var currentMode = 'viewMode';
@@ -171,14 +172,21 @@ var RepositoryDatatable = (function(global) {
     TABLE.button(0).enable(true);
     $('#saveRecord').attr('disabled', false);
     $(TABLE_WRAPPER_ID).find('tr').removeClass('blocked');
+
+    if (TABLE.ColSizes) {
+      $(TABLE_WRAPPER_ID).find('.table').addClass('table--resizable-columns');
+    }
+
     updateButtons();
     disableCheckboxToggleOnCheckboxPreview();
+    restoreColumnSizes();
   }
 
   function changeToEditMode() {
     $('#newRepoNameField').focus();
     currentMode = 'editMode';
-
+    $(TABLE_WRAPPER_ID).find('.table').removeClass('table--resizable-columns');
+    adjustTableHeader();
     clearRowSelection();
     updateButtons();
     initEditRowForms();
@@ -479,8 +487,24 @@ var RepositoryDatatable = (function(global) {
       contentType: 'application/json',
       data: JSON.stringify({ state: state }),
       dataType: 'json',
-      type: 'POST'
+      type: 'POST',
     });
+
+    TABLE.ColSizes = state.ColSizes;
+
+    restoreColumnSizes();
+  }
+
+  function updateColSizeMap(state) {
+    if (!state.ColSizes) return;
+
+    for (let i = 0; i < state.ColSizes.length; i++) {
+      colSizeMap[state.ColReorder[i]] = state.ColSizes[i];
+    }
+  }
+
+  function restoreColumnSizes() {
+    TABLE.colResize.restore();
   }
 
   function dataTableInit() {
@@ -503,16 +527,31 @@ var RepositoryDatatable = (function(global) {
         saveState: true,
         hasBoundCheck: false,
         isResizable: (column) => {
-          return column.idx > 1;
+          return column.idx > 0;
         },
         stateSaveCallback: (_, data) => {
           $(TABLE_ID).data('col-sizes', data);
           let state = TABLE.state();
+
+          // force width of checkbox column
+          data[0] = 30;
           state.ColSizes = data;
+
+          $(TABLE_WRAPPER_ID).find('.table').addClass('table--resizable-columns');
+
+          updateColSizeMap(state);
+
           saveState(state);
         },
-        stateLoadCallback: () => {
-          return TABLE.ColSizes;
+        stateLoadCallback: (state) => {
+          if (!TABLE.ColSizes) return;
+
+          let colSizes = TABLE.ColSizes;
+
+          // force width of checkbox column
+          colSizes[0] = 30;
+
+          return colSizes;
         },
         hoverClass: 'dt-colresizable-hover'
       },
@@ -537,6 +576,7 @@ var RepositoryDatatable = (function(global) {
 
           return JSON.stringify(d);
         },
+        complete: restoreColumnSizes,
         global: false,
         type: 'POST'
       },
@@ -682,13 +722,26 @@ var RepositoryDatatable = (function(global) {
             if (json.state.columns[7]) json.state.columns[7].visible = archived;
             if (json.state.search) delete json.state.search;
 
-            TABLE.ColSizes = json.state.ColSizes;
+            if (json.state.ColSizes) {
+              $(TABLE_WRAPPER_ID).find('.table').addClass('table--resizable-columns');
+              TABLE.ColSizes = json.state.ColSizes;
+              updateColSizeMap(json.state);
+            }
+
             callback(json.state);
           }
         });
       },
       stateSaveCallback: function(settings, data) {
-        saveState({ ...data, ColSizes: TABLE.ColSizes });
+        if (Object.keys(colSizeMap).length === 0) return;
+
+        let colSizes = [];
+
+        for (let i = 0; i < data.ColReorder.length; i++) {
+          colSizes.push(colSizeMap[data.ColReorder[i]]);
+        }
+
+        saveState({ ...data, ColSizes: colSizes });
       },
       fnInitComplete: function() {
         window.initActionToolbar();
@@ -736,7 +789,7 @@ var RepositoryDatatable = (function(global) {
         //   adjustTableHeader();
         // }, 500);
 
-        TABLE.colResize.restore();
+        restoreColumnSizes();
       }
     });
 
@@ -770,11 +823,6 @@ var RepositoryDatatable = (function(global) {
 
     initRowSelection();
     updateSelectedRowsForAssignments();
-    // $(window).resize(() => {
-    //   setTimeout(() => {
-    //     adjustTableHeader();
-    //   }, 500);
-    // });
 
     return TABLE;
   }
@@ -905,7 +953,6 @@ var RepositoryDatatable = (function(global) {
       });
 
       changeToEditMode();
-      // adjustTableHeader();
     })
     .on('click', '#assignRepositoryRecords', function(e) {
       e.preventDefault();
