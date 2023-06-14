@@ -4,7 +4,7 @@ module Users
   module Settings
     module Account
       class AddonsController < ApplicationController
-        before_action :set_breadcrumbs_items, only: %i(index show)
+        before_action :set_breadcrumbs_items, only: %i(index)
         layout 'fluid'
 
         def index
