@@ -84,24 +84,24 @@
               </div>
             </div>
           <% end %>
-          <div class="dropdown sort-menu">
-            <button class="btn btn-light icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              <span><i class="sn-icon sn-icon-sort-down"></i></span>
-            </button>
-            <ul id="sortMenuDropdown" class="dropdown-menu sort-projects-menu dropdown-menu-right" aria-labelledby="sortMenu">
-              <% %w(archived_new archived_old new old atoz ztoa id_asc id_desc).each_with_index do |sort, i| %>
-                <% if i.even? && i.positive? %>
-                  <li class="divider" <%= i == 2 ? 'data-view-mode=archived' : '' %>></li>
-                <% end %>
-                <li <%= %w(archived_new archived_old).include?(sort) ? 'data-view-mode=archived' : '' %>>
-                  <a class="<%= 'selected' if @current_sort == sort %>"
-                    data-sort="<%= sort %>" >
-                    <%= t("general.sort.#{sort}_html") %>
-                  </a>
-                </li>
+        </div>
+        <div class="dropdown sort-menu">
+          <button class="btn btn-light icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <span><i class="sn-icon sn-icon-sort-down"></i></span>
+          </button>
+          <ul id="sortMenuDropdown" class="dropdown-menu sort-projects-menu dropdown-menu-right" aria-labelledby="sortMenu">
+            <% %w(archived_new archived_old new old atoz ztoa id_asc id_desc).each_with_index do |sort, i| %>
+              <% if i.even? && i.positive? %>
+                <li class="divider" <%= i == 2 ? 'data-view-mode=archived' : '' %>></li>
               <% end %>
-            </ul>
-          </div>
+              <li <%= %w(archived_new archived_old).include?(sort) ? 'data-view-mode=archived' : '' %>>
+                <a class="<%= 'selected' if @current_sort == sort %>"
+                  data-sort="<%= sort %>" >
+                  <%= t("general.sort.#{sort}_html") %>
+                </a>
+              </li>
+            <% end %>
+          </ul>
         </div>
       </span>
     </div>
