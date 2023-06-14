@@ -5,7 +5,7 @@
     <a class="tab-button sa-experiments" href="#exp-tab-<%= at_who_key %>" data-toggle="tab"><%= t('atwho.experiments') %></a>
     <a class="tab-button sa-tasks" href="#tsk-tab-<%= at_who_key %>" data-toggle="tab"><%= t('atwho.tasks') %></a>
     <a class="tab-button sa-repositories" href="#rep-tab-<%= at_who_key %>" data-toggle="tab"><%= t('atwho.inventories') %></a>
-    <div class="dismiss"><span class="fas fa-times"></span></div>
+    <div class="dismiss"><span class="sn-icon sn-icon-close"></span></div>
   </div>
   <div class="tab-content">
     <div class="tab-pane" role="tabpanel" id="prj-tab-<%= at_who_key %>" data-object-type="PROJECT"></div>
@@ -16,7 +16,7 @@
       <% repositories.each do |repository| %>
         <button class="btn btn-light repository-object" data-object-id="<%= repository.id %>">
           <% if repository.shared_with?(current_team) %>
-            <i class="fas fa-user-friends"></i>
+            <i class="sn-icon sn-icon-user-menu-friends"></i>
           <% end %>
           <%= repository.name %>
         </button>

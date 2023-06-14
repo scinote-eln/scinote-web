@@ -3,9 +3,9 @@
     <% if result.is_text %>
     <span class="fas fa-font"></span>
     <% elsif result.is_table %>
-    <span class="fas fa-table"></span>
+    <span class="sn-icon sn-icon-tables"></span>
     <% elsif result.is_asset %>
-    <span class="fas fa-paperclip"></span>
+    <span class="sn-icon sn-icon-files"></span>
     <% end %>
   </div>
   <div class="panel panel-default">
@@ -13,7 +13,7 @@
       <div class="panel-options pull-right">
         <% if result.editable? && can_manage_my_module?(result.my_module) %>
           <a class="btn btn-light icon-btn edit-result-button <%= edit_result_button_class(result) %>" id="<%= result.id %>_edit" href="<%= edit_result_link(result) %>" data-remote="true" title="<%= t'my_modules.results.options.edit_title' %>">
-            <span class="fas fa-pencil-alt"></span>
+            <span class="sn-icon sn-icon-edit"></span>
           </a>
         <% end %>
         <% if can_manage_result?(result) %>

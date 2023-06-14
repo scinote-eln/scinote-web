@@ -38,7 +38,7 @@ module Toolbars
       {
         name: 'versions',
         label: I18n.t('protocols.index.toolbar.versions'),
-        icon: 'icon-versions',
+        icon: 'sn-icon sn-icon-versions',
         button_id: 'protocolVersions',
         type: :legacy
       }
@@ -53,7 +53,7 @@ module Toolbars
       {
         name: 'duplicate',
         label: I18n.t('protocols.index.toolbar.duplicate'),
-        icon: 'fas fa-copy',
+        icon: 'sn-icon sn-icon-duplicate',
         path: clone_protocols_path,
         type: :request,
         request_method: :post
@@ -74,7 +74,7 @@ module Toolbars
       {
         name: 'access',
         label: I18n.t('protocols.index.toolbar.access'),
-        icon: 'fas fa-door-open',
+        icon: 'sn-icon sn-icon-project-member-access',
         button_class: 'access-btn',
         path: path,
         type: 'remote-modal'
@@ -89,7 +89,7 @@ module Toolbars
       {
         name: 'export',
         label: I18n.t('protocols.index.toolbar.export'),
-        icon: 'fas fa-download',
+        icon: 'sn-icon sn-icon-export',
         path: export_protocols_path(protocol_ids: @protocols.pluck(:id)),
         type: :download
       }
@@ -101,7 +101,7 @@ module Toolbars
       {
         name: 'archive',
         label: I18n.t('protocols.index.toolbar.archive'),
-        icon: 'fas fa-archive',
+        icon: 'sn-icon sn-icon-archive',
         path: archive_protocols_path,
         type: :request,
         request_method: :post
@@ -114,7 +114,7 @@ module Toolbars
       {
         name: 'archive',
         label: I18n.t('protocols.index.toolbar.restore'),
-        icon: 'fas fa-undo',
+        icon: 'sn-icon sn-icon-restore',
         path: restore_protocols_path,
         type: :request,
         request_method: :post

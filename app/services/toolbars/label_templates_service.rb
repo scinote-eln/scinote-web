@@ -39,7 +39,7 @@ module Toolbars
       {
         name: 'edit',
         label: I18n.t('label_templates.index.toolbar.edit'),
-        icon: 'fas fa-pencil-alt',
+        icon: 'sn-icon sn-icon-edit',
         path: label_template_path(@label_templates.first),
         type: :link
       }
@@ -69,7 +69,7 @@ module Toolbars
       {
         name: 'duplicate',
         label: I18n.t('label_templates.index.toolbar.duplicate'),
-        icon: 'fas fa-copy',
+        icon: 'sn-icon sn-icon-duplicate',
         button_id: 'duplicateLabelTemplate',
         path: duplicate_label_templates_path,
         type: :legacy
@@ -86,7 +86,7 @@ module Toolbars
       {
         name: 'delete',
         label: I18n.t('label_templates.index.toolbar.delete'),
-        icon: 'fas fa-trash',
+        icon: 'sn-icon sn-icon-delete',
         button_id: 'deleteLabelTemplate',
         type: :legacy
       }

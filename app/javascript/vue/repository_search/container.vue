@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center mr-3 flex-nowrap">
     <button v-if="!searchOpened" class="btn btn-light icon-btn" @click="openSearch">
-      <i class="fas fa-search"></i>
+      <i class="sn-icon sn-icon-search"></i>
     </button>
     <div v-if="searchOpened || barcodeSearchOpened" class="w-52 flex">
       <div v-if="searchOpened" class="sci-input-container right-icon">
@@ -13,7 +13,7 @@
           @keyup="setValue"
           @blur="closeSearch"
         />
-        <i class="fas fa-search"></i>
+        <i class="sn-icon sn-icon-search"></i>
       </div>
       <div v-if="barcodeSearchOpened" class="sci-input-container right-icon ml-2">
         <input
@@ -24,11 +24,11 @@
           @change="setBarcodeValue"
           @blur="closeBarcodeSearch"
         />
-        <img class="barcode-scanner" src="/images/icon_small/barcode.png"/>
+        <i class='sn-icon sn-icon-barcode barcode-scanner'></i>
       </div>
     </div>
     <button v-if="!barcodeSearchOpened" class="btn btn-light icon-btn ml-2" @click="openBarcodeSearch">
-      <img class="barcode-scanner" src="/images/icon_small/barcode.png"/>
+      <i class='sn-icon sn-icon-barcode barcode-scanner'></i>
     </button>
   </div>
 </template>

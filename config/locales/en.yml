@@ -3051,8 +3051,8 @@ en:
           ztoa_html: "Name &#8593;"
         view_mode:
           inline_html: "<i class=\"fas fa-desktop\"></i> Extra large"
-          thumbnail_html: "<i class=\"fas fa-th-large\"></i> Medium"
-          list_html: "<i class=\"fas fa-list\"></i> List"
+          thumbnail_html: "<i class=\"sn-icon sn-icon-grid-view\"></i> Medium"
+          list_html: "<i class=\"sn-icon sn-icon-activities\"></i> List"
       new:
         add_step_title: "Add new step"
         tab_checklists: "Checklists"
@@ -3238,8 +3238,8 @@ en:
       set_view_size: "SET VIEW SIZE"
       delete: "Delete file"
       inline_html: "<i class=\"fas fa-desktop\"></i> Extra large"
-      thumbnail_html: "<i class=\"fas fa-th-large\"></i> Medium"
-      list_html: "<i class=\"fas fa-list\"></i> List"
+      thumbnail_html: "<i class=\"sn-icon sn-icon-grid-view\"></i> Medium"
+      list_html: "<i class=\"sn-icon sn-icon-activities\"></i> List"
     delete_file_modal:
       title: "Delete attachment"
       description_1_html: "You are about to delete <b>%{file_name}</b></p>"
@@ -3588,10 +3588,11 @@ en:
           not_valid: "Not valid URL"
 
   breadcrumbs:
+    templates: "Templates"
     projects: "Projects"
     inventories: "Inventories"
     protocols: "Protocol templates"
-    labels: "Label templates"
+    labels: "Label"
     teams: "All Teams"
     addons: "Add-Ons"
     label_printer: "Label Printer"

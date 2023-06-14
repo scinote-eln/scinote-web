@@ -1,7 +1,7 @@
 <%= render partial: "global_activities/references/team.html.erb",
            locals: { team: team, subject: team, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
 <div class="ga-breadcrumb">
-  <span class="fas fa-list-alt"></span>
+  <span class="sn-icon sn-icon-inventory"></span>
   <% if subject %>
     <%= route_to_other_team(repository_path(subject.id, team: subject.team.id),
                             team,

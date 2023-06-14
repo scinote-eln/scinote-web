@@ -19,7 +19,7 @@
         <span class="total-page">...</span>
       </div>
       <button class="btn btn-light icon-btn next-page">
-        <i class="fas fa-arrow-right"></i>
+        <i class="sn-icon sn-icon-move"></i>
       </button>
       <div class="divider"></div>
       <div class="zoom-page">
@@ -35,10 +35,10 @@
       </div>
       <div class="sci-btn-group">
         <button class="btn btn-light icon-btn zoom-out">
-          <i class="fas fa-search-minus"></i>
+          <i class="sn-icon sn-icon-search-minus"></i>
         </button>
         <button class="btn btn-light icon-btn zoom-in">
-          <i class="fas fa-search-plus"></i>
+          <i class="sn-icon sn-icon-search-plus"></i>
         </button>
       </div>
     </div>

@@ -10,7 +10,7 @@
         aria-expanded="true"
         tabindex="0"
       >
-        <span class="fas fa-cog"></span>
+        <span class="sn-icon sn-icon-settings"></span>
         <span>{{ i18n.t("my_modules.protocol.options_dropdown.title") }}</span>
         <span class="caret"></span>
       </button>
@@ -24,7 +24,7 @@
             data-action="load-from-repository"
             @click="loadProtocol"
           >
-            <span class="fas fa-edit"></span>
+            <span class="sn-icon sn-icon-protocols-templates"></span>
             <span>{{ i18n.t("my_modules.protocol.options_dropdown.load_from_repo") }}</span>
           </a>
         </li>
@@ -46,7 +46,7 @@
             :href="protocol.attributes.urls.export_url"
             :class="{ disabled: !protocol.attributes.urls.export_url }"
           >
-            <span class="fas fa-upload"></span>
+            <span class="sn-icon sn-icon-import"></span>
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.export")
             }}</span>
@@ -82,7 +82,7 @@
             data-action="revert"
             @click="revertProtocol"
           >
-            <span class="fas fa-undo"></span>
+            <span class="sn-icon sn-icon-restore"></span>
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.revert_protocol")
             }}</span>
@@ -93,7 +93,7 @@
             data-turbolinks="false"
             @click.prevent="openStepsDeletingModal()"
           >
-            <span class="fas fa-trash"></span>
+            <span class="sn-icon sn-icon-delete"></span>
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.delete_steps")
             }}</span>

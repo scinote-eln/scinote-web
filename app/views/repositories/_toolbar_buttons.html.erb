@@ -15,13 +15,13 @@
         <button type="button" data-toggle="tooltip" data-placement="bottom" title="<%= t('repositories.show.button_tooltip.new') %>"
                 class="btn btn-primary editAdd auto-shrink-button"
                 id="addRepositoryRecord" data-view-mode="active">
-          <span class="fas fa-plus"></span>
+          <span class="sn-icon sn-icon-new-task"></span>
           <span class="button-text"><%= t("repositories.add_new_record") %></span>
         </button>
         <button type="button" data-toggle="tooltip" data-placement="bottom" title="<%= t('repositories.show.button_tooltip.import') %>"
                 class="btn btn-light editImport auto-shrink-button"
                 id="importRecordsButton" data-view-mode="active">
-          <span class="fas fa-upload"></span>
+          <span class="sn-icon sn-icon-import"></span>
           <span class="button-text"><%= t('repositories.index.options_dropdown.import_items') %></span>
         </button>
       <% end %>
@@ -32,7 +32,7 @@
           <%= t("repositories.save_record") %>
         </button>
         <button type="button" class="btn btn-light prevent-shrink" id="cancelSave" data-view-mode="active">
-          <span class="fas fa-times-circle"></span>
+          <span class="sn-icon sn-icon-close"></span>
           <%= t("repositories.cancel_save") %>
         </button>
       </span>
@@ -80,7 +80,7 @@
       <button class="btn btn-light manage-repo-column-index"
               data-modal-url="<%= repository_repository_columns_path(@repository) %>"
               data-action="new">
-        <span class="fas fa-columns">
+        <span class="sn-icon sn-icon sn-icon-reports">
       </button>
     </div>
   </div>

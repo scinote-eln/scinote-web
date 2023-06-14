@@ -228,7 +228,7 @@ var globalActivities = (function() {
               ${dateContainer[0].dataset.periodLabel}
               ${$('.ga-side .date-selector.filter-block')[0].dataset.periodSelect}
             </div>
-            <i class="fas fa-times"></i>
+            <i class="sn-icon sn-icon-close"></i>
           </div>`).appendTo('.ga-top .ga-tags')
           .find('.fa-times').click(() => {
             $('.date-selector .date.clear').click();

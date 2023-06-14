@@ -36,14 +36,14 @@
     <h3 class="panel-title">
       <% if result.is_asset %>
         <% if result.asset.image? %>
-          <span class="fas fa-paperclip"></span>
+          <span class="sn-icon sn-icon-files"></span>
         <% else %>
-          <span class="fas fa-paperclip"></span>
+          <span class="sn-icon sn-icon-files"></span>
         <% end %>
       <% elsif result.is_text %>
         <span class="fas fa-asterisk"></span>
       <% elsif result.is_table %>
-        <span class="fas fa-table"></span>
+        <span class="sn-icon sn-icon-tables"></span>
       <% end %>
       <%= result.name %>
     </h3>

@@ -19,11 +19,11 @@
              @keyup.enter="addStep(steps.length)"
              @click="addStep(steps.length)"
              tabindex="0">
-              <span class="fas fa-plus" aria-hidden="true"></span>
+              <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
               <span>{{ i18n.t("protocols.steps.new_step") }}</span>
           </a>
           <button class="btn btn-secondary" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
-            <span class="fas fa-print" aria-hidden="true"></span>
+            <span class="sn-icon sn-icon-printer" aria-hidden="true"></span>
             <span>{{ i18n.t("protocols.print.button") }}</span>
           </button>
           <ProtocolOptions
@@ -104,11 +104,11 @@
         <div id="protocol-steps-container" :class=" inRepository ? 'protocol-steps collapse in' : ''">
           <div v-if="steps.length > 0" class="protocol-step-actions">
             <button class="btn btn-light" @click="collapseSteps" tabindex="0">
-              <span class="fas fa-caret-up"></span>
+              <span class="sn-icon sn-icon-open-show"></span>
               {{ i18n.t("protocols.steps.collapse_label") }}
             </button>
             <button class="btn btn-light" @click="expandSteps" tabindex="0">
-              <span class="fas fa-caret-down"></span>
+              <span class="sn-icon sn-icon-down"></span>
               {{ i18n.t("protocols.steps.expand_label") }}
             </button>
             <a v-if="urls.reorder_steps_url"
@@ -126,7 +126,7 @@
             <template v-for="(step, index) in steps">
               <div class="step-block" :key="step.id">
                 <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)">
-                  <i class="fas fa-plus"></i>
+                  <i class="sn-icon sn-icon-new-task"></i>
                 </div>
                 <Step
                   :step.sync="steps[index]"
@@ -143,7 +143,7 @@
             </template>
           </div>
           <button v-if="(steps.length > 0 || inRepository) && urls.add_step_url" :class="!inRepository ? 'btn btn-primary' : 'btn btn-secondary'" @click="addStep(steps.length)">
-            <i class="fas fa-plus"></i>
+            <i class="sn-icon sn-icon-new-task"></i>
             {{ i18n.t("protocols.steps.new_step") }}
           </button>
         </div>

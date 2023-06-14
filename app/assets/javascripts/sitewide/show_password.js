@@ -1,7 +1,7 @@
 function initShowPassword() {
   $('.fas.fa-eye.show-password').remove();
   $.each($('input[type="password"]'), function(i, e) {
-    $(`<i class="fas fa-eye show-password"
+    $(`<i class="sn-icon sn-icon-visibility-show show-password"
           style="
             cursor: pointer;
             z-index: 10;

@@ -3,12 +3,12 @@
     <% if result.is_text %>
       <span class="fas fa-asterisk"></span>
     <% elsif result.is_table %>
-      <span class="fas fa-table"></span>
+      <span class="sn-icon sn-icon-tables"></span>
     <% else %>
       <% if result.asset.image? %>
-        <span class="fas fa-paperclip"></span>
+        <span class="sn-icon sn-icon-files"></span>
       <% else %>
-        <span class="fas fa-paperclip"></span>
+        <span class="sn-icon sn-icon-files"></span>
       <% end %>
     <% end %>
     <%= render partial: "search/results/partials/result_text.html.erb", locals: { result: result, query: search_query, target: nil } %>

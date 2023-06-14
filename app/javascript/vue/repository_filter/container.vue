@@ -6,7 +6,7 @@
           <span class="filter-name">
             {{ filterName || i18n.t('repositories.show.filters.title') }}
           </span>
-          <i v-if="savedFilters.length" class="fas fa-caret-down"></i>
+          <i v-if="savedFilters.length" class="sn-icon sn-icon-down"></i>
         </div>
         <div v-if="savedFilters.length" class="dropdown-menu saved-filters-list">
           <SavedFilterElement
@@ -32,7 +32,7 @@
     <div class="footer">
       <div id="filtersColumnsDropdown" class="dropup filters-columns-dropdown" @click="toggleColumnsFilters">
         <button class="btn btn-secondary add-filter prevent-shrink" >
-          <i class="fas fa-plus"></i>
+          <i class="sn-icon sn-icon-new-task"></i>
           {{ i18n.t('repositories.show.filters.add_filter') }}
         </button>
         <div class="dropdown-menu filters-columns-list">

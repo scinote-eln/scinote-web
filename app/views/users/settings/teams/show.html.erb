@@ -33,13 +33,13 @@
     <div class="team-metadata">
 
       <div class="created-at grid-block">
-       <span class="fas fa-calendar-alt"></span>
+       <span class="sn-icon sn-icon-calendar"></span>
        <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_created_at") %></span>
        <b><%= l(@team.created_at, format: :full_date) %></b>
       </div>
 
       <div class="created-by grid-block">
-        <span class="fas fa-user fa-lg"></span>
+        <span class="sn-icon sn-icon-user-menu fa-lg"></span>
         <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_created_by") %></span>
         <b>
           <%= t('users.settings.teams.edit.header_created_by_name_email', name: @team.created_by.full_name, email: @team.created_by.email) if @team.created_by %>
@@ -80,7 +80,7 @@
       <% if can_invite_team_users?(@team) %>
         <div id="add-new-team-members-button" class="hidden">
           <a href="#" class="btn btn-primary" data-trigger="invite-users" data-turbolinks="false" data-modal-id="team-invite-users-modal">
-            <span class="fas fa-plus"></span>
+            <span class="sn-icon sn-icon-new-task"></span>
             <%= I18n.t('users.settings.teams.edit.add_user') %>
           </a>
         </div>

@@ -24,6 +24,14 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.sn-icon {
+  font-size: 24px !important;
+}
+
+.sn-icon.mini {
+  font-size: 16px !important;
+}
+
 .sn-icon-info:before {
   content: "\e900";
 }
