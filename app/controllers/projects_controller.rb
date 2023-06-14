@@ -184,7 +184,7 @@ class ProjectsController < ApplicationController
     end
 
     message_renamed = @project.name_changed?
-    message_visibility = if @project.visibility_changed?
+    message_visibility = if !@project.visibility_changed?
                            nil
                          elsif @project.visible?
                            t('projects.activity.visibility_visible')
@@ -201,15 +201,25 @@ class ProjectsController < ApplicationController
                        end
 
     default_public_user_name = nil
-    if @project.visibility_changed? && @project.default_public_user_role_id_changed?
-      default_public_user_name = UserRole.find(project_params[:default_public_user_role_id])&.name
+    if !@project.visibility_changed? && @project.default_public_user_role_id_changed?
+      default_public_user_name = UserRole.find(project_params[:default_public_user_role_id]).name
     end
 
     @project.last_modified_by = current_user
     if !return_error && @project.save
 
       # Add activities if needed
-      log_activity(:change_project_visibility, @project, visibility: message_visibility) if message_visibility.present?
+      log_activity(:project_grant_access_to_all_team_members,
+                   @project,
+                   { visibility: message_visibility,
+                     role: UserRole.find(@project.default_public_user_role_id).name,
+                     team: @project.team.id }) if message_visibility.present? && @project.visible?
+      log_activity(:project_remove_access_from_all_team_members,
+                   @project,
+                   { visibility: message_visibility,
+                     role: UserRole.find(@project.default_public_user_role_id).name,
+                     team: @project.team.id }) if message_visibility.present? && !@project.visible?
+
       log_activity(:rename_project) if message_renamed.present?
       log_activity(:archive_project) if message_archived == 'archive'
       log_activity(:restore_project) if message_archived == 'restore'

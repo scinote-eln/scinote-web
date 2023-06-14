@@ -441,7 +441,9 @@ class Extends
     protocol_template_access_granted_all_team_members: 238,
     protocol_template_access_changed_all_team_members: 239,
     protocol_template_access_revoked_all_team_members: 240,
-    project_access_changed_all_team_members: 241
+    project_access_changed_all_team_members: 241,
+    project_grant_access_to_all_team_members: 242,
+    project_remove_access_from_all_team_members: 243
   }
 
   ACTIVITY_GROUPS = {
