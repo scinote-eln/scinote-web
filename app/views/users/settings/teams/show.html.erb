@@ -11,9 +11,6 @@
 <div class="tab-content">
   <div class="tab-pane content-pane" role="tabpanel"></div>
   <div class="tab-pane content-pane active team-settings-pane" role="tabpanel">
-
-    <%= render partial: "users/settings/teams/breadcrumbs.html.erb" %>
-
     <!-- TITLE -->
     <h1 id="team-name" class="settings-team-name" data-current-team="<%= current_team == @team %>">
       <% if can_manage_team?(@team) %>

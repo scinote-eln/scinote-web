@@ -3593,6 +3593,9 @@ en:
     inventories: "Inventories"
     protocols: "Protocol templates"
     labels: "Label"
+    teams: "All Teams"
+    addons: "Add-Ons"
+    label_printer: "Label Printer"
 
   Add: "Add"
   Asset: "File"

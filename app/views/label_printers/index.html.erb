@@ -5,13 +5,6 @@
 
 <div class="content-pane flexible label-printer-show">
   <div class="content-header">
-    <div id="breadcrumbsWrapper">
-      <div class="breadcrumbs-container">
-        <%= render partial: 'shared/breadcrumbs', locals: {
-          links: [{label: 'Add-ons', url: addons_path}]
-        } %>
-      </div>
-    </div>
     <div class="title-row">
       <h1 class="printer-title">
         <% if @printer_type == 'fluics' %>
