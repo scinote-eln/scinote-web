@@ -776,6 +776,8 @@ var RepositoryDatatable = (function(global) {
           rowsLocked.push(parseInt($(e).attr('id'), 10));
         });
 
+        $(TABLE_WRAPPER_ID).find('.table thead th:not(:first-child)').prepend($('<i class="fas fa-grip-vertical column-grip"></i>'));
+
         // go back to manage columns index in modal, on column save, after table loads
         $('#manage-repository-column .back-to-column-modal').trigger('click');
 
