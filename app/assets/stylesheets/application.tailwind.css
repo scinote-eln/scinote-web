@@ -1,4 +1,5 @@
 @import "tailwind/inputs";
+@import "tailwind/buttons";
 
 @tailwind base;
 @tailwind components;

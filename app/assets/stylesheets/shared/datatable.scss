@@ -40,7 +40,7 @@
     align-items: center;
     display: flex;
     flex-wrap: wrap;
-    min-height: var(--datatable-pagination-row);
+    height: var(--datatable-pagination-row);
     position: relative;
     width: 100%;
     z-index: 101;

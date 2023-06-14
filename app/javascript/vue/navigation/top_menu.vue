@@ -15,7 +15,7 @@
       ></Select>
     </div>
     <div v-if="user" class="dropdown">
-      <button class="btn btn-light icon-btn" data-toggle="dropdown">
+      <button class="btn btn-light icon-btn btn-black" data-toggle="dropdown">
         <i class="sn-icon sn-icon-help"></i>
       </button>
       <ul v-if="user" class="dropdown-menu dropdown-menu-right">
@@ -27,7 +27,7 @@
       </ul>
     </div>
     <div v-if="user" class="dropdown">
-      <button class="btn btn-light icon-btn" data-toggle="dropdown">
+      <button class="btn btn-light icon-btn btn-black" data-toggle="dropdown">
         <i class="sn-icon sn-icon-settings"></i>
       </button>
       <ul class="dropdown-menu dropdown-menu-right">
@@ -44,7 +44,7 @@
       </ul>
     </div>
     <div v-if="user" class="sci--navigation--notificaitons-flyout-container">
-      <button class="btn btn-light icon-btn"
+      <button class="btn btn-light icon-btn btn-black"
               :class="{ 'has-unseen': unseenNotificationsCount > 0 }"
               :data-unseen="unseenNotificationsCount"
               data-toggle="dropdown"
@@ -60,7 +60,7 @@
         @close="notificationsOpened = false" />
     </div>
     <div v-if="user" class="dropdown">
-      <div class="sci--navigation--top-menu-user btn btn-light icon-btn" data-toggle="dropdown">
+      <div class="sci--navigation--top-menu-user btn btn-light icon-btn btn-black" data-toggle="dropdown">
         <img class="avatar w-6 h-6" :src="user.avatar_url">
       </div>
       <div class="dropdown-menu dropdown-menu-right top-menu-user-dropdown">
