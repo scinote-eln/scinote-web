@@ -95,7 +95,8 @@
         editingTable: false,
         tableObject: null,
         nameModalOpen: false,
-        reloadHeader: 0
+        reloadHeader: 0,
+        updatingTableData: false
       }
     },
     computed: {
@@ -104,10 +105,10 @@
       }
     },
     updated() {
-      this.loadTableData();
+      if(!this.updatingTableData) this.loadTableData();
     },
     beforeUpdate() {
-      this.tableObject.destroy();
+      if(!this.updatingTableData) this.tableObject.destroy();
     },
     mounted() {
       this.loadTableData();
@@ -130,6 +131,7 @@
       },
       disableTableEdit() {
         this.editingTable = false;
+        this.updatingTableData = false;
       },
       enableNameEdit() {
         this.editingName = true;
@@ -203,6 +205,7 @@
         }
         this.$emit('update', this.element)
         this.ajax_update_url()
+        this.updatingTableData = false;
       },
       ajax_update_url() {
         $.ajax({
@@ -229,7 +232,10 @@
           formulas: formulasEnabled,
           preventOverflow: 'horizontal',
           readOnly: !this.editingTable,
-          afterUnlisten: () => setTimeout(this.updateTable, 100) // delay makes cancel button work
+          afterUnlisten: () => {
+            this.updatingTableData = true;
+            setTimeout(this.updateTable, 100) // delay makes cancel button work
+          }
         });
       }
     }
