@@ -92,7 +92,10 @@
         this.buttonOverflow = false;
 
         this.$nextTick(() => {
-          if (!this.$el.getBoundingClientRect) return;
+          if (
+                !(this.$el.getBoundingClientRect &&
+                document.querySelector('.sn-action-toolbar__action:last-child'))
+              ) return;
 
           let containerRect = this.$el.getBoundingClientRect();
           let lastActionRect = document.querySelector('.sn-action-toolbar__action:last-child').getBoundingClientRect();

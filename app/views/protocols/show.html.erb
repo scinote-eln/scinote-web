@@ -15,7 +15,7 @@
                       } %>
         <% else %>
           <% if @protocol.archived %>
-            <i class="sn-icon sn-icon-archive"></i>&nbsp;
+            <span><%= t('labels.archived')%></span>&nbsp;
           <% end %>
           <div class="name-readonly-placeholder">
             <% if @protocol.in_repository_draft? %>

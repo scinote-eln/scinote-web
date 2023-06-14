@@ -16,7 +16,7 @@
     <% if ::NewRelic::Agent.instance.started? %>
       <%= ::NewRelic::Agent.browser_timing_header(controller.request.content_security_policy_nonce) %>
     <% end %>
-    <%= javascript_include_tag 'jquery_bundle' %>
+    <%= javascript_include_tag 'jquery_bundle', nonce: true %>
     <%= javascript_include_tag 'application' %>
     <%= javascript_include_tag 'application_pack' %>
     <%= javascript_include_tag 'session_end' %>
@@ -59,7 +59,7 @@
     data-atwho-repositories-url="<%= atwho_menu_team_path(current_team) %>"
     data-atwho-rep-items-url="<%= atwho_rep_items_team_path(current_team) %>"
     data-atwho-menu-items="<%= atwho_menu_items_team_path(current_team) %>"
-    data-datetime-picker-format-date-only="<%= datetime_picker_format_date_only %>"
+    data-datetime-picker-format="<%= datetime_picker_format_date_only %>"
     <% end %>
   >
 

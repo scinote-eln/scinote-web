@@ -4,7 +4,7 @@
     :value="value"
     :options="currentOptions"
     :placeholder="placeholder"
-    :noOptionsPlaceholder="noOptionsPlaceholder"
+    :noOptionsPlaceholder="isLoading ? i18n.t('general.loading') : noOptionsPlaceholder"
     v-bind:disabled="disabled"
     @change="change"
     @blur="blur"
@@ -29,7 +29,8 @@
       placeholder: { type: String },
       searchPlaceholder: { type: String },
       noOptionsPlaceholder: { type: String },
-      disabled: { type: Boolean }
+      disabled: { type: Boolean },
+      isLoading: { type: Boolean, default: false }
     },
     components: { Select },
     data() {

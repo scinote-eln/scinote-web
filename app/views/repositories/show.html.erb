@@ -37,7 +37,7 @@
       <% end %>
       <div class="repository-archived-title-name" data-view-mode="archived">
         <% if @repository.archived? %>
-          <i class="sn-icon sn-icon-archive"></i>&nbsp;
+          <span><%= t('labels.archived')%></span>&nbsp;
           <%= t('repositories.show.archived_inventory', repository_name: @repository.name) %>
         <% else %>
           <%= t('repositories.show.archived_inventory_items', repository_name: @repository.name) %>

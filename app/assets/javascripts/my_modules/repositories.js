@@ -783,10 +783,9 @@ var MyModuleRepositories = (function() {
         SELECTED_ROWS = {};
         $(FULL_VIEW_TABLE.table().container()).find('.dataTable')
           .attr('data-assigned-items-count', data.rows_count);
-        FULL_VIEW_TABLE.ajax.reload(null, false);
         reloadRepositoriesList(data.repository_id, true);
         updateFullViewRowsCount(data.rows_count);
-        renderFullViewAssignButtons();
+        FULL_VIEW_MODAL.modal('hide');
       },
       error: function(response) {
         if (response.status === 403) {

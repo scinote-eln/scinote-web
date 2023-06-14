@@ -747,6 +747,16 @@ li.module-hover {
 
             a {
               color: inherit;
+
+              &.disabled-link {
+                color: var(--sn-grey);
+                pointer-events: none;
+                text-decoration: none;
+
+                .name {
+                  color: var(--sn-grey);
+                }
+              }
             }
 
             .name {
@@ -872,7 +882,7 @@ li.module-hover {
             animation-duration: 2s;
             animation-iteration-count: infinite;
             animation-name: placeholder-pulsing;
-            background-color: $color-alto;
+            background-color: var(--sn-sleepy-grey);
             border-radius: $border-radius-default;
             height: 18px;
 

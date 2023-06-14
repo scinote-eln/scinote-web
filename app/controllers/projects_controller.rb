@@ -107,14 +107,14 @@ class ProjectsController < ApplicationController
   end
 
   def inventory_assigning_project_filter
-    readable_experiments = Experiment.readable_by_user(current_user)
+    viewable_experiments = Experiment.viewable_by_user(current_user, current_team)
     assignable_my_modules = MyModule.repository_row_assignable_by_user(current_user)
 
-    projects = Project.readable_by_user(current_user)
+    projects = Project.viewable_by_user(current_user, current_team)
+                      .active
                       .joins(experiments: :my_modules)
-                      .where(experiments: { id: readable_experiments })
+                      .where(experiments: { id: viewable_experiments })
                       .where(my_modules: { id: assignable_my_modules })
-                      .search(current_user, false, params[:query], 1, current_team)
                       .distinct
                       .pluck(:id, :name)
 
@@ -167,64 +167,70 @@ class ProjectsController < ApplicationController
   end
 
   def update
+    @project.assign_attributes(project_update_params)
     return_error = false
     flash_error = t('projects.update.error_flash', name: escape_input(@project.name))
 
+    return render_403 unless can_manage_project?(@project) || @project.archived_changed?
+
     # Check archive permissions if archiving/restoring
-    if project_params.include? :archived
-      if (project_params[:archived] == 'true' &&
-          !can_archive_project?(@project)) ||
-         (project_params[:archived] == 'false' &&
-           !can_restore_project?(@project))
+    if @project.archived_changed? &&
+       ((@project.archived == 'true' && !can_archive_project?(@project)) ||
+       (@project.archived == 'false' && !can_restore_project?(@project)))
         return_error = true
-        is_archive = project_params[:archived] == 'true' ? 'archive' : 'restore'
+        is_archive = @project.archived? ? 'archive' : 'restore'
         flash_error =
           t("projects.#{is_archive}.error_flash", name: escape_input(@project.name))
-      end
-    elsif !can_manage_project?(@project)
-      render_403 && return
     end
 
-    message_renamed = nil
-    message_visibility = nil
-    if (project_params.include? :name) &&
-       (project_params[:name] != @project.name)
-      message_renamed = true
-    end
-    if (project_params.include? :visibility) &&
-       (project_params[:visibility] != @project.visibility)
-      message_visibility = if project_params[:visibility] == 'visible'
-                             t('projects.activity.visibility_visible')
-                           else
-                             t('projects.activity.visibility_hidden')
-                           end
+    message_renamed = @project.name_changed?
+    message_visibility = if @project.visibility_changed?
+                           nil
+                         elsif @project.visible?
+                           t('projects.activity.visibility_visible')
+                         else
+                           t('projects.activity.visibility_hidden')
+                         end
+
+    message_archived = if !@project.archived_changed?
+                         nil
+                       elsif @project.archived?
+                         'archive'
+                       else
+                         'restore'
+                       end
+
+    default_public_user_name = nil
+    if @project.visibility_changed? && @project.default_public_user_role_id_changed?
+      default_public_user_name = UserRole.find(project_params[:default_public_user_role_id])&.name
     end
 
     @project.last_modified_by = current_user
-    if !return_error && @project.update(project_params)
-      # Add activities if needed
+    if !return_error && @project.save
 
+      # Add activities if needed
       log_activity(:change_project_visibility, @project, visibility: message_visibility) if message_visibility.present?
       log_activity(:rename_project) if message_renamed.present?
-      log_activity(:archive_project) if project_params[:archived] == 'true'
-      log_activity(:restore_project) if project_params[:archived] == 'false'
+      log_activity(:archive_project) if message_archived == 'archive'
+      log_activity(:restore_project) if message_archived == 'restore'
+
+      if default_public_user_name.present?
+        log_activity(:project_access_changed_all_team_members,
+                     @project,
+                     { team: @project.team.id, role: default_public_user_name })
+      end
 
       flash_success = t('projects.update.success_flash', name: escape_input(@project.name))
-      if project_params[:archived] == 'true'
+      if message_archived == 'archive'
         flash_success = t('projects.archive.success_flash', name: escape_input(@project.name))
-      elsif project_params[:archived] == 'false'
+      elsif message_archived == 'restore'
         flash_success = t('projects.restore.success_flash', name: escape_input(@project.name))
       end
       respond_to do |format|
         format.html do
-          # Redirect URL for archive view is different as for other views.
-          if project_params[:archived] == 'false'
-            # The project should be restored
-            @project.restore(current_user) unless @project.archived
-          elsif @project.archived
-            # The project should be archived
-            @project.archive(current_user)
-          end
+          @project.restore(current_user) if message_archived == 'restore'
+          @project.archive(current_user) if message_archived == 'archive'
+
           redirect_to projects_path
           flash[:success] = flash_success
         end
@@ -404,10 +410,15 @@ class ProjectsController < ApplicationController
   def project_params
     params.require(:project)
           .permit(
-            :name, :team_id, :visibility,
+            :name, :visibility,
             :archived, :project_folder_id,
             :default_public_user_role_id
           )
+  end
+
+  def project_update_params
+    params.require(:project)
+          .permit(:name, :visibility, :archived, :default_public_user_role_id)
   end
 
   def view_type_params

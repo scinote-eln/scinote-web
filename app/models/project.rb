@@ -113,23 +113,21 @@ class Project < ApplicationRecord
     joins("
       LEFT OUTER JOIN experiments ON experiments.project_id = projects.id
       LEFT OUTER JOIN user_assignments experiment_user_assignments
-        ON experiment_user_assignments.assignable_id = experiments.id AND
-           experiment_user_assignments.assignable_type = 'Experiment'
+        ON experiment_user_assignments.assignable_id = experiments.id
+        AND experiment_user_assignments.assignable_type = 'Experiment'
+        AND experiment_user_assignments.user_id = #{user.id}
       LEFT OUTER JOIN user_roles experiment_user_roles
         ON experiment_user_roles.id = experiment_user_assignments.user_role_id
+        AND experiment_user_roles.permissions @> ARRAY['#{ExperimentPermissions::READ}']::varchar[]
       LEFT OUTER JOIN my_modules ON my_modules.experiment_id = experiments.id
       LEFT OUTER JOIN user_assignments my_module_user_assignments
-        ON my_module_user_assignments.assignable_id = my_modules.id AND
-           my_module_user_assignments.assignable_type = 'MyModule'
+        ON my_module_user_assignments.assignable_id = my_modules.id
+        AND my_module_user_assignments.assignable_type = 'MyModule'
+        AND my_module_user_assignments.user_id = #{user.id}
       LEFT OUTER JOIN user_roles my_module_user_roles
         ON my_module_user_roles.id = my_module_user_assignments.user_role_id
+        AND my_module_user_roles.permissions @> ARRAY['#{MyModulePermissions::READ}']::varchar[]
     ")
-      .where('
-        (experiment_user_assignments.user_id = ? AND experiment_user_roles.permissions @> ARRAY[?]::varchar[]
-          OR experiments.id IS NULL) AND
-        (my_module_user_assignments.user_id = ? AND my_module_user_roles.permissions @> ARRAY[?]::varchar[]
-          OR my_modules.id IS NULL)
-      ', user.id, ExperimentPermissions::READ, user.id, MyModulePermissions::READ)
   end
 
   def self.filter_by_teams(teams = [])
