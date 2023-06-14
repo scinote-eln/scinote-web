@@ -14,7 +14,7 @@
       <template v-if="options.length">
         <div
           v-for="option in options"
-          :key="option[0]" @mousedown.stop="setValue(option[0])"
+          :key="option[0]" @mousedown.prevent.stop="setValue(option[0])"
           class="sn-select__option"
         >
           {{ option[1] }}
