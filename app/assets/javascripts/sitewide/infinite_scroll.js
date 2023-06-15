@@ -125,12 +125,6 @@ var InfiniteScroll = (function() {
       removeScroll(object);
       initScroll(object, config);
     },
-    resetScroll: (object) => {
-      $(object).data('next-page', $(object).data('config').loadFirstPage ? 1 : 2).removeClass('last-page');
-      if (scrollNotVisible($(object))) {
-        loadData($(object), $(object).data('next-page'));
-      }
-    },
     removeScroll: (object) => {
       removeScroll(object);
     },
