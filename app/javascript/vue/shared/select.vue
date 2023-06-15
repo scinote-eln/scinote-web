@@ -4,12 +4,12 @@
       <button ref="focusElement" class="sn-select__value">
         <span>{{ valueLabel || (placeholder || i18n.t('general.select')) }}</span>
       </button>
-      <span class="sn-select__caret caret"></span>
+      <i class="sn-icon" :class="{ 'sn-icon-down': !isOpen, 'sn-icon-up': isOpen}"></i>
     </slot>
     <perfect-scrollbar
       ref="optionsContainer"
-      class="sn-select__options"
       :style="optionPositionStyle"
+      class="sn-select__options scroll-container"
     >
       <template v-if="options.length">
         <div
@@ -30,8 +30,9 @@
     </perfect-scrollbar>
   </div>
 </template>
-
 <script>
+  import PerfectScrollbar from 'vue2-perfect-scrollbar';
+
   export default {
     name: 'Select',
     props: {
@@ -42,6 +43,7 @@
       noOptionsPlaceholder: { type: String },
       disabled: { type: Boolean, default: false }
     },
+    comments: { PerfectScrollbar },
     data() {
       return {
         isOpen: false,

@@ -135,19 +135,6 @@
     .sort-menu {
       display: inline-block;
 
-      #sortMenu {
-        background: $color-white;
-
-        &:focus,
-        &:active {
-          box-shadow: none;
-        }
-
-        &:hover {
-          background: $color-concrete;
-        }
-      }
-
       .dropdown-menu {
         @include font-button;
         min-width: 200px;

@@ -141,7 +141,7 @@ var DateTimeHelper = (function() {
                 data-datetime-part="date"
                 data-selected-date="${dateDataValue}"
                 value='${value}'/>
-        <i class="fas fa-calendar-alt"></i>
+        <i class="sn-icon sn-icon-calendar"></i>
       </div>
     `;
   }
@@ -154,7 +154,7 @@ var DateTimeHelper = (function() {
                data-mask-type="time"
                value='${value}'
                placeholder="HH:mm"/>
-        <i class="fas fa-clock"></i>
+        <i class="sn-icon sn-icon-created"></i>
       </div>
     `;
   }

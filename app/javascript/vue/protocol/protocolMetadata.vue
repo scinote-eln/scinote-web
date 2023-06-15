@@ -14,7 +14,7 @@
       </div>
       <div class="actions-block">
         <a class="btn btn-light icon-btn pull-right" :href="protocol.attributes.urls.print_protocol_url" target="_blank">
-          <span class="fas fa-print" aria-hidden="true"></span>
+          <span class="sn-icon sn-icon-printer" aria-hidden="true"></span>
         </a>
         <button class="btn btn-light" @click="openVersionsModal">{{ i18n.t("protocols.header.versions") }}</button>
         <button v-if="protocol.attributes.urls.publish_url" @click="$emit('publish')" class="btn btn-primary">{{ i18n.t("protocols.header.publish") }}</button>

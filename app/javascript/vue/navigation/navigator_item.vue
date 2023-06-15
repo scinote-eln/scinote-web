@@ -1,36 +1,40 @@
 <template>
-  <div class="text-sn-blue w-full flex justify-center flex-col"
-       :class="{ 'pl-6': !firstLevel }"
-       :navigator-item-id="item.id"
-  >
-    <div class="min-w-[190px] py-1.5 px-1 menu-item flex items-center whitespace-nowrap" :title="this.itemToolTip" :class="{ 'bg-sn-light-grey active': activeItem }">
-      <div class="w-6 h-6 flex justify-start shrink-0 mr-1.5">
-        <i v-if="hasChildren"
-          class="sn-icon cursor-pointer"
-          :class="{'sn-icon-right': !childrenExpanded, 'sn-icon-down': childrenExpanded }"
-          @click="toggleChildren"></i>
+  <div>
+    <div class="text-sn-blue w-full flex justify-center flex-col menu-item"
+        :class="{ 'bg-sn-super-light-blue active': activeItem }"
+        :style="{ 'padding-left': paddingLeft + 'px', 'min-width': (paddingLeft + 182) + 'px' }"
+        :navigator-item-id="item.id"
+    >
+      <div class="min-w-[182px] py-1.5 px-1 flex items-center whitespace-nowrap" :title="this.itemToolTip">
+        <div class="w-6 h-6 flex justify-start shrink-0 mr-2">
+          <i v-if="hasChildren"
+            class="sn-icon cursor-pointer"
+            :class="{'sn-icon-right': !childrenExpanded, 'sn-icon-down': childrenExpanded }"
+            @click="toggleChildren"></i>
+        </div>
+        <i v-if="itemIcon" class="mr-1" :class="itemIcon"></i>
+        <a :href="item.url"
+            class="text-ellipsis overflow-hidden hover:no-underline pr-3"
+            :class="{
+              'text-sn-science-blue-hover': (!item.archived && archived),
+              'no-hover': (!item.archived && archived),
+              'disabled-link': item.disabled
+            }">
+          <template v-if="item.archived">(A)</template>
+          {{ item.name }}
+        </a>
       </div>
-      <i v-if="itemIcon" class="mr-1" :class="itemIcon"></i>
-      <a :href="item.url"
-          class="text-ellipsis overflow-hidden hover:no-underline pr-3"
-          :class="{
-            'text-sn-science-blue-hover': (!item.archived && archived),
-            'no-hover': (!item.archived && archived),
-            'disabled-link': item.disabled,
-          }">
-        <template v-if="item.archived">(A)</template>
-        {{ item.name }}
-      </a>
     </div>
     <div class="basis-full" :class="{'hidden': !childrenExpanded}">
       <NavigatorItem v-for="item in sortedMenuItems"
-                     @item:expand="treeExpand"
-                     :key="item.id"
-                     :currentItemId="currentItemId"
-                     :reloadCurrentLevel="reloadCurrentLevel"
-                     :reloadChildrenLevel="reloadChildrenLevel"
-                     :item="item"
-                     :archived="archived" />
+                    @item:expand="treeExpand"
+                    :key="item.id"
+                    :currentItemId="currentItemId"
+                    :paddingLeft="24 + paddingLeft"
+                    :reloadCurrentLevel="reloadCurrentLevel"
+                    :reloadChildrenLevel="reloadChildrenLevel"
+                    :item="item"
+                    :archived="archived" />
     </div>
   </div>
 </template>
@@ -46,6 +50,7 @@ export default {
     item: Object,
     currentItemId: String,
     archived: Boolean,
+    paddingLeft: Number,
     reloadCurrentLevel: Boolean,
     reloadChildrenLevel: Boolean
   },

@@ -56,8 +56,10 @@
       </span>
 
     <% end %>
-    <span class="breadcrumbs-link" title="<%= last_item[:label] %>">
-      <%= last_item[:label] %>
-    </span>
+    <% if last_item %>
+      <span class="breadcrumbs-link" title="<%= last_item[:label] %>">
+        <%= last_item[:label] %>
+      </span>
+    <% end %>
   <% end %>
 <% end %>

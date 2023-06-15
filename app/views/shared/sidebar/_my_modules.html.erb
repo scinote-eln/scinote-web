@@ -10,13 +10,13 @@
                   class: 'sidebar-link',
                   data: { module_id: my_module.id } %>
       <% if action_name == 'canvas' %>
-        <i class="fas fa-map-marker-alt canvas-center-on" data-module-id="<%= my_module.id %>"></i>
+        <i class="sn-icon sn-icon-location canvas-center-on" data-module-id="<%= my_module.id %>"></i>
       <% end %>
     </li>
   <% end %>
   <li class="sidebar-leaf">
     <%= link_to my_modules_experiment_path(experiment, view_mode: :archived), class: 'sidebar-link' do %>
-      <i class="fas fa-archive"></i>&nbsp;
+      <i class="sn-icon sn-icon-archive"></i>&nbsp;
       <%= t('sidebar.my_modules.archived_button') %>
     <% end%>
   </li>

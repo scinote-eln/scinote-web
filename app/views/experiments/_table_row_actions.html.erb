@@ -2,7 +2,7 @@
 <% if can_restore_my_module?(my_module) %>
   <li>
     <a href="<%= restore_my_modules_experiment_path(my_module.experiment) %>" class="restore-my-module" data-id="<%= my_module.id %>">
-      <i class="fas fa-undo"></i>
+      <i class="sn-icon sn-icon-restore"></i>
       <%= t("experiments.table.my_module_actions.restore") %>
     </a>
   </li>
@@ -22,14 +22,14 @@
 <% end %>
 <li>
   <a class="open-access-modal" data-action="remote-modal" href="<%= task_access_path %>">
-    <i class="fas fa-door-open"></i>
+    <i class="sn-icon sn-icon-project-member-access"></i>
     <%= t("experiments.table.my_module_actions.access") %>
   </a>
 </li>
 <% if can_move_my_module?(my_module) %>
   <li>
     <a href="" class="move-my-module" data-id="<%= my_module.id %>">
-      <i class="fas fa-arrow-right"></i>
+      <i class="sn-icon sn-icon-move"></i>
       <%= t("experiments.table.my_module_actions.move") %>
     </a>
   </li>
@@ -37,7 +37,7 @@
 <% if can_manage_experiment?(my_module.experiment) && my_module.active? %>
 <li>
   <a href="" class="duplicate-my-module" data-id="<%= my_module.id %>">
-    <i class="fas fa-copy"></i>
+    <i class="sn-icon sn-icon-duplicate"></i>
     <%= t("experiments.table.my_module_actions.duplicate") %>
   </a>
 </li>
@@ -45,7 +45,7 @@
 <% if can_archive_my_module?(my_module) %>
   <li>
     <a href="<%= archive_my_modules_experiment_path(my_module.experiment) %>" class="archive-my-module" data-id="<%= my_module.id %>">
-      <i class="fas fa-archive"></i>
+      <i class="sn-icon sn-icon-archive"></i>
       <%= t("experiments.table.my_module_actions.archive") %>
     </a>
   </li>

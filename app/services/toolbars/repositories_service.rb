@@ -36,7 +36,7 @@ module Toolbars
         name: 'rename',
         label: I18n.t('libraries.index.buttons.edit'),
         button_id: 'renameRepoBtn',
-        icon: 'fas fa-pencil-alt',
+        icon: 'sn-icon sn-icon-edit',
         path: team_repository_rename_modal_path(@current_team, repository_id: @repository),
         type: 'remote-modal'
       }
@@ -49,7 +49,7 @@ module Toolbars
         name: 'duplicate',
         label: I18n.t('libraries.index.buttons.duplicate'),
         button_id: 'copyRepoBtn',
-        icon: 'fas fa-copy',
+        icon: 'sn-icon sn-icon-duplicate',
         path: team_repository_copy_modal_path(@current_team, repository_id: @repository),
         type: 'remote-modal'
       }
@@ -62,7 +62,7 @@ module Toolbars
         name: 'archive',
         label: I18n.t('libraries.index.buttons.archive'),
         button_id: 'archiveRepoBtn',
-        icon: 'fas fa-archive',
+        icon: 'sn-icon sn-icon-archive',
         path: archive_team_repositories_path(@current_team),
         type: :request,
         request_method: :post
@@ -75,7 +75,7 @@ module Toolbars
       {
         name: 'share',
         label: I18n.t('repositories.index.share_inventory'),
-        icon: 'fas fa-user-plus',
+        icon: 'sn-icon sn-icon-user-menu-plus',
         button_class: 'share-repository-button',
         path: team_repository_share_modal_path(@current_team, repository_id: @repository),
         type: 'remote-modal'
@@ -88,7 +88,7 @@ module Toolbars
       {
         name: 'restore',
         label: I18n.t('libraries.index.buttons.restore'),
-        icon: 'fas fa-undo',
+        icon: 'sn-icon sn-icon-restore',
         button_id: 'restoreRepoBtn',
         path: restore_team_repositories_path(@current_team),
         type: :request,
@@ -102,7 +102,7 @@ module Toolbars
       {
         name: 'delete',
         label: I18n.t('libraries.index.buttons.delete'),
-        icon: 'fas fa-trash',
+        icon: 'sn-icon sn-icon-delete',
         button_id: 'deleteRepoBtn',
         path: team_repository_destroy_modal_path(@current_team, repository_id: @repository),
         type: 'remote-modal'

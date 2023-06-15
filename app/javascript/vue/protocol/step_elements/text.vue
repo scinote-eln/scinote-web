@@ -9,10 +9,10 @@
         <i class="fas fa-pen"></i>
       </button>
       <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light" tabindex="0" @click="duplicateElement">
-        <i class="fas fa-clone"></i>
+        <i class="sn-icon sn-icon-duplicate"></i>
       </button>
       <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="0">
-        <i class="fas fa-trash"></i>
+        <i class="sn-icon sn-icon-delete"></i>
       </button>
     </div>
     <Tinymce

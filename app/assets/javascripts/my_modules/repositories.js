@@ -188,7 +188,7 @@ var MyModuleRepositories = (function() {
         if (row.hasActiveReminders) {
           recordName = `<div class="dropdown row-reminders-dropdown"
                           data-row-reminders-url="${row.rowRemindersUrl}" tabindex='-1'>
-                          <i class="fas fa-bell dropdown-toggle row-reminders-icon"
+                          <i class="sn-icon sn-icon-notifications dropdown-toggle row-reminders-icon"
                              data-toggle="dropdown" id="rowReminders${row.DT_RowId}}"></i>
                           <ul class="dropdown-menu" role="menu" aria-labelledby="rowReminders${row.DT_RowId}">
                           </ul>
@@ -286,7 +286,7 @@ var MyModuleRepositories = (function() {
         var dataTableWrapper = $(tableContainer).closest('.dataTables_wrapper');
         DataTableHelpers.initLengthAppearance(dataTableWrapper);
         DataTableHelpers.initSearchField(dataTableWrapper, I18n.t('repositories.show.filter_inventory_items'));
-        $('<img class="barcode-scanner" src="/images/icon_small/barcode.png"></img>').appendTo($('.search-container'));
+        $("<i class='sn-icon sn-icon-barcode'></i>").appendTo($('.search-container'));
         dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
         if (options.assign_mode) {
           renderFullViewAssignButtons();

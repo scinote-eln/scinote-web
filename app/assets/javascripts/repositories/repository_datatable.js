@@ -528,9 +528,9 @@ var RepositoryDatatable = (function(global) {
           let content = $.fn.dataTable.render.AssignedTasksValue(data, row);
           let icon;
           if (!row.recordEditable) {
-            icon = `<i class="repository-row-lock-icon fas fa-lock" title="${I18n.t('repositories.table.locked_item')}"></i>`;
+            icon = `<i class="repository-row-lock-icon sn-icon sn-icon-locked-task" title="${I18n.t('repositories.table.locked_item')}"></i>`;
           } else if (EDITABLE) {
-            icon = '<i class="repository-row-edit-icon fas fa-pencil-alt" data-view-mode="active"></i>';
+            icon = '<i class="repository-row-edit-icon sn-icon sn-icon-edit" data-view-mode="active"></i>';
           } else {
             icon = '';
           }

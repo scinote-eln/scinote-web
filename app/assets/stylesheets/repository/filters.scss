@@ -34,7 +34,7 @@
       cursor: pointer;
     }
 
-    &.open .fas.fa-caret-down::before {
+    &.open .sn-icon-down::before {
       content: $font-fas-caret-up;
     }
 

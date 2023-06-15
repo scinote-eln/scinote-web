@@ -10,14 +10,14 @@
 
   <div class="sci-input-container left-icon">
     <input type="search" class="form-control sci-input-field" id="searchFolderTree" placeholder="Find a folder"/>
-    <i class="fas fa-search"></i>
+    <i class="sn-icon sn-icon-search"></i>
   </div>
 
 
   <div class="folders-tree-container">
     <div id="moveToFolders">
       <ul>
-        <li class="jstree-open" id="root_folder" data-jstree='{"icon":"fas fa-folder root-folder"}'>
+        <li class="jstree-open" id="root_folder" data-jstree='{"icon":"sn-icon sn-icon-projects root-folder"}'>
           <a class="jstree-clicked" href="#">Projects</a>
           <%= render partial: 'projects/index/modals/move_to_folders_tree.html.erb',
                      locals: { records: sidebar_folders_tree(current_team, current_user, @current_sort, folders_only: true) } %>

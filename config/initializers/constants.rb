@@ -195,7 +195,7 @@ class Constants
   COLOR_BLACK = '#231f20'.freeze # $color-black
 
   # Fonts
-  FONT_FAMILY_BASE = 'Lato,"Open Sans",Arial,Helvetica,sans-serif;'.freeze # $font-family-base
+  FONT_FAMILY_BASE = 'Inter,"Open Sans",Arial,Helvetica,sans-serif;'.freeze # $font-family-base
 
   #=============================================================================
   # External URLs

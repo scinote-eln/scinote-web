@@ -21,14 +21,14 @@
                       type='text'
                       name='key'
                       placeholder="<%= t('protocols.index.protocolsio.search_bar_placeholder') %>" />
-                <i class='fas fa-search'></i>
+                <i class='sn-icon sn-icon-search'></i>
               </div>
             </div>
 
             <div class='protocol-sort'>
               <div class="dropdown sort-menu">
                 <button class="btn btn-light icon-btn" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                  <span><i class="fas fa-sort-amount-down"></i></span>
+                  <span><i class="sn-icon sn-icon-sort-down"></i></span>
                 </button>
                 <ul id="sortMenuDropdown" class="dropdown-menu sort-projects-menu dropdown-menu-right" aria-labelledby="sortMenu">
                   <% {atoz: :alpha_asc, ztoa: :alpha_desc, new: :newest, old: :oldest}.each do |name, value| %>

@@ -14,15 +14,15 @@
           <div class="pull-right" data-view-mode="active">
             <% if can_manage_my_module?(@my_module) %>
               <%= link_to "", remote: true, class: 'btn btn-link edit-tag-link', title: t("experiments.canvas.modal_manage_tags.edit_tag") do %>
-                <span class="fas fa-pencil-alt"></span>
+                <span class="sn-icon sn-icon-edit"></span>
               <% end %>
               <%= link_to my_module_my_module_tag_path(@my_module, mmt, format: :json), method: :delete, remote: true, class: 'btn btn-link remove-tag-link', title: t("experiments.canvas.modal_manage_tags.remove_tag", module: @my_module.name), data: {tag_id: tag.id} do %>
-                <span class="fas fa-times"></span>
+                <span class="sn-icon sn-icon-close"></span>
               <% end %>
               <%= bootstrap_form_for tag, remote: true, url: project_tag_path(@my_module.experiment.project, tag, format: :json), data: {tag_id: tag.id}, method: :delete, html: { class: "delete-tag-form"} do |f| %>
                 <%= hidden_field_tag :my_module_id, @my_module.id %>
                 <%= f.button class: 'btn btn-link delete-tag-link', title: t("experiments.canvas.modal_manage_tags.delete_tag"), data: { confirm: t("experiments.canvas.modal_manage_tags.delete_tag_confirmation") } do %>
-                  <span class="fas fa-trash-alt"></span>
+                  <span class="sn-icon sn-icon-delete-alt"></span>
                 <% end %>
               <% end %>
             <% end %>
@@ -44,7 +44,7 @@
                 <span class="fas fa-check"></span>
               <% end %>
               <%= link_to "", remote: true, class: 'btn btn-link cancel-tag-link', title: t("experiments.canvas.modal_manage_tags.cancel_tag") do %>
-                <span class="fas fa-times"></span>
+                <span class="sn-icon sn-icon-close"></span>
               <% end %>
             </div>
           <% end %>
@@ -81,7 +81,7 @@
           <%= f.hidden_field :name, :value => t("tags.create.new_name") %>
           <%= f.hidden_field :color, :value => Constants::TAG_COLORS[0] %>
           <%= f.button class: "btn btn-primary" do %>
-            <span class="fas fa-plus"></span>
+            <span class="sn-icon sn-icon-new-task"></span>
             <span class="hidden-xs"><%=t "experiments.canvas.modal_manage_tags.create_new" %></span>
           <% end %>
         <% end %>

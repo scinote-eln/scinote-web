@@ -16,7 +16,7 @@
                     class: 'btn btn-primary new-my-module-button',
                     data: { view_mode: 'active' },
                     remote: true do %>
-                <span class="fas fa-plus"></span>
+                <span class="sn-icon sn-icon-new-task"></span>
                 <span class="hidden-sm hidden-xs"><%= t('experiments.canvas.new_my_module') %></span>
         <% end %>
         <%=link_to canvas_edit_experiment_url(@experiment),
@@ -25,7 +25,7 @@
               id: 'edit-canvas-button',
               data: { action: 'edit' },
               class: 'ajax btn btn-light' do %>
-                <span class="fas fa-pencil-alt"></span>
+                <span class="sn-icon sn-icon-edit"></span>
                 <span class="hidden-sm hidden-xs"><%= t('experiments.canvas.canvas_edit') %></span>
               <% end %>
       <% end %>

@@ -1,10 +1,10 @@
 // scss-lint:disable ImportantRule
 
-$font-family-lato: Lato, "Open Sans", Arial, Helvetica, sans-serif;
+$font-family-inter: Inter;
 $font-family-sans-serif: "Open Sans", Arial, Helvetica, sans-serif;
 $font-family-serif: Georgia, "Times New Roman", Times, serif;
 $font-family-monospace: Menlo, Monaco, Consolas, "Courier New", monospace;
-$font-family-base: $font-family-lato;
+$font-family-base: $font-family-inter;
 $font-family-icons: "Font Awesome 5 Free";
 $font-size-base: 16px;
 $headings-font-weight: bold;
@@ -29,6 +29,7 @@ $font-fas-plus: "\f02b";
 
 .sn-icon {
   font-size: 24px !important;
+  vertical-align: middle;
 
   &.mini {
     font-size: 16px !important;

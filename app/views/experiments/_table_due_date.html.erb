@@ -6,7 +6,7 @@
   <span class="date-text" data-editable="<%= due_date_editable %>"
         data-toggle="tooltip" data-placement="top" title="<%= due_status %>" data-due-status="<%= due_status %>">
     <span id="dueDateLabelContainer" class="view-block" >
-      <%= render partial: "experiments/table_due_date_label.html.erb" , 
+      <%= render partial: "experiments/table_due_date_label.html.erb" ,
                  locals: { my_module: my_module, user: user } %>
     </span>
     <% if due_date_editable %>
@@ -24,7 +24,7 @@
                 data-positioning-vertical="bottom"
                 value="<%= my_module.due_date ? l(my_module.due_date, format: :full) : '' %>"/>
       </div>
-      <div class="fas fa-times-circle clear-date" 
+      <div class="sn-icon sn-icon-close clear-date"
            data-toggle='clear-date-time-picker'
            data-target='calendarDueDate<%= my_module.id %>'>
       </div>

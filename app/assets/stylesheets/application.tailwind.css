@@ -1,3 +1,6 @@
+@import "tailwind/inputs";
+@import "tailwind/buttons";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,4 +13,26 @@ html {
 .border {
   border-style: solid;
   border-color: theme('borderColor.DEFAULT', currentColor);
+}
+
+.scroll-container .ps__rail-y{
+  background-color: var(--sn-white);
+  opacity: 1;
+}
+
+.scroll-container .ps__thumb-y{
+  background-color: var(--sn-grey);
+  opacity: 1;
+  right: 5px;
+}
+
+.scroll-container .ps__rail-x{
+  background-color: var(--sn-white);
+  opacity: 1;
+}
+
+.scroll-container .ps__thumb-x{
+  background-color: var(--sn-grey);
+  opacity: 1;
+  bottom: 5px;
 }

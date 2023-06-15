@@ -33,7 +33,7 @@ module Toolbars
       {
         name: 'edit',
         label: I18n.t('projects.reports.index.edit'),
-        icon: 'fas fa-pencil-alt',
+        icon: 'sn-icon sn-icon-edit',
         button_id: 'edit-report-btn',
         path: edit_project_report_path(@report.project_id, @report.id),
         type: :link
@@ -72,7 +72,7 @@ module Toolbars
       {
         name: 'generate_docx_action',
         label: label,
-        icon: 'fas fa-file-word',
+        icon: 'sn-icon sn-icon-file-word',
         button_id: button_id
       }
     end
@@ -83,7 +83,7 @@ module Toolbars
       {
         name: 'delete',
         label: I18n.t('projects.reports.index.delete'),
-        icon: 'fas fa-trash',
+        icon: 'sn-icon sn-icon-delete',
         button_id: 'delete-reports-btn',
         type: :link
       }
