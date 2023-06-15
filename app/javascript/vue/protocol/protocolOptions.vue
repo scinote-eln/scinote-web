@@ -12,7 +12,7 @@
       >
         <span class="sn-icon sn-icon-settings"></span>
         <span>{{ i18n.t("my_modules.protocol.options_dropdown.title") }}</span>
-        <span class="caret"></span>
+        <span class="sn-icon sn-icon-down"></span>
       </button>
       <ul
         class="dropdown-menu dropdown-menu-right"

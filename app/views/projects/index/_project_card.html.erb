@@ -13,7 +13,7 @@
   </div>
 
   <div class="project-name-cell table-cell">
-    <% 
+    <%
       disabled_link = 'disabled-link' unless can_read_project?(project)
     %>
     <% if project.archived? %>
@@ -34,7 +34,7 @@
     <div
       class="dropdown dropdown-async project-actions-menu  <%= 'new-comments' if has_unseen_comments?(project) %>"
       data-dropdown-url="<%= actions_dropdown_project_path(project) %>">
-      <button class="btn btn-light dropdown-toggle icon-btn" type="button" id="projectActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      <button class="btn btn-light btn-xs dropdown-toggle icon-btn" type="button" id="projectActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
         <i class="sn-icon sn-icon-more-hori"></i>
       </button>
       <ul></ul>

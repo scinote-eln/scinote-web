@@ -17,7 +17,7 @@
           <%= link_to new_project_folder_path(project_folder_id: current_folder, view_mode: projects_view_mode),
                       class: 'btn btn-light new-project-folder-btn',
                       remote: true do %>
-            <span class="sn-icon sn-icon-projects" aria-hidden="true"></span>
+            <span class="sn-icon sn-icon-folder" aria-hidden="true"></span>
             <span class="hidden-xs"><%= t('projects.index.new_folder') %></span>
           <% end %>
         <% end %>
@@ -78,7 +78,7 @@
             </span>
             <span class="folder-search-label"><%= t("projects.index.filters_modal.folders.label") %></span>
             <div class="dropdown folder-search-info">
-              <a class="fas fa-info-circle" id="folderSearchInfoBtn" data-toggle="dropdown"></a>
+              <a class="sn-icon sn-icon-info" id="folderSearchInfoBtn" data-toggle="dropdown"></a>
               <div id="folderSearchInfo" class="dropdown-menu folder-search-popover" aria-labelledby="folderSearchInfo">
                 <%= t("projects.index.filters_modal.folders.popover_html") %>
               </div>

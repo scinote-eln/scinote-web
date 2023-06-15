@@ -3,7 +3,7 @@
     <div id="protocol-details" class="protocol-section-header">
       <div class="protocol-details-container">
         <a class="protocol-section-caret" role="button" data-toggle="collapse" href="#details-container" aria-expanded="false" aria-controls="details-container">
-          <i class="fas fa-caret-right"></i>
+          <i class="sn-icon sn-icon-right"></i>
           <span id="protocolDetailsLabel" class="protocol-section-title">
             <h2>
               {{ i18n.t("protocols.header.details") }}

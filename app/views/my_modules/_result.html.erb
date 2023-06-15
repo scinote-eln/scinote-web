@@ -30,7 +30,7 @@
         <% end %>
       </div>
       <a class="result-panel-collapse-link" href="#result-panel-<%= result.id %>" data-toggle="collapse">
-        <span class="fas fa-caret-right"></span>
+        <span class="sn-icon sn-icon-right"></span>
         <strong><%= result.name %></strong> |
         <span><%= t('my_modules.results.published_on_html', timestamp: l(result.created_at, format: :full), user: h(result.user.full_name)) %></span>
       </a>

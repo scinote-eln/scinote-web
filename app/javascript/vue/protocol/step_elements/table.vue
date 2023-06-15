@@ -2,7 +2,7 @@
   <div class="step-table-container">
      <div class="step-element-header" :class="{ 'editing-name': editingName, 'step-element--locked': locked }">
       <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
-        <i class="fas fas-rotated-90 fa-exchange-alt"></i>
+        <i class="sn-icon sn-icon-sort"></i>
       </div>
       <div v-else class="step-element-grip-placeholder"></div>
       <div v-if="!locked || element.attributes.orderable.name" :key="reloadHeader" class="step-element-name">
@@ -20,7 +20,7 @@
       </div>
       <div class="step-element-controls">
         <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="enableNameEdit" tabindex="0">
-          <i class="fas fa-pen"></i>
+          <i class="sn-icon sn-icon-edit"></i>
         </button>
         <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light" tabindex="0" @click="duplicateElement">
           <i class="sn-icon sn-icon-duplicate"></i>
@@ -36,7 +36,7 @@
          @keyup.enter="!editingTable && enableTableEdit()">
       <div  class="enable-edit-mode" v-if="!editingTable && element.attributes.orderable.urls.update_url" @click="enableTableEdit">
         <div class="enable-edit-mode__icon" tabindex="0">
-          <i class="fas fa-pen"></i>
+          <i class="sn-icon sn-icon-edit"></i>
         </div>
       </div>
       <div ref="hotTable" class="hot-table-container" @click="!editingTable && enableTableEdit()">
@@ -46,10 +46,10 @@
       </div>
     </div>
     <div class="edit-buttons" v-if="editingTable">
-      <button class="btn icon-btn btn-primary" @click="updateTable">
-        <i class="fas fa-check"></i>
+      <button class="btn icon-btn btn-primary btn-sm" @click="updateTable">
+        <i class="sn-icon sn-icon-check"></i>
       </button>
-      <button class="btn icon-btn btn-light" @click="disableTableEdit">
+      <button class="btn icon-btn btn-light btn-sm" @click="disableTableEdit">
         <i class="sn-icon sn-icon-close"></i>
       </button>
     </div>

@@ -36,7 +36,7 @@ module ReportsHelper
     preview = asset.inline? ? asset.large_preview : asset.medium_preview
     image_tag(preview.processed.service_url(expires_in: Constants::URL_LONG_EXPIRE_TIME))
   rescue ActiveStorage::FileNotFoundError
-    image_tag('icon_small/missing.png')
+    image_tag('icon_small/missing.svg')
   rescue StandardError => e
     Rails.logger.error e.message
     tag.i(I18n.t('projects.reports.index.generation.file_preview_generation_error'))

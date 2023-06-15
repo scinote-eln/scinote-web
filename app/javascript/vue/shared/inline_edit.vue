@@ -21,7 +21,7 @@
     </div>
     <template v-if="editing">
       <div :class="{ 'btn-primary': !error, 'btn-disabled': error }" class="sci-inline-edit__control btn icon-btn" @click="update">
-        <i class="fas fa-check"></i>
+        <i class="sn-icon sn-icon-check"></i>
       </div>
       <div class="sci-inline-edit__control btn btn-light icon-btn" @mousedown="cancelEdit">
         <i class="sn-icon sn-icon-close"></i>
