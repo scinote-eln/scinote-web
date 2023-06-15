@@ -1708,7 +1708,6 @@ en:
       no_archived_inventories:  "No archived inventories here"
       no_archived_inventories_matched: "No archived inventories matched your search request"
       snapshot_provisioning_in_progress: 'Editing is disabled while a snapshot is being created. This will only take a moment.'
-
       options_dropdown:
         import_items: 'Import'
         export_items: 'Export'
@@ -1735,6 +1734,13 @@ en:
         description: "Only the structure of the inventory is going to be copied."
         name_placeholder: "My inventory"
         copy: "Copy"
+      modal_export:
+        title: "Export Inventories"
+        description_p1_html: "You are about to export <strong>%{repositories_count}</strong> inventories in %{team_name}'s team."
+        description_alert: "This process may take minutes to hours, depending on the file size. Any new data entered afterward won't be included in the export."
+        description_p2: "You will receive an email when the .zip file is ready. A link to your file will also appear in your SciNote notification. For security reasons, this link will expire in 7 days."
+        description_p3_html: "After you confirm this export, you will have <strong>%{remaining_export_requests}</strong> export requests left today (max %{requests_limit} requests per day)."
+        export: "Export"
       modal_create:
         title: "Create new inventory"
         name_label: "Inventory name"
@@ -2238,6 +2244,7 @@ en:
       buttons:
         edit: "Rename"
         duplicate: "Duplicate"
+        export: "Export"
         archive: "Archive"
         restore: "Restore"
         delete: "Delete"
