@@ -254,6 +254,9 @@ en:
   nav:
     team_switch_title: "Switch team"
     search: "Search"
+    support: "Support"
+    settings: "Settings"
+    user_profile: "Profile"
     search_button: 'Go!'
     user_greeting: "Hi, %{full_name}"
     advanced_search: "Advanced search"
