@@ -77,11 +77,9 @@ var ProjectsIndex = (function() {
     // Modal's submit handler function
     $(projectsWrapper)
       .on('submit', '#new_project', function() {
-        $('#project_name').prop('disabled', true);
         $('#new-project-modal button[type="submit"]').prop('disabled', true);
       })
       .on('ajax:complete', '#new_project', function() {
-        $('#project_name').prop('disabled', false);
         $('#new-project-modal button[type="submit"]').prop('disabled', false);
       })
       .on('ajax:success', newProjectModal, function(_ev, data) {
