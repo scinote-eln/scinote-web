@@ -1,6 +1,6 @@
 <template>
   <div class="sci--navigation--top-menu-container">
-    <div v-if="user" class="sci--navigation--top-menu-search left-icon sci-input-container-v2" :class="{'disabled' : !currentTeam}">
+    <div v-if="user" class="sci--navigation--top-menu-search left-icon sci-input-container-v2" :class="{'disabled' : !currentTeam}" :title="i18n.t('nav.search')">
       <input type="text" :placeholder="i18n.t('nav.search')" @change="searchValue"/>
       <i class="sn-icon sn-icon-search"></i>
     </div>
@@ -14,7 +14,7 @@
         @change="switchTeam"
       ></Select>
     </div>
-    <div v-if="user" class="dropdown">
+    <div v-if="user" class="dropdown" :title="i18n.t('nav.support')">
       <button class="btn btn-light icon-btn btn-black" data-toggle="dropdown">
         <i class="sn-icon sn-icon-help"></i>
       </button>
@@ -26,7 +26,7 @@
         </li>
       </ul>
     </div>
-    <div v-if="user" class="dropdown">
+    <div v-if="user" class="dropdown" :title="i18n.t('nav.settings')">
       <button class="btn btn-light icon-btn btn-black" data-toggle="dropdown">
         <i class="sn-icon sn-icon-settings"></i>
       </button>
@@ -43,7 +43,7 @@
         </li>
       </ul>
     </div>
-    <div v-if="user" class="sci--navigation--notificaitons-flyout-container">
+    <div v-if="user" class="sci--navigation--notificaitons-flyout-container" :title="i18n.t('nav.notifications.title')">
       <button class="btn btn-light icon-btn btn-black"
               :class="{ 'has-unseen': unseenNotificationsCount > 0 }"
               :data-unseen="unseenNotificationsCount"
@@ -59,7 +59,7 @@
         @update:unseenNotificationsCount="checkUnseenNotifications()"
         @close="notificationsOpened = false" />
     </div>
-    <div v-if="user" class="dropdown">
+    <div v-if="user" class="dropdown" :title="i18n.t('nav.user_profile')">
       <div class="sci--navigation--top-menu-user btn btn-light icon-btn btn-black" data-toggle="dropdown">
         <img class="avatar w-6 h-6" :src="user.avatar_url">
       </div>
