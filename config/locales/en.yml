@@ -2235,6 +2235,7 @@ en:
       shared_for_viewing: "For viewing"
       shared_for_editing: "For editing"
       not_shared: "No"
+      shared: "Yes"
       switch_view:
         active: Show active inventories
         archived: Show archived inventories
