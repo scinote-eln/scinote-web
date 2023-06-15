@@ -7,7 +7,7 @@
     <% if @repository.active? %>
       <% if @repository.repository_snapshots.provisioning.any? %>
         <div class='repository-provisioning-notice auto-shrink-button'>
-          <i class="fas fa-info-circle"></i>
+          <i class="sn-icon sn-icon-info"></i>
           <span class="button-text"><%= t('repositories.index.snapshot_provisioning_in_progress') %></span>
         </div>
       <% end %>

@@ -30,11 +30,11 @@
         <% same_role = user_assignment.user_role_id == user_role.id %>
         <li class="user-team-role <%= 'disabled' if same_role %>">
           <% if same_role %>
-            <span class="fas fa-check"></span>
+            <span class="sn-icon sn-icon-check"></span>
             <%= user_role.name %>
           <% else %>
             <a href="#" data-action="submit-role" data-value="<%= user_role.id %>">
-              <span class="fas fa-check"></span>
+              <span class="sn-icon sn-icon-check"></span>
               <%= user_role.name %>
             </a>
           <% end %>

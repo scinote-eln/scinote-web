@@ -75,7 +75,7 @@
 
   &.list {
     grid-auto-flow: dense;
-    grid-auto-rows: 3em 1px;
+    grid-auto-rows: 4em 1px;
     grid-column-gap: 0;
     grid-row-gap: 0;
     grid-template-columns: repeat(var(--list-columns-number), minmax(100px, auto));
@@ -99,12 +99,6 @@
         display: inline-block;
         grid-column: 1/-1;
         height: 1px;
-      }
-
-      &:hover {
-        .table-cell {
-          background: $color-concrete;
-        }
       }
 
       .table-cell {
@@ -167,12 +161,6 @@
         .table-cell {
           background: $color-concrete;
           color: $color-volcano;
-        }
-
-        &:hover {
-          .table-cell {
-            background: $color-alto;
-          }
         }
       }
     }

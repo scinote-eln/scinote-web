@@ -35,7 +35,7 @@
 
       .comments-subject-title {
         @include font-h3;
-        flex-basis: calc(100% - 36px);
+        flex-basis: calc(100% - 40px);
         flex-grow: 1;
         height: 2em;
         line-height: 2em;
@@ -108,12 +108,10 @@
           color: $brand-primary;
           cursor: pointer;
           display: inline-block;
-          line-height: 1.8em;
           position: absolute;
-          right: -10px;
+          right: 5px;
           text-align: center;
-          top: 0;
-          width: 2.5em;
+          top: 5px;
         }
       }
 

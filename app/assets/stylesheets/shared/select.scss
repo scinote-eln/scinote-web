@@ -35,10 +35,6 @@
     white-space: nowrap;
   }
 
-  &:hover {
-    background: var(--sn-sleepy-grey);
-  }
-
   &.disabled {
     background: var(--sn-sleepy-grey);
     cursor: default;

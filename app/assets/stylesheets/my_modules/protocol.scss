@@ -1,17 +1,19 @@
 .task-protocol {
   .protocol-step-actions {
+    align-items: center;
+    display: flex;
     margin-left: -6px;
     padding-left: 1em;
   }
 
   .protocol-buttons-group {
-    column-gap: .25em;
+    column-gap: .5rem;
     display: grid;
     grid-template-columns: auto auto auto;
   }
 
   .portocol-header-left-part {
-    align-items: baseline;
+    align-items: center;
     display: flex;
 
     a:first-of-type:focus {
@@ -33,20 +35,20 @@
 
   .insert-step {
     align-items: center;
-    color: $color-concrete;
+    color: var(--sn-blue);
     cursor: pointer;
     display: flex;
 
     &::before,
     &::after {
-      background-color: $color-concrete;
+      background-color: var(--sn-light-grey);
       content: "";
       display: inline-block;
       flex-grow: 1;
-      height: 3px;
+      height: 1px;
     }
 
-    .fa-plus {
+    .sn-icon-new-task {
       margin: 0 .5em;
     }
 

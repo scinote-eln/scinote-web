@@ -117,7 +117,7 @@ var ExperimnetTable = {
       row += `
         <div class="table-body-cell">
           <div ref="dropdown" class="dropdown my-module-menu" data-url="${data.urls.actions_dropdown}">
-            <div class="btn btn-ligh icon-btn open-my-module-menu" tabindex="0"
+            <div class="btn btn-light btn-xs icon-btn open-my-module-menu" tabindex="0"
                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" >
               <i class="sn-icon sn-icon-more-hori"></i>
             </div>

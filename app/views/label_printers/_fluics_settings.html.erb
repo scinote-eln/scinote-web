@@ -39,7 +39,7 @@
 
           <%= form.submit t('general.save'), class: "save-button btn btn-primary #{'hidden' if @fluics_api_key}" %>
           <%= button_tag class: "saved-button btn btn-secondary #{'hidden' if !@fluics_api_key}", disabled: true do %>
-            <i class="fas fa-check"></i>
+            <i class="sn-icon sn-icon-check"></i>
             <%= t("users.settings.account.label_printer.saved") %>
           <% end %>
         </div>
