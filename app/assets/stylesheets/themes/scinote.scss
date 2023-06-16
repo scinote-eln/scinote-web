@@ -41,10 +41,14 @@ table {
 #no-teams-jumbotron {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  position: relative;
-  top: 100px;
   justify-content: center;
+  align-items: center;
+  padding-top: 7rem;
+
+  img {
+    margin-bottom: 1.5rem;
+    max-width: 33%;
+  }
 }
 
 #alert-container {
