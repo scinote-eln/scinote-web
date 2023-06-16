@@ -3,7 +3,7 @@
 
 .dataTables_scrollBody {
   .column-grip {
-    display: none;
+    display: none !important;
   }
 }
 
@@ -14,13 +14,17 @@
   word-break: initial;
 
   &.table--reorderable-columns {
-    thead tr th {
+    thead tr th:not(:first-child) {
+      padding-left: 24px;
+
       .column-grip {
         color: $color-volcano;
         cursor: grab;
+        display: block;
         opacity: 0;
-        margin-left: 5px;
-        margin-right: 10px;
+        left: 0;
+        position: absolute;
+        top: 6px;
       }
 
       &:hover .column-grip {
