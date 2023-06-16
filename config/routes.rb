@@ -197,6 +197,7 @@ Rails.application.routes.draw do
           get 'create_modal', to: 'repositories#create_modal',
               defaults: { format: 'json' }
           get 'actions_toolbar'
+          get 'export_modal'
         end
         get 'destroy_modal', to: 'repositories#destroy_modal',
             defaults: { format: 'json' }

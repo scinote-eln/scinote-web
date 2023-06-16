@@ -23,7 +23,7 @@ module Toolbars
       if @archived_state
         [restore_action, delete_action]
       else
-        [rename_action, duplicate_action, archive_action, share_action]
+        [rename_action, duplicate_action, export_action, archive_action, share_action]
       end.compact
     end
 
@@ -51,6 +51,19 @@ module Toolbars
         button_id: 'copyRepoBtn',
         icon: 'sn-icon sn-icon-duplicate',
         path: team_repository_copy_modal_path(@current_team, repository_id: @repository),
+        type: 'remote-modal'
+      }
+    end
+
+    def export_action
+      return unless @repositories.all? { |repository| can_read_repository?(repository) }
+
+      {
+        name: 'export',
+        label: I18n.t('libraries.index.buttons.export'),
+        button_id: 'exportRepoBtn',
+        icon: 'sn-icon sn-icon-export',
+        path: export_modal_team_repositories_path(@current_team),
         type: 'remote-modal'
       }
     end
