@@ -16,6 +16,8 @@
           :id="action.button_id"
           :title="action.label"
           :data-url="action.path"
+          :data-target="action.target"
+          :data-toggle="action.type === 'modal' && 'modal'"
           :data-object-type="action.item_type"
           :data-object-id="action.item_id"
           :data-action="action.type"
@@ -124,6 +126,8 @@
           case 'link':
             // do nothing, already handled by href
             break;
+          case 'modal':
+            // do nothihg, boostrap modal handled by data-toggle="modal" and data-target
           case 'remote-modal':
             // do nothing, handled by the data-action="remote-modal" binding
             break;
