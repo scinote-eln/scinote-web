@@ -5,7 +5,7 @@
     <%= javascript_include_tag wicked_pdf_asset_base64("reports/template_helpers") %>
   </head>
   <body id="reports-footer-header-template">
-    <%= javascript_include_tag 'reports/template_helpers', nonce: true %>
+    <%= javascript_include_tag 'reports/template_helpers' %>
     <%= yield %>
   </body>
 </html>
