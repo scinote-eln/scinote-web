@@ -86,7 +86,7 @@
         <% if user_signed_in? && current_user.teams.blank? && !(activities_are_selected? || settings_are_selected?) %>
           <!-- If member of no teams -->
           <div id="no-teams-jumbotron" class="jumbotron">
-            <%= image_tag "empty-screen-illustration.png", size: "500x500" %>
+            <%= image_tag "empty-screen-illustration.png" %>
             <h2><%=t 'general.no_teams.title' %></h2>
             <p class="no-teams-info"><%=t 'general.no_teams.text' %></p>
           </div>
