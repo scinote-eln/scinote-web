@@ -247,14 +247,14 @@ var RepositoryColumns = (function() {
 
       if (column.header.id !== 'row-name') {
         if (column.visible()) {
-          self.addClass('fa-eye-slash');
-          self.removeClass('fa-eye');
+          self.addClass('sn-icon-visibility-hide');
+          self.removeClass('sn-icon-visibility-show');
           li.addClass('col-invisible');
           column.visible(false);
           TABLE.setColumnSearchable(column.index(), false);
         } else {
-          self.addClass('fa-eye');
-          self.removeClass('fa-eye-slash');
+          self.addClass('sn-icon-visibility-show');
+          self.removeClass('sn-icon-visibility-hide');
           li.removeClass('col-invisible');
           column.visible(true);
           TABLE.setColumnSearchable(column.index(), true);
@@ -321,7 +321,9 @@ var RepositoryColumns = (function() {
             <span class="vis sn-icon ${visClass}" title="${visText}"></span>
           </span>
           <span class="text">${generateColumnNameTooltip(thederName)}</span>
-          <span class="column-type pull-right">${getColumnTypeText(el, colId)}</span>
+          <span class="column-type pull-right">${
+            getColumnTypeText(el, colId) || '<i class="sn-icon sn-icon-locked-task"></i>'
+          }</span>
           <span class="sci-btn-group manage-controls pull-right" data-view-mode="active">
             <button class="btn icon-btn btn-light edit-repo-column manage-repo-column"
                     data-action="edit"

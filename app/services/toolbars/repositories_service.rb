@@ -88,7 +88,7 @@ module Toolbars
       {
         name: 'share',
         label: I18n.t('repositories.index.share_inventory'),
-        icon: 'sn-icon sn-icon-user-menu-plus',
+        icon: 'sn-icon sn-icon-shared',
         button_class: 'share-repository-button',
         path: team_repository_share_modal_path(@current_team, repository_id: @repository),
         type: 'remote-modal'

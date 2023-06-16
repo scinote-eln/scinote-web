@@ -147,7 +147,7 @@
         if (!newTeam) return;
 
         $.post(this.teamSwitchUrl, {team_id: team}, (result) => {
-          this.currentTeam = result.currentTeam
+          this.currentTeam = result.current_team
           dropdownSelector.selectValues('#sciNavigationTeamSelector', this.currentTeam);
           $('body').attr('data-current-team-id', this.currentTeam);
           window.open(this.rootUrl, '_self')

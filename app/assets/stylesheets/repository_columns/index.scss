@@ -166,14 +166,6 @@
       &:last-of-type {
         border-bottom: 0;
       }
-
-      &:not(.editable) {
-        .column-type::before {
-          @include font-awesome;
-          content: $font-fas-lock;
-          padding-right: 4px;
-        }
-      }
     }
 
     [data-position] {
@@ -218,8 +210,8 @@
         margin-left: 10px;
         margin-right: 5px;
 
-        &:not(.fa-eye):not(.fa-eye-slash) {
-          padding-right: 15px;
+        &:not(.sn-icon-visibility-show):not(.sn-icon-visibility-hide) {
+          padding-right: 1.5rem;
         }
       }
     }

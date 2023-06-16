@@ -27,6 +27,9 @@ $font-fas-exclamation-circle: "\f06a";
 $font-fas-caret-up: "\f0d8";
 $font-fas-plus: "\f02b";
 
+$sn-icon-left: "\e932";
+$sn-icon-right: "\e931";
+
 .sn-icon {
   font-size: 24px !important;
   vertical-align: middle;
@@ -66,6 +69,11 @@ $font-fas-plus: "\f02b";
 @mixin font-awesome {
   font-family: "Font Awesome 5 Free";
   font-weight: 501;
+}
+
+@mixin font-sn-icon {
+  font-family: "SN-icon-font";
+  font-size: 24px !important;
 }
 
 html {

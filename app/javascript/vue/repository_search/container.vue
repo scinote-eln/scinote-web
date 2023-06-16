@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center mr-3 flex-nowrap">
-    <button v-if="!searchOpened" class="btn btn-light icon-btn" @click="openSearch">
+    <button v-if="!searchOpened" class="btn btn-light btn-black icon-btn" @click="openSearch">
       <i class="sn-icon sn-icon-search"></i>
     </button>
     <div v-if="searchOpened || barcodeSearchOpened" class="w-52 flex">
@@ -27,7 +27,7 @@
         <i class='sn-icon sn-icon-barcode barcode-scanner'></i>
       </div>
     </div>
-    <button v-if="!barcodeSearchOpened" class="btn btn-light icon-btn ml-2" @click="openBarcodeSearch">
+    <button v-if="!barcodeSearchOpened" class="btn btn-light btn-black icon-btn ml-2" @click="openBarcodeSearch">
       <i class='sn-icon sn-icon-barcode barcode-scanner'></i>
     </button>
   </div>
