@@ -10,14 +10,14 @@ class RepositoriesController < ApplicationController
   include MyModulesHelper
 
   before_action :load_repository, except: %i(index create create_modal sidebar archive restore actions_toolbar
-                                             export_modal)
+                                             export_modal export_repositories)
   before_action :load_repositories, only: %i(index show sidebar)
   before_action :load_repositories_for_archiving, only: :archive
   before_action :load_repositories_for_restoring, only: :restore
   before_action :check_view_all_permissions, only: %i(index sidebar)
   before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet
                                                     import_records sidebar archive restore actions_toolbar
-                                                    export_modal)
+                                                    export_modal export_repositories)
   before_action :check_manage_permissions, only: %i(rename_modal update)
   before_action :check_delete_permissions, only: %i(destroy destroy_modal)
   before_action :check_archive_permissions, only: %i(archive restore)
