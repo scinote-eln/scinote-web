@@ -385,6 +385,10 @@ class Protocol < ApplicationRecord
     steps.count
   end
 
+  def archived_branch?
+    archived? || parent&.archived?
+  end
+
   def completed_steps
     steps.where(completed: true)
   end
