@@ -4,7 +4,7 @@
   }
 
   .btn {
-    @apply inline-flex items-center shrink-0 gap-2 justify-center leading-5 py-2 px-4 rounded border-0 appearance-none whitespace-nowrap cursor-pointer;
+    @apply relative inline-flex items-center shrink-0 gap-2 justify-center leading-5 py-2 px-4 rounded border-0 appearance-none whitespace-nowrap cursor-pointer;
   }
 
   .btn.icon-btn {

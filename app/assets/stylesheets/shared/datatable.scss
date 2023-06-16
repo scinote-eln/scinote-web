@@ -84,6 +84,15 @@
     .pagination-info,
     .pagination-actions {
       flex-grow: 1;
+
+      .pagination,
+      .dataTables_paginate {
+        align-items: center;
+        display: flex;
+        height: 36px;
+        justify-content: flex-end;
+        margin: 0;
+      }
     }
 
     .pagination-info {
@@ -102,6 +111,7 @@
       }
 
       .dataTables_length {
+        height: 2.25rem;
         margin-right: 24px;
         width: 170px;
 

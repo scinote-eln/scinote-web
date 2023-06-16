@@ -6,7 +6,7 @@
         <%= button_to(view_type_experiment_path(@experiment, view_mode: 'archived'),
                       method: :put,
                       remote: true,
-                      class: "btn button-to #{ action_name == 'table' ? 'btn-primary' : 'btn-light' } prevent-shrink",
+                      class: "btn button-to #{ action_name == 'table' ? 'btn-primary' : 'btn-light' } prevent-shrink justify-start",
                       form_class: 'change-my-modules-view-type-form',
                       params: { experiment: { view_type: 'table', id: @experiment.id  } }) do %>
           <span class="<%= 'text-light' if action_name == 'table' %>">
@@ -18,7 +18,7 @@
         <%= button_to(view_type_experiment_path(@experiment, view_mode: 'archived'),
                       method: :put,
                       remote: true,
-                      class: "btn button-to #{ action_name == 'module_archive' ? 'btn-primary' : 'btn-light'} prevent-shrink",
+                      class: "btn button-to #{ action_name == 'module_archive' ? 'btn-primary' : 'btn-light'} prevent-shrink justify-start",
                       form_class: 'change-my-modules-view-type-form',
                       params: { experiment: { view_type: 'canvas', id: @experiment.id } }) do %>
           <span class="<%= 'text-light' if action_name == 'module_archive' %>">
@@ -31,7 +31,7 @@
         <%= button_to(view_type_experiment_path(@experiment),
                       method: :put,
                       remote: true,
-                      class: "btn button-to #{ action_name == 'table' ? 'btn-primary text-light' : 'btn-light' } prevent-shrink",
+                      class: "btn button-to #{ action_name == 'table' ? 'btn-primary text-light' : 'btn-light' } prevent-shrink justify-start",
                       form_class: 'change-my-modules-view-type-form',
                       params: { experiment: { view_type: 'table', id: @experiment.id  } }) do %>
           <span class="<%= 'text-light' if action_name == 'table' %>">
@@ -43,7 +43,7 @@
       <%= button_to(view_type_experiment_path(@experiment),
                     method: :put,
                     remote: true,
-                    class: "btn button-to #{ action_name == 'canvas' ? 'btn-primary text-light' : 'btn-light'} prevent-shrink",
+                    class: "btn button-to #{ action_name == 'canvas' ? 'btn-primary text-light' : 'btn-light'} prevent-shrink justify-start",
                     form_class: 'change-my-modules-view-type-form',
                     params: { experiment: { view_type: 'canvas', id: @experiment.id } }) do %>
           <span class="<%= 'text-light' if action_name == 'canvas' %>">
@@ -53,7 +53,7 @@
       </li>
     <% end %>
   <% end %>
-  
+
   <%= render partial: 'shared/state_view_switch', locals: {
     disabled: false,
     switchable: true,
