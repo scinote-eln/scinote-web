@@ -50,7 +50,7 @@ module ArchivableModel
 
   def name_with_label
     raise NotImplementedError, "Archivable model must implement the '.archived_branch?' method!" unless respond_to?(:archived_branch?)
-    return (parent&.name || name).prepend(I18n.t("labels.archived")) if archived_branch?
+    return "#{I18n.t('labels.archived'} #{parent&.name || name}" if archived_branch?
 
     parent&.name || name
   end
