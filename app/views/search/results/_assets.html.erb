@@ -6,7 +6,7 @@
       <% if wopi_file?(asset) %>
         <%= file_extension_icon(asset) %>
       <% else %>
-        <span class="fas fa-paperclip"></span>
+        <span class="sn-icon sn-icon-files"></span>
       <% end %>
     <% end %>
     <%= render partial: "search/results/partials/asset_text.html.erb", locals: { asset: asset, query: search_query } %>

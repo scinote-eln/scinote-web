@@ -3,9 +3,9 @@
     <% if result.is_text %>
     <span class="fas fa-font"></span>
     <% elsif result.is_table %>
-    <span class="fas fa-table"></span>
+    <span class="sn-icon sn-icon-tables"></span>
     <% elsif result.is_asset %>
-    <span class="fas fa-paperclip"></span>
+    <span class="sn-icon sn-icon-files"></span>
     <% end %>
   </div>
   <div class="panel panel-default">
@@ -13,7 +13,7 @@
       <div class="panel-options pull-right">
         <% if result.editable? && can_manage_my_module?(result.my_module) %>
           <a class="btn btn-light icon-btn edit-result-button <%= edit_result_button_class(result) %>" id="<%= result.id %>_edit" href="<%= edit_result_link(result) %>" data-remote="true" title="<%= t'my_modules.results.options.edit_title' %>">
-            <span class="fas fa-pencil-alt"></span>
+            <span class="sn-icon sn-icon-edit"></span>
           </a>
         <% end %>
         <% if can_manage_result?(result) %>
@@ -30,7 +30,7 @@
         <% end %>
       </div>
       <a class="result-panel-collapse-link" href="#result-panel-<%= result.id %>" data-toggle="collapse">
-        <span class="fas fa-caret-right"></span>
+        <span class="sn-icon sn-icon-right"></span>
         <strong><%= result.name %></strong> |
         <span><%= t('my_modules.results.published_on_html', timestamp: l(result.created_at, format: :full), user: h(result.user.full_name)) %></span>
       </a>

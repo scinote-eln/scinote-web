@@ -14,7 +14,7 @@
       <div class="step-element-header" :class="{ 'no-hover': !urls.update_url }">
         <div class="step-controls">
           <div v-if="reorderStepUrl" class="step-element-grip" @click="$emit('reorder')" :class="{ 'step-element--locked': !urls.update_url }">
-            <i class="fas fas-rotated-90 fa-exchange-alt"></i>
+            <i class="sn-icon sn-icon-sort"></i>
           </div>
           <div v-else class="step-element-grip-placeholder"></div>
           <a class="step-collapse-link"
@@ -22,9 +22,9 @@
             data-toggle="collapse"
             data-remote="true"
             @click="toggleCollapsed">
-              <span class="fas fa-caret-right"></span>
+              <span class="sn-icon sn-icon-right"></span>
           </a>
-          <div v-if="!inRepository" class="step-complete-container" :class="{ 'step-element--locked': !urls.state_url }">
+          <div v-if="!inRepository" class="step-complete-container mx-1.5" :class="{ 'step-element--locked': !urls.state_url }">
             <div :class="`step-state ${step.attributes.completed ? 'completed' : ''}`"
                  @click="changeState"
                  @keyup.enter="changeState"
@@ -52,26 +52,26 @@
             @update="updateName"
           />
         </div>
-        <button v-if="urls.update_url && !editingName" class="step-name-edit-icon btn icon-btn btn-light  " @click="editingName = true">
-          <i class="fas fa-pen"></i>
+        <button v-if="urls.update_url && !editingName" class="step-name-edit-icon btn btn-xs icon-btn btn-light my-1.5" @click="editingName = true">
+          <i class="sn-icon sn-icon-edit"></i>
         </button>
       </div>
       <div class="step-actions-container">
         <div ref="elementsDropdownButton" v-if="urls.update_url"  class="dropdown">
           <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'stepInserMenu_' + step.id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             {{ i18n.t('protocols.steps.insert.button') }}
-            <span class="caret"></span>
+            <span class="sn-icon sn-icon-down"></span>
           </button>
           <ul ref="elementsDropdown" class="dropdown-menu insert-element-dropdown dropdown-menu-right" :aria-labelledby="'stepInserMenu_' + step.id">
             <li class="title">
               {{ i18n.t('protocols.steps.insert.title') }}
             </li>
             <li class="action" @click="createElement('table')">
-              <i class="fas fa-table"></i>
+              <i class="sn-icon sn-icon-tables"></i>
               {{ i18n.t('protocols.steps.insert.table') }}
             </li>
             <li class="action dropdown-submenu-item">
-              <i class="fas fa-table"></i>
+              <i class="sn-icon sn-icon-tables"></i>
               {{ i18n.t('protocols.steps.insert.well_plate') }}
               <span class="caret"></span>
 
@@ -82,7 +82,7 @@
               </ul>
             </li>
             <li class="action"  @click="createElement('checklist')">
-              <i class="fas fa-list"></i>
+              <i class="sn-icon sn-icon-activities"></i>
               {{ i18n.t('protocols.steps.insert.checklist') }}
             </li>
             <li class="action"  @click="createElement('text')">
@@ -90,7 +90,7 @@
               {{ i18n.t('protocols.steps.insert.text') }}
             </li>
             <li v-if="attachmentsReady" class="action"  @click="showFileModal = true">
-              <i class="fas fa-paperclip"></i>
+              <i class="sn-icon sn-icon-files"></i>
               {{ i18n.t('protocols.steps.insert.attachment') }}
             </li>
           </ul>
@@ -103,7 +103,7 @@
            data-object-type="Step"
            @click="openCommentsSidebar"
            :data-object-id="step.id">
-          <i class="fas fa-comment"></i>
+          <i class="sn-icon sn-icon-comments"></i>
           <span class="comments-counter"
                 :id="`comment-count-${step.id}`"
                 :class="{'unseen': step.attributes.unseen_comments}"
@@ -113,23 +113,23 @@
         </a>
         <div v-if="urls.update_url" class="step-actions-container">
           <div ref="actionsDropdownButton" class="dropdown">
-            <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'stepOptionsMenu_' + step.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
-              <i class="fas fa-ellipsis-h"></i>
+            <button class="btn btn-light icon-btn dropdown-toggle insert-button" type="button" :id="'stepOptionsMenu_' + step.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
+              <i class="sn-icon sn-icon-more-hori"></i>
             </button>
             <ul ref="actionsDropdown" class="dropdown-menu dropdown-menu-right insert-element-dropdown" :aria-labelledby="'stepOptionsMenu_' + step.id">
               <li class="title">
                 {{ i18n.t('protocols.steps.options_dropdown.title') }}
               </li>
               <li v-if="urls.reorder_elements_url" class="action"  @click="openReorderModal" :class="{ 'disabled': elements.length < 2 }">
-                <i class="fas fas-rotated-90 fa-exchange-alt"></i>
+                <i class="sn-icon sn-icon-sort"></i>
                 {{ i18n.t('protocols.steps.options_dropdown.rearrange') }}
               </li>
               <li v-if="urls.duplicate_step_url" class="action" @click="duplicateStep">
-                <i class="fas fa-clone"></i>
+                <i class="sn-icon sn-icon-duplicate"></i>
                 {{ i18n.t('protocols.steps.options_dropdown.duplicate') }}
               </li>
               <li v-if="urls.delete_url" class="action" @click="showDeleteModal">
-                <i class="fas fa-trash"></i>
+                <i class="sn-icon sn-icon-delete"></i>
                 {{ i18n.t('protocols.steps.options_dropdown.delete') }}
               </li>
             </ul>

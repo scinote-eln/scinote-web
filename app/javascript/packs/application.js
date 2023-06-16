@@ -7,10 +7,10 @@ $(document).on('click', '.sci--layout--menu-item[data-submenu=true]', (e) => {
   const submenu = item.next();
   e.preventDefault();
   if (submenu.attr('data-collapsed') === 'true') {
-    caret.removeClass('fa-caret-right').addClass('fa-caret-down');
+    caret.removeClass('sn-icon-right').addClass('sn-icon-down');
     submenu.attr('data-collapsed', false);
   } else {
-    caret.removeClass('fa-caret-down').addClass('fa-caret-right');
+    caret.removeClass('sn-icon-down').addClass('sn-icon-right');
     submenu.attr('data-collapsed', true);
   }
 });

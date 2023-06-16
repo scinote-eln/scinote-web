@@ -7,7 +7,7 @@
            data-mask-type="time"
            v-model="value"
            placeholder="HH:mm"/>
-    <i class="fas fa-clock"></i>
+    <i class="sn-icon sn-icon-created"></i>
   </div>
 </template>
 

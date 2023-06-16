@@ -17,7 +17,7 @@
       {{ attachment.error }}
     </div>
     <div v-if="attachment.error" class="remove-button" @click="$emit('attachment:delete')">
-      <i class="fas fa-times"></i>
+      <i class="sn-icon sn-icon-close"></i>
     </div>
   </div>
 </template>

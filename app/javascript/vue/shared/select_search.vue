@@ -4,7 +4,7 @@
     :value="value"
     :options="currentOptions"
     :placeholder="placeholder"
-    :noOptionsPlaceholder="noOptionsPlaceholder"
+    :noOptionsPlaceholder="isLoading ? i18n.t('general.loading') : noOptionsPlaceholder"
     v-bind:disabled="disabled"
     @change="change"
     @blur="blur"
@@ -13,7 +13,7 @@
   >
     <input ref="focusElement" v-model="query" type="text" class="sn-select__search-input" :placeholder="searchPlaceholder" />
     <span class="sn-select__value">{{ valueLabel || (placeholder || i18n.t('general.select')) }}</span>
-    <span class="sn-select__caret caret"></span>
+    <i class="sn-icon" :class="{ 'sn-icon-down': !isOpen, 'sn-icon-up': isOpen}"></i>
   </Select>
 </template>
 
@@ -29,7 +29,8 @@
       placeholder: { type: String },
       searchPlaceholder: { type: String },
       noOptionsPlaceholder: { type: String },
-      disabled: { type: Boolean }
+      disabled: { type: Boolean },
+      isLoading: { type: Boolean, default: false }
     },
     components: { Select },
     data() {

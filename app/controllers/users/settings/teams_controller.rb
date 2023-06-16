@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Users
   module Settings
     class TeamsController < ApplicationController
@@ -6,26 +8,28 @@ module Users
       include ApplicationHelper
       include InputSanitizeHelper
 
-      before_action :load_user, only: [
-        :index,
-        :datatable,
-        :new,
-        :create,
-        :show,
-        :users_datatable
-      ]
+      before_action :load_user, only: %i(
+        index
+        datatable
+        new
+        create
+        show
+        users_datatable
+      )
 
-      before_action :load_team, only: [
-        :show,
-        :users_datatable,
-        :name_html,
-        :description_html,
-        :update,
-        :destroy
-      ]
+      before_action :load_team, only: %i(
+        show
+        users_datatable
+        name_html
+        description_html
+        update
+        destroy
+      )
 
       before_action :check_create_team_permission,
                     only: %i(new create)
+
+      before_action :set_breadcrumbs_items, only: %i(index show)
 
       layout 'fluid'
 
@@ -132,7 +136,7 @@ module Users
       end
 
       def switch
-        team = current_user.teams.find_by(id: params[:id])
+        team = current_user.teams.find_by(id: params[:team_id])
 
         if team && current_user.update(current_team_id: team.id)
           flash[:success] = t('users.settings.changed_team_flash',
@@ -154,7 +158,7 @@ module Users
       end
 
       def load_team
-        @team = Team.find_by_id(params[:id])
+        @team = Team.find_by(id: params[:id])
         render_403 unless can_manage_team?(@team)
       end
 
@@ -170,6 +174,21 @@ module Users
           :name,
           :description
         )
+      end
+
+      def set_breadcrumbs_items
+        @breadcrumbs_items = []
+
+        @breadcrumbs_items.push({
+                                  label: t('breadcrumbs.teams'),
+                                  url: teams_path
+                                })
+        if @team
+          @breadcrumbs_items.push({
+                                    label: @team.name,
+                                    url: team_path(@team)
+                                  })
+        end
       end
     end
   end

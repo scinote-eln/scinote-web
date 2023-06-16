@@ -113,23 +113,21 @@ class Project < ApplicationRecord
     joins("
       LEFT OUTER JOIN experiments ON experiments.project_id = projects.id
       LEFT OUTER JOIN user_assignments experiment_user_assignments
-        ON experiment_user_assignments.assignable_id = experiments.id AND
-           experiment_user_assignments.assignable_type = 'Experiment'
+        ON experiment_user_assignments.assignable_id = experiments.id
+        AND experiment_user_assignments.assignable_type = 'Experiment'
+        AND experiment_user_assignments.user_id = #{user.id}
       LEFT OUTER JOIN user_roles experiment_user_roles
         ON experiment_user_roles.id = experiment_user_assignments.user_role_id
+        AND experiment_user_roles.permissions @> ARRAY['#{ExperimentPermissions::READ}']::varchar[]
       LEFT OUTER JOIN my_modules ON my_modules.experiment_id = experiments.id
       LEFT OUTER JOIN user_assignments my_module_user_assignments
-        ON my_module_user_assignments.assignable_id = my_modules.id AND
-           my_module_user_assignments.assignable_type = 'MyModule'
+        ON my_module_user_assignments.assignable_id = my_modules.id
+        AND my_module_user_assignments.assignable_type = 'MyModule'
+        AND my_module_user_assignments.user_id = #{user.id}
       LEFT OUTER JOIN user_roles my_module_user_roles
         ON my_module_user_roles.id = my_module_user_assignments.user_role_id
+        AND my_module_user_roles.permissions @> ARRAY['#{MyModulePermissions::READ}']::varchar[]
     ")
-      .where('
-        (experiment_user_assignments.user_id = ? AND experiment_user_roles.permissions @> ARRAY[?]::varchar[]
-          OR experiments.id IS NULL) AND
-        (my_module_user_assignments.user_id = ? AND my_module_user_roles.permissions @> ARRAY[?]::varchar[]
-          OR my_modules.id IS NULL)
-      ', user.id, ExperimentPermissions::READ, user.id, MyModulePermissions::READ)
   end
 
   def self.filter_by_teams(teams = [])
@@ -289,22 +287,21 @@ class Project < ApplicationRecord
     # Style tables (mimick frontend processing)
 
     tables = parsed_html.css('.hot-table-contents')
-                        .zip(parsed_html.css('.hot-table-container'))
-    tables.each do |table_input, table_container|
+                        .zip(parsed_html.css('.hot-table-container'), parsed_html.css('.hot-table-metadata'))
+    tables.each do |table_input, table_container, metadata|
+      is_plate_template = JSON.parse(metadata['value'])['plateTemplate'] if metadata.present?
       table_vals = JSON.parse(table_input['value'])
       table_data = table_vals['data']
       table_headers = table_vals['headers']
-      table_headers ||= ('A'..'Z').first(table_data[0].count)
+      table_headers ||= Array.new(table_data[0].count) do |index|
+        is_plate_template ? index + 1 : convert_index_to_letter(index)
+      end
 
-      table_el = table_container
-                 .add_child('<table class="handsontable"></table>').first
+      table_el = table_container.add_child('<table class="handsontable"></table>').first
 
       # Add header row
-      header_cell = '<th>'\
-                      '<div class="relative">'\
-                        '<span>%s</span>'\
-                      '</div>'\
-                    '</th>'
+      header_cell = '<th><div class="relative"><span>%s</span></div></th>'
+
       header_el = table_el.add_child('<thead></thead>').first
       row_el = header_el.add_child('<tr></tr>').first
       row_el.add_child(format(header_cell, '')).first
@@ -316,8 +313,9 @@ class Project < ApplicationRecord
       body_cell = '<td>%s</td>'
       body_el = table_el.add_child('<tbody></tbody>').first
       table_data.each.with_index(1) do |row, idx|
+        row_name = is_plate_template ? convert_index_to_letter(idx - 1) : idx
         row_el = body_el.add_child('<tr></tr>').first
-        row_el.add_child(format(header_cell, idx)).first
+        row_el.add_child(format(header_cell, row_name)).first
         row.each do |col|
           row_el.add_child(format(body_cell, col)).first
         end
@@ -374,5 +372,19 @@ class Project < ApplicationRecord
     else
       UserAssignments::ProjectGroupUnAssignmentJob.perform_now(self)
     end
+  end
+
+  def convert_index_to_letter(index)
+    ord_a = 'A'.ord
+    ord_z = 'Z'.ord
+    len = (ord_z - ord_a) + 1
+    num = index
+
+    col_name = ''
+    while num >= 0
+      col_name = ((num % len) + ord_a).chr + col_name
+      num = (num / len).floor - 1
+    end
+    col_name
   end
 end

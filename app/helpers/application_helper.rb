@@ -196,7 +196,7 @@ module ApplicationHelper
     end
   rescue StandardError => e
     Rails.logger.error e.message
-    'icon_small/missing.png'
+    'icon_small/missing.svg'
   end
 
   def sso_enabled?

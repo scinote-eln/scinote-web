@@ -56,7 +56,7 @@ module Toolbars
         {
           name: 'edit',
           label: I18n.t('projects.index.edit_option'),
-          icon: 'fas fa-pencil-alt',
+          icon: 'sn-icon sn-icon-edit',
           button_class: 'edit-btn',
           path: edit_project_path(project),
           type: :legacy
@@ -69,7 +69,7 @@ module Toolbars
         {
           name: 'edit',
           label: I18n.t('projects.index.edit_option'),
-          icon: 'fas fa-pencil-alt',
+          icon: 'sn-icon sn-icon-edit',
           button_class: 'edit-btn',
           path: edit_project_folder_path(project_folder),
           type: :legacy
@@ -95,7 +95,7 @@ module Toolbars
       {
         name: 'access',
         label: I18n.t('general.access'),
-        icon: 'fas fa-door-open',
+        icon: 'sn-icon sn-icon-project-member-access',
         button_class: 'access-btn',
         path: path,
         type: 'remote-modal'
@@ -108,7 +108,7 @@ module Toolbars
       {
         name: 'move',
         label: I18n.t('projects.index.move_button'),
-        icon: 'fas fa-arrow-right',
+        icon: 'sn-icon sn-icon-move',
         button_class: 'move-projects-btn',
         path: move_to_modal_project_folders_path,
         type: :legacy
@@ -121,7 +121,7 @@ module Toolbars
       {
         name: 'export',
         label: I18n.t('projects.export_projects.export_button'),
-        icon: 'fas fa-file-export',
+        icon: 'sn-icon sn-icon-export',
         button_class: 'export-projects-btn',
         path: export_projects_modal_team_path(@items.first.team),
         type: :legacy
@@ -136,7 +136,7 @@ module Toolbars
       {
         name: 'archive',
         label: I18n.t('projects.index.archive_button'),
-        icon: 'fas fa-archive',
+        icon: 'sn-icon sn-icon-archive',
         button_class: 'archive-projects-btn',
         path: archive_group_projects_path,
         type: :request,
@@ -152,7 +152,7 @@ module Toolbars
       {
         name: 'restore',
         label: I18n.t('projects.index.restore_button'),
-        icon: 'fas fa-undo',
+        icon: 'sn-icon sn-icon-restore',
         button_class: 'restore-projects-btn',
         path: restore_group_projects_path,
         type: :request,
@@ -168,7 +168,7 @@ module Toolbars
       {
         name: 'delete_folders',
         label: I18n.t('general.delete'),
-        icon: 'fas fa-trash',
+        icon: 'sn-icon sn-icon-delete',
         button_class: 'delete-folders-btn',
         path: destroy_modal_project_folders_path(project_folder_ids: @items.map(&:id)),
         type: 'remote-modal'
@@ -187,7 +187,7 @@ module Toolbars
       {
         name: 'comments',
         label: I18n.t('Comments'),
-        icon: 'fas fa-comment',
+        icon: 'sn-icon sn-icon-comments',
         button_class: 'open-comments-sidebar',
         item_type: 'Project',
         item_id: project.id,
@@ -209,7 +209,7 @@ module Toolbars
       {
         name: 'activities',
         label: I18n.t('nav.label.activities'),
-        icon: 'fas fa-list',
+        icon: 'sn-icon sn-icon-activities',
         button_class: 'project-activities-btn',
         path: "/global_activities?#{activity_url_params}",
         type: :link

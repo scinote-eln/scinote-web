@@ -11,7 +11,7 @@
                     method: :put,
                     remote: true,
                     class: 'project-archive-restore-form') do %>
-        <i class="fas fa-undo"></i>
+        <i class="sn-icon sn-icon-restore"></i>
         <span><%= t('projects.index.restore_option') %></span>
       <% end %>
     </li>
@@ -24,7 +24,7 @@
           class="edit-project-btn"
           data-action="edit"
           data-remote="true">
-        <i class="fas fa-pencil-alt"></i>
+        <i class="sn-icon sn-icon-edit"></i>
         <span><%= t('projects.index.edit_option') %></span>
       </a>
     </li>
@@ -34,7 +34,7 @@
   <li class="form-dropdown-item">
     <%= link_to can_manage_project_users?(project) ? edit_access_permissions_project_path(project) : access_permissions_project_path(project),
                 data: { action: 'remote-modal'} do %>
-      <i class="fas fa-door-open"></i>
+      <i class="sn-icon sn-icon-project-member-access"></i>
       <%= I18n.t('projects.index.project_members_access') %>
     <% end  %>
   </li>
@@ -43,7 +43,7 @@
   <% if can_manage_team?(project.team) %>
     <li class="form-dropdown-item">
       <a href="#" data-project-id="<%= project.id %>" data-url="/project_folders/move_to_modal" class="move-projects-btn">
-        <i class="fas fa-arrow-right"></i>
+        <i class="sn-icon sn-icon-move"></i>
         <%= I18n.t('projects.index.move_button') %>
       </a>
     </li>
@@ -53,7 +53,7 @@
   <% if can_export_project?(project) %>
     <li class="form-dropdown-item">
       <a href="#" data-project-id="<%= project.id %>" data-url="<%= export_projects_modal_team_path(project.team) %>" class="export-projects-btn">
-        <i class="fas fa-file-export"></i>
+        <i class="sn-icon sn-icon-export"></i>
         <%= I18n.t('projects.export_projects.export_button') %>
       </a>
     </li>
@@ -67,7 +67,7 @@
                     remote: true,
                     class: 'project-archive-restore-form',
                     data: { confirm: t('projects.index.archive_confirm') }) do %>
-        <i class="fas fa-archive"></i>
+        <i class="sn-icon sn-icon-archive"></i>
         <span><%= t('projects.index.archive_option') %></span>
       <% end %>
     </li>
@@ -79,7 +79,7 @@
         data-turbolinks="false"
         data-object-type="Project"
         data-object-id="<%= project.id %>">
-      <i class="fas fa-comment"></i>
+      <i class="sn-icon sn-icon-comments"></i>
       <span id="comment-count-<%= project.id %>">
         <% unseen_comment_count = project.comments.unseen_by(current_user).count %>
         <% if unseen_comment_count.positive? %>
@@ -93,7 +93,7 @@
   <!-- Open activities -->
   <li>
     <a href="/global_activities?<%= Activity.url_search_query({ subjects: { Project: [project] } }) %>">
-      <i class="fas fa-list"></i>
+      <i class="sn-icon sn-icon-activities"></i>
       <span><%= t('projects.index.activities_option') %></span>
     </a>
   </li>

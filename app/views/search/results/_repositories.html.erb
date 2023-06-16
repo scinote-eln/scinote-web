@@ -1,6 +1,6 @@
 <% results.each do |repository_row| %>
   <h5>
-    <i class="fas fa-list-alt"></i>
+    <i class="sn-icon sn-icon-inventory"></i>
     <%=t "search.index.repositories.repository_row" %>
     <%= highlight repository_row.name, search_query.strip.split(/\s+/) %>
   </h5>

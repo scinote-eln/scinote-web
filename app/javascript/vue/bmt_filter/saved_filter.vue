@@ -2,7 +2,7 @@
   <div class="saved-filters-element">
     <span @click="loadFilters">{{ savedFilter.attributes.name }}</span>
     <button v-if="canManageFilters" class="btn btn-light icon-btn" @click="deleteFilter">
-      <i class="fas fa-trash"></i>
+      <i class="sn-icon sn-icon-delete"></i>
     </button>
   </div>
 </template>

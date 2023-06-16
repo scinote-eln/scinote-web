@@ -30,10 +30,10 @@ var DataTableHelpers = (function() {
       $('.dataTables_filter').append(`
           <button class="btn btn-light icon-btn search-icon"
                   title="${I18n.t('repositories.show.button_tooltip.search')}">
-            <i class="fas fa-search"></i>
+            <i class="sn-icon sn-icon-search"></i>
           </button>
           <div class="sci-input-container right-icon search-container">
-            <i class="fas fa-search"></i>
+            <i class="sn-icon sn-icon-search"></i>
           </div>`).find('.sci-input-container').prepend(tableFilterInput);
       $('.dataTables_filter').find('label').remove();
 

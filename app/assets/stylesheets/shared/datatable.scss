@@ -40,7 +40,7 @@
     align-items: center;
     display: flex;
     flex-wrap: wrap;
-    min-height: var(--datatable-pagination-row);
+    height: var(--datatable-pagination-row);
     position: relative;
     width: 100%;
     z-index: 101;
@@ -134,7 +134,8 @@
     }
   }
 
-  tr[data-shared=true] {
+  tr[data-shared=true],
+  tr[data-i-shared=true] {
     td.item-name::before {
       @include font-awesome;
       content: "\f0c0";

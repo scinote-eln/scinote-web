@@ -21,6 +21,10 @@
       display: flex;
       min-width: 5rem;
       width: 100%;
+
+      .fas {
+        margin-right: .5em;
+      }
     }
   }
 
@@ -46,13 +50,17 @@
     box-shadow: $flyout-shadow;
     margin: 1rem auto;
     max-width: 900px;
-    padding: 10px;
+    padding: 1rem 0;
     z-index: 2;
   }
 
   .dropdown {
     .dropdown-menu {
       z-index: 102;
+    }
+
+    .dropdown-backdrop {
+      z-index: 101;
     }
   }
 }
@@ -63,11 +71,13 @@
 
 .task-section {
   margin: 16px 0;
-  padding-left: 16px;
+  padding: 0 1rem;
 
   .task-section-caret {
+    align-items: center;
     color: $color-volcano;
-    display: inline-block;
+    display: inline-flex;
+    gap: .5rem;
     padding: .5em;
     text-decoration: none;
 
@@ -75,7 +85,7 @@
       margin-right: 5px;
     }
 
-    &:not(.collapsed) .fas {
+    &:not(.collapsed) .sn-icon-right {
       @include rotate(90deg);
     }
   }
@@ -114,7 +124,9 @@
       }
 
       .repositories-assign-container {
+        display: flex;
         flex-grow: 1;
+        justify-content: flex-end;
         max-width: 150px;
 
         .btn {
@@ -244,7 +256,7 @@
         opacity: 0;
       }
 
-      .fa-calendar-alt {
+      .sn-icon-calendar {
         display: none;
       }
     }

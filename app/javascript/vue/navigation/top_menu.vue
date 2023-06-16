@@ -1,28 +1,22 @@
 <template>
   <div class="sci--navigation--top-menu-container">
-    <div class="sci--navigation--top-menu-logo">
-      <a v-if="rootUrl && logo" :title="i18n.t('nav.label.scinote')" :href="rootUrl">
-        <img class="logo small" :src="logo.small_url">
-        <img class="logo large" :src="logo.large_url">
-      </a>
+    <div v-if="user" class="sci--navigation--top-menu-search left-icon sci-input-container-v2" :class="{'disabled' : !currentTeam}" :title="i18n.t('nav.search')">
+      <input type="text" :placeholder="i18n.t('nav.search')" @change="searchValue"/>
+      <i class="sn-icon sn-icon-search"></i>
     </div>
-    <div v-if="currentTeam" class="sci--navigation--top-menu-teams">
-      <DropdownSelector
-        :selectedValue="currentTeam"
+    <div v-if="currentTeam" class="mr-auto w-64">
+      <Select
+        :value="currentTeam"
         :options="teams"
-        :disableSearch="true"
-        :selectorId="`sciNavigationTeamSelector`"
-        :labelHTML="true"
-        @dropdown:changed="switchTeam"
-      />
+        :placeholder="'test'"
+        :noOptionsPlaceholder="'test'"
+        v-bind:disabled="false"
+        @change="switchTeam"
+      ></Select>
     </div>
-    <div v-if="user" class="sci--navigation--top-menu-search left-icon sci-input-container" :class="{'disabled' : !currentTeam}">
-      <input type="text" class="sci-input-field" :placeholder="i18n.t('nav.search')" @change="searchValue"/>
-      <i class="fas fa-search"></i>
-    </div>
-    <div v-if="user" class="dropdown">
-      <button class="btn btn-light icon-btn" data-toggle="dropdown">
-        <i class="fas fa-question-circle"></i>
+    <div v-if="user" class="dropdown" :title="i18n.t('nav.support')">
+      <button class="btn btn-light icon-btn btn-black" data-toggle="dropdown">
+        <i class="sn-icon sn-icon-help"></i>
       </button>
       <ul v-if="user" class="dropdown-menu dropdown-menu-right">
         <li v-for="(item, i) in helpMenu" :key="i">
@@ -32,9 +26,9 @@
         </li>
       </ul>
     </div>
-    <div v-if="user" class="dropdown">
-      <button class="btn btn-light icon-btn" data-toggle="dropdown">
-        <i class="fas fa-cog"></i>
+    <div v-if="user" class="dropdown" :title="i18n.t('nav.settings')">
+      <button class="btn btn-light icon-btn btn-black" data-toggle="dropdown">
+        <i class="sn-icon sn-icon-settings"></i>
       </button>
       <ul class="dropdown-menu dropdown-menu-right">
         <li v-for="(item, i) in settingsMenu" :key="i">
@@ -49,13 +43,13 @@
         </li>
       </ul>
     </div>
-    <div v-if="user" class="sci--navigation--notificaitons-flyout-container">
-      <button class="btn btn-light icon-btn"
+    <div v-if="user" class="sci--navigation--notificaitons-flyout-container" :title="i18n.t('nav.notifications.title')">
+      <button class="btn btn-light icon-btn btn-black"
               :class="{ 'has-unseen': unseenNotificationsCount > 0 }"
               :data-unseen="unseenNotificationsCount"
               data-toggle="dropdown"
               @click="notificationsOpened = !notificationsOpened">
-        <i class="fas fa-bell"></i>
+        <i class="sn-icon sn-icon-notifications"></i>
       </button>
       <div v-if="notificationsOpened" class="sci--navigation--notificaitons-flyout-backdrop" @click="notificationsOpened = false"></div>
       <NotificationsFlyout
@@ -65,10 +59,9 @@
         @update:unseenNotificationsCount="checkUnseenNotifications()"
         @close="notificationsOpened = false" />
     </div>
-    <div v-if="user" class="dropdown">
-      <div class="sci--navigation--top-menu-user" data-toggle="dropdown">
-        <span>{{ i18n.t('nav.user_greeting', { full_name: user.name })}}</span>
-        <img class="avatar" :src="user.avatar_url">
+    <div v-if="user" class="dropdown" :title="i18n.t('nav.user_profile')">
+      <div class="sci--navigation--top-menu-user btn btn-light icon-btn btn-black" data-toggle="dropdown">
+        <img class="avatar w-6 h-6" :src="user.avatar_url">
       </div>
       <div class="dropdown-menu dropdown-menu-right top-menu-user-dropdown">
         <li v-for="(item, i) in userMenu" :key="i">
@@ -89,12 +82,14 @@
 <script>
   import NotificationsFlyout from './notifications/notifications_flyout.vue'
   import DropdownSelector from '../shared/dropdown_selector.vue'
+  import Select from "../shared/select.vue";
 
   export default {
     name: 'TopMenuContainer',
     components: {
       DropdownSelector,
-      NotificationsFlyout
+      NotificationsFlyout,
+      Select
     },
     props: {
       url: String,
@@ -104,7 +99,7 @@
     data() {
       return {
         rootUrl: null,
-        logo: null,
+        teamSwitchUrl: null,
         currentTeam: null,
         teams: null,
         searchUrl: null,
@@ -134,7 +129,7 @@
       fetchData() {
         $.get(this.url, (result) => {
           this.rootUrl = result.root_url;
-          this.logo = result.logo;
+          this.teamSwitchUrl = result.team_switch_url;
           this.currentTeam = result.current_team;
           this.teams = result.teams;
           this.searchUrl = result.search_url;
@@ -147,11 +142,11 @@
       switchTeam(team) {
         if (this.currentTeam == team) return;
 
-        let newTeam = this.teams.find(e => e.value == team);
+        let newTeam = this.teams.find(e => e[0] == team);
 
         if (!newTeam) return;
 
-        $.post(newTeam.params.switch_url, (result) => {
+        $.post(this.teamSwitchUrl, {team_id: team}, (result) => {
           this.currentTeam = result.currentTeam
           dropdownSelector.selectValues('#sciNavigationTeamSelector', this.currentTeam);
           $('body').attr('data-current-team-id', this.currentTeam);

@@ -12,7 +12,7 @@ var RepositoryStatusColumnType = (function() {
       <input placeholder=${I18n.t('libraries.manange_modal_column.name_placeholder')}
              class="status-item-field"
              type="text"/>
-      <span class="status-item-icon-trash fas fa-trash"></span>
+      <span class="status-item-icon-trash sn-icon sn-icon-delete"></span>
     </div>`;
   }
 

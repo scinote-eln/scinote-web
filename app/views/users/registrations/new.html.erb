@@ -64,7 +64,7 @@
 <%= render partial: 'users/sessions/login_disclaimer'%>
 
 <% if resource && resource.errors.present? %>
-  <%= form_errors = {} %>
+  <% form_errors = {} %>
 
   <% resource.errors.as_json.each do |err, messages| %>
     <% form_errors[err] = [] %>
@@ -78,7 +78,7 @@
 
 <% if @team && @team.errors.present? %>
 
-  <%= form_errors = {} %>
+  <% form_errors = {} %>
 
   <% @team.errors.as_json.each do |err, messages| %>
     <% form_errors[err] = [] %>

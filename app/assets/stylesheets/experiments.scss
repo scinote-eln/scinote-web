@@ -16,7 +16,7 @@
     width: 36px;
 
     .dropdown-menu {
-      z-index: 9;
+      z-index: 102;
 
       a,
       button {
@@ -27,6 +27,10 @@
           margin-right: .4em;
         }
       }
+    }
+
+    .dropdown-backdrop {
+      z-index: 101;
     }
   }
 
@@ -279,7 +283,7 @@
       }
 
       &.list {
-        grid-auto-rows: 1px minmax(3em, auto);
+        grid-auto-rows: 1px minmax(4em, auto);
         grid-template-columns: max-content minmax(100px, auto) minmax(80px, max-content) repeat(calc(var(--list-columns-number) - 4), minmax(100px, auto)) max-content;
         grid-template-rows: 3em;
 
@@ -380,12 +384,6 @@
               height: 100%;
               padding-top: 3px;
               position: initial;
-            }
-          }
-
-          &:hover {
-            .description-text::after {
-              background: linear-gradient(to right, $color-transparent, $color-concrete 50%);
             }
           }
 

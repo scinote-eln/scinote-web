@@ -2,7 +2,7 @@
   <div class="step-table-container">
      <div class="step-element-header" :class="{ 'editing-name': editingName, 'step-element--locked': locked }">
       <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
-        <i class="fas fas-rotated-90 fa-exchange-alt"></i>
+        <i class="sn-icon sn-icon-sort"></i>
       </div>
       <div v-else class="step-element-grip-placeholder"></div>
       <div v-if="!locked || element.attributes.orderable.name" :key="reloadHeader" class="step-element-name">
@@ -20,13 +20,13 @@
       </div>
       <div class="step-element-controls">
         <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="enableNameEdit" tabindex="0">
-          <i class="fas fa-pen"></i>
+          <i class="sn-icon sn-icon-edit"></i>
         </button>
         <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light" tabindex="0" @click="duplicateElement">
-          <i class="fas fa-clone"></i>
+          <i class="sn-icon sn-icon-duplicate"></i>
         </button>
         <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="0">
-          <i class="fas fa-trash"></i>
+          <i class="sn-icon sn-icon-delete"></i>
         </button>
       </div>
     </div>
@@ -36,7 +36,7 @@
          @keyup.enter="!editingTable && enableTableEdit()">
       <div  class="enable-edit-mode" v-if="!editingTable && element.attributes.orderable.urls.update_url" @click="enableTableEdit">
         <div class="enable-edit-mode__icon" tabindex="0">
-          <i class="fas fa-pen"></i>
+          <i class="sn-icon sn-icon-edit"></i>
         </div>
       </div>
       <div ref="hotTable" class="hot-table-container" @click="!editingTable && enableTableEdit()">
@@ -46,11 +46,11 @@
       </div>
     </div>
     <div class="edit-buttons" v-if="editingTable">
-      <button class="btn icon-btn btn-primary" @click="updateTable">
-        <i class="fas fa-check"></i>
+      <button class="btn icon-btn btn-primary btn-sm" @click="updateTable">
+        <i class="sn-icon sn-icon-check"></i>
       </button>
-      <button class="btn icon-btn btn-light" @click="disableTableEdit">
-        <i class="fas fa-times"></i>
+      <button class="btn icon-btn btn-light btn-sm" @click="disableTableEdit">
+        <i class="sn-icon sn-icon-close"></i>
       </button>
     </div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @cancel="closeDeleteModal"/>
@@ -95,7 +95,8 @@
         editingTable: false,
         tableObject: null,
         nameModalOpen: false,
-        reloadHeader: 0
+        reloadHeader: 0,
+        updatingTableData: false
       }
     },
     computed: {
@@ -104,10 +105,10 @@
       }
     },
     updated() {
-      this.loadTableData();
+      if(!this.updatingTableData) this.loadTableData();
     },
     beforeUpdate() {
-      this.tableObject.destroy();
+      if(!this.updatingTableData) this.tableObject.destroy();
     },
     mounted() {
       this.loadTableData();
@@ -130,6 +131,7 @@
       },
       disableTableEdit() {
         this.editingTable = false;
+        this.updatingTableData = false;
       },
       enableNameEdit() {
         this.editingName = true;
@@ -165,27 +167,45 @@
       },
       update() {
         this.element.attributes.orderable.contents = JSON.stringify({ data: this.tableObject.getData() });
-        this.element.attributes.orderable.metadata = JSON.stringify({
-          cells: this.tableObject
-                     .getCellsMeta()
-                     .filter(e => !!e)
-                     .map((x) => {
-                          const {row, col} = x;
-                          const plugins = this.tableObject.plugin;
-                          const cellId = plugins.utils.translateCellCoords({row, col});
-                          const calculated = plugins.matrix.getItem(cellId)?.value ||
-                            this.tableObject.getDataAtCell(row, col) ||
-                            null;
-                          return {
-                            row: row,
-                            col: col,
-                            className: x.className || '',
-                            calculated: calculated
-                          }
-                      })
-        });
+        let metadata = this.element.attributes.orderable.metadata || {};
+        if (metadata.plateTemplate) {
+            this.element.attributes.orderable.metadata = JSON.stringify({
+              cells: this.tableObject
+                         .getCellsMeta()
+                         .filter(e => !!e)
+                         .map((x) => {
+                              const {row, col} = x;
+                              return {
+                                row: row,
+                                col: col,
+                                className: x.className || '',
+                              }
+                          })
+            });
+          } else {
+            this.element.attributes.orderable.metadata = JSON.stringify({
+              cells: this.tableObject
+                         .getCellsMeta()
+                         .filter(e => !!e)
+                         .map((x) => {
+                              const {row, col} = x;
+                              const plugins = this.tableObject.plugin;
+                              const cellId = plugins.utils.translateCellCoords({row, col});
+                              const calculated = plugins.matrix.getItem(cellId)?.value ||
+                                this.tableObject.getDataAtCell(row, col) ||
+                                null;
+                              return {
+                                row: row,
+                                col: col,
+                                className: x.className || '',
+                                calculated: calculated
+                              }
+                          })
+            });
+        }
         this.$emit('update', this.element)
         this.ajax_update_url()
+        this.updatingTableData = false;
       },
       ajax_update_url() {
         $.ajax({
@@ -198,6 +218,7 @@
         let container = this.$refs.hotTable;
         let data = JSON.parse(this.element.attributes.orderable.contents);
         let metadata = this.element.attributes.orderable.metadata || {};
+        let formulasEnabled = metadata.plateTemplate ? false : true;
 
         this.tableObject = new Handsontable(container, {
           data: data.data,
@@ -208,10 +229,13 @@
           colHeaders: tableColRowName.tableColHeaders(metadata.plateTemplate),
           cell: metadata.cells || [],
           contextMenu: this.editingTable,
-          formulas: true,
+          formulas: formulasEnabled,
           preventOverflow: 'horizontal',
           readOnly: !this.editingTable,
-          afterUnlisten: () => setTimeout(this.updateTable, 100) // delay makes cancel button work
+          afterUnlisten: () => {
+            this.updatingTableData = true;
+            setTimeout(this.updateTable, 100) // delay makes cancel button work
+          }
         });
       }
     }

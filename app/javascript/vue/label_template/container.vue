@@ -83,7 +83,7 @@
         </template>
         <div v-else-if="canManage" class="label-view-container" :title="i18n.t('label_templates.show.view_content_tooltip')" @click="enableContentEdit">
           {{ labelTemplate.attributes.content}}
-          <i class="fas fa-pen"></i>
+          <i class="sn-icon sn-icon-edit"></i>
         </div>
         <div v-else class="label-view-container read-only" :title="i18n.t('label_templates.show.view_content_tooltip')">
           {{ labelTemplate.attributes.content}}

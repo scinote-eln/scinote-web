@@ -4,10 +4,10 @@
       <%= button_to(experiment_path(experiment, format: :json),
                     method: :put,
                     remote: true,
-                    class: 'btn btn-light',
+                    class: 'btn btn-light justify-start',
                     form_class: 'experiment-action-form',
                     params: { experiment: { archived: false } }) do %>
-        <i class="fas fa-undo"></i>
+        <i class="sn-icon sn-icon-restore"></i>
         <span><%= t('experiments.index.restore_option') %></span>
       <% end %>
     </li>
@@ -18,7 +18,7 @@
       <%= link_to edit_experiment_url(experiment),
                   remote: true,
                   class: 'edit-experiment experiment-action-link' do %>
-        <i class="fas fa-pen"></i>
+        <i class="sn-icon sn-icon-edit"></i>
         <span><%= t('experiments.index.edit_option') %></span>
       <% end %>
     </li>
@@ -27,14 +27,14 @@
   <% if can_manage_experiment_users?(experiment) %>
     <li class="form-dropdown-item">
       <%= link_to edit_access_permissions_experiment_path(experiment), data: { action: 'remote-modal'} do %>
-        <i class="fas fa-door-open"></i>
+        <i class="sn-icon sn-icon-project-member-access"></i>
         <span><%= t('experiments.index.experiment_access') %></span>
       <% end %>
     </li>
   <% else %>
     <li class="form-dropdown-item">
       <%= link_to access_permissions_experiment_path(experiment), data: { action: 'remote-modal'} do %>
-        <i class="fas fa-door-open"></i>
+        <i class="sn-icon sn-icon-project-member-access"></i>
         <span><%= t('experiments.index.experiment_access') %></span>
       <% end %>
     </li>
@@ -45,7 +45,7 @@
       <%= link_to move_modal_experiment_url(experiment),
                   remote: true,
                   class: 'move-experiment experiment-action-link' do %>
-        <i class="fas fa-arrow-right"></i>
+        <i class="sn-icon sn-icon-move"></i>
         <span><%= t('experiments.index.move_option') %></span>
       <% end %>
     </li>
@@ -56,7 +56,7 @@
       <%= link_to clone_modal_experiment_url(experiment),
                   remote: true, type: 'button',
                   class: 'clone-experiment experiment-action-link' do %>
-        <i class="fas fa-copy"></i>
+        <i class="sn-icon sn-icon-duplicate"></i>
         <span><%= t('experiments.index.clone_option') %></span>
       <% end %>
     </li>
@@ -67,10 +67,10 @@
       <%= button_to(archive_experiment_path(experiment),
                     method: :post,
                     remote: true,
-                    class: 'btn btn-light',
+                    class: 'btn btn-light justify-start',
                     form_class: 'experiment-action-form',
                     data: { confirm: t('experiments.index.archive_confirm') } ) do %>
-        <i class="fas fa-archive"></i>
+        <i class="sn-icon sn-icon-archive"></i>
         <span><%= t('experiments.index.archive_option') %></span>
     <% end %>
     </li>

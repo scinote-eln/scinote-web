@@ -146,7 +146,7 @@
     }
 
     &.open {
-      .fa-caret-down {
+      .sn-icon-down {
         @include rotate(-180deg);
       }
     }

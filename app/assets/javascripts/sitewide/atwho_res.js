@@ -239,7 +239,7 @@ var SmartAnnotation = (function() {
   // Closes the atwho popup * needed in repositories to close the popup
   // if nothing is selected and the user leaves the form *
   function closePopup() {
-    $('.atwho-header-res').find('.fa-times').click();
+    $('.atwho-header-res').find('.sn-icon-close').click();
   }
 
   function initialize(field, deferred, assignableMyModuleId) {

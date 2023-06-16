@@ -111,7 +111,7 @@ module Experiments
         id: my_module.id,
         name: escape_input(my_module.name),
         provisioning_status: my_module.provisioning_status,
-        url: protocols_my_module_path(my_module)
+        url: protocols_my_module_path(my_module, view_mode: my_module.archived_branch? ? 'archived' : 'active')
       }
     end
 

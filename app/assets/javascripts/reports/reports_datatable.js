@@ -44,7 +44,7 @@
 
     if (data.preview_url) {
       return `<a href="#" class="file-preview-link docx" data-preview-url="${data.preview_url}">
-                <i class="fas fa-file-word"></i>
+                <i class="sn-icon sn-icon-file-word"></i>
                 ${I18n.t('projects.reports.index.docx')}
               </a>`;
     }
@@ -236,6 +236,7 @@
       },
       drawCallback: function() {
         if (CHECKBOX_SELECTOR) CHECKBOX_SELECTOR.checkSelectAllStatus();
+        setTimeout(() => { REPORTS_TABLE.columns.adjust(); }, 0);
       },
       rowCallback: function(row) {
         if (CHECKBOX_SELECTOR) CHECKBOX_SELECTOR.checkRowStatus(row);

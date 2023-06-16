@@ -8,14 +8,16 @@ class MyModulesController < ApplicationController
   include MyModulesHelper
   include Breadcrumbs
 
-  before_action :load_vars, except: %i(restore_group create new save_table_state my_module_filter actions_toolbar)
+  before_action :load_vars, except: %i(restore_group create new save_table_state
+                                       inventory_assigning_my_module_filter actions_toolbar)
   before_action :load_experiment, only: %i(create new)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_archive_permissions, only: %i(update)
   before_action :check_manage_permissions, only: %i(
     description due_date update_description update_protocol_description update_protocol
   )
-  before_action :check_read_permissions, except: %i(create new update update_description my_module_filter
+  before_action :check_read_permissions, except: %i(create new update update_description
+                                                    inventory_assigning_my_module_filter
                                                     update_protocol_description restore_group
                                                     save_table_state actions_toolbar)
   before_action :check_update_state_permissions, only: :update_state
@@ -449,22 +451,20 @@ class MyModulesController < ApplicationController
     render json: { provisioning_status: @my_module.provisioning_status }
   end
 
-  def my_module_filter
-    readable_experiments = Experiment.readable_by_user(current_user)
-    managable_active_my_modules = MyModule.managable_by_user(current_user).active
+  def inventory_assigning_my_module_filter
+    viewable_experiments = Experiment.viewable_by_user(current_user, current_team)
+    assignable_my_modules = MyModule.repository_row_assignable_by_user(current_user)
 
-    experiment = Experiment.readable_by_user(current_user)
+    experiment = Experiment.viewable_by_user(current_user, current_team)
                            .joins(:my_modules)
-                           .where(experiments: { id: readable_experiments })
-                           .where(my_modules: { id: managable_active_my_modules })
+                           .where(experiments: { id: viewable_experiments })
+                           .where(my_modules: { id: assignable_my_modules })
                            .find_by(id: params[:experiment_id])
 
     return render_404 if experiment.blank?
 
     my_modules = experiment.my_modules
-                           .where(my_modules: { id: managable_active_my_modules })
-                           .distinct
-                           .search(current_user, false, params[:query], 1, current_team)
+                           .where(my_modules: { id: assignable_my_modules })
                            .pluck(:id, :name)
 
     return render plain: [].to_json if my_modules.blank?

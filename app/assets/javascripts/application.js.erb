@@ -43,9 +43,6 @@
 // forms with clicking on links outside form in cases when other than
 // GET method is used.
 
-// eslint-disable-next-line no-unused-vars
-var formatJS = $('body').data('datetime-picker-format-date-only');
-
 function initFormSubmitLinks(el) {
 
   el = el || $(document.body);
@@ -334,7 +331,7 @@ const renderUserNamePopover = (url, fullName, email, html) => {
                   <h5 class='full-name'>${fullName}</h5>
                 </div>
                 <div class='col-xs-3 text-right'>
-                  <span class='fas fa-times' aria-hidden='true'></span>
+                  <span class='sn-icon sn-icon-close' aria-hidden='true'></span>
                 </div>
               </div>
               <div class='row'>

@@ -3,7 +3,7 @@
     <div id="protocol-details" class="protocol-section-header">
       <div class="protocol-details-container">
         <a class="protocol-section-caret" role="button" data-toggle="collapse" href="#details-container" aria-expanded="false" aria-controls="details-container">
-          <i class="fas fa-caret-right"></i>
+          <i class="sn-icon sn-icon-right"></i>
           <span id="protocolDetailsLabel" class="protocol-section-title">
             <h2>
               {{ i18n.t("protocols.header.details") }}
@@ -14,7 +14,7 @@
       </div>
       <div class="actions-block">
         <a class="btn btn-light icon-btn pull-right" :href="protocol.attributes.urls.print_protocol_url" target="_blank">
-          <span class="fas fa-print" aria-hidden="true"></span>
+          <span class="sn-icon sn-icon-printer" aria-hidden="true"></span>
         </a>
         <button class="btn btn-light" @click="openVersionsModal">{{ i18n.t("protocols.header.versions") }}</button>
         <button v-if="protocol.attributes.urls.publish_url" @click="$emit('publish')" class="btn btn-primary">{{ i18n.t("protocols.header.publish") }}</button>
