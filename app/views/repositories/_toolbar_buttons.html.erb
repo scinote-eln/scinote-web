@@ -37,6 +37,21 @@
         </button>
       </span>
     <% end %>
+    <% if @repository.repository_rows.with_active_reminders(current_user).any? %>
+      <button type="button" data-toggle="tooltip" data-placement="bottom" title="<%= t("repositories.hide_reminders") %>"
+              class="btn btn-light auto-shrink-button"
+              id="hideRepositoryReminders"
+              data-view-mode="active"
+              data-hide-reminders-url="<%= team_repository_hide_reminders_url(@current_team, @repository) %>">
+        <span class="fas fa-bell-slash"></span>
+        <span class="button-text"><%= t("repositories.hide_reminders") %></span>
+      </button>
+    <% end %>
+    <% if can_manage_repository_filters?(@repository) %>
+      <div class="toolbar-save-filters">
+        <%= render partial: 'repositories/toolbar/save_filters' %>
+      </div>
+    <% end %>
   </div>
 
   <div class="toolbar-middle-block">
