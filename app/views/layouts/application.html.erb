@@ -16,7 +16,7 @@
     <% if ::NewRelic::Agent.instance.started? %>
       <%= ::NewRelic::Agent.browser_timing_header(controller.request.content_security_policy_nonce) %>
     <% end %>
-    <%= javascript_include_tag 'jquery_bundle', nonce: true %>
+    <%= javascript_include_tag 'jquery_bundle' %>
     <%= javascript_include_tag 'application' %>
     <%= javascript_include_tag 'application_pack' %>
     <%= javascript_include_tag 'session_end' %>
@@ -42,10 +42,10 @@
       <%= yield(:head) %>
     <% end %>
 
-    <%= javascript_include_tag 'tui_image_editor', nonce: true %>
+    <%= javascript_include_tag 'tui_image_editor' %>
     <%= stylesheet_link_tag 'tui_image_editor_styles' %>
     <%= javascript_include_tag 'vue_navigation_navigator' %>
-    <%= javascript_include_tag 'vue_navigation_top_menu', nonce: true %>
+    <%= javascript_include_tag 'vue_navigation_top_menu' %>
   </head>
   <body
     class="<%= yield :body_class %> <%= 'navigator-collapsed' if !@navigator || session[:navigator_collapsed] %>"
@@ -86,7 +86,7 @@
         <% if user_signed_in? && current_user.teams.blank? && !(activities_are_selected? || settings_are_selected?) %>
           <!-- If member of no teams -->
           <div id="no-teams-jumbotron" class="jumbotron">
-            <%= image_tag "empty-screen-illustration.png", size: "500x500" %>
+            <%= image_tag "empty-screen-illustration.png" %>
             <h2><%=t 'general.no_teams.title' %></h2>
             <p class="no-teams-info"><%=t 'general.no_teams.text' %></p>
           </div>

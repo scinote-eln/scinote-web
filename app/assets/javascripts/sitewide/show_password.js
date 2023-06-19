@@ -1,5 +1,5 @@
 function initShowPassword() {
-  $('.fas.fa-eye.show-password').remove();
+  $('.sn-icon.sn-icon-visibility-show.show-password').remove();
   $.each($('input[type="password"]'), function(i, e) {
     $(`<i class="sn-icon sn-icon-visibility-show show-password"
           style="
@@ -17,11 +17,11 @@ $(document).on('turbolinks:load', function() {
 
 $(document).on('click', '.show-password', function() {
   let $icon = $(this);
-  if ($icon.hasClass('fa-eye')) {
-    $icon.removeClass('fa-eye').addClass('fa-eye-slash');
+  if ($icon.hasClass('sn-icon-visibility-show')) {
+    $icon.removeClass('sn-icon-visibility-show').addClass('sn-icon-visibility-hide');
     $icon.parent().find('input[type=password]').attr('type', 'text');
   } else {
-    $icon.removeClass('fa-eye-slash').addClass('fa-eye');
+    $icon.removeClass('sn-icon-visibility-hide').addClass('sn-icon-visibility-show');
     $icon.parent().find('input[type=text]').attr('type', 'password');
   }
 });
