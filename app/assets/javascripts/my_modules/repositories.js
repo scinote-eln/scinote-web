@@ -253,6 +253,13 @@ var MyModuleRepositories = (function() {
     SIMPLE_TABLE.ajax.reload(null, false);
   }
 
+  function addRepositorySearch() {
+    $(`<div id="inventorySearchComponent">
+      <repository_search_container/>
+    </div>`).appendTo('.filter-container');
+    initRepositorySearch();
+  }
+
   function renderFullViewTable(tableContainer, options = {}) {
     if (FULL_VIEW_TABLE) FULL_VIEW_TABLE.destroy();
     SELECTED_ROWS = {};
@@ -285,7 +292,8 @@ var MyModuleRepositories = (function() {
       fnInitComplete: function() {
         var dataTableWrapper = $(tableContainer).closest('.dataTables_wrapper');
         DataTableHelpers.initLengthAppearance(dataTableWrapper);
-        DataTableHelpers.initSearchField(dataTableWrapper, I18n.t('repositories.show.filter_inventory_items'));
+        $('.dataTables_filter').addClass('hidden');
+        addRepositorySearch();
         $("<i class='sn-icon sn-icon-barcode'></i>").appendTo($('.search-container'));
         dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
         if (options.assign_mode) {
