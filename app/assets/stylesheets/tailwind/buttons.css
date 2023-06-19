@@ -1,6 +1,6 @@
 @layer components {
   .sci-btn-group {
-    @apply flex items-center gap-2;
+    @apply flex items-center gap-2 relative;
   }
 
   .btn {

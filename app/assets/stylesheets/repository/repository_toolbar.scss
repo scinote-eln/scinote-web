@@ -164,8 +164,9 @@
     .repository-toolbar {
 
       .btn:not(.prevent-shrink) {
-        padding: 7px;
-        width: 36px;
+        height: 40px;
+        padding: .5rem;
+        width: 40px;
 
         .button-text {
           display: none;
