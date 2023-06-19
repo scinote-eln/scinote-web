@@ -160,13 +160,20 @@
     var value = inputField.val();
     inputField.focus().val('').val(value);
   }).on('shown.bs.modal', '#export-repositories-modal', function() {
+    const selectedInventoriesCount = CHECKBOX_SELECTOR.selectedRows.length;
     const firstDescription = $(this).find('.description-p1');
     const teamName = firstDescription.data('team-name');
     const exportButton = $(this).find('#export-repositories-modal-submit');
     const exportURL = exportButton.data('export-url');
+    let inv = I18n.t('repositories.index.modal_export.inventories');
+
+    if (selectedInventoriesCount === 1) {
+      inv = I18n.t('repositories.index.modal_export.inventory');
+    }
+
     firstDescription.html(I18n.t(
       'repositories.index.modal_export.description_p1_html',
-      { team_name: teamName, repositories_count: CHECKBOX_SELECTOR.selectedRows.length }
+      { team_name: teamName, inv: inv, repositories_count: selectedInventoriesCount }
     ));
 
     exportButton.on('click', function() {
