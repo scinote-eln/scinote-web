@@ -3624,6 +3624,7 @@ en:
     teams: "All Teams"
     addons: "Add-Ons"
     label_printer: "Label Printer"
+    fluics_printer: "Fluics Printer"
 
   Add: "Add"
   Asset: "File"
