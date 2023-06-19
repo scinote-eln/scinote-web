@@ -764,6 +764,8 @@ var MyModuleRepositories = (function() {
       UPDATE_REPOSITORY_MODAL.data('update-url', data.update_url);
       UPDATE_REPOSITORY_MODAL.modal('show');
     });
+
+    $(document).on('hidden.bs.modal', '#updateRepositoryRecordModal', () => $('body').addClass('modal-open'));
   }
 
   function submitUpdateRepositoryRecord(options = {}) {
