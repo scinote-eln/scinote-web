@@ -1746,7 +1746,9 @@ en:
         copy: "Copy"
       modal_export:
         title: "Export Inventories"
-        description_p1_html: "You are about to export <strong>%{repositories_count}</strong> inventories in %{team_name}'s team."
+        description_p1_html:
+          one: "You are about to export <strong>1</strong> inventory in %{team_name}'s team."
+          other: "You are about to export <strong>%{count}</strong> inventories in %{team_name}'s team."
         description_alert: "This process may take minutes to hours, depending on the file size. Any new data entered afterward won't be included in the export."
         description_p2: "You will receive an email when the .zip file is ready. A link to your file will also appear in your SciNote notification. For security reasons, this link will expire in 7 days."
         description_p3_html: "After you confirm this export, you will have <strong>%{remaining_export_requests}</strong> export requests left today (max %{requests_limit} requests per day)."
