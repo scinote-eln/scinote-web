@@ -6,6 +6,7 @@
         <% if current_team && can_create_projects?(current_team) %>
           <%= link_to new_project_path(project_folder_id: current_folder),
                       class: 'btn btn-primary new-project-btn',
+                      title: t('projects.index.new_tooltip'),
                       data: { view_mode: 'active' },
                       remote: true do %>
             <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
@@ -16,6 +17,7 @@
         <% if current_team && can_create_project_folders?(current_team) %>
           <%= link_to new_project_folder_path(project_folder_id: current_folder, view_mode: projects_view_mode),
                       class: 'btn btn-light new-project-folder-btn',
+                      title: t('projects.index.new_folder_tooltip'),
                       remote: true do %>
             <span class="sn-icon sn-icon-folder" aria-hidden="true"></span>
             <span class="hidden-xs"><%= t('projects.index.new_folder') %></span>
@@ -85,7 +87,7 @@
             </div>
           <% end %>
         </div>
-        <div class="dropdown sort-menu">
+        <div class="dropdown sort-menu" title="<%= t("general.sort.title") %>">
           <button class="btn btn-light icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <span><i class="sn-icon sn-icon-sort-down"></i></span>
           </button>

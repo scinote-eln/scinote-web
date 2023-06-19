@@ -4,6 +4,7 @@
       <%= link_to modules_new_experiment_path(@experiment, view_mode:'table'),
                     class: 'btn btn-primary new-my-module-button only-active',
                     id: 'createTask',
+                    title: t('experiments.table.toolbar.new_tooltip'),
                     data: { view_mode: 'active' },
                     remote: true do %>
                 <span class="sn-icon sn-icon-new-task"></span>
@@ -21,7 +22,7 @@
       <button id="taskDataDisplay" class="btn btn-light icon-btn" data-toggle="modal" data-target="#tableDisplayModal">
         <i class="sn-icon sn-icon sn-icon-reports"></i>
       </button>
-        <div class="dropdown sort-menu">
+        <div class="dropdown sort-menu" title="<%= t("general.sort.title") %>">
           <button class="btn btn-light icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <i class="sn-icon sn-icon-sort-up"></i>
           </button>

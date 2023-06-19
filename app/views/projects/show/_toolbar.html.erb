@@ -7,6 +7,7 @@
                     form_class: 'new-experiment-form',
                     data: {view_mode: :active},
                     id: 'new-experiment',
+                    title: t('experiments.toolbar.new_button_tooltip'),
                     method: :get,
                     class: 'btn btn-primary' do %>
         <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
@@ -61,7 +62,7 @@
 
     <% end %>
     <!-- Sort menu dropdown -->
-    <div class="dropdown sort-menu">
+    <div class="dropdown sort-menu" title="<%= t("general.sort.title") %>">
       <button class="btn btn-light icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
         <i class="sn-icon sn-icon-sort-up"></i>
       </button>
