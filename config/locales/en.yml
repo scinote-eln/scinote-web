@@ -461,7 +461,9 @@ en:
         create_new_button: "New Project"
         no_permission_title: "You don't have permission to create new project. Please contact your team administrator."
       new: "New project"
+      new_tooltip: "Create new Project"
       new_folder: "New folder"
+      new_folder_tooltip: "Create new folder"
       visibility_private: "Project is visible to project members only."
       visibility_public: "Project is visible to all team members."
       user_project: "%{user} joined on %{timestamp}."
@@ -621,6 +623,7 @@ en:
       index:
         head_title: "Reports"
         new: "New report"
+        new_tooltip: "Create new report"
         report_button: "Report"
         update_pdf: "Update PDF"
         save_pdf_to_inventory: "Save PDF to inventory"
@@ -929,6 +932,7 @@ en:
       template_set_as_default: 'Successfully set template as default'
       toolbar:
         new: 'New label template'
+        new_tooltip: 'Create new label template'
         update_fluics_labels: 'Update Fluics labels'
         edit: 'Edit'
         duplicate: 'Duplicate'
@@ -1323,6 +1327,7 @@ en:
       archived_experiments: "Go to Archived experiments"
     toolbar:
       new_button: "New experiment"
+      new_button_tooltip: "Create new experiment"
       edit_button: "Edit details"
       duplicate_button: "Duplicate"
       move_button: "Move"
@@ -1435,6 +1440,7 @@ en:
         comments: 'Comments'
       toolbar:
         new: 'New task'
+        new_tooltip: 'Create new task'
         edit: 'Edit'
         archive: 'Archive'
         restore: 'Restore'
@@ -1477,6 +1483,7 @@ en:
       canvas_edit: "Edit workflow"
       canvas_empty: "It's empty here. Please add some tasks."
       new_my_module: "New task"
+      new_my_module_tooltip: "Create new task"
       new_my_module_modal:
         title: "Create new task"
         name: "Task name"
@@ -1767,6 +1774,8 @@ en:
         archived_by: "by"
       filter_inventory_items: "Search items"
       filter_inventory_items_with_ean: "Search with EAN code"
+      search_button_tooltip: "Quick search"
+      ean_search_button_tooltip: "Barcode search"
       no_items: "No items here"
       no_items_matched: "No items here"
       no_archived_items: "No archived items here"
@@ -1774,7 +1783,7 @@ en:
       no_archived_items_matched: "No archived items here"
       error_searching: "Error searching, please try again"
       button_tooltip:
-        new: "New item"
+        new: "Create item"
         edit: "Edit item"
         duplicate: "Duplicate"
         export: "Export"
@@ -2121,6 +2130,7 @@ en:
       title: "Manage columns"
       add_column: "Add column"
     manange_modal_column:
+      button_tooltip: "Manage columns"
       name_placeholder: "Enter column name..."
       empty_name_error: "Column must have a name."
       value_too_high_error: "Too high (max %{max_value})"
@@ -2247,6 +2257,7 @@ en:
         delete: "Delete"
       no_libraries:
         create_new_button: "New inventory"
+        create_new_button_tooltip: "Create new inventory"
     show:
       head_title: "Inventories | %{library}"
   repository_row:
@@ -2834,6 +2845,7 @@ en:
       public_description: "Team protocols are visible and can be used by everyone from the team."
       private_description: "My protocols are only visible to you."
       create_new: "New protocol template"
+      create_new_tooltip: "Create new protocol template"
       edit: "Edit"
       clone_btn: "Copy"
       import: "Import"
@@ -3462,6 +3474,7 @@ en:
     comment_placeholder_new: "Add new comment…"
     archived: "Archived"
     sort:
+      title: "Sorting"
       new_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;Started last"
       old_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Started first"
       atoz_html: "<i class=\"fas fa-sort-alpha-down\"></i>&nbsp;&nbsp;Name A to Z"
