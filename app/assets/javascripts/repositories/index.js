@@ -165,15 +165,13 @@
     const teamName = firstDescription.data('team-name');
     const exportButton = $(this).find('#export-repositories-modal-submit');
     const exportURL = exportButton.data('export-url');
-    let inv = I18n.t('repositories.index.modal_export.inventories');
-
-    if (selectedInventoriesCount === 1) {
-      inv = I18n.t('repositories.index.modal_export.inventory');
-    }
 
     firstDescription.html(I18n.t(
       'repositories.index.modal_export.description_p1_html',
-      { team_name: teamName, inv: inv, repositories_count: selectedInventoriesCount }
+      {
+        team_name: teamName,
+        count: selectedInventoriesCount
+      }
     ));
 
     exportButton.on('click', function() {
