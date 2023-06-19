@@ -115,12 +115,6 @@
         }
       }
     }
-
-    &.filters-applied::after {
-      @include red-dot;
-      right: .45em;
-      top: .4em;
-    }
   }
 
   .widget-placeholder {

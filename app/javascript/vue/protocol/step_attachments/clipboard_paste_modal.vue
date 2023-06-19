@@ -22,7 +22,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" @click="cancel">{{i18n.t('general.cancel')}}</button>
+          <button type="button" class="btn btn-secondary" @click="cancel">{{i18n.t('general.cancel')}}</button>
           <button type="button" class="btn btn-success" @click="uploadImage">{{i18n.t('assets.from_clipboard.add_image')}}</button>
         </div>
       </div>

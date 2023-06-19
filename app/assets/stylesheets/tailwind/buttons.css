@@ -43,7 +43,10 @@
     @apply no-underline outline-none;
     box-shadow: 0px 0px 0px 4px var(--sn-science-blue-hover);
     color: var(--sn-white);
+  }
 
+  .btn:active {
+    box-shadow: none;
   }
 
   .btn:disabled,
@@ -68,18 +71,22 @@
     color: var(--sn-sleepy-grey);
   }
 
-  .btn.btn-secondary {
+  .btn.btn-secondary,
+  .btn.btn-default {
     background-color: var(--sn-white);
     border: 1px solid var(--sn-light-grey);
     color: var(--sn-blue);
   }
 
-  .btn.btn-secondary:hover {
+  .btn.btn-secondary:hover,
+  .btn.btn-default:hover {
     border: 1px solid var(--sn-blue-hover);
   }
 
   .btn.btn-secondary:disabled,
-  .btn.btn-secondary.disabled {
+  .btn.btn-secondary.disabled,
+  .btn.btn-default:disabled,
+  .btn.btn-default.disabled {
     background-color: var(--sn-white);
     color: var(--sn-sleepy-grey);
   }
@@ -91,6 +98,14 @@
 
   .btn.btn-light.btn-black {
     color: var(--sb-black);
+  }
+
+  .btn.btn-light.btn-white {
+    color: var(--sb-white);
+  }
+
+  .btn.btn-light.btn-white:hover {
+    background-color: transparent;
   }
 
   .btn.btn-light:hover {

@@ -13,7 +13,7 @@
           <p>{{ i18n.t('assets.delete_file_modal.description_2') }}</p>
         </div>
         <div class="modal-footer">
-          <button type='button' class='btn btn-default' @click="cancel">
+          <button type='button' class='btn btn-secondary' @click="cancel">
             {{ i18n.t('general.cancel') }}
           </button>
           <button type='button' class='btn btn-danger' @click="confirm">

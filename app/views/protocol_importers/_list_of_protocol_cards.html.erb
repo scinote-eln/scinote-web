@@ -5,7 +5,7 @@
 
 <% if protocols[:pagination][:current_page] + 1 <= protocols[:pagination][:total_pages] %>
 	<div class='show-more-protocols-btn text-center'>
-		<button class='btn btn-default'
+		<button class='btn btn-secondary'
 			data-next-page-id='<%= protocols[:pagination][:current_page] + 1 %>'>
 			<%= t('protocol_importers.show_more_button.title') %>
 		</button>

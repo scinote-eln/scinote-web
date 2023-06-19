@@ -30,6 +30,17 @@ $font-fas-plus: "\f02b";
 $sn-icon-left: "\e932";
 $sn-icon-right: "\e931";
 
+
+/// Hack for old icons
+.fas {
+  align-items: center;
+  display: inline-flex !important;
+  justify-content: center;
+  height: 24px;
+  width: 24px;
+
+}
+
 .sn-icon {
   font-size: 24px !important;
   vertical-align: middle;

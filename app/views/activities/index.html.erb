@@ -14,7 +14,7 @@
       </ul>
       <% if @vars[:more_activities_url].present? && @vars[:page] == 1 %>
       <div class="text-center">
-        <a class="btn btn-default btn-more-activities"
+        <a class="btn btn-secondary btn-more-activities"
            href="<%= @vars[:more_activities_url] %>"
            data-remote="true">
           <%= t'activities.index.more_activities' %></a>

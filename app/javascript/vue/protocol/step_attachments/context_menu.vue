@@ -1,6 +1,6 @@
 <template>
   <div class="dropdown asset-context-menu" ref="menu">
-    <button class="btn btn-light dropdown-toggle icon-btn" type="button" id="dropdownAssetContextMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    <button class="btn btn-light btn-xs dropdown-toggle icon-btn" type="button" id="dropdownAssetContextMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
       <i class="sn-icon sn-icon-more-hori"></i>
     </button>
 

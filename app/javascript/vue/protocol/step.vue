@@ -86,7 +86,7 @@
               {{ i18n.t('protocols.steps.insert.checklist') }}
             </li>
             <li class="action"  @click="createElement('text')">
-              <i class="fas fa-font"></i>
+              <i class="sn-icon sn-icon-result-text"></i>
               {{ i18n.t('protocols.steps.insert.text') }}
             </li>
             <li v-if="attachmentsReady" class="action"  @click="showFileModal = true">

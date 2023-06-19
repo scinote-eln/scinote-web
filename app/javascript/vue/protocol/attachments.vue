@@ -8,7 +8,7 @@
         <div ref="actionsDropdownButton" class="dropdown sci-dropdown">
           <button class="btn btn-light dropdown-toggle" type="button" id="dropdownAttachmentsOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <span>{{ i18n.t("protocols.steps.attachments.manage") }}</span>
-            <span class="caret pull-right"></span>
+            <span class="sn-icon sn-icon-down"></span>
           </button>
           <ul ref="actionsDropdown" class="dropdown-menu dropdown-menu-right dropdown-attachment-options"
               aria-labelledby="dropdownAttachmentsOptions"

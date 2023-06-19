@@ -47,7 +47,7 @@ module ResultsHelper
     if result.is_asset
       'sn-icon sn-icon-files'
     elsif result.is_text
-      'fas fa-font'
+      'sn-icon sn-icon-result-text'
     elsif result.is_table
       'sn-icon sn-icon-tables'
     else
