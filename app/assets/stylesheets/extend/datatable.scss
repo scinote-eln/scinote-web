@@ -137,32 +137,32 @@
     }
 
     &.previous {
+      align-items: center;
+      display: inline-flex;
+
       &::before {
-        @include font-awesome;
-        content: $font-fas-angle-left;
-        left: 0;
-        line-height: 36px;
-        padding: 0 8px;
-        position: absolute;
+        @include font-sn-icon;
+        content: $sn-icon-left;
       }
 
       a {
-        padding-left: 23px;
+        min-height: unset;
+        padding-left: .25rem;
       }
     }
 
     &.next {
-      &::before {
-        @include font-awesome;
-        content: $font-fas-angle-right;
-        line-height: 36px;
-        padding: 0 8px;
-        position: absolute;
-        right: 0;
+      align-items: center;
+      display: inline-flex;
+
+      &::after {
+        @include font-sn-icon;
+        content: $sn-icon-right;
       }
 
       a {
-        padding-right: 23px;
+        min-height: unset;
+        padding-right: .25rem;
       }
     }
   }

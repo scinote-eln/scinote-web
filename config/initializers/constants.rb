@@ -205,7 +205,7 @@ class Constants
   TUTORIALS_URL = ENV.fetch('VIDEO_TUTORIALS_URL', "#{HTTP}goo.gl/YH3fXA").freeze
   SUPPORT_URL = ENV.fetch('KNOWLEDGE_CENTER_URL', 'https://scinote-3850750.hs-sites.com/en/knowledge').freeze
   # Default user picture avatar
-  DEFAULT_AVATAR_URL = '/images/:style/missing.png'.freeze
+  DEFAULT_AVATAR_URL = '/images/:style/missing.svg'.freeze
 
   ACADEMY_BL_LINK = 'https://scinote.net/academy/?utm_source=SciNote%20software%20BL&utm_medium=SciNote%20software%20BL'.freeze
 

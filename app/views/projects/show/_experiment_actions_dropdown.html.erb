@@ -4,7 +4,7 @@
       <%= button_to(experiment_path(experiment, format: :json),
                     method: :put,
                     remote: true,
-                    class: 'btn btn-light',
+                    class: 'btn btn-light justify-start',
                     form_class: 'experiment-action-form',
                     params: { experiment: { archived: false } }) do %>
         <i class="sn-icon sn-icon-restore"></i>
@@ -18,7 +18,7 @@
       <%= link_to edit_experiment_url(experiment),
                   remote: true,
                   class: 'edit-experiment experiment-action-link' do %>
-        <i class="fas fa-pen"></i>
+        <i class="sn-icon sn-icon-edit"></i>
         <span><%= t('experiments.index.edit_option') %></span>
       <% end %>
     </li>
@@ -67,7 +67,7 @@
       <%= button_to(archive_experiment_path(experiment),
                     method: :post,
                     remote: true,
-                    class: 'btn btn-light',
+                    class: 'btn btn-light justify-start',
                     form_class: 'experiment-action-form',
                     data: { confirm: t('experiments.index.archive_confirm') } ) do %>
         <i class="sn-icon sn-icon-archive"></i>

@@ -33,6 +33,7 @@
     justify-content: space-between;
 
     .toolbar-left-block {
+      align-items: center;
       display: flex;
 
       .btn {
@@ -73,6 +74,10 @@
 
       &.open {
         .caret {
+          transform: rotateX(180deg);
+        }
+
+        .sn-icon-down {
           transform: rotateX(180deg);
         }
       }
@@ -266,12 +271,6 @@
     .table-row {
       display: contents;
 
-      &:hover {
-        .table-body-cell {
-          background-color: $color-concrete;
-        }
-      }
-
       &::after {
         background: $color-concrete;
         content: "";
@@ -320,10 +319,12 @@
       }
 
       .avatar-container {
+        align-items: center;
         border: 1px solid $color-white;
         border-radius: 50%;
-        display: inline-block;
+        display: inline-flex;
         height: 26px;
+        justify-content: center;
         margin-right: -5px;
         width: 26px;
 

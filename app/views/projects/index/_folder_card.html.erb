@@ -19,9 +19,10 @@
                 sidebar_url: sidebar_team_path(current_team, project_folder_id: folder.id)
               } do %>
     <div class="icon-folder">
-      <i class="sn-icon sn-icon-projects"></i>
+      <i class="sn-icon sn-icon-folder"></i>
     </div>
     <div class="name table-cell" title="<%= folder.name %>">
+      <i class="sn-icon mini sn-icon-mini-folder-left mr-1"></i>
       <%= folder.name %>
     </div>
   <% end %>

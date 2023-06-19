@@ -1,0 +1,17 @@
+@font-face {
+  font-family: "SN Inter";
+  src: url("fonts/Inter-Regular.ttf") format("truetype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "SN Inter";
+  src: url("fonts/Inter-SemiBold.ttf") format("truetype");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "SN Inter";
+  src: url("fonts/Inter-Bold.ttf") format("truetype");
+  font-weight: 900;
+}

@@ -12,7 +12,7 @@
       </div>
       <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
         <div class="alert alert-info" style="margin-top: 15px;" role="alert">
-          <span class="fas fa-info-circle" aria-hidden="true"></span>
+          <span class="sn-icon sn-icon-info" aria-hidden="true"></span>
           <%=t "users.registrations.edit.waiting_for_confirm", email: resource.unconfirmed_email %>
         </div>
       <% end %>

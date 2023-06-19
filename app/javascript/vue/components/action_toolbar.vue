@@ -10,12 +10,14 @@
       <div v-if="!loading && actions.length === 0" class="sn-action-toolbar__message">
         {{ i18n.t('action_toolbar.no_actions') }}
       </div>
-      <div v-for="action in actions" :key="action.name" class="sn-action-toolbar__action">
+      <div v-for="action in actions" :key="action.name" class="sn-action-toolbar__action shrink-0">
         <a :class="`rounded flex gap-2 items-center py-1.5 px-2.5 bg-sn-white color-sn-blue no-underline ${action.button_class}`"
           :href="(['link', 'remote-modal']).includes(action.type) ? action.path : '#'"
           :id="action.button_id"
           :title="action.label"
           :data-url="action.path"
+          :data-target="action.target"
+          :data-toggle="action.type === 'modal' && 'modal'"
           :data-object-type="action.item_type"
           :data-object-id="action.item_id"
           :data-action="action.type"
@@ -124,6 +126,8 @@
           case 'link':
             // do nothing, already handled by href
             break;
+          case 'modal':
+            // do nothihg, boostrap modal handled by data-toggle="modal" and data-target
           case 'remote-modal':
             // do nothing, handled by the data-action="remote-modal" binding
             break;

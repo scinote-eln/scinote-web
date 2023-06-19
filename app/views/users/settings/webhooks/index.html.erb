@@ -38,7 +38,7 @@
           </span>
           <div class="info-container dropdown" data-url="<%= filter_info_users_settings_webhooks_path(filter_id: filter.id) %>" >
             <div id="filter-info-<%= filter.id %>-button" class="btn btn-light show-filter icon-btn" data-toggle="dropdown">
-              <i class="fas fa-info-circle"></i>
+              <i class="sn-icon sn-icon-info"></i>
             </div>
             <div class="dropdown-menu" aria-labelledby="filter-info-<%= filter.id %>-button" role="menu">
               <p class="filter-info-title"><%= t('webhooks.index.applied_filters') %></p>
@@ -84,7 +84,7 @@
                     <li class="divider-label"><%= t("webhooks.index.webhook_options").upcase %></li>
                     <li>
                       <a href="#" class="edit-webhook">
-                        <i class="fas fa-pen"></i>
+                        <i class="sn-icon sn-icon-edit"></i>
                         <%= t('general.edit') %>
                       </a>
                     </li>

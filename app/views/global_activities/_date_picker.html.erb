@@ -9,6 +9,6 @@
   <span class="sn-icon sn-icon-calendar"></span>
   <input type="datetime" class="form-control calendar-input" name="calendar[<%= id %>]" id="calendar-<%= id %>" readonly="" data-ts="" placeholder="<%= placeholder %>" value="<%= defined?(setDate) ? setDate : '' %>"/>
 
-  <%= javascript_include_tag 'global_activities/date_picker', nonce: true %>
+  <%= javascript_include_tag 'global_activities/date_picker' %>
 
 </div>

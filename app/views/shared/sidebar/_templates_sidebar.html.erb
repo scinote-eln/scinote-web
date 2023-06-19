@@ -7,7 +7,7 @@
     </li>
   <% else %>
     <li class="sidebar-leaf">
-      <i class="fas fa-caret-right toggle-branch collapsed"></i>
+      <i class="sn-icon sn-icon-right toggle-branch collapsed"></i>
       <%= link_to t('sidebar.templates.protocol_templates'),
                   protocols_path,
                   class: "sidebar-link #{'selected' if active == :protocol && params[:type] != 'archived'}" %>

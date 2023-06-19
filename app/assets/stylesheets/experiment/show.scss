@@ -94,6 +94,10 @@
         .caret {
           transform: rotateX(180deg);
         }
+
+        .sn-icon-down {
+          transform: rotateX(180deg);
+        }
       }
 
       .dropdown-menu {
@@ -206,7 +210,7 @@
   .datetime-picker-container {
     width: 45%;
 
-    .fa-calendar-alt {
+    .sn-icon-calendar {
       color: $color-volcano !important;
       font-size: 14px !important;
     }

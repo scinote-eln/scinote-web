@@ -1,6 +1,6 @@
 // scss-lint:disable ImportantRule
 
-$font-family-inter: Inter;
+$font-family-inter: "SN Inter";
 $font-family-sans-serif: "Open Sans", Arial, Helvetica, sans-serif;
 $font-family-serif: Georgia, "Times New Roman", Times, serif;
 $font-family-monospace: Menlo, Monaco, Consolas, "Courier New", monospace;
@@ -26,6 +26,9 @@ $font-fas-angle-double-right: "\f101";
 $font-fas-exclamation-circle: "\f06a";
 $font-fas-caret-up: "\f0d8";
 $font-fas-plus: "\f02b";
+
+$sn-icon-left: "\e932";
+$sn-icon-right: "\e931";
 
 .sn-icon {
   font-size: 24px !important;
@@ -66,6 +69,11 @@ $font-fas-plus: "\f02b";
 @mixin font-awesome {
   font-family: "Font Awesome 5 Free";
   font-weight: 501;
+}
+
+@mixin font-sn-icon {
+  font-family: "SN-icon-font";
+  font-size: 24px !important;
 }
 
 html {

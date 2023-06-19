@@ -254,6 +254,9 @@ en:
   nav:
     team_switch_title: "Switch team"
     search: "Search"
+    support: "Support"
+    settings: "Settings"
+    user_profile: "Profile"
     search_button: 'Go!'
     user_greeting: "Hi, %{full_name}"
     advanced_search: "Advanced search"
@@ -2240,6 +2243,7 @@ en:
       shared_for_viewing: "For viewing"
       shared_for_editing: "For editing"
       not_shared: "No"
+      shared: "Yes"
       switch_view:
         active: Show active inventories
         archived: Show archived inventories

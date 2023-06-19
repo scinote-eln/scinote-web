@@ -1,12 +1,12 @@
 <template>
   <div class="step-text-container" :class="{ 'edit': inEditMode, 'step-element--locked': !element.attributes.orderable.urls.update_url }" @keyup.enter="enableEditMode($event)" tabindex="0">
     <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
-      <i class="fas fas-rotated-90 fa-exchange-alt"></i>
+      <i class="sn-icon sn-icon-sort"></i>
     </div>
     <div v-else class="step-element-grip-placeholder"></div>
     <div class="buttons-container">
       <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" tabindex="0" @click="enableEditMode($event)">
-        <i class="fas fa-pen"></i>
+        <i class="sn-icon sn-icon-edit"></i>
       </button>
       <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light" tabindex="0" @click="duplicateElement">
         <i class="sn-icon sn-icon-duplicate"></i>
