@@ -69,11 +69,11 @@
     },
     mounted() {
       this.$nextTick(this.setWidth);
-
-      $(window).on('scroll', this.setLeftOffset);
+      window.addEventListener('scroll', this.setLeftOffset);
     },
     beforeDestroy() {
       delete window.actionToolbarComponent;
+      window.removeEventListener('scroll', this.setLeftOffset);
     },
     computed: {
       paramsAreBlank() {
