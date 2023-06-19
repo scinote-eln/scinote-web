@@ -757,13 +757,7 @@ var MyModuleRepositories = (function() {
       UPDATE_REPOSITORY_MODAL.modal('show');
     });
 
-    setTimeout(() => {
-      $('.hide-assign-repo-modal').on('click', function() {
-        setTimeout(() => {
-          $('body').addClass('modal-open');
-        }, 0);
-      });
-    }, 200)
+    $(document).on('hidden.bs.modal', '#updateRepositoryRecordModal', () => $('body').addClass('modal-open'));
   }
 
   function submitUpdateRepositoryRecord(options = {}) {
