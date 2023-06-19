@@ -387,18 +387,19 @@
 
     .permission-selector {
       display: flex;
-      flex-basis: 55px;
+      flex-basis: 60px;
       flex-shrink: 0;
       justify-content: center;
     }
 
     .team-selector {
-      align-items: center;
+      align-items: baseline;
       display: flex;
       flex-grow: 1;
 
       .sci-checkbox-container {
-        margin-right: 5px;
+        margin-right: 8px;
+        top: 3px;
       }
     }
 

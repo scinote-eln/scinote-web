@@ -75,7 +75,7 @@
 
   .task-section-caret {
     align-items: center;
-    color: $color-volcano;
+    color: var(--sn-black);
     display: inline-flex;
     gap: .5rem;
     padding: .5em;
@@ -355,7 +355,7 @@
         right: 0;
         text-align: right;
         top: 0;
-        width: 120px;
+        width: 130px;
         z-index: 20;
 
         &.hidden {
@@ -363,24 +363,13 @@
         }
 
         a {
+          align-items: center;
           color: inherit;
-          display: inline-block;
-          line-height: 36px;
+          display: inline-flex;
+          gap: .25rem;
+          height: 36px;
           opacity: .7;
           text-decoration: none;
-
-          i {
-            float: left;
-            font-size: 16px;
-            line-height: 36px;
-            margin-right: 5px;
-            padding-top: 1px;
-          }
-
-          span {
-            float: left;
-            line-height: 36px;
-          }
         }
       }
     }

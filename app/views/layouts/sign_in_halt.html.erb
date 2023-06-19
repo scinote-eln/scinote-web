@@ -31,7 +31,7 @@
         </div>
         <% if user_signed_in? %>
           <div class="pull-right sign-in-halt-logout-button">
-            <%= link_to main_app.destroy_user_session_path, class: 'btn btn-default', method: :delete do %>
+            <%= link_to main_app.destroy_user_session_path, class: 'btn btn-secondary', method: :delete do %>
               <%= t('nav.user.logout') %>
             <% end %>
           </div>

@@ -929,7 +929,7 @@ li.module-hover {
       }
 
       &.list {
-        grid-auto-rows: minmax(4em, auto) 1px;
+        grid-auto-rows: minmax(3em, auto) 1px;
         grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 2), minmax(100px, auto)) max-content max-content;
 
         .projects-group {
@@ -1186,7 +1186,7 @@ li.module-hover {
 
         &.list {
           --list-columns-number: 8;
-          grid-auto-rows: minmax(4em, auto) 1px;
+          grid-auto-rows: minmax(3em, auto) 1px;
           grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 3), minmax(100px, auto)) max-content max-content;
 
           .card {

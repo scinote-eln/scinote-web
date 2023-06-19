@@ -1,19 +1,17 @@
 <% if user_assignment.user == user %>
-  <div class="btn btn-default btn-xs" type="button" disabled="disabled">
-    <span class="sn-icon sn-icon-user-menu-cog"></span>
-    <span class="caret"></span>
+  <div class="btn btn-light btn-xs icon-btn" type="button" disabled="disabled">
+    <span class="sn-icon sn-icon-down"></span>
   </div>
 <% else %>
   <% id = "user-#{user_assignment.user.id}-dropdown" %>
   <div class="dropdown dropdown-teams-user">
-    <div class="btn btn-default btn-xs"
+    <div class="btn btn-light icon-btn btn-xs"
          type="button"
          id="<%= id %>"
          data-toggle="dropdown"
          aria-haspopup="true"
          aria-expanded="true">
-      <span class="sn-icon sn-icon-user-menu-cog"></span>
-      <span class="caret"></span>
+      <span class="sn-icon sn-icon-down"></span>
     </div>
     <ul class="dropdown-menu custom-dropdown-menu dropdown-menu-right" aria-labelledby="<%= id %>">
       <li class="dropdown-header">
