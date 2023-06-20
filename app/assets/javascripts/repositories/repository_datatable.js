@@ -51,6 +51,18 @@ var RepositoryDatatable = (function(global) {
     return rowsSelected.every(r => visibleRowIds.includes(r));
   }
 
+  function updateColSizeMap(state) {
+    if (!state.ColSizes) return;
+
+    for (let i = 0; i < state.ColSizes.length; i += 1) {
+      colSizeMap[state.ColReorder[i]] = state.ColSizes[i];
+    }
+  }
+
+  function restoreColumnSizes() {
+    TABLE.colResize.restore();
+  }
+
   // Enable/disable edit button
   function updateButtons() {
     if (window.actionToolbarComponent) {
@@ -487,24 +499,12 @@ var RepositoryDatatable = (function(global) {
       contentType: 'application/json',
       data: JSON.stringify({ state: state }),
       dataType: 'json',
-      type: 'POST',
+      type: 'POST'
     });
 
     TABLE.ColSizes = state.ColSizes;
 
     restoreColumnSizes();
-  }
-
-  function updateColSizeMap(state) {
-    if (!state.ColSizes) return;
-
-    for (let i = 0; i < state.ColSizes.length; i++) {
-      colSizeMap[state.ColReorder[i]] = state.ColSizes[i];
-    }
-  }
-
-  function restoreColumnSizes() {
-    TABLE.colResize.restore();
   }
 
   function dataTableInit() {
@@ -737,7 +737,7 @@ var RepositoryDatatable = (function(global) {
 
         let colSizes = [];
 
-        for (let i = 0; i < data.ColReorder.length; i++) {
+        for (let i = 0; i < data.ColReorder.length; i += 1) {
           colSizes.push(colSizeMap[data.ColReorder[i]]);
         }
 
@@ -789,6 +789,12 @@ var RepositoryDatatable = (function(global) {
         // setTimeout(function() {
         //   adjustTableHeader();
         // }, 500);
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(restoreColumnSizes, 200);
+        });
 
         restoreColumnSizes();
       }
