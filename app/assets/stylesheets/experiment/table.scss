@@ -342,7 +342,7 @@
       }
 
       .new-user {
-        color: $color-silver-chalice;
+        color: var(--sn-black);
         line-height: 24px;
 
         &:not(:first-child) {
