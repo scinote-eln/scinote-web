@@ -116,6 +116,8 @@
     }
 
     .dataTables_scrollBody {
+      flex-grow: 1;
+
       thead th#checkbox {
         opacity: 0;
       }
