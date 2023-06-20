@@ -103,7 +103,7 @@
     .users-access-cell {
       .protocol-users-link {
         align-items: center;
-        color: $color-silver-chalice;
+        color: var(--sn-black);
         display: flex;
 
         &:hover {
@@ -115,11 +115,11 @@
         align-items: center;
         border: 2px solid $color-white;
         display: flex;
-        height: 32px;
+        height: 28px;
         justify-content: center;
         line-height: 28px;
         margin-right: -.5em;
-        width: 32px;
+        width: 28px;
       }
 
       .more-users {

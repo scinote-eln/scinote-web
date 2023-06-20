@@ -85,7 +85,9 @@
     }
 
     .toolbar-left-block {
+      align-items: center;
       display: flex;
+      gap: .25rem;
 
       >* {
         margin-left: .25em;

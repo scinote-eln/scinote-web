@@ -49,7 +49,8 @@
 
       .fa-long-arrow-alt-right {
         color: $color-silver-chalice;
-        padding: .5em 0;
+        padding: 1.5em 0;
+        z-index: 1;
       }
 
       .status-container {

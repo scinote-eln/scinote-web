@@ -37,8 +37,9 @@
   .step-panel-collapse-link {
     padding-left: 5px;
 
-    &:not(.collapsed) .fas {
+    &:not(.collapsed) .sn-icon {
       @include rotate(90deg);
+      display: inline-block;
     }
   }
 
