@@ -20,4 +20,11 @@ table.dataTable thead th.dt-colresizable-hover {
 
 table.dataTable.table--resizable-columns {
   table-layout: fixed;
+
+  thead tr th:not(:first-child) {
+    box-sizing: border-box;
+    min-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
