@@ -568,6 +568,8 @@ mark,.mark {
     float: right;
 
     .pagination {
+      align-items: center;
+      display: flex;
       margin: 0;
     }
   }
