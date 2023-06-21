@@ -44,7 +44,13 @@
       <%= last_item[:label] %>
     </span>
   <% else %>
-    <% last_item = @breadcrumbs_items.pop %>
+    <% template_paths = [/^\/protocols\/\d+$/, /^\/label_templates\/\d+$/] %>
+    <% if template_paths.any? { |pattern| request.path.match?(pattern) }%>
+     <% last_breadcrumb_items = @breadcrumbs_items.pop(2) %>
+    <% else %>
+      <% last_item = @breadcrumbs_items.pop %>
+    <% end %>
+
     <% @breadcrumbs_items.each do |item| %>
       <%= link_to(item[:label], item[:url],
                   class: "breadcrumbs-link",
@@ -54,7 +60,20 @@
              alt="navigate next"
              class="navigate_next">
       </span>
+    <% end %>
 
+    <% if last_breadcrumb_items %>
+      <span class="breadcrumbs-link" style="color: var(--sn-grey);" title="<%= last_breadcrumb_items.first[:label] %>">
+        <%= last_breadcrumb_items.first[:label] %>
+      </span>
+      <span class="delimiter">
+        <img src="<%= asset_path "icon_small/navigate_next.svg"%>"
+             alt="navigate next"
+             class="navigate_next">
+      </span>
+      <span class="breadcrumbs-link" style="color: var(--sn-grey);" title="<%= last_breadcrumb_items.last[:label] %>">
+        <%= last_breadcrumb_items.last[:label] %>
+      </span>
     <% end %>
     <% if last_item %>
       <span class="breadcrumbs-link" title="<%= last_item[:label] %>">

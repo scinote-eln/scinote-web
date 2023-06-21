@@ -3622,7 +3622,7 @@ en:
     templates: "Templates"
     projects: "Projects"
     inventories: "Inventories"
-    protocols: "Protocol templates"
+    protocols: "Protocol"
     labels: "Label"
     teams: "All Teams"
     addons: "Add-Ons"
