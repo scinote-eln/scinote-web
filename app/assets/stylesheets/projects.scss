@@ -734,6 +734,16 @@ li.module-hover {
             color: $color-volcano;
             display: contents;
             text-decoration: none;
+
+            .name {
+              -webkit-box-orient: vertical;
+              display: -webkit-box;
+              -webkit-line-clamp: 1;
+            }
+
+            .table-cell {
+              overflow-wrap: break-word;
+            }
           }
         }
 
@@ -981,7 +991,8 @@ li.module-hover {
               align-items: center;
               display: flex;
               grid-column: 6 span;
-              line-height: 3em;
+              line-height: 1.25em;
+              max-width: 200px;
             }
 
             .description {
