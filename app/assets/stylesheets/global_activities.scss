@@ -206,7 +206,7 @@
     .activity-card {
       cursor: default;
       margin-right: 15px;
-      padding: 5px 0 5px 40px;
+      padding: 5px 0 5px 5px;
 
       &:hover {
         background-color: $color-concrete;
@@ -228,16 +228,6 @@
               position: relative;
               top: 1px;
               width: 20px;
-            }
-          }
-
-          &:nth-child(1) {
-            height: 20px;
-            margin-left: -35px;
-
-            .global-avatar-container {
-              position: relative;
-              top: 10px;
             }
           }
         }
