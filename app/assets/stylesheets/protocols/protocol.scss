@@ -47,8 +47,9 @@
     }
 
     .protocol-section-caret {
+      align-items: center;
       color: $color-volcano;
-      display: inline-block;
+      display: inline-flex;
       padding: .5em;
       text-decoration: none;
 
