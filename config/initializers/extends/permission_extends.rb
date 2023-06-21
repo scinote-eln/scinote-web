@@ -55,7 +55,7 @@ module PermissionExtends
       READ
       READ_ARCHIVED
       MANAGE
-      TASKS_MANAGE
+      TASKS_CREATE
       USERS_READ
       USERS_MANAGE
       READ_CANVAS
@@ -155,7 +155,7 @@ module PermissionExtends
       ExperimentPermissions::READ,
       ExperimentPermissions::READ_CANVAS,
       ExperimentPermissions::MANAGE,
-      ExperimentPermissions::TASKS_MANAGE,
+      ExperimentPermissions::TASKS_CREATE,
       ExperimentPermissions::USERS_READ,
       MyModulePermissions::READ,
       MyModulePermissions::READ_ARCHIVED,
