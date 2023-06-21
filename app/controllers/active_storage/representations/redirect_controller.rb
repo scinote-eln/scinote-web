@@ -8,7 +8,7 @@ module ActiveStorage
 
       rescue_from ActiveRecord::RecordNotFound do |e|
         Rails.logger.error(e.message)
-        render json: { error: e.message }, status: :bad_request
+        render json: {}, status: :not_found
       end
 
       def show
