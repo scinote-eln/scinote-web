@@ -1,7 +1,7 @@
 <% results.each do |tag| %>
   <h5>
     <span class="fas fa-tag" style="color: <%= tag.color %>"></span>
-    <%= render partial: "search/results/partials/tag_text.html.erb", locals: { tag: tag, query: search_query } %>
+    <%= render partial: "search/results/partials/tag_text", locals: { tag: tag, query: search_query } %>
   </h5>
 
   <p>
@@ -14,7 +14,7 @@
       <%=t "search.index.modules" %>
       <% if tag.my_modules.count > 0 %>
         <% tag.my_modules.each_with_index do |mod, i| %>
-          <%= render partial: "search/results/partials/my_module_text.html.erb",
+          <%= render partial: "search/results/partials/my_module_text",
                       locals: { my_module: mod, link_to_page: :protocols } %>
           <% if i != tag.my_modules.count - 1 %>
             ,&nbsp;
@@ -29,7 +29,7 @@
       <%=t "search.index.experiment" %>
       <% if tag.my_modules.count > 0 %>
         <% experiments_results(tag).each_with_index do |exp, i| %>
-          <%= render partial: 'search/results/partials/experiment_text.html.erb',
+          <%= render partial: 'search/results/partials/experiment_text',
                      locals: { experiment: exp } %>
           <% if i != (experiments_results(tag).count - 1) %>
             ,&nbsp;
@@ -40,13 +40,13 @@
     <br>
     <span>
       <%=t "search.index.project" %>
-      <%= render partial: "search/results/partials/project_text.html.erb",
+      <%= render partial: "search/results/partials/project_text",
                  locals: { project: tag.project, link_to_page: :show } %>
     </span>
     <br>
     <span>
       <%=t "search.index.team" %>
-      <%= render partial: "search/results/partials/team_text.html.erb",
+      <%= render partial: "search/results/partials/team_text",
                  locals: { team: tag.project.team } %>
     </span>
   </p>

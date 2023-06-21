@@ -24,13 +24,13 @@
             data-step-id="<%= step.id %>"
             data-state-save-url="<%= update_view_state_step_path(step.id) %>">
           <li class="divider-label"><%= t("protocols.steps.attachments.add") %></li>
-          <%= render partial: '/assets/marvinjs/create_marvin_sketch_li.html.erb',
+          <%= render partial: '/assets/marvinjs/create_marvin_sketch_li',
                      locals: {  element_id: step.id, element_type: 'Step',  sketch_container: ".attachments[data-step-id=#{step.id}]" } %>
-          <%= render partial: '/assets/bio_eddie/create_bio_eddie_li.html.erb',
+          <%= render partial: '/assets/bio_eddie/create_bio_eddie_li',
                      locals: {  element_id: step.id, element_type: 'Step',  assets_container: ".attachments[data-step-id=#{step.id}]" } %>
 
           <li>
-            <%= render partial: '/assets/wopi/create_wopi_file_li.html.erb',
+            <%= render partial: '/assets/wopi/create_wopi_file_li',
                        locals: {  element_id: step.id, element_type: 'Step' } %>
           </li>
           <li role="separator" class="divider"></li>
@@ -59,7 +59,7 @@
 
 <div class="col-xs-12 attachments" data-preview="<%= preview %>" data-step-id="<%= step.id %>" data-order="<%= current_order %>">
   <% assets.each_with_index do |asset, i| %>
-    <%= render partial: 'assets/asset.html.erb', locals: { asset: asset, gallery_view_id: step.id } %>
+    <%= render partial: 'assets/asset', locals: { asset: asset, gallery_view_id: step.id } %>
   <% end %>
 </div>
 <hr>

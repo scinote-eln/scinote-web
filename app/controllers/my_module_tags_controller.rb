@@ -11,29 +11,19 @@ class MyModuleTagsController < ApplicationController
     @new_mmt = MyModuleTag.new(my_module: @my_module)
     @new_tag = Tag.new(project: @my_module.experiment.project)
 
-    respond_to do |format|
-      format.json {
-        render :json => {
-          :my_module => @my_module,
-          :html => render_to_string({
-            :partial => "index_edit.html.erb"
-          })
-        }
-      }
-    end
+    render json: {
+      my_module: @my_module,
+      html: render_to_string(partial: 'index_edit.html.erb')
+    }
   end
 
   def index
-    respond_to do |format|
-      format.json do
-        render json: {
-          html_module_header: render_to_string(
-            partial: 'my_modules/tags.html.erb',
-            locals: { my_module: @my_module, editable: can_manage_my_module?(@my_module) }
-          )
-        }
-      end
-    end
+    render json: {
+      html_module_header: render_to_string(
+        partial: 'my_modules/tags',
+        locals: { my_module: @my_module, editable: can_manage_my_module?(@my_module) }
+      )
+    }
   end
 
   def canvas_index
@@ -45,16 +35,13 @@ class MyModuleTagsController < ApplicationController
       res << {
         id: my_module.id,
         tags_html: render_to_string(
-          partial: 'canvas/tags.html.erb',
+          partial: 'canvas/tags',
           locals: { my_module: my_module }
         )
       }
     end
-    respond_to do |format|
-      format.json do
-        render json: { my_modules: res }
-      end
-    end
+
+    render json: { my_modules: res }
   end
 
   def create

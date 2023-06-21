@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-begin
+ActiveSupport::Reloader.to_prepare do
   azure_app_ids = ENV.select { |name, _| name =~ /^[[:alnum:]]*_AZURE_AD_APP_ID/ }
   settings = ApplicationSettings.instance
 

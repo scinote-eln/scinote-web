@@ -39,7 +39,7 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-xs-12" data-hook="result-content">
-            <%= render partial: 'my_modules/result_user_generated.html.erb',
+            <%= render partial: 'my_modules/result_user_generated',
                        locals: { result: result } %>
           </div>
         </div>
@@ -48,7 +48,7 @@
             <div class="result-comment"
                  id="result-comments-<%= result.id %>"
                  data-href="<%= result_result_comments_url(result) %>">
-              <%= render partial: "result_comments/index.html.erb",
+              <%= render partial: 'result_comments/index',
                          locals: { result: result, comments: result.last_comments, per_page: Constants::COMMENTS_SEARCH_LIMIT } %>
             </div>
           </div>

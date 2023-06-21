@@ -95,7 +95,7 @@ class ProtocolsController < ApplicationController
 
     @published_versions = @protocol.published_versions_with_original.order(version_number: :desc)
     render json: {
-      html: render_to_string(partial: 'protocols/index/protocol_versions_modal.html.erb')
+      html: render_to_string(partial: 'protocols/index/protocol_versions_modal')
     }
   end
 
@@ -107,29 +107,21 @@ class ProtocolsController < ApplicationController
   end
 
   def linked_children
-    respond_to do |format|
-      format.json do
-        render json: {
-          title: I18n.t('protocols.index.linked_children.title',
-                        protocol: escape_input(@protocol.name)),
-          html: render_to_string(partial: 'protocols/index/linked_children_modal_body.html.erb',
-                                 locals: { protocol: @protocol })
-        }
-      end
-    end
+    render json: {
+      title: I18n.t('protocols.index.linked_children.title',
+                    protocol: escape_input(@protocol.name)),
+      html: render_to_string(partial: 'protocols/index/linked_children_modal_body',
+                             locals: { protocol: @protocol })
+    }
   end
 
   def linked_children_datatable
-    respond_to do |format|
-      format.json do
-        render json: ::ProtocolLinkedChildrenDatatable.new(
-          view_context,
-          @protocol,
-          current_user,
-          self
-        )
-      end
-    end
+    render json: ::ProtocolLinkedChildrenDatatable.new(
+      view_context,
+      @protocol,
+      current_user,
+      self
+    )
   end
 
   def publish
@@ -196,10 +188,7 @@ class ProtocolsController < ApplicationController
   end
 
   def show
-    respond_to do |format|
-      format.json { render json: @protocol, serializer: ProtocolSerializer, user: current_user }
-      format.html
-    end
+    render json: @protocol, serializer: ProtocolSerializer, user: current_user
   end
 
   def update_keywords
@@ -562,7 +551,7 @@ class ProtocolsController < ApplicationController
 
   def protocolsio_index
     render json: {
-      html: render_to_string({ partial: 'protocols/index/protocolsio_modal_body.html.erb' })
+      html: render_to_string({ partial: 'protocols/index/protocolsio_modal_body' })
     }
   end
 

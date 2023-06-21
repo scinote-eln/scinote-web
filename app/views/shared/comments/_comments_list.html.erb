@@ -1,6 +1,6 @@
 <% user= nil %>
 <% comments.each do |comment| %>
-  <%= render partial: 'shared/comments/comment.html.erb',
+  <%= render partial: 'shared/comments/comment',
              locals: { comment: comment, skip_header: user == comment.user } %>
   <% user = comment.user %>
 <% end %>

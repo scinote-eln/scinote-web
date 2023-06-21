@@ -11,7 +11,7 @@
         <% if wopi_enabled? && wopi_file?(asset) %>
           <li>
             <% edit_supported, title = wopi_file_edit_button_status(asset) %>
-            <%= render partial: 'assets/wopi/file_wopi_controls.html.erb',
+            <%= render partial: 'assets/wopi/file_wopi_controls',
               locals: {
                 asset: asset,
                 edit_supported: edit_supported,

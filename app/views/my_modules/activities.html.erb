@@ -2,7 +2,7 @@
 <% provide(:sidebar_title, t("sidebar.my_module.sidebar_title")) %>
 
 <%= content_for :sidebar do %>
-  <%= render partial: "shared/sidebar/#{@my_module.archived_branch? ? 'archived_my_module' : 'my_module'}.html.erb",
+  <%= render partial: "shared/sidebar/#{@my_module.archived_branch? ? 'archived_my_module' : 'my_module'}",
     locals: {
       my_modules: @experiment_my_modules,
       experiment: @my_module.experiment,
@@ -28,7 +28,7 @@
             <div class="ga-activities-list"
                 data-activities-url="<%= activities_my_module_path(@my_module) %>"
                 data-starting-timestamp="<%= @starting_timestamp %>">
-              <%= render partial: "global_activities/activity_list.html.erb" %>
+              <%= render partial: "global_activities/activity_list" %>
             </div>
             <div class="text-center">
               <a class="btn btn-default btn-more-activities <%= 'hidden' unless @next_page %>"

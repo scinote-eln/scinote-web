@@ -4,7 +4,7 @@
     <% if can_edit && !preview %>
       <% if wopi_enabled? && wopi_file?(asset) %>
         <% edit_supported, title = wopi_file_edit_button_status(asset) %>
-        <%= render partial: 'assets/wopi/file_wopi_controls.html.erb',
+        <%= render partial: 'assets/wopi/file_wopi_controls',
           locals: {
             asset: asset,
             edit_supported: edit_supported,
@@ -57,7 +57,7 @@
       </a>
     <% end %>
     <% if (asset.step || asset.result) && !preview %>
-      <%= render partial: 'assets/asset_context_menu.html.erb', locals: { asset: asset, deletable: false, editable: false } %>
+      <%= render partial: 'assets/asset_context_menu', locals: { asset: asset, deletable: false, editable: false } %>
     <% end %>
     <button type="button" class="btn icon-btn btn-light" data-dismiss="modal"><span class="sn-icon sn-icon-close"></span></button>
   </div>
@@ -68,14 +68,14 @@
       <% if wopi_enabled? && wopi_file?(asset) %>
         <iframe class="wopi-file-preview" src="<%= asset.get_action_url(current_user, 'embedview') %>"></iframe>
       <% elsif asset.pdf_previewable? %>
-        <%= render partial: 'shared/pdf_viewer.html.erb', locals: { asset: asset, report_document: false } %>
+        <%= render partial: 'shared/pdf_viewer', locals: { asset: asset, report_document: false } %>
       <% else %>
         <%= image_tag asset.large_preview,
             class: 'asset-image',
             style: 'opacity: 0' %>
       <% end %>
     <% else %>
-      <%= render partial: 'shared/file_preview/file_icon.html.erb', locals: { asset: asset } %>
+      <%= render partial: 'shared/file_preview/file_icon', locals: { asset: asset } %>
     <% end %>
   </div>
 </div>

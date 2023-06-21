@@ -11,7 +11,7 @@
           <span class='sa-type'><%= experiment.code %></span>
           <span class="dot">&middot;</span>
           <span class="item-text"><%= experiment.name %></span>
-          <%= render partial: 'shared/smart_annotation/atwho_control_buttons.html.erb' %>
+          <%= render partial: 'shared/smart_annotation/atwho_control_buttons' %>
         </li>
       <% end %>
     </div>
@@ -21,7 +21,7 @@
     <div class="more-results"><%= t('atwho.more_results') %></div>
   <% end %>
   <% if experiments.blank? %>
-    <%= render partial: 'shared/smart_annotation/no_results.html.erb', locals: { object_type: 'experiments' } %>
+    <%= render partial: 'shared/smart_annotation/no_results', locals: { object_type: 'experiments' } %>
   <% end %>
 </div>
-<%= render partial: 'shared/smart_annotation/footer.html.erb' %>
+<%= render partial: 'shared/smart_annotation/footer' %>

@@ -25,47 +25,47 @@
     <br>
     <span>
       <%=t "search.index.step" %>
-      <%= render partial: "search/results/partials/step_text.html.erb",
+      <%= render partial: "search/results/partials/step_text",
                  locals: { step: checklist.step, target: nil } %>
     </span>
     <br>
     <% if checklist.step.protocol.in_module? %>
       <span>
         <%=t "search.index.module" %>
-        <%= render partial: "search/results/partials/my_module_text.html.erb",
+        <%= render partial: "search/results/partials/my_module_text",
                    locals: { my_module: checklist.step.protocol.my_module } %>
       </span>
       <br>
       <span>
         <%=t "search.index.experiment" %>
-        <%= render partial: "search/results/partials/experiment_text.html.erb",
+        <%= render partial: "search/results/partials/experiment_text",
                    locals: { experiment: checklist.step.protocol.my_module.experiment } %>
       </span>
       <br>
       <% if checklist.step.protocol.my_module.experiment.project.project_folder %>
         <span>
           <%=t "search.index.folder" %>
-          <%= render partial: "search/results/partials/project_folders_text.html.erb",
+          <%= render partial: "search/results/partials/project_folders_text",
                      locals: { folder: checklist.step.protocol.my_module.experiment.project.project_folder } %>
         </span>
         <br>
       <% end %>
       <span>
         <%=t "search.index.project" %>
-        <%= render partial: "search/results/partials/project_text.html.erb",
+        <%= render partial: "search/results/partials/project_text",
                    locals: { project: checklist.step.protocol.my_module.experiment.project, link_to_page: :show } %>
       </span>
     <% else %>
       <span>
         <%=t "search.index.protocol" %>
-        <%= render partial: "search/results/partials/protocol_text.html.erb",
+        <%= render partial: "search/results/partials/protocol_text",
                    locals: { protocol: checklist.step.protocol, query: search_query } %>
       </span>
     <% end %>
     <br>
     <span>
       <%=t "search.index.team" %>
-      <%= render partial: "search/results/partials/team_text.html.erb",
+      <%= render partial: "search/results/partials/team_text",
                  locals: { team: checklist.step.protocol.team } %>
     </span>
   </p>

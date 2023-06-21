@@ -96,7 +96,7 @@ class MyModuleRepositoriesController < ApplicationController
 
   def update_repository_records_modal
     modal = render_to_string(
-      partial: 'my_modules/modals/update_repository_records_modal_content.html.erb',
+      partial: 'my_modules/modals/update_repository_records_modal_content',
       locals: { my_module: @my_module,
                 repository: @repository,
                 selected_rows: params[:selected_rows],
@@ -110,7 +110,7 @@ class MyModuleRepositoriesController < ApplicationController
 
   def assign_repository_records_modal
     modal = render_to_string(
-      partial: 'my_modules/modals/assign_repository_records_modal_content.html.erb',
+      partial: 'my_modules/modals/assign_repository_records_modal_content',
       locals: { my_module: @my_module,
                 repository: @repository,
                 selected_rows: params[:selected_rows],
@@ -181,7 +181,7 @@ class MyModuleRepositoriesController < ApplicationController
     @stock_value = @module_repository_row.repository_row.repository_stock_value
     render json: {
       html: render_to_string(
-        partial: 'my_modules/repositories/consume_stock_modal_content.html.erb'
+        partial: 'my_modules/repositories/consume_stock_modal_content'
       )
     }
   end

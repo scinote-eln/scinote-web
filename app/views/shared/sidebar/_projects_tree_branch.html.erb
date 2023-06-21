@@ -23,7 +23,7 @@
         <%= record[:folder].name %>
       <% end%>
       <ul class="sidebar-branch">
-        <%= render partial: 'shared/sidebar/projects_tree_branch.html.erb', locals: { records: record[:children] } %>
+        <%= render partial: 'shared/sidebar/projects_tree_branch', locals: { records: record[:children] } %>
       </ul>
     </li>
   <% end %>

@@ -2,7 +2,7 @@
 
 source 'http://rubygems.org'
 
-ruby '2.7.6'
+ruby '3.2.2'
 
 gem 'bootsnap', require: false
 gem 'bootstrap-sass', '~> 3.4.1'
@@ -12,12 +12,13 @@ gem 'devise_invitable'
 gem 'figaro'
 gem 'pg', '~> 1.1'
 gem 'pg_search' # PostgreSQL full text search
-gem 'rails', '~> 6.1.5'
 gem 'psych', '< 4.0'
-gem 'view_component', require: 'view_component/engine'
+gem 'rails', '~> 7.0.5'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize'
 gem 'sassc-rails'
+gem 'sprockets-rails'
+gem 'view_component'
 gem 'yomu', git: 'https://github.com/scinote-eln/yomu', branch: 'master'
 
 # Gems for OAuth2 subsystem
@@ -48,8 +49,6 @@ gem 'uglifier', '>= 1.3.0'
 gem 'autosize-rails' # jQuery autosize plugin
 gem 'hammerjs-rails'
 gem 'jquery-rails'
-gem 'jquery-scrollto-rails',
-    git: 'https://github.com/biosistemika/jquery-scrollto-rails'
 gem 'jquery-ui-rails'
 gem 'js_cookie_rails' # Simple JS API for cookies
 gem 'spinjs-rails'
@@ -94,11 +93,11 @@ gem 'delayed_job_active_record'
 gem 'devise-async',
     git: 'https://github.com/mhfs/devise-async.git',
     branch: 'devise-4.x'
-gem 'image_processing', '~> 1.12'
+gem 'image_processing'
 gem 'img2zpl', git: 'https://github.com/scinote-eln/img2zpl'
-gem 'rufus-scheduler', '~> 3.5'
+gem 'rufus-scheduler'
 
-gem 'discard', '~> 1.0'
+gem 'discard'
 
 gem 'graphviz'
 
@@ -110,7 +109,7 @@ gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'
 
 # Permission helper Gem
-gem 'canaid', git: 'https://github.com/biosistemika/canaid', branch: 'rails_6'
+gem 'canaid', git: 'https://github.com/scinote-eln/canaid'
 
 group :development, :test do
   gem 'awesome_print'
@@ -119,14 +118,14 @@ group :development, :test do
   gem 'bullet'
   gem 'byebug'
   gem 'factory_bot_rails'
-  gem 'listen', '~> 3.0'
+  gem 'listen'
   gem 'overcommit'
   gem 'pry'
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'rails-controller-testing'
-  gem 'rspec-rails', '>= 4.0.0.beta2'
-  gem 'rubocop', '= 0.83.0', require: false
+  gem 'rspec-rails'
+  gem 'rubocop', require: false
   gem 'rubocop-performance'
   gem 'rubocop-rails'
   gem 'timecop'
@@ -135,7 +134,7 @@ end
 group :test do
   gem 'capybara'
   gem 'capybara-email'
-  gem 'cucumber-rails', '~> 1.8', require: false
+  gem 'cucumber-rails', require: false
   gem 'database_cleaner'
   gem 'json_matchers'
   gem 'selenium-webdriver'

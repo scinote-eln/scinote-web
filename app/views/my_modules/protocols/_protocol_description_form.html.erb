@@ -1,5 +1,5 @@
 <%= bootstrap_form_for protocol, url: update_url, remote: :true, html: {class: 'tiny-mce-editor'} do |f| %>
-  <%= render partial: 'shared/tiny_mce_extra_buttons.html.erb' %>
+  <%= render partial: 'shared/tiny_mce_extra_buttons' %>
   <div id="protocol_description_view"
        class="ql-editor tinymce-view"
        data-placeholder="<%= t('my_modules.protocols.protocol_status_bar.empty_description_edit_label') %>"

@@ -18,7 +18,7 @@ class BioEddieAssetsController < ApplicationController
     if asset && bio_eddie_params[:object_type] == 'Step'
       create_register_bio_eddie_activity(asset, current_user) if bio_eddie_params[:schedule_for_registration] == 'true'
       render json: {
-        html: render_to_string(partial: 'assets/asset.html.erb', locals: {
+        html: render_to_string(partial: 'assets/asset', locals: {
                                  asset: asset,
                                  gallery_view_id: bio_eddie_params[:object_id]
                                })

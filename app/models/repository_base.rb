@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 class RepositoryBase < ApplicationRecord
-  require 'sti_preload'
-
-  include StiPreload
   include Discard::Model
 
   self.table_name = 'repositories'

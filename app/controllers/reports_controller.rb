@@ -69,7 +69,7 @@ class ReportsController < ApplicationController
           }
         else
           render json: {
-            html: render_to_string(partial: 'reports/wizard/no_template_values.html.erb')
+            html: render_to_string(partial: 'reports/wizard/no_template_values')
           }
         end
       end
@@ -212,7 +212,7 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          html: render_to_string(partial: 'reports/save_PDF_to_inventory_modal.html.erb')
+          html: render_to_string(partial: 'reports/save_PDF_to_inventory_modal')
         }
       end
     end
@@ -254,7 +254,7 @@ class ReportsController < ApplicationController
         format.json do
           render json: {
             html: render_to_string(
-              partial: 'reports/new/modal/module_contents.html.erb',
+              partial: 'reports/new/modal/module_contents',
               locals: { project: @project, my_module: my_module }
             )
           }
@@ -277,7 +277,7 @@ class ReportsController < ApplicationController
         format.json do
           render json: {
             html: render_to_string(
-              partial: 'reports/new/modal/step_contents.html.erb',
+              partial: 'reports/new/modal/step_contents',
               locals: { project: @project, step: step }
             )
           }
@@ -300,7 +300,7 @@ class ReportsController < ApplicationController
         format.json do
           render json: {
             html: render_to_string(
-              partial: 'reports/new/modal/result_contents.html.erb',
+              partial: 'reports/new/modal/result_contents',
               locals: { project: @project, result: result }
             )
           }
@@ -312,7 +312,7 @@ class ReportsController < ApplicationController
   def project_contents
     render json: {
       html: render_to_string(
-        partial: 'reports/wizard/project_contents.html.erb',
+        partial: 'reports/wizard/project_contents',
         locals: { project: @project, report: nil }
       )
     }
@@ -324,7 +324,7 @@ class ReportsController < ApplicationController
 
   def document_preview
     render json: { html: render_to_string(
-      partial: 'reports/content_document_preview.html.erb',
+      partial: 'reports/content_document_preview',
       locals: {
         report: @report,
         report_type: params[:report_type]

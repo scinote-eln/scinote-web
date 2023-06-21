@@ -99,17 +99,12 @@ class StepsController < ApplicationController
   end
 
   def show
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'steps/step.html.erb',
-                     locals: { step: @step }
-          )
-        },
-        status: :ok
-      end
-    end
+    render json: {
+      html: render_to_string(
+        partial: 'steps/step',
+        locals: { step: @step }
+      )
+    }
   end
 
   def update
