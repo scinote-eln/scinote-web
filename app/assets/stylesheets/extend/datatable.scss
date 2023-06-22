@@ -1,11 +1,37 @@
 // scss-lint:disable SelectorDepth QualifyingElement NestingDepth
 // Data table
 
+.dataTables_scrollBody {
+  .column-grip {
+    display: none !important;
+  }
+}
+
 .table.dataTable {
   table-layout: initial;
   text-overflow: initial;
   width: 100%;
   word-break: initial;
+
+  &.table--reorderable-columns {
+    thead tr th:not(:first-child) {
+      padding-left: 24px;
+
+      .column-grip {
+        color: $color-volcano;
+        cursor: grab;
+        display: block;
+        left: 0;
+        opacity: 0;
+        position: absolute;
+        top: 6px;
+      }
+
+      &:hover .column-grip {
+        opacity: 1;
+      }
+    }
+  }
 
   thead {
     tr {
@@ -29,14 +55,8 @@
           opacity: 1;
         }
 
-        &.sorting::after {
-          opacity: 0;
-        }
-
         &.sorting:hover {
-          &::after {
-            opacity: 1;
-          }
+          background-color: $color-alto;
         }
 
         &:first-child {

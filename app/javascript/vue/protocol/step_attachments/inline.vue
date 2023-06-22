@@ -38,15 +38,14 @@
       />
     </div>
     <template v-if="attachment.attributes.wopi">
-      <div v-if="attachment.attributes.file_size > 0"
+      <div v-if="showWopi"
            class="iframe-placeholder"
            :data-iframe-url="attachment.attributes.urls.wopi_action"></div>
       <div v-else class="empty-office-file">
         <h2>{{ i18n.t('assets.empty_office_file.description') }}</h2>
         <a :href="attachment.attributes.urls.load_asset"
            class="btn btn-primary reload-asset"
-           @click.prevent="reloadAsset"
-           :params="{asset: {view_mode: attachment.attributes.view_mode}}">
+           @click.prevent="reloadAsset">
           {{ i18n.t('assets.empty_office_file.reload') }}
         </a>
       </div>
@@ -90,12 +89,28 @@
         required: true
       }
     },
+    data() {
+      return {
+        showWopi: false
+      }
+    },
+    mounted() {
+      this.showWopi = this.attachment.attributes.file_size > 0;
+    },
     methods: {
       reloadAsset() {
         $.ajax({
           method: 'GET',
-          url: this.attachment.attributes.urls.load_asset
-        });
+          url: this.attachment.attributes.urls.load_asset,
+          data: {
+            asset: {view_mode: this.attachment.attributes.view_mode}
+          },
+          success: (data) => {
+            if (!(data.html.includes('empty-office-file'))) {
+              this.showWopi = true;
+            }
+          }
+        })
       }
     },
   }

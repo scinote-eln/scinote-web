@@ -116,6 +116,8 @@
     }
 
     .dataTables_scrollBody {
+      flex-grow: 1;
+
       thead th#checkbox {
         opacity: 0;
       }
@@ -143,7 +145,7 @@
 
       .dataTables_length {
         margin-right: 24px;
-        width: 170px;
+        width: 180px;
 
         .dropdown-selector-container {
           width: inherit;
@@ -350,7 +352,7 @@
   }
 
   .share-repo-container {
-    padding: 15px 30px;
+    padding: 15px 0 0;
 
     // Main structure css
     .header,
@@ -366,6 +368,7 @@
     .all-teams,
     .teams-list {
       display: flex;
+      padding: 0 30px;
       width: 100%;
     }
 
@@ -408,14 +411,14 @@
       align-items: center;
       font-size: 14px;
       font-weight: bold;
-      padding: 5px 0 0;
+      padding: 5px 30px 0;
     }
 
     .all-teams {
       align-items: center;
       border-bottom: 1px solid $color-gainsboro;
       margin-left: -10px;
-      padding: 5px 10px;
+      padding: 5px 40px;
       user-select: none;
       width: calc(100% + 20px);
     }

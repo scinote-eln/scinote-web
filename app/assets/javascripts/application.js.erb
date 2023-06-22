@@ -14,6 +14,7 @@
 //= require bootstrap-select
 //= require_directory ./repository_columns/columns_initializers
 //= require datatables
+//= require jquery.dataTables.colResize
 //= require clndr.min
 //= require ajax-bootstrap-select.min
 //= require underscore
@@ -319,19 +320,16 @@ $(document).on('shown.bs.modal', '.modal', function() {
 let userNamePopover;
 const renderUserNamePopover = (url, fullName, email, html) => {
   return `<div class="user-name-popover-wrapper">
-            <div class='col-xs-4'>
+            <div class='col-xs-3'>
               <img
                 class='avatar'
                 src='${url}'
                 alt='thumb'>
             </div>
-            <div class='col-xs-8'>
+            <div class='col-xs-9'>
               <div class='row'>
-                <div class='col-xs-9 text-left'>
-                  <h5 class='full-name'>${fullName}</h5>
-                </div>
-                <div class='col-xs-3 text-right'>
-                  <span class='sn-icon sn-icon-close' aria-hidden='true'></span>
+                <div class='col-xs-12 text-left font-bold'>
+                  ${fullName}
                 </div>
               </div>
               <div class='row'>

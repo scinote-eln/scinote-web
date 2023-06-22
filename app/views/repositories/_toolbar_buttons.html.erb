@@ -26,7 +26,7 @@
         </button>
       <% end %>
 
-      <span id="saveCancel" class="flex items-center gap-3" data-toggle="buttons" style="display:none">
+      <span id="saveCancel" class="flex items-center gap-2" data-toggle="buttons" style="display:none">
         <button type="button" class="btn btn-primary prevent-shrink" id="saveRecord" data-view-mode="active">
           <span class="fas fa-save"></span>
           <%= t("repositories.save_record") %>
@@ -92,7 +92,7 @@
       </div>
     <% end %>
     <div class="repo-datatables-buttons">
-      <button class="btn btn-light btn-black icon-btn manage-repo-column-index" title="<%= t("libraries.manange_modal_column.button_tooltip") %>"
+      <button class="btn btn-light icon-btn manage-repo-column-index" title="<%= t("libraries.manange_modal_column.button_tooltip") %>"
               data-modal-url="<%= repository_repository_columns_path(@repository) %>"
               data-action="new">
         <span class="sn-icon sn-icon sn-icon-reports">

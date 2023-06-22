@@ -24,8 +24,16 @@
     text-decoration: none;
     width: 100%;
 
+    .sn-icon-dot-small {
+      color: var(--sn-grey);
+    }
+
     &:not([data-active='true']):hover {
       background-color: var(--sn-super-light-grey);
+
+      .sn-icon-dot-small {
+        color: var(--sn-black);
+      }
     }
 
     .show-submenu {

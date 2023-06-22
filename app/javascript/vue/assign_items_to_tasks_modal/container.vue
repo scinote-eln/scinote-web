@@ -316,14 +316,20 @@ export default {
         HelperModule.flashAlertMsg(this.i18n.t('repositories.modal_assign_items_to_task.assign.flash_assignments_failure'), 'danger');
       }).always(() => {
         this.resetSelectors();
-        this.deselectRows();
+        this.reloadTable();
       });
     },
     setShowCallback(callback) {
       this.showCallback = callback;
     },
-    deselectRows() {
+    reloadTable() {
       $('.repository-row-selector:checked').trigger('click');
+      $('.repository-table')
+        .find('table')
+        .dataTable()
+        .api()
+        .ajax
+        .reload();
     }
   }
 };

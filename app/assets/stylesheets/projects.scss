@@ -21,10 +21,6 @@ $color-module-hover: $brand-primary;
   align-items: center;
   display: flex;
 
-  #edit-canvas-button, .new-my-module-button {
-    margin-right: 5px;
-  }
-
   .actions-button {
     margin-right: 15px;
 
@@ -699,7 +695,7 @@ li.module-hover {
       .card {
         .project-users-link {
           align-items: center;
-          color: $color-silver-chalice;
+          color: var(--sn-black);
           display: flex;
           gap: .25rem;
 

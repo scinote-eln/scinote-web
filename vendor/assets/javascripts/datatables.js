@@ -20313,6 +20313,9 @@ $.extend( ColReorder.prototype, {
 	{
 		var that = this;
 
+		/* Added by SciNote to support ColReorder working alongside ColResize */
+		if( e.target.classList.contains(this.s.init.disabledClass) ) return;
+
 		/* Store information about the mouse position */
 		var target = $(e.target).closest('th, td');
 		var offset = target.offset();

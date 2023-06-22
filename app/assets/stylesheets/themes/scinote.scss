@@ -568,6 +568,8 @@ mark,.mark {
     float: right;
 
     .pagination {
+      align-items: center;
+      display: flex;
       margin: 0;
     }
   }
@@ -1018,13 +1020,9 @@ ul.content-activities {
   .result-panel-collapse-link {
     text-decoration: none;
 
-    &:not(.collapsed) .fas {
+    &:not(.collapsed) .sn-icon-right {
       @include rotate(90deg);
-    }
-
-    .fas {
-      margin-right: 7px;
-      text-align: center;
+      display: inline-block;
     }
   }
 

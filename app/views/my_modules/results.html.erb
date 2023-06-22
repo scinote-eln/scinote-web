@@ -22,7 +22,7 @@
         <a href="#" id="add-result-button" class="btn btn-secondary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           <span class="sn-icon sn-icon-new-task"></span>
           <span><%= t("my_modules.results.add_label") %></span>
-          <span class="caret pull-right"></span>
+          <span class="sn-icon sn-icon-down"></span>
         </a>
         <ul class="dropdown-menu add-result-dropdown" aria-labelledby="add-result-button">
           <li id="new-result-text" data-href="<%= new_my_module_result_text_path(my_module_id: @my_module.id, page: params[:page], order: params[:order]) %>">
@@ -45,7 +45,7 @@
     <% end %>
     <div class="sci-btn-group collapse-expand-result">
       <button class="btn btn-light" id="results-collapse-btn">
-        <span class="sn-icon sn-icon-open-show"></span>
+        <span class="sn-icon sn-icon-up"></span>
         <span class="hidden-xs-custom"><%= t'my_modules.results.collapse_label' %></span>
       </button>
       <button class="btn btn-light" id="results-expand-btn">

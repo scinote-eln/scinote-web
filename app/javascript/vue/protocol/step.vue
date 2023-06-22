@@ -17,12 +17,12 @@
             <i class="sn-icon sn-icon-sort"></i>
           </div>
           <div v-else class="step-element-grip-placeholder"></div>
-          <a class="step-collapse-link"
+          <a class="step-collapse-link hover:no-underline focus:no-underline"
             :href="'#stepBody' + step.id"
             data-toggle="collapse"
             data-remote="true"
             @click="toggleCollapsed">
-              <span class="sn-icon sn-icon-right"></span>
+              <span class="sn-icon sn-icon-right "></span>
           </a>
           <div v-if="!inRepository" class="step-complete-container mx-1.5" :class="{ 'step-element--locked': !urls.state_url }">
             <div :class="`step-state ${step.attributes.completed ? 'completed' : ''}`"

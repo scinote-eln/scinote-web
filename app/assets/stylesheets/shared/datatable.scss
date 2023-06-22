@@ -13,6 +13,7 @@
       align-items: center;
       display: flex;
       flex-grow: 1;
+      gap: .25rem;
     }
   }
 
@@ -113,7 +114,7 @@
       .dataTables_length {
         height: 2.25rem;
         margin-right: 24px;
-        width: 170px;
+        width: 180px;
 
         .dropdown-selector-container {
           width: inherit;
@@ -183,4 +184,9 @@
       }
     }
   }
+}
+
+div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+  align-items: center;
+  display: flex;
 }
