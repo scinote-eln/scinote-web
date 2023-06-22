@@ -50,28 +50,21 @@ $color-module-hover: $brand-primary;
 }
 
 #canvas-new-module {
-  .hbtn-default {
-    opacity: 1;
-    width: 0;
-    float: none;
+  .hbtn-new {
+    display: inline;
   }
 
-  .hbtn-hover {
-    opacity: 0;
-    width: 0;
-    height: 0;
-    float: left;
+  .hbtn-drag {
+    display: none;
   }
 
   &:hover {
-    .hbtn-default {
-      opacity: 0;
-      height: 0;
-      float: left;
+    .hbtn-new {
+      display: none;
     }
-    .hbtn-hover {
-      opacity: 1;
-      float: none;
+
+    .hbtn-drag {
+      display: inline;
     }
   }
 }
