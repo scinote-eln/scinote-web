@@ -529,6 +529,19 @@ var RepositoryDatatable = (function(global) {
         isResizable: (column) => {
           return column.idx > 0;
         },
+        onResize: function(column) {
+          // enforce min-width
+          let width = parseInt(column.width, 10);
+          let $headerColumn = $(TABLE.column(column.idx).header());
+          let minWidth = parseInt($headerColumn.css('min-width'), 10);
+
+          // get actual column index taking into account hidden columns
+          let trueColumnIndex = $(`${TABLE_WRAPPER_ID} .dataTables_scrollHeadInner tr`).children().index($headerColumn);
+
+          $(
+            `${TABLE_WRAPPER_ID} th:nth-child(${trueColumnIndex + 1})`
+          ).toggleClass('width-out-of-bounds', width < minWidth);
+        },
         stateSaveCallback: (_, data) => {
           $(TABLE_ID).data('col-sizes', data);
           let state = TABLE.state();
