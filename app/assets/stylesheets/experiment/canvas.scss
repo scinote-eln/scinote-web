@@ -82,3 +82,105 @@
     background-repeat: no-repeat;
   }
 }
+
+.panel-default > .panel-heading {
+  background-color: $color-white;
+
+  &>.panel-title {
+    color: $brand-primary;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.panel-footer-scinote {
+  background: $color-white;
+  padding: 0;
+
+  hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .btn-link {
+    color: $color-silver-chalice;
+  }
+
+  .btn-link:hover {
+    color: darken($color-silver-chalice, 15%);
+  }
+
+  .tab-content {
+    ul {
+      margin-bottom: 15px;
+    }
+
+    li {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+
+    .manage-users-link {
+      display: block;
+      padding-left: 15px;
+      margin-bottom: 10px;
+    }
+  }
+
+  .content-module-info {
+    max-height: 250px;
+    overflow: auto;
+  }
+
+  .content-comments {
+    max-height: 250px;
+    overflow: auto;
+  }
+
+  .content-activities {
+    max-height: 250px;
+    overflow: auto;
+  }
+
+  .content-users {
+    max-height: 250px;
+    overflow: auto;
+  }
+
+  .content-notifications {
+    max-height: 250px;
+    overflow: auto;
+
+    li.notification.alert-red > .date-time {
+      font-weight: bold;
+      color: $brand-danger;
+    }
+    li.notification.alert-yellow > .date-time {
+      font-weight: bold;
+      color: $brand-warning;
+    }
+  }
+}
+
+.panel-options {
+  position: relative;
+  bottom: 8px;
+}
+
+.panel-footer {
+  padding: 0 15px;
+}
+
+.module-large,
+.module-medium,
+.module-small {
+  box-shadow: 0 3px 6px $color-silver-chalice;
+}
+
+.badge {
+  background-color: var(--sn-science-blue);
+  border-radius: 50% !important;
+  font-size: 11px;
+  border-radius: 5px;
+}

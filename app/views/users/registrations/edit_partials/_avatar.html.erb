@@ -3,10 +3,10 @@
     <% @user_avatar_url ||= avatar_path(current_user, :thumb) %>
     <div class="avatar-container">
       <div class="avatar-image">
-          <%= image_tag @user_avatar_url %>
+          <%= image_tag @user_avatar_url, class:"w-24" %>
       </div>
       <div class="avatar-edit"></div>
-      <div class="avatar-edit-text">
+      <div class="avatar-edit-text btn btn-light mt-3">
         <span class="sn-icon sn-icon-edit"></span>
         <span><%=t "users.registrations.edit.avatar_btn" %></span>
       </div>
