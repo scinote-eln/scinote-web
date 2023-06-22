@@ -26,6 +26,12 @@
       <%= folder.name %>
     </div>
   <% end %>
+
+  <% 5.times do %>
+    <div class="name table-cell">
+    </div>
+  <% end %>
+
   <div class="description">
     <%= t('projects.index.folder.description', projects_count: folder.projects_count, folders_count: folder.folders_count) %>
   </div>
