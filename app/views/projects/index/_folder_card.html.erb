@@ -12,7 +12,7 @@
       <span class="sci-checkbox-label"></span>
     </div>
   </div>
-  <%= link_to project_folder_path(folder),
+  <%= link_to folder.archived_branch? ? project_folder_path(folder, view_mode: :archived) : project_folder_path(folder),
               class: 'project-folder-link',
               data: {
                 projects_cards_url: project_folder_cards_url(folder),

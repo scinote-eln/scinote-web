@@ -12,17 +12,23 @@ module Breadcrumbs
       @breadcrumbs_items = []
 
       folders = helpers.tree_ordered_parent_folders(current_folder)
+      archived_branch = project&.archived? ||
+                        current_folder&.archived? ||
+                        (!project && params[:view_mode] == 'archived')
 
       @breadcrumbs_items.push({
                                 label: t('projects.index.breadcrumbs_root'),
-                                url: projects_path(view_mode: project&.archived? ? :archived : :active),
-                                archived: project&.archived? || (!project && params[:view_mode] == 'archived')
+                                url: projects_path(view_mode: archived_branch ? :archived : :active),
+                                archived: archived_branch
                               })
 
       folders&.each do |project_folder|
+        archived_branch = project_folder.archived_branch?
         @breadcrumbs_items.push({
                                   label: project_folder.name,
-                                  url: project_folder_path(project_folder)
+                                  url: project_folder_path(project_folder,
+                                                           view_mode: archived_branch ? :archived : :active),
+                                  archived: archived_branch
                                 })
       end
 

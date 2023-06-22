@@ -571,7 +571,7 @@ class RepositoriesController < ApplicationController
 
   def set_breadcrumbs_items
     @breadcrumbs_items = []
-    archived_branch = params[:archived] == 'true' || @repository&.archived?
+    archived_branch = @repository&.archived? || (!@repository && params[:archived] == 'true')
 
     @breadcrumbs_items.push({
                               label: t('breadcrumbs.inventories'),
