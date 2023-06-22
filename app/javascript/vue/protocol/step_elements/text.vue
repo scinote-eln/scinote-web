@@ -5,13 +5,13 @@
     </div>
     <div v-else class="step-element-grip-placeholder"></div>
     <div class="buttons-container">
-      <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" tabindex="0" @click="enableEditMode($event)">
+      <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light btn-sm" tabindex="0" @click="enableEditMode($event)">
         <i class="sn-icon sn-icon-edit"></i>
       </button>
-      <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light" tabindex="0" @click="duplicateElement">
+      <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light btn-sm" tabindex="0" @click="duplicateElement">
         <i class="sn-icon sn-icon-duplicate"></i>
       </button>
-      <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="0">
+      <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light btn-sm" @click="showDeleteModal" tabindex="0">
         <i class="sn-icon sn-icon-delete"></i>
       </button>
     </div>

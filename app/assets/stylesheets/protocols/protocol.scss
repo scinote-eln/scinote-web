@@ -50,14 +50,15 @@
       align-items: center;
       color: $color-volcano;
       display: inline-flex;
-      padding: .5em;
+      gap: .5rem;
+      padding: .5rem;
       text-decoration: none;
 
       .fas {
         margin-right: 5px;
       }
 
-      &:not(.collapsed) .fas {
+      &:not(.collapsed) .sn-icon {
         @include rotate(90deg);
       }
     }
@@ -104,7 +105,7 @@
     }
 
     .protocol-details {
-      padding-left: 20px;
+      padding-left: 2.5rem;
     }
   }
 

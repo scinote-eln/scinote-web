@@ -152,7 +152,8 @@ body {
 }
 
 .badge {
-  background-color: $brand-primary;
+  background-color: var(--sn-science-blue);
+  border-radius: 50% !important;
   font-size: 11px;
   border-radius: 5px;
 }
