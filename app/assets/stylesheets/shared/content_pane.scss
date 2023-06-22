@@ -113,11 +113,12 @@
             width: calc(100% + 2em);
 
             &.selected::after {
-              @include font-awesome;
-              content: $font-fas-check;
+              @include font-sn-icon;
+              content: $sn-icon-check;
               margin-left: auto;
               position: absolute;
-              right: 1em;
+              right: .5rem;
+              top: 0;
             }
           }
         }
@@ -138,7 +139,7 @@
 
       .dropdown-menu {
         @include font-button;
-        min-width: 200px;
+        min-width: 160px;
         padding: .5em 0;
 
         a {
@@ -152,11 +153,12 @@
           }
 
           &.selected::after {
-            @include font-awesome;
-            content: $font-fas-check;
+            @include font-sn-icon;
+            content: $sn-icon-check;
             margin-left: auto;
             position: absolute;
-            right: 1em;
+            right: .5rem;
+            top: 0;
           }
         }
 

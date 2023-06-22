@@ -12,14 +12,11 @@
 
 .dashboard-view {
   --dashboard-widgets-gap: 30px;
-  padding: 15px
-           var(--dashboard-widgets-gap)
-           15px
-           var(--dashboard-widgets-gap);
+  padding: 1.5rem 0;
 }
 
 .dashboard-header {
-  padding-bottom: 15px;
+  padding-bottom: 1.5rem;
 }
 
 .dashboard-container {

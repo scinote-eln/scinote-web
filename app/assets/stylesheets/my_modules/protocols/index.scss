@@ -78,7 +78,7 @@
     color: var(--sn-black);
     display: inline-flex;
     gap: .5rem;
-    padding: .5em;
+    padding: .5rem;
     text-decoration: none;
 
     .fas {
@@ -183,6 +183,8 @@
 }
 
 .task-details {
+  padding-left: 2.5rem;
+
   .fas.block-icon {
     margin-right: 8px;
   }
@@ -406,6 +408,7 @@
 
 .task-notes {
   display: inline-block;
+  padding-left: 2rem;
   position: relative;
   width: 100%;
 
