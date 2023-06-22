@@ -47,8 +47,6 @@ class ProjectsController < ApplicationController
       }
     else
       if current_folder
-        breadcrumbs_html = render_to_string(partial: 'projects/index/breadcrumbs.html.erb',
-                                            locals: { target_folder: current_folder, folder_page: true })
         projects_cards_url = project_folder_cards_url(current_folder)
         title_html = if @inline_editable_title_config.present?
                        render_to_string(partial: 'shared/inline_editing',
@@ -60,7 +58,6 @@ class ProjectsController < ApplicationController
                        escape_input(current_folder.name)
                      end
       else
-        breadcrumbs_html = ''
         projects_cards_url = cards_projects_url
         title_html = title
       end
@@ -70,7 +67,6 @@ class ProjectsController < ApplicationController
 
       render json: {
         projects_cards_url: projects_cards_url,
-        breadcrumbs_html: breadcrumbs_html,
         title_html: title_html,
         next_page: cards.next_page,
         toolbar_html: render_to_string(partial: 'projects/index/toolbar.html.erb'),
