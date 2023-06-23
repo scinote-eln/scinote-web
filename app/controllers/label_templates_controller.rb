@@ -207,7 +207,6 @@ class LabelTemplatesController < ApplicationController
 
     @breadcrumbs_items.push({
                               label: t('breadcrumbs.templates'),
-                              url: label_templates_path
                             })
 
     @breadcrumbs_items.push({

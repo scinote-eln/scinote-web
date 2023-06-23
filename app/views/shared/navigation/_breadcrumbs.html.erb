@@ -45,45 +45,26 @@
     </span>
   <% else %>
     <% last_item = @breadcrumbs_items.pop %>
-    <% template_paths = [/^\/protocols\/\d+$/, /^\/label_templates\/\d+$/] %>
+    <% @breadcrumbs_items.each do |item| %>
+      <% if item[:url] %>
+        <%= link_to(item[:label], item[:url],
+                    class: "breadcrumbs-link",
+                    title: item[:label]) %>
+      <% else %>
+        <%= content_tag(:span, item[:label],
+                        class: "breadcrumbs-link plain-text",
+                        title: item[:label]) %>
+      <% end %>
 
-    <% if template_paths.any? { |pattern| request.path.match?(pattern) } || ["/protocols", "/label_templates"].include?(request.path) %>
-      <span class="breadcrumbs-link" style="color: var(--sn-grey);" title="<%= @breadcrumbs_items.first[:label] %>">
-        <%= @breadcrumbs_items.first[:label] %>
-      </span>
       <span class="delimiter">
         <img src="<%= asset_path "icon_small/navigate_next.svg"%>"
             alt="navigate next"
             class="navigate_next">
       </span>
-      <% @breadcrumbs_items.each do |item| %>
-      <%= next if @breadcrumbs_items.first == item%>
-        <%= link_to(item[:label], item[:url],
-                    class: "breadcrumbs-link",
-                    title: item[:label]) %>
-        <span class="delimiter">
-          <img src="<%= asset_path "icon_small/navigate_next.svg"%>"
-              alt="navigate next"
-              class="navigate_next">
-        </span>
-      <% end %>
-    <% else %>
-      <% @breadcrumbs_items.each do |item| %>
-        <%= link_to(item[:label], item[:url],
-                    class: "breadcrumbs-link",
-                    title: item[:label]) %>
-        <span class="delimiter">
-          <img src="<%= asset_path "icon_small/navigate_next.svg"%>"
-              alt="navigate next"
-              class="navigate_next">
-        </span>
-      <% end %>
     <% end %>
 
-    <% if last_item %>
-      <span class="breadcrumbs-link" title="<%= last_item[:label] %>">
-        <%= last_item[:label] %>
-      </span>
-    <% end %>
+    <span class="breadcrumbs-link" title="<%= last_item[:label] %>">
+      <%= last_item[:label] %>
+    </span>
   <% end %>
 <% end %>
