@@ -160,6 +160,8 @@
     var value = inputField.val();
     inputField.focus().val('').val(value);
   }).on('shown.bs.modal', '#export-repositories-modal', function() {
+    if (!CHECKBOX_SELECTOR) return;
+
     const selectedInventoriesCount = CHECKBOX_SELECTOR.selectedRows.length;
     const firstDescription = $(this).find('.description-p1');
     const teamName = firstDescription.data('team-name');
