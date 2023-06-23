@@ -153,9 +153,9 @@ body {
 
 .badge {
   background-color: var(--sn-science-blue);
-  border-radius: 50% !important;
+  border-radius: 8px;
   font-size: 11px;
-  border-radius: 5px;
+  min-width: 16px;
 }
 
 .badge-indicator,

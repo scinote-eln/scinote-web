@@ -441,10 +441,10 @@
 
   .unseen-comments {
     align-items: center;
-    background-color: $brand-complementary;
-    border: 2px solid $color-white;
+    background-color: var(--sn-science-blue);
+    border: 1px solid $color-white;
     border-radius: 50%;
-    color: $color-black;
+    color: var(--sn-white);
     display: flex;
     font-weight: bold;
     font-size: 11px;
