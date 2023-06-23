@@ -3415,7 +3415,7 @@ en:
     repository_header_html: 'You are about to export selected items in inventory %{repository}.'
     files_alert: 'Files uploaded to inventory items will not be exported. Only filenames will be exported.'
     repository_footer_html: 'Inventory will be exported in a .csv file format. You will receive <strong>email with a link</strong> where you can download it.'
-    export_request_success: "Export request received!"
+    export_request_success: "Export request received. Your export request is being processed."
     export_error: "Error when creating zip export."
 
   webhooks:
