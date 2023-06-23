@@ -1753,6 +1753,10 @@ en:
         description_p2: "You will receive an email when the .zip file is ready. A link to your file will also appear in your SciNote notification. For security reasons, this link will expire in 7 days."
         description_p3_html: "After you confirm this export, you will have <strong>%{remaining_export_requests}</strong> export requests left today (max %{requests_limit} requests per day)."
         export: "Export"
+      modal_export_limit_exceeded:
+        title: "Export denied"
+        error_p1_html: "It looks like you have exceeded your daily export limit. The number of exports is <strong>limited to %{limit} requests per day </strong>- you currently have 0 export requests left."
+        error_p2_html: "Please repeat the desired action <strong>tomorrow</strong>, when your daily limit will reset back to %{limit} export requests."
       modal_create:
         title: "Create new inventory"
         name_label: "Inventory name"

@@ -238,18 +238,29 @@ class RepositoriesController < ApplicationController
   end
 
   def export_modal
-    return unless current_user.has_available_exports?
-
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'export_repositories_modal.html.erb',
-            locals: { team_name: current_team.name,
-                      export_limit: TeamZipExport.exports_limit,
-                      num_of_requests_left: current_user.exports_left - 1 }
-          )
-        }
+    if current_user.has_available_exports?
+      respond_to do |format|
+        format.json do
+          render json: {
+            html: render_to_string(
+              partial: 'export_repositories_modal.html.erb',
+              locals: { team_name: current_team.name,
+                        export_limit: TeamZipExport.exports_limit,
+                        num_of_requests_left: current_user.exports_left - 1 }
+            )
+          }
+        end
+      end
+    else
+      respond_to do |format|
+        format.json do
+          render json: {
+            html: render_to_string(
+              partial: 'export_limit_exceeded_modal.html.erb',
+              locals: { requests_limit: TeamZipExport.exports_limit }
+            )
+          }
+        end
       end
     end
   end
