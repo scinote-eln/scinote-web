@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center mr-3 flex-nowrap">
-    <button v-if="!searchOpened" class="btn btn-light icon-btn" :title="i18n.t('repositories.show.search_button_tooltip')" @click="openSearch">
+    <button v-if="!searchOpened" class="btn btn-light  icon-btn" :title="i18n.t('repositories.show.search_button_tooltip')" @click="openSearch">
       <i class="sn-icon sn-icon-search"></i>
     </button>
     <div v-if="searchOpened || barcodeSearchOpened" class="w-52 flex">

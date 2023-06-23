@@ -5,7 +5,7 @@ class LabelPrintersController < ApplicationController
 
   before_action :check_manage_permissions, except: %i(index index_zebra update_progress_modal)
   before_action :find_label_printer, only: %i(edit update destroy)
-  before_action :set_breadcrumbs_items, only: %i(index_zebra)
+  before_action :set_breadcrumbs_items, only: %i(index_zebra index)
 
   def index
     @label_printers = LabelPrinter.all
@@ -137,6 +137,9 @@ class LabelPrintersController < ApplicationController
 
   def set_breadcrumbs_items
     @breadcrumbs_items = []
+    printer_label = t('breadcrumbs.fluics_printer')
+    printer_label = t('breadcrumbs.label_printer') if action_name == 'index_zebra'
+
     @breadcrumbs_items.push({
                               label: t('breadcrumbs.addons'),
                               url: addons_path
@@ -148,7 +151,7 @@ class LabelPrintersController < ApplicationController
                               })
     else
       @breadcrumbs_items.push({
-                                label: t('breadcrumbs.label_printer')
+                                label: printer_label
                               })
     end
   end

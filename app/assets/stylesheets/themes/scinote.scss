@@ -41,10 +41,14 @@ table {
 #no-teams-jumbotron {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  position: relative;
-  top: 100px;
   justify-content: center;
+  align-items: center;
+  padding-top: 7rem;
+
+  img {
+    margin-bottom: 1.5rem;
+    max-width: 33%;
+  }
 }
 
 #alert-container {
@@ -148,7 +152,8 @@ body {
 }
 
 .badge {
-  background-color: $brand-primary;
+  background-color: var(--sn-science-blue);
+  border-radius: 50% !important;
   font-size: 11px;
   border-radius: 5px;
 }
@@ -564,7 +569,9 @@ mark,.mark {
     float: right;
 
     .pagination {
-      margin: 2px 0;
+      align-items: center;
+      display: flex;
+      margin: 0;
     }
   }
 
@@ -1014,13 +1021,9 @@ ul.content-activities {
   .result-panel-collapse-link {
     text-decoration: none;
 
-    &:not(.collapsed) .fas {
+    &:not(.collapsed) .sn-icon-right {
       @include rotate(90deg);
-    }
-
-    .fas {
-      margin-right: 7px;
-      text-align: center;
+      display: inline-block;
     }
   }
 

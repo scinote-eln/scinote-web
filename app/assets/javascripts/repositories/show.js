@@ -101,8 +101,6 @@
       .text(I18n.t('repositories.show.archived_view_label.active', { repository_name: viewValue }));
   });
 
-  $('.create-new-repository').initSubmitModal('#create-repo-modal', 'repository');
-
   function initArchivingActionsInDropdown() {
     $('.archive-repository-option').on('click', function(event) {
       event.preventDefault();

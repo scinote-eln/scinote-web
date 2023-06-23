@@ -31,7 +31,7 @@
             <%= button_to(view_type_projects_path(format: :json),
                           method: :put,
                           remote: true,
-                          class: "btn btn-light button-to #{ @current_view_type == 'table' ? 'selected' : ''} prevent-shrink",
+                          class: "btn btn-light justify-start button-to #{ @current_view_type == 'table' ? 'selected' : ''} prevent-shrink",
                           form_class: 'change-projects-view-type-form',
                           params: { projects: { view_type: 'table' } }) do %>
               <span class="view-switch-list-span table-switch"><%= t('toolbar.table_view') %></span>
@@ -41,7 +41,7 @@
             <%= button_to(view_type_projects_path(format: :json),
                           method: :put,
                           remote: true,
-                          class: "btn btn-light button-to #{ @current_view_type == 'cards' ? 'selected' : ''} prevent-shrink",
+                          class: "btn btn-light justify-start button-to #{ @current_view_type == 'cards' ? 'selected' : ''} prevent-shrink",
                           form_class: 'change-projects-view-type-form',
                           params: { projects: { view_type: 'cards' } }) do %>
               <span class="view-switch-list-span cards-switch"><%= t('toolbar.cards_view') %></span>

@@ -286,7 +286,7 @@ var dropdownSelector = (function() {
           selectedOption.removeClass('highlight').next().next().addClass('highlight');
         }
       } else if (pressedKey === 8 && e.target.value === '') { // backspace
-        deleteTag(selector, container, container.find('.ds-tags .sn-icon-close').last());
+        deleteTag(selector, container, container.find('.ds-tags .sn-icon-close-small').last());
       }
     });
   }
@@ -743,7 +743,7 @@ var dropdownSelector = (function() {
       var tag = $(`<div class="${tagAppearance} ${customClass}" style="${customStyle ? customStyle(data) : ''}" >
                   <div class="tag-label">
                   </div>
-                  <i class="sn-icon sn-icon-close ${selector.data('config').singleSelect ? 'hidden' : ''}"></i>
+                  <i class="sn-icon sn-icon-close-small ${selector.data('config').singleSelect ? 'hidden' : ''}"></i>
                 </div>`).insertBefore(container.find('.input-field .search-field'));
 
 
@@ -758,7 +758,7 @@ var dropdownSelector = (function() {
       }
 
       // Now we need add delete action to tag
-      tag.find('.sn-icon-close').click(function(e) {
+      tag.find('.sn-icon-close-small').click(function(e) {
         e.stopPropagation();
         deleteTag(selector, container, $(this));
       });

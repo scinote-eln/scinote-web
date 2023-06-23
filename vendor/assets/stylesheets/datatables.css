@@ -102,24 +102,27 @@ table.dataTable thead .sorting_asc:after,
 table.dataTable thead .sorting_desc:after,
 table.dataTable thead .sorting_asc_disabled:after,
 table.dataTable thead .sorting_desc_disabled:after {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  display: block;
-  font-family: 'Glyphicons Halflings';
+  bottom: 12px;
+  display: inline-block;
+  font-family: 'SN-icon-font' !important;
+  font-size: 24px;
+  height: 24px;
   opacity: 0.5;
+  position: absolute;
+  right: 4px;
+  width: 24px;
 }
 table.dataTable thead .sorting:after {
   opacity: 0.2;
-  content: "\e150";
+  content: "\e915";
   /* sort */
 }
 table.dataTable thead .sorting_asc:after {
-  content: "\e155";
+  content: "\e916";
   /* sort-by-attributes */
 }
 table.dataTable thead .sorting_desc:after {
-  content: "\e156";
+  content: "\e917";
   /* sort-by-attributes-alt */
 }
 table.dataTable thead .sorting_asc_disabled:after,

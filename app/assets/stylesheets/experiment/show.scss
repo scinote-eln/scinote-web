@@ -45,8 +45,10 @@
     .left,
     .middle,
     .right {
+      align-items: center;
       display: flex;
       flex-direction: inherit;
+      gap: .5rem;
     }
   }
 }

@@ -18,7 +18,7 @@
         <%= image_tag asset.medium_preview,
             class: 'asset-thumbnail-image',
             style: 'opacity: 0' %>
-        <%= javascript_include_tag 'assets/asset_thumbnail', nonce: true %>
+        <%= javascript_include_tag 'assets/asset_thumbnail' %>
       <% else %>
         <i class="fas <%= file_fa_icon_class(asset) if asset.file_name %>"></i>
       <% end %>

@@ -11,13 +11,15 @@
   <%= bootstrap_form_tag url: canvas_experiment_url, method: "post", html: {class: "canvas-header"} do |f| %>
     <% if @experiment_managable %>
       <%=link_to "", type: "button", class: "btn btn-primary", id: "canvas-new-module" do %>
-        <span class="hbtn-default">
-          <span class="sn-icon sn-icon-new-task"></span>
-          <%= t("experiments.canvas.edit.new_module") %>
-        </span>
-        <span class="hbtn-hover">
-          <em class="hidden-xs"><%= t("experiments.canvas.edit.new_module_hover") %></em>
-          <span class="visible-xs-inline"><%= t("experiments.canvas.edit.new_module") %></span>
+        <span class="sn-icon sn-icon-new-task"></span>
+        <span>
+          <span class="hbtn-new">
+            <%= t("experiments.canvas.edit.new_module") %>
+          </span>
+          <span class="hbtn-drag">
+            <em class="hidden-xs"><%= t("experiments.canvas.edit.new_module_hover") %></em>
+            <span class="visible-xs-inline"><%= t("experiments.canvas.edit.new_module") %></span>
+          </span>
         </span>
       <% end %>
     <% end %>

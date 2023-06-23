@@ -567,12 +567,12 @@ var ProjectsIndex = (function() {
     let $textFilter = $('#textSearchFilterInput', $projectsFilter);
 
     function getFilterValues() {
-      createdOnFromFilter = selectDate($createdOnFromFilter);
-      createdOnToFilter = selectDate($createdOnToFilter);
-      membersFilter = dropdownSelector.getValues($('.members-filter'));
-      lookInsideFolders = $foldersCB.prop('checked') ? 'true' : '';
-      archivedOnFromFilter = selectDate($archivedOnFromFilter);
-      archivedOnToFilter = selectDate($archivedOnToFilter);
+      createdOnFromFilter = selectDate($createdOnFromFilter) || $createdOnFromFilter.val();
+      createdOnToFilter = selectDate($createdOnToFilter) || $createdOnToFilter.val();
+      membersFilter = dropdownSelector.getData($('.members-filter'));
+      lookInsideFolders = !!$foldersCB.prop('checked');
+      archivedOnFromFilter = selectDate($archivedOnFromFilter) || $archivedOnFromFilter.val();
+      archivedOnToFilter = selectDate($archivedOnToFilter) || $archivedOnToFilter.val();
       projectsViewSearch = $textFilter.val();
     }
 
@@ -580,13 +580,13 @@ var ProjectsIndex = (function() {
       getFilterValues();
 
       currentFilters = {
-        createdOnFromFilter: selectDate($createdOnFromFilter),
-        createdOnToFilter: selectDate($createdOnToFilter),
-        membersFilter: dropdownSelector.getData($('.members-filter')),
-        lookInsideFolders: !!$foldersCB.prop('checked'),
-        archivedOnFromFilter: selectDate($archivedOnFromFilter),
-        archivedOnToFilter: selectDate($archivedOnToFilter),
-        projectsViewSearch: $textFilter.val()
+        createdOnFromFilter: createdOnFromFilter,
+        createdOnToFilter: createdOnToFilter,
+        membersFilter: membersFilter,
+        lookInsideFolders: lookInsideFolders,
+        archivedOnFromFilter: archivedOnFromFilter,
+        archivedOnToFilter: archivedOnToFilter,
+        projectsViewSearch: projectsViewSearch
       };
     }
 
@@ -650,10 +650,10 @@ var ProjectsIndex = (function() {
       currentFilters = null;
 
       dropdownSelector.clearData($membersFilter);
-      if ($createdOnFromFilter.data('DateTimePicker')) $createdOnFromFilter.data('DateTimePicker').clear();
-      if ($createdOnToFilter.data('DateTimePicker')) $createdOnToFilter.data('DateTimePicker').clear();
-      if ($archivedOnFromFilter.data('DateTimePicker')) $archivedOnFromFilter.data('DateTimePicker').clear();
-      if ($archivedOnToFilter.data('DateTimePicker')) $archivedOnToFilter.data('DateTimePicker').clear();
+      $createdOnFromFilter.val('');
+      $createdOnToFilter.val('');
+      $archivedOnFromFilter.val('');
+      $archivedOnToFilter.val('');
       $foldersCB.prop('checked', false);
       $textFilter.val('');
     });

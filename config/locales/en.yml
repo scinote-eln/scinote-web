@@ -1718,7 +1718,6 @@ en:
       no_archived_inventories:  "No archived inventories here"
       no_archived_inventories_matched: "No archived inventories matched your search request"
       snapshot_provisioning_in_progress: 'Editing is disabled while a snapshot is being created. This will only take a moment.'
-
       options_dropdown:
         import_items: 'Import'
         export_items: 'Export'
@@ -1745,6 +1744,15 @@ en:
         description: "Only the structure of the inventory is going to be copied."
         name_placeholder: "My inventory"
         copy: "Copy"
+      modal_export:
+        title: "Export Inventories"
+        description_p1_html:
+          one: "You are about to export <strong>1</strong> inventory in %{team_name}'s team."
+          other: "You are about to export <strong>%{count}</strong> inventories in %{team_name}'s team."
+        description_alert: "This process may take minutes to hours, depending on the file size. Any new data entered afterward won't be included in the export."
+        description_p2: "You will receive an email when the .zip file is ready. A link to your file will also appear in your SciNote notification. For security reasons, this link will expire in 7 days."
+        description_p3_html: "After you confirm this export, you will have <strong>%{remaining_export_requests}</strong> export requests left today (max %{requests_limit} requests per day)."
+        export: "Export"
       modal_create:
         title: "Create new inventory"
         name_label: "Inventory name"
@@ -2252,6 +2260,7 @@ en:
       buttons:
         edit: "Rename"
         duplicate: "Duplicate"
+        export: "Export"
         archive: "Archive"
         restore: "Restore"
         delete: "Delete"
@@ -3476,16 +3485,16 @@ en:
     archived: "Archived"
     sort:
       title: "Sorting"
-      new_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;Started last"
-      old_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Started first"
-      atoz_html: "<i class=\"fas fa-sort-alpha-down\"></i>&nbsp;&nbsp;Name A to Z"
-      ztoa_html: "<i class=\"fas fa-sort-alpha-down-alt\"></i>&nbsp;&nbsp;Name Z to A"
-      archived_new_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;Archived last"
-      archived_old_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Archived first"
-      id_asc_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;ID ascending"
-      id_desc_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;ID descending"
-      due_first_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Due first"
-      due_last_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;Due last"
+      new_html: "Started last"
+      old_html: "Started first"
+      atoz_html: "Name A to Z"
+      ztoa_html: "Name Z to A"
+      archived_new_html: "Archived last"
+      archived_old_html: "Archived first"
+      id_asc_html: "ID ascending"
+      id_desc_html: "ID descending"
+      due_first_html: "Due first"
+      due_last_html: "Due last"
     sort_new:
       new: "Added last"
       old: "Added first"
@@ -3613,11 +3622,12 @@ en:
     templates: "Templates"
     projects: "Projects"
     inventories: "Inventories"
-    protocols: "Protocol templates"
+    protocols: "Protocol"
     labels: "Label"
     teams: "All Teams"
     addons: "Add-Ons"
     label_printer: "Label Printer"
+    fluics_printer: "Fluics Printer"
 
   Add: "Add"
   Asset: "File"

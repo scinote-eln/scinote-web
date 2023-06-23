@@ -36,7 +36,7 @@
 <% end %>
 <% if can_manage_experiment?(my_module.experiment) && my_module.active? %>
 <li>
-  <a href="" class="duplicate-my-module" data-id="<%= my_module.id %>">
+  <a href="<%= batch_clone_my_modules_experiment_path(my_module.experiment) %>" class="duplicate-my-module" data-id="<%= my_module.id %>">
     <i class="sn-icon sn-icon-duplicate"></i>
     <%= t("experiments.table.my_module_actions.duplicate") %>
   </a>

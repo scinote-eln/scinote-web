@@ -41,7 +41,7 @@
       position: absolute;
       right: 4px;
       text-align: center;
-      top: 4px;
+      top: 6px;
 
       &.sn-icon-search.simple-dropdown {
         color: $brand-focus;
@@ -327,7 +327,7 @@
           }
         }
 
-        .sn-icon-close {
+        .sn-icon-close-small {
           display: none;
         }
       }
@@ -344,7 +344,6 @@
       }
 
       .sn-icon-down {
-        margin-right: -6px;
         transform: rotate(180deg);
       }
     }
@@ -421,7 +420,7 @@
     .input-field {
       background: $color-white;
 
-      .ds-tags .sn-icon-close {
+      .ds-tags .sn-icon-close-small {
         display: none;
       }
     }

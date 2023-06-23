@@ -192,14 +192,13 @@
         text-decoration: none;
       }
 
-      .fas {
+      .sn-icon {
         display: inline-block;
         margin-right: 3px;
         text-align: center;
-        width: 10px;
       }
 
-      &:not(.collapsed) .fas {
+      &:not(.collapsed) .sn-icon {
         @include rotate(90deg);
       }
     }
@@ -207,7 +206,7 @@
     .activity-card {
       cursor: default;
       margin-right: 15px;
-      padding: 5px 0 5px 40px;
+      padding: 5px 0 5px 5px;
 
       &:hover {
         background-color: $color-concrete;
@@ -229,17 +228,6 @@
               position: relative;
               top: 1px;
               width: 20px;
-            }
-          }
-
-          &:nth-child(1) {
-            height: 20px;
-            margin-left: -35px;
-
-            .global-avatar-container {
-              margin: 0 5px 0 0;
-              position: relative;
-              top: 10px;
             }
           }
         }
@@ -363,14 +351,13 @@
         border: 0;
         cursor: pointer;
         float: left;
+        justify-content: start;
         margin: 0;
-        opacity: .7;
         text-align: left;
         width: calc(50% - 25px);
 
         &.selected {
-          background: $color-alto;
-          opacity: 1;
+          background: var(--sn-super-light-grey);
         }
 
         &:nth-child(even) {

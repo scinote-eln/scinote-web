@@ -34,7 +34,7 @@
         <%= hidden_field_tag :scope, @pre_auth.scope %>
         <%= hidden_field_tag :code_challenge, @pre_auth.code_challenge %>
         <%= hidden_field_tag :code_challenge_method, @pre_auth.code_challenge_method %>
-        <%= submit_tag t('general.cancel'), class: "btn btn-default" %>
+        <%= submit_tag t('general.cancel'), class: "btn btn-secondary" %>
       <% end %>
     </div>
     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-left doorkeeper-actions-right">

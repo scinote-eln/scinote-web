@@ -85,7 +85,9 @@
     }
 
     .toolbar-left-block {
+      align-items: center;
       display: flex;
+      gap: .25rem;
 
       >* {
         margin-left: .25em;
@@ -104,7 +106,7 @@
     .toolbar-right-block {
       display: flex;
       flex-shrink: 0;
-      gap: .25rem;
+      gap: .5rem;
 
       .active-reminders-filter {
         align-items: center;
@@ -164,8 +166,9 @@
     .repository-toolbar {
 
       .btn:not(.prevent-shrink) {
-        padding: 7px;
-        width: 36px;
+        height: 40px;
+        padding: .5rem;
+        width: 40px;
 
         .button-text {
           display: none;
