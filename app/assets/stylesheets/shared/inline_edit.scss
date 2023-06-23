@@ -64,17 +64,6 @@
   &.editing {
     margin-top: 0;
 
-    .sci-inline-edit__content {
-      &.error {
-        border-color: $brand-danger;
-        margin-bottom: 16px;
-
-        textarea {
-          border-color: $brand-danger;
-        }
-      }
-    }
-
     .sci-inline-edit__control {
       &.btn-disabled {
         background: $color-silver-chalice;
