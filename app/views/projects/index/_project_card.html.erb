@@ -8,7 +8,8 @@
       <span class="sci-checkbox-label"></span>
     </div>
   </div>
-    <div class="project-code-cell table-cell">
+
+  <div class="project-code-cell table-cell">
     <span><%= project.code %></span>
   </div>
 
@@ -30,6 +31,7 @@
       <% end %>
     <% end %>
   </div>
+
   <div class="actions actions-cell table-cell">
     <div
       class="dropdown dropdown-async project-actions-menu  <%= 'new-comments' if has_unseen_comments?(project) %>"
