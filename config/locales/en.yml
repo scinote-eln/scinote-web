@@ -2846,7 +2846,7 @@ en:
       private_description: "My protocols are only visible to you."
       create_new: "New protocol template"
       create_new_tooltip: "Create new protocol template"
-      import_tooltip: "import"
+      import_tooltip: "Import"
       edit: "Edit"
       clone_btn: "Copy"
       import: "Import"
