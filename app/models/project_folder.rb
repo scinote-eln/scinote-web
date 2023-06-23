@@ -97,6 +97,13 @@ class ProjectFolder < ApplicationRecord
     Project.where(project_folder: ProjectFolder.inner_folders(team, self) + [self])
   end
 
+  def archived_branch?
+    return false if active? && parent_folder.blank?
+    return true if archived?
+
+    parent_folder.present? && parent_folder.archived_branch?
+  end
+
   private
 
   def inherit_team_from_parent_folder

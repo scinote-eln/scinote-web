@@ -21,7 +21,7 @@ module Navigator
       {
         id: folder.code,
         name: folder.name,
-        url: projects_path(project_folder_id: folder.id, view_mode: archived ? 'archived' : 'active'),
+        url: project_folder_path(folder, view_mode: archived ? 'archived' : 'active'),
         archived: folder.archived,
         type: :folder,
         has_children: folder.has_children,
@@ -173,27 +173,31 @@ module Navigator
       my_modules
     end
 
-    def build_folder_tree(folder, children, archived = false)
+    def build_folder_tree(folder, children)
+      archived = params[:archived] == 'true'
       tree = fetch_projects(folder.parent_folder, archived).map { |i| project_serializer(i, archived) } +
              fetch_project_folders(folder.parent_folder, archived).map { |i| folder_serializer(i, archived) }
       tree.find { |i| i[:id] == folder.code }[:children] = children
-      tree = build_folder_tree(folder.parent_folder, tree, archived) if folder.parent_folder.present?
+      tree = build_folder_tree(folder.parent_folder, tree) if folder.parent_folder.present?
       tree
     end
 
-    def project_level_branch(object = nil, archived = false)
+    def project_level_branch(object = nil)
+      archived = params[:archived] == 'true'
       fetch_projects(object, archived)
         .map { |i| project_serializer(i, archived) } +
         fetch_project_folders(object, archived)
         .map { |i| folder_serializer(i, archived) }
     end
 
-    def experiment_level_branch(object, archived = false)
+    def experiment_level_branch(object)
+      archived = params[:archived] == 'true'
       fetch_experiments(object, archived)
         .map { |i| experiment_serializer(i, archived) }
     end
 
-    def my_module_level_branch(experiment, archived = false)
+    def my_module_level_branch(experiment)
+      archived = params[:archived] == 'true'
       fetch_my_modules(experiment, archived)
         .map { |i| my_module_serializer(i, archived) }
     end

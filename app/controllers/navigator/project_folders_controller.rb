@@ -5,12 +5,12 @@ module Navigator
     before_action :load_project_folder
 
     def show
-      folder = project_level_branch(@project_folder, params[:archived] == 'true')
+      folder = project_level_branch(@project_folder)
       render json: { items: folder }
     end
 
     def tree
-      tree = project_level_branch(@project_folder, params[:archived] == 'true')
+      tree = project_level_branch(@project_folder)
       tree = build_folder_tree(@project_folder, tree)
       render json: { items: tree }
     end
