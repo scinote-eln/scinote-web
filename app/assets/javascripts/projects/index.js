@@ -452,7 +452,6 @@ var ProjectsIndex = (function() {
       dataType: 'json',
       data: { ...requestParams, ...{ page: 1 } },
       success: function(data) {
-        $('#breadcrumbsWrapper').html(data.breadcrumbs_html);
         $(projectsWrapper).find('.projects-title').html(data.title_html);
         $(toolbarWrapper).html(data.toolbar_html);
         initProjectsViewModeSwitch();
@@ -570,7 +569,7 @@ var ProjectsIndex = (function() {
       createdOnFromFilter = selectDate($createdOnFromFilter) || $createdOnFromFilter.val();
       createdOnToFilter = selectDate($createdOnToFilter) || $createdOnToFilter.val();
       membersFilter = dropdownSelector.getData($('.members-filter'));
-      lookInsideFolders = !!$foldersCB.prop('checked');
+      lookInsideFolders = $foldersCB.prop('checked') || '';
       archivedOnFromFilter = selectDate($archivedOnFromFilter) || $archivedOnFromFilter.val();
       archivedOnToFilter = selectDate($archivedOnToFilter) || $archivedOnToFilter.val();
       projectsViewSearch = $textFilter.val();
@@ -595,7 +594,7 @@ var ProjectsIndex = (function() {
 
       $createdOnFromFilter.val(currentFilters.createdOnFromFilter);
       $createdOnToFilter.val(currentFilters.createdOnToFilter);
-      $foldersCB.attr('checked', currentFilters.lookInsideFolders);
+      $foldersCB.attr('checked', !!currentFilters.lookInsideFolders);
       dropdownSelector.setData($('.members-filter'), currentFilters.membersFilter);
       $archivedOnFromFilter.val(currentFilters.archivedOnFromFilter);
       $archivedOnToFilter.val(currentFilters.archivedOnToFilter);

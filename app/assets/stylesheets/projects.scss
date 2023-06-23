@@ -562,25 +562,6 @@ li.module-hover {
 
 // New projects page
 
-#breadcrumbsWrapper {
-  background: $color-white;
-  height: 1em;
-  margin-left: -2em;
-  padding: 0 2em;
-  width: calc(100% + 4em);
-
-  .projects-breadcrumbs {
-    padding: .75em 0;
-  }
-
-  &.breadcrumbs-in-secondary-navigation {
-    .projects-breadcrumbs {
-      margin-left: 3em;
-      padding-bottom: 0;
-    }
-  }
-}
-
 .projects-index {
   .content-header {
     height: var(--content-header-size);
