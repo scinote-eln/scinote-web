@@ -16,7 +16,10 @@ class CreateProjectService
       @params[:created_by] = @user
       @params[:last_modified_by] = @user
 
-      @project = @team.projects.create!(@params)
+      @project = @team.projects.build(@params)
+      @project.default_public_user_role ||= UserRole.find_predefined_viewer_role if @project.visible?
+      @project.save!
+
       create_project_activity
     end
     @project
