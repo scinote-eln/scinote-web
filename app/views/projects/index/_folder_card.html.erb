@@ -27,7 +27,9 @@
     </div>
   <% end %>
 
-  <% 5.times do %>
+  <%# match the number of columns in projects %>
+  <% additional_columns = folder.archived_branch? ? 6 : 5 %>
+  <% additional_columns.times do %>
     <div class="name table-cell">
     </div>
   <% end %>
