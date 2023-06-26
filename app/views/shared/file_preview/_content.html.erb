@@ -88,6 +88,7 @@
         <%= link_to asset_file_preview_path(previous_asset),
           class: "previous-asset gallery-switcher",
           data: {id: previous_asset.id, gallery_elements: gallery} do %>
+          <i class="sn-icon sn-icon-arrow-left"></i>
           <% if previous_asset.previewable? %>
             <%= image_tag previous_asset.medium_preview,
                 class: 'asset-image',
@@ -95,7 +96,6 @@
           <% else %>
             <i class="fas <%= file_fa_icon_class(previous_asset) if previous_asset.file_name %>"></i>
           <% end %>
-          <i class="sn-icon sn-icon-navigate-before"></i>
           <span class="file-name"><%= previous_asset.file_name %></span>
         <% end %>
       <% end %>
@@ -106,8 +106,6 @@
         <%= link_to asset_file_preview_path(next_asset),
           class: "next-asset gallery-switcher",
           data: {id: next_asset.id, gallery_elements: gallery} do %>
-          <span class="file-name"><%= next_asset.file_name %></span>
-          <i class="sn-icon sn-icon-navigate-next"></i>
           <% if next_asset.previewable? %>
             <%= image_tag next_asset.medium_preview,
                 class: 'asset-image',
@@ -115,6 +113,8 @@
           <% else %>
             <i class="fas <%= file_fa_icon_class(next_asset) if next_asset.file_name %>"></i>
           <% end %>
+          <span class="file-name"><%= next_asset.file_name %></span>
+          <i class="sn-icon sn-icon-arrow-right"></i>
         <% end %>
       <% end %>
     </div>

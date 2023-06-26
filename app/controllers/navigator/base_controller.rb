@@ -138,6 +138,8 @@ module Navigator
                            'SUM(CASE WHEN my_modules.archived IS FALSE OR
                                           (experiments.archived IS TRUE AND my_modules.id IS NOT NULL)
                                      THEN 1 ELSE 0 END) > 0 AS has_children'
+                         elsif project.archived?
+                           'COUNT(my_modules.id) > 0 AS has_children'
                          else
                            'SUM(CASE WHEN my_modules.archived IS TRUE OR
                                           (experiments.archived IS TRUE AND my_modules.id IS NOT NULL)
