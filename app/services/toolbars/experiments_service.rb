@@ -79,7 +79,7 @@ module Toolbars
       {
         name: 'access',
         label: I18n.t('general.access'),
-        icon: 'fa fa-door-open',
+        icon: 'sn-icon sn-icon-project-member-access',
         button_class: 'access-btn',
         path: path,
         type: 'remote-modal'
