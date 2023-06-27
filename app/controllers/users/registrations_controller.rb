@@ -15,7 +15,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def update_resource(resource, params)
-    @user_avatar_url = avatar_path(current_user, :thumb)
 
     if params.include? :change_password
       # Special handling if changing password

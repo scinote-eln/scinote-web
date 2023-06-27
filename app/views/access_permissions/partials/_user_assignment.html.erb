@@ -2,9 +2,7 @@
 
 <div class="member-item">
   <div class="user-assignment-info">
-    <div class="global-avatar-container">
-      <%= image_tag avatar_path(user, :icon_small), title: current_assignee_name(user), class: 'img-circle pull-left' %>
-    </div>
+    <%= render partial: 'shared/user_avatar', locals: { user: user, title: current_assignee_name(user) } %>
     <div>
       <%= current_assignee_name(user) %>
     </div>

@@ -72,7 +72,9 @@ class UserMyModulesController < ApplicationController
               user: {
                 id: @um.user.id,
                 full_name: @um.user.full_name,
-                avatar_url: avatar_path(@um.user, :icon_small),
+
+                avatar_url: (@um.user.avatar.attached? ? avatar_path(@um.user, :icon_small) : nil),
+                initials: @um.user.initials,
                 user_module_id: @um.id
               }, status: :ok
             }
@@ -136,7 +138,8 @@ class UserMyModulesController < ApplicationController
         value: user.id,
         label: escape_input(user.full_name),
         params: {
-          avatar_url: avatar_path(user, :icon_small),
+          avatar_url: (user.avatar.attached? ? avatar_path(user, :icon_small) : nil),
+          initials: user.initials,
           designated: user.designated,
           assign_url: my_module_user_my_modules_path(@my_module)
         }

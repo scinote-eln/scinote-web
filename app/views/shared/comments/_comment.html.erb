@@ -2,7 +2,7 @@
 <div class="comment-container <%= 'current-user' if user == current_user %>" data-comment-id="<%= comment.id %>">
   <% unless skip_header%>
     <div class="comment-header">
-      <%= image_tag avatar_path(comment.user, :icon_small), class: 'user-avatar' %>
+      <%= render partial: 'shared/user_avatar', locals: { user: comment.user } %>
       <div class="user-name">
         <%= user == current_user ? 'You' : comment.user.full_name %>
       </div>

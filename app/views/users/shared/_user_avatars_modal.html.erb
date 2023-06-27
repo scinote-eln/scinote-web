@@ -12,7 +12,7 @@
         <div class="modal-body">
           <div class="upload-block">
               <div class="current-avatar">
-                <%= image_tag avatar_path(current_user, :medium) %>
+                <%= render partial: 'shared/user_avatar', locals: { user: current_user } %>
                 <%= file_field_tag :raw_avatar, style: "display:none" %>
                 <%= hidden_field_tag :new_avatar, "" %>
               </div>

@@ -6,7 +6,7 @@
 <div class="atwho-scroll-container">
   <% users.limit(Constants::ATWHO_SEARCH_LIMIT).each do |user| %>
     <li class="atwho-user" data-full-name="<%= user.full_name %>" data-id="<%= user.id.base62_encode %>" data-type="rep_item">
-      <img src="<%= avatar_path(user, :icon_small) %>" class="avatar" />
+      <%= render partial: 'shared/user_avatar', locals: { user: user } %>
       <div class="user-info">
         <div class="user-name item-text"><%= user.full_name %></div>
         <div class="user-email item-text"><%= user.email %></div>

@@ -1,0 +1,10 @@
+<% title = user.full_name unless defined?(title)%>
+<div class="relative w-6 h-6" title="<%= title %>">
+  <% if user.avatar.attached? %>
+    <%= image_tag avatar_path(user, :icon_small), class: 'rounded-full w-full h-full' %>
+  <% else %>
+    <div class="w-full h-full rounded-full border border-sn-light-grey  bg-sn-super-light-grey flex justify-center items-center">
+      <span class="text-[.625rem] leading-3 font-normal"><%= user.initials %></span>
+    </div>
+  <% end %>
+</div>

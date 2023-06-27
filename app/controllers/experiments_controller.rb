@@ -485,7 +485,10 @@ class ExperimentsController < ApplicationController
   def assigned_users_to_tasks
     users = current_team.users.where(id: @experiment.my_modules.joins(:user_my_modules).select(:user_id))
                         .search(false, params[:query]).map do |u|
-      { value: u.id, label: escape_input(u.name), params: { avatar_url: avatar_path(u, :icon_small) } }
+      { value: u.id, label: escape_input(u.name), params: {
+        avatar_url: (u.avatar.attached? ? avatar_path(u, :icon_small) : nil),
+        initials: u.initials
+      } }
     end
 
     render json: users, status: :ok

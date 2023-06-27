@@ -62,7 +62,7 @@
     </div>
     <div v-if="user" class="dropdown" :title="i18n.t('nav.user_profile')">
       <div class="sci--navigation--top-menu-user btn btn-light icon-btn btn-black" data-toggle="dropdown">
-        <img class="avatar w-6 h-6" :src="user.avatar_url">
+        <UserAvatar :title="user.name" :initials="user.initials" :avatarUrl="user.avatar_url" />
       </div>
       <div class="dropdown-menu dropdown-menu-right top-menu-user-dropdown">
         <li v-for="(item, i) in userMenu" :key="i">
@@ -84,13 +84,15 @@
   import NotificationsFlyout from './notifications/notifications_flyout.vue'
   import DropdownSelector from '../shared/dropdown_selector.vue'
   import Select from "../shared/select.vue";
+  import UserAvatar from "../shared/user_avatar.vue"
 
   export default {
     name: 'TopMenuContainer',
     components: {
       DropdownSelector,
       NotificationsFlyout,
-      Select
+      Select,
+      UserAvatar
     },
     props: {
       url: String,

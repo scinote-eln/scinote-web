@@ -220,7 +220,7 @@
       labelHTML: true,
       tagClass: 'my-module-user-tags',
       tagLabel: (data) => {
-        return `<img class="img-responsive block-inline" src="${data.params.avatar_url}" alt="${data.label}"/>
+        return `${userAvatar(data.params.avatar_url, data.params.initials)}
                 <span style="user-full-name block-inline">${data.label}</span>`;
       },
       customDropdownIcon: () => {
@@ -262,6 +262,7 @@
             label: result.user.full_name,
             params: {
               avatar_url: result.user.avatar_url,
+              initials: result.user.initials,
               user_module_id: result.user.user_module_id
             }
           }, true);

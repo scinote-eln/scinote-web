@@ -36,7 +36,8 @@ class NavigationsController < ApplicationController
   def user
     {
       name: current_user.full_name,
-      avatar_url: avatar_path(current_user, :icon_small),
+      initials: current_user.initials,
+      avatar_url: (current_user.avatar.attached? ? avatar_path(current_user, :icon_small) : nil),
       sign_out_url: destroy_user_session_path
     }
   end

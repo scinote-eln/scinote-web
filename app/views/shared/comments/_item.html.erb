@@ -17,7 +17,7 @@
           <% base64_encoded = defined?(export_all) && export_all %>
           <%= image_tag user_avatar_absolute_url(comment.user, :icon_small, base64_encoded), class: 'avatar' %>
         <% else %>
-          <%= image_tag avatar_path(comment.user, :icon_small), class: 'avatar' %>
+          <%= render partial: 'shared/user_avatar', locals: { user: comment.user } %>
         <% end %>
       </span>
     </div>
