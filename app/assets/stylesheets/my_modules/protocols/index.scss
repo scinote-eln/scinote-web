@@ -385,6 +385,10 @@
   }
 
   .my-module-user-tags {
+    .user-full-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
     img {
       border-radius: 50%;

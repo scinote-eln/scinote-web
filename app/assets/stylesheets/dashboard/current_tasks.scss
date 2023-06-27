@@ -226,7 +226,7 @@
       }
 
       &:hover > * {
-        background: $color-concrete;
+        background: var(--sn-super-light-grey);
       }
     }
   }
