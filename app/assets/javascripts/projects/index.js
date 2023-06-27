@@ -462,6 +462,7 @@ var ProjectsIndex = (function() {
 
         updateProjectsToolbar();
         initProjectsFilters();
+        initSorting();
 
         // set current sort item
         if (projectsCurrentSort) {
@@ -535,7 +536,7 @@ var ProjectsIndex = (function() {
   }
 
   function initSorting() {
-    $(document).on('click', '#sortMenuDropdown a', function() {
+    $('#sortMenuDropdown a').on('click', function() {
       if (projectsCurrentSort !== $(this).data('sort')) {
         $('#sortMenuDropdown a').removeClass('selected');
         projectsCurrentSort = $(this).data('sort');
@@ -708,7 +709,6 @@ var ProjectsIndex = (function() {
     initEditButton();
     initMoveButton();
     initProjectsViewModeSwitch();
-    initSorting();
     initSelectAllCheckbox();
     initArchiveRestoreButton();
     loadCardsView();
