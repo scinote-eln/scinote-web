@@ -918,6 +918,11 @@ class ProtocolsController < ApplicationController
     }
   end
 
+  def import_docx
+    @job = Protocols::DocxImportJob.perform_later(params[:files])
+    render json: { job_id: @job.job_id }
+  end
+
   private
 
   def set_importer
