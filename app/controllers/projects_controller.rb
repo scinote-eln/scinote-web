@@ -379,7 +379,10 @@ class ProjectsController < ApplicationController
 
   def users_filter
     users = current_team.users.search(false, params[:query]).map do |u|
-      { value: u.id, label: escape_input(u.name), params: { avatar_url: avatar_path(u, :icon_small) } }
+      { value: u.id, label: escape_input(u.name), params: {
+        avatar_url: (u.avatar.attached? ? avatar_path(u, :icon_small) : nil),
+        initials: u.initials
+      } }
     end
 
     render json: users, status: :ok

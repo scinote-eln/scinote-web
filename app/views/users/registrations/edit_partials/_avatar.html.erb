@@ -1,9 +1,8 @@
 <div data-part="view">
   <div class="form-group user-settings-edit-avatar">
-    <% @user_avatar_url ||= avatar_path(current_user, :thumb) %>
     <div class="avatar-container">
       <div class="avatar-image">
-          <%= image_tag @user_avatar_url %>
+        <%= render partial: 'shared/user_avatar', locals: { user: current_user } %>
       </div>
       <div class="avatar-edit"></div>
       <div class="avatar-edit-text">

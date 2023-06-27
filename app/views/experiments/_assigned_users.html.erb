@@ -6,7 +6,7 @@
     <div  class="assigned-users-container" tabindex="0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
       <% users[0..3].each_with_index do |user, i| %>
         <span class="avatar-container" style="z-index: <%= 5 - i %>">
-          <%= image_tag avatar_path(user, :icon_small), title: user.full_name %>
+          <%= render partial: 'shared/user_avatar', locals: { user: user } %>
         </span>
       <% end %>
       <% if users.length > 4 %>

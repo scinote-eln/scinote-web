@@ -104,10 +104,10 @@ var ProtocolsIndex = (function() {
       dropdownSelector.init(selector, {
         optionClass: 'checkbox-icon users-dropdown-list',
         optionLabel: (data) => {
-          return `<img class="item-avatar" src="${data.params.avatar_url}"/> ${data.label}`;
+          return `${userAvatar(data.params.avatar_url, data.params.initials)} ${data.label}`;
         },
         tagLabel: (data) => {
-          return `<img class="item-avatar" src="${data.params.avatar_url}"/> ${data.label}`;
+          return `${userAvatar(data.params.avatar_url, data.params.initials)} ${data.label}`;
         },
         labelHTML: true,
         tagClass: 'users-dropdown-list'

@@ -343,7 +343,7 @@ var ExperimnetTable = {
             <div class="user-container">
               ${checkbox}
               <div class="user-avatar ${isArchivedView ? 'archived' : ''}">
-                <img src="${user.params.avatar_url}"></img>
+                ${userAvatar(user.params.avatar_url, user.params.initials)}
               </div>
               <div class="user-name">
                 ${user.label}
@@ -797,10 +797,10 @@ ExperimnetTable.filters.push({
     dropdownSelector.init($('.assigned-filter', $container), {
       optionClass: 'checkbox-icon users-dropdown-list',
       optionLabel: (data) => {
-        return `<img class="item-avatar" src="${data.params.avatar_url}"/> ${data.label}`;
+        return `${userAvatar(data.params.avatar_url, data.params.initials)} ${data.label}`;
       },
       tagLabel: (data) => {
-        return `<img class="item-avatar" src="${data.params.avatar_url}"/> ${data.label}`;
+        return `${userAvatar(data.params.avatar_url, data.params.initials)} ${data.label}`;
       },
       labelHTML: true,
       tagClass: 'users-dropdown-list'

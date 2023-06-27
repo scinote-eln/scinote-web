@@ -113,7 +113,7 @@
       <% step.step_comments.each do |comment| %>
         <div class="print-comment-container">
           <div class="print-comment-header">
-            <%= image_tag avatar_path(comment.user, :icon_small), class: 'user-avatar' %>
+            <%= render partial: 'shared/user_avatar', locals: { user: comment.user } %>
             <div class="user-name">
               <%= comment.user.full_name %>
             </div>

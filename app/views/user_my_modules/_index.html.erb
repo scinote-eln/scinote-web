@@ -5,7 +5,11 @@
                    [
                      user.full_name,
                      user.id,
-                     {'data-params' => {avatar_url: avatar_path(user, :icon_small), user_module_id: um.id }.to_json}
+                     {'data-params' => {
+                      avatar_url: ( user.avatar.attached? ? avatar_path(user, :icon_small) : nil ),
+                      initials: user.initials,
+                      user_module_id: um.id
+                     }.to_json}
                    ]
                  }),
                  {

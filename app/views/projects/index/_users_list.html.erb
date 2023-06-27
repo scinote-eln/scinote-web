@@ -1,7 +1,5 @@
 <% project.user_assignments[0..3].each do |user_assigment| %>
-  <span class="global-avatar-container">
-    <%= image_tag(avatar_path(user_assigment.user, :icon_small), title: user_name_with_role(user_assigment)) %>
-  </span>
+  <%= render partial: 'shared/user_avatar', locals: { user: user_assigment.user, title: user_name_with_role(user_assigment) } %>
 <% end %>
 
 <% more_users = project.user_assignments[4..-1].to_a %>
