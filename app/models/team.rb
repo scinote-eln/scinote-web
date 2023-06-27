@@ -193,6 +193,14 @@ class Team < ApplicationRecord
     )
   end
 
+  def team_task_shareable?
+    false # dummy data before backend implementation
+  end
+
+  def number_of_task_shared
+    1 # dummy data before backend implementation
+  end
+
   private
 
   def generate_template_project

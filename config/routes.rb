@@ -224,6 +224,8 @@ Rails.application.routes.draw do
         post 'export_projects'
         get 'sidebar'
         get 'export_projects_modal'
+        post 'shared_tasks_toggle'
+        get 'disable_tasks_sharing_modal'
         # Used for atwho (smart annotations)
         get 'atwho_users', to: 'at_who#users'
         get 'atwho_menu', to: 'at_who#menu'
