@@ -28,7 +28,7 @@ var DataTableHelpers = (function() {
         .addClass('sci-input-field search-field')
         .css('margin', 0);
       $('.dataTables_filter').append(`
-          <button class="btn btn-light icon-btn search-icon"
+          <button class="btn btn-light icon-btn search-icon btn-black"
                   title="${I18n.t('repositories.show.button_tooltip.search')}">
             <i class="sn-icon sn-icon-search"></i>
           </button>
