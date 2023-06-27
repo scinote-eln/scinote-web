@@ -1012,7 +1012,7 @@ var dropdownSelector = (function() {
       currentData = getCurrentData($(selector).next());
       currentData.push(value);
       setData($(selector), currentData, skip_event);
-      if (selector.data('config').tagClass) {
+      if ($(selector).data('config').tagClass) {
         appendOptionToSelector(selector, value);
       }
 
