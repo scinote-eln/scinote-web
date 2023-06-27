@@ -353,7 +353,7 @@
   .dataTable {
     tbody {
       tr:hover {
-        background-color: $color-concrete;
+        background-color: var(--sn-super-light-grey);
 
         .assigned-column {
           .repository-row-edit-icon {
