@@ -49,11 +49,12 @@ class ZipExport < ApplicationRecord
     I18n.backend.date_format = user.settings[:date_format] || Constants::DEFAULT_DATE_FORMAT
     zip_input_dir = FileUtils.mkdir_p(File.join(Rails.root, "tmp/temp_zip_#{Time.now.to_i}")).first
     tmp_zip_dir = FileUtils.mkdir_p(File.join(Rails.root, 'tmp/zip-ready')).first
-    tmp_full_zip_name = File.join(tmp_zip_dir, "export_#{Time.now.strftime('%F %H-%M-%S_UTC')}.zip")
+    tmp_zip_name = "export_#{Time.now.strftime('%F %H-%M-%S_UTC')}.zip"
+    tmp_full_zip_name = File.join(tmp_zip_dir, tmp_zip_name)
 
     fill_content(zip_input_dir, data, type, options)
     zip!(zip_input_dir, tmp_full_zip_name)
-    zip_file.attach(io: File.open(tmp_full_zip_name), filename: tmp_full_zip_name)
+    zip_file.attach(io: File.open(tmp_full_zip_name), filename: tmp_zip_name)
     generate_notification(user) if save
   ensure
     FileUtils.rm_rf([zip_input_dir, tmp_full_zip_name], secure: true)

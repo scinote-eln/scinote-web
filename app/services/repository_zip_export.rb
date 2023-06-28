@@ -80,9 +80,9 @@ module RepositoryZipExport
                      when -6
                        I18n.l(row.created_at, format: :full)
                      when -7
-                       row.archived_by.full_name
+                       row.archived_by.present? ? row.archived_by.full_name : ''
                      when -8
-                       I18n.l(row.archived_on, format: :full)
+                       row.archived_on.present? ? I18n.l(row.archived_on, format: :full) : ''
                      else
                        cell = row.repository_cells
                                  .find_by(repository_column_id: c_id)
