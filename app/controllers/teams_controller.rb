@@ -87,6 +87,28 @@ class TeamsController < ApplicationController
     return render_403 unless can_manage_team?(@team)
 
     @team.toggle!(:shareable_links_enabled)
+
+    if @team.shareable_links_enabled?
+      Activities::CreateActivityService
+        .call(activity_type: :team_sharing_tasks_enabled,
+              owner: current_user,
+              subject: @team,
+              team: @team,
+              message_items: {
+                team: @team.id,
+                user: current_user.id
+              })
+    else
+      Activities::CreateActivityService
+        .call(activity_type: :team_sharing_tasks_disabled,
+              owner: current_user,
+              subject: @team,
+              team: @team,
+              message_items: {
+                team: @team.id,
+                user: current_user.id
+              })
+    end
   end
 
   def routing_error(error = 'Routing error', status = :not_found, exception=nil)
