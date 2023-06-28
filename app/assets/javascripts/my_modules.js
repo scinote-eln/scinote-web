@@ -103,7 +103,7 @@
     if ($('.status-flow-dropdown').data('status-changing')) {
       setTimeout(() => { checkStatusState(); }, STATUS_POLLING_INTERVAL);
     }
-    $('.task-flows').on('click', '#dropdownTaskFlowList > li[data-state-id]', function() {
+    $('.task-sharing-and-flows').on('click', '#dropdownTaskFlowList > li[data-state-id]', function() {
       var list = $('#dropdownTaskFlowList');
       var item = $(this);
       animateSpinner();

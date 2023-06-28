@@ -1058,6 +1058,9 @@ en:
       recent_protocols_from_repository: "Recent protocols from the Repository"
       code: "ID: "
       recent_protocols_from_repository: "Recent protocols from the Templates"
+    shareable_links:
+      share: "Share"
+      shared: "Shared"
     notes:
       title: "Notes"
       no_description: "No task description"
