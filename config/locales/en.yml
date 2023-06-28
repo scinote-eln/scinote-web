@@ -2598,6 +2598,16 @@ en:
           new_team: "New team"
         show:
           enter_description: "Enter Team description"
+          tasks_share:
+            enable_label: "Enable task sharing"
+            enable_success_message: "Task sharing is enabled."
+            disable_success_message: "Task sharing is disabled."
+            failure_message: "Something went wrong."
+            disable_modal:
+              title: "Disable task sharing"
+              description_p1: "Are you sure to disable task sharing in %{team_name}?"
+              description_p2: "This action will deactivate sharing tasks and permanently deactivate all shared links for %{counter} task(s). Any user who has shared links will no longer be able to access the shared tasks."
+              disable_button: "Disable"
         index:
           description_label: "Team is a group of SciNote users who are working on the same projects and share the inventories."
           member_of:

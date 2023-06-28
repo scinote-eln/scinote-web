@@ -6,7 +6,8 @@ class TeamsController < ApplicationController
   attr_reader :current_folder
   helper_method :current_folder
 
-  before_action :load_vars, only: %i(sidebar export_projects export_projects_modal)
+  before_action :load_vars, only: %i(sidebar export_projects export_projects_modal
+                                     disable_tasks_sharing_modal shared_tasks_toggle)
   before_action :load_current_folder, only: :sidebar
   before_action :check_read_permissions, except: :view_type
   before_action :check_export_projects_permissions, only: %i(export_projects_modal export_projects)
@@ -72,6 +73,17 @@ class TeamsController < ApplicationController
       render json: { flash: I18n.t('projects.export_projects.zero_projects_flash') }, status: :unprocessable_entity
     end
   end
+
+  def disable_tasks_sharing_modal
+    render json: {
+      html: render_to_string(
+        partial: 'users/settings/teams/destroy_tasks_sharing_modal.html.erb',
+        locals: {}
+      )
+    }
+  end
+
+  def shared_tasks_toggle; end
 
   def routing_error(error = 'Routing error', status = :not_found, exception=nil)
     redirect_to root_path
