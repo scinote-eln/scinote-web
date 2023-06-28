@@ -67,8 +67,8 @@
         this.value = value
       },
       renderOption(data) {
-        return `<span class="user-filter-option" title="${data.label.trim()} | ${data.params.email}">
-                  <img class="item-avatar" src="${data.params.avatar_url}"/>
+        return `<span class="user-filter-option flex gap-2 items-center" title="${data.label.trim()} | ${data.params.email}">
+                  ${userAvatar(data.params.avatar_url, data.params.initials)}
                   ${data.label}
                 </span>`;
       }

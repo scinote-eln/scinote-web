@@ -10,5 +10,5 @@ function userAvatar(url, initials, title) {
               </div>`;
   }
 
-  return `<div class="relative w-6 h-6" title="${title}">${avatar}</div>`;
+  return `<div class="relative w-6 h-6 shrink-0" title="${title}">${avatar}</div>`;
 }
