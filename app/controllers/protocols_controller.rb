@@ -591,7 +591,7 @@ class ProtocolsController < ApplicationController
                 message_items: {
                   protocol: protocol.id
                 })
-
+        generate_import_protocol_notification(current_user, protocol)
         format.json do
           render json: { status: :ok }, status: :ok
         end
@@ -766,20 +766,7 @@ class ProtocolsController < ApplicationController
         end
         z_output_stream.rewind
 
-        protocol_name = get_protocol_name(@protocols[0])
-
-        # Now generate filename of the archive and send file to user
-        if @protocols.count == 1
-          # Try to construct an OS-safe file name
-          file_name = 'protocol.eln'
-          unless protocol_name.nil?
-            escaped_name = protocol_name.gsub(/[^0-9a-zA-Z\-.,_]/i, '_')
-                                        .downcase[0..Constants::NAME_MAX_LENGTH]
-            file_name = escaped_name + '.eln' unless escaped_name.blank?
-          end
-        elsif @protocols.length > 1
-          file_name = 'protocols.eln'
-        end
+        file_name = export_protocol_file_name(@protocols)
 
         @protocols.each do |protocol|
           if params[:my_module_id]
@@ -940,6 +927,46 @@ class ProtocolsController < ApplicationController
     when '1.1'
       @importer = ProtocolsImporterV2.new(current_user, current_team)
     end
+  end
+
+  def generate_import_protocol_notification(user, protocol)
+    protocol_download_link = "<a data-id='#{protocol.id}' " \
+                             "data-turbolinks='false' " \
+                             "href='#{Rails.application
+                                           .routes
+                                           .url_helpers
+                                           .export_protocols_path(protocol_ids: [protocol.id])}'>" \
+                             "#{export_protocol_file_name([protocol])}</a>"
+
+    notification = Notification.create(
+      type_of: :deliver,
+      title: I18n.t('protocols.import_export.import_protocol_notification.title', link: protocol_download_link),
+      message:  "#{I18n.t('protocols.import_export.import_protocol_notification.message')} <a data-id='#{protocol.id}' " \
+                "data-turbolinks='false' " \
+                "href='#{Rails.application
+                              .routes
+                              .url_helpers
+                              .protocol_path(protocol)}'>" \
+                "#{protocol.name}</a>"
+    )
+
+    UserNotification.create(notification: notification, user: user)
+  end
+
+  def export_protocol_file_name(protocols)
+    protocol_name = get_protocol_name(protocols[0])
+
+    if protocols.count == 1
+      file_name = 'protocol.eln'
+      unless protocol_name.nil?
+        escaped_name = protocol_name.gsub(/[^0-9a-zA-Z\-.,_]/i, '_')
+                                    .downcase[0..Constants::NAME_MAX_LENGTH]
+        file_name = escaped_name + '.eln' unless escaped_name.blank?
+      end
+    elsif protocols.length > 1
+      file_name = 'protocols.eln'
+    end
+    file_name
   end
 
   def valid_protocol_json(json)
