@@ -3,7 +3,7 @@
     <i class="sn-icon sn-icon-navigator sci--layout--navigator-open cursor-pointer p-1.5 border rounded border-sn-light-grey mr-4"></i>
     <h1 class="project-name">
       <% if @project.archived? %>
-        <i class="fas fa-archive" data-view-mode="archived"></i>
+        <span><%= t('labels.archived')%></span>&nbsp;
       <% end %>
       <% if @inline_editable_title_config.present? %>
               <%= render partial: "shared/inline_editing",

@@ -38,11 +38,11 @@
 <!-- Repositories action buttons -->
 <template id="repositoriesListButtons">
   <% if can_create_repositories?(current_team) %>
-    <a id="createRepoBtn" class="btn btn-primary"
+    <a id="createRepoBtn" class="btn btn-primary" title="<%= t('libraries.index.no_libraries.create_new_button_tooltip') %>"
       data-remote="true"
       data-view-mode="active"
       href="<%= create_modal_team_repositories_path(current_team) %>">
-      <span class="fas fa-plus"></span>
+      <span class="sn-icon sn-icon-new-task"></span>
       <span class="hidden-xs"><%= t('libraries.index.no_libraries.create_new_button') %></span>
     </a>
   <% end %>

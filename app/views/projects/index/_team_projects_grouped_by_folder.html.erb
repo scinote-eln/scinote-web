@@ -6,9 +6,6 @@
   </div>
 <% else %>
   <% projects_by_folder.each do |folder, projects| %>
-    <div class="projects-group">
-      <%= render partial: 'projects/index/breadcrumbs', locals: { target_folder: folder } %>
-    </div>
     <% projects.each do |project| %>
       <% cache [current_user, project] do %>
         <%= render partial: 'projects/index/project_card', locals: { project: project } %>

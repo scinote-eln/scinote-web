@@ -11,6 +11,7 @@
 }
 
 #assigned-items-container {
+  padding-left: 2.5rem;
   padding-top: 10px;
 
   .assigned-repository {
@@ -37,7 +38,16 @@
         @include rotate(90deg);
       }
 
+      &:not(.collapsed) .sn-icon-right {
+        @include rotate(90deg);
+      }
+
       .fa-caret-right {
+        flex-shrink: 0;
+        margin-right: 10px;
+      }
+
+      .sn-icon-right {
         flex-shrink: 0;
         margin-right: 10px;
       }

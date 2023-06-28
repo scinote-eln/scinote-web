@@ -28,12 +28,12 @@ var DataTableHelpers = (function() {
         .addClass('sci-input-field search-field')
         .css('margin', 0);
       $('.dataTables_filter').append(`
-          <button class="btn btn-light icon-btn search-icon"
+          <button class="btn btn-light icon-btn search-icon btn-black"
                   title="${I18n.t('repositories.show.button_tooltip.search')}">
-            <i class="fas fa-search"></i>
+            <i class="sn-icon sn-icon-search"></i>
           </button>
           <div class="sci-input-container right-icon search-container">
-            <i class="fas fa-search"></i>
+            <i class="sn-icon sn-icon-search"></i>
           </div>`).find('.sci-input-container').prepend(tableFilterInput);
       $('.dataTables_filter').find('label').remove();
 

@@ -1163,6 +1163,11 @@ class ProtocolsController < ApplicationController
     archived_branch = params[:type] == 'archived' || @protocol&.archived?
 
     @breadcrumbs_items.push({
+                              label: t('breadcrumbs.templates'),
+                              archived: archived_branch
+                            })
+
+    @breadcrumbs_items.push({
                               label: t('breadcrumbs.protocols'),
                               url: archived_branch ? protocols_path(type: :archived) : protocols_path,
                               archived: archived_branch

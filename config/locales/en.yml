@@ -254,6 +254,9 @@ en:
   nav:
     team_switch_title: "Switch team"
     search: "Search"
+    support: "Support"
+    settings: "Settings"
+    user_profile: "Profile"
     search_button: 'Go!'
     user_greeting: "Hi, %{full_name}"
     advanced_search: "Advanced search"
@@ -430,6 +433,9 @@ en:
     delete_error: "Error occurred while deleting comment."
     step_url: "Go to step"
 
+  labels:
+    archived: "(A)"
+
   projects:
     index:
       header:
@@ -455,7 +461,9 @@ en:
         create_new_button: "New Project"
         no_permission_title: "You don't have permission to create new project. Please contact your team administrator."
       new: "New project"
+      new_tooltip: "Create new project"
       new_folder: "New folder"
+      new_folder_tooltip: "Create new folder"
       visibility_private: "Project is visible to project members only."
       visibility_public: "Project is visible to all team members."
       user_project: "%{user} joined on %{timestamp}."
@@ -615,6 +623,7 @@ en:
       index:
         head_title: "Reports"
         new: "New report"
+        new_tooltip: "Create new report"
         report_button: "Report"
         update_pdf: "Update PDF"
         save_pdf_to_inventory: "Save PDF to inventory"
@@ -923,6 +932,7 @@ en:
       template_set_as_default: 'Successfully set template as default'
       toolbar:
         new: 'New label template'
+        new_tooltip: 'Create new label template'
         update_fluics_labels: 'Update Fluics labels'
         edit: 'Edit'
         duplicate: 'Duplicate'
@@ -1317,6 +1327,7 @@ en:
       archived_experiments: "Go to Archived experiments"
     toolbar:
       new_button: "New experiment"
+      new_button_tooltip: "Create new experiment"
       edit_button: "Edit details"
       duplicate_button: "Duplicate"
       move_button: "Move"
@@ -1429,6 +1440,7 @@ en:
         comments: 'Comments'
       toolbar:
         new: 'New task'
+        new_tooltip: 'Create new task'
         edit: 'Edit'
         archive: 'Archive'
         restore: 'Restore'
@@ -1471,6 +1483,7 @@ en:
       canvas_edit: "Edit workflow"
       canvas_empty: "It's empty here. Please add some tasks."
       new_my_module: "New task"
+      new_my_module_tooltip: "Create new task"
       new_my_module_modal:
         title: "Create new task"
         name: "Task name"
@@ -1679,7 +1692,7 @@ en:
       active_reminders:
         label: "Active reminders"
         short_label: "Reminders…"
-        description: "Show only active reminderss"
+        description: "Show only active reminders"
         checked_description: "Show all items"
       head_title: "Inventories"
       title: "Inventories"
@@ -1705,7 +1718,6 @@ en:
       no_archived_inventories:  "No archived inventories here"
       no_archived_inventories_matched: "No archived inventories matched your search request"
       snapshot_provisioning_in_progress: 'Editing is disabled while a snapshot is being created. This will only take a moment.'
-
       options_dropdown:
         import_items: 'Import'
         export_items: 'Export'
@@ -1732,6 +1744,19 @@ en:
         description: "Only the structure of the inventory is going to be copied."
         name_placeholder: "My inventory"
         copy: "Copy"
+      modal_export:
+        title: "Export Inventories"
+        description_p1_html:
+          one: "You are about to export <strong>1</strong> inventory in %{team_name}'s team."
+          other: "You are about to export <strong>%{count}</strong> inventories in %{team_name}'s team."
+        description_alert: "This process may take minutes to hours, depending on the file size. Any new data entered afterward won't be included in the export."
+        description_p2: "You will receive an email when the .zip file is ready. A link to your file will also appear in your SciNote notification. For security reasons, this link will expire in 7 days."
+        description_p3_html: "After you confirm this export, you will have <strong>%{remaining_export_requests}</strong> export requests left today (max %{requests_limit} requests per day)."
+        export: "Export"
+      modal_export_limit_exceeded:
+        title: "Export denied"
+        error_p1_html: "It looks like you have exceeded your daily export limit. The number of exports is <strong>limited to %{limit} requests per day </strong>- you currently have 0 export requests left."
+        error_p2_html: "Please repeat the desired action <strong>tomorrow</strong>, when your daily limit will reset back to %{limit} export requests."
       modal_create:
         title: "Create new inventory"
         name_label: "Inventory name"
@@ -1761,6 +1786,8 @@ en:
         archived_by: "by"
       filter_inventory_items: "Search items"
       filter_inventory_items_with_ean: "Search with EAN code"
+      search_button_tooltip: "Quick search"
+      ean_search_button_tooltip: "Barcode search"
       no_items: "No items here"
       no_items_matched: "No items here"
       no_archived_items: "No archived items here"
@@ -1768,7 +1795,7 @@ en:
       no_archived_items_matched: "No archived items here"
       error_searching: "Error searching, please try again"
       button_tooltip:
-        new: "New item"
+        new: "Create new item"
         edit: "Edit item"
         duplicate: "Duplicate"
         export: "Export"
@@ -2115,6 +2142,7 @@ en:
       title: "Manage columns"
       add_column: "Add column"
     manange_modal_column:
+      button_tooltip: "Manage columns"
       name_placeholder: "Enter column name..."
       empty_name_error: "Column must have a name."
       value_too_high_error: "Too high (max %{max_value})"
@@ -2229,17 +2257,20 @@ en:
       shared_for_viewing: "For viewing"
       shared_for_editing: "For editing"
       not_shared: "No"
+      shared: "Yes"
       switch_view:
         active: Show active inventories
         archived: Show archived inventories
       buttons:
         edit: "Rename"
         duplicate: "Duplicate"
+        export: "Export"
         archive: "Archive"
         restore: "Restore"
         delete: "Delete"
       no_libraries:
         create_new_button: "New inventory"
+        create_new_button_tooltip: "Create new inventory"
     show:
       head_title: "Inventories | %{library}"
   repository_row:
@@ -2827,6 +2858,8 @@ en:
       public_description: "Team protocols are visible and can be used by everyone from the team."
       private_description: "My protocols are only visible to you."
       create_new: "New protocol template"
+      create_new_tooltip: "Create new protocol template"
+      import_tooltip: "Import"
       edit: "Edit"
       clone_btn: "Copy"
       import: "Import"
@@ -3051,8 +3084,8 @@ en:
           ztoa_html: "Name &#8593;"
         view_mode:
           inline_html: "<i class=\"fas fa-desktop\"></i> Extra large"
-          thumbnail_html: "<i class=\"fas fa-th-large\"></i> Medium"
-          list_html: "<i class=\"fas fa-list\"></i> List"
+          thumbnail_html: "<i class=\"sn-icon sn-icon-grid-view\"></i> Medium"
+          list_html: "<i class=\"sn-icon sn-icon-activities\"></i> List"
       new:
         add_step_title: "Add new step"
         tab_checklists: "Checklists"
@@ -3238,8 +3271,8 @@ en:
       set_view_size: "SET VIEW SIZE"
       delete: "Delete file"
       inline_html: "<i class=\"fas fa-desktop\"></i> Extra large"
-      thumbnail_html: "<i class=\"fas fa-th-large\"></i> Medium"
-      list_html: "<i class=\"fas fa-list\"></i> List"
+      thumbnail_html: "<i class=\"sn-icon sn-icon-grid-view\"></i> Medium"
+      list_html: "<i class=\"sn-icon sn-icon-activities\"></i> List"
     delete_file_modal:
       title: "Delete attachment"
       description_1_html: "You are about to delete <b>%{file_name}</b></p>"
@@ -3386,7 +3419,7 @@ en:
     repository_header_html: 'You are about to export selected items in inventory %{repository}.'
     files_alert: 'Files uploaded to inventory items will not be exported. Only filenames will be exported.'
     repository_footer_html: 'Inventory will be exported in a .csv file format. You will receive <strong>email with a link</strong> where you can download it.'
-    export_request_success: "Export request received!"
+    export_request_success: "Export request received. Your export request is being processed."
     export_error: "Error when creating zip export."
 
   webhooks:
@@ -3444,6 +3477,7 @@ en:
     download: "Download"
     access: "Access"
     select: "Select"
+    loading: "Loading..."
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"
@@ -3454,16 +3488,17 @@ en:
     comment_placeholder_new: "Add new comment…"
     archived: "Archived"
     sort:
-      new_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;Started last"
-      old_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Started first"
-      atoz_html: "<i class=\"fas fa-sort-alpha-down\"></i>&nbsp;&nbsp;Name A to Z"
-      ztoa_html: "<i class=\"fas fa-sort-alpha-down-alt\"></i>&nbsp;&nbsp;Name Z to A"
-      archived_new_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;Archived last"
-      archived_old_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Archived first"
-      id_asc_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;ID ascending"
-      id_desc_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;ID descending"
-      due_first_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Due first"
-      due_last_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;Due last"
+      title: "Sorting"
+      new_html: "Started last"
+      old_html: "Started first"
+      atoz_html: "Name A to Z"
+      ztoa_html: "Name Z to A"
+      archived_new_html: "Archived last"
+      archived_old_html: "Archived first"
+      id_asc_html: "ID ascending"
+      id_desc_html: "ID descending"
+      due_first_html: "Due first"
+      due_last_html: "Due last"
     sort_new:
       new: "Added last"
       old: "Added first"
@@ -3588,10 +3623,15 @@ en:
           not_valid: "Not valid URL"
 
   breadcrumbs:
+    templates: "Templates"
     projects: "Projects"
     inventories: "Inventories"
-    protocols: "Protocol templates"
-    labels: "Label templates"
+    protocols: "Protocol"
+    labels: "Label"
+    teams: "All Teams"
+    addons: "Add-Ons"
+    label_printer: "Label Printer"
+    fluics_printer: "Fluics Printer"
 
   Add: "Add"
   Asset: "File"

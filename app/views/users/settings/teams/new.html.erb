@@ -5,9 +5,6 @@
 <div class="tab-content">
   <div class="tab-pane content-pane" role="tabpanel"></div>
   <div class="tab-pane content-pane active" role="tabpanel">
-
-    <%= render partial: "users/settings/teams/breadcrumbs.html.erb" %>
-
     <%= bootstrap_form_for @new_team, url: create_team_path do |f| %>
       <div class="form-group" style="max-width: 500px;">
         <%= f.text_field :name,
@@ -26,7 +23,7 @@
         </small>
       </div>
 
-      <%= link_to t('general.cancel'), teams_path, class: 'btn btn-default' %>
+      <%= link_to t('general.cancel'), teams_path, class: 'btn btn-secondary' %>
       <%= f.submit t('users.settings.teams.new.create'), class: 'btn btn-success' %>
 
     <% end %>

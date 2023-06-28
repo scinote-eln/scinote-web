@@ -206,10 +206,13 @@ class LabelTemplatesController < ApplicationController
     @breadcrumbs_items = []
 
     @breadcrumbs_items.push({
+                              label: t('breadcrumbs.templates'),
+                            })
+
+    @breadcrumbs_items.push({
                               label: t('breadcrumbs.labels'),
                               url: label_templates_path
                             })
-
     if @label_template
       @breadcrumbs_items.push({
                                 label: @label_template.name,

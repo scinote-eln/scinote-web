@@ -18,17 +18,17 @@
       </div>
       <% if comment_editable?(comment) %>
         <div class="dropdown comment-menu-container">
-          <div id="comment-dropdown-menu-<%= comment.id %>" class="fas fa-ellipsis-h open-dropdown-btn"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></div>
+          <div id="comment-dropdown-menu-<%= comment.id %>" class="sn-icon sn-icon-more-hori open-dropdown-btn"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></div>
           <ul class="dropdown-menu comment-dropdown-menu dropdown-menu-right" aria-labelledby="comment-dropdown-menu-<%= comment.id %>">
             <li>
               <a href="#" class="edit-comment" data-comment-raw="<%= comment.message %>" data-update-url="<%= comment_path(comment) %>" data-comment-id="<%= comment.id %>">
-                <i class="fas fa-pen"></i>
+                <i class="sn-icon sn-icon-edit"></i>
                 <%= t('general.edit') %>
               </a>
             </li>
             <li>
               <a href="#" data-delete-url="<%= comment_path(comment) %>" class="delete-comment">
-                <i class="fas fa-trash"></i>
+                <i class="sn-icon sn-icon-delete"></i>
                 <%= t('general.delete') %>
               </a>
             </li>

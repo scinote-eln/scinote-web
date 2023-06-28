@@ -33,7 +33,6 @@
     <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>
     <%= favicon_link_tag "favicon-32.png", type: "image/png", size: "32x32" %>
     <%= favicon_link_tag "favicon-48.png", type: "image/png", size: "48x48" %>
-    <%= stylesheet_link_tag 'fonts', id: 'font-css-pack' %>
     <%= stylesheet_link_tag 'fontawesome' %>
 
     <%= stylesheet_link_tag 'prism' %>
@@ -43,10 +42,10 @@
       <%= yield(:head) %>
     <% end %>
 
-    <%= javascript_include_tag 'tui_image_editor', nonce: true %>
+    <%= javascript_include_tag 'tui_image_editor' %>
     <%= stylesheet_link_tag 'tui_image_editor_styles' %>
     <%= javascript_include_tag 'vue_navigation_navigator' %>
-    <%= javascript_include_tag 'vue_navigation_top_menu', nonce: true %>
+    <%= javascript_include_tag 'vue_navigation_top_menu' %>
   </head>
   <body
     class="<%= yield :body_class %> <%= 'navigator-collapsed' if !@navigator || session[:navigator_collapsed] %>"
@@ -59,7 +58,7 @@
     data-atwho-repositories-url="<%= atwho_menu_team_path(current_team) %>"
     data-atwho-rep-items-url="<%= atwho_rep_items_team_path(current_team) %>"
     data-atwho-menu-items="<%= atwho_menu_items_team_path(current_team) %>"
-    data-datetime-picker-format-date-only="<%= datetime_picker_format_date_only %>"
+    data-datetime-picker-format="<%= datetime_picker_format_date_only %>"
     <% end %>
   >
 
@@ -87,7 +86,7 @@
         <% if user_signed_in? && current_user.teams.blank? && !(activities_are_selected? || settings_are_selected?) %>
           <!-- If member of no teams -->
           <div id="no-teams-jumbotron" class="jumbotron">
-            <%= image_tag "empty-screen-illustration.png", size: "500x500" %>
+            <%= image_tag "empty-screen-illustration.png" %>
             <h2><%=t 'general.no_teams.title' %></h2>
             <p class="no-teams-info"><%=t 'general.no_teams.text' %></p>
           </div>

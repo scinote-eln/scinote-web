@@ -14,13 +14,13 @@
         <span class="left">
           <div class="move-button-container collapse">
             <button class="btn btn-light">
-              <span class="fas fa-arrow-right"></span>
+              <span class="sn-icon sn-icon-move"></span>
               <%= t('experiments.module_archive.move_option') %>
             </button>
           </div>
           <div class="restore-button-container collapse">
             <%= button_to restore_my_modules_experiment_path(@experiment), class: 'btn btn-light', method: :post do %>
-              <span class="fas fa-undo"></span>
+              <span class="sn-icon sn-icon-restore"></span>
               <%= t('experiments.module_archive.restore_option') %>
             <% end %>
           </div>

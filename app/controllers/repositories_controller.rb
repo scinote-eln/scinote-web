@@ -9,13 +9,15 @@ class RepositoriesController < ApplicationController
   include RepositoriesDatatableHelper
   include MyModulesHelper
 
-  before_action :load_repository, except: %i(index create create_modal sidebar archive restore actions_toolbar)
+  before_action :load_repository, except: %i(index create create_modal sidebar archive restore actions_toolbar
+                                             export_modal export_repositories)
   before_action :load_repositories, only: %i(index show sidebar)
   before_action :load_repositories_for_archiving, only: :archive
   before_action :load_repositories_for_restoring, only: :restore
   before_action :check_view_all_permissions, only: %i(index sidebar)
-  before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet import_records
-                                                    sidebar archive restore actions_toolbar)
+  before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet
+                                                    import_records sidebar archive restore actions_toolbar
+                                                    export_modal export_repositories)
   before_action :check_manage_permissions, only: %i(rename_modal update)
   before_action :check_delete_permissions, only: %i(destroy destroy_modal)
   before_action :check_archive_permissions, only: %i(archive restore)
@@ -235,6 +237,34 @@ class RepositoriesController < ApplicationController
     end
   end
 
+  def export_modal
+    if current_user.has_available_exports?
+      respond_to do |format|
+        format.json do
+          render json: {
+            html: render_to_string(
+              partial: 'export_repositories_modal.html.erb',
+              locals: { team_name: current_team.name,
+                        export_limit: TeamZipExport.exports_limit,
+                        num_of_requests_left: current_user.exports_left - 1 }
+            )
+          }
+        end
+      end
+    else
+      respond_to do |format|
+        format.json do
+          render json: {
+            html: render_to_string(
+              partial: 'export_limit_exceeded_modal.html.erb',
+              locals: { requests_limit: TeamZipExport.exports_limit }
+            )
+          }
+        end
+      end
+    end
+  end
+
   def copy
     @tmp_repository = Repository.new(
       team: current_team,
@@ -379,6 +409,17 @@ class RepositoriesController < ApplicationController
           render json: { message: t('zip_export.export_error') }, status: :unprocessable_entity
         end
       end
+    end
+  end
+
+  def export_repositories
+    repositories = Repository.viewable_by_user(current_user, current_team).where(id: params[:repository_ids])
+    if repositories.present? && current_user.has_available_exports?
+      current_user.increase_daily_exports_counter!
+      RepositoriesExportJob.perform_later(repositories.pluck(:id), current_user, current_team)
+      render json: { message: t('zip_export.export_request_success') }
+    else
+      render json: { message: t('zip_export.export_error') }, status: :unprocessable_entity
     end
   end
 
@@ -541,7 +582,7 @@ class RepositoriesController < ApplicationController
 
   def set_breadcrumbs_items
     @breadcrumbs_items = []
-    archived_branch = params[:archived] == 'true' || @repository&.archived?
+    archived_branch = @repository&.archived? || (!@repository && params[:archived] == 'true')
 
     @breadcrumbs_items.push({
                               label: t('breadcrumbs.inventories'),

@@ -1,6 +1,6 @@
 <% results.each do |project_folder| %>
   <h5>
-    <span class="fas fa-folder"></span>
+    <span class="sn-icon sn-icon-folder"></span>
     <%= render partial: 'search/results/partials/project_folder_text.html.erb',
                locals: { project_folder: project_folder, query: search_query, link_to_page: :show } %>
   </h5>

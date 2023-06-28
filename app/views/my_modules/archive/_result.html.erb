@@ -1,8 +1,8 @@
 <div class="panel panel-default panel-archive">
 
   <div class="dropdown pull-right">
-    <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-      <span class="caret"></span>
+    <button class="btn dropdown-toggle mt-1 bg-transparent" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      <span class="sn-icon sn-icon-down"></span>
     </button>
     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
       <li>
@@ -36,14 +36,14 @@
     <h3 class="panel-title">
       <% if result.is_asset %>
         <% if result.asset.image? %>
-          <span class="fas fa-paperclip"></span>
+          <span class="sn-icon sn-icon-files"></span>
         <% else %>
-          <span class="fas fa-paperclip"></span>
+          <span class="sn-icon sn-icon-files"></span>
         <% end %>
       <% elsif result.is_text %>
         <span class="fas fa-asterisk"></span>
       <% elsif result.is_table %>
-        <span class="fas fa-table"></span>
+        <span class="sn-icon sn-icon-tables"></span>
       <% end %>
       <%= result.name %>
     </h3>

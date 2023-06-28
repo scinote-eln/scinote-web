@@ -22,7 +22,7 @@
           >
             <input type="file" class="hidden" ref=fileSelector @change="uploadFiles" multiple />
             <div class="title btn btn-light" @click="$refs.fileSelector.click()" tabindex="0" @keyup.enter="$refs.fileSelector.click()">
-              <i class="fas fa-upload"></i>
+              <i class="sn-icon sn-icon-import"></i>
               {{ i18n.t("protocols.steps.attachments.file_modal.drag_zone_title") }}
             </div>
             <div class="description">
@@ -63,7 +63,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type='button' class='btn btn-default' @click="cancel">
+          <button type='button' class='btn btn-secondary' @click="cancel">
             {{ i18n.t('general.cancel') }}
           </button>
         </div>

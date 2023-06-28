@@ -13,13 +13,13 @@
       <div class="modal-body">
           <%= f.file_field :file %>
           <div class="inline-alert alert-info" role="alert">
-            <span class="fas fa-info-circle alert-icon"></span>
+            <span class="sn-icon sn-icon-info alert-icon"></span>
             <span><%= t('repositories.modal_import.limit_description_html') %></span>
           </div>
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-default close-button" data-dismiss="modal"><%= t('general.cancel')%></button>
+        <button type="button" class="btn btn-secondary close-button" data-dismiss="modal"><%= t('general.cancel')%></button>
         <input type="submit" class="btn btn-success" value="<%= t("repositories.modal_import.upload") %>">
       </div>
       <% end %>

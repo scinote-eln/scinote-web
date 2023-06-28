@@ -3,33 +3,37 @@
 
 .sci--layout--left-menu-container {
   background-color: $color-white;
+  border-right: 1px solid var(--sn-sleepy-grey);
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 1rem 0;
+  padding: 1.5rem 1rem;
   width: 100%;
 
   .sci--layout--menu-item {
     @include font-small;
     align-items: center;
+    border-radius: 4px;
     color: $color-black;
     cursor: pointer;
     display: flex;
     gap: 1em;
     height: 36px;
-    margin: .25em 0;
-    padding: 0 1em;
+    margin: .375rem 0;
+    padding: .375rem .375rem .375rem .625rem;
     text-decoration: none;
     width: 100%;
 
-    &:not([data-active='true']):hover {
-      background-color: var(--sn-super-light-grey);
+    .sn-icon-dot-small {
+      color: var(--sn-grey);
     }
 
-    .fas {
-      display: inline-block;
-      font-size: 1.125rem;
-      width: 16px;
+    &:not([data-active='true']):hover {
+      background-color: var(--sn-super-light-grey);
+
+      .sn-icon-dot-small {
+        color: var(--sn-black);
+      }
     }
 
     .show-submenu {
@@ -38,25 +42,8 @@
       margin-left: auto;
     }
 
-    .dot {
-      align-items: center;
-      display: flex;
-      height: 16px;
-      justify-content: center;
-      width: 16px;
-
-      &::after {
-        background-color: $color-black;
-        border-radius: 50%;
-        content: "";
-        height: 3px;
-        width: 3px;
-      }
-    }
-
     &[data-active='true'] {
-      background-color: $color-gainsboro;
-      box-shadow: inset 4px 0 0 $brand-primary;
+      background-color: var(--sn-super-light-blue);
     }
 
     &[data-disabled='true'] {

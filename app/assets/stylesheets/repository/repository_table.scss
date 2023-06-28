@@ -73,7 +73,7 @@
     padding: 1px 8px;
     position: relative;
 
-    .fas.fa-pencil-alt {
+    .sn-icon.sn-icon-edit {
       line-height: 35px;
       text-align: center;
       width: 30px;
@@ -353,7 +353,7 @@
   .dataTable {
     tbody {
       tr:hover {
-        background-color: $color-concrete;
+        background-color: var(--sn-super-light-grey);
 
         .assigned-column {
           .repository-row-edit-icon {

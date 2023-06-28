@@ -40,7 +40,7 @@
                 <% end %>
                 <% if can_delete_protocol_draft_in_repository?(draft) %>
                   <div data-url="<%= destroy_draft_protocol_path(draft) %>" class="btn btn-light delete-draft">
-                    <i class="fas fa-trash"></i>
+                    <i class="sn-icon sn-icon-delete"></i>
                   </div>
                 <% end %>
               </div>
@@ -94,7 +94,7 @@
                                   placement: :left,
                                   toggle: :tooltip
                                 } do %>
-                    <i class="fas fa-clone"></i>
+                    <i class="sn-icon sn-icon-duplicate"></i>
                   <% end %>
                 <% end %>
               </div>

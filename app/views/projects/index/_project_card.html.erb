@@ -8,31 +8,36 @@
       <span class="sci-checkbox-label"></span>
     </div>
   </div>
-    <div class="project-code-cell table-cell">
+
+  <div class="project-code-cell table-cell">
     <span><%= project.code %></span>
   </div>
 
   <div class="project-name-cell table-cell">
+    <%
+      disabled_link = 'disabled-link' unless can_read_project?(project)
+    %>
     <% if project.archived? %>
-      <%= link_to project_url(project, view_mode: :archived) do %>
+      <%= link_to project_url(project, view_mode: :archived), class: disabled_link  do %>
         <h3 class="name" title="<%= project.name %>">
           <%= project.name %>
         </h3>
       <% end %>
     <% else %>
-      <%= link_to project_url(project) do %>
+      <%= link_to project_url(project), class: disabled_link do %>
         <h3 class="name" title="<%= project.name %>">
           <%= project.name %>
         </h3>
       <% end %>
     <% end %>
   </div>
+
   <div class="actions actions-cell table-cell">
     <div
       class="dropdown dropdown-async project-actions-menu  <%= 'new-comments' if has_unseen_comments?(project) %>"
       data-dropdown-url="<%= actions_dropdown_project_path(project) %>">
-      <button class="btn btn-light dropdown-toggle icon-btn" type="button" id="projectActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-        <i class="fas fa-ellipsis-h"></i>
+      <button class="btn btn-light btn-xs dropdown-toggle icon-btn" type="button" id="projectActionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <i class="sn-icon sn-icon-more-hori"></i>
       </button>
       <ul></ul>
     </div>
@@ -70,7 +75,7 @@
         <%= link_to edit_access_permissions_project_path(project), class: 'project-users-link', data: { action: 'remote-modal' } do %>
           <%= render partial: 'projects/index/users_list.html.erb', locals: { project: project } %>
           <span class="new-user global-avatar-container">
-            <i class="fas fa-plus"></i>
+            <i class="sn-icon sn-icon-new-task"></i>
           </span>
         <% end %>
       <% else %>

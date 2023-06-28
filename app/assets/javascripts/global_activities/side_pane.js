@@ -228,18 +228,18 @@ var globalActivities = (function() {
               ${dateContainer[0].dataset.periodLabel}
               ${$('.ga-side .date-selector.filter-block')[0].dataset.periodSelect}
             </div>
-            <i class="fas fa-times"></i>
+            <i class="sn-icon sn-icon-close-small"></i>
           </div>`).appendTo('.ga-top .ga-tags')
-          .find('.fa-times').click(() => {
+          .find('.sn-icon-close-small').click(() => {
             $('.date-selector .date.clear').click();
           });
       }
       $.each($('.ga-side .ds-tags'), function(index, tag) {
         var newTag = $(tag.outerHTML).appendTo('.ga-top .ga-tags');
-        newTag.find('.fa-times')
+        newTag.find('.sn-icon-close-small')
           .click(function() {
             newTag.addClass('closing');
-            $(tag).find('.fa-times').click();
+            $(tag).find('.sn-icon-close-small').click();
           });
       });
     }

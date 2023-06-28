@@ -40,7 +40,7 @@ import contentCss from '!!raw-loader!tinymce/skins/content/default/content.min.c
 import contentUiCss from '!!raw-loader!tinymce/skins/ui/tinymce-5/content.min.css';
 
 const contentPStyle = `p { margin: 0; padding: 0;}`;
-const contentBodyStyle = `body { font-family: Lato, "Open Sans", Arial, Helvetica, sans-serif }`;
+const contentBodyStyle = `body { font-family: "SN Inter", "Open Sans", Arial, Helvetica, sans-serif }`;
 const contentStyle = [contentCss, contentUiCss, contentBodyStyle, contentPStyle].map((s) => s.toString()).join('\n');
 
 // Optional pre-initialization method
@@ -74,7 +74,7 @@ window.TinyMCE = (() => {
     const lastUpdated = $(selector).data('last-updated');
     let notificationBar;
     const restoreBtn = $('<button class="btn restore-draft-btn">Restore Draft</button>');
-    const cancelBtn = $('<span class="fas fa-times"></span>');
+    const cancelBtn = $('<span class="sn-icon sn-icon-close"></span>');
 
     // Check whether we have draft stored
 

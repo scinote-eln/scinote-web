@@ -247,14 +247,14 @@ var RepositoryColumns = (function() {
 
       if (column.header.id !== 'row-name') {
         if (column.visible()) {
-          self.addClass('fa-eye-slash');
-          self.removeClass('fa-eye');
+          self.addClass('sn-icon-visibility-hide');
+          self.removeClass('sn-icon-visibility-show');
           li.addClass('col-invisible');
           column.visible(false);
           TABLE.setColumnSearchable(column.index(), false);
         } else {
-          self.addClass('fa-eye');
-          self.removeClass('fa-eye-slash');
+          self.addClass('sn-icon-visibility-show');
+          self.removeClass('sn-icon-visibility-hide');
           li.removeClass('col-invisible');
           column.visible(true);
           TABLE.setColumnSearchable(column.index(), true);
@@ -287,7 +287,7 @@ var RepositoryColumns = (function() {
         let colId = $(el).attr('id');
         let colIndex = $(el).attr('data-column-index');
         let visible = TABLE.column(colIndex).visible();
-        let visClass = (visible) ? 'fa-eye' : 'fa-eye-slash';
+        let visClass = (visible) ? 'sn-icon-visibility-show' : 'sn-icon-visibility-hide';
         let visLi = (visible) ? '' : 'col-invisible';
         let visText = $(TABLE_ID).data('columns-visibility-text');
         let customColumn = ($(el).attr('data-type')) ? 'editable' : '';
@@ -311,22 +311,24 @@ var RepositoryColumns = (function() {
           destroyButton = `<button class="btn icon-btn btn-light delete-repo-column manage-repo-column"
                               data-action="destroy"
                               data-modal-url="${destroyUrl}">
-                              <span class="fas fa-trash" title="Delete"></span>
+                              <span class="sn-icon sn-icon-delete" title="Delete"></span>
                           </button>`;
         }
 
         let listItem = `<li class="col-list-el ${visLi} ${customColumn} ${editableRow}" data-position="${colIndex}" data-id="${colId}">
           <i class="grippy"></i>
           <span class="vis-controls">
-            <span class="vis fas ${visClass}" title="${visText}"></span>
+            <span class="vis sn-icon ${visClass}" title="${visText}"></span>
           </span>
           <span class="text">${generateColumnNameTooltip(thederName)}</span>
-          <span class="column-type pull-right">${getColumnTypeText(el, colId)}</span>
+          <span class="column-type pull-right">${
+            getColumnTypeText(el, colId) || '<i class="sn-icon sn-icon-locked-task"></i>'
+          }</span>
           <span class="sci-btn-group manage-controls pull-right" data-view-mode="active">
             <button class="btn icon-btn btn-light edit-repo-column manage-repo-column"
                     data-action="edit"
                     data-modal-url="${editUrl}">
-              <span class="fas fa-pencil-alt" title="Edit"></span>
+              <span class="sn-icon sn-icon-edit" title="Edit"></span>
             </button>
             ${destroyButton}
           </span>

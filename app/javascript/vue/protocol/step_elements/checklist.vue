@@ -2,7 +2,7 @@
   <div class="step-checklist-container" >
     <div class="step-element-header" :class="{ 'editing-name': editingName, 'no-hover': !element.attributes.orderable.urls.update_url }">
       <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
-        <i class="fas fas-rotated-90 fa-exchange-alt"></i>
+        <i class="sn-icon sn-icon-sort"></i>
       </div>
       <div v-else class="step-element-grip-placeholder"></div>
       <div class="step-element-name">
@@ -23,13 +23,13 @@
       </div>
       <div class="step-element-controls">
         <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="editingName = true" tabindex="0">
-          <i class="fas fa-pen"></i>
+          <i class="sn-icon sn-icon-edit"></i>
         </button>
         <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light" tabindex="0" @click="duplicateElement">
-          <i class="fas fa-clone"></i>
+          <i class="sn-icon sn-icon-duplicate"></i>
         </button>
         <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="0">
-          <i class="fas fa-trash"></i>
+          <i class="sn-icon sn-icon-delete"></i>
         </button>
       </div>
     </div>
@@ -66,7 +66,7 @@
            tabindex="0"
            @keyup.enter="addItem"
            @click="addItem">
-        <i class="fas fa-plus"></i>
+        <i class="sn-icon sn-icon-new-task"></i>
         {{ i18n.t('protocols.steps.insert.checklist_item') }}
       </div>
     </div>

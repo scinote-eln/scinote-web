@@ -18,7 +18,7 @@
           data-sketch-name="<%= asset.file.metadata[:name] %>"
           data-sketch-description="<%= asset.file.metadata[:description] %>"
         >
-          <span class="fas fa-pencil-alt"></span>
+          <span class="sn-icon sn-icon-edit"></span>
           <%= t('assets.file_preview.edit_in_marvinjs') %>
         </button>
 
@@ -30,7 +30,7 @@
           data-molecule-name="<%= asset.file.metadata[:name] || asset.file_name %>"
           data-molecule-description="<%= asset.file.metadata[:description] || asset.file.download %>"
         >
-          <span class="fas fa-pencil-alt"></span>
+          <span class="sn-icon sn-icon-edit"></span>
           <%= t('assets.file_preview.edit_in_bio_eddie') %>
         </button>
       <% elsif asset.editable_image? %>
@@ -42,24 +42,24 @@
           data-image-mime-type="<%= asset.file.content_type %>"
           data-image-start-edit-url="<%= start_edit_image_path(asset) %>"
         >
-          <span class="fas fa-pencil-alt"></span>
+          <span class="sn-icon sn-icon-edit"></span>
           <%= t('assets.file_preview.edit_in_scinote') %>
         </button>
       <% end %>
     <% end %>
     <% if asset.file.metadata[:asset_type] == 'bio_eddie' %>
       <a class="btn btn-light file-download-link" href="data:text/plain;charset=utf-8,<%= asset.file.metadata[:description] %>" download="<%= asset.file.metadata[:name] %>.helm" data-turbolinks="false">
-        <span class="fas fa-download"></span> <%= t('Download')%>
+        <span class="sn-icon sn-icon-export"></span> <%= t('Download')%>
       </a>
     <% else %>
       <a class="btn btn-light file-download-link" href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>" data-turbolinks="false">
-        <span class="fas fa-download"></span> <%= t('Download')%>
+        <span class="sn-icon sn-icon-export"></span> <%= t('Download')%>
       </a>
     <% end %>
     <% if (asset.step || asset.result) && !preview %>
       <%= render partial: 'assets/asset_context_menu.html.erb', locals: { asset: asset, deletable: false, editable: false } %>
     <% end %>
-    <button type="button" class="btn icon-btn btn-light" data-dismiss="modal"><span class="fas fa-times"></span></button>
+    <button type="button" class="btn icon-btn btn-light" data-dismiss="modal"><span class="sn-icon sn-icon-close"></span></button>
   </div>
 </div>
 <div class="modal-body">
@@ -88,6 +88,7 @@
         <%= link_to asset_file_preview_path(previous_asset),
           class: "previous-asset gallery-switcher",
           data: {id: previous_asset.id, gallery_elements: gallery} do %>
+          <i class="sn-icon sn-icon-arrow-left"></i>
           <% if previous_asset.previewable? %>
             <%= image_tag previous_asset.medium_preview,
                 class: 'asset-image',
@@ -95,7 +96,6 @@
           <% else %>
             <i class="fas <%= file_fa_icon_class(previous_asset) if previous_asset.file_name %>"></i>
           <% end %>
-          <i class="fas fa-angle-left"></i>
           <span class="file-name"><%= previous_asset.file_name %></span>
         <% end %>
       <% end %>
@@ -106,8 +106,6 @@
         <%= link_to asset_file_preview_path(next_asset),
           class: "next-asset gallery-switcher",
           data: {id: next_asset.id, gallery_elements: gallery} do %>
-          <span class="file-name"><%= next_asset.file_name %></span>
-          <i class="fas fa-angle-right"></i>
           <% if next_asset.previewable? %>
             <%= image_tag next_asset.medium_preview,
                 class: 'asset-image',
@@ -115,10 +113,12 @@
           <% else %>
             <i class="fas <%= file_fa_icon_class(next_asset) if next_asset.file_name %>"></i>
           <% end %>
+          <span class="file-name"><%= next_asset.file_name %></span>
+          <i class="sn-icon sn-icon-arrow-right"></i>
         <% end %>
       <% end %>
     </div>
   <% end %>
 </div>
 
-<%= javascript_include_tag 'shared/file_preview', nonce: true %>
+<%= javascript_include_tag 'shared/file_preview' %>

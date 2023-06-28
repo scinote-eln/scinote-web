@@ -20,7 +20,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.cancel")%></button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t("general.cancel")%></button>
         <%= link_to t('repositories.index.modal_delete.delete'),
                     team_repository_path(id: @repository),
                     id: "confirm-repo-delete",

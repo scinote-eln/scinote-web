@@ -57,7 +57,7 @@ module RepositoryZipExport
                     when -8
                       I18n.t('repositories.table.archived_on')
                     else
-                      column = RepositoryColumn.find_by_id(c_id)
+                      column = repository.repository_columns.find_by(id: c_id)
                       column ? column.name : nil
                     end
     end
@@ -80,16 +80,15 @@ module RepositoryZipExport
                      when -6
                        I18n.l(row.created_at, format: :full)
                      when -7
-                       row.archived_by.full_name
+                       row.archived_by.present? ? row.archived_by.full_name : ''
                      when -8
-                       I18n.l(row.archived_on, format: :full)
+                       row.archived_on.present? ? I18n.l(row.archived_on, format: :full) : ''
                      else
                        cell = row.repository_cells
                                  .find_by(repository_column_id: c_id)
 
                        if cell
-                         if cell.value_type == 'RepositoryAssetValue' &&
-                            handle_file_name_func
+                         if cell.value_type == 'RepositoryAssetValue' && handle_file_name_func
                            handle_file_name_func.call(cell.value.asset)
                          else
                            SmartAnnotations::TagToText.new(

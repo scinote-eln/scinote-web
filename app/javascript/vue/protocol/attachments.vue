@@ -8,7 +8,7 @@
         <div ref="actionsDropdownButton" class="dropdown sci-dropdown">
           <button class="btn btn-light dropdown-toggle" type="button" id="dropdownAttachmentsOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <span>{{ i18n.t("protocols.steps.attachments.manage") }}</span>
-            <span class="caret pull-right"></span>
+            <span class="sn-icon sn-icon-down"></span>
           </button>
           <ul ref="actionsDropdown" class="dropdown-menu dropdown-menu-right dropdown-attachment-options"
               aria-labelledby="dropdownAttachmentsOptions"
@@ -17,7 +17,7 @@
             <li class="divider-label">{{ i18n.t("protocols.steps.attachments.add") }}</li>
             <li>
               <a class="action-link attachments-view-mode" @click="$emit('attachments:openFileModal')">
-                <i class="fas fa-upload"></i>
+                <i class="sn-icon sn-icon-import"></i>
                 {{ i18n.t('protocols.steps.attachments.menu.file_from_pc') }}
               </a>
             </li>

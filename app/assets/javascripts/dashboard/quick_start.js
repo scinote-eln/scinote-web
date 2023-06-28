@@ -31,7 +31,7 @@ var DasboardQuickStartWidget = (function() {
       selectAppearance: 'simple',
       optionLabel: (data) => {
         if (data.value === 0) {
-          return `<i class="fas fa-plus"></i>
+          return `<i class="sn-icon sn-icon-new-task"></i>
                   <span class="create-new">${I18n.t('dashboard.create_task_modal.filter_create_new')}</span>
                   <span>"${data.label}"</span>`;
         }
@@ -61,7 +61,7 @@ var DasboardQuickStartWidget = (function() {
       selectAppearance: 'simple',
       optionLabel: (data) => {
         if (data.value === 0) {
-          return `<i class="fas fa-plus"></i>
+          return `<i class="sn-icon sn-icon-new-task"></i>
                   <span class="create-new">${I18n.t('dashboard.create_task_modal.filter_create_new')}</span>
                   <span>"${data.label}"</span>`;
         }
@@ -88,7 +88,7 @@ var DasboardQuickStartWidget = (function() {
       }
     });
 
-    $(createTaskButton).click((e) => {
+    $(createTaskButton).one('click', (e) => {
       var params = {};
       if (dropdownSelector.getValues(projectFilter) === '0') {
         params.project = {

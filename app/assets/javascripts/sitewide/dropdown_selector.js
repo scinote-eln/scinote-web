@@ -218,7 +218,7 @@ var dropdownSelector = (function() {
     if (config.customDropdownIcon) {
       return config.customDropdownIcon();
     }
-    return '<i class="fas fa-caret-down right-icon"></i><i class="fas fa-search right-icon simple-dropdown"></i>';
+    return '<i class="sn-icon sn-icon-down right-icon"></i><i class="sn-icon sn-icon-search right-icon simple-dropdown"></i>';
   }
 
   // Set new data
@@ -286,7 +286,7 @@ var dropdownSelector = (function() {
           selectedOption.removeClass('highlight').next().next().addClass('highlight');
         }
       } else if (pressedKey === 8 && e.target.value === '') { // backspace
-        deleteTag(selector, container, container.find('.ds-tags .fa-times').last());
+        deleteTag(selector, container, container.find('.ds-tags .sn-icon-close-small').last());
       }
     });
   }
@@ -716,7 +716,9 @@ var dropdownSelector = (function() {
       } else {
         // Or delete specific one
         deleteValue(selector, container, tagLabel.data('ds-tag-id'), tagLabel.data('ds-tag-group'));
-        removeOptionFromSelector(selector, tagLabel.data('ds-tag-id'));
+        if (selector.data('config').tagClass) {
+          removeOptionFromSelector(selector, tagLabel.data('ds-tag-id'));
+        }
       }
     }, 350);
   }
@@ -741,7 +743,7 @@ var dropdownSelector = (function() {
       var tag = $(`<div class="${tagAppearance} ${customClass}" style="${customStyle ? customStyle(data) : ''}" >
                   <div class="tag-label">
                   </div>
-                  <i class="fas fa-times ${selector.data('config').singleSelect ? 'hidden' : ''}"></i>
+                  <i class="sn-icon sn-icon-close-small ${selector.data('config').singleSelect ? 'hidden' : ''}"></i>
                 </div>`).insertBefore(container.find('.input-field .search-field'));
 
 
@@ -756,7 +758,7 @@ var dropdownSelector = (function() {
       }
 
       // Now we need add delete action to tag
-      tag.find('.fa-times').click(function(e) {
+      tag.find('.sn-icon-close-small').click(function(e) {
         e.stopPropagation();
         deleteTag(selector, container, $(this));
       });
@@ -1010,7 +1012,9 @@ var dropdownSelector = (function() {
       currentData = getCurrentData($(selector).next());
       currentData.push(value);
       setData($(selector), currentData, skip_event);
-      appendOptionToSelector(selector, value);
+      if ($(selector).data('config').tagClass) {
+        appendOptionToSelector(selector, value);
+      }
 
       return this;
     },

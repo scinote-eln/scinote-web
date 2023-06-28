@@ -108,7 +108,7 @@
                         <span class="input-group-addon" id="image-name"></span></div>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">${I18n.t('general.cancel')}</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">${I18n.t('general.cancel')}</button>
                         <button type="button" class="btn btn-success" data-action="addImageFormClipboard">${I18n.t('assets.from_clipboard.add_image')}</button>
                       </div>
                     </div>
@@ -318,11 +318,11 @@
     function uploadedAssetPreview(asset, i) {
       var html = `<div class="panel panel-default panel-result-attachment-new" data-item-uuid="${asset.uuid}">
                     <div class="panel-heading">
-                      <span class="fas fa-paperclip"></span>
+                      <span class="sn-icon sn-icon-files"></span>
                       ${I18n.t('assets.drag_n_drop.file_label')}
                       <div class="pull-right">
                         <a data-item-id="${asset.uuid}" href="#">
-                          <span class="fas fa-times"></span>
+                          <span class="sn-icon sn-icon-close"></span>
                         </a>
                       </div>
                     </div>

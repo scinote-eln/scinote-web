@@ -10,9 +10,9 @@
         <%= t('webhooks.index.title') %>
       </h1>
       <div class="header-actions">
-        <div class="dropdown sort-menu">
-          <button class="btn btn-light icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            <span><i class="fas fa-sort-amount-down"></i></span>
+        <div class="dropdown sort-menu" title="<%= t("general.sort.title") %>">
+          <button class="btn btn-light btn-black icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <span><i class="sn-icon sn-icon-sort-down"></i></span>
           </button>
           <ul id="sortMenuDropdown" class="dropdown-menu dropdown-menu-right" aria-labelledby="sortMenu">
             <% %w(atoz ztoa).each do |sort| %>
@@ -32,13 +32,13 @@
     <% @activity_filters.each do |filter| %>
       <li class="filter-element">
         <div class="filter-block">
-          <i class="fas fa-caret-down collapsed" data-toggle="collapse" href="#activityFilter<%= filter.id %>" aria-expanded="false"></i>
+          <i class="sn-icon sn-icon-down collapsed" data-toggle="collapse" href="#activityFilter<%= filter.id %>" aria-expanded="false"></i>
           <span class="filter-name" title="<%= filter.name %>">
             <%= filter.name %>
           </span>
           <div class="info-container dropdown" data-url="<%= filter_info_users_settings_webhooks_path(filter_id: filter.id) %>" >
             <div id="filter-info-<%= filter.id %>-button" class="btn btn-light show-filter icon-btn" data-toggle="dropdown">
-              <i class="fas fa-info-circle"></i>
+              <i class="sn-icon sn-icon-info"></i>
             </div>
             <div class="dropdown-menu" aria-labelledby="filter-info-<%= filter.id %>-button" role="menu">
               <p class="filter-info-title"><%= t('webhooks.index.applied_filters') %></p>
@@ -46,11 +46,11 @@
             </div>
           </div>
           <div class="btn btn-light create-webhook">
-            <i class="fas fa-plus"></i>
+            <i class="sn-icon sn-icon-new-task"></i>
             <%= t('webhooks.index.new_webhook') %>
           </div>
           <div class="btn btn-light delete-filter icon-btn" data-id="<%= filter.id %>" data-name="<%= filter.name %>">
-            <i class="fas fa-trash"></i>
+            <i class="sn-icon sn-icon-delete"></i>
           </div>
         </div>
         <ul class="webhooks-list collapse" id="activityFilter<%= filter.id %>">
@@ -78,13 +78,13 @@
                 <% end %>
                 <div class="dropdown webhook-menu">
                   <button class="btn btn-light icon-btn dropdown-toggle" type="button" id="webhookMenuButton<%= webhook.id %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <span><i class="fas fa-ellipsis-h"></i></span>
+                    <span><i class="sn-icon sn-icon-more-hori"></i></span>
                   </button>
                   <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="webhookMenuButton<%= webhook.id %>">
                     <li class="divider-label"><%= t("webhooks.index.webhook_options").upcase %></li>
                     <li>
                       <a href="#" class="edit-webhook">
-                        <i class="fas fa-pen"></i>
+                        <i class="sn-icon sn-icon-edit"></i>
                         <%= t('general.edit') %>
                       </a>
                     </li>
@@ -103,7 +103,7 @@
                     </li>
                     <li>
                       <%= link_to users_settings_webhook_path(webhook, filter_id: filter.id, sort: @current_sort), method: :delete, data: { confirm: t('webhooks.index.delete_webhook_confimration') } do %>
-                        <i class="fas fa-trash"></i>
+                        <i class="sn-icon sn-icon-delete"></i>
                         <%= t('general.delete') %>
                       <% end %>
                     </li>

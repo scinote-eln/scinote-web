@@ -1,19 +1,20 @@
 <template>
   <div class="w-[216px] ml-6 h-full border rounded relative bg-sn-white flex flex-col right-0 absolute navigator-container">
-    <div class="px-3 py-2 flex items-center relative leading-4">
+    <div class="px-3 py-1.5 flex items-center relative leading-4">
       <i class="sn-icon sn-icon-navigator"></i>
-      <div class="font-bold text-base pl-2">
+      <div class="font-bold text-base pl-3">
         {{ i18n.t('navigator.title') }}
       </div>
-      <i @click="$emit('navigator:colapse')" class="sn-icon sn-icon-close ml-auto cursor-pointer absolute right-3 top-2"></i>
+      <i @click="$emit('navigator:colapse')" class="sn-icon sn-icon-close ml-auto cursor-pointer absolute right-2.5 top-1.5"></i>
     </div>
-    <perfect-scrollbar @ps-scroll-y="onScrollY" @ps-scroll-x="onScrollX" ref="scrollContainer" class="grow py-4 relative px-3">
+    <perfect-scrollbar @ps-scroll-y="onScrollY" @ps-scroll-x="onScrollX" ref="scrollContainer" class="grow py-2 relative px-4 scroll-container">
       <NavigatorItem v-for="item in sortedMenuItems"
                      :key="item.id"
                      :currentItemId="currentItemId"
                      :item="item"
                      :firstLevel="true"
                      :reloadCurrentLevel="reloadCurrentLevel"
+                     :paddingLeft="0"
                      :reloadChildrenLevel="reloadChildrenLevel"
                      :archived="archived" />
     </perfect-scrollbar>

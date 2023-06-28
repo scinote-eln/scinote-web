@@ -4,7 +4,7 @@
 @import "components/*";
 
 .step-container {
-  --left-component-padding: 24px;
+  --left-component-padding: 2rem;
   border: $border-transparent;
   margin: 6px 0 6px -1.5em;
   padding: 8px 24px 8px 0;
@@ -15,7 +15,9 @@
     margin-bottom: 1.2em;
 
     .step-element-header {
+      align-items: center;
       border-radius: 4px;
+      display: flex;
       flex-basis: 80%;
       position: relative;
 
@@ -71,7 +73,7 @@
     }
 
     .step-state {
-      border: 2px solid $color-alto;
+      border: 1px solid $color-alto;
       border-radius: 50%;
       cursor: pointer;
       height: 24px;
@@ -95,8 +97,10 @@
     }
 
     .step-actions-container {
+      align-items: center;
       display: flex;
       justify-content: flex-end;
+      gap: .25rem;
       flex-basis: 20%;
 
       .disabled {
@@ -154,7 +158,6 @@
       bottom: 17px;
       width: 356px;
       height: 15px;
-      font-family: 'Lato';
       font-style: normal;
       font-weight: 400;
       font-size: 10px;

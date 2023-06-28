@@ -21,8 +21,8 @@
 
       <% if assignable.top_level_assignable? %>
         <div class="modal-footer">
-          <%= link_to new_assignment_path, class: 'btn btn-default pull-right', data: { action: 'swap-remote-container', target: '#user_assignments_modal' } do %>
-            <i class="fas fa-plus"></i>
+          <%= link_to new_assignment_path, class: 'btn btn-secondary pull-right', data: { action: 'swap-remote-container', target: '#user_assignments_modal' } do %>
+            <i class="sn-icon sn-icon-new-task"></i>
             <%= t('access_permissions.grant_access') %>
           <% end %>
         </div>

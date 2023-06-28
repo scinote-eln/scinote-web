@@ -143,7 +143,7 @@ Rails.application.routes.draw do
     namespace :users do
       namespace :settings do
         resources :teams, only: [] do
-          member do
+          collection do
             post :switch
           end
         end
@@ -197,6 +197,7 @@ Rails.application.routes.draw do
           get 'create_modal', to: 'repositories#create_modal',
               defaults: { format: 'json' }
           get 'actions_toolbar'
+          get 'export_modal'
         end
         get 'destroy_modal', to: 'repositories#destroy_modal',
             defaults: { format: 'json' }
@@ -219,6 +220,7 @@ Rails.application.routes.draw do
       member do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'export_repository', to: 'repositories#export_repository'
+        post 'export_repositories', to: 'repositories#export_repositories'
         post 'export_projects'
         get 'sidebar'
         get 'export_projects_modal'

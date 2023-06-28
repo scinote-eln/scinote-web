@@ -1,11 +1,37 @@
 // scss-lint:disable SelectorDepth QualifyingElement NestingDepth
 // Data table
 
+.dataTables_scrollBody {
+  .column-grip {
+    display: none !important;
+  }
+}
+
 .table.dataTable {
   table-layout: initial;
   text-overflow: initial;
   width: 100%;
   word-break: initial;
+
+  &.table--reorderable-columns {
+    thead tr th:not(:first-child) {
+      padding-left: 24px;
+
+      .column-grip {
+        color: $color-volcano;
+        cursor: grab;
+        display: block;
+        left: 0;
+        opacity: 0;
+        position: absolute;
+        top: 6px;
+      }
+
+      &:hover .column-grip {
+        opacity: 1;
+      }
+    }
+  }
 
   thead {
     tr {
@@ -29,14 +55,8 @@
           opacity: 1;
         }
 
-        &.sorting::after {
-          opacity: 0;
-        }
-
         &.sorting:hover {
-          &::after {
-            opacity: 1;
-          }
+          background-color: $color-alto;
         }
 
         &:first-child {
@@ -137,32 +157,32 @@
     }
 
     &.previous {
+      align-items: center;
+      display: inline-flex;
+
       &::before {
-        @include font-awesome;
-        content: $font-fas-angle-left;
-        left: 0;
-        line-height: 36px;
-        padding: 0 8px;
-        position: absolute;
+        @include font-sn-icon;
+        content: $sn-icon-left;
       }
 
       a {
-        padding-left: 23px;
+        min-height: unset;
+        padding-left: .25rem;
       }
     }
 
     &.next {
-      &::before {
-        @include font-awesome;
-        content: $font-fas-angle-right;
-        line-height: 36px;
-        padding: 0 8px;
-        position: absolute;
-        right: 0;
+      align-items: center;
+      display: inline-flex;
+
+      &::after {
+        @include font-sn-icon;
+        content: $sn-icon-right;
       }
 
       a {
-        padding-right: 23px;
+        min-height: unset;
+        padding-right: .25rem;
       }
     }
   }

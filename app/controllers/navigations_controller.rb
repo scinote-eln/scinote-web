@@ -6,7 +6,7 @@ class NavigationsController < ApplicationController
   def top_menu
     render json:  {
       root_url: root_path,
-      logo: logo,
+      team_switch_url: switch_users_settings_teams_path,
       current_team: current_team&.id,
       search_url: search_path,
       teams: teams,
@@ -24,20 +24,12 @@ class NavigationsController < ApplicationController
 
   private
 
-  def logo
-    {
-      large_url: image_path('/images/scinote_icon.svg'),
-      small_url: image_path('/images/sn-icon.svg')
-    }
-  end
-
   def teams
     current_user.teams.order(:name).map do |t|
-      {
-        label: t.name,
-        value: t.id,
-        params: { switch_url: switch_users_settings_team_path(t) }
-      }
+      [
+        t.id,
+        t.name
+      ]
     end
   end
 
