@@ -83,7 +83,11 @@ class TeamsController < ApplicationController
     }
   end
 
-  def shared_tasks_toggle; end
+  def shared_tasks_toggle
+    return render_403 unless can_manage_team?(@team)
+
+    @team.toggle!(:shareable_links_enabled)
+  end
 
   def routing_error(error = 'Routing error', status = :not_found, exception=nil)
     redirect_to root_path

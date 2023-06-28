@@ -56,7 +56,7 @@
     <div class="flex items-center py-4 leading-6 gap-6">
       <span><%= t("users.settings.teams.show.tasks_share.enable_label") %></span>
       <span class="sci-toggle-checkbox-container">
-        <%= check_box_tag 'select_team_share_permission', 0, @team.team_task_shareable?, { class: 'sci-toggle-checkbox team-share-permission',
+        <%= check_box_tag 'select_team_share_permission', 0, @team.shareable_links_enabled?, { class: 'sci-toggle-checkbox team-share-permission',
                                                                                            data: { disable_url: disable_tasks_sharing_modal_team_path(),
                                                                                                    enable_url: shared_tasks_toggle_team_path()
                                                                                                  },

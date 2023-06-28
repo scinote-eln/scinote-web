@@ -12,6 +12,7 @@ class Team < ApplicationRecord
   # output in space_taken related functions
   include ActionView::Helpers::NumberHelper
 
+  before_save -> { shareable_links.destroy_all }, if: -> { !shareable_links_enabled? }
   after_create :generate_template_project
   after_create :create_default_label_templates
   scope :teams_select, -> { select(:id, :name).order(name: :asc) }
@@ -70,6 +71,7 @@ class Team < ApplicationRecord
            through: :repository_sharing_user_assignments,
            source: :assignable,
            source_type: 'RepositoryBase'
+  has_many :shareable_links, inverse_of: :team, dependent: :destroy
 
   attr_accessor :without_templates
 
@@ -193,12 +195,8 @@ class Team < ApplicationRecord
     )
   end
 
-  def team_task_shareable?
-    false # dummy data before backend implementation
-  end
-
   def number_of_task_shared
-    1 # dummy data before backend implementation
+    shareable_links.count
   end
 
   private

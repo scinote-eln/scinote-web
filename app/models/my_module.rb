@@ -47,6 +47,7 @@ class MyModule < ApplicationRecord
   belongs_to :restored_by, foreign_key: 'restored_by_id', class_name: 'User', optional: true
   belongs_to :experiment, inverse_of: :my_modules, touch: true
   has_one :project, through: :experiment, autosave: false
+  has_one :shareable_link, as: :shareable, dependent: :destroy
   delegate :team, to: :project
   belongs_to :my_module_group, inverse_of: :my_modules, optional: true
   belongs_to :my_module_status, optional: true
