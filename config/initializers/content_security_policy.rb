@@ -4,27 +4,29 @@
 # For further information see the following documentation
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
 
-Rails.application.config.content_security_policy do |policy|
-  policy.default_src :self, :https
-  policy.base_uri    :self
-  policy.font_src    :self, :https, :data
-  policy.img_src     :self, :https, :data, :blob
-  policy.object_src  :none
-  policy.script_src  :self, :https, :unsafe_eval
-  policy.style_src   :self, :https, :unsafe_inline, :data
-  policy.connect_src :self, :data, *Extends::EXTERNAL_SERVICES
+ActiveSupport::Reloader.to_prepare do
+  Rails.application.config.content_security_policy do |policy|
+    policy.default_src :self, :https
+    policy.base_uri    :self
+    policy.font_src    :self, :https, :data
+    policy.img_src     :self, :https, :data, :blob
+    policy.object_src  :none
+    policy.script_src  :self, :https, :unsafe_eval
+    policy.style_src   :self, :https, :unsafe_inline, :data
+    policy.connect_src :self, :data, *Extends::EXTERNAL_SERVICES
 
-  # Specify URI for violation reports
-  # policy.report_uri "/csp-violation-report-endpoint"
+    # Specify URI for violation reports
+    # policy.report_uri "/csp-violation-report-endpoint"
+  end
 end
 
 # https://discuss.rubyonrails.org/t/turbolinks-broken-by-default-with-a-secure-csp/74790
-Rails.application.config.content_security_policy_nonce_generator = ->(request) do
+Rails.application.config.content_security_policy_nonce_generator = -> (request) do
   # use the same csp nonce for turbolinks requests
   if request.env['HTTP_TURBOLINKS_REFERRER'].present?
     request.env['HTTP_X_TURBOLINKS_NONCE']
   else
-    SecureRandom.base64(16)
+    request.session.id.to_s
   end
 end
 

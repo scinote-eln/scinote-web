@@ -14,7 +14,7 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" data-dismiss="modal"><%= t('general.cancel') %></button>
-          <%= button_to '', class: "btn btn-danger", remote: true do %>
+          <%= button_to '', class: "btn btn-danger", method: :post, remote: true do %>
             <%= t('protocols.delete_draft_modal.confirm') %>
           <% end %>
       </div>

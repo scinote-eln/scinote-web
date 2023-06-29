@@ -74,29 +74,21 @@ module Users
       end
 
       def name_html
-        respond_to do |format|
-          format.json do
-            render json: {
-              html: render_to_string(
-                partial: 'users/settings/teams/name_modal_body.html.erb',
-                locals: { team: @team }
-              )
-            }
-          end
-        end
+        render json: {
+          html: render_to_string(
+            partial: 'users/settings/teams/name_modal_body',
+            locals: { team: @team }
+          )
+        }
       end
 
       def description_html
-        respond_to do |format|
-          format.json do
-            render json: {
-              html: render_to_string(
-                partial: 'users/settings/teams/description_modal_body.html.erb',
-                locals: { team: @team }
-              )
-            }
-          end
-        end
+        render json: {
+          html: render_to_string(
+            partial: 'users/settings/teams/description_modal_body',
+            locals: { team: @team }
+          )
+        }
       end
 
       def update

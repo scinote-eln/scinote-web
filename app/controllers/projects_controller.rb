@@ -38,16 +38,16 @@ class ProjectsController < ApplicationController
 
     if filters_included?
       render json: {
-        toolbar_html: render_to_string(partial: 'projects/index/toolbar.html.erb'),
+        toolbar_html: render_to_string(partial: 'projects/index/toolbar'),
         filtered: true,
         cards_html: render_to_string(
-          partial: 'projects/index/team_projects_grouped_by_folder.html.erb',
+          partial: 'projects/index/team_projects_grouped_by_folder',
           locals: { projects_by_folder: overview_service.grouped_by_folder_project_cards }
         )
       }
     else
       if current_folder
-        breadcrumbs_html = render_to_string(partial: 'projects/index/breadcrumbs.html.erb',
+        breadcrumbs_html = render_to_string(partial: 'projects/index/breadcrumbs',
                                             locals: { target_folder: current_folder, folder_page: true })
         projects_cards_url = project_folder_cards_url(current_folder)
         title_html = if @inline_editable_title_config.present?
@@ -73,9 +73,9 @@ class ProjectsController < ApplicationController
         breadcrumbs_html: breadcrumbs_html,
         title_html: title_html,
         next_page: cards.next_page,
-        toolbar_html: render_to_string(partial: 'projects/index/toolbar.html.erb'),
+        toolbar_html: render_to_string(partial: 'projects/index/toolbar'),
         cards_html: render_to_string(
-          partial: 'projects/index/team_projects.html.erb',
+          partial: 'projects/index/team_projects',
           locals: { cards: cards, view_mode: params[:view_mode] }
         )
       }
@@ -125,15 +125,9 @@ class ProjectsController < ApplicationController
 
   def new
     @project = current_team.projects.new(project_folder: current_folder)
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'projects/index/modals/new_project.html.erb'
-          )
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'projects/index/modals/new_project')
+    }
   end
 
   def create
@@ -160,9 +154,8 @@ class ProjectsController < ApplicationController
 
   def edit
     render json: {
-      html: render_to_string(partial: 'projects/index/modals/edit_project_contents.html.erb',
+      html: render_to_string(partial: 'projects/index/modals/edit_project_contents',
                              locals: { project: @project })
-
     }
   end
 
@@ -352,19 +345,10 @@ class ProjectsController < ApplicationController
   end
 
   def notifications
-    @modules = @project
-               .assigned_modules(current_user)
-               .order(due_date: :desc)
-    respond_to do |format|
-      # format.html
-      format.json do
-        render json: {
-          html: render_to_string({
-                                   partial: 'notifications.html.erb'
-                                 })
-        }
-      end
-    end
+    @modules = @project.assigned_modules(current_user).order(due_date: :desc)
+    render json: {
+      html: render_to_string(partial: 'notifications')
+    }
   end
 
   def users_filter

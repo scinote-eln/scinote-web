@@ -15,7 +15,7 @@ module CommentHelper
   end
 
   def comment_index_helper(comments, more_url, partial = nil)
-    partial ||= 'shared/comments/list.html.erb'
+    partial ||= 'shared/comments/list'
     render json: {
       perPage: @per_page,
       resultsNumber: comments.size,

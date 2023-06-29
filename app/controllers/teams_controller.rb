@@ -12,16 +12,12 @@ class TeamsController < ApplicationController
   before_action :check_export_projects_permissions, only: %i(export_projects_modal export_projects)
 
   def sidebar
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'shared/sidebar/projects.html.erb',
-            locals: { team: current_team, sort: params[:sort] }
-          )
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(
+        partial: 'shared/sidebar/projects',
+        locals: { team: current_team, sort: params[:sort] }
+      )
+    }
   end
 
   def export_projects
@@ -51,7 +47,7 @@ class TeamsController < ApplicationController
       if current_user.has_available_exports?
         render json: {
           html: render_to_string(
-            partial: 'projects/export/modal.html.erb',
+            partial: 'projects/export/modal',
             locals: { num_projects: @exp_projects.size,
                       limit: TeamZipExport.exports_limit,
                       num_of_requests_left: current_user.exports_left - 1 }
@@ -61,7 +57,7 @@ class TeamsController < ApplicationController
       else
         render json: {
           html: render_to_string(
-            partial: 'projects/export/error.html.erb',
+            partial: 'projects/export/error',
             locals: { limit: TeamZipExport.exports_limit }
           ),
           title: t('projects.export_projects.error_title'),

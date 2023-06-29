@@ -21,12 +21,12 @@
       </div>
       <% if assignable.visibility && assignable.visibility == 'hidden' %>
         <%= f.fields_for :users, UserAssignment.new do |user_form| %>
-          <%= render 'access_permissions/partials/public_assignment_field.html.erb', user_form: user_form, assignable: assignable  %>
+          <%= render 'access_permissions/partials/public_assignment_field', user_form: user_form, assignable: assignable  %>
         <% end %>
       <% end %>
       <% users.each do |user| %>
         <%= f.fields_for :users, UserAssignment.new(user: user) do |user_form| %>
-          <%= render 'access_permissions/partials/user_assignment_field.html.erb', user_form: user_form, assignable: assignable  %>
+          <%= render 'access_permissions/partials/user_assignment_field', user_form: user_form, assignable: assignable  %>
         <% end %>
       <% end %>
     </div>

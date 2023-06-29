@@ -136,15 +136,9 @@ module Users
         @invite_results << result
       end
 
-      respond_to do |format|
-        format.json do
-          render json: {
-            html: render_to_string(
-              partial: 'shared/invite_users_modal_results.html.erb'
-            )
-          }
-        end
-      end
+      render json: {
+        html: render_to_string(partial: 'shared/invite_users_modal_results')
+      }
     end
 
     def invitable_teams

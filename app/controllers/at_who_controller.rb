@@ -6,14 +6,9 @@ class AtWhoController < ApplicationController
 
   def users
     users = @team.search_users(@query).limit(Constants::ATWHO_SEARCH_LIMIT + 1)
-    respond_to do |format|
-      format.json do
-        render json: {
-          users: [render_to_string(partial: 'shared/smart_annotation/users.html.erb', locals: {users: users})],
-          status: :ok
-        }
-      end
-    end
+    render json: {
+      users: [render_to_string(partial: 'shared/smart_annotation/users', locals: { users: users })]
+    }
   end
 
   def menu_items
@@ -46,18 +41,14 @@ class AtWhoController < ApplicationController
       items = []
       repository_id = nil
     end
-    respond_to do |format|
-      format.json do
-        render json: {
-          res: [
-            render_to_string(partial: 'shared/smart_annotation/repository_items.html.erb',
-                             locals: { repository_rows: items, repository: repository })
-          ],
-          repository: repository_id,
-          team: current_team.id
-        }
-      end
-    end
+    render json: {
+      res: [
+        render_to_string(partial: 'shared/smart_annotation/repository_items',
+                         locals: { repository_rows: items, repository: repository })
+      ],
+      repository: repository_id,
+      team: current_team.id
+    }
   end
 
   def menu
@@ -68,47 +59,29 @@ class AtWhoController < ApplicationController
 
   def projects
     res = SmartAnnotation.new(current_user, current_team, @query)
-    respond_to do |format|
-      format.json do
-        render json: {
-          res: [render_to_string(partial: 'shared/smart_annotation/project_items.html.erb', locals: {
-                                 projects: res.projects
-                               })],
-          team: current_team.id,
-          status: :ok
-        }
-      end
-    end
+    render json: {
+      res: [render_to_string(partial: 'shared/smart_annotation/project_items',
+                             locals: { projects: res.projects })],
+      team: current_team.id
+    }
   end
 
   def experiments
     res = SmartAnnotation.new(current_user, current_team, @query)
-    respond_to do |format|
-      format.json do
-        render json: {
-          res: [render_to_string(partial: 'shared/smart_annotation/experiment_items.html.erb', locals: {
-                                 experiments: res.experiments
-                               })],
-          team: current_team.id,
-          status: :ok
-        }
-      end
-    end
+    render json: {
+      res: [render_to_string(partial: 'shared/smart_annotation/experiment_items',
+                             locals: { experiments: res.experiments })],
+      team: current_team.id
+    }
   end
 
   def my_modules
     res = SmartAnnotation.new(current_user, current_team, @query)
-    respond_to do |format|
-      format.json do
-        render json: {
-          res: [render_to_string(partial: 'shared/smart_annotation/my_module_items.html.erb', locals: {
-                                 my_modules: res.my_modules
-                               })],
-          team: current_team.id,
-          status: :ok
-        }
-      end
-    end
+    render json: {
+      res: [render_to_string(partial: 'shared/smart_annotation/my_module_items',
+                             locals: { my_modules: res.my_modules })],
+      team: current_team.id
+    }
   end
 
   private

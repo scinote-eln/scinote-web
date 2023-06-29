@@ -55,19 +55,11 @@ class GlobalActivitiesController < ApplicationController
     @next_page = activities.next_page
     @starting_timestamp = activities.first&.created_at.to_i
 
-    respond_to do |format|
-      format.json do
-        render json: {
-          activities_html: render_to_string(
-            partial: 'activity_list.html.erb'
-          ),
-          next_page: @next_page,
-          starting_timestamp: @starting_timestamp
-        }
-      end
-      format.html do
-      end
-    end
+    render json: {
+      activities_html: render_to_string(partial: 'activity_list'),
+      next_page: @next_page,
+      starting_timestamp: @starting_timestamp
+    }
   end
 
   def team_filter

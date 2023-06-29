@@ -34,7 +34,7 @@ class MyModulesController < ApplicationController
 
     render json: {
       html: render_to_string(
-        partial: 'my_modules/modals/new_modal.html.erb', locals: { view_mode: params[:view_mode],
+        partial: 'my_modules/modals/new_modal', locals: { view_mode: params[:view_mode],
                                                                    users: assigned_users }
       )
     }
@@ -75,31 +75,17 @@ class MyModulesController < ApplicationController
   end
 
   def show
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string({
-                                   partial: 'show.html.erb'
-                                 })
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'show')
+    }
   end
 
   # Description modal window in full-zoom canvas
   def description
-    respond_to do |format|
-      format.html
-      format.json do
-        render json: {
-          html: render_to_string({
-                                   partial: 'description.html.erb'
-                                 }),
-          title: t('my_modules.description.title',
-                   module: escape_input(@my_module.name))
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'description'),
+      title: t('my_modules.description.title', module: escape_input(@my_module.name))
+    }
   end
 
   def save_table_state
@@ -145,51 +131,28 @@ class MyModulesController < ApplicationController
     @next_page = activities.next_page
     @starting_timestamp = activities.first&.created_at.to_i
 
-    respond_to do |format|
-      format.json do
-        render json: {
-          activities_html: render_to_string(
-            partial: 'global_activities/activity_list.html.erb'
-          ),
-          next_page: @next_page,
-          starting_timestamp: @starting_timestamp
-        }
-      end
-      format.html do
-      end
-    end
+    render json: {
+      activities_html: render_to_string(partial: 'global_activities/activity_list'),
+      next_page: @next_page,
+      starting_timestamp: @starting_timestamp
+    }
   end
 
   # Different controller for showing activities inside tab
   def activities_tab
     @activities = @my_module.last_activities(1, @per_page)
 
-    respond_to do |format|
-      format.html
-      format.json do
-        render json: {
-          html: render_to_string({
-                                   partial: 'activities.html.erb'
-                                 })
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'activities')
+    }
   end
 
   # Due date modal window in full-zoom canvas
   def due_date
-    respond_to do |format|
-      format.html
-      format.json do
-        render json: {
-          html: render_to_string({
-                                   partial: 'due_date.html.erb'
-                                 }),
-          title: t('my_modules.due_date.title',
-                   module: escape_input(@my_module.name))
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'due_date'),
+      title: t('my_modules.due_date.title', module: escape_input(@my_module.name))
+    }
   end
 
   def update
@@ -225,51 +188,44 @@ class MyModulesController < ApplicationController
         log_due_date_change_activity(due_date_changes) if due_date_changes.present?
       end
     end
-    respond_to do |format|
-      if saved
-        format.json do
-          alerts = []
-          alerts << 'alert-green' if @my_module.completed?
-          unless @my_module.completed?
-            alerts << 'alert-red' if @my_module.is_overdue?
-            alerts << 'alert-yellow' if @my_module.is_one_day_prior?
-          end
-          render json: {
-            status: :ok,
-            start_date_label: render_to_string(
-              partial: 'my_modules/start_date_label.html.erb',
-              locals: { my_module: @my_module, start_date_editable: true }
-            ),
-            due_date_label: render_to_string(
-              partial: 'my_modules/due_date_label.html.erb',
-              locals: { my_module: @my_module, due_date_editable: true }
-            ),
-            card_due_date_label: render_to_string(
-              partial: 'my_modules/card_due_date_label.html.erb',
-              locals: { my_module: @my_module }
-            ),
-            table_due_date_label: {
-              html: render_to_string(partial: 'experiments/table_due_date_label.html.erb',
-                                     locals: { my_module: @my_module, user: current_user }),
-              due_status: my_module_due_status(@my_module)
-            },
-            module_header_due_date: render_to_string(
-              partial: 'my_modules/module_header_due_date.html.erb',
-              locals: { my_module: @my_module }
-            ),
-            description_label: render_to_string(
-              partial: 'my_modules/description_label.html.erb',
-              locals: { my_module: @my_module }
-            ),
-            alerts: alerts
-          }
-        end
-      else
-        format.json do
-          render json: @my_module.errors,
-                 status: :unprocessable_entity
-        end
+    if saved
+      alerts = []
+      alerts << 'alert-green' if @my_module.completed?
+      unless @my_module.completed?
+        alerts << 'alert-red' if @my_module.is_overdue?
+        alerts << 'alert-yellow' if @my_module.is_one_day_prior?
       end
+      render json: {
+        status: :ok,
+        start_date_label: render_to_string(
+          partial: 'my_modules/start_date_label',
+          locals: { my_module: @my_module, start_date_editable: true }
+        ),
+        due_date_label: render_to_string(
+          partial: 'my_modules/due_date_label',
+          locals: { my_module: @my_module, due_date_editable: true }
+        ),
+        card_due_date_label: render_to_string(
+          partial: 'my_modules/card_due_date_label',
+          locals: { my_module: @my_module }
+        ),
+        table_due_date_label: {
+          html: render_to_string(partial: 'experiments/table_due_date_label',
+                                 locals: { my_module: @my_module, user: current_user }),
+          due_status: my_module_due_status(@my_module)
+        },
+        module_header_due_date: render_to_string(
+          partial: 'my_modules/module_header_due_date',
+          locals: { my_module: @my_module }
+        ),
+        description_label: render_to_string(
+          partial: 'my_modules/description_label',
+          locals: { my_module: @my_module }
+        ),
+        alerts: alerts
+      }
+    else
+      render json: @my_module.errors, status: :unprocessable_entity
     end
   end
 

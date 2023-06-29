@@ -125,7 +125,7 @@
     <% columns = %w(Text Number Asset List Status Date Time DateTime Checklist Stock) %>
     <% columns.each do |column| %>
       <span style="display: none" class="column-type <%= column.downcase %>-column-type" data-column-type="Repository<%= column %>Value">
-        <%= render partial: "repository_columns/manage_column_partials/#{column.downcase}.html.erb", locals: {column: @repository_column}  %>
+        <%= render partial: "repository_columns/manage_column_partials/#{column.downcase}", locals: {column: @repository_column}  %>
       </span>
     <% end %>
   </div>

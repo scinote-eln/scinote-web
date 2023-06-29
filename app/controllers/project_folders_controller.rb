@@ -16,32 +16,23 @@ class ProjectFoldersController < ApplicationController
   def new
     @project_folder =
       current_team.project_folders.new(parent_folder: current_folder, archived: projects_view_mode_archived?)
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'projects/index/modals/new_project_folder.html.erb'
-          )
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(
+        partial: 'projects/index/modals/new_project_folder'
+      )
+    }
   end
 
   def create
     project_folder = current_team.project_folders.new(project_folders_params)
 
-    respond_to do |format|
-      format.json do
-        if project_folder.save
-          log_activity(:create_project_folder, project_folder, project_folder: project_folder.id)
-          message = t('projects.index.modal_new_project_folder.success_flash',
-                      name: escape_input(project_folder.name))
-          render json: { message: message }
-        else
-          render json: project_folder.errors,
-                 status: :unprocessable_entity
-        end
-      end
+    if project_folder.save
+      log_activity(:create_project_folder, project_folder, project_folder: project_folder.id)
+      message = t('projects.index.modal_new_project_folder.success_flash',
+                  name: escape_input(project_folder.name))
+      render json: { message: message }
+    else
+      render json: project_folder.errors, status: :unprocessable_entity
     end
   end
 
@@ -57,15 +48,11 @@ class ProjectFoldersController < ApplicationController
       move_projects(destination_folder)
       move_folders(destination_folder)
     end
-    respond_to do |format|
-      format.json { render json: { flash: I18n.t('projects.move.success_flash') } }
-    end
+    render json: { flash: I18n.t('projects.move.success_flash') }
   rescue StandardError => e
     Rails.logger.error e.message
     Rails.logger.error e.backtrace.join("\n")
-    respond_to do |format|
-      format.json { render json: { flash: I18n.t('projects.move.error_flash') }, status: :bad_request }
-    end
+    render json: { flash: I18n.t('projects.move.error_flash') }, status: :bad_request
   end
 
   def move_to_modal
@@ -73,16 +60,15 @@ class ProjectFoldersController < ApplicationController
     @current_sort = view_state.state.dig('projects', projects_view_mode, 'sort') || 'atoz'
 
     render json: {
-      html: render_to_string(partial: 'projects/index/modals/move_to_modal_contents.html.erb',
+      html: render_to_string(partial: 'projects/index/modals/move_to_modal_contents',
                              locals: { items_label: items_label(params[:items]) })
     }
   end
 
   def edit
     render json: {
-      html: render_to_string(partial: 'projects/index/modals/edit_folder_contents.html.erb',
-                               locals: { folder: @project_folder })
-
+      html: render_to_string(partial: 'projects/index/modals/edit_folder_contents',
+                             locals: { folder: @project_folder })
     }
   end
 
@@ -98,7 +84,7 @@ class ProjectFoldersController < ApplicationController
 
   def destroy_modal
     render json: {
-      html: render_to_string(partial: 'projects/index/modals/project_folder_delete.html.erb',
+      html: render_to_string(partial: 'projects/index/modals/project_folder_delete',
                              locals: { project_folder_ids: params[:project_folder_ids] })
     }
   end

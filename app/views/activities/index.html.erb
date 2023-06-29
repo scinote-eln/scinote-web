@@ -8,7 +8,7 @@
           <li><em><%= t'activities.index.no_activities' %></em></li>
         <% else %>
           <% @vars[:activities].each do |activity| %>
-            <%= render 'activity.html.erb', activity: activity %>
+            <%= render 'activity', activity: activity %>
           <% end %>
         <% end %>
       </ul>

@@ -30,7 +30,7 @@ module Dashboard
                                .where('my_modules.due_date > ? AND my_modules.due_date < ?', start_date, end_date)
                                .where(projects: { team_id: current_team.id })
       render json: {
-        html: render_to_string(partial: 'shared/my_modules_list_partial.html.erb', locals: {
+        html: render_to_string(partial: 'shared/my_modules_list_partial', locals: {
                                  my_modules: my_modules
                                })
       }

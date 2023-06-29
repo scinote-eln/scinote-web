@@ -6,7 +6,7 @@
     <span class="hidden-xs hidden-sm hidden-md"><%= t('my_modules.details.start_date') %></span>
   </div>
   <div id="startDateContainer" class="datetime-container" data-update-url="<%= my_module_path(@my_module, format: :json) %>">
-    <%= render partial: "module_header_start_date.html.erb", locals: { my_module: @my_module } %>
+    <%= render partial: "module_header_start_date", locals: { my_module: @my_module } %>
   </div>
 </div>
 
@@ -16,7 +16,7 @@
     <span class="hidden-xs hidden-sm  hidden-md"><%= t('my_modules.details.due_date') %></span>
   </div>
   <div id="dueDateContainer" class="datetime-container" data-update-url="<%= my_module_path(@my_module, format: :json) %>">
-    <%= render partial: "module_header_due_date.html.erb", locals: { my_module: @my_module } %>
+    <%= render partial: "module_header_due_date", locals: { my_module: @my_module } %>
   </div>
 </div>
 

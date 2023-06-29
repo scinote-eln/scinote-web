@@ -2,7 +2,7 @@
 <% provide(:sidebar_title, t("sidebar.my_module.sidebar_title")) %>
 
 <%= content_for :sidebar do %>
-  <%= render partial: "shared/sidebar/#{@my_module.archived_branch? ? 'archived_my_module' : 'my_module'}.html.erb",
+  <%= render partial: "shared/sidebar/#{@my_module.archived_branch? ? 'archived_my_module' : 'my_module'}",
     locals: {
       my_modules: @experiment_my_modules,
       experiment: @my_module.experiment,
@@ -36,7 +36,7 @@
           </li>
           <%= render partial: '/assets/marvinjs/create_marvin_sketch_li',
                        locals: {  element_id: @my_module.id, element_type: 'Result',  sketch_container: "#results[data-module-id=#{@my_module.id}]" } %>
-          <%= render partial: '/assets/bio_eddie/create_bio_eddie_li.html.erb',
+          <%= render partial: '/assets/bio_eddie/create_bio_eddie_li',
                      locals: {  element_id: @my_module.id, element_type: 'Result',  assets_container:"#results[data-module-id=#{@my_module.id}]" } %>
           <%= render partial: "assets/wopi/create_wopi_file_li",
                      locals: {  element_id: @my_module.id, element_type: 'Result' } %>
@@ -80,13 +80,13 @@
   </div>
 </div>
 
-<%= render partial: "shared/bio_eddie_modal.html.erb" %>
+<%= render partial: "shared/bio_eddie_modal" %>
 
 
 <%= javascript_include_tag "handsontable.full" %>
 
 <!-- Libraries for formulas -->
-<%= render partial: "shared/formulas_libraries.html.erb" %>
+<%= render partial: "shared/formulas_libraries" %>
 
 <%= javascript_include_tag "assets/wopi/create_wopi_file" %>
 <%= javascript_include_tag "my_modules/results" %>

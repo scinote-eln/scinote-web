@@ -17,7 +17,7 @@ class MyModuleCommentsController < ApplicationController
     unless comments.blank?
       more_url = url_for(my_module_my_module_comments_url(@my_module, format: :json, from: comments.first.id))
     end
-    comment_index_helper(comments, more_url, @last_comment_id.positive? ? nil : '/my_module_comments/index.html.erb')
+    comment_index_helper(comments, more_url, @last_comment_id.positive? ? nil : '/my_module_comments/index')
   end
 
   def create
