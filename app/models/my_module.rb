@@ -450,6 +450,10 @@ class MyModule < ApplicationRecord
                              user_target: user.id })
   end
 
+  def shared?
+    current_team.shareable_links_enabled? && shareable_link.present?
+  end
+
   def comments
     task_comments
   end

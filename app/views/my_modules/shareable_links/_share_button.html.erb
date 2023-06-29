@@ -1,0 +1,13 @@
+<button class="ml-2 btn
+                <%= my_module.shared? ? " btn-shared" : " btn-secondary" %>
+                <%= can_manage_my_module?(current_user, my_module) ? "" : " disabled" %>"
+  id="share-button"
+  title="<%= my_module.shared? ? t("my_modules.shareable_links.shared") : t("my_modules.shareable_links.share") %>"
+  type="button"
+  data-modal-target="#share-modal"
+  >
+  <span class="sn-icon sn-icon-shared"></span>
+  <span class="text-sm">
+    <%= my_module.shared? ? t("my_modules.shareable_links.shared") : t("my_modules.shareable_links.share") %>
+  </span>
+</button>

@@ -82,9 +82,19 @@
     color: var(--sn-blue);
   }
 
+  .btn.btn-shared {
+    background-color: var(--sn-white);
+    border: 1px solid var(--sn-coral);
+    color: var(--sn-coral);
+  }
+
   .btn.btn-secondary:hover,
   .btn.btn-default:hover {
     border: 1px solid var(--sn-blue-hover);
+  }
+
+  .btn.btn-shared:hover {
+    border: 1px solid var(--sn-light-grey);
   }
 
   .btn.btn-secondary:disabled,
@@ -93,6 +103,13 @@
   .btn.btn-default.disabled {
     background-color: var(--sn-white);
     color: var(--sn-sleepy-grey);
+  }
+
+  .btn.btn-shared:disabled,
+  .btn.btn-shared.disabled {
+    background-color: var(--sn-white);
+    color: var(--sn-sleepy-grey);
+    border: 1px solid var(--sn-light-grey);
   }
 
   .btn.btn-light {
