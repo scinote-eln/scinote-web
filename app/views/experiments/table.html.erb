@@ -64,7 +64,7 @@
 <%= render partial: "canvas/edit/modal/edit_module" %>
 <%= render partial: "experiments/table_display_modal"%>
 
-<%= javascript_include_tag "vue_components_action_toolbar" %>
-<%= javascript_include_tag("my_modules/tags") %>
-<%= javascript_include_tag("experiments/table") %>
-<%= javascript_include_tag("experiments/dropdown_actions") %>
+<%= javascript_include_tag "vue_components_action_toolbar", nonce: true %>
+<%= javascript_include_tag "my_modules/tags", nonce: true %>
+<%= javascript_include_tag "experiments/table", nonce: true %>
+<%= javascript_include_tag "experiments/dropdown_actions", nonce: true %>

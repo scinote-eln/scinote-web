@@ -3,9 +3,9 @@
   <head>
     <title><%= t("protocols.print.title") %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <%= javascript_include_tag 'jquery_bundle' %>
-    <%= javascript_include_tag 'application' %>
-    <%= javascript_include_tag "handsontable.full" %>
+    <%= javascript_include_tag 'jquery_bundle', nonce: true %>
+    <%= javascript_include_tag 'application', nonce: true %>
+    <%= javascript_include_tag "handsontable.full", nonce: true %>
     <%= render 'shared/formulas_libraries' %>
     <%= stylesheet_link_tag 'layouts/print_protocol', media: 'print, screen' %>
     <body>
@@ -14,6 +14,6 @@
         data-init-rows-cnt="<%= Constants::HANDSONTABLE_INIT_ROWS_CNT %>"
         data-init-cols-cnt="<%= Constants::HANDSONTABLE_INIT_COLS_CNT %>"
       ></div>
-      <%= javascript_include_tag 'protocols/handson' %>
+      <%= javascript_include_tag 'protocols/handson', nonce: true %>
     </body>
 </html>

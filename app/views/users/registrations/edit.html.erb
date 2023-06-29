@@ -80,6 +80,6 @@
 
 <%= render partial: 'users/shared/user_avatars_modal' %>
 
-<%= javascript_include_tag 'croppie' %>
+<%= javascript_include_tag 'croppie', nonce: true %>
 <%= stylesheet_link_tag 'croppie_styles' %>
-<%= javascript_include_tag "users/registrations/edit" %>
+<%= javascript_include_tag "users/registrations/edit", nonce: true %>

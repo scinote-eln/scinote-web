@@ -11,10 +11,10 @@
 </div>
 
 
-<%= javascript_include_tag "handsontable.full" %>
+<%= javascript_include_tag "handsontable.full", nonce: true %>
 
 <!-- Libraries for formulas -->
 <%= render partial: "shared/formulas_libraries.html.erb" %>
 
-<%= javascript_include_tag("reports/new") %>
-<%= javascript_include_tag 'reports/save_pdf_to_inventory' %>
+<%= javascript_include_tag "reports/new", nonce: true %>
+<%= javascript_include_tag 'reports/save_pdf_to_inventory', nonce: true %>

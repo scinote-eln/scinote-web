@@ -68,11 +68,11 @@
 <%= render partial: "my_modules/modals/manage_module_tags_modal", locals: { my_module: nil } %>
 
 <!-- Initialize dropdown actions -->
-<%= javascript_include_tag("experiments/dropdown_actions") %>
+<%= javascript_include_tag "experiments/dropdown_actions", nonce: true %>
 
-<%= javascript_include_tag("experiments/show") %>
+<%= javascript_include_tag "experiments/show", nonce: true %>
 
 <!-- Include all the neccesary JS libraries -->
-<%= javascript_include_tag("eventPause-min") %>
+<%= javascript_include_tag "eventPause-min", nonce: true %>
 
-<%= javascript_include_tag("projects/canvas") %>
+<%= javascript_include_tag "projects/canvas", nonce: true %>

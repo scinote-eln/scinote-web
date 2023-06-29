@@ -27,5 +27,5 @@
     <% form_errors[err] = (msg == "not found") ? ["Email not found"] : [msg] %>
   <% end %>
   <div class="hidden" id="form-error-data" data-form-errors="<%= form_errors.to_json %>"></div>
-  <%= javascript_include_tag 'users/confirmation/new' %>
+  <%= javascript_include_tag 'users/confirmation/new', nonce: true %>
 <% end %>

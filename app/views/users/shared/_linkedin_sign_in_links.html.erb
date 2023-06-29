@@ -8,6 +8,6 @@
                         'default-src': image_path('linkedin/Sign-in-Large---Default.png'),
                         'click-src': image_path('linkedin/Sign-in-Large---Active.png')
                       }) %>
-        <%= javascript_include_tag 'users/shared/linkedin_sign_in_links' %>
+        <%= javascript_include_tag 'users/shared/linkedin_sign_in_links', nonce: true %>
   <% end -%>
 <% end -%>

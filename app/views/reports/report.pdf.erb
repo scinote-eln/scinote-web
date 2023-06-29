@@ -5,19 +5,19 @@
     <%= wicked_pdf_stylesheet_link_tag "application" %>
     <%= wicked_pdf_stylesheet_link_tag "reports_pdf" %>
     <%= font_awesome_cdn_link_tag %>
-    <%= wicked_pdf_javascript_include_tag "jquery" %>
-    <%= wicked_pdf_javascript_include_tag "handsontable.full" %>
+    <%= wicked_pdf_javascript_include_tag "jquery", nonce: true %>
+    <%= wicked_pdf_javascript_include_tag "handsontable.full", nonce: true %>
     <!-- Libraries for formulas -->
-    <%= wicked_pdf_javascript_include_tag "lodash" %>
-    <%= wicked_pdf_javascript_include_tag "numeral" %>
-    <%= wicked_pdf_javascript_include_tag "numeric" %>
-    <%= wicked_pdf_javascript_include_tag "md5" %>
-    <%= wicked_pdf_javascript_include_tag "jstat" %>
-    <%= wicked_pdf_javascript_include_tag "formula" %>
-    <%= wicked_pdf_javascript_include_tag "parser" %>
-    <%= wicked_pdf_javascript_include_tag "ruleJS" %>
-    <%= wicked_pdf_javascript_include_tag "big.min" %>
-    <%= wicked_pdf_javascript_include_tag "handsontable.formula" %>
+    <%= wicked_pdf_javascript_include_tag "lodash", nonce: true %>
+    <%= wicked_pdf_javascript_include_tag "numeral", nonce: true %>
+    <%= wicked_pdf_javascript_include_tag "numeric", nonce: true %>
+    <%= wicked_pdf_javascript_include_tag "md5", nonce: true %>
+    <%= wicked_pdf_javascript_include_tag "jstat", nonce: true %>
+    <%= wicked_pdf_javascript_include_tag "formula", nonce: true %>
+    <%= wicked_pdf_javascript_include_tag "parser", nonce: true %>
+    <%= wicked_pdf_javascript_include_tag "ruleJS", nonce: true %>
+    <%= wicked_pdf_javascript_include_tag "big.min", nonce: true %>
+    <%= wicked_pdf_javascript_include_tag "handsontable.formula", nonce: true %>
     <%= wicked_pdf_stylesheet_link_tag "handsontable.formula" %>
   </head>
   <body class="print-report-body">
@@ -27,6 +27,6 @@
       <% end %>
     </div>
 
-    <%= wicked_pdf_javascript_include_tag "reports/content" %>
+    <%= wicked_pdf_javascript_include_tag "reports/content", nonce: true %>
   </body>
 </html>

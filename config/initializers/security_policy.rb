@@ -5,12 +5,12 @@
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
 
 Rails.application.config.content_security_policy do |policy|
-  policy.default_src :self, :https
+  policy.default_src :self
   policy.base_uri    :self
   policy.font_src    :self, :https, :data
   policy.img_src     :self, :https, :data, :blob
   policy.object_src  :none
-  policy.script_src  :self, :https, :unsafe_eval
+  policy.script_src  :self, :https, :unsafe_eval, :unsafe_inline, :strict_dynamic
   policy.style_src   :self, :https, :unsafe_inline, :data
   policy.connect_src :self, :data, *Extends::EXTERNAL_SERVICES
 

@@ -53,5 +53,5 @@
 
 <%= render partial: "users/settings/user_teams/leave_user_team_modal.html.erb" %>
 <%= stylesheet_link_tag 'datatables' %>
-<%= javascript_include_tag "users/settings/teams/index" %>
-<%= javascript_include_tag "users/settings/teams/datatable" %>
+<%= javascript_include_tag "users/settings/teams/index", nonce: true %>
+<%= javascript_include_tag "users/settings/teams/datatable", nonce: true %>

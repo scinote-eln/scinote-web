@@ -171,17 +171,17 @@
 <%= render partial: 'my_modules/repositories/consume_stock_modal.html.erb'%>
 
 <%= stylesheet_link_tag 'datatables' %>
-<%= javascript_include_tag "handsontable.full" %>
+<%= javascript_include_tag "handsontable.full", nonce: true %>
 <%= render partial: "shared/formulas_libraries.html.erb" %>
-<%= javascript_include_tag("my_modules/protocols") %>
-<%= javascript_include_tag("my_modules/status_flow") %>
-<%= javascript_include_tag("my_modules/tags") %>
-<%= javascript_include_tag 'emoji_button' %>
-<%= javascript_include_tag("my_modules/repositories") %>
-<%= javascript_include_tag("my_modules/pwa_mobile_app") %>
-<%= javascript_include_tag 'pdf_js' %>
+<%= javascript_include_tag "my_modules/protocols", nonce: true %>
+<%= javascript_include_tag "my_modules/status_flow", nonce: true %>
+<%= javascript_include_tag "my_modules/tags", nonce: true %>
+<%= javascript_include_tag 'emoji_button', nonce: true %>
+<%= javascript_include_tag "my_modules/repositories", nonce: true %>
+<%= javascript_include_tag "my_modules/pwa_mobile_app", nonce: true %>
+<%= javascript_include_tag 'pdf_js', nonce: true %>
 <%= stylesheet_link_tag 'pdf_js_styles' %>
-<%= javascript_include_tag "protocols/new_protocol" %>
+<%= javascript_include_tag "protocols/new_protocol", nonce: true %>
 
-<%= javascript_include_tag 'vue_protocol' %>
+<%= javascript_include_tag 'vue_protocol', nonce: true %>
 
