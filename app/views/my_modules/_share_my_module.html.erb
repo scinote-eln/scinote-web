@@ -1,0 +1,14 @@
+<div
+  class="share-task-container"
+  data-my-module-shared="<%= my_module.shared?%>"
+  data-shareable-button-disabled="<%= !can_manage_my_module?(current_user, my_module)%>"
+  data-shareable-object-url="<%= my_module_shareable_link_path(my_module) %>"
+>
+  <share-task-container
+    :shared="shared"
+    :urls="urls"
+    :disabled="disabled"
+  />
+</div>
+
+<%= javascript_include_tag 'vue_share_task_container' %>

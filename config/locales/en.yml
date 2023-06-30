@@ -3646,6 +3646,21 @@ en:
     label_printer: "Label Printer"
     fluics_printer: "Fluics Printer"
 
+  shareable_links:
+    modal:
+      title: "Share task"
+      sharing_toggle_label: "Link sharing"
+      description_placeholder: "This is the message written by the previous user."
+      sharing_link_label: "Shared link"
+      copy_button: "Copy"
+      disclaimer: "Anyone with the link can view the protocol and results pages of this task."
+      too_long_text: "Text is too long (maximum number is %{counter} characters)"
+      copy_success: "Shared link copied to clipboard"
+    destroy_modal: 
+      title: "Deactivate shared link"
+      description: "This action will permanently deactivate the shared link. Any user who has this link will no longer be able to access the task."
+      deactivate: "Deactivate"
+
   Add: "Add"
   Asset: "File"
   Assets: "Files"
