@@ -19,7 +19,7 @@
           <button v-else type="button"
                   class="btn btn-primary"
                   :disabled="state === 'in_progress'"
-                  data-dismiss="modal">{{ i18n.t('protocols.import_modal.close') }}</button>
+                  @click.stop.prevent="close">{{ i18n.t('protocols.import_modal.close') }}</button>
         </div>
       </div>
     </div>
@@ -39,7 +39,8 @@
         jobPollInterval: null,
         pollCount: 0,
         jobId: null,
-        protocolUrl: null
+        protocolUrl: null,
+        refreshCallback: null
       }
     },
     mounted() {
@@ -49,7 +50,14 @@
       open() {
         $(this.$refs.modal).modal('show');
       },
-      init(files) {
+      close() {
+        if (this.state === "done" && this.refreshCallback) {
+          this.refreshCallback();
+        }
+        $(this.$refs.modal).modal('hide');
+      },
+      init(files, refreshCallback) {
+        this.refreshCallback = refreshCallback;
         this.pollCount = 0;
         this.jobId = null;
         this.files = files;

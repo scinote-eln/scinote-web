@@ -2,8 +2,8 @@
 
 module Protocols
   class DocxImportJob < ApplicationJob
-    def perform(files)
-      ProtocolImporters::DocxService.new(files).call
+    def perform(files, user)
+      ProtocolImporters::DocxService.new(files, user).import!
     end
   end
 end
