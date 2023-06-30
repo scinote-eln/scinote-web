@@ -358,7 +358,7 @@ class ReportsController < ApplicationController
 
   def load_wizard_vars
     @templates = Extends::REPORT_TEMPLATES
-    live_repositories = Repository.accessible_by_teams(current_team)
+    live_repositories = Repository.accessible_by_teams(current_team).active
     snapshots_of_deleted = RepositorySnapshot.left_outer_joins(:original_repository)
                                              .where(team: current_team)
                                              .where.not(original_repository: live_repositories)
