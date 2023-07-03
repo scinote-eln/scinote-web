@@ -8,7 +8,7 @@
           var $container = $(this).find('.hot');
           var data = null;
           var contents = $(this).find('.hot-contents');
-          var metadata = JSON.parse($(this).find('.hot-metadata').val() || '{}');
+          var metadata = $(this).find('.hot-metadata').val() || {};
           if (contents.attr('value')) {
             data = JSON.parse(contents.attr('value')).data;
           }
