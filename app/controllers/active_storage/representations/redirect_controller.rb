@@ -6,6 +6,11 @@ module ActiveStorage
       include ActiveStorage::SetBlob
       include ActiveStorage::CheckBlobPermissions
 
+      rescue_from ActiveRecord::RecordNotFound do |e|
+        Rails.logger.error(e.message)
+        render json: {}, status: :not_found
+      end
+
       def show
         if @blob.attachments.take.record_type == 'Asset'
           return render plain: '', status: :accepted unless preview_ready?
