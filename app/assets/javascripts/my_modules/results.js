@@ -28,7 +28,7 @@
           fillHandle: false,
           formulas: true,
           data: JSON.parse(contents.attr('value')).data,
-          cell: JSON.parse(metadata.val() || '{}').cells || [],
+          cell: (metadata.val() || {}).cells || [],
           readOnly: true
         });
         let hot = $container.handsontable('getInstance');
