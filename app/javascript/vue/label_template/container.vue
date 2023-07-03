@@ -188,8 +188,9 @@
         this.editingContent = true;
         this.$nextTick(() => {
           this.$refs.contentInput.focus();
-          $(this.$refs.contentInput).prop('selectionStart', this.cursorPos);
-          $(this.$refs.contentInput).prop('selectionEnd', this.cursorPos);
+          const contentInput = this.$refs.contentInput;
+          const contentLength = contentInput.value.length;
+          contentInput.setSelectionRange(contentLength, contentLength);
         });
       },
       disableContentEdit() {
