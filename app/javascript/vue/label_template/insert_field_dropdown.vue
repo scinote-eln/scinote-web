@@ -148,9 +148,9 @@
       });
       this.$nextTick(() => {
         $(this.$refs.dropdown).on('show.bs.dropdown', () => {
-          setTimeout(() => {
+          this.$nextTick(() => {
             $('.insert-field-dropdown')[1].focus()
-          }, 50);
+          });
           this.searchValue = '';
         });
       });
