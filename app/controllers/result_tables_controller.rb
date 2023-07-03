@@ -31,6 +31,7 @@ class ResultTablesController < ApplicationController
 
   def create
     @table = Table.new(result_params[:table_attributes])
+    @table.metadata = JSON.parse(result_params[:table_attributes][:metadata])
     @table.created_by = current_user
     @table.team = current_team
     @table.last_modified_by = current_user
