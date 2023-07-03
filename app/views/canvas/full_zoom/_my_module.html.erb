@@ -24,14 +24,12 @@
     </a>
   </div>
 
-  <% unless my_module.experiment.archived_branch? || !can_restore_my_module?(my_module) %>
-    <div class="task-selector-container pull-left " data-view-mode="archived" data-task-id="<%= my_module.id %>">
-      <div class="sci-checkbox-container">
-        <input value="1" type="checkbox" class="sci-checkbox task-selector">
-        <span class="sci-checkbox-label"></span>
-      </div>
+  <div class="task-selector-container pull-left " data-view-mode="archived" data-task-id="<%= my_module.id %>">
+    <div class="sci-checkbox-container">
+      <input value="1" type="checkbox" class="sci-checkbox task-selector">
+      <span class="sci-checkbox-label"></span>
     </div>
-  <% end %>
+  </div>
 
   <div class="panel-heading">
     <h3 class="panel-title">
