@@ -15,7 +15,7 @@ RUN \
 
 ENV APP_HOME /usr/src/app
 ENV RAILS_ENV=production
-ENV GEM_HOME=$APP_HOME/vendor/bundle/ruby/2.7.0
+ENV GEM_HOME=$APP_HOME/vendor/bundle/ruby/3.2.0
 ENV PATH=$GEM_HOME/bin:$PATH
 ENV BUNDLE_APP_CONFIG=.bundle
 ENV BUNDLE_BUILD__SASSC=--disable-march-tune-native
@@ -29,7 +29,7 @@ RUN \
   bundle config set path '/usr/src/app/tmp/bundle' && \
   bundle install --jobs `nproc` && \
   cp -r tmp/bundle/ vendor && \
-  rm -rf vendor/bundle/ruby/2.7.0/cache && \
+  rm -rf vendor/bundle/ruby/3.2.0/cache && \
   find vendor/bundle/ruby -type d -name '.git' -exec rm -rf {} + && \
   bundle config --local path vendor/bundle
 
@@ -74,6 +74,7 @@ RUN \
   libjemalloc2 \
   groff-base \
   postgresql-client \
+  npm \
   netcat-openbsd \
   poppler-utils \
   librsvg2-2 \
@@ -97,7 +98,7 @@ RUN \
 
 ENV APP_HOME /usr/src/app
 ENV RAILS_ENV=production
-ENV GEM_HOME=$APP_HOME/vendor/bundle/ruby/2.7.0
+ENV GEM_HOME=$APP_HOME/vendor/bundle/ruby/3.2.0
 ENV PATH=$GEM_HOME/bin:$PATH
 ENV BUNDLE_APP_CONFIG=.bundle
 
