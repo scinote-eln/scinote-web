@@ -1,0 +1,9 @@
+<div class="inline-flex flex-row flex-nowrap">
+  <% my_module.user_my_modules.each do |um| %>
+    <% user = um.user %>
+    <div class="inline-flex gap-2 flex-nowrap h-6 px-2 py-1 items-center select-none" title="<%= user.full_name %>">
+      <img class="block rounded-full h-5" src="<%= avatar_path(user, :icon_small)%>" alt="<%= user.full_name %>">
+      <span style="block"><%= user.full_name %></span>
+    </div>
+  <% end %>
+</div>

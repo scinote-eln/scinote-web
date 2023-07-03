@@ -21,14 +21,14 @@
 
     <%= csrf_meta_tags %>
   </head>
-  <body class="">
-    <div class="sci--sl-layout">
+  <body id="sci-shareable-links">
+    <div class="flex flex-row">
       <div class="w-80 h-screen px-4 py-6 flex flex-col
                   border-0 border-r border-solid border-sn-sleepy-grey">
         <%= render "shareable_links/left_navigation" %>
       </div>
-      <div class="sci--sl-layout-content">
-        <%= yield :content %>
+      <div class="flex flex-col flex-1 min-h-screen p-4 bg-sn-super-light-grey">
+        <%= yield %>
       </div>
     </div>
 

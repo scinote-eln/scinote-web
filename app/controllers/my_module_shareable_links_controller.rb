@@ -5,7 +5,7 @@ class MyModuleShareableLinksController < ApplicationController
   before_action :load_shareable_link, only: %i(update destroy)
   before_action :check_view_permissions, only: :show
   before_action :check_manage_permissions, except: %i(show my_module_protocol_show)
-  skip_before_action :authenticate_user!, only: %(my_module_protocol_show)
+  skip_before_action :authenticate_user!, only: %i(my_module_protocol_show)
 
   def show
     render json: @my_module.shareable_link
