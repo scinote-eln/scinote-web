@@ -531,7 +531,8 @@ CREATE TABLE public.teams (
     created_by_id bigint,
     last_modified_by_id bigint,
     description character varying,
-    space_taken bigint DEFAULT 1048576 NOT NULL
+    space_taken bigint DEFAULT 1048576 NOT NULL,
+    shareable_links_enabled boolean DEFAULT false NOT NULL
 );
 
 
@@ -2508,6 +2509,43 @@ ALTER SEQUENCE public.settings_id_seq OWNED BY public.settings.id;
 
 
 --
+-- Name: shareable_links; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.shareable_links (
+    id bigint NOT NULL,
+    signed_id character varying,
+    description character varying,
+    shareable_type character varying,
+    shareable_id bigint,
+    team_id bigint,
+    created_by_id bigint,
+    last_modified_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: shareable_links_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.shareable_links_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: shareable_links_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.shareable_links_id_seq OWNED BY public.shareable_links.id;
+
+
+--
 -- Name: step_assets; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3935,6 +3973,13 @@ ALTER TABLE ONLY public.settings ALTER COLUMN id SET DEFAULT nextval('public.set
 
 
 --
+-- Name: shareable_links id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.shareable_links ALTER COLUMN id SET DEFAULT nextval('public.shareable_links_id_seq'::regclass);
+
+
+--
 -- Name: step_assets id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4672,6 +4717,14 @@ ALTER TABLE ONLY public.schema_migrations
 
 ALTER TABLE ONLY public.settings
     ADD CONSTRAINT settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: shareable_links shareable_links_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.shareable_links
+    ADD CONSTRAINT shareable_links_pkey PRIMARY KEY (id);
 
 
 --
@@ -6537,6 +6590,41 @@ CREATE UNIQUE INDEX index_settings_on_type ON public.settings USING btree (type)
 
 
 --
+-- Name: index_shareable_links_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_shareable_links_on_created_by_id ON public.shareable_links USING btree (created_by_id);
+
+
+--
+-- Name: index_shareable_links_on_last_modified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_shareable_links_on_last_modified_by_id ON public.shareable_links USING btree (last_modified_by_id);
+
+
+--
+-- Name: index_shareable_links_on_shareable; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_shareable_links_on_shareable ON public.shareable_links USING btree (shareable_type, shareable_id);
+
+
+--
+-- Name: index_shareable_links_on_signed_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_shareable_links_on_signed_id ON public.shareable_links USING btree (signed_id);
+
+
+--
+-- Name: index_shareable_links_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_shareable_links_on_team_id ON public.shareable_links USING btree (team_id);
+
+
+--
 -- Name: index_step_assets_on_step_id_and_asset_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7356,6 +7444,14 @@ ALTER TABLE ONLY public.oauth_access_grants
 
 
 --
+-- Name: shareable_links fk_rails_34ccd51b3f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.shareable_links
+    ADD CONSTRAINT fk_rails_34ccd51b3f FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: my_module_statuses fk_rails_357ee33309; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7481,6 +7577,14 @@ ALTER TABLE ONLY public.experiments
 
 ALTER TABLE ONLY public.repository_list_items
     ADD CONSTRAINT fk_rails_4e75dc8e18 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: shareable_links fk_rails_58d7b77ced; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.shareable_links
+    ADD CONSTRAINT fk_rails_58d7b77ced FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
 --
@@ -7913,6 +8017,14 @@ ALTER TABLE ONLY public.activities
 
 ALTER TABLE ONLY public.active_storage_variant_records
     ADD CONSTRAINT fk_rails_993965df05 FOREIGN KEY (blob_id) REFERENCES public.active_storage_blobs(id);
+
+
+--
+-- Name: shareable_links fk_rails_9985e5ac7c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.shareable_links
+    ADD CONSTRAINT fk_rails_9985e5ac7c FOREIGN KEY (team_id) REFERENCES public.teams(id);
 
 
 --
@@ -8803,6 +8915,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230223142119'),
 ('20230227131215'),
 ('20230414091215'),
-('20230426112548');
+('20230426112548'),
+('20230505104830'),
+('20230627091027');
 
 
