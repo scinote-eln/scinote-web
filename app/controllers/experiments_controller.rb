@@ -31,7 +31,8 @@ class ExperimentsController < ApplicationController
     @experiment = Experiment.new
     render json: {
       html: render_to_string(
-        partial: 'new_modal'
+        partial: 'new_modal',
+        formats: :html
       )
     }
   end

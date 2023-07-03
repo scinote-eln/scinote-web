@@ -3,9 +3,9 @@
      role="dialog"
      tabindex="-1"
      aria-labelledby="new-office-file-modal-label">
-    <%= bootstrap_form_tag url: create_wopi_file_path(),
-                          html: { novalidate: "novalidate" },
-                          method: :post, remote: true do |f| %>
+    <%= form_with url: create_wopi_file_path(),
+                  html: { novalidate: "novalidate" },
+                  method: :post, remote: true do |f| %>
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">

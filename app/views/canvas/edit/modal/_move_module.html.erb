@@ -8,7 +8,7 @@
       <div class="modal-body">
         <% experiments = @experiment.project.experiments.managable_by_user(current_user).order(name: :asc).active %>
         <% if experiments.count > 1 %>
-          <%= bootstrap_form_tag do |f| %>
+          <%= form_with do |f| %>
             <%= f.select :experiment_id, experiments
                                         .select { |e| e != @experiment && can_manage_experiment?(e) }
                                         .collect { |e| [ e.name, e.id ] }, {},

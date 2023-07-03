@@ -1,5 +1,5 @@
 <div class="modal" id="create-repo-modal" tabindex="-1" role="dialog" aria-labelledby="create-repo-modal-label">
-  <%= bootstrap_form_for [current_team, @repository], remote: :true do |f| %>
+  <%= form_with url: [current_team, @repository], remote: :true do |f| %>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -10,9 +10,9 @@
         </div>
         <div class="modal-body">
           <div class="form-group sci-input-container">
+            <label><%= t("repositories.index.modal_create.name_label") %></label>
             <%= f.text_field :name,
                              autofocus: true,
-                             label: t("repositories.index.modal_create.name_label"),
                              class: "sci-input-field",
                              placeholder: t("repositories.index.modal_create.name_placeholder") %>
           </div>

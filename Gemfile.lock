@@ -207,7 +207,6 @@ GEM
     bootstrap-select-rails (1.12.4)
     bootstrap3-datetimepicker-rails (4.17.47)
       momentjs-rails (>= 2.8.1)
-    bootstrap_form (2.7.0)
     builder (3.2.4)
     bullet (7.0.7)
       activesupport (>= 3.0.0)
@@ -438,6 +437,8 @@ GEM
     nokogiri (1.14.5)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
+    nokogiri (1.14.5-arm64-darwin)
+      racc (~> 1.4)
     nokogiri (1.14.5-x86_64-linux)
       racc (~> 1.4)
     oauth2 (2.0.9)
@@ -659,6 +660,8 @@ GEM
       ffi (~> 1.1)
     tailwindcss-rails (2.0.29)
       railties (>= 6.0.0)
+    tailwindcss-rails (2.0.29-arm64-darwin)
+      railties (>= 6.0.0)
     tailwindcss-rails (2.0.29-x86_64-linux)
       railties (>= 6.0.0)
     thor (1.2.2)
@@ -701,6 +704,7 @@ GEM
       rubyzip (>= 1.0.0)
 
 PLATFORMS
+  arm64-darwin
   ruby
   x86_64-linux
 
@@ -723,7 +727,6 @@ DEPENDENCIES
   bootstrap-sass (~> 3.4.1)
   bootstrap-select-rails (~> 1.12.4)
   bootstrap3-datetimepicker-rails (~> 4.17)
-  bootstrap_form (~> 2.7.0)
   bullet
   byebug
   canaid!
