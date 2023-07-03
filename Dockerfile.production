@@ -65,14 +65,16 @@ RUN \
 RUN \
   --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked \
+  DEBIAN_FRONTEND=noninteractive \
   apt-get update -qq && \
+  apt-get install -y --no-install-recommends \
+  default-jre-headless \
+  ca-certificates-java && \
   apt-get install -y --no-install-recommends \
   libjemalloc2 \
   groff-base \
   postgresql-client \
   netcat-openbsd \
-  npm \
-  default-jre-headless \
   poppler-utils \
   librsvg2-2 \
   libvips42 \
