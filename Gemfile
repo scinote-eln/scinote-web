@@ -6,7 +6,6 @@ ruby '3.2.2'
 
 gem 'bootsnap', require: false
 gem 'bootstrap-sass', '~> 3.4.1'
-gem 'bootstrap_form', '~> 2.7.0'
 gem 'devise', '~> 4.8.1'
 gem 'devise_invitable'
 gem 'figaro'

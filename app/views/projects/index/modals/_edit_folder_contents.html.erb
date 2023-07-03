@@ -4,12 +4,13 @@
     <%= t('projects.index.modal_edit_folder.title', folder: folder.name) %>
   </h4>
 </div>
-<%= bootstrap_form_for folder, url: project_folder_path(folder ,format: :json), method: :put, remote: true do |f| %>
+<%= form_with model: folder, url: project_folder_path(folder ,format: :json), method: :put, remote: true do |f| %>
   <div class="modal-body">
       <p><%= t('projects.index.modal_edit_folder.description') %></p>
       <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-          <%= f.text_field :name, label: t('projects.index.modal_edit_folder.folder_name_field'), autofocus: true %>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 sci-input-container">
+          <label><%= t('projects.index.modal_edit_folder.folder_name_field') %></label>
+          <%= f.text_field :name, autofocus: true, class: "sci-input-field" %>
         </div>
       </div>
 

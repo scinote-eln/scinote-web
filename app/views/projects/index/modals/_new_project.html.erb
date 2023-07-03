@@ -1,5 +1,5 @@
 <div class="modal" id="new-project-modal" tabindex="-1" role="dialog" aria-labelledby="new-project-modal-label">
-  <%= bootstrap_form_for @project, remote: true do |f| %>
+  <%= form_with model: @project, remote: true do |f| %>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -8,25 +8,31 @@
         </div>
         <div class="modal-body">
           <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 sci-input-container">
               <%= f.hidden_field :project_folder_id %>
-              <%= f.text_field :name, label: t('projects.index.modal_new_project.name'), placeholder: t('projects.index.modal_new_project.name_placeholder') %>
+              <label><%= t('projects.index.modal_new_project.name') %></label>
+              <%= f.text_field :name, placeholder: t('projects.index.modal_new_project.name_placeholder'), class: 'sci-input-field' %>
             </div>
           </div>
           <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-              <div class="checkbox">
-                <%= f.check_box :visibility,
-                                { label: t('projects.index.modal_new_project.visibility_html'), data: { action: 'toggle-visibility', target: 'role_select_wrapper' } },
-                                :visible,
-                                :hidden %>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-4">
+              <div class="flex items-center gap-4 text-xs">
+                <div class="sci-checkbox-container">
+                  <%= f.check_box :visibility,
+                                  { class: 'sci-checkbox' ,data: { action: 'toggle-visibility', target: 'role_select_wrapper' } },
+                                  :visible,
+                                  :hidden %>
+                  <span class="sci-checkbox-label"></span>
+                </div>
+                <span><%= t('projects.index.modal_new_project.visibility_html') %></span>
               </div>
             </div>
           </div>
           <div class="row hidden" id="role_select_wrapper">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 sci-input-container mt-4">
               <%= f.select :default_public_user_role_id,
                            options_for_select(user_roles_collection(@project), UserRole.find_by(name: I18n.t('user_roles.predefined.viewer')).id),
+                           {},
                            class: 'form-control selectpicker'%>
             </div>
           </div>

@@ -23,9 +23,7 @@ class ResultTextsController < ApplicationController
     respond_to do |format|
       format.json {
         render json: {
-          html: render_to_string({
-            partial: "new.html.erb"
-          })
+          html: render_to_string({ partial: 'new', formats: :html })
         }, status: :ok
       }
     end

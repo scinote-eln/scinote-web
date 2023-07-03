@@ -3,7 +3,7 @@
      tabindex="-1"
      role="dialog"
      aria-labelledby="move-experiment-modal-label">
-     <%= bootstrap_form_for @experiment,
+     <%= form_with model: @experiment,
                             url: move_experiment_path(@experiment),
                             method: :post,
                             remote: true,

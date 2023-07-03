@@ -1,9 +1,5 @@
-module BootstrapFormHelper
-
-  # Extend Bootstrap form builder
-  class BootstrapForm::FormBuilder
-    include BootstrapFormHelper
-
+module SciFormHelper
+  class SciFormBuilder < ActionView::Helpers::FormBuilder
     # Returns Bootstrap date-time picker of the "datetime" type tailored for accessing a specified datetime attribute (identified by +name+) on an object
     # assigned to the template (identified by +object+). Additional options on the input tag can be passed as a
     # hash with +options+. The supported options are shown in the following examples.
@@ -21,8 +17,8 @@ module BootstrapFormHelper
     #   Show a "today" button on the bottom of the date picker.
     #   # => datetime_picker(:post, :published, today: true)
     def datetime_picker(name, options = {})
-      id = "#{@object_name}_#{name.to_s}"
-      input_name = "#{@object_name}[#{name.to_s}]"
+      id = "#{@object_name}_#{name}"
+      input_name = "#{@object_name}[#{name}]"
       value = options[:value] ? options[:value].strftime("#{I18n.backend.date_format} %H:%M") : ''
       js_locale = I18n.locale.to_s
       js_format = options[:time] ? datetime_picker_format_full : datetime_picker_format_date_only
@@ -36,7 +32,7 @@ module BootstrapFormHelper
 
       res << "<div class='input-group date'>" if options[:clear]
 
-      res << "<input type='datetime' class='form-control' name='#{input_name}' id='#{id}' "\
+      res << "<input type='datetime' class='form-control' name='#{input_name}' id='#{id}' " \
              "readonly value='#{value}' data-toggle='date-time-picker' data-date-format='#{js_format}' " \
              "data-date-locale='#{js_locale}' data-date-show-today-button='#{options[:today].present?}'/>"
 
@@ -66,48 +62,40 @@ module BootstrapFormHelper
     #   Specify custom CSS classes on the element
     #   # => enum_btn_group(:car, :type, class: "class1 class2")
     def enum_btn_group(name, options = {})
-      id = "#{@object_name}_#{name.to_s}"
-      input_name = "#{@object_name}[#{name.to_s}]"
+      id = "#{@object_name}_#{name}"
+      input_name = "#{@object_name}[#{name}]"
 
       enum_vals = @object.class.send(name.to_s.pluralize)
-      btn_names = Hash[enum_vals.keys.collect { |k| [k, k] }]
-      if options[:btn_names] then
-        btn_names = options[:btn_names]
-      end
-      btn_names = HashWithIndifferentAccess.new(btn_names)
+      btn_names = enum_vals.keys.collect { |k| [k, k] }.to_h
+      btn_names = options[:btn_names] if options[:btn_names]
+      btn_names = ActiveSupport::HashWithIndifferentAccess.new(btn_names)
 
       label = name.to_s.humanize
-      if options[:label] then
-        label = options[:label]
-      end
+      label = options[:label] if options[:label]
 
-      style_str = ""
-      if options[:style] then
-        style_str = " style='#{options[:style]}'"
-      end
+      style_str = ''
+      style_str = " style='#{options[:style]}'" if options[:style]
 
-      class_str = ""
-      if options[:class] then
-        class_str = " #{options[:class]}"
-      end
+      class_str = ''
+      class_str = " #{options[:class]}" if options[:class]
 
-      res = ""
+      res = ''
       res << "<div class='form-group#{class_str}'#{style_str}>"
       res << "<label for='#{id}'>#{label}</label>"
-      res << "<br>"
+      res << '<br>'
       res << "<div class='btn-group' data-toggle='buttons'>"
       enum_vals.keys.each do |val|
         active = @object.send("#{val}?")
-        active_str = active ? " active" : ""
-        checked_str = active ? " checked='checked'" : ""
+        active_str = active ? ' active' : ''
+        checked_str = active ? " checked='checked'" : ''
 
         res << "<label class='btn btn-toggle#{active_str}'>"
         res << "<input type='radio' value='#{val}' name='#{input_name}' id='#{id}_#{val}'#{checked_str}>"
         res << btn_names[val]
-        res << "</label>"
+        res << '</label>'
       end
-      res << "</div>"
-      res << "</div>"
+      res << '</div>'
+      res << '</div>'
       res.html_safe
     end
 
@@ -125,11 +113,11 @@ module BootstrapFormHelper
       end
       opts.delete(:rows) if opts[:rows].nil?
       if opts[:single_line]
-        if opts[:rows]
-          opts[:class] = [opts[:class], 'textarea-sm-present'].join(' ')
-        else
-          opts[:class] = [opts[:class], 'textarea-sm'].join(' ')
-        end
+        opts[:class] = if opts[:rows]
+                         [opts[:class], 'textarea-sm-present'].join(' ')
+                       else
+                         [opts[:class], 'textarea-sm'].join(' ')
+                       end
       end
       text_area(name, opts)
     end

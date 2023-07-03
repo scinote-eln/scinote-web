@@ -1,3 +1,3 @@
-<%= bootstrap_form_for @my_module, url: my_module_path(@my_module, format: :json), remote: :true do |f| %>
+<%= form_with model: @my_module, url: my_module_path(@my_module, format: :json), builder: SciFormHelper::SciFormBuilder, remote: :true do |f| %>
   <%= f.smart_text_area :description, label: t("my_modules.description.label") %>
 <% end %>
