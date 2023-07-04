@@ -368,6 +368,7 @@ Rails.application.routes.draw do
         post 'restore_group'
         put 'view_type', to: 'teams#view_type'
         get 'actions_toolbar'
+        get 'list_toolbar'
       end
     end
 

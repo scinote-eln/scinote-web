@@ -13,7 +13,7 @@ class ProjectsOverviewService
                    params[:view_mode]
                  end
 
-    # Update sort if chanhed
+    # Update sort if changed
     @sort = @view_state.state.dig('projects', @view_mode, 'sort') || 'atoz'
     if @params[:sort] && @sort != @params[:sort] &&
        %w(new old atoz ztoa id_asc id_desc archived_old archived_new).include?(@params[:sort])

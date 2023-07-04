@@ -12,7 +12,6 @@
 
 var ProjectsIndex = (function() {
   var projectsWrapper = '#projectsWrapper';
-  var toolbarWrapper = '#toolbarWrapper';
   var cardsWrapper = '#cardsWrapper';
   var editProjectModal = '#edit-modal';
   var moveToModal = '#move-to-modal';
@@ -416,7 +415,7 @@ var ProjectsIndex = (function() {
     viewContainer.removeClass('no-results no-data');
     viewContainer.find('.card, .projects-group, .no-results-container, .no-data-container').remove();
 
-    if (viewContainer.find('.list').length) {
+    if (viewContainer.find('.table').length) {
       viewContainer.find('.table-header').show();
     }
 
@@ -433,9 +432,7 @@ var ProjectsIndex = (function() {
   }
 
   function loadCardsView() {
-    var requestParams = {
-      view_mode: $('.projects-index').data('view-mode'),
-      sort: projectsCurrentSort,
+    var filterParams = {
       search: projectsViewSearch,
       members: membersFilter,
       created_on_from: createdOnFromFilter,
@@ -443,7 +440,19 @@ var ProjectsIndex = (function() {
       folders_search: lookInsideFolders,
       archived_on_from: archivedOnFromFilter,
       archived_on_to: archivedOnToFilter
-    };
+    }
+
+    filterParams = Object.fromEntries(
+      Object.entries(filterParams).filter(([key, _value]) => {
+        return !!filterParams[key];
+      })
+    );
+
+    var requestParams = Object.assign({
+      view_mode: $('.projects-index').data('view-mode'),
+      sort: projectsCurrentSort
+    }, filterParams);
+
     var viewContainer = $(cardsWrapper);
     var cardsUrl = viewContainer.data('projects-cards-url');
 
@@ -455,7 +464,6 @@ var ProjectsIndex = (function() {
       data: { ...requestParams, ...{ page: 1 } },
       success: function(data) {
         $(projectsWrapper).find('.projects-title').html(data.title_html);
-        $(toolbarWrapper).html(data.toolbar_html);
         initProjectsViewModeSwitch();
         initCardData(viewContainer, data);
 
@@ -511,8 +519,6 @@ var ProjectsIndex = (function() {
       .on('ajax:success', '.change-projects-view-type-form', function(ev, data) {
         $('.view-switch-btn-name').text($(ev.target).find('.button-to').text());
 
-        $(cardsWrapper).removeClass('list cards').addClass(data.cards_view_type_class);
-
         $(projectsPageSelector).find('.cards-switch .button-to').removeClass('form-dropdown-state-item');
         $(projectsPageSelector).find('.cards-switch .button-to').addClass('btn-light');
         $(projectsPageSelector).find('.cards-switch .button-to .view-switch-list-span').css('color', 'black');
@@ -558,6 +564,10 @@ var ProjectsIndex = (function() {
   }
 
   function initProjectsFilters() {
+    // move filters into toolbar, TODO: implement filters as vue component
+    $('#filtersContainer').append($('.projects-filters-dropdown'));
+    $('.projects-filters-dropdown').removeClass('hidden');
+
     var $filterDropdown = filterDropdown.init(filtersEnabled);
     let $projectsFilter = $('.projects-index .projects-filters');
     let $membersFilter = $('.members-filter', $projectsFilter);
@@ -701,7 +711,16 @@ var ProjectsIndex = (function() {
     exportProjectsModalHeader = exportProjectsModal.find('.modal-title');
     exportProjectsModalBody = exportProjectsModal.find('.modal-body');
 
+    // hide when initializing
+    $('.projects-filters-dropdown').addClass('hidden');
+
     window.initActionToolbar();
+
+    window.initListToolbar();
+    window.listToolbarComponent.sortChangeCallback = (sort) => {
+      projectsCurrentSort = sort;
+      loadCardsView();
+    };
 
     updateSelectedCards();
     initNewProjectFolderModal();

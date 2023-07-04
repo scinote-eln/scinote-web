@@ -19,6 +19,39 @@
       <span class="projects-title name-readonly-placeholder"><%= current_folder&.name || t('projects.index.head_title_archived') %></span>
     </h1>
   </div>
-  <div id="toolbarWrapper" class="toolbar-row" data-width-breakpoint="700">
+  <%= render layout: 'shared/filter_dropdown', locals: {
+    container_class: 'projects-filters',
+    dropdown_title: t("filters_modal.title"),
+    search_field_history_key: 'project_filters_per_team'
+  } do %>
+    <%= render partial: 'shared/filter_dropdown/text_search', locals: {container_class: ''} %>
+    <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'created-on-filter', label: t("filters_modal.created_on.label"), view_mode: nil } %>
+    <div class="select-block">
+      <label><%= t("projects.index.filters_modal.members.label") %></label>
+      <select class="members-filter"
+              data-ajax-url="<%= users_filter_projects_path %>"
+              data-placeholder="<%= t('projects.index.filters_modal.members.placeholder') %>">
+      </select>
+    </div>
+    <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'archived-on-filter', label: t("filters_modal.archived_on.label"), view_mode: 'archived' } %>
+    <div class="select-block folders">
+      <span class="sci-checkbox-container">
+        <%= check_box_tag :folder_search, 'accepted', false, {class: "sci-checkbox"} %>
+        <span class="sci-checkbox-label"></span>
+      </span>
+      <span class="folder-search-label"><%= t("projects.index.filters_modal.folders.label") %></span>
+      <div class="dropdown folder-search-info">
+        <a class="fas fa-info-circle" id="folderSearchInfoBtn" data-toggle="dropdown"></a>
+        <div id="folderSearchInfo" class="dropdown-menu folder-search-popover" aria-labelledby="folderSearchInfo">
+          <%= t("projects.index.filters_modal.folders.popover_html") %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  <div id="listToolbar" data-behaviour="vue">
+    <list-toolbar
+      url="<%= list_toolbar_projects_path(project_folder_id: params[:project_folder_id], view: params[:view] || :cards, sort: params[:sort] || :atoz, archived: params[:archived] || false) %>"
+    />
   </div>
+  <%= javascript_include_tag "vue_components_list_toolbar" %>
 </div>
