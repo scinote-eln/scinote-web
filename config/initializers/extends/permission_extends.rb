@@ -5,6 +5,7 @@ module PermissionExtends
     %w(
       READ
       MANAGE
+      MANAGE_TASKS_SHARE
       USERS_MANAGE
       PROJECTS_CREATE
       INVENTORIES_CREATE
@@ -69,6 +70,7 @@ module PermissionExtends
       READ_ARCHIVED
       ACTIVITIES_READ
       MANAGE
+      SHARE
       UPDATE_START_DATE
       UPDATE_DUE_DATE
       UPDATE_DESCRIPTION
@@ -161,6 +163,7 @@ module PermissionExtends
       MyModulePermissions::READ_ARCHIVED,
       MyModulePermissions::ACTIVITIES_READ,
       MyModulePermissions::MANAGE,
+      MyModulePermissions::SHARE,
       MyModulePermissions::UPDATE_START_DATE,
       MyModulePermissions::UPDATE_DUE_DATE,
       MyModulePermissions::UPDATE_DESCRIPTION,

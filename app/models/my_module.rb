@@ -452,7 +452,7 @@ class MyModule < ApplicationRecord
   end
 
   def shared?
-    current_team.shareable_links_enabled? && shareable_link.present?
+    team.shareable_links_enabled? && shareable_link.present?
   end
 
   def comments

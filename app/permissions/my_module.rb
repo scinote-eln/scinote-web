@@ -44,6 +44,10 @@ Canaid::Permissions.register_for(MyModule) do
     my_module.permission_granted?(user, MyModulePermissions::MANAGE)
   end
 
+  can :share_my_module do |user, my_module|
+    my_module.permission_granted?(user, MyModulePermissions::SHARE)
+  end
+
   can :restore_my_module do |user, my_module|
     my_module.archived? && my_module.permission_granted?(user, MyModulePermissions::MANAGE)
   end
