@@ -10,7 +10,7 @@ gem 'bootstrap_form', '~> 2.7.0'
 gem 'devise', '~> 4.8.1'
 gem 'devise_invitable'
 gem 'figaro'
-gem 'pg', '~> 1.1'
+gem 'pg', '~> 1.5'
 gem 'pg_search' # PostgreSQL full text search
 gem 'psych', '< 4.0'
 gem 'rails', '~> 7.0.5'
