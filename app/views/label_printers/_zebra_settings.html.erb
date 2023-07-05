@@ -4,7 +4,7 @@
       <i class="sn-icon sn-icon-down collapsed" data-toggle="collapse" href="#zebraInstructionsSection" aria-expanded="false"></i>
       <div class="row-title"><%= t("users.settings.account.label_printer.instructions") %></div>
     </div>
-    <ul class="collapse collapse-content" id="zebraInstructionsSection">
+    <ul class="collapse" id="zebraInstructionsSection">
       <li>
         <%= t("users.settings.account.label_printer.zebra_instruction.general_html", link: Constants::SCINOTE_ZEBRA_DOWNLOAD_URL) %>
       </li>
@@ -73,7 +73,7 @@
           <% end %>
         </div>
     </div>
-    <ul class="collapse in zebra-printers collapse-content" id="PrintersSection"></ul>
+    <ul class="collapse in zebra-printers" id="PrintersSection"></ul>
   </li>
 </ul>
 
