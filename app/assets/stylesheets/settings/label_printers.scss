@@ -47,10 +47,21 @@
   }
 
   .zebra-settings-collapse {
-    .collapse-content {
+    border-left: 3px solid $color-concrete;
+    margin-top: 14px;
+    padding-bottom: 0;
+    padding-top: 0;
+
+    .collapse {
+      padding-left: 2.5em;
+
       ol {
         padding-left: 1.5em;
       }
+    }
+
+    .collapse-row {
+      padding-left: 1em;
     }
 
     li:last-child {
@@ -83,6 +94,10 @@
     }
   }
 
+  .collapse {
+    margin-bottom: 1em;
+  }
+
   .sn-icon-down {
     cursor: pointer;
     margin-right: .25em;
@@ -95,12 +110,10 @@
   .collapse-row {
     align-items: center;
     display: flex;
-    padding-left: 1em;
   }
 
-  .collapse-content {
-    margin-bottom: 1em;
-    padding-left: 2.5em;
+  .collapse {
+    padding-left: 1.5em;
   }
 
   .row-title {
