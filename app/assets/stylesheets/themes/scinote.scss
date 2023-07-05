@@ -5,7 +5,6 @@
 @import "mixins";
 @import "main_navigation";
 @import "repositories";
-@import "bootstrap/mixins/buttons";
 /** Layout **/
 
 // Word wrapping everywhere, except for table header of "datatables.js"
@@ -91,7 +90,6 @@ table {
 .dropdown-header {
   background-color: $brand-primary;
   color: $color-concrete;
-  font-size: $font-size-base;
   font-weight: bold;
   padding: 8px 20px;
 
@@ -105,10 +103,6 @@ table {
   margin-bottom: 5px;
 }
 
-.blockquote-search {
-  font-size: $font-size-base;
-  margin-bottom: 10px;
-}
 
 .vertical-spacer-one-half {
   display: inline-block;
@@ -122,9 +116,6 @@ table {
 
 /** Skin **/
 
-body {
-  font-size: $font-size-small;
-}
 
 .modal-body {
   font-size: $font-size-base;
@@ -446,7 +437,6 @@ mark,.mark {
   padding: 13px;
 
   .fas.fa-info-circle {
-    font-size: $font-size-large;
     margin-top: 4px;
   }
 }
@@ -1170,7 +1160,7 @@ body > .loading-overlay {
     visibility: hidden;
     width: 200px;
     word-wrap: break-word;
-    z-index: $infinity;
+    z-index: 10000;
   }
 }
 
@@ -1385,7 +1375,6 @@ th.custom-field .modal-tooltiptext {
 .tooltip-open {
   background-color: $color-concrete;
   color: $color-black;
-  font-size: $font-size-base;
 
   .popover-footer {
     background-color: $color-gainsboro;
