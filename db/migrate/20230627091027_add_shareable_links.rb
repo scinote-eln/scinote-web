@@ -3,7 +3,7 @@
 class AddShareableLinks < ActiveRecord::Migration[6.1]
   def change
     create_table :shareable_links do |t|
-      t.string :signed_id, index: true
+      t.string :uuid, index: true
       t.string :description
       t.references :shareable, polymorphic: true, index: true
       t.references :team, index: true, foreign_key: { to_table: :teams }

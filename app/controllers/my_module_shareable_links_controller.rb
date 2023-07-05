@@ -11,8 +11,8 @@ class MyModuleShareableLinksController < ApplicationController
   end
 
   def create
-    @my_module.shareable_link.create!(
-      signed_id: @my_module.signed_id,
+    @my_module.create_shareable_link(
+      uuid: @my_module.signed_id,
       description: params[:description],
       team: @my_module.team,
       created_by: current_user
@@ -48,6 +48,6 @@ class MyModuleShareableLinksController < ApplicationController
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_my_module?(@my_module)
+    render_403 unless can_share_my_module?(@my_module)
   end
 end

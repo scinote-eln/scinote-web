@@ -1,6 +1,6 @@
 <button class="ml-2 btn
                 <%= my_module.shared? ? " btn-shared" : " btn-secondary" %>
-                <%= can_manage_my_module?(current_user, my_module) ? "" : " disabled" %>"
+                <%=" disabled"  unless can_share_my_module?(current_user, my_module) %>"
   id="share-button"
   title="<%= my_module.shared? ? t("my_modules.shareable_links.shared") : t("my_modules.shareable_links.share") %>"
   type="button"
