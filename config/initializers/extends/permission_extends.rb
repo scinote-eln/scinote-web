@@ -5,7 +5,6 @@ module PermissionExtends
     %w(
       READ
       MANAGE
-      MANAGE_TASKS_SHARE
       USERS_MANAGE
       PROJECTS_CREATE
       INVENTORIES_CREATE

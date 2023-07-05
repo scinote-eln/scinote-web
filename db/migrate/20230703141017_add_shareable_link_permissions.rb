@@ -1,12 +1,7 @@
 # frozen_string_literal: true
 
 class AddShareableLinkPermissions < ActiveRecord::Migration[6.1]
-  OWNER_PERMISSIONS = [
-    TeamPermissions::MANAGE_TASKS_SHARE,
-    MyModulePermissions::SHARE
-  ].freeze
-
-  NORMAL_USER_PERMISSIONS = [
+  MY_MODULE_SHARE_PERMISSION = [
     MyModulePermissions::SHARE
   ].freeze
 
@@ -15,8 +10,8 @@ class AddShareableLinkPermissions < ActiveRecord::Migration[6.1]
       dir.up do
         @owner_role = UserRole.find_predefined_owner_role
         @normal_user_role = UserRole.find_predefined_normal_user_role
-        @owner_role.permissions = @owner_role.permissions | OWNER_PERMISSIONS
-        @normal_user_role.permissions = @normal_user_role.permissions | NORMAL_USER_PERMISSIONS
+        @owner_role.permissions = @owner_role.permissions | MY_MODULE_SHARE_PERMISSION
+        @normal_user_role.permissions = @normal_user_role.permissions | MY_MODULE_SHARE_PERMISSION
         @owner_role.save(validate: false)
         @normal_user_role.save(validate: false)
       end
@@ -24,8 +19,8 @@ class AddShareableLinkPermissions < ActiveRecord::Migration[6.1]
       dir.down do
         @owner_role = UserRole.find_predefined_owner_role
         @normal_user_role = UserRole.find_predefined_normal_user_role
-        @owner_role.permissions = @owner_role.permissions - OWNER_PERMISSIONS
-        @normal_user_role.permissions = @normal_user_role.permissions - NORMAL_USER_PERMISSIONS
+        @owner_role.permissions = @owner_role.permissions - MY_MODULE_SHARE_PERMISSION
+        @normal_user_role.permissions = @normal_user_role.permissions - MY_MODULE_SHARE_PERMISSION
         @owner_role.save(validate: false)
         @normal_user_role.save(validate: false)
       end

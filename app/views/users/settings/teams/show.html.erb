@@ -60,7 +60,7 @@
                                                                                            data: { disable_url: disable_tasks_sharing_modal_team_path(),
                                                                                                    enable_url: shared_tasks_toggle_team_path()
                                                                                                  },
-                                                                                           disabled: !can_manage_task_sharing?(current_team) }%>
+                                                                                           disabled: !can_manage_team?(current_team) }%>
         <span class="sci-toggle-checkbox-label"></span>
       </span>
     </div>

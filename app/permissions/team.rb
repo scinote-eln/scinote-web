@@ -58,10 +58,6 @@ Canaid::Permissions.register_for(Team) do
   can :manage_label_templates do |user, team|
     team.permission_granted?(user, TeamPermissions::LABEL_TEMPLATES_MANAGE)
   end
-
-  can :manage_task_sharing do |user, team|
-    team.permission_granted?(user, TeamPermissions::MANAGE_TASKS_SHARE)
-  end
 end
 
 Canaid::Permissions.register_for(ProjectFolder) do
