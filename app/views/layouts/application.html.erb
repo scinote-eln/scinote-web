@@ -108,6 +108,7 @@
       <%= render "shared/marvinjs_modal.html.erb" %>
       <%= render "users/sessions/session_expire_modal.html.erb" %>
       <%= render "users/sessions/session_end_modal.html.erb" %>
+      <%= render "label_printers/label_printer_modal" %>
     <% end %>
 
     <% if user_signed_in? && flash[:system_notification_modal] && current_user.show_login_system_notification? %>

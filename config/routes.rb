@@ -666,7 +666,7 @@ Rails.application.routes.draw do
     resources :comments, only: %i(index create update destroy)
 
     resources :repository_rows, only: %i() do
-      member do
+      collection do
         get :rows_to_print
         post :print
         get :print_zpl
