@@ -102,7 +102,8 @@ class StepsController < ApplicationController
     render json: {
       html: render_to_string(
         partial: 'steps/step',
-        locals: { step: @step }
+        locals: { step: @step },
+        formats: :html
       )
     }
   end

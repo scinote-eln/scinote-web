@@ -137,7 +137,7 @@ module Users
       end
 
       render json: {
-        html: render_to_string(partial: 'shared/invite_users_modal_results')
+        html: render_to_string(partial: 'shared/invite_users_modal_results', formats: :html)
       }
     end
 

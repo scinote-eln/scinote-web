@@ -77,7 +77,8 @@ module Users
         render json: {
           html: render_to_string(
             partial: 'users/settings/teams/name_modal_body',
-            locals: { team: @team }
+            locals: { team: @team },
+            formats: :html
           )
         }
       end
@@ -86,7 +87,8 @@ module Users
         render json: {
           html: render_to_string(
             partial: 'users/settings/teams/description_modal_body',
-            locals: { team: @team }
+            locals: { team: @team },
+            formats: :html
           )
         }
       end

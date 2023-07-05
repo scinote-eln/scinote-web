@@ -78,7 +78,8 @@ class TeamUsersDatatable < CustomDatatable
               data: { action: 'destroy-user-team' }
             ),
             user: @user
-          }
+          },
+          formats: :html
         )
       }
     end

@@ -852,28 +852,15 @@ class ProtocolsController < ApplicationController
   end
 
   def load_from_repository_modal
-    @protocol = Protocol.find_by_id(params[:id])
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string({
-            partial: "my_modules/protocols/load_from_repository_modal_body.html.erb"
-          })
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'my_modules/protocols/load_from_repository_modal_body', formats: :html)
+    }
   end
 
   def protocol_status_bar
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string({
-            partial: "my_modules/protocols/protocol_status_bar.html.erb"
-          })
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'my_modules/protocols/protocol_status_bar', formats: :html)
+    }
   end
 
   def version_comment

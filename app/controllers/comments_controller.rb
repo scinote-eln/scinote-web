@@ -28,7 +28,8 @@ class CommentsController < ApplicationController
       object_url: object_url,
       comment_addable: comment_addable?(@commentable),
       comments: render_to_string(partial: 'shared/comments/comments_list',
-                                 locals: { comments: comments })
+                                 locals: { comments: comments },
+                                 formats: :html)
     }
   end
 

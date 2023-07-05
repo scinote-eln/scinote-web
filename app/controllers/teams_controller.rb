@@ -15,7 +15,8 @@ class TeamsController < ApplicationController
     render json: {
       html: render_to_string(
         partial: 'shared/sidebar/projects',
-        locals: { team: current_team, sort: params[:sort] }
+        locals: { team: current_team, sort: params[:sort] },
+        formats: :html
       )
     }
   end
@@ -50,7 +51,8 @@ class TeamsController < ApplicationController
             partial: 'projects/export/modal',
             locals: { num_projects: @exp_projects.size,
                       limit: TeamZipExport.exports_limit,
-                      num_of_requests_left: current_user.exports_left - 1 }
+                      num_of_requests_left: current_user.exports_left - 1 },
+            formats: :html
           ),
           title: t('projects.export_projects.modal_title')
         }
@@ -58,7 +60,8 @@ class TeamsController < ApplicationController
         render json: {
           html: render_to_string(
             partial: 'projects/export/error',
-            locals: { limit: TeamZipExport.exports_limit }
+            locals: { limit: TeamZipExport.exports_limit },
+            formats: :html
           ),
           title: t('projects.export_projects.error_title'),
           status: 'error'

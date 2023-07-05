@@ -173,7 +173,8 @@ module ApplicationHelper
             :thumb,
             base64_encoded_imgs
           )
-        }
+        },
+        formats: :html
       )
   end
 

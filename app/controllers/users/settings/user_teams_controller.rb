@@ -40,7 +40,8 @@ module Users
         render json: {
           html: render_to_string(
             partial: 'users/settings/user_teams/leave_user_team_modal_body',
-            locals: { user_assignment: @user_assignment }
+            locals: { user_assignment: @user_assignment },
+            formats: :html
           ),
           heading: I18n.t(
             'users.settings.user_teams.leave_uo_heading',
@@ -54,7 +55,8 @@ module Users
           html: render_to_string(
             partial: 'users/settings/user_teams/' \
                       'destroy_user_team_modal_body',
-            locals: { user_assignment: @user_assignment }
+            locals: { user_assignment: @user_assignment },
+            formats: :html
           ),
           heading: I18n.t(
             'users.settings.user_teams.destroy_uo_heading',
