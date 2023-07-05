@@ -29,9 +29,6 @@
           date: this.defaultValue
         }
         );
-      if(this.isValidDate(this.defaultValue)) {
-        this.update($("#" + this.selectorId).data("DateTimePicker").date());
-      }
       $("#" + this.selectorId).on('dp.change', (e) => this.update(e.date))
     },
     methods: {
