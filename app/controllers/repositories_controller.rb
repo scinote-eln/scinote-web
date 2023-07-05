@@ -84,23 +84,13 @@ class RepositoriesController < ApplicationController
 
   def create_modal
     @repository = Repository.new
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'create_repository_modal'
-          )
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'create_repository_modal', formats: :html)
+    }
   end
 
   def share_modal
-    respond_to do |format|
-      format.json do
-        render json: { html: render_to_string(partial: 'share_repository_modal') }
-      end
-    end
+    render json: { html: render_to_string(partial: 'share_repository_modal', formats: :html) }
   end
 
   def hide_reminders

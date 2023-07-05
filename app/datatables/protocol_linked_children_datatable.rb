@@ -60,19 +60,22 @@ class ProtocolLinkedChildrenDatatable < CustomDatatable
     res += "<li><span class='sn-icon sn-icon-projects'></span>&nbsp;"
     res += @controller.render_to_string(
       partial: 'search/results/partials/project_text',
-      locals: { project: record.my_module.experiment.project }
+      locals: { project: record.my_module.experiment.project },
+      formats: :html
     )
     res += '</li>'
     res += "<li><i class='sn-icon sn-icon-experiment'></i>&nbsp;"
     res += @controller.render_to_string(
       partial: 'search/results/partials/experiment_text',
-      locals: { experiment: record.my_module.experiment }
+      locals: { experiment: record.my_module.experiment },
+      formats: :html
     )
     res += '</li>'
     res += "<li><span class='sn-icon sn-icon-task'></span>&nbsp;"
     res += @controller.render_to_string(
       partial: 'search/results/partials/my_module_text',
-      locals: { my_module: record.my_module, link_to_page: :protocols }
+      locals: { my_module: record.my_module, link_to_page: :protocols },
+      formats: :html
     )
     res += '</li>'
     res += '</ol>'

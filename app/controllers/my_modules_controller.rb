@@ -143,15 +143,15 @@ class MyModulesController < ApplicationController
     @activities = @my_module.last_activities(1, @per_page)
 
     render json: {
-      html: render_to_string(partial: 'activities')
+      html: render_to_string(partial: 'activities', formats: :html)
     }
   end
 
   # Due date modal window in full-zoom canvas
   def due_date
     render json: {
-      html: render_to_string(partial: 'due_date'),
-      title: t('my_modules.due_date.title', module: escape_input(@my_module.name))
+      html: render_to_string(partial: 'due_date', formats: :html),
+      title: t('.due_date.title', module: escape_input(@my_module.name))
     }
   end
 

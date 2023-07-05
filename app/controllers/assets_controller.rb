@@ -28,7 +28,8 @@ class AssetsController < ApplicationController
         can_edit: can_manage_asset?(@asset),
         gallery: params[:gallery],
         preview: params[:preview]
-      }
+      },
+      formats: :html
     ) }
   end
 
@@ -60,7 +61,8 @@ class AssetsController < ApplicationController
                                           locals: {
                                             asset: @asset,
                                             gallery_view_id: gallery_view_id
-                                          }) }
+                                          },
+                                          formats: :html) }
   end
 
   def file_url
