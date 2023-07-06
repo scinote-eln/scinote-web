@@ -41,9 +41,9 @@
   .reports-new-body {
     background: $color-concrete;
     height: calc(100% - 10em);
-    margin-left: calc(-1em - 15px);
+    padding-left: calc(-1em - 15px);
     overflow-y: auto;
-    width: calc(100% + 2em + 30px);
+    width: 100%;
   }
 
   .reports-new-footer {
@@ -409,7 +409,7 @@
 
     ul {
       list-style-type: none;
-      padding-left: 1em;
+      padding-left: 1.5em;
     }
 
     .sci-checkbox-container {
@@ -438,6 +438,10 @@
     .hide-unchecked {
       align-items: center;
       display: flex;
+
+      .sci-checkbox-container {
+        margin-right: .4em;
+      }
     }
 
     .divider {
@@ -466,7 +470,7 @@
 
       .sn-icon-down {
         cursor: pointer;
-        margin: 0 .5em;
+        margin: 0;
 
         &.collapsed {
           @include rotate(-90deg);
@@ -551,7 +555,7 @@
 
     .sn-icon-down {
       cursor: pointer;
-      margin: 0 .5em;
+      margin: 0 0 0 .5em;
 
       &.collapsed {
         @include rotate(-90deg);
@@ -576,11 +580,16 @@
 
     .repositories-items-description {
       @include font-button;
-      display: inline-block;
+      display: flex;
       margin-top: 1em;
+      padding-left: 1em;
 
       .fas {
         color: $brand-focus;
+      }
+      
+      .sn-icon-info {
+        margin-right: .1em;
       }
     }
 
@@ -610,6 +619,11 @@
         .fa-exclamation-triangle {
           color: $brand-warning;
           margin-top: .5em;
+          width: var(--sci-checkbox-size);
+        }
+
+        .sci-checkbox-container {
+          margin-right: .4em;
         }
       }
     }
