@@ -11,11 +11,11 @@ class MyModuleShareableLinksController < ApplicationController
   end
 
   def my_module_protocol_show
-    shareable_link = ShareableLink.find_by(uuid: params[:uuid])
+    @shareable_link = ShareableLink.find_by(uuid: params[:uuid])
 
-    return render_403 if shareable_link.blank?
+    return render_403 if @shareable_link.blank?
 
-    @my_module = shareable_link.shareable
+    @my_module = @shareable_link.shareable
     render 'shareable_links/my_module_protocol_show', layout: 'shareable_links'
   end
 

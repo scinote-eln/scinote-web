@@ -1627,7 +1627,11 @@ en:
         bullet_point_1: "Ease of use"
         bullet_point_2: "Quality of support"
         bullet_point_3: "Ease of setup"
-
+      free_trial: "Get free trial"
+    welcome_modal:
+      title: "Welcome to SciNote"
+      description: "You have been invited to view the %{my_module}."
+      view_task_btn: "View task"
   tags:
     new:
       head_title: "Create tag"
