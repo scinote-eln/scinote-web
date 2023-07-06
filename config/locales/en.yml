@@ -1605,6 +1605,19 @@ en:
       no_active_modules_archived_branch: "This experiment is archived and can’t have active tasks."
 
   shareable_links:
+    modal:
+      title: "Share task"
+      sharing_toggle_label: "Link sharing"
+      description_placeholder: "This is the message written by the previous user."
+      sharing_link_label: "Shared link"
+      copy_button: "Copy"
+      disclaimer: "Anyone with the link can view the protocol and results pages of this task."
+      too_long_text: "Text is too long (maximum number is %{counter} characters)"
+      copy_success: "Shared link copied to clipboard"
+    destroy_modal: 
+      title: "Deactivate shared link"
+      description: "This action will permanently deactivate the shared link. Any user who has this link will no longer be able to access the task."
+      deactivate: "Deactivate"
     left_navigation:
       welcome: "Welcome to SciNote!"
       title: "SciNote Electronic Lab Notebook (ELN) Software"
@@ -1614,6 +1627,7 @@ en:
         bullet_point_1: "Ease of use"
         bullet_point_2: "Quality of support"
         bullet_point_3: "Ease of setup"
+
   tags:
     new:
       head_title: "Create tag"
@@ -3655,21 +3669,6 @@ en:
     addons: "Add-Ons"
     label_printer: "Label Printer"
     fluics_printer: "Fluics Printer"
-
-  shareable_links:
-    modal:
-      title: "Share task"
-      sharing_toggle_label: "Link sharing"
-      description_placeholder: "This is the message written by the previous user."
-      sharing_link_label: "Shared link"
-      copy_button: "Copy"
-      disclaimer: "Anyone with the link can view the protocol and results pages of this task."
-      too_long_text: "Text is too long (maximum number is %{counter} characters)"
-      copy_success: "Shared link copied to clipboard"
-    destroy_modal: 
-      title: "Deactivate shared link"
-      description: "This action will permanently deactivate the shared link. Any user who has this link will no longer be able to access the task."
-      deactivate: "Deactivate"
 
   Add: "Add"
   Asset: "File"

@@ -6,6 +6,6 @@ class ShareableLinksSerializer < ActiveModel::Serializer
   attributes :shareable_url, :description
 
   def shareable_url
-    shared_url(object.uuid)
+    shared_protocol_url(object.uuid)
   end
 end

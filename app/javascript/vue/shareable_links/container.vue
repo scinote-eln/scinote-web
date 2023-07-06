@@ -15,7 +15,7 @@
 
     <shareModalContainer v-if="visibleShareModal"
                          :shared="share"
-                         :urls="urls"
+                         :shareableLinkUrl="shareableLinkUrl"
                          :characterLimit="255"
                          @enable="enableShare"
                          @disable="disableShare"
@@ -33,8 +33,8 @@
         type: Boolean,
         default: false
       },
-      urls: {
-        type: Object,
+      shareableLinkUrl: {
+        type: String,
         required: true
       },
       disabled: {

@@ -3,7 +3,7 @@
 class MyModuleShareableLinksController < ApplicationController
   before_action :load_my_module, except: %i(my_module_protocol_show)
   before_action :check_view_permissions, only: :show
-  before_action :check_manage_permissions, except: %i(show my_module_protocol_show)
+  before_action :check_manage_permissions, except: :my_module_protocol_show
   skip_before_action :authenticate_user!, only: %(my_module_protocol_show)
 
   def show

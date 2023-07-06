@@ -96,8 +96,8 @@
         type: Boolean,
         default: false
       },
-      urls: {
-        type: Object,
+      shareableLinkUrl: {
+        type: String,
         required: true
       },
       characterLimit: {
@@ -134,7 +134,7 @@
     created() {
       this.sharedEnabled = this.shared;
       if (this.sharedEnabled) {
-        $.get(this.urls.shareableLinkUrl, (result) => {
+        $.get(this.shareableLinkUrl, (result) => {
           this.shareableData = result.data;
           this.description = this.shareableData.attributes.description || '';
           this.$nextTick(() => {
@@ -165,7 +165,7 @@
       saveDescription() {
         this.dirty = true;
         $.ajax({
-          url: this.urls.shareableLinkUrl,
+          url: this.shareableLinkUrl,
           type: 'PATCH',
           data: {description: this.description},
           success: (result) => {
@@ -195,7 +195,7 @@
       },
       checkboxChange() {
         if(this.sharedEnabled ) {
-          $.post(this.urls.shareableLinkUrl, { description: this.description }, (result) => {
+          $.post(this.shareableLinkUrl, { description: this.description }, (result) => {
             this.shareableData = result.data;
             this.$emit('enable');
           });
@@ -207,7 +207,7 @@
       deleteLink() {
         this.dirty = true;
         $.ajax({
-          url:  this.urls.shareableLinkUrl,
+          url:  this.shareableLinkUrl,
           type: 'DELETE',
           success: () => {
             this.shareableData = {};
