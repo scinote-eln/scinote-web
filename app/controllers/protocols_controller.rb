@@ -15,6 +15,7 @@ class ProtocolsController < ApplicationController
   before_action :check_clone_permissions, only: [:clone]
   before_action :check_view_permissions, only: %i(
     show
+    print
     versions_modal
     protocol_status_bar
     linked_children
@@ -100,9 +101,6 @@ class ProtocolsController < ApplicationController
   end
 
   def print
-    @protocol = Protocol.find(params[:id])
-    render_403 && return unless @protocol.my_module.blank? || can_read_protocol_in_module?(@protocol)
-
     render layout: 'protocols/print'
   end
 
