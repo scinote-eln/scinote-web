@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta data-hook="head-js">
+    <title><%=t "head.title", title: (yield :head_title) %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= csp_meta_tag %>
+    <%= javascript_include_tag 'jquery_bundle' %>
+    <%= javascript_include_tag 'application' %>
+    <%= javascript_include_tag 'application_pack' %>
+
+    <%= favicon_link_tag "favicon.ico" %>
+    <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>
+    <%= favicon_link_tag "favicon-32.png", type: "image/png", size: "32x32" %>
+    <%= favicon_link_tag "favicon-48.png", type: "image/png", size: "48x48" %>
+    <%= stylesheet_link_tag 'fontawesome' %>
+
+    <%= stylesheet_link_tag 'prism' %>
+
+    <%= csrf_meta_tags %>
+  </head>
+  <body class="">
+    <div class="sci--sl-layout">
+      <div class="w-80 h-screen px-4 py-6 flex flex-col
+                  border-0 border-r border-solid border-sn-sleepy-grey">
+        <%= render "shareable_links/left_navigation" %>
+      </div>
+      <div class="sci--sl-layout-content">
+        <%= yield :content %>
+      </div>
+    </div>
+
+    <%= javascript_include_tag 'prism' %>
+  </body>
+</html>

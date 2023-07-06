@@ -1604,6 +1604,16 @@ en:
       no_active_modules: "This experiment has no active tasks."
       no_active_modules_archived_branch: "This experiment is archived and can’t have active tasks."
 
+  shareable_links:
+    left_navigation:
+      welcome: "Welcome to SciNote!"
+      title: "SciNote Electronic Lab Notebook (ELN) Software"
+      description_1: "SciNote is a leading ELN with inventory, compliance and team management tools, used by the FDA, USDA and over 100K scientific professionals."
+      description_2: "What do our users like the most?"
+      description_3:
+        bullet_point_1: "Ease of use"
+        bullet_point_2: "Quality of support"
+        bullet_point_3: "Ease of setup"
   tags:
     new:
       head_title: "Create tag"
