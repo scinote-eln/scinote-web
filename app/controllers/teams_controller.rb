@@ -31,15 +31,9 @@ class TeamsController < ApplicationController
 
       generate_export_projects_zip
 
-      Activities::CreateActivityService
-        .call(activity_type: :export_projects,
-              owner: current_user,
-              subject: @team,
-              team: @team,
-              message_items: {
-                team: @team.id,
-                projects: @exp_projects.map(&:name).join(', ')
-              })
+      log_activity(:export_projects,
+                   team: @team.id,
+                   projects: @exp_projects.map(&:name).join(', '))
 
       render json: {
         flash: t('projects.export_projects.success_flash')
@@ -87,6 +81,16 @@ class TeamsController < ApplicationController
     return render_403 unless can_manage_team?(@team)
 
     @team.toggle!(:shareable_links_enabled)
+
+    if @team.shareable_links_enabled?
+      log_activity(:team_sharing_tasks_enabled,
+                   team: @team.id,
+                   user: current_user.id)
+    else
+      log_activity(:team_sharing_tasks_disabled,
+                   team: @team.id,
+                   user: current_user.id)
+    end
   end
 
   def routing_error(error = 'Routing error', status = :not_found, exception=nil)
@@ -155,5 +159,14 @@ class TeamsController < ApplicationController
       options
     )
     ids
+  end
+
+  def log_activity(type_of, message_items = {})
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: @team,
+            team: @team,
+            message_items: message_items)
   end
 end
