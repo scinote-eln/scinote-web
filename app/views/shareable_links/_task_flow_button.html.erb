@@ -1,0 +1,15 @@
+<% status = my_module.my_module_status %>
+<%= t('my_module_statuses.dropdown.status_label') %>
+
+<button class="btn btn-secondary disabled"
+        type="button">
+  <span>
+    <% if my_module.status_changing %>
+      <i class="fas fa-spinner fa-spin"></i>
+      <span><%= t('my_module_statuses.dropdown.status_transitioning_label') %></span>
+    <% end %>
+    <%= status.name %>
+  </span>
+  <span class="sn-icon sn-icon-down"></span>
+</button>
+
