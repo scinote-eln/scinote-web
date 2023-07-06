@@ -31,15 +31,9 @@ class TeamsController < ApplicationController
 
       generate_export_projects_zip
 
-      Activities::CreateActivityService
-        .call(activity_type: :export_projects,
-              owner: current_user,
-              subject: @team,
-              team: @team,
-              message_items: {
-                team: @team.id,
-                projects: @exp_projects.map(&:name).join(', ')
-              })
+      log_activity(:export_projects,
+                   team: @team.id,
+                   projects: @exp_projects.map(&:name).join(', '))
 
       render json: {
         flash: t('projects.export_projects.success_flash')
@@ -89,25 +83,13 @@ class TeamsController < ApplicationController
     @team.toggle!(:shareable_links_enabled)
 
     if @team.shareable_links_enabled?
-      Activities::CreateActivityService
-        .call(activity_type: :team_sharing_tasks_enabled,
-              owner: current_user,
-              subject: @team,
-              team: @team,
-              message_items: {
-                team: @team.id,
-                user: current_user.id
-              })
+      log_activity(:team_sharing_tasks_enabled,
+                   team: @team.id,
+                   user: current_user.id)
     else
-      Activities::CreateActivityService
-        .call(activity_type: :team_sharing_tasks_disabled,
-              owner: current_user,
-              subject: @team,
-              team: @team,
-              message_items: {
-                team: @team.id,
-                user: current_user.id
-              })
+      log_activity(:team_sharing_tasks_disabled,
+                   team: @team.id,
+                   user: current_user.id)
     end
   end
 
@@ -177,5 +159,14 @@ class TeamsController < ApplicationController
       options
     )
     ids
+  end
+
+  def log_activity(type_of, message_items = {})
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: @team,
+            team: @team,
+            message_items: message_items)
   end
 end
