@@ -19,7 +19,8 @@
   "scripts": {
     "flow": "flow",
     "lint": "eslint .",
-    "build": "webpack --config ./config/webpack/webpack.config.js"
+    "build": "webpack --config ./config/webpack/webpack.config.js",
+    "build:css": "./bin/build-css"
   },
   "postinstall": "./engines_yarn_install.js",
   "devDependencies": {
@@ -81,7 +82,7 @@
     "postcss": "8.2.15",
     "postcss-loader": "5.3.0",
     "raw-loader": "^4.0.2",
-    "sass": "1.60.0",
+    "sass": "^1.63.6",
     "sass-loader": "^10.4.1",
     "style-loader": "2.0.0",
     "tinymce": "^6.1.2",
