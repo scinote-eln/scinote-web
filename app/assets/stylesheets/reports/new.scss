@@ -41,8 +41,8 @@
   .reports-new-body {
     background: $color-concrete;
     height: calc(100% - 10em);
-    padding-left: calc(-1em - 15px);
     overflow-y: auto;
+    padding-left: calc(-1em - 15px);
     width: 100%;
   }
 
@@ -587,7 +587,7 @@
       .fas {
         color: $brand-focus;
       }
-      
+
       .sn-icon-info {
         margin-right: .1em;
       }
