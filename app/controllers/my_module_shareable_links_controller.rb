@@ -1,12 +1,22 @@
 # frozen_string_literal: true
 
 class MyModuleShareableLinksController < ApplicationController
-  before_action :load_my_module
+  before_action :load_my_module, except: %i(my_module_protocol_show)
   before_action :check_view_permissions, only: :show
-  before_action :check_manage_permissions, except: :show
+  before_action :check_manage_permissions, except: %i(show my_module_protocol_show)
+  skip_before_action :authenticate_user!, only: %(my_module_protocol_show)
 
   def show
     render json: @my_module.shareable_link, serializer: ShareableLinksSerializer
+  end
+
+  def my_module_protocol_show
+    shareable_link = ShareableLink.find_by(uuid: params[:uuid])
+
+    return render_403 if shareable_link.blank?
+
+    @my_module = shareable_link.shareable
+    render 'shareable_links/my_module_protocol_show', layout: 'shareable_links'
   end
 
   def create

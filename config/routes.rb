@@ -963,6 +963,8 @@ Rails.application.routes.draw do
     end
   end
 
+  get '/shared_tasks/:uuid/protocol', to: 'my_module_shareable_links#my_module_protocol_show'
+
   resources :marvin_js_assets, only: %i(create update destroy show) do
     collection do
       get :team_sketches
