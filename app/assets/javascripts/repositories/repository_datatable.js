@@ -4,7 +4,6 @@
   initAssignedTasksDropdown initBMTFilter initReminderDropdown initBSTooltips
 */
 
-//= require jquery-ui/widgets/sortable
 //= require repositories/row_editor.js
 
 

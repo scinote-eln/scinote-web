@@ -5,7 +5,6 @@ source 'http://rubygems.org'
 ruby '3.2.2'
 
 gem 'bootsnap', require: false
-gem 'bootstrap-sass', '~> 3.4.1'
 gem 'devise', '~> 4.8.1'
 gem 'devise_invitable'
 gem 'figaro'
@@ -37,20 +36,7 @@ gem 'kaminari'
 gem 'rack-attack'
 gem 'rack-cors'
 
-# JS datetime library, requirement of datetime picker
-gem 'momentjs-rails', '~> 2.17.1'
-# JS datetime picker
-gem 'bootstrap3-datetimepicker-rails', '~> 4.17'
-# Select elements for Bootstrap
-gem 'bootstrap-select-rails', '~> 1.12.4'
 gem 'uglifier', '>= 1.3.0'
-# jQuery & plugins
-gem 'autosize-rails' # jQuery autosize plugin
-gem 'hammerjs-rails'
-gem 'jquery-rails'
-gem 'jquery-ui-rails'
-gem 'js_cookie_rails' # Simple JS API for cookies
-gem 'spinjs-rails'
 
 gem 'activerecord-import'
 gem 'ajax-datatables-rails', '~> 0.3.1'
