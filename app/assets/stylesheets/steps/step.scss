@@ -1,7 +1,9 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
 
-@import "components/*";
+@import "components/checklist";
+@import "components/table";
+@import "components/text";
 
 .step-container {
   --left-component-padding: 24px;

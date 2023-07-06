@@ -52,6 +52,23 @@ services:
       - scinote_development_bundler:/usr/local/bundle/
       - scinote_development_files:/usr/src/app/public/system
 
+  css_bundling:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: scinote_web_development
+    container_name: scinote_css_bundling_development
+    stdin_open: true
+    tty: true
+    command: >
+      bash -c "yarn build:css --watch"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - .:/usr/src/app
+      - scinote_development_bundler:/usr/local/bundle/
+      - scinote_development_files:/usr/src/app/public/system
+
   tailwind:
     build:
       context: .
