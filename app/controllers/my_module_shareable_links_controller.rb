@@ -2,13 +2,12 @@
 
 class MyModuleShareableLinksController < ApplicationController
   before_action :load_my_module, except: %i(my_module_protocol_show)
-  before_action :load_shareable_link, only: %i(update destroy)
   before_action :check_view_permissions, only: :show
-  before_action :check_manage_permissions, except: %i(show my_module_protocol_show)
+  before_action :check_manage_permissions, except: :my_module_protocol_show
   skip_before_action :authenticate_user!, only: %i(my_module_protocol_show)
 
   def show
-    render json: @my_module.shareable_link
+    render json: @my_module.shareable_link, serializer: ShareableLinksSerializer
   end
 
   def my_module_protocol_show
@@ -22,7 +21,7 @@ class MyModuleShareableLinksController < ApplicationController
 
   def create
     @my_module.create_shareable_link(
-      uuid: @my_module.signed_id,
+      uuid: @my_module.signed_id(expires_in: 999.years),
       description: params[:description],
       team: @my_module.team,
       created_by: current_user
@@ -30,7 +29,7 @@ class MyModuleShareableLinksController < ApplicationController
 
     log_activity(:task_link_sharing_enabled)
 
-    render json: @my_module.shareable_link
+    render json: @my_module.shareable_link, serializer: ShareableLinksSerializer
   end
 
   def update
@@ -41,7 +40,7 @@ class MyModuleShareableLinksController < ApplicationController
 
     log_activity(:shared_task_message_edited)
 
-    render json: @my_module.shareable_link
+    render json: @my_module.shareable_link, serializer: ShareableLinksSerializer
   end
 
   def destroy
@@ -60,7 +59,7 @@ class MyModuleShareableLinksController < ApplicationController
   end
 
   def check_view_permissions
-    render_403 unless can_view_my_module?(@my_module)
+    render_403 unless can_read_my_module?(@my_module)
   end
 
   def check_manage_permissions
