@@ -1,0 +1,57 @@
+<div class="text-3xl font-bold"><%= @my_module.name %></div>
+
+<div class="my-5 max-w-4xl flex-1 bg-sn-white">
+  <div class="my-module-position-container">
+    <!-- Header Actions -->
+    <%= render partial: 'shareable_links/header_actions' %>
+    <!-- Details -->
+    <div class="task-section task-information">
+      <div id="task-details" class="task-section-header">
+          <div class="flex items-center gap-3">
+            <%= render partial: 'shareable_links/task_flow_button', locals: { my_module: @my_module } if @my_module.my_module_status_flow %>
+          </div>
+        <div class="task-details-container flex items-center gap-2">
+          <a class="task-section-caret" role="button" data-toggle="collapse" href="#details-container" aria-expanded="false" aria-controls="details-container">
+            <i class="sn-icon sn-icon-right"></i>
+            <span id="taskDetailsLabel" class="task-section-title">
+              <h2>
+                <%= t('my_modules.details.title') %>
+              </h2>
+            </span>
+          </a>
+          <span class="task-details-code">
+            <%= @my_module.code %>
+          </span>
+        </div>
+      </div>
+      <div id="details-container" class="task-details">
+        <%= render partial: 'shareable_links/my_module_details' %>
+      </div>
+    </div>
+    <!-- Notes -->
+    <div class="task-section">
+      <div class="task-section-header">
+        <a class="task-section-caret" role="button" data-toggle="collapse" href="#notes-container" aria-expanded="true" aria-controls="notes-container">
+          <i class="sn-icon sn-icon-right"></i>
+          <span class="task-section-title">
+            <h2><%= t('my_modules.notes.title') %></h2>
+          </span>
+        </a>
+      </div>
+      <div class="collapse in" id="notes-container" aria-expanded="true">
+        <div class="task-notes">
+          <div class="task-notes-content">
+            <% if @my_module.description.present? %>
+              <%= custom_auto_link(@my_module.tinymce_render(:description),
+                                  simple_format: false,
+                                  tags: %w(img),
+                                  team: current_team) %>
+            <% else %>
+              <span class="no-description"><%= t('my_modules.notes.no_description') %></span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

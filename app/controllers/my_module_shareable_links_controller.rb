@@ -4,7 +4,7 @@ class MyModuleShareableLinksController < ApplicationController
   before_action :load_my_module, except: %i(my_module_protocol_show)
   before_action :check_view_permissions, only: :show
   before_action :check_manage_permissions, except: :my_module_protocol_show
-  skip_before_action :authenticate_user!, only: %(my_module_protocol_show)
+  skip_before_action :authenticate_user!, only: %i(my_module_protocol_show)
 
   def show
     render json: @my_module.shareable_link, serializer: ShareableLinksSerializer
@@ -27,6 +27,8 @@ class MyModuleShareableLinksController < ApplicationController
       created_by: current_user
     )
 
+    log_activity(:task_link_sharing_enabled)
+
     render json: @my_module.shareable_link, serializer: ShareableLinksSerializer
   end
 
@@ -36,11 +38,15 @@ class MyModuleShareableLinksController < ApplicationController
       last_modified_by: current_user
     )
 
+    log_activity(:shared_task_message_edited)
+
     render json: @my_module.shareable_link, serializer: ShareableLinksSerializer
   end
 
   def destroy
     @my_module.shareable_link.destroy!
+
+    log_activity(:task_link_sharing_disabled)
 
     render json: {}
   end
@@ -58,5 +64,18 @@ class MyModuleShareableLinksController < ApplicationController
 
   def check_manage_permissions
     render_403 unless can_share_my_module?(@my_module)
+  end
+
+  def log_activity(type_of)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            team: @my_module.team,
+            project: @my_module.project,
+            subject: @my_module,
+            message_items: {
+              my_module: @my_module.id,
+              user: current_user.id
+            })
   end
 end
