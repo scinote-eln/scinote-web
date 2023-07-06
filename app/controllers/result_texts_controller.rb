@@ -101,20 +101,19 @@ class ResultTextsController < ApplicationController
 
     respond_to do |format|
       if saved
-        format.html {
+        format.html do
           flash[:success] = success_flash
           redirect_to results_my_module_path(@my_module)
-        }
-        format.json {
+        end
+        format.json do
           render json: {
-            html: render_to_string({
-              partial: "my_modules/result.html.erb",
-              locals: {
-                result: @result
-              }
-            })
-          }, status: :ok
-        }
+            html: render_to_string(
+              partial: 'my_modules/result.html.erb',
+              locals: { result: @result },
+              formats: :html
+            )
+          }
+        end
       else
         format.json {
           render json: @result.errors, status: :bad_request

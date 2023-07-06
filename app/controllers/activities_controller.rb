@@ -6,7 +6,7 @@ class ActivitiesController < ApplicationController
     render json: {
       more_url: local_vars.fetch(:more_activities_url),
       html: render_to_string(
-        partial: 'list', locals: @vars
+        partial: 'list', locals: @vars, formats: :html
       )
     }
   end

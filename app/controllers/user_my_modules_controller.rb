@@ -11,9 +11,7 @@ class UserMyModulesController < ApplicationController
     @user_my_modules = @my_module.user_my_modules
 
     render json: {
-      html: render_to_string(
-        partial: 'designated_users'
-      ),
+      html: render_to_string(partial: 'designated_users', formats: :html),
       my_module_id: @my_module.id,
       counter: @my_module.designated_users.count # Used for counter badge
     }
@@ -21,7 +19,7 @@ class UserMyModulesController < ApplicationController
 
   def index
     render json: {
-      html: render_to_string(partial: 'index')
+      html: render_to_string(partial: 'index', formats: :html)
     }
   end
 
@@ -33,7 +31,7 @@ class UserMyModulesController < ApplicationController
     render json: {
       my_module: @my_module,
       html: render_to_string(
-        partial: 'index_edit'
+        partial: 'index_edit', formats: :html
       )
     }
   end
@@ -48,7 +46,8 @@ class UserMyModulesController < ApplicationController
       if params[:table]
         render json: {
           html: render_to_string(partial: 'experiments/assigned_users',
-                                 locals: { my_module: @my_module, user: current_user, skip_unassigned: false }),
+                                 locals: { my_module: @my_module, user: current_user, skip_unassigned: false },
+                                 formats: :html),
           unassign_url: my_module_user_my_module_path(@my_module, @um)
         }
       else
@@ -75,7 +74,8 @@ class UserMyModulesController < ApplicationController
       if params[:table]
         render json: {
           html: render_to_string(partial: 'experiments/assigned_users',
-                                 locals: { my_module: @my_module, user: current_user, skip_unassigned: false })
+                                 locals: { my_module: @my_module, user: current_user, skip_unassigned: false },
+                                 formats: :html)
         }
       else
         render json: {}

@@ -21,7 +21,7 @@ module CommentHelper
       resultsNumber: comments.size,
       moreUrl: more_url,
       html: render_to_string(
-        partial: partial, locals: { comments: comments }
+        partial: partial, locals: { comments: comments }, formats: :html
       )
     }
   end
@@ -49,7 +49,8 @@ module CommentHelper
           locals: {
             comment: comment,
             skip_header: false
-          }
+          },
+          formats: :html
         )
       }
     else
@@ -111,7 +112,8 @@ module CommentHelper
             locals: {
               comment: comment,
               skip_header: false
-            }
+            },
+            formats: :html
           )
         }
       else

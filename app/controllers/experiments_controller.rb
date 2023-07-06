@@ -31,8 +31,7 @@ class ExperimentsController < ApplicationController
     @experiment = Experiment.new
     render json: {
       html: render_to_string(
-        partial: 'new_modal',
-        formats: :html
+        partial: 'new_modal', formats: :html
       )
     }
   end
@@ -63,7 +62,7 @@ class ExperimentsController < ApplicationController
 
   def show
     render json: {
-      html: render_to_string(partial: 'experiments/details_modal')
+      html: render_to_string(partial: 'experiments/details_modal', formats: :html)
     }
   end
 
@@ -143,9 +142,7 @@ class ExperimentsController < ApplicationController
 
   def edit
     render json: {
-      html: render_to_string(
-        partial: 'edit_modal'
-      )
+      html: render_to_string(partial: 'edit_modal', formats: :html)
     }
   end
 
@@ -256,7 +253,8 @@ class ExperimentsController < ApplicationController
     render json: {
       html: render_to_string(
         partial: 'clone_modal',
-        locals: { view_mode: params[:view_mode] }
+        locals: { view_mode: params[:view_mode] },
+        formats: :html
       )
     }
   end
@@ -285,9 +283,7 @@ class ExperimentsController < ApplicationController
   def move_modal
     @projects = @experiment.movable_projects(current_user)
     render json: {
-      html: render_to_string(
-        partial: 'move_modal'
-      )
+      html: render_to_string(partial: 'move_modal', formats: :html)
     }
   end
 
@@ -331,9 +327,7 @@ class ExperimentsController < ApplicationController
     @experiments = @experiment.project.experiments.active.where.not(id: @experiment)
                               .managable_by_user(current_user).order(name: :asc)
     render json: {
-      html: render_to_string(
-        partial: 'move_modules_modal'
-      )
+      html: render_to_string(partial: 'move_modules_modal', formats: :html)
     }
   end
 
@@ -394,7 +388,8 @@ class ExperimentsController < ApplicationController
     render json: {
       workflowimg: render_to_string(
         partial: 'projects/show/workflow_img',
-        locals: { experiment: @experiment }
+        locals: { experiment: @experiment },
+        formats: :html
       )
     }
   end
