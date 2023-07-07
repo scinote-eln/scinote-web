@@ -446,7 +446,9 @@ class RepositoriesController < ApplicationController
                               label: u.full_name,
                               value: u.id,
                               params: {
-                                email: u.email, avatar_url: u.avatar_url('icon_small')
+                                email: u.email,
+                                avatar_url: (u.avatar.attached? ? u.avatar_url('icon_small') : nil),
+                                initials: u.initials
                               }
                             }
                           end }

@@ -31,13 +31,13 @@
       delimiter: true,
       optionClass: 'users-dropdown-list',
       optionLabel: (data) => {
-        return `<img class="item-avatar" src="${data.params.avatar_url}"/>
+        return `<span class="mr-2">${userAvatar(data.params.avatar_url, data.params.initials)}</span>
                 ${data.label}
                 <span class="item-email pull-right">${data.params.email}</span>`;
       },
       tagLabel: (data) => {
         if (data.params) {
-          return `<img class="item-avatar" src="${data.params.avatar_url}"/> ${data.label}`;
+          return `<span class="mr-2">${userAvatar(data.params.avatar_url, data.params.initials)}</span> ${data.label}`;
         }
         return data.label;
       },
