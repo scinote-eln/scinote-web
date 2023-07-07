@@ -572,13 +572,14 @@
     }
 
     .sn-icon {
-      margin-right: .4em;
       cursor: pointer;
+      margin-right: .4em;
+
+      &.disabled {
+        cursor: not-allowed;
+      }
     }
 
-    .sn-icon.disabled {
-      cursor: not-allowed;
-    }
   }
 }
 
