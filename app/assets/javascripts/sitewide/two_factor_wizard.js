@@ -17,15 +17,22 @@ $(document).on('turbolinks:load', function() {
     });
   });
 
-  $('#twoFactorAuthenticationModal .2fa-enable-form').on('ajax:error', function(e, data) {
-    $(this).find('.submit-code-field').addClass('error').attr('data-error-text', data.responseJSON.error);
-  }).on('ajax:success', function(e, data) {
-    var blob = new Blob([data.recovery_codes.join('\r\n')], { type: 'text/plain;charset=utf-8' });
-    $('#twoFactorAuthenticationModal').find('.recovery-codes').html(data.recovery_codes.join('<br>'));
-    $('#twoFactorAuthenticationModal').find('[href="#2fa-step-4"]').tab('show');
-    $('.download-recovery-codes').attr('href', window.URL.createObjectURL(blob));
-    $('#twoFactorAuthenticationModal').one('hide.bs.modal', function() {
-      window.location.reload();
+  $('#twoFactorAuthenticationModal .2fa-enable-form').on('submit', function(e) {
+    e.preventDefault();
+
+    const form = $(this);
+    const formData = $(this).serialize();
+    const formAction = $(this).attr('action');
+    $.post(formAction, formData).error(function(data) {
+      form.find('.submit-code-field').addClass('error').attr('data-error-text', data.responseJSON.error);
+    }).done(function(data) {
+      const blob = new Blob([data.recovery_codes.join('\r\n')], { type: 'text/plain;charset=utf-8' });
+      $('#twoFactorAuthenticationModal').find('.recovery-codes').html(data.recovery_codes.join('<br>'));
+      $('#twoFactorAuthenticationModal').find('[href="#2fa-step-4"]').tab('show');
+      $('.download-recovery-codes').attr('href', window.URL.createObjectURL(blob));
+      $('#twoFactorAuthenticationModal').one('hide.bs.modal', function() {
+        window.location.reload();
+      });
     });
   });
 
