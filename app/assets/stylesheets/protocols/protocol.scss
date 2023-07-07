@@ -7,7 +7,7 @@
 .content-pane.protocols-show {
   --container-margin: 20px;
   background-color: $color-alto;
-  min-height: calc(100vh - var(--navbar-height) - 2 * var(--container-margin));
+  min-height: calc(100vh - var(--navbar-height) - var(--container-margin));
   overflow: hidden;
   padding: 0 0 10px;
   display: flex;
