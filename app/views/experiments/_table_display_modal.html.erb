@@ -12,7 +12,7 @@
         <% Experiments::TableViewService::COLUMNS.each do |col| %>
           <div class="column-container <%= col %> visible">
             <% if col == :archived && params[:view_mode] != 'archived' %>
-              <i class="sn-icon sn-icon-visibility-hide disabled" data-column="<%= col %>"></i>
+              <i class="sn-icon sn-icon-visibility-hide disabled" disabled data-column="<%= col %>"></i>
             <% elsif col != :task_name %>
               <i class="sn-icon sn-icon-<%= col.to_s.in?(@my_module_visible_table_columns) ? 'visibility-show' : 'visibility-hide' %>" data-column="<%= col %>"></i>
             <% end %>

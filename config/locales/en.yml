@@ -1448,6 +1448,7 @@ en:
         duplicate: 'Duplicate'
         task_access: 'Task access'
         task_data: 'Task data display'
+        manage_columns_tooltip: "Manage columns"
       my_module_actions:
         title: 'TASK ACTIONS'
         edit: 'Edit'
