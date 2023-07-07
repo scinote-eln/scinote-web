@@ -3287,9 +3287,9 @@ en:
       projects: "Projects with this name/ID were not found"
       experiments: "Experiments with this name/ID were not found"
       my_modules: "Tasks with this name/ID were not found"
-      repository_rows: "Items with this name/ID were not found"
+      repository_rows: "This inventory is currently empty."
       users: "Users with this name were not found"
-      description: "Please make sure there are no typos, or erase letters one by one unless you see some results"
+      description: "Once you create items in the inventory, they will appear here."
     buttons:
       insert: "Insert"
       assign: "Assign to this task"
