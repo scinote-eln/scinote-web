@@ -10,4 +10,5 @@
   --no-source-map \
   --load-path=node_modules \
   --load-path=vendor/assets/stylesheets \
+  --load-path=addons \
   $@
