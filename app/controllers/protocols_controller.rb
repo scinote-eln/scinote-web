@@ -188,7 +188,10 @@ class ProtocolsController < ApplicationController
   end
 
   def show
-    render json: @protocol, serializer: ProtocolSerializer, user: current_user
+    respond_to do |format|
+      format.json { render json: @protocol, serializer: ProtocolSerializer, user: current_user }
+      format.html
+    end
   end
 
   def update_keywords
