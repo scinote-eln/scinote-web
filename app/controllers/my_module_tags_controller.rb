@@ -13,7 +13,7 @@ class MyModuleTagsController < ApplicationController
 
     render json: {
       my_module: @my_module,
-      html: render_to_string(partial: 'index_edit.html.erb')
+      html: render_to_string(partial: 'index_edit', formats: :html)
     }
   end
 

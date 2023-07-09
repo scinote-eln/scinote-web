@@ -473,7 +473,7 @@ Rails.application.routes.draw do
       resources :repositories, controller: :my_module_repositories, only: %i(update create) do
         member do
           get :full_view_table
-          post :index_dt
+          post :index_dt, defaults: { format: 'json' }
           post :export_repository
           get :assign_repository_records_modal, as: :assign_modal
           get :update_repository_records_modal, as: :update_modal
@@ -485,7 +485,7 @@ Rails.application.routes.draw do
       resources :repository_snapshots, controller: :my_module_repository_snapshots, only: %i(destroy show) do
         member do
           get :full_view_table
-          post :index_dt
+          post :index_dt, defaults: { format: 'json' }
           post :export_repository_snapshot
           get :status
         end
