@@ -59,17 +59,19 @@ class ReportsController < ApplicationController
 
     respond_to do |format|
       format.json do
-        if lookup_context.template_exists?("reports/templates/#{template}/edit.html.erb")
+        if lookup_context.template_exists?("reports/templates/#{template}/edit")
           render json: {
             html: render_to_string(
-              template: "reports/templates/#{template}/edit.html.erb",
+              template: "reports/templates/#{template}/edit",
               layout: 'reports/template_values_editor',
-              locals: { report: report }
+              locals: { report: report },
+              formats: :html
             )
           }
         else
           render json: {
-            html: render_to_string(partial: 'reports/wizard/no_template_values')
+            html: render_to_string(partial: 'reports/wizard/no_template_values',
+                                   formats: :html)
           }
         end
       end
@@ -212,7 +214,7 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          html: render_to_string(partial: 'reports/save_PDF_to_inventory_modal')
+          html: render_to_string(partial: 'reports/save_PDF_to_inventory_modal', formats: :html)
         }
       end
     end
