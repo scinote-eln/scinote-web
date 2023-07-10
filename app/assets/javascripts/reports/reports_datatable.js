@@ -194,6 +194,9 @@
         sWidth: '1%',
         render: renderCheckboxHTML
       },
+      { targets: 3,
+        width: 50
+      },
       {
         targets: 4,
         searchable: false,
