@@ -627,7 +627,7 @@ en:
         report_button: "Report"
         update_pdf: "Update PDF"
         save_pdf_to_inventory: "Save PDF to inventory"
-        search_reports: "Filter reports"
+        search_reports: "Search reports"
         request_docx: "Generate .DOCX"
         update_docx: "Update .DOCX"
         edit: "Edit"
@@ -919,7 +919,7 @@ en:
         logo_params_error: 'Failed to parse logo parameters!'
     index:
       head_title: 'Label templates'
-      search_templates: 'Filter templates'
+      search_templates: 'Search labels'
       thead_name: 'Name'
       format: 'Format'
       description: 'Description'
@@ -1170,7 +1170,7 @@ en:
         title: "Load protocol template"
         text: "This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
         text2: "Choose the protocol to be loaded to the task."
-        filter_protocols: "Filter protocols"
+        filter_protocols: "Search protocols"
         thead_name: "Name"
         thead_keywords: "Keywords"
         thead_published_by: "Published by"
@@ -2844,7 +2844,7 @@ en:
       head_title_archived: "Archived protocol templates"
       default_name: 'New protocol'
       back_to_active_protocols: 'Back to active protocols'
-      search_bar_placeholder: 'Filter protocols'
+      search_bar_placeholder: 'Search protocols'
       navigation:
         archive: "Archive"
       toolbar:
