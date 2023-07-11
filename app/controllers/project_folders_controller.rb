@@ -61,6 +61,7 @@ class ProjectFoldersController < ApplicationController
 
     render json: {
       html: render_to_string(partial: 'projects/index/modals/move_to_modal_contents',
+                             formats: :html,
                              locals: { items_label: items_label(params[:items]) })
     }
   end
@@ -85,6 +86,7 @@ class ProjectFoldersController < ApplicationController
   def destroy_modal
     render json: {
       html: render_to_string(partial: 'projects/index/modals/project_folder_delete',
+                             formats: :html,
                              locals: { project_folder_ids: params[:project_folder_ids] })
     }
   end
