@@ -69,7 +69,7 @@ module Reports
                          assigns: { settings: report.settings },
                          locals: { report: report },
                          disable_javascript: false,
-                         template: 'reports/report.pdf.erb'
+                         template: 'reports/report'
         )
 
         file.rewind
@@ -165,11 +165,12 @@ module Reports
       merged_file = Tempfile.new(['report', '.pdf'], binmode: true)
 
       title_page << renderer.render(
-        pdf: 'report', inline: renderer.render_to_string("reports/templates/#{template}/cover.html.erb",
+        pdf: 'report', inline: renderer.render_to_string("reports/templates/#{template}/cover",
                                                          layout: false,
+                                                         formats: :html,
                                                          locals: { report: report, total_pages: total_pages.to_i, logo: report_logo }),
                        disable_javascript: false,
-                       template: 'reports/report.pdf.erb'
+                       template: 'reports/report'
       )
 
       title_page.rewind

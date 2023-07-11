@@ -13,7 +13,7 @@ module ReportsHelper
     end
 
     # Determine partial
-    view = "reports/elements/#{element.type_of}_element.html.erb"
+    view = "reports/elements/#{element.type_of}_element"
 
     # Set locals
     locals = provided_locals.nil? ? {} : provided_locals.clone
