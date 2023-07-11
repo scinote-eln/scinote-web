@@ -53,6 +53,24 @@
         </div>
       </div>
     </div>
+    <!-- Assigned items -->
+    <% assigned_repositories = @my_module.live_and_snapshot_repositories_list %>
+    <div class="task-section">
+      <div class="task-section-header">
+        <a class="task-section-caret" role="button" data-toggle="collapse" href="#assigned-items-container" aria-expanded="true" aria-controls="assigned-items-container">
+          <i class="sn-icon sn-icon-right"></i>
+          <span class="task-section-title ">
+            <h2 class="assigned-items-title" data-assigned-items-count="<%= assigned_repositories.map(&:assigned_rows_count).sum %>">
+              <%= t('my_modules.assigned_items.title') %>
+            </h2>
+          </span>
+        </a>
+      </div>
+      <div class="collapse in panel-group" id="assigned-items-container" aria-expanded="true"
+          data-repositories-list-url="<%= my_module_repositories_list_html_path(@my_module) %>">
+        <%= render partial: "shareable_links/repositories_list", locals: {assigned_repositories: assigned_repositories} %>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -60,3 +78,4 @@
 <%= render "shareable_links/welcome_modal" %>
 
 <%= javascript_include_tag 'shareable_links/my_module_protocol_show' %>
+<%= javascript_include_tag("shareable_links/repositories") %>
