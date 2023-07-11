@@ -39,6 +39,7 @@
         :ghostClass="'step-checklist-item-ghost'"
         :dragClass="'step-checklist-item-drag'"
         :chosenClass="'step-checklist-item-chosen'"
+        :forceFallback="true"
         :handle="'.step-element-grip'"
         :disabled="editingItem || checklistItems.length < 2 || !element.attributes.orderable.urls.reorder_url"
         @start="startReorder"
