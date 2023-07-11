@@ -33,7 +33,7 @@ module Api
       end
 
       def create
-        raise PermissionError.new(MyModule, :create) unless can_manage_experiment_tasks?(@experiment)
+        raise PermissionError.new(MyModule, :create) unless can_create_experiment_tasks?(@experiment)
 
         my_module = @experiment.my_modules.create!(task_params_create.merge(created_by: current_user))
 

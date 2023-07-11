@@ -72,7 +72,7 @@ describe Api::V1::TasksController, type: :controller do
 
     it_behaves_like "a controller action with permissions checking", :post, :create do
       let(:testable) { experiment }
-      let(:permissions) { [ExperimentPermissions::TASKS_MANAGE] }
+      let(:permissions) { [ExperimentPermissions::TASKS_CREATE] }
       let(:action_params) {
         {
           team_id: team.id,
