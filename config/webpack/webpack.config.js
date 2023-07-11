@@ -34,7 +34,8 @@ const entryList = {
   vue_repository_assign_items_to_task_modal: './app/javascript/packs/vue/assign_items_to_task_modal.js',
   vue_navigation_top_menu: './app/javascript/packs/vue/navigation/top_menu.js',
   vue_navigation_navigator: './app/javascript/packs/vue/navigation/navigator.js',
-  vue_components_action_toolbar: './app/javascript/packs/vue/action_toolbar.js'
+  vue_components_action_toolbar: './app/javascript/packs/vue/action_toolbar.js',
+  vue_protocol_file_import_modal: './app/javascript/packs/vue/protocol_file_import_modal.js'
 }
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949

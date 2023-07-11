@@ -591,7 +591,6 @@ class ProtocolsController < ApplicationController
                 message_items: {
                   protocol: protocol.id
                 })
-        generate_import_protocol_notification(current_user, protocol)
         format.json do
           render json: { status: :ok }, status: :ok
         end
@@ -918,6 +917,11 @@ class ProtocolsController < ApplicationController
     }
   end
 
+  def import_docx
+    @job = Protocols::DocxImportJob.perform_later(params[:files], current_user)
+    render json: { job_id: @job.job_id }
+  end
+
   private
 
   def set_importer
@@ -927,30 +931,6 @@ class ProtocolsController < ApplicationController
     when '1.1'
       @importer = ProtocolsImporterV2.new(current_user, current_team)
     end
-  end
-
-  def generate_import_protocol_notification(user, protocol)
-    protocol_download_link = "<a data-id='#{protocol.id}' " \
-                             "data-turbolinks='false' " \
-                             "href='#{Rails.application
-                                           .routes
-                                           .url_helpers
-                                           .export_protocols_path(protocol_ids: [protocol.id])}'>" \
-                             "#{export_protocol_file_name([protocol])}</a>"
-
-    notification = Notification.create(
-      type_of: :deliver,
-      title: I18n.t('protocols.import_export.import_protocol_notification.title', link: protocol_download_link),
-      message:  "#{I18n.t('protocols.import_export.import_protocol_notification.message')} <a data-id='#{protocol.id}' " \
-                "data-turbolinks='false' " \
-                "href='#{Rails.application
-                              .routes
-                              .url_helpers
-                              .protocol_path(protocol)}'>" \
-                "#{protocol.name}</a>"
-    )
-
-    UserNotification.create(notification: notification, user: user)
   end
 
   def export_protocol_file_name(protocols)
