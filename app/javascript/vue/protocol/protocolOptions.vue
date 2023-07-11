@@ -10,7 +10,6 @@
         aria-expanded="true"
         tabindex="0"
       >
-        <span class="sn-icon sn-icon-settings"></span>
         <span>{{ i18n.t("my_modules.protocol.options_dropdown.title") }}</span>
         <span class="sn-icon sn-icon-down"></span>
       </button>

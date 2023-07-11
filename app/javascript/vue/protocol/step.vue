@@ -58,7 +58,7 @@
       </div>
       <div class="step-actions-container">
         <div ref="elementsDropdownButton" v-if="urls.update_url"  class="dropdown">
-          <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'stepInserMenu_' + step.id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <button class="btn btn-light btn-black dropdown-toggle insert-button" type="button" :id="'stepInserMenu_' + step.id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             {{ i18n.t('protocols.steps.insert.button') }}
             <span class="sn-icon sn-icon-down"></span>
           </button>
@@ -98,7 +98,7 @@
         <a href="#"
            v-if="!inRepository"
            ref="comments"
-           class="open-comments-sidebar btn icon-btn btn-light"
+           class="open-comments-sidebar btn icon-btn btn-light btn-black"
            data-turbolinks="false"
            data-object-type="Step"
            @click="openCommentsSidebar"
@@ -113,7 +113,7 @@
         </a>
         <div v-if="urls.update_url" class="step-actions-container">
           <div ref="actionsDropdownButton" class="dropdown">
-            <button class="btn btn-light icon-btn dropdown-toggle insert-button" type="button" :id="'stepOptionsMenu_' + step.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
+            <button class="btn btn-light icon-btn btn-black dropdown-toggle insert-button" type="button" :id="'stepOptionsMenu_' + step.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
               <i class="sn-icon sn-icon-more-hori"></i>
             </button>
             <ul ref="actionsDropdown" class="dropdown-menu dropdown-menu-right insert-element-dropdown" :aria-labelledby="'stepOptionsMenu_' + step.id">
