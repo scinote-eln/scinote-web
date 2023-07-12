@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="dropdown sci-dropdown protocol-options-dropdown">
+    <div class="dropdown protocol-options-dropdown">
       <button
         class="btn btn-secondary dropdown-toggle"
         type="button"
