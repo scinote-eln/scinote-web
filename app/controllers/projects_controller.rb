@@ -155,6 +155,7 @@ class ProjectsController < ApplicationController
   def edit
     render json: {
       html: render_to_string(partial: 'projects/index/modals/edit_project_contents',
+                             formats: :html,
                              locals: { project: @project })
     }
   end

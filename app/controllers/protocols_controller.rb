@@ -188,7 +188,10 @@ class ProtocolsController < ApplicationController
   end
 
   def show
-    render json: @protocol, serializer: ProtocolSerializer, user: current_user
+    respond_to do |format|
+      format.json { render json: @protocol, serializer: ProtocolSerializer, user: current_user }
+      format.html
+    end
   end
 
   def update_keywords
@@ -335,6 +338,7 @@ class ProtocolsController < ApplicationController
           render json: { message: t('my_modules.protocols.copy_to_repository_modal.success_message') }
         end
       end
+      format.html
     end
   end
 

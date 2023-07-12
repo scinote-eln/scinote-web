@@ -652,6 +652,8 @@ var ProjectsIndex = (function() {
       dropdownSelector.clearData($membersFilter);
       if ($createdOnFromFilter.data('DateTimePicker')) $createdOnFromFilter.data('DateTimePicker').clear();
       if ($createdOnToFilter.data('DateTimePicker')) $createdOnToFilter.data('DateTimePicker').clear();
+      $createdOnFromFilter.val('');
+      $createdOnToFilter.val('');
       if ($archivedOnFromFilter.data('DateTimePicker')) $archivedOnFromFilter.data('DateTimePicker').clear();
       if ($archivedOnToFilter.data('DateTimePicker')) $archivedOnToFilter.data('DateTimePicker').clear();
       $foldersCB.prop('checked', false);
