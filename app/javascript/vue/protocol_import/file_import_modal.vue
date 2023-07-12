@@ -65,10 +65,12 @@
         this.open();
       },
       confirm() {
-        $.post(this.importUrl, (data) => {
-          this.state = 'in_progress';
-          this.jobId = data.job_id
-          this.jobPollInterval = setInterval(this.fetchJobStatus, 1000);
+        let formData = new FormData();
+        Array.from(this.files).forEach(file => formData.append('files[]', file, file.name));
+        $.post({ url: this.importUrl, data: formData, processData: false, contentType: false }, (data) => {
+            this.state = 'in_progress';
+            this.jobId = data.job_id
+            this.jobPollInterval = setInterval(this.fetchJobStatus, 1000);
         });
       },
       fetchJobStatus() {
