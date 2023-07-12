@@ -33,20 +33,6 @@
             </a>
           </li>
           <li role="separator" class="divider"></li>
-        <% elsif asset.bio_eddie? && BioEddieService.enabled?(current_user) %>
-          <li>
-            <a class="btn btn-light bio-eddie-edit-button"
-              data-molecule-id="<%= asset.id %>"
-              data-update-url="<%= bio_eddie_asset_path(asset) %>"
-              data-edit-url="<%= start_editing_bio_eddie_asset_path(asset) %>"
-              data-molecule-name="<%= asset.file.metadata[:name] || asset.file_name %>"
-              data-molecule-description="<%= asset.file.metadata[:description] || asset.file.download %>"
-            >
-              <%= image_tag 'icon_small/bio_eddie.png' %>
-              <%= t('assets.file_preview.edit_in_bio_eddie') %>
-            </a>
-          </li>
-          <li role="separator" class="divider"></li>
         <% elsif asset.editable_image? %>
           <li>
             <a class="btn btn-light image-edit-button"
