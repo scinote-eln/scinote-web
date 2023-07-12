@@ -1,47 +1,55 @@
 // scss-lint:disable SelectorDepth QualifyingElement NestingDepth
 
 .sci-toggle-checkbox-container {
+  --sci-toggle-check-size: .75rem;
+  --sci-toggle-container-height: 1.5rem;
+  --sci-toggle-container-width: 2.25rem;
+  --sci-toggle-label-border: .0625rem;
+  --sci-toggle-label-height: 1rem;
+  --sci-toggle-label-width: 2rem;
   display: inline-block;
-  height: 16px;
+  height: var(--sci-toggle-container-height);
   position: relative;
-  width: 24px;
+  width: var(--sci-toggle-container-width);
 }
 
 input[type="checkbox"].sci-toggle-checkbox {
   cursor: pointer;
   flex-shrink: 0;
-  height: 16px;
+  height: var(--sci-toggle-container-height);
   margin: 0;
   opacity: 0;
   position: relative;
-  width: 24px;
+  width: var(--sci-toggle-container-width);
   z-index: 2;
 
   + .sci-toggle-checkbox-label {
     animation-timing-function: $timing-function-sharp;
-    background: $color-alto;
-    border-radius: 8px;
+    background: var(--sn-white);
+    border: var(--sci-toggle-label-border) solid var(--sn-grey);
+    border-radius: calc(var(--sci-toggle-label-height) / 2);
     display: inline-block;
     flex-shrink: 0;
     font-weight: normal;
-    height: 16px;
-    left: 0;
+    height: var(--sci-toggle-label-height);
+    left: calc((var(--sci-toggle-container-width) - var(--sci-toggle-label-width))/2);
     position: absolute;
-    top: 0;
-    transition: .2s;
-    width: 24px;
+    top: calc((var(--sci-toggle-container-height) - var(--sci-toggle-label-height))/2);
+    transition: .4s;
+    width: var(--sci-toggle-label-width);
 
     &::before {
       animation-timing-function: $timing-function-sharp;
-      background: $color-white;
-      border-radius: 7px;
+      background: var(--sn-grey);
+      border-radius: 50%;
       content: "";
-      height: 12px;
+      height: var(--sci-toggle-check-size);
       left: 0;
-      margin: 2px;
+      margin: calc((var(--sci-toggle-label-height) - var(--sci-toggle-check-size))/2);
       position: absolute;
-      transition: .2s;
-      width: 12px;
+      top: calc(0 - var(--sci-toggle-label-border));
+      transition: .4s;
+      width: var(--sci-toggle-check-size);
     }
   }
 
@@ -50,18 +58,25 @@ input[type="checkbox"].sci-toggle-checkbox {
   }
 
   &:checked + .sci-toggle-checkbox-label {
-    background: $brand-primary;
+    border-color: var(--sn-blue);
 
     &::before {
-      left: 8px;
+      background-color: var(--sn-science-blue);
+      left: unset;
+      right: 0;
     }
   }
 
   &:disabled + .sci-toggle-checkbox-label {
+    border-color: var(--sn-light-grey);
 
     &::before {
-      background: $color-silver-chalice;
+      background-color: var(--sn-light-grey);
     }
+  }
+
+  &:disabled:checked + .sci-toggle-checkbox-label {
+    background-color: var(--sn-super-light-grey);
   }
 }
 
