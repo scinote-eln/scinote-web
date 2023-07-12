@@ -69,7 +69,8 @@ module Reports
                          assigns: { settings: report.settings },
                          locals: { report: report },
                          disable_javascript: false,
-                         template: 'reports/report'
+                         template: 'reports/report',
+                         formats: :pdf
         )
 
         file.rewind
@@ -170,7 +171,8 @@ module Reports
                                                          formats: :html,
                                                          locals: { report: report, total_pages: total_pages.to_i, logo: report_logo }),
                        disable_javascript: false,
-                       template: 'reports/report'
+                       template: 'reports/report',
+                       formats: :pdf
       )
 
       title_page.rewind

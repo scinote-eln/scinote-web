@@ -68,7 +68,7 @@ class AssetsController < ApplicationController
   def file_url
     return render_404 unless @asset.file.attached?
 
-    render plain: @asset.file.blob.service_url
+    render plain: @asset.file.blob.url
   end
 
   def download
@@ -103,7 +103,7 @@ class AssetsController < ApplicationController
     return render plain: '', status: :not_acceptable unless previewable_document?(@asset.blob)
     return render plain: '', status: :accepted unless @asset.pdf_preview_ready?
 
-    redirect_to @asset.file_pdf_preview.service_url
+    redirect_to @asset.file_pdf_preview.url
   end
 
   def create_start_edit_image_activity
