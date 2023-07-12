@@ -58,7 +58,7 @@ class GlobalActivitiesController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          activities_html: render_to_string(partial: 'activity_list'),
+          activities_html: render_to_string(partial: 'activity_list', formats: :html),
           next_page: @next_page,
           starting_timestamp: @starting_timestamp
         }
