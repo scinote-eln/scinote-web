@@ -19,10 +19,7 @@ class ResultTablesController < ApplicationController
     )
 
     render json: {
-      html: render_to_string({
-        partial: 'new',
-        formats: :html
-      })
+      html: render_to_string({ partial: 'new', formats: :html })
     }, status: :ok
   end
 
