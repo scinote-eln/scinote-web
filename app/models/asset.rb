@@ -238,10 +238,6 @@ class Asset < ApplicationRecord
     file.metadata[:asset_type] == 'marvinjs'
   end
 
-  def bio_eddie?
-    file.metadata[:asset_type] == 'bio_eddie' || File.extname(file_name) == '.helm'
-  end
-
   def pdf_preview_ready?
     return false if pdf_preview_processing
 

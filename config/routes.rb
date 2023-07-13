@@ -968,24 +968,6 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :bio_eddie_assets, only: %i(create update) do
-    collection do
-      get :license
-    end
-    member do
-      post :start_editing
-    end
-  end
-
-  resources :bmt_filters, only: %i(index create destroy)
-
-  match '/marvin4js-license.cxl', to: 'bio_eddie_assets#license', via: :get
-
-  match 'biomolecule_toolkit/*path', to: 'bio_eddie_assets#bmt_request',
-                                     via: %i(get post put delete),
-                                     defaults: { format: 'json' },
-                                     as: 'bmt_request'
-
   post 'global_activities', to: 'global_activities#index'
 
   constraints WopiSubdomain do

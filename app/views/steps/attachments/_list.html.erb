@@ -24,10 +24,9 @@
             data-step-id="<%= step.id %>"
             data-state-save-url="<%= update_view_state_step_path(step.id) %>">
           <li class="divider-label"><%= t("protocols.steps.attachments.add") %></li>
-          <%= render partial: '/assets/marvinjs/create_marvin_sketch_li.html.erb',
-                     locals: {  element_id: step.id, element_type: 'Step',  sketch_container: ".attachments[data-step-id=#{step.id}]" } %>
-          <%= render partial: '/assets/bio_eddie/create_bio_eddie_li.html.erb',
-                     locals: {  element_id: step.id, element_type: 'Step',  assets_container: ".attachments[data-step-id=#{step.id}]" } %>
+          <%= render partial: '/assets/marvinjs/create_marvin_sketch_li',
+                     locals: {  element_id: step.id, element_type: 'Step',  sketch_container: ".attachments[data-step-id=#{step.id}]" },
+                     formats: :html %>
 
           <li>
             <%= render partial: '/assets/wopi/create_wopi_file_li.html.erb',

@@ -36,8 +36,6 @@
           </li>
           <%= render partial: '/assets/marvinjs/create_marvin_sketch_li',
                        locals: {  element_id: @my_module.id, element_type: 'Result',  sketch_container: "#results[data-module-id=#{@my_module.id}]" } %>
-          <%= render partial: '/assets/bio_eddie/create_bio_eddie_li.html.erb',
-                     locals: {  element_id: @my_module.id, element_type: 'Result',  assets_container:"#results[data-module-id=#{@my_module.id}]" } %>
           <%= render partial: "assets/wopi/create_wopi_file_li",
                      locals: {  element_id: @my_module.id, element_type: 'Result' } %>
         </ul>
@@ -79,9 +77,6 @@
     <%= paginate @results, outer_window: 1, window: 1 %>
   </div>
 </div>
-
-<%= render partial: "shared/bio_eddie_modal.html.erb" %>
-
 
 <%= javascript_include_tag "handsontable.full" %>
 

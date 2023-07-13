@@ -22,17 +22,6 @@
           <%= t('assets.file_preview.edit_in_marvinjs') %>
         </button>
 
-      <% elsif asset.bio_eddie? && BioEddieService.enabled?(current_user) %>
-        <button class="btn btn-light bio-eddie-edit-button"
-          data-molecule-id="<%= asset.id %>"
-          data-update-url="<%= bio_eddie_asset_path(asset) %>"
-          data-edit-url="<%= start_editing_bio_eddie_asset_path(asset) %>"
-          data-molecule-name="<%= asset.file.metadata[:name] || asset.file_name %>"
-          data-molecule-description="<%= asset.file.metadata[:description] || asset.file.download %>"
-        >
-          <span class="sn-icon sn-icon-edit"></span>
-          <%= t('assets.file_preview.edit_in_bio_eddie') %>
-        </button>
       <% elsif asset.editable_image? %>
         <button class="btn btn-light image-edit-button"
           data-image-id="<%= asset.id %>"
@@ -47,15 +36,9 @@
         </button>
       <% end %>
     <% end %>
-    <% if asset.file.metadata[:asset_type] == 'bio_eddie' %>
-      <a class="btn btn-light file-download-link" href="data:text/plain;charset=utf-8,<%= asset.file.metadata[:description] %>" download="<%= asset.file.metadata[:name] %>.helm" data-turbolinks="false">
-        <span class="sn-icon sn-icon-export"></span> <%= t('Download')%>
-      </a>
-    <% else %>
-      <a class="btn btn-light file-download-link" href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>" data-turbolinks="false">
-        <span class="sn-icon sn-icon-export"></span> <%= t('Download')%>
-      </a>
-    <% end %>
+    <a class="btn btn-light file-download-link" href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>" data-turbolinks="false">
+      <span class="sn-icon sn-icon-export"></span> <%= t('Download')%>
+    </a>
     <% if (asset.step || asset.result) && !preview %>
       <%= render partial: 'assets/asset_context_menu.html.erb', locals: { asset: asset, deletable: false, editable: false } %>
     <% end %>
