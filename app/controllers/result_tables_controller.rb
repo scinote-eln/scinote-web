@@ -18,15 +18,12 @@ class ResultTablesController < ApplicationController
       table: @table
     )
 
-    respond_to do |format|
-      format.json {
-        render json: {
-          html: render_to_string({
-            partial: "new.html.erb"
-          })
-        }, status: :ok
-      }
-    end
+    render json: {
+      html: render_to_string({
+        partial: "new",
+        formats: :html
+      })
+    }, status: :ok
   end
 
   def create
