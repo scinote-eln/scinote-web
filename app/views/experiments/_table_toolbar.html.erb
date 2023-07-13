@@ -18,7 +18,7 @@
   <div class="content-header sticky-header">
     <div class="header-actions experiment-header">
       <% if action_name == 'table' %>
-        <%= render partial: 'table_filters.html.erb' %>
+        <%= render partial: 'table_filters' %>
         <button id="taskDataDisplay" class="btn btn-light btn-black icon-btn" data-toggle="modal" data-target="#tableDisplayModal" title="<%= t('experiments.table.toolbar.manage_columns_tooltip') %>">
           <i class="sn-icon sn-icon sn-icon-reports"></i>
         </button>
