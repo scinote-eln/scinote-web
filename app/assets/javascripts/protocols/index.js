@@ -694,7 +694,7 @@ var ProtocolsIndex = (function() {
       } else {
         protocolFileImportModal.init(ev.target.files, reloadTable);
       }
-      $(this).val('');
+      // $(this).val('');
     });
   }
 

@@ -918,7 +918,16 @@ class ProtocolsController < ApplicationController
   end
 
   def import_docx
-    @job = Protocols::DocxImportJob.perform_later(params[:files], current_user)
+    temp_files_ids = []
+    params[:files].each do |file|
+      temp_file = TempFile.new(session_id: request.session_options[:id], file: file)
+
+      if temp_file.save
+        TempFile.destroy_obsolete(temp_file.id)
+        temp_files_ids << temp_file.id
+      end
+    end
+    @job = Protocols::DocxImportJob.perform_later(temp_files_ids, current_user.id, current_team.id)
     render json: { job_id: @job.job_id }
   end
 
