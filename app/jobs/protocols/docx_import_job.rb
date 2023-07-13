@@ -29,7 +29,10 @@ module Protocols
         }
       )
 
-      raise RequestFailureException, "#{response.code}: #{response.message}" unless response.success?
+      unless response.success?
+        create_failed_notification!
+        raise RequestFailureException, "#{response.code}: #{response.message}"
+      end
 
       ActiveRecord::Base.transaction do
         @protocol = @team.protocols.new(
@@ -46,6 +49,9 @@ module Protocols
         @protocol.save!
         create_steps!(response['steps']) if response['steps'].present?
         create_notification!
+      rescue ActiveRecord::RecordInvalid => e
+        create_failed_notification!
+        Rails.logger.error(e.message)
       end
     end
 
@@ -142,6 +148,15 @@ module Protocols
                   "<a data-id='#{@protocol.id}'  data-turbolinks='false' " \
                   "href='#{Rails.application.routes.url_helpers.protocol_path(@protocol)}'>" \
                   "#{@protocol.name}</a>"
+      )
+
+      UserNotification.create!(notification: notification, user: @user)
+    end
+
+    def create_failed_notification!
+      notification = Notification.create!(
+        type_of: :deliver_error,
+        title: I18n.t('protocols.import_export.import_protocol_notification_error.title')
       )
 
       UserNotification.create!(notification: notification, user: @user)
