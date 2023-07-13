@@ -223,7 +223,7 @@ class TeamZipExport < ZipExport
         file_name = preview.image.filename.to_s
         file_data = preview.image.download
       else
-        file_name = preview.filename.to_s
+        file_name = preview.blob.filename.to_s
 
         begin
           file_data = preview.processed.service.download(preview.key)
