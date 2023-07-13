@@ -1,0 +1,10 @@
+<div class="attachment-container asset" data-asset-id="<%= attachment.id %>">
+  <div
+    class="file-name"
+    id="modal_link<%= attachment.id %>"
+    data-no-turbolink="true"
+    data-id="<%= attachment.id %>"
+  >
+    <div class="attachment-preview processing <%= attachment.file.metadata&.dig(:asset_type) %>"></div>
+  </div>
+</div>

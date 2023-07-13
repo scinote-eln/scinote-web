@@ -46,7 +46,7 @@
 <div class="flex items-center w-full justify-start h-8">
   <span class="sn-icon block-icon sn-icon-users mr-2.5"></span>
   <span class="hidden-xs hidden-sm"><%= t('my_modules.details.assigned_users') %></span>
-  <%= render partial: "shareable_links/user_my_modules", locals: { my_module: @my_module } %>
+  <%= render partial: "shareable_links/my_modules/user_my_modules", locals: { my_module: @my_module } %>
 </div>
 
 
@@ -54,5 +54,5 @@
 <div class="flex items-center w-full justify-start h-8">
   <span class="sn-icon block-icon sn-icon-tag mr-2.5"></span>
   <span class="hidden-xs hidden-sm tags-title"><%=t "my_modules.details.tags" %></span>
-  <%= render partial: "shareable_links/tags", locals: { my_module: @my_module } %>
+  <%= render partial: "shareable_links/my_modules/tags", locals: { my_module: @my_module } %>
 </div>

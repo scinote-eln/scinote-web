@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class MyModuleShareableLinksController < ApplicationController
-  before_action :load_my_module, except: %i(my_module_protocol_show)
+  before_action :load_my_module, except: %i(my_module_protocol_show file_preview)
   before_action :check_view_permissions, only: :show
-  before_action :check_manage_permissions, except: :my_module_protocol_show
-  skip_before_action :authenticate_user!, only: %i(my_module_protocol_show)
+  before_action :check_manage_permissions, except: %i(my_module_protocol_show file_preview)
+  before_action :load_assets, only: :file_preview
+  skip_before_action :authenticate_user!, only: %i(my_module_protocol_show file_preview)
 
   def show
     render json: @my_module.shareable_link, serializer: ShareableLinksSerializer
@@ -51,6 +52,19 @@ class MyModuleShareableLinksController < ApplicationController
     render json: {}
   end
 
+  def file_preview
+    render json: { html: render_to_string(
+      partial: 'shareable_links/my_modules/step_attachments/file_preview',
+      locals: {
+        asset: @asset,
+        can_edit: false,
+        gallery: params[:gallery],
+        preview: params[:preview]
+      },
+      formats: :html
+    ) }
+  end
+
   private
 
   def load_my_module
@@ -77,5 +91,19 @@ class MyModuleShareableLinksController < ApplicationController
               my_module: @my_module.id,
               user: current_user.id
             })
+  end
+
+  def load_assets
+    @asset = Asset.find_signed(params[:uuid])
+    return render_404 unless @asset
+
+    @assoc ||= @asset.step
+    @assoc ||= @asset.result
+
+    if @assoc.instance_of?(Step)
+      @protocol = @asset.step.protocol
+    elsif @assoc.instance_of?(Result)
+      @my_module = @assoc.my_module
+    end
   end
 end

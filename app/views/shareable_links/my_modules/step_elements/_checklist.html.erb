@@ -1,0 +1,21 @@
+<div class="step-checklist-container" >
+  <div class="step-element-header no-hover">
+    <div class="step-element-grip-placeholder"></div>
+    <div class="step-element-name">
+      <%= render partial: "shareable_links/my_modules/inline_edit", locals: { text: element.name,
+                                                                              smart_annotation_enabled: true,
+                                                                              placeholder: '' } %>
+    </div>
+  </div>
+  <% if element.checklist_items.count > 0 %>
+    <div class="step-checklist-items">
+      <% element.checklist_items.sort_by(&:position).each do |checklistItem| %>
+        <%= render partial: "shareable_links/my_modules/step_elements/checklistItem", locals: { checklistItem: checklistItem } %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="empty-checklist-element">
+      <%= t("protocols.steps.checklist.empty_checklist") %>
+    </div>
+  <% end %>
+</div>

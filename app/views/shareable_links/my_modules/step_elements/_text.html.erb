@@ -1,0 +1,12 @@
+<div class="step-text-container step-element--locked" tabindex="0">
+  <div class="step-element-grip-placeholder"></div>
+  <% if element.text.present? %>
+    <div class="view-text-element" >
+      <%= smart_annotation_text(element.tinymce_render(:text)) %>
+    </div>
+  <% else %>
+    <div class="empty-text-element">
+      <%= t("protocols.steps.text.empty_text") %>
+    </div>
+  <% end %>
+</div>

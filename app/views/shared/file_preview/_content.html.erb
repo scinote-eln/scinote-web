@@ -51,7 +51,7 @@
       <% if wopi_enabled? && wopi_file?(asset) %>
         <iframe class="wopi-file-preview" src="<%= asset.get_action_url(current_user, 'embedview') %>"></iframe>
       <% elsif asset.pdf_previewable? %>
-        <%= render partial: 'shared/pdf_viewer', locals: { asset: asset, report_document: false } %>
+        <%= render partial: 'shared/pdf_viewer', locals: { asset: asset, report_document: false, shareable_document: false } %>
       <% else %>
         <%= image_tag asset.large_preview,
             class: 'asset-image',

@@ -1,0 +1,18 @@
+<div class="step-checklist-item step-element--locked">
+  <div class="step-element-header locked">
+    <div class="step-element-grip-placeholder"></div>
+    <div class="step-element-name <%= 'done' if checklistItem.checked %>">
+      <div class="sci-checkbox-container disabled">
+        <input type="checkbox"
+               class="sci-checkbox"
+               <%= 'checked' if checklistItem.checked %> />
+        <span class="sci-checkbox-label" ></span>
+      </div>
+      <div class="step-checklist-text step-element--locked">
+        <%= render partial: "shareable_links/my_modules/inline_edit", locals: { text: checklistItem.text,
+                                                                                smart_annotation_enabled: true,
+                                                                                placeholder: 'Add a checklist item...' } %>
+      </div>
+    </div>
+  </div>
+</div>

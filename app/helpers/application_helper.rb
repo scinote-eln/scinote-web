@@ -121,6 +121,10 @@ module ApplicationHelper
     smart_annotation_filter_users(new_text, team, base64_encoded_imgs: base64_encoded_imgs)
   end
 
+  def smart_annotation_text_parser(text)
+    SmartAnnotations::TagToText.new(nil, nil, text, skip_validation: true).text
+  end
+
   # Check if text have smart annotations of resources
   # and outputs a link to resource
   def smart_annotation_filter_resources(text, team, preview_repository: false)

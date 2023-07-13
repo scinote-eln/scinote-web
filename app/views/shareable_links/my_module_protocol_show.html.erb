@@ -3,12 +3,12 @@
 <div class="my-5 max-w-4xl flex-1 bg-sn-white">
   <div class="my-module-position-container">
     <!-- Header Actions -->
-    <%= render partial: 'shareable_links/header_actions' %>
+    <%= render partial: 'shareable_links/my_modules/header_actions' %>
     <!-- Details -->
     <div class="task-section task-information">
       <div id="task-details" class="task-section-header">
           <div class="flex items-center gap-3">
-            <%= render partial: 'shareable_links/task_flow_button', locals: { my_module: @my_module } if @my_module.my_module_status_flow %>
+            <%= render partial: 'shareable_links/my_modules/task_flow_button', locals: { my_module: @my_module } if @my_module.my_module_status_flow %>
           </div>
         <div class="task-details-container flex items-center gap-2">
           <a class="task-section-caret" role="button" data-toggle="collapse" href="#details-container" aria-expanded="false" aria-controls="details-container">
@@ -25,7 +25,7 @@
         </div>
       </div>
       <div id="details-container" class="task-details">
-        <%= render partial: 'shareable_links/my_module_details' %>
+        <%= render partial: 'shareable_links/my_modules/my_module_details' %>
       </div>
     </div>
     <!-- Notes -->
@@ -68,14 +68,20 @@
       </div>
       <div class="collapse in panel-group" id="assigned-items-container" aria-expanded="true"
           data-repositories-list-url="<%= my_module_repositories_list_html_path(@my_module) %>">
-        <%= render partial: "shareable_links/repositories_list", locals: {assigned_repositories: assigned_repositories} %>
+          <%= render partial: "shareable_links/my_modules/repositories_list", locals: {assigned_repositories: assigned_repositories} %>
       </div>
+    </div>
+
+    <!-- Protocol -->
+    <div class="task-section">
+      <%= render partial: "shareable_links/my_modules/protocol", locals: { protocol: @my_module.protocol } %>
     </div>
   </div>
 </div>
 
 
-<%= render "shareable_links/welcome_modal" %>
+<%= render "shareable_links/my_modules/welcome_modal" %>
 
+<%= javascript_include_tag "handsontable.full" %>
 <%= javascript_include_tag 'shareable_links/my_module_protocol_show' %>
 <%= javascript_include_tag("shareable_links/repositories") %>
