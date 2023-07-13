@@ -3,17 +3,12 @@ class ActivitiesController < ApplicationController
 
   def index
     @vars = local_vars
-    respond_to do |format|
-      format.json do
-        render json: {
-          more_url: local_vars.fetch(:more_activities_url),
-          html: render_to_string(
-            partial: 'list.html.erb', locals: @vars
-          )
-        }
-      end
-      format.html
-    end
+    render json: {
+      more_url: local_vars.fetch(:more_activities_url),
+      html: render_to_string(
+        partial: 'list', locals: @vars, formats: :html
+      )
+    }
   end
 
   private

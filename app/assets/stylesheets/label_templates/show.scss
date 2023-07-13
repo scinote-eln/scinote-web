@@ -118,9 +118,9 @@
     position: relative;
     white-space: pre;
 
-    .fa-pen {
+    .sn-icon-edit {
       display: none;
-      padding: 1em;
+      padding: .5rem;
       position: absolute;
       right: 0;
       top: 0;
@@ -133,7 +133,7 @@
     &:hover:not(.read-only) {
       background-color: $color-concrete;
 
-      .fa-pen {
+      .sn-icon-edit {
         display: inline-block;
       }
     }

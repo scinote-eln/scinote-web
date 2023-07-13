@@ -151,7 +151,7 @@ module Reports
 
       asset_preview = Reports::Utils.image_prepare(asset)
 
-      dimension = FastImage.size(asset_preview.processed.service_url)
+      dimension = FastImage.size(asset_preview.processed.url)
       return unless dimension
 
       x = dimension[0]
@@ -167,7 +167,7 @@ module Reports
                     asset_preview.blob.download
                   end
 
-      docx.img asset_preview.processed.service_url.split('&')[0] do
+      docx.img asset_preview.processed.url.split('&')[0] do
         data blob_data
         width x
         height y

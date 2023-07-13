@@ -15,13 +15,13 @@ module CommentHelper
   end
 
   def comment_index_helper(comments, more_url, partial = nil)
-    partial ||= 'shared/comments/list.html.erb'
+    partial ||= 'shared/comments/list'
     render json: {
       perPage: @per_page,
       resultsNumber: comments.size,
       moreUrl: more_url,
       html: render_to_string(
-        partial: partial, locals: { comments: comments }
+        partial: partial, locals: { comments: comments }, formats: :html
       )
     }
   end
@@ -45,11 +45,12 @@ module CommentHelper
 
       render json: {
         html: render_to_string(
-          partial: "/shared/comments/#{partial}.html.erb",
+          partial: "shared/comments/#{partial}",
           locals: {
             comment: comment,
             skip_header: false
-          }
+          },
+          formats: :html
         )
       }
     else
@@ -111,7 +112,8 @@ module CommentHelper
             locals: {
               comment: comment,
               skip_header: false
-            }
+            },
+            formats: :html
           )
         }
       else

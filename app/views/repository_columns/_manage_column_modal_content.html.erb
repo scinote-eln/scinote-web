@@ -1,6 +1,6 @@
 <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <button class="btn icon-btn btn-light manage-repo-column-index back-to-column-modal"
+  <button class="btn icon-btn btn-light btn-black manage-repo-column-index back-to-column-modal"
           title="<%= t("libraries.manange_modal_column.button_tooltip") %>"
           data-modal-url="<%= repository_repository_columns_path(@repository) %>"
           data-action="new">
@@ -126,7 +126,7 @@
     <% columns = %w(Text Number Asset List Status Date Time DateTime Checklist Stock) %>
     <% columns.each do |column| %>
       <span style="display: none" class="column-type <%= column.downcase %>-column-type" data-column-type="Repository<%= column %>Value">
-        <%= render partial: "repository_columns/manage_column_partials/#{column.downcase}.html.erb", locals: {column: @repository_column}  %>
+        <%= render partial: "repository_columns/manage_column_partials/#{column.downcase}", locals: {column: @repository_column}  %>
       </span>
     <% end %>
   </div>

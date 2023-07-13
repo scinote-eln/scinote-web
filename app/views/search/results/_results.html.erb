@@ -11,7 +11,7 @@
         <span class="sn-icon sn-icon-files"></span>
       <% end %>
     <% end %>
-    <%= render partial: "search/results/partials/result_text.html.erb", locals: { result: result, query: search_query, target: nil } %>
+    <%= render partial: "search/results/partials/result_text", locals: { result: result, query: search_query, target: nil } %>
   </h5>
 
   <% if result.is_text && result.result_text.text.present? %>
@@ -33,33 +33,33 @@
     <br>
     <span>
       <%=t "search.index.module" %>
-      <%= render partial: "search/results/partials/my_module_text.html.erb",
+      <%= render partial: "search/results/partials/my_module_text",
                  locals: { my_module: result.my_module } %>
     </span>
     <br>
     <span>
       <%=t "search.index.experiment" %>
-      <%= render partial: "search/results/partials/experiment_text.html.erb",
+      <%= render partial: "search/results/partials/experiment_text",
                  locals: { experiment: result.my_module.experiment } %>
     </span>
     <br>
     <span>
       <%=t "search.index.project" %>
-      <%= render partial: "search/results/partials/project_text.html.erb",
+      <%= render partial: "search/results/partials/project_text",
                  locals: { project: result.my_module.experiment.project, link_to_page: :show } %>
     </span>
     <br>
     <% if result.my_module.experiment.project.project_folder %>
       <span>
         <%=t "search.index.folder" %>
-        <%= render partial: "search/results/partials/project_folders_text.html.erb",
+        <%= render partial: "search/results/partials/project_folders_text",
                    locals: { folder: result.my_module.experiment.project.project_folder } %>
       </span>
       <br>
     <% end %>
     <span>
       <%=t "search.index.team" %>
-      <%= render partial: "search/results/partials/team_text.html.erb",
+      <%= render partial: "search/results/partials/team_text",
                  locals: { team: result.my_module.experiment.project.team } %>
     </span>
   </p>

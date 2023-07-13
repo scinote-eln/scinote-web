@@ -1,7 +1,7 @@
 class AddProjectToTags < ActiveRecord::Migration[4.2]
   def change
     # Add project ID reference, make it nullable at first
-    add_column :tags, :project_id, :integer, { null: true }
+    add_column :tags, :project_id, :integer, null: true
     add_foreign_key :tags, :projects
 
     # Clone tags for each project, just to make sure not a single tag has

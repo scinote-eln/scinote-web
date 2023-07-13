@@ -4,6 +4,7 @@ module ActiveStorage
   class Previewer
     class LibreofficePreviewer < Previewer
       class << self
+        require 'active_storage_file_util'
         include ActiveStorageFileUtil
 
         def accept?(blob)

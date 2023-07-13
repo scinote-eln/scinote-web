@@ -82,15 +82,9 @@ class RepositoryRowsController < ApplicationController
     @viewable_modules = @assigned_modules.viewable_by_user(current_user, current_user.teams)
     @private_modules = @assigned_modules - @viewable_modules
 
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'repositories/repository_row_info_modal.html.erb'
-          )
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'repositories/repository_row_info_modal')
+    }
   end
 
   def validate_label_template_columns
@@ -149,7 +143,7 @@ class RepositoryRowsController < ApplicationController
 
     render json: {
       html: render_to_string(
-        partial: 'label_printers/print_progress_modal.html.erb',
+        partial: 'label_printers/print_progress_modal',
         locals: { starting_item_count: label_printer.current_print_job_ids.length,
                   label_printer: label_printer }
       )
@@ -254,7 +248,7 @@ class RepositoryRowsController < ApplicationController
     viewable_modules = assigned_modules.viewable_by_user(current_user, current_user.teams)
     private_modules_number = assigned_modules.where.not(id: viewable_modules).count
     render json: {
-      html: render_to_string(partial: 'shared/my_modules_list_partial.html.erb', locals: {
+      html: render_to_string(partial: 'shared/my_modules_list_partial', locals: {
                                my_modules: viewable_modules,
                                private_modules_number: private_modules_number
                              })
@@ -294,7 +288,7 @@ class RepositoryRowsController < ApplicationController
   def active_reminder_repository_cells
     reminder_cells = @repository_row.repository_cells.with_active_reminder(current_user).distinct
     render json: {
-      html: render_to_string(partial: 'shared/repository_row_reminder.html.erb', locals: {
+      html: render_to_string(partial: 'shared/repository_row_reminder', locals: {
                                reminders: reminder_cells
                              })
     }
