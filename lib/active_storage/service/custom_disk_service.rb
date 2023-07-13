@@ -4,11 +4,9 @@ require 'active_storage/service/disk_service'
 
 module ActiveStorage
   class Service::CustomDiskService < Service::DiskService
-    def current_host
-      host = ActiveStorage::Current.host
-      host ||= Rails.application.secrets.mail_server_url
-      host = "http://#{host}" unless host.match?(/^http/)
-      host
+    def url_options
+      ActiveStorage::Current.url_options ||= { host: Rails.application.secrets.mail_server_url }
+      ActiveStorage::Current.url_options
     end
   end
 end

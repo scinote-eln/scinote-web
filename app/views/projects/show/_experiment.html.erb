@@ -5,7 +5,7 @@
        >
     <div class="panel-heading">
       <div class="actions actions-cell table-cell pull-right">
-        <%= render partial: 'projects/show/experiment_actions_dropdown.html.erb', locals: { experiment: experiment, view: 'cards', project: project } %>
+        <%= render partial: 'projects/show/experiment_actions_dropdown', locals: { experiment: experiment, view: 'cards', project: project } %>
       </div>
       <div class="panel-title">
         <%= link_to experiment.name, list_modules_experiment_pat(experiment) %>

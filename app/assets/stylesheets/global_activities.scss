@@ -30,6 +30,7 @@
       border-bottom: 1px solid $color-gainsboro;
       display: flex;
       height: 42px;
+      padding-bottom: .75em;
 
       .ga-search-container {
         display: none;
@@ -209,7 +210,7 @@
       padding: 5px 0 5px 5px;
 
       &:hover {
-        background-color: $color-concrete;
+        background-color: var(--sn-super-light-grey);
         border-radius: 5px;
       }
 

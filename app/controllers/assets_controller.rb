@@ -22,34 +22,33 @@ class AssetsController < ApplicationController
 
   def file_preview
     render json: { html: render_to_string(
-      partial: 'shared/file_preview/content.html.erb',
+      partial: 'shared/file_preview/content',
       locals: {
         asset: @asset,
         can_edit: can_manage_asset?(@asset),
         gallery: params[:gallery],
         preview: params[:preview]
-      }
+      },
+      formats: :html
     ) }
   end
 
   def toggle_view_mode
     @asset.view_mode = toggle_view_mode_params[:view_mode]
-    if @asset.save(touch: false)
-      gallery_view_id = if @assoc.is_a?(Step)
-                          @assoc.id
-                        elsif @assoc.is_a?(Result)
-                          @assoc.my_module.id
-                        end
-      html = render_to_string(partial: 'assets/asset.html.erb', locals: {
-                                asset: @asset,
-                                gallery_view_id: gallery_view_id
-                              })
-      respond_to do |format|
-        format.json do
-          render json: { html: html }, status: :ok
-        end
-      end
-    end
+    @asset.save!(touch: false)
+    gallery_view_id = if @assoc.is_a?(Step)
+                        @assoc.id
+                      elsif @assoc.is_a?(Result)
+                        @assoc.my_module.id
+                      end
+    render json: {
+      html: render_to_string(
+        partial: 'assets/asset', locals: {
+          asset: @asset,
+          gallery_view_id: gallery_view_id
+        }
+      )
+    }
   end
 
   def load_asset
@@ -58,17 +57,18 @@ class AssetsController < ApplicationController
                       elsif @assoc.is_a?(Result)
                         @assoc.my_module.id
                       end
-    render json: { html: render_to_string(partial: 'assets/asset.html.erb',
+    render json: { html: render_to_string(partial: 'assets/asset',
                                           locals: {
                                             asset: @asset,
                                             gallery_view_id: gallery_view_id
-                                          }) }
+                                          },
+                                          formats: :html) }
   end
 
   def file_url
     return render_404 unless @asset.file.attached?
 
-    render plain: @asset.file.blob.service_url
+    render plain: @asset.file.blob.url
   end
 
   def download
@@ -103,7 +103,7 @@ class AssetsController < ApplicationController
     return render plain: '', status: :not_acceptable unless previewable_document?(@asset.blob)
     return render plain: '', status: :accepted unless @asset.pdf_preview_ready?
 
-    redirect_to @asset.file_pdf_preview.service_url
+    redirect_to @asset.file_pdf_preview.url
   end
 
   def create_start_edit_image_activity
@@ -133,7 +133,7 @@ class AssetsController < ApplicationController
                                       end
 
                     render_to_string(
-                      partial: 'assets/asset.html.erb',
+                      partial: 'assets/asset',
                       locals: {
                         asset: @asset,
                         gallery_view_id: gallery_view_id
@@ -142,17 +142,13 @@ class AssetsController < ApplicationController
                     )
                   else
                     render_to_string(
-                      partial: 'assets/asset_link.html.erb',
+                      partial: 'assets/asset_link',
                       locals: { asset: @asset, display_image_tag: true },
                       formats: :html
                     )
                   end
 
-    respond_to do |format|
-      format.json do
-        render json: { html: render_html }
-      end
-    end
+    render json: { html: render_html }
   end
 
   # POST: create_wopi_file_path

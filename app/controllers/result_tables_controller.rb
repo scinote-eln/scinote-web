@@ -31,6 +31,7 @@ class ResultTablesController < ApplicationController
 
   def create
     @table = Table.new(result_params[:table_attributes])
+    @table.metadata = JSON.parse(result_params[:table_attributes][:metadata])
     @table.created_by = current_user
     @table.team = current_team
     @table.last_modified_by = current_user
@@ -70,6 +71,7 @@ class ResultTablesController < ApplicationController
     @result.table.last_modified_by = current_user
     @result.table.team = current_team
     @result.assign_attributes(update_params)
+    @result.table.metadata = JSON.parse(update_params[:table_attributes][:metadata])
     flash_success = t("result_tables.update.success_flash",
       module: @my_module.name)
     if @result.archived_changed?(from: false, to: true)

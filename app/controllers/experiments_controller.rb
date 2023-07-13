@@ -29,15 +29,11 @@ class ExperimentsController < ApplicationController
 
   def new
     @experiment = Experiment.new
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'new_modal.html.erb'
-          )
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(
+        partial: 'new_modal', formats: :html
+      )
+    }
   end
 
   def create
@@ -66,7 +62,7 @@ class ExperimentsController < ApplicationController
 
   def show
     render json: {
-      html: render_to_string(partial: 'experiments/details_modal.html.erb')
+      html: render_to_string(partial: 'experiments/details_modal', formats: :html)
     }
   end
 
@@ -145,15 +141,9 @@ class ExperimentsController < ApplicationController
   end
 
   def edit
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'edit_modal.html.erb'
-          )
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'edit_modal', formats: :html)
+    }
   end
 
   def update
@@ -260,16 +250,13 @@ class ExperimentsController < ApplicationController
   def clone_modal
     @projects = @experiment.project.team.projects.active
                            .with_user_permission(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'clone_modal.html.erb',
-            locals: { view_mode: params[:view_mode] }
-          )
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(
+        partial: 'clone_modal',
+        locals: { view_mode: params[:view_mode] },
+        formats: :html
+      )
+    }
   end
 
   # POST: clone_experiment(id)
@@ -295,15 +282,9 @@ class ExperimentsController < ApplicationController
   # GET: move_modal_experiment_path(id)
   def move_modal
     @projects = @experiment.movable_projects(current_user)
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'move_modal.html.erb'
-          )
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'move_modal', formats: :html)
+    }
   end
 
   def search_tags
@@ -346,9 +327,7 @@ class ExperimentsController < ApplicationController
     @experiments = @experiment.project.experiments.active.where.not(id: @experiment)
                               .managable_by_user(current_user).order(name: :asc)
     render json: {
-      html: render_to_string(
-        partial: 'move_modules_modal.html.erb'
-      )
+      html: render_to_string(partial: 'move_modules_modal', formats: :html)
     }
   end
 
@@ -406,16 +385,13 @@ class ExperimentsController < ApplicationController
       end
     end
 
-    respond_to do |format|
-      format.json do
-        render json: {
-          workflowimg: render_to_string(
-            partial: 'projects/show/workflow_img.html.erb',
-            locals: { experiment: @experiment }
-          )
-        }
-      end
-    end
+    render json: {
+      workflowimg: render_to_string(
+        partial: 'projects/show/workflow_img',
+        locals: { experiment: @experiment },
+        formats: :html
+      )
+    }
   end
 
   def sidebar
@@ -431,19 +407,15 @@ class ExperimentsController < ApplicationController
                  end
 
     my_modules = sort_my_modules(my_modules, params[:sort].presence || default_sort)
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: if params[:view_mode] == 'archived'
-                       'shared/sidebar/archived_my_modules.html.erb'
-                     else
-                       'shared/sidebar/my_modules.html.erb'
-                     end, locals: { experiment: @experiment, my_modules: my_modules }
-          )
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(
+        partial: if params[:view_mode] == 'archived'
+                    'shared/sidebar/archived_my_modules'
+                  else
+                    'shared/sidebar/my_modules'
+                  end, locals: { experiment: @experiment, my_modules: my_modules }
+      )
+    }
   end
 
   def inventory_assigning_experiment_filter

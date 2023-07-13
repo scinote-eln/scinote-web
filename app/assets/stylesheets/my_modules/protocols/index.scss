@@ -130,9 +130,6 @@
       }
 
       .repositories-assign-container {
-        display: flex;
-        flex-grow: 1;
-        justify-content: flex-end;
         max-width: 150px;
 
         .btn {
@@ -391,6 +388,10 @@
   }
 
   .my-module-user-tags {
+    .user-full-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
     img {
       border-radius: 50%;

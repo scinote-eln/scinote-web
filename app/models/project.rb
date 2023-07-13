@@ -278,7 +278,7 @@ class Project < ApplicationRecord
     report = Report.generate_whole_project_report(self, user, team)
 
     page_html_string =
-      renderer.render 'reports/export.html.erb',
+      renderer.render 'reports/export',
                       locals: { report: report, export_all: true },
                       assigns: { settings: report.settings, obj_filenames: obj_filenames }
     parsed_page_html = Nokogiri::HTML(page_html_string)

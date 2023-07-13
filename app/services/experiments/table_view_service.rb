@@ -125,7 +125,7 @@ module Experiments
       {
         id: my_module.id,
         data: ApplicationController.renderer.render(
-          partial: 'experiments/table_due_date.html.erb',
+          partial: 'experiments/table_due_date',
           locals: { my_module: my_module,
                     user: @user }
         )
@@ -160,7 +160,7 @@ module Experiments
 
     def assigned_presenter(my_module)
       { html: ApplicationController.renderer.render(
-        partial: 'experiments/assigned_users.html.erb',
+        partial: 'experiments/assigned_users',
         locals: { my_module: my_module,
                   user: @user,
                   skip_unassigned: @params[:view_mode] == 'archived' ||

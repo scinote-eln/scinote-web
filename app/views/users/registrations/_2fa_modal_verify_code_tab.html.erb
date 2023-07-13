@@ -3,7 +3,7 @@
     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
     <h2 class="modal-title"><%= t("users.registrations.edit.2fa_modal.step_3.title") %></h2>
   </div>
-  <%= form_with(url: main_app.users_2fa_enable_path, method: "post", class: "2fa-enable-form") do %>
+  <%= form_with(url: main_app.users_2fa_enable_path, method: "post", class: "2fa-enable-form", html: { data: { remote: true } }) do %>
     <div class="modal-body">
       <p><%= t("users.registrations.edit.2fa_modal.step_3.description") %></p>
       <p class="sci-input-container submit-code-field">

@@ -14,13 +14,13 @@
 
   <div data-view-mode="active">
     <a class="edit-tags-link pull-right" data-remote="true" href="<%= my_module_tags_edit_url(my_module, format: :json) %>">
-      <%= render partial: "canvas/tags.html.erb", locals: { my_module: my_module } %>
+      <%= render partial: "canvas/tags", locals: { my_module: my_module } %>
     </a>
   </div>
 
   <div data-view-mode="archived">
     <a class="edit-tags-link pull-right" data-remote="true" href="<%= my_module_tags_edit_url(my_module, format: :json) %>">
-      <%= render partial: "canvas/tags.html.erb", locals: { my_module: my_module } %>
+      <%= render partial: "canvas/tags", locals: { my_module: my_module } %>
     </a>
   </div>
 
@@ -46,10 +46,10 @@
       <% if !my_module.completed? && can_manage_my_module?(my_module) %>
         <%= link_to due_date_my_module_path(my_module, format: :json), remote: true,
                     class: "due-date-link due-date-refresh" do %>
-          <%= render partial: "my_modules/card_due_date_label.html.erb", locals: { my_module: my_module, format: :full_date } %>
+          <%= render partial: "my_modules/card_due_date_label", locals: { my_module: my_module, format: :full_date } %>
         <% end %>
       <% else %>
-        <%= render partial: "my_modules/card_due_date_label.html.erb", locals: { my_module: my_module, format: :full_date } %>
+        <%= render partial: "my_modules/card_due_date_label", locals: { my_module: my_module, format: :full_date } %>
       <% end %>
     </div>
 

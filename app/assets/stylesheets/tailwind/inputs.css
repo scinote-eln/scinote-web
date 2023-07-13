@@ -8,7 +8,7 @@
   }
 
   .sci-input-container-v2 input {
-    @apply w-full h-full bg-transparent p-0.5 border rounded outline-none absolute top-0;
+    @apply w-full h-full bg-transparent p-0.5 border rounded outline-none absolute top-0 pl-2;
     border-color: var(--sn-sleepy-grey);
   }
 
@@ -25,7 +25,8 @@
   }
 
   .sci-input-container-v2 input:focus {
-    border-color: var(--sn-science-blue);
+    border-color: var(--sn-sleepy-grey);
+    box-shadow: none;
   }
 
   .sci-input-container-v2 .sn-icon {
@@ -33,24 +34,15 @@
     color: var(--sn-black)
   }
 
+  .sci-input-container-v2.right-icon .sn-icon {
+    @apply absolute right-0;
+  }
+
   .sci-input-container-v2.left-icon input {
     @apply pl-10;
   }
 
-  .sci-input-container-v2.textarea-lg {
-    @apply h-[9rem];
-  }
-
-  .sci-input-container-v2 textarea {
-    @apply w-full h-full bg-transparent px-2 border rounded outline-none absolute top-0;
-    border-color: var(--sn-sleepy-grey);
-  }
-
-  .sci-input-container-v2 textarea::placeholder {
-    color: var(--sn-sleepy-grey);
-  }
-
-  .sci-input-container-v2 textarea:focus {
-    border-color: var(--sn-science-blue);
+  .sci-input-container-v2.right-icon input {
+    @apply pr-10;
   }
 }

@@ -2,7 +2,7 @@
 <% provide(:sidebar_title, t("sidebar.my_module.sidebar_title")) %>
 
 <%= content_for :sidebar do %>
-  <%= render partial: 'shared/sidebar/my_module.html.erb',
+  <%= render partial: 'shared/sidebar/my_module',
     locals: {
       my_modules: @experiment_my_modules,
       experiment: @experiment,
@@ -20,7 +20,7 @@
     <% if @archived_results.any? %>
       <% @archived_results.each do |result| %>
         <div class="col-xs-3">
-          <%= render partial: "my_modules/archive/result.html.erb", locals: { result: result } %>
+          <%= render partial: "my_modules/archive/result", locals: { result: result } %>
         </div>
       <% end %>
     <% else %>

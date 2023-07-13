@@ -17,7 +17,7 @@ class MarvinJsAssetsController < ApplicationController
 
     if result[:asset] && marvin_params[:object_type] == 'Step'
       render json: {
-        html: render_to_string(partial: 'assets/asset.html.erb', locals: {
+        html: render_to_string(partial: 'assets/asset', locals: {
                                  asset: result[:asset],
                                  gallery_view_id: marvin_params[:object_id]
                                })
@@ -26,7 +26,7 @@ class MarvinJsAssetsController < ApplicationController
       @my_module = result[:object].my_module
       render json: {
         html: render_to_string(
-          partial: 'my_modules/result.html.erb',
+          partial: 'my_modules/result',
             locals: { result: result[:object] }
         )
       }, status: :ok

@@ -2,7 +2,7 @@
 
 <span class="date-text" data-editable="<%= due_date_editable %>">
   <span id="dueDateLabelContainer" class="view-block">
-    <%= render partial: "my_modules/due_date_label.html.erb" , locals: { my_module: my_module, due_date_editable: due_date_editable  } %>
+    <%= render partial: "due_date_label" , locals: { my_module: my_module, due_date_editable: due_date_editable  } %>
   </span>
   <% if due_date_editable %>
     <div class="datetime-picker-container" id="due-date">

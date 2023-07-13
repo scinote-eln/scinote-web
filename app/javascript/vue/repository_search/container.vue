@@ -1,10 +1,10 @@
 <template>
   <div class="flex items-center mr-3 flex-nowrap">
-    <button v-if="!searchOpened" class="btn btn-light  icon-btn" :title="i18n.t('repositories.show.search_button_tooltip')" @click="openSearch">
+    <button v-if="!searchOpened" class="btn btn-light btn-lg btn-black icon-btn" :title="i18n.t('repositories.show.search_button_tooltip')" @click="openSearch">
       <i class="sn-icon sn-icon-search"></i>
     </button>
     <div v-if="searchOpened || barcodeSearchOpened" class="w-52 flex">
-      <div v-if="searchOpened" class="sci-input-container right-icon">
+      <div v-if="searchOpened" class="sci-input-container-v2 w-full right-icon">
         <input
           ref="searchInput"
           class="sci-input-field"
@@ -13,9 +13,9 @@
           @keyup="setValue"
           @blur="closeSearch"
         />
-        <i class="sn-icon sn-icon-search"></i>
+        <i class="sn-icon sn-icon-search !mr-2.5"></i>
       </div>
-      <div v-if="barcodeSearchOpened" class="sci-input-container right-icon ml-2">
+      <div v-if="barcodeSearchOpened" class="sci-input-container-v2 w-full right-icon ml-2">
         <input
           ref="barcodeSearchInput"
           class="sci-input-field"
@@ -24,10 +24,10 @@
           @change="setBarcodeValue"
           @blur="closeBarcodeSearch"
         />
-        <i class='sn-icon sn-icon-barcode barcode-scanner'></i>
+        <i class='sn-icon sn-icon-barcode barcode-scanner !mr-2.5'></i>
       </div>
     </div>
-    <button v-if="!barcodeSearchOpened" class="btn btn-light icon-btn ml-2" :title="i18n.t('repositories.show.ean_search_button_tooltip')" @click="openBarcodeSearch">
+    <button v-if="!barcodeSearchOpened" class="btn btn-light btn-lg btn-black icon-btn ml-2" :title="i18n.t('repositories.show.ean_search_button_tooltip')" @click="openBarcodeSearch">
       <i class='sn-icon sn-icon-barcode barcode-scanner'></i>
     </button>
   </div>

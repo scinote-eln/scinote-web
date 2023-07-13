@@ -4,7 +4,7 @@
 <% provide(:container_class, 'no-second-nav-container') %>
 
 <%= content_for :sidebar do %>
-  <%= render partial: 'shared/sidebar/archived_my_modules.html.erb', locals: { experiment: @experiment, my_modules: @my_modules } %>
+  <%= render partial: 'shared/sidebar/archived_my_modules', locals: { experiment: @experiment, my_modules: @my_modules } %>
 <% end %>
 <div class="content-pane flexible" id="module-archive">
   <%= render partial: 'experiments/show_header' %>
@@ -26,7 +26,7 @@
           </div>
         </span>
       <% end %>
-    <%= render partial: 'task_view_dropdowns.html.erb' %>
+    <%= render partial: 'task_view_dropdowns' %>
   </div>
 
     <div class="row mt-4"
@@ -46,7 +46,7 @@
   <%= render partial: 'my_modules/modals/manage_module_tags_modal', locals: { my_module: nil } %>
 
   <% unless  @my_modules.present? %>
-    <%= render partial: 'task_view_dropdowns.html.erb' %>
+    <%= render partial: 'task_view_dropdowns' %>
   <% end %>
 
 </div>

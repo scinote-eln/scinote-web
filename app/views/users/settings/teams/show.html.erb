@@ -7,7 +7,7 @@
 
 <div data-hook="team-beginning"></div>
 
-<%= render partial: "users/settings/sidebar.html.erb" %>
+<%= render partial: "users/settings/sidebar" %>
 <div class="tab-content">
   <div class="tab-pane content-pane" role="tabpanel"></div>
   <div class="tab-pane content-pane active team-settings-pane" role="tabpanel">
@@ -96,7 +96,7 @@
             <%= I18n.t('users.settings.teams.edit.add_user') %>
           </a>
         </div>
-        <%= render(partial: 'shared/invite_users_modal.html.erb',
+        <%= render(partial: 'shared/invite_users_modal',
                    locals: { modal_id: 'team-invite-users-modal',
                              type: 'invite_to_team_with_role',
                              team: @team } ) %>
@@ -122,9 +122,9 @@
   </div>
 </div>
 
-<%= render partial: 'users/settings/teams/description_modal.html.erb' %>
-<%= render partial: 'users/settings/teams/destroy_modal.html.erb', locals: { team: @team } %>
-<%= render partial: 'users/settings/user_teams/destroy_user_team_modal.html.erb' %>
+<%= render partial: 'users/settings/teams/description_modal' %>
+<%= render partial: 'users/settings/teams/destroy_modal', locals: { team: @team } %>
+<%= render partial: 'users/settings/user_teams/destroy_user_team_modal' %>
 <%= stylesheet_link_tag 'datatables' %>
 <%= javascript_include_tag 'users/settings/teams/show' %>
 <span data-hook="team-bottom"></span>

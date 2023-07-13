@@ -32,7 +32,7 @@ module Experiments
         penwidth: '3.0'
       }
 
-      @graph = Graphviz::Graph.new('G', @graph_params)
+      @graph = Graphviz::Graph.new('G', **@graph_params)
       @errors = []
     end
 
@@ -58,7 +58,7 @@ module Experiments
           # draw nodes
           node = @graph.add_node(
             "#{subgraph_id}-#{index}",
-            @node_params.merge(
+            **@node_params.merge(
               label: '',
               pos: "#{my_module.x / 10},-#{my_module.y / 10}!"
             )
@@ -80,7 +80,7 @@ module Experiments
       @exp.my_modules.without_group.each do |my_module|
         @graph.add_node(
           "Orphan-#{my_module.id}",
-          @node_params.merge(
+          **@node_params.merge(
             label: '',
             pos: "#{my_module.x / 10},-#{my_module.y / 10}!"
           )

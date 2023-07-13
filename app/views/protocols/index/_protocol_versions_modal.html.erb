@@ -33,7 +33,7 @@
               </div>
               <div class="protocol-actions">
                 <% if can_publish_protocol_in_repository?(draft) %>
-                  <%= button_to publish_protocol_path(draft), class: "btn btn-light publish-draft" do %>
+                  <%= button_to publish_protocol_path(draft), class: "btn btn-light publish-draft", method: :post do %>
                     <%= image_tag 'icon_small/publish.svg' %>
                     <%= t('protocols.index.versions.publish') %>
                   <% end %>
@@ -90,6 +90,7 @@
                                 class: "btn btn-light icon-btn save-as-draft",
                                 title: t('protocols.index.versions.save_as_draft'),
                                 disabled: @protocol.draft.present?,
+                                method: :post,
                                 data: {
                                   placement: :left,
                                   toggle: :tooltip

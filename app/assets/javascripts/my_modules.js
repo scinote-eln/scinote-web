@@ -221,7 +221,7 @@
       tagClass: 'my-module-user-tags',
       tagLabel: (data) => {
         return `<img class="img-responsive block-inline" src="${data.params.avatar_url}" alt="${data.label}"/>
-                <span style="user-full-name block-inline">${data.label}</span>`;
+                <span class="user-full-name block-inline">${data.label}</span>`;
       },
       customDropdownIcon: () => {
         return '';

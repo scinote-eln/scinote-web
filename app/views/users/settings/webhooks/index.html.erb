@@ -1,7 +1,7 @@
 <% provide(:head_title, t('webhooks.index.title')) %>
 <% provide(:container_class, "no-second-nav-container") %>
 
-<%= render partial: "users/settings/sidebar.html.erb" %>
+<%= render partial: "users/settings/sidebar" %>
 
 <div class="content-pane flexible webhooks-index">
   <div class="content-header sticky-header">
@@ -11,7 +11,7 @@
       </h1>
       <div class="header-actions">
         <div class="dropdown sort-menu" title="<%= t("general.sort.title") %>">
-          <button class="btn btn-light icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <button class="btn btn-light btn-black icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <span><i class="sn-icon sn-icon-sort-down"></i></span>
           </button>
           <ul id="sortMenuDropdown" class="dropdown-menu dropdown-menu-right" aria-labelledby="sortMenu">
