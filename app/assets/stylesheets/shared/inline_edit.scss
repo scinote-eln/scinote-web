@@ -23,8 +23,8 @@
 
     textarea,
     .sci-inline-edit__view {
-      min-height: 30px;
       line-height: 26px;
+      min-height: 30px;
       padding: .1em .2em;
     }
 
@@ -82,9 +82,9 @@
     }
 
     .sci-inline-edit__control {
+      margin: 0 .25em;
       max-height: 30px;
       max-width: 30px;
-      margin: 0 0.25em;
 
       &.btn-disabled {
         background: $color-silver-chalice;

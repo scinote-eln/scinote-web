@@ -20,7 +20,7 @@
       display: flex;
       flex-basis: 80%;
       position: relative;
-      padding-top: 0.4em;
+      padding-top: .4em;
 
       .step-name-edit-icon {
         background: linear-gradient(90deg,
@@ -82,7 +82,7 @@
       height: 24px;
       text-align: center;
       width: 24px;
-      margin-bottom: -0.5em;
+      margin-bottom: -.5em;
 
       &:hover {
         border-color: $brand-success;
