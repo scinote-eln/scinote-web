@@ -30,47 +30,40 @@ module Users
             end
           else
             format.json do
-              render json: @user_assignment.errors,
-              status: :unprocessable_entity
+              render json: @user_assignment.errors, status: :unprocessable_entity
             end
           end
         end
       end
 
       def leave_html
-        respond_to do |format|
-          format.json do
-            render json: {
-              html: render_to_string(
-                partial: 'users/settings/user_teams/leave_user_team_modal_body.html.erb',
-                locals: { user_assignment: @user_assignment }
-              ),
-              heading: I18n.t(
-                'users.settings.user_teams.leave_uo_heading',
-                team: escape_input(@user_assignment.assignable.name)
-              )
-            }
-          end
-        end
+        render json: {
+          html: render_to_string(
+            partial: 'users/settings/user_teams/leave_user_team_modal_body',
+            locals: { user_assignment: @user_assignment },
+            formats: :html
+          ),
+          heading: I18n.t(
+            'users.settings.user_teams.leave_uo_heading',
+            team: escape_input(@user_assignment.assignable.name)
+          )
+        }
       end
 
       def destroy_html
-        respond_to do |format|
-          format.json do
-            render json: {
-              html: render_to_string(
-                partial: 'users/settings/user_teams/' \
-                         'destroy_user_team_modal_body.html.erb',
-                locals: { user_assignment: @user_assignment }
-              ),
-              heading: I18n.t(
-                'users.settings.user_teams.destroy_uo_heading',
-                user: escape_input(@user_assignment.user.full_name),
-                team: escape_input(@user_assignment.assignable.name)
-              )
-            }
-          end
-        end
+        render json: {
+          html: render_to_string(
+            partial: 'users/settings/user_teams/' \
+                      'destroy_user_team_modal_body',
+            locals: { user_assignment: @user_assignment },
+            formats: :html
+          ),
+          heading: I18n.t(
+            'users.settings.user_teams.destroy_uo_heading',
+            user: escape_input(@user_assignment.user.full_name),
+            team: escape_input(@user_assignment.assignable.name)
+          )
+        }
       end
 
       def destroy

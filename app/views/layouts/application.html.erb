@@ -95,7 +95,7 @@
         <% end %>
       </div>
 
-      <%= render "shared/comments/comments_sidebar.html.erb" %>
+      <%= render "shared/comments/comments_sidebar" %>
     </div>
 
     <%= render partial: 'shared/flash_alerts',
@@ -103,11 +103,11 @@
 
     <% if user_signed_in? %>
       <%= render "shared/about_modal" %>
-      <%= render "shared/file_preview/modal.html.erb" %>
-      <%= render "shared/file_edit_modal.html.erb" %>
-      <%= render "shared/marvinjs_modal.html.erb" %>
-      <%= render "users/sessions/session_expire_modal.html.erb" %>
-      <%= render "users/sessions/session_end_modal.html.erb" %>
+      <%= render "shared/file_preview/modal" %>
+      <%= render "shared/file_edit_modal" %>
+      <%= render "shared/marvinjs_modal" %>
+      <%= render "users/sessions/session_expire_modal" %>
+      <%= render "users/sessions/session_end_modal" %>
       <%= render "label_printers/label_printer_modal" %>
     <% end %>
 

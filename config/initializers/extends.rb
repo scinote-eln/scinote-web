@@ -526,8 +526,6 @@ class Extends
     change_user_role_on_my_module
   )
 
-  STI_PRELOAD_CLASSES = %w(LinkedRepository)
-
   DEFAULT_LABEL_TEMPLATE = {
     zpl:
       <<~HEREDOC

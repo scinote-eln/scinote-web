@@ -6,7 +6,7 @@
   <span class="date-text" data-editable="<%= due_date_editable %>"
         data-toggle="tooltip" data-placement="top" title="<%= due_status %>" data-due-status="<%= due_status %>">
     <span id="dueDateLabelContainer" class="view-block" >
-      <%= render partial: "experiments/table_due_date_label.html.erb" ,
+      <%= render partial: "experiments/table_due_date_label" ,
                  locals: { my_module: my_module, user: user } %>
     </span>
     <% if due_date_editable %>

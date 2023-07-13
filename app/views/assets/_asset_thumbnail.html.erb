@@ -31,5 +31,5 @@
       <%= number_to_human_size(asset.file_size) %>
     </div>
   <% end %>
-  <%= render partial: 'assets/asset_context_menu.html.erb', locals: { asset: asset, deletable: deletable, editable: editable } %>
+  <%= render partial: 'assets/asset_context_menu', locals: { asset: asset, deletable: deletable, editable: editable } %>
 </div>

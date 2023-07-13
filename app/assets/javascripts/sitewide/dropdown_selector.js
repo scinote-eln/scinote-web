@@ -441,7 +441,9 @@ var dropdownSelector = (function() {
       if (dropdownContainer.hasClass('disabled') || (config.inputTagMode && noOptionsForSelect(selector))) return;
 
       // Each time we open option contianer we must scroll it
-      optionContainer.scrollTo(0);
+      dropdownContainer.animate({
+        scrollTop: optionContainer.offset().top
+      });
 
       // Now open/close option container
       dropdownContainer.toggleClass('open');

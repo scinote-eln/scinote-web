@@ -1,12 +1,12 @@
-FROM ruby:2.7.6-bullseye
+FROM ruby:3.2.2-bookworm
 MAINTAINER SciNote <info@scinote.net>
 
-ARG WKHTMLTOPDF_PACKAGE_URL=https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.buster_amd64.deb
+ARG WKHTMLTOPDF_PACKAGE_URL=https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.bookworm_amd64.deb
 
 # additional dependecies
 # libreoffice for file preview generation
 RUN apt-get update -qq && \
-  apt-get install -y \
+  apt-get install -y --no-install-recommends \
   libjemalloc2 \
   libssl-dev \
   nodejs \
@@ -16,7 +16,7 @@ RUN apt-get update -qq && \
   poppler-utils \
   librsvg2-2 \
   libvips42 \
-  sudo graphviz --no-install-recommends \
+  graphviz  \
   libreoffice \
   fonts-droid-fallback \
   fonts-noto-mono \

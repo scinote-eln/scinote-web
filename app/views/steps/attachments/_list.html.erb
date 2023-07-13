@@ -29,7 +29,7 @@
                      formats: :html %>
 
           <li>
-            <%= render partial: '/assets/wopi/create_wopi_file_li.html.erb',
+            <%= render partial: '/assets/wopi/create_wopi_file_li',
                        locals: {  element_id: step.id, element_type: 'Step' } %>
           </li>
           <li role="separator" class="divider"></li>
@@ -58,7 +58,7 @@
 
 <div class="col-xs-12 attachments" data-preview="<%= preview %>" data-step-id="<%= step.id %>" data-order="<%= current_order %>">
   <% assets.each_with_index do |asset, i| %>
-    <%= render partial: 'assets/asset.html.erb', locals: { asset: asset, gallery_view_id: step.id } %>
+    <%= render partial: 'assets/asset', locals: { asset: asset, gallery_view_id: step.id } %>
   <% end %>
 </div>
 <hr>
