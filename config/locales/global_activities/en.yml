@@ -502,7 +502,7 @@ en:
       protocol_repository: "Protocol templates"
       team: "Team"
       exports: "Exports"
-      label_repository: "Label repository"
+      label_repository: "Label templates"
     subject_name:
       repository: "Inventory"
       project: "Project"
