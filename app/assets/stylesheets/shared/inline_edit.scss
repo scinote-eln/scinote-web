@@ -1,9 +1,8 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
 .sci-inline-edit {
-  column-gap: .25em;
-  display: grid;
-  grid-template-columns: auto repeat(2, max-content);
+  align-items: flex-start;
+  display: flex;
   transition: .4s $timing-function-sharp border;
 
   &.editing .sci-inline-edit__content {
@@ -16,15 +15,17 @@
     display: flex;
     flex-direction: column;
     margin-left: -.25em;
-    min-height: 36px;
+    margin-right: .5rem;
+    min-height: 30px;
     padding-left: .25em;
     position: relative;
     width: 100%;
 
     textarea,
     .sci-inline-edit__view {
-      min-height: 36px;
-      padding: .3em .2em .2em;
+      min-height: 30px;
+      line-height: 26px;
+      padding: .1em .2em;
     }
 
     .sci-inline-edit__view {
@@ -35,6 +36,11 @@
 
       &.blank {
         color: $color-silver-chalice;
+      }
+
+      &.hover-border:hover {
+        border: 1px solid $color-silver;
+        border-radius: 3px;
       }
     }
 
@@ -76,6 +82,10 @@
     }
 
     .sci-inline-edit__control {
+      max-height: 30px;
+      max-width: 30px;
+      margin: 0 0.25em;
+
       &.btn-disabled {
         background: $color-silver-chalice;
         color: $color-concrete;

@@ -38,10 +38,8 @@
   }
 
   .sn-icon {
-    line-height: 36px;
     position: absolute;
     text-align: center;
-    bottom: 0;
     width: 25px;
   }
 
@@ -70,7 +68,6 @@
     &::after {
       @include font-awesome;
       top: 0;
-      line-height: 36px;
       position: absolute;
       right: 5px;
       text-align: center;
