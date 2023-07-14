@@ -254,7 +254,7 @@
       templateOption(option) {
         return `
           <div class="label-template-option" data-toggle="tooltip" data-placement="right" title="${option.params.description}">
-            <img src="${option.params.icon}"></img>
+            <img src="${option.params.icon}" style=""></img>
             ${option.label}
           </div>
         `
