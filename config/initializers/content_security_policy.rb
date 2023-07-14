@@ -12,6 +12,7 @@ ActiveSupport::Reloader.to_prepare do
     policy.img_src     :self, :https, :data, :blob
     policy.object_src  :none
     policy.script_src  :self, :unsafe_eval
+    policy.script_src_elem :self, *Extends::EXTERNAL_SERVICES
     policy.style_src   :self, :https, :unsafe_inline, :data
     policy.connect_src :self, :data, *Extends::EXTERNAL_SERVICES
 
