@@ -18,15 +18,9 @@ class ResultTablesController < ApplicationController
       table: @table
     )
 
-    respond_to do |format|
-      format.json {
-        render json: {
-          html: render_to_string({
-            partial: "new.html.erb"
-          })
-        }, status: :ok
-      }
-    end
+    render json: {
+      html: render_to_string({ partial: 'new', formats: :html })
+    }, status: :ok
   end
 
   def create
@@ -57,9 +51,7 @@ class ResultTablesController < ApplicationController
     respond_to do |format|
       format.json {
         render json: {
-          html: render_to_string({
-            partial: "edit.html.erb"
-          })
+          html: render_to_string({ partial: 'edit', formats: :html })
         }, status: :ok
       }
     end
@@ -98,9 +90,11 @@ class ResultTablesController < ApplicationController
         }
         format.json {
           render json: {
-            html: render_to_string({
-              partial: "my_modules/result.html.erb", locals: {result: @result}
-            })
+            html: render_to_string(
+              partial: 'my_modules/result',
+              locals: { result: @result },
+              formats: :html
+            )
           }, status: :ok
         }
       else
