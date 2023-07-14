@@ -36,7 +36,7 @@
       </div>
     </div>
     <div id="protocol-content" class="protocol-content collapse in" aria-expanded="true">
-      <div class="protocol-description">
+      <div>
         <div class="protocol-name" v-if="!inRepository">
           <InlineEdit
             v-if="urls.update_protocol_name_url"
