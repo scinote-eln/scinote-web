@@ -51,9 +51,7 @@ class ResultTablesController < ApplicationController
     respond_to do |format|
       format.json {
         render json: {
-          html: render_to_string({
-            partial: "edit.html.erb"
-          })
+          html: render_to_string({ partial: 'edit', formats: :html })
         }, status: :ok
       }
     end
@@ -93,7 +91,9 @@ class ResultTablesController < ApplicationController
         format.json {
           render json: {
             html: render_to_string({
-              partial: "my_modules/result.html.erb", locals: {result: @result}
+              partial: "my_modules/result",
+              locals: { result: @result },
+              formats: :html
             })
           }, status: :ok
         }
