@@ -131,11 +131,19 @@ class MyModulesController < ApplicationController
     @next_page = activities.next_page
     @starting_timestamp = activities.first&.created_at.to_i
 
-    render json: {
-      activities_html: render_to_string(partial: 'global_activities/activity_list'),
-      next_page: @next_page,
-      starting_timestamp: @starting_timestamp
-    }
+    respond_to do |format|
+      format.json do
+        render json: {
+          activities_html: render_to_string(
+            partial: 'global_activities/activity_list',
+            formats: :html
+          ),
+          next_page: @next_page,
+          starting_timestamp: @starting_timestamp
+        }
+      end
+      format.html
+    end
   end
 
   # Different controller for showing activities inside tab
