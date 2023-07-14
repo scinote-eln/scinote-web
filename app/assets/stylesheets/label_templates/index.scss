@@ -23,6 +23,10 @@
 
     .label-search-container {
       margin-left: auto;
+
+      .dataTables_filter {
+        display: none;
+      } 
     }
 
     .label-buttons-container {
