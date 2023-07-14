@@ -90,11 +90,11 @@ class ResultTablesController < ApplicationController
         }
         format.json {
           render json: {
-            html: render_to_string({
-              partial: "my_modules/result",
+            html: render_to_string(
+              partial: 'my_modules/result',
               locals: { result: @result },
               formats: :html
-            })
+            )
           }, status: :ok
         }
       else
