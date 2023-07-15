@@ -63,7 +63,7 @@ class ResultTablesController < ApplicationController
     @result.table.last_modified_by = current_user
     @result.table.team = current_team
     @result.assign_attributes(update_params)
-    @result.table.metadata = JSON.parse(update_params[:table_attributes][:metadata])
+    @result.table.metadata = JSON.parse(update_params[:table_attributes][:metadata]) if update_params[:table_attributes]
     flash_success = t("result_tables.update.success_flash",
       module: @my_module.name)
     if @result.archived_changed?(from: false, to: true)
@@ -108,7 +108,7 @@ class ResultTablesController < ApplicationController
   def download
     _ = JSON.parse @result_table.table.contents
     @table_data = _["data"] || []
-    data = render_to_string partial: 'download.txt.erb'
+    data = render_to_string partial: 'download'
     send_data data, filename: @result_table.result.name + '.txt',
       type: 'plain/text'
   end
