@@ -29,7 +29,7 @@ module ActiveStorage
 
         preview_exists =
           if @blob.variable?
-            @blob.service.exist?(@blob.representation(params['variation_key']).key)
+            @blob.service.exist?(@blob.representation(params['variation_key']).processed.key)
           else
             @blob.preview(params['variation_key']).image.attached?
           end
