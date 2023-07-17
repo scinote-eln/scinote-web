@@ -26,7 +26,7 @@ class MyModuleRepositorySnapshotsController < ApplicationController
                          .preload(:repository_columns,
                                   :created_by,
                                   repository_cells: { value: @repository_snapshot.cell_preload_includes })
-      rows_view = 'repository_rows/snapshot_index.json'
+      rows_view = 'repository_rows/snapshot_index'
     end
     @repository_rows = repository_rows.page(page).per(per_page)
 
