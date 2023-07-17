@@ -17,13 +17,13 @@ Rails.application.config.active_storage.variable_content_types << 'image/svg+xml
 Rails.application.config.active_storage.variant_processor = :vips if ENV['ACTIVESTORAGE_ENABLE_VIPS'] == 'true'
 
 ActiveStorage::Downloader.class_eval do
-  def open(key, checksum:, name: 'ActiveStorage-', tmpdir: nil)
+  def open(key, checksum: nil, verify: true, name: 'ActiveStorage-', tmpdir: nil)
     open_tempfile(name, tmpdir) do |file|
       download key, file
       if checksum == 'dummy' || checksum.nil?
         ActiveStorage::Blob.find_by(key: key).update(checksum: Digest::MD5.file(file).base64digest)
       else
-        verify_integrity_of file, checksum: checksum
+        verify_integrity_of(file, checksum: checksum) if verify
       end
       yield file
     end

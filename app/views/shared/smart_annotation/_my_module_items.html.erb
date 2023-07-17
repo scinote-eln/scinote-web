@@ -13,7 +13,7 @@
           <span class='sa-type'><%= task.code %></span>
           <span class="dot">&middot;</span>
           <span class="item-text"><%= task.name %></span>
-          <%= render partial: 'shared/smart_annotation/atwho_control_buttons.html.erb' %>
+          <%= render partial: 'shared/smart_annotation/atwho_control_buttons' %>
         </li>
       <% end %>
     </div>
@@ -23,7 +23,7 @@
     <div class="more-results"><%= t('atwho.more_results') %></div>
   <% end %>
   <% if my_modules.blank? %>
-    <%= render partial: 'shared/smart_annotation/no_results.html.erb', locals: { object_type: 'my_modules' } %>
+    <%= render partial: 'shared/smart_annotation/no_results', locals: { object_type: 'my_modules' } %>
   <% end %>
 </div>
-<%= render partial: 'shared/smart_annotation/footer.html.erb' %>
+<%= render partial: 'shared/smart_annotation/footer' %>

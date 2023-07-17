@@ -1,21 +1,18 @@
 require_relative 'boot'
 
 require 'rails'
-
-%w(
-  active_record/railtie
-  active_storage/engine
-  action_controller/railtie
-  action_view/railtie
-  action_mailer/railtie
-  active_job/railtie
-  sprockets/railtie
-).each do |railtie|
-  begin
-    require railtie
-  rescue LoadError
-  end
-end
+# Pick the frameworks you want:
+require 'active_model/railtie'
+require 'active_job/railtie'
+require 'active_record/railtie'
+require 'active_storage/engine'
+require 'action_controller/railtie'
+require 'action_mailer/railtie'
+# require "action_mailbox/engine"
+# require "action_text/engine"
+require 'action_view/railtie'
+# require "action_cable/engine"
+# require "rails/test_unit/railtie"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -24,18 +21,20 @@ Bundler.require(*Rails.groups)
 module Scinote
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.0
+    config.load_defaults 7.0
 
-    Rails.autoloaders.main.ignore(Rails.root.join('addons', '*', 'app', 'decorators'))
+    # Configuration for the application, engines, and railties goes here.
+    #
+    # These settings can be overridden in specific environments using the files
+    # in config/environments, which are processed later.
+    #
+    # config.time_zone = "Central Time (US & Canada)"
+    # config.eager_load_paths << Rails.root.join("extras")
 
-    # config.add_autoload_paths_to_load_path = false
+    # Don't generate system test files.
+    config.generators.system_tests = nil
 
-    config.active_record.schema_format = :sql
-
-    # Settings in config/environments/* take precedence over those specified here.
-    # Application configuration should go into files in config/initializers
-    # -- all .rb files in that directory are automatically loaded.
-
+    Rails.autoloaders.main.ignore(Rails.root.join('addons/*/app/decorators'))
     # Add rack-attack middleware for request rate limiting
     config.middleware.use Rack::Attack
 
@@ -51,6 +50,8 @@ module Scinote
     config.encoding = 'utf-8'
 
     config.active_job.queue_adapter = :delayed_job
+
+    config.action_dispatch.cookies_serializer = :hybrid
 
     # Max uploaded file size in MB
     config.x.file_max_size_mb = (ENV['FILE_MAX_SIZE_MB'] || 50).to_i

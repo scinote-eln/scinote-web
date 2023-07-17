@@ -41,17 +41,6 @@
                   {{ i18n.t('protocols.steps.attachments.menu.chemical_drawing') }}
               </a>
             </li>
-            <li v-if="step.attributes.bio_eddie_service_enabled">
-              <a
-                class="new-bio-eddie-upload-button"
-                :data-object-id="step.id"
-                data-object-type="Step"
-                :data-assets-container="`.attachments[data-step-id=${step.id}]`"
-              >
-                <img v-bind:src="bioEddieIcon">
-                {{ i18n.t('bio_eddie.new_button') }}
-              </a>
-            </li>
             <li role="separator" class="divider"></li>
             <li class="divider-label">{{ i18n.t("protocols.steps.attachments.sort_by") }}</li>
             <li v-for="(orderOption, index) in orderOptions" :key="`orderOption_${index}`">
@@ -98,7 +87,6 @@
   import thumbnailAttachment from './step_attachments/thumbnail.vue'
   import uploadingAttachment from './step_attachments/uploading.vue'
   import emptyAttachment from './step_attachments/empty.vue'
-  import bioEddieIcon from '../images/bio_eddie.png'
 
   import WopiFileModal from './step_attachments/mixins/wopi_file_modal.js'
 
@@ -120,7 +108,6 @@
     },
     data() {
       return {
-        bioEddieIcon,
         viewModeOptions: ['inline', 'thumbnail', 'list'],
         orderOptions: ['new', 'old', 'atoz', 'ztoa']
       }

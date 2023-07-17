@@ -6,13 +6,19 @@ module ActiveStorage
       include ActiveStorage::SetBlob
       include ActiveStorage::CheckBlobPermissions
 
+      rescue_from ActiveRecord::RecordNotFound do |e|
+        Rails.logger.error(e.message)
+        render json: {}, status: :not_found
+      end
+
       def show
         if @blob.attachments.take.record_type == 'Asset'
           return render plain: '', status: :accepted unless preview_ready?
         end
 
         expires_in ActiveStorage.service_urls_expire_in
-        redirect_to @blob.representation(params[:variation_key]).processed.url(disposition: params[:disposition])
+        redirect_to @blob.representation(params[:variation_key]).processed.url(disposition: params[:disposition]),
+                    allow_other_host: true
       end
 
       private
@@ -23,7 +29,8 @@ module ActiveStorage
 
         preview_exists =
           if @blob.variable?
-            @blob.service.exist?(@blob.representation(params['variation_key']).key)
+            rep_key = @blob.representation(params['variation_key']).key
+            rep_key && @blob.service.exist?(rep_key)
           else
             @blob.preview(params['variation_key']).image.attached?
           end

@@ -6,7 +6,7 @@
   item_id = dom_id(user, :assignment_member)
 %>
 
-<%= form_with(model: assignment, url: update_path, method: :put, remote: true, html: { class: 'member-item', id: item_id, data: { action: 'replace-form autosave-form', object_type: :assignment_member } }) do |f| %>
+<%= form_with(model: assignment, url: update_path, method: :put, html: { class: 'member-item', id: item_id, data: { remote: true, action: 'replace-form autosave-form', object_type: :assignment_member } }) do |f| %>
   <%= f.hidden_field :user_id, value: f.object.user.id %>
     <div class="user-assignment-info">
       <div class="global-avatar-container">

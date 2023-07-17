@@ -5,7 +5,7 @@
 
   <h5>
     <span class="sn-icon sn-icon-protocols-templates"></span>
-    <%= render partial: "search/results/partials/protocol_text.html.erb", locals: { protocol: protocol, query: search_query } %>
+    <%= render partial: "search/results/partials/protocol_text", locals: { protocol: protocol, query: search_query } %>
   </h5>
 
   <% if has_description || has_authors || has_keywords %>
@@ -61,7 +61,7 @@
         <% if protocol_linked_modules = protocol.linked_modules %>
           <%= t('search.index.modules') %>
           <% protocol_linked_modules.each_with_index do |mod, i| %>
-            <%= render partial: "search/results/partials/my_module_text.html.erb",
+            <%= render partial: "search/results/partials/my_module_text",
                        locals: { my_module: mod } %>
             <% if i != (protocol_linked_modules.size - 1) %>
               ,&nbsp;
@@ -74,7 +74,7 @@
         <% if protocol_linked_experiments = protocol.linked_experiments(protocol_linked_modules) %>
           <%= t('search.index.experiment') %>
           <% protocol_linked_experiments.each_with_index do |exp, i| %>
-            <%= render partial: "search/results/partials/experiment_text.html.erb",
+            <%= render partial: "search/results/partials/experiment_text",
                        locals: { experiment: exp } %>
             <% if i != (protocol_linked_experiments.size - 1) %>
               ,&nbsp;
@@ -87,7 +87,7 @@
         <% if protocol_linked_projects = protocol.linked_projects(protocol_linked_experiments) %>
           <%= t('search.index.project') %>
           <% protocol_linked_projects.each_with_index do |pro, i| %>
-            <%= render partial: "search/results/partials/project_text.html.erb",
+            <%= render partial: "search/results/partials/project_text",
                      locals: { project: pro, link_to_page: :show } %>
             <% if i != (protocol_linked_projects.size - 1) %>
               ,&nbsp;
@@ -100,26 +100,26 @@
     <% if protocol.in_module? %>
       <span>
         <%= t('search.index.module') %>
-        <%= render partial: "search/results/partials/my_module_text.html.erb",
+        <%= render partial: "search/results/partials/my_module_text",
                    locals: { my_module: protocol.my_module } %>
       </span>
       <br>
       <span>
         <%= t('search.index.experiment') %>
-        <%= render partial: "search/results/partials/experiment_text.html.erb",
+        <%= render partial: "search/results/partials/experiment_text",
                    locals: { experiment: protocol.my_module.experiment } %>
       </span>
       <br>
       <span>
         <%= t('search.index.project') %>
-        <%= render partial: "search/results/partials/project_text.html.erb",
+        <%= render partial: "search/results/partials/project_text",
                    locals: { project: protocol.my_module.experiment.project, link_to_page: :show } %>
       </span>
       <br>
     <% end %>
     <span>
       <%= t('search.index.team') %>
-      <%= render partial: "search/results/partials/team_text.html.erb",
+      <%= render partial: "search/results/partials/team_text",
                  locals: { team: protocol.team } %>
     </span>
   </p>

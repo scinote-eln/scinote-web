@@ -14,7 +14,7 @@
         <div class="ga-activities-list"
              data-activities-url="<%= global_activities_path %>"
              data-starting-timestamp="<%= @starting_timestamp %>">
-          <%= render partial: "activity_list.html.erb" %>
+          <%= render partial: "activity_list" %>
         </div>
         <div class="text-center">
           <a class="btn btn-secondary btn-more-activities <%= 'hidden' unless @next_page %>"

@@ -1,12 +1,12 @@
 <% case (subject&.result || subject&.step) %>
 <% when Result %>
-  <%= render partial: "global_activities/references/result.html.erb",
+  <%= render partial: "global_activities/references/result",
           locals: { team: team, subject: subject.result, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
 <% when Step %>
-  <%= render partial: "global_activities/references/protocol.html.erb",
+  <%= render partial: "global_activities/references/protocol",
           locals: { team: team, subject: subject.step.protocol, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
 <% else %>
-  <%= render partial: "global_activities/references/my_module.html.erb",
+  <%= render partial: "global_activities/references/my_module",
           locals: { team: team, subject: nil, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
   <div class="ga-breadcrumb">
     <span class="fa fa-paperclip">&nbsp;</span>

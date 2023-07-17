@@ -5,7 +5,7 @@
 <% provide(:head_title, t("users.settings.teams.head_title")) %>
 <% provide(:container_class, "no-second-nav-container") %>
 
-<%= render partial: "users/settings/sidebar.html.erb" %>
+<%= render partial: "users/settings/sidebar" %>
 <div class="tab-content">
   <div class="tab-pane content-pane" role="tabpanel"></div>
   <div class="tab-pane content-pane active" role="tabpanel">
@@ -51,7 +51,7 @@
   </div>
 </div>
 
-<%= render partial: "users/settings/user_teams/leave_user_team_modal.html.erb" %>
+<%= render partial: "users/settings/user_teams/leave_user_team_modal" %>
 <%= stylesheet_link_tag 'datatables' %>
 <%= javascript_include_tag "users/settings/teams/index" %>
 <%= javascript_include_tag "users/settings/teams/datatable" %>

@@ -1,8 +1,8 @@
 <% if !subject || subject.in_repository? %>
-  <%= render partial: "global_activities/references/team.html.erb",
+  <%= render partial: "global_activities/references/team",
              locals: { team: team, subject: team, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
 <% else %>
-  <%= render partial: "global_activities/references/my_module.html.erb",
+  <%= render partial: "global_activities/references/my_module",
              locals: { team: team, subject: subject&.my_module, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
 <% end %>
 <% if subject %>

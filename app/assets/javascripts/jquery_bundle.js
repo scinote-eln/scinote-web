@@ -1,7 +1,6 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.mousewheel.min
-//= require jquery.scrollTo
 //= require jquery.autosize
 //= require jquery-ui/widget
 //= require jquery-ui/widgets/mouse

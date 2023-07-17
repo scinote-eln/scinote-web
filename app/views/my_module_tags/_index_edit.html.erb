@@ -36,7 +36,7 @@
               <%= f.text_field :name, hide_label: true %>
             </div>
             <div class="col-xs-5 flex items-center gap-2 justify-end">
-              <%= render partial: 'shared/color_picker_select.erb',
+              <%= render partial: 'shared/color_picker_select',
                          locals: { name: :color, colors: Constants::TAG_COLORS,
                                    classes: "edit-tag-color", styles: "",
                                    object_name: :tag} %>

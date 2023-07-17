@@ -10,29 +10,17 @@ class UserMyModulesController < ApplicationController
   def designated_users
     @user_my_modules = @my_module.user_my_modules
 
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'designated_users.html.erb'
-          ),
-          my_module_id: @my_module.id,
-          counter: @my_module.designated_users.count # Used for counter badge
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'designated_users', formats: :html),
+      my_module_id: @my_module.id,
+      counter: @my_module.designated_users.count # Used for counter badge
+    }
   end
 
   def index
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'index.html.erb'
-          )
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'index', formats: :html)
+    }
   end
 
   def index_edit
@@ -40,16 +28,12 @@ class UserMyModulesController < ApplicationController
     @undesignated_users = @my_module.undesignated_users.order(full_name: :asc)
     @new_um = UserMyModule.new(my_module: @my_module)
 
-    respond_to do |format|
-      format.json do
-        render json: {
-          my_module: @my_module,
-          html: render_to_string(
-            partial: 'index_edit.html.erb'
-          )
-        }
-      end
-    end
+    render json: {
+      my_module: @my_module,
+      html: render_to_string(
+        partial: 'index_edit', formats: :html
+      )
+    }
   end
 
   def create
@@ -59,34 +43,27 @@ class UserMyModulesController < ApplicationController
     if @um.save
       @um.log_activity(:designate_user_to_my_module, current_user)
 
-      respond_to do |format|
-        format.json do
-          if params[:table]
-            render json: {
-              html: render_to_string(partial: 'experiments/assigned_users.html.erb',
-                                     locals: { my_module: @my_module, user: current_user, skip_unassigned: false }),
-              unassign_url: my_module_user_my_module_path(@my_module, @um)
-            }
-          else
-            render json: {
-              user: {
-                id: @um.user.id,
-                full_name: @um.user.full_name,
-                avatar_url: avatar_path(@um.user, :icon_small),
-                user_module_id: @um.id
-              }, status: :ok
-            }
-          end
-        end
+      if params[:table]
+        render json: {
+          html: render_to_string(partial: 'experiments/assigned_users',
+                                 locals: { my_module: @my_module, user: current_user, skip_unassigned: false },
+                                 formats: :html),
+          unassign_url: my_module_user_my_module_path(@my_module, @um)
+        }
+      else
+        render json: {
+          user: {
+            id: @um.user.id,
+            full_name: @um.user.full_name,
+            avatar_url: avatar_path(@um.user, :icon_small),
+            user_module_id: @um.id
+          }
+        }
       end
     else
-      respond_to do |format|
-        format.json do
-          render json: {
-            errors: @um.errors
-          }, status: :unprocessable_entity
-        end
-      end
+      render json: {
+        errors: @um.errors
+      }, status: :unprocessable_entity
     end
   end
 
@@ -94,26 +71,19 @@ class UserMyModulesController < ApplicationController
     if @um.destroy
       @um.log_activity(:undesignate_user_from_my_module, current_user)
 
-      respond_to do |format|
-        format.json do
-          if params[:table]
-            render json: {
-              html: render_to_string(partial: 'experiments/assigned_users.html.erb',
-                                     locals: { my_module: @my_module, user: current_user, skip_unassigned: false })
-            }
-          else
-            render json: {}, status: :ok
-          end
-        end
+      if params[:table]
+        render json: {
+          html: render_to_string(partial: 'experiments/assigned_users',
+                                 locals: { my_module: @my_module, user: current_user, skip_unassigned: false },
+                                 formats: :html)
+        }
+      else
+        render json: {}
       end
     else
-      respond_to do |format|
-        format.json do
-          render json: {
-            errors: @um.errors
-          }, status: :unprocessable_entity
-        end
-      end
+      render json: {
+        errors: @um.errors
+      }, status: :unprocessable_entity
     end
   end
 

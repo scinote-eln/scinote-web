@@ -39,10 +39,10 @@
         </div>
       </div>
       <div class="step-element-controls">
-        <button v-if="!checklistItem.attributes.urls || updateUrl" class="btn icon-btn btn-light" @click="enableTextEdit" tabindex="0">
+        <button v-if="!checklistItem.attributes.urls || updateUrl" class="btn icon-btn btn-light  btn-sm" @click="enableTextEdit" tabindex="0">
           <i class="sn-icon sn-icon-edit"></i>
         </button>
-        <button v-if="!checklistItem.attributes.urls || deleteUrl" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="0">
+        <button v-if="!checklistItem.attributes.urls || deleteUrl" class="btn icon-btn btn-light  btn-sm" @click="showDeleteModal" tabindex="0">
           <i class="sn-icon sn-icon-delete"></i>
         </button>
       </div>

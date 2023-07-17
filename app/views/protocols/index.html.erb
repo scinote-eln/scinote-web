@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="protocols-container">
-      <%= render partial: "protocols/index/protocols_datatable.html.erb" %>
+      <%= render partial: "protocols/index/protocols_datatable" %>
 
       <div id="actionToolbar" data-behaviour="vue">
         <action-toolbar actions-url="<%= actions_toolbar_protocols_url %>" />
@@ -35,20 +35,20 @@
 <% end %>
 
 <div id="protocolsio-preview-modal-target"></div>
-<%= render partial: "protocols/index/general_toolbar.html.erb" %>
-<%= render partial: "protocols/index/protocol_filters.html.erb" %>
-<%= render partial: "protocols/index/delete_draft_modal.html.erb" %>
-<%= render partial: "protocols/index/linked_children_modal.html.erb" %>
-<%= render partial: "protocols/index/protocol_preview_modal.html.erb" %>
-<%= render partial: "protocols/index/protocolsio_modal.html.erb" %>
-<%= render partial: "protocols/index/new_protocol_modal.html.erb", locals: {type: 'new'} %>
+<%= render partial: "protocols/index/general_toolbar" %>
+<%= render partial: "protocols/index/protocol_filters" %>
+<%= render partial: "protocols/index/delete_draft_modal" %>
+<%= render partial: "protocols/index/linked_children_modal" %>
+<%= render partial: "protocols/index/protocol_preview_modal" %>
+<%= render partial: "protocols/index/protocolsio_modal" %>
+<%= render partial: "protocols/index/new_protocol_modal", locals: {type: 'new'} %>
 
-<%= render partial: "protocols/import_export/import_elements.html.erb" %>
+<%= render partial: "protocols/import_export/import_elements" %>
 <%= javascript_include_tag "vue_components_action_toolbar" %>
 <%= javascript_include_tag "handsontable.full" %>
 
 <!-- Libraries for formulas -->
-<%= render partial: "shared/formulas_libraries.html.erb" %>
+<%= render partial: "shared/formulas_libraries" %>
 
 <%= stylesheet_link_tag 'datatables' %>
 <%= javascript_include_tag "assets/wopi/create_wopi_file" %>
