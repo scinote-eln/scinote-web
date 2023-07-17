@@ -11,8 +11,7 @@ ActiveSupport::Reloader.to_prepare do
     policy.font_src    :self, :https, :data
     policy.img_src     :self, :https, :data, :blob
     policy.object_src  :none
-    policy.script_src  :self, :unsafe_eval
-    policy.script_src_elem :self, :unsafe_eval, *Extends::EXTERNAL_SERVICES
+    policy.script_src  :self, :unsafe_eval, *Extends::EXTERNAL_SERVICES
     policy.style_src   :self, :https, :unsafe_inline, :data
     policy.connect_src :self, :data, *Extends::EXTERNAL_SERVICES
 
@@ -32,7 +31,7 @@ Rails.application.config.content_security_policy_nonce_generator = -> (request) 
 end
 
 # Set the nonce only to specific directives
-Rails.application.config.content_security_policy_nonce_directives = %w(script-src script-src-elem)
+Rails.application.config.content_security_policy_nonce_directives = %w(script-src)
 
 # Report CSP violations to a specified URI
 # For further information see the following documentation:
