@@ -29,14 +29,10 @@ class LabelTemplatesController < ApplicationController
   end
 
   def datatable
-    respond_to do |format|
-      format.json do
-        render json: ::LabelTemplateDatatable.new(
-          view_context,
-          @label_templates
-        )
-      end
-    end
+    render json: ::LabelTemplateDatatable.new(
+      view_context,
+      @label_templates
+    )
   end
 
   def show

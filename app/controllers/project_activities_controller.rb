@@ -5,15 +5,9 @@ class ProjectActivitiesController < ApplicationController
   def index
     @activities = @project.last_activities
 
-    respond_to do |format|
-      format.json {
-        render :json => {
-          :html => render_to_string({
-            :partial => "index.html.erb"
-          })
-        }
-      }
-    end
+    render json: {
+      html: render_to_string({ partial: 'index', formats: :html })
+    }
   end
 
   private

@@ -5,14 +5,10 @@ class UserNotificationsController < ApplicationController
     page = (params[:page] || 1).to_i
     notifications = load_notifications.page(page).per(Constants::INFINITE_SCROLL_LIMIT).without_count
 
-    respond_to do |format|
-      format.json do
-        render json: {
-          notifications: notification_serializer(notifications),
-          next_page: notifications.next_page
-        }
-      end
-    end
+    render json: {
+      notifications: notification_serializer(notifications),
+      next_page: notifications.next_page
+    }
 
     UserNotification.where(
       notification_id: notifications.except(:select).where.not(type_of: 2).select(:id)

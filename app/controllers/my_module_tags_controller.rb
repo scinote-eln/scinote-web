@@ -63,13 +63,10 @@ class MyModuleTagsController < ApplicationController
               my_module: my_module.id,
               tag: @mt.tag.id
             })
-
-    respond_to do |format|
-      format.json do
-        redirect_to my_module_tags_edit_path(format: :json), turbolinks: false,
-                    status: 303
-      end
-    end
+    # rubocop:disable Rails/HttpStatus
+    redirect_to my_module_tags_edit_path(format: :json), turbolinks: false,
+                status: 303
+    # rubocop:enable Rails/HttpStatus
   end
 
   def destroy
@@ -89,13 +86,10 @@ class MyModuleTagsController < ApplicationController
             })
 
     @mt.destroy
-
-    respond_to do |format|
-      format.json do
-        redirect_to my_module_tags_edit_path(format: :json), turbolinks: false,
-                    status: 303
-      end
-    end
+    # rubocop:disable Rails/HttpStatus
+    redirect_to my_module_tags_edit_path(format: :json), turbolinks: false,
+                status: 303
+    # rubocop:enable Rails/HttpStatus
   end
 
   def search_tags
