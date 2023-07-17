@@ -536,7 +536,7 @@
 }
 
 .table-display-modal {
-  p,
+  .modal-description,
   .column-container {
     font-size: 14px;
   }
@@ -562,12 +562,6 @@
       &.disabled {
         color: $color-alto;
         pointer-events: none;
-      }
-    }
-
-    &.task_name {
-      .fas {
-        display: none;
       }
     }
 
