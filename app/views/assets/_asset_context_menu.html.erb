@@ -11,7 +11,7 @@
         <% if wopi_enabled? && wopi_file?(asset) %>
           <li>
             <% edit_supported, title = wopi_file_edit_button_status(asset) %>
-            <%= render partial: 'assets/wopi/file_wopi_controls.html.erb',
+            <%= render partial: 'assets/wopi/file_wopi_controls',
               locals: {
                 asset: asset,
                 edit_supported: edit_supported,
@@ -30,20 +30,6 @@
             >
               <%= image_tag 'icon_small/marvinjs.svg' %>
               <%= t('assets.file_preview.edit_in_marvinjs') %>
-            </a>
-          </li>
-          <li role="separator" class="divider"></li>
-        <% elsif asset.bio_eddie? && BioEddieService.enabled?(current_user) %>
-          <li>
-            <a class="btn btn-light bio-eddie-edit-button"
-              data-molecule-id="<%= asset.id %>"
-              data-update-url="<%= bio_eddie_asset_path(asset) %>"
-              data-edit-url="<%= start_editing_bio_eddie_asset_path(asset) %>"
-              data-molecule-name="<%= asset.file.metadata[:name] || asset.file_name %>"
-              data-molecule-description="<%= asset.file.metadata[:description] || asset.file.download %>"
-            >
-              <%= image_tag 'icon_small/bio_eddie.png' %>
-              <%= t('assets.file_preview.edit_in_bio_eddie') %>
             </a>
           </li>
           <li role="separator" class="divider"></li>

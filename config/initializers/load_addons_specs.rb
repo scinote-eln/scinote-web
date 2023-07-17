@@ -1,4 +1,5 @@
 require 'singleton'
+require 'addons_helper'
 
 class AddonsSpecLoader
   include Singleton

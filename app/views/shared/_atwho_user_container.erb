@@ -21,7 +21,7 @@
     data-full-name="<%= user.full_name %>"
     data-email="<%= user.email %>"
     data-popover-html="<%= popover_html %>"
-    data-user-avatar-popover-absolute-url="<%= user_avatar_popover_absolute_url %>"
+    data-user-avatar-popover-absolute-url="<%= user_avatar_absolute_url(user, :thumb, true) %>"
   >
     <%= user.full_name %>
   </a>

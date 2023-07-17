@@ -13,7 +13,7 @@ class ExternalProtocolsController < ApplicationController
       show_import_button = can_create_protocols_in_repository?(@team)
       render json: {
         html: render_to_string(
-          partial: 'protocol_importers/list_of_protocol_cards.html.erb',
+          partial: 'protocol_importers/list_of_protocol_cards',
           locals: { protocols: service_call.protocols_list, show_import_button: show_import_button }
         ),
         page_id: service_call.protocols_list[:pagination][:current_page]
@@ -62,14 +62,14 @@ class ExternalProtocolsController < ApplicationController
 
       render json: {
         html: render_to_string(
-          partial: 'protocol_importers/import_form.html.erb',
+          partial: 'protocol_importers/import_form',
           locals: { protocol: @protocol,
                     steps_json: service_call.serialized_steps,
                     steps_assets: service_call.steps_assets }
         ),
         title: t('protocol_importers.new.modal_title', protocol_name: @protocol.name),
         footer: render_to_string(
-          partial: 'protocol_importers/preview_modal_footer.html.erb'
+          partial: 'protocol_importers/preview_modal_footer'
         ),
         validation_errors: { protocol: @protocol.errors.messages }
       }

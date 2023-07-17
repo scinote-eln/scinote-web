@@ -22,13 +22,13 @@
         />
       </div>
       <div class="step-element-controls">
-        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="editingName = true" tabindex="0">
+        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light btn-sm" @click="editingName = true" tabindex="0">
           <i class="sn-icon sn-icon-edit"></i>
         </button>
-        <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light" tabindex="0" @click="duplicateElement">
+        <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light btn-sm" tabindex="0" @click="duplicateElement">
           <i class="sn-icon sn-icon-duplicate"></i>
         </button>
-        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="0">
+        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light btn-sm" @click="showDeleteModal" tabindex="0">
           <i class="sn-icon sn-icon-delete"></i>
         </button>
       </div>
@@ -39,6 +39,7 @@
         :ghostClass="'step-checklist-item-ghost'"
         :dragClass="'step-checklist-item-drag'"
         :chosenClass="'step-checklist-item-chosen'"
+        :forceFallback="true"
         :handle="'.step-element-grip'"
         :disabled="editingItem || checklistItems.length < 2 || !element.attributes.orderable.urls.reorder_url"
         @start="startReorder"
@@ -62,7 +63,7 @@
         />
       </Draggable>
       <div v-if="element.attributes.orderable.urls.create_item_url"
-           class="btn btn-light step-checklist-add-item"
+           class="btn btn-light btn-sm step-checklist-add-item"
            tabindex="0"
            @keyup.enter="addItem"
            @click="addItem">

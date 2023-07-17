@@ -29,11 +29,25 @@
     .search-container:not(.expand) {
       display: none;
     }
+
+    input {
+      width: 100% !important;
+    }
+
+    .sci-input-container-v2 .sn-icon {
+      margin-right: 10px !important;
+    }
   }
 
   .dataTables_scrollHead {
     .dataTable {
       margin-top: 0 !important;
+    }
+
+    thead {
+      .sci-checkbox-container {
+        margin-left: .25rem;
+      }
     }
   }
 

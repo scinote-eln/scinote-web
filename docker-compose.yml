@@ -2,7 +2,7 @@ version: '2'
 services:
   db:
     container_name: scinote_db_development
-    image: postgres:11
+    image: postgres:15
     volumes:
       - scinote_development_postgres:/var/lib/postgresql/data
     ports:
