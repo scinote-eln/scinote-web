@@ -10,6 +10,10 @@ module Api
         object.table&.id
       end
 
+      def metadata
+        object.table&.metadata
+      end
+
       def table_contents
         object.table&.contents&.force_encoding(Encoding::UTF_8)
       end
