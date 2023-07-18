@@ -37,7 +37,7 @@ var ProjectsIndex = (function() {
   // Arrays with selected project and folder IDs shared between both views
   var selectedProjects = [];
   var selectedProjectFolders = [];
-  var singleSelectedProject = []
+  var singleSelectedProject;
   var destinationFolder;
 
   // Init new project folder modal function
@@ -164,7 +164,7 @@ var ProjectsIndex = (function() {
       ev.preventDefault();
 
       const projectId = $(this).data('projectId');
-      singleSelectedProject.push(projectId);
+      singleSelectedProject = projectId;
 
       // Load HTML to refresh users list
       $.ajax({
@@ -225,7 +225,7 @@ var ProjectsIndex = (function() {
         type: 'POST',
         dataType: 'json',
         data: {
-          project_ids: selectedProjects.length > 0 ? selectedProjects : singleSelectedProject,
+          project_ids: selectedProjects.length > 0 ? selectedProjects : [singleSelectedProject],
           project_folder_ids: selectedProjectFolders
         },
         success: function(data) {
@@ -237,7 +237,6 @@ var ProjectsIndex = (function() {
           HelperModule.flashAlertMsg(I18n.t('projects.export_projects.error_flash'), 'danger');
         }
       });
-      singleSelectedProject.length = 0;
     });
   }
 
