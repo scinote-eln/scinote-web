@@ -4,24 +4,6 @@
       {{ i18n.t('nav.notifications.title') }}
       <i class="sn-icon sn-icon-close" @click="$emit('close')"></i>
     </div>
-    <div class="sci--navigation--notificaitons-flyout-tabs">
-      <div class="sci--navigation--notificaitons-flyout-tab"
-           :data-unseen="unseenNotificationsCount"
-           @click="setActiveTab('all')"
-           :class="{'active': activeTab == 'all', 'has-unseen': unseenNotificationsCount > 0}">
-        {{ i18n.t('nav.notifications.all') }}
-      </div>
-      <div class="sci--navigation--notificaitons-flyout-tab"
-           @click="setActiveTab('message')"
-           :class="{'active': activeTab == 'message'}">
-        {{ i18n.t('nav.notifications.message') }}
-      </div>
-      <div class="sci--navigation--notificaitons-flyout-tab"
-           @click="setActiveTab('system')"
-           :class="{'active': activeTab == 'system'}">
-        {{ i18n.t('nav.notifications.system') }}
-      </div>
-    </div>
     <hr>
     <perfect-scrollbar ref="scrollContainer" class="sci--navigation--notificaitons-flyout-notifications">
       <div class="sci-navigation--notificaitons-flyout-subtitle" v-if="todayNotifications.length" >
