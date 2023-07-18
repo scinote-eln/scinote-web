@@ -556,6 +556,7 @@ class Extends
     newrelic.com
     *.newrelic.com
     *.nr-data.net
+    *.analytics.google.com
   )
 end
 
