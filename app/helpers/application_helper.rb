@@ -171,7 +171,7 @@ module ApplicationHelper
           user_avatar_popover_absolute_url: user_avatar_absolute_url(
             user,
             :thumb,
-            base64_encoded_imgs
+            base64_encoded_imgs && user.avatar.attached?
           )
         },
         formats: :html
