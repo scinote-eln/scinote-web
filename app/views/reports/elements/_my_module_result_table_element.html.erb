@@ -31,7 +31,7 @@
   </div>
   <div class="report-element-children">
     <% if @settings.dig('task', 'result_comments') %>
-      <%= render partial: 'reports/elements/result_comments_element.html.erb', locals: { result: result } %>
+      <%= render partial: 'reports/elements/result_comments_element', locals: { result: result } %>
     <% end %>
   </div>
   <% if defined?(children) %>

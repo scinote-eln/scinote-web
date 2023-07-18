@@ -50,7 +50,7 @@
   <div class="toolbar-filter-buttons" style="display:none">
   </div>
 
-  <%= render partial: 'label_printers/label_printer_modal' %>
+
 
   <%= render partial: "repositories/repository_table",
              locals: {
@@ -77,13 +77,9 @@
 <%= render partial: "toolbar_buttons" %>
 <%= render partial: "assign_items_to_task_modal" %>
 
-<% if @repository.is_a?(BmtRepository) %>
-  <%= render partial: 'save_bmt_filter_modal' %>
-  <%= javascript_include_tag 'vue_bmt_filter' %>
-<% else %>
-  <%= render partial: 'repository_filters' %>
-  <%= render partial: 'save_repository_filter_modal' %>
-<% end %>
+<%= render partial: 'repository_filters' %>
+<%= render partial: 'save_repository_filter_modal' %>
+
 
 <%= javascript_include_tag 'vue_components_action_toolbar' %>
 <%= javascript_include_tag 'vue_repository_search' %>

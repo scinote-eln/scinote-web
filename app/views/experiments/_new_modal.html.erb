@@ -10,7 +10,7 @@
           <h4 class="modal-title" id="new-eperiment-modal-label"><%= t("experiments.new.modal_title") %></h4>
         </div>
         <div class="modal-body">
-          <%= render partial: 'form.html.erb', locals: { form: f } %>
+          <%= render partial: 'form', locals: { form: f } %>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.cancel') %></button>

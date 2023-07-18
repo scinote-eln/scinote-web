@@ -14,18 +14,6 @@
         @change="switchTeam"
       ></Select>
     </div>
-    <div v-if="user" class="dropdown" >
-      <button class="btn btn-light icon-btn btn-black" data-toggle="dropdown" :title="i18n.t('nav.support')">
-        <i class="sn-icon sn-icon-help"></i>
-      </button>
-      <ul v-if="user" class="dropdown-menu dropdown-menu-right">
-        <li v-for="(item, i) in helpMenu" :key="i">
-          <a :href="item.url" target="_blank">
-            {{ item.name }}
-          </a>
-        </li>
-      </ul>
-    </div>
     <div v-if="user" class="dropdown">
       <button class="btn btn-light icon-btn btn-black" data-toggle="dropdown"  :title="i18n.t('nav.settings')">
         <i class="sn-icon sn-icon-settings"></i>
@@ -126,6 +114,9 @@
       // Track name update in user profile settings
       $(document).on('inlineEditing::updated', '.inline-editing-container[data-field-to-update="full_name"]', this.fetchData);
     },
+    beforeDestroy: function(){
+      clearTimeout(this.unseenNotificationsTimeout);
+    },
     methods: {
       fetchData() {
         $.get(this.url, (result) => {
@@ -160,8 +151,10 @@
         window.open(`${this.searchUrl}?q=${e.target.value}`, '_self')
       },
       checkUnseenNotifications() {
+        clearTimeout(this.unseenNotificationsTimeout);
         $.get(this.unseenNotificationsUrl, (result) => {
           this.unseenNotificationsCount = result.unseen;
+          this.unseenNotificationsTimeout = setTimeout(this.checkUnseenNotifications, 30000);
         })
       },
       refreshCurrentTeam() {

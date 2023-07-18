@@ -12,7 +12,7 @@
     </div>
     <div class="navigational-breadcrumbs">
     <% unless activity.old_activity? || !activity.subject_type.present?%>
-      <%= render partial: "global_activities/references/#{activity.subject_type.underscore}.html.erb",
+      <%= render partial: "global_activities/references/#{activity.subject_type.underscore}",
                  locals: {
                     team: activity.team,
                     subject: activity.subject,

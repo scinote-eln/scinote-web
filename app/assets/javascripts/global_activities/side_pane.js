@@ -1,4 +1,4 @@
-/* global animateSpinner gaUrlQueryParams PerfectSb dropdownSelector */
+/* global animateSpinner PerfectSb dropdownSelector */
 /* eslint-disable no-extend-native, no-underscore-dangle, no-use-before-define */
 
 var globalActivities = (function() {
@@ -242,9 +242,13 @@ var globalActivities = (function() {
             $(tag).find('.sn-icon-close-small').click();
           });
       });
+
+      toggleClearButtons();
     }
 
     function preloadFilters(filters) {
+      if (!filters) return;
+
       updateRunning = true;
       if (filters.subject_labels) {
         $.each(filters.subject_labels, (i, subject) => {
@@ -354,9 +358,7 @@ var globalActivities = (function() {
 
     GlobalActivitiesUpdateTopPaneTags();
 
-    if (typeof gaUrlQueryParams !== 'undefined' && gaUrlQueryParams) {
-      preloadFilters(gaUrlQueryParams);
-    }
+    preloadFilters($('#filters').data('filters'));
 
     $('.date-selector .hot-button').click(function() {
       var selectPeriod = this.dataset.period;

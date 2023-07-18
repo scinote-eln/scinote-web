@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-begin
+ActiveSupport::Reloader.to_prepare do
   settings = ApplicationSettings.instance
   provider_conf = settings.values['okta']
   if provider_conf.blank? && %w(OKTA_CLIENT_ID OKTA_CLIENT_SECRET OKTA_DOMAIN).all? { |v| ENV.fetch(v, nil).present? }

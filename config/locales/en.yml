@@ -627,7 +627,7 @@ en:
         report_button: "Report"
         update_pdf: "Update PDF"
         save_pdf_to_inventory: "Save PDF to inventory"
-        search_reports: "Filter reports"
+        search_reports: "Search reports"
         request_docx: "Generate .DOCX"
         update_docx: "Update .DOCX"
         edit: "Edit"
@@ -919,7 +919,7 @@ en:
         logo_params_error: 'Failed to parse logo parameters!'
     index:
       head_title: 'Label templates'
-      search_templates: 'Filter templates'
+      search_templates: 'Search labels'
       thead_name: 'Name'
       format: 'Format'
       description: 'Description'
@@ -1170,7 +1170,7 @@ en:
         title: "Load protocol template"
         text: "This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
         text2: "Choose the protocol to be loaded to the task."
-        filter_protocols: "Filter protocols"
+        filter_protocols: "Search protocols"
         thead_name: "Name"
         thead_keywords: "Keywords"
         thead_published_by: "Published by"
@@ -1687,7 +1687,6 @@ en:
       i_shared: "Shared inventory (owned by your Team)"
       shared_edit: "Shared inventory (owned by %{team_name}). You can edit."
       shared_read: "Shared inventory (owned by %{team_name}). You can view."
-    bmt_singleton_error: "Only one BMT inventory can be present."
     index:
       active_reminders:
         label: "Active reminders"
@@ -1891,47 +1890,6 @@ en:
                 from_placeholder: "From"
                 all_units: "All units"
                 no_unit: "No unit"
-      bmt_search:
-        bmt_filter: "Biomolecule filter"
-        save_filters: "Save filters"
-        title: "Filters"
-        clear_all: "Clear all"
-        add_filter: "Add filter"
-        apply: "Apply"
-        filter: "Filter"
-        no_filters: "No active filters."
-        filters:
-          types:
-            additionalDataFilter:
-              name: "Additional data"
-            entityTypeFilter:
-              name: "Entity type"
-              placeholder: "Enter entity type"
-            monomerTypeFilter:
-              name: "Monomere type"
-              placeholder: "Enter monomere type"
-            subsequenceFilter:
-              name: "Subsequence"
-              placeholder: "Enter subsequence"
-              derivatives_included: "Derivatives included"
-            variantSequenceFilter:
-              name: "Variant sequence"
-              placeholder: "Enter variant sequence"
-              derivatives_included: "Derivatives included"
-              distance: "Distance"
-              distance_type: "Distance type"
-              exact: "Exact"
-              maximum: "Maximum"
-            fullsequenceFilter:
-              name: "Full sequence"
-              placeholder: "Enter full sequence"
-              derivatives_included: "Derivatives included"
-            monomerSubstructureSearchFilter:
-              name: "Monomere substructure"
-              placeholder: "Enter substructure"
-            cidFilter:
-              name: "Cid"
-              placeholder: "Enter Cid"
     table:
       id: 'Item ID'
       external_id: 'External ID'
@@ -2844,7 +2802,7 @@ en:
       head_title_archived: "Archived protocol templates"
       default_name: 'New protocol'
       back_to_active_protocols: 'Back to active protocols'
-      search_bar_placeholder: 'Filter protocols'
+      search_bar_placeholder: 'Search protocols'
       navigation:
         archive: "Archive"
       toolbar:
@@ -3266,7 +3224,6 @@ en:
     file_preview:
       edit_in_scinote: "Edit in SciNote"
       edit_in_marvinjs: "Edit in Marvin JS"
-      edit_in_bio_eddie: "Edit in BioEddie"
     context_menu:
       set_view_size: "SET VIEW SIZE"
       delete: "Delete file"
@@ -3668,14 +3625,6 @@ en:
   Added: 'Added'
   by: 'by'
   name: 'name'
-
-  bio_eddie:
-    new_molecule: "New Molecule"
-    new_button: "Biomolecule"
-    molecule_name_placeholder: "Click here to enter Molecule name"
-    no_molecules_found: "No Molecules Found"
-    save_and_register: "Save & Register to Biomolecule Toolkit"
-    empty_molecule_error: "An error occurred. The molecule can't be empty."
 
   marvinjs:
     new_sketch: "New Chemical Drawing"

@@ -2,13 +2,6 @@
 
 'use strict';
 
-// eslint-disable-next-line no-unused-vars
-var gaUrlQueryParams;
-
-(function() {
-  gaUrlQueryParams = $('#filters').data('filters');
-}());
-
 (function() {
   function initExpandCollapseAllButtons() {
     $('#global-activities-colapse-all').on('click', function(ev) {

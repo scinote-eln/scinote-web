@@ -45,7 +45,7 @@
   </div>
   <div id="steps">
     <% protocol.steps.sort_by{ |s| s.position }.each do |step| %>
-      <%= render partial: "steps/step.html.erb", locals: { step: step, steps_assets: steps_assets, preview: true, import: true } %>
+      <%= render partial: "steps/step", locals: { step: step, steps_assets: steps_assets, preview: true, import: true } %>
     <% end %>
   </div>
 </div>

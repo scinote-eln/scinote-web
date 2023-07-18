@@ -6,7 +6,7 @@
 .step-container {
   --left-component-padding: 2rem;
   border: $border-transparent;
-  margin: 6px 0 6px -1.5em;
+  margin: 6px 0 6px -1em;
   padding: 8px 24px 8px 0;
 
   .step-header {
@@ -15,11 +15,12 @@
     margin-bottom: 1.2em;
 
     .step-element-header {
-      align-items: center;
+      align-items: baseline;
       border-radius: 4px;
       display: flex;
       flex-basis: 80%;
       position: relative;
+      padding-top: .4em;
 
       .step-name-edit-icon {
         background: linear-gradient(90deg,
@@ -63,6 +64,7 @@
     }
 
     .step-name-container {
+      align-self: baseline;
       flex-grow: 1;
       font-size: 16px;
       font-weight: bold;
@@ -73,12 +75,14 @@
     }
 
     .step-state {
+      align-self: center;
       border: 1px solid $color-alto;
       border-radius: 50%;
       cursor: pointer;
       height: 24px;
       text-align: center;
       width: 24px;
+      margin-bottom: -.5em;
 
       &:hover {
         border-color: $brand-success;
@@ -154,7 +158,7 @@
 
     .step-timestamp {
       position: relative;
-      margin-left: 30px;
+      margin-left: 40px;
       bottom: 17px;
       width: 356px;
       height: 15px;
@@ -166,19 +170,10 @@
       order: 0;
       flex-grow: 0;
     }
-
-    .step-element-name {
-      .sci-inline-edit__view,
-      textarea {
-        padding-bottom: .1em;
-        padding-top: .5em;
-      }
-    }
   }
 
   .step-element-grip-placeholder {
-    height: 24px;
-    width: 28px;
+    width: 42px;
   }
 
   .comments-counter {
@@ -269,7 +264,7 @@
 }
 
 .step-element-header {
-  align-items: flex-start;
+  align-items: baseline;
   border-radius: 4px;
   display: flex;
   min-height: 40px;
@@ -284,7 +279,7 @@
 
   .step-controls {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     min-height: 35px;
   }
 
@@ -304,12 +299,10 @@
   }
 
   .step-element-controls {
-    background: linear-gradient(
-      90deg,
-      transparent,
-      $color-concrete 15%,
-      $color-concrete 100%
-    );
+    background: linear-gradient(90deg,
+        transparent,
+        $color-concrete 15%,
+        $color-concrete 100%);
     display: flex;
     margin-left: auto;
     position: absolute;
@@ -339,7 +332,6 @@
 .step-element-grip {
   color: $color-silver-chalice;
   cursor: pointer;
-  margin: auto;
   padding: .5em;
 
   &.step-element-grip--draggable {

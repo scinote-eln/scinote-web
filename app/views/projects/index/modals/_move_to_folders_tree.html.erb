@@ -2,7 +2,7 @@
   <% records.each do |record| %>
     <li id="<%= "folder_#{record[:folder].id}" %>" data-jstree='{"icon":"sn-icon sn-icon-folder icon-folder"}'>
       <%= record[:folder].name %>
-      <%= render partial: 'projects/index/modals/move_to_folders_tree.html.erb', locals: { records: record[:children] } %>
+      <%= render partial: 'projects/index/modals/move_to_folders_tree', locals: { records: record[:children] } %>
     </li>
   <% end %>
 </ul>
