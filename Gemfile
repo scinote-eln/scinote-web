@@ -14,7 +14,6 @@ gem 'psych', '< 4.0'
 gem 'rails', '~> 7.0.5'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize'
-gem 'sassc-rails'
 gem 'sprockets-rails'
 gem 'view_component'
 gem 'yomu', git: 'https://github.com/scinote-eln/yomu', branch: 'master'
@@ -87,6 +86,7 @@ gem 'discard'
 gem 'graphviz'
 
 gem 'jsbundling-rails'
+gem 'cssbundling-rails'
 
 gem 'tailwindcss-rails', '~> 2.0'
 

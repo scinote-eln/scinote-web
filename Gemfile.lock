@@ -230,6 +230,8 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
+    cssbundling-rails (1.1.2)
+      railties (>= 6.0.0)
     cucumber (8.0.0)
       builder (~> 3.2, >= 3.2.4)
       cucumber-ci-environment (~> 9.0, >= 9.0.4)
@@ -600,14 +602,6 @@ GEM
     sanitize (6.0.2)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    sassc (2.4.0)
-      ffi (~> 1.9)
-    sassc-rails (2.1.2)
-      railties (>= 4.0.0)
-      sassc (>= 2.0)
-      sprockets (> 3.0)
-      sprockets-rails
-      tilt
     scenic (1.7.0)
       activerecord (>= 4.0.0)
       railties (>= 4.0.0)
@@ -710,6 +704,7 @@ DEPENDENCIES
   capybara
   capybara-email
   caracal!
+  cssbundling-rails
   cucumber-rails
   database_cleaner
   deface (~> 1.9)
@@ -772,7 +767,6 @@ DEPENDENCIES
   rubyzip (>= 2.3.0)
   rufus-scheduler
   sanitize
-  sassc-rails
   scenic (~> 1.4)
   sdoc (~> 1.0)
   selenium-webdriver
