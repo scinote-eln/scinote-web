@@ -37,7 +37,7 @@
             <% end %>
           </a>
           <a class="p-4 border-b-4 border-transparent text-sn-grey hover:no-underline <%= "border-sn-blue" if is_module_activities? %>"
-             href="<%= activities_my_module_url(@my_module) %>"
+             href="<%= activities_my_module_url(@my_module, view_mode: params[:view_mode]) %>"
              title="<%= t("nav2.modules.activities") %>"
           >
             <%= t("nav2.modules.activities") %>

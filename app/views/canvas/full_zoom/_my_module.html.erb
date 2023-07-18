@@ -88,7 +88,8 @@
         </a>
       </li>
       <li role="presentation">
-        <a class="btn btn-light task-card-view-activities" href="<%= activities_my_module_url(id: my_module.id) %>" aria-controls="<%= my_module.id %>_activities" role="tab">
+        <a class="btn btn-light task-card-view-activities" href="<%= activities_my_module_url(id: my_module.id, view_mode: my_module.archived_branch? ? 'archived' : 'active') %>"
+           aria-controls="<%= my_module.id %>_activities" role="tab">
           <span class="sn-icon sn-icon-activities" aria-hidden="true"></span>
         </a>
       </li>
