@@ -347,14 +347,10 @@ class ProtocolsController < ApplicationController
   def unlink
     transaction_error = false
     Protocol.transaction do
-      # rubocop:disable Style/RedundantBegin
-      begin
-        @protocol.unlink
-      rescue StandardError
-        transaction_error = true
-        raise ActiveRecord::Rollback
-      end
-      # rubocop:enable Style/RedundantBegin
+      @protocol.unlink
+    rescue StandardError
+      transaction_error = true
+      raise ActiveRecord::Rollback
     end
 
     if transaction_error
