@@ -19,7 +19,7 @@ class MyModuleRepositorySnapshotsController < ApplicationController
     if params[:simple_view]
       repository_rows = datatable_service.repository_rows
       @repository = @repository_snapshot
-      rows_view = 'repository_rows/simple_view_index.json'
+      rows_view = 'repository_rows/simple_view_index'
     else
       repository_rows =
         datatable_service.repository_rows
