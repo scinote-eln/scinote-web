@@ -19,7 +19,7 @@
   }
 
   .panel-heading {
-    padding: 10px 15px 4px;
+    padding: 7px 30px 7px 15px;
   }
 
   .panel-body {
@@ -40,7 +40,7 @@
 
   .panel-footer {
     .nav > li > a {
-      padding: 6px 15px;
+      padding: 1px 15px;
     }
 
     .btn {
@@ -48,18 +48,15 @@
     }
 
     .badge-indicator {
-      background: $brand-accent;
-      border-radius: $border-radius-tag;
-      color: $color-black;
+      background: var(--sn-science-blue);
+      border-radius: 50%;
+      color: var(--sn-white);
       font-size: 10px;
       margin-left: -8px;
     }
   }
 }
 
-.view-switch-button {
-  margin-right: .25em;
-}
 
 .canvas-preview-img,
 .canvas-preview-rect {
@@ -83,5 +80,13 @@
     background-image: url("/images/medium/loading.svg");
     background-position: center;
     background-repeat: no-repeat;
+  }
+}
+
+#manage-module-due-date-modal {
+  .input-group {
+    .form-control {
+      height: 2.5rem;
+    }
   }
 }

@@ -15,6 +15,7 @@ class ProtocolsController < ApplicationController
   before_action :check_clone_permissions, only: [:clone]
   before_action :check_view_permissions, only: %i(
     show
+    print
     versions_modal
     protocol_status_bar
     linked_children
@@ -100,9 +101,6 @@ class ProtocolsController < ApplicationController
   end
 
   def print
-    @protocol = Protocol.find(params[:id])
-    render_403 && return unless @protocol.my_module.blank? || can_read_protocol_in_module?(@protocol)
-
     render layout: 'protocols/print'
   end
 
@@ -188,7 +186,10 @@ class ProtocolsController < ApplicationController
   end
 
   def show
-    render json: @protocol, serializer: ProtocolSerializer, user: current_user
+    respond_to do |format|
+      format.json { render json: @protocol, serializer: ProtocolSerializer, user: current_user }
+      format.html
+    end
   end
 
   def update_keywords
@@ -335,6 +336,7 @@ class ProtocolsController < ApplicationController
           render json: { message: t('my_modules.protocols.copy_to_repository_modal.success_message') }
         end
       end
+      format.html
     end
   end
 
@@ -1140,7 +1142,6 @@ class ProtocolsController < ApplicationController
 
     @breadcrumbs_items.push({
                               label: t('breadcrumbs.templates'),
-                              url: archived_branch ? protocols_path(type: :archived) : protocols_path,
                               archived: archived_branch
                             })
 

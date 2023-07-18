@@ -208,16 +208,25 @@ class RepositoriesController < ApplicationController
   end
 
   def export_modal
-    return unless current_user.has_available_exports?
-
-    render json: {
-      html: render_to_string(
-        partial: 'export_repositories_modal',
-        locals: { team_name: current_team.name,
-                  export_limit: TeamZipExport.exports_limit,
-                  num_of_requests_left: current_user.exports_left - 1 }
-      )
-    }
+    if current_user.has_available_exports?
+      render json: {
+        html: render_to_string(
+          partial: 'export_repositories_modal',
+          locals: { team_name: current_team.name,
+                    export_limit: TeamZipExport.exports_limit,
+                    num_of_requests_left: current_user.exports_left - 1 },
+          formats: :html
+        )
+      }
+    else
+      render json: {
+        html: render_to_string(
+          partial: 'export_limit_exceeded_modal',
+          locals: { requests_limit: TeamZipExport.exports_limit },
+          formats: :html
+        )
+      }
+    end
   end
 
   def copy
@@ -510,7 +519,7 @@ class RepositoriesController < ApplicationController
 
   def set_breadcrumbs_items
     @breadcrumbs_items = []
-    archived_branch = params[:archived] == 'true' || @repository&.archived?
+    archived_branch = @repository&.archived? || (!@repository && params[:archived] == 'true')
 
     @breadcrumbs_items.push({
                               label: t('breadcrumbs.inventories'),

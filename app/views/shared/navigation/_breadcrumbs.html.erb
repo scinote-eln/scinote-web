@@ -46,20 +46,25 @@
   <% else %>
     <% last_item = @breadcrumbs_items.pop %>
     <% @breadcrumbs_items.each do |item| %>
-      <%= link_to(item[:label], item[:url],
-                  class: "breadcrumbs-link",
-                  title: item[:label]) %>
+      <% if item[:url] %>
+        <%= link_to(item[:label], item[:url],
+                    class: "breadcrumbs-link",
+                    title: item[:label]) %>
+      <% else %>
+        <%= content_tag(:span, item[:label],
+                        class: "breadcrumbs-link plain-text",
+                        title: item[:label]) %>
+      <% end %>
+
       <span class="delimiter">
         <img src="<%= asset_path "icon_small/navigate_next.svg"%>"
-             alt="navigate next"
-             class="navigate_next">
+            alt="navigate next"
+            class="navigate_next">
       </span>
+    <% end %>
 
-    <% end %>
-    <% if last_item %>
-      <span class="breadcrumbs-link" title="<%= last_item[:label] %>">
-        <%= last_item[:label] %>
-      </span>
-    <% end %>
+    <span class="breadcrumbs-link" title="<%= last_item[:label] %>">
+      <%= last_item[:label] %>
+    </span>
   <% end %>
 <% end %>

@@ -17,7 +17,7 @@
           <%= render partial: "activity_list" %>
         </div>
         <div class="text-center">
-          <a class="btn btn-default btn-more-activities <%= 'hidden' unless @next_page %>"
+          <a class="btn btn-secondary btn-more-activities <%= 'hidden' unless @next_page %>"
              data-next-page="<%= @next_page %>">
             <%= t'activities.index.more_activities' %>
           </a>

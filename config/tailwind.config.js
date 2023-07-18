@@ -6,6 +6,7 @@ module.exports = {
     './app/helpers/**/*.rb',
     './app/javascript/**/*.js',
     './app/javascript/**/*.vue',
+    './app/assets/javascripts/**/*.js',
     './app/views/**/*.{erb,haml,html,slim}'
   ],
   corePlugins: {

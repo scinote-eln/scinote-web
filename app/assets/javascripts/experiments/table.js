@@ -204,7 +204,7 @@ var ExperimnetTable = {
     $(this.table).on('click', '.duplicate-my-module', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      this.duplicateMyModules($('#duplicateTasks').data('url'), e.currentTarget.dataset.id);
+      this.duplicateMyModules(e.currentTarget.href, e.currentTarget.dataset.id);
     });
 
     $(this.table).on('click', '.move-my-module', (e) => {

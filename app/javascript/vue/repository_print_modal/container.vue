@@ -62,7 +62,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal"> {{ i18n.t('general.cancel') }}</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"> {{ i18n.t('general.cancel') }}</button>
             <button class="btn btn-primary" @click="submitPrint">
               {{ i18n.t(`repository_row.modal_print_label.${labelTemplateError ? 'print_anyway' : 'print_label'}`) }}
             </button>
@@ -153,7 +153,7 @@
               description: i.attributes.description || ''
             }
           }
-        })
+        }).sort((temp1, temp2) => (temp1.label?.toLowerCase() > temp2.label?.toLowerCase() ? 1 : -1));
       },
       availablePrinters() {
         return this.printers.map(i => {

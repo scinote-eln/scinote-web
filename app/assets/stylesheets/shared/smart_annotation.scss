@@ -219,8 +219,12 @@
 }
 
 .atwho-user-container {
+  display: inline-block;
+  white-space: nowrap;
+
   .atwho-user-popover {
     cursor: pointer;
+    line-height: 1.25rem;
   }
 
   .atwho-user-popover:focus {

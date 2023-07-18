@@ -47,8 +47,6 @@ class ProjectsController < ApplicationController
       }
     else
       if current_folder
-        breadcrumbs_html = render_to_string(partial: 'projects/index/breadcrumbs',
-                                            locals: { target_folder: current_folder, folder_page: true })
         projects_cards_url = project_folder_cards_url(current_folder)
         title_html = if @inline_editable_title_config.present?
                        render_to_string(partial: 'shared/inline_editing',
@@ -60,7 +58,6 @@ class ProjectsController < ApplicationController
                        escape_input(current_folder.name)
                      end
       else
-        breadcrumbs_html = ''
         projects_cards_url = cards_projects_url
         title_html = title
       end
@@ -70,7 +67,6 @@ class ProjectsController < ApplicationController
 
       render json: {
         projects_cards_url: projects_cards_url,
-        breadcrumbs_html: breadcrumbs_html,
         title_html: title_html,
         next_page: cards.next_page,
         toolbar_html: render_to_string(partial: 'projects/index/toolbar'),
@@ -155,6 +151,7 @@ class ProjectsController < ApplicationController
   def edit
     render json: {
       html: render_to_string(partial: 'projects/index/modals/edit_project_contents',
+                             formats: :html,
                              locals: { project: @project })
     }
   end
@@ -177,7 +174,7 @@ class ProjectsController < ApplicationController
     end
 
     message_renamed = @project.name_changed?
-    message_visibility = if @project.visibility_changed?
+    message_visibility = if !@project.visibility_changed?
                            nil
                          elsif @project.visible?
                            t('projects.activity.visibility_visible')
@@ -193,24 +190,38 @@ class ProjectsController < ApplicationController
                          'restore'
                        end
 
-    default_public_user_name = nil
-    if @project.visibility_changed? && @project.default_public_user_role_id_changed?
-      default_public_user_name = UserRole.find(project_params[:default_public_user_role_id])&.name
+    default_public_user_role_name = nil
+    if !@project.visibility_changed? && @project.default_public_user_role_id_changed?
+      default_public_user_role_name = UserRole.find(project_params[:default_public_user_role_id]).name
     end
 
     @project.last_modified_by = current_user
     if !return_error && @project.save
 
       # Add activities if needed
-      log_activity(:change_project_visibility, @project, visibility: message_visibility) if message_visibility.present?
+      if message_visibility.present? && @project.visible?
+        log_activity(:project_grant_access_to_all_team_members,
+                     @project,
+                     { visibility: message_visibility,
+                       role: @project.default_public_user_role.name,
+                       team: @project.team.id })
+      end
+      if message_visibility.present? && !@project.visible?
+        log_activity(:project_remove_access_from_all_team_members,
+                     @project,
+                     { visibility: message_visibility,
+                       role: @project.default_public_user_role.name,
+                       team: @project.team.id })
+      end
+
       log_activity(:rename_project) if message_renamed.present?
       log_activity(:archive_project) if message_archived == 'archive'
       log_activity(:restore_project) if message_archived == 'restore'
 
-      if default_public_user_name.present?
+      if default_public_user_role_name.present?
         log_activity(:project_access_changed_all_team_members,
                      @project,
-                     { team: @project.team.id, role: default_public_user_name })
+                     { team: @project.team.id, role: default_public_user_role_name })
       end
 
       flash_success = t('projects.update.success_flash', name: escape_input(@project.name))

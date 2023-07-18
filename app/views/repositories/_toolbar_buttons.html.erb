@@ -26,8 +26,8 @@
         </button>
       <% end %>
 
-      <span id="saveCancel" data-toggle="buttons" style="display:none">
-        <button type="button" class="btn btn-success prevent-shrink" id="saveRecord" data-view-mode="active">
+      <span id="saveCancel" class="flex items-center gap-2" data-toggle="buttons" style="display:none">
+        <button type="button" class="btn btn-primary prevent-shrink" id="saveRecord" data-view-mode="active">
           <span class="fas fa-save"></span>
           <%= t("repositories.save_record") %>
         </button>
@@ -37,10 +37,24 @@
         </button>
       </span>
     <% end %>
+    <% if @repository.repository_rows.with_active_reminders(current_user).any? %>
+      <button type="button" data-toggle="tooltip" data-placement="bottom" title="<%= t("repositories.hide_reminders") %>"
+              class="btn btn-light auto-shrink-button"
+              id="hideRepositoryReminders"
+              data-view-mode="active"
+              data-hide-reminders-url="<%= team_repository_hide_reminders_url(@current_team, @repository) %>">
+        <span class="fas fa-bell-slash"></span>
+        <span class="button-text"><%= t("repositories.hide_reminders") %></span>
+      </button>
+    <% end %>
+    <% if can_manage_repository_filters?(@repository) %>
+      <div class="toolbar-save-filters">
+        <%= render partial: 'repositories/toolbar/save_filters' %>
+      </div>
+    <% end %>
   </div>
 
   <div class="toolbar-middle-block">
-    <% unless @repository.is_a?(BmtRepository) %>
       <%= render partial: 'shared/state_view_switch', locals: {
           disabled: @repository.archived?,
           switchable: true,
@@ -48,7 +62,6 @@
           active_url: repository_path(@repository),
           archived_url: repository_path(@repository, archived: true),
         } %>
-    <% end %>
   </div>
 
   <!-- RIGHT TOOLBAR BLOCK -->
@@ -71,13 +84,8 @@
       </div>
     <% end %>
     <div class="toolbar-filters"></div>
-    <% if @repository.is_a?(BmtRepository) %>
-      <div class="toolbar-bmt-filters">
-        <%= render partial: 'repositories/toolbar/bmt' %>
-      </div>
-    <% end %>
     <div class="repo-datatables-buttons">
-      <button class="btn btn-light manage-repo-column-index"
+      <button class="btn btn-light btn-black icon-btn manage-repo-column-index" title="<%= t("libraries.manange_modal_column.button_tooltip") %>"
               data-modal-url="<%= repository_repository_columns_path(@repository) %>"
               data-action="new">
         <span class="sn-icon sn-icon sn-icon-reports">

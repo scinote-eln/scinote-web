@@ -52,10 +52,12 @@
 
   .jstree-icon {
     &.root-folder {
+      background-image: none !important;
       color: $color-volcano;
     }
 
     &.icon-folder {
+      background-image: none !important;
       color: $brand-primary-light;
     }
   }

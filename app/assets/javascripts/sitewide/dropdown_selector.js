@@ -286,7 +286,7 @@ var dropdownSelector = (function() {
           selectedOption.removeClass('highlight').next().next().addClass('highlight');
         }
       } else if (pressedKey === 8 && e.target.value === '') { // backspace
-        deleteTag(selector, container, container.find('.ds-tags .sn-icon-close').last());
+        deleteTag(selector, container, container.find('.ds-tags .sn-icon-close-small').last());
       }
     });
   }
@@ -441,7 +441,9 @@ var dropdownSelector = (function() {
       if (dropdownContainer.hasClass('disabled') || (config.inputTagMode && noOptionsForSelect(selector))) return;
 
       // Each time we open option contianer we must scroll it
-      optionContainer.scrollTo(0);
+      dropdownContainer.animate({
+        scrollTop: optionContainer.offset().top
+      });
 
       // Now open/close option container
       dropdownContainer.toggleClass('open');
@@ -743,7 +745,7 @@ var dropdownSelector = (function() {
       var tag = $(`<div class="${tagAppearance} ${customClass}" style="${customStyle ? customStyle(data) : ''}" >
                   <div class="tag-label">
                   </div>
-                  <i class="sn-icon sn-icon-close ${selector.data('config').singleSelect ? 'hidden' : ''}"></i>
+                  <i class="sn-icon sn-icon-close-small ${selector.data('config').singleSelect ? 'hidden' : ''}"></i>
                 </div>`).insertBefore(container.find('.input-field .search-field'));
 
 
@@ -758,7 +760,7 @@ var dropdownSelector = (function() {
       }
 
       // Now we need add delete action to tag
-      tag.find('.sn-icon-close').click(function(e) {
+      tag.find('.sn-icon-close-small').click(function(e) {
         e.stopPropagation();
         deleteTag(selector, container, $(this));
       });
@@ -1012,7 +1014,7 @@ var dropdownSelector = (function() {
       currentData = getCurrentData($(selector).next());
       currentData.push(value);
       setData($(selector), currentData, skip_event);
-      if (selector.data('config').tagClass) {
+      if ($(selector).data('config').tagClass) {
         appendOptionToSelector(selector, value);
       }
 

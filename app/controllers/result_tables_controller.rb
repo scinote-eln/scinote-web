@@ -18,19 +18,14 @@ class ResultTablesController < ApplicationController
       table: @table
     )
 
-    respond_to do |format|
-      format.json {
-        render json: {
-          html: render_to_string({
-            partial: "new.html.erb"
-          })
-        }, status: :ok
-      }
-    end
+    render json: {
+      html: render_to_string({ partial: 'new', formats: :html })
+    }, status: :ok
   end
 
   def create
     @table = Table.new(result_params[:table_attributes])
+    @table.metadata = JSON.parse(result_params[:table_attributes][:metadata])
     @table.created_by = current_user
     @table.team = current_team
     @table.last_modified_by = current_user
@@ -56,9 +51,7 @@ class ResultTablesController < ApplicationController
     respond_to do |format|
       format.json {
         render json: {
-          html: render_to_string({
-            partial: "edit.html.erb"
-          })
+          html: render_to_string({ partial: 'edit', formats: :html })
         }, status: :ok
       }
     end
@@ -70,6 +63,7 @@ class ResultTablesController < ApplicationController
     @result.table.last_modified_by = current_user
     @result.table.team = current_team
     @result.assign_attributes(update_params)
+    @result.table.metadata = JSON.parse(update_params[:table_attributes][:metadata]) if update_params[:table_attributes]
     flash_success = t("result_tables.update.success_flash",
       module: @my_module.name)
     if @result.archived_changed?(from: false, to: true)
@@ -96,9 +90,11 @@ class ResultTablesController < ApplicationController
         }
         format.json {
           render json: {
-            html: render_to_string({
-              partial: "my_modules/result.html.erb", locals: {result: @result}
-            })
+            html: render_to_string(
+              partial: 'my_modules/result',
+              locals: { result: @result },
+              formats: :html
+            )
           }, status: :ok
         }
       else
@@ -112,7 +108,7 @@ class ResultTablesController < ApplicationController
   def download
     _ = JSON.parse @result_table.table.contents
     @table_data = _["data"] || []
-    data = render_to_string partial: 'download.txt.erb'
+    data = render_to_string partial: 'download'
     send_data data, filename: @result_table.result.name + '.txt',
       type: 'plain/text'
   end

@@ -120,7 +120,7 @@
               <span class="units"><%= repository_stock_value.repository_stock_unit_item&.data %></span>
             </div>
             <div class="stock-arrow">
-              <i class="sn-icon sn-icon-move"></i>
+              <i class="sn-icon sn-icon-arrow-right"></i>
             </div>
             <div class="stock-final-container <%= 'negative' if repository_stock_value.amount.negative? %> ">
               <span class="subtitle"><%= t('repository_stock_values.manage_modal.new_stock') %></span>
@@ -135,7 +135,7 @@
   <div class="modal-footer">
     <button type="button"
             id="cancel"
-            class="btn btn-default"
+            class="btn btn-secondary"
             tabindex="7"
             data-dismiss="modal"><%=t 'general.cancel' %></button>
     <%= submit_tag t('repository_stock_values.manage_modal.save_stock'), class: "btn btn-primary update-repository-stock", tabindex: "6" %>

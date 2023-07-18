@@ -75,15 +75,14 @@ RUN \
   groff-base \
   postgresql-client \
   npm \
+  awscli \
   netcat-openbsd \
   poppler-utils \
   librsvg2-2 \
   libvips42 \
   graphviz \
-  libreoffice-calc \
-  libreoffice-impress \
-  libreoffice-writer \
   libfile-mimeinfo-perl && \
+  apt-get install -y libreoffice && \
   ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so
 
 ARG BUILD_TIMESTAMP=1

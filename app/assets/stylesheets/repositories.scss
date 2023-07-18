@@ -116,6 +116,8 @@
     }
 
     .dataTables_scrollBody {
+      flex-grow: 1;
+
       thead th#checkbox {
         opacity: 0;
       }
@@ -143,7 +145,7 @@
 
       .dataTables_length {
         margin-right: 24px;
-        width: 170px;
+        width: 180px;
 
         .dropdown-selector-container {
           width: inherit;
@@ -169,7 +171,10 @@
 }
 
 .breadcrumb.breadcrumb-repository {
+  align-items: center;
   background-color: $color-concrete;
+  display: flex;
+  gap: .5rem;
   margin-bottom: 15px;
 }
 
@@ -347,7 +352,7 @@
   }
 
   .share-repo-container {
-    padding: 15px 30px;
+    padding: 15px 0 0;
 
     // Main structure css
     .header,
@@ -363,6 +368,7 @@
     .all-teams,
     .teams-list {
       display: flex;
+      padding: 0 30px;
       width: 100%;
     }
 
@@ -384,18 +390,19 @@
 
     .permission-selector {
       display: flex;
-      flex-basis: 55px;
+      flex-basis: 60px;
       flex-shrink: 0;
       justify-content: center;
     }
 
     .team-selector {
-      align-items: center;
+      align-items: baseline;
       display: flex;
       flex-grow: 1;
 
       .sci-checkbox-container {
-        margin-right: 5px;
+        margin-right: 8px;
+        top: 3px;
       }
     }
 
@@ -404,16 +411,15 @@
       align-items: center;
       font-size: 14px;
       font-weight: bold;
-      padding: 5px 0 0;
+      padding: 5px 30px 0;
     }
 
     .all-teams {
       align-items: center;
       border-bottom: 1px solid $color-gainsboro;
-      margin-left: -10px;
-      padding: 5px 10px;
+      padding: 5px 40px;
       user-select: none;
-      width: calc(100% + 20px);
+      width: 100%;
     }
   }
 }
@@ -424,16 +430,8 @@
   }
 }
 
-.barcode-scanner {
-  cursor: pointer;
-  position: absolute;
-  right: 12px;
-  top: 12px;
-}
-
 .search-container {
   .search-field {
-    padding-right: 32px;
 
     &.barcode-mode {
       background-color: $brand-primary;

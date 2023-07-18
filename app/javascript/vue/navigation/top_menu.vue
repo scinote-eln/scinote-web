@@ -14,8 +14,8 @@
         @change="switchTeam"
       ></Select>
     </div>
-    <div v-if="user" class="dropdown" :title="i18n.t('nav.support')">
-      <button class="btn btn-light icon-btn btn-black" data-toggle="dropdown">
+    <div v-if="user" class="dropdown" >
+      <button class="btn btn-light icon-btn btn-black" data-toggle="dropdown" :title="i18n.t('nav.support')">
         <i class="sn-icon sn-icon-help"></i>
       </button>
       <ul v-if="user" class="dropdown-menu dropdown-menu-right">
@@ -26,8 +26,8 @@
         </li>
       </ul>
     </div>
-    <div v-if="user" class="dropdown" :title="i18n.t('nav.settings')">
-      <button class="btn btn-light icon-btn btn-black" data-toggle="dropdown">
+    <div v-if="user" class="dropdown">
+      <button class="btn btn-light icon-btn btn-black" data-toggle="dropdown"  :title="i18n.t('nav.settings')">
         <i class="sn-icon sn-icon-settings"></i>
       </button>
       <ul class="dropdown-menu dropdown-menu-right">
@@ -43,8 +43,9 @@
         </li>
       </ul>
     </div>
-    <div v-if="user" class="sci--navigation--notificaitons-flyout-container" :title="i18n.t('nav.notifications.title')">
+    <div v-if="user" class="sci--navigation--notificaitons-flyout-container" >
       <button class="btn btn-light icon-btn btn-black"
+              :title="i18n.t('nav.notifications.title')"
               :class="{ 'has-unseen': unseenNotificationsCount > 0 }"
               :data-unseen="unseenNotificationsCount"
               data-toggle="dropdown"
@@ -125,6 +126,9 @@
       // Track name update in user profile settings
       $(document).on('inlineEditing::updated', '.inline-editing-container[data-field-to-update="full_name"]', this.fetchData);
     },
+    beforeDestroy: function(){
+      clearTimeout(this.unseenNotificationsTimeout);
+    },
     methods: {
       fetchData() {
         $.get(this.url, (result) => {
@@ -147,7 +151,7 @@
         if (!newTeam) return;
 
         $.post(this.teamSwitchUrl, {team_id: team}, (result) => {
-          this.currentTeam = result.currentTeam
+          this.currentTeam = result.current_team
           dropdownSelector.selectValues('#sciNavigationTeamSelector', this.currentTeam);
           $('body').attr('data-current-team-id', this.currentTeam);
           window.open(this.rootUrl, '_self')
@@ -159,8 +163,10 @@
         window.open(`${this.searchUrl}?q=${e.target.value}`, '_self')
       },
       checkUnseenNotifications() {
+        clearTimeout(this.unseenNotificationsTimeout);
         $.get(this.unseenNotificationsUrl, (result) => {
           this.unseenNotificationsCount = result.unseen;
+          this.unseenNotificationsTimeout = setTimeout(this.checkUnseenNotifications, 30000);
         })
       },
       refreshCurrentTeam() {

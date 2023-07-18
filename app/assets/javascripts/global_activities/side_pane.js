@@ -1,4 +1,4 @@
-/* global animateSpinner gaUrlQueryParams PerfectSb dropdownSelector */
+/* global animateSpinner PerfectSb dropdownSelector */
 /* eslint-disable no-extend-native, no-underscore-dangle, no-use-before-define */
 
 var globalActivities = (function() {
@@ -228,23 +228,27 @@ var globalActivities = (function() {
               ${dateContainer[0].dataset.periodLabel}
               ${$('.ga-side .date-selector.filter-block')[0].dataset.periodSelect}
             </div>
-            <i class="sn-icon sn-icon-close"></i>
+            <i class="sn-icon sn-icon-close-small"></i>
           </div>`).appendTo('.ga-top .ga-tags')
-          .find('.fa-times').click(() => {
+          .find('.sn-icon-close-small').click(() => {
             $('.date-selector .date.clear').click();
           });
       }
       $.each($('.ga-side .ds-tags'), function(index, tag) {
         var newTag = $(tag.outerHTML).appendTo('.ga-top .ga-tags');
-        newTag.find('.fa-times')
+        newTag.find('.sn-icon-close-small')
           .click(function() {
             newTag.addClass('closing');
-            $(tag).find('.fa-times').click();
+            $(tag).find('.sn-icon-close-small').click();
           });
       });
+
+      toggleClearButtons();
     }
 
     function preloadFilters(filters) {
+      if (!filters) return;
+
       updateRunning = true;
       if (filters.subject_labels) {
         $.each(filters.subject_labels, (i, subject) => {
@@ -354,9 +358,7 @@ var globalActivities = (function() {
 
     GlobalActivitiesUpdateTopPaneTags();
 
-    if (typeof gaUrlQueryParams !== 'undefined' && gaUrlQueryParams) {
-      preloadFilters(gaUrlQueryParams);
-    }
+    preloadFilters($('#filters').data('filters'));
 
     $('.date-selector .hot-button').click(function() {
       var selectPeriod = this.dataset.period;

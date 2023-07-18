@@ -257,10 +257,10 @@ function importProtocolFromFile(
   }
 
   function addTablePreview(stepEl, tableNode) {
-    var tableId = $(tableNode).attr('id');
     var tableName = $(tableNode).children('name').text();
     var tableContent = $(tableNode).children('contents').text();
-    var tableMetadata = JSON.parse($(tableNode).children('metadata').text()) || {};
+    var metadata = $(tableNode).children('metadata').text();
+    var tableMetadata = metadata ? JSON.parse(metadata) : {};
 
     // Generate table element
     var tableEl = newPreviewElement(

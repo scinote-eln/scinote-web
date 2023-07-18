@@ -40,10 +40,14 @@ table {
 #no-teams-jumbotron {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  position: relative;
-  top: 100px;
   justify-content: center;
+  align-items: center;
+  padding-top: 7rem;
+
+  img {
+    margin-bottom: 1.5rem;
+    max-width: 33%;
+  }
 }
 
 #alert-container {
@@ -139,9 +143,10 @@ table {
 }
 
 .badge {
-  background-color: $brand-primary;
+  background-color: var(--sn-science-blue);
+  border-radius: 8px;
   font-size: 11px;
-  border-radius: 5px;
+  min-width: 16px;
 }
 
 .badge-indicator,
@@ -554,7 +559,9 @@ mark,.mark {
     float: right;
 
     .pagination {
-      margin: 2px 0;
+      align-items: center;
+      display: flex;
+      margin: 0;
     }
   }
 
@@ -758,6 +765,7 @@ ul.double-line > li {
 }
 
 .panel-heading .dropdown {
+  background-color: $color-white;
   bottom: 8px;
   left: 8px;
 }
@@ -1004,13 +1012,9 @@ ul.content-activities {
   .result-panel-collapse-link {
     text-decoration: none;
 
-    &:not(.collapsed) .fas {
+    &:not(.collapsed) .sn-icon-right {
       @include rotate(90deg);
-    }
-
-    .fas {
-      margin-right: 7px;
-      text-align: center;
+      display: inline-block;
     }
   }
 

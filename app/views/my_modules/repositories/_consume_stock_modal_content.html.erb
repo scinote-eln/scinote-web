@@ -1,4 +1,6 @@
-<%= form_with url: update_consumption_my_module_repository_path(@my_module, @repository, module_row_id: @module_repository_row), method: :post, remote: true do |f| %>
+<%= form_with url: update_consumption_my_module_repository_path(@my_module, @repository, module_row_id: @module_repository_row), 
+              method: :post, 
+              html: { data: { remote: true } } do |f| %>
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>">
       <span aria-hidden="true">&times;</span>
@@ -54,7 +56,7 @@
   <div class="modal-footer">
     <button type="button"
             id="cancel"
-            class="btn btn-default"
+            class="btn btn-secondary"
             tabindex="4"
             data-dismiss="modal"><%=t('general.cancel') %></button>
     <%= submit_tag t('general.save'), class: "btn btn-primary update-consumption-button", disabled: @module_repository_row.stock_consumption.nil?, tabindex: 1 %>

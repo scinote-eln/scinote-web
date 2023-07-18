@@ -28,8 +28,6 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :activities, only: [:index]
-
     get '/jobs/:id/status', to: 'active_jobs#status'
 
     get 'forbidden', to: 'application#forbidden', as: 'forbidden'
@@ -473,7 +471,7 @@ Rails.application.routes.draw do
       resources :repositories, controller: :my_module_repositories, only: %i(update create) do
         member do
           get :full_view_table
-          post :index_dt
+          post :index_dt, defaults: { format: 'json' }
           post :export_repository
           get :assign_repository_records_modal, as: :assign_modal
           get :update_repository_records_modal, as: :update_modal
@@ -485,7 +483,7 @@ Rails.application.routes.draw do
       resources :repository_snapshots, controller: :my_module_repository_snapshots, only: %i(destroy show) do
         member do
           get :full_view_table
-          post :index_dt
+          post :index_dt, defaults: { format: 'json' }
           post :export_repository_snapshot
           get :status
         end
@@ -666,7 +664,7 @@ Rails.application.routes.draw do
     resources :comments, only: %i(index create update destroy)
 
     resources :repository_rows, only: %i() do
-      member do
+      collection do
         get :rows_to_print
         post :print
         get :print_zpl
@@ -967,24 +965,6 @@ Rails.application.routes.draw do
       post :start_editing
     end
   end
-
-  resources :bio_eddie_assets, only: %i(create update) do
-    collection do
-      get :license
-    end
-    member do
-      post :start_editing
-    end
-  end
-
-  resources :bmt_filters, only: %i(index create destroy)
-
-  match '/marvin4js-license.cxl', to: 'bio_eddie_assets#license', via: :get
-
-  match 'biomolecule_toolkit/*path', to: 'bio_eddie_assets#bmt_request',
-                                     via: %i(get post put delete),
-                                     defaults: { format: 'json' },
-                                     as: 'bmt_request'
 
   post 'global_activities', to: 'global_activities#index'
 

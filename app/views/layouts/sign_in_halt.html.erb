@@ -20,6 +20,7 @@
     <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>
     <%= favicon_link_tag "favicon-32.png", type: "image/png", size: "32x32" %>
     <%= favicon_link_tag "favicon-48.png", type: "image/png", size: "48x48" %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag 'fontawesome' %>
 
     <%= csrf_meta_tags %>
@@ -34,7 +35,7 @@
         </div>
         <% if user_signed_in? %>
           <div class="pull-right sign-in-halt-logout-button">
-            <%= link_to main_app.destroy_user_session_path, class: 'btn btn-default', method: :delete do %>
+            <%= link_to main_app.destroy_user_session_path, class: 'btn btn-secondary', method: :delete do %>
               <%= t('nav.user.logout') %>
             <% end %>
           </div>

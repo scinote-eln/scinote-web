@@ -23,14 +23,6 @@
     data-popover-html="<%= popover_html %>"
     data-user-avatar-popover-absolute-url="<%= user_avatar_popover_absolute_url %>"
   >
-    <% unless skip_avatar %>
-      <span class="global-avatar-container smart-annotation">
-        <img
-          src="<%= user_avatar_absolute_url %>"
-          alt="avatar" class="atwho-user-img-popover"
-          ref="<%= 'missing-img' unless user.avatar.attached? %>%">
-      </span>
-    <% end %>
     <%= user.full_name %>
   </a>
   <% unless skip_user_status || user_still_in_team %>

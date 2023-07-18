@@ -27,7 +27,6 @@ const entryList = {
   pdf_js_styles: './app/javascript/packs/pdfjs/pdf_js_styles.scss',
   pdf_js: './app/javascript/packs/pdfjs/pdf_js.js',
   pdf_js_worker: './app/javascript/packs/pdfjs/pdf_js_worker.js',
-  vue_bmt_filter: './app/javascript/packs/vue/bmt_filter.js',
   vue_label_template: './app/javascript/packs/vue/label_template.js',
   vue_protocol: './app/javascript/packs/vue/protocol.js',
   vue_repository_filter: './app/javascript/packs/vue/repository_filter.js',

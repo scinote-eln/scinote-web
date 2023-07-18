@@ -8,7 +8,7 @@
         <div ref="actionsDropdownButton" class="dropdown sci-dropdown">
           <button class="btn btn-light dropdown-toggle" type="button" id="dropdownAttachmentsOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <span>{{ i18n.t("protocols.steps.attachments.manage") }}</span>
-            <span class="caret pull-right"></span>
+            <span class="sn-icon sn-icon-down"></span>
           </button>
           <ul ref="actionsDropdown" class="dropdown-menu dropdown-menu-right dropdown-attachment-options"
               aria-labelledby="dropdownAttachmentsOptions"
@@ -39,17 +39,6 @@
                   <img :src="step.attributes.marvinjs_context.icon">
                 </span>
                   {{ i18n.t('protocols.steps.attachments.menu.chemical_drawing') }}
-              </a>
-            </li>
-            <li v-if="step.attributes.bio_eddie_service_enabled">
-              <a
-                class="new-bio-eddie-upload-button"
-                :data-object-id="step.id"
-                data-object-type="Step"
-                :data-assets-container="`.attachments[data-step-id=${step.id}]`"
-              >
-                <img v-bind:src="bioEddieIcon">
-                {{ i18n.t('bio_eddie.new_button') }}
               </a>
             </li>
             <li role="separator" class="divider"></li>
@@ -98,7 +87,6 @@
   import thumbnailAttachment from './step_attachments/thumbnail.vue'
   import uploadingAttachment from './step_attachments/uploading.vue'
   import emptyAttachment from './step_attachments/empty.vue'
-  import bioEddieIcon from '../images/bio_eddie.png'
 
   import WopiFileModal from './step_attachments/mixins/wopi_file_modal.js'
 
@@ -120,7 +108,6 @@
     },
     data() {
       return {
-        bioEddieIcon,
         viewModeOptions: ['inline', 'thumbnail', 'list'],
         orderOptions: ['new', 'old', 'atoz', 'ztoa']
       }

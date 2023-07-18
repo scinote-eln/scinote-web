@@ -19,6 +19,10 @@
     &:last-child {
       color: var(--sn-grey);
     }
+
+    &.plain-text {
+      color: var(--sn-grey);
+    }
   }
 
   .delimiter {

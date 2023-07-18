@@ -36,10 +36,6 @@ Canaid::Permissions.register_for(Team) do
     team.permission_granted?(user, TeamPermissions::PROTOCOLS_CREATE)
   end
 
-  can :manage_bmt_filters do |user, team|
-    can_manage_team?(user, team)
-  end
-
   # repository: create, copy
   can :create_repositories do |user, team|
     within_limits = Repository.within_global_limits?

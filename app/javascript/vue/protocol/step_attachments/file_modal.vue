@@ -63,7 +63,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type='button' class='btn btn-default' @click="cancel">
+          <button type='button' class='btn btn-secondary' @click="cancel">
             {{ i18n.t('general.cancel') }}
           </button>
         </div>

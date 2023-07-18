@@ -19,6 +19,10 @@
 
   .dataTables_scrollHead {
     flex-shrink: 0;
+
+    thead .sci-checkbox-container {
+      margin-left: .125em !important;
+    }
   }
 
   .dataTables_filter {
@@ -73,7 +77,7 @@
     padding: 1px 8px;
     position: relative;
 
-    .fas.fa-pencil-alt {
+    .sn-icon.sn-icon-edit {
       line-height: 35px;
       text-align: center;
       width: 30px;
@@ -353,7 +357,7 @@
   .dataTable {
     tbody {
       tr:hover {
-        background-color: $color-concrete;
+        background-color: var(--sn-super-light-grey);
 
         .assigned-column {
           .repository-row-edit-icon {

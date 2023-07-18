@@ -88,7 +88,7 @@ var DasboardQuickStartWidget = (function() {
       }
     });
 
-    $(createTaskButton).click((e) => {
+    $(createTaskButton).one('click', (e) => {
       var params = {};
       if (dropdownSelector.getValues(projectFilter) === '0') {
         params.project = {

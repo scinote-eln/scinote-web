@@ -18,12 +18,12 @@
   <h6 class="date clear"><%= t('global_activities.index.clear') %></h6>
   <div class="date-selector">
     <div class="hot-buttons">
-      <div class="hot-button btn btn-default" data-period="today"><%= t('global_activities.index.today') %></div>
-      <div class="hot-button btn btn-default" data-period="yesterday"><%= t('global_activities.index.yesterday') %></div>
-      <div class="hot-button btn btn-default" data-period="this_week"><%= t('global_activities.index.this_week') %></div>
-      <div class="hot-button btn btn-default" data-period="last_week"><%= t('global_activities.index.last_week') %></div>
-      <div class="hot-button btn btn-default" data-period="this_month"><%= t('global_activities.index.this_month') %></div>
-      <div class="hot-button btn btn-default" data-period="last_month"><%= t('global_activities.index.last_month') %></div>
+      <div class="hot-button btn btn-secondary" data-period="today"><%= t('global_activities.index.today') %></div>
+      <div class="hot-button btn btn-secondary" data-period="yesterday"><%= t('global_activities.index.yesterday') %></div>
+      <div class="hot-button btn btn-secondary" data-period="this_week"><%= t('global_activities.index.this_week') %></div>
+      <div class="hot-button btn btn-secondary" data-period="last_week"><%= t('global_activities.index.last_week') %></div>
+      <div class="hot-button btn btn-secondary" data-period="this_month"><%= t('global_activities.index.this_month') %></div>
+      <div class="hot-button btn btn-secondary" data-period="last_month"><%= t('global_activities.index.last_month') %></div>
     </div>
     <div class="to">
       <%= render partial: "date_picker", locals: { id: 'to-date', use_current: 'false', placeholder: t('global_activities.index.to_label'), label: nil } %>

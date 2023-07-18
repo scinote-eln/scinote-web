@@ -131,11 +131,19 @@ class MyModulesController < ApplicationController
     @next_page = activities.next_page
     @starting_timestamp = activities.first&.created_at.to_i
 
-    render json: {
-      activities_html: render_to_string(partial: 'global_activities/activity_list'),
-      next_page: @next_page,
-      starting_timestamp: @starting_timestamp
-    }
+    respond_to do |format|
+      format.json do
+        render json: {
+          activities_html: render_to_string(
+            partial: 'global_activities/activity_list',
+            formats: :html
+          ),
+          next_page: @next_page,
+          starting_timestamp: @starting_timestamp
+        }
+      end
+      format.html
+    end
   end
 
   # Different controller for showing activities inside tab
@@ -199,27 +207,33 @@ class MyModulesController < ApplicationController
         status: :ok,
         start_date_label: render_to_string(
           partial: 'my_modules/start_date_label',
+          formats: :html,
           locals: { my_module: @my_module, start_date_editable: true }
         ),
         due_date_label: render_to_string(
           partial: 'my_modules/due_date_label',
+          formats: :html,
           locals: { my_module: @my_module, due_date_editable: true }
         ),
         card_due_date_label: render_to_string(
           partial: 'my_modules/card_due_date_label',
+          formats: :html,
           locals: { my_module: @my_module }
         ),
         table_due_date_label: {
           html: render_to_string(partial: 'experiments/table_due_date_label',
+                                 formats: :html,
                                  locals: { my_module: @my_module, user: current_user }),
           due_status: my_module_due_status(@my_module)
         },
         module_header_due_date: render_to_string(
           partial: 'my_modules/module_header_due_date',
+          formats: :html,
           locals: { my_module: @my_module }
         ),
         description_label: render_to_string(
           partial: 'my_modules/description_label',
+          formats: :html,
           locals: { my_module: @my_module }
         ),
         alerts: alerts

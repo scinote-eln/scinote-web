@@ -47,7 +47,7 @@ class RepositoriesExportJob < ApplicationJob
     csv_file = FileUtils.touch("#{path}/#{repository_name}.csv").first
 
     # Define headers and columns IDs
-    col_ids = [-3, -4, -5, -6] + repository.repository_columns.map(&:id)
+    col_ids = [-3, -4, -5, -6, -7, -8] + repository.repository_columns.map(&:id)
 
     # Define callback function for file name
     assets = {}

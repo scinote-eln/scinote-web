@@ -20,6 +20,7 @@ class ResultTextsController < ApplicationController
     )
     @result.build_result_text
 
+<<<<<<< HEAD
     respond_to do |format|
       format.json {
         render json: {
@@ -27,6 +28,11 @@ class ResultTextsController < ApplicationController
         }, status: :ok
       }
     end
+=======
+    render json: {
+      html: render_to_string({ partial: 'new', formats: :html })
+    }, status: :ok
+>>>>>>> develop
   end
 
   def create
@@ -53,15 +59,9 @@ class ResultTextsController < ApplicationController
   end
 
   def edit
-    respond_to do |format|
-      format.json {
-        render json: {
-          html: render_to_string({
-            partial: "edit.html.erb"
-          })
-        }, status: :ok
-      }
-    end
+    render json: {
+      html: render_to_string({ partial: 'edit', formats: :html })
+    }, status: :ok
   end
 
   def update
@@ -108,7 +108,7 @@ class ResultTextsController < ApplicationController
         format.json do
           render json: {
             html: render_to_string(
-              partial: 'my_modules/result.html.erb',
+              partial: 'my_modules/result',
               locals: { result: @result },
               formats: :html
             )
