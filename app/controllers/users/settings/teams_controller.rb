@@ -38,11 +38,7 @@ module Users
       end
 
       def datatable
-        respond_to do |format|
-          format.json do
-            render json: ::TeamsDatatable.new(view_context, @user)
-          end
-        end
+        render json: ::TeamsDatatable.new(view_context, @user)
       end
 
       def new
@@ -66,11 +62,7 @@ module Users
       end
 
       def users_datatable
-        respond_to do |format|
-          format.json do
-            render json: ::TeamUsersDatatable.new(view_context, @team, @user)
-          end
-        end
+        render json: ::TeamUsersDatatable.new(view_context, @team, @user)
       end
 
       def name_html
@@ -94,26 +86,19 @@ module Users
       end
 
       def update
-        respond_to do |format|
-          if @team.update(update_params)
-            @team.update(last_modified_by: current_user)
-            format.json do
-              render json: {
-                status: :ok,
-                html: custom_auto_link(
-                  @team.tinymce_render(:description),
-                  simple_format: false,
-                  tags: %w(img),
-                  team: current_team
-                )
-              }
-            end
-          else
-            format.json do
-              render json: @team.errors,
-              status: :unprocessable_entity
-            end
-          end
+        if @team.update(update_params)
+          @team.update(last_modified_by: current_user)
+          render json: {
+            status: :ok,
+            html: custom_auto_link(
+              @team.tinymce_render(:description),
+              simple_format: false,
+              tags: %w(img),
+              team: current_team
+            )
+          }
+        else
+          render json: @team.errors, status: :unprocessable_entity
         end
       end
 

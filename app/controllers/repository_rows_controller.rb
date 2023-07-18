@@ -197,18 +197,12 @@ class RepositoryRowsController < ApplicationController
         flash = t('repositories.destroy.success_flash',
                   records_number: deleted_count)
       end
-      respond_to do |format|
-        color = deleted_count.zero? ? 'info' : 'success'
-        format.json { render json: { flash: flash, color: color }, status: :ok }
-      end
+      color = deleted_count.zero? ? 'info' : 'success'
+      render json: { flash: flash, color: color }, status: :ok
     else
-      respond_to do |format|
-        format.json do
-          render json: {
-            flash: t('repositories.destroy.no_records_selected_flash')
-          }, status: :bad_request
-        end
-      end
+      render json: {
+        flash: t('repositories.destroy.no_records_selected_flash')
+      }, status: :bad_request
     end
   end
 
@@ -341,13 +335,9 @@ class RepositoryRowsController < ApplicationController
   def check_snapshotting_status
     return if @repository.repository_snapshots.provisioning.none?
 
-    respond_to do |format|
-      format.json do
-        render json: {
-          flash: t('repositories.index.snapshot_provisioning_in_progress')
-        }, status: :unprocessable_entity
-      end
-    end
+    render json: {
+      flash: t('repositories.index.snapshot_provisioning_in_progress')
+    }, status: :unprocessable_entity
   end
 
   def check_create_permissions
