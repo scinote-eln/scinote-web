@@ -16,6 +16,9 @@
           <button v-if="state === 'confirm'" type="button"
                   class="btn btn-primary"
                   @click.stop.prevent="confirm">{{ i18n.t('protocols.import_modal.import') }}</button>
+          <button v-else-if="state === 'failed'" type="button"
+                  class="btn btn-primary"
+                  data-dismiss="modal">{{ i18n.t('protocols.import_modal.close') }}</button>
           <button v-else type="button"
                   class="btn btn-primary"
                   :disabled="state === 'in_progress'"
@@ -97,6 +100,7 @@
               clearInterval(this.jobPollInterval);
               break;
             case 'failed':
+              this.state = 'failed';
               clearInterval(this.jobPollInterval);
               break;
           }

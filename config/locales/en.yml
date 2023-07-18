@@ -2655,6 +2655,9 @@ en:
       done:
         title: "Importing completed"
         body_html: 'The protocol has been successfully imported. You can access the draft of protocol template <a href="%{url}">here.</a>'
+      failed:
+        title: "Import failed"
+        body_html: "We're sorry, but the file import has failed. Please ensure you have a stable internet connection and try again. If the problem persists, please contact support for further assistance."
       import: "Import"
       cancel: "Cancel"
       close: "Close"
@@ -2752,6 +2755,8 @@ en:
       import_protocol_notification:
         title: "The import process has been successfully completed. You can download original file here: %{link}"
         message: "Protocol template:"
+      import_protocol_notification_error:
+        title: "We're sorry, but the file import has failed. Please ensure you have a stable internet connection and try again. If the problem persists, please contact support for further assistance."
     export:
       export_results:
         title: "Export results"
