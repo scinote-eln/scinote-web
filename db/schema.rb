@@ -1188,11 +1188,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_20_070830) do
     t.bigint "team_id", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.bigint "assigned_by_id"
-    t.index ["assigned_by_id"], name: "index_user_teams_on_assigned_by_id"
-    t.index ["team_id"], name: "index_user_teams_on_team_id"
-    t.index ["user_id", "team_id"], name: "index_user_teams_on_user_id_and_team_id", unique: true
-    t.index ["user_id"], name: "index_user_teams_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -1474,7 +1469,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_20_070830) do
   add_foreign_key "user_system_notifications", "users"
   add_foreign_key "user_teams", "teams"
   add_foreign_key "user_teams", "users"
-  add_foreign_key "user_teams", "users", column: "assigned_by_id"
   add_foreign_key "users", "teams", column: "current_team_id"
   add_foreign_key "view_states", "users"
   add_foreign_key "webhooks", "activity_filters"
