@@ -118,6 +118,7 @@ module PermissionExtends
       COLUMNS_UPDATE
       COLUMNS_DELETE
       USERS_MANAGE
+      FILTERS_MANAGE
     ).each { |permission| const_set(permission, "inventory_#{permission.underscore}") }
   end
 
@@ -190,7 +191,8 @@ module PermissionExtends
       RepositoryPermissions::COLUMNS_CREATE,
       RepositoryPermissions::ROWS_CREATE,
       RepositoryPermissions::ROWS_UPDATE,
-      RepositoryPermissions::ROWS_DELETE
+      RepositoryPermissions::ROWS_DELETE,
+      RepositoryPermissions::FILTERS_MANAGE
     ]
 
     TECHNICIAN_PERMISSIONS = [

@@ -95,8 +95,7 @@ Canaid::Permissions.register_for(Repository) do
 
   # repository: create/update/delete filters
   can :manage_repository_filters do |user, repository|
-    ((repository.team == user.current_team) && can_manage_team?(user, repository.team)) ||
-      (repository.shared_with_write?(user.current_team) && can_manage_team?(user, user.current_team))
+    repository.permission_granted?(user, RepositoryPermissions::FILTERS_MANAGE)
   end
 
   can :manage_repository_stock do |user, repository|
