@@ -2,7 +2,6 @@
 <% provide(:sidebar_title, t("sidebar.my_modules.sidebar_title_archived")) %>
 <% provide(:sidebar_url, sidebar_experiment_path(@experiment)) %>
 <% provide(:container_class, 'no-second-nav-container') %>
-
 <%= content_for :sidebar do %>
   <%= render partial: 'shared/sidebar/archived_my_modules', locals: { experiment: @experiment, my_modules: @my_modules } %>
 <% end %>
@@ -10,25 +9,8 @@
   <%= render partial: 'experiments/show_header' %>
   <div class="toolbar">
     <% if @my_modules.present? %>
-      <% if can_manage_experiment?(@experiment) %>
-        <span class="left">
-          <div class="move-button-container collapse">
-            <button class="btn btn-light">
-              <span class="sn-icon sn-icon-move"></span>
-              <%= t('experiments.module_archive.move_option') %>
-            </button>
-          </div>
-          <div class="restore-button-container collapse">
-            <%= button_to restore_my_modules_experiment_path(@experiment), class: 'btn btn-light', method: :post do %>
-              <span class="sn-icon sn-icon-restore"></span>
-              <%= t('experiments.module_archive.restore_option') %>
-            <% end %>
-          </div>
-        </span>
-      <% end %>
     <%= render partial: 'task_view_dropdowns' %>
-  </div>
-
+    </div>
     <div class="row mt-4"
          id="cards-container"
          data-move-modules-modal-url="<%= move_modules_modal_experiment_path(@experiment) %>"
@@ -41,14 +23,11 @@
       <% end %>
     </div>
   <% end %>
-
   <!-- Manage tags modal -->
   <%= render partial: 'my_modules/modals/manage_module_tags_modal', locals: { my_module: nil } %>
-
   <% unless  @my_modules.present? %>
     <%= render partial: 'task_view_dropdowns' %>
   <% end %>
-
   <div id="actionToolbar" data-behaviour="vue">
     <action-toolbar actions-url="<%= actions_toolbar_my_modules_url %>" />
   </div>
@@ -58,7 +37,6 @@
     <em><%= t('experiments.empty_state.no_archived_modules') %></em>
   </div>
 <% end %>
-
 <%= javascript_include_tag('vue_components_action_toolbar') %>
 <%= javascript_include_tag('projects/canvas') %>
 <%= javascript_include_tag('my_modules/archived') %>
