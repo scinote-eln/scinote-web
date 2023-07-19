@@ -106,7 +106,7 @@
       },
       toggleColumnsFilters(e) {
         e.stopPropagation();
-        $('.filters-columns-list').scrollTo(0);
+        $('.filters-columns-list').scrollTop(0);
         this.closeSavedFilters();
         $('#filtersColumnsDropdown').toggleClass('open');
       },
@@ -146,7 +146,7 @@
       },
       toggleSavedFilters(e) {
         e.stopPropagation();
-        $('.saved-filters-list').scrollTo(0);
+        $('.saved-filters-list').scrollTop(0);
         if (this.savedFilterScrollbar) {
           this.savedFilterScrollbar.update();
         } else {

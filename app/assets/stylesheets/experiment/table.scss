@@ -536,11 +536,16 @@
 }
 
 .table-display-modal {
+  .modal-description,
+  .column-container {
+    font-size: 14px;
+  }
+
   .column-container {
     align-items: center;
     border-bottom: $border-default;
     display: flex;
-    padding: .5em 1em;
+    padding: .5em 1.4em;
 
     &:not(.visible) {
       color: $color-alto;
@@ -560,13 +565,15 @@
       }
     }
 
-    &.task_name {
-      padding-left: 3em;
+    .sn-icon {
+      cursor: pointer;
+      margin-right: .6em;
 
-      .fas {
-        display: none;
+      &.disabled {
+        cursor: not-allowed;
       }
     }
+
   }
 }
 

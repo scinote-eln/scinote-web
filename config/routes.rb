@@ -28,8 +28,6 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :activities, only: [:index]
-
     get '/jobs/:id/status', to: 'active_jobs#status'
 
     get 'forbidden', to: 'application#forbidden', as: 'forbidden'

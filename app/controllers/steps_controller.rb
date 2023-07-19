@@ -160,11 +160,8 @@ class StepsController < ApplicationController
     view_state = @step.current_view_state(current_user)
     view_state.state['assets']['sort'] = params.require(:assets).require(:order)
     view_state.save! if view_state.changed?
-    respond_to do |format|
-      format.json do
-        render json: {}, status: :ok
-      end
-    end
+
+    render json: {}, status: :ok
   end
 
   def update_asset_view_mode

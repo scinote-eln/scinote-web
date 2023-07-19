@@ -120,25 +120,22 @@ class RepositoriesController < ApplicationController
     )
     @repository.assign_attributes(repository_params)
 
-    respond_to do |format|
-      format.json do
-        if @repository.save
-          log_activity(:create_inventory)
+    if @repository.save
+      log_activity(:create_inventory)
 
-          flash[:success] = t('repositories.index.modal_create.success_flash_html', name: @repository.name)
-          render json: { url: repository_path(@repository) }
-        else
-          render json: @repository.errors,
-            status: :unprocessable_entity
-        end
-      end
+      flash[:success] = t('repositories.index.modal_create.success_flash_html', name: @repository.name)
+      render json: { url: repository_path(@repository) }
+    else
+      render json: @repository.errors,
+        status: :unprocessable_entity
     end
   end
 
   def destroy_modal
     render json: {
       html: render_to_string(
-        partial: 'delete_repository_modal'
+        partial: 'delete_repository_modal',
+        formats: :html
       )
     }
   end

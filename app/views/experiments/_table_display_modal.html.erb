@@ -8,7 +8,7 @@
         </h4>
       </div>
       <div class="modal-body">
-        <p><%= t("experiments.table.column_display_modal.description") %></p>
+        <p class='modal-description'><%= t("experiments.table.column_display_modal.description") %></p>
         <% Experiments::TableViewService::COLUMNS.each do |col| %>
           <div class="column-container <%= col %> visible">
             <% if col == :archived && params[:view_mode] != 'archived' %>

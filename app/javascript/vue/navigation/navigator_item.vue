@@ -114,7 +114,7 @@ export default {
       }
     },
     children: function() {
-      if (this.children.length > 0) {
+      if (this.children && this.children.length > 0) {
         this.childrenExpanded = true;
       } else if (this.childrenLoaded) {
         this.item.has_children = false;

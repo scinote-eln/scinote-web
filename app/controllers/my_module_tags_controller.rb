@@ -63,13 +63,8 @@ class MyModuleTagsController < ApplicationController
               my_module: my_module.id,
               tag: @mt.tag.id
             })
-
-    respond_to do |format|
-      format.json do
-        redirect_to my_module_tags_edit_path(format: :json), turbolinks: false,
-                    status: 303
-      end
-    end
+    redirect_to my_module_tags_edit_path(format: :json), turbolinks: false,
+                status: :see_other
   end
 
   def destroy
@@ -89,13 +84,8 @@ class MyModuleTagsController < ApplicationController
             })
 
     @mt.destroy
-
-    respond_to do |format|
-      format.json do
-        redirect_to my_module_tags_edit_path(format: :json), turbolinks: false,
-                    status: 303
-      end
-    end
+    redirect_to my_module_tags_edit_path(format: :json), turbolinks: false,
+                status: :see_other
   end
 
   def search_tags
