@@ -55,7 +55,6 @@
   </div>
 
   <div class="toolbar-middle-block">
-    <% unless @repository.is_a?(BmtRepository) %>
       <%= render partial: 'shared/state_view_switch', locals: {
           disabled: @repository.archived?,
           switchable: true,
@@ -63,7 +62,6 @@
           active_url: nil,
           archived_url: nil
         } %>
-    <% end %>
   </div>
 
   <!-- RIGHT TOOLBAR BLOCK -->
@@ -86,11 +84,6 @@
       </div>
     <% end %>
     <div class="toolbar-filters"></div>
-    <% if @repository.is_a?(BmtRepository) %>
-      <div class="toolbar-bmt-filters">
-        <%= render partial: 'repositories/toolbar/bmt' %>
-      </div>
-    <% end %>
     <div class="repo-datatables-buttons">
       <button class="btn btn-light btn-black icon-btn manage-repo-column-index" title="<%= t("libraries.manange_modal_column.button_tooltip") %>"
               data-modal-url="<%= repository_repository_columns_path(@repository) %>"

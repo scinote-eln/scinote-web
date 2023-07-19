@@ -21,6 +21,12 @@
 
       .dataTables_scrollHead {
 
+        thead {
+          .sci-checkbox-container {
+            margin-left: .125rem;
+          }
+        }
+
         tbody {
           td {
             vertical-align: middle;

@@ -249,9 +249,12 @@ var HelperModule = (function(){
     return exit;
   });
 
-  const RESIZE_OBSERVER = new ResizeObserver(function(entries) {
-    entries.forEach((entry) => {
-      if (entry.target.offsetWidth <= parseInt(entry.target.getAttribute('data-width-breakpoint'))) {
+  const RESIZE_OBSERVER = new ResizeObserver(entries => {
+    entries.forEach(entry => {
+      const { offsetWidth } = entry.target;
+      const breakpoint = parseInt(entry.target.getAttribute('data-width-breakpoint'));
+
+      if (offsetWidth <= breakpoint && offsetWidth !== 0) {
         entry.target.classList.add('narrow');
       } else {
         entry.target.classList.remove('narrow');

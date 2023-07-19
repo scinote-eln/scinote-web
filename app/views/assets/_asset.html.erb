@@ -11,9 +11,9 @@ partial_locals = {
 }
 %>
 <% if asset.inline? %>
-    <%= render partial: 'assets/asset_inline.html.erb', locals: partial_locals %>
+    <%= render partial: 'assets/asset_inline', locals: partial_locals %>
 <% elsif asset.list? %>
-    <%= render partial: 'assets/asset_list.html.erb', locals: partial_locals %>
+    <%= render partial: 'assets/asset_list', locals: partial_locals %>
 <% else %>
-    <%= render partial: 'assets/asset_thumbnail.html.erb', locals: partial_locals %>
+    <%= render partial: 'assets/asset_thumbnail', locals: partial_locals %>
 <% end %>

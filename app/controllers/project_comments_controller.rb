@@ -14,7 +14,7 @@ class ProjectCommentsController < ApplicationController
   def index
     comments = @project.last_comments(@last_comment_id, @per_page)
     more_url = project_project_comments_url(@project, format: :json, from: comments.first.id) unless comments.blank?
-    comment_index_helper(comments, more_url, @last_comment_id.positive? ? nil : '/project_comments/index.html.erb')
+    comment_index_helper(comments, more_url, @last_comment_id.positive? ? nil : '/project_comments/index')
   end
 
   def create

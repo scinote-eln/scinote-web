@@ -153,7 +153,7 @@
               description: i.attributes.description || ''
             }
           }
-        })
+        }).sort((temp1, temp2) => (temp1.label?.toLowerCase() > temp2.label?.toLowerCase() ? 1 : -1));
       },
       availablePrinters() {
         return this.printers.map(i => {

@@ -190,7 +190,6 @@ class TeamZipExport < ZipExport
     elements.each_with_index do |element, i|
       asset = element.asset
       preview = prepare_preview(asset)
-      bio_eddie = asset.file.metadata[:asset_type] == 'bio_eddie'
       if type == :step
         name = "#{directory}/" \
                "#{append_file_suffix(asset.file_name, "_#{i}_Step#{element.step.position_plus_one}")}"
@@ -198,28 +197,18 @@ class TeamZipExport < ZipExport
           preview_name = "#{directory}/" \
                          "#{append_file_suffix(preview[:file_name], "_#{i}_Step#{element.step.position_plus_one}_preview")}"
         end
-        if bio_eddie
-          bio_eddie_name = "#{directory}/" \
-                           "#{append_file_suffix("#{asset.file.metadata[:name]}.heml", "_#{i}_Step#{element.step.position_plus_one}")}"
-        end
       elsif type == :result
         name = "#{directory}/#{append_file_suffix(asset.file_name, "_#{i}")}"
         preview_name = "#{directory}/#{append_file_suffix(preview[:file_name], "_#{i}_preview")}" if preview
-        bio_eddie_name = "#{directory}/#{append_file_suffix("#{asset.file.metadata[:name]}.heml", "_#{i}_preview")}" if bio_eddie
       end
 
       if asset.file.attached?
         File.open(name, 'wb') { |f| f.write(asset.file.download) }
         File.open(preview_name, 'wb') { |f| f.write(preview[:file_data]) } if preview
-
-        if bio_eddie
-          File.open(bio_eddie_name, 'wb') { |f| f.write(asset.file.metadata[:description]) }
-        end
       end
       asset_indexes[asset.id] = {
         file: name,
-        preview: preview_name,
-        bio_eddie: bio_eddie_name
+        preview: preview_name
       }
     end
     asset_indexes
@@ -234,7 +223,7 @@ class TeamZipExport < ZipExport
         file_name = preview.image.filename.to_s
         file_data = preview.image.download
       else
-        file_name = preview.filename.to_s
+        file_name = preview.blob.filename.to_s
 
         begin
           file_data = preview.processed.service.download(preview.key)

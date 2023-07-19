@@ -46,7 +46,7 @@ class AddProtocolVersioning < ActiveRecord::Migration[6.1]
     execute(
       'UPDATE "protocols" SET "published_by_id" = "added_by_id" ' \
       'WHERE "protocols"."protocol_type" = 5 ' \
-      'AND "protocols"."visibility" = 1' \
+      'AND "protocols"."visibility" = 1 ' \
       'AND "protocols"."published_by_id" IS NULL;'
     )
   end

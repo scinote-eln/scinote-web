@@ -44,7 +44,8 @@ function applyClickCallbackOnProtocolCards() {
           // Set iframe content
           iFrame.contents().find('body').html(data.html);
 
-          scrollbox.scrollTo(0);
+          scrollbox.scrollTop(0);
+
           iFrame.contents().find('body').find('table.htCore')
             .css('width', '100%')
             .css('table-layout', 'auto');
@@ -130,7 +131,7 @@ function applySearchCallback() {
       } else if (data.html) {
         resetPreviewPanel();
         $('.empty-text').hide();
-        listWrapper.show().html(data.html).scrollTo(0);
+        listWrapper.show().html(data.html).scrollTop(0);
       } else {
         setDefaultViewState();
       }

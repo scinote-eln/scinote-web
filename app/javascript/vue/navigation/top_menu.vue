@@ -114,6 +114,9 @@
       // Track name update in user profile settings
       $(document).on('inlineEditing::updated', '.inline-editing-container[data-field-to-update="full_name"]', this.fetchData);
     },
+    beforeDestroy: function(){
+      clearTimeout(this.unseenNotificationsTimeout);
+    },
     methods: {
       fetchData() {
         $.get(this.url, (result) => {
@@ -148,8 +151,10 @@
         window.open(`${this.searchUrl}?q=${e.target.value}`, '_self')
       },
       checkUnseenNotifications() {
+        clearTimeout(this.unseenNotificationsTimeout);
         $.get(this.unseenNotificationsUrl, (result) => {
           this.unseenNotificationsCount = result.unseen;
+          this.unseenNotificationsTimeout = setTimeout(this.checkUnseenNotifications, 30000);
         })
       },
       refreshCurrentTeam() {

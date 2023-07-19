@@ -55,16 +55,19 @@ module ActiveStorage
 
     def check_tinymce_asset_read_permissions(asset)
       return render_403 unless asset
-      return true if asset.object.nil? && asset.team == current_team
+
+      current_user.permission_team = asset.team || current_team
+
+      return true if !asset.saved && can_read_team?(asset.team)
 
       case asset.object_type
       when 'MyModule'
-        render_403 unless can_read_experiment?(asset.object.experiment)
+        render_403 unless can_read_my_module?(asset.object)
       when 'Protocol'
         render_403 unless can_read_protocol_in_module?(asset.object) ||
                           can_read_protocol_in_repository?(asset.object)
       when 'ResultText'
-        render_403 unless can_read_experiment?(asset.object.result.my_module.experiment)
+        render_403 unless can_read_my_module?(asset.object.result.my_module)
       when 'StepText'
         render_403 unless can_read_protocol_in_module?(asset.object.step.protocol) ||
                           can_read_protocol_in_repository?(asset.object.step.protocol)

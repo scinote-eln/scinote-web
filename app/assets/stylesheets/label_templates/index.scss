@@ -77,6 +77,13 @@
       .dataTables_scrollHead {
         flex-shrink: 0;
 
+
+        thead {
+          .sci-checkbox-container {
+            margin-left: .125rem;
+          }
+        }
+
         th:first-child {
           text-align: center;
           vertical-align: middle;

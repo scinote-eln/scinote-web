@@ -240,12 +240,13 @@ class ProtocolsDatatable < CustomDatatable
 
   def versions_html(record)
     @view.controller
-         .render_to_string(partial: 'protocols/index/protocol_versions.html.erb',
-                           locals: { protocol: record, readable: can_read_protocol_in_repository?(@user, record) })
+         .render_to_string(partial: 'protocols/index/protocol_versions',
+                           locals: { protocol: record, readable: can_read_protocol_in_repository?(@user, record) },
+                           formats: :html)
   end
 
   def access_html(record)
-    @view.controller.render_to_string(partial: 'protocols/index/protocol_access.html.erb', locals: { protocol: record })
+    @view.controller.render_to_string(partial: 'protocols/index/protocol_access', locals: { protocol: record }, formats: :html)
   end
 
   def published_by(record)

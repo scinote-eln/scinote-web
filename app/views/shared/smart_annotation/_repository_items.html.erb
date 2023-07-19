@@ -5,14 +5,14 @@
       <span class='sa-type'><%= row[:code] %></span>
       <span class="dot">&middot;</span>
       <span class="item-text"><%= row[:name] %></span>
-      <%= render partial: 'shared/smart_annotation/atwho_control_buttons.html.erb', locals: { row: row, repository: repository } %>
+      <%= render partial: 'shared/smart_annotation/atwho_control_buttons', locals: { row: row, repository: repository } %>
     </li>
   <% end %>
   <% if limit_reached %>
     <div class="more-results"><%= t('atwho.more_results') %></div>
   <% end %>
   <% if repository_rows.blank? %>
-    <%= render partial: 'shared/smart_annotation/no_results.html.erb', locals: { object_type: 'repository_rows' } %>
+    <%= render partial: 'shared/smart_annotation/no_results', locals: { object_type: 'repository_rows' } %>
   <% end %>
 </div>
-<%= render partial: 'shared/smart_annotation/footer.html.erb' %>
+<%= render partial: 'shared/smart_annotation/footer' %>

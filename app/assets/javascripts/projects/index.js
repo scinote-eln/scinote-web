@@ -652,6 +652,8 @@ var ProjectsIndex = (function() {
       dropdownSelector.clearData($membersFilter);
       $createdOnFromFilter.val('');
       $createdOnToFilter.val('');
+      $createdOnFromFilter.val('');
+      $createdOnToFilter.val('');
       $archivedOnFromFilter.val('');
       $archivedOnToFilter.val('');
       $foldersCB.prop('checked', false);

@@ -144,8 +144,10 @@
   }
 
   function updateButtons() {
-    window.actionToolbarComponent.fetchActions({ label_template_ids: rowsSelectedIDs() });
-    $('.dataTables_scrollBody').css('padding-bottom', `${rowsSelectedIDs().length > 0 ? 68 : 0}px`);
+    if (window.actionToolbarComponent) {
+      window.actionToolbarComponent.fetchActions({ label_template_ids: rowsSelectedIDs() });
+      $('.dataTables_scrollBody').css('padding-bottom', `${rowsSelectedIDs().length > 0 ? 68 : 0}px`);
+    }
   }
 
   function reloadTable() {

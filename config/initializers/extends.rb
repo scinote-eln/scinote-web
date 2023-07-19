@@ -462,7 +462,7 @@ class Extends
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 170, 173, 179, 187, 186,
                           190, 191, *204..215, 220, 221, 223, 227, 228, 229, *230..235, *237..240],
     team: [92, 94, 93, 97, 104],
-    label_repository: [*216..219]
+    label_templates: [*216..219]
   }
 
   TOP_LEVEL_ASSIGNABLES = %w(Project Team Protocol Repository).freeze
@@ -525,8 +525,6 @@ class Extends
     change_user_role_on_experiment
     change_user_role_on_my_module
   )
-
-  STI_PRELOAD_CLASSES = %w(LinkedRepository BmtRepository)
 
   DEFAULT_LABEL_TEMPLATE = {
     zpl:

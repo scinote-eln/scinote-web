@@ -37,11 +37,8 @@ class ApplicationController < ActionController::Base
   def to_user_date_format
     ts = I18n.l(Time.parse(params[:timestamp]),
                 format: params[:ts_format].to_sym)
-    respond_to do |format|
-      format.json do
-        render json: { ts: ts }, status: :ok
-      end
-    end
+
+    render json: { ts: ts }, status: :ok
   end
 
   protected

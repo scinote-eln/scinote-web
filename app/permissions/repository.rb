@@ -41,8 +41,6 @@ Canaid::Permissions.register_for(Repository) do
 
   # repository: archive, restore
   can :archive_repository do |user, repository|
-    next false if repository.is_a?(BmtRepository)
-
     !repository.shared_with?(user.current_team) && repository.permission_granted?(user, RepositoryPermissions::MANAGE)
   end
 
@@ -68,7 +66,6 @@ Canaid::Permissions.register_for(Repository) do
 
   # repository: create/import record
   can :create_repository_rows do |user, repository|
-    next false if repository.is_a?(BmtRepository)
     next false if repository.archived?
 
     repository.permission_granted?(user, RepositoryPermissions::ROWS_CREATE)

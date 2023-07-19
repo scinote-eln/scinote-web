@@ -13,15 +13,15 @@
     <% end %>
   </span>
 
-  <%= render partial: 'task_view_dropdowns.html.erb' %>
+  <%= render partial: 'task_view_dropdowns' %>
 
   <div class="content-header sticky-header">
     <div class="header-actions experiment-header">
       <% if action_name == 'table' %>
-        <%= render partial: 'table_filters.html.erb' %>
-      <button id="taskDataDisplay" class="btn btn-light btn-black icon-btn" data-toggle="modal" data-target="#tableDisplayModal">
-        <i class="sn-icon sn-icon sn-icon-reports"></i>
-      </button>
+        <%= render partial: 'table_filters' %>
+        <button id="taskDataDisplay" class="btn btn-light btn-black icon-btn" data-toggle="modal" data-target="#tableDisplayModal" title="<%= t('experiments.table.toolbar.manage_columns_tooltip') %>">
+          <i class="sn-icon sn-icon sn-icon-reports"></i>
+        </button>
         <div class="dropdown sort-menu" title="<%= t("general.sort.title") %>">
           <button class="btn btn-light btn-black icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <i class="sn-icon sn-icon-sort-up"></i>

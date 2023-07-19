@@ -14,7 +14,7 @@ module Dashboard
       tasks = load_tasks.page(page).per(Constants::INFINITE_SCROLL_LIMIT).without_count
 
       tasks_list = tasks.map do |task|
-        render_to_string(partial: 'dashboards/current_tasks/task', locals: { task: task })
+        render_to_string(partial: 'dashboards/current_tasks/task', locals: { task: task }, formats: :html)
       end
 
       render json: { data: tasks_list, next_page: tasks.next_page }

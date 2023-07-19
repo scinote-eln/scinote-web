@@ -42,7 +42,7 @@ class RepositoriesController < ApplicationController
 
   def sidebar
     render json: {
-      html: render_to_string(partial: 'repositories/sidebar.html.erb', locals: {
+      html: render_to_string(partial: 'repositories/sidebar', locals: {
                                repositories: @repositories,
                                archived: params[:archived] == 'true'
                              })
@@ -61,7 +61,7 @@ class RepositoriesController < ApplicationController
 
   def table_toolbar
     render json: {
-      html: render_to_string(partial: 'repositories/toolbar_buttons.html.erb')
+      html: render_to_string(partial: 'repositories/toolbar_buttons')
     }
   end
 
@@ -74,7 +74,7 @@ class RepositoriesController < ApplicationController
 
   def load_table
     render json: {
-      html: render_to_string(partial: 'repositories/repository_table.html.erb',
+      html: render_to_string(partial: 'repositories/repository_table',
                              locals: {
                                repository: @repository,
                                repository_index_link: repository_table_index_path(@repository)
@@ -84,23 +84,13 @@ class RepositoriesController < ApplicationController
 
   def create_modal
     @repository = Repository.new
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'create_repository_modal.html.erb'
-          )
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'create_repository_modal', formats: :html)
+    }
   end
 
   def share_modal
-    respond_to do |format|
-      format.json do
-        render json: { html: render_to_string(partial: 'share_repository_modal.html.erb') }
-      end
-    end
+    render json: { html: render_to_string(partial: 'share_repository_modal', formats: :html) }
   end
 
   def hide_reminders
@@ -130,31 +120,24 @@ class RepositoriesController < ApplicationController
     )
     @repository.assign_attributes(repository_params)
 
-    respond_to do |format|
-      format.json do
-        if @repository.save
-          log_activity(:create_inventory)
+    if @repository.save
+      log_activity(:create_inventory)
 
-          flash[:success] = t('repositories.index.modal_create.success_flash_html', name: @repository.name)
-          render json: { url: repository_path(@repository) }
-        else
-          render json: @repository.errors,
-            status: :unprocessable_entity
-        end
-      end
+      flash[:success] = t('repositories.index.modal_create.success_flash_html', name: @repository.name)
+      render json: { url: repository_path(@repository) }
+    else
+      render json: @repository.errors,
+        status: :unprocessable_entity
     end
   end
 
   def destroy_modal
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'delete_repository_modal.html.erb'
-          )
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(
+        partial: 'delete_repository_modal',
+        formats: :html
+      )
+    }
   end
 
   def archive
@@ -191,32 +174,22 @@ class RepositoriesController < ApplicationController
   end
 
   def rename_modal
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'rename_repository_modal.html.erb'
-          )
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(
+        partial: 'rename_repository_modal'
+      )
+    }
   end
 
   def update
     @repository.update(repository_params)
 
-    respond_to do |format|
-      format.json do
-        if @repository.save
-          log_activity(:rename_inventory) # Acton only for renaming
+    if @repository.save
+      log_activity(:rename_inventory) # Acton only for renaming
 
-          render json: {
-            url: team_repositories_path
-          }, status: :ok
-        else
-          render json: @repository.errors, status: :unprocessable_entity
-        end
-      end
+      render json: { url: team_repositories_path }
+    else
+      render json: @repository.errors, status: :unprocessable_entity
     end
   end
 
@@ -226,42 +199,30 @@ class RepositoriesController < ApplicationController
       created_by: current_user,
       name: @repository.name
     )
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'copy_repository_modal.html.erb'
-          )
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'copy_repository_modal')
+    }
   end
 
   def export_modal
     if current_user.has_available_exports?
-      respond_to do |format|
-        format.json do
-          render json: {
-            html: render_to_string(
-              partial: 'export_repositories_modal.html.erb',
-              locals: { team_name: current_team.name,
-                        export_limit: TeamZipExport.exports_limit,
-                        num_of_requests_left: current_user.exports_left - 1 }
-            )
-          }
-        end
-      end
+      render json: {
+        html: render_to_string(
+          partial: 'export_repositories_modal',
+          locals: { team_name: current_team.name,
+                    export_limit: TeamZipExport.exports_limit,
+                    num_of_requests_left: current_user.exports_left - 1 },
+          formats: :html
+        )
+      }
     else
-      respond_to do |format|
-        format.json do
-          render json: {
-            html: render_to_string(
-              partial: 'export_limit_exceeded_modal.html.erb',
-              locals: { requests_limit: TeamZipExport.exports_limit }
-            )
-          }
-        end
-      end
+      render json: {
+        html: render_to_string(
+          partial: 'export_limit_exceeded_modal',
+          locals: { requests_limit: TeamZipExport.exports_limit },
+          formats: :html
+        )
+      }
     end
   end
 
@@ -272,39 +233,29 @@ class RepositoriesController < ApplicationController
     )
     @tmp_repository.assign_attributes(repository_params)
 
-    respond_to do |format|
-      format.json do
-        if !@tmp_repository.valid?
-          render json: @tmp_repository.errors, status: :unprocessable_entity
-        else
-          copied_repository =
-            @repository.copy(current_user, @tmp_repository.name)
+    if !@tmp_repository.valid?
+      render json: @tmp_repository.errors, status: :unprocessable_entity
+    else
+      copied_repository = @repository.copy(current_user, @tmp_repository.name)
 
-          if !copied_repository
-            render json: { 'name': ['Server error'] },
-            status: :unprocessable_entity
-          else
-            flash[:success] = t(
-              'repositories.index.copy_flash',
-              old: @repository.name,
-              new: copied_repository.name
-            )
-            render json: {
-              url: repository_path(copied_repository)
-            }, status: :ok
-          end
-        end
+      if !copied_repository
+        render json: { name: ['Server error'] }, status: :unprocessable_entity
+      else
+        flash[:success] = t(
+          'repositories.index.copy_flash',
+          old: @repository.name,
+          new: copied_repository.name
+        )
+        render json: {
+          url: repository_path(copied_repository)
+        }
       end
     end
   end
 
   # AJAX actions
   def repository_table_index
-    respond_to do |format|
-      format.json do
-        render json: ::RepositoryDatatable.new(view_context, @repository, nil, current_user)
-      end
-    end
+    render json: ::RepositoryDatatable.new(view_context, @repository, nil, current_user)
   end
 
   def parse_sheet
@@ -336,15 +287,9 @@ class RepositoriesController < ApplicationController
         end
 
         if (@temp_file = parsed_file.generate_temp_file)
-          respond_to do |format|
-            format.json do
-              render json: {
-                html: render_to_string(
-                  partial: 'repositories/parse_records_modal.html.erb'
-                )
-              }
-            end
-          end
+          render json: {
+            html: render_to_string(partial: 'repositories/parse_records_modal')
+          }
         else
           repository_response(t('repositories.parse_sheet.errors.temp_file_failure'))
         end
@@ -361,54 +306,43 @@ class RepositoriesController < ApplicationController
     render_403 unless can_create_repository_rows?(Repository.accessible_by_teams(current_team)
                                                             .find_by_id(import_params[:id]))
 
-    respond_to do |format|
-      format.json do
-        # Check if there exist mapping for repository record (it's mandatory)
-        if import_params[:mappings].value?('-1')
-          import_records = repostiory_import_actions
-          status = import_records.import!
+    # Check if there exist mapping for repository record (it's mandatory)
+    if import_params[:mappings].value?('-1')
+      import_records = repostiory_import_actions
+      status = import_records.import!
 
-          if status[:status] == :ok
-            log_activity(:import_inventory_items,
-                         num_of_items: status[:nr_of_added])
+      if status[:status] == :ok
+        log_activity(:import_inventory_items,
+                      num_of_items: status[:nr_of_added])
 
-            flash[:success] = t('repositories.import_records.success_flash',
-                                number_of_rows: status[:nr_of_added],
-                                total_nr: status[:total_nr])
-            render json: {}, status: :ok
-          else
-            flash[:alert] =
-              t('repositories.import_records.partial_success_flash',
-                nr: status[:nr_of_added], total_nr: status[:total_nr])
-            render json: {}, status: :unprocessable_entity
-          end
-        else
-          render json: {
-            html: render_to_string(
-              partial: 'shared/flash_errors.html.erb',
-              locals: { error_title: t('repositories.import_records'\
-                                       '.error_message.errors_list_title'),
-                        error: t('repositories.import_records.error_message'\
-                                 '.no_repository_name') }
-            )
-          },
-          status: :unprocessable_entity
-        end
+        flash[:success] = t('repositories.import_records.success_flash',
+                            number_of_rows: status[:nr_of_added],
+                            total_nr: status[:total_nr])
+        render json: {}, status: :ok
+      else
+        flash[:alert] =
+          t('repositories.import_records.partial_success_flash',
+            nr: status[:nr_of_added], total_nr: status[:total_nr])
+        render json: {}, status: :unprocessable_entity
       end
+    else
+      render json: {
+        html: render_to_string(
+          partial: 'shared/flash_errors',
+          locals: { error_title: t('repositories.import_records.error_message.errors_list_title'),
+                    error: t('repositories.import_records.error_message.no_repository_name') }
+        )
+      }, status: :unprocessable_entity
     end
   end
 
   def export_repository
-    respond_to do |format|
-      format.json do
-        if params[:row_ids] && params[:header_ids]
-          RepositoryZipExport.generate_zip(params, @repository, current_user)
-          log_activity(:export_inventory_items)
-          render json: { message: t('zip_export.export_request_success') }, status: :ok
-        else
-          render json: { message: t('zip_export.export_error') }, status: :unprocessable_entity
-        end
-      end
+    if params[:row_ids] && params[:header_ids]
+      RepositoryZipExport.generate_zip(params, @repository, current_user)
+      log_activity(:export_inventory_items)
+      render json: { message: t('zip_export.export_request_success') }, status: :ok
+    else
+      render json: { message: t('zip_export.export_error') }, status: :unprocessable_entity
     end
   end
 

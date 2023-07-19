@@ -10,9 +10,9 @@
 <div class="modal-body">
   <div class="file-preview-container">
     <% if report_type == 'pdf' %>
-      <%= render partial: 'shared/pdf_viewer.html.erb', locals: { asset: report.pdf_file, report_document: true } %>
+      <%= render partial: 'shared/pdf_viewer', locals: { asset: report.pdf_file, report_document: true } %>
     <% elsif report_type == 'docx' %>
-      <%= render partial: 'shared/pdf_viewer.html.erb', locals: { asset: report.docx_preview_file, report_document: true } %>
+      <%= render partial: 'shared/pdf_viewer', locals: { asset: report.docx_preview_file, report_document: true } %>
     <% else %>
       <div>
         <i class="fas fa-10x fa-file-word"></i>

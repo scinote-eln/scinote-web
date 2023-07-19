@@ -28,13 +28,13 @@ class MyModuleRepositoriesController < ApplicationController
 
     if params[:simple_view]
       repository_rows = datatable_service.repository_rows
-      rows_view = 'repository_rows/simple_view_index.json'
+      rows_view = 'repository_rows/simple_view_index'
     else
       repository_rows = datatable_service.repository_rows
                                          .preload(:repository_columns,
                                                   :created_by,
                                                   repository_cells: { value: @repository.cell_preload_includes })
-      rows_view = 'repository_rows/index.json'
+      rows_view = 'repository_rows/index'
     end
     @repository_rows = repository_rows.page(page).per(per_page)
 
@@ -82,21 +82,17 @@ class MyModuleRepositoriesController < ApplicationController
       status = :bad_request
     end
 
-    respond_to do |format|
-      format.json do
-        render json: {
-          flash: flash,
-          rows_count: @my_module.repository_rows_count(@repository),
-          assigned_count: service.assigned_rows_count,
-          repository_id: @repository.repository_snapshots.find_by(selected: true)&.id || @repository.id
-        }, status: status
-      end
-    end
+    render json: {
+      flash: flash,
+      rows_count: @my_module.repository_rows_count(@repository),
+      assigned_count: service.assigned_rows_count,
+      repository_id: @repository.repository_snapshots.find_by(selected: true)&.id || @repository.id
+    }, status: status
   end
 
   def update_repository_records_modal
     modal = render_to_string(
-      partial: 'my_modules/modals/update_repository_records_modal_content.html.erb',
+      partial: 'my_modules/modals/update_repository_records_modal_content',
       locals: { my_module: @my_module,
                 repository: @repository,
                 selected_rows: params[:selected_rows],
@@ -110,7 +106,7 @@ class MyModuleRepositoriesController < ApplicationController
 
   def assign_repository_records_modal
     modal = render_to_string(
-      partial: 'my_modules/modals/assign_repository_records_modal_content.html.erb',
+      partial: 'my_modules/modals/assign_repository_records_modal_content',
       locals: { my_module: @my_module,
                 repository: @repository,
                 selected_rows: params[:selected_rows],
@@ -181,7 +177,7 @@ class MyModuleRepositoriesController < ApplicationController
     @stock_value = @module_repository_row.repository_row.repository_stock_value
     render json: {
       html: render_to_string(
-        partial: 'my_modules/repositories/consume_stock_modal_content.html.erb'
+        partial: 'my_modules/repositories/consume_stock_modal_content'
       )
     }
   end
