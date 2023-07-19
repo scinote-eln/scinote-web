@@ -13,7 +13,7 @@ module Toolbars
       @project_folders = current_user.current_team.project_folders.where(id: project_folder_ids)
 
       @items = @projects + @project_folders
-      @not_assigned = @projects.any? { |project| !project.assigned_users.include?(current_user) }
+      @not_assigned = current_user.current_team.projects.not_assigned_to_user(current_user).any?
 
       @single = @items.length == 1
 
