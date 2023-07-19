@@ -14,16 +14,12 @@ class AtWhoController < ApplicationController
   def menu_items
     res = SmartAnnotation.new(current_user, current_team, @query)
 
-    respond_to do |format|
-      format.json do
-        render json: {
-          prj: res.projects,
-          exp: res.experiments,
-          tsk: res.my_modules,
-          status: :ok
-        }
-      end
-    end
+    render json: {
+      prj: res.projects,
+      exp: res.experiments,
+      tsk: res.my_modules,
+      status: :ok
+    }
   end
 
   def rep_items

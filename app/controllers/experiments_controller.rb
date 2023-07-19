@@ -46,17 +46,10 @@ class ExperimentsController < ApplicationController
       log_activity(:create_experiment, @experiment)
       flash[:success] = t('experiments.create.success_flash',
                           experiment: @experiment.name)
-      respond_to do |format|
-        format.json do
-          render json: { path: my_modules_experiment_url(@experiment) }, status: :ok
-        end
-      end
+
+      render json: { path: my_modules_experiment_url(@experiment) }, status: :ok
     else
-      respond_to do |format|
-        format.json do
-          render json: @experiment.errors, status: :unprocessable_entity
-        end
-      end
+      render json: @experiment.errors, status: :unprocessable_entity
     end
   end
 
