@@ -200,7 +200,7 @@ class RepositoriesController < ApplicationController
       name: @repository.name
     )
     render json: {
-      html: render_to_string(partial: 'copy_repository_modal')
+      html: render_to_string(partial: 'copy_repository_modal', formats: :html)
     }
   end
 

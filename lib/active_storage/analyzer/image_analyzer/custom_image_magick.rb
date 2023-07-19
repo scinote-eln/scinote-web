@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module ActiveStorage
-  class Analyzer::CustomImageAnalyzer < Analyzer::ImageAnalyzer
+  class Analyzer::ImageAnalyzer::CustomImageMagick < Analyzer::ImageAnalyzer::ImageMagick
     JPEG_MIME_TYPES = ['image/jpeg', 'image/pjpeg'].freeze
 
     def self.accept?(blob)
