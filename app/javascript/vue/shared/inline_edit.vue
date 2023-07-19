@@ -20,10 +20,10 @@
       </div>
     </div>
     <template v-if="editing">
-      <div :class="{ 'btn-primary': !error, 'btn-disabled': error }" class="sci-inline-edit__control btn icon-btn" @click="update">
+      <div :class="{ 'btn-primary': !error, 'btn-disabled': error }" class="sci-inline-edit__control btn btn-sm icon-btn" @click="update">
         <i class="sn-icon sn-icon-check"></i>
       </div>
-      <div class="sci-inline-edit__control btn btn-light icon-btn" @mousedown="cancelEdit">
+      <div class="sci-inline-edit__control btn btn-light btn-sm icon-btn" @mousedown="cancelEdit">
         <i class="sn-icon sn-icon-close"></i>
       </div>
     </template>

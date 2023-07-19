@@ -94,15 +94,11 @@ class MyModulesController < ApplicationController
   end
 
   def status_state
-    respond_to do |format|
-      format.json do
-        if @my_module.last_transition_error && @my_module.last_transition_error['type'] == 'repository_snapshot'
-          flash[:repository_snapshot_error] = @my_module.last_transition_error
-        end
-
-        render json: { status_changing: @my_module.status_changing? }
-      end
+    if @my_module.last_transition_error && @my_module.last_transition_error['type'] == 'repository_snapshot'
+      flash[:repository_snapshot_error] = @my_module.last_transition_error
     end
+
+    render json: { status_changing: @my_module.status_changing? }
   end
 
   def canvas_dropdown_menu
@@ -131,11 +127,19 @@ class MyModulesController < ApplicationController
     @next_page = activities.next_page
     @starting_timestamp = activities.first&.created_at.to_i
 
-    render json: {
-      activities_html: render_to_string(partial: 'global_activities/activity_list'),
-      next_page: @next_page,
-      starting_timestamp: @starting_timestamp
-    }
+    respond_to do |format|
+      format.json do
+        render json: {
+          activities_html: render_to_string(
+            partial: 'global_activities/activity_list',
+            formats: :html
+          ),
+          next_page: @next_page,
+          starting_timestamp: @starting_timestamp
+        }
+      end
+      format.html
+    end
   end
 
   # Different controller for showing activities inside tab
@@ -239,24 +243,20 @@ class MyModulesController < ApplicationController
     render_403 && return unless can_update_my_module_description?(@my_module)
 
     old_description = @my_module.description
-    respond_to do |format|
-      format.json do
-        if @my_module.update(description: params.require(:my_module)[:description])
-          log_activity(:change_module_description)
-          TinyMceAsset.update_images(@my_module, params[:tiny_mce_images], current_user)
-          my_module_annotation_notification(old_description)
-          render json: {
-            html: custom_auto_link(
-              @my_module.tinymce_render(:description),
-              simple_format: false,
-              tags: %w(img),
-              team: current_team
-            )
-          }
-        else
-          render json: @my_module.errors, status: :unprocessable_entity
-        end
-      end
+    if @my_module.update(description: params.require(:my_module)[:description])
+      log_activity(:change_module_description)
+      TinyMceAsset.update_images(@my_module, params[:tiny_mce_images], current_user)
+      my_module_annotation_notification(old_description)
+      render json: {
+        html: custom_auto_link(
+          @my_module.tinymce_render(:description),
+          simple_format: false,
+          tags: %w(img),
+          team: current_team
+        )
+      }
+    else
+      render json: @my_module.errors, status: :unprocessable_entity
     end
   end
 
@@ -265,24 +265,20 @@ class MyModulesController < ApplicationController
     old_description = protocol.description
     return render_404 unless protocol
 
-    respond_to do |format|
-      format.json do
-        if protocol.update(description: params.require(:protocol)[:description])
-          log_activity(:protocol_description_in_task_edited)
-          TinyMceAsset.update_images(protocol, params[:tiny_mce_images], current_user)
-          protocol_annotation_notification(old_description)
-          render json: {
-            html: custom_auto_link(
-              protocol.tinymce_render(:description),
-              simple_format: false,
-              tags: %w(img),
-              team: current_team
-            )
-          }
-        else
-          render json: protocol.errors, status: :unprocessable_entity
-        end
-      end
+    if protocol.update(description: params.require(:protocol)[:description])
+      log_activity(:protocol_description_in_task_edited)
+      TinyMceAsset.update_images(protocol, params[:tiny_mce_images], current_user)
+      protocol_annotation_notification(old_description)
+      render json: {
+        html: custom_auto_link(
+          protocol.tinymce_render(:description),
+          simple_format: false,
+          tags: %w(img),
+          team: current_team
+        )
+      }
+    else
+      render json: protocol.errors, status: :unprocessable_entity
     end
   end
 

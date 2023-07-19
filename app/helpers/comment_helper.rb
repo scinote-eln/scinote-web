@@ -108,7 +108,7 @@ module CommentHelper
       if partial
         render json: {
           html: render_to_string(
-            partial: "/shared/comments/#{partial}.html.erb",
+            partial: "/shared/comments/#{partial}",
             locals: {
               comment: comment,
               skip_header: false

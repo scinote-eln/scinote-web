@@ -522,6 +522,7 @@ var ExperimnetTable = {
         icon.removeClass('sn-icon-visibility-show').addClass('sn-icon-visibility-hide');
         icon.parent().removeClass('visible');
       } else {
+        if (icon.hasClass('disabled')) return;
         $(`.experiment-table .${icon.data('column')}-column`).removeClass('hidden');
         icon.addClass('sn-icon-visibility-show').removeClass('sn-icon-visibility-hide');
         icon.parent().addClass('visible');

@@ -4,7 +4,7 @@
   }
 
   .btn {
-    @apply relative inline-flex items-center text-sm shrink-0 gap-2 justify-center leading-5 py-2 px-4 rounded border-0 appearance-none whitespace-nowrap cursor-pointer;
+    @apply relative inline-flex items-center text-sm shrink-0 gap-2 justify-center leading-5 py-2 px-4 rounded border-0 appearance-none whitespace-nowrap cursor-pointer max-h-[40px];
   }
 
   .btn.icon-btn {
@@ -12,7 +12,7 @@
   }
 
   .btn.btn-lg {
-    @apply py-2.5 px-[1.125rem] text-base leading-5;
+    @apply py-2.5 px-[1.125rem] text-base leading-5 max-h-[44px];
   }
 
   .btn.btn-lg.icon-btn {
@@ -20,7 +20,7 @@
   }
 
   .btn.btn-sm {
-    @apply py-1.5 px-2.5 text-xs leading-5;
+    @apply py-1.5 px-2.5 text-xs leading-5 max-h-[36px];
   }
 
   .btn.btn-sm.icon-btn {
@@ -28,7 +28,7 @@
   }
 
   .btn.btn-xs {
-    @apply py-0.5 px-2.5 text-xs leading-5;
+    @apply py-0.5 px-2.5 text-xs leading-5 max-h-[30px];
   }
 
   .btn.btn-xs.icon-btn {

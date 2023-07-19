@@ -10,6 +10,7 @@ module Api
         payload[:exp] = Rails.configuration.x.core_api_token_ttl.from_now.to_i
       end
       payload[:iss] = Rails.configuration.x.core_api_token_iss
+      payload[:salt] = SecureRandom.base64(30)
       JWT.encode(payload, KEY_SECRET, Rails.configuration.x.core_api_sign_alg)
     end
 
