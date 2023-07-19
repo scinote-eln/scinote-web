@@ -21,13 +21,13 @@
       <div class="flex items-center uppercase text-bold">
         <% if can_read_experiment?(@my_module.experiment) %>
           <a class="p-4 border-b-4 border-transparent text-sn-grey hover:no-underline <%= "border-sn-blue" if is_module_protocols? %>"
-             href="<%= protocols_my_module_url(@my_module) %>"
+             href="<%= protocols_my_module_url(@my_module, view_mode: params[:view_mode]) %>"
              title="<%= t("nav2.modules.steps") %>"
           >
             <%=t "nav2.modules.steps" %>
           </a>
           <a class="p-4 border-b-4 border-transparent text-sn-grey hover:no-underline <%= "border-sn-blue" if is_module_results? %>"
-             href="<%= results_my_module_url(@my_module) %>"
+             href="<%= results_my_module_url(@my_module, view_mode: params[:view_mode]) %>"
              title="<%= t("nav2.modules.results") %>"
           >
             <%= t("nav2.modules.results") %>
