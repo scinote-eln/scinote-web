@@ -35,7 +35,7 @@ class ResultAssetsController < ApplicationController
 
   def edit
     render json: {
-      html: render_to_string(partial: 'edit')
+      html: render_to_string(partial: 'edit', formats: :html)
     }
   end
 
