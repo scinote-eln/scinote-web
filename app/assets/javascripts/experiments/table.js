@@ -499,7 +499,9 @@ var ExperimnetTable = {
     });
   },
   updateExperimentToolbar: function() {
-    window.actionToolbarComponent.fetchActions({ my_module_ids: this.selectedMyModules });
+    if (window.actionToolbarComponent) {
+      window.actionToolbarComponent.fetchActions({ my_module_ids: this.selectedMyModules });
+    }
   },
   selectDate: function($field) {
     var datePicker = $field.data('DateTimePicker');
