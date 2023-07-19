@@ -41,7 +41,8 @@ class GlobalActivitiesController < ApplicationController
                        @teams.order(name: :asc)
                      end
     @activity_types = Activity.activity_types_list
-    @user_list = User.where(id: UserTeam.where(team: current_user.teams).select(:user_id))
+
+    @user_list = User.where(id: current_user.teams.joins(:users).group('users.id').select('users.id'))
                      .distinct
                      .order(full_name: :asc)
                      .pluck(:full_name, :id)
