@@ -37,7 +37,6 @@ export default {
   data() {
     return {
       notifications: [],
-      activeTab: 'all',
       nextPage: 1,
       scrollBar: null,
       loadingPage: false
@@ -64,12 +63,6 @@ export default {
     }
   },
   methods: {
-    setActiveTab(selection) {
-      this.activeTab = selection;
-      this.nextPage = 1;
-      this.notifications = [];
-      this.loadNotifications();
-    },
     loadNotifications() {
       if (this.nextPage == null || this.loadingPage) return;
 
