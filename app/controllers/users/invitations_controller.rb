@@ -150,7 +150,7 @@ module Users
                           .distinct
       teams = teams.where_attributes_like('teams.name', params[:query]) if params[:query].present?
 
-      teams = teams.select { |team| can_invite_team_users?(team) && current_user_team_role(team)&.owner? }
+      teams = teams.select { |team| can_invite_team_users?(team) }
       render json: teams.map { |t| { value: t.id, label: escape_input(t.name) } }.to_json
     end
 
@@ -159,14 +159,6 @@ module Users
     def update_sanitized_params
       # Solution for Devise < 4.0.0
       devise_parameter_sanitizer.permit(:accept_invitation, keys: [:full_name])
-    end
-
-    def current_user_team_assignment(team)
-      team.user_assignments.find { |ua| ua.user == current_user }
-    end
-
-    def current_user_team_role(team)
-      current_user_team_assignment(team)&.user_role
     end
 
     def check_captcha
