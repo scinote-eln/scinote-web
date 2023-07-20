@@ -13,7 +13,7 @@ module Api
       end
 
       def position
-        object.step_orderable_element.position
+        object&.step_orderable_element&.position
       end
     end
   end
