@@ -175,9 +175,7 @@ class RepositoriesController < ApplicationController
 
   def rename_modal
     render json: {
-      html: render_to_string(
-        partial: 'rename_repository_modal'
-      )
+      html: render_to_string(partial: 'rename_repository_modal', formats: :html)
     }
   end
 

@@ -21,7 +21,8 @@ class MyModuleTagsController < ApplicationController
     render json: {
       html_module_header: render_to_string(
         partial: 'my_modules/tags',
-        locals: { my_module: @my_module, editable: can_manage_my_module?(@my_module) }
+        locals: { my_module: @my_module, editable: can_manage_my_module?(@my_module) },
+        formats: :html
       )
     }
   end
