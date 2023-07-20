@@ -105,7 +105,7 @@ class ResultAssetsController < ApplicationController
             html: render_to_string(
               partial: 'my_modules/result', locals: { result: @result }, formats: :html
             )
-          }, status: :ok
+          }
         end
       else
         format.json do
