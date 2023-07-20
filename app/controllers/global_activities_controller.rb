@@ -42,11 +42,6 @@ class GlobalActivitiesController < ApplicationController
                      end
     @activity_types = Activity.activity_types_list
 
-    @user_list = User.where(id: current_user.teams.joins(:users).group('users.id').select('users.id'))
-                     .distinct
-                     .order(full_name: :asc)
-                     .pluck(:full_name, :id)
-
     activities = ActivitiesService.load_activities(current_user, selected_teams, activity_filters)
 
     @grouped_activities = activities.group_by do |activity|
