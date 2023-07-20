@@ -31,7 +31,6 @@ class Team < ApplicationRecord
              foreign_key: 'last_modified_by_id',
              class_name: 'User',
              optional: true
-  has_many :user_teams, inverse_of: :team, dependent: :destroy
   has_many :users, through: :user_assignments
   has_many :projects, inverse_of: :team
   has_many :project_folders, inverse_of: :team, dependent: :destroy
@@ -171,8 +170,8 @@ class Team < ApplicationRecord
   def self.global_activity_filter(filters, search_query)
     query = where('name ILIKE ?', "%#{search_query}%")
     if filters[:users]
-      users_team = User.where(id: filters[:users]).joins(:user_teams).group(:team_id).pluck(:team_id)
-      query = query.where(id: users_team)
+      user_teams = User.where(id: filters[:users]).joins(:teams).group(:team_id).select(:team_id)
+      query = query.where(id: user_teams)
     end
     query = query.where(id: team_by_subject(filters[:subjects])) if filters[:subjects]
     query.select(:id, :name).map { |i| { value: i[:id], label: ApplicationController.helpers.escape_input(i[:name]) } }
