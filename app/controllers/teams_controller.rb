@@ -70,8 +70,9 @@ class TeamsController < ApplicationController
   def disable_tasks_sharing_modal
     render json: {
       html: render_to_string(
-        partial: 'users/settings/teams/destroy_tasks_sharing_modal.html.erb',
-        locals: {}
+        partial: 'users/settings/teams/destroy_tasks_sharing_modal',
+        locals: {},
+        formats: :html
       )
     }
   end
