@@ -150,8 +150,7 @@ module Users
                           .distinct
       teams = teams.where_attributes_like('teams.name', params[:query]) if params[:query].present?
 
-      teams.select { |team| can_invite_team_users?(team) }
-
+      teams = teams.select { |team| can_invite_team_users?(team) }
       render json: teams.map { |t| { value: t.id, label: escape_input(t.name) } }.to_json
     end
 

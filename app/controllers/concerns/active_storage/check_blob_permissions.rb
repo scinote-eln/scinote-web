@@ -58,6 +58,8 @@ module ActiveStorage
 
       current_user.permission_team = asset.team || current_team
 
+      return true if asset.object.nil? && can_read_team?(asset.team)
+
       case asset.object_type
       when 'MyModule'
         render_403 unless can_read_my_module?(asset.object)

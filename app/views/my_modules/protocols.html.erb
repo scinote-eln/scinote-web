@@ -119,6 +119,8 @@
           data-repositories-list-url="<%= my_module_repositories_list_html_path(@my_module) %>">
         <%= render partial: "my_modules/repositories/repositories_list" %>
       </div>
+
+      <%= render partial: "my_modules/repositories/full_view_modal" %>
     </div>
     <!-- Protocol -->
     <div class="task-section">
@@ -136,7 +138,6 @@
   </div>
 </div>
 
-<%= render partial: "my_modules/repositories/full_view_modal" %>
 <%= render partial: "my_modules/modals/update_repository_records_modal" %>
 
 
