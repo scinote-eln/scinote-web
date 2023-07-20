@@ -115,7 +115,7 @@ class MyModulesController < ApplicationController
       MyModule: [@my_module.id]
     }
     @activity_types = Activity.activity_types_list
-    @user_list = User.where(id: UserTeam.where(team: current_user.teams).select(:user_id))
+    @user_list = User.where(id: current_user.teams.joins(:users).group('users.id').select('users.id'))
                      .distinct
                      .pluck(:full_name, :id)
     activities = ActivitiesService.load_activities(current_user, current_team, activity_filters)

@@ -45,7 +45,6 @@ module SmartAnnotations
         match = el.match(USER_REGEX)
         user = User.find_by_id(match[2].base62_decode)
         next unless user
-        next if UserTeam.where(user: user, team: team).blank?
         user.full_name
       end
     end
