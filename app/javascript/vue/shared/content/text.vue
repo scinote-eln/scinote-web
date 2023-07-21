@@ -1,10 +1,14 @@
 <template>
-  <div class="step-text-container" :class="{ 'edit': inEditMode, 'step-element--locked': !element.attributes.orderable.urls.update_url }" @keyup.enter="enableEditMode($event)" tabindex="0">
-    <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
+  <div class="content__text-container flex rounded pl-10 mb-4 relative w-full group/text_container" :class="{ 'edit': inEditMode, 'component__element--locked': !element.attributes.orderable.urls.update_url }" @keyup.enter="enableEditMode($event)" tabindex="0">
+    <div v-if="reorderElementUrl"
+         class="absolute items-center h-full justify-center left-0 p-2 tw-hidden text-sn-grey"
+         :class="{ 'group-hover/text_container:flex': !inEditMode }"
+         @click="$emit('reorder')"
+    >
       <i class="sn-icon sn-icon-sort"></i>
     </div>
-    <div v-else class="step-element-grip-placeholder"></div>
-    <div class="buttons-container">
+    <div v-else class="flex-none"></div>
+    <div class="bg-sn-light-grey rounded absolute right-0 flex z-10 tw-hidden" :class="{ 'group-hover/text_container:flex': !inEditMode && element.attributes.orderable.urls.update_url }">
       <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light btn-sm" tabindex="0" @click="enableEditMode($event)">
         <i class="sn-icon sn-icon-edit"></i>
       </button>
@@ -22,9 +26,9 @@
       :placeholder="element.attributes.orderable.placeholder"
       :inEditMode="inEditMode || isNew"
       :updateUrl="element.attributes.orderable.urls.update_url"
-      :objectType="'StepText'"
+      :objectType="'TextContent'"
       :objectId="element.attributes.orderable.id"
-      :fieldName="'step_text[text]'"
+      :fieldName="'text_component[text]'"
       :lastUpdated="element.attributes.orderable.updated_at"
       :assignableMyModuleId="assignableMyModuleId"
       :characterLimit="1000000"
@@ -33,7 +37,7 @@
       @editingEnabled="enableEditMode"
     />
     <div class="view-text-element" v-else-if="element.attributes.orderable.text_view" v-html="element.attributes.orderable.text_view"></div>
-    <div v-else class="empty-text-element">
+    <div v-else class="text-sn-grey">
       {{ i18n.t("protocols.steps.text.empty_text") }}
     </div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement($event)" @cancel="closeDeleteModal"/>
@@ -41,13 +45,13 @@
 </template>
 
  <script>
-  import DeleteMixin from '../mixins/components/delete.js'
-  import DuplicateMixin from '../mixins/components/duplicate.js'
-  import deleteElementModal from '../modals/delete_element.vue'
-  import Tinymce from '../../shared/tinymce.vue'
+  import DeleteMixin from './mixins/delete.js'
+  import DuplicateMixin from './mixins/duplicate.js'
+  import deleteElementModal from './modal/delete.vue'
+  import Tinymce from '../tinymce.vue'
 
   export default {
-    name: 'StepText',
+    name: 'TextContent',
     components: { deleteElementModal, Tinymce },
     mixins: [DeleteMixin, DuplicateMixin],
     props: {

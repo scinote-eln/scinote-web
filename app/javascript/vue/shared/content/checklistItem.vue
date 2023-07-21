@@ -52,9 +52,9 @@
 </template>
 
  <script>
-  import DeleteMixin from '../mixins/components/delete.js'
-  import InlineEdit from '../../shared/inline_edit.vue'
-  import deleteElementModal from '../modals/delete_element.vue'
+  import DeleteMixin from './mixins/delete.js'
+  import InlineEdit from '../inline_edit.vue'
+  import deleteElementModal from './modal/delete.vue'
 
   export default {
     name: 'ChecklistItem',

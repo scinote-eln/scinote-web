@@ -199,9 +199,9 @@
   }
 
   import InlineEdit from '../shared/inline_edit.vue'
-  import StepTable from './step_elements/table.vue'
-  import StepText from './step_elements/text.vue'
-  import Checklist from './step_elements/checklist.vue'
+  import StepTable from '../shared/content/table.vue'
+  import StepText from '../shared/content/text.vue'
+  import Checklist from '../shared/content/checklist.vue'
   import deleteStepModal from './modals/delete_step.vue'
   import Attachments from './attachments.vue'
   import fileModal from './step_attachments/file_modal.vue'

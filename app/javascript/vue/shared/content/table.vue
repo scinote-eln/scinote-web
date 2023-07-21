@@ -59,11 +59,11 @@
 </template>
 
  <script>
-  import DeleteMixin from '../mixins/components/delete.js'
-  import DuplicateMixin from '../mixins/components/duplicate.js'
-  import deleteElementModal from '../modals/delete_element.vue'
-  import InlineEdit from '../../shared/inline_edit.vue'
-  import TableNameModal from '../modals/table_name_modal.vue'
+  import DeleteMixin from './mixins/delete.js'
+  import DuplicateMixin from './mixins/duplicate.js'
+  import deleteElementModal from './modal/delete.vue'
+  import InlineEdit from '../inline_edit.vue'
+  import TableNameModal from './modal/table_name.vue'
 
   export default {
     name: 'StepTable',

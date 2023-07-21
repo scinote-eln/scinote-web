@@ -79,11 +79,11 @@
 </template>
 
  <script>
-  import DeleteMixin from '../mixins/components/delete.js'
-  import DuplicateMixin from '../mixins/components/duplicate.js'
-  import deleteElementModal from '../modals/delete_element.vue'
-  import InlineEdit from '../../shared/inline_edit.vue'
-  import ChecklistItem from '../step_elements/checklistItem.vue'
+  import DeleteMixin from './mixins/delete.js'
+  import DuplicateMixin from './mixins/duplicate.js'
+  import deleteElementModal from './modal/delete.vue'
+  import InlineEdit from '../inline_edit.vue'
+  import ChecklistItem from './checklistItem.vue'
   import Draggable from 'vuedraggable'
 
   export default {
