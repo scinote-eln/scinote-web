@@ -100,15 +100,15 @@ class WopiController < ActionController::Base
         if @asset.lock == lock
           @asset.refresh_lock
           response.headers['X-WOPI-ItemVersion'] = @asset.version
-          return render body: nil, status: :ok
+          render body: nil, status: :ok
         else
           response.headers['X-WOPI-Lock'] = @asset.lock
-          return render body: nil, status: :conflict
+          render body: nil, status: :conflict
         end
       else
         @asset.lock_asset(lock)
         response.headers['X-WOPI-ItemVersion'] = @asset.version
-        return render body: nil, status: :ok
+        render body: nil, status: :ok
       end
     end
   end
@@ -126,14 +126,14 @@ class WopiController < ActionController::Base
           @asset.unlock
           @asset.lock_asset(lock)
           response.headers['X-WOPI-ItemVersion'] = @asset.version
-          return render body: nil, status: :ok
+          render body: nil, status: :ok
         else
           response.headers['X-WOPI-Lock'] = @asset.lock
-          return render body: nil, status: :conflict
+          render body: nil, status: :conflict
         end
       else
         response.headers['X-WOPI-Lock'] = ' '
-        return render body: nil, status: :conflict
+        render body: nil, status: :conflict
       end
     end
   end
@@ -151,15 +151,15 @@ class WopiController < ActionController::Base
           create_wopi_file_activity(@user, false)
 
           response.headers['X-WOPI-ItemVersion'] = @asset.version
-          return render body: nil, status: :ok
+          render body: nil, status: :ok
         else
           response.headers['X-WOPI-Lock'] = @asset.lock
-          return render body: nil, status: :conflict
+          render body: nil, status: :conflict
         end
       else
         logger.warn 'WOPI: tried to unlock non-locked file'
         response.headers['X-WOPI-Lock'] = ' '
-        return render body: nil, status: :conflict
+        render body: nil, status: :conflict
       end
     end
   end
@@ -174,14 +174,14 @@ class WopiController < ActionController::Base
           @asset.refresh_lock
           response.headers['X-WOPI-ItemVersion'] = @asset.version
           response.headers['X-WOPI-ItemVersion'] = @asset.version
-          return render body: nil, status: :ok
+          render body: nil, status: :ok
         else
           response.headers['X-WOPI-Lock'] = @asset.lock
-          return render body: nil, status: :conflict
+          render body: nil, status: :conflict
         end
       else
         response.headers['X-WOPI-Lock'] = ' '
-        return render body: nil, status: :conflict
+        render body: nil, status: :conflict
       end
     end
   end
@@ -189,7 +189,7 @@ class WopiController < ActionController::Base
   def get_lock
     @asset.with_lock do
       response.headers['X-WOPI-Lock'] = @asset.locked? ? @asset.lock : ' '
-      return render body: nil, status: :ok
+      render body: nil, status: :ok
     end
   end
 
@@ -211,11 +211,11 @@ class WopiController < ActionController::Base
           @protocol&.update(updated_at: Time.now.utc)
 
           response.headers['X-WOPI-ItemVersion'] = @asset.version
-          return render body: nil, status: :ok
+          render body: nil, status: :ok
         else
           logger.warn 'WOPI: wrong lock used to try and modify file'
           response.headers['X-WOPI-Lock'] = @asset.lock
-          return render body: nil, status: :conflict
+          render body: nil, status: :conflict
         end
       elsif !@asset.file_size.nil? && @asset.file_size.zero?
         logger.warn 'WOPI: initializing empty file'
@@ -227,11 +227,11 @@ class WopiController < ActionController::Base
         @team.save
 
         response.headers['X-WOPI-ItemVersion'] = @asset.version
-        return render body: nil, status: :ok
+        render body: nil, status: :ok
       else
         logger.warn 'WOPI: trying to modify unlocked file'
         response.headers['X-WOPI-Lock'] = ' '
-        return render body: nil, status: :conflict
+        render body: nil, status: :conflict
       end
     end
   end
