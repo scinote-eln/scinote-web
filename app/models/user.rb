@@ -156,8 +156,8 @@ class User < ApplicationRecord
 
   has_many :tokens,
            class_name: 'Token',
-           foreign_key: 'user_id',
-           inverse_of: :user
+           inverse_of: :user,
+           dependent: :destroy
 
   has_many :modified_tags,
            class_name: 'Tag',
@@ -456,11 +456,9 @@ class User < ApplicationRecord
 
   def self.find_by_valid_wopi_token(token)
     Rails.logger.warn "WOPI: searching by token #{token}"
-    User
-      .joins('LEFT OUTER JOIN tokens ON user_id = users.id')
-      .where(tokens: { token: token })
-      .where('tokens.ttl = 0 OR tokens.ttl > ?', Time.now.to_i)
-      .first
+    User.joins(:tokens)
+        .where(tokens: { token: token })
+        .find_by('tokens.ttl = 0 OR tokens.ttl > ?', Time.now.to_i)
   end
 
   def get_wopi_token

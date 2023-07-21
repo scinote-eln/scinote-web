@@ -249,13 +249,13 @@ class WopiController < ActionController::Base
       @assoc = result_assoc unless result_assoc.nil?
       @assoc = repository_cell_assoc unless repository_cell_assoc.nil?
 
-      if @assoc.class == Step
+      if @assoc.instance_of?(Step)
         @protocol = @asset.step.protocol
         @team = @protocol.team
-      elsif @assoc.class == Result
+      elsif @assoc.instance_of?(Result)
         @my_module = @assoc.my_module
         @team = @my_module.experiment.project.team
-      elsif @assoc.class == RepositoryCell
+      elsif @assoc.instance_of?(RepositoryCell)
         @repository = @assoc.repository_column.repository
         @team = @repository.team
       end
@@ -278,8 +278,9 @@ class WopiController < ActionController::Base
 
     # This is what we get for settings permission methods with
     # current_user
+    @user.permission_team = @team
     @current_user = @user
-    if @assoc.class == Step
+    if @assoc.instance_of?(Step)
       if @protocol.in_module?
         @can_read = can_read_protocol_in_module?(@protocol)
         @can_write = can_manage_step?(@assoc)
@@ -299,7 +300,7 @@ class WopiController < ActionController::Base
         @breadcrumb_folder_name = 'Protocol managament'
       end
       @breadcrumb_folder_url = @close_url
-    elsif @assoc.class == Result
+    elsif @assoc.instance_of?(Result)
       @can_read = can_read_experiment?(@my_module.experiment)
       @can_write = can_manage_my_module?(@my_module)
 
@@ -311,7 +312,7 @@ class WopiController < ActionController::Base
                                             host: ENV['WOPI_USER_HOST'])
       @breadcrumb_folder_name = @my_module.name
       @breadcrumb_folder_url  = @close_url
-    elsif @assoc.class == RepositoryCell
+    elsif @assoc.instance_of?(RepositoryCell)
       @can_read = can_read_repository?(@repository)
       @can_write = !@repository.is_a?(RepositorySnapshot) && can_edit_wopi_file_in_repository_rows?
 
