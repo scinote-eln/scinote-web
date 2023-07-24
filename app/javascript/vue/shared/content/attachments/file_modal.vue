@@ -28,34 +28,34 @@
             <div class="description">
               {{ i18n.t("protocols.steps.attachments.file_modal.drag_zone_description") }}
             </div>
-            <StorageUsage v-if="step.attributes.storage_limit" :step="step"/>
+            <StorageUsage v-if="parent.attributes.storage_limit" :parent="parent"/>
             <div class="available-storage"></div>
             <div class="drop-notification">
-              {{ i18n.t("protocols.steps.attachments.file_modal.drag_zone_notification", {position: step.attributes.position + 1}) }}
+              {{ i18n.t("protocols.steps.attachments.file_modal.drag_zone_notification", {position: parent.attributes.position + 1}) }}
             </div>
           </div>
-          <div class="divider" v-if="step.attributes.marvinjs_enabled || step.attributes.wopi_enabled">
+          <div class="divider" v-if="parent.attributes.marvinjs_enabled || parent.attributes.wopi_enabled">
             {{ i18n.t("protocols.steps.attachments.file_modal.or") }}
           </div>
           <div class="integrations-container">
-            <div class="integration-block wopi" v-if="step.attributes.wopi_enabled">
+            <div class="integration-block wopi" v-if="parent.attributes.wopi_enabled">
               <a @click="openWopiFileModal" class="create-wopi-file-btn btn btn-light" tabindex="0" @keyup.enter="openWopiFileModal">
-                <img :src="step.attributes.wopi_context.icon"/>
+                <img :src="parent.attributes.wopi_context.icon"/>
                 {{ i18n.t('assets.create_wopi_file.button_text') }}
               </a>
             </div>
-            <div class="integration-block marvinjs" v-if="step.attributes.marvinjs_enabled">
+            <div class="integration-block marvinjs" v-if="parent.attributes.marvinjs_enabled">
               <a
                 class="new-marvinjs-upload-button btn btn-light"
-                :data-object-id="step.id"
-                :data-marvin-url="step.attributes.marvinjs_context.marvin_js_asset_url"
-                data-object-type="Step"
+                :data-object-id="parent.id"
+                :data-marvin-url="parent.attributes.marvinjs_context.marvin_js_asset_url"
+                :data-object-type="parent.attributes.type"
                 @click="openMarvinJsModal"
                 tabindex="0"
                 @keyup.enter="openMarvinJsModal"
               >
                 <span class="new-marvinjs-upload-icon">
-                  <img :src="step.attributes.marvinjs_context.icon"/>
+                  <img :src="parent.attributes.marvinjs_context.icon"/>
                 </span>
                 {{ i18n.t('marvinjs.new_button') }}
               </a>
@@ -72,14 +72,14 @@
   </div>
 </template>
  <script>
-  import StorageUsage from '../storage_usage.vue'
+  import StorageUsage from './storage_usage.vue'
 
   import WopiFileModal from './mixins/wopi_file_modal.js'
 
   export default {
     name: 'fileModal',
     props: {
-      step: Object
+      parent: Object
     },
     data() {
       return {
@@ -140,7 +140,7 @@
       openMarvinJsModal() {
       },
       openWopiFileModal() {
-        this.initWopiFileModal(this.step, (_e, data, status) => {
+        this.initWopiFileModal(this.parent, (_e, data, status) => {
           if (status === 'success') {
             $(this.$refs.modal).modal('hide');
             this.$emit('attachmentUploaded', data);

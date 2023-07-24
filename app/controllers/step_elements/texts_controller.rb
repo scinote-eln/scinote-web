@@ -60,7 +60,7 @@ module StepElements
     private
 
     def step_text_params
-      params.require(:step_text).permit(:text)
+      params.require(:text_component).permit(:text)
     end
 
     def load_step_text

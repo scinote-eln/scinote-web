@@ -33,7 +33,7 @@
   export default {
     name: 'clipboardPasteModal',
     props: {
-      step: Object,
+      parent: Object,
       image: DataTransferItem
     },
     mounted() {

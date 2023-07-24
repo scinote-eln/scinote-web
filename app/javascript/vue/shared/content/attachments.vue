@@ -1,10 +1,10 @@
 <template>
-  <div class="step-attachments">
-    <div class="attachments-actions">
+  <div class="content__attachments" :id='"content__attachments-" + parent.id'>
+    <div class="content__attachments-actions">
       <div class="title">
         <h3>{{ i18n.t('protocols.steps.files', {count: attachments.length}) }}</h3>
       </div>
-      <div class="actions" v-if="step.attributes.attachments_manageble && attachmentsReady">
+      <div class="actions" v-if="parent.attributes.attachments_manageble && attachmentsReady">
         <div ref="actionsDropdownButton" class="dropdown sci-dropdown">
           <button class="btn btn-light dropdown-toggle" type="button" id="dropdownAttachmentsOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <span>{{ i18n.t("protocols.steps.attachments.manage") }}</span>
@@ -12,7 +12,7 @@
           </button>
           <ul ref="actionsDropdown" class="dropdown-menu dropdown-menu-right dropdown-attachment-options"
               aria-labelledby="dropdownAttachmentsOptions"
-              :data-step-id="step.id"
+              :data-parent-id="parent.id"
           >
             <li class="divider-label">{{ i18n.t("protocols.steps.attachments.add") }}</li>
             <li>
@@ -21,22 +21,22 @@
                 {{ i18n.t('protocols.steps.attachments.menu.file_from_pc') }}
               </a>
             </li>
-            <li v-if="step.attributes.wopi_enabled">
+            <li v-if="parent.attributes.wopi_enabled">
               <a @click="openWopiFileModal" class="create-wopi-file-btn" tabindex="0" @keyup.enter="openWopiFileModal">
-                <img :src="step.attributes.wopi_context.icon"/>
+                <img :src="parent.attributes.wopi_context.icon"/>
                 {{ i18n.t('protocols.steps.attachments.menu.office_file') }}
               </a>
             </li>
-            <li v-if="step.attributes.marvinjs_enabled">
+            <li v-if="parent.attributes.marvinjs_enabled">
               <a
                 class="new-marvinjs-upload-button"
-                :data-object-id="step.id"
-                data-object-type="Step"
-                :data-marvin-url="step.attributes.marvinjs_context.marvin_js_asset_url"
-                :data-sketch-container="`.attachments[data-step-id=${step.id}]`"
+                :data-object-id="parent.id"
+                :data-object-type="parent.attributes.type"
+                :data-marvin-url="parent.attributes.marvinjs_context.marvin_js_asset_url"
+                :data-sketch-container="`.attachments[data-parent-id=${parent.id}]`"
               >
                 <span class="new-marvinjs-upload-icon">
-                  <img :src="step.attributes.marvinjs_context.icon">
+                  <img :src="parent.attributes.marvinjs_context.icon">
                 </span>
                   {{ i18n.t('protocols.steps.attachments.menu.chemical_drawing') }}
               </a>
@@ -46,18 +46,18 @@
             <li v-for="(orderOption, index) in orderOptions" :key="`orderOption_${index}`">
               <a class="action-link change-order"
                 @click="changeAttachmentsOrder(orderOption)"
-                :class="step.attributes.assets_order == orderOption ? 'selected' : ''"
+                :class="parent.attributes.assets_order == orderOption ? 'selected' : ''"
               >
                 {{ i18n.t(`general.sort_new.${orderOption}`) }}
               </a>
             </li>
-            <template v-if="step.attributes.urls.update_asset_view_mode_url">
+            <template v-if="parent.attributes.urls.update_asset_view_mode_url">
               <li role="separator" class="divider"></li>
               <li class="divider-label">{{ i18n.t("protocols.steps.attachments.attachments_view_mode") }}</li>
               <li v-for="(viewMode, index) in viewModeOptions" :key="`viewMode_${index}`">
                 <a
                   class="attachments-view-mode action-link"
-                  :class="viewMode == step.attributes.assets_view_mode ? 'selected' : ''"
+                  :class="viewMode == parent.attributes.assets_view_mode ? 'selected' : ''"
                   @click="changeAttachmentsViewMode(viewMode)"
                   v-html="i18n.t(`protocols.steps.attachments.view_mode.${viewMode}_html`)"
                 ></a>
@@ -67,13 +67,13 @@
         </div>
       </div>
     </div>
-    <div class="attachments">
+    <div class="attachments" :data-parent-id="parent.id">
       <template v-for="(attachment, index) in attachmentsOrdered">
         <component
           :is="attachment_view_mode(attachmentsOrdered[index])"
           :key="attachment.id"
           :attachment="attachment"
-          :stepId="parseInt(step.id)"
+          :parentId="parseInt(parent.id)"
           @attachment:viewMode="updateAttachmentViewMode"
           @attachment:delete="deleteAttachment(attachment.id)"
         />
@@ -82,13 +82,13 @@
   </div>
 </template>
 <script>
-  import listAttachment from './step_attachments/list.vue'
-  import inlineAttachment from './step_attachments/inline.vue'
-  import thumbnailAttachment from './step_attachments/thumbnail.vue'
-  import uploadingAttachment from './step_attachments/uploading.vue'
-  import emptyAttachment from './step_attachments/empty.vue'
+  import listAttachment from './attachments/list.vue'
+  import inlineAttachment from './attachments/inline.vue'
+  import thumbnailAttachment from './attachments/thumbnail.vue'
+  import uploadingAttachment from './attachments/uploading.vue'
+  import emptyAttachment from './attachments/empty.vue'
 
-  import WopiFileModal from './step_attachments/mixins/wopi_file_modal.js'
+  import WopiFileModal from './attachments/mixins/wopi_file_modal.js'
 
   export default {
     name: 'Attachments',
@@ -97,7 +97,7 @@
         type: Array,
         required: true
       },
-      step: {
+      parent: {
         type: Object,
         required: true
       },
@@ -124,7 +124,7 @@
       attachmentsOrdered() {
         return this.attachments.sort((a, b) => {
           if (a.attributes.asset_order == b.attributes.asset_order) {
-            switch(this.step.attributes.assets_order) {
+            switch(this.parent.attributes.assets_order) {
               case 'new':
                 return b.attributes.updated_at - a.attributes.updated_at;
               case 'old':
@@ -168,12 +168,12 @@
       initMarvinJS() {
         // legacy logic from app/assets/javascripts/sitewide/marvinjs_editor.js
         MarvinJsEditor.initNewButton(
-          `#stepContainer${this.step.id} .new-marvinjs-upload-button`,
+          `#content__attachments-${this.parent.id} .new-marvinjs-upload-button`,
           () => this.$emit('attachment:uploaded')
         );
       },
       openWopiFileModal() {
-        this.initWopiFileModal(this.step, (_e, data, status) => {
+        this.initWopiFileModal(this.parent, (_e, data, status) => {
           if (status === 'success') {
             this.$emit('attachment:uploaded', data);
           } else {

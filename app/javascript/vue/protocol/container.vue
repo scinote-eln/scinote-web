@@ -149,7 +149,6 @@
         </div>
       </div>
     </div>
-    <ProtocolModals/>
     <ReorderableItemsModal v-if="reordering"
       :title="i18n.t('protocols.reorder_steps.modal.title')"
       :items="steps"
@@ -170,7 +169,6 @@
   import Step from './step'
   import ProtocolMetadata from './protocolMetadata'
   import ProtocolOptions from './protocolOptions'
-  import ProtocolModals from './modals'
   import Tinymce from '../shared/tinymce.vue'
   import ReorderableItemsModal from './modals/reorderable_items_modal.vue'
   import PublishProtocol from './modals/publish_protocol.vue'
@@ -185,7 +183,7 @@
         required: true
       }
     },
-    components: { Step, InlineEdit, ProtocolModals, ProtocolOptions, Tinymce, ReorderableItemsModal, ProtocolMetadata, PublishProtocol },
+    components: { Step, InlineEdit, ProtocolOptions, Tinymce, ReorderableItemsModal, ProtocolMetadata, PublishProtocol },
     mixins: [UtilsMixin],
     computed: {
       inRepository() {

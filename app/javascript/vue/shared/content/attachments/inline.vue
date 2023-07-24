@@ -9,7 +9,7 @@
           :id="`modal_link${attachment.id}`"
           data-no-turbolink="true"
           :data-id="attachment.id"
-          :data-gallery-view-id="stepId"
+          :data-gallery-view-id="parentId"
           :data-preview-url="attachment.attributes.urls.preview"
         >
           <span data-toggle="tooltip"
@@ -73,7 +73,7 @@
 <script>
   import ContextMenuMixin from './mixins/context_menu.js';
   import ContextMenu from './context_menu.vue';
-  import PdfViewer from '../../shared/pdf_viewer.vue';
+  import PdfViewer from '../../pdf_viewer.vue';
 
   export default {
     name: 'inlineAttachment',
@@ -84,7 +84,7 @@
         type: Object,
         required: true
       },
-      stepId: {
+      parentId: {
         type: Number,
         required: true
       }

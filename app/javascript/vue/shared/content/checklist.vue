@@ -1,13 +1,14 @@
 <template>
-  <div class="step-checklist-container" >
-    <div class="step-element-header" :class="{ 'editing-name': editingName, 'no-hover': !element.attributes.orderable.urls.update_url }">
-      <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
+  <div class="content__checklist-container" >
+    <div class="checklist-header flex rounded pl-10 mb-1 items-center relative w-full group/checklist-header" :class="{ 'editing-name': editingName, 'locked': !element.attributes.orderable.urls.update_url }">
+      <div v-if="reorderElementUrl"
+          class="absolute items-center h-full justify-center left-0 p-2 tw-hidden text-sn-grey"
+          :class="{ 'group-hover/checklist-header:flex': !locked }"
+           @click="$emit('reorder')">
         <i class="sn-icon sn-icon-sort"></i>
       </div>
-      <div v-else class="step-element-grip-placeholder"></div>
-      <div class="step-element-name">
+      <div class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold">
         <InlineEdit
-          :class="{ 'step-element--locked': !element.attributes.orderable.urls.update_url }"
           :value="element.attributes.orderable.name"
           :sa_value="element.attributes.orderable.sa_name"
           :characterLimit="10000"
@@ -21,7 +22,7 @@
           @update="updateName"
         />
       </div>
-      <div class="step-element-controls">
+      <div class="tw-hidden group-hover/checklist-header:flex items-center gap-2 ml-auto">
         <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light btn-sm" @click="editingName = true" tabindex="0">
           <i class="sn-icon sn-icon-edit"></i>
         </button>
@@ -33,14 +34,14 @@
         </button>
       </div>
     </div>
-    <div v-if="element.attributes.orderable.urls.create_item_url || orderedChecklistItems.length > 0" class="step-checklist-items">
+    <div v-if="element.attributes.orderable.urls.create_item_url || orderedChecklistItems.length > 0">
       <Draggable
         v-model="checklistItems"
-        :ghostClass="'step-checklist-item-ghost'"
-        :dragClass="'step-checklist-item-drag'"
-        :chosenClass="'step-checklist-item-chosen'"
+        :ghostClass="'checklist-item-ghost border-blue border-solid'"
+        :dragClass="'checklist-item-drag'"
+        :chosenClass="'checklist-item-chosen'"
         :forceFallback="true"
-        :handle="'.step-element-grip'"
+        :handle="'.element-grip'"
         :disabled="editingItem || checklistItems.length < 2 || !element.attributes.orderable.urls.reorder_url"
         @start="startReorder"
         @end="endReorder"
@@ -63,15 +64,15 @@
         />
       </Draggable>
       <div v-if="element.attributes.orderable.urls.create_item_url"
-           class="btn btn-light btn-sm step-checklist-add-item"
+           class="ml-7 btn btn-light btn-sm px-2"
            tabindex="0"
            @keyup.enter="addItem"
            @click="addItem">
-        <i class="sn-icon sn-icon-new-task"></i>
+        <i class="sn-icon sn-icon-new-task w-6 text-center"></i>
         {{ i18n.t('protocols.steps.insert.checklist_item') }}
       </div>
     </div>
-    <div v-else class="empty-checklist-element">
+    <div v-else class="text-sn-grey ml-12">
       {{ i18n.t("protocols.steps.checklist.empty_checklist") }}
     </div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @cancel="closeDeleteModal"/>
@@ -79,11 +80,11 @@
 </template>
 
  <script>
-  import DeleteMixin from '../mixins/components/delete.js'
-  import DuplicateMixin from '../mixins/components/duplicate.js'
-  import deleteElementModal from '../modals/delete_element.vue'
-  import InlineEdit from '../../shared/inline_edit.vue'
-  import ChecklistItem from '../step_elements/checklistItem.vue'
+  import DeleteMixin from './mixins/delete.js'
+  import DuplicateMixin from './mixins/duplicate.js'
+  import deleteElementModal from './modal/delete.vue'
+  import InlineEdit from '../inline_edit.vue'
+  import ChecklistItem from './checklistItem.vue'
   import Draggable from 'vuedraggable'
 
   export default {

@@ -5,6 +5,9 @@
 @tailwind components;
 @tailwind utilities;
 
+.tw-hidden {
+  @apply hidden
+}
 
 html {
   font-size: 16px;

@@ -9,10 +9,15 @@ class StepSerializer < ActiveModel::Serializer
 
   attributes :name, :position, :completed, :attachments_manageble, :urls, :assets_view_mode,
              :marvinjs_enabled, :marvinjs_context, :created_by, :created_at, :assets_order,
-             :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit
+             :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit,
+             :type
 
   def marvinjs_enabled
     MarvinJsService.enabled?
+  end
+
+  def type
+    'Step'
   end
 
   def marvinjs_context
