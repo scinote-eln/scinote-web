@@ -37,7 +37,8 @@ class MyModuleTagsController < ApplicationController
         id: my_module.id,
         tags_html: render_to_string(
           partial: 'canvas/tags',
-          locals: { my_module: my_module }
+          locals: { my_module: my_module },
+          formats: :html
         )
       }
     end
