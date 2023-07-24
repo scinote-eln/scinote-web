@@ -1,77 +1,18 @@
-.step-table-container {
-  margin-bottom: 1em;
-
-  .step-table {
-    border: $border-transparent;
-    border-radius: 4px;
-    margin-left: var(--left-component-padding);
-    padding: 4px;
-    position: relative;
-
-    .enable-edit-mode {
-      cursor: pointer;
-      justify-content: flex-end;
-      opacity: 0;
-      padding: 12px;
-      position: absolute;
-      right: 0;
-      top: 0;
-      z-index: 200;
-    }
-
-    .enable-edit-mode__icon {
-      background: linear-gradient(
-          90deg,
-          transparent 0%,
-          $color-concrete 25%,
-          $color-concrete 100%
-        );
-      padding: 4px 8px;
-      position: absolute;
-      right: 0;
-      top: 0;
-    }
-
-    .edit-message {
-      @include font-small;
-      color: $color-silver-chalice;
-      padding: 12px 0 8px;
-    }
-
-    td,
-    th {
-      color: $color-black;
-    }
-
-    &.view:not(.locked) {
-      &:hover {
-        background-color: $color-concrete;
-
-        .enable-edit-mode {
-          display: flex;
-          opacity: 1;
-        }
-      }
-    }
-
-    &.edit {
-      border: $border-default;
-      border-radius: 4px;
+.content__table-container {
+  .table-header:not(.editing-name):not(.locked) {
+    &:hover {
+      background-color: $color-concrete;
     }
   }
 
-  .edit-buttons {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: .5em;
-
-    .btn {
-      margin-left: .5em;
+  .table-body:not(.edit):not(.locked) {
+    &:hover {
+      background-color: $color-concrete;
     }
   }
 
-  .table-name-error {
-    color: $brand-danger;
-    font-size: 12px;
+  td,
+  th {
+    color: $color-black;
   }
 }

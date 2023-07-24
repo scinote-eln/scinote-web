@@ -29,7 +29,7 @@
         type: Object,
         required: true
       },
-      stepId: {
+      parentId: {
         type: Number,
         required: true
       }

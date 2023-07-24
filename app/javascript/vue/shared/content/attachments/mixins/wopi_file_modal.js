@@ -2,11 +2,11 @@
 
 export default {
   methods: {
-    initWopiFileModal(step, requestCallback) {
+    initWopiFileModal(object, requestCallback) {
       // handle legacy wopi file modal
       let $wopiModal = $('#new-office-file-modal');
-      $wopiModal.find('#element_id').val(step.id);
-      $wopiModal.find('#element_type').val('Step');
+      $wopiModal.find('#element_id').val(object.id);
+      $wopiModal.find('#element_type').val(object.attributes.type);
       $wopiModal.modal('show');
       $($wopiModal).find('#new-wopi-file-name').focus();
 

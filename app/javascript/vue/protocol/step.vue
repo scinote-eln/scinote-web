@@ -8,7 +8,7 @@
   >
     <div class="drop-message" @dragleave.prevent="!showFileModal ? dragingFile = false : null">
       {{ i18n.t('protocols.steps.drop_message', { position: step.attributes.position + 1 }) }}
-      <StorageUsage v-if="showStorageUsage()" :step="step"/>
+      <StorageUsage v-if="showStorageUsage()" :parent="step"/>
     </div>
     <div class="step-header">
       <div class="step-element-header" :class="{ 'no-hover': !urls.update_url }">
@@ -156,7 +156,7 @@
           />
         </template>
         <Attachments v-if="attachments.length"
-                    :step="step"
+                    :parent="step"
                     :attachments="attachments"
                     :attachmentsReady="attachmentsReady"
                     @attachments:openFileModal="showFileModal = true"
@@ -169,7 +169,7 @@
     </div>
     <deleteStepModal v-if="confirmingDelete" @confirm="deleteStep" @cancel="closeDeleteModal"/>
     <fileModal v-if="showFileModal"
-               :step="step"
+               :parent="step"
                @cancel="showFileModal = false"
                @files="uploadFiles"
                @attachmentUploaded="addAttachment"
@@ -177,7 +177,7 @@
                @copyPasteImageModal="copyPasteImageModal"
     />
     <clipboardPasteModal v-if="showClipboardPasteModal"
-                         :step="step"
+                         :parent="step"
                          :image="pasteImages"
                          @files="uploadFiles"
                          @cancel="showClipboardPasteModal = false"
@@ -203,14 +203,14 @@
   import StepText from '../shared/content/text.vue'
   import Checklist from '../shared/content/checklist.vue'
   import deleteStepModal from './modals/delete_step.vue'
-  import Attachments from './attachments.vue'
-  import fileModal from './step_attachments/file_modal.vue'
-  import clipboardPasteModal from './step_attachments/clipboard_paste_modal.vue'
+  import Attachments from '../shared/content/attachments.vue'
+  import fileModal from '../shared/content/attachments/file_modal.vue'
+  import clipboardPasteModal from '../shared/content/attachments/clipboard_paste_modal.vue'
   import ReorderableItemsModal from './modals/reorderable_items_modal.vue'
 
   import UtilsMixin from '../mixins/utils.js'
   import AttachmentsMixin from './mixins/attachments.js'
-  import StorageUsage from './storage_usage.vue'
+  import StorageUsage from '../shared/content/attachments/storage_usage.vue'
 
   export default {
     name: 'StepContainer',

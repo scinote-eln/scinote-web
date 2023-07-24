@@ -8,11 +8,11 @@
        :id="`modal_link${attachment.id}`"
        data-no-turbolink="true"
        :data-id="attachment.id"
-       :data-gallery-view-id="stepId"
+       :data-gallery-view-id="parentId"
        :data-preview-url="attachment.attributes.urls.preview"
     >
-      <span data-toggle="tooltip" 
-           data-placement="bottom" 
+      <span data-toggle="tooltip"
+           data-placement="bottom"
            :title="`${ attachment.attributes.file_name }`">
         {{ attachment.attributes.file_name }}
       </span>
@@ -50,7 +50,7 @@
         type: Object,
         required: true
       },
-      stepId: {
+      parentId: {
         type: Number,
         required: true
       }

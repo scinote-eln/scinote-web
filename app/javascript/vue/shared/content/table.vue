@@ -1,11 +1,14 @@
 <template>
-  <div class="step-table-container">
-     <div class="step-element-header" :class="{ 'editing-name': editingName, 'step-element--locked': locked }">
-      <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
+  <div class="content__table-container">
+     <div class="table-header flex rounded pl-10 mb-1 items-center relative w-full group/table-header" :class="{ 'editing-name': editingName, 'locked': locked }">
+      <div v-if="reorderElementUrl"
+          class="absolute items-center h-full justify-center left-0 p-2 tw-hidden text-sn-grey"
+          :class="{ 'group-hover/table-header:flex': (!editingName && !locked) }"
+          @click="$emit('reorder')">
         <i class="sn-icon sn-icon-sort"></i>
       </div>
-      <div v-else class="step-element-grip-placeholder"></div>
-      <div v-if="!locked || element.attributes.orderable.name" :key="reloadHeader" class="step-element-name">
+      <div v-if="!locked || element.attributes.orderable.name" :key="reloadHeader"
+           class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold">
         <InlineEdit
           :value="element.attributes.orderable.name"
           :characterLimit="255"
@@ -18,7 +21,7 @@
           @update="updateName"
         />
       </div>
-      <div class="step-element-controls">
+      <div class="tw-hidden group-hover/table-header:flex items-center gap-2 ml-auto">
         <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="enableNameEdit" tabindex="0">
           <i class="sn-icon sn-icon-edit"></i>
         </button>
@@ -30,22 +33,23 @@
         </button>
       </div>
     </div>
-    <div class="step-table"
-         :class="{'edit': editingTable, 'view': !editingTable, 'locked': !element.attributes.orderable.urls.update_url}"
+    <div class="table-body ml-10 group/table-body relative p-1 border-solid border-transparent"
+         :class="{'edit border-sn-light-grey': editingTable, 'view': !editingTable, 'locked': !element.attributes.orderable.urls.update_url}"
          tabindex="0"
          @keyup.enter="!editingTable && enableTableEdit()">
-      <div  class="enable-edit-mode" v-if="!editingTable && element.attributes.orderable.urls.update_url" @click="enableTableEdit">
-        <div class="enable-edit-mode__icon" tabindex="0">
+      <div  class="absolute right-0 top-0 z-[200]" v-if="!editingTable && element.attributes.orderable.urls.update_url" @click="enableTableEdit">
+        <div class="bg-sn-light-grey rounded tw-hidden group-hover/table-body:flex cursor-pointer p-1">
+
           <i class="sn-icon sn-icon-edit"></i>
         </div>
       </div>
       <div ref="hotTable" class="hot-table-container" @click="!editingTable && enableTableEdit()">
       </div>
-      <div v-if="editingTable" class="edit-message">
+      <div v-if="editingTable" class="text-xs pt-3 pb-2 text-sn-grey">
         {{ i18n.t('protocols.steps.table.edit_message') }}
       </div>
     </div>
-    <div class="edit-buttons" v-if="editingTable">
+    <div class="flex justify-end mt-1 gap-2" v-if="editingTable">
       <button class="btn icon-btn btn-primary btn-sm" @click="updateTable">
         <i class="sn-icon sn-icon-check"></i>
       </button>
@@ -66,7 +70,7 @@
   import TableNameModal from './modal/table_name.vue'
 
   export default {
-    name: 'StepTable',
+    name: 'ContentTable',
     components: { deleteElementModal, InlineEdit, TableNameModal },
     mixins: [DeleteMixin, DuplicateMixin],
     props: {
