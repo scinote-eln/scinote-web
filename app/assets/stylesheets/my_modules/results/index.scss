@@ -72,6 +72,10 @@
     margin-left: 4.25em !important;
   }
 
+  .ql-editor {
+    overflow-x: scroll;
+  }
+
   .result-icon {
     @include font-main;
     background: $color-concrete;
