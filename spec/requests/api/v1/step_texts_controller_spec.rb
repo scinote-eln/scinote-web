@@ -11,7 +11,6 @@ RSpec.describe 'Api::V1::StepTextsController', type: :request do
     @task = @experiment.my_modules.first
     @protocol = create(:protocol, my_module: @task)
     @step = create(:step, protocol: @protocol)
-    create(:user_team, user: @user, team: @team)
 
     @valid_headers = {
       'Authorization': 'Bearer ' + generate_token(@user.id),
