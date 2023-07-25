@@ -1,6 +1,6 @@
 <template>
-  <div class="flex items-center mr-3 flex-nowrap">
-    <button v-if="!searchOpened" class="btn btn-light btn-lg btn-black icon-btn" :title="i18n.t('repositories.show.search_button_tooltip')" @click="openSearch">
+  <div class="flex items-center mr-3 flex-nowrap relative" v-click-outside="{handler: 'closeSearchInputs', exclude: ['searchInput', 'searchInputBtn', 'barcodeSearchInput', 'barcodeSearchInputBtn']}">
+    <button :class="{hidden: searchOpened}" ref='searchInputBtn' class="btn btn-light btn-lg btn-black icon-btn" :title="i18n.t('repositories.show.search_button_tooltip')" @click="openSearch">
       <i class="sn-icon sn-icon-search"></i>
     </button>
     <div v-if="searchOpened || barcodeSearchOpened" class="w-52 flex">
@@ -11,7 +11,6 @@
           type="text"
           :placeholder="i18n.t('repositories.show.filter_inventory_items')"
           @keyup="setValue"
-          @blur="closeSearch"
         />
         <i class="sn-icon sn-icon-search !mr-2.5"></i>
       </div>
@@ -21,13 +20,12 @@
           class="sci-input-field"
           type="text"
           :placeholder="i18n.t('repositories.show.filter_inventory_items_with_ean')"
-          @change="setBarcodeValue"
-          @blur="closeBarcodeSearch"
+          @keyup="setBarcodeValue"
         />
         <i class='sn-icon sn-icon-barcode barcode-scanner !mr-2.5'></i>
       </div>
     </div>
-    <button v-if="!barcodeSearchOpened" class="btn btn-light btn-lg btn-black icon-btn ml-2" :title="i18n.t('repositories.show.ean_search_button_tooltip')" @click="openBarcodeSearch">
+    <button :class="{hidden: barcodeSearchOpened}" ref='barcodeSearchInputBtn' class="btn btn-light btn-lg btn-black icon-btn ml-2" :title="i18n.t('repositories.show.ean_search_button_tooltip')" @click="openBarcodeSearch">
       <i class='sn-icon sn-icon-barcode barcode-scanner'></i>
     </button>
   </div>
@@ -66,7 +64,7 @@ export default {
     },
     openBarcodeSearch() {
       this.clearValues();
-      this.closeSearch();
+      this.searchOpened = false;
       this.barcodeSearchOpened = true;
       this.$nextTick(() => {
         this.$refs.barcodeSearchInput.focus();
@@ -74,7 +72,7 @@ export default {
     },
     openSearch() {
       this.clearValues();
-      this.closeBarcodeSearch();
+      this.barcodeSearchOpened = false;
       this.searchOpened = true;
       this.$nextTick(() => {
         this.$refs.searchInput.focus();
@@ -103,6 +101,10 @@ export default {
       this.barcodeValue = '';
       if (this.$refs.searchInput) this.$refs.searchInput.value = '';
       if (this.$refs.barcodeSearchInput) this.$refs.barcodeSearchInput.value = '';
+    },
+    closeSearchInputs() {
+      this.closeSearch();
+      this.closeBarcodeSearch();
     }
   }
 }
