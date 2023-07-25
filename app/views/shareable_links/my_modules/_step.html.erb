@@ -4,13 +4,13 @@
       <div class="step-controls">
         <div class="step-element-grip-placeholder"></div>
         <a class="step-collapse-link hover:no-underline focus:no-underline"
-          href="#stepBody<%= step.id%>"
+          href="#stepBody<%= step.id %>"
           data-toggle="collapse"
           data-remote="true">
             <span class="sn-icon sn-icon-right "></span>
         </a>
         <div class="step-complete-container mx-1.5 step-element--locked">
-          <div class="step-state <%= step.completed ? 'completed' : ''%>"
+          <div class="step-state <%= step.completed ? 'completed' : '' %>"
                tabindex="0"
           ></div>
         </div>
@@ -20,10 +20,7 @@
       </div>
 
       <div class="step-name-container">
-        <%= render partial: "shareable_links/my_modules/inline_edit", locals: { text: step.name,
-                                                                                smart_annotation_enabled: false,
-                                                                                placeholder: t('protocols.steps.placeholder')
-                                                                              } %>
+        <%= render partial: "shareable_links/my_modules/inline_view", locals: { text: step.name, smart_annotation_enabled: false } %>
       </div>
     </div>
     <div class="step-actions-container">
@@ -31,11 +28,11 @@
          class="shareable-link-open-comments-sidebar btn icon-btn btn-light"
          data-turbolinks="false"
          data-object-type="Step"
-         data-object-id="<%= step.id%>"
+         data-object-id="<%= step.id %>"
          data-object-target="#Step<%= step.id %>">
         <i class="sn-icon sn-icon-comments"></i>
         <span class="comments-counter"
-              id="<%= `comment-count-${step.id}` %>"
+              id="comment-count-<%= step.id %>"
         >
           <%= step.comments.count %>
         </span>
@@ -43,7 +40,7 @@
     </div>
   </div>
 
-  <div class="collapse in" id="stepBody<%= step.id%>">
+  <div class="collapse in" id="stepBody<%= step.id %>">
     <div class="step-elements">
       <div class="step-timestamp">
         <%= t('protocols.steps.timestamp', date: step.created_at, user: step.user.full_name) %>

@@ -1,6 +1,5 @@
 <%
-
-  if shareable_document
+  if defined?(shareable_document) && shareable_document
     pdf_url = asset.file.url(disposition: 'attachment', expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes)
     pdf_size = asset&.blob&.byte_size
   elsif report_document

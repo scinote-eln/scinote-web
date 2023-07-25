@@ -8,23 +8,32 @@
   }
 
   function initStepsExpandCollapse() {
-    $('.steps-collapse').on('click', function() {
-      $('.step-container .collapse').collapse('hide');
-    });
-
-    $('.steps-expand').on('click', function() {
-      $('.step-container .collapse').collapse('show');
+    $('.protocol-step-actions').on('click', function(event) {
+      let action = $(event.target).hasClass('steps-expand') ? 'show' : 'hide';
+      $('.step-container .collapse').collapse(action);
     });
   }
 
   function initStepComments() {
-    $('.shareable-link-open-comments-sidebar').on('click', function(e) {
+    $('.step-actions-container').on('click', '.shareable-link-open-comments-sidebar', function(e) {
       e.preventDefault();
-      $('.comments-sidebar.open').removeClass('open');
+      $('.comments-sidebar').removeClass('open');
       $('.showing-comments').removeClass('showing-comments');
 
       $($(this).data('objectTarget')).addClass('open');
       $(`#stepContainer${$(this).data('objectId')}`).addClass('showing-comments');
+    });
+
+    $('.comments-sidebar').on('click', '.close-btn', function() {
+      $('.showing-comments').removeClass('showing-comments');
+    })
+  }
+
+  function initStepAttachments() {
+    $(document).on('click', '.shareable-file-preview-link, .shareable-gallery-switcher', function(e) {
+      e.preventDefault();
+      $('.modal-file-preview.in').modal('hide')
+      $($(`.modal-file-preview[data-object-id=${$(this).data('id')}]`)).modal('show');
     });
   }
 
@@ -52,6 +61,7 @@
     initWelcomeModal();
     initStepsExpandCollapse();
     initStepComments();
+    initStepAttachments();
 
     $('.hot-table-container').each(function() {
       initializeHandsonTable($(this));

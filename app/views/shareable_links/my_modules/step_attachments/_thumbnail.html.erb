@@ -1,19 +1,16 @@
 <div class="attachment-container asset">
-  <%= link_to asset.file.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
-          class: "file-preview-link",
+  <%= link_to '#',
+          class: "shareable-file-preview-link",
           id: "modal_link#{asset.id}",
           data: {
             no_turbolink: true,
-            id: asset.id,
-            gallery_view_id: step.id,
-            preview_url: shared_file_preview_url(asset.signed_id(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes))
+            id: asset.id
           } do %>
     <div class="attachment-preview <%= asset.file.attached? ? asset.file.metadata['asset_type'] : '' %>">
       <% if asset.previewable? %>
         <%= image_tag asset.file.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT).url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
             class: 'asset-thumbnail-image',
             style: 'opacity: 0' %>
-        <%= javascript_include_tag 'assets/asset_thumbnail' %>
       <% else %>
         <i class="fas <%= file_fa_icon_class(asset) if asset.file_name %>"></i>
       <% end %>
@@ -21,8 +18,8 @@
     <div class="attachment-label"
          data-toggle="tooltip"
          data-placement="bottom"
-         title="<%= escape_input(asset.render_file_name) %>">
-      <%= escape_input(asset.render_file_name) %>
+         title="<%= asset.render_file_name %>">
+      <%= asset.render_file_name %>
     </div>
     <div class="attachment-metadata">
       <%= t('assets.placeholder.modified_label') %> <%= l(asset.updated_at, format: :full_date) if asset.updated_at %><br>

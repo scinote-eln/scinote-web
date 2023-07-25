@@ -23,7 +23,7 @@ module InputSanitizeHelper
       text = smart_annotation_text_parser(text)
     end
 
-    text.html_safe
+    strip_tags(text)
   end
 
   def custom_auto_link(text, options = {})

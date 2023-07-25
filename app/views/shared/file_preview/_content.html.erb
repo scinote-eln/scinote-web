@@ -51,7 +51,7 @@
       <% if wopi_enabled? && wopi_file?(asset) %>
         <iframe class="wopi-file-preview" src="<%= asset.get_action_url(current_user, 'embedview') %>"></iframe>
       <% elsif asset.pdf_previewable? %>
-        <%= render partial: 'shared/pdf_viewer', locals: { asset: asset, report_document: false, shareable_document: false } %>
+        <%= render partial: 'shared/pdf_viewer', locals: { asset: asset, report_document: false } %>
       <% else %>
         <%= image_tag asset.large_preview,
             class: 'asset-image',
@@ -70,7 +70,7 @@
       <% if previous_asset && can_read_asset?(previous_asset) %>
         <%= link_to asset_file_preview_path(previous_asset),
           class: "previous-asset gallery-switcher",
-          data: {id: previous_asset.id, gallery_elements: gallery} do %>
+          data: { id: previous_asset.id, gallery_elements: gallery } do %>
           <i class="sn-icon sn-icon-arrow-left"></i>
           <% if previous_asset.previewable? %>
             <%= image_tag previous_asset.medium_preview,
@@ -88,7 +88,7 @@
       <% if next_asset && can_read_asset?(next_asset) %>
         <%= link_to asset_file_preview_path(next_asset),
           class: "next-asset gallery-switcher",
-          data: {id: next_asset.id, gallery_elements: gallery} do %>
+          data: { id: next_asset.id, gallery_elements: gallery } do %>
           <% if next_asset.previewable? %>
             <%= image_tag next_asset.medium_preview,
                 class: 'asset-image',

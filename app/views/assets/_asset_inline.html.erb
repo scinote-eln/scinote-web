@@ -39,7 +39,7 @@
       </div>
     <% end %>
   <% elsif asset.pdf_previewable? %>
-    <%= render partial: 'shared/pdf_viewer', locals: { asset: asset, report_document: false, shareable_document: false } %>
+    <%= render partial: 'shared/pdf_viewer', locals: { asset: asset, report_document: false} %>
   <% elsif asset.previewable? %>
     <div class="image-container">
       <%= image_tag asset.large_preview,

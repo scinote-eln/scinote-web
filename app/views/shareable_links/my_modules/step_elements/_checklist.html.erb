@@ -2,15 +2,13 @@
   <div class="step-element-header no-hover">
     <div class="step-element-grip-placeholder"></div>
     <div class="step-element-name">
-      <%= render partial: "shareable_links/my_modules/inline_edit", locals: { text: element.name,
-                                                                              smart_annotation_enabled: true,
-                                                                              placeholder: '' } %>
+      <%= render partial: "shareable_links/my_modules/inline_view", locals: { text: element.name, smart_annotation_enabled: true } %>
     </div>
   </div>
   <% if element.checklist_items.count > 0 %>
     <div class="step-checklist-items">
-      <% element.checklist_items.sort_by(&:position).each do |checklistItem| %>
-        <%= render partial: "shareable_links/my_modules/step_elements/checklistItem", locals: { checklistItem: checklistItem } %>
+      <% element.checklist_items.sort_by(&:position).each do |checklist_item| %>
+        <%= render partial: "shareable_links/my_modules/step_elements/checklist_item", locals: { checklist_item: checklist_item } %>
       <% end %>
     </div>
   <% else %>

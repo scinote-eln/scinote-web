@@ -1,18 +1,16 @@
 <div class="list-attachment-container asset">
   <i class="fas asset-icon <%= file_fa_icon_class(asset) %>"></i>
-  <%= link_to asset.file.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
-    class: "file-preview-link file-name",
+  <%= link_to '#',
+    class: "shareable-file-preview-link file-name",
     id: "modal_link#{asset.id}",
     data: {
       no_turbolink: true,
-      id: asset.id,
-      gallery_view_id: step.id,
-      preview_url: shared_file_preview_url(asset.signed_id(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes))
+      id: asset.id
     } do %>
     <span data-toggle="tooltip" 
           data-placement="bottom" 
-          title="<%= escape_input(asset.render_file_name) %>">
-      <%= escape_input(asset.render_file_name) %>
+          title="<%= asset.render_file_name %>">
+      <%= asset.render_file_name %>
     </span>
   <% end %>
   <div class="file-metadata">

@@ -962,7 +962,6 @@ Rails.application.routes.draw do
   end
 
   get '/shared/:uuid/protocol', to: 'my_module_shareable_links#my_module_protocol_show', as: :shared_protocol
-  get 'shared/files/:uuid/preview', to: 'my_module_shareable_links#file_preview', as: :shared_file_preview
 
   resources :marvin_js_assets, only: %i(create update destroy show) do
     collection do

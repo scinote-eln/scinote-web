@@ -45,16 +45,18 @@
     </div>
     <div>
       <div id="protocol-steps-container">
-        <div v-if="steps.length > 0" class="protocol-step-actions">
-          <button class="btn btn-light steps-collapse" tabindex="0">
-            <span class="sn-icon sn-icon-collapse"></span>
-            <%= t("protocols.steps.collapse_label") %>
-          </button>
-          <button class="btn btn-light steps-expand" tabindex="0">
-            <span class="sn-icon sn-icon-expand"></span>
-            <%= t("protocols.steps.expand_label") %>
-          </button>
-        </div>
+        <% if protocol.steps.length > 0 %>
+          <div class="protocol-step-actions">
+            <button class="btn btn-light steps-collapse" tabindex="0">
+              <span class="sn-icon sn-icon-collapse"></span>
+              <%= t("protocols.steps.collapse_label") %>
+            </button>
+            <button class="btn btn-light steps-expand" tabindex="0">
+              <span class="sn-icon sn-icon-expand"></span>
+              <%= t("protocols.steps.expand_label") %>
+            </button>
+          </div>
+        <% end %>
         <div class="protocol-steps">
           <% protocol.steps.sort_by(&:position).each do |step| %>
             <div class="step-block">

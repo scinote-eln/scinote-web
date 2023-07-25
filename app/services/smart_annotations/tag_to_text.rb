@@ -4,9 +4,9 @@ module SmartAnnotations
   class TagToText
     attr_reader :text
 
-    def initialize(user, team, text, skip_validation: false)
-      parse_items_annotations(user, team, text, skip_validation)
-      parse_users_annotations(user, team, @text, skip_validation)
+    def initialize(user, team, text, is_shareable_object: false)
+      parse_items_annotations(user, team, text, is_shareable_object)
+      parse_users_annotations(user, team, @text, is_shareable_object)
     end
 
     private
@@ -18,7 +18,7 @@ module SmartAnnotations
                         tsk: MyModule,
                         rep_item: RepositoryRow }.freeze
 
-    def parse_items_annotations(user, team, text, skip_validation)
+    def parse_items_annotations(user, team, text, is_shareable_object)
       @text = text.gsub(ITEMS_REGEX) do |el|
         value = extract_values(el)
         type = value[:object_type]
@@ -26,12 +26,12 @@ module SmartAnnotations
           object = fetch_object(type, value[:object_id])
           # handle repository_items edge case
           if type == 'rep_item'
-            repository_item(value[:name], user, team, type, object, skip_validation)
+            repository_item(value[:name], user, team, type, object, is_shareable_object)
           else
-            next unless skip_validation || (object && SmartAnnotations::PermissionEval.check(user,
-                                                                                             team,
-                                                                                             type,
-                                                                                             object))
+            next unless is_shareable_object || (object && SmartAnnotations::PermissionEval.check(user,
+                                                                                                 team,
+                                                                                                 type,
+                                                                                                 object))
 
             SmartAnnotations::TextPreview.text(nil, type, object)
           end
@@ -41,20 +41,20 @@ module SmartAnnotations
       end
     end
 
-    def parse_users_annotations(user, team, text, skip_validation)
+    def parse_users_annotations(user, team, text, is_shareable_object)
       @text = text.gsub(USER_REGEX) do |el|
         match = el.match(USER_REGEX)
         user = User.find_by_id(match[2].base62_decode)
         next unless user
-        next if !skip_validation && UserTeam.where(user: user, team: team).blank?
+        next if !is_shareable_object && UserTeam.where(user: user, team: team).blank?
 
         user.full_name
       end
     end
 
-    def repository_item(name, user, team, type, object, skip_validation)
+    def repository_item(name, user, team, type, object, is_shareable_object)
       if object
-        return unless skip_validation || SmartAnnotations::PermissionEval.check(user, team, type, object)
+        return unless is_shareable_object || SmartAnnotations::PermissionEval.check(user, team, type, object)
 
         return SmartAnnotations::TextPreview.text(nil, type, object)
       end
