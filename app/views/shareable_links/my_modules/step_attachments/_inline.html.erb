@@ -40,10 +40,9 @@
   <% elsif asset.previewable? %>
     <div class="image-container">
       <%= image_tag asset.file.representation(resize_to_limit: Constants::LARGE_PIC_FORMAT).url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
-          class: 'asset-inline-image',
+          class: 'asset-preview-image',
           style: 'opacity: 0' %>
     </div>
-    <%= javascript_include_tag 'assets/asset_inline' %>
   <% else %>
     <div class="general-file-container">
       <i class="fas <%= file_fa_icon_class(asset) if asset.file_name %>"></i>

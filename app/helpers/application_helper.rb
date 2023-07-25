@@ -122,7 +122,7 @@ module ApplicationHelper
   end
 
   def smart_annotation_text_parser(text)
-    SmartAnnotations::TagToText.new(nil, nil, text, skip_validation: true).text
+    SmartAnnotations::TagToText.new(nil, nil, text, is_shareable_object: true).text
   end
 
   # Check if text have smart annotations of resources

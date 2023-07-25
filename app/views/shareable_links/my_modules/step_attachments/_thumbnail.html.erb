@@ -9,7 +9,7 @@
     <div class="attachment-preview <%= asset.file.attached? ? asset.file.metadata['asset_type'] : '' %>">
       <% if asset.previewable? %>
         <%= image_tag asset.file.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT).url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
-            class: 'asset-thumbnail-image',
+            class: 'asset-preview-image',
             style: 'opacity: 0' %>
       <% else %>
         <i class="fas <%= file_fa_icon_class(asset) if asset.file_name %>"></i>

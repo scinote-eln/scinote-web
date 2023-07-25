@@ -44,7 +44,12 @@ module SmartAnnotations
     def parse_users_annotations(user, team, text, is_shareable_object)
       @text = text.gsub(USER_REGEX) do |el|
         match = el.match(USER_REGEX)
-        user = team.users.find_by(id: match[2].base62_decode)
+
+        user = if is_shareable_object
+                 User.find_by(id: match[2].base62_decode)
+               else
+                 team.users.find_by(id: match[2].base62_decode)
+               end
         next unless user
 
         user.full_name
