@@ -175,9 +175,7 @@ class RepositoriesController < ApplicationController
 
   def rename_modal
     render json: {
-      html: render_to_string(
-        partial: 'rename_repository_modal'
-      )
+      html: render_to_string(partial: 'rename_repository_modal', formats: :html)
     }
   end
 
@@ -200,7 +198,7 @@ class RepositoriesController < ApplicationController
       name: @repository.name
     )
     render json: {
-      html: render_to_string(partial: 'copy_repository_modal')
+      html: render_to_string(partial: 'copy_repository_modal', formats: :html)
     }
   end
 
@@ -288,7 +286,7 @@ class RepositoriesController < ApplicationController
 
         if (@temp_file = parsed_file.generate_temp_file)
           render json: {
-            html: render_to_string(partial: 'repositories/parse_records_modal')
+            html: render_to_string(partial: 'repositories/parse_records_modal', formats: :html)
           }
         else
           repository_response(t('repositories.parse_sheet.errors.temp_file_failure'))

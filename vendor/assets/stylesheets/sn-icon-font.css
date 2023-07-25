@@ -1,15 +1,16 @@
 @font-face {
   font-family: 'SN-icon-font';
-  src:
-    url('fonts/SN-icon-font.ttf?cnjgbu') format('truetype'),
-    url('fonts/SN-icon-font.woff?cnjgbu') format('woff'),
-    url('fonts/SN-icon-font.svg?cnjgbu#SN-icon-font') format('svg');
+  src:  url('fonts/SN-icon-font.eot?n7qhkp');
+  src:  url('fonts/SN-icon-font.eot?n7qhkp#iefix') format('embedded-opentype'),
+        url('fonts/SN-icon-font.ttf?n7qhkp') format('truetype'),
+        url('fonts/SN-icon-font.woff?n7qhkp') format('woff'),
+        url('fonts/SN-icon-font.svg?n7qhkp#SN-icon-font') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
 }
 
-.sn-icon {
+[class^="sn-icon-"], [class*=" sn-icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'SN-icon-font' !important;
   speak: never;
@@ -349,4 +350,46 @@
 }
 .sn-icon-activities:before {
   content: "\e969";
+}
+.sn-icon-send-comment:before {
+  content: "\e96a";
+}
+.sn-icon-assign-to-task:before {
+  content: "\e96b";
+}
+.sn-icon-arrow-down:before {
+  content: "\e96c";
+}
+.sn-icon-arrow-up:before {
+  content: "\e96d";
+}
+.sn-icon-signature:before {
+  content: "\e96e";
+}
+.sn-icon-industry:before {
+  content: "\e96f";
+}
+.sn-icon-alert-success:before {
+  content: "\e970";
+}
+.sn-icon-alert-warning:before {
+  content: "\e971";
+}
+.sn-icon-alert-destructive:before {
+  content: "\e972";
+}
+.sn-icon-txt-t:before {
+  content: "\e973";
+}
+.sn-icon-txt-a:before {
+  content: "\e974";
+}
+.sn-icon-file-pdf:before {
+  content: "\e975";
+}
+.sn-icon-save:before {
+  content: "\e976";
+}
+.sn-icon-archived:before {
+  content: "\e977";
 }
