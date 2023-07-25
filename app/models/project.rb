@@ -172,19 +172,6 @@ class Project < ApplicationRecord
     ProjectComment.from(comments, :comments).order(created_at: :asc)
   end
 
-  def unassigned_users
-    User.joins(:user_teams)
-        .joins(
-          "LEFT OUTER JOIN user_assignments ON user_assignments.user_id = users.id "\
-          "AND user_assignments.assignable_id = #{id} "\
-          "AND user_assignments.assignable_type = 'Project'"
-        )
-        .where(user_teams: { team_id: team_id })
-        .where(user_assignments: { id: nil })
-        .where.not(confirmed_at: nil)
-        .distinct
-  end
-
   def user_role(user)
     user_assignments.includes(:user_role).references(:user_role).find_by(user: user)&.user_role&.name
   end
@@ -289,7 +276,7 @@ class Project < ApplicationRecord
     tables = parsed_html.css('.hot-table-contents')
                         .zip(parsed_html.css('.hot-table-container'), parsed_html.css('.hot-table-metadata'))
     tables.each do |table_input, table_container, metadata|
-      is_plate_template = JSON.parse(metadata['value'])['plateTemplate'] if metadata.present?
+      is_plate_template = JSON.parse(metadata['value'])['plateTemplate'] if metadata && metadata['value'].present?
       table_vals = JSON.parse(table_input['value'])
       table_data = table_vals['data']
       table_headers = table_vals['headers']

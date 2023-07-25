@@ -115,9 +115,7 @@ class MyModulesController < ApplicationController
       MyModule: [@my_module.id]
     }
     @activity_types = Activity.activity_types_list
-    @user_list = User.where(id: UserTeam.where(team: current_user.teams).select(:user_id))
-                     .distinct
-                     .pluck(:full_name, :id)
+
     activities = ActivitiesService.load_activities(current_user, current_team, activity_filters)
 
     @grouped_activities = activities.group_by do |activity|

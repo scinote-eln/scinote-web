@@ -43,10 +43,9 @@
   <% elsif asset.previewable? %>
     <div class="image-container">
       <%= image_tag asset.large_preview,
-          class: 'asset-inline-image',
+          class: 'asset-preview-image',
           style: 'opacity: 0' %>
     </div>
-    <%= javascript_include_tag 'assets/asset_inline' %>
   <% else %>
     <div class="general-file-container">
       <i class="fas <%= file_fa_icon_class(asset) if asset.file_name %>"></i>

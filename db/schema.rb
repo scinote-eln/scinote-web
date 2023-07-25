@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_16_140951) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_20_070830) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -104,15 +104,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_16_140951) do
     t.index ["created_by_id"], name: "index_assets_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_assets_on_last_modified_by_id"
     t.index ["team_id"], name: "index_assets_on_team_id"
-  end
-
-  create_table "bmt_filters", force: :cascade do |t|
-    t.string "name", null: false
-    t.json "filters", null: false
-    t.bigint "created_by_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["created_by_id"], name: "index_bmt_filters_on_created_by_id"
   end
 
   create_table "checklist_items", force: :cascade do |t|
@@ -1315,7 +1306,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_16_140951) do
   add_foreign_key "asset_text_data", "assets"
   add_foreign_key "assets", "users", column: "created_by_id"
   add_foreign_key "assets", "users", column: "last_modified_by_id"
-  add_foreign_key "bmt_filters", "users", column: "created_by_id"
   add_foreign_key "checklist_items", "checklists"
   add_foreign_key "checklist_items", "users", column: "created_by_id"
   add_foreign_key "checklist_items", "users", column: "last_modified_by_id"
@@ -1491,21 +1481,4 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_16_140951) do
   add_foreign_key "wopi_actions", "wopi_apps"
   add_foreign_key "wopi_apps", "wopi_discoveries"
   add_foreign_key "zip_exports", "users"
-
-  create_view "datatables_teams", sql_definition: <<-SQL
-      SELECT teams.id,
-      teams.name,
-      user_teams.role,
-      ( SELECT count(*) AS count
-             FROM user_teams user_teams_1
-            WHERE (user_teams_1.team_id = teams.id)) AS members,
-          CASE
-              WHEN (teams.created_by_id = user_teams.user_id) THEN false
-              ELSE true
-          END AS can_be_left,
-      user_teams.id AS user_team_id,
-      user_teams.user_id
-     FROM (teams
-       JOIN user_teams ON ((teams.id = user_teams.team_id)));
-  SQL
 end

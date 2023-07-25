@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'active_storage/previewer/libreoffice_previewer'
-require 'active_storage/analyzer/custom_image_analyzer'
+require 'active_storage/analyzer/image_analyzer/custom_image_magick'
 require 'active_storage/downloader'
 
 # Enable PDF previews for files
@@ -10,7 +10,7 @@ Rails.application.config.x.enable_pdf_previews = ENV['ACTIVESTORAGE_ENABLE_PDF_P
 Rails.application.config.active_storage.previewers = [ActiveStorage::Previewer::PopplerPDFPreviewer,
                                                       ActiveStorage::Previewer::LibreofficePreviewer]
 
-Rails.application.config.active_storage.analyzers.prepend(ActiveStorage::Analyzer::CustomImageAnalyzer)
+Rails.application.config.active_storage.analyzers.prepend(ActiveStorage::Analyzer::ImageAnalyzer::CustomImageMagick)
 
 Rails.application.config.active_storage.variable_content_types << 'image/svg+xml'
 
