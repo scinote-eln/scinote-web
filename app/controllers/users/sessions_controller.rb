@@ -2,7 +2,6 @@
 
 class Users::SessionsController < Devise::SessionsController
   layout :session_layout
-  after_action :after_sign_in, only: %i(create authenticate_with_two_factor)
   before_action :remove_authenticate_mesasge_if_root_path, only: :new
   prepend_before_action :skip_timeout, only: :expire_in
 
@@ -56,10 +55,6 @@ class Users::SessionsController < Devise::SessionsController
 
   def two_factor_auth
     @initial_page = stored_location_for(:user)
-  end
-
-  def after_sign_in
-    flash[:system_notification_modal] = true
   end
 
   def authenticate_with_two_factor

@@ -58,16 +58,6 @@
       }
     }
 
-    .sci--navigation--notificaitons-flyout-tab {
-      cursor: pointer;
-      padding: .5rem .625rem;
-      position: relative;
-
-      &.active {
-        color: $brand-focus;
-      }
-    }
-
     hr {
       margin: .625rem 0;
     }

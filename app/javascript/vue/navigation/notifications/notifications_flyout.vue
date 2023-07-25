@@ -67,7 +67,7 @@ export default {
       if (this.nextPage == null || this.loadingPage) return;
 
       this.loadingPage = true;
-      $.getJSON(this.notificationsUrl, { type: this.activeTab, page: this.nextPage }, (result) => {
+      $.getJSON(this.notificationsUrl, { page: this.nextPage }, (result) => {
         this.notifications = this.notifications.concat(result.notifications);
         this.nextPage = result.next_page;
         this.loadingPage = false;
