@@ -1,5 +1,8 @@
 <template>
-  <div class="flex items-center mr-3 flex-nowrap relative" v-click-outside="{handler: 'closeSearchInputs', exclude: ['searchInput', 'searchInputBtn', 'barcodeSearchInput', 'barcodeSearchInputBtn']}">
+  <div 
+    class="flex items-center mr-3 flex-nowrap relative" 
+    v-click-outside="{handler: 'closeSearchInputs', exclude: ['searchInput', 'searchInputBtn', 'barcodeSearchInput', 'barcodeSearchInputBtn']}"
+  >
     <button :class="{hidden: searchOpened}" ref='searchInputBtn' class="btn btn-light btn-lg btn-black icon-btn" :title="i18n.t('repositories.show.search_button_tooltip')" @click="openSearch">
       <i class="sn-icon sn-icon-search"></i>
     </button>
