@@ -16,7 +16,7 @@
            :title="attachment.attributes.wopi_context.title"
            target="_blank"
         >
-          <i :class="`sn-icon sn-icon-${attachment.attributes.wopi_context.sn_icon}`"></i>
+          <img :src="attachment.attributes.wopi_context.wopi_icon"/>
           {{ attachment.attributes.wopi_context.button_text }}
         </a>
       </li>
