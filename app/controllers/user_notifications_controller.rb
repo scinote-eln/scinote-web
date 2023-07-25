@@ -25,8 +25,8 @@ class UserNotificationsController < ApplicationController
 
   def load_notifications
     current_user.notifications
-      .select(:id, :type_of, :title, :message, :created_at, 'user_notifications.checked')
-      .order(created_at: :desc)
+                .select(:id, :type_of, :title, :message, :created_at, 'user_notifications.checked')
+                .order(created_at: :desc)
   end
 
   def notification_serializer(notifications)
