@@ -28,7 +28,7 @@ module Reports::Docx::DrawResultTable
       cell_style cols[0], bold: true, background: color[:concrete]
 
       if table.metadata.present?
-        JSON.parse(table.metadata)['cells']&.each do |cell|
+        table.metadata['cells']&.each do |cell|
           next unless cell.present? && cell['row'].present? && cell['col'].present? && cell['className'].present?
 
           cell_style rows.dig(cell['row'].to_i + 1, cell['col'].to_i + 1),

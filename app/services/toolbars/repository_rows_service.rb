@@ -79,7 +79,7 @@ module Toolbars
       {
         name: 'assign',
         label: I18n.t('repositories.assign_record'),
-        icon: 'sn-icon sn-icon-files',
+        icon: 'sn-icon sn-icon-assign-to-task',
         button_class: 'assign-repository-rows-btn',
         button_id: 'assignRepositoryRecords',
         type: :legacy

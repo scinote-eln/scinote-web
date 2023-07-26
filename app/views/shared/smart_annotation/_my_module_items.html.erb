@@ -9,10 +9,10 @@
     </div>
     <div class="items">
       <% task_group[:tasks].each do |task| %>
-        <li class="item" data-name="<%= task.name %>" data-id="<%= task.id.base62_encode %>" data-type="tsk">
+        <li class="item" data-name="<%= sanitize_input(task.name) %>" data-id="<%= task.id.base62_encode %>" data-type="tsk">
           <span class='sa-type'><%= task.code %></span>
           <span class="dot">&middot;</span>
-          <span class="item-text"><%= task.name %></span>
+          <span class="item-text"><%= sanitize_input(task.name) %></span>
           <%= render partial: 'shared/smart_annotation/atwho_control_buttons' %>
         </li>
       <% end %>

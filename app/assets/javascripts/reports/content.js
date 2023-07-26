@@ -64,7 +64,7 @@
 
       el.handsontable('getInstance').getPlugin('columnSorting').sort(3, order);
     } else {
-      metadata = JSON.parse(metadataJson.val() || '{}');
+      metadata = metadataJson.val() || {};
       el.handsontable({
         disableVisualSelection: true,
         rowHeaders: tableRowHeaders(metadata.plateTemplate),

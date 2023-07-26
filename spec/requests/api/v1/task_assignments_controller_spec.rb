@@ -7,7 +7,6 @@ RSpec.describe 'Api::V1::TaskAssignmentsController', type: :request do
     @user = create(:user)
     @user_second = create(:user)
     @team = create(:team, created_by: @user)
-    create(:user_team, user: @user, team: @team, role: 1)
     @owner_role = UserRole.find_by(name: I18n.t('user_roles.predefined.owner'))
     @project = create(:project, name: Faker::Name.unique.name,
                       created_by: @user, team: @team)

@@ -2475,8 +2475,8 @@ en:
           head_title: "Settings | Add-ons"
           title: "Add-ons"
           no_addons: "You have no SciNote Add-ons."
-          scinote_addons: "Scinote add-ons"
-          label_printers: "Label Printers"
+          scinote_addons: "SciNote add-ons"
+          label_printers: "Label printers"
           printers:
             ready: "Ready"
             not_ready: "Not ready"
@@ -3587,9 +3587,9 @@ en:
     protocols: "Protocol"
     labels: "Label"
     teams: "All Teams"
-    addons: "Add-Ons"
-    label_printer: "Label Printer"
-    fluics_printer: "Fluics Printer"
+    addons: "Add-ons"
+    label_printer: "Label printer"
+    fluics_printer: "Fluics printer"
 
   Add: "Add"
   Asset: "File"
