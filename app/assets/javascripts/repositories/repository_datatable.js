@@ -565,7 +565,7 @@ var RepositoryDatatable = (function(global) {
           saveState(state);
         },
         stateLoadCallback: (state) => {
-          if (!TABLE.ColSizes) return;
+          if (!TABLE.ColSizes || TABLE.ColSizes.length === 0) return;
 
           let colSizes = TABLE.ColSizes;
 
@@ -754,8 +754,6 @@ var RepositoryDatatable = (function(global) {
         });
       },
       stateSaveCallback: function(_, data) {
-        if (Object.keys(colSizeMap).length === 0) return true;
-
         let colSizes = [];
 
         for (let i = 0; i < data.ColReorder.length; i += 1) {
