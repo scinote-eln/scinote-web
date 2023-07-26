@@ -1,0 +1,30 @@
+<div class="attachment-container asset">
+  <%= link_to '#',
+          class: "shareable-file-preview-link",
+          id: "modal_link#{asset.id}",
+          data: {
+            no_turbolink: true,
+            id: asset.id
+          } do %>
+    <div class="attachment-preview <%= asset.file.attached? ? asset.file.metadata['asset_type'] : '' %>">
+      <% if asset.previewable? %>
+        <%= image_tag asset.file.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT).url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
+            class: 'asset-preview-image',
+            style: 'opacity: 0' %>
+      <% else %>
+        <i class="fas <%= file_fa_icon_class(asset) if asset.file_name %>"></i>
+      <% end %>
+    </div>
+    <div class="attachment-label"
+         data-toggle="tooltip"
+         data-placement="bottom"
+         title="<%= asset.render_file_name %>">
+      <%= asset.render_file_name %>
+    </div>
+    <div class="attachment-metadata">
+      <%= t('assets.placeholder.modified_label') %> <%= l(asset.updated_at, format: :full_date) if asset.updated_at %><br>
+      <%= number_to_human_size(asset.file_size) %>
+    </div>
+  <% end %>
+  <%= render partial: "shareable_links/my_modules/step_attachments/context_menu", locals: { asset: asset } %>
+</div>

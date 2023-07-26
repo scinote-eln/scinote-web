@@ -1,0 +1,78 @@
+<div id="filePreviewModal"
+     class="modal modal-file-preview"
+     role="dialog"
+     tabindex="-1"
+     aria-labelledby="filePreviewModal"
+     data-backdrop="static"
+     data-object-id="<%= asset.id %>">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="file-name"><%= asset.file.metadata[:name] || asset.file_name %></span>
+        <div class="sci-btn-group">
+          <a class="btn btn-light file-download-link" href="<%= asset.file.url(disposition: 'attachment', expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes) %>" data-turbolinks="false">
+            <span class="sn-icon sn-icon-export"></span> <%= t('Download')%>
+          </a>
+          <%= render partial: "shareable_links/my_modules/step_attachments/context_menu", locals: { asset: asset } %>
+          <button type="button" class="btn icon-btn btn-light" data-dismiss="modal"><span class="sn-icon sn-icon-close"></span></button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="file-preview-container">
+          <% if asset.previewable? %>
+            <% if wopi_enabled? && wopi_file?(asset) %>
+              <iframe class="wopi-file-preview" src="<%= asset.get_action_url(nil, 'embedview', false) %>"></iframe>
+            <% elsif asset.pdf_previewable? %>
+              <%= render partial: 'shared/pdf_viewer', locals: { asset: asset, report_document: false, shareable_document: true } %>
+            <% else %>
+              <%= image_tag asset.file.representation(resize_to_limit: Constants::LARGE_PIC_FORMAT).url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
+                  class: 'asset-image',
+                  style: 'opacity: 0' %>
+            <% end %>
+          <% else %>
+            <%= render partial: 'shared/file_preview/file_icon', locals: { asset: asset } %>
+          <% end %>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="gallery">
+          <% previous_asset = Asset.find_by(id: gallery.split(asset.id)[0]&.last) %>
+          <% next_asset = Asset.find_by(id: gallery.split(asset.id)[1]&.first) %>
+          <% if previous_asset %>
+            <%= link_to '#',
+              class: "previous-asset shareable-gallery-switcher",
+              data: { id: previous_asset.id } do %>
+              <i class="sn-icon sn-icon-arrow-left"></i>
+              <% if previous_asset.previewable? %>
+                <%= image_tag previous_asset.file.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT).url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
+                    class: 'asset-image',
+                    style: 'opacity: 0' %>
+              <% else %>
+                <i class="fas <%= file_fa_icon_class(previous_asset) if previous_asset.file_name %>"></i>
+              <% end %>
+              <span class="file-name"><%= previous_asset.file_name %></span>
+            <% end %>
+          <% end %>
+          <span class="file-counter">
+            <%= gallery.split(asset.id)[0].length + 1 %> of <%= gallery.length %> attachments
+          </span>
+          <% if next_asset %>
+            <%= link_to '#',
+              class: "next-asset shareable-gallery-switcher",
+              data: { id: next_asset.id } do %>
+              <% if next_asset.previewable? %>
+                <%= image_tag next_asset.file.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT).url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
+                    class: 'asset-image',
+                    style: 'opacity: 0' %>
+              <% else %>
+                <i class="fas <%= file_fa_icon_class(next_asset) if next_asset.file_name %>"></i>
+              <% end %>
+              <span class="file-name"><%= next_asset.file_name %></span>
+              <i class="sn-icon sn-icon-arrow-right"></i>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

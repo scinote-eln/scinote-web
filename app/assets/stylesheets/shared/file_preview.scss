@@ -110,7 +110,8 @@
         margin: 0 auto;
       }
 
-      .gallery-switcher {
+      .gallery-switcher,
+      .shareable-gallery-switcher {
         align-items: center;
         color: $color-black;
         display: flex;
