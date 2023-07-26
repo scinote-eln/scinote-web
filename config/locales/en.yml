@@ -192,6 +192,10 @@ en:
           attributes:
             step:
               wrong_step: "connected to the wrong step"
+        result_orderable_element:
+          attributes:
+            result:
+              wrong_result: "connected to the wrong result"
         repository_snapshot:
           attributes:
             selected:
