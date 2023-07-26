@@ -2959,6 +2959,7 @@ en:
         text: 'Text'
         checklist: 'Checklist'
         attachment: 'File'
+        add_file: 'File from your PC'
         checklist_item: 'Add a new checklist item...'
         well_plate_options:
           32_x_48: '1536 (32 x 48)'
@@ -3022,12 +3023,6 @@ en:
         add: "ADD"
         sort_by: "SORT BY"
         attachments_view_mode: "ALL ATTACHMENTS VIEW SIZE"
-        file_modal:
-          title: "Add file"
-          drag_zone_title: "Upload a file from your PC"
-          drag_zone_description: "You can also drag & drop files to here or into steps to upload"
-          drag_zone_notification: "Drop files to add to step %{position}"
-          or: "OR"
         new:
           description: 'New'
           uploading: 'Uploading'
