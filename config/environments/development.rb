@@ -15,7 +15,7 @@ Rails.application.configure do
   config.cache_classes = ENV['WORKER'].present?
 
   # Do not eager load code on boot.
-  config.eager_load = false
+  config.eager_load = ENV['WORKER'].present?
 
   # Show full error reports.
   config.consider_all_requests_local = true
