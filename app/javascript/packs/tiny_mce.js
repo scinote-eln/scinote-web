@@ -246,11 +246,11 @@ window.TinyMCE = (() => {
           object_resizing: true,
           elementpath: false,
           quickbars_insert_toolbar: false,
-          default_link_target: '_blank',
+          link_default_target: '_blank',
           mobile: {
             menubar: 'file edit view insert format table'
           },
-          target_list: [
+          link_target_list: [
             { title: 'New page', value: '_blank' },
             { title: 'Same page', value: '_self' }
           ],
