@@ -17,13 +17,11 @@ module InputSanitizeHelper
   end
 
   def smart_annotation_text(text)
-    text = sanitize_input(text)
-
     if text =~ SmartAnnotations::TagToText::USER_REGEX || text =~ SmartAnnotations::TagToText::ITEMS_REGEX
-      text = smart_annotation_text_parser(text)
+      text = SmartAnnotations::TagToText.new(nil, nil, text, is_shared_object: true).text
     end
 
-    strip_tags(text)
+    sanitize_input(text)
   end
 
   def custom_auto_link(text, options = {})

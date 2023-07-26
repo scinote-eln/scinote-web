@@ -11,7 +11,7 @@
     <% end %>
     <div class="comment-body">
       <div class="comment-message">
-        <%= custom_auto_link(comment.message, team: nil, simple_format: false) %>
+        <%= smart_annotation_text(comment.message) %>
       </div>
       <div class="comment-footer">
         <div class="comment-create-date">

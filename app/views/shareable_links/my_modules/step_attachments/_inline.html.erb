@@ -23,7 +23,7 @@
   </div>
   <% if wopi_enabled? && wopi_file?(asset) %>
     <% if asset.file_size.positive? %>
-      <div class="iframe-placeholder" data-iframe-url="<%= asset.get_action_url(current_user, 'embedview', false) %>"></div>
+      <div class="iframe-placeholder" data-iframe-url="<%= asset.get_action_url(nil, 'embedview', false) %>"></div>
     <% else %>
       <div class="empty-office-file">
         <h2><%= t('assets.empty_office_file.description') %></h2>
