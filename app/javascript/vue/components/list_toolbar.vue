@@ -27,7 +27,9 @@
         :options="archivedOptions" />
     </div>
     <div class="sn-list-toolbar__right flex">
-      <div id="filtersContainer"></div>
+      <div v-if="filters">
+        <FilterDropdown :filters="filters" @applyFilters="applyFilters" />
+      </div>
       <div class="dropdown sort-menu" :title="i18n.t('general.sort.title')">
         <button class="btn btn-light btn-black icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           <span><i class="sn-icon sn-icon-sort-down"></i></span>
@@ -53,13 +55,14 @@
 
 <script>
   import Select from '../shared/select.vue';
+  import FilterDropdown from '../shared/filter_dropdown.vue';
 
   export default {
     name: 'ListToolbar',
     props: {
       url: { type: String, required: true }
     },
-    components: { Select },
+    components: { Select, FilterDropdown },
     data() {
       return {
         loading: false,
@@ -69,9 +72,12 @@
         sorts: null,
         sort: null,
         archived: null,
+        filters: null,
+        filterValues: null,
         viewChangeCallback: null,
         archivedChangeCallback: null,
-        sortChangeCallback: null
+        sortChangeCallback: null,
+        filterChangeCallback: null
       }
     },
     created() {
@@ -83,6 +89,7 @@
         this.view = data.view;
         this.sorts = data.sorts;
         this.sort = data.sort;
+        this.filters = data.filters;
         this.archived = data.archived;
         this.loading = false;
       });
@@ -132,6 +139,13 @@
         }
 
         this.reloadList();
+      },
+      applyFilters(filterValues) {
+        this.filterValues = filterValues;
+
+        if (this.filterChangeCallback) {
+          return this.filterChangeCallback(filterValues);
+        }
       },
       reloadList() {
         Turbolinks.visit(`?view=${this.view}&archived=${this.archived}&sort=${this.sort}`);

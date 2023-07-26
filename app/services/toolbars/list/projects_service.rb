@@ -24,7 +24,8 @@ module Toolbars
           view: current_view,
           sorts: %w(archived_new archived_old | new old | atoz ztoa | id_asc id_desc),
           sort: current_sort,
-          archived: archived
+          archived: archived,
+          filters: filters
         }
       end
 
@@ -33,6 +34,17 @@ module Toolbars
           new_project_action,
           new_folder_action
         ].compact
+      end
+
+      def filters
+        [
+          {
+            key: 'contains',
+            type: 'text',
+            label: I18n.t('filters_modal.text.label'),
+            placeholder: I18n.t('filters_modal.text.placeholder')
+          }
+        ]
       end
 
       private

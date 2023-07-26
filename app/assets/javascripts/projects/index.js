@@ -721,6 +721,10 @@ var ProjectsIndex = (function() {
       projectsCurrentSort = sort;
       loadCardsView();
     };
+    window.listToolbarComponent.filterChangeCallback = (filters) => {
+      currentFilters = filters;
+      loadCardsView();
+    };
 
     updateSelectedCards();
     initNewProjectFolderModal();
