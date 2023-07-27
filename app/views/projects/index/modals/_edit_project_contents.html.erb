@@ -16,14 +16,14 @@
         <div class="checkbox">
           <%= f.check_box :visibility,
                           { label: t('projects.index.modal_new_project.visibility_html'),
-                            data: { action: 'toggle-visibility', target: 'role_select_wrapper' },
+                            data: { action: 'toggle-visibility', target: 'edit_project_role_select_wrapper' },
                             checked: f.object.visible? },
                           :visible,
                           :hidden %>
         </div>
       </div>
     </div>
-    <div class="row <%= f.object.hidden? ? 'hidden' : '' %>" id="role_select_wrapper">
+    <div class="row <%= f.object.hidden? ? 'hidden' : '' %>" id="edit_project_role_select_wrapper">
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <%= f.select :default_public_user_role_id,
                      options_for_select(user_roles_collection(@project), selected: f.object.default_public_user_role_id),
