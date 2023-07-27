@@ -12,7 +12,9 @@ module Api
       before_action :load_checklist_item_for_managing, only: %i(update destroy)
 
       def index
-        checklist_items = @checklist.checklist_items.page(params.dig(:page, :number)).per(params.dig(:page, :size))
+        checklist_items =
+          filter_timestamp_range(@checklist.checklist_items).page(params.dig(:page, :number))
+                                                            .per(params.dig(:page, :size))
 
         render jsonapi: checklist_items, each_serializer: ChecklistItemSerializer
       end

@@ -11,10 +11,11 @@ module Api
       before_action :check_delete_permissions, only: :destroy
 
       def index
-        inventories = @team.repositories
-                           .active
-                           .page(params.dig(:page, :number))
-                           .per(params.dig(:page, :size))
+        inventories =
+          filter_timestamp_range(@team.repositories).active
+                                                    .page(params.dig(:page, :number))
+                                                    .per(params.dig(:page, :size))
+
         render jsonapi: inventories, each_serializer: InventorySerializer
       end
 

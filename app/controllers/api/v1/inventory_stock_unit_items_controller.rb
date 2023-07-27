@@ -11,9 +11,13 @@ module Api
       before_action :check_manage_permissions, only: %i(create update destroy)
 
       def index
-        stock_unit_items = @inventory_column.repository_stock_unit_items
-                                            .page(params.dig(:page, :number))
-                                            .per(params.dig(:page, :size))
+        stock_unit_items =
+          filter_timestamp_range(
+            @inventory_column.repository_stock_unit_items
+          )
+          .page(params.dig(:page, :number))
+          .per(params.dig(:page, :size))
+
         render jsonapi: stock_unit_items, each_serializer: InventoryStockUnitItemSerializer
       end
 

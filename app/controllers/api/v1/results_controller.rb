@@ -8,9 +8,8 @@ module Api
       before_action :check_manage_permissions, only: %i(create update)
 
       def index
-        results = @task.results
-                       .page(params.dig(:page, :number))
-                       .per(params.dig(:page, :size))
+        results = filter_timestamp_range(@task.results).page(params.dig(:page, :number))
+                                                       .per(params.dig(:page, :size))
         render jsonapi: results, each_serializer: ResultSerializer,
                                  include: (%i(text table file) << include_params).flatten.compact
       end

@@ -11,9 +11,8 @@ module Api
       end
 
       def index
-        protocols = @task.protocols
-                         .page(params.dig(:page, :number))
-                         .per(params.dig(:page, :size))
+        protocols = filter_timestamp_range(@task.protocols).page(params.dig(:page, :number))
+                                                           .per(params.dig(:page, :size))
         render jsonapi: protocols,
           each_serializer: ProtocolSerializer, rte_rendering: render_rte?, team: @team
       end

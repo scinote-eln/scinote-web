@@ -13,7 +13,8 @@ module Api
       before_action :check_delete_permissions, only: :destroy
 
       def index
-        steps = @protocol.steps.page(params.dig(:page, :number)).per(params.dig(:page, :size))
+        steps = filter_timestamp_range(@protocol.steps).page(params.dig(:page, :number))
+                                                       .per(params.dig(:page, :size))
 
         render jsonapi: steps, each_serializer: StepSerializer,
                                include: include_params,

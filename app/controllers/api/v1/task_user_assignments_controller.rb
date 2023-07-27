@@ -12,10 +12,9 @@ module Api
       before_action :load_user_assignment_for_managing, only: %i(update show)
 
       def index
-        user_assignments = @task.user_assignments
-                                .includes(:user_role)
-                                .page(params.dig(:page, :number))
-                                .per(params.dig(:page, :size))
+        user_assignments = filter_timestamp_range(@task.user_assignments).includes(:user_role)
+                                                                         .page(params.dig(:page, :number))
+                                                                         .per(params.dig(:page, :size))
 
         render jsonapi: user_assignments,
                each_serializer: UserAssignmentSerializer,

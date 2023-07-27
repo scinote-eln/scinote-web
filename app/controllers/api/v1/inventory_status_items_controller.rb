@@ -8,9 +8,14 @@ module Api
       before_action :check_manage_permissions, only: %i(create update destroy)
 
       def index
-        status_items = @inventory_column.repository_status_items
-                                        .page(params.dig(:page, :number))
-                                        .per(params.dig(:page, :size))
+        status_items =
+          filter_timestamp_range(
+            @inventory_column.repository_status_items
+          )
+          .repository_status_items
+          .page(params.dig(:page, :number))
+          .per(params.dig(:page, :size))
+
         render jsonapi: status_items, each_serializer: InventoryStatusItemSerializer
       end
 

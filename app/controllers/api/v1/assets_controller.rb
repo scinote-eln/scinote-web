@@ -8,9 +8,9 @@ module Api
       before_action :check_upload_type, only: :create
 
       def index
-        attachments = @step.assets
-                           .page(params.dig(:page, :number))
-                           .per(params.dig(:page, :size))
+        attachments =
+          filter_timestamp_range(@step.assets).page(params.dig(:page, :number))
+                                              .per(params.dig(:page, :size))
 
         render jsonapi: attachments, each_serializer: AssetSerializer
       end

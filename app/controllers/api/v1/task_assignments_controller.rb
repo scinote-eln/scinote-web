@@ -10,10 +10,10 @@ module Api
       before_action :check_manage_permissions, only: %i(create destroy)
 
       def index
-        users = User.joins(:user_my_modules)
-                    .where(user_my_modules: { my_module_id: @task.id })
-                    .page(params.dig(:page, :number))
-                    .per(params.dig(:page, :size))
+        users = filter_timestamp_range(User).joins(:user_my_modules)
+                                            .where(user_my_modules: { my_module_id: @task.id })
+                                            .page(params.dig(:page, :number))
+                                            .per(params.dig(:page, :size))
         render jsonapi: users, each_serializer: UserSerializer
       end
 
