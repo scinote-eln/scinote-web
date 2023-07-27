@@ -20,7 +20,7 @@
           id="activities-group-<%= date %>"
           data-button-link="<%= "#activities-group-#{date}-button" %>">
           <% activities.each do |activity| %>
-            <%= render partial: 'global_activities/activity.html.erb', locals: { activity: activity } %>
+            <%= render partial: 'global_activities/activity', locals: { activity: activity } %>
           <% end %>
       </div>
     </div>

@@ -9,11 +9,11 @@
     </div>
     <div class="items">
       <% task_group[:tasks].each do |task| %>
-        <li class="item" data-name="<%= task.name %>" data-id="<%= task.id.base62_encode %>" data-type="tsk">
+        <li class="item" data-name="<%= sanitize_input(task.name) %>" data-id="<%= task.id.base62_encode %>" data-type="tsk">
           <span class='sa-type'><%= task.code %></span>
           <span class="dot">&middot;</span>
-          <span class="item-text"><%= task.name %></span>
-          <%= render partial: 'shared/smart_annotation/atwho_control_buttons.html.erb' %>
+          <span class="item-text"><%= sanitize_input(task.name) %></span>
+          <%= render partial: 'shared/smart_annotation/atwho_control_buttons' %>
         </li>
       <% end %>
     </div>
@@ -23,7 +23,7 @@
     <div class="more-results"><%= t('atwho.more_results') %></div>
   <% end %>
   <% if my_modules.blank? %>
-    <%= render partial: 'shared/smart_annotation/no_results.html.erb', locals: { object_type: 'my_modules' } %>
+    <%= render partial: 'shared/smart_annotation/no_results', locals: { object_type: 'my_modules' } %>
   <% end %>
 </div>
-<%= render partial: 'shared/smart_annotation/footer.html.erb' %>
+<%= render partial: 'shared/smart_annotation/footer' %>

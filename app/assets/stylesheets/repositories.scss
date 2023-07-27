@@ -432,7 +432,6 @@
 
 .search-container {
   .search-field {
-    padding-right: 32px;
 
     &.barcode-mode {
       background-color: $brand-primary;
@@ -446,7 +445,7 @@
     background: $color-white;
     color: $color-silver-chalice;
     display: none;
-    z-index: 1000;
+    z-index: 1;
 
     .repository-save-changes-link {
       cursor: pointer;

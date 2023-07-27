@@ -12,22 +12,16 @@ class RepositoryColumnsController < ApplicationController
     render json: {
       id: @repository.id,
       html: render_to_string(
-        partial: 'repository_columns/manage_column_modal_index.html.erb'
+        partial: 'repository_columns/manage_column_modal_index'
       )
     }
   end
 
   def new
     @repository_column = RepositoryColumn.new
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'repository_columns/manage_column_modal_content.html.erb'
-          )
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'repository_columns/manage_column_modal_content')
+    }
   end
 
   def create
@@ -51,7 +45,7 @@ class RepositoryColumnsController < ApplicationController
   def edit
     render json: {
       html: render_to_string(
-        partial: 'repository_columns/manage_column_modal_content.html.erb'
+        partial: 'repository_columns/manage_column_modal_content'
       )
     }
   end
@@ -61,15 +55,9 @@ class RepositoryColumnsController < ApplicationController
   end
 
   def destroy_html
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'repository_columns/delete_column_modal_body.html.erb'
-          )
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'repository_columns/delete_column_modal_body')
+    }
   end
 
   def destroy
@@ -77,22 +65,16 @@ class RepositoryColumnsController < ApplicationController
     column_name = @repository_column.name
 
     log_activity(:delete_column_inventory) # Should we move this call somewhere?
-    respond_to do |format|
-      format.json do
-        if @repository_column.destroy
-          render json: {
-            message: t('libraries.repository_columns.destroy.success_flash',
-                       name: escape_input(column_name)),
-            id: column_id,
-            status: :ok
-          }
-        else
-          render json: {
-            message: t('libraries.repository_columns.destroy.error_flash'),
-            status: :unprocessable_entity
-          }
-        end
-      end
+    if @repository_column.destroy
+      render json: {
+        message: t('libraries.repository_columns.destroy.success_flash', name: escape_input(column_name)),
+        id: column_id
+      }
+    else
+      render json: {
+        message: t('libraries.repository_columns.destroy.error_flash'),
+        status: :unprocessable_entity
+      }
     end
   end
 
@@ -106,7 +88,7 @@ class RepositoryColumnsController < ApplicationController
         no_items: t(
           'projects.reports.new.save_PDF_to_inventory_modal.no_columns'
         )
-        }, status: :ok
+      }
     else
       render json: { results: @asset_columns }, status: :ok
     end

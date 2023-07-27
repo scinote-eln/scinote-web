@@ -63,9 +63,14 @@ export default {
   },
   computed: {
     hasChildren: function() {
-      return !this.item.disabled && (this.item.has_children || this.children.length > 0);
+      if (this.item.disabled) return false;
+      if (this.item.has_children) return true;
+      if (this.children && this.children.length > 0) return true;
+      return false
     },
     sortedMenuItems: function() {
+      if (!this.children) return [];
+
       return this.children.sort((a, b) => {
         if (a.name.toLowerCase() < b.name.toLowerCase()) {
           return -1;
@@ -114,7 +119,7 @@ export default {
       }
     },
     children: function() {
-      if (this.children.length > 0) {
+      if (this.children && this.children.length > 0) {
         this.childrenExpanded = true;
       } else if (this.childrenLoaded) {
         this.item.has_children = false;

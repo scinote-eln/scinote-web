@@ -1,6 +1,6 @@
 <% editable ||= false %>
 <% if assignable.visible? %>
-  <%= form_with(model: assignable, url: [:update_default_public_user_role, :access_permissions, assignable], method: :put, remote: true, html: { class: 'member-item', id: 'public_assignments', data: { action: 'replace-form autosave-form', object_type: assignable.class.name.underscore.to_sym } }) do |f| %>
+  <%= form_with(model: assignable, url: [:update_default_public_user_role, :access_permissions, assignable], method: :put, html: { class: 'member-item', id: 'public_assignments', data: { remote: true, action: 'replace-form autosave-form', object_type: assignable.class.name.underscore.to_sym } }) do |f| %>
     <div class="user-assignment-info">
       <div class="global-avatar-container">
         <%= image_tag "icon/team.png", class: 'img-circle pull-left' %>

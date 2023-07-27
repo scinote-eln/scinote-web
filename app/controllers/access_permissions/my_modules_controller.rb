@@ -8,17 +8,9 @@ module AccessPermissions
     before_action :check_read_permissions, only: %i(show)
     before_action :check_manage_permissions, only: %i(edit update)
 
-    def show
-      respond_to do |format|
-        format.json
-      end
-    end
+    def show; end
 
-    def edit
-      respond_to do |format|
-        format.json
-      end
-    end
+    def edit; end
 
     def update
       user_id = permitted_update_params[:user_id]
@@ -38,11 +30,7 @@ module AccessPermissions
 
       log_change_activity
 
-      respond_to do |format|
-        format.json do
-          render :my_module_member
-        end
-      end
+      render :my_module_member
     end
 
     private

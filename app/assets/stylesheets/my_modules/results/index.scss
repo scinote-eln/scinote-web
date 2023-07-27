@@ -31,8 +31,7 @@
       }
 
       .create-wopi-file-btn,
-      .new-marvinjs-upload-button,
-      .new-bio-eddie-upload-button {
+      .new-marvinjs-upload-button {
         padding: 0;
       }
     }
@@ -71,6 +70,10 @@
 .result {
   .panel {
     margin-left: 4.25em !important;
+  }
+
+  .ql-editor {
+    overflow-x: auto;
   }
 
   .result-icon {

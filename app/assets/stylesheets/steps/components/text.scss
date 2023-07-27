@@ -22,6 +22,9 @@
   }
 
   .view-text-element {
+    overflow-x: auto;
+    pointer-events: initial;
+
     a {
       pointer-events: initial;
     }

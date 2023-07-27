@@ -1448,6 +1448,7 @@ en:
         duplicate: 'Duplicate'
         task_access: 'Task access'
         task_data: 'Task data display'
+        manage_columns_tooltip: "Manage columns"
       my_module_actions:
         title: 'TASK ACTIONS'
         edit: 'Edit'
@@ -1687,7 +1688,6 @@ en:
       i_shared: "Shared inventory (owned by your Team)"
       shared_edit: "Shared inventory (owned by %{team_name}). You can edit."
       shared_read: "Shared inventory (owned by %{team_name}). You can view."
-    bmt_singleton_error: "Only one BMT inventory can be present."
     index:
       active_reminders:
         label: "Active reminders"
@@ -1891,47 +1891,6 @@ en:
                 from_placeholder: "From"
                 all_units: "All units"
                 no_unit: "No unit"
-      bmt_search:
-        bmt_filter: "Biomolecule filter"
-        save_filters: "Save filters"
-        title: "Filters"
-        clear_all: "Clear all"
-        add_filter: "Add filter"
-        apply: "Apply"
-        filter: "Filter"
-        no_filters: "No active filters."
-        filters:
-          types:
-            additionalDataFilter:
-              name: "Additional data"
-            entityTypeFilter:
-              name: "Entity type"
-              placeholder: "Enter entity type"
-            monomerTypeFilter:
-              name: "Monomere type"
-              placeholder: "Enter monomere type"
-            subsequenceFilter:
-              name: "Subsequence"
-              placeholder: "Enter subsequence"
-              derivatives_included: "Derivatives included"
-            variantSequenceFilter:
-              name: "Variant sequence"
-              placeholder: "Enter variant sequence"
-              derivatives_included: "Derivatives included"
-              distance: "Distance"
-              distance_type: "Distance type"
-              exact: "Exact"
-              maximum: "Maximum"
-            fullsequenceFilter:
-              name: "Full sequence"
-              placeholder: "Enter full sequence"
-              derivatives_included: "Derivatives included"
-            monomerSubstructureSearchFilter:
-              name: "Monomere substructure"
-              placeholder: "Enter substructure"
-            cidFilter:
-              name: "Cid"
-              placeholder: "Enter Cid"
     table:
       id: 'Item ID'
       external_id: 'External ID'
@@ -2516,8 +2475,8 @@ en:
           head_title: "Settings | Add-ons"
           title: "Add-ons"
           no_addons: "You have no SciNote Add-ons."
-          scinote_addons: "Scinote add-ons"
-          label_printers: "Label Printers"
+          scinote_addons: "SciNote add-ons"
+          label_printers: "Label printers"
           printers:
             ready: "Ready"
             not_ready: "Not ready"
@@ -3266,7 +3225,6 @@ en:
     file_preview:
       edit_in_scinote: "Edit in SciNote"
       edit_in_marvinjs: "Edit in Marvin JS"
-      edit_in_bio_eddie: "Edit in BioEddie"
     context_menu:
       set_view_size: "SET VIEW SIZE"
       delete: "Delete file"
@@ -3629,9 +3587,9 @@ en:
     protocols: "Protocol"
     labels: "Label"
     teams: "All Teams"
-    addons: "Add-Ons"
-    label_printer: "Label Printer"
-    fluics_printer: "Fluics Printer"
+    addons: "Add-ons"
+    label_printer: "Label printer"
+    fluics_printer: "Fluics printer"
 
   Add: "Add"
   Asset: "File"
@@ -3668,14 +3626,6 @@ en:
   Added: 'Added'
   by: 'by'
   name: 'name'
-
-  bio_eddie:
-    new_molecule: "New Molecule"
-    new_button: "Biomolecule"
-    molecule_name_placeholder: "Click here to enter Molecule name"
-    no_molecules_found: "No Molecules Found"
-    save_and_register: "Save & Register to Biomolecule Toolkit"
-    empty_molecule_error: "An error occurred. The molecule can't be empty."
 
   marvinjs:
     new_sketch: "New Chemical Drawing"

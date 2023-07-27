@@ -24,15 +24,11 @@ class ReportsController < ApplicationController
   def index; end
 
   def datatable
-    respond_to do |format|
-      format.json do
-        render json: ::ReportDatatable.new(
-          view_context,
-          current_user,
-          Report.viewable_by_user(current_user, current_team)
-        )
-      end
-    end
+    render json: ::ReportDatatable.new(
+      view_context,
+      current_user,
+      Report.viewable_by_user(current_user, current_team)
+    )
   end
 
   # Report grouped by modules
@@ -57,22 +53,20 @@ class ReportsController < ApplicationController
       report = current_team.reports.new(project: @project)
     end
 
-    respond_to do |format|
-      format.json do
-        if lookup_context.template_exists?("reports/templates/#{template}/edit.html.erb")
-          render json: {
-            html: render_to_string(
-              template: "reports/templates/#{template}/edit.html.erb",
-              layout: 'reports/template_values_editor',
-              locals: { report: report }
-            )
-          }
-        else
-          render json: {
-            html: render_to_string(partial: 'reports/wizard/no_template_values.html.erb')
-          }
-        end
-      end
+    if lookup_context.template_exists?("reports/templates/#{template}/edit")
+      render json: {
+        html: render_to_string(
+          template: "reports/templates/#{template}/edit",
+          layout: 'reports/template_values_editor',
+          locals: { report: report },
+          formats: :html
+        )
+      }
+    else
+      render json: {
+        html: render_to_string(partial: 'reports/wizard/no_template_values',
+                               formats: :html)
+      }
     end
   end
 
@@ -164,58 +158,42 @@ class ReportsController < ApplicationController
     docx = @report.docx_file.attached? ? document_preview_report_path(@report, report_type: :docx) : nil
     pdf = @report.pdf_file.attached? ? document_preview_report_path(@report, report_type: :pdf) : nil
 
-    respond_to do |format|
-      format.json do
-        render json: {
-          docx: {
-            processing: @report.docx_processing?,
-            preview_url: docx,
-            error: @report.docx_error?
-          },
-          pdf: {
-            processing: @report.pdf_processing?,
-            preview_url: pdf,
-            error: @report.pdf_error?
-          }
-        }
-      end
-    end
+    render json: {
+      docx: {
+        processing: @report.docx_processing?,
+        preview_url: docx,
+        error: @report.docx_error?
+      },
+      pdf: {
+        processing: @report.pdf_processing?,
+        preview_url: pdf,
+        error: @report.pdf_error?
+      }
+    }
   end
 
   # Generation actions
   def generate_pdf
-    respond_to do |format|
-      format.json do
-        render json: {
-          message: I18n.t('projects.reports.index.generation.accepted_message')
-        }
-      end
-    end
+    render json: {
+      message: I18n.t('projects.reports.index.generation.accepted_message')
+    }
   end
 
   def generate_docx
-    respond_to do |format|
-      format.json do
-        @report.docx_processing!
-        log_activity(:generate_docx_report)
+    @report.docx_processing!
+    log_activity(:generate_docx_report)
 
-        ensure_report_template!
-        Reports::DocxJob.perform_later(@report.id, current_user, root_url)
-        render json: {
-          message: I18n.t('projects.reports.index.generation.accepted_message')
-        }
-      end
-    end
+    ensure_report_template!
+    Reports::DocxJob.perform_later(@report.id, current_user, root_url)
+    render json: {
+      message: I18n.t('projects.reports.index.generation.accepted_message')
+    }
   end
 
   def save_pdf_to_inventory_modal
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(partial: 'reports/save_PDF_to_inventory_modal.html.erb')
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'reports/save_PDF_to_inventory_modal', formats: :html)
+    }
   end
 
   def save_pdf_to_inventory_item
@@ -245,21 +223,16 @@ class ReportsController < ApplicationController
     my_module = MyModule.find_by_id(params[:my_module_id])
     return render_403 unless my_module.experiment.project == @project
 
-    respond_to do |format|
-      if my_module.blank?
-        format.json do
-          render json: {}, status: :not_found
-        end
-      else
-        format.json do
-          render json: {
-            html: render_to_string(
-              partial: 'reports/new/modal/module_contents.html.erb',
-              locals: { project: @project, my_module: my_module }
-            )
-          }
-        end
-      end
+    if my_module.blank?
+      render json: {}, status: :not_found
+    else
+      render json: {
+        html: render_to_string(
+          partial: 'reports/new/modal/module_contents',
+          locals: { project: @project, my_module: my_module },
+          formats: :html
+        )
+      }
     end
   end
 
@@ -268,21 +241,16 @@ class ReportsController < ApplicationController
     step = Step.find_by_id(params[:step_id])
     return render_403 unless step.my_module.experiment.project == @project
 
-    respond_to do |format|
-      if step.blank?
-        format.json do
-          render json: {}, status: :not_found
-        end
-      else
-        format.json do
-          render json: {
-            html: render_to_string(
-              partial: 'reports/new/modal/step_contents.html.erb',
-              locals: { project: @project, step: step }
-            )
-          }
-        end
-      end
+    if step.blank?
+      render json: {}, status: :not_found
+    else
+      render json: {
+        html: render_to_string(
+          partial: 'reports/new/modal/step_contents',
+          locals: { project: @project, step: step },
+          formats: :html
+        )
+      }
     end
   end
 
@@ -291,29 +259,25 @@ class ReportsController < ApplicationController
     result = Result.find_by_id(params[:result_id])
     return render_403 unless result.experiment.project == @project
 
-    respond_to do |format|
-      if result.blank?
-        format.json do
-          render json: {}, status: :not_found
-        end
-      else
-        format.json do
-          render json: {
-            html: render_to_string(
-              partial: 'reports/new/modal/result_contents.html.erb',
-              locals: { project: @project, result: result }
-            )
-          }
-        end
-      end
+    if result.blank?
+      render json: {}, status: :not_found
+    else
+      render json: {
+        html: render_to_string(
+          partial: 'reports/new/modal/result_contents',
+          locals: { project: @project, result: result },
+          formats: :html
+        )
+      }
     end
   end
 
   def project_contents
     render json: {
       html: render_to_string(
-        partial: 'reports/wizard/project_contents.html.erb',
-        locals: { project: @project, report: nil }
+        partial: 'reports/wizard/project_contents',
+        locals: { project: @project, report: nil },
+        formats: :html
       )
     }
   end
@@ -324,11 +288,12 @@ class ReportsController < ApplicationController
 
   def document_preview
     render json: { html: render_to_string(
-      partial: 'reports/content_document_preview.html.erb',
+      partial: 'reports/content_document_preview',
       locals: {
         report: @report,
         report_type: params[:report_type]
-      }
+      },
+      formats: :html
     ) }
   end
 

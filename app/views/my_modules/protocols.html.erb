@@ -28,7 +28,7 @@
 
 
 <%= content_for :sidebar do %>
-  <%= render partial: "shared/sidebar/#{@my_module.archived_branch? ? 'archived_my_module' : 'my_module'}.html.erb",
+  <%= render partial: "shared/sidebar/#{@my_module.archived_branch? ? 'archived_my_module' : 'my_module'}",
     locals: {
       my_modules: @experiment_my_modules,
       experiment: @my_module.experiment,
@@ -65,7 +65,7 @@
               <i class="sn-icon sn-icon-info"></i>
             </a>
             <div class="dropdown-menu" aria-labelledby="taskDetailsButton">
-              <%= render partial: "module_header_details_popover.html.erb" %>
+              <%= render partial: "module_header_details_popover" %>
             </div>
           </span>
           <span class="task-details-code">
@@ -119,6 +119,8 @@
           data-repositories-list-url="<%= my_module_repositories_list_html_path(@my_module) %>">
         <%= render partial: "my_modules/repositories/repositories_list" %>
       </div>
+
+      <%= render partial: "my_modules/repositories/full_view_modal" %>
     </div>
     <!-- Protocol -->
     <div class="task-section">
@@ -136,9 +138,8 @@
   </div>
 </div>
 
-<%= render partial: "my_modules/repositories/full_view_modal" %>
 <%= render partial: "my_modules/modals/update_repository_records_modal" %>
-<%= render partial: 'label_printers/label_printer_modal' %>
+
 
 <%= render partial: "my_modules/protocols/print_protocol_modal", locals: { protocol: @protocol, comments_enabled: true} %>
 
@@ -146,33 +147,33 @@
 <div class="hidden" data-role="protocol-status-bar-url" data-url="<%= protocol_status_bar_protocol_path(@protocol) %>"></div>
 
 <!-- Confirm link update modal -->
-<%= render partial: "my_modules/protocols/confirm_link_update_modal.html.erb" %>
+<%= render partial: "my_modules/protocols/confirm_link_update_modal" %>
 
 <!-- Load from repository modal -->
-<%= render partial: "my_modules/protocols/load_from_repository_modal.html.erb" %>
+<%= render partial: "my_modules/protocols/load_from_repository_modal" %>
 
 <!-- Copy to repository protocol modal -->
-<%= render partial: "protocols/index/new_protocol_modal.html.erb", locals: {type: 'copy'} %>
+<%= render partial: "protocols/index/new_protocol_modal", locals: {type: 'copy'} %>
 
 <!-- Import protocol elements -->
-<%= render partial: "protocols/import_export/import_elements.html.erb" %>
+<%= render partial: "protocols/import_export/import_elements" %>
 
 <!-- Status flow modal -->
 <% if @my_module.my_module_status_flow %>
-  <%= render partial: 'my_modules/modals/status_flow_modal.html.erb' %>
+  <%= render partial: 'my_modules/modals/status_flow_modal' %>
 <% end %>
 
 <!-- Create new office file modal -->
-<%= render partial: 'assets/wopi/create_wopi_file_modal.html.erb' %>
+<%= render partial: 'assets/wopi/create_wopi_file_modal' %>
 
 <!-- Delete file modal -->
-<%= render partial: 'assets/asset_delete_modal.html.erb' %>
+<%= render partial: 'assets/asset_delete_modal' %>
 
-<%= render partial: 'my_modules/repositories/consume_stock_modal.html.erb'%>
+<%= render partial: 'my_modules/repositories/consume_stock_modal'%>
 
 <%= stylesheet_link_tag 'datatables' %>
 <%= javascript_include_tag "handsontable.full" %>
-<%= render partial: "shared/formulas_libraries.html.erb" %>
+<%= render partial: "shared/formulas_libraries" %>
 <%= javascript_include_tag("my_modules/protocols") %>
 <%= javascript_include_tag("my_modules/status_flow") %>
 <%= javascript_include_tag("my_modules/tags") %>

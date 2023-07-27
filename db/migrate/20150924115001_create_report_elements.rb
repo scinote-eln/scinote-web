@@ -3,7 +3,7 @@ class CreateReportElements < ActiveRecord::Migration[4.2]
     create_table :report_elements do |t|
       t.integer :position, null: false
       t.integer :type_of, null: false
-      t.integer :sort_order, { default: 0 } # Can be null
+      t.integer :sort_order, default: 0 # Can be null
 
       # Each element belongs to report
       t.integer :report_id

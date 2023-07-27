@@ -130,12 +130,11 @@
       })
 
       $(this.$refs.modal).on('hidden.bs.modal', () => {
+        if (this.zebraEnabled) {
+          this.zebraPrinters = null;
+        }
         this.$emit('close');
       });
-
-      if (this.zebraEnabled) {
-        this.initZebraPrinter();
-      }
     },
     computed: {
       availableTemplates() {
@@ -153,7 +152,7 @@
               description: i.attributes.description || ''
             }
           }
-        })
+        }).sort((temp1, temp2) => (temp1.label?.toLowerCase() > temp2.label?.toLowerCase() ? 1 : -1));
       },
       availablePrinters() {
         return this.printers.map(i => {
@@ -167,6 +166,9 @@
     watch: {
       showModal() {
         if (this.showModal) {
+          if (this.zebraEnabled) {
+            this.initZebraPrinter();
+          }
           $(this.$refs.modal).modal('show');
           this.validateTemplate();
         }

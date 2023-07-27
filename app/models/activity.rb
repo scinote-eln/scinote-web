@@ -112,7 +112,7 @@ class Activity < ApplicationRecord
   def self.url_search_query(filters)
     result = []
     filters.each do |filter, values|
-      result.push(values.map { |k, v| { k => v.collect(&:id) } }.to_query(filter))
+      result.push(values.transform_values { |v| v.collect(&:id) }.to_query(filter))
     end
     if filters[:subjects]
       subject_labels = []

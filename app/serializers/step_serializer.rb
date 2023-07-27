@@ -7,22 +7,9 @@ class StepSerializer < ActiveModel::Serializer
   include CommentHelper
   include InputSanitizeHelper
 
-  attributes :name, :position, :completed, :attachments_manageble, :urls, :assets_view_mode, :assets_order,
-             :marvinjs_enabled, :bio_eddie_service_enabled, :bio_eddie_context, :marvinjs_context,
-             :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit, :created_at,
-             :created_by
-
-  def bio_eddie_service_enabled
-    BioEddieService.enabled?(@instance_options[:user])
-  end
-
-  def bio_eddie_context
-    if bio_eddie_service_enabled
-      {
-        marvin_js_asset_url: marvin_js_assets_path
-      }
-    end
-  end
+  attributes :name, :position, :completed, :attachments_manageble, :urls, :assets_view_mode,
+             :marvinjs_enabled, :marvinjs_context, :created_by, :created_at, :assets_order,
+             :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit
 
   def marvinjs_enabled
     MarvinJsService.enabled?

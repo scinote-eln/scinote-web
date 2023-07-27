@@ -13,7 +13,7 @@ module ReportsHelper
     end
 
     # Determine partial
-    view = "reports/elements/#{element.type_of}_element.html.erb"
+    view = "reports/elements/#{element.type_of}_element"
 
     # Set locals
     locals = provided_locals.nil? ? {} : provided_locals.clone
@@ -28,13 +28,13 @@ module ReportsHelper
     locals[:report_element] = element
     locals[:children] = children_html
 
-    render partial: view, locals: locals
+    render partial: view, locals: locals, formats: :html
   end
 
   # "Hack" to omit file preview URL because of WKHTML issues
   def report_image_asset_url(asset)
     preview = asset.inline? ? asset.large_preview : asset.medium_preview
-    image_tag(preview.processed.service_url(expires_in: Constants::URL_LONG_EXPIRE_TIME))
+    image_tag(preview.processed.url(expires_in: Constants::URL_LONG_EXPIRE_TIME))
   rescue ActiveStorage::FileNotFoundError
     image_tag('icon_small/missing.svg')
   rescue StandardError => e

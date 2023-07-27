@@ -53,7 +53,7 @@ module WopiUtil
   # Currently only saves Excel, Word and PowerPoint view and edit actions
   def initialize_discovery
     Rails.cache.fetch(:wopi_discovery, expires_in: DISCOVERY_TTL) do
-      @doc = Nokogiri::XML(Kernel.open(ENV['WOPI_DISCOVERY_URL']))
+      @doc = Nokogiri::XML(Net::HTTP.get(URI(ENV.fetch('WOPI_DISCOVERY_URL', nil))))
       discovery_json = {}
       key = @doc.xpath('//proof-key')
       discovery_json[:proof_key_mod] = key.xpath('@modulus').first.value

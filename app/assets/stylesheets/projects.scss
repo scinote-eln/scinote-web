@@ -184,8 +184,14 @@ path, ._jsPlumb_endpoint {
     height: 40px;
 
     .dropdown {
-      bottom: 18px;
-      left: 0;
+      bottom: 22px;
+      left: 22px;
+
+      &:hover {
+        a {
+          text-decoration: none;
+        }
+      }
     }
   }
 
@@ -380,7 +386,6 @@ path, ._jsPlumb_endpoint {
   div {
     font-size: 20px;
     width: 4px;
-    height: 0px;
     display: inline-block;
 
     & .fas {
@@ -420,7 +425,7 @@ path, ._jsPlumb_endpoint {
     font-size: $font-size-large;
     text-transform: uppercase;
     display: block;
-    margin-top: 20%;
+    margin-top: 10%;
 
     a {
       color: $color-emperor;

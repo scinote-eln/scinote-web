@@ -252,17 +252,6 @@ module RepositoryDatatableHelper
     }
   end
 
-  def bmt_repository_default_columns(record)
-    {
-      '1': assigned_row(record),
-      '2': escape_input(record.external_id),
-      '3': record.code,
-      '4': escape_input(record.name),
-      '5': escape_input(record.created_by.full_name),
-      '6': I18n.l(record.created_at, format: :full)
-    }
-  end
-
   def display_cell_value(cell, team, repository, options = {})
     serializer_class = "RepositoryDatatable::#{cell.repository_column.data_type}Serializer".constantize
     serializer_class.new(

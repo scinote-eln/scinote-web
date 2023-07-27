@@ -6,7 +6,6 @@ RSpec.describe "Api::Service::StepsController", type: :request do
   before :all do
     @user = create(:user)
     @team = create(:team, created_by: @user)
-    create(:user_team, user: @user, team: @team, role: 2)
 
     @project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @team)
     @experiment = create(:experiment, created_by: @user, last_modified_by: @user, project: @project, created_by: @user)

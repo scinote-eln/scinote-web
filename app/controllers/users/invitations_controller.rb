@@ -136,15 +136,9 @@ module Users
         @invite_results << result
       end
 
-      respond_to do |format|
-        format.json do
-          render json: {
-            html: render_to_string(
-              partial: 'shared/invite_users_modal_results.html.erb'
-            )
-          }
-        end
-      end
+      render json: {
+        html: render_to_string(partial: 'shared/invite_users_modal_results', formats: :html)
+      }
     end
 
     def invitable_teams
@@ -156,8 +150,7 @@ module Users
                           .distinct
       teams = teams.where_attributes_like('teams.name', params[:query]) if params[:query].present?
 
-      teams.select { |team| can_invite_team_users?(team) }
-
+      teams = teams.select { |team| can_invite_team_users?(team) }
       render json: teams.map { |t| { value: t.id, label: escape_input(t.name) } }.to_json
     end
 
