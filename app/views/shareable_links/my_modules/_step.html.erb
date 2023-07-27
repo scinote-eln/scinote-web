@@ -43,7 +43,7 @@
   <div class="collapse in" id="stepBody<%= step.id %>">
     <div class="step-elements">
       <div class="step-timestamp">
-        <%= t('protocols.steps.timestamp', date: step.created_at, user: step.user.full_name) %>
+        <%= t('protocols.steps.timestamp_iso_html', date: step.created_at.iso8601, user: step.user.full_name) %>
       </div>
       <% step.step_orderable_elements.sort_by(&:position).each do |element| %>
         <% if element.orderable_type == 'StepText' %>
