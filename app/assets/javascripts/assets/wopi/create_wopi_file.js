@@ -1,3 +1,5 @@
+const FILENAME_MAX_LENGTH = 100;
+
 // Opens create wopi modal on the click of the button
 function applyCreateWopiFileCallback() {
   $('.create-wopi-file-btn').off().on('click', function(e) {
@@ -41,6 +43,11 @@ function initCreateWopiFileModal() {
         msg = I18n.t('assets.create_wopi_file.errors.not_found');
       }
       renderFormError(undefined, element, msg);
+    })
+    .on('input', '#new-wopi-file-name', function() {
+      if (this.value.length <= FILENAME_MAX_LENGTH) {
+        $(this).closest('form').clearFormErrors();
+      }
     });
 }
 
