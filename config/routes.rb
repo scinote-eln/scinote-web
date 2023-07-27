@@ -961,7 +961,18 @@ Rails.application.routes.draw do
     end
   end
 
-  get '/shared/:uuid/protocol', to: 'my_module_shareable_links#my_module_protocol_show', as: :shared_protocol
+  # Shareable links
+  get '/shared/:uuid/protocol',
+    to: 'my_module_shareable_links#protocol_show',
+    as: :shared_protocol
+  post '/shared/:uuid/repositories/:id/items',
+    to: 'my_module_shareable_links#repository_index_dt',
+    as: :shared_protocol_items,
+    defaults: { format: :json }
+  post '/shared/:uuid/repositories/:id/snapshot_items',
+    to: 'my_module_shareable_links#repository_snapshot_index_dt',
+    as: :shared_protocol_snapshot_items,
+    defaults: { format: :json }
 
   resources :marvin_js_assets, only: %i(create update destroy show) do
     collection do
