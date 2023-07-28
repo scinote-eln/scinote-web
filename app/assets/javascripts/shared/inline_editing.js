@@ -104,12 +104,14 @@ var inlineEditing = (function() {
         }
       },
       error: function(response) {
+        const description_error = response.responseJSON.description.map((element) => element.includes('10000') ? "Description " + element : undefined);
+
         var error = response.responseJSON[fieldToUpdate];
         if (response.status === 403) {
           HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
         } else if (response.status === 422) {
           HelperModule.flashAlertMsg(response.responseJSON.errors
-            ? Object.values(response.responseJSON.errors).join(', ') : I18n.t('errors.general'), 'danger');
+            ? Object.values(response.responseJSON.errors).join(', ') : description_error ? description_error : I18n.t('errors.general'), 'danger');
         }
         if (!error) error = response.responseJSON.errors[fieldToUpdate];
         container.addClass('error');
