@@ -232,6 +232,10 @@ en:
           attributes:
             output_id:
               creates_cycle: "mustn't create cycle"
+        checklist_item:
+          attributes:
+            text: Text is too long
+            position: "Position has already been taken by another item in the checklist"
   errors:
     general: "Something went wrong."
     general_text_too_long: 'Text is too long'

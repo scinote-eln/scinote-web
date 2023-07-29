@@ -5,7 +5,7 @@ class ChecklistItem < ApplicationRecord
             length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :checklist, presence: true
   validates :checked, inclusion: { in: [true, false] }
-  validates :position, uniqueness: { scope: :checklist }, unless: -> { position.nil? }
+  validates :position, uniqueness: { scope: :checklist }
 
   belongs_to :checklist,
              inverse_of: :checklist_items

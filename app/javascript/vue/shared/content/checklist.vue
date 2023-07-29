@@ -172,8 +172,8 @@
           );
 
           if(callback) callback();
-        }).error(() => {
-          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+        }).error((xhr) => {
+          this.setFlashErrors(xhr.responseText)
         });
 
         this.update();
@@ -190,7 +190,7 @@
               updatedItem.attributes.id = item.attributes.id
               this.$set(this.checklistItems, item.attributes.position, updatedItem)
             },
-            error: () => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')
+            error: (xhr) => this.setFlashErrors(xhr.responseText)
           });
         } else {
           // create item, then append next one
@@ -274,6 +274,15 @@
         };
 
         synchronousPost(0);
+      },
+      setFlashErrors(errors) {
+        errors = JSON.parse(errors);
+        for(const key in errors){
+          HelperModule.flashAlertMsg(
+            this.i18n.t(`activerecord.errors.models.checklist_item.attributes.${key}`),
+            'danger'
+          )
+        }
       }
     }
   }

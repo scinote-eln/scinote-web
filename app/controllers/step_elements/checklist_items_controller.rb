@@ -27,9 +27,7 @@ module StepElements
 
       render json: checklist_item, serializer: ChecklistItemSerializer, user: current_user
     rescue ActiveRecord::RecordInvalid
-      render json: checklist_item, serializer: ChecklistItemSerializer,
-                                   user: current_user,
-                                   status: :unprocessable_entity
+      render json: checklist_item.errors, status: :unprocessable_entity
     end
 
     def update
@@ -49,9 +47,7 @@ module StepElements
 
       render json: @checklist_item, serializer: ChecklistItemSerializer, user: current_user
     rescue ActiveRecord::RecordInvalid
-      render json: @checklist_item, serializer: ChecklistItemSerializer,
-                                    user: current_user,
-                                    status: :unprocessable_entity
+      render json: @checklist_item.errors, status: :unprocessable_entity
     end
 
     def toggle
