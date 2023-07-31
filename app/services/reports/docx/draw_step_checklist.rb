@@ -24,15 +24,15 @@ module Reports::Docx::DrawStepChecklist
         items.each do |item|
           li do
             text_array = SmartAnnotations::TagToText.new(user, team, item.text).text.split("\n")
-            
+
             text_array.each_with_index do |line, index|
               # Add the text line
               text line
-              
+
               # If this isn't the last line in the array, start a new paragraph for the next line
               br if index < text_array.length - 1
             end
-            
+
             text " (#{I18n.t('projects.reports.elements.step_checklist.checked')})", color: '2dbe61' if item.checked
           end
         end

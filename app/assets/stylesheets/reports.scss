@@ -536,11 +536,11 @@ label {
   }
 
   .report-checklist-item {
-    display: -webkit-box; /* for wkhtmltopdf compatibility */
+    display: -webkit-box; // for wkhtmltopdf compatibility
     display: flex;
     justify-content: start;
     margin-top: .5em;
-    -webkit-box-pack: start; /* for wkhtmltopdf compatibility */
+    -webkit-box-pack: start; // for wkhtmltopdf compatibility
 
     div:nth-child(2) {
       margin-top: .2em;

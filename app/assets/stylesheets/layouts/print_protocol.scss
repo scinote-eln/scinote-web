@@ -82,7 +82,6 @@ hr {
 
 .print-checklist-item {
   display: flex;
-  gap: .7em;
   margin-bottom: 1em;
 
   span {
@@ -90,6 +89,8 @@ hr {
   }
 
   div {
+    margin-bottom: .7em;
+    margin-left: .7em;
     white-space: pre-line;
   }
 }
