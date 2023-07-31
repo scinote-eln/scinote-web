@@ -12,12 +12,12 @@ module Api
       before_action :check_create_permissions, only: %i(create)
 
       def index
-        columns = filter_timestamp_range(@inventory.repository_columns).includes(:repository_list_items)
-                                                                       .includes(:repository_status_items)
-                                                                       .includes(:repository_checklist_items)
-                                                                       .includes(:repository_stock_unit_items)
-                                                                       .page(params.dig(:page, :number))
-                                                                       .per(params.dig(:page, :size))
+        columns = timestamps_filter(@inventory.repository_columns).includes(:repository_list_items)
+                                                                  .includes(:repository_status_items)
+                                                                  .includes(:repository_checklist_items)
+                                                                  .includes(:repository_stock_unit_items)
+                                                                  .page(params.dig(:page, :number))
+                                                                  .per(params.dig(:page, :size))
 
         render jsonapi: columns,
                each_serializer: InventoryColumnSerializer,

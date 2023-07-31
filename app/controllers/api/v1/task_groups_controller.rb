@@ -9,8 +9,8 @@ module Api
       before_action :load_task_group, only: :show
 
       def index
-        task_groups = filter_timestamp_range(@experiment.my_module_groups).page(params.dig(:page, :number))
-                                                                          .per(params.dig(:page, :size))
+        task_groups = timestamps_filter(@experiment.my_module_groups).page(params.dig(:page, :number))
+                                                                     .per(params.dig(:page, :size))
         render jsonapi: task_groups, each_serializer: TaskGroupSerializer, include: include_params
       end
 

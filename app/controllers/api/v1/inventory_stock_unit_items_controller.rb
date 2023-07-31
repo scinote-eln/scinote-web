@@ -12,7 +12,7 @@ module Api
 
       def index
         stock_unit_items =
-          filter_timestamp_range(
+          timestamps_filter(
             @inventory_column.repository_stock_unit_items
           )
           .page(params.dig(:page, :number))

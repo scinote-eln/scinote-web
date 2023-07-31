@@ -13,7 +13,7 @@ module Api
 
       def index
         items =
-          filter_timestamp_range(
+          timestamps_filter(
             @inventory.repository_rows
           )
           .active

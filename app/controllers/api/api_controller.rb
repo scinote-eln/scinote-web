@@ -48,26 +48,5 @@ module Api
       end
       render json: response, status: :ok
     end
-
-    private
-
-    def filter_timestamp_range(records)
-      from = params.dig(:create_date_start)
-      to = params.dig(:create_date_end)
-      column = 'created_at'
-      if from.blank? || to.blank?
-        from = params.dig(:update_date_start)
-        to = params.dig(:update_date_end)
-        column = 'updated_at'
-      end
-
-      return records if from.blank? || to.blank?
-
-      if column == 'created_at'
-        records.where(created_at: (from..to))
-      else
-        records.where(updated_at: (from..to))
-      end
-    end
   end
 end

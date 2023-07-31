@@ -10,8 +10,8 @@ module Api
       before_action :load_table_for_managing, only: %i(update destroy)
 
       def index
-        tables = filter_timestamp_range(@step.tables).page(params.dig(:page, :number))
-                                                     .per(params.dig(:page, :size))
+        tables = timestamps_filter(@step.tables).page(params.dig(:page, :number))
+                                                .per(params.dig(:page, :size))
 
         render jsonapi: tables, each_serializer: TableSerializer
       end

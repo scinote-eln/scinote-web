@@ -8,8 +8,8 @@ module Api
       end
 
       def index
-        teams = filter_timestamp_range(current_user.teams).page(params.dig(:page, :number))
-                                                          .per(params.dig(:page, :size))
+        teams = timestamps_filter(current_user.teams).page(params.dig(:page, :number))
+                                                     .per(params.dig(:page, :size))
         render jsonapi: teams, each_serializer: TeamSerializer
       end
 

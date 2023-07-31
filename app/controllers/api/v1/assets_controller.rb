@@ -9,8 +9,8 @@ module Api
 
       def index
         attachments =
-          filter_timestamp_range(@step.assets).page(params.dig(:page, :number))
-                                              .per(params.dig(:page, :size))
+          timestamps_filter(@step.assets).page(params.dig(:page, :number))
+                                         .per(params.dig(:page, :size))
 
         render jsonapi: attachments, each_serializer: AssetSerializer
       end

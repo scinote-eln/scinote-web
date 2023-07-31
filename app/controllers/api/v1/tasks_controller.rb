@@ -16,7 +16,7 @@ module Api
 
       def index
         tasks =
-          filter_timestamp_range(
+          timestamps_filter(
             @experiment.my_modules
           ).includes(:my_module_status, :my_modules, :my_module_antecessors)
         tasks = archived_filter(tasks).page(params.dig(:page, :number))

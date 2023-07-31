@@ -12,7 +12,7 @@ module Api
 
       def index
         cells =
-          filter_timestamp_range(
+          timestamps_filter(
             @inventory_item.repository_cells
           )
           .preload(:repository_column, value: @inventory.cell_preload_includes)

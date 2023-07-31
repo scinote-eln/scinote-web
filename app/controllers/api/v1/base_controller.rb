@@ -244,6 +244,25 @@ module Api
           raise FilterParamError
         end
       end
+
+      def timestamps_filter(records)
+        from = params.dig(:created_at, :from)
+        to = params.dig(:created_at, :to)
+        return records.where(created_at: (from..to)) if
+          valid_date?(*from&.split('-')&.map(&:to_i)) && valid_date?(*to&.split('-')&.map(&:to_i))
+
+        from = params.dig(:updated_at, :from)
+        to = params.dig(:updated_at, :to)
+
+        return records.where(updated_at: (from..to)) if
+          valid_date?(*from&.split('-')&.map(&:to_i)) && valid_date?(*to&.split('-')&.map(&:to_i))
+
+        records
+      end
+
+      def valid_date?(year = '', month = '', day = '')
+        Date.new(year, month, day) rescue false
+      end
     end
   end
 end

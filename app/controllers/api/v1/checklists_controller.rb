@@ -11,8 +11,8 @@ module Api
 
       def index
         checklists =
-          filter_timestamp_range(@step.checklists).page(params.dig(:page, :number))
-                                                  .per(params.dig(:page, :size))
+          timestamps_filter(@step.checklists).page(params.dig(:page, :number))
+                                             .per(params.dig(:page, :size))
 
         render jsonapi: checklists, each_serializer: ChecklistSerializer, include: include_params
       end

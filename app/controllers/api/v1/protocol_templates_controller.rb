@@ -12,7 +12,7 @@ module Api
 
       def index
         protocol_templates =
-          filter_timestamp_range(
+          timestamps_filter(
             Protocol.latest_available_versions(@team)
           )
           .viewable_by_user(current_user, @team)

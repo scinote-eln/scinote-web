@@ -10,8 +10,8 @@ module Api
       before_action :load_step_text_for_managing, only: %i(update destroy)
 
       def index
-        step_texts = filter_timestamp_range(@step.step_texts).page(params.dig(:page, :number))
-                                                             .per(params.dig(:page, :size))
+        step_texts = timestamps_filter(@step.step_texts).page(params.dig(:page, :number))
+                                                        .per(params.dig(:page, :size))
 
         render jsonapi: step_texts, each_serializer: StepTextSerializer, include: include_params
       end

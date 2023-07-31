@@ -9,8 +9,8 @@ module Api
       before_action :load_project_comment, only: :show
 
       def index
-        project_comments = filter_timestamp_range(@project.project_comments).page(params.dig(:page, :number))
-                                                                            .per(params.dig(:page, :size))
+        project_comments = timestamps_filter(@project.project_comments).page(params.dig(:page, :number))
+                                                                       .per(params.dig(:page, :size))
 
         render jsonapi: project_comments,
                each_serializer: CommentSerializer,

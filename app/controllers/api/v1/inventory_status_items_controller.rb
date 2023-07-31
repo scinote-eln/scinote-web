@@ -9,7 +9,7 @@ module Api
 
       def index
         status_items =
-          filter_timestamp_range(
+          timestamps_filter(
             @inventory_column.repository_status_items
           )
           .repository_status_items

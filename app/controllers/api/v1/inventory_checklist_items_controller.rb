@@ -12,8 +12,8 @@ module Api
 
       def index
         checklist_items =
-          filter_timestamp_range(@inventory_column.repository_checklist_items).page(params.dig(:page, :number))
-                                                                              .per(params.dig(:page, :size))
+          timestamps_filter(@inventory_column.repository_checklist_items).page(params.dig(:page, :number))
+                                                                         .per(params.dig(:page, :size))
 
         render jsonapi: checklist_items, each_serializer: InventoryChecklistItemSerializer
       end

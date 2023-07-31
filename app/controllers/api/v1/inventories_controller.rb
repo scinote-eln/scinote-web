@@ -12,9 +12,9 @@ module Api
 
       def index
         inventories =
-          filter_timestamp_range(@team.repositories).active
-                                                    .page(params.dig(:page, :number))
-                                                    .per(params.dig(:page, :size))
+          timestamps_filter(@team.repositories).active
+                                               .page(params.dig(:page, :number))
+                                               .per(params.dig(:page, :size))
 
         render jsonapi: inventories, each_serializer: InventorySerializer
       end
