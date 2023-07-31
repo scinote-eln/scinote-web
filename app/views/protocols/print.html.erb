@@ -68,8 +68,8 @@
                 <% else %>
                   <span class="checklist-checkbox not-checked"></span>
                 <% end %>
-                <%= smart_annotation_parser(checklist_item.text, current_team).html_safe %>
-              </span>
+              </span>#
+                <div><%= smart_annotation_parser(checklist_item.text, current_team).html_safe %></div> <%# Should stay in one line %>
             </div>
           <% end %>
         </div>
