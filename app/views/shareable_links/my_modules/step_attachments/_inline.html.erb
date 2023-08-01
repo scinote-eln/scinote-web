@@ -22,19 +22,7 @@
     <%= render partial: "shareable_links/my_modules/step_attachments/context_menu", locals: { asset: asset } %>
   </div>
   <% if wopi_enabled? && wopi_file?(asset) %>
-    <% if asset.file_size.positive? %>
-      <div class="iframe-placeholder" data-iframe-url="<%= asset.get_action_url(nil, 'embedview', false) %>"></div>
-    <% else %>
-      <div class="empty-office-file">
-        <h2><%= t('assets.empty_office_file.description') %></h2>
-        <%= link_to(load_asset_path(asset),
-                        remote: true,
-                        class: 'btn btn-primary reload-asset',
-                        params: { asset: {view_mode: asset.view_mode }}) do %>
-            <%= t('assets.empty_office_file.reload') %>
-          <% end %>
-      </div>
-    <% end %>
+    <iframe class="wopi-file-preview" src="<%= asset.get_action_url(nil, 'embedview', false) %>"></iframe>
   <% elsif asset.pdf_previewable? %>
     <%= render partial: 'shared/pdf_viewer', locals: { asset: asset, report_document: false, shareable_document: true } %>
   <% elsif asset.previewable? %>

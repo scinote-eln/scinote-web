@@ -8,11 +8,13 @@ Vue.use(PerfectScrollbar);
 
 Vue.prototype.i18n = window.I18n;
 
-window.addEventListener('DOMContentLoaded', () => {
+function initShareTaskContainer() {
   new Vue({
     el: '.share-task-container',
     components: {
       'share-task-container': ShareLinkContainer
     }
   });
-});
+}
+
+initShareTaskContainer();

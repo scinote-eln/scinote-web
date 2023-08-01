@@ -3,19 +3,24 @@
 class MyModuleShareableLinksController < ApplicationController
   before_action :load_my_module, except: %i(protocol_show
                                             repository_index_dt
-                                            repository_snapshot_index_dt)
+                                            repository_snapshot_index_dt
+                                            download_asset)
   before_action :check_view_permissions, only: :show
   before_action :check_manage_permissions, except: %i(protocol_show
                                                       repository_index_dt
-                                                      repository_snapshot_index_dt)
+                                                      repository_snapshot_index_dt
+                                                      download_asset)
   before_action :shareable_link_load_my_module, only: %i(protocol_show
                                                          repository_index_dt
-                                                         repository_snapshot_index_dt)
+                                                         repository_snapshot_index_dt
+                                                         download_asset)
   before_action :load_repository, only: :repository_index_dt
   before_action :load_repository_snapshot, only: :repository_snapshot_index_dt
+  before_action :load_asset, only: :download_asset
   skip_before_action :authenticate_user!, only: %i(protocol_show
                                                    repository_index_dt
-                                                   repository_snapshot_index_dt)
+                                                   repository_snapshot_index_dt
+                                                   download_asset)
   after_action -> { request.session_options[:skip] = true }
 
   def show
@@ -60,6 +65,10 @@ class MyModuleShareableLinksController < ApplicationController
     @repository_rows = datatable_service.repository_rows.page(page).per(per_page)
 
     render 'repository_rows/simple_view_index'
+  end
+
+  def download_asset
+    redirect_to @asset.file.url(disposition: 'attachment')
   end
 
   def create
@@ -107,6 +116,14 @@ class MyModuleShareableLinksController < ApplicationController
     return render_404 if @shareable_link.blank?
 
     @my_module = @shareable_link.shareable
+  end
+
+  def load_asset
+    @asset = Asset.joins(step: { protocol: :my_module })
+                  .find_by(my_modules: { id: @my_module.id },
+                           assets: { id: params[:id] })
+
+    return render_404 if @asset.blank?
   end
 
   def load_repository
