@@ -2535,7 +2535,7 @@ en:
 
         connected_accounts:
           head_title: "Settings | Connected Accounts"
-          title: "Connected Accounts"
+          title: "Connected accounts"
           not_connected: "You have no Connected accounts"
           unlink_success: "Successfully unlinked"
           azure_ad:
