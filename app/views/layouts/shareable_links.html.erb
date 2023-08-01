@@ -21,7 +21,7 @@
 
     <%= csrf_meta_tags %>
   </head>
-  <body id="sci-shareable-links">
+  <body id="sci-shareable-links" data-datetime-picker-format="YYYY-MM-DD">
     <div class="flex flex-row">
       <div class="w-80 h-screen px-6 py-6 flex flex-col
                   border-0 border-r border-solid border-sn-sleepy-grey">
@@ -33,5 +33,6 @@
     </div>
 
     <%= javascript_include_tag 'prism' %>
+    <%= javascript_include_tag 'shareable_links/date_formatting' %>
   </body>
 </html>

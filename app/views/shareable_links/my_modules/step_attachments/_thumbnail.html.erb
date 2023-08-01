@@ -22,7 +22,7 @@
       <%= asset.render_file_name %>
     </div>
     <div class="attachment-metadata">
-      <%= t('assets.placeholder.modified_label') %> <%= l(asset.updated_at, format: :full_date) if asset.updated_at %><br>
+      <%= t('assets.placeholder.modified_label') %> <span class="iso-formatted-date"><%= asset.updated_at.iso8601 if asset.updated_at %></span><br>
       <%= number_to_human_size(asset.file_size) %>
     </div>
   <% end %>

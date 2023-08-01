@@ -14,8 +14,8 @@
         <%= smart_annotation_text(comment.message) %>
       </div>
       <div class="comment-footer">
-        <div class="comment-create-date">
-          <%= I18n.l(comment.created_at, format: :full) %>
+        <div class="comment-create-date iso-formatted-date">
+          <%= comment.created_at.iso8601 %>
         </div>
       </div>
     </div>

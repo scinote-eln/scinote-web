@@ -7,6 +7,7 @@ class MyModuleShareableLinksController < ApplicationController
   before_action :check_view_permissions, only: :show
   before_action :check_manage_permissions, except: %i(my_module_protocol_show download_asset)
   skip_before_action :authenticate_user!, only: %i(my_module_protocol_show download_asset)
+  after_action -> { request.session_options[:skip] = true }
 
   def show
     render json: @my_module.shareable_link, serializer: ShareableLinksSerializer
