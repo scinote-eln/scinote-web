@@ -16,7 +16,7 @@ class LabelTemplate < ApplicationRecord
   validate :ensure_single_default_template!
 
   def self.enabled?
-    ApplicationSettings.instance.values['label_templates_enabled']
+    ApplicationSettings.instance.values['label_templates_enabled'] == true
   end
 
   def icon
