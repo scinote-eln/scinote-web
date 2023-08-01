@@ -173,7 +173,7 @@
 
           if(callback) callback();
         }).error((xhr) => {
-          this.setFlashErrors(xhr.responseText)
+          this.setFlashErrors(xhr.responseJSON.errors)
         });
 
         this.update();
@@ -190,7 +190,7 @@
               updatedItem.attributes.id = item.attributes.id
               this.$set(this.checklistItems, item.attributes.position, updatedItem)
             },
-            error: (xhr) => this.setFlashErrors(xhr.responseText)
+            error: (xhr) => setFlashErrors(xhr.responseJSON.errors)
           });
         } else {
           // create item, then append next one
@@ -231,26 +231,26 @@
       startReorder() {
         this.reordering = true;
       },
-      endReorder() {
+      endReorder(event) {
         this.reordering = false;
-        this.saveItemOrder();
+        if(
+          Number.isInteger(event.newIndex)
+          && Number.isInteger(event.newIndex)
+          && event.newIndex !== event.oldIndex
+        ){
+          const { id, position } = this.orderedChecklistItems[event.newIndex]?.attributes
+          this.saveItemOrder(id, position);
+        }
       },
-      saveItemOrder() {
-        let checklistItemPositions =
-          {
-            checklist_item_positions: this.orderedChecklistItems.map(
-              (i) => [i.attributes.id, i.attributes.position]
-            )
-          };
-
+      saveItemOrder(id, position) {
         $.ajax({
           type: "POST",
           url: this.element.attributes.orderable.urls.reorder_url,
-          data: JSON.stringify(checklistItemPositions),
+          data: JSON.stringify({ attributes: { id, position } }),
           contentType: "application/json",
           dataType: "json",
-          error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')),
-          success: (() => this.update())
+          error: (xhr) => this.setFlashErrors(xhr.responseJSON.errors),
+          success: () => this.update()
         });
       },
       handleMultilinePaste(data) {
@@ -276,7 +276,6 @@
         synchronousPost(0);
       },
       setFlashErrors(errors) {
-        errors = JSON.parse(errors);
         for(const key in errors){
           HelperModule.flashAlertMsg(
             this.i18n.t(`activerecord.errors.models.checklist_item.attributes.${key}`),

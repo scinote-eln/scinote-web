@@ -9,6 +9,7 @@ class ChecklistItem < ApplicationRecord
 
   belongs_to :checklist,
              inverse_of: :checklist_items
+  acts_as_list scope: :checklist, top_of_list: 0
   belongs_to :created_by,
              foreign_key: 'created_by_id',
              class_name: 'User',
@@ -18,7 +19,7 @@ class ChecklistItem < ApplicationRecord
              class_name: 'User',
              optional: true
 
-  after_destroy :update_positions
+  before_destroy :remove_from_list
 
   # conditional touch excluding checked updates
   after_destroy :touch_checklist
@@ -34,13 +35,5 @@ class ChecklistItem < ApplicationRecord
     # rubocop:disable Rails/SkipsModelValidations
     checklist.touch
     # rubocop:enable Rails/SkipsModelValidations
-  end
-
-  def update_positions
-    transaction do
-      checklist.checklist_items.order(position: :asc).each_with_index do |checklist_item, i|
-        checklist_item.update!(position: i)
-      end
-    end
   end
 end
