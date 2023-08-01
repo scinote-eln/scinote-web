@@ -17,6 +17,27 @@ export default {
         this.uploadFiles(e.dataTransfer.files);
       }
     },
+    openLoadFromComputer() {
+      this.$refs.fileSelector.click();
+    },
+    loadFromComputer() {
+      this.uploadFiles(this.$refs.fileSelector.files);
+    },
+    openMarvinJsModal(button) {
+      MarvinJsEditor.initNewButton('.new-marvinjs-upload-button', () => {
+        this.loadAttachments
+      });
+      button.click();
+    },
+    openWopiFileModal() {
+      this.initWopiFileModal(this.step, (_e, data, status) => {
+        if (status === 'success') {
+          this.addAttachment(data)
+        } else {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+        }
+      });
+    },
     uploadFiles(files) {
       const filesToUploadCntr = files.length;
       let filesUploadedCntr = 0;
