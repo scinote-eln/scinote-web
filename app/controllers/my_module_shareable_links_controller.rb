@@ -63,14 +63,14 @@ class MyModuleShareableLinksController < ApplicationController
   def load_shareable_link
     @shareable_link = ShareableLink.find_by(uuid: params[:uuid])
 
-    return render_403 if @shareable_link.blank?
+    return render_404 if @shareable_link.blank?
+
+    @my_module = @shareable_link.shareable
   end
 
   def load_asset
-    return render_403 if @shareable_link.blank?
-
     @asset = Asset.find_signed(params[:id])
-    return render_403 if @asset.blank?
+    return render_404 if @asset.blank? || @my_module != @asset.step&.protocol&.my_module
   end
 
   def check_view_permissions
