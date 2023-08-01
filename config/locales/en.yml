@@ -3018,7 +3018,7 @@ en:
           chemical_drawing: "New chemical drawing"
           file_from_pc: "File from your PC"
         modified_label: "Modified:"
-        manage: "Manage"
+        preview_menu: "Preview size"
         add: "ADD"
         sort_by: "SORT BY"
         attachments_view_mode: "ALL ATTACHMENTS VIEW SIZE"
@@ -3042,9 +3042,9 @@ en:
           atoz_html: "Name &#8595;"
           ztoa_html: "Name &#8593;"
         view_mode:
-          inline_html: "<i class=\"fas fa-desktop\"></i> Extra large"
-          thumbnail_html: "<i class=\"sn-icon sn-icon-grid-view\"></i> Medium"
-          list_html: "<i class=\"sn-icon sn-icon-activities\"></i> List"
+          inline_html: "Large"
+          thumbnail_html: "Medium"
+          list_html: "List"
       new:
         add_step_title: "Add new step"
         tab_checklists: "Checklists"
@@ -3223,14 +3223,14 @@ en:
         forbidden: 'You do not have permission to add files.'
         not_found: 'Element not found.'
     file_preview:
-      edit_in_scinote: "Edit in SciNote"
+      edit_in_scinote: "Edit"
       edit_in_marvinjs: "Edit in Marvin JS"
     context_menu:
-      set_view_size: "SET VIEW SIZE"
-      delete: "Delete file"
-      inline_html: "<i class=\"fas fa-desktop\"></i> Extra large"
-      thumbnail_html: "<i class=\"sn-icon sn-icon-grid-view\"></i> Medium"
-      list_html: "<i class=\"sn-icon sn-icon-activities\"></i> List"
+      set_view_size: "SET PREVIEW SIZE"
+      delete: "Delete"
+      inline_html: "Large"
+      thumbnail_html: "Medium"
+      list_html: "List"
     delete_file_modal:
       title: "Delete attachment"
       description_1_html: "You are about to delete <b>%{file_name}</b></p>"
