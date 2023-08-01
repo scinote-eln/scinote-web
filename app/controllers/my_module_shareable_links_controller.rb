@@ -119,8 +119,11 @@ class MyModuleShareableLinksController < ApplicationController
   end
 
   def load_asset
-    @asset = Asset.find_signed(params[:id])
-    return render_404 if @asset.blank? || @my_module != @asset.step&.protocol&.my_module
+    @asset = Asset.joins(step: { protocol: :my_module })
+                  .find_by(my_modules: { id: @my_module.id },
+                           assets: { id: params[:id] })
+
+    return render_404 if @asset.blank?
   end
 
   def load_repository

@@ -10,7 +10,7 @@
       <div class="modal-header">
         <span class="file-name"><%= asset.file.metadata[:name] || asset.file_name %></span>
         <div class="sci-btn-group">
-          <%= link_to shared_protocol_asset_download_path(@shareable_link.uuid, asset.signed_id),
+          <%= link_to shared_protocol_asset_download_path(@shareable_link.uuid, asset),
                       class: 'btn btn-light file-download-link',
                       data: { turbolinks: false } do %>
             <span class="sn-icon sn-icon-export"></span>

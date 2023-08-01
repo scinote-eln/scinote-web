@@ -5,7 +5,7 @@
 
   <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownAssetContextMenu">
     <li>
-      <%= link_to shared_protocol_asset_download_path(@shareable_link.uuid, asset.signed_id), data: { turbolinks: false } do %>
+      <%= link_to shared_protocol_asset_download_path(@shareable_link.uuid, asset), data: { turbolinks: false } do %>
         <span class="sn-icon sn-icon-export"></span>
         <%= t('Download') %>
       <% end %>
