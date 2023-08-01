@@ -8,7 +8,7 @@
   <div id="startDateContainer" class="datetime-container">
     <span class="date-text">
       <span id="startDateLabelContainer" class="view-block">
-        <%= render partial: "my_modules/start_date_label", locals: { my_module: @my_module } %>
+        <%= render partial: "shareable_links/my_modules/start_date_label", locals: { my_module: @my_module } %>
       </span>
     </span>
   </div>
@@ -22,7 +22,7 @@
   <div id="dueDateContainer" class="datetime-container">
     <span class="date-text">
       <span id="dueDateLabelContainer" class="view-block">
-        <%= render partial: "my_modules/due_date_label", locals: { my_module: @my_module, due_date_editable: false } %>
+        <%= render partial: "shareable_links/my_modules/due_date_label", locals: { my_module: @my_module } %>
       </span>
     </span>
   </div>
@@ -35,8 +35,8 @@
       <span class="hidden-xs hidden-sm  hidden-md"><%= t('my_modules.details.completed_date') %></span>
     </div>
     <div class="datetime-container">
-      <span class="date-text">
-        <%= l(@my_module.completed_on, format: :full) %>
+      <span class="date-text iso-formatted-date">
+        <%= @my_module.completed_on.iso8601 %>
       </span>
     </div>
   </div>
