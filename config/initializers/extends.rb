@@ -214,7 +214,7 @@ class Extends
 
   ACTIVITY_MESSAGE_ITEMS_TYPES =
     ACTIVITY_SUBJECT_TYPES + %w(
-      User Tag RepositoryColumn RepositoryRow Step Asset TinyMceAsset
+      User Tag RepositoryColumn RepositoryRow Step Result Asset TinyMceAsset
       Repository MyModuleStatus RepositorySnapshot
     ).freeze
 
@@ -443,7 +443,8 @@ class Extends
     protocol_template_access_revoked_all_team_members: 240,
     project_access_changed_all_team_members: 241,
     project_grant_access_to_all_team_members: 242,
-    project_remove_access_from_all_team_members: 243
+    project_remove_access_from_all_team_members: 243,
+    result_content_rearranged: 244
   }
 
   ACTIVITY_GROUPS = {
