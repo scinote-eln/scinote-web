@@ -214,7 +214,7 @@ class Extends
 
   ACTIVITY_MESSAGE_ITEMS_TYPES =
     ACTIVITY_SUBJECT_TYPES + %w(
-      User Tag RepositoryColumn RepositoryRow Step Asset TinyMceAsset
+      User Tag RepositoryColumn RepositoryRow Step Result Asset TinyMceAsset
       Repository MyModuleStatus RepositorySnapshot
     ).freeze
 
@@ -448,7 +448,8 @@ class Extends
     team_sharing_tasks_disabled: 245,
     task_link_sharing_enabled: 246,
     task_link_sharing_disabled: 247,
-    shared_task_message_edited: 248
+    shared_task_message_edited: 248,
+    result_content_rearranged: 244
   }
 
   ACTIVITY_GROUPS = {

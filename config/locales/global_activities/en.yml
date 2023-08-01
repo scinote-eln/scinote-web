@@ -214,6 +214,7 @@ en:
       task_inventory_item_stock_consumed_html: "%{user} changed consumption of inventory item %{repository_row} from %{stock_consumption_was} %{unit} to %{stock_consumption} %{unit} on task %{my_module} \n%{comment}"
       task_steps_rearranged_html: "%{user} rearranged protocol's steps on task %{my_module}"
       task_step_content_rearranged_html: "%{user} rearranged content of protocol's step %{step_position} <strong>%{step}</strong> on task %{my_module}"
+      result_content_rearranged_html: "%{user} rearranged result's content on task %{my_module}"
       task_step_file_added_html: "%{user} added file <strong>%{file}</strong> to protocol's step %{step_position} <strong>%{step}</strong> on task %{my_module}"
       task_step_file_deleted_html: "%{user} deleted file <strong>%{file}</strong> in protocol's step %{step_position} <strong>%{step}</strong> on task %{my_module}"
       protocol_steps_rearranged_html: "%{user} rearranged protocol's steps in protocol %{protocol} in Protocol repository"
