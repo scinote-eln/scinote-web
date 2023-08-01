@@ -67,6 +67,8 @@ class MyModuleShareableLinksController < ApplicationController
   end
 
   def load_asset
+    return render_403 if @shareable_link.blank?
+
     @asset = Asset.find_signed(params[:id])
     return render_403 if @asset.blank?
   end
