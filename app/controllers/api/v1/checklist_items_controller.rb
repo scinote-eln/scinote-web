@@ -30,7 +30,7 @@ module Api
       end
 
       def update
-        @checklist_item.assign_attributes(checklist_item_params.except(:position))
+        @checklist_item.assign_attributes(checklist_item_params)
 
         if @checklist_item.changed? && @checklist_item.save!
           if @checklist_item.saved_change_to_attribute?(:checked)

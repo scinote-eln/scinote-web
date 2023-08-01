@@ -3,6 +3,6 @@
 class
  AddIndexToChecklistItems < ActiveRecord::Migration[7.0]
   def change
-    add_index :checklist_items, [:checklist_id, :position]
+    add_index :checklist_items, %i(checklist_id position), unique: true
   end
 end

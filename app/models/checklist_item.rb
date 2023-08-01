@@ -9,7 +9,7 @@ class ChecklistItem < ApplicationRecord
 
   belongs_to :checklist,
              inverse_of: :checklist_items
-  acts_as_list scope: :checklist, top_of_list: 0
+  acts_as_list scope: :checklist, top_of_list: 0, sequential_updates: true
   belongs_to :created_by,
              foreign_key: 'created_by_id',
              class_name: 'User',
@@ -18,8 +18,6 @@ class ChecklistItem < ApplicationRecord
              foreign_key: 'last_modified_by_id',
              class_name: 'User',
              optional: true
-
-  before_destroy :remove_from_list
 
   # conditional touch excluding checked updates
   after_destroy :touch_checklist
