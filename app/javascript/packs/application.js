@@ -16,7 +16,7 @@ $(document).on('click', '.sci--layout--menu-item[data-submenu=true]', (e) => {
 });
 
 $(document).on('click', '.sci--layout--navigator-open', (e) => {
-  navigatorContainer.toggleNavigatorState(false)
+  navigatorContainer.toggleNavigatorState(false);
 });
 
 $(document).on('click', '.btn', function() {

@@ -26,7 +26,7 @@ window.addEventListener('DOMContentLoaded', () => {
       })
     },
     methods: {
-      toggleNavigatorState: function (newNavigatorState) {
+      toggleNavigatorState: function(newNavigatorState) {
         let stateUrl = $('#sciNavigationNavigatorContainer').attr('data-navigator-state-url');
         $.post(stateUrl, {state: newNavigatorState ? 'collapsed' : 'open'});
         $('.sci--layout').attr('data-navigator-collapsed', newNavigatorState);
@@ -51,7 +51,8 @@ window.addEventListener('DOMContentLoaded', () => {
           });
         }
       }
-  }});
+    }
+  });
 
   window.navigatorContainer = navigator
 });
