@@ -1,7 +1,7 @@
 <div class="select-user-container">
   <%= select_tag 'user_my_modules',
-                 options_for_select(my_module.user_my_modules.map{ |um|
-                   user = um.user
+                 options_for_select(my_module.assigned_users.map{ |um|
+                   user = um
                    [
                      user.full_name,
                      user.id,

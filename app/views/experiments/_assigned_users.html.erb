@@ -1,4 +1,4 @@
-<% users = my_module.designated_users.order(:full_name) %>
+<% users = my_module.assigned_users.order(:full_name) %>
 <% if users.empty? && !can_manage_my_module_designated_users?(user, my_module) %>
   <%= I18n.t('experiments.table.not_set') %>
 <% else %>
