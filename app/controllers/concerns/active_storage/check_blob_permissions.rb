@@ -58,7 +58,7 @@ module ActiveStorage
 
       current_user.permission_team = asset.team || current_team
 
-      return true if !asset.saved && can_read_team?(asset.team)
+      return true if asset.object.nil? && can_read_team?(asset.team)
 
       case asset.object_type
       when 'MyModule'

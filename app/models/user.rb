@@ -58,7 +58,6 @@ class User < ApplicationRecord
 
   # Relations
   has_many :user_identities, inverse_of: :user
-  has_many :user_teams, inverse_of: :user
   has_many :user_assignments, dependent: :destroy
   has_many :user_projects, inverse_of: :user
   has_many :teams, through: :user_assignments, source: :assignable, source_type: 'Team'
@@ -157,17 +156,14 @@ class User < ApplicationRecord
 
   has_many :tokens,
            class_name: 'Token',
-           foreign_key: 'user_id',
-           inverse_of: :user
+           inverse_of: :user,
+           dependent: :destroy
 
   has_many :modified_tags,
            class_name: 'Tag',
            foreign_key: 'last_modified_by_id'
   has_many :assigned_user_my_modules,
            class_name: 'UserMyModule',
-           foreign_key: 'assigned_by_id'
-  has_many :assigned_user_teams,
-           class_name: 'UserTeam',
            foreign_key: 'assigned_by_id'
   has_many :assigned_user_projects,
            class_name: 'UserProject',
@@ -311,7 +307,6 @@ class User < ApplicationRecord
   has_many :user_notifications, inverse_of: :user
   has_many :notifications, through: :user_notifications
   has_many :zip_exports, inverse_of: :user, dependent: :destroy
-  has_many :datatables_teams, class_name: '::Views::Datatables::DatatablesTeam'
   has_many :view_states, dependent: :destroy
 
   has_many :access_grants, class_name: 'Doorkeeper::AccessGrant',
@@ -434,46 +429,6 @@ class User < ApplicationRecord
     end
   end
 
-  def projects_by_teams(team_id = 0, sort_by = nil, archived = false)
-    archived = archived ? true : false
-    query = Project.all.joins(:user_projects)
-    sql = 'projects.team_id IN (SELECT DISTINCT team_id ' \
-          'FROM user_teams WHERE user_teams.user_id = :user_id)'
-    if team_id.zero? || !user_teams.find_by(team_id: team_id).try(:admin?)
-      # Admins see all projects of team
-      sql += ' AND (projects.visibility=1 OR user_projects.user_id=:user_id)'
-    end
-    sql += ' AND projects.archived = :archived '
-
-    sort =
-      case sort_by
-      when 'old'
-        { created_at: :asc }
-      when 'atoz'
-        { name: :asc }
-      when 'ztoa'
-        { name: :desc }
-      else
-        { created_at: :desc }
-      end
-
-    if team_id > 0
-      result = query
-               .where('projects.team_id = ?', team_id)
-               .where(sql, user_id: id, archived: archived)
-               .order(sort)
-               .distinct
-               .group_by(&:team)
-    else
-      result = query
-               .where(sql, user_id: id, archived: archived)
-               .order(sort)
-               .distinct
-               .group_by(&:team)
-    end
-    result || []
-  end
-
   # Finds all activities of user that is assigned to project. If user
   # is not an owner of the project, user must be also assigned to
   # module.
@@ -499,11 +454,9 @@ class User < ApplicationRecord
 
   def self.find_by_valid_wopi_token(token)
     Rails.logger.warn "WOPI: searching by token #{token}"
-    User
-      .joins('LEFT OUTER JOIN tokens ON user_id = users.id')
-      .where(tokens: { token: token })
-      .where('tokens.ttl = 0 OR tokens.ttl > ?', Time.now.to_i)
-      .first
+    User.joins(:tokens)
+        .where(tokens: { token: token })
+        .find_by('tokens.ttl = 0 OR tokens.ttl > ?', Time.now.to_i)
   end
 
   def get_wopi_token

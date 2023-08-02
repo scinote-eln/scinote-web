@@ -127,6 +127,10 @@
         padding: 5px 0;
       }
 
+      .filter-table input {
+        width: auto !important;
+      }
+
       .filter-table,
       .display-limit {
         flex-shrink: 0;

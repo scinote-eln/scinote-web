@@ -71,10 +71,6 @@ class AddTeamLevelPermissions < ActiveRecord::Migration[6.1]
         @normal_user_role.save(validate: false)
         @viewer_role.permissions = @viewer_role.permissions | VIEWER_PERMISSIONS
         @viewer_role.save(validate: false)
-
-        create_user_assignments(UserTeam.admin, @owner_role)
-        create_user_assignments(UserTeam.normal_user, @normal_user_role)
-        create_user_assignments(UserTeam.guest, @viewer_role)
       end
 
       dir.down do
@@ -103,32 +99,5 @@ class AddTeamLevelPermissions < ActiveRecord::Migration[6.1]
       assigned: assigned,
       user_role: user_role
     )
-  end
-
-  def create_user_assignments(user_teams, user_role)
-    user_teams.includes(:user, team: %i(reports repositories repository_protocols))
-              .find_in_batches(batch_size: 100) do |user_team_batch|
-      user_assignments = []
-      user_team_batch.each do |user_team|
-        team_user_assignment = new_user_assignment(user_team.user, user_team.team, user_role, :manually)
-        team_user_assignment.assign_attributes(created_at: user_team.created_at,
-                                               updated_at: user_team.updated_at)
-        user_assignments << team_user_assignment
-        user_team.team.repositories.each do |repository|
-          user_assignments << new_user_assignment(user_team.user, repository, user_role, :automatically)
-        end
-        user_team.team.repository_protocols.each do |protocol|
-          if user_team.user_id == protocol.added_by_id
-            user_assignments << new_user_assignment(user_team.user, protocol, @owner_role, :automatically)
-          elsif (protocol.in_repository_archived? && protocol.published_on.present?) || protocol.in_repository_public?
-            user_assignments << new_user_assignment(user_team.user, protocol, @viewer_role, :automatically)
-          end
-        end
-        user_team.team.reports.each do |report|
-          user_assignments << new_user_assignment(user_team.user, report, user_role, :automatically)
-        end
-      end
-      UserAssignment.import(user_assignments)
-    end
   end
 end

@@ -8,7 +8,7 @@ module Api
       has_many :checklist_items, serializer: ChecklistItemSerializer
 
       def position
-        object.step_orderable_element.position
+        object&.step_orderable_element&.position
       end
 
       include TimestampableModel

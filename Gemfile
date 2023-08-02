@@ -73,7 +73,7 @@ gem 'nested_form_fields'
 gem 'nokogiri', '~> 1.14.3' # HTML/XML parser
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'rgl' # Graph framework for project diagram calculations
-gem 'roo', '~> 2.8.2' # Spreadsheet parser
+gem 'roo', '~> 2.10.0' # Spreadsheet parser
 gem 'rotp'
 gem 'rqrcode', '~> 2.0' # QR code generator
 gem 'rubyzip', '>= 2.3.0' # will load new rubyzip version

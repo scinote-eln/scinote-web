@@ -1449,21 +1449,4 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_24_094959) do
   add_foreign_key "wopi_actions", "wopi_apps"
   add_foreign_key "wopi_apps", "wopi_discoveries"
   add_foreign_key "zip_exports", "users"
-
-  create_view "datatables_teams", sql_definition: <<-SQL
-      SELECT teams.id,
-      teams.name,
-      user_teams.role,
-      ( SELECT count(*) AS count
-             FROM user_teams user_teams_1
-            WHERE (user_teams_1.team_id = teams.id)) AS members,
-          CASE
-              WHEN (teams.created_by_id = user_teams.user_id) THEN false
-              ELSE true
-          END AS can_be_left,
-      user_teams.id AS user_team_id,
-      user_teams.user_id
-     FROM (teams
-       JOIN user_teams ON ((teams.id = user_teams.team_id)));
-  SQL
 end

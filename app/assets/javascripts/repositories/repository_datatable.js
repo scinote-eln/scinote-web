@@ -532,7 +532,7 @@ var RepositoryDatatable = (function(global) {
 
     TABLE.ColSizes = state.ColSizes;
 
-    restoreColumnSizes();
+    setTimeout(restoreColumnSizes, 100);
   }
 
   function dataTableInit() {
@@ -576,6 +576,15 @@ var RepositoryDatatable = (function(global) {
 
           // force width of checkbox column
           data[0] = 30;
+
+          // perserve widths of invisible columns or enforce min width
+          for (let i = 0; i < data.length; i++) {
+            if (data[i] === 0) {
+              let minWidth = parseInt($(TABLE.column(i).header()).css('min-width'), 10);
+              data[i] = colSizeMap[i] || minWidth;
+            }
+          }
+
           state.ColSizes = data;
 
           $(TABLE_WRAPPER_ID).find('.table').addClass('table--resizable-columns');
@@ -773,8 +782,8 @@ var RepositoryDatatable = (function(global) {
           }
         });
       },
-      stateSaveCallback: function(settings, data) {
-        if (Object.keys(colSizeMap).length === 0) return;
+      stateSaveCallback: function(_, data) {
+        if (Object.keys(colSizeMap).length === 0) return true;
 
         let colSizes = [];
 
