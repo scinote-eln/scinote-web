@@ -111,13 +111,18 @@ class GeneSequenceAssetsController < ApplicationController
   end
 
   def check_manage_permission
+    render_403 unless can_manage_asset?
+  end
+
+  helper_method :can_manage_asset?
+  def can_manage_asset?
     case @parent
     when Step
-      return render_403 unless can_manage_step?(@parent)
+      can_manage_step?(@parent)
     when Result
-      return render_403 unless can_manage_my_module?(@parent)
+      can_manage_my_module?(@parent)
     else
-      render_403
+      false
     end
   end
 end
