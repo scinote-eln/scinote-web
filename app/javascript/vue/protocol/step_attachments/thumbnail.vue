@@ -11,7 +11,7 @@
         :data-preview-url="attachment.attributes.urls.preview"
     >
       <div class="attachment-preview" :class= "attachment.attributes.asset_type">
-        <img v-if="attachment.attributes.medium_preview !== null"
+        <img v-if="attachment.attributes.medium_preview"
             :src="attachment.attributes.medium_preview"
             @error="ActiveStoragePreviews.reCheckPreview"
             @load="ActiveStoragePreviews.showPreview"

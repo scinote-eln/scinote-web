@@ -17,6 +17,7 @@ class Asset < ApplicationRecord
   # ActiveStorage configuration
   has_one_attached :file
   has_one_attached :file_pdf_preview
+  has_one_attached :preview_image
 
   # Asset validation
   # This could cause some problems if you create empty asset and want to
@@ -165,17 +166,21 @@ class Asset < ApplicationRecord
   end
 
   def previewable?
-    return false unless file.attached?
+    return false unless preview_image.attached? || file.attached?
 
     previewable_document?(blob) || previewable_image?
   end
 
+  def preview_attachment
+    preview_image.attached? ? preview_image : file
+  end
+
   def medium_preview
-    file.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT)
+    preview_attachment.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT)
   end
 
   def large_preview
-    file.representation(resize_to_limit: Constants::LARGE_PIC_FORMAT)
+    preview_attachment.representation(resize_to_limit: Constants::LARGE_PIC_FORMAT)
   end
 
   def file_name
@@ -449,7 +454,8 @@ class Asset < ApplicationRecord
   end
 
   def previewable_image?
-    file.blob&.content_type =~ %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}}
+    preview_image.attached? ||
+      file.blob&.content_type =~ %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}}
   end
 
   def step_or_result_or_repository_asset_value
