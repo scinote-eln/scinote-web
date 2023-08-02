@@ -14,6 +14,7 @@ const entryList = {
   emoji_button: './app/javascript/packs/emoji_button.js',
   fontawesome: './app/javascript/packs/fontawesome.scss',
   prism: './app/javascript/packs/prism.js',
+  open_vector_editor: './app/javascript/packs/open_vector_editor.js',
   tiny_mce: './app/javascript/packs/tiny_mce.js',
   tiny_mce_styles: './app/javascript/packs/tiny_mce_styles.scss',
   tui_image_editor: './app/javascript/packs/tui_image_editor.js',
@@ -33,7 +34,8 @@ const entryList = {
   vue_repository_assign_items_to_task_modal: './app/javascript/packs/vue/assign_items_to_task_modal.js',
   vue_navigation_top_menu: './app/javascript/packs/vue/navigation/top_menu.js',
   vue_navigation_navigator: './app/javascript/packs/vue/navigation/navigator.js',
-  vue_components_action_toolbar: './app/javascript/packs/vue/action_toolbar.js'
+  vue_components_action_toolbar: './app/javascript/packs/vue/action_toolbar.js',
+  vue_components_open_vector_editor: './app/javascript/packs/vue/open_vector_editor.js'
 }
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949

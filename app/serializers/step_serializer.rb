@@ -9,7 +9,8 @@ class StepSerializer < ActiveModel::Serializer
 
   attributes :name, :position, :completed, :attachments_manageble, :urls, :assets_view_mode,
              :marvinjs_enabled, :marvinjs_context, :created_by, :created_at, :assets_order,
-             :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit
+             :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit,
+             :new_sequence_url
 
   def marvinjs_enabled
     MarvinJsService.enabled?
@@ -22,6 +23,10 @@ class StepSerializer < ActiveModel::Serializer
         icon: image_path('icon_small/marvinjs.svg')
       }
     end
+  end
+
+  def new_sequence_url
+    new_gene_sequence_asset_url(parent_type: 'Step', parent_id: object.id)
   end
 
   def comments_count

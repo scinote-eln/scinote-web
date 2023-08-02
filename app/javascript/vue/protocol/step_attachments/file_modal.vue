@@ -61,6 +61,11 @@
               </a>
             </div>
           </div>
+          <div class="integration-block open-vector-editor-button">
+            <a @click="openOVEditor">
+              {{  i18n.t('open_vector_editor.new_sequence') }}
+            </a>
+          </div>
         </div>
         <div class="modal-footer">
           <button type='button' class='btn btn-secondary' @click="cancel">
@@ -148,6 +153,10 @@
             HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
           }
         });
+      },
+      openOVEditor() {
+        $(this.$refs.modal).modal('hide');
+        window.showIFrameModal(this.step.attributes.new_sequence_url);
       }
     }
   }

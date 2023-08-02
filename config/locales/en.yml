@@ -3636,6 +3636,11 @@ en:
     checmical_drawing: "Chemical drawings"
     no_sketches_found: "No Sketches Found"
 
+  open_vector_editor:
+    new_sequence: "New sequence"
+    edit_sequence: "Edit sequence"
+    default_sequence_name: "New sequence"
+
   pdf_preview:
     fit_to_screen: 'Fit to screen'
     pages:

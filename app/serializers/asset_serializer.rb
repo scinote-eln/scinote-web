@@ -11,7 +11,9 @@ class AssetSerializer < ActiveModel::Serializer
   attributes :file_name, :view_mode, :icon, :urls, :updated_at_formatted,
              :file_size, :medium_preview, :large_preview, :asset_type, :wopi,
              :wopi_context, :pdf_previewable, :file_size_formatted, :asset_order,
-             :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached
+             :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached,
+             :edit_url, :preview_image
+
 
   def icon
     file_fa_icon_class(object)
@@ -37,6 +39,10 @@ class AssetSerializer < ActiveModel::Serializer
     number_to_human_size(object.file_size)
   end
 
+  def preview_image
+    rails_representation_url(object.preview_image) if object.preview_image.attached?
+  end
+
   def medium_preview
     rails_representation_url(object.medium_preview) if object.previewable?
   end
@@ -47,6 +53,10 @@ class AssetSerializer < ActiveModel::Serializer
 
   def asset_type
     object.file.metadata&.dig(:asset_type)
+  end
+
+  def edit_url
+    edit_gene_sequence_asset_path(object.id) if object.file.metadata&.dig(:asset_type) == 'gene_sequence'
   end
 
   def metadata
