@@ -92,6 +92,7 @@ describe User, type: :model do
     it { should have_many :user_notifications }
     it { should have_many :notifications }
     it { should have_many :zip_exports }
+    it { should have_many(:shareable_links).dependent(:destroy) }
 
     it 'have many repositories' do
       table = User.reflect_on_association(:repositories)

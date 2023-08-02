@@ -1,0 +1,9 @@
+<span class="start-date-label">
+  <% if my_module.started_on.present? %>
+    <span class="iso-formatted-date font-bold"><%= my_module.started_on.iso8601 %></span>
+  <% else %>
+    <span class="empty-label">
+      <%= t('my_modules.details.no_start_date_placeholder') %>
+    </span>
+  <% end %>
+</span>

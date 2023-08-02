@@ -1,7 +1,7 @@
 /* global animateSpinner */
 
 (function() {
-  $('.task-flows').on('click', '#viewTaskFlow', function() {
+  $('.task-sharing-and-flows').on('click', '#viewTaskFlow', function() {
     $('#statusFlowModal').modal('show');
   });
 

@@ -1058,6 +1058,9 @@ en:
       recent_protocols_from_repository: "Recent protocols from the Repository"
       code: "ID: "
       recent_protocols_from_repository: "Recent protocols from the Templates"
+    shareable_links:
+      share: "Share"
+      shared: "Shared"
     notes:
       title: "Notes"
       no_description: "No task description"
@@ -1602,6 +1605,34 @@ en:
       no_active_modules: "This experiment has no active tasks."
       no_active_modules_archived_branch: "This experiment is archived and can’t have active tasks."
 
+  shareable_links:
+    modal:
+      title: "Share task"
+      sharing_toggle_label: "Link sharing"
+      description_placeholder: "This is the message written by the previous user."
+      sharing_link_label: "Shared link"
+      copy_button: "Copy"
+      disclaimer: "Anyone with the link can view the protocol and results pages of this task."
+      too_long_text: "Text is too long (maximum number is %{counter} characters)"
+      copy_success: "Shared link copied to clipboard"
+    destroy_modal: 
+      title: "Deactivate shared link"
+      description: "This action will permanently deactivate the shared link. Any user who has this link will no longer be able to access the task."
+      deactivate: "Deactivate"
+    left_navigation:
+      welcome: "Welcome to SciNote!"
+      title: "SciNote Electronic Lab Notebook (ELN) Software"
+      description_1: "SciNote is a leading ELN with inventory, compliance and team management tools, used by the FDA, USDA and over 100K scientific professionals."
+      description_2: "What do our users like the most?"
+      description_3:
+        bullet_point_1: "Ease of use"
+        bullet_point_2: "Quality of support"
+        bullet_point_3: "Ease of setup"
+      free_trial: "Get free trial"
+    welcome_modal:
+      title: "Welcome to SciNote"
+      description: "You have been invited to view the %{my_module}."
+      view_task_btn: "View task"
   tags:
     new:
       head_title: "Create tag"
@@ -2557,6 +2588,16 @@ en:
           new_team: "New team"
         show:
           enter_description: "Enter Team description"
+          tasks_share:
+            enable_label: "Enable task sharing"
+            enable_success_message: "Task sharing is enabled."
+            disable_success_message: "Task sharing is disabled."
+            failure_message: "Something went wrong."
+            disable_modal:
+              title: "Disable task sharing"
+              description_p1: "Are you sure to disable task sharing in %{team_name}?"
+              description_p2: "This action will deactivate sharing tasks and permanently deactivate all shared links for %{counter} task(s). Any user who has shared links will no longer be able to access the shared tasks."
+              disable_button: "Disable"
         index:
           description_label: "Team is a group of SciNote users who are working on the same projects and share the inventories."
           member_of:
@@ -2943,6 +2984,7 @@ en:
       step_duplication_failed: "Step could not be duplicated, try again later."
       component_duplication_failed: "Step content could not be duplicated, try again later."
       timestamp: "Created on %{date} by %{user}"
+      timestamp_iso_html: "Created on <span class='iso-formatted-date'>%{date}</span> by %{user}"
       status:
         complete: "Mark as done"
         uncomplete: "Unmark as done"

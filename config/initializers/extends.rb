@@ -443,14 +443,19 @@ class Extends
     protocol_template_access_revoked_all_team_members: 240,
     project_access_changed_all_team_members: 241,
     project_grant_access_to_all_team_members: 242,
-    project_remove_access_from_all_team_members: 243
+    project_remove_access_from_all_team_members: 243,
+    team_sharing_tasks_enabled: 244,
+    team_sharing_tasks_disabled: 245,
+    task_link_sharing_enabled: 246,
+    task_link_sharing_disabled: 247,
+    shared_task_message_edited: 248
   }
 
   ACTIVITY_GROUPS = {
     projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162, 241, 242, 243],
     task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, 169, 172, 178],
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
-           *146..148, 166],
+           *146..148, 166, 246, 247, 248],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
                     217, 168, 171, 177, 184, 185, 188, 189, *192..203, 222, 224, 225, 226, 236],
     task_inventory: [55, 56, 146, 147, 183],
@@ -461,8 +466,8 @@ class Extends
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 170, 173, 179, 187, 186,
                           190, 191, *204..215, 220, 221, 223, 227, 228, 229, *230..235, *237..240],
-    team: [92, 94, 93, 97, 104],
-    label_templates: [*216..219]
+    team: [92, 94, 93, 97, 104, 244, 245],
+    label_repository: [*216..219]
   }
 
   TOP_LEVEL_ASSIGNABLES = %w(Project Team Protocol Repository).freeze
