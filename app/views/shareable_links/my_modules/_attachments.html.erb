@@ -7,8 +7,10 @@
   <div class="attachments">
     <% attachments.each do |attachment| %>
       <% if attachment.file.attached? %>
-        <%= render partial: "shareable_links/my_modules/step_attachments/#{ attachment.view_mode }", locals: { asset: attachment, step: step } %>
-        <%= render partial: "shareable_links/my_modules/step_attachments/file_preview", locals: { asset: attachment, gallery: attachments.pluck(:id)  } %>
+        <%= render partial: "shareable_links/my_modules/step_attachments/#{ attachment.view_mode }", locals: { asset: attachment, show_context: true } %>
+        <%= render partial: "shareable_links/my_modules/step_attachments/file_preview", locals: { asset: attachment,
+                                                                                                  gallery: attachments.pluck(:id),
+                                                                                                  object_type: 'step' } %>
       <% else %>
         <%= attachment.view_mode %>
         <%= render partial: "shareable_links/my_modules/step_attachments/empty", locals: { asset: attachment } %>

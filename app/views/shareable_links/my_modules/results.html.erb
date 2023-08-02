@@ -1,0 +1,50 @@
+<div class="text-3xl font-bold"><%= @my_module.name %></div>
+
+<div class="px-4 my-5 flex-1 bg-sn-white">
+  <div class="content-pane flexible">
+    <%= render partial: 'shareable_links/my_modules/header_actions' %>
+    <div class="mt-5" id="results-toolbar">
+      <div class="sci-btn-group collapse-expand-result">
+        <button class="btn btn-light" id="results-collapse-btn">
+          <span class="sn-icon sn-icon-up"></span>
+          <span class="hidden-xs-custom"><%= t'my_modules.results.collapse_label' %></span>
+        </button>
+        <button class="btn btn-light" id="results-expand-btn">
+          <span class="sn-icon sn-icon-down"></span>
+          <span class="hidden-xs-custom"><%= t'my_modules.results.expand_label' %></span>
+        </button>
+      </div>
+      <div class="sort-result-dropdown dropdown">
+        <button id="sort-result-button" class="btn btn-light icon-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <i class="sn-icon sn-icon-sort-up"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="sort-result-button">
+          <li><%= link_to t('general.sort_new.atoz'), shared_protocol_results_path(@shareable_link.uuid, page: params[:page], order: 'atoz'), class: (@results_order == 'atoz' ? 'selected' : '') %></li>
+          <li><%= link_to t('general.sort_new.ztoa'), shared_protocol_results_path(@shareable_link.uuid, page: params[:page], order: 'ztoa'), class: (@results_order == 'ztoa' ? 'selected' : '') %></li>
+          <li><%= link_to t('general.sort_new.old'), shared_protocol_results_path(@shareable_link.uuid, page: params[:page], order: 'old'), class: (@results_order == 'old' ? 'selected' : '') %></li>
+          <li><%= link_to t('general.sort_new.new'), shared_protocol_results_path(@shareable_link.uuid, page: params[:page], order: 'new'), class: (@results_order == 'new' ? 'selected' : '') %></li>
+          <li><%= link_to t('general.sort_new.old_updated'), shared_protocol_results_path(@shareable_link.uuid, page: params[:page], order: 'old_updated'), class: (@results_order == 'old_updated' ? 'selected' : '') %></li>
+          <li><%= link_to t('general.sort_new.new_updated'), shared_protocol_results_path(@shareable_link.uuid, page: params[:page], order: 'new_updated'), class: (@results_order == 'new_updated' ? 'selected' : '') %></li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="height: 15px;"></div>
+    <div id="results">
+      <% @results.each do |result| %>
+        <%= render partial: "shareable_links/my_modules/results/result", locals: { result: result, gallery: @gallery } %>
+      <% end %>
+    </div>
+    <div class="kaminari-pagination">
+      <%= paginate @results, outer_window: 1, window: 1 %>
+    </div>
+
+  </div>
+</div>
+
+<%= javascript_include_tag "handsontable.full" %>
+<%= javascript_include_tag 'shareable_links/results' %>
+
+<%= javascript_include_tag 'shared/file_preview' %>
+<%= javascript_include_tag 'pdf_js' %>
+<%= stylesheet_link_tag 'pdf_js_styles' %>

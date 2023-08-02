@@ -4,23 +4,27 @@ class MyModuleShareableLinksController < ApplicationController
   before_action :load_my_module, except: %i(protocol_show
                                             repository_index_dt
                                             repository_snapshot_index_dt
-                                            download_asset)
+                                            download_asset
+                                            results)
   before_action :check_view_permissions, only: :show
   before_action :check_manage_permissions, except: %i(protocol_show
                                                       repository_index_dt
                                                       repository_snapshot_index_dt
-                                                      download_asset)
+                                                      download_asset
+                                                      results)
   before_action :shareable_link_load_my_module, only: %i(protocol_show
                                                          repository_index_dt
                                                          repository_snapshot_index_dt
-                                                         download_asset)
+                                                         download_asset
+                                                         results)
   before_action :load_repository, only: :repository_index_dt
   before_action :load_repository_snapshot, only: :repository_snapshot_index_dt
   before_action :load_asset, only: :download_asset
   skip_before_action :authenticate_user!, only: %i(protocol_show
                                                    repository_index_dt
                                                    repository_snapshot_index_dt
-                                                   download_asset)
+                                                   download_asset
+                                                   results)
   after_action -> { request.session_options[:skip] = true }
 
   def show
@@ -29,6 +33,26 @@ class MyModuleShareableLinksController < ApplicationController
 
   def protocol_show
     render 'shareable_links/my_module_protocol_show', layout: 'shareable_links'
+  end
+
+  def results
+    @results_order = params[:order] || 'new'
+
+    @results = @my_module.results.active
+    @results = @results.page(params[:page]).per(Constants::RESULTS_PER_PAGE_LIMIT)
+
+    @results = case @results_order
+               when 'old' then @results.order(created_at: :asc)
+               when 'old_updated' then @results.order(updated_at: :asc)
+               when 'new_updated' then @results.order(updated_at: :desc)
+               when 'atoz' then @results.order(name: :asc)
+               when 'ztoa' then @results.order(name: :desc)
+               else @results.order(created_at: :desc)
+               end
+
+    @gallery = @results.left_joins(:asset).pluck('assets.id').compact
+
+    render 'shareable_links/my_modules/results', layout: 'shareable_links'
   end
 
   def repository_index_dt
@@ -119,9 +143,15 @@ class MyModuleShareableLinksController < ApplicationController
   end
 
   def load_asset
-    @asset = Asset.joins(step: { protocol: :my_module })
-                  .find_by(my_modules: { id: @my_module.id },
-                           assets: { id: params[:id] })
+    @asset = if params[:object_type] == 'result'
+               Asset.joins(result: :my_module)
+                    .find_by(my_modules: { id: @my_module.id },
+                             assets: { id: params[:id] })
+             else
+               Asset.joins(step: { protocol: :my_module })
+                    .find_by(my_modules: { id: @my_module.id },
+                             assets: { id: params[:id] })
+             end
 
     return render_404 if @asset.blank?
   end

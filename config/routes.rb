@@ -968,6 +968,9 @@ Rails.application.routes.draw do
   get '/shared/:uuid/protocol/asset/:id/download',
       to: 'my_module_shareable_links#download_asset',
       as: :shared_protocol_asset_download
+  get '/shared/:uuid/protocol/results',
+      to: 'my_module_shareable_links#results',
+      as: :shared_protocol_results
   post '/shared/:uuid/repositories/:id/items',
        to: 'my_module_shareable_links#repository_index_dt',
        as: :shared_protocol_items,

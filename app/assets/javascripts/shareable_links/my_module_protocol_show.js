@@ -1,4 +1,4 @@
-/* global tableColRowName*/
+/* global tableColRowName notTurbolinksPreview */
 
 (function() {
   'use strict';
@@ -8,9 +8,12 @@
   }
 
   function initStepsExpandCollapse() {
-    $(document).on('click', '.protocol-step-actions', function(event) {
-      let action = $(event.target).hasClass('steps-expand') ? 'show' : 'hide';
-      $('.step-container .collapse').collapse(action);
+    $(document).on('click', '#steps-collapse-btn', function() {
+      $('.step-container .collapse').collapse('hide');
+    });
+
+    $(document).on('click', '#steps-expand-btn', function() {
+      $('.step-container .collapse').collapse('show');
     });
   }
 
@@ -68,5 +71,7 @@
     });
   }
 
-  initMyModuleProtocolShow();
+  if (notTurbolinksPreview()) {
+    initMyModuleProtocolShow();
+  }
 }());
