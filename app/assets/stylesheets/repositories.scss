@@ -109,7 +109,6 @@
     flex-direction: column;
     flex-grow: 1;
     height: calc(100% - var(--datatable-pagination-row) - var(--repository-top-toolbar-height));
-    z-index: 1;
 
     .dataTables_scrollHead {
       z-index: 90;
