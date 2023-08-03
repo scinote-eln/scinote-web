@@ -317,6 +317,7 @@ Rails.application.routes.draw do
       end
 
       resources :my_modules, only: %i(show) do
+
         member do
           get :tree
         end
@@ -525,7 +526,6 @@ Rails.application.routes.draw do
         get 'protocols' # Protocols view for single module
         get 'protocol', to: 'my_modules#protocol', as: 'protocol'
         patch 'protocol', to: 'my_modules#update_protocol', as: 'update_protocol'
-        get 'results' # Results view for single module
         get 'archive' # Archive view for single module
       end
 
@@ -533,6 +533,8 @@ Rails.application.routes.draw do
       # to preserve original id parameters in URL.
       get 'tags/edit', to: 'my_module_tags#index_edit'
       get 'users/edit', to: 'user_my_modules#index_edit'
+
+      resources :results, only: %i(index show create update destroy)
     end
 
     resources :steps, only: %i(index update destroy show) do

@@ -1,6 +1,29 @@
+# frozen_string_literal: true
+
 class ResultsController < ApplicationController
-  before_action :load_vars
-  before_action :check_destroy_permissions
+  before_action :load_vars, only: :destroy
+  before_action :check_destroy_permissions, only: :destroy
+
+  def index
+    @my_module = MyModule.readable_by_user(current_user).find(params[:my_module_id])
+
+    respond_to do |format|
+      format.json do
+        # API endpoint
+        render(
+          json: @my_module.results,
+          formats: :json
+        )
+      end
+
+      format.html do
+        # Main view
+        @experiment = @my_module.experiment
+        @project = @experiment.project
+        render(:index, formats: :html)
+      end
+    end
+  end
 
   def destroy
     result_type = if @result.is_text
@@ -29,7 +52,9 @@ class ResultsController < ApplicationController
 
   def load_vars
     @result = Result.find_by_id(params[:id])
+
     return render_403 unless @result
+
     @my_module = @result.my_module
   end
 
