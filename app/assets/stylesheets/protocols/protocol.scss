@@ -6,7 +6,7 @@
 
 .content-pane.protocols-show {
   background-color: $color-alto;
-  min-height: calc(100vh - var(--navbar-height));
+  min-height: calc(100vh - var(--navbar-height) - 40px);
   overflow: hidden;
   padding: 0 0 10px;
 
