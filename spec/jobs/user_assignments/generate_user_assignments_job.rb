@@ -14,10 +14,8 @@ module UserAssignments
 
     before(:each) do
       available_roles = [owner_role, viewer_role, technician_role]
-      create :user_team, :admin, user: user_two, team: team
       create :user_assignment, user: user_two, assignable: project, user_role: viewer_role, assigned_by: user_one
 
-      create :user_team, :admin, user: user_three, team: team
       create :user_assignment, user: user_three, assignable: project, user_role: technician_role, assigned_by: user_one
     end
 

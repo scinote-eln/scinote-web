@@ -12,11 +12,10 @@ module Api
 
       def index
         items =
-          @task.repository_rows
-               .includes(repository_cells: :repository_column)
-               .preload(repository_cells: :value)
-               .page(params.dig(:page, :number))
-               .per(params.dig(:page, :size))
+          timestamps_filter(@task.repository_rows).includes(repository_cells: :repository_column)
+                                                  .preload(repository_cells: :value)
+                                                  .page(params.dig(:page, :number))
+                                                  .per(params.dig(:page, :size))
         render jsonapi: items,
                each_serializer: TaskInventoryItemSerializer,
                show_repository: true,

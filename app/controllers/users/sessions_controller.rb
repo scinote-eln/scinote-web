@@ -112,7 +112,7 @@ class Users::SessionsController < Devise::SessionsController
 
   def remove_authenticate_mesasge_if_root_path
     if session[:user_return_to] == root_path && flash[:alert] == I18n.t('devise.failure.unauthenticated')
-      flash[:alert] = nil
+      flash.clear
     end
   end
 

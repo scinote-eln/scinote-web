@@ -1,7 +1,7 @@
 Canaid::Permissions.register_for(Experiment) do
   # Experiment and its project must be active for all the specified permissions
   %i(manage_experiment
-     manage_experiment_tasks
+     create_experiment_tasks
      manage_experiment_users
      archive_experiment
      clone_experiment)
@@ -57,8 +57,8 @@ Canaid::Permissions.register_for(Experiment) do
     experiment.permission_granted?(user, ExperimentPermissions::USERS_MANAGE)
   end
 
-  can :manage_experiment_tasks do |user, experiment|
-    experiment.permission_granted?(user, ExperimentPermissions::TASKS_MANAGE)
+  can :create_experiment_tasks do |user, experiment|
+    experiment.permission_granted?(user, ExperimentPermissions::TASKS_CREATE)
   end
 
   can :manage_all_experiment_my_modules do |user, experiment|

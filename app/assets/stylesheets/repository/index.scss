@@ -156,5 +156,17 @@
 
   .dataTables_scrollHead {
     flex-shrink: 0;
+
+    .table.dataTable .sorting {
+      &::after {
+        opacity: 0;
+      }
+
+      &:hover {
+        &::after {
+          opacity: 1;
+        }
+      }
+    }
   }
 }

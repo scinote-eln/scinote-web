@@ -8,7 +8,7 @@
 
   .title-row {
     @include font-h1;
-    align-items: end;
+    align-items: flex-start;
     background: $color-white;
     border-bottom: $border-tertiary;
     display: flex;
@@ -18,9 +18,8 @@
 
     .label-template-icon {
       flex-shrink: 0;
-      margin-bottom: auto;
       margin-right: 5px;
-      margin-top: 13px;
+      margin-top: 2px;
       width: 32px;
     }
 

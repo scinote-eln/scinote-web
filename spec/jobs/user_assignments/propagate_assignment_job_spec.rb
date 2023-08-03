@@ -16,13 +16,6 @@ module UserAssignments
     let!(:my_module_one) { create :my_module, experiment: experiment_one, created_by: experiment_one.created_by }
     let!(:my_module_two) { create :my_module, experiment: experiment_two, created_by: experiment_two.created_by }
 
-
-    before do
-      [user_one, user_two].each do |user|
-        create :user_team, :admin, user: user, team: team
-      end
-    end
-
     describe 'perform' do
       it 'propagates the user assignments to project child object' do
         expect {

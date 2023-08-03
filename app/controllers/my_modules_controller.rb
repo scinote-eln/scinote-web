@@ -454,7 +454,7 @@ class MyModulesController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 && return unless can_manage_experiment?(@experiment)
+    render_403 && return unless can_create_experiment_tasks?(@experiment)
   end
 
   def check_manage_permissions

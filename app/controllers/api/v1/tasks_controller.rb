@@ -15,7 +15,10 @@ module Api
       before_action :load_task, only: :activities
 
       def index
-        tasks = @experiment.my_modules.includes(:my_module_status, :my_modules, :my_module_antecessors)
+        tasks =
+          timestamps_filter(
+            @experiment.my_modules
+          ).includes(:my_module_status, :my_modules, :my_module_antecessors)
         tasks = archived_filter(tasks).page(params.dig(:page, :number))
                                       .per(params.dig(:page, :size))
 
@@ -33,7 +36,7 @@ module Api
       end
 
       def create
-        raise PermissionError.new(MyModule, :create) unless can_manage_experiment_tasks?(@experiment)
+        raise PermissionError.new(MyModule, :create) unless can_create_experiment_tasks?(@experiment)
 
         my_module = @experiment.my_modules.create!(task_params_create.merge(created_by: current_user))
 

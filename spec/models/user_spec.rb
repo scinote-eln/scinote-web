@@ -46,7 +46,6 @@ describe User, type: :model do
   end
 
   describe 'Relations' do
-    it { should have_many :user_teams }
     it { should have_many :teams }
     it { should have_many :user_projects }
     it { should have_many :projects }
@@ -85,7 +84,6 @@ describe User, type: :model do
     it { should have_many :tokens }
     it { should have_many :modified_tags }
     it { should have_many :assigned_user_my_modules }
-    it { should have_many :assigned_user_teams }
     it { should have_many :assigned_user_projects }
     it { should have_many :added_protocols }
     it { should have_many :archived_protocols }
@@ -146,21 +144,6 @@ describe User, type: :model do
       user.name = 'Axe'
       expect(user.name).to_not eq 'Tinker'
       expect(user.name).to eq 'Axe'
-    end
-  end
-
-  describe 'teams_data should return a list of teams' do
-    #  needs persistence because is testing a sql query
-    let(:team) { create :team }
-    let(:user_one) do
-      create :user, email: 'user1@asdf.com', current_team_id: team.id
-    end
-    let(:user_two) { create :user, email: 'user2@asdf.com' }
-
-    it 'should return correct number of team members' do
-      create :user_team, team: team, user: user_one
-      create :user_team, team: team, user: user_two
-      expect(user_one.datatables_teams.first.members).to eq 2
     end
   end
 

@@ -23,6 +23,7 @@ var DataTableHelpers = (function() {
     },
 
     initSearchField: function(dataTableWraper, searchText) {
+      $(dataTableWraper).find('.dataTables_filter').show();
       var tableFilterInput = $(dataTableWraper).find('.dataTables_filter input');
       tableFilterInput.attr('placeholder', searchText)
         .addClass('sci-input-field search-field')

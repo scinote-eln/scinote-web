@@ -23,6 +23,10 @@
 
     .label-search-container {
       margin-left: auto;
+
+      .dataTables_filter {
+        display: none;
+      } 
     }
 
     .label-buttons-container {
@@ -83,6 +87,18 @@
         th:first-child {
           text-align: center;
           vertical-align: middle;
+        }
+
+        .table.dataTable .sorting {
+          &::after {
+            opacity: 0;
+          }
+
+          &:hover {
+            &::after {
+              opacity: 1;
+            }
+          }
         }
       }
 

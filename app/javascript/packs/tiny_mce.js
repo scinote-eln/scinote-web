@@ -201,7 +201,7 @@ window.TinyMCE = (() => {
         }
 
         return tinyMCE.init({
-          cache_suffix: '?v=6.3.1', // This suffix should be changed any time library is updated
+          cache_suffix: '?v=6.5.1-19', // This suffix should be changed any time library is updated
           selector,
           skin: false,
           content_css: false,
@@ -213,7 +213,7 @@ window.TinyMCE = (() => {
           },
           block_formats: 'Paragraph=p; Header 1=h1; Header 2=h2; Header 3=h3; Preformatted=pre',
           menubar: 'file edit view insert format table',
-          toolbar: window.customTinyMceToolbar || 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link | forecolor backcolor | codesample | customimageuploader marvinjs | help',
+          toolbar: window.customTinyMceToolbar || 'undo redo restoredraft | insert | styleselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | customimageuploader | marvinjs link codesample | help',
           plugins,
           contextmenu: '',
           autoresize_bottom_margin: 20,

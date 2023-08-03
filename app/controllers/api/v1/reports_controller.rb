@@ -8,9 +8,8 @@ module Api
       before_action :load_report, only: :show
 
       def index
-        reports = @project.reports
-                          .page(params.dig(:page, :number))
-                          .per(params.dig(:page, :size))
+        reports = timestamps_filter(@project.reports).page(params.dig(:page, :number))
+                                                     .per(params.dig(:page, :size))
         render jsonapi: reports,
                each_serializer: ReportSerializer,
                hide_project: true

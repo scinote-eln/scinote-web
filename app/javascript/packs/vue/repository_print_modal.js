@@ -18,7 +18,6 @@ function initPrintModalComponent() {
         return {
           showModal: false,
           row_ids: [],
-          zebraEnabled: container.data('zebra-enabled'),
           urls: {
             print: container.data('print-url'),
             zebraProgress: container.data('zebra-progress-url'),

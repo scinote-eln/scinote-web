@@ -59,8 +59,8 @@
           disabled: @repository.archived?,
           switchable: true,
           archived: params[:archived] || @repository.archived?,
-          active_url: repository_path(@repository),
-          archived_url: repository_path(@repository, archived: true),
+          active_url: nil,
+          archived_url: nil
         } %>
   </div>
 

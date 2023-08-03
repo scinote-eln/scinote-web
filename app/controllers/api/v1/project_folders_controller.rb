@@ -7,9 +7,8 @@ module Api
       before_action :load_project_folder, only: %i(show update)
 
       def index
-        project_folders = @team.project_folders
-                               .page(params.dig(:page, :number))
-                               .per(params.dig(:page, :size))
+        project_folders = timestamps_filter(@team.project_folders).page(params.dig(:page, :number))
+                                                                  .per(params.dig(:page, :size))
 
         render jsonapi: project_folders, each_serializer: ProjectFolderSerializer
       end
