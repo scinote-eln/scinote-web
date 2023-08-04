@@ -1,17 +1,18 @@
 # frozen_string_literal: true
 
 class ResultsController < ApplicationController
+  skip_before_action :verify_authenticity_token, only: %i(create destroy)
+
+  before_action :load_my_module
   before_action :load_vars, only: :destroy
   before_action :check_destroy_permissions, only: :destroy
 
   def index
-    @my_module = MyModule.readable_by_user(current_user).find(params[:my_module_id])
-
     respond_to do |format|
       format.json do
         # API endpoint
         render(
-          json: @my_module.results,
+          json: apply_sort(@my_module.results),
           formats: :json
         )
       end
@@ -23,6 +24,12 @@ class ResultsController < ApplicationController
         render(:index, formats: :html)
       end
     end
+  end
+
+  def create
+    result = @my_module.results.create!(user: current_user)
+
+    render json: result
   end
 
   def destroy
@@ -49,6 +56,27 @@ class ResultsController < ApplicationController
   end
 
   private
+
+  def apply_sort(results)
+    case params[:sort]
+    when 'updated_at_asc'
+      results.order(updated_at: :asc)
+    when 'updated_at_desc'
+      results.order(updated_at: :desc)
+    when 'created_at_asc'
+      results.order(created_at: :asc)
+    when 'created_at_desc'
+      results.order(created_at: :desc)
+    when 'name_asc'
+      results.order(name: :asc)
+    when 'name_desc'
+      results.order(name: :desc)
+    end
+  end
+
+  def load_my_module
+    @my_module = MyModule.readable_by_user(current_user).find(params[:my_module_id])
+  end
 
   def load_vars
     @result = Result.find_by_id(params[:id])

@@ -1,6 +1,6 @@
 <template>
   <div class="results-wrapper">
-    <ResultsToolbar :urls="{}" class="mb-3" />
+    <ResultsToolbar :sort="sort" @setSort="setSort" @newResult="createResult" @expandAll="expandAll" @collapseAll="collapseAll" lass="mb-3" />
     <div class="results-list">
       <Result v-for="result in results" :key="result.id" :result="result" />
     </div>
@@ -20,7 +20,8 @@
     },
     data() {
       return {
-        results: []
+        results: [],
+        sort: 'created_at_desc'
       }
     },
     created() {
@@ -29,13 +30,39 @@
     methods: {
       loadResults() {
         axios.get(
-          this.url,
+          `${this.url}?sort=${this.sort}`,
           {
             headers: {
               'Accept': 'application/json'
             }
           }
         ).then((response) => this.results = response.data.data);
+      },
+      setSort(sort) {
+        this.sort = sort;
+        this.loadResults();
+      },
+      createResult() {
+        axios.post(
+          `${this.url}`,
+          {
+            headers: {
+              'Accept': 'application/json'
+            }
+          }
+        ).then(
+          (response) => {
+            this.results.unshift(response.data.data)
+          }
+        );
+
+
+      },
+      expandAll() {
+        $('.result-wrapper .collapse').collapse('show')
+      },
+      collapseAll() {
+        $('.result-wrapper .collapse').collapse('hide')
       }
     }
   }

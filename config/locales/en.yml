@@ -1228,6 +1228,13 @@ en:
       info_tab: "Info"
       comments_tab: "Comments"
       comment_title: "%{user} at %{time}:"
+      sorts:
+        updated_at_asc: "Modified first"
+        updated_at_desc: "Modified last"
+        created_at_asc: "Created first"
+        created_at_desc: "Created last"
+        name_asc: "Name A to Z"
+        name_desc: "Name Z to A"
       options:
         comment_title: "Comments"
         no_comments: "No comments"
