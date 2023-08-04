@@ -68,7 +68,8 @@ class MyModuleShareableLinksController < ApplicationController
   end
 
   def download_asset
-    redirect_to @asset.file.url(disposition: 'attachment')
+    redirect_to @asset.file.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes, disposition: 'attachment'),
+                allow_other_host: true
   end
 
   def create
@@ -119,9 +120,7 @@ class MyModuleShareableLinksController < ApplicationController
   end
 
   def load_asset
-    @asset = Asset.joins(step: { protocol: :my_module })
-                  .find_by(my_modules: { id: @my_module.id },
-                           assets: { id: params[:id] })
+    @asset = @my_module.assets_in_steps.find_by(id: params[:id])
 
     return render_404 if @asset.blank?
   end
