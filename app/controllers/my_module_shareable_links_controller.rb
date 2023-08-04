@@ -25,6 +25,10 @@ class MyModuleShareableLinksController < ApplicationController
                                                    repository_snapshot_index_dt
                                                    download_asset
                                                    results)
+  skip_before_action :verify_authenticity_token, only: %i(protocol_show
+                                                          repository_index_dt
+                                                          repository_snapshot_index_dt)
+
   after_action -> { request.session_options[:skip] = true }
 
   def show
@@ -65,6 +69,7 @@ class MyModuleShareableLinksController < ApplicationController
       view_mode: params[:view_mode],
       my_module: @my_module,
       include_stock_consumption: @repository.has_stock_management? && params[:assigned].present?,
+      disable_reminders: true, # reminders are always disabled for shareable links
       disable_stock_management: true # stock management is always disabled in MyModule context
     }
 

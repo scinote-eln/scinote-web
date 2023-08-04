@@ -208,6 +208,7 @@ class RepositoriesController < ApplicationController
         html: render_to_string(
           partial: 'export_repositories_modal',
           locals: { team_name: current_team.name,
+                    counter: params[:counter].to_i,
                     export_limit: TeamZipExport.exports_limit,
                     num_of_requests_left: current_user.exports_left - 1 },
           formats: :html

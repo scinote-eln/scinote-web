@@ -561,6 +561,8 @@ class Extends
     newrelic.com
     *.newrelic.com
     *.nr-data.net
+    www.recaptcha.net/
+    www.gstatic.com/recaptcha/
   )
 end
 

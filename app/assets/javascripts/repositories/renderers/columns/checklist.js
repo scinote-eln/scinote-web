@@ -48,7 +48,8 @@ var ChecklistColumnHelper = (function() {
       optionClass: 'checkbox-icon',
       selectAppearance: 'simple',
       onChange: function() {
-        $hiddenField.val(JSON.stringify(dropdownSelector.getValues('#' + select)));
+        let currentValues = dropdownSelector.getValues('#' + select);
+        $hiddenField.val(currentValues.length ? JSON.stringify(currentValues) : null);
       }
     });
   }
