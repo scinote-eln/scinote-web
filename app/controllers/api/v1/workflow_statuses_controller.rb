@@ -6,7 +6,7 @@ module Api
       before_action :load_workflow
 
       def index
-        statuses = @workflow.my_module_statuses
+        statuses = timestamps_filter(@workflow.my_module_statuses)
         render jsonapi: statuses, each_serializer: WorkflowStatusSerializer
       end
     end

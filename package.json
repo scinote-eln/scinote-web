@@ -75,7 +75,7 @@
     "sass": "1.60.0",
     "sass-loader": "^10.4.1",
     "style-loader": "2.0.0",
-    "tinymce": "^6.1.2",
+    "tinymce": "^6.5.1",
     "tui-code-snippet": "^1.5.0",
     "tui-color-picker": "^2.2.0",
     "tui-image-editor": "github:biosistemika/tui.image-editor#3_15_2_updated",

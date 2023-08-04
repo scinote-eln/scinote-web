@@ -41,6 +41,11 @@ function initCreateWopiFileModal() {
         msg = I18n.t('assets.create_wopi_file.errors.not_found');
       }
       renderFormError(undefined, element, msg);
+    })
+    .on('input', '#new-wopi-file-name', function() {
+      if (this.value.length <= GLOBAL_CONSTANTS.FILENAME_MAX_LENGTH) {
+        $(this).closest('form').clearFormErrors();
+      }
     });
 }
 
