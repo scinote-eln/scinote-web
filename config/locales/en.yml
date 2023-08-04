@@ -1609,7 +1609,7 @@ en:
     modal:
       title: "Share task"
       sharing_toggle_label: "Link sharing"
-      description_placeholder: "This is the message written by the previous user."
+      description_placeholder: "Add optional message for the visitor."
       sharing_link_label: "Shared link"
       copy_button: "Copy"
       disclaimer: "Anyone with the link can view the protocol and results pages of this task."

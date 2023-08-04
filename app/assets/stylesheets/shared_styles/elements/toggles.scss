@@ -1,12 +1,12 @@
 // scss-lint:disable SelectorDepth QualifyingElement NestingDepth
 
 .sci-toggle-checkbox-container {
-  --sci-toggle-check-size: .75rem;
+  --sci-toggle-check-size: .625rem;
   --sci-toggle-container-height: 1.5rem;
   --sci-toggle-container-width: 2.25rem;
   --sci-toggle-label-border: .0625rem;
-  --sci-toggle-label-height: 1rem;
-  --sci-toggle-label-width: 2rem;
+  --sci-toggle-label-height: .875rem;
+  --sci-toggle-label-width: 1.875rem;
   display: inline-block;
   height: var(--sci-toggle-container-height);
   position: relative;
@@ -42,14 +42,13 @@ input[type="checkbox"].sci-toggle-checkbox {
       animation-timing-function: $timing-function-sharp;
       background: var(--sn-grey);
       border-radius: 50%;
+      bottom: calc(var(--sci-toggle-label-height) / 2 - var(--sci-toggle-check-size) / 2);
       content: "";
-      height: var(--sci-toggle-check-size);
-      left: 0;
-      margin: calc((var(--sci-toggle-label-height) - var(--sci-toggle-check-size))/2);
+      left: calc(var(--sci-toggle-label-height) / 2 - var(--sci-toggle-check-size) / 2);
       position: absolute;
-      top: calc(0 - var(--sci-toggle-label-border));
-      transition: .4s;
-      width: var(--sci-toggle-check-size);
+      right: calc(var(--sci-toggle-label-width) - var(--sci-toggle-label-height) / 2 - var(--sci-toggle-check-size) / 2);
+      top: calc(var(--sci-toggle-label-height) / 2 - var(--sci-toggle-check-size) / 2);
+      transition: .6s;
     }
   }
 
@@ -62,8 +61,8 @@ input[type="checkbox"].sci-toggle-checkbox {
 
     &::before {
       background-color: var(--sn-science-blue);
-      left: unset;
-      right: 0;
+      left: calc(var(--sci-toggle-label-width) - var(--sci-toggle-label-height) / 2 - var(--sci-toggle-check-size) / 2);
+      right: calc(var(--sci-toggle-label-height) / 2 - var(--sci-toggle-check-size) / 2);
     }
   }
 
