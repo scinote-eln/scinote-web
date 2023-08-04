@@ -23,8 +23,7 @@ class MyModuleShareableLinksController < ApplicationController
                                                    download_asset)
   skip_before_action :verify_authenticity_token, only: %i(protocol_show
                                                           repository_index_dt
-                                                          repository_snapshot_index_dt
-                                                          download_asset)
+                                                          repository_snapshot_index_dt)
   after_action -> { request.session_options[:skip] = true }
 
   def show
