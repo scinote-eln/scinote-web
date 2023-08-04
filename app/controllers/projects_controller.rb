@@ -19,7 +19,7 @@ class ProjectsController < ApplicationController
   before_action :load_current_folder, only: %i(index cards new show)
   before_action :check_view_permissions, except: %i(index cards new create edit update archive_group restore_group
                                                     users_filter actions_dropdown inventory_assigning_project_filter
-                                                    actions_toolbar)
+                                                    actions_toolbar list_toolbar)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
   before_action :load_exp_sort_var, only: :show
@@ -381,6 +381,10 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def list_toolbar
+    render json: Toolbars::List::ProjectsService.new(current_user, params).as_json
+  end
+
   def actions_toolbar
     render json: {
       actions:
@@ -526,8 +530,8 @@ class ProjectsController < ApplicationController
   def set_current_projects_view_type
     if current_team
       view_state = current_team.current_view_state(current_user)
-      @current_sort = view_state.state.dig('projects', projects_view_mode, 'sort') || 'atoz'
-      @current_view_type = view_state.state.dig('projects', 'view_type')
+      @current_sort = params[:sort] || view_state.state.dig('projects', projects_view_mode, 'sort') || 'atoz'
+      @current_view_type = params[:view] || view_state.state.dig('projects', 'view_type') || 'cards'
     end
   end
 end

@@ -6,7 +6,7 @@ module ProjectsHelper
 
     return 'archived' if current_folder&.archived?
 
-    params[:view_mode] == 'archived' ? 'archived' : 'active'
+    params[:archived] == 'true' ? 'archived' : 'active'
   end
 
   def projects_view_mode_archived?

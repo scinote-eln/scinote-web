@@ -19,6 +19,10 @@
       <span class="projects-title name-readonly-placeholder"><%= current_folder&.name || t('projects.index.head_title_archived') %></span>
     </h1>
   </div>
-  <div id="toolbarWrapper" class="toolbar-row" data-width-breakpoint="700">
+  <div id="listToolbar" data-behaviour="vue">
+    <list-toolbar
+      url="<%= list_toolbar_projects_path(project_folder_id: params[:project_folder_id], view: params[:view] || :cards, sort: params[:sort] || :atoz, archived: params[:archived] || false) %>"
+    />
   </div>
+  <%= javascript_include_tag "vue_components_list_toolbar" %>
 </div>

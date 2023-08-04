@@ -15,6 +15,7 @@
         <div
           v-for="option in options"
           :key="option[0]" @mousedown.prevent.stop="setValue(option[0])"
+          :v-html="allowHtmlOptions && option[1]"
           class="sn-select__option"
         >
           {{ option[1] }}
@@ -41,7 +42,8 @@
       initialValue: { type: [String, Number] },
       placeholder: { type: String },
       noOptionsPlaceholder: { type: String },
-      disabled: { type: Boolean, default: false }
+      disabled: { type: Boolean, default: false },
+      allowHtmlOptions: { type: Boolean, default: false }
     },
     comments: { PerfectScrollbar },
     data() {
