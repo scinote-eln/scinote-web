@@ -25,7 +25,7 @@
           </div>
           <div class="modal-body">
             <div class="flex items-center text-sm gap-4 mb-4">
-              <span>{{ i18n.t("repositories.modal_assign_items_to_task.title") }}</span>
+              <span>{{ i18n.t("shareable_links.modal.sharing_toggle_label") }}</span>
               <span class="sci-toggle-checkbox-container">
                 <input type="checkbox"
                       v-model="sharedEnabled"
