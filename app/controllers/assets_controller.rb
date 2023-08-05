@@ -135,7 +135,6 @@ class AssetsController < ApplicationController
                     render_to_string(
                       partial: 'assets/asset',
                       locals: {
-                        lazy_load: false,
                         asset: @asset,
                         gallery_view_id: gallery_view_id
                       },

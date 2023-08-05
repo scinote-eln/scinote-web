@@ -1,4 +1,4 @@
-/* global animateSpinner fabric PerfectScrollbar refreshProtocolStatusBar tui Uint8Array*/
+/* global animateSpinner fabric PerfectScrollbar refreshProtocolStatusBar tui Uint8Array ActiveStoragePreviews*/
 /* eslint-disable no-underscore-dangle */
 
 var ImageEditorModal = (function() {
@@ -355,6 +355,17 @@ var ImageEditorModal = (function() {
         $('#fileEditModal').modal('hide');
       }
 
+      const updatePreviews = (htmlStr) => {
+        $(`.asset[data-asset-id=${data.id}] .image-container img`)
+          .replaceWith($(htmlStr).find('.image-container img'));
+        $(`.asset[data-asset-id=${data.id}] .attachment-preview img`)
+          .replaceWith($(htmlStr).find('.attachment-preview img'));
+        $(`.asset[data-asset-id=${data.id}]`).closest('.attachments').trigger('reorder');
+        $(`.asset[data-asset-id=${data.id}] .attachment-preview img`)
+          .one('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
+          .one('load', (event) => ActiveStoragePreviews.showPreview(event));
+      };
+
       dataUpload.append('image', imageBlob);
       animateSpinner(null, true);
       $.ajax({
@@ -364,11 +375,8 @@ var ImageEditorModal = (function() {
         contentType: false,
         processData: false,
         success: function(res) {
-          $(`.asset[data-asset-id=${data.id}] .image-container img`)
-            .replaceWith($(res.html).find('.image-container img'));
-          $(`.asset[data-asset-id=${data.id}] .attachment-preview img`)
-            .replaceWith($(res.html).find('.attachment-preview img'));
           $(`.asset[data-asset-id=${data.id}]`).closest('.attachments').trigger('reorder');
+          updatePreviews(res.html);
           closeEditor();
         }
       });
