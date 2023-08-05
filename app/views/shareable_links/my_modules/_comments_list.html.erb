@@ -3,7 +3,7 @@
   <div class="comment-container" data-comment-id="<%= comment.id %>">
     <% unless user == comment.user%>
       <div class="comment-header">
-        <%= image_tag avatar_path(comment.user, :icon_small), class: 'user-avatar' %>
+        <%= image_tag user_avatar_absolute_url(comment.user, :icon_small, true), class: 'user-avatar' %>
         <div class="user-name">
           <%= comment.user.full_name %>
         </div>
