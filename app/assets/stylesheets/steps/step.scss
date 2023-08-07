@@ -1,6 +1,8 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
 
+@import "components/text";
+
 .step-container {
   --left-component-padding: 2rem;
   border: $border-transparent;

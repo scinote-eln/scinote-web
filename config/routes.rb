@@ -656,6 +656,7 @@ Rails.application.routes.draw do
         post 'restore', to: 'protocols#restore'
         post 'clone', to: 'protocols#clone'
         post 'import', to: 'protocols#import'
+        post 'import_docx', to: 'protocols#import_docx'
         post 'protocolsio_import_create',
              to: 'protocols#protocolsio_import_create'
         post 'protocolsio_import_save', to: 'protocols#protocolsio_import_save'
@@ -966,8 +967,14 @@ Rails.application.routes.draw do
       to: 'my_module_shareable_links#protocol_show',
       as: :shared_protocol
   get '/shared/:uuid/protocol/asset/:id/download',
-      to: 'my_module_shareable_links#download_asset',
+      to: 'my_module_shareable_links#download_step_asset',
       as: :shared_protocol_asset_download
+  get '/shared/:uuid/protocol/asset/:id/download_result',
+      to: 'my_module_shareable_links#download_result_asset',
+      as: :shared_protocol_result_asset_download
+  get '/shared/:uuid/protocol/results',
+      to: 'my_module_shareable_links#results_show',
+      as: :shared_protocol_results
   post '/shared/:uuid/repositories/:id/items',
        to: 'my_module_shareable_links#repository_index_dt',
        as: :shared_protocol_items,

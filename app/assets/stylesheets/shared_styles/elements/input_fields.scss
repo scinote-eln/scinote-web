@@ -35,6 +35,13 @@
     &::placeholder {
       color: $color-alto;
     }
+
+    &.textarea {
+      height: unset;
+      min-height: 36px;
+      padding: 10px;
+      resize: vertical;
+    }
   }
 
   .sci-input-field[type=password] {

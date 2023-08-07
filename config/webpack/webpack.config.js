@@ -11,6 +11,7 @@ const mode = process.env.NODE_ENV === 'development' ? 'development' : 'productio
 
 const entryList = {
   application_pack: './app/javascript/packs/application.js',
+  application_pack_styles: './app/javascript/packs/application.scss',
   emoji_button: './app/javascript/packs/emoji_button.js',
   fontawesome: './app/javascript/packs/fontawesome.scss',
   prism: './app/javascript/packs/prism.js',
@@ -20,6 +21,7 @@ const entryList = {
   tui_image_editor_styles: './app/javascript/packs/tui_image_editor_styles.scss',
   croppie: './app/javascript/packs/custom/croppie.js',
   croppie_styles: './app/javascript/packs/custom/croppie_styles.scss',
+  bootstrap: './app/javascript/packs/bootstrap.scss',
   inputmask: './app/javascript/packs/custom/inputmask.js',
   pdfjs: './app/javascript/packs/pdfjs/pdf_js.js',
   pdf_js_styles: './app/javascript/packs/pdfjs/pdf_js_styles.scss',
@@ -35,7 +37,8 @@ const entryList = {
   vue_navigation_top_menu: './app/javascript/packs/vue/navigation/top_menu.js',
   vue_navigation_navigator: './app/javascript/packs/vue/navigation/navigator.js',
   vue_navigation_breadcrumbs: './app/javascript/packs/vue/navigation/breadcrumbs.js',
-  vue_components_action_toolbar: './app/javascript/packs/vue/action_toolbar.js'
+  vue_components_action_toolbar: './app/javascript/packs/vue/action_toolbar.js',
+  vue_protocol_file_import_modal: './app/javascript/packs/vue/protocol_file_import_modal.js'
 }
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949
@@ -115,6 +118,10 @@ module.exports = {
     new VueLoaderPlugin(),
     new RemoveEmptyScriptsPlugin(),
     new MiniCssExtractPlugin(),
-    new NodePolyfillPlugin()
+    new NodePolyfillPlugin(),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+    })
   ]
 };

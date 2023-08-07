@@ -1213,6 +1213,7 @@ en:
       new_table_result: "Table"
       new_asset_result: "File"
       published_on_html: "Added on <em>%{timestamp}</em> by <em>%{user}</em>"
+      published_on_iso_html: "Added on <em><span class='iso-formatted-date'>%{timestamp}</span></em> by <em>%{user}</em>"
       published_table: "entered a table on %{timestamp}."
       published_text:  "entered a text on %{timestamp}."
       published_asset:  "uploaded a file on %{timestamp}."
@@ -2688,6 +2689,25 @@ en:
         button: "Rearrange steps"
         modal:
           title: "Rearrange protocol steps"
+    import_modal:
+      confirm:
+        title: "Import protocol"
+        body_html: "You will start importing selected .docx file into SciNote. The import time may vary according to the size of a file and internet connection."
+      in_progress:
+        title: "Importing in progress"
+        body_html: "The process of importing has started. Please wait..."
+      not_yet_done:
+        title: "Importing in progress"
+        body_html: "The import is taking longer than expected. You'll get a notice in <i class=\"sn-icon sn-icon-notifications\"></i> Notifications when your protocol template is ready. You can close the window and continue with your work."
+      done:
+        title: "Importing completed"
+        body_html: 'The protocol has been successfully imported. You can access the draft of protocol template <a href="%{url}">here.</a>'
+      failed:
+        title: "Import failed"
+        body_html: "We're sorry, but the file import has failed. Please ensure you have a stable internet connection and try again. If the problem persists, please contact support for further assistance."
+      import: "Import"
+      cancel: "Cancel"
+      close: "Close"
     print:
       title: "Print protocol"
       button: "Print"
@@ -2779,6 +2799,11 @@ en:
         import_to_team_protocols_label: "Import to Team Protocols"
         import_to_private_protocols_label: "Import to My Protocols"
         import_protocols_label: "Import"
+      import_protocol_notification:
+        title: "The import process has been successfully completed. You can download original file here: %{link}"
+        message: "Protocol template:"
+      import_protocol_notification_error:
+        title: "We're sorry, but the file import has failed. Please ensure you have a stable internet connection and try again. If the problem persists, please contact support for further assistance."
     export:
       export_results:
         title: "Export results"
@@ -2867,7 +2892,7 @@ en:
       edit: "Edit"
       clone_btn: "Copy"
       import: "Import"
-      import_alt: "From local file"
+      import_alt: "From file (.docx, .eln)"
       import_protocols_io: "From Protocols.io"
       modal_import_json_upload: "Upload"
       modal_import_json_title: "Import protocols.io file"
