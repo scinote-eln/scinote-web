@@ -1209,6 +1209,7 @@ en:
       new_table_result: "Table"
       new_asset_result: "File"
       published_on_html: "Added on <em>%{timestamp}</em> by <em>%{user}</em>"
+      published_on_iso_html: "Added on <em><span class='iso-formatted-date'>%{timestamp}</span></em> by <em>%{user}</em>"
       published_table: "entered a table on %{timestamp}."
       published_text:  "entered a text on %{timestamp}."
       published_asset:  "uploaded a file on %{timestamp}."

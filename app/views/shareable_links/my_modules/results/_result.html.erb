@@ -1,0 +1,50 @@
+<div class="result">
+  <div class="result-icon">
+    <% if result.is_text %>
+      <span class="sn-icon sn-icon-result-text"></span>
+    <% elsif result.is_table %>
+      <span class="sn-icon sn-icon-tables"></span>
+    <% elsif result.is_asset %>
+      <span class="sn-icon sn-icon-files"></span>
+    <% end %>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="panel-options pull-right">
+      </div>
+      <a class="result-panel-collapse-link" href="#result-panel-<%= result.id %>" data-toggle="collapse">
+        <span class="sn-icon sn-icon-right"></span>
+        <strong><%= result.name %></strong> |
+        <span><%= t('my_modules.results.published_on_iso_html', timestamp: result.created_at.iso8601, user: h(result.user.full_name)) %></span>
+      </a>
+    </div>
+    <div class="panel-collapse collapse in" id="result-panel-<%= result.id %>" role="tabpanel">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12">
+            <% if result.is_text %>
+              <div class="ql-editor">
+                 <%= smart_annotation_text(result.result_text.shareable_tinymce_render(:text)) %>
+              </div>
+            <% elsif result.is_table %>
+              <div class="hot-table">
+                <input type="hidden" class="hot-table-contents" value="<%= result.table.contents_utf_8 %>" />
+                <input type="hidden" class="hot-table-metadata" value="<%= result.table.metadata ? result.table.metadata.to_json : nil %>" />
+                <div class="hot-table-container"></div>
+              </div>
+            <% elsif result.is_asset %>
+              <%= render partial: "shareable_links/my_modules/step_attachments/#{ result.asset.view_mode }", locals: { asset: result.asset } %>
+              <%= render partial: "shareable_links/my_modules/step_attachments/file_preview", locals: { asset: result.asset, gallery: gallery } %>
+            <% end %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="result-comment"
+               id="result-comments-<%= result.id %>">
+             <%= render partial: "shareable_links/my_modules/results/comments", locals: { comments: result.comments } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
