@@ -12,6 +12,7 @@
           :attributeName="i18n.t('label_templates.show.name_error_prefix')"
           :autofocus="editingName"
           :editOnload="newLabel"
+          :customClasses="['hover-border']"
           @editingEnabled="editingName = true"
           @editingDisabled="editingName = false"
           @update="updateName"
@@ -34,6 +35,7 @@
           :attributeName="i18n.t('label_templates.show.description_error_prefix')"
           :placeholder="i18n.t('label_templates.show.description_placeholder')"
           :autofocus="editingDescription"
+          :customClasses="['hover-border']"
           @editingEnabled="editingDescription = true"
           @editingDisabled="editingDescription = false"
           @update="updateDescription"
@@ -188,8 +190,9 @@
         this.editingContent = true;
         this.$nextTick(() => {
           this.$refs.contentInput.focus();
-          $(this.$refs.contentInput).prop('selectionStart', this.cursorPos);
-          $(this.$refs.contentInput).prop('selectionEnd', this.cursorPos);
+          const contentInput = this.$refs.contentInput;
+          const contentLength = contentInput.value.length;
+          contentInput.setSelectionRange(contentLength, contentLength);
         });
       },
       disableContentEdit() {

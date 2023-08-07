@@ -236,24 +236,22 @@ var RepositoryColumns = (function() {
   }
 
   function toggleColumnVisibility() {
-    var lis = $(columnsList).find('.vis');
-    lis.on('click', function(event) {
-      var self = $(this);
-      var li = self.closest('li');
-      var column = TABLE.column(li.attr('data-position'));
+    $(columnsList).find('.vis').on('click', function(event) {
+      const $this = $(this);
+      const li = $this.closest('li');
+      const column = TABLE.column(li.attr('data-position'));
 
       event.stopPropagation();
-
-      if (column.header.id !== 'row-name') {
+      if (!['row-name', 'archived-by', 'archived-on'].includes(column.header().id)) {
         if (column.visible()) {
-          self.addClass('sn-icon-visibility-hide');
-          self.removeClass('sn-icon-visibility-show');
+          $this.addClass('sn-icon-visibility-hide');
+          $this.removeClass('sn-icon-visibility-show');
           li.addClass('col-invisible');
           column.visible(false);
           TABLE.setColumnSearchable(column.index(), false);
         } else {
-          self.addClass('sn-icon-visibility-show');
-          self.removeClass('sn-icon-visibility-hide');
+          $this.addClass('sn-icon-visibility-show');
+          $this.removeClass('sn-icon-visibility-hide');
           li.removeClass('col-invisible');
           column.visible(true);
           TABLE.setColumnSearchable(column.index(), true);

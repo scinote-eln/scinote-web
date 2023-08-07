@@ -138,7 +138,7 @@ var hammertime;
  * Initializes page
  */
 function init() {
-  if ($("#canvas-container").length === 0) return;
+  if ($('#module-archive').length === 0 && $('#canvas-container').length === 0) return;
 
   if($('#module-archive').length) {
     bindFullZoomAjaxTabs();

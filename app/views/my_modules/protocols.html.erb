@@ -40,12 +40,24 @@
 <div class="content-pane flexible my-modules-protocols-index" data-task-id="<%= @my_module.id %>">
   <%= render partial: 'my_modules/header' %>
   <div class="my-module-position-container">
+    <!-- Header Actions -->
+    <%= render partial: 'my_modules/header_actions' %>
     <!-- Details -->
     <div class="task-section task-information hidden">
       <div id="task-details" class="task-section-header">
-        <div class="task-flows">
-          <%= render partial: 'my_modules/status_flow/task_flow_button', locals: { my_module: @my_module } if @my_module.my_module_status_flow %>
-        </div>
+          <div class="task-sharing-and-flows">
+            <%= render partial: 'my_modules/status_flow/task_flow_button', locals: { my_module: @my_module } if @my_module.my_module_status_flow %>
+            <% if current_team.shareable_links_enabled? %>
+              <div class="share-task-container" data-behaviour="vue">
+                <share-task-container
+                  <%= 'shared' if @my_module.shared? %>
+                  shareable-link-url="<%= my_module_shareable_link_path(@my_module) %>"
+                  <%= 'disabled' if !can_manage_my_module?(current_user, @my_module) %> />
+              </div>
+
+              <%= javascript_include_tag 'vue_share_task_container' %>
+            <% end %>
+          </div>
         <div class="task-details-container flex items-center gap-2">
           <a class="task-section-caret collapsed" role="button" data-toggle="collapse" href="#details-container" aria-expanded="false" aria-controls="details-container">
             <i class="sn-icon sn-icon-right"></i>
@@ -119,6 +131,8 @@
           data-repositories-list-url="<%= my_module_repositories_list_html_path(@my_module) %>">
         <%= render partial: "my_modules/repositories/repositories_list" %>
       </div>
+
+      <%= render partial: "my_modules/repositories/full_view_modal" %>
     </div>
     <!-- Protocol -->
     <div class="task-section">
@@ -136,7 +150,6 @@
   </div>
 </div>
 
-<%= render partial: "my_modules/repositories/full_view_modal" %>
 <%= render partial: "my_modules/modals/update_repository_records_modal" %>
 
 

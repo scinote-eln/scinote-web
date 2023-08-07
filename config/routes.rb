@@ -222,6 +222,8 @@ Rails.application.routes.draw do
         post 'export_projects'
         get 'sidebar'
         get 'export_projects_modal'
+        post 'shared_tasks_toggle'
+        get 'disable_tasks_sharing_modal'
         # Used for atwho (smart annotations)
         get 'atwho_users', to: 'at_who#users'
         get 'atwho_menu', to: 'at_who#menu'
@@ -460,6 +462,8 @@ Rails.application.routes.draw do
       end
 
       resource :status_flow, controller: :my_module_status_flow, only: :show
+
+      resource :shareable_link, controller: :my_module_shareable_links, only: %i(show create update destroy)
 
       resources :my_module_comments,
                 path: '/comments',
@@ -956,6 +960,22 @@ Rails.application.routes.draw do
       post :save_activity_filter
     end
   end
+
+  # Shareable links
+  get '/shared/:uuid/protocol',
+      to: 'my_module_shareable_links#protocol_show',
+      as: :shared_protocol
+  get '/shared/:uuid/protocol/asset/:id/download',
+      to: 'my_module_shareable_links#download_asset',
+      as: :shared_protocol_asset_download
+  post '/shared/:uuid/repositories/:id/items',
+       to: 'my_module_shareable_links#repository_index_dt',
+       as: :shared_protocol_items,
+       defaults: { format: :json }
+  post '/shared/:uuid/repositories/:id/snapshot_items',
+       to: 'my_module_shareable_links#repository_snapshot_index_dt',
+       as: :shared_protocol_snapshot_items,
+       defaults: { format: :json }
 
   resources :marvin_js_assets, only: %i(create update destroy show) do
     collection do

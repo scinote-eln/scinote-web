@@ -26,6 +26,10 @@
     .on('shown.bs.modal', function() {
       $(`${protocolModal} #protocol_name`).parent().removeClass('error');
       $(`${protocolModal} #protocol_name`).val('');
+      const protocolName = $(`a[data-target="${protocolModal}"]`).attr('data-protocol-name');
+      if (protocolName) {
+        $(this).find('.sci-input-field').val(protocolName);
+      }
       $(this).find('.sci-input-field').focus();
     })
     .on('ajax:error', 'form', function(e, error) {

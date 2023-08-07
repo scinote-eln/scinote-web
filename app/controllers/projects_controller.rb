@@ -134,17 +134,9 @@ class ProjectsController < ApplicationController
       log_activity(:create_project)
 
       message = t('projects.create.success_flash', name: escape_input(@project.name))
-      respond_to do |format|
-        format.json do
-          render json: { message: message }, status: :ok
-        end
-      end
+      render json: { message: message }, status: :ok
     else
-      respond_to do |format|
-        format.json do
-          render json: @project.errors, status: :unprocessable_entity
-        end
-      end
+      render json: @project.errors, status: :unprocessable_entity
     end
   end
 

@@ -58,7 +58,7 @@ class TinyMceAsset < ApplicationRecord
     Rails.logger.error e.backtrace.join("\n")
   end
 
-  def self.generate_url(description, obj = nil)
+  def self.generate_url(description, obj = nil, is_shared_object: false)
     # Check tinymce for old format
     description = update_old_tinymce(description, obj)
 
@@ -75,7 +75,11 @@ class TinyMceAsset < ApplicationRecord
       asset_id = tm_asset.attr('data-mce-token')
       new_asset = obj.tiny_mce_assets.find_by(id: Base62.decode(asset_id))
       if new_asset&.image&.attached?
-        tm_asset.attributes['src'].value = Rails.application.routes.url_helpers.url_for(new_asset.image)
+        tm_asset.attributes['src'].value = if is_shared_object
+                                             new_asset.image.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes)
+                                           else
+                                             Rails.application.routes.url_helpers.url_for(new_asset.image)
+                                           end
         tm_asset['class'] = 'img-responsive'
       end
     end

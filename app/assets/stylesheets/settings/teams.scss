@@ -11,10 +11,8 @@
 
   .team-metadata {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 2fr));
-    grid-gap: 20px;
     font-size: 14px;
-    margin-bottom: 20px;
+    grid-gap: 8px;
 
     .grid-block {
 
@@ -33,7 +31,7 @@
 
   .team-description {
     display: inline-block;
-    margin-top: 20px;
+    margin-top: 16px;
     position: relative;
     width: 100%;
 
@@ -123,6 +121,10 @@
       .add-new-team-members {
         flex-grow: 1;
         padding: 5px 0;
+      }
+
+      .filter-table input {
+        width: auto !important;
       }
 
       .filter-table,

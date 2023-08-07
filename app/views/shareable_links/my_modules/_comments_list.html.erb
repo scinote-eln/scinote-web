@@ -1,0 +1,24 @@
+<% user= nil %>
+<% step.comments.order(created_at: :asc).each do |comment| %>  
+  <div class="comment-container" data-comment-id="<%= comment.id %>">
+    <% unless user == comment.user%>
+      <div class="comment-header">
+        <%= image_tag avatar_path(comment.user, :icon_small), class: 'user-avatar' %>
+        <div class="user-name">
+          <%= comment.user.full_name %>
+        </div>
+      </div>
+    <% end %>
+    <div class="comment-body">
+      <div class="comment-message">
+        <%= smart_annotation_text(comment.message) %>
+      </div>
+      <div class="comment-footer">
+        <div class="comment-create-date iso-formatted-date">
+          <%= comment.created_at.iso8601 %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% user = comment.user %>
+<% end %>

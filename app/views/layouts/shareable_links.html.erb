@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%= csp_meta_tag %>
+    <meta data-hook="head-js">
+    <title><%=t "head.title", title: (yield :head_title) %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= javascript_include_tag 'jquery_bundle' %>
+    <%= javascript_include_tag 'application' %>
+    <%= javascript_include_tag 'application_pack' %>
+
+    <%= favicon_link_tag "favicon.ico" %>
+    <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>
+    <%= favicon_link_tag "favicon-32.png", type: "image/png", size: "32x32" %>
+    <%= favicon_link_tag "favicon-48.png", type: "image/png", size: "48x48" %>
+    <%= stylesheet_link_tag 'fontawesome' %>
+
+    <%= stylesheet_link_tag 'prism' %>
+
+    <%= csrf_meta_tags %>
+  </head>
+  <body id="sci-shareable-links" data-datetime-picker-format="YYYY-MM-DD">
+    <div class="flex flex-row">
+      <div class="w-80 h-screen px-6 py-6 flex flex-col
+                  border-0 border-r border-solid border-sn-sleepy-grey">
+        <%= render "shareable_links/my_modules/left_navigation" %>
+      </div>
+      <div class="flex flex-col flex-1 min-h-screen p-4 bg-sn-super-light-grey">
+        <%= yield %>
+      </div>
+    </div>
+
+    <%= javascript_include_tag 'prism' %>
+    <%= javascript_include_tag 'shareable_links/date_formatting' %>
+  </body>
+</html>

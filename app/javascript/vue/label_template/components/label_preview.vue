@@ -52,6 +52,14 @@
         </div>
       </div>
       <div v-else>
+        <label>{{ i18n.t('label_templates.label_preview.units') }}</label>
+        <DropdownSelector
+          :disableSearch="true"
+          :options="[{ value: 'in', label: i18n.t(`label_templates.label_preview.in`) }, { value: 'mm', label: i18n.t(`label_templates.label_preview.mm`) }]"
+          :selectorId="'UnitSelector'"
+          :selectedValue="unit"
+          @dropdown:changed="updateUnit" />
+
         <div>{{ i18n.t('label_templates.label_preview.height') }}: {{ height }} {{ unit }} </div>
         <div>{{ i18n.t('label_templates.label_preview.width') }}: {{ width }} {{ unit }} </div>
         <div>{{ i18n.t('label_templates.label_preview.density') }}: {{ densityLabel() }}</div>

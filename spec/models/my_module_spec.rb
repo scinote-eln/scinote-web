@@ -60,21 +60,22 @@ describe MyModule, type: :model do
     it { should have_many(:inputs).class_name('Connection') }
     it { should have_many(:outputs).class_name('Connection') }
     it { should have_many(:my_module_antecessors).class_name('MyModule') }
+    it { should have_one(:shareable_link).dependent(:destroy) }
   end
 
   describe 'Validations' do
     describe '#name' do
       it do
         is_expected.to(validate_length_of(:name)
-                         .is_at_least(Constants::NAME_MIN_LENGTH)
-                         .is_at_most(Constants::NAME_MAX_LENGTH))
+                   .is_at_least(Constants::NAME_MIN_LENGTH)
+                   .is_at_most(Constants::NAME_MAX_LENGTH))
       end
     end
 
     describe '#description' do
       it do
         is_expected.to(validate_length_of(:description)
-                         .is_at_most(Constants::RICH_TEXT_MAX_LENGTH))
+                   .is_at_most(Constants::RICH_TEXT_MAX_LENGTH))
       end
     end
 

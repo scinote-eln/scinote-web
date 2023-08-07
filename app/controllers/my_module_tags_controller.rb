@@ -21,7 +21,8 @@ class MyModuleTagsController < ApplicationController
     render json: {
       html_module_header: render_to_string(
         partial: 'my_modules/tags',
-        locals: { my_module: @my_module, editable: can_manage_my_module?(@my_module) }
+        locals: { my_module: @my_module, editable: can_manage_my_module?(@my_module) },
+        formats: :html
       )
     }
   end
@@ -36,7 +37,8 @@ class MyModuleTagsController < ApplicationController
         id: my_module.id,
         tags_html: render_to_string(
           partial: 'canvas/tags',
-          locals: { my_module: my_module }
+          locals: { my_module: my_module },
+          formats: :html
         )
       }
     end
@@ -63,13 +65,8 @@ class MyModuleTagsController < ApplicationController
               my_module: my_module.id,
               tag: @mt.tag.id
             })
-
-    respond_to do |format|
-      format.json do
-        redirect_to my_module_tags_edit_path(format: :json), turbolinks: false,
-                    status: 303
-      end
-    end
+    redirect_to my_module_tags_edit_path(format: :json), turbolinks: false,
+                status: :see_other
   end
 
   def destroy
@@ -89,13 +86,8 @@ class MyModuleTagsController < ApplicationController
             })
 
     @mt.destroy
-
-    respond_to do |format|
-      format.json do
-        redirect_to my_module_tags_edit_path(format: :json), turbolinks: false,
-                    status: 303
-      end
-    end
+    redirect_to my_module_tags_edit_path(format: :json), turbolinks: false,
+                status: :see_other
   end
 
   def search_tags

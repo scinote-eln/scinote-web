@@ -7,13 +7,11 @@
   data-print-validation-url="<%= validate_label_template_columns_repository_rows_path %>"
   data-label-preview-url="<%= zpl_preview_label_templates_path %>"
   data-fluics-info-url="<%= Constants::SCINOTE_FLUICS_URL %>"
-  data-zebra-enabled="<%= LabelPrinter.zebra_print_enabled? %>"
 >
   <print-modal-container
     :show-modal = "showModal"
     :row_ids = "row_ids"
     :urls = "urls"
-    :zebra-enabled = "zebraEnabled"
     @close="closeModal"
   ></print-modal-container>
 </div>

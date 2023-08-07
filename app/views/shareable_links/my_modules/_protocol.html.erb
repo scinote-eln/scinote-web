@@ -1,0 +1,73 @@
+<div class="task-protocol">
+  <div class="task-section-header">
+    <div class="portocol-header-left-part">
+      <a class="task-section-caret" tabindex="0" role="button" data-toggle="collapse" href="#protocol-content" aria-expanded="true" aria-controls="protocol-content">
+        <i class="sn-icon sn-icon-right"></i>
+        <div class="task-section-title">
+          <h2><%= t('Protocol') %></h2>
+        </div>
+      </a>
+      <div class="my-module-protocol-status">
+        <% if protocol.linked? %>
+          <span class="status-label linked">
+            [<%= t("my_modules.protocols.protocol_status_bar.linked") %>]
+          </span>
+        <% else %>
+          <span class="status-label">
+            [<%= t("my_modules.protocols.protocol_status_bar.unlinked") %>]
+          </span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div id="protocol-content" class="protocol-content collapse in" aria-expanded="true">
+    <div class="protocol-description">
+      <div class="protocol-name">
+        <span>
+          <%= protocol.name %>
+        </span>
+      </div>
+        
+        <div>
+          <div id="protocol-description-container" >
+            <% if protocol.description.present? %>
+              <div>
+                <%=  smart_annotation_text(protocol.shareable_tinymce_render(:description)) %>
+              </div>
+            <% else %>
+              <div class="empty-protocol-description">
+                 <%= t("protocols.no_text_placeholder") %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+    </div>
+    <div>
+      <div id="protocol-steps-container">
+        <% if protocol.steps.length > 0 %>
+          <div class="protocol-step-actions">
+            <button class="btn btn-light steps-collapse" tabindex="0">
+              <span class="sn-icon sn-icon-collapse"></span>
+              <%= t("protocols.steps.collapse_label") %>
+            </button>
+            <button class="btn btn-light steps-expand" tabindex="0">
+              <span class="sn-icon sn-icon-expand"></span>
+              <%= t("protocols.steps.expand_label") %>
+            </button>
+          </div>
+        <% end %>
+        <div class="protocol-steps">
+          <% protocol.steps.sort_by(&:position).each do |step| %>
+            <div class="step-block">
+              <%= render partial: "shareable_links/my_modules/step", locals: { step: step } %>
+              <%= render partial: "shareable_links/my_modules/comments_sidebar", locals: { step: step } %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>

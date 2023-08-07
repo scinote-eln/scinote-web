@@ -99,8 +99,7 @@
     props: {
       showModal: Boolean,
       row_ids: Array,
-      urls: Object,
-      zebraEnabled: Boolean
+      urls: Object
     },
     data() {
       return {
@@ -130,12 +129,9 @@
       })
 
       $(this.$refs.modal).on('hidden.bs.modal', () => {
+        this.zebraPrinters = null;
         this.$emit('close');
       });
-
-      if (this.zebraEnabled) {
-        this.initZebraPrinter();
-      }
     },
     computed: {
       availableTemplates() {
@@ -167,6 +163,7 @@
     watch: {
       showModal() {
         if (this.showModal) {
+          this.initZebraPrinter();
           $(this.$refs.modal).modal('show');
           this.validateTemplate();
         }
@@ -254,7 +251,7 @@
       templateOption(option) {
         return `
           <div class="label-template-option" data-toggle="tooltip" data-placement="right" title="${option.params.description}">
-            <img src="${option.params.icon}"></img>
+            <img src="${option.params.icon}" style=""></img>
             ${option.label}
           </div>
         `

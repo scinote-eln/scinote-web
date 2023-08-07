@@ -11,6 +11,7 @@ body.navigator-collapsed {
   --left-navigation-width: 192px;
   --navbar-height: calc(var(--top-navigation-height) + var(--breadcrumbs-navigation-height));
   --navigator-navigation-width: 240px;
+  --title-row-height: 4em;
   --top-navigation-height: 72px;
   display: grid;
   grid-template-areas: "left top top"
@@ -98,4 +99,8 @@ body.navigator-collapsed {
       padding: 1em; // override bootstrap and old pages support
     }
   }
+}
+
+.w-98 {
+  width: 98%;
 }

@@ -122,7 +122,7 @@ class Report < ApplicationRecord
       )
     end
 
-    report = Report.new
+    report = Report.new(skip_user_assignments: true)
     report.name = loop do
       dummy_name = SecureRandom.hex(10)
       break dummy_name unless Report.exists?(name: dummy_name)

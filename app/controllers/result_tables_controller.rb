@@ -48,13 +48,9 @@ class ResultTablesController < ApplicationController
   end
 
   def edit
-    respond_to do |format|
-      format.json {
-        render json: {
-          html: render_to_string({ partial: 'edit', formats: :html })
-        }, status: :ok
-      }
-    end
+    render json: {
+      html: render_to_string({ partial: 'edit', formats: :html })
+    }, status: :ok
   end
 
   def update
