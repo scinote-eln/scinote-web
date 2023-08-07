@@ -22,7 +22,7 @@
       </div>
       <div class="modal-body">
         <div class="file-preview-container">
-          <% if asset.previewable? %>
+          <% if asset.previewable? && !asset.file_processing %>
             <% if wopi_enabled? && wopi_file?(asset) %>
               <iframe class="wopi-file-preview" src="<%= asset.get_action_url(nil, 'embedview', false) %>"></iframe>
             <% elsif asset.pdf_previewable? %>
@@ -46,7 +46,7 @@
               class: "previous-asset shareable-gallery-switcher",
               data: { id: previous_asset.id } do %>
               <i class="sn-icon sn-icon-arrow-left"></i>
-              <% if previous_asset.previewable? %>
+              <% if previous_asset.previewable? && !previous_asset.file_processing %>
                 <%= image_tag previous_asset.file.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT).url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
                     class: 'asset-image',
                     style: 'opacity: 0' %>
@@ -63,7 +63,7 @@
             <%= link_to '#',
               class: "next-asset shareable-gallery-switcher",
               data: { id: next_asset.id } do %>
-              <% if next_asset.previewable? %>
+              <% if next_asset.previewable? && !next_asset.file_processing %>
                 <%= image_tag next_asset.file.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT).url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
                     class: 'asset-image',
                     style: 'opacity: 0' %>
