@@ -4,8 +4,6 @@
 // scss-lint:disable SelectorDepth SelectorFormat
 // scss-lint:disable NestingDepth QualifyingElement
 
-@import "constants";
-
 // Fix for elements being scrolled to being hidden behind sticky navigation
 html {
   scroll-padding-top: 128px;

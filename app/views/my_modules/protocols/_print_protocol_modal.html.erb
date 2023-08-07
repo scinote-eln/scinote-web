@@ -3,7 +3,7 @@
      tabindex="-1"
      role="dialog"
      aria-labelledby="print-protocol-modal-label">
-  <%= bootstrap_form_tag({ url: print_protocol_path(protocol), method: :get, html: { class: 'print-protocol-form', id: "print-protocol-form", target: '_blank' } }) do %>
+  <%= form_with url: print_protocol_path(protocol), method: :get, html: { class: 'print-protocol-form', id: "print-protocol-form", target: '_blank' }  do %>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">

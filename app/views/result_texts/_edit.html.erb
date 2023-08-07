@@ -1,8 +1,11 @@
 <div class="well edit-text-result">
-  <%= bootstrap_form_for(@result, url: result_text_path(format: :json),
+  <%= form_with(model: @result, url: result_text_path(format: :json),
+                                  builder: SciFormHelper::SciFormBuilder,
                                   data: { 'name-max-length': Constants::NAME_MAX_LENGTH, 'rich-text-max-length': Constants::RICH_TEXT_MAX_LENGTH },
                                   remote: :true) do |f| %>
-    <%= f.text_field :name, style: "margin-top: 10px;" %><br />
+    <div class="sci-input-container mb-4">
+      <%= f.text_field :name, style: "margin-top: 10px;", class: "sci-input-field" %><br />
+    </div>
     <%= f.fields_for :result_text do |ff| %>
       <%= ff.tiny_mce_editor(:text,
                              id: :result_text_attributes_textarea,

@@ -1,8 +1,8 @@
 // scss-lint:disable SelectorDepth SelectorFormat QualifyingElement
 // scss-lint:disable NestingDepth ImportantRule
 
-@import "constants";
-@import "layouts/reminders";
+
+@import "../layouts/reminders";
 
 .repository-table {
   --content-header-size: 3.5rem;

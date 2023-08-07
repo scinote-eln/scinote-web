@@ -11,6 +11,7 @@ const mode = process.env.NODE_ENV === 'development' ? 'development' : 'productio
 
 const entryList = {
   application_pack: './app/javascript/packs/application.js',
+  application_pack_styles: './app/javascript/packs/application.scss',
   emoji_button: './app/javascript/packs/emoji_button.js',
   fontawesome: './app/javascript/packs/fontawesome.scss',
   prism: './app/javascript/packs/prism.js',
@@ -20,6 +21,7 @@ const entryList = {
   tui_image_editor_styles: './app/javascript/packs/tui_image_editor_styles.scss',
   croppie: './app/javascript/packs/custom/croppie.js',
   croppie_styles: './app/javascript/packs/custom/croppie_styles.scss',
+  bootstrap: './app/javascript/packs/bootstrap.scss',
   inputmask: './app/javascript/packs/custom/inputmask.js',
   pdfjs: './app/javascript/packs/pdfjs/pdf_js.js',
   pdf_js_styles: './app/javascript/packs/pdfjs/pdf_js_styles.scss',
@@ -115,6 +117,10 @@ module.exports = {
     new VueLoaderPlugin(),
     new RemoveEmptyScriptsPlugin(),
     new MiniCssExtractPlugin(),
-    new NodePolyfillPlugin()
+    new NodePolyfillPlugin(),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+    })
   ]
 };

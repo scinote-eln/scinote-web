@@ -1,8 +1,8 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
 // scss-lint:disable IdSelector
-@import "constants";
-@import "mixins";
+
+
 
 // Some color definitions
 $color-group-hover: $color-alabaster;
@@ -422,7 +422,7 @@ path, ._jsPlumb_endpoint {
 
   span {
     font-weight: bold;
-    font-size: $font-size-large;
+    font-size: 20px;
     text-transform: uppercase;
     display: block;
     margin-top: 10%;
@@ -511,7 +511,7 @@ li.module-hover {
           margin-top: 5px;
           font-family: 'Glyphicons Halflings';
           color: $color-white;
-          font-size: $font-size-large;
+          font-size: 20px;
 
           &:before {
             content: "\e221";

@@ -1,5 +1,5 @@
 <div id="table-form" class="well">
-	<%= bootstrap_form_for(@result, url: result_table_path(format: :json),
+	<%= form_with(model: @result, url: result_table_path(format: :json),
 																	data: { 'name-max-length': Constants::NAME_MAX_LENGTH },
 																	remote: true) do |f| %>
 		<%= f.text_field :name, style: "margin-top: 10px;" %><br />
