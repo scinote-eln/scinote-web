@@ -34,10 +34,7 @@
               </div>
             <% elsif result.is_asset %>
               <%= render partial: "shareable_links/my_modules/step_attachments/#{ result.asset.view_mode }", locals: { asset: result.asset } %>
-              <%= render partial: "shareable_links/my_modules/step_attachments/file_preview", locals: { asset: result.asset,
-                                                                                                        gallery: gallery,
-                                                                                                        object_type: 'result'
-                                                                                                      } %>
+              <%= render partial: "shareable_links/my_modules/step_attachments/file_preview", locals: { asset: result.asset, gallery: gallery } %>
             <% end %>
           </div>
         </div>

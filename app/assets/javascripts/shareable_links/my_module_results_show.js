@@ -41,7 +41,7 @@
     });
   }
 
-  function initMyModuleProtocolResults() {
+  function initMyModuleResultsShow() {
     initAttachments();
     initResultsExpandCollapse();
 
@@ -51,6 +51,6 @@
   }
 
   if (notTurbolinksPreview()) {
-    initMyModuleProtocolResults();
+    initMyModuleResultsShow();
   }
 }());
