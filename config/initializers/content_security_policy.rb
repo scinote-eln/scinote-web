@@ -11,7 +11,7 @@ ActiveSupport::Reloader.to_prepare do
     policy.font_src    :self, :https, :data
     policy.img_src     :self, :https, :data, :blob
     policy.object_src  :none
-    policy.script_src  :self, :unsafe_eval
+    policy.script_src  :self, :unsafe_eval, *Extends::EXTERNAL_SERVICES
     policy.style_src   :self, :https, :unsafe_inline, :data
     policy.connect_src :self, :data, *Extends::EXTERNAL_SERVICES
 
@@ -26,7 +26,9 @@ Rails.application.config.content_security_policy_nonce_generator = -> (request) 
   if request.env['HTTP_TURBOLINKS_REFERRER'].present?
     request.env['HTTP_X_TURBOLINKS_NONCE']
   else
-    request.session.id.to_s
+    return request.session.id.to_s if request&.session&.id.present?
+
+    SecureRandom.base64(16)
   end
 end
 

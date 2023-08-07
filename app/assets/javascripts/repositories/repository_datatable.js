@@ -409,6 +409,35 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
+  function initRepositoryViewSwitcher() {
+    const viewSwitch = $('.view-switch');
+    const repositoryShow = $('.repository-show');
+    const stateViewSwitchBtnName = $('.state-view-switch-btn-name');
+    const selectedSwitchOptionClass = 'form-dropdown-state-item prevent-shrink';
+
+    function switchView(event, activeClass, inactiveClass) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      repositoryShow.removeClass(inactiveClass).addClass(activeClass);
+
+      $(`.view-switch-${inactiveClass} a`).removeClass(selectedSwitchOptionClass);
+      $(`.view-switch-${activeClass} a`).addClass(selectedSwitchOptionClass);
+
+      stateViewSwitchBtnName.text($(`.view-switch-${activeClass}`).text());
+      viewSwitch.removeClass('open');
+      RepositoryDatatable.reload();
+    }
+
+    viewSwitch.on('click', '.view-switch-archived', function(event) {
+      switchView(event, 'archived', 'active');
+    });
+
+    viewSwitch.on('click', '.view-switch-active', function(event) {
+      switchView(event, 'active', 'archived');
+    });
+  }
+
   function initExportActions() {
     $(document).on('click', '#exportRepositoriesButton', function(e) {
       e.preventDefault();
@@ -503,7 +532,7 @@ var RepositoryDatatable = (function(global) {
 
     TABLE.ColSizes = state.ColSizes;
 
-    restoreColumnSizes();
+    setTimeout(restoreColumnSizes, 100);
   }
 
   function dataTableInit() {
@@ -547,6 +576,15 @@ var RepositoryDatatable = (function(global) {
 
           // force width of checkbox column
           data[0] = 30;
+
+          // perserve widths of invisible columns or enforce min width
+          for (let i = 0; i < data.length; i++) {
+            if (data[i] === 0) {
+              let minWidth = parseInt($(TABLE.column(i).header()).css('min-width'), 10);
+              data[i] = colSizeMap[i] || minWidth;
+            }
+          }
+
           state.ColSizes = data;
 
           $(TABLE_WRAPPER_ID).find('.table').addClass('table--resizable-columns');
@@ -556,7 +594,7 @@ var RepositoryDatatable = (function(global) {
           saveState(state);
         },
         stateLoadCallback: (state) => {
-          if (!TABLE.ColSizes) return;
+          if (!TABLE.ColSizes || TABLE.ColSizes.length === 0) return;
 
           let colSizes = TABLE.ColSizes;
 
@@ -744,9 +782,7 @@ var RepositoryDatatable = (function(global) {
           }
         });
       },
-      stateSaveCallback: function(settings, data) {
-        if (Object.keys(colSizeMap).length === 0) return;
-
+      stateSaveCallback: function(_, data) {
         let colSizes = [];
 
         for (let i = 0; i < data.ColReorder.length; i += 1) {
@@ -776,6 +812,7 @@ var RepositoryDatatable = (function(global) {
         initSaveButton();
         initCancelButton();
         initBSTooltips();
+        initRepositoryViewSwitcher();
         DataTableHelpers.initLengthAppearance($(TABLE_ID).closest('.dataTables_wrapper'));
 
         $('.dataTables_filter').addClass('hidden');

@@ -8,7 +8,7 @@ module Api
       end
 
       def index
-        workflows = MyModuleStatusFlow.all
+        workflows = timestamps_filter(MyModuleStatusFlow.all)
         render jsonapi: workflows, each_serializer: WorkflowSerializer
       end
 

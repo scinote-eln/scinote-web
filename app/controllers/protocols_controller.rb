@@ -79,16 +79,12 @@ class ProtocolsController < ApplicationController
   def index; end
 
   def datatable
-    respond_to do |format|
-      format.json do
-        render json: ::ProtocolsDatatable.new(
-          view_context,
-          @current_team,
-          @type,
-          current_user
-        )
-      end
-    end
+    render json: ::ProtocolsDatatable.new(
+      view_context,
+      @current_team,
+      @type,
+      current_user
+    )
   end
 
   def versions_modal
@@ -193,15 +189,11 @@ class ProtocolsController < ApplicationController
   end
 
   def update_keywords
-    respond_to do |format|
-      if @protocol.update_keywords(params[:keywords], current_user)
-        format.json do
-          log_activity(:edit_keywords_in_protocol_repository, nil, protocol: @protocol.id)
-          render json: @protocol, serializer: ProtocolSerializer, user: current_user
-        end
-      else
-        format.json { render json: I18n.t('errors.general'), status: :unprocessable_entity }
-      end
+    if @protocol.update_keywords(params[:keywords], current_user)
+      log_activity(:edit_keywords_in_protocol_repository, nil, protocol: @protocol.id)
+      render json: @protocol, serializer: ProtocolSerializer, user: current_user
+    else
+      render json: I18n.t('errors.general'), status: :unprocessable_entity
     end
   end
 
@@ -225,17 +217,13 @@ class ProtocolsController < ApplicationController
 
   def update_description
     old_description = @protocol.description
-    respond_to do |format|
-      format.json do
-        if @protocol.update(description: params.require(:protocol)[:description], last_modified_by: current_user)
-          log_activity(:edit_description_in_protocol_repository, nil, protocol: @protocol.id)
-          TinyMceAsset.update_images(@protocol, params[:tiny_mce_images], current_user)
-          protocol_annotation_notification(old_description)
-          render json: @protocol, serializer: ProtocolSerializer, user: current_user
-        else
-          render json: @protocol.errors, status: :unprocessable_entity
-        end
-      end
+    if @protocol.update(description: params.require(:protocol)[:description], last_modified_by: current_user)
+      log_activity(:edit_description_in_protocol_repository, nil, protocol: @protocol.id)
+      TinyMceAsset.update_images(@protocol, params[:tiny_mce_images], current_user)
+      protocol_annotation_notification(old_description)
+      render json: @protocol, serializer: ProtocolSerializer, user: current_user
+    else
+      render json: @protocol.errors, status: :unprocessable_entity
     end
   end
 
@@ -297,15 +285,11 @@ class ProtocolsController < ApplicationController
       raise ActiveRecord::Rollback
     end
 
-    respond_to do |format|
-      format.json do
-        if cloned.present?
-          render json: { message: t('protocols.index.clone.success_flash', original: @original.name, new: cloned.name) }
-        else
-          render json: { message: t('protocols.index.clone.error_flash', original: @original.name) },
-                 status: :bad_request
-        end
-      end
+    if cloned.present?
+      render json: { message: t('protocols.index.clone.success_flash', original: @original.name, new: cloned.name) }
+    else
+      render json: { message: t('protocols.index.clone.error_flash', original: @original.name) },
+             status: :bad_request
     end
   end
 
@@ -361,231 +345,199 @@ class ProtocolsController < ApplicationController
   end
 
   def unlink
-    respond_to do |format|
+    transaction_error = false
+    Protocol.transaction do
+      @protocol.unlink
+    rescue StandardError
+      transaction_error = true
+      raise ActiveRecord::Rollback
+    end
+
+    if transaction_error
+      # Bad request error
+      render json: {
+        message: t('my_modules.protocols.unlink_error')
+      }, status: :bad_request
+    else
+      # Everything good, display flash & render 200
+      flash[:success] = t(
+        'my_modules.protocols.unlink_flash'
+      )
+      flash.keep(:success)
+      render json: {}, status: :ok
+    end
+  end
+
+  def revert
+    if @protocol.can_destroy?
       transaction_error = false
       Protocol.transaction do
-        begin
-          @protocol.unlink
-        rescue StandardError
-          transaction_error = true
-          raise ActiveRecord::Rollback
-        end
+        # Revert is basically update from parent
+        @protocol.update_from_parent(current_user, @protocol.parent)
+      rescue StandardError
+        transaction_error = true
+        raise ActiveRecord::Rollback
+      end
+
+      if transaction_error
+        # Bad request error
+        render json: {
+          message: t('my_modules.protocols.revert_error')
+        },
+        status: :bad_request
+      else
+        # Everything good, display flash & render 200
+        log_activity(:update_protocol_in_task_from_repository,
+                     @protocol.my_module.experiment.project,
+                     my_module: @protocol.my_module.id,
+                     protocol_repository: @protocol.parent.id)
+        flash[:success] = t(
+          'my_modules.protocols.revert_flash'
+        )
+        flash.keep(:success)
+        render json: {}, status: :ok
+      end
+    else
+      render json: {
+        message: t('my_modules.protocols.revert_error_locked')
+      }, status: :bad_request
+    end
+  end
+
+  def update_from_parent
+    protocol_can_destroy = @protocol.can_destroy?
+    if protocol_can_destroy
+      transaction_error = false
+      Protocol.transaction do
+        # Find original published protocol template
+        source_parent = if @protocol.parent.in_repository_published_original?
+                          @protocol.parent
+                        else
+                          @protocol.parent.parent
+                        end
+        @protocol.update_from_parent(current_user, source_parent.latest_published_version_or_self)
+      rescue StandardError
+        transaction_error = true
+        raise ActiveRecord::Rollback
+      end
+    end
+
+    if !protocol_can_destroy
+      render json: { message: t('my_modules.protocols.update_from_parent_error_locked') }, status: :bad_request
+    elsif transaction_error
+      render json: { message: t('my_modules.protocols.update_from_parent_error') }, status: :bad_request
+    else
+      log_activity(:update_protocol_in_task_from_repository,
+                   @protocol.my_module.experiment.project,
+                   my_module: @protocol.my_module.id,
+                   protocol_repository: @protocol.parent.id)
+
+      flash[:success] = t('my_modules.protocols.update_from_parent_flash')
+      flash.keep(:success)
+      render json: {}, status: :ok
+    end
+  end
+
+  def load_from_repository
+    if @protocol.can_destroy?
+      transaction_error = false
+      Protocol.transaction do
+        @protocol.load_from_repository(@source, current_user)
+      rescue StandardError
+        transaction_error = true
+        raise ActiveRecord::Rollback
       end
 
       if transaction_error
         # Bad request error
         format.json do
           render json: {
-            message: t('my_modules.protocols.unlink_error')
+            message: t('my_modules.protocols.load_from_repository_error')
           },
           status: :bad_request
         end
       else
-        # Everything good, display flash & render 200
-        flash[:success] = t(
-          'my_modules.protocols.unlink_flash'
-        )
+        # Everything good, record activity, display flash & render 200
+        log_activity(:load_protocol_to_task_from_repository,
+                     @protocol.my_module.experiment.project,
+                     my_module: @protocol.my_module.id,
+                     protocol_repository: @protocol.parent.id)
+        flash[:success] = t('my_modules.protocols.load_from_repository_flash')
         flash.keep(:success)
-        format.json { render json: {}, status: :ok }
+        render json: {}, status: :ok
       end
-    end
-  end
-
-  def revert
-    respond_to do |format|
-      if @protocol.can_destroy?
-        transaction_error = false
-        Protocol.transaction do
-          # Revert is basically update from parent
-          @protocol.update_from_parent(current_user, @protocol.parent)
-        rescue StandardError
-          transaction_error = true
-          raise ActiveRecord::Rollback
-        end
-
-        if transaction_error
-          # Bad request error
-          format.json do
-            render json: {
-              message: t('my_modules.protocols.revert_error')
-            },
-            status: :bad_request
-          end
-        else
-          # Everything good, display flash & render 200
-          log_activity(:update_protocol_in_task_from_repository,
-                       @protocol.my_module.experiment.project,
-                       my_module: @protocol.my_module.id,
-                       protocol_repository: @protocol.parent.id)
-          flash[:success] = t(
-            'my_modules.protocols.revert_flash'
-          )
-          flash.keep(:success)
-          format.json { render json: {}, status: :ok }
-        end
-      else
-        format.json do
-          render json: {
-            message: t('my_modules.protocols.revert_error_locked')
-          }, status: :bad_request
-        end
-      end
-    end
-  end
-
-  def update_from_parent
-    protocol_can_destroy = @protocol.can_destroy?
-    respond_to do |format|
-      if protocol_can_destroy
-        transaction_error = false
-        Protocol.transaction do
-          # Find original published protocol template
-          source_parent = if @protocol.parent.in_repository_published_original?
-                            @protocol.parent
-                          else
-                            @protocol.parent.parent
-                          end
-          @protocol.update_from_parent(current_user, source_parent.latest_published_version_or_self)
-        rescue StandardError
-          transaction_error = true
-          raise ActiveRecord::Rollback
-        end
-      end
-
-      format.json do
-        if !protocol_can_destroy
-          render json: { message: t('my_modules.protocols.update_from_parent_error_locked') }, status: :bad_request
-        elsif transaction_error
-          render json: { message: t('my_modules.protocols.update_from_parent_error') }, status: :bad_request
-        else
-          log_activity(:update_protocol_in_task_from_repository,
-                       @protocol.my_module.experiment.project,
-                       my_module: @protocol.my_module.id,
-                       protocol_repository: @protocol.parent.id)
-
-          flash[:success] = t('my_modules.protocols.update_from_parent_flash')
-          flash.keep(:success)
-          render json: {}, status: :ok
-        end
-      end
-    end
-  end
-
-  def load_from_repository
-    respond_to do |format|
-      if @protocol.can_destroy?
-        transaction_error = false
-        Protocol.transaction do
-          @protocol.load_from_repository(@source, current_user)
-        rescue StandardError
-          transaction_error = true
-          raise ActiveRecord::Rollback
-        end
-
-        if transaction_error
-          # Bad request error
-          format.json do
-            render json: {
-              message: t('my_modules.protocols.load_from_repository_error')
-            },
-            status: :bad_request
-          end
-        else
-          # Everything good, record activity, display flash & render 200
-          log_activity(:load_protocol_to_task_from_repository,
-                       @protocol.my_module.experiment.project,
-                       my_module: @protocol.my_module.id,
-                       protocol_repository: @protocol.parent.id)
-          flash[:success] = t('my_modules.protocols.load_from_repository_flash')
-          flash.keep(:success)
-          format.json { render json: {}, status: :ok }
-        end
-      else
-        format.json do
-          render json: {
-            message: t('my_modules.protocols.load_from_repository_error_locked')
-          }, status: :bad_request
-        end
-      end
+    else
+      render json: {
+        message: t('my_modules.protocols.load_from_repository_error_locked')
+      }, status: :bad_request
     end
   end
 
   def load_from_file
     # This is actually very similar to import
-    respond_to do |format|
-      if @protocol.can_destroy?
-        transaction_error = false
-        Protocol.transaction do
-          @importer.import_into_existing(
-            @protocol, @protocol_json
-          )
-        rescue StandardError => e
-          transaction_error = true
-          Rails.logger.error(e.message)
-          Rails.logger.error(e.backtrace.join("\n"))
-          raise ActiveRecord::Rollback
-        end
-
-        if transaction_error
-          format.json do
-            render json: { status: :error }, status: :bad_request
-          end
-        else
-          # Everything good, record activity, display flash & render 200
-          log_activity(:load_protocol_to_task_from_file,
-                       @protocol.my_module.experiment.project,
-                       my_module: @my_module.id)
-          flash[:success] = t(
-            'my_modules.protocols.load_from_file_flash'
-          )
-          flash.keep(:success)
-          format.json do
-            render json: { status: :ok }, status: :ok
-          end
-        end
-      else
-        format.json do
-          render json: { status: :locked }, status: :bad_request
-        end
-      end
-    end
-  end
-
-  def protocolsio_index
-    render json: {
-      html: render_to_string({ partial: 'protocols/index/protocolsio_modal_body' })
-    }
-  end
-
-  def import
-    protocol = nil
-    respond_to do |format|
+    if @protocol.can_destroy?
       transaction_error = false
       Protocol.transaction do
-        protocol = @importer.import_new_protocol(@protocol_json)
+        @importer.import_into_existing(
+          @protocol, @protocol_json
+        )
       rescue StandardError => e
-        Rails.logger.error e.backtrace.join("\n")
         transaction_error = true
+        Rails.logger.error(e.message)
+        Rails.logger.error(e.backtrace.join("\n"))
         raise ActiveRecord::Rollback
       end
 
       if transaction_error
         format.json do
-          render json: { status: :bad_request }, status: :bad_request
+          render json: { status: :error }, status: :bad_request
         end
       else
-        Activities::CreateActivityService
-          .call(activity_type: :import_protocol_in_repository,
-                owner: current_user,
-                subject: protocol,
-                team: protocol.team,
-                message_items: {
-                  protocol: protocol.id
-                })
-        format.json do
-          render json: { status: :ok }, status: :ok
-        end
+        # Everything good, record activity, display flash & render 200
+        log_activity(:load_protocol_to_task_from_file,
+                     @protocol.my_module.experiment.project,
+                     my_module: @my_module.id)
+        flash[:success] = t(
+          'my_modules.protocols.load_from_file_flash'
+        )
+        flash.keep(:success)
+        render json: { status: :ok }, status: :ok
       end
+    else
+      render json: { status: :locked }, status: :bad_request
+    end
+  end
+
+  def protocolsio_index
+    render json: {
+      html: render_to_string({ partial: 'protocols/index/protocolsio_modal_body', formats: :html })
+    }
+  end
+
+  def import
+    protocol = nil
+    transaction_error = false
+    Protocol.transaction do
+      protocol = @importer.import_new_protocol(@protocol_json)
+    rescue StandardError => e
+      Rails.logger.error e.backtrace.join("\n")
+      transaction_error = true
+      raise ActiveRecord::Rollback
+    end
+
+    if transaction_error
+      render json: { status: :bad_request }, status: :bad_request
+    else
+      Activities::CreateActivityService
+        .call(activity_type: :import_protocol_in_repository,
+              owner: current_user,
+              subject: protocol,
+              team: protocol.team,
+              message_items: {
+                protocol: protocol.id
+              })
+
+      render json: { status: :ok }, status: :ok
     end
   end
 
@@ -715,128 +667,112 @@ class ProtocolsController < ApplicationController
 
   def export
     # Make a zip output stream and send it to the client
-    respond_to do |format|
-      format.html do
-        z_output_stream = Zip::OutputStream.write_buffer do |ostream|
-          ostream.put_next_entry('scinote.xml')
-          ostream.print(generate_envelope_xml(@protocols))
-          ostream.put_next_entry('scinote.xsd')
-          ostream.print(generate_envelope_xsd)
-          ostream.put_next_entry('eln.xsd')
-          ostream.print(generate_eln_xsd)
+    # rubocop:disable Metrics/BlockLength
+    z_output_stream = Zip::OutputStream.write_buffer do |ostream|
+      ostream.put_next_entry('scinote.xml')
+      ostream.print(generate_envelope_xml(@protocols))
+      ostream.put_next_entry('scinote.xsd')
+      ostream.print(generate_envelope_xsd)
+      ostream.put_next_entry('eln.xsd')
+      ostream.print(generate_eln_xsd)
 
-          # Create folder and xml file for each protocol and populate it
-          @protocols.each do |protocol|
-            protocol = protocol.latest_published_version_or_self
-            protocol_dir = get_guid(protocol.id).to_s
-            ostream.put_next_entry("#{protocol_dir}/eln.xml")
-            ostream.print(generate_protocol_xml(protocol))
-            ostream = protocol.tiny_mce_assets.save_to_eln(ostream, protocol_dir)
-            # Add assets to protocol folder
-            next if protocol.steps.count <= 0
-            protocol.steps.order(:id).each do |step|
-              step_guid = get_guid(step.id)
-              step_dir = "#{protocol_dir}/#{step_guid}"
-              if step.assets.exists?
-                step.assets.order(:id).each do |asset|
-                  next unless asset.file.attached?
-                  asset_guid = get_guid(asset.id)
-                  asset_file_name = asset_guid.to_s + File.extname(asset.file_name).to_s
-                  ostream.put_next_entry("#{step_dir}/#{asset_file_name}")
-                  ostream.print(asset.file.download)
-                end
-              end
-              ostream = step.tiny_mce_assets.save_to_eln(ostream, step_dir)
+      # Create folder and xml file for each protocol and populate it
+      @protocols.each do |protocol|
+        protocol = protocol.latest_published_version_or_self
+        protocol_dir = get_guid(protocol.id).to_s
+        ostream.put_next_entry("#{protocol_dir}/eln.xml")
+        ostream.print(generate_protocol_xml(protocol))
+        ostream = protocol.tiny_mce_assets.save_to_eln(ostream, protocol_dir)
+        # Add assets to protocol folder
+        next if protocol.steps.count <= 0
 
-              step.step_texts.each do |step_text|
-                ostream = step_text.tiny_mce_assets.save_to_eln(ostream, step_dir)
-              end
+        protocol.steps.order(:id).each do |step|
+          step_guid = get_guid(step.id)
+          step_dir = "#{protocol_dir}/#{step_guid}"
+          if step.assets.exists?
+            step.assets.order(:id).each do |asset|
+              next unless asset.file.attached?
+
+              asset_guid = get_guid(asset.id)
+              asset_file_name = asset_guid.to_s + File.extname(asset.file_name).to_s
+              ostream.put_next_entry("#{step_dir}/#{asset_file_name}")
+              ostream.print(asset.file.download)
             end
           end
-        end
-        z_output_stream.rewind
+          ostream = step.tiny_mce_assets.save_to_eln(ostream, step_dir)
 
-        file_name = export_protocol_file_name(@protocols)
-
-        @protocols.each do |protocol|
-          if params[:my_module_id]
-            my_module = MyModule.find(params[:my_module_id])
-            Activities::CreateActivityService
-              .call(activity_type: :export_protocol_from_task,
-                    owner: current_user,
-                    project: my_module.project,
-                    subject: my_module,
-                    team: my_module.team,
-                    message_items: {
-                      my_module: params[:my_module_id].to_i
-                    })
-          else
-            Activities::CreateActivityService
-              .call(activity_type: :export_protocol_in_repository,
-                    owner: current_user,
-                    subject: protocol,
-                    team: protocol.team,
-                    message_items: {
-                      protocol: protocol.id
-                    })
+          step.step_texts.each do |step_text|
+            ostream = step_text.tiny_mce_assets.save_to_eln(ostream, step_dir)
           end
         end
-
-        send_data(z_output_stream.read, filename: file_name)
       end
     end
+    # rubocop:enable Metrics/BlockLength
+    z_output_stream.rewind
+
+    file_name = export_protocol_file_name(@protocols)
+
+    @protocols.each do |protocol|
+      if params[:my_module_id]
+        my_module = MyModule.find(params[:my_module_id])
+        Activities::CreateActivityService
+          .call(activity_type: :export_protocol_from_task,
+                owner: current_user,
+                project: my_module.project,
+                subject: my_module,
+                team: my_module.team,
+                message_items: {
+                  my_module: params[:my_module_id].to_i
+                })
+      else
+        Activities::CreateActivityService
+          .call(activity_type: :export_protocol_in_repository,
+                owner: current_user,
+                subject: protocol,
+                team: protocol.team,
+                message_items: {
+                  protocol: protocol.id
+                })
+      end
+    end
+
+    send_data(z_output_stream.read, filename: file_name)
   end
 
   def unlink_modal
-    respond_to do |format|
-      format.json do
-        render json: {
-          title: t('my_modules.protocols.confirm_link_update_modal.unlink_title'),
-          message: t('my_modules.protocols.confirm_link_update_modal.unlink_message'),
-          btn_text: t('my_modules.protocols.confirm_link_update_modal.unlink_btn_text'),
-          url: unlink_protocol_path(@protocol)
-        }
-      end
-    end
+    render json: {
+      title: t('my_modules.protocols.confirm_link_update_modal.unlink_title'),
+      message: t('my_modules.protocols.confirm_link_update_modal.unlink_message'),
+      btn_text: t('my_modules.protocols.confirm_link_update_modal.unlink_btn_text'),
+      url: unlink_protocol_path(@protocol)
+    }
   end
 
   def revert_modal
-    respond_to do |format|
-      format.json do
-        render json: {
-          title: t('my_modules.protocols.confirm_link_update_modal.revert_title'),
-          message: t('my_modules.protocols.confirm_link_update_modal.revert_message'),
-          btn_text: t('my_modules.protocols.confirm_link_update_modal.revert_btn_text'),
-          url: revert_protocol_path(@protocol)
-        }
-      end
-    end
+    render json: {
+      title: t('my_modules.protocols.confirm_link_update_modal.revert_title'),
+      message: t('my_modules.protocols.confirm_link_update_modal.revert_message'),
+      btn_text: t('my_modules.protocols.confirm_link_update_modal.revert_btn_text'),
+      url: revert_protocol_path(@protocol)
+    }
   end
 
   def update_from_parent_modal
-    respond_to do |format|
-      format.json do
-        render json: {
-          title: t('my_modules.protocols.confirm_link_update_modal.update_self_title'),
-          message: t('my_modules.protocols.confirm_link_update_modal.update_self_message'),
-          btn_text: t('my_modules.protocols.confirm_link_update_modal.update_self_btn_text'),
-          url: update_from_parent_protocol_path(@protocol)
-        }
-      end
-    end
+    render json: {
+      title: t('my_modules.protocols.confirm_link_update_modal.update_self_title'),
+      message: t('my_modules.protocols.confirm_link_update_modal.update_self_message'),
+      btn_text: t('my_modules.protocols.confirm_link_update_modal.update_self_btn_text'),
+      url: update_from_parent_protocol_path(@protocol)
+    }
   end
 
   def load_from_repository_datatable
     @protocol = Protocol.find_by_id(params[:id])
-    respond_to do |format|
-      format.json do
-        render json: ::LoadFromRepositoryProtocolsDatatable.new(
-          view_context,
-          @protocol.team,
-          current_user
-        )
-      end
-    end
+    render json: ::LoadFromRepositoryProtocolsDatatable.new(
+      view_context,
+      @protocol.team,
+      current_user
+    )
   end
 
   def load_from_repository_modal
@@ -852,25 +788,17 @@ class ProtocolsController < ApplicationController
   end
 
   def version_comment
-    respond_to do |format|
-      format.json do
-        render json: { version_comment: @protocol.version_comment }
-      end
-    end
+    render json: { version_comment: @protocol.version_comment }
   end
 
   def update_version_comment
-    respond_to do |format|
-      format.json do
-        if @protocol.update(version_comment: params.require(:protocol)[:version_comment])
-          log_activity(:protocol_template_revision_notes_updated,
-                       nil,
-                       protocol: @protocol.id)
-          render json: { version_comment: @protocol.version_comment }
-        else
-          render json: { errors: @protocol.errors }, status: :unprocessable_entity
-        end
-      end
+    if @protocol.update(version_comment: params.require(:protocol)[:version_comment])
+      log_activity(:protocol_template_revision_notes_updated,
+                   nil,
+                   protocol: @protocol.id)
+      render json: { version_comment: @protocol.version_comment }
+    else
+      render json: { errors: @protocol.errors }, status: :unprocessable_entity
     end
   end
 

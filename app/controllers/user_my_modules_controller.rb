@@ -54,7 +54,7 @@ class UserMyModulesController < ApplicationController
         render json: {
           user: {
             id: @um.user.id,
-            full_name: @um.user.full_name,
+            full_name: escape_input(@um.user.full_name),
             avatar_url: avatar_path(@um.user, :icon_small),
             user_module_id: @um.id
           }

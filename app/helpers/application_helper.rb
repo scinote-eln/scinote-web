@@ -28,11 +28,11 @@ module ApplicationHelper
 
     if message.strip.length > len
       sanitize_input("<div class='modal-tooltip'> \
-      #{truncate(message.strip, length: len)} \
+      #{message.strip} \
       <span class='modal-tooltiptext'> \
       #{message.strip}</span></div>")
     else
-      truncate(message.strip, length: len)
+      message.strip
     end
   end
 
@@ -154,7 +154,7 @@ module ApplicationHelper
                             skip_avatar = false,
                             base64_encoded_imgs = false)
 
-    (defined?(controller) ? controller : ActionController::Base.new)
+    (defined?(controller) ? controller : ApplicationController.new)
       .render_to_string(
         partial: 'shared/atwho_user_container',
         locals: {
@@ -162,17 +162,7 @@ module ApplicationHelper
           skip_avatar: skip_avatar,
           skip_user_status: skip_user_status,
           team: team,
-          base64_encoded_imgs: base64_encoded_imgs,
-          user_avatar_absolute_url: user_avatar_absolute_url(
-            user,
-            :icon_small,
-            base64_encoded_imgs
-          ),
-          user_avatar_popover_absolute_url: user_avatar_absolute_url(
-            user,
-            :thumb,
-            base64_encoded_imgs
-          )
+          base64_encoded_imgs: base64_encoded_imgs
         },
         formats: :html
       )

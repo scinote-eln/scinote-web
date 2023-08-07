@@ -518,11 +518,12 @@
 
   .task_name-column {
     a {
-      display: inline-block;
       max-width: 320px;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
+      -webkit-box-orient: vertical;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
     }
 
     span {
@@ -536,11 +537,16 @@
 }
 
 .table-display-modal {
+  .modal-description,
+  .column-container {
+    font-size: 14px;
+  }
+
   .column-container {
     align-items: center;
     border-bottom: $border-default;
     display: flex;
-    padding: .5em 1em;
+    padding: .5em 1.4em;
 
     &:not(.visible) {
       color: $color-alto;
@@ -560,13 +566,15 @@
       }
     }
 
-    &.task_name {
-      padding-left: 3em;
+    .sn-icon {
+      cursor: pointer;
+      margin-right: .6em;
 
-      .fas {
-        display: none;
+      &.disabled {
+        cursor: not-allowed;
       }
     }
+
   }
 }
 

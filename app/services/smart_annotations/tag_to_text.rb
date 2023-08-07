@@ -4,9 +4,9 @@ module SmartAnnotations
   class TagToText
     attr_reader :text
 
-    def initialize(user, team, text)
-      parse_items_annotations(user, team, text)
-      parse_users_annotations(user, team, @text)
+    def initialize(user, team, text, is_shared_object: false)
+      parse_items_annotations(user, team, text, is_shared_object)
+      parse_users_annotations(user, team, @text, is_shared_object)
     end
 
     private
@@ -18,7 +18,7 @@ module SmartAnnotations
                         tsk: MyModule,
                         rep_item: RepositoryRow }.freeze
 
-    def parse_items_annotations(user, team, text)
+    def parse_items_annotations(user, team, text, is_shared_object)
       @text = text.gsub(ITEMS_REGEX) do |el|
         value = extract_values(el)
         type = value[:object_type]
@@ -26,12 +26,13 @@ module SmartAnnotations
           object = fetch_object(type, value[:object_id])
           # handle repository_items edge case
           if type == 'rep_item'
-            repository_item(value[:name], user, team, type, object)
+            repository_item(value[:name], user, team, type, object, is_shared_object)
           else
-            next unless object && SmartAnnotations::PermissionEval.check(user,
-                                                                         team,
-                                                                         type,
-                                                                         object)
+            next unless is_shared_object || (object && SmartAnnotations::PermissionEval.check(user,
+                                                                                              team,
+                                                                                              type,
+                                                                                              object))
+
             SmartAnnotations::TextPreview.text(nil, type, object)
           end
         rescue ActiveRecord::RecordNotFound
@@ -40,19 +41,24 @@ module SmartAnnotations
       end
     end
 
-    def parse_users_annotations(user, team, text)
+    def parse_users_annotations(user, team, text, is_shared_object)
       @text = text.gsub(USER_REGEX) do |el|
         match = el.match(USER_REGEX)
-        user = User.find_by_id(match[2].base62_decode)
+
+        user = if is_shared_object
+                 User.find_by(id: match[2].base62_decode)
+               else
+                 team.users.find_by(id: match[2].base62_decode)
+               end
         next unless user
-        next if UserTeam.where(user: user, team: team).blank?
+
         user.full_name
       end
     end
 
-    def repository_item(name, user, team, type, object)
+    def repository_item(name, user, team, type, object, is_shared_object)
       if object
-        return unless SmartAnnotations::PermissionEval.check(user, team, type, object)
+        return unless is_shared_object || SmartAnnotations::PermissionEval.check(user, team, type, object)
 
         return SmartAnnotations::TextPreview.text(nil, type, object)
       end

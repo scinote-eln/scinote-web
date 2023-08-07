@@ -120,25 +120,22 @@ class RepositoriesController < ApplicationController
     )
     @repository.assign_attributes(repository_params)
 
-    respond_to do |format|
-      format.json do
-        if @repository.save
-          log_activity(:create_inventory)
+    if @repository.save
+      log_activity(:create_inventory)
 
-          flash[:success] = t('repositories.index.modal_create.success_flash_html', name: @repository.name)
-          render json: { url: repository_path(@repository) }
-        else
-          render json: @repository.errors,
-            status: :unprocessable_entity
-        end
-      end
+      flash[:success] = t('repositories.index.modal_create.success_flash_html', name: @repository.name)
+      render json: { url: repository_path(@repository) }
+    else
+      render json: @repository.errors,
+        status: :unprocessable_entity
     end
   end
 
   def destroy_modal
     render json: {
       html: render_to_string(
-        partial: 'delete_repository_modal'
+        partial: 'delete_repository_modal',
+        formats: :html
       )
     }
   end
@@ -178,9 +175,7 @@ class RepositoriesController < ApplicationController
 
   def rename_modal
     render json: {
-      html: render_to_string(
-        partial: 'rename_repository_modal'
-      )
+      html: render_to_string(partial: 'rename_repository_modal', formats: :html)
     }
   end
 
@@ -203,7 +198,7 @@ class RepositoriesController < ApplicationController
       name: @repository.name
     )
     render json: {
-      html: render_to_string(partial: 'copy_repository_modal')
+      html: render_to_string(partial: 'copy_repository_modal', formats: :html)
     }
   end
 
@@ -213,6 +208,7 @@ class RepositoriesController < ApplicationController
         html: render_to_string(
           partial: 'export_repositories_modal',
           locals: { team_name: current_team.name,
+                    counter: params[:counter].to_i,
                     export_limit: TeamZipExport.exports_limit,
                     num_of_requests_left: current_user.exports_left - 1 },
           formats: :html
@@ -291,7 +287,7 @@ class RepositoriesController < ApplicationController
 
         if (@temp_file = parsed_file.generate_temp_file)
           render json: {
-            html: render_to_string(partial: 'repositories/parse_records_modal')
+            html: render_to_string(partial: 'repositories/parse_records_modal', formats: :html)
           }
         else
           repository_response(t('repositories.parse_sheet.errors.temp_file_failure'))

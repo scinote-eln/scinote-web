@@ -14,23 +14,11 @@ module AccessPermissions
         assigned_by: current_user,
         team: current_team
       )
-
-      respond_to do |format|
-        format.json
-      end
     end
 
-    def show
-      respond_to do |format|
-        format.json
-      end
-    end
+    def show; end
 
-    def edit
-      respond_to do |format|
-        format.json
-      end
-    end
+    def edit; end
 
     def update
       @user_assignment = @project.user_assignments.find_by(
@@ -51,11 +39,7 @@ module AccessPermissions
                                                    role: @user_assignment.user_role.name })
       propagate_job(@user_assignment)
 
-      respond_to do |format|
-        format.json do
-          render :project_member
-        end
-      end
+      render :project_member
     rescue ActiveRecord::RecordInvalid
       render json: { flash: t('access_permissions.update.failure') }, status: :unprocessable_entity
     end
@@ -92,14 +76,12 @@ module AccessPermissions
           end
         end
 
-        respond_to do |format|
-          @message = if created_count.zero?
-                       t('access_permissions.create.success', count: t('access_permissions.all_team'))
-                     else
-                       t('access_permissions.create.success', count: created_count)
-                     end
-          format.json { render :edit }
-        end
+        @message = if created_count.zero?
+                     t('access_permissions.create.success', count: t('access_permissions.all_team'))
+                   else
+                     t('access_permissions.create.success', count: created_count)
+                   end
+        render :edit
       rescue ActiveRecord::RecordInvalid => e
         Rails.logger.error e.message
         errors = @project.errors.present? ? @project.errors&.map(&:message)&.join(',') : e.message

@@ -4,7 +4,7 @@
   }
 
   .btn {
-    @apply relative inline-flex items-center text-sm shrink-0 gap-2 justify-center leading-5 py-2 px-4 rounded border-0 appearance-none whitespace-nowrap cursor-pointer;
+    @apply relative inline-flex items-center text-sm shrink-0 gap-2 justify-center leading-5 py-2 px-4 rounded border-0 appearance-none whitespace-nowrap cursor-pointer max-h-[40px];
   }
 
   .btn.icon-btn {
@@ -12,7 +12,7 @@
   }
 
   .btn.btn-lg {
-    @apply py-2.5 px-[1.125rem] text-base leading-5;
+    @apply py-2.5 px-[1.125rem] text-base leading-5 max-h-[44px];
   }
 
   .btn.btn-lg.icon-btn {
@@ -20,7 +20,7 @@
   }
 
   .btn.btn-sm {
-    @apply py-1.5 px-2.5 text-xs leading-5;
+    @apply py-1.5 px-2.5 text-xs leading-5 max-h-[36px];
   }
 
   .btn.btn-sm.icon-btn {
@@ -28,7 +28,7 @@
   }
 
   .btn.btn-xs {
-    @apply py-0.5 px-2.5 text-xs leading-5;
+    @apply py-0.5 px-2.5 text-xs leading-5 max-h-[30px];
   }
 
   .btn.btn-xs.icon-btn {
@@ -82,9 +82,19 @@
     color: var(--sn-blue);
   }
 
+  .btn.btn-shared {
+    background-color: var(--sn-white);
+    border: 1px solid var(--sn-coral);
+    color: var(--sn-coral);
+  }
+
   .btn.btn-secondary:hover,
   .btn.btn-default:hover {
     border: 1px solid var(--sn-blue-hover);
+  }
+
+  .btn.btn-shared:hover {
+    border: 1px solid var(--sn-light-grey);
   }
 
   .btn.btn-secondary:disabled,
@@ -93,6 +103,13 @@
   .btn.btn-default.disabled {
     background-color: var(--sn-white);
     color: var(--sn-sleepy-grey);
+  }
+
+  .btn.btn-shared:disabled,
+  .btn.btn-shared.disabled {
+    background-color: var(--sn-white);
+    color: var(--sn-sleepy-grey);
+    border: 1px solid var(--sn-light-grey);
   }
 
   .btn.btn-light {

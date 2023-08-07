@@ -60,7 +60,7 @@ class ProtocolLinkedChildrenDatatable < CustomDatatable
     res += "<li><span class='sn-icon sn-icon-projects'></span>&nbsp;"
     res += @controller.render_to_string(
       partial: 'search/results/partials/project_text',
-      locals: { project: record.my_module.experiment.project },
+      locals: { project: record.my_module.experiment.project, link_to_page: :show },
       formats: :html
     )
     res += '</li>'

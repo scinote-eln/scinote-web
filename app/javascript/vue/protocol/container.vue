@@ -36,7 +36,7 @@
       </div>
     </div>
     <div id="protocol-content" class="protocol-content collapse in" aria-expanded="true">
-      <div class="protocol-description">
+      <div>
         <div class="protocol-name" v-if="!inRepository">
           <InlineEdit
             v-if="urls.update_protocol_name_url"
@@ -45,6 +45,7 @@
             :placeholder="i18n.t('my_modules.protocols.protocol_status_bar.enter_name')"
             :allowBlank="!inRepository"
             :attributeName="`${i18n.t('Protocol')} ${i18n.t('name')}`"
+            :customClasses="['hover-border']"
             @update="updateName"
           />
           <span v-else>

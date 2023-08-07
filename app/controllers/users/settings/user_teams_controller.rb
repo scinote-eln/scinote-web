@@ -10,29 +10,23 @@ module Users
       before_action :check_destroy_permissions, only: %i(leave_html destroy_html destroy)
 
       def update
-        respond_to do |format|
-          if @user_assignment.update(update_params)
-            Activities::CreateActivityService
-              .call(activity_type: :change_users_role_on_team,
-                    owner: current_user,
-                    subject: @user_assignment.assignable,
-                    team: @user_assignment.assignable,
-                    message_items: {
-                      team: @user_assignment.assignable.id,
-                      user_changed: @user_assignment.user.id,
-                      role: @user_assignment.user_role.name
-                    })
+        if @user_assignment.update(update_params)
+          Activities::CreateActivityService
+            .call(activity_type: :change_users_role_on_team,
+                  owner: current_user,
+                  subject: @user_assignment.assignable,
+                  team: @user_assignment.assignable,
+                  message_items: {
+                    team: @user_assignment.assignable.id,
+                    user_changed: @user_assignment.user.id,
+                    role: @user_assignment.user_role.name
+                  })
 
-            format.json do
-              render json: {
-                status: :ok
-              }
-            end
-          else
-            format.json do
-              render json: @user_assignment.errors, status: :unprocessable_entity
-            end
-          end
+          render json: {
+            status: :ok
+          }
+        else
+          render json: @user_assignment.errors, status: :unprocessable_entity
         end
       end
 
@@ -125,26 +119,21 @@ module Users
           end
         end
 
-        respond_to do |format|
-          if !invalid
-            if params[:leave]
-              flash[:notice] = I18n.t(
-                'users.settings.user_teams.leave_flash',
-                team: @user_assignment.assignable.name
-              )
-              flash.keep(:notice)
-            end
-            generate_notification(current_user,
-                                  @user_assignment.user,
-                                  @user_assignment.assignable,
-                                  false)
-            format.json { render json: { status: :ok } }
-          else
-            format.json do
-              render json: @user_assignment.errors,
-              status: :unprocessable_entity
-            end
+        if !invalid
+          if params[:leave]
+            flash[:notice] = I18n.t(
+              'users.settings.user_teams.leave_flash',
+              team: @user_assignment.assignable.name
+            )
+            flash.keep(:notice)
           end
+          generate_notification(current_user,
+                                @user_assignment.user,
+                                @user_assignment.assignable,
+                                false)
+          render json: { status: :ok }
+        else
+          render json: @user_assignment.errors, status: :unprocessable_entity
         end
       end
 

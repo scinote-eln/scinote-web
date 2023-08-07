@@ -68,6 +68,17 @@ module FileIconsHelper
     end
   end
 
+  def sn_icon_for(asset)
+    file_ext = asset.file_name.split('.').last
+    if Constants::FILE_TEXT_FORMATS.include?(file_ext)
+      'file-word'
+    elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
+      'file-excel'
+    elsif Constants::FILE_PRESENTATION_FORMATS.include?(file_ext)
+      'file-powerpoint'
+    end
+  end
+
   # For showing in view/edit buttons (WOPI)
   def file_application_icon(asset)
     image_link = file_application_url(asset)

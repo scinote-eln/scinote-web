@@ -31,6 +31,7 @@
           <a
             data-toggle="modal"
             data-target="#newProtocolModal"
+            v-bind:data-protocol-name="protocol.attributes.name"
             :class="{ disabled: !protocol.attributes.urls.save_to_repo_url }"
           >
             <span class="fas fa-save"></span>
