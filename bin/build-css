@@ -2,7 +2,7 @@
 
 ./node_modules/sass/sass.js \
   ./app/assets/stylesheets/application.sass.scss:./app/assets/builds/application.css \
-  ./vendor/assets/stylesheets/handsontable.sass.scss:./app/assets/builds/handsontable.css \
+  ./vendor/assets/stylesheets/handsontable.full.sass.scss:./app/assets/builds/handsontable.css \
   ./vendor/assets/stylesheets/handsontable.formula.sass.scss:./app/assets/builds/handsontable.formula.css \
   ./app/assets/stylesheets/layouts/print_protocol.sass.scss:./app/assets/builds/print_protocol.css \
   ./vendor/assets/stylesheets/datatables.sass.scss:./app/assets/builds/datatables.css \
