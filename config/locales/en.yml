@@ -192,6 +192,10 @@ en:
           attributes:
             step:
               wrong_step: "connected to the wrong step"
+        result_orderable_element:
+          attributes:
+            result:
+              wrong_result: "connected to the wrong result"
         repository_snapshot:
           attributes:
             selected:
@@ -1208,7 +1212,7 @@ en:
       load_from_file_protocol_general_error: "Failed to load the protocol from file. It is likely that certain fields (protocol and individual step titles and names) contain too many or too few characters.(max is %{max} and min is %{min})"
     results:
       head_title: "%{project} | %{module} | Results"
-      add_label: "Add new result"
+      add_label: "New result"
       new_text_result: "Text"
       new_table_result: "Table"
       new_asset_result: "File"
@@ -1224,6 +1228,13 @@ en:
       info_tab: "Info"
       comments_tab: "Comments"
       comment_title: "%{user} at %{time}:"
+      sorts:
+        updated_at_asc: "Modified first"
+        updated_at_desc: "Modified last"
+        created_at_asc: "Created first"
+        created_at_desc: "Created last"
+        name_asc: "Name A to Z"
+        name_desc: "Name Z to A"
       options:
         comment_title: "Comments"
         no_comments: "No comments"
