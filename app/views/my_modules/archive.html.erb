@@ -14,7 +14,9 @@
 <% provide(:container_class, 'no-second-nav-container') %>
 <div class="content-pane flexible">
   <%= render partial: 'my_modules/header' %>
-  <div class="row">
+  <!-- Header Actions -->
+  <%= render partial: 'my_modules/header_actions' %>
+  <div class="row mt-5">
     <% if @archived_results.any? %>
       <% @archived_results.each do |result| %>
         <div class="col-xs-3">

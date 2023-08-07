@@ -1,0 +1,86 @@
+.step-text-container {
+  display: flex;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  padding-left: var(--left-component-padding);
+  position: relative;
+  width: calc(100% + 16px);
+
+  // TinyMCE table of contents
+  .mce-toc ul,
+  .mce-toc li {
+    list-style-type: none;
+  }
+
+  .step-element-grip-placeholder {
+    flex: 0;
+  }
+
+  .img-responsive {
+    display: inline;
+    vertical-align: baseline;
+  }
+
+  .view-text-element {
+    overflow-x: auto;
+    pointer-events: initial;
+
+    a {
+      pointer-events: initial;
+    }
+  }
+
+  .empty-text-element {
+    color: $color-silver-chalice;
+  }
+
+  .buttons-container {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      $color-concrete 25%,
+      $color-concrete 100%
+    );
+    border-radius: 4px;
+    opacity: 0;
+    padding-left: 2em;
+    position: absolute;
+    right: 0;
+  }
+
+
+  .step-element-grip {
+    align-items: center;
+    color: $color-silver-chalice;
+    display: none;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    padding: .5em;
+    position: absolute;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  &:hover:not(.edit):not(.locked) {
+    background: $color-concrete;
+
+    .buttons-container {
+      display: flex;
+      opacity: 1;
+    }
+
+    .step-element-grip {
+      display: flex;
+    }
+  }
+
+  &.edit {
+    .buttons-container,
+    .step-element-grip {
+      display: none;
+    }
+  }
+}

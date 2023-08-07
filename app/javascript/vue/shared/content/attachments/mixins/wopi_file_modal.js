@@ -1,5 +1,7 @@
 /* global HelperModule */
 
+const FILENAME_MAX_LENGTH = 100;
+
 export default {
   methods: {
     initWopiFileModal(object, requestCallback) {
@@ -9,6 +11,13 @@ export default {
       $wopiModal.find('#element_type').val(object.attributes.type);
       $wopiModal.modal('show');
       $($wopiModal).find('#new-wopi-file-name').focus();
+
+      // Clear filename input error on input change if appropriate
+      $wopiModal.on('input', '#new-wopi-file-name', (e) => {
+        if (e.currentTarget.value.length <= FILENAME_MAX_LENGTH) {
+          $wopiModal.clearFormErrors();
+        }
+      });
 
       $wopiModal.find('form').on(
         'ajax:success',

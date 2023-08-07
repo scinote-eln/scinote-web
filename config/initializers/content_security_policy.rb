@@ -26,7 +26,9 @@ Rails.application.config.content_security_policy_nonce_generator = -> (request) 
   if request.env['HTTP_TURBOLINKS_REFERRER'].present?
     request.env['HTTP_X_TURBOLINKS_NONCE']
   else
-    request.session.id.to_s
+    return request.session.id.to_s if request&.session&.id.present?
+
+    SecureRandom.base64(16)
   end
 end
 

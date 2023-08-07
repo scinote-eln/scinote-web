@@ -28,11 +28,11 @@ module ApplicationHelper
 
     if message.strip.length > len
       sanitize_input("<div class='modal-tooltip'> \
-      #{truncate(message.strip, length: len)} \
+      #{message.strip} \
       <span class='modal-tooltiptext'> \
       #{message.strip}</span></div>")
     else
-      truncate(message.strip, length: len)
+      message.strip
     end
   end
 

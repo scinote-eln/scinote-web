@@ -4,7 +4,7 @@
       <i class="sn-icon sn-icon-down" data-toggle="collapse" href="#fluicsInstructionsSection" aria-expanded="false"></i>
       <div class="row-title"><%= t("users.settings.account.label_printer.instructions") %></div>
     </div>
-    <ul class="collapse in" id="fluicsInstructionsSection">
+    <ul class="collapse in collapse-content" id="fluicsInstructionsSection">
       <li>
         <%= t("users.settings.account.label_printer.fluics_instruction.p1") %>
       </li>
@@ -28,7 +28,7 @@
       <i class="sn-icon sn-icon-down" data-toggle="collapse" href="#SettingsSection" aria-expanded="false"></i>
       <div class="row-title"><%= t("users.settings.account.label_printer.settings") %></div>
     </div>
-    <ul class="collapse in" id="SettingsSection">
+    <ul class="collapse in collapse-content" id="SettingsSection">
       <%= form_with scope: :label_printer, url: create_fluics_label_printers_path do |form| %>
         <div class="api-key-container" data-warning="<%= t("users.settings.account.label_printer.api_key_warning") %>">
           <div class="sci-input-container <%= 'error' if flash[:error] %>" data-error-text="<%= flash[:error] %>">
@@ -63,7 +63,7 @@
         </div>
       <% end %>
     </div>
-    <ul class="collapse in" id="PrintersSection">
+    <ul class="collapse in collapse-content" id="PrintersSection">
       <% if @label_printers.any? %>
         <% @label_printers.each do |printer| %>
           <li>

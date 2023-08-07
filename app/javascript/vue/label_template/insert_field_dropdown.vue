@@ -9,11 +9,12 @@
         <label>
           {{ i18n.t('label_templates.show.insert_dropdown.button') }}
         </label>
-        <a class="close-dropdown" data-toggle="dropdown">{{ i18n.t('general.cancel')}}</a>
+        <a class="close-dropdown hover:cursor-pointer" data-toggle="dropdown">{{ i18n.t('general.cancel')}}</a>
         <input v-model="searchValue"
                type="text"
-               class="sci-input-field"
+               class="sci-input-field insert-field-dropdown autofocus" autofocus="true"
                :placeholder="i18n.t('label_templates.show.insert_dropdown.search_placeholder')" />
+        <i class="fas fa-search relative left-60 bottom-7"></i>
       </div>
       <div class="fields-container">
         <div :key="`default_${index}`" v-for="(field, index) in filteredFields.default"
@@ -147,6 +148,9 @@
       });
       this.$nextTick(() => {
         $(this.$refs.dropdown).on('show.bs.dropdown', () => {
+          this.$nextTick(() => {
+            $('.insert-field-dropdown')[1].focus()
+          });
           this.searchValue = '';
         });
       });
@@ -161,7 +165,12 @@
         this.$emit('insertTag', field.tag)
       },
       filterArray(array, key) {
-        return array.filter(field => field[key].toLowerCase().indexOf(this.searchValue.toLowerCase()) !== -1)
+        return array.filter(field => {
+          return (
+            field[key].toLowerCase().indexOf(this.searchValue.toLowerCase()) !== -1 ||
+            field.tags
+          );
+        });
       }
     }
   }
