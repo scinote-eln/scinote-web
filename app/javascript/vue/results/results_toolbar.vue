@@ -23,34 +23,9 @@
           <i class="sn-icon sn-icon-sort"></i>
         </button>
         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="sortDropdown">
-          <li>
-            <a class="cursor-pointer" @click="setSort('updated_at_asc')">
-              {{ i18n.t('my_modules.results.sorts.updated_at_asc')}}
-            </a>
-          </li>
-          <li>
-            <a class="cursor-pointer" @click="setSort('updated_at_desc')">
-              {{ i18n.t('my_modules.results.sorts.updated_at_desc')}}
-            </a>
-          </li>
-          <li>
-            <a class="cursor-pointer" @click="setSort('created_at_asc')">
-              {{ i18n.t('my_modules.results.sorts.created_at_asc')}}
-            </a>
-          </li>
-          <li>
-            <a class="cursor-pointer" @click="setSort('created_at_desc')">
-              {{ i18n.t('my_modules.results.sorts.created_at_desc')}}
-            </a>
-          </li>
-          <li>
-            <a class="cursor-pointer" @click="setSort('name_asc')">
-              {{ i18n.t('my_modules.results.sorts.name_asc')}}
-            </a>
-          </li>
-          <li>
-            <a class="cursor-pointer" @click="setSort('name_desc')">
-              {{ i18n.t('my_modules.results.sorts.name_desc')}}
+          <li v-for="sort in sorts" :key="sort">
+            <a class="cursor-pointer" @click="setSort(sort)">
+              {{ i18n.t(`my_modules.results.sorts.${sort}`)}}
             </a>
           </li>
         </ul>
@@ -60,10 +35,22 @@
 </template>
 
 <script>
+  const SORTS = [
+    'updated_at_asc',
+    'updated_at_desc',
+    'created_at_asc',
+    'created_at_desc',
+    'name_asc',
+    'name_desc'
+  ];
+
   export default {
     name: 'ResultsToolbar',
     props: {
       sort: { type: String, required: true }
+    },
+    created() {
+      this.sorts = SORTS;
     },
     methods: {
       setSort(sort) {

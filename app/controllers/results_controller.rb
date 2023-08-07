@@ -4,7 +4,7 @@ class ResultsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: %i(create destroy)
 
   before_action :load_my_module
-  before_action :load_vars, only: :destroy
+  before_action :load_vars, only: %i(destroy elements assets)
   before_action :check_destroy_permissions, only: :destroy
 
   def index
@@ -30,6 +30,18 @@ class ResultsController < ApplicationController
     result = @my_module.results.create!(user: current_user)
 
     render json: result
+  end
+
+  def elements
+    render json: @result.result_orderable_elements.order(:position),
+           each_serializer: ResultOrderableElementSerializer,
+           user: current_user
+  end
+
+  def assets
+    render json: @result.assets,
+           each_serializer: AssetSerializer,
+           user: current_user
   end
 
   def destroy
@@ -79,7 +91,7 @@ class ResultsController < ApplicationController
   end
 
   def load_vars
-    @result = Result.find_by_id(params[:id])
+    @result = @my_module.results.find(params[:id])
 
     return render_403 unless @result
 

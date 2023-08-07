@@ -3,7 +3,6 @@
 class ResultAsset < ApplicationRecord
   belongs_to :result, inverse_of: :result_assets, touch: true
   belongs_to :asset, inverse_of: :result_asset, dependent: :destroy
-  has_one :result_orderable_element, as: :orderable, dependent: :destroy
 
   def space_taken
     asset.present? ? asset.estimated_size : 0

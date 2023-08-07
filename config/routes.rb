@@ -534,7 +534,10 @@ Rails.application.routes.draw do
       get 'tags/edit', to: 'my_module_tags#index_edit'
       get 'users/edit', to: 'user_my_modules#index_edit'
 
-      resources :results, only: %i(index show create update destroy)
+      resources :results, only: %i(index show create update destroy) do
+        get :elements
+        get :assets
+      end
     end
 
     resources :steps, only: %i(index update destroy show) do

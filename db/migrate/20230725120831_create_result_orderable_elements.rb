@@ -23,12 +23,6 @@ class CreateResultOrderableElements < ActiveRecord::Migration[7.0]
       'result_orderable_elements(result_id, position, orderable_type, orderable_id, created_at, updated_at) ' \
       'SELECT result_id, 0, \'ResultTable\', id, NOW(), NOW() FROM result_tables;'
     )
-
-    ActiveRecord::Base.connection.execute(
-      'INSERT INTO ' \
-      'result_orderable_elements(result_id, position, orderable_type, orderable_id, created_at, updated_at) ' \
-      'SELECT result_id, 0, \'ResultAsset\', id, NOW(), NOW() FROM result_assets;'
-    )
   end
 
   def down
