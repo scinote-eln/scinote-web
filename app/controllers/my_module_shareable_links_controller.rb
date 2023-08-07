@@ -4,30 +4,28 @@ class MyModuleShareableLinksController < ApplicationController
   before_action :load_my_module, except: %i(protocol_show
                                             repository_index_dt
                                             repository_snapshot_index_dt
-                                            download_asset
+                                            download_step_asset
                                             download_result_asset
                                             results_show)
   before_action :check_view_permissions, only: :show
   before_action :check_manage_permissions, except: %i(protocol_show
                                                       repository_index_dt
                                                       repository_snapshot_index_dt
-                                                      download_asset
+                                                      download_step_asset
                                                       download_result_asset
                                                       results_show)
   before_action :shareable_link_load_my_module, only: %i(protocol_show
                                                          repository_index_dt
                                                          repository_snapshot_index_dt
-                                                         download_asset
+                                                         download_step_asset
                                                          download_result_asset
                                                          results_show)
   before_action :load_repository, only: :repository_index_dt
   before_action :load_repository_snapshot, only: :repository_snapshot_index_dt
-  before_action :load_asset, only: :download_asset
-  before_action :load_result_asset, only: :download_result_asset
   skip_before_action :authenticate_user!, only: %i(protocol_show
                                                    repository_index_dt
                                                    repository_snapshot_index_dt
-                                                   download_asset
+                                                   download_step_asset
                                                    download_result_asset
                                                    results_show)
   skip_before_action :verify_authenticity_token, only: %i(protocol_show
@@ -100,12 +98,20 @@ class MyModuleShareableLinksController < ApplicationController
     render 'repository_rows/simple_view_index'
   end
 
-  def download_asset
+  def download_step_asset
+    @asset = @my_module.assets_in_steps.find_by(id: params[:id])
+
+    return render_404 if @asset.blank?
+
     redirect_to @asset.file.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes, disposition: 'attachment'),
                 allow_other_host: true
   end
 
   def download_result_asset
+    @asset = @my_module.assets_in_results.find_by(id: params[:id])
+
+    return render_404 if @asset.blank?
+
     redirect_to @asset.file.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes, disposition: 'attachment'),
                 allow_other_host: true
   end
@@ -155,18 +161,6 @@ class MyModuleShareableLinksController < ApplicationController
     return render_404 if @shareable_link.blank?
 
     @my_module = @shareable_link.shareable
-  end
-
-  def load_asset
-    @asset = @my_module.assets_in_steps.find_by(id: params[:id])
-
-    return render_404 if @asset.blank?
-  end
-
-  def load_result_asset
-    @asset = @my_module.assets_in_results.find_by(id: params[:id])
-
-    return render_404 if @asset.blank?
   end
 
   def load_repository
