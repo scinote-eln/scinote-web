@@ -627,7 +627,7 @@ en:
         report_button: "Report"
         update_pdf: "Update PDF"
         save_pdf_to_inventory: "Save PDF to inventory"
-        search_reports: "Filter reports"
+        search_reports: "Search reports"
         request_docx: "Generate .DOCX"
         update_docx: "Update .DOCX"
         edit: "Edit"
@@ -919,7 +919,7 @@ en:
         logo_params_error: 'Failed to parse logo parameters!'
     index:
       head_title: 'Label templates'
-      search_templates: 'Filter templates'
+      search_templates: 'Search labels'
       thead_name: 'Name'
       format: 'Format'
       description: 'Description'
@@ -1173,7 +1173,7 @@ en:
         title: "Load protocol template"
         text: "This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
         text2: "Choose the protocol to be loaded to the task."
-        filter_protocols: "Filter protocols"
+        filter_protocols: "Search protocols"
         thead_name: "Name"
         thead_keywords: "Keywords"
         thead_published_by: "Published by"
@@ -1610,7 +1610,7 @@ en:
     modal:
       title: "Share task"
       sharing_toggle_label: "Link sharing"
-      description_placeholder: "This is the message written by the previous user."
+      description_placeholder: "Add optional message for the visitor."
       sharing_link_label: "Shared link"
       copy_button: "Copy"
       disclaimer: "Anyone with the link can view the protocol and results pages of this task."
@@ -2845,7 +2845,7 @@ en:
       head_title_archived: "Archived protocol templates"
       default_name: 'New protocol'
       back_to_active_protocols: 'Back to active protocols'
-      search_bar_placeholder: 'Filter protocols'
+      search_bar_placeholder: 'Search protocols'
       navigation:
         archive: "Archive"
       toolbar:
@@ -3288,9 +3288,9 @@ en:
       projects: "Projects with this name/ID were not found"
       experiments: "Experiments with this name/ID were not found"
       my_modules: "Tasks with this name/ID were not found"
-      repository_rows: "Items with this name/ID were not found"
+      repository_rows: "This inventory is currently empty."
       users: "Users with this name were not found"
-      description: "Please make sure there are no typos, or erase letters one by one unless you see some results"
+      description: "Once you create items in the inventory, they will appear here."
     buttons:
       insert: "Insert"
       assign: "Assign to this task"

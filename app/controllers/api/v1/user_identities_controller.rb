@@ -7,9 +7,8 @@ module Api
       before_action :load_user_identity, only: %i(show update destroy)
 
       def index
-        identities = @user.user_identities
-                          .page(params.dig(:page, :number))
-                          .per(params.dig(:page, :size))
+        identities = timestamps_filter(@user.user_identities).page(params.dig(:page, :number))
+                                                             .per(params.dig(:page, :size))
         render jsonapi: identities, each_serializer: UserIdentitySerializer
       end
 

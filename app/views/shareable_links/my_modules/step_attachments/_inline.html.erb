@@ -27,7 +27,7 @@
     <iframe class="wopi-file-preview" src="<%= asset.get_action_url(nil, 'embedview', false) %>"></iframe>
   <% elsif asset.pdf_previewable? %>
     <%= render partial: 'shared/pdf_viewer', locals: { asset: asset, report_document: false, shareable_document: true } %>
-  <% elsif asset.previewable? %>
+  <% elsif asset.previewable? && !asset.file_processing %>
     <div class="image-container">
       <%= image_tag asset.file.representation(resize_to_limit: Constants::LARGE_PIC_FORMAT).url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
           class: 'asset-preview-image',
