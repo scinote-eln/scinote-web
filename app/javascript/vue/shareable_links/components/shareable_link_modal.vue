@@ -71,7 +71,7 @@
                         :disabled="true"
                   />
                   <button class="btn btn-primary share-link-copy"
-                          @click="copy"
+                          @click="copy($refs.clone.value)"
                           :disabled="!sharedEnabled">{{ i18n.t('shareable_links.modal.copy_button') }}
                   </button>
               </div>
@@ -158,8 +158,8 @@
       hideModal() {
         $(this.$refs.modal).modal('hide');
       },
-      copy() {
-        navigator.clipboard.writeText(this.$refs.clone.value);
+      copy(value) {
+        navigator.clipboard.writeText(value);
         HelperModule.flashAlertMsg(this.i18n.t('shareable_links.modal.copy_success'), 'success');
       },
       saveDescription() {
@@ -198,6 +198,7 @@
           $.post(this.shareableLinkUrl, { description: this.description }, (result) => {
             this.shareableData = result.data;
             this.$emit('enable');
+            this.copy(this.shareableData.attributes.shareable_url);
           });
         } else {
           this.hideModal();
