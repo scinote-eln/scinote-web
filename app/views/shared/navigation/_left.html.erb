@@ -1,8 +1,10 @@
 <div class="sci--layout--left-menu-container">
-  <div class="pl-2.5 mb-8 h-6">
-    <a title="SciNote" href="/">
-      <%= image_tag "scinote_logo.svg", class: "h-full block" %>
-    </a>
+  <div class="pl-2.5 mb-8 h-6 relative">
+    <div class="w-full h-full sci--navigation--left-menu-logo">
+      <a title="SciNote" href="/">
+        <%= image_tag "scinote_logo.svg", class: "h-full block" %>
+      </a>
+    </div>
   </div>
   <% left_menu_elements.each_with_index do |item, index| %>
     <%= link_to item[:url], title: item[:name], class:"sci--layout--menu-item", data: { active: item[:submenu].blank? && item[:active], disabled: current_user.teams.blank?, submenu: item[:submenu].any? } do %>
