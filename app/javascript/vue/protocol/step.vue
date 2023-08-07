@@ -57,6 +57,7 @@
         </button>
       </div>
       <div class="step-actions-container">
+        <input type="file" class="hidden" ref="fileSelector" @change="loadFromComputer" multiple />
         <div ref="elementsDropdownButton" v-if="urls.update_url"  class="dropdown">
           <button class="btn btn-light btn-black dropdown-toggle insert-button" type="button" :id="'stepInserMenu_' + step.id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             {{ i18n.t('protocols.steps.insert.button') }}
@@ -89,9 +90,30 @@
               <i class="sn-icon sn-icon-result-text"></i>
               {{ i18n.t('protocols.steps.insert.text') }}
             </li>
-            <li v-if="attachmentsReady" class="action"  @click="showFileModal = true">
+            <li class="action dropdown-submenu-item">
               <i class="sn-icon sn-icon-files"></i>
               {{ i18n.t('protocols.steps.insert.attachment') }}
+              <span class="caret"></span>
+              <ul class="dropdown-submenu">
+                <li class="action" @click="openLoadFromComputer">
+                  {{ i18n.t('protocols.steps.insert.add_file') }}
+                </li>
+                <li class="action" v-if="step.attributes.wopi_enabled" @click="openWopiFileModal">
+                  {{ i18n.t('assets.create_wopi_file.button_text') }}
+                </li>
+                <li class="action" v-if="step.attributes.marvinjs_enabled" @click="openMarvinJsModal($refs.marvinJsButton)">
+                  <span
+                    class="new-marvinjs-upload-button text-sn-black text-decoration-none"
+                    :data-object-id="step.id"
+                    ref="marvinJsButton"
+                    :data-marvin-url="step.attributes.marvinjs_context.marvin_js_asset_url"
+                    :data-object-type="step.attributes.type"
+                    tabindex="0"
+                  >
+                    {{ i18n.t('marvinjs.new_button') }}
+                  </span>
+                </li>
+              </ul>
             </li>
           </ul>
         </div>
@@ -168,14 +190,6 @@
       </div>
     </div>
     <deleteStepModal v-if="confirmingDelete" @confirm="deleteStep" @cancel="closeDeleteModal"/>
-    <fileModal v-if="showFileModal"
-               :parent="step"
-               @cancel="showFileModal = false"
-               @files="uploadFiles"
-               @attachmentUploaded="addAttachment"
-               @attachmentsChanged="loadAttachments"
-               @copyPasteImageModal="copyPasteImageModal"
-    />
     <clipboardPasteModal v-if="showClipboardPasteModal"
                          :parent="step"
                          :image="pasteImages"
@@ -204,12 +218,12 @@
   import Checklist from '../shared/content/checklist.vue'
   import deleteStepModal from './modals/delete_step.vue'
   import Attachments from '../shared/content/attachments.vue'
-  import fileModal from '../shared/content/attachments/file_modal.vue'
   import clipboardPasteModal from '../shared/content/attachments/clipboard_paste_modal.vue'
   import ReorderableItemsModal from './modals/reorderable_items_modal.vue'
 
   import UtilsMixin from '../mixins/utils.js'
   import AttachmentsMixin from './mixins/attachments.js'
+  import WopiFileModal from '../shared/content/attachments/mixins/wopi_file_modal.js'
   import StorageUsage from '../shared/content/attachments/storage_usage.vue'
 
   export default {
@@ -254,14 +268,13 @@
         ]
       }
     },
-    mixins: [UtilsMixin, AttachmentsMixin],
+    mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal],
     components: {
       InlineEdit,
       StepTable,
       StepText,
       Checklist,
       deleteStepModal,
-      fileModal,
       clipboardPasteModal,
       Attachments,
       StorageUsage,

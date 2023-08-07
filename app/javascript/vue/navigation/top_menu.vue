@@ -4,7 +4,7 @@
       <input type="text" :placeholder="i18n.t('nav.search')" @change="searchValue"/>
       <i class="sn-icon sn-icon-search"></i>
     </div>
-    <div v-if="currentTeam" class="mr-auto w-64">
+    <div v-if="currentTeam" class="w-64">
       <Select
         :value="currentTeam"
         :options="teams"
@@ -13,6 +13,18 @@
         v-bind:disabled="false"
         @change="switchTeam"
       ></Select>
+    </div>
+    <div v-if="user" class="ml-auto dropdown" >
+      <button class="btn btn-light icon-btn btn-black" data-toggle="dropdown" :title="i18n.t('nav.support')">
+        <i class="sn-icon sn-icon-help"></i>
+      </button>
+      <ul v-if="user" class="dropdown-menu dropdown-menu-right">
+        <li v-for="(item, i) in helpMenu" :key="i">
+          <a :href="item.url" target="_blank">
+            {{ item.name }}
+          </a>
+        </li>
+      </ul>
     </div>
     <div v-if="user" class="dropdown">
       <button class="btn btn-light icon-btn btn-black" data-toggle="dropdown"  :title="i18n.t('nav.settings')">

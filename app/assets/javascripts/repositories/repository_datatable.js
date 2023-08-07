@@ -818,6 +818,9 @@ var RepositoryDatatable = (function(global) {
         $('.dataTables_filter').addClass('hidden');
         addRepositorySearch();
 
+        $(`.repository-table-head-${$(TABLE_ID).data('repository-id')}`).removeClass('hidden');
+        adjustTableHeader();
+
         $('.repository-toolbar, .pagination-row').removeClass('hidden');
 
         $(TABLE_ID).find('tr[data-editable=false]').each(function(_, e) {

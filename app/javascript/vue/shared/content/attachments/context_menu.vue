@@ -16,7 +16,6 @@
            :title="attachment.attributes.wopi_context.title"
            target="_blank"
         >
-          <i :class="`sn-icon sn-icon-${attachment.attributes.wopi_context.sn_icon}`"></i>
           {{ attachment.attributes.wopi_context.button_text }}
         </a>
       </li>
@@ -28,7 +27,6 @@
            :data-sketch-name="attachment.attributes.metadata.name"
            :data-sketch-description="attachment.attributes.metadata.description"
         >
-          <img :src="attachment.attributes.urls.marvin_js_icon"/>
           {{ i18n.t('assets.file_preview.edit_in_marvinjs') }}
         </a>
       </li>
@@ -43,16 +41,21 @@
            :data-image-mime-type="attachment.attributes.image_context.type"
            :data-image-start-edit-url="attachment.attributes.urls.start_edit_image"
         >
-          <span class="sn-icon sn-icon-edit"></span>
           {{ i18n.t('assets.file_preview.edit_in_scinote') }}
         </a>
       </li>
       <li>
         <a :href="attachment.attributes.urls.download" data-turbolinks="false">
-          <span class="sn-icon sn-icon-export"></span>
           {{ i18n.t('Download') }}
         </a>
       </li>
+      <template v-if="attachment.attributes.urls.delete">
+        <li>
+          <a @click.prevent.stop="deleteModal = true">
+            {{ i18n.t("assets.context_menu.delete") }}
+          </a>
+        </li>
+      </template>
       <template v-if="attachment.attributes.urls.toggle_view_mode">
         <li role="separator" class="divider"></li>
         <li class="divider-label">
@@ -65,15 +68,6 @@
             @click.prevent.stop="changeViewMode(viewMode)"
             v-html="i18n.t(`assets.context_menu.${viewMode}_html`)"
           ></a>
-        </li>
-      </template>
-      <template v-if="attachment.attributes.urls.delete">
-        <li role="separator" class="divider"></li>
-        <li>
-          <a @click.prevent.stop="deleteModal = true">
-            <i class="sn-icon sn-icon-delete"></i>
-            {{ i18n.t("assets.context_menu.delete") }}
-          </a>
         </li>
       </template>
     </ul>

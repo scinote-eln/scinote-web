@@ -24,9 +24,8 @@
 
 
     <% if MarvinJsService.enabled? && ENV['MARVINJS_API_KEY'] %>
-    <%= javascript_include_tag "https://marvinjs.chemicalize.com/v1/#{ ENV['MARVINJS_API_KEY'] }/client-settings.js",
-                                nonce: true %>
-    <%= javascript_include_tag 'https://marvinjs.chemicalize.com/v1/client.js', nonce: true %>
+      <%= javascript_include_tag "https://marvinjs.chemicalize.com/v1/#{ ENV['MARVINJS_API_KEY'] }/client-settings.js", nonce: true, async: true %>
+      <%= javascript_include_tag 'https://marvinjs.chemicalize.com/v1/client.js', nonce: true, async: true %>
     <% end %>
 
     <%= favicon_link_tag "favicon.ico" %>

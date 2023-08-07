@@ -45,19 +45,6 @@
     <!-- Details -->
     <div class="task-section task-information hidden">
       <div id="task-details" class="task-section-header">
-          <div class="task-sharing-and-flows">
-            <%= render partial: 'my_modules/status_flow/task_flow_button', locals: { my_module: @my_module } if @my_module.my_module_status_flow %>
-            <% if current_team.shareable_links_enabled? %>
-              <div class="share-task-container" data-behaviour="vue">
-                <share-task-container
-                  <%= 'shared' if @my_module.shared? %>
-                  shareable-link-url="<%= my_module_shareable_link_path(@my_module) %>"
-                  <%= 'disabled' if !can_manage_my_module?(current_user, @my_module) %> />
-              </div>
-
-              <%= javascript_include_tag 'vue_share_task_container' %>
-            <% end %>
-          </div>
         <div class="task-details-container flex items-center gap-2">
           <a class="task-section-caret collapsed" role="button" data-toggle="collapse" href="#details-container" aria-expanded="false" aria-controls="details-container">
             <i class="sn-icon sn-icon-right"></i>
@@ -83,6 +70,10 @@
           <span class="task-details-code">
             <%= @my_module.code %>
           </span>
+        </div>
+
+        <div class="task-flows">
+          <%= render partial: 'my_modules/status_flow/task_flow_button', locals: { my_module: @my_module } if @my_module.my_module_status_flow %>
         </div>
       </div>
       <div id="details-container" class="task-details collapse">

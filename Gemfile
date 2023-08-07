@@ -54,6 +54,7 @@ gem 'js_cookie_rails' # Simple JS API for cookies
 gem 'spinjs-rails'
 
 gem 'activerecord-import'
+gem 'acts_as_list'
 gem 'ajax-datatables-rails', '~> 0.3.1'
 gem 'aspector' # Aspect-oriented programming for Rails
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces AR
