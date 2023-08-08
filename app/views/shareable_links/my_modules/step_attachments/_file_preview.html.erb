@@ -31,9 +31,7 @@
       <div class="modal-body">
         <div class="file-preview-container">
           <% if asset.previewable? && !asset.file_processing %>
-            <% if wopi_enabled? && wopi_file?(asset) %>
-              <iframe class="wopi-file-preview" src="<%= asset.get_action_url(nil, 'embedview', false) %>"></iframe>
-            <% elsif asset.pdf_previewable? %>
+            <% if asset.pdf_previewable? %>
               <%= render partial: 'shared/pdf_viewer', locals: { asset: asset, report_document: false, shareable_document: true } %>
             <% else %>
               <%= image_tag asset.file.representation(resize_to_limit: Constants::LARGE_PIC_FORMAT).url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
