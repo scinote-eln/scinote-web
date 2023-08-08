@@ -3,7 +3,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" data-dismiss="modal" tabindex="0" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="modal-destroy-shareable-link">
             {{ i18n.t('shareable_links.destroy_modal.title')}}
           </h4>
@@ -12,8 +12,8 @@
           <p>{{ i18n.t('shareable_links.destroy_modal.description')}}</p>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" @click="cancel">{{ i18n.t('general.cancel') }}</button>
-          <button class="btn btn-danger" @click="confirm">{{ i18n.t('shareable_links.destroy_modal.deactivate')}}</button>
+          <button class="btn btn-secondary" tabindex="0" @click="cancel">{{ i18n.t('general.cancel') }}</button>
+          <button class="btn btn-danger" tabindex="0" @click="confirm">{{ i18n.t('shareable_links.destroy_modal.deactivate')}}</button>
         </div>
       </div>
     </div>
