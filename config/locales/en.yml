@@ -3500,8 +3500,8 @@ en:
       due_first_html: "Due first"
       due_last_html: "Due last"
     sort_new:
-      new: "Added last"
-      old: "Added first"
+      new: "Created last"
+      old: "Created first"
       new_updated: "Modified last"
       old_updated: "Modified first"
       atoz: "Name A to Z"

@@ -54,6 +54,9 @@
           content: $font-fas-check;
           float: right;
         }
+        &:hover {
+          background-color: var(--sn-super-light-blue);
+        }
       }
     }
   }
