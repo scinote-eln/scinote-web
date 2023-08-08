@@ -2,7 +2,7 @@
   <div>
     <div
       ref="modal"
-      class="modal fade share-task-modal"
+      class="modal fade share-task-modal centered-modal"
       id="share-task-modal"
       tabindex="-1"
       role="dialog"

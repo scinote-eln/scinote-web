@@ -119,6 +119,14 @@
   }
 }
 
+.centered-modal.in {
+  display: flex !important;
+
+  .modal-dialog {
+    margin: auto;
+  }
+}
+
 .modal-content {
   .modal-header {
     padding: 10px 15px;
