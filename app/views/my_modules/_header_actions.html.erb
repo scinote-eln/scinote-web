@@ -8,7 +8,7 @@
         <%=t "nav2.modules.steps" %>
       </a>
       <a class="p-4 border-b-4 border-transparent hover:no-underline capitalize <%= is_module_results? ? "text-sn-blue" : "text-sn-grey" %>"
-          href="<%= results_my_module_url(@my_module) %>"
+          href="<%= my_module_results_path(@my_module) %>"
           title="<%= t("nav2.modules.results") %>"
       >
         <%= t("nav2.modules.results") %>
