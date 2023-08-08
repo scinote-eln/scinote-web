@@ -3,11 +3,11 @@
     <div class="ove-header flex justify-between">
       <span class="file-name flex items-center ml-3">
         <div class="sci-input-container">
-          <input v-model="sequenceName" class="sci-input-field" type="text" />
+          <input v-model="sequenceName" class="sci-input-field" type="text" :disabled="readOnly" />
         </div>
       </span>
       <div class="ove-buttons">
-        <button @click="saveAndClose" class="btn btn-light">
+        <button v-if="!readOnly" @click="saveAndClose" class="btn btn-light">
           <i class="sn-icon sn-icon-save"></i>
           {{ i18n.t('SaveClose') }}
         </button>
@@ -30,7 +30,8 @@
     props: {
       fileUrl: { type: String },
       fileName: { type: String },
-      updateUrl: { type: String }
+      updateUrl: { type: String },
+      readOnly: { type: Boolean, default: false }
     },
     data() {
       return {
@@ -49,10 +50,23 @@
       }
     },
     mounted() {
-      this.editor = window.createVectorEditor(this.$refs.container, {
+      let editorConfig = {
         onSave: this.saveFile,
-        generatePng: true
-      });
+        generatePng: true,
+        readOnly: this.readOnly
+      }
+
+      if (this.readOnly) {
+        editorConfig = {
+          ...editorConfig,
+          showReadOnly: false,
+          ToolBarProps: {
+            toolList: []
+          }
+        }
+      }
+
+      this.editor = window.createVectorEditor(this.$refs.container, editorConfig);
       this.sequenceName = this.fileName || this.i18n.t('open_vector_editor.default_sequence_name');
 
       if (this.fileUrl) {
@@ -60,8 +74,7 @@
       } else {
         this.editor.updateEditor(
           {
-            sequenceData: { circular: true, name: this.sequenceName },
-            readOnly: false
+            sequenceData: { circular: true, name: this.sequenceName }
           }
         );
       }
@@ -71,8 +84,7 @@
         fetch(this.fileUrl).then((response) => response.json()).then(
           (json) => this.editor.updateEditor(
             {
-              sequenceData: json,
-              readOnly: false
+              sequenceData: json
             }
           )
         );
@@ -82,6 +94,8 @@
         document.querySelector('[data-test=saveTool]').click();
       },
       saveFile(opts, sequenceDataToSave, editorState, onSuccessCallback) {
+        if (this.readOnly) return;
+
         blobToBase64(opts.pngFile).then((base64image) => {
           (this.fileUrl ? axios.patch : axios.post)(
             this.updateUrl,
