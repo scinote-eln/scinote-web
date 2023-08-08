@@ -5,6 +5,7 @@ require('jquery-mousewheel');
 require('jquery-autosize');
 require('jquery-ui/ui/widget');
 require('jquery-ui/ui/widgets/mouse');
+require('jquery-ui/ui/widgets/sortable');
 require('jquery-ui/ui/widgets/draggable');
 require('jquery-ui/ui/widgets/droppable');
 require('jquery-ui/ui/effects/effect-slide');

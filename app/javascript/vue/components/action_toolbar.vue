@@ -146,7 +146,7 @@
               HelperModule.flashAlertMsg(data.responseJSON && data.responseJSON.message || data.message, 'success');
             }).fail((data) => {
               HelperModule.flashAlertMsg(data.responseJSON && data.responseJSON.message || data.message, 'danger');
-            }).complete(() => {
+            }).always(() => {
               if (this.reloadCallback) this.reloadCallback();
             });
             break;

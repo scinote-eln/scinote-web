@@ -2,7 +2,7 @@
   <%= form_with model: @protocol || Protocol.new,
                 url: type == 'new' ? protocols_path : copy_to_repository_protocol_path(@protocol),
                 method: :post,
-                html: { data: { action: type, remote: true } }  do |f| %>
+                html: { data: { action: type } }  do |f| %>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
