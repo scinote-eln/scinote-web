@@ -76,8 +76,8 @@ class RepositoriesExportJob < ApplicationJob
   end
 
   def append_file_suffix(file_name, suffix)
-    file_name = to_filesystem_name(file_name)
     ext = File.extname(file_name)
+    file_name = to_filesystem_name(file_name)
     File.basename(file_name, ext) + suffix + ext
   end
 
