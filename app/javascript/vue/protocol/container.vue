@@ -167,7 +167,7 @@
   import ProtocolMetadata from './protocolMetadata'
   import ProtocolOptions from './protocolOptions'
   import Tinymce from '../shared/tinymce.vue'
-  import ReorderableItemsModal from './modals/reorderable_items_modal.vue'
+  import ReorderableItemsModal from '../shared/reorderable_items_modal.vue'
   import PublishProtocol from './modals/publish_protocol.vue'
 
   import UtilsMixin from '../mixins/utils.js'

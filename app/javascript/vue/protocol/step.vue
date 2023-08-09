@@ -219,7 +219,7 @@
   import deleteStepModal from './modals/delete_step.vue'
   import Attachments from '../shared/content/attachments.vue'
   import clipboardPasteModal from '../shared/content/attachments/clipboard_paste_modal.vue'
-  import ReorderableItemsModal from './modals/reorderable_items_modal.vue'
+  import ReorderableItemsModal from '../shared/reorderable_items_modal.vue'
 
   import UtilsMixin from '../mixins/utils.js'
   import AttachmentsMixin from './mixins/attachments.js'
