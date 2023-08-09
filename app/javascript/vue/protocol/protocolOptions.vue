@@ -143,22 +143,22 @@ export default {
     loadProtocol() {
       $.get(
         this.protocol.attributes.urls.load_from_repo_url + "?type=recent"
-      ).success((data) => {
+      ).done((data) => {
         $(this.$refs.loadProtocol).trigger("ajax:success", data);
       });
     },
     unlinkProtocol() {
-      $.get(this.protocol.attributes.urls.unlink_url).success((data) => {
+      $.get(this.protocol.attributes.urls.unlink_url).done((data) => {
         $(this.$refs.unlinkProtocol).trigger("ajax:success", data);
       });
     },
     updateProtocol() {
-      $.get(this.protocol.attributes.urls.update_protocol_url).success((data) => {
+      $.get(this.protocol.attributes.urls.update_protocol_url).done((data) => {
         $(this.$refs.updateProtocol).trigger("ajax:success", data);
       });
     },
     revertProtocol() {
-      $.get(this.protocol.attributes.urls.revert_protocol_url).success((data) => {
+      $.get(this.protocol.attributes.urls.revert_protocol_url).done((data) => {
         $(this.$refs.revertProtocol).trigger("ajax:success", data);
       });
     },

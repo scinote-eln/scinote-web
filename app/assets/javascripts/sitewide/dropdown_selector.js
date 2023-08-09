@@ -343,7 +343,7 @@ var dropdownSelector = (function() {
         toggleElement = $(selectElement.data('toggle-target'));
         if (getCurrentData(dropdownContainer).length > 0) {
           toggleElement.removeClass('hidden');
-          toggleElement.find('input, select').removeAttr('disabled');
+          toggleElement.find('input, select').attr('disabled', false);
         } else {
           toggleElement.addClass('hidden');
           toggleElement.find('input, select').attr('disabled', true);
