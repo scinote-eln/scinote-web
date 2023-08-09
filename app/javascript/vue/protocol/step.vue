@@ -357,7 +357,7 @@
           completed: this.step.attributes.completed,
           position: this.step.attributes.position
         });
-        $.post(this.urls.state_url, {completed: this.step.attributes.completed}).error(() => {
+        $.post(this.urls.state_url, {completed: this.step.attributes.completed}).fail(() => {
           this.step.attributes.completed = !this.step.attributes.completed;
           this.$emit('step:update', {
             completed: this.step.attributes.completed,
@@ -397,7 +397,7 @@
                 callback();
               }
             }
-          }).error(() => {
+          }).fail(() => {
             HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
           })
         }
@@ -447,7 +447,7 @@
           result.data.isNew = true;
           this.elements.push(result.data)
           this.$emit('stepUpdated')
-        }).error(() => {
+        }).fail(() => {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         }).done(() => {
           this.$parent.$nextTick(() => {
@@ -513,7 +513,7 @@
         $.post(this.urls.duplicate_step_url, (result) => {
           this.$emit('step:insert', result.data);
           HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.step_duplicated'), 'success');
-        }).error(() => {
+        }).fail(() => {
           HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.step_duplication_failed'), 'danger');
         });
       }

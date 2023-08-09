@@ -230,7 +230,7 @@
       deleteSteps() {
         $.post(this.urls.delete_steps_url, () => {
           this.steps = []
-        }).error(() => {
+        }).fail(() => {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')
         })
       },
@@ -277,7 +277,7 @@
             this.$nextTick(() => this.scrollToBottom());
           }
           this.refreshProtocolStatus();
-        }).error((data) => {
+        }).fail((data) => {
           HelperModule.flashAlertMsg(data.responseJSON.error ? Object.values(data.responseJSON.error).join(', ') : I18n.t('errors.general'), 'danger');
         })
       },

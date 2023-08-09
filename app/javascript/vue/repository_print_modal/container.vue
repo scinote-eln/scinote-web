@@ -200,7 +200,7 @@
         $.post(this.urls.printValidation, {label_template_id: this.selectedTemplate.id, rows: this.row_ids}, (result) => {
           this.labelTemplateError = null;
           this.labelTemplateCode = result.label_code;
-        }).error((result) => {
+        }).fail((result) => {
           this.labelTemplateError = result.responseJSON.error;
           this.labelTemplateCode = result.responseJSON.label_code;
         })
