@@ -1,5 +1,3 @@
-window.$ = window.jQuery = require('jquery');
-
 require('jquery-ujs');
 require('jquery-mousewheel');
 require('jquery-autosize');
@@ -10,14 +8,12 @@ require('jquery-ui/ui/widgets/draggable');
 require('jquery-ui/ui/widgets/droppable');
 require('jquery-ui/ui/effects/effect-slide');
 require('hammerjs');
-
 import 'bootstrap';
 window.moment = require('moment');
 require('bootstrap-select/js/bootstrap-select');
 
 window.bwipjs = require('bwip-js');
 window.Decimal = require('decimal.js');
-
 
 $(document).on('click', '.sci--layout--menu-item[data-submenu=true]', (e) => {
   const item = $(e.currentTarget);
