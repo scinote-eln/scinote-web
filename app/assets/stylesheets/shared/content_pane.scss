@@ -3,8 +3,12 @@
 
 .content-pane {
   --content-header-size: 9.5em;
-  background-color: $color-white;
+  background-color: var(--sn-white);
   margin: 20px 0;
+
+  &.with-grey-background {
+    background: var(--sn-super-light-grey);
+  }
 
   &.flexible {
     margin: 0;
@@ -12,7 +16,7 @@
 
   .content-header {
     &.sticky-header {
-      background: $color-white;
+      background-color: inherit;
       position: sticky;
       position: -webkit-sticky;
       top: var(--navbar-height);
@@ -21,7 +25,7 @@
 
     .title-row {
       align-items: center;
-      background: $color-white;
+      background-color: inherit;
       display: flex;
       height: 4em;
       margin-left: -1.5rem;

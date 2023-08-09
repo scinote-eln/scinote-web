@@ -7,9 +7,9 @@
   }
 
   .protocol-buttons-group {
-    column-gap: .5rem;
-    display: grid;
-    grid-template-columns: auto auto auto;
+    align-items: center;
+    display: flex;
+    gap: .5rem;
   }
 
   .portocol-header-left-part {
@@ -41,11 +41,11 @@
 
     &::before,
     &::after {
-      background-color: var(--sn-light-grey);
+      border-bottom: 1px dotted var(--sn-light-grey);
       content: "";
       display: inline-block;
       flex-grow: 1;
-      height: 1px;
+      height: 0;
     }
 
     .sn-icon-new-task {

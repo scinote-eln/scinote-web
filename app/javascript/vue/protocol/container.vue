@@ -15,28 +15,44 @@
       <div class="actions-block">
         <div class="protocol-buttons-group">
           <a v-if="urls.add_step_url"
-             class="btn btn-primary"
+             class="btn btn-secondary"
              @keyup.enter="addStep(steps.length)"
              @click="addStep(steps.length)"
              tabindex="0">
               <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
               <span>{{ i18n.t("protocols.steps.new_step") }}</span>
           </a>
-          <button class="btn btn-secondary" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
-            <span class="sn-icon sn-icon-printer" aria-hidden="true"></span>
-            <span>{{ i18n.t("protocols.print.button") }}</span>
-          </button>
+          <template v-if="steps.length > 0">
+            <button class="btn btn-secondary" @click="collapseSteps" tabindex="0">
+              {{ i18n.t("protocols.steps.collapse_label") }}
+            </button>
+            <button class="btn btn-secondary" @click="expandSteps" tabindex="0">
+              {{ i18n.t("protocols.steps.expand_label") }}
+            </button>
+          </template>
           <ProtocolOptions
             v-if="protocol.attributes && protocol.attributes.urls"
             :protocol="protocol"
             @protocol:delete_steps="deleteSteps"
             :canDeleteSteps="steps.length > 0 && urls.delete_steps_url !== null"
           />
+          <button class="btn btn-light icon-btn" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
+            <span class="sn-icon sn-icon-printer" aria-hidden="true"></span>
+          </button>
+          <a v-if="steps.length > 0 && urls.reorder_steps_url"
+            class="btn btn-light icon-btn"
+            data-toggle="modal"
+            @click="startStepReorder"
+            @keyup.enter="startStepReorder"
+            :class="{'disabled': steps.length == 1}"
+            tabindex="0" >
+              <i class="sn-icon sn-icon-sort" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
     </div>
     <div id="protocol-content" class="protocol-content collapse in" aria-expanded="true">
-      <div>
+      <div class="pl-9">
         <div class="protocol-name" v-if="!inRepository">
           <InlineEdit
             v-if="urls.update_protocol_name_url"
@@ -103,26 +119,6 @@
           </div>
         </div>
         <div id="protocol-steps-container" :class=" inRepository ? 'protocol-steps collapse in' : ''">
-          <div v-if="steps.length > 0" class="protocol-step-actions">
-            <button class="btn btn-light" @click="collapseSteps" tabindex="0">
-              <span class="sn-icon sn-icon-collapse"></span>
-              {{ i18n.t("protocols.steps.collapse_label") }}
-            </button>
-            <button class="btn btn-light" @click="expandSteps" tabindex="0">
-              <span class="sn-icon sn-icon-expand"></span>
-              {{ i18n.t("protocols.steps.expand_label") }}
-            </button>
-            <a v-if="urls.reorder_steps_url"
-              class="btn btn-light"
-              data-toggle="modal"
-              @click="startStepReorder"
-              @keyup.enter="startStepReorder"
-              :class="{'disabled': steps.length == 1}"
-              tabindex="0" >
-                <i class="sn-icon sn-icon-sort" aria-hidden="true"></i>
-                <span>{{ i18n.t("protocols.reorder_steps.button") }}</span>
-            </a>
-          </div>
           <div class="protocol-steps">
             <template v-for="(step, index) in steps">
               <div class="step-block" :key="step.id">

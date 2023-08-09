@@ -51,15 +51,6 @@
     width: calc(100% + 2rem);
   }
 
-  .my-module-position-container {
-    background-color: $color-white;
-    box-shadow: $flyout-shadow;
-    margin: 1rem auto 0 0;
-    max-width: 900px;
-    padding: 0 0 1rem;
-    z-index: 2;
-  }
-
   .dropdown {
     .dropdown-menu {
       z-index: 102;
@@ -76,7 +67,9 @@
 }
 
 .task-section {
-  margin: 16px 0;
+  background-color: var(--sn-white);
+  border-radius: .25rem;
+  margin: 1rem 0;
   padding: 0 1rem;
 
   .task-section-caret {
@@ -113,6 +106,10 @@
         }
       }
     }
+  }
+
+  .task-section-body {
+    padding-bottom: 1rem;
   }
 
   .task-section-header {
