@@ -4,7 +4,7 @@
     <%= t('projects.index.modal_edit_folder.title', folder: folder.name) %>
   </h4>
 </div>
-<%= form_with model: folder, url: project_folder_path(folder ,format: :json), method: :put, remote: true do |f| %>
+<%= form_with model: folder, url: project_folder_path(folder ,format: :json), method: :put, data: { remote: true } do |f| %>
   <div class="modal-body">
       <p><%= t('projects.index.modal_edit_folder.description') %></p>
       <div class="row">

@@ -1,4 +1,4 @@
-<%= form_with model: @my_module, url: update_description_my_module_path(@my_module, format: :json), remote: :true, html: {class: 'tiny-mce-editor'}, builder: SciFormHelper::SciFormBuilder do |f| %>
+<%= form_with model: @my_module, url: update_description_my_module_path(@my_module, format: :json), data: { remote: true }, html: {class: 'tiny-mce-editor'}, builder: SciFormHelper::SciFormBuilder do |f| %>
   <%= render partial: 'shared/tiny_mce_extra_buttons' %>
   <div id="my_module_description_view"
        class="ql-editor tinymce-view"

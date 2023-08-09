@@ -20,8 +20,7 @@
       <%= form_with model: user_assignment,
                     url: update_role_path,
                     method: :put,
-                    remote: true,
-                    data: { id: 'update-role-form' } do |f| %>
+                    data: { remote: true, id: 'update-role-form' } do |f| %>
         <input type="hidden" name="user_assignment[user_role_id]" data-field="role" value="" %>
       <% end %>
       <% team_user_roles_collection.each do |user_role| %>

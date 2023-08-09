@@ -1,9 +1,9 @@
 <div class="modal" id="new-experiment-modal" tabindex="-1" role="dialog" aria-labelledby="new-experiment-modal-label">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <%= form_with url: [@project, @experiment],
-                    remote: true,
+      <%= form_with model: [@project, @experiment],
                     method: :post,
+                    data: { remote: true },
                     builder: SciFormHelper::SciFormBuilder,
                     html: { class: 'experiment-action-form' } do |f| %>
         <div class="modal-header">

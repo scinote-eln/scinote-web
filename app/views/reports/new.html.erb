@@ -65,7 +65,7 @@
           </button>
           <ul id="reportGenerateMenuDropdown" class="dropdown-menu dropdown-menu-right" aria-labelledby="reportGenerateMenu">
             <li>
-              <%= link_to reports_path, remote: true, id: 'saveAsNewReport', class: "disabled", data: { create_url: reports_path } do %>
+              <%= link_to reports_path, data: { remote: true }, id: 'saveAsNewReport', class: "disabled", data: { create_url: reports_path } do %>
                 <i class="sn-icon sn-icon-new-task-circle"></i>
                 <%= t("projects.reports.new.save_as_new_report") %>
               <% end %>
