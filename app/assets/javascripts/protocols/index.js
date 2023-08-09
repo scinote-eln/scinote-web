@@ -503,14 +503,12 @@ var ProtocolsIndex = (function() {
   }
 
   function duplicateProtocols($el) {
-    $.ajax(
-      {
+    $.ajax({
         type: 'POST',
         url: $el.data('url'),
         data: JSON.stringify({ ids: rowsSelected }),
         contentType: 'application/json'
-      }
-    ).done((data) => {
+    }).done((data) => {
       animateSpinner(null, false);
       HelperModule.flashAlertMsg(data.message, 'success');
       reloadTable();
