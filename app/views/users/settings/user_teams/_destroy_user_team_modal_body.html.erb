@@ -1,6 +1,6 @@
 <%= form_with model: user_assignment,
               url: destroy_user_team_path(user_assignment, format: :json),
-              remote: :true,
+              data: { remote: true },
               method: :delete,
               data: { id: 'destroy-user-team-form' } do |f| %>
   <p><%= t("users.settings.user_teams.destroy_uo_message",

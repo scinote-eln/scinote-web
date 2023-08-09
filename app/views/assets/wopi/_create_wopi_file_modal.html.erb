@@ -5,7 +5,7 @@
      aria-labelledby="new-office-file-modal-label">
     <%= form_with url: create_wopi_file_path(),
                   html: { novalidate: "novalidate" },
-                  method: :post, remote: true do |f| %>
+                  method: :post, data: { remote: true } do |f| %>
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">

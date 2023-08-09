@@ -1,7 +1,7 @@
 <%= form_with model:team,
               url: update_team_path(team,
               format: :json),
-              remote: :true,
+              data: { remote: true },
               builder: SciFormHelper::SciFormBuilder,
               method: :put do |f| %>
   <%= f.smart_text_area :description,

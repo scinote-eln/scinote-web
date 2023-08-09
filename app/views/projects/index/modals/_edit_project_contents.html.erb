@@ -4,7 +4,7 @@
     <%= t('projects.index.modal_edit_project.modal_title', project: @project.name) %>
   </h4>
 </div>
-<%= form_with model: @project, url: project_path(@project ,format: :json), method: :put, remote: true do |f| %>
+<%= form_with model: @project, url: project_path(@project ,format: :json), method: :put, data: { remote: true } do |f| %>
   <div class="modal-body">
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 sci-input-container">

@@ -1,7 +1,7 @@
 <div class="modal fade" id="copy-repo-modal" tabindex="-1" role="dialog">
   <%= form_with model: @tmp_repository,
                 url: team_repository_copy_path(id: @repository, format: :json),
-                remote: true do |f| %>
+                data: { remote: true } do |f| %>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
