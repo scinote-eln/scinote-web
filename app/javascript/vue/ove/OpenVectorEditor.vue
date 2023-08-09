@@ -6,6 +6,10 @@
           <input v-model="sequenceName" class="sci-input-field" type="text" :disabled="readOnly" />
         </div>
       </span>
+      <div v-if="oveEnabledDaysLeft <= 30" class="flex items-center">
+        <i class="mr-1 text-brand-warning sn-icon sn-icon-alert-warning"></i>
+        <p v-html="i18n.t('open_vector_editor.trial_expiration_warning_html', { count: oveEnabledDaysLeft })" class="mb-0"></p>
+      </div>
       <div class="ove-buttons">
         <button v-if="!readOnly" @click="saveAndClose" class="btn btn-light">
           <i class="sn-icon sn-icon-save"></i>
@@ -31,7 +35,8 @@
       fileUrl: { type: String },
       fileName: { type: String },
       updateUrl: { type: String },
-      readOnly: { type: Boolean, default: false }
+      readOnly: { type: Boolean, default: false },
+      oveEnabledDaysLeft: { type: Number }
     },
     data() {
       return {

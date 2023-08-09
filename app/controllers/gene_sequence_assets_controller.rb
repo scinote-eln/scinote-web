@@ -5,6 +5,7 @@ class GeneSequenceAssetsController < ApplicationController
 
   skip_before_action :verify_authenticity_token
 
+  before_action :check_open_vector_service_enabled, except: :edit
   before_action :load_vars, except: %i(new create)
   before_action :load_create_vars, only: %i(new create)
 
@@ -18,6 +19,7 @@ class GeneSequenceAssetsController < ApplicationController
   def edit
     @file_url = rails_representation_url(@asset.file)
     @file_name = @asset.render_file_name
+    @ove_enabled = OpenVectorEditorService.enabled?
     render :edit, layout: false
   end
 
@@ -111,11 +113,15 @@ class GeneSequenceAssetsController < ApplicationController
   end
 
   def check_manage_permission
-    render_403 unless can_manage_asset?
+    render_403 unless asset_managable?
   end
 
-  helper_method :can_manage_asset?
-  def can_manage_asset?
+  def check_open_vector_service_enabled
+    render_403 unless OpenVectorEditorService.enabled?
+  end
+
+  helper_method :asset_managable?
+  def asset_managable?
     case @parent
     when Step
       can_manage_step?(@parent)
