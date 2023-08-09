@@ -1,5 +1,7 @@
 <html>
   <head>
+    <%= csp_meta_tag %>
+    <meta data-hook="head-js">
     <%= javascript_include_tag 'i18n_bundle' %>
     <%= stylesheet_link_tag 'sn_icon_font' %>
     <%= stylesheet_link_tag 'tailwind' %>
@@ -21,5 +23,6 @@
     </div>
     <%= javascript_include_tag 'open_vector_editor' %>
     <%= javascript_include_tag 'vue_components_open_vector_editor' %>
+    <%= render partial: 'overrides/pendo_js_snippet' %>
   </body>
 </html>
