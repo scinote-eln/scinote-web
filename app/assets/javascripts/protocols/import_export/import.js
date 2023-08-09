@@ -393,15 +393,15 @@ function importProtocolFromFile(
       $('[data-action="jump-to-first-protocol"]').attr('disabled', 'disabled');
       $('[data-action="jump-to-previous-protocol"]').attr('disabled', 'disabled');
     } else {
-      $('[data-action="jump-to-first-protocol"]').removeAttr('disabled');
-      $('[data-action="jump-to-previous-protocol"]').removeAttr('disabled');
+      $('[data-action="jump-to-first-protocol"]').attr('disabled', false);
+      $('[data-action="jump-to-previous-protocol"]').attr('disabled', false);
     }
     if (currentProtocol === nrOfProtocols - 1) {
       $('[data-action="jump-to-next-protocol"]').attr('disabled', 'disabled');
       $('[data-action="jump-to-last-protocol"]').attr('disabled', 'disabled');
     } else {
-      $('[data-action="jump-to-next-protocol"]').removeAttr('disabled');
-      $('[data-action="jump-to-last-protocol"]').removeAttr('disabled');
+      $('[data-action="jump-to-next-protocol"]').attr('disabled', false);
+      $('[data-action="jump-to-last-protocol"]').attr('disabled', false);
     }
   }
 

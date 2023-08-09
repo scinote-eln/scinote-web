@@ -181,7 +181,8 @@ module ApplicationHelper
         File.open(file_path) do |file|
           Base64.strict_encode64(file.read)
         end
-      "data:#{avatar_link.split('.').last};base64,#{encoded_data}"
+
+      "data:image/svg+xml;base64,#{encoded_data}"
     else
       avatar_link
     end

@@ -5,7 +5,7 @@
      aria-labelledby="modal-export-repository-label">
   <%= form_with(url: export_repository_team_path(repository),
                          html: { id: 'form-export' },
-                         remote: true) do |f| %>
+                         data: { remote: true }) do |f| %>
      <div class="modal-dialog" role="document">
        <div class="modal-content">
          <div class="modal-header">

@@ -1,8 +1,7 @@
 <div class="well edit-text-result">
   <%= form_with(model: @result, url: my_module_result_texts_path(format: :json, page: params[:page], order: params[:order]),
                                   builder: SciFormHelper::SciFormBuilder,
-                                  data: { 'name-max-length': Constants::NAME_MAX_LENGTH, 'rich-text-max-length': Constants::RICH_TEXT_MAX_LENGTH },
-                                  remote: true) do |f| %>
+                                  data: { remote: true, 'name-max-length': Constants::NAME_MAX_LENGTH, 'rich-text-max-length': Constants::RICH_TEXT_MAX_LENGTH }) do |f| %>
     <div class="sci-input-container mb-4">
       <%= f.text_field :name, style: "margin-top: 10px;", class: "sci-input-field" %><br />
     </div>

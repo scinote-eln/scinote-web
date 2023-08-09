@@ -164,7 +164,7 @@
         this.$emit('update', this.element, skipRequest);
       },
       postItem(item, callback) {
-        $.post(this.element.attributes.orderable.urls.create_item_url, item).success((result) => {
+        $.post(this.element.attributes.orderable.urls.create_item_url, item).done((result) => {
           this.checklistItems.splice(
             result.data.attributes.position,
             1,
@@ -172,7 +172,7 @@
           );
 
           if(callback) callback();
-        }).error((xhr) => {
+        }).fail((xhr) => {
           this.setFlashErrors(xhr.responseJSON.errors)
         });
 

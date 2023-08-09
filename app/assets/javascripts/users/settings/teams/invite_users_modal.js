@@ -49,9 +49,8 @@
       onChange: () => {
         let values = dropdownSelector.getValues(emailsInput);
         if (values.length > 0) {
-          inviteBtn.removeAttr('disabled');
-          inviteWithRoleBtn.removeAttr('disabled');
-          $($('.search-field')[0]).val('');
+          inviteBtn.attr('disabled', false);
+          inviteWithRoleBtn.attr('disabled', false);
         } else {
           inviteBtn.attr('disabled', 'disabled');
           inviteWithRoleBtn.attr('disabled', 'disabled');
@@ -120,7 +119,7 @@
       ) {
         teamSelectorCheckbox.on('change', function() {
           if ($(this).is(':checked')) {
-            teamSelectorDropdown.removeAttr('disabled');
+            teamSelectorDropdown.attr('disabled', false);
             teamSelectorDropdown2.removeClass('disabled');
             if (type === 'invite_with_team_selector') {
               inviteBtn.hide();

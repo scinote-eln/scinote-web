@@ -459,7 +459,7 @@ var ProtocolsIndex = (function() {
     $.post(url, { protocol_ids: ids }, (data) => {
       HelperModule.flashAlertMsg(data.message, 'success');
       reloadTable();
-    }).error((data) => {
+    }).fail((data) => {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   }
@@ -474,7 +474,7 @@ var ProtocolsIndex = (function() {
     $.post(url, { protocol_ids: ids }, (data) => {
       HelperModule.flashAlertMsg(data.message, 'success');
       reloadTable();
-    }).error((data) => {
+    }).fail((data) => {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   }
@@ -503,18 +503,16 @@ var ProtocolsIndex = (function() {
   }
 
   function duplicateProtocols($el) {
-    $.ajax(
-      {
+    $.ajax({
         type: 'POST',
         url: $el.data('url'),
         data: JSON.stringify({ ids: rowsSelected }),
         contentType: 'application/json'
-      }
-    ).success((data) => {
+    }).done((data) => {
       animateSpinner(null, false);
       HelperModule.flashAlertMsg(data.message, 'success');
       reloadTable();
-    }).error((data) => {
+    }).fail((data) => {
       animateSpinner(null, false);
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });

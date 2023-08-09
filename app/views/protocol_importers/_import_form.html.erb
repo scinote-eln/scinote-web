@@ -1,5 +1,5 @@
 <%= form_for :protocol, url: team_import_external_protocol_path(team_id: current_team.id),
-             method: :post, remote: true  do |f|%>
+             method: :post, data: { remote: true }  do |f|%>
   <div class="general-error has-error">
     <span class="has-error help-block"></span>
   </div>

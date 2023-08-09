@@ -87,6 +87,10 @@ module.exports = {
     sourceMapFilename: '[file].map',
     path: path.resolve(__dirname, '..', '..', 'app/assets/builds')
   },
+  externals: {
+    $: 'jquery',
+    jquery: 'jQuery'
+  },
   module: {
     rules: [
       {
@@ -119,10 +123,6 @@ module.exports = {
     new VueLoaderPlugin(),
     new RemoveEmptyScriptsPlugin(),
     new MiniCssExtractPlugin(),
-    new NodePolyfillPlugin(),
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-    })
+    new NodePolyfillPlugin()
   ]
 };

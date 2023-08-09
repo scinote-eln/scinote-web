@@ -169,7 +169,7 @@ var MarvinJsEditorApi = (function() {
       config.button.dataset.inProgress = false;
 
       if (MarvinJsEditor.saveCallback) MarvinJsEditor.saveCallback();
-    }).error((response) => {
+    }).fail((response) => {
       if (response.status === 403) {
         HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
       }

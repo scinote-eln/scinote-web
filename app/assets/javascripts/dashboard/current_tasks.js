@@ -131,7 +131,7 @@ var DasboardCurrentTasksWidget = (function() {
       });
 
       animateSpinner($currentTasksList, false);
-    }).error(function(error) {
+    }).fail(function(error) {
       // If error is 403, it is possible that the user was removed from project/experiment,
       // so clear local storage and filter state
       if (error.status === 403) {

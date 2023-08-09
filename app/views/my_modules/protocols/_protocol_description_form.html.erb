@@ -1,4 +1,4 @@
-<%= form_with model: protocol, url: update_url, remote: :true, html: {class: 'tiny-mce-editor'}, builder: SciFormHelper::SciFormBuilder do |f| %>
+<%= form_with model: protocol, url: update_url, data: { remote: true }, html: {class: 'tiny-mce-editor'}, builder: SciFormHelper::SciFormBuilder do |f| %>
   <%= render partial: 'shared/tiny_mce_extra_buttons' %>
   <div id="protocol_description_view"
        class="ql-editor tinymce-view"

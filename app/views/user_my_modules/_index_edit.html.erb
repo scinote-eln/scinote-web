@@ -38,7 +38,7 @@
   <li>
     <hr>
     <div class="row">
-    <%= form_wiht url: [@my_module, @new_um], remote: true, format: :json, html: { class: 'add-user-form' } do |f| %>
+    <%= form_with model: [@my_module, @new_um], data: { remote: true }, format: :json, html: { class: 'add-user-form' } do |f| %>
       <div class="col-xs-4">
       <%= collection_select(:user_my_module, :user_id, @undesignated_users, :id, :full_name, {}, { class: 'selectpicker' }) %>
       </div>
