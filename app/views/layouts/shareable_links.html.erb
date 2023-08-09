@@ -22,12 +22,12 @@
     <%= csrf_meta_tags %>
   </head>
   <body id="sci-shareable-links" data-datetime-picker-format="YYYY-MM-DD">
-    <div class="flex flex-row">
-      <div class="w-80 h-screen px-6 py-6 flex flex-col
+    <div class="relative">
+      <div class="fixed top-0 bottom-0 left-0 w-80 h-screen px-6 py-6 flex flex-col
                   border-0 border-r border-solid border-sn-sleepy-grey">
         <%= render "shareable_links/my_modules/left_navigation" %>
       </div>
-      <div class="flex flex-col flex-1 min-h-screen p-4 bg-sn-super-light-grey">
+      <div class="ml-80 flex flex-col flex-1 min-h-screen p-4 bg-sn-super-light-grey">
         <%= yield %>
       </div>
     </div>
