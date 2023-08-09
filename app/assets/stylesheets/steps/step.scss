@@ -76,27 +76,32 @@
 
     .step-state {
       align-self: center;
-      border: 1px solid $color-alto;
+      background-color: var(--sn-light-grey);
+      border: 1px solid transparent;
       border-radius: 50%;
       cursor: pointer;
       height: 24px;
+      position: relative;
       text-align: center;
       width: 24px;
-      margin-bottom: -.5em;
+
+      &::after {
+        @include font-sn-icon;
+        color: $color-white;
+        content: $sn-icon-check;
+        height: 24px;
+        left: -1px;
+        position: absolute;
+        top: -6px;
+      }
 
       &:hover {
-        border-color: $brand-success;
+        border-color: var(--sn-science-blue);
       }
 
       &.completed {
-        background: $brand-success;
-        border: 2px solid $brand-success;
-
-        &::after {
-          @include font-awesome;
-          color: $color-white;
-          content: $font-fas-check;
-        }
+        background: var(--sn-science-blue);
+        border: 1px solid var(--sn-science-blue);
       }
     }
 
@@ -279,7 +284,7 @@
 
   .step-controls {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     min-height: 35px;
   }
 

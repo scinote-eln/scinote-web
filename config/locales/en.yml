@@ -1631,7 +1631,7 @@ en:
       disclaimer: "Anyone with the link can view the protocol and results pages of this task."
       too_long_text: "Text is too long (maximum number is %{counter} characters)"
       copy_success: "Shared link copied to clipboard"
-    destroy_modal: 
+    destroy_modal:
       title: "Deactivate shared link"
       description: "This action will permanently deactivate the shared link. Any user who has this link will no longer be able to access the task."
       deactivate: "Deactivate"
@@ -3034,7 +3034,7 @@ en:
         duplicate: 'Duplicate'
         delete: 'Delete'
       insert:
-        button: 'Insert'
+        button: 'Add content'
         title: 'Insert step content'
         table: 'Table'
         well_plate: 'Well plate'
