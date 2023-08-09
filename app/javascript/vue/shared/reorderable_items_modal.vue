@@ -61,8 +61,8 @@
       }
     },
     mounted() {
-      $(this.$refs.modal).modal('show');
-      $(this.$refs.modal).on('hidden.bs.modal', () => {
+      window.$(this.$refs.modal).modal('show');
+      window.$(this.$refs.modal).on('hidden.bs.modal', () => {
         this.close();
       })
     },
