@@ -535,8 +535,21 @@ Rails.application.routes.draw do
       get 'users/edit', to: 'user_my_modules#index_edit'
 
       resources :results, only: %i(index show create update destroy) do
-        get :elements
-        get :assets
+        member do
+          get :elements
+          get :assets
+        end
+
+        resources :tables, controller: 'result_elements/tables', only: %i(create destroy update) do
+          member do
+            post :duplicate
+          end
+        end
+        resources :texts, controller: 'result_elements/texts', only: %i(create destroy update) do
+          member do
+            post :duplicate
+          end
+        end
       end
     end
 

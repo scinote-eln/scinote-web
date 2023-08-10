@@ -222,7 +222,7 @@
   import ReorderableItemsModal from '../shared/reorderable_items_modal.vue'
 
   import UtilsMixin from '../mixins/utils.js'
-  import AttachmentsMixin from './mixins/attachments.js'
+  import AttachmentsMixin from '../shared/content/mixins/attachments.js'
   import WopiFileModal from '../shared/content/attachments/mixins/wopi_file_modal.js'
   import StorageUsage from '../shared/content/attachments/storage_usage.vue'
 

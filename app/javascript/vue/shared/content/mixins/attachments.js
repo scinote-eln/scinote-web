@@ -10,6 +10,14 @@ export default {
       }
     };
   },
+  computed: {
+    attachmentsParent() {
+      return this.step || this.result;
+    },
+    attachmentsParentName() {
+      return this.step ? 'step' : 'result';
+    }
+  },
   methods: {
     dropFile(e) {
       if (!this.showFileModal && e.dataTransfer && e.dataTransfer.files.length) {
@@ -30,7 +38,7 @@ export default {
       button.click();
     },
     openWopiFileModal() {
-      this.initWopiFileModal(this.step, (_e, data, status) => {
+      this.initWopiFileModal(this.attachmentsParent, (_e, data, status) => {
         if (status === 'success') {
           this.addAttachment(data)
         } else {
@@ -43,17 +51,17 @@ export default {
       let filesUploadedCntr = 0;
       this.showFileModal = false;
 
-      if (!this.step.attributes.urls.upload_attachment_url) return false;
+      if (!this.attachmentsParent.attributes.urls.upload_attachment_url) return false;
 
       return new Promise((resolve, reject) => {
         $(files).each((_, file) => {
           const fileObject = {
             attributes: {
               progress: 0,
-              view_mode: this.step.attributes.assets_view_mode,
+              view_mode: this.attachmentsParent.attributes.assets_view_mode,
               file_name: file.name,
               uploading: true,
-              asset_order: this.viewModeOrder[this.step.attributes.assets_view_mode]
+              asset_order: this.viewModeOrder[this.attachmentsParent.attributes.assets_view_mode]
             },
             directUploadWillStoreFileWithXHR(request) {
               request.upload.addEventListener('progress', (e) => {
@@ -68,16 +76,16 @@ export default {
             return;
           }
 
-          const storageLimit = this.step.attributes.storage_limit &&
-                               this.step.attributes.storage_limit.total > 0 &&
-                               this.step.attributes.storage_limit.used >= this.step.attributes.storage_limit.total;
+          const storageLimit = this.attachmentsParent.attributes.storage_limit &&
+                               this.attachmentsParent.attributes.storage_limit.total > 0 &&
+                               this.attachmentsParent.attributes.storage_limit.used >= this.attachmentsParent.attributes.storage_limit.total;
           if (storageLimit) {
             fileObject.error = I18n.t('protocols.steps.attachments.new.no_more_space');
             this.attachments.push(fileObject);
             return;
           }
 
-          const upload = new ActiveStorage.DirectUpload(file, this.step.attributes.urls.direct_upload_url, fileObject);
+          const upload = new ActiveStorage.DirectUpload(file, this.attachmentsParent.attributes.urls.direct_upload_url, fileObject);
 
           fileObject.isNewUpload = true;
           this.attachments.push(fileObject);
@@ -93,7 +101,7 @@ export default {
               reject(error);
             } else {
               const signedId = blob.signed_id;
-              $.post(this.step.attributes.urls.upload_attachment_url, {
+              $.post(this.attachmentsParent.attributes.urls.upload_attachment_url, {
                 signed_blob_id: signedId
               }, (result) => {
                 fileObject.id = result.data.id;
@@ -108,7 +116,7 @@ export default {
               filesUploadedCntr += 1;
               if (filesUploadedCntr === filesToUploadCntr) {
                 setTimeout(() => {
-                  this.$emit('stepUpdated');
+                  this.$emit(`${this.attachmentsParentName}Updated`);
                 }, 1000);
                 resolve('done');
               }
@@ -118,18 +126,18 @@ export default {
       });
     },
     changeAttachmentsOrder(order) {
-      this.step.attributes.assets_order = order;
-      $.post(this.step.attributes.urls.update_view_state_step_url, {
+      this.attachmentsParent.attributes.assets_order = order;
+      $.post(this.attachmentsParent.attributes.urls.update_view_state_url, {
         assets: { order }
       });
     },
     changeAttachmentsViewMode(viewMode) {
-      this.step.attributes.assets_view_mode = viewMode;
+      this.attachmentsParent.attributes.assets_view_mode = viewMode;
       this.attachments.forEach((attachment) => {
         this.$set(attachment.attributes, 'view_mode', viewMode);
         this.$set(attachment.attributes, 'asset_order', this.viewModeOrder[viewMode]);
       });
-      $.post(this.step.attributes.urls.update_asset_view_mode_url, {
+      $.post(this.attachmentsParent.attributes.urls.update_asset_view_mode_url, {
         assets_view_mode: viewMode
       });
     },

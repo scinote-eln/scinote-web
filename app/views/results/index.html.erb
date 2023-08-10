@@ -18,4 +18,8 @@
   <results url="<%= my_module_results_url(@my_module) %>">
 </div>
 
+<%= javascript_include_tag "handsontable.full" %>
+<%= render partial: "shared/formulas_libraries" %>
+<%= render 'shared/tiny_mce_packs' %>
 <%= javascript_include_tag 'vue_results' %>
+

@@ -7,7 +7,7 @@ class ResultSerializer < ActiveModel::Serializer
   include ActionView::Helpers::TextHelper
   include InputSanitizeHelper
 
-  attributes :name, :id, :urls, :updated_at, :created_at_formatted, :updated_at_formatted, :user
+  attributes :name, :id, :urls, :updated_at, :created_at_formatted, :updated_at_formatted, :user, :my_module_id
 
   def updated_at
     object.updated_at.to_i
@@ -30,7 +30,8 @@ class ResultSerializer < ActiveModel::Serializer
 
   def urls
     {
-
+      elements_url: elements_my_module_result_path(object.my_module, object),
+      attachments_url: assets_my_module_result_path(object.my_module, object)
     }
   end
 end
