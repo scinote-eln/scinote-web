@@ -11,9 +11,8 @@
       <meta name="expiration-url" content="<%= users_expire_in_path %>">
       <meta name="revive-url" content="<%= users_revive_session_path %>">
     <% end %>
-    <%= stylesheet_link_tag 'bootstrap', media: 'all' %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag 'application', media: 'all' %>
+
     <%= stylesheet_link_tag 'application_pack_styles', media: 'all' %>
     <% if ::NewRelic::Agent.instance.started? %>
       <%= ::NewRelic::Agent.browser_timing_header(controller.request.content_security_policy_nonce) %>
@@ -24,6 +23,7 @@
     <%= javascript_include_tag 'application' %>
     <%= javascript_include_tag 'session_end' %>
     <%= javascript_include_tag 'sidebar_toggle' %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
 
 
     <% if MarvinJsService.enabled? && ENV['MARVINJS_API_KEY'] %>

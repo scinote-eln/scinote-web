@@ -21,7 +21,6 @@ const entryList = {
   tui_image_editor_styles: './app/javascript/packs/tui_image_editor_styles.scss',
   croppie: './app/javascript/packs/custom/croppie.js',
   croppie_styles: './app/javascript/packs/custom/croppie_styles.scss',
-  bootstrap: './app/javascript/packs/bootstrap.scss',
   inputmask: './app/javascript/packs/custom/inputmask.js',
   pdfjs: './app/javascript/packs/pdfjs/pdf_js.js',
   pdf_js_styles: './app/javascript/packs/pdfjs/pdf_js_styles.scss',
@@ -103,6 +102,15 @@ module.exports = {
         use: ['babel-loader']
       },
       {
+        test: /\.less$/i,
+        use: [
+          // compiles Less to CSS
+          "style-loader",
+          "css-loader",
+          "less-loader",
+        ],
+      },
+      {
         test: /\.(?:sa|sc|c)ss$/i,
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
       },
@@ -114,7 +122,7 @@ module.exports = {
   },
   resolve: {
     // Add additional file types
-    extensions: ['.js', '.jsx', '.scss', '.css', '.vue']
+    extensions: ['.js', '.jsx', '.scss', '.css', '.vue', '.less']
   },
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({
