@@ -467,7 +467,7 @@ class Extends
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 170, 173, 179, 187, 186,
                           190, 191, *204..215, 220, 221, 223, 227, 228, 229, *230..235, *237..240],
     team: [92, 94, 93, 97, 104, 244, 245],
-    label_repository: [*216..219]
+    label_templates: [*216..219]
   }
 
   TOP_LEVEL_ASSIGNABLES = %w(Project Team Protocol Repository).freeze
