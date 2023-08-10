@@ -5,6 +5,14 @@
     <button @click="openReorderModal">
       Open Rearrange Modal
     </button>
+    <a href="#"
+       ref="comments"
+       class="open-comments-sidebar btn icon-btn btn-light btn-black"
+       data-turbolinks="false"
+       data-object-type="Result"
+       :data-object-id="result.id">
+       <i class="sn-icon sn-icon-comments"></i>
+    </a>
     <hr>
     <ReorderableItemsModal v-if="reordering"
       title="Placeholder title for this modal"
