@@ -33,4 +33,8 @@ class ResultSerializer < ActiveModel::Serializer
 
     }
   end
+
+  def comments
+    object.comments
+  end
 end
