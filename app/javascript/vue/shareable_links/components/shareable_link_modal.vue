@@ -9,7 +9,8 @@
       aria-labelledby="shareTaskModalLabel"
     >
       <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content" 
+            @blur="handleTextareaBlur">
           <div class="modal-header flex">
             <h4 class="modal-title">
               {{ i18n.t("shareable_links.modal.title") }}
@@ -44,8 +45,7 @@
                           v-model="description"
                           :placeholder="i18n.t('shareable_links.modal.description_placeholder')"
                           :disabled="!sharedEnabled"
-                          @focus="editing = true"
-                          @blur="handleTextareaBlur">
+                          @focus="editing = true">
                 </textarea>
               </div>
               <div v-if="error" class="text-xs shareable-link-error">
