@@ -105,6 +105,7 @@
         }
       },
       setValue(value) {
+        this.focusElement.blur();
         this.$emit('change', value);
       },
       updateOptionPosition() {
