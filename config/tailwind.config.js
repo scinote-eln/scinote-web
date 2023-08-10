@@ -19,7 +19,8 @@ module.exports = {
       },
       colors: {
         transparent: 'transparent',
-        current: 'currentColor'
+        current: 'currentColor',
+        'brand-warning': '#f0ad4e'
       }
     }
   },

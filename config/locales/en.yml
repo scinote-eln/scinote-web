@@ -3640,7 +3640,9 @@ en:
     new_sequence: "New sequence"
     edit_sequence: "Edit sequence"
     default_sequence_name: "New sequence"
-
+    trial_expiration_warning_html:
+      one: "Your Sequence editor trial expires in %{count} day. <a href='mailto:support@scinote.net'> Contact SciNote for more information.</a>"
+      other: "Your Sequence editor trial expires in %{count} days. <a href='mailto:support@scinote.net'> Contact SciNote for more information.</a>"
   pdf_preview:
     fit_to_screen: 'Fit to screen'
     pages:
