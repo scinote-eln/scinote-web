@@ -1,4 +1,11 @@
-<div class="text-3xl font-bold"><%= @my_module.name %></div>
+<div class="text-3xl font-bold flex flex-row flex-nowrap">
+  <span class="inline-block whitespace-nowrap">
+    <%= t "labels.archived" if @my_module.archived? %>
+  </span>
+  <span class="inline-block truncate w-[calc(100vw-27rem)]" title="<%= @my_module.name %>">
+    <%= @my_module.name %>
+  </span>
+</div>
 
 <div class="my-5 max-w-4xl flex-1 bg-sn-white">
   <div class="my-module-position-container">
