@@ -1,2 +1,1 @@
-
-//= require jquery.min
+//= require jquery
