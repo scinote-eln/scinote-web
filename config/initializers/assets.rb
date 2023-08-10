@@ -136,8 +136,5 @@ Rails.application.config.assets.precompile += %w(ruleJS.js)
 Rails.application.config.assets.precompile += %w(handsontable.formula.js)
 Rails.application.config.assets.precompile += %w(big.min.js)
 
-# JQuery related includes
-Rails.application.config.assets.precompile += %w(jquery_bundle.js)
-
 # Add stuff installed by yarn
 Rails.application.config.assets.paths << Rails.root.join('node_modules')

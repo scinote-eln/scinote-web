@@ -37,3 +37,13 @@ $(document).on('click', '.btn', function() {
   $(this).blur();
 });
 
+// Needed to support Turbolinks redirect_to responses as unsafe-inline is blocked by the CSP
+$.ajaxSetup({
+  converters: {
+    'text script': function(text) {
+      $.globalEval(text, { nonce: document.querySelector('meta[name="csp-nonce"]').getAttribute('content') });
+      return text;
+    }
+  }
+});
+

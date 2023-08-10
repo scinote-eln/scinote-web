@@ -66,7 +66,7 @@ gem 'scenic', '~> 1.4'
 gem 'sdoc', '~> 1.0', group: :doc
 gem 'silencer' # Silence certain Rails logs
 gem 'sneaky-save', git: 'https://github.com/einzige/sneaky-save'
-gem 'turbolinks', '~> 5.1.1'
+gem 'turbolinks', '~> 5.2.0'
 gem 'underscore-rails'
 gem 'wicked_pdf'
 
