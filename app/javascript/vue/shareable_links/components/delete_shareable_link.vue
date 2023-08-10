@@ -1,5 +1,5 @@
 <template>
-  <div ref="modal" class="modal" id="modalDestroyShareableLink" tabindex="-1" role="dialog">
+  <div ref="modal" class="modal centered-modal" id="modalDestroyShareableLink" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
