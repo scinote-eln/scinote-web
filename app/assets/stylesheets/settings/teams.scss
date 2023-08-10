@@ -90,16 +90,7 @@
     }
 
     .button-container {
-      position: absolute;
-      right: 0;
-      top: -20px;
-
-      .inline-field-button {
-        color: $color-silver-chalice;
-        cursor: pointer;
-        line-height: 20px;
-        padding-left: 20px;
-      }
+      top: -32px;
     }
 
     &:hover .input-field,

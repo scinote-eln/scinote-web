@@ -29,6 +29,7 @@
 /**
  * Fix for bootstrap styles
  */
+ // scss-lint:disable ImportantRule
 .handsontable .table th, .handsontable .table td {
   border-top: none;
 }
@@ -509,6 +510,10 @@
   top: 0;
   left: 0;
   z-index: 104;
+
+  *:focus {
+    outline: none !important;
+  }
 }
 
 .htSelectEditor {
