@@ -6,7 +6,6 @@ class TeamUsersDatatable < CustomDatatable
 
   def_delegator :@view, :link_to
   def_delegator :@view, :update_user_team_path
-  def_delegator :@view, :update_role_path
   def_delegator :@view, :destroy_user_team_html_path
 
   def initialize(view, team, user)
