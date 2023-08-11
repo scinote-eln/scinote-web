@@ -29,6 +29,10 @@
     }
   }
 
+  .team-share-permission:disabled {
+    cursor: not-allowed;
+  }
+
   .team-description {
     display: inline-block;
     margin-top: 16px;
