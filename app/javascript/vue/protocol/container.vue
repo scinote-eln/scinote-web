@@ -36,7 +36,7 @@
       </div>
     </div>
     <div id="protocol-content" class="protocol-content collapse in" aria-expanded="true">
-      <div>
+      <div class="ml-[2.375rem] mb-8">
         <div class="protocol-name" v-if="!inRepository">
           <InlineEdit
             v-if="urls.update_protocol_name_url"
@@ -67,7 +67,7 @@
             </div>
           </div>
           <div id="protocol-description-container" :class=" inRepository ? 'protocol-description collapse in' : ''" >
-            <div v-if="urls.update_protocol_description_url">
+            <div class="ml-[0.25rem]" v-if="urls.update_protocol_description_url">
               <Tinymce
                 :value="protocol.attributes.description"
                 :value_html="protocol.attributes.description_view"
