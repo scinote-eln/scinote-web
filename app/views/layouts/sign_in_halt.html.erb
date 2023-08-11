@@ -11,18 +11,16 @@
     </style>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
 
-    <%= stylesheet_link_tag 'application_pack', media: 'all' %>
+    <%= stylesheet_link_tag 'application_pack_styles', media: 'all' %>
     <%= javascript_include_tag 'jquery_bundle' %>
     <%= javascript_include_tag 'application' %>
-    <%= javascript_include_tag 'application_pack_styles' %>
+    <%= javascript_include_tag 'application_pack' %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
 
     <%= favicon_link_tag "favicon.ico" %>
     <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>
     <%= favicon_link_tag "favicon-32.png", type: "image/png", size: "32x32" %>
     <%= favicon_link_tag "favicon-48.png", type: "image/png", size: "48x48" %>
-    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag 'fontawesome' %>
 
     <%= csrf_meta_tags %>
   </head>
