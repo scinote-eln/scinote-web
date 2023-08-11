@@ -81,10 +81,11 @@
   }
 
   // Cells
-  td {
-    white-space: nowrap;
+  td.added-on,
+  td.asset-value-cell {
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   // Assigned
