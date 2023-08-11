@@ -184,7 +184,7 @@ class ReportsController < ApplicationController
     log_activity(:generate_docx_report)
 
     ensure_report_template!
-    Reports::DocxJob.perform_later(@report.id, current_user, root_url)
+    Reports::DocxJob.perform_later(@report.id, current_user.id, root_url)
     render json: {
       message: I18n.t('projects.reports.index.generation.accepted_message')
     }
@@ -399,7 +399,7 @@ class ReportsController < ApplicationController
     log_activity(:generate_pdf_report)
 
     ensure_report_template!
-    Reports::PdfJob.perform_later(@report.id, current_user)
+    Reports::PdfJob.perform_later(@report.id, current_user.id)
   end
 
   def ensure_report_template!

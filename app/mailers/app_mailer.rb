@@ -7,8 +7,8 @@ class AppMailer < Devise::Mailer
   default from: ENV['MAIL_FROM']
   default reply: ENV['MAIL_REPLYTO']
 
-  def notification(user, notification, opts = {})
-    @user = user
+  def notification(user_id, notification, opts = {})
+    @user = User.find(user_id)
     @notification = notification
     subject =
       if notification.deliver?
@@ -23,8 +23,8 @@ class AppMailer < Devise::Mailer
     mail(headers)
   end
 
-  def system_notification(user, system_notification, opts = {})
-    @user = user
+  def system_notification(user_id, system_notification, opts = {})
+    @user = User.find(user_id)
     @system_notification = system_notification
 
     headers = {

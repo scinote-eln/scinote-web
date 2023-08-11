@@ -6,8 +6,8 @@ require 'csv'
 class TeamZipExport < ZipExport
   include StringUtility
 
-  def generate_exportable_zip(user, data, type, options = {})
-    @user = user
+  def generate_exportable_zip(user_id, data, type, options = {})
+    @user = User.find(user_id)
     zip_input_dir = FileUtils.mkdir_p(
       File.join(Rails.root, "tmp/temp_zip_#{Time.now.to_i}")
     ).first
