@@ -30,7 +30,7 @@ var DataTableHelpers = (function() {
         .removeClass('form-control input-sm')
         .css('margin', 0);
       $('.dataTables_filter').append(`
-          <button class="btn btn-light btn-lg icon-btn search-icon btn-black"
+          <button class="btn btn-light icon-btn search-icon btn-black"
                   title="${I18n.t('repositories.show.button_tooltip.search')}">
             <i class="sn-icon sn-icon-search"></i>
           </button>

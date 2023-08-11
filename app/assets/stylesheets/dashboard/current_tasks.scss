@@ -17,11 +17,8 @@
   .search-container {
     flex-basis: 36px;
 
-    .fa-search {
-      animation-timing-function: $timing-function-sharp;
-      color: $color-alto;
-      transition: .3s;
-      width: 26px;
+    .sn-icon {
+      top: calc(50% - .75rem);
     }
 
     .task-search-field {
@@ -36,10 +33,6 @@
         border: $border-transparent;
         cursor: pointer;
         width: 36px;
-
-        + .fa-search {
-          color: $color-volcano;
-        }
       }
 
       &:hover {
@@ -50,10 +43,6 @@
         border: $border-focus;
         cursor: auto;
         width: 200px;
-
-        + .fa-search {
-          color: $color-alto;
-        }
       }
 
 

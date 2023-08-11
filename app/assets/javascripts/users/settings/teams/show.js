@@ -187,6 +187,8 @@
   }
 
   function initTeamSharePermission() {
+    $('.team-share-permission')
+      .css('cursor', `${$('.team-share-permission').attr('disabled') ? 'not-allowed' : 'cursor'}`);
     function toogleCheckbox() {
       var checkbox = $('.team-share-permission');
       checkbox.prop('checked', !checkbox.prop('checked'));
