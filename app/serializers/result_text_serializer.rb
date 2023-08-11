@@ -6,7 +6,7 @@ class ResultTextSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :id, :text, :urls, :text_view, :icon, :placeholder
+  attributes :id, :text, :urls, :text_view, :icon, :placeholder, :name
 
   def updated_at
     object.updated_at.to_i

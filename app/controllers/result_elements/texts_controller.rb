@@ -13,7 +13,7 @@ module ResultElements
       result_text = @result.result_texts.build
 
       ActiveRecord::Base.transaction do
-        create_in_step!(@result, result_text)
+        create_in_result!(@result, result_text)
         #log_step_activity(:text_added, { text_name: step_text.name })
       end
 

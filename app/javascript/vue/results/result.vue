@@ -5,14 +5,14 @@
     <button @click="openReorderModal">
       Open Rearrange Modal
     </button>
-    <div>
+    <div class="inline-block">
       <input type="file" class="hidden" ref="fileSelector" @change="loadFromComputer" multiple />
       <div ref="elementsDropdownButton" v-if="urls.update_url"  class="dropdown">
-        <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'stepInserMenu_' + step.id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'resultInsertMenu_' + result.id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           {{ i18n.t('protocols.steps.insert.button') }}
           <span class="sn-icon sn-icon-down"></span>
         </button>
-        <ul ref="elementsDropdown" class="dropdown-menu insert-element-dropdown dropdown-menu-right" :aria-labelledby="'stepInserMenu_' + step.id">
+        <ul ref="elementsDropdown" class="dropdown-menu insert-element-dropdown dropdown-menu-right" :aria-labelledby="'resultInsertMenu_' + result.id">
           <li class="title">
             {{ i18n.t('protocols.steps.insert.title') }}
           </li>
@@ -31,10 +31,6 @@
               </li>
             </ul>
           </li>
-          <li class="action"  @click="createElement('checklist')">
-            <i class="sn-icon sn-icon-activities"></i>
-            {{ i18n.t('protocols.steps.insert.checklist') }}
-          </li>
           <li class="action"  @click="createElement('text')">
             <i class="sn-icon sn-icon-result-text"></i>
             {{ i18n.t('protocols.steps.insert.text') }}
@@ -47,16 +43,16 @@
               <li class="action" @click="openLoadFromComputer">
                 {{ i18n.t('protocols.steps.insert.add_file') }}
               </li>
-              <li class="action" v-if="step.attributes.wopi_enabled" @click="openWopiFileModal">
+              <li class="action" v-if="result.attributes.wopi_enabled" @click="openWopiFileModal">
                 {{ i18n.t('assets.create_wopi_file.button_text') }}
               </li>
-              <li class="action" v-if="step.attributes.marvinjs_enabled" @click="openMarvinJsModal($refs.marvinJsButton)">
+              <li class="action" v-if="result.attributes.marvinjs_enabled" @click="openMarvinJsModal($refs.marvinJsButton)">
                 <span
                   class="new-marvinjs-upload-button text-sn-black text-decoration-none"
-                  :data-object-id="step.id"
+                  :data-object-id="result.id"
                   ref="marvinJsButton"
-                  :data-marvin-url="step.attributes.marvinjs_context.marvin_js_asset_url"
-                  :data-object-type="step.attributes.type"
+                  :data-marvin-url="result.attributes.marvinjs_context.marvin_js_asset_url"
+                  :data-object-type="result.attributes.type"
                   tabindex="0"
                 >
                   {{ i18n.t('marvinjs.new_button') }}
@@ -97,9 +93,9 @@
                     @attachments:openFileModal="showFileModal = true"
                     @attachment:deleted="attachmentDeleted"
                     @attachment:uploaded="loadAttachments"
-                    @attachments:order="() => {}"
-                    @attachments:viewMode="() => {}"
-                    @attachment:viewMode="() => {}"/>
+                    @attachments:order="changeAttachmentsOrder"
+                    @attachments:viewMode="changeAttachmentsViewMode"
+                    @attachment:viewMode="updateAttachmentViewMode"/>
     </div>
   </div>
 </template>
@@ -126,7 +122,15 @@
         elements: [],
         attachments: [],
         attachmentsReady: false,
-        showFileModal: false
+        showFileModal: false,
+        wellPlateOptions: [
+          { label: 'protocols.steps.insert.well_plate_options.32_x_48', dimensions: [32, 48] },
+          { label: 'protocols.steps.insert.well_plate_options.16_x_24', dimensions: [16, 24] },
+          { label: 'protocols.steps.insert.well_plate_options.8_x_12', dimensions: [8, 12] },
+          { label: 'protocols.steps.insert.well_plate_options.6_x_8', dimensions: [6, 8] },
+          { label: 'protocols.steps.insert.well_plate_options.6_x_4', dimensions: [6, 4] },
+          { label: 'protocols.steps.insert.well_plate_options.2_x_3', dimensions: [2, 3] }
+        ]
       }
     },
     mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal],
@@ -177,17 +181,57 @@
           }
         })
         .then(() => {
-          this.$emit('stepUpdated');
+          this.$emit('resultUpdated');
         })
         .catch(() => {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
       },
-      deleteElement(element) {
+      deleteElement(position) {
+        this.elements.splice(position, 1)
+        let unorderedElements = this.elements.map( e => {
+          if (e.attributes.position >= position) {
+            e.attributes.position -= 1;
+          }
+          return e;
+        })
+        this.$emit('resultUpdated')
       },
-      updateElement(element) {
+      updateElement(element, skipRequest=false, callback) {
+        let index = this.elements.findIndex((e) => e.id === element.id);
+        this.elements[index].isNew = false;
+
+        if (skipRequest) {
+          this.elements[index].attributes.orderable = element.attributes.orderable;
+          this.$emit('resultUpdated');
+        } else {
+          $.ajax({
+            url: element.attributes.orderable.urls.update_url,
+            method: 'PUT',
+            data: element.attributes.orderable,
+            success: (result) => {
+              this.elements[index].attributes.orderable = result.data.attributes;
+              this.$emit('resultUpdated');
+
+              // optional callback after successful update
+              if(typeof callback === 'function') {
+                callback();
+              }
+            }
+          }).fail(() => {
+            HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+          })
+        }
       },
       insertElement(element) {
+        let position = element.attributes.position;
+        this.elements = this.elements.map( s => {
+          if (s.attributes.position >= position) {
+              s.attributes.position += 1;
+          }
+          return s;
+        })
+        this.elements.push(element);
       },
       loadElements() {
         $.get(this.urls.elements_url, (result) => {
@@ -213,6 +257,25 @@
       attachmentDeleted(id) {
         this.attachments = this.attachments.filter((a) => a.id !== id );
         this.$emit('resultUpdated');
+      },
+      createElement(elementType, tableDimensions = [5,5], plateTemplate = false) {
+        $.post(this.urls[`create_${elementType}_url`], { tableDimensions: tableDimensions, plateTemplate: plateTemplate }, (result) => {
+          result.data.isNew = true;
+          this.elements.push(result.data)
+          this.$emit('stepUpdated')
+        }).fail(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+        }).done(() => {
+          this.$parent.$nextTick(() => {
+            const children = this.$children
+            const lastChild = children[children.length - 1]
+            lastChild.$el.scrollIntoView(false)
+            window.scrollBy({
+              top: 200,
+              behavior: 'smooth'
+            });
+          })
+        });
       },
     }
   }

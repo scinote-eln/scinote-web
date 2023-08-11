@@ -24,7 +24,7 @@
            :title="`${ attachment.attributes.file_name }`">
         {{ attachment.attributes.file_name }}
         <span v-if="attachment.isNewUpload" class="attachment-label-new">
-          {{ i18n.t('protocols.steps.attachments.new.description') }}
+          {{ i18n.t('attachments.new.description') }}
         </span>
       </div>
       <div class="attachment-metadata">

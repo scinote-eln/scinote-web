@@ -377,6 +377,34 @@ en:
       activities: "Activity"
       archive: "Archived results"
 
+  attachments:
+    menu:
+      office_file: "New Office file"
+      chemical_drawing: "New chemical drawing"
+      file_from_pc: "File from your PC"
+    modified_label: "Modified:"
+    preview_menu: "Preview size"
+    add: "ADD"
+    sort_by: "SORT BY"
+    attachments_view_mode: "ALL ATTACHMENTS VIEW SIZE"
+    new:
+      description: 'New'
+      uploading: 'Uploading'
+      file_too_big: 'Failed to upload: File size is too big'
+      no_more_space: 'Failed to upload: You ran out of space'
+      general_error: 'Failed to upload: Something went wrong, please try again'
+      leaving_warning: 'Your changes will be lost if you navigate away'
+
+    sort:
+      new_html: "Newest first &#8595;"
+      old_html: "Oldest first &#8593;"
+      atoz_html: "Name &#8595;"
+      ztoa_html: "Name &#8593;"
+    view_mode:
+      inline_html: "Large"
+      thumbnail_html: "Medium"
+      list_html: "List"
+
   search:
     whole_word: "Match any whole word"
     whole_phrase: "Match whole phrase"
@@ -3095,33 +3123,6 @@ en:
         duplicate_title: "Duplicate step"
         complete_title: "Complete step"
         uncomplete_title: "Restart step"
-      attachments:
-        menu:
-          office_file: "New Office file"
-          chemical_drawing: "New chemical drawing"
-          file_from_pc: "File from your PC"
-        modified_label: "Modified:"
-        preview_menu: "Preview size"
-        add: "ADD"
-        sort_by: "SORT BY"
-        attachments_view_mode: "ALL ATTACHMENTS VIEW SIZE"
-        new:
-          description: 'New'
-          uploading: 'Uploading'
-          file_too_big: 'Failed to upload: File size is too big'
-          no_more_space: 'Failed to upload: You ran out of space'
-          general_error: 'Failed to upload: Something went wrong, please try again'
-          leaving_warning: 'Your changes will be lost if you navigate away'
-
-        sort:
-          new_html: "Newest first &#8595;"
-          old_html: "Oldest first &#8593;"
-          atoz_html: "Name &#8595;"
-          ztoa_html: "Name &#8593;"
-        view_mode:
-          inline_html: "Large"
-          thumbnail_html: "Medium"
-          list_html: "List"
       new:
         add_step_title: "Add new step"
         tab_checklists: "Checklists"

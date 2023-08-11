@@ -15,7 +15,7 @@
     <div class="actions">
       <div class="dropdown sci-dropdown">
         <button class="btn btn-light dropdown-toggle" type="button" id="dropdownAttachmentsOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-          <span><%= t("protocols.steps.attachments.manage") %></span>
+          <span><%= t("attachments.manage") %></span>
           <span class="caret pull-right"></span>
         </button>
         <ul class="dropdown-menu dropdown-menu-right dropdown-attachment-options"
@@ -23,7 +23,7 @@
             data-view-mode-url="<%= update_asset_view_mode_step_path(step) %>"
             data-step-id="<%= step.id %>"
             data-state-save-url="<%= update_view_state_step_path(step.id) %>">
-          <li class="divider-label"><%= t("protocols.steps.attachments.add") %></li>
+          <li class="divider-label"><%= t("attachments.add") %></li>
           <%= render partial: '/assets/marvinjs/create_marvin_sketch_li',
                      locals: {  element_id: step.id, element_type: 'Step',  sketch_container: ".attachments[data-step-id=#{step.id}]" },
                      formats: :html %>
@@ -33,7 +33,7 @@
                        locals: {  element_id: step.id, element_type: 'Step' } %>
           </li>
           <li role="separator" class="divider"></li>
-          <li class="divider-label"><%= t("protocols.steps.attachments.sort_by") %></li>
+          <li class="divider-label"><%= t("attachments.sort_by") %></li>
           <% ['new', 'old', 'atoz', 'ztoa'].each do |sort| %>
             <li>
               <a data-order="<%= sort %>" class="action-link change-order <%= 'selected' if current_order == sort %>">
@@ -42,11 +42,11 @@
             </li>
           <% end %>
           <li role="separator" class="divider"></li>
-          <li class="divider-label"><%= t("protocols.steps.attachments.attachments_view_mode") %></li>
+          <li class="divider-label"><%= t("attachments.attachments_view_mode") %></li>
           <% ['inline', 'thumbnail', 'list'].each do |view_mode| %>
           <li>
             <a class="attachments-view-mode action-link <%= 'selected' if view_mode == step.assets_view_mode %>"  data-assets-view-mode="<%= view_mode %>">
-              <%= t("protocols.steps.attachments.view_mode.#{view_mode}_html") %>
+              <%= t("attachments.view_mode.#{view_mode}_html") %>
             </a>
           </li>
           <% end %>

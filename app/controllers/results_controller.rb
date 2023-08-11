@@ -4,7 +4,7 @@ class ResultsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: %i(create destroy)
 
   before_action :load_my_module
-  before_action :load_vars, only: %i(destroy elements assets)
+  before_action :load_vars, only: %i(destroy elements assets upload_attachment update_view_state update_asset_view_mode )
   before_action :check_destroy_permissions, only: :destroy
 
   def index
@@ -42,6 +42,44 @@ class ResultsController < ApplicationController
     render json: @result.assets,
            each_serializer: AssetSerializer,
            user: current_user
+  end
+
+  def upload_attachment
+    @result.transaction do
+      @asset = @result.assets.create!(
+        created_by: current_user,
+        last_modified_by: current_user,
+        team: @my_module.team,
+        view_mode: @result.assets_view_mode
+      )
+      @asset.file.attach(params[:signed_blob_id])
+      @asset.post_process_file(@my_module.team)
+    end
+
+    render json: @asset,
+           serializer: AssetSerializer,
+           user: current_user
+  end
+
+  def update_view_state
+    view_state = @result.current_view_state(current_user)
+    view_state.state['result_assets']['sort'] = params.require(:assets).require(:order)
+    view_state.save! if view_state.changed?
+
+    render json: {}, status: :ok
+  end
+
+  def update_asset_view_mode
+    html = ''
+    ActiveRecord::Base.transaction do
+      @result.assets_view_mode = params[:assets_view_mode]
+      @result.save!(touch: false)
+      @result.assets.update_all(view_mode: @result.assets_view_mode)
+    end
+    render json: { view_mode: @result.assets_view_mode }, status: :ok
+  rescue ActiveRecord::RecordInvalid => e
+    Rails.logger.error(e.message)
+    render json: { errors: e.message }, status: :unprocessable_entity
   end
 
   def destroy

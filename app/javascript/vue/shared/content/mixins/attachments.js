@@ -71,7 +71,7 @@ export default {
             }
           };
           if (file.size > GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB * 1024 * 1024) {
-            fileObject.error = I18n.t('protocols.steps.attachments.new.file_too_big');
+            fileObject.error = I18n.t('attachments.new.file_too_big');
             this.attachments.push(fileObject);
             return;
           }
@@ -80,7 +80,7 @@ export default {
                                this.attachmentsParent.attributes.storage_limit.total > 0 &&
                                this.attachmentsParent.attributes.storage_limit.used >= this.attachmentsParent.attributes.storage_limit.total;
           if (storageLimit) {
-            fileObject.error = I18n.t('protocols.steps.attachments.new.no_more_space');
+            fileObject.error = I18n.t('attachments.new.no_more_space');
             this.attachments.push(fileObject);
             return;
           }
@@ -93,7 +93,7 @@ export default {
 
           upload.create((error, blob) => {
             if (error) {
-              fileObject.error = I18n.t('protocols.steps.attachments.new.general_error');
+              fileObject.error = I18n.t('attachments.new.general_error');
               this.attachments.splice(filePosition, 1);
               setTimeout(() => {
                 this.attachments.push(fileObject);
@@ -107,7 +107,7 @@ export default {
                 fileObject.id = result.data.id;
                 fileObject.attributes = result.data.attributes;
               }).fail(() => {
-                fileObject.error = I18n.t('protocols.steps.attachments.new.general_error');
+                fileObject.error = I18n.t('attachments.new.general_error');
                 this.attachments.splice(filePosition, 1);
                 setTimeout(() => {
                   this.attachments.push(fileObject);

@@ -8,10 +8,10 @@ module ResultElements
       predefined_table_dimensions = create_table_params[:tableDimensions].map(&:to_i)
       name = if predefined_table_dimensions[0] == predefined_table_dimensions[1]
                t('protocols.steps.table.default_name',
-                 position: @step.step_tables.length + 1)
+                 position: @result.result_tables.length + 1)
              else
                t('protocols.steps.plate.default_name',
-                 position: @step.step_tables.length + 1)
+                 position: @result.result_tables.length + 1)
              end
       result_table = @result.result_tables.new(table:
         Table.new(
@@ -24,11 +24,11 @@ module ResultElements
         ))
 
       ActiveRecord::Base.transaction do
-         create_in_step!(@step, step_table)
+         create_in_result!(@result, result_table)
       #  log_step_activity(:table_added, { table_name: step_table.table.name })
       end
 
-      render_result_orderable_element(step_table)
+      render_result_orderable_element(result_table)
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end
