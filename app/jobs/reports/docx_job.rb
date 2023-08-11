@@ -21,7 +21,7 @@ module Reports
         else
           Rails.application.routes.url_helpers.reports_path(team: report.team.id)
         end
-      user = job.arguments.second
+      user = User.find(job.arguments.second)
       notification = Notification.create(
         type_of: :deliver_error,
         title: I18n.t('projects.reports.index.generation.error_docx_notification_title'),
@@ -33,8 +33,9 @@ module Reports
       Rails.logger.error("Couldn't generate DOCX for Report with id: #{report.id}. Error:\n #{error}")
     end
 
-    def perform(report_id, user, root_url)
+    def perform(report_id, user_id, root_url)
       report = Report.find(report_id)
+      user = User.find(user_id)
       file = Tempfile.new(['report', '.docx'])
       begin
         I18n.backend.date_format = user.settings[:date_format]

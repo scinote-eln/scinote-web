@@ -73,7 +73,7 @@ module Assignable
         user_role: role
       )
 
-      UserAssignments::GenerateUserAssignmentsJob.perform_later(self, created_by)
+      UserAssignments::GenerateUserAssignmentsJob.perform_later(self, created_by.id)
     end
   end
 end

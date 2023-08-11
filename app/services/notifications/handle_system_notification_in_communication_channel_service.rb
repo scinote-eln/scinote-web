@@ -14,7 +14,7 @@ module Notifications
     def call
       @system_notification.user_system_notifications.find_each do |usn|
         user = usn.user
-        AppMailer.delay.system_notification(user, @system_notification) if user.system_message_email_notification
+        AppMailer.delay.system_notification(user.id, @system_notification) if user.system_message_email_notification
       end
 
       self

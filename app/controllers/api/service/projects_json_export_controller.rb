@@ -10,7 +10,7 @@ module Api
         valid_url?(projects_json_export_params[:callback_url])
         ProjectsJsonExportJob.perform_later(projects_json_export_params[:task_ids],
                                             projects_json_export_params[:callback_url],
-                                            current_user)
+                                            current_user.id)
         render json: { status: :ok }, status: :accepted
       end
 

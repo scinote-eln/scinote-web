@@ -24,7 +24,7 @@ module UserAssignments
         UserAssignments::ProjectGroupAssignmentJob.perform_later(
           @team,
           project,
-          @assigned_by
+          @assigned_by.id
         )
       end
     end

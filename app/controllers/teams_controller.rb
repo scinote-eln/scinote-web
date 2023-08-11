@@ -132,7 +132,7 @@ class TeamsController < ApplicationController
     options = { team: @team }
     zip = TeamZipExport.create(user: current_user)
     zip.generate_exportable_zip(
-      current_user,
+      current_user.id,
       ids,
       :teams,
       options

@@ -118,7 +118,7 @@ module Experiments
         user_role: @project.user_assignments.find_by(user: @user).user_role
       )
 
-      UserAssignments::GenerateUserAssignmentsJob.perform_later(object, @user)
+      UserAssignments::GenerateUserAssignmentsJob.perform_later(object, @user.id)
     end
 
     def clean_up_user_my_modules(my_module)
