@@ -1,5 +1,5 @@
 <div class="modal" id="create-repo-modal" tabindex="-1" role="dialog" aria-labelledby="create-repo-modal-label">
-  <%= form_with url: [current_team, @repository], remote: :true do |f| %>
+  <%= form_with model: @repository, url: repositories_path, html: { data: { remote: true } } do |f| %>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
