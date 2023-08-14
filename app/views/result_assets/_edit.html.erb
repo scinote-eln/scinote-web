@@ -1,5 +1,5 @@
 <div class="well">
-  <%= form_with(model: @result, url: result_asset_path(format: :json), data: { remote: true }) do |f| %>
+  <%= form_with(model: @result, url: result_asset_path(format: :json), data: { remote: true }, html: {class: 'edit-result-asset'}) do |f| %>
     <%= f.text_field :name, style: "margin-top: 10px;" %><br />
     <%= f.fields_for :asset do |ff| %>
       <span><strong><%=t "result_assets.edit.uploaded_asset" %></strong></span>
@@ -18,5 +18,5 @@
                    class: 'btn btn-primary save-result' %>
     </div>
   <% end %>
-  <%= javascript_include_tag 'results/result_assets/edit' %>
+  <%= javascript_include_tag 'results/result_assets/edit', nonce: true %>
 </div>

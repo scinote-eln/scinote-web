@@ -27,6 +27,12 @@ var ActiveStoragePreviews = (function() {
     showPreview: function(ev) {
       $(ev.target).css('opacity', 1);
       $(ev.target).parent().removeClass('processing');
+    },
+    reloadPreview: function(target) {
+      $(target)
+        .one('error', (event) => this.reCheckPreview(event))
+        .one('load', (event) => this.showPreview(event))
+        .trigger('error');
     }
   });
 }());
