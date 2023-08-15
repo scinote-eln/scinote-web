@@ -90,6 +90,7 @@
   // Assigned
 
   .assigned-column {
+    overflow: unset;
     padding: 1px 8px;
     position: relative;
 
@@ -168,6 +169,10 @@
     .circle-icon {
       margin: 9px 30px;
     }
+  }
+
+  .checklist-column {
+    overflow: unset;
   }
 
   .item-name {
