@@ -503,9 +503,6 @@ Rails.application.routes.draw do
 
       post :select_default_snapshot, to: 'my_module_repository_snapshots#select'
 
-      resources :result_texts, only: [:new, :create]
-      resources :result_assets, only: [:new, :create]
-      resources :result_tables, only: [:new, :create]
       member do
         # AJAX popup accessed from full-zoom canvas for single module,
         # as well as full activities view (HTML) for single module
@@ -535,8 +532,24 @@ Rails.application.routes.draw do
       get 'users/edit', to: 'user_my_modules#index_edit'
 
       resources :results, only: %i(index show create update destroy) do
-        get :elements
-        get :assets
+        member do
+          get :elements
+          get :assets
+          post :upload_attachment
+          post :update_view_state
+          post :update_asset_view_mode
+        end
+
+        resources :tables, controller: 'result_elements/tables', only: %i(create destroy update) do
+          member do
+            post :duplicate
+          end
+        end
+        resources :texts, controller: 'result_elements/texts', only: %i(create destroy update) do
+          member do
+            post :duplicate
+          end
+        end
       end
     end
 

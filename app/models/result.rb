@@ -4,9 +4,12 @@ class Result < ApplicationRecord
   include ArchivableModel
   include SearchableModel
   include SearchableByNameModel
+  include ViewableModel
 
   auto_strip_attributes :name, nullify: false
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
+
+  enum assets_view_mode: { thumbnail: 0, list: 1, inline: 2 }
 
   belongs_to :user, inverse_of: :results
   belongs_to :last_modified_by, class_name: 'User', optional: true
@@ -48,6 +51,16 @@ class Result < ApplicationRecord
       new_query
     else
       new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
+    end
+  end
+
+  def default_view_state
+    { 'assets' => { 'sort' => 'new' } }
+  end
+
+  def validate_view_state(view_state)
+    unless %w(new old atoz ztoa).include?(view_state.state.dig('assets', 'sort'))
+      view_state.errors.add(:state, :wrong_state)
     end
   end
 

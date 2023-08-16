@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_25_120831) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_11_115859) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -921,7 +921,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_25_120831) do
   end
 
   create_table "result_texts", force: :cascade do |t|
-    t.string "text", null: false
+    t.string "text"
     t.bigint "result_id", null: false
     t.index "trim_html_tags((text)::text) gin_trgm_ops", name: "index_result_texts_on_text", using: :gin
     t.index ["result_id"], name: "index_result_texts_on_result_id"
@@ -939,6 +939,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_25_120831) do
     t.bigint "archived_by_id"
     t.bigint "restored_by_id"
     t.datetime "restored_on", precision: nil
+    t.integer "assets_view_mode", default: 0
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_results_on_name", using: :gin
     t.index ["archived"], name: "index_results_on_archived"
     t.index ["archived_by_id"], name: "index_results_on_archived_by_id"

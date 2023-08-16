@@ -7,7 +7,7 @@
       <div class="flex items-center gap-2" v-if="parent.attributes.attachments_manageble && attachmentsReady">
         <div ref="actionsDropdownButton" class="dropdown sci-dropdown">
           <button class="btn btn-light dropdown-toggle" type="button" id="dropdownAttachmentsOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            <span>{{ i18n.t("protocols.steps.attachments.preview_menu") }}</span>
+            <span>{{ i18n.t("attachments.preview_menu") }}</span>
             <span class="sn-icon sn-icon-down"></span>
           </button>
           <ul ref="actionsDropdown" class="dropdown-menu dropdown-menu-right dropdown-attachment-options"
@@ -20,7 +20,7 @@
                   class="attachments-view-mode action-link"
                   :class="viewMode == parent.attributes.assets_view_mode ? 'selected' : ''"
                   @click="changeAttachmentsViewMode(viewMode)"
-                  v-html="i18n.t(`protocols.steps.attachments.view_mode.${viewMode}_html`)"
+                  v-html="i18n.t(`attachments.view_mode.${viewMode}_html`)"
                 ></a>
               </li>
             </template>
