@@ -13,6 +13,7 @@ class GeneSequenceAssetsController < ApplicationController
   before_action :check_manage_permission, only: %i(new update create)
 
   def new
+    @ove_enabled = OpenVectorEditorService.enabled?
     render :edit, layout: false
   end
 

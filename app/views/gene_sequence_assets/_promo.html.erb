@@ -1,0 +1,23 @@
+<div class="ove-promo-wrapper flex flex-col h-screen">
+  <div class="flex justify-end border-0 border-b-[1px] border-solid border-[color:var(--sn-sleepy-grey)]">
+    <a class="btn btn-light icon-btn iframe-close">
+      <i class="sn-icon sn-icon-close"></i>
+    </a>
+  </div>
+  <div class="promo-container w-full h-full flex justify-center items-center gap-28">
+    <%= image_tag "ove/promo.png", class: "h-2/3" %>
+    <div class="max-w-sm">
+      <h1 class="text-3xl font-semibold text-sn-blue">
+        <%= t "open_vector_editor.promo.title" %>
+      </h1>
+      <ul class="text-xl font-normal text-sn-blue">
+        <li><%= t "open_vector_editor.promo.bullet_1" %></li>
+        <li><%= t "open_vector_editor.promo.bullet_2" %></li>
+        <li><%= t "open_vector_editor.promo.bullet_3" %></li>
+      </ul>
+      <div class="flex justify-center">
+        <%= link_to t("open_vector_editor.promo.button"), Constants::OPEN_VECTOR_EDITOR_PROMO_URL,  class: "btn btn-lg bg-sn-blue text-white w-fit", target: :_blank %>
+      </div>
+    </div>
+  </div>
+</div>
