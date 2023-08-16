@@ -10,7 +10,6 @@ require('jquery-ui/ui/effects/effect-slide');
 require('hammerjs');
 import 'bootstrap';
 import './bootstrap.less';
-window.moment = require('moment');
 require('bootstrap-select/js/bootstrap-select');
 
 window.bwipjs = require('bwip-js');

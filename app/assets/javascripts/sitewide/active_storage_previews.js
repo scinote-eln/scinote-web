@@ -30,16 +30,3 @@ var ActiveStoragePreviews = (function() {
     }
   });
 }());
-
-$(document).on('turbolinks:load', function() {
-  $('.asset-preview-image')
-    .one('load', (event) => ActiveStoragePreviews.showPreview(event))
-    .one('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
-    .each(function() { 
-      if (this.complete) {
-        $(this).load();
-      } else if (this.error) {
-        $(this).error();
-      }
-    });
-});
