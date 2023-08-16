@@ -22,6 +22,7 @@
       </li>
       <li v-if="attachment.attributes.asset_type == 'gene_sequence'">
         <a class="ove-edit-button" @click="openOVEditor(attachment.attributes.edit_url)">
+          <span class="sn-icon sn-icon-edit"></span>
           {{ i18n.t('open_vector_editor.edit_sequence') }}
         </a>
       </li>
