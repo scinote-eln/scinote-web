@@ -323,12 +323,13 @@ class ReportsController < ApplicationController
 
   def load_wizard_vars
     @templates = Extends::REPORT_TEMPLATES
-    live_repositories = Repository.accessible_by_teams(current_team)
+    live_repositories = Repository.accessible_by_teams(current_team).sort_by { |r| r.name.downcase }
     snapshots_of_deleted = RepositorySnapshot.left_outer_joins(:original_repository)
                                              .where(team: current_team)
                                              .where.not(original_repository: live_repositories)
                                              .select('DISTINCT ON ("repositories"."parent_id") "repositories".*')
-    @repositories = (live_repositories + snapshots_of_deleted).sort_by { |r| r.name.downcase }
+                                             .sort_by { |r| r.name.downcase }
+    @repositories = live_repositories + snapshots_of_deleted
     @visible_projects = current_team.projects
                                     .active
                                     .joins(experiments: :my_modules)

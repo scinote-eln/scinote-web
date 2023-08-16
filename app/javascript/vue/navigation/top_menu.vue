@@ -14,18 +14,6 @@
         @change="switchTeam"
       ></Select>
     </div>
-    <div v-if="user" class="dropdown" >
-      <button class="btn btn-light icon-btn btn-black" data-toggle="dropdown" :title="i18n.t('nav.support')">
-        <i class="sn-icon sn-icon-help"></i>
-      </button>
-      <ul v-if="user" class="dropdown-menu dropdown-menu-right">
-        <li v-for="(item, i) in helpMenu" :key="i">
-          <a :href="item.url" target="_blank">
-            {{ item.name }}
-          </a>
-        </li>
-      </ul>
-    </div>
     <div v-if="user" class="dropdown">
       <button class="btn btn-light icon-btn btn-black" data-toggle="dropdown"  :title="i18n.t('nav.settings')">
         <i class="sn-icon sn-icon-settings"></i>
@@ -155,7 +143,7 @@
           dropdownSelector.selectValues('#sciNavigationTeamSelector', this.currentTeam);
           $('body').attr('data-current-team-id', this.currentTeam);
           window.open(this.rootUrl, '_self')
-        }).error((msg) => {
+        }).fail((msg) => {
           HelperModule.flashAlertMsg(msg.responseJSON.message, 'danger');
         });
       },

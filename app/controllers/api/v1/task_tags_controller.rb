@@ -10,9 +10,8 @@ module Api
       before_action :load_tag, only: :show
 
       def index
-        tags = @task.tags
-                    .page(params.dig(:page, :number))
-                    .per(params.dig(:page, :size))
+        tags = timestamps_filter(@task.tags).page(params.dig(:page, :number))
+                                            .per(params.dig(:page, :size))
         render jsonapi: tags, each_serializer: TagSerializer
       end
 

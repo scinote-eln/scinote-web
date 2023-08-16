@@ -1,14 +1,16 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
 
-@import "constants";
-@import "mixins";
 
 .content-pane.protocols-show {
+  --container-margin: 20px;
   background-color: $color-alto;
-  min-height: calc(100vh - var(--navbar-height));
+  min-height: calc(100vh - var(--navbar-height) - var(--container-margin));
   overflow: hidden;
   padding: 0 0 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   .title-row h1 {
     max-width: 100%;
@@ -16,6 +18,7 @@
 
   .content-header {
     padding: 0 1.5rem;
+    align-self: stretch;
   }
 
   .protocol-breadcrumbs {
@@ -26,9 +29,9 @@
     background-color: $color-white;
     border-radius: 2px;
     box-shadow: $flyout-shadow;
-    margin: 20px auto;
-    max-width: 900px;
+    margin: var(--container-margin) 0;
     padding: 10px 10px 10px 26px;
+    width: 900px;
   }
 
   .dropdown-menu {
@@ -40,7 +43,7 @@
   }
 
   .protocol-section {
-    margin: 16px 0 16px -20px;
+    margin: 16px 0;
 
     &.protocol-steps-section {
       margin-left: 0;

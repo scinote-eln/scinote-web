@@ -10,6 +10,7 @@
       <i class="sn-icon sn-icon-calendar"></i>
   </div>
 </template>
+import '../../../../vendor/assets/javascripts/bootstrap-datetimepicker';
 
 <script>
   export default {

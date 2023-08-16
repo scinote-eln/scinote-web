@@ -244,6 +244,22 @@ module Api
           raise FilterParamError
         end
       end
+
+      def timestamps_filter(records)
+        from = Date.parse(params.dig(:filter, :created_at, :from)) if
+          params.dig(:filter, :created_at, :from).present?
+        to = Date.parse(params.dig(:filter, :created_at, :to)) if
+          params.dig(:filter, :created_at, :to).present?
+        records = records.where(created_at: (from..to)) if from || to
+
+        from = Date.parse(params.dig(:filter, :updated_at, :from)) if
+          params.dig(:filter, :updated_at, :from).present?
+        to = Date.parse(params.dig(:filter, :updated_at, :to)) if
+          params.dig(:filter, :updated_at, :to).present?
+        records = records.where(updated_at: (from..to)) if from || to
+
+        records
+      end
     end
   end
 end

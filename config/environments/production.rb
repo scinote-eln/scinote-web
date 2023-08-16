@@ -54,7 +54,8 @@ Rails.application.configure do
   config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
 
   # Compress CSS using a preprocessor.
-  # config.assets.css_compressor = :sass
+  # Set to nil to fix builds in production (https://github.com/sass/sassc-rails/issues/93)
+  config.assets.css_compressor = nil
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
   config.assets.compile = false

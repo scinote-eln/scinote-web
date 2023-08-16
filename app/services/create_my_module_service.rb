@@ -18,7 +18,7 @@ class CreateMyModuleService
       end
 
       raise ActiveRecord::Rollback unless @params[:experiment]&.valid? &&
-                                          can_manage_experiment_tasks?(@user, @params[:experiment])
+                                          can_create_experiment_tasks?(@user, @params[:experiment])
 
       @my_module_params[:x] ||= 0
       @my_module_params[:y] ||= 0

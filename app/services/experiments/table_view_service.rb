@@ -6,7 +6,7 @@ module Experiments
     include CommentHelper
     include ProjectsHelper
     include InputSanitizeHelper
-    include BootstrapFormHelper
+    include SciFormHelper
     include MyModulesHelper
     include Canaid::Helpers::PermissionsHelper
     include Rails.application.routes.url_helpers

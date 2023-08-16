@@ -74,7 +74,8 @@ class AssetSerializer < ActiveModel::Serializer
         edit_supported: edit_supported,
         title: title,
         button_text: wopi_button_text(object, 'edit'),
-        wopi_icon: ActionController::Base.helpers.image_path(file_application_url(object))
+        wopi_icon: ActionController::Base.helpers.image_path(file_application_url(object)),
+        sn_icon: sn_icon_for(object)
       }
     end
   end

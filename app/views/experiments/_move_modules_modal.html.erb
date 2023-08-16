@@ -7,7 +7,7 @@
       </div>
       <div class="modal-body">
         <% if @experiments.present? %>
-          <%= bootstrap_form_tag do |f| %>
+          <%= form_with do |f| %>
             <%= f.select :experiment_id, @experiments.collect { |e| [ e.name, e.id ] }, {}, class: "form-control selectpicker", 'data-role': 'clear' %>
           <% end %>
         <% else %>

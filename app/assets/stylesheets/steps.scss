@@ -6,11 +6,6 @@
 // scss-lint:disable SelectorFormat
 // scss-lint:disable ImportantRule
 // scss-lint:disable Unknown
-
-@import "constants";
-@import "mixins";
-
-
 #steps {
   // hack only for firefox
   @-moz-document url-prefix() {

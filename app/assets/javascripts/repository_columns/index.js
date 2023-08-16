@@ -3,7 +3,6 @@
 /* global RepositoryDateColumnType RepositoryDatatable */
 /* eslint-disable no-restricted-globals */
 
-//= require jquery-ui/widgets/sortable
 
 var RepositoryColumns = (function() {
   var TABLE_ID = '';

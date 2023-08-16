@@ -1,0 +1,14 @@
+<hr>
+<div class="col-xs-12 comments-title">
+  <h4>
+    <%=t('my_modules.results.comments_tab') %>
+    (<span><%= comments.count %></span>)
+  </h4>
+</div>
+<div class="comments-container">
+  <div class="content-comments inline_scroll_block">
+    <div class="comments-list">
+      <%= render partial: "shareable_links/my_modules/results/comments_list", locals: { comments: comments } %>
+    </div>
+  </div>
+</div>

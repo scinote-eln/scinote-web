@@ -1,8 +1,7 @@
-<%= bootstrap_form_for user_assignment,
-                       url: destroy_user_team_path(user_assignment, format: :json),
-                       remote: :true,
-                       method: :delete,
-                       data: { id: 'destroy-user-team-form' } do |f| %>
+<%= form_with model: user_assignment,
+              url: destroy_user_team_path(user_assignment, format: :json),
+              data: { remote: true, id: 'destroy-user-team-form' },
+              method: :delete do |f| %>
   <p><%= t("users.settings.user_teams.destroy_uo_message",
            user: user_assignment.user.full_name,
            team: user_assignment.assignable.name) %></p>

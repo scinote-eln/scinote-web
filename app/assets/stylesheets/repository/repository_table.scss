@@ -1,8 +1,8 @@
 // scss-lint:disable SelectorDepth SelectorFormat QualifyingElement
 // scss-lint:disable NestingDepth ImportantRule
 
-@import "constants";
-@import "layouts/reminders";
+
+@import "../layouts/reminders";
 
 .repository-table {
   --content-header-size: 3.5rem;
@@ -19,6 +19,18 @@
 
   .dataTables_scrollHead {
     flex-shrink: 0;
+
+    .table.dataTable .sorting {
+      &::after {
+        opacity: 0;
+      }
+
+      &:hover {
+        &::after {
+          opacity: 1;
+        }
+      }
+    }
 
     thead .sci-checkbox-container {
       margin-left: .125em !important;
@@ -69,7 +81,12 @@
   }
 
   // Cells
-
+  td.added-on,
+  td.asset-value-cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
   // Assigned
 
@@ -397,6 +414,10 @@
               margin-left: 30px;
             }
           }
+        }
+
+        td {
+          overflow: visible;
         }
       }
     }

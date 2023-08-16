@@ -55,7 +55,7 @@ module PermissionExtends
       READ
       READ_ARCHIVED
       MANAGE
-      TASKS_MANAGE
+      TASKS_CREATE
       USERS_READ
       USERS_MANAGE
       READ_CANVAS
@@ -69,6 +69,7 @@ module PermissionExtends
       READ_ARCHIVED
       ACTIVITIES_READ
       MANAGE
+      SHARE
       UPDATE_START_DATE
       UPDATE_DUE_DATE
       UPDATE_DESCRIPTION
@@ -118,6 +119,7 @@ module PermissionExtends
       COLUMNS_UPDATE
       COLUMNS_DELETE
       USERS_MANAGE
+      FILTERS_MANAGE
     ).each { |permission| const_set(permission, "inventory_#{permission.underscore}") }
   end
 
@@ -155,12 +157,13 @@ module PermissionExtends
       ExperimentPermissions::READ,
       ExperimentPermissions::READ_CANVAS,
       ExperimentPermissions::MANAGE,
-      ExperimentPermissions::TASKS_MANAGE,
+      ExperimentPermissions::TASKS_CREATE,
       ExperimentPermissions::USERS_READ,
       MyModulePermissions::READ,
       MyModulePermissions::READ_ARCHIVED,
       MyModulePermissions::ACTIVITIES_READ,
       MyModulePermissions::MANAGE,
+      MyModulePermissions::SHARE,
       MyModulePermissions::UPDATE_START_DATE,
       MyModulePermissions::UPDATE_DUE_DATE,
       MyModulePermissions::UPDATE_DESCRIPTION,
@@ -190,7 +193,8 @@ module PermissionExtends
       RepositoryPermissions::COLUMNS_CREATE,
       RepositoryPermissions::ROWS_CREATE,
       RepositoryPermissions::ROWS_UPDATE,
-      RepositoryPermissions::ROWS_DELETE
+      RepositoryPermissions::ROWS_DELETE,
+      RepositoryPermissions::FILTERS_MANAGE
     ]
 
     TECHNICIAN_PERMISSIONS = [

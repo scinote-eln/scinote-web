@@ -66,8 +66,10 @@ export default {
   },
   mounted() {
     let container = this.$refs.scrollContainer.$el
-    container.addEventListener('ps-y-reach-end', (e) => {
-      this.loadNotifications();
+    container.addEventListener('ps-scroll-y', (e) => {
+      if (e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight - 20) {
+        this.loadNotifications();
+      }
     })
   },
   computed: {

@@ -1,9 +1,10 @@
 <div class="row">
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-    <div  class="form-group">
+    <div  class="sci-input-container">
+      <label><%= t('experiments.new.name') %></label>
       <%= form.text_field :name,
-                          label: t('experiments.new.name'),
                           autofocus: true,
+                          class: 'sci-input-field',
                           placeholder: t('experiments.new.name_placeholder'),
                           id: 'experiment-name' %>
     </div>
@@ -12,10 +13,11 @@
 
 <div class="row">
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-    <div class="form-group">
+    <div class="sci-input-container">
+      <label><%= t('experiments.new.description') %></label>
       <%= form.smart_text_area :description,
-                               label: t('experiments.new.description'),
                                id: 'experiment-description',
+                               class: 'sci-input-field textarea h-48',
                                data: { 'atwho-edit' => '' } %>
     </div>
   </div>

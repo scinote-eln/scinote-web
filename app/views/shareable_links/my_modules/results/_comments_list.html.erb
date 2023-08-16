@@ -1,0 +1,18 @@
+<% comments.order(created_at: :asc).each do |comment| %>
+  <div class="comment-container">
+    <div class="avatar-placehodler">
+      <span class='global-avatar-container'>
+        <%= image_tag avatar_path(comment.user, :icon_small), class: 'avatar' %>
+      </span>
+    </div>
+    <div class="content-placeholder">
+      <div class="comment-name"><%= comment.user.full_name %></div>
+      <div class="comment-right !w-fit">
+        <div class="comment-datetime !w-fit"><%= comment.created_at.iso8601 %></div>
+      </div>
+      <div class="comment-message">
+        <div class="view-mode"><%= smart_annotation_text(comment.message) %></div>
+      </div>
+    </div>
+  </div>
+<% end %>

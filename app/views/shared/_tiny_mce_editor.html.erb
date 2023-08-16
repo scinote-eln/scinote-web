@@ -1,4 +1,4 @@
-<%= bootstrap_form_for object, url: update_url, remote: :true, method: update_method, html: {class: 'tiny-mce-editor'} do |f| %>
+<%= form_with model: object, url: update_url, data: { remote: true }, method: update_method, html: {class: 'tiny-mce-editor'}, builder: SciFormHelper::SciFormBuilder do |f| %>
   <%= render partial: 'shared/tiny_mce_extra_buttons' %>
   <div class="ql-editor tinymce-view"
       data-placeholder="<%= placeholder %>"><%= custom_auto_link(object.tinymce_render(field),
