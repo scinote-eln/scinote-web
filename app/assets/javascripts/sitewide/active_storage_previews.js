@@ -37,9 +37,9 @@ $(document).on('turbolinks:load', function() {
     .one('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
     .each(function() { 
       if (this.complete) {
-        $(this).trigger("load");
+        $(this).trigger('load');
       } else if (this.error) {
-        $(this).trigger("error");
+        $(this).trigger('error');
       }
     });
 });
