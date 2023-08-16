@@ -1,5 +1,6 @@
-/* global animateSpinner fabric PerfectScrollbar refreshProtocolStatusBar tui Uint8Array*/
-/* eslint-disable no-underscore-dangle */
+/* global animateSpinner fabric PerfectScrollbar refreshProtocolStatusBar tui Uint8Array ActiveStoragePreviews*/
+/* eslint-disable no-underscore-dangle no-unused-vars */
+
 
 var ImageEditorModal = (function() {
 
@@ -364,9 +365,12 @@ var ImageEditorModal = (function() {
         contentType: false,
         processData: false,
         success: function(res) {
-          $(`.asset[data-asset-id=${data.id}] .image-container img`).replaceWith($(res.html).find('.image-container img'));
-          $(`.asset[data-asset-id=${data.id}] .attachment-preview img`).replaceWith($(res.html).find('attachment-preview img'));
+          $(`.asset[data-asset-id=${data.id}] .image-container img`)
+            .replaceWith($(res.html).find('.image-container img'));
+          $(`.asset[data-asset-id=${data.id}] .attachment-preview img`)
+            .replaceWith($(res.html).find('.attachment-preview img'));
           $(`.asset[data-asset-id=${data.id}]`).closest('.attachments').trigger('reorder');
+          ActiveStoragePreviews.reloadPreview(`.asset[data-asset-id=${data.id}] .attachment-preview img`);
           closeEditor();
         }
       });
