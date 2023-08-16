@@ -64,6 +64,13 @@
         });
       }
 
+      // Save result table callback
+      function resultTableCallback () {
+        $('result-tables-buttons').on('click', '.save-result', (event) => {
+          Results.processResult(event, Results.ResultTypeEnum.TABLE);
+        });
+      }
+
       // Apply ajax callback to form
       function _formAjaxResultTable($form, $prevResult) {
         $form.on('ajax:success', function(e, data) {
@@ -80,6 +87,7 @@
           Results.expandResult($result);
           Comments.init();
           initNewResultTable();
+          resultTableCallback();
         });
         $form.on('ajax:error', function(e, xhr, status, error) {
           var data = xhr.responseJSON;
@@ -111,6 +119,7 @@
           Results.toggleResultEditButtons(false);
 
           $('#result_name').focus();
+          resultTableCallback();
         });
       }
 
