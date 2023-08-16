@@ -1,4 +1,4 @@
-<span class="due-date-label <%= get_task_alert_color(my_module) %>">
+<span class="due-date-label font-medium <%= get_task_alert_color(my_module) %>">
   <% if (my_module.archived_branch? || my_module.completed? ) && my_module.due_date %>
     <span class="iso-formatted-date"><%= my_module.due_date.iso8601 %></span>
   <% elsif my_module.is_one_day_prior? %>
