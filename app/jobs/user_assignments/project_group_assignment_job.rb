@@ -29,7 +29,7 @@ module UserAssignments
             project,
             user.id,
             project.default_public_user_role || UserRole.find_predefined_viewer_role,
-            @assigned_by.id
+            @assigned_by&.id
           )
         end
       end
