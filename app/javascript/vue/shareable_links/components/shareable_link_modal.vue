@@ -159,8 +159,11 @@
         $(this.$refs.modal).modal('hide');
       },
       copy(value) {
-        navigator.clipboard.writeText(value);
-        HelperModule.flashAlertMsg(this.i18n.t('shareable_links.modal.copy_success'), 'success');
+        navigator.clipboard.writeText(value).then(
+          () => {
+            HelperModule.flashAlertMsg(this.i18n.t('shareable_links.modal.copy_success'), 'success');
+          }
+        );
       },
       saveDescription() {
         this.dirty = true;
