@@ -1679,6 +1679,8 @@ en:
       uploaded_asset: "Uploaded file"
       update: "Update"
       locked_file_error: 'This file is being edited by someone else.'
+      label:
+        name: 'Name'
     create:
       success_flash: "Successfully added file result to task <strong>%{module}</strong>"
     update:
@@ -1700,10 +1702,14 @@ en:
       head_title: "%{project} | %{module} | Add table result"
       title: "Add result to task %{module}"
       create: "Add"
+      label:
+        name: 'Name'
     edit:
       head_title: "%{project} | %{module} | Edit table result"
       title: "Edit result from task %{module}"
       update: "Update"
+      label:
+        name: 'Name'
     create:
       success_flash: "Successfully added table result to task <strong>%{module}</strong>"
     update:
