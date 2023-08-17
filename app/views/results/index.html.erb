@@ -14,6 +14,8 @@
 <%= render partial: 'assets/wopi/create_wopi_file_modal' %>
 <% provide(:container_class, 'no-second-nav-container') %>
 
+<%= render partial: 'my_modules/header_actions' %>
+
 <div id="results" data-behaviour="vue">
   <results url="<%= my_module_results_url(@my_module) %>">
 </div>

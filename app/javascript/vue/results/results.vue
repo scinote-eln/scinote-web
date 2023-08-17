@@ -1,6 +1,6 @@
 <template>
   <div class="results-wrapper">
-    <ResultsToolbar :sort="sort" @setSort="setSort" @newResult="createResult" @expandAll="expandAll" @collapseAll="collapseAll" lass="mb-3" />
+    <ResultsToolbar :sort="sort" @setSort="setSort" @newResult="createResult" @expandAll="expandAll" @collapseAll="collapseAll" class="mb-3" />
     <div class="results-list">
       <Result v-for="result in results" :key="result.id" :result="result" />
     </div>

@@ -28,7 +28,6 @@ class ResultSerializer < ActiveModel::Serializer
     end
   end
 
-
   def updated_at
     object.updated_at.to_i
   end
@@ -74,7 +73,7 @@ class ResultSerializer < ActiveModel::Serializer
     if can_manage_result?(object)
       urls_list.merge!({
         delete_url: result_path(object),
-        update_url: result_path(object),
+        update_url: my_module_result_path(object.my_module, object),
         create_table_url: my_module_result_tables_path(object.my_module, object),
         create_text_url: my_module_result_texts_path(object.my_module, object),
         update_asset_view_mode_url: update_asset_view_mode_my_module_result_path(object.my_module, object),
