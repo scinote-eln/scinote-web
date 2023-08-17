@@ -34,7 +34,7 @@
               {{ i18n.t("protocols.steps.attachments.file_modal.drag_zone_notification", {position: step.attributes.position + 1}) }}
             </div>
           </div>
-          <div class="divider" v-if="step.attributes.marvinjs_enabled || step.attributes.wopi_enabled">
+          <div class="divider" v-if="step.attributes.marvinjs_enabled || step.attributes.wopi_enabled || step.attributes.open_vector_editor_context.new_sequence_asset_url">
             {{ i18n.t("protocols.steps.attachments.file_modal.or") }}
           </div>
           <div class="integrations-container">
@@ -42,6 +42,12 @@
               <a @click="openWopiFileModal" class="create-wopi-file-btn btn btn-light" tabindex="0" @keyup.enter="openWopiFileModal">
                 <img :src="step.attributes.wopi_context.icon"/>
                 {{ i18n.t('assets.create_wopi_file.button_text') }}
+              </a>
+            </div>
+            <div class="integration-block" v-if="step.attributes.open_vector_editor_context.new_sequence_asset_url">
+              <a @click="openOVEditor" class="open-vector-editor-button btn btn-light">
+                <img :src="step.attributes.open_vector_editor_context.icon"/>
+                {{ i18n.t('open_vector_editor.new_sequence') }}
               </a>
             </div>
             <div class="integration-block marvinjs" v-if="step.attributes.marvinjs_enabled">
@@ -57,14 +63,9 @@
                 <span class="new-marvinjs-upload-icon">
                   <img :src="step.attributes.marvinjs_context.icon"/>
                 </span>
-                {{ i18n.t('marvinjs.new_button') }}
+                {{ i18n.t('marvinjs.new_li_button') }}
               </a>
             </div>
-          </div>
-          <div class="integration-block open-vector-editor-button">
-            <a @click="openOVEditor">
-              {{  i18n.t('open_vector_editor.new_sequence') }}
-            </a>
           </div>
         </div>
         <div class="modal-footer">
@@ -156,7 +157,7 @@
       },
       openOVEditor() {
         $(this.$refs.modal).modal('hide');
-        window.showIFrameModal(this.step.attributes.new_sequence_url);
+        window.showIFrameModal(this.step.attributes.open_vector_editor_context.new_sequence_asset_url);
       }
     }
   }

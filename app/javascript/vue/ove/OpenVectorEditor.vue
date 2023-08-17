@@ -3,7 +3,11 @@
     <div class="ove-header flex justify-between">
       <span class="file-name flex items-center ml-3">
         <div class="sci-input-container">
-          <input v-model="sequenceName" class="sci-input-field" type="text" :disabled="readOnly" />
+          <input v-model="sequenceName"
+                 class="sci-input-field" 
+                 type="text"
+                 :disabled="readOnly"
+                 :placeholder="i18n.t('open_vector_editor.sequence_name_placeholder')"/>
         </div>
       </span>
       <div v-if="oveEnabledDaysLeft <= 30" class="flex items-center">
@@ -72,7 +76,7 @@
       }
 
       this.editor = window.createVectorEditor(this.$refs.container, editorConfig);
-      this.sequenceName = this.fileName || this.i18n.t('open_vector_editor.default_sequence_name');
+      this.sequenceName = this.fileName;
 
       if (this.fileUrl) {
         this.loadFile();
@@ -106,7 +110,7 @@
             this.updateUrl,
             {
               sequence_data: sequenceDataToSave,
-              sequence_name: this.sequenceName,
+              sequence_name: this.sequenceName || this.i18n.t('open_vector_editor.default_sequence_name'),
               base64_image: base64image
             }
           ).then(() => {
