@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-md" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" @click="cancel" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" @click="cancel" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
           <h4 class="modal-title" id="modal-destroy-team-label">
             {{ i18n.t('protocols.steps.table.name_modal.title')}}
           </h4>

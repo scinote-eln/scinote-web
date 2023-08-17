@@ -62,7 +62,6 @@
 
   .modal-body {
     height: calc(100% - 60px);
-    padding: 0;
 
     #marvinjs-editor {
       height: 100%;
@@ -150,9 +149,5 @@
 .modal-promo-marvin-js {
   .modal-header {
     padding-left: 35px;
-  }
-
-  .modal-body {
-    padding: 15px 35px;
   }
 }

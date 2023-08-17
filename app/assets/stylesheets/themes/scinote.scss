@@ -118,15 +118,6 @@ table {
 
 /** Skin **/
 
-
-.modal-body {
-  font-size: $font-size-base;
-
-  label {
-    @include font-small;
-  }
-}
-
 .modal-header h4 {
   font-size: 18px;
 }

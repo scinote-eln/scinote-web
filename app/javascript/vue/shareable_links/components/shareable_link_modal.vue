@@ -20,7 +20,7 @@
               data-dismiss="modal"
               aria-label="Close"
             >
-              <span aria-hidden="true">&times;</span>
+              <i class="sn-icon sn-icon-close"></i>
             </button>
           </div>
           <div class="modal-body">
@@ -59,7 +59,7 @@
                 </div>
               </div>
             </div>
-            
+
             <div>
               <div class="mb-2"> {{ i18n.t('shareable_links.modal.sharing_link_label') }} </div>
               <div class="sci-input-container-v2 input-sm text-sm mb-2 flex-row-reverse">
