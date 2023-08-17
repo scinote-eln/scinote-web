@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UpdateValuesInMyModuleStatuses < ActiveRecord::Migration[7.0]
   def up
     MyModuleStatus.where(name: 'Not started').update_all(color: '#FFFFFF')
