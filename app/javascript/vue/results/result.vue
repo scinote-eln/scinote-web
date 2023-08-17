@@ -1,85 +1,123 @@
 <template>
-  <div class="result-wrapper">
-    {{ result.id }}
-    {{ result.attributes.name }}
-    <button @click="openReorderModal">
-      Open Rearrange Modal
-    </button>
-    <div class="inline-block">
-      <input type="file" class="hidden" ref="fileSelector" @change="loadFromComputer" multiple />
-      <div ref="elementsDropdownButton" v-if="urls.update_url"  class="dropdown">
-        <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'resultInsertMenu_' + result.id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-          {{ i18n.t('protocols.steps.insert.button') }}
-          <span class="sn-icon sn-icon-down"></span>
-        </button>
-        <ul ref="elementsDropdown" class="dropdown-menu insert-element-dropdown dropdown-menu-right" :aria-labelledby="'resultInsertMenu_' + result.id">
-          <li class="title">
-            {{ i18n.t('protocols.steps.insert.title') }}
-          </li>
-          <li class="action" @click="createElement('table')">
-            <i class="sn-icon sn-icon-tables"></i>
-            {{ i18n.t('protocols.steps.insert.table') }}
-          </li>
-          <li class="action dropdown-submenu-item">
-            <i class="sn-icon sn-icon-tables"></i>
-            {{ i18n.t('protocols.steps.insert.well_plate') }}
-            <span class="caret"></span>
-
-            <ul class="dropdown-submenu">
-              <li v-for="option in wellPlateOptions" :key="option.dimensions.toString()" class="action" @click="createElement('table', option.dimensions, true)">
-                {{ i18n.t(option.label) }}
-              </li>
-            </ul>
-          </li>
-          <li class="action"  @click="createElement('text')">
-            <i class="sn-icon sn-icon-result-text"></i>
-            {{ i18n.t('protocols.steps.insert.text') }}
-          </li>
-          <li class="action dropdown-submenu-item">
-            <i class="sn-icon sn-icon-files"></i>
-            {{ i18n.t('protocols.steps.insert.attachment') }}
-            <span class="caret"></span>
-            <ul class="dropdown-submenu">
-              <li class="action" @click="openLoadFromComputer">
-                {{ i18n.t('protocols.steps.insert.add_file') }}
-              </li>
-              <li class="action" v-if="result.attributes.wopi_enabled" @click="openWopiFileModal">
-                {{ i18n.t('assets.create_wopi_file.button_text') }}
-              </li>
-              <li class="action" v-if="result.attributes.marvinjs_enabled" @click="openMarvinJsModal($refs.marvinJsButton)">
-                <span
-                  class="new-marvinjs-upload-button text-sn-black text-decoration-none"
-                  :data-object-id="result.id"
-                  ref="marvinJsButton"
-                  :data-marvin-url="result.attributes.marvinjs_context.marvin_js_asset_url"
-                  :data-object-type="result.attributes.type"
-                  tabindex="0"
-                >
-                  {{ i18n.t('marvinjs.new_button') }}
-                </span>
-              </li>
-            </ul>
-          </li>
-        </ul>
+  <div class="result-wrapper bg-white">
+    <div class="result-header flex justify-between p-3">
+      <div class="result-head-left">
+        <InlineEdit
+          :value="result.attributes.name"
+          :class="{ 'result-element--locked': !urls.update_url }"
+          :characterLimit="255"
+          :allowBlank="false"
+          :attributeName="`${i18n.t('Result')} ${i18n.t('name')}`"
+          :autofocus="editingName"
+          :placeholder="i18n.t('my_modules.results.placeholder')"
+          :defaultValue="i18n.t('my_modules.results.default_name')"
+          @editingEnabled="editingName = true"
+          @editingDisabled="editingName = false"
+          :editOnload="result.newResult == true"
+          @update="updateName"
+        />
       </div>
-      <div ref="actionsDropdownButton" class="dropdown">
-        <button class="btn btn-light icon-btn dropdown-toggle insert-button" type="button" :id="'resultOptionsMenu_' + result.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
-          <i class="sn-icon sn-icon-more-hori"></i>
-        </button>
-        <ul ref="actionsDropdown" class="dropdown-menu dropdown-menu-right insert-element-dropdown" :aria-labelledby="'resultOptionsMenu_' + result.id">
-          <li class="action"  @click="openReorderModal">
-            {{ i18n.t('my_modules.results.actions.rearrange') }}
-          </li>
-          <li class="action" @click="duplicateResult">
-            {{ i18n.t('my_modules.results.actions.duplicate') }}
-          </li>
-          <li class="action" @click="archiveResult">
-            {{ i18n.t('my_modules.results.actions.archive') }}
-          </li>
-        </ul>
+      <div class="result-head-right flex">
+        <input type="file" class="hidden" ref="fileSelector" @change="loadFromComputer" multiple />
+        <div ref="elementsDropdownButton" v-if="urls.update_url"  class="dropdown">
+          <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'resultInsertMenu_' + result.id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            {{ i18n.t('protocols.steps.insert.button') }}
+            <span class="sn-icon sn-icon-down"></span>
+          </button>
+          <ul ref="elementsDropdown" class="dropdown-menu insert-element-dropdown dropdown-menu-right" :aria-labelledby="'resultInsertMenu_' + result.id">
+            <li class="title">
+              <a>
+                {{ i18n.t('protocols.steps.insert.title') }}
+              </a>
+            </li>
+            <li class="action" @click="createElement('table')">
+              <a class="cursor-pointer">
+                <i class="sn-icon sn-icon-tables"></i>
+                {{ i18n.t('protocols.steps.insert.table') }}
+              </a>
+            </li>
+            <li class="action dropdown-submenu-item">
+              <a class="cursor-pointer">
+                <i class="sn-icon sn-icon-tables"></i>
+                {{ i18n.t('protocols.steps.insert.well_plate') }}
+              </a>
+              <span class="caret"></span>
+
+              <ul class="dropdown-submenu">
+                <li v-for="option in wellPlateOptions" :key="option.dimensions.toString()" class="action" @click="createElement('table', option.dimensions, true)">
+                  <a class="cursor-pointer">
+                    {{ i18n.t(option.label) }}
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="action"  @click="createElement('text')">
+              <a class="cursor-pointer">
+                <i class="sn-icon sn-icon-result-text"></i>
+                {{ i18n.t('protocols.steps.insert.text') }}
+              </a>
+            </li>
+            <li class="action dropdown-submenu-item">
+              <a class="cursor-pointer">
+                <i class="sn-icon sn-icon-files"></i>
+                {{ i18n.t('protocols.steps.insert.attachment') }}
+              </a>
+              <span class="caret"></span>
+              <ul class="dropdown-submenu">
+                <li class="action" @click="openLoadFromComputer">
+                  <a class="cursor-pointer">
+                    {{ i18n.t('protocols.steps.insert.add_file') }}
+                  </a>
+                </li>
+                <li class="action" v-if="result.attributes.wopi_enabled" @click="openWopiFileModal">
+                  <a class="cursor-pointer">
+                    {{ i18n.t('assets.create_wopi_file.button_text') }}
+                  </a>
+                </li>
+                <li class="action" v-if="result.attributes.marvinjs_enabled" @click="openMarvinJsModal($refs.marvinJsButton)">
+                  <a class="cursor-point  er">
+                    <span
+                    class="new-marvinjs-upload-button text-sn-black text-decoration-none"
+                    :data-object-id="result.id"
+                    ref="marvinJsButton"
+                    :data-marvin-url="result.attributes.marvinjs_context.marvin_js_asset_url"
+                    :data-object-type="result.attributes.type"
+                    tabindex="0"
+                    >
+                      {{ i18n.t('marvinjs.new_button') }}
+                    </span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <a href="#"
+          ref="comments"
+          class="open-comments-sidebar btn icon-btn btn-light"
+          data-turbolinks="false"
+          data-object-type="Result"
+          :data-object-id="result.id">
+          <i class="sn-icon sn-icon-comments"></i>
+        </a>
+        <div ref="actionsDropdownButton" class="dropdown">
+          <button class="btn btn-light icon-btn dropdown-toggle insert-button" type="button" :id="'resultOptionsMenu_' + result.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
+            <i class="sn-icon sn-icon-more-hori"></i>
+          </button>
+          <ul ref="actionsDropdown" class="dropdown-menu dropdown-menu-right insert-element-dropdown" :aria-labelledby="'resultOptionsMenu_' + result.id">
+            <li class="action"  @click="openReorderModal">
+              <a class="cursor-pointer">{{ i18n.t('my_modules.results.actions.rearrange') }}</a>
+            </li>
+            <li class="action" @click="duplicateResult">
+              <a class="cursor-pointer">{{ i18n.t('my_modules.results.actions.duplicate') }}</a>
+            </li>
+            <li class="action" @click="archiveResult">
+              <a class="cursor-pointer">{{ i18n.t('my_modules.results.actions.archive') }}</a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
-    <hr>
     <ReorderableItemsModal v-if="reordering"
       title="Placeholder title for this modal"
       :items="reorderableElements"
@@ -113,6 +151,7 @@
                     @attachments:viewMode="changeAttachmentsViewMode"
                     @attachment:viewMode="updateAttachmentViewMode"/>
     </div>
+    <hr>
   </div>
 </template>
 
@@ -122,6 +161,7 @@
   import ResultTable from '../shared/content/table.vue';
   import ResultText from '../shared/content/text.vue';
   import Attachments from '../shared/content/attachments.vue';
+  import InlineEdit from '../shared/inline_edit.vue'
 
   import AttachmentsMixin from '../shared/content/mixins/attachments.js'
   import WopiFileModal from '../shared/content/attachments/mixins/wopi_file_modal.js'
@@ -146,7 +186,8 @@
           { label: 'protocols.steps.insert.well_plate_options.6_x_8', dimensions: [6, 8] },
           { label: 'protocols.steps.insert.well_plate_options.6_x_4', dimensions: [6, 4] },
           { label: 'protocols.steps.insert.well_plate_options.2_x_3', dimensions: [2, 3] }
-        ]
+        ],
+        editingName: false
       }
     },
     mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal],
@@ -154,7 +195,8 @@
       ReorderableItemsModal,
       ResultTable,
       ResultText,
-      Attachments
+      Attachments,
+      InlineEdit
     },
     computed: {
       reorderableElements() {
@@ -278,7 +320,7 @@
         $.post(this.urls[`create_${elementType}_url`], { tableDimensions: tableDimensions, plateTemplate: plateTemplate }, (result) => {
           result.data.isNew = true;
           this.elements.push(result.data)
-          this.$emit('stepUpdated')
+          this.$emit('resultUpdated')
         }).fail(() => {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         }).done(() => {
@@ -298,6 +340,11 @@
       },
       duplicateResult() {
 
+      },
+      updateName(name) {
+        axios.patch(this.urls.update_url, { result: { name: name } }, (_) => {
+          this.$emit('resultUpdated')
+        });
       }
     }
   }

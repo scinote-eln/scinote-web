@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class ResultsController < ApplicationController
-  skip_before_action :verify_authenticity_token, only: %i(create destroy)
+  skip_before_action :verify_authenticity_token, only: %i(create update destroy)
 
   before_action :load_my_module
-  before_action :load_vars, only: %i(destroy elements assets upload_attachment update_view_state update_asset_view_mode )
+  before_action :load_vars, only: %i(destroy elements assets upload_attachment update_view_state update_asset_view_mode update)
   before_action :check_destroy_permissions, only: :destroy
 
   def index
@@ -30,6 +30,12 @@ class ResultsController < ApplicationController
     result = @my_module.results.create!(user: current_user)
 
     render json: result
+  end
+
+  def update
+    @result.update!(result_params)
+
+    render json: @result
   end
 
   def elements
@@ -106,6 +112,10 @@ class ResultsController < ApplicationController
   end
 
   private
+
+  def result_params
+    params.require(:result).permit(:name)
+  end
 
   def apply_sort(results)
     case params[:sort]
