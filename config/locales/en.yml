@@ -3705,7 +3705,7 @@ en:
 
   open_vector_editor:
     new_sequence: "New sequence"
-    edit_sequence: "Edit sequence"
+    edit_sequence: "Edit in Sequence editor"
     default_sequence_name: "New sequence"
     trial_expiration_warning_html:
       one: "Your Sequence editor trial expires in %{count} day. <a href='mailto:support@scinote.net'> Contact SciNote for more information.</a>"
