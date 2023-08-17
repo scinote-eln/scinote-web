@@ -8,6 +8,7 @@
     .dropdown-toggle {
       border: 0;
       color: $color-white;
+      padding: .5rem .5rem .5rem 1rem;
       text-align: left;
       width: 100%;
 
@@ -16,6 +17,11 @@
       }
     }
 
+    .dropdown-toggle.btn-not-started {
+      border: 1px solid var(--sn-sleepy-grey);
+      color: var(--sn-black);
+    }
+    
     &.open .dropdown-menu{
       align-items: center;
       display: grid;
@@ -67,6 +73,11 @@
         white-space: nowrap;
       }
 
+      .btn-not-started {
+        border: 1px solid var(--sn-sleepy-grey);
+        color: var(--sn-black);
+      }
+      
       .error-message {
         @include font-small;
         color: $color-silver-chalice;
