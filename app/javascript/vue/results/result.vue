@@ -62,6 +62,22 @@
           </li>
         </ul>
       </div>
+      <div ref="actionsDropdownButton" class="dropdown">
+        <button class="btn btn-light icon-btn dropdown-toggle insert-button" type="button" :id="'resultOptionsMenu_' + result.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
+          <i class="sn-icon sn-icon-more-hori"></i>
+        </button>
+        <ul ref="actionsDropdown" class="dropdown-menu dropdown-menu-right insert-element-dropdown" :aria-labelledby="'resultOptionsMenu_' + result.id">
+          <li class="action"  @click="openReorderModal">
+            {{ i18n.t('my_modules.results.actions.rearrange') }}
+          </li>
+          <li class="action" @click="duplicateResult">
+            {{ i18n.t('my_modules.results.actions.duplicate') }}
+          </li>
+          <li class="action" @click="archiveResult">
+            {{ i18n.t('my_modules.results.actions.archive') }}
+          </li>
+        </ul>
+      </div>
     </div>
     <hr>
     <ReorderableItemsModal v-if="reordering"
@@ -277,6 +293,12 @@
           })
         });
       },
+      archiveResult() {
+
+      },
+      duplicateResult() {
+
+      }
     }
   }
 </script>

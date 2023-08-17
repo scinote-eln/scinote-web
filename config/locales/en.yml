@@ -1269,6 +1269,10 @@ en:
         new_comment: "New comment"
         edit_title: "Edit result"
         archive_title: "Archive result"
+      actions:
+        rearrange: "Rearrange"
+        archive: "Archive"
+        duplicate: "Duplicate"
     archive_results:
       preview: "View"
     activities:
