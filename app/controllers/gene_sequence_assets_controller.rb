@@ -5,7 +5,7 @@ class GeneSequenceAssetsController < ApplicationController
 
   skip_before_action :verify_authenticity_token
 
-  before_action :check_open_vector_service_enabled, except: :edit
+  before_action :check_open_vector_service_enabled, except: %i(new edit)
   before_action :load_vars, except: %i(new create)
   before_action :load_create_vars, only: %i(new create)
 
@@ -19,7 +19,6 @@ class GeneSequenceAssetsController < ApplicationController
   def edit
     @file_url = rails_representation_url(@asset.file)
     @file_name = @asset.render_file_name
-    @ove_enabled = OpenVectorEditorService.enabled?
     render :edit, layout: false
   end
 
@@ -70,6 +69,7 @@ class GeneSequenceAssetsController < ApplicationController
   end
 
   def load_vars
+    @ove_enabled = OpenVectorEditorService.enabled?
     @asset = current_team.assets.find_by(id: params[:id])
     return render_404 unless @asset
 
@@ -85,6 +85,7 @@ class GeneSequenceAssetsController < ApplicationController
   end
 
   def load_create_vars
+    @ove_enabled = OpenVectorEditorService.enabled?
     @parent = case params[:parent_type]
               when 'Step'
                 Step.find_by(id: params[:parent_id])

@@ -27,6 +27,12 @@
                 {{ i18n.t('protocols.steps.attachments.menu.office_file') }}
               </a>
             </li>
+            <li v-if="step.attributes.open_vector_editor_context.new_sequence_asset_url">
+              <a @click="openOVEditor" class="open-vector-editor-button" tabindex="0" @keyup.enter="openOVEditor">
+                <img :src="step.attributes.open_vector_editor_context.icon"/>
+                {{ i18n.t('open_vector_editor.new_sequence_file') }}
+              </a>
+            </li>
             <li v-if="step.attributes.marvinjs_enabled">
               <a
                 class="new-marvinjs-upload-button"
@@ -184,6 +190,9 @@
             HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
           }
         });
+      },
+      openOVEditor() {
+        window.showIFrameModal(this.step.attributes.open_vector_editor_context.new_sequence_asset_url);
       },
       handleDropdownPosition() {
         this.$refs.actionsDropdownButton.classList.toggle("dropup", !this.isInViewport(this.$refs.actionsDropdown));

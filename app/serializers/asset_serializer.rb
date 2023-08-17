@@ -12,8 +12,7 @@ class AssetSerializer < ActiveModel::Serializer
              :file_size, :medium_preview, :large_preview, :asset_type, :wopi,
              :wopi_context, :pdf_previewable, :file_size_formatted, :asset_order,
              :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached,
-             :edit_url, :preview_image
-
+             :preview_image
 
   def icon
     file_fa_icon_class(object)
@@ -53,10 +52,6 @@ class AssetSerializer < ActiveModel::Serializer
 
   def asset_type
     object.file.metadata&.dig(:asset_type)
-  end
-
-  def edit_url
-    edit_gene_sequence_asset_path(object.id) if object.file.metadata&.dig(:asset_type) == 'gene_sequence'
   end
 
   def metadata
@@ -137,6 +132,7 @@ class AssetSerializer < ActiveModel::Serializer
         delete: asset_destroy_path(object)
       )
     end
+    urls[:open_vector_editor_edit] = edit_gene_sequence_asset_path(object.id) if can_manage_asset?(user, object)
     urls[:wopi_action] = object.get_action_url(user, 'embedview') if wopi && can_manage_asset?(user, object)
     urls[:blob] = rails_blob_path(object.file, disposition: 'attachment') if object.file.attached?
 
