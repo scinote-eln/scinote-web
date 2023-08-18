@@ -434,14 +434,14 @@ window.TinyMCE = (() => {
 
             editor.on('BeforeSetContent GetContent', function(e) {
               if (e.content && e.content.includes('target="external"')) {
-                  const div = document.createElement('div');
-                  div.innerHTML = e.content;
-                  const links = div.querySelectorAll('a[target="external"]');
-                  links.forEach(link => {
-                      link.removeAttribute('target');
-                      link.setAttribute('rel', 'external');
-                  });
-                  e.content = div.innerHTML;
+                const div = document.createElement('div');
+                div.innerHTML = e.content;
+                const links = div.querySelectorAll('a[target="external"]');
+                links.forEach(link => {
+                  link.removeAttribute('target');
+                  link.setAttribute('rel', 'external');
+                });
+                e.content = div.innerHTML;
               }
             });
           },
