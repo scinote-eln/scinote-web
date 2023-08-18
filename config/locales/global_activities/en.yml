@@ -273,6 +273,10 @@ en:
       task_link_sharing_enabled_html: "%{user} enabled link sharing for task %{my_module}."
       task_link_sharing_disabled_html: "%{user} disabled link sharing for task %{my_module}."
       shared_task_message_edited_html: "%{user} edited message for shared task %{my_module}."
+      protocol_sequence_asset_added_html: "%{user} created sequence <strong>%{asset_name}</strong> on protocol’s step <strong>%{step_position}</strong> <strong>%{step}</strong> on task <strong>%{my_module}</strong>."
+      protocol_sequence_asset_edit_started_html: "%{user} edited sequence <strong>%{asset_name}</strong> on protocol’s step <strong>%{step_position}</strong> <strong>%{step}</strong> on task <strong>%{my_module}</strong>: editing started."
+      protocol_sequence_asset_edit_finished_html: "%{user} edited sequence <strong>%{asset_name}</strong> on protocol’s step <strong>%{step_position}</strong> <strong>%{step}</strong> on task <strong>%{my_module}</strong>: editing finished."
+      protocol_sequence_asset_deleted_html: "%{user} deleted sequence <strong>%{asset_name}</strong> on protocol’s step <strong>%{step_position}</strong> <strong>%{step}</strong> on task <strong>%{my_module}</strong>."
     activity_name:
       create_project: "Project created"
       rename_project: "Project renamed"

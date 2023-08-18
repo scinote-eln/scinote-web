@@ -448,7 +448,11 @@ class Extends
     team_sharing_tasks_disabled: 245,
     task_link_sharing_enabled: 246,
     task_link_sharing_disabled: 247,
-    shared_task_message_edited: 248
+    shared_task_message_edited: 248,
+    protocol_sequence_asset_added: 249,
+    protocol_sequence_asset_edit_started: 250,
+    protocol_sequence_asset_edit_finished: 251,
+    protocol_sequence_asset_deleted: 252
   }
 
   ACTIVITY_GROUPS = {
@@ -457,7 +461,7 @@ class Extends
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
            *146..148, 166, 246, 247, 248],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
-                    217, 168, 171, 177, 184, 185, 188, 189, *192..203, 222, 224, 225, 226, 236],
+                    217, 168, 171, 177, 184, 185, 188, 189, *192..203, 222, 224, 225, 226, 236, *249..252],
     task_inventory: [55, 56, 146, 147, 183],
     experiment: [*27..31, 57, 141, 165],
     reports: [48, 50, 49, 163, 164],
