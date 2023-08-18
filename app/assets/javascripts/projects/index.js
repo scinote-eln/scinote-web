@@ -416,11 +416,11 @@ var ProjectsIndex = (function() {
     viewContainer.removeClass('no-results no-data');
     viewContainer.find('.card, .projects-group, .no-results-container, .no-data-container').remove();
 
-    if (viewContainer.find('.list').length) {
+    viewContainer.append(data.cards_html);
+
+    if (viewContainer.hasClass('list')) {
       viewContainer.find('.table-header').show();
     }
-
-    viewContainer.append(data.cards_html);
 
     if (viewContainer.find('.no-results-container').length) {
       viewContainer.addClass('no-results');
