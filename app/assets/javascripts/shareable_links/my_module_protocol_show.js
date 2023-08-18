@@ -61,7 +61,11 @@
   }
 
   function initMyModuleProtocolShow() {
-    initWelcomeModal();
+    const myModule = $('#details-container').attr('data-my-module');
+    if (!sessionStorage.getItem(`my_module_shareable_link_${myModule}`)) {
+      sessionStorage.setItem(`my_module_shareable_link_${myModule}`, myModule);
+      initWelcomeModal();
+    }
     initStepsExpandCollapse();
     initStepComments();
     initStepAttachments();
