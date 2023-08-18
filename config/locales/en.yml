@@ -192,6 +192,10 @@ en:
           attributes:
             step:
               wrong_step: "connected to the wrong step"
+        result_orderable_element:
+          attributes:
+            result:
+              wrong_result: "connected to the wrong result"
         repository_snapshot:
           attributes:
             selected:
@@ -232,6 +236,10 @@ en:
           attributes:
             output_id:
               creates_cycle: "mustn't create cycle"
+        checklist_item:
+          attributes:
+            text: Text is too long
+            position: "Position has already been taken by another item in the checklist"
   errors:
     general: "Something went wrong."
     general_text_too_long: 'Text is too long'
@@ -368,6 +376,34 @@ en:
       results: "Results"
       activities: "Activity"
       archive: "Archived results"
+
+  attachments:
+    menu:
+      office_file: "New Office file"
+      chemical_drawing: "New chemical drawing"
+      file_from_pc: "File from your PC"
+    modified_label: "Modified:"
+    preview_menu: "Preview size"
+    add: "ADD"
+    sort_by: "SORT BY"
+    attachments_view_mode: "ALL ATTACHMENTS VIEW SIZE"
+    new:
+      description: 'New'
+      uploading: 'Uploading'
+      file_too_big: 'Failed to upload: File size is too big'
+      no_more_space: 'Failed to upload: You ran out of space'
+      general_error: 'Failed to upload: Something went wrong, please try again'
+      leaving_warning: 'Your changes will be lost if you navigate away'
+
+    sort:
+      new_html: "Newest first &#8595;"
+      old_html: "Oldest first &#8593;"
+      atoz_html: "Name &#8595;"
+      ztoa_html: "Name &#8593;"
+    view_mode:
+      inline_html: "Large"
+      thumbnail_html: "Medium"
+      list_html: "List"
 
   search:
     whole_word: "Match any whole word"
@@ -627,7 +663,7 @@ en:
         report_button: "Report"
         update_pdf: "Update PDF"
         save_pdf_to_inventory: "Save PDF to inventory"
-        search_reports: "Filter reports"
+        search_reports: "Search reports"
         request_docx: "Generate .DOCX"
         update_docx: "Update .DOCX"
         edit: "Edit"
@@ -919,7 +955,7 @@ en:
         logo_params_error: 'Failed to parse logo parameters!'
     index:
       head_title: 'Label templates'
-      search_templates: 'Filter templates'
+      search_templates: 'Search labels'
       thead_name: 'Name'
       format: 'Format'
       description: 'Description'
@@ -1058,6 +1094,9 @@ en:
       recent_protocols_from_repository: "Recent protocols from the Repository"
       code: "ID: "
       recent_protocols_from_repository: "Recent protocols from the Templates"
+    shareable_links:
+      share: "Share"
+      shared: "Shared"
     notes:
       title: "Notes"
       no_description: "No task description"
@@ -1170,7 +1209,7 @@ en:
         title: "Load protocol template"
         text: "This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
         text2: "Choose the protocol to be loaded to the task."
-        filter_protocols: "Filter protocols"
+        filter_protocols: "Search protocols"
         thead_name: "Name"
         thead_keywords: "Keywords"
         thead_published_by: "Published by"
@@ -1201,11 +1240,14 @@ en:
       load_from_file_protocol_general_error: "Failed to load the protocol from file. It is likely that certain fields (protocol and individual step titles and names) contain too many or too few characters.(max is %{max} and min is %{min})"
     results:
       head_title: "%{project} | %{module} | Results"
-      add_label: "Add new result"
+      default_name: "New result"
+      placeholder: "Enter result name"
+      add_label: "New result"
       new_text_result: "Text"
       new_table_result: "Table"
       new_asset_result: "File"
       published_on_html: "Added on <em>%{timestamp}</em> by <em>%{user}</em>"
+      published_on_iso_html: "Added on <em><span class='iso-formatted-date'>%{timestamp}</span></em> by <em>%{user}</em>"
       published_table: "entered a table on %{timestamp}."
       published_text:  "entered a text on %{timestamp}."
       published_asset:  "uploaded a file on %{timestamp}."
@@ -1216,12 +1258,23 @@ en:
       info_tab: "Info"
       comments_tab: "Comments"
       comment_title: "%{user} at %{time}:"
+      sorts:
+        updated_at_asc: "Modified first"
+        updated_at_desc: "Modified last"
+        created_at_asc: "Created first"
+        created_at_desc: "Created last"
+        name_asc: "Name A to Z"
+        name_desc: "Name Z to A"
       options:
         comment_title: "Comments"
         no_comments: "No comments"
         new_comment: "New comment"
         edit_title: "Edit result"
         archive_title: "Archive result"
+      actions:
+        rearrange: "Rearrange"
+        archive: "Archive"
+        duplicate: "Duplicate"
     archive_results:
       preview: "View"
     activities:
@@ -1602,6 +1655,34 @@ en:
       no_active_modules: "This experiment has no active tasks."
       no_active_modules_archived_branch: "This experiment is archived and can’t have active tasks."
 
+  shareable_links:
+    modal:
+      title: "Share task"
+      sharing_toggle_label: "Link sharing"
+      description_placeholder: "Add optional message for the visitor."
+      sharing_link_label: "Shared link"
+      copy_button: "Copy"
+      disclaimer: "Anyone with the link can view the protocol and results pages of this task."
+      too_long_text: "Text is too long (maximum number is %{counter} characters)"
+      copy_success: "Shared link copied to clipboard"
+    destroy_modal:
+      title: "Deactivate shared link"
+      description: "This action will permanently deactivate the shared link. Any user who has this link will no longer be able to access the task."
+      deactivate: "Deactivate"
+    left_navigation:
+      welcome: "Welcome to SciNote!"
+      title: "SciNote Electronic Lab Notebook (ELN) Software"
+      description_1: "SciNote is a leading ELN with inventory, compliance and team management tools, used by the FDA, USDA and over 100K scientific professionals."
+      description_2: "What do our users like the most?"
+      description_3:
+        bullet_point_1: "Ease of use"
+        bullet_point_2: "Quality of support"
+        bullet_point_3: "Ease of setup"
+      free_trial: "Get free trial"
+    welcome_modal:
+      title: "Welcome to SciNote"
+      description: "You have been invited to view the %{my_module}."
+      view_task_btn: "View task"
   tags:
     new:
       head_title: "Create tag"
@@ -2475,8 +2556,8 @@ en:
           head_title: "Settings | Add-ons"
           title: "Add-ons"
           no_addons: "You have no SciNote Add-ons."
-          scinote_addons: "Scinote add-ons"
-          label_printers: "Label Printers"
+          scinote_addons: "SciNote add-ons"
+          label_printers: "Label printers"
           printers:
             ready: "Ready"
             not_ready: "Not ready"
@@ -2535,7 +2616,7 @@ en:
 
         connected_accounts:
           head_title: "Settings | Connected Accounts"
-          title: "Connected Accounts"
+          title: "Connected accounts"
           not_connected: "You have no Connected accounts"
           unlink_success: "Successfully unlinked"
           azure_ad:
@@ -2557,6 +2638,16 @@ en:
           new_team: "New team"
         show:
           enter_description: "Enter Team description"
+          tasks_share:
+            enable_label: "Enable task sharing"
+            enable_success_message: "Task sharing is enabled."
+            disable_success_message: "Task sharing is disabled."
+            failure_message: "Something went wrong."
+            disable_modal:
+              title: "Disable task sharing"
+              description_p1: "Are you sure to disable task sharing in %{team_name}?"
+              description_p2: "This action will deactivate sharing tasks and permanently deactivate all shared links for %{counter} task(s). Any user who has shared links will no longer be able to access the shared tasks."
+              disable_button: "Disable"
         index:
           description_label: "Team is a group of SciNote users who are working on the same projects and share the inventories."
           member_of:
@@ -2643,6 +2734,25 @@ en:
         button: "Rearrange steps"
         modal:
           title: "Rearrange protocol steps"
+    import_modal:
+      confirm:
+        title: "Import protocol"
+        body_html: "You will start importing selected .docx file into SciNote. The import time may vary according to the size of a file and internet connection."
+      in_progress:
+        title: "Importing in progress"
+        body_html: "The process of importing has started. Please wait..."
+      not_yet_done:
+        title: "Importing in progress"
+        body_html: "The import is taking longer than expected. You'll get a notice in <i class=\"sn-icon sn-icon-notifications\"></i> Notifications when your protocol template is ready. You can close the window and continue with your work."
+      done:
+        title: "Importing completed"
+        body_html: 'The protocol has been successfully imported. You can access the draft of protocol template <a href="%{url}">here.</a>'
+      failed:
+        title: "Import failed"
+        body_html: "We're sorry, but the file import has failed. Please ensure you have a stable internet connection and try again. If the problem persists, please contact support for further assistance."
+      import: "Import"
+      cancel: "Cancel"
+      close: "Close"
     print:
       title: "Print protocol"
       button: "Print"
@@ -2734,6 +2844,11 @@ en:
         import_to_team_protocols_label: "Import to Team Protocols"
         import_to_private_protocols_label: "Import to My Protocols"
         import_protocols_label: "Import"
+      import_protocol_notification:
+        title: "The import process has been successfully completed. You can download original file here: %{link}"
+        message: "Protocol template:"
+      import_protocol_notification_error:
+        title: "We're sorry, but the file import has failed. Please ensure you have a stable internet connection and try again. If the problem persists, please contact support for further assistance."
     export:
       export_results:
         title: "Export results"
@@ -2803,7 +2918,7 @@ en:
       head_title_archived: "Archived protocol templates"
       default_name: 'New protocol'
       back_to_active_protocols: 'Back to active protocols'
-      search_bar_placeholder: 'Filter protocols'
+      search_bar_placeholder: 'Search protocols'
       navigation:
         archive: "Archive"
       toolbar:
@@ -2822,7 +2937,7 @@ en:
       edit: "Edit"
       clone_btn: "Copy"
       import: "Import"
-      import_alt: "From local file"
+      import_alt: "From file (.docx, .eln)"
       import_protocols_io: "From Protocols.io"
       modal_import_json_upload: "Upload"
       modal_import_json_title: "Import protocols.io file"
@@ -2943,6 +3058,7 @@ en:
       step_duplication_failed: "Step could not be duplicated, try again later."
       component_duplication_failed: "Step content could not be duplicated, try again later."
       timestamp: "Created on %{date} by %{user}"
+      timestamp_iso_html: "Created on <span class='iso-formatted-date'>%{date}</span> by %{user}"
       status:
         complete: "Mark as done"
         uncomplete: "Unmark as done"
@@ -2952,13 +3068,14 @@ en:
         duplicate: 'Duplicate'
         delete: 'Delete'
       insert:
-        button: 'Insert'
+        button: 'Add content'
         title: 'Insert step content'
         table: 'Table'
         well_plate: 'Well plate'
         text: 'Text'
         checklist: 'Checklist'
         attachment: 'File'
+        add_file: 'File from your PC'
         checklist_item: 'Add a new checklist item...'
         well_plate_options:
           32_x_48: '1536 (32 x 48)'
@@ -3012,39 +3129,6 @@ en:
         duplicate_title: "Duplicate step"
         complete_title: "Complete step"
         uncomplete_title: "Restart step"
-      attachments:
-        menu:
-          office_file: "New Office file"
-          chemical_drawing: "New chemical drawing"
-          file_from_pc: "File from your PC"
-        modified_label: "Modified:"
-        manage: "Manage"
-        add: "ADD"
-        sort_by: "SORT BY"
-        attachments_view_mode: "ALL ATTACHMENTS VIEW SIZE"
-        file_modal:
-          title: "Add file"
-          drag_zone_title: "Upload a file from your PC"
-          drag_zone_description: "You can also drag & drop files to here or into steps to upload"
-          drag_zone_notification: "Drop files to add to step %{position}"
-          or: "OR"
-        new:
-          description: 'New'
-          uploading: 'Uploading'
-          file_too_big: 'Failed to upload: File size is too big'
-          no_more_space: 'Failed to upload: You ran out of space'
-          general_error: 'Failed to upload: Something went wrong, please try again'
-          leaving_warning: 'Your changes will be lost if you navigate away'
-
-        sort:
-          new_html: "Newest first &#8595;"
-          old_html: "Oldest first &#8593;"
-          atoz_html: "Name &#8595;"
-          ztoa_html: "Name &#8593;"
-        view_mode:
-          inline_html: "<i class=\"fas fa-desktop\"></i> Extra large"
-          thumbnail_html: "<i class=\"sn-icon sn-icon-grid-view\"></i> Medium"
-          list_html: "<i class=\"sn-icon sn-icon-activities\"></i> List"
       new:
         add_step_title: "Add new step"
         tab_checklists: "Checklists"
@@ -3223,14 +3307,14 @@ en:
         forbidden: 'You do not have permission to add files.'
         not_found: 'Element not found.'
     file_preview:
-      edit_in_scinote: "Edit in SciNote"
+      edit_in_scinote: "Edit"
       edit_in_marvinjs: "Edit in Marvin JS"
     context_menu:
-      set_view_size: "SET VIEW SIZE"
-      delete: "Delete file"
-      inline_html: "<i class=\"fas fa-desktop\"></i> Extra large"
-      thumbnail_html: "<i class=\"sn-icon sn-icon-grid-view\"></i> Medium"
-      list_html: "<i class=\"sn-icon sn-icon-activities\"></i> List"
+      set_view_size: "SET PREVIEW SIZE"
+      delete: "Delete"
+      inline_html: "Large"
+      thumbnail_html: "Medium"
+      list_html: "List"
     delete_file_modal:
       title: "Delete attachment"
       description_1_html: "You are about to delete <b>%{file_name}</b></p>"
@@ -3245,9 +3329,9 @@ en:
       projects: "Projects with this name/ID were not found"
       experiments: "Experiments with this name/ID were not found"
       my_modules: "Tasks with this name/ID were not found"
-      repository_rows: "Items with this name/ID were not found"
+      repository_rows: "This inventory is currently empty."
       users: "Users with this name were not found"
-      description: "Please make sure there are no typos, or erase letters one by one unless you see some results"
+      description: "Once you create items in the inventory, they will appear here."
     buttons:
       insert: "Insert"
       assign: "Assign to this task"
@@ -3587,9 +3671,9 @@ en:
     protocols: "Protocol"
     labels: "Label"
     teams: "All Teams"
-    addons: "Add-Ons"
-    label_printer: "Label Printer"
-    fluics_printer: "Fluics Printer"
+    addons: "Add-ons"
+    label_printer: "Label printer"
+    fluics_printer: "Fluics printer"
 
   Add: "Add"
   Asset: "File"

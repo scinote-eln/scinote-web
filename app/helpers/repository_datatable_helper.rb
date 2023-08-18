@@ -103,7 +103,7 @@ module RepositoryDatatableHelper
 
   def prepare_simple_view_row_columns(repository_rows, repository, my_module, options = {})
     has_stock_management = repository.has_stock_management?
-    reminders_enabled = Repository.reminders_enabled?
+    reminders_enabled = !options[:disable_reminders] && Repository.reminders_enabled?
     repository_rows = reminders_enabled ? with_reminders_status(repository_rows, repository) : repository_rows
     # Always disabled in a simple view
     stock_managable = false
@@ -302,7 +302,7 @@ module RepositoryDatatableHelper
   end
 
   def stock_consumption_permitted?(repository, my_module)
-    return false unless repository.is_a?(Repository)
+    return false unless repository.is_a?(Repository) && current_user
 
     can_update_my_module_stock_consumption?(my_module)
   end

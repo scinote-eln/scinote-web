@@ -1,8 +1,9 @@
-<%= bootstrap_form_for team,
-                       url: update_team_path(team,
-                       format: :json),
-                       remote: :true,
-                       method: :put do |f| %>
+<%= form_with model:team,
+              url: update_team_path(team,
+              format: :json),
+              data: { remote: true },
+              builder: SciFormHelper::SciFormBuilder,
+              method: :put do |f| %>
   <%= f.smart_text_area :description,
                         label: t('users.settings.teams.edit.description_label') %>
 <% end %>

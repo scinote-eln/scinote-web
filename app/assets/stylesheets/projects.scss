@@ -1,8 +1,8 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
 // scss-lint:disable IdSelector
-@import "constants";
-@import "mixins";
+
+
 
 // Some color definitions
 $color-group-hover: $color-alabaster;
@@ -300,7 +300,7 @@ path, ._jsPlumb_endpoint {
   }
 
   .designated-users-task-title {
-    padding-left: 15px;
+    padding: 7px 0 0 15px;
   }
 
   .user-role {
@@ -386,7 +386,6 @@ path, ._jsPlumb_endpoint {
   div {
     font-size: 20px;
     width: 4px;
-    height: 0px;
     display: inline-block;
 
     & .fas {
@@ -423,7 +422,7 @@ path, ._jsPlumb_endpoint {
 
   span {
     font-weight: bold;
-    font-size: $font-size-large;
+    font-size: 20px;
     text-transform: uppercase;
     display: block;
     margin-top: 10%;
@@ -512,7 +511,7 @@ li.module-hover {
           margin-top: 5px;
           font-family: 'Glyphicons Halflings';
           color: $color-white;
-          font-size: $font-size-large;
+          font-size: 20px;
 
           &:before {
             content: "\e221";
@@ -965,9 +964,10 @@ li.module-hover {
 
             .name {
               align-items: center;
-              display: flex;
               grid-column: 1 span;
-              line-height: 1.25em;
+              -webkit-box-orient: vertical;
+              display: -webkit-box;
+              -webkit-line-clamp: 2;
             }
 
             .description {
@@ -988,6 +988,9 @@ li.module-hover {
 
               h3 {
                 line-height: 1.25em;
+                -webkit-box-orient: vertical;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
               }
 
               a:hover {
@@ -1113,7 +1116,7 @@ li.module-hover {
         }
 
         .archived-date-cell {
-          z-index: 2;
+          z-index: 1;
 
           .value {
             color: $color-black;

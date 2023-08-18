@@ -27,15 +27,13 @@ module StepElements
 
       render json: checklist_item, serializer: ChecklistItemSerializer, user: current_user
     rescue ActiveRecord::RecordInvalid
-      render json: checklist_item, serializer: ChecklistItemSerializer,
-                                   user: current_user,
-                                   status: :unprocessable_entity
+      render json: { errors: checklist_item.errors }, status: :unprocessable_entity
     end
 
     def update
       old_text = @checklist_item.text
       @checklist_item.assign_attributes(
-        checklist_item_params.merge(last_modified_by: current_user)
+        checklist_item_params.except(:position, :id).merge(last_modified_by: current_user)
       )
 
       if @checklist_item.save!
@@ -49,9 +47,7 @@ module StepElements
 
       render json: @checklist_item, serializer: ChecklistItemSerializer, user: current_user
     rescue ActiveRecord::RecordInvalid
-      render json: @checklist_item, serializer: ChecklistItemSerializer,
-                                    user: current_user,
-                                    status: :unprocessable_entity
+      render json: { errors: @checklist_item.errors }, status: :unprocessable_entity
     end
 
     def toggle
@@ -97,14 +93,14 @@ module StepElements
     end
 
     def reorder
-      @checklist.with_lock do
-        params[:checklist_item_positions].each do |id, position|
-          @checklist.checklist_items.find(id).update_column(:position, position)
-        end
+      checklist_item = @checklist.checklist_items.find(checklist_item_params[:id])
+      ActiveRecord::Base.transaction do
+        checklist_item.insert_at(checklist_item_params[:position])
         @checklist.touch
       end
-
       render json: params[:checklist_item_positions], status: :ok
+    rescue ActiveRecord::RecordInvalid
+      render json: { errors: checklist_item.errors }, status: :conflict
     end
 
     private
@@ -122,7 +118,7 @@ module StepElements
     end
 
     def checklist_item_params
-      params.require(:attributes).permit(:text, :position)
+      params.require(:attributes).permit(:text, :position, :id)
     end
 
     def checklist_toggle_item_params

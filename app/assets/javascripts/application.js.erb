@@ -1,8 +1,5 @@
 // turbolinks MUST BE THE LAST inclusion
-//= require hammer
-//= require js.cookie
-//= require bootstrap-sprockets
-//= require moment
+
 //= require bootstrap-datetimepicker
 //= require bootstrap-colorselector
 //= require bootstrap-tagsinput.min
@@ -11,10 +8,12 @@
 //= require nested_form_fields
 //= require jsPlumb-2.0.4-min
 //= require jsnetworkx
-//= require bootstrap-select
 //= require_directory ./repository_columns/columns_initializers
 //= require datatables
 //= require jquery.dataTables.colResize
+//= require jquery.ui.touch-punch.min
+//= require jquery.caret.min
+//= require jquery.atwho.min
 //= require clndr.min
 //= require ajax-bootstrap-select.min
 //= require underscore
@@ -158,7 +157,7 @@ window.onbeforeunload = function () {
  * Disable Firefox caching to get rid of issues with pressing
  * browser back, like opening canvas in edit mode.
  */
-$(window).unload(function () {
+$(window).on("unload", function() {
   $(window).unbind('unload');
 });
 
@@ -206,7 +205,7 @@ var HelperModule = (function(){
                         '<span class="message">' + message + '</span>' +
                         '<button type="button" class="close" ' +
                           'data-dismiss="alert" aria-label="Close">' +
-                          '<span aria-hidden="true">×</span></button>' +
+                          '<i class="sn-icon sn-icon-close"></i></button>' +
                       '</div>';
     $('#notifications').html(htmlSnippet);
     helpers.hideFlashMsg();
@@ -325,7 +324,7 @@ const renderUserNamePopover = (url, fullName, email, html) => {
   return `<div class="user-name-popover-wrapper">
             <div class='col-xs-3'>
               <img
-                class='avatar'
+                class='avatar img-responsive'
                 src='${url}'
                 alt='thumb'>
             </div>

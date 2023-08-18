@@ -41,7 +41,7 @@ class Constants
   EMAIL_MAX_LENGTH = 254
   # Some big value which is still supported by all databases, no matter what
   # data type is used
-  INFINITY = 2**32 / 2 - 1
+  INFINITY = ((2**32) / 2) - 1
 
   # Prevents integer overflow for reminder delta seconds
   MAX_NUMBER_OF_REMINDER_WEEKS = 816
@@ -204,6 +204,7 @@ class Constants
   HTTP = 'http://'.freeze
   TUTORIALS_URL = ENV.fetch('VIDEO_TUTORIALS_URL', "#{HTTP}goo.gl/YH3fXA").freeze
   SUPPORT_URL = ENV.fetch('KNOWLEDGE_CENTER_URL', 'https://scinote-3850750.hs-sites.com/en/knowledge').freeze
+  FREE_TRIAL_URL = 'https://www.scinote.net/free-trial/?utm_source=SciNoteShare&utm_medium=FreeTrialButton&utm_campaign=Q3_2023'.freeze
   # Default user picture avatar
   DEFAULT_AVATAR_URL = '/images/:style/missing.svg'.freeze
 

@@ -1,10 +1,12 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
 
+@import "components/text";
+
 .step-container {
   --left-component-padding: 2rem;
   border: $border-transparent;
-  margin: 6px 0 6px -1.5em;
+  margin: 6px 0 6px -1em;
   padding: 8px 24px 8px 0;
 
   .step-header {
@@ -13,11 +15,12 @@
     margin-bottom: 1.2em;
 
     .step-element-header {
-      align-items: center;
+      align-items: baseline;
       border-radius: 4px;
       display: flex;
       flex-basis: 80%;
       position: relative;
+      padding-top: .4em;
 
       .step-name-edit-icon {
         background: linear-gradient(90deg,
@@ -61,6 +64,7 @@
     }
 
     .step-name-container {
+      align-self: baseline;
       flex-grow: 1;
       font-size: 16px;
       font-weight: bold;
@@ -71,26 +75,33 @@
     }
 
     .step-state {
-      border: 1px solid $color-alto;
+      align-self: center;
+      background-color: var(--sn-light-grey);
+      border: 1px solid transparent;
       border-radius: 50%;
       cursor: pointer;
       height: 24px;
+      position: relative;
       text-align: center;
       width: 24px;
 
+      &::after {
+        @include font-sn-icon;
+        color: $color-white;
+        content: $sn-icon-check;
+        height: 24px;
+        left: -1px;
+        position: absolute;
+        top: -6px;
+      }
+
       &:hover {
-        border-color: $brand-success;
+        border-color: var(--sn-science-blue);
       }
 
       &.completed {
-        background: $brand-success;
-        border: 2px solid $brand-success;
-
-        &::after {
-          @include font-awesome;
-          color: $color-white;
-          content: $font-fas-check;
-        }
+        background: var(--sn-science-blue);
+        border: 1px solid var(--sn-science-blue);
       }
     }
 
@@ -152,7 +163,7 @@
 
     .step-timestamp {
       position: relative;
-      margin-left: 30px;
+      margin-left: 40px;
       bottom: 17px;
       width: 356px;
       height: 15px;
@@ -164,19 +175,10 @@
       order: 0;
       flex-grow: 0;
     }
-
-    .step-element-name {
-      .sci-inline-edit__view,
-      textarea {
-        padding-bottom: .1em;
-        padding-top: .5em;
-      }
-    }
   }
 
   .step-element-grip-placeholder {
-    height: 24px;
-    width: 28px;
+    width: 42px;
   }
 
   .comments-counter {
@@ -267,7 +269,7 @@
 }
 
 .step-element-header {
-  align-items: flex-start;
+  align-items: baseline;
   border-radius: 4px;
   display: flex;
   min-height: 40px;
@@ -302,12 +304,10 @@
   }
 
   .step-element-controls {
-    background: linear-gradient(
-      90deg,
-      transparent,
-      $color-concrete 15%,
-      $color-concrete 100%
-    );
+    background: linear-gradient(90deg,
+        transparent,
+        $color-concrete 15%,
+        $color-concrete 100%);
     display: flex;
     margin-left: auto;
     position: absolute;
@@ -337,7 +337,6 @@
 .step-element-grip {
   color: $color-silver-chalice;
   cursor: pointer;
-  margin: auto;
   padding: .5em;
 
   &.step-element-grip--draggable {
@@ -351,10 +350,6 @@
 }
 
 .sci-reorderable-items {
-  .modal-body {
-    padding-top: 0;
-  }
-
   .step-element-header {
     align-items: center;
     border-bottom: 1px solid $color-concrete;

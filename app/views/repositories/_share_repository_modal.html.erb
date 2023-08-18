@@ -1,10 +1,10 @@
 <div class="modal share-repo-modal" tabindex="-1" role="dialog" >
-  <%= form_for :shares, url: team_repository_team_repositories_path(current_team, @repository), remote: :true,
+  <%= form_for :shares, url: team_repository_team_repositories_path(current_team, @repository), data: { remote: true },
                data: { success_message: t("repositories.index.modal_share.success_message", inventory_name: @repository.name) } do |f| %>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
           <h4 class="modal-title" id="create-repo-modal-label">
             <%= t("repositories.index.modal_share.title") %>
           </h4>

@@ -3,11 +3,11 @@
      tabindex="-1"
      role="dialog"
      aria-labelledby="print-protocol-modal-label">
-  <%= bootstrap_form_tag({ url: print_protocol_path(protocol), method: :get, html: { class: 'print-protocol-form', id: "print-protocol-form", target: '_blank' } }) do %>
+  <%= form_with url: print_protocol_path(protocol), method: :get, html: { class: 'print-protocol-form', id: "print-protocol-form", target: '_blank' }  do %>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
           <h4 class="modal-title" id="print-protocol-modal-label"><%= t("protocols.print.modal.title") %></h5>
         </div>
         <div class="modal-body">

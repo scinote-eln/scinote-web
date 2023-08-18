@@ -11,6 +11,7 @@ body.navigator-collapsed {
   --left-navigation-width: 192px;
   --navbar-height: calc(var(--top-navigation-height) + var(--breadcrumbs-navigation-height));
   --navigator-navigation-width: 240px;
+  --title-row-height: 4em;
   --top-navigation-height: 72px;
   display: grid;
   grid-template-areas: "left top top"
@@ -68,6 +69,7 @@ body.navigator-collapsed {
   }
 
   .sci--layout-navigation-navigator {
+    background-color: var(--sn-white);
     grid-area: navigator;
     height: calc(100vh - var(--top-navigation-height) - var(--breadcrumbs-navigation-height) - 1rem);
     position: sticky;
@@ -79,6 +81,7 @@ body.navigator-collapsed {
   }
 
   .sci--layout-navigation-breadcrumbs {
+    background-color: var(--sn-white);
     grid-area: breadcrumbs;
     height: var(--breadcrumbs-navigation-height);
     position: sticky;
@@ -90,6 +93,7 @@ body.navigator-collapsed {
   }
 
   .sci--layout-content {
+    background-color: var(--sn-white);
     grid-area: content;
     padding: 0 1.5rem;
     width: 100%;
@@ -98,4 +102,17 @@ body.navigator-collapsed {
       padding: 1em; // override bootstrap and old pages support
     }
   }
+
+  &[data-grey-background="true"] {
+    .sci--layout-content,
+    .sci--layout-navigation-breadcrumbs,
+    .sci--layout-navigation-navigator {
+      background-color: var(--sn-super-light-grey);
+
+    }
+  }
+}
+
+.w-98 {
+  width: 98%;
 }

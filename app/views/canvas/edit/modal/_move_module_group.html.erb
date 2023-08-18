@@ -2,13 +2,13 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
         <h4 class="modal-title" id="modal-move-module-group-label"><%=t "experiments.canvas.edit.modal_move_module_group.title" %></h4>
       </div>
       <div class="modal-body">
         <% experiments =  @experiment.project.experiments.managable_by_user(current_user).order(name: :asc).active %>
         <% if experiments.count > 1 %>
-          <%= bootstrap_form_tag do |f| %>
+          <%= form_with do |f| %>
             <%= f.select :experiment_id, experiments
                                         .select { |e| e != @experiment }
                                         .collect { |e| [ e.name, e.id ] }, {},

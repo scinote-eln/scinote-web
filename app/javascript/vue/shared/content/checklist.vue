@@ -164,7 +164,7 @@
         this.$emit('update', this.element, skipRequest);
       },
       postItem(item, callback) {
-        $.post(this.element.attributes.orderable.urls.create_item_url, item).success((result) => {
+        $.post(this.element.attributes.orderable.urls.create_item_url, item).done((result) => {
           this.checklistItems.splice(
             result.data.attributes.position,
             1,
@@ -172,8 +172,8 @@
           );
 
           if(callback) callback();
-        }).error(() => {
-          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+        }).fail((xhr) => {
+          this.setFlashErrors(xhr.responseJSON.errors)
         });
 
         this.update();
@@ -190,7 +190,7 @@
               updatedItem.attributes.id = item.attributes.id
               this.$set(this.checklistItems, item.attributes.position, updatedItem)
             },
-            error: () => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')
+            error: (xhr) => setFlashErrors(xhr.responseJSON.errors)
           });
         } else {
           // create item, then append next one
@@ -231,26 +231,26 @@
       startReorder() {
         this.reordering = true;
       },
-      endReorder() {
+      endReorder(event) {
         this.reordering = false;
-        this.saveItemOrder();
+        if(
+          Number.isInteger(event.newIndex)
+          && Number.isInteger(event.newIndex)
+          && event.newIndex !== event.oldIndex
+        ){
+          const { id, position } = this.orderedChecklistItems[event.newIndex]?.attributes
+          this.saveItemOrder(id, position);
+        }
       },
-      saveItemOrder() {
-        let checklistItemPositions =
-          {
-            checklist_item_positions: this.orderedChecklistItems.map(
-              (i) => [i.attributes.id, i.attributes.position]
-            )
-          };
-
+      saveItemOrder(id, position) {
         $.ajax({
           type: "POST",
           url: this.element.attributes.orderable.urls.reorder_url,
-          data: JSON.stringify(checklistItemPositions),
+          data: JSON.stringify({ attributes: { id, position } }),
           contentType: "application/json",
           dataType: "json",
-          error: (() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')),
-          success: (() => this.update())
+          error: (xhr) => this.setFlashErrors(xhr.responseJSON.errors),
+          success: () => this.update()
         });
       },
       handleMultilinePaste(data) {
@@ -274,6 +274,14 @@
         };
 
         synchronousPost(0);
+      },
+      setFlashErrors(errors) {
+        for(const key in errors){
+          HelperModule.flashAlertMsg(
+            this.i18n.t(`activerecord.errors.models.checklist_item.attributes.${key}`),
+            'danger'
+          )
+        }
       }
     }
   }

@@ -107,15 +107,16 @@ module Reports
 
           results = my_module_element.my_module.results
           order_results_for_report(results, report.settings.dig(:task, :result_order)).each do |result|
-            next unless result.is_asset && PREVIEW_EXTENSIONS.include?(result.asset.file.blob.filename.extension)
+            result.assets.each do |asset|
+              next unless PREVIEW_EXTENSIONS.include?(asset.file.blob.filename.extension)
 
-            asset = result.asset
-            if !asset.file_pdf_preview.attached? || (asset.file.created_at > asset.file_pdf_preview.created_at)
-              PdfPreviewJob.perform_now(asset.id)
-              asset.reload
-            end
-            asset.file_pdf_preview.open(tmpdir: tmp_dir) do |file|
-              report_file = merge_pdf_files(file, report_file)
+              if !asset.file_pdf_preview.attached? || (asset.file.created_at > asset.file_pdf_preview.created_at)
+                PdfPreviewJob.perform_now(asset.id)
+                asset.reload
+              end
+              asset.file_pdf_preview.open(tmpdir: tmp_dir) do |file|
+                report_file = merge_pdf_files(file, report_file)
+              end
             end
           end
         end

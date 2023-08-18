@@ -1,0 +1,92 @@
+<div class="text-3xl font-bold flex flex-row flex-nowrap">
+  <span class="inline-block whitespace-nowrap">
+    <%= t "labels.archived" if @my_module.archived? %>
+  </span>
+  <span class="inline-block truncate w-[calc(100vw-27rem)]" title="<%= @my_module.name %>">
+    <%= @my_module.name %>
+  </span>
+</div>
+
+<div class="my-5 max-w-4xl flex-1 bg-sn-white">
+  <div class="my-module-position-container">
+    <!-- Header Actions -->
+    <%= render partial: 'shareable_links/my_modules/header_actions' %>
+    <!-- Details -->
+    <div class="task-section task-information">
+      <div id="task-details" class="task-section-header">
+          <div class="flex items-center gap-3">
+            <%= render partial: 'shareable_links/my_modules/task_flow_button', locals: { my_module: @my_module } if @my_module.my_module_status_flow %>
+          </div>
+        <div class="task-details-container flex items-center mr-auto gap-2">
+          <a class="task-section-caret" role="button" data-toggle="collapse" href="#details-container" aria-expanded="false" aria-controls="details-container">
+            <i class="sn-icon sn-icon-right"></i>
+            <span id="taskDetailsLabel" class="task-section-title">
+              <h2>
+                <%= t('my_modules.details.title') %>
+              </h2>
+            </span>
+          </a>
+          <span class="task-details-code">
+            <%= @my_module.code %>
+          </span>
+        </div>
+      </div>
+      <div id="details-container" class="task-details">
+        <%= render partial: 'shareable_links/my_modules/my_module_details' %>
+      </div>
+    </div>
+    <!-- Notes -->
+    <div class="task-section">
+      <div class="task-section-header">
+        <a class="task-section-caret" role="button" data-toggle="collapse" href="#notes-container" aria-expanded="true" aria-controls="notes-container">
+          <i class="sn-icon sn-icon-right"></i>
+          <span class="task-section-title">
+            <h2><%= t('my_modules.notes.title') %></h2>
+          </span>
+        </a>
+      </div>
+      <div class="collapse in" id="notes-container" aria-expanded="true">
+        <div class="task-notes">
+          <div class="task-notes-content">
+            <% if @my_module.description.present? %>
+            <%= smart_annotation_text(@my_module.shareable_tinymce_render(:description)) %>
+            <% else %>
+              <span class="no-description"><%= t('my_modules.notes.no_description') %></span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Assigned items -->
+    <% assigned_repositories = @my_module.live_and_snapshot_repositories_list %>
+    <div class="task-section">
+      <div class="task-section-header">
+        <a class="task-section-caret" role="button" data-toggle="collapse" href="#assigned-items-container" aria-expanded="true" aria-controls="assigned-items-container">
+          <i class="sn-icon sn-icon-right"></i>
+          <span class="task-section-title ">
+            <h2 class="assigned-items-title" data-assigned-items-count="<%= assigned_repositories.map(&:assigned_rows_count).sum %>">
+              <%= t('my_modules.assigned_items.title') %>
+            </h2>
+          </span>
+        </a>
+      </div>
+      <div class="collapse in panel-group" id="assigned-items-container" aria-expanded="true"
+          data-repositories-list-url="<%= my_module_repositories_list_html_path(@my_module) %>">
+        <%= render partial: "shareable_links/my_modules/repositories_list", locals: { assigned_repositories: assigned_repositories } %>
+      </div>
+    </div>
+
+    <!-- Protocol -->
+    <div class="task-section">
+      <%= render partial: "shareable_links/my_modules/protocol", locals: { protocol: @my_module.protocol } %>
+    </div>
+  </div>
+</div>
+
+
+<%= render "shareable_links/my_modules/welcome_modal" %>
+
+<%= javascript_include_tag "handsontable.full" %>
+<%= render 'shared/formulas_libraries' %>
+<%= javascript_include_tag 'shareable_links/my_module_protocol_show' %>
+<%= javascript_include_tag 'shareable_links/repositories' %>

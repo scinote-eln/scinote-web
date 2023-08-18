@@ -63,7 +63,7 @@ module Toolbars
         label: I18n.t('libraries.index.buttons.export'),
         button_id: 'exportRepoBtn',
         icon: 'sn-icon sn-icon-export',
-        path: export_modal_team_repositories_path(@current_team),
+        path: export_modal_team_repositories_path(@current_team, counter: @repositories.length),
         type: 'remote-modal'
       }
     end

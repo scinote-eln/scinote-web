@@ -13,7 +13,8 @@ module Api
       before_action :check_delete_permissions, only: :destroy
 
       def index
-        steps = @protocol.steps.page(params.dig(:page, :number)).per(params.dig(:page, :size))
+        steps = timestamps_filter(@protocol.steps).page(params.dig(:page, :number))
+                                                  .per(params.dig(:page, :size))
 
         render jsonapi: steps, each_serializer: StepSerializer,
                                include: include_params,
@@ -31,16 +32,24 @@ module Api
       def create
         raise PermissionError.new(Protocol, :create) unless can_manage_protocol_in_module?(@protocol)
 
-        step = @protocol.steps.create!(
-          step_params.except(:description)
-                     .merge!(completed: false,
-                             user: current_user,
-                             position: @protocol.number_of_steps,
-                             last_modified_by_id: current_user.id)
-        )
-        step.step_texts.create!(text: step_params[:description]) if step_params[:description]
+        @protocol.transaction do
+          @step = @protocol.steps.create!(
+            step_params.except(:description)
+                       .merge!(completed: false,
+                               user: current_user,
+                               position: @protocol.number_of_steps,
+                               last_modified_by_id: current_user.id)
+          )
+          if step_params[:description]
+            step_text = @step.step_texts.build(text: step_params[:description])
+            @step.step_orderable_elements.create!(
+              position: 0,
+              orderable: step_text
+            )
+          end
+        end
 
-        render jsonapi: step, serializer: StepSerializer, status: :created
+        render jsonapi: @step, serializer: StepSerializer, status: :created
       end
 
       def update

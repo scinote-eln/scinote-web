@@ -222,6 +222,8 @@ Rails.application.routes.draw do
         post 'export_projects'
         get 'sidebar'
         get 'export_projects_modal'
+        post 'shared_tasks_toggle'
+        get 'disable_tasks_sharing_modal'
         # Used for atwho (smart annotations)
         get 'atwho_users', to: 'at_who#users'
         get 'atwho_menu', to: 'at_who#menu'
@@ -315,6 +317,7 @@ Rails.application.routes.draw do
       end
 
       resources :my_modules, only: %i(show) do
+
         member do
           get :tree
         end
@@ -461,6 +464,8 @@ Rails.application.routes.draw do
 
       resource :status_flow, controller: :my_module_status_flow, only: :show
 
+      resource :shareable_link, controller: :my_module_shareable_links, only: %i(show create update destroy)
+
       resources :my_module_comments,
                 path: '/comments',
                 only: %i(create index update destroy)
@@ -498,9 +503,6 @@ Rails.application.routes.draw do
 
       post :select_default_snapshot, to: 'my_module_repository_snapshots#select'
 
-      resources :result_texts, only: [:new, :create]
-      resources :result_assets, only: [:new, :create]
-      resources :result_tables, only: [:new, :create]
       member do
         # AJAX popup accessed from full-zoom canvas for single module,
         # as well as full activities view (HTML) for single module
@@ -521,7 +523,6 @@ Rails.application.routes.draw do
         get 'protocols' # Protocols view for single module
         get 'protocol', to: 'my_modules#protocol', as: 'protocol'
         patch 'protocol', to: 'my_modules#update_protocol', as: 'update_protocol'
-        get 'results' # Results view for single module
         get 'archive' # Archive view for single module
       end
 
@@ -529,6 +530,27 @@ Rails.application.routes.draw do
       # to preserve original id parameters in URL.
       get 'tags/edit', to: 'my_module_tags#index_edit'
       get 'users/edit', to: 'user_my_modules#index_edit'
+
+      resources :results, only: %i(index show create update destroy) do
+        member do
+          get :elements
+          get :assets
+          post :upload_attachment
+          post :update_view_state
+          post :update_asset_view_mode
+        end
+
+        resources :tables, controller: 'result_elements/tables', only: %i(create destroy update) do
+          member do
+            post :duplicate
+          end
+        end
+        resources :texts, controller: 'result_elements/texts', only: %i(create destroy update) do
+          member do
+            post :duplicate
+          end
+        end
+      end
     end
 
     resources :steps, only: %i(index update destroy show) do
@@ -652,6 +674,7 @@ Rails.application.routes.draw do
         post 'restore', to: 'protocols#restore'
         post 'clone', to: 'protocols#clone'
         post 'import', to: 'protocols#import'
+        post 'import_docx', to: 'protocols#import_docx'
         post 'protocolsio_import_create',
              to: 'protocols#protocolsio_import_create'
         post 'protocolsio_import_save', to: 'protocols#protocolsio_import_save'
@@ -956,6 +979,28 @@ Rails.application.routes.draw do
       post :save_activity_filter
     end
   end
+
+  # Shareable links
+  get '/shared/:uuid/protocol',
+      to: 'my_module_shareable_links#protocol_show',
+      as: :shared_protocol
+  get '/shared/:uuid/protocol/asset/:id/download',
+      to: 'my_module_shareable_links#download_step_asset',
+      as: :shared_protocol_asset_download
+  get '/shared/:uuid/protocol/asset/:id/download_result',
+      to: 'my_module_shareable_links#download_result_asset',
+      as: :shared_protocol_result_asset_download
+  get '/shared/:uuid/protocol/results',
+      to: 'my_module_shareable_links#results_show',
+      as: :shared_protocol_results
+  post '/shared/:uuid/repositories/:id/items',
+       to: 'my_module_shareable_links#repository_index_dt',
+       as: :shared_protocol_items,
+       defaults: { format: :json }
+  post '/shared/:uuid/repositories/:id/snapshot_items',
+       to: 'my_module_shareable_links#repository_snapshot_index_dt',
+       as: :shared_protocol_snapshot_items,
+       defaults: { format: :json }
 
   resources :marvin_js_assets, only: %i(create update destroy show) do
     collection do

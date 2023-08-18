@@ -2,11 +2,14 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close close-button" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
         <h4 class="modal-title"><%= t('repositories.modal_import.title') %></h4>
+
+      </div>
+      <div class="modal-description">
         <%= t("repositories.modal_import.notice") %>
       </div>
-      <%= bootstrap_form_tag url: parse_sheet_repository_path(repository),
+      <%= form_with url: parse_sheet_repository_path(repository),
                              html: {'data-type' => 'json',
                                     id: 'form-records-file'} do |f| %>
         <%= f.hidden_field :team_id, value: current_team.id %>

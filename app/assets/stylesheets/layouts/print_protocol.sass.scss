@@ -1,0 +1,288 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
+@import "../shared_styles/constants";
+@import "../constants";
+
+@page {
+  size: A4;
+  margin: 8mm;
+}
+
+@media print {
+  .print-table {
+    page-break-inside: avoid;
+  }
+}
+
+.page-break {
+  clear: both;
+}
+
+body {
+  font-family: "SN Inter", "Open Sans", Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.print-protocol-header {
+  font-size: .8em;
+
+  img {
+    height: .8em;
+  }
+}
+
+h1 {
+  font-size: 1.5em;
+}
+
+h2 {
+  font-size: 1.3em;
+
+  .fa-check-circle {
+    color: $brand-success;
+    font-size: 1.3em;
+  }
+}
+
+h3 {
+  font-size: 1em;
+}
+
+hr {
+  background-color: $color-alto;
+  border-width: 0;
+  height: 1px;
+}
+
+.print-step {
+  margin: 2em 0;
+}
+
+.step-check-circle {
+  border: .15em solid $color-alto;
+  border-radius: 50%;
+  color: $color-white;
+  display: inline-block;
+  height: 1.1em;
+  text-align: center;
+  vertical-align: text-bottom;
+  width: 1.1em;
+}
+
+.step-check-circle-checked {
+  img {
+    height: 1.4em;
+    vertical-align: text-bottom;
+    width: 1.4em;
+  }
+}
+
+.print-checklist-item {
+  display: flex;
+  margin-bottom: 1em;
+
+  span {
+    vertical-align: top;
+  }
+
+  div {
+    margin-bottom: .7em;
+    margin-left: .7em;
+    white-space: pre-line;
+  }
+}
+
+.checklist-checkbox {
+  &.checked {
+    img {
+      height: 1.3em;
+      text-align: center;
+      vertical-align: middle;
+      width: 1.3em;
+    }
+  }
+
+  &.not-checked {
+    border: .15em solid $color-alto;
+    border-radius: .2em;
+    display: inline-block;
+    height: 1em;
+    text-align: center;
+    width: 1em;
+  }
+}
+
+.print-table {
+  table {
+    border-collapse: collapse;
+    width: 100%;
+
+    &,
+    td,
+    th {
+      border: 1px solid $color-silver-chalice;
+    }
+
+    th {
+      font-weight: normal;
+    }
+
+    th,
+    td:first-child {
+      background: $color-concrete;
+    }
+
+    td {
+      padding: .15em .3em;
+
+      &.htLeft {
+        text-align: left;
+      }
+
+      &.htCenter {
+        text-align: center;
+      }
+
+      &.htRight {
+        text-align: right;
+      }
+
+      &.htJustify {
+        text-align: justify;
+      }
+
+      &.htTop {
+        vertical-align: top;
+      }
+
+      &.htMiddle {
+        vertical-align: middle;
+      }
+
+      &.htBottom {
+        vertical-align: bottom;
+      }
+    }
+  }
+}
+
+.print-asset {
+  margin: 1em;
+
+  p {
+    font-style: italic;
+  }
+
+  &.thumbnail {
+    align-items: flex-end;
+    display: flex;
+    justify-content: center;
+    padding: 1em 1em 0;
+    text-align: center;
+    width: 15%;
+
+    img {
+      max-width: 100%;
+    }
+
+    .print-asset-image {
+      flex-basis: .25;
+    }
+  }
+
+  &.thumbnail,
+  &.list {
+    border: 1px solid $color-silver-chalice;
+  }
+
+  &.list {
+    padding: .5em 1em;
+  }
+
+  &.inline {
+    margin: 5em 0;
+    text-align: center;
+
+    img {
+      max-width: 100%;
+    }
+  }
+}
+
+.print-thumbnails {
+  align-items: stretch;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+}
+
+.print-asset-icon {
+  display: inline-block;
+  font-size: $font-size-h2;
+  text-align: center;
+  width: 24px;
+
+  .fa-file-pdf {
+    color: $pdf-color;
+  }
+
+  .fa-image {
+    color: $brand-primary;
+  }
+}
+
+.print-comments {
+  margin-bottom: 5em;
+}
+
+.print-comment-container {
+  margin-bottom: 1em;
+}
+
+.print-comment-header {
+  .user-avatar {
+    float: left;
+    margin-right: 1em;
+  }
+
+  .user-name {
+    color: $color-silver-chalice;
+  }
+}
+
+.print-comment-footer {
+  color: $color-silver-chalice;
+  font-size: .8em;
+  text-align: right;
+}
+
+.global-avatar-container.smart-annotation {
+  img {
+    margin-right: .2em;
+    vertical-align: middle;
+    width: 1.2em;
+  }
+}
+
+.ht_clone_top,
+.ht_clone_bottom,
+.ht_clone_left,
+.ht_clone_top_left_corner {
+  display: none;
+}
+
+.sa-type {
+  font-size: 10px;
+  font-weight: 600;
+  padding-left: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  vertical-align: super;
+
+  &:hover {
+    text-decoration: none;
+  }
+}

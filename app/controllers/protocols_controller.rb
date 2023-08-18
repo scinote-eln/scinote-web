@@ -710,20 +710,7 @@ class ProtocolsController < ApplicationController
     # rubocop:enable Metrics/BlockLength
     z_output_stream.rewind
 
-    protocol_name = get_protocol_name(@protocols[0])
-
-    # Now generate filename of the archive and send file to user
-    if @protocols.count == 1
-      # Try to construct an OS-safe file name
-      file_name = 'protocol.eln'
-      unless protocol_name.nil?
-        escaped_name = protocol_name.gsub(/[^0-9a-zA-Z\-.,_]/i, '_')
-                                    .downcase[0..Constants::NAME_MAX_LENGTH]
-        file_name = escaped_name + '.eln' if escaped_name.present?
-      end
-    elsif @protocols.length > 1
-      file_name = 'protocols.eln'
-    end
+    file_name = export_protocol_file_name(@protocols)
 
     @protocols.each do |protocol|
       if params[:my_module_id]
@@ -836,6 +823,20 @@ class ProtocolsController < ApplicationController
     }
   end
 
+  def import_docx
+    temp_files_ids = []
+    params[:files].each do |file|
+      temp_file = TempFile.new(session_id: request.session_options[:id], file: file)
+
+      if temp_file.save
+        TempFile.destroy_obsolete(temp_file.id)
+        temp_files_ids << temp_file.id
+      end
+    end
+    @job = Protocols::DocxImportJob.perform_later(temp_files_ids, current_user.id, current_team.id)
+    render json: { job_id: @job.job_id }
+  end
+
   private
 
   def set_importer
@@ -845,6 +846,22 @@ class ProtocolsController < ApplicationController
     when '1.1'
       @importer = ProtocolsImporterV2.new(current_user, current_team)
     end
+  end
+
+  def export_protocol_file_name(protocols)
+    protocol_name = get_protocol_name(protocols[0])
+
+    if protocols.count == 1
+      file_name = 'protocol.eln'
+      unless protocol_name.nil?
+        escaped_name = protocol_name.gsub(/[^0-9a-zA-Z\-.,_]/i, '_')
+                                    .downcase[0..Constants::NAME_MAX_LENGTH]
+        file_name = escaped_name + '.eln' unless escaped_name.blank?
+      end
+    elsif protocols.length > 1
+      file_name = 'protocols.eln'
+    end
+    file_name
   end
 
   def valid_protocol_json(json)

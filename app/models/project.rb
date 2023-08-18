@@ -276,7 +276,7 @@ class Project < ApplicationRecord
     tables = parsed_html.css('.hot-table-contents')
                         .zip(parsed_html.css('.hot-table-container'), parsed_html.css('.hot-table-metadata'))
     tables.each do |table_input, table_container, metadata|
-      is_plate_template = JSON.parse(metadata['value'])['plateTemplate'] if metadata.present?
+      is_plate_template = JSON.parse(metadata['value'])['plateTemplate'] if metadata && metadata['value'].present?
       table_vals = JSON.parse(table_input['value'])
       table_data = table_vals['data']
       table_headers = table_vals['headers']

@@ -1,9 +1,9 @@
-<%= form_with url: update_consumption_my_module_repository_path(@my_module, @repository, module_row_id: @module_repository_row), 
-              method: :post, 
+<%= form_with url: update_consumption_my_module_repository_path(@my_module, @repository, module_row_id: @module_repository_row),
+              method: :post,
               html: { data: { remote: true } } do |f| %>
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>">
-      <span aria-hidden="true">&times;</span>
+      <i class="sn-icon sn-icon-close"></i>
     </button>
     <h4 class="modal-title">
       <% if @module_repository_row.stock_consumption %>
@@ -42,7 +42,7 @@
             <span class="units"><%= @stock_value.repository_stock_unit_item&.data %></span>
           </div>
           <div class="stock-arrow">
-            <i class="sn-icon sn-icon-move"></i>
+            <i class="sn-icon sn-icon-arrow-right"></i>
           </div>
           <div class="stock-final-container ">
             <span class="subtitle"><%= t('repository_stock_values.manage_modal.new_stock') %></span>

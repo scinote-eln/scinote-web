@@ -1,0 +1,23 @@
+<div class="list-attachment-container asset">
+  <i class="fas asset-icon <%= file_fa_icon_class(asset) %>"></i>
+  <%= link_to '#',
+    class: "shareable-file-preview-link file-name",
+    id: "modal_link#{asset.id}",
+    data: {
+      no_turbolink: true,
+      id: asset.id
+    } do %>
+    <span data-toggle="tooltip" 
+          data-placement="bottom" 
+          title="<%= asset.render_file_name %>">
+      <%= asset.render_file_name %>
+    </span>
+  <% end %>
+  <div class="file-metadata">
+    <span><%= t('assets.placeholder.modified_label') %> <span class="iso-formatted-date"><%= asset.updated_at.iso8601 if asset.updated_at %></span></span>
+    <span><%= t('assets.placeholder.size_label', size: number_to_human_size(asset.file_size)) %></span>
+  </div>
+  <% if defined?(show_context) && show_context %>
+    <%= render partial: "shareable_links/my_modules/step_attachments/context_menu", locals: { asset: asset } %>
+  <% end %>
+</div>
