@@ -617,11 +617,16 @@
     }
 
     .status-label {
-      @include font-small;
+      @include font-button;
       flex-basis: 50%;
-      font-weight: 700;
       margin-right: .5em;
       text-align: right;
+
+      .status-title {
+        @include font-small;
+        color: var(--sn-grey);
+        margin-right: .2em;
+      }
 
       .status-note {
         font-weight: normal;

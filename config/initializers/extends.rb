@@ -494,9 +494,9 @@ class Extends
   DEFAULT_FLOW_NAME = 'SciNote Free default task flow'
 
   DEFAULT_FLOW_STATUSES = [
-    { name: 'Not started', color: '#406d86' },
-    { name: 'In progress', color: '#0065ff', consequences: ['MyModuleStatusConsequences::Uncompletion'] },
-    { name: 'Completed', color: '#00b900', consequences: ['MyModuleStatusConsequences::Completion'] }
+    { name: 'Not started', color: '#FFFFFF' },
+    { name: 'In progress', color: '#3070ED', consequences: ['MyModuleStatusConsequences::Uncompletion'] },
+    { name: 'Completed', color: '#5EC66F', consequences: ['MyModuleStatusConsequences::Completion'] }
   ]
 
   REPORT_TEMPLATES = {}
