@@ -36,7 +36,7 @@
       </div>
     </div>
     <div id="protocol-content" class="protocol-content collapse in" aria-expanded="true">
-      <div class="ml-[2.375rem] mb-8">
+      <div class="ml-9 mb-8">
         <div class="protocol-name" v-if="!inRepository">
           <InlineEdit
             v-if="urls.update_protocol_name_url"
