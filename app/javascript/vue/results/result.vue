@@ -339,11 +339,13 @@
 
       },
       duplicateResult() {
-
+        axios.post(this.urls.duplicate_url).then((_) => {
+          this.$emit('duplicated');
+        });
       },
       updateName(name) {
-        axios.patch(this.urls.update_url, { result: { name: name } }, (_) => {
-          this.$emit('resultUpdated')
+        axios.patch(this.urls.update_url, { result: { name: name } }).then((_) => {
+          this.$emit('updated');
         });
       }
     }

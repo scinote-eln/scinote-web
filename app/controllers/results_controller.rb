@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class ResultsController < ApplicationController
-  skip_before_action :verify_authenticity_token, only: %i(create update destroy)
+  skip_before_action :verify_authenticity_token, only: %i(create update destroy duplicate)
 
   before_action :load_my_module
-  before_action :load_vars, only: %i(destroy elements assets upload_attachment update_view_state update_asset_view_mode update)
+  before_action :load_vars, only: %i(destroy elements assets upload_attachment
+                                     update_view_state update_asset_view_mode update duplicate)
   before_action :check_destroy_permissions, only: :destroy
 
   def index
@@ -76,7 +77,6 @@ class ResultsController < ApplicationController
   end
 
   def update_asset_view_mode
-    html = ''
     ActiveRecord::Base.transaction do
       @result.assets_view_mode = params[:assets_view_mode]
       @result.save!(touch: false)
@@ -109,6 +109,16 @@ class ResultsController < ApplicationController
                         module: @my_module.name)
     @result.destroy
     redirect_to archive_my_module_path(@my_module)
+  end
+
+  def duplicate
+    ActiveRecord::Base.transaction do
+      new_result = @result.duplicate(
+        @my_module, current_user, result_name: "#{@result.name} (1)"
+      )
+
+      render json: new_result, serializer: ResultSerializer, user: current_user
+    end
   end
 
   private

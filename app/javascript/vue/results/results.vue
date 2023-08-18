@@ -2,7 +2,7 @@
   <div class="results-wrapper">
     <ResultsToolbar :sort="sort" @setSort="setSort" @newResult="createResult" @expandAll="expandAll" @collapseAll="collapseAll" class="mb-3" />
     <div class="results-list">
-      <Result v-for="result in results" :key="result.id" :result="result" />
+      <Result v-for="result in results" :key="result.id" :result="result" @duplicated="loadResults" />
     </div>
   </div>
 </template>
