@@ -2338,19 +2338,6 @@ en:
       my_to_team_message: 'My protocols to Team protocols'
       team_to_my_message: 'Team protocols to My protocols'
 
-  system_notifications:
-      navbar:
-        tooltip: 'What’s new notifications'
-      emails:
-        subject: "You've received a What's new notification"
-        intro_paragraph: "Hi %{user_name}, you've received What's new notification in SciNote:"
-      index:
-        whats_new_html: "What's New"
-        more_notifications: "Show more notifications"
-        no_notifications: "No more notifications"
-        settings: "Settings"
-        see_all: "show all"
-
   user_my_modules:
     new:
       head_title: "%{project} | %{module} | Add user"
