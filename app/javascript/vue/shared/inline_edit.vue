@@ -50,7 +50,7 @@
       smartAnnotation: { type: Boolean, default: false },
       editOnload: { type: Boolean, default: false },
       defaultValue: { type: String, default: '' },
-      customClasses: { type: Array, default: [] }
+      customClasses: { type: Array, default: () => [] }
     },
     data() {
       return {

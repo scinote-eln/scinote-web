@@ -6,7 +6,8 @@ class TeamsController < ApplicationController
   attr_reader :current_folder
   helper_method :current_folder
 
-  before_action :load_vars, only: %i(sidebar export_projects export_projects_modal)
+  before_action :load_vars, only: %i(sidebar export_projects export_projects_modal
+                                     disable_tasks_sharing_modal shared_tasks_toggle)
   before_action :load_current_folder, only: :sidebar
   before_action :check_read_permissions, except: :view_type
   before_action :check_export_projects_permissions, only: %i(export_projects_modal export_projects)
@@ -27,15 +28,9 @@ class TeamsController < ApplicationController
 
       generate_export_projects_zip
 
-      Activities::CreateActivityService
-        .call(activity_type: :export_projects,
-              owner: current_user,
-              subject: @team,
-              team: @team,
-              message_items: {
-                team: @team.id,
-                projects: @exp_projects.map(&:name).join(', ')
-              })
+      log_activity(:export_projects,
+                   team: @team.id,
+                   projects: @exp_projects.map(&:name).join(', '))
 
       render json: {
         flash: t('projects.export_projects.success_flash')
@@ -69,6 +64,32 @@ class TeamsController < ApplicationController
       end
     else
       render json: { flash: I18n.t('projects.export_projects.zero_projects_flash') }, status: :unprocessable_entity
+    end
+  end
+
+  def disable_tasks_sharing_modal
+    render json: {
+      html: render_to_string(
+        partial: 'users/settings/teams/destroy_tasks_sharing_modal',
+        locals: {},
+        formats: :html
+      )
+    }
+  end
+
+  def shared_tasks_toggle
+    return render_403 unless can_manage_team?(@team)
+
+    @team.toggle!(:shareable_links_enabled)
+
+    if @team.shareable_links_enabled?
+      log_activity(:team_sharing_tasks_enabled,
+                   team: @team.id,
+                   user: current_user.id)
+    else
+      log_activity(:team_sharing_tasks_disabled,
+                   team: @team.id,
+                   user: current_user.id)
     end
   end
 
@@ -138,5 +159,14 @@ class TeamsController < ApplicationController
       options
     )
     ids
+  end
+
+  def log_activity(type_of, message_items = {})
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: @team,
+            team: @team,
+            message_items: message_items)
   end
 end

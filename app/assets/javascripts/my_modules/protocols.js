@@ -195,7 +195,7 @@ function initLoadFromRepositoryTable(content) {
     // Enable load btn
     content.closest('.modal')
       .find(".modal-footer [data-action='submit']")
-      .removeAttr('disabled');
+      .attr('disabled', false);
 
     e.stopPropagation();
   });

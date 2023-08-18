@@ -92,6 +92,7 @@ describe User, type: :model do
     it { should have_many :user_notifications }
     it { should have_many :notifications }
     it { should have_many :zip_exports }
+    it { should have_many(:shareable_links).dependent(:destroy) }
 
     it 'have many repositories' do
       table = User.reflect_on_association(:repositories)
@@ -299,10 +300,6 @@ describe User, type: :model do
         expect(user.exports_left).to be == 3
       end
     end
-  end
-
-  describe 'Associations' do
-    it { is_expected.to have_many(:system_notifications) }
   end
 
   describe 'Email downcase' do

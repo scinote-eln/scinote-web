@@ -5,8 +5,6 @@ source 'http://rubygems.org'
 ruby '3.2.2'
 
 gem 'bootsnap', require: false
-gem 'bootstrap-sass', '~> 3.4.1'
-gem 'bootstrap_form', '~> 2.7.0'
 gem 'devise', '~> 4.8.1'
 gem 'devise_invitable'
 gem 'figaro'
@@ -16,7 +14,6 @@ gem 'psych', '< 4.0'
 gem 'rails', '~> 7.0.5'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize'
-gem 'sassc-rails'
 gem 'sprockets-rails'
 gem 'view_component'
 gem 'yomu', git: 'https://github.com/scinote-eln/yomu', branch: 'master'
@@ -38,20 +35,7 @@ gem 'kaminari'
 gem 'rack-attack'
 gem 'rack-cors'
 
-# JS datetime library, requirement of datetime picker
-gem 'momentjs-rails', '~> 2.17.1'
-# JS datetime picker
-gem 'bootstrap3-datetimepicker-rails', '~> 4.17'
-# Select elements for Bootstrap
-gem 'bootstrap-select-rails', '~> 1.12.4'
 gem 'uglifier', '>= 1.3.0'
-# jQuery & plugins
-gem 'autosize-rails' # jQuery autosize plugin
-gem 'hammerjs-rails'
-gem 'jquery-rails'
-gem 'jquery-ui-rails'
-gem 'js_cookie_rails' # Simple JS API for cookies
-gem 'spinjs-rails'
 
 gem 'activerecord-import'
 gem 'ajax-datatables-rails', '~> 0.3.1'
@@ -82,7 +66,7 @@ gem 'scenic', '~> 1.4'
 gem 'sdoc', '~> 1.0', group: :doc
 gem 'silencer' # Silence certain Rails logs
 gem 'sneaky-save', git: 'https://github.com/einzige/sneaky-save'
-gem 'turbolinks', '~> 5.1.1'
+gem 'turbolinks', '~> 5.2.0'
 gem 'underscore-rails'
 gem 'wicked_pdf'
 
@@ -102,6 +86,7 @@ gem 'discard'
 gem 'graphviz'
 
 gem 'jsbundling-rails'
+gem 'cssbundling-rails'
 
 gem 'tailwindcss-rails', '~> 2.0'
 

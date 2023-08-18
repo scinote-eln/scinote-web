@@ -1,9 +1,5 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
-
-@import "constants";
-@import "mixins";
-
 .tree {
   height: calc(100% - 30px);
   padding-bottom: 30px;

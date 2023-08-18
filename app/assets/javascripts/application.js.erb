@@ -1,7 +1,5 @@
 // turbolinks MUST BE THE LAST inclusion
-//= require hammer
-//= require js.cookie
-//= require bootstrap-sprockets
+
 //= require moment
 //= require bootstrap-datetimepicker
 //= require bootstrap-colorselector
@@ -11,10 +9,12 @@
 //= require nested_form_fields
 //= require jsPlumb-2.0.4-min
 //= require jsnetworkx
-//= require bootstrap-select
 //= require_directory ./repository_columns/columns_initializers
 //= require datatables
 //= require jquery.dataTables.colResize
+//= require jquery.ui.touch-punch.min
+//= require jquery.caret.min
+//= require jquery.atwho.min
 //= require clndr.min
 //= require ajax-bootstrap-select.min
 //= require underscore
@@ -158,7 +158,7 @@ window.onbeforeunload = function () {
  * Disable Firefox caching to get rid of issues with pressing
  * browser back, like opening canvas in edit mode.
  */
-$(window).unload(function () {
+$(window).on("unload", function() {
   $(window).unbind('unload');
 });
 

@@ -147,7 +147,6 @@
               noRecentText.show();
             }
             bindSystemNotificationAjax();
-            SystemNotificationsMarkAsSeen();
           }
         });
         $('#count-system-notifications').hide();

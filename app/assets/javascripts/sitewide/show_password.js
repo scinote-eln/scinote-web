@@ -5,7 +5,6 @@ function initShowPassword() {
           style="
             cursor: pointer;
             z-index: 10;
-            top: ${$(e).position().top}px
           "></i>`).insertAfter(e);
     $(e).parent().addClass('right-icon');
   });

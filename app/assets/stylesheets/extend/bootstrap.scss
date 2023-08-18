@@ -1,7 +1,5 @@
 /* Extending Bootstrap */
 
-@import 'constants';
-
 /* navbar avatar image */
 .navbar-nav .dropdown-toggle[title="Account"] {
   align-items: center;
@@ -116,6 +114,14 @@
 .btn {
   .fas {
     margin-right: 5px;
+  }
+}
+
+.centered-modal.in {
+  display: flex !important;
+
+  .modal-dialog {
+    margin: auto;
   }
 }
 

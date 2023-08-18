@@ -10,9 +10,8 @@ module Api
       before_action :load_user, only: :show
 
       def index
-        users = @task.users
-                     .page(params.dig(:page, :number))
-                     .per(params.dig(:page, :size))
+        users = timestamps_filter(@task.users).page(params.dig(:page, :number))
+                                              .per(params.dig(:page, :size))
         render jsonapi: users, each_serializer: UserSerializer
       end
 

@@ -19,10 +19,9 @@ module Api
       end
 
       def index
-        user_assignments = @project.user_assignments
-                                   .includes(:user_role)
-                                   .page(params.dig(:page, :number))
-                                   .per(params.dig(:page, :size))
+        user_assignments = timestamps_filter(@project.user_assignments).includes(:user_role)
+                                                                       .page(params.dig(:page, :number))
+                                                                       .per(params.dig(:page, :size))
 
         render jsonapi: user_assignments,
                each_serializer: UserAssignmentSerializer,

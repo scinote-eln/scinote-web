@@ -1,0 +1,22 @@
+<div class="step-attachments">
+  <div class="attachments-actions">
+    <div class="title">
+      <h3> <%= t('protocols.steps.files', count: attachments.length) %> </h3>
+    </div>
+  </div>
+  <div class="attachments">
+    <% attachments.each do |attachment| %>
+      <% if attachment.file.attached? %>
+        <%= render partial: "shareable_links/my_modules/step_attachments/#{ attachment.view_mode }", locals: { asset: attachment, show_context: true } %>
+        <%= render partial: "shareable_links/my_modules/step_attachments/file_preview", locals: { asset: attachment, gallery: attachments.pluck(:id) } %>
+      <% else %>
+        <%= attachment.view_mode %>
+        <%= render partial: "shareable_links/my_modules/step_attachments/empty", locals: { asset: attachment } %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<%= javascript_include_tag 'shared/file_preview' %>
+<%= javascript_include_tag 'pdf_js' %>
+<%= stylesheet_link_tag 'pdf_js_styles' %>

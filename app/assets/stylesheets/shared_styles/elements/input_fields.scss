@@ -35,9 +35,22 @@
     &::placeholder {
       color: $color-alto;
     }
+
+    &.textarea {
+      height: unset;
+      min-height: 36px;
+      padding: 10px;
+      resize: vertical;
+    }
+  }
+
+  .sci-input-field[type=password] {
+    font-family: Arial;
+    letter-spacing: .075em;
   }
 
   .sn-icon {
+    bottom: 6px;
     position: absolute;
     text-align: center;
     width: 25px;
@@ -67,10 +80,11 @@
   &.error {
     &::after {
       @include font-awesome;
-      top: 0;
+      bottom: 6px;
       position: absolute;
       right: 5px;
       text-align: center;
+      top: 6px;
       width: 25px;
     }
   }

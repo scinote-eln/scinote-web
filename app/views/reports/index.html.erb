@@ -42,7 +42,7 @@
 
 <!-- Save report modal -->
 <div class="modal" id="delete-reports-modal" tabindex="-1" role="dialog" aria-labelledby="delete-reports-modal-label">
-  <%= bootstrap_form_tag url: reports_destroy_path, method: :post, id: "delete-reports-form" do |f| %>
+  <%= form_with url: reports_destroy_path, method: :post, id: "delete-reports-form" do |f| %>
     <input type="hidden" name="report_ids" id="report-ids">
     <div class="modal-dialog" role="document">
       <div class="modal-content">

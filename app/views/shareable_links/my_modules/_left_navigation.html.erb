@@ -1,0 +1,24 @@
+<div class="block pl-2 pb-6 object-contain border-0 border-b border-solid border-sn-light-grey">
+    <%= image_tag "scinote_logo.svg" %>
+</div>
+<h3 class="my-4">
+  <%= t("shareable_links.left_navigation.welcome")%>
+</h3>
+<div class="flex flex-col p-6 bg-sn-super-light-blue gap-4">
+  <span class="font-semibold">
+    <%= t("shareable_links.left_navigation.title")%>
+  </span>
+  <span class="text-[.75rem]">
+    <%= t("shareable_links.left_navigation.description_1")%>
+  </span>
+  <span class="text-[.75rem]">
+    <%= t("shareable_links.left_navigation.description_2")%>
+  </span>
+  <ul class="text-[.75rem] mb-0">
+    <li><%= t("shareable_links.left_navigation.description_3.bullet_point_1")%></li>
+    <li><%= t("shareable_links.left_navigation.description_3.bullet_point_2")%></li>
+    <li><%= t("shareable_links.left_navigation.description_3.bullet_point_3")%></li>
+  </ul>
+
+  <%= link_to t("shareable_links.left_navigation.free_trial"), Constants::FREE_TRIAL_URL,  class: "btn btn-lg btn-primary w-fit", target: :_blank %>
+</div>

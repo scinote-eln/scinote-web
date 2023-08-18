@@ -37,7 +37,7 @@ module SecondaryNavigationHelper
   end
 
   def is_module_protocols?
-    action_name == 'protocols'
+    %w(protocols protocol_show).include?(action_name)
   end
 
   def is_module_results?

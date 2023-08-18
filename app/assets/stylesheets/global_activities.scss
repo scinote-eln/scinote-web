@@ -1,8 +1,6 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
 
-@import "constants";
-@import "mixins";
 
 .global-activities-container {
   background: $color-white;
@@ -12,7 +10,7 @@
   padding: 0 15px;
 
   &.task-activities {
-    height: calc(100vh - 136px);
+    height: calc(100vh - var(--navbar-height) - var(--title-row-height) - 3rem);
     padding-top: 20px;
   }
 

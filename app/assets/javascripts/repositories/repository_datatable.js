@@ -4,7 +4,6 @@
   initAssignedTasksDropdown initReminderDropdown initBSTooltips
 */
 
-//= require jquery-ui/widgets/sortable
 //= require repositories/row_editor.js
 
 
@@ -594,7 +593,7 @@ var RepositoryDatatable = (function(global) {
           saveState(state);
         },
         stateLoadCallback: (state) => {
-          if (!TABLE.ColSizes) return;
+          if (!TABLE.ColSizes || TABLE.ColSizes.length === 0) return;
 
           let colSizes = TABLE.ColSizes;
 
@@ -718,7 +717,9 @@ var RepositoryDatatable = (function(global) {
         }
         customColumns.each((i, column) => {
           var columnData = $(column).data('type') === 'RepositoryStockValue' ? 'stock' : String(columns.length);
+          const className = $(column).data('type') === 'RepositoryChecklistValue' ? 'checklist-column' : '';
           columns.push({
+            className: className,
             visible: true,
             searchable: true,
             data: columnData,
@@ -783,8 +784,6 @@ var RepositoryDatatable = (function(global) {
         });
       },
       stateSaveCallback: function(_, data) {
-        if (Object.keys(colSizeMap).length === 0) return true;
-
         let colSizes = [];
 
         for (let i = 0; i < data.ColReorder.length; i += 1) {
