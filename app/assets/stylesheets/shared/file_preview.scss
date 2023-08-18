@@ -38,6 +38,11 @@
       background-color: var(--sn-white);
     }
 
+    .gene-sequence-asset {
+      height: 500px;
+      width: 500px;
+    }
+
     &.processing {
       background-image: url("/images/medium/loading_white.svg");
       background-position: center;
