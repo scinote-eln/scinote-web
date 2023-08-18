@@ -65,8 +65,15 @@
       }
 
       // Save result table callback
-      function resultTableCallback () {
-        $('result-tables-buttons').on('click', '.save-result', (event) => {
+      function newResultTableCallback() {
+        $('.new-result-tables-buttons .save-result').on('click', (event) => {
+          Results.processResult(event, Results.ResultTypeEnum.TABLE);
+        });
+      }
+
+      // Save result table callback
+      function saveResultTableCallback() {
+        $('.edit-result-tables-buttons .save-result').on('click', (event) => {
           Results.processResult(event, Results.ResultTypeEnum.TABLE);
         });
       }
@@ -87,7 +94,6 @@
           Results.expandResult($result);
           Comments.init();
           initNewResultTable();
-          resultTableCallback();
         });
         $form.on('ajax:error', function(e, xhr, status, error) {
           var data = xhr.responseJSON;
@@ -119,7 +125,7 @@
           Results.toggleResultEditButtons(false);
 
           $('#result_name').focus();
-          resultTableCallback();
+          saveResultTableCallback();
         });
       }
 
@@ -146,6 +152,7 @@
               Results.initCancelFormButton($form, initNewResultTable);
               Results.toggleResultEditButtons(false);
               $('#result_name').focus();
+              newResultTableCallback();
             },
             error: function() {
               animateSpinner(null, false);
