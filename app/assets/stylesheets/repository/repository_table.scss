@@ -1,8 +1,8 @@
 // scss-lint:disable SelectorDepth SelectorFormat QualifyingElement
 // scss-lint:disable NestingDepth ImportantRule
 
-@import "constants";
-@import "layouts/reminders";
+
+@import "../layouts/reminders";
 
 .repository-table {
   --content-header-size: 3.5rem;
@@ -81,11 +81,17 @@
   }
 
   // Cells
-
+  td.added-on,
+  td.asset-value-cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
   // Assigned
 
   .assigned-column {
+    overflow: unset;
     padding: 1px 8px;
     position: relative;
 
@@ -164,6 +170,10 @@
     .circle-icon {
       margin: 9px 30px;
     }
+  }
+
+  .checklist-column {
+    overflow: unset;
   }
 
   .item-name {
@@ -409,6 +419,10 @@
               margin-left: 30px;
             }
           }
+        }
+
+        td {
+          overflow: visible;
         }
       }
     }

@@ -99,8 +99,7 @@
     props: {
       showModal: Boolean,
       row_ids: Array,
-      urls: Object,
-      zebraEnabled: Boolean
+      urls: Object
     },
     data() {
       return {
@@ -130,12 +129,9 @@
       })
 
       $(this.$refs.modal).on('hidden.bs.modal', () => {
+        this.zebraPrinters = null;
         this.$emit('close');
       });
-
-      if (this.zebraEnabled) {
-        this.initZebraPrinter();
-      }
     },
     computed: {
       availableTemplates() {
@@ -167,6 +163,7 @@
     watch: {
       showModal() {
         if (this.showModal) {
+          this.initZebraPrinter();
           $(this.$refs.modal).modal('show');
           this.validateTemplate();
         }
@@ -203,7 +200,7 @@
         $.post(this.urls.printValidation, {label_template_id: this.selectedTemplate.id, rows: this.row_ids}, (result) => {
           this.labelTemplateError = null;
           this.labelTemplateCode = result.label_code;
-        }).error((result) => {
+        }).fail((result) => {
           this.labelTemplateError = result.responseJSON.error;
           this.labelTemplateCode = result.responseJSON.label_code;
         })

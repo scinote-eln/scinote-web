@@ -1,0 +1,18 @@
+<div class="flex items-center uppercase">
+  <a class="p-4 border-b-4 border-transparent hover:no-underline capitalize <%= is_module_protocols? ? "text-sn-blue" : "text-sn-grey" %>"
+      href="<%= shared_protocol_url(@shareable_link.uuid) %>"
+      title="<%= t("nav2.modules.steps") %>"
+  >
+    <%= t("nav2.modules.steps") %>
+  </a>
+  <a class="p-4 border-b-4 border-transparent hover:no-underline capitalize <%= is_module_results? ? "text-sn-blue" : "text-sn-grey" %>"
+      href="<%= shared_protocol_results_path(@shareable_link.uuid) %>"
+      title="<%= t("nav2.modules.results") %>"
+  >
+    <%= t("nav2.modules.results") %>
+    <% @active_results_size = @my_module.results.where(archived:false).size %>
+    <% if @active_results_size.positive? %>
+      <sup class="navigation-results-counter"><%= @my_module.archived_branch? ? @my_module.results.size : @active_results_size %></sup>
+    <% end %>
+  </a>
+</div>

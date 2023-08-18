@@ -74,7 +74,6 @@ class UserDataDeletion
         destroy_protocol(protocol)
       end
       team.protocol_keywords.destroy_all
-      team.user_teams.delete_all
       User.where(current_team_id: team).each do |user|
         user.update(current_team_id: nil)
       end

@@ -5,11 +5,12 @@
 <div class="tab-content">
   <div class="tab-pane content-pane" role="tabpanel"></div>
   <div class="tab-pane content-pane active" role="tabpanel">
-    <%= bootstrap_form_for @new_team, url: create_team_path do |f| %>
-      <div class="form-group" style="max-width: 500px;">
+    <%= form_with model: @new_team, url: create_team_path do |f| %>
+      <div class="form-group sci-input-container" style="max-width: 500px;">
+        <label><%= t('users.settings.teams.new.name_label') %></label>
         <%= f.text_field :name,
-                         label: t('users.settings.teams.new.name_label'),
                          autofocus: true,
+                         class: 'sci-input-field',
                          placeholder: t('users.settings.teams.new.name_placeholder') %>
         <small>
           <%=t 'users.settings.teams.new.name_sublabel' %>
@@ -18,6 +19,7 @@
 
       <div class="form-group" style="max-width: 500px;">
         <%= f.text_area :description, label: t('users.settings.teams.new.description_label') %>
+        <br>
         <small>
           <%=t 'users.settings.teams.new.description_sublabel' %>
         </small>

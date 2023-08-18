@@ -820,7 +820,7 @@ var MyModuleRepositories = (function() {
         header_ids: headerIds
       }, function(response) {
         HelperModule.flashAlertMsg(response.message, 'success');
-      }).error((response) => {
+      }).fail((response) => {
         HelperModule.flashAlertMsg(response.responseJSON.message, 'danger');
       });
     });

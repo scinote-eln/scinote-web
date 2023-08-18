@@ -143,7 +143,7 @@
           dropdownSelector.selectValues('#sciNavigationTeamSelector', this.currentTeam);
           $('body').attr('data-current-team-id', this.currentTeam);
           window.open(this.rootUrl, '_self')
-        }).error((msg) => {
+        }).fail((msg) => {
           HelperModule.flashAlertMsg(msg.responseJSON.message, 'danger');
         });
       },

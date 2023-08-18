@@ -222,6 +222,8 @@ Rails.application.routes.draw do
         post 'export_projects'
         get 'sidebar'
         get 'export_projects_modal'
+        post 'shared_tasks_toggle'
+        get 'disable_tasks_sharing_modal'
         # Used for atwho (smart annotations)
         get 'atwho_users', to: 'at_who#users'
         get 'atwho_menu', to: 'at_who#menu'
@@ -461,6 +463,8 @@ Rails.application.routes.draw do
 
       resource :status_flow, controller: :my_module_status_flow, only: :show
 
+      resource :shareable_link, controller: :my_module_shareable_links, only: %i(show create update destroy)
+
       resources :my_module_comments,
                 path: '/comments',
                 only: %i(create index update destroy)
@@ -568,17 +572,6 @@ Rails.application.routes.draw do
       end
     end
 
-    # System notifications routes
-    resources :system_notifications, only: %i(show) do
-      collection do
-        post 'mark_as_seen'
-        get 'unseen_counter'
-      end
-      member do
-        post 'mark_as_read'
-      end
-    end
-
     # tinyMCE image uploader endpoint
     resources :tiny_mce_assets, only: [:create] do
       member do
@@ -652,6 +645,7 @@ Rails.application.routes.draw do
         post 'restore', to: 'protocols#restore'
         post 'clone', to: 'protocols#clone'
         post 'import', to: 'protocols#import'
+        post 'import_docx', to: 'protocols#import_docx'
         post 'protocolsio_import_create',
              to: 'protocols#protocolsio_import_create'
         post 'protocolsio_import_save', to: 'protocols#protocolsio_import_save'
@@ -956,6 +950,28 @@ Rails.application.routes.draw do
       post :save_activity_filter
     end
   end
+
+  # Shareable links
+  get '/shared/:uuid/protocol',
+      to: 'my_module_shareable_links#protocol_show',
+      as: :shared_protocol
+  get '/shared/:uuid/protocol/asset/:id/download',
+      to: 'my_module_shareable_links#download_step_asset',
+      as: :shared_protocol_asset_download
+  get '/shared/:uuid/protocol/asset/:id/download_result',
+      to: 'my_module_shareable_links#download_result_asset',
+      as: :shared_protocol_result_asset_download
+  get '/shared/:uuid/protocol/results',
+      to: 'my_module_shareable_links#results_show',
+      as: :shared_protocol_results
+  post '/shared/:uuid/repositories/:id/items',
+       to: 'my_module_shareable_links#repository_index_dt',
+       as: :shared_protocol_items,
+       defaults: { format: :json }
+  post '/shared/:uuid/repositories/:id/snapshot_items',
+       to: 'my_module_shareable_links#repository_snapshot_index_dt',
+       as: :shared_protocol_snapshot_items,
+       defaults: { format: :json }
 
   resources :marvin_js_assets, only: %i(create update destroy show) do
     collection do

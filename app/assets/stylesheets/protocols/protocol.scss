@@ -1,8 +1,6 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
 
-@import "constants";
-@import "mixins";
 
 .content-pane.protocols-show {
   --container-margin: 20px;
@@ -271,6 +269,10 @@
   .repository-new-step {
     margin-left: 1.5em;
   }
+}
+
+#protocol-description-container {
+  overflow-x: auto;
 }
 
 .delete-steps-modal {

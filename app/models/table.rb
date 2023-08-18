@@ -105,6 +105,10 @@ class Table < ApplicationRecord
     end
   end
 
+  def metadata
+    attributes['metadata'].is_a?(String) ? JSON.parse(attributes['metadata']) : attributes['metadata']
+  end
+
   def contents_utf_8
     contents.present? ? contents.force_encoding(Encoding::UTF_8) : nil
   end

@@ -1,7 +1,5 @@
 // scss-lint:disable SelectorFormat
 
-@import "constants";
-
 .status-item-list {
   max-height: 350px;
   overflow-y: auto;
@@ -16,7 +14,7 @@
   transition: .3s;
 
   .status-item-field {
-    border: 1px solid $input-border;
+    border: 1px solid $color-alto;
     border-left: 0;
     border-radius: 0 4px 4px 0;
     flex-grow: 1;
@@ -77,7 +75,7 @@
     }
 
     .status-item-icon {
-      border-right-color: $input-border;
+      border-right-color: $color-alto;
     }
 
     &::before {

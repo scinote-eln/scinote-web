@@ -230,7 +230,7 @@ var ExperimnetTable = {
     $.post(url, { my_module_ids: ids }, () => {
       this.loadTable();
       window.navigatorContainer.reloadChildrenLevel = true;
-    }).error((data) => {
+    }).fail((data) => {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   },
@@ -245,7 +245,7 @@ var ExperimnetTable = {
       HelperModule.flashAlertMsg(data.message, 'success');
       this.loadTable();
       window.navigatorContainer.reloadChildrenLevel = true;
-    }).error((data) => {
+    }).fail((data) => {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   },
@@ -387,7 +387,7 @@ var ExperimnetTable = {
           checkbox.dataset.unassignUrl = result.unassign_url;
           $(checkbox).closest('.table-row').find('.assigned-users-container')
             .replaceWith($(result.html).find('.assigned-users-container'));
-        }).error((data) => {
+        }).fail((data) => {
           HelperModule.flashAlertMsg(data.responseJSON.errors, 'danger');
         });
       } else {
@@ -439,7 +439,7 @@ var ExperimnetTable = {
           HelperModule.flashAlertMsg(data.message, 'success');
           this.loadTable();
           window.navigatorContainer.reloadChildrenLevel = true;
-        }).error((data) => {
+        }).fail((data) => {
           HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
         });
         $('#modal-move-modules').modal('hide');

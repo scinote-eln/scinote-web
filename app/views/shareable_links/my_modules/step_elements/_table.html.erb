@@ -1,0 +1,15 @@
+<div class="step-table-container">
+  <div class="step-element-header step-element--locked">
+    <div class="step-element-grip-placeholder"></div>
+    <% if element.name.present? %>
+      <div class="step-element-name">
+        <%= render partial: "shareable_links/my_modules/inline_view", locals: { text: element.name, smart_annotation_enabled: false } %>
+        </div>                                                                            
+    <% end %>
+  </div>
+  <div class="step-table view locked" tabindex="0">
+    <input type="hidden" class="hot-table-contents" value="<%= element.contents_utf_8 %>" />
+    <input type="hidden" class="hot-table-metadata" value="<%= element.metadata ? element.metadata.to_json : nil %>" />
+    <div class="hot-table-container"></div>
+  </div>
+</div>

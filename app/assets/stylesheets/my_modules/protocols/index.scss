@@ -4,8 +4,8 @@
 // scss-lint:disable ImportantRule
 // scss-lint:disable IdSelector
 
-@import "constants";
-@import "mixins";
+
+
 
 .my-module-header {
   .my-module-title-row {
@@ -21,6 +21,12 @@
       display: flex;
       min-width: 5rem;
       width: 100%;
+
+      .view-mode {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
 
       .fas {
         margin-right: .5em;
@@ -48,9 +54,9 @@
   .my-module-position-container {
     background-color: $color-white;
     box-shadow: $flyout-shadow;
-    margin: 1rem auto;
+    margin: 1rem auto 0 0;
     max-width: 900px;
-    padding: 1rem 0;
+    padding: 0 0 1rem;
     z-index: 2;
   }
 
@@ -419,6 +425,7 @@
 
   .task-notes-content {
     margin-left: 10px;
+    overflow-x: auto;
 
     .form-group.has-error {
       border: 1px solid $brand-danger;
@@ -600,7 +607,7 @@
     }
   }
 
-  .task-flows {
+  .task-sharing-and-flows {
     align-items: center;
     display: flex;
     justify-content: flex-end;
@@ -610,11 +617,16 @@
     }
 
     .status-label {
-      @include font-small;
+      @include font-button;
       flex-basis: 50%;
-      font-weight: 700;
       margin-right: .5em;
       text-align: right;
+
+      .status-title {
+        @include font-small;
+        color: var(--sn-grey);
+        margin-right: .2em;
+      }
 
       .status-note {
         font-weight: normal;
@@ -655,7 +667,7 @@
   .task-information .task-section-header {
     display: block;
 
-    .task-flows,
+    .task-sharing-and-flows,
     .status-label,
     .status-buttons {
       display: block;
@@ -700,7 +712,7 @@
       grid-row: 3 / span 1;
     }
 
-    .task-flows {
+    .task-sharing-and-flows {
       grid-column: unset;
       grid-row: 2 / span 1;
     }

@@ -11,9 +11,10 @@ module Api
       before_action :check_manage_permissions, only: %i(create update destroy)
 
       def index
-        checklist_items = @inventory_column.repository_checklist_items
-                                           .page(params.dig(:page, :number))
-                                           .per(params.dig(:page, :size))
+        checklist_items =
+          timestamps_filter(@inventory_column.repository_checklist_items).page(params.dig(:page, :number))
+                                                                         .per(params.dig(:page, :size))
+
         render jsonapi: checklist_items, each_serializer: InventoryChecklistItemSerializer
       end
 

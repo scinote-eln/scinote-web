@@ -40,7 +40,6 @@ Given('the following users are registered with teams:') do |table|
     team = Team.find_by(name: row[:team])
     team ||= FactoryBot.create(:team, name: row[:team])
     user = FactoryBot.create(:user, row.slice('name', 'email'))
-    FactoryBot.create(:user_team, user: user, team: team, role: row[:role])
   end
 end
 

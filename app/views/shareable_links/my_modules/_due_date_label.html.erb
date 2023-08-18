@@ -1,0 +1,15 @@
+<span class="due-date-label font-medium <%= get_task_alert_color(my_module) %>">
+  <% if (my_module.archived_branch? || my_module.completed? ) && my_module.due_date %>
+    <span class="iso-formatted-date"><%= my_module.due_date.iso8601 %></span>
+  <% elsif my_module.is_one_day_prior? %>
+    <%= t('my_modules.states.due_soon') %>
+    <span class="iso-formatted-date"><%= my_module.due_date.iso8601 %></span>
+    <span class="fas fa-exclamation-triangle"></span>
+  <% elsif my_module.is_overdue? %>
+    <%= t('my_modules.states.overdue') %>
+    <span class="iso-formatted-date"><%= my_module.due_date.iso8601 %></span>
+    <span class="fas fa-exclamation-triangle"></span>
+  <% elsif my_module.due_date %>
+      <span class="iso-formatted-date"><%= my_module.due_date.iso8601 %></span>
+  <% end %>
+</span>

@@ -57,9 +57,7 @@ module Users
         end
       end
 
-      def show
-        @user_team = UserTeam.find_by(user: @user, team: @team)
-      end
+      def show; end
 
       def users_datatable
         render json: ::TeamUsersDatatable.new(view_context, @team, @user)

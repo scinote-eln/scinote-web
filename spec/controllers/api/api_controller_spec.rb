@@ -24,22 +24,4 @@ describe Api::ApiController, type: :controller do
       end
     end
   end
-
-  describe 'GET #health' do
-    before do
-      stub_request(:get, Rails.application.secrets.system_notifications_uri + '/api/system_notifications')
-        .with(query: hash_including('channels_slug': Rails.application.secrets.system_notifications_channel),
-              headers: { 'Accept': 'application/vnd.system-notifications.1+json' })
-        .to_return(status: 200, body: '', headers: {})
-      get :health
-    end
-
-    it 'Returns HTTP success' do
-      expect(response).to have_http_status(200)
-    end
-
-    it 'Response with the correct plain text' do
-      expect(response.body).to match('RUNNING')
-    end
-  end
 end
