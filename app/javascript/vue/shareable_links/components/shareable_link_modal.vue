@@ -38,7 +38,7 @@
                 <span class="sci-toggle-checkbox-label"></span>
               </span>
             </div>
-            <div>
+            <div class="text-sm">
               <div class="sci-input-container-v2 textarea-lg mb-2">
                 <textarea ref="textarea"
                           tabindex="0"

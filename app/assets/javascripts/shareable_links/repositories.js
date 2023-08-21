@@ -80,6 +80,8 @@
                           <ul class="dropdown-menu" role="menu" aria-labelledby="rowReminders${row.DT_RowId}">
                           </ul>
                         </div>` + recordName;
+        } else {
+          recordName = `<span class='inline-block my-2'>${recordName}</span>`;
         }
         return recordName;
       }
@@ -119,6 +121,12 @@
       },
       columns: simpleTableColumns(tableContainer),
       columnDefs: simpleViewColumnDefs(tableContainer),
+      language: {
+        paginate: {
+          previous: "<span class='hidden'></span>",
+          next: "<span class='hidden'></span>"
+        }
+      },
       drawCallback: function() {
         var repositoryContainer = $(this).closest('.assigned-repository-container');
         repositoryContainer.find('.table.dataTable').removeClass('hidden');

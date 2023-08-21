@@ -11,6 +11,8 @@
     <%= javascript_include_tag 'jquery_bundle' %>
     <%= javascript_include_tag 'application' %>
     <%= javascript_include_tag 'application_pack' %>
+    <%= stylesheet_link_tag 'datatables' %>
+    <%= stylesheet_link_tag 'my_modules/shared/layout_overrides' %>
 
     <%= favicon_link_tag "favicon.ico" %>
     <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>
@@ -23,7 +25,7 @@
     <%= csrf_meta_tags %>
   </head>
   <body id="sci-shareable-links" data-datetime-picker-format="YYYY-MM-DD">
-    <div class="flex">
+    <div class="flex shareable-links">
       <div class="sticky top-0 w-80 h-screen px-6 py-6 flex flex-col
                   border-0 border-r border-solid border-sn-sleepy-grey">
         <%= render "shareable_links/my_modules/left_navigation" %>
