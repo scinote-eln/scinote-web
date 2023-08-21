@@ -71,11 +71,6 @@ class Project < ApplicationRecord
                         end
                       end)
 
-  scope :not_assigned_to_user, lambda { |user|
-    left_joins(:user_assignments)
-      .where('user_assignments.user_id = ? AND user_assignments.id IS NULL', user.id)
-  }
-
   scope :templates, -> { where(template: true) }
 
   after_create :auto_assign_project_members, if: :visible?
