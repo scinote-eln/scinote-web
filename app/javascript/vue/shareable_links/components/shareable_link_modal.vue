@@ -47,8 +47,7 @@
                           v-model="description"
                           :placeholder="i18n.t('shareable_links.modal.description_placeholder')"
                           :disabled="!sharedEnabled"
-                          @focus="editing = true"
-                          @blur="handleTextareaBlur">
+                          @focus="editing = true">
                 </textarea>
               </div>
               <div v-if="error" class="text-xs shareable-link-error">
@@ -188,13 +187,6 @@
         $(this.$refs.textarea).on('input change paste keydown', () => {
           this.characterCount = this.$refs.textarea.value.length;
         });
-      },
-      handleTextareaBlur() {
-        this.editing = false;
-
-        if (!this.dirty) {
-          this.description = this.shareableData.attributes.description || '';
-        }
       },
       handleCheckboxEnter() {
         this.sharedEnabled = !this.sharedEnabled;
