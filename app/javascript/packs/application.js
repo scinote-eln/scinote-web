@@ -9,7 +9,6 @@ require('jquery-ui/ui/widgets/droppable');
 require('jquery-ui/ui/effects/effect-slide');
 require('hammerjs');
 import 'bootstrap';
-import './bootstrap.less';
 require('bootstrap-select/js/bootstrap-select');
 
 window.bwipjs = require('bwip-js');
