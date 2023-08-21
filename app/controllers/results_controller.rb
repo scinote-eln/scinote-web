@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ResultsController < ApplicationController
-  skip_before_action :verify_authenticity_token, only: %i(create update destroy)
-
   before_action :load_my_module
   before_action :load_vars, only: %i(destroy elements assets upload_attachment update_view_state update_asset_view_mode update)
   before_action :check_destroy_permissions, only: :destroy

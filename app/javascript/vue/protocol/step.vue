@@ -175,6 +175,7 @@
             @update="updateElement"
             @reorder="openReorderModal"
             @component:insert="insertElement"
+            @moved="moveElement"
           />
         </template>
         <Attachments v-if="attachments.length"
@@ -243,7 +244,11 @@
       assignableMyModuleId: {
         type: Number,
         required: false
-      }
+      },
+      stepToReload: {
+        type: Number,
+        required: false
+      },
     },
     data() {
       return {
@@ -283,6 +288,13 @@
     created() {
       this.loadAttachments();
       this.loadElements();
+    },
+    watch: {
+      stepToReload() {
+        if (this.stepToReload == this.step.id) {
+          this.loadElements();
+        }
+      }
     },
     mounted() {
       $(this.$refs.comments).data('closeCallback', this.closeCommentsSidebar);
@@ -335,6 +347,7 @@
       loadElements() {
         $.get(this.urls.elements_url, (result) => {
           this.elements = result.data
+          this.$emit('step:elements:loaded');
         });
       },
       showStorageUsage() {
@@ -521,6 +534,17 @@
           return s;
         })
         this.elements.push(element);
+      },
+      moveElement(position, target_id) {
+        this.elements.splice(position, 1)
+        let unorderedElements = this.elements.map( e => {
+          if (e.attributes.position >= position) {
+            e.attributes.position -= 1;
+          }
+          return e;
+        })
+        this.$emit('stepUpdated')
+        this.$emit('step:move_element', target_id)
       },
       duplicateStep() {
         $.post(this.urls.duplicate_step_url, (result) => {
