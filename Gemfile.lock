@@ -755,7 +755,7 @@ DEPENDENCIES
   puma
   rack-attack
   rack-cors
-  rails (~> 7.0.5.1)
+  rails (~> 7.0.5)
   rails-controller-testing
   rails_12factor
   rails_autolink (~> 1.1, >= 1.1.6)
