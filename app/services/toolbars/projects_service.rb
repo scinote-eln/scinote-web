@@ -16,7 +16,7 @@ module Toolbars
 
       @single = @items.length == 1
 
-      @team_owner = @current_user.current_team.user_assignments.exists?(user: @current_user, role: UserRole.find_predefined_owner_role)
+      @team_owner = @current_user.current_team.user_assignments.exists?(user: @current_user, user_role: UserRole.find_predefined_owner_role)
       @unassigned_team_owner = @team_owner && !can_read_project?(@items.first)
 
       @item_type = if project_ids.blank? && project_folder_ids.blank?
