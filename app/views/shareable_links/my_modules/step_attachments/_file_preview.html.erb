@@ -30,14 +30,12 @@
       </div>
       <div class="modal-body">
         <div class="file-preview-container">
-          <% if asset.previewable? && !asset.file_processing %>
-            <% if asset.pdf_previewable? %>
-              <%= render partial: 'shared/pdf_viewer', locals: { asset: asset, report_document: false, shareable_document: true } %>
-            <% else %>
-              <%= image_tag asset.file.representation(resize_to_limit: Constants::LARGE_PIC_FORMAT).url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
-                  class: 'asset-image',
-                  style: 'opacity: 0' %>
-            <% end %>
+          <% if asset.pdf_previewable? %>
+            <%= render partial: 'shared/pdf_viewer', locals: { asset: asset, report_document: false, shareable_document: true } %>
+          <% elsif asset.previewable? && asset.large_preview.image.attached? %>
+            <%= image_tag asset.large_preview.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
+                class: 'asset-image',
+                style: 'opacity: 0' %>
           <% else %>
             <%= render partial: 'shared/file_preview/file_icon', locals: { asset: asset } %>
           <% end %>
@@ -52,8 +50,8 @@
               class: "previous-asset shareable-gallery-switcher",
               data: { id: previous_asset.id } do %>
               <i class="sn-icon sn-icon-arrow-left"></i>
-              <% if previous_asset.previewable? && !previous_asset.file_processing %>
-                <%= image_tag previous_asset.file.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT).url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
+              <% if previous_asset.previewable? && previous_asset.medium_preview.image.attached? %>
+                <%= image_tag previous_asset.medium_preview.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
                     class: 'asset-image',
                     style: 'opacity: 0' %>
               <% else %>
@@ -69,8 +67,8 @@
             <%= link_to '#',
               class: "next-asset shareable-gallery-switcher",
               data: { id: next_asset.id } do %>
-              <% if next_asset.previewable? && !next_asset.file_processing %>
-                <%= image_tag next_asset.file.representation(resize_to_limit: Constants::MEDIUM_PIC_FORMAT).url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
+              <% if next_asset.previewable? && next_asset.medium_preview.image.attached? %>
+                <%= image_tag next_asset.medium_preview.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
                     class: 'asset-image',
                     style: 'opacity: 0' %>
               <% else %>
