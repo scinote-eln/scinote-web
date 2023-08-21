@@ -370,13 +370,7 @@ var ImageEditorModal = (function() {
           $(`.asset[data-asset-id=${data.id}] .attachment-preview img`)
             .replaceWith($(res.html).find('.attachment-preview img'));
           $(`.asset[data-asset-id=${data.id}]`).closest('.attachments').trigger('reorder');
-<<<<<<< HEAD
-          $(`.asset[data-asset-id=${data.id}] .attachment-preview img`)
-            .one('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
-            .one('load', (event) => ActiveStoragePreviews.showPreview(event));
-=======
           ActiveStoragePreviews.reloadPreview(`.asset[data-asset-id=${data.id}] .attachment-preview img`);
->>>>>>> develop
           closeEditor();
         }
       });
