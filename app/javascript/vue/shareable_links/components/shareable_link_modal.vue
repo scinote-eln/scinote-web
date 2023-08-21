@@ -9,8 +9,7 @@
       aria-labelledby="shareTaskModalLabel"
     >
       <div class="modal-dialog" role="document">
-        <div class="modal-content" 
-            @blur="handleTextareaBlur">
+        <div class="modal-content">
           <div class="modal-header flex">
             <h4 class="modal-title">
               {{ i18n.t("shareable_links.modal.title") }}
@@ -188,13 +187,6 @@
         $(this.$refs.textarea).on('input change paste keydown', () => {
           this.characterCount = this.$refs.textarea.value.length;
         });
-      },
-      handleTextareaBlur() {
-        this.editing = false;
-
-        if (!this.dirty) {
-          this.description = this.shareableData.attributes.description || '';
-        }
       },
       handleCheckboxEnter() {
         this.sharedEnabled = !this.sharedEnabled;
