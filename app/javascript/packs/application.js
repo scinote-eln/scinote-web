@@ -31,7 +31,7 @@ $(document).on('click', '.sci--layout--menu-item[data-submenu=true]', (e) => {
 });
 
 $(document).on('click', '.sci--layout--navigator-open', (e) => {
-  navigatorContainer.$data.navigatorCollapsed = false
+  navigatorContainer.toggleNavigatorState(false);
 });
 
 $(document).on('click', '.btn', function() {
