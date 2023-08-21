@@ -14,12 +14,12 @@
   .sci-inline-edit__content {
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
     margin-left: -.25em;
     margin-right: .5rem;
     min-height: 30px;
     padding-left: .25em;
     position: relative;
-    width: 100%;
 
     textarea,
     .sci-inline-edit__view {
