@@ -149,7 +149,7 @@
   .experiment-table {
     display: grid;
     grid-auto-rows: 3em 1px;
-    grid-template-columns: max-content repeat(calc(var(--columns-count)), minmax(max-content, auto)) max-content;
+    grid-template-columns: max-content repeat(calc(var(--columns-count)), minmax(100px, auto)) max-content;
     min-width: 100%;
 
     .table-header-cell {
@@ -518,7 +518,6 @@
 
   .task_name-column {
     a {
-      max-width: 320px;
       overflow: hidden;
       text-overflow: ellipsis;
       -webkit-box-orient: vertical;
