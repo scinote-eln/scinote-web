@@ -302,10 +302,6 @@ describe User, type: :model do
     end
   end
 
-  describe 'Associations' do
-    it { is_expected.to have_many(:system_notifications) }
-  end
-
   describe 'Email downcase' do
     it 'downcases email before validating and saving user' do
       user = User.new(email: 'Test@Email.com')

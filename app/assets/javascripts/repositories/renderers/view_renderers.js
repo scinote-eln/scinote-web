@@ -5,7 +5,7 @@ $.fn.dataTable.render.RepositoryAssetValue = function(data) {
   if (asset.id) {
     return `
       <div class="asset-value-cell">
-        ${asset.icon_html}
+        <i class="sn-icon sn-icon-${asset.icon_html}"></i>
         <div>
           <a  class="file-preview-link"
             id="modal_link${asset.id}"

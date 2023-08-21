@@ -3,6 +3,7 @@
 ActiveSupport::Reloader.to_prepare do
   azure_app_ids = ENV.select { |name, _| name =~ /^[[:alnum:]]*_AZURE_AD_APP_ID/ }
   settings = ApplicationSettings.instance
+  settings.values['azure_ad_apps'] ||= []
 
   azure_app_ids.each do |name, value|
     app_name = name.sub('_AZURE_AD_APP_ID', '')

@@ -83,9 +83,9 @@
   }
 
   .btn.btn-shared {
-    background-color: var(--sn-white);
-    border: 1px solid var(--sn-coral);
-    color: var(--sn-coral);
+    background-color: var(--sn-science-blue);
+    border: 1px solid var(--sn-white);
+    color: var(--sn-white);
   }
 
   .btn.btn-secondary:hover,

@@ -9,20 +9,18 @@
     <style media="all">
       html, body { height: 100%; min-height: 100%; }
     </style>
-    <%= stylesheet_link_tag 'bootstrap', media: 'all' %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag 'application', media: 'all' %>
-    <%= stylesheet_link_tag 'application_pack', media: 'all' %>
+
+    <%= stylesheet_link_tag 'application_pack_styles', media: 'all' %>
     <%= javascript_include_tag 'jquery_bundle' %>
     <%= javascript_include_tag 'application' %>
-    <%= javascript_include_tag 'application_pack_styles' %>
+    <%= javascript_include_tag 'application_pack' %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
 
     <%= favicon_link_tag "favicon.ico" %>
     <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>
     <%= favicon_link_tag "favicon-32.png", type: "image/png", size: "32x32" %>
     <%= favicon_link_tag "favicon-48.png", type: "image/png", size: "48x48" %>
-    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag 'fontawesome' %>
 
     <%= csrf_meta_tags %>
   </head>
@@ -31,7 +29,7 @@
       <div class="container-fluid">
         <div class="navbar-header">
           <span class="navbar-brand" title="<% t('nav.label.scinote') %>">
-            <%= image_tag('/images/scinote_icon.svg', id: 'logo') %>
+            <%= image_tag('scinote_logo.svg', id: 'logo') %>
           </span>
         </div>
         <% if user_signed_in? %>

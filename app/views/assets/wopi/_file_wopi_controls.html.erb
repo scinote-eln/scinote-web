@@ -3,7 +3,7 @@
           id: 'wopi_file_edit_button',
           class: 'btn btn-light',
           target: '_blank' do %>
-    <%= file_application_icon(asset) %>
+    <i class="sn-icon sn-icon-<%= sn_icon_for(asset) %>"></i>
     <%= wopi_button_text(asset, 'edit') %>
   <% end %>
 <% else %>
@@ -13,7 +13,7 @@
           target: '_blank',
           title: title,
           disabled: true do %>
-    <%= file_application_icon(asset) %>
+    <i class="sn-icon sn-icon-<%= sn_icon_for(asset) %>"></i>
     <%= wopi_button_text(asset, 'edit') %>
   <% end %>
 <% end %>

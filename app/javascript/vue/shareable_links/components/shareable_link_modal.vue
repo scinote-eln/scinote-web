@@ -19,6 +19,7 @@
               type="button"
               class="close float-right !ml-auto"
               data-dismiss="modal"
+              tabindex="0"
               aria-label="Close"
             >
               <span aria-hidden="true">&times;</span>
@@ -32,6 +33,7 @@
                       v-model="sharedEnabled"
                       id="checkbox"
                       class="sci-toggle-checkbox"
+                      tabindex="0"
                       @change="checkboxChange"
                       @keyup.enter="handleCheckboxEnter"/>
                 <span class="sci-toggle-checkbox-label"></span>
@@ -40,6 +42,7 @@
             <div>
               <div class="sci-input-container-v2 textarea-lg mb-2">
                 <textarea ref="textarea"
+                          tabindex="0"
                           class="sci-input-field"
                           :class="{ 'error': error }"
                           v-model="description"
@@ -54,8 +57,8 @@
 
               <div class="mb-2" v-if="editing">
                 <div class="sci-btn-group flex justify-end">
-                  <button class="btn btn-secondary btn-sm" tabindex="-1" @mousedown="cancelDescriptionEdit">{{ i18n.t('general.cancel') }}</button>
-                  <button class="btn btn-secondary btn-sm" tabindex="-1" @mousedown="saveDescription" :disabled="error">{{ i18n.t('general.save') }}</button>
+                  <button class="btn btn-secondary btn-sm" tabindex="0" @mousedown="cancelDescriptionEdit">{{ i18n.t('general.cancel') }}</button>
+                  <button class="btn btn-secondary btn-sm" tabindex="0" @mousedown="saveDescription" :disabled="error">{{ i18n.t('general.save') }}</button>
                 </div>
               </div>
             </div>
@@ -71,6 +74,7 @@
                         :disabled="true"
                   />
                   <button class="btn btn-primary share-link-copy"
+                          tabindex="0"
                           @click="copy($refs.clone.value)"
                           :disabled="!sharedEnabled">{{ i18n.t('shareable_links.modal.copy_button') }}
                   </button>
@@ -159,8 +163,11 @@
         $(this.$refs.modal).modal('hide');
       },
       copy(value) {
-        navigator.clipboard.writeText(value);
-        HelperModule.flashAlertMsg(this.i18n.t('shareable_links.modal.copy_success'), 'success');
+        navigator.clipboard.writeText(value).then(
+          () => {
+            HelperModule.flashAlertMsg(this.i18n.t('shareable_links.modal.copy_success'), 'success');
+          }
+        );
       },
       saveDescription() {
         this.dirty = true;
