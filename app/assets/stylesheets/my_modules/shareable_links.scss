@@ -14,6 +14,10 @@
 
 
 .shareable-links {
+  .module-name {
+    width: calc(100vw - 27rem);
+  }
+
   #assigned-items-container .assigned-repository {
     border: unset;
 

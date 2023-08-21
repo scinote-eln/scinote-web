@@ -2,12 +2,12 @@
   <span class="inline-block whitespace-nowrap mr-1">
     <%= t "labels.archived" if @my_module.archived? %>
   </span>
-  <span class="inline-block truncate w-[calc(100vw-27rem)]" title="<%= @my_module.name %>">
+  <span class="inline-block truncate module-name" title="<%= @my_module.name %>">
     <%= @my_module.name %>
   </span>
 </div>
 
-<div class="my-5 max-w-4xl flex-1 bg-sn-white shareable-links">
+<div class="my-5 max-w-4xl flex-1 bg-sn-white">
   <div class="my-module-position-container">
     <!-- Header Actions -->
     <%= render partial: 'shareable_links/my_modules/header_actions' %>
