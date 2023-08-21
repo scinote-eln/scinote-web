@@ -717,7 +717,9 @@ var RepositoryDatatable = (function(global) {
         }
         customColumns.each((i, column) => {
           var columnData = $(column).data('type') === 'RepositoryStockValue' ? 'stock' : String(columns.length);
+          const className = $(column).data('type') === 'RepositoryChecklistValue' ? 'checklist-column' : '';
           columns.push({
+            className: className,
             visible: true,
             searchable: true,
             data: columnData,

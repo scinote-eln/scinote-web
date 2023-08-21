@@ -88,7 +88,8 @@ module.exports = {
   },
   externals: {
     $: 'jquery',
-    jquery: 'jQuery'
+    jquery: 'jQuery',
+    moment: 'moment'
   },
   module: {
     rules: [

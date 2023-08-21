@@ -57,19 +57,6 @@ class AppMailerPreview < ActionMailer::Preview
     )
   end
 
-  # <b>DEPRECATED:</b> Please use <tt>system_notification</tt> instead.
-  def system_message_notification
-    AppMailer.notification(
-      fake_user,
-      Notification.new(
-        type_of: :system_message,
-        title: 'SciNote 9.1 released!',
-        message: '<a href="#" target="_blank">View release notes</a>',
-        created_at: Time.now
-      )
-    )
-  end
-
   def delivery_notification
     AppMailer.notification(
       fake_user,
@@ -81,12 +68,6 @@ class AppMailerPreview < ActionMailer::Preview
         created_at: Time.now
       )
     )
-  end
-
-  def system_notification
-    sn = FactoryBot.build(:system_notification)
-    user = FactoryBot.build(:user)
-    AppMailer.system_notification(user, sn)
   end
 
   private

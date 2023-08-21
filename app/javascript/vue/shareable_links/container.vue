@@ -39,7 +39,7 @@
       },
       disabled: {
         type: Boolean,
-        defaul: true
+        default: false
       }
     },
     data() {

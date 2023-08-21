@@ -27,6 +27,12 @@ var ActiveStoragePreviews = (function() {
     showPreview: function(ev) {
       $(ev.target).css('opacity', 1);
       $(ev.target).parent().removeClass('processing');
+    },
+    reloadPreview: function(target) {
+      $(target)
+        .one('error', (event) => this.reCheckPreview(event))
+        .one('load', (event) => this.showPreview(event))
+        .trigger('error');
     }
   });
 }());
@@ -37,9 +43,9 @@ $(document).on('turbolinks:load', function() {
     .one('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
     .each(function() { 
       if (this.complete) {
-        $(this).load();
+        $(this).trigger('load');
       } else if (this.error) {
-        $(this).error();
+        $(this).trigger('error');
       }
     });
 });

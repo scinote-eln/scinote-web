@@ -590,17 +590,6 @@ Rails.application.routes.draw do
       end
     end
 
-    # System notifications routes
-    resources :system_notifications, only: %i(show) do
-      collection do
-        post 'mark_as_seen'
-        get 'unseen_counter'
-      end
-      member do
-        post 'mark_as_read'
-      end
-    end
-
     # tinyMCE image uploader endpoint
     resources :tiny_mce_assets, only: [:create] do
       member do

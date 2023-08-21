@@ -1728,6 +1728,8 @@ en:
       uploaded_asset: "Uploaded file"
       update: "Update"
       locked_file_error: 'This file is being edited by someone else.'
+      label:
+        name: 'Name'
     create:
       success_flash: "Successfully added file result to task <strong>%{module}</strong>"
     update:
@@ -1749,10 +1751,14 @@ en:
       head_title: "%{project} | %{module} | Add table result"
       title: "Add result to task %{module}"
       create: "Add"
+      label:
+        name: 'Name'
     edit:
       head_title: "%{project} | %{module} | Edit table result"
       title: "Edit result from task %{module}"
       update: "Update"
+      label:
+        name: 'Name'
     create:
       success_flash: "Successfully added table result to task <strong>%{module}</strong>"
     update:
@@ -2380,19 +2386,6 @@ en:
     protocols:
       my_to_team_message: 'My protocols to Team protocols'
       team_to_my_message: 'Team protocols to My protocols'
-
-  system_notifications:
-      navbar:
-        tooltip: 'What’s new notifications'
-      emails:
-        subject: "You've received a What's new notification"
-        intro_paragraph: "Hi %{user_name}, you've received What's new notification in SciNote:"
-      index:
-        whats_new_html: "What's New"
-        more_notifications: "Show more notifications"
-        no_notifications: "No more notifications"
-        settings: "Settings"
-        see_all: "show all"
 
   user_my_modules:
     new:

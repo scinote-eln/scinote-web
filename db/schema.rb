@@ -1009,22 +1009,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_11_115859) do
     t.index ["user_id"], name: "index_steps_on_user_id"
   end
 
-  create_table "system_notifications", force: :cascade do |t|
-    t.string "title"
-    t.text "description"
-    t.string "modal_title"
-    t.text "modal_body"
-    t.boolean "show_on_login", default: false
-    t.datetime "source_created_at", precision: nil
-    t.bigint "source_id"
-    t.datetime "last_time_changed_at", precision: nil, null: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.index ["last_time_changed_at"], name: "index_system_notifications_on_last_time_changed_at"
-    t.index ["source_created_at"], name: "index_system_notifications_on_source_created_at"
-    t.index ["source_id"], name: "index_system_notifications_on_source_id", unique: true
-  end
-
   create_table "tables", force: :cascade do |t|
     t.binary "contents", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -1178,20 +1162,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_11_115859) do
     t.datetime "updated_at", null: false
     t.index ["created_by_id"], name: "index_user_roles_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_user_roles_on_last_modified_by_id"
-  end
-
-  create_table "user_system_notifications", force: :cascade do |t|
-    t.bigint "user_id"
-    t.bigint "system_notification_id"
-    t.datetime "seen_at", precision: nil
-    t.datetime "read_at", precision: nil
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.index ["read_at"], name: "index_user_system_notifications_on_read_at"
-    t.index ["seen_at"], name: "index_user_system_notifications_on_seen_at"
-    t.index ["system_notification_id"], name: "index_user_system_notifications_on_system_notification_id"
-    t.index ["user_id", "system_notification_id"], name: "index_user_system_notifications_on_user_and_notification_id", unique: true
-    t.index ["user_id"], name: "index_user_system_notifications_on_user_id"
   end
 
   create_table "user_teams", force: :cascade do |t|
@@ -1483,8 +1453,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_11_115859) do
   add_foreign_key "user_projects", "users", column: "assigned_by_id"
   add_foreign_key "user_roles", "users", column: "created_by_id"
   add_foreign_key "user_roles", "users", column: "last_modified_by_id"
-  add_foreign_key "user_system_notifications", "system_notifications"
-  add_foreign_key "user_system_notifications", "users"
   add_foreign_key "user_teams", "teams"
   add_foreign_key "user_teams", "users"
   add_foreign_key "user_teams", "users", column: "assigned_by_id"

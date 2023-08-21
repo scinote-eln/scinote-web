@@ -10,7 +10,6 @@ require('jquery-ui/ui/effects/effect-slide');
 require('hammerjs');
 import 'bootstrap';
 import './bootstrap.less';
-window.moment = require('moment');
 require('bootstrap-select/js/bootstrap-select');
 
 window.bwipjs = require('bwip-js');
@@ -36,5 +35,15 @@ $(document).on('click', '.sci--layout--navigator-open', (e) => {
 
 $(document).on('click', '.btn', function() {
   $(this).blur();
+});
+
+// Needed to support Turbolinks redirect_to responses as unsafe-inline is blocked by the CSP
+$.ajaxSetup({
+  converters: {
+    'text script': function(text) {
+      $.globalEval(text, { nonce: document.querySelector('meta[name="csp-nonce"]').getAttribute('content') });
+      return text;
+    }
+  }
 });
 

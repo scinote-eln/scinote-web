@@ -1,0 +1,167 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
+:root {
+  --attachment-column-width: 16em;
+  --attachment-row-height: 3em;
+}
+
+.step-container {
+  .step-attachments {
+    padding-left: 28px;
+  }
+
+  .attachments-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+
+    .title {
+      flex-grow: 1;
+      flex-shrink: 0;
+    }
+
+    .dropdown-attachment-options {
+      @include font-button;
+      min-width: 200px;
+
+      .divider-label {
+        @include font-small;
+        color: $color-silver-chalice;
+        padding-left: 1em;
+        pointer-events: none;
+      }
+
+      a {
+        border-radius: unset;
+        cursor: pointer;
+        padding: .5em 1em;
+
+        &:hover {
+          background: $color-concrete;
+        }
+      }
+
+      .action-link {
+        &.selected::after {
+          @include font-awesome;
+          content: $font-fas-check;
+          margin-left: auto;
+          position: absolute;
+          right: 1em;
+        }
+      }
+
+      .change-order {
+        padding-left: 2.75em;
+      }
+
+      .attachments-view-mode {
+        .fas {
+          width: 1.5em;
+        }
+      }
+    }
+  }
+
+  .attachments {
+    display: grid;
+    grid-auto-rows: var(--attachment-row-height);
+    grid-column-gap: 1em;
+    grid-row-gap: 1em;
+    grid-template-columns: repeat(auto-fill, minmax(var(--attachment-column-width), 1fr));
+    margin: 1em 0;
+
+    .asset-context-menu {
+      .marvinjs-edit-button img {
+        margin-left: -.6em;
+        margin-right: 0;
+        width: 2em;
+      }
+    }
+
+    &[data-preview="true"] {
+      .asset-context-menu {
+        display: none;
+      }
+    }
+  }
+
+  .add-file-modal {
+    .file-drop-zone {
+      align-items: center;
+      background: $color-concrete;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2em;
+
+      .btn.title {
+        cursor: pointer;
+        font-size: 1em;
+
+        &:hover {
+          background-color: $color-alto;
+        }
+
+        .fas {
+          margin: 0 .5em;
+        }
+      }
+
+      .description {
+        color: $color-silver-chalice;
+        margin-top: 1.5em;
+      }
+    }
+
+    .drop-notification {
+      display: none;
+    }
+
+    &.draging-file {
+      .file-drop-zone {
+        background-color: $brand-focus-light;
+        position: relative;
+
+        .drop-notification {
+          @include font-h3;
+          align-items: center;
+          color: $brand-primary;
+          display: flex;
+          height: 100%;
+          justify-content: center;
+          position: absolute;
+          width: 100%;
+        }
+
+        .title,
+        .description,
+        .available-storage {
+          opacity: 0;
+        }
+
+        * {
+          pointer-events: none;
+        }
+      }
+    }
+
+    .divider {
+      @include font-small;
+      font-weight: bold;
+      padding: 1em 0;
+      text-align: center;
+    }
+
+    .integrations-container {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+
+      .integration-block {
+        margin: 0 1em;
+      }
+    }
+  }
+}

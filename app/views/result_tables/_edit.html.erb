@@ -1,7 +1,10 @@
 <div id="table-form" class="well">
 	<%= form_with(model: @result, url: result_table_path(format: :json),
 																	data: { remote: true, 'name-max-length': Constants::NAME_MAX_LENGTH }) do |f| %>
-		<%= f.text_field :name, style: "margin-top: 10px;" %><br />
+		<div class="sci-input-container mb-4">
+			<label><%= t('result_tables.edit.label.name') %></label>
+			<%= f.text_field :name, class: 'sci-input-field' %>
+		</div>
 		<div class="editable-table">
 			<%= f.fields_for :table do |ff| %>
 				<%= ff.hidden_field(:contents, value: ff.object.contents_utf_8, class: "hot-contents" ) %>
@@ -17,7 +20,6 @@
 			</button>
 			<%= f.button t("general.save"),
 									 class: 'btn btn-primary save-result' %>
-			<%= javascript_include_tag 'results/result_tables/edit' %>
 		</div>
 	<% end %>
 </div>

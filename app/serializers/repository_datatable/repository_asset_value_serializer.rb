@@ -12,7 +12,7 @@ module RepositoryDatatable
         url: rails_blob_path(asset.file, disposition: 'attachment'),
         preview_url: asset_file_preview_path(asset),
         file_name: escape_input(asset.file_name),
-        icon_html: FileIconsHelper.file_extension_icon_html(asset)
+        icon_html: FileIconsHelper.sn_icon_for(asset)
       }
     rescue StandardError => e
       Rails.logger.error e.message
