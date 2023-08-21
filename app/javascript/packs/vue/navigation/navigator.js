@@ -28,7 +28,7 @@ window.addEventListener('DOMContentLoaded', () => {
     methods: {
       toggleNavigatorState: function(newNavigatorState) {
         let stateUrl = $('#sciNavigationNavigatorContainer').attr('data-navigator-state-url');
-        $.post(stateUrl, {state: newNavigatorState ? 'collapsed' : 'open'});
+        $.post(stateUrl, { state: newNavigatorState ? 'collapsed' : 'open' });
         $('.sci--layout').attr('data-navigator-collapsed', newNavigatorState);
         $('body').toggleClass('navigator-collapsed', newNavigatorState);
 
