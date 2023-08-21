@@ -13,11 +13,10 @@ module Toolbars
       @project_folders = current_user.current_team.project_folders.where(id: project_folder_ids)
 
       @items = @projects + @project_folders
-      @not_assigned = current_user.current_team.projects.not_assigned_to_user(current_user).any?
 
       @single = @items.length == 1
 
-      @team_owner = @current_user.current_team.user_assignments.find { |ua| ua.user == current_user }&.user_role.owner?
+      @team_owner = @current_user.current_team.user_assignments.exists?(user: @current_user, role: UserRole.find_predefined_owner_role)
       @unassigned_team_owner = @team_owner && !can_read_project?(@items.first)
 
       @item_type = if project_ids.blank? && project_folder_ids.blank?
