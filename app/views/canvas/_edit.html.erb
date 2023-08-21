@@ -8,7 +8,7 @@
   data-can-edit-connections="<%= @experiment_managable ? "yes" : "no" %>"
   data-unsaved-work-text="<%=t "experiments.canvas.edit.unsaved_work" %>"
 >
-  <%= bootstrap_form_tag url: canvas_experiment_url, method: "post", html: {class: "canvas-header"} do |f| %>
+  <%= form_with url: canvas_experiment_url, method: "post", html: {class: "canvas-header"} do |f| %>
     <% if @experiment_managable %>
       <%=link_to "", type: "button", class: "btn btn-primary", id: "canvas-new-module" do %>
         <span class="sn-icon sn-icon-new-task"></span>

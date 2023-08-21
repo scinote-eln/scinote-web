@@ -1,7 +1,6 @@
 <div id="table-form" class="well">
-	<%= bootstrap_form_for(@result, url: my_module_result_tables_path(format: :json, page: params[:page], order: params[:order]),
-																			 data: { 'name-max-length': Constants::NAME_MAX_LENGTH },
-																			 remote: true) do |f| %>
+	<%= form_with(model: @result, url: my_module_result_tables_path(format: :json, page: params[:page], order: params[:order]),
+																			 data: { remote: true, 'name-max-length': Constants::NAME_MAX_LENGTH }) do |f| %>
 		<%= f.text_field :name, style: "margin-top: 10px;" %><br />
 		<div class="editable-table" style="margin-bottom: 25px;">
 			<%= f.fields_for :table do |ff| %>

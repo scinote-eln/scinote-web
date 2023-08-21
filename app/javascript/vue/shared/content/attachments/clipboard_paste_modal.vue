@@ -7,7 +7,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+            <i class="sn-icon sn-icon-close"></i>
           </button>
           <h4 class="modal-title">{{i18n.t('assets.from_clipboard.modal_title')}}</h4>
         </div>

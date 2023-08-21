@@ -1,8 +1,6 @@
 // scss-lint:disable SelectorDepth SelectorFormat
 // scss-lint:disable NestingDepth ImportantRule
 
-@import "constants";
-@import "mixins";
 
 .team-settings-pane {
   .settings-team-name {
@@ -13,10 +11,8 @@
 
   .team-metadata {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 2fr));
-    grid-gap: 20px;
     font-size: 14px;
-    margin-bottom: 20px;
+    grid-gap: 8px;
 
     .grid-block {
 
@@ -35,7 +31,7 @@
 
   .team-description {
     display: inline-block;
-    margin-top: 20px;
+    margin-top: 16px;
     position: relative;
     width: 100%;
 
@@ -63,7 +59,7 @@
 
     .input-field {
       border: 1px solid $color-silver;
-      border-radius: $border-radius-small;
+      border-radius: $border-radius-default;
       cursor: pointer;
       display: block;
       float: left;
@@ -127,6 +123,10 @@
         padding: 5px 0;
       }
 
+      .filter-table input {
+        width: auto !important;
+      }
+
       .filter-table,
       .display-limit {
         flex-shrink: 0;
@@ -175,7 +175,7 @@
       .open {
         .input-field {
           border: 1px solid $brand-focus;
-          border-radius: $border-radius-small;
+          border-radius: $border-radius-default;
 
           .fa-search {
             color: $brand-focus;

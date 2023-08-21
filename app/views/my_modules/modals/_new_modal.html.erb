@@ -1,10 +1,10 @@
 <div class="modal" id="new-my-module-modal" tabindex="-1" role="dialog"
      data-create-url="<%= modules_experiment_path(@experiment) %>" data-user-id="<%= current_user.id %>">
-  <%= bootstrap_form_for @my_module, url: modules_experiment_path(@experiment), remote: true do |f| %>
+  <%= form_with model: @my_module, url: modules_experiment_path(@experiment), data: { remote: true } do |f| %>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" tabindex=0 ><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" tabindex=0 ><i class="sn-icon sn-icon-close"></i></button>
           <h4 class="modal-title"><%= t('experiments.canvas.new_my_module_modal.title') %></h4>
         </div>
         <div class="modal-body">

@@ -1,0 +1,77 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+// scss-lint:disable SelectorFormat
+// scss-lint:disable ImportantRule
+// scss-lint:disable IdSelector
+
+
+// MarvinJs modal
+.modal-bio-eddie {
+  background: transparent;
+  font-size: $font-size-base;
+  padding: 0 !important;
+
+  .modal-dialog {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    width: auto;
+  }
+
+  .modal-content {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    height: 100%;
+    width: auto;
+  }
+
+  .modal-header {
+    background: $color-white;
+    display: flex;
+    height: 60px;
+    line-height: 40px;
+    padding: 10px 15px;
+    text-align: center;
+
+    .file-save-link {
+      flex-shrink: 0;
+      margin: 0 20px 0 0;
+
+      img {
+        height: 16px;
+        vertical-align: sub;
+      }
+    }
+
+    .file-name {
+      align-items: center;
+      display: flex;
+      flex-shrink: 0;
+      float: left;
+      margin-right: auto;
+
+      input {
+        border-radius: 5px;
+        box-shadow: none;
+        color: $color-black;
+        height: 40px;
+        margin-left: 5px;
+        outline: 0;
+        padding: 5px 10px;
+        position: relative;
+        width: 350px;
+      }
+    }
+  }
+
+  .modal-body {
+    height: calc(100% - 60px);
+
+    iframe {
+      height: 100%;
+      position: relative;
+      width: 100%;
+    }
+  }
+}

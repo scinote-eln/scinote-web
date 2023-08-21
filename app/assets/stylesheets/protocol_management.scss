@@ -1,19 +1,9 @@
 // scss-lint:disable SelectorDepth, NestingDepth, SelectorFormat, ImportantRule, QualifyingElement, IdSelector
 
-@import "constants";
-
-#protocolsioModal {
-  .modal-body {
-    padding-bottom: 0;
-    padding-top: 0;
-  }
-}
 
 .btn-open-file {
   overflow: hidden;
   position: relative;
-  margin-top: 9px;
-  margin-bottom: 4px;
 
   > input[type=file] {
     background: $color-white;

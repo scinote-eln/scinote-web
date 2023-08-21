@@ -65,7 +65,7 @@
           </button>
           <ul id="reportGenerateMenuDropdown" class="dropdown-menu dropdown-menu-right" aria-labelledby="reportGenerateMenu">
             <li>
-              <%= link_to reports_path, remote: true, id: 'saveAsNewReport', class: "disabled", data: { create_url: reports_path } do %>
+              <%= link_to reports_path, data: { remote: true }, id: 'saveAsNewReport', class: "disabled", data: { create_url: reports_path } do %>
                 <i class="sn-icon sn-icon-new-task-circle"></i>
                 <%= t("projects.reports.new.save_as_new_report") %>
               <% end %>
@@ -91,7 +91,7 @@
   <div class="modal-dialog modal-sm" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
         <h4 class="modal-title">
           <%= t("projects.reports.new.exit_modal.title_#{@edit ? 'edit' : 'new'}") %>
         </h4>

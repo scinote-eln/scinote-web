@@ -4,7 +4,7 @@
       <input type="text" :placeholder="i18n.t('nav.search')" @change="searchValue"/>
       <i class="sn-icon sn-icon-search"></i>
     </div>
-    <div v-if="currentTeam" class="mr-auto w-64">
+    <div v-if="currentTeam" class="w-64">
       <Select
         :value="currentTeam"
         :options="teams"
@@ -14,7 +14,7 @@
         @change="switchTeam"
       ></Select>
     </div>
-    <div v-if="user" class="dropdown" >
+    <div v-if="user" class="ml-auto dropdown" >
       <button class="btn btn-light icon-btn btn-black" data-toggle="dropdown" :title="i18n.t('nav.support')">
         <i class="sn-icon sn-icon-help"></i>
       </button>
@@ -155,7 +155,7 @@
           dropdownSelector.selectValues('#sciNavigationTeamSelector', this.currentTeam);
           $('body').attr('data-current-team-id', this.currentTeam);
           window.open(this.rootUrl, '_self')
-        }).error((msg) => {
+        }).fail((msg) => {
           HelperModule.flashAlertMsg(msg.responseJSON.message, 'danger');
         });
       },

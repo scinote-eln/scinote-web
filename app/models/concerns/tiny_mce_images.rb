@@ -47,6 +47,10 @@ module TinyMceImages
       TinyMceAsset.generate_url(self[field], self)
     end
 
+    def shareable_tinymce_render(field)
+      TinyMceAsset.generate_url(self[field], self, is_shared_object: true)
+    end
+
     # Takes array of old/new TinyMCE asset ID pairs
     # and updates references in assosiated object's description
     def reassign_tiny_mce_image_references(images = [])

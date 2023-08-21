@@ -9,9 +9,13 @@
     <style media="all">
       html, body { height: 100%; min-height: 100%; }
     </style>
-    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+
+    <%= stylesheet_link_tag 'application_pack', media: 'all' %>
     <%= javascript_include_tag 'jquery_bundle' %>
     <%= javascript_include_tag 'application' %>
+    <%= javascript_include_tag 'application_pack_styles' %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
 
     <%= favicon_link_tag "favicon.ico" %>
     <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>

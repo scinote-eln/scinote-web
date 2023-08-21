@@ -7,11 +7,12 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
         <h4 class="modal-title"><%= t('repositories.index.modal_export.title') %></h4>
       </div>
       <div class="modal-body">
-        <p class="description-p1" data-team-name="<%= team_name %>">
+        <p class="description-p1">
+          <%= t('repositories.index.modal_export.description_p1_html', team_name: team_name, count: counter) %>
         </p>
         <p class="bg-sn-super-light-blue p-3"><%= t('repositories.index.modal_export.description_alert') %></p>
         <p class="mt-3"><%= t('repositories.index.modal_export.description_p2') %></p>

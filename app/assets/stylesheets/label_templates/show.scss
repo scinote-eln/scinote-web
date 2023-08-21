@@ -8,19 +8,18 @@
 
   .title-row {
     @include font-h1;
-    align-items: end;
+    align-items: flex-start;
     background: $color-white;
     border-bottom: $border-tertiary;
     display: flex;
-    margin-left: -2em;
+    margin: 0 -2em;
     padding: .25em 2em;
-    width: calc(100% + 4em);
+    width: calc(100% + 3em);
 
     .label-template-icon {
       flex-shrink: 0;
-      margin-bottom: auto;
       margin-right: 5px;
-      margin-top: 13px;
+      margin-top: 2px;
       width: 32px;
     }
 

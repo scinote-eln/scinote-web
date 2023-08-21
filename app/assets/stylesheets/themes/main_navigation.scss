@@ -1,5 +1,4 @@
-@import 'constants';
-@import "mixins";
+
 
 #main-nav {
   box-shadow: $flyout-shadow;
@@ -94,7 +93,6 @@
     border-radius: 50%;
     color: $color-concrete;
     display: block;
-    font-size: $font-size-h3;
     height: 45px;
     padding-top: 5px;
     width: 45px;
@@ -105,7 +103,6 @@
     border-radius: 50%;
     color: $color-concrete;
     display: block;
-    font-size: $font-size-h3;
     height: 45px;
     padding-top: 5px;
     width: 45px;
@@ -116,7 +113,6 @@
     border-radius: 50%;
     color: $color-concrete;
     display: block;
-    font-size: $font-size-h3;
     height: 45px;
     padding-top: 5px;
     width: 45px;
@@ -127,7 +123,6 @@
     border-radius: 50%;
     color: $color-concrete;
     display: block;
-    font-size: $font-size-h3;
     height: 45px;
     padding-top: 8px;
     width: 45px;
@@ -459,9 +454,5 @@
 
     }
 
-    a {
-      font-size: $font-size-small;
-      font-weight: $headings-font-weight;
-    }
   }
 }

@@ -16,6 +16,14 @@ module InputSanitizeHelper
     CGI.unescapeHTML(text)
   end
 
+  def smart_annotation_text(text)
+    if text =~ SmartAnnotations::TagToText::USER_REGEX || text =~ SmartAnnotations::TagToText::ITEMS_REGEX
+      text = SmartAnnotations::TagToText.new(nil, nil, text, is_shared_object: true).text
+    end
+
+    sanitize_input(text)
+  end
+
   def custom_auto_link(text, options = {})
     simple_f = options.fetch(:simple_format, true)
     team = options.fetch(:team, nil)

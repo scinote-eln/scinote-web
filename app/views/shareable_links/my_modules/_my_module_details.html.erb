@@ -1,0 +1,56 @@
+<div class="flex-block date-block">
+  <div class="flex-block-label">
+    <span class="sn-icon block-icon sn-icon-calendar mr-2.5"></span>
+    <span class="hidden-xs hidden-sm hidden-md"><%= t('my_modules.details.start_date') %></span>
+  </div>
+  <div id="startDateContainer" class="datetime-container">
+    <span class="date-text">
+      <span id="startDateLabelContainer" class="view-block">
+        <%= render partial: "shareable_links/my_modules/start_date_label", locals: { my_module: @my_module } %>
+      </span>
+    </span>
+  </div>
+</div>
+
+<div class="flex-block date-block" >
+  <div class="flex-block-label">
+    <span class="sn-icon block-icon sn-icon-calendar mr-2.5"></span>
+    <span class="hidden-xs hidden-sm  hidden-md"><%= t('my_modules.details.due_date') %></span>
+  </div>
+  <div id="dueDateContainer" class="datetime-container">
+    <span class="date-text">
+      <span id="dueDateLabelContainer" class="view-block">
+        <%= render partial: "shareable_links/my_modules/due_date_label", locals: { my_module: @my_module } %>
+      </span>
+    </span>
+  </div>
+</div>
+
+<% if @my_module.completed? %>
+  <div class="flex-block date-block" >
+    <div class="flex-block-label">
+      <span class="sn-icon block-icon sn-icon-calendar mr-2.5"></span>
+      <span class="hidden-xs hidden-sm  hidden-md"><%= t('my_modules.details.completed_date') %></span>
+    </div>
+    <div class="datetime-container">
+      <span class="date-text iso-formatted-date">
+        <%= @my_module.completed_on.iso8601 %>
+      </span>
+    </div>
+  </div>
+<% end %>
+
+
+<div class="flex items-center w-full justify-start h-8">
+  <span class="sn-icon block-icon sn-icon-users mr-2.5"></span>
+  <span class="hidden-xs hidden-sm"><%= t('my_modules.details.assigned_users') %></span>
+  <%= render partial: "shareable_links/my_modules/user_my_modules", locals: { my_module: @my_module } %>
+</div>
+
+
+
+<div class="flex items-center w-full justify-start h-8">
+  <span class="sn-icon block-icon sn-icon-tag mr-2.5"></span>
+  <span class="hidden-xs hidden-sm tags-title"><%=t "my_modules.details.tags" %></span>
+  <%= render partial: "shareable_links/my_modules/tags", locals: { my_module: @my_module } %>
+</div>

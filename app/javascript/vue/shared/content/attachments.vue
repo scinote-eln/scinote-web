@@ -4,65 +4,44 @@
       <div class="title">
         <h3>{{ i18n.t('protocols.steps.files', {count: attachments.length}) }}</h3>
       </div>
-      <div class="actions" v-if="parent.attributes.attachments_manageble && attachmentsReady">
+      <div class="flex items-center gap-2" v-if="parent.attributes.attachments_manageble && attachmentsReady">
         <div ref="actionsDropdownButton" class="dropdown sci-dropdown">
           <button class="btn btn-light dropdown-toggle" type="button" id="dropdownAttachmentsOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            <span>{{ i18n.t("protocols.steps.attachments.manage") }}</span>
+            <span>{{ i18n.t("attachments.preview_menu") }}</span>
             <span class="sn-icon sn-icon-down"></span>
           </button>
           <ul ref="actionsDropdown" class="dropdown-menu dropdown-menu-right dropdown-attachment-options"
               aria-labelledby="dropdownAttachmentsOptions"
               :data-parent-id="parent.id"
           >
-            <li class="divider-label">{{ i18n.t("protocols.steps.attachments.add") }}</li>
-            <li>
-              <a class="action-link attachments-view-mode" @click="$emit('attachments:openFileModal')">
-                <i class="sn-icon sn-icon-import"></i>
-                {{ i18n.t('protocols.steps.attachments.menu.file_from_pc') }}
-              </a>
-            </li>
-            <li v-if="parent.attributes.wopi_enabled">
-              <a @click="openWopiFileModal" class="create-wopi-file-btn" tabindex="0" @keyup.enter="openWopiFileModal">
-                <img :src="parent.attributes.wopi_context.icon"/>
-                {{ i18n.t('protocols.steps.attachments.menu.office_file') }}
-              </a>
-            </li>
-            <li v-if="parent.attributes.marvinjs_enabled">
-              <a
-                class="new-marvinjs-upload-button"
-                :data-object-id="parent.id"
-                :data-object-type="parent.attributes.type"
-                :data-marvin-url="parent.attributes.marvinjs_context.marvin_js_asset_url"
-                :data-sketch-container="`.attachments[data-parent-id=${parent.id}]`"
-              >
-                <span class="new-marvinjs-upload-icon">
-                  <img :src="parent.attributes.marvinjs_context.icon">
-                </span>
-                  {{ i18n.t('protocols.steps.attachments.menu.chemical_drawing') }}
-              </a>
-            </li>
-            <li role="separator" class="divider"></li>
-            <li class="divider-label">{{ i18n.t("protocols.steps.attachments.sort_by") }}</li>
-            <li v-for="(orderOption, index) in orderOptions" :key="`orderOption_${index}`">
-              <a class="action-link change-order"
+            <template v-if="parent.attributes.urls.update_asset_view_mode_url">
+              <li v-for="(viewMode, index) in viewModeOptions" :key="`viewMode_${index}`">
+                <a
+                  class="attachments-view-mode action-link"
+                  :class="viewMode == parent.attributes.assets_view_mode ? 'selected' : ''"
+                  @click="changeAttachmentsViewMode(viewMode)"
+                  v-html="i18n.t(`attachments.view_mode.${viewMode}_html`)"
+                ></a>
+              </li>
+            </template>
+          </ul>
+        </div>
+        <div ref="sortDropdownButton" class="dropdown sci-dropdown">
+          <button class="btn btn-light icon-btn dropdown-toggle" type="button" id="dropdownSortAttachmentsOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <i class="sn-icon sn-icon-sort-up"></i>
+          </button>
+          <ul ref="sortDropdown" class="dropdown-menu dropdown-menu-right dropdown-attachment-options"
+              aria-labelledby="dropdownSortAttachmentsOptions"
+              :data-parent-id="parent.id"
+          >
+            <li v-for="(orderOption, index) in orderOptions" :key="`orderOption_${index}`" :class="{'divider' : (orderOption == 'divider')}">
+              <a v-if="orderOption != 'divider'" class="action-link change-order"
                 @click="changeAttachmentsOrder(orderOption)"
                 :class="parent.attributes.assets_order == orderOption ? 'selected' : ''"
               >
                 {{ i18n.t(`general.sort_new.${orderOption}`) }}
               </a>
             </li>
-            <template v-if="parent.attributes.urls.update_asset_view_mode_url">
-              <li role="separator" class="divider"></li>
-              <li class="divider-label">{{ i18n.t("protocols.steps.attachments.attachments_view_mode") }}</li>
-              <li v-for="(viewMode, index) in viewModeOptions" :key="`viewMode_${index}`">
-                <a
-                  class="attachments-view-mode action-link"
-                  :class="viewMode == parent.attributes.assets_view_mode ? 'selected' : ''"
-                  @click="changeAttachmentsViewMode(viewMode)"
-                  v-html="i18n.t(`protocols.steps.attachments.view_mode.${viewMode}_html`)"
-                ></a>
-              </li>
-            </template>
           </ul>
         </div>
       </div>
@@ -109,7 +88,7 @@
     data() {
       return {
         viewModeOptions: ['inline', 'thumbnail', 'list'],
-        orderOptions: ['new', 'old', 'atoz', 'ztoa']
+        orderOptions: ['new', 'old', 'divider', 'atoz', 'ztoa']
       }
     },
     mixins: [WopiFileModal],

@@ -109,20 +109,21 @@ module Navigator
                else
                  object&.project_folder
                end
+      has_children_sql = 'SUM(CASE WHEN viewable_projects.id IS NOT NULL OR project_folders_project_folders.id IS NOT NULL
+      THEN 1 ELSE 0 END) > 0'
       current_team.project_folders.where(parent_folder: folder)
-                  .where(project_folders: { archived: archived })
                   .left_outer_joins(:projects, project_folders: {})
                   .joins(
-                    "LEFT OUTER JOIN (#{Project.viewable_by_user(current_user, current_team).to_sql}) " \
+                    "LEFT OUTER JOIN (#{Project.viewable_by_user(current_user, current_team).where(archived: archived).to_sql}) " \
                     "viewable_projects ON viewable_projects.project_folder_id = project_folders.id"
                   )
                   .select(
                     'project_folders.id',
                     'project_folders.name',
                     'project_folders.archived',
-                    'SUM(CASE WHEN viewable_projects.id IS NOT NULL OR project_folders_project_folders.id IS NOT NULL
-                              THEN 1 ELSE 0 END) > 0 AS has_children'
+                    "#{has_children_sql} AS has_children"
                   ).group('project_folders.id')
+                  .having("project_folders.archived = :archived OR #{has_children_sql}", archived: archived)
     end
 
     def fetch_experiments(object, archived = false)

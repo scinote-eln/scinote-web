@@ -27,7 +27,7 @@
     data-snapshot-provisioning="<%= @snapshot_provisioning %>"
     data-status-url="<%= repository_status_path(@repository) %>">
     <thead>
-      <tr>
+      <tr class="repository-table-head-<%= repository.id %> hidden" >
         <th id="checkbox" data-unmanageable="true">
           <div class="sci-checkbox-container">
             <input name="select_all" value="1" type="checkbox" class="sci-checkbox">
@@ -59,7 +59,7 @@
             <%= "data-items-url=#{items_repository_repository_columns_list_column_path(repository, column)}" if column.repository_list_value? %>
             <%= "data-items-url=#{items_repository_repository_columns_status_column_path(repository, column)}" if column.repository_status_value? %>
           >
-            <%= display_tooltip(column.name) %>
+            <div class="truncate"><%= display_tooltip(column.name) %></div>
           </th>
         <% end %>
       </tr>

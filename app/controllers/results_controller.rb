@@ -1,6 +1,92 @@
+# frozen_string_literal: true
+
 class ResultsController < ApplicationController
-  before_action :load_vars
-  before_action :check_destroy_permissions
+  skip_before_action :verify_authenticity_token, only: %i(create update destroy)
+
+  before_action :load_my_module
+  before_action :load_vars, only: %i(destroy elements assets upload_attachment update_view_state update_asset_view_mode update)
+  before_action :check_destroy_permissions, only: :destroy
+
+  def index
+    respond_to do |format|
+      format.json do
+        # API endpoint
+        render(
+          json: apply_sort(@my_module.results),
+          formats: :json
+        )
+      end
+
+      format.html do
+        # Main view
+        @experiment = @my_module.experiment
+        @project = @experiment.project
+        render(:index, formats: :html)
+      end
+    end
+  end
+
+  def create
+    result = @my_module.results.create!(user: current_user)
+
+    render json: result
+  end
+
+  def update
+    @result.update!(result_params)
+
+    render json: @result
+  end
+
+  def elements
+    render json: @result.result_orderable_elements.order(:position),
+           each_serializer: ResultOrderableElementSerializer,
+           user: current_user
+  end
+
+  def assets
+    render json: @result.assets,
+           each_serializer: AssetSerializer,
+           user: current_user
+  end
+
+  def upload_attachment
+    @result.transaction do
+      @asset = @result.assets.create!(
+        created_by: current_user,
+        last_modified_by: current_user,
+        team: @my_module.team,
+        view_mode: @result.assets_view_mode
+      )
+      @asset.file.attach(params[:signed_blob_id])
+      @asset.post_process_file(@my_module.team)
+    end
+
+    render json: @asset,
+           serializer: AssetSerializer,
+           user: current_user
+  end
+
+  def update_view_state
+    view_state = @result.current_view_state(current_user)
+    view_state.state['result_assets']['sort'] = params.require(:assets).require(:order)
+    view_state.save! if view_state.changed?
+
+    render json: {}, status: :ok
+  end
+
+  def update_asset_view_mode
+    html = ''
+    ActiveRecord::Base.transaction do
+      @result.assets_view_mode = params[:assets_view_mode]
+      @result.save!(touch: false)
+      @result.assets.update_all(view_mode: @result.assets_view_mode)
+    end
+    render json: { view_mode: @result.assets_view_mode }, status: :ok
+  rescue ActiveRecord::RecordInvalid => e
+    Rails.logger.error(e.message)
+    render json: { errors: e.message }, status: :unprocessable_entity
+  end
 
   def destroy
     result_type = if @result.is_text
@@ -27,9 +113,36 @@ class ResultsController < ApplicationController
 
   private
 
+  def result_params
+    params.require(:result).permit(:name)
+  end
+
+  def apply_sort(results)
+    case params[:sort]
+    when 'updated_at_asc'
+      results.order(updated_at: :asc)
+    when 'updated_at_desc'
+      results.order(updated_at: :desc)
+    when 'created_at_asc'
+      results.order(created_at: :asc)
+    when 'created_at_desc'
+      results.order(created_at: :desc)
+    when 'name_asc'
+      results.order(name: :asc)
+    when 'name_desc'
+      results.order(name: :desc)
+    end
+  end
+
+  def load_my_module
+    @my_module = MyModule.readable_by_user(current_user).find(params[:my_module_id])
+  end
+
   def load_vars
-    @result = Result.find_by_id(params[:id])
+    @result = @my_module.results.find(params[:id])
+
     return render_403 unless @result
+
     @my_module = @result.my_module
   end
 

@@ -22,7 +22,7 @@ class Table < ApplicationRecord
   has_one :step_table, inverse_of: :table, dependent: :destroy
   has_one :step, through: :step_table
 
-  has_one :result_table, inverse_of: :table
+  has_one :result_table, inverse_of: :table, dependent: :destroy
   has_one :result, through: :result_table
   has_many :report_elements, inverse_of: :table, dependent: :destroy
 

@@ -1,8 +1,8 @@
 // scss-lint:disable SelectorDepth SelectorFormat QualifyingElement
 // scss-lint:disable NestingDepth ImportantRule
 
-@import "constants";
-@import "layouts/reminders";
+
+@import "../layouts/reminders";
 
 .repository-table {
   --content-header-size: 3.5rem;
@@ -19,6 +19,18 @@
 
   .dataTables_scrollHead {
     flex-shrink: 0;
+
+    .table.dataTable .sorting {
+      &::after {
+        opacity: 0;
+      }
+
+      &:hover {
+        &::after {
+          opacity: 1;
+        }
+      }
+    }
 
     thead .sci-checkbox-container {
       margin-left: .125em !important;
@@ -69,7 +81,11 @@
   }
 
   // Cells
-
+  td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
   // Assigned
 
@@ -405,6 +421,11 @@
 
 .repository-table,
 #myModuleRepositoryFullViewModal {
+  .modal-body {
+    padding: 0;
+    border-bottom: 0;
+  }
+
   .date-time-cell-value,
   .date-cell-value {
     display: inline-block;
