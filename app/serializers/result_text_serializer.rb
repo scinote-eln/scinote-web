@@ -6,7 +6,7 @@ class ResultTextSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :id, :text, :urls, :text_view, :icon, :placeholder, :name
+  attributes :id, :text, :urls, :text_view, :icon, :placeholder, :name, :parent_type
 
   def updated_at
     object.updated_at.to_i
@@ -14,6 +14,10 @@ class ResultTextSerializer < ActiveModel::Serializer
 
   def placeholder
     I18n.t('protocols.steps.text.placeholder')
+  end
+
+  def parent_type
+    :result
   end
 
   def text_view
@@ -40,7 +44,9 @@ class ResultTextSerializer < ActiveModel::Serializer
     {
       duplicate_url: duplicate_my_module_result_text_path(result.my_module, result, object),
       delete_url: my_module_result_text_path(result.my_module, result, object),
-      update_url: my_module_result_text_path(result.my_module, result, object)
+      update_url: my_module_result_text_path(result.my_module, result, object),
+      move_targets_url: move_targets_my_module_result_text_path(result.my_module, result, object),
+      move_url: move_my_module_result_text_path(result.my_module, result, object)
     }
   end
 end

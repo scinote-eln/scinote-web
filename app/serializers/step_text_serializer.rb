@@ -6,10 +6,14 @@ class StepTextSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :id, :text, :urls, :text_view, :updated_at, :icon, :name, :placeholder
+  attributes :id, :text, :urls, :text_view, :updated_at, :icon, :name, :placeholder, :parent_type
 
   def updated_at
     object.updated_at.to_i
+  end
+
+  def parent_type
+    :step
   end
 
   def placeholder
@@ -38,7 +42,9 @@ class StepTextSerializer < ActiveModel::Serializer
     {
       duplicate_url: duplicate_step_text_path(object.step, object),
       delete_url: step_text_path(object.step, object),
-      update_url: step_text_path(object.step, object)
+      update_url: step_text_path(object.step, object),
+      move_url: move_step_text_path(object.step, object),
+      move_targets_url: move_targets_step_text_path(object.step, object)
     }
   end
 end
