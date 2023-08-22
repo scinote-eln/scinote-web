@@ -4,10 +4,10 @@
      role="dialog"
      aria-labelledby="move-experiment-modal-label">
      <%= form_with model: @experiment,
-                            url: move_experiment_path(@experiment),
-                            method: :post,
-                            remote: true,
-                            html: { class: 'experiment-action-form' } do |f| %>
+                   url: move_experiment_path(@experiment),
+                   method: :post,
+                   data: { remote: true },
+                   html: { class: 'experiment-action-form' } do |f| %>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">

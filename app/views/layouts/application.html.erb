@@ -12,7 +12,7 @@
       <meta name="revive-url" content="<%= users_revive_session_path %>">
     <% end %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
-
+    <%= stylesheet_link_tag 'bootstrap_pack', media: 'all' %>
     <%= stylesheet_link_tag 'application_pack_styles', media: 'all' %>
     <% if ::NewRelic::Agent.instance.started? %>
       <%= ::NewRelic::Agent.browser_timing_header(controller.request.content_security_policy_nonce) %>
@@ -113,12 +113,6 @@
       <%= render "users/sessions/session_expire_modal" %>
       <%= render "users/sessions/session_end_modal" %>
       <%= render "label_printers/label_printer_modal" %>
-    <% end %>
-
-    <% if user_signed_in? && flash[:system_notification_modal] && current_user.show_login_system_notification? %>
-      <%= render partial: "/system_notifications/system_notification_modal", locals: { notification: current_user.user_system_notifications.show_on_login(true) } %>
-    <% else %>
-      <%= render partial: "/system_notifications/system_notification_modal", locals: { notification: nil} %>
     <% end %>
 
     <span style="display: none;" data-hook="application-body-end-html"></span>

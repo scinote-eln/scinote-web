@@ -88,8 +88,8 @@ module Protocols
 
     def create_step_table_element!(step, step_element_json)
       table = Table.create!(
-        name: step_element_json['name'],
-        contents: step_element_json['table']['contents'],
+        name: step_element_json['name'].presence || 'New table',
+        contents: step_element_json['contents'],
         created_by: @user,
         last_modified_by: @user,
         team: @team
@@ -100,13 +100,13 @@ module Protocols
 
     def create_step_list_element!(step, step_element_json)
       checklist = Checklist.create!(
-        name: step_element_json['list']['name'].presence || 'New list',
+        name: step_element_json['name'].presence || 'New list',
         step: step,
         created_by: @user,
         last_modified_by: @user
       )
 
-      step_element_json['list']['contents'].each do |item|
+      step_element_json['contents'].each do |item|
         checklist.checklist_items.create!(
           text: item.truncate(Constants::TEXT_MAX_LENGTH),
           checked: false,
