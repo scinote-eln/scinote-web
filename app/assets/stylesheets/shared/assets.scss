@@ -249,15 +249,15 @@
   }
 
   .attachment-image-tooltip {
+    bottom: 90px;
     display: none;
-    z-index: 9999;
     position: relative;
     right: 110px;
-    bottom: 90px;
+    z-index: 9999;
 
     img {
-      width: 150px;
       height: 150px;
+      width: 150px;
     }
   }
 
