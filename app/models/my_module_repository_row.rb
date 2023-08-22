@@ -61,7 +61,8 @@ class MyModuleRepositoryRow < ApplicationRecord
       user: last_modified_by || assigned_by,
       amount: delta,
       balance: stock_value.amount,
-      comment: comment
+      comment: comment,
+      unit: stock_value.repository_stock_unit_item&.data
     )
     stock_value.save!
     save!
