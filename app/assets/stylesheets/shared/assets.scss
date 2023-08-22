@@ -248,6 +248,23 @@
     @include font-main;
   }
 
+  .attachment-image-tooltip {
+    display: none;
+    z-index: 9999;
+    position: relative;
+    right: 110px;
+    bottom: 90px;
+
+    img {
+      width: 150px;
+      height: 150px;
+    }
+  }
+
+  .file-preview-link:hover + .attachment-image-tooltip {
+    display: block;
+  }
+
   .file-name {
     @include font-main;
     color: $brand-primary;
