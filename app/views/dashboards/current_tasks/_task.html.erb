@@ -16,6 +16,9 @@
     <% end %>
   </div>
   <div class="task-status-container row-border">
-    <span class="task-status" style="background:<%= task.status_color %>"><%= task.status_name %></span>
+    <span class="task-status <%= 'btn-not-started' if task.status_name == 'Not started' %>"
+      style="background:<%= task.status_color %>">
+        <%= task.status_name %>
+    </span>
   </div>
 </a>
