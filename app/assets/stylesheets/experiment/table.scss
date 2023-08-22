@@ -359,6 +359,10 @@
       padding: 2px 8px;
       text-overflow: ellipsis;
       white-space: nowrap;
+
+      &.btn-not-started {
+        @include not-started;
+      }
     }
 
     .table-row-placeholder-divider {
