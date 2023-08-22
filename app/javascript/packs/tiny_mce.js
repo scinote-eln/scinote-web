@@ -25,6 +25,7 @@ import 'tinymce/plugins/insertdatetime';
 import 'tinymce/plugins/nonbreaking';
 import 'tinymce/plugins/save';
 import 'tinymce/plugins/help';
+import 'tinymce/plugins/help/js/i18n/keynav/en';
 import 'tinymce/plugins/quickbars';
 import 'tinymce/plugins/directionality';
 import './tinymce/custom_image_uploader/plugin';
