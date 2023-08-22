@@ -17,7 +17,7 @@
         <div class="flex items-center gap-4 text-xs">
           <div class="sci-checkbox-container">
             <%= f.check_box :visibility,
-                            { class: 'sci-checkbox' ,data: { action: 'toggle-visibility', target: 'new_project_role_select_wrapper' } },
+                            { class: 'sci-checkbox', checked: f.object.visible?, data: { action: 'toggle-visibility', target: 'edit_project_role_select_wrapper' } },
                             :visible,
                             :hidden %>
             <span class="sci-checkbox-label"></span>
