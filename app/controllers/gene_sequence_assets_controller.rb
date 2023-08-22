@@ -20,16 +20,25 @@ class GeneSequenceAssetsController < ApplicationController
   def edit
     @file_url = rails_representation_url(@asset.file)
     @file_name = @asset.render_file_name
+    @ove_enabled = OpenVectorEditorService.enabled?
+    log_activity(:protocol_sequence_asset_edit_started)
     render :edit, layout: false
   end
 
   def create
     save_asset!
+    log_activity(:protocol_sequence_asset_added)
     head :ok
   end
 
   def update
     save_asset!
+    log_activity(:protocol_sequence_asset_edit_finished)
+    head :ok
+  end
+
+  def destroy
+    log_activity(:protocol_sequence_asset_deleted)
     head :ok
   end
 
@@ -132,5 +141,27 @@ class GeneSequenceAssetsController < ApplicationController
     else
       false
     end
+  end
+
+  def log_activity(type_of, message_items = {})
+    return unless @parent.is_a?(Step)
+
+    my_module = @parent.my_module
+    default_items = {
+      protocol: @protocol.id,
+      my_module: my_module&.id,
+      step: @parent.id,
+      asset_name: { id: @asset.id, value_for: 'file_name' },
+      step_position: { id: @parent.id, value_for: 'position_plus_one' }
+    }
+    message_items = default_items.merge(message_items)
+
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            team: @protocol.team,
+            project: my_module&.project,
+            subject: @protocol,
+            message_items: message_items)
   end
 end
