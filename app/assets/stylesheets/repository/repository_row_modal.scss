@@ -4,6 +4,12 @@
     justify-content: flex-end;
   }
 
+  .modal-footer {
+    .export-consumption-button {
+      margin-right: auto;
+    }
+  }
+
   .modal-footer[data-assign-item-button="true"] {
     align-items: center;
     display: flex;

@@ -438,7 +438,7 @@ var RepositoryDatatable = (function(global) {
   }
 
   function initExportActions() {
-    $(document).on('click', '#exportRepositoriesButton', function(e) {
+    $(document).on('click', '#exportRepositoryRowsButton', function(e) {
       e.preventDefault();
       e.stopPropagation();
 
