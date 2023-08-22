@@ -216,8 +216,8 @@
   display: flex !important;
 }
 
-.tox-tbtn {
-  background-color: var(--sn-white);
+.tox-tbtn:not(:hover) {
+  background-color: var(--sn-white) !important;
 }
 
 .tox .tox-pop {
