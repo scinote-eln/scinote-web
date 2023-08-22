@@ -11,12 +11,14 @@
        :data-gallery-view-id="parentId"
        :data-preview-url="attachment.attributes.urls.preview"
     >
-      <span data-toggle="tooltip"
-           data-placement="bottom"
-           :title="`${ attachment.attributes.file_name }`">
+      <span class="attachment-name" data-toggle="tooltip"
+           data-placement="bottom">
         {{ attachment.attributes.file_name }}
       </span>
     </a>
+    <div class="attachment-image-tooltip" >
+      <img :src="this.imageLoadError ? attachment.attributes.urls.blob : attachment.attributes.medium_preview" @error="handleImageError"/>
+    </div>
     <span v-if="attachment.isNewUpload" class="attachment-label-new">
       {{ i18n.t('attachments.new.description') }}
     </span>
@@ -53,7 +55,17 @@
       parentId: {
         type: Number,
         required: true
-      }
+      },
     },
+    data() {
+      return {
+        imageLoadError: false
+      };
+    },
+    methods: {
+      handleImageError() {
+        this.imageLoadError = true;
+      }
+    }
   }
 </script>
