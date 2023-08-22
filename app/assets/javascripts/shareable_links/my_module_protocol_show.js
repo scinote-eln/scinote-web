@@ -61,7 +61,7 @@
   }
 
   function initMyModuleProtocolShow() {
-    const myModule = $('#details-container').attr('data-my-module');
+    const myModule = $('#details-container').attr('data-shareable-link');
     if (!sessionStorage.getItem(`my_module_shareable_link_${myModule}`)) {
       sessionStorage.setItem(`my_module_shareable_link_${myModule}`, myModule);
       initWelcomeModal();
