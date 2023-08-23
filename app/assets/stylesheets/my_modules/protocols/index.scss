@@ -604,10 +604,6 @@
   }
 
   .task-sharing-and-flows {
-    align-items: center;
-    display: flex;
-    justify-content: flex-end;
-
     #dropdownTaskFlowList {
       min-width: 230px;
     }
@@ -663,7 +659,6 @@
   .task-information .task-section-header {
     display: block;
 
-    .task-sharing-and-flows,
     .status-label,
     .status-buttons {
       display: block;
@@ -706,11 +701,6 @@
 
     .task-details {
       grid-row: 3 / span 1;
-    }
-
-    .task-sharing-and-flows {
-      grid-column: unset;
-      grid-row: 2 / span 1;
     }
   }
 }

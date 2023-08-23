@@ -1,13 +1,13 @@
 <div class="bg-sn-white border-b border-solid border-0 border-sn-sleepy-grey rounded-t px-4 py-2">
-  <div class="flex items-center uppercase text-bold gap-4">
+  <div class="flex items-center gap-4">
     <% if can_read_experiment?(@my_module.experiment) %>
-      <a class="p-3 border-b-4 border-transparent hover:no-underline capitalize <%= is_module_protocols? ? "text-sn-blue" : "text-sn-grey" %>"
+      <a class="p-3 border-b-4 border-transparent hover:no-underline uppercase text-bold capitalize <%= is_module_protocols? ? "text-sn-blue" : "text-sn-grey" %>"
           href="<%= protocols_my_module_url(@my_module) %>"
           title="<%= t("nav2.modules.steps") %>"
       >
         <%=t "nav2.modules.steps" %>
       </a>
-      <a class="p-3 border-b-4 border-transparent hover:no-underline capitalize <%= is_module_results? ? "text-sn-blue" : "text-sn-grey" %>"
+      <a class="p-3 border-b-4 border-transparent hover:no-underline uppercase text-bold capitalize <%= is_module_results? ? "text-sn-blue" : "text-sn-grey" %>"
           href="<%= my_module_results_path(@my_module) %>"
           title="<%= t("nav2.modules.results") %>"
       >
@@ -17,7 +17,7 @@
           <sup class="navigation-results-counter"><%= @my_module.archived_branch? ? @my_module.results.size : @active_results_size %></sup>
         <% end %>
       </a>
-      <a class="p-3 border-b-4 border-transparent hover:no-underline capitalize <%= is_module_activities? ? "text-sn-blue" : "text-sn-grey" %>"
+      <a class="p-3 border-b-4 border-transparent hover:no-underline uppercase text-bold capitalize <%= is_module_activities? ? "text-sn-blue" : "text-sn-grey" %>"
           href="<%= activities_my_module_url(@my_module, view_mode: params[:view_mode]) %>"
           title="<%= t("nav2.modules.activities") %>"
       >
@@ -27,7 +27,7 @@
 
     <div data-hook="secondary-navigation-tabs"></div>
     <% if can_read_experiment?(@my_module.experiment) && !@my_module.archived_branch? %>
-      <a class="p-3 border-b-4 border-transparent hover:no-underline capitalize <%= is_module_archive? ? "text-sn-blue" : "text-sn-grey" %>"
+      <a class="p-3 border-b-4 border-transparent hover:no-underline uppercase text-bold capitalize <%= is_module_archive? ? "text-sn-blue" : "text-sn-grey" %>"
           href="<%= archive_my_module_url(@my_module) %>"
           title="<%= t'nav2.modules.archive' %>"
       >
@@ -38,5 +38,6 @@
         <% end %>
       </a>
     <% end %>
+    <%= render partial: '/my_modules/task_flow_and_sharing' %>
   </div>
 </div>
