@@ -7,7 +7,7 @@ module ResultElements
     include InputSanitizeHelper
     include Rails.application.routes.url_helpers
 
-    before_action :load_result_text, only: %i(update destroy duplicate)
+    before_action :load_result_text, only: %i(update destroy duplicate move)
 
     def create
       result_text = @result.result_texts.build
@@ -34,6 +34,18 @@ module ResultElements
       render json: @result_text, serializer: ResultTextSerializer, user: current_user
     rescue ActiveRecord::RecordInvalid
       render json: @result_text.errors, status: :unprocessable_entity
+    end
+
+    def move
+      target = @my_module.results.find_by(id: params[:target_id])
+      ActiveRecord::Base.transaction do
+        @result_text.update!(result: target)
+        @result_text.result_orderable_element.update!(result: target, position: target.result_orderable_elements.size)
+        @result.normalize_elements_position
+        render json: @result_text, serializer: ResultTextSerializer, user: current_user
+      rescue ActiveRecord::RecordInvalid
+        render json: @result_text.errors, status: :unprocessable_entity
+      end
     end
 
     def destroy

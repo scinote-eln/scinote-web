@@ -180,6 +180,12 @@ class Step < ApplicationRecord
     end
   end
 
+  def normalize_elements_position
+    step_orderable_elements.order(:position).each_with_index do |element, index|
+      element.update!(position: index) unless element.position == index
+    end
+  end
+
   private
 
   def touch_protocol

@@ -9,13 +9,18 @@
       class="mb-3"
     />
     <div class="results-list">
-      <Result v-for="result in results" :key="result.id" :result="result" />
+      <Result v-for="result in results" :key="result.id"
+        :result="result"
+        :resultToReload="resultToReload"
+        @result:elements:loaded="resultToReload = null"
+        @result:move_element="reloadResult"
+      />
     </div>
   </div>
 </template>
 
 <script>
-  import axios from 'axios';
+  import axios from '../../packs/custom_axios.js';
   import ResultsToolbar from './results_toolbar.vue';
   import Result from './result.vue';
 
@@ -29,13 +34,17 @@
       return {
         results: [],
         sort: 'created_at_desc',
-        filters: {}
+        filters: {},
+        resultToReload: null
       }
     },
     created() {
       this.loadResults();
     },
     methods: {
+      reloadResult(result) {
+        this.resultToReload = result;
+      },
       loadResults() {
         axios.get(
           `${this.url}`,

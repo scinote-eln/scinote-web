@@ -29,6 +29,9 @@
         <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light btn-sm" tabindex="0" @click="duplicateElement">
           <i class="sn-icon sn-icon-duplicate"></i>
         </button>
+        <button v-if="element.attributes.orderable.urls.move_targets_url" class="btn btn-light btn-sm" tabindex="0" @click="showMoveModal">
+          Move
+        </button>
         <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light btn-sm" @click="showDeleteModal" tabindex="0">
           <i class="sn-icon sn-icon-delete"></i>
         </button>
@@ -76,21 +79,27 @@
       {{ i18n.t("protocols.steps.checklist.empty_checklist") }}
     </div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @cancel="closeDeleteModal"/>
+    <moveElementModal v-if="movingElement"
+                      :parent_type="element.attributes.orderable.parent_type"
+                      :targets_url="element.attributes.orderable.urls.move_targets_url"
+                      @confirm="moveElement($event)" @cancel="closeMoveModal"/>
   </div>
 </template>
 
  <script>
   import DeleteMixin from './mixins/delete.js'
+  import MoveMixin from './mixins/move.js'
   import DuplicateMixin from './mixins/duplicate.js'
   import deleteElementModal from './modal/delete.vue'
   import InlineEdit from '../inline_edit.vue'
   import ChecklistItem from './checklistItem.vue'
   import Draggable from 'vuedraggable'
+  import moveElementModal from './modal/move.vue'
 
   export default {
     name: 'Checklist',
-    components: { deleteElementModal, InlineEdit, ChecklistItem, Draggable },
-    mixins: [DeleteMixin, DuplicateMixin],
+    components: { deleteElementModal, InlineEdit, ChecklistItem, Draggable, moveElementModal },
+    mixins: [DeleteMixin, DuplicateMixin, MoveMixin],
     props: {
       element: {
         type: Object,

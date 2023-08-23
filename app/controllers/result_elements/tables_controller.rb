@@ -2,7 +2,7 @@
 
 module ResultElements
   class TablesController < BaseController
-    before_action :load_table, only: %i(update destroy duplicate)
+    before_action :load_table, only: %i(update destroy duplicate move)
 
     def create
       predefined_table_dimensions = create_table_params[:tableDimensions].map(&:to_i)
@@ -55,6 +55,19 @@ module ResultElements
       render json: @table, serializer: ResultTableSerializer, user: current_user
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
+    end
+
+    def move
+      target = @my_module.results.find_by(id: params[:target_id])
+      result_table = @table.result_table
+      ActiveRecord::Base.transaction do
+        result_table.update!(result: target)
+        result_table.result_orderable_element.update!(result: target, position: target.result_orderable_elements.size)
+        @result.normalize_elements_position
+        render json: @table, serializer: ResultTableSerializer, user: current_user
+      rescue ActiveRecord::RecordInvalid
+        render json: result_table.errors, status: :unprocessable_entity
+      end
     end
 
     def destroy

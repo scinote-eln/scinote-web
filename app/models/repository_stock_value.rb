@@ -24,7 +24,8 @@ class RepositoryStockValue < ApplicationRecord
                                       amount: amount,
                                       balance: amount,
                                       reference: repository_cell.repository_column.repository,
-                                      comment: comment)
+                                      comment: comment,
+                                      unit: repository_stock_unit_item&.data)
   end
 
   SORTABLE_COLUMN_NAME = 'repository_stock_values.amount'
@@ -111,16 +112,18 @@ class RepositoryStockValue < ApplicationRecord
                                       .repository_stock_unit_items
                                       .find(new_data[:unit_item_id])
     self.last_modified_by = user
-    delta = new_data[:amount].to_d - amount.to_d
+    new_amount = new_data[:amount].to_d
+    delta = new_amount - amount.to_d
     self.comment = new_data[:comment].presence
     repository_ledger_records.create!(
       user: last_modified_by,
       amount: delta,
-      balance: amount,
+      balance: new_amount,
       reference: repository_cell.repository_column.repository,
-      comment: comment
+      comment: comment,
+      unit: repository_stock_unit_item&.data
     )
-    self.amount = BigDecimal(new_data[:amount].to_s)
+    self.amount = new_amount
     save!
   end
 
