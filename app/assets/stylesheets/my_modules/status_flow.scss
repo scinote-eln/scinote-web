@@ -3,6 +3,67 @@
 // scss-lint:disable SelectorFormat
 // scss-lint:disable ImportantRule
 
+.task-sharing-and-flows {
+  #dropdownTaskFlowList {
+    min-width: 230px;
+  }
+
+  .status-flow-dropdown {
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  .status-buttons {
+    display: flex;
+
+    > :not(:first-child):not(.dropdown-menu) {
+      margin-left: .5em;
+    }
+
+    .status-flow-dropdown[data-status-changing=true] {
+      .caret.pull-right {
+        display: none;
+      }
+    }
+
+    > div > .btn {
+      min-width: 115px;
+    }
+  }
+
+  .status-transition-error {
+    @include font-small;
+    color: $brand-danger;
+    margin-top: .5em;
+
+    .fas {
+      margin-right: .5em;
+    }
+  }
+
+  .status-label {
+    @include font-button;
+    flex-basis: 50%;
+    margin-right: .5em;
+    text-align: right;
+
+    .status-title {
+      @include font-small;
+      color: var(--sn-grey);
+      margin-right: .2em;
+    }
+
+    .status-note {
+      font-weight: normal;
+    }
+
+    .pull-right {
+      font-weight: 400;
+    }
+  }
+}
+
 .status-flow-dropdown {
   .dropdown-toggle {
     color: $color-white;
