@@ -14,6 +14,11 @@ class Activity < ApplicationRecord
     change_user_role_on_my_module
   ).freeze
 
+  # invert the children hash to get a hash defining parents
+  ACTIVITY_SUBJECT_PARENTS = Extends::ACTIVITY_SUBJECT_CHILDREN.invert.map do |k, v|
+    k&.map { |s| [s.to_s.classify, v.to_s.classify.constantize.reflect_on_association(s)&.inverse_of&.name || v] }
+  end.compact.sum.to_h.freeze
+
   include ActivityValuesModel
   include GenerateNotificationModel
 
@@ -125,6 +130,18 @@ class Activity < ApplicationRecord
       result.push(subject_labels.to_query('subject_labels'))
     end
     result.join('&')
+  end
+
+  def subject_parents
+    recursive_subject_parents(subject, []).compact
+  end
+
+  def recursive_subject_parents(activity_subject, parents)
+    parent_model_name = ACTIVITY_SUBJECT_PARENTS[activity_subject.class.name]
+    return parents if parent_model_name.nil?
+
+    parent = activity_subject.public_send(parent_model_name)
+    recursive_subject_parents(parent, parents << parent)
   end
 
   private
