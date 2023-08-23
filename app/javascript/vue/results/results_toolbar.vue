@@ -14,9 +14,7 @@
         {{ i18n.t('my_modules.results.collapse_label') }}
       </button>
 
-      <button class="btn btn-light icon-btn mr-3">
-        <i class="sn-icon sn-icon-filter"></i>
-      </button>
+      <FilterDropdown :filters="filters" @applyFilters="setFilters" />
 
       <div class="dropdown">
         <button class="dropdown-toggle btn btn-light icon-btn mr-3"  id="sortDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -44,17 +42,47 @@
     'name_desc'
   ];
 
+  import FilterDropdown from '../shared/filters/filter_dropdown.vue';
+
   export default {
     name: 'ResultsToolbar',
     props: {
-      sort: { type: String, required: true }
+      sort: { type: String, required: true },
     },
+    data() {
+      return {
+        filters: null
+      }
+    },
+    components: { FilterDropdown },
     created() {
+      this.filters = [
+        {
+          key: 'query',
+          type: 'Text',
+          label: this.i18n.t('my_modules.results.filters.query.label'),
+          placeholder: this.i18n.t('my_modules.results.filters.query.placeholder')
+        },
+        {
+          key: 'created_at',
+          type: 'DateRange',
+          label: this.i18n.t('my_modules.results.filters.created_at.label')
+        },
+        {
+          key: 'updated_at',
+          type: 'DateRange',
+          label: this.i18n.t('my_modules.results.filters.updated_at.label')
+        }
+      ];
+
       this.sorts = SORTS;
     },
     methods: {
       setSort(sort) {
         this.$emit('setSort', sort);
+      },
+      setFilters(filters) {
+        this.$emit('setFilters', filters);
       }
     }
   }
