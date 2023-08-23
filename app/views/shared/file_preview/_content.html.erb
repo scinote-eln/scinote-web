@@ -62,7 +62,7 @@
         <%= render partial: 'shared/pdf_viewer', locals: { asset: asset, report_document: false } %>
       <% else %>
         <%= image_tag asset.large_preview,
-          class: class_names('asset-image', 'gene-sequence-asset': asset.blob.metadata["asset_type"] == 'gene_sequence'),
+          class: class_names('asset-image', 'gene-sequence-asset': asset.blob&.metadata["asset_type"] == 'gene_sequence'),
           style: 'opacity: 0' %>
       <% end %>
     <% else %>
