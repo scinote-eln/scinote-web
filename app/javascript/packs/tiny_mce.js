@@ -504,8 +504,7 @@ $(document).on('turbolinks:before-visit', (e) => {
   return true;
 });
 
-// Open rel="external" links in new tabs
-$('a[rel*=external]').on('click', function(e) {
+$(document).on('click', 'a[rel*=external]', function(e) {
   e.preventDefault();
-  window.open(this.href, '_blank', 'noopener');
+  window.open(this.href, '_blank', 'noopener');  
 });
