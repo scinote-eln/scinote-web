@@ -824,6 +824,8 @@ class ProtocolsController < ApplicationController
   end
 
   def import_docx
+    return render_403 unless Protocol.docx_parser_enabled?
+
     temp_files_ids = []
     params[:files].each do |file|
       temp_file = TempFile.new(session_id: request.session_options[:id], file: file)
