@@ -16,7 +16,8 @@ module Toolbars
 
       @single = @items.length == 1
 
-      @team_owner = @current_user.current_team.user_assignments.exists?(user: @current_user, user_role: UserRole.find_predefined_owner_role)
+      @team_owner = @current_user.current_team.user_assignments.exists?(user: @current_user,
+                                                                        user_role: UserRole.find_predefined_owner_role)
 
       @item_type = if project_ids.blank? && project_folder_ids.blank?
                      :none
@@ -105,8 +106,8 @@ module Toolbars
     end
 
     def move_action
-      return unless can_manage_team?(@items.first.team) && (@item_type == :project_folder ||
-                                                            can_read_project?(@items.first))
+      return unless can_manage_team?(@items.first.team) &&
+                    @items.all? { |item| item.is_a?(Project) ? can_read_project?(item) : true }
 
       {
         name: 'move',
