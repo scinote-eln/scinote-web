@@ -15,4 +15,22 @@ class ResultText < ApplicationRecord
 
     strip_tags(text.truncate(64))
   end
+
+  def duplicate(result, position = nil)
+    ActiveRecord::Base.transaction do
+      new_result_text = result.result_texts.create!(
+        text: text
+      )
+
+      # Copy results tinyMce assets
+      clone_tinymce_assets(new_result_text, result.my_module.team)
+
+      result.result_orderable_elements.create!(
+        position: position || result.result_orderable_elements.length,
+        orderable: new_result_text
+      )
+
+      new_result_text
+    end
+  end
 end

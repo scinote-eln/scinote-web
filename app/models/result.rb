@@ -54,6 +54,35 @@ class Result < ApplicationRecord
     end
   end
 
+  def duplicate(my_module, user, result_name: nil)
+    ActiveRecord::Base.transaction do
+      new_result = my_module.results.new(
+        name: result_name || name,
+        user: user
+      )
+      new_result.save!
+
+      # Copy texts
+      result_texts.each do |result_text|
+        result_text.duplicate(new_result)
+      end
+
+      # Copy assets
+      assets.each do |asset|
+        new_asset = asset.dup
+        new_asset.save!
+        new_result.assets << new_asset
+      end
+
+      # Copy tables
+      tables.each do |table|
+        table.duplicate(new_result, user)
+      end
+
+      new_result
+    end
+  end
+
   def default_view_state
     { 'assets' => { 'sort' => 'new' } }
   end

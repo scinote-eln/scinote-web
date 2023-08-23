@@ -538,6 +538,7 @@ Rails.application.routes.draw do
           post :upload_attachment
           post :update_view_state
           post :update_asset_view_mode
+          post :duplicate
         end
 
         resources :tables, controller: 'result_elements/tables', only: %i(create destroy update) do

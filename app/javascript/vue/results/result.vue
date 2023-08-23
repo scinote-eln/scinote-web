@@ -349,7 +349,9 @@
 
       },
       duplicateResult() {
-
+        axios.post(this.urls.duplicate_url).then((_) => {
+          this.$emit('duplicated');
+        });
       },
       moveElement(position, target_id) {
         this.elements.splice(position, 1)
@@ -363,8 +365,8 @@
         this.$emit('result:move_element', target_id)
       },
       updateName(name) {
-        axios.patch(this.urls.update_url, { result: { name: name } }, (_) => {
-          this.$emit('resultUpdated')
+        axios.patch(this.urls.update_url, { result: { name: name } }).then((_) => {
+          this.$emit('updated');
         });
       }
     }

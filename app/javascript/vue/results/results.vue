@@ -14,6 +14,7 @@
         :resultToReload="resultToReload"
         @result:elements:loaded="resultToReload = null"
         @result:move_element="reloadResult"
+        @duplicated="loadResults"
       />
     </div>
   </div>

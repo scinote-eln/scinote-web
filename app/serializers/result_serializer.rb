@@ -83,6 +83,10 @@ class ResultSerializer < ActiveModel::Serializer
       })
     end
 
+    if can_create_results?(object.my_module)
+      urls_list[:duplicate_url] = duplicate_my_module_result_url(object.my_module, object)
+    end
+
     urls_list
   end
 end
