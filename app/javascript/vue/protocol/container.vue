@@ -36,7 +36,7 @@
       </div>
     </div>
     <div id="protocol-content" class="protocol-content collapse in" aria-expanded="true">
-      <div class="protocol-description">
+      <div class="mb-8">
         <div class="protocol-name" v-if="!inRepository">
           <InlineEdit
             v-if="urls.update_protocol_name_url"
@@ -45,6 +45,7 @@
             :placeholder="i18n.t('my_modules.protocols.protocol_status_bar.enter_name')"
             :allowBlank="!inRepository"
             :attributeName="`${i18n.t('Protocol')} ${i18n.t('name')}`"
+            :customClasses="['hover-border']"
             @update="updateName"
           />
           <span v-else>
@@ -66,7 +67,7 @@
             </div>
           </div>
           <div id="protocol-description-container" :class=" inRepository ? 'protocol-description collapse in' : ''" >
-            <div v-if="urls.update_protocol_description_url">
+            <div class="ml-1" v-if="urls.update_protocol_description_url">
               <Tinymce
                 :value="protocol.attributes.description"
                 :value_html="protocol.attributes.description_view"
@@ -229,7 +230,7 @@
       deleteSteps() {
         $.post(this.urls.delete_steps_url, () => {
           this.steps = []
-        }).error(() => {
+        }).fail(() => {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')
         })
       },
@@ -276,7 +277,7 @@
             this.$nextTick(() => this.scrollToBottom());
           }
           this.refreshProtocolStatus();
-        }).error((data) => {
+        }).fail((data) => {
           HelperModule.flashAlertMsg(data.responseJSON.error ? Object.values(data.responseJSON.error).join(', ') : I18n.t('errors.general'), 'danger');
         })
       },

@@ -5,7 +5,7 @@
     </div>
     <div class="collapse-buttons sci-btn-group">
        <button class="btn btn-light collapse-all">
-          <i class="sn-icon sn-icon-open-show"></i>
+          <i class="sn-icon sn-icon-up"></i>
           <%= t("projects.reports.wizard.second_step.collapse_all") %>
        </button>
        <button class="btn btn-light expand-all">
@@ -31,7 +31,7 @@
   <div class="divider"></div>
   <div class="project-contents" data-project-id="<%= report.project&.id %>" data-project-content-url="<%= project_contents_reports_path %>">
     <% if report.id %>
-      <%= render partial: 'reports/wizard/project_contents.html.erb',
+      <%= render partial: 'reports/wizard/project_contents',
         locals: { project: report.project, report: report } %>
     <% end %>
   </div>

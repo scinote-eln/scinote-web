@@ -4,7 +4,7 @@ class LabelTemplatesController < ApplicationController
   include InputSanitizeHelper
   include TeamsHelper
 
-  before_action :check_feature_enabled, except: :index
+  before_action :check_feature_enabled, except: %i(index zpl_preview)
   before_action :load_label_templates, only: %i(index datatable)
   before_action :load_label_template, only: %i(show set_default update template_tags)
   before_action :check_view_permissions, except: %i(create duplicate set_default delete update)
@@ -29,14 +29,10 @@ class LabelTemplatesController < ApplicationController
   end
 
   def datatable
-    respond_to do |format|
-      format.json do
-        render json: ::LabelTemplateDatatable.new(
-          view_context,
-          @label_templates
-        )
-      end
-    end
+    render json: ::LabelTemplateDatatable.new(
+      view_context,
+      @label_templates
+    )
   end
 
   def show
@@ -178,7 +174,7 @@ class LabelTemplatesController < ApplicationController
   end
 
   def load_label_templates
-    @label_templates = LabelTemplate.where(team_id: current_team.id)
+    @label_templates = LabelTemplate.enabled? ? current_team.label_templates : current_team.label_templates.default
   end
 
   def load_label_template

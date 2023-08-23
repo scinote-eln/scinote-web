@@ -38,10 +38,10 @@ class ProjectsController < ApplicationController
 
     if filters_included?
       render json: {
-        toolbar_html: render_to_string(partial: 'projects/index/toolbar.html.erb'),
+        toolbar_html: render_to_string(partial: 'projects/index/toolbar'),
         filtered: true,
         cards_html: render_to_string(
-          partial: 'projects/index/team_projects_grouped_by_folder.html.erb',
+          partial: 'projects/index/team_projects_grouped_by_folder',
           locals: { projects_by_folder: overview_service.grouped_by_folder_project_cards }
         )
       }
@@ -69,9 +69,9 @@ class ProjectsController < ApplicationController
         projects_cards_url: projects_cards_url,
         title_html: title_html,
         next_page: cards.next_page,
-        toolbar_html: render_to_string(partial: 'projects/index/toolbar.html.erb'),
+        toolbar_html: render_to_string(partial: 'projects/index/toolbar'),
         cards_html: render_to_string(
-          partial: 'projects/index/team_projects.html.erb',
+          partial: 'projects/index/team_projects',
           locals: { cards: cards, view_mode: params[:view_mode] }
         )
       }
@@ -121,15 +121,9 @@ class ProjectsController < ApplicationController
 
   def new
     @project = current_team.projects.new(project_folder: current_folder)
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'projects/index/modals/new_project.html.erb'
-          )
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'projects/index/modals/new_project')
+    }
   end
 
   def create
@@ -140,25 +134,17 @@ class ProjectsController < ApplicationController
       log_activity(:create_project)
 
       message = t('projects.create.success_flash', name: escape_input(@project.name))
-      respond_to do |format|
-        format.json do
-          render json: { message: message }, status: :ok
-        end
-      end
+      render json: { message: message }, status: :ok
     else
-      respond_to do |format|
-        format.json do
-          render json: @project.errors, status: :unprocessable_entity
-        end
-      end
+      render json: @project.errors, status: :unprocessable_entity
     end
   end
 
   def edit
     render json: {
-      html: render_to_string(partial: 'projects/index/modals/edit_project_contents.html.erb',
+      html: render_to_string(partial: 'projects/index/modals/edit_project_contents',
+                             formats: :html,
                              locals: { project: @project })
-
     }
   end
 
@@ -362,19 +348,10 @@ class ProjectsController < ApplicationController
   end
 
   def notifications
-    @modules = @project
-               .assigned_modules(current_user)
-               .order(due_date: :desc)
-    respond_to do |format|
-      # format.html
-      format.json do
-        render json: {
-          html: render_to_string({
-                                   partial: 'notifications.html.erb'
-                                 })
-        }
-      end
-    end
+    @modules = @project.assigned_modules(current_user).order(due_date: :desc)
+    render json: {
+      html: render_to_string(partial: 'notifications')
+    }
   end
 
   def users_filter

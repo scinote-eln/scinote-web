@@ -19,7 +19,7 @@
               <%= link_to my_module_my_module_tag_path(@my_module, mmt, format: :json), method: :delete, remote: true, class: 'btn btn-light icon-btn remove-tag-link btn-sm btn-white', title: t("experiments.canvas.modal_manage_tags.remove_tag", module: @my_module.name), data: {tag_id: tag.id} do %>
                 <span class="sn-icon sn-icon-close"></span>
               <% end %>
-              <%= bootstrap_form_for tag, remote: true, url: project_tag_path(@my_module.experiment.project, tag, format: :json), data: {tag_id: tag.id}, method: :delete, html: { class: "delete-tag-form"} do |f| %>
+              <%= form_with model: tag, url: project_tag_path(@my_module.experiment.project, tag, format: :json), data: { tag_id: tag.id, remote: true }, method: :delete, html: { class: "delete-tag-form"} do |f| %>
                 <%= hidden_field_tag :my_module_id, @my_module.id %>
                 <%= f.button class: 'btn btn-light delete-tag-link icon-btn btn-sm btn-white', title: t("experiments.canvas.modal_manage_tags.delete_tag"), data: { confirm: t("experiments.canvas.modal_manage_tags.delete_tag_confirmation") } do %>
                   <span class="sn-icon sn-icon-delete"></span>
@@ -30,13 +30,13 @@
         </div>
 
         <div class="row tag-edit" style="display: none;">
-          <%= bootstrap_form_for tag, remote: true, url: project_tag_path(@my_module.experiment.project, tag, format: :json), method: :put, html: { class: "edit-tag-form" }, data: {tag_id: tag.id} do |f| %>
+          <%= form_with model: tag, url: project_tag_path(@my_module.experiment.project, tag, format: :json), method: :put, html: { class: "edit-tag-form" }, data: { tag_id: tag.id, remote: true } do |f| %>
             <%= hidden_field_tag :my_module_id, @my_module.id %>
             <div class="col-xs-7">
               <%= f.text_field :name, hide_label: true %>
             </div>
             <div class="col-xs-5 flex items-center gap-2 justify-end">
-              <%= render partial: 'shared/color_picker_select.erb',
+              <%= render partial: 'shared/color_picker_select',
                          locals: { name: :color, colors: Constants::TAG_COLORS,
                                    classes: "edit-tag-color", styles: "",
                                    object_name: :tag} %>
@@ -58,7 +58,7 @@
 <% if can_manage_my_module?(@my_module) %>
   <hr data-view-mode="active">
   <div class="row" data-view-mode="active">
-      <%= bootstrap_form_for [@my_module, @new_mmt], remote: true, format: :json, html: { class: 'add-tag-form' } do |f| %>
+      <%= form_with model: [@my_module, @new_mmt], data: { remote: true }, format: :json, html: { class: 'add-tag-form' } do |f| %>
         <div>
           <div class="well well-sm">
             <%= collection_select(:my_module_tag,
@@ -75,7 +75,7 @@
         </div>
       <% end %>
       <div class="pull-right create-new-tag-btn">
-        <%= bootstrap_form_for [@my_module.experiment.project, @new_tag], remote: true, format: :json, html: { class: 'add-tag-form' } do |f| %>
+        <%= form_with model: [@my_module.experiment.project, @new_tag], data: { remote: true }, format: :json, html: { class: 'add-tag-form' } do |f| %>
           <%= hidden_field_tag :my_module_id, @my_module.id %>
           <%= f.hidden_field :project_id, :value => @my_module.experiment.project.id %>
           <%= f.hidden_field :name, :value => t("tags.create.new_name") %>

@@ -1,7 +1,8 @@
+/* eslint-disable no-unused-vars */
 /*
  global Results ActiveStorage animateSpinner Comments ResultAssets FilePreviewModal
         TinyMCE getParam applyCreateWopiFileCallback initFormSubmitLinks textValidator
-        GLOBAL_CONSTANTS
+        GLOBAL_CONSTANTS ActiveStoragePreviews
 */
 
 (function(global) {
@@ -28,7 +29,7 @@
           fillHandle: false,
           formulas: true,
           data: JSON.parse(contents.attr('value')).data,
-          cell: JSON.parse(metadata.val() || '{}').cells || [],
+          cell: (metadata.val() || {}).cells || [],
           readOnly: true
         });
         let hot = $container.handsontable('getInstance');
@@ -92,8 +93,9 @@
           // Handle the error
         } else {
           let formData = new FormData();
+          const assetId = form.find('#result_asset_attributes_id').val();
           formData.append('result[name]', form.find('#result_name').val());
-          formData.append('result[asset_attributes][id]', form.find('#result_asset_attributes_id').val());
+          formData.append('result[asset_attributes][id]', assetId);
           formData.append('result[asset_attributes][signed_blob_id]', blob.signed_id);
 
           $.ajax({
@@ -102,7 +104,7 @@
             data: formData,
             success: function(data) {
               animateSpinner(null, false);
-              $('.edit_result').parent().remove();
+              $('.edit-result-asset').parent().remove();
               $(data.html).prependTo('#results').promise().done(() => {
                 $.each($('#results').find('.result'), function() {
                   initFormSubmitLinks($(this));
@@ -113,13 +115,14 @@
                   ResultAssets.initNewResultAsset();
                   expandResult($(this));
                 });
+                ActiveStoragePreviews.reloadPreview(`.asset[data-asset-id=${assetId}] .attachment-preview img`);
               });
 
               $('#results-toolbar').show();
             },
             error: function(XHR) {
               animateSpinner(null, false);
-              $('.edit_result').renderFormErrors('result', XHR.responseJSON.errors);
+              $('.edit-result-asset').renderFormErrors('result', XHR.responseJSON.errors);
             },
             processData: false,
             contentType: false

@@ -9,7 +9,8 @@
   width: var(--attachment-column-width);
 
 
-  .file-preview-link {
+  .file-preview-link,
+  .shareable-file-preview-link {
     display: block;
     height: 100%;
     width: 100%;
@@ -61,34 +62,6 @@
       }
     }
 
-    &.bio_eddie {
-
-      &::before,
-      &::after {
-        border-radius: 1em 0 0 1em;
-        bottom: 1em;
-        content: "";
-        display: block;
-        height: 2em;
-        line-height: 2em;
-        position: absolute;
-        right: -1em;
-        width: 2.25em;
-      }
-
-      &::before {
-        background: $bio-eddie-color;
-      }
-
-      &::after {
-        background-image: url("/images/icon_small/bio_eddie_white.png");
-        background-repeat: no-repeat;
-        height: 1.85em;
-        right: -1.15em;
-        width: 2em;
-      }
-    }
-
     .fas {
       font-size: 100px;
       height: 240px;
@@ -134,7 +107,8 @@
   &:hover {
     box-shadow: $md-shadow;
 
-    .file-preview-link {
+    .file-preview-link,
+    .shareable-file-preview-link {
       text-decoration: none;
     }
 

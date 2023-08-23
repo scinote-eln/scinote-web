@@ -101,3 +101,17 @@
     }
   }
 }
+
+.share-task-modal {
+  .share-link-copy {
+    border-radius: 0 4px 4px 0;
+  }
+
+  .shareable-link-error {
+    color: var(--sn-coral);
+  }
+
+  .shareable-link-disclaimer {
+    color: var(--sn-grey);
+  }
+}

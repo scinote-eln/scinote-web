@@ -43,7 +43,8 @@ var ExperimnetTable = {
       return `<a href="${data.url}">${data.count}</a>`;
     },
     status: function(data) {
-      return `<div class="my-module-status" style="background-color: ${data.color}">${data.name}</div>`;
+      return `<div class="my-module-status ${data.name === 'Not started' ? 'btn-not-started' : ''}" 
+        style="background-color: ${data.color}">${data.name}</div>`;
     },
     assigned: function(data) {
       return data.html;
@@ -230,7 +231,7 @@ var ExperimnetTable = {
     $.post(url, { my_module_ids: ids }, () => {
       this.loadTable();
       window.navigatorContainer.reloadChildrenLevel = true;
-    }).error((data) => {
+    }).fail((data) => {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   },
@@ -245,7 +246,7 @@ var ExperimnetTable = {
       HelperModule.flashAlertMsg(data.message, 'success');
       this.loadTable();
       window.navigatorContainer.reloadChildrenLevel = true;
-    }).error((data) => {
+    }).fail((data) => {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   },
@@ -387,7 +388,7 @@ var ExperimnetTable = {
           checkbox.dataset.unassignUrl = result.unassign_url;
           $(checkbox).closest('.table-row').find('.assigned-users-container')
             .replaceWith($(result.html).find('.assigned-users-container'));
-        }).error((data) => {
+        }).fail((data) => {
           HelperModule.flashAlertMsg(data.responseJSON.errors, 'danger');
         });
       } else {
@@ -439,7 +440,7 @@ var ExperimnetTable = {
           HelperModule.flashAlertMsg(data.message, 'success');
           this.loadTable();
           window.navigatorContainer.reloadChildrenLevel = true;
-        }).error((data) => {
+        }).fail((data) => {
           HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
         });
         $('#modal-move-modules').modal('hide');
@@ -499,7 +500,9 @@ var ExperimnetTable = {
     });
   },
   updateExperimentToolbar: function() {
-    window.actionToolbarComponent.fetchActions({ my_module_ids: this.selectedMyModules });
+    if (window.actionToolbarComponent) {
+      window.actionToolbarComponent.fetchActions({ my_module_ids: this.selectedMyModules });
+    }
   },
   selectDate: function($field) {
     var datePicker = $field.data('DateTimePicker');
@@ -522,6 +525,7 @@ var ExperimnetTable = {
         icon.removeClass('sn-icon-visibility-show').addClass('sn-icon-visibility-hide');
         icon.parent().removeClass('visible');
       } else {
+        if (icon.hasClass('disabled')) return;
         $(`.experiment-table .${icon.data('column')}-column`).removeClass('hidden');
         icon.addClass('sn-icon-visibility-show').removeClass('sn-icon-visibility-hide');
         icon.parent().addClass('visible');

@@ -12,7 +12,7 @@
       <div class="comments-container simple">
         <ul class="no-style content-comments">
           <% comments.each do |comment| %>
-            <%= render partial: 'shared/comments/item.html.erb',
+            <%= render partial: 'shared/comments/item',
                         locals: { comment: comment, readonly: true, report: true, export_all: export_all } %>
           <% end %>
         </ul>

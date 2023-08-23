@@ -103,7 +103,7 @@ module RepositoryDatatableHelper
 
   def prepare_simple_view_row_columns(repository_rows, repository, my_module, options = {})
     has_stock_management = repository.has_stock_management?
-    reminders_enabled = Repository.reminders_enabled?
+    reminders_enabled = !options[:disable_reminders] && Repository.reminders_enabled?
     repository_rows = reminders_enabled ? with_reminders_status(repository_rows, repository) : repository_rows
     # Always disabled in a simple view
     stock_managable = false
@@ -252,17 +252,6 @@ module RepositoryDatatableHelper
     }
   end
 
-  def bmt_repository_default_columns(record)
-    {
-      '1': assigned_row(record),
-      '2': escape_input(record.external_id),
-      '3': record.code,
-      '4': escape_input(record.name),
-      '5': escape_input(record.created_by.full_name),
-      '6': I18n.l(record.created_at, format: :full)
-    }
-  end
-
   def display_cell_value(cell, team, repository, options = {})
     serializer_class = "RepositoryDatatable::#{cell.repository_column.data_type}Serializer".constantize
     serializer_class.new(
@@ -313,7 +302,7 @@ module RepositoryDatatableHelper
   end
 
   def stock_consumption_permitted?(repository, my_module)
-    return false unless repository.is_a?(Repository)
+    return false unless repository.is_a?(Repository) && current_user
 
     can_update_my_module_stock_consumption?(my_module)
   end

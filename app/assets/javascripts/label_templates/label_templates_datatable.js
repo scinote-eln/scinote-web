@@ -71,7 +71,7 @@
         $.post(rowsSelected[0].setDefaultUrl, function(response) {
           reloadTable();
           HelperModule.flashAlertMsg(response.message, 'success');
-        }).error((response) => {
+        }).fail((response) => {
           HelperModule.flashAlertMsg(response.responseJSON.error, 'danger');
         });
       }
@@ -95,7 +95,7 @@
         $.post(this.dataset.url, { selected_ids: rowsSelectedIDs() }, function(response) {
           reloadTable();
           HelperModule.flashAlertMsg(response.message, 'success');
-        }).error((response) => {
+        }).fail((response) => {
           HelperModule.flashAlertMsg(response.responseJSON.error, 'danger');
         });
       }
@@ -118,7 +118,7 @@
           reloadTable();
           HelperModule.flashAlertMsg(response.message, 'success');
           $('#deleteLabelTemplatesModal').modal('hide');
-        }).error((response) => {
+        }).fail((response) => {
           HelperModule.flashAlertMsg(response.responseJSON.error, 'danger');
           $('#deleteLabelTemplatesModal').modal('hide');
         });
@@ -131,7 +131,7 @@
       $.post(this.dataset.url, function(response) {
         reloadTable();
         HelperModule.flashAlertMsg(response.message, 'success');
-      }).error((response) => {
+      }).fail((response) => {
         HelperModule.flashAlertMsg(response.responseJSON.error, 'danger');
       });
     });
@@ -144,8 +144,10 @@
   }
 
   function updateButtons() {
-    window.actionToolbarComponent.fetchActions({ label_template_ids: rowsSelectedIDs() });
-    $('.dataTables_scrollBody').css('padding-bottom', `${rowsSelectedIDs().length > 0 ? 68 : 0}px`);
+    if (window.actionToolbarComponent) {
+      window.actionToolbarComponent.fetchActions({ label_template_ids: rowsSelectedIDs() });
+      $('.dataTables_scrollBody').css('padding-bottom', `${rowsSelectedIDs().length > 0 ? 68 : 0}px`);
+    }
   }
 
   function reloadTable() {

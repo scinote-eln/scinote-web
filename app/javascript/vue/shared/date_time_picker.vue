@@ -34,6 +34,7 @@
         this.updateDateTime();
       },
       getTime(dateTime) {
+        if(!this.isValidDate(dateTime)) return
         return `${dateTime.getHours().toString().padStart(2, '0')}:${dateTime.getMinutes().toString().padStart(2, '0')}`
       },
       updateTime(value) {

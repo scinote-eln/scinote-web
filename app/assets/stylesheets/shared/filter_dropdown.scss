@@ -108,7 +108,7 @@
   }
 
   .connect-line {
-    background: $input-border;
+    background: var(--sn-super-light-grey);
     height: 10px;
     margin: 5px auto;
     width: 2px;

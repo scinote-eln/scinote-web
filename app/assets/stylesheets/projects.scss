@@ -1,8 +1,8 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
 // scss-lint:disable IdSelector
-@import "constants";
-@import "mixins";
+
+
 
 // Some color definitions
 $color-group-hover: $color-alabaster;
@@ -184,8 +184,14 @@ path, ._jsPlumb_endpoint {
     height: 40px;
 
     .dropdown {
-      bottom: 18px;
-      left: 0;
+      bottom: 22px;
+      left: 22px;
+
+      &:hover {
+        a {
+          text-decoration: none;
+        }
+      }
     }
   }
 
@@ -380,7 +386,6 @@ path, ._jsPlumb_endpoint {
   div {
     font-size: 20px;
     width: 4px;
-    height: 0px;
     display: inline-block;
 
     & .fas {
@@ -417,10 +422,10 @@ path, ._jsPlumb_endpoint {
 
   span {
     font-weight: bold;
-    font-size: $font-size-large;
+    font-size: 20px;
     text-transform: uppercase;
     display: block;
-    margin-top: 20%;
+    margin-top: 10%;
 
     a {
       color: $color-emperor;
@@ -506,7 +511,7 @@ li.module-hover {
           margin-top: 5px;
           font-family: 'Glyphicons Halflings';
           color: $color-white;
-          font-size: $font-size-large;
+          font-size: 20px;
 
           &:before {
             content: "\e221";
@@ -959,9 +964,8 @@ li.module-hover {
 
             .name {
               align-items: center;
-              grid-column: 1 span;
               -webkit-box-orient: vertical;
-              display: -webkit-box;
+              display: flex;
               -webkit-line-clamp: 2;
             }
 

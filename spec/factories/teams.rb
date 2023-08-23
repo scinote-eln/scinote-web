@@ -10,5 +10,8 @@ FactoryBot.define do
     trait :with_members do
       users { create_list :user, 3 }
     end
+    trait :shareable_links_enabled do
+      shareable_links_enabled { true }
+    end
   end
 end

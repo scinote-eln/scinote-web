@@ -2,7 +2,7 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
 
-@import "constants";
+
 
 #manage-repository-column {
   .modal-content {
@@ -207,6 +207,7 @@
       }
 
       .vis {
+        display: inline-block;
         margin-left: 10px;
         margin-right: 5px;
 

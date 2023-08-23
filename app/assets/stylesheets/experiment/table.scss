@@ -149,7 +149,7 @@
   .experiment-table {
     display: grid;
     grid-auto-rows: 3em 1px;
-    grid-template-columns: max-content repeat(calc(var(--columns-count)), minmax(max-content, auto)) max-content;
+    grid-template-columns: max-content repeat(calc(var(--columns-count)), minmax(100px, auto)) max-content;
     min-width: 100%;
 
     .table-header-cell {
@@ -359,6 +359,10 @@
       padding: 2px 8px;
       text-overflow: ellipsis;
       white-space: nowrap;
+
+      &.btn-not-started {
+        @include not-started;
+      }
     }
 
     .table-row-placeholder-divider {
@@ -499,14 +503,6 @@
         opacity: 0;
       }
     }
-
-    &:hover {
-      .date-text[data-editable=true] {
-        background-color: $color-concrete;
-        border-radius: 4px;
-
-      }
-    }
   }
 
   .open-comments-sidebar {
@@ -526,7 +522,6 @@
 
   .task_name-column {
     a {
-      max-width: 320px;
       overflow: hidden;
       text-overflow: ellipsis;
       -webkit-box-orient: vertical;
@@ -545,11 +540,16 @@
 }
 
 .table-display-modal {
+  .modal-description,
+  .column-container {
+    font-size: 14px;
+  }
+
   .column-container {
     align-items: center;
     border-bottom: $border-default;
     display: flex;
-    padding: .5em 1em;
+    padding: .5em 1.4em;
 
     &:not(.visible) {
       color: $color-alto;
@@ -569,13 +569,15 @@
       }
     }
 
-    &.task_name {
-      padding-left: 3em;
+    .sn-icon {
+      cursor: pointer;
+      margin-right: .6em;
 
-      .fas {
-        display: none;
+      &.disabled {
+        cursor: not-allowed;
       }
     }
+
   }
 }
 

@@ -1,7 +1,7 @@
 <% provide(:head_title, t('users.settings.account.addons.head_title')) %>
 <% provide(:container_class, "no-second-nav-container") %>
 
-<%= render partial: 'users/settings/sidebar.html.erb' %>
+<%= render partial: 'users/settings/sidebar' %>
 <div class="tab-content user-account-addons">
   <div class="tab-pane content-pane active" role="tabpanel">
 
@@ -20,25 +20,23 @@
     <div class="row printer-settings">
       <div class="col-xs-12 col-sm-12">
         <h2 class="addons-subtitle"><%= t('users.settings.account.addons.label_printers') %></h2>
-        <% if LabelPrinter.zebra_print_enabled? %>
-          <div class="printers-container">
-            <div class="printer">
-              <div class="header">
-                <div class="title">
-                  <%= t('users.settings.account.addons.zebra_printer.title') %>
-                </div>
-                <div class="control">
-                  <%= t('users.settings.account.addons.printers.enabled') %>
-                  <i class="sn-icon sn-icon-check"></i>
-                </div>
+        <div class="printers-container">
+          <div class="printer">
+            <div class="header">
+              <div class="title">
+                <%= t('users.settings.account.addons.zebra_printer.title') %>
               </div>
-              <div class="description">
-                <%= t('users.settings.account.addons.zebra_printer.description') %>
+              <div class="control">
+                <%= t('users.settings.account.addons.printers.enabled') %>
+                <i class="sn-icon sn-icon-check"></i>
               </div>
-               <%= link_to t('users.settings.account.addons.printers.details'), zebra_settings_path(), class: 'printer-details' %>
             </div>
+            <div class="description">
+              <%= t('users.settings.account.addons.zebra_printer.description') %>
+            </div>
+              <%= link_to t('users.settings.account.addons.printers.details'), zebra_settings_path(), class: 'printer-details' %>
           </div>
-        <% end %>
+        </div>
         <div class="printers-container">
           <div class="printer">
             <div class="header">

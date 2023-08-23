@@ -1,6 +1,9 @@
 <div class="well">
-  <%= bootstrap_form_for(@result, url: result_asset_path(format: :json), remote: true) do |f| %>
-    <%= f.text_field :name, style: "margin-top: 10px;" %><br />
+  <%= form_with(model: @result, url: result_asset_path(format: :json), data: { remote: true }, html: { class: 'edit-result-asset' }) do |f| %>
+    <div class="sci-input-container mb-4">
+			<label><%= t('result_assets.edit.label.name') %></label>
+			<%= f.text_field :name, class: 'sci-input-field' %>
+		</div>
     <%= f.fields_for :asset do |ff| %>
       <span><strong><%=t "result_assets.edit.uploaded_asset" %></strong></span>
       <p style="margin: 10px;">
@@ -18,5 +21,4 @@
                    class: 'btn btn-primary save-result' %>
     </div>
   <% end %>
-  <%= javascript_include_tag 'results/result_assets/edit' %>
 </div>

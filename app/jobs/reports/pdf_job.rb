@@ -62,14 +62,15 @@ module Reports
         file << renderer.render(
           pdf: 'report', header: { html: { template: "reports/templates/#{template}/header",
                                            locals: { report: report, user: user, logo: report_logo },
-                                           layout: 'reports/footer_header.html.erb' } },
+                                           layout: 'reports/footer_header' } },
                          footer: { html: { template: "reports/templates/#{template}/footer",
                                            locals: { report: report, user: user, logo: report_logo },
-                                           layout: 'reports/footer_header.html.erb' } },
+                                           layout: 'reports/footer_header' } },
                          assigns: { settings: report.settings },
                          locals: { report: report },
                          disable_javascript: false,
-                         template: 'reports/report.pdf.erb'
+                         template: 'reports/report',
+                         formats: :pdf
         )
 
         file.rewind
@@ -149,7 +150,7 @@ module Reports
     end
 
     def prepend_title_page(file, template, report, renderer)
-      unless File.exist?(Rails.root.join('app', 'views', 'reports', 'templates', template, 'cover.html.erb'))
+      unless File.exist?(Rails.root.join('app', 'views', 'reports', 'templates', template, 'cover'))
         return file
       end
 
@@ -165,11 +166,13 @@ module Reports
       merged_file = Tempfile.new(['report', '.pdf'], binmode: true)
 
       title_page << renderer.render(
-        pdf: 'report', inline: renderer.render_to_string("reports/templates/#{template}/cover.html.erb",
+        pdf: 'report', inline: renderer.render_to_string("reports/templates/#{template}/cover",
                                                          layout: false,
+                                                         formats: :html,
                                                          locals: { report: report, total_pages: total_pages.to_i, logo: report_logo }),
                        disable_javascript: false,
-                       template: 'reports/report.pdf.erb'
+                       template: 'reports/report',
+                       formats: :pdf
       )
 
       title_page.rewind

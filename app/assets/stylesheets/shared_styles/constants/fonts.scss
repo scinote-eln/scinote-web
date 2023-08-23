@@ -106,3 +106,27 @@ html {
 // $headings-font-weight: 500;
 // $headings-line-height: 1.1;
 // $headings-color: inherit;
+
+h1 {
+  @include font-h1;
+}
+
+h2 {
+  @include font-h2;
+}
+
+h3 {
+  @include font-h3;
+}
+
+h4 {
+  @include font-h3;
+}
+
+h5 {
+  @include font-h3;
+}
+
+h6 {
+  @include font-h3;
+}

@@ -1,6 +1,6 @@
 <% status = my_module.my_module_status %>
 <div class="status-label">
-  <%= t('my_module_statuses.dropdown.status_label') %>
+  <div class="status-title"><%= t('my_module_statuses.dropdown.status_label') %></div>
   <div class="status-note">
     <% if my_module.last_transition_error %>
       <div class="status-transition-error">
@@ -22,7 +22,9 @@
   <div class="dropdown sci-dropdown status-flow-dropdown"
       data-status-changing="<%= my_module.status_changing %>"
       data-status-check-url="<%= status_state_my_module_path(my_module) %>">
-    <button class="btn btn-secondary dropdown-toggle <%= 'disabled' if my_module.status_changing || my_module.archived_branch? %>"
+    <button class="btn btn-secondary dropdown-toggle
+    <%= 'disabled' if my_module.status_changing || my_module.archived_branch? %>
+    <%= 'btn-not-started' if status.name == 'Not started' %>"
             type="button"
             data-toggle="dropdown"
             aria-haspopup="true"
@@ -45,8 +47,9 @@
           <li data-state-id="<%= previous_s.id %>" id="previousStatusSelector" class="<%= 'disabled' if previous_s_errors.any? %>">
             <span><%= t('my_module_statuses.dropdown.return_label') %></span>
             <i class="fas fa-long-arrow-alt-right"></i>
-            <div class=" status-container">
-              <div class="status-name" style="<%= "background-color: #{previous_s.color}" %>"><%= previous_s.name %></div>
+            <div class="status-container">
+              <div class="status-name <%= 'btn-not-started' if previous_s.name == 'Not started' %>"
+                style="<%= "background-color: #{previous_s.color}" %>"><%= previous_s.name %></div>
             </div>
           </li>
           <span class="error-message"><% previous_s_errors.each do |error| %>

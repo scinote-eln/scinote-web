@@ -1,4 +1,4 @@
-/* global TinyMCE Results Comments animateSpinner initFormSubmitLinks */
+/* global TinyMCE Results Comments animateSpinner initFormSubmitLinks Prism */
 
 (function() {
   'use strict';
@@ -82,6 +82,7 @@
         TinyMCE.destroyAll();
         Comments.init();
         initNewReslutText();
+        Prism.highlightAllUnder(newResult.get(0));
       });
       $form.on('ajax:error', function(e, xhr) {
         var data = xhr.responseJSON;

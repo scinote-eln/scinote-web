@@ -25,6 +25,7 @@ import 'tinymce/plugins/insertdatetime';
 import 'tinymce/plugins/nonbreaking';
 import 'tinymce/plugins/save';
 import 'tinymce/plugins/help';
+import 'tinymce/plugins/help/js/i18n/keynav/en';
 import 'tinymce/plugins/quickbars';
 import 'tinymce/plugins/directionality';
 import './tinymce/custom_image_uploader/plugin';
@@ -178,7 +179,7 @@ window.TinyMCE = (() => {
         // Hide element containing HTML view of RTE field
         const tinyMceContainer = $(selector).closest('form').find('.tinymce-view');
         const tinyMceInitSize = tinyMceContainer.height();
-        $(selector).closest('.form-group')
+        $(selector).closest('.form-group, .tinymce-editor-container')
           .before(`<div class="tinymce-placeholder" style="height:${tinyMceInitSize}px"></div>`);
         tinyMceContainer.addClass('hidden');
         const plugins = `
@@ -246,12 +247,12 @@ window.TinyMCE = (() => {
           object_resizing: true,
           elementpath: false,
           quickbars_insert_toolbar: false,
-          default_link_target: '_blank',
+          link_default_target: 'external',
           mobile: {
             menubar: 'file edit view insert format table'
           },
-          target_list: [
-            { title: 'New page', value: '_blank' },
+          link_target_list: [
+            { title: 'New page', value: 'external' },
             { title: 'Same page', value: '_self' }
           ],
           style_formats: [
@@ -431,6 +432,19 @@ window.TinyMCE = (() => {
             editor.on('init', () => {
               restoreDraftNotification(selector, editor);
             });
+
+            editor.on('BeforeSetContent GetContent', function(e) {
+              if (e.content && e.content.includes('target="external"')) {
+                const div = document.createElement('div');
+                div.innerHTML = e.content;
+                const links = div.querySelectorAll('a[target="external"]');
+                links.forEach(link => {
+                  link.removeAttribute('target');
+                  link.setAttribute('rel', 'external');
+                });
+                e.content = div.innerHTML;
+              }
+            });
           },
           save_onsavecallback: (editor) => { saveAction(editor); }
         });
@@ -485,4 +499,10 @@ $(document).on('turbolinks:before-visit', (e) => {
     return false;
   }
   return true;
+});
+
+// Open rel="external" links in new tabs
+$('a[rel*=external]').on('click', function(e) {
+  e.preventDefault();
+  window.open(this.href, '_blank', 'noopener');
 });

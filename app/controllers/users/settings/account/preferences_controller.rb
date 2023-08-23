@@ -13,17 +13,10 @@ module Users
         end
 
         def update
-          respond_to do |format|
-            if @user.update(update_params)
-              format.json do
-                render json: { status: :ok }
-              end
-            else
-              format.json do
-                render json: @user.errors,
-                status: :unprocessable_entity
-              end
-            end
+          if @user.update(update_params)
+            render json: { status: :ok }
+          else
+            render json: @user.errors, status: :unprocessable_entity
           end
         end
 
@@ -44,21 +37,13 @@ module Users
             @user.system_message_email_notification = val
           end
           if @user.save
-            respond_to do |format|
-              format.json do
-                render json: {
-                  status: :ok
-                }
-              end
-            end
+            render json: {
+              status: :ok
+            }
           else
-            respond_to do |format|
-              format.json do
-                render json: {
-                  status: :unprocessable_entity
-                }
-              end
-            end
+            render json: {
+              status: :unprocessable_entity
+            }
           end
         end
 

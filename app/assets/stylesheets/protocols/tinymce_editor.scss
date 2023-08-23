@@ -46,6 +46,11 @@
 
     .tinymce-view {
       border-color: transparent;
+      padding: .1em 0;
+
+      &:hover {
+        border: 1px solid transparent;
+      }
     }
   }
 

@@ -23,6 +23,10 @@
 
     .label-search-container {
       margin-left: auto;
+
+      .dataTables_filter {
+        display: none;
+      } 
     }
 
     .label-buttons-container {
@@ -56,7 +60,7 @@
 
 .label-templates-datatable {
   --content-header-size: 3.5rem;
-  height: calc(100vh - var(--navbar-height) - var(--content-header-size));
+  height: calc(100vh - var(--top-navigation-height) - var(--breadcrumbs-navigation-height) - var(--content-header-size));
 
   #label-templates-table_wrapper {
     display: flex;
@@ -73,9 +77,28 @@
       .dataTables_scrollHead {
         flex-shrink: 0;
 
+
+        thead {
+          .sci-checkbox-container {
+            margin-left: .125rem;
+          }
+        }
+
         th:first-child {
           text-align: center;
           vertical-align: middle;
+        }
+
+        .table.dataTable .sorting {
+          &::after {
+            opacity: 0;
+          }
+
+          &:hover {
+            &::after {
+              opacity: 1;
+            }
+          }
         }
       }
 

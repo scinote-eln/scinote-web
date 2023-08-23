@@ -19,7 +19,7 @@
   }
 
   .panel-heading {
-    padding: 10px 15px 4px;
+    padding: 7px 30px 7px 15px;
   }
 
   .panel-body {
@@ -35,6 +35,10 @@
       padding: 2px 8px;
       text-overflow: ellipsis;
       white-space: nowrap;
+
+      &.btn-not-started {
+        @include not-started;
+      }
     }
   }
 
@@ -80,5 +84,13 @@
     background-image: url("/images/medium/loading.svg");
     background-position: center;
     background-repeat: no-repeat;
+  }
+}
+
+#manage-module-due-date-modal {
+  .input-group {
+    .form-control {
+      height: 2.5rem;
+    }
   }
 }

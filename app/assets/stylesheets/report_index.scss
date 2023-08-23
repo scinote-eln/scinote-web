@@ -38,6 +38,10 @@
       #reports-table_filter {
         margin-left: auto;
       }
+      
+      .dataTables_filter {
+        display: none;
+      } 
     }
 
     .dataTables_scroll {
@@ -48,6 +52,18 @@
 
       .dataTables_scrollHead {
         flex-shrink: 0;
+
+        .table.dataTable .sorting {
+          &::after {
+            opacity: 0;
+          }
+
+          &:hover {
+            &::after {
+              opacity: 1;
+            }
+          }
+        }
       }
     }
 
@@ -71,6 +87,9 @@
       .generate-pdf {
         display: initial;
       }
+    }
+    td:nth-child(4) {
+      min-width: 60px;
     }
   }
 

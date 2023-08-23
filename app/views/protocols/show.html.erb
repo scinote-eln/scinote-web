@@ -3,7 +3,7 @@
   <%= render partial: "/shared/sidebar/templates_sidebar", locals: {active: :protocol} %>
 <% end %>
  <% provide(:container_class, 'no-second-nav-container') %>
-<div class="content-pane protocols-show" >
+<div class="content-pane protocols-show flexible" >
   <div class="content-header">
     <div class="title-row">
       <h1>
@@ -40,19 +40,18 @@
       />
     </div>
   </div>
-  <%= render partial: "protocols/index/delete_draft_modal.html.erb" %>
+  <%= render partial: "protocols/index/delete_draft_modal" %>
 </div>
 
 <!-- Create new office file modal -->
-<%= render partial: 'assets/wopi/create_wopi_file_modal.html.erb' %>
+<%= render partial: 'assets/wopi/create_wopi_file_modal' %>
 <%= render partial: "my_modules/protocols/print_protocol_modal", locals: { protocol: @protocol, comments_enabled: true} %>
 
 
 <%= javascript_include_tag "handsontable.full" %>
-<%= render partial: "shared/formulas_libraries.html.erb" %>
+<%= render partial: "shared/formulas_libraries" %>
 <%= javascript_include_tag 'pdf_js' %>
 <%= stylesheet_link_tag 'pdf_js_styles' %>
 
 <%= render 'shared/tiny_mce_packs' %>
 <%= javascript_include_tag 'vue_protocol' %>
-<%= render partial: 'label_printers/label_printer_modal' %>

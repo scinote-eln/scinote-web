@@ -62,7 +62,10 @@
     },
     mounted() {
       this.focusElement.onblur = this.blur;
-      document.addEventListener("scroll", this.updateOptionPosition);
+      document.addEventListener('scroll', this.updateOptionPosition);
+    },
+    beforeDestroy() {
+      document.removeEventListener('scroll', this.updateOptionPosition);
     },
     methods: {
       preventBlur() {
@@ -102,6 +105,7 @@
         }
       },
       setValue(value) {
+        this.focusElement.blur();
         this.$emit('change', value);
       },
       updateOptionPosition() {

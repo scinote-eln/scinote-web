@@ -154,7 +154,7 @@ module ApplicationHelper
                             skip_avatar = false,
                             base64_encoded_imgs = false)
 
-    (defined?(controller) ? controller : ActionController::Base.new)
+    (defined?(controller) ? controller : ApplicationController.new)
       .render_to_string(
         partial: 'shared/atwho_user_container',
         locals: {
@@ -162,18 +162,9 @@ module ApplicationHelper
           skip_avatar: skip_avatar,
           skip_user_status: skip_user_status,
           team: team,
-          base64_encoded_imgs: base64_encoded_imgs,
-          user_avatar_absolute_url: user_avatar_absolute_url(
-            user,
-            :icon_small,
-            base64_encoded_imgs
-          ),
-          user_avatar_popover_absolute_url: user_avatar_absolute_url(
-            user,
-            :thumb,
-            base64_encoded_imgs
-          )
-        }
+          base64_encoded_imgs: base64_encoded_imgs
+        },
+        formats: :html
       )
   end
 
@@ -183,14 +174,15 @@ module ApplicationHelper
     if user.avatar.attached?
       return user.convert_variant_to_base64(avatar_link) if base64_encoded_imgs
 
-      avatar_link.processed.service_url(expires_in: Constants::URL_LONG_EXPIRE_TIME)
+      avatar_link.processed.url(expires_in: Constants::URL_LONG_EXPIRE_TIME)
     elsif base64_encoded_imgs
       file_path = Rails.root.join('app', 'assets', *avatar_link.split('/'))
       encoded_data =
         File.open(file_path) do |file|
           Base64.strict_encode64(file.read)
         end
-      "data:#{avatar_link.split('.').last};base64,#{encoded_data}"
+
+      "data:image/svg+xml;base64,#{encoded_data}"
     else
       avatar_link
     end

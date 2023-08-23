@@ -21,13 +21,12 @@ module TinyMceImages
 
       tiny_mce_assets.each do |tm_asset|
         next unless tm_asset&.image&.attached?
-
         begin
           new_tm_asset_src =
             if base64_encoded_imgs
               tm_asset.convert_variant_to_base64(tm_asset.preview)
             else
-              tm_asset.preview.processed.service_url(expires_in: Constants::URL_LONG_EXPIRE_TIME)
+              tm_asset.preview.processed.url(expires_in: Constants::URL_LONG_EXPIRE_TIME)
             end
         rescue ActiveStorage::FileNotFoundError
           next
@@ -46,6 +45,10 @@ module TinyMceImages
 
     def tinymce_render(field)
       TinyMceAsset.generate_url(self[field], self)
+    end
+
+    def shareable_tinymce_render(field)
+      TinyMceAsset.generate_url(self[field], self, is_shared_object: true)
     end
 
     # Takes array of old/new TinyMCE asset ID pairs

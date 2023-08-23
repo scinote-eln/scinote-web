@@ -52,7 +52,7 @@
           $.post(cardsContainer.data('move-modules-url'), moveParams, (data) => {
             HelperModule.flashAlertMsg(data.message, 'success');
             window.location.reload();
-          }).error((data) => {
+          }).fail((data) => {
             HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
           });
           $('#modal-move-modules').modal('hide');

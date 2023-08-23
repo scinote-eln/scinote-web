@@ -77,20 +77,22 @@
   <% end %>
 </div>
 <div class="modal-footer">
-  <a class="btn btn-light" data-dismiss="modal">
-    <i class="sn-icon sn-icon-close"></i>
-    <%= t('general.cancel') %>
-  </a>
-  <% if downstream %>
-    <a class="btn btn-primary next-step" >
-      <%= t('my_modules.modals.update_repository_record.next') %>
+  <div class="sci-btn-group">
+    <a class="btn btn-light" data-dismiss="modal">
+      <i class="sn-icon sn-icon-close"></i>
+      <%= t('general.cancel') %>
     </a>
-    <a class="btn btn-primary downstream-action hidden" >
-      <%= t('my_modules.modals.update_repository_record.task_and_downstream') %>
-    </a>
-  <% else %>
-    <a class="btn btn-primary task-action">
-      <%= t('my_modules.modals.update_repository_record.task') %>
-    </a>
-  <% end %>
+    <% if downstream %>
+      <a class="btn btn-primary next-step" >
+        <%= t('my_modules.modals.update_repository_record.next') %>
+      </a>
+      <a class="btn btn-primary downstream-action hidden" >
+        <%= t('my_modules.modals.update_repository_record.task_and_downstream') %>
+      </a>
+    <% else %>
+      <a class="btn btn-primary task-action">
+        <%= t('my_modules.modals.update_repository_record.task') %>
+      </a>
+    <% end %>
+  </div>
 </div>

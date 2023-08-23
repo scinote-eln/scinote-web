@@ -1,10 +1,9 @@
 /*
   globals I18n _ SmartAnnotation FilePreviewModal animateSpinner DataTableHelpers
   HelperModule RepositoryDatatableRowEditor prepareRepositoryHeaderForExport
-  initAssignedTasksDropdown initBMTFilter initReminderDropdown initBSTooltips
+  initAssignedTasksDropdown initReminderDropdown initBSTooltips
 */
 
-//= require jquery-ui/widgets/sortable
 //= require repositories/row_editor.js
 
 
@@ -357,7 +356,6 @@ var RepositoryDatatable = (function(global) {
       if (filterSaveButtonVisible) {
         $('#saveRepositoryFilters').removeClass('hidden');
       }
-      if (typeof initBMTFilter === 'function') initBMTFilter();
 
       initBSTooltips();
     });
@@ -407,6 +405,35 @@ var RepositoryDatatable = (function(global) {
     }, function() {
       $(this).append($(this).data('dropdown-tooltip'));
       $(this).data('dropdown-tooltip').removeAttr('style');
+    });
+  }
+
+  function initRepositoryViewSwitcher() {
+    const viewSwitch = $('.view-switch');
+    const repositoryShow = $('.repository-show');
+    const stateViewSwitchBtnName = $('.state-view-switch-btn-name');
+    const selectedSwitchOptionClass = 'form-dropdown-state-item prevent-shrink';
+
+    function switchView(event, activeClass, inactiveClass) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      repositoryShow.removeClass(inactiveClass).addClass(activeClass);
+
+      $(`.view-switch-${inactiveClass} a`).removeClass(selectedSwitchOptionClass);
+      $(`.view-switch-${activeClass} a`).addClass(selectedSwitchOptionClass);
+
+      stateViewSwitchBtnName.text($(`.view-switch-${activeClass}`).text());
+      viewSwitch.removeClass('open');
+      RepositoryDatatable.reload();
+    }
+
+    viewSwitch.on('click', '.view-switch-archived', function(event) {
+      switchView(event, 'archived', 'active');
+    });
+
+    viewSwitch.on('click', '.view-switch-active', function(event) {
+      switchView(event, 'active', 'archived');
     });
   }
 
@@ -504,7 +531,7 @@ var RepositoryDatatable = (function(global) {
 
     TABLE.ColSizes = state.ColSizes;
 
-    restoreColumnSizes();
+    setTimeout(restoreColumnSizes, 100);
   }
 
   function dataTableInit() {
@@ -548,6 +575,15 @@ var RepositoryDatatable = (function(global) {
 
           // force width of checkbox column
           data[0] = 30;
+
+          // perserve widths of invisible columns or enforce min width
+          for (let i = 0; i < data.length; i++) {
+            if (data[i] === 0) {
+              let minWidth = parseInt($(TABLE.column(i).header()).css('min-width'), 10);
+              data[i] = colSizeMap[i] || minWidth;
+            }
+          }
+
           state.ColSizes = data;
 
           $(TABLE_WRAPPER_ID).find('.table').addClass('table--resizable-columns');
@@ -557,7 +593,7 @@ var RepositoryDatatable = (function(global) {
           saveState(state);
         },
         stateLoadCallback: (state) => {
-          if (!TABLE.ColSizes) return;
+          if (!TABLE.ColSizes || TABLE.ColSizes.length === 0) return;
 
           let colSizes = TABLE.ColSizes;
 
@@ -681,7 +717,9 @@ var RepositoryDatatable = (function(global) {
         }
         customColumns.each((i, column) => {
           var columnData = $(column).data('type') === 'RepositoryStockValue' ? 'stock' : String(columns.length);
+          const className = $(column).data('type') === 'RepositoryChecklistValue' ? 'checklist-column' : '';
           columns.push({
+            className: className,
             visible: true,
             searchable: true,
             data: columnData,
@@ -745,9 +783,7 @@ var RepositoryDatatable = (function(global) {
           }
         });
       },
-      stateSaveCallback: function(settings, data) {
-        if (Object.keys(colSizeMap).length === 0) return;
-
+      stateSaveCallback: function(_, data) {
         let colSizes = [];
 
         for (let i = 0; i < data.ColReorder.length; i += 1) {
@@ -770,7 +806,6 @@ var RepositoryDatatable = (function(global) {
         let toolBar = $($('#repositoryToolbar').html());
         toolBar.find('.toolbar-search').html($('.repository-search-container'));
         $('.repository-toolbar').html(toolBar);
-        if (typeof initBMTFilter === 'function') initBMTFilter();
 
         RepositoryDatatableRowEditor.initFormSubmitAction(TABLE);
         initExportActions();
@@ -778,6 +813,7 @@ var RepositoryDatatable = (function(global) {
         initSaveButton();
         initCancelButton();
         initBSTooltips();
+        initRepositoryViewSwitcher();
         DataTableHelpers.initLengthAppearance($(TABLE_ID).closest('.dataTables_wrapper'));
 
         $('.dataTables_filter').addClass('hidden');

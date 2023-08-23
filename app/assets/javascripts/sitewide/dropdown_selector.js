@@ -136,7 +136,9 @@ var dropdownSelector = (function() {
     if (selector.data('select-by-group')) {
       $.each(container.find('.dropdown-group'), function(gi, group) {
         if ($(group).find('.dropdown-option').length === $(group).find('.dropdown-option.select').length) {
-          $(group).addClass('select');
+          $(group).find('.group-name').addClass('select');
+        } else {
+          $(group).find('.group-name').removeClass('select');
         }
       });
     }
@@ -341,7 +343,7 @@ var dropdownSelector = (function() {
         toggleElement = $(selectElement.data('toggle-target'));
         if (getCurrentData(dropdownContainer).length > 0) {
           toggleElement.removeClass('hidden');
-          toggleElement.find('input, select').removeAttr('disabled');
+          toggleElement.find('input, select').attr('disabled', false);
         } else {
           toggleElement.addClass('hidden');
           toggleElement.find('input, select').attr('disabled', true);
@@ -441,7 +443,9 @@ var dropdownSelector = (function() {
       if (dropdownContainer.hasClass('disabled') || (config.inputTagMode && noOptionsForSelect(selector))) return;
 
       // Each time we open option contianer we must scroll it
-      optionContainer.scrollTo(0);
+      dropdownContainer.animate({
+        scrollTop: optionContainer.offset().top
+      });
 
       // Now open/close option container
       dropdownContainer.toggleClass('open');
@@ -617,7 +621,7 @@ var dropdownSelector = (function() {
             // Disable group select to single select
             if (selector.data('config').singleSelect) return;
 
-            if (groupContainer.toggleClass('select').hasClass('select')) {
+            if ($(this).toggleClass('select').hasClass('select')) {
               groupContainer.find('.dropdown-option').addClass('select');
             } else {
               groupContainer.find('.dropdown-option').removeClass('select');

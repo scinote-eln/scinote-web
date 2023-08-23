@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="dropdown sci-dropdown protocol-options-dropdown">
+    <div class="dropdown protocol-options-dropdown">
       <button
         class="btn btn-secondary dropdown-toggle"
         type="button"
@@ -10,7 +10,6 @@
         aria-expanded="true"
         tabindex="0"
       >
-        <span class="sn-icon sn-icon-settings"></span>
         <span>{{ i18n.t("my_modules.protocol.options_dropdown.title") }}</span>
         <span class="sn-icon sn-icon-down"></span>
       </button>
@@ -32,6 +31,7 @@
           <a
             data-toggle="modal"
             data-target="#newProtocolModal"
+            v-bind:data-protocol-name="protocol.attributes.name"
             :class="{ disabled: !protocol.attributes.urls.save_to_repo_url }"
           >
             <span class="fas fa-save"></span>
@@ -143,22 +143,22 @@ export default {
     loadProtocol() {
       $.get(
         this.protocol.attributes.urls.load_from_repo_url + "?type=recent"
-      ).success((data) => {
+      ).done((data) => {
         $(this.$refs.loadProtocol).trigger("ajax:success", data);
       });
     },
     unlinkProtocol() {
-      $.get(this.protocol.attributes.urls.unlink_url).success((data) => {
+      $.get(this.protocol.attributes.urls.unlink_url).done((data) => {
         $(this.$refs.unlinkProtocol).trigger("ajax:success", data);
       });
     },
     updateProtocol() {
-      $.get(this.protocol.attributes.urls.update_protocol_url).success((data) => {
+      $.get(this.protocol.attributes.urls.update_protocol_url).done((data) => {
         $(this.$refs.updateProtocol).trigger("ajax:success", data);
       });
     },
     revertProtocol() {
-      $.get(this.protocol.attributes.urls.revert_protocol_url).success((data) => {
+      $.get(this.protocol.attributes.urls.revert_protocol_url).done((data) => {
         $(this.$refs.revertProtocol).trigger("ajax:success", data);
       });
     },

@@ -1,5 +1,5 @@
 <div class="modal" id="new-project-folder-modal" tabindex="-1" role="dialog" aria-labelledby="new-project-folder-modal-label">
-  <%= bootstrap_form_for @project_folder, remote: true do |f| %>
+  <%= form_with model: @project_folder, data: { remote: true } do |f| %>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -13,7 +13,8 @@
           <div class="form-group sci-input-container">
             <%= f.hidden_field :parent_folder_id %>
             <%= f.hidden_field :archived %>
-            <%= f.text_field :name, label: t('projects.index.modal_new_project_folder.name'), placeholder: t('projects.index.modal_new_project_folder.name_placeholder') %>
+            <label><%= t('projects.index.modal_new_project_folder.name') %></label>
+            <%= f.text_field :name, placeholder: t('projects.index.modal_new_project_folder.name_placeholder'), class: 'sci-input-field' %>
           </div>
         </div>
         <div class="modal-footer">

@@ -268,6 +268,11 @@ en:
       protocol_template_access_revoked_all_team_members_html: "%{user} removed %{team} team members with user role %{role} from protocol template %{protocol}."
       task_protocol_save_to_template_html: "%{user} created a new protocol template %{protocol} from a task."
       project_access_changed_all_team_members_html: "%{user} changed %{team}’s role on project %{project} to %{role}."
+      team_sharing_tasks_enabled_html: "%{user} enabled sharing tasks in team %{team}."
+      team_sharing_tasks_disabled_html: "%{user} disabled sharing tasks in team %{team}."
+      task_link_sharing_enabled_html: "%{user} enabled link sharing for task %{my_module}."
+      task_link_sharing_disabled_html: "%{user} disabled link sharing for task %{my_module}."
+      shared_task_message_edited_html: "%{user} edited message for shared task %{my_module}."
     activity_name:
       create_project: "Project created"
       rename_project: "Project renamed"
@@ -490,6 +495,11 @@ en:
       protocol_template_access_changed_all_team_members: "Change role of all team members"
       protocol_template_access_revoked_all_team_members: "Remove access from all team members"
       project_access_changed_all_team_members: "Change role of all team members"
+      team_sharing_tasks_enabled: "Sharing tasks enabled"
+      team_sharing_tasks_disabled: "Sharing tasks disabled"
+      task_link_sharing_enabled: "Task link sharing enabled"
+      task_link_sharing_disabled: "Task link sharing disabled"
+      shared_task_message_edited: "Shared task message edited"
     activity_group:
       projects: "Projects"
       task_results: "Task results"
@@ -502,7 +512,7 @@ en:
       protocol_repository: "Protocol templates"
       team: "Team"
       exports: "Exports"
-      label_repository: "Label repository"
+      label_templates: "Label templates"
     subject_name:
       repository: "Inventory"
       project: "Project"

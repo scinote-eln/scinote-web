@@ -1,4 +1,4 @@
-@import "constants";
+
 
 .repository-columns-body {
   margin-top: 50px;
@@ -24,16 +24,6 @@
   float: right;
 }
 
-.custom-alert-info {
-  background-color: $state-info-bg;
-  border: 1px solid $state-info-border;
-  color: $color-volcano;
-  margin: 10px 0;
-  opacity: .86;
-  padding: 15px;
-  width: 100%;
-}
-
 .repository-input-file-field {
   width: auto;
 
@@ -44,10 +34,6 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-  }
-
-  .form-group.has-error {
-    border-color: $state-danger-border;
   }
 
   button {

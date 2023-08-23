@@ -7,7 +7,7 @@
 
 <div data-hook="team-beginning"></div>
 
-<%= render partial: "users/settings/sidebar.html.erb" %>
+<%= render partial: "users/settings/sidebar" %>
 <div class="tab-content">
   <div class="tab-pane content-pane" role="tabpanel"></div>
   <div class="tab-pane content-pane active team-settings-pane" role="tabpanel">
@@ -53,7 +53,19 @@
       </div>
     </div>
 
-    <div class="team-description">
+    <div class="flex items-center py-4 leading-6 gap-6">
+      <span><%= t("users.settings.teams.show.tasks_share.enable_label") %></span>
+      <span class="sci-toggle-checkbox-container">
+        <%= check_box_tag 'select_team_share_permission', 0, @team.shareable_links_enabled?, { class: 'sci-toggle-checkbox team-share-permission',
+                                                                                           data: { disable_url: disable_tasks_sharing_modal_team_path(),
+                                                                                                   enable_url: shared_tasks_toggle_team_path()
+                                                                                                 },
+                                                                                           disabled: !can_manage_team?(@team) } %>
+        <span class="sci-toggle-checkbox-label"></span>
+      </span>
+    </div>
+
+    <div class="team-description inline-editing-container">
       <% if can_manage_team?(@team) %>
         <div
           class="inline-init-handler"
@@ -65,8 +77,9 @@
           <div class="view-mode" data-placeholder="<%= t("users.settings.teams.show.enter_description") %>"><%= @team.description %></div>
           <textarea placeholder="<%= t("users.settings.teams.show.enter_description") %>" class="hidden input-field smart-text-area" type="text" value="<%= @team.description %>" disabled><%= @team.description %></textarea>
           <div class="button-container">
-            <span class="cancel-button inline-field-button"><%= t('general.cancel') %></span>
-            <span class="save-button inline-field-button"><%= t('general.save') %></span>
+            <span class="cancel-button inline-field-button"><i class="sn-icon sn-icon-close"></i></span>
+            <span class="save-button inline-field-button"><i class="sn-icon sn-icon-check"></i></span>
+
           </div>
         </div>
       <% else %>
@@ -84,7 +97,7 @@
             <%= I18n.t('users.settings.teams.edit.add_user') %>
           </a>
         </div>
-        <%= render(partial: 'shared/invite_users_modal.html.erb',
+        <%= render(partial: 'shared/invite_users_modal',
                    locals: { modal_id: 'team-invite-users-modal',
                              type: 'invite_to_team_with_role',
                              team: @team } ) %>
@@ -110,9 +123,9 @@
   </div>
 </div>
 
-<%= render partial: 'users/settings/teams/description_modal.html.erb' %>
-<%= render partial: 'users/settings/teams/destroy_modal.html.erb', locals: { team: @team } %>
-<%= render partial: 'users/settings/user_teams/destroy_user_team_modal.html.erb' %>
+<%= render partial: 'users/settings/teams/description_modal' %>
+<%= render partial: 'users/settings/teams/destroy_modal', locals: { team: @team } %>
+<%= render partial: 'users/settings/user_teams/destroy_user_team_modal' %>
 <%= stylesheet_link_tag 'datatables' %>
 <%= javascript_include_tag 'users/settings/teams/show' %>
 <span data-hook="team-bottom"></span>

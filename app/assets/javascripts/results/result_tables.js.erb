@@ -8,7 +8,7 @@
           var $container = $(this).find('.hot');
           var data = null;
           var contents = $(this).find('.hot-contents');
-          var metadata = JSON.parse($(this).find('.hot-metadata').val() || '{}');
+          var metadata = $(this).find('.hot-metadata').val() || {};
           if (contents.attr('value')) {
             data = JSON.parse(contents.attr('value')).data;
           }
@@ -64,6 +64,20 @@
         });
       }
 
+      // Save result table callback
+      function newResultTableCallback() {
+        $('.new-result-tables-buttons .save-result').on('click', (event) => {
+          Results.processResult(event, Results.ResultTypeEnum.TABLE);
+        });
+      }
+
+      // Save result table callback
+      function saveResultTableCallback() {
+        $('.edit-result-tables-buttons .save-result').on('click', (event) => {
+          Results.processResult(event, Results.ResultTypeEnum.TABLE);
+        });
+      }
+
       // Apply ajax callback to form
       function _formAjaxResultTable($form, $prevResult) {
         $form.on('ajax:success', function(e, data) {
@@ -111,6 +125,7 @@
           Results.toggleResultEditButtons(false);
 
           $('#result_name').focus();
+          saveResultTableCallback();
         });
       }
 
@@ -137,6 +152,7 @@
               Results.initCancelFormButton($form, initNewResultTable);
               Results.toggleResultEditButtons(false);
               $('#result_name').focus();
+              newResultTableCallback();
             },
             error: function() {
               animateSpinner(null, false);

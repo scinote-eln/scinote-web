@@ -1,6 +1,6 @@
 <h5 class="text-center"><%= t('projects.index.comment_tab') %></h5>
 <hr>
-  <%= render partial: 'shared/comments/comments.html.erb', locals: {
+  <%= render partial: 'shared/comments/comments', locals: {
     object: @project,
     comments: comments,
     can_create_comments: can_create_project_comments?(@project),

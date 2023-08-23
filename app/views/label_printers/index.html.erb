@@ -1,7 +1,7 @@
 <% provide(:head_title, t('users.settings.account.addons.head_title')) %>
 <% provide(:container_class, "no-second-nav-container") %>
 
-<%= render partial: 'users/settings/sidebar.html.erb' %>
+<%= render partial: 'users/settings/sidebar' %>
 
 <div class="content-pane flexible label-printer-show">
   <div class="content-header">
@@ -9,7 +9,7 @@
       <h1 class="printer-title">
         <% if @printer_type == 'fluics' %>
           <%= t("users.settings.account.label_printer.fluics_printer") %>
-        <% elsif @printer_type == 'zebra' && LabelPrinter.zebra_print_enabled? %>
+        <% elsif @printer_type == 'zebra' %>
           <%= t("users.settings.account.label_printer.zebra_printer") %>
         <% end %>
       </h1>
@@ -18,7 +18,7 @@
 
   <% if @printer_type == 'fluics' %>
     <%= render "fluics_settings" %>
-  <% elsif @printer_type == 'zebra' && LabelPrinter.zebra_print_enabled? %>
+  <% elsif @printer_type == 'zebra' %>
      <%= render "zebra_settings" %>
   <% end %>
 </div>

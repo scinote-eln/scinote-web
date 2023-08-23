@@ -34,7 +34,7 @@ class MyModulesController < ApplicationController
 
     render json: {
       html: render_to_string(
-        partial: 'my_modules/modals/new_modal.html.erb', locals: { view_mode: params[:view_mode],
+        partial: 'my_modules/modals/new_modal', locals: { view_mode: params[:view_mode],
                                                                    users: assigned_users }
       )
     }
@@ -75,31 +75,17 @@ class MyModulesController < ApplicationController
   end
 
   def show
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string({
-                                   partial: 'show.html.erb'
-                                 })
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'show')
+    }
   end
 
   # Description modal window in full-zoom canvas
   def description
-    respond_to do |format|
-      format.html
-      format.json do
-        render json: {
-          html: render_to_string({
-                                   partial: 'description.html.erb'
-                                 }),
-          title: t('my_modules.description.title',
-                   module: escape_input(@my_module.name))
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'description'),
+      title: t('my_modules.description.title', module: escape_input(@my_module.name))
+    }
   end
 
   def save_table_state
@@ -108,15 +94,11 @@ class MyModulesController < ApplicationController
   end
 
   def status_state
-    respond_to do |format|
-      format.json do
-        if @my_module.last_transition_error && @my_module.last_transition_error['type'] == 'repository_snapshot'
-          flash[:repository_snapshot_error] = @my_module.last_transition_error
-        end
-
-        render json: { status_changing: @my_module.status_changing? }
-      end
+    if @my_module.last_transition_error && @my_module.last_transition_error['type'] == 'repository_snapshot'
+      flash[:repository_snapshot_error] = @my_module.last_transition_error
     end
+
+    render json: { status_changing: @my_module.status_changing? }
   end
 
   def canvas_dropdown_menu
@@ -133,9 +115,7 @@ class MyModulesController < ApplicationController
       MyModule: [@my_module.id]
     }
     @activity_types = Activity.activity_types_list
-    @user_list = User.where(id: UserTeam.where(team: current_user.teams).select(:user_id))
-                     .distinct
-                     .pluck(:full_name, :id)
+
     activities = ActivitiesService.load_activities(current_user, current_team, activity_filters)
 
     @grouped_activities = activities.group_by do |activity|
@@ -149,14 +129,14 @@ class MyModulesController < ApplicationController
       format.json do
         render json: {
           activities_html: render_to_string(
-            partial: 'global_activities/activity_list.html.erb'
+            partial: 'global_activities/activity_list',
+            formats: :html
           ),
           next_page: @next_page,
           starting_timestamp: @starting_timestamp
         }
       end
-      format.html do
-      end
+      format.html
     end
   end
 
@@ -164,32 +144,17 @@ class MyModulesController < ApplicationController
   def activities_tab
     @activities = @my_module.last_activities(1, @per_page)
 
-    respond_to do |format|
-      format.html
-      format.json do
-        render json: {
-          html: render_to_string({
-                                   partial: 'activities.html.erb'
-                                 })
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'activities', formats: :html)
+    }
   end
 
   # Due date modal window in full-zoom canvas
   def due_date
-    respond_to do |format|
-      format.html
-      format.json do
-        render json: {
-          html: render_to_string({
-                                   partial: 'due_date.html.erb'
-                                 }),
-          title: t('my_modules.due_date.title',
-                   module: escape_input(@my_module.name))
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'due_date', formats: :html),
+      title: t('.due_date.title', module: escape_input(@my_module.name))
+    }
   end
 
   def update
@@ -225,51 +190,50 @@ class MyModulesController < ApplicationController
         log_due_date_change_activity(due_date_changes) if due_date_changes.present?
       end
     end
-    respond_to do |format|
-      if saved
-        format.json do
-          alerts = []
-          alerts << 'alert-green' if @my_module.completed?
-          unless @my_module.completed?
-            alerts << 'alert-red' if @my_module.is_overdue?
-            alerts << 'alert-yellow' if @my_module.is_one_day_prior?
-          end
-          render json: {
-            status: :ok,
-            start_date_label: render_to_string(
-              partial: 'my_modules/start_date_label.html.erb',
-              locals: { my_module: @my_module, start_date_editable: true }
-            ),
-            due_date_label: render_to_string(
-              partial: 'my_modules/due_date_label.html.erb',
-              locals: { my_module: @my_module, due_date_editable: true }
-            ),
-            card_due_date_label: render_to_string(
-              partial: 'my_modules/card_due_date_label.html.erb',
-              locals: { my_module: @my_module }
-            ),
-            table_due_date_label: {
-              html: render_to_string(partial: 'experiments/table_due_date_label.html.erb',
-                                     locals: { my_module: @my_module, user: current_user }),
-              due_status: my_module_due_status(@my_module)
-            },
-            module_header_due_date: render_to_string(
-              partial: 'my_modules/module_header_due_date.html.erb',
-              locals: { my_module: @my_module }
-            ),
-            description_label: render_to_string(
-              partial: 'my_modules/description_label.html.erb',
-              locals: { my_module: @my_module }
-            ),
-            alerts: alerts
-          }
-        end
-      else
-        format.json do
-          render json: @my_module.errors,
-                 status: :unprocessable_entity
-        end
+    if saved
+      alerts = []
+      alerts << 'alert-green' if @my_module.completed?
+      unless @my_module.completed?
+        alerts << 'alert-red' if @my_module.is_overdue?
+        alerts << 'alert-yellow' if @my_module.is_one_day_prior?
       end
+      render json: {
+        status: :ok,
+        start_date_label: render_to_string(
+          partial: 'my_modules/start_date_label',
+          formats: :html,
+          locals: { my_module: @my_module, start_date_editable: true }
+        ),
+        due_date_label: render_to_string(
+          partial: 'my_modules/due_date_label',
+          formats: :html,
+          locals: { my_module: @my_module, due_date_editable: true }
+        ),
+        card_due_date_label: render_to_string(
+          partial: 'my_modules/card_due_date_label',
+          formats: :html,
+          locals: { my_module: @my_module }
+        ),
+        table_due_date_label: {
+          html: render_to_string(partial: 'experiments/table_due_date_label',
+                                 formats: :html,
+                                 locals: { my_module: @my_module, user: current_user }),
+          due_status: my_module_due_status(@my_module)
+        },
+        module_header_due_date: render_to_string(
+          partial: 'my_modules/module_header_due_date',
+          formats: :html,
+          locals: { my_module: @my_module }
+        ),
+        description_label: render_to_string(
+          partial: 'my_modules/description_label',
+          formats: :html,
+          locals: { my_module: @my_module }
+        ),
+        alerts: alerts
+      }
+    else
+      render json: @my_module.errors, status: :unprocessable_entity
     end
   end
 
@@ -277,24 +241,20 @@ class MyModulesController < ApplicationController
     render_403 && return unless can_update_my_module_description?(@my_module)
 
     old_description = @my_module.description
-    respond_to do |format|
-      format.json do
-        if @my_module.update(description: params.require(:my_module)[:description])
-          log_activity(:change_module_description)
-          TinyMceAsset.update_images(@my_module, params[:tiny_mce_images], current_user)
-          my_module_annotation_notification(old_description)
-          render json: {
-            html: custom_auto_link(
-              @my_module.tinymce_render(:description),
-              simple_format: false,
-              tags: %w(img),
-              team: current_team
-            )
-          }
-        else
-          render json: @my_module.errors, status: :unprocessable_entity
-        end
-      end
+    if @my_module.update(description: params.require(:my_module)[:description])
+      log_activity(:change_module_description)
+      TinyMceAsset.update_images(@my_module, params[:tiny_mce_images], current_user)
+      my_module_annotation_notification(old_description)
+      render json: {
+        html: custom_auto_link(
+          @my_module.tinymce_render(:description),
+          simple_format: false,
+          tags: %w(img),
+          team: current_team
+        )
+      }
+    else
+      render json: @my_module.errors, status: :unprocessable_entity
     end
   end
 
@@ -303,24 +263,20 @@ class MyModulesController < ApplicationController
     old_description = protocol.description
     return render_404 unless protocol
 
-    respond_to do |format|
-      format.json do
-        if protocol.update(description: params.require(:protocol)[:description])
-          log_activity(:protocol_description_in_task_edited)
-          TinyMceAsset.update_images(protocol, params[:tiny_mce_images], current_user)
-          protocol_annotation_notification(old_description)
-          render json: {
-            html: custom_auto_link(
-              protocol.tinymce_render(:description),
-              simple_format: false,
-              tags: %w(img),
-              team: current_team
-            )
-          }
-        else
-          render json: protocol.errors, status: :unprocessable_entity
-        end
-      end
+    if protocol.update(description: params.require(:protocol)[:description])
+      log_activity(:protocol_description_in_task_edited)
+      TinyMceAsset.update_images(protocol, params[:tiny_mce_images], current_user)
+      protocol_annotation_notification(old_description)
+      render json: {
+        html: custom_auto_link(
+          protocol.tinymce_render(:description),
+          simple_format: false,
+          tags: %w(img),
+          team: current_team
+        )
+      }
+    else
+      render json: protocol.errors, status: :unprocessable_entity
     end
   end
 
@@ -498,7 +454,7 @@ class MyModulesController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 && return unless can_manage_experiment?(@experiment)
+    render_403 && return unless can_create_experiment_tasks?(@experiment)
   end
 
   def check_manage_permissions

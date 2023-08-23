@@ -2,7 +2,7 @@ version: '2'
 services:
   db:
     container_name: scinote_db_development
-    image: postgres:11
+    image: postgres:15
     volumes:
       - scinote_development_postgres:/var/lib/postgresql/data
     ports:
@@ -45,6 +45,23 @@ services:
     tty: true
     command: >
       bash -c "yarn install && yarn build --watch"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - .:/usr/src/app
+      - scinote_development_bundler:/usr/local/bundle/
+      - scinote_development_files:/usr/src/app/public/system
+
+  css_bundling:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: scinote_web_development
+    container_name: scinote_css_bundling_development
+    stdin_open: true
+    tty: true
+    command: >
+      bash -c "yarn build:css --watch"
     environment:
       - NODE_ENV=development
     volumes:
