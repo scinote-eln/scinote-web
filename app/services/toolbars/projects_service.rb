@@ -16,8 +16,7 @@ module Toolbars
 
       @single = @items.length == 1
 
-      @team_owner = @current_user.current_team.user_assignments.exists?(user: @current_user, user_role: UserRole.find_predefined_owner_role)
-
+      @team_owner = @current_user.current_team.permission_granted?(@current_user, TeamPermissions::MANAGE)
       @item_type = if project_ids.blank? && project_folder_ids.blank?
                      :none
                    elsif project_ids.present? && project_folder_ids.present?
