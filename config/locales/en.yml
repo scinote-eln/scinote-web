@@ -3199,8 +3199,6 @@ en:
       assignments_description: 'Assignment notifications appear whenever you get assigned to a team, project, task.'
       recent_notification: 'Recent changes'
       recent_notification_description: 'Recent changes notifications appear whenever there is a change on a task you are assigned to.'
-      system_message: "What's New in SciNote"
-      system_message_description: 'You will be notified about new SciNote features, releases and improvements you can benefit from.'
     deliver:
       download_link: "Download link:"
       download_text: "Click the link to download the file."
