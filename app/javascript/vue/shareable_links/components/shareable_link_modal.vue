@@ -177,11 +177,13 @@
           success: (result) => {
             this.shareableData = result.data;
             this.dirty = false;
+            this.editing = false;
           }
         });
       },
       cancelDescriptionEdit() {
         this.description = this.shareableData.attributes.description || '';
+        this.editing = false;
       },
       initCharacterCount() {
         $(this.$refs.textarea).on('input change paste keydown', () => {
