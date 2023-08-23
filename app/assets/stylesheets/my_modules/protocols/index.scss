@@ -602,78 +602,11 @@
       min-width: 115px;
     }
   }
-
-  .task-sharing-and-flows {
-    #dropdownTaskFlowList {
-      min-width: 230px;
-    }
-
-    .status-label {
-      @include font-button;
-      flex-basis: 50%;
-      margin-right: .5em;
-      text-align: right;
-
-      .status-title {
-        @include font-small;
-        color: var(--sn-grey);
-        margin-right: .2em;
-      }
-
-      .status-note {
-        font-weight: normal;
-      }
-
-      .pull-right {
-        font-weight: 400;
-      }
-    }
-
-    .status-flow-dropdown {
-      &:last-child {
-        margin-right: 0;
-      }
-    }
-
-    .status-buttons {
-      display: flex;
-
-      > :not(:first-child):not(.dropdown-menu) {
-        margin-left: .5em;
-      }
-    }
-
-    .status-transition-error {
-      @include font-small;
-      color: $brand-danger;
-      margin-top: .5em;
-
-      .fas {
-        margin-right: .5em;
-      }
-    }
-  }
 }
 
 @media (max-width: 810px) {
   .task-information .task-section-header {
     display: block;
-
-    .status-label,
-    .status-buttons {
-      display: block;
-      max-width: 230px;
-    }
-
-    .status-label {
-      margin: 0;
-      text-align: left;
-    }
-
-    .status-buttons > :not(:first-child):not(.dropdown-menu) {
-      margin-left: 0;
-      margin-top: .5em;
-    }
   }
 
   .task-information .expanded {
