@@ -115,7 +115,6 @@ Rails.application.config.assets.precompile += %w(my_modules/shared/layout_overri
 Rails.application.config.assets.precompile += %w(shareable_links/my_module_protocol_show.js)
 Rails.application.config.assets.precompile += %w(shareable_links/repositories.js)
 Rails.application.config.assets.precompile += %w(shareable_links/date_formatting.js)
-Rails.application.config.assets.precompile += %w(shareable_links/link_handling.js)
 Rails.application.config.assets.precompile += %w(shareable_links/my_module_results_show.js)
 
 # Libraries needed for Handsontable formulas
