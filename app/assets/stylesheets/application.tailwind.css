@@ -1,5 +1,6 @@
 @import "tailwind/inputs";
 @import "tailwind/buttons";
+@import "tailwind/modals";
 
 @tailwind base;
 @tailwind components;

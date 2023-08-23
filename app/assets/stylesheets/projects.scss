@@ -964,9 +964,8 @@ li.module-hover {
 
             .name {
               align-items: center;
-              grid-column: 1 span;
               -webkit-box-orient: vertical;
-              display: -webkit-box;
+              display: flex;
               -webkit-line-clamp: 2;
             }
 

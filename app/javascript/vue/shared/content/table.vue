@@ -28,6 +28,9 @@
         <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light" tabindex="0" @click="duplicateElement">
           <i class="sn-icon sn-icon-duplicate"></i>
         </button>
+        <button v-if="element.attributes.orderable.urls.move_targets_url" class="btn btn-light btn-sm" tabindex="0" @click="showMoveModal">
+          Move
+        </button>
         <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="0">
           <i class="sn-icon sn-icon-delete"></i>
         </button>
@@ -59,20 +62,26 @@
     </div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @cancel="closeDeleteModal"/>
     <tableNameModal v-if="nameModalOpen" :element="element" @update="updateEmptyName" @cancel="nameModalOpen = false" />
+    <moveElementModal v-if="movingElement"
+                      :parent_type="element.attributes.orderable.parent_type"
+                      :targets_url="element.attributes.orderable.urls.move_targets_url"
+                      @confirm="moveElement($event)" @cancel="closeMoveModal"/>
   </div>
 </template>
 
  <script>
   import DeleteMixin from './mixins/delete.js'
+  import MoveMixin from './mixins/move.js'
   import DuplicateMixin from './mixins/duplicate.js'
   import deleteElementModal from './modal/delete.vue'
   import InlineEdit from '../inline_edit.vue'
   import TableNameModal from './modal/table_name.vue'
+  import moveElementModal from './modal/move.vue'
 
   export default {
     name: 'ContentTable',
-    components: { deleteElementModal, InlineEdit, TableNameModal },
-    mixins: [DeleteMixin, DuplicateMixin],
+    components: { deleteElementModal, InlineEdit, TableNameModal, moveElementModal },
+    mixins: [DeleteMixin, DuplicateMixin, MoveMixin],
     props: {
       element: {
         type: Object,

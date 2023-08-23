@@ -6,10 +6,14 @@ class ChecklistSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :id, :name, :urls, :icon, :sa_name, :checklist_items
+  attributes :id, :name, :urls, :icon, :sa_name, :checklist_items, :parent_type
 
   def icon
     'fa-list-ul'
+  end
+
+  def parent_type
+    :step
   end
 
   def checklist_items
@@ -34,7 +38,9 @@ class ChecklistSerializer < ActiveModel::Serializer
       delete_url: step_checklist_path(object.step, object),
       update_url: step_checklist_path(object.step, object),
       reorder_url: reorder_step_checklist_checklist_items_path(object.step, object),
-      create_item_url: step_checklist_checklist_items_path(object.step, object)
+      create_item_url: step_checklist_checklist_items_path(object.step, object),
+      move_targets_url: move_targets_step_checklist_path(object.step, object),
+      move_url: move_step_checklist_path(object.step, object)
     }
   end
 end

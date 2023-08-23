@@ -3,7 +3,7 @@
     <div class="modal-content">
       <%= form_with model: @experiment, url: clone_experiment_path(@experiment, :view_mode=>view_mode), method: :post do |f| %>
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
           <h4 class="modal-title" id="clone-experiment-modal-label"><%= t("experiments.clone.modal_title", experiment: @experiment.name ) %></h5>
         </div>
         <div class="modal-body">
@@ -17,7 +17,7 @@
                            end
                          end,
                          @experiment.project.id ),
-                       {}, {class: "form-control selectpicker", "data-role" => "clear"} %>
+                       {}, {"data-role" => "clear"} %>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>

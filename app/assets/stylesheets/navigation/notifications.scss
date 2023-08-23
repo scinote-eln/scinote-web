@@ -58,24 +58,6 @@
       }
     }
 
-    .sci--navigation--notificaitons-flyout-tabs {
-      align-items: center;
-      display: flex;
-      flex-basis: 2.5rem;
-      flex-shrink: 0;
-      gap: 3rem;
-    }
-
-    .sci--navigation--notificaitons-flyout-tab {
-      cursor: pointer;
-      padding: .5rem .625rem;
-      position: relative;
-
-      &.active {
-        color: $brand-focus;
-      }
-    }
-
     hr {
       margin: .625rem 0;
     }

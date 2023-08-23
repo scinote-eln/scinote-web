@@ -65,7 +65,7 @@
       </span>
     </div>
 
-    <div class="team-description">
+    <div class="team-description inline-editing-container">
       <% if can_manage_team?(@team) %>
         <div
           class="inline-init-handler"
@@ -77,8 +77,9 @@
           <div class="view-mode" data-placeholder="<%= t("users.settings.teams.show.enter_description") %>"><%= @team.description %></div>
           <textarea placeholder="<%= t("users.settings.teams.show.enter_description") %>" class="hidden input-field smart-text-area" type="text" value="<%= @team.description %>" disabled><%= @team.description %></textarea>
           <div class="button-container">
-            <span class="cancel-button inline-field-button"><%= t('general.cancel') %></span>
-            <span class="save-button inline-field-button"><%= t('general.save') %></span>
+            <span class="cancel-button inline-field-button"><i class="sn-icon sn-icon-close"></i></span>
+            <span class="save-button inline-field-button"><i class="sn-icon sn-icon-check"></i></span>
+
           </div>
         </div>
       <% else %>

@@ -10,7 +10,6 @@ require('jquery-ui/ui/effects/effect-slide');
 require('hammerjs');
 import 'bootstrap';
 import './bootstrap.less';
-window.moment = require('moment');
 require('bootstrap-select/js/bootstrap-select');
 
 window.bwipjs = require('bwip-js');
@@ -31,10 +30,38 @@ $(document).on('click', '.sci--layout--menu-item[data-submenu=true]', (e) => {
 });
 
 $(document).on('click', '.sci--layout--navigator-open', (e) => {
-  navigatorContainer.$data.navigatorCollapsed = false
+  navigatorContainer.toggleNavigatorState(false);
 });
 
 $(document).on('click', '.btn', function() {
   $(this).blur();
+});
+
+$(document).on('turbolinks:load', () => {
+  $(window).on('scroll', () => {
+    const navbarHeight = 116;
+    let scrollPosition = $(window).scrollTop();
+    if (scrollPosition > navbarHeight) {
+      scrollPosition = navbarHeight;
+    }
+    $('.sci--layout').css(
+      '--navbar-height',
+      `calc(var(--top-navigation-height) + var(--breadcrumbs-navigation-height) - ${scrollPosition}px)`
+    );
+    $('.sci--layout-navigation-navigator').css(
+      '--navigator-top-margin',
+      ((scrollPosition / navbarHeight) * 16) + 'px'
+    );
+  });
+});
+
+// Needed to support Turbolinks redirect_to responses as unsafe-inline is blocked by the CSP
+$.ajaxSetup({
+  converters: {
+    'text script': function(text) {
+      $.globalEval(text, { nonce: document.querySelector('meta[name="csp-nonce"]').getAttribute('content') });
+      return text;
+    }
+  }
 });
 

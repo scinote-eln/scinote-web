@@ -543,11 +543,15 @@ Rails.application.routes.draw do
 
         resources :tables, controller: 'result_elements/tables', only: %i(create destroy update) do
           member do
+            get :move_targets
+            post :move
             post :duplicate
           end
         end
         resources :texts, controller: 'result_elements/texts', only: %i(create destroy update) do
           member do
+            get :move_targets
+            post :move
             post :duplicate
           end
         end
@@ -563,16 +567,22 @@ Rails.application.routes.draw do
                 only: %i(create index update destroy)
       resources :tables, controller: 'step_elements/tables', only: %i(create destroy update) do
         member do
+          get :move_targets
+          post :move
           post :duplicate
         end
       end
       resources :texts, controller: 'step_elements/texts', only: %i(create destroy update) do
         member do
+          get :move_targets
+          post :move
           post :duplicate
         end
       end
       resources :checklists, controller: 'step_elements/checklists', only: %i(create destroy update) do
         member do
+          get :move_targets
+          post :move
           post :duplicate
         end
         resources :checklist_items, controller: 'step_elements/checklist_items', only: %i(create update destroy) do
@@ -588,17 +598,6 @@ Rails.application.routes.draw do
         post 'update_view_state'
         post 'update_asset_view_mode'
         post 'duplicate'
-      end
-    end
-
-    # System notifications routes
-    resources :system_notifications, only: %i(show) do
-      collection do
-        post 'mark_as_seen'
-        get 'unseen_counter'
-      end
-      member do
-        post 'mark_as_read'
       end
     end
 

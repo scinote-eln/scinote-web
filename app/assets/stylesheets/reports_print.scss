@@ -42,24 +42,20 @@ div.print-report {
   .report-project-header-element {
     & > .report-element-body .project-name {
       color: $color-black;
-      white-space: nowrap;
     }
 
     &:hover > .report-element-body .project-name {
       color: $color-black;
-      white-space: nowrap;
     }
   }
 
   .report-module-element:hover {
     & > .report-element-body .module-name {
       color: $color-black;
-      white-space: nowrap;
     }
 
     &:hover > .report-element-body .module-name {
       color: $color-black;
-      white-space: nowrap;
     }
   }
 

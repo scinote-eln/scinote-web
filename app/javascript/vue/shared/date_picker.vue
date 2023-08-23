@@ -5,17 +5,19 @@
         type="datetime"
         class="form-control calendar-input sci-input-field"
         :id="this.selectorId"
-        placeholder='dd/mm/yyyy'
+        :placeholder="placeholder || 'dd/mm/yyyy'"
       />
       <i class="sn-icon sn-icon-calendar"></i>
   </div>
 </template>
-import '../../../../vendor/assets/javascripts/bootstrap-datetimepicker';
 
 <script>
+  import '../../../../vendor/assets/javascripts/bootstrap-datetimepicker';
+
   export default {
     name: 'DatePicker',
     props: {
+      placeholder: { type: String },
       selectorId: { type: String, required: true },
       useCurrent: { type: Boolean, default: true },
       defaultValue: { type: Date, default: null }
@@ -26,7 +28,7 @@ import '../../../../vendor/assets/javascripts/bootstrap-datetimepicker';
           useCurrent: this.useCurrent,
           ignoreReadonly: this.ignoreReadOnly,
           locale: this.i18n.locale,
-          format: this.dateFormat,
+          format: $('body').data('datetime-picker-format'),
           date: this.defaultValue
         }
         );

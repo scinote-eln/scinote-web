@@ -14,6 +14,11 @@
   padding-left: 2.5rem;
   padding-top: 10px;
 
+  .modal-body {
+    padding: 0;
+    border-bottom: 0;
+  }
+
   .assigned-repository {
     border: $border-default;
     border-radius: $border-radius-modal;
@@ -238,7 +243,6 @@
 
       .modal-body {
         grid-area: table;
-        padding: 0;
       }
 
       .stock-low {

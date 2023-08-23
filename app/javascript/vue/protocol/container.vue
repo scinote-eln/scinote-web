@@ -83,7 +83,7 @@
             </div>
           </div>
           <div id="protocol-description-container" :class=" inRepository ? 'protocol-description collapse in' : ''" >
-            <div v-if="urls.update_protocol_description_url">
+            <div class="ml-1" v-if="urls.update_protocol_description_url">
               <Tinymce
                 :value="protocol.attributes.description"
                 :value_html="protocol.attributes.description_view"
@@ -129,10 +129,13 @@
                   :step.sync="steps[index]"
                   @reorder="startStepReorder"
                   :inRepository="inRepository"
+                  :stepToReload="stepToReload"
                   @step:delete="updateStepsPosition"
                   @step:update="updateStep"
                   @stepUpdated="refreshProtocolStatus"
                   @step:insert="updateStepsPosition"
+                  @step:elements:loaded="stepToReload = null"
+                  @step:move_element="reloadStep"
                   :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
                   :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
                 />
@@ -200,7 +203,8 @@
         },
         steps: [],
         reordering: false,
-        publishing: false
+        publishing: false,
+        stepToReload: null,
       }
     },
     created() {
@@ -215,6 +219,9 @@
       });
     },
     methods: {
+      reloadStep(step) {
+        this.stepToReload = step;
+      },
       collapseSteps() {
         $('.step-container .collapse').collapse('hide')
       },

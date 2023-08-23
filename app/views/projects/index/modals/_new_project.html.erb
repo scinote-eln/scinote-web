@@ -3,7 +3,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>"><i class="sn-icon sn-icon-close"></i></button>
           <h4 class="modal-title" id="new-project-modal-label"><%= t('projects.index.modal_new_project.modal_title') %></h4>
         </div>
         <div class="modal-body">
@@ -19,7 +19,7 @@
               <div class="flex items-center gap-4 text-xs">
                 <div class="sci-checkbox-container">
                   <%= f.check_box :visibility,
-                                  { class: 'sci-checkbox' ,data: { action: 'toggle-visibility', target: 'role_select_wrapper' } },
+                                  { class: 'sci-checkbox' ,data: { action: 'toggle-visibility', target: 'new_project_role_select_wrapper' } },
                                   :visible,
                                   :hidden %>
                   <span class="sci-checkbox-label"></span>
@@ -28,7 +28,7 @@
               </div>
             </div>
           </div>
-          <div class="row hidden" id="role_select_wrapper">
+          <div class="row hidden" id="new_project_role_select_wrapper">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 sci-input-container mt-4">
               <%= f.select :default_public_user_role_id,
                            options_for_select(user_roles_collection(@project), UserRole.find_by(name: I18n.t('user_roles.predefined.viewer')).id),

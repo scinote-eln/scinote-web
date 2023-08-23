@@ -140,4 +140,10 @@ class Result < ApplicationRecord
   def comments
     result_comments
   end
+
+  def normalize_elements_position
+    result_orderable_elements.order(:position).each_with_index do |element, index|
+      element.update!(position: index) unless element.position == index
+    end
+  end
 end

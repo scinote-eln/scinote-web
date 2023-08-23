@@ -4448,6 +4448,11 @@ jquery-autosize@^1.18.18:
   resolved "https://registry.yarnpkg.com/jquery-autosize/-/jquery-autosize-1.18.18.tgz#28fcdfd671cbf3ee661ca484c19ee7aaa65e825a"
   integrity sha512-Z2nzJEbchigrxqqqr026TMPdTZJ8syt2xeGMGkqCXbb1raI3J/X0LdiIhyIMcJ+nTjwTBf/p6bbRVP0vAuqd/w==
 
+jquery-migrate@^3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/jquery-migrate/-/jquery-migrate-3.4.1.tgz#6a7114626b80e0d9e1cb77f170623efd85c5fc9c"
+  integrity sha512-6RaV23lLAYccu8MtLfy2sIxOvx+bulnWHm/pvffAi7KOzPk1sN9IYglpkl1ZNCj1FSgSNDPS2fSZ1hWsXc200Q==
+
 jquery-mousewheel@^3.1.13:
   version "3.1.13"
   resolved "https://registry.yarnpkg.com/jquery-mousewheel/-/jquery-mousewheel-3.1.13.tgz#06f0335f16e353a695e7206bf50503cb523a6ee5"

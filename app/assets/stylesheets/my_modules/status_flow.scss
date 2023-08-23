@@ -3,95 +3,104 @@
 // scss-lint:disable SelectorFormat
 // scss-lint:disable ImportantRule
 
-.content-pane.my-modules-protocols-index {
-  .status-flow-dropdown {
-    .dropdown-toggle {
-      border: 0;
-      color: $color-white;
-      text-align: left;
-      width: 100%;
+.status-flow-dropdown {
+  .dropdown-toggle {
+    color: $color-white;
+    padding: .5rem .5rem .5rem 1rem;
+    text-align: left;
+    width: 100%;
 
-      .caret {
-        margin: 8px 0;
+    &.btn-not-started {
+      border: 1px solid var(--sn-sleepy-grey);
+      color: var(--sn-black);
+    }
+
+    .caret {
+      margin: 8px 0;
+    }
+  }
+
+  &.open .dropdown-menu{
+    align-items: center;
+    display: grid;
+    grid-template-columns: minmax(0, auto) 12px minmax(0, auto);
+    min-width: 230px;
+    padding: .5em 0 0;
+
+    li {
+      display: contents;
+
+      > * {
+        cursor: pointer;
+        line-height: 2em;
+        padding: .5em 1em;
+      }
+
+      &:hover > *{
+        background: $color-concrete;
+      }
+
+      &.disabled {
+        pointer-events: none;
+
+        .status-name {
+          background: $color-alto !important;
+        }
       }
     }
 
-    &.open .dropdown-menu{
-      align-items: center;
-      display: grid;
-      grid-template-columns: minmax(0, auto) 12px minmax(0, auto);
-      padding: .5em 0 0;
+    .fa-long-arrow-alt-right {
+      color: $color-silver-chalice;
+      padding: 1.5em 0;
+      z-index: 1;
+    }
 
-      li {
-        display: contents;
+    .status-container {
+      display: flex;
+    }
 
-        > * {
-          cursor: pointer;
-          line-height: 2em;
-          padding: .5em 1em;
-        }
+    .status-name {
+      border-radius: $border-radius-tag;
+      color: $color-white;
+      display: inline-block;
+      font-weight: bold;
+      line-height: 1em;
+      max-width: 100%;
+      overflow: hidden;
+      padding: .5em;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
 
-        &:hover > *{
-          background: $color-concrete;
-        }
+    .btn-not-started {
+      border: 1px solid var(--sn-sleepy-grey);
+      color: var(--sn-black);
+    }
 
-        &.disabled {
-          pointer-events: none;
+    .error-message {
+      @include font-small;
+      color: $color-silver-chalice;
+      grid-column: span 3;
+      line-height: 1em;
+      padding: 0em 1em .5em;
 
-          .status-name {
-            background: $color-alto !important;
-          }
-        }
+      &:empty {
+        display: none;
       }
 
-      .fa-long-arrow-alt-right {
-        color: $color-silver-chalice;
-        padding: 1.5em 0;
-        z-index: 1;
-      }
-
-      .status-container {
-        display: flex;
-      }
-
-      .status-name {
-        border-radius: $border-radius-tag;
-        color: $color-white;
-        display: inline-block;
-        font-weight: bold;
-        line-height: 1em;
-        max-width: 100%;
-        overflow: hidden;
-        padding: .5em;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .error-message {
-        @include font-small;
-        color: $color-silver-chalice;
-        grid-column: span 3;
-        line-height: 1em;
-        padding: 0em 1em .5em;
-
-        &:empty {
-          display: none;
-        }
-
-        &.permission-error {
-          padding: .5em 1em;
-        }
-      }
-
-      #viewTaskFlow {
-        border-top: $border-default;
-        cursor: pointer;
-        display: list-item;
-        grid-column: span 3;
-        line-height: 2em;
-        margin-top: .5em;
+      &.permission-error {
         padding: .5em 1em;
       }
+    }
+
+    #viewTaskFlow {
+      border-top: $border-default;
+      cursor: pointer;
+      display: list-item;
+      grid-column: span 3;
+      line-height: 2em;
+      margin-top: .5em;
+      padding: .5em 1em;
     }
   }
 }
@@ -126,6 +135,11 @@
         line-height: 1em;
         padding: .5em;
         white-space: nowrap;
+
+        &.btn-not-started {
+          border: 1px solid var(--sn-sleepy-grey);
+          color: var(--sn-black);
+        }
       }
 
       .status-comment {

@@ -5,6 +5,10 @@ module ResultElements
     before_action :load_result_and_my_module
     before_action :check_manage_permissions
 
+    def move_targets
+      render json: { targets: @my_module.results.where.not(id: @result.id).map{ |i| [i.id, i.name] } }
+    end
+
     private
 
     def load_result_and_my_module

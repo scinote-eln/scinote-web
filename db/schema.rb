@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_11_115859) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_18_072619) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -116,6 +116,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_11_115859) do
     t.bigint "last_modified_by_id"
     t.integer "position"
     t.index "trim_html_tags((text)::text) gin_trgm_ops", name: "index_checklist_items_on_text", using: :gin
+    t.index ["checklist_id", "position"], name: "index_checklist_items_on_checklist_id_and_position", unique: true
     t.index ["checklist_id"], name: "index_checklist_items_on_checklist_id"
     t.index ["created_by_id"], name: "index_checklist_items_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_checklist_items_on_last_modified_by_id"
@@ -735,6 +736,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_11_115859) do
     t.text "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "unit"
     t.index ["reference_type", "reference_id"], name: "index_repository_ledger_records_on_reference"
     t.index ["repository_stock_value_id"], name: "index_repository_ledger_records_on_repository_stock_value_id"
     t.index ["user_id"], name: "index_repository_ledger_records_on_user_id"
@@ -956,6 +958,23 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_11_115859) do
     t.index ["type"], name: "index_settings_on_type", unique: true
   end
 
+  create_table "shareable_links", force: :cascade do |t|
+    t.string "uuid"
+    t.string "description"
+    t.string "shareable_type"
+    t.bigint "shareable_id"
+    t.bigint "team_id"
+    t.bigint "created_by_id"
+    t.bigint "last_modified_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_shareable_links_on_created_by_id"
+    t.index ["last_modified_by_id"], name: "index_shareable_links_on_last_modified_by_id"
+    t.index ["shareable_type", "shareable_id"], name: "index_shareable_links_on_shareable"
+    t.index ["team_id"], name: "index_shareable_links_on_team_id"
+    t.index ["uuid"], name: "index_shareable_links_on_uuid"
+  end
+
   create_table "step_assets", force: :cascade do |t|
     t.bigint "step_id", null: false
     t.bigint "asset_id", null: false
@@ -1009,22 +1028,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_11_115859) do
     t.index ["user_id"], name: "index_steps_on_user_id"
   end
 
-  create_table "system_notifications", force: :cascade do |t|
-    t.string "title"
-    t.text "description"
-    t.string "modal_title"
-    t.text "modal_body"
-    t.boolean "show_on_login", default: false
-    t.datetime "source_created_at", precision: nil
-    t.bigint "source_id"
-    t.datetime "last_time_changed_at", precision: nil, null: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.index ["last_time_changed_at"], name: "index_system_notifications_on_last_time_changed_at"
-    t.index ["source_created_at"], name: "index_system_notifications_on_source_created_at"
-    t.index ["source_id"], name: "index_system_notifications_on_source_id", unique: true
-  end
-
   create_table "tables", force: :cascade do |t|
     t.binary "contents", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -1076,6 +1079,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_11_115859) do
     t.bigint "last_modified_by_id"
     t.string "description"
     t.bigint "space_taken", default: 1048576, null: false
+    t.boolean "shareable_links_enabled", default: false, null: false
     t.index ["created_by_id"], name: "index_teams_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_teams_on_last_modified_by_id"
     t.index ["name"], name: "index_teams_on_name"
@@ -1178,20 +1182,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_11_115859) do
     t.datetime "updated_at", null: false
     t.index ["created_by_id"], name: "index_user_roles_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_user_roles_on_last_modified_by_id"
-  end
-
-  create_table "user_system_notifications", force: :cascade do |t|
-    t.bigint "user_id"
-    t.bigint "system_notification_id"
-    t.datetime "seen_at", precision: nil
-    t.datetime "read_at", precision: nil
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.index ["read_at"], name: "index_user_system_notifications_on_read_at"
-    t.index ["seen_at"], name: "index_user_system_notifications_on_seen_at"
-    t.index ["system_notification_id"], name: "index_user_system_notifications_on_system_notification_id"
-    t.index ["user_id", "system_notification_id"], name: "index_user_system_notifications_on_user_and_notification_id", unique: true
-    t.index ["user_id"], name: "index_user_system_notifications_on_user_id"
   end
 
   create_table "user_teams", force: :cascade do |t|
@@ -1450,6 +1440,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_11_115859) do
   add_foreign_key "results", "users", column: "archived_by_id"
   add_foreign_key "results", "users", column: "last_modified_by_id"
   add_foreign_key "results", "users", column: "restored_by_id"
+  add_foreign_key "shareable_links", "teams"
+  add_foreign_key "shareable_links", "users", column: "created_by_id"
+  add_foreign_key "shareable_links", "users", column: "last_modified_by_id"
   add_foreign_key "step_assets", "assets"
   add_foreign_key "step_assets", "steps"
   add_foreign_key "step_orderable_elements", "steps"
@@ -1483,8 +1476,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_11_115859) do
   add_foreign_key "user_projects", "users", column: "assigned_by_id"
   add_foreign_key "user_roles", "users", column: "created_by_id"
   add_foreign_key "user_roles", "users", column: "last_modified_by_id"
-  add_foreign_key "user_system_notifications", "system_notifications"
-  add_foreign_key "user_system_notifications", "users"
   add_foreign_key "user_teams", "teams"
   add_foreign_key "user_teams", "users"
   add_foreign_key "user_teams", "users", column: "assigned_by_id"

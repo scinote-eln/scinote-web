@@ -33,6 +33,12 @@
       .create-new {
         padding: 0 5px;
       }
+
+      .dropdown-option {
+        overflow: hidden;
+        text-overflow: clip;
+        white-space: nowrap;
+      }
     }
 
     .new-projects-visibility {

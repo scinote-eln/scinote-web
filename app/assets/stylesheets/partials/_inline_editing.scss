@@ -114,4 +114,10 @@
       }
     }
   }
+
+  @-moz-document url-prefix() {
+    input {
+      padding: 0 4px;
+    }
+  }
 }

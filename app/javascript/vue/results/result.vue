@@ -138,6 +138,7 @@
           @update="updateElement"
           @reorder="openReorderModal"
           @component:insert="insertElement"
+          @moved="moveElement"
         />
       </template>
       <Attachments v-if="attachments.length"
@@ -156,7 +157,7 @@
 </template>
 
 <script>
-  import axios from 'axios';
+  import axios from '../../packs/custom_axios.js';
   import ReorderableItemsModal from '../shared/reorderable_items_modal.vue';
   import ResultTable from '../shared/content/table.vue';
   import ResultText from '../shared/content/text.vue';
@@ -170,7 +171,8 @@
   export default {
     name: 'Results',
     props: {
-      result: { type: Object, required: true }
+      result: { type: Object, required: true },
+      resultToReload: { type: Number, required: false }
     },
     data() {
       return {
@@ -197,6 +199,13 @@
       ResultText,
       Attachments,
       InlineEdit
+    },
+    watch: {
+      resultToReload() {
+        if (this.resultToReload == this.result.id) {
+          this.loadElements();
+        }
+      }
     },
     computed: {
       reorderableElements() {
@@ -294,6 +303,7 @@
       loadElements() {
         $.get(this.urls.elements_url, (result) => {
           this.elements = result.data
+          this.$emit('result:elements:loaded');
         });
       },
       loadAttachments() {
@@ -342,6 +352,17 @@
         axios.post(this.urls.duplicate_url).then((_) => {
           this.$emit('duplicated');
         });
+      },
+      moveElement(position, target_id) {
+        this.elements.splice(position, 1)
+        let unorderedElements = this.elements.map( e => {
+          if (e.attributes.position >= position) {
+            e.attributes.position -= 1;
+          }
+          return e;
+        })
+        this.$emit('resultUpdated')
+        this.$emit('result:move_element', target_id)
       },
       updateName(name) {
         axios.patch(this.urls.update_url, { result: { name: name } }).then((_) => {

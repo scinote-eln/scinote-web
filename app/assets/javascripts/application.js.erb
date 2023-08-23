@@ -1,5 +1,6 @@
 // turbolinks MUST BE THE LAST inclusion
 
+//= require moment
 //= require bootstrap-datetimepicker
 //= require bootstrap-colorselector
 //= require bootstrap-tagsinput.min
@@ -205,7 +206,7 @@ var HelperModule = (function(){
                         '<span class="message">' + message + '</span>' +
                         '<button type="button" class="close" ' +
                           'data-dismiss="alert" aria-label="Close">' +
-                          '<span aria-hidden="true">×</span></button>' +
+                          '<i class="sn-icon sn-icon-close"></i></button>' +
                       '</div>';
     $('#notifications').html(htmlSnippet);
     helpers.hideFlashMsg();

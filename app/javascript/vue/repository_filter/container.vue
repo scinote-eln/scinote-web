@@ -20,7 +20,7 @@
         </div>
       </div>
       <button type="button" class="close" @click="$emit('hide-dropdown')" aria-label="<%= t('general.close') %>">
-        <span aria-hidden="true">&times;</span>
+        <i class="sn-icon sn-icon-close"></i>
       </button>
     </div>
     <FiltersList

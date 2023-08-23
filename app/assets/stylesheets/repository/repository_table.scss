@@ -81,17 +81,20 @@
   }
 
   // Cells
-  td {
-    white-space: nowrap;
+  td.added-on,
+  td.asset-value-cell {
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   // Assigned
 
   .assigned-column {
+    overflow: unset;
     padding: 1px 8px;
     position: relative;
+    white-space: nowrap;
 
     .sn-icon.sn-icon-edit {
       line-height: 35px;
@@ -168,6 +171,10 @@
     .circle-icon {
       margin: 9px 30px;
     }
+  }
+
+  .checklist-column {
+    overflow: unset;
   }
 
   .item-name {
@@ -414,6 +421,10 @@
             }
           }
         }
+
+        td {
+          overflow: visible;
+        }
       }
     }
   }
@@ -421,6 +432,11 @@
 
 .repository-table,
 #myModuleRepositoryFullViewModal {
+  .modal-body {
+    padding: 0;
+    border-bottom: 0;
+  }
+
   .date-time-cell-value,
   .date-cell-value {
     display: inline-block;

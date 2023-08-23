@@ -115,12 +115,6 @@
       <%= render "label_printers/label_printer_modal" %>
     <% end %>
 
-    <% if user_signed_in? && flash[:system_notification_modal] && current_user.show_login_system_notification? %>
-      <%= render partial: "/system_notifications/system_notification_modal", locals: { notification: current_user.user_system_notifications.show_on_login(true) } %>
-    <% else %>
-      <%= render partial: "/system_notifications/system_notification_modal", locals: { notification: nil} %>
-    <% end %>
-
     <span style="display: none;" data-hook="application-body-end-html"></span>
 
     <%= javascript_include_tag 'prism' %>

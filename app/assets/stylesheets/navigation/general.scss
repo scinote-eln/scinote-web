@@ -51,9 +51,6 @@ body.navigator-collapsed {
   .sci--layout-navigation-top {
     grid-area: top;
     height: var(--top-navigation-height);
-    position: sticky;
-    position: -webkit-sticky;
-    top: 0;
     width: 100%;
     z-index: 610;
   }
@@ -69,13 +66,14 @@ body.navigator-collapsed {
   }
 
   .sci--layout-navigation-navigator {
+    --navigator-top-margin: 0px;
     background-color: var(--sn-white);
     grid-area: navigator;
-    height: calc(100vh - var(--top-navigation-height) - var(--breadcrumbs-navigation-height) - 1rem);
+    height: calc(100vh - var(--navbar-height) - 1rem - var(--navigator-top-margin));
     position: sticky;
     position: -webkit-sticky;
-    top: calc(var(--top-navigation-height) + var(--breadcrumbs-navigation-height));
-    transition: .4s $timing-function-sharp;
+    top: 1rem;
+    transition: width .4s $timing-function-sharp;
     width: var(--navigator-navigation-width);
     z-index: 550;
   }
@@ -84,9 +82,6 @@ body.navigator-collapsed {
     background-color: var(--sn-white);
     grid-area: breadcrumbs;
     height: var(--breadcrumbs-navigation-height);
-    position: sticky;
-    position: -webkit-sticky;
-    top: var(--top-navigation-height);
     transition: .4s $timing-function-sharp;
     width: 100%;
     z-index: 600;
@@ -104,6 +99,8 @@ body.navigator-collapsed {
   }
 
   &[data-grey-background="true"] {
+    background-color: var(--sn-super-light-grey);
+
     .sci--layout-content,
     .sci--layout-navigation-breadcrumbs,
     .sci--layout-navigation-navigator {

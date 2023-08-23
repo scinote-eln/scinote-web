@@ -15,6 +15,8 @@ class LabelTemplate < ApplicationRecord
 
   validate :ensure_single_default_template!
 
+  scope :default, -> { where(default: true) }
+
   def self.enabled?
     ApplicationSettings.instance.values['label_templates_enabled'] == true
   end
