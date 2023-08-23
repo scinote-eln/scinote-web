@@ -23,7 +23,7 @@ module Protocols
       raise RequestFailureException, 'Protocols parser URL is missing!' unless parser_url
 
       response = HTTParty.post(
-        ENV.fetch('PROTOCOLS_PARSER_URL', nil),
+        parser_url,
         body: {
           file: File.open(protocol_file.open)
         }
@@ -75,7 +75,7 @@ module Protocols
           when 'StepList'
             create_step_list_element!(step, step_element_json)
           when 'StepFile'
-            create_step_asset_element!(step, step_element_json)
+            # create_step_asset_element!(step, step_element_json)
           end
         end
       end
