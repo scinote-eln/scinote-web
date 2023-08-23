@@ -1,11 +1,8 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
 
-@import "constants";
-@import "mixins";
 @import "main_navigation";
 @import "repositories";
-@import "bootstrap/mixins/buttons";
 /** Layout **/
 
 // Word wrapping everywhere, except for table header of "datatables.js"
@@ -41,10 +38,14 @@ table {
 #no-teams-jumbotron {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  position: relative;
-  top: 100px;
   justify-content: center;
+  align-items: center;
+  padding-top: 7rem;
+
+  img {
+    margin-bottom: 1.5rem;
+    max-width: 33%;
+  }
 }
 
 #alert-container {
@@ -91,7 +92,6 @@ table {
 .dropdown-header {
   background-color: $brand-primary;
   color: $color-concrete;
-  font-size: $font-size-base;
   font-weight: bold;
   padding: 8px 20px;
 
@@ -105,10 +105,6 @@ table {
   margin-bottom: 5px;
 }
 
-.blockquote-search {
-  font-size: $font-size-base;
-  margin-bottom: 10px;
-}
 
 .vertical-spacer-one-half {
   display: inline-block;
@@ -122,9 +118,6 @@ table {
 
 /** Skin **/
 
-body {
-  font-size: $font-size-small;
-}
 
 .modal-body {
   font-size: $font-size-base;
@@ -140,6 +133,16 @@ body {
 
 .jumbotron {
   background-color: inherit;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 7rem;
+
+  img {
+    margin-bottom: 1.5rem;
+    max-width: 33%;
+  }
 }
 
 .no-teams-info {
@@ -148,9 +151,10 @@ body {
 }
 
 .badge {
-  background-color: $brand-primary;
+  background-color: var(--sn-science-blue);
+  border-radius: 8px;
   font-size: 11px;
-  border-radius: 5px;
+  min-width: 16px;
 }
 
 .badge-indicator,
@@ -446,7 +450,6 @@ mark,.mark {
   padding: 13px;
 
   .fas.fa-info-circle {
-    font-size: $font-size-large;
     margin-top: 4px;
   }
 }
@@ -564,7 +567,9 @@ mark,.mark {
     float: right;
 
     .pagination {
-      margin: 2px 0;
+      align-items: center;
+      display: flex;
+      margin: 0;
     }
   }
 
@@ -768,6 +773,7 @@ ul.double-line > li {
 }
 
 .panel-heading .dropdown {
+  background-color: $color-white;
   bottom: 8px;
   left: 8px;
 }
@@ -1014,13 +1020,9 @@ ul.content-activities {
   .result-panel-collapse-link {
     text-decoration: none;
 
-    &:not(.collapsed) .fas {
+    &:not(.collapsed) .sn-icon-right {
       @include rotate(90deg);
-    }
-
-    .fas {
-      margin-right: 7px;
-      text-align: center;
+      display: inline-block;
     }
   }
 
@@ -1170,7 +1172,7 @@ body > .loading-overlay {
     visibility: hidden;
     width: 200px;
     word-wrap: break-word;
-    z-index: $infinity;
+    z-index: 10000;
   }
 }
 
@@ -1385,7 +1387,6 @@ th.custom-field .modal-tooltiptext {
 .tooltip-open {
   background-color: $color-concrete;
   color: $color-black;
-  font-size: $font-size-base;
 
   .popover-footer {
     background-color: $color-gainsboro;

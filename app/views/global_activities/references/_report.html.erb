@@ -1,7 +1,7 @@
-<%= render partial: "global_activities/references/team.html.erb",
+<%= render partial: "global_activities/references/team",
            locals: { team: team, subject: team, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
 <div class="ga-breadcrumb">
-  <span class="fas fa-clipboard-check"></span>
+  <span class="sn-icon sn-icon-reports"></span>
   <% if subject %>
     <%= route_to_other_team(reports_path(subject, team: subject.team.id, preview_report_id: subject.id, preview_type: :pdf),
                             team,

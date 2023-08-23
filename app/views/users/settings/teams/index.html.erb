@@ -5,13 +5,10 @@
 <% provide(:head_title, t("users.settings.teams.head_title")) %>
 <% provide(:container_class, "no-second-nav-container") %>
 
-<%= render partial: "users/settings/sidebar.html.erb" %>
+<%= render partial: "users/settings/sidebar" %>
 <div class="tab-content">
   <div class="tab-pane content-pane" role="tabpanel"></div>
   <div class="tab-pane content-pane active" role="tabpanel">
-
-    <%= render partial: "users/settings/teams/breadcrumbs.html.erb" %>
-
     <div>
       <% if @member_of > 0 %>
         <%= t("users.settings.teams.index.description_label") %>
@@ -25,7 +22,7 @@
       <% if can_create_teams? %>
         <span id="new-team-button">
           <%= link_to new_team_path, class: "btn btn-primary", style: "margin-left: 30px;" do %>
-            <span class="fas fa-plus"></span>
+            <span class="sn-icon sn-icon-new-task"></span>
             <span class="hidden-xs">
               <%= t("users.settings.teams.index.new_team") %>
             </span>
@@ -54,7 +51,7 @@
   </div>
 </div>
 
-<%= render partial: "users/settings/user_teams/leave_user_team_modal.html.erb" %>
+<%= render partial: "users/settings/user_teams/leave_user_team_modal" %>
 <%= stylesheet_link_tag 'datatables' %>
 <%= javascript_include_tag "users/settings/teams/index" %>
 <%= javascript_include_tag "users/settings/teams/datatable" %>

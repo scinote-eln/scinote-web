@@ -113,23 +113,21 @@ class Project < ApplicationRecord
     joins("
       LEFT OUTER JOIN experiments ON experiments.project_id = projects.id
       LEFT OUTER JOIN user_assignments experiment_user_assignments
-        ON experiment_user_assignments.assignable_id = experiments.id AND
-           experiment_user_assignments.assignable_type = 'Experiment'
+        ON experiment_user_assignments.assignable_id = experiments.id
+        AND experiment_user_assignments.assignable_type = 'Experiment'
+        AND experiment_user_assignments.user_id = #{user.id}
       LEFT OUTER JOIN user_roles experiment_user_roles
         ON experiment_user_roles.id = experiment_user_assignments.user_role_id
+        AND experiment_user_roles.permissions @> ARRAY['#{ExperimentPermissions::READ}']::varchar[]
       LEFT OUTER JOIN my_modules ON my_modules.experiment_id = experiments.id
       LEFT OUTER JOIN user_assignments my_module_user_assignments
-        ON my_module_user_assignments.assignable_id = my_modules.id AND
-           my_module_user_assignments.assignable_type = 'MyModule'
+        ON my_module_user_assignments.assignable_id = my_modules.id
+        AND my_module_user_assignments.assignable_type = 'MyModule'
+        AND my_module_user_assignments.user_id = #{user.id}
       LEFT OUTER JOIN user_roles my_module_user_roles
         ON my_module_user_roles.id = my_module_user_assignments.user_role_id
+        AND my_module_user_roles.permissions @> ARRAY['#{MyModulePermissions::READ}']::varchar[]
     ")
-      .where('
-        (experiment_user_assignments.user_id = ? AND experiment_user_roles.permissions @> ARRAY[?]::varchar[]
-          OR experiments.id IS NULL) AND
-        (my_module_user_assignments.user_id = ? AND my_module_user_roles.permissions @> ARRAY[?]::varchar[]
-          OR my_modules.id IS NULL)
-      ', user.id, ExperimentPermissions::READ, user.id, MyModulePermissions::READ)
   end
 
   def self.filter_by_teams(teams = [])
@@ -172,19 +170,6 @@ class Project < ApplicationRecord
                              .order(created_at: :desc)
                              .limit(per_page)
     ProjectComment.from(comments, :comments).order(created_at: :asc)
-  end
-
-  def unassigned_users
-    User.joins(:user_teams)
-        .joins(
-          "LEFT OUTER JOIN user_assignments ON user_assignments.user_id = users.id "\
-          "AND user_assignments.assignable_id = #{id} "\
-          "AND user_assignments.assignable_type = 'Project'"
-        )
-        .where(user_teams: { team_id: team_id })
-        .where(user_assignments: { id: nil })
-        .where.not(confirmed_at: nil)
-        .distinct
   end
 
   def user_role(user)
@@ -280,7 +265,7 @@ class Project < ApplicationRecord
     report = Report.generate_whole_project_report(self, user, team)
 
     page_html_string =
-      renderer.render 'reports/export.html.erb',
+      renderer.render 'reports/export',
                       locals: { report: report, export_all: true },
                       assigns: { settings: report.settings, obj_filenames: obj_filenames }
     parsed_page_html = Nokogiri::HTML(page_html_string)
@@ -291,7 +276,7 @@ class Project < ApplicationRecord
     tables = parsed_html.css('.hot-table-contents')
                         .zip(parsed_html.css('.hot-table-container'), parsed_html.css('.hot-table-metadata'))
     tables.each do |table_input, table_container, metadata|
-      is_plate_template = JSON.parse(metadata['value'])['plateTemplate'] if metadata.present?
+      is_plate_template = JSON.parse(metadata['value'])['plateTemplate'] if metadata && metadata['value'].present?
       table_vals = JSON.parse(table_input['value'])
       table_data = table_vals['data']
       table_headers = table_vals['headers']

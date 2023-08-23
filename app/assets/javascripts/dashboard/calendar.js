@@ -6,11 +6,11 @@ var DasboardCalendarWidget = (function() {
     return `<script id="calendar-template" type="text/template">
               <div class="controls">
                 <div class="clndr-previous-button">
-                  <div class="btn btn-light icon-btn"><i class="fas fa-angle-double-left"></i></div>
+                  <div class="btn btn-light icon-btn"><i class="sn-icon sn-icon-left"></i></div>
                 </div>
                 <div class="clndr-title"><%= month %> <%= year %></div>
                 <div class="clndr-next-button">
-                  <div class="btn btn-light icon-btn"><i class="fas fa-angle-double-right"></i></div>
+                  <div class="btn btn-light icon-btn"><i class="sn-icon sn-icon sn-icon-right"></i></div>
                 </div>
               </div>
               <div class="days-container">

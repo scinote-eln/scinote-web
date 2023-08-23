@@ -66,8 +66,8 @@ class TeamUsersDatatable < CustomDatatable
         '2': record.user_role.name,
         '3': I18n.l(record.created_at, format: :full_date),
         '4': record.user.active_status_str,
-        '5': ApplicationController.new.render_to_string(
-          partial: 'users/settings/teams/user_dropdown.html.erb',
+        '5': @view.controller.render_to_string(
+          partial: 'users/settings/teams/user_dropdown',
           locals: {
             user_assignment: record,
             update_role_path: update_user_team_path(record, format: :json),
@@ -78,7 +78,8 @@ class TeamUsersDatatable < CustomDatatable
               data: { action: 'destroy-user-team' }
             ),
             user: @user
-          }
+          },
+          formats: :html
         )
       }
     end

@@ -1,10 +1,9 @@
 /*
   globals I18n _ SmartAnnotation FilePreviewModal animateSpinner DataTableHelpers
   HelperModule RepositoryDatatableRowEditor prepareRepositoryHeaderForExport
-  initAssignedTasksDropdown initBMTFilter initReminderDropdown initBSTooltips
+  initAssignedTasksDropdown initReminderDropdown initBSTooltips
 */
 
-//= require jquery-ui/widgets/sortable
 //= require repositories/row_editor.js
 
 
@@ -20,6 +19,7 @@ var RepositoryDatatable = (function(global) {
 
   var rowsSelected = [];
   var rowsLocked = [];
+  var colSizeMap = {};
 
   // Tells whether we're currently viewing or editing table
   var currentMode = 'viewMode';
@@ -48,6 +48,18 @@ var RepositoryDatatable = (function(global) {
     ).toArray().map((r) => parseInt(r.id, 10));
 
     return rowsSelected.every(r => visibleRowIds.includes(r));
+  }
+
+  function updateColSizeMap(state) {
+    if (!state.ColSizes) return;
+
+    for (let i = 0; i < state.ColSizes.length; i += 1) {
+      colSizeMap[state.ColReorder[i]] = state.ColSizes[i];
+    }
+  }
+
+  function restoreColumnSizes() {
+    TABLE.colResize.restore();
   }
 
   // Enable/disable edit button
@@ -171,14 +183,21 @@ var RepositoryDatatable = (function(global) {
     TABLE.button(0).enable(true);
     $('#saveRecord').attr('disabled', false);
     $(TABLE_WRAPPER_ID).find('tr').removeClass('blocked');
+
+    if (TABLE.ColSizes) {
+      $(TABLE_WRAPPER_ID).find('.table').addClass('table--resizable-columns');
+    }
+
     updateButtons();
     disableCheckboxToggleOnCheckboxPreview();
+    restoreColumnSizes();
   }
 
   function changeToEditMode() {
     $('#newRepoNameField').focus();
     currentMode = 'editMode';
-
+    $(TABLE_WRAPPER_ID).find('.table').removeClass('table--resizable-columns');
+    adjustTableHeader();
     clearRowSelection();
     updateButtons();
     initEditRowForms();
@@ -337,7 +356,6 @@ var RepositoryDatatable = (function(global) {
       if (filterSaveButtonVisible) {
         $('#saveRepositoryFilters').removeClass('hidden');
       }
-      if (typeof initBMTFilter === 'function') initBMTFilter();
 
       initBSTooltips();
     });
@@ -387,6 +405,35 @@ var RepositoryDatatable = (function(global) {
     }, function() {
       $(this).append($(this).data('dropdown-tooltip'));
       $(this).data('dropdown-tooltip').removeAttr('style');
+    });
+  }
+
+  function initRepositoryViewSwitcher() {
+    const viewSwitch = $('.view-switch');
+    const repositoryShow = $('.repository-show');
+    const stateViewSwitchBtnName = $('.state-view-switch-btn-name');
+    const selectedSwitchOptionClass = 'form-dropdown-state-item prevent-shrink';
+
+    function switchView(event, activeClass, inactiveClass) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      repositoryShow.removeClass(inactiveClass).addClass(activeClass);
+
+      $(`.view-switch-${inactiveClass} a`).removeClass(selectedSwitchOptionClass);
+      $(`.view-switch-${activeClass} a`).addClass(selectedSwitchOptionClass);
+
+      stateViewSwitchBtnName.text($(`.view-switch-${activeClass}`).text());
+      viewSwitch.removeClass('open');
+      RepositoryDatatable.reload();
+    }
+
+    viewSwitch.on('click', '.view-switch-archived', function(event) {
+      switchView(event, 'archived', 'active');
+    });
+
+    viewSwitch.on('click', '.view-switch-active', function(event) {
+      switchView(event, 'active', 'archived');
     });
   }
 
@@ -464,6 +511,29 @@ var RepositoryDatatable = (function(global) {
     initRepositorySearch();
   }
 
+  function saveState(state) {
+    // Send an Ajax request to the server with the state object
+    let repositoryId = $(TABLE_ID).data('repository-id');
+    var viewType = $('.repository-show').hasClass('archived') ? 'archived' : 'active';
+
+    localStorage.setItem(
+      `datatables_repositories_state/${repositoryId}/${viewType}`,
+      JSON.stringify(state)
+    );
+
+    $.ajax({
+      url: '/repositories/' + repositoryId + '/state_save',
+      contentType: 'application/json',
+      data: JSON.stringify({ state: state }),
+      dataType: 'json',
+      type: 'POST'
+    });
+
+    TABLE.ColSizes = state.ColSizes;
+
+    setTimeout(restoreColumnSizes, 100);
+  }
+
   function dataTableInit() {
     TABLE = $(TABLE_ID).DataTable({
       dom: "R<'repository-toolbar hidden'<'repository-search-container'f>>t<'pagination-row hidden'<'pagination-info'li><'pagination-actions'p>>",
@@ -476,7 +546,63 @@ var RepositoryDatatable = (function(global) {
       stateDuration: 0,
       colReorder: {
         fixedColumnsLeft: 2,
-        realtime: false
+        realtime: false,
+        disabledClass: 'dt-colresizable-hover'
+      },
+      colResize: {
+        isEnabled: true,
+        saveState: true,
+        hasBoundCheck: false,
+        isResizable: (column) => {
+          return column.idx > 0;
+        },
+        onResize: function(column) {
+          // enforce min-width
+          let width = parseInt(column.width, 10);
+          let $headerColumn = $(TABLE.column(column.idx).header());
+          let minWidth = parseInt($headerColumn.css('min-width'), 10);
+
+          // get actual column index taking into account hidden columns
+          let trueColumnIndex = $(`${TABLE_WRAPPER_ID} .dataTables_scrollHeadInner tr`).children().index($headerColumn);
+
+          $(
+            `${TABLE_WRAPPER_ID} th:nth-child(${trueColumnIndex + 1})`
+          ).toggleClass('width-out-of-bounds', width < minWidth);
+        },
+        stateSaveCallback: (_, data) => {
+          $(TABLE_ID).data('col-sizes', data);
+          let state = TABLE.state();
+
+          // force width of checkbox column
+          data[0] = 30;
+
+          // perserve widths of invisible columns or enforce min width
+          for (let i = 0; i < data.length; i++) {
+            if (data[i] === 0) {
+              let minWidth = parseInt($(TABLE.column(i).header()).css('min-width'), 10);
+              data[i] = colSizeMap[i] || minWidth;
+            }
+          }
+
+          state.ColSizes = data;
+
+          $(TABLE_WRAPPER_ID).find('.table').addClass('table--resizable-columns');
+
+          updateColSizeMap(state);
+
+          saveState(state);
+        },
+        stateLoadCallback: (state) => {
+          if (!TABLE.ColSizes || TABLE.ColSizes.length === 0) return;
+
+          let colSizes = TABLE.ColSizes;
+
+          // force width of checkbox column
+          colSizes[0] = 30;
+
+          return colSizes;
+        },
+        hoverClass: 'dt-colresizable-hover'
       },
       destroy: true,
       ajax: {
@@ -499,6 +625,7 @@ var RepositoryDatatable = (function(global) {
 
           return JSON.stringify(d);
         },
+        complete: restoreColumnSizes,
         global: false,
         type: 'POST'
       },
@@ -528,9 +655,9 @@ var RepositoryDatatable = (function(global) {
           let content = $.fn.dataTable.render.AssignedTasksValue(data, row);
           let icon;
           if (!row.recordEditable) {
-            icon = `<i class="repository-row-lock-icon fas fa-lock" title="${I18n.t('repositories.table.locked_item')}"></i>`;
+            icon = `<i class="repository-row-lock-icon sn-icon sn-icon-locked-task" title="${I18n.t('repositories.table.locked_item')}"></i>`;
           } else if (EDITABLE) {
-            icon = '<i class="repository-row-edit-icon fas fa-pencil-alt" data-view-mode="active"></i>';
+            icon = '<i class="repository-row-edit-icon sn-icon sn-icon-edit" data-view-mode="active"></i>';
           } else {
             icon = '';
           }
@@ -590,7 +717,9 @@ var RepositoryDatatable = (function(global) {
         }
         customColumns.each((i, column) => {
           var columnData = $(column).data('type') === 'RepositoryStockValue' ? 'stock' : String(columns.length);
+          const className = $(column).data('type') === 'RepositoryChecklistValue' ? 'checklist-column' : '';
           columns.push({
+            className: className,
             visible: true,
             searchable: true,
             data: columnData,
@@ -644,27 +773,24 @@ var RepositoryDatatable = (function(global) {
             if (json.state.columns[7]) json.state.columns[7].visible = archived;
             if (json.state.search) delete json.state.search;
 
+            if (json.state.ColSizes) {
+              $(TABLE_WRAPPER_ID).find('.table').addClass('table--resizable-columns');
+              TABLE.ColSizes = json.state.ColSizes;
+              updateColSizeMap(json.state);
+            }
+
             callback(json.state);
           }
         });
       },
-      stateSaveCallback: function(settings, data) {
-        // Send an Ajax request to the server with the state object
-        let repositoryId = $(TABLE_ID).data('repository-id');
-        var viewType = $('.repository-show').hasClass('archived') ? 'archived' : 'active';
+      stateSaveCallback: function(_, data) {
+        let colSizes = [];
 
-        localStorage.setItem(
-          `datatables_repositories_state/${repositoryId}/${viewType}`,
-          JSON.stringify(data)
-        );
+        for (let i = 0; i < data.ColReorder.length; i += 1) {
+          colSizes.push(colSizeMap[data.ColReorder[i]]);
+        }
 
-        $.ajax({
-          url: '/repositories/' + repositoryId + '/state_save',
-          contentType: 'application/json',
-          data: JSON.stringify({ state: data }),
-          dataType: 'json',
-          type: 'POST'
-        });
+        saveState({ ...data, ColSizes: colSizes });
       },
       fnInitComplete: function() {
         window.initActionToolbar();
@@ -680,7 +806,6 @@ var RepositoryDatatable = (function(global) {
         let toolBar = $($('#repositoryToolbar').html());
         toolBar.find('.toolbar-search').html($('.repository-search-container'));
         $('.repository-toolbar').html(toolBar);
-        if (typeof initBMTFilter === 'function') initBMTFilter();
 
         RepositoryDatatableRowEditor.initFormSubmitAction(TABLE);
         initExportActions();
@@ -688,6 +813,7 @@ var RepositoryDatatable = (function(global) {
         initSaveButton();
         initCancelButton();
         initBSTooltips();
+        initRepositoryViewSwitcher();
         DataTableHelpers.initLengthAppearance($(TABLE_ID).closest('.dataTables_wrapper'));
 
         $('.dataTables_filter').addClass('hidden');
@@ -699,9 +825,10 @@ var RepositoryDatatable = (function(global) {
           rowsLocked.push(parseInt($(e).attr('id'), 10));
         });
 
+        $(TABLE_WRAPPER_ID).find('.table thead th:not(:first-child)').prepend($('<i class="sn-icon sn-icon-drag column-grip"></i>'));
+
         // go back to manage columns index in modal, on column save, after table loads
         $('#manage-repository-column .back-to-column-modal').trigger('click');
-
 
         initAssignedTasksDropdown(TABLE_ID);
         initReminderDropdown(TABLE_ID);
@@ -711,6 +838,14 @@ var RepositoryDatatable = (function(global) {
         // setTimeout(function() {
         //   adjustTableHeader();
         // }, 500);
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(restoreColumnSizes, 200);
+        });
+
+        restoreColumnSizes();
       }
     });
 
@@ -744,11 +879,6 @@ var RepositoryDatatable = (function(global) {
 
     initRowSelection();
     updateSelectedRowsForAssignments();
-    // $(window).resize(() => {
-    //   setTimeout(() => {
-    //     adjustTableHeader();
-    //   }, 500);
-    // });
 
     return TABLE;
   }
@@ -879,7 +1009,6 @@ var RepositoryDatatable = (function(global) {
       });
 
       changeToEditMode();
-      // adjustTableHeader();
     })
     .on('click', '#assignRepositoryRecords', function(e) {
       e.preventDefault();

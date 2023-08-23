@@ -14,28 +14,26 @@
 
   <div data-view-mode="active">
     <a class="edit-tags-link pull-right" data-remote="true" href="<%= my_module_tags_edit_url(my_module, format: :json) %>">
-      <%= render partial: "canvas/tags.html.erb", locals: { my_module: my_module } %>
+      <%= render partial: "canvas/tags", locals: { my_module: my_module } %>
     </a>
   </div>
 
   <div data-view-mode="archived">
     <a class="edit-tags-link pull-right" data-remote="true" href="<%= my_module_tags_edit_url(my_module, format: :json) %>">
-      <%= render partial: "canvas/tags.html.erb", locals: { my_module: my_module } %>
+      <%= render partial: "canvas/tags", locals: { my_module: my_module } %>
     </a>
   </div>
 
-  <% unless my_module.experiment.archived_branch? || !can_restore_my_module?(my_module) %>
-    <div class="task-selector-container pull-left " data-view-mode="archived" data-task-id="<%= my_module.id %>">
-      <div class="sci-checkbox-container">
-        <input value="1" type="checkbox" class="sci-checkbox task-selector">
-        <span class="sci-checkbox-label"></span>
-      </div>
+  <div class="task-selector-container pull-left " data-view-mode="archived" data-task-id="<%= my_module.id %>">
+    <div class="sci-checkbox-container">
+      <input value="1" type="checkbox" class="sci-checkbox task-selector">
+      <span class="sci-checkbox-label"></span>
     </div>
-  <% end %>
+  </div>
 
   <div class="panel-heading">
     <h3 class="panel-title">
-      <%= link_to my_module.name, protocols_my_module_path(my_module, 
+      <%= link_to my_module.name, protocols_my_module_path(my_module,
                                                            view_mode: my_module.archived_branch? ? 'archived' : 'active'),
             title: my_module.name, class: 'my-module-title' %>
     </h3>
@@ -46,10 +44,10 @@
       <% if !my_module.completed? && can_manage_my_module?(my_module) %>
         <%= link_to due_date_my_module_path(my_module, format: :json), remote: true,
                     class: "due-date-link due-date-refresh" do %>
-          <%= render partial: "my_modules/card_due_date_label.html.erb", locals: { my_module: my_module, format: :full_date } %>
+          <%= render partial: "my_modules/card_due_date_label", locals: { my_module: my_module, format: :full_date } %>
         <% end %>
       <% else %>
-        <%= render partial: "my_modules/card_due_date_label.html.erb", locals: { my_module: my_module, format: :full_date } %>
+        <%= render partial: "my_modules/card_due_date_label", locals: { my_module: my_module, format: :full_date } %>
       <% end %>
     </div>
 
@@ -67,20 +65,21 @@
       </div>
     </div>
 
-    <div class="status-label" style="--state-color: <%= my_module.my_module_status.color %>">
-      <% if my_module.status_changing %>
-        <i class="fas fa-spinner fa-spin"></i>
-        <span><%= t('experiments.canvas.full_zoom.status_transitioning_label') %></span>
-      <% end %>
-      <%= my_module.my_module_status.name %>
+    <div class="status-label <%= 'btn-not-started' if my_module.my_module_status.name == 'Not started' %>"
+      style="--state-color: <%= my_module.my_module_status.color %>">
+        <% if my_module.status_changing %>
+          <i class="fas fa-spinner fa-spin"></i>
+          <span><%= t('experiments.canvas.full_zoom.status_transitioning_label') %></span>
+        <% end %>
+        <%= my_module.my_module_status.name %>
     </div>
   </div>
 
   <div class="panel-footer panel-footer-scinote buttons-container">
     <ul class="nav nav-tabs nav-tabs-less" role="tablist">
       <li role="presentation">
-        <a class="btn btn-link task-card-view-users" href="<%= designated_users_my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_users" role="tab" data-remote="true">
-          <span class="fas fa-users" aria-hidden="true"></span>
+        <a class="btn btn-light task-card-view-users" href="<%= designated_users_my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_users" role="tab" data-remote="true">
+          <span class="sn-icon sn-icon-users" aria-hidden="true"></span>
           <span class="badge badge-indicator users-badge-indicator <%= 'hidden' unless my_module.designated_users_count.positive? %>"
                 data-linked-id="<%= my_module.id %>">
             <%= my_module.designated_users_count %>
@@ -88,14 +87,15 @@
         </a>
       </li>
       <li role="presentation">
-        <a class="btn btn-link task-card-view-activities" href="<%= activities_my_module_url(id: my_module.id) %>" aria-controls="<%= my_module.id %>_activities" role="tab">
-          <span class="fas fa-list" aria-hidden="true"></span>
+        <a class="btn btn-light task-card-view-activities" href="<%= activities_my_module_url(id: my_module.id, view_mode: my_module.archived_branch? ? 'archived' : 'active') %>"
+           aria-controls="<%= my_module.id %>_activities" role="tab">
+          <span class="sn-icon sn-icon-activities" aria-hidden="true"></span>
         </a>
       </li>
       <li role="presentation">
-        <a href="#" class="btn btn-link open-comments-sidebar" tabindex=0
+        <a href="#" class="btn btn-light open-comments-sidebar" tabindex=0
            data-object-type="MyModule" data-object-id="<%= my_module.id %>">
-          <span class="fas fa-comment" aria-hidden="true"></span>
+          <span class="sn-icon sn-icon-comments" aria-hidden="true"></span>
           <span id="comment-count-<%= my_module.id %>" class="badge badge-indicator comments-badge-indicator <%= 'hidden' unless my_module.task_comments_count.positive? %>">
             <%= my_module.task_comments_count %>
           </span>

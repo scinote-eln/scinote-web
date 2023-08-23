@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+./node_modules/sass/sass.js \
+  ./app/assets/stylesheets/application.sass.scss:./app/assets/builds/application.css \
+  ./vendor/assets/stylesheets/handsontable.full.sass.scss:./app/assets/builds/handsontable.css \
+  ./vendor/assets/stylesheets/handsontable.formula.sass.scss:./app/assets/builds/handsontable.formula.css \
+  ./app/assets/stylesheets/layouts/print_protocol.sass.scss:./app/assets/builds/print_protocol.css \
+  ./vendor/assets/stylesheets/datatables.sass.scss:./app/assets/builds/datatables.css \
+  ./app/assets/stylesheets/reports_pdf.sass.scss:./app/assets/builds/reports_pdf.css \
+  --no-source-map \
+  --load-path=node_modules \
+  --load-path=vendor/assets/stylesheets \
+  --load-path=addons \
+  $@

@@ -4,8 +4,6 @@
 // scss-lint:disable ImportantRule
 // scss-lint:disable IdSelector
 
-@import "constants";
-@import "mixins";
 
 // MarvinJs modal
 .modal-marvin-js {
@@ -96,7 +94,6 @@
 
       .sketch-name {
         color: $brand-primary;
-        font-family: Lato;
         font-size: 16px;
         line-height: 18px;
         margin: 10px auto;

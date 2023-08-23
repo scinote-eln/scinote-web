@@ -209,6 +209,9 @@
   padding-left: 2px;
   text-decoration: none;
   text-transform: uppercase;
+  vertical-align: super;
+  font-size: .625rem;
+  font-weight: 600;
 
   &:hover {
     text-decoration: none;
@@ -216,8 +219,12 @@
 }
 
 .atwho-user-container {
+  display: inline-block;
+  white-space: nowrap;
+
   .atwho-user-popover {
     cursor: pointer;
+    line-height: 1.25rem;
   }
 
   .atwho-user-popover:focus {

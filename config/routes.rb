@@ -28,8 +28,6 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :activities, only: [:index]
-
     get '/jobs/:id/status', to: 'active_jobs#status'
 
     get 'forbidden', to: 'application#forbidden', as: 'forbidden'
@@ -143,7 +141,7 @@ Rails.application.routes.draw do
     namespace :users do
       namespace :settings do
         resources :teams, only: [] do
-          member do
+          collection do
             post :switch
           end
         end
@@ -197,6 +195,7 @@ Rails.application.routes.draw do
           get 'create_modal', to: 'repositories#create_modal',
               defaults: { format: 'json' }
           get 'actions_toolbar'
+          get 'export_modal'
         end
         get 'destroy_modal', to: 'repositories#destroy_modal',
             defaults: { format: 'json' }
@@ -219,9 +218,12 @@ Rails.application.routes.draw do
       member do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'export_repository', to: 'repositories#export_repository'
+        post 'export_repositories', to: 'repositories#export_repositories'
         post 'export_projects'
         get 'sidebar'
         get 'export_projects_modal'
+        post 'shared_tasks_toggle'
+        get 'disable_tasks_sharing_modal'
         # Used for atwho (smart annotations)
         get 'atwho_users', to: 'at_who#users'
         get 'atwho_menu', to: 'at_who#menu'
@@ -461,6 +463,8 @@ Rails.application.routes.draw do
 
       resource :status_flow, controller: :my_module_status_flow, only: :show
 
+      resource :shareable_link, controller: :my_module_shareable_links, only: %i(show create update destroy)
+
       resources :my_module_comments,
                 path: '/comments',
                 only: %i(create index update destroy)
@@ -471,7 +475,7 @@ Rails.application.routes.draw do
       resources :repositories, controller: :my_module_repositories, only: %i(update create) do
         member do
           get :full_view_table
-          post :index_dt
+          post :index_dt, defaults: { format: 'json' }
           post :export_repository
           get :assign_repository_records_modal, as: :assign_modal
           get :update_repository_records_modal, as: :update_modal
@@ -483,7 +487,7 @@ Rails.application.routes.draw do
       resources :repository_snapshots, controller: :my_module_repository_snapshots, only: %i(destroy show) do
         member do
           get :full_view_table
-          post :index_dt
+          post :index_dt, defaults: { format: 'json' }
           post :export_repository_snapshot
           get :status
         end
@@ -568,17 +572,6 @@ Rails.application.routes.draw do
       end
     end
 
-    # System notifications routes
-    resources :system_notifications, only: %i(show) do
-      collection do
-        post 'mark_as_seen'
-        get 'unseen_counter'
-      end
-      member do
-        post 'mark_as_read'
-      end
-    end
-
     # tinyMCE image uploader endpoint
     resources :tiny_mce_assets, only: [:create] do
       member do
@@ -652,6 +645,7 @@ Rails.application.routes.draw do
         post 'restore', to: 'protocols#restore'
         post 'clone', to: 'protocols#clone'
         post 'import', to: 'protocols#import'
+        post 'import_docx', to: 'protocols#import_docx'
         post 'protocolsio_import_create',
              to: 'protocols#protocolsio_import_create'
         post 'protocolsio_import_save', to: 'protocols#protocolsio_import_save'
@@ -664,7 +658,7 @@ Rails.application.routes.draw do
     resources :comments, only: %i(index create update destroy)
 
     resources :repository_rows, only: %i() do
-      member do
+      collection do
         get :rows_to_print
         post :print
         get :print_zpl
@@ -957,6 +951,28 @@ Rails.application.routes.draw do
     end
   end
 
+  # Shareable links
+  get '/shared/:uuid/protocol',
+      to: 'my_module_shareable_links#protocol_show',
+      as: :shared_protocol
+  get '/shared/:uuid/protocol/asset/:id/download',
+      to: 'my_module_shareable_links#download_step_asset',
+      as: :shared_protocol_asset_download
+  get '/shared/:uuid/protocol/asset/:id/download_result',
+      to: 'my_module_shareable_links#download_result_asset',
+      as: :shared_protocol_result_asset_download
+  get '/shared/:uuid/protocol/results',
+      to: 'my_module_shareable_links#results_show',
+      as: :shared_protocol_results
+  post '/shared/:uuid/repositories/:id/items',
+       to: 'my_module_shareable_links#repository_index_dt',
+       as: :shared_protocol_items,
+       defaults: { format: :json }
+  post '/shared/:uuid/repositories/:id/snapshot_items',
+       to: 'my_module_shareable_links#repository_snapshot_index_dt',
+       as: :shared_protocol_snapshot_items,
+       defaults: { format: :json }
+
   resources :marvin_js_assets, only: %i(create update destroy show) do
     collection do
       get :team_sketches
@@ -965,24 +981,6 @@ Rails.application.routes.draw do
       post :start_editing
     end
   end
-
-  resources :bio_eddie_assets, only: %i(create update) do
-    collection do
-      get :license
-    end
-    member do
-      post :start_editing
-    end
-  end
-
-  resources :bmt_filters, only: %i(index create destroy)
-
-  match '/marvin4js-license.cxl', to: 'bio_eddie_assets#license', via: :get
-
-  match 'biomolecule_toolkit/*path', to: 'bio_eddie_assets#bmt_request',
-                                     via: %i(get post put delete),
-                                     defaults: { format: 'json' },
-                                     as: 'bmt_request'
 
   post 'global_activities', to: 'global_activities#index'
 

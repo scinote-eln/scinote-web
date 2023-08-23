@@ -6,25 +6,25 @@ module LeftMenuBarHelper
       {
         url: dashboard_path,
         name: t('left_menu_bar.dashboard'),
-        icon: 'fa-thumbtack',
+        icon: 'sn-icon-dashboard',
         active: dashboard_are_selected?,
         submenu: []
       }, {
         url: projects_path,
         name: t('left_menu_bar.projects'),
-        icon: 'fa-folder',
+        icon: 'sn-icon-projects',
         active: projects_are_selected?,
         submenu: []
       }, {
         url: repositories_path,
         name: t('left_menu_bar.repositories'),
-        icon: 'fa-list-alt',
+        icon: 'sn-icon-inventory',
         active: repositories_are_selected?,
         submenu: []
       }, {
         url: "#",
         name: t('left_menu_bar.templates'),
-        icon: 'fa-edit',
+        icon: 'sn-icon-protocols-templates',
         active: protocols_are_selected? || label_templates_are_selected?,
         submenu: [{
           url: protocols_path,
@@ -38,13 +38,13 @@ module LeftMenuBarHelper
       }, {
         url: reports_path,
         name: t('left_menu_bar.reports'),
-        icon: 'fa-clipboard-check',
+        icon: 'sn-icon-reports',
         active: reports_are_selected?,
         submenu: []
       }, {
         url: global_activities_path,
         name: t('left_menu_bar.activities'),
-        icon: 'fa-list',
+        icon: 'sn-icon-activities',
         active: activities_are_selected?,
         submenu: []
       }

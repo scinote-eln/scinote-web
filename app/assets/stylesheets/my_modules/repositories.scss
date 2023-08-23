@@ -11,6 +11,7 @@
 }
 
 #assigned-items-container {
+  padding-left: 2.5rem;
   padding-top: 10px;
 
   .assigned-repository {
@@ -37,7 +38,16 @@
         @include rotate(90deg);
       }
 
+      &:not(.collapsed) .sn-icon-right {
+        @include rotate(90deg);
+      }
+
       .fa-caret-right {
+        flex-shrink: 0;
+        margin-right: 10px;
+      }
+
+      .sn-icon-right {
         flex-shrink: 0;
         margin-right: 10px;
       }
@@ -98,6 +108,42 @@
           height: 38px;
         }
       }
+    }
+  }
+}
+
+.assigned-repository.shared {
+  border: 0;
+  box-shadow: 0;
+
+  .table {
+    border: 0;
+    margin-bottom: 0;
+  }
+
+  tr:not(:first) {
+    border-bottom: 2px solid var(--sn-sleepy-grey);
+    border-top: 0;
+  }
+
+  .item-name {
+    vertical-align: middle;
+  }
+
+  .version-label {
+    @include font-small;
+    color: var(--sn-grey);
+    font-weight: bold;
+  }
+
+  .dataTables_scrollHead .sorting {
+    position: relative;
+
+    &::after {
+      content: "\21C5";
+      font-size: 20px;
+      position: absolute;
+      right: 4px;
     }
   }
 }

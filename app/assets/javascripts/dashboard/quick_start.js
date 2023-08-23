@@ -31,7 +31,7 @@ var DasboardQuickStartWidget = (function() {
       selectAppearance: 'simple',
       optionLabel: (data) => {
         if (data.value === 0) {
-          return `<i class="fas fa-plus"></i>
+          return `<i class="sn-icon sn-icon-new-task"></i>
                   <span class="create-new">${I18n.t('dashboard.create_task_modal.filter_create_new')}</span>
                   <span>"${data.label}"</span>`;
         }
@@ -61,7 +61,7 @@ var DasboardQuickStartWidget = (function() {
       selectAppearance: 'simple',
       optionLabel: (data) => {
         if (data.value === 0) {
-          return `<i class="fas fa-plus"></i>
+          return `<i class="sn-icon sn-icon-new-task"></i>
                   <span class="create-new">${I18n.t('dashboard.create_task_modal.filter_create_new')}</span>
                   <span>"${data.label}"</span>`;
         }
@@ -81,14 +81,14 @@ var DasboardQuickStartWidget = (function() {
       onSelect: () => {
         var selectedValue = dropdownSelector.getValues(experimentFilter);
         if (selectedValue >= 0) {
-          $(createTaskButton).removeAttr('disabled');
+          $(createTaskButton).attr('disabled', false);
         } else {
           $(createTaskButton).attr('disabled', true);
         }
       }
     });
 
-    $(createTaskButton).click((e) => {
+    $(createTaskButton).one('click', (e) => {
       var params = {};
       if (dropdownSelector.getValues(projectFilter) === '0') {
         params.project = {
@@ -108,7 +108,7 @@ var DasboardQuickStartWidget = (function() {
       $('#create-task-modal .select-block').attr('data-error', '');
       $.post($(createTaskButton).data('ajaxUrl'), params, function(data) {
         window.location.href = data.my_module_path;
-      }).error((response) => {
+      }).fail((response) => {
         var errorsObject = response.responseJSON.error_object;
         var errorsText = response.responseJSON.errors.name.join(' ');
         $(`#create-task-modal .select-block[data-error-object="${errorsObject}"]`).attr('data-error', errorsText);

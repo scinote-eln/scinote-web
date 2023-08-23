@@ -22,7 +22,7 @@
         <span><%= t('assets.placeholder.size_label', size: number_to_human_size(asset.file_size)) %></span>
       </div>
     </div>
-    <%= render partial: 'assets/asset_context_menu.html.erb', locals: { asset: asset, deletable: deletable, editable: editable } %>
+    <%= render partial: 'assets/asset_context_menu', locals: { asset: asset, deletable: deletable, editable: editable } %>
   </div>
   <% if wopi_enabled? && wopi_file?(asset) %>
     <% if asset.file_size.positive? %>
@@ -39,14 +39,13 @@
       </div>
     <% end %>
   <% elsif asset.pdf_previewable? %>
-    <%= render partial: 'shared/pdf_viewer.html.erb', locals: { asset: asset, report_document: false } %>
+    <%= render partial: 'shared/pdf_viewer', locals: { asset: asset, report_document: false } %>
   <% elsif asset.previewable? %>
     <div class="image-container">
       <%= image_tag asset.large_preview,
-          class: 'asset-inline-image',
+          class: 'asset-preview-image',
           style: 'opacity: 0' %>
     </div>
-    <%= javascript_include_tag 'assets/asset_inline', nonce: true %>
   <% else %>
     <div class="general-file-container">
       <i class="fas <%= file_fa_icon_class(asset) if asset.file_name %>"></i>

@@ -2,7 +2,7 @@
   <div class="step-checklist-container" >
     <div class="step-element-header" :class="{ 'editing-name': editingName, 'no-hover': !element.attributes.orderable.urls.update_url }">
       <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
-        <i class="fas fas-rotated-90 fa-exchange-alt"></i>
+        <i class="sn-icon sn-icon-sort"></i>
       </div>
       <div v-else class="step-element-grip-placeholder"></div>
       <div class="step-element-name">
@@ -22,14 +22,14 @@
         />
       </div>
       <div class="step-element-controls">
-        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="editingName = true" tabindex="0">
-          <i class="fas fa-pen"></i>
+        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light btn-sm" @click="editingName = true" tabindex="0">
+          <i class="sn-icon sn-icon-edit"></i>
         </button>
-        <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light" tabindex="0" @click="duplicateElement">
-          <i class="fas fa-clone"></i>
+        <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light btn-sm" tabindex="0" @click="duplicateElement">
+          <i class="sn-icon sn-icon-duplicate"></i>
         </button>
-        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="0">
-          <i class="fas fa-trash"></i>
+        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light btn-sm" @click="showDeleteModal" tabindex="0">
+          <i class="sn-icon sn-icon-delete"></i>
         </button>
       </div>
     </div>
@@ -39,6 +39,7 @@
         :ghostClass="'step-checklist-item-ghost'"
         :dragClass="'step-checklist-item-drag'"
         :chosenClass="'step-checklist-item-chosen'"
+        :forceFallback="true"
         :handle="'.step-element-grip'"
         :disabled="editingItem || checklistItems.length < 2 || !element.attributes.orderable.urls.reorder_url"
         @start="startReorder"
@@ -62,11 +63,11 @@
         />
       </Draggable>
       <div v-if="element.attributes.orderable.urls.create_item_url"
-           class="btn btn-light step-checklist-add-item"
+           class="btn btn-light btn-sm step-checklist-add-item"
            tabindex="0"
            @keyup.enter="addItem"
            @click="addItem">
-        <i class="fas fa-plus"></i>
+        <i class="sn-icon sn-icon-new-task"></i>
         {{ i18n.t('protocols.steps.insert.checklist_item') }}
       </div>
     </div>
@@ -162,7 +163,7 @@
         this.$emit('update', this.element, skipRequest);
       },
       postItem(item, callback) {
-        $.post(this.element.attributes.orderable.urls.create_item_url, item).success((result) => {
+        $.post(this.element.attributes.orderable.urls.create_item_url, item).done((result) => {
           this.checklistItems.splice(
             result.data.attributes.position,
             1,
@@ -170,7 +171,7 @@
           );
 
           if(callback) callback();
-        }).error(() => {
+        }).fail(() => {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
 

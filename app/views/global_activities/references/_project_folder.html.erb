@@ -1,7 +1,7 @@
-<%= render partial: "global_activities/references/team.html.erb",
+<%= render partial: "global_activities/references/team",
            locals: { team: team, subject: team, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
 <div class="ga-breadcrumb">
-  <span class="fas fa-folder"></span>
+  <span class="sn-icon sn-icon-folders"></span>
 
   <% if subject %>
     <% path = project_folder_path(subject, team: team) %>

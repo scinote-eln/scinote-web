@@ -14,17 +14,17 @@
         @keyup.escape="cancelEdit"
       ></textarea>
       <div v-else-if="smartAnnotation" @click="enableEdit($event)" class="sci-inline-edit__view" v-html="sa_value || placeholder" :class="{ 'blank': isBlank }"></div>
-      <div v-else @click="enableEdit($event)" class="sci-inline-edit__view" :class="{ 'blank': isBlank }">{{newValue || placeholder}}</div>
+      <div v-else @click="enableEdit($event)" class="sci-inline-edit__view" :class="[isBlank ? 'blank' : '', ...customClasses]">{{newValue || placeholder}}</div>
       <div v-if="editing && error" class="sci-inline-edit__error">
         {{ error }}
       </div>
     </div>
     <template v-if="editing">
-      <div :class="{ 'btn-primary': !error, 'btn-disabled': error }" class="sci-inline-edit__control btn icon-btn" @click="update">
-        <i class="fas fa-check"></i>
+      <div :class="{ 'btn-primary': !error, 'btn-disabled': error }" class="sci-inline-edit__control btn btn-sm icon-btn" @click="update">
+        <i class="sn-icon sn-icon-check"></i>
       </div>
-      <div class="sci-inline-edit__control btn btn-light icon-btn" @mousedown="cancelEdit">
-        <i class="fas fa-times"></i>
+      <div class="sci-inline-edit__control btn btn-light btn-sm icon-btn" @mousedown="cancelEdit">
+        <i class="sn-icon sn-icon-close"></i>
       </div>
     </template>
   </div>
@@ -49,7 +49,8 @@
       multilinePaste: { type: Boolean, default: false },
       smartAnnotation: { type: Boolean, default: false },
       editOnload: { type: Boolean, default: false },
-      defaultValue: { type: String, default: '' }
+      defaultValue: { type: String, default: '' },
+      customClasses: { type: Array, default: () => [] }
     },
     data() {
       return {

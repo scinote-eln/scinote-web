@@ -1,7 +1,7 @@
 <% results.each do |comment| %>
 
   <p>
-    <span class="fas fa-comment"></span>
+    <span class="sn-icon sn-icon-comments"></span>
     <% if comment.is_a?(ProjectComment) && comment.project.present? %>
       <%=t "search.index.comments.project" %>
     <% elsif comment.is_a?(TaskComment) && comment.my_module.present? %>
@@ -55,7 +55,7 @@
     <% if result %>
       <span>
         <%=t "search.index.result" %>
-        <%= render partial: "search/results/partials/result_text.html.erb",
+        <%= render partial: "search/results/partials/result_text",
                    locals: { result: result, target: :comment } %>
       </span>
       <br>
@@ -64,7 +64,7 @@
     <% if step %>
       <span>
         <%=t "search.index.step" %>
-        <%= render partial: "search/results/partials/step_text.html.erb",
+        <%= render partial: "search/results/partials/step_text",
                    locals: { step: step, target: :comment } %>
       </span>
       <br>
@@ -73,7 +73,7 @@
     <% if my_module %>
       <span>
         <%=t "search.index.module" %>
-        <%= render partial: "search/results/partials/my_module_text.html.erb",
+        <%= render partial: "search/results/partials/my_module_text",
                    locals: { my_module: my_module, link_to_page: :canvas } %>
       </span>
       <br>
@@ -82,7 +82,7 @@
     <% if experiment %>
       <span>
         <%=t "search.index.experiment" %>
-        <%= render partial: "search/results/partials/experiment_text.html.erb",
+        <%= render partial: "search/results/partials/experiment_text",
                    locals: { experiment: experiment } %>
       </span>
       <br>
@@ -90,13 +90,13 @@
 
     <span>
       <%=t "search.index.project" %>
-      <%= render partial: "search/results/partials/project_text.html.erb",
+      <%= render partial: "search/results/partials/project_text",
                  locals: { project: project, link_to_page: :show } %>
     </span>
     <br>
     <span>
       <%=t "search.index.team" %>
-      <%= render partial: "search/results/partials/team_text.html.erb",
+      <%= render partial: "search/results/partials/team_text",
                  locals: { team: project.team } %>
     </span>
   </p>

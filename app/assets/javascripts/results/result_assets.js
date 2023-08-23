@@ -2,6 +2,20 @@
   'use strict';
 
   global.ResultAssets = (function() {
+    // New asset callback
+    function createResultAssetCallback() {
+      $('.new-result-assets-buttons')
+        .on('click', '.save-result', (event) => {
+          DragNDropResults.processResult(event); // eslint-disable-line no-undef
+        })
+        .on('click', '.cancel-new', () => {
+          DragNDropResults.destroyAll(); // eslint-disable-line no-undef
+        });
+
+      $('#new-result-assets-select').on('change', '#drag-n-drop-assets', function() {
+        DragNDropResults.init(this.files); // eslint-disable-line no-undef
+      });
+    }
     // New result asset behaviour
     function initNewResultAsset() {
       $('#new-result-asset').on('click', function(event) {
@@ -24,6 +38,7 @@
             Results.initCancelFormButton($form, initNewResultAsset);
             Results.toggleResultEditButtons(false);
             dragNdropAssetsInit();
+            createResultAssetCallback();
           },
           error: function(xhr, status, e) {
             $(this).renderFormErrors('result', xhr.responseJSON, true, e);
@@ -31,6 +46,13 @@
             initNewResultAsset();
           }
         });
+      });
+    }
+
+    // Save asset callback
+    function saveResultAssetCallback() {
+      $('.edit-result-assets-buttons').on('click', '.save-result', (event) => {
+        Results.processResult(event, Results.ResultTypeEnum.FILE); // eslint-disable-line no-undef
       });
     }
 
@@ -55,6 +77,7 @@
         Results.toggleResultEditButtons(false);
 
         $('#result_name').focus();
+        saveResultAssetCallback();
       }).on('ajax:error', function(e, xhr, status, error) {
         animateSpinner(null, false);
       });

@@ -4,24 +4,25 @@
       <button data-toggle="modal"
               data-target="#newProtocolModal"
               class="btn btn-primary only-active"
+              title="<%= t("protocols.index.create_new_tooltip") %>"
       >
-        <span class="fas fa-plus"></span>
+        <span class="sn-icon sn-icon-new-task"></span>
         <span class="hidden-xs"><%= t("protocols.index.create_new") %></span>
       </button>
 
-      <div id="protocol-import-group" class="sci-btn-group  only-active" role="group">
-        <button class="btn btn-light btn-open-file"
+      <div id="protocol-import-group" class="relative sci-btn-group only-active" role="group">
+        <button class="btn btn-light btn-open-file" title="<%= t("protocols.index.import_tooltip") %>"
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false">
-          <span class="fas fa-upload"></span><span class="hidden-xs"><%= t("protocols.index.import") %></span>
+          <span class="sn-icon sn-icon-import"></span><span class="hidden-xs"><%= t("protocols.index.import") %></span>
         </button>
 
         <ul class="dropdown-menu">
           <li>
-            <a class="btn-link-alt btn-default-link btn-open-file" <%= can_create_protocols_in_repository?(@current_team) ? 'data-action="import"' : 'disabled="disabled"' %>>
+            <a class="btn-link-alt btn-secondary-link btn-open-file" <%= can_create_protocols_in_repository?(@current_team) ? 'data-action="import"' : 'disabled="disabled"' %>>
               <span><%= t("protocols.index.import_alt") %></span>
-              <input type="file" value="" accept=".eln" data-role="import-file-input"
+              <input type="file" value="" accept=".eln,.docx" data-role="import-file-input"
               data-team-id="<%= @current_team.id %>" data-import-url="<%= import_protocols_path %>">
             </a>
           </li>

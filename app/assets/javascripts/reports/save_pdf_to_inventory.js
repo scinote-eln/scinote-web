@@ -51,7 +51,7 @@
   function appendSearchResultsForItems(data) {
     var items = [];
     if (data.hasOwnProperty('results')) {
-      $('#selectInventoryItem').parent().find('button').removeAttr('disabled');
+      $('#selectInventoryItem').parent().find('button').attr('disabled', false);
       $.each(data.results, function(index, el) {
         items.push(
           {
@@ -77,7 +77,7 @@
   function appendSearchResultsForColumns(data) {
     var items = [];
     if (data.hasOwnProperty('results')) {
-      $('#selectInventoryColumn').parent().find('button').removeAttr('disabled');
+      $('#selectInventoryColumn').parent().find('button').attr('disabled', false);
       $.each(data.results, function(index, el) {
         items.push(
           {
@@ -100,7 +100,7 @@
   function submitButtonEnableToggle(status) {
     var button = $('#savePDFtoInventorySubmit');
     if (status) {
-      button.removeAttr('disabled');
+      button.attr('disabled', false);
     } else {
       button.attr('disabled', true);
     }
@@ -123,7 +123,7 @@
 
   function initInventoryItemSelectPicker() {
     ITEM_PICKER = $('#selectInventoryItem')
-      .removeAttr('disabled')
+      .attr('disabled', false)
       .selectpicker({ liveSearch: true })
       .ajaxSelectPicker({
         ajax: {
@@ -158,7 +158,7 @@
 
   function initInventoryColumnSelectPicker() {
     COLUMN_PICKER = $('#selectInventoryColumn')
-      .removeAttr('disabled')
+      .attr('disabled', false)
       .selectpicker({ liveSearch: true })
       .ajaxSelectPicker({
         ajax: {

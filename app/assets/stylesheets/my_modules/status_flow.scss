@@ -3,16 +3,18 @@
 // scss-lint:disable SelectorFormat
 // scss-lint:disable ImportantRule
 
-@import "constants";
-@import "mixins";
-
 .content-pane.my-modules-protocols-index {
   .status-flow-dropdown {
     .dropdown-toggle {
       border: 0;
       color: $color-white;
+      padding: .5rem .5rem .5rem 1rem;
       text-align: left;
       width: 100%;
+
+      &.btn-not-started {
+        @include not-started;
+      }
 
       .caret {
         margin: 8px 0;
@@ -49,7 +51,8 @@
 
       .fa-long-arrow-alt-right {
         color: $color-silver-chalice;
-        padding: .5em 0;
+        padding: 1.5em 0;
+        z-index: 1;
       }
 
       .status-container {
@@ -67,6 +70,10 @@
         padding: .5em;
         text-overflow: ellipsis;
         white-space: nowrap;
+      }
+
+      .btn-not-started {
+        @include not-started;
       }
 
       .error-message {
@@ -128,6 +135,10 @@
         line-height: 1em;
         padding: .5em;
         white-space: nowrap;
+
+        &.btn-not-started {
+          @include not-started;
+        }
       }
 
       .status-comment {

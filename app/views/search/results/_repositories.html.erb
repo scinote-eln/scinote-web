@@ -1,6 +1,6 @@
 <% results.each do |repository_row| %>
   <h5>
-    <i class="fas fa-list-alt"></i>
+    <i class="sn-icon sn-icon-inventory"></i>
     <%=t "search.index.repositories.repository_row" %>
     <%= highlight repository_row.name, search_query.strip.split(/\s+/) %>
   </h5>
@@ -35,7 +35,7 @@
       <%=t "search.index.modules" %>
       <% if repository_row.my_modules.any? %>
         <% repository_row.my_modules.each_with_index do |mod, i|  %>
-          <%= render partial: "search/results/partials/my_module_text.html.erb",
+          <%= render partial: "search/results/partials/my_module_text",
                      locals: { my_module: mod, link_to_page: :repositories, repository: repository } %>
           <% if i != repository_row.my_modules.count - 1 %>
             ,&nbsp;
@@ -48,7 +48,7 @@
     <br>
     <span>
       <%=t "search.index.team" %>
-      <%= render partial: "search/results/partials/team_text.html.erb",
+      <%= render partial: "search/results/partials/team_text",
                  locals: { team: repository.team } %>
     </span>
   </p>

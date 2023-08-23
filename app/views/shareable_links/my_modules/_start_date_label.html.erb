@@ -1,0 +1,5 @@
+<span class="start-date-label">
+  <% if my_module.started_on.present? %>
+    <span class="iso-formatted-date font-medium"><%= my_module.started_on.iso8601 %></span>
+  <% end %>
+</span>

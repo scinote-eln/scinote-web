@@ -11,11 +11,14 @@
   </div>
   <div class="task-due-date row-border <%= task_date[:span_class]%>">
     <% if task_date[:date] %>
-      <i class="fas fa-calendar-day"></i>
+      <i class="sn-icon sn-icon-calendar-small"></i>
       <%= t("dashboard.current_tasks.#{task_date[:translation_key]}", date: l(task_date[:date], format: :full_date)) %>
     <% end %>
   </div>
   <div class="task-status-container row-border">
-    <span class="task-status" style="background:<%= task.status_color %>"><%= task.status_name %></span>
+    <span class="task-status <%= 'btn-not-started' if task.status_name == 'Not started' %>"
+      style="background:<%= task.status_color %>">
+        <%= task.status_name %>
+    </span>
   </div>
 </a>

@@ -1,4 +1,0 @@
-en:
-  biomolecule_toolkit_client:
-    generic_error: 'Failed to execute API command'
-    response_parsing_error: 'Failed to parse API response'

@@ -8,7 +8,7 @@
           var $container = $(this).find('.hot');
           var data = null;
           var contents = $(this).find('.hot-contents');
-          var metadata = JSON.parse($(this).find('.hot-metadata').val() || '{}');
+          var metadata = $(this).find('.hot-metadata').val() || {};
           if (contents.attr('value')) {
             data = JSON.parse(contents.attr('value')).data;
           }
@@ -41,11 +41,19 @@
           contents.attr('value', data);
           metadata.attr('value', JSON.stringify({cells: hot.getCellsMeta().map(
             (x) => {
+              const {row, col} = x;
+              const plugins = hot.plugin;
+              const cellId = plugins.utils.translateCellCoords({row, col});
+              const calculated = plugins.matrix.getItem(cellId)?.value ||
+                hot.getDataAtCell(row, col) ||
+                null;
+
               if (x) {
                 return {
                   col: x.col,
                   row: x.row,
-                  className: x.className || ''
+                  className: x.className || '',
+                  calculated: calculated
                 }
               } else {
                 return null
@@ -53,6 +61,20 @@
             }).filter(e => { return e !== null})
           }))
           return true;
+        });
+      }
+
+      // Save result table callback
+      function newResultTableCallback() {
+        $('.new-result-tables-buttons .save-result').on('click', (event) => {
+          Results.processResult(event, Results.ResultTypeEnum.TABLE);
+        });
+      }
+
+      // Save result table callback
+      function saveResultTableCallback() {
+        $('.edit-result-tables-buttons .save-result').on('click', (event) => {
+          Results.processResult(event, Results.ResultTypeEnum.TABLE);
         });
       }
 
@@ -103,6 +125,7 @@
           Results.toggleResultEditButtons(false);
 
           $('#result_name').focus();
+          saveResultTableCallback();
         });
       }
 
@@ -129,6 +152,7 @@
               Results.initCancelFormButton($form, initNewResultTable);
               Results.toggleResultEditButtons(false);
               $('#result_name').focus();
+              newResultTableCallback();
             },
             error: function() {
               animateSpinner(null, false);

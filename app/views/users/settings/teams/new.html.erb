@@ -1,18 +1,16 @@
 <% provide(:head_title, t("users.settings.teams.head_title")) %>
 <% provide(:container_class, "no-second-nav-container") %>
 
-<%= render partial: "users/settings/sidebar.html.erb" %>
+<%= render partial: "users/settings/sidebar" %>
 <div class="tab-content">
   <div class="tab-pane content-pane" role="tabpanel"></div>
   <div class="tab-pane content-pane active" role="tabpanel">
-
-    <%= render partial: "users/settings/teams/breadcrumbs.html.erb" %>
-
-    <%= bootstrap_form_for @new_team, url: create_team_path do |f| %>
-      <div class="form-group" style="max-width: 500px;">
+    <%= form_with model: @new_team, url: create_team_path do |f| %>
+      <div class="form-group sci-input-container" style="max-width: 500px;">
+        <label><%= t('users.settings.teams.new.name_label') %></label>
         <%= f.text_field :name,
-                         label: t('users.settings.teams.new.name_label'),
                          autofocus: true,
+                         class: 'sci-input-field',
                          placeholder: t('users.settings.teams.new.name_placeholder') %>
         <small>
           <%=t 'users.settings.teams.new.name_sublabel' %>
@@ -21,12 +19,13 @@
 
       <div class="form-group" style="max-width: 500px;">
         <%= f.text_area :description, label: t('users.settings.teams.new.description_label') %>
+        <br>
         <small>
           <%=t 'users.settings.teams.new.description_sublabel' %>
         </small>
       </div>
 
-      <%= link_to t('general.cancel'), teams_path, class: 'btn btn-default' %>
+      <%= link_to t('general.cancel'), teams_path, class: 'btn btn-secondary' %>
       <%= f.submit t('users.settings.teams.new.create'), class: 'btn btn-success' %>
 
     <% end %>

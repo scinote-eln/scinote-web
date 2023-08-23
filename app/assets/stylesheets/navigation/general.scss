@@ -11,9 +11,10 @@ body.navigator-collapsed {
   --left-navigation-width: 192px;
   --navbar-height: calc(var(--top-navigation-height) + var(--breadcrumbs-navigation-height));
   --navigator-navigation-width: 240px;
-  --top-navigation-height: 52px;
+  --title-row-height: 4em;
+  --top-navigation-height: 72px;
   display: grid;
-  grid-template-areas: "top top top"
+  grid-template-areas: "left top top"
                        "left breadcrumbs breadcrumbs"
                        "left navigator content";
   grid-template-columns: var(--left-navigation-width)
@@ -59,10 +60,10 @@ body.navigator-collapsed {
 
   .sci--layout-navigation-left {
     grid-area: left;
-    height: calc(100vh - var(--top-navigation-height));
+    height: 100vh;
     position: sticky;
     position: -webkit-sticky;
-    top: var(--top-navigation-height);
+    top: 0;
     width: var(--left-navigation-width);
     z-index: 600;
   }
@@ -98,4 +99,8 @@ body.navigator-collapsed {
       padding: 1em; // override bootstrap and old pages support
     }
   }
+}
+
+.w-98 {
+  width: 98%;
 }

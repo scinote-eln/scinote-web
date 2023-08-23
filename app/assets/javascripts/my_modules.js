@@ -103,7 +103,7 @@
     if ($('.status-flow-dropdown').data('status-changing')) {
       setTimeout(() => { checkStatusState(); }, STATUS_POLLING_INTERVAL);
     }
-    $('.task-flows').on('click', '#dropdownTaskFlowList > li[data-state-id]', function() {
+    $('.task-sharing-and-flows').on('click', '#dropdownTaskFlowList > li[data-state-id]', function() {
       var list = $('#dropdownTaskFlowList');
       var item = $(this);
       animateSpinner();
@@ -148,7 +148,7 @@
           return `<span class="my-module-tags-color" style="background:${data.params.color}"></span>
                   ${data.label}`;
         }
-        return `<span class="my-module-tags-color new"><i class="fas fa-plus"></i></span>
+        return `<span class="my-module-tags-color new"><i class="sn-icon sn-icon-new-task"></i></span>
                   ${data.label + ' '}
                 <span class="my-module-tags-create-new"> ${I18n.t('my_modules.details.create_new_tag')}</span>`;
       },
@@ -221,7 +221,7 @@
       tagClass: 'my-module-user-tags',
       tagLabel: (data) => {
         return `<img class="img-responsive block-inline" src="${data.params.avatar_url}" alt="${data.label}"/>
-                <span style="user-full-name block-inline">${data.label}</span>`;
+                <span class="user-full-name block-inline">${data.label}</span>`;
       },
       customDropdownIcon: () => {
         return '';

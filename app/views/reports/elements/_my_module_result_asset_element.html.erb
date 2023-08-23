@@ -14,25 +14,14 @@
     </div>
     <div class="file-name">
       <% if defined? export_all and export_all %>
-        <% if  @obj_filenames.dig(:assets, asset.id, :bio_eddie) %>
-          <% file_link = @obj_filenames.dig(:assets, asset.id, :bio_eddie) %>
-        <% else %>
-          <% file_link = @obj_filenames.dig(:assets, asset.id, :file) %>
-        <% end %>
+        <% file_link = @obj_filenames.dig(:assets, asset.id, :file) %>
         <a href="<%= file_link %>" class="export-all-link" >
           <em><%= file_link&.split('/')&.last %></em>
         </a>
       <% else %>
         <em>
-          <% if asset.file.metadata[:asset_type] == 'bio_eddie' %>
-            <%= truncate("#{asset.file.metadata[:name]}.helm", length: Constants::FILENAME_TRUNCATION_LENGTH) %>
-            <a class="btn btn-light file-download-link" href="data:text/plain;charset=utf-8,<%= asset.file.metadata[:description] %>" download="<%= asset.file.metadata[:name] %>.helm" data-turbolinks="false">
-              <span class="fas fa-download"></span> <%= t('Download')%>
-            </a>
-          <% else %>
-            <%= truncate(asset.file_name, length: Constants::FILENAME_TRUNCATION_LENGTH) %>
-            <%= link_to t('projects.reports.elements.download'), asset_download_url(asset, disposition: 'attachment'), class: 'download-link', target: :_blank %>
-          <% end %>
+          <%= truncate(asset.file_name, length: Constants::FILENAME_TRUNCATION_LENGTH) %>
+          <%= link_to t('projects.reports.elements.download'), asset_download_url(asset, disposition: 'attachment'), class: 'download-link', target: :_blank %>
         </em>
       <% end %>
     </div>
@@ -56,7 +45,7 @@
   <% end %>
   <div class="report-element-children">
     <% if @settings.dig('task', 'result_comments') %>
-      <%= render partial: 'reports/elements/result_comments_element.html.erb', locals: { result: result } %>
+      <%= render partial: 'reports/elements/result_comments_element', locals: { result: result } %>
     <% end %>
   </div>
   <% if defined?(children) %>

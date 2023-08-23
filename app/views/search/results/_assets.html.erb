@@ -6,10 +6,10 @@
       <% if wopi_file?(asset) %>
         <%= file_extension_icon(asset) %>
       <% else %>
-        <span class="fas fa-paperclip"></span>
+        <span class="sn-icon sn-icon-files"></span>
       <% end %>
     <% end %>
-    <%= render partial: "search/results/partials/asset_text.html.erb", locals: { asset: asset, query: search_query } %>
+    <%= render partial: "search/results/partials/asset_text", locals: { asset: asset, query: search_query } %>
   </h5>
 
   <p>
@@ -21,103 +21,103 @@
     <% if asset.step %>
       <span>
         <%=t "search.index.step" %>
-        <%= render partial: "search/results/partials/step_text.html.erb",
+        <%= render partial: "search/results/partials/step_text",
                    locals: { step: asset.step, target: nil } %>
       </span>
       <br>
       <% if asset.step.protocol.in_module? %>
         <span>
           <%=t "search.index.module" %>
-          <%= render partial: "search/results/partials/my_module_text.html.erb",
+          <%= render partial: "search/results/partials/my_module_text",
                      locals: { my_module: asset.step.protocol.my_module } %>
         </span>
         <br>
         <span>
           <%=t "search.index.experiment" %>
-          <%= render partial: "search/results/partials/experiment_text.html.erb",
+          <%= render partial: "search/results/partials/experiment_text",
                      locals: { experiment: asset.step.protocol.my_module.experiment } %>
         </span>
         <br>
         <span>
           <%=t "search.index.project" %>
-          <%= render partial: "search/results/partials/project_text.html.erb",
+          <%= render partial: "search/results/partials/project_text",
                      locals: { project: asset.step.protocol.my_module.experiment.project, link_to_page: :show } %>
         </span>
         <% if asset.step.protocol.my_module.experiment.project.project_folder %>
           <br>
           <span>
             <%=t "search.index.folder" %>
-            <%= render partial: "search/results/partials/project_folders_text.html.erb",
+            <%= render partial: "search/results/partials/project_folders_text",
                        locals: { folder: asset.step.protocol.my_module.experiment.project.project_folder } %>
           </span>
         <% end %>
       <% else %>
         <span>
           <%=t "search.index.protocol" %>
-          <%= render partial: "search/results/partials/protocol_text.html.erb",
+          <%= render partial: "search/results/partials/protocol_text",
                      locals: { protocol: asset.step.protocol, query: search_query } %>
         </span>
       <% end %>
       <br>
       <span>
         <%=t "search.index.team" %>
-        <%= render partial: "search/results/partials/team_text.html.erb",
+        <%= render partial: "search/results/partials/team_text",
                    locals: { team: asset.step.protocol.team } %>
       </span>
     <% elsif asset.result %>
       <span>
         <%=t "search.index.result" %>
-        <%= render partial: "search/results/partials/result_text.html.erb",
+        <%= render partial: "search/results/partials/result_text",
                    locals: { result: asset.result, target: nil } %>
       </span>
       <br>
       <span>
         <%=t "search.index.module" %>
-        <%= render partial: "search/results/partials/my_module_text.html.erb",
+        <%= render partial: "search/results/partials/my_module_text",
                    locals: { my_module: asset.result.my_module } %>
       </span>
       <br>
       <span>
         <%=t "search.index.experiment" %>
-        <%= render partial: "search/results/partials/experiment_text.html.erb",
+        <%= render partial: "search/results/partials/experiment_text",
                    locals: { experiment: asset.result.my_module.experiment } %>
       </span>
       <br>
       <span>
         <%=t "search.index.project" %>
-        <%= render partial: "search/results/partials/project_text.html.erb",
+        <%= render partial: "search/results/partials/project_text",
                    locals: { project: asset.result.my_module.experiment.project, link_to_page: :show } %>
       </span>
       <% if asset.result.my_module.experiment.project.project_folder %>
         <br>
         <span>
           <%=t "search.index.folder" %>
-          <%= render partial: "search/results/partials/project_folders_text.html.erb",
+          <%= render partial: "search/results/partials/project_folders_text",
                      locals: { folder: asset.result.my_module.experiment.project.project_folder } %>
         </span>
       <% end %>
       <br>
       <span>
         <%=t "search.index.team" %>
-        <%= render partial: "search/results/partials/team_text.html.erb",
+        <%= render partial: "search/results/partials/team_text",
                    locals: { team: asset.result.my_module.experiment.project.team } %>
       </span>
     <% elsif asset.repository_asset_value %>
       <span>
         <%=t "search.index.repository_row" %>
-        <%= render partial: "search/results/partials/repository_row_text.html.erb",
+        <%= render partial: "search/results/partials/repository_row_text",
                    locals: { repository_row: asset.repository_asset_value.repository_cell.repository_row } %>
       </span>
       <br>
       <span>
         <%=t "search.index.repository" %>
-        <%= render partial: "search/results/partials/repository_text.html.erb",
+        <%= render partial: "search/results/partials/repository_text",
                    locals: { repository: asset.repository_asset_value.repository_cell.repository_row.repository } %>
       </span>
       <br>
       <span>
         <%=t "search.index.team" %>
-        <%= render partial: "search/results/partials/team_text.html.erb",
+        <%= render partial: "search/results/partials/team_text",
                    locals: { team: asset.team } %>
       </span>
     <% end %>

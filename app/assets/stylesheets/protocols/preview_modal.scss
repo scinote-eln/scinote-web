@@ -1,9 +1,6 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
 
-@import "constants";
-@import "mixins";
-
 #protocol-preview-modal .modal-dialog {
   .modal-body {
     max-height: 75vh;
@@ -34,6 +31,7 @@
       justify-content: space-between;
 
       .left-section {
+        align-items: center;
         column-gap: 32px;
         display: flex;
         justify-content: space-between;

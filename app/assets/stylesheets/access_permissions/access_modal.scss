@@ -3,11 +3,6 @@
 #user_assignments_modal {
 
   .btn-role-select {
-    padding: 0 0 0 16px;
-
-    &:hover {
-      background-color: $color-concrete;
-    }
 
     &:focus {
       box-shadow: none;
@@ -28,7 +23,7 @@
   }
 
   .member-item {
-    border-bottom: 1px solid $modal-header-border-color;
+    border-bottom: 1px solid $color-concrete;
     padding: .5em 0;
   }
 
@@ -109,7 +104,6 @@
 
   .group-members-button {
     cursor: pointer;
-    margin-left: .5em;
   }
 
   .group-members-content {

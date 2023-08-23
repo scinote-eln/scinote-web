@@ -23,18 +23,20 @@ var DataTableHelpers = (function() {
     },
 
     initSearchField: function(dataTableWraper, searchText) {
+      $(dataTableWraper).find('.dataTables_filter').show();
       var tableFilterInput = $(dataTableWraper).find('.dataTables_filter input');
       tableFilterInput.attr('placeholder', searchText)
         .addClass('sci-input-field search-field')
+        .removeClass('form-control input-sm')
         .css('margin', 0);
       $('.dataTables_filter').append(`
-          <button class="btn btn-light icon-btn search-icon"
+          <button class="btn btn-light icon-btn search-icon btn-black"
                   title="${I18n.t('repositories.show.button_tooltip.search')}">
-            <i class="fas fa-search"></i>
+            <i class="sn-icon sn-icon-search"></i>
           </button>
-          <div class="sci-input-container right-icon search-container">
-            <i class="fas fa-search"></i>
-          </div>`).find('.sci-input-container').prepend(tableFilterInput);
+          <div class="sci-input-container-v2 w-48 right-icon search-container">
+            <i class="sn-icon sn-icon-search"></i>
+          </div>`).find('.sci-input-container-v2').prepend(tableFilterInput);
       $('.dataTables_filter').find('label').remove();
 
       $('.dataTables_filter').on('click', '.search-icon', function() {

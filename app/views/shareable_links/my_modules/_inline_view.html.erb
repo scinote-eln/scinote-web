@@ -1,0 +1,12 @@
+<div class="sci-inline-edit" tabindex="0">
+  <div class="sci-inline-edit__content">
+    <div class="sci-inline-edit__view !whitespace-normal">
+      <% if smart_annotation_enabled %>
+        <%= smart_annotation_text(text) %>
+      <% else %>
+        <%= text %>
+      <% end %>
+    </div>
+  </div>
+</div>
+

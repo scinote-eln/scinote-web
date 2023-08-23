@@ -1,10 +1,10 @@
 <ul>
   <li>
     <div class="collapse-row">
-      <i class="fas fa-caret-down" data-toggle="collapse" href="#fluicsInstructionsSection" aria-expanded="false"></i>
+      <i class="sn-icon sn-icon-down" data-toggle="collapse" href="#fluicsInstructionsSection" aria-expanded="false"></i>
       <div class="row-title"><%= t("users.settings.account.label_printer.instructions") %></div>
     </div>
-    <ul class="collapse in" id="fluicsInstructionsSection">
+    <ul class="collapse in collapse-content" id="fluicsInstructionsSection">
       <li>
         <%= t("users.settings.account.label_printer.fluics_instruction.p1") %>
       </li>
@@ -25,10 +25,10 @@
 <% if can_manage_label_printers? %>
   <li>
     <div class="collapse-row">
-      <i class="fas fa-caret-down" data-toggle="collapse" href="#SettingsSection" aria-expanded="false"></i>
+      <i class="sn-icon sn-icon-down" data-toggle="collapse" href="#SettingsSection" aria-expanded="false"></i>
       <div class="row-title"><%= t("users.settings.account.label_printer.settings") %></div>
     </div>
-    <ul class="collapse in" id="SettingsSection">
+    <ul class="collapse in collapse-content" id="SettingsSection">
       <%= form_with scope: :label_printer, url: create_fluics_label_printers_path do |form| %>
         <div class="api-key-container" data-warning="<%= t("users.settings.account.label_printer.api_key_warning") %>">
           <div class="sci-input-container <%= 'error' if flash[:error] %>" data-error-text="<%= flash[:error] %>">
@@ -39,7 +39,7 @@
 
           <%= form.submit t('general.save'), class: "save-button btn btn-primary #{'hidden' if @fluics_api_key}" %>
           <%= button_tag class: "saved-button btn btn-secondary #{'hidden' if !@fluics_api_key}", disabled: true do %>
-            <i class="fas fa-check"></i>
+            <i class="sn-icon sn-icon-check"></i>
             <%= t("users.settings.account.label_printer.saved") %>
           <% end %>
         </div>
@@ -49,7 +49,7 @@
 <% end %>
   <li>
     <div class="collapse-row">
-      <i class="fas fa-caret-down" data-toggle="collapse" href="#PrintersSection" aria-expanded="false"></i>
+      <i class="sn-icon sn-icon-down" data-toggle="collapse" href="#PrintersSection" aria-expanded="false"></i>
       <div class="row-title">Printers</div>
       <% if can_manage_label_printers? %>
         <div class="update-printers">
@@ -63,7 +63,7 @@
         </div>
       <% end %>
     </div>
-    <ul class="collapse in" id="PrintersSection">
+    <ul class="collapse in collapse-content" id="PrintersSection">
       <% if @label_printers.any? %>
         <% @label_printers.each do |printer| %>
           <li>

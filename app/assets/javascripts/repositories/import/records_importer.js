@@ -16,7 +16,7 @@
           el.children().eq(currIndex).attr('disabled', 'disabled');
         }
 
-        el.children().eq(previousIndex).removeAttr('disabled');
+        el.children().eq(previousIndex).attr('disabled', false);
       });
 
       previousIndex = currIndex;
@@ -29,7 +29,7 @@
         return false;
       }
       disabledOptions = $("option[disabled='disabled']");
-      disabledOptions.removeAttr('disabled');
+      disabledOptions.attr('disabled', false);
       loadingRecords = true;
       animateSpinner();
     }).on('ajax:success', function(ev, data, status) {

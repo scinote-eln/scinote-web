@@ -1,7 +1,15 @@
 // scss-lint:disable Comment
 
-@import "constants/*";
-@import "elements/*";
+@import "elements/alerts";
+@import "elements/bootstrap_tabs";
+@import "elements/checkboxes";
+@import "elements/dialogs";
+@import "elements/dropdown";
+@import "elements/input_fields";
+@import "elements/modal";
+@import "elements/navigation";
+@import "elements/radio_buttons";
+@import "elements/toggles";
 
 // Examples
 
@@ -40,7 +48,7 @@
   <hr>
   <div class="sci-toggles-group">
     <input type="radio" name="test1" class="sci-toggle-item">
-    <span class="sci-toggle-item-label"><i class="fas fa-th-large"></i></span>
+    <span class="sci-toggle-item-label"><i class="sn-icon sn-icon-grid-view"></i></span>
     <input type="radio" name="test1" class="sci-toggle-item">
     <span class="sci-toggle-item-label"><i class="fas fa-th-list"></i></span>
     <input type="radio" name="test1" class="sci-toggle-item">
@@ -53,19 +61,19 @@
   <hr>
   <div class="sci-input-container left-icon" style="width: 300px">
     <input type="text" class="sci-input-field" placeholder="Placeholder"></input>
-    <i class="fas fa-search"></i>
+    <i class="sn-icon sn-icon-search"></i>
   </div>
   <hr>
   <div class="sci-input-container right-icon"  style="width: 300px">
     <label>Right icon</label>
     <input type="text" class="sci-input-field" placeholder="Placeholder"></input>
-    <i class="fas fa-search"></i>
+    <i class="sn-icon sn-icon-search"></i>
   </div>
   <hr>
   <div class="sci-input-container right-icon success"  style="width: 300px">
     <label>Success and icon</label>
     <input type="text" class="sci-input-field" placeholder="Placeholder"></input>
-    <i class="fas fa-search"></i>
+    <i class="sn-icon sn-icon-search"></i>
   </div>
   <hr>
   <div class="sci-input-container error" data-error-text="Error text"  style="width: 300px">

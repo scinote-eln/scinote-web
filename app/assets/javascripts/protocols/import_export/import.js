@@ -257,10 +257,10 @@ function importProtocolFromFile(
   }
 
   function addTablePreview(stepEl, tableNode) {
-    var tableId = $(tableNode).attr('id');
     var tableName = $(tableNode).children('name').text();
     var tableContent = $(tableNode).children('contents').text();
-    var tableMetadata = JSON.parse($(tableNode).children('metadata').text()) || {};
+    var metadata = $(tableNode).children('metadata').text();
+    var tableMetadata = metadata ? JSON.parse(metadata) : {};
 
     // Generate table element
     var tableEl = newPreviewElement(
@@ -393,15 +393,15 @@ function importProtocolFromFile(
       $('[data-action="jump-to-first-protocol"]').attr('disabled', 'disabled');
       $('[data-action="jump-to-previous-protocol"]').attr('disabled', 'disabled');
     } else {
-      $('[data-action="jump-to-first-protocol"]').removeAttr('disabled');
-      $('[data-action="jump-to-previous-protocol"]').removeAttr('disabled');
+      $('[data-action="jump-to-first-protocol"]').attr('disabled', false);
+      $('[data-action="jump-to-previous-protocol"]').attr('disabled', false);
     }
     if (currentProtocol === nrOfProtocols - 1) {
       $('[data-action="jump-to-next-protocol"]').attr('disabled', 'disabled');
       $('[data-action="jump-to-last-protocol"]').attr('disabled', 'disabled');
     } else {
-      $('[data-action="jump-to-next-protocol"]').removeAttr('disabled');
-      $('[data-action="jump-to-last-protocol"]').removeAttr('disabled');
+      $('[data-action="jump-to-next-protocol"]').attr('disabled', false);
+      $('[data-action="jump-to-last-protocol"]').attr('disabled', false);
     }
   }
 

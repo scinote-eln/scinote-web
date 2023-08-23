@@ -1,14 +1,14 @@
 <% limit_reached = users.length == Constants::ATWHO_SEARCH_LIMIT + 1 %>
 <div class="atwho-header">
   <span><%= t("atwho.users.header") %></span>
-  <div class="dismiss"><span class="fas fa-times"></span></div>
+  <div class="dismiss"><span class="sn-icon sn-icon-close"></span></div>
 </div>
 <div class="atwho-scroll-container">
   <% users.limit(Constants::ATWHO_SEARCH_LIMIT).each do |user| %>
-    <li class="atwho-user" data-full-name="<%= user.full_name %>" data-id="<%= user.id.base62_encode %>" data-type="rep_item">
+    <li class="atwho-user" data-full-name="<%= sanitize_input(user.full_name) %>" data-id="<%= user.id.base62_encode %>" data-type="rep_item">
       <img src="<%= avatar_path(user, :icon_small) %>" class="avatar" />
       <div class="user-info">
-        <div class="user-name item-text"><%= user.full_name %></div>
+        <div class="user-name item-text"><%= sanitize_input(user.full_name) %></div>
         <div class="user-email item-text"><%= user.email %></div>
       </div>
     </li>
@@ -17,7 +17,7 @@
     <div class="more-results"><%= t('atwho.more_results') %></div>
   <% end %>
   <% if users.blank? %>
-    <%= render partial: 'shared/smart_annotation/no_results.html.erb', locals: { object_type: 'users' } %>
+    <%= render partial: 'shared/smart_annotation/no_results', locals: { object_type: 'users' } %>
   <% end %>
 </div>
-<%= render partial: 'shared/smart_annotation/footer.html.erb' %>
+<%= render partial: 'shared/smart_annotation/footer' %>

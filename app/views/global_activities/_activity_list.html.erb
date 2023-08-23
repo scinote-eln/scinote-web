@@ -7,7 +7,7 @@
          data-toggle="collapse"
          data-turbolinks="false"
          data-target="#activities-group-<%= date %>">
-        <span class="fas fa-caret-right"></span>
+        <span class="sn-icon sn-icon-right"></span>
         <%= l(Time.parse(date), format: :full_date) %>
       </a>
     </div>
@@ -20,7 +20,7 @@
           id="activities-group-<%= date %>"
           data-button-link="<%= "#activities-group-#{date}-button" %>">
           <% activities.each do |activity| %>
-            <%= render partial: 'global_activities/activity.html.erb', locals: { activity: activity } %>
+            <%= render partial: 'global_activities/activity', locals: { activity: activity } %>
           <% end %>
       </div>
     </div>

@@ -25,7 +25,7 @@
     if (data.error) {
       let oldLink = '';
       if (data.preview_url) {
-        oldLink = `<a href="#" class="file-preview-link docx" data-preview-url="${data.preview_url}">
+        oldLink = `<a href="#" class="file-preview-link flex items-center gap-1 docx hover:no-underline whitespace-nowrap" data-preview-url="${data.preview_url}">
                   (<i class="fas fa-file-docx"></i>
                   ${I18n.t('projects.reports.index.previous_docx')})
                 </a>`;
@@ -43,8 +43,8 @@
     }
 
     if (data.preview_url) {
-      return `<a href="#" class="file-preview-link docx" data-preview-url="${data.preview_url}">
-                <i class="fas fa-file-word"></i>
+      return `<a href="#" class="file-preview-link flex items-center gap-1 docx hover:no-underline whitespace-nowrap" data-preview-url="${data.preview_url}">
+                <i class="sn-icon sn-icon-file-word"></i>
                 ${I18n.t('projects.reports.index.docx')}
               </a>`;
     }
@@ -55,7 +55,7 @@
     if (data.error) {
       let oldLink = '';
       if (data.preview_url) {
-        oldLink = `<a href="#" class="file-preview-link pdf" data-preview-url="${data.preview_url}">
+        oldLink = `<a href="#" class="file-preview-link flex items-center gap-1 pdf hover:no-underline whitespace-nowrap" data-preview-url="${data.preview_url}">
                   (<i class="fas fa-file-pdf"></i>
                   ${I18n.t('projects.reports.index.previous_pdf')})
                 </a>`;
@@ -73,7 +73,7 @@
     }
 
     if (data.preview_url) {
-      return `<a href="#" class="file-preview-link pdf" data-preview-url="${data.preview_url}">
+      return `<a href="#" class="file-preview-link flex items-center gap-1 pdf hover:no-underline whitespace-nowrap" data-preview-url="${data.preview_url}">
                 <i class="fas fa-file-pdf"></i>
                 ${I18n.t('projects.reports.index.pdf')}
               </a>`;
@@ -193,6 +193,9 @@
         className: 'dt-body-center',
         sWidth: '1%',
         render: renderCheckboxHTML
+      },
+      { targets: 3,
+        width: 50
       },
       {
         targets: 4,

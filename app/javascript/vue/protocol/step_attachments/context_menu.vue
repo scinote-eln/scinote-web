@@ -1,7 +1,7 @@
 <template>
   <div class="dropdown asset-context-menu" ref="menu">
-    <button class="btn btn-light dropdown-toggle icon-btn" type="button" id="dropdownAssetContextMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-      <i class="fas fa-ellipsis-h"></i>
+    <button class="btn btn-light btn-xs dropdown-toggle icon-btn" type="button" id="dropdownAssetContextMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      <i class="sn-icon sn-icon-more-hori"></i>
     </button>
 
     <ul class="dropdown-menu dropdown-menu-right"
@@ -16,7 +16,7 @@
            :title="attachment.attributes.wopi_context.title"
            target="_blank"
         >
-          <img :src="attachment.attributes.wopi_context.wopi_icon"/>
+          <i :class="`sn-icon sn-icon-${attachment.attributes.wopi_context.sn_icon}`"></i>
           {{ attachment.attributes.wopi_context.button_text }}
         </a>
       </li>
@@ -43,13 +43,13 @@
            :data-image-mime-type="attachment.attributes.image_context.type"
            :data-image-start-edit-url="attachment.attributes.urls.start_edit_image"
         >
-          <span class="fas fa-pencil-alt"></span>
+          <span class="sn-icon sn-icon-edit"></span>
           {{ i18n.t('assets.file_preview.edit_in_scinote') }}
         </a>
       </li>
       <li>
         <a :href="attachment.attributes.urls.download" data-turbolinks="false">
-          <span class="fas fa-download"></span>
+          <span class="sn-icon sn-icon-export"></span>
           {{ i18n.t('Download') }}
         </a>
       </li>
@@ -71,7 +71,7 @@
         <li role="separator" class="divider"></li>
         <li>
           <a @click.prevent.stop="deleteModal = true">
-            <i class="fas fa-trash"></i>
+            <i class="sn-icon sn-icon-delete"></i>
             {{ i18n.t("assets.context_menu.delete") }}
           </a>
         </li>

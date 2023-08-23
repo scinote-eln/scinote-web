@@ -254,6 +254,9 @@ en:
   nav:
     team_switch_title: "Switch team"
     search: "Search"
+    support: "Support"
+    settings: "Settings"
+    user_profile: "Profile"
     search_button: 'Go!'
     user_greeting: "Hi, %{full_name}"
     advanced_search: "Advanced search"
@@ -430,6 +433,9 @@ en:
     delete_error: "Error occurred while deleting comment."
     step_url: "Go to step"
 
+  labels:
+    archived: "(A)"
+
   projects:
     index:
       header:
@@ -455,7 +461,9 @@ en:
         create_new_button: "New Project"
         no_permission_title: "You don't have permission to create new project. Please contact your team administrator."
       new: "New project"
+      new_tooltip: "Create new project"
       new_folder: "New folder"
+      new_folder_tooltip: "Create new folder"
       visibility_private: "Project is visible to project members only."
       visibility_public: "Project is visible to all team members."
       user_project: "%{user} joined on %{timestamp}."
@@ -615,10 +623,11 @@ en:
       index:
         head_title: "Reports"
         new: "New report"
+        new_tooltip: "Create new report"
         report_button: "Report"
         update_pdf: "Update PDF"
         save_pdf_to_inventory: "Save PDF to inventory"
-        search_reports: "Filter reports"
+        search_reports: "Search reports"
         request_docx: "Generate .DOCX"
         update_docx: "Update .DOCX"
         edit: "Edit"
@@ -910,7 +919,7 @@ en:
         logo_params_error: 'Failed to parse logo parameters!'
     index:
       head_title: 'Label templates'
-      search_templates: 'Filter templates'
+      search_templates: 'Search labels'
       thead_name: 'Name'
       format: 'Format'
       description: 'Description'
@@ -923,6 +932,7 @@ en:
       template_set_as_default: 'Successfully set template as default'
       toolbar:
         new: 'New label template'
+        new_tooltip: 'Create new label template'
         update_fluics_labels: 'Update Fluics labels'
         edit: 'Edit'
         duplicate: 'Duplicate'
@@ -1048,6 +1058,9 @@ en:
       recent_protocols_from_repository: "Recent protocols from the Repository"
       code: "ID: "
       recent_protocols_from_repository: "Recent protocols from the Templates"
+    shareable_links:
+      share: "Share"
+      shared: "Shared"
     notes:
       title: "Notes"
       no_description: "No task description"
@@ -1160,7 +1173,7 @@ en:
         title: "Load protocol template"
         text: "This action will overwrite the current protocol in the task and unlink it from templates. The current protocol will remain unchanged in templates."
         text2: "Choose the protocol to be loaded to the task."
-        filter_protocols: "Filter protocols"
+        filter_protocols: "Search protocols"
         thead_name: "Name"
         thead_keywords: "Keywords"
         thead_published_by: "Published by"
@@ -1196,6 +1209,7 @@ en:
       new_table_result: "Table"
       new_asset_result: "File"
       published_on_html: "Added on <em>%{timestamp}</em> by <em>%{user}</em>"
+      published_on_iso_html: "Added on <em><span class='iso-formatted-date'>%{timestamp}</span></em> by <em>%{user}</em>"
       published_table: "entered a table on %{timestamp}."
       published_text:  "entered a text on %{timestamp}."
       published_asset:  "uploaded a file on %{timestamp}."
@@ -1317,6 +1331,7 @@ en:
       archived_experiments: "Go to Archived experiments"
     toolbar:
       new_button: "New experiment"
+      new_button_tooltip: "Create new experiment"
       edit_button: "Edit details"
       duplicate_button: "Duplicate"
       move_button: "Move"
@@ -1429,6 +1444,7 @@ en:
         comments: 'Comments'
       toolbar:
         new: 'New task'
+        new_tooltip: 'Create new task'
         edit: 'Edit'
         archive: 'Archive'
         restore: 'Restore'
@@ -1436,6 +1452,7 @@ en:
         duplicate: 'Duplicate'
         task_access: 'Task access'
         task_data: 'Task data display'
+        manage_columns_tooltip: "Manage columns"
       my_module_actions:
         title: 'TASK ACTIONS'
         edit: 'Edit'
@@ -1471,6 +1488,7 @@ en:
       canvas_edit: "Edit workflow"
       canvas_empty: "It's empty here. Please add some tasks."
       new_my_module: "New task"
+      new_my_module_tooltip: "Create new task"
       new_my_module_modal:
         title: "Create new task"
         name: "Task name"
@@ -1588,6 +1606,34 @@ en:
       no_active_modules: "This experiment has no active tasks."
       no_active_modules_archived_branch: "This experiment is archived and can’t have active tasks."
 
+  shareable_links:
+    modal:
+      title: "Share task"
+      sharing_toggle_label: "Link sharing"
+      description_placeholder: "Add optional message for the visitor."
+      sharing_link_label: "Shared link"
+      copy_button: "Copy"
+      disclaimer: "Anyone with the link can view the protocol and results pages of this task."
+      too_long_text: "Text is too long (maximum number is %{counter} characters)"
+      copy_success: "Shared link copied to clipboard"
+    destroy_modal: 
+      title: "Deactivate shared link"
+      description: "This action will permanently deactivate the shared link. Any user who has this link will no longer be able to access the task."
+      deactivate: "Deactivate"
+    left_navigation:
+      welcome: "Welcome to SciNote!"
+      title: "SciNote Electronic Lab Notebook (ELN) Software"
+      description_1: "SciNote is a leading ELN with inventory, compliance and team management tools, used by the FDA, USDA and over 100K scientific professionals."
+      description_2: "What do our users like the most?"
+      description_3:
+        bullet_point_1: "Ease of use"
+        bullet_point_2: "Quality of support"
+        bullet_point_3: "Ease of setup"
+      free_trial: "Get free trial"
+    welcome_modal:
+      title: "Welcome to SciNote"
+      description: "You have been invited to view the %{my_module}."
+      view_task_btn: "View task"
   tags:
     new:
       head_title: "Create tag"
@@ -1633,6 +1679,8 @@ en:
       uploaded_asset: "Uploaded file"
       update: "Update"
       locked_file_error: 'This file is being edited by someone else.'
+      label:
+        name: 'Name'
     create:
       success_flash: "Successfully added file result to task <strong>%{module}</strong>"
     update:
@@ -1654,10 +1702,14 @@ en:
       head_title: "%{project} | %{module} | Add table result"
       title: "Add result to task %{module}"
       create: "Add"
+      label:
+        name: 'Name'
     edit:
       head_title: "%{project} | %{module} | Edit table result"
       title: "Edit result from task %{module}"
       update: "Update"
+      label:
+        name: 'Name'
     create:
       success_flash: "Successfully added table result to task <strong>%{module}</strong>"
     update:
@@ -1674,12 +1726,11 @@ en:
       i_shared: "Shared inventory (owned by your Team)"
       shared_edit: "Shared inventory (owned by %{team_name}). You can edit."
       shared_read: "Shared inventory (owned by %{team_name}). You can view."
-    bmt_singleton_error: "Only one BMT inventory can be present."
     index:
       active_reminders:
         label: "Active reminders"
         short_label: "Reminders…"
-        description: "Show only active reminderss"
+        description: "Show only active reminders"
         checked_description: "Show all items"
       head_title: "Inventories"
       title: "Inventories"
@@ -1705,7 +1756,6 @@ en:
       no_archived_inventories:  "No archived inventories here"
       no_archived_inventories_matched: "No archived inventories matched your search request"
       snapshot_provisioning_in_progress: 'Editing is disabled while a snapshot is being created. This will only take a moment.'
-
       options_dropdown:
         import_items: 'Import'
         export_items: 'Export'
@@ -1732,6 +1782,19 @@ en:
         description: "Only the structure of the inventory is going to be copied."
         name_placeholder: "My inventory"
         copy: "Copy"
+      modal_export:
+        title: "Export Inventories"
+        description_p1_html:
+          one: "You are about to export <strong>1</strong> inventory in %{team_name}'s team."
+          other: "You are about to export <strong>%{count}</strong> inventories in %{team_name}'s team."
+        description_alert: "This process may take minutes to hours, depending on the file size. Any new data entered afterward won't be included in the export."
+        description_p2: "You will receive an email when the .zip file is ready. A link to your file will also appear in your SciNote notification. For security reasons, this link will expire in 7 days."
+        description_p3_html: "After you confirm this export, you will have <strong>%{remaining_export_requests}</strong> export requests left today (max %{requests_limit} requests per day)."
+        export: "Export"
+      modal_export_limit_exceeded:
+        title: "Export denied"
+        error_p1_html: "It looks like you have exceeded your daily export limit. The number of exports is <strong>limited to %{limit} requests per day </strong>- you currently have 0 export requests left."
+        error_p2_html: "Please repeat the desired action <strong>tomorrow</strong>, when your daily limit will reset back to %{limit} export requests."
       modal_create:
         title: "Create new inventory"
         name_label: "Inventory name"
@@ -1761,6 +1824,8 @@ en:
         archived_by: "by"
       filter_inventory_items: "Search items"
       filter_inventory_items_with_ean: "Search with EAN code"
+      search_button_tooltip: "Quick search"
+      ean_search_button_tooltip: "Barcode search"
       no_items: "No items here"
       no_items_matched: "No items here"
       no_archived_items: "No archived items here"
@@ -1768,7 +1833,7 @@ en:
       no_archived_items_matched: "No archived items here"
       error_searching: "Error searching, please try again"
       button_tooltip:
-        new: "New item"
+        new: "Create new item"
         edit: "Edit item"
         duplicate: "Duplicate"
         export: "Export"
@@ -1864,47 +1929,6 @@ en:
                 from_placeholder: "From"
                 all_units: "All units"
                 no_unit: "No unit"
-      bmt_search:
-        bmt_filter: "Biomolecule filter"
-        save_filters: "Save filters"
-        title: "Filters"
-        clear_all: "Clear all"
-        add_filter: "Add filter"
-        apply: "Apply"
-        filter: "Filter"
-        no_filters: "No active filters."
-        filters:
-          types:
-            additionalDataFilter:
-              name: "Additional data"
-            entityTypeFilter:
-              name: "Entity type"
-              placeholder: "Enter entity type"
-            monomerTypeFilter:
-              name: "Monomere type"
-              placeholder: "Enter monomere type"
-            subsequenceFilter:
-              name: "Subsequence"
-              placeholder: "Enter subsequence"
-              derivatives_included: "Derivatives included"
-            variantSequenceFilter:
-              name: "Variant sequence"
-              placeholder: "Enter variant sequence"
-              derivatives_included: "Derivatives included"
-              distance: "Distance"
-              distance_type: "Distance type"
-              exact: "Exact"
-              maximum: "Maximum"
-            fullsequenceFilter:
-              name: "Full sequence"
-              placeholder: "Enter full sequence"
-              derivatives_included: "Derivatives included"
-            monomerSubstructureSearchFilter:
-              name: "Monomere substructure"
-              placeholder: "Enter substructure"
-            cidFilter:
-              name: "Cid"
-              placeholder: "Enter Cid"
     table:
       id: 'Item ID'
       external_id: 'External ID'
@@ -2115,6 +2139,7 @@ en:
       title: "Manage columns"
       add_column: "Add column"
     manange_modal_column:
+      button_tooltip: "Manage columns"
       name_placeholder: "Enter column name..."
       empty_name_error: "Column must have a name."
       value_too_high_error: "Too high (max %{max_value})"
@@ -2229,17 +2254,20 @@ en:
       shared_for_viewing: "For viewing"
       shared_for_editing: "For editing"
       not_shared: "No"
+      shared: "Yes"
       switch_view:
         active: Show active inventories
         archived: Show archived inventories
       buttons:
         edit: "Rename"
         duplicate: "Duplicate"
+        export: "Export"
         archive: "Archive"
         restore: "Restore"
         delete: "Delete"
       no_libraries:
         create_new_button: "New inventory"
+        create_new_button_tooltip: "Create new inventory"
     show:
       head_title: "Inventories | %{library}"
   repository_row:
@@ -2309,19 +2337,6 @@ en:
     protocols:
       my_to_team_message: 'My protocols to Team protocols'
       team_to_my_message: 'Team protocols to My protocols'
-
-  system_notifications:
-      navbar:
-        tooltip: 'What’s new notifications'
-      emails:
-        subject: "You've received a What's new notification"
-        intro_paragraph: "Hi %{user_name}, you've received What's new notification in SciNote:"
-      index:
-        whats_new_html: "What's New"
-        more_notifications: "Show more notifications"
-        no_notifications: "No more notifications"
-        settings: "Settings"
-        see_all: "show all"
 
   user_my_modules:
     new:
@@ -2485,8 +2500,8 @@ en:
           head_title: "Settings | Add-ons"
           title: "Add-ons"
           no_addons: "You have no SciNote Add-ons."
-          scinote_addons: "Scinote add-ons"
-          label_printers: "Label Printers"
+          scinote_addons: "SciNote add-ons"
+          label_printers: "Label printers"
           printers:
             ready: "Ready"
             not_ready: "Not ready"
@@ -2567,6 +2582,16 @@ en:
           new_team: "New team"
         show:
           enter_description: "Enter Team description"
+          tasks_share:
+            enable_label: "Enable task sharing"
+            enable_success_message: "Task sharing is enabled."
+            disable_success_message: "Task sharing is disabled."
+            failure_message: "Something went wrong."
+            disable_modal:
+              title: "Disable task sharing"
+              description_p1: "Are you sure to disable task sharing in %{team_name}?"
+              description_p2: "This action will deactivate sharing tasks and permanently deactivate all shared links for %{counter} task(s). Any user who has shared links will no longer be able to access the shared tasks."
+              disable_button: "Disable"
         index:
           description_label: "Team is a group of SciNote users who are working on the same projects and share the inventories."
           member_of:
@@ -2653,6 +2678,25 @@ en:
         button: "Rearrange steps"
         modal:
           title: "Rearrange protocol steps"
+    import_modal:
+      confirm:
+        title: "Import protocol"
+        body_html: "You will start importing selected .docx file into SciNote. The import time may vary according to the size of a file and internet connection."
+      in_progress:
+        title: "Importing in progress"
+        body_html: "The process of importing has started. Please wait..."
+      not_yet_done:
+        title: "Importing in progress"
+        body_html: "The import is taking longer than expected. You'll get a notice in <i class=\"sn-icon sn-icon-notifications\"></i> Notifications when your protocol template is ready. You can close the window and continue with your work."
+      done:
+        title: "Importing completed"
+        body_html: 'The protocol has been successfully imported. You can access the draft of protocol template <a href="%{url}">here.</a>'
+      failed:
+        title: "Import failed"
+        body_html: "We're sorry, but the file import has failed. Please ensure you have a stable internet connection and try again. If the problem persists, please contact support for further assistance."
+      import: "Import"
+      cancel: "Cancel"
+      close: "Close"
     print:
       title: "Print protocol"
       button: "Print"
@@ -2744,6 +2788,11 @@ en:
         import_to_team_protocols_label: "Import to Team Protocols"
         import_to_private_protocols_label: "Import to My Protocols"
         import_protocols_label: "Import"
+      import_protocol_notification:
+        title: "The import process has been successfully completed. You can download original file here: %{link}"
+        message: "Protocol template:"
+      import_protocol_notification_error:
+        title: "We're sorry, but the file import has failed. Please ensure you have a stable internet connection and try again. If the problem persists, please contact support for further assistance."
     export:
       export_results:
         title: "Export results"
@@ -2813,7 +2862,7 @@ en:
       head_title_archived: "Archived protocol templates"
       default_name: 'New protocol'
       back_to_active_protocols: 'Back to active protocols'
-      search_bar_placeholder: 'Filter protocols'
+      search_bar_placeholder: 'Search protocols'
       navigation:
         archive: "Archive"
       toolbar:
@@ -2827,10 +2876,12 @@ en:
       public_description: "Team protocols are visible and can be used by everyone from the team."
       private_description: "My protocols are only visible to you."
       create_new: "New protocol template"
+      create_new_tooltip: "Create new protocol template"
+      import_tooltip: "Import"
       edit: "Edit"
       clone_btn: "Copy"
       import: "Import"
-      import_alt: "From local file"
+      import_alt: "From file (.docx, .eln)"
       import_protocols_io: "From Protocols.io"
       modal_import_json_upload: "Upload"
       modal_import_json_title: "Import protocols.io file"
@@ -2951,6 +3002,7 @@ en:
       step_duplication_failed: "Step could not be duplicated, try again later."
       component_duplication_failed: "Step content could not be duplicated, try again later."
       timestamp: "Created on %{date} by %{user}"
+      timestamp_iso_html: "Created on <span class='iso-formatted-date'>%{date}</span> by %{user}"
       status:
         complete: "Mark as done"
         uncomplete: "Unmark as done"
@@ -3051,8 +3103,8 @@ en:
           ztoa_html: "Name &#8593;"
         view_mode:
           inline_html: "<i class=\"fas fa-desktop\"></i> Extra large"
-          thumbnail_html: "<i class=\"fas fa-th-large\"></i> Medium"
-          list_html: "<i class=\"fas fa-list\"></i> List"
+          thumbnail_html: "<i class=\"sn-icon sn-icon-grid-view\"></i> Medium"
+          list_html: "<i class=\"sn-icon sn-icon-activities\"></i> List"
       new:
         add_step_title: "Add new step"
         tab_checklists: "Checklists"
@@ -3233,13 +3285,12 @@ en:
     file_preview:
       edit_in_scinote: "Edit in SciNote"
       edit_in_marvinjs: "Edit in Marvin JS"
-      edit_in_bio_eddie: "Edit in BioEddie"
     context_menu:
       set_view_size: "SET VIEW SIZE"
       delete: "Delete file"
       inline_html: "<i class=\"fas fa-desktop\"></i> Extra large"
-      thumbnail_html: "<i class=\"fas fa-th-large\"></i> Medium"
-      list_html: "<i class=\"fas fa-list\"></i> List"
+      thumbnail_html: "<i class=\"sn-icon sn-icon-grid-view\"></i> Medium"
+      list_html: "<i class=\"sn-icon sn-icon-activities\"></i> List"
     delete_file_modal:
       title: "Delete attachment"
       description_1_html: "You are about to delete <b>%{file_name}</b></p>"
@@ -3254,9 +3305,9 @@ en:
       projects: "Projects with this name/ID were not found"
       experiments: "Experiments with this name/ID were not found"
       my_modules: "Tasks with this name/ID were not found"
-      repository_rows: "Items with this name/ID were not found"
+      repository_rows: "This inventory is currently empty."
       users: "Users with this name were not found"
-      description: "Please make sure there are no typos, or erase letters one by one unless you see some results"
+      description: "Once you create items in the inventory, they will appear here."
     buttons:
       insert: "Insert"
       assign: "Assign to this task"
@@ -3386,7 +3437,7 @@ en:
     repository_header_html: 'You are about to export selected items in inventory %{repository}.'
     files_alert: 'Files uploaded to inventory items will not be exported. Only filenames will be exported.'
     repository_footer_html: 'Inventory will be exported in a .csv file format. You will receive <strong>email with a link</strong> where you can download it.'
-    export_request_success: "Export request received!"
+    export_request_success: "Export request received. Your export request is being processed."
     export_error: "Error when creating zip export."
 
   webhooks:
@@ -3444,6 +3495,7 @@ en:
     download: "Download"
     access: "Access"
     select: "Select"
+    loading: "Loading..."
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"
@@ -3454,16 +3506,17 @@ en:
     comment_placeholder_new: "Add new comment…"
     archived: "Archived"
     sort:
-      new_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;Started last"
-      old_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Started first"
-      atoz_html: "<i class=\"fas fa-sort-alpha-down\"></i>&nbsp;&nbsp;Name A to Z"
-      ztoa_html: "<i class=\"fas fa-sort-alpha-down-alt\"></i>&nbsp;&nbsp;Name Z to A"
-      archived_new_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;Archived last"
-      archived_old_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Archived first"
-      id_asc_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;ID ascending"
-      id_desc_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;ID descending"
-      due_first_html: "<i class=\"fas fa-sort-numeric-down\"></i>&nbsp;&nbsp;Due first"
-      due_last_html: "<i class=\"fas fa-sort-numeric-down-alt\"></i>&nbsp;&nbsp;Due last"
+      title: "Sorting"
+      new_html: "Started last"
+      old_html: "Started first"
+      atoz_html: "Name A to Z"
+      ztoa_html: "Name Z to A"
+      archived_new_html: "Archived last"
+      archived_old_html: "Archived first"
+      id_asc_html: "ID ascending"
+      id_desc_html: "ID descending"
+      due_first_html: "Due first"
+      due_last_html: "Due last"
     sort_new:
       new: "Added last"
       old: "Added first"
@@ -3588,10 +3641,15 @@ en:
           not_valid: "Not valid URL"
 
   breadcrumbs:
+    templates: "Templates"
     projects: "Projects"
     inventories: "Inventories"
-    protocols: "Protocol templates"
-    labels: "Label templates"
+    protocols: "Protocol"
+    labels: "Label"
+    teams: "All Teams"
+    addons: "Add-ons"
+    label_printer: "Label printer"
+    fluics_printer: "Fluics printer"
 
   Add: "Add"
   Asset: "File"
@@ -3628,14 +3686,6 @@ en:
   Added: 'Added'
   by: 'by'
   name: 'name'
-
-  bio_eddie:
-    new_molecule: "New Molecule"
-    new_button: "Biomolecule"
-    molecule_name_placeholder: "Click here to enter Molecule name"
-    no_molecules_found: "No Molecules Found"
-    save_and_register: "Save & Register to Biomolecule Toolkit"
-    empty_molecule_error: "An error occurred. The molecule can't be empty."
 
   marvinjs:
     new_sketch: "New Chemical Drawing"

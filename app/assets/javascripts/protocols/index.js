@@ -459,7 +459,7 @@ var ProtocolsIndex = (function() {
     $.post(url, { protocol_ids: ids }, (data) => {
       HelperModule.flashAlertMsg(data.message, 'success');
       reloadTable();
-    }).error((data) => {
+    }).fail((data) => {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   }
@@ -474,7 +474,7 @@ var ProtocolsIndex = (function() {
     $.post(url, { protocol_ids: ids }, (data) => {
       HelperModule.flashAlertMsg(data.message, 'success');
       reloadTable();
-    }).error((data) => {
+    }).fail((data) => {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   }
@@ -503,18 +503,16 @@ var ProtocolsIndex = (function() {
   }
 
   function duplicateProtocols($el) {
-    $.ajax(
-      {
+    $.ajax({
         type: 'POST',
         url: $el.data('url'),
         data: JSON.stringify({ ids: rowsSelected }),
         contentType: 'application/json'
-      }
-    ).success((data) => {
+    }).done((data) => {
       animateSpinner(null, false);
       HelperModule.flashAlertMsg(data.message, 'success');
       reloadTable();
-    }).error((data) => {
+    }).fail((data) => {
       animateSpinner(null, false);
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
@@ -667,29 +665,34 @@ var ProtocolsIndex = (function() {
       var importUrl = fileInput.attr('data-import-url');
       var teamId = fileInput.attr('data-team-id');
       var type = fileInput.attr('data-type');
-      importProtocolFromFile(
-        ev.target.files[0],
-        importUrl,
-        { team_id: teamId, type: type },
-        false,
-        function(datas) {
-          var nrSuccessful = 0;
-          _.each(datas, function(data) {
-            if (data.status === 'ok') {
-              nrSuccessful += 1;
-            }
-          });
-          animateSpinner(null, false);
 
-          if (nrSuccessful) {
-            HelperModule.flashAlertMsg(I18n.t('protocols.index.import_results.message_ok_html', { count: nrSuccessful }), 'success');
-            reloadTable();
-          } else {
-            HelperModule.flashAlertMsg(I18n.t('protocols.index.import_results.message_failed'), 'danger');
+      if(ev.target.files[0].name.split('.').pop() === 'eln') {
+        importProtocolFromFile(
+          ev.target.files[0],
+          importUrl,
+          { team_id: teamId, type: type },
+          false,
+          function(datas) {
+            var nrSuccessful = 0;
+            _.each(datas, function(data) {
+              if (data.status === 'ok') {
+                nrSuccessful += 1;
+              }
+            });
+            animateSpinner(null, false);
+
+            if (nrSuccessful) {
+              HelperModule.flashAlertMsg(I18n.t('protocols.index.import_results.message_ok_html', { count: nrSuccessful }), 'success');
+              reloadTable();
+            } else {
+              HelperModule.flashAlertMsg(I18n.t('protocols.index.import_results.message_failed'), 'danger');
+            }
           }
-        }
-      );
-      $(this).val('');
+        );
+      } else {
+        protocolFileImportModal.init(ev.target.files, reloadTable);
+      }
+      // $(this).val('');
     });
   }
 

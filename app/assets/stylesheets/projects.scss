@@ -1,8 +1,8 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
 // scss-lint:disable IdSelector
-@import "constants";
-@import "mixins";
+
+
 
 // Some color definitions
 $color-group-hover: $color-alabaster;
@@ -20,10 +20,6 @@ $color-module-hover: $brand-primary;
 #diagram-buttons {
   align-items: center;
   display: flex;
-
-  #edit-canvas-button, .new-my-module-button {
-    margin-right: 5px;
-  }
 
   .actions-button {
     margin-right: 15px;
@@ -54,28 +50,21 @@ $color-module-hover: $brand-primary;
 }
 
 #canvas-new-module {
-  .hbtn-default {
-    opacity: 1;
-    width: 0;
-    float: none;
+  .hbtn-new {
+    display: inline;
   }
 
-  .hbtn-hover {
-    opacity: 0;
-    width: 0;
-    height: 0;
-    float: left;
+  .hbtn-drag {
+    display: none;
   }
 
   &:hover {
-    .hbtn-default {
-      opacity: 0;
-      height: 0;
-      float: left;
+    .hbtn-new {
+      display: none;
     }
-    .hbtn-hover {
-      opacity: 1;
-      float: none;
+
+    .hbtn-drag {
+      display: inline;
     }
   }
 }
@@ -195,8 +184,14 @@ path, ._jsPlumb_endpoint {
     height: 40px;
 
     .dropdown {
-      bottom: 18px;
-      left: 0;
+      bottom: 22px;
+      left: 22px;
+
+      &:hover {
+        a {
+          text-decoration: none;
+        }
+      }
     }
   }
 
@@ -391,7 +386,6 @@ path, ._jsPlumb_endpoint {
   div {
     font-size: 20px;
     width: 4px;
-    height: 0px;
     display: inline-block;
 
     & .fas {
@@ -428,10 +422,10 @@ path, ._jsPlumb_endpoint {
 
   span {
     font-weight: bold;
-    font-size: $font-size-large;
+    font-size: 20px;
     text-transform: uppercase;
     display: block;
-    margin-top: 20%;
+    margin-top: 10%;
 
     a {
       color: $color-emperor;
@@ -517,7 +511,7 @@ li.module-hover {
           margin-top: 5px;
           font-family: 'Glyphicons Halflings';
           color: $color-white;
-          font-size: $font-size-large;
+          font-size: 20px;
 
           &:before {
             content: "\e221";
@@ -556,7 +550,6 @@ li.module-hover {
     width: 568px;
     height: 30px;
 
-    font-family: 'Lato';
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -573,25 +566,6 @@ li.module-hover {
 
 
 // New projects page
-
-#breadcrumbsWrapper {
-  background: $color-white;
-  height: 1em;
-  margin-left: -2em;
-  padding: 0 2em;
-  width: calc(100% + 4em);
-
-  .projects-breadcrumbs {
-    padding: .75em 0;
-  }
-
-  &.breadcrumbs-in-secondary-navigation {
-    .projects-breadcrumbs {
-      margin-left: 3em;
-      padding-bottom: 0;
-    }
-  }
-}
 
 .projects-index {
   .content-header {
@@ -662,6 +636,7 @@ li.module-hover {
 
       .right {
         align-self: flex-end;
+        display: flex;
       }
 
     }
@@ -699,8 +674,9 @@ li.module-hover {
       .card {
         .project-users-link {
           align-items: center;
-          color: $color-silver-chalice;
+          color: var(--sn-black);
           display: flex;
+          gap: .25rem;
 
           &:hover {
             text-decoration: none;
@@ -733,6 +709,16 @@ li.module-hover {
             color: $color-volcano;
             display: contents;
             text-decoration: none;
+
+            .name {
+              -webkit-box-orient: vertical;
+              display: -webkit-box;
+              -webkit-line-clamp: 1;
+            }
+
+            .table-cell {
+              overflow-wrap: break-word;
+            }
           }
         }
 
@@ -747,6 +733,16 @@ li.module-hover {
 
             a {
               color: inherit;
+
+              &.disabled-link {
+                color: var(--sn-grey);
+                pointer-events: none;
+                text-decoration: none;
+
+                .name {
+                  color: var(--sn-grey);
+                }
+              }
             }
 
             .name {
@@ -770,8 +766,8 @@ li.module-hover {
             }
 
             .project-actions-menu {
-              height: 36px;
-              width: 36px;
+              height: 28px;
+              width: 28px;
 
               a {
                 @include font-button;
@@ -834,9 +830,10 @@ li.module-hover {
               }
 
               .global-avatar-container {
+                align-items: center;
+                display: flex;
                 height: 2em;
-                line-height: 2em;
-                margin-right: .25em;
+                justify-content: center;
                 position: unset;
                 width: 2em;
               }
@@ -872,7 +869,7 @@ li.module-hover {
             animation-duration: 2s;
             animation-iteration-count: infinite;
             animation-name: placeholder-pulsing;
-            background-color: $color-alto;
+            background-color: var(--sn-sleepy-grey);
             border-radius: $border-radius-default;
             height: 18px;
 
@@ -966,14 +963,10 @@ li.module-hover {
             }
 
             .name {
-              grid-column: 6 span;
-              line-height: 3em;
-
-              &:before {
-                @include font-awesome;
-                content: "\f07b";
-                margin-right: .25em;
-              }
+              align-items: center;
+              -webkit-box-orient: vertical;
+              display: flex;
+              -webkit-line-clamp: 2;
             }
 
             .description {
@@ -994,6 +987,9 @@ li.module-hover {
 
               h3 {
                 line-height: 1.25em;
+                -webkit-box-orient: vertical;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
               }
 
               a:hover {
@@ -1095,8 +1091,8 @@ li.module-hover {
 
     .projects-container {
       .project-actions-menu {
-        height: 36px;
-        width: 36px;
+        height: 28px;
+        width: 28px;
 
         .btn-light:hover {
           background: $color-alto;
@@ -1184,7 +1180,7 @@ li.module-hover {
           .card {
             &.folder-card {
               .name {
-                grid-column: 7 span;
+                grid-column: 1 span;
               }
             }
 

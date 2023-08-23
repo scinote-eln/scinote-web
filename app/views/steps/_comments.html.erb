@@ -7,7 +7,7 @@
     </h4>
   </div>
 
-  <%= render partial: 'shared/comments/comments.html.erb', locals: {
+  <%= render partial: 'shared/comments/comments', locals: {
     object: step,
     comments: comments,
     can_create_comments: can_create_comments_in_my_module_steps?(@protocol.my_module),

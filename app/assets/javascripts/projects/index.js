@@ -37,6 +37,7 @@ var ProjectsIndex = (function() {
   // Arrays with selected project and folder IDs shared between both views
   var selectedProjects = [];
   var selectedProjectFolders = [];
+  var singleSelectedProject;
   var destinationFolder;
 
   // Init new project folder modal function
@@ -76,17 +77,23 @@ var ProjectsIndex = (function() {
 
     // Modal's submit handler function
     $(projectsWrapper)
-      .on('ajax:success', newProjectModal, function(ev, data) {
+      .on('submit', '#new_project', function() {
+        $('#new-project-modal button[type="submit"]').prop('disabled', true);
+      })
+      .on('ajax:complete', '#new_project', function() {
+        $('#new-project-modal button[type="submit"]').prop('disabled', false);
+      })
+      .on('ajax:success', newProjectModal, function(_ev, data) {
         $(newProjectModal).modal('hide');
         HelperModule.flashAlertMsg(data.message, 'success');
         refreshCurrentView();
       })
-      .on('ajax:error', newProjectModal, function(ev, data) {
+      .on('ajax:error', newProjectModal, function(_ev, data) {
         $(this).renderFormErrors('project', data.responseJSON);
       });
 
     $(projectsWrapper)
-      .on('ajax:success', '.new-project-btn', function(ev, data) {
+      .on('ajax:success', '.new-project-btn', function(_ev, data) {
         // Add and show modal
         $(projectsWrapper).append($.parseHTML(data.html));
         $(newProjectModal).modal('show');
@@ -157,6 +164,7 @@ var ProjectsIndex = (function() {
       ev.preventDefault();
 
       const projectId = $(this).data('projectId');
+      singleSelectedProject = projectId;
 
       // Load HTML to refresh users list
       $.ajax({
@@ -217,7 +225,7 @@ var ProjectsIndex = (function() {
         type: 'POST',
         dataType: 'json',
         data: {
-          project_ids: selectedProjects,
+          project_ids: selectedProjects.length > 0 ? selectedProjects : [singleSelectedProject],
           project_folder_ids: selectedProjectFolders
         },
         success: function(data) {
@@ -226,7 +234,7 @@ var ProjectsIndex = (function() {
           HelperModule.flashAlertMsg(data.flash, 'success');
         },
         error: function() {
-          // TODO
+          HelperModule.flashAlertMsg(I18n.t('projects.export_projects.error_flash'), 'danger');
         }
       });
     });
@@ -408,11 +416,11 @@ var ProjectsIndex = (function() {
     viewContainer.removeClass('no-results no-data');
     viewContainer.find('.card, .projects-group, .no-results-container, .no-data-container').remove();
 
-    if (viewContainer.find('.list').length) {
+    viewContainer.append(data.cards_html);
+
+    if (viewContainer.hasClass('list')) {
       viewContainer.find('.table-header').show();
     }
-
-    viewContainer.append(data.cards_html);
 
     if (viewContainer.find('.no-results-container').length) {
       viewContainer.addClass('no-results');
@@ -446,7 +454,6 @@ var ProjectsIndex = (function() {
       dataType: 'json',
       data: { ...requestParams, ...{ page: 1 } },
       success: function(data) {
-        $('#breadcrumbsWrapper').html(data.breadcrumbs_html);
         $(projectsWrapper).find('.projects-title').html(data.title_html);
         $(toolbarWrapper).html(data.toolbar_html);
         initProjectsViewModeSwitch();
@@ -457,6 +464,7 @@ var ProjectsIndex = (function() {
 
         updateProjectsToolbar();
         initProjectsFilters();
+        initSorting();
 
         // set current sort item
         if (projectsCurrentSort) {
@@ -530,7 +538,7 @@ var ProjectsIndex = (function() {
   }
 
   function initSorting() {
-    $(document).on('click', '#sortMenuDropdown a', function() {
+    $('#sortMenuDropdown a').on('click', function() {
       if (projectsCurrentSort !== $(this).data('sort')) {
         $('#sortMenuDropdown a').removeClass('selected');
         projectsCurrentSort = $(this).data('sort');
@@ -561,12 +569,12 @@ var ProjectsIndex = (function() {
     let $textFilter = $('#textSearchFilterInput', $projectsFilter);
 
     function getFilterValues() {
-      createdOnFromFilter = selectDate($createdOnFromFilter);
-      createdOnToFilter = selectDate($createdOnToFilter);
+      createdOnFromFilter = selectDate($createdOnFromFilter) || $createdOnFromFilter.val();
+      createdOnToFilter = selectDate($createdOnToFilter) || $createdOnToFilter.val();
       membersFilter = dropdownSelector.getValues($('.members-filter'));
-      lookInsideFolders = $foldersCB.prop('checked') ? 'true' : '';
-      archivedOnFromFilter = selectDate($archivedOnFromFilter);
-      archivedOnToFilter = selectDate($archivedOnToFilter);
+      lookInsideFolders = $foldersCB.prop('checked') || '';
+      archivedOnFromFilter = selectDate($archivedOnFromFilter) || $archivedOnFromFilter.val();
+      archivedOnToFilter = selectDate($archivedOnToFilter) || $archivedOnToFilter.val();
       projectsViewSearch = $textFilter.val();
     }
 
@@ -574,13 +582,13 @@ var ProjectsIndex = (function() {
       getFilterValues();
 
       currentFilters = {
-        createdOnFromFilter: selectDate($createdOnFromFilter),
-        createdOnToFilter: selectDate($createdOnToFilter),
+        createdOnFromFilter: createdOnFromFilter,
+        createdOnToFilter: createdOnToFilter,
         membersFilter: dropdownSelector.getData($('.members-filter')),
-        lookInsideFolders: !!$foldersCB.prop('checked'),
-        archivedOnFromFilter: selectDate($archivedOnFromFilter),
-        archivedOnToFilter: selectDate($archivedOnToFilter),
-        projectsViewSearch: $textFilter.val()
+        lookInsideFolders: lookInsideFolders,
+        archivedOnFromFilter: archivedOnFromFilter,
+        archivedOnToFilter: archivedOnToFilter,
+        projectsViewSearch: projectsViewSearch
       };
     }
 
@@ -589,7 +597,7 @@ var ProjectsIndex = (function() {
 
       $createdOnFromFilter.val(currentFilters.createdOnFromFilter);
       $createdOnToFilter.val(currentFilters.createdOnToFilter);
-      $foldersCB.attr('checked', currentFilters.lookInsideFolders);
+      $foldersCB.attr('checked', !!currentFilters.lookInsideFolders);
       dropdownSelector.setData($('.members-filter'), currentFilters.membersFilter);
       $archivedOnFromFilter.val(currentFilters.archivedOnFromFilter);
       $archivedOnToFilter.val(currentFilters.archivedOnToFilter);
@@ -644,10 +652,12 @@ var ProjectsIndex = (function() {
       currentFilters = null;
 
       dropdownSelector.clearData($membersFilter);
-      if ($createdOnFromFilter.data('DateTimePicker')) $createdOnFromFilter.data('DateTimePicker').clear();
-      if ($createdOnToFilter.data('DateTimePicker')) $createdOnToFilter.data('DateTimePicker').clear();
-      if ($archivedOnFromFilter.data('DateTimePicker')) $archivedOnFromFilter.data('DateTimePicker').clear();
-      if ($archivedOnToFilter.data('DateTimePicker')) $archivedOnToFilter.data('DateTimePicker').clear();
+      $createdOnFromFilter.val('');
+      $createdOnToFilter.val('');
+      $createdOnFromFilter.val('');
+      $createdOnToFilter.val('');
+      $archivedOnFromFilter.val('');
+      $archivedOnToFilter.val('');
       $foldersCB.prop('checked', false);
       $textFilter.val('');
     });
@@ -703,7 +713,6 @@ var ProjectsIndex = (function() {
     initEditButton();
     initMoveButton();
     initProjectsViewModeSwitch();
-    initSorting();
     initSelectAllCheckbox();
     initArchiveRestoreButton();
     loadCardsView();

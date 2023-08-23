@@ -34,7 +34,7 @@
       cursor: pointer;
     }
 
-    &.open .fas.fa-caret-down::before {
+    &.open .sn-icon-down::before {
       content: $font-fas-caret-up;
     }
 
@@ -149,6 +149,7 @@
     }
 
     .filter-container {
+      width: 424px;
       margin-bottom: .5em;
 
       .filter-title {

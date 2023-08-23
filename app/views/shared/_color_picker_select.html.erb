@@ -1,0 +1,11 @@
+<% id = "#{object_name}_#{name.to_s}" %>
+<% input_name = "#{object_name}[#{name.to_s}]" %>
+
+<select name="<%= input_name %>" id="<%= id %>" style="<%= styles %>" class="<%= classes %>"
+        data-color-picker-select-id="<%= id %>" >
+  <% colors.each do |color| %>
+    <option value="<%= color %>" data-color="<%= color %>"></option>
+  <% end %>
+</select>
+
+<%= javascript_include_tag 'shared/color_picker_select' %>

@@ -6,17 +6,17 @@ module Navigator
     before_action :check_read_permissions, except: :index
 
     def index
-      project_and_folders = project_level_branch(nil, params[:archived] == 'true')
+      project_and_folders = project_level_branch(nil)
       render json: { items: project_and_folders }
     end
 
     def show
-      experiments = experiment_level_branch(@project, params[:archived] == 'true')
+      experiments = experiment_level_branch(@project)
       render json: { items: experiments }
     end
 
     def tree
-      tree = project_level_branch(@project, params[:archived] == 'true')
+      tree = project_level_branch(@project)
 
       tree = build_folder_tree(@project.project_folder, tree) if @project.project_folder
 

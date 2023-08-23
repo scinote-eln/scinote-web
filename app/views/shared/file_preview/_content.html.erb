@@ -4,7 +4,7 @@
     <% if can_edit && !preview %>
       <% if wopi_enabled? && wopi_file?(asset) %>
         <% edit_supported, title = wopi_file_edit_button_status(asset) %>
-        <%= render partial: 'assets/wopi/file_wopi_controls.html.erb',
+        <%= render partial: 'assets/wopi/file_wopi_controls',
           locals: {
             asset: asset,
             edit_supported: edit_supported,
@@ -18,21 +18,10 @@
           data-sketch-name="<%= asset.file.metadata[:name] %>"
           data-sketch-description="<%= asset.file.metadata[:description] %>"
         >
-          <span class="fas fa-pencil-alt"></span>
+          <span class="sn-icon sn-icon-edit"></span>
           <%= t('assets.file_preview.edit_in_marvinjs') %>
         </button>
 
-      <% elsif asset.bio_eddie? && BioEddieService.enabled?(current_user) %>
-        <button class="btn btn-light bio-eddie-edit-button"
-          data-molecule-id="<%= asset.id %>"
-          data-update-url="<%= bio_eddie_asset_path(asset) %>"
-          data-edit-url="<%= start_editing_bio_eddie_asset_path(asset) %>"
-          data-molecule-name="<%= asset.file.metadata[:name] || asset.file_name %>"
-          data-molecule-description="<%= asset.file.metadata[:description] || asset.file.download %>"
-        >
-          <span class="fas fa-pencil-alt"></span>
-          <%= t('assets.file_preview.edit_in_bio_eddie') %>
-        </button>
       <% elsif asset.editable_image? %>
         <button class="btn btn-light image-edit-button"
           data-image-id="<%= asset.id %>"
@@ -42,24 +31,18 @@
           data-image-mime-type="<%= asset.file.content_type %>"
           data-image-start-edit-url="<%= start_edit_image_path(asset) %>"
         >
-          <span class="fas fa-pencil-alt"></span>
+          <span class="sn-icon sn-icon-edit"></span>
           <%= t('assets.file_preview.edit_in_scinote') %>
         </button>
       <% end %>
     <% end %>
-    <% if asset.file.metadata[:asset_type] == 'bio_eddie' %>
-      <a class="btn btn-light file-download-link" href="data:text/plain;charset=utf-8,<%= asset.file.metadata[:description] %>" download="<%= asset.file.metadata[:name] %>.helm" data-turbolinks="false">
-        <span class="fas fa-download"></span> <%= t('Download')%>
-      </a>
-    <% else %>
-      <a class="btn btn-light file-download-link" href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>" data-turbolinks="false">
-        <span class="fas fa-download"></span> <%= t('Download')%>
-      </a>
-    <% end %>
+    <a class="btn btn-light file-download-link" href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>" data-turbolinks="false">
+      <span class="sn-icon sn-icon-export"></span> <%= t('Download')%>
+    </a>
     <% if (asset.step || asset.result) && !preview %>
-      <%= render partial: 'assets/asset_context_menu.html.erb', locals: { asset: asset, deletable: false, editable: false } %>
+      <%= render partial: 'assets/asset_context_menu', locals: { asset: asset, deletable: false, editable: false } %>
     <% end %>
-    <button type="button" class="btn icon-btn btn-light" data-dismiss="modal"><span class="fas fa-times"></span></button>
+    <button type="button" class="btn icon-btn btn-light" data-dismiss="modal"><span class="sn-icon sn-icon-close"></span></button>
   </div>
 </div>
 <div class="modal-body">
@@ -68,14 +51,14 @@
       <% if wopi_enabled? && wopi_file?(asset) %>
         <iframe class="wopi-file-preview" src="<%= asset.get_action_url(current_user, 'embedview') %>"></iframe>
       <% elsif asset.pdf_previewable? %>
-        <%= render partial: 'shared/pdf_viewer.html.erb', locals: { asset: asset, report_document: false } %>
+        <%= render partial: 'shared/pdf_viewer', locals: { asset: asset, report_document: false } %>
       <% else %>
         <%= image_tag asset.large_preview,
             class: 'asset-image',
             style: 'opacity: 0' %>
       <% end %>
     <% else %>
-      <%= render partial: 'shared/file_preview/file_icon.html.erb', locals: { asset: asset } %>
+      <%= render partial: 'shared/file_preview/file_icon', locals: { asset: asset } %>
     <% end %>
   </div>
 </div>
@@ -88,6 +71,7 @@
         <%= link_to asset_file_preview_path(previous_asset),
           class: "previous-asset gallery-switcher",
           data: {id: previous_asset.id, gallery_elements: gallery} do %>
+          <i class="sn-icon sn-icon-arrow-left"></i>
           <% if previous_asset.previewable? %>
             <%= image_tag previous_asset.medium_preview,
                 class: 'asset-image',
@@ -95,7 +79,6 @@
           <% else %>
             <i class="fas <%= file_fa_icon_class(previous_asset) if previous_asset.file_name %>"></i>
           <% end %>
-          <i class="fas fa-angle-left"></i>
           <span class="file-name"><%= previous_asset.file_name %></span>
         <% end %>
       <% end %>
@@ -106,8 +89,6 @@
         <%= link_to asset_file_preview_path(next_asset),
           class: "next-asset gallery-switcher",
           data: {id: next_asset.id, gallery_elements: gallery} do %>
-          <span class="file-name"><%= next_asset.file_name %></span>
-          <i class="fas fa-angle-right"></i>
           <% if next_asset.previewable? %>
             <%= image_tag next_asset.medium_preview,
                 class: 'asset-image',
@@ -115,6 +96,8 @@
           <% else %>
             <i class="fas <%= file_fa_icon_class(next_asset) if next_asset.file_name %>"></i>
           <% end %>
+          <span class="file-name"><%= next_asset.file_name %></span>
+          <i class="sn-icon sn-icon-arrow-right"></i>
         <% end %>
       <% end %>
     </div>

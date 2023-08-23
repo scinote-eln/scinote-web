@@ -6,10 +6,10 @@
 <%= form_tag search_path, method: :get, id: 'search-bar', class: 'navbar-form navbar-left', role: 'search' do %>
   <div class="form-group">
     <div class="input-group">
-      <input class="form-control" type="text" name="q" placeholder="<%= t('nav.search') %>">
+      <input class="form-control min-h-[2.5rem]" type="text" name="q" placeholder="<%= t('nav.search') %>">
       <span class="input-group-btn">
-        <button id="search-button" class="btn btn-default" type="submit">
-          <span class="fas fa-search"></span>
+        <button id="search-button" class="btn btn-secondary" type="submit">
+          <span class="sn-icon sn-icon-search"></span>
         </button>
       </span>
     </div>

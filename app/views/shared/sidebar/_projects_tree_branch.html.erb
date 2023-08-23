@@ -10,7 +10,7 @@
   <% else %>
     <li class="sidebar-leaf">
       <% unless record[:children].blank? %>
-        <i class="fas fa-caret-right toggle-branch collapsed"></i>
+        <i class="sn-icon sn-icon-right toggle-branch collapsed"></i>
       <% end %>
       <%= link_to project_folder_path(record[:folder]),
           class: "sidebar-link project-folder-link folder #{'selected' if current_folder == record[:folder]}",
@@ -19,11 +19,11 @@
             sidebar_url: sidebar_team_path(current_team, project_folder_id: record[:folder].id),
             projects_cards_url: project_folder_cards_url(record[:folder])
           } do %>
-        <i class="fas fa-folder"></i>
+        <i class="sn-icon sn-icon-folder"></i>
         <%= record[:folder].name %>
       <% end%>
       <ul class="sidebar-branch">
-        <%= render partial: 'shared/sidebar/projects_tree_branch.html.erb', locals: { records: record[:children] } %>
+        <%= render partial: 'shared/sidebar/projects_tree_branch', locals: { records: record[:children] } %>
       </ul>
     </li>
   <% end %>

@@ -2,11 +2,11 @@
 
 <span class="date-text" data-editable="<%= due_date_editable %>">
   <span id="dueDateLabelContainer" class="view-block">
-    <%= render partial: "due_date_label.html.erb" , locals: { my_module: my_module, due_date_editable: due_date_editable  } %>
+    <%= render partial: "due_date_label" , locals: { my_module: my_module, due_date_editable: due_date_editable  } %>
   </span>
   <% if due_date_editable %>
     <div class="datetime-picker-container" id="due-date">
-      <span class="fas fa-calendar-alt"></span>
+      <span class="sn-icon sn-icon-calendar"></span>
       <input id="calendarDueDate"
              type="datetime"
              data-toggle='date-time-picker'
@@ -19,6 +19,6 @@
              data-date-orientation="left"
              value="<%= my_module.due_date ? l(my_module.due_date, format: :full) : '' %>"/>
     </div>
-    <span class="fas fa-times clear-date" data-toggle='clear-date-time-picker' data-target='calendarDueDate'></span>
+    <span class="sn-icon sn-icon-close clear-date" data-toggle='clear-date-time-picker' data-target='calendarDueDate'></span>
   <% end %>
 </span>

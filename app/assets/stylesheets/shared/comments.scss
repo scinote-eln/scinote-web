@@ -1,8 +1,6 @@
 // scss-lint:disable SelectorDepth SelectorFormat
 // scss-lint:disable NestingDepth ImportantRule
 
-@import "constants";
-@import "mixins";
 
 .comments-container {
   // Comment item
@@ -45,7 +43,7 @@
 
         .view-mode {
           border: 1px solid transparent;
-          border-radius: $border-radius-small;
+          border-radius: $border-radius-default;
           display: inline-block;
           line-height: 16px;
           min-height: 20px;
@@ -60,7 +58,7 @@
 
         textarea {
           border: 1px solid $color-silver;
-          border-radius: $border-radius-small;
+          border-radius: $border-radius-default;
           height: 22px;
           line-height: 16px;
           overflow: hidden;

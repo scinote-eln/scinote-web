@@ -87,20 +87,20 @@ class TeamsDatatable < CustomDatatable
   # If user is last admin of team, don't allow
   # him/her to leave team
   def leave_team_button(record)
-    button = "<span class=\"fas fa-sign-out-alt\"></span>
+    button = "<span class=\"sn-icon sn-icon-sign-out\"></span>
               <span class=\"hidden-xs\">
                 #{I18n.t('users.settings.teams.index.leave')}
               </span>"
     owner_role = UserRole.find_by(name: UserRole.public_send('owner_role').name)
     if current_user_team_role(record)&.owner? && record.user_assignments.where(user_role: owner_role).none?
-      button.prepend('<div class="btn btn-default btn-xs"
+      button.prepend('<div class="btn btn-secondary btn-xs"
                       type="button" disabled="disabled">')
       button << '</div>'
     else
       button = link_to(
         button.html_safe,
         leave_user_team_html_path(current_user_team_assignment(record), format: :json, leave: true),
-        remote: true, class: 'btn btn-default btn-xs', type: 'button',
+        remote: true, class: 'btn btn-secondary btn-xs', type: 'button',
         data: { action: 'leave-user-team' }
       )
     end

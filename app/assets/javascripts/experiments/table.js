@@ -43,7 +43,8 @@ var ExperimnetTable = {
       return `<a href="${data.url}">${data.count}</a>`;
     },
     status: function(data) {
-      return `<div class="my-module-status" style="background-color: ${data.color}">${data.name}</div>`;
+      return `<div class="my-module-status ${data.name === 'Not started' ? 'btn-not-started' : ''}" 
+        style="background-color: ${data.color}">${data.name}</div>`;
     },
     assigned: function(data) {
       return data.html;
@@ -102,7 +103,7 @@ var ExperimnetTable = {
       $.each(data.columns, (_i, cell) => {
         let hidden = '';
 
-        if ($(`.table-display-modal .fa-eye-slash[data-column="${cell.column_type}"]`).length === 1) {
+        if ($(`.table-display-modal .sn-icon-visibility-hide[data-column="${cell.column_type}"]`).length === 1) {
           hidden = 'hidden';
         }
 
@@ -117,9 +118,9 @@ var ExperimnetTable = {
       row += `
         <div class="table-body-cell">
           <div ref="dropdown" class="dropdown my-module-menu" data-url="${data.urls.actions_dropdown}">
-            <div class="btn btn-ligh icon-btn open-my-module-menu" tabindex="0"
+            <div class="btn btn-light btn-xs icon-btn open-my-module-menu" tabindex="0"
                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" >
-              <i class="fas fa-ellipsis-h"></i>
+              <i class="sn-icon sn-icon-more-hori"></i>
             </div>
             <div class="dropdown-menu dropdown-menu-right">
               <a class="open-access-modal hidden" data-action="remote-modal" href="${data.urls.access}"></a>
@@ -204,7 +205,7 @@ var ExperimnetTable = {
     $(this.table).on('click', '.duplicate-my-module', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      this.duplicateMyModules($('#duplicateTasks').data('url'), e.currentTarget.dataset.id);
+      this.duplicateMyModules(e.currentTarget.href, e.currentTarget.dataset.id);
     });
 
     $(this.table).on('click', '.move-my-module', (e) => {
@@ -230,7 +231,7 @@ var ExperimnetTable = {
     $.post(url, { my_module_ids: ids }, () => {
       this.loadTable();
       window.navigatorContainer.reloadChildrenLevel = true;
-    }).error((data) => {
+    }).fail((data) => {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   },
@@ -245,7 +246,7 @@ var ExperimnetTable = {
       HelperModule.flashAlertMsg(data.message, 'success');
       this.loadTable();
       window.navigatorContainer.reloadChildrenLevel = true;
-    }).error((data) => {
+    }).fail((data) => {
       HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
     });
   },
@@ -387,7 +388,7 @@ var ExperimnetTable = {
           checkbox.dataset.unassignUrl = result.unassign_url;
           $(checkbox).closest('.table-row').find('.assigned-users-container')
             .replaceWith($(result.html).find('.assigned-users-container'));
-        }).error((data) => {
+        }).fail((data) => {
           HelperModule.flashAlertMsg(data.responseJSON.errors, 'danger');
         });
       } else {
@@ -439,7 +440,7 @@ var ExperimnetTable = {
           HelperModule.flashAlertMsg(data.message, 'success');
           this.loadTable();
           window.navigatorContainer.reloadChildrenLevel = true;
-        }).error((data) => {
+        }).fail((data) => {
           HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
         });
         $('#modal-move-modules').modal('hide');
@@ -499,7 +500,9 @@ var ExperimnetTable = {
     });
   },
   updateExperimentToolbar: function() {
-    window.actionToolbarComponent.fetchActions({ my_module_ids: this.selectedMyModules });
+    if (window.actionToolbarComponent) {
+      window.actionToolbarComponent.fetchActions({ my_module_ids: this.selectedMyModules });
+    }
   },
   selectDate: function($field) {
     var datePicker = $field.data('DateTimePicker');
@@ -509,30 +512,31 @@ var ExperimnetTable = {
     return null;
   },
   initManageColumnsModal: function() {
-    $.each($('.table-display-modal .fa-eye-slash'), (_i, column) => {
+    $.each($('.table-display-modal .sn-icon-visibility-hide'), (_i, column) => {
       $(column).parent().removeClass('visible');
     });
     $('.experiment-table')[0].style
-      .setProperty('--columns-count', $('.table-display-modal .fa-eye:not(.disabled)').length + 1);
+      .setProperty('--columns-count', $('.table-display-modal .sn-icon-visibility-show:not(.disabled)').length + 1);
 
-    $('.table-display-modal').on('click', '.column-container .fas', (e) => {
+    $('.table-display-modal').on('click', '.column-container .sn-icon', (e) => {
       let icon = $(e.target);
-      if (icon.hasClass('fa-eye')) {
+      if (icon.hasClass('sn-icon-visibility-show')) {
         $(`.experiment-table .${icon.data('column')}-column`).addClass('hidden');
-        icon.removeClass('fa-eye').addClass('fa-eye-slash');
+        icon.removeClass('sn-icon-visibility-show').addClass('sn-icon-visibility-hide');
         icon.parent().removeClass('visible');
       } else {
+        if (icon.hasClass('disabled')) return;
         $(`.experiment-table .${icon.data('column')}-column`).removeClass('hidden');
-        icon.addClass('fa-eye').removeClass('fa-eye-slash');
+        icon.addClass('sn-icon-visibility-show').removeClass('sn-icon-visibility-hide');
         icon.parent().addClass('visible');
       }
 
-      let visibleColumns = $('.table-display-modal .fa-eye').map((_i, col) => col.dataset.column).toArray();
+      let visibleColumns = $('.table-display-modal .sn-icon-visibility-show').map((_i, col) => col.dataset.column).toArray();
       // Update columns on backend - $.post('', { columns: visibleColumns }, () => {});
       $.post($('.table-display-modal').data('column-state-url'), { columns: visibleColumns }, () => {});
 
       $('.experiment-table')[0].style
-        .setProperty('--columns-count', $('.table-display-modal .fa-eye:not(.disabled)').length + 1);
+        .setProperty('--columns-count', $('.table-display-modal .sn-icon-visibility-show:not(.disabled)').length + 1);
     });
   },
   clearRowTaskSelection: function() {

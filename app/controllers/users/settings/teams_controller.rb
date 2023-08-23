@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Users
   module Settings
     class TeamsController < ApplicationController
@@ -6,26 +8,28 @@ module Users
       include ApplicationHelper
       include InputSanitizeHelper
 
-      before_action :load_user, only: [
-        :index,
-        :datatable,
-        :new,
-        :create,
-        :show,
-        :users_datatable
-      ]
+      before_action :load_user, only: %i(
+        index
+        datatable
+        new
+        create
+        show
+        users_datatable
+      )
 
-      before_action :load_team, only: [
-        :show,
-        :users_datatable,
-        :name_html,
-        :description_html,
-        :update,
-        :destroy
-      ]
+      before_action :load_team, only: %i(
+        show
+        users_datatable
+        name_html
+        description_html
+        update
+        destroy
+      )
 
       before_action :check_create_team_permission,
                     only: %i(new create)
+
+      before_action :set_breadcrumbs_items, only: %i(index show)
 
       layout 'fluid'
 
@@ -34,11 +38,7 @@ module Users
       end
 
       def datatable
-        respond_to do |format|
-          format.json do
-            render json: ::TeamsDatatable.new(view_context, @user)
-          end
-        end
+        render json: ::TeamsDatatable.new(view_context, @user)
       end
 
       def new
@@ -57,65 +57,46 @@ module Users
         end
       end
 
-      def show
-        @user_team = UserTeam.find_by(user: @user, team: @team)
-      end
+      def show; end
 
       def users_datatable
-        respond_to do |format|
-          format.json do
-            render json: ::TeamUsersDatatable.new(view_context, @team, @user)
-          end
-        end
+        render json: ::TeamUsersDatatable.new(view_context, @team, @user)
       end
 
       def name_html
-        respond_to do |format|
-          format.json do
-            render json: {
-              html: render_to_string(
-                partial: 'users/settings/teams/name_modal_body.html.erb',
-                locals: { team: @team }
-              )
-            }
-          end
-        end
+        render json: {
+          html: render_to_string(
+            partial: 'users/settings/teams/name_modal_body',
+            locals: { team: @team },
+            formats: :html
+          )
+        }
       end
 
       def description_html
-        respond_to do |format|
-          format.json do
-            render json: {
-              html: render_to_string(
-                partial: 'users/settings/teams/description_modal_body.html.erb',
-                locals: { team: @team }
-              )
-            }
-          end
-        end
+        render json: {
+          html: render_to_string(
+            partial: 'users/settings/teams/description_modal_body',
+            locals: { team: @team },
+            formats: :html
+          )
+        }
       end
 
       def update
-        respond_to do |format|
-          if @team.update(update_params)
-            @team.update(last_modified_by: current_user)
-            format.json do
-              render json: {
-                status: :ok,
-                html: custom_auto_link(
-                  @team.tinymce_render(:description),
-                  simple_format: false,
-                  tags: %w(img),
-                  team: current_team
-                )
-              }
-            end
-          else
-            format.json do
-              render json: @team.errors,
-              status: :unprocessable_entity
-            end
-          end
+        if @team.update(update_params)
+          @team.update(last_modified_by: current_user)
+          render json: {
+            status: :ok,
+            html: custom_auto_link(
+              @team.tinymce_render(:description),
+              simple_format: false,
+              tags: %w(img),
+              team: current_team
+            )
+          }
+        else
+          render json: @team.errors, status: :unprocessable_entity
         end
       end
 
@@ -132,7 +113,7 @@ module Users
       end
 
       def switch
-        team = current_user.teams.find_by(id: params[:id])
+        team = current_user.teams.find_by(id: params[:team_id])
 
         if team && current_user.update(current_team_id: team.id)
           flash[:success] = t('users.settings.changed_team_flash',
@@ -154,7 +135,7 @@ module Users
       end
 
       def load_team
-        @team = Team.find_by_id(params[:id])
+        @team = Team.find_by(id: params[:id])
         render_403 unless can_manage_team?(@team)
       end
 
@@ -170,6 +151,21 @@ module Users
           :name,
           :description
         )
+      end
+
+      def set_breadcrumbs_items
+        @breadcrumbs_items = []
+
+        @breadcrumbs_items.push({
+                                  label: t('breadcrumbs.teams'),
+                                  url: teams_path
+                                })
+        if @team
+          @breadcrumbs_items.push({
+                                    label: @team.name,
+                                    url: team_path(@team)
+                                  })
+        end
       end
     end
   end

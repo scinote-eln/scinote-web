@@ -5,13 +5,13 @@
         <input type="hidden" name="_method" value="patch">
         <div class="hidden tinymce-cancel-button tox-mbtn" tabindex="-1">
         <button type="button" tabindex="-1">
-          <span class="fas fa-times"></span>
+          <span class="sn-icon sn-icon-close"></span>
           <span class="mce-txt">{{ i18n.t('general.cancel') }}</span>
         </button>
         </div>
         <div class="hidden tinymce-save-button tox-mbtn" tabindex="-1">
           <button type="button" tabindex="-1" >
-            <span class="fas fa-check"></span>
+            <span class="sn-icon sn-icon-check"></span>
             <span class="mce-txt">{{ i18n.t('general.save') }}</span>
           </button>
         </div>
@@ -27,7 +27,7 @@
             :data-placeholder="placeholder"
             :data-tinymce-init="`tinymce-${objectType}-description-${objectId}`">
         </div>
-        <div class="flex">
+        <div class="flex tinymce-editor-container">
           <textarea :id="`${objectType}_textarea_${objectId}`"
                     class="form-control hidden"
                     autocomplete="off"

@@ -387,12 +387,6 @@
             }
           }
 
-          &:hover {
-            .description-text::after {
-              background: linear-gradient(to right, $color-transparent, $color-concrete 50%);
-            }
-          }
-
           &.experiment-placeholder {
             display: contents;
 

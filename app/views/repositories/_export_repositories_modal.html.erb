@@ -1,0 +1,36 @@
+<div class="modal"
+     id="export-repositories-modal"
+     class="export-repositories-modal"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="export-repositories-modal-label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><%= t('repositories.index.modal_export.title') %></h4>
+      </div>
+      <div class="modal-body">
+        <p class="description-p1">
+          <%= t('repositories.index.modal_export.description_p1_html', team_name: team_name, count: counter) %>
+        </p>
+        <p class="bg-sn-super-light-blue p-3"><%= t('repositories.index.modal_export.description_alert') %></p>
+        <p class="mt-3"><%= t('repositories.index.modal_export.description_p2') %></p>
+        <p>
+          <%= t('repositories.index.modal_export.description_p3_html',
+                remaining_export_requests: num_of_requests_left,
+                requests_limit: export_limit) %>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button id="export-repositories-modal-cancel" type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
+        <button id="export-repositories-modal-submit"
+                type="button"
+                class="btn btn-primary"
+                data-export-url="<%= export_repositories_team_path(current_team) %>">
+          <%=t "repositories.index.modal_export.export" %>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

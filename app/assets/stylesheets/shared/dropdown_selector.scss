@@ -1,16 +1,14 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
 
-@import "constants";
-
 .select-container--with-search .dropdown-selector-container {
   &.active,
   &.open {
-    .right-icon.fa-search {
+    .right-icon.sn-icon-search {
       display: block;
     }
 
-    .right-icon.fa-caret-down {
+    .right-icon.sn-icon-down {
       display: none;
     }
   }
@@ -38,15 +36,12 @@
     .right-icon {
       color: $color-volcano;
       cursor: pointer;
-      height: 18px;
-      line-height: 18px;
       position: absolute;
-      right: 12px;
+      right: 4px;
       text-align: center;
-      top: 8px;
-      width: 18px;
+      top: 6px;
 
-      &.fa-search.simple-dropdown {
+      &.sn-icon-search.simple-dropdown {
         color: $brand-focus;
         display: none;
       }
@@ -330,7 +325,7 @@
           }
         }
 
-        .fa-times {
+        .sn-icon-close-small {
           display: none;
         }
       }
@@ -346,7 +341,7 @@
         min-width: 50px;
       }
 
-      .fa-caret-down {
+      .sn-icon-down {
         transform: rotate(180deg);
       }
     }
@@ -391,11 +386,11 @@
       }
 
       .right-icon {
-        &.fa-search {
-          display: inline;
+        &.sn-icon-search {
+          display: block;
         }
 
-        &.fa-caret-down {
+        &.sn-icon-down {
           display: none;
         }
       }
@@ -423,7 +418,7 @@
     .input-field {
       background: $color-white;
 
-      .ds-tags .fa-times {
+      .ds-tags .sn-icon-close-small {
         display: none;
       }
     }

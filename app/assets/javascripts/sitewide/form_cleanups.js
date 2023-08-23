@@ -10,8 +10,8 @@ $.fn.clearFormFields = function () {
     .not('input[type="submit"], input[type="reset"], input[type="hidden"]')
     .not('input[type="radio"]') // Leave out radios as this messes up Bootstrap btn-groups
     .val('')
-    .removeAttr('checked')
-    .removeAttr('selected');
+    .attr('checked', false)
+    .attr('selected', false);
 };
 
 $.fn.removeBlankFileForms = function () {

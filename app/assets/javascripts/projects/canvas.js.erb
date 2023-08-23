@@ -138,7 +138,7 @@ var hammertime;
  * Initializes page
  */
 function init() {
-  if ($("#canvas-container").length === 0) return;
+  if ($('#module-archive').length === 0 && $('#canvas-container').length === 0) return;
 
   if($('#module-archive').length) {
     bindFullZoomAjaxTabs();
@@ -1151,8 +1151,8 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
 
   var toggleIcon = document.createElement("span");
   $(toggleIcon)
-  .addClass("fas")
-  .addClass("fa-caret-down")
+  .addClass("sn-icon")
+  .addClass("sn-icon-down")
   .attr("aria-hidden", "true")
   .appendTo(dropdownToggle);
 

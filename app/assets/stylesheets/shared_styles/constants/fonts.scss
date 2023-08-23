@@ -1,10 +1,10 @@
 // scss-lint:disable ImportantRule
 
-$font-family-lato: Lato, "Open Sans", Arial, Helvetica, sans-serif;
+$font-family-inter: "SN Inter";
 $font-family-sans-serif: "Open Sans", Arial, Helvetica, sans-serif;
 $font-family-serif: Georgia, "Times New Roman", Times, serif;
 $font-family-monospace: Menlo, Monaco, Consolas, "Courier New", monospace;
-$font-family-base: $font-family-lato;
+$font-family-base: $font-family-inter;
 $font-family-icons: "Font Awesome 5 Free";
 $font-size-base: 16px;
 $headings-font-weight: bold;
@@ -27,8 +27,24 @@ $font-fas-exclamation-circle: "\f06a";
 $font-fas-caret-up: "\f0d8";
 $font-fas-plus: "\f02b";
 
+$sn-icon-left: "\e932";
+$sn-icon-right: "\e931";
+$sn-icon-check: "\e95f";
+
+
+/// Hack for old icons
+.fas {
+  align-items: center;
+  display: inline-flex !important;
+  justify-content: center;
+  height: 24px;
+  width: 24px;
+
+}
+
 .sn-icon {
   font-size: 24px !important;
+  vertical-align: middle;
 
   &.mini {
     font-size: 16px !important;
@@ -67,6 +83,11 @@ $font-fas-plus: "\f02b";
   font-weight: 501;
 }
 
+@mixin font-sn-icon {
+  font-family: "SN-icon-font";
+  font-size: 24px !important;
+}
+
 html {
   font-size: 16px !important;
 }
@@ -85,3 +106,27 @@ html {
 // $headings-font-weight: 500;
 // $headings-line-height: 1.1;
 // $headings-color: inherit;
+
+h1 {
+  @include font-h1;
+}
+
+h2 {
+  @include font-h2;
+}
+
+h3 {
+  @include font-h3;
+}
+
+h4 {
+  @include font-h3;
+}
+
+h5 {
+  @include font-h3;
+}
+
+h6 {
+  @include font-h3;
+}

@@ -1,7 +1,5 @@
 // scss-lint:disable SelectorDepth, NestingDepth, ImportantRule
 
-@import "constants";
-
 .dropdown-menu .divider {
   margin: 5px 0;
 }
@@ -20,6 +18,10 @@
       border-color: $brand-focus;
 
       .caret {
+        transform: rotateX(180deg);
+      }
+
+      .sn-icon-down {
         transform: rotateX(180deg);
       }
     }

@@ -2,10 +2,10 @@
   <%= form_for(@result, url: my_module_result_assets_path(format: :json), data: { type: :json }) do |f| %>
     <div id="new-result-assets-select" class="text-center new-asset-box">
       <span>
-        <label>
-        <h2 class="inline-block font-normal"><%= t('assets.drag_n_drop.label_html') %></h2>
-          <span class="btn btn-default new-asset-upload-button">
-            <span class="fas fa-file-upload new-asset-upload-icon"></span>
+        <label class="flex align-center justify-center">
+          <h2 class="inline-block font-normal my-auto"><%= t('assets.drag_n_drop.label_html') %></h2>
+          <span class="btn btn-light btn-sm new-asset-upload-button">
+            <span class="sn-icon sn-icon-import new-asset-upload-icon"></span>
             <%= t('assets.drag_n_drop.browse_label') %>
           </span>
           <%= f.file_field :file,
@@ -27,5 +27,4 @@
 
     </div>
   <% end %>
-  <%= javascript_include_tag 'results/result_assets/new', nonce: true %>
 </div>

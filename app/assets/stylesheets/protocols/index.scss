@@ -21,6 +21,12 @@
 
       .dataTables_scrollHead {
 
+        thead {
+          .sci-checkbox-container {
+            margin-left: .125rem;
+          }
+        }
+
         tbody {
           td {
             vertical-align: middle;
@@ -103,8 +109,9 @@
     .users-access-cell {
       .protocol-users-link {
         align-items: center;
-        color: $color-silver-chalice;
+        color: var(--sn-black);
         display: flex;
+        gap: .25rem;
 
         &:hover {
           text-decoration: none;
@@ -113,34 +120,30 @@
 
       .global-avatar-container {
         align-items: center;
-        border: 2px solid $color-white;
         display: flex;
-        height: 32px;
+        height: 28px;
         justify-content: center;
         line-height: 28px;
-        margin-right: -.5em;
-        width: 32px;
+        width: 28px;
       }
 
       .more-users {
         background: $color-volcano;
-        border: 2px solid $color-white;
         border-radius: 50%;
         color: $color-white;
-        height: 32px;
-        line-height: 28px;
-        margin-right: -.5em;
+        height: 2em;
+        line-height: 2em;
+        margin-right: .25em;
         text-align: center;
         text-decoration: none;
-        width: 32px;
+        width: 2em;
       }
 
       .new-user {
         background: $color-concrete;
-        margin-left: .75em;
-        text-align: center;
-        line-height: 24px;
         height: 28px;
+        line-height: 24px;
+        text-align: center;
         width: 28px;
       }
   }

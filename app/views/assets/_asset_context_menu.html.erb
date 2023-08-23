@@ -1,7 +1,7 @@
 <% if can_manage_asset?(asset) %>
   <div class="dropdown asset-context-menu">
-    <button class="btn btn-light dropdown-toggle icon-btn" type="button" id="dropdownAssetContextMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-      <i class="fas fa-ellipsis-h"></i>
+    <button class="btn btn-light btn-xs dropdown-toggle icon-btn" type="button" id="dropdownAssetContextMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      <i class="sn-icon sn-icon-more-hori"></i>
     </button>
     <ul class="dropdown-menu dropdown-menu-right"
         aria-labelledby="dropdownAssetContextMenu"
@@ -11,7 +11,7 @@
         <% if wopi_enabled? && wopi_file?(asset) %>
           <li>
             <% edit_supported, title = wopi_file_edit_button_status(asset) %>
-            <%= render partial: 'assets/wopi/file_wopi_controls.html.erb',
+            <%= render partial: 'assets/wopi/file_wopi_controls',
               locals: {
                 asset: asset,
                 edit_supported: edit_supported,
@@ -33,20 +33,6 @@
             </a>
           </li>
           <li role="separator" class="divider"></li>
-        <% elsif asset.bio_eddie? && BioEddieService.enabled?(current_user) %>
-          <li>
-            <a class="btn btn-light bio-eddie-edit-button"
-              data-molecule-id="<%= asset.id %>"
-              data-update-url="<%= bio_eddie_asset_path(asset) %>"
-              data-edit-url="<%= start_editing_bio_eddie_asset_path(asset) %>"
-              data-molecule-name="<%= asset.file.metadata[:name] || asset.file_name %>"
-              data-molecule-description="<%= asset.file.metadata[:description] || asset.file.download %>"
-            >
-              <%= image_tag 'icon_small/bio_eddie.png' %>
-              <%= t('assets.file_preview.edit_in_bio_eddie') %>
-            </a>
-          </li>
-          <li role="separator" class="divider"></li>
         <% elsif asset.editable_image? %>
           <li>
             <a class="btn btn-light image-edit-button"
@@ -57,13 +43,13 @@
               data-image-mime-type="<%= asset.file.content_type %>"
               data-image-start-edit-url="<%= start_edit_image_path(asset) %>"
             >
-              <span class="fas fa-pencil-alt"></span>
+              <span class="sn-icon sn-icon-edit"></span>
               <%= t('assets.file_preview.edit_in_scinote') %>
             </a>
           </li>
           <li>
             <a class="btn btn-light file-download-link" href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>" data-turbolinks="false">
-              <span class="fas fa-download"></span>
+              <span class="sn-icon sn-icon-export"></span>
               <%= t('Download') %>
             </a>
           </li>
@@ -82,7 +68,7 @@
         <li role="separator" class="divider"></li>
         <li>
           <a class="delete-asset" href="<%= asset_destroy_path(asset) %>" data-file-name="<%= asset.render_file_name %>">
-            <i class="fas fa-trash"></i>
+            <i class="sn-icon sn-icon-delete"></i>
             <%= t("assets.context_menu.delete") %>
           </a>
         </li>

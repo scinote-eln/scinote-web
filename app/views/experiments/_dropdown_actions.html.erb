@@ -14,7 +14,7 @@
                   type: 'button',
                   data: { id: experiment.id },
                   class: 'edit-experiment' do %>
-        <i class="fas fa-pen"></i>
+        <i class="sn-icon sn-icon-edit"></i>
         <span><%= t('experiments.edit.label_title') %></span>
       <% end %>
     </li>
@@ -25,7 +25,7 @@
       <%= link_to clone_modal_experiment_url(experiment),
                   remote: true, type: 'button',
                   class: 'clone-experiment' do %>
-        <i class="fas fa-copy"></i>
+        <i class="sn-icon sn-icon-duplicate"></i>
         <span><%= t('experiments.clone.label_title') %></span>
       <% end %>
     </li>
@@ -35,7 +35,7 @@
       <%= link_to move_modal_experiment_url(experiment),
                   remote: true, type: 'button',
                   class: 'move-experiment' do %>
-        <i class="fas fa-arrow-right"></i>
+        <i class="sn-icon sn-icon-move"></i>
         <span><%= t('experiments.move.label_title') %></span>
       <% end %>
     </li>
@@ -44,14 +44,14 @@
   <% if can_manage_experiment_users?(experiment) %>
     <li>
       <%= link_to edit_access_permissions_experiment_path(experiment), data: { action: 'remote-modal'} do %>
-        <i class="fas fa-door-open"></i>
+        <i class="sn-icon sn-icon-project-member-access"></i>
         <span><%= t('experiments.index.experiment_access') %></span>
       <% end %>
     </li>
   <% else %>
     <li>
       <%= link_to access_permissions_experiment_path(experiment), data: { action: 'remote-modal'} do %>
-        <i class="fas fa-door-open"></i>
+        <i class="sn-icon sn-icon-project-member-access"></i>
         <span><%= t('experiments.index.experiment_access') %></span>
       <% end %>
     </li>
@@ -62,7 +62,7 @@
                   type: 'button',
                   method: :post,
                   data: { confirm: t('experiments.canvas.archive_confirm') } do %>
-        <i class="fas fa-archive"></i>
+        <i class="sn-icon sn-icon-archive"></i>
         <span><%= t('experiments.archive.label_title') %></span>
       <% end %>
     </li>
@@ -74,7 +74,7 @@
       <%= f.hidden_field :archived, value: false %>
     <% end %>
     <li><a href="#" class="form-submit-link" data-turbolinks="false" data-submit-form="<%= experiment_form.options[:html][:id] %>">
-          <i class="fas fa-undo"></i><%= t "projects.experiment_archive.restore_option" %></a></li>
+          <i class="sn-icon sn-icon-restore"></i><%= t "projects.experiment_archive.restore_option" %></a></li>
   <% end %>
 
   <div class="divider-label footer">

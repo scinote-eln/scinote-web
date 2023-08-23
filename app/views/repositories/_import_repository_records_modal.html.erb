@@ -6,20 +6,20 @@
         <h4 class="modal-title"><%= t('repositories.modal_import.title') %></h4>
         <%= t("repositories.modal_import.notice") %>
       </div>
-      <%= bootstrap_form_tag url: parse_sheet_repository_path(repository),
+      <%= form_with url: parse_sheet_repository_path(repository),
                              html: {'data-type' => 'json',
                                     id: 'form-records-file'} do |f| %>
         <%= f.hidden_field :team_id, value: current_team.id %>
       <div class="modal-body">
           <%= f.file_field :file %>
           <div class="inline-alert alert-info" role="alert">
-            <span class="fas fa-info-circle alert-icon"></span>
+            <span class="sn-icon sn-icon-info alert-icon"></span>
             <span><%= t('repositories.modal_import.limit_description_html') %></span>
           </div>
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-default close-button" data-dismiss="modal"><%= t('general.cancel')%></button>
+        <button type="button" class="btn btn-secondary close-button" data-dismiss="modal"><%= t('general.cancel')%></button>
         <input type="submit" class="btn btn-success" value="<%= t("repositories.modal_import.upload") %>">
       </div>
       <% end %>

@@ -45,12 +45,12 @@
       tagClass: 'users-dropdown-list',
       inputTagMode: true,
       selectKeys: [13, 32, 44, 188],
-      customDropdownIcon: () => { return '<i class="fas fa-search right-icon"></i>'; },
+      customDropdownIcon: () => { return '<i class="sn-icon sn-icon-search right-icon"></i>'; },
       onChange: () => {
         let values = dropdownSelector.getValues(emailsInput);
         if (values.length > 0) {
-          inviteBtn.removeAttr('disabled');
-          inviteWithRoleBtn.removeAttr('disabled');
+          inviteBtn.attr('disabled', false);
+          inviteWithRoleBtn.attr('disabled', false);
         } else {
           inviteBtn.attr('disabled', 'disabled');
           inviteWithRoleBtn.attr('disabled', 'disabled');
@@ -119,7 +119,7 @@
       ) {
         teamSelectorCheckbox.on('change', function() {
           if ($(this).is(':checked')) {
-            teamSelectorDropdown.removeAttr('disabled');
+            teamSelectorDropdown.attr('disabled', false);
             teamSelectorDropdown2.removeClass('disabled');
             if (type === 'invite_with_team_selector') {
               inviteBtn.hide();

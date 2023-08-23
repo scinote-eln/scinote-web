@@ -6,22 +6,20 @@ class TeamsController < ApplicationController
   attr_reader :current_folder
   helper_method :current_folder
 
-  before_action :load_vars, only: %i(sidebar export_projects export_projects_modal)
+  before_action :load_vars, only: %i(sidebar export_projects export_projects_modal
+                                     disable_tasks_sharing_modal shared_tasks_toggle)
   before_action :load_current_folder, only: :sidebar
   before_action :check_read_permissions, except: :view_type
   before_action :check_export_projects_permissions, only: %i(export_projects_modal export_projects)
 
   def sidebar
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'shared/sidebar/projects.html.erb',
-            locals: { team: current_team, sort: params[:sort] }
-          )
-        }
-      end
-    end
+    render json: {
+      html: render_to_string(
+        partial: 'shared/sidebar/projects',
+        locals: { team: current_team, sort: params[:sort] },
+        formats: :html
+      )
+    }
   end
 
   def export_projects
@@ -30,15 +28,9 @@ class TeamsController < ApplicationController
 
       generate_export_projects_zip
 
-      Activities::CreateActivityService
-        .call(activity_type: :export_projects,
-              owner: current_user,
-              subject: @team,
-              team: @team,
-              message_items: {
-                team: @team.id,
-                projects: @exp_projects.map(&:name).join(', ')
-              })
+      log_activity(:export_projects,
+                   team: @team.id,
+                   projects: @exp_projects.map(&:name).join(', '))
 
       render json: {
         flash: t('projects.export_projects.success_flash')
@@ -51,18 +43,20 @@ class TeamsController < ApplicationController
       if current_user.has_available_exports?
         render json: {
           html: render_to_string(
-            partial: 'projects/export/modal.html.erb',
+            partial: 'projects/export/modal',
             locals: { num_projects: @exp_projects.size,
                       limit: TeamZipExport.exports_limit,
-                      num_of_requests_left: current_user.exports_left - 1 }
+                      num_of_requests_left: current_user.exports_left - 1 },
+            formats: :html
           ),
           title: t('projects.export_projects.modal_title')
         }
       else
         render json: {
           html: render_to_string(
-            partial: 'projects/export/error.html.erb',
-            locals: { limit: TeamZipExport.exports_limit }
+            partial: 'projects/export/error',
+            locals: { limit: TeamZipExport.exports_limit },
+            formats: :html
           ),
           title: t('projects.export_projects.error_title'),
           status: 'error'
@@ -70,6 +64,32 @@ class TeamsController < ApplicationController
       end
     else
       render json: { flash: I18n.t('projects.export_projects.zero_projects_flash') }, status: :unprocessable_entity
+    end
+  end
+
+  def disable_tasks_sharing_modal
+    render json: {
+      html: render_to_string(
+        partial: 'users/settings/teams/destroy_tasks_sharing_modal',
+        locals: {},
+        formats: :html
+      )
+    }
+  end
+
+  def shared_tasks_toggle
+    return render_403 unless can_manage_team?(@team)
+
+    @team.toggle!(:shareable_links_enabled)
+
+    if @team.shareable_links_enabled?
+      log_activity(:team_sharing_tasks_enabled,
+                   team: @team.id,
+                   user: current_user.id)
+    else
+      log_activity(:team_sharing_tasks_disabled,
+                   team: @team.id,
+                   user: current_user.id)
     end
   end
 
@@ -139,5 +159,14 @@ class TeamsController < ApplicationController
       options
     )
     ids
+  end
+
+  def log_activity(type_of, message_items = {})
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: @team,
+            team: @team,
+            message_items: message_items)
   end
 end

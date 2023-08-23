@@ -6,7 +6,6 @@ Given(/^the following users are registered:$/) do |table|
     team_role = hash.delete 'role'
     user = FactoryBot.create(:user, hash)
     team = FactoryBot.create(:team, name: team_name, users: [user])
-    UserTeam.where(user: user, team: team).first.update role: team_role
     User.find_by(email: hash.fetch('email')).confirm
   end
 end
@@ -87,7 +86,6 @@ end
 
 Given(/^Templates project exists for the "([^"]*)" team$/) do |team_name|
   team = Team.find_by(name: team_name)
-  user = team.user_teams.where(role: :admin).take.user
   TemplatesService.new.schedule_creation_for_user(user)
 end
 Given(/^I'm on the projects page of "([^"]*)" team$/) do |team_name|
@@ -99,9 +97,6 @@ end
 Given(/^"([^"]*)" is in "([^"]*)" team as a "([^"]*)"$/) do |user_email, team_name, role|
   team = Team.find_by(name: team_name)
   user = User.find_by(email: user_email)
-  FactoryBot.create(:user_team, user: user,
-                    team: team, role:
-                    UserTeam.roles.fetch(role))
 end
 
 Then(/^I attach a "([^"]*)" file to "([^"]*)" field$/) do |file, field_id|

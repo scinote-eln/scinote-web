@@ -5,7 +5,7 @@
        >
     <div class="panel-heading">
       <div class="actions actions-cell table-cell pull-right">
-        <%= render partial: 'projects/show/experiment_actions_dropdown.html.erb', locals: { experiment: experiment, view: 'cards', project: project } %>
+        <%= render partial: 'projects/show/experiment_actions_dropdown', locals: { experiment: experiment, view: 'cards', project: project } %>
       </div>
       <div class="panel-title">
         <%= link_to experiment.name, list_modules_experiment_pat(experiment) %>
@@ -13,13 +13,13 @@
 
       <% if experiment.archived_branch? %>
         <div class="panel-date">
-          <span class="fas fa-archive" aria-hidden="true"></span>
+          <span class="sn-icon sn-icon-archive" aria-hidden="true"></span>
           <%= l(experiment_archived_on(experiment), format: :full_date) %>
         </div>
       <% end %>
 
       <div class="panel-date">
-        <span class="fas fa-calendar-alt" aria-hidden="true"></span>
+        <span class="sn-icon sn-icon-calendar" aria-hidden="true"></span>
         <%= l(experiment.created_at, format: :full_date) %> - <%= l(experiment.updated_at, format: :full_date) %>
       </div>
 

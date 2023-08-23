@@ -1,7 +1,5 @@
 // turbolinks MUST BE THE LAST inclusion
-//= require hammer
-//= require js.cookie
-//= require bootstrap-sprockets
+
 //= require moment
 //= require bootstrap-datetimepicker
 //= require bootstrap-colorselector
@@ -11,9 +9,12 @@
 //= require nested_form_fields
 //= require jsPlumb-2.0.4-min
 //= require jsnetworkx
-//= require bootstrap-select
 //= require_directory ./repository_columns/columns_initializers
 //= require datatables
+//= require jquery.dataTables.colResize
+//= require jquery.ui.touch-punch.min
+//= require jquery.caret.min
+//= require jquery.atwho.min
 //= require clndr.min
 //= require ajax-bootstrap-select.min
 //= require underscore
@@ -157,7 +158,7 @@ window.onbeforeunload = function () {
  * Disable Firefox caching to get rid of issues with pressing
  * browser back, like opening canvas in edit mode.
  */
-$(window).unload(function () {
+$(window).on("unload", function() {
   $(window).unbind('unload');
 });
 
@@ -248,9 +249,12 @@ var HelperModule = (function(){
     return exit;
   });
 
-  const RESIZE_OBSERVER = new ResizeObserver(function(entries) {
-    entries.forEach((entry) => {
-      if (entry.target.offsetWidth <= parseInt(entry.target.getAttribute('data-width-breakpoint'))) {
+  const RESIZE_OBSERVER = new ResizeObserver(entries => {
+    entries.forEach(entry => {
+      const { offsetWidth } = entry.target;
+      const breakpoint = parseInt(entry.target.getAttribute('data-width-breakpoint'));
+
+      if (offsetWidth <= breakpoint && offsetWidth !== 0) {
         entry.target.classList.add('narrow');
       } else {
         entry.target.classList.remove('narrow');
@@ -319,19 +323,16 @@ $(document).on('shown.bs.modal', '.modal', function() {
 let userNamePopover;
 const renderUserNamePopover = (url, fullName, email, html) => {
   return `<div class="user-name-popover-wrapper">
-            <div class='col-xs-4'>
+            <div class='col-xs-3'>
               <img
-                class='avatar'
+                class='avatar img-responsive'
                 src='${url}'
                 alt='thumb'>
             </div>
-            <div class='col-xs-8'>
+            <div class='col-xs-9 pl-3'>
               <div class='row'>
-                <div class='col-xs-9 text-left'>
-                  <h5 class='full-name'>${fullName}</h5>
-                </div>
-                <div class='col-xs-3 text-right'>
-                  <span class='fas fa-times' aria-hidden='true'></span>
+                <div class='col-xs-12 text-left font-bold'>
+                  ${fullName}
                 </div>
               </div>
               <div class='row'>

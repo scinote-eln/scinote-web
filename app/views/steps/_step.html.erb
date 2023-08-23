@@ -8,7 +8,7 @@
            href="#step-panel-<%= step.id || step.position %>"
            data-toggle="collapse"
            data-remote="true">
-          <span class="fas fa-caret-right"></span>
+          <span class="sn-icon sn-icon-right"></span>
         </a>
 
         <span class="step-number"><%= step.position + 1 %>.</span>
@@ -65,10 +65,10 @@
           <% end %>
 
           <% if import %>
-            <%= render partial: 'steps/attachments/preview_list.html.erb',
+            <%= render partial: 'steps/attachments/preview_list',
                        locals: {  attachments: steps_assets[step.position]} %>
           <% else %>
-            <%= render partial: 'steps/attachments/list.html.erb', locals: {  step: step, preview: preview } %>
+            <%= render partial: 'steps/attachments/list', locals: {  step: step, preview: preview } %>
           <% end %>
 
           <% unless step.checklists.blank? then %>
@@ -99,7 +99,7 @@
         </div>
         <% unless import %>
           <hr>
-          <%= render partial: 'steps/comments.html.erb', locals: {  comments: step.last_comments,
+          <%= render partial: 'steps/comments', locals: {  comments: step.last_comments,
                                                                     comments_count: step.step_comments.count,
                                                                     step: step } %>
         <% end %>

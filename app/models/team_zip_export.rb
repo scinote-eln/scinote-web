@@ -13,16 +13,15 @@ class TeamZipExport < ZipExport
     ).first
     zip_dir = FileUtils.mkdir_p(File.join(Rails.root, 'tmp/zip-ready')).first
 
-    zip_name = "projects_export_#{Time.now.strftime('%F_%H-%M-%S_UTC')}.zip"
+    zip_name = "projects_export_#{Time.now.utc.strftime('%F_%H-%M-%S_UTC')}.zip"
     full_zip_name = File.join(zip_dir, zip_name)
-    zip_file = File.new(full_zip_name, 'w+')
 
     fill_content(zip_input_dir, data, type, options)
-    zip!(zip_input_dir, zip_file)
-    self.zip_file.attach(io: File.open(zip_file), filename: zip_name)
+    zip!(zip_input_dir, full_zip_name)
+    zip_file.attach(io: File.open(full_zip_name), filename: zip_name)
     generate_notification(user) if save
   ensure
-    FileUtils.rm_rf([zip_input_dir, zip_file], secure: true)
+    FileUtils.rm_rf([zip_input_dir, full_zip_name], secure: true)
   end
 
   handle_asynchronously :generate_exportable_zip,
@@ -191,7 +190,6 @@ class TeamZipExport < ZipExport
     elements.each_with_index do |element, i|
       asset = element.asset
       preview = prepare_preview(asset)
-      bio_eddie = asset.file.metadata[:asset_type] == 'bio_eddie'
       if type == :step
         name = "#{directory}/" \
                "#{append_file_suffix(asset.file_name, "_#{i}_Step#{element.step.position_plus_one}")}"
@@ -199,28 +197,18 @@ class TeamZipExport < ZipExport
           preview_name = "#{directory}/" \
                          "#{append_file_suffix(preview[:file_name], "_#{i}_Step#{element.step.position_plus_one}_preview")}"
         end
-        if bio_eddie
-          bio_eddie_name = "#{directory}/" \
-                           "#{append_file_suffix("#{asset.file.metadata[:name]}.heml", "_#{i}_Step#{element.step.position_plus_one}")}"
-        end
       elsif type == :result
         name = "#{directory}/#{append_file_suffix(asset.file_name, "_#{i}")}"
         preview_name = "#{directory}/#{append_file_suffix(preview[:file_name], "_#{i}_preview")}" if preview
-        bio_eddie_name = "#{directory}/#{append_file_suffix("#{asset.file.metadata[:name]}.heml", "_#{i}_preview")}" if bio_eddie
       end
 
       if asset.file.attached?
         File.open(name, 'wb') { |f| f.write(asset.file.download) }
         File.open(preview_name, 'wb') { |f| f.write(preview[:file_data]) } if preview
-
-        if bio_eddie
-          File.open(bio_eddie_name, 'wb') { |f| f.write(asset.file.metadata[:description]) }
-        end
       end
       asset_indexes[asset.id] = {
         file: name,
-        preview: preview_name,
-        bio_eddie: bio_eddie_name
+        preview: preview_name
       }
     end
     asset_indexes
@@ -235,7 +223,7 @@ class TeamZipExport < ZipExport
         file_name = preview.image.filename.to_s
         file_data = preview.image.download
       else
-        file_name = preview.filename.to_s
+        file_name = preview.blob.filename.to_s
 
         begin
           file_data = preview.processed.service.download(preview.key)
@@ -319,39 +307,5 @@ class TeamZipExport < ZipExport
     end
 
     csv_file_path
-  end
-
-  # Recursive zipping
-  def zip!(input_dir, output_file)
-    files = Dir.entries(input_dir)
-
-    # Don't zip current/above directory
-    files.delete_if { |el| ['.', '..'].include?(el) }
-
-    Zip::File.open(output_file.path, Zip::File::CREATE) do |zipfile|
-      write_entries(input_dir, files, '', zipfile)
-    end
-  end
-
-  # A helper method to make the recursion work.
-  def write_entries(input_dir, entries, path, io)
-    entries.each do |e|
-      zip_file_path = path == '' ? e : File.join(path, e)
-      disk_file_path = File.join(input_dir, zip_file_path)
-      puts 'Deflating ' + disk_file_path
-      if File.directory?(disk_file_path)
-        io.mkdir(zip_file_path)
-        subdir = Dir.entries(disk_file_path)
-
-        # Remove current/above directory to prevent infinite recursion
-        subdir.delete_if { |el| ['.', '..'].include?(el) }
-
-        write_entries(input_dir, subdir, zip_file_path, io)
-      else
-        io.get_output_stream(zip_file_path) do |f|
-          f.write(File.open(disk_file_path, 'rb').read)
-        end
-      end
-    end
   end
 end

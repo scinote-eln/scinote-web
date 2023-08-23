@@ -1,7 +1,7 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
 // scss-lint:disable IdSelector
-@import "constants";
+
 
 .folders-tree-container {
   --row-height: 36px;
@@ -52,10 +52,12 @@
 
   .jstree-icon {
     &.root-folder {
+      background-image: none !important;
       color: $color-volcano;
     }
 
     &.icon-folder {
+      background-image: none !important;
       color: $brand-primary-light;
     }
   }

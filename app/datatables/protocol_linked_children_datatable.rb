@@ -57,22 +57,25 @@ class ProtocolLinkedChildrenDatatable < CustomDatatable
   def record_html(record)
     res = ''
     res += "<ol class='breadcrumb'>"
-    res += "<li><span class='fas fa-folder'></span>&nbsp;"
+    res += "<li><span class='sn-icon sn-icon-projects'></span>&nbsp;"
     res += @controller.render_to_string(
-      partial: 'search/results/partials/project_text.html.erb',
-      locals: { project: record.my_module.experiment.project }
+      partial: 'search/results/partials/project_text',
+      locals: { project: record.my_module.experiment.project, link_to_page: :show },
+      formats: :html
     )
     res += '</li>'
-    res += "<li><i class='fas fa-flask'></i>&nbsp;"
+    res += "<li><i class='sn-icon sn-icon-experiment'></i>&nbsp;"
     res += @controller.render_to_string(
-      partial: 'search/results/partials/experiment_text.html.erb',
-      locals: { experiment: record.my_module.experiment }
+      partial: 'search/results/partials/experiment_text',
+      locals: { experiment: record.my_module.experiment },
+      formats: :html
     )
     res += '</li>'
-    res += "<li><span class='fas fa-credit-card'></span>&nbsp;"
+    res += "<li><span class='sn-icon sn-icon-task'></span>&nbsp;"
     res += @controller.render_to_string(
-      partial: 'search/results/partials/my_module_text.html.erb',
-      locals: { my_module: record.my_module, link_to_page: :protocols }
+      partial: 'search/results/partials/my_module_text',
+      locals: { my_module: record.my_module, link_to_page: :protocols },
+      formats: :html
     )
     res += '</li>'
     res += '</ol>'

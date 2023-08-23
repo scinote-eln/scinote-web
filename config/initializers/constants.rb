@@ -41,7 +41,7 @@ class Constants
   EMAIL_MAX_LENGTH = 254
   # Some big value which is still supported by all databases, no matter what
   # data type is used
-  INFINITY = 2**32 / 2 - 1
+  INFINITY = ((2**32) / 2) - 1
 
   # Prevents integer overflow for reminder delta seconds
   MAX_NUMBER_OF_REMINDER_WEEKS = 816
@@ -195,7 +195,7 @@ class Constants
   COLOR_BLACK = '#231f20'.freeze # $color-black
 
   # Fonts
-  FONT_FAMILY_BASE = 'Lato,"Open Sans",Arial,Helvetica,sans-serif;'.freeze # $font-family-base
+  FONT_FAMILY_BASE = 'Inter,"Open Sans",Arial,Helvetica,sans-serif;'.freeze # $font-family-base
 
   #=============================================================================
   # External URLs
@@ -204,8 +204,9 @@ class Constants
   HTTP = 'http://'.freeze
   TUTORIALS_URL = ENV.fetch('VIDEO_TUTORIALS_URL', "#{HTTP}goo.gl/YH3fXA").freeze
   SUPPORT_URL = ENV.fetch('KNOWLEDGE_CENTER_URL', 'https://scinote-3850750.hs-sites.com/en/knowledge').freeze
+  FREE_TRIAL_URL = 'https://www.scinote.net/free-trial/?utm_source=SciNoteShare&utm_medium=FreeTrialButton&utm_campaign=Q3_2023'.freeze
   # Default user picture avatar
-  DEFAULT_AVATAR_URL = '/images/:style/missing.png'.freeze
+  DEFAULT_AVATAR_URL = '/images/:style/missing.svg'.freeze
 
   ACADEMY_BL_LINK = 'https://scinote.net/academy/?utm_source=SciNote%20software%20BL&utm_medium=SciNote%20software%20BL'.freeze
 

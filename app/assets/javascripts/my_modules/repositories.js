@@ -188,7 +188,7 @@ var MyModuleRepositories = (function() {
         if (row.hasActiveReminders) {
           recordName = `<div class="dropdown row-reminders-dropdown"
                           data-row-reminders-url="${row.rowRemindersUrl}" tabindex='-1'>
-                          <i class="fas fa-bell dropdown-toggle row-reminders-icon"
+                          <i class="sn-icon sn-icon-notifications dropdown-toggle row-reminders-icon"
                              data-toggle="dropdown" id="rowReminders${row.DT_RowId}}"></i>
                           <ul class="dropdown-menu" role="menu" aria-labelledby="rowReminders${row.DT_RowId}">
                           </ul>
@@ -253,6 +253,13 @@ var MyModuleRepositories = (function() {
     SIMPLE_TABLE.ajax.reload(null, false);
   }
 
+  function addRepositorySearch() {
+    $(`<div id="inventorySearchComponent">
+      <repository_search_container/>
+    </div>`).appendTo('.filter-container');
+    initRepositorySearch();
+  }
+
   function renderFullViewTable(tableContainer, options = {}) {
     if (FULL_VIEW_TABLE) FULL_VIEW_TABLE.destroy();
     SELECTED_ROWS = {};
@@ -285,8 +292,9 @@ var MyModuleRepositories = (function() {
       fnInitComplete: function() {
         var dataTableWrapper = $(tableContainer).closest('.dataTables_wrapper');
         DataTableHelpers.initLengthAppearance(dataTableWrapper);
-        DataTableHelpers.initSearchField(dataTableWrapper, I18n.t('repositories.show.filter_inventory_items'));
-        $('<img class="barcode-scanner" src="/images/icon_small/barcode.png"></img>').appendTo($('.search-container'));
+        $('.dataTables_filter').addClass('hidden');
+        addRepositorySearch();
+        $("<i class='sn-icon sn-icon-barcode'></i>").appendTo($('.search-container'));
         dataTableWrapper.find('.main-actions, .pagination-row').removeClass('hidden');
         if (options.assign_mode) {
           renderFullViewAssignButtons();
@@ -756,6 +764,8 @@ var MyModuleRepositories = (function() {
       UPDATE_REPOSITORY_MODAL.data('update-url', data.update_url);
       UPDATE_REPOSITORY_MODAL.modal('show');
     });
+
+    $(document).on('hidden.bs.modal', '#updateRepositoryRecordModal', () => $('body').addClass('modal-open'));
   }
 
   function submitUpdateRepositoryRecord(options = {}) {
@@ -810,7 +820,7 @@ var MyModuleRepositories = (function() {
         header_ids: headerIds
       }, function(response) {
         HelperModule.flashAlertMsg(response.message, 'success');
-      }).error((response) => {
+      }).fail((response) => {
         HelperModule.flashAlertMsg(response.responseJSON.message, 'danger');
       });
     });

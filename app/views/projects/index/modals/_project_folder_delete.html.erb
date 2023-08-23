@@ -12,12 +12,13 @@
         <p><%= t('projects.index.modal_delete_folders.description_2') %></p>
       </div>
       <div class="modal-footer">
-        <button type='button' class='btn btn-default' data-dismiss='modal'><%= t('general.cancel')%></button>
+        <button type='button' class='btn btn-secondary' data-dismiss='modal'><%= t('general.cancel')%></button>
         <%= button_to t('projects.index.modal_delete_folders.confirm_button'),
                       destroy_project_folders_path,
                       class: 'btn btn-danger',
                       form_class: 'delete-folders-form',
                       params: { project_folder_ids: project_folder_ids },
+                      method: :post,
                       remote: true %>
       </div>
     </div>

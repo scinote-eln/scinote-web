@@ -25,6 +25,7 @@ import 'tinymce/plugins/insertdatetime';
 import 'tinymce/plugins/nonbreaking';
 import 'tinymce/plugins/save';
 import 'tinymce/plugins/help';
+import 'tinymce/plugins/help/js/i18n/keynav/en';
 import 'tinymce/plugins/quickbars';
 import 'tinymce/plugins/directionality';
 import './tinymce/custom_image_uploader/plugin';
@@ -40,7 +41,7 @@ import contentCss from '!!raw-loader!tinymce/skins/content/default/content.min.c
 import contentUiCss from '!!raw-loader!tinymce/skins/ui/tinymce-5/content.min.css';
 
 const contentPStyle = `p { margin: 0; padding: 0;}`;
-const contentBodyStyle = `body { font-family: Lato, "Open Sans", Arial, Helvetica, sans-serif }`;
+const contentBodyStyle = `body { font-family: "SN Inter", "Open Sans", Arial, Helvetica, sans-serif }`;
 const contentStyle = [contentCss, contentUiCss, contentBodyStyle, contentPStyle].map((s) => s.toString()).join('\n');
 
 // Optional pre-initialization method
@@ -74,7 +75,7 @@ window.TinyMCE = (() => {
     const lastUpdated = $(selector).data('last-updated');
     let notificationBar;
     const restoreBtn = $('<button class="btn restore-draft-btn">Restore Draft</button>');
-    const cancelBtn = $('<span class="fas fa-times"></span>');
+    const cancelBtn = $('<span class="sn-icon sn-icon-close"></span>');
 
     // Check whether we have draft stored
 
@@ -178,7 +179,7 @@ window.TinyMCE = (() => {
         // Hide element containing HTML view of RTE field
         const tinyMceContainer = $(selector).closest('form').find('.tinymce-view');
         const tinyMceInitSize = tinyMceContainer.height();
-        $(selector).closest('.form-group')
+        $(selector).closest('.form-group, .tinymce-editor-container')
           .before(`<div class="tinymce-placeholder" style="height:${tinyMceInitSize}px"></div>`);
         tinyMceContainer.addClass('hidden');
         const plugins = `
@@ -201,7 +202,7 @@ window.TinyMCE = (() => {
         }
 
         return tinyMCE.init({
-          cache_suffix: '?v=6.3.1', // This suffix should be changed any time library is updated
+          cache_suffix: '?v=6.5.1-19', // This suffix should be changed any time library is updated
           selector,
           skin: false,
           content_css: false,
@@ -213,7 +214,7 @@ window.TinyMCE = (() => {
           },
           block_formats: 'Paragraph=p; Header 1=h1; Header 2=h2; Header 3=h3; Preformatted=pre',
           menubar: 'file edit view insert format table',
-          toolbar: window.customTinyMceToolbar || 'undo redo restoredraft | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link | forecolor backcolor | codesample | customimageuploader marvinjs | help',
+          toolbar: window.customTinyMceToolbar || 'undo redo restoredraft | insert | styleselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | customimageuploader | marvinjs link codesample | help',
           plugins,
           contextmenu: '',
           autoresize_bottom_margin: 20,
@@ -249,11 +250,12 @@ window.TinyMCE = (() => {
           default_link_target: '_blank',
           toolbar_mode: 'sliding',
           color_default_background: 'yellow',
+          link_default_target: 'external',
           mobile: {
             menubar: 'file edit view insert format table'
           },
-          target_list: [
-            { title: 'New page', value: '_blank' },
+          link_target_list: [
+            { title: 'New page', value: 'external' },
             { title: 'Same page', value: '_self' }
           ],
           style_formats: [
@@ -433,6 +435,19 @@ window.TinyMCE = (() => {
             editor.on('init', () => {
               restoreDraftNotification(selector, editor);
             });
+
+            editor.on('BeforeSetContent GetContent', function(e) {
+              if (e.content && e.content.includes('target="external"')) {
+                const div = document.createElement('div');
+                div.innerHTML = e.content;
+                const links = div.querySelectorAll('a[target="external"]');
+                links.forEach(link => {
+                  link.removeAttribute('target');
+                  link.setAttribute('rel', 'external');
+                });
+                e.content = div.innerHTML;
+              }
+            });
           },
           save_onsavecallback: (editor) => { saveAction(editor); }
         });
@@ -487,4 +502,10 @@ $(document).on('turbolinks:before-visit', (e) => {
     return false;
   }
   return true;
+});
+
+// Open rel="external" links in new tabs
+$('a[rel*=external]').on('click', function(e) {
+  e.preventDefault();
+  window.open(this.href, '_blank', 'noopener');
 });

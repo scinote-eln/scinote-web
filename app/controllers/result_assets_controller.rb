@@ -16,13 +16,9 @@ class ResultAssetsController < ApplicationController
       asset: @asset
     )
 
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(partial: 'new.html.erb')
-        }, status: :ok
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'new')
+    }
   end
 
   def create
@@ -38,13 +34,9 @@ class ResultAssetsController < ApplicationController
   end
 
   def edit
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(partial: 'edit.html.erb')
-        }, status: :ok
-      end
-    end
+    render json: {
+      html: render_to_string(partial: 'edit', formats: :html)
+    }
   end
 
   def update
@@ -111,9 +103,9 @@ class ResultAssetsController < ApplicationController
         format.json do
           render json: {
             html: render_to_string(
-              partial: 'my_modules/result.html.erb', locals: { result: @result }
+              partial: 'my_modules/result', locals: { result: @result }, formats: :html
             )
-          }, status: :ok
+          }
         end
       else
         format.json do

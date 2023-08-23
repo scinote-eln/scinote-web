@@ -1,7 +1,7 @@
 <% if result.is_text %>
-  <%= render partial: "results/result_text.html.erb", locals: {result: result, target: nil} %>
+  <%= render partial: 'results/result_text', locals: { result: result, target: nil } %>
 <% elsif result.is_table %>
-  <%= render partial: "results/result_table.html.erb", locals: {result: result} %>
+  <%= render partial: 'results/result_table', locals: { result: result } %>
 <% elsif result.is_asset %>
-  <%= render partial: 'assets/asset.html.erb', locals: { asset: result.asset, gallery_view_id: result.my_module.id } %>
+  <%= render partial: 'assets/asset', locals: { asset: result.asset, gallery_view_id: result.my_module.id } %>
 <% end %>

@@ -7,13 +7,13 @@
     <%= javascript_include_tag 'application' %>
     <%= javascript_include_tag "handsontable.full" %>
     <%= render 'shared/formulas_libraries' %>
-    <%= stylesheet_link_tag 'layouts/print_protocol', media: 'print, screen' %>
+    <%= stylesheet_link_tag 'print_protocol', media: 'print, screen' %>
     <body>
       <%= yield %>
       <div id="handson"
         data-init-rows-cnt="<%= Constants::HANDSONTABLE_INIT_ROWS_CNT %>"
         data-init-cols-cnt="<%= Constants::HANDSONTABLE_INIT_COLS_CNT %>"
       ></div>
-      <%= javascript_include_tag 'protocols/handson', nonce: true %>
+      <%= javascript_include_tag 'protocols/handson' %>
     </body>
 </html>

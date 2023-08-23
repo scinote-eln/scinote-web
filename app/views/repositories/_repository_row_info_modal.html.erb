@@ -11,7 +11,7 @@
 
       <div class="modal-body">
         <ol class="breadcrumb breadcrumb-repository">
-          <span class="fas fa-list-alt" aria-hidden="true"></span>
+          <span class="sn-icon sn-icon-inventory" aria-hidden="true"></span>
           <%= t('repositories.repository', name: @repository_row.repository.name) %>
           <%= @repository_row.repository.archived? ? I18n.t('atwho.res.archived') : '' %>
         </ol>
@@ -72,23 +72,23 @@
                       <td class="sorting_1">
                         <ol class='breadcrumb'>
                           <li>
-                            <span class='fas fa-users'></span>&nbsp;
-                            <%= render partial: 'search/results/partials/team_text.html.erb',
+                            <span class='sn-icon sn-icon sn-icon-users'></span>&nbsp;
+                            <%= render partial: 'search/results/partials/team_text',
                                        locals: { team: my_module.experiment.project.team } %>
                           </li>
                           <li>
                             <%= image_tag 'icon_small/project.svg' %>
-                            <%= render partial: 'search/results/partials/project_text.html.erb',
+                            <%= render partial: 'search/results/partials/project_text',
                                       locals: { project: my_module.experiment.project } %>
                           </li>
                           <li>
                             <%= image_tag 'icon_small/experiment.svg' %>
-                            <%= render partial: 'search/results/partials/experiment_text.html.erb',
+                            <%= render partial: 'search/results/partials/experiment_text',
                                       locals: { experiment: my_module.experiment } %>
                           </li>
                           <li>
                             <%= image_tag 'icon_small/task.svg' %>
-                            <%= render partial: 'search/results/partials/my_module_text.html.erb',
+                            <%= render partial: 'search/results/partials/my_module_text',
                                       locals: { my_module: my_module,
                                                 link_to_page: :repositories,
                                                 repository: @repository_row.repository } %>

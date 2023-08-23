@@ -3,7 +3,7 @@
     <div class="task-section-header" v-if="!inRepository">
       <div class="portocol-header-left-part">
         <a class="task-section-caret" tabindex="0" role="button" data-toggle="collapse" href="#protocol-content" aria-expanded="true" aria-controls="protocol-content">
-          <i class="fas fa-caret-right"></i>
+          <i class="sn-icon sn-icon-right"></i>
           <div class="task-section-title">
             <h2>{{ i18n.t('Protocol') }}</h2>
           </div>
@@ -19,11 +19,11 @@
              @keyup.enter="addStep(steps.length)"
              @click="addStep(steps.length)"
              tabindex="0">
-              <span class="fas fa-plus" aria-hidden="true"></span>
+              <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
               <span>{{ i18n.t("protocols.steps.new_step") }}</span>
           </a>
           <button class="btn btn-secondary" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
-            <span class="fas fa-print" aria-hidden="true"></span>
+            <span class="sn-icon sn-icon-printer" aria-hidden="true"></span>
             <span>{{ i18n.t("protocols.print.button") }}</span>
           </button>
           <ProtocolOptions
@@ -36,7 +36,7 @@
       </div>
     </div>
     <div id="protocol-content" class="protocol-content collapse in" aria-expanded="true">
-      <div class="protocol-description">
+      <div class="mb-8">
         <div class="protocol-name" v-if="!inRepository">
           <InlineEdit
             v-if="urls.update_protocol_name_url"
@@ -45,6 +45,7 @@
             :placeholder="i18n.t('my_modules.protocols.protocol_status_bar.enter_name')"
             :allowBlank="!inRepository"
             :attributeName="`${i18n.t('Protocol')} ${i18n.t('name')}`"
+            :customClasses="['hover-border']"
             @update="updateName"
           />
           <span v-else>
@@ -56,7 +57,7 @@
           <div v-if="inRepository" id="protocol-description" class="protocol-section-header">
             <div class="protocol-description-container">
               <a class="protocol-section-caret" role="button" data-toggle="collapse" href="#protocol-description-container" aria-expanded="false" aria-controls="protocol-description-container">
-                <i class="fas fa-caret-right"></i>
+                <i class="sn-icon sn-icon-right"></i>
                 <span id="protocolDescriptionLabel" class="protocol-section-title">
                   <h2>
                     {{ i18n.t("protocols.header.protocol_description") }}
@@ -66,7 +67,7 @@
             </div>
           </div>
           <div id="protocol-description-container" :class=" inRepository ? 'protocol-description collapse in' : ''" >
-            <div v-if="urls.update_protocol_description_url">
+            <div class="ml-1" v-if="urls.update_protocol_description_url">
               <Tinymce
                 :value="protocol.attributes.description"
                 :value_html="protocol.attributes.description_view"
@@ -92,7 +93,7 @@
         <div v-if="inRepository" id="protocol-steps" class="protocol-section-header">
           <div class="protocol-steps-container">
             <a class="protocol-section-caret" role="button" data-toggle="collapse" href="#protocol-steps-container" aria-expanded="false" aria-controls="protocol-steps-container">
-              <i class="fas fa-caret-right"></i>
+              <i class="sn-icon sn-icon-right"></i>
               <span id="protocolStepsLabel" class="protocol-section-title">
                 <h2>
                   {{ i18n.t("protocols.header.protocol_steps") }}
@@ -104,11 +105,11 @@
         <div id="protocol-steps-container" :class=" inRepository ? 'protocol-steps collapse in' : ''">
           <div v-if="steps.length > 0" class="protocol-step-actions">
             <button class="btn btn-light" @click="collapseSteps" tabindex="0">
-              <span class="fas fa-caret-up"></span>
+              <span class="sn-icon sn-icon-collapse"></span>
               {{ i18n.t("protocols.steps.collapse_label") }}
             </button>
             <button class="btn btn-light" @click="expandSteps" tabindex="0">
-              <span class="fas fa-caret-down"></span>
+              <span class="sn-icon sn-icon-expand"></span>
               {{ i18n.t("protocols.steps.expand_label") }}
             </button>
             <a v-if="urls.reorder_steps_url"
@@ -118,7 +119,7 @@
               @keyup.enter="startStepReorder"
               :class="{'disabled': steps.length == 1}"
               tabindex="0" >
-                <i class="fas fas-rotated-90 fa-exchange-alt" aria-hidden="true"></i>
+                <i class="sn-icon sn-icon-sort" aria-hidden="true"></i>
                 <span>{{ i18n.t("protocols.reorder_steps.button") }}</span>
             </a>
           </div>
@@ -126,7 +127,7 @@
             <template v-for="(step, index) in steps">
               <div class="step-block" :key="step.id">
                 <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)">
-                  <i class="fas fa-plus"></i>
+                  <i class="sn-icon sn-icon-new-task"></i>
                 </div>
                 <Step
                   :step.sync="steps[index]"
@@ -143,7 +144,7 @@
             </template>
           </div>
           <button v-if="(steps.length > 0 || inRepository) && urls.add_step_url" :class="!inRepository ? 'btn btn-primary' : 'btn btn-secondary'" @click="addStep(steps.length)">
-            <i class="fas fa-plus"></i>
+            <i class="sn-icon sn-icon-new-task"></i>
             {{ i18n.t("protocols.steps.new_step") }}
           </button>
         </div>
@@ -229,7 +230,7 @@
       deleteSteps() {
         $.post(this.urls.delete_steps_url, () => {
           this.steps = []
-        }).error(() => {
+        }).fail(() => {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')
         })
       },
@@ -276,7 +277,7 @@
             this.$nextTick(() => this.scrollToBottom());
           }
           this.refreshProtocolStatus();
-        }).error((data) => {
+        }).fail((data) => {
           HelperModule.flashAlertMsg(data.responseJSON.error ? Object.values(data.responseJSON.error).join(', ') : I18n.t('errors.general'), 'danger');
         })
       },

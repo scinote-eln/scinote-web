@@ -1,6 +1,6 @@
 <% results.each do |table| %>
   <h5>
-    <span class="fas fa-table"></span>
+    <span class="sn-icon sn-icon-tables"></span>
     <%= highlight table.name, search_query.strip.split(/\s+/) %>
   </h5>
 
@@ -13,13 +13,13 @@
     <% if table.step %>
       <span>
         <%=t "search.index.step" %>
-        <%= render partial: "search/results/partials/step_text.html.erb", locals: { step: table.step, target: nil } %>
+        <%= render partial: "search/results/partials/step_text", locals: { step: table.step, target: nil } %>
       </span>
       <br>
       <% if table.step.protocol.in_module? %>
         <span>
           <%=t "search.index.module" %>
-          <%= render partial: "search/results/partials/my_module_text.html.erb",
+          <%= render partial: "search/results/partials/my_module_text",
                       locals: {
                         my_module: table.step.protocol.my_module,
                         link_to_page: :protocols
@@ -28,72 +28,72 @@
         <br>
         <span>
           <%=t "search.index.experiment" %>
-          <%= render partial: "search/results/partials/experiment_text.html.erb",
+          <%= render partial: "search/results/partials/experiment_text",
                      locals: { experiment: table.step.protocol.my_module.experiment } %>
         </span>
         <br>
         <span>
           <%=t "search.index.project" %>
-          <%= render partial: "search/results/partials/project_text.html.erb",
+          <%= render partial: "search/results/partials/project_text",
                      locals: { project: table.step.protocol.my_module.experiment.project, link_to_page: :show } %>
         </span>
         <% if table.step.protocol.my_module.experiment.project.project_folder %>
           <br>
           <span>
             <%=t "search.index.folder" %>
-            <%= render partial: "search/results/partials/project_folders_text.html.erb",
+            <%= render partial: "search/results/partials/project_folders_text",
                        locals: { folder: table.step.protocol.my_module.experiment.project.project_folder } %>
           </span>
         <% end %>
       <% else %>
         <span>
           <%=t "search.index.protocol" %>
-          <%= render partial: "search/results/partials/protocol_text.html.erb",
+          <%= render partial: "search/results/partials/protocol_text",
                      locals: { protocol: table.step.protocol, query: search_query } %>
         </span>
       <% end %>
       <br>
       <span>
         <%=t "search.index.team" %>
-        <%= render partial: "search/results/partials/team_text.html.erb",
+        <%= render partial: "search/results/partials/team_text",
                    locals: { team: table.step.protocol.team } %>
       </span>
     <% elsif table.result %>
       <span>
         <%=t "search.index.result" %>
-        <%= render partial: "search/results/partials/result_text.html.erb",
+        <%= render partial: "search/results/partials/result_text",
                    locals: { result: table.result, target: nil } %>
       </span>
       <br>
       <span>
         <%=t "search.index.module" %>
-        <%= render partial: "search/results/partials/my_module_text.html.erb",
+        <%= render partial: "search/results/partials/my_module_text",
                    locals: { my_module: table.result.my_module, link_to_page: :results } %>
       </span>
       <br>
       <span>
         <%=t "search.index.experiment" %>
-        <%= render partial: "search/results/partials/experiment_text.html.erb",
+        <%= render partial: "search/results/partials/experiment_text",
                    locals: { experiment: table.result.my_module.experiment } %>
       </span>
       <br>
       <span>
         <%=t "search.index.project" %>
-        <%= render partial: "search/results/partials/project_text.html.erb",
+        <%= render partial: "search/results/partials/project_text",
                    locals: { project: table.result.my_module.experiment.project, link_to_page: :show } %>
       </span>
       <% if table.result.my_module.experiment.project.project_folder %>
         <br>
         <span>
           <%=t "search.index.folder" %>
-          <%= render partial: "search/results/partials/project_folders_text.html.erb",
+          <%= render partial: "search/results/partials/project_folders_text",
                      locals: { folder: table.result.my_module.experiment.project.project_folder } %>
         </span>
       <% end %>
       <br>
       <span>
         <%=t "search.index.team" %>
-        <%= render partial: "search/results/partials/team_text.html.erb",
+        <%= render partial: "search/results/partials/team_text",
                    locals: { team: table.result.my_module.experiment.project.team } %>
       </span>
     <% end %>

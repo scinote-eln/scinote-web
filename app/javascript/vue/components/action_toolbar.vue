@@ -1,26 +1,28 @@
 <template>
   <div v-if="!paramsAreBlank"
-       class="sn-action-toolbar p-4 w-full fixed bottom-0 rounded-t-md shadow-[0_-12px_24px_-12px_rgba(35,31,32,0.2)]"
+       class="sn-action-toolbar p-4 w-full fixed bottom-0 rounded-t-md"
        :class="{ 'sn-action-toolbar--button-overflow': buttonOverflow }"
        :style="`width: ${width}px; bottom: ${bottomOffset}px; transform: translateX(${leftOffset}px)`">
-    <div class="sn-action-toolbar__actions flex">
-      <div v-if="loading && !actions.length" class="sn-action-toolbar__action mr-1.5">
-        <a class="btn btn-light"></a>
+    <div class="sn-action-toolbar__actions flex gap-4">
+      <div v-if="loading && !actions.length" class="sn-action-toolbar__action">
+        <a class="rounded flex items-center py-1.5 px-2.5 bg-sn-white color-sn-blue no-underline"></a>
       </div>
       <div v-if="!loading && actions.length === 0" class="sn-action-toolbar__message">
         {{ i18n.t('action_toolbar.no_actions') }}
       </div>
-      <div v-for="action in actions" :key="action.name" class="sn-action-toolbar__action mr-1.5">
-        <a :class="`btn btn-light ${action.button_class}`"
+      <div v-for="action in actions" :key="action.name" class="sn-action-toolbar__action shrink-0">
+        <a :class="`rounded flex gap-2 items-center py-1.5 px-2.5 bg-sn-white color-sn-blue no-underline ${action.button_class}`"
           :href="(['link', 'remote-modal']).includes(action.type) ? action.path : '#'"
           :id="action.button_id"
           :title="action.label"
           :data-url="action.path"
+          :data-target="action.target"
+          :data-toggle="action.type === 'modal' && 'modal'"
           :data-object-type="action.item_type"
           :data-object-id="action.item_id"
           :data-action="action.type"
           @click="doAction(action, $event)">
-          <i class="mr-1" :class="action.icon"></i>
+          <i :class="action.icon"></i>
           <span class="sn-action-toolbar__button-text">{{ action.label }}</span>
         </a>
       </div>
@@ -67,11 +69,11 @@
     },
     mounted() {
       this.$nextTick(this.setWidth);
-
-      $(window).on('scroll', this.setLeftOffset);
+      window.addEventListener('scroll', this.setLeftOffset);
     },
     beforeDestroy() {
       delete window.actionToolbarComponent;
+      window.removeEventListener('scroll', this.setLeftOffset);
     },
     computed: {
       paramsAreBlank() {
@@ -124,6 +126,8 @@
           case 'link':
             // do nothing, already handled by href
             break;
+          case 'modal':
+            // do nothihg, boostrap modal handled by data-toggle="modal" and data-target
           case 'remote-modal':
             // do nothing, handled by the data-action="remote-modal" binding
             break;
@@ -142,7 +146,7 @@
               HelperModule.flashAlertMsg(data.responseJSON && data.responseJSON.message || data.message, 'success');
             }).fail((data) => {
               HelperModule.flashAlertMsg(data.responseJSON && data.responseJSON.message || data.message, 'danger');
-            }).complete(() => {
+            }).always(() => {
               if (this.reloadCallback) this.reloadCallback();
             });
             break;

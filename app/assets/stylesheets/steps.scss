@@ -6,11 +6,6 @@
 // scss-lint:disable SelectorFormat
 // scss-lint:disable ImportantRule
 // scss-lint:disable Unknown
-
-@import "constants";
-@import "mixins";
-
-
 #steps {
   // hack only for firefox
   @-moz-document url-prefix() {
@@ -37,8 +32,9 @@
   .step-panel-collapse-link {
     padding-left: 5px;
 
-    &:not(.collapsed) .fas {
+    &:not(.collapsed) .sn-icon {
       @include rotate(90deg);
+      display: inline-block;
     }
   }
 

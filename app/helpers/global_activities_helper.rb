@@ -18,15 +18,15 @@ module GlobalActivitiesHelper
         end
 
       if key == 'comment' && parameters[key].strip.present?
-        parameters[key] = '<i class="fas fa-comment"></i>' + parameters[key]
+        parameters[key] = '<i class="sn-icon sn-icon-comments"></i>' + parameters[key]
       end
     end
 
     if no_custom_links
-      I18n.t("global_activities.content.#{activity.type_of}_html", parameters.symbolize_keys)
+      I18n.t("global_activities.content.#{activity.type_of}_html", **parameters.symbolize_keys)
     else
       custom_auto_link(
-        I18n.t("global_activities.content.#{activity.type_of}_html", parameters.symbolize_keys),
+        I18n.t("global_activities.content.#{activity.type_of}_html", **parameters.symbolize_keys),
         team: activity.team
       )
     end

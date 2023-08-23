@@ -9,11 +9,12 @@
         <label>
           {{ i18n.t('label_templates.show.insert_dropdown.button') }}
         </label>
-        <a class="close-dropdown" data-toggle="dropdown">{{ i18n.t('general.cancel')}}</a>
+        <a class="close-dropdown hover:cursor-pointer" data-toggle="dropdown">{{ i18n.t('general.cancel')}}</a>
         <input v-model="searchValue"
                type="text"
-               class="sci-input-field"
+               class="sci-input-field insert-field-dropdown autofocus" autofocus="true"
                :placeholder="i18n.t('label_templates.show.insert_dropdown.search_placeholder')" />
+        <i class="fas fa-search relative left-60 bottom-7"></i>
       </div>
       <div class="fields-container">
         <div :key="`default_${index}`" v-for="(field, index) in filteredFields.default"
@@ -25,7 +26,7 @@
             @click="insertTag(field)"
         >
           {{ field.key }}
-          <i class="fas fa-plus-square"></i>
+          <i class="sn-icon sn-icon-plus-square"></i>
         </div>
         <div v-if="filteredFields.common.length" class="block-title">
           {{ i18n.t('label_templates.show.insert_dropdown.common_fields') }}
@@ -40,13 +41,13 @@
         >
           <i v-if="field.icon" :class="field.icon"></i>
           {{ field.key }}
-          <i class="fas fa-plus-square"></i>
+          <i class="sn-icon sn-icon-plus-square"></i>
         </div>
-        <template v-for="(repository, index) in filteredFields.repositories">
-          <div :key="`repository_${index}`" class="block-title">
+        <div v-for="(repository, index) in filteredFields.repositories" :key="`repository_${index}`">
+          <div class="block-title">
             {{ repository.repository_name }}
           </div>
-          <div :key="`repository_${index}_${index1}`" v-for="(field, index1) in repository.tags"
+          <div v-for="(field, index1) in repository.tags" :key="`repository_${index}_${index1}`"
             data-toggle="tooltip"
             data-placement="right"
             :data-template="tooltipTemplate"
@@ -55,9 +56,9 @@
             @click="insertTag(field)"
           >
             {{ field.key }}
-            <i class="fas fa-plus-square"></i>
+            <i class="sn-icon sn-icon-plus-square"></i>
           </div>
-        </template>
+        </div>
         <div class="no-results" v-if="this.noResults">
           {{ i18n.t('label_templates.show.insert_dropdown.nothing_found') }}
         </div>
@@ -106,28 +107,22 @@
                 </div>`
       },
       filteredFields() {
-        let result = {};
-        if (this.searchValue.length == 0) {
-          result = this.fields;
-        } else {
-          let filteredRepositories = this.filterArray(this.fields.repositories, 'repository_name');
-          filteredRepositories = filteredRepositories.map((repo) => {
-            repo.tags = this.filterArray(repo.tags, 'key');
-            return repo;
-          });
-
-          result = {
-            default: this.filterArray(this.fields.default, 'key'),
-            common: this.filterArray(this.fields.common, 'key'),
-            repositories: filteredRepositories,
-          };
-        }
-
         this.$nextTick(() => {
           $('.tooltip').remove();
           $('[data-toggle="tooltip"]').tooltip();
         });
-        return result;
+
+        if (this.searchValue.length == 0) {
+          return this.fields;
+        } else {
+          return {
+            default: this.filterArray(this.fields.default, 'key'),
+            common: this.filterArray(this.fields.common, 'key'),
+            repositories: this.filterArray(this.fields.repositories, 'repository_name').map((repo) => {
+              return { ...repo, tags: this.filterArray(repo.tags, 'key') };
+            })
+          };
+        }
       },
       noResults() {
         return this.filteredFields.default.concat(this.filteredFields.common, this.filteredFields.repositories).length === 0;
@@ -147,6 +142,9 @@
       });
       this.$nextTick(() => {
         $(this.$refs.dropdown).on('show.bs.dropdown', () => {
+          this.$nextTick(() => {
+            $('.insert-field-dropdown')[1].focus()
+          });
           this.searchValue = '';
         });
       });
@@ -161,7 +159,12 @@
         this.$emit('insertTag', field.tag)
       },
       filterArray(array, key) {
-        return array.filter(field => field[key].toLowerCase().indexOf(this.searchValue.toLowerCase()) !== -1)
+        return array.filter(field => {
+          return (
+            field[key].toLowerCase().indexOf(this.searchValue.toLowerCase()) !== -1 ||
+            field.tags
+          );
+        });
       }
     }
   }

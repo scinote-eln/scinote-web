@@ -28,7 +28,8 @@ module RepositoriesDatatableHelper
           'data-delete-modal-url': team_repository_destroy_modal_path(team, repository_id: repository),
           'data-copy-modal-url': team_repository_copy_modal_path(team, repository_id: repository),
           'data-rename-modal-url': team_repository_rename_modal_path(team, repository_id: repository),
-          'data-shared': repository.shared_with?(team)
+          'data-shared': repository.shared_with?(team),
+          'data-i-shared': repository.i_shared?(team)
         }
       )
     end
@@ -38,6 +39,7 @@ module RepositoriesDatatableHelper
   private
 
   def shared_label(repository, team)
+    return I18n.t('libraries.index.shared') if repository.i_shared?(team)
     return I18n.t('libraries.index.not_shared') unless repository.shared_with?(team)
 
     if repository.shared_with_read?(team)

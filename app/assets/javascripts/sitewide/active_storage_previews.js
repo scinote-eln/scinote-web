@@ -27,6 +27,25 @@ var ActiveStoragePreviews = (function() {
     showPreview: function(ev) {
       $(ev.target).css('opacity', 1);
       $(ev.target).parent().removeClass('processing');
+    },
+    reloadPreview: function(target) {
+      $(target)
+        .one('error', (event) => this.reCheckPreview(event))
+        .one('load', (event) => this.showPreview(event))
+        .trigger('error');
     }
   });
 }());
+
+$(document).on('turbolinks:load', function() {
+  $('.asset-preview-image')
+    .one('load', (event) => ActiveStoragePreviews.showPreview(event))
+    .one('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
+    .each(function() { 
+      if (this.complete) {
+        $(this).trigger('load');
+      } else if (this.error) {
+        $(this).trigger('error');
+      }
+    });
+});

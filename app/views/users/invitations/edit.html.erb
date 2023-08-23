@@ -65,7 +65,7 @@
     <% end %>
   <% end %>
   <div class="hidden" id="resource-error-data" data-form-errors="<%= form_errors.to_json %>"></div>
-  <%= javascript_include_tag 'users/invitations/resource_errors', nonce: true %>
+  <%= javascript_include_tag 'users/invitations/resource_errors' %>
 <% end %>
 
 <% if @team && @team.errors.present? %>
@@ -79,5 +79,5 @@
     <% end %>
   <% end %>
   <div class="hidden" id="team-error-data" data-form-errors="<%= form_errors.to_json %>"></div>
-  <%= javascript_include_tag 'users/invitations/team_errors', nonce: true %>
+  <%= javascript_include_tag 'users/invitations/team_errors' %>
 <% end %>

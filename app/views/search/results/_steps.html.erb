@@ -1,7 +1,7 @@
 <% results.each do |step| %>
   <h5>
-    <span class="fas fa-arrow-circle-right"></span>
-    <%= render partial: "search/results/partials/step_text.html.erb", locals: { step: step, query: search_query, target: nil } %>
+    <span class="sn-icon sn-icon-steps"></span>
+    <%= render partial: "search/results/partials/step_text", locals: { step: step, query: search_query, target: nil } %>
   </h5>
 
   <% if step.step_texts.present? %>
@@ -27,40 +27,40 @@
     <% if step.protocol.in_module? %>
       <span>
         <%=t "search.index.module" %>
-        <%= render partial: "search/results/partials/my_module_text.html.erb",
+        <%= render partial: "search/results/partials/my_module_text",
                     locals: { my_module: step.protocol.my_module, link_to_page: :protocols } %>
       </span>
       <br>
       <span>
         <%=t "search.index.experiment" %>
-        <%= render partial: "search/results/partials/experiment_text.html.erb",
+        <%= render partial: "search/results/partials/experiment_text",
                    locals: { experiment: step.protocol.my_module.experiment } %>
       </span>
       <br>
       <span>
         <%=t "search.index.project" %>
-        <%= render partial: "search/results/partials/project_text.html.erb",
+        <%= render partial: "search/results/partials/project_text",
                    locals: { project: step.protocol.my_module.experiment.project, link_to_page: :show } %>
       </span>
       <% if step.protocol.my_module.experiment.project.project_folder %>
         <br>
         <span>
           <%=t "search.index.folder" %>
-          <%= render partial: "search/results/partials/project_folders_text.html.erb",
+          <%= render partial: "search/results/partials/project_folders_text",
                      locals: { folder: step.protocol.my_module.experiment.project.project_folder } %>
         </span>
       <% end %>
     <% else %>
       <span>
         <%=t "search.index.protocol" %>
-        <%= render partial: "search/results/partials/protocol_text.html.erb",
+        <%= render partial: "search/results/partials/protocol_text",
                    locals: { protocol: step.protocol, query: search_query } %>
       </span>
     <% end %>
     <br>
     <span>
       <%=t "search.index.team" %>
-      <%= render partial: "search/results/partials/team_text.html.erb",
+      <%= render partial: "search/results/partials/team_text",
                  locals: { team: step.protocol.team } %>
     </span>
   </p>

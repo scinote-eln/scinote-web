@@ -26,10 +26,12 @@ var SmartAnnotation = (function() {
       var $html = $(html);
       var $liText = $html.find('.item-text, .sa-type');
       if ($liText.length === 0 || !query) return html;
+      const highlightRegex = new RegExp(query.replace(/[()]/g, '\\$&')
+        .split(' ')
+        .join('|'), 'gi');
 
-      $.each($liText, function(i, item) {
-        $(item).html($(item).text().replace(new RegExp(query.split(' ').join('|'), 'gi'),
-          '<span class="atwho-highlight">$&</span>'));
+      $.each($liText, function(_i, item) {
+        $(item).html($(item).text().replace(highlightRegex, '<span class="atwho-highlight">$&</span>'));
       });
 
       return $html;
@@ -111,10 +113,12 @@ var SmartAnnotation = (function() {
             }
             a = decodeURI('%C3%80');
             y = decodeURI('%C3%BF');
-            regexp = new RegExp(`${cleanedFlag}$|${cleanedFlag}(\\S[A-Za-z${a}-${y}0-9_/:\\s+-]*)$|${cleanedFlag}(\\S[^\\x00-\\xff]*)$`, 'gi');
+            regexp = new RegExp(`${cleanedFlag}$|` +
+                                `${cleanedFlag}(\\S[A-Za-z${a}-${y}0-9_/:\\s\\)\\(.+-]*)$|` +
+                                `${cleanedFlag}(\\S[^\\x00-\\xff]*)$`, 'gi');
             match = regexp.exec(subtext);
             if (match) {
-              return match[1] || '';
+              return (match[1] || '').trim();
             }
             return null;
           }
@@ -239,7 +243,7 @@ var SmartAnnotation = (function() {
   // Closes the atwho popup * needed in repositories to close the popup
   // if nothing is selected and the user leaves the form *
   function closePopup() {
-    $('.atwho-header-res').find('.fa-times').click();
+    $('.atwho-header-res').find('.sn-icon-close').click();
   }
 
   function initialize(field, deferred, assignableMyModuleId) {

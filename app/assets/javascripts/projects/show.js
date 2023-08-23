@@ -124,8 +124,8 @@
           }
         });
       },
-      error: function() {
-        viewContainer.html('Error loading project list');
+      error: function(e) {
+        viewContainer.html('Error loading experiment list');
       },
       complete: function() {
         updateSelectAllCheckbox();

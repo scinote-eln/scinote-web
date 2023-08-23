@@ -131,9 +131,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
             @team.created_by = resource # set created_by for oraganization
             @team.save
 
-            # Add this user to the team as owner
-            UserTeam.create(user: resource, team: @team, role: :admin)
-
             # set current team to new user
             resource.current_team_id = @team.id
             resource.save
@@ -170,9 +167,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
       @team.created_by = @user # set created_by for team
       @team.save!
-
-      # Add this user to the team as owner
-      UserTeam.create(user: @user, team: @team, role: :admin)
 
       # set current team to new user
       @user.current_team_id = @team.id

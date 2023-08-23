@@ -14,23 +14,11 @@ module AccessPermissions
         assigned_by: current_user,
         team: current_team
       )
-
-      respond_to do |format|
-        format.json
-      end
     end
 
-    def show
-      respond_to do |format|
-        format.json
-      end
-    end
+    def show; end
 
-    def edit
-      respond_to do |format|
-        format.json
-      end
-    end
+    def edit; end
 
     def update
       @user_assignment = @project.user_assignments.find_by(
@@ -51,11 +39,7 @@ module AccessPermissions
                                                    role: @user_assignment.user_role.name })
       propagate_job(@user_assignment)
 
-      respond_to do |format|
-        format.json do
-          render :project_member
-        end
-      end
+      render :project_member
     rescue ActiveRecord::RecordInvalid
       render json: { flash: t('access_permissions.update.failure') }, status: :unprocessable_entity
     end
@@ -68,7 +52,10 @@ module AccessPermissions
 
           if user_assignment_params[:user_id] == 'all'
             @project.update!(visibility: :visible, default_public_user_role_id: user_assignment_params[:user_role_id])
-            log_activity(:change_project_visibility, { visibility: t('projects.activity.visibility_visible') })
+            log_activity(:project_grant_access_to_all_team_members,
+                         { visibility: t('projects.activity.visibility_visible'),
+                           role: @project.default_public_user_role.name,
+                           team: @project.team.id })
           else
             user_assignment = UserAssignment.find_or_initialize_by(
               assignable: @project,
@@ -89,14 +76,12 @@ module AccessPermissions
           end
         end
 
-        respond_to do |format|
-          @message = if created_count.zero?
-                       t('access_permissions.create.success', count: t('access_permissions.all_team'))
-                     else
-                       t('access_permissions.create.success', count: created_count)
-                     end
-          format.json { render :edit }
-        end
+        @message = if created_count.zero?
+                     t('access_permissions.create.success', count: t('access_permissions.all_team'))
+                   else
+                     t('access_permissions.create.success', count: created_count)
+                   end
+        render :edit
       rescue ActiveRecord::RecordInvalid => e
         Rails.logger.error e.message
         errors = @project.errors.present? ? @project.errors&.map(&:message)&.join(',') : e.message
@@ -141,8 +126,13 @@ module AccessPermissions
         if permitted_default_public_user_role_params[:default_public_user_role_id].blank?
           # revoke all team members access
           @project.visibility = :hidden
+          previous_user_role_name = @project.default_public_user_role.name
+          @project.default_public_user_role_id = nil
           @project.save!
-          log_activity(:change_project_visibility, { visibility: t('projects.activity.visibility_hidden') })
+          log_activity(:project_remove_access_from_all_team_members,
+                       { visibility: t('projects.activity.visibility_hidden'),
+                         role: previous_user_role_name,
+                         team: @project.team.id })
           render json: { flash: t('access_permissions.update.revoke_all_team_members') }
         else
           # update all team members access

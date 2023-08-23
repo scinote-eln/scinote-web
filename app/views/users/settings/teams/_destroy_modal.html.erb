@@ -13,8 +13,8 @@
         <%= t("users.settings.teams.edit.modal_destroy_team.message", team: team.name) %>
       </div>
       <div class="modal-footer">
-        <%= bootstrap_form_tag url: destroy_team_path(team), method: :delete do |f| %>
-          <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('general.cancel') %></button>
+        <%= form_with url: destroy_team_path(team), method: :delete do |f| %>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.cancel') %></button>
           <%= f.submit t("users.settings.teams.edit.modal_destroy_team.confirm"), class: "btn btn-danger" %>
         <% end %>
       </div>

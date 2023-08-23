@@ -1,14 +1,14 @@
 <% if !subject || subject.in_repository? %>
-  <%= render partial: "global_activities/references/team.html.erb",
+  <%= render partial: "global_activities/references/team",
              locals: { team: team, subject: team, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
 <% else %>
-  <%= render partial: "global_activities/references/my_module.html.erb",
+  <%= render partial: "global_activities/references/my_module",
              locals: { team: team, subject: subject&.my_module, breadcrumbs: breadcrumbs, values: values, type_of: type_of } %>
 <% end %>
 <% if subject %>
   <% if subject.in_repository? %>
     <div class="ga-breadcrumb">
-      <span class="fas fa-edit"></span>
+      <span class="sn-icon sn-icon-protocols-templates"></span>
         <%= route_to_other_team protocols_path(team: subject.team),
                                 team,
                                 subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
@@ -17,7 +17,7 @@
   <% end %>
 <% else %>
   <div class="ga-breadcrumb">
-    <span class="fas fa-edit"></span>
+    <span class="sn-icon sn-icon-protocols-templates"></span>
     <span title="<%= breadcrumbs['protocol'] %>">
       <%= breadcrumbs['protocol']&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>
     </span>

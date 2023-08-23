@@ -5,6 +5,7 @@ class LabelPrintersController < ApplicationController
 
   before_action :check_manage_permissions, except: %i(index index_zebra update_progress_modal)
   before_action :find_label_printer, only: %i(edit update destroy)
+  before_action :set_breadcrumbs_items, only: %i(index_zebra index)
 
   def index
     @label_printers = LabelPrinter.all
@@ -35,29 +36,29 @@ class LabelPrintersController < ApplicationController
     @label_printer = LabelPrinter.new(label_printer_params)
 
     if @label_printer.save
-      flash[:success] = t('label_printers.create.success', { printer_name: @label_printer.name })
+      flash[:success] = t('label_printers.create.success',  printer_name: @label_printer.name)
       redirect_to edit_label_printer_path(@label_printer)
     else
-      flash[:error] = t('label_printers.create.error', { printer_name: @label_printer.name })
+      flash[:error] = t('label_printers.create.error',  printer_name: @label_printer.name)
       render :new
     end
   end
 
   def update
     if @label_printer.update(label_printer_params)
-      flash[:success] = t('label_printers.update.success', { printer_name: @label_printer.name })
+      flash[:success] = t('label_printers.update.success',  printer_name: @label_printer.name)
       redirect_to edit_label_printer_path(@label_printer)
     else
-      flash[:error] = t('label_printers.update.error', { printer_name: @label_printer.name })
+      flash[:error] = t('label_printers.update.error',  printer_name: @label_printer.name)
       render :edit
     end
   end
 
   def destroy
     if @label_printer.destroy
-      flash[:success] = t('label_printers.destroy.success', { printer_name: @label_printer.name })
+      flash[:success] = t('label_printers.destroy.success',  printer_name: @label_printer.name)
     else
-      flash[:error] = t('label_printers.destroy.error', { printer_name: @label_printer.name })
+      flash[:error] = t('label_printers.destroy.error',  printer_name: @label_printer.name)
     end
 
     redirect_to addons_path
@@ -132,5 +133,26 @@ class LabelPrintersController < ApplicationController
 
   def find_label_printer
     @label_printer = LabelPrinter.find(params[:id])
+  end
+
+  def set_breadcrumbs_items
+    @breadcrumbs_items = []
+    printer_label = t('breadcrumbs.fluics_printer')
+    printer_label = t('breadcrumbs.label_printer') if action_name == 'index_zebra'
+
+    @breadcrumbs_items.push({
+                              label: t('breadcrumbs.addons'),
+                              url: addons_path
+                            })
+    if @label_printer
+      @breadcrumbs_items.push({
+                                label: @label_printer.name,
+                                url: label_printers_path(@label_printer)
+                              })
+    else
+      @breadcrumbs_items.push({
+                                label: printer_label
+                              })
+    end
   end
 end

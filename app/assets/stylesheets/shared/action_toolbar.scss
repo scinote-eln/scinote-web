@@ -2,8 +2,10 @@
   background: $color-concrete;
   z-index: 100;
 
-  .btn.btn-light:hover {
-    background: $color-white;
+  .sn-action-toolbar__action a:hover {
+    background: var(--sn-blue);
+    color: var(--sn-white);
+    text-decoration: none;
   }
 
   .icon-versions {

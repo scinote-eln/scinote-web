@@ -159,8 +159,29 @@
     var inputField = $('#repository_name');
     var value = inputField.val();
     inputField.focus().val('').val(value);
+  }).on('shown.bs.modal', '#export-repositories-modal', function() {
+    if (!CHECKBOX_SELECTOR) return;
+
+    const exportButton = $(this).find('#export-repositories-modal-submit');
+    const exportURL = exportButton.data('export-url');
+
+    exportButton.on('click', function() {
+      $.ajax({
+        url: exportURL,
+        method: 'POST',
+        data: { repository_ids: CHECKBOX_SELECTOR.selectedRows },
+        success: function(data) {
+          HelperModule.flashAlertMsg(data.message, 'success');
+          CHECKBOX_SELECTOR.clearSelection();
+          $('#export-repositories-modal').modal('hide');
+        },
+        error: function(data) {
+          HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+        }
+      });
+    });
   });
-  
+
   $('.create-new-repository').initSubmitModal('#create-repo-modal', 'repository');
   if (notTurbolinksPreview()) {
     initRepositoriesDataTable('#repositoriesList', $('.repositories-index').hasClass('archived'));

@@ -12,6 +12,7 @@
           :attributeName="i18n.t('label_templates.show.name_error_prefix')"
           :autofocus="editingName"
           :editOnload="newLabel"
+          :customClasses="['hover-border']"
           @editingEnabled="editingName = true"
           @editingDisabled="editingName = false"
           @update="updateName"
@@ -34,6 +35,7 @@
           :attributeName="i18n.t('label_templates.show.description_error_prefix')"
           :placeholder="i18n.t('label_templates.show.description_placeholder')"
           :autofocus="editingDescription"
+          :customClasses="['hover-border']"
           @editingEnabled="editingDescription = true"
           @editingDisabled="editingDescription = false"
           @update="updateDescription"
@@ -83,7 +85,7 @@
         </template>
         <div v-else-if="canManage" class="label-view-container" :title="i18n.t('label_templates.show.view_content_tooltip')" @click="enableContentEdit">
           {{ labelTemplate.attributes.content}}
-          <i class="fas fa-pen"></i>
+          <i class="sn-icon sn-icon-edit"></i>
         </div>
         <div v-else class="label-view-container read-only" :title="i18n.t('label_templates.show.view_content_tooltip')">
           {{ labelTemplate.attributes.content}}
@@ -188,8 +190,9 @@
         this.editingContent = true;
         this.$nextTick(() => {
           this.$refs.contentInput.focus();
-          $(this.$refs.contentInput).prop('selectionStart', this.cursorPos);
-          $(this.$refs.contentInput).prop('selectionEnd', this.cursorPos);
+          const contentInput = this.$refs.contentInput;
+          const contentLength = contentInput.value.length;
+          contentInput.setSelectionRange(contentLength, contentLength);
         });
       },
       disableContentEdit() {

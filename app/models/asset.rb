@@ -238,10 +238,6 @@ class Asset < ApplicationRecord
     file.metadata[:asset_type] == 'marvinjs'
   end
 
-  def bio_eddie?
-    file.metadata[:asset_type] == 'bio_eddie' || File.extname(file_name) == '.helm'
-  end
-
   def pdf_preview_ready?
     return false if pdf_preview_processing
 
@@ -266,7 +262,7 @@ class Asset < ApplicationRecord
       Rails.logger.info "Asset #{id}: Creating extract text job"
       # The extract_asset_text also includes
       # estimated size calculation
-      Asset.delay(queue: :assets).extract_asset_text_delayed(id, in_template)
+      Delayed::Job.enqueue(AssetTextExtractionJob.new(id, in_template))
     elsif marvinjs?
       extract_asset_text
     else
@@ -278,13 +274,6 @@ class Asset < ApplicationRecord
       PdfPreviewJob.perform_later(id)
       ActiveRecord::Base.no_touching { update(pdf_preview_processing: true) }
     end
-  end
-
-  def self.extract_asset_text_delayed(asset_id, in_template = false)
-    asset = find_by(id: asset_id)
-    return unless asset.present? && asset.file.attached?
-
-    asset.extract_asset_text(in_template)
   end
 
   def extract_asset_text(in_template = false)

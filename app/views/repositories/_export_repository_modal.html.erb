@@ -3,9 +3,9 @@
      tabindex="-1"
      role="dialog"
      aria-labelledby="modal-export-repository-label">
-  <%= bootstrap_form_tag(url: export_repository_team_path(repository),
+  <%= form_with(url: export_repository_team_path(repository),
                          html: { id: 'form-export' },
-                         remote: true) do |f| %>
+                         data: { remote: true }) do |f| %>
      <div class="modal-dialog" role="document">
        <div class="modal-content">
          <div class="modal-header">
@@ -18,7 +18,7 @@
            <div><%=t 'zip_export.repository_footer_html' %></div>
          </div>
          <div class="modal-footer">
-           <button type='button' class='btn btn-default' data-dismiss='modal' id='close-modal-export-repositories'><%= t('general.cancel')%></button>
+           <button type='button' class='btn btn-secondary' data-dismiss='modal' id='close-modal-export-repositories'><%= t('general.cancel')%></button>
            <%= f.submit t('my_modules.repository.export'), id: "export-repositories", class: "btn btn-success" %>
          </div>
        </div>

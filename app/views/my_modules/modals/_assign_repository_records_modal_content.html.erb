@@ -46,17 +46,19 @@
   <% end %>
 </div>
 <div class="modal-footer">
-  <a class="btn btn-light" data-dismiss="modal">
-    <i class="fas fa-times"></i>
-    <%= t('general.cancel') %>
-  </a>
-  <% if downstream %>
-    <a class="btn btn-primary downstream-action">
-      <%= t('my_modules.modals.assign_repository_record.task_and_downstream') %>
+  <div class="sci-btn-group">
+    <a class="btn btn-light hide-assign-repo-modal" data-dismiss="modal">
+      <i class="sn-icon sn-icon-close"></i>
+      <%= t('general.cancel') %>
     </a>
-  <% else %>
-    <a class="btn btn-primary task-action">
-      <%= t('my_modules.modals.assign_repository_record.task') %>
-    </a>
-  <% end %>
+    <% if downstream %>
+      <a class="btn btn-primary downstream-action">
+        <%= t('my_modules.modals.assign_repository_record.task_and_downstream') %>
+      </a>
+    <% else %>
+      <a class="btn btn-primary task-action">
+        <%= t('my_modules.modals.assign_repository_record.task') %>
+      </a>
+    <% end %>
+  </div>
 </div>

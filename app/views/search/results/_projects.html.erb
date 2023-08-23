@@ -1,7 +1,7 @@
 <% results.each do |project| %>
   <h5>
-    <span class="fas fa-folder"></span>
-    <%= render partial: 'search/results/partials/project_text.html.erb',
+    <span class="sn-icon sn-icon-projects"></span>
+    <%= render partial: 'search/results/partials/project_text',
                locals: { project: project, query: search_query, link_to_page: :show } %>
   </h5>
 
@@ -19,14 +19,14 @@
     <% if project.project_folder %>
       <span>
         <%=t "search.index.folder" %>
-        <%= render partial: "search/results/partials/project_folders_text.html.erb",
+        <%= render partial: "search/results/partials/project_folders_text",
                    locals: { folder: project.project_folder } %>
       </span>
       <br>
     <% end %>
     <span>
       <%=t 'search.index.team' %>
-      <%= render partial: 'search/results/partials/team_text.html.erb',
+      <%= render partial: 'search/results/partials/team_text',
                  locals: { team: project.team } %>
     </span>
     <span data-hook="search-result-project"></span>
