@@ -17,7 +17,6 @@ module Toolbars
       @single = @items.length == 1
 
       @team_owner = @current_user.current_team.user_assignments.exists?(user: @current_user, user_role: UserRole.find_predefined_owner_role)
-      @unassigned_team_owner = @team_owner && !can_read_project?(@items.first)
 
       @item_type = if project_ids.blank? && project_folder_ids.blank?
                      :none
@@ -32,7 +31,6 @@ module Toolbars
 
     def actions
       return [] if @item_type == :none
-      return [access_action] if @unassigned_team_owner
 
       [
         restore_action,
@@ -107,7 +105,8 @@ module Toolbars
     end
 
     def move_action
-      return unless can_manage_team?(@items.first.team)
+      return unless can_manage_team?(@items.first.team) && (@item_type == :project_folder ||
+                                                            can_read_project?(@items.first))
 
       {
         name: 'move',
