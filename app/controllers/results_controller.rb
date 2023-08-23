@@ -11,8 +11,13 @@ class ResultsController < ApplicationController
     respond_to do |format|
       format.json do
         # API endpoint
+        @results = @my_module.results
+
+        apply_sort!
+        apply_filters!
+
         render(
-          json: apply_sort(@my_module.results),
+          json: @results,
           formats: :json
         )
       end
@@ -76,7 +81,6 @@ class ResultsController < ApplicationController
   end
 
   def update_asset_view_mode
-    html = ''
     ActiveRecord::Base.transaction do
       @result.assets_view_mode = params[:assets_view_mode]
       @result.save!(touch: false)
@@ -117,21 +121,32 @@ class ResultsController < ApplicationController
     params.require(:result).permit(:name)
   end
 
-  def apply_sort(results)
+  def apply_sort!
     case params[:sort]
     when 'updated_at_asc'
-      results.order(updated_at: :asc)
+      @results = @results.order(updated_at: :asc)
     when 'updated_at_desc'
-      results.order(updated_at: :desc)
+      @results = @results.order(updated_at: :desc)
     when 'created_at_asc'
-      results.order(created_at: :asc)
+      @results = @results.order(created_at: :asc)
     when 'created_at_desc'
-      results.order(created_at: :desc)
+      @results = @results.order(created_at: :desc)
     when 'name_asc'
-      results.order(name: :asc)
+      @results = @results.order(name: :asc)
     when 'name_desc'
-      results.order(name: :desc)
+      @results = @results.order(name: :desc)
     end
+  end
+
+  def apply_filters!
+    if params[:query].present?
+      @results = @results.search(current_user, params[:archived] == 'true', params[:query], params[:page] || 1)
+    end
+
+    @results = @results.where('created_at >= ?', params[:created_at_from]) if params[:created_at_from]
+    @results = @results.where('created_at <= ?', params[:created_at_to]) if params[:created_at_to]
+    @results = @results.where('updated_at >= ?', params[:updated_at_from]) if params[:updated_at_from]
+    @results = @results.where('updated_at <= ?', params[:updated_at_to]) if params[:updated_at_to]
   end
 
   def load_my_module

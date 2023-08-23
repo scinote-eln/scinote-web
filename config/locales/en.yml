@@ -1265,6 +1265,14 @@ en:
         created_at_desc: "Created last"
         name_asc: "Name A to Z"
         name_desc: "Name Z to A"
+      filters:
+        query:
+          label: 'Contains text'
+          placeholder: 'Enter search terms'
+        created_at:
+          label: 'Created date'
+        updated_at:
+          label: 'Updated date'
       options:
         comment_title: "Comments"
         no_comments: "No comments"
@@ -3703,6 +3711,8 @@ en:
   Added: 'Added'
   by: 'by'
   name: 'name'
+  From: 'From'
+  To: 'To'
 
   marvinjs:
     new_sketch: "New Chemical Drawing"
