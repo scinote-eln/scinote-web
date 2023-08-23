@@ -232,6 +232,10 @@ class Protocol < ApplicationRecord
     teams.blank? ? self : where(team: teams)
   end
 
+  def self.docx_parser_enabled?
+    ENV.fetch('PROTOCOLS_PARSER_URL', nil).present?
+  end
+
   def original_code
     # returns linked protocol code, or code of the original version of the linked protocol
     parent&.parent&.code || parent&.code || code
