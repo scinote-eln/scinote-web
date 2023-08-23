@@ -154,7 +154,6 @@ describe User, type: :model do
     it { is_expected.to respond_to(:assignments_email_notification) }
     it { is_expected.to respond_to(:recent_notification) }
     it { is_expected.to respond_to(:recent_email_notification) }
-    it { is_expected.to respond_to(:system_message_email_notification) }
   end
 
   describe 'user variables' do

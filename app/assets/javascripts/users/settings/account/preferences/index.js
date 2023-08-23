@@ -54,26 +54,6 @@
     function enableDependant(dependant) {
       dependant.checkboxpicker().prop('disabled', false);
     }
-
-    // Initialize system messages
-    var system_message_notification = $('[name="system_message_notification"]');
-    system_message_notification
-      .checkboxpicker({
-        onActiveCls: 'btn-toggle', offActiveCls: 'btn-toggle'
-      });
-    system_message_notification.prop('checked', true);
-    system_message_notification.prop('disabled', true);
-
-    // Initialize system messages email
-    var system_message_notification_mail = $('[name="system_message_notification_email"]');
-    system_message_notification_mail
-      .checkboxpicker({
-        onActiveCls: 'btn-toggle', offActiveCls: 'btn-toggle'
-      });
-    system_message_notification_mail.prop(
-      'checked',
-      system_message_notification_mail.attr('value') === 'true'
-    );
   }
 
   // triggers submit action when the user clicks
