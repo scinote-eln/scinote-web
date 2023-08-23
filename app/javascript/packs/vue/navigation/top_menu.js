@@ -8,11 +8,19 @@ Vue.use(PerfectScrollbar);
 
 Vue.prototype.i18n = window.I18n;
 
-window.addEventListener('DOMContentLoaded', () => {
+function addNavigationTopMenuContainer() {
   new Vue({
     el: '#sciNavigationTopMenuContainer',
     components: {
       'top-menu-container': TopMenuContainer
     }
   });
-});
+}
+
+if (document.readyState !== 'loading') {
+  addNavigationTopMenuContainer();
+} else {
+  window.addEventListener('DOMContentLoaded', () => {
+    addNavigationTopMenuContainer();
+  });
+}
