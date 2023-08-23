@@ -94,28 +94,6 @@
                   </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-sm-12">
-                <strong><%=t 'notifications.form.system_message' %></strong>
-                <p><%=t 'notifications.form.system_message_description' %></p>
-                <div class="row">
-                  <div class="col-sm-4">
-                    <%=t 'notifications.form.notification_scinote' %>
-                  </div>
-                  <div class="col-sm-8">
-                    <%= check_box_tag :system_message_notification %>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-4">
-                    <%=t 'notifications.form.notification_email' %>
-                  </div>
-                  <div class="col-sm-8">
-                    <%= check_box_tag :system_message_notification_email, @user.system_message_email_notification %>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         <% end %>
         <br>

@@ -25,6 +25,7 @@ import 'tinymce/plugins/insertdatetime';
 import 'tinymce/plugins/nonbreaking';
 import 'tinymce/plugins/save';
 import 'tinymce/plugins/help';
+import 'tinymce/plugins/help/js/i18n/keynav/en';
 import 'tinymce/plugins/quickbars';
 import 'tinymce/plugins/directionality';
 import './tinymce/custom_image_uploader/plugin';
@@ -246,6 +247,9 @@ window.TinyMCE = (() => {
           object_resizing: true,
           elementpath: false,
           quickbars_insert_toolbar: false,
+          link_default_target: 'external',
+          toolbar_mode: 'sliding',
+          color_default_background: 'yellow',
           link_default_target: 'external',
           mobile: {
             menubar: 'file edit view insert format table'

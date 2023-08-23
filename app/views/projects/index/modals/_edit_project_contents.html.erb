@@ -13,22 +13,25 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <div class="checkbox">
-          <%= f.check_box :visibility,
-                          { label: t('projects.index.modal_new_project.visibility_html'),
-                            data: { action: 'toggle-visibility', target: 'role_select_wrapper' },
-                            checked: f.object.visible? },
-                          :visible,
-                          :hidden %>
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-4">
+        <div class="flex gap-2 text-xs">
+          <div class="sci-checkbox-container mt-0.5">
+            <%= f.check_box :visibility,
+                            { class: 'sci-checkbox', checked: f.object.visible?, data: { action: 'toggle-visibility', target: 'edit_project_role_select_wrapper' } },
+                            :visible,
+                            :hidden %>
+            <span class="sci-checkbox-label"></span>
+          </div>
+          <span><%= t('projects.index.modal_new_project.visibility_html') %></span>
         </div>
       </div>
     </div>
-    <div class="row <%= f.object.hidden? ? 'hidden' : '' %>" id="role_select_wrapper">
+    <div class="row mt-4 <%= f.object.hidden? ? 'hidden' : '' %>" id="edit_project_role_select_wrapper">
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <%= f.label :default_public_user_role_id, t('user_assignment.select_default_user_role') %>
         <%= f.select :default_public_user_role_id,
                      options_for_select(user_roles_collection(@project), selected: f.object.default_public_user_role_id),
-                     { label: t('user_assignment.select_default_user_role') },
+                     {},
                      class: 'form-control selectpicker'%>
       </div>
     </div>

@@ -33,7 +33,7 @@
         </p>
         <p class="data-block" v-if="protocol.attributes.published">
           <span>{{ i18n.t("protocols.header.published_by") }}</span>
-          <img :src="protocol.attributes.published_by.avatar"/>
+          <img :src="protocol.attributes.published_by.avatar" class="rounded-full"/>
           {{ protocol.attributes.published_by.name }}
         </p>
         <p class="data-block">
@@ -46,7 +46,7 @@
         </p>
         <p class="data-block">
           <span>{{ i18n.t("protocols.header.added_by") }}</span>
-          <img :src="protocol.attributes.added_by.avatar"/>
+          <img :src="protocol.attributes.added_by.avatar" class="rounded-full"/>
           {{ protocol.attributes.added_by.name }}
         </p>
         <p class="data-block authors-data">

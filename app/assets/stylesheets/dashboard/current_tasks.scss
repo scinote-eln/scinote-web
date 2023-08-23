@@ -211,6 +211,10 @@
           color: $color-white;
           font-weight: bold;
           padding: .25em .5em;
+
+          &.btn-not-started {
+            @include not-started;
+          }
         }
       }
 

@@ -16,10 +16,10 @@
           </div>
           <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-4">
-              <div class="flex items-center gap-4 text-xs">
-                <div class="sci-checkbox-container">
+              <div class="flex gap-2 text-xs">
+                <div class="sci-checkbox-container mt-0.5">
                   <%= f.check_box :visibility,
-                                  { class: 'sci-checkbox' ,data: { action: 'toggle-visibility', target: 'role_select_wrapper' } },
+                                  { class: 'sci-checkbox' ,data: { action: 'toggle-visibility', target: 'new_project_role_select_wrapper' } },
                                   :visible,
                                   :hidden %>
                   <span class="sci-checkbox-label"></span>
@@ -28,8 +28,9 @@
               </div>
             </div>
           </div>
-          <div class="row hidden" id="role_select_wrapper">
+          <div class="row hidden" id="new_project_role_select_wrapper">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 sci-input-container mt-4">
+              <%= f.label :default_public_user_role_id, t('user_assignment.select_default_user_role') %>
               <%= f.select :default_public_user_role_id,
                            options_for_select(user_roles_collection(@project), UserRole.find_by(name: I18n.t('user_roles.predefined.viewer')).id),
                            {},

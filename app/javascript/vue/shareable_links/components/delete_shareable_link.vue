@@ -9,7 +9,7 @@
           </h4>
         </div>
         <div class="modal-body">
-          <p>{{ i18n.t('shareable_links.destroy_modal.description')}}</p>
+          <p class="text-sm">{{ i18n.t('shareable_links.destroy_modal.description')}}</p>
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" tabindex="0" @click="cancel">{{ i18n.t('general.cancel') }}</button>

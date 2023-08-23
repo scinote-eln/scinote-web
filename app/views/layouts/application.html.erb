@@ -12,7 +12,7 @@
       <meta name="revive-url" content="<%= users_revive_session_path %>">
     <% end %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
-
+    <%= stylesheet_link_tag 'bootstrap_pack', media: 'all' %>
     <%= stylesheet_link_tag 'application_pack_styles', media: 'all' %>
     <% if ::NewRelic::Agent.instance.started? %>
       <%= ::NewRelic::Agent.browser_timing_header(controller.request.content_security_policy_nonce) %>
