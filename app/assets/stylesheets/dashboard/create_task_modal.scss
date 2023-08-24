@@ -35,9 +35,11 @@
       }
 
       .dropdown-option {
-        overflow: hidden;
-        text-overflow: clip;
-        white-space: nowrap;
+        &[data-value = '0'] {
+          overflow: hidden;
+          text-overflow: clip;
+          white-space: nowrap;
+        }
       }
     }
 
