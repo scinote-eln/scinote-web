@@ -119,10 +119,13 @@
     text-align: center;
 
     a {
+      align-items: center;
       background-color: inherit;
       border: 1px solid transparent;
       border-radius: $border-radius-default;
       color: inherit;
+      display: flex;
+      justify-content: center;
       min-height: 36px;
       min-width: 36px;
       outline: 0;

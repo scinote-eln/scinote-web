@@ -40,13 +40,13 @@
   </div>
 <% end %>
 
-<div class="flex items-center w-full justify-start">
+<div class="flex-block items-center w-full justify-start">
   <span class="sn-icon block-icon sn-icon-users mr-2.5"></span>
   <span class="hidden-xs hidden-sm"><%= t('my_modules.details.assigned_users') %></span>
   <%= render partial: "shareable_links/my_modules/user_my_modules", locals: { my_module: @my_module } %>
 </div>
 
-<div class="flex items-center w-full justify-start">
+<div class="flex-block items-center w-full justify-start">
   <span class="sn-icon block-icon sn-icon-tag mr-2.5"></span>
   <span class="hidden-xs hidden-sm tags-title whitespace-nowrap"><%=t "my_modules.details.tags" %></span>
   <%= render partial: "shareable_links/my_modules/tags", locals: { my_module: @my_module } %>

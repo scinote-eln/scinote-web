@@ -179,12 +179,12 @@
   }
 
   .comments-counter {
-    @include font-small;
     align-items: center;
-    background-color: $color-concrete;
-    border: 2px solid $color-white;
-    border-radius: 8px;
+    background: var(--sn-science-blue);
+    border-radius: .5rem;
+    color: $color-white;
     display: flex;
+    font-size: 10px;
     height: 16px;
     justify-content: center;
     margin: 2px;
