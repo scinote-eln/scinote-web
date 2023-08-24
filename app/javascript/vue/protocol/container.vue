@@ -136,6 +136,8 @@
                   @step:insert="updateStepsPosition"
                   @step:elements:loaded="stepToReload = null"
                   @step:move_element="reloadStep"
+                  @step:attachemnts:loaded="stepToReload = null"
+                  @step:move_attachment="reloadStep"
                   :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
                   :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
                 />
