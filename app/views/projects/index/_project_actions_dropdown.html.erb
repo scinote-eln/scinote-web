@@ -1,6 +1,5 @@
-<%= project_form = nil
-   team_owner = current_user.current_team.user_assignments.exists?(user: current_user, user_role: UserRole.find_predefined_owner_role)
-   unassigned_team_owner = team_owner && !can_read_project?(project)
+<% project_form = nil
+   unassigned_team_owner = can_manage_team?(current_user.current_team) && !can_read_project?(project)
 %>
 
 <%= form_for project, format: :json, method: :put, remote: true, html: { id: "edit-project-dropdown-form-#{project.id}" } do |f| %>
