@@ -247,7 +247,6 @@ window.TinyMCE = (() => {
           object_resizing: true,
           elementpath: false,
           quickbars_insert_toolbar: false,
-          default_link_target: '_blank',
           toolbar_mode: 'sliding',
           color_default_background: 'yellow',
           link_default_target: 'external',
@@ -502,10 +501,4 @@ $(document).on('turbolinks:before-visit', (e) => {
     return false;
   }
   return true;
-});
-
-// Open rel="external" links in new tabs
-$('a[rel*=external]').on('click', function(e) {
-  e.preventDefault();
-  window.open(this.href, '_blank', 'noopener');
 });
