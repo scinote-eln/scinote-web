@@ -12,7 +12,7 @@
       text-align: left;
       width: 100%;
 
-      &.btn-not-started {
+      &.status-light {
         @include not-started;
       }
 
@@ -72,7 +72,7 @@
         white-space: nowrap;
       }
 
-      .btn-not-started {
+      .status-light {
         @include not-started;
       }
 
@@ -136,7 +136,7 @@
         padding: .5em;
         white-space: nowrap;
 
-        &.btn-not-started {
+        &.status-light {
           @include not-started;
         }
       }

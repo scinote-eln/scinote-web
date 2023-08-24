@@ -212,7 +212,7 @@
           font-weight: bold;
           padding: .25em .5em;
 
-          &.btn-not-started {
+          &.status-light {
             @include not-started;
           }
         }

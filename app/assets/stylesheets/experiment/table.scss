@@ -360,7 +360,7 @@
       text-overflow: ellipsis;
       white-space: nowrap;
 
-      &.btn-not-started {
+      &.status-light {
         @include not-started;
       }
     }
