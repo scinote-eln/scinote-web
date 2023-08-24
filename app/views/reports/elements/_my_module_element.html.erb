@@ -25,7 +25,8 @@
     <p class="module-status">
       <% status = my_module.my_module_status %>
       <%= t('projects.reports.elements.module.status') %>
-      <span class="status-block" style="background: <%= status.color %>">
+      <span class="status-block" style="background: <%= status.color %>;
+        <%= 'color: #000000;' if status.name == 'Not started' %>">
         <%= status.name %>
       </span>
       <% if my_module.completed? %>
