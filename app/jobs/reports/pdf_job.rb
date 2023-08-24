@@ -191,7 +191,7 @@ module Reports
     end
 
     def report_logo
-      'logo.png'
+      'scinote_logo.svg'
     end
 
   end
