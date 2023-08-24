@@ -4,8 +4,8 @@ module UserAssignments
   class GenerateUserAssignmentsJob < ApplicationJob
     queue_as :high_priority
 
-    def perform(object, assigned_by)
-      @assigned_by = assigned_by
+    def perform(object, assigned_by_id)
+      @assigned_by = User.find_by(id: assigned_by_id)
       ActiveRecord::Base.transaction do
         case object
         when Experiment

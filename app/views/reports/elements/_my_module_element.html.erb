@@ -66,9 +66,11 @@
     <% end %>
 
 
-    <div class="results-title-name">
-      <%= t('projects.reports.elements.module.results') %>
-    </div><br>
+    <% if %w(file_results table_results text_results).any? { |k| @settings.dig('task', k) } %>
+      <div class="results-title-name">
+        <%= t('projects.reports.elements.module.results') %>
+      </div><br>
+    <% end %>
 
     <% order_results_for_report(my_module.results, @settings.dig('task', 'result_order')).each do |result| %>
       <% if result.is_asset && @settings.dig('task', 'file_results') %>

@@ -4,10 +4,10 @@ module UserAssignments
   class PropagateAssignmentJob < ApplicationJob
     queue_as :high_priority
 
-    def perform(resource, user, user_role, assigned_by, options = {})
-      @user = user
+    def perform(resource, user_id, user_role, assigned_by_id, options = {})
+      @user = User.find(user_id)
       @user_role = user_role
-      @assigned_by = assigned_by
+      @assigned_by = User.find_by(id: assigned_by_id)
       @destroy = options.fetch(:destroy, false)
       @remove_from_team = options.fetch(:remove_from_team, false)
       @resource = resource
