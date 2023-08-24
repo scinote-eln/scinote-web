@@ -9,7 +9,8 @@ module Protocols
     def perform(temp_files_ids, user_id, team_id)
       @user = User.find(user_id)
       @team = @user.teams.find(team_id)
-      TempFile.where(id: temp_files_ids).each do |temp_file|
+      @tmp_files = TempFile.where(id: temp_files_ids)
+      @tmp_files.each do |temp_file|
         temp_file.file.open do |protocol_file|
           parse_protocol(protocol_file)
         end
@@ -135,15 +136,14 @@ module Protocols
     end
 
     def create_notification!
-      # TODO: Add proper protocol original file link
-      protocol_download_link = "<a data-id='#{@protocol.id}' " \
-                               "data-turbolinks='false' " \
-                               "href='#'>" \
-                               "#{@protocol.name}</a>"
+      original_file_download_link =
+        "<a data-turbolinks='false' " \
+        "href='#{Rails.application.routes.url_helpers.rails_blob_path(@tmp_files.take.file)}'>" \
+        "#{@tmp_files.take.file.filename}</a>"
 
       notification = Notification.create!(
         type_of: :deliver,
-        title: I18n.t('protocols.import_export.import_protocol_notification.title', link: protocol_download_link),
+        title: I18n.t('protocols.import_export.import_protocol_notification.title', link: original_file_download_link),
         message:  "#{I18n.t('protocols.import_export.import_protocol_notification.message')} " \
                   "<a data-id='#{@protocol.id}'  data-turbolinks='false' " \
                   "href='#{Rails.application.routes.url_helpers.protocol_path(@protocol)}'>" \
