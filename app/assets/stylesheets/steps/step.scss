@@ -34,14 +34,14 @@
         position: absolute;
         right: 0;
         top: 0;
-
-        &:hover {
-          background: $color-concrete;
-        }
       }
 
       &:hover .step-name-edit-icon {
         opacity: 1;
+        background: var(--sn-white);
+        &:hover {
+          background: var(--sn-super-light-grey);
+        }
       }
 
       .step-collapse-link {
@@ -301,10 +301,6 @@
   }
 
   .step-element-controls {
-    background: linear-gradient(90deg,
-        transparent,
-        $color-concrete 15%,
-        $color-concrete 100%);
     display: flex;
     margin-left: auto;
     position: absolute;
@@ -322,7 +318,6 @@
   }
 
   &:hover:not(.locked):not(.no-hover) {
-    background: $color-concrete;
 
     .step-element-grip,
     .step-element-controls {
@@ -354,10 +349,6 @@
   .step-element-header {
     align-items: center;
     border-bottom: 1px solid $color-concrete;
-
-    &:hover:not(.locked) {
-      background-color: $color-white;
-    }
 
     .step-element-name {
       font-weight: normal;

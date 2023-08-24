@@ -35,12 +35,10 @@
   }
 
   .buttons-container {
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      $color-concrete 25%,
-      $color-concrete 100%
-    );
+    .icon-btn:not(:hover) {
+      background: var(--sn-white);
+    }
+
     border-radius: 4px;
     opacity: 0;
     padding-left: 2em;
@@ -65,8 +63,6 @@
   }
 
   &:hover:not(.edit):not(.locked) {
-    background: $color-concrete;
-
     .buttons-container {
       display: flex;
       opacity: 1;

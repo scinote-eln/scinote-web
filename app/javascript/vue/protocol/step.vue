@@ -13,10 +13,6 @@
     <div class="step-header">
       <div class="step-element-header" :class="{ 'no-hover': !urls.update_url }">
         <div class="step-controls">
-          <div v-if="reorderStepUrl" class="step-element-grip" @click="$emit('reorder')" :class="{ 'step-element--locked': !urls.update_url }">
-            <i class="sn-icon sn-icon-sort"></i>
-          </div>
-          <div v-else class="step-element-grip-placeholder"></div>
           <a class="step-collapse-link hover:no-underline focus:no-underline"
             :href="'#stepBody' + step.id"
             data-toggle="collapse"

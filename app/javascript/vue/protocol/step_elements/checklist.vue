@@ -1,10 +1,6 @@
 <template>
   <div class="step-checklist-container" >
     <div class="step-element-header" :class="{ 'editing-name': editingName, 'no-hover': !element.attributes.orderable.urls.update_url }">
-      <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
-        <i class="sn-icon sn-icon-sort"></i>
-      </div>
-      <div v-else class="step-element-grip-placeholder"></div>
       <div class="step-element-name">
         <InlineEdit
           :class="{ 'step-element--locked': !element.attributes.orderable.urls.update_url }"

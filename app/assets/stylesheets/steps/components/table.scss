@@ -20,12 +20,9 @@
     }
 
     .enable-edit-mode__icon {
-      background: linear-gradient(
-          90deg,
-          transparent 0%,
-          $color-concrete 25%,
-          $color-concrete 100%
-        );
+      &:hover {
+        background: var(--sn-super-light-grey);
+      }
       padding: 4px 8px;
       position: absolute;
       right: 0;
@@ -45,8 +42,6 @@
 
     &.view:not(.locked) {
       &:hover {
-        background-color: $color-concrete;
-
         .enable-edit-mode {
           display: flex;
           opacity: 1;

@@ -1,10 +1,6 @@
 <template>
   <div class="step-table-container">
      <div class="step-element-header" :class="{ 'editing-name': editingName, 'step-element--locked': locked }">
-      <div v-if="reorderElementUrl" class="step-element-grip" @click="$emit('reorder')">
-        <i class="sn-icon sn-icon-sort"></i>
-      </div>
-      <div v-else class="step-element-grip-placeholder"></div>
       <div v-if="!locked || element.attributes.orderable.name" :key="reloadHeader" class="step-element-name">
         <InlineEdit
           :value="element.attributes.orderable.name"
