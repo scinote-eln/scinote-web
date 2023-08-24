@@ -105,7 +105,7 @@ module Toolbars
     def move_action
       return unless can_manage_team?(@items.first.team) &&
                     @items.all? { |item| item.is_a?(Project) ? can_read_project?(item) : true }
- 
+
       {
         name: 'move',
         label: I18n.t('projects.index.move_button'),
