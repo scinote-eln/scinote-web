@@ -1891,11 +1891,6 @@ en:
       error_searching: "Error searching, please try again"
       button_tooltip:
         new: "Create new item"
-        edit: "Edit item"
-        duplicate: "Duplicate"
-        export: "Export"
-        print_label: "Print label"
-        archive: "Archive"
         import: "Import"
         filters: "Filters"
         search: "Quick search"
@@ -2064,7 +2059,8 @@ en:
     archive_record: "Archive"
     restore_record: "Restore"
     print_label: "Print label"
-    export_record: "Export"
+    export_records: "Export items"
+    export_stock_consumption: "Export consumption"
     save_record: "Save"
     cancel_save: "Cancel"
     hide_reminders: "Clear all reminders"
@@ -2343,6 +2339,7 @@ en:
       assign_to_task_error:
         no_access: "You can only view this task"
         already_assigned: "This item is already assigned to this task"
+      export_consumption_label: "Export consumption"
     modal_print_label:
       head_title: "Print label - %{repository_row}"
       head_title_multiple: "Print label - %{repository_rows} rows"
