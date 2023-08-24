@@ -16,7 +16,6 @@ module Toolbars
 
       @single = @items.length == 1
 
-      @team_owner = @current_user.current_team.permission_granted?(@current_user, TeamPermissions::MANAGE)
       @item_type = if project_ids.blank? && project_folder_ids.blank?
                      :none
                    elsif project_ids.present? && project_folder_ids.present?
@@ -85,7 +84,7 @@ module Toolbars
 
       project = @items.first
 
-      return unless @team_owner || can_read_project?(project)
+      return unless can_manage_team?(project.team) || can_read_project?(project)
 
       path = if can_manage_project_users?(project)
                edit_access_permissions_project_path(project)
@@ -104,8 +103,9 @@ module Toolbars
     end
 
     def move_action
-      return unless can_read_project?(@items.first) && can_manage_team?(@items.first.team)
-
+      return unless can_manage_team?(@items.first.team) &&
+                    @items.all? { |item| item.is_a?(Project) ? can_read_project?(item) : true }
+ 
       {
         name: 'move',
         label: I18n.t('projects.index.move_button'),

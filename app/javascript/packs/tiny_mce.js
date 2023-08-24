@@ -247,6 +247,9 @@ window.TinyMCE = (() => {
           object_resizing: true,
           elementpath: false,
           quickbars_insert_toolbar: false,
+          default_link_target: '_blank',
+          toolbar_mode: 'sliding',
+          color_default_background: 'yellow',
           link_default_target: 'external',
           mobile: {
             menubar: 'file edit view insert format table'

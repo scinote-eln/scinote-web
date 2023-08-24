@@ -2881,7 +2881,8 @@ en:
       edit: "Edit"
       clone_btn: "Copy"
       import: "Import"
-      import_alt: "From file (.docx, .eln)"
+      import_eln: "From file (.eln)"
+      import_eln_docx: "From file (.docx, .eln)"
       import_protocols_io: "From Protocols.io"
       modal_import_json_upload: "Upload"
       modal_import_json_title: "Import protocols.io file"
@@ -3199,8 +3200,6 @@ en:
       assignments_description: 'Assignment notifications appear whenever you get assigned to a team, project, task.'
       recent_notification: 'Recent changes'
       recent_notification_description: 'Recent changes notifications appear whenever there is a change on a task you are assigned to.'
-      system_message: "What's New in SciNote"
-      system_message_description: 'You will be notified about new SciNote features, releases and improvements you can benefit from.'
     deliver:
       download_link: "Download link:"
       download_text: "Click the link to download the file."
