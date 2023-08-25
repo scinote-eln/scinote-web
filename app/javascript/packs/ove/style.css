@@ -11994,7 +11994,8 @@ body.tg-no-scroll-body {
 }
 
 .veToolbar {
-  padding-top: 3px;
+  justify-content: flex-start !important;
+  padding: 3px 0 0 1.5rem;
 }
 .veToolbar-outer {
   padding-bottom: 1px;
