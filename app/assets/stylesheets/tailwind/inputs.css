@@ -66,4 +66,8 @@
   .sci-input-container-v2 textarea:focus {
     border-color: var(--sn-science-blue);
   }
+
+  .sci-input-container-v2 .history-flyout li:hover {
+    background-color: var(--sn-super-light-grey);
+  }
 }
