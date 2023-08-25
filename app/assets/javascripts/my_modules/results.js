@@ -148,7 +148,7 @@
             .removeClass(GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME);
           break;
         case ResultTypeEnum.TEXT:
-          textWithoutImages = TinyMCE.getContent().replaceAll(/src="(data:image\/[^;]+;base64[^"]+)"/i, '');
+          textWithoutImages = TinyMCE.getContent().replaceAll(/src="(data:image\/[^;]+;base64[^"]+)"/g, '');
 
           textValidator(
             ev, $form.find('#result_text_attributes_textarea'), 1,

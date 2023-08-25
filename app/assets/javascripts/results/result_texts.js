@@ -40,6 +40,12 @@
       });
     }
 
+    function initSaveReslutText() {
+      $('#results').on('click', '.edit-text-result .save-result', (event) => {
+        Results.processResult(event, Results.ResultTypeEnum.TEXT);
+      });
+    }
+
     // Edit result text button behaviour
     function applyEditResultTextCallback() {
       $('.edit-result-text').off('ajax:success ajax:error').on('ajax:success', function(e, data) {
@@ -101,6 +107,7 @@
 
     publicAPI = Object.freeze({
       initNewReslutText: initNewReslutText,
+      initSaveReslutText: initSaveReslutText,
       applyEditResultTextCallback: applyEditResultTextCallback
     });
 
@@ -108,5 +115,6 @@
   }());
 
   ResultText.initNewReslutText();
+  ResultText.initSaveReslutText();
   ResultText.applyEditResultTextCallback();
 }());
