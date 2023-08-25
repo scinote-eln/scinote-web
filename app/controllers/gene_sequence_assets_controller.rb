@@ -13,14 +13,12 @@ class GeneSequenceAssetsController < ApplicationController
   before_action :check_manage_permission, only: %i(new update create)
 
   def new
-    @ove_enabled = OpenVectorEditorService.enabled?
     render :edit, layout: false
   end
 
   def edit
     @file_url = rails_representation_url(@asset.file)
     @file_name = @asset.render_file_name
-    @ove_enabled = OpenVectorEditorService.enabled?
     log_activity(:protocol_sequence_asset_edit_started)
     render :edit, layout: false
   end
