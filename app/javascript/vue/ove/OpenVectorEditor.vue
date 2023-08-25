@@ -63,7 +63,7 @@
         onSave: this.saveFile,
         generatePng: true,
         readOnly: this.readOnly,
-        showMenuBar: true,
+        showMenuBar: true
       }
 
       if (this.readOnly) {
