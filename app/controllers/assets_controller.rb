@@ -68,10 +68,10 @@ class AssetsController < ApplicationController
   def move_targets
     if @assoc.is_a?(Step)
       protocol = @assoc.protocol
-      render json: { targets: protocol.steps.order(:position).where.not(id: @assoc.id).map{|i| [i.id, i.name] } }
+      render json: { targets: protocol.steps.order(:position).where.not(id: @assoc.id).map { |i| [i.id, i.name] } }
     elsif @assoc.is_a?(Result)
       my_module = @assoc.my_module
-      render json: { targets: my_module.results.where.not(id: @assoc.id).map{ |i| [i.id, i.name] } }
+      render json: { targets: my_module.results.where.not(id: @assoc.id).map { |i| [i.id, i.name] } }
     else
       render json: { targets: [] }
     end

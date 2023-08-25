@@ -9,16 +9,16 @@ export default {
   methods: {
     showMoveModal(event) {
       event.stopPropagation();
-      this.movingAttachment= true;
+      this.movingAttachment = true;
     },
     closeMoveModal() {
       this.movingAttachment = false;
     },
-    moveAttachment(target_id) {
-      axios.post(this.attachment.attributes.urls.move, { target_id: target_id }).
-        then(() => {
+    moveAttachment(targetId) {
+      axios.post(this.attachment.attributes.urls.move, { target_id: targetId })
+        .then(() => {
           this.movingAttachment = false;
-          this.$emit('attachment:moved', this.attachment.id, target_id);
+          this.$emit('attachment:moved', this.attachment.id, targetId);
         });
     }
   }

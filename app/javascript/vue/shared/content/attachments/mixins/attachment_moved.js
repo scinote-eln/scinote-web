@@ -4,4 +4,4 @@ export default {
       this.$emit('attachment:moved', attachmentId, targetId);
     }
   }
-}
+};

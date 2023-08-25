@@ -144,7 +144,7 @@
         return `${attachment.attributes.view_mode}Attachment`
       },
       deleteAttachment(id) {
-        this.$emit('attachment:deleted', id, )
+        this.$emit('attachment:deleted', id)
       },
       initMarvinJS() {
         // legacy logic from app/assets/javascripts/sitewide/marvinjs_editor.js
