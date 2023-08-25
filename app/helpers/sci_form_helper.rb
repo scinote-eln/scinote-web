@@ -1,5 +1,6 @@
 module SciFormHelper
   class SciFormBuilder < ActionView::Helpers::FormBuilder
+    include SciFormHelper
     # Returns Bootstrap date-time picker of the "datetime" type tailored for accessing a specified datetime attribute (identified by +name+) on an object
     # assigned to the template (identified by +object+). Additional options on the input tag can be passed as a
     # hash with +options+. The supported options are shown in the following examples.
@@ -42,60 +43,6 @@ module SciFormHelper
       end
 
       res << '</div></div></div></div>'
-      res.html_safe
-    end
-
-    # Returns Bootstrap button group for choosing a specified enum attribute (identified by +name+) on an object
-    # assigned to the template (identified by +object+). Additional options on the input tag can be passed as a
-    # hash with +options+. The supported options are shown in the following examples.
-    #
-    # ==== Examples
-    #   Specify custom label (otherwise, a humanized version of +name+ is used)
-    #   # => enum_btn_group(:car, :type, label: "Car type")
-    #
-    #   Specify custom button names for enum values (a hash)
-    #   # => enum_btn_groups(:car, :type, btn_names: { diesel: "Diesel car", electric: "Electric car" })
-    #
-    #   Specify custom CSS style on the element
-    #   # => enum_btn_group(:car, :type, style: "background-color: #000; margin-top: 20px;")
-    #
-    #   Specify custom CSS classes on the element
-    #   # => enum_btn_group(:car, :type, class: "class1 class2")
-    def enum_btn_group(name, options = {})
-      id = "#{@object_name}_#{name}"
-      input_name = "#{@object_name}[#{name}]"
-
-      enum_vals = @object.class.send(name.to_s.pluralize)
-      btn_names = enum_vals.keys.collect { |k| [k, k] }.to_h
-      btn_names = options[:btn_names] if options[:btn_names]
-      btn_names = ActiveSupport::HashWithIndifferentAccess.new(btn_names)
-
-      label = name.to_s.humanize
-      label = options[:label] if options[:label]
-
-      style_str = ''
-      style_str = " style='#{options[:style]}'" if options[:style]
-
-      class_str = ''
-      class_str = " #{options[:class]}" if options[:class]
-
-      res = ''
-      res << "<div class='form-group#{class_str}'#{style_str}>"
-      res << "<label for='#{id}'>#{label}</label>"
-      res << '<br>'
-      res << "<div class='btn-group' data-toggle='buttons'>"
-      enum_vals.keys.each do |val|
-        active = @object.send("#{val}?")
-        active_str = active ? ' active' : ''
-        checked_str = active ? " checked='checked'" : ''
-
-        res << "<label class='btn btn-toggle#{active_str}'>"
-        res << "<input type='radio' value='#{val}' name='#{input_name}' id='#{id}_#{val}'#{checked_str}>"
-        res << btn_names[val]
-        res << '</label>'
-      end
-      res << '</div>'
-      res << '</div>'
       res.html_safe
     end
 
