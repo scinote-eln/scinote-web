@@ -62,7 +62,8 @@
       let editorConfig = {
         onSave: this.saveFile,
         generatePng: true,
-        readOnly: this.readOnly
+        readOnly: this.readOnly,
+        showMenuBar: true
       }
 
       if (this.readOnly) {
