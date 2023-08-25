@@ -15,7 +15,7 @@ class AssetSerializer < ActiveModel::Serializer
              :preview_image
 
   def icon
-    file_fa_icon_class(object)
+    file_extension_icon_html(object)
   end
 
   def file_name

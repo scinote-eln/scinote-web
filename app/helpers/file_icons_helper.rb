@@ -22,10 +22,6 @@ module FileIconsHelper
       'fa-file-pdf'
     elsif %w(txt csv tab tex).include?(file_ext)
       'far fa-file-alt'
-    elsif asset.file.attached? && asset.file.metadata['asset_type'] == 'marvinjs'
-      'mce-i-marvinjs'
-    elsif asset.file.attached? && asset.file.metadata['asset_type'] == 'gene_sequence'
-      'sn-file-ove'
     elsif Constants::WHITELISTED_IMAGE_TYPES.include?(file_ext)
       'fa-image'
     else
