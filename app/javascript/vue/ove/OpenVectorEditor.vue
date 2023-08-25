@@ -1,10 +1,10 @@
 <template>
   <div class="ove-wrapper flex flex-col h-screen">
-    <div class="ove-header flex justify-between">
+    <div class="ove-header flex justify-between h-14 px-4 py-2">
       <span class="file-name flex items-center ml-3">
         <div class="sci-input-container">
           <input v-model="sequenceName"
-                 class="sci-input-field" 
+                 class="border-sn-grey border-[1px] rounded-[4px] px-2 py-1 w-80 h-10 text-sm font-sans"
                  type="text"
                  :disabled="readOnly"
                  :placeholder="i18n.t('open_vector_editor.sequence_name_placeholder')"/>
@@ -14,8 +14,8 @@
         <i class="mr-1 text-brand-warning sn-icon sn-icon-alert-warning"></i>
         <p v-html="i18n.t('open_vector_editor.trial_expiration_warning_html', { count: oveEnabledDaysLeft })" class="mb-0"></p>
       </div>
-      <div class="ove-buttons">
-        <button v-if="!readOnly" @click="saveAndClose" class="btn btn-light">
+      <div class="ove-buttons text-sn-blue">
+        <button v-if="!readOnly" @click="saveAndClose" class="btn btn-light font-sans">
           <i class="sn-icon sn-icon-save"></i>
           {{ i18n.t('SaveClose') }}
         </button>

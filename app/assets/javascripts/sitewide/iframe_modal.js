@@ -24,4 +24,14 @@ $(document).on('turbolinks:load', function() {
     iFrameModalFrame.removeAttribute('src');
     iFrameModal.dispatchEvent(new Event('hidden'));
   });
+
+  iFrameModal.addEventListener('shown', () => {
+    document.body.classList.add('overflow-hidden');
+    document.body.classList.remove('overflow-auto');
+  });
+
+  iFrameModal.addEventListener('hidden', () => {
+    document.body.classList.remove('overflow-hidden');
+    document.body.classList.add('overflow-auto');
+  });
 });

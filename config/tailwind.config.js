@@ -21,7 +21,8 @@ module.exports = {
         transparent: 'transparent',
         current: 'currentColor',
         'brand-warning': '#f0ad4e',
-        'sn-blue': '#104DA9'
+        'sn-blue': '#104DA9',
+        'sn-grey': '#98a2b3'
       }
     }
   },
