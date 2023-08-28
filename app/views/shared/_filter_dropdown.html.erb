@@ -1,21 +1,21 @@
 <div class="filter-container dropdown <%= container_class + '-dropdown' %>">
       <button class="btn btn-light icon-btn btn-black filter-button" title="<%= t("filters_modal.title") %>" data-toggle="dropdown"><i class="sn-icon sn-icon-filter"></i></button>
-      <div class="dropdown-menu dropdown-menu-right filter-dropdown <%= container_class %>" role="menu" data-team-id="<%= current_team.id %>" data-search-field-history-key="<%= search_field_history_key %>">
-        <div class="header">
-          <div class="title"><%= dropdown_title %></div>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
+      <div class="dropdown-menu dropdown-menu-right sci-flyout <%= container_class %>" role="menu" data-team-id="<%= current_team.id %>" data-search-field-history-key="<%= search_field_history_key %>">
+        <div class="sci-flyout-header">
+          <div class="sci-flyout-title"><%= dropdown_title %></div>
+          <button type="button" class="ml-auto close" data-dismiss="modal" aria-label="Close">
+            <i class="sn-icon sn-icon-close"></i>
+          </button>
         </div>
-        <div class="body">
+        <div class="sci-flyout-body">
           <%= yield %>
         </div>
-        <div class="footer">
-          <div class="buttons">
-            <div class="btn btn-secondary clear-button">
-              <%= t("filters_modal.clear_btn") %>
-            </div>
-            <div class="btn btn-primary apply-filters">
-              <%= t("filters_modal.show_btn.one") %>
-            </div>
+        <div class="sci-flyout-footer">
+          <div class="btn btn-secondary clear-button">
+            <%= t("filters_modal.clear_btn") %>
+          </div>
+          <div class="btn btn-primary apply-filters">
+            <%= t("filters_modal.show_btn.one") %>
           </div>
         </div>
       </div>

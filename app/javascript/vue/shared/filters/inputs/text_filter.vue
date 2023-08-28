@@ -1,7 +1,6 @@
 <template>
-  <div>
-    <label>{{ filter.label }}</label>
-    <inputWithHistory :modelValue="value" @update:modelValue="update" :placeholder="filter.placeholder" :id="'textSearch' + filter.key"/>
+  <div class="mb-6">
+    <inputWithHistory :modelValue="value" :label="filter.label" @update:modelValue="update" :placeholder="filter.placeholder" :id="'textSearch' + filter.key"/>
   </div>
 </template>
 
