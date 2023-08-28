@@ -31,6 +31,12 @@
               assignableMyModuleId: $('#result_text_attributes_textarea').data('my-module-id')
             });
             $('#result_name').focus();
+            setTimeout(function() {
+              $('.edit-text-result').css('display', 'initial');
+            }, 600);
+            setTimeout(function() {
+              $('.edit-text-result').css('display', 'block');
+            }, 800)
           },
           error: function() {
             animateSpinner(null, false);
@@ -70,6 +76,12 @@
           assignableMyModuleId: $('#result_text_attributes_textarea').data('my-module-id')
         });
         $('#result_name').focus();
+        setTimeout(function() {
+          $('.edit-text-result').css('display', 'initial');
+        }, 600);
+        setTimeout(function() {
+          $('.edit-text-result').css('display', 'block');
+        }, 800)
       });
     }
 
