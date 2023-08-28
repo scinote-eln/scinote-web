@@ -154,7 +154,8 @@ module Experiments
     def status_presenter(my_module)
       {
         name: escape_input(my_module.my_module_status.name),
-        color: escape_input(my_module.my_module_status.color)
+        color: escape_input(my_module.my_module_status.color),
+        light_color: escape_input(my_module.my_module_status.light_color?)
       }
     end
 

@@ -67,6 +67,10 @@ class MyModuleStatus < ApplicationRecord
     mm_copy.errors.messages&.values&.flatten
   end
 
+  def light_color?
+    color == '#FFFFFF'
+  end
+
   private
 
   def next_in_same_flow

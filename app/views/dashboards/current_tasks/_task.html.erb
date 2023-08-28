@@ -16,7 +16,7 @@
     <% end %>
   </div>
   <div class="task-status-container row-border">
-    <span class="task-status <%= 'btn-not-started' if task.status_name == 'Not started' %>"
+    <span class="task-status <%= 'status-light' if task.my_module_status.light_color? %>"
       style="background:<%= task.status_color %>">
         <%= task.status_name %>
     </span>

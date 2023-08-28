@@ -43,7 +43,7 @@ var ExperimnetTable = {
       return `<a href="${data.url}">${data.count}</a>`;
     },
     status: function(data) {
-      return `<div class="my-module-status ${data.name === 'Not started' ? 'btn-not-started' : ''}" 
+      return `<div class="my-module-status ${data.light_color ? 'status-light' : ''}" 
         style="background-color: ${data.color}">${data.name}</div>`;
     },
     assigned: function(data) {
