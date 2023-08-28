@@ -38,7 +38,6 @@
       });
       $('#modal-info-repository-row #bar-code-image').attr('src', barCodeCanvas.toDataURL('image/png'));
 
-
       $('#repository_row-info-table').DataTable({
         dom: 'RBltpi',
         stateSave: false,
@@ -58,6 +57,24 @@
         preDrawCallback: function(settings) {
           animateSpinner(this);
         }
+      });
+
+      $('.export-consumption-button').on('click', () => {
+        // eslint-disable-next-line no-undef
+        animateSpinner(null, true);
+        $.ajax({
+          url: $('.export-consumption-button').attr('data-repository-stock-export-url'),
+          type: 'post',
+          data: { row_ids: $('.export-consumption-button').attr('data-rows') },
+          success: function(response) {
+            HelperModule.flashAlertMsg(response.message, 'success');
+          },
+          error: function(response) {
+            HelperModule.flashAlertMsg(response.message, 'danger');
+          },
+          // eslint-disable-next-line no-undef
+          complete: () => animateSpinner(null, false)
+        });
       });
     });
     e.preventDefault();

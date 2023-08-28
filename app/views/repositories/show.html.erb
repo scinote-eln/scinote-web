@@ -59,7 +59,11 @@
              }
   %>
 
-  <div id="actionToolbar" data-behaviour="vue">
+  <div
+    id="actionToolbar" 
+    data-behaviour="vue" 
+    data-repository-stock-export-url="<%= export_repository_stock_items_team_path(@repository) %>"
+  >
     <action-toolbar actions-url="<%= actions_toolbar_repository_rows_url %>" />
   </div>
 </div>

@@ -6,7 +6,6 @@
 
 //= require repositories/row_editor.js
 
-
 var RepositoryDatatable = (function(global) {
   'use strict';
 
@@ -438,6 +437,33 @@ var RepositoryDatatable = (function(global) {
   }
 
   function initExportActions() {
+    // RepositoryStockValue Export Action
+    $(document).on('click', '#exportStockConsumptionButton', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      let rowIds = [];
+      $.each(rowsSelected, function(rowId) {
+        rowIds.push(rowId);
+      });
+
+      // eslint-disable-next-line no-undef
+      animateSpinner(null, true);
+      $.ajax({
+        url: $('#actionToolbar').attr('data-repository-stock-export-url'),
+        type: 'post',
+        data: { row_ids: rowIds },
+        success: function(data) {
+          HelperModule.flashAlertMsg(data.message, 'success');
+        },
+        error: function(data) {
+          HelperModule.flashAlertMsg(data.message, 'danger');
+        },
+        // eslint-disable-next-line no-undef
+        complete: () => animateSpinner(null, false)
+      });
+    });
+
+    // RepositoryRow Export Action
     $(document).on('click', '#exportRepositoryRowsButton', function(e) {
       e.preventDefault();
       e.stopPropagation();

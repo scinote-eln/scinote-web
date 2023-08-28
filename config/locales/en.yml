@@ -2226,7 +2226,24 @@ en:
       reminder_at: "Reminder at"
       units_remaining: "%{unit} remaining."
       enter_ammount: "Enter an amount"
-
+    stock_export:
+      headers:
+        consumption_type: 'Consumption type'
+        item_name: 'Item name'
+        item_id: 'Item ID'
+        consumed_amount: 'Consumed amount'
+        consumed_amount_unit: 'Consumed amount unit'
+        added_amount: 'Added amount'
+        added_amount_unit: 'Added amount unit'
+        consumed_by: 'Consumed by'
+        consumed_on: 'Consumed on'
+        team: 'Team'
+        project: 'Project'
+        experiment: 'Experiment'
+        task: 'Task'
+        task_id: 'Task ID'
+        stock_amount_balance: 'Stock amount after update (balance)'
+        stock_balance_unit: 'Stock unit after update'
   libraries:
     manange_modal_column_index:
       title: "Manage columns"

@@ -356,6 +356,15 @@ class RepositoriesController < ApplicationController
     end
   end
 
+  def export_repository_stock_items
+    if params[:row_ids]
+      RepositoryStockLedgerZipExport.generate_zip(params[:row_ids], current_user)
+      render json: { message: t('zip_export.export_request_success') }, status: :ok
+    else
+      render json: { message: t('zip_export.export_error') }, status: :unprocessable_entity
+    end
+  end
+
   def assigned_my_modules
     my_modules = MyModule.joins(:repository_rows).where(repository_rows: { repository: @repository })
                          .readable_by_user(current_user).distinct
