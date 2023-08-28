@@ -7,12 +7,13 @@
           @click="$emit('reorder')">
         <i class="sn-icon sn-icon-sort"></i>
       </div>
+
       <div v-if="!locked || element.attributes.orderable.name" :key="reloadHeader"
            class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold">
         <InlineEdit
           :value="element.attributes.orderable.name"
           :characterLimit="255"
-          :placeholder="''"
+          :placeholder="element.attributes.orderable.placeholder"
           :allowBlank="false"
           :autofocus="editingName"
           :attributeName="`${i18n.t('Table')} ${i18n.t('name')}`"

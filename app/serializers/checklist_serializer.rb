@@ -6,7 +6,11 @@ class ChecklistSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :id, :name, :urls, :icon, :sa_name, :checklist_items, :parent_type
+  attributes :id, :name, :urls, :icon, :sa_name, :checklist_items, :parent_type, :placeholder
+
+  def placeholder
+    I18n.t('protocols.steps.checklist.checklist_name')
+  end
 
   def icon
     'fa-list-ul'

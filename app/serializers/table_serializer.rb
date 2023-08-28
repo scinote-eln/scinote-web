@@ -4,10 +4,14 @@ class TableSerializer < ActiveModel::Serializer
   include Canaid::Helpers::PermissionsHelper
   include Rails.application.routes.url_helpers
 
-  attributes :name, :contents, :urls, :icon, :metadata, :parent_type
+  attributes :name, :contents, :urls, :icon, :metadata, :parent_type, :placeholder
 
   def contents
     object.contents_utf_8
+  end
+
+  def placeholder
+    I18n.t('protocols.steps.table.table_name')
   end
 
   def icon

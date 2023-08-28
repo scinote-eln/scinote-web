@@ -1156,8 +1156,8 @@ en:
         unlinked: "unlinked"
         linked: "linked"
         no_description: "No protocol description"
-        enter_name: "Enter protocol name"
-        empty_description_edit_label: "Click here to enter Protocol Description (optional)"
+        enter_name: "Protocol title"
+        empty_description_edit_label: "Add description"
         keywords: "Keywords"
         no_keywords: "no keywords"
         protocol_created: "Protocol created:"
@@ -3030,7 +3030,7 @@ en:
           ztoa_html: "<i class=\"fas fa-sort-alpha-up\"></i>&nbsp;&nbsp;Name Z to A"
 
     steps:
-      placeholder: 'Enter step name'
+      placeholder: 'Step name'
       default_name: 'Untitled step'
       completed: 'Completed'
       uncompleted: 'Uncompleted'
@@ -3090,8 +3090,10 @@ en:
           description: 'Tables have become content blocks and require a name. To be able to edit the table, please add the name now:'
           save: 'Save table title'
           error: "Table name can't be empty"
+        table_name: "Table name"
       checklist:
         default_name: 'Checklist %{position}'
+        checklist_name: "Checklist name"
         empty_checklist: 'Doesn’t contain any checklist items'
       text:
         placeholder: 'Enter step text'
