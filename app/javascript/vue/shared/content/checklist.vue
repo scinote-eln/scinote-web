@@ -12,7 +12,7 @@
           :value="element.attributes.orderable.name"
           :sa_value="element.attributes.orderable.sa_name"
           :characterLimit="10000"
-          :placeholder="''"
+          :placeholder="i18n.t('protocols.steps.checklist.checklist_name')"
           :allowBlank="false"
           :autofocus="editingName"
           :smartAnnotation="true"

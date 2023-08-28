@@ -12,7 +12,7 @@
         <InlineEdit
           :value="element.attributes.orderable.name"
           :characterLimit="255"
-          :placeholder="''"
+          :placeholder="i18n.t('protocols.steps.table.table_name')"
           :allowBlank="false"
           :autofocus="editingName"
           :attributeName="`${i18n.t('Table')} ${i18n.t('name')}`"
