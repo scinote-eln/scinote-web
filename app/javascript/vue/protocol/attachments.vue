@@ -120,6 +120,15 @@
       uploadingAttachment,
       emptyAttachment
     },
+    watch: {
+      attachmentsReady() {
+        if (this.attachmentsReady) {
+          this.$nextTick(() => {
+            this.initMarvinJS();
+          })
+        }
+      }
+    },
     computed: {
       attachmentsOrdered() {
         return this.attachments.sort((a, b) => {
