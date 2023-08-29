@@ -155,7 +155,7 @@ module Experiments
       {
         name: escape_input(my_module.my_module_status.name),
         color: escape_input(my_module.my_module_status.color),
-        light_color: escape_input(my_module.my_module_status.light_color?)
+        light_color: my_module.my_module_status.light_color?
       }
     end
 
