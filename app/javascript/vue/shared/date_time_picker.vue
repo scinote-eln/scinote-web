@@ -1,5 +1,5 @@
 <template>
-  <div class="date-time-picker">
+  <div class="date-time-picker grow">
     <DatePicker v-if="!timeOnly"
       @change="updateDate"
       :placeholder="placeholder"

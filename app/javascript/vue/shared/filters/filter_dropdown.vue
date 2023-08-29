@@ -2,24 +2,24 @@
   <div class="relative">
     <div ref="dropdown" class="filter-container dropdown" :class="{ 'filters-applied': appliedDotIsShown }">
       <button class="btn btn-light icon-btn filter-button" :title="i18n.t('filters_modal.title')" data-toggle="dropdown"><i class="sn-icon sn-icon-filter"></i></button>
-      <div class="dropdown-menu dropdown-menu-right filter-dropdown" @click.stop.self>
-        <div class="header !-mb-2">
-          <div class="title">{{ i18n.t('filters_modal.title') }}</div>
-          <button @click="toggleDropdown" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="dropdown-menu dropdown-menu-right sci-flyout" @click.stop.self>
+        <div class="sci-flyout-header">
+          <div class="sci-flyout-title">{{ i18n.t('filters_modal.title') }}</div>
+          <button @click="toggleDropdown" type="button" class="ml-auto btn btn-light btn-black icon-btn" data-dismiss="modal" aria-label="Close">
+            <i class="sn-icon sn-icon-close"></i>
+          </button>
         </div>
-        <div class="body p-3">
-          <div v-for="filter in filters" :key="filter.key + resetFilters" class="mt-4">
+        <div class="sci-flyout-body">
+          <div v-for="filter in filters" :key="filter.key + resetFilters" class="">
             <Component :is="`${filter.type}Filter`" :filter="filter" :value="filterValues[filter.key]" @update="updateFilter" />
           </div>
         </div>
-        <div class="footer">
-          <div class="buttons">
-            <div @click.prevent="clearFilters" class="btn btn-secondary">
-              {{ i18n.t('filters_modal.clear_btn') }}
-            </div>
-            <div @click.prevent="applyFilters" class="btn btn-primary">
-              {{ i18n.t('filters_modal.show_btn.one') }}
-            </div>
+        <div class="sci-flyout-footer">
+          <div @click.prevent="clearFilters" class="btn btn-secondary">
+            {{ i18n.t('filters_modal.clear_btn') }}
+          </div>
+          <div @click.prevent="applyFilters" class="btn btn-primary">
+            {{ i18n.t('filters_modal.show_btn.one') }}
           </div>
         </div>
       </div>

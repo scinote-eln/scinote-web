@@ -1,4 +1,10 @@
 @layer components {
+
+  .sci-label {
+    @apply text-sm font-medium;
+    color: var(--sn-grey);
+  }
+
   .sci-input-container-v2 {
     @apply relative h-[2.5rem] flex items-center;
   }
