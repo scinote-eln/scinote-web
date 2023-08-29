@@ -29,24 +29,18 @@ module Api
       end
 
       def update
-        user_role = UserRole.find user_assignment_params[:user_role_id]
-        user = @user_assignment.user
-        my_module_member = MyModuleMember.new(
-          current_user,
-          @task,
-          @experiment,
-          @project,
-          user,
-          @user_assignment
-        )
+        ActiveRecord::Base.transaction do
+          if @user_assignment.user_role_id == user_assignment_params[:user_role_id]
+            return render body: nil, status: :no_content
+          end
 
-        return render body: nil, status: :no_content if @user_assignment.user_role == user_role
+          @user_assignment.update!(user_assignment_params.merge(assigned: :manually))
+          log_change_activity
 
-        my_module_member.update(user_role_id: user_role.id, user_id: user.id)
-
-        render jsonapi: my_module_member.user_assignment.reload,
-               serializer: UserAssignmentSerializer,
-               status: :ok
+          render jsonapi: @user_assignment.reload,
+                 serializer: UserAssignmentSerializer,
+                 status: :ok
+        end
       end
 
       private
@@ -71,6 +65,21 @@ module Api
 
       def permitted_includes
         %w(user user_role assignable)
+      end
+
+      def log_change_activity
+        Activities::CreateActivityService.call(
+          activity_type: :change_user_role_on_my_module,
+          owner: current_user,
+          subject: @task,
+          team: @project.team,
+          project: @project,
+          message_items: {
+            my_module: @task.id,
+            user_target: @user_assignment.user_id,
+            role: @user_assignment.user_role.name
+          }
+        )
       end
     end
   end
