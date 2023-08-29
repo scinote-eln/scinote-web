@@ -19,24 +19,24 @@ class GeneSequenceAssetsController < ApplicationController
   def edit
     @file_url = rails_representation_url(@asset.file)
     @file_name = @asset.render_file_name
-    log_activity(:protocol_sequence_asset_edit_started)
+    log_activity('sequence_asset_edit_started')
     render :edit, layout: false
   end
 
   def create
     save_asset!
-    log_activity(:protocol_sequence_asset_added)
+    log_activity('sequence_asset_added')
     head :ok
   end
 
   def update
     save_asset!
-    log_activity(:protocol_sequence_asset_edit_finished)
+    log_activity('sequence_asset_edit_finished')
     head :ok
   end
 
   def destroy
-    log_activity(:protocol_sequence_asset_deleted)
+    log_activity('sequence_asset_deleted')
     head :ok
   end
 
@@ -141,25 +141,34 @@ class GeneSequenceAssetsController < ApplicationController
     end
   end
 
-  def log_activity(type_of, message_items = {})
+  def log_activity(type_of, project = nil, message_items = {})
     return unless @parent.is_a?(Step)
 
     my_module = @parent.my_module
     default_items = {
-      protocol: @protocol.id,
-      my_module: my_module&.id,
+      protocol: @parent.protocol.id,
       step: @parent.id,
       asset_name: { id: @asset.id, value_for: 'file_name' },
       step_position: { id: @parent.id, value_for: 'position_plus_one' }
     }
+
+    if my_module
+      project = my_module.project
+      default_items[:my_module] = my_module.id
+      type_of = "task_#{type_of}".to_sym
+    else
+      type_of = "protocol_#{type_of}".to_sym
+    end
+
     message_items = default_items.merge(message_items)
 
-    Activities::CreateActivityService
-      .call(activity_type: type_of,
-            owner: current_user,
-            team: @protocol.team,
-            project: my_module&.project,
-            subject: @protocol,
-            message_items: message_items)
+    Activities::CreateActivityService.call(
+      activity_type: type_of,
+      owner: current_user,
+      team: @parent.protocol.team,
+      subject: @parent.protocol,
+      message_items: message_items,
+      project: project
+    )
   end
 end
