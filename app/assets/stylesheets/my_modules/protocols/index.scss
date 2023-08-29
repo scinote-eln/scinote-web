@@ -115,7 +115,7 @@
   .task-section-header {
     align-items: center;
     display: flex;
-    flex-wrap: wrap;
+    min-height: 4rem;
 
     .actions-block {
       display: flex;
