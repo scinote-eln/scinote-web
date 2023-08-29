@@ -61,7 +61,7 @@ module SmartAnnotations
       klass = OBJECT_MAPPINGS.fetch(type.to_sym) do
         raise ActiveRecord::RecordNotFound.new("#{type} does not exist")
       end
-      klass.find_by_id(id)
+      klass.find_by(id: id)
     end
   end
 end
