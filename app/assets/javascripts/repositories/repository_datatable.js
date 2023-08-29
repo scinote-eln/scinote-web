@@ -184,7 +184,7 @@ var RepositoryDatatable = (function(global) {
     $('#saveRecord').attr('disabled', false);
     $(TABLE_WRAPPER_ID).find('tr').removeClass('blocked');
 
-    if (TABLE.ColSizes && TABLE.ColSizes.filter((s) => !!s).length > 0) {
+    if (TABLE.ColSizes && TABLE.ColSizes.filter((s) => !!s).length > 1) {
       $(TABLE_WRAPPER_ID).find('.table').addClass('table--resizable-columns');
     }
 
