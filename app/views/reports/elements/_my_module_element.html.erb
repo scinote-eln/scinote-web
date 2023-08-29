@@ -60,7 +60,7 @@
     </div>
   </div>
   <div class="report-element-children">
-    <%= render partial: 'reports/elements/my_module_protocol_element', locals: { protocol: my_module.protocol } %>
+    <%= render partial: 'reports/elements/my_module_protocol_element', locals: { protocol: my_module.protocol, export_all: export_all } %>
 
     <% filter_steps_for_report(my_module.protocol.steps, @settings).order(:position).each do |step| %>
       <%= render partial: 'reports/elements/my_module_step_element', locals: { step: step, export_all: export_all } %>

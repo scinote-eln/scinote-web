@@ -195,11 +195,12 @@ window.TinyMCE = (() => {
           document.location.hash = `${textAreaObject.data('objectType')}_${textAreaObject.data('objectId')}`;
         }
 
-        if ($('.navbar-secondary').length) {
-          editorToolbaroffset = $('.navbar-secondary').position().top + $('.navbar-secondary').height();
-        } else if ($('#main-nav').length) {
-          editorToolbaroffset = $('#main-nav').height();
-        }
+        let topMenuHeight = $('.sci--navigation--top-menu-container') ? $('.sci--navigation--top-menu-container').height() : 0;
+        let breadcrumbsHeight = $('.sci--layout-navigation-breadcrumbs') ? $('.sci--layout-navigation-breadcrumbs').height() : 0;
+        let secondaryNavHeight = $('.content-header.sticky-header') ? $('.content-header.sticky-header').height() : 0;
+
+        editorToolbaroffset = topMenuHeight + breadcrumbsHeight + secondaryNavHeight;
+
 
         return tinyMCE.init({
           cache_suffix: '?v=6.5.1-19', // This suffix should be changed any time library is updated
