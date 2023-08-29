@@ -147,7 +147,7 @@ module Experiments
     def results_presenter(my_module)
       {
         count: (my_module.archived_branch? ? my_module.results : my_module.results.active).length,
-        url: results_my_module_path(my_module)
+        url: my_module_results_path(my_module)
       }
     end
 
@@ -218,8 +218,9 @@ module Experiments
       @view_state = experiment.current_view_state(@user)
       @view_mode = @params[:view_mode] || 'active'
       @sort = @view_state.state.dig('my_modules', @view_mode, 'sort') || 'atoz'
-      if @params[:sort] && @sort != @params[:sort] && %w(due_first due_last atoz ztoa
-                                                         archived_old archived_new).include?(@params[:sort])
+      if @params[:sort] &&
+         @sort != @params[:sort] &&
+         %w(due_first due_last atoz ztoa id_asc id_desc archived_old archived_new).include?(@params[:sort])
         @view_state.state['my_modules'].merge!(Hash[@view_mode, { 'sort': @params[:sort] }.stringify_keys])
         @view_state.save!
         @sort = @view_state.state.dig('my_modules', @view_mode, 'sort')
@@ -236,6 +237,10 @@ module Experiments
         records.order(:name)
       when 'ztoa'
         records.order(name: :desc)
+      when 'id_asc'
+        records.order(:id)
+      when 'id_desc'
+        records.order(id: :desc)
       when 'archived_old'
         records.order(Arel.sql('COALESCE(my_modules.archived_on, my_modules.archived_on) ASC'))
       when 'archived_new'
