@@ -25,7 +25,7 @@
   </div>
   <% if asset.pdf_previewable? %>
     <%= render partial: 'shared/pdf_viewer', locals: { asset: asset, report_document: false, shareable_document: true } %>
-  <% elsif asset.previewable? && asset.large_preview.image.attached? %>
+  <% elsif asset.previewable? && asset.large_preview&.image&.attached? %>
     <div class="image-container">
       <%= image_tag asset.large_preview.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
           class: 'asset-preview-image',
