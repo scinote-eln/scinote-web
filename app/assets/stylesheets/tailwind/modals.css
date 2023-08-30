@@ -1,7 +1,6 @@
 @layer components {
   .modal-backdrop {
-    @apply fixed right-0 top-0 left-0 bottom-0 z-[1040];
-    background-color: black;
+    @apply fixed right-0 top-0 left-0 bottom-0 z-[1040] bg-sn-black;
   }
 
   .modal-backdrop.fade {
@@ -54,8 +53,7 @@
   }
 
   .modal .modal-content {
-    @apply relative border border-solid rounded outline-none shadow p-6;
-    background-color: var(--sn-white);
+    @apply relative border border-solid rounded outline-none shadow p-6 bg-sn-white;
   }
 
   .modal .modal-header {
@@ -83,7 +81,6 @@
   }
 
   .modal .modal-footer {
-    @apply flex pt-6 justify-end gap-6 border-0 border-t border-solid;
-    border-color: var(--sn-light-grey);
+    @apply flex pt-6 justify-end gap-6 border-0 border-t border-solid border-sn-light-grey;
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div>TODO</div>
+  <div class="mb-6">TODO</div>
 </template>
 
 <script>

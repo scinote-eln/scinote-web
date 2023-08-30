@@ -1,6 +1,8 @@
 <template>
   <div>
+    <label v-if="label" class="sci-label" :for="id">{{ label }}</label>
     <div class="sci-input-container-v2">
+
       <input :value="modelValue"
              :placeholder="placeholder"
              :id="id"
@@ -28,6 +30,7 @@
   export default {
     name: 'inputWithHistory',
     props: {
+      label: { type: String },
       modelValue: { type: String },
       placeholder: { type: String },
       id: { type: String }
