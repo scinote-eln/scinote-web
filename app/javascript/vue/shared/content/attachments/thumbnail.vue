@@ -43,10 +43,10 @@
       >
         {{ attachment.attributes.file_name }}
       </a>
-      <div class="thumbnail-file-size">
+      <div class="absolute bottom-14 text-sn-grey">
         {{ attachment.attributes.file_size_formatted }}
       </div>
-      <div class="thumbnail-action-buttons">
+      <div class="absolute bottom-2 min-w-[194px] justify-between flex">
         <a class="btn btn-light icon-btn thumbnail-action-btn image-edit-button"
           :title="i18n.t('attachments.thumbnail.buttons.edit')"
           :data-image-id="attachment.id"
