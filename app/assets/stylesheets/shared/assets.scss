@@ -83,6 +83,28 @@
     transition: $md-transaction;
     white-space: nowrap;
   }
+  .thumbnail-file-size {
+    position: absolute;
+    bottom: 55px;
+    color: var(--sn-grey);
+  }
+
+  .thumbnail-action-buttons {
+    position: absolute;
+    bottom: 10px;
+    min-width: 194px;
+    justify-content: space-between;
+    display: flex;
+
+    .thumbnail-action-btn {
+      border: 1px solid var(--sn-light-grey);
+
+      &:hover {
+        background-color: var(--sn-white);
+        border-color: var(--sn-blue)
+      }
+    }
+  }
 
   .attachment-label {
     @include font-main;

@@ -1,8 +1,11 @@
 <template>
   <div class="attachment-container asset"
        :data-asset-id="attachment.id"
+       @mouseover="isHovered = true"
+       @mouseleave="isHovered = false"
   >
-    <a  :href="attachment.attributes.urls.blob"
+    <a v-if="!isHovered"
+        :href="attachment.attributes.urls.blob"
         class="file-preview-link file-name"
         :id="`modal_link${attachment.id}`"
         data-no-turbolink="true"
@@ -27,15 +30,62 @@
           {{ i18n.t('attachments.new.description') }}
         </span>
       </div>
-      <div class="attachment-metadata">
-        {{ i18n.t('assets.placeholder.modified_label') }} {{ attachment.attributes.updated_at_formatted }}<br>
+    </a>
+    <div v-else class="hovered-thumbnail">
+      <a
+        :href="attachment.attributes.urls.blob"
+        class="file-preview-link file-name"
+        :id="`modal_link${attachment.id}`"
+        data-no-turbolink="true"
+        :data-id="attachment.id"
+        :data-gallery-view-id="parentId"
+        :data-preview-url="attachment.attributes.urls.preview"
+      >
+        {{ attachment.attributes.file_name }}
+      </a>
+      <div class="thumbnail-file-size">
         {{ attachment.attributes.file_size_formatted }}
       </div>
-    </a>
+      <div class="thumbnail-action-buttons">
+        <a class="btn btn-light icon-btn thumbnail-action-btn image-edit-button"
+          :title="i18n.t('attachments.thumbnail.buttons.edit')"
+          :data-image-id="attachment.id"
+          :data-image-name="attachment.attributes.file_name"
+          :data-image-url="attachment.attributes.urls.asset_file"
+          :data-image-quality="attachment.attributes.image_context.quality"
+          :data-image-mime-type="attachment.attributes.image_context.type"
+          :data-image-start-edit-url="attachment.attributes.urls.start_edit_image"
+        >
+          <i class="sn-icon sn-icon-edit"></i>
+        </a>
+        <a class="btn btn-light icon-btn thumbnail-action-btn" :title="i18n.t('attachments.thumbnail.buttons.move')">
+          <!-- TODO -->
+          <i class="sn-icon sn-icon-move"></i>
+        </a>
+        <a class="btn btn-light icon-btn thumbnail-action-btn"
+          :title="i18n.t('attachments.thumbnail.buttons.download')"
+          :href="attachment.attributes.urls.download" data-turbolinks="false">
+          <i class="sn-icon sn-icon-export"></i>
+        </a>
+        <template v-if="attachment.attributes.urls.delete">
+          <a class="btn btn-light icon-btn thumbnail-action-btn"
+            :title="i18n.t('attachments.thumbnail.buttons.delete')"
+            @click.prevent.stop="deleteModal = true">
+            <i class="sn-icon sn-icon-delete"></i>
+          </a>
+        </template>
+      </div>
+    </div>
     <ContextMenu
       :attachment="attachment"
       @attachment:viewMode="updateViewMode"
       @attachment:delete="deleteAttachment"
+    />
+    <deleteAttachmentModal
+      v-if="deleteModal"
+      :fileName="attachment.attributes.file_name"
+      @confirm="deleteAttachment"
+      @cancel="deleteModal = false"
     />
   </div>
 
@@ -44,10 +94,12 @@
 <script>
   import ContextMenuMixin from './mixins/context_menu.js'
   import ContextMenu from './context_menu.vue'
+  import deleteAttachmentModal from './delete_modal.vue'
+
   export default {
     name: 'thumbnailAttachment',
     mixins: [ContextMenuMixin],
-    components: { ContextMenu },
+    components: { ContextMenu, deleteAttachmentModal },
     props: {
       attachment: {
         type: Object,
@@ -56,6 +108,18 @@
       parentId: {
         type: Number,
         required: true
+      }
+    },
+    data() {
+      return {
+        isHovered: false,
+        deleteModal: false
+      };
+    },
+    methods: {
+      deleteAttachment() {
+        this.deleteModal = false;
+        this.$emit('attachment:delete');
       }
     }
   }
