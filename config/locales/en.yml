@@ -394,7 +394,12 @@ en:
       no_more_space: 'Failed to upload: You ran out of space'
       general_error: 'Failed to upload: Something went wrong, please try again'
       leaving_warning: 'Your changes will be lost if you navigate away'
-
+    thumbnail:
+      buttons:
+        edit: "Edit"
+        move: "Move"
+        download: "Download"
+        delete: "Delete"
     sort:
       new_html: "Newest first &#8595;"
       old_html: "Oldest first &#8593;"
