@@ -16,8 +16,17 @@ class ResultsController < ApplicationController
         apply_sort!
         apply_filters!
 
+        @results = @results.page(params[:page] || 1)
+
         render(
-          json: @results,
+          json: {
+            results: @results.map do |r|
+                       {
+                         attributes: ResultSerializer.new(r, scope: current_user).as_json
+                       }
+                     end,
+            next_page: @results.next_page
+          },
           formats: :json
         )
       end
