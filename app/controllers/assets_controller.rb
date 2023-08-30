@@ -83,15 +83,16 @@ class AssetsController < ApplicationController
         target = @assoc.protocol.steps.find_by(id: params[:target_id])
         object_to_update = @asset.step_asset
         object_to_update.update!(step: target)
-        render json: { status: :ok }
+        render json: {}
       elsif @assoc.is_a?(Result)
         target = @assoc.my_module.results.find_by(id: params[:target_id])
         object_to_update = @asset.result_asset
         object_to_update.update!(result: target)
-        render json: { status: :ok }
+        render json: {}
       end
     rescue ActiveRecord::RecordInvalid
       render json: object_to_update.errors, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
     end
   end
 
