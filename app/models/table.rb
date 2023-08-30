@@ -166,7 +166,7 @@ class Table < ApplicationRecord
         )
 
         parent.result_orderable_elements.create!(
-          position: parent.result_orderable_elements.length,
+          position: position || parent.result_orderable_elements.length,
           orderable: new_table.result_table
         )
 
