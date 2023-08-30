@@ -16,7 +16,6 @@
   }
 
   .sci-flyout .sci-flyout-footer {
-    @apply flex pt-6 justify-end gap-6 border-0 border-t border-solid;
-    border-color: var(--sn-light-grey);
+    @apply flex pt-6 justify-end gap-6 border-0 border-t border-solid border-sn-light-grey;
   }
 }
