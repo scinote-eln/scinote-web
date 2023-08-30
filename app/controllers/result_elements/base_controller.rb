@@ -38,7 +38,7 @@ module ResultElements
       render json: result_orderable_element, serializer: ResultOrderableElementSerializer, user: current_user
     end
 
-    def log_step_activity(element_type_of, message_items)
+    def log_result_activity(element_type_of, message_items)
       # TODO
       #message_items[:my_module] = @protocol.my_module.id if @protocol.in_module?
       #Activities::CreateActivityService.call(
