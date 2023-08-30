@@ -10,10 +10,14 @@ en:
         title: "Filters"
         clear: "Clear"
         sort: "Sort by"
-        start_date: "Start date"
-        due_date: "Due date"
-        atoz: "From A to Z"
-        ztoa: "From Z to A"
+        due_first: "Due first"
+        due_last: "Due last"
+        start_first: "Started first"
+        start_last: "Started last"
+        atoz: "Name A to Z"
+        ztoa: "Name Z to A"
+        id_asc: "ID ascending"
+        id_desc: "ID descending"
         display: "Display statuses"
         statuses:
           placeholder: "Select statuses"
@@ -41,13 +45,13 @@ en:
     calendar:
       due_on: Due on
       dow:
-        su: 'Su'
-        mo: 'Mo'
-        tu: 'Tu'
-        we: 'We'
-        th: 'Th'
-        fr: 'Fr'
-        sa: 'Sa'
+        su: "Su"
+        mo: "Mo"
+        tu: "Tu"
+        we: "We"
+        th: "Th"
+        fr: "Fr"
+        sa: "Sa"
     quick_start:
       title: "Quick start"
       description: "Quickly start a new task, create a new project or a new report."

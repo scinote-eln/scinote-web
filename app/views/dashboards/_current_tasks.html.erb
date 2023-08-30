@@ -12,10 +12,14 @@
           <div class="select-block">
             <label><%= t("dashboard.current_tasks.filter.sort") %></label>
             <select class="sort-filter">
-              <option value="start_date" ><%= t("dashboard.current_tasks.filter.start_date") %></option>
-              <option value="due_date" selected><%= t("dashboard.current_tasks.filter.due_date") %></option>
-              <option value="atoz" ><%= t("dashboard.current_tasks.filter.atoz") %></option>
-              <option value="ztoa" ><%= t("dashboard.current_tasks.filter.ztoa") %></option>
+              <option value="due_first" selected ><%= t("dashboard.current_tasks.filter.due_first") %></option>
+              <option value="due_last"><%= t("dashboard.current_tasks.filter.due_last") %></option>
+              <option value="start_first"><%= t("dashboard.current_tasks.filter.start_first") %></option>
+              <option value="start_last"><%= t("dashboard.current_tasks.filter.start_last") %></option>
+              <option value="atoz"><%= t("dashboard.current_tasks.filter.atoz") %></option>
+              <option value="ztoa"><%= t("dashboard.current_tasks.filter.ztoa") %></option>
+              <option value="id_asc"><%= t("dashboard.current_tasks.filter.id_asc") %></option>
+              <option value="id_desc"><%= t("dashboard.current_tasks.filter.id_desc") %></option>
             </select>
           </div>
           <div class="select-block">

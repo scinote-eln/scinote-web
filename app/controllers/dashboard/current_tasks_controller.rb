@@ -109,14 +109,22 @@ module Dashboard
       tasks = tasks.where(my_module_status_id: task_filters[:statuses]) if task_filters[:statuses].present?
 
       case task_filters[:sort]
-      when 'start_date'
-        tasks = tasks.order('my_modules.started_on': :asc).order('my_modules.name': :asc)
-      when 'due_date'
+      when 'due_first'
         tasks = tasks.order('my_modules.due_date': :asc).order('my_modules.name': :asc)
+      when 'due_last'
+        tasks = tasks.order('my_modules.due_date': :desc).order('my_modules.name': :asc)
+      when 'start_first'
+        tasks = tasks.order('my_modules.started_on': :asc).order('my_modules.name': :asc)
+      when 'start_last'
+        tasks = tasks.order('my_modules.started_on': :desc).order('my_modules.name': :asc)
       when 'atoz'
         tasks = tasks.order('my_modules.name': :asc)
       when 'ztoa'
         tasks = tasks.order('my_modules.name': :desc)
+      when 'id_asc'
+        tasks = tasks.order('my_modules.id': :asc).order('my_modules.name': :asc)
+      when 'id_desc'
+        tasks = tasks.order('my_modules.id': :desc).order('my_modules.name': :asc)
       end
 
       tasks = tasks.search_by_name(current_user, current_team, task_filters[:query]) if task_filters[:query].present?
