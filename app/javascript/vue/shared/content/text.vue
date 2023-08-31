@@ -1,5 +1,5 @@
 <template>
-  <div class="content__text-container flex rounded pl-10 mb-4 relative w-full group/text_container" :class="{ 'edit': inEditMode, 'component__element--locked': !element.attributes.orderable.urls.update_url }" @keyup.enter="enableEditMode($event)" tabindex="0">
+  <div class="content__text-container flex rounded pl-8 min-h-[2.25rem] mb-4 relative w-full group/text_container" :class="{ 'edit': inEditMode, 'component__element--locked': !element.attributes.orderable.urls.update_url }" @keyup.enter="enableEditMode($event)" tabindex="0">
     <div v-if="reorderElementUrl"
          class="absolute items-center h-full justify-center left-0 p-2 tw-hidden text-sn-grey"
          :class="{ 'group-hover/text_container:flex': !inEditMode }"

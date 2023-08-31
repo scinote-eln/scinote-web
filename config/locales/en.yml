@@ -1263,6 +1263,23 @@ en:
       info_tab: "Info"
       comments_tab: "Comments"
       comment_title: "%{user} at %{time}:"
+      insert:
+        button: 'Insert content'
+        title: 'Insert result content'
+        table: 'Table'
+        well_plate: 'Well plate'
+        text: 'Text'
+        checklist: 'Checklist'
+        attachment: 'File'
+        add_file: 'File from your PC'
+        checklist_item: 'Add a new checklist item...'
+        well_plate_options:
+          32_x_48: '1536 (32 x 48)'
+          16_x_24: '384 (16 x 24)'
+          8_x_12: '96 (8 x 12)'
+          6_x_8: '48 (6 x 8 )'
+          6_x_4: '24 (6 x 4)'
+          2_x_3: '6 (2 x 3)'
       sorts:
         updated_at_asc: "Modified first"
         updated_at_desc: "Modified last"
@@ -3071,7 +3088,7 @@ en:
         duplicate: 'Duplicate'
         delete: 'Delete'
       insert:
-        button: 'Add content'
+        button: 'Insert content'
         title: 'Insert step content'
         table: 'Table'
         well_plate: 'Well plate'

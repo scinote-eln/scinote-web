@@ -10,7 +10,7 @@ body.navigator-collapsed {
   --breadcrumbs-navigation-height: 44px;
   --left-navigation-width: 192px;
   --navbar-height: calc(var(--top-navigation-height) + var(--breadcrumbs-navigation-height));
-  --navigator-navigation-width: 240px;
+  --navigator-navigation-width: 224px;
   --title-row-height: 4em;
   --top-navigation-height: 72px;
   display: grid;
@@ -90,7 +90,7 @@ body.navigator-collapsed {
   .sci--layout-content {
     background-color: var(--sn-white);
     grid-area: content;
-    padding: 0 1.5rem;
+    padding: 0 1rem;
     width: 100%;
 
     .container-fluid {

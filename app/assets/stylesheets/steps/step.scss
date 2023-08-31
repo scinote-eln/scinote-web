@@ -104,58 +104,6 @@
         border: 1px solid var(--sn-science-blue);
       }
     }
-
-    .step-actions-container {
-      align-items: center;
-      display: flex;
-      justify-content: flex-end;
-      gap: .25rem;
-      flex-basis: 20%;
-
-      .disabled {
-        color: $color-silver-chalice;
-        pointer-events: none;
-      }
-
-      .dropdown-menu {
-        white-space: nowrap;
-      }
-
-      .insert-button {
-        .caret {
-          margin-left: .5em;
-        }
-      }
-
-      .insert-element-dropdown {
-        @include font-button;
-
-        min-width: 230px;
-        padding: 0;
-
-        li {
-          padding: .5em 1em;
-
-          &.action {
-            cursor: pointer;
-
-            &:hover {
-              background: $color-concrete;
-            }
-
-            .fas {
-              margin-right: .5em;
-            }
-          }
-
-          &.title {
-            @include font-small;
-            color: $color-alto;
-            text-transform: uppercase;
-          }
-        }
-      }
-    }
   }
 
   .step-elements {

@@ -56,7 +56,7 @@
           <i class="sn-icon sn-icon-edit"></i>
         </button>
       </div>
-      <div class="step-actions-container">
+      <div class="elements-actions-container">
         <input type="file" class="hidden" ref="fileSelector" @change="loadFromComputer" multiple />
         <div ref="elementsDropdownButton" v-if="urls.update_url"  class="dropdown">
           <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'stepInserMenu_' + step.id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -143,15 +143,12 @@
                 {{ i18n.t('protocols.steps.options_dropdown.title') }}
               </li>
               <li v-if="urls.reorder_elements_url" class="action"  @click="openReorderModal" :class="{ 'disabled': elements.length < 2 }">
-                <i class="sn-icon sn-icon-sort"></i>
                 {{ i18n.t('protocols.steps.options_dropdown.rearrange') }}
               </li>
               <li v-if="urls.duplicate_step_url" class="action" @click="duplicateStep">
-                <i class="sn-icon sn-icon-duplicate"></i>
                 {{ i18n.t('protocols.steps.options_dropdown.duplicate') }}
               </li>
               <li v-if="urls.delete_url" class="action" @click="showDeleteModal">
-                <i class="sn-icon sn-icon-delete"></i>
                 {{ i18n.t('protocols.steps.options_dropdown.delete') }}
               </li>
             </ul>

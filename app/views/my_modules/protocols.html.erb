@@ -24,18 +24,7 @@
   </span>
 <% end %>
 
-<% provide(:container_class, 'no-second-nav-container') %>
 
-
-<%= content_for :sidebar do %>
-  <%= render partial: "shared/sidebar/#{@my_module.archived_branch? ? 'archived_my_module' : 'my_module'}",
-    locals: {
-      my_modules: @experiment_my_modules,
-      experiment: @my_module.experiment,
-      current_my_module: @my_module
-    }
-  %>
-<% end %>
 <%= render partial: 'shared/drag_n_drop_overlay' %>
 <div class="content-pane flexible my-modules-protocols-index with-grey-background" data-task-id="<%= @my_module.id %>">
   <%= render partial: 'my_modules/header' %>

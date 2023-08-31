@@ -41,7 +41,7 @@ module SecondaryNavigationHelper
   end
 
   def is_module_results?
-    %w(results results_show).include?(action_name)
+    %w(index).include?(action_name) && controller_name == 'results'
   end
 
   def is_module_activities?

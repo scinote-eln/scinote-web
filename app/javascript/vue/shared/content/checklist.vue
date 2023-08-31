@@ -1,6 +1,6 @@
 <template>
   <div class="content__checklist-container" >
-    <div class="checklist-header flex rounded pl-10 mb-1 items-center relative w-full group/checklist-header" :class="{ 'editing-name': editingName, 'locked': !element.attributes.orderable.urls.update_url }">
+    <div class="checklist-header flex rounded pl-8 mb-1 items-center relative w-full group/checklist-header" :class="{ 'editing-name': editingName, 'locked': !element.attributes.orderable.urls.update_url }">
       <div v-if="reorderElementUrl"
           class="absolute items-center h-full justify-center left-0 p-2 tw-hidden text-sn-grey"
           :class="{ 'group-hover/checklist-header:flex': !locked }"
