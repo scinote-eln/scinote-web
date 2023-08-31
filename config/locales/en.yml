@@ -3711,6 +3711,9 @@ en:
       bullet_2: "Visualize"
       bullet_3: "Annotate"
       button: "Try Sequence editor"
+    editor:
+      tooltips:
+        importTool: "Click or drag to import and view files (.fasta .gb .dna .json)"
   pdf_preview:
     fit_to_screen: 'Fit to screen'
     pages:
