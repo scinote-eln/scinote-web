@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 class ResultsController < ApplicationController
+  include Breadcrumbs
   skip_before_action :verify_authenticity_token, only: %i(create update destroy duplicate)
   before_action :load_my_module
   before_action :load_vars, only: %i(destroy elements assets upload_attachment
                                      update_view_state update_asset_view_mode update duplicate)
   before_action :check_destroy_permissions, only: :destroy
+  before_action :set_breadcrumbs_items, only: %i(index)
+  before_action :set_navigator, only: %i(index)
 
   def index
     respond_to do |format|
@@ -173,5 +176,13 @@ class ResultsController < ApplicationController
 
   def check_destroy_permissions
     render_403 unless can_delete_result?(@result)
+  end
+
+  def set_navigator
+    @navigator = {
+      url: tree_navigator_my_module_path(@my_module),
+      archived: params[:view_mode] == 'archived',
+      id: @my_module.code
+    }
   end
 end

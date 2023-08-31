@@ -6,7 +6,7 @@
       @newResult="createResult"
       @expandAll="expandAll"
       @collapseAll="collapseAll"
-      class="mb-3"
+      class="my-4"
     />
     <div class="results-list">
       <Result v-for="result in results" :key="result.id"

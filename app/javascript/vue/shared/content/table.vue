@@ -1,6 +1,6 @@
 <template>
   <div class="content__table-container">
-     <div class="table-header flex rounded pl-10 mb-1 items-center relative w-full group/table-header" :class="{ 'editing-name': editingName, 'locked': locked }">
+     <div class="table-header h-9 flex rounded pl-8 mb-1 items-center relative w-full group/table-header" :class="{ 'editing-name': editingName, 'locked': locked }">
       <div v-if="reorderElementUrl"
           class="absolute items-center h-full justify-center left-0 p-2 tw-hidden text-sn-grey"
           :class="{ 'group-hover/table-header:flex': (!editingName && !locked) }"
@@ -36,7 +36,7 @@
         </button>
       </div>
     </div>
-    <div class="table-body ml-10 group/table-body relative p-1 border-solid border-transparent"
+    <div class="table-body ml-8 group/table-body relative p-1 border-solid border-transparent"
          :class="{'edit border-sn-light-grey': editingTable, 'view': !editingTable, 'locked': !element.attributes.orderable.urls.update_url}"
          tabindex="0"
          @keyup.enter="!editingTable && enableTableEdit()">

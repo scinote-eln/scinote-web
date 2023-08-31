@@ -12,12 +12,14 @@
 <% end %>
 <%= render partial: 'shared/drag_n_drop_overlay' %>
 <%= render partial: 'assets/wopi/create_wopi_file_modal' %>
-<% provide(:container_class, 'no-second-nav-container') %>
 
-<%= render partial: 'my_modules/header_actions' %>
+<div class="content-pane flexible my-modules-results with-grey-background">
+  <%= render partial: 'my_modules/header' %>
+  <%= render partial: 'my_modules/header_actions' %>
 
-<div id="results" data-behaviour="vue">
-  <results url="<%= my_module_results_url(@my_module) %>">
+  <div id="results" data-behaviour="vue">
+    <results url="<%= my_module_results_url(@my_module) %>">
+  </div>
 </div>
 
 <%= javascript_include_tag "handsontable.full" %>

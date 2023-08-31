@@ -84,22 +84,6 @@
       }
     }
   }
-  .tinymce-wrapper {
-    width: 100%;
-
-    .tox-tinymce {
-      flex-grow: 1;
-    }
-  }
-  .tinymce-container {
-    display: flex;
-    width: 100%;
-
-    .tiny-mce-editor {
-      flex-basis: 100%;
-      max-width: 100%;
-    }
-  }
 }
 
 .share-task-modal {
