@@ -3697,14 +3697,14 @@ en:
     no_sketches_found: "No Sketches Found"
 
   open_vector_editor:
-    new_sequence: "Sequence file"
-    new_sequence_file: "New sequence file"
+    new_sequence: "Sequence"
+    new_sequence_file: "New sequence"
     default_sequence_name: "New sequence"
     edit_sequence: "Edit in Sequence editor"
     sequence_name_placeholder: "Click here to enter sequence name"
     trial_expiration_warning_html:
-      one: "Your Sequence editor trial expires in %{count} day. <a href='mailto:support@scinote.net'> Contact SciNote for more information.</a>"
-      other: "Your Sequence editor trial expires in %{count} days. <a href='mailto:support@scinote.net'> Contact SciNote for more information.</a>"
+      one: "Your Sequence editor trial expires in %{count} day. <a href='https://share.hsforms.com/1ZmzxQnxJTB2uUT2TfiUSXg2aj9a'> Upgrade to full version now.</a>"
+      other: "Your Sequence editor trial expires in %{count} days. <a href='https://share.hsforms.com/1ZmzxQnxJTB2uUT2TfiUSXg2aj9a'> Upgrade to full version now.</a>"
     promo:
       title: "Manage protein sequences in SciNote:"
       bullet_1: "Import"
