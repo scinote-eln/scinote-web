@@ -68,10 +68,12 @@ class Result < ApplicationRecord
       end
 
       # Copy assets
-      assets.each do |asset|
+      assets_to_clone = assets.map do |asset|
         new_asset = asset.dup
         new_asset.save!
         new_result.assets << new_asset
+
+        [asset.id, new_asset.id]
       end
 
       # Copy tables
@@ -79,7 +81,24 @@ class Result < ApplicationRecord
         table.duplicate(new_result, user)
       end
 
+      Result.delay(queue: :assets).deep_clone_assets(assets_to_clone)
+
       new_result
+    end
+  end
+
+  # Deep-clone given array of assets
+  def self.deep_clone_assets(assets_to_clone)
+    ActiveRecord::Base.no_touching do
+      assets_to_clone.each do |src_id, dest_id|
+        src = Asset.find_by(id: src_id)
+        dest = Asset.find_by(id: dest_id)
+        dest.destroy! if src.blank? && dest.present?
+        next unless src.present? && dest.present?
+
+        # Clone file
+        src.duplicate_file(dest)
+      end
     end
   end
 
