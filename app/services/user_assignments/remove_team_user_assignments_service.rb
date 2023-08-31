@@ -10,7 +10,7 @@ module UserAssignments
     def call
       @team.projects.find_each do |project|
         UserAssignments::PropagateAssignmentJob
-          .perform_now(project, @user, nil, nil, destroy: true, remove_from_team: true)
+          .perform_now(project, @user.id, nil, nil, destroy: true, remove_from_team: true)
       end
       remove_repositories_assignments
       remove_protocols_assignments

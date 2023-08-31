@@ -353,7 +353,7 @@ class Experiment < ApplicationRecord
 
       # regenerate user assignments
       my_module.user_assignments.destroy_all
-      UserAssignments::GenerateUserAssignmentsJob.perform_later(my_module, current_user)
+      UserAssignments::GenerateUserAssignmentsJob.perform_later(my_module, current_user.id)
 
       Activities::CreateActivityService.call(activity_type: :move_task,
                                              owner: current_user,
@@ -410,7 +410,7 @@ class Experiment < ApplicationRecord
 
             # regenerate user assignments
             m.user_assignments.destroy_all
-            UserAssignments::GenerateUserAssignmentsJob.new(m, current_user).perform_now
+            UserAssignments::GenerateUserAssignmentsJob.new(m, current_user.id).perform_now
 
             # Add activity
             Activities::CreateActivityService.call(

@@ -12,9 +12,8 @@
       text-align: left;
       width: 100%;
 
-      &.btn-not-started {
-        border: 1px solid var(--sn-sleepy-grey);
-        color: var(--sn-black);
+      &.status-light {
+        @include not-started;
       }
 
       .caret {
@@ -73,9 +72,8 @@
         white-space: nowrap;
       }
 
-      .btn-not-started {
-        border: 1px solid var(--sn-sleepy-grey);
-        color: var(--sn-black);
+      .status-light {
+        @include not-started;
       }
 
       .error-message {
@@ -138,9 +136,8 @@
         padding: .5em;
         white-space: nowrap;
 
-        &.btn-not-started {
-          border: 1px solid var(--sn-sleepy-grey);
-          color: var(--sn-black);
+        &.status-light {
+          @include not-started;
         }
       }
 

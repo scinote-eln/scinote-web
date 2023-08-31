@@ -30,7 +30,7 @@ module RepositoryZipExport
 
     zip = ZipExport.create(user: current_user)
     zip.generate_exportable_zip(
-      current_user,
+      current_user.id,
       to_csv(rows, params[:header_ids], current_user, repository, nil, params[:my_module_id].present?),
       :repositories
     )

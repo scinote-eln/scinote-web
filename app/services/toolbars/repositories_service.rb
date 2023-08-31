@@ -21,7 +21,7 @@ module Toolbars
       return [] if @repositories.none?
 
       if @archived_state
-        [restore_action, delete_action]
+        [export_action, restore_action, delete_action]
       else
         [rename_action, duplicate_action, export_action, archive_action, share_action]
       end.compact

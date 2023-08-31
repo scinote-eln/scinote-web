@@ -19,12 +19,12 @@ module UserAssignments
     describe 'perform' do
       it 'propagates the user assignments to project child object' do
         expect {
-          described_class.perform_now(project, user_two, technician_role, user_one)
+          described_class.perform_now(project, user_two.id, technician_role, user_one.id)
         }.to change(UserAssignment, :count).by(4)
       end
 
       it 'propagates the user assignments to project child object with the same role' do
-        described_class.perform_now(project, user_two, technician_role, user_one)
+        described_class.perform_now(project, user_two.id, technician_role, user_one.id)
         [
           UserAssignment.find_by(user: user_two, assignable: experiment_one),
           UserAssignment.find_by(user: user_two, assignable: experiment_two),
@@ -53,7 +53,7 @@ module UserAssignments
                                        user_role: owner_role,
                                        assigned_by: user_one,
                                        assigned: :manually
-        described_class.perform_now(project, user_two, technician_role, user_one)
+        described_class.perform_now(project, user_two.id, technician_role, user_one.id)
         expect(experiment_assignment.reload.user_role).to eq owner_role
       end
 
@@ -64,7 +64,7 @@ module UserAssignments
                                        user_role: owner_role,
                                        assigned_by: user_one,
                                        assigned: :automatically
-        described_class.perform_now(project, user_two, technician_role, user_one)
+        described_class.perform_now(project, user_two.id, technician_role, user_one.id)
         expect(experiment_assignment.reload.user_role).to eq technician_role
       end
     end

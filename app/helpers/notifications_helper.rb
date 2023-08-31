@@ -1,6 +1,6 @@
 module NotificationsHelper
   def send_email_notification(user, notification)
-    AppMailer.delay.notification(user, notification)
+    AppMailer.delay.notification(user.id, notification)
   end
 
   # generate assignment notification
