@@ -15,7 +15,7 @@
         <p v-html="i18n.t('open_vector_editor.trial_expiration_warning_html', { count: oveEnabledDaysLeft })" class="mb-0"></p>
       </div>
       <div class="ove-buttons text-sn-blue">
-        <button v-if="!readOnly" @click="saveAndClose" class="btn btn-light font-sans">
+        <button :style="{ pointerEvents: 'all' }" v-if="!readOnly" @click="saveAndClose" class="btn btn-light font-sans" :disabled="this.disableSave">
           <i class="sn-icon sn-icon-save"></i>
           {{ i18n.t('SaveClose') }}
         </button>
@@ -53,7 +53,6 @@
       let editorConfig = {
         onSave: this.saveFile,
         generatePng: true,
-        readOnly: this.readOnly,
         showMenuBar: true,
         alwaysAllowSave: true,
         menuFilter: this.menuFilter,
@@ -96,7 +95,8 @@
       } else {
         this.editor.updateEditor(
           {
-            sequenceData: { circular: true, name: this.sequenceName }
+            sequenceData: { circular: true, name: this.sequenceName },
+            readOnly: this.readOnly
           }
         );
       }
@@ -105,7 +105,10 @@
       loadFile() {
         fetch(this.fileUrl).then((response) => response.json()).then(
           (json) => this.editor.updateEditor(
-            { sequenceData: json }
+            {
+              sequenceData: json,
+              readOnly: this.readOnly
+            }
           )
         );
       },
