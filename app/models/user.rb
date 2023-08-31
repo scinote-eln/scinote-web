@@ -303,7 +303,10 @@ class User < ApplicationRecord
            foreign_key: 'last_modified_by_id',
            inverse_of: :last_modified_by,
            dependent: :nullify
-  has_many :shareable_links, inverse_of: :created_by, dependent: :destroy
+  has_many :shareable_links,
+           foreign_key: 'created_by_id',
+           inverse_of: :created_by,
+           dependent: :destroy
 
   has_many :user_notifications, inverse_of: :user
   has_many :notifications, through: :user_notifications
