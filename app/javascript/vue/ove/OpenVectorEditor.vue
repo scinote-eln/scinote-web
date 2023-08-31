@@ -63,7 +63,25 @@
         onSave: this.saveFile,
         generatePng: true,
         readOnly: this.readOnly,
-        showMenuBar: true
+        showMenuBar: true,
+        ToolBarProps: {
+          toolList: [
+            'saveTool',
+            'downloadTool',
+            { name: 'importTool', tooltip: I18n.t('open_vector_editor.editor.tooltips.importTool') },
+            'undoTool',
+            'redoTool',
+            'cutsiteTool',
+            'featureTool',
+            'partTool',
+            'oligoTool',
+            'orfTool',
+            'alignmentTool',
+            'editTool',
+            'findTool',
+            'visibilityTool'
+          ]
+        }
       }
 
       if (this.readOnly) {
