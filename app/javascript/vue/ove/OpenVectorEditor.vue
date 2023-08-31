@@ -15,7 +15,7 @@
         <p v-html="i18n.t('open_vector_editor.trial_expiration_warning_html', { count: oveEnabledDaysLeft })" class="mb-0"></p>
       </div>
       <div class="ove-buttons text-sn-blue">
-        <button :style="{ pointerEvents: 'all' }" v-if="!readOnly" @click="saveAndClose" class="btn btn-light font-sans" :disabled="this.disableSave">
+        <button :style="{ pointerEvents: 'all' }" v-if="!readOnly" @click="saveAndClose" class="btn btn-light font-sans" :disabled="this.readOnly">
           <i class="sn-icon sn-icon-save"></i>
           {{ i18n.t('SaveClose') }}
         </button>
