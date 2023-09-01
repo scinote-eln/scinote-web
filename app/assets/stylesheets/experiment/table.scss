@@ -359,6 +359,10 @@
       padding: 2px 8px;
       text-overflow: ellipsis;
       white-space: nowrap;
+
+      &.status-light {
+        @include not-started;
+      }
     }
 
     .table-row-placeholder-divider {

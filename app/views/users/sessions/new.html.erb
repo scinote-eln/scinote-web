@@ -14,12 +14,12 @@
 
       <% unless Rails.application.config.x.disable_local_passwords %>
         <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-          <div class="input-group sci-input-container">
+          <div class="input-group form-group sci-input-container">
             <%= f.label :email, t("devise.sessions.new.email_field") %>
             <%= f.email_field :email, autofocus: true, class: "form-control sci-input-field", placeholder: t("devise.sessions.new.email_placeholder") %>
           </div>
 
-          <div class="input-group sci-input-container">
+          <div class="input-group form-group sci-input-container">
             <%= f.label :password, t("devise.sessions.new.password_field") %>
             <%= f.password_field :password, autocomplete: "off", class: "form-control sci-input-field", placeholder: t("devise.sessions.new.password_placeholder") %>
           </div>

@@ -48,14 +48,14 @@ function generateElnTable(content, tableMetadata) {
 
     for (let j = 0; j < numCols; j += 1) {
       let cellData = '';
-      let cellClass = getMetadataCellValue(tableMetadata.cells, i - 1, j - 1);
+      let cellClass = tableMetadata ? getMetadataCellValue(tableMetadata.cells, i - 1, j - 1) : '';
 
       if (i > 0 && j > 0 && tableData.data[i - 1][j - 1] !== null) {
         cellData = tableData.data[i - 1][j - 1];
       } else if (i === 0 && j !== 0) {
-        cellData = tableMetadata.plateTemplate ? j.toString() : colName(j - 1);
+        cellData = tableMetadata && tableMetadata.plateTemplate ? j.toString() : colName(j - 1);
       } else if (j === 0 && i !== 0) {
-        cellData = tableMetadata.plateTemplate ? colName(i - 1) : i.toString();
+        cellData = tableMetadata && tableMetadata.plateTemplate ? colName(i - 1) : i.toString();
       }
 
       tableCells = `${tableCells}<td ${cellClass ? `class="${cellClass}"` : ''}>${cellData}</td>`;

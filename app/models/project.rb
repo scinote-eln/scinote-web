@@ -341,7 +341,7 @@ class Project < ApplicationRecord
     UserAssignments::ProjectGroupAssignmentJob.perform_later(
       team,
       self,
-      last_modified_by || created_by
+      last_modified_by&.id || created_by&.id
     )
   end
 

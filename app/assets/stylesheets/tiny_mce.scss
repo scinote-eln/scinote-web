@@ -216,8 +216,8 @@
   display: flex !important;
 }
 
-.tox-tbtn {
-  background-color: var(--sn-white);
+.tox-button--icon:not(:hover) {
+  background-color: var(--sn-white) !important;
 }
 
 .tox .tox-pop {
@@ -257,6 +257,7 @@
   flex-direction: column !important;
 
   .restore-draft-notification {
+    background-color: var(--sn-super-light-blue);
     flex-basis: 30px;
   }
 }

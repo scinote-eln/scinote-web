@@ -5,6 +5,21 @@
 
 
 // New experiments page
+.clone-experiment-modal,
+.move-experiment-modal {
+  .dropdown-toggle {
+    box-shadow: unset;
+    outline: unset;
+  }
+
+  .dropdown-menu {
+    .dropdown-item {
+      min-height: 32px;
+      outline: none;
+      white-space: break-spaces;
+    }
+  }
+}
 
 .projects-show {
   .content-header {

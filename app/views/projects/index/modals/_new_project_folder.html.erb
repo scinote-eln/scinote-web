@@ -1,5 +1,5 @@
 <div class="modal" id="new-project-folder-modal" tabindex="-1" role="dialog" aria-labelledby="new-project-folder-modal-label">
-  <%= form_with model: @project_folder, data: { remote: true } do |f| %>
+  <%= form_with model: @project_folder, class: 'new_project_folder', data: { remote: true } do |f| %>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">

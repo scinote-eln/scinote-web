@@ -2,7 +2,8 @@
 
 module MyModules
   class CopyContentJob < ApplicationJob
-    def perform(user, source_my_module_id, target_my_module_id)
+    def perform(user_id, source_my_module_id, target_my_module_id)
+      user = User.find(user_id)
       target_my_module = MyModule.find(target_my_module_id)
       MyModule.transaction do
         MyModule.find(source_my_module_id).copy_content(user, target_my_module)

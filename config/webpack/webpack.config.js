@@ -12,6 +12,7 @@ const mode = process.env.NODE_ENV === 'development' ? 'development' : 'productio
 const entryList = {
   application_pack: './app/javascript/packs/application.js',
   application_pack_styles: './app/javascript/packs/application.scss',
+  bootstrap_pack: './app/javascript/packs/bootstrap.less',
   emoji_button: './app/javascript/packs/emoji_button.js',
   fontawesome: './app/javascript/packs/fontawesome.scss',
   prism: './app/javascript/packs/prism.js',
@@ -105,8 +106,7 @@ module.exports = {
       {
         test: /\.less$/i,
         use: [
-          // compiles Less to CSS
-          "style-loader",
+          MiniCssExtractPlugin.loader,
           "css-loader",
           "less-loader",
         ],

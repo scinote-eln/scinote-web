@@ -174,9 +174,9 @@ module AccessPermissions
     def propagate_job(user_assignment, destroy: false)
       UserAssignments::PropagateAssignmentJob.perform_later(
         @project,
-        user_assignment.user,
+        user_assignment.user.id,
         user_assignment.user_role,
-        current_user,
+        current_user.id,
         destroy: destroy
       )
     end

@@ -59,7 +59,7 @@
 }
 
 .label-templates-datatable {
-  --content-header-size: 3.5rem;
+  --content-header-size: 4.5rem;
   height: calc(100vh - var(--top-navigation-height) - var(--breadcrumbs-navigation-height) - var(--content-header-size));
 
   #label-templates-table_wrapper {
@@ -72,7 +72,7 @@
       display: flex;
       flex-direction: column;
       flex-grow: 1;
-      height: calc(100% - var(--datatable-pagination-row) - 3.5rem);
+      height: calc(100% - var(--datatable-pagination-row) - 4.5rem);
 
       .dataTables_scrollHead {
         flex-shrink: 0;

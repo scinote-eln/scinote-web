@@ -1399,6 +1399,10 @@ th.custom-field .modal-tooltiptext {
 
 .parse-records-table {
   max-height: 200px;
+
+  select {
+    max-width: 8rem;
+  }
 }
 
 a.disabled {

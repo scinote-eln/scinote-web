@@ -31,12 +31,24 @@
               assignableMyModuleId: $('#result_text_attributes_textarea').data('my-module-id')
             });
             $('#result_name').focus();
+            setTimeout(function() {
+              $('.edit-text-result').css('display', 'initial');
+            }, 600);
+            setTimeout(function() {
+              $('.edit-text-result').css('display', 'block');
+            }, 800)
           },
           error: function() {
             animateSpinner(null, false);
             initNewReslutText();
           }
         });
+      });
+    }
+
+    function initSaveReslutText() {
+      $('#results').on('click', '.edit-text-result .save-result', (event) => {
+        Results.processResult(event, Results.ResultTypeEnum.TEXT);
       });
     }
 
@@ -64,6 +76,12 @@
           assignableMyModuleId: $('#result_text_attributes_textarea').data('my-module-id')
         });
         $('#result_name').focus();
+        setTimeout(function() {
+          $('.edit-text-result').css('display', 'initial');
+        }, 600);
+        setTimeout(function() {
+          $('.edit-text-result').css('display', 'block');
+        }, 800)
       });
     }
 
@@ -101,6 +119,7 @@
 
     publicAPI = Object.freeze({
       initNewReslutText: initNewReslutText,
+      initSaveReslutText: initSaveReslutText,
       applyEditResultTextCallback: applyEditResultTextCallback
     });
 
@@ -108,5 +127,6 @@
   }());
 
   ResultText.initNewReslutText();
+  ResultText.initSaveReslutText();
   ResultText.applyEditResultTextCallback();
 }());

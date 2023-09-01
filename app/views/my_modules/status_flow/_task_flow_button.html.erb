@@ -24,7 +24,7 @@
       data-status-check-url="<%= status_state_my_module_path(my_module) %>">
     <button class="btn btn-secondary dropdown-toggle
     <%= 'disabled' if my_module.status_changing || my_module.archived_branch? %>
-    <%= 'btn-not-started' if status.name == 'Not started' %>"
+    <%= 'status-light' if status.light_color? %>"
             type="button"
             data-toggle="dropdown"
             aria-haspopup="true"
@@ -48,7 +48,7 @@
             <span><%= t('my_module_statuses.dropdown.return_label') %></span>
             <i class="fas fa-long-arrow-alt-right"></i>
             <div class="status-container">
-              <div class="status-name <%= 'btn-not-started' if previous_s.name == 'Not started' %>"
+              <div class="status-name <%= 'status-light' if previous_s.light_color? %>"
                 style="<%= "background-color: #{previous_s.color}" %>"><%= previous_s.name %></div>
             </div>
           </li>

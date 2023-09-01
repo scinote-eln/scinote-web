@@ -3,7 +3,8 @@
 class HideRepositoryRemindersJob < ApplicationJob
   queue_as :high_priority
 
-  def perform(repository, user)
+  def perform(repository, user_id)
+    user = User.find(user_id)
     hidden_reminder_repository_cell_ids =
       HiddenRepositoryCellReminder.joins(repository_cell: { repository_row: :repository })
                                   .where(user: user)

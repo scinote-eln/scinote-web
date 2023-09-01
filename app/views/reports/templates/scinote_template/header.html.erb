@@ -22,10 +22,10 @@
 </style>
 <div class="print-header">
   <div class="logo-img">
-    <% if logo == 'logo.png' %>
+    <% if logo == 'scinote_logo.svg' %>
       <%= image_tag wicked_pdf_asset_base64(logo) %>
-    <%else%>
-      <%= wicked_pdf_image_tag logo %>
+    <% else %>
+      <%= image_tag logo %>
     <% end %>
   </div>
   <div class="page-numbers pagination" data-page-offset="0">

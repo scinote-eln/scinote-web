@@ -29,9 +29,9 @@ module AccessPermissions
 
       UserAssignments::PropagateAssignmentJob.perform_later(
         @experiment,
-        @user_assignment.user,
+        @user_assignment.user.id,
         @user_assignment.user_role,
-        current_user
+        current_user.id
       )
 
       log_change_activity

@@ -11,7 +11,7 @@
           <%= t('my_modules.modals.status_flow_modal.current_status') %><i class="fas fa-long-arrow-alt-right"></i>
         <% end %>
       </div>
-      <div class="status-block <%= 'btn-not-started' if status.name == 'Not started' %>"
+      <div class="status-block <%= 'status-light' if status.light_color? %>"
         style="background: <%= status[:color] %>">
         <%= status[:name] %>
       </div>
