@@ -14,10 +14,12 @@
       <template v-if="options.length">
         <div
           v-for="option in options"
-          :key="option[0]" @mousedown.prevent.stop="setValue(option[0])"
+          :key="option[0]"
+          @mousedown.prevent.stop="setValue(option[0])"
           class="sn-select__option"
+          :class="{ 'select__option-placeholder': option[1] === null }"
         >
-          {{ option[1] }}
+          {{ option[1] || option[2] }}
         </div>
       </template>
       <template v-else>
@@ -54,7 +56,7 @@
     computed: {
       valueLabel() {
         let option = this.options.find((o) => o[0] === this.value);
-        return option && option[1];
+        return option && (option[1] || option[2]);
       },
       focusElement() {
         return this.$refs.focusElement || this.$scopedSlots.default()[0].context.$refs.focusElement;
