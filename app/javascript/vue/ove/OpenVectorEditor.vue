@@ -49,15 +49,6 @@
         closeAfterSave: false
       }
     },
-    watch: {
-      sequenceName() {
-        if (this.editor && this.editor.getState()) {
-          this.editor.updateEditor({
-            sequenceData: { ...this.editor.getState().sequenceData, name: this.sequenceName }
-          });
-        }
-      }
-    },
     mounted() {
       let editorConfig = {
         onSave: this.saveFile,
@@ -112,9 +103,7 @@
       loadFile() {
         fetch(this.fileUrl).then((response) => response.json()).then(
           (json) => this.editor.updateEditor(
-            {
-              sequenceData: json
-            }
+            { sequenceData: { ...json, name: this.sequenceName } }
           )
         );
       },
