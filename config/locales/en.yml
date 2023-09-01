@@ -3534,6 +3534,7 @@ en:
     newer_version_available: "Newer version of the text below has been saved in the browser. Do you want to restore it?"
   general:
     save: "Save"
+    move: "Move"
     update: "Update"
     edit: "Edit"
     delete: "Delete"
