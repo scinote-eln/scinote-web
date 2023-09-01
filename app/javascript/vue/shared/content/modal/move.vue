@@ -23,7 +23,7 @@
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" @click="cancel">{{ i18n.t('general.cancel') }}</button>
-          <button class="btn btn-primary" @click="confirm">{{ i18n.t('general.save')}}</button>
+          <button class="btn btn-primary" @click="confirm">{{ i18n.t('general.move')}}</button>
         </div>
       </div>
     </div>
