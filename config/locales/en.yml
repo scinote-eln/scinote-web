@@ -1105,7 +1105,7 @@ en:
     notes:
       title: "Notes"
       no_description: "No task description"
-      empty_description_edit_label: "Click here to start writing notes"
+      empty_description_edit_label: "Add notes"
     assigned_items:
       title: "Assigned items"
       assign_from: "Assign from"
