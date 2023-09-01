@@ -76,7 +76,8 @@
             'partTool',
             'oligoTool',
             'orfTool',
-            'alignmentTool',
+            // Hide allignment tool
+            // 'alignmentTool',
             'editTool',
             'findTool',
             'visibilityTool'
