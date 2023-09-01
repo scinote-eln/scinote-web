@@ -90,6 +90,10 @@
       width: calc(100%);
     }
 
+    .select__option-placeholder {
+      color: var(--sn-grey);
+    }
+
     .sn-select__no-options {
       color: var(--sn-grey);
       padding: .5em;
