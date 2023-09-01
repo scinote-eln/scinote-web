@@ -989,6 +989,7 @@ en:
     show:
       breadcrumb_index: 'Label templates'
       name_error_prefix: 'Label template name'
+      name_placeholder: 'Enter label template name'
       description_error_prefix: 'Label template description'
       description_title: 'Template description'
       description_placeholder: 'Enter the template description (optional)'
@@ -2915,6 +2916,7 @@ en:
       added_by: "Created by:"
       keywords: "Keywords:"
       authors: "Authors:"
+      authors_list: "authors list"
       no_authors: "No authors"
       add_authors: "+ Add authors"
       add_keywords: "+ Add keywords"
@@ -3115,6 +3117,7 @@ en:
           error: "Table name can't be empty"
         table_name: "Table name"
       checklist:
+        placeholder: 'Enter checklist name'
         default_name: 'Checklist %{position}'
         checklist_name: "Checklist name"
         empty_checklist: 'Doesn’t contain any checklist items'

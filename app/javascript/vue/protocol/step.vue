@@ -44,6 +44,7 @@
             :allowBlank="false"
             :attributeName="`${i18n.t('Step')} ${i18n.t('name')}`"
             :autofocus="editingName"
+            :timestamp="i18n.t('protocols.steps.timestamp', { date: step.attributes.created_at, user: step.attributes.created_by })"
             :placeholder="i18n.t('protocols.steps.placeholder')"
             :defaultValue="i18n.t('protocols.steps.default_name')"
             @editingEnabled="editingName = true"
@@ -52,9 +53,6 @@
             @update="updateName"
           />
         </div>
-        <button v-if="urls.update_url && !editingName" class="step-name-edit-icon btn btn-xs icon-btn btn-light my-1.5" @click="editingName = true">
-          <i class="sn-icon sn-icon-edit"></i>
-        </button>
       </div>
       <div class="elements-actions-container">
         <input type="file" class="hidden" ref="fileSelector" @change="loadFromComputer" multiple />
@@ -158,7 +156,6 @@
     </div>
     <div class="collapse in" :id="'stepBody' + step.id">
       <div class="step-elements">
-        <div class="step-timestamp">{{ i18n.t('protocols.steps.timestamp', {date: step.attributes.created_at, user: step.attributes.created_by}) }}</div>
         <template v-for="(element, index) in orderedElements">
           <component
             :is="elements[index].attributes.orderable_type"
@@ -260,6 +257,7 @@
         reordering: false,
         isCollapsed: false,
         editingName: false,
+        inlineEditError: null,
         wellPlateOptions: [
           { label: 'protocols.steps.insert.well_plate_options.32_x_48', dimensions: [32, 48] },
           { label: 'protocols.steps.insert.well_plate_options.16_x_24', dimensions: [16, 24] },
