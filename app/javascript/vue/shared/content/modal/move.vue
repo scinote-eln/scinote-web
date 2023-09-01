@@ -15,7 +15,7 @@
           <div class="w-full">
             <Select
               :value="target"
-              :options="getOptions(targets)"
+              :options="targetOptions"
               v-bind:disabled="false"
               @change="setTarget"
             ></Select>
@@ -77,16 +77,15 @@
       },
       cancel() {
         $(this.$refs.modal).modal('hide');
-      },
-      getOptions(targets) {
-        const updatedTargets = targets.map(target => {
-          if (target[1] === null) {
-            target[2] = this.i18n.t('protocols.steps.modals.move_element.result.untitled_result');
-          }
-          return target;
-        });
-
-        return updatedTargets;
+      }
+    },
+    computed: {
+      targetOptions() {
+        return this.targets.map(target => [
+          target[0],
+          target[1] || this.i18n.t('protocols.steps.modals.move_element.result.untitled_result'),
+          target[1] === null ? true : false
+        ]);
       }
     }
   }

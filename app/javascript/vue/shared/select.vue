@@ -17,9 +17,9 @@
           :key="option[0]"
           @mousedown.prevent.stop="setValue(option[0])"
           class="sn-select__option"
-          :class="{ 'select__option-placeholder': option[1] === null }"
+          :class="{ 'select__option-placeholder': option[2] }"
         >
-          {{ option[1] || option[2] }}
+          {{ option[1] }}
         </div>
       </template>
       <template v-else>
@@ -56,7 +56,7 @@
     computed: {
       valueLabel() {
         let option = this.options.find((o) => o[0] === this.value);
-        return option && (option[1] || option[2]);
+        return option && option[1];
       },
       focusElement() {
         return this.$refs.focusElement || this.$scopedSlots.default()[0].context.$refs.focusElement;
