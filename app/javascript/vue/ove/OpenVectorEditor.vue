@@ -55,6 +55,7 @@
         generatePng: true,
         readOnly: this.readOnly,
         showMenuBar: true,
+        alwaysAllowSave: true,
         ToolBarProps: {
           toolList: [
             'saveTool',
@@ -108,12 +109,11 @@
         );
       },
       saveAndClose() {
-        this.closeAfterSave = close;
-        document.querySelector('[data-test=saveTool]').click();
+        this.closeAfterSave = true;
+        document.querySelector('[data-test=saveTool]').click()
       },
       saveFile(opts, sequenceDataToSave, editorState, onSuccessCallback) {
         if (this.readOnly) return;
-
         blobToBase64(opts.pngFile).then((base64image) => {
           (this.fileUrl ? axios.patch : axios.post)(
             this.updateUrl,
