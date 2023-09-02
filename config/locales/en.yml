@@ -3692,7 +3692,7 @@ en:
     new_li_button: "Chemical drawing"
     structure_placeholder: "Click here to enter Chemical Drawing name"
     modal_name_title: "Chemical Drawing name:"
-    checmical_drawing: "Chemical drawings"
+    chemical_drawing: "Chemical drawings"
     no_sketches_found: "No Sketches Found"
 
   open_vector_editor:
