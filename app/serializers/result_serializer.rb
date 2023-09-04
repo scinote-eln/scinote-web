@@ -9,7 +9,7 @@ class ResultSerializer < ActiveModel::Serializer
 
   attributes :name, :id, :urls, :updated_at, :created_at_formatted, :updated_at_formatted, :user,
              :my_module_id, :attachments_manageble, :marvinjs_enabled, :marvinjs_context,
-             :wopi_enabled, :wopi_context
+             :wopi_enabled, :wopi_context, :created_at, :created_by
 
   def marvinjs_enabled
     MarvinJsService.enabled?
@@ -88,5 +88,13 @@ class ResultSerializer < ActiveModel::Serializer
     end
 
     urls_list
+  end
+
+  def created_at
+    object.created_at.strftime('%B %d, %Y at %H:%M')
+  end
+
+  def created_by
+    object.user.full_name
   end
 end
