@@ -100,6 +100,11 @@
         </div>
       </div>
     </div>
+
+    <div class="relative ml-1 bottom-17 w-356 h-15 font-normal font-hairline text-xs leading-4">
+      {{ i18n.t('protocols.steps.timestamp', {date: result.attributes.created_at, user: result.attributes.created_by }) }}
+    </div>
+
     <ReorderableItemsModal v-if="reordering"
       title="Placeholder title for this modal"
       :items="reorderableElements"
