@@ -74,7 +74,7 @@ module ResultElements
     private
 
     def result_text_params
-      params.require(:text_component).permit(:text)
+      params.require(:text_component).permit(:text, :name)
     end
 
     def load_result_text

@@ -3121,6 +3121,7 @@ en:
       text:
         placeholder: 'Enter step text'
         empty_text: 'No text entered'
+        text_name: "Enter text name"
       plate:
         default_name: "Plate %{position}"
       modals:
@@ -3726,6 +3727,7 @@ en:
   ChecklistItem: "Checklist item"
   Checklists: "Checklists"
   Table: "Table"
+  Text: "Text"
   Tables: "Tables"
   Repositories_team: "Inventories - %{team}"
   Reports: "Reports"
