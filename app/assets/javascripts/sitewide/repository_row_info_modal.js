@@ -59,22 +59,23 @@
         }
       });
 
-      $('.export-consumption-button').on('click', () => {
-        // eslint-disable-next-line no-undef
-        animateSpinner(null, true);
-        $.ajax({
-          url: $('.export-consumption-button').attr('data-repository-stock-export-url'),
-          type: 'post',
-          data: { row_ids: $('.export-consumption-button').attr('data-rows') },
-          success: function(response) {
-            HelperModule.flashAlertMsg(response.message, 'success');
-          },
-          error: function(response) {
-            HelperModule.flashAlertMsg(response.message, 'danger');
-          },
-          // eslint-disable-next-line no-undef
-          complete: () => animateSpinner(null, false)
-        });
+      // Stock Consumption Export Action
+      $(document).on('click', '.export-consumption-button', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        $('#modal-info-repository-row').modal('hide');
+        // set and unset data-rows value so export knows to ignore selected rows or not
+        $('#exportStockConsumptionModal')
+          .on('show.bs.modal', function() {
+            $('#exportStockConsumptionModal').attr(
+              'data-rows',
+              $('#modal-info-repository-row .print-label-button').attr('data-rows')
+            );
+          })
+          .on('hide.bs.modal', function() {
+            $('#exportStockConsumptionModal').attr('data-rows', null);
+          })
+          .modal('show');
       });
     });
     e.preventDefault();

@@ -114,11 +114,8 @@
       <div class="modal-footer" data-assign-item-button="<%= @my_module.present? %>">
         <% if can_export_repository_stock?(@repository_row.repository) %>
           <button 
-            type="button" 
-            class="btn btn-secondary export-consumption-button" 
-            data-rows="[<%= @repository_row.id %>]"
-            data-repository-stock-export-url="<%= export_repository_stock_items_team_path(@repository) %>"
-            data-dismiss='modal'
+            type="button"
+            class="btn btn-secondary export-consumption-button"
           >
             <%= t('repository_row.modal_info.export_consumption_label') %>
           </button>

@@ -36,7 +36,7 @@ describe RepositoryStockLedgerZipExport, type: :background_job do
     it 'generates a new zip export object' do
       params = RepositoryRow.pluck(:id)
       ZipExport.skip_callback(:create, :after, :self_destruct)
-      described_class.generate_zip(params, repository, user)
+      described_class.generate_zip(params, user.id)
       expect(ZipExport.count).to eq 1
       ZipExport.set_callback(:create, :after, :self_destruct)
     end
@@ -44,17 +44,18 @@ describe RepositoryStockLedgerZipExport, type: :background_job do
     it 'generates a zip with csv file with exported rows' do
       ZipExport.skip_callback(:create, :after, :self_destruct)
       params = RepositoryRow.pluck(:id)
-      described_class.generate_zip(params, repository, user)
-      csv_zip_file = ZipExport.first.zip_file
+      described_class.generate_zip(params, user.id)
+      csv_zip_file = ZipExport.last.zip_file
       file_path = ActiveStorage::Blob.service.public_send(:path_for, csv_zip_file.key)
       parsed_csv_content = Zip::File.open(file_path) do |zip_file|
-        csv_file = zip_file.glob('*.csv').first
+        csv_file = zip_file.glob('*.csv').last
         csv_content = csv_file.get_input_stream.read
         CSV.parse(csv_content, headers: true)
       end
 
-      expect(parsed_csv_content[0].to_h.keys).to 
-        eq described_class::COLUMNS.map{ |col| I18n.t("repository_stock_values.stock_export.headers.#{col}") }
+      expect(
+        parsed_csv_content.to_a[0]
+      ).to eq described_class::COLUMNS.map{ |col| I18n.t("repository_stock_values.stock_export.headers.#{col}") }
       expect(parsed_csv_content.length).to eq RepositoryLedgerRecord.count
 
       ZipExport.set_callback(:create, :after, :self_destruct)
