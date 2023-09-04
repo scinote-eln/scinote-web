@@ -29,13 +29,18 @@ class AtWhoController < ApplicationController
       else
         Repository.active.accessible_by_teams(@team).first
       end
+
+    items = []
+    repository_id = nil
+
     if repository && can_read_repository?(repository)
+      assignable_my_module =
+        if params[:assignable_my_module_id].present?
+          MyModule.viewable_by_user(current_user, @team).find_by(id: params[:assignable_my_module_id])
+        end
       items = SmartAnnotation.new(current_user, current_team, @query)
-                             .repository_rows(repository, params[:assignable_my_module_id])
+                             .repository_rows(repository, assignable_my_module&.id)
       repository_id = repository.id
-    else
-      items = []
-      repository_id = nil
     end
     render json: {
       res: [
