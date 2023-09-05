@@ -826,6 +826,8 @@ Rails.application.routes.draw do
     get 'files/:id/load_asset', to: 'assets#load_asset', as: 'load_asset'
     post 'files/:id/update_image', to: 'assets#update_image',
                                    as: 'update_asset_image'
+    get 'files/:id/move_targets', to: 'assets#move_targets', as: 'asset_move_tagets'
+    post 'files/:id/move', to: 'assets#move', as: 'asset_move'
     delete 'files/:id/', to: 'assets#destroy', as: 'asset_destroy'
     post 'files/create_wopi_file',
          to: 'assets#create_wopi_file',

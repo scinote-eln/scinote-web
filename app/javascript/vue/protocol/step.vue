@@ -183,6 +183,7 @@
                     @attachment:deleted="attachmentDeleted"
                     @attachment:uploaded="loadAttachments"
                     @attachments:order="changeAttachmentsOrder"
+                    @attachment:moved="moveAttachment"
                     @attachments:viewMode="changeAttachmentsViewMode"
                     @attachment:viewMode="updateAttachmentViewMode"/>
       </div>
@@ -290,6 +291,7 @@
       stepToReload() {
         if (this.stepToReload == this.step.id) {
           this.loadElements();
+          this.loadAttachments();
         }
       }
     },
@@ -330,7 +332,7 @@
 
         $.get(this.urls.attachments_url, (result) => {
           this.attachments = result.data
-
+          this.$emit('step:attachments:loaded');
           if (this.attachments.findIndex((e) => e.attributes.attached === false) >= 0) {
             setTimeout(() => {
               this.loadAttachments()
@@ -542,6 +544,11 @@
         })
         this.$emit('stepUpdated')
         this.$emit('step:move_element', target_id)
+      },
+      moveAttachment(id, target_id) {
+        this.attachments = this.attachments.filter((a) => a.id !== id );
+        this.$emit('stepUpdated')
+        this.$emit('step:move_attachment', target_id)
       },
       duplicateStep() {
         $.post(this.urls.duplicate_step_url, (result) => {

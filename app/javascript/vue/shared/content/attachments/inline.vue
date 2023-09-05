@@ -35,6 +35,7 @@
         :attachment="attachment"
         @attachment:viewMode="updateViewMode"
         @attachment:delete="deleteAttachment"
+        @attachment:moved="attachmentMoved"
       />
     </div>
     <template v-if="attachment.attributes.wopi">
@@ -71,13 +72,14 @@
 </template>
 
 <script>
+  import AttachmentMovedMixin from './mixins/attachment_moved.js';
   import ContextMenuMixin from './mixins/context_menu.js';
   import ContextMenu from './context_menu.vue';
   import PdfViewer from '../../pdf_viewer.vue';
 
   export default {
     name: 'inlineAttachment',
-    mixins: [ContextMenuMixin],
+    mixins: [ContextMenuMixin, AttachmentMovedMixin],
     components: { ContextMenu, PdfViewer },
     props: {
       attachment: {

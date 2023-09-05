@@ -80,6 +80,7 @@
       :attachment="attachment"
       @attachment:viewMode="updateViewMode"
       @attachment:delete="deleteAttachment"
+      @attachment:moved="attachmentMoved"
     />
     <deleteAttachmentModal
       v-if="deleteModal"
@@ -92,13 +93,14 @@
 </template>
 
 <script>
+  import AttachmentMovedMixin from './mixins/attachment_moved.js'
   import ContextMenuMixin from './mixins/context_menu.js'
   import ContextMenu from './context_menu.vue'
   import deleteAttachmentModal from './delete_modal.vue'
 
   export default {
     name: 'thumbnailAttachment',
-    mixins: [ContextMenuMixin],
+    mixins: [ContextMenuMixin, AttachmentMovedMixin],
     components: { ContextMenu, deleteAttachmentModal },
     props: {
       attachment: {

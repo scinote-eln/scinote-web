@@ -14,6 +14,8 @@
         :resultToReload="resultToReload"
         @result:elements:loaded="resultToReload = null"
         @result:move_element="reloadResult"
+        @result:attachments:loaded="resultToReload = null"
+        @result:move_attachment="reloadResult"
         @duplicated="resetPageAndReload"
       />
     </div>

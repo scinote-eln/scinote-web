@@ -55,12 +55,14 @@
           :parentId="parseInt(parent.id)"
           @attachment:viewMode="updateAttachmentViewMode"
           @attachment:delete="deleteAttachment(attachment.id)"
+          @attachment:moved="attachmentMoved"
         />
       </template>
     </div>
   </div>
 </template>
 <script>
+  import AttachmentMovedMixin from './attachments/mixins/attachment_moved.js'
   import listAttachment from './attachments/list.vue'
   import inlineAttachment from './attachments/inline.vue'
   import thumbnailAttachment from './attachments/thumbnail.vue'
@@ -91,7 +93,7 @@
         orderOptions: ['new', 'old', 'divider', 'atoz', 'ztoa']
       }
     },
-    mixins: [WopiFileModal],
+    mixins: [WopiFileModal, AttachmentMovedMixin],
     components: {
       thumbnailAttachment,
       inlineAttachment,

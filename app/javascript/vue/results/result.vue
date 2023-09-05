@@ -135,6 +135,7 @@
                     @attachments:openFileModal="showFileModal = true"
                     @attachment:deleted="attachmentDeleted"
                     @attachment:uploaded="loadAttachments"
+                    @attachment:moved="moveAttachment"
                     @attachments:order="changeAttachmentsOrder"
                     @attachments:viewMode="changeAttachmentsViewMode"
                     @attachment:viewMode="updateAttachmentViewMode"/>
@@ -190,6 +191,7 @@
       resultToReload() {
         if (this.resultToReload == this.result.attributes.id) {
           this.loadElements();
+          this.loadAttachments();
         }
       }
     },
@@ -297,7 +299,7 @@
 
         $.get(this.urls.attachments_url, (result) => {
           this.attachments = result.data
-
+          this.$emit('result:attachments:loaded');
           if (this.attachments.findIndex((e) => e.attributes.attached === false) >= 0) {
             setTimeout(() => {
               this.loadAttachments()
@@ -354,6 +356,11 @@
         })
         this.$emit('resultUpdated')
         this.$emit('result:move_element', target_id)
+      },
+      moveAttachment(id, target_id) {
+        this.attachments = this.attachments.filter((a) => a.id !== id );
+        this.$emit('resultUpdated')
+        this.$emit('result:move_attachment', target_id)
       },
       updateName(name) {
         axios.patch(this.urls.update_url, { result: { name: name } }).then((_) => {
