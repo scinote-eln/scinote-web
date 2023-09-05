@@ -327,7 +327,12 @@
         });
       },
       archiveResult() {
-
+        if (this.urls.archive_url) {
+          axios.post(this.urls.archive_url).then((response) => {
+            this.$emit('resultArchived', response.data);
+            location.reload();
+          });
+        }
       },
       duplicateResult() {
         axios.post(this.urls.duplicate_url).then((_) => {

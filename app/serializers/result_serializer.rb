@@ -73,6 +73,7 @@ class ResultSerializer < ActiveModel::Serializer
     if can_manage_result?(object)
       urls_list.merge!({
         delete_url: result_path(object),
+        archive_url: my_module_result_archive_path(object.my_module, object),
         update_url: my_module_result_path(object.my_module, object),
         create_table_url: my_module_result_tables_path(object.my_module, object),
         create_text_url: my_module_result_texts_path(object.my_module, object),
