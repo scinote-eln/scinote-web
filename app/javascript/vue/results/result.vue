@@ -106,7 +106,7 @@
     </div>
 
     <ReorderableItemsModal v-if="reordering"
-      title="Placeholder title for this modal"
+      :title="i18n.t('my_modules.modals.reorder_results.title')"
       :items="reorderableElements"
       @reorder="updateElementOrder"
       @close="closeReorderModal"

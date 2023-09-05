@@ -79,7 +79,8 @@ class ResultSerializer < ActiveModel::Serializer
         update_asset_view_mode_url: update_asset_view_mode_my_module_result_path(object.my_module, object),
         update_view_state_url: update_view_state_my_module_result_path(object.my_module, object),
         direct_upload_url: rails_direct_uploads_url,
-        upload_attachment_url: upload_attachment_my_module_result_path(object.my_module, object)
+        upload_attachment_url: upload_attachment_my_module_result_path(object.my_module, object),
+        reorder_elements_url: reorder_result_result_orderable_elements_path(result_id: object.id)
       })
     end
 

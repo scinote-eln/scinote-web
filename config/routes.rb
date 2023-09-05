@@ -614,6 +614,9 @@ Rails.application.routes.draw do
     end
 
     resources :results, only: [:update, :destroy] do
+      resources :result_orderable_elements do
+        post :reorder, on: :collection
+      end
       resources :result_comments,
                 path: '/comments',
                 only: %i(create index update destroy)
