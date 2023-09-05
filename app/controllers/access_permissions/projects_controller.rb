@@ -99,21 +99,11 @@ module AccessPermissions
         raise ActiveRecord::RecordInvalid
       end
 
-      if @project.visible?
-        user_assignment.update!(
-          user_role: @project.default_public_user_role,
-          assigned: :automatically
-        )
-      else
-        user_assignment.destroy!
-      end
-
       propagate_job(user_assignment, destroy: true)
       log_activity(:unassign_user_from_project, { user_target: user_assignment.user.id,
                                                   role: user_assignment.user_role.name })
 
-      render json: { flash: t('access_permissions.destroy.success', member_name: escape_input(user.full_name)) },
-             status: :ok
+      render json: { flash: t('access_permissions.destroy.success', member_name: escape_input(user.full_name)) }
     rescue ActiveRecord::RecordInvalid
       render json: { flash: t('access_permissions.destroy.failure') },
              status: :unprocessable_entity

@@ -65,12 +65,14 @@ module UserAssignments
       user_assignment = object.user_assignments.find { |ua| ua.user_id == @user.id }
       return if user_assignment.blank?
 
-      if !object.is_a?(Project) && object.project.visible? && !@remove_from_team
+      project = object.is_a?(Project) ? object : object.project
+
+      if project.visible? && !@remove_from_team
         # if project is public, the assignment
         # will reset to the default public role
 
         user_assignment.update!(
-          user_role_id: object.project.default_public_user_role_id,
+          user_role_id: project.default_public_user_role_id,
           assigned: :automatically,
           assigned_by: @assigned_by
         )
