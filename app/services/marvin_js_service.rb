@@ -47,20 +47,10 @@ class MarvinJsService
     private
 
     def connect_asset(asset, params, current_user)
-      if params[:object_type] == 'Step'
-        object = params[:object_type].constantize.find(params[:object_id])
-        asset.update!(view_mode: object.assets_view_mode)
-        object.assets << asset
-      elsif params[:object_type] == 'Result'
-        my_module = MyModule.find_by(id: params[:object_id])
-        return unless my_module
+      object = params[:object_type].constantize.find(params[:object_id])
+      asset.update!(view_mode: object.assets_view_mode)
+      object.assets << asset
 
-        object = Result.create(user: current_user,
-                          my_module: my_module,
-                          name: prepare_name(params[:name]),
-                          asset: asset,
-                          last_modified_by: current_user)
-      end
       { asset: asset, object: object }
     end
 

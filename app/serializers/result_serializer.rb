@@ -8,7 +8,7 @@ class ResultSerializer < ActiveModel::Serializer
   include InputSanitizeHelper
 
   attributes :name, :id, :urls, :updated_at, :created_at_formatted, :updated_at_formatted, :user,
-             :my_module_id, :attachments_manageble, :marvinjs_enabled, :marvinjs_context,
+             :my_module_id, :attachments_manageble, :marvinjs_enabled, :type, :marvinjs_context,
              :wopi_enabled, :wopi_context
 
   def marvinjs_enabled
