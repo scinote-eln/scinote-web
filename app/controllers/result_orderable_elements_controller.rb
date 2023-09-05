@@ -5,17 +5,19 @@ class ResultOrderableElementsController < ApplicationController
   before_action :check_manage_permissions
 
   def reorder
-    @result.with_lock do
-      params[:result_orderable_element_positions].each do |id, position|
-        @result.result_orderable_elements.find(id).update_column(:position, position)
+    params[:result_orderable_element_positions].each do |id, position|
+      result_element = @result.result_orderable_elements.find(id)
+      ActiveRecord::Base.transaction do
+        result_element.insert_at(position)
       end
-
-      log_activity(:result_content_rearranged, @my_module.experiment.project, my_module: @my_module.id)
-
-      @result.touch
     end
 
+    log_activity(:result_content_rearranged, @my_module.experiment.project, my_module: @my_module.id)
+    @result.touch
+
     render json: params[:result_orderable_element_positions], status: :ok
+  rescue ActiveRecord::RecordInvalid
+    render json: { errors: result_element.errors }, status: :conflict
   end
 
   private
@@ -39,7 +41,7 @@ class ResultOrderableElementsController < ApplicationController
       .call(activity_type: type_of,
             owner: current_user,
             subject: @result,
-            team: @@my_module.team,
+            team: @my_module.team,
             project: project,
             message_items: message_items)
   end

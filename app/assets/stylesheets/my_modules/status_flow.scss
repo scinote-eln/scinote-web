@@ -1,0 +1,248 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+// scss-lint:disable SelectorFormat
+// scss-lint:disable ImportantRule
+
+.task-sharing-and-flows {
+  #dropdownTaskFlowList {
+    min-width: 230px;
+  }
+
+  .status-flow-dropdown {
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  .status-buttons {
+    display: flex;
+
+    &.status-light {
+      @include not-started;
+    }
+
+    > :not(:first-child):not(.dropdown-menu) {
+      margin-left: .5em;
+    }
+
+    .status-flow-dropdown[data-status-changing=true] {
+      .caret.pull-right {
+        display: none;
+      }
+    }
+
+    > div > .btn {
+      min-width: 115px;
+    }
+  }
+
+  .status-transition-error {
+    @include font-small;
+    color: $brand-danger;
+    margin-top: .5em;
+
+    .fas {
+      margin-right: .5em;
+    }
+  }
+
+  .status-label {
+    @include font-button;
+    flex-basis: 50%;
+    margin-right: .5em;
+    text-align: right;
+
+    .status-title {
+      @include font-small;
+      color: var(--sn-grey);
+      margin-right: .2em;
+    }
+
+    .status-note {
+      font-weight: normal;
+    }
+
+    .pull-right {
+      font-weight: 400;
+    }
+  }
+}
+
+.status-flow-dropdown {
+  .dropdown-toggle {
+    color: $color-white;
+    padding: .5rem .5rem .5rem 1rem;
+    text-align: left;
+    width: 100%;
+
+    &.btn-not-started {
+      border: 1px solid var(--sn-sleepy-grey);
+      color: var(--sn-black);
+    }
+
+    .caret {
+      margin: 8px 0;
+    }
+  }
+
+  .status-light {
+    @include not-started;
+  }
+
+  &.open .dropdown-menu{
+    align-items: center;
+    display: grid;
+    grid-template-columns: minmax(0, auto) 12px minmax(0, auto);
+    min-width: 230px;
+    padding: .5em 0 0;
+
+    li {
+      display: contents;
+
+      > * {
+        cursor: pointer;
+        line-height: 2em;
+        padding: .5em 1em;
+      }
+
+      &:hover > *{
+        background: $color-concrete;
+      }
+
+      &.disabled {
+        pointer-events: none;
+
+        .status-name {
+          background: $color-alto !important;
+        }
+      }
+    }
+
+    .fa-long-arrow-alt-right {
+      color: $color-silver-chalice;
+      padding: 1.5em 0;
+      z-index: 1;
+    }
+
+    .status-container {
+      display: flex;
+    }
+
+    .status-name {
+      border-radius: $border-radius-tag;
+      color: $color-white;
+      display: inline-block;
+      font-weight: bold;
+      line-height: 1em;
+      max-width: 100%;
+      overflow: hidden;
+      padding: .5em;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .btn-not-started {
+      border: 1px solid var(--sn-sleepy-grey);
+      color: var(--sn-black);
+    }
+
+    .error-message {
+      @include font-small;
+      color: $color-silver-chalice;
+      grid-column: span 3;
+      line-height: 1em;
+      padding: 0em 1em .5em;
+
+      &:empty {
+        display: none;
+      }
+
+      &.permission-error {
+        padding: .5em 1em;
+      }
+    }
+
+    #viewTaskFlow {
+      border-top: $border-default;
+      cursor: pointer;
+      display: list-item;
+      grid-column: span 3;
+      line-height: 2em;
+      margin-top: .5em;
+      padding: .5em 1em;
+    }
+  }
+}
+
+
+#statusFlowModal {
+  .status-flow {
+    padding: 2em;
+
+    .status-container {
+      align-items: center;
+      display: grid;
+      grid-template-columns: 1fr min-content 1fr;
+      grid-template-rows: 28px;
+      justify-content: space-around;
+      position: relative;
+
+      .current-status {
+        @include font-small;
+        justify-self: end;
+
+        .fas {
+          margin: 0 .5em;
+        }
+      }
+
+      .status-block {
+        @include font-button;
+        border-radius: $border-radius-tag;
+        color: $color-white;
+        font-weight: bold;
+        line-height: 1em;
+        padding: .5em;
+        white-space: nowrap;
+
+        &.status-light {
+          @include not-started;
+        }
+      }
+
+      .status-comment {
+        @include font-small;
+        color: $color-silver-chalice;
+        padding-left: .5em;
+      }
+    }
+
+    .connector {
+      background: $color-black;
+      height: 2em;
+      margin: 0 auto;
+      position: relative;
+      width: 2px;
+
+      &:before,
+      &:after {
+        border-left: .2em solid transparent;
+        border-right: .2em solid transparent;
+        content: '';
+        display: block;
+        margin-left: -.1em;
+        position: absolute;
+      }
+
+      &:before {
+        border-top: .2em solid $color-black;
+        top: 0;
+      }
+
+      &:after {
+        border-bottom: .2em solid $color-black;
+        bottom: 0;
+      }
+    }
+  }
+}

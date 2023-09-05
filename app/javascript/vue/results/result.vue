@@ -100,8 +100,13 @@
         </div>
       </div>
     </div>
+
+    <div class="relative ml-1 bottom-17 w-356 h-15 font-normal font-hairline text-xs leading-4">
+      {{ i18n.t('protocols.steps.timestamp', {date: result.attributes.created_at, user: result.attributes.created_by }) }}
+    </div>
+
     <ReorderableItemsModal v-if="reordering"
-      title="Placeholder title for this modal"
+      :title="i18n.t('my_modules.modals.reorder_results.title')"
       :items="reorderableElements"
       @reorder="updateElementOrder"
       @close="closeReorderModal"
@@ -327,7 +332,12 @@
         });
       },
       archiveResult() {
-
+        if (this.urls.archive_url) {
+          axios.post(this.urls.archive_url).then((response) => {
+            this.$emit('resultArchived', response.data);
+            location.reload();
+          });
+        }
       },
       duplicateResult() {
         axios.post(this.urls.duplicate_url).then((_) => {

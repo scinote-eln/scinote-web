@@ -1142,6 +1142,7 @@ en:
       option_delete: "Delete"
       confirm_delete: "Are you sure you want to permanently delete result?"
       delete_flash: "Successfully removed result <strong>%{result}</strong> from task <strong>%{module}</strong>."
+      archive_flash: "Successfully archived result <strong>%{result}</strong> in task <strong>%{module}</strong>"
       archived_on: "Archived on"
       archived_on_title: "Result archived on %{date} at %{time}."
       option_download: "Download"
@@ -1388,6 +1389,8 @@ en:
       snapshot_error:
         title: "Snapshot error"
         body_html: "<strong>%{repository}</strong> inventory snapshot failed to generate. Please contact support if this problem persists."
+      reorder_results:
+        title: "Rearrange result content"
     modules_list_partial:
       private_tasks_html: 'Assigned to <strong>%{nr}</strong> private task(s)'
       no_results:
@@ -3139,6 +3142,7 @@ en:
           result:
             title: Move to different result
             targets_label: Select result
+            untitled_result: Untitled result
         delete_step:
           title: 'Delete step'
           description_1: 'You’re about to delete a whole step from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
@@ -3536,6 +3540,7 @@ en:
     newer_version_available: "Newer version of the text below has been saved in the browser. Do you want to restore it?"
   general:
     save: "Save"
+    move: "Move"
     update: "Update"
     edit: "Edit"
     delete: "Delete"
