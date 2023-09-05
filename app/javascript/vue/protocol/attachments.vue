@@ -1,5 +1,5 @@
 <template>
-  <div class="step-attachments">
+  <div class="step-attachments"  v-if="attachments && attachments.length">
     <div class="attachments-actions">
       <div class="title">
         <h3>{{ i18n.t('protocols.steps.files', {count: attachments.length}) }}</h3>
