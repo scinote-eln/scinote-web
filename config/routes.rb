@@ -6,8 +6,6 @@ Rails.application.routes.draw do
   post 'access_tokens/revoke', to: 'doorkeeper/access_tokens#revoke'
 
   # Addons
-  mount Scinote::AI::Engine => '/'
-
 
   def draw(routes_name)
     instance_eval(File.read(Rails.root.join("config/routes/#{routes_name}.rb")))
