@@ -42,7 +42,7 @@
                 :data-sketch-container="`.attachments[data-step-id=${step.id}]`"
               >
                 <span class="new-marvinjs-upload-icon">
-                  <img :src="step.attributes.marvinjs_context.icon">
+                  <i class="sn-icon sn-icon-marvinjs"></i>
                 </span>
                   {{ i18n.t('protocols.steps.attachments.menu.chemical_drawing') }}
               </a>
@@ -74,8 +74,9 @@
       </div>
     </div>
     <div class="attachments">
-      <template v-for="(attachment, index) in attachmentsOrdered">
+      <template >
         <component
+          v-for="(attachment, index) in attachmentsOrdered"
           :is="attachment_view_mode(attachmentsOrdered[index])"
           :key="attachment.id"
           :attachment="attachment"
