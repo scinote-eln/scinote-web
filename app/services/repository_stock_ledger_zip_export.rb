@@ -48,7 +48,7 @@ module RepositoryStockLedgerZipExport
     data = []
     repository_rows =
       RepositoryRow.where(id: row_ids)
-                   .joins(repository_stock_value: [{ repository_ledger_records: [:user] }])
+                   .joins(repository_stock_value: [{ repository_ledger_records: :user }])
                    .joins('LEFT OUTER JOIN repositories ON repository_ledger_records.reference_id = repositories.id')
                    .joins('LEFT OUTER JOIN my_module_repository_rows ON
                      repository_ledger_records.reference_id = my_module_repository_rows.id')
