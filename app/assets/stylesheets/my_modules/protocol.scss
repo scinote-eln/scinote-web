@@ -1,3 +1,7 @@
+.my-module-position-container .protocol-content {
+  margin-left: 2.25rem;
+}
+
 .task-protocol {
   .protocol-step-actions {
     align-items: center;
@@ -82,22 +86,6 @@
         cursor: default;
         pointer-events: none;
       }
-    }
-  }
-  .tinymce-wrapper {
-    width: 100%;
-
-    .tox-tinymce {
-      flex-grow: 1;
-    }
-  }
-  .tinymce-container {
-    display: flex;
-    width: 100%;
-
-    .tiny-mce-editor {
-      flex-basis: 100%;
-      max-width: 100%;
     }
   }
 }

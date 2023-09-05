@@ -45,8 +45,12 @@
   }
 
   .sci-input-field[type=password] {
-    font-family: Arial;
+    font-family: "SN Inter", "Open Sans", Arial, Helvetica, sans-serif;
     letter-spacing: .075em;
+
+    &::placeholder {
+      letter-spacing: initial;
+    }
   }
 
   .sn-icon {

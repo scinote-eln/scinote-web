@@ -42,7 +42,7 @@ module Reports::Docx::DrawMyModule
     @docx.p do
       text I18n.t('projects.reports.elements.module.status')
       text ' '
-      text "[#{status.name}]", color: status.color.delete('#')
+      text "[#{status.name}]", color: (status.light_color? ? '000000' : status.color.delete('#'))
       if my_module.completed?
         text " #{I18n.t('my_modules.states.completed')} #{I18n.l(my_module.completed_on, format: :full)}"
       end
@@ -70,7 +70,7 @@ module Reports::Docx::DrawMyModule
       draw_step(step)
     end
 
-    @docx.h4 I18n.t('Results') if my_module.results.any?
+    @docx.h4 I18n.t('Results') if my_module.results.any? && (%w(file_results table_results text_results).any? { |k| @settings.dig('task', k) })
     order_results_for_report(my_module.results, @settings.dig('task', 'result_order')).each do |result|
       if result.is_asset && @settings.dig('task', 'file_results')
         draw_result_asset(result, @settings)

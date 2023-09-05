@@ -1,10 +1,24 @@
-.protocol-content {
+.protocol-content,
+.my-modules-results {
+  .tinymce-wrapper {
+    width: 100%;
+
+    .tox-tinymce {
+      flex-grow: 1;
+    }
+  }
+
   .tinymce-container {
     align-items: center;
     border-radius: 4px;
     display: flex;
     min-height: 36px;
     width: 100%;
+
+    .tiny-mce-editor {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
 
     form > .form-group {
       margin-bottom: 0;

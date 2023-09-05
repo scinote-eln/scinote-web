@@ -1,4 +1,4 @@
-<div class="modal" id="clone-experiment-modal-<%= @experiment.id %>" tabindex="-1" role="dialog" aria-labelledby="clone-experiment-modal-label">
+<div class="modal clone-experiment-modal" id="clone-experiment-modal-<%= @experiment.id %>" tabindex="-1" role="dialog" aria-labelledby="clone-experiment-modal-label">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <%= form_with model: @experiment, url: clone_experiment_path(@experiment, :view_mode=>view_mode), method: :post do |f| %>
@@ -17,7 +17,7 @@
                            end
                          end,
                          @experiment.project.id ),
-                       {}, {"data-role" => "clear"} %>
+                       {}, { class: "form-control selectpicker", "data-role" => "clear" } %>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>

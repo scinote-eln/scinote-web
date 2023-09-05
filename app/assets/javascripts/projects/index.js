@@ -52,7 +52,7 @@ var ProjectsIndex = (function() {
         refreshCurrentView();
       })
       .on('ajax:error', newProjectFolderModal, function(e, data) {
-        let form = $(this).find('form#new_project_folder');
+        let form = $(this).find('.new_project_folder');
         form.renderFormErrors('project_folder', data.responseJSON);
       });
 

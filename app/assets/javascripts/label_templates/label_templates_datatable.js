@@ -259,6 +259,10 @@
         targets: 2,
         className: 'label-template-name',
         render: renderNameHTML
+      }, {
+        targets: 4,
+        className: 'whitespace-break-spaces',
+        render: data => `<span class='whitespace-break-spaces'>${data}</span>`
       }],
       oLanguage: {
         sSearch: I18n.t('general.filter')

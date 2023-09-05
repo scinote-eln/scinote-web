@@ -184,7 +184,7 @@ var RepositoryDatatable = (function(global) {
     $('#saveRecord').attr('disabled', false);
     $(TABLE_WRAPPER_ID).find('tr').removeClass('blocked');
 
-    if (TABLE.ColSizes) {
+    if (TABLE.ColSizes && TABLE.ColSizes.filter((s) => !!s).length > 1) {
       $(TABLE_WRAPPER_ID).find('.table').addClass('table--resizable-columns');
     }
 
@@ -586,7 +586,9 @@ var RepositoryDatatable = (function(global) {
 
           state.ColSizes = data;
 
-          $(TABLE_WRAPPER_ID).find('.table').addClass('table--resizable-columns');
+          if (data.length > 0) {
+            $(TABLE_WRAPPER_ID).find('.table').addClass('table--resizable-columns');
+          }
 
           updateColSizeMap(state);
 
@@ -773,7 +775,7 @@ var RepositoryDatatable = (function(global) {
             if (json.state.columns[7]) json.state.columns[7].visible = archived;
             if (json.state.search) delete json.state.search;
 
-            if (json.state.ColSizes) {
+            if (json.state.ColSizes && json.state.ColSizes.length > 0) {
               $(TABLE_WRAPPER_ID).find('.table').addClass('table--resizable-columns');
               TABLE.ColSizes = json.state.ColSizes;
               updateColSizeMap(json.state);

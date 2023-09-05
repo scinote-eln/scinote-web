@@ -17,6 +17,10 @@
   .status-buttons {
     display: flex;
 
+    &.status-light {
+      @include not-started;
+    }
+
     > :not(:first-child):not(.dropdown-menu) {
       margin-left: .5em;
     }
@@ -79,6 +83,10 @@
     .caret {
       margin: 8px 0;
     }
+  }
+
+  .status-light {
+    @include not-started;
   }
 
   &.open .dropdown-menu{
@@ -197,9 +205,8 @@
         padding: .5em;
         white-space: nowrap;
 
-        &.btn-not-started {
-          border: 1px solid var(--sn-sleepy-grey);
-          color: var(--sn-black);
+        &.status-light {
+          @include not-started;
         }
       }
 

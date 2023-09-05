@@ -1,17 +1,20 @@
 # frozen_string_literal: true
 
 class ResultsController < ApplicationController
+  include Breadcrumbs
   skip_before_action :verify_authenticity_token, only: %i(create update destroy duplicate)
   before_action :load_my_module
   before_action :load_vars, only: %i(destroy elements assets upload_attachment
                                      update_view_state update_asset_view_mode update duplicate)
   before_action :check_destroy_permissions, only: :destroy
+  before_action :set_breadcrumbs_items, only: %i(index)
+  before_action :set_navigator, only: %i(index)
 
   def index
     respond_to do |format|
       format.json do
         # API endpoint
-        @results = @my_module.results
+        @results = @my_module.results.active
 
         apply_sort!
         apply_filters!
@@ -50,6 +53,27 @@ class ResultsController < ApplicationController
     @result.update!(result_params)
 
     render json: @result
+  end
+
+  def archive
+    result = @my_module.results.find(params[:result_id])
+    result.archive(current_user)
+
+    if result.save
+      Activities::CreateActivityService
+        .call(activity_type: :destroy_result,
+              owner: current_user,
+              subject: result,
+              team: @my_module.team,
+              project: @my_module.project,
+              message_items: { result: result.id })
+
+      flash[:success] = t('my_modules.module_archive.archive_flash',
+                          result: result.name,
+                          module: @my_module.name)
+
+      redirect_to my_module_results_path(@my_module)
+    end
   end
 
   def elements
@@ -182,5 +206,13 @@ class ResultsController < ApplicationController
 
   def check_destroy_permissions
     render_403 unless can_delete_result?(@result)
+  end
+
+  def set_navigator
+    @navigator = {
+      url: tree_navigator_my_module_path(@my_module),
+      archived: params[:view_mode] == 'archived',
+      id: @my_module.code
+    }
   end
 end

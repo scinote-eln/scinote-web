@@ -1,4 +1,4 @@
-<%= form_with model: @my_module, url: my_module_path(@my_module, format: :json), remote: :true do |f| %>
+<%= form_with model: @my_module, url: my_module_path(@my_module, format: :json), data: { remote: :true }, builder: SciFormHelper::SciFormBuilder do |f| %>
   <%= f.datetime_picker :due_date,
                         value: @my_module.due_date,
                         label: t('my_modules.due_date.label'),

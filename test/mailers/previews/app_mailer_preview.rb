@@ -17,7 +17,7 @@ class AppMailerPreview < ActionMailer::Preview
 
   def assignment_notification
     AppMailer.notification(
-      fake_user,
+      fake_user.id,
       Notification.new(
         type_of: :assignment,
         title: I18n.t(
@@ -40,7 +40,7 @@ class AppMailerPreview < ActionMailer::Preview
     user = User.first
     user = fake_user if user.blank?
     AppMailer.notification(
-      user,
+      user.id,
       Notification.new(
         type_of: :recent_changes,
         title: I18n.t(
@@ -59,7 +59,7 @@ class AppMailerPreview < ActionMailer::Preview
 
   def delivery_notification
     AppMailer.notification(
-      fake_user,
+      fake_user.id,
       Notification.new(
         type_of: :deliver,
         title: 'Your requested export package is ready!',

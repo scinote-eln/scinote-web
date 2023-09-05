@@ -3,8 +3,8 @@
 class RepositoriesExportJob < ApplicationJob
   include StringUtility
 
-  def perform(repository_ids, user, team)
-    @user = user
+  def perform(repository_ids, user_id, team)
+    @user = User.find(user_id)
     @team = team
     @repositories = Repository.viewable_by_user(@user, @team).where(id: repository_ids).order(:id)
     zip_input_dir = FileUtils.mkdir_p(Rails.root.join("tmp/temp_zip_#{Time.now.to_i}")).first

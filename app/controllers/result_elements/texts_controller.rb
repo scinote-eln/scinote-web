@@ -14,7 +14,7 @@ module ResultElements
 
       ActiveRecord::Base.transaction do
         create_in_result!(@result, result_text)
-        #log_step_activity(:text_added, { text_name: step_text.name })
+        #log_result_activity(:text_added, { text_name: result_text.name })
       end
 
       render_result_orderable_element(result_text)
@@ -27,7 +27,7 @@ module ResultElements
       ActiveRecord::Base.transaction do
         @result_text.update!(result_text_params)
         TinyMceAsset.update_images(@result_text, params[:tiny_mce_images], current_user)
-        #log_step_activity(:text_edited, { text_name: @step_text.name })
+        #log_result_activity(:text_edited, { text_name: @result_text.name })
         result_annotation_notification(old_text)
       end
 
@@ -50,7 +50,7 @@ module ResultElements
 
     def destroy
       if @result_text.destroy
-        log_step_activity(:text_deleted, { text_name: @result_text.name })
+        log_result_activity(:text_deleted, { text_name: @result_text.name })
         head :ok
       else
         head :unprocessable_entity
@@ -58,15 +58,15 @@ module ResultElements
     end
 
     def duplicate
-      #ActiveRecord::Base.transaction do
-      #  position = @step_text.step_orderable_element.position
-      #  @step.step_orderable_elements.where('position > ?', position).order(position: :desc).each do |element|
-      #    element.update(position: element.position + 1)
-      #  end
-      #  new_step_text = @step_text.duplicate(@step, position + 1)
-      #  log_step_activity(:text_duplicated, { text_name: new_step_text.name })
-      #  render_step_orderable_element(new_step_text)
-      #end
+      ActiveRecord::Base.transaction do
+        position = @result_text.result_orderable_element.position
+        @result.result_orderable_elements.where('position > ?', position).order(position: :desc).each do |element|
+          element.update(position: element.position + 1)
+        end
+        new_result_text = @result_text.duplicate(@result, position + 1)
+        # log_result_activity(:text_duplicated, { text_name: new_result_text.name })
+        render_result_orderable_element(new_result_text)
+      end
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
     end
@@ -74,7 +74,7 @@ module ResultElements
     private
 
     def result_text_params
-      params.require(:text_component).permit(:text)
+      params.require(:text_component).permit(:text, :name)
     end
 
     def load_result_text

@@ -6,8 +6,8 @@
         <h4 class="modal-title" id="team-sharing-tasks-label"><%= t("users.settings.teams.show.tasks_share.disable_modal.title") %></h4>
       </div>
       <div class="modal-body">
-        <p><%= t("users.settings.teams.show.tasks_share.disable_modal.description_p1", team_name: @team.name) %></p>
-        <p><%= t("users.settings.teams.show.tasks_share.disable_modal.description_p2", counter: @team.number_of_task_shared) %></p>
+        <p class='text-sm'><%= t("users.settings.teams.show.tasks_share.disable_modal.description_p1", team_name: @team.name) %></p>
+        <p class='text-sm'><%= t("users.settings.teams.show.tasks_share.disable_modal.description_p2", counter: @team.number_of_task_shared) %></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.cancel') %></button>

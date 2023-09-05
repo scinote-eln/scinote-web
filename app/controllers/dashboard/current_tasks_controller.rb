@@ -129,6 +129,7 @@ module Dashboard
 
       tasks = tasks.search_by_name(current_user, current_team, task_filters[:query]) if task_filters[:query].present?
       tasks.joins(:my_module_status)
+           .includes(:my_module_status)
            .select(
              'my_modules.*',
              'my_module_statuses.name AS status_name',

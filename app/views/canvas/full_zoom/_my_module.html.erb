@@ -65,12 +65,13 @@
       </div>
     </div>
 
-    <div class="status-label" style="--state-color: <%= my_module.my_module_status.color %>">
-      <% if my_module.status_changing %>
-        <i class="fas fa-spinner fa-spin"></i>
-        <span><%= t('experiments.canvas.full_zoom.status_transitioning_label') %></span>
-      <% end %>
-      <%= my_module.my_module_status.name %>
+    <div class="status-label <%= 'status-light' if my_module.my_module_status.light_color? %>"
+      style="--state-color: <%= my_module.my_module_status.color %>">
+        <% if my_module.status_changing %>
+          <i class="fas fa-spinner fa-spin"></i>
+          <span><%= t('experiments.canvas.full_zoom.status_transitioning_label') %></span>
+        <% end %>
+        <%= my_module.my_module_status.name %>
     </div>
   </div>
 

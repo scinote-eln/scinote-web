@@ -104,58 +104,6 @@
         border: 1px solid var(--sn-science-blue);
       }
     }
-
-    .step-actions-container {
-      align-items: center;
-      display: flex;
-      justify-content: flex-end;
-      gap: .25rem;
-      flex-basis: 20%;
-
-      .disabled {
-        color: $color-silver-chalice;
-        pointer-events: none;
-      }
-
-      .dropdown-menu {
-        white-space: nowrap;
-      }
-
-      .insert-button {
-        .caret {
-          margin-left: .5em;
-        }
-      }
-
-      .insert-element-dropdown {
-        @include font-button;
-
-        min-width: 230px;
-        padding: 0;
-
-        li {
-          padding: .5em 1em;
-
-          &.action {
-            cursor: pointer;
-
-            &:hover {
-              background: $color-concrete;
-            }
-
-            .fas {
-              margin-right: .5em;
-            }
-          }
-
-          &.title {
-            @include font-small;
-            color: $color-alto;
-            text-transform: uppercase;
-          }
-        }
-      }
-    }
   }
 
   .step-elements {
@@ -182,12 +130,12 @@
   }
 
   .comments-counter {
-    @include font-small;
     align-items: center;
-    background-color: $color-concrete;
-    border: 2px solid $color-white;
-    border-radius: 8px;
+    background: var(--sn-science-blue);
+    border-radius: .5rem;
+    color: $color-white;
     display: flex;
+    font-size: 10px;
     height: 16px;
     justify-content: center;
     margin: 2px;

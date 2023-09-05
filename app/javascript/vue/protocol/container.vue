@@ -62,7 +62,7 @@
       </div>
     </div>
     <div id="protocol-content" class="protocol-content collapse in" aria-expanded="true">
-      <div class="pl-9">
+      <div class="pl-9 mb-8">
         <div class="protocol-name" v-if="!inRepository">
           <InlineEdit
             v-if="urls.update_protocol_name_url"
@@ -399,6 +399,12 @@
         let secondaryNavigationHeight = secondaryNavigation.offsetHeight;
         let secondaryNavigationTop = secondaryNavigation.getBoundingClientRect().top;
 
+        // TinyMCE offset calculation
+        let stickyNavigationHeight = secondaryNavigationHeight;
+        if ($('.tox-editor-header').length > 0 && $('.tox-editor-header')[0].getBoundingClientRect().top > protocolHeaderTop) {
+          stickyNavigationHeight += protocolHeaderHeight;
+        }
+
         // Add shadow to secondary navigation when it starts fly
         if (secondaryNavigation.getBoundingClientRect().top == 0 && !this.headerSticked) {
           secondaryNavigation.style.boxShadow = '0px 5px 8px 0px rgba(0, 0, 0, 0.10)';
@@ -406,7 +412,7 @@
           secondaryNavigation.style.boxShadow = 'none';
         }
 
-        if (protocolHeaderTop < protocolHeaderHeight) { // When secondary navigation touch protocol header
+        if (protocolHeaderTop - 5 < protocolHeaderHeight) { // When secondary navigation touch protocol header
           secondaryNavigation.style.top = protocolHeaderTop - protocolHeaderHeight + 'px'; // Secondary navigation starts slowly disappear
           protocolHeader.style.boxShadow = '0px 5px 8px 0px rgba(0, 0, 0, 0.10)'; // Flying shadow
           this.headerSticked = true;
@@ -433,6 +439,11 @@
           protocolHeader.style.boxShadow = 'none';
           this.headerSticked = false;
         }
+
+        // Apply TinyMCE offset
+        $('.tox-editor-header').css('top',
+          stickyNavigationHeight +  parseInt($(secondaryNavigation).css('top'), 10)
+        );
 
         this.lastScrollTop = window.scrollY; // Save last scroll position to when user scroll up/down
       }

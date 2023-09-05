@@ -72,7 +72,7 @@ module ResultElements
 
     def destroy
       if @table.destroy
-        #log_step_activity(:table_deleted, { table_name: @table.name })
+        log_result_activity(:table_deleted, { table_name: @table.name })
         head :ok
       else
         head :unprocessable_entity
@@ -80,17 +80,19 @@ module ResultElements
     end
 
     def duplicate
-      #ActiveRecord::Base.transaction do
-      #  position = @table.step_table.step_orderable_element.position
-      #  @step.step_orderable_elements.where('position > ?', position).order(position: :desc).each do |element|
-      #    element.update(position: element.position + 1)
-      #  end
-      #  @table.name += ' (1)'
-      #  new_table = @table.duplicate(@step, current_user, position + 1)
-      #  log_step_activity(:table_duplicated, { table_name: new_table.name })
-      #  render_step_orderable_element(new_table.step_table)
-      #end
-    rescue ActiveRecord::RecordInvalid
+      ActiveRecord::Base.transaction do
+        position = @table.result_table.result_orderable_element.position
+        @result.result_orderable_elements.where('position > ?', position).order(position: :desc).each do |element|
+          element.update(position: element.position + 1)
+        end
+        @table.name += ' (1)'
+        new_table = @table.duplicate(@result, current_user, position + 1)
+        # log_result_activity(:table_duplicated, { table_name: new_table.name })
+        render_result_orderable_element(new_table.result_table)
+      end
+    rescue ActiveRecord::RecordInvalid => e
+      Rails.logger.error(e.message)
+      Rails.logger.error(e.backtrace.join("\n"))
       head :unprocessable_entity
     end
 

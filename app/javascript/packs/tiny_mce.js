@@ -25,6 +25,7 @@ import 'tinymce/plugins/insertdatetime';
 import 'tinymce/plugins/nonbreaking';
 import 'tinymce/plugins/save';
 import 'tinymce/plugins/help';
+import 'tinymce/plugins/help/js/i18n/keynav/en';
 import 'tinymce/plugins/quickbars';
 import 'tinymce/plugins/directionality';
 import './tinymce/custom_image_uploader/plugin';
@@ -194,11 +195,11 @@ window.TinyMCE = (() => {
           document.location.hash = `${textAreaObject.data('objectType')}_${textAreaObject.data('objectId')}`;
         }
 
-        if ($('.navbar-secondary').length) {
-          editorToolbaroffset = $('.navbar-secondary').position().top + $('.navbar-secondary').height();
-        } else if ($('#main-nav').length) {
-          editorToolbaroffset = $('#main-nav').height();
-        }
+        editorToolbaroffset = 0;
+
+        $.each($('.sticky-header-element'), (_index, element) => {
+          editorToolbaroffset += $(element).outerHeight();
+        });
 
         return tinyMCE.init({
           cache_suffix: '?v=6.5.1-19', // This suffix should be changed any time library is updated
@@ -246,12 +247,14 @@ window.TinyMCE = (() => {
           object_resizing: true,
           elementpath: false,
           quickbars_insert_toolbar: false,
-          default_link_target: '_blank',
+          toolbar_mode: 'sliding',
+          color_default_background: 'yellow',
+          link_default_target: 'external',
           mobile: {
             menubar: 'file edit view insert format table'
           },
-          target_list: [
-            { title: 'New page', value: '_blank' },
+          link_target_list: [
+            { title: 'New page', value: 'external' },
             { title: 'Same page', value: '_self' }
           ],
           style_formats: [
@@ -430,6 +433,19 @@ window.TinyMCE = (() => {
 
             editor.on('init', () => {
               restoreDraftNotification(selector, editor);
+            });
+
+            editor.on('BeforeSetContent GetContent', function(e) {
+              if (e.content && e.content.includes('target="external"')) {
+                const div = document.createElement('div');
+                div.innerHTML = e.content;
+                const links = div.querySelectorAll('a[target="external"]');
+                links.forEach(link => {
+                  link.removeAttribute('target');
+                  link.setAttribute('rel', 'external');
+                });
+                e.content = div.innerHTML;
+              }
             });
           },
           save_onsavecallback: (editor) => { saveAction(editor); }

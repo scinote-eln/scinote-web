@@ -43,11 +43,11 @@
           {{ field.key }}
           <i class="sn-icon sn-icon-plus-square"></i>
         </div>
-        <template v-for="(repository, index) in filteredFields.repositories">
-          <div :key="`repository_${index}`" class="block-title">
+        <div v-for="(repository, index) in filteredFields.repositories" :key="`repository_${index}`">
+          <div class="block-title">
             {{ repository.repository_name }}
           </div>
-          <div :key="`repository_${index}_${index1}`" v-for="(field, index1) in repository.tags"
+          <div v-for="(field, index1) in repository.tags" :key="`repository_${index}_${index1}`"
             data-toggle="tooltip"
             data-placement="right"
             :data-template="tooltipTemplate"
@@ -58,7 +58,7 @@
             {{ field.key }}
             <i class="sn-icon sn-icon-plus-square"></i>
           </div>
-        </template>
+        </div>
         <div class="no-results" v-if="this.noResults">
           {{ i18n.t('label_templates.show.insert_dropdown.nothing_found') }}
         </div>
@@ -107,28 +107,22 @@
                 </div>`
       },
       filteredFields() {
-        let result = {};
-        if (this.searchValue.length == 0) {
-          result = this.fields;
-        } else {
-          let filteredRepositories = this.filterArray(this.fields.repositories, 'repository_name');
-          filteredRepositories = filteredRepositories.map((repo) => {
-            repo.tags = this.filterArray(repo.tags, 'key');
-            return repo;
-          });
-
-          result = {
-            default: this.filterArray(this.fields.default, 'key'),
-            common: this.filterArray(this.fields.common, 'key'),
-            repositories: filteredRepositories,
-          };
-        }
-
         this.$nextTick(() => {
           $('.tooltip').remove();
           $('[data-toggle="tooltip"]').tooltip();
         });
-        return result;
+
+        if (this.searchValue.length == 0) {
+          return this.fields;
+        } else {
+          return {
+            default: this.filterArray(this.fields.default, 'key'),
+            common: this.filterArray(this.fields.common, 'key'),
+            repositories: this.filterArray(this.fields.repositories, 'repository_name').map((repo) => {
+              return { ...repo, tags: this.filterArray(repo.tags, 'key') };
+            })
+          };
+        }
       },
       noResults() {
         return this.filteredFields.default.concat(this.filteredFields.common, this.filteredFields.repositories).length === 0;

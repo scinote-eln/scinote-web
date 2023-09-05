@@ -1,6 +1,6 @@
 <template>
-  <div class="result-wrapper bg-white">
-    <div class="result-header flex justify-between p-3">
+  <div class="result-wrapper bg-white px-4 py-2 mb-4">
+    <div class="result-header flex justify-between py-2">
       <div class="result-head-left">
         <InlineEdit
           :value="result.attributes.name"
@@ -17,65 +17,48 @@
           @update="updateName"
         />
       </div>
-      <div class="result-head-right flex">
+      <div class="result-head-right flex elements-actions-container">
         <input type="file" class="hidden" ref="fileSelector" @change="loadFromComputer" multiple />
         <div ref="elementsDropdownButton" v-if="urls.update_url"  class="dropdown">
           <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'resultInsertMenu_' + result.attributes.id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            {{ i18n.t('protocols.steps.insert.button') }}
+            {{ i18n.t('my_modules.results.insert.button') }}
             <span class="sn-icon sn-icon-down"></span>
           </button>
           <ul ref="elementsDropdown" class="dropdown-menu insert-element-dropdown dropdown-menu-right" :aria-labelledby="'resultInsertMenu_' + result.attributes.id">
             <li class="title">
-              <a>
-                {{ i18n.t('protocols.steps.insert.title') }}
-              </a>
+              {{ i18n.t('my_modules.results.insert.title') }}
             </li>
             <li class="action" @click="createElement('table')">
-              <a class="cursor-pointer">
-                <i class="sn-icon sn-icon-tables"></i>
-                {{ i18n.t('protocols.steps.insert.table') }}
-              </a>
+              <i class="sn-icon sn-icon-tables"></i>
+              {{ i18n.t('my_modules.results.insert.table') }}
             </li>
             <li class="action dropdown-submenu-item">
-              <a class="cursor-pointer">
-                <i class="sn-icon sn-icon-tables"></i>
-                {{ i18n.t('protocols.steps.insert.well_plate') }}
-              </a>
+              <i class="sn-icon sn-icon-tables"></i>
+              {{ i18n.t('my_modules.results.insert.well_plate') }}
               <span class="caret"></span>
 
               <ul class="dropdown-submenu">
                 <li v-for="option in wellPlateOptions" :key="option.dimensions.toString()" class="action" @click="createElement('table', option.dimensions, true)">
-                  <a class="cursor-pointer">
-                    {{ i18n.t(option.label) }}
-                  </a>
+                  {{ i18n.t(option.label) }}
                 </li>
               </ul>
             </li>
             <li class="action"  @click="createElement('text')">
-              <a class="cursor-pointer">
-                <i class="sn-icon sn-icon-result-text"></i>
-                {{ i18n.t('protocols.steps.insert.text') }}
-              </a>
+              <i class="sn-icon sn-icon-result-text"></i>
+              {{ i18n.t('my_modules.results.insert.text') }}
             </li>
             <li class="action dropdown-submenu-item">
-              <a class="cursor-pointer">
-                <i class="sn-icon sn-icon-files"></i>
-                {{ i18n.t('protocols.steps.insert.attachment') }}
-              </a>
+              <i class="sn-icon sn-icon-files"></i>
+              {{ i18n.t('my_modules.results.insert.attachment') }}
               <span class="caret"></span>
               <ul class="dropdown-submenu">
                 <li class="action" @click="openLoadFromComputer">
-                  <a class="cursor-pointer">
-                    {{ i18n.t('protocols.steps.insert.add_file') }}
-                  </a>
+                  {{ i18n.t('my_modules.results.insert.add_file') }}
                 </li>
                 <li class="action" v-if="result.attributes.wopi_enabled" @click="openWopiFileModal">
-                  <a class="cursor-pointer">
-                    {{ i18n.t('assets.create_wopi_file.button_text') }}
-                  </a>
+                  {{ i18n.t('assets.create_wopi_file.button_text') }}
                 </li>
                 <li class="action" v-if="result.attributes.marvinjs_enabled" @click="openMarvinJsModal($refs.marvinJsButton)">
-                  <a class="cursor-point  er">
                     <span
                     class="new-marvinjs-upload-button text-sn-black text-decoration-none"
                     :data-object-id="result.attributes.id"
@@ -86,7 +69,6 @@
                     >
                       {{ i18n.t('marvinjs.new_button') }}
                     </span>
-                  </a>
                 </li>
               </ul>
             </li>
@@ -106,29 +88,33 @@
           </button>
           <ul ref="actionsDropdown" class="dropdown-menu dropdown-menu-right insert-element-dropdown" :aria-labelledby="'resultOptionsMenu_' + result.attributes.id">
             <li class="action"  @click="openReorderModal">
-              <a class="cursor-pointer">{{ i18n.t('my_modules.results.actions.rearrange') }}</a>
+              {{ i18n.t('my_modules.results.actions.rearrange') }}
             </li>
             <li class="action" @click="duplicateResult">
-              <a class="cursor-pointer">{{ i18n.t('my_modules.results.actions.duplicate') }}</a>
+              {{ i18n.t('my_modules.results.actions.duplicate') }}
             </li>
             <li class="action" @click="archiveResult">
-              <a class="cursor-pointer">{{ i18n.t('my_modules.results.actions.archive') }}</a>
+              {{ i18n.t('my_modules.results.actions.archive') }}
             </li>
           </ul>
         </div>
       </div>
     </div>
+
+    <div class="relative ml-1 bottom-17 w-356 h-15 font-normal font-hairline text-xs leading-4">
+      {{ i18n.t('protocols.steps.timestamp', {date: result.attributes.created_at, user: result.attributes.created_by }) }}
+    </div>
+
     <ReorderableItemsModal v-if="reordering"
-      title="Placeholder title for this modal"
+      :title="i18n.t('my_modules.modals.reorder_results.title')"
       :items="reorderableElements"
       @reorder="updateElementOrder"
       @close="closeReorderModal"
     />
     <div>
-      <template v-for="(element, index) in orderedElements">
+      <div v-for="(element, index) in orderedElements" :key="index" class="pt-6 border-0 border-t border-dotted border-sn-sleepy-grey mt-6">
         <component
           :is="elements[index].attributes.orderable_type"
-          :key="index"
           :element.sync="elements[index]"
           :inRepository="false"
           :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
@@ -140,8 +126,9 @@
           @component:insert="insertElement"
           @moved="moveElement"
         />
-      </template>
+      </div>
       <Attachments v-if="attachments.length"
+                    class="pt-6 border-0 border-t border-dotted border-sn-sleepy-grey mt-6"
                     :parent="result"
                     :attachments="attachments"
                     :attachmentsReady="attachmentsReady"
@@ -152,7 +139,6 @@
                     @attachments:viewMode="changeAttachmentsViewMode"
                     @attachment:viewMode="updateAttachmentViewMode"/>
     </div>
-    <hr>
   </div>
 </template>
 
@@ -182,12 +168,12 @@
         attachmentsReady: false,
         showFileModal: false,
         wellPlateOptions: [
-          { label: 'protocols.steps.insert.well_plate_options.32_x_48', dimensions: [32, 48] },
-          { label: 'protocols.steps.insert.well_plate_options.16_x_24', dimensions: [16, 24] },
-          { label: 'protocols.steps.insert.well_plate_options.8_x_12', dimensions: [8, 12] },
-          { label: 'protocols.steps.insert.well_plate_options.6_x_8', dimensions: [6, 8] },
-          { label: 'protocols.steps.insert.well_plate_options.6_x_4', dimensions: [6, 4] },
-          { label: 'protocols.steps.insert.well_plate_options.2_x_3', dimensions: [2, 3] }
+          { label: 'my_modules.results.insert.well_plate_options.32_x_48', dimensions: [32, 48] },
+          { label: 'my_modules.results.insert.well_plate_options.16_x_24', dimensions: [16, 24] },
+          { label: 'my_modules.results.insert.well_plate_options.8_x_12', dimensions: [8, 12] },
+          { label: 'my_modules.results.insert.well_plate_options.6_x_8', dimensions: [6, 8] },
+          { label: 'my_modules.results.insert.well_plate_options.6_x_4', dimensions: [6, 4] },
+          { label: 'my_modules.results.insert.well_plate_options.2_x_3', dimensions: [2, 3] }
         ],
         editingName: false
       }
@@ -346,7 +332,12 @@
         });
       },
       archiveResult() {
-
+        if (this.urls.archive_url) {
+          axios.post(this.urls.archive_url).then((response) => {
+            this.$emit('resultArchived', response.data);
+            location.reload();
+          });
+        }
       },
       duplicateResult() {
         axios.post(this.urls.duplicate_url).then((_) => {

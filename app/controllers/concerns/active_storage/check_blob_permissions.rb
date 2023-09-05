@@ -31,6 +31,8 @@ module ActiveStorage
         true
       when 'ZipExport', 'TeamZipExport'
         check_zip_export_read_permissions(attachment.record)
+      when 'TempFile'
+        check_temp_file_read_permissions(attachment.record)
       else
         render_403
       end
@@ -86,6 +88,10 @@ module ActiveStorage
 
     def check_zip_export_read_permissions(zip_export)
       render_403 unless zip_export.user == current_user
+    end
+
+    def check_temp_file_read_permissions(temp_file)
+      render_403 unless temp_file.session_id == request.session_options[:id].to_s
     end
   end
 end

@@ -2,11 +2,6 @@
 
 module Activities
   class ActivityFilterMatchingService
-    # invert the children hash to get a hash defining parents
-    ACTIVITY_SUBJECT_PARENTS = Extends::ACTIVITY_SUBJECT_CHILDREN.invert.map do |k, v|
-      k&.map { |s| [s.to_s.classify, v.to_s.classify.constantize.reflect_on_association(s)&.inverse_of&.name || v] }
-    end.compact.sum.to_h.freeze
-
     def initialize(activity)
       @activity = activity
       @activity_filters = ActivityFilter.all
@@ -60,7 +55,7 @@ module Activities
     end
 
     def filter_subjects!
-      parents = activity_subject_parents
+      parents = @activity.subject_parents
 
       @activity_filters = @activity_filters.where(
         "NOT(filter ? 'subjects') OR "\
@@ -71,18 +66,6 @@ module Activities
             "filter -> 'subjects' -> '#{subject.class}' @> '\"#{subject.id}\"'"
           end.join(' OR ')
       )
-    end
-
-    def activity_subject_parents
-      subject_parents(@activity.subject, []).compact
-    end
-
-    def subject_parents(subject, parents)
-      parent_model_name = ACTIVITY_SUBJECT_PARENTS[subject.class.name]
-      return parents if parent_model_name.nil?
-
-      parent = subject.public_send(parent_model_name)
-      subject_parents(parent, parents << parent)
     end
   end
 end
