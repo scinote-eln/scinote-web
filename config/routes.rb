@@ -555,6 +555,7 @@ Rails.application.routes.draw do
             post :duplicate
           end
         end
+        post 'archive', to: 'results#archive'
       end
     end
 

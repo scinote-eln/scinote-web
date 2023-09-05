@@ -1141,6 +1141,7 @@ en:
       option_delete: "Delete"
       confirm_delete: "Are you sure you want to permanently delete result?"
       delete_flash: "Successfully removed result <strong>%{result}</strong> from task <strong>%{module}</strong>."
+      archive_flash: "Successfully archived result <strong>%{result}</strong> in task <strong>%{module}</strong>"
       archived_on: "Archived on"
       archived_on_title: "Result archived on %{date} at %{time}."
       option_download: "Download"
