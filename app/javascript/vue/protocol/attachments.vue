@@ -156,7 +156,7 @@
       }
     },
     mounted() {
-      this.initOVE();
+      this.initOVE(this);
       this.initMarvinJS();
       $(this.$refs.actionsDropdownButton).on('shown.bs.dropdown hidden.bs.dropdown', this.handleDropdownPosition);
     },
@@ -181,8 +181,10 @@
       deleteAttachment(id) {
         this.$emit('attachment:deleted', id)
       },
-      initOVE() {
-        $(window.iFrameModal).on('sequenceSaved', () => this.$emit('attachment:uploaded'));
+      initOVE(component) {
+        $(window.iFrameModal).on('sequenceSaved', function() {
+          component.$emit('attachment:uploaded');
+        });
       },
       initMarvinJS() {
         // legacy logic from app/assets/javascripts/sitewide/marvinjs_editor.js

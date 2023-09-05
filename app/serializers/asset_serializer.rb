@@ -11,8 +11,7 @@ class AssetSerializer < ActiveModel::Serializer
   attributes :file_name, :view_mode, :icon, :urls, :updated_at_formatted,
              :file_size, :medium_preview, :large_preview, :asset_type, :wopi,
              :wopi_context, :pdf_previewable, :file_size_formatted, :asset_order,
-             :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached,
-             :preview_image
+             :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached
 
   def icon
     file_extension_icon_html(object)
@@ -36,10 +35,6 @@ class AssetSerializer < ActiveModel::Serializer
 
   def file_size_formatted
     number_to_human_size(object.file_size)
-  end
-
-  def preview_image
-    rails_representation_url(object.preview_image) if object.preview_image.attached?
   end
 
   def medium_preview

@@ -13,12 +13,6 @@ $(document).on('turbolinks:load', function() {
     iFrameModal.dispatchEvent(new Event('shown'));
   };
 
-  iFrameModalFrame.addEventListener('load', () => {
-    iFrameModalFrame.contentWindow.document.querySelector('.iframe-close').addEventListener('click', function() {
-      iFrameModal.dispatchEvent(new Event('hide'))
-    });
-  });
-
   iFrameModal.addEventListener('hide', () => {
     iFrameModal.classList.add('hidden');
     iFrameModalFrame.removeAttribute('src');
