@@ -1,4 +1,4 @@
-<div class="modal in centered-modal" id="shareable-link-welcome-modal" tabindex="-1" role="dialog" aria-labelledby="shareable-link-welcome-modal-label">
+<div class="modal centered-modal" id="shareable-link-welcome-modal" tabindex="-1" role="dialog" aria-labelledby="shareable-link-welcome-modal-label">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -9,7 +9,9 @@
       </div>
       <div class="modal-body">
         <p class="text-sm"><%= t("shareable_links.welcome_modal.description", my_module: @my_module.name)%></p>
-        <p class="text-sm"><%= @shareable_link.description %></p>
+        <% if @shareable_link.description.present? %>
+          <p class="text-sm"><%= @shareable_link.description %></p>
+        <% end %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal"><%= t("shareable_links.welcome_modal.view_task_btn")%></button>

@@ -12,7 +12,7 @@ var selectedRow = null;
 function initEditMyModuleDescription() {
   var viewObject = $('#my_module_description_view');
   viewObject.on('click', function(e) {
-    if ($(e.target).hasClass('record-info-link')) return;
+    if ($(e.target).hasClass('record-info-link') || e.target.tagName === 'A') return;
     TinyMCE.init(
       '#my_module_description_textarea',
       {
@@ -22,9 +22,6 @@ function initEditMyModuleDescription() {
         assignableMyModuleId: $('#my_module_description_textarea').data('object-id')
       }
     );
-  }).on('click', 'a', function(e) {
-    if ($(this).hasClass('record-info-link')) return;
-    e.stopPropagation();
   });
 
   setTimeout(function() {
@@ -345,7 +342,6 @@ function initProtocolSectionOpenEvent() {
     });
   });
 }
-
 /**
  * Initializes page
  */

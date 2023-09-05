@@ -37,36 +37,98 @@ module Api
       def create
         raise PermissionError.new(Project, :manage) unless can_manage_project_users?(@project)
 
-        # internally we reuse the same logic as for user project assignment
-        user = @team.users.find(user_project_params[:user_id])
+        ActiveRecord::Base.transaction do
+          user_assignment = UserAssignment.find_or_initialize_by(
+            assignable: @project,
+            user_id: user_project_params[:user_id],
+            team: @project.team
+          )
 
-        project_member = ProjectMember.new(user, @project, current_user)
-        project_member.assign = true
-        project_member.user_role_id = user_project_params[:user_role_id]
-        project_member.save
-        render jsonapi: project_member.user_assignment.reload,
-               serializer: UserAssignmentSerializer,
-               status: :created
+          user_assignment.update!(
+            user_role_id: user_project_params[:user_role_id],
+            assigned_by: current_user,
+            assigned: :manually
+          )
+
+          log_activity(:assign_user_to_project, { user_target: user_assignment.user.id,
+                                                  role: user_assignment.user_role.name })
+          propagate_job(user_assignment)
+
+          render jsonapi: user_assignment.reload,
+                 serializer: UserAssignmentSerializer,
+                 status: :created
+        end
       end
 
       def update
-        user_role = UserRole.find user_project_params[:user_role_id]
-        project_member = ProjectMember.new(@user_assignment.user, @project, current_user)
+        # prevent role change if it would result in no manually assigned users having the user management permission
+        new_user_role = UserRole.find(user_project_params[:user_role_id])
+        if !new_user_role.has_permission?(ProjectPermissions::USERS_MANAGE) &&
+           @user_assignment.last_with_permission?(ProjectPermissions::USERS_MANAGE, assigned: :manually)
+          raise ActiveRecord::RecordInvalid
+        end
 
-        return render body: nil, status: :no_content if project_member.user_assignment&.user_role == user_role
+        return render body: nil, status: :no_content if @user_assignment&.user_role == new_user_role
 
-        project_member.user_role_id = user_role.id
-        project_member.update
+        ActiveRecord::Base.transaction do
+          @user_assignment.update!(user_role: new_user_role)
+
+          log_activity(:change_user_role_on_project, { user_target: @user_assignment.user.id,
+                                                       role: @user_assignment.user_role.name })
+
+          propagate_job(@user_assignment)
+        end
+
         render jsonapi: @user_assignment.reload, serializer: UserAssignmentSerializer, status: :ok
       end
 
       def destroy
-        project_member = ProjectMember.new(@user_assignment.user, @project, current_user)
-        project_member.destroy
+        # prevent deletion of last manually assigned user that can manage users
+        if @user_assignment.last_with_permission?(ProjectPermissions::USERS_MANAGE, assigned: :manually)
+          raise ActiveRecord::RecordInvalid
+        end
+
+        ActiveRecord::Base.transaction do
+          if @project.visible?
+            @user_assignment.update!(
+              user_role: @project.default_public_user_role,
+              assigned: :automatically
+            )
+          else
+            @user_assignment.destroy!
+          end
+
+          propagate_job(@user_assignment, destroy: true)
+          log_activity(:unassign_user_from_project, { user_target: @user_assignment.user.id,
+                                                      role: @user_assignment.user_role.name })
+        end
+
         render body: nil
       end
 
       private
+
+      def propagate_job(user_assignment, destroy: false)
+        UserAssignments::PropagateAssignmentJob.perform_later(
+          @project,
+          user_assignment.user.id,
+          user_assignment.user_role,
+          current_user.id,
+          destroy: destroy
+        )
+      end
+
+      def log_activity(type_of, message_items = {})
+        message_items = { project: @project.id }.merge(message_items)
+
+        Activities::CreateActivityService
+          .call(activity_type: type_of,
+                owner: current_user,
+                subject: @project,
+                team: @project.team,
+                project: @project,
+                message_items: message_items)
+      end
 
       def check_read_permissions
         # team admins can always manage users, so they should also be able to read them

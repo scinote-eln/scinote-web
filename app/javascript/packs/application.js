@@ -9,7 +9,6 @@ require('jquery-ui/ui/widgets/droppable');
 require('jquery-ui/ui/effects/effect-slide');
 require('hammerjs');
 import 'bootstrap';
-import './bootstrap.less';
 require('bootstrap-select/js/bootstrap-select');
 
 window.bwipjs = require('bwip-js');
@@ -65,3 +64,7 @@ $.ajaxSetup({
   }
 });
 
+$(document).on('click', 'a[rel*=external]', function(e) {
+  e.preventDefault();
+  window.open(this.href, '_blank', 'noopener');
+});

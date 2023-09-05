@@ -1,0 +1,53 @@
+// scss-lint:disable IdSelector SelectorDepth NestingDepth
+
+#shareable-link-welcome-modal,
+#team-sharing-tasks,
+#modalDestroyShareableLink {
+  .modal-body {
+    padding: .625rem 1rem;
+
+    .text-sm:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+
+.shareable-links {
+  .module-name {
+    width: calc(100vw - 27rem);
+  }
+
+  #assigned-items-container .assigned-repository {
+    border: unset;
+
+    .assigned-repository-caret {
+      padding: 0;
+    }
+
+    .assigned-repository-container {
+      padding-left: 6px;
+    }
+  }
+
+  .dataTables_paginate .paginate_button {
+    &.next,
+    &.previous {
+      cursor: pointer;
+
+      a {
+        display: none;
+      }
+
+      &.disabled {
+        cursor: not-allowed;
+      }
+    }
+
+    &.paginate_button.next {
+      &::after {
+        padding-left: 12px;
+      }
+    }
+  }
+}

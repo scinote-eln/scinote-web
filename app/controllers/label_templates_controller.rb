@@ -133,7 +133,7 @@ class LabelTemplatesController < ApplicationController
     # only render last generated label image
     payload = service.generate_zpl_preview!.split.last
 
-    if service.error.blank?
+    if service.error.blank? && payload.present?
       render json: { base64_preview: payload }
     else
       render json: { error: service.error }, status: :unprocessable_entity

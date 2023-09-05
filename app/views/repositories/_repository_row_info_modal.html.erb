@@ -112,6 +112,11 @@
         <% end %>
       </div>
       <div class="modal-footer" data-assign-item-button="<%= @my_module.present? %>">
+        <% if can_export_repository_stock?(@repository_row.repository) %>
+          <button type="button" class="btn btn-secondary export-consumption-button" data-rows="[<%= @repository_row.id %>]">
+            <%= t('repository_row.modal_info.export_consumption_label') %>
+          </button>
+        <% end %>
         <% if @my_module %>
           <button type="button" class="btn btn-secondary print-label-button"  data-rows="[<%= @repository_row.id %>]"><%= t('repository_row.modal_print_label.print_label') %></button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.close')%></button>

@@ -1,0 +1,21 @@
+@layer components {
+  .sci-flyout {
+    @apply w-[400px] !p-6;
+  }
+
+  .sci-flyout-medium {
+    @apply w-[600px];
+  }
+
+  .sci-flyout .sci-flyout-header {
+    @apply flex items-center mb-6;
+  }
+
+  .sci-flyout .sci-flyout-header .sci-flyout-title {
+    @apply text-xl font-bold;
+  }
+
+  .sci-flyout .sci-flyout-footer {
+    @apply flex pt-6 justify-end gap-6 border-0 border-t border-solid border-sn-light-grey;
+  }
+}

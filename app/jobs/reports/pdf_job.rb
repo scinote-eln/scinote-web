@@ -25,7 +25,7 @@ module Reports
         else
           Rails.application.routes.url_helpers.reports_path(team: report.team.id)
         end
-      user = job.arguments.second
+      user = User.find(job.arguments.second)
       notification = Notification.create(
         type_of: :deliver_error,
         title: I18n.t('projects.reports.index.generation.error_pdf_notification_title'),
@@ -39,8 +39,9 @@ module Reports
 
     PREVIEW_EXTENSIONS = %w(docx pdf).freeze
 
-    def perform(report_id, user)
+    def perform(report_id, user_id)
       report = Report.find(report_id)
+      user = User.find(user_id)
       file = Tempfile.new(['report', '.pdf'], binmode: true)
       begin
         template =
@@ -191,7 +192,7 @@ module Reports
     end
 
     def report_logo
-      'logo.png'
+      'scinote_logo.svg'
     end
 
   end

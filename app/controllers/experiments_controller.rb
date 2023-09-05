@@ -502,7 +502,7 @@ class ExperimentsController < ApplicationController
           }.merge(new_my_module.get_new_position)
         )
         new_my_module.designated_users << current_user
-        MyModules::CopyContentJob.perform_later(current_user, my_module.id, new_my_module.id)
+        MyModules::CopyContentJob.perform_later(current_user.id, my_module.id, new_my_module.id)
       end
       @experiment.workflowimg.purge
     end

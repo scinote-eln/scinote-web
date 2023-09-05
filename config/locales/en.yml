@@ -394,7 +394,12 @@ en:
       no_more_space: 'Failed to upload: You ran out of space'
       general_error: 'Failed to upload: Something went wrong, please try again'
       leaving_warning: 'Your changes will be lost if you navigate away'
-
+    thumbnail:
+      buttons:
+        edit: "Edit"
+        move: "Move"
+        download: "Download"
+        delete: "Delete"
     sort:
       new_html: "Newest first &#8595;"
       old_html: "Oldest first &#8593;"
@@ -1100,7 +1105,7 @@ en:
     notes:
       title: "Notes"
       no_description: "No task description"
-      empty_description_edit_label: "Click here to start writing notes"
+      empty_description_edit_label: "Add notes"
     assigned_items:
       title: "Assigned items"
       assign_from: "Assign from"
@@ -1136,6 +1141,7 @@ en:
       option_delete: "Delete"
       confirm_delete: "Are you sure you want to permanently delete result?"
       delete_flash: "Successfully removed result <strong>%{result}</strong> from task <strong>%{module}</strong>."
+      archive_flash: "Successfully archived result <strong>%{result}</strong> in task <strong>%{module}</strong>"
       archived_on: "Archived on"
       archived_on_title: "Result archived on %{date} at %{time}."
       option_download: "Download"
@@ -1156,8 +1162,8 @@ en:
         unlinked: "unlinked"
         linked: "linked"
         no_description: "No protocol description"
-        enter_name: "Enter protocol name"
-        empty_description_edit_label: "Click here to enter Protocol Description (optional)"
+        enter_name: "Protocol title"
+        empty_description_edit_label: "Add description"
         keywords: "Keywords"
         no_keywords: "no keywords"
         protocol_created: "Protocol created:"
@@ -1258,6 +1264,23 @@ en:
       info_tab: "Info"
       comments_tab: "Comments"
       comment_title: "%{user} at %{time}:"
+      insert:
+        button: 'Insert content'
+        title: 'Insert result content'
+        table: 'Table'
+        well_plate: 'Well plate'
+        text: 'Text'
+        checklist: 'Checklist'
+        attachment: 'File'
+        add_file: 'File from your PC'
+        checklist_item: 'Add a new checklist item...'
+        well_plate_options:
+          32_x_48: '1536 (32 x 48)'
+          16_x_24: '384 (16 x 24)'
+          8_x_12: '96 (8 x 12)'
+          6_x_8: '48 (6 x 8 )'
+          6_x_4: '24 (6 x 4)'
+          2_x_3: '6 (2 x 3)'
       sorts:
         updated_at_asc: "Modified first"
         updated_at_desc: "Modified last"
@@ -1365,6 +1388,8 @@ en:
       snapshot_error:
         title: "Snapshot error"
         body_html: "<strong>%{repository}</strong> inventory snapshot failed to generate. Please contact support if this problem persists."
+      reorder_results:
+        title: "Rearrange result content"
     modules_list_partial:
       private_tasks_html: 'Assigned to <strong>%{nr}</strong> private task(s)'
       no_results:
@@ -1891,11 +1916,6 @@ en:
       error_searching: "Error searching, please try again"
       button_tooltip:
         new: "Create new item"
-        edit: "Edit item"
-        duplicate: "Duplicate"
-        export: "Export"
-        print_label: "Print label"
-        archive: "Archive"
         import: "Import"
         filters: "Filters"
         search: "Quick search"
@@ -2064,7 +2084,8 @@ en:
     archive_record: "Archive"
     restore_record: "Restore"
     print_label: "Print label"
-    export_record: "Export"
+    export_records: "Export items"
+    export_stock_consumption: "Export consumption"
     save_record: "Save"
     cancel_save: "Cancel"
     hide_reminders: "Clear all reminders"
@@ -2343,6 +2364,7 @@ en:
       assign_to_task_error:
         no_access: "You can only view this task"
         already_assigned: "This item is already assigned to this task"
+      export_consumption_label: "Export consumption"
     modal_print_label:
       head_title: "Print label - %{repository_row}"
       head_title_multiple: "Print label - %{repository_rows} rows"
@@ -2938,7 +2960,8 @@ en:
       edit: "Edit"
       clone_btn: "Copy"
       import: "Import"
-      import_alt: "From file (.docx, .eln)"
+      import_eln: "From file (.eln)"
+      import_eln_docx: "From file (.docx, .eln)"
       import_protocols_io: "From Protocols.io"
       modal_import_json_upload: "Upload"
       modal_import_json_title: "Import protocols.io file"
@@ -3033,7 +3056,7 @@ en:
           ztoa_html: "<i class=\"fas fa-sort-alpha-up\"></i>&nbsp;&nbsp;Name Z to A"
 
     steps:
-      placeholder: 'Enter step name'
+      placeholder: 'Step name'
       default_name: 'Untitled step'
       completed: 'Completed'
       uncompleted: 'Uncompleted'
@@ -3069,7 +3092,7 @@ en:
         duplicate: 'Duplicate'
         delete: 'Delete'
       insert:
-        button: 'Add content'
+        button: 'Insert content'
         title: 'Insert step content'
         table: 'Table'
         well_plate: 'Well plate'
@@ -3093,12 +3116,15 @@ en:
           description: 'Tables have become content blocks and require a name. To be able to edit the table, please add the name now:'
           save: 'Save table title'
           error: "Table name can't be empty"
+        table_name: "Table name"
       checklist:
         default_name: 'Checklist %{position}'
+        checklist_name: "Checklist name"
         empty_checklist: 'Doesn’t contain any checklist items'
       text:
         placeholder: 'Enter step text'
         empty_text: 'No text entered'
+        text_name: "Enter text name"
       plate:
         default_name: "Plate %{position}"
       modals:
@@ -3114,6 +3140,7 @@ en:
           result:
             title: Move to different result
             targets_label: Select result
+            untitled_result: Untitled result
         delete_step:
           title: 'Delete step'
           description_1: 'You’re about to delete a whole step from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
@@ -3231,8 +3258,6 @@ en:
       assignments_description: 'Assignment notifications appear whenever you get assigned to a team, project, task.'
       recent_notification: 'Recent changes'
       recent_notification_description: 'Recent changes notifications appear whenever there is a change on a task you are assigned to.'
-      system_message: "What's New in SciNote"
-      system_message_description: 'You will be notified about new SciNote features, releases and improvements you can benefit from.'
     deliver:
       download_link: "Download link:"
       download_text: "Click the link to download the file."
@@ -3514,6 +3539,7 @@ en:
     newer_version_available: "Newer version of the text below has been saved in the browser. Do you want to restore it?"
   general:
     save: "Save"
+    move: "Move"
     update: "Update"
     edit: "Edit"
     delete: "Delete"
@@ -3705,6 +3731,7 @@ en:
   ChecklistItem: "Checklist item"
   Checklists: "Checklists"
   Table: "Table"
+  Text: "Text"
   Tables: "Tables"
   Repositories_team: "Inventories - %{team}"
   Reports: "Reports"

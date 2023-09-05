@@ -84,6 +84,15 @@
     white-space: nowrap;
   }
 
+  .thumbnail-action-btn {
+    border: 1px solid var(--sn-light-grey);
+
+    &:hover {
+      background-color: var(--sn-white);
+      border-color: var(--sn-blue);
+    }
+  }
+
   .attachment-label {
     @include font-main;
     margin-top: 1.5em;

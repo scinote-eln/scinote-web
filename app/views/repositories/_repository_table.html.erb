@@ -59,7 +59,9 @@
             <%= "data-items-url=#{items_repository_repository_columns_list_column_path(repository, column)}" if column.repository_list_value? %>
             <%= "data-items-url=#{items_repository_repository_columns_status_column_path(repository, column)}" if column.repository_status_value? %>
           >
-            <div class="truncate"><%= display_tooltip(column.name) %></div>
+            <span class="truncate" title="<%= column.name %>">
+              <%= column.name %>
+            </span>
           </th>
         <% end %>
       </tr>

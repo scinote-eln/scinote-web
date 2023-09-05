@@ -18,13 +18,8 @@ module Reports::Docx::PrivateMethods
 
     @docx.page_numbers true, align: :right
 
-    path = Rails.root.join('app', 'assets', 'images', 'logo.png')
+    insert_logo
 
-    @docx.img path.to_s do
-      height 20
-      width 100
-      align :left
-    end
     @docx.p do
       text I18n.t('projects.reports.new.generate_PDF.generated_on', timestamp: I18n.l(Time.zone.now, format: :full))
     end
@@ -32,6 +27,17 @@ module Reports::Docx::PrivateMethods
     @docx.hr
 
     generate_html_styles
+  end
+
+  def insert_logo
+    logo_data = File.read(Rails.root.join('app/assets/images/scinote_logo.svg'))
+
+    @docx.img 'logo.svg' do
+      data logo_data
+      height 20
+      width 100
+      align :left
+    end
   end
 
   def generate_html_styles

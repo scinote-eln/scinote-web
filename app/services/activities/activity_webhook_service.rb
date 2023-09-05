@@ -18,7 +18,10 @@ module Activities
         subject: {
           type: @activity.subject_type,
           id: @activity.subject_id
-        }
+        },
+        subject_breadcrumbs: @activity.subject_parents.map do |subject|
+          { type: subject.model_name.human.downcase, id: subject.id }
+        end
       )
     end
   end

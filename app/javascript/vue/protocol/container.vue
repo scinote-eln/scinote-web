@@ -1,15 +1,25 @@
 <template>
   <div v-if="protocol.id" class="task-protocol">
-    <div class="task-section-header" v-if="!inRepository">
-      <div class="portocol-header-left-part">
-        <a class="task-section-caret" tabindex="0" role="button" data-toggle="collapse" href="#protocol-content" aria-expanded="true" aria-controls="protocol-content">
-          <i class="sn-icon sn-icon-right"></i>
-          <div class="task-section-title">
-            <h2>{{ i18n.t('Protocol') }}</h2>
+    <div ref="header" class="task-section-header ml-[-1rem] w-[calc(100%_+_2rem)] px-4 z-[250] bg-sn-white sticky top-0 transition" v-if="!inRepository">
+      <div class="portocol-header-left-part truncate grow">
+        <template v-if="headerSticked && protocol.attributes.assignable_my_module_name">
+          <i class="sn-icon sn-icon-navigator sci--layout--navigator-open cursor-pointer p-1.5 border rounded border-sn-light-grey mr-4"></i>
+          <div @click="scrollTop" class="task-section-title w-[calc(100%_-_4rem)] cursor-pointer">
+            <h2 class="truncate">{{ protocol.attributes.assignable_my_module_name }}</h2>
           </div>
-        </a>
-        <div class="my-module-protocol-status">
-          <!-- protocol status dropdown gets mounted here -->
+        </template>
+        <template v-else >
+          <a class="task-section-caret" tabindex="0" role="button" data-toggle="collapse" href="#protocol-content" aria-expanded="true" aria-controls="protocol-content">
+            <i class="sn-icon sn-icon-right"></i>
+            <div class="task-section-title">
+              <h2>{{ i18n.t('Protocol') }}</h2>
+            </div>
+          </a>
+        </template>
+        <div :class="{'hidden': headerSticked}" >
+          <div class="my-module-protocol-status">
+            <!-- protocol status dropdown gets mounted here -->
+          </div>
         </div>
       </div>
       <div class="actions-block">
@@ -52,7 +62,7 @@
       </div>
     </div>
     <div id="protocol-content" class="protocol-content collapse in" aria-expanded="true">
-      <div class="pl-9">
+      <div class="pl-9 mb-8">
         <div class="protocol-name" v-if="!inRepository">
           <InlineEdit
             v-if="urls.update_protocol_name_url"
@@ -207,6 +217,8 @@
         reordering: false,
         publishing: false,
         stepToReload: null,
+        headerSticked: false,
+        lastScrollTop: 0,
       }
     },
     created() {
@@ -214,11 +226,19 @@
         this.protocol = result.data;
         this.$nextTick(() => {
           this.refreshProtocolStatus();
+          if (!this.inRepository) {
+            window.addEventListener('scroll', this.initStackableHeaders, false);
+          }
         });
         $.get(this.urls.steps_url, (result) => {
           this.steps = result.data
         })
       });
+    },
+    beforeDestroy() {
+      if (!this.inRepository) {
+        window.removeEventListener('scroll', this.initStackableHeaders, false);
+      }
     },
     methods: {
       reloadStep(step) {
@@ -365,6 +385,69 @@
       publishProtocol(comment) {
         this.protocol.attributes.version_comment = comment;
         $.post(this.urls.publish_url, {version_comment: comment, view: 'show'})
+      },
+      scrollTop() {
+        window.scrollTo(0, 0);
+        setTimeout(() => {
+          $('.my_module-name .view-mode').trigger('click');
+          $('.my_module-name .input-field').focus();
+        }, 300)
+      },
+      initStackableHeaders() {
+        let protocolHeader = this.$refs.header;
+        let secondaryNavigation = document.querySelector('#taskSecondaryMenu');
+        let protocolHeaderHeight = protocolHeader.offsetHeight;
+        let protocolHeaderTop = protocolHeader.getBoundingClientRect().top;
+        let secondaryNavigationHeight = secondaryNavigation.offsetHeight;
+        let secondaryNavigationTop = secondaryNavigation.getBoundingClientRect().top;
+
+        // TinyMCE offset calculation
+        let stickyNavigationHeight = secondaryNavigationHeight;
+        if ($('.tox-editor-header').length > 0 && $('.tox-editor-header')[0].getBoundingClientRect().top > protocolHeaderTop) {
+          stickyNavigationHeight += protocolHeaderHeight;
+        }
+
+        // Add shadow to secondary navigation when it starts fly
+        if (secondaryNavigation.getBoundingClientRect().top == 0 && !this.headerSticked) {
+          secondaryNavigation.style.boxShadow = '0px 5px 8px 0px rgba(0, 0, 0, 0.10)';
+        } else {
+          secondaryNavigation.style.boxShadow = 'none';
+        }
+
+        if (protocolHeaderTop - 5 < protocolHeaderHeight) { // When secondary navigation touch protocol header
+          secondaryNavigation.style.top = protocolHeaderTop - protocolHeaderHeight + 'px'; // Secondary navigation starts slowly disappear
+          protocolHeader.style.boxShadow = '0px 5px 8px 0px rgba(0, 0, 0, 0.10)'; // Flying shadow
+          this.headerSticked = true;
+
+
+          if (this.lastScrollTop > window.scrollY) { // When user scroll up
+            let newSecondaryTop = secondaryNavigationTop - (window.scrollY - this.lastScrollTop); // Calculate new top position of secondary navigation
+            if (newSecondaryTop > 0) newSecondaryTop = 0;
+
+            secondaryNavigation.style.top = newSecondaryTop + 'px'; // Secondary navigation starts slowly appear
+            protocolHeader.style.top = secondaryNavigationHeight + newSecondaryTop - 1 + 'px'; // Protocol header starts getting offset to compensate secondary navigation position
+            // -1 to compensate small gap between protocol header and secondary navigation
+          } else { // When user scroll down
+            let newSecondaryTop = secondaryNavigationTop - (window.scrollY - this.lastScrollTop); // Calculate new top position of secondary navigation
+            if (newSecondaryTop * -1 > secondaryNavigationHeight ) newSecondaryTop = secondaryNavigationHeight * -1;
+
+            secondaryNavigation.style.top = newSecondaryTop + 'px'; // Secondary navigation starts slowly disappear
+            protocolHeader.style.top = newSecondaryTop + secondaryNavigationHeight - 1 + 'px'; // Protocol header starts getting offset to compensate secondary navigation position
+            // -1 to compensate small gap between protocol header and secondary navigation
+          }
+        } else {
+          // Just reset secondary navigation and protocol header styles to initial state
+          secondaryNavigation.style.top = '0px';
+          protocolHeader.style.boxShadow = 'none';
+          this.headerSticked = false;
+        }
+
+        // Apply TinyMCE offset
+        $('.tox-editor-header').css('top',
+          stickyNavigationHeight +  parseInt($(secondaryNavigation).css('top'), 10)
+        );
+
+        this.lastScrollTop = window.scrollY; // Save last scroll position to when user scroll up/down
       }
     }
   }

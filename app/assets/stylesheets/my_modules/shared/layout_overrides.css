@@ -1,0 +1,23 @@
+.sci--layout-navigation-breadcrumbs {
+  background-color: var(--sn-white);
+}
+
+.sci--layout-content {
+  background-color: var(--sn-white);
+}
+
+.title-row {
+  background-color: var(--sn-white);
+}
+
+.header-actions {
+  background-color: var(--sn-white);
+  display: flex;
+  height: 3rem;
+  padding: 0 1.125rem;
+  align-items: center;
+  gap: 0.5rem;
+  align-self: stretch;
+  z-index: 205;
+  border-bottom: 1px solid var(--sn-light-grey);
+}

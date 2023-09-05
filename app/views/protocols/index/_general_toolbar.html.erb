@@ -21,8 +21,8 @@
         <ul class="dropdown-menu">
           <li>
             <a class="btn-link-alt btn-secondary-link btn-open-file" <%= can_create_protocols_in_repository?(@current_team) ? 'data-action="import"' : 'disabled="disabled"' %>>
-              <span><%= t("protocols.index.import_alt") %></span>
-              <input type="file" value="" accept=".eln,.docx" data-role="import-file-input"
+              <span><%= Protocol.docx_parser_enabled? ? t('protocols.index.import_eln_docx') : t('protocols.index.import_eln') %></span>
+              <input type="file" value="" accept="<%= Protocol.docx_parser_enabled? ? '.eln,.docx' : '.eln' %>" data-role="import-file-input"
               data-team-id="<%= @current_team.id %>" data-import-url="<%= import_protocols_path %>">
             </a>
           </li>

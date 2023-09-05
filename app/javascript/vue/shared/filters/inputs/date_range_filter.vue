@@ -1,14 +1,13 @@
 <template>
-  <div>
-    <label>{{ filter.label }}</label>
-    <div class="flex center justify-between">
+  <div class="mb-6">
+    <label class="sci-label">{{ filter.label }}</label>
+    <div class="flex items-center gap-5">
       <DateTimePicker
         @change="updateDateFrom"
         :placeholder="i18n.t('From')"
         :dateOnly="true"
         :selectorId="`DatePicker${filter.key}`"
       />
-      <div class="px-2 mt-2"> — </div>
       <DateTimePicker
         @change="updateDateTo"
         :placeholder="i18n.t('To')"

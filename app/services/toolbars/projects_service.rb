@@ -84,7 +84,7 @@ module Toolbars
 
       project = @items.first
 
-      return unless can_read_project?(project)
+      return unless can_manage_team?(project.team) || can_read_project?(project)
 
       path = if can_manage_project_users?(project)
                edit_access_permissions_project_path(project)
@@ -103,7 +103,8 @@ module Toolbars
     end
 
     def move_action
-      return unless can_manage_team?(@items.first.team)
+      return unless can_manage_team?(@items.first.team) &&
+                    @items.all? { |item| item.is_a?(Project) ? can_read_project?(item) : true }
 
       {
         name: 'move',

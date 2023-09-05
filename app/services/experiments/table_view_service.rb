@@ -147,14 +147,15 @@ module Experiments
     def results_presenter(my_module)
       {
         count: (my_module.archived_branch? ? my_module.results : my_module.results.active).length,
-        url: results_my_module_path(my_module)
+        url: my_module_results_path(my_module)
       }
     end
 
     def status_presenter(my_module)
       {
         name: escape_input(my_module.my_module_status.name),
-        color: escape_input(my_module.my_module_status.color)
+        color: escape_input(my_module.my_module_status.color),
+        light_color: my_module.my_module_status.light_color?
       }
     end
 

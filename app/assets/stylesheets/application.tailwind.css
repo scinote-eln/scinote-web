@@ -1,6 +1,7 @@
 @import "tailwind/inputs";
 @import "tailwind/buttons";
 @import "tailwind/modals";
+@import "tailwind/flyouts";
 
 @tailwind base;
 @tailwind components;

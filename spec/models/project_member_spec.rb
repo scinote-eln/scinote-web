@@ -30,7 +30,7 @@ describe ProjectMember, type: :model do
     it 'triggers the UserAssignments::PropagateAssignmentJob job' do
       subject.user_role_id = normal_user_role.id
       expect(UserAssignments::PropagateAssignmentJob).to receive(:perform_later).with(
-        project, user, normal_user_role, user
+        project, user.id, normal_user_role, user.id
       )
       subject.update
     end
@@ -74,7 +74,7 @@ describe ProjectMember, type: :model do
 
     it 'triggers the UserAssignments::PropagateAssignmentJob job' do
       expect(UserAssignments::PropagateAssignmentJob).to receive(:perform_later).with(
-        project, user, owner_role, user, destroy: true
+        project, user.id, owner_role, user.id, destroy: true
       )
       subject.destroy
     end

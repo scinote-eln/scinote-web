@@ -87,14 +87,13 @@ var Comments = (function() {
           $el.find('.new-comment-button').removeClass('show');
           newButton.disable = false;
           $el.find('textarea').focus().blur();
-        })
-          .error((error) => {
-            if (error.status === 403) {
-              HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
-            }
-            errorField.text(error.responseJSON.errors.message);
-            newButton.disable = false;
-          });
+        }).fail((error) => {
+          if (error.status === 403) {
+            HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+          }
+          errorField.text(error.responseJSON.errors.message);
+          newButton.disable = false;
+        });
       });
     });
   }

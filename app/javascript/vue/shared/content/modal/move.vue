@@ -15,7 +15,7 @@
           <div class="w-full">
             <Select
               :value="target"
-              :options="targets"
+              :options="targetOptions"
               v-bind:disabled="false"
               @change="setTarget"
             ></Select>
@@ -23,7 +23,7 @@
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" @click="cancel">{{ i18n.t('general.cancel') }}</button>
-          <button class="btn btn-primary" @click="confirm">{{ i18n.t('general.save')}}</button>
+          <button class="btn btn-primary" @click="confirm">{{ i18n.t('general.move')}}</button>
         </div>
       </div>
     </div>
@@ -77,6 +77,15 @@
       },
       cancel() {
         $(this.$refs.modal).modal('hide');
+      }
+    },
+    computed: {
+      targetOptions() {
+        return this.targets.map(target => [
+          target[0],
+          target[1] || this.i18n.t('protocols.steps.modals.move_element.result.untitled_result'),
+          target[1] === null ? true : false
+        ]);
       }
     }
   }

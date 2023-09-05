@@ -38,7 +38,7 @@
                 <span class="sci-toggle-checkbox-label"></span>
               </span>
             </div>
-            <div>
+            <div class="text-sm">
               <div class="sci-input-container-v2 textarea-lg mb-2">
                 <textarea ref="textarea"
                           tabindex="0"
@@ -47,8 +47,7 @@
                           v-model="description"
                           :placeholder="i18n.t('shareable_links.modal.description_placeholder')"
                           :disabled="!sharedEnabled"
-                          @focus="editing = true"
-                          @blur="handleTextareaBlur">
+                          @focus="editing = true">
                 </textarea>
               </div>
               <div v-if="error" class="text-xs shareable-link-error">
@@ -178,23 +177,18 @@
           success: (result) => {
             this.shareableData = result.data;
             this.dirty = false;
+            this.editing = false;
           }
         });
       },
       cancelDescriptionEdit() {
         this.description = this.shareableData.attributes.description || '';
+        this.editing = false;
       },
       initCharacterCount() {
         $(this.$refs.textarea).on('input change paste keydown', () => {
           this.characterCount = this.$refs.textarea.value.length;
         });
-      },
-      handleTextareaBlur() {
-        this.editing = false;
-
-        if (!this.dirty) {
-          this.description = this.shareableData.attributes.description || '';
-        }
       },
       handleCheckboxEnter() {
         this.sharedEnabled = !this.sharedEnabled;
