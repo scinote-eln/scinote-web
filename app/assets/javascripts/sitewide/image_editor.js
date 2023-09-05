@@ -370,7 +370,8 @@ var ImageEditorModal = (function() {
           $(`.asset[data-asset-id=${data.id}] .attachment-preview img`)
             .replaceWith($(res.html).find('.attachment-preview img'));
           $(`.asset[data-asset-id=${data.id}]`).closest('.attachments').trigger('reorder');
-          ActiveStoragePreviews.reloadPreview(`.asset[data-asset-id=${data.id}] .attachment-preview img`);
+          ActiveStoragePreviews.reloadPreview(`.asset[data-asset-id=${data.id}] .attachment-preview img,
+          .asset[data-asset-id=${data.id}] .image-container img`);
           closeEditor();
         }
       });
