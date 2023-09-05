@@ -129,11 +129,11 @@
         min-height: 36px;
 
         .authors-list {
-          position: relative;
-          max-width: calc(100% - 90px);
+          font-weight: bold;
           line-height: 32px;
           margin-left: 8px;
-          font-weight: bold;
+          max-width: calc(100% - 90px);
+          position: relative;
         }
 
         * {

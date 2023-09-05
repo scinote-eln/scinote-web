@@ -91,10 +91,10 @@
     },
     computed: {
       isBlank() {
-        return this.newValue.length === 0
+        return this.newValue.length === 0;
       },
       isContentDefault() {
-        return this.$refs ? this.$refs.input.innerText === this.defaultValue : false;
+        return this.newValue === this.defaultValue;
       },
       error() {
         if(!this.allowBlank && this.isBlank) {

@@ -5,7 +5,7 @@
   cursor: url("/images/icon_small/edit.svg") 0 16, auto;
 }
 
-.inline-edit-placeholder:empty:before {
+.inline-edit-placeholder:empty::before {
   content: attr(placeholder);
   display: block;
 }
