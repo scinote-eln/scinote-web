@@ -8,7 +8,7 @@
         <i class="sn-icon sn-icon-sort"></i>
       </div>
 
-      <div v-if="element.attributes.orderable.urls.update_url || element.attributes.orderable.name" :key="reloadHeader"
+      <div v-if="element.attributes.orderable.urls.update_url || element.attributes.orderable.name"
            class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold">
         <InlineEdit
           :value="element.attributes.orderable.name"

@@ -208,7 +208,7 @@ class Extends
     project: [:experiments],
     experiment: [:my_modules],
     my_module: %i(results protocols),
-    result: [:asset],
+    result: [:assets],
     protocol: [:steps],
     step: [:assets]
   }
