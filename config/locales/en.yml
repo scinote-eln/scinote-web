@@ -1388,6 +1388,8 @@ en:
       snapshot_error:
         title: "Snapshot error"
         body_html: "<strong>%{repository}</strong> inventory snapshot failed to generate. Please contact support if this problem persists."
+      reorder_results:
+        title: "Rearrange result content"
     modules_list_partial:
       private_tasks_html: 'Assigned to <strong>%{nr}</strong> private task(s)'
       no_results:
