@@ -9,12 +9,12 @@
       class="my-4"
     />
     <div class="results-list">
-      <Result v-for="result in results" :key="result.id"
+      <Result v-for="result in results" :key="result.attributes.id"
         :result="result"
         :resultToReload="resultToReload"
         @result:elements:loaded="resultToReload = null"
         @result:move_element="reloadResult"
-        @duplicated="loadResults"
+        @duplicated="resetPageAndReload"
       />
     </div>
   </div>
@@ -36,37 +36,60 @@
         results: [],
         sort: 'created_at_desc',
         filters: {},
-        resultToReload: null
+        resultToReload: null,
+        nextPage: 1,
+        loadingPage: false
       }
     },
-    created() {
+    mounted() {
+      window.addEventListener('scroll', this.loadResults, false);
       this.loadResults();
+    },
+    beforeDestroy() {
+      window.removeEventListener('scroll', this.loadResults, false);
     },
     methods: {
       reloadResult(result) {
         this.resultToReload = result;
       },
+      resetPageAndReload(){
+        this.nextPage = 1;
+        this.results = [];
+        this.$nextTick(() => {
+          this.loadResults();
+        });
+      },
       loadResults() {
-        axios.get(
-          `${this.url}`,
-          {
-            params: {
-              sort: this.sort,
-              ...this.filters
+        if (this.nextPage == null || this.loadingPage) return;
+
+        if (window.scrollY + window.innerHeight >= document.body.scrollHeight - 20) {
+          this.loadingPage = true;
+          axios.get(
+            `${this.url}`,
+            {
+              params: {
+                sort: this.sort,
+                page: this.nextPage,
+                ...this.filters
+              },
+              headers: {
+                'Accept': 'application/json'
+              }
             },
-            headers: {
-              'Accept': 'application/json'
-            }
-          },
-        ).then((response) => this.results = response.data.data);
+          ).then((response) => {
+            this.results = this.results.concat(response.data.results);
+            this.nextPage = response.data.next_page;
+            this.loadingPage = false;
+          });
+        }
       },
       setSort(sort) {
         this.sort = sort;
-        this.loadResults();
+        this.resetPageAndReload();
       },
       setFilters(filters) {
         this.filters = filters;
-        this.loadResults();
+        this.resetPageAndReload();
       },
       createResult() {
         axios.post(

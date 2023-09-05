@@ -19,6 +19,10 @@ class ResultSerializer < ActiveModel::Serializer
     'Result'
   end
 
+  def current_user
+    scope
+  end
+
   def marvinjs_context
     if marvinjs_enabled
       {
