@@ -349,7 +349,7 @@ class RepositoriesController < ApplicationController
     repositories = Repository.viewable_by_user(current_user, current_team).where(id: params[:repository_ids])
     if repositories.present? && current_user.has_available_exports?
       current_user.increase_daily_exports_counter!
-      RepositoriesExportJob.perform_later(repositories.pluck(:id), current_user.id, current_team)
+      RepositoriesExportJob.perform_later(repositories.pluck(:id), user_id: current_user.id, team_id: current_team.id)
       render json: { message: t('zip_export.export_request_success') }
     else
       render json: { message: t('zip_export.export_error') }, status: :unprocessable_entity

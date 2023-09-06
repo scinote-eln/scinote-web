@@ -835,7 +835,7 @@ class ProtocolsController < ApplicationController
         temp_files_ids << temp_file.id
       end
     end
-    @job = Protocols::DocxImportJob.perform_later(temp_files_ids, current_user.id, current_team.id)
+    @job = Protocols::DocxImportJob.perform_later(temp_files_ids, user_id: current_user.id, team_id: current_team.id)
     render json: { job_id: @job.job_id }
   end
 
