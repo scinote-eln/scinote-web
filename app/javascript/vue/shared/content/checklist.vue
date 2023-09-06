@@ -12,7 +12,7 @@
           :value="element.attributes.orderable.name"
           :sa_value="element.attributes.orderable.sa_name"
           :characterLimit="10000"
-          :placeholder="i18n.t('protocols.steps.checklist.checklist_name')"
+          :placeholder="i18n.t('protocols.steps.checklist.placeholder')"
           :allowBlank="false"
           :autofocus="editingName"
           :smartAnnotation="true"
@@ -173,6 +173,7 @@
         this.$emit('update', this.element, skipRequest);
       },
       postItem(item, callback) {
+        console.log(this.element.attributes.orderable.urls.create_item_url)
         $.post(this.element.attributes.orderable.urls.create_item_url, item).done((result) => {
           this.checklistItems.splice(
             result.data.attributes.position,
@@ -181,8 +182,8 @@
           );
 
           if(callback) callback();
-        }).fail((xhr) => {
-          this.setFlashErrors(xhr.responseJSON.errors)
+        }).fail((e) => {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
 
         this.update();

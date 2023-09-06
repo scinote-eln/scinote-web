@@ -18,9 +18,10 @@
       align-items: baseline;
       border-radius: 4px;
       display: flex;
-      flex-basis: 80%;
+      flex-basis: 100%;
       position: relative;
       padding-top: .4em;
+      gap: .5em;
 
       .step-name-edit-icon {
         background: linear-gradient(90deg,
@@ -65,7 +66,6 @@
 
     .step-name-container {
       align-self: baseline;
-      flex-grow: 1;
       font-size: 16px;
       font-weight: bold;
 
@@ -221,7 +221,6 @@
   border-radius: 4px;
   display: flex;
   min-height: 40px;
-  overflow: hidden;
   position: relative;
 
   &.editing-name {
@@ -242,8 +241,8 @@
 
   .step-element-name {
     font-weight: bold;
-    width: 100%;
-
+    margin-bottom: 2em;
+    position: relative;
 
     .step-element-number {
       display: inline-block;
