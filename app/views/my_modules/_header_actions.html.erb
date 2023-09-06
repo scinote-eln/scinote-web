@@ -41,3 +41,8 @@
     <%= render partial: '/my_modules/task_flow_and_sharing' %>
   </div>
 </div>
+
+<!-- Status flow modal -->
+<% if @my_module.my_module_status_flow %>
+  <%= render partial: 'my_modules/modals/status_flow_modal' %>
+<% end %>
