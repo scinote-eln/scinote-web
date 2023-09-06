@@ -13,12 +13,27 @@
             {{ i18n.t(`protocols.steps.modals.move_element.${parent_type}.targets_label`) }}
           </label>
           <div class="w-full">
-            <Select
+            <SelectSearch
               :value="target"
-              :options="targetOptions"
-              v-bind:disabled="false"
               @change="setTarget"
-            ></Select>
+              :options="targetOptions"
+              :isLoading="false"
+              :placeholder="
+                i18n.t(
+                  'my_modules.results.move_modal.search_placeholder'
+                )
+              "
+              :no-options-placeholder="
+                i18n.t(
+                  'my_modules.results.move_modal.no_options_placeholder'
+                )
+              "
+              :searchPlaceholder="
+                i18n.t(
+                  'my_modules.results.move_modal.search_placeholder'
+                )
+              "
+            />
           </div>
         </div>
         <div class="modal-footer">
@@ -31,7 +46,7 @@
 </template>
  <script>
   import axios from '../../../../packs/custom_axios.js';
-  import Select from "../../select.vue";
+  import SelectSearch from "../../select_search.vue";
 
   export default {
     name: 'moveElementModal',
@@ -52,7 +67,7 @@
       }
     },
     components: {
-      Select
+      SelectSearch
     },
     mounted() {
       $(this.$refs.modal).modal('show');

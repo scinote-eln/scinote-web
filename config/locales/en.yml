@@ -1305,6 +1305,9 @@ en:
         rearrange: "Rearrange"
         archive: "Archive"
         duplicate: "Duplicate"
+      move_modal:
+        search_placeholder: "Enter result name"
+        no_options_placeholder: "No results available to select"
     archive_results:
       preview: "View"
     activities:
