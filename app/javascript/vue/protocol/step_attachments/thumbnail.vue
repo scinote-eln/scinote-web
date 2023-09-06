@@ -16,7 +16,7 @@
             @error="ActiveStoragePreviews.reCheckPreview"
             @load="ActiveStoragePreviews.showPreview"
             style='opacity: 0' />
-        <i  v-else class="fas" :class="attachment.attributes.icon"></i>
+        <span v-else class="sn-icon sn-icon-sequence-editor"></span>
       </div>
       <div class="attachment-label"
            data-toggle="tooltip"
