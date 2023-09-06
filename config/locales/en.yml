@@ -2572,6 +2572,15 @@ en:
               title: "Unlink Azure AD account?"
               description_1: "Are you sure you would like unlink Azure AD and SciNote accounts?"
               submit_button: "Submit"
+          okta:
+            title: "Your Okta Account"
+            connect_hint: "Allows you to sign in with your Okta account."
+            connected: "Connected"
+            unlink_button: "Unlink"
+            unlink_modal:
+              title: "Unlink Okta account?"
+              description_1: "Are you sure you would like unlink Okta and SciNote accounts?"
+              submit_button: "Submit"
           errors:
             not_found: "You have no Connected accounts for this provider"
             generic: "Unable to unlink linked account"
