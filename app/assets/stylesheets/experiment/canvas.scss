@@ -95,8 +95,13 @@
   }
 }
 
-#modal-move-module {
+#modal-move-modules {
   .dropdown-menu {
     max-width: 100%;
+
+    ul {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
   }
 }

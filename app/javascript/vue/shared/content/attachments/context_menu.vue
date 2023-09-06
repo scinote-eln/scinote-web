@@ -49,6 +49,13 @@
           {{ i18n.t('Download') }}
         </a>
       </li>
+      <template v-if="attachment.attributes.urls.move_targets">
+        <li>
+          <a @click.prevent.stop="showMoveModal">
+            {{ i18n.t("assets.context_menu.move") }}
+          </a>
+        </li>
+      </template>
       <template v-if="attachment.attributes.urls.delete">
         <li>
           <a @click.prevent.stop="deleteModal = true">
@@ -77,15 +84,22 @@
         @confirm="deleteAttachment"
         @cancel="deleteModal = false"
     />
+    <moveAssetModal v-if="movingAttachment"
+                      :parent_type="attachment.attributes.parent_type"
+                      :targets_url="attachment.attributes.urls.move_targets"
+                      @confirm="moveAttachment($event)" @cancel="closeMoveModal"/>
   </div>
 </template>
 
 <script>
   import deleteAttachmentModal from './delete_modal.vue'
+  import moveAssetModal from '../modal/move.vue'
+  import MoveMixin from './mixins/move.js'
 
   export default {
     name: 'contextMenu',
-    components: { deleteAttachmentModal },
+    components: { deleteAttachmentModal, moveAssetModal },
+    mixins: [MoveMixin],
     props: {
       attachment: {
         type: Object,

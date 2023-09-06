@@ -147,7 +147,7 @@ module Experiments
     def results_presenter(my_module)
       {
         count: (my_module.archived_branch? ? my_module.results : my_module.results.active).length,
-        url: results_my_module_path(my_module)
+        url: my_module_results_path(my_module)
       }
     end
 

@@ -20,11 +20,11 @@
       <div class="result-head-right flex elements-actions-container">
         <input type="file" class="hidden" ref="fileSelector" @change="loadFromComputer" multiple />
         <div ref="elementsDropdownButton" v-if="urls.update_url"  class="dropdown">
-          <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'resultInsertMenu_' + result.id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'resultInsertMenu_' + result.attributes.id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             {{ i18n.t('my_modules.results.insert.button') }}
             <span class="sn-icon sn-icon-down"></span>
           </button>
-          <ul ref="elementsDropdown" class="dropdown-menu insert-element-dropdown dropdown-menu-right" :aria-labelledby="'resultInsertMenu_' + result.id">
+          <ul ref="elementsDropdown" class="dropdown-menu insert-element-dropdown dropdown-menu-right" :aria-labelledby="'resultInsertMenu_' + result.attributes.id">
             <li class="title">
               {{ i18n.t('my_modules.results.insert.title') }}
             </li>
@@ -59,16 +59,16 @@
                   {{ i18n.t('assets.create_wopi_file.button_text') }}
                 </li>
                 <li class="action" v-if="result.attributes.marvinjs_enabled" @click="openMarvinJsModal($refs.marvinJsButton)">
-                  <span
-                  class="new-marvinjs-upload-button text-sn-black text-decoration-none"
-                  :data-object-id="result.id"
-                  ref="marvinJsButton"
-                  :data-marvin-url="result.attributes.marvinjs_context.marvin_js_asset_url"
-                  :data-object-type="result.attributes.type"
-                  tabindex="0"
-                  >
-                    {{ i18n.t('marvinjs.new_button') }}
-                  </span>
+                    <span
+                    class="new-marvinjs-upload-button text-sn-black text-decoration-none"
+                    :data-object-id="result.attributes.id"
+                    ref="marvinJsButton"
+                    :data-marvin-url="result.attributes.marvinjs_context.marvin_js_asset_url"
+                    :data-object-type="result.attributes.type"
+                    tabindex="0"
+                    >
+                      {{ i18n.t('marvinjs.new_button') }}
+                    </span>
                 </li>
               </ul>
             </li>
@@ -79,14 +79,14 @@
           class="open-comments-sidebar btn icon-btn btn-light"
           data-turbolinks="false"
           data-object-type="Result"
-          :data-object-id="result.id">
+          :data-object-id="result.attributes.id">
           <i class="sn-icon sn-icon-comments"></i>
         </a>
         <div ref="actionsDropdownButton" class="dropdown">
-          <button class="btn btn-light icon-btn dropdown-toggle insert-button" type="button" :id="'resultOptionsMenu_' + result.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
+          <button class="btn btn-light icon-btn dropdown-toggle insert-button" type="button" :id="'resultOptionsMenu_' + result.attributes.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
             <i class="sn-icon sn-icon-more-hori"></i>
           </button>
-          <ul ref="actionsDropdown" class="dropdown-menu dropdown-menu-right insert-element-dropdown" :aria-labelledby="'resultOptionsMenu_' + result.id">
+          <ul ref="actionsDropdown" class="dropdown-menu dropdown-menu-right insert-element-dropdown" :aria-labelledby="'resultOptionsMenu_' + result.attributes.id">
             <li class="action"  @click="openReorderModal">
               {{ i18n.t('my_modules.results.actions.rearrange') }}
             </li>
@@ -100,8 +100,13 @@
         </div>
       </div>
     </div>
+
+    <div class="relative ml-1 bottom-17 w-356 h-15 font-normal font-hairline text-xs leading-4">
+      {{ i18n.t('protocols.steps.timestamp', {date: result.attributes.created_at, user: result.attributes.created_by }) }}
+    </div>
+
     <ReorderableItemsModal v-if="reordering"
-      title="Placeholder title for this modal"
+      :title="i18n.t('my_modules.modals.reorder_results.title')"
       :items="reorderableElements"
       @reorder="updateElementOrder"
       @close="closeReorderModal"
@@ -130,6 +135,7 @@
                     @attachments:openFileModal="showFileModal = true"
                     @attachment:deleted="attachmentDeleted"
                     @attachment:uploaded="loadAttachments"
+                    @attachment:moved="moveAttachment"
                     @attachments:order="changeAttachmentsOrder"
                     @attachments:viewMode="changeAttachmentsViewMode"
                     @attachment:viewMode="updateAttachmentViewMode"/>
@@ -183,8 +189,9 @@
     },
     watch: {
       resultToReload() {
-        if (this.resultToReload == this.result.id) {
+        if (this.resultToReload == this.result.attributes.id) {
           this.loadElements();
+          this.loadAttachments();
         }
       }
     },
@@ -292,7 +299,7 @@
 
         $.get(this.urls.attachments_url, (result) => {
           this.attachments = result.data
-
+          this.$emit('result:attachments:loaded');
           if (this.attachments.findIndex((e) => e.attributes.attached === false) >= 0) {
             setTimeout(() => {
               this.loadAttachments()
@@ -327,7 +334,12 @@
         });
       },
       archiveResult() {
-
+        if (this.urls.archive_url) {
+          axios.post(this.urls.archive_url).then((response) => {
+            this.$emit('resultArchived', response.data);
+            location.reload();
+          });
+        }
       },
       duplicateResult() {
         axios.post(this.urls.duplicate_url).then((_) => {
@@ -344,6 +356,11 @@
         })
         this.$emit('resultUpdated')
         this.$emit('result:move_element', target_id)
+      },
+      moveAttachment(id, target_id) {
+        this.attachments = this.attachments.filter((a) => a.id !== id );
+        this.$emit('resultUpdated')
+        this.$emit('result:move_attachment', target_id)
       },
       updateName(name) {
         axios.patch(this.urls.update_url, { result: { name: name } }).then((_) => {

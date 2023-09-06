@@ -65,6 +65,37 @@ class AssetsController < ApplicationController
                                           formats: :html) }
   end
 
+  def move_targets
+    if @assoc.is_a?(Step)
+      protocol = @assoc.protocol
+      render json: { targets: protocol.steps.order(:position).where.not(id: @assoc.id).map { |i| [i.id, i.name] } }
+    elsif @assoc.is_a?(Result)
+      my_module = @assoc.my_module
+      render json: { targets: my_module.results.where.not(id: @assoc.id).map { |i| [i.id, i.name] } }
+    else
+      render json: { targets: [] }
+    end
+  end
+
+  def move
+    ActiveRecord::Base.transaction do
+      if @assoc.is_a?(Step)
+        target = @assoc.protocol.steps.find_by(id: params[:target_id])
+        object_to_update = @asset.step_asset
+        object_to_update.update!(step: target)
+        render json: {}
+      elsif @assoc.is_a?(Result)
+        target = @assoc.my_module.results.find_by(id: params[:target_id])
+        object_to_update = @asset.result_asset
+        object_to_update.update!(result: target)
+        render json: {}
+      end
+    rescue ActiveRecord::RecordInvalid
+      render json: object_to_update.errors, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
+    end
+  end
+
   def file_url
     return render_404 unless @asset.file.attached?
 

@@ -191,6 +191,12 @@
     padding: .5em;
     width: 100%;
 
+    &.processing {
+      background-image: url("/images/medium/loading.svg");
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
     img {
       max-height: 100%;
       max-width: 100%;

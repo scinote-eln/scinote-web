@@ -14,13 +14,22 @@ class ResultsController < ApplicationController
     respond_to do |format|
       format.json do
         # API endpoint
-        @results = @my_module.results
+        @results = @my_module.results.active
 
         apply_sort!
         apply_filters!
 
+        @results = @results.page(params[:page] || 1)
+
         render(
-          json: @results,
+          json: {
+            results: @results.map do |r|
+                       {
+                         attributes: ResultSerializer.new(r, scope: current_user).as_json
+                       }
+                     end,
+            next_page: @results.next_page
+          },
           formats: :json
         )
       end
@@ -44,6 +53,27 @@ class ResultsController < ApplicationController
     @result.update!(result_params)
 
     render json: @result
+  end
+
+  def archive
+    result = @my_module.results.find(params[:result_id])
+    result.archive(current_user)
+
+    if result.save
+      Activities::CreateActivityService
+        .call(activity_type: :destroy_result,
+              owner: current_user,
+              subject: result,
+              team: @my_module.team,
+              project: @my_module.project,
+              message_items: { result: result.id })
+
+      flash[:success] = t('my_modules.module_archive.archive_flash',
+                          result: result.name,
+                          module: @my_module.name)
+
+      redirect_to my_module_results_path(@my_module)
+    end
   end
 
   def elements

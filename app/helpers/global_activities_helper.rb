@@ -92,7 +92,7 @@ module GlobalActivitiesHelper
     when Result
       return current_value unless obj.navigable?
 
-      path = obj.archived? ? archive_my_module_path(obj.my_module) : results_my_module_path(obj.my_module)
+      path = obj.archived? ? archive_my_module_path(obj.my_module) : my_module_results_path(obj.my_module)
     when Step
       return current_value
     when Report

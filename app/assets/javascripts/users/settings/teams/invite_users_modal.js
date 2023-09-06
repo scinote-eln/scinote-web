@@ -51,6 +51,7 @@
         if (values.length > 0) {
           inviteBtn.attr('disabled', false);
           inviteWithRoleBtn.attr('disabled', false);
+          $($('.search-field')[0]).val('');
         } else {
           inviteBtn.attr('disabled', 'disabled');
           inviteWithRoleBtn.attr('disabled', 'disabled');

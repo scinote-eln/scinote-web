@@ -1,6 +1,6 @@
 <template>
   <div class="content__table-container">
-     <div class="table-header h-9 flex rounded pl-8 mb-1 items-center relative w-full group/table-header" :class="{ 'editing-name': editingName, 'locked': locked }">
+    <div class="table-header h-9 flex rounded pl-8 mb-1 items-center relative w-full group/table-header" :class="{ 'editing-name': editingName, 'locked': locked }">
       <div v-if="reorderElementUrl"
           class="absolute items-center h-full justify-center left-0 p-2 tw-hidden text-sn-grey"
           :class="{ 'group-hover/table-header:flex': (!editingName && !locked) }"

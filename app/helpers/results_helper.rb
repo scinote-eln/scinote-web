@@ -42,17 +42,6 @@ module ResultsHelper
   end
 
   def result_icon_class(result)
-    return 'sn-icon sn-icon-tables' unless result
-
-    if result.is_asset
-      'sn-icon sn-icon-files'
-    elsif result.is_text
-      'sn-icon sn-icon-result-text'
-    elsif result.is_table
-      'sn-icon sn-icon-tables'
-    else
-      # just return table for any other result
-      'sn-icon sn-icon-tables'
-    end
+    return 'sn-icon sn-icon-tables'
   end
 end
