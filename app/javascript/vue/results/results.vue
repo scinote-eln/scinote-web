@@ -1,6 +1,7 @@
 <template>
   <div class="results-wrapper">
     <ResultsToolbar :sort="sort"
+      :canCreate="canCreate == 'true'"
       @setSort="setSort"
       @setFilters="setFilters"
       @newResult="createResult"
@@ -16,7 +17,10 @@
         @result:move_element="reloadResult"
         @result:attachments:loaded="resultToReload = null"
         @result:move_attachment="reloadResult"
-        @duplicated="resetPageAndReload"
+        @result:duplicated="resetPageAndReload"
+        @result:archived="removeResult"
+        @result:deleted="removeResult"
+        @result:restored="removeResult"
       />
     </div>
   </div>
@@ -31,7 +35,8 @@
     name: 'Results',
     components: { ResultsToolbar, Result },
     props: {
-      url: { type: String, required: true }
+      url: { type: String, required: true },
+      canCreate: { type: String, required: true }
     },
     data() {
       return {
@@ -114,6 +119,9 @@
       },
       collapseAll() {
         $('.result-wrapper .collapse').collapse('hide')
+      },
+      removeResult(result_id) {
+        this.results = this.results.filter((r) => r.attributes.id != result_id);
       }
     }
   }

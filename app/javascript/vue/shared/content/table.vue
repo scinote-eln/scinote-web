@@ -9,7 +9,8 @@
       </div>
 
       <div v-if="!locked || element.attributes.orderable.name" :key="reloadHeader"
-           class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold">
+           class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold"
+           :class="{'pointer-events-none': locked}">
         <InlineEdit
           :value="element.attributes.orderable.name"
           :characterLimit="255"

@@ -18,7 +18,8 @@
   <%= render partial: 'my_modules/header_actions' %>
 
   <div id="results" data-behaviour="vue">
-    <results url="<%= my_module_results_url(@my_module) %>">
+    <results url="<%= my_module_results_url(@my_module, view_mode: params[:view_mode]) %>"
+             can-create=<%= can_create_results?(@my_module) && params[:view_mode].blank?  %>>
   </div>
 </div>
 

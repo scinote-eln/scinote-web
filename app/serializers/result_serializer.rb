@@ -8,8 +8,8 @@ class ResultSerializer < ActiveModel::Serializer
   include InputSanitizeHelper
 
   attributes :name, :id, :urls, :updated_at, :created_at_formatted, :updated_at_formatted, :user,
-             :my_module_id, :attachments_manageble, :marvinjs_enabled, :type, :marvinjs_context,
-             :wopi_enabled, :wopi_context, :created_at, :created_by
+             :my_module_id, :attachments_manageble, :marvinjs_enabled, :marvinjs_context, :type,
+             :wopi_enabled, :wopi_context, :created_at, :created_by, :archived
 
   def marvinjs_enabled
     MarvinJsService.enabled?
@@ -17,6 +17,18 @@ class ResultSerializer < ActiveModel::Serializer
 
   def type
     'Result'
+  end
+
+  def name
+    if archived
+      "(A) #{object.name}"
+    else
+      object.name
+    end
+  end
+
+  def archived
+    object.archived?
   end
 
   def current_user
@@ -76,21 +88,26 @@ class ResultSerializer < ActiveModel::Serializer
 
     if can_manage_result?(object)
       urls_list.merge!({
-        delete_url: result_path(object),
-        archive_url: my_module_result_archive_path(object.my_module, object),
-        update_url: my_module_result_path(object.my_module, object),
-        create_table_url: my_module_result_tables_path(object.my_module, object),
-        create_text_url: my_module_result_texts_path(object.my_module, object),
-        update_asset_view_mode_url: update_asset_view_mode_my_module_result_path(object.my_module, object),
-        update_view_state_url: update_view_state_my_module_result_path(object.my_module, object),
-        direct_upload_url: rails_direct_uploads_url,
-        upload_attachment_url: upload_attachment_my_module_result_path(object.my_module, object),
-        reorder_elements_url: reorder_result_result_orderable_elements_path(result_id: object.id)
-      })
+                         archive_url: archive_my_module_result_path(object.my_module, object),
+                         update_url: my_module_result_path(object.my_module, object),
+                         create_table_url: my_module_result_tables_path(object.my_module, object),
+                         create_text_url: my_module_result_texts_path(object.my_module, object),
+                         update_asset_view_mode_url: update_asset_view_mode_my_module_result_path(object.my_module,
+                                                                                                  object),
+                         update_view_state_url: update_view_state_my_module_result_path(object.my_module, object),
+                         direct_upload_url: rails_direct_uploads_url,
+                         upload_attachment_url: upload_attachment_my_module_result_path(object.my_module, object),
+                         reorder_elements_url: reorder_my_module_result_result_orderable_elements_path(
+                           object.my_module, object
+                         )
+                       })
     end
 
+    urls_list[:restore_url] = restore_my_module_result_path(object.my_module, object) if can_restore_result?(object)
+    urls_list[:delete_url] = my_module_result_path(object.my_module, object) if can_delete_result?(object)
     if can_create_results?(object.my_module)
-      urls_list[:duplicate_url] = duplicate_my_module_result_url(object.my_module, object)
+      urls_list[:duplicate_url] =
+        duplicate_my_module_result_url(object.my_module, object)
     end
 
     urls_list
