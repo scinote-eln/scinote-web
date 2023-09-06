@@ -253,7 +253,7 @@ en:
         full_name: "Full name"
         initials: "Initials"
         avatar: "Avatar"
-  
+
   activejob:
     failure_notifiable_job:
       general_notification_title: "Your export failed. Please contact support."
@@ -1312,6 +1312,8 @@ en:
         rearrange: "Rearrange"
         archive: "Archive"
         duplicate: "Duplicate"
+        restore: "Restore"
+        delete: "Delete"
       move_modal:
         search_placeholder: "Enter result name"
         no_options_placeholder: "No results available to select"

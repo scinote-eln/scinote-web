@@ -539,6 +539,12 @@ Rails.application.routes.draw do
           post :update_view_state
           post :update_asset_view_mode
           post :duplicate
+          post :archive
+          post :restore
+        end
+
+        resources :result_orderable_elements do
+          post :reorder, on: :collection
         end
 
         resources :tables, controller: 'result_elements/tables', only: %i(create destroy update) do
@@ -555,7 +561,6 @@ Rails.application.routes.draw do
             post :duplicate
           end
         end
-        post 'archive', to: 'results#archive'
       end
     end
 
@@ -612,15 +617,6 @@ Rails.application.routes.draw do
       collection do
         post :marvinjs, to: 'tiny_mce_assets#marvinjs_create'
       end
-    end
-
-    resources :results, only: [:update, :destroy] do
-      resources :result_orderable_elements do
-        post :reorder, on: :collection
-      end
-      resources :result_comments,
-                path: '/comments',
-                only: %i(create index update destroy)
     end
 
     resources :result_texts, only: [:edit, :update, :destroy]

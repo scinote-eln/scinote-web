@@ -7,7 +7,7 @@
            @click="$emit('reorder')">
         <i class="sn-icon sn-icon-sort"></i>
       </div>
-      <div class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold">
+      <div class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold" :class="{ 'pointer-events-none': locked } ">
         <InlineEdit
           :value="element.attributes.orderable.name"
           :sa_value="element.attributes.orderable.sa_name"

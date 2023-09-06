@@ -4,7 +4,7 @@
       <div class="result-head-left">
         <InlineEdit
           :value="result.attributes.name"
-          :class="{ 'result-element--locked': !urls.update_url }"
+          :class="{ 'pointer-events-none': !urls.update_url }"
           :characterLimit="255"
           :allowBlank="false"
           :attributeName="`${i18n.t('Result')} ${i18n.t('name')}`"
@@ -87,14 +87,20 @@
             <i class="sn-icon sn-icon-more-hori"></i>
           </button>
           <ul ref="actionsDropdown" class="dropdown-menu dropdown-menu-right insert-element-dropdown" :aria-labelledby="'resultOptionsMenu_' + result.attributes.id">
-            <li class="action"  @click="openReorderModal">
+            <li class="action"  @click="openReorderModal" v-if="urls.reorder_elements_url">
               {{ i18n.t('my_modules.results.actions.rearrange') }}
             </li>
-            <li class="action" @click="duplicateResult">
+            <li class="action" @click="duplicateResult" v-if="urls.duplicate_url && !result.attributes.archived">
               {{ i18n.t('my_modules.results.actions.duplicate') }}
             </li>
-            <li class="action" @click="archiveResult">
+            <li class="action" @click="archiveResult" v-if="urls.archive_url">
               {{ i18n.t('my_modules.results.actions.archive') }}
+            </li>
+            <li class="action" @click="restoreResult" v-if="urls.restore_url">
+              {{ i18n.t('my_modules.results.actions.restore') }}
+            </li>
+            <li class="action" @click="deleteResult" v-if="urls.delete_url">
+              {{ i18n.t('my_modules.results.actions.delete') }}
             </li>
           </ul>
         </div>
@@ -334,16 +340,23 @@
         });
       },
       archiveResult() {
-        if (this.urls.archive_url) {
-          axios.post(this.urls.archive_url).then((response) => {
-            this.$emit('resultArchived', response.data);
-            location.reload();
-          });
-        }
+        axios.post(this.urls.archive_url).then((response) => {
+          this.$emit('result:archived', this.result.attributes.id);
+        });
+      },
+      restoreResult() {
+        axios.post(this.urls.restore_url).then((response) => {
+          this.$emit('result:restored', this.result.attributes.id);
+        });
+      },
+      deleteResult() {
+        axios.delete(this.urls.delete_url).then((response) => {
+          this.$emit('result:deleted', this.result.attributes.id);
+        });
       },
       duplicateResult() {
         axios.post(this.urls.duplicate_url).then((_) => {
-          this.$emit('duplicated');
+          this.$emit('result:duplicated');
         });
       },
       moveElement(position, target_id) {

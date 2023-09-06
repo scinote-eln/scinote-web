@@ -28,7 +28,7 @@
     <div data-hook="secondary-navigation-tabs"></div>
     <% if can_read_experiment?(@my_module.experiment) && !@my_module.archived_branch? %>
       <a class="p-3 border-b-4 border-transparent hover:no-underline uppercase text-bold capitalize <%= is_module_archive? ? "text-sn-blue" : "text-sn-grey" %>"
-          href="<%= archive_my_module_url(@my_module) %>"
+          href="<%= my_module_results_path(@my_module, view_mode: :archived) %>"
           title="<%= t'nav2.modules.archive' %>"
       >
         <%= t("nav2.modules.archive") %>
