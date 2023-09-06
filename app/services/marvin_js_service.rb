@@ -47,7 +47,12 @@ class MarvinJsService
     private
 
     def connect_asset(asset, params, current_user)
-      object = params[:object_type].constantize.find(params[:object_id])
+      object = case params[:object_type]
+               when 'Step'
+                 Step.find(params[:object_id])
+               when 'Result'
+                 Result.find(params[:object_id])
+               end
       asset.update!(view_mode: object.assets_view_mode)
       object.assets << asset
 
