@@ -226,6 +226,18 @@ class Asset < ApplicationRecord
       to_blob = ActiveStorage::Blob.create_and_upload!(io: tmp_file, filename: blob.filename, metadata: blob.metadata)
       to_asset.file.attach(to_blob)
     end
+
+    if preview_image.attached?
+      preview_image.blob.open do |tmp_preview_image|
+        to_blob = ActiveStorage::Blob.create_and_upload!(
+          io: tmp_preview_image,
+          filename: blob.filename,
+          metadata: blob.metadata
+        )
+        to_asset.preview_image.attach(to_blob)
+      end
+    end
+
     to_asset.post_process_file(to_asset.team)
   end
 
