@@ -52,19 +52,9 @@
     }
   }
 
-  &:hover input,
-  &:hover .view-mode {
-    border: 1px solid $color-silver;
-    border-radius: 3px;
-
-    &:disabled {
-      border: 1px solid $color-gainsboro;
-    }
-  }
-
   .view-mode {
     border: 1px solid transparent;
-    cursor: pointer;
+    cursor: url("/images/icon_small/edit.svg") 0 16, auto;
     line-height: 26px;
     margin-left: -5px;
     min-height: 30px;
@@ -83,11 +73,8 @@
   }
 
   input {
-    border: 1px solid $color-silver;
-    border-radius: $border-radius-default;
-    cursor: pointer;
+    cursor: initial;
     display: block;
-    line-height: 26px;
     margin-left: -5px;
     padding: 2px 4px;
     padding-right: 36px;
