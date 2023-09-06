@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module FailedDeliveryNotifiableJobJob
+module FailedDeliveryNotifiableJob
   extend ActiveSupport::Concern
 
   included do
