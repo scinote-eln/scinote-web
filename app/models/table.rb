@@ -41,7 +41,7 @@ class Table < ApplicationRecord
                    .pluck('step_tables.id')
 
     result_ids = Result.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-                       .joins(:result_table)
+                       .joins(:result_tables)
                        .distinct
                        .pluck('result_tables.id')
 

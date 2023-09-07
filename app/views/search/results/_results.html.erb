@@ -1,23 +1,14 @@
 <% results.each do |result| %>
   <h5>
-    <% if result.is_text %>
-      <span class="fas fa-asterisk"></span>
-    <% elsif result.is_table %>
-      <span class="sn-icon sn-icon-tables"></span>
-    <% else %>
-      <% if result.asset.image? %>
-        <span class="sn-icon sn-icon-files"></span>
-      <% else %>
-        <span class="sn-icon sn-icon-files"></span>
-      <% end %>
-    <% end %>
+    <span class="sn-icon sn-icon-files"></span>
+
     <%= render partial: "search/results/partials/result_text", locals: { result: result, query: search_query, target: nil } %>
   </h5>
 
-  <% if result.is_text && result.result_text.text.present? %>
+  <% result.result_texts.each do |result_text| %>
     <blockquote class="search-asset-text-data">
       <p>
-        <%= highlight custom_auto_link(result.result_text.tinymce_render(:text),
+        <%= highlight custom_auto_link(result_text.tinymce_render(:text),
                              simple_format: false,
                              tags: %w(img),
                              team: current_team), search_query.strip.split(/\s+/) %>
