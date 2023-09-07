@@ -67,6 +67,8 @@ label {
  * Global fix for handsontable
  */
 .hot-table-container {
+  display: flex;
+  overflow: auto;
   .ht_master .wtHolder {
     height: auto !important;
     width: auto !important;
