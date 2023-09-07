@@ -25,7 +25,8 @@ class RepositoryStockValue < ApplicationRecord
                                       balance: amount,
                                       reference: repository_cell.repository_column.repository,
                                       comment: comment,
-                                      unit: repository_stock_unit_item&.data)
+                                      unit: repository_stock_unit_item&.data,
+                                      repository_row: repository_cell.repository_row)
   end
 
   SORTABLE_COLUMN_NAME = 'repository_stock_values.amount'
@@ -121,7 +122,8 @@ class RepositoryStockValue < ApplicationRecord
       balance: new_amount,
       reference: repository_cell.repository_column.repository,
       comment: comment,
-      unit: repository_stock_unit_item&.data
+      unit: repository_stock_unit_item&.data,
+      repository_row: repository_cell.repository_row
     )
     self.amount = new_amount
     save!
