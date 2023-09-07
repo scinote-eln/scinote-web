@@ -104,7 +104,7 @@
       loadFile() {
         fetch(this.fileUrl).then((response) => response.json()).then(
           (json) => this.editor.updateEditor(
-            { sequenceData: { ...json, name: this.sequenceName } }
+            { sequenceData: json }
           )
         );
       },
