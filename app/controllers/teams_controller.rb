@@ -25,16 +25,18 @@ class TeamsController < ApplicationController
   def export_projects
     if current_user.has_available_exports?
       current_user.increase_daily_exports_counter!
-
-      generate_export_projects_zip
-
+      TeamZipExportJob.perform_later(
+        user_id: current_user.id,
+        params: {
+          team_id: @team.id,
+          project_ids: @exp_projects.collect(&:id)
+        }
+      )
       log_activity(:export_projects,
                    team: @team.id,
                    projects: @exp_projects.map(&:name).join(', '))
 
-      render json: {
-        flash: t('projects.export_projects.success_flash')
-      }, status: :ok
+      render json: { flash: t('projects.export_projects.success_flash') }
     end
   end
 
@@ -145,20 +147,6 @@ class TeamsController < ApplicationController
     @exp_projects.each do |project|
       return render_403 unless can_export_project?(current_user, project)
     end
-  end
-
-  def generate_export_projects_zip
-    ids = @exp_projects.index_by(&:id)
-
-    options = { team: @team }
-    zip = TeamZipExport.create(user: current_user)
-    zip.generate_exportable_zip(
-      current_user.id,
-      ids,
-      :teams,
-      options
-    )
-    ids
   end
 
   def log_activity(type_of, message_items = {})

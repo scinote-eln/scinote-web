@@ -14,6 +14,7 @@ class MyModuleRepositoryRow < ApplicationRecord
              touch: true,
              inverse_of: :my_module_repository_rows
   belongs_to :repository_stock_unit_item, optional: true
+  has_many :repository_ledger_records, as: :reference, dependent: :nullify
 
   validates :repository_row, uniqueness: { scope: :my_module }
 

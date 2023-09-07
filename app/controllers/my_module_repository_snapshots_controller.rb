@@ -103,7 +103,14 @@ class MyModuleRepositorySnapshotsController < ApplicationController
 
   def export_repository_snapshot
     if params[:header_ids]
-      RepositoryZipExport.generate_zip(params, @repository_snapshot, current_user)
+      RepositoryZipExportJob.perform_later(
+        user_id: current_user.id,
+        params: {
+          repository_id: @repository_snapshot.id,
+          my_module_id: @my_module.id,
+          header_ids: params[:header_ids]
+        }
+      )
 
       Activities::CreateActivityService.call(
         activity_type: :export_inventory_snapshot_items_assigned_to_task,
