@@ -48,6 +48,7 @@
       </div>
       <div class="absolute bottom-2 min-w-[194px] justify-between flex">
         <a class="btn btn-light icon-btn thumbnail-action-btn image-edit-button"
+          v-if="attachment.attributes.urls.edit_asset"
           :title="i18n.t('attachments.thumbnail.buttons.edit')"
           :data-image-id="attachment.id"
           :data-image-name="attachment.attributes.file_name"
@@ -58,7 +59,7 @@
         >
           <i class="sn-icon sn-icon-edit"></i>
         </a>
-        <a class="btn btn-light icon-btn thumbnail-action-btn" :title="i18n.t('attachments.thumbnail.buttons.move')">
+        <a v-if="attachment.attributes.urls.move" class="btn btn-light icon-btn thumbnail-action-btn" :title="i18n.t('attachments.thumbnail.buttons.move')">
           <!-- TODO -->
           <i class="sn-icon sn-icon-move"></i>
         </a>
