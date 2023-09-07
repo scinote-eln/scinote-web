@@ -33,6 +33,12 @@
       <% when 'StepText' %>
         <% step_text = step_element.orderable %>
         <div class="print-step-text">
+          <strong>
+            <%= auto_link(simple_format(step_text.name),
+                                link: :urls,
+                                html: { target: '_blank' }) %>
+          </strong>
+          <div class="page-break"></div>
           <div class="ql-editor">
           <%= custom_auto_link(step_text.tinymce_render(:text).gsub(/<p>\S<\/p>/, '').strip,
                                 simple_format: false,
