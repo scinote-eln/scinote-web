@@ -47,17 +47,18 @@ module RepositoryStockLedgerZipExport
   def self.generate_data(row_ids)
     data = []
     repository_ledger_records =
-      RepositoryLedgerRecord.includes(:user, :repository_row)
-                            .where(repository_row: { id: row_ids })
-                            .joins('LEFT OUTER JOIN my_module_repository_rows ON
-                              repository_ledger_records.reference_id = my_module_repository_rows.id')
-                            .joins('LEFT OUTER JOIN my_modules ON
-                              my_modules.id = my_module_repository_rows.my_module_id')
-                            .joins('LEFT OUTER JOIN experiments ON experiments.id = my_modules.experiment_id')
-                            .joins('LEFT OUTER JOIN projects ON projects.id = experiments.project_id')
-                            .joins('LEFT OUTER JOIN teams ON teams.id = projects.team_id')
-                            .order('repository_row.created_at, repository_ledger_records.created_at')
-                            .select('repository_ledger_records.*,
+    RepositoryLedgerRecord.joins(repository_stock_value: :repository_row)
+                          .includes(:user, { repository_stock_value: :repository_row })
+                          .where(repository_row: { id: row_ids })
+                          .joins('LEFT OUTER JOIN my_module_repository_rows ON
+                            repository_ledger_records.reference_id = my_module_repository_rows.id')
+                          .joins('LEFT OUTER JOIN my_modules ON
+                            my_modules.id = my_module_repository_rows.my_module_id')
+                          .joins('LEFT OUTER JOIN experiments ON experiments.id = my_modules.experiment_id')
+                          .joins('LEFT OUTER JOIN projects ON projects.id = experiments.project_id')
+                          .joins('LEFT OUTER JOIN teams ON teams.id = projects.team_id')
+                          .order('repository_row.created_at, repository_ledger_records.created_at')
+                          .select('repository_ledger_records.*,
                               my_modules.id AS module_id, my_modules.name AS module_name,
                               projects.name AS project_name, teams.name AS team_name,
                               experiments.name AS experiment_name')
@@ -77,8 +78,8 @@ module RepositoryStockLedgerZipExport
 
       row_data = [
         consumption_type,
-        record.repository_row.name,
-        record.repository_row.code,
+        record.repository_stock_value.repository_row.name,
+        record.repository_stock_value.repository_row.code,
         consumed_amount,
         consumed_amount_unit,
         added_amount,

@@ -10,6 +10,7 @@ class RepositoryStockValue < ApplicationRecord
   belongs_to :created_by, class_name: 'User', optional: true, inverse_of: :created_repository_stock_values
   belongs_to :last_modified_by, class_name: 'User', optional: true, inverse_of: :modified_repository_stock_values
   has_one :repository_cell, as: :value, dependent: :destroy, inverse_of: :value
+  has_one :repository_row, through: :repository_cell
   has_many :repository_ledger_records, dependent: :destroy
   accepts_nested_attributes_for :repository_cell
 
@@ -25,8 +26,7 @@ class RepositoryStockValue < ApplicationRecord
                                       balance: amount,
                                       reference: repository_cell.repository_column.repository,
                                       comment: comment,
-                                      unit: repository_stock_unit_item&.data,
-                                      repository_row: repository_cell.repository_row)
+                                      unit: repository_stock_unit_item&.data)
   end
 
   SORTABLE_COLUMN_NAME = 'repository_stock_values.amount'
@@ -122,8 +122,7 @@ class RepositoryStockValue < ApplicationRecord
       balance: new_amount,
       reference: repository_cell.repository_column.repository,
       comment: comment,
-      unit: repository_stock_unit_item&.data,
-      repository_row: repository_cell.repository_row
+      unit: repository_stock_unit_item&.data
     )
     self.amount = new_amount
     save!

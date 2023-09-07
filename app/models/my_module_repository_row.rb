@@ -62,8 +62,7 @@ class MyModuleRepositoryRow < ApplicationRecord
       amount: delta,
       balance: stock_value.amount,
       comment: comment,
-      unit: stock_value.repository_stock_unit_item&.data,
-      repository_row: repository_row
+      unit: stock_value.repository_stock_unit_item&.data
     )
     stock_value.save!
     save!
