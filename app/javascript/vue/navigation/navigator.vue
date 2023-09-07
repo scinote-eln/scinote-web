@@ -1,5 +1,5 @@
 <template>
-  <div class="w-[216px] ml-4 h-full border rounded relative bg-sn-white flex flex-col right-0 absolute navigator-container">
+  <div class="w-[208px] ml-4 h-full border rounded relative bg-sn-white flex flex-col right-0 absolute navigator-container">
     <div class="px-3 py-1.5 flex items-center relative leading-4">
       <i class="sn-icon sn-icon-navigator"></i>
       <div class="font-bold text-base pl-3">
