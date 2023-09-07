@@ -58,8 +58,7 @@
         >
           <i class="sn-icon sn-icon-edit"></i>
         </a>
-        <a class="btn btn-light icon-btn thumbnail-action-btn" :title="i18n.t('attachments.thumbnail.buttons.move')">
-          <!-- TODO -->
+        <a class="btn btn-light icon-btn thumbnail-action-btn" @click.prevent.stop="showMoveModal" :title="i18n.t('attachments.thumbnail.buttons.move')">
           <i class="sn-icon sn-icon-move"></i>
         </a>
         <a class="btn btn-light icon-btn thumbnail-action-btn"
@@ -88,6 +87,10 @@
       @confirm="deleteAttachment"
       @cancel="deleteModal = false"
     />
+    <moveAssetModal v-if="movingAttachment"
+                      :parent_type="attachment.attributes.parent_type"
+                      :targets_url="attachment.attributes.urls.move_targets"
+                      @confirm="moveAttachment($event)" @cancel="closeMoveModal"/>
   </div>
 
 </template>
@@ -97,11 +100,13 @@
   import ContextMenuMixin from './mixins/context_menu.js'
   import ContextMenu from './context_menu.vue'
   import deleteAttachmentModal from './delete_modal.vue'
+  import MoveAssetModal from '../modal/move.vue'
+  import MoveMixin from './mixins/move.js'
 
   export default {
     name: 'thumbnailAttachment',
-    mixins: [ContextMenuMixin, AttachmentMovedMixin],
-    components: { ContextMenu, deleteAttachmentModal },
+    mixins: [ContextMenuMixin, AttachmentMovedMixin, MoveMixin],
+    components: { ContextMenu, deleteAttachmentModal, MoveAssetModal},
     props: {
       attachment: {
         type: Object,
