@@ -82,7 +82,7 @@
           :data-object-id="result.attributes.id">
           <i class="sn-icon sn-icon-comments"></i>
         </a>
-        <div ref="actionsDropdownButton" class="dropdown">
+        <div v-if="!locked"  ref="actionsDropdownButton" class="dropdown">
           <button class="btn btn-light icon-btn dropdown-toggle insert-button" type="button" :id="'resultOptionsMenu_' + result.attributes.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
             <i class="sn-icon sn-icon-more-hori"></i>
           </button>
@@ -210,6 +210,9 @@
       },
       urls() {
         return this.result.attributes.urls || {}
+      },
+      locked() {
+        return !(this.urls.restore_url || this.urls.archive_url || this.urls.delete_url || this.urls.update_url)
       }
     },
     created() {
