@@ -65,6 +65,8 @@ class GeneSequenceAssetsController < ApplicationController
       file.blob.metadata['name'] = params[:sequence_name]
       file.save!
 
+      @asset.view_mode = @parent.assets_view_mode
+
       @asset.save!
     end
   end
