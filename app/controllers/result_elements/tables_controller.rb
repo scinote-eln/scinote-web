@@ -24,8 +24,8 @@ module ResultElements
         ))
 
       ActiveRecord::Base.transaction do
-         create_in_result!(@result, result_table)
-      #  log_step_activity(:table_added, { table_name: step_table.table.name })
+        create_in_result!(@result, result_table)
+        log_result_activity(:result_table_added, { table_name: result_table.table.name })
       end
 
       render_result_orderable_element(result_table)
@@ -49,7 +49,7 @@ module ResultElements
           @table.metadata = {}
         end
         @table.save!
-        #log_step_activity(:table_edited, { table_name: @table.name })
+        log_result_activity(:result_table_edited, { table_name: @table.name })
       end
 
       render json: @table, serializer: ResultTableSerializer, user: current_user
@@ -72,7 +72,7 @@ module ResultElements
 
     def destroy
       if @table.destroy
-        log_result_activity(:table_deleted, { table_name: @table.name })
+        log_result_activity(:result_table_deleted, { table_name: @table.name })
         head :ok
       else
         head :unprocessable_entity
@@ -87,7 +87,7 @@ module ResultElements
         end
         @table.name += ' (1)'
         new_table = @table.duplicate(@result, current_user, position + 1)
-        # log_result_activity(:table_duplicated, { table_name: new_table.name })
+        log_result_activity(:result_table_duplicated, { table_name: new_table.name })
         render_result_orderable_element(new_table.result_table)
       end
     rescue ActiveRecord::RecordInvalid => e

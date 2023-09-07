@@ -49,18 +49,19 @@ class ResultsController < ApplicationController
 
   def create
     result = @my_module.results.create!(user: current_user)
-
+    log_activity(:add_result, { result: result })
     render json: result
   end
 
   def update
     @result.update!(result_params)
-
+    log_activity(:edit_result, { result: @result })
     render json: @result
   end
 
   def archive
     if @result.archive(current_user)
+      log_activity(:archive_result, { result: @result })
       render json: {}, status: :ok
     else
       render json: { errors: @result.errors.full_messages }, status: :unprocessable_entity
@@ -69,6 +70,7 @@ class ResultsController < ApplicationController
 
   def restore
     if @result.restore(current_user)
+      log_activity(:result_restored, { result: @result })
       render json: {}, status: :ok
     else
       render json: { errors: @result.errors.full_messages }, status: :unprocessable_entity
@@ -99,6 +101,7 @@ class ResultsController < ApplicationController
       @asset.post_process_file(@my_module.team)
     end
 
+    log_activity(:result_file_added, { file: @asset.file_name, result: @result })
     render json: @asset,
            serializer: AssetSerializer,
            user: current_user
@@ -125,7 +128,9 @@ class ResultsController < ApplicationController
   end
 
   def destroy
+    name = @result.name
     if @result.destroy
+      log_activity(:destroy_result, { destroyed_result: name })
       render json: {}, status: :ok
     else
       render json: { errors: @result.errors.full_messages }, status: :unprocessable_entity
@@ -138,6 +143,7 @@ class ResultsController < ApplicationController
         @my_module, current_user, result_name: "#{@result.name} (1)"
       )
 
+      log_activity(:result_duplicated, { result: @result })
       render json: new_result, serializer: ResultSerializer, user: current_user
     end
   end
@@ -198,5 +204,24 @@ class ResultsController < ApplicationController
       archived: params[:view_mode] == 'archived',
       id: @my_module.code
     }
+  end
+
+  def log_activity(element_type_of, message_items = {})
+    message_items[:my_module] = @my_module.id
+    subject = if message_items.key?(:result)
+                result = message_items[:result]
+                message_items[:result] = result.id
+                result
+              else
+                @my_module
+              end
+
+    Activities::CreateActivityService.call(
+      activity_type: element_type_of,
+      owner: current_user,
+      team: @my_module.team,
+      subject: subject,
+      message_items: message_items
+    )
   end
 end

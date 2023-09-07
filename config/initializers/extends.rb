@@ -450,12 +450,24 @@ class Extends
     task_link_sharing_enabled: 246,
     task_link_sharing_disabled: 247,
     shared_task_message_edited: 248,
-    result_content_rearranged: 244
+    result_content_rearranged: 249,
+    result_table_added: 250,
+    result_file_added: 252,
+    result_file_deleted: 253,
+    result_text_added: 254,
+    result_text_edited: 255,
+    result_text_deleted: 256,
+    result_table_edited: 257,
+    result_table_deleted: 258,
+    result_duplicated: 259,
+    result_text_duplicated: 260,
+    result_table_duplicated: 261,
+    result_restored: 262
   }
 
   ACTIVITY_GROUPS = {
     projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162, 241, 242, 243],
-    task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, 169, 172, 178],
+    task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, 169, 172, 178, *249..262],
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
            *146..148, 166, 246, 247, 248],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,

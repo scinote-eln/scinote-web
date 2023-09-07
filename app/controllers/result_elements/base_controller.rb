@@ -39,22 +39,17 @@ module ResultElements
     end
 
     def log_result_activity(element_type_of, message_items)
-      # TODO
-      #message_items[:my_module] = @protocol.my_module.id if @protocol.in_module?
-      #Activities::CreateActivityService.call(
-      #  activity_type: "#{!@step.protocol.in_module? ? 'protocol_step_' : 'task_step_'}#{element_type_of}",
-      #  owner: current_user,
-      #  team: @protocol.team,
-      #  project: @protocol.in_module? ? @protocol.my_module.project : nil,
-      #  subject: @protocol,
-      #  message_items: {
-      #    step: @step.id,
-      #    step_position: {
-      #      id: @step.id,
-      #      value_for: 'position_plus_one'
-      #    },
-      #  }.merge(message_items)
-      #)
+      message_items[:my_module] = @my_module.id
+
+      Activities::CreateActivityService.call(
+        activity_type: element_type_of,
+        owner: current_user,
+        team: @my_module.team,
+        subject: @result,
+        message_items: {
+          result: @result.id
+        }.merge(message_items)
+      )
     end
   end
 end
