@@ -1,10 +1,10 @@
 <template>
   <div class="ove-wrapper flex flex-col h-screen">
     <div class="ove-header flex justify-between h-14 px-4 py-2">
-      <span class="file-name flex items-center ml-3">
-        <div class="sci-input-container">
+      <span class="file-name flex items-center ml-3 w-56">
+        <div class="sci-input-container-v2 w-full">
           <input v-model="sequenceName"
-                 class="border-sn-grey border-[1px] rounded-[4px] px-2 py-1 w-80 h-10 text-sm font-sans"
+                 class="sci-input-field"
                  type="text"
                  :disabled="readOnly"
                  :placeholder="i18n.t('open_vector_editor.sequence_name_placeholder')"/>
