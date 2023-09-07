@@ -2226,7 +2226,24 @@ en:
       reminder_at: "Reminder at"
       units_remaining: "%{unit} remaining."
       enter_ammount: "Enter an amount"
-
+    stock_export:
+      headers:
+        consumption_type: 'Consumption type'
+        item_name: 'Item name'
+        item_id: 'Item ID'
+        consumed_amount: 'Consumed amount'
+        consumed_amount_unit: 'Consumed amount unit'
+        added_amount: 'Added amount'
+        added_amount_unit: 'Added amount unit'
+        consumed_by: 'Consumed by'
+        consumed_on: 'Consumed on'
+        team: 'Team'
+        project: 'Project'
+        experiment: 'Experiment'
+        task: 'Task'
+        task_id: 'Task ID'
+        stock_amount_balance: 'Stock amount after update (balance)'
+        stock_balance_unit: 'Stock unit after update'
   libraries:
     manange_modal_column_index:
       title: "Manage columns"
@@ -3505,7 +3522,7 @@ en:
           title: "Manage access for %{resource_name}"
           description: "Changing a role will take away any permissions inherited from the project or the experiment. New permissions will apply only to this specific task."
   zip_export:
-    modal_label: 'Export inventory'
+    repositories_modal_label: 'Export inventory'
     notification_title: 'Your requested export package is ready!'
     expired_title: 'Looks like your link has expired.'
     expired_description: 'Please export the data again in order to receive a new link.'
@@ -3515,7 +3532,10 @@ en:
     repository_footer_html: 'Inventory will be exported in a .csv file format. You will receive <strong>email with a link</strong> where you can download it.'
     export_request_success: "Export request received. Your export request is being processed."
     export_error: "Error when creating zip export."
-
+    consumption_modal_label: 'Consumption report'
+    consumption_header_html: 'You are about to generate consumption report for selected items in inventory %{repository}.'
+    consumption_footer_html: 'Consumption report will be exported in a .csv file format. You will receive <strong>email with a link</strong> where you can download it.'
+    consumption_generate: 'Generate'
   webhooks:
     index:
       title: 'Webhooks'

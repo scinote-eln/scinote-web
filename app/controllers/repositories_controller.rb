@@ -339,7 +339,7 @@ class RepositoriesController < ApplicationController
     if params[:row_ids] && params[:header_ids]
       RepositoryZipExport.generate_zip(params, @repository, current_user)
       log_activity(:export_inventory_items)
-      render json: { message: t('zip_export.export_request_success') }, status: :ok
+      render json: { message: t('zip_export.export_request_success') }
     else
       render json: { message: t('zip_export.export_error') }, status: :unprocessable_entity
     end
@@ -350,6 +350,16 @@ class RepositoriesController < ApplicationController
     if repositories.present? && current_user.has_available_exports?
       current_user.increase_daily_exports_counter!
       RepositoriesExportJob.perform_later(repositories.pluck(:id), user_id: current_user.id, team_id: current_team.id)
+      render json: { message: t('zip_export.export_request_success') }
+    else
+      render json: { message: t('zip_export.export_error') }, status: :unprocessable_entity
+    end
+  end
+
+  def export_repository_stock_items
+    row_ids = @repository.repository_rows.where(id: params[:row_ids]).pluck(:id)
+    if row_ids.any?
+      RepositoryStockLedgerZipExport.generate_zip(row_ids, current_user.id)
       render json: { message: t('zip_export.export_request_success') }
     else
       render json: { message: t('zip_export.export_error') }, status: :unprocessable_entity

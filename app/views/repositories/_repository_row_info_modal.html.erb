@@ -53,7 +53,7 @@
           </div>
           <div class="col-md-4 bar-code-container">
             <canvas id="bar-code-canvas" class="hidden" data-id="<%= @repository_row.code %>"></canvas>
-            <img id="bar-code-image"></img>
+            <img id="bar-code-image" />
           </div>
         </div>
 
@@ -113,7 +113,10 @@
       </div>
       <div class="modal-footer" data-assign-item-button="<%= @my_module.present? %>">
         <% if can_export_repository_stock?(@repository_row.repository) %>
-          <button type="button" class="btn btn-secondary export-consumption-button" data-rows="[<%= @repository_row.id %>]">
+          <button 
+            type="button"
+            class="btn btn-secondary export-consumption-button"
+          >
             <%= t('repository_row.modal_info.export_consumption_label') %>
           </button>
         <% end %>

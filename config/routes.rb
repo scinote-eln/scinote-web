@@ -219,6 +219,7 @@ Rails.application.routes.draw do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'export_repository', to: 'repositories#export_repository'
         post 'export_repositories', to: 'repositories#export_repositories'
+        post 'export_repository_stock_items', to: 'repositories#export_repository_stock_items'
         post 'export_projects'
         get 'sidebar'
         get 'export_projects_modal'
