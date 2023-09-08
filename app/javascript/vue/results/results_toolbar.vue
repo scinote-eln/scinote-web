@@ -6,6 +6,25 @@
         {{ i18n.t('my_modules.results.add_label') }}
       </button>
     </div>
+    <div class="dropdown view-switch" >
+      <div class="btn btn-light btn-black view-switch-button prevent-shrink" id="viewSwitchButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <span v-if="archived" class="state-view-switch-btn-name">{{ i18n.t('my_modules.results.archived_results') }}</span>
+        <span v-else class="state-view-switch-btn-name">{{ i18n.t('my_modules.results.active_results') }}</span>
+        <span class="sn-icon sn-icon-down"></span>
+      </div>
+      <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="viewSwitchButton">
+        <li class="view-switch-active">
+          <a :href="active_url" :class="{'form-dropdown-state-item prevent-shrink': !archived}">
+            {{ i18n.t('my_modules.results.active_results') }}
+          </a>
+        </li>
+        <li class="view-switch-archived">
+          <a :href="archived_url" :class="{'form-dropdown-state-item prevent-shrink': archived}">
+            {{ i18n.t('my_modules.results.archived_results') }}
+          </a>
+        </li>
+      </ul>
+    </div>
     <div class="result-toolbar__right flex items-center" @click="$emit('expandAll')">
       <button class="btn btn-secondary mr-3">
         {{ i18n.t('my_modules.results.expand_label') }}
@@ -48,7 +67,10 @@
     name: 'ResultsToolbar',
     props: {
       sort: { type: String, required: true },
-      canCreate: { type: Boolean, required: true }
+      canCreate: { type: Boolean, required: true },
+      archived: { type: Boolean, required: true },
+      active_url: { type: String, required: true },
+      archived_url: { type: String, required: true }
     },
     data() {
       return {

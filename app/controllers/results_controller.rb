@@ -195,7 +195,7 @@ class ResultsController < ApplicationController
   def set_navigator
     @navigator = {
       url: tree_navigator_my_module_path(@my_module),
-      archived: params[:view_mode] == 'archived',
+      archived: false,
       id: @my_module.code
     }
   end
