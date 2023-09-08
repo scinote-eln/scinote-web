@@ -139,11 +139,11 @@
         if(menu.text !== 'Help') return menu;
 
         const menuOverride = {
-            text: "Help",
+            text: I18n.t('open_vector_editor.editor.menu_bar.help_text'),
             submenu: [
               { isMenuSearch: true },
               "--",
-              { text: "About", onClick: () => { return } },
+              { text: I18n.t('open_vector_editor.editor.menu_bar.about_text'), onClick: () => { return } },
               {
                 cmd: "versionNumber",
                 shouldDismissPopover: true,

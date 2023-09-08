@@ -3713,6 +3713,9 @@ en:
     editor:
       tooltips:
         importTool: "Click or drag to import and view files (.fasta .gb .dna .json)"
+      menu_bar:
+        help_text: 'Help'
+        about_text: 'About'
   pdf_preview:
     fit_to_screen: 'Fit to screen'
     pages:
