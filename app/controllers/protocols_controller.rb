@@ -697,6 +697,12 @@ class ProtocolsController < ApplicationController
               asset_file_name = asset_guid.to_s + File.extname(asset.file_name).to_s
               ostream.put_next_entry("#{step_dir}/#{asset_file_name}")
               ostream.print(asset.file.download)
+
+              next unless asset.preview_image.attached?
+
+              asset_preview_image_name = asset_guid.to_s + File.extname(asset.file_name).to_s
+              ostream.put_next_entry("#{step_dir}/previews/#{asset_preview_image_name}")
+              ostream.print(asset.preview_image.download)
             end
           end
           ostream = step.tiny_mce_assets.save_to_eln(ostream, step_dir)

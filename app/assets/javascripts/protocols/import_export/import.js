@@ -58,9 +58,20 @@ function importProtocolFromFile(
   }
 
   function getAssetBytes(folder, stepGuid, fileRef) {
-    var stepPath = stepGuid ? stepGuid + '/' : '';
-    var filePath = folder + stepPath + fileRef;
-    var assetBytes = zipFiles.files[cleanFilePath(filePath)].asBinary();
+    const stepPath = stepGuid ? stepGuid + '/' : '';
+    const filePath = folder + stepPath + fileRef;
+    let assetBytes;
+    const fileExtension = fileRef.split('.').at(-1);
+    const fileType = `image/${fileExtension}`;
+
+    try {
+      const previewFileRef = filePath.replace(fileRef, 'previews/' + fileRef);
+      assetBytes = zipFiles.files[cleanFilePath(previewFileRef)].asBinary();
+    } catch (error) {
+        if ($.inArray(fileType, ['image/png', 'image/jpeg', 'image/gif', 'image/bmp', 'image/jpg']) > 0) {
+          assetBytes = zipFiles.files[cleanFilePath(filePath)].asBinary();
+        }
+    }
     return window.btoa(assetBytes);
   }
 
@@ -81,15 +92,17 @@ function importProtocolFromFile(
     return template;
   }
 
-  function newAssetElement(folder, stepGuid, fileRef, fileName, fileType) {
-    var html = '<li class="col-xs-12">';
-    var assetBytes;
-    if ($.inArray(fileType, ['image/png', 'image/jpeg', 'image/gif', 'image/bmp']) > 0) {
-      assetBytes = getAssetBytes(folder, stepGuid, fileRef);
+  function newAssetElement(folder, stepGuid, fileRef, fileName) {
+    const fileExtension = fileRef.split('.').at(-1);
+    let html = '<li class="col-xs-12">';
+    const assetBytes = getAssetBytes(folder, stepGuid, fileRef);
 
-      html += '<img style="max-width:300px; max-height:300px;" src="data:' + fileType + ';base64,' + assetBytes + '" />';
+    if (assetBytes) {
+      html += '<img style="max-width:300px; max-height:300px;" src="data:' +
+      `image/${fileExtension}` + ';base64,' + assetBytes + '" />';
       html += '<br>';
     }
+
     html += '<span>' + fileName + '</span>';
     html += '</li>';
     return $.parseHTML(html);
@@ -226,7 +239,8 @@ function importProtocolFromFile(
       });
 
       // Iterate through step assets
-      assetNodes = node.find('assets > asset');
+      assetNodes = node.find('assets > asset'); // ToDoGrega
+
       if (assetNodes.length > 0) {
         fileHeader = newPreviewElement('asset-file-name', null);
 
@@ -636,7 +650,7 @@ function importProtocolFromFile(
     return json;
   }
 
-  function importSingleProtocol(index, replaceVals, resultCallback) {
+  function importSingleProtocol(index, replaceVals, resultCallback) { // ToDoGrega
     // Retrieve general protocol info
     var name;
     var authors;
@@ -708,6 +722,7 @@ function importProtocolFromFile(
         var assetId = $(this).attr('id');
         var fileRef = $(this).attr('fileRef');
         var fileName = $(this).children('fileName').text();
+
         stepAssetJson.id = assetId;
         stepAssetJson.fileName = fileName;
         stepAssetJson.fileType = $(this).children('fileType').text();
