@@ -1252,6 +1252,8 @@ en:
       load_from_file_protocol_general_error: "Failed to load the protocol from file. It is likely that certain fields (protocol and individual step titles and names) contain too many or too few characters.(max is %{max} and min is %{min})"
     results:
       head_title: "%{project} | %{module} | Results"
+      active_results: "Active results"
+      archived_results: "Archived results"
       default_name: "New result"
       placeholder: "Enter result name"
       add_label: "New result"
