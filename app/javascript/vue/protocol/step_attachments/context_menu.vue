@@ -20,7 +20,7 @@
           {{ attachment.attributes.wopi_context.button_text }}
         </a>
       </li>
-      <li v-if="attachment.attributes.asset_type == 'gene_sequence' && attachment.attributes.urls.open_vector_editor_edit">
+      <li v-if="attachment.attributes.asset_type == 'gene_sequence' && attachment.attributes.urls.open_vector_editor_edit && !attachment.attributes.locked " >
         <a class="ove-edit-button" @click="openOVEditor(attachment.attributes.urls.open_vector_editor_edit)">
           <span class="sn-icon sn-icon-sequence-editor"></span>
           {{ i18n.t('open_vector_editor.edit_sequence') }}
