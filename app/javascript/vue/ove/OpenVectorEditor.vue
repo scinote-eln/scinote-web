@@ -56,6 +56,7 @@
         readOnly: this.readOnly,
         showMenuBar: true,
         alwaysAllowSave: true,
+        menuFilter: this.menuFilter,
         ToolBarProps: {
           toolList: [
             'saveTool',
@@ -132,6 +133,27 @@
         if (parent !== window) {
           parent.document.getElementById('iFrameModal').dispatchEvent(new Event('hide'));
         }
+      },
+      menuFilter(menus) {
+       return menus.map(menu => {
+        if(menu.text !== 'Help') return menu;
+
+        const menuOverride = {
+            text: I18n.t('open_vector_editor.editor.menu_bar.help_text'),
+            submenu: [
+              { isMenuSearch: true },
+              "--",
+              { text: I18n.t('open_vector_editor.editor.menu_bar.about_text'), onClick: () => { return } },
+              {
+                cmd: "versionNumber",
+                shouldDismissPopover: true,
+                onClick: () => { return }
+              },
+              "hotkeyDialog"
+            ]
+          };
+          return menuOverride;
+       });
       }
     }
   }
