@@ -22,7 +22,7 @@
           <%= t('assets.file_preview.edit_in_marvinjs') %>
         </button>
 
-      <% elsif asset.blob.metadata["asset_type"] == 'gene_sequence' && !asset.locked? %>
+      <% elsif asset.blob.metadata["asset_type"] == 'gene_sequence' %>
         <button class="btn btn-light gene-sequence-edit-button"
           data-sequence-edit-url="<%= edit_gene_sequence_asset_path(asset) %>"
         >

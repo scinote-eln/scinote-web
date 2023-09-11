@@ -11,7 +11,7 @@ class AssetSerializer < ActiveModel::Serializer
   attributes :file_name, :view_mode, :icon, :urls, :updated_at_formatted,
              :file_size, :medium_preview, :large_preview, :asset_type, :wopi,
              :wopi_context, :pdf_previewable, :file_size_formatted, :asset_order,
-             :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached, :locked
+             :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached
 
   def icon
     file_extension_icon_html(object)
@@ -95,10 +95,6 @@ class AssetSerializer < ActiveModel::Serializer
         type: object.file.content_type
       }
     end
-  end
-
-  def locked
-    object.locked?
   end
 
   def asset_order
