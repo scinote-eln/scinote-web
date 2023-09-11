@@ -76,15 +76,6 @@
   }
 }
 
-.content__checklist-container {
-  .checklist-header:not(.editing-name):not(.locked) {
-    &:hover {
-      background-color: $color-concrete;
-    }
-  }
-
-}
-
 .content__checklist-item {
   .checklist-item-header:not(.editing-name):not(.locked) {
     &:hover {

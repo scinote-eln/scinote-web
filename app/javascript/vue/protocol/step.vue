@@ -12,11 +12,7 @@
     </div>
     <div class="step-header">
       <div class="step-element-header" :class="{ 'no-hover': !urls.update_url }">
-        <div class="step-controls">
-          <div v-if="reorderStepUrl" class="step-element-grip" @click="$emit('reorder')" :class="{ 'step-element--locked': !urls.update_url }">
-            <i class="sn-icon sn-icon-sort"></i>
-          </div>
-          <div v-else class="step-element-grip-placeholder"></div>
+        <div class="step-controls gap-4 mr-4">
           <a class="step-collapse-link hover:no-underline focus:no-underline"
             :href="'#stepBody' + step.id"
             data-toggle="collapse"
@@ -24,7 +20,7 @@
             @click="toggleCollapsed">
               <span class="sn-icon sn-icon-right "></span>
           </a>
-          <div v-if="!inRepository" class="step-complete-container mx-1.5" :class="{ 'step-element--locked': !urls.state_url }">
+          <div v-if="!inRepository" class="step-complete-container" :class="{ 'step-element--locked': !urls.state_url }">
             <div :class="`step-state ${step.attributes.completed ? 'completed' : ''}`"
                  @click="changeState"
                  @keyup.enter="changeState"
