@@ -95,16 +95,16 @@
     display: inline-block;
     flex-shrink: 0;
     line-height: 24px;
-    text-align: center;
-    width: 24px;
     position: relative;
+    text-align: center;
     top: 2px;
+    width: 24px;
 
     &:not(.collapsed) {
-      transform: rotate(90deg);
       position: relative;
       right: 5px;
       top: -3px;
+      transform: rotate(90deg);
     }
   }
 }
