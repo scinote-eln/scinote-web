@@ -6,13 +6,16 @@
         {{ i18n.t('my_modules.results.add_label') }}
       </button>
     </div>
-    <div class="result-toolbar__right flex items-center" @click="$emit('expandAll')">
-      <button class="btn btn-secondary mr-3">
-        {{ i18n.t('my_modules.results.expand_label') }}
-      </button>
-      <button class="btn btn-secondary mr-3" @click="$emit('collapseAll')">
-        {{ i18n.t('my_modules.results.collapse_label') }}
-      </button>
+
+    <div class="result-toolbar__right flex items-center">
+      <template>
+        <button class="btn btn-secondary mr-3" @click="collapseResults" tabindex="0">
+          {{ i18n.t('my_modules.results.collapse_label') }}
+        </button>
+        <button class="btn btn-secondary mr-3" @click="expandResults" tabindex="0">
+          {{ i18n.t('my_modules.results.expand_label') }}
+        </button>
+      </template>
 
       <FilterDropdown :filters="filters" @applyFilters="setFilters" />
 
@@ -83,6 +86,12 @@
       },
       setFilters(filters) {
         this.$emit('setFilters', filters);
+      },
+      collapseResults() {
+        $('.result-wrapper .collapse').collapse('hide')
+      },
+      expandResults() {
+        $('.result-wrapper .collapse').collapse('show')
       }
     }
   }

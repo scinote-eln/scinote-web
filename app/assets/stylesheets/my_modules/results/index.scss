@@ -87,6 +87,28 @@
   }
 }
 
+.result-head-left {
+  display: grid;
+  grid-template-columns: 0fr 1fr;
+
+  .result-collapse-link {
+    display: inline-block;
+    flex-shrink: 0;
+    line-height: 24px;
+    text-align: center;
+    width: 24px;
+    position: relative;
+    top: 2px;
+
+    &:not(.collapsed) {
+      transform: rotate(90deg);
+      position: relative;
+      right: 5px;
+      top: -3px;
+    }
+  }
+}
+
 .edit-text-result {
   .form-group {
     display: flex;
