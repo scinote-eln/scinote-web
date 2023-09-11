@@ -32,7 +32,7 @@
             {{ step.attributes.position + 1 }}.
           </div>
         </div>
-        <div class="step-name-container" :class="{'step-element--locked': !urls.update_url}">
+        <div class="step-name-container flex-grow" :class="{'step-element--locked': !urls.update_url}">
           <InlineEdit
             :value="step.attributes.name"
             :class="{ 'step-element--locked': !urls.update_url }"
@@ -40,6 +40,7 @@
             :allowBlank="false"
             :attributeName="`${i18n.t('Step')} ${i18n.t('name')}`"
             :autofocus="editingName"
+            :singleLine="false"
             :timestamp="i18n.t('protocols.steps.timestamp', { date: step.attributes.created_at, user: step.attributes.created_by })"
             :placeholder="i18n.t('protocols.steps.placeholder')"
             :defaultValue="i18n.t('protocols.steps.default_name')"
