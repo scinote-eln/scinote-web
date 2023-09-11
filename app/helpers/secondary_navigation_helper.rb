@@ -41,15 +41,11 @@ module SecondaryNavigationHelper
   end
 
   def is_module_results?
-    %w(index).include?(action_name) && controller_name == 'results' && !%w(archived).include?(params[:view_mode])
+    %w(index).include?(action_name) && controller_name == 'results'
   end
 
   def is_module_activities?
     action_name == 'activities'
-  end
-
-  def is_module_archive?
-    %w(index).include?(action_name) && controller_name == 'results' && %w(archived).include?(params[:view_mode])
   end
 
   def title_element

@@ -22,48 +22,31 @@ module RepositoryStockLedgerZipExport
     stock_balance_unit
   ).freeze
 
-  def self.generate_zip(row_ids, user_id)
-    rows = generate_data(row_ids)
-
-    zip = ZipExport.create(user_id: user_id)
-    zip.generate_exportable_zip(
-      user_id,
-      to_csv(rows),
-      :repositories
-    )
-  end
-
-  def self.to_csv(rows)
+  def self.to_csv(repository_row_ids)
     csv_header = COLUMNS.map { |col| I18n.t("repository_stock_values.stock_export.headers.#{col}") }
+    repository_ledger_records = load_records(repository_row_ids)
 
     CSV.generate do |csv|
       csv << csv_header
-      rows.each do |row|
-        csv << row
+      repository_ledger_records.each do |record|
+        csv << generate_record_data(record)
       end
     end
   end
 
-  def self.generate_data(row_ids)
-    data = []
-    repository_ledger_records =
-    RepositoryLedgerRecord.joins(repository_stock_value: :repository_row)
-                          .includes(:user, { repository_stock_value: :repository_row })
-                          .where(repository_row: { id: row_ids })
-                          .joins('LEFT OUTER JOIN my_module_repository_rows ON
-                            repository_ledger_records.reference_id = my_module_repository_rows.id')
-                          .joins('LEFT OUTER JOIN my_modules ON
-                            my_modules.id = my_module_repository_rows.my_module_id')
-                          .joins('LEFT OUTER JOIN experiments ON experiments.id = my_modules.experiment_id')
-                          .joins('LEFT OUTER JOIN projects ON projects.id = experiments.project_id')
-                          .joins('LEFT OUTER JOIN teams ON teams.id = projects.team_id')
-                          .order('repository_row.created_at, repository_ledger_records.created_at')
-                          .select('repository_ledger_records.*,
-                              my_modules.id AS module_id, my_modules.name AS module_name,
-                              projects.name AS project_name, teams.name AS team_name,
-                              experiments.name AS experiment_name')
-    # rubocop:disable Metrics/BlockLength
-    repository_ledger_records.each do |record|
+  class << self
+    private
+
+    def load_records(repository_row_ids)
+      RepositoryLedgerRecord
+        .joins(:repository_row)
+        .preload(:user, repository_row: { repository: :team })
+        .preload(my_module_repository_row: { my_module: { experiment: { project: :team } } })
+        .where(repository_row: { id: repository_row_ids })
+        .order(:created_at)
+    end
+
+    def generate_record_data(record)
       consumption_type = record.reference_type == 'MyModuleRepositoryRow' ? 'Task' : 'Inventory'
 
       if record.amount.positive?
@@ -78,32 +61,31 @@ module RepositoryStockLedgerZipExport
 
       row_data = [
         consumption_type,
-        record.repository_stock_value.repository_row.name,
-        record.repository_stock_value.repository_row.code,
+        record.repository_row.name,
+        record.repository_row.code,
         consumed_amount,
         consumed_amount_unit,
         added_amount,
         added_amount_unit,
         record.user.full_name,
         record.created_at.strftime(record.user.date_format),
-        record.team_name,
+        record.repository_row.repository.team.name,
         record.unit,
         record.balance.to_d
       ]
 
       if consumption_type == 'Task'
+        my_module = record.my_module_repository_row.my_module
         breadcrumbs_data = [
-          record.project_name,
-          record.experiment_name,
-          record.module_name,
-          "#{MyModule::ID_PREFIX}#{record.module_id}"
+          my_module.experiment.project.name,
+          my_module.experiment.name,
+          my_module.name,
+          my_module.code
         ]
       end
 
       row_data.insert(10, *breadcrumbs_data)
-      data << row_data
+      row_data
     end
-    # rubocop:enable Metrics/BlockLength
-    data
   end
 end

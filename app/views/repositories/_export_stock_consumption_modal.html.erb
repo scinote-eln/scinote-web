@@ -13,8 +13,9 @@
            <h4 class="modal-title"><%=t 'zip_export.consumption_modal_label' %></h4>
          </div>
          <div class="modal-body">
-           <div><%=t('zip_export.consumption_header_html', repository: repository.name) %></div>
-           <div><%=t 'zip_export.consumption_footer_html' %></div>
+           <p><%=t('zip_export.consumption_header_html', repository: repository.name) %></p>
+           <p><%=t 'zip_export.consumption_body_html' %></p>
+           <p class='pb-0'><%=t 'zip_export.consumption_footer_html' %></p>
          </div>
          <div class="modal-footer">
            <button type='button' class='btn btn-secondary' data-dismiss='modal' id='close-modal-export-stock-consumption'><%= t('general.cancel')%></button>

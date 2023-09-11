@@ -94,7 +94,7 @@ class RepositoriesExportJob < ApplicationJob
                               .zip_exports_download_export_all_path(@zip_export)}'>" \
                 "#{@zip_export.zip_file_name}</a>"
     )
-    UserNotification.create!(notification: notification, user: @user)
+    notification.create_user_notification(@user)
   end
 
   # Overrides method from FailedDeliveryNotifiableJob concern

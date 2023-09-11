@@ -109,7 +109,7 @@ class ResultsController < ApplicationController
 
   def update_view_state
     view_state = @result.current_view_state(current_user)
-    view_state.state['result_assets']['sort'] = params.require(:assets).require(:order)
+    view_state.state['assets']['sort'] = params.require(:assets).require(:order)
     view_state.save! if view_state.changed?
 
     render json: {}, status: :ok
@@ -201,7 +201,7 @@ class ResultsController < ApplicationController
   def set_navigator
     @navigator = {
       url: tree_navigator_my_module_path(@my_module),
-      archived: params[:view_mode] == 'archived',
+      archived: false,
       id: @my_module.code
     }
   end

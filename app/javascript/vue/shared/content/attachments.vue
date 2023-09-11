@@ -47,17 +47,16 @@
       </div>
     </div>
     <div class="attachments" :data-parent-id="parent.id">
-      <template v-for="(attachment, index) in attachmentsOrdered">
-        <component
-          :is="attachment_view_mode(attachmentsOrdered[index])"
-          :key="attachment.id"
-          :attachment="attachment"
-          :parentId="parseInt(parent.id)"
-          @attachment:viewMode="updateAttachmentViewMode"
-          @attachment:delete="deleteAttachment(attachment.id)"
-          @attachment:moved="attachmentMoved"
-        />
-      </template>
+      <component
+        v-for="(attachment, index) in attachmentsOrdered"
+        :key="attachment.id"
+        :is="attachment_view_mode(attachmentsOrdered[index])"
+        :attachment="attachment"
+        :parentId="parseInt(parent.id)"
+        @attachment:viewMode="updateAttachmentViewMode"
+        @attachment:delete="deleteAttachment(attachment.id)"
+        @attachment:moved="attachmentMoved"
+      />
     </div>
   </div>
 </template>

@@ -2,6 +2,9 @@
   <div class="results-wrapper">
     <ResultsToolbar :sort="sort"
       :canCreate="canCreate == 'true'"
+      :archived="archived == 'true'"
+      :active_url="active_url"
+      :archived_url="archived_url"
       @setSort="setSort"
       @setFilters="setFilters"
       @newResult="createResult"
@@ -36,7 +39,10 @@
     components: { ResultsToolbar, Result },
     props: {
       url: { type: String, required: true },
-      canCreate: { type: String, required: true }
+      canCreate: { type: String, required: true },
+      archived: { type: String, required: true },
+      active_url: { type: String, required: true },
+      archived_url: { type: String, required: true }
     },
     data() {
       return {

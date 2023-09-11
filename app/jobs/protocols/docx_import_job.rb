@@ -144,8 +144,7 @@ module Protocols
                   "href='#{Rails.application.routes.url_helpers.protocol_path(@protocol)}'>" \
                   "#{@protocol.name}</a>"
       )
-
-      UserNotification.create!(notification: notification, user: @user)
+      notification.create_user_notification(@user)
     end
 
     # Overrides method from FailedDeliveryNotifiableJob concern
