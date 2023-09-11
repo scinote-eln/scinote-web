@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full">
+  <div class="w-full relative">
     <template v-if="editing">
       <input type="text"
         v-if="singleLine"
@@ -11,6 +11,7 @@
           'border-b-sn-science-blue': !error,
         }"
         :placeholder="placeholder"
+        v-model="newValue"
         @keydown="handleKeypress"
         @paste="handlePaste"
         @blur="handleBlur"
@@ -18,13 +19,14 @@
         @focus="setCaretAtEnd"/>
       <textarea v-else
         ref="input"
-        class="overflow-hidden inline-block box-size outline-none p-0 py-1 border-0 border-solid border-b w-full border-t-transparent"
+        class="overflow-hidden inline-block outline-none px-0 py-1 border-0 border-solid border-b w-full border-t-transparent"
         :class="{
           'inline-edit-placeholder text-sn-grey caret-black': isBlank,
           'border-sn-delete-red': error,
           'border-sn-science-blue': !error,
         }"
         :placeholder="placeholder"
+        v-model="newValue"
         @keydown="handleKeypress"
         @paste="handlePaste"
         @blur="handleBlur"
@@ -33,8 +35,9 @@
     </template>
     <div
       v-else
+      ref="view"
       class="sci-cursor-edit border-0 py-1 outline-none inline-block border-solid border-y border-transparent"
-      :class="{ 'text-sn-grey': isBlank }"
+      :class="{ 'text-sn-grey': isBlank, 'pb-1.5': !singleLine }"
       @click="enableEdit($event)"
     >
       <span v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
@@ -42,7 +45,7 @@
     </div>
 
     <div
-      class="mt-2 whitespace-nowrap text-xs font-normal"
+      class="mt-2 whitespace-nowrap text-xs font-normal absolute bottom-[-.75rem]"
       :class="{'text-sn-delete-red': editing && error}"
     >
       {{ editing && error ? error : timestamp }}
@@ -97,8 +100,8 @@
       newValue() {
         if (this.newValue.length === 0 && this.editing) {
           this.focus();
-          this.setCaretPosition();
         }
+        this.refreshTexareaHeight();
       },
       autofocus() {
         this.handleAutofocus();
@@ -160,26 +163,11 @@
           this.$refs.input.focus();
         });
       },
-      // Fixing Firefox specific caret placement issue
-      setCaretPosition() {
-        const range = document.createRange();
-        const sel = window.getSelection();
-        range.setStart(this.$refs.input, 0);
-        range.collapse(true);
-        sel.removeAllRanges();
-        sel.addRange(range);
-      },
       setCaretAtEnd() {
         if (this.isBlank || this.isContentDefault) return;
 
         const el = this.$refs.input;
-        let range = document.createRange();
-        range.selectNodeContents(el);
-        range.collapse(false);
-
-        let selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(range);
+        el.focus();
       },
       enableEdit(e) {
         if (e && $(e.target).hasClass('atwho-user-popover')) return;
@@ -250,7 +238,6 @@
         this.newValue = this.allowNewLine ? e.target.textContent : e.target.textContent.replace(/^[\n\r]+|[\n\r]+$/g, '');
 
         sel.collapse(sel.anchorNode, offset);
-        this.refreshTexareaHeight()
       },
       handleKeypress(e) {
         if (e.key == 'Escape') {
@@ -264,6 +251,8 @@
         }
       },
       update() {
+        this.refreshTexareaHeight();
+
         if (!this.dirty && !this.isBlank) {
           this.editing = false;
           return;
@@ -271,8 +260,8 @@
 
         if(this.error) return;
         if(!this.$refs.input) return;
-
         this.newValue = this.$refs.input.value.trim() // Fix for smart annotation
+
         this.editing = false;
         this.$emit('editingDisabled');
         this.$emit('update', this.newValue);
@@ -280,7 +269,8 @@
       refreshTexareaHeight() {
         if (this.editing && !this.singleLine) {
           this.$nextTick(() => {
-            this.$refs.input.style.height = this.$refs.input.scrollHeight + 'px';
+            this.$refs.input.style.height = '0px';
+            this.$refs.input.style.height = this.$refs.input.scrollHeight - 3 + 'px';
           });
         }
       }

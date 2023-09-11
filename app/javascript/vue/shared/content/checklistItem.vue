@@ -8,7 +8,7 @@
         <i class="sn-icon sn-icon-drag"></i>
       </div>
       <div class="flex items-start gap-2 grow" :class="{ 'done': checklistItem.attributes.checked }">
-        <div v-if="!inRepository" class="sci-checkbox-container my-2.5 w-6" :class="{ 'disabled': !toggleUrl }">
+        <div v-if="!inRepository" class="sci-checkbox-container my-1.5 border-y border-transparent border-solid w-6" :class="{ 'disabled': !toggleUrl }">
           <input ref="checkbox"
                  type="checkbox"
                  class="sci-checkbox"
@@ -25,6 +25,7 @@
             :characterLimit="10000"
             :placeholder="'Add a checklist item...'"
             :allowBlank="true"
+            :singleLine="false"
             :autofocus="editingText"
             :attributeName="`${i18n.t('ChecklistItem')} ${i18n.t('name')}`"
             :multilinePaste="true"

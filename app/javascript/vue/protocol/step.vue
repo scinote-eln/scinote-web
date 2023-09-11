@@ -12,7 +12,7 @@
     </div>
     <div class="step-header">
       <div class="step-element-header" :class="{ 'no-hover': !urls.update_url }">
-        <div class="step-controls gap-4 mr-4">
+        <div class="flex items-center gap-4 py-1 border-0 border-y border-transparent border-solid">
           <a class="step-collapse-link hover:no-underline focus:no-underline"
             :href="'#stepBody' + step.id"
             data-toggle="collapse"
@@ -32,7 +32,7 @@
             {{ step.attributes.position + 1 }}.
           </div>
         </div>
-        <div class="step-name-container flex-grow" :class="{'step-element--locked': !urls.update_url}">
+        <div class="step-name-container basis-[calc(100%_-_100px)]" :class="{'step-element--locked': !urls.update_url}">
           <InlineEdit
             :value="step.attributes.name"
             :class="{ 'step-element--locked': !urls.update_url }"
