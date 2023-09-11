@@ -68,9 +68,7 @@
                                   :name,
                                   {},
                                   { class: 'selectpicker' }) %>
-            <%= f.button class: 'btn btn-primary' do %>
-              <span><%= t("experiments.canvas.modal_manage_tags.create") %></span>
-            <% end %>
+            <%= f.submit t("experiments.canvas.modal_manage_tags.create"), class: 'btn btn-primary' %>
           </div>
         </div>
       <% end %>
