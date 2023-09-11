@@ -61,7 +61,6 @@
       flex-shrink: 0;
       font-weight: bold;
       line-height: 24px;
-      margin: 0 4px;
     }
 
     .step-name-container {
@@ -80,23 +79,20 @@
       border: 1px solid transparent;
       border-radius: 50%;
       cursor: pointer;
-      height: 24px;
+      height: 20px;
       position: relative;
       text-align: center;
-      width: 24px;
+      width: 20px;
 
       &::after {
         @include font-sn-icon;
         color: $color-white;
         content: $sn-icon-check;
-        height: 24px;
-        left: -1px;
         position: absolute;
-        top: -6px;
-      }
-
-      &:hover {
-        border-color: var(--sn-science-blue);
+        font-size: 18px !important;
+        left: 0;
+        height: 20px;
+        top: -3px;
       }
 
       &.completed {
@@ -269,15 +265,6 @@
   .step-element-controls,
   .step-element-grip {
     opacity: 0;
-  }
-
-  &:hover:not(.locked):not(.no-hover) {
-    background: $color-concrete;
-
-    .step-element-grip,
-    .step-element-controls {
-      opacity: 1;
-    }
   }
 }
 

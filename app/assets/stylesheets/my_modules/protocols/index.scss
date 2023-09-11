@@ -43,7 +43,6 @@
 
 .content-pane.my-modules-protocols-index {
   background-color: $color-alto;
-  padding: 0 1rem 1rem !important;
   min-height: calc(100vh - var(--navbar-height));
 
   .title-row {
@@ -76,7 +75,7 @@
     align-items: center;
     color: var(--sn-black);
     display: inline-flex;
-    gap: .5rem;
+    gap: 1rem;
     padding: .5rem;
     text-decoration: none;
 
@@ -97,12 +96,13 @@
 
       &.assigned-items-title {
         &::after {
-          @include font-h3;
           color: $color-alto;
           content: '[' attr(data-assigned-items-count) ']';
           display: inline;
+          font-size: 1rem;
+          font-style: normal;
           line-height: 22px;
-          padding-left: 5px;
+          padding-left: .25rem;
         }
       }
     }
@@ -434,10 +434,11 @@
   position: relative;
 
   .status-label {
-    @include font-h3;
     color: $color-alto;
     float: left;
-    margin: 0 3px;
+    font-size: 1rem;
+    font-style: normal;
+    margin: 0 .25rem;
 
     &.linked {
       color: $brand-primary;
@@ -447,7 +448,6 @@
   .status-info {
     @include font-h2;
     color: inherit;
-    padding: .5em;
     text-decoration: none;
 
     &:hover,
