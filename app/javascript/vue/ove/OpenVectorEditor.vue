@@ -143,11 +143,14 @@
             submenu: [
               { isMenuSearch: true },
               "--",
-              { text: I18n.t('open_vector_editor.editor.menu_bar.about_text'), onClick: () => { return } },
+              {
+                text: I18n.t('open_vector_editor.editor.menu_bar.about_text'),
+                onClick: () => { window.open('https://knowledgebase.scinote.net/en/knowledge/sequence-editor', '_blank'); }
+              },
               {
                 cmd: "versionNumber",
                 shouldDismissPopover: true,
-                onClick: () => { return }
+                disabled: true
               },
               "hotkeyDialog"
             ]
