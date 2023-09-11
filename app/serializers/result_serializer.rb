@@ -9,7 +9,7 @@ class ResultSerializer < ActiveModel::Serializer
 
   attributes :name, :id, :urls, :updated_at, :created_at_formatted, :updated_at_formatted, :user,
              :my_module_id, :attachments_manageble, :marvinjs_enabled, :marvinjs_context, :type,
-             :wopi_enabled, :wopi_context, :created_at, :created_by, :archived
+             :wopi_enabled, :wopi_context, :created_at, :created_by, :archived, :assets_order
 
   def marvinjs_enabled
     MarvinJsService.enabled?
@@ -53,6 +53,10 @@ class ResultSerializer < ActiveModel::Serializer
       avatar: object.user&.avatar_url(:icon_small),
       name: object.user&.full_name
     }
+  end
+
+  def assets_order
+    object.current_view_state(current_user).state.dig('assets', 'sort') unless object.destroyed?
   end
 
   def attachments_manageble
