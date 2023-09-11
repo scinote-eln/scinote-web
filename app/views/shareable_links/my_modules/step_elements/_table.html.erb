@@ -1,6 +1,5 @@
 <div class="step-table-container">
   <div class="step-element-header step-element--locked">
-    <div class="step-element-grip-placeholder"></div>
     <% if element.name.present? %>
       <div class="step-element-name">
         <%= render partial: "shareable_links/my_modules/inline_view", locals: { text: element.name, smart_annotation_enabled: false } %>
