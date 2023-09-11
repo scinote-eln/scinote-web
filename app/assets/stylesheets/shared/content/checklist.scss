@@ -26,8 +26,10 @@
       grid-template-columns: max-content auto;
 
       .step-checklist-text {
+        display: inline-block;
         margin-top: -.1em;
-        width: 100%;
+        position: relative;
+        width: fit-content;
       }
 
       &:hover.done .step-checklist-text {
@@ -42,7 +44,7 @@
     border-radius: 50%;
     height: 4px;
     margin-right: .5em;
-    margin-top: 1em;
+    margin-top: .4em;
     width: 4px;
   }
 
@@ -72,15 +74,6 @@
     color: $color-silver-chalice;
     margin-left: 3em;
   }
-}
-
-.content__checklist-container {
-  .checklist-header:not(.editing-name):not(.locked) {
-    &:hover {
-      background-color: $color-concrete;
-    }
-  }
-
 }
 
 .content__checklist-item {

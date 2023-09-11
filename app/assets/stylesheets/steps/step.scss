@@ -18,9 +18,10 @@
       align-items: baseline;
       border-radius: 4px;
       display: flex;
-      flex-basis: 80%;
+      flex-basis: 100%;
       position: relative;
       padding-top: .4em;
+      gap: .5em;
 
       .step-name-edit-icon {
         background: linear-gradient(90deg,
@@ -60,12 +61,10 @@
       flex-shrink: 0;
       font-weight: bold;
       line-height: 24px;
-      margin: 0 4px;
     }
 
     .step-name-container {
       align-self: baseline;
-      flex-grow: 1;
       font-size: 16px;
       font-weight: bold;
 
@@ -80,23 +79,20 @@
       border: 1px solid transparent;
       border-radius: 50%;
       cursor: pointer;
-      height: 24px;
+      height: 20px;
       position: relative;
       text-align: center;
-      width: 24px;
+      width: 20px;
 
       &::after {
         @include font-sn-icon;
         color: $color-white;
         content: $sn-icon-check;
-        height: 24px;
-        left: -1px;
         position: absolute;
-        top: -6px;
-      }
-
-      &:hover {
-        border-color: var(--sn-science-blue);
+        font-size: 18px !important;
+        left: 0;
+        height: 20px;
+        top: -3px;
       }
 
       &.completed {
@@ -221,7 +217,6 @@
   border-radius: 4px;
   display: flex;
   min-height: 40px;
-  overflow: hidden;
   position: relative;
 
   &.editing-name {
@@ -242,8 +237,8 @@
 
   .step-element-name {
     font-weight: bold;
-    width: 100%;
-
+    margin-bottom: 2em;
+    position: relative;
 
     .step-element-number {
       display: inline-block;
@@ -270,15 +265,6 @@
   .step-element-controls,
   .step-element-grip {
     opacity: 0;
-  }
-
-  &:hover:not(.locked):not(.no-hover) {
-    background: $color-concrete;
-
-    .step-element-grip,
-    .step-element-controls {
-      opacity: 1;
-    }
   }
 }
 

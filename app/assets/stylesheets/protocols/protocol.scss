@@ -123,17 +123,17 @@
       }
 
       .authors-data {
-        align-items: center;
+        align-items: baseline;
         display: flex;
         margin-top: -12px;
         min-height: 36px;
 
         .authors-list {
-          flex-basis: calc(100% - 90px);
-          flex-grow: 1;
+          font-weight: bold;
           line-height: 32px;
           margin-left: 8px;
-          font-weight: bold;
+          max-width: calc(100% - 90px);
+          position: relative;
         }
 
         * {
@@ -260,10 +260,10 @@
 
 .protocol-content {
   .protocol-name {
-    font-size: 1.7em;
+    display: inline-block;
+    font-size: 1.125rem;
     font-weight: bold;
-    margin-bottom: 32px;
-    margin-top: 28px;
+    position: relative;
   }
 
   .repository-new-step {

@@ -114,6 +114,8 @@ var inlineEditing = (function() {
         if (!error) error = response.responseJSON.errors[fieldToUpdate];
         container.addClass('error');
         if (error) container.find('.error-block').html(error.join(', '));
+        inputField(container).removeClass('border-sn-science-blue');
+        inputField(container).addClass('border-sn-delete-red');
         inputField(container).focus();
         container.data('disabled', false);
         $('.tooltip').hide();
@@ -166,6 +168,8 @@ var inlineEditing = (function() {
           .scrollTop(container.offsetTop);
         $('.tooltip').hide();
       }
+      inputField(container).removeClass('border-sn-delete-red');
+      inputField(container).addClass('border-sn-science-blue');
       e.stopPropagation();
       return true;
     })

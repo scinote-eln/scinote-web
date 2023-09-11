@@ -3,10 +3,11 @@
 module Protocols
   class DocxImportJob < ApplicationJob
     include RenamingUtil
+    include FailedDeliveryNotifiableJob
 
     class RequestFailureException < StandardError; end
 
-    def perform(temp_files_ids, user_id, team_id)
+    def perform(temp_files_ids, user_id:, team_id:)
       @user = User.find(user_id)
       @team = @user.teams.find(team_id)
       @tmp_files = TempFile.where(id: temp_files_ids)
@@ -30,10 +31,7 @@ module Protocols
         }
       )
 
-      unless response.success?
-        create_failed_notification!
-        raise RequestFailureException, "#{response.code}: #{response.message}"
-      end
+      raise RequestFailureException, "#{response.code}: #{response.message}" unless response.success?
 
       ActiveRecord::Base.transaction do
         @protocol = @team.protocols.new(
@@ -50,9 +48,6 @@ module Protocols
         @protocol.save!
         create_steps!(response['steps']) if response['steps'].present?
         create_notification!
-      rescue ActiveRecord::RecordInvalid => e
-        create_failed_notification!
-        Rails.logger.error(e.message)
       end
     end
 
@@ -149,17 +144,17 @@ module Protocols
                   "href='#{Rails.application.routes.url_helpers.protocol_path(@protocol)}'>" \
                   "#{@protocol.name}</a>"
       )
-
-      UserNotification.create!(notification: notification, user: @user)
+      notification.create_user_notification(@user)
     end
 
-    def create_failed_notification!
-      notification = Notification.create!(
-        type_of: :deliver_error,
-        title: I18n.t('protocols.import_export.import_protocol_notification_error.title')
-      )
+    # Overrides method from FailedDeliveryNotifiableJob concern
+    def failed_notification_title
+      I18n.t('protocols.import_export.import_protocol_notification_error.title')
+    end
 
-      UserNotification.create!(notification: notification, user: @user)
+    # Overrides method from FailedDeliveryNotifiableJob concern
+    def failed_notification_message
+      I18n.t('protocols.import_export.import_protocol_notification_error.message')
     end
   end
 end

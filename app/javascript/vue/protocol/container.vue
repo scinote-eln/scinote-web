@@ -62,8 +62,9 @@
       </div>
     </div>
     <div id="protocol-content" class="protocol-content collapse in" aria-expanded="true">
-      <div class="pl-9 mb-8">
-        <div class="protocol-name" v-if="!inRepository">
+      <div class="border-0 border-b border-dashed border-sn-light-grey" v-if="!inRepository"></div>
+      <div class="mb-4">
+        <div class="protocol-name mt-4" v-if="!inRepository">
           <InlineEdit
             v-if="urls.update_protocol_name_url"
             :value="protocol.attributes.name"
@@ -71,7 +72,6 @@
             :placeholder="i18n.t('my_modules.protocols.protocol_status_bar.enter_name')"
             :allowBlank="!inRepository"
             :attributeName="`${i18n.t('Protocol')} ${i18n.t('name')}`"
-            :customClasses="['hover-border']"
             @update="updateName"
           />
           <span v-else>
@@ -93,7 +93,7 @@
             </div>
           </div>
           <div id="protocol-description-container" :class=" inRepository ? 'protocol-description collapse in' : ''" >
-            <div class="ml-1" v-if="urls.update_protocol_description_url">
+            <div v-if="urls.update_protocol_description_url">
               <Tinymce
                 :value="protocol.attributes.description"
                 :value_html="protocol.attributes.description_view"
@@ -128,6 +128,7 @@
             </a>
           </div>
         </div>
+        <div class="border-0 border-b border-dashed border-sn-light-grey" v-if="!inRepository"></div>
         <div id="protocol-steps-container" :class=" inRepository ? 'protocol-steps collapse in' : ''">
           <div class="protocol-steps">
             <template v-for="(step, index) in steps">
@@ -146,16 +147,14 @@
                   @step:insert="updateStepsPosition"
                   @step:elements:loaded="stepToReload = null"
                   @step:move_element="reloadStep"
+                  @step:attachemnts:loaded="stepToReload = null"
+                  @step:move_attachment="reloadStep"
                   :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
                   :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
                 />
               </div>
             </template>
           </div>
-          <button v-if="(steps.length > 0 || inRepository) && urls.add_step_url" :class="!inRepository ? 'btn btn-primary' : 'btn btn-secondary'" @click="addStep(steps.length)">
-            <i class="sn-icon sn-icon-new-task"></i>
-            {{ i18n.t("protocols.steps.new_step") }}
-          </button>
         </div>
       </div>
     </div>
@@ -399,6 +398,12 @@
         let secondaryNavigationHeight = secondaryNavigation.offsetHeight;
         let secondaryNavigationTop = secondaryNavigation.getBoundingClientRect().top;
 
+        // TinyMCE offset calculation
+        let stickyNavigationHeight = secondaryNavigationHeight;
+        if ($('.tox-editor-header').length > 0 && $('.tox-editor-header')[0].getBoundingClientRect().top > protocolHeaderTop) {
+          stickyNavigationHeight += protocolHeaderHeight;
+        }
+
         // Add shadow to secondary navigation when it starts fly
         if (secondaryNavigation.getBoundingClientRect().top == 0 && !this.headerSticked) {
           secondaryNavigation.style.boxShadow = '0px 5px 8px 0px rgba(0, 0, 0, 0.10)';
@@ -406,7 +411,7 @@
           secondaryNavigation.style.boxShadow = 'none';
         }
 
-        if (protocolHeaderTop < protocolHeaderHeight) { // When secondary navigation touch protocol header
+        if (protocolHeaderTop - 5 < protocolHeaderHeight) { // When secondary navigation touch protocol header
           secondaryNavigation.style.top = protocolHeaderTop - protocolHeaderHeight + 'px'; // Secondary navigation starts slowly disappear
           protocolHeader.style.boxShadow = '0px 5px 8px 0px rgba(0, 0, 0, 0.10)'; // Flying shadow
           this.headerSticked = true;
@@ -433,6 +438,11 @@
           protocolHeader.style.boxShadow = 'none';
           this.headerSticked = false;
         }
+
+        // Apply TinyMCE offset
+        $('.tox-editor-header').css('top',
+          stickyNavigationHeight +  parseInt($(secondaryNavigation).css('top'), 10)
+        );
 
         this.lastScrollTop = window.scrollY; // Save last scroll position to when user scroll up/down
       }

@@ -48,18 +48,18 @@
       </div>
       <div class="absolute bottom-2 min-w-[194px] justify-between flex">
         <a class="btn btn-light icon-btn thumbnail-action-btn image-edit-button"
+          v-if="attachment.attributes.urls.edit_asset"
           :title="i18n.t('attachments.thumbnail.buttons.edit')"
           :data-image-id="attachment.id"
           :data-image-name="attachment.attributes.file_name"
           :data-image-url="attachment.attributes.urls.asset_file"
-          :data-image-quality="attachment.attributes.image_context.quality"
-          :data-image-mime-type="attachment.attributes.image_context.type"
+          :data-image-quality="attachment.attributes.image_context && attachment.attributes.image_context.quality"
+          :data-image-mime-type="attachment.attributes.image_context && attachment.attributes.image_context.type"
           :data-image-start-edit-url="attachment.attributes.urls.start_edit_image"
         >
           <i class="sn-icon sn-icon-edit"></i>
         </a>
-        <a class="btn btn-light icon-btn thumbnail-action-btn" :title="i18n.t('attachments.thumbnail.buttons.move')">
-          <!-- TODO -->
+        <a v-if="attachment.attributes.urls.move" @click.prevent.stop="showMoveModal" class="btn btn-light icon-btn thumbnail-action-btn" :title="i18n.t('attachments.thumbnail.buttons.move')">
           <i class="sn-icon sn-icon-move"></i>
         </a>
         <a class="btn btn-light icon-btn thumbnail-action-btn"
@@ -80,6 +80,7 @@
       :attachment="attachment"
       @attachment:viewMode="updateViewMode"
       @attachment:delete="deleteAttachment"
+      @attachment:moved="attachmentMoved"
     />
     <deleteAttachmentModal
       v-if="deleteModal"
@@ -87,19 +88,26 @@
       @confirm="deleteAttachment"
       @cancel="deleteModal = false"
     />
+    <moveAssetModal v-if="movingAttachment"
+                      :parent_type="attachment.attributes.parent_type"
+                      :targets_url="attachment.attributes.urls.move_targets"
+                      @confirm="moveAttachment($event)" @cancel="closeMoveModal"/>
   </div>
 
 </template>
 
 <script>
+  import AttachmentMovedMixin from './mixins/attachment_moved.js'
   import ContextMenuMixin from './mixins/context_menu.js'
   import ContextMenu from './context_menu.vue'
   import deleteAttachmentModal from './delete_modal.vue'
+  import MoveAssetModal from '../modal/move.vue'
+  import MoveMixin from './mixins/move.js'
 
   export default {
     name: 'thumbnailAttachment',
-    mixins: [ContextMenuMixin],
-    components: { ContextMenu, deleteAttachmentModal },
+    mixins: [ContextMenuMixin, AttachmentMovedMixin, MoveMixin],
+    components: { ContextMenu, deleteAttachmentModal, MoveAssetModal},
     props: {
       attachment: {
         type: Object,
@@ -115,12 +123,6 @@
         isHovered: false,
         deleteModal: false
       };
-    },
-    methods: {
-      deleteAttachment() {
-        this.deleteModal = false;
-        this.$emit('attachment:delete');
-      }
     }
   }
 </script>

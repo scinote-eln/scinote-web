@@ -69,7 +69,7 @@ class Step < ApplicationRecord
     new_query = Step.distinct
                     .left_outer_joins(:step_texts)
                     .where(steps: { protocol_id: protocol_ids })
-                    .where_attributes_like(['name', 'step_texts.text'], query, options)
+                    .where_attributes_like(['steps.name', 'step_texts.text'], query, options)
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT

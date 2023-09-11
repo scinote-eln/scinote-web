@@ -8,7 +8,7 @@
       <p><%= t("users.registrations.edit.2fa_modal.step_3.description") %></p>
       <p class="sci-input-container submit-code-field">
         <%= label_tag :submit_code, t("users.registrations.edit.2fa_modal.step_3.enter_code") %>
-        <%= text_field_tag :submit_code, '', class: "sci-input-field" %>
+        <%= text_field_tag :submit_code, '', class: "sci-input-field", autofocus: true %>
       </p>
     </div>
     <div class="modal-footer">

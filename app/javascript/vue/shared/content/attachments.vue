@@ -47,20 +47,21 @@
       </div>
     </div>
     <div class="attachments" :data-parent-id="parent.id">
-      <template v-for="(attachment, index) in attachmentsOrdered">
-        <component
-          :is="attachment_view_mode(attachmentsOrdered[index])"
-          :key="attachment.id"
-          :attachment="attachment"
-          :parentId="parseInt(parent.id)"
-          @attachment:viewMode="updateAttachmentViewMode"
-          @attachment:delete="deleteAttachment(attachment.id)"
-        />
-      </template>
+      <component
+        v-for="(attachment, index) in attachmentsOrdered"
+        :key="attachment.id"
+        :is="attachment_view_mode(attachmentsOrdered[index])"
+        :attachment="attachment"
+        :parentId="parseInt(parent.id)"
+        @attachment:viewMode="updateAttachmentViewMode"
+        @attachment:delete="deleteAttachment(attachment.id)"
+        @attachment:moved="attachmentMoved"
+      />
     </div>
   </div>
 </template>
 <script>
+  import AttachmentMovedMixin from './attachments/mixins/attachment_moved.js'
   import listAttachment from './attachments/list.vue'
   import inlineAttachment from './attachments/inline.vue'
   import thumbnailAttachment from './attachments/thumbnail.vue'
@@ -91,7 +92,7 @@
         orderOptions: ['new', 'old', 'divider', 'atoz', 'ztoa']
       }
     },
-    mixins: [WopiFileModal],
+    mixins: [WopiFileModal, AttachmentMovedMixin],
     components: {
       thumbnailAttachment,
       inlineAttachment,

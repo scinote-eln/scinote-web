@@ -48,10 +48,6 @@ module SecondaryNavigationHelper
     action_name == 'activities'
   end
 
-  def is_module_archive?
-    action_name == 'archive'
-  end
-
   def title_element
     if all_projects_page?
       current_team

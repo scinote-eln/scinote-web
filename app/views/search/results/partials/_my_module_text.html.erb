@@ -27,7 +27,7 @@
                                 my_module.experiment.project.team,
                                 text %>
       <% when :results %>
-        <%= route_to_other_team results_my_module_path(my_module),
+        <%= route_to_other_team my_module_results_path(my_module),
                                 my_module.experiment.project.team,
                                 text %>
       <% else %>

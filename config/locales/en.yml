@@ -254,6 +254,11 @@ en:
         initials: "Initials"
         avatar: "Avatar"
 
+  activejob:
+    failure_notifiable_job:
+      general_notification_title: "Your export failed. Please contact support."
+      general_notification_message: "Request timestamp: %{request_timestamp}"
+
   head:
     title: "SciNote | %{title}"
 
@@ -989,6 +994,7 @@ en:
     show:
       breadcrumb_index: 'Label templates'
       name_error_prefix: 'Label template name'
+      name_placeholder: 'Enter label template name'
       description_error_prefix: 'Label template description'
       description_title: 'Template description'
       description_placeholder: 'Enter the template description (optional)'
@@ -1141,6 +1147,7 @@ en:
       option_delete: "Delete"
       confirm_delete: "Are you sure you want to permanently delete result?"
       delete_flash: "Successfully removed result <strong>%{result}</strong> from task <strong>%{module}</strong>."
+      archive_flash: "Successfully archived result <strong>%{result}</strong> in task <strong>%{module}</strong>"
       archived_on: "Archived on"
       archived_on_title: "Result archived on %{date} at %{time}."
       option_download: "Download"
@@ -1245,6 +1252,8 @@ en:
       load_from_file_protocol_general_error: "Failed to load the protocol from file. It is likely that certain fields (protocol and individual step titles and names) contain too many or too few characters.(max is %{max} and min is %{min})"
     results:
       head_title: "%{project} | %{module} | Results"
+      active_results: "Active results"
+      archived_results: "Archived results"
       default_name: "New result"
       placeholder: "Enter result name"
       add_label: "New result"
@@ -1305,6 +1314,11 @@ en:
         rearrange: "Rearrange"
         archive: "Archive"
         duplicate: "Duplicate"
+        restore: "Restore"
+        delete: "Delete"
+      move_modal:
+        search_placeholder: "Enter result name"
+        no_options_placeholder: "No results available to select"
     archive_results:
       preview: "View"
     activities:
@@ -1387,6 +1401,8 @@ en:
       snapshot_error:
         title: "Snapshot error"
         body_html: "<strong>%{repository}</strong> inventory snapshot failed to generate. Please contact support if this problem persists."
+      reorder_results:
+        title: "Rearrange result content"
     modules_list_partial:
       private_tasks_html: 'Assigned to <strong>%{nr}</strong> private task(s)'
       no_results:
@@ -1888,6 +1904,10 @@ en:
         all_teams: "All teams (current & new)"
         all_teams_tooltip: "This will disable individual team settings"
         success_message: "Selected sharing options for the Inventory %{inventory_name} have been saved."
+      export:
+        notification:
+          error:
+            title: "Your Inventories export failed. Please contact support."
     show:
       name: "Name"
       archived_inventory_items: "%{repository_name} archived items"
@@ -2208,7 +2228,24 @@ en:
       reminder_at: "Reminder at"
       units_remaining: "%{unit} remaining."
       enter_ammount: "Enter an amount"
-
+    stock_export:
+      headers:
+        consumption_type: 'Consumption type'
+        item_name: 'Item name'
+        item_id: 'Item ID'
+        consumed_amount: 'Consumed amount'
+        consumed_amount_unit: 'Consumed amount unit'
+        added_amount: 'Added amount'
+        added_amount_unit: 'Added amount unit'
+        consumed_by: 'Consumed by'
+        consumed_on: 'Consumed on'
+        team: 'Team'
+        project: 'Project'
+        experiment: 'Experiment'
+        task: 'Task'
+        task_id: 'Task ID'
+        stock_amount_balance: 'Stock amount after update (balance)'
+        stock_balance_unit: 'Stock unit after update'
   libraries:
     manange_modal_column_index:
       title: "Manage columns"
@@ -2769,7 +2806,7 @@ en:
         body_html: 'The protocol has been successfully imported. You can access the draft of protocol template <a href="%{url}">here.</a>'
       failed:
         title: "Import failed"
-        body_html: "We're sorry, but the file import has failed. Please ensure you have a stable internet connection and try again. If the problem persists, please contact support for further assistance."
+        body_html: "We're sorry but the file import process has encountered an error. Please make another attempt, and if the issue persists, please contact support for further assistance."
       import: "Import"
       cancel: "Cancel"
       close: "Close"
@@ -2868,7 +2905,8 @@ en:
         title: "The import process has been successfully completed. You can download original file here: %{link}"
         message: "Protocol template:"
       import_protocol_notification_error:
-        title: "We're sorry, but the file import has failed. Please ensure you have a stable internet connection and try again. If the problem persists, please contact support for further assistance."
+        title: "Import failed"
+        message: "We're sorry but the file import process has encountered an error. Please make another attempt, and if the issue persists, please contact support for further assistance."
     export:
       export_results:
         title: "Export results"
@@ -2915,6 +2953,7 @@ en:
       added_by: "Created by:"
       keywords: "Keywords:"
       authors: "Authors:"
+      authors_list: "authors list"
       no_authors: "No authors"
       add_authors: "+ Add authors"
       add_keywords: "+ Add keywords"
@@ -3115,12 +3154,14 @@ en:
           error: "Table name can't be empty"
         table_name: "Table name"
       checklist:
+        placeholder: 'Enter checklist name'
         default_name: 'Checklist %{position}'
         checklist_name: "Checklist name"
         empty_checklist: 'Doesn’t contain any checklist items'
       text:
         placeholder: 'Enter step text'
         empty_text: 'No text entered'
+        text_name: "Enter text name"
       plate:
         default_name: "Plate %{position}"
       modals:
@@ -3341,6 +3382,7 @@ en:
     context_menu:
       set_view_size: "SET PREVIEW SIZE"
       delete: "Delete"
+      move: "Move"
       inline_html: "Large"
       thumbnail_html: "Medium"
       list_html: "List"
@@ -3482,7 +3524,7 @@ en:
           title: "Manage access for %{resource_name}"
           description: "Changing a role will take away any permissions inherited from the project or the experiment. New permissions will apply only to this specific task."
   zip_export:
-    modal_label: 'Export inventory'
+    repositories_modal_label: 'Export inventory'
     notification_title: 'Your requested export package is ready!'
     expired_title: 'Looks like your link has expired.'
     expired_description: 'Please export the data again in order to receive a new link.'
@@ -3492,7 +3534,11 @@ en:
     repository_footer_html: 'Inventory will be exported in a .csv file format. You will receive <strong>email with a link</strong> where you can download it.'
     export_request_success: "Export request received. Your export request is being processed."
     export_error: "Error when creating zip export."
-
+    consumption_modal_label: 'Export consumption'
+    consumption_header_html: 'You are about to generate consumption report for selected items in inventory %{repository}*. The report will be saved in a .csv file format.'
+    consumption_body_html: 'After the report is generated, you will be able to find the <strong>download link</strong> in both your SciNote notifications and email inbox.'
+    consumption_footer_html: 'For security reasons, please note that the link will only be <strong>valid for 7 days</strong>.'
+    consumption_generate: 'Generate'
   webhooks:
     index:
       title: 'Webhooks'
@@ -3726,6 +3772,7 @@ en:
   ChecklistItem: "Checklist item"
   Checklists: "Checklists"
   Table: "Table"
+  Text: "Text"
   Tables: "Tables"
   Repositories_team: "Inventories - %{team}"
   Reports: "Reports"

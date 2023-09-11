@@ -1,5 +1,5 @@
 .my-module-position-container .protocol-content {
-  margin-left: 2.25rem;
+  margin-left: 3rem;
 }
 
 .task-protocol {
@@ -13,7 +13,7 @@
   .protocol-buttons-group {
     align-items: center;
     display: flex;
-    gap: .5rem;
+    gap: 1rem;
   }
 
   .portocol-header-left-part {
@@ -28,12 +28,9 @@
       padding-right: .25em;
     }
 
-    .status-label {
-      margin: 2px 0 0;
-    }
-
     .status-info {
-      padding-left: 4px;
+      display: flex;
+      height: 24px;
     }
   }
 
@@ -45,7 +42,7 @@
 
     &::before,
     &::after {
-      border-bottom: 1px dotted var(--sn-light-grey);
+      border-bottom: 1px dashed var(--sn-light-grey);
       content: "";
       display: inline-block;
       flex-grow: 1;

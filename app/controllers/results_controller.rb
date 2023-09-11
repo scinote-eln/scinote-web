@@ -4,7 +4,7 @@ class ResultsController < ApplicationController
   include Breadcrumbs
   skip_before_action :verify_authenticity_token, only: %i(create update destroy duplicate)
   before_action :load_my_module
-  before_action :load_vars, only: %i(destroy elements assets upload_attachment
+  before_action :load_vars, only: %i(destroy elements assets upload_attachment archive restore destroy
                                      update_view_state update_asset_view_mode update duplicate)
   before_action :check_destroy_permissions, only: :destroy
   before_action :set_breadcrumbs_items, only: %i(index)
@@ -14,13 +14,26 @@ class ResultsController < ApplicationController
     respond_to do |format|
       format.json do
         # API endpoint
-        @results = @my_module.results
+        @results = if params[:view_mode] == 'archived'
+                     @my_module.results.archived
+                   else
+                     @my_module.results.active
+                   end
 
         apply_sort!
         apply_filters!
 
+        @results = @results.page(params[:page] || 1)
+
         render(
-          json: @results,
+          json: {
+            results: @results.map do |r|
+                       {
+                         attributes: ResultSerializer.new(r, scope: current_user).as_json
+                       }
+                     end,
+            next_page: @results.next_page
+          },
           formats: :json
         )
       end
@@ -44,6 +57,22 @@ class ResultsController < ApplicationController
     @result.update!(result_params)
 
     render json: @result
+  end
+
+  def archive
+    if @result.archive(current_user)
+      render json: {}, status: :ok
+    else
+      render json: { errors: @result.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  def restore
+    if @result.restore(current_user)
+      render json: {}, status: :ok
+    else
+      render json: { errors: @result.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   def elements
@@ -77,7 +106,7 @@ class ResultsController < ApplicationController
 
   def update_view_state
     view_state = @result.current_view_state(current_user)
-    view_state.state['result_assets']['sort'] = params.require(:assets).require(:order)
+    view_state.state['assets']['sort'] = params.require(:assets).require(:order)
     view_state.save! if view_state.changed?
 
     render json: {}, status: :ok
@@ -96,26 +125,11 @@ class ResultsController < ApplicationController
   end
 
   def destroy
-    result_type = if @result.is_text
-                    t('activities.result_type.text')
-                  elsif @result.is_table
-                    t('activities.result_type.table')
-                  elsif @result.is_asset
-                    t('activities.result_type.asset')
-                  end
-    Activities::CreateActivityService
-      .call(activity_type: :destroy_result,
-            owner: current_user,
-            subject: @result,
-            team: @my_module.team,
-            project: @my_module.project,
-            message_items: { result: @result.id,
-                             type_of_result: result_type })
-    flash[:success] = t('my_modules.module_archive.delete_flash',
-                        result: @result.name,
-                        module: @my_module.name)
-    @result.destroy
-    redirect_to archive_my_module_path(@my_module)
+    if @result.destroy
+      render json: {}, status: :ok
+    else
+      render json: { errors: @result.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   def duplicate
@@ -181,7 +195,7 @@ class ResultsController < ApplicationController
   def set_navigator
     @navigator = {
       url: tree_navigator_my_module_path(@my_module),
-      archived: params[:view_mode] == 'archived',
+      archived: false,
       id: @my_module.code
     }
   end

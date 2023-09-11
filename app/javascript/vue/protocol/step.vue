@@ -12,11 +12,7 @@
     </div>
     <div class="step-header">
       <div class="step-element-header" :class="{ 'no-hover': !urls.update_url }">
-        <div class="step-controls">
-          <div v-if="reorderStepUrl" class="step-element-grip" @click="$emit('reorder')" :class="{ 'step-element--locked': !urls.update_url }">
-            <i class="sn-icon sn-icon-sort"></i>
-          </div>
-          <div v-else class="step-element-grip-placeholder"></div>
+        <div class="step-controls gap-4 mr-4">
           <a class="step-collapse-link hover:no-underline focus:no-underline"
             :href="'#stepBody' + step.id"
             data-toggle="collapse"
@@ -24,7 +20,7 @@
             @click="toggleCollapsed">
               <span class="sn-icon sn-icon-right "></span>
           </a>
-          <div v-if="!inRepository" class="step-complete-container mx-1.5" :class="{ 'step-element--locked': !urls.state_url }">
+          <div v-if="!inRepository" class="step-complete-container" :class="{ 'step-element--locked': !urls.state_url }">
             <div :class="`step-state ${step.attributes.completed ? 'completed' : ''}`"
                  @click="changeState"
                  @keyup.enter="changeState"
@@ -44,6 +40,7 @@
             :allowBlank="false"
             :attributeName="`${i18n.t('Step')} ${i18n.t('name')}`"
             :autofocus="editingName"
+            :timestamp="i18n.t('protocols.steps.timestamp', { date: step.attributes.created_at, user: step.attributes.created_by })"
             :placeholder="i18n.t('protocols.steps.placeholder')"
             :defaultValue="i18n.t('protocols.steps.default_name')"
             @editingEnabled="editingName = true"
@@ -52,9 +49,6 @@
             @update="updateName"
           />
         </div>
-        <button v-if="urls.update_url && !editingName" class="step-name-edit-icon btn btn-xs icon-btn btn-light my-1.5" @click="editingName = true">
-          <i class="sn-icon sn-icon-edit"></i>
-        </button>
       </div>
       <div class="elements-actions-container">
         <input type="file" class="hidden" ref="fileSelector" @change="loadFromComputer" multiple />
@@ -158,7 +152,6 @@
     </div>
     <div class="collapse in" :id="'stepBody' + step.id">
       <div class="step-elements">
-        <div class="step-timestamp">{{ i18n.t('protocols.steps.timestamp', {date: step.attributes.created_at, user: step.attributes.created_by}) }}</div>
         <template v-for="(element, index) in orderedElements">
           <component
             :is="elements[index].attributes.orderable_type"
@@ -183,6 +176,7 @@
                     @attachment:deleted="attachmentDeleted"
                     @attachment:uploaded="loadAttachments"
                     @attachments:order="changeAttachmentsOrder"
+                    @attachment:moved="moveAttachment"
                     @attachments:viewMode="changeAttachmentsViewMode"
                     @attachment:viewMode="updateAttachmentViewMode"/>
       </div>
@@ -260,6 +254,7 @@
         reordering: false,
         isCollapsed: false,
         editingName: false,
+        inlineEditError: null,
         wellPlateOptions: [
           { label: 'protocols.steps.insert.well_plate_options.32_x_48', dimensions: [32, 48] },
           { label: 'protocols.steps.insert.well_plate_options.16_x_24', dimensions: [16, 24] },
@@ -290,6 +285,7 @@
       stepToReload() {
         if (this.stepToReload == this.step.id) {
           this.loadElements();
+          this.loadAttachments();
         }
       }
     },
@@ -330,7 +326,7 @@
 
         $.get(this.urls.attachments_url, (result) => {
           this.attachments = result.data
-
+          this.$emit('step:attachments:loaded');
           if (this.attachments.findIndex((e) => e.attributes.attached === false) >= 0) {
             setTimeout(() => {
               this.loadAttachments()
@@ -542,6 +538,11 @@
         })
         this.$emit('stepUpdated')
         this.$emit('step:move_element', target_id)
+      },
+      moveAttachment(id, target_id) {
+        this.attachments = this.attachments.filter((a) => a.id !== id );
+        this.$emit('stepUpdated')
+        this.$emit('step:move_attachment', target_id)
       },
       duplicateStep() {
         $.post(this.urls.duplicate_step_url, (result) => {

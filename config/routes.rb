@@ -219,6 +219,7 @@ Rails.application.routes.draw do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'export_repository', to: 'repositories#export_repository'
         post 'export_repositories', to: 'repositories#export_repositories'
+        post 'export_repository_stock_items', to: 'repositories#export_repository_stock_items'
         post 'export_projects'
         get 'sidebar'
         get 'export_projects_modal'
@@ -539,6 +540,12 @@ Rails.application.routes.draw do
           post :update_view_state
           post :update_asset_view_mode
           post :duplicate
+          post :archive
+          post :restore
+        end
+
+        resources :result_orderable_elements do
+          post :reorder, on: :collection
         end
 
         resources :tables, controller: 'result_elements/tables', only: %i(create destroy update) do
@@ -611,12 +618,6 @@ Rails.application.routes.draw do
       collection do
         post :marvinjs, to: 'tiny_mce_assets#marvinjs_create'
       end
-    end
-
-    resources :results, only: [:update, :destroy] do
-      resources :result_comments,
-                path: '/comments',
-                only: %i(create index update destroy)
     end
 
     resources :result_texts, only: [:edit, :update, :destroy]
@@ -822,6 +823,8 @@ Rails.application.routes.draw do
     get 'files/:id/load_asset', to: 'assets#load_asset', as: 'load_asset'
     post 'files/:id/update_image', to: 'assets#update_image',
                                    as: 'update_asset_image'
+    get 'files/:id/move_targets', to: 'assets#move_targets', as: 'asset_move_tagets'
+    post 'files/:id/move', to: 'assets#move', as: 'asset_move'
     delete 'files/:id/', to: 'assets#destroy', as: 'asset_destroy'
     post 'files/create_wopi_file',
          to: 'assets#create_wopi_file',

@@ -56,7 +56,8 @@
               :value="protocol.attributes.authors"
               :placeholder="i18n.t('protocols.header.add_authors')"
               :allowBlank="true"
-              :attributeName="`${i18n.t('Protocol')} ${i18n.t('authors')}`"
+              :attributeName="`${i18n.t('Protocol')} ${i18n.t('protocols.header.authors_list')}`"
+              :characterLimit="10000"
               @update="updateAuthors"
             />
           </span>

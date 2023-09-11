@@ -1,6 +1,6 @@
 <template>
   <div class="content__table-container">
-     <div class="table-header h-9 flex rounded pl-8 mb-1 items-center relative w-full group/table-header" :class="{ 'editing-name': editingName, 'locked': locked }">
+    <div class="table-header h-9 flex rounded pl-8 mb-1 items-center relative w-full group/table-header" :class="{ 'editing-name': editingName, 'locked': locked }">
       <div v-if="reorderElementUrl"
           class="absolute items-center h-full justify-center left-0 p-2 tw-hidden text-sn-grey"
           :class="{ 'group-hover/table-header:flex': (!editingName && !locked) }"
@@ -9,7 +9,8 @@
       </div>
 
       <div v-if="!locked || element.attributes.orderable.name" :key="reloadHeader"
-           class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold">
+           class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold"
+           :class="{'pointer-events-none': locked}">
         <InlineEdit
           :value="element.attributes.orderable.name"
           :characterLimit="255"

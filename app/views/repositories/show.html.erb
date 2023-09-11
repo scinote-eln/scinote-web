@@ -69,7 +69,9 @@
 
 
 <%= render partial: "repositories/delete_record_modal" %>
-<%= render partial: 'repositories/export_repository_modal',
+<%= render partial: 'repositories/export_repository_rows_modal',
+           locals: { repository: @repository } %>
+<%= render partial: 'repositories/export_stock_consumption_modal',
            locals: { repository: @repository } %>
 
 <%= render partial: 'repository_columns/manage_column_modal', locals: { my_module_page: false } %>
