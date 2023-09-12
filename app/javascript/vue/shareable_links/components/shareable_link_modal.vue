@@ -95,6 +95,10 @@
     name: "shareModalContainer",
     components: { deleteShareableLinkModal },
     props: {
+      open: {
+        type: Boolean,
+        required: true
+      },
       shared: {
         type: Boolean,
         default: false
@@ -123,11 +127,12 @@
     watch: {
       shared() {
         this.sharedEnabled = this.shared;
+      },
+      open() {
+        this.open ? this.showModal() : this.hideModal();
       }
     },
     mounted() {
-
-      $(this.$refs.modal).modal('show');
       $(this.$refs.modal).on('hidden.bs.modal', () => {
         if (!this.confirmingDelete) {
           this.$emit('close');
