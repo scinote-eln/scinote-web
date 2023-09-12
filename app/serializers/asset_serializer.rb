@@ -18,7 +18,7 @@ class AssetSerializer < ActiveModel::Serializer
   end
 
   def file_name
-    escape_input(object.render_file_name)
+    object.render_file_name
   end
 
   def updated_at
