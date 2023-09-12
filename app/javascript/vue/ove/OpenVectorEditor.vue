@@ -137,24 +137,11 @@
       menuFilter(menus) {
        return menus.map(menu => {
         if(menu.text !== 'Help') return menu;
+          const menuOverride = {
+            ...menu,
+            submenu: menu.submenu.filter(item => item.cmd !== 'versionNumber')
+          }
 
-        const menuOverride = {
-            text: I18n.t('open_vector_editor.editor.menu_bar.help_text'),
-            submenu: [
-              { isMenuSearch: true },
-              "--",
-              {
-                text: I18n.t('open_vector_editor.editor.menu_bar.about_text'),
-                onClick: () => { window.open('https://knowledgebase.scinote.net/en/knowledge/sequence-editor', '_blank'); }
-              },
-              {
-                cmd: "versionNumber",
-                shouldDismissPopover: true,
-                disabled: true
-              },
-              "hotkeyDialog"
-            ]
-          };
           return menuOverride;
        });
       }
