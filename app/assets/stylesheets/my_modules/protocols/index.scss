@@ -410,6 +410,22 @@
   }
 }
 
+#manage-module-tags-modal {
+  .dropdown-toggle {
+    box-shadow: unset;
+    outline: unset;
+  }
+
+  .dropdown-menu {
+    outline: none;
+
+    li > a:hover,
+    li > a:focus {
+      background-color: $color-concrete;
+    }
+  }
+}
+
 .task-notes {
   display: inline-block;
   padding-left: 2rem;
