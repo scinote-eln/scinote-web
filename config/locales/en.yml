@@ -3535,10 +3535,10 @@ en:
     export_request_success: "Export request received. Your export request is being processed."
     export_error: "Error when creating zip export."
     consumption_modal_label: 'Export consumption'
-    consumption_header_html: 'You are about to generate consumption report for selected items in inventory %{repository}*. The report will be saved in a .csv file format.'
-    consumption_body_html: 'After the report is generated, you will be able to find the <strong>download link</strong> in both your SciNote notifications and email inbox.'
+    consumption_header_html: 'You are about to generate a consumption report for selected items in inventory %{repository}. The report will be saved in a .csv file format.'
+    consumption_body_html: 'After the report is prepared, you will be able to find the <strong>download link</strong> in both your SciNote notifications and email inbox.'
     consumption_footer_html: 'For security reasons, please note that the link will only be <strong>valid for 7 days</strong>.'
-    consumption_generate: 'Generate'
+    consumption_generate: 'Export'
   webhooks:
     index:
       title: 'Webhooks'
