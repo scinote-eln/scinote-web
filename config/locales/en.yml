@@ -3701,12 +3701,6 @@ en:
     default_sequence_name: "New sequence"
     edit_sequence: "Edit in Sequence editor"
     sequence_name_placeholder: "Click here to enter sequence name"
-    promo:
-      title: "Manage protein sequences in SciNote:"
-      bullet_1: "Import"
-      bullet_2: "Visualize"
-      bullet_3: "Annotate"
-      button: "Try Sequence editor"
     editor:
       tooltips:
         importTool: "Click or drag to import and view files (.fasta .gb .dna .json)"
