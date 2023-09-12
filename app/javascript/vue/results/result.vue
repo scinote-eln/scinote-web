@@ -2,6 +2,12 @@
   <div class="result-wrapper bg-white px-4 py-2 mb-4">
     <div class="result-header flex justify-between py-2">
       <div class="result-head-left">
+        <a class="result-collapse-link hover:no-underline focus:no-underline"
+            :href="'#resultBody' + result.id"
+            data-toggle="collapse"
+            data-remote="true">
+          <span class="sn-icon sn-icon-right "></span>
+        </a>
         <InlineEdit
           :value="result.attributes.name"
           :class="{ 'pointer-events-none': !urls.update_url }"
@@ -117,7 +123,7 @@
       @reorder="updateElementOrder"
       @close="closeReorderModal"
     />
-    <div>
+    <div class="collapse in" :id="'resultBody' + result.id">
       <div v-for="(element, index) in orderedElements" :key="index" class="pt-6 border-0 border-t border-dotted border-sn-sleepy-grey mt-6">
         <component
           :is="elements[index].attributes.orderable_type"
