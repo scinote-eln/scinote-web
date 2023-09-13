@@ -7,7 +7,7 @@
           <%= link_to new_project_path(project_folder_id: current_folder),
                       class: 'btn btn-primary new-project-btn',
                       title: t('projects.index.new_tooltip'),
-                      data: { view_mode: 'active' },
+                      data: { view_mode: 'active', e2e: 'e2e-new-project-button' },
                       remote: true do %>
             <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
             <span class="hidden-xs"><%= t('projects.index.new') %></span>
