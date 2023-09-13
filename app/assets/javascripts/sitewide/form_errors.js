@@ -16,6 +16,7 @@
 * error that can happen/show.
 */
 var renderFormError = function(ev, input, errMsgs, clearErr, errAttributes) {
+  // console.log(input)
   clearErr = _.isUndefined(clearErr) ? false : clearErr;
   errAttributes = _.isUndefined(errAttributes) ? '' : ' ' + errAttributes;
   var $form = $(input).closest('form');
@@ -37,9 +38,11 @@ var renderFormError = function(ev, input, errMsgs, clearErr, errAttributes) {
 
     // Mark error form group
     var $formGroup = $(input).closest('.form-group');
-    if (!$formGroup.hasClass('has-error')) {
-      $formGroup.addClass('has-error');
-    }
+    $formGroup.each(function() {
+      if (!$(this).hasClass('has-error')) {
+        $(this).addClass('has-error');
+      }
+    });
 
     var $errSpan = "<span class='help-block'" +
       errAttributes + '>' + errorText + '.' + '</span>';
