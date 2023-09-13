@@ -24,20 +24,17 @@
           @update="updateName"
         />
       </div>
-      <div class="tw-hidden group-hover/text-header:flex items-center gap-2 ml-auto" >
-        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="enableNameEdit" tabindex="0">
-          <i class="sn-icon sn-icon-edit"></i>
-        </button>
-        <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light" tabindex="0" @click="duplicateElement">
-          <i class="sn-icon sn-icon-duplicate"></i>
-        </button>
-        <button v-if="element.attributes.orderable.urls.move_targets_url" class="btn btn-light btn-sm" tabindex="0" @click="showMoveModal">
-          Move
-        </button>
-        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="0">
-          <i class="sn-icon sn-icon-delete"></i>
-        </button>
-      </div>
+      <MenuDropdown
+        class="ml-auto"
+        :listItems="this.actionMenu"
+        :btnClasses="'btn btn-light icon-btn'"
+        :position="'right'"
+        :btnIcon="'sn-icon sn-icon-more-hori'"
+        @edit="enableNameEdit"
+        @duplicate="duplicateElement"
+        @move="showMoveModal"
+        @delete="showDeleteModal"
+      ></MenuDropdown>
     </div>
     <div class="flex rounded ml-8 pl-1 min-h-[2.25rem] mb-4 relative w-full group/text_container content__text-body" :class="{ 'edit': inEditMode, 'component__element--locked': !element.attributes.orderable.urls.update_url }" @keyup.enter="enableEditMode($event)" tabindex="0">
       <Tinymce
@@ -78,10 +75,11 @@
   import moveElementModal from './modal/move.vue'
   import InlineEdit from '../inline_edit.vue'
   import Tinymce from '../tinymce.vue'
+  import MenuDropdown from '../menu_dropdown.vue'
 
   export default {
     name: 'TextContent',
-    components: { deleteElementModal, Tinymce, moveElementModal, InlineEdit },
+    components: { deleteElementModal, Tinymce, moveElementModal, InlineEdit, MenuDropdown },
     mixins: [DeleteMixin, DuplicateMixin, MoveMixin],
     props: {
       element: {
@@ -113,6 +111,36 @@
     mounted() {
       if (this.isNew) {
         this.enableEditMode();
+      }
+    },
+    computed: {
+      actionMenu() {
+        let menu = [];
+        if (this.element.attributes.orderable.urls.update_url) {
+          menu.push({
+            text: I18n.t('general.edit'),
+            emit: 'edit'
+          });
+        }
+        if (this.element.attributes.orderable.urls.duplicate_url) {
+          menu.push({
+            text: I18n.t('general.duplicate'),
+            emit: 'duplicate'
+          });
+        }
+        if (this.element.attributes.orderable.urls.move_targets_url) {
+          menu.push({
+            text: I18n.t('general.move'),
+            emit: 'move'
+          });
+        }
+        if (this.element.attributes.orderable.urls.delete_url) {
+          menu.push({
+            text: I18n.t('general.delete'),
+            emit: 'delete'
+          });
+        }
+        return menu;
       }
     },
     methods: {

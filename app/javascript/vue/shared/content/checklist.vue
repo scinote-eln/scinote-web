@@ -22,20 +22,17 @@
           @update="updateName"
         />
       </div>
-      <div class="tw-hidden group-hover/checklist-header:flex items-center gap-2 ml-auto">
-        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light btn-sm" @click="editingName = true" tabindex="0">
-          <i class="sn-icon sn-icon-edit"></i>
-        </button>
-        <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light btn-sm" tabindex="0" @click="duplicateElement">
-          <i class="sn-icon sn-icon-duplicate"></i>
-        </button>
-        <button v-if="element.attributes.orderable.urls.move_targets_url" class="btn btn-light btn-sm" tabindex="0" @click="showMoveModal">
-          Move
-        </button>
-        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light btn-sm" @click="showDeleteModal" tabindex="0">
-          <i class="sn-icon sn-icon-delete"></i>
-        </button>
-      </div>
+      <MenuDropdown
+        class="ml-auto"
+        :listItems="this.actionMenu"
+        :btnClasses="'btn btn-light icon-btn'"
+        :position="'right'"
+        :btnIcon="'sn-icon sn-icon-more-hori'"
+        @edit="editingName = true"
+        @duplicate="duplicateElement"
+        @move="showMoveModal"
+        @delete="showDeleteModal"
+      ></MenuDropdown>
     </div>
     <div v-if="element.attributes.orderable.urls.create_item_url || orderedChecklistItems.length > 0">
       <Draggable
@@ -95,10 +92,11 @@
   import ChecklistItem from './checklistItem.vue'
   import Draggable from 'vuedraggable'
   import moveElementModal from './modal/move.vue'
+  import MenuDropdown from '../menu_dropdown.vue'
 
   export default {
     name: 'Checklist',
-    components: { deleteElementModal, InlineEdit, ChecklistItem, Draggable, moveElementModal },
+    components: { deleteElementModal, InlineEdit, ChecklistItem, Draggable, moveElementModal, MenuDropdown },
     mixins: [DeleteMixin, DuplicateMixin, MoveMixin],
     props: {
       element: {
@@ -153,6 +151,34 @@
       },
       locked() {
         return this.reordering || this.editingName || !this.element.attributes.orderable.urls.update_url
+      },
+      actionMenu() {
+        let menu = [];
+        if (this.element.attributes.orderable.urls.update_url) {
+          menu.push({
+            text: I18n.t('general.edit'),
+            emit: 'edit'
+          });
+        }
+        if (this.element.attributes.orderable.urls.duplicate_url) {
+          menu.push({
+            text: I18n.t('general.duplicate'),
+            emit: 'duplicate'
+          });
+        }
+        if (this.element.attributes.orderable.urls.move_targets_url) {
+          menu.push({
+            text: I18n.t('general.move'),
+            emit: 'move'
+          });
+        }
+        if (this.element.attributes.orderable.urls.delete_url) {
+          menu.push({
+            text: I18n.t('general.delete'),
+            emit: 'delete'
+          });
+        }
+        return menu;
       }
     },
     methods: {
