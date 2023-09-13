@@ -121,7 +121,7 @@
         $('.result-wrapper .collapse').collapse('hide')
       },
       removeResult(result_id) {
-        this.results = this.results.filter((r) => r.attributes.id != result_id);
+        this.results = this.results.filter((r) => r.id != result_id);
       }
     }
   }
