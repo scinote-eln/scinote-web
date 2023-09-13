@@ -259,7 +259,11 @@ class AssetsController < ApplicationController
           )
         end
       when Result
-        log_result_activity(:edit_result, @assoc)
+        log_result_activity(
+          :result_file_deleted,
+          @assoc,
+          file: @asset.file_name
+        )
       end
 
       render json: { flash: I18n.t('assets.file_deleted', file_name: escape_input(@asset.file_name)) }
@@ -330,7 +334,7 @@ class AssetsController < ApplicationController
             message_items: message_items)
   end
 
-  def log_result_activity(type_of, result)
+  def log_result_activity(type_of, result, message_items)
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
@@ -338,8 +342,7 @@ class AssetsController < ApplicationController
             team: result.my_module.team,
             project: result.my_module.project,
             message_items: {
-              result: result.id,
-              type_of_result: t('activities.result_type.text')
-            })
+              result: result.id
+            }.merge(message_items))
   end
 end

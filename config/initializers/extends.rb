@@ -243,10 +243,10 @@ class Extends
     check_step_checklist_item: 20,
     uncheck_step_checklist_item: 21,
     edit_step: 22,
-    add_result: 23,
+    add_result_old: 23,
     add_comment_to_result: 24,
-    archive_result: 25,
-    edit_result: 26,
+    archive_result_old: 25,
+    edit_result_old: 26,
     create_experiment: 27,
     edit_experiment: 28,
     archive_experiment: 29,
@@ -262,7 +262,7 @@ class Extends
     delete_step_comment: 39,
     edit_result_comment: 40,
     delete_result_comment: 41,
-    destroy_result: 42,
+    destroy_result_old: 42,
     start_edit_wopi_file: 43, # not in use
     unlock_wopi_file: 44, # not in use
     load_protocol_to_task_from_file: 45,
@@ -450,12 +450,28 @@ class Extends
     task_link_sharing_enabled: 246,
     task_link_sharing_disabled: 247,
     shared_task_message_edited: 248,
-    result_content_rearranged: 244
+    result_content_rearranged: 249,
+    add_result: 250,
+    edit_result: 251,
+    archive_result: 252,
+    destroy_result: 253,
+    result_table_added: 254,
+    result_file_added: 255,
+    result_file_deleted: 256,
+    result_text_added: 257,
+    result_text_edited: 258,
+    result_text_deleted: 259,
+    result_table_edited: 260,
+    result_table_deleted: 261,
+    result_duplicated: 262,
+    result_text_duplicated: 263,
+    result_table_duplicated: 264,
+    result_restored: 265
   }
 
   ACTIVITY_GROUPS = {
     projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162, 241, 242, 243],
-    task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, 169, 172, 178],
+    task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, 169, 172, 178, *249..265],
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
            *146..148, 166, 246, 247, 248],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
