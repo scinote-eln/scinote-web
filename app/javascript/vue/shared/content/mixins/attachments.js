@@ -46,6 +46,10 @@ export default {
         }
       });
     },
+    addAttachment(attachment) {
+      this.attachments.push(attachment);
+      this.showFileModal = false;
+    },
     uploadFiles(files) {
       const filesToUploadCntr = files.length;
       let filesUploadedCntr = 0;

@@ -304,7 +304,7 @@ class WopiController < ActionController::Base
       @can_read = can_read_experiment?(@my_module.experiment)
       @can_write = can_manage_my_module?(@my_module)
 
-      @close_url = results_my_module_url(@my_module, only_path: false, host: ENV['WOPI_USER_HOST'])
+      @close_url = my_module_results_url(@my_module, only_path: false, host: ENV['WOPI_USER_HOST'])
 
       @breadcrumb_brand_name  = @my_module.experiment.project.name
       @breadcrumb_brand_url   = project_url(@my_module.experiment.project,
