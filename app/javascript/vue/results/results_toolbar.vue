@@ -1,7 +1,7 @@
 <template>
   <div class="result-toolbar p-3 flex justify-between rounded-md bg-sn-white">
     <div class="result-toolbar__left">
-      <button v-if="canCreate" class="btn btn-secondary" @click="$emit('newResult')">
+      <button v-if="canCreate" :title="i18n.t('my_modules.results.add_title')" class="btn btn-secondary" @click="$emit('newResult')">
         <i class="sn-icon sn-icon-new-task"></i>
         {{ i18n.t('my_modules.results.add_label') }}
       </button>

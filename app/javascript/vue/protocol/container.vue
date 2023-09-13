@@ -26,6 +26,7 @@
         <div class="protocol-buttons-group">
           <a v-if="urls.add_step_url"
              class="btn btn-secondary"
+             :title="i18n.t('protocols.steps.new_step_title')"
              @keyup.enter="addStep(steps.length)"
              @click="addStep(steps.length)"
              tabindex="0">
@@ -131,29 +132,39 @@
         <div class="border-0 border-b border-dashed border-sn-light-grey" v-if="!inRepository"></div>
         <div id="protocol-steps-container" :class=" inRepository ? 'protocol-steps collapse in' : ''">
           <div class="protocol-steps">
-            <template v-for="(step, index) in steps">
-              <div class="step-block" :key="step.id">
-                <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)">
-                  <i class="sn-icon sn-icon-new-task"></i>
-                </div>
-                <Step
-                  :step.sync="steps[index]"
-                  @reorder="startStepReorder"
-                  :inRepository="inRepository"
-                  :stepToReload="stepToReload"
-                  @step:delete="updateStepsPosition"
-                  @step:update="updateStep"
-                  @stepUpdated="refreshProtocolStatus"
-                  @step:insert="updateStepsPosition"
-                  @step:elements:loaded="stepToReload = null"
-                  @step:move_element="reloadStep"
-                  @step:attachemnts:loaded="stepToReload = null"
-                  @step:move_attachment="reloadStep"
-                  :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
-                  :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
-                />
+            <div v-for="(step, index) in steps" :key="step.id" class="step-block">
+              <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)">
+                <i class="sn-icon sn-icon-new-task"></i>
               </div>
-            </template>
+              <Step
+                :step.sync="steps[index]"
+                @reorder="startStepReorder"
+                :inRepository="inRepository"
+                :stepToReload="stepToReload"
+                @step:delete="updateStepsPosition"
+                @step:update="updateStep"
+                @stepUpdated="refreshProtocolStatus"
+                @step:insert="updateStepsPosition"
+                @step:elements:loaded="stepToReload = null"
+                @step:move_element="reloadStep"
+                @step:attachemnts:loaded="stepToReload = null"
+                @step:move_attachment="reloadStep"
+                :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
+                :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
+              />
+            </div>
+            <div class="insert-step"></div>
+            <div v-if="steps.length > 0" class="py-5">
+              <a v-if="urls.add_step_url"
+                class="btn btn-secondary"
+                :title="i18n.t('protocols.steps.new_step_title')"
+                @keyup.enter="addStep(steps.length)"
+                @click="addStep(steps.length)"
+                tabindex="0">
+                  <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
+                  <span>{{ i18n.t("protocols.steps.new_step") }}</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>

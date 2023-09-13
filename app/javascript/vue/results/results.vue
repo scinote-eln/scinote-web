@@ -13,7 +13,7 @@
       class="my-4"
     />
     <div class="results-list">
-      <Result v-for="result in results" :key="result.attributes.id"
+      <Result v-for="result in results" :key="result.id"
         :result="result"
         :resultToReload="resultToReload"
         @result:elements:loaded="resultToReload = null"
@@ -25,6 +25,12 @@
         @result:deleted="removeResult"
         @result:restored="removeResult"
       />
+    </div>
+    <div v-if="results.length > 0" class="p-3 rounded-md bg-sn-white my-4">
+      <button v-if="canCreate" :title="i18n.t('my_modules.results.add_title')" class="btn btn-secondary" @click="createResult">
+        <i class="sn-icon sn-icon-new-task"></i>
+        {{ i18n.t('my_modules.results.add_label') }}
+      </button>
     </div>
   </div>
 </template>
@@ -50,12 +56,13 @@
         sort: 'created_at_desc',
         filters: {},
         resultToReload: null,
-        nextPage: 1,
+        nextPageUrl: null,
         loadingPage: false
       }
     },
     mounted() {
       window.addEventListener('scroll', this.loadResults, false);
+      this.nextPageUrl = this.url;
       this.loadResults();
     },
     beforeDestroy() {
@@ -66,32 +73,20 @@
         this.resultToReload = result;
       },
       resetPageAndReload(){
-        this.nextPage = 1;
+        this.nextPageUrl = this.url;
         this.results = [];
         this.$nextTick(() => {
           this.loadResults();
         });
       },
       loadResults() {
-        if (this.nextPage == null || this.loadingPage) return;
+        if (this.nextPageUrl === null || this.loadingPage) return;
 
         if (window.scrollY + window.innerHeight >= document.body.scrollHeight - 20) {
           this.loadingPage = true;
-          axios.get(
-            `${this.url}`,
-            {
-              params: {
-                sort: this.sort,
-                page: this.nextPage,
-                ...this.filters
-              },
-              headers: {
-                'Accept': 'application/json'
-              }
-            },
-          ).then((response) => {
-            this.results = this.results.concat(response.data.results);
-            this.nextPage = response.data.next_page;
+          axios.get(this.nextPageUrl, { params: { sort: this.sort, ...this.filters } }).then((response) => {
+            this.results = this.results.concat(response.data.data);
+            this.nextPageUrl = response.data.links.next;
             this.loadingPage = false;
           });
         }
@@ -114,11 +109,10 @@
           }
         ).then(
           (response) => {
-            this.results.unshift(response.data.data)
+            this.results = [response.data.data, ...this.results];
+            window.scrollTo(0, 0);
           }
         );
-
-
       },
       expandAll() {
         $('.result-wrapper .collapse').collapse('show')
