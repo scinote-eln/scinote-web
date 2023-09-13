@@ -131,6 +131,17 @@
         </div>
         <div class="border-0 border-b border-dashed border-sn-light-grey" v-if="!inRepository"></div>
         <div id="protocol-steps-container" :class=" inRepository ? 'protocol-steps collapse in' : ''">
+          <div v-if="urls.add_step_url && inRepository" class="py-5">
+            <a
+              class="btn btn-secondary"
+              :title="i18n.t('protocols.steps.new_step_title')"
+              @keyup.enter="addStep(steps.length)"
+              @click="addStep(steps.length)"
+              tabindex="0">
+                <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
+                <span>{{ i18n.t("protocols.steps.new_step") }}</span>
+            </a>
+          </div>
           <div class="protocol-steps">
             <div v-for="(step, index) in steps" :key="step.id" class="step-block">
               <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)">
@@ -153,9 +164,8 @@
                 :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
               />
             </div>
-            <div class="insert-step"></div>
-            <div v-if="steps.length > 0" class="py-5">
-              <a v-if="urls.add_step_url"
+            <div v-if="steps.length > 0 && urls.add_step_url && inRepository" class="py-5">
+              <a
                 class="btn btn-secondary"
                 :title="i18n.t('protocols.steps.new_step_title')"
                 @keyup.enter="addStep(steps.length)"
