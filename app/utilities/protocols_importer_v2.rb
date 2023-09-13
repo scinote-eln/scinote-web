@@ -115,6 +115,11 @@ class ProtocolsImporterV2
                         filename: asset_json['fileName'],
                         content_type: asset_json['fileType'],
                         metadata: JSON.parse(asset_json['fileMetadata'] || '{}'))
+      if asset_json['preview_image'].present?
+        asset.preview_image.attach(io: StringIO.new(Base64.decode64(asset_json.dig('preview_image', 'bytes'))),
+                                   filename: asset_json.dig('preview_image', 'fileName'))
+      end
+
       asset.save!
       asset_ids << asset.id
 

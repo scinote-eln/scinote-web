@@ -3097,7 +3097,7 @@ en:
           drag_zone_title: "Upload a file from your PC"
           drag_zone_description: "You can also drag & drop files to here or into steps to upload"
           drag_zone_notification: "Drop files to add to step %{position}"
-          or: "OR"
+          or: "or create new"
         new:
           description: 'New'
           uploading: 'Uploading'
@@ -3277,7 +3277,7 @@ en:
     wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel Online.'
     wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in PowerPoint Online.'
     create_wopi_file:
-      button_text: 'Create an MS Office file'
+      button_text: 'MS Office file'
       li_text: "Office file"
       modal_title: 'Create new Microsoft Office Online document'
       text_field_label: 'Document name'
@@ -3701,9 +3701,18 @@ en:
     new_li_button: "Chemical drawing"
     structure_placeholder: "Click here to enter Chemical Drawing name"
     modal_name_title: "Chemical Drawing name:"
-    checmical_drawing: "Chemical drawings"
+    chemical_drawing: "Chemical drawings"
     no_sketches_found: "No Sketches Found"
 
+  open_vector_editor:
+    new_sequence: "Sequence"
+    new_sequence_file: "New sequence"
+    default_sequence_name: "New sequence"
+    edit_sequence: "Edit in Sequence editor"
+    sequence_name_placeholder: "Click here to enter sequence name"
+    editor:
+      tooltips:
+        importTool: "Click or drag to import and view files (.fasta .gb .dna .json)"
   pdf_preview:
     fit_to_screen: 'Fit to screen'
     pages:

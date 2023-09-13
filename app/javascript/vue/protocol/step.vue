@@ -140,8 +140,8 @@
     <div class="collapse in" :id="'stepBody' + step.id">
       <div class="step-elements">
         <div class="step-timestamp">{{ i18n.t('protocols.steps.timestamp', {date: step.attributes.created_at, user: step.attributes.created_by}) }}</div>
-        <template v-for="(element, index) in orderedElements">
           <component
+            v-for="(element, index) in orderedElements"
             :is="elements[index].attributes.orderable_type"
             :key="index"
             :element.sync="elements[index]"
@@ -154,17 +154,16 @@
             @reorder="openReorderModal"
             @component:insert="insertElement"
           />
-        </template>
-        <Attachments v-if="attachments.length"
-                    :step="step"
-                    :attachments="attachments"
-                    :attachmentsReady="attachmentsReady"
-                    @attachments:openFileModal="showFileModal = true"
-                    @attachment:deleted="attachmentDeleted"
-                    @attachment:uploaded="loadAttachments"
-                    @attachments:order="changeAttachmentsOrder"
-                    @attachments:viewMode="changeAttachmentsViewMode"
-                    @attachment:viewMode="updateAttachmentViewMode"/>
+        <Attachments
+          :step="step"
+          :attachments="attachments"
+          :attachmentsReady="attachmentsReady"
+          @attachments:openFileModal="showFileModal = true"
+          @attachment:deleted="attachmentDeleted"
+          @attachment:uploaded="loadAttachments"
+          @attachments:order="changeAttachmentsOrder"
+          @attachments:viewMode="changeAttachmentsViewMode"
+          @attachment:viewMode="updateAttachmentViewMode"/>
       </div>
     </div>
     <deleteStepModal v-if="confirmingDelete" @confirm="deleteStep" @cancel="closeDeleteModal"/>
@@ -308,7 +307,6 @@
 
         $.get(this.urls.attachments_url, (result) => {
           this.attachments = result.data
-
           if (this.attachments.findIndex((e) => e.attributes.attached === false) >= 0) {
             setTimeout(() => {
               this.loadAttachments()

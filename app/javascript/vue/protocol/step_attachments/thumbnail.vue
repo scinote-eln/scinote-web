@@ -10,13 +10,15 @@
         :data-gallery-view-id="stepId"
         :data-preview-url="attachment.attributes.urls.preview"
     >
-      <div class="attachment-preview" :class= "attachment.attributes.asset_type">
-        <img v-if="attachment.attributes.medium_preview !== null"
+      <div v-if="attachment.attributes.medium_preview" class="attachment-preview" :class= "attachment.attributes.asset_type">
+        <img
             :src="attachment.attributes.medium_preview"
             @error="ActiveStoragePreviews.reCheckPreview"
             @load="ActiveStoragePreviews.showPreview"
             style='opacity: 0' />
-        <i  v-else class="fas" :class="attachment.attributes.icon"></i>
+      </div>
+      <div v-else class="attachment-preview flex">
+        <span class="fa fa-paperclip m-auto text-4xl"></span>
       </div>
       <div class="attachment-label"
            data-toggle="tooltip"

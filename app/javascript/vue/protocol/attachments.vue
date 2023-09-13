@@ -1,5 +1,5 @@
 <template>
-  <div class="step-attachments">
+  <div class="step-attachments"  v-if="attachments && attachments.length">
     <div class="attachments-actions">
       <div class="title">
         <h3>{{ i18n.t('protocols.steps.files', {count: attachments.length}) }}</h3>
@@ -27,6 +27,12 @@
                 {{ i18n.t('protocols.steps.attachments.menu.office_file') }}
               </a>
             </li>
+            <li v-if="step.attributes.open_vector_editor_context.new_sequence_asset_url">
+              <a @click="openOVEditor" class="open-vector-editor-button" tabindex="0" @keyup.enter="openOVEditor">
+                <img :src="step.attributes.open_vector_editor_context.icon"/>
+                {{ i18n.t('open_vector_editor.new_sequence_file') }}
+              </a>
+            </li>
             <li v-if="step.attributes.marvinjs_enabled">
               <a
                 class="new-marvinjs-upload-button"
@@ -36,7 +42,7 @@
                 :data-sketch-container="`.attachments[data-step-id=${step.id}]`"
               >
                 <span class="new-marvinjs-upload-icon">
-                  <img :src="step.attributes.marvinjs_context.icon">
+                  <i class="sn-icon sn-icon-marvinjs"></i>
                 </span>
                   {{ i18n.t('protocols.steps.attachments.menu.chemical_drawing') }}
               </a>
@@ -68,8 +74,9 @@
       </div>
     </div>
     <div class="attachments">
-      <template v-for="(attachment, index) in attachmentsOrdered">
+      <template >
         <component
+          v-for="(attachment, index) in attachmentsOrdered"
           :is="attachment_view_mode(attachmentsOrdered[index])"
           :key="attachment.id"
           :attachment="attachment"
@@ -150,6 +157,7 @@
       }
     },
     mounted() {
+      this.initOVE(this);
       this.initMarvinJS();
       $(this.$refs.actionsDropdownButton).on('shown.bs.dropdown hidden.bs.dropdown', this.handleDropdownPosition);
     },
@@ -174,6 +182,11 @@
       deleteAttachment(id) {
         this.$emit('attachment:deleted', id)
       },
+      initOVE(component) {
+        $(window.iFrameModal).on('sequenceSaved', function() {
+          component.$emit('attachment:uploaded');
+        });
+      },
       initMarvinJS() {
         // legacy logic from app/assets/javascripts/sitewide/marvinjs_editor.js
         MarvinJsEditor.initNewButton(
@@ -189,6 +202,9 @@
             HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
           }
         });
+      },
+      openOVEditor() {
+        window.showIFrameModal(this.step.attributes.open_vector_editor_context.new_sequence_asset_url);
       },
       handleDropdownPosition() {
         this.$refs.actionsDropdownButton.classList.toggle("dropup", !this.isInViewport(this.$refs.actionsDropdown));
