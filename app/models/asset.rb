@@ -189,6 +189,12 @@ class Asset < ApplicationRecord
     file.blob&.filename&.sanitized
   end
 
+  def preview_image_file_name
+    return '' unless preview_image.attached?
+
+    preview_image.blob&.filename&.sanitized
+  end
+
   def render_file_name
     if file.attached? && file.metadata['asset_type']
       file.metadata['name']
