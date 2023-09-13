@@ -1,11 +1,13 @@
 <template>
-    <div id="repository-item-sidebar" class="w-[500px] h-[1032px] m-[24px] bg-white justify-between flex flex-col">
+    <div id="repository-item-sidebar" class="w-[500px] min-h-[1032px] h-auto m-[24px] bg-white justify-between flex flex-col">
         <div id="top" class="flex flex-col items-center gap-6 self-stretch min-h-[763px] h-full">
 
             <div id="modal-title-and-subtitle" class="h-[48px] w-full">
                 <div id="title" class="h-[30px] w-full flex justify-between">
-                    <p class="my-auto mx-0 w-fit font-inter text-base font-semibold leading-7">{{ this.title }}</p>
-                    <i @click="toggleShowHide" class="sn-icon sn-icon-close ml-auto cursor-pointer my-auto mx-0"></i>
+                    <p class="my-auto mx-0 w-fit font-inter text-base font-semibold leading-7">
+                      {{ this.title }}
+                    </p>
+                    <i @click="toggleShowHideSidebar" class="sn-icon sn-icon-close ml-auto cursor-pointer my-auto mx-0"></i>
                 </div>
                 <div id="subtitle" class="h-[18px] w-full flex">
                     {{ this.subtitle }}
@@ -14,48 +16,230 @@
 
             <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px	"></div>
 
-            <div id="content" class="min-h-[684px] flex flex-row">
-                <div id="items" class="min-w-[350px] grid grid-rows-10">
+            <div id="content" class="min-h-[684px] h-auto flex flex-row">
+                <div id="items" class="min-w-[350px] h-auto flex flex-col gap-4">
                     <div id="information" class="h-[28px] font-inter text-lg font-semibold leading-7">Information</div>
 
-                    <div id="inventory-wrapper" class="flex flex-col h-[46px]">
+                    <div id="inventory-wrapper" class="flex flex-col min-h-[46px] h-auto gap-[6px]">
                       <div id="inventory-label" class="font-inter text-sm font-semibold leading-5">Inventory</div>
-                      <div id="inventory-value" class="text-gray-700 font-inter text-sm font-normal leading-5">{{ this.inventory }}</div>
+                      <div id="inventory-value" class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+                        {{ this.inventory }}
+                      </div>
                     </div>
 
-                    <div id="divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-sleepy-grey"></div>
+                    <div id="dashed-divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-light-grey"></div>
 
-                    <div id="item-id-wrapper" class="flex flex-col h-[46px]">
+                    <div id="item-id-wrapper" class="flex flex-col min-h-[46px] h-auto gap-[6px]">
                       <div id="item-id-label" class="font-inter text-sm font-semibold leading-5">Item ID</div>
-                      <div id="item-id-value" class="text-gray-700 font-inter text-sm font-normal leading-5">{{ this.itemId }}</div>
+                      <div id="item-id-value" class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+                        {{ this.itemId }}
+                      </div>
                     </div>
 
-                    <div id="divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-sleepy-grey"></div>
+                    <div id="dashed-divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-light-grey"></div>
 
-                    <div id="added-on-wrapper" class="flex flex-col h-[46px]">
+                    <div id="added-on-wrapper" class="flex flex-col min-h-[46px] h-auto gap-[6px]">
                       <div id="added-on-label" class="font-inter text-sm font-semibold leading-5">Added on</div>
-                      <div id="added-on-value" class="text-gray-700 font-inter text-sm font-normal leading-5">{{ this.addedOn }}</div>
+                      <div id="added-on-value" class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+                        {{ this.addedOn }}
+                      </div>
                     </div>
 
-                    <div id="divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-sleepy-grey"></div>
+                    <div id="dashed-divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-light-grey"></div>
 
-                    <div id="added-by-wrapper" class="flex flex-col h-[46px]">
+                    <div id="added-by-wrapper" class="flex flex-col min-h-[46px] h-auto gap-[6px]">
                       <div id="added-by-label" class="font-inter text-sm font-semibold leading-5">Added by</div>
-                      <div id="added-by-value" class="text-gray-700 font-inter text-sm font-normal leading-5">{{ this.addedBy }}</div>
+                      <div id="added-by-value" class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+                        {{ this.addedBy }}
+                      </div>
                     </div>
 
                     <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px	"></div>
 
-                    <div id="custom-columns-wrapper" class="flex flex-col h-[64px]">
-                      <div id="custom-columns-label" class="font-inter text-base font-semibold leading-7">Custom columns</div>
-                      <div id="custom-columns-value" class="text-gray-700 font-inter text-sm font-normal leading-5">{{ this.customColumns }}</div>
+                    <div id="custom-columns-wrapper" class="flex flex-col min-h-[64px] h-auto">
+
+                      <div id="custom-columns-label" class="font-inter text-base font-semibold leading-7 mb-2">Custom columns</div>
+                      <div v-if="customColumns?.length > 0" class="flex flex-col gap-4 w-[350px] h-auto">
+                      <!-- start of custom columns -->
+
+                        <div id="" class="flex flex-col min-h-[46px] h-auto gap-[6px]">
+                          <div id="" class="flex justify-between">
+                            <div class="font-inter text-sm font-semibold leading-5">Solvent stock</div>
+                            <div class="font-inter text-sm font-normal leading-5 text-sn-blue cursor-pointer">Export</div>
+                          </div>
+                          <div id="">
+                            <div v-if="this.customColumns[0]?.solventStock" class="flex flex-row justify-between">
+                              <div class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+                                {{ this.customColumns[0]?.solventStock }}
+                              </div>
+                              <i class="sn-icon sn-icon-notifications"></i>
+                            </div>
+                            <div v-else>No stock</div>
+                          </div>
+                        </div>
+                        <div id="dashed-divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-light-grey"></div>
+
+                        <div id="" class="flex flex-col min-h-[46px] h-auto gap-[6px]">
+                          <div id="" class="font-inter text-sm font-semibold leading-5">Items in warehouse</div>
+                          <div id="" class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+                            {{ this.customColumns[0]?.itemsInWarehouse ? 'In stock' : 'No text' }}
+                          </div>
+                        </div>
+                        <div id="dashed-divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-light-grey"></div>
+
+                        <div id="" class="flex flex-col min-h-[46px] h-auto gap-[6px]">
+                          <div id="" class="font-inter text-sm font-semibold leading-5">Storage temperature</div>
+                          <div id="" class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+                            {{ this.customColumns[0]?.storageTemp || 'No text' }}
+                          </div>
+                        </div>
+                        <div id="dashed-divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-light-grey"></div>
+
+                        <div id="" class="flex flex-col min-h-[46px] h-auto gap-[6px]">
+                          <div id="" class="font-inter text-sm font-semibold leading-5">Sampling date & time range</div>
+                          <div id="" class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+                            {{ this.customColumns[0]?.samplingDateTimeRange || 'No date & time range' }}
+                          </div>
+                        </div>
+                        <div id="dashed-divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-light-grey"></div>
+
+                        <div id="" class="flex flex-col min-h-[46px] h-auto gap-[6px]">
+                          <div id="" class="font-inter text-sm font-semibold leading-5">Sampling date & time reminder</div>
+                          <div id="">
+                            <div v-if="this.customColumns[0]?.samplingDateTimeReminder" class="flex flex-row justify-between">
+                              <div class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+                                {{ this.customColumns[0]?.samplingDateTimeReminder }}
+                              </div>
+                              <i class="sn-icon sn-icon-notifications"></i>
+                            </div>
+                            <div v-else>No Date & time</div>
+                          </div>
+                        </div>
+                        <div id="dashed-divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-light-grey"></div>
+
+                        <div id="" class="flex flex-col min-h-[46px] h-auto gap-[6px]">
+                          <div id="" class="font-inter text-sm font-semibold leading-5">Sampling date range</div>
+                          <div id="" class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+                            {{ this.customColumns[0]?.samplingDateRange || 'No date range' }}
+                          </div>
+                        </div>
+                        <div id="dashed-divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-light-grey"></div>
+
+                        <div id="" class="flex flex-col min-h-[46px] h-auto gap-[6px]">
+                          <div id="" class="font-inter text-sm font-semibold leading-5">Sampling date</div>
+                          <div id="" class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+                            {{ this.customColumns[0]?.samplingDate || 'No date' }}
+                          </div>
+                        </div>
+                        <div id="dashed-divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-light-grey"></div>
+
+                        <div id="" class="flex flex-col min-h-[46px] h-auto gap-[6px]">
+                          <div id="" class="font-inter text-sm font-semibold leading-5">Sampling date reminder</div>
+                          <div id="">
+                            <div v-if="this.customColumns[0]?.samplingDateReminder" class="flex flex-row justify-between">
+                              <div class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+                                {{ this.customColumns[0]?.samplingDateReminder }}
+                              </div>
+                              <i class="sn-icon sn-icon-notifications"></i>
+                            </div>
+                            <div v-else>No Date</div>
+                          </div>
+                        </div>
+                        <div id="dashed-divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-light-grey"></div>
+
+                        <div id="" class="flex flex-col min-h-[46px] h-auto gap-[6px]">
+                          <div id="" class="font-inter text-sm font-semibold leading-5">Sampling time range</div>
+                          <div id="" class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+                            {{ this.customColumns[0]?.samplingTimeRange || 'No time range' }}
+                          </div>
+                        </div>
+                        <div id="dashed-divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-light-grey"></div>
+
+                        <div id="" class="flex flex-col min-h-[46px] h-auto gap-[6px]">
+                          <div id="" class="font-inter text-sm font-semibold leading-5">Incubation time</div>
+                          <div id="" class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+                            {{ this.customColumns[0]?.incubationTime || 'No time' }}
+                          </div>
+                        </div>
+                        <div id="dashed-divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-light-grey"></div>
+
+                        <div id="" class="flex flex-col min-h-[46px] h-auto gap-[6px]">
+                          <div id="" class="font-inter text-sm font-semibold leading-5">DNA File</div>
+                          <div id="" class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+                            <a v-if="this.customColumns[0]?.dnaFile">
+                              {{ this.customColumns[0]?.dnaFile }}
+                            </a>
+                            <div v-else>No file</div>
+                          </div>
+                        </div>
+                        <div id="dashed-divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-light-grey"></div>
+
+                        <div id="" class="flex flex-col min-h-[46px] h-auto gap-[6px]">
+                          <div id="" class="font-inter text-sm font-semibold leading-5">Number of aliquots</div>
+                          <div id="" class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+                            {{ this.customColumns[0]?.numOfAliquots || 'No number' }}
+                          </div>
+                        </div>
+                        <div id="dashed-divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-light-grey"></div>
+
+                        <div id="" class="flex flex-col min-h-[46px] h-auto gap-[6px]">
+                          <div id="" class="font-inter text-sm font-semibold leading-5">Color</div>
+                          <div id="" class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+                            {{ this.customColumns[0]?.color || 'No selection' }}
+                          </div>
+                        </div>
+                        <div id="dashed-divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-light-grey"></div>
+
+                        <div id="" class="flex flex-col min-h-[46px] h-auto gap-[6px]">
+                          <div id="" class="font-inter text-sm font-semibold leading-5">Option</div>
+                          <div id="" class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+                            <div v-if="this.customColumns[0]?.optionArr.length > 0"
+                              class="flex flex-row overflow-auto break-normal w-[350px] gap-1 flex-wrap h-auto"> 
+                              <div v-for="(option, index) in this.customColumns[0].optionArr" :key="index" class="flex min-w-fit">
+                                {{ option + ' |' }}
+                              </div>
+                            </div>
+                            <div v-else>No number</div>
+                          </div>
+                        </div>
+                        <div id="dashed-divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-light-grey"></div>
+
+                        <div id="" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
+                          <div id="" class="font-inter text-sm font-semibold leading-5">Item status</div>
+                          <div id="" class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+                            {{ this.customColumns[0]?.itemStatus || 'No selection' }}
+                          </div>
+                        </div>
+                        <div id="dashed-divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-light-grey"></div>
+
+                        <div id="" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
+                          <div id="" class="flex justify-between">
+                            <div class="font-inter text-sm font-semibold leading-5">Sequence</div>
+                            <div @click="toggleExpandSequence" class="font-inter text-sm font-normal leading-5 text-sn-blue cursor-pointer">
+                              {{ this.sequenceExpanded ? 'Hide' : 'Show' }}
+                            </div>
+                          </div>
+                          <div 
+                            id="sequence-container" 
+                            class="text-sn-dark-grey font-inter text-sm font-normal leading-5 flex flex-row overflow-auto break-normal w-[350px] h-[60px] gap-1 flex-wrap">
+                            {{ this.customColumns[0]?.sequence || 'No text' }}
+                          </div>
+                        </div>
+
+                      <!-- end of custom columns -->
+                      </div>
+                      <div v-else id="custom-columns-value" class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+                        {{ this.customColumnsFallback }}
+                      </div>
                     </div>
 
                     <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px	"></div>
 
-                    <div id="assigned-wrapper" class="flex flex-col h-[64px]">
+                    <div id="assigned-wrapper" class="flex flex-col h-[64px] gap-[6px]">
                       <div id="assigned-label" class="font-inter text-base font-semibold leading-7">Assigned (3)</div>
-                      <div id="assigned-value" class="text-gray-700 font-inter text-sm font-normal leading-5">{{ this.assigned }}</div>
+                      <div id="assigned-value" class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+                        {{ this.assigned }}
+                      </div>
                     </div>
 
                     <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px	"></div>
@@ -67,7 +251,7 @@
                     </div>
                 </div>
 
-                <div class="min-w-[130px] h-[130px] flex item-end gap-x-4	">
+                <div id="navigation" class="min-w-[130px] h-[130px] flex item-end gap-x-4	">
                   <div class="flex flex-col py-2 px-0 gap-3 self-stretch w-[130px] h-[130px]  justify-center items-center">
                     <div class="flex flex-col w-[130px] h-[130px] justify-between text-right">
                       <div @click="handleSideNavClick" id="text-item-1" class="hover:cursor-pointer text-sn-grey">Information</div>
@@ -103,20 +287,38 @@
       data() {
         // using dummy data for now
         return {
+            customColumns: [{
+              solventStock: '120 mL',
+              itemsInWarehouse: true,
+              storageTemp: '-20 °C',
+              samplingDateTimeRange: '8 August 2023, 10:10 - 16 August 2023, 10:10',
+              samplingDateTimeReminder: '27 June 2023, 10:20',
+              samplingDateRange: '08/23/2023 - 08/24/2023',
+              samplingDate: '30 June 2023',
+              samplingDateReminder: '27 June 2023',
+              samplingTimeRange: '11:20 - 12:30',
+              incubationTime: '11:20',
+              dnaFile: 'Metastatic-Cancer-Research.pdf',
+              numOfAliquots: '6487325893648732568743622589364873256874362856885687258936487325687436285682646498362463872258936487325687436285686487326748',
+              color: 'Green',
+              optionArr: ['Option 1', 'Option 10', 'Option 2', 'Option 4', 'Option 5', 'Option 1', 'Option 10', 'Option 2', 'Option 4', 'Option 5','Option 1', 'Option 10', 'Option 2', 'Option 4', 'Option 5'],
+              itemStatus: 'Vapour',
+              sequence: '>J014514.1 Cloning vector pBR322, complete sequence>J014514.1 Cloning vector pBR322, complete sequence>J014514.1 Cloning vector pBR322, complete sequence>J014514.1 Cloning vector pBR322, complete sequence>J014514.1 Cloning vector pBR322, complete sequence'
+            }],
             isShowing: false,
+            sequenceExpanded: false,
             title: 'DNA sample 01',
             subtitle: 'subtitle',
             inventory: 'Sample',
             itemId: 'IT32823',
             addedOn: '27 June 2023',
             addedBy: 'Alexander Cansbridge',
-            customColumns: 'No custom columns',
+            customColumnsFallback: 'No custom columns',
             assigned: 'Assigned to 3 private tasks that will not be displayed'
         }
       },
       created() {
         window.repositoryItemSidebarComponent = this;
-
       },
       watch: {
         isShowing(newVal, oldVal) {
@@ -144,10 +346,20 @@
       computed: {
       },
       methods: {
-        // component is currently shown/hidden by calling window.repositoryItemSidebarComponent.toggleShowHide()
-        toggleShowHide(itemId) {
+        // component is currently shown/hidden by calling window.repositoryItemSidebarComponent.toggleShowHideSidebar()
+        toggleShowHideSidebar(itemId) {
             this.isShowing = !this.isShowing
             console.log(`Showing details for itemId: ${itemId}`)
+        },
+        toggleExpandSequence() {
+          if (this.sequenceExpanded) {
+            document.getElementById('sequence-container').classList.remove('h-fit', 'max-h-[600px]')
+            document.getElementById('sequence-container').classList.add('h-[60px]')
+          } else {
+            document.getElementById('sequence-container').classList.remove('h-[60px]')
+            document.getElementById('sequence-container').classList.add('h-fit', 'max-h-[600px]')
+          }
+          this.sequenceExpanded = !this.sequenceExpanded
         },
 
         // determine the identifier value according to the text-item (target) value
