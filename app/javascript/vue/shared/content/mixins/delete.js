@@ -5,8 +5,7 @@ export default {
     };
   },
   methods: {
-    showDeleteModal(event) {
-      event.stopPropagation();
+    showDeleteModal() {
       this.confirmingDelete = true;
     },
     closeDeleteModal() {

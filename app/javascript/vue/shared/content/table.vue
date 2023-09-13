@@ -23,26 +23,23 @@
           @update="updateName"
         />
       </div>
-      <div class="tw-hidden group-hover/table-header:flex items-center gap-2 ml-auto">
-        <button v-if="element.attributes.orderable.urls.update_url" class="btn icon-btn btn-light" @click="enableNameEdit" tabindex="0">
-          <i class="sn-icon sn-icon-edit"></i>
-        </button>
-        <button v-if="element.attributes.orderable.urls.duplicate_url" class="btn icon-btn btn-light" tabindex="0" @click="duplicateElement">
-          <i class="sn-icon sn-icon-duplicate"></i>
-        </button>
-        <button v-if="element.attributes.orderable.urls.move_targets_url" class="btn btn-light btn-sm" tabindex="0" @click="showMoveModal">
-          Move
-        </button>
-        <button v-if="element.attributes.orderable.urls.delete_url" class="btn icon-btn btn-light" @click="showDeleteModal" tabindex="0">
-          <i class="sn-icon sn-icon-delete"></i>
-        </button>
-      </div>
+      <MenuDropdown
+        class="ml-auto"
+        :listItems="this.actionMenu"
+        :btnClasses="'btn btn-light icon-btn'"
+        :position="'right'"
+        :btnIcon="'sn-icon sn-icon-more-hori'"
+        @edit="enableNameEdit"
+        @duplicate="duplicateElement"
+        @move="showMoveModal"
+        @delete="showDeleteModal"
+      ></MenuDropdown>
     </div>
     <div class="table-body ml-8 group/table-body relative p-1 border-solid border-transparent"
          :class="{'edit border-sn-light-grey': editingTable, 'view': !editingTable, 'locked': !element.attributes.orderable.urls.update_url}"
          tabindex="0"
          @keyup.enter="!editingTable && enableTableEdit()">
-      <div  class="absolute right-0 top-0 z-[200]" v-if="!editingTable && element.attributes.orderable.urls.update_url" @click="enableTableEdit">
+      <div  class="absolute right-0 top-0 z-40" v-if="!editingTable && element.attributes.orderable.urls.update_url" @click="enableTableEdit">
         <div class="bg-sn-light-grey rounded tw-hidden group-hover/table-body:flex cursor-pointer p-1">
 
           <i class="sn-icon sn-icon-edit"></i>
@@ -79,10 +76,11 @@
   import InlineEdit from '../inline_edit.vue'
   import TableNameModal from './modal/table_name.vue'
   import moveElementModal from './modal/move.vue'
+  import MenuDropdown from '../menu_dropdown.vue'
 
   export default {
     name: 'ContentTable',
-    components: { deleteElementModal, InlineEdit, TableNameModal, moveElementModal },
+    components: { deleteElementModal, InlineEdit, TableNameModal, moveElementModal, MenuDropdown },
     mixins: [DeleteMixin, DuplicateMixin, MoveMixin],
     props: {
       element: {
@@ -117,6 +115,34 @@
     computed: {
       locked() {
         return !this.element.attributes.orderable.urls.update_url
+      },
+      actionMenu() {
+        let menu = [];
+        if (this.element.attributes.orderable.urls.update_url) {
+          menu.push({
+            text: I18n.t('general.edit'),
+            emit: 'edit'
+          });
+        }
+        if (this.element.attributes.orderable.urls.duplicate_url) {
+          menu.push({
+            text: I18n.t('general.duplicate'),
+            emit: 'duplicate'
+          });
+        }
+        if (this.element.attributes.orderable.urls.move_targets_url) {
+          menu.push({
+            text: I18n.t('general.move'),
+            emit: 'move'
+          });
+        }
+        if (this.element.attributes.orderable.urls.delete_url) {
+          menu.push({
+            text: I18n.t('general.delete'),
+            emit: 'delete'
+          });
+        }
+        return menu;
       }
     },
     updated() {

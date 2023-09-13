@@ -7,8 +7,7 @@ export default {
     };
   },
   methods: {
-    showMoveModal(event) {
-      event.stopPropagation();
+    showMoveModal() {
       this.movingElement = true;
     },
     closeMoveModal() {

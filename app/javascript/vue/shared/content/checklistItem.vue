@@ -18,7 +18,7 @@
           </span>
         </div>
         <div v-else class="w-6"></div>
-        <div class="whitespace-nowrap text-ellipsis overflow-hidden grow" :class="{ 'pointer-events-none': !checklistItem.attributes.isNew && !updateUrl }">
+        <div class="grow" :class="{ 'pointer-events-none': !checklistItem.attributes.isNew && !updateUrl }">
           <InlineEdit
             :value="checklistItem.attributes.text"
             :sa_value="checklistItem.attributes.sa_text"
