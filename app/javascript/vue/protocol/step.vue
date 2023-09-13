@@ -481,10 +481,6 @@
           })
         });
       },
-      addAttachment(attachment) {
-        this.attachments.push(attachment);
-        this.showFileModal = false;
-      },
       openCommentsSidebar() {
         $('.comments-sidebar .close-btn').click();
         this.showCommentsSidebar = true
