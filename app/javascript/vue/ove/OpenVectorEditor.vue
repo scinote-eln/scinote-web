@@ -15,7 +15,7 @@
         <p v-html="i18n.t('open_vector_editor.trial_expiration_warning_html', { count: oveEnabledDaysLeft })" class="mb-0"></p>
       </div>
       <div class="ove-buttons text-sn-blue">
-        <button v-if="!readOnly" @click="saveAndClose" class="btn btn-light font-sans">
+        <button :style="{ pointerEvents: 'all' }" @click="saveAndClose" class="btn btn-light font-sans" :disabled="this.readOnly">
           <i class="sn-icon sn-icon-save"></i>
           {{ i18n.t('SaveClose') }}
         </button>
@@ -39,29 +39,30 @@
       fileUrl: { type: String },
       fileName: { type: String },
       updateUrl: { type: String },
-      readOnly: { type: Boolean, default: false },
+      canEditFile: { type: Boolean, default: false },
       oveEnabledDaysLeft: { type: Number }
     },
     data() {
       return {
         editor: null,
         sequenceName: null,
-        closeAfterSave: false
+        closeAfterSave: false,
+        readOnly: !this.canEditFile
       }
     },
     mounted() {
       let editorConfig = {
         onSave: this.saveFile,
         generatePng: true,
-        readOnly: this.readOnly,
         showMenuBar: true,
         alwaysAllowSave: true,
         menuFilter: this.menuFilter,
+        beforeReadOnlyChange: this.readOnlyHandler,
         ToolBarProps: {
           toolList: [
             'saveTool',
             'downloadTool',
-            { name: 'importTool', tooltip: I18n.t('open_vector_editor.editor.tooltips.importTool') },
+            { name: 'importTool', tooltip: I18n.t('open_vector_editor.editor.tooltips.importTool'), disabled: this.readOnly },
             'undoTool',
             'redoTool',
             'cutsiteTool',
@@ -96,7 +97,8 @@
       } else {
         this.editor.updateEditor(
           {
-            sequenceData: { circular: true, name: this.sequenceName }
+            sequenceData: { circular: true, name: this.sequenceName },
+            readOnly: this.readOnly
           }
         );
       }
@@ -105,7 +107,7 @@
       loadFile() {
         fetch(this.fileUrl).then((response) => response.json()).then(
           (json) => this.editor.updateEditor(
-            { sequenceData: json }
+            { sequenceData: json, readOnly: this.readOnly }
           )
         );
       },
@@ -144,7 +146,9 @@
 
           return menuOverride;
        });
-      }
+      },
+
+      readOnlyHandler(val) { this.readOnly = val; return true }
     }
   }
  </script>

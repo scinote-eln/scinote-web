@@ -19,7 +19,7 @@
           file-url="<%= @file_url %>"
           file-name="<%= @file_name %>"
           update-url="<%= @asset ? gene_sequence_asset_url(@asset) : gene_sequence_assets_url(parent_type: params[:parent_type], parent_id: params[:parent_id]) %>"
-          :read-only="<%= !asset_managable? %>"
+          :can-edit-file="<%= asset_managable? %>"
           :ove-enabled-days-left="<%= OpenVectorEditorService.evaluation_period_left %>"
         />
       </div>
