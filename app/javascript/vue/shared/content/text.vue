@@ -36,7 +36,7 @@
         @delete="showDeleteModal"
       ></MenuDropdown>
     </div>
-    <div class="flex rounded ml-8 pl-1 min-h-[2.25rem] mb-4 relative w-full group/text_container content__text-body" :class="{ 'edit': inEditMode, 'component__element--locked': !element.attributes.orderable.urls.update_url }" @keyup.enter="enableEditMode($event)" tabindex="0">
+    <div class="flex rounded ml-8 pl-1 min-h-[2.25rem] mb-4 relative group/text_container content__text-body" :class="{ 'edit': inEditMode, 'component__element--locked': !element.attributes.orderable.urls.update_url }" @keyup.enter="enableEditMode($event)" tabindex="0">
       <Tinymce
         v-if="element.attributes.orderable.urls.update_url"
         :value="element.attributes.orderable.text"
