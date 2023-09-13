@@ -6,7 +6,26 @@
     ev.stopPropagation();
 
     let dt = $(this);
-    let options = { ignoreReadonly: true };
+    let selectedDate = {};
+
+    $('.calendar-input').slice(0, 2).each(function(index, element) {
+      if ($(element).val().length > 0 ) {
+        selectedDate.index = index;
+        selectedDate.date = $(element).val();
+      }
+    });
+
+    let options = {
+      ignoreReadonly: true
+    };
+
+    if (selectedDate.date) {
+      if (selectedDate.index == 0) {
+        options.minDate = new Date(selectedDate.date);
+      } else if (selectedDate.index == 1) {
+        options.maxDate = new Date(selectedDate.date);
+      }
+    }
 
     if (dt.data('DateTimePicker')) {
       dt.data('DateTimePicker').destroy();
