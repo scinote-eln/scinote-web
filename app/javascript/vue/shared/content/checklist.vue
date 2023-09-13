@@ -37,7 +37,7 @@
     <div v-if="element.attributes.orderable.urls.create_item_url || orderedChecklistItems.length > 0">
       <Draggable
         v-model="checklistItems"
-        :ghostClass="'checklist-item-ghost border-blue border-solid'"
+        :ghostClass="'checklist-item-ghost'"
         :dragClass="'checklist-item-drag'"
         :chosenClass="'checklist-item-chosen'"
         :forceFallback="true"
