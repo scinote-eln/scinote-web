@@ -58,7 +58,7 @@ describe AccessPermissions::ExperimentsController, type: :controller do
       {
         id: experiment.id,
         project_id: project.id,
-        experiment_member: {
+        user_assignment: {
           user_role_id: technician_role.id,
           user_id: viewer_user.id
         }

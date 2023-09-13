@@ -95,44 +95,6 @@ describe Protocol, type: :model do
     end
   end
 
-  describe '.publish(user)' do
-    let(:user) { create :user }
-    let(:team) { create :team, created_by: user }
-    let(:protocol) { create :protocol, :in_public_repository, team: team, added_by: user }
-
-    it 'calls create activity for restoring protocol' do
-      expect(Activities::CreateActivityService)
-        .to(receive(:call)
-              .with(hash_including(activity_type:
-                                     :move_protocol_in_repository)))
-
-      protocol.publish user
-    end
-
-    it 'creats one new activity DB' do
-      expect { protocol.publish(user) }.to change { Activity.count }.by(1)
-    end
-  end
-
-  describe '.make_private(user)' do
-    let(:user) { create :user }
-    let(:team) { create :team, created_by: user }
-    let(:protocol) { create :protocol, :in_public_repository, team: team, added_by: user }
-
-    it 'calls create activity for restoring protocol' do
-      expect(Activities::CreateActivityService)
-        .to(receive(:call)
-              .with(hash_including(activity_type:
-                                     :move_protocol_in_repository)))
-
-      protocol.make_private user
-    end
-
-    it 'creats one new activity DB' do
-      expect { protocol.make_private(user) }.to change { Activity.count }.by(1)
-    end
-  end
-
   describe '.deep_clone_repository' do
     let(:user) { create :user }
     let(:team) { create :team, created_by: user }

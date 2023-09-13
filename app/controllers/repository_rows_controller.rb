@@ -83,7 +83,7 @@ class RepositoryRowsController < ApplicationController
     @private_modules = @assigned_modules - @viewable_modules
 
     render json: {
-      html: render_to_string(partial: 'repositories/repository_row_info_modal')
+      html: render_to_string(partial: 'repositories/repository_row_info_modal', formats: :html)
     }
   end
 

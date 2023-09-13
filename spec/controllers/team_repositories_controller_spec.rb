@@ -12,11 +12,11 @@ describe TeamRepositoriesController, type: :controller do
 
   describe 'DELETE destroy' do
     let(:second_team) { create :team, created_by: user }
-    let(:team_repository) { create :team_repository, :read, team: second_team, repository: repository }
+    let(:team_repository) { create :team_shared_object, :read, team: second_team, shared_object: repository }
 
     context 'when resource can be deleted' do
       let(:action) do
-        delete :destroy, params: { repository_id: repository.id, team_id: team.id, id: team_repository.id }
+        delete :destroy, params: { team_id: team.id, id: team_repository.id }
       end
 
       it 'renders 204' do
