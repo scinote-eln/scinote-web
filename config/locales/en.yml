@@ -2696,9 +2696,9 @@ en:
         body_html: "The process of importing has started. Please wait..."
       not_yet_done:
         title: "Importing in progress"
-        body_html: "The import is taking longer than expected. You'll get a notice in <i class=\"sn-icon sn-icon-notifications\"></i> Notifications when your protocol template is ready. You can close the window and continue with your work."
+        body_html: "The import is taking longer than expected. You'll get a notice in Notifications when your protocol template is ready. You can close the window and continue with your work."
       done:
-        title: "Importing completed"
+        title: "Importing finished"
         body_html: 'The protocol has been successfully imported. You can access the draft of protocol template <a href="%{url}">here.</a>'
       failed:
         title: "Import failed"
