@@ -266,6 +266,7 @@
             setTimeout(this.updateTable, 100) // delay makes cancel button work
           }
         });
+        this.$nextTick(this.tableObject.render);
       }
     }
   }
