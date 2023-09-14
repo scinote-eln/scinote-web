@@ -32,6 +32,7 @@ class Step < ApplicationRecord
   belongs_to :user, inverse_of: :steps
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User', optional: true
   belongs_to :protocol, inverse_of: :steps
+  delegate :team, to: :protocol
   has_many :step_orderable_elements, inverse_of: :step, dependent: :destroy
   has_many :checklists, inverse_of: :step, dependent: :destroy
   has_many :step_comments, foreign_key: :associated_id, dependent: :destroy

@@ -4,7 +4,6 @@ class User < ApplicationRecord
   include SearchableModel
   include SettingsModel
   include VariablesModel
-  include TeamBySubjectModel
   include InputSanitizeHelper
   include ActiveStorageConcerns
 
@@ -581,13 +580,11 @@ class User < ApplicationRecord
   end
 
   def global_activity_filter(filters, search_query)
-    query_teams = teams.pluck(:id)
-    query_teams &= filters[:teams].map(&:to_i) if filters[:teams]
-    query_teams &= User.team_by_subject(filters[:subjects]) if filters[:subjects]
+    query_teams = teams
+    query_teams = query_teams.where(id: filters[:teams].map(&:to_i)) if filters[:teams].present?
+    query_teams = query_teams.by_activity_subjects(filters[:subjects]) if filters[:subjects].present?
     User.where(id: UserAssignment.where(assignable_id: query_teams, assignable_type: 'Team').select(:user_id))
         .search(false, search_query)
-        .select(:full_name, :id)
-        .map { |i| { label: escape_input(i[:full_name]), value: i[:id] } }
   end
 
   def file_name
