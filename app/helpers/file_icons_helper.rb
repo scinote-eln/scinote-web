@@ -48,11 +48,9 @@ module FileIconsHelper
     image_link = Extends::FILE_ICON_MAPPINGS[file_ext] if Extends::FILE_ICON_MAPPINGS[file_ext]
 
     if image_link
-      if report
-        wicked_pdf_image_tag(image_link, class: 'image-icon')
-      else
-        ActionController::Base.helpers.image_tag(image_link, class: 'image-icon')
-      end
+      image_link = wicked_pdf_asset_base64(image_link) if report
+
+      ActionController::Base.helpers.image_tag(image_link, class: 'image-icon')
     else
       ''
     end

@@ -3,15 +3,15 @@
   <% timestamp = asset.created_at %>
   <div class="report-element report-result-element report-result-asset-element">
     <div class="report-element-header">
-      <div class="result-icon">
+      <span class="result-icon">
         <%= file_extension_icon_html(asset, true) %>
-      </div>
-      <div class="result-name">
+      </span>
+      <span class="result-name">
         <%= result.name %>
         <% if result.archived? %>
           <span class="label label-warning"><%= t('search.index.archived') %></span>
         <% end %>
-      </div>
+      </span>
       <div class="file-name">
         <% if defined? export_all and export_all %>
           <% file_link = @obj_filenames.dig(:assets, asset.id, :file) %>
