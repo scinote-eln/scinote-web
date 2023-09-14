@@ -1,16 +1,4 @@
 .content__table-container {
-  .table-header:not(.editing-name):not(.locked) {
-    &:hover {
-      background-color: $color-concrete;
-    }
-  }
-
-  .table-body:not(.edit):not(.locked) {
-    &:hover {
-      background-color: $color-concrete;
-    }
-  }
-
   td,
   th {
     color: $color-black;

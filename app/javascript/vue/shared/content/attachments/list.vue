@@ -2,7 +2,7 @@
   <div class="list-attachment-container asset"
        :data-asset-id="attachment.id"
   >
-    <i class="fas asset-icon" :class="attachment.attributes.icon"></i>
+    <i class="text-sn-grey asset-icon sn-icon" :class="attachment.attributes.icon"></i>
     <a :href="attachment.attributes.urls.blob"
        class="file-preview-link file-name"
        :id="`modal_link${attachment.id}`"

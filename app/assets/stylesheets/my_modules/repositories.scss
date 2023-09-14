@@ -11,7 +11,7 @@
 }
 
 #assigned-items-container {
-  padding-left: 2.5rem;
+  padding-left: 2.875rem;
   padding-top: 10px;
 
   .modal-body {
@@ -34,7 +34,6 @@
 
       &.collapsed:hover,
       &.collapsed:active {
-        background: $color-concrete;
         border-radius: 6px;
         text-decoration: none;
       }

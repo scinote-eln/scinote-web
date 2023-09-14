@@ -1,11 +1,5 @@
 .content__text-container {
 
-  .text-header:not(.editing-name):not(.locked) {
-    &:hover {
-      background-color: $color-concrete;
-    }
-  }
-
   // TinyMCE table of contents
   .mce-toc ul,
   .mce-toc li {
@@ -25,9 +19,5 @@
 
   img {
     max-width: 100%;
-  }
-
-  .content__text-body:hover:not(.edit):not(.component__element--locked) {
-    background: $color-concrete;
   }
 }

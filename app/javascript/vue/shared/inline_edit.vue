@@ -4,13 +4,12 @@
       <input type="text"
         v-if="singleLine"
         ref="input"
-        class="inline-block outline-none pl-0 py-1 border-0 border-solid border-y w-full border-t-transparent"
+        class="inline-block leading-5 outline-none pl-0 py-1 border-0 border-solid border-y w-full border-t-transparent"
         :class="{
           'inline-edit-placeholder text-sn-grey caret-black': isBlank,
           'border-b-sn-delete-red': error,
           'border-b-sn-science-blue': !error,
         }"
-        :placeholder="placeholder"
         v-model="newValue"
         @keydown="handleKeypress"
         @paste="handlePaste"
@@ -19,7 +18,7 @@
         @focus="setCaretAtEnd"/>
       <textarea v-else
         ref="input"
-        class="overflow-hidden inline-block outline-none px-0 py-1 border-0 border-solid border-b w-full border-t-transparent"
+        class="overflow-hidden leading-5 inline-block outline-none px-0 py-1 border-0 border-solid border-b w-full border-t-transparent"
         :class="{
           'inline-edit-placeholder text-sn-grey caret-black': isBlank,
           'border-sn-delete-red': error,
@@ -36,8 +35,8 @@
     <div
       v-else
       ref="view"
-      class="sci-cursor-edit border-0 py-1 outline-none inline-block border-solid border-y border-transparent"
-      :class="{ 'text-sn-grey': isBlank, 'pb-1.5': !singleLine }"
+      class="sci-cursor-edit leading-5 border-0 py-1 outline-none inline-block border-solid border-y border-transparent"
+      :class="{ 'text-sn-grey font-normal': isBlank }"
       @click="enableEdit($event)"
     >
       <span v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
@@ -45,7 +44,7 @@
     </div>
 
     <div
-      class="mt-2 whitespace-nowrap text-xs font-normal absolute bottom-[-.75rem]"
+      class="mt-2 whitespace-nowrap text-xs font-normal absolute bottom-[-1rem]"
       :class="{'text-sn-delete-red': editing && error}"
     >
       {{ editing && error ? error : timestamp }}

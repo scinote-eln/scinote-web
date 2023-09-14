@@ -1,13 +1,13 @@
 <template>
   <div class="content__checklist-item">
-    <div class="checklist-item-header flex rounded pl-10 mb-1 items-center relative w-full group/checklist-item-header" :class="{ 'locked': locked || editingText, 'editing-name': editingText }">
+    <div class="checklist-item-header flex rounded pl-10 ml-[-2.325rem] items-center relative w-full group/checklist-item-header" :class="{ 'locked': locked || editingText, 'editing-name': editingText }">
       <div v-if="reorderChecklistItemUrl"
-        class="absolute items-center h-full cursor-grab justify-center left-0 p-2 tw-hidden text-sn-grey element-grip step-element-grip--draggable"
+        class="absolute h-6 cursor-grab justify-center left-0 top-1 px-2 tw-hidden text-sn-grey element-grip step-element-grip--draggable"
         :class="{ 'group-hover/checklist-item-header:flex': (!locked && !editingText && draggable) }"
       >
         <i class="sn-icon sn-icon-drag"></i>
       </div>
-      <div class="flex items-start gap-2 grow" :class="{ 'done': checklistItem.attributes.checked }">
+      <div class="flex items-start gap-2 grow pt-[1px]" :class="{ 'done': checklistItem.attributes.checked }">
         <div v-if="!inRepository" class="sci-checkbox-container my-1.5 border-y border-transparent border-solid w-6" :class="{ 'disabled': !toggleUrl }">
           <input ref="checkbox"
                  type="checkbox"
@@ -18,7 +18,7 @@
           </span>
         </div>
         <div v-else class="w-6"></div>
-        <div class="grow" :class="{ 'pointer-events-none': !checklistItem.attributes.isNew && !updateUrl }">
+        <div class="pr-10 grow relative flex items-start" :class="{ 'pointer-events-none': !checklistItem.attributes.isNew && !updateUrl }">
           <InlineEdit
             :value="checklistItem.attributes.text"
             :sa_value="checklistItem.attributes.sa_text"
@@ -39,15 +39,10 @@
             @delete="removeItem()"
             @multilinePaste="(data) => { $emit('multilinePaste', data) && removeItem() }"
           />
+          <span v-if="!checklistItem.attributes.urls || deleteUrl" class="absolute right-0 leading-6 tw-hidden group-hover/checklist-item-header:inline-block !text-sn-blue cursor-pointer" @click="showDeleteModal" tabindex="0">
+            <i class="sn-icon sn-icon-delete"></i>
+          </span>
         </div>
-      </div>
-      <div class="items-center gap-2 tw-hidden group-hover/checklist-item-header:flex">
-        <button v-if="!checklistItem.attributes.urls || updateUrl" class="btn icon-btn btn-light  btn-sm" @click="enableTextEdit" tabindex="0">
-          <i class="sn-icon sn-icon-edit"></i>
-        </button>
-        <button v-if="!checklistItem.attributes.urls || deleteUrl" class="btn icon-btn btn-light  btn-sm" @click="showDeleteModal" tabindex="0">
-          <i class="sn-icon sn-icon-delete"></i>
-        </button>
       </div>
     </div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @cancel="closeDeleteModal"/>

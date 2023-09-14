@@ -75,11 +75,3 @@
     margin-left: 3em;
   }
 }
-
-.content__checklist-item {
-  .checklist-item-header:not(.editing-name):not(.locked) {
-    &:hover {
-      background-color: $color-concrete;
-    }
-  }
-}

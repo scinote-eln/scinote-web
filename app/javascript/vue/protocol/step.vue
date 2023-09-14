@@ -12,7 +12,7 @@
     </div>
     <div class="step-header">
       <div class="step-element-header" :class="{ 'no-hover': !urls.update_url }">
-        <div class="flex items-center gap-4 py-1 border-0 border-y border-transparent border-solid">
+        <div class="flex items-center gap-4 py-0.5 border-0 border-y border-transparent border-solid">
           <a class="step-collapse-link hover:no-underline focus:no-underline"
             :href="'#stepBody' + step.id"
             data-toggle="collapse"
@@ -28,7 +28,7 @@
                  :title="step.attributes.completed ? i18n.t('protocols.steps.status.uncomplete') : i18n.t('protocols.steps.status.complete')"
             ></div>
           </div>
-          <div class="step-position">
+          <div class="step-position  leading-5">
             {{ step.attributes.position + 1 }}.
           </div>
         </div>
