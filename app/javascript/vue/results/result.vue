@@ -64,6 +64,9 @@
                 <li class="action" v-if="result.attributes.wopi_enabled" @click="openWopiFileModal">
                   {{ i18n.t('assets.create_wopi_file.button_text') }}
                 </li>
+                <li v-if="result.attributes.open_vector_editor_context.new_sequence_asset_url" @click="openOVEditor"  @keyup.enter="openOVEditor">
+                  {{ i18n.t('open_vector_editor.new_sequence_file') }}
+                </li>
                 <li class="action" v-if="result.attributes.marvinjs_enabled" @click="openMarvinJsModal($refs.marvinJsButton)">
                     <span
                     class="new-marvinjs-upload-button text-sn-black text-decoration-none"
@@ -165,6 +168,7 @@
 
   import AttachmentsMixin from '../shared/content/mixins/attachments.js'
   import WopiFileModal from '../shared/content/attachments/mixins/wopi_file_modal.js'
+  import OveMixin from '../shared/content/attachments/mixins/ove.js'
   import UtilsMixin from '../mixins/utils.js'
 
   export default {
@@ -191,7 +195,7 @@
         editingName: false
       }
     },
-    mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal],
+    mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin],
     components: {
       ReorderableItemsModal,
       ResultTable,

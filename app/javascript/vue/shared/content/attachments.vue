@@ -1,6 +1,6 @@
 <template>
   <div class="content__attachments" :id='"content__attachments-" + parent.id'>
-    <div class="border-0 border-b border-dashed border-sn-light-grey my-6" v-if="!inRepository"></div>
+    <div class="border-0 border-b border-dashed border-sn-light-grey my-6"></div>
     <div class="content__attachments-actions">
       <div class="title">
         {{ i18n.t('protocols.steps.files', {count: attachments.length}) }}
@@ -155,6 +155,7 @@
       deleteAttachment(id) {
         this.$emit('attachment:deleted', id)
       },
+
       initMarvinJS() {
         // legacy logic from app/assets/javascripts/sitewide/marvinjs_editor.js
         MarvinJsEditor.initNewButton(
@@ -171,6 +172,7 @@
           }
         });
       },
+
       handleDropdownPosition() {
         this.$refs.actionsDropdownButton.classList.toggle("dropup", !this.isInViewport(this.$refs.actionsDropdown));
       },

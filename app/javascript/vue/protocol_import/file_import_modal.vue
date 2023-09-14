@@ -9,10 +9,6 @@
         <div class="modal-body text-xs" v-html="i18n.t(`protocols.import_modal.${state}.body_html`, { url: protocolUrl })">
         </div>
         <div class="modal-footer">
-          <button type="button"
-                  class="btn btn-default"
-                  data-dismiss="modal">{{ i18n.t('protocols.import_modal.cancel') }}</button>
-
           <button v-if="state === 'confirm'" type="button"
                   class="btn btn-primary"
                   @click.stop.prevent="confirm">{{ i18n.t('protocols.import_modal.import') }}</button>

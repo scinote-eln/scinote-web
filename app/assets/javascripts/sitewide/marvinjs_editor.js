@@ -303,6 +303,12 @@ $(document).on('click', '.marvinjs-edit-button', function() {
   });
 });
 
+$(document).on('click', '.gene-sequence-edit-button', function() {
+  var editButton = $(this);
+  $('#filePreviewModal').modal('hide');
+  window.showIFrameModal(editButton.data('sequence-edit-url'));
+});
+
 $(document).on('turbolinks:load', function() {
   MarvinJsEditor = MarvinJsEditorApi();
   if (MarvinJsEditor.enabled()) {

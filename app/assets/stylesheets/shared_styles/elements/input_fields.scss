@@ -24,12 +24,18 @@
     transition: .3s;
     width: 100%;
 
+    &:hover {
+      border: 1px solid var(--sn-science-blue-hover);
+    }
+
     &:focus {
       border: $border-focus;
     }
 
     &:disabled {
-      background: transparent;
+      background-color: var(--sn-super-light-grey);
+      color: var(--sn-light-grey);
+      border: 1px solid var(--sn-light-grey);
     }
 
     &::placeholder {

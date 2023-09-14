@@ -9,7 +9,8 @@ class ResultSerializer < ActiveModel::Serializer
 
   attributes :name, :id, :urls, :updated_at, :created_at_formatted, :updated_at_formatted, :user,
              :my_module_id, :attachments_manageble, :marvinjs_enabled, :marvinjs_context, :type,
-             :wopi_enabled, :wopi_context, :created_at, :created_by, :archived, :assets_order
+             :wopi_enabled, :wopi_context, :created_at, :created_by, :archived, :assets_order,
+             :open_vector_editor_context
 
   def marvinjs_enabled
     MarvinJsService.enabled?
@@ -72,6 +73,15 @@ class ResultSerializer < ActiveModel::Serializer
       {
         create_wopi: create_wopi_file_path,
         icon: image_path('office/office.svg')
+      }
+    end
+  end
+
+  def open_vector_editor_context
+    if can_manage_result?(object)
+      {
+        new_sequence_asset_url: new_gene_sequence_asset_url(parent_type: 'Result', parent_id: object.id),
+        icon: image_path('icon_small/sequence-editor.svg')
       }
     end
   end

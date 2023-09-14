@@ -130,5 +130,11 @@ Rails.application.config.assets.precompile += %w(big.min.js)
 # JQuery related includes
 Rails.application.config.assets.precompile += %w(jquery_bundle.js)
 
+# Separate icon font file
+Rails.application.config.assets.precompile += %w(sn_icon_font.css)
+
+# Separate translations file
+Rails.application.config.assets.precompile += %w(i18n_bundle.js)
+
 # Add stuff installed by yarn
 Rails.application.config.assets.paths << Rails.root.join('node_modules')

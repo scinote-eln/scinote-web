@@ -96,6 +96,9 @@
                 <li class="action" v-if="step.attributes.wopi_enabled" @click="openWopiFileModal">
                   {{ i18n.t('assets.create_wopi_file.button_text') }}
                 </li>
+                <li v-if="step.attributes.open_vector_editor_context.new_sequence_asset_url" @click="openOVEditor"  @keyup.enter="openOVEditor">
+                  {{ i18n.t('open_vector_editor.new_sequence_file') }}
+                </li>
                 <li class="action" v-if="step.attributes.marvinjs_enabled" @click="openMarvinJsModal($refs.marvinJsButton)">
                   <span
                     class="new-marvinjs-upload-button text-sn-black text-decoration-none"
@@ -153,22 +156,21 @@
     </div>
     <div class="collapse in" :id="'stepBody' + step.id">
       <div class="step-elements">
-        <template v-for="(element, index) in orderedElements">
-          <component
-            :is="elements[index].attributes.orderable_type"
-            :key="index"
-            :element.sync="elements[index]"
-            :inRepository="inRepository"
-            :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
-            :assignableMyModuleId="assignableMyModuleId"
-            :isNew="element.isNew"
-            @component:delete="deleteElement"
-            @update="updateElement"
-            @reorder="openReorderModal"
-            @component:insert="insertElement"
-            @moved="moveElement"
-          />
-        </template>
+        <component
+          v-for="(element, index) in orderedElements"
+          :is="elements[index].attributes.orderable_type"
+          :key="index"
+          :element.sync="elements[index]"
+          :inRepository="inRepository"
+          :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
+          :assignableMyModuleId="assignableMyModuleId"
+          :isNew="element.isNew"
+          @component:delete="deleteElement"
+          @update="updateElement"
+          @reorder="openReorderModal"
+          @component:insert="insertElement"
+          @moved="moveElement"
+        />
         <Attachments v-if="attachments.length"
                     :parent="step"
                     :attachments="attachments"
@@ -217,6 +219,7 @@
   import UtilsMixin from '../mixins/utils.js'
   import AttachmentsMixin from '../shared/content/mixins/attachments.js'
   import WopiFileModal from '../shared/content/attachments/mixins/wopi_file_modal.js'
+  import OveMixin from '../shared/content/attachments/mixins/ove.js'
   import StorageUsage from '../shared/content/attachments/storage_usage.vue'
 
   export default {
@@ -266,7 +269,7 @@
         ]
       }
     },
-    mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal],
+    mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin],
     components: {
       InlineEdit,
       StepTable,

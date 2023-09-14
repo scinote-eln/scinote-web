@@ -40,6 +40,8 @@ module FileIconsHelper
       image_link = 'icon_small/pptx_file.svg'
     elsif asset.file.attached? && asset.file.metadata['asset_type'] == 'marvinjs'
       image_link = 'icon_small/marvinjs_file.svg'
+    elsif asset.file.attached? && asset.file.metadata['asset_type'] == 'gene_sequence'
+      image_link = 'icon_small/sequence-editor.svg'
     end
 
     # Now check for custom mappings or possible overrides

@@ -7,7 +7,7 @@
             id: asset.id
           } do %>
     <div class="attachment-preview <%= asset.file.attached? ? asset.file.metadata['asset_type'] : '' %>">
-      <% if asset.previewable? && asset.medium_preview.image.attached? %>
+      <% if asset.previewable? && asset.medium_preview&.image&.attached? %>
         <%= image_tag asset.medium_preview.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
             class: 'asset-preview-image',
             style: 'opacity: 0' %>

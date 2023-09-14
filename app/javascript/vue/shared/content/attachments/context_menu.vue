@@ -19,6 +19,11 @@
           {{ attachment.attributes.wopi_context.button_text }}
         </a>
       </li>
+      <li v-if="attachment.attributes.asset_type == 'gene_sequence' && attachment.attributes.urls.open_vector_editor_edit">
+        <a class="ove-edit-button" @click="openOVEditor(attachment.attributes.urls.open_vector_editor_edit)">
+          {{ i18n.t('open_vector_editor.edit_sequence') }}
+        </a>
+      </li>
       <li v-if="attachment.attributes.asset_type == 'marvinjs' && attachment.attributes.urls.marvin_js_start_edit">
         <a class="marvinjs-edit-button"
            :data-sketch-id="attachment.id"
@@ -137,6 +142,9 @@
       deleteAttachment() {
         this.deleteModal = false
         this.$emit('attachment:delete')
+      },
+      openOVEditor(url) {
+        window.showIFrameModal(url);
       }
     }
   }
