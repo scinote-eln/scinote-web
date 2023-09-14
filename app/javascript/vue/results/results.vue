@@ -26,12 +26,6 @@
         @result:restored="removeResult"
       />
     </div>
-    <div v-if="results.length > 0" class="p-3 rounded-md bg-sn-white my-4">
-      <button v-if="canCreate" :title="i18n.t('my_modules.results.add_title')" class="btn btn-secondary" @click="createResult">
-        <i class="sn-icon sn-icon-new-task"></i>
-        {{ i18n.t('my_modules.results.add_label') }}
-      </button>
-    </div>
   </div>
 </template>
 
