@@ -7,16 +7,13 @@
 }
 
 
-.content__attachments {
-  padding-left: 2rem;
-}
-
 .content__attachments-actions {
   align-items: center;
   display: flex;
   flex-wrap: wrap;
 
   .title {
+    @include font-h3;
     flex-grow: 1;
     flex-shrink: 0;
   }

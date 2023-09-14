@@ -1,8 +1,9 @@
 <template>
   <div class="content__attachments" :id='"content__attachments-" + parent.id'>
+    <div class="border-0 border-b border-dashed border-sn-light-grey my-6" v-if="!inRepository"></div>
     <div class="content__attachments-actions">
       <div class="title">
-        <h3>{{ i18n.t('protocols.steps.files', {count: attachments.length}) }}</h3>
+        {{ i18n.t('protocols.steps.files', {count: attachments.length}) }}
       </div>
       <div class="flex items-center gap-2" v-if="parent.attributes.attachments_manageble && attachmentsReady">
         <div ref="actionsDropdownButton" class="dropdown sci-dropdown">

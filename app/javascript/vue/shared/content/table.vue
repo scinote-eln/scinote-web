@@ -1,13 +1,7 @@
 <template>
   <div class="content__table-container">
-    <div class="table-header h-9 flex rounded pl-8 mb-1 items-center relative w-full group/table-header" :class="{ 'editing-name': editingName, 'locked': locked }">
-      <div v-if="reorderElementUrl"
-          class="absolute items-center h-full justify-center left-0 p-2 tw-hidden text-sn-grey"
-          :class="{ 'group-hover/table-header:flex': (!editingName && !locked) }"
-          @click="$emit('reorder')">
-        <i class="sn-icon sn-icon-sort"></i>
-      </div>
-
+    <div class="border-0 border-b border-dashed border-sn-light-grey my-6" v-if="!inRepository"></div>
+    <div class="table-header h-9 flex rounded mb-1 items-center relative w-full group/table-header" :class="{ 'editing-name': editingName, 'locked': locked }">
       <div v-if="!locked || element.attributes.orderable.name" :key="reloadHeader"
            class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold"
            :class="{'pointer-events-none': locked}">
@@ -35,16 +29,10 @@
         @delete="showDeleteModal"
       ></MenuDropdown>
     </div>
-    <div class="table-body ml-8 group/table-body relative p-1 border-solid border-transparent"
+    <div class="table-body group/table-body relative border-solid border-transparent"
          :class="{'edit border-sn-light-grey': editingTable, 'view': !editingTable, 'locked': !element.attributes.orderable.urls.update_url}"
          tabindex="0"
          @keyup.enter="!editingTable && enableTableEdit()">
-      <div  class="absolute right-0 top-0 z-40" v-if="!editingTable && element.attributes.orderable.urls.update_url" @click="enableTableEdit">
-        <div class="bg-sn-light-grey rounded tw-hidden group-hover/table-body:flex cursor-pointer p-1">
-
-          <i class="sn-icon sn-icon-edit"></i>
-        </div>
-      </div>
       <div ref="hotTable" class="hot-table-container" @click="!editingTable && enableTableEdit()">
       </div>
       <div v-if="editingTable" class="text-xs pt-3 pb-2 text-sn-grey">

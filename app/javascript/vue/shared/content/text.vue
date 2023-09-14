@@ -1,13 +1,7 @@
 <template>
   <div class="content__text-container">
-    <div class="text-header h-9 flex rounded pl-8 mb-1 items-center relative w-full group/text-header" :class="{ 'editing-name': editingName, 'locked': !element.attributes.orderable.urls.update_url }">
-      <div v-if="reorderElementUrl"
-          class="absolute items-center h-full justify-center left-0 p-2 tw-hidden text-sn-grey"
-          :class="{ 'group-hover/text-header:flex': !inEditMode }"
-          @click="$emit('reorder')">
-        <i class="sn-icon sn-icon-sort"></i>
-      </div>
-
+    <div class="border-0 border-b border-dashed border-sn-light-grey my-6" v-if="!inRepository"></div>
+    <div class="text-header h-9 flex rounded mb-1 items-center relative w-full group/text-header" :class="{ 'editing-name': editingName, 'locked': !element.attributes.orderable.urls.update_url }">
       <div v-if="element.attributes.orderable.urls.update_url || element.attributes.orderable.name"
            class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold"
            :class="{'pointer-events-none': !element.attributes.orderable.urls.update_url}"
@@ -36,7 +30,7 @@
         @delete="showDeleteModal"
       ></MenuDropdown>
     </div>
-    <div class="flex rounded ml-8 pl-1 min-h-[2.25rem] mb-4 relative group/text_container content__text-body" :class="{ 'edit': inEditMode, 'component__element--locked': !element.attributes.orderable.urls.update_url }" @keyup.enter="enableEditMode($event)" tabindex="0">
+    <div class="flex rounded min-h-[2.25rem] mb-4 relative group/text_container content__text-body" :class="{ 'edit': inEditMode, 'component__element--locked': !element.attributes.orderable.urls.update_url }" @keyup.enter="enableEditMode($event)" tabindex="0">
       <Tinymce
         v-if="element.attributes.orderable.urls.update_url"
         :value="element.attributes.orderable.text"

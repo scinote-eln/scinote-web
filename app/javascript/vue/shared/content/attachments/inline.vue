@@ -64,7 +64,7 @@
     </template>
     <template v-else>
       <div class="general-file-container">
-        <i lass="fas" :class="attachment.attributes.icon"></i>
+        <i lass="text-sn-grey  sn-icon" :class="attachment.attributes.icon"></i>
       </div>
     </template>
   </div>

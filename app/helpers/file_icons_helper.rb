@@ -13,17 +13,17 @@ module FileIconsHelper
     if Extends::FILE_FA_ICON_MAPPINGS[file_ext] # Check for custom mappings or possible overrides
       Extends::FILE_FA_ICON_MAPPINGS[file_ext]
     elsif Constants::FILE_TEXT_FORMATS.include?(file_ext)
-      'fa-file-word'
+      'sn-icon-file-word'
     elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
-      'fa-file-excel'
+      'sn-icon-file-excel'
     elsif Constants::FILE_PRESENTATION_FORMATS.include?(file_ext)
-      'fa-file-powerpoint'
+      'sn-icon-file-powerpoint'
     elsif %w(pdf).include?(file_ext)
-      'fa-file-pdf'
+      'sn-icon-pdf'
     elsif %w(txt csv tab tex).include?(file_ext)
-      'far fa-file-alt'
+      'sn-icon-result-text'
     elsif Constants::WHITELISTED_IMAGE_TYPES.include?(file_ext)
-      'fa-image'
+      'sn-icon-result-image'
     else
       'fa-paperclip'
     end
@@ -125,7 +125,7 @@ module FileIconsHelper
       html = ActionController::Base.helpers.content_tag(
         :i,
         '',
-        class: ['fas', 'asset-icon', file_fa_icon_class(asset)]
+        class: ['sn-icon', 'asset-icon', file_fa_icon_class(asset)]
       )
     end
     html

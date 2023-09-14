@@ -1,12 +1,7 @@
 <template>
   <div class="content__checklist-container" >
-    <div class="checklist-header flex rounded pl-8 mb-1 items-center relative w-full group/checklist-header" :class="{ 'editing-name': editingName, 'locked': !element.attributes.orderable.urls.update_url }">
-      <div v-if="reorderElementUrl"
-          class="absolute items-center h-full justify-center left-0 p-2 tw-hidden text-sn-grey"
-          :class="{ 'group-hover/checklist-header:flex': !locked }"
-           @click="$emit('reorder')">
-        <i class="sn-icon sn-icon-sort"></i>
-      </div>
+    <div class="border-0 border-b border-dashed border-sn-light-grey my-6" v-if="!inRepository"></div>
+    <div class="checklist-header flex rounded mb-1 items-center relative w-full group/checklist-header" :class="{ 'editing-name': editingName, 'locked': !element.attributes.orderable.urls.update_url }">
       <div class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold" :class="{ 'pointer-events-none': locked } ">
         <InlineEdit
           :value="element.attributes.orderable.name"
@@ -64,11 +59,11 @@
         />
       </Draggable>
       <div v-if="element.attributes.orderable.urls.create_item_url"
-           class="ml-7 btn btn-light btn-sm px-2"
+           class="flex items-center gap-1 text-sn-blue cursor-pointer mb-2 mt-1"
            tabindex="0"
            @keyup.enter="addItem"
            @click="addItem">
-        <i class="sn-icon sn-icon-new-task w-6 text-center"></i>
+        <i class="sn-icon sn-icon-new-task w-6 text-center inline-block"></i>
         {{ i18n.t('protocols.steps.insert.checklist_item') }}
       </div>
     </div>

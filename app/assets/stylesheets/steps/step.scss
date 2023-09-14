@@ -19,7 +19,7 @@
       display: flex;
       flex-basis: 100%;
       position: relative;
-      gap: 1rem;
+      gap: .25rem;
 
       .step-name-edit-icon {
         background: linear-gradient(90deg,
@@ -101,7 +101,7 @@
   }
 
   .step-elements {
-    padding-left: calc(var(--left-component-padding) * 2);
+    padding-left: 2.5rem;
 
     .step-timestamp {
       position: relative;

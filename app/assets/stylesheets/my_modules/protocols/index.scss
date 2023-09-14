@@ -100,7 +100,7 @@
           content: '[' attr(data-assigned-items-count) ']';
           display: inline;
           font-size: 1rem;
-          font-style: normal;
+          font-weight: normal;
           line-height: 22px;
           padding-left: .25rem;
         }
@@ -423,7 +423,7 @@
 
 .task-notes {
   display: inline-block;
-  padding-left: 2rem;
+  padding-left: 2.875rem;
   position: relative;
   width: 100%;
 
@@ -432,7 +432,6 @@
   }
 
   .task-notes-content {
-    margin-left: 10px;
     overflow-x: auto;
 
     .form-group.has-error {

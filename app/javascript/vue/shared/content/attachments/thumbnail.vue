@@ -19,7 +19,7 @@
             @error="ActiveStoragePreviews.reCheckPreview"
             @load="ActiveStoragePreviews.showPreview"
             style='opacity: 0' />
-        <i  v-else class="fas" :class="attachment.attributes.icon"></i>
+        <i  v-else class="text-sn-grey sn-icon" :class="attachment.attributes.icon"></i>
       </div>
       <div class="attachment-label"
            data-toggle="tooltip"
