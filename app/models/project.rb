@@ -64,8 +64,12 @@ class Project < ApplicationRecord
                                 reject_if: :all_blank
 
   scope :visible_to, (lambda do |user, team|
-                        unless team.permission_granted?(user, TeamPermissions::MANAGE)
-                          left_outer_joins(user_assignments: :user_role)
+                        # Team owners see all projects in the team
+                        if team.permission_granted?(user, TeamPermissions::MANAGE)
+                          where(team: team)
+                        else
+                          where(team: team)
+                            .left_outer_joins(user_assignments: :user_role)
                             .where(user_assignments: { user: user })
                             .where('? = ANY(user_roles.permissions)', ProjectPermissions::READ)
                         end
@@ -98,15 +102,10 @@ class Project < ApplicationRecord
   end
 
   def self.viewable_by_user(user, teams)
-    # Team owners see all projects in the team
-    owner_role = UserRole.find_predefined_owner_role
-    projects = Project.left_outer_joins(:team, user_assignments: :user_role)
-                      .joins("LEFT OUTER JOIN user_assignments team_user_assignments " \
-                             "ON team_user_assignments.assignable_type = 'Team' " \
-                             "AND team_user_assignments.assignable_id = team.id")
-                      .where(team: teams)
-    projects.where(team: { team_user_assignments: { user_id: user, user_role_id: owner_role } })
-            .or(projects.with_granted_permissions(user, ProjectPermissions::READ)).distinct
+    joins(user_assignments: :user_role)
+      .where(team: teams)
+      .with_granted_permissions(user, ProjectPermissions::READ)
+      .distinct
   end
 
   def self.with_children_viewable_by_user(user)
