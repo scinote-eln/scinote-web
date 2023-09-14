@@ -65,13 +65,17 @@ class GlobalActivitiesController < ApplicationController
   end
 
   def team_filter
-    render json: current_user.teams.ordered.global_activity_filter(activity_filters, params[:query])
+    teams = current_user.teams.ordered.global_activity_filter(activity_filters, params[:query])
+    render json: teams.select(:id, :name)
+                      .map { |i| { value: i[:id], label: escape_input(i[:name]) } }
   end
 
   def user_filter
     filter = activity_filters
     filter = { subjects: { MyModule: [params[:my_module_id].to_i] } } if params[:my_module_id]
-    render json: current_user.global_activity_filter(filter, params[:query])
+    users = current_user.global_activity_filter(filter, params[:query])
+    render json: users.select(:full_name, :id)
+                      .map { |i| { label: escape_input(i[:full_name]), value: i[:id] } }
   end
 
   def project_filter
