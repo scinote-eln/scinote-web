@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawResultText
-  def draw_result_text(result)
-    result_text = result.result_text
+  def draw_result_text(element)
+    result = element.result
+    result_text = result.orderable.text
     timestamp = result.created_at
     color = @color
     @docx.p
