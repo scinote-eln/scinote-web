@@ -14,7 +14,6 @@ var RepositoryDatatable = (function(global) {
   var TABLE = null;
   var EDITABLE = false;
   var SELECT_ALL_SELECTOR = '#checkbox input[name=select_all]';
-  const STATUS_POLLING_INTERVAL = 10000;
 
   var rowsSelected = [];
   var rowsLocked = [];
@@ -511,7 +510,7 @@ var RepositoryDatatable = (function(global) {
   function checkSnapshottingStatus() {
     $.getJSON($(TABLE_ID).data('status-url'), (statusData) => {
       if (statusData.snapshot_provisioning) {
-        setTimeout(() => { checkSnapshottingStatus(); }, STATUS_POLLING_INTERVAL);
+        setTimeout(() => { checkSnapshottingStatus(); }, GLOBAL_CONSTANTS.SLOW_STATUS_POLLING_INTERVAL);
       } else {
         EDITABLE = statusData.editable;
         $('.repository-provisioning-notice').remove();
@@ -1097,7 +1096,7 @@ var RepositoryDatatable = (function(global) {
     EDITABLE = $(TABLE_ID).data('editable');
     TABLE = dataTableInit();
     if ($(TABLE_ID).data('snapshot-provisioning')) {
-      setTimeout(() => { checkSnapshottingStatus(); }, STATUS_POLLING_INTERVAL);
+      setTimeout(() => { checkSnapshottingStatus(); }, GLOBAL_CONSTANTS.SLOW_STATUS_POLLING_INTERVAL);
     }
   }
 

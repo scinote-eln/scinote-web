@@ -1,8 +1,6 @@
 /* global I18n dropdownSelector HelperModule animateSpinner */
 /* eslint-disable no-use-before-define */
 (function() {
-  const STATUS_POLLING_INTERVAL = 5000;
-
   function initTaskCollapseState() {
     let taskView = '.my-modules-protocols-index';
     let taskSection = '.task-section-caret';
