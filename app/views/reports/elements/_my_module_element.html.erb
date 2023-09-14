@@ -75,6 +75,14 @@
 
     <% order_results_for_report(my_module.results, @settings.dig('task', 'result_order')).each do |result| %>
       <%= render partial: 'reports/elements/my_module_result_asset_element', locals: { result: result, report: report, export_all: export_all } %>
+
+      <% result.result_orderable_elements.each do |element| %>
+        <% if element.orderable_type == "ResultTable" %>
+          <%= render partial: 'reports/elements/my_module_result_table_element', locals: { result: result, export_all: export_all, element: element} %>
+        <% elsif element.orderable_type == "ResultText" %>
+          <%= render partial: 'reports/elements/my_module_result_text_element', locals: { result: result, export_all: export_all, element: element } %>
+        <% end %>
+      <% end %>
     <% end %>
   </div><br>
 

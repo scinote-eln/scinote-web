@@ -73,6 +73,13 @@ module Reports::Docx::DrawMyModule
     @docx.h4 I18n.t('Results') if my_module.results.any? && (%w(file_results table_results text_results).any? { |k| @settings.dig('task', k) })
     order_results_for_report(my_module.results, @settings.dig('task', 'result_order')).each do |result|
       draw_result_asset(result, @settings)
+      result.result_orderable_elements.each do |element|
+        if element.orderable_type == "ResultTable"
+          draw_result_table(element)
+        elsif element.orderable_type == "ResultText"
+          draw_result_text(element)
+        end
+      end
     end
 
     @docx.p
