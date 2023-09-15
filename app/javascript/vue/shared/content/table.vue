@@ -170,7 +170,11 @@
       },
       updateName(name) {
         this.element.attributes.orderable.name = name;
-        this.update();
+        // Prevents the table from being updated when the name is updated
+        this.updatingTableData = true;
+        this.update(() => {
+          this.updatingTableData = false;
+        });
       },
       openNameModal() {
         this.tableObject.deselectCell();
@@ -191,10 +195,12 @@
       updateTable() {
         if (this.editingTable == false) return;
 
-        this.update();
-        this.editingTable = false;
+        this.update(() => {
+          this.editingTable = false;
+          this.updatingTableData = false;
+        });
       },
-      update() {
+      update(callback = () => {}) {
         this.element.attributes.orderable.contents = JSON.stringify({ data: this.tableObject.getData() });
         let metadata = this.element.attributes.orderable.metadata || {};
         if (metadata.plateTemplate) {
@@ -232,16 +238,8 @@
                           })
             });
         }
-        this.$emit('update', this.element)
-        this.ajax_update_url()
-        this.updatingTableData = false;
-      },
-      ajax_update_url() {
-        $.ajax({
-          url: this.element.attributes.orderable.urls.update_url,
-          method: 'PUT',
-          data: this.element.attributes.orderable,
-        })
+
+        this.$emit('update', this.element, false, callback)
       },
       loadTableData() {
         let container = this.$refs.hotTable;
