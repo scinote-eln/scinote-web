@@ -2106,7 +2106,7 @@ en:
       invalid_arguments: "Can't find %{key}"
     my_module_assigned_snapshot_service:
       invalid_arguments: "Can't find %{key}"
-    side_bar:
+    item_card:
       title:
         information: "Information"
       default:

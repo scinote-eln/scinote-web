@@ -9,7 +9,7 @@
       </div>
       <div class="body mt-4">
         <section id="information">
-          <h4 class="title mb-0">{{ i18n.t('repositories.side_bar.title.information') }}</h4>
+          <h4 class="title mb-0">{{ i18n.t('repositories.item_card.title.information') }}</h4>
           <div class="item-details">
             <div v-for="column in defaultColumns" class="flex flex-col py-3">
               <span class="inline-block font-semibold pb-2">{{ column.label }}</span>
@@ -314,10 +314,10 @@
       computed: {
         defaultColumns() {
           return [
-            { label: I18n.t('repositories.side_bar.default.repository_name'), value: this.repositoryRow.repository_name },
-            { label: I18n.t('repositories.side_bar.default.id'), value: this.repositoryRow.code },
-            { label: I18n.t('repositories.side_bar.default.added_on'), value: this.repositoryRow.added_on },
-            { label: I18n.t('repositories.side_bar.default.added_by'), value: this.repositoryRow.added_by }
+            { label: I18n.t('repositories.item_card.default.repository_name'), value: this.repositoryRow.repository_name },
+            { label: I18n.t('repositories.item_card.default.id'), value: this.repositoryRow.code },
+            { label: I18n.t('repositories.item_card.default.added_on'), value: this.repositoryRow.added_on },
+            { label: I18n.t('repositories.item_card.default.added_by'), value: this.repositoryRow.added_by }
           ]
         }
       },
