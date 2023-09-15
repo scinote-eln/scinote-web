@@ -39,18 +39,20 @@
       fileUrl: { type: String },
       fileName: { type: String },
       updateUrl: { type: String },
-      canEditFile: { type: Boolean, default: false },
-      oveEnabledDaysLeft: { type: Number }
+      canEditFile: { type: String },
+      oveEnabledDaysLeftString: { type: String }
     },
     data() {
       return {
         editor: null,
         sequenceName: null,
         closeAfterSave: false,
-        readOnly: !this.canEditFile
+        readOnly: this.canEditFile !== 'true',
+        oveEnabledDaysLeft: 0
       }
     },
     mounted() {
+      this.oveEnabledDaysLeft = parseInt(this.oveEnabledDaysLeftString);
       let editorConfig = {
         onSave: this.saveFile,
         generatePng: true,
