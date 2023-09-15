@@ -64,7 +64,7 @@ var RepositoryDatatable = (function(global) {
   function updateButtons() {
     if (window.actionToolbarComponent) {
       window.actionToolbarComponent.fetchActions({ repository_row_ids: rowsSelected });
-      $('.dataTables_scrollBody').css('padding-bottom', `${rowsSelected.length > 0 ? 68 : 0}px`);
+      $('.dataTables_scrollBody').css('margin-bottom', `${rowsSelected.length > 0 ? 68 : 0}px`);
     }
 
     if (currentMode === 'viewMode') {
