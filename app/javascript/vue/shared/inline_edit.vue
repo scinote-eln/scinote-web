@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full relative">
+  <div class="w-full relative flex">
     <template v-if="editing">
       <input type="text"
         v-if="singleLine"
@@ -18,7 +18,7 @@
         @focus="setCaretAtEnd"/>
       <textarea v-else
         ref="input"
-        class="overflow-hidden leading-5 inline-block outline-none px-0 py-1 border-0 border-solid border-b w-full border-t-transparent"
+        class="overflow-hidden leading-5 inline-block outline-none px-0 py-1 border-0 border-solid border-y w-full border-t-transparent mb-[1px]"
         :class="{
           'inline-edit-placeholder text-sn-grey caret-black': isBlank,
           'border-sn-delete-red': error,
@@ -269,7 +269,7 @@
         if (this.editing && !this.singleLine) {
           this.$nextTick(() => {
             this.$refs.input.style.height = '0px';
-            this.$refs.input.style.height = this.$refs.input.scrollHeight - 3 + 'px';
+            this.$refs.input.style.height = this.$refs.input.scrollHeight  + 'px';
           });
         }
       }

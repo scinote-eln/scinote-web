@@ -213,7 +213,7 @@
         required: true
       }
     },
-    components: { Step, InlineEdit, ProtocolOptions, Tinymce, ReorderableItemsModal, ProtocolMetadata, PublishProtocol },
+    components: { Step, InlineEdit, ProtocolOptions, Tinymce, ReorderableItemsModal, ProtocolMetadata, PublishProtocol},
     mixins: [UtilsMixin],
     computed: {
       inRepository() {
