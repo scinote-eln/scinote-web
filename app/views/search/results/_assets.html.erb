@@ -1,7 +1,9 @@
 <% @asset_results.each do |asset| %>
-  <h5>
+  <h5 class="flex flex-row flex-nowrap items-center gap-1">
     <% if asset.blob.metadata["asset_type"] == 'marvinjs' %>
       <span class="mce-i-marvinjs"></span>
+    <% elsif asset.blob.metadata["asset_type"] == 'gene_sequence' %>
+      <span class="sn-file-ove"></span>
     <% else %>
       <% if wopi_file?(asset) %>
         <%= file_extension_icon(asset) %>

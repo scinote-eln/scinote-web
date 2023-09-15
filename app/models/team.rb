@@ -5,7 +5,6 @@ class Team < ApplicationRecord
   include ViewableModel
   include Assignable
   include PermissionCheckableModel
-  include TeamBySubjectModel
   include TinyMceImages
 
   # Not really MVC-compliant, but we just use it for logger
@@ -169,14 +168,26 @@ class Team < ApplicationRecord
     ProtocolKeyword.where(team: self).pluck(:name)
   end
 
+  def self.by_activity_subjects(subjects)
+    team_ids = []
+    valid_subjects = subjects.select { |k| Extends::SEARCHABLE_ACTIVITY_SUBJECT_TYPES.include?(k.to_s) }
+    valid_subjects.each do |subject_name, subject_id|
+      subject = subject_name.to_s.constantize.find_by(id: subject_id)
+      next if subject.blank?
+
+      team_ids << subject.team.id
+    end
+    where(id: team_ids.uniq)
+  end
+
   def self.global_activity_filter(filters, search_query)
-    query = where('name ILIKE ?', "%#{search_query}%")
+    query = where_attributes_like(:name, search_query)
     if filters[:users]
       user_teams = User.where(id: filters[:users]).joins(:teams).group(:team_id).select(:team_id)
       query = query.where(id: user_teams)
     end
-    query = query.where(id: team_by_subject(filters[:subjects])) if filters[:subjects]
-    query.select(:id, :name).map { |i| { value: i[:id], label: ApplicationController.helpers.escape_input(i[:name]) } }
+    query = query.by_activity_subjects(filters[:subjects]) if filters[:subjects].present?
+    query
   end
 
   def self.search_by_object(obj)

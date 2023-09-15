@@ -445,3 +445,15 @@
   padding: 4px 8px;
   white-space: nowrap;
 }
+
+.sn-file-ove {
+  height: 1.5rem;
+  width: 1.5rem;
+
+  &::before {
+    content: url("icon_small/sequence-editor.svg");
+    display: inline-block;
+    margin: auto;
+    width: 100%;
+  }
+}

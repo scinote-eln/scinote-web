@@ -19,7 +19,10 @@ module.exports = {
       },
       colors: {
         transparent: 'transparent',
-        current: 'currentColor'
+        current: 'currentColor',
+        'brand-warning': '#f0ad4e',
+        'sn-blue': '#104DA9',
+        'sn-grey': '#98a2b3'
       }
     }
   },

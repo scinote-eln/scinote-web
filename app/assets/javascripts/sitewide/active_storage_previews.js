@@ -17,6 +17,8 @@ var ActiveStoragePreviews = (function() {
 
       if (img.retryCount >= RETRY_COUNT) return;
 
+      $(img).css('opacity', 0);
+
       if (!$(img).parent().hasClass('processing')) $(img).parent().addClass('processing');
 
       setTimeout(() => {
