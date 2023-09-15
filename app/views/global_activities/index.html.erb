@@ -11,9 +11,7 @@
         <div class="no-activities-message text-center <%= 'hidden' if @grouped_activities.keys.any? %>">
           <p><%= t('activities.index.no_activities_message') %></p>
         </div>
-        <div class="ga-activities-list"
-             data-activities-url="<%= global_activities_path %>"
-             data-starting-timestamp="<%= @starting_timestamp %>">
+        <div class="ga-activities-list" data-activities-url="<%= global_activities_path %>">
           <%= render partial: "activity_list" %>
         </div>
         <div class="text-center">
