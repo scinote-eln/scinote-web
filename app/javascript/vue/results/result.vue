@@ -1,8 +1,8 @@
 <template>
   <div class="result-wrapper bg-white px-4 py-2 mb-4">
     <div class="result-header flex justify-between py-2">
-      <div class="result-head-left">
-        <a class="result-collapse-link hover:no-underline focus:no-underline"
+      <div class="result-head-left flex items-center">
+        <a class="result-collapse-link hover:no-underline focus:no-underline flex flex-shrink-0 mr-2"
             :href="'#resultBody' + result.id"
             data-toggle="collapse"
             data-remote="true">
