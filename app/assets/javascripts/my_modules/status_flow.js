@@ -17,7 +17,7 @@
   function checkStatusState() {
     $.getJSON($('.status-flow-dropdown').data('status-check-url'), (statusData) => {
       if (statusData.status_changing) {
-        setTimeout(() => { checkStatusState(); }, STATUS_POLLING_INTERVAL);
+        setTimeout(() => { checkStatusState(); }, GLOBAL_CONSTANTS.FAST_STATUS_POLLING_INTERVAL);
       } else {
         location.reload();
       }
@@ -26,7 +26,7 @@
 
   function applyTaskStatusChangeCallBack() {
     if ($('.status-flow-dropdown').data('status-changing')) {
-      setTimeout(() => { checkStatusState(); }, STATUS_POLLING_INTERVAL);
+      setTimeout(() => { checkStatusState(); }, GLOBAL_CONSTANTS.FAST_STATUS_POLLING_INTERVAL);
     }
     $('.task-sharing-and-flows').on('click', '#dropdownTaskFlowList > li[data-state-id]', function() {
       var list = $('#dropdownTaskFlowList');
