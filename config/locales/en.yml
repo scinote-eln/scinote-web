@@ -2106,6 +2106,15 @@ en:
       invalid_arguments: "Can't find %{key}"
     my_module_assigned_snapshot_service:
       invalid_arguments: "Can't find %{key}"
+    item_card:
+      title:
+        information: "Information"
+      default:
+        repository_name: "Inventory"
+        id: "Item ID"
+        added_on: "Added on"
+        added_at: "Added at"
+        added_by: 'Added by'
   repository_stock_values:
     manage_modal:
       title: "Stock %{item}"
