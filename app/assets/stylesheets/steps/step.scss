@@ -125,7 +125,7 @@
 
   .comments-counter {
     align-items: center;
-    background: var(--sn-science-blue);
+    background: var(--sn-grey);
     border-radius: .5rem;
     color: $color-white;
     display: flex;
@@ -139,7 +139,7 @@
     top: 0;
 
     &.unseen {
-      background-color: $brand-complementary;
+      background-color: var(--sn-science-blue);
     }
   }
 
