@@ -473,7 +473,10 @@ var ProjectsIndex = (function() {
         }
 
         if (data.filtered) {
-          InfiniteScroll.removeScroll(cardsWrapper);
+          $(projectsWrapper).find('.project-list-end-placeholder').remove();
+          if (window.innerWidth > document.body.clientWidth) {
+            $($($(cardsWrapper).data('config').endOfListTemplate).html()).appendTo($(cardsWrapper));
+          }
         } else {
           InfiniteScroll.init(cardsWrapper, {
             url: cardsUrl,
@@ -490,7 +493,7 @@ var ProjectsIndex = (function() {
             }
           });
         }
-      },
+    },
       error: function() {
         viewContainer.html('Error loading project list');
       },
