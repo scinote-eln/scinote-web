@@ -6,45 +6,20 @@
         {{ i18n.t('protocols.steps.files', {count: attachments.length}) }}
       </div>
       <div class="flex items-center gap-2" v-if="parent.attributes.attachments_manageble && attachmentsReady">
-        <div ref="actionsDropdownButton" class="dropdown sci-dropdown">
-          <button class="btn btn-light dropdown-toggle" type="button" id="dropdownAttachmentsOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            <span>{{ i18n.t("attachments.preview_menu") }}</span>
-            <span class="sn-icon sn-icon-down"></span>
-          </button>
-          <ul ref="actionsDropdown" class="dropdown-menu dropdown-menu-right dropdown-attachment-options"
-              aria-labelledby="dropdownAttachmentsOptions"
-              :data-parent-id="parent.id"
-          >
-            <template v-if="parent.attributes.urls.update_asset_view_mode_url">
-              <li v-for="(viewMode, index) in viewModeOptions" :key="`viewMode_${index}`">
-                <a
-                  class="attachments-view-mode action-link"
-                  :class="viewMode == parent.attributes.assets_view_mode ? 'selected' : ''"
-                  @click="changeAttachmentsViewMode(viewMode)"
-                  v-html="i18n.t(`attachments.view_mode.${viewMode}_html`)"
-                ></a>
-              </li>
-            </template>
-          </ul>
-        </div>
-        <div ref="sortDropdownButton" class="dropdown sci-dropdown">
-          <button class="btn btn-light icon-btn dropdown-toggle" type="button" id="dropdownSortAttachmentsOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            <i class="sn-icon sn-icon-sort-up"></i>
-          </button>
-          <ul ref="sortDropdown" class="dropdown-menu dropdown-menu-right dropdown-attachment-options"
-              aria-labelledby="dropdownSortAttachmentsOptions"
-              :data-parent-id="parent.id"
-          >
-            <li v-for="(orderOption, index) in orderOptions" :key="`orderOption_${index}`" :class="{'divider' : (orderOption == 'divider')}">
-              <a v-if="orderOption != 'divider'" class="action-link change-order"
-                @click="changeAttachmentsOrder(orderOption)"
-                :class="parent.attributes.assets_order == orderOption ? 'selected' : ''"
-              >
-                {{ i18n.t(`general.sort_new.${orderOption}`) }}
-              </a>
-            </li>
-          </ul>
-        </div>
+        <MenuDropdown
+          :listItems="this.viewModeMenu"
+          :btnText="i18n.t('attachments.preview_menu')"
+          :position="'right'"
+          :caret="true"
+          @attachment:viewMode = "changeAttachmentsViewMode"
+        ></MenuDropdown>
+        <MenuDropdown
+          :listItems="this.sortMenu"
+          :btnIcon="'sn-icon sn-icon-sort-down'"
+          :btnClasses="'btn btn-light icon-btn'"
+          :position="'right'"
+          @attachment:order = "changeAttachmentsOrder"
+        ></MenuDropdown>
       </div>
     </div>
     <div class="attachments" :data-parent-id="parent.id">
@@ -68,6 +43,7 @@
   import thumbnailAttachment from './attachments/thumbnail.vue'
   import uploadingAttachment from './attachments/uploading.vue'
   import emptyAttachment from './attachments/empty.vue'
+  import MenuDropdown from '../menu_dropdown.vue'
 
   import WopiFileModal from './attachments/mixins/wopi_file_modal.js'
 
@@ -90,7 +66,7 @@
     data() {
       return {
         viewModeOptions: ['inline', 'thumbnail', 'list'],
-        orderOptions: ['new', 'old', 'divider', 'atoz', 'ztoa']
+        orderOptions: ['new', 'old', 'atoz', 'ztoa']
       }
     },
     mixins: [WopiFileModal, AttachmentMovedMixin],
@@ -99,7 +75,8 @@
       inlineAttachment,
       listAttachment,
       uploadingAttachment,
-      emptyAttachment
+      emptyAttachment,
+      MenuDropdown
     },
     watch: {
       attachmentsReady() {
@@ -128,6 +105,29 @@
 
           return a.attributes.asset_order > b.attributes.asset_order ? 1 : -1;
         })
+      },
+      viewModeMenu() {
+        let menu = [];
+        this.viewModeOptions.forEach((viewMode) => {
+          menu.push({
+            text: this.i18n.t(`attachments.view_mode.${viewMode}_html`),
+            emit: 'attachment:viewMode',
+            params: viewMode
+          })
+        })
+        return menu;
+      },
+      sortMenu() {
+        let menu = [];
+        this.orderOptions.forEach((orderOption, i) => {
+          menu.push({
+            text: this.i18n.t(`general.sort_new.${orderOption}`),
+            emit: 'attachment:order',
+            params: orderOption,
+            dividerBefore: i === 2
+          })
+        })
+        return menu;
       }
     },
     mounted() {

@@ -25,64 +25,19 @@
       </div>
       <div class="result-head-right flex elements-actions-container">
         <input type="file" class="hidden" ref="fileSelector" @change="loadFromComputer" multiple />
-        <div ref="elementsDropdownButton" v-if="urls.update_url"  class="dropdown">
-          <button class="btn btn-light dropdown-toggle insert-button" type="button" :id="'resultInsertMenu_' + result.id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            {{ i18n.t('my_modules.results.insert.button') }}
-            <span class="sn-icon sn-icon-down"></span>
-          </button>
-          <ul ref="elementsDropdown" class="dropdown-menu insert-element-dropdown dropdown-menu-right" :aria-labelledby="'resultInsertMenu_' + result.id">
-            <li class="title">
-              {{ i18n.t('my_modules.results.insert.title') }}
-            </li>
-            <li class="action" @click="createElement('table')">
-              <i class="sn-icon sn-icon-tables"></i>
-              {{ i18n.t('my_modules.results.insert.table') }}
-            </li>
-            <li class="action dropdown-submenu-item">
-              <i class="sn-icon sn-icon-tables"></i>
-              {{ i18n.t('my_modules.results.insert.well_plate') }}
-              <span class="caret"></span>
-
-              <ul class="dropdown-submenu">
-                <li v-for="option in wellPlateOptions" :key="option.dimensions.toString()" class="action" @click="createElement('table', option.dimensions, true)">
-                  {{ i18n.t(option.label) }}
-                </li>
-              </ul>
-            </li>
-            <li class="action"  @click="createElement('text')">
-              <i class="sn-icon sn-icon-result-text"></i>
-              {{ i18n.t('my_modules.results.insert.text') }}
-            </li>
-            <li class="action dropdown-submenu-item">
-              <i class="sn-icon sn-icon-files"></i>
-              {{ i18n.t('my_modules.results.insert.attachment') }}
-              <span class="caret"></span>
-              <ul class="dropdown-submenu">
-                <li class="action" @click="openLoadFromComputer">
-                  {{ i18n.t('my_modules.results.insert.add_file') }}
-                </li>
-                <li class="action" v-if="result.attributes.wopi_enabled" @click="openWopiFileModal">
-                  {{ i18n.t('assets.create_wopi_file.button_text') }}
-                </li>
-                <li v-if="result.attributes.open_vector_editor_context.new_sequence_asset_url" @click="openOVEditor"  @keyup.enter="openOVEditor">
-                  {{ i18n.t('open_vector_editor.new_sequence_file') }}
-                </li>
-                <li class="action" v-if="result.attributes.marvinjs_enabled" @click="openMarvinJsModal($refs.marvinJsButton)">
-                    <span
-                    class="new-marvinjs-upload-button text-sn-black text-decoration-none"
-                    :data-object-id="result.id"
-                    ref="marvinJsButton"
-                    :data-marvin-url="result.attributes.marvinjs_context.marvin_js_asset_url"
-                    :data-object-type="result.attributes.type"
-                    tabindex="0"
-                    >
-                      {{ i18n.t('marvinjs.new_button') }}
-                    </span>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </div>
+        <MenuDropdown
+          :listItems="this.insertMenu"
+          :btnText="i18n.t('my_modules.results.insert.button')"
+          :position="'right'"
+          :caret="true"
+          @create:table="(...args) => this.createElement('table', ...args)"
+          @create:checklist="createElement('checklist')"
+          @create:text="createElement('text')"
+          @create:file="openLoadFromComputer"
+          @create:wopi_file="openWopiFileModal"
+          @create:ove_file="openOVEditor"
+          @create:marvinjs_file="openMarvinJsModal($refs.marvinJsButton)"
+        ></MenuDropdown>
         <a href="#"
           ref="comments"
           class="open-comments-sidebar btn icon-btn btn-light"
@@ -91,28 +46,18 @@
           :data-object-id="result.id">
           <i class="sn-icon sn-icon-comments"></i>
         </a>
-        <div v-if="!locked"  ref="actionsDropdownButton" class="dropdown">
-          <button class="btn btn-light icon-btn dropdown-toggle insert-button" type="button" :id="'resultOptionsMenu_' + result.id" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="true">
-            <i class="sn-icon sn-icon-more-hori"></i>
-          </button>
-          <ul ref="actionsDropdown" class="dropdown-menu dropdown-menu-right insert-element-dropdown" :aria-labelledby="'resultOptionsMenu_' + result.id">
-            <li class="action"  @click="openReorderModal" v-if="urls.reorder_elements_url">
-              {{ i18n.t('my_modules.results.actions.rearrange') }}
-            </li>
-            <li class="action" @click="duplicateResult" v-if="urls.duplicate_url && !result.attributes.archived">
-              {{ i18n.t('my_modules.results.actions.duplicate') }}
-            </li>
-            <li class="action" @click="archiveResult" v-if="urls.archive_url">
-              {{ i18n.t('my_modules.results.actions.archive') }}
-            </li>
-            <li class="action" @click="restoreResult" v-if="urls.restore_url">
-              {{ i18n.t('my_modules.results.actions.restore') }}
-            </li>
-            <li class="action" @click="deleteResult" v-if="urls.delete_url">
-              {{ i18n.t('my_modules.results.actions.delete') }}
-            </li>
-          </ul>
-        </div>
+        <MenuDropdown
+          v-if="!locked"
+          :listItems="this.actionsMenu"
+          :btnClasses="'btn btn-light icon-btn'"
+          :position="'right'"
+          :btnIcon="'sn-icon sn-icon-more-hori'"
+          @reorder="openReorderModal"
+          @duplicate="duplicateResult"
+          @archive="archiveResult"
+          @restore="restoreResult"
+          @delete="deleteResult"
+        ></MenuDropdown>
       </div>
     </div>
 
@@ -165,6 +110,7 @@
   import ResultText from '../shared/content/text.vue';
   import Attachments from '../shared/content/attachments.vue';
   import InlineEdit from '../shared/inline_edit.vue'
+  import MenuDropdown from '../shared/menu_dropdown.vue'
 
   import AttachmentsMixin from '../shared/content/mixins/attachments.js'
   import WopiFileModal from '../shared/content/attachments/mixins/wopi_file_modal.js'
@@ -185,12 +131,12 @@
         attachmentsReady: false,
         showFileModal: false,
         wellPlateOptions: [
-          { label: 'my_modules.results.insert.well_plate_options.32_x_48', dimensions: [32, 48] },
-          { label: 'my_modules.results.insert.well_plate_options.16_x_24', dimensions: [16, 24] },
-          { label: 'my_modules.results.insert.well_plate_options.8_x_12', dimensions: [8, 12] },
-          { label: 'my_modules.results.insert.well_plate_options.6_x_8', dimensions: [6, 8] },
-          { label: 'my_modules.results.insert.well_plate_options.6_x_4', dimensions: [6, 4] },
-          { label: 'my_modules.results.insert.well_plate_options.2_x_3', dimensions: [2, 3] }
+          { text: I18n.t('protocols.steps.insert.well_plate_options.32_x_48'), emit: 'create:table', params: [32, 48] },
+          { text: I18n.t('protocols.steps.insert.well_plate_options.16_x_24'), emit: 'create:table', params: [16, 24] },
+          { text: I18n.t('protocols.steps.insert.well_plate_options.8_x_12'), emit: 'create:table', params: [8, 12] },
+          { text: I18n.t('protocols.steps.insert.well_plate_options.6_x_8'), emit: 'create:table', params: [6, 8] },
+          { text: I18n.t('protocols.steps.insert.well_plate_options.6_x_4'), emit: 'create:table', params: [6, 4] },
+          { text: I18n.t('protocols.steps.insert.well_plate_options.2_x_3'), emit: 'create:table', params: [2, 3] }
         ],
         editingName: false
       }
@@ -201,7 +147,8 @@
       ResultTable,
       ResultText,
       Attachments,
-      InlineEdit
+      InlineEdit,
+      MenuDropdown
     },
     watch: {
       resultToReload() {
@@ -223,6 +170,90 @@
       },
       locked() {
         return !(this.urls.restore_url || this.urls.archive_url || this.urls.delete_url || this.urls.update_url)
+      },
+      filesMenu() {
+        let menu = [];
+        if (this.urls.upload_attachment_url) {
+          menu = menu.concat([{
+            text: this.i18n.t('my_modules.results.insert.add_file'),
+            emit: 'create:file'
+          }]);
+        }
+        if (this.result.attributes.wopi_enabled) {
+          menu = menu.concat([{
+            text: this.i18n.t('assets.create_wopi_file.button_text'),
+            emit: 'create:wopi_file'
+          }]);
+        }
+        if (this.result.attributes.open_vector_editor_context.new_sequence_asset_url) {
+          menu = menu.concat([{
+            text: this.i18n.t('open_vector_editor.new_sequence_file'),
+            emit: 'create:ove_file'
+          }]);
+        }
+        if (this.result.attributes.marvinjs_enabled) {
+          menu = menu.concat([{
+            text: this.i18n.t('marvinjs.new_button'),
+            emit: 'create:marvinjs_file'
+          }]);
+        }
+        return menu;
+      },
+      insertMenu() {
+        let menu = [];
+        if (this.urls.update_url) {
+          menu = menu.concat([{
+                    text: this.i18n.t('my_modules.results.insert.text'),
+                    emit: 'create:text'
+                  },{
+                    text: this.i18n.t('my_modules.results.insert.attachment'),
+                    submenu: this.filesMenu,
+                    position: 'left'
+                  },{
+                    text: this.i18n.t('my_modules.results.insert.table'),
+                    emit: 'create:table'
+                  },{
+                    text: this.i18n.t('my_modules.results.insert.well_plate'),
+                    submenu: this.wellPlateOptions,
+                    position: 'left'
+                  }]);
+        }
+
+        return menu;
+      },
+      actionsMenu() {
+        let menu = [];
+        if (this.urls.reorder_elements_url) {
+          menu = menu.concat([{
+            text: this.i18n.t('my_modules.results.actions.rearrange'),
+            emit: 'reorder'
+          }]);
+        }
+        if (this.urls.duplicate_url && !this.result.attributes.archived) {
+          menu = menu.concat([{
+            text: this.i18n.t('my_modules.results.actions.duplicate'),
+            emit: 'duplicate'
+          }]);
+        }
+        if (this.urls.archive_url) {
+          menu = menu.concat([{
+            text: this.i18n.t('my_modules.results.actions.archive'),
+            emit: 'archive'
+          }]);
+        }
+        if (this.urls.restore_url) {
+          menu = menu.concat([{
+            text: this.i18n.t('my_modules.results.actions.restore'),
+            emit: 'restore'
+          }]);
+        }
+        if (this.urls.delete_url) {
+          menu = menu.concat([{
+            text: this.i18n.t('my_modules.results.actions.delete'),
+            emit: 'delete'
+          }]);
+        }
+        return menu;
       }
     },
     created() {

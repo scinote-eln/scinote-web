@@ -34,19 +34,13 @@
       </button>
 
       <FilterDropdown :filters="filters" @applyFilters="setFilters" />
-
-      <div class="dropdown">
-        <button class="dropdown-toggle btn btn-light icon-btn mr-3"  id="sortDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-          <i class="sn-icon sn-icon-sort"></i>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="sortDropdown">
-          <li v-for="sort in sorts" :key="sort">
-            <a class="cursor-pointer" @click="setSort(sort)">
-              {{ i18n.t(`my_modules.results.sorts.${sort}`)}}
-            </a>
-          </li>
-        </ul>
-      </div>
+      <MenuDropdown
+          :listItems="this.sortMenu"
+          :btnClasses="'btn btn-light icon-btn'"
+          :position="'right'"
+          :btnIcon="'sn-icon sn-icon-sort'"
+          @sort="setSort"
+        ></MenuDropdown>
     </div>
   </div>
 </template>
@@ -62,6 +56,7 @@
   ];
 
   import FilterDropdown from '../shared/filters/filter_dropdown.vue';
+  import MenuDropdown from '../shared/menu_dropdown.vue'
 
   export default {
     name: 'ResultsToolbar',
@@ -77,7 +72,7 @@
         filters: null
       }
     },
-    components: { FilterDropdown },
+    components: { FilterDropdown, MenuDropdown },
     created() {
       this.filters = [
         {
@@ -99,6 +94,17 @@
       ];
 
       this.sorts = SORTS;
+    },
+    computed: {
+      sortMenu() {
+        return this.sorts.map(sort => {
+          return {
+            text: this.i18n.t(`my_modules.results.sorts.${sort}`),
+            emit: 'sort',
+            params: sort
+          }
+        })
+      }
     },
     methods: {
       setSort(sort) {

@@ -14,86 +14,79 @@
         <span class="sn-icon sn-icon-down"></span>
       </button>
       <ul
-        class="dropdown-menu dropdown-menu-right"
+        class="dropdown-menu dropdown-menu-right rounded !p-2.5 sn-shadow-menu-sm"
         aria-labelledby="dropdownProtocolOptions"
       >
         <li v-if="protocol.attributes.urls.load_from_repo_url">
-          <a
+          <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
             ref="loadProtocol"
             data-action="load-from-repository"
             @click="loadProtocol"
           >
-            <span class="sn-icon sn-icon-protocols-templates"></span>
             <span>{{ i18n.t("my_modules.protocol.options_dropdown.load_from_repo") }}</span>
           </a>
         </li>
         <li>
-          <a
+          <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
             data-toggle="modal"
             data-target="#newProtocolModal"
             v-bind:data-protocol-name="protocol.attributes.name"
             :class="{ disabled: !protocol.attributes.urls.save_to_repo_url }"
           >
-            <span class="fas fa-save"></span>
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.save_to_repo")
             }}</span>
           </a>
         </li>
         <li>
-          <a
+          <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
             data-turbolinks="false"
             :href="protocol.attributes.urls.export_url"
             :class="{ disabled: !protocol.attributes.urls.export_url }"
           >
-            <span class="sn-icon sn-icon-import"></span>
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.export")
             }}</span>
           </a>
         </li>
         <li v-if="protocol.attributes.urls.update_protocol_url">
-          <a
+          <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
             ref="updateProtocol"
             data-action="update-self"
             @click="updateProtocol"
           >
-            <span class="fas fa-sync-alt"></span>
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.update_protocol")
             }}</span>
           </a>
         </li>
         <li v-if="protocol.attributes.urls.unlink_url">
-          <a
+          <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
             ref="unlinkProtocol"
             data-action="unlink"
             @click="unlinkProtocol"
           >
-            <span class="fas fa-unlink"></span>
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.unlink")
             }}</span>
           </a>
         </li>
         <li v-if="protocol.attributes.urls.revert_protocol_url">
-          <a
+          <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
             ref="revertProtocol"
             data-action="revert"
             @click="revertProtocol"
           >
-            <span class="sn-icon sn-icon-restore"></span>
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.revert_protocol")
             }}</span>
           </a>
         </li>
         <li v-if="canDeleteSteps">
-          <a
+          <a class="!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue"
             data-turbolinks="false"
             @click.prevent="openStepsDeletingModal()"
           >
-            <span class="sn-icon sn-icon-delete"></span>
             <span>{{
               i18n.t("my_modules.protocol.options_dropdown.delete_steps")
             }}</span>

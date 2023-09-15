@@ -140,6 +140,7 @@
         .repositories-dropdown-menu {
           max-height: 250px;
           overflow: auto;
+          z-index: 251;
 
           .repository {
             @include font-button;
