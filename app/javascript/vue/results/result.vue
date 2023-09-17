@@ -56,7 +56,7 @@
           @duplicate="duplicateResult"
           @archive="archiveResult"
           @restore="restoreResult"
-          @delete="deleteResult"
+          @delete="showDeleteModal"
         ></MenuDropdown>
       </div>
     </div>
@@ -64,6 +64,8 @@
     <div class="relative ml-1 bottom-17 w-356 h-15 font-normal font-hairline text-xs leading-4">
       {{ i18n.t('protocols.steps.timestamp', {date: result.attributes.created_at, user: result.attributes.created_by }) }}
     </div>
+
+    <deleteResultModal v-if="confirmingDelete" @confirm="deleteResult" @cancel="closeDeleteModal"/>
 
     <ReorderableItemsModal v-if="reordering"
       :title="i18n.t('my_modules.modals.reorder_results.title')"
@@ -111,6 +113,7 @@
   import Attachments from '../shared/content/attachments.vue';
   import InlineEdit from '../shared/inline_edit.vue'
   import MenuDropdown from '../shared/menu_dropdown.vue'
+  import deleteResultModal from './delete_result.vue';
 
   import AttachmentsMixin from '../shared/content/mixins/attachments.js'
   import WopiFileModal from '../shared/content/attachments/mixins/wopi_file_modal.js'
@@ -138,7 +141,8 @@
           { text: I18n.t('protocols.steps.insert.well_plate_options.6_x_4'), emit: 'create:table', params: [6, 4] },
           { text: I18n.t('protocols.steps.insert.well_plate_options.2_x_3'), emit: 'create:table', params: [2, 3] }
         ],
-        editingName: false
+        editingName: false,
+        confirmingDelete: false
       }
     },
     mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin],
@@ -148,7 +152,8 @@
       ResultText,
       Attachments,
       InlineEdit,
-      MenuDropdown
+      MenuDropdown,
+      deleteResultModal
     },
     watch: {
       resultToReload() {
@@ -392,6 +397,12 @@
         axios.post(this.urls.restore_url).then((response) => {
           this.$emit('result:restored', this.result.id);
         });
+      },
+      showDeleteModal() {
+        this.confirmingDelete = true;
+      },
+      closeDeleteModal() {
+        this.confirmingDelete = false;
       },
       deleteResult() {
         axios.delete(this.urls.delete_url).then((response) => {
