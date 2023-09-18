@@ -2109,12 +2109,13 @@ en:
     item_card:
       title:
         information: "Information"
-      default:
+      default_columns:
         repository_name: "Inventory"
         id: "Item ID"
         added_on: "Added on"
         added_at: "Added at"
         added_by: 'Added by'
+      no_custom_columns_label: 'This item has no custom columns'
   repository_stock_values:
     manage_modal:
       title: "Stock %{item}"
