@@ -2818,7 +2818,7 @@ en:
         body_html: "The import is taking longer than expected. You'll get a notice in Notifications when your protocol template is ready. You can close the window and continue with your work."
       done:
         title: "Importing finished"
-        body_html: 'The protocol has been successfully imported. You can access the draft of protocol template <a href="%{url}">here.</a>'
+        body_html: 'The protocol has been successfully imported. You can access protocol template in Notifications. You can also find it in the table of <a href="%{url}">protocol templates.</a>'
       failed:
         title: "Import failed"
         body_html: "We're sorry but the file import process has encountered an error. Please make another attempt, and if the issue persists, please contact support for further assistance."
