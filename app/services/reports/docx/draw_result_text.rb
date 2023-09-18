@@ -3,7 +3,7 @@
 module Reports::Docx::DrawResultText
   def draw_result_text(element)
     result = element.result
-    result_text = result.orderable.text
+    result_text = element.orderable
     timestamp = result.created_at
     color = @color
     @docx.p
