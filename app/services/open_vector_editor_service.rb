@@ -3,7 +3,7 @@
 class OpenVectorEditorService
   class << self
     def enabled?
-      false
+      ENV.fetch('SCINOTE_OVE_ENABLED') == 'true'
     end
   end
 end
