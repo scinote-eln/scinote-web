@@ -64,6 +64,17 @@ module ResultElements
         result_table.update!(result: target)
         result_table.result_orderable_element.update!(result: target, position: target.result_orderable_elements.size)
         @result.normalize_elements_position
+
+        log_result_activity(
+          :result_table_moved,
+          {
+            user: current_user.id,
+            table_name: @table.name,
+            result_original: @result.id,
+            result_destination: target.id
+          }
+        )
+        
         render json: @table, serializer: ResultTableSerializer, user: current_user
       rescue ActiveRecord::RecordInvalid
         render json: result_table.errors, status: :unprocessable_entity

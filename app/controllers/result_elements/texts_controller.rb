@@ -43,6 +43,17 @@ module ResultElements
         @result_text.result_orderable_element.update!(result: target, position: target.result_orderable_elements.size)
         @result.normalize_elements_position
         render json: @result_text, serializer: ResultTextSerializer, user: current_user
+
+        log_result_activity(
+          :result_text_moved,
+          {
+            user: current_user.id,
+            text_name: @result_text.name,
+            result_original: @result.id,
+            result_destination: target.id
+          }
+        )
+        
       rescue ActiveRecord::RecordInvalid
         render json: @result_text.errors, status: :unprocessable_entity
       end

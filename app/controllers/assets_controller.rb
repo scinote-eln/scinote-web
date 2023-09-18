@@ -83,11 +83,50 @@ class AssetsController < ApplicationController
         target = @assoc.protocol.steps.find_by(id: params[:target_id])
         object_to_update = @asset.step_asset
         object_to_update.update!(step: target)
+
+        if @assoc.protocol.in_module?
+          log_step_activity(
+            @asset.file.blob.metadata['asset_type'] == 'gene_sequence' ? :move_chemical_structure_on_step : :task_step_file_moved,
+            @assoc,
+            @assoc.my_module.project,
+            my_module: @assoc.my_module.id,
+            file: @asset.file_name,
+            user: current_user.id,
+            step_position_original: @asset.step.position + 1,
+            step_original: @asset.step.id,
+            step_position_destination: target.position + 1,
+            step_destination: target.id
+          )
+        else
+          log_step_activity(
+            @asset.file.blob.metadata['asset_type'] ? :move_chemical_structure_on_step_in_repository : :protocol_step_file_moved,
+            @assoc,
+            nil,
+            protocol: @assoc.protocol.id,
+            file: @asset.file_name,
+            user: current_user.id,
+            step_position_original: @asset.step.position + 1,
+            step_original: @asset.step.id,
+            step_position_destination: target.position + 1,
+            step_destination: target.id
+          )
+        end
+        
         render json: {}
       elsif @assoc.is_a?(Result)
         target = @assoc.my_module.results.find_by(id: params[:target_id])
         object_to_update = @asset.result_asset
         object_to_update.update!(result: target)
+
+        log_result_activity(
+          @asset.file.blob.metadata['asset_type'] ? :move_chemical_structure_on_result : :result_file_moved,
+          @assoc,
+          file: @asset.file_name,
+          user: current_user.id,
+          result_original: @assoc.id ,
+          result_destination: target.id
+        )
+
         render json: {}
       end
     rescue ActiveRecord::RecordInvalid
