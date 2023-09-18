@@ -314,10 +314,8 @@
       margin-top: 8px;
       padding-bottom: 8px;
       padding-top: 8px;
-
-      &:hover {
-        text-decoration: underline;
-      }
+      color: var(--sn-blue);
+      font-size: .875rem;
     }
 
     .select-container {
