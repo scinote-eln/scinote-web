@@ -21,7 +21,7 @@
       <MenuDropdown
         class="ml-auto"
         :listItems="this.actionMenu"
-        :btnClasses="'btn btn-light icon-btn'"
+        :btnClasses="'btn btn-light icon-btn btn-sm'"
         :position="'right'"
         :btnIcon="'sn-icon sn-icon-more-hori'"
         @edit="enableNameEdit"
@@ -30,7 +30,7 @@
         @delete="showDeleteModal"
       ></MenuDropdown>
     </div>
-    <div class="flex rounded min-h-[2.25rem] mb-4 relative group/text_container content__text-body" :class="{ 'edit': inEditMode, 'component__element--locked': !element.attributes.orderable.urls.update_url }" @keyup.enter="enableEditMode($event)" tabindex="0">
+    <div class="flex rounded min-h-[2.25rem] mb-4 relative group/text_container content__text-body max-w-[90ch]" :class="{ 'edit': inEditMode, 'component__element--locked': !element.attributes.orderable.urls.update_url }" @keyup.enter="enableEditMode($event)" tabindex="0">
       <Tinymce
         v-if="element.attributes.orderable.urls.update_url"
         :value="element.attributes.orderable.text"

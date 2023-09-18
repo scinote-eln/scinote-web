@@ -20,7 +20,7 @@
       <MenuDropdown
         class="ml-auto"
         :listItems="this.actionMenu"
-        :btnClasses="'btn btn-light icon-btn'"
+        :btnClasses="'btn btn-light icon-btn btn-sm'"
         :position="'right'"
         :btnIcon="'sn-icon sn-icon-more-hori'"
         @edit="enableNameEdit"
@@ -38,14 +38,6 @@
       <div v-if="editingTable" class="text-xs pt-3 pb-2 text-sn-grey">
         {{ i18n.t('protocols.steps.table.edit_message') }}
       </div>
-    </div>
-    <div class="flex justify-end mt-1 gap-2" v-if="editingTable">
-      <button class="btn icon-btn btn-primary btn-sm" @click="updateTable">
-        <i class="sn-icon sn-icon-check"></i>
-      </button>
-      <button class="btn icon-btn btn-light btn-sm" @click="disableTableEdit">
-        <i class="sn-icon sn-icon-close"></i>
-      </button>
     </div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @cancel="closeDeleteModal"/>
     <tableNameModal v-if="nameModalOpen" :element="element" @update="updateEmptyName" @cancel="nameModalOpen = false" />

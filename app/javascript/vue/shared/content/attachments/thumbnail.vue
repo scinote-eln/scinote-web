@@ -15,11 +15,12 @@
     >
       <div class="attachment-preview" :class= "attachment.attributes.asset_type">
         <img v-if="attachment.attributes.medium_preview !== null"
+            class="rounded-sm"
             :src="attachment.attributes.medium_preview"
             @error="ActiveStoragePreviews.reCheckPreview"
             @load="ActiveStoragePreviews.showPreview"
             style='opacity: 0' />
-        <i  v-else class="text-sn-grey sn-icon" :class="attachment.attributes.icon"></i>
+        <div v-else class="w-[186px] h-[186px] bg-sn-super-light-grey rounded-sm"></div>
       </div>
       <div class="attachment-label"
            data-toggle="tooltip"
@@ -31,7 +32,7 @@
         </span>
       </div>
     </a>
-    <div v-else class="hovered-thumbnail">
+    <div v-else class="hovered-thumbnail h-full">
       <a
         :href="attachment.attributes.urls.blob"
         class="file-preview-link file-name"
@@ -46,7 +47,7 @@
       <div class="absolute bottom-14 text-sn-grey">
         {{ attachment.attributes.file_size_formatted }}
       </div>
-      <div class="absolute bottom-2 min-w-[194px] justify-between flex">
+      <div class="absolute bottom-4 min-w-[194px] justify-between flex">
         <a class="btn btn-light icon-btn thumbnail-action-btn image-edit-button"
           v-if="attachment.attributes.urls.edit_asset"
           :title="i18n.t('attachments.thumbnail.buttons.edit')"
@@ -77,10 +78,12 @@
       </div>
     </div>
     <ContextMenu
+      v-if="isHovered"
       :attachment="attachment"
       @attachment:viewMode="updateViewMode"
       @attachment:delete="deleteAttachment"
       @attachment:moved="attachmentMoved"
+      :withBorder="true"
     />
     <deleteAttachmentModal
       v-if="deleteModal"

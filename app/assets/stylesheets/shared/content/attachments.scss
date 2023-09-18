@@ -2,8 +2,8 @@
 // scss-lint:disable NestingDepth
 
 :root {
-  --attachment-column-width: 16em;
-  --attachment-row-height: 3em;
+  --attachment-column-width: 13.625rem;
+  --attachment-row-height: 2.5rem;
 }
 
 
@@ -64,10 +64,10 @@
 .attachments {
   display: grid;
   grid-auto-rows: var(--attachment-row-height);
-  grid-column-gap: 1em;
-  grid-row-gap: 1em;
+  grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
   grid-template-columns: repeat(auto-fill, minmax(var(--attachment-column-width), 1fr));
-  margin: 1em 0;
+  margin: 1rem 0;
 
   .asset-context-menu {
     .marvinjs-edit-button img {

@@ -15,7 +15,7 @@
   .sci-input-field {
     @include font-button;
     animation-timing-function: $timing-function-sharp;
-    border: 1px solid var(--sn-sleepy-grey);
+    border: 1px solid var(--sn-light-grey);
     border-radius: $border-radius-default !important;
     box-shadow: none;
     height: 36px;

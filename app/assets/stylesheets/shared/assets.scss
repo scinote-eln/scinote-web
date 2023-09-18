@@ -2,9 +2,9 @@
 
 .attachment-container {
   @include md-card-style;
-  grid-row: span 6;
-  height: 23em;
-  padding: 1em;
+  grid-row: span 5;
+  height: 15.875rem;
+  padding: 1rem;
   position: relative;
   width: var(--attachment-column-width);
 
@@ -19,7 +19,7 @@
   .attachment-preview {
     border-radius: $border-radius-default;
     color: $color-volcano;
-    height: 14em;
+    height: 11.625rem;
     position: relative;
     text-align: center;
     width: 100%;
@@ -34,34 +34,6 @@
       max-height: 100%;
       max-width: 100%;
     }
-
-    &.marvinjs {
-
-      &::before,
-      &::after {
-        border-radius: 1em 0 0 1em;
-        bottom: 1em;
-        content: "";
-        display: block;
-        height: 2em;
-        line-height: 2em;
-        position: absolute;
-        right: -1em;
-        width: 2.25em;
-      }
-
-      &::before {
-        background: $marvinjs-color;
-      }
-
-      &::after {
-        background-image: url("/images/icon_small/marvinjs-white.svg");
-        height: 2.25em;
-        right: -.75em;
-        width: 2em;
-      }
-    }
-
     .fas {
       font-size: 100px;
       height: 240px;
@@ -95,7 +67,6 @@
 
   .attachment-label {
     @include font-main;
-    margin-top: 1.5em;
     z-index: 2;
   }
 
@@ -114,8 +85,6 @@
   }
 
   &:hover {
-    box-shadow: $md-shadow;
-
     .file-preview-link,
     .shareable-file-preview-link {
       text-decoration: none;
@@ -160,8 +129,8 @@
 
   .asset-context-menu {
     position: absolute;
-    right: 0;
-    top: 0;
+    right: 1rem;
+    top: 1rem;
   }
 }
 

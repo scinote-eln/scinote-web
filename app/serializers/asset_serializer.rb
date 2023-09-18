@@ -14,7 +14,7 @@ class AssetSerializer < ActiveModel::Serializer
              :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached, :parent_type
 
   def icon
-    file_extension_icon_html(object)
+    file_fa_icon_class(object)
   end
 
   def file_name
