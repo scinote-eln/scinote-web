@@ -4,10 +4,6 @@
 @import "components/text";
 
 .step-container {
-  --left-component-padding: 2rem;
-  border: $border-transparent;
-  margin: 6px 0 6px -1em;
-  padding: 8px 24px 8px 0;
 
   .step-header {
     align-items: flex-start;

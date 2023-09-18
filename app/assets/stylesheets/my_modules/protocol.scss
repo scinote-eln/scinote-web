@@ -39,6 +39,7 @@
     color: var(--sn-blue);
     cursor: pointer;
     display: flex;
+    margin: .5rem 0;
 
     &::before,
     &::after {
@@ -58,7 +59,7 @@
 
       &::before,
       &::after {
-        background-color: $brand-primary;
+        border-color: $brand-primary;
       }
     }
   }

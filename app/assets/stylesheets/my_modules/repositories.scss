@@ -11,7 +11,7 @@
 }
 
 #assigned-items-container {
-  padding-left: 2.875rem;
+  padding-left: 2.375rem;
   padding-top: 10px;
 
   .modal-body {
@@ -63,6 +63,7 @@
           color: $color-alto;
           content: '[' attr(data-rows-count) ']';
           display: inline-block;
+          font-weight: normal;
           padding-left: 1px;
           padding-right: .7em;
           right: 0;

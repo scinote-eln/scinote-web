@@ -20,7 +20,7 @@
       <MenuDropdown
         class="ml-auto"
         :listItems="this.actionMenu"
-        :btnClasses="'btn btn-light icon-btn'"
+        :btnClasses="'btn btn-light icon-btn  btn-sm'"
         :position="'right'"
         :btnIcon="'sn-icon sn-icon-more-hori'"
         @edit="editingName = true"

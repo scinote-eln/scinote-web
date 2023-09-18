@@ -51,7 +51,7 @@
           />
         </div>
       </div>
-      <div class="elements-actions-container">
+      <div class="elements-actions-container mt-[-5px]">
         <input type="file" class="hidden" ref="fileSelector" @change="loadFromComputer" multiple />
 
         <MenuDropdown
@@ -85,7 +85,7 @@
            @click="openCommentsSidebar"
            :data-object-id="step.id">
           <i class="sn-icon sn-icon-comments"></i>
-          <span class="comments-counter"
+          <span class="comments-counter" v-if="step.attributes.comments_count"
                 :id="`comment-count-${step.id}`"
                 :class="{'unseen': step.attributes.unseen_comments}"
           >

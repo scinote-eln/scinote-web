@@ -18,7 +18,7 @@
         @focus="setCaretAtEnd"/>
       <textarea v-else
         ref="input"
-        class="overflow-hidden leading-5 inline-block outline-none px-0 py-1 border-0 border-solid border-y w-full border-t-transparent mb-[1px]"
+        class="overflow-hidden leading-5 inline-block outline-none px-0 py-1 border-0 border-solid border-y w-full border-t-transparent mb-0.5"
         :class="{
           'inline-edit-placeholder text-sn-grey caret-black': isBlank,
           'border-sn-delete-red': error,
@@ -44,7 +44,8 @@
     </div>
 
     <div
-      class="mt-2 whitespace-nowrap text-xs font-normal absolute bottom-[-1rem]"
+      class="mt-2 whitespace-nowrap truncate text-xs font-normal absolute bottom-[-1rem] w-full"
+      :title="editing && error ? error : timestamp"
       :class="{'text-sn-delete-red': editing && error}"
     >
       {{ editing && error ? error : timestamp }}

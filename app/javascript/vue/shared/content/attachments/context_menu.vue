@@ -24,7 +24,7 @@
     <MenuDropdown
       class="ml-auto"
       :listItems="this.menu"
-      :btnClasses="'btn btn-light icon-btn !bg-sn-white'"
+      :btnClasses="`btn btn-sm icon-btn !bg-sn-white ${ withBorder ? 'btn-secondary' : 'btn-light'}`"
       :position="'right'"
       :btnIcon="'sn-icon sn-icon-more-hori'"
       @open_ove_editor="openOVEditor(attachment.attributes.urls.open_vector_editor_edit)"
@@ -61,7 +61,8 @@
       attachment: {
         type: Object,
         required: true
-      }
+      },
+      withBorder: {default: false, type: Boolean }
     },
     data() {
       return {

@@ -7,7 +7,7 @@
       </button>
     </div>
     <div class="dropdown view-switch" >
-      <div class="btn btn-light btn-black view-switch-button prevent-shrink" id="viewSwitchButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      <div class="btn btn-secondary view-switch-button prevent-shrink" id="viewSwitchButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
         <span v-if="archived" class="state-view-switch-btn-name">{{ i18n.t('my_modules.results.archived_results') }}</span>
         <span v-else class="state-view-switch-btn-name">{{ i18n.t('my_modules.results.active_results') }}</span>
         <span class="sn-icon sn-icon-down"></span>

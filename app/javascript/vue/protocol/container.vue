@@ -129,7 +129,7 @@
             </a>
           </div>
         </div>
-        <div class="border-0 border-b border-dashed border-sn-light-grey" v-if="!inRepository"></div>
+        <div class="border-0 border-b border-dashed border-sn-light-grey my-4" v-if="!inRepository"></div>
         <div id="protocol-steps-container" :class=" inRepository ? 'protocol-steps collapse in' : ''">
           <div v-if="urls.add_step_url && inRepository" class="py-5">
             <a

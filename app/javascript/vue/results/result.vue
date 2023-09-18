@@ -1,8 +1,8 @@
 <template>
-  <div class="result-wrapper bg-white px-4 py-2 mb-4">
-    <div class="result-header flex justify-between py-2">
-      <div class="result-head-left">
-        <a class="result-collapse-link hover:no-underline focus:no-underline"
+  <div class="result-wrapper bg-white p-4 mb-4 rounded">
+    <div class="result-header flex justify-between ">
+      <div class="result-head-left flex items-start flex-grow gap-4">
+        <a class="result-collapse-link hover:no-underline focus:no-underline py-0.5 border-0 border-y border-transparent border-solid text-sn-black"
             :href="'#resultBody' + result.id"
             data-toggle="collapse"
             data-remote="true">
@@ -10,6 +10,7 @@
         </a>
         <InlineEdit
           :value="result.attributes.name"
+          class="flex-grow font-bold text-base"
           :class="{ 'pointer-events-none': !urls.update_url }"
           :characterLimit="255"
           :allowBlank="false"
@@ -17,6 +18,7 @@
           :autofocus="editingName"
           :placeholder="i18n.t('my_modules.results.placeholder')"
           :defaultValue="i18n.t('my_modules.results.default_name')"
+          :timestamp="i18n.t('protocols.steps.timestamp', {date: result.attributes.created_at, user: result.attributes.created_by })"
           @editingEnabled="editingName = true"
           @editingDisabled="editingName = false"
           :editOnload="result.newResult == true"
@@ -60,11 +62,6 @@
         ></MenuDropdown>
       </div>
     </div>
-
-    <div class="relative ml-1 bottom-17 w-356 h-15 font-normal font-hairline text-xs leading-4">
-      {{ i18n.t('protocols.steps.timestamp', {date: result.attributes.created_at, user: result.attributes.created_by }) }}
-    </div>
-
     <deleteResultModal v-if="confirmingDelete" @confirm="deleteResult" @cancel="closeDeleteModal"/>
 
     <ReorderableItemsModal v-if="reordering"
@@ -73,8 +70,8 @@
       @reorder="updateElementOrder"
       @close="closeReorderModal"
     />
-    <div class="collapse in" :id="'resultBody' + result.id">
-      <div v-for="(element, index) in orderedElements" :key="index" class="pt-6 border-0 border-t border-dotted border-sn-sleepy-grey mt-6">
+    <div class="collapse in pl-10" :id="'resultBody' + result.id">
+      <div v-for="(element, index) in orderedElements" :key="index">
         <component
           :is="elements[index].attributes.orderable_type"
           :element.sync="elements[index]"
@@ -90,7 +87,6 @@
         />
       </div>
       <Attachments v-if="attachments.length"
-                    class="pt-6 border-0 border-t border-dotted border-sn-sleepy-grey mt-6"
                     :parent="result"
                     :attachments="attachments"
                     :attachmentsReady="attachmentsReady"
