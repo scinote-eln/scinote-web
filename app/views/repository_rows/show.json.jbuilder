@@ -14,3 +14,13 @@ json.custom_columns do
     json.merge! serialize_repository_cell_value(repository_cell, @repository.team, @repository)
   end
 end
+
+json.assigned_modules do
+  json.total_assigned_count @assigned_modules.length
+  json.private_count @private_modules.length
+  json.viewable_modules do
+    json.array! @viewable_modules do |my_module|
+      json.merge! extract_my_module_metadata(my_module)
+    end
+  end
+end

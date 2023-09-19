@@ -112,4 +112,65 @@ module MyModulesHelper
       ''
     end
   end
+
+  def extract_my_module_metadata(my_module)
+    [
+      team_data(my_module.team),
+      project_data(my_module.project),
+      experiment_data(my_module.experiment),
+      my_module_data(my_module)
+    ].each do |item|
+      item[:value] = "(A) #{item[:value]}" if item[:archived]
+    end
+  end
+
+  private
+
+  def team_data(team)
+    {
+      label: I18n.t('repositories.item_card.assigned.labels.team'),
+      value: team.name,
+      url: projects_path(team: team.id),
+      archived: false
+    }
+  end
+
+  def project_data(project)
+    {
+      label: I18n.t('repositories.item_card.assigned.labels.project'),
+      value: project.name,
+      url: project_path(project, view_mode: view_mode(project.archived?)),
+      archived: project.archived?
+    }
+  end
+
+  def experiment_data(experiment)
+    {
+      label: I18n.t('repositories.item_card.assigned.labels.experiment'),
+      value: experiment.name,
+      url: experiment_url(experiment),
+      archived: experiment.archived_branch?
+    }
+  end
+
+  def my_module_data(my_module)
+    {
+      label: I18n.t('repositories.item_card.assigned.labels.my_module'),
+      value: my_module.name,
+      url: protocols_my_module_path(my_module, view_mode: view_mode(my_module.archived_branch?)),
+      archived: my_module.archived_branch?
+    }
+  end
+
+  def view_mode(archived)
+    archived ? 'archived' : 'active'
+  end
+
+  def experiment_url(experiment)
+    if experiment.archived_branch?
+      module_archive_experiment_path(experiment)
+    else
+      my_modules_experiment_path(experiment)
+    end
+  end
 end

@@ -60,14 +60,40 @@
           </div>
   
           <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px	"></div>
-  
-          <div id="assigned-wrapper" class="flex flex-col h-[64px] gap-[6px]">
-          <div id="assigned-label" class="font-inter text-base font-semibold leading-7">Assigned (3)</div>
-          <div id="assigned-value" class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
-            {{ this.assigned }}
+
+          <div class="assigned-wrapper">
+            <div class="text-base font-semibold w-[350px] my-3 leading-7">
+              {{ i18n.t('repositories.item_card.section.assigned', { count: assignedModules.total_assigned_count }) }}
+            </div>
+
+            <div v-if="assignedModules.total_assigned_count > 0">
+              <div v-if="assignedModules.private_count > 0" class="pb-6">
+                {{ i18n.t('repositories.item_card.assigned.private', { count: assignedModules.private_count }) }}
+
+                <hr v-if="assignedModules.viewable_modules.length > 0"
+                    class="h-1 w-[350px] m-0 mt-6 border-dashed border-1 border-sn-light-grey"/>
+              </div>
+
+              <div v-for="(assigned, index) in assignedModules.viewable_modules" 
+                   :key="`assigned_module_${index}`"
+                   class="flex flex-col w-[350px] mb-6 h-auto">
+
+                <div class="flex flex-col gap-3">
+                  <div v-for="(object, index_assigned) in assigned"
+                       :key="`assigned_element_${index_assigned}`">
+                    {{ object.label }}
+                    <a :href="object.url">{{ object.value }}</a>
+                  </div>
+                </div>
+
+                <hr v-if="index < assignedModules.viewable_modules.length - 1" 
+                    class="h-1 w-[350px] mt-6 mb-0 border-dashed border-1 border-sn-light-grey"/>
+              </div>
+            </div>
+            <div v-else class="mb-3">
+              {{ i18n.t('repositories.item_card.assigned.empty') }}
+            </div>
           </div>
-          </div>
-  
           <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px	"></div>
   
           <div id="QR-wrapper" class="block">
@@ -114,9 +140,9 @@
             repositoryName: null,
             defaultColumns: null,
             customColumns: null,
+            assignedModules: null,
             isShowing: false,
             sequenceExpanded: false,
-            assigned: 'Assigned to 3 private tasks that will not be displayed'
         }
       },
       created() {
@@ -172,6 +198,7 @@
               this.repositoryName = result.repository_name;
               this.defaultColumns = result.default_columns;
               this.customColumns = result.custom_columns;
+              this.assignedModules = result.assigned_modules;
             }
           });
         },
