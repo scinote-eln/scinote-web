@@ -74,7 +74,7 @@ module ResultElements
             result_destination: target.id
           }
         )
-        
+
         render json: @table, serializer: ResultTableSerializer, user: current_user
       rescue ActiveRecord::RecordInvalid
         render json: result_table.errors, status: :unprocessable_entity

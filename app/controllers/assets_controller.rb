@@ -86,7 +86,7 @@ class AssetsController < ApplicationController
 
         if @assoc.protocol.in_module?
           log_step_activity(
-            @asset.file.blob.metadata['asset_type'] == 'gene_sequence' ? :move_chemical_structure_on_step : :task_step_file_moved,
+            @asset.file.metadata[:asset_type] == 'marvinjs' ? :move_chemical_structure_on_step : :task_step_file_moved,
             @assoc,
             @assoc.my_module.project,
             my_module: @assoc.my_module.id,
@@ -99,7 +99,7 @@ class AssetsController < ApplicationController
           )
         else
           log_step_activity(
-            @asset.file.blob.metadata['asset_type'] ? :move_chemical_structure_on_step_in_repository : :protocol_step_file_moved,
+            @asset.file.metadata[:asset_type] == 'marvinjs' ? :move_chemical_structure_on_step_in_repository : :protocol_step_file_moved,
             @assoc,
             nil,
             protocol: @assoc.protocol.id,
@@ -111,7 +111,7 @@ class AssetsController < ApplicationController
             step_destination: target.id
           )
         end
-        
+
         render json: {}
       elsif @assoc.is_a?(Result)
         target = @assoc.my_module.results.find_by(id: params[:target_id])
@@ -119,11 +119,11 @@ class AssetsController < ApplicationController
         object_to_update.update!(result: target)
 
         log_result_activity(
-          @asset.file.blob.metadata['asset_type'] ? :move_chemical_structure_on_result : :result_file_moved,
+          @asset.file.metadata[:asset_type] == 'marvinjs' ? :move_chemical_structure_on_result : :result_file_moved,
           @assoc,
           file: @asset.file_name,
           user: current_user.id,
-          result_original: @assoc.id ,
+          result_original: @assoc.id,
           result_destination: target.id
         )
 

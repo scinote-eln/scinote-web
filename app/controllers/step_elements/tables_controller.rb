@@ -77,7 +77,7 @@ module StepElements
             step_destination: target.id
           }
         )
-        
+
       rescue ActiveRecord::RecordInvalid
         render json: step_table.errors, status: :unprocessable_entity
       end

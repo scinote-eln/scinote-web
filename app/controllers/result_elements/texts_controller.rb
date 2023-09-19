@@ -53,7 +53,7 @@ module ResultElements
             result_destination: target.id
           }
         )
-        
+
       rescue ActiveRecord::RecordInvalid
         render json: @result_text.errors, status: :unprocessable_entity
       end
