@@ -12,6 +12,7 @@
           :value="result.attributes.name"
           class="flex-grow font-bold text-base"
           :class="{ 'pointer-events-none': !urls.update_url }"
+          :singleLine="false"
           :characterLimit="255"
           :allowBlank="false"
           :attributeName="`${i18n.t('Result')} ${i18n.t('name')}`"
