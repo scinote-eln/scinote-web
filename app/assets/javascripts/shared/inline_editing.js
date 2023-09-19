@@ -1,10 +1,10 @@
 /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "initInlineEditing" }]*/
 /* global SmartAnnotation HelperModule I18n */
 
-var inlineEditing = (function() {
+let inlineEditing = (function() {
   const SIDEBAR_ITEM_TYPES = ['project', 'experiment', 'my_module', 'repository'];
 
-  var editBlocks = '.inline-init-handler';
+  const editBlocks = '.inline-init-handler';
 
   function appendAfterLabel(container) {
     if (container.data('label-after')) {
@@ -114,8 +114,8 @@ var inlineEditing = (function() {
         if (!error) error = response.responseJSON.errors[fieldToUpdate];
         container.addClass('error');
         if (error) container.find('.error-block').html(error.join(', '));
-        inputField(container).removeClass('border-sn-science-blue');
-        inputField(container).addClass('border-sn-delete-red');
+        inputField(container).removeClass('!border-b-sn-science-blue');
+        inputField(container).addClass('!border-b-sn-delete-red');
         inputField(container).focus();
         container.data('disabled', false);
         $('.tooltip').hide();
@@ -148,6 +148,9 @@ var inlineEditing = (function() {
         $(editBlocks).click();
       }
     })
+    .on('blur', `${editBlocks} textarea, ${editBlocks} input`, function(e) {
+      saveAllEditFields();
+    })
     .on('click', editBlocks, function(e) {
     // 'A' mean that, if we click on <a></a> element we will not go in edit mode
       var container = $(this);
@@ -168,8 +171,8 @@ var inlineEditing = (function() {
           .scrollTop(container.offsetTop);
         $('.tooltip').hide();
       }
-      inputField(container).removeClass('border-sn-delete-red');
-      inputField(container).addClass('border-sn-science-blue');
+      inputField(container).removeClass('!border-b-sn-delete-red');
+      inputField(container).addClass('!border-b-sn-science-blue');
       e.stopPropagation();
       return true;
     })
