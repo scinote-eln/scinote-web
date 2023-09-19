@@ -40,6 +40,19 @@ module StepElements
         @step_text.update!(step: target)
         @step_text.step_orderable_element.update!(step: target, position: target.step_orderable_elements.size)
         @step.normalize_elements_position
+
+        log_step_activity(
+          :text_moved,
+          {
+            user: current_user.id,
+            text_name: @step_text.name,
+            step_position_original: @step.position + 1,
+            step_original: @step.id,
+            step_position_destination: target.position + 1,
+            step_destination: target.id
+          }
+        )
+
         render json: @step_text, serializer: StepTextSerializer, user: current_user
       rescue ActiveRecord::RecordInvalid
         render json: @step_text.errors, status: :unprocessable_entity
