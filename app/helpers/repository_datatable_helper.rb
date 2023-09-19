@@ -43,7 +43,7 @@ module RepositoryDatatableHelper
 
       custom_cells.each do |cell|
         row[columns_mappings[cell.repository_column.id]] =
-          display_cell_value(cell, team, repository, reminders_enabled: reminders_enabled)
+          serialize_repository_cell_value(cell, team, repository, reminders_enabled: reminders_enabled)
       end
 
       if has_stock_management
@@ -64,7 +64,12 @@ module RepositoryDatatableHelper
         stock_cell = record.repository_cells.find { |cell| cell.value_type == 'RepositoryStockValue' }
 
         # always add stock cell, even if empty
-        row['stock'] = stock_cell.present? ? display_cell_value(record.repository_stock_cell, team, repository) : {}
+        row['stock'] =
+          if stock_cell.present?
+            serialize_repository_cell_value(record.repository_stock_cell, team, repository)
+          else
+            {}
+          end
         row['stock'][:stock_managable] = stock_managable
         row['stock']['displayWarnings'] = display_stock_warnings?(repository)
         row['stock'][:stock_status] = stock_cell&.value&.status
@@ -132,7 +137,12 @@ module RepositoryDatatableHelper
 
         consumption_managable = stock_consumption_managable?(record, repository, my_module)
 
-        row['stock'] = stock_present ? display_cell_value(record.repository_stock_cell, record.repository.team, repository) : {}
+        row['stock'] =
+          if stock_present
+            serialize_repository_cell_value(record.repository_stock_cell, record.repository.team, repository)
+          else
+            {}
+          end
         row['stock']['displayWarnings'] = display_stock_warnings?(repository)
         row['stock'][:stock_status] = record.repository_stock_cell&.value&.status
 
@@ -140,7 +150,9 @@ module RepositoryDatatableHelper
         if record.repository.is_a?(RepositorySnapshot)
           row['consumedStock'] =
             if record.repository_stock_consumption_value.present?
-              display_cell_value(record.repository_stock_consumption_cell, record.repository.team, repository)
+              serialize_repository_cell_value(record.repository_stock_consumption_cell,
+                                              record.repository.team,
+                                              repository)
             else
               {}
             end
@@ -184,24 +196,26 @@ module RepositoryDatatableHelper
         '2': escape_input(record.name),
         '3': I18n.l(record.created_at, format: :full),
         '4': escape_input(record.created_by.full_name),
-        'recordInfoUrl': Rails.application.routes.url_helpers.repository_repository_row_path(repository_snapshot, record)
+        'recordInfoUrl': Rails.application.routes.url_helpers
+                              .repository_repository_row_path(repository_snapshot, record)
       }
 
       # Add custom columns
       record.repository_cells.each do |cell|
-        row[columns_mappings[cell.repository_column.id]] = display_cell_value(cell, team, repository_snapshot)
+        row[columns_mappings[cell.repository_column.id]] =
+          serialize_repository_cell_value(cell, team, repository_snapshot)
       end
 
       if has_stock_management
         row['stock'] = if record.repository_stock_cell.present?
-                         display_cell_value(record.repository_stock_cell, team, repository_snapshot)
+                         serialize_repository_cell_value(record.repository_stock_cell, team, repository_snapshot)
                        else
                          { value_type: 'RepositoryStockValue' }
                        end
 
         row['consumedStock'] =
           if record.repository_stock_consumption_cell.present?
-            display_cell_value(record.repository_stock_consumption_cell, team, repository_snapshot)
+            serialize_repository_cell_value(record.repository_stock_consumption_cell, team, repository_snapshot)
           else
             {}
           end
@@ -218,13 +232,6 @@ module RepositoryDatatableHelper
       projects: record.assigned_projects_count,
       task_list_url: assigned_task_list_repository_repository_row_path(record.repository, record)
     }
-  end
-
-  def can_perform_repository_actions(repository)
-    can_read_repository?(repository) ||
-      can_manage_repository?(repository) ||
-      can_create_repositories?(repository.team) ||
-      can_manage_repository_rows?(repository)
   end
 
   def repository_default_columns(record)
@@ -252,7 +259,7 @@ module RepositoryDatatableHelper
     }
   end
 
-  def display_cell_value(cell, team, repository, options = {})
+  def serialize_repository_cell_value(cell, team, repository, options = {})
     serializer_class = "RepositoryDatatable::#{cell.repository_column.data_type}Serializer".constantize
     serializer_class.new(
       cell.value,
