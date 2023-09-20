@@ -22,6 +22,14 @@
           <%= t('assets.file_preview.edit_in_marvinjs') %>
         </button>
 
+      <% elsif asset.blob.metadata["asset_type"] == 'gene_sequence' %>
+        <button class="btn btn-light gene-sequence-edit-button"
+          data-sequence-edit-url="<%= edit_gene_sequence_asset_path(asset) %>"
+        >
+          <span class="sn-icon sn-icon-sequence-editor"></span>
+          <%= t('open_vector_editor.edit_sequence') %>
+        </button>
+
       <% elsif asset.editable_image? %>
         <button class="btn btn-light image-edit-button"
           data-image-id="<%= asset.id %>"
@@ -54,8 +62,8 @@
         <%= render partial: 'shared/pdf_viewer', locals: { asset: asset, report_document: false } %>
       <% else %>
         <%= image_tag asset.large_preview,
-            class: 'asset-image',
-            style: 'opacity: 0' %>
+          class: class_names('asset-image', 'gene-sequence-asset': asset.blob&.metadata["asset_type"] == 'gene_sequence'),
+          style: 'opacity: 0' %>
       <% end %>
     <% else %>
       <%= render partial: 'shared/file_preview/file_icon', locals: { asset: asset } %>

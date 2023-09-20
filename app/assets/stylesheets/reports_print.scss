@@ -29,6 +29,8 @@ div.print-report {
     }
 
     .hot-table-container {
+      display: flex;
+      overflow: auto;
       .ht_master .wtHolder {
         overflow: hidden !important;
 

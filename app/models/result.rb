@@ -14,6 +14,7 @@ class Result < ApplicationRecord
   belongs_to :archived_by, foreign_key: 'archived_by_id', class_name: 'User', optional: true
   belongs_to :restored_by, foreign_key: 'restored_by_id', class_name: 'User', optional: true
   belongs_to :my_module, inverse_of: :results
+  delegate :team, to: :my_module
   has_one :result_asset, inverse_of: :result, dependent: :destroy
   has_one :asset, through: :result_asset
   has_one :result_table, inverse_of: :result, dependent: :destroy
