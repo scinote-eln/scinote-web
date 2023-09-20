@@ -111,20 +111,7 @@
       }
     }
 
-    .footer {
-      border-top: $border-default;
-      display: flex;
-      flex-shrink: 0;
-      padding: 1em;
-
-      .apply-button {
-        margin-left: 8px;
-      }
-
-      .clear-filters-btn {
-        margin-left: auto;
-      }
-
+    .sci-flyout-footer {
       .filters-columns-list {
         max-height: 300px;
         overflow-y: auto;
