@@ -3853,7 +3853,7 @@ en:
     created_on:
       label: "Start date"
     updated_on:
-      label: "Modified date"
+      label: "Updated date"
     archived_on:
       label: "Archived date"
     recent_searches_label: "Recent searches"
