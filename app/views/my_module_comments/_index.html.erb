@@ -1,9 +1,0 @@
-<h5 class="text-center"><%= t('experiments.canvas.popups.comments_tab') %></h5>
-<hr>
-  <%= render partial: 'shared/comments/comments', locals: {
-    object: @my_module,
-    comments: comments,
-    can_create_comments: can_create_my_module_comments?(@my_module),
-    create_url: my_module_my_module_comments_path(@my_module, format: :json),
-    more_url: my_module_my_module_comments_path(@my_module, format: :json, from: comments.first&.id)
-  } %>

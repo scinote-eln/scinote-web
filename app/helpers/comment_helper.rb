@@ -1,31 +1,6 @@
 # frozen_string_literal: true
 
 module CommentHelper
-  def comment_action_url(comment)
-    case comment.type
-    when 'StepComment'
-      step_step_comment_path(comment.step, comment, format: :json)
-    when 'ResultComment'
-      result_result_comment_path(comment.result, comment, format: :json)
-    when 'ProjectComment'
-      project_project_comment_path(comment.project, comment, format: :json)
-    when 'TaskComment'
-      my_module_my_module_comment_path(comment.my_module, comment, format: :json)
-    end
-  end
-
-  def comment_index_helper(comments, more_url, partial = nil)
-    partial ||= 'shared/comments/list'
-    render json: {
-      perPage: @per_page,
-      resultsNumber: comments.size,
-      moreUrl: more_url,
-      html: render_to_string(
-        partial: partial, locals: { comments: comments }, formats: :html
-      )
-    }
-  end
-
   def comment_create_helper(comment, partial = 'item')
     if comment.save
       case comment.type
