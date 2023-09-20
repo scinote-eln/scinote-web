@@ -284,10 +284,6 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
-  function updateSelectedRowsForAssignments() {
-    window.AssignItemsToTaskModalComponent.setShowCallback(() => rowsSelected);
-  }
-
   function checkAvailableColumns() {
     $.ajax({
       url: $(TABLE_ID).data('available-columns'),
@@ -887,7 +883,6 @@ var RepositoryDatatable = (function(global) {
     })
 
     initRowSelection();
-    updateSelectedRowsForAssignments();
 
     return TABLE;
   }
@@ -1023,7 +1018,7 @@ var RepositoryDatatable = (function(global) {
       e.preventDefault();
       e.stopPropagation();
 
-      window.AssignItemsToTaskModalComponentContainer.showModal();
+      window.AssignItemsToTaskModalComponentContainer.showModal(rowsSelected);
     })
     .on('click', '#deleteRepositoryRecords', function(e) {
       e.preventDefault();
