@@ -35,7 +35,10 @@
 <% end %>
 
 <div id="protocolFileImportModal">
-  <protocol-file-import-modal import-url="<%= import_docx_protocols_path %>" />
+  <protocol-file-import-modal 
+    import-url="<%= import_docx_protocols_path %>"
+    protocol-template-table-url="<%= protocols_path %>"
+  />
 </div>
 <%= javascript_include_tag 'vue_protocol_file_import_modal' %>
 
