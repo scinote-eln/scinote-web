@@ -6,7 +6,6 @@ class ProtocolsController < ApplicationController
   include InputSanitizeHelper
   include ProtocolsIoHelper
   include TeamsHelper
-  include CommentHelper
   include ProtocolsExporterV2
 
   before_action :check_create_permissions, only: %i(

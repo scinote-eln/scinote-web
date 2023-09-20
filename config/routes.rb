@@ -326,9 +326,6 @@ Rails.application.routes.draw do
     end
 
     resources :projects, except: [:destroy] do
-      resources :project_comments,
-                path: '/comments',
-                only: %i(create index update destroy)
       # Activities popup (JSON) for individual project in projects index,
       # as well as all activities page for single project (HTML)
       resources :project_activities, path: '/activities', only: [:index]
@@ -467,10 +464,6 @@ Rails.application.routes.draw do
 
       resource :shareable_link, controller: :my_module_shareable_links, only: %i(show create update destroy)
 
-      resources :my_module_comments,
-                path: '/comments',
-                only: %i(create index update destroy)
-
       get :repositories_dropdown_list, controller: :my_module_repositories
       get :repositories_list_html, controller: :my_module_repositories
 
@@ -569,9 +562,6 @@ Rails.application.routes.draw do
       resources :step_orderable_elements do
         post :reorder, on: :collection
       end
-      resources :step_comments,
-                path: '/comments',
-                only: %i(create index update destroy)
       resources :tables, controller: 'step_elements/tables', only: %i(create destroy update) do
         member do
           get :move_targets
