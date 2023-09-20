@@ -18,7 +18,7 @@
         @focus="setCaretAtEnd"/>
       <textarea v-else
         ref="input"
-        class="overflow-hidden leading-5 inline-block outline-none px-0 py-1 border-0 border-solid border-y w-full border-t-transparent mb-0.5"
+        class="overflow-hidden leading-5 inline-block outline-none px-0 py-1 border-0 border-solid border-y w-full border-t-transparent mb-[1px]"
         :class="{
           'inline-edit-placeholder text-sn-grey caret-black': isBlank,
           'border-sn-delete-red': error,
@@ -35,12 +35,12 @@
     <div
       v-else
       ref="view"
-      class="sci-cursor-edit leading-5 border-0 py-1 outline-none inline-block border-solid border-y border-transparent"
+      class="grid sci-cursor-edit leading-5 border-0 py-1 outline-none inline-block border-solid border-y border-transparent"
       :class="{ 'text-sn-grey font-normal': isBlank }"
       @click="enableEdit($event)"
     >
-      <span v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
-      <span v-else>{{newValue || placeholder}}</span>
+      <span :class="{'truncate': singleLine}" v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
+      <span :class="{'truncate': singleLine}" v-else>{{newValue || placeholder}}</span>
     </div>
 
     <div

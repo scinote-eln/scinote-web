@@ -9,6 +9,7 @@ class ResultsController < ApplicationController
   before_action :check_destroy_permissions, only: :destroy
   before_action :set_breadcrumbs_items, only: %i(index)
   before_action :set_navigator, only: %i(index)
+  before_action :set_inline_name_editing, only: %i(index)
 
   def index
     respond_to do |format|
@@ -213,5 +214,17 @@ class ResultsController < ApplicationController
       subject: subject,
       message_items: message_items
     )
+  end
+
+  def set_inline_name_editing
+    return unless can_manage_my_module?(@my_module)
+
+    @inline_editable_title_config = {
+      name: 'title',
+      params_group: 'my_module',
+      item_id: @my_module.id,
+      field_to_udpate: 'name',
+      path_to_update: my_module_path(@my_module)
+    }
   end
 end
