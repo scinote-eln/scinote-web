@@ -47,7 +47,12 @@
           data-object-type="Result"
           :data-object-id="result.id">
           <i class="sn-icon sn-icon-comments"></i>
+          <span class="comments-counter" v-if="result.attributes.comments_count"
+                :id="`comment-count-${result.id}`">
+              {{ result.attributes.comments_count }}
+          </span>
         </a>
+
         <MenuDropdown
           v-if="!locked"
           :listItems="this.actionsMenu"
