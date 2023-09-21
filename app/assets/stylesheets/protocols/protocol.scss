@@ -3,36 +3,6 @@
 
 
 .content-pane.protocols-show {
-  --container-margin: 20px;
-  background-color: $color-alto;
-  min-height: calc(100vh - var(--navbar-height) - var(--container-margin));
-  overflow: hidden;
-  padding: 0 0 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  .title-row h1 {
-    max-width: 100%;
-  }
-
-  .content-header {
-    padding: 0 1.5rem;
-    align-self: stretch;
-  }
-
-  .protocol-breadcrumbs {
-    padding: .75em 0;
-  }
-
-  .protocol-position-container {
-    background-color: $color-white;
-    border-radius: 2px;
-    box-shadow: $flyout-shadow;
-    margin: var(--container-margin) 0;
-    padding: 10px 10px 10px 26px;
-    width: 900px;
-  }
 
   .dropdown-menu {
     z-index: 102;
@@ -43,7 +13,11 @@
   }
 
   .protocol-section {
-    margin: 16px 0;
+    background-color: var(--sn-white);
+    border-radius: .25rem;
+    display: inline-block;
+    padding: .25rem 1rem;
+    width: 100%;
 
     &.protocol-steps-section {
       margin-left: 0;
@@ -54,7 +28,7 @@
       color: var(--sn-black);
       display: inline-flex;
       gap: .5rem;
-      padding: .5rem;
+      padding: .5rem .5rem .5rem 0;
       text-decoration: none;
 
       .fas {
@@ -108,7 +82,7 @@
     }
 
     .protocol-details {
-      padding-left: 2.5rem;
+      padding-left: 2rem;
     }
   }
 
