@@ -98,3 +98,18 @@
   }
 }
 
+.comments-counter {
+  align-items: center;
+  background: var(--sn-grey);
+  border-radius: .5rem;
+  color: $color-white;
+  display: flex;
+  font-size: 10px;
+  height: 16px;
+  justify-content: center;
+  margin: 2px;
+  min-width: 16px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
