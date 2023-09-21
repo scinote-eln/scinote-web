@@ -572,17 +572,11 @@
 }
 
 .task-details-dropdown-container {
-  .task-details-button {
-    @include font-h2;
-    color: inherit;
-    margin-left: -5px;
-    text-decoration: none;
-  }
-
   .dropdown-menu {
     @include font-button;
     min-width: 500px;
     padding: 1em 2em;
+    z-index: 251;
 
     .task-details-value {
       @include font-h3;
@@ -591,27 +585,6 @@
     .row-v-margin {
       margin-bottom: .5em;
       margin-top: .5em;
-    }
-  }
-}
-
-.task-information {
-  .task-section-header {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-  }
-
-  .status-buttons {
-    .status-flow-dropdown[data-status-changing=true] {
-      .caret.pull-right {
-        display: none;
-      }
-    }
-
-    > div > .btn {
-      min-width: 115px;
     }
   }
 }
@@ -648,11 +621,6 @@
       grid-row: 3 / span 1;
     }
   }
-}
-
-.task-details-code {
-  display: inline-block;
-  margin-left: 4px;
 }
 
 #confirm-link-update-modal,

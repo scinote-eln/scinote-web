@@ -1,6 +1,6 @@
 <template>
   <div v-if="protocol.id" class="task-protocol">
-    <div ref="header" class="task-section-header ml-[-1rem] w-[calc(100%_+_2rem)] px-4 z-[250] bg-sn-white sticky top-0 transition" v-if="!inRepository">
+    <div ref="header" class="task-section-header ml-[-1rem] w-[calc(100%_+_2rem)] px-4 bg-sn-white sticky top-0 transition" v-if="!inRepository">
       <div class="portocol-header-left-part truncate grow">
         <template v-if="headerSticked && protocol.attributes.assignable_my_module_name">
           <i class="sn-icon sn-icon-navigator sci--layout--navigator-open cursor-pointer p-1.5 border rounded border-sn-light-grey mr-4"></i>
@@ -428,13 +428,17 @@
         // Add shadow to secondary navigation when it starts fly
         if (secondaryNavigation.getBoundingClientRect().top == 0 && !this.headerSticked) {
           secondaryNavigation.style.boxShadow = '0px 5px 8px 0px rgba(0, 0, 0, 0.10)';
+          secondaryNavigation.style.zIndex= 251;
         } else {
           secondaryNavigation.style.boxShadow = 'none';
+          secondaryNavigation.style.zIndex= 0;
         }
 
         if (protocolHeaderTop - 5 < protocolHeaderHeight) { // When secondary navigation touch protocol header
           secondaryNavigation.style.top = protocolHeaderTop - protocolHeaderHeight + 'px'; // Secondary navigation starts slowly disappear
           protocolHeader.style.boxShadow = '0px 5px 8px 0px rgba(0, 0, 0, 0.10)'; // Flying shadow
+          protocolHeader.style.zIndex= 250;
+
           this.headerSticked = true;
 
 
@@ -443,6 +447,7 @@
             if (newSecondaryTop > 0) newSecondaryTop = 0;
 
             secondaryNavigation.style.top = newSecondaryTop + 'px'; // Secondary navigation starts slowly appear
+            secondaryNavigation.style.zIndex= 251;
             protocolHeader.style.top = secondaryNavigationHeight + newSecondaryTop - 1 + 'px'; // Protocol header starts getting offset to compensate secondary navigation position
             // -1 to compensate small gap between protocol header and secondary navigation
           } else { // When user scroll down
@@ -452,11 +457,13 @@
             secondaryNavigation.style.top = newSecondaryTop + 'px'; // Secondary navigation starts slowly disappear
             protocolHeader.style.top = newSecondaryTop + secondaryNavigationHeight - 1 + 'px'; // Protocol header starts getting offset to compensate secondary navigation position
             // -1 to compensate small gap between protocol header and secondary navigation
+            if (newSecondaryTop <= 1) secondaryNavigation.style.zIndex= 0;
           }
         } else {
           // Just reset secondary navigation and protocol header styles to initial state
           secondaryNavigation.style.top = '0px';
           protocolHeader.style.boxShadow = 'none';
+          protocolHeader.style.zIndex= 0;
           this.headerSticked = false;
         }
 
