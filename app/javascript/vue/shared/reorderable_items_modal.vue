@@ -20,7 +20,7 @@
               <div class="step-element-grip step-element-grip--draggable">
                 <i class="sn-icon sn-icon-drag"></i>
               </div>
-              <div class="step-element-name">
+              <div class="step-element-name text-center">
                 <strong v-if="includeNumbers" class="step-element-number">{{ index + 1 }}</strong>
                 <i v-if="item.attributes.icon" class="fas" :class="item.attributes.icon"></i>
                 <span :title="nameWithFallbacks(item)" v-if="nameWithFallbacks(item)">{{ nameWithFallbacks(item) }}</span>
