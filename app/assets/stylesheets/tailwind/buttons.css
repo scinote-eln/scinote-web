@@ -13,7 +13,7 @@
   }
 
   .btn.btn-lg {
-    @apply py-2.5 px-[1.125rem] text-base leading-5 max-h-[44px];
+    @apply py-2.5 px-[1.125rem] text-base leading-5 h-[44px];
   }
 
   .btn.btn-lg.icon-btn {
@@ -21,7 +21,7 @@
   }
 
   .btn.btn-sm {
-    @apply py-1.5 px-2.5 text-xs leading-5 max-h-[36px];
+    @apply py-1.5 px-2.5 text-xs leading-5 h-[36px];
   }
 
   .btn.btn-sm.icon-btn {
@@ -29,7 +29,7 @@
   }
 
   .btn.btn-xs {
-    @apply py-0.5 px-2.5 text-xs leading-5 max-h-[30px];
+    @apply py-0.5 px-2.5 text-xs leading-5 h-[30px];
   }
 
   .btn.btn-xs.icon-btn {
