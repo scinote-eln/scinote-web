@@ -16,12 +16,6 @@ class ChecklistSerializer < ActiveModel::Serializer
     :step
   end
 
-  def checklist_items
-    object.checklist_items.map do |item|
-      ChecklistItemSerializer.new(item, scope: { user: scope[:user] || @instance_options[:user] }).as_json
-    end
-  end
-
   def sa_name
     @user = scope[:user] || @instance_options[:user]
     custom_auto_link(object.name,
@@ -34,6 +28,7 @@ class ChecklistSerializer < ActiveModel::Serializer
     return {} if object.destroyed? || !can_manage_step?(scope[:user] || @instance_options[:user], object.step)
 
     {
+      checklist_items_url: step_checklist_checklist_items_path(object.step, object),
       duplicate_url: duplicate_step_checklist_path(object.step, object),
       delete_url: step_checklist_path(object.step, object),
       update_url: step_checklist_path(object.step, object),

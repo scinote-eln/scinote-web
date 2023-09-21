@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_04_080206) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_21_142200) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -115,6 +115,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_04_080206) do
     t.bigint "created_by_id"
     t.bigint "last_modified_by_id"
     t.integer "position"
+    t.boolean "with_paragraphs", default: false
     t.index "trim_html_tags((text)::text) gin_trgm_ops", name: "index_checklist_items_on_text", using: :gin
     t.index ["checklist_id", "position"], name: "index_checklist_items_on_checklist_id_and_position", unique: true
     t.index ["checklist_id"], name: "index_checklist_items_on_checklist_id"

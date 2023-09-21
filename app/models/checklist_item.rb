@@ -24,6 +24,45 @@ class ChecklistItem < ApplicationRecord
   after_save :touch_checklist
   after_touch :touch_checklist
 
+  def save_multiline!
+    if with_paragraphs
+      if new_record?
+        original_position = position
+        self.position = nil
+        save!
+        insert_at(original_position + 1)
+      else
+        save!
+      end
+      return [self]
+    end
+
+    items = []
+    if new_record?
+      start_position = position
+      split_multiline.each do |line|
+        new_item = checklist.checklist_items.create!(text: line)
+        new_item.insert_at(start_position + 1)
+        start_position = new_item.position
+        items.push(new_item)
+      end
+    else
+      item = self
+      split_multiline.each_with_index do |line, index|
+        if index.zero?
+          update!(text: line)
+          items.push(self)
+        else
+          new_item = checklist.checklist_items.create!(text: line)
+          new_item.insert_at(item.position + 1)
+          item = new_item
+          items.push(new_item)
+        end
+      end
+    end
+    items
+  end
+
   private
 
   def touch_checklist
@@ -33,5 +72,9 @@ class ChecklistItem < ApplicationRecord
     # rubocop:disable Rails/SkipsModelValidations
     checklist.touch
     # rubocop:enable Rails/SkipsModelValidations
+  end
+
+  def split_multiline
+    text.split("\n").compact
   end
 end

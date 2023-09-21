@@ -10,22 +10,28 @@ module StepElements
     before_action :check_toggle_permissions, only: %i(toggle)
     before_action :check_manage_permissions, only: %i(create update destroy)
 
-    def create
-      checklist_item = @checklist.checklist_items.build(checklist_item_params.merge!(created_by: current_user))
+    def index
+      render json: @checklist.checklist_items, each_serializer: ChecklistItemSerializer, user: current_user
+    end
 
+    def create
+      checklist_item = @checklist.checklist_items.new(checklist_item_params.merge!(created_by: current_user))
+      new_items = []
       ActiveRecord::Base.transaction do
-        checklist_item.save!
-        log_activity(
-          "#{@step.protocol.in_module? ? :task : :protocol}_step_checklist_item_added",
-          {
-            checklist_item: checklist_item.text,
-            checklist_name: @checklist.name
-          }
-        )
-        checklist_item_annotation(@step, checklist_item)
+        new_items = checklist_item.save_multiline!
+        new_items.each do |item|
+          log_activity(
+            "#{@step.protocol.in_module? ? :task : :protocol}_step_checklist_item_added",
+            {
+              checklist_item: item.text,
+              checklist_name: @checklist.name
+            }
+          )
+          checklist_item_annotation(@step, item)
+        end
       end
 
-      render json: checklist_item, serializer: ChecklistItemSerializer, user: current_user
+      render json: new_items, each_serializer: ChecklistItemSerializer, user: current_user
     rescue ActiveRecord::RecordInvalid
       render json: { errors: checklist_item.errors }, status: :unprocessable_entity
     end
@@ -35,17 +41,31 @@ module StepElements
       @checklist_item.assign_attributes(
         checklist_item_params.except(:position, :id).merge(last_modified_by: current_user)
       )
-
-      if @checklist_item.save!
-        log_activity(
-          "#{@step.protocol.in_module? ? :task : :protocol}_step_checklist_item_edited",
-          checklist_item: @checklist_item.text,
-          checklist_name: @checklist.name
-        )
-        checklist_item_annotation(@step, @checklist_item, old_text)
+      new_items = []
+      ActiveRecord::Base.transaction do
+        new_items = @checklist_item.save_multiline!
+        new_items.each_with_index do |item, i|
+          if i.zero?
+            log_activity(
+              "#{@step.protocol.in_module? ? :task : :protocol}_step_checklist_item_edited",
+              checklist_item: item.text,
+              checklist_name: @checklist.name
+            )
+            checklist_item_annotation(@step, item, old_text)
+          else
+            log_activity(
+              "#{@step.protocol.in_module? ? :task : :protocol}_step_checklist_item_added",
+              {
+                checklist_item: item.text,
+                checklist_name: @checklist.name
+              }
+            )
+            checklist_item_annotation(@step, item)
+          end
+        end
       end
 
-      render json: @checklist_item, serializer: ChecklistItemSerializer, user: current_user
+      render json: new_items, each_serializer: ChecklistItemSerializer, user: current_user
     rescue ActiveRecord::RecordInvalid
       render json: { errors: @checklist_item.errors }, status: :unprocessable_entity
     end
@@ -96,7 +116,6 @@ module StepElements
       checklist_item = @checklist.checklist_items.find(checklist_item_params[:id])
       ActiveRecord::Base.transaction do
         checklist_item.insert_at(checklist_item_params[:position])
-        @checklist.touch
       end
       render json: params[:checklist_item_positions], status: :ok
     rescue ActiveRecord::RecordInvalid
@@ -118,7 +137,7 @@ module StepElements
     end
 
     def checklist_item_params
-      params.require(:attributes).permit(:text, :position, :id)
+      params.require(:attributes).permit(:text, :position, :id, :with_paragraphs)
     end
 
     def checklist_toggle_item_params

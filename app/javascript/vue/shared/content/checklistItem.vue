@@ -2,13 +2,13 @@
   <div class="content__checklist-item">
     <div class="checklist-item-header flex rounded pl-10 ml-[-2.325rem] items-center relative w-full group/checklist-item-header" :class="{ 'locked': locked || editingText, 'editing-name': editingText }">
       <div v-if="reorderChecklistItemUrl"
-        class="absolute h-6 cursor-grab justify-center left-0 top-1 px-2 tw-hidden text-sn-grey element-grip step-element-grip--draggable"
+        class="absolute h-6 cursor-grab justify-center left-0 top-0.5 px-2 tw-hidden text-sn-grey element-grip step-element-grip--draggable"
         :class="{ 'group-hover/checklist-item-header:flex': (!locked && !editingText && draggable) }"
       >
         <i class="sn-icon sn-icon-drag"></i>
       </div>
-      <div class="flex items-start gap-2 grow pt-[1px]" :class="{ 'done': checklistItem.attributes.checked }">
-        <div v-if="!inRepository" class="sci-checkbox-container my-1.5 border-y border-transparent border-solid w-6" :class="{ 'disabled': !toggleUrl }">
+      <div class="flex items-start gap-2 grow" :class="{ 'done': checklistItem.attributes.checked }">
+        <div v-if="!inRepository" class="sci-checkbox-container my-1.5 border-0 border-y border-transparent border-solid" :class="{ 'disabled': !toggleUrl }">
           <input ref="checkbox"
                  type="checkbox"
                  class="sci-checkbox"
@@ -18,7 +18,11 @@
           </span>
         </div>
         <div v-else class="w-6"></div>
-        <div class="pr-10 grow relative flex items-start max-w-[90ch]" :class="{ 'pointer-events-none': !checklistItem.attributes.isNew && !updateUrl }">
+        <div class="pr-24 relative flex items-start max-w-[90ch]"
+             :class="{
+              'pointer-events-none': !checklistItem.attributes.isNew && !updateUrl,
+              'flex-grow': editingText,
+             }">
           <InlineEdit
             :value="checklistItem.attributes.text"
             :sa_value="checklistItem.attributes.sa_text"
@@ -28,18 +32,16 @@
             :singleLine="false"
             :autofocus="editingText"
             :attributeName="`${i18n.t('ChecklistItem')} ${i18n.t('name')}`"
-            :multilinePaste="true"
             :editOnload="checklistItem.attributes.isNew"
             :smartAnnotation="true"
-            :saveOnEnter="false"
-            :allowNewLine="true"
             @editingEnabled="enableTextEdit"
             @editingDisabled="disableTextEdit"
             @update="updateText"
             @delete="removeItem()"
-            @multilinePaste="(data) => { $emit('multilinePaste', data) && removeItem() }"
+            @keypress="keyPressHandler"
+            @blur="editingText = false"
           />
-          <span v-if="!checklistItem.attributes.urls || deleteUrl" class="absolute right-0 leading-6 tw-hidden group-hover/checklist-item-header:inline-block !text-sn-blue cursor-pointer" @click="showDeleteModal" tabindex="0">
+          <span v-if="!editingText && (!checklistItem.attributes.urls || deleteUrl)" class="absolute right-0 top-0.5 leading-6 tw-hidden group-hover/checklist-item-header:inline-block !text-sn-blue cursor-pointer" @click="showDeleteModal" tabindex="0">
             <i class="sn-icon sn-icon-delete"></i>
           </span>
         </div>
@@ -81,7 +83,8 @@
     },
     data() {
       return {
-        editingText: false
+        editingText: false,
+        deleting: false
       }
     },
     computed: {
@@ -116,6 +119,8 @@
       },
       disableTextEdit() {
         if (this.checklistItem.attributes.isNew) {
+          if (this.deleting) return
+
           this.removeItem();
           this.$emit('editEnd');
           this.editingText = false;
@@ -129,25 +134,30 @@
         this.checklistItem.attributes.checked = this.$refs.checkbox.checked;
         this.$emit('toggle', this.checklistItem);
       },
-      updateText(text) {
+      updateText(text, withKey) {
         if (text.length === 0) {
           this.disableTextEdit();
-          this.removeItem();
         } else {
           this.checklistItem.attributes.text = text;
-          this.update();
+          this.update(withKey);
         }
       },
       removeItem() {
+        this.deleting = true;
         if (this.deleteUrl) {
           this.deleteElement();
         } else {
           this.$emit('removeItem', this.checklistItem.attributes.position);
         }
       },
-      update() {
-        this.$emit('update', this.checklistItem);
-      }
+      update(withKey) {
+        this.$emit('update', this.checklistItem, withKey);
+      },
+      keyPressHandler(e) {
+        if (e.key === 'Enter' && e.shiftKey) {
+          this.checklistItem.attributes.with_paragraphs = true;
+        }
+      },
     }
   }
 </script>

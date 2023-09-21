@@ -6,7 +6,7 @@ class ChecklistItemSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :id, :text, :checked, :position, :urls, :sa_text
+  attributes :id, :text, :checked, :position, :urls, :sa_text, :with_paragraphs
 
   def sa_text
     @user = scope[:user] || @instance_options[:user]

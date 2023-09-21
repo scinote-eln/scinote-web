@@ -582,7 +582,7 @@ Rails.application.routes.draw do
           post :move
           post :duplicate
         end
-        resources :checklist_items, controller: 'step_elements/checklist_items', only: %i(create update destroy) do
+        resources :checklist_items, controller: 'step_elements/checklist_items', only: %i(index create update destroy) do
           patch :toggle, on: :member
           post :reorder, on: :collection
         end
