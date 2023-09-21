@@ -20,10 +20,6 @@
     @apply text-sn-sleepy-grey;
   }
 
-  .sci-input-container-v2 .sci-input-field-v2 {
-    @apply h-[2.25rem];
-  }
-
   .sci-input-container-v2 .error {
     @apply !border-sn-coral;
   }
@@ -38,7 +34,7 @@
 
   .sci-input-container-v2 input:disabled {
     background-color: var(--sn-super-light-grey);
-    color: var(--sn-light-grey);
+    color: var(--sn-grey);
     border: 1px solid var(--sn-light-grey);
   }
 

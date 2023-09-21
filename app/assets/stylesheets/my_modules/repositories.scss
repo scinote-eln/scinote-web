@@ -172,6 +172,7 @@
       grid-template-columns: minmax(50%, 100%) 0;
       grid-template-rows: 55px calc(100% - 55px);
       height: inherit;
+      padding: 0;
       transition: all $timing-function-sharp;
 
       &.show-sidebar {

@@ -19,16 +19,17 @@
   }
 
   .modal-content {
-    background: transparent;
     border: 0;
     box-shadow: none;
     height: 100%;
+    padding: 0;
     width: auto;
   }
 
   .modal-header {
     background: $color-white;
     display: flex;
+    flex-direction: row;
     height: 60px;
     line-height: 40px;
     padding: 10px 15px;
