@@ -19,9 +19,7 @@
               :options="targetOptions"
               :isLoading="false"
               :placeholder="
-                i18n.t(
-                  'my_modules.results.move_modal.search_placeholder'
-                )
+                i18n.t(`protocols.steps.modals.move_element.${parent_type}.search_placeholder`)
               "
               :no-options-placeholder="
                 i18n.t(
@@ -29,9 +27,7 @@
                 )
               "
               :searchPlaceholder="
-                i18n.t(
-                  'my_modules.results.move_modal.search_placeholder'
-                )
+                i18n.t(`protocols.steps.modals.move_element.${parent_type}.search_placeholder`)
               "
             />
           </div>

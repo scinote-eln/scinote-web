@@ -3190,10 +3190,12 @@ en:
           step:
             title: Move to different step
             targets_label: Select step
+            search_placeholder: "Enter step name"
           result:
             title: Move to different result
             targets_label: Select result
             untitled_result: Untitled result
+            search_placeholder: "Enter result name"
         delete_step:
           title: 'Delete step'
           description_1: 'You’re about to delete a whole step from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
