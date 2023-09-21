@@ -18,7 +18,7 @@
           <span class="sn-icon sn-icon-import"></span><span class="hidden-xs"><%= t("protocols.index.import") %></span>
         </button>
 
-        <ul class="dropdown-menu rounded !grid !p-2.5 !gap-y-px sn-shadow-menu-sm">
+        <ul class="dropdown-menu rounded !p-2.5 sn-shadow-menu-sm">
           <li>
             <a class="btn-open-file !pl-3 !py-2.5 hover:!bg-sn-super-light-blue rounded !text-sn-blue data-action='import'" >
               <span><%= t('protocols.index.import_eln') %></span>
@@ -28,7 +28,7 @@
           </li>
           <% if Protocol.docx_parser_enabled?%>
             <li>
-              <a class="btn-open-file btn-beta-icon !pl-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue rounded data-action='import'" >
+              <a class="btn-open-file btn-beta-icon !pl-3 mt-px !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue rounded data-action='import'" >
                 <span><%= t('protocols.index.import_docx')%></span>
                 <input type="file" value="" accept=".docx" data-role="import-file-input"
                 data-team-id="<%= @current_team.id %>" data-import-url="<%= import_protocols_path %>">
@@ -38,7 +38,7 @@
           <li>
             <%= link_to t("protocols.index.import_protocols_io"),
                         '',
-                        class: '!pl-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue rounded',
+                        class: '!pl-3 !py-2.5 hover:!bg-sn-super-light-blue mt-px !text-sn-blue rounded',
                         data: { target: '#protocolsioModal', toggle: 'modal' } %>
           </li>
         </ul>
