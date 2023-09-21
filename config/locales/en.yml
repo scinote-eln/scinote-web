@@ -3759,3 +3759,24 @@ en:
     canvas_view: "Canvas view"
     active_state: "Active state"
     archived_state: "Archived state"
+
+  errors:
+    forbidden:
+      title: "Access to this page is denied (403)."
+      dialog:
+        title: "It would seem that you are not allowed in here."
+        text: "You should request access from your team administrators."
+        button: "Go back"
+    not_found:
+      title: "This page could not be found (404)."
+      dialog:
+        title: "This page could not be found (404)."
+        text_1: "You may have mistyped the address or the page may have moved."
+        text_2_html: |
+          "If you are the application owner check the logs for more information.
+          You can go back to <a href="%{home_url}">home page</a> or try <a href="%{search_url}">searching.</a>"
+    unprocessable_entity:
+      title: "The change you wanted was rejected (422)."
+      dialog:
+        title: "Ooops, something went wrong."
+        text: "Please contact your SciNote administrator."
