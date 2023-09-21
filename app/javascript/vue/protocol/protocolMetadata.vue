@@ -1,5 +1,5 @@
 <template>
-  <div class="protocol-section protocol-information">
+  <div class="protocol-section protocol-information mb-4">
     <div id="protocol-details" class="protocol-section-header">
       <div class="protocol-details-container">
         <a class="protocol-section-caret" role="button" data-toggle="collapse" href="#details-container" aria-expanded="false" aria-controls="details-container">

@@ -3,7 +3,8 @@
   <%= render partial: "/shared/sidebar/templates_sidebar", locals: {active: :protocol} %>
 <% end %>
  <% provide(:container_class, 'no-second-nav-container') %>
-  <div class="content-header">
+<div class="content-pane protocols-show flexible with-grey-background pb-4" >
+  <div class="content-header sticky-header">
     <div class="title-row">
       <h1>
         <% if @inline_editable_title_config.present? %>
@@ -27,18 +28,15 @@
       </h1>
     </div>
   </div>
-<div class="content-pane protocols-show flexible" >
-  <div class="protocol-position-container">
-    <div
-      id="protocolContainer"
-      data-protocol-url="<%= protocol_path(@protocol) %>"
-      data-date-format="<%= datetime_picker_format_date_only %>"
-      data-user-utc-offset="<%= ActiveSupport::TimeZone.find_tzinfo(current_user.time_zone).utc_offset %>"
-    >
-      <protocol-container
-      :protocol-url="protocolUrl"
-      />
-    </div>
+  <div
+    id="protocolContainer"
+    data-protocol-url="<%= protocol_path(@protocol) %>"
+    data-date-format="<%= datetime_picker_format_date_only %>"
+    data-user-utc-offset="<%= ActiveSupport::TimeZone.find_tzinfo(current_user.time_zone).utc_offset %>"
+  >
+    <protocol-container
+    :protocol-url="protocolUrl"
+    />
   </div>
   <%= render partial: "protocols/index/delete_draft_modal" %>
 </div>
