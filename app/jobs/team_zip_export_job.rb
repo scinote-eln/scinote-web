@@ -2,6 +2,7 @@
 
 require 'fileutils'
 require 'csv'
+require 'vips'
 
 class TeamZipExportJob < ZipExportJob
   include StringUtility
