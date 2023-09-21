@@ -14,11 +14,11 @@ class AssetSerializer < ActiveModel::Serializer
              :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached
 
   def icon
-    file_fa_icon_class(object)
+    file_extension_icon_html(object)
   end
 
   def file_name
-    escape_input(object.render_file_name)
+    object.render_file_name
   end
 
   def updated_at
@@ -127,6 +127,7 @@ class AssetSerializer < ActiveModel::Serializer
         delete: asset_destroy_path(object)
       )
     end
+    urls[:open_vector_editor_edit] = edit_gene_sequence_asset_path(object.id) if can_manage_asset?(user, object)
     urls[:wopi_action] = object.get_action_url(user, 'embedview') if wopi && can_manage_asset?(user, object)
     urls[:blob] = rails_blob_path(object.file, disposition: 'attachment') if object.file.attached?
 

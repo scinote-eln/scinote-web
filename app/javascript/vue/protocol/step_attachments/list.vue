@@ -2,6 +2,7 @@
   <div class="list-attachment-container asset"
        :data-asset-id="attachment.id"
   >
+    <div v-html="attachment.attributes.icon"></div>
     <i class="fas asset-icon" :class="attachment.attributes.icon"></i>
     <a :href="attachment.attributes.urls.blob"
        class="file-preview-link file-name"

@@ -29,6 +29,16 @@
     box-shadow: none;
   }
 
+  .sci-input-container-v2 input:hover {
+    border-color: var(--sn-science-blue-hover);
+  }
+
+  .sci-input-container-v2 input:disabled {
+    background-color: var(--sn-super-light-grey);
+    color: var(--sn-light-grey);
+    border: 1px solid var(--sn-light-grey);
+  }
+
   .sci-input-container-v2 .sn-icon {
     @apply m-2;
     color: var(--sn-black)

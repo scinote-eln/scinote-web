@@ -991,4 +991,6 @@ Rails.application.routes.draw do
     get 'wopi/files/:id', to: 'wopi#file_get_endpoint', as: 'wopi_rest_endpoint'
     post 'wopi/files/:id', to: 'wopi#post_file_endpoint'
   end
+
+  resources :gene_sequence_assets, only: %i(new create edit update)
 end
