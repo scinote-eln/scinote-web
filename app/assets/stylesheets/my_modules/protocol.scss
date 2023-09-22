@@ -43,7 +43,7 @@
 
     &::before,
     &::after {
-      border-bottom: 1px dashed var(--sn-light-grey);
+      border-bottom: 1px dotted var(--sn-sleepy-grey);
       content: "";
       display: inline-block;
       flex-grow: 1;
