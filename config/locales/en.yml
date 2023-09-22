@@ -2116,6 +2116,8 @@ en:
         added_at: "Added at"
         added_by: 'Added by'
       no_custom_columns_label: 'This item has no custom columns'
+      navigations:
+        qr: "QR"
       repository_time_range_value:
         no_time_range: 'No time range'
       repository_text_value:
