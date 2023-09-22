@@ -1,0 +1,37 @@
+<template>
+  <div id="repository-stock-value-wrapper" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
+    <div class="font-inter text-sm font-semibold leading-5">
+      {{ colName }}
+    </div>
+    <div v-if="stock_formatted" class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+      {{ stock_formatted }}
+    </div>
+    <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+      {{ i18n.t('repositories.item_card.repository_stock_value.no_stock') }}
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'RepositoryStockValue',
+  data() {
+    return {
+      stock_formatted: null,
+      stock_amount: null,
+      low_stock_threshold: null
+    }
+  },
+  props: {
+    data_type: String,
+    colId: Number,
+    colName: String,
+    colVal: Object
+  },
+  created() {
+    this.stock_formatted = this.colVal.stock_formatted
+    this.stock_amount = this.colVal.stock_amount
+    this.low_stock_threshold = this.colVal.low_stock_threshold
+  }
+}
+</script>
