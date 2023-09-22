@@ -57,8 +57,6 @@
     <template v-else-if="attachment.attributes.large_preview !== null">
       <div class="image-container">
         <img :src="attachment.attributes.large_preview"
-             @error="ActiveStoragePreviews.reCheckPreview"
-             @load="ActiveStoragePreviews.showPreview"
              style='opacity: 0' />
       </div>
     </template>
@@ -98,6 +96,11 @@
     },
     mounted() {
       this.showWopi = this.attachment.attributes.file_size > 0;
+      $(this.$nextTick(function() {
+        $(`.image-container img`)
+          .on('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
+          .on('load', (event) => ActiveStoragePreviews.showPreview(event))
+      }))
     },
     methods: {
       reloadAsset() {

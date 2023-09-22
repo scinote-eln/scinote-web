@@ -138,6 +138,12 @@
           type: 'PATCH',
           dataType: 'json',
           data: { asset: { view_mode: viewMode } }
+        }).done(data => {
+          this.$nextTick(function() {
+            $(`.asset[data-asset-id=${this.attachment.id}] img`)
+              .replaceWith($(data.html).find(`.asset[data-asset-id=${this.attachment.id}] img`));
+            ActiveStoragePreviews.reloadPreview(`.asset[data-asset-id=${this.attachment.id}] img`);
+          })
         });
       },
       deleteAttachment() {
