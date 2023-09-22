@@ -9,19 +9,22 @@
     <perfect-scrollbar
       ref="optionsContainer"
       :style="optionPositionStyle"
-      class="sn-select__options scroll-container"
+      class="sn-select__options scroll-container p-2.5 block"
     >
-      <template v-if="options.length">
+      <div v-if="options.length" class="flex flex-col gap-[1px]">
         <div
           v-for="option in options"
           :key="option[0]"
           @mousedown.prevent.stop="setValue(option[0])"
-          class="sn-select__option"
-          :class="{ 'select__option-placeholder': option[2] }"
+          class="sn-select__option p-3 rounded"
+          :class="{
+            'select__option-placeholder': option[2],
+            '!bg-sn-super-light-blue': option[0] == value,
+          }"
         >
           {{ option[1] }}
         </div>
-      </template>
+      </div>
       <template v-else>
         <div
           class="sn-select__no-options"

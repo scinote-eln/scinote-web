@@ -16,7 +16,7 @@
             :chosenClass="'step-checklist-item-chosen'"
             :handle="'.step-element-grip'"
           >
-            <div v-for="(item, index) in reorderedItems" :key="item.id" class="step-element-header">
+            <div v-for="(item, index) in reorderedItems" :key="item.id" class="step-element-header flex items-center">
               <div class="step-element-grip step-element-grip--draggable">
                 <i class="sn-icon sn-icon-drag"></i>
               </div>

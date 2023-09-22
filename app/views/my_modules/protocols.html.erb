@@ -92,12 +92,12 @@
         </a>
         <div class="actions-block">
           <% if can_assign_my_module_repository_rows?(@my_module) %>
-            <div class="dropdown repositories-assign-container sci-dropdown" data-repositories-url="<%= my_module_repositories_dropdown_list_path(@my_module) %>">
+            <div class="dropdown repositories-assign-container" data-repositories-url="<%= my_module_repositories_dropdown_list_path(@my_module) %>">
               <a href="#" id="repositories-assign-button" class="btn btn-light btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                 <span><%= t('my_modules.assigned_items.assign_from') %></span>
                 <span class="sn-icon sn-icon-down"></span>
               </a>
-              <ul class="dropdown-menu repositories-dropdown-menu perfect-scrollbar" aria-labelledby="repositories-assign-button">
+              <ul class="dropdown-menu repositories-dropdown-menu perfect-scrollbar rounded !p-2.5 sn-shadow-menu-sm flex flex-col gap-[1px]" aria-labelledby="repositories-assign-button">
               </ul>
             </div>
           <% end %>

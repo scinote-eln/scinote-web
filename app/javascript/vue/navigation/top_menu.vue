@@ -14,23 +14,14 @@
         @change="switchTeam"
       ></Select>
     </div>
-    <div v-if="user" class="dropdown ml-auto">
-      <button class="btn btn-light icon-btn btn-black" data-toggle="dropdown"  :title="i18n.t('nav.settings')">
-        <i class="sn-icon sn-icon-settings"></i>
-      </button>
-      <ul class="dropdown-menu dropdown-menu-right">
-        <li v-for="(item, i) in settingsMenu" :key="i">
-          <a :href="item.url">
-            {{ item.name }}
-          </a>
-        </li>
-        <li>
-          <a href="" data-toggle='modal' data-target='#aboutModal' >
-          {{ i18n.t('left_menu_bar.support_links.core_version') }}
-          </a>
-        </li>
-      </ul>
-    </div>
+    <MenuDropdown
+      class="ml-auto"
+      v-if="this.settingsMenu && this.settingsMenu.length > 0"
+      :listItems="this.settingsMenu.map((item) => { return { text: item.name, url: item.url } })"
+      :btnClasses="'btn btn-light icon-btn btn-black'"
+      :position="'right'"
+      :btnIcon="'sn-icon sn-icon-settings'"
+    ></MenuDropdown>
     <div v-if="user" class="sci--navigation--notificaitons-flyout-container" >
       <button class="btn btn-light icon-btn btn-black"
               :title="i18n.t('nav.notifications.title')"
@@ -52,14 +43,14 @@
       <div class="sci--navigation--top-menu-user btn btn-light icon-btn btn-black" data-toggle="dropdown">
         <img class="avatar w-6 h-6" :src="user.avatar_url">
       </div>
-      <div class="dropdown-menu dropdown-menu-right top-menu-user-dropdown">
+      <div class="dropdown-menu dropdown-menu-right rounded !p-2.5 sn-shadow-menu-sm">
         <li v-for="(item, i) in userMenu" :key="i">
-          <a :href="item.url">
+          <a :href="item.url" class="!px-3 !py-2.5 rounded hover:!bg-sn-super-light-grey !text-sn-blue block">
             {{ item.name }}
           </a>
         </li>
         <li>
-          <a rel="nofollow" data-method="delete" :href="user.sign_out_url">
+          <a rel="nofollow" data-method="delete" :href="user.sign_out_url" class="!px-3 !py-2.5 rounded hover:!bg-sn-super-light-grey !text-sn-blue block">
             {{ i18n.t('nav.user.logout') }}
           </a>
         </li>
@@ -69,16 +60,18 @@
 </template>
 
 <script>
-  import NotificationsFlyout from './notifications/notifications_flyout.vue'
-  import DropdownSelector from '../shared/dropdown_selector.vue'
+  import NotificationsFlyout from './notifications/notifications_flyout.vue';
+  import DropdownSelector from '../shared/dropdown_selector.vue';
   import Select from "../shared/select.vue";
+  import MenuDropdown from '../shared/menu_dropdown.vue';
 
   export default {
     name: 'TopMenuContainer',
     components: {
       DropdownSelector,
       NotificationsFlyout,
-      Select
+      Select,
+      MenuDropdown
     },
     props: {
       url: String,

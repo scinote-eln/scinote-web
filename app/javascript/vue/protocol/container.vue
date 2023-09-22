@@ -142,7 +142,7 @@
                 <span>{{ i18n.t("protocols.steps.new_step") }}</span>
             </a>
           </div>
-          <div class="protocol-steps">
+          <div class="protocol-steps pb-8">
             <div v-for="(step, index) in steps" :key="step.id" class="step-block">
               <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)">
                 <i class="sn-icon sn-icon-new-task"></i>
