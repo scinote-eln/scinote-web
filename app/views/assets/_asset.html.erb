@@ -10,10 +10,12 @@ partial_locals = {
   editable: editable
 }
 %>
-<% if asset.inline? %>
-    <%= render partial: 'assets/asset_inline', locals: partial_locals %>
-<% elsif asset.list? %>
-    <%= render partial: 'assets/asset_list', locals: partial_locals %>
-<% else %>
-    <%= render partial: 'assets/asset_thumbnail', locals: partial_locals %>
-<% end %>
+<div>
+    <% if asset.inline? %>
+        <%= render partial: 'assets/asset_inline', locals: partial_locals %>
+    <% elsif asset.list? %>
+        <%= render partial: 'assets/asset_list', locals: partial_locals %>
+    <% else %>
+        <%= render partial: 'assets/asset_thumbnail', locals: partial_locals %>
+    <% end %>
+</div>

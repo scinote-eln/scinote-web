@@ -32,8 +32,8 @@ var ActiveStoragePreviews = (function() {
     },
     reloadPreview: function(target) {
       $(target)
-        .one('error', (event) => this.reCheckPreview(event))
-        .one('load', (event) => this.showPreview(event))
+        .on('error', event => this.reCheckPreview(event))
+        .on('load', event => this.showPreview(event))
         .trigger('error');
     }
   });
