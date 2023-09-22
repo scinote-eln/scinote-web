@@ -40,7 +40,7 @@ class ChecklistItem < ApplicationRecord
     items = []
     if new_record?
       start_position = position
-      split_multiline.each do |line|
+      text.split("\n").compact.each do |line|
         new_item = checklist.checklist_items.create!(text: line)
         new_item.insert_at(start_position + 1)
         start_position = new_item.position
@@ -48,7 +48,7 @@ class ChecklistItem < ApplicationRecord
       end
     else
       item = self
-      split_multiline.each_with_index do |line, index|
+      text.split("\n").compact.each_with_index do |line, index|
         if index.zero?
           update!(text: line)
           items.push(self)
@@ -72,9 +72,5 @@ class ChecklistItem < ApplicationRecord
     # rubocop:disable Rails/SkipsModelValidations
     checklist.touch
     # rubocop:enable Rails/SkipsModelValidations
-  end
-
-  def split_multiline
-    text.split("\n").compact
   end
 end

@@ -45,23 +45,12 @@ module StepElements
       ActiveRecord::Base.transaction do
         new_items = @checklist_item.save_multiline!
         new_items.each_with_index do |item, i|
-          if i.zero?
-            log_activity(
-              "#{@step.protocol.in_module? ? :task : :protocol}_step_checklist_item_edited",
-              checklist_item: item.text,
-              checklist_name: @checklist.name
-            )
-            checklist_item_annotation(@step, item, old_text)
-          else
-            log_activity(
-              "#{@step.protocol.in_module? ? :task : :protocol}_step_checklist_item_added",
-              {
-                checklist_item: item.text,
-                checklist_name: @checklist.name
-              }
-            )
-            checklist_item_annotation(@step, item)
-          end
+          log_activity(
+            "#{@step.protocol.in_module? ? :task : :protocol}_step_checklist_item_#{i.zero? ? 'edited' : 'added'}",
+            checklist_item: item.text,
+            checklist_name: @checklist.name
+          )
+          checklist_item_annotation(@step, item, old_text)
         end
       end
 
