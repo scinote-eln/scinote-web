@@ -1,4 +1,7 @@
 class ChecklistItem < ApplicationRecord
+
+  attr_accessor :with_paragraphs
+
   auto_strip_attributes :text, nullify: false
   validates :text,
             presence: true,
