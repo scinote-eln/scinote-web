@@ -16,15 +16,12 @@
         <nav class="w-full">
           <ul class="flex flex-col gap-3 text-right list-none">
             <li v-for="nav in navigations" :key="nav.value" class="cursor-pointer inline-block relative">
-              <span
-                :class="`${activeNav === nav.value ? 'text-sn-science-blue' : 'text-sn-grey'} mr-8 transition-colors`"
-                @click.prevent="hightlightContent(nav.value)"
-              >
+              <span :class="`${activeNav === nav.value ? 'text-sn-science-blue' : 'text-sn-grey'} mr-8 transition-colors`"
+                @click.prevent="hightlightContent(nav.value)">
                 {{ nav.label }}
               </span>
               <span
-                :class="`${activeNav === nav.value ? 'bg-sn-science-blue w-1 inset-y-0 right-0.5' : 'transparent hidden'} absolute transition-all rounded`"
-              >
+                :class="`${activeNav === nav.value ? 'bg-sn-science-blue w-1 inset-y-0 right-0.5' : 'transparent hidden'} absolute transition-all rounded`">
               </span>
             </li>
           </ul>
@@ -79,9 +76,9 @@
               </div>
             </div>
           </section>
-  
+
           <div id="divider" class="w-500 bg-sn-light-grey flex items-center self-stretch h-px	"></div>
-  
+
           <section id="custom_columns_wrapper" class="flex flex-col min-h-[64px] h-auto">
             <h4 id="custom-columns-label" class="font-inter text-base font-semibold leading-7 pb-4">
               {{ i18n.t('repositories.item_card.navigations.custom_columns') }}
@@ -128,7 +125,8 @@
           <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px	"></div>
 
           <section id="qr_wrapper">
-            <h4 class="font-inter text-base font-semibold leading-7 mb-4 mt-0">{{ i18n.t('repositories.item_card.navigations.qr') }}</h4>
+            <h4 class="font-inter text-base font-semibold leading-7 mb-4 mt-0">{{
+              i18n.t('repositories.item_card.navigations.qr') }}</h4>
             <div class="bar-code-container">
               <canvas id="bar-code-canvas" class="hidden"></canvas>
               <img id="bar-code-image" />
@@ -136,7 +134,7 @@
           </section>
         </div>
       </div>
-  
+
       <div class="footer">
         <div id="divider" class="w-full bg-sn-sleepy-grey flex items-center self-stretch h-px mb-6"></div>
         <div id="bottom-button-wrapper" class="flex mb-6 justify-end">
@@ -162,6 +160,7 @@ import RepositoryDateTimeRangeValue from './repository_values/RepositoryDateTime
 import RepositoryDateValue from './repository_values/RepositoryDateValue.vue';
 import RepositoryDateRangeValue from './repository_values/RepositoryDateRangeValue.vue';
 import RepositoryTimeRangeValue from './repository_values/RepositoryTimeRangeValue.vue'
+import RepositoryTimeValue from './repository_values/RepositoryTimeValue.vue'
 
 export default {
   name: 'RepositoryItemSidebar',
@@ -178,6 +177,7 @@ export default {
     RepositoryDateValue,
     RepositoryDateRangeValue,
     RepositoryTimeRangeValue,
+    RepositoryTimeValue
   },
   data() {
     return {
@@ -252,25 +252,25 @@ export default {
     hightlightContent(nav) {
       this.activeNav = nav;
       this.navClicked = true;
-      this.$nextTick(function() {
+      this.$nextTick(function () {
         $(`#repository-item-sidebar #${nav}_wrapper`)[0].scrollIntoView();
       })
     },
     attachScrollEvent() {
       const topOffsets = {}
       const sections = ['information', 'custom_columns', 'assigned', 'qr'];
-      for(let idx = 0; idx < sections.length; idx++) {
-      topOffsets[sections[idx]] = $(`#repository-item-sidebar #${sections[idx]}_wrapper`).offset().top;
+      for (let idx = 0; idx < sections.length; idx++) {
+        topOffsets[sections[idx]] = $(`#repository-item-sidebar #${sections[idx]}_wrapper`).offset().top;
       }
       let isScrolling;
       $('.content').on('scroll', () => {
-        if(isScrolling !== null) clearTimeout(isScrolling);
+        if (isScrolling !== null) clearTimeout(isScrolling);
         isScrolling = setTimeout(() => {
           const scrollPosition = $('.content').scrollTop();
-          for(let idx = 0; idx < sections.length; idx++) {
-            if(scrollPosition < topOffsets[sections[idx + 1]] - topOffsets['information']) {
+          for (let idx = 0; idx < sections.length; idx++) {
+            if (scrollPosition < topOffsets[sections[idx + 1]] - topOffsets['information']) {
               // Set nav only when scrolling is not triggered by ckicking nav
-              if(sections[idx] !== this.activeNav && !this.navClicked) this.activeNav = sections[idx];
+              if (sections[idx] !== this.activeNav && !this.navClicked) this.activeNav = sections[idx];
               break;
             }
           }
@@ -279,7 +279,7 @@ export default {
       })
     },
     generateBarCode(text) {
-      if(!text) return;
+      if (!text) return;
 
       const barCodeCanvas = bwipjs.toCanvas('bar-code-canvas', {
         bcid: 'qrcode',

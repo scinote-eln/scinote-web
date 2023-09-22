@@ -2145,6 +2145,8 @@ en:
         no_checklist: 'No selection'
       repository_asset_value:
         no_asset: 'No file'
+      repository_time_value:
+        no_time: 'No time'
   repository_stock_values:
     manage_modal:
       title: "Stock %{item}"
