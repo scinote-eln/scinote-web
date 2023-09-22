@@ -53,7 +53,7 @@
   }
 
   .modal .modal-content {
-    @apply relative border border-solid rounded outline-none shadow p-6 bg-sn-white;
+    @apply relative rounded outline-none shadow p-6 bg-sn-white;
   }
 
   .modal .modal-header {
