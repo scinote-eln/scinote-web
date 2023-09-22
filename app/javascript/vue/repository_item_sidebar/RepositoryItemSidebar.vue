@@ -11,7 +11,7 @@
     <div id="divider" class="w-500 bg-sn-light-grey flex my-6 items-center self-stretch h-px	"></div>
 
     <div id="body-wrapper" class="flex flex-1 justify-between">
-      <div id="left-col" class="flex flex-col gap-4">
+      <div id="left-col" class="flex flex-col gap-4 mb-4">
         <div id="information">
           <div id="title" class="font-inter text-xl font-semibold leading-7 mb-4">{{
             i18n.t('repositories.item_card.title.information') }}</div>
@@ -108,12 +108,13 @@
 
           <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px	"></div>
 
-          <div id="QR-wrapper" class="block">
-            <div id="QR-label" class="font-inter text-base font-semibold leading-7 mb-4">QR</div>
-            <canvas id="bar-code-canvas" class="hidden" data-id="IT2"></canvas>
-            <img :src="barCodeSrc" />
-          </div>
-
+          <section id="qr-wrapper">
+            <h4 class="font-inter text-base font-semibold leading-7 mb-4 mt-0">{{ i18n.t('repositories.item_card.navigations.qr') }}</h4>
+            <div class="bar-code-container">
+              <canvas id="bar-code-canvas" class="hidden"></canvas>
+              <img id="bar-code-image" />
+            </div>
+          </section>
         </div>
       </div>
       <div id="navigation" class="min-w-[130px] h-[130px] flex item-end gap-x-4	">
@@ -136,7 +137,9 @@
     <div id="bottom" class="h-[100px] flex flex-col justify-end" :class="{ 'pb-6': customColumns?.length }">
       <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px mb-6"></div>
       <div id="bottom-button-wrapper" class="flex h-10 justify-end">
-        <button class="btn btn-primary">Print Label</button>
+        <button type="button" class="btn btn-primary print-label-button" :data-rows="JSON.stringify([repositoryRowId])">
+          {{ i18n.t('repository_row.modal_print_label.print_label') }}
+        </button>
       </div>
     </div>
   </div>
@@ -177,6 +180,7 @@ export default {
   data() {
     // using dummy data for now
     return {
+      repositoryRowId: null,
       repositoryName: null,
       defaultColumns: null,
       customColumns: null,
@@ -198,19 +202,7 @@ export default {
       } else {
         element.classList.add('transition-transform', 'ease-in-out', 'duration-300', 'transform', 'translate-x-0', 'translate-x-full');
       }
-    },
-    defaultColumns(newCol, oldCol) {
-      const canvasEl = document.getElementById('bar-code-canvas')
-      if (newCol.code && bwipjs && canvasEl) {
-        // generate the QR code
-        let barCodeCanvas = bwipjs.toCanvas('bar-code-canvas', {
-          bcid: 'qrcode',
-          text: newCol.code,
-          scale: 3
-        });
-        this.barCodeSrc = barCodeCanvas.toDataURL('image/png')
-      }
-    },
+    }
   },
   beforeDestroy() {
     delete window.repositoryItemSidebarComponent;
@@ -236,9 +228,13 @@ export default {
         url: repositoryRowUrl,
         dataType: 'json',
         success: (result) => {
+          this.repositoryRowId = result.id;
           this.repositoryName = result.repository_name;
           this.defaultColumns = result.default_columns;
           this.customColumns = result.custom_columns;
+          this.$nextTick(() => {
+            this.generateBarCode(this.defaultColumns.code);
+          });
         }
       });
     },
@@ -274,6 +270,16 @@ export default {
       //unhighlight the rest of the text and identifiers
       arrToUnhighlight_1.forEach(id => document.getElementById(id).classList.remove('text-sn-science-blue'))
       arrToUnhighlight_2.forEach(id => document.getElementById(id).classList.remove('bg-sn-science-blue'))
+    },
+    generateBarCode(text) {
+      if(!text) return;
+
+      const barCodeCanvas = bwipjs.toCanvas('bar-code-canvas', {
+        bcid: 'qrcode',
+        text,
+        scale: 3
+      });
+      $('#repository-item-sidebar #bar-code-image').attr('src', barCodeCanvas.toDataURL('image/png'));
     }
   }
 }
