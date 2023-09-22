@@ -137,7 +137,7 @@
     <div id="bottom" class="h-[100px] flex flex-col justify-end" :class="{ 'pb-6': customColumns?.length }">
       <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px mb-6"></div>
       <div id="bottom-button-wrapper" class="flex h-10 justify-end">
-        <button type="button" class="btn btn-primary print-label-button" :data-rows="JSON.stringify([repositoryId])">
+        <button type="button" class="btn btn-primary print-label-button" :data-rows="JSON.stringify([repositoryRowId])">
           {{ i18n.t('repository_row.modal_print_label.print_label') }}
         </button>
       </div>
@@ -180,7 +180,7 @@ export default {
   data() {
     // using dummy data for now
     return {
-      repositoryId: null,
+      repositoryRowId: null,
       repositoryName: null,
       defaultColumns: null,
       customColumns: null,
@@ -228,7 +228,7 @@ export default {
         url: repositoryRowUrl,
         dataType: 'json',
         success: (result) => {
-          this.repositoryId = result.id;
+          this.repositoryRowId = result.id;
           this.repositoryName = result.repository_name;
           this.defaultColumns = result.default_columns;
           this.customColumns = result.custom_columns;
