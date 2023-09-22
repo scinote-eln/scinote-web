@@ -15,7 +15,7 @@
         </div>
       </div>
       <div v-else
-        class="text-sn-dark-grey font-inter text-sm font-normal leading-5 h-12 overflow-auto grid auto-rows-auto grid-cols-3">
+        class="text-sn-dark-grey font-inter text-sm font-normal leading-5 h-fit overflow-auto grid auto-rows-auto grid-cols-3">
         <div v-for="(checklistItem, index) in allChecklistItems" :key="index">
           <div id="checklist-item" class="min-w-max">
             {{ `${checklistItem.label} |` }}

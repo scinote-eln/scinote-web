@@ -2227,12 +2227,8 @@ en:
         id: "Item ID"
         added_on: "Added on"
         added_at: "Added at"
-        added_by: "Added by"
-      navigations:
-        information: "Information"
-        custom_columns: "Custom columns"
-        assigned: "Assigned"
-        qr: "QR"
+        added_by: 'Added by'
+      custom_columns_label: 'Custom columns'
       no_custom_columns_label: 'This item has no custom columns'
       repository_time_range_value:
         no_time_range: 'No time range'
@@ -2260,6 +2256,11 @@ en:
         no_asset: 'No file'
       repository_time_value:
         no_time: 'No time'
+    highlight_component:
+      information_label: 'Information'
+      custom_columns_label: 'Custom columns'
+      assigned_label: 'Assigned'
+      QR_label: 'QR'
   repository_stock_values:
     manage_modal:
       title: "Stock %{item}"

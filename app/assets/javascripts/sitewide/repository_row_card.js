@@ -7,7 +7,8 @@
     e.stopPropagation();
     e.preventDefault();
 
-    window.repositoryItemSidebarComponent.toggleShowHideSidebar($(this).attr('href'));
+    const repositoryRowURL = $(this).attr('href');
+    window.repositoryItemSidebarComponent.toggleShowHideSidebar(repositoryRowURL);
   });
 
   $(document).on('click', '.print-label-button', function(e) {
