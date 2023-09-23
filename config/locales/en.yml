@@ -388,7 +388,7 @@ en:
       chemical_drawing: "New chemical drawing"
       file_from_pc: "File from your PC"
     modified_label: "Modified:"
-    preview_menu: "Preview size"
+    preview_menu: "View"
     add: "ADD"
     sort_by: "SORT BY"
     attachments_view_mode: "ALL ATTACHMENTS VIEW SIZE"
@@ -412,7 +412,7 @@ en:
       ztoa_html: "Name &#8593;"
     view_mode:
       inline_html: "Large"
-      thumbnail_html: "Medium"
+      thumbnail_html: "Thumbnail"
       list_html: "List"
 
   search:
@@ -3402,7 +3402,7 @@ en:
       delete: "Delete"
       move: "Move"
       inline_html: "Large"
-      thumbnail_html: "Medium"
+      thumbnail_html: "Thumbnail"
       list_html: "List"
     delete_file_modal:
       title: "Delete attachment"
