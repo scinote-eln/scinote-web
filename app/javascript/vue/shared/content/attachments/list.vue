@@ -16,7 +16,7 @@
         {{ attachment.attributes.file_name }}
       </span>
     </a>
-    <div class="attachment-image-tooltip bg-white sn-shadow-menu-sm" >
+    <div v-if="attachment.attributes.medium_preview !== null" class="attachment-image-tooltip bg-white sn-shadow-menu-sm" >
       <img :src="this.imageLoadError ? attachment.attributes.urls.blob : attachment.attributes.medium_preview" @error="handleImageError"/>
     </div>
     <span v-if="attachment.isNewUpload" class="attachment-label-new">
