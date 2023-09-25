@@ -410,6 +410,10 @@ class Constants
 
   TEMPLATES_PROJECT_NAME = 'Templates'.freeze
 
+  # Interval time for polling status state
+  FAST_STATUS_POLLING_INTERVAL = 5000
+  SLOW_STATUS_POLLING_INTERVAL = 10000
+
   #                             )       \   /      (
   #                            /|\      )\_/(     /|\
   #   *                       / | \    (/\|/\)   / | \                      *

@@ -14,20 +14,17 @@
     </div>
   </div>
   <div class="report-element-body">
-    <ul class="no-style">
-      <% items.each do |item| %>
-        <li>
-          <input type="checkbox" disabled="disabled" <%= "checked='checked'" if item.checked %>/>
-          <span class="<%= 'checked' if item.checked %>">
-            <%= custom_auto_link(item.text,
-                                 team: current_team,
-                                 simple_format: true,
-                                 wrapper_tag: { wrapper_tag: 'span'},
-                                 base64_encoded_imgs: export_all) %>
-          </span>
-        </li>
-      <% end %>
-    </ul>
+    <% items.each do |item| %>
+      <div class="report-checklist-item">
+        <div><input type="checkbox" disabled="disabled" <%= "checked='checked'" if item.checked %>/></div>
+        <div class="report-checklist-item-text"><%= custom_auto_link(item.text, # Must be on one line
+                                team: current_team,
+                                simple_format: false,
+                                wrapper_tag: { wrapper_tag: 'span'},
+                                base64_encoded_imgs: export_all) %>
+        </div>
+      </div>
+    <% end %>
   </div>
   <% if defined?(children) %>
     <div class="report-element-children">

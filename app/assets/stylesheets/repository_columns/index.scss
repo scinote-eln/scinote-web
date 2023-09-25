@@ -5,34 +5,15 @@
 
 
 #manage-repository-column {
-  .modal-content {
-    font-size: 14px;
-    min-height: 500px;
-    width: 540px;
-  }
 
   .modal-header {
-    padding: 4px 15px 4px 8px;
 
     .back-to-column-modal {
       float: left;
     }
-
-    .modal-title {
-      margin-right: 25px;
-      overflow: hidden;
-      padding: 6px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .close {
-      padding: 6px 0;
-    }
   }
 
   .modal-body {
-    padding: 0 15px 61px;
 
     .form-horizontal {
       padding: 15px 0;
@@ -56,8 +37,6 @@
 
     .dropdown-selector-container {
 
-
-
       .delimiter-icon-dropdown {
 
         .tag-label {
@@ -79,14 +58,6 @@
         }
       }
     }
-  }
-
-  .modal-footer {
-    bottom: 0;
-    padding: 12px 15px;
-    position: absolute;
-    text-align: center;
-    width: 100%;
   }
 
   .range-label {

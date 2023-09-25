@@ -73,6 +73,11 @@
 @import "settings/teams";
 @import "settings/users";
 @import "settings/webhooks";
+@import "shared/content/elements";
+@import "shared/content/attachments";
+@import "shared/content/checklist";
+@import "shared/content/table";
+@import "shared/content/text";
 @import "shared/action_toolbar";
 @import "shared/assets";
 @import "shared/avatar";
@@ -98,8 +103,8 @@
 @import "shared/pdf_preview";
 @import "shared/select";
 @import "shared/smart_annotation";
+@import "shared/handson_table.scss";
 @import "steps/step";
-@import "steps/step_attachments";
 @import "themes/main_navigation";
 @import "themes/menu_bar";
 @import "themes/projects";

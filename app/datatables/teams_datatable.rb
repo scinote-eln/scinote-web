@@ -33,11 +33,7 @@ class TeamsDatatable < CustomDatatable
                escape_input(record.name)
              end,
         '1': escape_input(current_user_team_role(record)&.name),
-        '2': if current_user_team_role(record)&.viewer?
-               I18n.t('users.settings.teams.index.na')
-             else
-               record.users.count
-             end,
+        '2': record.users.count,
         '3': leave_team_button(record)
       }
     end

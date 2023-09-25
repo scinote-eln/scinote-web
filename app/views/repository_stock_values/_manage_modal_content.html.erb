@@ -1,7 +1,7 @@
 <%= form_tag update_repository_stock_repository_repository_row_path(@repository, @repository_row), method: :post, remote: true, novalidate: true do %>
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>">
-      <span aria-hidden="true">&times;</span>
+      <i class="sn-icon sn-icon-close"></i>
     </button>
     <h4 class="modal-title" id="modal-delete-module-label">
       <% if repository_stock_value.new_record? %>

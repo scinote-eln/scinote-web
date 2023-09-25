@@ -1,32 +1,53 @@
 <template>
-  <div class="sci-inline-edit" :class="{ 'editing': editing }" tabindex="0" @keyup.enter="enableEdit($event)">
-    <div class="sci-inline-edit__content" :class="{ 'error': error }">
-      <textarea
+  <div class="w-full relative flex">
+    <template v-if="editing">
+      <input type="text"
+        v-if="singleLine"
         ref="input"
-        rows="1"
-        v-if="editing"
-        :placeholder="placeholder"
+        class="inline-block leading-5 outline-none pl-0 py-1 border-0 border-solid border-y w-full border-t-transparent"
+        :class="{
+          'inline-edit-placeholder text-sn-grey caret-black': isBlank,
+          'border-b-sn-delete-red': error,
+          'border-b-sn-science-blue': !error,
+        }"
         v-model="newValue"
-        @input="handleInput"
         @keydown="handleKeypress"
-        @paste="handlePaste"
         @blur="handleBlur"
         @keyup.escape="cancelEdit"
-      ></textarea>
-      <div v-else-if="smartAnnotation" @click="enableEdit($event)" class="sci-inline-edit__view" v-html="sa_value || placeholder" :class="{ 'blank': isBlank }"></div>
-      <div v-else @click="enableEdit($event)" class="sci-inline-edit__view" :class="[isBlank ? 'blank' : '', ...customClasses]">{{newValue || placeholder}}</div>
-      <div v-if="editing && error" class="sci-inline-edit__error">
-        {{ error }}
-      </div>
-    </div>
-    <template v-if="editing">
-      <div :class="{ 'btn-primary': !error, 'btn-disabled': error }" class="sci-inline-edit__control btn btn-sm icon-btn" @click="update">
-        <i class="sn-icon sn-icon-check"></i>
-      </div>
-      <div class="sci-inline-edit__control btn btn-light btn-sm icon-btn" @mousedown="cancelEdit">
-        <i class="sn-icon sn-icon-close"></i>
-      </div>
+        @focus="setCaretAtEnd"/>
+      <textarea v-else
+        ref="input"
+        class="overflow-hidden leading-5 inline-block outline-none px-0 py-1 border-0 border-solid border-y w-full border-t-transparent mb-0.5"
+        :class="{
+          'inline-edit-placeholder text-sn-grey caret-black': isBlank,
+          'border-sn-delete-red': error,
+          'border-sn-science-blue': !error,
+        }"
+        :placeholder="placeholder"
+        v-model="newValue"
+        @keydown="handleKeypress"
+        @blur="handleBlur"
+        @keyup.escape="cancelEdit"
+        @focus="setCaretAtEnd"/>
     </template>
+    <div
+      v-else
+      ref="view"
+      class="grid sci-cursor-edit leading-5 border-0 py-1 outline-none inline-block border-solid border-y border-transparent"
+      :class="{ 'text-sn-grey font-normal': isBlank, 'whitespace-pre-line': !singleLine }"
+      @click="enableEdit($event)"
+    >
+      <span :class="{'truncate': singleLine}" v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
+      <span :class="{'truncate': singleLine}" v-else>{{newValue || placeholder}}</span>
+    </div>
+
+    <div
+      class="mt-2 whitespace-nowrap truncate text-xs font-normal absolute bottom-[-1rem] w-full"
+      :title="editing && error ? error : timestamp"
+      :class="{'text-sn-delete-red': editing && error}"
+    >
+      {{ editing && error ? error : timestamp }}
+    </div>
   </div>
 </template>
 
@@ -42,6 +63,7 @@
       attributeName: { type: String, required: true },
       characterLimit: { type: Number },
       characterMinLimit: { type: Number },
+      timestamp: { type: String},
       placeholder: { type: String },
       autofocus: { type: Boolean, default: false },
       saveOnEnter: { type: Boolean, default: true },
@@ -50,7 +72,7 @@
       smartAnnotation: { type: Boolean, default: false },
       editOnload: { type: Boolean, default: false },
       defaultValue: { type: String, default: '' },
-      customClasses: { type: Array, default: () => [] }
+      singleLine: { type: Boolean, default: true }
     },
     data() {
       return {
@@ -60,7 +82,7 @@
       }
     },
     mixins: [UtilsMixin],
-    created( ){
+    created() {
       this.newValue = this.value || '';
     },
     mounted() {
@@ -70,16 +92,25 @@
       }
     },
     watch: {
+      editing() {
+        this.refreshTexareaHeight()
+      },
+      newValue() {
+        if (this.newValue.length === 0 && this.editing) {
+          this.focus();
+        }
+        this.refreshTexareaHeight();
+      },
       autofocus() {
         this.handleAutofocus();
-      },
-      value() {
-        this.newValue = this.value;
       }
     },
     computed: {
       isBlank() {
-        return this.newValue.length === 0
+        return this.newValue.length === 0;
+      },
+      isContentDefault() {
+        return this.newValue === this.defaultValue;
       },
       error() {
         if(!this.allowBlank && this.isBlank) {
@@ -118,7 +149,7 @@
       },
       handleBlur() {
         if ($('.atwho-view:visible').length) return;
-
+        this.$emit('blur');
         if (this.allowBlank || !this.isBlank) {
           this.$nextTick(this.update);
         } else {
@@ -128,10 +159,14 @@
       focus() {
         this.$nextTick(() => {
           if (!this.$refs.input) return;
-
           this.$refs.input.focus();
-          this.resize();
         });
+      },
+      setCaretAtEnd() {
+        if (this.isBlank || this.isContentDefault) return;
+
+        const el = this.$refs.input;
+        el.focus();
       },
       enableEdit(e) {
         if (e && $(e.target).hasClass('atwho-user-popover')) return;
@@ -139,10 +174,17 @@
         if (e && $(e.target).parent().hasClass('atwho-inserted')) return;
 
         this.editing = true;
-        this.focus();
         this.$nextTick(() => {
-          if (this.$refs.input.value === this.defaultValue) {
-            this.$refs.input.select();
+          this.focus();
+          this.$refs.input.value = this.newValue;
+
+          // Select whole content if it is default
+          if (this.isContentDefault) {
+            let range = document.createRange();
+            range.selectNodeContents(this.$refs.input);
+            let selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
           }
           if (this.smartAnnotation) {
             SmartAnnotation.init($(this.$refs.input), false);
@@ -155,42 +197,31 @@
         this.newValue = this.value || '';
         this.$emit('editingDisabled');
       },
-      handlePaste(e) {
+      handleInput(e) {
         this.dirty = true;
 
-        if (!this.multilinePaste) return;
-        let lines = (e.originalEvent || e).clipboardData.getData('text/plain').split(/[\n\r]/);
-        lines = lines.filter((l) => l).map((l) => l.trim());
+        const sel = document.getSelection();
+        const offset = sel.anchorOffset;
 
-        if (lines.length > 1) {
-          this.newValue = lines[0];
-          this.$emit('multilinePaste', lines);
-          this.update();
-        }
-      },
-      handleInput() {
-        this.dirty = true;
-        if (!this.allowNewLine) {
-          this.newValue = this.newValue.replace(/^[\n\r]+|[\n\r]+$/g, '');
-        }
-        this.$nextTick(this.resize);
+        this.newValue = this.allowNewLine ? e.target.textContent : e.target.textContent.replace(/^[\n\r]+|[\n\r]+$/g, '');
+
+        sel.collapse(sel.anchorNode, offset);
       },
       handleKeypress(e) {
         if (e.key == 'Escape') {
           this.cancelEdit();
-        } else if (e.key == 'Enter' && this.saveOnEnter) {
-          this.update();
+        } else if (e.key == 'Enter' && this.saveOnEnter && e.shiftKey == false) {
+          e.preventDefault()
+          this.update(e.key);
         } else {
+          if (!this.error) this.$emit('error-cleared');
           this.dirty = true;
         }
+        this.$emit('keypress', e)
       },
-      resize() {
-        if (!this.$refs.input) return;
+      update(withKey = null) {
+        this.refreshTexareaHeight();
 
-        this.$refs.input.style.height = "auto";
-        this.$refs.input.style.height = (this.$refs.input.scrollHeight) + "px";
-      },
-      update() {
         if (!this.dirty && !this.isBlank) {
           this.editing = false;
           return;
@@ -198,11 +229,21 @@
 
         if(this.error) return;
         if(!this.$refs.input) return;
-        this.newValue = this.$refs.input.value // Fix for smart annotation
-        this.newValue = this.newValue.trim();
+        this.newValue = this.$refs.input.value.trim() // Fix for smart annotation
+
         this.editing = false;
         this.$emit('editingDisabled');
-        this.$emit('update', this.newValue);
+        this.$emit('update', this.newValue, withKey);
+      },
+      refreshTexareaHeight() {
+        if (this.editing && !this.singleLine) {
+          this.$nextTick(() => {
+            if (!this.$refs.input) return;
+
+            this.$refs.input.style.height = '0px';
+            this.$refs.input.style.height = this.$refs.input.scrollHeight  + 'px';
+          });
+        }
       }
     }
   }

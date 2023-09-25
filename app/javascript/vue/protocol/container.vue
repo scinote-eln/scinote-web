@@ -1,43 +1,71 @@
 <template>
   <div v-if="protocol.id" class="task-protocol">
-    <div class="task-section-header" v-if="!inRepository">
-      <div class="portocol-header-left-part">
-        <a class="task-section-caret" tabindex="0" role="button" data-toggle="collapse" href="#protocol-content" aria-expanded="true" aria-controls="protocol-content">
-          <i class="sn-icon sn-icon-right"></i>
-          <div class="task-section-title">
-            <h2>{{ i18n.t('Protocol') }}</h2>
+    <div ref="header" class="task-section-header ml-[-1rem] w-[calc(100%_+_2rem)] px-4 bg-sn-white sticky top-0 transition" v-if="!inRepository">
+      <div class="portocol-header-left-part truncate grow">
+        <template v-if="headerSticked && protocol.attributes.assignable_my_module_name">
+          <i class="sn-icon sn-icon-navigator sci--layout--navigator-open cursor-pointer p-1.5 border rounded border-sn-light-grey mr-4"></i>
+          <div @click="scrollTop" class="task-section-title w-[calc(100%_-_4rem)] cursor-pointer">
+            <h2 class="truncate">{{ protocol.attributes.assignable_my_module_name }}</h2>
           </div>
-        </a>
-        <div class="my-module-protocol-status">
-          <!-- protocol status dropdown gets mounted here -->
+        </template>
+        <template v-else >
+          <a class="task-section-caret" tabindex="0" role="button" data-toggle="collapse" href="#protocol-content" aria-expanded="true" aria-controls="protocol-content">
+            <i class="sn-icon sn-icon-right"></i>
+            <div class="task-section-title">
+              <h2>{{ i18n.t('Protocol') }}</h2>
+            </div>
+          </a>
+        </template>
+        <div :class="{'hidden': headerSticked}" >
+          <div class="my-module-protocol-status">
+            <!-- protocol status dropdown gets mounted here -->
+          </div>
         </div>
       </div>
       <div class="actions-block">
         <div class="protocol-buttons-group">
           <a v-if="urls.add_step_url"
-             class="btn btn-primary"
+             class="btn btn-secondary"
+             :title="i18n.t('protocols.steps.new_step_title')"
              @keyup.enter="addStep(steps.length)"
              @click="addStep(steps.length)"
              tabindex="0">
               <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
               <span>{{ i18n.t("protocols.steps.new_step") }}</span>
           </a>
-          <button class="btn btn-secondary" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
-            <span class="sn-icon sn-icon-printer" aria-hidden="true"></span>
-            <span>{{ i18n.t("protocols.print.button") }}</span>
-          </button>
+          <template v-if="steps.length > 0">
+            <button class="btn btn-secondary" @click="collapseSteps" tabindex="0">
+              {{ i18n.t("protocols.steps.collapse_label") }}
+            </button>
+            <button class="btn btn-secondary" @click="expandSteps" tabindex="0">
+              {{ i18n.t("protocols.steps.expand_label") }}
+            </button>
+          </template>
           <ProtocolOptions
             v-if="protocol.attributes && protocol.attributes.urls"
             :protocol="protocol"
             @protocol:delete_steps="deleteSteps"
             :canDeleteSteps="steps.length > 0 && urls.delete_steps_url !== null"
           />
+          <button class="btn btn-light icon-btn" data-toggle="modal" data-target="#print-protocol-modal" tabindex="0">
+            <span class="sn-icon sn-icon-printer" aria-hidden="true"></span>
+          </button>
+          <a v-if="steps.length > 0 && urls.reorder_steps_url"
+            class="btn btn-light icon-btn"
+            data-toggle="modal"
+            @click="startStepReorder"
+            @keyup.enter="startStepReorder"
+            :class="{'disabled': steps.length == 1}"
+            tabindex="0" >
+              <i class="sn-icon sn-icon-sort" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
     </div>
     <div id="protocol-content" class="protocol-content collapse in" aria-expanded="true">
-      <div class="mb-8">
-        <div class="protocol-name" v-if="!inRepository">
+      <div class="border-0 border-b border-dashed border-sn-light-grey" v-if="!inRepository"></div>
+      <div class="mb-4">
+        <div class="protocol-name mt-4" v-if="!inRepository">
           <InlineEdit
             v-if="urls.update_protocol_name_url"
             :value="protocol.attributes.name"
@@ -45,7 +73,6 @@
             :placeholder="i18n.t('my_modules.protocols.protocol_status_bar.enter_name')"
             :allowBlank="!inRepository"
             :attributeName="`${i18n.t('Protocol')} ${i18n.t('name')}`"
-            :customClasses="['hover-border']"
             @update="updateName"
           />
           <span v-else>
@@ -67,7 +94,7 @@
             </div>
           </div>
           <div id="protocol-description-container" :class=" inRepository ? 'protocol-description collapse in' : ''" >
-            <div class="ml-1" v-if="urls.update_protocol_description_url">
+            <div v-if="urls.update_protocol_description_url">
               <Tinymce
                 :value="protocol.attributes.description"
                 :value_html="protocol.attributes.description_view"
@@ -102,55 +129,56 @@
             </a>
           </div>
         </div>
+        <div class="border-0 border-b border-dashed border-sn-light-grey my-4" v-if="!inRepository"></div>
         <div id="protocol-steps-container" :class=" inRepository ? 'protocol-steps collapse in' : ''">
-          <div v-if="steps.length > 0" class="protocol-step-actions">
-            <button class="btn btn-light" @click="collapseSteps" tabindex="0">
-              <span class="sn-icon sn-icon-collapse"></span>
-              {{ i18n.t("protocols.steps.collapse_label") }}
-            </button>
-            <button class="btn btn-light" @click="expandSteps" tabindex="0">
-              <span class="sn-icon sn-icon-expand"></span>
-              {{ i18n.t("protocols.steps.expand_label") }}
-            </button>
-            <a v-if="urls.reorder_steps_url"
-              class="btn btn-light"
-              data-toggle="modal"
-              @click="startStepReorder"
-              @keyup.enter="startStepReorder"
-              :class="{'disabled': steps.length == 1}"
-              tabindex="0" >
-                <i class="sn-icon sn-icon-sort" aria-hidden="true"></i>
-                <span>{{ i18n.t("protocols.reorder_steps.button") }}</span>
+          <div v-if="urls.add_step_url && inRepository" class="py-5">
+            <a
+              class="btn btn-secondary"
+              :title="i18n.t('protocols.steps.new_step_title')"
+              @keyup.enter="addStep(steps.length)"
+              @click="addStep(steps.length)"
+              tabindex="0">
+                <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
+                <span>{{ i18n.t("protocols.steps.new_step") }}</span>
             </a>
           </div>
-          <div class="protocol-steps">
-            <template v-for="(step, index) in steps">
-              <div class="step-block" :key="step.id">
-                <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)">
-                  <i class="sn-icon sn-icon-new-task"></i>
-                </div>
-                <Step
-                  :step.sync="steps[index]"
-                  @reorder="startStepReorder"
-                  :inRepository="inRepository"
-                  @step:delete="updateStepsPosition"
-                  @step:update="updateStep"
-                  @stepUpdated="refreshProtocolStatus"
-                  @step:insert="updateStepsPosition"
-                  :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
-                  :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
-                />
+          <div class="protocol-steps pb-8">
+            <div v-for="(step, index) in steps" :key="step.id" class="step-block">
+              <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)">
+                <i class="sn-icon sn-icon-new-task"></i>
               </div>
-            </template>
+              <Step
+                :step.sync="steps[index]"
+                @reorder="startStepReorder"
+                :inRepository="inRepository"
+                :stepToReload="stepToReload"
+                @step:delete="updateStepsPosition"
+                @step:update="updateStep"
+                @stepUpdated="refreshProtocolStatus"
+                @step:insert="updateStepsPosition"
+                @step:elements:loaded="stepToReload = null"
+                @step:move_element="reloadStep"
+                @step:attachemnts:loaded="stepToReload = null"
+                @step:move_attachment="reloadStep"
+                :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
+                :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
+              />
+            </div>
+            <div v-if="steps.length > 0 && urls.add_step_url && inRepository" class="py-5">
+              <a
+                class="btn btn-secondary"
+                :title="i18n.t('protocols.steps.new_step_title')"
+                @keyup.enter="addStep(steps.length)"
+                @click="addStep(steps.length)"
+                tabindex="0">
+                  <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
+                  <span>{{ i18n.t("protocols.steps.new_step") }}</span>
+              </a>
+            </div>
           </div>
-          <button v-if="(steps.length > 0 || inRepository) && urls.add_step_url" :class="!inRepository ? 'btn btn-primary' : 'btn btn-secondary'" @click="addStep(steps.length)">
-            <i class="sn-icon sn-icon-new-task"></i>
-            {{ i18n.t("protocols.steps.new_step") }}
-          </button>
         </div>
       </div>
     </div>
-    <ProtocolModals/>
     <ReorderableItemsModal v-if="reordering"
       :title="i18n.t('protocols.reorder_steps.modal.title')"
       :items="steps"
@@ -171,9 +199,8 @@
   import Step from './step'
   import ProtocolMetadata from './protocolMetadata'
   import ProtocolOptions from './protocolOptions'
-  import ProtocolModals from './modals'
   import Tinymce from '../shared/tinymce.vue'
-  import ReorderableItemsModal from './modals/reorderable_items_modal.vue'
+  import ReorderableItemsModal from '../shared/reorderable_items_modal.vue'
   import PublishProtocol from './modals/publish_protocol.vue'
 
   import UtilsMixin from '../mixins/utils.js'
@@ -186,7 +213,7 @@
         required: true
       }
     },
-    components: { Step, InlineEdit, ProtocolModals, ProtocolOptions, Tinymce, ReorderableItemsModal, ProtocolMetadata, PublishProtocol },
+    components: { Step, InlineEdit, ProtocolOptions, Tinymce, ReorderableItemsModal, ProtocolMetadata, PublishProtocol},
     mixins: [UtilsMixin],
     computed: {
       inRepository() {
@@ -206,7 +233,10 @@
         },
         steps: [],
         reordering: false,
-        publishing: false
+        publishing: false,
+        stepToReload: null,
+        headerSticked: false,
+        lastScrollTop: 0,
       }
     },
     created() {
@@ -214,13 +244,24 @@
         this.protocol = result.data;
         this.$nextTick(() => {
           this.refreshProtocolStatus();
+          if (!this.inRepository) {
+            window.addEventListener('scroll', this.initStackableHeaders, false);
+          }
         });
         $.get(this.urls.steps_url, (result) => {
           this.steps = result.data
         })
       });
     },
+    beforeDestroy() {
+      if (!this.inRepository) {
+        window.removeEventListener('scroll', this.initStackableHeaders, false);
+      }
+    },
     methods: {
+      reloadStep(step) {
+        this.stepToReload = step;
+      },
       collapseSteps() {
         $('.step-container .collapse').collapse('hide')
       },
@@ -362,6 +403,76 @@
       publishProtocol(comment) {
         this.protocol.attributes.version_comment = comment;
         $.post(this.urls.publish_url, {version_comment: comment, view: 'show'})
+      },
+      scrollTop() {
+        window.scrollTo(0, 0);
+        setTimeout(() => {
+          $('.my_module-name .view-mode').trigger('click');
+          $('.my_module-name .input-field').focus();
+        }, 300)
+      },
+      initStackableHeaders() {
+        let protocolHeader = this.$refs.header;
+        let secondaryNavigation = document.querySelector('#taskSecondaryMenu');
+        let protocolHeaderHeight = protocolHeader.offsetHeight;
+        let protocolHeaderTop = protocolHeader.getBoundingClientRect().top;
+        let secondaryNavigationHeight = secondaryNavigation.offsetHeight;
+        let secondaryNavigationTop = secondaryNavigation.getBoundingClientRect().top;
+
+        // TinyMCE offset calculation
+        let stickyNavigationHeight = secondaryNavigationHeight;
+        if ($('.tox-editor-header').length > 0 && $('.tox-editor-header')[0].getBoundingClientRect().top > protocolHeaderTop) {
+          stickyNavigationHeight += protocolHeaderHeight;
+        }
+
+        // Add shadow to secondary navigation when it starts fly
+        if (secondaryNavigation.getBoundingClientRect().top == 0 && !this.headerSticked) {
+          secondaryNavigation.style.boxShadow = '0px 5px 8px 0px rgba(0, 0, 0, 0.10)';
+          secondaryNavigation.style.zIndex= 251;
+        } else {
+          secondaryNavigation.style.boxShadow = 'none';
+          if (secondaryNavigationTop > 10) secondaryNavigation.style.zIndex= 0;
+        }
+
+        if (protocolHeaderTop - 5 < protocolHeaderHeight) { // When secondary navigation touch protocol header
+          secondaryNavigation.style.top = protocolHeaderTop - protocolHeaderHeight + 'px'; // Secondary navigation starts slowly disappear
+          protocolHeader.style.boxShadow = '0px 5px 8px 0px rgba(0, 0, 0, 0.10)'; // Flying shadow
+          protocolHeader.style.zIndex= 250;
+
+          this.headerSticked = true;
+
+
+          if (this.lastScrollTop > window.scrollY) { // When user scroll up
+            let newSecondaryTop = secondaryNavigationTop - (window.scrollY - this.lastScrollTop); // Calculate new top position of secondary navigation
+            if (newSecondaryTop > 0) newSecondaryTop = 0;
+
+            secondaryNavigation.style.top = newSecondaryTop + 'px'; // Secondary navigation starts slowly appear
+            secondaryNavigation.style.zIndex= 251;
+            protocolHeader.style.top = secondaryNavigationHeight + newSecondaryTop - 1 + 'px'; // Protocol header starts getting offset to compensate secondary navigation position
+            // -1 to compensate small gap between protocol header and secondary navigation
+          } else { // When user scroll down
+            let newSecondaryTop = secondaryNavigationTop - (window.scrollY - this.lastScrollTop); // Calculate new top position of secondary navigation
+            if (newSecondaryTop * -1 > secondaryNavigationHeight ) newSecondaryTop = secondaryNavigationHeight * -1;
+
+            secondaryNavigation.style.top = newSecondaryTop + 'px'; // Secondary navigation starts slowly disappear
+            protocolHeader.style.top = newSecondaryTop + secondaryNavigationHeight - 1 + 'px'; // Protocol header starts getting offset to compensate secondary navigation position
+            // -1 to compensate small gap between protocol header and secondary navigation
+            if (newSecondaryTop * -1 >= secondaryNavigationHeight) secondaryNavigation.style.zIndex= 0;
+          }
+        } else {
+          // Just reset secondary navigation and protocol header styles to initial state
+          secondaryNavigation.style.top = '0px';
+          protocolHeader.style.boxShadow = 'none';
+          protocolHeader.style.zIndex= 0;
+          this.headerSticked = false;
+        }
+
+        // Apply TinyMCE offset
+        $('.tox-editor-header').css('top',
+          stickyNavigationHeight +  parseInt($(secondaryNavigation).css('top'), 10)
+        );
+
+        this.lastScrollTop = window.scrollY; // Save last scroll position to when user scroll up/down
       }
     }
   }

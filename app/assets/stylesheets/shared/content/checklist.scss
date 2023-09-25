@@ -1,0 +1,77 @@
+// scss-lint:disable SelectorDepth
+// scss-lint:disable NestingDepth
+
+.step-checklist-items {
+  .sci-inline-edit {
+    margin-top: 5px;
+
+    .sci-inline-edit__content {
+      margin-bottom: 7px;
+      margin-left: 0;
+      margin-right: .5em;
+    }
+  }
+
+  .step-checklist-item {
+    padding-left: 5px;
+  }
+
+  .step-element-header {
+
+    .step-element-name {
+      align-items: flex-start;
+      column-gap: .25em;
+      display: grid;
+      font-weight: normal;
+      grid-template-columns: max-content auto;
+
+      .step-checklist-text {
+        display: inline-block;
+        margin-top: -.1em;
+        position: relative;
+        width: fit-content;
+      }
+
+      &:hover.done .step-checklist-text {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .sci-checkbox-view-mode {
+    align-self: flex-start;
+    background-color: $color-black;
+    border-radius: 50%;
+    height: 4px;
+    margin-right: .5em;
+    margin-top: .4em;
+    width: 4px;
+  }
+
+  .step-checklist-add-item {
+    margin-left: 1.925rem;
+
+    .fas {
+      margin-right: .5em;
+    }
+  }
+
+  .step-checklist-item-ghost {
+    border: 1px solid $brand-primary;
+  }
+
+  .sci-checkbox-container {
+    margin: 11px 0;
+
+    &.disabled {
+      pointer-events: none;
+    }
+  }
+}
+
+.step-checklist-container {
+  .empty-checklist-element {
+    color: $color-silver-chalice;
+    margin-left: 3em;
+  }
+}

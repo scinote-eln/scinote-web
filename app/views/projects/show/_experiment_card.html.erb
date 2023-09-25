@@ -74,7 +74,7 @@
     <div class="description-text">
       <%= custom_auto_link(experiment.description, team: current_team) %>
     </div>
-    <% if experiment.description.present? && experiment.description.length > Constants::EXPERIMENT_LONG_DESCRIPTION %>
+    <% if experiment.description.present? && (experiment.description.length > Constants::EXPERIMENT_LONG_DESCRIPTION || experiment.description.count("\n") > 1) %>
       <%= link_to t('experiments.card.more'),
             experiment_path(experiment),
             class: 'more-button experiment-action-link',

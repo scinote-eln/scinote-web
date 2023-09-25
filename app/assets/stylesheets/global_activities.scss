@@ -10,7 +10,7 @@
   padding: 0 15px;
 
   &.task-activities {
-    height: calc(100vh - var(--navbar-height) - var(--title-row-height) - 3rem);
+    height: calc(100vh - var(--navbar-height) - var(--title-row-height) - 4rem);
     padding-top: 20px;
   }
 
@@ -314,10 +314,8 @@
       margin-top: 8px;
       padding-bottom: 8px;
       padding-top: 8px;
-
-      &:hover {
-        text-decoration: underline;
-      }
+      color: var(--sn-blue);
+      font-size: .875rem;
     }
 
     .select-container {

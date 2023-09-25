@@ -6,7 +6,7 @@
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">{{ i18n.t(`protocols.import_modal.${state}.title`) }}</h4>
         </div>
-        <div class="modal-body text-xs" v-html="i18n.t(`protocols.import_modal.${state}.body_html`, { url: protocolUrl })">
+        <div class="modal-body text-xs" v-html="i18n.t(`protocols.import_modal.${state}.body_html`, { url: protocolTemplateTableUrl })">
         </div>
         <div class="modal-footer">
           <button v-if="state === 'confirm'" type="button"
@@ -29,7 +29,8 @@
   export default {
     name: 'ProtocolFileImportModal',
     props: {
-      importUrl: { type: String, required: true}
+      importUrl: { type: String, required: true },
+      protocolTemplateTableUrl: { type: String }
     },
     data() {
       return {
@@ -38,7 +39,6 @@
         jobPollInterval: null,
         pollCount: 0,
         jobId: null,
-        protocolUrl: null,
         refreshCallback: null
       }
     },

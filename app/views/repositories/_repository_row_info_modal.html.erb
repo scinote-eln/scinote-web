@@ -2,7 +2,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
         <h4 class="modal-title">
           <%= t('repository_row.modal_info.head_title', repository_row: @repository_row.name) %>
           <%= @repository_row.archived? ? I18n.t('atwho.res.archived') : '' %>
@@ -53,7 +53,7 @@
           </div>
           <div class="col-md-4 bar-code-container">
             <canvas id="bar-code-canvas" class="hidden" data-id="<%= @repository_row.code %>"></canvas>
-            <img id="bar-code-image"></img>
+            <img id="bar-code-image" />
           </div>
         </div>
 
@@ -112,6 +112,14 @@
         <% end %>
       </div>
       <div class="modal-footer" data-assign-item-button="<%= @my_module.present? %>">
+        <% if can_export_repository_stock?(@repository_row.repository) %>
+          <button 
+            type="button"
+            class="btn btn-secondary export-consumption-button"
+          >
+            <%= t('repository_row.modal_info.export_consumption_label') %>
+          </button>
+        <% end %>
         <% if @my_module %>
           <button type="button" class="btn btn-secondary print-label-button"  data-rows="[<%= @repository_row.id %>]"><%= t('repository_row.modal_print_label.print_label') %></button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.close')%></button>

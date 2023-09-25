@@ -1,6 +1,11 @@
 @layer components {
+
+  .sci-label {
+    @apply text-sm font-medium text-sn-grey;
+  }
+
   .sci-input-container-v2 {
-    @apply relative h-[2.5rem] flex items-center;
+    @apply relative h-[2.75rem] flex items-center;
   }
 
   .sci-input-container-v2.input-sm {
@@ -8,25 +13,19 @@
   }
 
   .sci-input-container-v2 input {
-    @apply w-full h-full bg-transparent p-0.5 border rounded outline-none absolute top-0 pl-2;
-    border-color: var(--sn-sleepy-grey);
+    @apply w-full h-full bg-transparent p-0.5 border rounded outline-none absolute top-0 pl-2 border-sn-sleepy-grey;
   }
 
   .sci-input-container-v2 input::placeholder {
-    color: var(--sn-sleepy-grey);
-  }
-
-  .sci-input-container-v2 .sci-input-field-v2 {
-    @apply h-[2.25rem];
+    @apply text-sn-sleepy-grey;
   }
 
   .sci-input-container-v2 .error {
-    border-color: var(--sn-coral) !important;
+    @apply !border-sn-coral;
   }
 
   .sci-input-container-v2 input:focus {
-    border-color: var(--sn-science-blue);
-    box-shadow: none;
+    @apply border-sn-science-blue shadow-none;
   }
 
   .sci-input-container-v2 input:hover {
@@ -35,13 +34,12 @@
 
   .sci-input-container-v2 input:disabled {
     background-color: var(--sn-super-light-grey);
-    color: var(--sn-light-grey);
+    color: var(--sn-grey);
     border: 1px solid var(--sn-light-grey);
   }
 
   .sci-input-container-v2 .sn-icon {
-    @apply m-2;
-    color: var(--sn-black)
+    @apply m-2 text-sn-black;
   }
 
   .sci-input-container-v2.right-icon .sn-icon {
@@ -65,15 +63,18 @@
   }
 
   .sci-input-container-v2 textarea {
-    @apply w-full h-full bg-transparent px-2 border rounded outline-none absolute top-0;
-    border-color: var(--sn-sleepy-grey);
+    @apply w-full h-full bg-transparent px-2 border rounded outline-none absolute top-0 border-sn-sleepy-grey;
   }
 
   .sci-input-container-v2 textarea::placeholder {
-    color: var(--sn-sleepy-grey);
+    @apply text-sn-sleepy-grey;
   }
 
   .sci-input-container-v2 textarea:focus {
-    border-color: var(--sn-science-blue);
+    @apply border-sn-science-blue;
+  }
+
+  .sci-input-container-v2 .history-flyout li:hover {
+    @apply bg-sn-super-light-grey;
   }
 }

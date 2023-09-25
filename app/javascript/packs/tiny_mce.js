@@ -195,11 +195,11 @@ window.TinyMCE = (() => {
           document.location.hash = `${textAreaObject.data('objectType')}_${textAreaObject.data('objectId')}`;
         }
 
-        let topMenuHeight = $('.sci--navigation--top-menu-container').length ? $('.sci--navigation--top-menu-container').height() : 0;
-        let breadcrumbsHeight = $('.sci--layout-navigation-breadcrumbs').length ? $('.sci--layout-navigation-breadcrumbs').height() : 0;
-        let secondaryNavHeight = $('.content-header.sticky-header').length ? $('.content-header.sticky-header').height() : 0;
+        editorToolbaroffset = 0;
 
-        editorToolbaroffset = topMenuHeight + breadcrumbsHeight + secondaryNavHeight;
+        $.each($('.sticky-header-element'), (_index, element) => {
+          editorToolbaroffset += $(element).outerHeight();
+        });
 
         return tinyMCE.init({
           cache_suffix: '?v=6.5.1-19', // This suffix should be changed any time library is updated

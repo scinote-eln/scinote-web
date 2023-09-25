@@ -208,14 +208,14 @@ class Extends
     project: [:experiments],
     experiment: [:my_modules],
     my_module: %i(results protocols),
-    result: [:asset],
+    result: [:assets],
     protocol: [:steps],
     step: [:assets]
   }
 
   ACTIVITY_MESSAGE_ITEMS_TYPES =
     ACTIVITY_SUBJECT_TYPES + %w(
-      User Tag RepositoryColumn RepositoryRow Step Asset TinyMceAsset
+      User Tag RepositoryColumn RepositoryRow Step Result Asset TinyMceAsset
       Repository MyModuleStatus RepositorySnapshot
     ).freeze
 
@@ -243,10 +243,10 @@ class Extends
     check_step_checklist_item: 20,
     uncheck_step_checklist_item: 21,
     edit_step: 22,
-    add_result: 23,
+    add_result_old: 23,
     add_comment_to_result: 24,
-    archive_result: 25,
-    edit_result: 26,
+    archive_result_old: 25,
+    edit_result_old: 26,
     create_experiment: 27,
     edit_experiment: 28,
     archive_experiment: 29,
@@ -262,7 +262,7 @@ class Extends
     delete_step_comment: 39,
     edit_result_comment: 40,
     delete_result_comment: 41,
-    destroy_result: 42,
+    destroy_result_old: 42,
     start_edit_wopi_file: 43, # not in use
     unlock_wopi_file: 44, # not in use
     load_protocol_to_task_from_file: 45,
@@ -457,16 +457,47 @@ class Extends
     protocol_sequence_asset_added: 253,
     protocol_sequence_asset_edit_started: 254,
     protocol_sequence_asset_edit_finished: 255,
-    protocol_sequence_asset_deleted: 256
+    protocol_sequence_asset_deleted: 256,
+    result_content_rearranged: 257,
+    add_result: 258,
+    edit_result: 259,
+    archive_result: 260,
+    destroy_result: 261,
+    result_table_added: 262,
+    result_file_added: 263,
+    result_file_deleted: 264,
+    result_text_added: 265,
+    result_text_edited: 266,
+    result_text_deleted: 267,
+    result_table_edited: 268,
+    result_table_deleted: 269,
+    result_duplicated: 270,
+    result_text_duplicated: 271,
+    result_table_duplicated: 272,
+    result_restored: 273,
+    task_step_file_moved: 274,
+    task_step_text_moved: 275,
+    task_step_table_moved: 276,
+    task_step_checklist_moved: 277,
+    move_chemical_structure_on_step: 278,
+    protocol_step_file_moved: 279,
+    protocol_step_text_moved: 280,
+    protocol_step_table_moved: 281,
+    protocol_step_checklist_moved: 282,
+    move_chemical_structure_on_step_in_repository: 283,
+    result_file_moved: 284,
+    result_text_moved: 285,
+    result_table_moved: 286,
+    move_chemical_structure_on_result: 287
   }
 
   ACTIVITY_GROUPS = {
     projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162, 241, 242, 243],
-    task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, 169, 172, 178],
+    task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, 169, 172, 178, *257..273, *284..287],
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
            *146..148, 166, 246, 247, 248],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
-                    217, 168, 171, 177, 184, 185, 188, 189, *192..203, 222, 224, 225, 226, 236, *249..252],
+                    217, 168, 171, 177, 184, 185, 188, 189, *192..203, 222, 224, 225, 226, 236, *249..252, *274..278],
     task_inventory: [55, 56, 146, 147, 183],
     experiment: [*27..31, 57, 141, 165],
     reports: [48, 50, 49, 163, 164],
@@ -474,7 +505,8 @@ class Extends
                   78, 96, 107, 113, 114, *133..136, 180, 181, 182],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 170, 173, 179, 187, 186,
-                          190, 191, *204..215, 220, 221, 223, 227, 228, 229, *230..235, *237..240, *253..256],
+                          190, 191, *204..215, 220, 221, 223, 227, 228, 229, *230..235,
+                          *237..240, *253..256, *259..283],
     team: [92, 94, 93, 97, 104, 244, 245],
     label_templates: [*216..219]
   }

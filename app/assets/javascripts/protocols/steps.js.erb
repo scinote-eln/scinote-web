@@ -1,121 +1,119 @@
 //= require Sortable.min
 
-var protocolSteps = function() {
-  (function(global) {
-    'use strict';
+(function(global) {
+  'use strict';
 
-    // Creates handsontable where needed
-    function initHandsOnTable(root) {
-      root.find("[data-role='hot-table']").each(function()  {
-        var $container = $(this).find("[data-role='step-hot-table']");
-        var contents = $(this).find('.hot-contents');
+  // Creates handsontable where needed
+  function initHandsOnTable(root) {
+    root.find("[data-role='hot-table']").each(function()  {
+      var $container = $(this).find("[data-role='step-hot-table']");
+      var contents = $(this).find('.hot-contents');
 
-        $container.handsontable({
-          startRows: <%= Constants::HANDSONTABLE_INIT_ROWS_CNT %>,
-          startCols: <%= Constants::HANDSONTABLE_INIT_COLS_CNT %>,
-          rowHeaders: true,
-          colHeaders: true,
-          fillHandle: false,
-          formulas: true,
-          cells: function (row, col, prop) {
-            var cellProperties = {};
+      $container.handsontable({
+        startRows: <%= Constants::HANDSONTABLE_INIT_ROWS_CNT %>,
+        startCols: <%= Constants::HANDSONTABLE_INIT_COLS_CNT %>,
+        rowHeaders: true,
+        colHeaders: true,
+        fillHandle: false,
+        formulas: true,
+        cells: function (row, col, prop) {
+          var cellProperties = {};
 
-            if (col >= 0)
-              cellProperties.readOnly = true;
-            else
-              cellProperties.readOnly = false;
+          if (col >= 0)
+            cellProperties.readOnly = true;
+          else
+            cellProperties.readOnly = false;
 
-            return cellProperties;
-          }
-        });
-        var hot = $container.handsontable('getInstance');
-
-        if (contents.attr("value")) {
-          var data = JSON.parse(contents.attr("value"));
-          if (Array.isArray(data.data)) hot.loadData(data.data);
-          setTimeout(() => {
-            hot.render()
-          }, 0)
+          return cellProperties;
         }
       });
-    }
+      var hot = $container.handsontable('getInstance');
 
-    // On init
-
-    initHandsOnTable($(document));
-
-    SmartAnnotation.preventPropagation('.atwho-user-popover');
-
-    $(function () {
-      $("[data-action='collapse-steps']").click(function () {
-        $('.step .panel-collapse').collapse('hide');
-      });
+      if (contents.attr("value")) {
+        var data = JSON.parse(contents.attr("value"));
+        if (Array.isArray(data.data)) hot.loadData(data.data);
+        setTimeout(() => {
+          hot.render()
+        }, 0)
+      }
     });
+  }
 
-    global.initHandsOnTable = initHandsOnTable;
-  })(window);
+  // On init
 
-  (function() {
-      // Reorder attachments
-    function reorderAttachmentsInit() {
-      $('#steps').on('click', '.attachments-actions .change-order', function(e){
-        var orderDropdown = $(this).closest('.dropdown-menu');
-        var assetsContainer = $(`.attachments[data-step-id=${orderDropdown.data('step-id')}]`)
-        var order = $(this).data('order');
-        e.preventDefault();
-        assetsContainer.data('order', order);
-        orderDropdown.find('.change-order').removeClass('selected');
-        $(this).addClass('selected');
-        assetsContainer.trigger('reorder');
-        $.post(orderDropdown.data('state-save-url'), {
-          assets: { order: order }
-        });
-      })
+  initHandsOnTable($(document));
 
-      $('#steps').on('reorder', '.attachments', function() {
-        var assets = $(`.attachments[data-step-id=${$(this).data('step-id')}] .asset`);
-        var order = $(this).data('order');
-        var sortedAssets = assets.sort(function(a, b) {
-          if (a.dataset.assetOrder == b.dataset.assetOrder) {
-            if (order == 'new') {
-              return b.dataset.assetUpdatedAt - a.dataset.assetUpdatedAt;
-            } if (order == 'old') {
-              return a.dataset.assetUpdatedAt - b.dataset.assetUpdatedAt;
-            } if (order == 'atoz') {
-              return a.dataset.assetFileName.toLowerCase() > b.dataset.assetFileName.toLowerCase() ? 1 : -1;
-            } if (order == 'ztoa') {
-              return b.dataset.assetFileName.toLowerCase() > a.dataset.assetFileName.toLowerCase() ? 1 : -1;
-            }
-          }
+  SmartAnnotation.preventPropagation('.atwho-user-popover');
 
-          return a.dataset.assetOrder > b.dataset.assetOrder ? 1 : -1
-        })
-
-        $.each(sortedAssets, function(i, element){
-          element.style.order = i
-        })
-      })
-      .on('DOMSubtreeModified', '.attachments', function() {
-        $(this).trigger('reorder');
-      })
-      $('.attachments').trigger('reorder');
-    }
-
-    function initAssetViewModeToggle(){
-      $('#steps').on('click', '.attachments-actions .attachments-view-mode', function () {
-        var viewModeBtn = $(this);
-        $.post(viewModeBtn.closest('.dropdown-menu').data('view-mode-url'), {
-          assets_view_mode: viewModeBtn.data('assets-view-mode')
-        }, function(result) {
-          viewModeBtn.closest('.dropdown-menu').find('.attachments-view-mode').removeClass('selected');
-          viewModeBtn.addClass('selected');
-          viewModeBtn.closest('.step').find('.attachments').html(result.html);
-          PdfPreview.initCanvas();
-        })
-      })
-    }
-
-    reorderAttachmentsInit();
-    initAssetViewModeToggle();
+  $(function () {
+    $("[data-action='collapse-steps']").click(function () {
+      $('.step .panel-collapse').collapse('hide');
+    });
   });
-}
+
+  global.initHandsOnTable = initHandsOnTable;
+})(window);
+
+(function() {
+    // Reorder attachments
+  function reorderAttachmentsInit() {
+    $('#steps').on('click', '.attachments-actions .change-order', function(e){
+      var orderDropdown = $(this).closest('.dropdown-menu');
+      var assetsContainer = $(`.attachments[data-step-id=${orderDropdown.data('step-id')}]`)
+      var order = $(this).data('order');
+      e.preventDefault();
+      assetsContainer.data('order', order);
+      orderDropdown.find('.change-order').removeClass('selected');
+      $(this).addClass('selected');
+      assetsContainer.trigger('reorder');
+      $.post(orderDropdown.data('state-save-url'), {
+        assets: { order: order }
+      });
+    })
+
+    $('#steps').on('reorder', '.attachments', function() {
+      var assets = $(`.attachments[data-step-id=${$(this).data('step-id')}] .asset`);
+      var order = $(this).data('order');
+      var sortedAssets = assets.sort(function(a, b) {
+        if (a.dataset.assetOrder == b.dataset.assetOrder) {
+          if (order == 'new') {
+            return b.dataset.assetUpdatedAt - a.dataset.assetUpdatedAt;
+          } if (order == 'old') {
+            return a.dataset.assetUpdatedAt - b.dataset.assetUpdatedAt;
+          } if (order == 'atoz') {
+            return a.dataset.assetFileName.toLowerCase() > b.dataset.assetFileName.toLowerCase() ? 1 : -1;
+          } if (order == 'ztoa') {
+            return b.dataset.assetFileName.toLowerCase() > a.dataset.assetFileName.toLowerCase() ? 1 : -1;
+          }
+        }
+
+        return a.dataset.assetOrder > b.dataset.assetOrder ? 1 : -1
+      })
+
+      $.each(sortedAssets, function(i, element){
+        element.style.order = i
+      })
+    })
+    .on('DOMSubtreeModified', '.attachments', function() {
+      $(this).trigger('reorder');
+    })
+    $('.attachments').trigger('reorder');
+  }
+
+  function initAssetViewModeToggle(){
+    $('#steps').on('click', '.attachments-actions .attachments-view-mode', function () {
+      var viewModeBtn = $(this);
+      $.post(viewModeBtn.closest('.dropdown-menu').data('view-mode-url'), {
+        assets_view_mode: viewModeBtn.data('assets-view-mode')
+      }, function(result) {
+        viewModeBtn.closest('.dropdown-menu').find('.attachments-view-mode').removeClass('selected');
+        viewModeBtn.addClass('selected');
+        viewModeBtn.closest('.step').find('.attachments').html(result.html);
+        PdfPreview.initCanvas();
+      })
+    })
+  }
+
+  reorderAttachmentsInit();
+  initAssetViewModeToggle();
+});

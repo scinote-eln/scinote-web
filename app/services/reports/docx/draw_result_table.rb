@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 module Reports::Docx::DrawResultTable
-  def draw_result_table(result)
-    table = result.table
+  def draw_result_table(element)
+    result = element.result
+    table = element.orderable.table
     timestamp = table.created_at
     color = @color
     obj = self

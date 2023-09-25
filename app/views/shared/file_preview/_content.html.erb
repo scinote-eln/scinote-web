@@ -70,8 +70,8 @@
     <% end %>
   </div>
 </div>
-<div class="modal-footer">
-  <% if gallery %>
+<% if gallery.present? %>
+  <div class="modal-footer">
     <div class="gallery">
       <% previous_asset = Asset.find_by(id: gallery.split(asset.id.to_s)[0]&.last) %>
       <% next_asset = Asset.find_by(id: gallery.split(asset.id.to_s)[1]&.first) %>
@@ -109,7 +109,7 @@
         <% end %>
       <% end %>
     </div>
-  <% end %>
-</div>
+  </div>
+<% end %>
 
 <%= javascript_include_tag 'shared/file_preview', nonce: true %>
