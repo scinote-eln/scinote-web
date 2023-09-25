@@ -1,15 +1,22 @@
 <template>
-  <div class="result-toolbar p-3 flex justify-between rounded-md bg-sn-white">
-    <div class="result-toolbar__left">
-      <button v-if="canCreate" :title="i18n.t('my_modules.results.add_title')" class="btn btn-secondary" @click="$emit('newResult')">
+  <div ref="resultsHeaderToolbar" class="result-toolbar sticky top-0 transition p-3 flex justify-between bg-sn-white">
+    <div v-if="headerSticked" class="flex items-center truncate grow">
+      <i class="sn-icon sn-icon-navigator sci--layout--navigator-open cursor-pointer p-1.5 border rounded border-sn-light-grey mr-4"></i>
+      <div @click="scrollTop" class="w-[calc(100%_-_4rem)] cursor-pointer">
+        <h2 class="truncate leading-6 mt-2.5 mb-2.5">{{ moduleName }}</h2>
+      </div>
+    </div>
+
+    <div class="result-toolbar__left flex items-center">
+      <button v-if="canCreate" :title="i18n.t('my_modules.results.add_title')" class="btn btn-secondary" :class="{'mr-3': headerSticked}" @click="$emit('newResult')">
         <i class="sn-icon sn-icon-new-task"></i>
         {{ i18n.t('my_modules.results.add_label') }}
       </button>
     </div>
 
 
-    <div class="dropdown view-switch" >
-      <div class="btn btn-secondary view-switch-button prevent-shrink" id="viewSwitchButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    <div class="dropdown view-switch flex items-center">
+      <div class="btn btn-secondary view-switch-button prevent-shrink" :class="{'mr-3': headerSticked}" id="viewSwitchButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
         <span v-if="archived" class="state-view-switch-btn-name">{{ i18n.t('my_modules.results.archived_results') }}</span>
         <span v-else class="state-view-switch-btn-name">{{ i18n.t('my_modules.results.active_results') }}</span>
         <span class="sn-icon sn-icon-down"></span>
@@ -66,8 +73,10 @@
       sort: { type: String, required: true },
       canCreate: { type: Boolean, required: true },
       archived: { type: Boolean, required: true },
+      headerSticked: { type: Boolean, required: true },
       active_url: { type: String, required: true },
-      archived_url: { type: String, required: true }
+      archived_url: { type: String, required: true },
+      moduleName: { type: String, required: true }
     },
     data() {
       return {
@@ -120,6 +129,13 @@
       },
       expandResults() {
         $('.result-wrapper .collapse').collapse('show')
+      },
+      scrollTop() {
+        window.scrollTo(0, 0);
+        setTimeout(() => {
+          $('.my_module-name .view-mode').trigger('click');
+          $('.my_module-name .input-field').focus();
+        }, 300)
       }
     }
   }
