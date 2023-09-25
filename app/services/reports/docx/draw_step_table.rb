@@ -8,8 +8,8 @@ module Reports::Docx::DrawStepTable
     table_data = JSON.parse(table.contents_utf_8)['data']
     table_data = obj.add_headers_to_table(table_data, table_type == 'step_well_plates_table')
 
-    if table.metadata.present?
-      table.metadata['cells']&.each do |cell|
+    if table.metadata.present? && table.metadata['cells'].is_a?(Array)
+      table.metadata['cells'].each do |cell|
         next unless cell['row'].present? && cell['col'].present?
 
         row_index = cell['row'].to_i + 1
@@ -26,8 +26,8 @@ module Reports::Docx::DrawStepTable
       cell_style rows[0], bold: true, background: color[:concrete]
       cell_style cols[0], bold: true, background: color[:concrete]
 
-      if table.metadata.present?
-        table.metadata['cells']&.each do |cell|
+      if table.metadata.present? && table.metadata['cells'].is_a?(Array)
+        table.metadata['cells'].each do |cell|
           data = cell[1]
           next unless data.present? && data['row'].present? && data['col'].present? && data['className'].present?
 

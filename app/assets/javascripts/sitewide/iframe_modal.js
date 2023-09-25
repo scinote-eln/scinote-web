@@ -7,6 +7,10 @@ $(document).on('turbolinks:load', function() {
   window.iFrameModal = document.getElementById('iFrameModal');
   let iFrameModalFrame = document.getElementById('iFrameModalFrame');
 
+  // Block from running when accessing page without defined iframe modal
+  // (sign in, reset password, accept invitation, 2fa)
+  if (!iFrameModalFrame || !iFrameModal) return;
+
   window.showIFrameModal = (url) => {
     iFrameModalFrame.setAttribute('src', url);
     iFrameModal.classList.remove('hidden');

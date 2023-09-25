@@ -10,9 +10,9 @@
                  :placeholder="i18n.t('open_vector_editor.sequence_name_placeholder')"/>
         </div>
       </span>
-      <div v-if="oveEnabledDaysLeft <= 30" class="flex items-center">
+      <div v-if="oveWarning" class="flex items-center">
         <i class="mr-1 text-brand-warning sn-icon sn-icon-alert-warning"></i>
-        <p v-html="i18n.t('open_vector_editor.trial_expiration_warning_html', { count: oveEnabledDaysLeft })" class="mb-0"></p>
+        <p v-html="oveWarning" class="mb-0"></p>
       </div>
       <div class="ove-buttons text-sn-blue">
         <button :style="{ pointerEvents: 'all' }" @click="saveAndClose" class="btn btn-light font-sans" :disabled="this.readOnly">
@@ -40,19 +40,17 @@
       fileName: { type: String },
       updateUrl: { type: String },
       canEditFile: { type: String },
-      oveEnabledDaysLeftString: { type: String }
+      oveWarning: { type: String }
     },
     data() {
       return {
         editor: null,
         sequenceName: null,
         closeAfterSave: false,
-        readOnly: this.canEditFile !== 'true',
-        oveEnabledDaysLeft: 0
+        readOnly: this.canEditFile !== 'true'
       }
     },
     mounted() {
-      this.oveEnabledDaysLeft = parseInt(this.oveEnabledDaysLeftString);
       let editorConfig = {
         onSave: this.saveFile,
         generatePng: true,

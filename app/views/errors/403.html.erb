@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= t("errors.forbidden.title") %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+      body {
+        background-color: #F0F0F6;
+        color: #2E2F30;
+        text-align: center;
+        font-family: arial, sans-serif;
+        margin: 0;
+      }
+
+      div.navbar {
+        background: #FFFFFF;
+        box-shadow: 0px 1px 4px rgba(35, 31, 32, 0.15);
+        height: 52px;
+        left: 0%;
+        position: absolute;
+        right: 0%;
+        top: 0%;
+      }
+
+      div.navbar img {
+        width: 121px;
+        height: 24px;
+        left: 21px;
+        position: absolute;
+        top: calc(50% - 24px/2 - 0px);
+      }
+
+      div.dialog {
+        width: 95%;
+        margin: 4em auto 0;
+      }
+
+      div.dialog > h1 {
+        color: #404048;
+        font-family: Lato;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 1.5em;
+        line-height: 29px;
+        margin: 0.5em;
+        text-align: center;
+      }
+
+      div.dialog > p {
+        color: #404048;
+        font-family: Lato;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 1.1em;
+        margin: 0.5em;
+      }
+
+      div.dialog > img {
+        margin: 1em;
+      }
+
+      div.back-button {
+        margin-top: 3em;
+        text-align: center;
+      }
+
+      a.back-button {
+        background: #104DA9;
+        border-radius: 4px;
+        color: #FFFFFF;
+        display: inline-block;
+        font-family: Lato;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 0.9em;
+        margin-top: 3em;
+        padding: 0.8em 1em;
+        text-decoration: none;
+      }
+
+      a.back-button > img {
+        filter: invert(100%);
+        width: 1em;
+        height: 1em;
+        margin-right: 0.5em;
+        vertical-align:middle;
+      }
+
+      a.back-button > span {
+        color: #FFFFFF;
+        width: 1em;
+        height: 1em;
+      }
+
+      .illustration {
+        margin-top: 64px !important;
+      }
+    </style>
+  </head>
+
+  <body data-turbolinks="false">
+    <div class="navbar">
+      <a href="/">
+        <img id="logo" src="/images/scinote_logo.svg" title="SciNote">
+      </a>
+    </div>
+    <div class="dialog">
+      <img src="/images/undraw_through_the_park.svg" class="illustration">
+      <h1><%= t("errors.forbidden.dialog.title") %></h1>
+      <p><%= t("errors.forbidden.dialog.text") %></p>
+
+      <a class="back-button" href="/dashboard">
+        <img src="/images/arrow-left.svg">
+        <span><%= t("errors.forbidden.dialog.button") %></span>
+      </a>
+    </div>
+  </body>
+</html>
