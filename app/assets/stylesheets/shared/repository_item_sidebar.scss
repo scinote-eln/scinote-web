@@ -1,45 +1,47 @@
-// scss-lint:disable IdSelector
-// scss-lint:disable SelectorDepth
-// scss-lint:disable NestingDepth
+// Should use tailwind; commented out for reference when refactoring
 
-.repository-item-sidebar {
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 20px;
+// // scss-lint:disable IdSelector
+// // scss-lint:disable SelectorDepth
+// // scss-lint:disable NestingDepth
 
-  .header {
-    border-bottom: 1px solid var(--sn-sleepy-grey);
-    height: var(--top-navigation-height);
+// .repository-item-sidebar {
+//   font-size: 14px;
+//   font-weight: 400;
+//   line-height: 20px;
 
-    .item-name {
-      font-size: 20px;
-      line-height: 30px;
-      width: calc(100% - 2rem);
-    }
-  }
+//   .header {
+//     border-bottom: 1px solid var(--sn-sleepy-grey);
+//     height: var(--top-navigation-height);
 
-  .title {
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 28px;
-  }
+//     .item-name {
+//       font-size: 20px;
+//       line-height: 30px;
+//       width: calc(100% - 2rem);
+//     }
+//   }
 
-  #information {
-    width: 70%;
-  }
+//   .title {
+//     font-size: 18px;
+//     font-weight: 600;
+//     line-height: 28px;
+//   }
 
-  .item-details {
-    div {
-      border-bottom: 1px solid var(--sn-sleepy-grey);
+//   #information {
+//     width: 70%;
+//   }
 
-      span {
-        &.repository-name {
-          -webkit-box-orient: vertical;
-          display: -webkit-box;
-          -webkit-line-clamp: 3;
-          overflow: hidden;
-        }
-      }
-    }
-  }
-}
+//   .item-details {
+//     div {
+//       border-bottom: 1px solid var(--sn-sleepy-grey);
+
+//       span {
+//         &.repository-name {
+//           -webkit-box-orient: vertical;
+//           display: -webkit-box;
+//           -webkit-line-clamp: 3;
+//           overflow: hidden;
+//         }
+//       }
+//     }
+//   }
+// }

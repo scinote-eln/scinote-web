@@ -1616,7 +1616,7 @@ en:
       disclaimer: "Anyone with the link can view the protocol and results pages of this task."
       too_long_text: "Text is too long (maximum number is %{counter} characters)"
       copy_success: "Shared link copied to clipboard"
-    destroy_modal: 
+    destroy_modal:
       title: "Deactivate shared link"
       description: "This action will permanently deactivate the shared link. Any user who has this link will no longer be able to access the task."
       deactivate: "Deactivate"
@@ -2128,6 +2128,32 @@ en:
         added_at: "Added at"
         added_by: 'Added by'
       no_custom_columns_label: 'This item has no custom columns'
+      navigations:
+        qr: "QR"
+      repository_time_range_value:
+        no_time_range: 'No time range'
+      repository_text_value:
+        no_text: 'No text'
+      repository_stock_value:
+        no_stock: 'No stock'
+      repository_status_value:
+        no_status: 'No selection'
+      repository_number_value:
+        no_number: 'No number'
+      repository_list_value:
+        no_list: 'No selection'
+      repository_date_value:
+        no_date: 'No date'
+      repositoy_date_time_value:
+        no_date_time: 'No date & time'
+      repository_date_time_range_value:
+        no_date_time_range: 'No date & time range'
+      repository_date_range_value:
+        no_date_range_value: 'No date range'
+      repository_checklist_value:
+        no_checklist: 'No selection'
+      repository_asset_value:
+        no_asset: 'No file'
   repository_stock_values:
     manage_modal:
       title: "Stock %{item}"
