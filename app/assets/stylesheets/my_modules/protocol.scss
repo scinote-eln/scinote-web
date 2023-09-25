@@ -43,7 +43,12 @@
 
     &::before,
     &::after {
-      border-bottom: 1px dotted var(--sn-sleepy-grey);
+      background-image: linear-gradient(to right, var(--sn-sleepy-grey) 15%, rgba(255, 255, 255, 0) 0%);
+      background-position: top;
+      background-size: 10px 1px;
+      background-repeat: repeat-x;
+
+      border-bottom: 1px dotted transparent;
       content: "";
       display: inline-block;
       flex-grow: 1;
@@ -59,7 +64,7 @@
 
       &::before,
       &::after {
-        border-color: $brand-primary;
+        background-image: linear-gradient(to right, $brand-primary 15%, rgba(255, 255, 255, 0) 0%);
       }
     }
   }
