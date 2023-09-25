@@ -7,32 +7,39 @@
       <i v-else-if="caret" class="sn-icon sn-icon-down"></i>
     </button>
     <div ref="flyout"
-         class="absolute z-[150] bg-sn-white rounded p-2.5 sn-shadow-menu-sm min-w-full"
-         :class="{'right-0': position === 'right', 'left-0': position === 'left'}"
+         class="absolute z-[150] bg-sn-white rounded p-2.5 sn-shadow-menu-sm min-w-full flex flex-col gap-[1px]"
+         :class="{
+            'right-0': position === 'right',
+            'left-0': position === 'left',
+            'bottom-0': openUp,
+            '!mb-0': !openUp,
+         }"
          v-if="showMenu"
          v-click-outside="{handler: 'closeMenu', exclude: ['openBtn', 'flyout']}">
-      <span v-for="(item, i) in listItems" :key="i">
+      <span v-for="(item, i) in listItems" :key="i" class="contents">
+        <div v-if="item.dividerBefore" class="border-0 border-t border-solid border-sn-light-grey"></div>
         <a :href="item.url" v-if="!item.submenu"
-          :class="{'border-0 border-t border-solid border-sn-light-grey': item.dividerBefore}"
           :traget="item.url_target || '_self'"
           class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey"
           @click="handleClick($event, item)"
         >
           {{ item.text }}
         </a>
-        <span v-else
-              @click="showSubmenu = i"
-              :class="{'!bg-sn-super-light-blue': showSubmenu == i}"
-              class="flex group items-center rounded relative text-sn-blue whitespace-nowrap px-3 py-2.5 hover:no-underline cursor-pointer hover:bg-sn-super-light-grey"
-        >
-          {{ item.text }}
-          <i class="sn-icon sn-icon-right ml-auto"></i>
-          <div v-if="showSubmenu == i"
-               class="absolute top-0 bg-sn-white rounded p-2.5 sn-shadow-menu-sm"
-               :class="{
-                 'left-0 ml-[calc(100%_+_0.625rem)]': item.position === 'right',
-                 'right-0 mr-[calc(100%_+_0.625rem)]': item.position === 'left'
-               }"
+        <div v-else class="-mx-2.5 px-2.5 group relative">
+          <span
+                class="flex group items-center rounded relative text-sn-blue whitespace-nowrap px-3 py-2.5 hover:no-underline cursor-pointer group-hover:bg-sn-super-light-blue hover:!bg-sn-super-light-grey"
+          >
+            {{ item.text }}
+            <i class="sn-icon sn-icon-right ml-auto"></i>
+          </span>
+          <div
+              class="absolute bg-sn-white rounded p-2.5 sn-shadow-menu-sm  flex flex-col gap-[1px] tw-hidden group-hover:block"
+              :class="{
+                'left-0 ml-[100%]': item.position === 'right',
+                'right-0 mr-[100%]': item.position === 'left',
+                'bottom-0': openUp,
+                'top-0': !openUp,
+              }"
           >
             <a v-for="(sub_item, si) in item.submenu" :key="si"
               :href="sub_item.url"
@@ -43,7 +50,7 @@
               {{ sub_item.text }}
             </a>
           </div>
-        </span>
+        </div>
       </span>
     </div>
   </div>
@@ -64,13 +71,28 @@ export default {
   data() {
     return {
       showMenu: false,
-      showSubmenu: null,
+      openUp: false
     }
+  },
+  watch: {
+    showMenu() {
+      if (this.showMenu) {
+        this.$nextTick(() => {
+          this.$refs.flyout.style.marginBottom = `${this.$refs.openBtn.offsetHeight}px`;
+          this.verticalPositionFlyout();
+        })
+      }
+    }
+  },
+  mounted() {
+    document.addEventListener('scroll', this.verticalPositionFlyout);
+  },
+  unmounted() {
+    document.removeEventListener('scroll', this.verticalPositionFlyout);
   },
   methods: {
     closeMenu() {
       this.showMenu = false;
-      this.showSubmenu = null;
     },
     handleClick(event, item) {
       if (!item.url) {
@@ -82,7 +104,21 @@ export default {
       }
 
       this.closeMenu();
+    },
+    verticalPositionFlyout() {
+      if (!this.showMenu) return;
+
+      const btn = this.$refs.openBtn;
+      const screenHeight = window.innerHeight;
+      const btnBottom = btn.getBoundingClientRect().bottom;
+
+      if (screenHeight / 2 < btnBottom) {
+        this.openUp = true;
+      } else {
+        this.openUp = false;
+      }
     }
+
   }
 }
 </script>

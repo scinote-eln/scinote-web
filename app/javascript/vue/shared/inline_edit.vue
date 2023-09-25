@@ -34,7 +34,7 @@
       v-else
       ref="view"
       class="grid sci-cursor-edit leading-5 border-0 py-1 outline-none inline-block border-solid border-y border-transparent"
-      :class="{ 'text-sn-grey font-normal': isBlank, 'whitespace-pre': !singleLine }"
+      :class="{ 'text-sn-grey font-normal': isBlank, 'whitespace-pre-line': !singleLine }"
       @click="enableEdit($event)"
     >
       <span :class="{'truncate': singleLine}" v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
