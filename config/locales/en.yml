@@ -1304,7 +1304,7 @@ en:
         created_at:
           label: 'Created date'
         updated_at:
-          label: 'Updated date'
+          label: 'Modified date'
       options:
         comment_title: "Comments"
         no_comments: "No comments"
@@ -3855,7 +3855,7 @@ en:
     created_on:
       label: "Start date"
     updated_on:
-      label: "Updated date"
+      label: "Modified date"
     archived_on:
       label: "Archived date"
     recent_searches_label: "Recent searches"

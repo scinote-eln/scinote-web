@@ -120,6 +120,7 @@
         if (this.attachment.attributes.urls.toggle_view_mode) {
           this.viewModeOptions.forEach((viewMode, i) => {
             menu.push({
+              active: this.attachment.attributes.view_mode == viewMode,
               text: this.i18n.t(`assets.context_menu.${viewMode}_html`),
               emit: 'viewMode',
               params: viewMode,
@@ -154,7 +155,6 @@
         window.showIFrameModal(url);
       },
       openMarvinJsEditor() {
-        console.log(this.$refs)
         $(this.$refs.marvinjsEditButton).trigger('click');
       },
       openScinoteEditor() {

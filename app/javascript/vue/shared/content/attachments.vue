@@ -110,6 +110,7 @@
         let menu = [];
         this.viewModeOptions.forEach((viewMode) => {
           menu.push({
+            active: this.parent.attributes.assets_view_mode == viewMode,
             text: this.i18n.t(`attachments.view_mode.${viewMode}_html`),
             emit: 'attachment:viewMode',
             params: viewMode

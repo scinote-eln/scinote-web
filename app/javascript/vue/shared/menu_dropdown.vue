@@ -20,6 +20,7 @@
         <div v-if="item.dividerBefore" class="border-0 border-t border-solid border-sn-light-grey"></div>
         <a :href="item.url" v-if="!item.submenu"
           :traget="item.url_target || '_self'"
+          :class="{ 'bg-sn-super-light-blue': item.active }"
           class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey"
           @click="handleClick($event, item)"
         >
@@ -27,7 +28,8 @@
         </a>
         <div v-else class="-mx-2.5 px-2.5 group relative">
           <span
-                class="flex group items-center rounded relative text-sn-blue whitespace-nowrap px-3 py-2.5 hover:no-underline cursor-pointer group-hover:bg-sn-super-light-blue hover:!bg-sn-super-light-grey"
+            :class="{ 'bg-sn-super-light-blue': item.active }"
+            class="flex group items-center rounded relative text-sn-blue whitespace-nowrap px-3 py-2.5 hover:no-underline cursor-pointer group-hover:bg-sn-super-light-blue hover:!bg-sn-super-light-grey"
           >
             {{ item.text }}
             <i class="sn-icon sn-icon-right ml-auto"></i>
@@ -44,6 +46,7 @@
             <a v-for="(sub_item, si) in item.submenu" :key="si"
               :href="sub_item.url"
               :traget="sub_item.url_target || '_self'"
+              :class="{ 'bg-sn-super-light-blue': item.active }"
               class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey"
               @click="handleClick($event, sub_item)"
             >
