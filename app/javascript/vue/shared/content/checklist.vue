@@ -178,6 +178,9 @@
       }
     },
     methods: {
+      update: function() {
+        this.$emit('update', this.element, false)
+      },
       loadChecklistItems(insertAfter) {
         $.get(this.element.attributes.orderable.urls.checklist_items_url, (result) => {
           this.checklistItems = result.data;
@@ -189,6 +192,7 @@
       updateName(name) {
         this.element.attributes.orderable.name = name;
         this.editingName = false;
+        this.update();
       },
       postItem(item) {
         item.attributes.position = item.attributes.position - 1;
