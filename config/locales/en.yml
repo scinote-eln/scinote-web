@@ -2114,13 +2114,10 @@ en:
         id: "Item ID"
         added_on: "Added on"
         added_at: "Added at"
-        added_by: "Added by"
-      navigations:
-        information: "Information"
-        custom_columns: "Custom columns"
-        assigned: "Assigned"
-        qr: "QR"
+        added_by: 'Added by'
       no_custom_columns_label: 'This item has no custom columns'
+      navigations:
+        qr: "QR"
       repository_time_range_value:
         no_time_range: 'No time range'
       repository_text_value:

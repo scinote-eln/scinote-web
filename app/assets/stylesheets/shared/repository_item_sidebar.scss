@@ -1,0 +1,47 @@
+// Should use tailwind; commented out for reference when refactoring
+
+// // scss-lint:disable IdSelector
+// // scss-lint:disable SelectorDepth
+// // scss-lint:disable NestingDepth
+
+// .repository-item-sidebar {
+//   font-size: 14px;
+//   font-weight: 400;
+//   line-height: 20px;
+
+//   .header {
+//     border-bottom: 1px solid var(--sn-sleepy-grey);
+//     height: var(--top-navigation-height);
+
+//     .item-name {
+//       font-size: 20px;
+//       line-height: 30px;
+//       width: calc(100% - 2rem);
+//     }
+//   }
+
+//   .title {
+//     font-size: 18px;
+//     font-weight: 600;
+//     line-height: 28px;
+//   }
+
+//   #information {
+//     width: 70%;
+//   }
+
+//   .item-details {
+//     div {
+//       border-bottom: 1px solid var(--sn-sleepy-grey);
+
+//       span {
+//         &.repository-name {
+//           -webkit-box-orient: vertical;
+//           display: -webkit-box;
+//           -webkit-line-clamp: 3;
+//           overflow: hidden;
+//         }
+//       }
+//     }
+//   }
+// }
