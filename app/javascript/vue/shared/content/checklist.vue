@@ -122,10 +122,11 @@
       }
     },
     created() {
-      this.loadChecklistItems();
 
       if (this.isNew) {
-        this.addItem(orderedChecklistItems.length + 1);
+        this.addItem(1);
+      } else {
+        this.loadChecklistItems();
       }
     },
     watch: {

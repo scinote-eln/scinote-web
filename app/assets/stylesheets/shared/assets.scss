@@ -50,7 +50,6 @@
     overflow: hidden;
     padding-top: 1em;
     position: relative;
-    text-align: center;
     text-overflow: ellipsis;
     transition: $md-transaction;
     white-space: nowrap;
@@ -337,7 +336,6 @@
   }
 
   .file-name {
-    text-align: center;
 
     &:not(.one-line) div {
       margin-bottom: .5em;

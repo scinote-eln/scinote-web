@@ -25,9 +25,6 @@
            data-placement="bottom"
            :title="`${ attachment.attributes.file_name }`">
         {{ attachment.attributes.file_name }}
-        <span v-if="attachment.isNewUpload" class="attachment-label-new">
-          {{ i18n.t('attachments.new.description') }}
-        </span>
       </div>
     </a>
     <div :class="{ hidden: !isHovered }" class="hovered-thumbnail h-full">
@@ -42,7 +39,7 @@
       >
         {{ attachment.attributes.file_name }}
       </a>
-      <div class="absolute bottom-14 text-sn-grey">
+      <div class="absolute bottom-16 text-sn-grey">
         {{ attachment.attributes.file_size_formatted }}
       </div>
       <div class="absolute bottom-4 min-w-[194px] justify-between flex">

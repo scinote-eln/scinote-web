@@ -108,14 +108,21 @@
     }
 
     .col-list-el {
+      align-items: center;
       background: $color-white;
       border-bottom: 1px solid $color-alto;
+      display: flex;
+      gap: .5rem;
+      min-height: 3.5rem;
       padding: 10px 10px 10px 0;
       vertical-align: middle;
 
       .manage-controls {
         display: none;
-        margin-top: -10px;
+      }
+
+      .text {
+        margin-right: auto;
       }
 
       &:hover {
@@ -130,7 +137,7 @@
         }
 
         .grippy {
-          background: url(asset-path("custom/grippy.png"));
+          opacity: 1;
         }
       }
 
@@ -148,10 +155,8 @@
     }
 
     .grippy {
-      background-repeat: none;
-      display: inline-block;
-      height: 13px;
-      width: 8px;
+      color: $color-alto;
+      opacity: 0;
     }
 
     .column-type {
@@ -179,8 +184,6 @@
 
       .vis {
         display: inline-block;
-        margin-left: 10px;
-        margin-right: 5px;
 
         &:not(.sn-icon-visibility-show):not(.sn-icon-visibility-hide) {
           padding-right: 1.5rem;
