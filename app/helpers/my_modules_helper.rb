@@ -119,16 +119,14 @@ module MyModulesHelper
       project_data(my_module.project),
       experiment_data(my_module.experiment),
       my_module_data(my_module)
-    ].each do |item|
-      item[:value] = "(A) #{item[:value]}" if item[:archived]
-    end
+    ]
   end
 
   private
 
   def team_data(team)
     {
-      label: I18n.t('repositories.item_card.assigned.labels.team'),
+      type: team.class.name.underscore,
       value: team.name,
       url: projects_path(team: team.id),
       archived: false
@@ -137,7 +135,7 @@ module MyModulesHelper
 
   def project_data(project)
     {
-      label: I18n.t('repositories.item_card.assigned.labels.project'),
+      type: project.class.name.underscore,
       value: project.name,
       url: project_path(project, view_mode: view_mode(project.archived?)),
       archived: project.archived?
@@ -146,7 +144,7 @@ module MyModulesHelper
 
   def experiment_data(experiment)
     {
-      label: I18n.t('repositories.item_card.assigned.labels.experiment'),
+      type: experiment.class.name.underscore,
       value: experiment.name,
       url: experiment_url(experiment),
       archived: experiment.archived_branch?
@@ -155,7 +153,7 @@ module MyModulesHelper
 
   def my_module_data(my_module)
     {
-      label: I18n.t('repositories.item_card.assigned.labels.my_module'),
+      type: my_module.class.name.underscore,
       value: my_module.name,
       url: protocols_my_module_path(my_module, view_mode: view_mode(my_module.archived_branch?)),
       archived: my_module.archived_branch?
