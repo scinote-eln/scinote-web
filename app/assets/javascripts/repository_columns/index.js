@@ -1,6 +1,6 @@
 /* global I18n HelperModule truncateLongString animateSpinner RepositoryListColumnType RepositoryStockColumnType */
 /* global RepositoryDatatable RepositoryStatusColumnType RepositoryChecklistColumnType dropdownSelector RepositoryDateTimeColumnType */
-/* global RepositoryDateColumnType RepositoryDatatable */
+/* global RepositoryDateColumnType RepositoryDatatable _ */
 /* eslint-disable no-restricted-globals */
 
 
@@ -297,6 +297,8 @@ var RepositoryColumns = (function() {
         } else {
           thederName = el.innerText;
         }
+        thederName = _.escape(thederName);
+
         if (['row-name', 'archived-by', 'archived-on'].includes(el.id)) {
           visClass = '';
           visText = '';
