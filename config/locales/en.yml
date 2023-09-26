@@ -1941,6 +1941,7 @@ en:
       added_by: "Added by"
       archived_on: "Archived on"
       archived_by: "Archived by"
+      relationship: "Relationship"
       row_consumption: "Consumed"
       enter_row_name: "Enter name"
       locked_item: "This is read-only item."

@@ -22,7 +22,8 @@ module.exports = {
         current: 'currentColor',
         'brand-warning': '#f0ad4e',
         'sn-blue': '#104DA9',
-        'sn-grey': '#98a2b3'
+        'sn-grey': '#98a2b3',
+        'sn-science-blue': '#3B99FD'
       }
     }
   },

@@ -188,4 +188,8 @@ class RepositoryRow < ApplicationRecord
       '-'
     end
   end
+
+  def relationship_count
+    parent_connections.size + child_connections.size
+  end
 end

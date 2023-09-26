@@ -344,12 +344,12 @@ class Constants
     'order' => [[3, 'asc']], # Default sorting by 'name' column
     'columns' => [],
     'assigned' => 'assigned',
-    'ColReorder' => [*0..7]
+    'ColReorder' => [*0..8]
   }
-  8.times do |i|
+  9.times do |i|
     REPOSITORY_TABLE_DEFAULT_STATE['columns'] << {
-      'visible' => (i < 6),
-      'searchable' => (i >= 1), # Checkboxes column is not searchable
+      'visible' => (i < 7),
+      'searchable' => (i >= 1 && i != 4), # Checkboxes and relationship column is not searchable
       'search' => { 'search' => '',
                     'smart' => true,
                     'regex' => false,
