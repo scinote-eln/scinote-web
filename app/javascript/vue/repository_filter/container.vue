@@ -20,7 +20,7 @@
         </div>
       </div>
       <button type="button" class="close" @click="$emit('hide-dropdown')" aria-label="<%= t('general.close') %>">
-        <span aria-hidden="true">&times;</span>
+        <i class="sn-icon sn-icon-close"></i>
       </button>
     </div>
     <FiltersList
@@ -29,8 +29,8 @@
       :key="filterListKey ? 1 : 0"
       @filter:update="updateFilter"
       @filter:delete="deleteFilter" />
-    <div class="footer">
-      <div id="filtersColumnsDropdown" class="dropup filters-columns-dropdown" @click="toggleColumnsFilters">
+    <div class="sci-flyout-footer">
+      <div id="filtersColumnsDropdown" class="dropup filters-columns-dropdown mr-auto" @click="toggleColumnsFilters">
         <button class="btn btn-secondary add-filter prevent-shrink" >
           <i class="sn-icon sn-icon-new-task"></i>
           {{ i18n.t('repositories.show.filters.add_filter') }}

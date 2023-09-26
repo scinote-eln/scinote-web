@@ -5,34 +5,15 @@
 
 
 #manage-repository-column {
-  .modal-content {
-    font-size: 14px;
-    min-height: 500px;
-    width: 540px;
-  }
 
   .modal-header {
-    padding: 4px 15px 4px 8px;
 
     .back-to-column-modal {
       float: left;
     }
-
-    .modal-title {
-      margin-right: 25px;
-      overflow: hidden;
-      padding: 6px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .close {
-      padding: 6px 0;
-    }
   }
 
   .modal-body {
-    padding: 0 15px 61px;
 
     .form-horizontal {
       padding: 15px 0;
@@ -56,8 +37,6 @@
 
     .dropdown-selector-container {
 
-
-
       .delimiter-icon-dropdown {
 
         .tag-label {
@@ -79,14 +58,6 @@
         }
       }
     }
-  }
-
-  .modal-footer {
-    bottom: 0;
-    padding: 12px 15px;
-    position: absolute;
-    text-align: center;
-    width: 100%;
   }
 
   .range-label {
@@ -137,14 +108,21 @@
     }
 
     .col-list-el {
+      align-items: center;
       background: $color-white;
       border-bottom: 1px solid $color-alto;
+      display: flex;
+      gap: .5rem;
+      min-height: 3.5rem;
       padding: 10px 10px 10px 0;
       vertical-align: middle;
 
       .manage-controls {
         display: none;
-        margin-top: -10px;
+      }
+
+      .text {
+        margin-right: auto;
       }
 
       &:hover {
@@ -159,7 +137,7 @@
         }
 
         .grippy {
-          background: url(asset-path("custom/grippy.png"));
+          opacity: 1;
         }
       }
 
@@ -177,10 +155,8 @@
     }
 
     .grippy {
-      background-repeat: none;
-      display: inline-block;
-      height: 13px;
-      width: 8px;
+      color: $color-alto;
+      opacity: 0;
     }
 
     .column-type {
@@ -208,8 +184,6 @@
 
       .vis {
         display: inline-block;
-        margin-left: 10px;
-        margin-right: 5px;
 
         &:not(.sn-icon-visibility-show):not(.sn-icon-visibility-hide) {
           padding-right: 1.5rem;

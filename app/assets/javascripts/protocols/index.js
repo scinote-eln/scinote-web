@@ -1,7 +1,7 @@
 //= require protocols/import_export/import
 /* eslint-disable no-use-before-define, no-underscore-dangle, max-len, no-param-reassign */
-/* global ProtocolRepositoryHeader PdfPreview DataTableHelpers importProtocolFromFile _ PerfectSb protocolsIO
-  protocolSteps dropdownSelector filterDropdown I18n animateSpinner initHandsOnTable inlineEditing HelperModule */
+/* global ProtocolRepositoryHeader PdfPreview DataTableHelpers importProtocolFromFile _ PerfectSb
+          dropdownSelector filterDropdown I18n animateSpinner initHandsOnTable inlineEditing HelperModule */
 
 // Global variables
 var ProtocolsIndex = (function() {
@@ -443,8 +443,6 @@ var ProtocolsIndex = (function() {
       if ($(this).find('.modal-body').length === 0) {
         $.get(this.dataset.url, function(data) {
           $('#protocolsioModal').find('.modal-content').html(data.html);
-          protocolsIO();
-          protocolSteps();
           PerfectSb().init();
         });
       }

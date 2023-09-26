@@ -1,5 +1,5 @@
 <% result ||= report_element.result %>
-<% table = result.table %>
+<% table = element.orderable.table %>
 <% timestamp = table.created_at %>
 <% name = result.name %>
 <% export_all = defined?(export_all) && export_all %>

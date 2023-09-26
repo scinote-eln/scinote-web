@@ -20,7 +20,7 @@
           file-name="<%= @file_name %>"
           update-url="<%= @asset ? gene_sequence_asset_url(@asset) : gene_sequence_assets_url(parent_type: params[:parent_type], parent_id: params[:parent_id]) %>"
           can-edit-file="<%= asset_managable? %>"
-          ove-enabled-days-left-string="<%= OpenVectorEditorService.evaluation_period_left %>"
+          ove-warning="<%= defined?(@warnings) ? @warnings : '' %>"
         />
       </div>
       <%= javascript_include_tag 'open_vector_editor' %>

@@ -25743,7 +25743,7 @@ function () {
     key: "onCloneWheel",
     value: function onCloneWheel(event) {
       if (this.scrollableElement !== window) {
-        event.preventDefault();
+        //event.preventDefault();
       } // There was if statement which controlled flow of this function. It avoided the execution of the next lines
       // on mobile devices. It was changed. Broader description of this case is included within issue #4856.
 

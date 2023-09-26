@@ -22,9 +22,11 @@
   }
 
   &.no-results {
+    grid-template-rows: 1fr;
+    height: calc(100vh - var(--content-header-size) - var(--navbar-height));
+
     .no-results-container {
       grid-column: 1 / -1;
-      grid-row: 8;
     }
 
     .no-results-img {
@@ -84,9 +86,13 @@
       display: none !important;
     }
 
+    &.no-results {
+      grid-template-rows: 2em 1fr;
+      height: calc(100vh - var(--content-header-size) - var(--navbar-height));
+    }
+
     .no-results-container {
       grid-column: 1 / -1;
-      grid-row: 12;
     }
 
     .card {
@@ -130,7 +136,7 @@
         padding: 0 .5em;
         position: sticky;
         position: -webkit-sticky;
-        top: calc(var(--content-header-size) + var(--navbar-height));
+        top: var(--content-header-size);
         z-index: 2;
 
         &.select-all-checkboxes {

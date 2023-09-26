@@ -34,7 +34,7 @@ var DasboardCurrentTasksWidget = (function() {
   function filtersEnabled() {
     return dropdownSelector.getData(experimentFilter).length > 0
            || dropdownSelector.getData(projectFilter).length > 0
-           || (dropdownSelector.getValues(sortFilter) !== 'due_date')
+           || (dropdownSelector.getValues(sortFilter) !== 'due_first')
            || dropdownSelector.getValues(statusFilter).sort().toString()
               !== getDefaultStatusValues().sort().toString();
   }
@@ -148,7 +148,7 @@ var DasboardCurrentTasksWidget = (function() {
       e.stopPropagation();
       e.preventDefault();
 
-      dropdownSelector.selectValues(sortFilter, 'due_date');
+      dropdownSelector.selectValues(sortFilter, 'due_first');
       dropdownSelector.selectValues(statusFilter, getDefaultStatusValues());
       dropdownSelector.clearData(projectFilter);
       dropdownSelector.clearData(experimentFilter);

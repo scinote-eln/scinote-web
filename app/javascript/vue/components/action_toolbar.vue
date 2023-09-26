@@ -5,7 +5,7 @@
        :style="`width: ${width}px; bottom: ${bottomOffset}px; transform: translateX(${leftOffset}px)`">
     <div class="sn-action-toolbar__actions flex gap-4">
       <div v-if="loading && !actions.length" class="sn-action-toolbar__action">
-        <a class="rounded flex items-center py-1.5 px-2.5 bg-sn-white color-sn-blue no-underline"></a>
+        <a class="rounded flex items-center py-1.5 px-2.5 bg-transparent text-transparent no-underline"></a>
       </div>
       <div v-if="!loading && actions.length === 0" class="sn-action-toolbar__message">
         {{ i18n.t('action_toolbar.no_actions') }}

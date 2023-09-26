@@ -1,14 +1,6 @@
 // scss-lint:disable SelectorDepth, NestingDepth, SelectorFormat, ImportantRule, QualifyingElement, IdSelector
 
 
-
-#protocolsioModal {
-  .modal-body {
-    padding-bottom: 0;
-    padding-top: 0;
-  }
-}
-
 .btn-open-file {
   overflow: hidden;
   position: relative;
@@ -27,6 +19,20 @@
     right: 0;
     text-align: right;
     top: 0;
+  }
+}
+
+.btn-beta-icon {
+  &::after {
+    background-color: var(--sn-coral);
+    border-radius: 1px;
+    color: var(--sn-white);
+    content: "BETA";
+    font-size: .5rem;
+    left: 7rem;
+    padding: .125rem .25rem;
+    position: absolute;
+    top: .1rem;
   }
 }
 

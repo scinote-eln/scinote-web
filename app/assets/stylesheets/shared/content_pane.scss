@@ -3,8 +3,12 @@
 
 .content-pane {
   --content-header-size: 9.5em;
-  background-color: $color-white;
+  background-color: var(--sn-white);
   margin: 20px 0;
+
+  &.with-grey-background {
+    background: var(--sn-super-light-grey);
+  }
 
   &.flexible {
     margin: 0;
@@ -12,21 +16,21 @@
 
   .content-header {
     &.sticky-header {
-      background: $color-white;
+      background-color: inherit;
       position: sticky;
       position: -webkit-sticky;
-      top: var(--navbar-height);
+      top: 0;
       z-index: 250;
     }
 
     .title-row {
       align-items: center;
-      background: $color-white;
+      background-color: inherit;
       display: flex;
       height: 4em;
-      margin-left: -1.5rem;
-      padding: 0 1.5rem;
-      width: calc(100% + 3rem);
+      margin-left: -1rem;
+      padding: 0 1rem;
+      width: calc(100% + 2rem);
 
 
       h1 {
@@ -34,7 +38,7 @@
         display: flex;
         flex-grow: 1;
         margin: 0;
-        max-width: calc(100% - 2rem);
+        max-width: calc(100% - 2.5rem);
       }
 
       .name-readonly-placeholder {
@@ -170,9 +174,9 @@
 
     .toolbar-row {
       background: $color-white;
-      margin-left: -1.5rem;
-      padding: 1em 1.5rem;
-      width: calc(100% + 3rem);
+      margin-left: -1rem;
+      padding: 1rem;
+      width: calc(100% + 2rem);
     }
 
     .narrow {

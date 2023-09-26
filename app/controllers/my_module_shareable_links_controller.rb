@@ -56,7 +56,7 @@ class MyModuleShareableLinksController < ApplicationController
                else @results.order(created_at: :desc)
                end
 
-    @gallery = @results.left_joins(:asset).pluck('assets.id').compact
+    @gallery = @results.left_joins(:assets).pluck('assets.id').compact
 
     render 'shareable_links/my_module_results_show', layout: 'shareable_links'
   end

@@ -2,10 +2,11 @@
 
 class RepositoriesExportJob < ApplicationJob
   include StringUtility
+  include FailedDeliveryNotifiableJob
 
-  def perform(repository_ids, user_id, team)
+  def perform(repository_ids, user_id:, team_id:)
     @user = User.find(user_id)
-    @team = team
+    @team = Team.find(team_id)
     @repositories = Repository.viewable_by_user(@user, @team).where(id: repository_ids).order(:id)
     zip_input_dir = FileUtils.mkdir_p(Rails.root.join("tmp/temp_zip_#{Time.now.to_i}")).first
     zip_dir = FileUtils.mkdir_p(Rails.root.join('tmp/zip-ready')).first
@@ -93,6 +94,11 @@ class RepositoriesExportJob < ApplicationJob
                               .zip_exports_download_export_all_path(@zip_export)}'>" \
                 "#{@zip_export.zip_file_name}</a>"
     )
-    UserNotification.create!(notification: notification, user: @user)
+    notification.create_user_notification(@user)
+  end
+
+  # Overrides method from FailedDeliveryNotifiableJob concern
+  def failed_notification_title
+    I18n.t('repositories.index.export.notification.error.title')
   end
 end

@@ -365,12 +365,10 @@ var ImageEditorModal = (function() {
         contentType: false,
         processData: false,
         success: function(res) {
-          $(`.asset[data-asset-id=${data.id}] .image-container img`)
-            .replaceWith($(res.html).find('.image-container img'));
-          $(`.asset[data-asset-id=${data.id}] .attachment-preview img`)
-            .replaceWith($(res.html).find('.attachment-preview img'));
+          $(`.asset[data-asset-id=${data.id}] img`)
+            .replaceWith($(res.html).find(`.asset[data-asset-id=${data.id}] img`));
+          ActiveStoragePreviews.reloadPreview(`.asset[data-asset-id=${data.id}] img`);
           $(`.asset[data-asset-id=${data.id}]`).closest('.attachments').trigger('reorder');
-          ActiveStoragePreviews.reloadPreview(`.asset[data-asset-id=${data.id}] .attachment-preview img`);
           closeEditor();
         }
       });

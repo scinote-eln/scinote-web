@@ -21,7 +21,7 @@
   <% if @notification.system_message? %>
     <% # We assume the system notification is clean %>
     <%= @notification.message.html_safe %>
-  <% elsif @notification.deliver? && @notification.message.match?(/data-id=('|")(\d*)('|")/) %>
+  <% elsif @notification.deliver? && @notification.message.match?(/data-id=('|")(\d*)('|")/) && @notification.message.match?(/href=('|")\/zip_exports/) %>
     <%= I18n.t("notifications.deliver.download_link") %>
     <% # work around the problem with inserting the link of zipExport %>
     <% zip_id = /data-id=('|")(\d*)('|")/.match(@notification.message)[2] %>

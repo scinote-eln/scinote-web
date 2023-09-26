@@ -342,7 +342,6 @@ function initProtocolSectionOpenEvent() {
     });
   });
 }
-
 /**
  * Initializes page
  */

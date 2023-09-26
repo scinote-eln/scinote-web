@@ -46,7 +46,7 @@ class ApplicationController < ActionController::Base
   def render_403(style = 'danger')
     respond_to do |format|
       format.html do
-        render file: 'public/403.html', status: :forbidden, layout: false
+        render 'errors/403', status: :forbidden, layout: false
       end
       format.json do
         render json: { style: style }, status: :forbidden
@@ -60,7 +60,7 @@ class ApplicationController < ActionController::Base
   def render_404
     respond_to do |format|
       format.html do
-        render file: 'public/404.html', status: :not_found, layout: false
+        render 'errors/404', status: :not_found, layout: false
       end
       format.json do
         render json: {}, status: :not_found
@@ -74,7 +74,7 @@ class ApplicationController < ActionController::Base
   def render_422(message = t('client_api.permission_error'))
     respond_to do |format|
       format.html do
-        render file: 'public/422.html', status: :unprocessable_entity, layout: false
+        render 'errors/422', status: :unprocessable_entity, layout: false
       end
       format.json do
         render json: { message: message }, status: :unprocessable_entity

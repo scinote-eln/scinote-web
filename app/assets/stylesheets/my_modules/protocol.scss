@@ -1,5 +1,5 @@
 .my-module-position-container .protocol-content {
-  margin-left: 2.25rem;
+  margin-left: 2.5rem;
 }
 
 .task-protocol {
@@ -11,9 +11,9 @@
   }
 
   .protocol-buttons-group {
-    column-gap: .5rem;
-    display: grid;
-    grid-template-columns: auto auto auto;
+    align-items: center;
+    display: flex;
+    gap: 1rem;
   }
 
   .portocol-header-left-part {
@@ -28,12 +28,9 @@
       padding-right: .25em;
     }
 
-    .status-label {
-      margin: 2px 0 0;
-    }
-
     .status-info {
-      padding-left: 4px;
+      display: flex;
+      height: 24px;
     }
   }
 
@@ -42,14 +39,20 @@
     color: var(--sn-blue);
     cursor: pointer;
     display: flex;
+    margin: .5rem 0;
 
     &::before,
     &::after {
-      background-color: var(--sn-light-grey);
+      background-image: linear-gradient(to right, var(--sn-sleepy-grey) 15%, rgba(255, 255, 255, 0) 0%);
+      background-position: top;
+      background-size: 10px 1px;
+      background-repeat: repeat-x;
+
+      border-bottom: 1px dotted transparent;
       content: "";
       display: inline-block;
       flex-grow: 1;
-      height: 1px;
+      height: 0;
     }
 
     .sn-icon-new-task {
@@ -61,17 +64,13 @@
 
       &::before,
       &::after {
-        background-color: $brand-primary;
+        background-image: linear-gradient(to right, $brand-primary 15%, rgba(255, 255, 255, 0) 0%);
       }
     }
   }
   .protocol-description {
-    margin-bottom: 2em;
-    padding-left: 2.5rem;
-  }
-
-  .protocol-steps {
-    padding-left: .75em;
+    margin-bottom: 1rem;
+    padding-left: 2rem;
   }
 
   .empty-protocol-description {
@@ -86,22 +85,6 @@
         cursor: default;
         pointer-events: none;
       }
-    }
-  }
-  .tinymce-wrapper {
-    width: 100%;
-
-    .tox-tinymce {
-      flex-grow: 1;
-    }
-  }
-  .tinymce-container {
-    display: flex;
-    width: 100%;
-
-    .tiny-mce-editor {
-      flex-basis: 100%;
-      max-width: 100%;
     }
   }
 }

@@ -55,7 +55,7 @@ $(document).on('click', '.asset .delete-asset', function(e) {
 
 $(document).on('turbolinks:before-visit', (e) => {
   if ($('.uploading-attachment-container:not(.error)').length) {
-    if (confirm(I18n.t('protocols.steps.attachments.new.leaving_warning'))) {
+    if (confirm(I18n.t('attachments.new.leaving_warning'))) {
       return true;
     }
     e.preventDefault();

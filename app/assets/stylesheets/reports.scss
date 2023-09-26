@@ -537,6 +537,23 @@ label {
     padding-top: 0;
   }
 
+  .report-checklist-item {
+    -webkit-box-pack: start; // for wkhtmltopdf compatibility
+    display: -webkit-box; // for wkhtmltopdf compatibility
+    display: flex;
+    justify-content: start;
+    margin-top: .5em;
+
+    div:nth-child(2) {
+      margin-top: .2em;
+    }
+
+    > div {
+      margin-left: .7em;
+      white-space: pre-wrap;
+    }
+  }
+
   &:hover > .report-element-header .checklist-name {
     color: $brand-primary;
   }

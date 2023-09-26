@@ -11,6 +11,12 @@ Canaid::Permissions.register_for(Result) do
       result.my_module.permission_granted?(user, MyModulePermissions::RESULTS_MANAGE)
   end
 
+  can :restore_result do |user, result|
+    result.archived? &&
+      !result.my_module.archived_branch? &&
+      result.my_module.permission_granted?(user, MyModulePermissions::RESULTS_MANAGE)
+  end
+
   can :delete_result do |user, result|
     result.archived? &&
       result.unlocked?(result) &&

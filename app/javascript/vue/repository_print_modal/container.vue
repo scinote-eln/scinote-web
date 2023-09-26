@@ -4,7 +4,7 @@
       <div class="modal-content">
         <div v-if="availablePrinters.length > 0" class="printers-available">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
             <p class="modal-title">
               <template v-if="rows.length == 1">
                 <b>{{ i18n.t('repository_row.modal_print_label.head_title', {repository_row: rows[0].attributes.name}) }}</b>
@@ -70,7 +70,7 @@
         </div>
         <div v-else class="no-printers-available">
           <div class="modal-body no-printers-container">
-            <button type="button" class="close modal-absolute-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button type="button" class="close modal-absolute-close-button" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
             <img src='/images/printers/no_available_printers.png'>
             <p class="no-printer-title">
               {{ i18n.t('repository_row.modal_print_label.no_printers.title') }}

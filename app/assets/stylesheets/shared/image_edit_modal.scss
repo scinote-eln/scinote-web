@@ -13,12 +13,14 @@
   .modal-content {
     border: 0;
     height: 100%;
+    padding: 0;
   }
 
   .modal-header {
     align-items: center;
     background: $color-white;
     display: flex;
+    flex-direction: row;
     height: 4em;
     padding: 0 1em;
 

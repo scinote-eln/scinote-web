@@ -1,0 +1,17 @@
+.handsontable {
+  .ht__highlight {
+    background: var(--sn-light-grey) !important;
+  }
+  th {
+    background: var(--sn-super-light-grey) !important;
+    border-color: var(--sn-light-grey) !important;
+  }
+
+  td.area:before {
+    background: var(--sn-science-blue) !important;
+  }
+
+  td {
+    border-color: var(--sn-light-grey) !important;
+  }
+}

@@ -41,20 +41,6 @@ $colors:  ("sn-white": "#FFFFFF",
   }
 }
 
-@each $color, $value in $colors {
-  .bg-#{$color} {
-    background-color: var(--#{$color});
-  }
-
-  .text-#{$color} {
-    color: var(--#{$color});
-  }
-
-  .border-#{$color} {
-    border-color: var(--#{$color});
-  }
-}
-
 
 // LEGACY COLORS
 

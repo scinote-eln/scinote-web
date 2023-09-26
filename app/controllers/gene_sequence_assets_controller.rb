@@ -115,7 +115,7 @@ class GeneSequenceAssetsController < ApplicationController
       return render_403 unless can_read_protocol_in_module?(@protocol) ||
                                can_read_protocol_in_repository?(@protocol)
     when Result
-      return render_403 unless can_read_my_module?(@my_module)
+      return render_403 unless can_read_result?(@parent)
     else
       render_403
     end
@@ -135,7 +135,7 @@ class GeneSequenceAssetsController < ApplicationController
     when Step
       can_manage_step?(@parent)
     when Result
-      can_manage_my_module?(@parent)
+      can_manage_result?(@parent)
     else
       false
     end

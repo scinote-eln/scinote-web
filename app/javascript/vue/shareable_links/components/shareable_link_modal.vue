@@ -11,9 +11,6 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header flex">
-            <h4 class="modal-title">
-              {{ i18n.t("shareable_links.modal.title") }}
-            </h4>
             <button
               type="button"
               class="close float-right !ml-auto"
@@ -21,8 +18,11 @@
               tabindex="0"
               aria-label="Close"
             >
-              <span aria-hidden="true">&times;</span>
+              <i class="sn-icon sn-icon-close"></i>
             </button>
+            <h4 class="modal-title">
+              {{ i18n.t("shareable_links.modal.title") }}
+            </h4>
           </div>
           <div class="modal-body">
             <div class="flex items-center text-sm gap-4 mb-4">
@@ -61,18 +61,18 @@
                 </div>
               </div>
             </div>
-            
+
             <div>
               <div class="mb-2"> {{ i18n.t('shareable_links.modal.sharing_link_label') }} </div>
               <div class="sci-input-container-v2 input-sm text-sm mb-2 flex-row-reverse">
                 <input type="text"
-                        class="sci-input-field-v2"
+                        class="sci-input-field !pr-16"
                         ref="clone"
                         :value="shareableData.attributes ? shareableData.attributes.shareable_url : ''"
                         id="#share-link-input"
                         :disabled="true"
                   />
-                  <button class="btn btn-primary share-link-copy"
+                  <button class="btn btn-primary btn-sm share-link-copy"
                           tabindex="0"
                           @click="copy($refs.clone.value)"
                           :disabled="!sharedEnabled">{{ i18n.t('shareable_links.modal.copy_button') }}
@@ -95,6 +95,10 @@
     name: "shareModalContainer",
     components: { deleteShareableLinkModal },
     props: {
+      open: {
+        type: Boolean,
+        required: true
+      },
       shared: {
         type: Boolean,
         default: false
@@ -123,11 +127,12 @@
     watch: {
       shared() {
         this.sharedEnabled = this.shared;
+      },
+      open() {
+        this.open ? this.showModal() : this.hideModal();
       }
     },
     mounted() {
-
-      $(this.$refs.modal).modal('show');
       $(this.$refs.modal).on('hidden.bs.modal', () => {
         if (!this.confirmingDelete) {
           this.$emit('close');

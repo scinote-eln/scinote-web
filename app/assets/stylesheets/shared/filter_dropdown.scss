@@ -3,39 +3,7 @@
 .filter-container {
   position: initial;
 
-  .filter-dropdown {
-    padding: 0;
-    width: 230px;
-
-    .header {
-      align-items: center;
-      border-bottom: $border-default;
-      display: flex;
-      height: 2.75em;
-      margin-bottom: 1em;
-      padding: 1em;
-
-      .title {
-        @include font-h2;
-        flex-grow: 1;
-        user-select: none;
-
-      }
-    }
-
-    .select-block {
-      display: inline-block;
-      padding: 0 1em 1em;
-      position: relative;
-      width: 100%;
-
-      label {
-        @include font-small;
-        font-weight: bold;
-        margin-bottom: .3em;
-        user-select: none;
-      }
-    }
+  .sci-flyout {
 
     .text-search-filter {
       &.open {
@@ -82,21 +50,6 @@
         .keyword-text {
           margin-left: .25em;
         }
-      }
-    }
-
-    .footer {
-      align-items: center;
-      border-top: $border-default;
-      display: flex;
-      height: 4.25em;
-      justify-content: center;
-      padding: 0 1em;
-      position: relative;
-      width: 100%;
-
-      .clear-button {
-        margin-right: .375rem;
       }
     }
   }

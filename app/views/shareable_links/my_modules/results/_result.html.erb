@@ -1,13 +1,4 @@
 <div class="result">
-  <div class="result-icon">
-    <% if result.is_text %>
-      <span class="sn-icon sn-icon-result-text"></span>
-    <% elsif result.is_table %>
-      <span class="sn-icon sn-icon-tables"></span>
-    <% elsif result.is_asset %>
-      <span class="sn-icon sn-icon-files"></span>
-    <% end %>
-  </div>
   <div class="panel panel-default">
     <div class="panel-heading">
       <div class="panel-options pull-right">
@@ -22,19 +13,15 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-xs-12">
-            <% if result.is_text %>
-              <div class="ql-editor">
-                 <%= smart_annotation_text(result.result_text.shareable_tinymce_render(:text)) %>
-              </div>
-            <% elsif result.is_table %>
-              <div class="hot-table">
-                <input type="hidden" class="hot-table-contents" value="<%= result.table.contents_utf_8 %>" />
-                <input type="hidden" class="hot-table-metadata" value="<%= result.table.metadata ? result.table.metadata.to_json : nil %>" />
-                <div class="hot-table-container"></div>
-              </div>
-            <% elsif result.is_asset %>
-              <%= render partial: "shareable_links/my_modules/step_attachments/#{ result.asset.view_mode }", locals: { asset: result.asset } %>
-              <%= render partial: "shareable_links/my_modules/step_attachments/file_preview", locals: { asset: result.asset, gallery: gallery } %>
+            <% result.result_orderable_elements.sort_by(&:position).each do |element| %>
+              <% if element.orderable_type == 'ResultText' %>
+                <%= render partial: "shareable_links/my_modules/step_elements/text", locals: { element: element.orderable } %>
+              <% elsif element.orderable_type == 'ResultTable'%>              
+                <%= render partial: "shareable_links/my_modules/step_elements/table", locals: { element: element.orderable.table } %>
+              <% end %>
+            <% end %>
+            <% if result.result_assets.present? %>
+              <%= render partial: "shareable_links/my_modules/attachments", locals: { attachments: result.assets, step: result } %>
             <% end %>
           </div>
         </div>

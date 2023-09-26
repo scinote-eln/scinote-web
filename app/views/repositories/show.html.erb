@@ -31,7 +31,7 @@
           </h1>
           <% if @repository.shared_with_anybody? %>
             <% team_name = @repository.team == current_team ? t('repositories.show.your_team') : @repository.team.name %>
-            <div class="repository-subtitle"><%= t('repositories.show.subtitle', team_name: team_name) %></div>
+            <div class="repository-subtitle mt-0.5"><%= t('repositories.show.subtitle', team_name: team_name) %></div>
           <% end %>
         </div>
       <% end %>
@@ -69,7 +69,9 @@
 
 
 <%= render partial: "repositories/delete_record_modal" %>
-<%= render partial: 'repositories/export_repository_modal',
+<%= render partial: 'repositories/export_repository_rows_modal',
+           locals: { repository: @repository } %>
+<%= render partial: 'repositories/export_stock_consumption_modal',
            locals: { repository: @repository } %>
 
 <%= render partial: 'repository_columns/manage_column_modal', locals: { my_module_page: false } %>

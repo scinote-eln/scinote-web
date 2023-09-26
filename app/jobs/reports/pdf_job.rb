@@ -6,40 +6,15 @@ module Reports
     include InputSanitizeHelper
     include ReportsHelper
     include Canaid::Helpers::PermissionsHelper
+    include FailedDeliveryNotifiableJob
 
     PDFUNITE_ENCRYPTED_PDF_ERROR_STRING = 'Unimplemented Feature: Could not merge encrypted files'
 
     queue_as :reports
 
-    discard_on StandardError do |job, error|
-      report = Report.find_by(id: job.arguments.first)
-      next unless report
-
-      ActiveRecord::Base.no_touching do
-        report.pdf_error!
-      end
-      report_path =
-        if report.pdf_file.attached?
-          Rails.application.routes.url_helpers
-               .reports_path(team: report.team.id, preview_report_id: report.id, preview_type: :pdf)
-        else
-          Rails.application.routes.url_helpers.reports_path(team: report.team.id)
-        end
-      user = User.find(job.arguments.second)
-      notification = Notification.create(
-        type_of: :deliver_error,
-        title: I18n.t('projects.reports.index.generation.error_pdf_notification_title'),
-        message: I18n.t('projects.reports.index.generation.error_notification_message',
-                        report_link: "<a href='#{report_path}'>#{escape_input(report.name)}</a>",
-                        team_name: escape_input(report.team.name))
-      )
-      notification.create_user_notification(user)
-      Rails.logger.error("Couldn't generate PDF for Report with id: #{report.id}. Error:\n #{error}")
-    end
-
     PREVIEW_EXTENSIONS = %w(docx pdf).freeze
 
-    def perform(report_id, user_id)
+    def perform(report_id, user_id:)
       report = Report.find(report_id)
       user = User.find(user_id)
       file = Tempfile.new(['report', '.pdf'], binmode: true)
@@ -97,6 +72,14 @@ module Reports
         I18n.backend.date_format = nil
         file.close(true)
       end
+    rescue StandardError => e
+      raise e if report.blank?
+
+      ActiveRecord::Base.no_touching do
+        report.pdf_error!
+      end
+      Rails.logger.error("Couldn't generate PDF for Report with id: #{report.id}. Error:\n #{e.message}")
+      raise e
     end
 
     private
@@ -108,15 +91,16 @@ module Reports
 
           results = my_module_element.my_module.results
           order_results_for_report(results, report.settings.dig(:task, :result_order)).each do |result|
-            next unless result.is_asset && PREVIEW_EXTENSIONS.include?(result.asset.file.blob.filename.extension)
+            result.assets.each do |asset|
+              next unless PREVIEW_EXTENSIONS.include?(asset.file.blob.filename.extension)
 
-            asset = result.asset
-            if !asset.file_pdf_preview.attached? || (asset.file.created_at > asset.file_pdf_preview.created_at)
-              PdfPreviewJob.perform_now(asset.id)
-              asset.reload
-            end
-            asset.file_pdf_preview.open(tmpdir: tmp_dir) do |file|
-              report_file = merge_pdf_files(file, report_file)
+              if !asset.file_pdf_preview.attached? || (asset.file.created_at > asset.file_pdf_preview.created_at)
+                PdfPreviewJob.perform_now(asset.id)
+                asset.reload
+              end
+              asset.file_pdf_preview.open(tmpdir: tmp_dir) do |file|
+                report_file = merge_pdf_files(file, report_file)
+              end
             end
           end
         end
@@ -194,5 +178,27 @@ module Reports
       'scinote_logo.svg'
     end
 
+    # Overrides method from FailedDeliveryNotifiableJob concern
+    def failed_notification_title
+      I18n.t('projects.reports.index.generation.error_pdf_notification_title')
+    end
+
+    # Overrides method from FailedDeliveryNotifiableJob concern
+    def failed_notification_message
+      report = Report.find_by(id: arguments.first)
+      return '' if report.blank?
+
+      report_path =
+        if report.pdf_file.attached?
+          Rails.application.routes.url_helpers
+               .reports_path(team: report.team.id, preview_report_id: report.id, preview_type: :pdf)
+        else
+          Rails.application.routes.url_helpers.reports_path(team: report.team.id)
+        end
+
+      I18n.t('projects.reports.index.generation.error_notification_message',
+             report_link: "<a href='#{report_path}'>#{escape_input(report.name)}</a>",
+             team_name: escape_input(report.team.name))
+    end
   end
 end
