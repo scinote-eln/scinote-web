@@ -22,7 +22,7 @@
   .input-field {
     align-items: center;
     background: $color-white;
-    border: 1px solid $color-silver-chalice;
+    border: 1px solid var(--sn-light-grey);
     border-radius: 4px;
     display: flex;
     flex-wrap: wrap;

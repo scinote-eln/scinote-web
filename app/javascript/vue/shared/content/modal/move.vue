@@ -9,7 +9,7 @@
           </h4>
         </div>
         <div class="modal-body">
-          <label>
+          <label class="font-normal text-sn-dark-grey">
             {{ i18n.t(`protocols.steps.modals.move_element.${parent_type}.targets_label`) }}
           </label>
           <div class="w-full">

@@ -142,7 +142,7 @@
                 <span>{{ i18n.t("protocols.steps.new_step") }}</span>
             </a>
           </div>
-          <div class="protocol-steps">
+          <div class="protocol-steps pb-8">
             <div v-for="(step, index) in steps" :key="step.id" class="step-block">
               <div v-if="index > 0 && urls.add_step_url" class="insert-step" @click="addStep(index)">
                 <i class="sn-icon sn-icon-new-task"></i>
@@ -431,7 +431,7 @@
           secondaryNavigation.style.zIndex= 251;
         } else {
           secondaryNavigation.style.boxShadow = 'none';
-          secondaryNavigation.style.zIndex= 0;
+          if (secondaryNavigationTop > 10) secondaryNavigation.style.zIndex= 0;
         }
 
         if (protocolHeaderTop - 5 < protocolHeaderHeight) { // When secondary navigation touch protocol header
@@ -457,7 +457,7 @@
             secondaryNavigation.style.top = newSecondaryTop + 'px'; // Secondary navigation starts slowly disappear
             protocolHeader.style.top = newSecondaryTop + secondaryNavigationHeight - 1 + 'px'; // Protocol header starts getting offset to compensate secondary navigation position
             // -1 to compensate small gap between protocol header and secondary navigation
-            if (newSecondaryTop <= 1) secondaryNavigation.style.zIndex= 0;
+            if (newSecondaryTop * -1 >= secondaryNavigationHeight) secondaryNavigation.style.zIndex= 0;
           }
         } else {
           // Just reset secondary navigation and protocol header styles to initial state

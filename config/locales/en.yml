@@ -388,7 +388,7 @@ en:
       chemical_drawing: "New chemical drawing"
       file_from_pc: "File from your PC"
     modified_label: "Modified:"
-    preview_menu: "Preview size"
+    preview_menu: "View"
     add: "ADD"
     sort_by: "SORT BY"
     attachments_view_mode: "ALL ATTACHMENTS VIEW SIZE"
@@ -412,7 +412,7 @@ en:
       ztoa_html: "Name &#8593;"
     view_mode:
       inline_html: "Large"
-      thumbnail_html: "Medium"
+      thumbnail_html: "Thumbnail"
       list_html: "List"
 
   search:
@@ -1304,7 +1304,7 @@ en:
         created_at:
           label: 'Created date'
         updated_at:
-          label: 'Updated date'
+          label: 'Modified date'
       options:
         comment_title: "Comments"
         no_comments: "No comments"
@@ -3402,7 +3402,7 @@ en:
       delete: "Delete"
       move: "Move"
       inline_html: "Large"
-      thumbnail_html: "Medium"
+      thumbnail_html: "Thumbnail"
       list_html: "List"
     delete_file_modal:
       title: "Delete attachment"
@@ -3855,7 +3855,7 @@ en:
     created_on:
       label: "Start date"
     updated_on:
-      label: "Updated date"
+      label: "Modified date"
     archived_on:
       label: "Archived date"
     recent_searches_label: "Recent searches"
@@ -3873,3 +3873,24 @@ en:
     canvas_view: "Canvas view"
     active_state: "Active state"
     archived_state: "Archived state"
+
+  errors:
+    forbidden:
+      title: "Access to this page is denied (403)."
+      dialog:
+        title: "It would seem that you are not allowed in here."
+        text: "You should request access from your team administrators."
+        button: "Go back"
+    not_found:
+      title: "This page could not be found (404)."
+      dialog:
+        title: "This page could not be found (404)."
+        text_1: "You may have mistyped the address or the page may have moved."
+        text_2_html: |
+          "If you are the application owner check the logs for more information.
+          You can go back to <a href="%{home_url}">home page</a> or try <a href="%{search_url}">searching.</a>"
+    unprocessable_entity:
+      title: "The change you wanted was rejected (422)."
+      dialog:
+        title: "Ooops, something went wrong."
+        text: "Please contact your SciNote administrator."

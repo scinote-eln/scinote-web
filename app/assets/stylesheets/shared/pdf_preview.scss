@@ -1,9 +1,10 @@
 .pdf-viewer {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: calc(100% + 4rem);
+  margin: -2rem;
   position: relative;
-  width: 100%;
+  width: calc(100% + 4rem);
 
   .page-container {
     display: flex;

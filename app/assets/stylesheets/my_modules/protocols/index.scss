@@ -144,10 +144,6 @@
           z-index: 251;
 
           .repository {
-            @include font-button;
-            cursor: pointer;
-            display: flex;
-            padding: 8px 16px;
 
             .assigned-items,
             .shared-icon {
@@ -579,7 +575,7 @@
     z-index: 251;
 
     .task-details-value {
-      @include font-h3;
+      font-weight: bold;
     }
 
     .row-v-margin {

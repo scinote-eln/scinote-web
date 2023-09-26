@@ -4,7 +4,7 @@
        @mouseover="isHovered = true"
        @mouseleave="isHovered = false"
   >
-    <a v-if="!isHovered"
+    <a  :class="{ hidden: isHovered }"
         :href="attachment.attributes.urls.blob"
         class="file-preview-link file-name"
         :id="`modal_link${attachment.id}`"
@@ -17,8 +17,6 @@
         <img v-if="attachment.attributes.medium_preview !== null"
             class="rounded-sm"
             :src="attachment.attributes.medium_preview"
-            @error="ActiveStoragePreviews.reCheckPreview"
-            @load="ActiveStoragePreviews.showPreview"
             style='opacity: 0' />
         <div v-else class="w-[186px] h-[186px] bg-sn-super-light-grey rounded-sm"></div>
       </div>
@@ -27,12 +25,9 @@
            data-placement="bottom"
            :title="`${ attachment.attributes.file_name }`">
         {{ attachment.attributes.file_name }}
-        <span v-if="attachment.isNewUpload" class="attachment-label-new">
-          {{ i18n.t('attachments.new.description') }}
-        </span>
       </div>
     </a>
-    <div v-else class="hovered-thumbnail h-full">
+    <div :class="{ hidden: !isHovered }" class="hovered-thumbnail h-full">
       <a
         :href="attachment.attributes.urls.blob"
         class="file-preview-link file-name"
@@ -44,7 +39,7 @@
       >
         {{ attachment.attributes.file_name }}
       </a>
-      <div class="absolute bottom-14 text-sn-grey">
+      <div class="absolute bottom-16 text-sn-grey">
         {{ attachment.attributes.file_size_formatted }}
       </div>
       <div class="absolute bottom-4 min-w-[194px] justify-between flex">
@@ -126,6 +121,25 @@
         isHovered: false,
         deleteModal: false
       };
+    },
+    mounted() {
+      $(this.$nextTick(function() {
+        $(`.attachment-preview img`)
+          .on('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
+          .on('load', (event) => ActiveStoragePreviews.showPreview(event))
+      }))
+    },
+    watch: {
+      isHovered: function(newValue) {
+        // reload thumbnail on mouse out
+        if(newValue) return;
+
+        $(this.$nextTick(function() {
+          $(`.attachment-preview img`)
+            .on('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
+            .on('load', (event) => ActiveStoragePreviews.showPreview(event))
+        }))
+      }
     }
   }
 </script>

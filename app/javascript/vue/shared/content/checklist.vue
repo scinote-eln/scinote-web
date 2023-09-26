@@ -43,7 +43,7 @@
       >
         <ChecklistItem
           v-for="checklistItem in orderedChecklistItems"
-          :key="checklistItem.attributes.id"
+          :key="checklistItem.id"
           :checklistItem="checklistItem"
           :locked="locked"
           :reorderChecklistItemUrl="element.attributes.orderable.urls.reorder_url"
@@ -55,14 +55,13 @@
           @toggle="saveItemChecked"
           @removeItem="removeItem"
           @component:delete="removeItem"
-          @multilinePaste="handleMultilinePaste"
         />
       </Draggable>
-      <div v-if="element.attributes.orderable.urls.create_item_url"
-           class="flex items-center gap-1 text-sn-blue cursor-pointer mb-2 mt-1"
+      <div v-if="element.attributes.orderable.urls.create_item_url && !addingNewItem"
+           class="flex items-center gap-1 text-sn-blue cursor-pointer mb-2 mt-1 "
            tabindex="0"
-           @keyup.enter="addItem"
-           @click="addItem">
+           @keyup.enter="addItem(orderedChecklistItems.length + 1)"
+           @click="addItem(orderedChecklistItems.length + 1)">
         <i class="sn-icon sn-icon-new-task w-6 text-center inline-block"></i>
         {{ i18n.t('protocols.steps.insert.checklist_item') }}
       </div>
@@ -117,35 +116,37 @@
     data() {
       return {
         checklistItems: [],
-        linesToPaste: 0,
         editingName: false,
         reordering: false,
-        editingItem: false
+        editingItem: false,
       }
     },
     created() {
-      this.initChecklistItems();
 
       if (this.isNew) {
-        this.addItem();
+        this.addItem(1);
+      } else {
+        this.loadChecklistItems();
       }
     },
     watch: {
       element() {
-        this.initChecklistItems();
+        this.loadChecklistItems();
       }
     },
     computed: {
       orderedChecklistItems() {
-        return this.checklistItems.map((item, index) => {
-          return { attributes: {...item.attributes, position: index } }
-        });
-      },
-      pastingMultiline() {
-        return this.linesToPaste > 0;
+        return this.checklistItems.sort((a, b) => a.attributes.position - b.attributes.position || b.id - a.id)
+                                  .map((item, index) => {
+                                    item.attributes.position = index + 1;
+                                    return item;
+                                  });
       },
       locked() {
         return this.reordering || this.editingName || !this.element.attributes.orderable.urls.update_url
+      },
+      addingNewItem() {
+        return this.checklistItems.find((item) => item.attributes.isNew);
       },
       actionMenu() {
         let menu = [];
@@ -177,57 +178,50 @@
       }
     },
     methods: {
-      initChecklistItems() {
-        this.checklistItems = this.element.attributes.orderable.checklist_items.map((item, index) => {
-          return { attributes: {...item, position: index } }
+      update: function() {
+        this.$emit('update', this.element, false)
+      },
+      loadChecklistItems(insertAfter) {
+        $.get(this.element.attributes.orderable.urls.checklist_items_url, (result) => {
+          this.checklistItems = result.data;
+          if (insertAfter != null) {
+            this.addItem(insertAfter);
+          }
         });
       },
       updateName(name) {
         this.element.attributes.orderable.name = name;
         this.editingName = false;
-        this.update(false);
+        this.update();
       },
-      update(skipRequest = true) {
-        this.element.attributes.orderable.checklist_items =
-          this.checklistItems.map((i) => i.attributes);
-
-        this.$emit('update', this.element, skipRequest);
-      },
-      postItem(item, callback) {
-        console.log(this.element.attributes.orderable.urls.create_item_url)
+      postItem(item) {
+        item.attributes.position = item.attributes.position - 1;
         $.post(this.element.attributes.orderable.urls.create_item_url, item).done((result) => {
-          this.checklistItems.splice(
-            result.data.attributes.position,
-            1,
-            { attributes: { ...result.data.attributes, id: result.data.id } }
-          );
-
-          if(callback) callback();
+          this.loadChecklistItems(result.data[result.data.length - 1].attributes.position)
         }).fail((e) => {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
 
-        this.update();
+        // Fake element during loading
+        item.id = 'new' + Math.floor(Math.random() * 1000000000);
+        this.checklistItems.push(item);
+
       },
-      saveItem(item) {
-        if (item.attributes.id) {
+      saveItem(item, key) {
+        if (item.id > 0) {
+          let insertAfter = key === 'Enter' ? item.attributes.position : null;
           $.ajax({
             url: item.attributes.urls.update_url,
             type: 'PATCH',
             data: item,
-            success: (result) => {
-              let updatedItem = this.checklistItems[item.attributes.position]
-              updatedItem.attributes = result.data.attributes
-              updatedItem.attributes.id = item.attributes.id
-              this.$set(this.checklistItems, item.attributes.position, updatedItem)
+            success: () => {
+              this.loadChecklistItems(insertAfter)
             },
             error: (xhr) => setFlashErrors(xhr.responseJSON.errors)
           });
         } else {
-          // create item, then append next one
-          this.postItem(item, this.addItem);
+          this.postItem(item, key);
         }
-        this.update(true);
       },
       saveItemChecked(item) {
         $.ajax({
@@ -235,29 +229,28 @@
           type: 'PATCH',
           data: { attributes: { checked: item.attributes.checked } },
           success: (result) => {
-            let updatedItem = this.checklistItems[item.attributes.position]
-            updatedItem.attributes = result.data.attributes
-            updatedItem.attributes.id = item.attributes.id
-            this.$set(this.checklistItems, item.attributes.position, updatedItem)
+            this.checklistItems.find(
+              (i) => i.id === item.id
+            ).attributes.checked = result.data.attributes.checked;
           },
           error: () => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')
         });
       },
-      addItem() {
+      addItem(insertAfter) {
         this.checklistItems.push(
           {
             attributes: {
               text: '',
               checked: false,
-              position: this.checklistItems.length,
+              position: insertAfter,
               isNew: true
             }
           }
         );
+        this.checklistItems = this.orderedChecklistItems;
       },
       removeItem(position) {
-        this.checklistItems.splice(position, 1);
-        this.update();
+        this.checklistItems = this.orderedChecklistItems.filter((item) => item.attributes.position !== position);
       },
       startReorder() {
         this.reordering = true;
@@ -266,10 +259,12 @@
         this.reordering = false;
         if(
           Number.isInteger(event.newIndex)
-          && Number.isInteger(event.newIndex)
+          && Number.isInteger(event.oldIndex)
           && event.newIndex !== event.oldIndex
         ){
-          const { id, position } = this.orderedChecklistItems[event.newIndex]?.attributes
+          let position = this.orderedChecklistItems[event.newIndex]?.attributes.position;
+          let id = this.checklistItems[event.oldIndex]?.id;
+          this.checklistItems[event.oldIndex].attributes.position = position + (event.newIndex > event.oldIndex ? 1 : -1);
           this.saveItemOrder(id, position);
         }
       },
@@ -281,30 +276,8 @@
           contentType: "application/json",
           dataType: "json",
           error: (xhr) => this.setFlashErrors(xhr.responseJSON.errors),
-          success: () => this.update()
+          success: () => this.loadChecklistItems()
         });
-      },
-      handleMultilinePaste(data) {
-        this.linesToPaste = data.length;
-        let nextPosition = this.checklistItems.length - 1;
-
-        // we need to post items to API in the right order, to avoid positions breaking
-        let synchronousPost = (index) => {
-          if(index === data.length) return;
-
-          let item = {
-            attributes: {
-              text: data[index],
-              checked: false,
-              position: nextPosition + index
-            }
-          };
-
-          this.linesToPaste -= 1;
-          this.postItem(item, () => synchronousPost(index + 1));
-        };
-
-        synchronousPost(0);
       },
       setFlashErrors(errors) {
         for(const key in errors){

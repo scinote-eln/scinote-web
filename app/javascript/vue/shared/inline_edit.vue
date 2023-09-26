@@ -12,13 +12,12 @@
         }"
         v-model="newValue"
         @keydown="handleKeypress"
-        @paste="handlePaste"
         @blur="handleBlur"
         @keyup.escape="cancelEdit"
         @focus="setCaretAtEnd"/>
       <textarea v-else
         ref="input"
-        class="overflow-hidden leading-5 inline-block outline-none px-0 py-1 border-0 border-solid border-y w-full border-t-transparent mb-[1px]"
+        class="overflow-hidden leading-5 inline-block outline-none px-0 py-1 border-0 border-solid border-y w-full border-t-transparent mb-0.5"
         :class="{
           'inline-edit-placeholder text-sn-grey caret-black': isBlank,
           'border-sn-delete-red': error,
@@ -27,7 +26,6 @@
         :placeholder="placeholder"
         v-model="newValue"
         @keydown="handleKeypress"
-        @paste="handlePaste"
         @blur="handleBlur"
         @keyup.escape="cancelEdit"
         @focus="setCaretAtEnd"/>
@@ -36,7 +34,7 @@
       v-else
       ref="view"
       class="grid sci-cursor-edit leading-5 border-0 py-1 outline-none inline-block border-solid border-y border-transparent"
-      :class="{ 'text-sn-grey font-normal': isBlank }"
+      :class="{ 'text-sn-grey font-normal': isBlank, 'whitespace-pre-line': !singleLine }"
       @click="enableEdit($event)"
     >
       <span :class="{'truncate': singleLine}" v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
@@ -151,6 +149,7 @@
       },
       handleBlur() {
         if ($('.atwho-view:visible').length) return;
+        this.$emit('blur');
         if (this.allowBlank || !this.isBlank) {
           this.$nextTick(this.update);
         } else {
@@ -198,37 +197,6 @@
         this.newValue = this.value || '';
         this.$emit('editingDisabled');
       },
-      handlePaste(e) {
-        e.preventDefault();
-        this.dirty = true;
-
-        const clipboardData = (e.clipboardData || window.clipboardData).getData("text");
-        let lines = clipboardData.split(/[\n\r]/).filter((l) => l).map((l) => l.trim());
-
-        const selection = window.getSelection();
-        if (!selection.rangeCount) return;
-
-        selection.deleteFromDocument();
-
-        let textNode = document.createTextNode(lines[0]);
-        selection.getRangeAt(0).insertNode(textNode);
-
-        let range = document.createRange();
-        range.setStart(textNode, textNode.length);
-        range.setEnd(textNode, textNode.length);
-
-        this.$nextTick(() => {
-          this.newValue = e.target.textContent;
-          selection.removeAllRanges();
-          selection.addRange(range);
-
-          // Handle multi-line paste
-          if (this.multilinePaste && lines.length > 1) {
-            this.$emit('multilinePaste', lines);
-            this.update();
-          }
-        });
-      },
       handleInput(e) {
         this.dirty = true;
 
@@ -242,15 +210,16 @@
       handleKeypress(e) {
         if (e.key == 'Escape') {
           this.cancelEdit();
-        } else if (e.key == 'Enter' && this.saveOnEnter) {
+        } else if (e.key == 'Enter' && this.saveOnEnter && e.shiftKey == false) {
           e.preventDefault()
-          this.update();
+          this.update(e.key);
         } else {
           if (!this.error) this.$emit('error-cleared');
           this.dirty = true;
         }
+        this.$emit('keypress', e)
       },
-      update() {
+      update(withKey = null) {
         this.refreshTexareaHeight();
 
         if (!this.dirty && !this.isBlank) {
@@ -264,11 +233,13 @@
 
         this.editing = false;
         this.$emit('editingDisabled');
-        this.$emit('update', this.newValue);
+        this.$emit('update', this.newValue, withKey);
       },
       refreshTexareaHeight() {
         if (this.editing && !this.singleLine) {
           this.$nextTick(() => {
+            if (!this.$refs.input) return;
+
             this.$refs.input.style.height = '0px';
             this.$refs.input.style.height = this.$refs.input.scrollHeight  + 'px';
           });

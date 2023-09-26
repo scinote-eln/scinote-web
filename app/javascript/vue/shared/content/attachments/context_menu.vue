@@ -120,6 +120,7 @@
         if (this.attachment.attributes.urls.toggle_view_mode) {
           this.viewModeOptions.forEach((viewMode, i) => {
             menu.push({
+              active: this.attachment.attributes.view_mode == viewMode,
               text: this.i18n.t(`assets.context_menu.${viewMode}_html`),
               emit: 'viewMode',
               params: viewMode,
@@ -138,6 +139,12 @@
           type: 'PATCH',
           dataType: 'json',
           data: { asset: { view_mode: viewMode } }
+        }).done(data => {
+          this.$nextTick(function() {
+            $(`.asset[data-asset-id=${this.attachment.id}] img`)
+              .replaceWith($(data.html).find(`.asset[data-asset-id=${this.attachment.id}] img`));
+            ActiveStoragePreviews.reloadPreview(`.asset[data-asset-id=${this.attachment.id}] img`);
+          })
         });
       },
       deleteAttachment() {
@@ -148,7 +155,6 @@
         window.showIFrameModal(url);
       },
       openMarvinJsEditor() {
-        console.log(this.$refs)
         $(this.$refs.marvinjsEditButton).trigger('click');
       },
       openScinoteEditor() {
