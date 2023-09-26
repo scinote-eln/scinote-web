@@ -232,10 +232,11 @@ module RepositoryDatatableHelper
       '1': assigned_row(record),
       '2': record.code,
       '3': escape_input(record.name),
-      '4': I18n.l(record.created_at, format: :full),
-      '5': escape_input(record.created_by.full_name),
-      '6': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
-      '7': escape_input(record.archived_by&.full_name)
+      '4': record.relationship_count,
+      '5': I18n.l(record.created_at, format: :full),
+      '6': escape_input(record.created_by.full_name),
+      '7': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
+      '8': escape_input(record.archived_by&.full_name)
     }
   end
 

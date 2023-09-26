@@ -675,8 +675,17 @@ var RepositoryDatatable = (function(global) {
                  + "class='record-info-link'>" + data + '</a>';
         }
       }, {
-        // Added on column
         targets: 4,
+        class: 'relationship',
+        visible: true,
+        searchable: false,
+        orderable: true,
+        render: function(data) {
+          return $.fn.dataTable.render.RelationshipValue(data);
+        }
+      }, {
+        // Added on column
+        targets: 5,
         class: 'added-on',
         visible: true
       }, {
