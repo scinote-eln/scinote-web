@@ -118,8 +118,13 @@ class AssetsController < ApplicationController
         object_to_update = @asset.result_asset
         object_to_update.update!(result: target)
 
+        type_of = {
+          'marvinjs' => :move_chemical_structure_on_result,
+          'gene_sequence' => :sequence_on_result_moved
+        }.fetch(@asset.file.metadata[:asset_type], :result_file_moved)
+        
         log_result_activity(
-          @asset.file.metadata[:asset_type] == 'marvinjs' ? :move_chemical_structure_on_result : :result_file_moved,
+          type_of,
           @assoc,
           file: @asset.file_name,
           user: current_user.id,
@@ -299,7 +304,7 @@ class AssetsController < ApplicationController
         end
       when Result
         log_result_activity(
-          :result_file_deleted,
+          @asset.file.metadata[:asset_type] == 'gene_sequence' ? :sequence_on_result_deleted : :result_file_deleted,
           @assoc,
           file: @asset.file_name
         )
