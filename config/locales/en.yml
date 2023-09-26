@@ -3328,6 +3328,7 @@ en:
       recent_changes: "Recent changes"
       system_message: "SciNote system message"
       deliver: 'Exportable content'
+      deliver_error: 'Exportable content'
     experiment_annotation_title: "%{user} mentioned you in experiment %{experiment}."
     experiment_annotation_message_html: "Project: %{project} | Experiment: %{experiment}"
     project_comment_annotation_title: "%{user} mentioned you in a comment on project %{project}."
