@@ -11,22 +11,62 @@
         {{ i18n.t('action_toolbar.no_actions') }}
       </div>
       <div v-for="action in actions" :key="action.name" class="sn-action-toolbar__action shrink-0">
-        <a :class="`rounded flex gap-2 items-center py-1.5 px-2.5 bg-sn-white color-sn-blue no-underline ${action.button_class}`"
-          :href="(['link', 'remote-modal']).includes(action.type) ? action.path : '#'"
-          :id="action.button_id"
-          :title="action.label"
-          :data-url="action.path"
-          :data-target="action.target"
-          :data-toggle="action.type === 'modal' && 'modal'"
-          :data-object-type="action.item_type"
-          :data-object-id="action.item_id"
-          :data-action="action.type"
-          @click="doAction(action, $event)">
-          <i :class="action.icon"></i>
-          <span class="sn-action-toolbar__button-text">{{ action.label }}</span>
-        </a>
+          <div v-if="action.type === 'group' && Array.isArray(action.actions) && action.actions.length > 1" class="export-actions-dropdown sci-dropdown dropup">
+            <button class="btn btn-primary dropdown-toggle single-object-action rounded" type="button" id="exportDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <i class="sn-icon sn-icon-export"></i>
+              <span>{{ action.group_label }}</span>
+              <span class="caret pull-right"></span>
+            </button>
+            <ul class="sci-dropdown dropup dropdown-menu dropdown-menu-right px-2" aria-labelledby="<%= id %>">
+              <li v-for="groupAction in action.actions" class="">
+                <a :class="`flex gap-2 items-center bg-sn-white color-sn-blue no-underline ${action.button_class}`"
+                  :href="(['link', 'remote-modal']).includes(groupAction.type) ? groupAction.path : '#'"
+                  :id="groupAction.button_id"
+                  :title="groupAction.label"
+                  :data-url="groupAction.path"
+                  :data-target="groupAction.target"
+                  :data-toggle="groupAction.type === 'modal' && 'modal'"
+                  :data-object-type="groupAction.item_type"
+                  :data-object-id="groupAction.item_id"
+                  :data-action="groupAction.type"
+                  @click="closeExportDropdown($event); doAction(groupAction, $event);">
+                  <span class="sn-action-toolbar__button-text">{{ groupAction.label }}</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <a :class="`rounded flex gap-2 items-center py-1.5 px-2.5 bg-sn-white color-sn-blue no-underline ${action.actions[0].button_class}`"
+            v-else-if="action.type === 'group' && Array.isArray(action.actions) && action.actions.length == 1"
+            :href="(['link', 'remote-modal']).includes(action.actions[0].type) ? action.actions[0].path : '#'"
+            :id="action.actions[0].button_id"
+            :title="action.group_label"
+            :data-url="action.actions[0].path"
+            :data-target="action.actions[0].target"
+            :data-toggle="action.actions[0].type === 'modal' && 'modal'"
+            :data-object-type="action.actions[0].item_type"
+            :data-object-id="action.actions[0].item_id"
+            :data-action="action.actions[0].type"
+            @click="doAction(action.actions[0], $event);">
+            <i :class="action.actions[0].icon"></i>
+            <span class="sn-action-toolbar__button-text">{{ action.group_label }}</span>
+          </a>
+          <a :class="`rounded flex gap-2 items-center py-1.5 px-2.5 bg-sn-white color-sn-blue no-underline ${action.button_class}`"
+            :href="(['link', 'remote-modal']).includes(action.type) ? action.path : '#'"
+            :id="action.button_id"
+            :title="action.label"
+            :data-url="action.path"
+            :data-target="action.target"
+            v-else
+            :data-toggle="action.type === 'modal' && 'modal'"
+            :data-object-type="action.item_type"
+            :data-object-id="action.item_id"
+            :data-action="action.type"
+            @click="doAction(action, $event)">
+            <i :class="action.icon"></i>
+            <span class="sn-action-toolbar__button-text">{{ action.label }}</span>
+          </a>
+        </div>
       </div>
-    </div>
   </div>
 </template>
 
@@ -151,6 +191,10 @@
             });
             break;
         }
+      },
+      closeExportDropdown(event) {
+        event.preventDefault();
+        $(event.target).closest('.export-actions-dropdown').removeClass('open')
       }
     }
   }
