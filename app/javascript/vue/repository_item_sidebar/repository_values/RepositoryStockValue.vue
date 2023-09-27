@@ -1,10 +1,18 @@
 <template>
   <div id="repository-stock-value-wrapper" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
-    <div class="font-inter text-sm font-semibold leading-5">
-      {{ colName }}
+    <div class="font-inter text-sm font-semibold leading-5 relative">
+      <span>{{ colName }}</span>
+      <a style="text-decoration: none;"
+        class="absolute right-0 text-sn-science-blue visited:text-sn-science-blue hover:text-sn-science-blue font-inter text-sm font-normal cursor-pointer" 
+        v-if="permissions?.can_export_repository_stock === true"
+        @click.prevent="exportConsumptionCallback"
+        :data-rows="JSON.stringify([repositoryRowId])"
+      >
+        {{ i18n.t('repositories.item_card.export') }}
+      </a>
     </div>
-    <div v-if="stock_formatted" class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
-      {{ stock_formatted }}
+    <div v-if="colVal.stock_formatted" class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
+      {{ colVal.stock_formatted }}
     </div>
     <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
       {{ i18n.t('repositories.item_card.repository_stock_value.no_stock') }}
@@ -26,12 +34,29 @@ export default {
     data_type: String,
     colId: Number,
     colName: String,
-    colVal: Object
+    colVal: Object,
+    repositoryRowId: null,
+    permissions: null
   },
   created() {
     this.stock_formatted = this.colVal.stock_formatted
     this.stock_amount = this.colVal.stock_amount
     this.low_stock_threshold = this.colVal.low_stock_threshold
+  },
+  methods: {
+    exportConsumptionCallback(event) {
+      $('#exportStockConsumptionModal')
+      .one('show.bs.modal', function() {
+          $('#exportStockConsumptionModal').attr(
+            'data-rows',
+            $(event.target).attr('data-rows')
+          );
+        })
+        .one('hide.bs.modal', function() {
+          $('#exportStockConsumptionModal').attr('data-rows', null);
+        })
+        .modal('show');
+    }
   }
 }
 </script>

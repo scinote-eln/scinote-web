@@ -2,6 +2,9 @@
 
 json.id @repository_row.id
 json.repository_name @repository.name
+json.permissions do
+  json.can_export_repository_stock can_export_repository_stock?(@repository_row.repository)
+end
 json.default_columns do
   json.name @repository_row.name
   json.code @repository_row.code
