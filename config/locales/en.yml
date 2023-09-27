@@ -2210,6 +2210,18 @@ en:
     item_card:
       title:
         information: "Information"
+      section:
+        assigned: "Assigned (%{count})"
+      assigned:
+        empty: "This item is not assigned to any task."
+        private:
+          one: "Assigned to %{count} private task"
+          other: "Assigned to %{count} private tasks"
+        labels:
+          team: "Team:"
+          project: "Project:"
+          experiment: "Experiment:"
+          my_module: "Task:"
       default_columns:
         repository_name: "Inventory"
         id: "Item ID"
