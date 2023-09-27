@@ -21,7 +21,7 @@ json.assigned_modules do
   json.total_assigned_size @assigned_modules.size
   json.viewable_modules do
     json.array! @viewable_modules do |my_module|
-      json.merge! extract_my_module_metadata(my_module)
+      json.merge! serialize_assigned_my_module_value(my_module)
     end
   end
 end

@@ -113,18 +113,18 @@ module MyModulesHelper
     end
   end
 
-  def extract_my_module_metadata(my_module)
+  def serialize_assigned_my_module_value(my_module)
     [
-      team_data(my_module.team),
-      project_data(my_module.project),
-      experiment_data(my_module.experiment),
-      my_module_data(my_module)
+      serialize_assigned_my_module_team_data(my_module.team),
+      serialize_assigned_my_module_project_data(my_module.project),
+      serialize_assigned_my_module_experiment_data(my_module.experiment),
+      serialize_assigned_my_module_data(my_module)
     ]
   end
 
   private
 
-  def team_data(team)
+  def serialize_assigned_my_module_team_data(team)
     {
       type: team.class.name.underscore,
       value: team.name,
@@ -133,42 +133,32 @@ module MyModulesHelper
     }
   end
 
-  def project_data(project)
+  def serialize_assigned_my_module_project_data(project)
+    archived = project.archived?
     {
       type: project.class.name.underscore,
       value: project.name,
-      url: project_path(project, view_mode: view_mode(project.archived?)),
-      archived: project.archived?
+      url: project_path(project, view_mode: archived ? 'archived' : 'active'),
+      archived: archived
     }
   end
 
-  def experiment_data(experiment)
+  def serialize_assigned_my_module_experiment_data(experiment)
+    archived = experiment.archived_branch?
     {
       type: experiment.class.name.underscore,
       value: experiment.name,
-      url: experiment_url(experiment),
-      archived: experiment.archived_branch?
+      url: archived ? module_archive_experiment_path(experiment) : my_modules_experiment_path(experiment),
+      archived: archived
     }
   end
 
-  def my_module_data(my_module)
+  def serialize_assigned_my_module_data(my_module)
     {
       type: my_module.class.name.underscore,
       value: my_module.name,
-      url: protocols_my_module_path(my_module, view_mode: view_mode(my_module.archived_branch?)),
+      url: protocols_my_module_path(my_module, view_mode: my_module.archived_branch? ? 'archived' : 'active'),
       archived: my_module.archived_branch?
     }
-  end
-
-  def view_mode(archived)
-    archived ? 'archived' : 'active'
-  end
-
-  def experiment_url(experiment)
-    if experiment.archived_branch?
-      module_archive_experiment_path(experiment)
-    else
-      my_modules_experiment_path(experiment)
-    end
   end
 end
