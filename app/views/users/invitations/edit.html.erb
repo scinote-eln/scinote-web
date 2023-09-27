@@ -8,26 +8,30 @@
 
   <%= f.hidden_field :invitation_token %>
 
-  <p class="sci-input-container">
+  <div class="form-group sci-input-container">
     <%= f.label :full_name %>
     <%= f.text_field :full_name,
                      value: (params[:user] ? params[:user][:full_name] : ''),
                      autofocus: true,
                      class: 'sci-input-field' %>
-  </p>
-
-  <p class="sci-input-container">
+  </div>
+  
+  <div class="form-group sci-input-container password-input-container">
     <%= f.label :password %>
     <% if @minimum_password_length %>
     <em>(<%= @minimum_password_length %> characters minimum)</em>
     <% end %>
-    <%= f.password_field :password, autocomplete: "off", class: "sci-input-field" %>
-  </p>
-
-  <p class="sci-input-container">
+    <div class="password-icon-wrapper">
+      <%= f.password_field :password, autocomplete: "off", class: "sci-input-field" %>
+    </div>
+  </div>
+  
+  <div class="form-group sci-input-container password-input-container">
     <%= f.label :password_confirmation %>
-    <%= f.password_field :password_confirmation, autocomplete: "off", class: "sci-input-field" %>
-  </p>
+    <div class="password-icon-wrapper">
+      <%= f.password_field :password_confirmation, autocomplete: "off", class: "sci-input-field" %>
+    </div>
+  </div>
 
   <% if Rails.configuration.x.new_team_on_signup %>
   <p class="sci-input-container"
