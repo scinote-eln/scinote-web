@@ -23,7 +23,7 @@
 
   &.no-results {
     grid-template-rows: 1fr;
-    height: calc(100vh - var(--content-header-size) - var(--navbar-height));
+    min-height: calc(100vh - var(--content-header-size) - var(--navbar-height));
 
     .no-results-container {
       grid-column: 1 / -1;
@@ -88,11 +88,12 @@
 
     &.no-results {
       grid-template-rows: 2em 1fr;
-      height: calc(100vh - var(--content-header-size) - var(--navbar-height));
+      min-height: calc(100vh - var(--content-header-size) - var(--navbar-height));
     }
 
     .no-results-container {
       grid-column: 1 / -1;
+      grid-row: span;
     }
 
     .card {
