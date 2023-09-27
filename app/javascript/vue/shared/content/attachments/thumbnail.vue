@@ -42,9 +42,33 @@
       <div class="absolute bottom-16 text-sn-grey">
         {{ attachment.attributes.file_size_formatted }}
       </div>
-      <div class="absolute bottom-4 min-w-[194px] justify-between flex">
+      <div class="absolute bottom-4 w-[184px] grid grid-cols-[repeat(4,_2.5rem)] justify-between">
+        <a class="btn btn-light icon-btn thumbnail-action-btn"
+           v-if="this.attachment.attributes.wopi && this.attachment.attributes.urls.edit_asset"
+           :href="attachment.attributes.urls.edit_asset"
+           id="wopi_file_edit_button"
+           :class="attachment.attributes.wopi_context.edit_supported ? '' : 'disabled'"
+        >
+          <i class="sn-icon sn-icon-edit"></i>
+        </a>
+        <a class="btn btn-light icon-btn thumbnail-action-btn ove-edit-button"
+           v-else-if="attachment.attributes.asset_type == 'gene_sequence' && attachment.attributes.urls.open_vector_editor_edit"
+           @click="openOVEditor(attachment.attributes.urls.open_vector_editor_edit)"
+        >
+          <i class="sn-icon sn-icon-edit"></i>
+        </a>
+        <a class="btn btn-light icon-btn thumbnail-action-btn marvinjs-edit-button"
+           v-else-if="attachment.attributes.asset_type == 'marvinjs' && attachment.attributes.urls.marvin_js_start_edit"
+           :data-sketch-id="attachment.id"
+           :data-update-url="attachment.attributes.urls.marvin_js"
+           :data-sketch-start-edit-url="attachment.attributes.urls.marvin_js_start_edit"
+           :data-sketch-name="attachment.attributes.metadata.name"
+           :data-sketch-description="attachment.attributes.metadata.description"
+        >
+          <i class="sn-icon sn-icon-edit"></i>
+        </a>
         <a class="btn btn-light icon-btn thumbnail-action-btn image-edit-button"
-          v-if="attachment.attributes.urls.edit_asset"
+          v-else-if="attachment.attributes.image_editable && attachment.attributes.urls.edit_asset"
           :title="i18n.t('attachments.thumbnail.buttons.edit')"
           :data-image-id="attachment.id"
           :data-image-name="attachment.attributes.file_name"
@@ -139,6 +163,11 @@
             .on('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
             .on('load', (event) => ActiveStoragePreviews.showPreview(event))
         }))
+      }
+    },
+    methods: {
+      openOVEditor(url) {
+        window.showIFrameModal(url);
       }
     }
   }

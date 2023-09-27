@@ -1281,7 +1281,7 @@ en:
         text: 'Text'
         checklist: 'Checklist'
         attachment: 'File'
-        add_file: 'File from your PC'
+        add_file: 'From your PC'
         checklist_item: 'Add new'
         well_plate_options:
           32_x_48: '1536 (32 x 48)'
@@ -3153,7 +3153,7 @@ en:
         text: 'Text'
         checklist: 'Checklist'
         attachment: 'File'
-        add_file: 'File from your PC'
+        add_file: 'From your PC'
         checklist_item: 'Add new'
         well_plate_options:
           32_x_48: '1536 (32 x 48)'
@@ -3384,7 +3384,7 @@ en:
     wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel Online.'
     wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in PowerPoint Online.'
     create_wopi_file:
-      button_text: 'MS Office file'
+      button_text: 'New MS Office file'
       li_text: "Office file"
       modal_title: 'Create new Microsoft Office Online document'
       text_field_label: 'Document name'
@@ -3813,8 +3813,8 @@ en:
   To: 'To'
 
   marvinjs:
-    new_sketch: "New Chemical Drawing"
-    new_button: "Create Chemical Drawing"
+    new_sketch: "New chemical drawing"
+    new_button: "New chemical drawing"
     new_li_button: "Chemical drawing"
     structure_placeholder: "Click here to enter Chemical Drawing name"
     modal_name_title: "Chemical Drawing name:"
