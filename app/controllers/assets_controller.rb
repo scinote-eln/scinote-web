@@ -252,14 +252,11 @@ class AssetsController < ApplicationController
 
       edit_url = edit_asset_url(step_asset.asset_id)
     elsif params[:element_type] == 'Result'
-      my_module = Result.find(params[:element_id].to_i).my_module
-      render_403 and return unless can_manage_my_module?(my_module)
+      result = Result.find(params[:element_id].to_i)
+      render_403 and return unless can_manage_result?(result)
 
-      # First create result and then the asset
-      result = Result.create(name: asset.file_name,
-                             my_module: my_module,
-                             user: current_user)
       result_asset = ResultAsset.create!(result: result, asset: asset)
+      asset.update!(view_mode: result.assets_view_mode)
 
       edit_url = edit_asset_url(result_asset.asset_id)
     else
