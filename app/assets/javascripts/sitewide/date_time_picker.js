@@ -11,7 +11,7 @@
     $('.calendar-input').slice(0, 2).each(function(index, element) {
       if ($(element).val().length > 0 ) {
         selectedDate.index = index;
-        selectedDate.date = $(element).val();
+        selectedDate.date = moment($(element).val(), element.dataset.dateFormat).toDate();
       }
     });
 
@@ -21,9 +21,9 @@
 
     if (selectedDate.date) {
       if (selectedDate.index == 0) {
-        options.minDate = new Date(selectedDate.date);
+        options.minDate = selectedDate.date;
       } else if (selectedDate.index == 1) {
-        options.maxDate = new Date(selectedDate.date);
+        options.maxDate = selectedDate.date;
       }
     }
 
