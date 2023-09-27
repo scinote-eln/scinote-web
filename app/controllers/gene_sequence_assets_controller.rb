@@ -25,13 +25,37 @@ class GeneSequenceAssetsController < ApplicationController
 
   def create
     save_asset!
-    log_activity('sequence_asset_added')
+
+    case @parent
+    when Step
+      log_activity('sequence_asset_added')
+    when Result
+      log_result_activity(
+        :sequence_on_result_added,
+        @parent,
+        file: @asset.file_name,
+        user: current_user.id
+      )
+    end
+
     head :ok
   end
 
   def update
     save_asset!
-    log_activity('sequence_asset_edit_finished')
+
+    case @parent
+    when Step
+      log_activity('sequence_asset_edit_finished')
+    when Result
+      log_result_activity(
+        :sequence_on_result_edited,
+        @parent,
+        file: @asset.file_name,
+        user: current_user.id
+      )
+    end
+
     head :ok
   end
 
@@ -170,5 +194,17 @@ class GeneSequenceAssetsController < ApplicationController
       message_items: message_items,
       project: project
     )
+  end
+
+  def log_result_activity(type_of, result, message_items)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: result,
+            team: result.my_module.team,
+            project: result.my_module.project,
+            message_items: {
+              result: result.id
+            }.merge(message_items))
   end
 end
