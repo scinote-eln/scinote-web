@@ -2107,8 +2107,10 @@ en:
     archive_record: "Archive"
     restore_record: "Restore"
     print_label: "Print label"
-    export_records: "Export items"
-    export_stock_consumption: "Export consumption"
+    exports:
+      export: "Export"
+      records: "Items"
+      stock_consumption: "Consumption"
     save_record: "Save"
     cancel_save: "Cancel"
     hide_reminders: "Clear all reminders"
