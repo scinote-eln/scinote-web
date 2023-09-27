@@ -319,6 +319,8 @@ class AssetsController < ApplicationController
     @asset = Asset.find_by(id: params[:id])
     return render_404 unless @asset
 
+    current_user.permission_team = @asset.team
+
     @assoc ||= @asset.step
     @assoc ||= @asset.result
     @assoc ||= @asset.repository_cell
