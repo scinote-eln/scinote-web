@@ -8,7 +8,7 @@
         @click.prevent="exportConsumptionCallback"
         :data-rows="JSON.stringify([repositoryRowId])"
       >
-        {{ i18n.t('repositories.item_card.export') }}
+        {{ i18n.t('repositories.item_card.stock_export') }}
       </a>
     </div>
     <div v-if="colVal.stock_formatted" class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
