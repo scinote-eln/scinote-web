@@ -122,7 +122,7 @@ class AssetsController < ApplicationController
           'marvinjs' => :move_chemical_structure_on_result,
           'gene_sequence' => :sequence_on_result_moved
         }.fetch(@asset.file.metadata[:asset_type], :result_file_moved)
-        
+
         log_result_activity(
           type_of,
           @assoc,

@@ -25,7 +25,7 @@ class GeneSequenceAssetsController < ApplicationController
 
   def create
     save_asset!
-    
+
     case @parent
     when Step
       log_activity('sequence_asset_added')
@@ -34,10 +34,10 @@ class GeneSequenceAssetsController < ApplicationController
         :sequence_on_result_added,
         @parent,
         file: @asset.file_name,
-        user: current_user.id,
+        user: current_user.id
       )
     end
-    
+
     head :ok
   end
 
@@ -52,7 +52,7 @@ class GeneSequenceAssetsController < ApplicationController
         :sequence_on_result_edited,
         @parent,
         file: @asset.file_name,
-        user: current_user.id,
+        user: current_user.id
       )
     end
 
