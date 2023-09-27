@@ -26,7 +26,10 @@
     min-height: calc(100vh - var(--content-header-size) - var(--navbar-height));
 
     .no-results-container {
+      align-self: center;
       grid-column: 1 / -1;
+      grid-row: 1 / -1;
+      justify-self: center;
     }
 
     .no-results-img {
@@ -92,8 +95,10 @@
     }
 
     .no-results-container {
+      align-self: center;
       grid-column: 1 / -1;
-      grid-row: span;
+      grid-row: 2 / -1;
+      justify-self: center;
     }
 
     .card {
