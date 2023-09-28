@@ -378,6 +378,13 @@ class RepositoriesController < ApplicationController
     end
   end
 
+  def export_repository_stock_items_modal
+    render json: {
+      export_consumption_url: export_repository_stock_items_team_path(@repository),
+      name: @repository.name
+    }
+  end
+
   def assigned_my_modules
     my_modules = MyModule.joins(:repository_rows).where(repository_rows: { repository: @repository })
                          .readable_by_user(current_user).distinct
