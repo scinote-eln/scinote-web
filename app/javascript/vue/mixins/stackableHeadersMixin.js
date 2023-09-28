@@ -87,7 +87,7 @@ export default {
         this.secondaryNavigation.style.top = '0px';
         header.style.top = '0px';
         header.style.boxShadow = 'none';
-        header.style.zIndex = 10;
+        header.style.zIndex = 105;
         this.headerSticked = false;
       }
 
