@@ -26,6 +26,10 @@ var filterDropdown = (function() {
     var $textFilter = $('#textSearchFilterInput', $filterContainer);
 
     $filterContainer.on('show.bs.dropdown', function() {
+      if (!$(this).hasClass('filters-applied')) {
+        $(this).find('input').val('');
+      }
+
       let $filterDropdown = $filterContainer.find('.dropdown-menu');
       let teamId = $filterDropdown.data('team-id');
       $('#textSearchFilterHistory').find('li').remove();

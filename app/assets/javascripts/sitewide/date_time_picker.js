@@ -5,26 +5,39 @@
     ev.preventDefault();
     ev.stopPropagation();
 
-    let dt = $(this);
-    let selectedDate = {};
+    const dt = $(this);
 
-    $('.calendar-input').slice(0, 2).each(function(index, element) {
-      if ($(element).val().length > 0 ) {
-        selectedDate.index = index;
-        selectedDate.date = moment($(element).val(), element.dataset.dateFormat).toDate();
-      }
-    });
+    if (dt.data('DateTimePicker')) {
+      dt.data('DateTimePicker').show();
+      return;
+    }
+
+    const linkedMin = dt.data('linked-min');
+    const linkedMax =  dt.data('linked-max');
 
     let options = {
-      ignoreReadonly: true
-    };
+      ignoreReadonly: true,
+      useCurrent: false
+    }
 
-    if (selectedDate.date) {
-      if (selectedDate.index == 0) {
-        options.minDate = selectedDate.date;
-      } else if (selectedDate.index == 1) {
-        options.maxDate = selectedDate.date;
+    if (linkedMin) {
+      if ($(linkedMin).val()) {
+        options.minDate = moment($(linkedMin).val(), $(linkedMin).data('dateFormat')).toDate();
       }
+
+      $(linkedMin).on("dp.change", function (e) {
+          dt.data("DateTimePicker").minDate(e.date);
+      });
+    }
+
+    if (linkedMax) {
+      if ($(linkedMax).val()) {
+        options.maxDate = moment($(linkedMax).val(), $(linkedMax).data('dateFormat')).toDate();
+      }
+
+      $(linkedMax).on("dp.change", function (e) {
+          dt.data("DateTimePicker").maxDate(e.date);
+      });
     }
 
     if (dt.data('DateTimePicker')) {

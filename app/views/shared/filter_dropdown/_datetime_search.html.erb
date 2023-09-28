@@ -6,6 +6,8 @@
       <div class="datetime-picker-container flex">
         <span class="sn-icon sn-icon-calendar"></span>
         <input type="datetime"
+              id="<%= "#{container_class}_from" %>"
+              data-linked-max="#<%= "#{container_class}_to" %>"
               data-toggle='date-time-picker'
               class="form-control calendar-input from-date"
               readonly
@@ -19,6 +21,8 @@
         <span class="sn-icon sn-icon-calendar"></span>
         <input type="datetime"
               data-toggle='date-time-picker'
+              id="<%= "#{container_class}_to" %>"
+              data-linked-min="#<%= "#{container_class}_from" %>"
               class="form-control calendar-input to-date"
               readonly
               placeholder="<%= t('filters_modal.to_placeholder') %>"
