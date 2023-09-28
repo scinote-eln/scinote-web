@@ -127,6 +127,8 @@ var ProtocolsIndex = (function() {
     $filterDropdown.on('filter:clear', function() {
       dropdownSelector.clearData($publishedByFilter);
       dropdownSelector.clearData($accessByFilter);
+
+      $(this).find('input').val('');
       if ($publishedOnFromFilter.data('DateTimePicker')) $publishedOnFromFilter.data('DateTimePicker').clear();
       if ($publishedOnToFilter.data('DateTimePicker')) $publishedOnToFilter.data('DateTimePicker').clear();
       if ($modifiedOnFromFilter.data('DateTimePicker')) $modifiedOnFromFilter.data('DateTimePicker').clear();
