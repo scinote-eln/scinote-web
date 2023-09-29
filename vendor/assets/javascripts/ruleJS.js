@@ -1,6 +1,3 @@
-// * Licensed under the MIT license
-// * Copyright (c) 2012-2014 Marcin Warpechowski <hello@handsontable.com>
-
 var ruleJS = (function (root) {
   'use strict';
 
@@ -18,7 +15,7 @@ var ruleJS = (function (root) {
    * current version
    * @type {string}
    */
-  var version = '0.0.1';
+  var version = '0.0.3';
 
   /**
    * parser object delivered by jison library
@@ -76,7 +73,8 @@ var ruleJS = (function (root) {
       {type: 'NAME', output: '#NAME?'},
       {type: 'NUM', output: '#NUM!'},
       {type: 'NOT_AVAILABLE', output: '#N/A!'},
-      {type: 'ERROR', output: '#ERROR'}
+      {type: 'ERROR', output: '#ERROR'},
+      {type: 'NEED_UPDATE', output: '#NEED_UPDATE'}
     ],
     /**
      * get error by type
@@ -916,8 +914,7 @@ var ruleJS = (function (root) {
       'ODD', 'OR',
       'PI', 'POWER',
       'ROUND', 'ROUNDDOWN', 'ROUNDUP',
-      'SIN', 'SINH', 'SLOPE', 'SPLIT', 'STDEVP', 'STDEVS', 'SQRT', 'SQRTPI', 'SUM', 'SUMIF', 'SUMIFS', 'SUMPRODUCT', 'SUMSQ', 'SUMX2MY2', 'SUMX2PY2', 'SUMXMY2',
-      'VARP', 'VARS',
+      'SIN', 'SINH', 'SPLIT', 'SQRT', 'SQRTPI', 'SUM', 'SUMIF', 'SUMIFS', 'SUMPRODUCT', 'SUMSQ', 'SUMX2MY2', 'SUMX2PY2', 'SUMXMY2',
       'TAN', 'TANH', 'TRUE', 'TRUNC',
       'XOR'
     ],
@@ -1033,49 +1030,23 @@ var ruleJS = (function (root) {
       number2 = helper.number(number2);
 
       if (isNaN(number1) || isNaN(number2)) {
+
+        if (number1[0] === '=' || number2[0] === '=') {
+          throw Error('NEED_UPDATE');
+        }
+
         throw Error('VALUE');
       }
 
       switch (type) {
         case '+':
-          //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
-          try{
-            var number1_big = new Big(number1);
-            var result_big = number1_big.plus(number2);
-            result = parseFloat(result_big);
-          } catch(e) {
-            result = number1 + number2;
-          }
-          //MODIFICATION END
-
-          //ORIGINAL: result = number1 + number2;
+          result = number1 + number2;
           break;
         case '-':
-          //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
-          try{
-            var number1_big = new Big(number1);
-            var result_big = number1_big.minus(number2);
-            result = parseFloat(result_big);
-          } catch(e) {
-            result = number1 - number2;
-          }
-          //MODIFICATION END
-
-          //ORIGINAL: result = number1 - number2;
+          result = number1 - number2;
           break;
         case '/':
-          //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
-          try{
-            var number1_big = new Big(number1);
-            var result_big = number1_big.div(number2);
-            result = parseFloat(result_big);
-          } catch(e){
-            result = number1 / number2;
-          }
-          //MODIFICATION END
-
-          //ORIGINAL: result = number1 / number2;
-
+          result = number1 / number2;
           if (result == Infinity) {
             throw Error('DIV_ZERO');
           } else if (isNaN(result)) {
@@ -1083,23 +1054,10 @@ var ruleJS = (function (root) {
           }
           break;
         case '*':
-          //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
-          try{
-            var number1_big = new Big(number1);
-            var result_big = number1_big.times(number2);
-            result = parseFloat(result_big);
-          } catch(e) {
-            result = number1 * number2;
-          }
-          //MODIFICATION END
-
-          //ORIGINAL: result = number1 * number2;
+          result = number1 * number2;
           break;
         case '^':
           result = Math.pow(number1, number2);
-          break;
-        case 'e':
-          result = number1 * Math.pow(10, number2);
           break;
       }
 
@@ -1274,22 +1232,6 @@ var ruleJS = (function (root) {
         error = null;
 
     try {
-      // Preprocess E-notation, eg. replaces -5.32e-3 with -0.00532
-      // Excel does it too as well, so we're good
-      formula = formula.replace(/(?:([0-9]+(\.[0-9]+)?)+(E|e)((-|\+)?[0-9]+))/g, function(expr) {
-        var spl = expr.split('E')
-        var m = helper.number(spl[0]);
-        var e = helper.number(spl[1]);
-
-        return Big(m).times(Big(10).pow(e)).toFixed();
-      })
-
-      // Preprocess the following aliases for formulas
-      // or parser won't accept them
-      formula = formula.replace('STDEV.P', 'STDEVP');
-      formula = formula.replace('STDEV.S', 'STDEVS');
-      formula = formula.replace('VAR.P', 'VARP');
-      formula = formula.replace('VAR.S', 'VARS');
 
       parser.setObj(element);
       result = parser.parse(formula);
@@ -1344,7 +1286,7 @@ var ruleJS = (function (root) {
 
     parser = new FormulaParser(instance);
 
-    instance.formulas = Formula;
+    instance.formulas = formulajs;
     instance.matrix = new Matrix();
 
     instance.custom = {};
