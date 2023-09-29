@@ -17,10 +17,10 @@
               </div>
             </a>
           </template>
-        </div>
-        <div :class="{'hidden': headerSticked}">
-          <div class="my-module-protocol-status">
-            <!-- protocol status dropdown gets mounted here -->
+          <div :class="{'hidden': headerSticked}">
+            <div class="my-module-protocol-status">
+              <!-- protocol status dropdown gets mounted here -->
+            </div>
           </div>
         </div>
       </div>
