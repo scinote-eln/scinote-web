@@ -18,7 +18,7 @@ module Reports::Docx::DrawResultAsset
       end
 
       @docx.p do
-        text result.name, italic: true
+        text result.name.presence || '(unnamed)', italic: true
         text ' '
         link I18n.t('projects.reports.elements.download'), asset_url do
           italic true
