@@ -7,7 +7,7 @@
         <%= file_extension_icon_html(asset, true) %>
       </span>
       <span class="result-name">
-        <%= result.name.presence || '(unnamed)' %>
+        <%= result.name.presence || I18n.t('projects.reports.unnamed') %>
         <% if result.archived? %>
           <span class="label label-warning"><%= t('search.index.archived') %></span>
         <% end %>

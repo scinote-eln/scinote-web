@@ -666,6 +666,7 @@ en:
         no_active_experiment_archived_project: "This project is archived and can’t have active experiments."
     reports:
       print_title: "%{project} | Report"
+      unnamed: "(unnamed)"
       index:
         head_title: "Reports"
         new: "New report"
