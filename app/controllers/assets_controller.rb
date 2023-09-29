@@ -268,8 +268,6 @@ class AssetsController < ApplicationController
       render_404 and return
     end
 
-    # Prepare file preview in advance
-    asset.medium_preview.processed && asset.large_preview.processed
     # Return edit url and asset info
     render json: {
       attributes: AssetSerializer.new(asset, scope: { user: current_user }).as_json,
