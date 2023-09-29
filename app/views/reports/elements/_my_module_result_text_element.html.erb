@@ -6,7 +6,7 @@
 <div class="report-element report-result-element report-result-text-element">
   <div class="report-element-header">
     <div class="result-name">
-      <%= name %>
+      <%= name.presence || I18n.t('projects.reports.unnamed') %>
       <% if result.archived? %>
         <span class="label label-warning"><%= t('search.index.archived') %></span>
       <% end %>
