@@ -1255,7 +1255,7 @@ en:
       head_title: "%{project} | %{module} | Results"
       active_results: "Active results"
       archived_results: "Archived results"
-      default_name: "New result"
+      default_name: "Untitled result"
       placeholder: "Enter result name"
       add_label: "New result"
       add_title: "Create new result"
