@@ -69,15 +69,7 @@
     <span style="display: none;" data-hook="application-body-html"></span>
 
     <div class="sci--layout"
-         data-grey-background="<%= [
-          'my_modules/protocols',
-          'my_modules/signatures',
-          'my_modules/activities',
-          'results/index',
-          'protocols/show',
-          'organization/index'
-         ].include?(controller_name + '/' + action_name)
-        %>"
+         data-grey-background="<%= show_grey_background? %>"
          data-breadcrumbs-collapsed="<%= !@breadcrumbs_items.present? %>"
          data-navigator-collapsed="<%= !@navigator || session[:navigator_collapsed] %>"
          data-left-navigation-collapsed=<%= !user_signed_in? %>
