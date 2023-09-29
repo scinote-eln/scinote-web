@@ -26,7 +26,7 @@
               data-team-id="<%= @current_team.id %>" data-import-url="<%= import_protocols_path %>">
             </a>
           </li>
-          <% if Protocol.docx_parser_enabled?%>
+          <% if Protocol.docx_parser_enabled? && !ApplicationSettings.instance.values['ai_learning_enabled'].nil? %>
             <li>
               <a class="btn-open-file btn-beta-icon !pl-3 mt-px !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue rounded data-action='import'" >
                 <span><%= t('protocols.index.import_docx')%></span>
