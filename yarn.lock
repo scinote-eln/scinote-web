@@ -1236,10 +1236,10 @@
     string_decoder "^1.3.0"
     validate.io-nonnegative-integer-array "^1.0.1"
 
-"@teselagen/bounce-loader@0.3.7":
-  version "0.3.7"
-  resolved "https://registry.yarnpkg.com/@teselagen/bounce-loader/-/bounce-loader-0.3.7.tgz#cc2ffcb7723f63554a7edfca859ec703e2bb7685"
-  integrity sha512-wXjJKouM+/Ig28Ss/mGzLlrFkIZTNR5sFniszraqduxNWjqwT7JR22vOnIkNUyRaPNBzDRN/AkeZx+RzX6MlWQ==
+"@teselagen/bounce-loader@0.3.11":
+  version "0.3.11"
+  resolved "https://registry.yarnpkg.com/@teselagen/bounce-loader/-/bounce-loader-0.3.11.tgz#970154924e6450b3fb3165f973d8d063430ffb32"
+  integrity sha512-YOGBJ4WOtXDF2xVa8zio9KB0Lq67qOMX+Ni3EDAwgiCb1r/xEL1n6PYgSDdA4RIOwz0+QxneugTXHMdV94sP6A==
   dependencies:
     react "18.2.0"
 
@@ -1253,10 +1253,10 @@
     lodash "^4.17.21"
     papaparse "^5.4.1"
 
-"@teselagen/ove@^0.3.15":
-  version "0.3.15"
-  resolved "https://registry.yarnpkg.com/@teselagen/ove/-/ove-0.3.15.tgz#693be04dcd3a25703d5836f65a781a341618294e"
-  integrity sha512-wi1cDM40FktWXVZO0ZPQNSAB/SMK/nv8ZHVKHZ3/r4ZlO86qS1bw7aVfMHCsiDqnxJjbbeGtpIRk+wtlMvPdXw==
+"@teselagen/ove@^0.3.23":
+  version "0.3.25"
+  resolved "https://registry.yarnpkg.com/@teselagen/ove/-/ove-0.3.25.tgz#005fff64b8f502f4854b6ccd68582a7e4eacd42c"
+  integrity sha512-qnLlVHoYSFR6VpuLhGrJICNkl+rnep/Olg7HXXxCMmFzJyuz7Q7ZvcbcorDPZaxWv4wAChqzQnB1vZ9RO5TtIg==
   dependencies:
     "@blueprintjs/core" "3.52.0"
     "@blueprintjs/datetime" "3.23.19"
@@ -1266,13 +1266,13 @@
     "@hello-pangea/dnd" "16.2.0"
     "@risingstack/react-easy-state" "^6.3.0"
     "@teselagen/bio-parsers" "0.3.8"
-    "@teselagen/bounce-loader" "0.3.7"
+    "@teselagen/bounce-loader" "0.3.11"
     "@teselagen/file-utils" "0.3.9"
     "@teselagen/range-utils" "0.3.7"
     "@teselagen/react-list" "0.8.18"
     "@teselagen/react-table" "^6.10.11"
     "@teselagen/sequence-utils" "0.3.7"
-    "@teselagen/ui" "0.3.13"
+    "@teselagen/ui" "0.3.25"
     "@use-gesture/react" "^10.2.23"
     axios "^0.21.1"
     bluebird "3.7.2"
@@ -1300,8 +1300,8 @@
     jsondiffpatch "0.4.1"
     jszip "^3.10.1"
     math-expression-evaluator "^1.3.7"
-    mobx "^6.9.0"
-    mobx-react "^7.6.0"
+    mobx "^6.10.2"
+    mobx-react "^9.0.1"
     mock-fs "5.2.0"
     nanoid "^4.0.0"
     node-interval-tree "^1.3.3"
@@ -1314,7 +1314,7 @@
     react "18.2.0"
     react-color "^2.19.3"
     react-dom "18.2.0"
-    react-draggable "4.4.4"
+    react-draggable "4.4.5"
     react-dropzone "^11.4.2"
     react-markdown "8.0.7"
     react-measure "^2.5.2"
@@ -1373,16 +1373,16 @@
     jsondiffpatch "0.4.1"
     string-splice "^1.3.0"
 
-"@teselagen/ui@0.3.13":
-  version "0.3.13"
-  resolved "https://registry.yarnpkg.com/@teselagen/ui/-/ui-0.3.13.tgz#655f6251f8ab1005c9c1d3d06a15b1b254bdf2d6"
-  integrity sha512-AYPGeOAZeCuVeBVKrDVlMY4i285T/JrIWgPP9K+OHNMGmLByNBlPYN/I63DjxDgUft0WEFirBBW9qjZjIs4/Nw==
+"@teselagen/ui@0.3.25":
+  version "0.3.25"
+  resolved "https://registry.yarnpkg.com/@teselagen/ui/-/ui-0.3.25.tgz#ae39274e28c99864967ff57a7ae1a9ae963d4ddb"
+  integrity sha512-vUuG1tcrVxvJDfeOHBSrR80t7akcIbCYU/pE63GXsv8VHnasONDCazMoxiwWsS4ohnWYxYCx1Mjg2Cnzyi2dDw==
   dependencies:
     "@blueprintjs/core" "3.52.0"
     "@blueprintjs/datetime" "3.23.19"
     "@blueprintjs/icons" "3.33.0"
     "@blueprintjs/select" "3.18.11"
-    "@teselagen/bounce-loader" "0.3.7"
+    "@teselagen/bounce-loader" "0.3.11"
     "@teselagen/file-utils" "0.3.9"
     "@teselagen/react-table" "^6.10.11"
     axios "^0.21.1"
@@ -1399,8 +1399,8 @@
     is-mobile "^3.0.0"
     jszip "^3.10.1"
     math-expression-evaluator "^1.3.7"
-    mobx "^6.9.0"
-    mobx-react "^7.6.0"
+    mobx "^6.10.2"
+    mobx-react "^9.0.1"
     mock-fs "5.2.0"
     nanoid "^4.0.0"
     papaparse "^5.3.2"
@@ -5030,19 +5030,21 @@ mkdirp@^1.0.3, mkdirp@^1.0.4:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-mobx-react-lite@^3.4.0:
-  version "3.4.3"
-  resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-3.4.3.tgz#3a4c22c30bfaa8b1b2aa48d12b2ba811c0947ab7"
-  integrity sha512-NkJREyFTSUXR772Qaai51BnE1voWx56LOL80xG7qkZr6vo8vEaLF3sz1JNUVh+rxmUzxYaqOhfuxTfqUh0FXUg==
-
-mobx-react@^7.6.0:
-  version "7.6.0"
-  resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-7.6.0.tgz#ebf0456728a9bd2e5c24fdcf9b36e285a222a7d6"
-  integrity sha512-+HQUNuh7AoQ9ZnU6c4rvbiVVl+wEkb9WqYsVDzGLng+Dqj1XntHu79PvEWKtSMoMj67vFp/ZPXcElosuJO8ckA==
+mobx-react-lite@^4.0.4:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-4.0.5.tgz#e2cb98f813e118917bcc463638f5bf6ea053a67b"
+  integrity sha512-StfB2wxE8imKj1f6T8WWPf4lVMx3cYH9Iy60bbKXEs21+HQ4tvvfIBZfSmMXgQAefi8xYEwQIz4GN9s0d2h7dg==
   dependencies:
-    mobx-react-lite "^3.4.0"
+    use-sync-external-store "^1.2.0"
 
-mobx@^6.9.0:
+mobx-react@^9.0.1:
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-9.0.1.tgz#f03fd8a2f009af260971a558acc29c0e04808e26"
+  integrity sha512-0idiElBgNMJg20YqGgHvYEnlqIJpPDQaOkxj2dHJIZeqCvUh+zBkBkMkpUFw/uEd1OdPUvT0y+AFBqsWIUAXww==
+  dependencies:
+    mobx-react-lite "^4.0.4"
+
+mobx@^6.10.2:
   version "6.10.2"
   resolved "https://registry.yarnpkg.com/mobx/-/mobx-6.10.2.tgz#96e123deef140750360ca9a5b02a8b91fbffd4d9"
   integrity sha512-B1UGC3ieK3boCjnMEcZSwxqRDMdzX65H/8zOHbuTY8ZhvrIjTUoLRR2TP2bPqIgYRfb3+dUigu8yMZufNjn0LQ==
@@ -5803,7 +5805,7 @@ promise-retry@^2.0.1:
     err-code "^2.0.2"
     retry "^0.12.0"
 
-prop-types@15, prop-types@^15.0.0, prop-types@^15.5.10, prop-types@^15.5.7, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.8.1:
+prop-types@15, prop-types@^15.0.0, prop-types@^15.5.10, prop-types@^15.5.7, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -5943,14 +5945,6 @@ react-dom@18.2.0:
   dependencies:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
-
-react-draggable@4.4.4:
-  version "4.4.4"
-  resolved "https://registry.yarnpkg.com/react-draggable/-/react-draggable-4.4.4.tgz#5b26d9996be63d32d285a426f41055de87e59b2f"
-  integrity sha512-6e0WdcNLwpBx/YIDpoyd2Xb04PB0elrDrulKUgdrIlwuYvxh5Ok9M+F8cljm8kPXXs43PmMzek9RrB1b7mLMqA==
-  dependencies:
-    clsx "^1.1.1"
-    prop-types "^15.6.0"
 
 react-draggable@4.4.5:
   version "4.4.5"
@@ -7204,7 +7198,7 @@ use-memo-one@^1.1.3:
   resolved "https://registry.yarnpkg.com/use-memo-one/-/use-memo-one-1.1.3.tgz#2fd2e43a2169eabc7496960ace8c79efef975e99"
   integrity sha512-g66/K7ZQGYrI6dy8GLpVcMsBp4s17xNkYJVSMvTEevGy3nDxHOfE6z8BVE22+5G5x7t3+bhzrlTDB7ObrEE0cQ==
 
-use-sync-external-store@^1.0.0:
+use-sync-external-store@^1.0.0, use-sync-external-store@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.2.0.tgz#7dbefd6ef3fe4e767a0cf5d7287aacfb5846928a"
   integrity sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==
