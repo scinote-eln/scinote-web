@@ -9,7 +9,7 @@ class RepositoryRowsController < ApplicationController
                                              validate_label_template_columns actions_toolbar)
   before_action :load_repository_row_print, only: %i(print rows_to_print print_zpl validate_label_template_columns)
   before_action :load_repository_or_snapshot, only: %i(print rows_to_print print_zpl validate_label_template_columns)
-  before_action :load_repository_row, only: %i(update assigned_task_list active_reminder_repository_cells)
+  before_action :load_repository_row, only: %i(update assigned_task_list active_reminder_repository_cells relationships)
   before_action :check_read_permissions, except: %i(show create update delete_records
                                                     copy_records reminder_repository_cells
                                                     delete_records archive_records restore_records
@@ -295,6 +295,14 @@ class RepositoryRowsController < ApplicationController
           current_user,
           repository_row_ids: params[:repository_row_ids].split(',')
         ).actions
+    }
+  end
+
+  def relationships
+    render json: {
+      repository_row: RepositoryRowSerializer.new(@repository_row),
+      parents: @repository_row.parent_repository_rows.map { |r| RepositoryRowSerializer.new(r) },
+      children: @repository_row.child_repository_rows.map { |r| RepositoryRowSerializer.new(r) }
     }
   end
 

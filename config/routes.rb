@@ -663,9 +663,6 @@ Rails.application.routes.draw do
         post :print
         get :print_zpl
         post :validate_label_template_columns
-      end
-
-      collection do
         get :actions_toolbar
       end
     end
@@ -722,6 +719,7 @@ Rails.application.routes.draw do
       resources :repository_table_filters, only: %i(index show create update destroy)
       resources :repository_rows, only: %i(create show update) do
         member do
+          get :relationships
           get :assigned_task_list
           get :active_reminder_repository_cells
         end
