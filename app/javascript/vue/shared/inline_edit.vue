@@ -240,7 +240,6 @@
           this.$nextTick(() => {
             if (!this.$refs.input) return;
 
-            this.$refs.input.style.height = '0px';
             this.$refs.input.style.height = this.$refs.input.scrollHeight  + 'px';
           });
         }
