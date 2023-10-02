@@ -1,7 +1,7 @@
 <template>
   <div ref="wrapper"
     class='bg-white overflow-auto gap-2.5 self-stretch  rounded-tl-4 rounded-bl-4 transition-transform ease-in-out transform shadow-lg'
-    :class="{ 'translate-x-0 w-[565px] h-full': isShowing, 'transition-transform ease-in-out duration-400 transform translate-x-0 translate-x-full': !isShowing }">
+    :class="{ 'translate-x-0 w-[565px] h-full': isShowing, 'transition-transform ease-in-out duration-400 transform translate-x-0 translate-x-full w-0': !isShowing }">
 
     <div id="repository-item-sidebar" class="w-full h-full  py-6 px-6 bg-white flex flex-col">
 
