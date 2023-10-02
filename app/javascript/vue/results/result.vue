@@ -45,7 +45,7 @@
           class="new-marvinjs-upload-button hidden"
           :data-object-id="result.id"
           ref="marvinJsButton"
-          :data-marvin-url="result.attributes.marvinjs_context.marvin_js_asset_url"
+          :data-marvin-url="result.attributes.marvinjs_context?.marvin_js_asset_url"
           :data-object-type="result.attributes.type"
           tabindex="0"
         ></span> <!-- Hidden element to support legacy code -->

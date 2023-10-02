@@ -71,7 +71,7 @@
           class="new-marvinjs-upload-button hidden"
           :data-object-id="step.id"
           ref="marvinJsButton"
-          :data-marvin-url="step.attributes.marvinjs_context.marvin_js_asset_url"
+          :data-marvin-url="step.attributes.marvinjs_context?.marvin_js_asset_url"
           :data-object-type="step.attributes.type"
           tabindex="0"
         ></span> <!-- Hidden element to support legacy code -->

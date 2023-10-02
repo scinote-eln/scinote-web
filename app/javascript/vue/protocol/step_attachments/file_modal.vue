@@ -54,7 +54,7 @@
               <a
                 class="new-marvinjs-upload-button btn btn-light"
                 :data-object-id="step.id"
-                :data-marvin-url="step.attributes.marvinjs_context.marvin_js_asset_url"
+                :data-marvin-url="step.attributes.marvinjs_context?.marvin_js_asset_url"
                 data-object-type="Step"
                 @click="openMarvinJsModal"
                 tabindex="0"
