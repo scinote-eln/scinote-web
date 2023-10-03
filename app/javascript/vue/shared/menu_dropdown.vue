@@ -21,6 +21,8 @@
         <a :href="item.url" v-if="!item.submenu"
           :traget="item.url_target || '_self'"
           :class="{ 'bg-sn-super-light-blue': item.active }"
+          :data-toggle="item.modalTarget && 'modal'"
+          :data-target="item.modalTarget"
           class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey"
           @click="handleClick($event, item)"
         >
