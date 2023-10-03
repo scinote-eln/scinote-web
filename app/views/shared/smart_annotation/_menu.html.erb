@@ -18,7 +18,9 @@
           <% if repository.shared_with?(current_team) %>
             <i class="sn-icon sn-icon-user-menu-friends"></i>
           <% end %>
-          <div class="truncate"><%= repository.name %></div>
+          <div class="max-w-[150px] overflow-hidden whitespace-nowrap ml-[-10px] text-left truncate">
+            <%= repository.name %>
+          </div>
         </button>
       <% end %>
       </div>
