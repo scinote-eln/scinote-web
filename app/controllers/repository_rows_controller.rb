@@ -59,6 +59,7 @@ class RepositoryRowsController < ApplicationController
 
     @assigned_modules = @repository_row.my_modules.joins(experiment: :project)
     @viewable_modules = @assigned_modules.viewable_by_user(current_user, current_user.teams)
+    @reminders_enabled = @repository_row.repository_cells.with_active_reminder(@current_user).any?
   end
 
   def create

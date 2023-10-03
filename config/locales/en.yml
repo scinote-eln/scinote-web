@@ -2228,9 +2228,17 @@ en:
         added_on: "Added on"
         added_at: "Added at"
         added_by: "Added by"
-      custom_columns_label: "Custom columns"
+      reminders:
+        stock_low: "Only %{stock_formated} left."
+        stock_empty: "No stock left"
+        date_expiration: "This item is expiring in %{date_expiration}."
+        item_expired: "This item has expired."
+        day:
+          one: "day"
+          other: "days"
       stock_export: "Export"
-      no_custom_columns_label: 'This item has no custom columns'
+      custom_columns_label: "Custom columns"
+      no_custom_columns_label: "This item has no custom columns"
       repository_time_range_value:
         no_time_range: 'No time range'
       repository_text_value:
