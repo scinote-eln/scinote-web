@@ -30,6 +30,8 @@ class Result < ApplicationRecord
   accepts_nested_attributes_for :assets
   accepts_nested_attributes_for :tables
 
+  before_save :ensure_default_name
+
   def self.search(user,
                   include_archived,
                   query = nil,
@@ -165,5 +167,9 @@ class Result < ApplicationRecord
     result_orderable_elements.order(:position).each_with_index do |element, index|
       element.update!(position: index) unless element.position == index
     end
+  end
+
+  def ensure_default_name
+    self.name = name.presence || I18n.t('my_modules.results.default_name')
   end
 end
