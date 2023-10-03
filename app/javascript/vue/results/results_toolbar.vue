@@ -112,7 +112,8 @@
           return {
             text: this.i18n.t(`my_modules.results.sorts.${sort}`),
             emit: 'sort',
-            params: sort
+            params: sort,
+            active: sort == this.sort
           }
         })
       }
