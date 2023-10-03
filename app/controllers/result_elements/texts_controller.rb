@@ -37,7 +37,9 @@ module ResultElements
     end
 
     def move
-      target = @my_module.results.find_by(id: params[:target_id])
+      target = @my_module.results.active.find_by(id: params[:target_id])
+      return head(:conflict) unless target
+
       ActiveRecord::Base.transaction do
         @result_text.update!(result: target)
         @result_text.result_orderable_element.update!(result: target, position: target.result_orderable_elements.size)
