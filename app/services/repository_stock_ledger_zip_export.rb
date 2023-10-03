@@ -69,7 +69,7 @@ module RepositoryStockLedgerZipExport
         added_amount,
         added_amount_unit,
         record.user.full_name,
-        record.created_at.strftime(record.user.date_format),
+        I18n.l(record.created_at, format: :full),
         record.repository_row.repository.team.name,
         record.balance.to_d,
         record.unit
