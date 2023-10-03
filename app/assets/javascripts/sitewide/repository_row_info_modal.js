@@ -58,28 +58,29 @@
           animateSpinner(this);
         }
       });
-
-      // Stock Consumption Export Action
-      $(document).on('click', '.export-consumption-button', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        $('#modal-info-repository-row').modal('hide');
-        // set and unset data-rows value so export knows to ignore selected rows or not
-        $('#exportStockConsumptionModal')
-          .on('show.bs.modal', function() {
-            $('#exportStockConsumptionModal').attr(
-              'data-rows',
-              $('#modal-info-repository-row .print-label-button').attr('data-rows')
-            );
-          })
-          .on('hide.bs.modal', function() {
-            $('#exportStockConsumptionModal').attr('data-rows', null);
-          })
-          .modal('show');
-      });
     });
     e.preventDefault();
     return false;
+  });
+
+  $(document).on('click', '.export-consumption-button', function() {
+    let selectedRows = [];
+
+    if ($(this).attr('id') === 'exportStockConsumptionButton') {
+      selectedRows = RepositoryDatatable.selectedRows();
+    } else {
+      selectedRows = $('#modal-info-repository-row .print-label-button').data('rows');
+    }
+
+    window.initExportStockConsumptionModal();
+
+    if (window.exportStockConsumptionModalComponent) {
+      window.exportStockConsumptionModalComponent.fetchRepositoryData(
+        selectedRows,
+        { repository_id: $(this).data('objectId') },
+      );
+      $('#modal-info-repository-row').modal('hide');
+    }
   });
 
   $(document).on('click', '.print-label-button', function(e) {

@@ -19,7 +19,7 @@
             </button>
             <ul class="sci-dropdown dropup dropdown-menu dropdown-menu-right px-2" aria-labelledby="<%= id %>">
               <li v-for="groupAction in action.actions" class="">
-                <a :class="`flex gap-2 items-center bg-sn-white color-sn-blue no-underline ${action.button_class}`"
+                <a :class="`flex gap-2 items-center bg-sn-white color-sn-blue no-underline ${groupAction.button_class}`"
                   :href="(['link', 'remote-modal']).includes(groupAction.type) ? groupAction.path : '#'"
                   :id="groupAction.button_id"
                   :title="groupAction.label"
