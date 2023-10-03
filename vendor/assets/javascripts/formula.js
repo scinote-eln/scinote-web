@@ -1,3 +1,6 @@
+// Copyright (c) 2014 Sutoiku, Inc.
+// The MIT License (MIT)
+
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
