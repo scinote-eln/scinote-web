@@ -63,7 +63,7 @@
 
 <script>
 
-import { isInViewPort } from './isInViewPort.js';
+import isInViewPort from './isInViewPort.js';
 
 export default {
   name: 'DropdownMenu',
@@ -116,7 +116,10 @@ export default {
     updateOpenDirectoin() {
       if (!this.showMenu) return;
 
-      this.openUp = !isInViewPort(this.$refs.flyout);
+      this.openUp = false;
+      this.$nextTick(() => {
+        this.openUp = !isInViewPort(this.$refs.flyout);
+      });
     }
   }
 }

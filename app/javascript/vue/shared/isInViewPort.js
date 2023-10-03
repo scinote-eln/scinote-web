@@ -1,4 +1,4 @@
-export function isInViewPort(el) {
+export default function isInViewPort(el) {
   const rect = el.getBoundingClientRect();
 
   return (
@@ -6,9 +6,9 @@ export function isInViewPort(el) {
     rect.left >= 0 &&
     rect.bottom <=
       (window.innerHeight ||
-        document.documentElement.clientHeight) /*or $(window).height() */ &&
+        document.documentElement.clientHeight) &&
     rect.right <=
       (window.innerWidth ||
-        document.documentElement.clientWidth) /*or $(window).width() */
+        document.documentElement.clientWidth)
   );
 }
