@@ -147,10 +147,9 @@
             <div id="QR-wrapper" class="block">
               <div ref="QR-label" id="QR-label"
                 class="font-inter text-base font-semibold leading-7 mb-4 transition-colors duration-300">QR</div>
-              <canvas id="bar-code-canvas" class="hidden" data-id="IT2"></canvas>
+              <canvas id="bar-code-canvas" class="hidden"></canvas>
               <img :src="barCodeSrc" />
             </div>
-
           </div>
         </div>
 
@@ -229,20 +228,6 @@ export default {
   created() {
     window.repositoryItemSidebarComponent = this;
   },
-  watch: {
-    defaultColumns(newCol, oldCol) {
-      const canvasEl = document.getElementById('bar-code-canvas')
-      if (newCol.code && bwipjs && canvasEl) {
-        // generate the QR code
-        let barCodeCanvas = bwipjs.toCanvas('bar-code-canvas', {
-          bcid: 'qrcode',
-          text: newCol.code,
-          scale: 3
-        });
-        this.barCodeSrc = barCodeCanvas.toDataURL('image/png')
-      }
-    },
-  },
   beforeDestroy() {
     delete window.repositoryItemSidebarComponent;
   },
@@ -281,8 +266,21 @@ export default {
           this.dataLoading = false
           this.assignedModules = result.assigned_modules;
           this.permissions = result.permissions
+          this.$nextTick(() => {
+            this.generateBarCode(this.defaultColumns.code);
+          });
         }
       });
+    },
+    generateBarCode(text) {
+      if (!text) return
+      // generate the QR code
+      const barCodeCanvas = bwipjs.toCanvas('bar-code-canvas', {
+        bcid: 'qrcode',
+        text,
+        scale: 3
+      });
+      this.barCodeSrc = barCodeCanvas.toDataURL('image/png')
     },
     privateModuleSize() {
       return this.assignedModules.total_assigned_size - this.assignedModules.viewable_modules.length;
