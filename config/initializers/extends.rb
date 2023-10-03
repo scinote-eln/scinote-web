@@ -609,6 +609,14 @@ class Extends
     www.recaptcha.net/
     www.gstatic.com/recaptcha/
   )
+
+  COLORED_BACKGROUND_ACTIONS = %w(
+    my_modules/protocols
+    my_modules/signatures
+    my_modules/activities
+    results/index
+    protocols/show
+  )
 end
 
 # rubocop:enable Style/MutableConstant

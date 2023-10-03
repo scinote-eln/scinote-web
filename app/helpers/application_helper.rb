@@ -240,13 +240,6 @@ module ApplicationHelper
   def show_grey_background?
     return false unless controller_name && action_name
 
-    %w(
-      my_modules/protocols
-      my_modules/signatures
-      my_modules/activities
-      results/index
-      protocols/show
-      organization/index
-    ).include?("#{controller_name}/#{action_name}")
+    Extends::COLORED_BACKGROUND_ACTIONS.include?("#{controller_name}/#{action_name}")
   end
 end
