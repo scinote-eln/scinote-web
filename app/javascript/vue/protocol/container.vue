@@ -133,7 +133,7 @@
         </div>
         <div class="border-0 border-b border-dashed border-sn-light-grey my-4" v-if="!inRepository"></div>
         <div id="protocol-steps-container" :class=" inRepository ? 'protocol-steps collapse in' : ''">
-          <div v-if="urls.add_step_url && inRepository" class="py-5">
+          <div v-if="urls.add_step_url && inRepository" class="py-5 flex flex-row gap-8 justify-between">
             <a
               class="btn btn-secondary"
               :title="i18n.t('protocols.steps.new_step_title')"
@@ -143,6 +143,23 @@
                 <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
                 <span>{{ i18n.t("protocols.steps.new_step") }}</span>
             </a>
+            <div v-if="steps.length > 0" class="flex justify-between items-center gap-4">
+              <button @click="collapseSteps" class="btn btn-secondary flex px-4" tabindex="0">
+                {{ i18n.t("protocols.steps.collapse_label") }}
+              </button>
+              <button @click="expandSteps" class="btn btn-secondary flex px-4" tabindex="0">
+                {{ i18n.t("protocols.steps.expand_label") }}
+              </button>
+              <a v-if="steps.length > 0 && urls.reorder_steps_url"
+                class="btn btn-light icon-btn"
+                data-toggle="modal"
+                @click="startStepReorder"
+                @keyup.enter="startStepReorder"
+                :class="{'disabled': steps.length == 1}"
+                tabindex="0" >
+              <i class="sn-icon sn-icon-sort" aria-hidden="true"></i>
+          </a>
+          </div>
           </div>
           <div class="protocol-steps pb-8">
             <div v-for="(step, index) in steps" :key="step.id" class="step-block">

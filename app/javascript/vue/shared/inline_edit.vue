@@ -37,7 +37,7 @@
       :class="{ 'text-sn-grey font-normal': isBlank, 'whitespace-pre-line': !singleLine }"
       @click="enableEdit($event)"
     >
-      <span :class="{'truncate': singleLine}" v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
+      <span class="list-item" :class="{'truncate': singleLine}" v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
       <span :class="{'truncate': singleLine}" v-else>{{newValue || placeholder}}</span>
     </div>
 
