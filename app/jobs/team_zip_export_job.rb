@@ -279,4 +279,9 @@ class TeamZipExportJob < ZipExportJob
 
     csv_file_path
   end
+
+  def failed_notification_title
+    I18n.t('activejob.failure_notifiable_job.item_notification_title',
+           item: I18n.t('activejob.failure_notifiable_job.items.project'))
+  end
 end
