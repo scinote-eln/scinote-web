@@ -63,6 +63,8 @@
 
 <script>
 
+import { isInViewPort } from './isInViewPort.js';
+
 export default {
   name: 'DropdownMenu',
   props: {
@@ -82,18 +84,19 @@ export default {
   watch: {
     showMenu() {
       if (this.showMenu) {
+        this.openUp = false;
         this.$nextTick(() => {
           this.$refs.flyout.style.marginBottom = `${this.$refs.openBtn.offsetHeight}px`;
-          this.verticalPositionFlyout();
+          this.updateOpenDirectoin();
         })
       }
     }
   },
   mounted() {
-    document.addEventListener('scroll', this.verticalPositionFlyout);
+    document.addEventListener('scroll', this.updateOpenDirectoin);
   },
   unmounted() {
-    document.removeEventListener('scroll', this.verticalPositionFlyout);
+    document.removeEventListener('scroll', this.updateOpenDirectoin);
   },
   methods: {
     closeMenu() {
@@ -110,20 +113,11 @@ export default {
 
       this.closeMenu();
     },
-    verticalPositionFlyout() {
+    updateOpenDirectoin() {
       if (!this.showMenu) return;
 
-      const btn = this.$refs.openBtn;
-      const screenHeight = window.innerHeight;
-      const btnBottom = btn.getBoundingClientRect().bottom;
-
-      if (screenHeight / 2 < btnBottom) {
-        this.openUp = true;
-      } else {
-        this.openUp = false;
-      }
+      this.openUp = !isInViewPort(this.$refs.flyout);
     }
-
   }
 }
 </script>
