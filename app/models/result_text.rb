@@ -15,7 +15,8 @@ class ResultText < ApplicationRecord
   def duplicate(result, position = nil)
     ActiveRecord::Base.transaction do
       new_result_text = result.result_texts.create!(
-        text: text
+        text: text,
+        name: name
       )
 
       # Copy results tinyMce assets
