@@ -95,7 +95,7 @@
               <div v-if="customColumns?.length > 0" class="flex flex-col gap-4 w-[350px] h-auto">
                 <div v-for="(column, index) in customColumns" class="flex flex-col gap-4 w-[350px] h-auto">
                   <component :is="column.data_type" :key="index" :data_type="column.data_type" :colId="column.id"
-                    :colName="column.name" :colVal="column.value" />
+                    :colName="column.name" :colVal="column.value" :repositoryRowId="repositoryRowId" :permissions="permissions" />
                   <div id="dashed-divider" :class="{ 'hidden': index === customColumns.length - 1 }"
                     class="flex h-[1px] py-0 border-dashed border-[1px] border-sn-light-grey">
                   </div>
@@ -222,7 +222,8 @@ export default {
       assignedModules: null,
       isShowing: false,
       assigned: 'Assigned to 3 private tasks that will not be displayed',
-      barCodeSrc: null
+      barCodeSrc: null,
+      permissions: null
     }
   },
   created() {
@@ -279,6 +280,7 @@ export default {
           this.customColumns = result.custom_columns;
           this.dataLoading = false
           this.assignedModules = result.assigned_modules;
+          this.permissions = result.permissions
         }
       });
     },

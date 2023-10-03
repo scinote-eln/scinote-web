@@ -2227,8 +2227,9 @@ en:
         id: "Item ID"
         added_on: "Added on"
         added_at: "Added at"
-        added_by: 'Added by'
-      custom_columns_label: 'Custom columns'
+        added_by: "Added by"
+      custom_columns_label: "Custom columns"
+      stock_export: "Export"
       no_custom_columns_label: 'This item has no custom columns'
       repository_time_range_value:
         no_time_range: 'No time range'
