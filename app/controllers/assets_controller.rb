@@ -26,7 +26,7 @@ class AssetsController < ApplicationController
       locals: {
         asset: @asset,
         can_edit: can_manage_asset?(@asset),
-        gallery: params[:gallery].uniq,
+        gallery: params[:gallery],
         preview: params[:preview]
       },
       formats: :html
