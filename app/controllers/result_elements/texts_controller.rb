@@ -40,7 +40,9 @@ module ResultElements
       target = @my_module.results.find_by(id: params[:target_id])
       ActiveRecord::Base.transaction do
         @result_text.update!(result: target)
-        @result_text.result_orderable_element.update!(result: target, position: target.result_orderable_elements.size)
+        @result_text.result_orderable_element.destroy
+        new_orderable_element = target.result_orderable_elements.build(orderable: @result_text)
+        new_orderable_element.insert_at(target.result_orderable_elements.count)
         @result.normalize_elements_position
         render json: @result_text, serializer: ResultTextSerializer, user: current_user
 
@@ -53,7 +55,6 @@ module ResultElements
             result_destination: target.id
           }
         )
-
       rescue ActiveRecord::RecordInvalid
         render json: @result_text.errors, status: :unprocessable_entity
       end

@@ -8,7 +8,7 @@ class ResultOrderableElement < ApplicationRecord
 
   belongs_to :result, inverse_of: :result_orderable_elements, touch: true
   belongs_to :orderable, polymorphic: true, inverse_of: :result_orderable_element
-  acts_as_list scope: :result, top_of_list: 0, sequential_updates: true
+  acts_as_list scope: :result, top_of_list: 0, sequential_updates: false
 
   private
 
