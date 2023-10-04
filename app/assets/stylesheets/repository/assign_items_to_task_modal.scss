@@ -1,10 +1,8 @@
 .assign-items-to-task-modal-container {
   .modal-header {
-    color: $color-volcano;
     display: flex;
     font-size: $font-size-h2;
     font-weight: bold;
-    padding: 1rem;
 
     .close {
       margin-left: auto;
@@ -12,7 +10,6 @@
   }
 
   .modal-body {
-    color: $color-volcano;
     display: flex;
     flex-direction: column;
     font-size: $font-size-base;
