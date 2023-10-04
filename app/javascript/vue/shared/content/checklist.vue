@@ -2,7 +2,7 @@
   <div class="content__checklist-container" >
     <div class="border-0 border-b border-dashed border-sn-light-grey my-6" v-if="!inRepository"></div>
     <div class="checklist-header flex rounded mb-1 items-center relative w-full group/checklist-header" :class="{ 'editing-name': editingName, 'locked': !element.attributes.orderable.urls.update_url }">
-      <div class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold" :class="{ 'pointer-events-none': locked } ">
+      <div class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold">
         <InlineEdit
           :value="element.attributes.orderable.name"
           :sa_value="element.attributes.orderable.sa_name"
@@ -29,7 +29,7 @@
         @delete="showDeleteModal"
       ></MenuDropdown>
     </div>
-    <div v-if="element.attributes.orderable.urls.create_item_url || orderedChecklistItems.length > 0">
+    <div v-if="element.attributes.orderable.urls.create_item_url || orderedChecklistItems.length > 0" :class="{ 'pointer-events-none': locked }">
       <Draggable
         v-model="checklistItems"
         :ghostClass="'checklist-item-ghost'"
