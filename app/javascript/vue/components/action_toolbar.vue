@@ -15,11 +15,11 @@
             <button class="btn btn-primary dropdown-toggle single-object-action rounded" type="button" id="exportDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               <i class="sn-icon sn-icon-export"></i>
               <span>{{ action.group_label }}</span>
-              <span class="caret pull-right"></span>
+              <span class="sn-icon sn-icon-down"></span>
             </button>
             <ul class="sci-dropdown dropup dropdown-menu dropdown-menu-right px-2" aria-labelledby="<%= id %>">
               <li v-for="groupAction in action.actions" class="">
-                <a :class="`flex gap-2 items-center bg-sn-white color-sn-blue no-underline ${action.button_class}`"
+                <a :class="`flex gap-2 items-center bg-sn-white color-sn-blue no-underline ${groupAction.button_class}`"
                   :href="(['link', 'remote-modal']).includes(groupAction.type) ? groupAction.path : '#'"
                   :id="groupAction.button_id"
                   :title="groupAction.label"

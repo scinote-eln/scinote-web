@@ -71,16 +71,23 @@ class AssetsController < ApplicationController
       render json: { targets: protocol.steps.order(:position).where.not(id: @assoc.id).map { |i| [i.id, i.name] } }
     elsif @assoc.is_a?(Result)
       my_module = @assoc.my_module
-      render json: { targets: my_module.results.where.not(id: @assoc.id).map { |i| [i.id, i.name] } }
+      render json: { targets: my_module.results.active.where.not(id: @assoc.id).map { |i| [i.id, i.name] } }
     else
       render json: { targets: [] }
     end
   end
 
   def move
+    case @assoc
+    when Step
+      target = @assoc.protocol.steps.find_by(id: params[:target_id])
+    when Result
+      target = @assoc.my_module.results.active.find_by(id: params[:target_id])
+      return render_404 unless target
+    end
+
     ActiveRecord::Base.transaction do
       if @assoc.is_a?(Step)
-        target = @assoc.protocol.steps.find_by(id: params[:target_id])
         object_to_update = @asset.step_asset
         object_to_update.update!(step: target)
 
@@ -114,7 +121,6 @@ class AssetsController < ApplicationController
 
         render json: {}
       elsif @assoc.is_a?(Result)
-        target = @assoc.my_module.results.find_by(id: params[:target_id])
         object_to_update = @asset.result_asset
         object_to_update.update!(result: target)
 
@@ -268,8 +274,6 @@ class AssetsController < ApplicationController
       render_404 and return
     end
 
-    # Prepare file preview in advance
-    asset.medium_preview.processed && asset.large_preview.processed
     # Return edit url and asset info
     render json: {
       attributes: AssetSerializer.new(asset, scope: { user: current_user }).as_json,

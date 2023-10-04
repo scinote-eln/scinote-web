@@ -759,6 +759,7 @@ Rails.application.routes.draw do
       collection do
         get :sidebar
         post 'available_rows', to: 'repository_rows#available_rows', defaults: { format: 'json' }
+        get 'export_repository_stock_items_modal'
       end
 
       member do

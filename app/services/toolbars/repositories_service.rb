@@ -12,6 +12,7 @@ module Toolbars
       @current_team = current_team
       @repositories = Repository.readable_by_user(current_user)
                                 .where(id: repository_ids)
+                                .distinct
       @repository = @repositories.first
       @archived_state = @repositories.all.any?(&:archived?)
       @single = @repositories.uniq.length == 1

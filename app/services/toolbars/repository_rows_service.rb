@@ -121,8 +121,9 @@ module Toolbars
         name: 'export_consumption',
         label: I18n.t('repositories.exports.stock_consumption'),
         icon: 'sn-icon sn-icon-reports',
-        button_class: 'export-repository-stock-consumption-btn',
+        button_class: 'export-consumption-button',
         button_id: 'exportStockConsumptionButton',
+        item_id: @repository.id,
         type: :legacy
       }
     end
