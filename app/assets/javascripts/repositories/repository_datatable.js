@@ -833,6 +833,11 @@ var RepositoryDatatable = (function(global) {
         initRepositoryViewSwitcher();
         DataTableHelpers.initLengthAppearance($(TABLE_ID).closest('.dataTables_wrapper'));
 
+        $('.dataTables_wrapper').on('click', '.pagination', () => {
+          const dataTablesScrollBody = document.querySelector('.dataTables_scrollBody');
+          dataTablesScrollBody.scrollTo(0, 0);
+        });
+
         $('.dataTables_filter').addClass('hidden');
         addRepositorySearch();
 
