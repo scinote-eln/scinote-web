@@ -17,7 +17,8 @@ var RepositoryDateTimeColumnType = (function() {
     $modal.on('change', `${columnContainer} #datetime-reminder, ${columnContainer} #datetime-range`, function() {
       let reminderCheckbox = $(columnContainer).find('#datetime-reminder');
       let rangeCheckbox = $(columnContainer).find('#datetime-range');
-      rangeCheckbox.attr('disabled', reminderCheckbox.is(':checked'));
+      const isExistingRecord = $('#new-repo-column-submit').css('display') === 'none';
+      rangeCheckbox.attr('disabled', isExistingRecord || reminderCheckbox.is(':checked'));
       reminderCheckbox.attr('disabled', rangeCheckbox.is(':checked'));
       $(columnContainer).find('.reminder-group').toggleClass('hidden', !reminderCheckbox.is(':checked'));
     });
