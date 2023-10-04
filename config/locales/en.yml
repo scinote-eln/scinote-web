@@ -255,6 +255,12 @@ en:
     failure_notifiable_job:
       general_notification_title: "Your export failed. Please contact support."
       general_notification_message: "Request timestamp: %{request_timestamp}"
+      item_notification_title: "Your %{item} export failed. Please contact support."
+      items:
+        project: "Projects"
+        repository: "Inventories"
+        repository_item: "Items"
+        stock_consumption: "Stock consumption"
 
   head:
     title: "SciNote | %{title}"

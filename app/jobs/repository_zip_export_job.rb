@@ -37,4 +37,9 @@ class RepositoryZipExportJob < ZipExportJob
                                       params[:my_module_id].present?)
     File.binwrite("#{dir}/export.csv", data)
   end
+
+  def failed_notification_title
+    I18n.t('activejob.failure_notifiable_job.item_notification_title',
+           item: I18n.t('activejob.failure_notifiable_job.items.repository_item'))
+  end
 end
