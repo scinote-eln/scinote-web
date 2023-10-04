@@ -15,7 +15,7 @@
             <button class="btn btn-primary dropdown-toggle single-object-action rounded" type="button" id="exportDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               <i class="sn-icon sn-icon-export"></i>
               <span>{{ action.group_label }}</span>
-              <span class="caret pull-right"></span>
+              <span class="sn-icon sn-icon-down"></span>
             </button>
             <ul class="sci-dropdown dropup dropdown-menu dropdown-menu-right px-2" aria-labelledby="<%= id %>">
               <li v-for="groupAction in action.actions" class="">
