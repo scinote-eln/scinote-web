@@ -68,6 +68,8 @@ class GeneSequenceAssetsController < ApplicationController
 
   def save_asset!
     ActiveRecord::Base.transaction do
+      view_mode = @asset.view_mode if @asset
+
       ensure_asset!
 
       @asset.file.purge
@@ -88,7 +90,7 @@ class GeneSequenceAssetsController < ApplicationController
       file.blob.metadata['asset_type'] = 'gene_sequence'
       file.blob.metadata['name'] = params[:sequence_name]
       file.save!
-      @asset.view_mode ||= @parent.assets_view_mode
+      @asset.view_mode = view_mode || @parent.assets_view_mode
       @asset.save!
     end
   end
