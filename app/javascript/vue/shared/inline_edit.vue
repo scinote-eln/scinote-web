@@ -37,7 +37,7 @@
       :class="{ 'text-sn-grey font-normal': isBlank, 'whitespace-pre-line': !singleLine }"
       @click="enableEdit($event)"
     >
-      <span class="list-item" :class="{'truncate': singleLine}" v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
+      <span :class="{'truncate': singleLine, 'list-item': viewMode !== 'active'}" v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
       <span :class="{'truncate': singleLine}" v-else>{{newValue || placeholder}}</span>
     </div>
 
@@ -78,7 +78,8 @@
       return {
         editing: false,
         dirty: false,
-        newValue: ''
+        newValue: '',
+        viewMode: null
       }
     },
     mixins: [UtilsMixin],
@@ -89,6 +90,13 @@
       this.handleAutofocus();
       if (this.editOnload) {
         this.enableEdit();
+      }
+
+      // determine whether view mode is in projects(active) or templates(inactive)
+      const urlSearchParam = window.location?.search
+      if (!urlSearchParam) return
+      if (urlSearchParam.includes('view_mode=active')) {
+        this.viewMode = 'active'
       }
     },
     watch: {
