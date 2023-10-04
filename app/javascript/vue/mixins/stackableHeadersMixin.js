@@ -54,7 +54,6 @@ export default {
         this.secondaryNavigation.style.zIndex = 252;
       } else {
         this.secondaryNavigation.style.boxShadow = 'none';
-        if (secondaryNavigationTop > 10) this.secondaryNavigation.style.zIndex = 11;
       }
 
       if (headerTop - 5 < this.taskSecondaryMenuHeight) { // When secondary navigation touch header
