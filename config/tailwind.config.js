@@ -57,6 +57,9 @@ module.exports = {
         'sn-background-passion': '#FAE1E7',
         'sn-background-turqoise': '#E3F6F7',
         'sn-background-bloo': '#E2F0FF'
+      },
+      boxShadow: {
+        'flyout-shadow': '0px 1px 4px rgba(35, 31, 32, 0.15)',
       }
     }
   },

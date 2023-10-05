@@ -1,45 +1,62 @@
 <template>
   <div class="w-full relative flex">
     <template v-if="editing">
-      <input type="text"
-        v-if="singleLine"
-        ref="input"
-        class="inline-block leading-5 outline-none pl-0 py-1 border-0 border-solid border-y w-full border-t-transparent"
-        :class="{
-          'inline-edit-placeholder text-sn-grey caret-black': isBlank,
-          'border-b-sn-delete-red': error,
-          'border-b-sn-science-blue': !error,
-        }"
-        v-model="newValue"
-        @keydown="handleKeypress"
-        @blur="handleBlur"
-        @keyup.escape="cancelEdit"
-        @focus="setCaretAtEnd"/>
+      <input v-if="singleLine"
+             type="text"
+             ref="input"
+             class="inline-block leading-5 outline-none pl-0 py-1 border-0 border-solid border-y w-full border-t-transparent"
+             :class="{
+               'inline-edit-placeholder text-sn-grey caret-black': isBlank,
+               'border-b-sn-delete-red': error,
+               'border-b-sn-science-blue': !error
+             }"
+             v-model="newValue"
+             @keydown="handleKeypress"
+             @blur="handleBlur"
+             @keyup.escape="cancelEdit"
+             @focus="setCaretAtEnd"/>
       <textarea v-else
-        ref="input"
-        class="overflow-hidden leading-5 inline-block outline-none px-0 py-1 border-0 border-solid border-y w-full border-t-transparent mb-0.5"
-        :class="{
-          'inline-edit-placeholder text-sn-grey caret-black': isBlank,
-          'border-sn-delete-red': error,
-          'border-sn-science-blue': !error,
-        }"
-        :placeholder="placeholder"
-        v-model="newValue"
-        @keydown="handleKeypress"
-        @blur="handleBlur"
-        @keyup.escape="cancelEdit"
-        @focus="setCaretAtEnd"/>
+                ref="input"
+                class="leading-5 inline-block outline-none border-solid w-full"
+                :class="{
+                  'border-0 inline-edit-placeholder text-sn-grey caret-black': isBlank,
+                  'border-sn-delete-red': error,
+                  'border-sn-science-blue': !error,
+                  'overflow-hidden px-0 py-1 border-0 border-y border-t-transparent': !expandable,
+                  'font-normal border-[1px] box-content overflow-x-hidden overflow-y-auto resize-none rounded px-4 py-2': expandable,
+                  'max-h-[4rem]': expandable && collapsed,
+                  'max-h-[40rem]': expandable && !collapsed
+                }"
+                :placeholder="placeholder"
+                v-model="newValue"
+                @keydown="handleKeypress"
+                @blur="handleBlur"
+                @keyup.escape="cancelEdit"
+                @focus="setCaretAtEnd" />
     </template>
-    <div
-      v-else
-      ref="view"
-      class="grid sci-cursor-edit leading-5 border-0 py-1 outline-none border-solid border-y border-transparent"
-      :class="{ 'text-sn-grey font-normal': isBlank, 'whitespace-pre-line': !singleLine }"
-      @click="enableEdit($event)"
-    >
-      <span :class="{'truncate': singleLine }" v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
-      <span :class="{'truncate': singleLine}" v-else>{{newValue || placeholder}}</span>
-    </div>
+    <template v-else>
+      <div v-if="singleLine"
+          ref="view"
+          class="grid sci-cursor-edit leading-5 border-0 py-1 outline-none border-solid border-y border-transparent"
+          :class="{ 'text-sn-grey font-normal': isBlank }"
+          @click="enableEdit($event)"
+      >
+        <span class="truncate" v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
+        <span class="truncate" v-else>{{newValue || placeholder}}</span>
+      </div>
+      <div v-else
+          ref="view"
+          class="grid w-full box-content sci-cursor-edit font-normal leading-5 border outline-none border-solid px-4 py-2 border-sn-light-grey
+                hover:border-sn-sleepy-grey rounded overflow-y-auto whitespace-pre-line"
+          :class="{ 'text-sn-grey font-normal': isBlank,
+                    'max-h-[4rem]': expandable && collapsed,
+                    'max-h-[40rem]': expandable && !collapsed, }"
+          @click="enableEdit($event)"
+      >
+        <span v-if="smartAnnotation" v-html="sa_value || noContentPlaceholder ||placeholder" ></span>
+        <span v-else>{{ newValue || noContentPlaceholder || placeholder }}</span>
+      </div>
+    </template>
 
     <div
       class="mt-2 whitespace-nowrap truncate text-xs font-normal absolute bottom-[-1rem] w-full"
@@ -65,6 +82,7 @@
       characterMinLimit: { type: Number },
       timestamp: { type: String},
       placeholder: { type: String },
+      noContentPlaceholder: { type: String, default: '' },
       autofocus: { type: Boolean, default: false },
       saveOnEnter: { type: Boolean, default: true },
       allowNewLine: { type: Boolean, default: false },
@@ -72,7 +90,9 @@
       smartAnnotation: { type: Boolean, default: false },
       editOnload: { type: Boolean, default: false },
       defaultValue: { type: String, default: '' },
-      singleLine: { type: Boolean, default: true }
+      singleLine: { type: Boolean, default: true },
+      expandable: { type: Boolean, default: false },
+      collapsed: { type: Boolean, default: true }
     },
     data() {
       return {
@@ -93,7 +113,10 @@
     },
     watch: {
       editing() {
-        this.refreshTexareaHeight()
+        this.refreshTexareaHeight();
+      },
+      value() {
+        this.newValue = this.value || '';
       },
       newValue() {
         if (this.newValue.length === 0 && this.editing) {
@@ -241,7 +264,7 @@
             if (!this.$refs.input) return;
             this.$refs.input.style.height = this.$refs.input.scrollHeight / 2  + 'px';
 
-            this.$refs.input.style.height = this.$refs.input.scrollHeight  + 'px';
+            this.$refs.input.style.height = this.$refs.input.scrollHeight + 'px';
           });
         }
       }

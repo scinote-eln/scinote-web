@@ -2260,7 +2260,8 @@ en:
       repository_text_value:
         collapse: 'Collapse'
         expand: 'Expand'
-        no_text: 'No text'
+        no_text: 'No content'
+        placeholder: 'Enter text'
       repository_stock_value:
         no_stock: 'No stock'
       repository_status_value:
@@ -2269,6 +2270,7 @@ en:
         collapse: 'Collapse'
         expand: 'Expand'
         no_number: 'No number'
+        placeholder: 'Enter text'
       repository_list_value:
         no_list: 'No selection'
       repository_date_value:
@@ -2285,6 +2287,9 @@ en:
         no_asset: 'No file'
       repository_time_value:
         no_time: 'No time'
+      expand: 'Expand'
+      collapse: 'Collapse'
+      dropdown_placeholder: 'Select'
     highlight_component:
       information_label: 'Information'
       custom_columns_label: 'Custom columns'
@@ -3685,6 +3690,8 @@ en:
   general:
     save: "Save"
     move: "Move"
+    clear: "Clear"
+    select_all: "Select all"
     update: "Update"
     edit: "Edit"
     delete: "Delete"
@@ -3700,6 +3707,7 @@ en:
     download: "Download"
     access: "Access"
     select: "Select"
+    selected: "Selected"
     loading: "Loading..."
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
@@ -3880,6 +3888,8 @@ en:
   Text: "Text"
   Tables: "Tables"
   Repositories_team: "Inventories - %{team}"
+  Repository: "Inventory"
+  Repository_row: "Inventory item"
   Reports: "Reports"
   Comments: "Comments"
   Step: "Step"
