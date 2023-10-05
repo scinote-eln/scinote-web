@@ -663,6 +663,10 @@ var ProtocolsIndex = (function() {
     // Hack to hide "No file chosen" tooltip
     fileInput.attr('title', window.webkitURL ? ' ' : '');
 
+    fileInput.on('click', (ev) => {
+      ev.target.value = null;
+    });
+
     fileInput.on('change', function(ev) {
       var importUrl = fileInput.attr('data-import-url');
       var teamId = fileInput.attr('data-team-id');
