@@ -1,4 +1,5 @@
-/* global animateSpinner filterDropdown Turbolinks HelperModule InfiniteScroll AsyncDropdown GLOBAL_CONSTANTS */
+/* global animateSpinner filterDropdown Turbolinks HelperModule InfiniteScroll AsyncDropdown
+  GLOBAL_CONSTANTS loadPlaceHolder */
 /* eslint-disable no-use-before-define */
 (function() {
   const pageSize = GLOBAL_CONSTANTS.DEFAULT_ELEMENTS_PER_PAGE;
@@ -54,14 +55,6 @@
     });
   }
 
-  function loadPlaceHolder() {
-    let palceholder = '';
-    $.each(Array(pageSize), function() {
-      palceholder += $('#experimentPlaceholder').html();
-    });
-    $(palceholder).insertAfter($(cardsWrapper).find('.table-header'));
-  }
-
   function initCardData(viewContainer, data) {
     viewContainer.find('.card, .no-results-container, .no-data-container').remove();
     viewContainer.removeClass('no-results no-data');
@@ -96,7 +89,7 @@
     var viewContainer = $(cardsWrapper);
     var cardsUrl = viewContainer.data('experiments-cards-url');
 
-    loadPlaceHolder();
+    loadPlaceHolder($(cardsWrapper), $('#experimentPlaceholder'), '.experiment-placeholder');
     $.ajax({
       url: cardsUrl,
       type: 'GET',
