@@ -430,8 +430,16 @@ label {
   }
 }
 
-/* Result text element style */
+// Text element style
+.report-step-text-element,
 .report-result-text-element {
+  .report-element-header {
+    .text-name {
+      font-size: 10pt;
+      font-weight: bold;
+    }
+  }
+
   .report-element-body {
     .text-container {
       border-radius: 4px;

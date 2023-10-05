@@ -86,6 +86,7 @@ module ProtocolsExporterV2
 
   def step_text_xml(step_text)
     xml = "<stepText id=\"#{step_text.id}\" guid=\"#{get_guid(step_text.id)}\">\n" \
+          "<name>#{step_text.name}</name>\n"\
           "<contents>\n" \
           "<!--[CDATA[  #{Nokogiri::HTML::DocumentFragment.parse(step_text.text)}  ]]-->"\
           "</contents>\n"
