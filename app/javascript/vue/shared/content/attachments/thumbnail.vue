@@ -48,6 +48,7 @@
            :href="attachment.attributes.urls.edit_asset"
            id="wopi_file_edit_button"
            :class="attachment.attributes.wopi_context.edit_supported ? '' : 'disabled'"
+           target="_blank"
         >
           <i class="sn-icon sn-icon-edit"></i>
         </a>
@@ -102,6 +103,7 @@
       @attachment:viewMode="updateViewMode"
       @attachment:delete="deleteAttachment"
       @attachment:moved="attachmentMoved"
+      @attachment:uploaded="reloadAttachments"
       :withBorder="true"
     />
     <deleteAttachmentModal

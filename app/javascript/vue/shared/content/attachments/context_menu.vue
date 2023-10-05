@@ -154,7 +154,14 @@
       openOVEditor(url) {
         window.showIFrameModal(url);
       },
+      reloadAttachments() {
+        this.$emit('attachment:uploaded');
+      },
       openMarvinJsEditor() {
+        MarvinJsEditor.initNewButton(
+          this.$refs.marvinjsEditButton,
+          this.reloadAttachments
+        );
         $(this.$refs.marvinjsEditButton).trigger('click');
       },
       openScinoteEditor() {

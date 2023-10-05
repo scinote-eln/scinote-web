@@ -19,7 +19,7 @@
       <span v-for="(item, i) in listItems" :key="i" class="contents">
         <div v-if="item.dividerBefore" class="border-0 border-t border-solid border-sn-light-grey"></div>
         <a :href="item.url" v-if="!item.submenu"
-          :traget="item.url_target || '_self'"
+          :target="item.url_target || '_self'"
           :class="{ 'bg-sn-super-light-blue': item.active }"
           :data-toggle="item.modalTarget && 'modal'"
           :data-target="item.modalTarget"

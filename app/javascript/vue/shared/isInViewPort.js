@@ -1,4 +1,6 @@
 export default function isInViewPort(el) {
+  if (!el) return;
+
   const rect = el.getBoundingClientRect();
 
   return (
