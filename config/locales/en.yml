@@ -879,15 +879,17 @@ en:
           name: "%{repository} of task %{my_module}"
           table_name: "%{name}"
           no_items: "No items"
+        result:
+          user_time: "Added on %{timestamp} by %{user}."
         result_asset:
           file_name: "%{file}"
           user_time: "Added on %{timestamp} by %{user}."
           full_preview_attached: "[full document attached to report]"
         result_table:
           table_name: "%{name}"
-          user_time: "Added on %{timestamp} by %{user}."
+          user_time: "Table created on %{timestamp}."
         result_text:
-          user_time: "Added on %{timestamp} by %{user}."
+          user_time: "Text created on %{timestamp}"
         step:
           sidebar_name: "Step %{pos}: %{name}"
           step_pos: "Step %{pos}:"
@@ -899,6 +901,8 @@ en:
         step_table:
           table_name: "%{name}"
           user_time: "Table created on %{timestamp}."
+        step_text:
+          user_time: "Text created on %{timestamp}"
         step_well_plates_table:
           table_name: "%{name}"
           user_time: "Well plate created on %{timestamp}."
