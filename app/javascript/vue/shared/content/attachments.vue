@@ -32,6 +32,7 @@
         @attachment:viewMode="updateAttachmentViewMode"
         @attachment:delete="deleteAttachment(attachment.id)"
         @attachment:moved="attachmentMoved"
+        @attachment:uploaded="$emit('attachment:uploaded')"
       />
     </div>
   </div>

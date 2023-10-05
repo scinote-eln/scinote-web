@@ -201,6 +201,8 @@ var MarvinJsEditorApi = (function() {
         }
         $(marvinJsModal).modal('hide');
         config.button.dataset.inProgress = false;
+
+        if (MarvinJsEditor.saveCallback) MarvinJsEditor.saveCallback();
       },
       error: function(response) {
         if (response.status === 403) {
@@ -295,6 +297,7 @@ $(document).on('click', '.marvinjs-edit-button', function() {
   var editButton = $(this);
   $.post(editButton.data('sketch-start-edit-url'));
   $('#filePreviewModal').modal('hide');
+
   MarvinJsEditor.open({
     mode: 'edit',
     data: editButton.data('sketch-description'),
