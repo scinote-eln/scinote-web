@@ -13,7 +13,9 @@
   .protocol-buttons-group {
     align-items: center;
     display: flex;
-    gap: 1rem;
+    flex-wrap: wrap;
+    column-gap: 1rem;
+    row-gap: .4rem;
   }
 
   .portocol-header-left-part {
@@ -47,7 +49,6 @@
       background-position: top;
       background-size: 10px 1px;
       background-repeat: repeat-x;
-
       border-bottom: 1px dotted transparent;
       content: "";
       display: inline-block;
@@ -100,5 +101,16 @@
 
   .shareable-link-disclaimer {
     color: var(--sn-grey);
+  }
+}
+
+@media screen and (max-width: 1395px) {
+  .task-section-header {
+    height: 7.44rem;
+  }
+
+  .protocol-buttons-group {
+    flex-wrap: wrap;
+    margin: 1rem;
   }
 }
