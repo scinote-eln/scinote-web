@@ -595,7 +595,7 @@ function importProtocolFromFile(
 
   function stepTextJson(stepTextNode, folderIndex, stepGuid) {
     var json = {};
-
+    json.name = stepTextNode.children('name').text();
     json.contents = $('<div></div>').html(
       stepTextNode.children('contents')
         .html()
