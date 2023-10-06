@@ -54,7 +54,7 @@ module RepositoryStockLedgerZipExport
         consumed_amount = record.amount.abs.to_d
         consumed_amount_unit = record.unit
       else
-        added_amount = record.amount.to_d
+        added_amount = record.amount.abs.to_d
         added_amount_unit = record.unit
       end
 
@@ -70,14 +70,14 @@ module RepositoryStockLedgerZipExport
         added_amount_unit,
         record.user.full_name,
         I18n.l(record.created_at, format: :full),
-        record.repository_row.repository.team.name,
         record.balance.to_d,
         record.unit
       ]
-
+      breadcrumbs_data = Array.new(5)
       if consumption_type == 'Task'
         my_module = record.my_module_repository_row.my_module
         breadcrumbs_data = [
+          my_module.experiment.project.team.name,
           my_module.experiment.project.name,
           my_module.experiment.name,
           my_module.name,
@@ -85,7 +85,7 @@ module RepositoryStockLedgerZipExport
         ]
       end
 
-      row_data.insert(10, *breadcrumbs_data)
+      row_data.insert(9, *breadcrumbs_data)
       row_data
     end
   end
