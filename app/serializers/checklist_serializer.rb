@@ -25,7 +25,9 @@ class ChecklistSerializer < ActiveModel::Serializer
   end
 
   def urls
-    return {} if object.destroyed? || !can_manage_step?(scope[:user] || @instance_options[:user], object.step)
+    if object.destroyed? || !can_manage_step?(scope[:user] || @instance_options[:user], object.step)
+      return { checklist_items_url: step_checklist_checklist_items_path(object.step, object) }
+    end
 
     {
       checklist_items_url: step_checklist_checklist_items_path(object.step, object),
