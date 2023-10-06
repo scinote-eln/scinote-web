@@ -46,6 +46,7 @@
           :key="checklistItem.id"
           :checklistItem="checklistItem"
           :locked="locked"
+          :reordering="reordering"
           :reorderChecklistItemUrl="element.attributes.orderable.urls.reorder_url"
           :inRepository="inRepository"
           :draggable="checklistItems.length > 1"
@@ -122,7 +123,6 @@
       }
     },
     created() {
-
       if (this.isNew) {
         this.addItem(1);
       } else {
@@ -143,7 +143,7 @@
                                   });
       },
       locked() {
-        return this.reordering || this.editingName || !this.element.attributes.orderable.urls.update_url
+        return this.editingName || !this.element.attributes.orderable.urls.update_url
       },
       addingNewItem() {
         return this.checklistItems.find((item) => item.attributes.isNew);
@@ -184,7 +184,7 @@
       loadChecklistItems(insertAfter) {
         $.get(this.element.attributes.orderable.urls.checklist_items_url, (result) => {
           this.checklistItems = result.data;
-          if (insertAfter != null) {
+          if (insertAfter) {
             this.addItem(insertAfter);
           }
         });
