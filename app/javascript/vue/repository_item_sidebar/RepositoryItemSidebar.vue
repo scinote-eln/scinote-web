@@ -152,7 +152,7 @@
               <div class="font-inter text-base font-semibold leading-7 mb-4 mt-0">{{ i18n.t('repositories.item_card.section.qr') }}</div>
               <div class="bar-code-container">
                 <canvas id="bar-code-canvas" class="hidden"></canvas>
-                <img id="bar-code-image" />
+                <img :src="barCodeSrc" />
               </div>
             </section>
           </div>
@@ -230,6 +230,7 @@ export default {
       customColumns: null,
       assignedModules: null,
       isShowing: false,
+      barCodeSrc: null,
       permissions: null
     }
   },
@@ -294,7 +295,7 @@ export default {
         text,
         scale: 3
       });
-      $('#repository-item-sidebar #bar-code-image').attr('src', barCodeCanvas.toDataURL('image/png'));
+      this.barCodeSrc = barCodeCanvas.toDataURL('image/png');
     },
     privateModuleSize() {
       return this.assignedModules.total_assigned_size - this.assignedModules.viewable_modules.length;
