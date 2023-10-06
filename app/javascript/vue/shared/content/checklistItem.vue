@@ -24,6 +24,7 @@
               'flex-grow': editingText,
              }">
           <InlineEdit
+            :class="{ 'pointer-events-none': reordering }"
             :value="checklistItem.attributes.text"
             :sa_value="checklistItem.attributes.sa_text"
             :characterLimit="10000"
@@ -79,6 +80,10 @@
       },
       reorderChecklistItemUrl: {
         type: String
+      },
+      reordering: {
+        type: Boolean,
+        required: true
       }
     },
     data() {
