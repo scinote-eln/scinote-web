@@ -197,7 +197,7 @@ window.TinyMCE = (() => {
 
         editorToolbaroffset = 0;
 
-        $.each($('.sticky-header-element'), (_index, element) => {
+        $.each($('.sticky-header-element, .sticky-header'), (_index, element) => {
           editorToolbaroffset += $(element).outerHeight();
         });
 
