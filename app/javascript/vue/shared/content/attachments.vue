@@ -126,7 +126,8 @@
             text: this.i18n.t(`general.sort_new.${orderOption}`),
             emit: 'attachment:order',
             params: orderOption,
-            dividerBefore: i === 2
+            dividerBefore: i === 2,
+            active: this.parent.attributes.assets_order === orderOption
           })
         })
         return menu;
