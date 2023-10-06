@@ -7,7 +7,7 @@ class SetDefaultNamesForResults < ActiveRecord::Migration[7.0]
         FROM results
         WHERE result_texts.result_id = results.id
         AND (result_texts.name = '' OR result_texts.name IS NULL)
-        AND results.name IS NOT NULL AND results.name != ''"
+        AND results.name IS NOT NULL AND results.name != '' AND results.name != 'Untitled result'"
     )
 
     ActiveRecord::Base.connection.execute(
