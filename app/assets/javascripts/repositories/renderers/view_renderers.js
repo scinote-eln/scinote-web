@@ -267,9 +267,10 @@ $.fn.dataTable.render.defaultRepositoryStockConsumptionValue = function() {
   return $.fn.dataTable.render.RepositoryStockConsumptionValue();
 };
 
-$.fn.dataTable.render.RelationshipValue = function(data) {
+$.fn.dataTable.render.RelationshipValue = function(data, row) {
   if (data > 0) {
-    return `<div class="flex flex-wrap items-center">
+    return `<div class="relationships-cell-wrapper flex flex-wrap items-center w-fit"
+              data-relationships-url="${row.relationshipsUrl}">
               <i class="sn-icon sn-icon-navigator"></i>
               <a class="bg-sn-science-blue flex flex-wrap text-white w-4 h-4
                         ml-2 rounded-lg content-center justify-center text-xs" href='#'>
@@ -277,6 +278,5 @@ $.fn.dataTable.render.RelationshipValue = function(data) {
               </a>
             </div>`;
   }
-
   return '';
 };

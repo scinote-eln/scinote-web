@@ -131,8 +131,8 @@ var MyModuleRepositories = (function() {
       }, {
         targets: 4,
         class: 'relationship',
-        render: function(data) {
-          return $.fn.dataTable.render.RelationshipValue(data);
+        render: function(data, row) {
+          return $.fn.dataTable.render.RelationshipValue(data, row);
         }
       });
     } else {

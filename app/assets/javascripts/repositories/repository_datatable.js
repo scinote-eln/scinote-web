@@ -680,8 +680,8 @@ var RepositoryDatatable = (function(global) {
         visible: true,
         searchable: false,
         orderable: true,
-        render: function(data) {
-          return $.fn.dataTable.render.RelationshipValue(data);
+        render: function(data, type, row) {
+          return $.fn.dataTable.render.RelationshipValue(data, row);
         }
       }, {
         // Added on column

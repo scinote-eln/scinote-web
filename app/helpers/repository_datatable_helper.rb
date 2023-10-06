@@ -23,7 +23,11 @@ module RepositoryDatatableHelper
                .active_reminder_repository_cells_repository_repository_row_url(
                  repository,
                  record
-               )
+               ),
+        relationshipsUrl:
+          Rails.application.routes.url_helpers
+               .relationships_repository_repository_row_url(record.repository_id, record.id),
+        code: record.code
       )
 
       if reminders_enabled
