@@ -1,12 +1,12 @@
 <div role="tabpanel" class="tab-pane" id="2fa-step-4">
-  <div class="modal-header">
+  <div class="modal-header flex justify-center mb-6">
     <button type="button" class="close" data-dismiss="modal"><i class="sn-icon sn-icon-close"></i></button>
     <h2 class="modal-title"><%= t("users.registrations.edit.2fa_modal.step_4.title") %></h2>
   </div>
   <div class="modal-body">
     <h1 class="verified-label"><i class="fas fa-check-circle">&nbsp;</i><%= t("users.registrations.edit.2fa_modal.step_4.verified") %></h1>
     <p><%= t("users.registrations.edit.2fa_modal.step_4.description") %></p>
-    <div class="recovery-codes"></div>
+    <div class="recovery-codes mb-1"></div>
   </div>
   <div class="modal-footer">
     <button type="button" id="cancel" class="btn btn-secondary two-factor-modal-close" data-dismiss="modal"><%=t 'general.close' %></button>
