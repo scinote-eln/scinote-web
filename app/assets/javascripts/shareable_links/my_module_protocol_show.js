@@ -21,14 +21,8 @@
     $(document).on('click', '.shareable-link-open-comments-sidebar', function(e) {
       e.preventDefault();
       $('.comments-sidebar').removeClass('open');
-      $('.showing-comments').removeClass('showing-comments');
 
       $($(this).data('objectTarget')).addClass('open');
-      $(`#stepContainer${$(this).data('objectId')}`).addClass('showing-comments');
-    });
-
-    $(document).on('click', '.comments-sidebar .close-btn', function() {
-      $('.showing-comments').removeClass('showing-comments');
     });
   }
 

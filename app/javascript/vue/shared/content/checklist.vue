@@ -1,6 +1,6 @@
 <template>
   <div class="content__checklist-container" >
-    <div class="border-0 border-b border-dashed border-sn-light-grey my-6" v-if="!inRepository"></div>
+    <div class="sci-divider my-6" v-if="!inRepository"></div>
     <div class="checklist-header flex rounded mb-1 items-center relative w-full group/checklist-header" :class="{ 'editing-name': editingName, 'locked': !element.attributes.orderable.urls.update_url }">
       <div class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold">
         <InlineEdit

@@ -139,10 +139,6 @@
     }
   }
 
-  &.showing-comments {
-    border: 1px dotted $brand-primary;
-  }
-
   .drop-message {
     @include font-h3;
     align-items: center;

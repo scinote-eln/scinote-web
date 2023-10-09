@@ -43,9 +43,9 @@
 
     &::before,
     &::after {
-      background-image: linear-gradient(to right, var(--sn-sleepy-grey) 15%, rgba(255, 255, 255, 0) 0%);
+      background-image: linear-gradient(to right, var(--sn-sleepy-grey) 20%, rgba(255, 255, 255, 0) 0%);
       background-position: top;
-      background-size: 10px 1px;
+      background-size: 5px 1px;
       background-repeat: repeat-x;
 
       border-bottom: 1px dotted transparent;
