@@ -75,13 +75,13 @@ module RepositoryStockLedgerZipExport
       ]
       breadcrumbs_data = Array.new(5)
       if consumption_type == 'Task'
-        my_module = record.my_module_repository_row.my_module
+        my_module = record.my_module_repository_row&.my_module
         breadcrumbs_data = [
-          my_module.experiment.project.team.name,
-          my_module.experiment.project.name,
-          my_module.experiment.name,
-          my_module.name,
-          my_module.code
+          my_module&.experiment&.project&.team&.name,
+          my_module&.experiment&.project&.name,
+          my_module&.experiment&.name,
+          my_module&.name,
+          my_module&.code
         ]
       end
 
