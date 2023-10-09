@@ -15,8 +15,6 @@
       border-radius: $border-radius-modal;
       display: flex;
       flex-direction: column;
-      flex-grow: 1;
-      height: 5.5em;
       padding: .5em 0;
 
       .value {
@@ -81,8 +79,6 @@
 
 #consumeRepositoryStockValueModalWarning {
   .modal-body {
-    padding: 0;
-
     p {
       padding: 15px 15px 0;
     }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-sn-blue w-full flex justify-center flex-col menu-item"
+    <div class="text-sn-blue w-full flex justify-center flex-col menu-item rounded"
         :class="{ 'bg-sn-super-light-blue active': activeItem }"
         :style="{ 'padding-left': paddingLeft + 'px', 'min-width': (paddingLeft + 182) + 'px' }"
         :navigator-item-id="item.id"

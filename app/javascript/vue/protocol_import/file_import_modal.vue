@@ -6,13 +6,9 @@
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">{{ i18n.t(`protocols.import_modal.${state}.title`) }}</h4>
         </div>
-        <div class="modal-body text-xs" v-html="i18n.t(`protocols.import_modal.${state}.body_html`, { url: protocolUrl })">
+        <div class="modal-body text-xs" v-html="i18n.t(`protocols.import_modal.${state}.body_html`, { url: protocolTemplateTableUrl })">
         </div>
         <div class="modal-footer">
-          <button type="button"
-                  class="btn btn-default"
-                  data-dismiss="modal">{{ i18n.t('protocols.import_modal.cancel') }}</button>
-
           <button v-if="state === 'confirm'" type="button"
                   class="btn btn-primary"
                   @click.stop.prevent="confirm">{{ i18n.t('protocols.import_modal.import') }}</button>
@@ -33,7 +29,8 @@
   export default {
     name: 'ProtocolFileImportModal',
     props: {
-      importUrl: { type: String, required: true}
+      importUrl: { type: String, required: true },
+      protocolTemplateTableUrl: { type: String }
     },
     data() {
       return {
@@ -42,7 +39,6 @@
         jobPollInterval: null,
         pollCount: 0,
         jobId: null,
-        protocolUrl: null,
         refreshCallback: null
       }
     },
@@ -51,6 +47,7 @@
     },
     methods: {
       open() {
+        $('.protocol-import-dropdown-button').dropdown('toggle');
         $(this.$refs.modal).modal('show');
       },
       close() {
@@ -70,6 +67,7 @@
       confirm() {
         let formData = new FormData();
         Array.from(this.files).forEach(file => formData.append('files[]', file, file.name));
+
         $.post({ url: this.importUrl, data: formData, processData: false, contentType: false }, (data) => {
             this.state = 'in_progress';
             this.jobId = data.job_id

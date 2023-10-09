@@ -22,6 +22,14 @@
           <%= t('assets.file_preview.edit_in_marvinjs') %>
         </button>
 
+      <% elsif asset.blob.metadata["asset_type"] == 'gene_sequence' %>
+        <button class="btn btn-light gene-sequence-edit-button"
+          data-sequence-edit-url="<%= edit_gene_sequence_asset_path(asset) %>"
+        >
+          <span class="sn-icon sn-icon-sequence-editor"></span>
+          <%= t('open_vector_editor.edit_sequence') %>
+        </button>
+
       <% elsif asset.editable_image? %>
         <button class="btn btn-light image-edit-button"
           data-image-id="<%= asset.id %>"
@@ -46,7 +54,7 @@
   </div>
 </div>
 <div class="modal-body">
-  <div class="file-preview-container">
+  <div class="file-preview-container <%= 'file-preview-container__wopi' if wopi_file?(asset) %>">
     <% if asset.previewable? %>
       <% if wopi_enabled? && wopi_file?(asset) %>
         <iframe class="wopi-file-preview" src="<%= asset.get_action_url(current_user, 'embedview') %>"></iframe>
@@ -54,16 +62,16 @@
         <%= render partial: 'shared/pdf_viewer', locals: { asset: asset, report_document: false } %>
       <% else %>
         <%= image_tag asset.large_preview,
-            class: 'asset-image',
-            style: 'opacity: 0' %>
+          class: class_names('asset-image', 'gene-sequence-asset': asset.blob&.metadata["asset_type"] == 'gene_sequence'),
+          style: 'opacity: 0' %>
       <% end %>
     <% else %>
       <%= render partial: 'shared/file_preview/file_icon', locals: { asset: asset } %>
     <% end %>
   </div>
 </div>
-<div class="modal-footer">
-  <% if gallery %>
+<% if gallery.present? %>
+  <div class="modal-footer">
     <div class="gallery">
       <% previous_asset = Asset.find_by(id: gallery.split(asset.id.to_s)[0]&.last) %>
       <% next_asset = Asset.find_by(id: gallery.split(asset.id.to_s)[1]&.first) %>
@@ -101,7 +109,7 @@
         <% end %>
       <% end %>
     </div>
-  <% end %>
-</div>
+  </div>
+<% end %>
 
 <%= javascript_include_tag 'shared/file_preview', nonce: true %>

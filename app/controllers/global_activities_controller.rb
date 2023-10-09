@@ -49,14 +49,12 @@ class GlobalActivitiesController < ApplicationController
     end
 
     @next_page = activities.next_page
-    @starting_timestamp = activities.first&.created_at.to_i
 
     respond_to do |format|
       format.json do
         render json: {
           activities_html: render_to_string(partial: 'activity_list', formats: :html),
-          next_page: @next_page,
-          starting_timestamp: @starting_timestamp
+          next_page: @next_page
         }
       end
       format.html do
@@ -65,13 +63,17 @@ class GlobalActivitiesController < ApplicationController
   end
 
   def team_filter
-    render json: current_user.teams.ordered.global_activity_filter(activity_filters, params[:query])
+    teams = current_user.teams.ordered.global_activity_filter(activity_filters, params[:query])
+    render json: teams.select(:id, :name)
+                      .map { |i| { value: i[:id], label: escape_input(i[:name]) } }
   end
 
   def user_filter
     filter = activity_filters
     filter = { subjects: { MyModule: [params[:my_module_id].to_i] } } if params[:my_module_id]
-    render json: current_user.global_activity_filter(filter, params[:query])
+    users = current_user.global_activity_filter(filter, params[:query])
+    render json: users.select(:full_name, :id)
+                      .map { |i| { label: escape_input(i[:full_name]), value: i[:id] } }
   end
 
   def project_filter
@@ -154,7 +156,7 @@ class GlobalActivitiesController < ApplicationController
 
   def activity_filters
     params.permit(
-      :page, :starting_timestamp, :from_date, :to_date, types: [], subjects: {}, users: [], teams: []
+      :page, :from_date, :to_date, types: [], subjects: {}, users: [], teams: []
     )
   end
 

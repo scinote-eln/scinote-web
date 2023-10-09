@@ -8,7 +8,7 @@
       data-navigator-state-url="<%= navigator_state_navigations_path %>"
       data-turbolinks-permanent data-behaviour="vue">
   <navigator-container
-    @navigator:colapse="navigatorCollapsed = true"
+    @navigator:colapse="toggleNavigatorState(true)"
     :reload-current-level="reloadCurrentLevel"
     :reload-children-level="reloadChildrenLevel"
   />

@@ -432,6 +432,11 @@
 
 .repository-table,
 #myModuleRepositoryFullViewModal {
+  .modal-body {
+    padding: 0;
+    border-bottom: 0;
+  }
+
   .date-time-cell-value,
   .date-cell-value {
     display: inline-block;

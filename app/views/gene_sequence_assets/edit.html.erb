@@ -1,0 +1,31 @@
+<html>
+  <head>
+    <%= csp_meta_tag %>
+    <%= javascript_include_tag 'i18n_bundle' %>
+    <%= javascript_include_tag 'jquery_bundle' %>
+    <%= stylesheet_link_tag 'sn_icon_font' %>
+    <%= stylesheet_link_tag 'application' %>
+    <%= stylesheet_link_tag 'tailwind' %>
+    <%= stylesheet_link_tag 'open_vector_editor' %>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <% if @ove_enabled %>
+      <div id="open-vector-editor" data-behaviour="vue">
+        <open-vector-editor
+          file-url="<%= @file_url %>"
+          file-name="<%= @file_name %>"
+          update-url="<%= @asset ? gene_sequence_asset_url(@asset) : gene_sequence_assets_url(parent_type: params[:parent_type], parent_id: params[:parent_id]) %>"
+          can-edit-file="<%= asset_managable? %>"
+          ove-warning="<%= defined?(@warnings) ? @warnings : '' %>"
+        />
+      </div>
+      <%= javascript_include_tag 'open_vector_editor' %>
+      <%= javascript_include_tag 'vue_components_open_vector_editor' %>
+    <% end %>
+  </body>
+</html>

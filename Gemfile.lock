@@ -132,6 +132,8 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
+    acts_as_list (1.1.0)
+      activerecord (>= 4.2)
     addressable (2.8.4)
       public_suffix (>= 2.0.2, < 6.0)
     aes_key_wrap (1.1.0)
@@ -399,7 +401,7 @@ GEM
     mini_magick (4.12.0)
     mini_mime (1.1.2)
     mini_portile2 (2.8.4)
-    minitest (5.18.1)
+    minitest (5.20.0)
     msgpack (1.7.1)
     multi_json (1.15.0)
     multi_test (1.1.0)
@@ -671,7 +673,7 @@ GEM
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     whacamole (1.2.0)
-    wicked_pdf (2.6.3)
+    wicked_pdf (2.7.0)
       activesupport
     xpath (3.2.0)
       nokogiri (~> 1.8)
@@ -687,6 +689,7 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers (~> 0.10.7)
   activerecord-import
+  acts_as_list
   ajax-datatables-rails (~> 0.3.1)
   aspector
   auto_strip_attributes (~> 2.1)

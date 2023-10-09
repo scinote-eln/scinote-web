@@ -219,6 +219,7 @@ Rails.application.routes.draw do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'export_repository', to: 'repositories#export_repository'
         post 'export_repositories', to: 'repositories#export_repositories'
+        post 'export_repository_stock_items', to: 'repositories#export_repository_stock_items'
         post 'export_projects'
         get 'sidebar'
         get 'export_projects_modal'
@@ -317,6 +318,7 @@ Rails.application.routes.draw do
       end
 
       resources :my_modules, only: %i(show) do
+
         member do
           get :tree
         end
@@ -324,9 +326,6 @@ Rails.application.routes.draw do
     end
 
     resources :projects, except: [:destroy] do
-      resources :project_comments,
-                path: '/comments',
-                only: %i(create index update destroy)
       # Activities popup (JSON) for individual project in projects index,
       # as well as all activities page for single project (HTML)
       resources :project_activities, path: '/activities', only: [:index]
@@ -465,10 +464,6 @@ Rails.application.routes.draw do
 
       resource :shareable_link, controller: :my_module_shareable_links, only: %i(show create update destroy)
 
-      resources :my_module_comments,
-                path: '/comments',
-                only: %i(create index update destroy)
-
       get :repositories_dropdown_list, controller: :my_module_repositories
       get :repositories_list_html, controller: :my_module_repositories
 
@@ -502,9 +497,6 @@ Rails.application.routes.draw do
 
       post :select_default_snapshot, to: 'my_module_repository_snapshots#select'
 
-      resources :result_texts, only: [:new, :create]
-      resources :result_assets, only: [:new, :create]
-      resources :result_tables, only: [:new, :create]
       member do
         # AJAX popup accessed from full-zoom canvas for single module,
         # as well as full activities view (HTML) for single module
@@ -525,7 +517,6 @@ Rails.application.routes.draw do
         get 'protocols' # Protocols view for single module
         get 'protocol', to: 'my_modules#protocol', as: 'protocol'
         patch 'protocol', to: 'my_modules#update_protocol', as: 'update_protocol'
-        get 'results' # Results view for single module
         get 'archive' # Archive view for single module
       end
 
@@ -533,30 +524,65 @@ Rails.application.routes.draw do
       # to preserve original id parameters in URL.
       get 'tags/edit', to: 'my_module_tags#index_edit'
       get 'users/edit', to: 'user_my_modules#index_edit'
+
+      resources :results, only: %i(index show create update destroy) do
+        member do
+          get :elements
+          get :assets
+          post :upload_attachment
+          post :update_view_state
+          post :update_asset_view_mode
+          post :duplicate
+          post :archive
+          post :restore
+        end
+
+        resources :result_orderable_elements do
+          post :reorder, on: :collection
+        end
+
+        resources :tables, controller: 'result_elements/tables', only: %i(create destroy update) do
+          member do
+            get :move_targets
+            post :move
+            post :duplicate
+          end
+        end
+        resources :texts, controller: 'result_elements/texts', only: %i(create destroy update) do
+          member do
+            get :move_targets
+            post :move
+            post :duplicate
+          end
+        end
+      end
     end
 
     resources :steps, only: %i(index update destroy show) do
       resources :step_orderable_elements do
         post :reorder, on: :collection
       end
-      resources :step_comments,
-                path: '/comments',
-                only: %i(create index update destroy)
       resources :tables, controller: 'step_elements/tables', only: %i(create destroy update) do
         member do
+          get :move_targets
+          post :move
           post :duplicate
         end
       end
       resources :texts, controller: 'step_elements/texts', only: %i(create destroy update) do
         member do
+          get :move_targets
+          post :move
           post :duplicate
         end
       end
       resources :checklists, controller: 'step_elements/checklists', only: %i(create destroy update) do
         member do
+          get :move_targets
+          post :move
           post :duplicate
         end
-        resources :checklist_items, controller: 'step_elements/checklist_items', only: %i(create update destroy) do
+        resources :checklist_items, controller: 'step_elements/checklist_items', only: %i(index create update destroy) do
           patch :toggle, on: :member
           post :reorder, on: :collection
         end
@@ -582,12 +608,6 @@ Rails.application.routes.draw do
       collection do
         post :marvinjs, to: 'tiny_mce_assets#marvinjs_create'
       end
-    end
-
-    resources :results, only: [:update, :destroy] do
-      resources :result_comments,
-                path: '/comments',
-                only: %i(create index update destroy)
     end
 
     resources :result_texts, only: [:edit, :update, :destroy]
@@ -739,6 +759,7 @@ Rails.application.routes.draw do
       collection do
         get :sidebar
         post 'available_rows', to: 'repository_rows#available_rows', defaults: { format: 'json' }
+        get 'export_repository_stock_items_modal'
       end
 
       member do
@@ -793,6 +814,8 @@ Rails.application.routes.draw do
     get 'files/:id/load_asset', to: 'assets#load_asset', as: 'load_asset'
     post 'files/:id/update_image', to: 'assets#update_image',
                                    as: 'update_asset_image'
+    get 'files/:id/move_targets', to: 'assets#move_targets', as: 'asset_move_tagets'
+    post 'files/:id/move', to: 'assets#move', as: 'asset_move'
     delete 'files/:id/', to: 'assets#destroy', as: 'asset_destroy'
     post 'files/create_wopi_file',
          to: 'assets#create_wopi_file',
@@ -991,4 +1014,6 @@ Rails.application.routes.draw do
     get 'wopi/files/:id', to: 'wopi#file_get_endpoint', as: 'wopi_rest_endpoint'
     post 'wopi/files/:id', to: 'wopi#post_file_endpoint'
   end
+
+  resources :gene_sequence_assets, only: %i(new create edit update)
 end

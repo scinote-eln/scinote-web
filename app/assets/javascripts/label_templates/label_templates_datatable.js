@@ -146,7 +146,7 @@
   function updateButtons() {
     if (window.actionToolbarComponent) {
       window.actionToolbarComponent.fetchActions({ label_template_ids: rowsSelectedIDs() });
-      $('.dataTables_scrollBody').css('padding-bottom', `${rowsSelectedIDs().length > 0 ? 68 : 0}px`);
+      $('.dataTables_scrollBody').css('margin-bottom', `${rowsSelectedIDs().length > 0 ? 54 : 0}px`);
     }
   }
 

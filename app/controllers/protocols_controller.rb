@@ -6,7 +6,6 @@ class ProtocolsController < ApplicationController
   include InputSanitizeHelper
   include ProtocolsIoHelper
   include TeamsHelper
-  include CommentHelper
   include ProtocolsExporterV2
 
   before_action :check_create_permissions, only: %i(
@@ -697,6 +696,12 @@ class ProtocolsController < ApplicationController
               asset_file_name = asset_guid.to_s + File.extname(asset.file_name).to_s
               ostream.put_next_entry("#{step_dir}/#{asset_file_name}")
               ostream.print(asset.file.download)
+
+              next unless asset.preview_image.attached?
+
+              asset_preview_image_name = asset_guid.to_s + File.extname(asset.preview_image_file_name).to_s
+              ostream.put_next_entry("#{step_dir}/previews/#{asset_preview_image_name}")
+              ostream.print(asset.preview_image.download)
             end
           end
           ostream = step.tiny_mce_assets.save_to_eln(ostream, step_dir)
@@ -835,7 +840,7 @@ class ProtocolsController < ApplicationController
         temp_files_ids << temp_file.id
       end
     end
-    @job = Protocols::DocxImportJob.perform_later(temp_files_ids, current_user.id, current_team.id)
+    @job = Protocols::DocxImportJob.perform_later(temp_files_ids, user_id: current_user.id, team_id: current_team.id)
     render json: { job_id: @job.job_id }
   end
 

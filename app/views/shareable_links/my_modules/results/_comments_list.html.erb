@@ -2,13 +2,13 @@
   <div class="comment-container">
     <div class="avatar-placehodler">
       <span class='global-avatar-container'>
-        <%= image_tag avatar_path(comment.user, :icon_small), class: 'avatar' %>
+        <%= image_tag user_avatar_absolute_url(comment.user, :icon_small, true), class: 'user-avatar' %>
       </span>
     </div>
     <div class="content-placeholder">
       <div class="comment-name"><%= comment.user.full_name %></div>
       <div class="comment-right !w-fit">
-        <div class="comment-datetime !w-fit"><%= comment.created_at.iso8601 %></div>
+        <div class="comment-datetime !w-fit"><%= l(comment.created_at, format: :full) %></div>
       </div>
       <div class="comment-message">
         <div class="view-mode"><%= smart_annotation_text(comment.message) %></div>

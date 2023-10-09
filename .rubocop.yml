@@ -9,7 +9,7 @@ AllCops:
     - "spec/**/*"
   NewCops: enable
   UseCache: false
-  TargetRubyVersion: 2.7
+  TargetRubyVersion: 3.0
 
 ##################### Style ####################################
 
@@ -100,7 +100,6 @@ Style/GuardClause:
 
 Style/HashSyntax:
   EnforcedStyle: ruby19
-  EnforcedShorthandSyntax: never
 
 Style/IfUnlessModifier:
   Enabled: true

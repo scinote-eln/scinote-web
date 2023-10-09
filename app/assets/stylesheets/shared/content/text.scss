@@ -1,0 +1,25 @@
+.content__text-container {
+
+  // TinyMCE table of contents
+  .mce-toc ul,
+  .mce-toc li {
+    list-style-type: none;
+  }
+
+  .img-responsive {
+    display: inline;
+    vertical-align: baseline;
+  }
+
+  .view-text-element {
+    overflow-x: auto;
+    pointer-events: initial;
+    a {
+      pointer-events: initial;
+    }
+  }
+
+  img {
+    max-width: 100%;
+  }
+}

@@ -43,21 +43,11 @@
 
 .content-pane.my-modules-protocols-index {
   background-color: $color-alto;
-  padding: 0 1rem 1rem !important;
   min-height: calc(100vh - var(--navbar-height));
 
   .title-row {
     margin-left: -1rem;
     width: calc(100% + 2rem);
-  }
-
-  .my-module-position-container {
-    background-color: $color-white;
-    box-shadow: $flyout-shadow;
-    margin: 1rem auto 0 0;
-    max-width: 900px;
-    padding: 0 0 1rem;
-    z-index: 2;
   }
 
   .dropdown {
@@ -76,15 +66,18 @@
 }
 
 .task-section {
-  margin: 16px 0;
+  background-color: var(--sn-white);
+  border-radius: .25rem;
+  margin: 1rem 0;
   padding: 0 1rem;
 
   .task-section-caret {
     align-items: center;
     color: var(--sn-black);
     display: inline-flex;
-    gap: .5rem;
+    gap: 1rem;
     padding: .5rem;
+    padding-left: 0;
     text-decoration: none;
 
     .fas {
@@ -104,21 +97,26 @@
 
       &.assigned-items-title {
         &::after {
-          @include font-h3;
           color: $color-alto;
           content: '[' attr(data-assigned-items-count) ']';
           display: inline;
+          font-size: 1rem;
+          font-weight: normal;
           line-height: 22px;
-          padding-left: 5px;
+          padding-left: .25rem;
         }
       }
     }
   }
 
+  .task-section-body {
+    padding-bottom: 1rem;
+  }
+
   .task-section-header {
     align-items: center;
     display: flex;
-    flex-wrap: wrap;
+    min-height: 4rem;
 
     .actions-block {
       display: flex;
@@ -143,12 +141,9 @@
         .repositories-dropdown-menu {
           max-height: 250px;
           overflow: auto;
+          z-index: 251;
 
           .repository {
-            @include font-button;
-            cursor: pointer;
-            display: flex;
-            padding: 8px 16px;
 
             .assigned-items,
             .shared-icon {
@@ -413,9 +408,20 @@
   }
 }
 
+#manage-module-tags-modal {
+  .dropdown-toggle {
+    box-shadow: unset;
+    outline: unset;
+  }
+
+  .dropdown-menu {
+    outline: none;
+  }
+}
+
 .task-notes {
   display: inline-block;
-  padding-left: 2rem;
+  padding-left: 40px;
   position: relative;
   width: 100%;
 
@@ -424,7 +430,6 @@
   }
 
   .task-notes-content {
-    margin-left: 10px;
     overflow-x: auto;
 
     .form-group.has-error {
@@ -437,10 +442,11 @@
   position: relative;
 
   .status-label {
-    @include font-h3;
     color: $color-alto;
     float: left;
-    margin: 0 3px;
+    font-size: 1rem;
+    font-style: normal;
+    margin: 0 .25rem;
 
     &.linked {
       color: $brand-primary;
@@ -450,7 +456,6 @@
   .status-info {
     @include font-h2;
     color: inherit;
-    padding: .5em;
     text-decoration: none;
 
     &:hover,
@@ -563,20 +568,14 @@
 }
 
 .task-details-dropdown-container {
-  .task-details-button {
-    @include font-h2;
-    color: inherit;
-    margin-left: -5px;
-    text-decoration: none;
-  }
-
   .dropdown-menu {
     @include font-button;
     min-width: 500px;
     padding: 1em 2em;
+    z-index: 251;
 
     .task-details-value {
-      @include font-h3;
+      font-weight: bold;
     }
 
     .row-v-margin {
@@ -586,103 +585,9 @@
   }
 }
 
-.task-information {
-  .task-section-header {
-    align-items: center;
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-between;
-    width: 100%;
-  }
-
-  .status-buttons {
-    .status-flow-dropdown[data-status-changing=true] {
-      .caret.pull-right {
-        display: none;
-      }
-    }
-
-    > div > .btn {
-      min-width: 115px;
-    }
-  }
-
-  .task-sharing-and-flows {
-    align-items: center;
-    display: flex;
-    justify-content: flex-end;
-
-    #dropdownTaskFlowList {
-      min-width: 230px;
-    }
-
-    .status-label {
-      @include font-button;
-      flex-basis: 50%;
-      margin-right: .5em;
-      text-align: right;
-
-      .status-title {
-        @include font-small;
-        color: var(--sn-grey);
-        margin-right: .2em;
-      }
-
-      .status-note {
-        font-weight: normal;
-      }
-
-      .pull-right {
-        font-weight: 400;
-      }
-    }
-
-    .status-flow-dropdown {
-      &:last-child {
-        margin-right: 0;
-      }
-    }
-
-    .status-buttons {
-      display: flex;
-
-      > :not(:first-child):not(.dropdown-menu) {
-        margin-left: .5em;
-      }
-    }
-
-    .status-transition-error {
-      @include font-small;
-      color: $brand-danger;
-      margin-top: .5em;
-
-      .fas {
-        margin-right: .5em;
-      }
-    }
-  }
-}
-
 @media (max-width: 810px) {
   .task-information .task-section-header {
     display: block;
-
-    .task-sharing-and-flows,
-    .status-label,
-    .status-buttons {
-      display: block;
-      max-width: 230px;
-    }
-
-    .status-label {
-      margin: 0;
-      text-align: left;
-    }
-
-    .status-buttons > :not(:first-child):not(.dropdown-menu) {
-      margin-left: 0;
-      margin-top: .5em;
-    }
   }
 
   .task-information .expanded {
@@ -711,17 +616,7 @@
     .task-details {
       grid-row: 3 / span 1;
     }
-
-    .task-sharing-and-flows {
-      grid-column: unset;
-      grid-row: 2 / span 1;
-    }
   }
-}
-
-.task-details-code {
-  display: inline-block;
-  margin-left: 4px;
 }
 
 #confirm-link-update-modal,

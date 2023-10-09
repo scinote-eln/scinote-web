@@ -2,9 +2,9 @@
 
 .attachment-container {
   @include md-card-style;
-  grid-row: span 6;
-  height: 23em;
-  padding: 1em;
+  grid-row: span 5;
+  height: 15.875rem;
+  padding: 1rem;
   position: relative;
   width: var(--attachment-column-width);
 
@@ -19,7 +19,7 @@
   .attachment-preview {
     border-radius: $border-radius-default;
     color: $color-volcano;
-    height: 14em;
+    height: 11.625rem;
     position: relative;
     text-align: center;
     width: 100%;
@@ -34,34 +34,6 @@
       max-height: 100%;
       max-width: 100%;
     }
-
-    &.marvinjs {
-
-      &::before,
-      &::after {
-        border-radius: 1em 0 0 1em;
-        bottom: 1em;
-        content: "";
-        display: block;
-        height: 2em;
-        line-height: 2em;
-        position: absolute;
-        right: -1em;
-        width: 2.25em;
-      }
-
-      &::before {
-        background: $marvinjs-color;
-      }
-
-      &::after {
-        background-image: url("/images/icon_small/marvinjs-white.svg");
-        height: 2.25em;
-        right: -.75em;
-        width: 2em;
-      }
-    }
-
     .fas {
       font-size: 100px;
       height: 240px;
@@ -78,15 +50,22 @@
     overflow: hidden;
     padding-top: 1em;
     position: relative;
-    text-align: center;
     text-overflow: ellipsis;
     transition: $md-transaction;
     white-space: nowrap;
   }
 
+  .thumbnail-action-btn {
+    border: 1px solid var(--sn-light-grey);
+
+    &:hover {
+      background-color: var(--sn-white);
+      border-color: var(--sn-blue);
+    }
+  }
+
   .attachment-label {
     @include font-main;
-    margin-top: 1.5em;
     z-index: 2;
   }
 
@@ -105,8 +84,6 @@
   }
 
   &:hover {
-    box-shadow: $md-shadow;
-
     .file-preview-link,
     .shareable-file-preview-link {
       text-decoration: none;
@@ -151,8 +128,8 @@
 
   .asset-context-menu {
     position: absolute;
-    right: 0;
-    top: 0;
+    right: 1rem;
+    top: 1rem;
   }
 }
 
@@ -182,13 +159,19 @@
     padding: .5em;
     width: 100%;
 
+    &.processing {
+      background-image: url("/images/medium/loading.svg");
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
     img {
       max-height: 100%;
       max-width: 100%;
     }
 
-    .fas {
-      font-size: 10em;
+    .sn-icon {
+      font-size: 10em !important;
     }
   }
 
@@ -198,6 +181,7 @@
     display: flex;
     height: calc(100% - 4em);
     justify-content: center;
+    margin: unset;
     width: 100%;
   }
 
@@ -248,6 +232,22 @@
     @include font-main;
   }
 
+  .attachment-image-tooltip {
+    bottom: 90px;
+    display: none;
+    position: relative;
+    right: 110px;
+    z-index: 9999;
+
+    img {
+      height: 150px;
+    }
+  }
+
+  .file-preview-link:hover + .attachment-image-tooltip {
+    display: block;
+  }
+
   .file-name {
     @include font-main;
     color: $brand-primary;
@@ -267,7 +267,7 @@
   }
 
   .asset-context-menu {
-    margin-left: auto;
+    margin-left: 1rem;
   }
 }
 
@@ -336,7 +336,6 @@
   }
 
   .file-name {
-    text-align: center;
 
     &:not(.one-line) div {
       margin-bottom: .5em;
@@ -444,4 +443,16 @@
   margin-right: 1em;
   padding: 4px 8px;
   white-space: nowrap;
+}
+
+.sn-file-ove {
+  height: 1.5rem;
+  width: 1.5rem;
+
+  &::before {
+    content: url("icon_small/sequence-editor.svg");
+    display: inline-block;
+    margin: auto;
+    width: 100%;
+  }
 }

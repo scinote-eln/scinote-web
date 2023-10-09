@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="max-file-size" content="<%= Rails.configuration.x.file_max_size_mb %>">
     <meta name="tiny-mce-assets-url" content="<%= tiny_mce_assets_path %>">
+    <meta name="turbolinks-cache-control" content="no-preview">
     <% if user_signed_in? %>
       <meta name="expiration-url" content="<%= users_expire_in_path %>">
       <meta name="revive-url" content="<%= users_revive_session_path %>">
@@ -27,9 +28,8 @@
 
 
     <% if MarvinJsService.enabled? && ENV['MARVINJS_API_KEY'] %>
-    <%= javascript_include_tag "https://marvinjs.chemicalize.com/v1/#{ ENV['MARVINJS_API_KEY'] }/client-settings.js",
-                                nonce: true %>
-    <%= javascript_include_tag 'https://marvinjs.chemicalize.com/v1/client.js', nonce: true %>
+      <%= javascript_include_tag "https://marvinjs.chemicalize.com/v1/#{ ENV['MARVINJS_API_KEY'] }/client-settings.js", nonce: true, async: true %>
+      <%= javascript_include_tag 'https://marvinjs.chemicalize.com/v1/client.js', nonce: true, async: true %>
     <% end %>
 
     <%= favicon_link_tag "favicon.ico" %>
@@ -69,6 +69,7 @@
     <span style="display: none;" data-hook="application-body-html"></span>
 
     <div class="sci--layout"
+         data-grey-background="<%= show_grey_background? %>"
          data-breadcrumbs-collapsed="<%= !@breadcrumbs_items.present? %>"
          data-navigator-collapsed="<%= !@navigator || session[:navigator_collapsed] %>"
          data-left-navigation-collapsed=<%= !user_signed_in? %>
@@ -109,9 +110,11 @@
       <%= render "shared/file_preview/modal" %>
       <%= render "shared/file_edit_modal" %>
       <%= render "shared/marvinjs_modal" %>
+      <%= render "shared/iframe_modal" %>
       <%= render "users/sessions/session_expire_modal" %>
       <%= render "users/sessions/session_end_modal" %>
       <%= render "label_printers/label_printer_modal" %>
+      <%= render "shared/export_stock_consumption_modal" %>
     <% end %>
 
     <span style="display: none;" data-hook="application-body-end-html"></span>

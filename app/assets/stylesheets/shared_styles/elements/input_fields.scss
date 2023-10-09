@@ -7,15 +7,16 @@
 
   label {
     @include font-small;
+    color: var(--sn-dark-grey);
     display: inline-block;
-    font-weight: bold;
-    margin-bottom: 5px;
+    font-weight: 400;
+    margin-bottom: .5rem;
   }
 
   .sci-input-field {
     @include font-button;
     animation-timing-function: $timing-function-sharp;
-    border: $border-secondary;
+    border: 1px solid var(--sn-light-grey);
     border-radius: $border-radius-default !important;
     box-shadow: none;
     height: 36px;
@@ -24,12 +25,18 @@
     transition: .3s;
     width: 100%;
 
+    &:hover {
+      border: 1px solid var(--sn-science-blue-hover);
+    }
+
     &:focus {
       border: $border-focus;
     }
 
     &:disabled {
-      background: transparent;
+      background-color: var(--sn-super-light-grey);
+      color: var(--sn-light-grey);
+      border: 1px solid var(--sn-light-grey);
     }
 
     &::placeholder {
@@ -51,6 +58,10 @@
     &::placeholder {
       letter-spacing: initial;
     }
+  }
+
+  input.sci-input-field {
+    height: 36px !important;
   }
 
   .sn-icon {
@@ -164,6 +175,46 @@
       &::placeholder {
         color: inherit;
       }
+    }
+  }
+
+  &.password-input-container {
+    .password-icon-wrapper {
+      position: relative;
+
+      input {
+        padding-right: 2.4em;
+      }
+    }
+
+    .sn-icon {
+      align-items: center;
+      display: flex;
+      height: 100%;
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 24px;
+    }
+
+    .help-block {
+      left: 0;
+      position: absolute;
+      width: 100%;
+
+      &:nth-of-type(2) { top: 60px; }
+      &:nth-of-type(3) { top: 120px; }
+    }
+
+    &.error::before,
+    &.has-error {
+      padding-bottom: 0;
+    }
+
+    &.has-error {
+      margin-bottom: inherit;
+      padding-bottom: 2em;
     }
   }
 }

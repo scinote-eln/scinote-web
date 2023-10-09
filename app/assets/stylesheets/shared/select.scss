@@ -53,14 +53,14 @@
     background: transparent;
     border: 0;
     display: none;
+    height: 26px;
     outline: 0;
+    padding: 0;
     width: calc(100% - 1.5em);
   }
 
   &.sn-select--open {
     background: $color-white;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
     border-color: var(--sn-science-blue);
 
     .sn-select__search-input {
@@ -82,12 +82,14 @@
     }
 
     .sn-select__option {
-      line-height: 1.75rem;
       overflow: hidden;
-      padding: .5rem 1rem;
       text-overflow: ellipsis;
       white-space: nowrap;
-      width: calc(100%);
+      width: 100%;
+    }
+
+    .select__option-placeholder {
+      color: var(--sn-grey);
     }
 
     .sn-select__no-options {

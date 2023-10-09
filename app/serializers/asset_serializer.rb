@@ -11,14 +11,14 @@ class AssetSerializer < ActiveModel::Serializer
   attributes :file_name, :view_mode, :icon, :urls, :updated_at_formatted,
              :file_size, :medium_preview, :large_preview, :asset_type, :wopi,
              :wopi_context, :pdf_previewable, :file_size_formatted, :asset_order,
-             :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached
+             :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached, :parent_type
 
   def icon
     file_fa_icon_class(object)
   end
 
   def file_name
-    escape_input(object.render_file_name)
+    object.render_file_name
   end
 
   def updated_at
@@ -27,6 +27,11 @@ class AssetSerializer < ActiveModel::Serializer
 
   def updated_at_formatted
     I18n.l(object.updated_at, format: :full_date) if object.updated_at
+  end
+
+  def parent_type
+    return 'step' if object.step
+    return 'result' if object.result
   end
 
   def attached
@@ -124,9 +129,12 @@ class AssetSerializer < ActiveModel::Serializer
         edit_asset: edit_asset_path(object),
         marvin_js_start_edit: start_editing_marvin_js_asset_path(object),
         start_edit_image: start_edit_image_path(object),
-        delete: asset_destroy_path(object)
+        delete: asset_destroy_path(object),
+        move_targets: asset_move_tagets_path(object),
+        move: asset_move_path(object)
       )
     end
+    urls[:open_vector_editor_edit] = edit_gene_sequence_asset_path(object.id) if can_manage_asset?(user, object)
     urls[:wopi_action] = object.get_action_url(user, 'embedview') if wopi && can_manage_asset?(user, object)
     urls[:blob] = rails_blob_path(object.file, disposition: 'attachment') if object.file.attached?
 

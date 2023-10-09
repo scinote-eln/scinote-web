@@ -98,4 +98,8 @@ Canaid::Permissions.register_for(Repository) do
   can :manage_repository_stock do |user, repository|
     RepositoryBase.stock_management_enabled? && can_manage_repository_rows?(user, repository)
   end
+
+  can :export_repository_stock do |user, repository|
+    can_read_repository?(user, repository) && repository.has_stock_management?
+  end
 end

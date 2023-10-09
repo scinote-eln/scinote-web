@@ -6,16 +6,14 @@ class ChecklistSerializer < ActiveModel::Serializer
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  attributes :id, :name, :urls, :icon, :sa_name, :checklist_items
+  attributes :id, :name, :urls, :icon, :sa_name, :checklist_items, :parent_type
 
   def icon
     'fa-list-ul'
   end
 
-  def checklist_items
-    object.checklist_items.map do |item|
-      ChecklistItemSerializer.new(item, scope: { user: scope[:user] || @instance_options[:user] }).as_json
-    end
+  def parent_type
+    :step
   end
 
   def sa_name
@@ -27,14 +25,19 @@ class ChecklistSerializer < ActiveModel::Serializer
   end
 
   def urls
-    return {} if object.destroyed? || !can_manage_step?(scope[:user] || @instance_options[:user], object.step)
+    if object.destroyed? || !can_manage_step?(scope[:user] || @instance_options[:user], object.step)
+      return { checklist_items_url: step_checklist_checklist_items_path(object.step, object) }
+    end
 
     {
+      checklist_items_url: step_checklist_checklist_items_path(object.step, object),
       duplicate_url: duplicate_step_checklist_path(object.step, object),
       delete_url: step_checklist_path(object.step, object),
       update_url: step_checklist_path(object.step, object),
       reorder_url: reorder_step_checklist_checklist_items_path(object.step, object),
-      create_item_url: step_checklist_checklist_items_path(object.step, object)
+      create_item_url: step_checklist_checklist_items_path(object.step, object),
+      move_targets_url: move_targets_step_checklist_path(object.step, object),
+      move_url: move_step_checklist_path(object.step, object)
     }
   end
 end

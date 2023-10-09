@@ -17,6 +17,8 @@ var ActiveStoragePreviews = (function() {
 
       if (img.retryCount >= RETRY_COUNT) return;
 
+      $(img).css('opacity', 0);
+
       if (!$(img).parent().hasClass('processing')) $(img).parent().addClass('processing');
 
       setTimeout(() => {
@@ -30,8 +32,8 @@ var ActiveStoragePreviews = (function() {
     },
     reloadPreview: function(target) {
       $(target)
-        .one('error', (event) => this.reCheckPreview(event))
-        .one('load', (event) => this.showPreview(event))
+        .on('error', event => this.reCheckPreview(event))
+        .on('load', event => this.showPreview(event))
         .trigger('error');
     }
   });

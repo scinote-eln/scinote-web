@@ -58,10 +58,39 @@ function importProtocolFromFile(
   }
 
   function getAssetBytes(folder, stepGuid, fileRef) {
-    var stepPath = stepGuid ? stepGuid + '/' : '';
-    var filePath = folder + stepPath + fileRef;
-    var assetBytes = zipFiles.files[cleanFilePath(filePath)].asBinary();
+    const stepPath = stepGuid ? stepGuid + '/' : '';
+    const filePath = folder + stepPath + fileRef;
+    const assetBytes = zipFiles.files[cleanFilePath(filePath)].asBinary();
     return window.btoa(assetBytes);
+  }
+
+  function getAssetPreview(folder, stepGuid, fileRef, fileName, fileType) {
+    if ($.inArray(fileType, ['image/png', 'image/jpeg', 'image/gif', 'image/bmp']) > 0) {
+      return {
+        fileName: fileName,
+        fileType: fileType,
+        bytes: getAssetBytes(folder, stepGuid, fileRef)
+      };
+    } else {
+      const stepPath = stepGuid ? folder + stepGuid + '/' : folder;
+      let baseName;
+      baseName = fileRef.split('.');
+      baseName.pop();
+      baseName.join('.');
+      let previewFileRef = zipFiles.file(new RegExp(stepPath + 'previews/' + baseName));
+      if (previewFileRef.length > 0) {
+        const previewFileExt = previewFileRef[0].name.split('.').at(-1);
+        let previewFileName = fileName.split('.');
+        previewFileName.splice(-1, 1, previewFileExt);
+        previewFileName.join('.');
+        return {
+          fileName: previewFileName,
+          fileType: `image/${previewFileExt}`,
+          bytes: window.btoa(previewFileRef[0].asBinary())
+        };
+      }
+    }
+    return null;
   }
 
   /* Template functions */
@@ -82,14 +111,14 @@ function importProtocolFromFile(
   }
 
   function newAssetElement(folder, stepGuid, fileRef, fileName, fileType) {
-    var html = '<li class="col-xs-12">';
-    var assetBytes;
-    if ($.inArray(fileType, ['image/png', 'image/jpeg', 'image/gif', 'image/bmp']) > 0) {
-      assetBytes = getAssetBytes(folder, stepGuid, fileRef);
+    let html = '<li class="col-xs-12">';
+    let assetPreview = getAssetPreview(folder, stepGuid, fileRef, fileName, fileType);
 
-      html += '<img style="max-width:300px; max-height:300px;" src="data:' + fileType + ';base64,' + assetBytes + '" />';
+    if (assetPreview) {
+      html += '<img style="max-width:300px; max-height:300px;" src="data:' + assetPreview.fileType + ';base64,' + assetPreview.bytes + '" />';
       html += '<br>';
     }
+
     html += '<span>' + fileName + '</span>';
     html += '</li>';
     return $.parseHTML(html);
@@ -300,13 +329,12 @@ function importProtocolFromFile(
   }
 
   function addStepTextPreview(stepEl, stepTextNode, folder, stepGuid) {
-    var itemId = $(stepTextNode).attr('id');
+    const itemName = $(stepTextNode).children('name').text();
+    const itemText = displayTinyMceAssetInDescription(stepTextNode, folder, stepGuid);
 
-    var itemText = displayTinyMceAssetInDescription(stepTextNode, folder, stepGuid);
-
-    var textEl = newPreviewElement(
+    const textEl = newPreviewElement(
       'step-text',
-      { text: itemText }
+      { name: itemName, text: itemText }
     );
 
     stepEl.append(textEl);
@@ -567,7 +595,7 @@ function importProtocolFromFile(
 
   function stepTextJson(stepTextNode, folderIndex, stepGuid) {
     var json = {};
-
+    json.name = stepTextNode.children('name').text();
     json.contents = $('<div></div>').html(
       stepTextNode.children('contents')
         .html()
@@ -708,6 +736,7 @@ function importProtocolFromFile(
         var assetId = $(this).attr('id');
         var fileRef = $(this).attr('fileRef');
         var fileName = $(this).children('fileName').text();
+
         stepAssetJson.id = assetId;
         stepAssetJson.fileName = fileName;
         stepAssetJson.fileType = $(this).children('fileType').text();
@@ -721,6 +750,14 @@ function importProtocolFromFile(
           protocolFolders[index],
           stepGuid,
           fileRef
+        );
+
+        stepAssetJson.preview_image = getAssetPreview(
+          protocolFolders[index],
+          stepGuid,
+          fileRef,
+          fileName,
+          null
         );
 
         stepAssetsJson.push(stepAssetJson);

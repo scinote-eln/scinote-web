@@ -13,19 +13,23 @@ module FileIconsHelper
     if Extends::FILE_FA_ICON_MAPPINGS[file_ext] # Check for custom mappings or possible overrides
       Extends::FILE_FA_ICON_MAPPINGS[file_ext]
     elsif Constants::FILE_TEXT_FORMATS.include?(file_ext)
-      'fa-file-word'
+      'sn-icon-file-word'
     elsif Constants::FILE_TABLE_FORMATS.include?(file_ext)
-      'fa-file-excel'
+      'sn-icon-file-excel'
     elsif Constants::FILE_PRESENTATION_FORMATS.include?(file_ext)
-      'fa-file-powerpoint'
+      'sn-icon-file-powerpoint'
     elsif %w(pdf).include?(file_ext)
-      'fa-file-pdf'
+      'sn-icon-file-pdf'
     elsif %w(txt csv tab tex).include?(file_ext)
-      'far fa-file-alt'
+      'sn-icon-result-text'
     elsif Constants::WHITELISTED_IMAGE_TYPES.include?(file_ext)
-      'fa-image'
+      'sn-icon-result-image'
+    elsif asset.file.attached? && asset.file.metadata['asset_type'] == 'marvinjs'
+      'sn-icon-marvinjs'
+    elsif asset.file.attached? && asset.file.metadata['asset_type'] == 'gene_sequence'
+      'sn-icon-sequence-editor'
     else
-      'fa-paperclip'
+      'sn-icon-attachment'
     end
   end
 
@@ -40,17 +44,17 @@ module FileIconsHelper
       image_link = 'icon_small/pptx_file.svg'
     elsif asset.file.attached? && asset.file.metadata['asset_type'] == 'marvinjs'
       image_link = 'icon_small/marvinjs_file.svg'
+    elsif asset.file.attached? && asset.file.metadata['asset_type'] == 'gene_sequence'
+      image_link = 'icon_small/sequence-editor.svg'
     end
 
     # Now check for custom mappings or possible overrides
     image_link = Extends::FILE_ICON_MAPPINGS[file_ext] if Extends::FILE_ICON_MAPPINGS[file_ext]
 
     if image_link
-      if report
-        wicked_pdf_image_tag(image_link, class: 'image-icon')
-      else
-        ActionController::Base.helpers.image_tag(image_link, class: 'image-icon')
-      end
+      image_link = wicked_pdf_asset_base64(image_link) if report
+
+      ActionController::Base.helpers.image_tag(image_link, class: 'image-icon')
     else
       ''
     end
@@ -125,7 +129,7 @@ module FileIconsHelper
       html = ActionController::Base.helpers.content_tag(
         :i,
         '',
-        class: ['fas', 'asset-icon', file_fa_icon_class(asset)]
+        class: ['sn-icon', 'asset-icon', file_fa_icon_class(asset)]
       )
     end
     html

@@ -32,7 +32,7 @@ module Toolbars
         edit_action,
         assign_action,
         duplicate_action,
-        export_action,
+        export_actions,
         print_label_action,
         archive_action,
         delete_action
@@ -101,16 +101,38 @@ module Toolbars
       }
     end
 
-    def export_action
+    def export_items_action
       return unless can_read_repository?(@repository)
 
       {
-        name: 'export',
-        label: I18n.t('repositories.export_record'),
+        name: 'export_records',
+        label: I18n.t('repositories.exports.records'),
         icon: 'sn-icon sn-icon-export',
         button_class: 'export-repository-row-btn',
-        button_id: 'exportRepositoriesButton',
+        button_id: 'exportRepositoryRowsButton',
         type: :legacy
+      }
+    end
+
+    def export_consumption_action
+      return unless can_export_repository_stock?(@repository)
+
+      {
+        name: 'export_consumption',
+        label: I18n.t('repositories.exports.stock_consumption'),
+        icon: 'sn-icon sn-icon-reports',
+        button_class: 'export-consumption-button',
+        button_id: 'exportStockConsumptionButton',
+        item_id: @repository.id,
+        type: :legacy
+      }
+    end
+
+    def export_actions
+      {
+        type: :group,
+        group_label: I18n.t('repositories.exports.export'),
+        actions: [export_items_action, export_consumption_action].compact
       }
     end
 

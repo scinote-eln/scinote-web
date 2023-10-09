@@ -9,10 +9,15 @@ class StepSerializer < ActiveModel::Serializer
 
   attributes :name, :position, :completed, :attachments_manageble, :urls, :assets_view_mode,
              :marvinjs_enabled, :marvinjs_context, :created_by, :created_at, :assets_order,
-             :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit
+             :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit,
+             :type, :open_vector_editor_context
 
   def marvinjs_enabled
     MarvinJsService.enabled?
+  end
+
+  def type
+    'Step'
   end
 
   def marvinjs_context
@@ -20,6 +25,15 @@ class StepSerializer < ActiveModel::Serializer
       {
         marvin_js_asset_url: marvin_js_assets_path,
         icon: image_path('icon_small/marvinjs.svg')
+      }
+    end
+  end
+
+  def open_vector_editor_context
+    if can_manage_step?(object)
+      {
+        new_sequence_asset_url: new_gene_sequence_asset_url(parent_type: 'Step', parent_id: object.id),
+        icon: image_path('icon_small/sequence-editor.svg')
       }
     end
   end
@@ -79,7 +93,7 @@ class StepSerializer < ActiveModel::Serializer
         create_text_url: step_texts_path(object),
         create_checklist_url: step_checklists_path(object),
         update_asset_view_mode_url: update_asset_view_mode_step_path(object),
-        update_view_state_step_url: update_view_state_step_path(object),
+        update_view_state_url: update_view_state_step_path(object),
         direct_upload_url: rails_direct_uploads_url,
         upload_attachment_url: upload_attachment_step_path(object),
         reorder_elements_url: reorder_step_step_orderable_elements_path(step_id: object.id)

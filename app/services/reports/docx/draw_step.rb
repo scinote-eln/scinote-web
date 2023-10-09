@@ -31,7 +31,7 @@ module Reports::Docx::DrawStep
       when 'Checklist'
         handle_checklist(element.orderable)
       when 'StepText'
-        handle_step_text(element.orderable)
+        handle_step_text(element)
       end
     end
     if @settings.dig('task', 'protocol', 'step_files')
@@ -65,7 +65,7 @@ module Reports::Docx::DrawStep
     draw_step_checklist(checklist) if @settings.dig('task', 'protocol', 'step_checklists')
   end
 
-  def handle_step_text(text)
-    draw_step_text(text) if @settings.dig('task', 'protocol', 'step_texts')
+  def handle_step_text(element)
+    draw_step_text(element) if @settings.dig('task', 'protocol', 'step_texts')
   end
 end
