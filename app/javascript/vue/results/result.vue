@@ -86,7 +86,7 @@
       @close="closeReorderModal"
     />
     <div class="collapse in pl-10" :id="'resultBody' + result.id">
-      <div v-for="(element, index) in orderedElements" :key="index">
+      <div v-for="(element, index) in orderedElements" :key="element.id">
         <component
           :is="elements[index].attributes.orderable_type"
           :element.sync="elements[index]"
@@ -427,7 +427,7 @@
       },
       moveElement(position, target_id) {
         this.elements.splice(position, 1)
-        let unorderedElements = this.elements.map( e => {
+        this.elements.map( e => {
           if (e.attributes.position >= position) {
             e.attributes.position -= 1;
           }
