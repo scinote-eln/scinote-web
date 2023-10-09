@@ -1291,6 +1291,8 @@ en:
           6_x_8: '48 (6 x 8 )'
           6_x_4: '24 (6 x 4)'
           2_x_3: '6 (2 x 3)'
+      text:
+        placeholder: "Enter result text"
       sorts:
         updated_at_asc: "Modified first"
         updated_at_desc: "Modified last"
