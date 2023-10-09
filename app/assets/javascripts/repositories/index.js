@@ -67,7 +67,7 @@
           orderable: false,
           render: function() {
             return `<div class="sci-checkbox-container">
-                      <input class='repository-row-selector sci-checkbox' type='checkbox'>
+                      <input class='repository-row-selector sci-checkbox' type='checkbox' data-e2e='e2e-inventories-inventoryCheckbox'>
                       <span class='sci-checkbox-label'></span>
                     </div>`;
           }
