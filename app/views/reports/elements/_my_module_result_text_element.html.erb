@@ -19,11 +19,11 @@
     <div class="row">
       <div class="col-xs-12">
         <div class="text-container ql-editor">
-          <%= custom_auto_link(result_text.prepare_for_report(:text, export_all),
+          <%= custom_auto_link(result_text.prepare_for_report(:text),
                                 team: current_team,
                                 simple_format: false,
                                 tags: %w(img),
-                                base64_encoded_imgs: export_all) %>
+                                base64_encoded_imgs: true) %>
         </div>
       </div>
     </div>
