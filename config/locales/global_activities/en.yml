@@ -568,6 +568,10 @@ en:
       protocol_sequence_asset_edit_started: "Protocol sequence asset editing started"
       protocol_sequence_asset_edit_finished: "Protocol sequence asset editing finished"
       protocol_sequence_asset_deleted: "Protocol sequence asset deleted"
+      sequence_on_result_added: "Sequence on result added"
+      sequence_on_result_edited: "Sequence on result edited"
+      sequence_on_result_moved: "Sequence on result moved"
+      sequence_on_result_deleted: "Sequence on result deleted"
       task_step_file_moved: "Task step file moved"
       task_step_text_moved: "Task step text moved"
       task_step_table_moved: "Task step table moved"
@@ -582,6 +586,7 @@ en:
       result_text_moved: "Result text moved"
       result_table_moved: "Result table moved"
       move_chemical_structure_on_result: "Chemical structure on result moved"
+
     activity_group:
       projects: "Projects"
       task_results: "Task results"
