@@ -36,19 +36,8 @@ class AssetsController < ApplicationController
   def toggle_view_mode
     @asset.view_mode = toggle_view_mode_params[:view_mode]
     @asset.save!(touch: false)
-    gallery_view_id = if @assoc.is_a?(Step)
-                        @assoc.id
-                      elsif @assoc.is_a?(Result)
-                        @assoc.my_module.id
-                      end
-    render json: {
-      html: render_to_string(
-        partial: 'assets/asset', locals: {
-          asset: @asset,
-          gallery_view_id: gallery_view_id
-        }
-      )
-    }
+
+    render json: AssetSerializer.new(@asset, scope: { user: current_user }).as_json
   end
 
   def load_asset
