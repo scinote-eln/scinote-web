@@ -95,7 +95,8 @@
               <div v-if="customColumns?.length > 0" class="flex flex-col gap-4 w-[350px] h-auto">
                 <div v-for="(column, index) in customColumns" class="flex flex-col gap-4 w-[350px] h-auto">
                   <component :is="column.data_type" :key="index" :data_type="column.data_type" :colId="column.id"
-                    :colName="column.name" :colVal="column.value" :repositoryRowId="repositoryRowId" :permissions="permissions" />
+                    :colName="column.name" :colVal="column.value" :repositoryRowId="repositoryRowId"
+                    :permissions="permissions" @closeSidebar="toggleShowHideSidebar(null)" />
                   <div id="dashed-divider" :class="{ 'hidden': index === customColumns.length - 1 }"
                     class="flex h-[1px] py-0 border-dashed border-[1px] border-sn-light-grey">
                   </div>
@@ -246,6 +247,12 @@ export default {
         this.currentItemUrl = null
         return
       }
+      // explicit close (from emit)
+      else if (repositoryRowUrl === null) {
+        this.isShowing = false
+        this.currentItemUrl = null
+        return
+      }
       // click on a different item - should just fetch new data
       else {
         this.loadRepositoryRow(repositoryRowUrl)
@@ -260,6 +267,7 @@ export default {
         url: repositoryRowUrl,
         dataType: 'json',
         success: (result) => {
+          this.repositoryRowId = result.id
           this.repositoryName = result.repository_name;
           this.defaultColumns = result.default_columns;
           this.customColumns = result.custom_columns;

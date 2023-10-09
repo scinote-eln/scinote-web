@@ -1,6 +1,6 @@
 <template>
   <div class="absolute">
-    <img :src="this.url"
+    <img :src="this.medium_preview_url"
       class="absolute bg-sn-light-grey text-sn-black w-[300px] h-[260px] rounded pointer-events-none flex shadow-lg shrink-0" />
   </div>
 </template>
@@ -14,6 +14,7 @@ export default {
     preview_url: String,
     file_name: String,
     icon_html: String || null,
+    medium_preview_url: String || null,
   },
 }
 </script>
