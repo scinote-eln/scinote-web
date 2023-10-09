@@ -2,6 +2,7 @@
 
 json.id @repository_row.id
 json.repository_name @repository.name
+json.update_url update_row_item_repository_row_url(@repository_row)
 json.permissions do
   json.can_export_repository_stock can_export_repository_stock?(@repository_row.repository)
 end

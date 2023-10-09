@@ -9,7 +9,8 @@ class RepositoryRowsController < ApplicationController
                                              validate_label_template_columns actions_toolbar)
   before_action :load_repository_row_print, only: %i(print rows_to_print print_zpl validate_label_template_columns)
   before_action :load_repository_or_snapshot, only: %i(print rows_to_print print_zpl validate_label_template_columns)
-  before_action :load_repository_row, only: %i(update assigned_task_list active_reminder_repository_cells)
+  before_action :load_repository_row, only: %i(update update_row_item assigned_task_list
+                                               active_reminder_repository_cells)
   before_action :check_read_permissions, except: %i(create update delete_records
                                                     copy_records reminder_repository_cells
                                                     delete_records archive_records restore_records
@@ -164,6 +165,19 @@ class RepositoryRowsController < ApplicationController
           repository: escape_input(@repository.name)
         )
       }, status: :ok
+    else
+      render json: row_update.errors, status: :bad_request
+    end
+  end
+
+  def update_row_item
+    row_cell_update =
+      RepositoryRows::UpdateRepositoryCellService.call(
+        repository_row: @repository_row, user: current_user, params: cell_update_params
+      )
+
+    if row_cell_update.succeed?
+      render status: :no_content
     else
       render json: row_update.errors, status: :bad_request
     end
@@ -425,6 +439,10 @@ class RepositoryRowsController < ApplicationController
 
   def update_params
     params.permit(repository_row: {}, repository_cells: {}).to_h
+  end
+
+  def cell_update_params
+    params.permit(repository_row: {}, repository_cell: {})
   end
 
   def log_activity(type_of, repository_row)

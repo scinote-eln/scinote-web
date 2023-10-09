@@ -683,10 +683,11 @@ Rails.application.routes.draw do
         post :print
         get :print_zpl
         post :validate_label_template_columns
+        get :actions_toolbar
       end
 
-      collection do
-        get :actions_toolbar
+      member do
+        put :update_row_item
       end
     end
 
