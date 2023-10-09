@@ -95,7 +95,6 @@ export default {
         'top',
         stickyNavigationHeight + parseInt($(this.secondaryNavigation).css('top'), 10)
       );
-
       this.lastScrollTop = window.scrollY; // Save last scroll position to when user scroll up/down
     },
   },

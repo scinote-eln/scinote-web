@@ -5,7 +5,7 @@
         <div class="portocol-header-left-part grow">
           <template v-if="headerSticked && moduleName">
             <i class="sn-icon sn-icon-navigator sci--layout--navigator-open cursor-pointer p-1.5 border rounded border-sn-light-grey mr-4"></i>
-            <div @click="scrollTop" class="task-section-title w-[calc(100%_-_4rem)] cursor-pointer">
+            <div @click="scrollTop" class="task-section-title w-[calc(100%_-_4rem)] min-w-[5rem] cursor-pointer">
               <h2 class="truncate leading-6">{{ moduleName }}</h2>
             </div>
           </template>
@@ -428,7 +428,6 @@
         $.post(this.urls.publish_url, {version_comment: comment, view: 'show'})
       },
       scrollTop() {
-        console.log("clicekd")
         window.scrollTo(0, 0);
         setTimeout(() => {
           $('.my_module-name .view-mode').trigger('click');
