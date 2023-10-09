@@ -108,7 +108,7 @@
         <component
           v-for="(element, index) in orderedElements"
           :is="elements[index].attributes.orderable_type"
-          :key="index"
+          :key="element.id"
           :element.sync="elements[index]"
           :inRepository="inRepository"
           :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
