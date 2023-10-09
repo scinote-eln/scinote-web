@@ -312,6 +312,9 @@ window.TinyMCE = (() => {
               editorForm.find('.tinymce-status-badge').removeClass('hidden');
             }
 
+            // Remove transition class
+            $('.tox-editor-header').removeClass('tox-editor-dock-fadeout');
+
             // Init image toolbar
             initCssOverrides(editor);
 
