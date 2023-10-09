@@ -13,7 +13,7 @@ module TinyMceImages
     before_save :clean_tiny_mce_image_urls
     after_create :ensure_extracted_image_object_references
 
-    def prepare_for_report(field, base64_encoded_imgs = false)
+    def prepare_for_report(field)
       description = self[field]
 
       # Check tinymce for old format
@@ -21,13 +21,9 @@ module TinyMceImages
 
       tiny_mce_assets.each do |tm_asset|
         next unless tm_asset&.image&.attached?
+
         begin
-          new_tm_asset_src =
-            if base64_encoded_imgs
-              tm_asset.convert_variant_to_base64(tm_asset.preview)
-            else
-              tm_asset.preview.processed.url(expires_in: Constants::URL_LONG_EXPIRE_TIME)
-            end
+          new_tm_asset_src = tm_asset.convert_variant_to_base64(tm_asset.preview)
         rescue ActiveStorage::FileNotFoundError
           next
         end
