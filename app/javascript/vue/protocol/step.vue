@@ -4,7 +4,7 @@
        @drop.prevent="dropFile"
        @dragenter.prevent="dragEnter($event)"
        @dragover.prevent
-       :class="{ 'draging-file': dragingFile, 'showing-comments': showCommentsSidebar, 'editing-name': editingName }"
+       :class="{ 'draging-file': dragingFile, 'editing-name': editingName }"
   >
     <div class="drop-message" @dragleave.prevent="!showFileModal ? dragingFile = false : null">
       {{ i18n.t('protocols.steps.drop_message', { position: step.attributes.position + 1 }) }}

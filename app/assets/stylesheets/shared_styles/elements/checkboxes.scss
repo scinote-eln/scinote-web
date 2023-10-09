@@ -51,12 +51,6 @@ input[type="checkbox"].sci-checkbox {
     }
   }
 
-  &:focus + .sci-checkbox-label {
-    &::before {
-      border: 1px solid var(--sn-science-blue);
-    }
-  }
-
   &.hidden + .sci-checkbox-label {
     display: none;
   }
@@ -81,6 +75,11 @@ input[type="checkbox"].sci-checkbox {
       top: 3px;
       width: calc(var(--sci-checkbox-size) - 6px);
     }
+  }
+
+  &:focus {
+    outline: none;
+    outline-offset: 0;
   }
 
   &:disabled {

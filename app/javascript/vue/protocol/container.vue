@@ -65,7 +65,7 @@
       </div>
     </div>
     <div id="protocol-content" class="protocol-content collapse in" aria-expanded="true">
-      <div class="border-0 border-b border-dashed border-sn-light-grey" v-if="!inRepository"></div>
+      <div class="sci-divider" v-if="!inRepository"></div>
       <div class="mb-4">
         <div class="protocol-name mt-4" v-if="!inRepository">
           <InlineEdit
@@ -131,7 +131,7 @@
             </a>
           </div>
         </div>
-        <div class="border-0 border-b border-dashed border-sn-light-grey my-4" v-if="!inRepository"></div>
+        <div class="sci-divider my-4" v-if="!inRepository"></div>
         <div id="protocol-steps-container" :class=" inRepository ? 'protocol-steps collapse in' : ''">
           <div v-if="urls.add_step_url && inRepository" class="py-5 flex flex-row gap-8 justify-between">
             <a
