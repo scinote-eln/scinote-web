@@ -15,7 +15,7 @@ end
 json.custom_columns do
   json.array! @repository_row.repository_cells do |repository_cell|
     json.merge!(**serialize_repository_cell_value(
-      repository_cell, @repository.team, @repository, reminders_enabled: @reminders_enabled
+      repository_cell, @repository.team, @repository, reminders_enabled: @reminders_present
     ), **repository_cell.repository_column.as_json(only: %i(id name data_type)))
   end
 end
