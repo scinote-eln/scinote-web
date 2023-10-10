@@ -134,7 +134,10 @@
     mounted() {
       this.loadTableData();
 
-      if (this.isNew) this.enableTableEdit();
+      if (this.isNew) {
+        // needs to first update to save metadata at table creation
+        this.update(() => { this.enableTableEdit() });
+      }
     },
     methods: {
       enableTableEdit() {
