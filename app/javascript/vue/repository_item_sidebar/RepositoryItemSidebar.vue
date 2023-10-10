@@ -38,8 +38,8 @@
                 <div class="flex flex-col ">
                   <span class="inline-block font-semibold pb-[6px]">{{
                     i18n.t('repositories.item_card.default_columns.repository_name') }}</span>
-                  <span class="repository-name flex text-sn-dark-grey" :title="repositoryName">
-                    {{ repositoryName }}
+                  <span class="repository-name flex text-sn-dark-grey" :title="repository?.name">
+                    {{ repository?.name }}
                   </span>
                 </div>
 
@@ -98,7 +98,7 @@
                     <Reminder :value="column.value" :valueType="column.value_type" />
                   </span>
                   <component :is="column.data_type" :key="index" :data_type="column.data_type" :colId="column.id"
-                    :colName="column.name" :colVal="column.value" :repositoryRowId="repositoryRowId"
+                    :colName="column.name" :colVal="column.value" :repositoryRowId="repositoryRowId" :repositoryId="repository?.id"
                     :permissions="permissions" @closeSidebar="toggleShowHideSidebar(null)" />
                   <div id="dashed-divider" :class="{ 'hidden': index === customColumns.length - 1 }"
                     class="flex h-[1px] py-0 border-dashed border-[1px] border-sn-light-grey">
@@ -221,7 +221,7 @@ export default {
     return {
       currentItemUrl: null,
       dataLoading: false,
-      repositoryName: null,
+      repository: null,
       defaultColumns: null,
       customColumns: null,
       assignedModules: null,
@@ -273,7 +273,7 @@ export default {
         dataType: 'json',
         success: (result) => {
           this.repositoryRowId = result.id
-          this.repositoryName = result.repository_name;
+          this.repository = result.repository;
           this.defaultColumns = result.default_columns;
           this.customColumns = result.custom_columns;
           this.dataLoading = false
