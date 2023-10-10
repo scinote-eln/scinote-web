@@ -187,7 +187,7 @@ class TeamZipExportJob < ZipExportJob
   def prepare_preview(asset)
     if asset.previewable? && !asset.list?
       preview = asset.inline? ? asset.large_preview : asset.medium_preview
-      return unless preview.processed?
+      return unless preview.image.attached?
 
       begin
         file_name = preview.image.filename.to_s
