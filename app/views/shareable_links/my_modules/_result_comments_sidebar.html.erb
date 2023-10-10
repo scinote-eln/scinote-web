@@ -1,0 +1,26 @@
+<div class="comments-sidebar !top-0 !h-screen" id="Result<%= result.id %>">
+  <div class="sidebar-content">
+    <div class="sidebar-header">
+      <div class="comments-subject-title">
+        <%= "#{result.name}" %>
+      </div>
+      <div class="btn btn-light icon-btn close-btn">
+        <i class="sn-icon sn-icon-close"></i>
+      </div>
+    </div>
+    <div class="sidebar-body">
+      <% if result.comments.present? %>
+        <div class="comments-list">
+           <%= render partial: "shareable_links/my_modules/comments_list", locals: { object: result } %>
+        </div>
+      <% else %>
+        <div class="no-comments-placeholder !block">
+          <%= image_tag 'comments/placeholder.svg', class: 'no-comments-image' %>
+          <h1><%= t('comments.empty_state.title') %></h1>
+          <p class="description"><%= t('comments.empty_state.description') %></p>
+        </div>
+      <% end %>
+    </div>
+     <div class="sidebar-footer"></div>
+  </div>
+</div>

@@ -31,6 +31,15 @@
     });
   }
 
+  function initResultComments() {
+    $(document).on('click', '.shareable-link-open-comments-sidebar', function(e) {
+      e.preventDefault();
+      $('.comments-sidebar').removeClass('open');
+
+      $($(this).data('objectTarget')).addClass('open');
+    });
+  }
+
   function initResultsExpandCollapse() {
     $(document).on('click', '#results-collapse-btn', function() {
       $('.result .panel-collapse').collapse('hide');
@@ -44,6 +53,7 @@
   function initMyModuleResultsShow() {
     initAttachments();
     initResultsExpandCollapse();
+    initResultComments();
 
     $('.hot-table-container').each(function() {
       initializeHandsonTable($(this));

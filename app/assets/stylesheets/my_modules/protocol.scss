@@ -103,14 +103,3 @@
     color: var(--sn-grey);
   }
 }
-
-@media screen and (max-width: 1395px) {
-  .task-section-header {
-    height: 7.44rem;
-  }
-
-  .protocol-buttons-group {
-    flex-wrap: wrap;
-    margin: 1rem;
-  }
-}
