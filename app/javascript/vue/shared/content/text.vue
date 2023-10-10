@@ -48,7 +48,25 @@
         @editingDisabled="disableEditMode"
         @editingEnabled="enableEditMode"
       />
-      <div class="view-text-element" v-else-if="element.attributes.orderable.text_view" v-html="element.attributes.orderable.text_view"></div>
+      <div class="view-text-element" v-else-if="element.attributes.orderable.text_view">
+        <Tinymce
+          :value="element.attributes.orderable.text"
+          :value_html="element.attributes.orderable.text_view"
+          :placeholder="element.attributes.orderable.placeholder"
+          :inEditMode="inEditMode || isNew"
+          :updateUrl="element.attributes.orderable.urls.update_url"
+          :objectType="'TextContent'"
+          :objectId="element.attributes.orderable.id"
+          :fieldName="'text_component[text]'"
+          :lastUpdated="element.attributes.orderable.updated_at"
+          :assignableMyModuleId="assignableMyModuleId"
+          :characterLimit="1000000"
+          @update="updateText"
+          @editingDisabled="disableEditMode"
+          @editingEnabled="enableEditMode"
+          :class="'pointer-events-none'"
+        />
+      </div>
       <div v-else class="text-sn-grey">
         {{ i18n.t("protocols.steps.text.empty_text") }}
       </div>
