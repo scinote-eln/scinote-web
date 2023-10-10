@@ -212,6 +212,7 @@ class ResultsController < ApplicationController
       owner: current_user,
       team: @my_module.team,
       subject: subject,
+      project: @my_module.experiment.project,
       message_items: message_items
     )
   end
