@@ -567,7 +567,7 @@ var ProjectsIndex = (function() {
     function getFilterValues() {
       createdOnFromFilter = selectDate($createdOnFromFilter) || $createdOnFromFilter.val();
       createdOnToFilter = selectDate($createdOnToFilter) || $createdOnToFilter.val();
-      membersFilter = dropdownSelector.getValues($('.members-filter'));
+      membersFilter = dropdownSelector.getData($('.members-filter'));
       lookInsideFolders = $foldersCB.prop('checked') || '';
       archivedOnFromFilter = selectDate($archivedOnFromFilter) || $archivedOnFromFilter.val();
       archivedOnToFilter = selectDate($archivedOnToFilter) || $archivedOnToFilter.val();
@@ -578,12 +578,12 @@ var ProjectsIndex = (function() {
       getFilterValues();
 
       currentFilters = {
-        createdOnFromFilter: createdOnFromFilter,
-        createdOnToFilter: createdOnToFilter,
-        membersFilter: dropdownSelector.getData($('.members-filter')),
+        createdOnFromFilter: $createdOnFromFilter.val(),
+        createdOnToFilter: $createdOnToFilter.val(),
+        membersFilter: membersFilter,
         lookInsideFolders: lookInsideFolders,
-        archivedOnFromFilter: archivedOnFromFilter,
-        archivedOnToFilter: archivedOnToFilter,
+        archivedOnFromFilter: $archivedOnFromFilter.val(),
+        archivedOnToFilter: $archivedOnToFilter.val(),
         projectsViewSearch: projectsViewSearch
       };
     }
