@@ -435,44 +435,36 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
-  function exportActionCallback(exportType, formId) {
-    const exportModal = $(`#export${exportType}Modal`);
-    $(document).on('click', `#export${exportType}Button`, function(e) {
+  function initExportActions() {
+    const exportModal = $('#exportRepositoryRowsModal');
+    $(document).on('click', '#exportRepositoryRowsButton', (e) => {
       e.preventDefault();
       e.stopPropagation();
 
       exportModal.modal('show');
     });
 
-    $(`form#${formId}`).off().submit(function() {
+    $('form#form-repository-rows-export').off().submit(function() {
       var form = this;
       if (currentMode === 'viewMode') {
         // Remove all hidden fields
         $(form).find('input[name=row_ids\\[\\]]').remove();
         $(form).find('input[name=header_ids\\[\\]]').remove();
 
-        // Append visible column information for repository export
-        if (formId === 'form-repository-rows-export') {
-          $('table' + TABLE_ID + ' thead tr th').each(function() {
-            var th = $(this);
-            var val = prepareRepositoryHeaderForExport(th);
+        // Append visible column information
+        $(`table${TABLE_ID} thead tr th`).each(function() {
+          const th = $(this);
+          const val = prepareRepositoryHeaderForExport(th);
 
-            if (val) {
-              appendInput(form, val, 'header_ids[]');
-            }
-          });
-        }
+          if (val) {
+            appendInput(form, val, 'header_ids[]');
+          }
+        });
 
         // Append records
-        const exportRows = $('#exportStockConsumptionModal').attr('data-rows');
-
-        if (exportRows) {
-          appendInput(form, JSON.parse(exportRows)[0], 'row_ids[]');
-        } else {
-          $.each(rowsSelected, function(index, rowId) {
-            appendInput(form, rowId, 'row_ids[]');
-          });
-        }
+        $.each(rowsSelected, (index, rowId) => {
+          appendInput(form, rowId, 'row_ids[]');
+        });
       }
     })
       .on('ajax:beforeSend', function() {
@@ -488,14 +480,6 @@ var RepositoryDatatable = (function(global) {
       .on('ajax:error', function(ev, data) {
         HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
       });
-  }
-
-  function initExportActions() {
-    // Stock Consumption Export Action
-    exportActionCallback('StockConsumption', 'form-stock-consumption-export');
-
-    // RepositoryRow Export Action
-    exportActionCallback('RepositoryRows', 'form-repository-rows-export');
   }
 
   // Adjust columns width in table header

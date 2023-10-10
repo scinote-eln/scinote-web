@@ -85,7 +85,7 @@ module Protocols
     def create_step_table_element!(step, step_element_json)
       table = Table.create!(
         name: step_element_json['name'].presence || 'New table',
-        contents: step_element_json['contents'],
+        contents: step_element_json['contents'].to_json,
         created_by: @user,
         last_modified_by: @user,
         team: @team

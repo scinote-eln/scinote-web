@@ -488,12 +488,15 @@ class Extends
     result_file_moved: 284,
     result_text_moved: 285,
     result_table_moved: 286,
-    move_chemical_structure_on_result: 287
+    sequence_on_result_added: 287,
+    sequence_on_result_edited: 288,
+    sequence_on_result_deleted: 289,
+    sequence_on_result_moved: 290
   }
 
   ACTIVITY_GROUPS = {
     projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162, 241, 242, 243],
-    task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, 169, 172, 178, *257..273, *284..287],
+    task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, 169, 172, 178, *257..273, *284..290],
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
            *146..148, 166, 246, 247, 248],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
@@ -604,6 +607,14 @@ class Extends
     *.nr-data.net
     www.recaptcha.net/
     www.gstatic.com/recaptcha/
+  )
+
+  COLORED_BACKGROUND_ACTIONS = %w(
+    my_modules/protocols
+    my_modules/signatures
+    my_modules/activities
+    results/index
+    protocols/show
   )
 end
 

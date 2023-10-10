@@ -1,7 +1,7 @@
 <template>
   <div class="content__table-container">
-    <div class="border-0 border-b border-dashed border-sn-light-grey my-6" v-if="!inRepository"></div>
-    <div class="table-header h-9 flex rounded mb-1 items-center relative w-full group/table-header" :class="{ 'editing-name': editingName, 'locked': locked }">
+    <div class="sci-divider my-6" v-if="!inRepository"></div>
+    <div class="table-header h-9 flex rounded mb-3 items-center relative w-full group/table-header" :class="{ 'editing-name': editingName, 'locked': locked }">
       <div v-if="!locked || element.attributes.orderable.name" :key="reloadHeader"
            class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold"
            :class="{'pointer-events-none': locked}">

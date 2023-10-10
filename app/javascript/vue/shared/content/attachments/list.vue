@@ -33,6 +33,7 @@
       @attachment:viewMode="updateViewMode"
       @attachment:delete="deleteAttachment"
       @attachment:moved="attachmentMoved"
+      @attachment:uploaded="reloadAttachments"
     />
   </div>
 </template>

@@ -21,7 +21,8 @@ class StepText < ApplicationRecord
   def duplicate(step, position = nil)
     ActiveRecord::Base.transaction do
       new_step_text = step.step_texts.create!(
-        text: text
+        text: text,
+        name: name
       )
 
       # Copy steps tinyMce assets

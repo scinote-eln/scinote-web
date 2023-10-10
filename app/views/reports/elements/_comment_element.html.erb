@@ -9,8 +9,7 @@
 >
   <div class="avatar-placehodler">
     <span class='global-avatar-container'>
-      <% base64_encoded = defined?(export_all) && export_all %>
-      <%= image_tag user_avatar_absolute_url(comment.user, :icon_small, base64_encoded), class: 'avatar' %>
+      <%= image_tag user_avatar_absolute_url(comment.user, :icon_small, true), class: 'avatar' %>
     </span>
   </div>
   <div class="content-placeholder">

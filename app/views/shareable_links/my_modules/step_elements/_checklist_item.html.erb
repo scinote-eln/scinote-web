@@ -8,7 +8,7 @@
                <%= 'checked' if checklist_item.checked %> />
         <span class="sci-checkbox-label" ></span>
       </div>
-      <div class="step-checklist-text step-element--locked">
+      <div class="step-checklist-text !mt-1 step-element--locked">
         <%= render partial: "shareable_links/my_modules/inline_view", locals: { text: checklist_item.text, smart_annotation_enabled: true } %>
       </div>
     </div>

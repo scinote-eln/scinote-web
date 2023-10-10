@@ -17,6 +17,8 @@ module ActiveStorage
     end
 
     def check_attachment_read_permissions(attachment)
+      current_user.permission_team = attachment.record.team || current_team if attachment.record.respond_to?(:team)
+
       case attachment.record_type
       when 'Asset'
         check_asset_read_permissions(attachment.record)
@@ -57,8 +59,6 @@ module ActiveStorage
 
     def check_tinymce_asset_read_permissions(asset)
       return render_403 unless asset
-
-      current_user.permission_team = asset.team || current_team
 
       return true if asset.object.nil? && can_read_team?(asset.team)
 

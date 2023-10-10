@@ -14,6 +14,7 @@ module FailedDeliveryNotifiableJob
       logger.error e.message
       logger.error e.backtrace.join("\n")
       create_failed_notification!
+      raise e
     end
   end
 

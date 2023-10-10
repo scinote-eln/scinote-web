@@ -41,6 +41,15 @@
           @create:ove_file="openOVEditor"
           @create:marvinjs_file="openMarvinJsModal($refs.marvinJsButton)"
         ></MenuDropdown>
+        <span
+          class="new-marvinjs-upload-button hidden"
+          :data-object-id="result.id"
+          ref="marvinJsButton"
+          :data-marvin-url="result.attributes.marvinjs_context?.marvin_js_asset_url"
+          :data-object-type="result.attributes.type"
+          tabindex="0"
+        ></span> <!-- Hidden element to support legacy code -->
+
         <a href="#"
           ref="comments"
           class="open-comments-sidebar btn icon-btn btn-light"
@@ -77,7 +86,7 @@
       @close="closeReorderModal"
     />
     <div class="collapse in pl-10" :id="'resultBody' + result.id">
-      <div v-for="(element, index) in orderedElements" :key="index">
+      <div v-for="(element, index) in orderedElements" :key="element.id">
         <component
           :is="elements[index].attributes.orderable_type"
           :element.sync="elements[index]"
@@ -418,7 +427,7 @@
       },
       moveElement(position, target_id) {
         this.elements.splice(position, 1)
-        let unorderedElements = this.elements.map( e => {
+        this.elements.map( e => {
           if (e.attributes.position >= position) {
             e.attributes.position -= 1;
           }

@@ -1,5 +1,6 @@
 // scss-lint:disable SelectorDepth SelectorFormat QualifyingElement
 // scss-lint:disable NestingDepth ImportantRule
+// scss-lint:disable IdSelector
 
 .repository-show {
   margin: 0;
@@ -96,6 +97,41 @@
 
       .view-switch {
         margin-left: 4px;
+      }
+    }
+  }
+
+  #actionToolbar {
+    #exportDropdown {
+      background-color: var(--sn-white);
+      color: var(--sn-blue);
+      height: 36px;
+
+      &:hover {
+        background-color: var(--sn-blue);
+        color: var(--sn-white);
+      }
+    }
+
+    .sci-dropdown {
+      &.open {
+        [data-toggle="dropdown"] {
+          border-color: transparent;
+          border-radius: .25rem;
+        }
+      }
+
+      .dropdown-menu {
+        padding: .5rem;
+
+        li > a {
+          color: var(--sn-blue);
+          padding: .375rem .625rem;
+
+          &:hover {
+            background-color: $color-concrete;
+          }
+        }
       }
     }
   }

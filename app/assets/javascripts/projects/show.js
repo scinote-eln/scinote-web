@@ -1,4 +1,5 @@
-/* global animateSpinner filterDropdown Turbolinks HelperModule InfiniteScroll AsyncDropdown GLOBAL_CONSTANTS */
+/* global animateSpinner filterDropdown Turbolinks HelperModule InfiniteScroll AsyncDropdown
+  GLOBAL_CONSTANTS loadPlaceHolder */
 /* eslint-disable no-use-before-define */
 (function() {
   const pageSize = GLOBAL_CONSTANTS.DEFAULT_ELEMENTS_PER_PAGE;
@@ -54,14 +55,6 @@
     });
   }
 
-  function loadPlaceHolder() {
-    let palceholder = '';
-    $.each(Array(pageSize), function() {
-      palceholder += $('#experimentPlaceholder').html();
-    });
-    $(palceholder).insertAfter($(cardsWrapper).find('.table-header'));
-  }
-
   function initCardData(viewContainer, data) {
     viewContainer.find('.card, .no-results-container, .no-data-container').remove();
     viewContainer.removeClass('no-results no-data');
@@ -96,7 +89,7 @@
     var viewContainer = $(cardsWrapper);
     var cardsUrl = viewContainer.data('experiments-cards-url');
 
-    loadPlaceHolder();
+    loadPlaceHolder($(cardsWrapper), $('#experimentPlaceholder'), '.experiment-placeholder');
     $.ajax({
       url: cardsUrl,
       type: 'GET',
@@ -192,13 +185,13 @@
 
     // Clear filters
     $filterDropdown.on('filter:clear', function() {
+      $(this).find('input').val('');
       if ($startedOnFromFilter.data('DateTimePicker')) $startedOnFromFilter.data('DateTimePicker').clear();
       if ($startedOnToFilter.data('DateTimePicker')) $startedOnToFilter.data('DateTimePicker').clear();
       if ($modifiedOnFromFilter.data('DateTimePicker')) $modifiedOnFromFilter.data('DateTimePicker').clear();
       if ($modifiedOnToFilter.data('DateTimePicker')) $modifiedOnToFilter.data('DateTimePicker').clear();
       if ($archivedOnFromFilter.data('DateTimePicker')) $archivedOnFromFilter.data('DateTimePicker').clear();
       if ($archivedOnToFilter.data('DateTimePicker')) $archivedOnToFilter.data('DateTimePicker').clear();
-      $textFilter.val('');
     });
   }
 

@@ -170,8 +170,8 @@
       max-width: 100%;
     }
 
-    .fas {
-      font-size: 10em;
+    .sn-icon {
+      font-size: 10em !important;
     }
   }
 
@@ -181,6 +181,7 @@
     display: flex;
     height: calc(100% - 4em);
     justify-content: center;
+    margin: unset;
     width: 100%;
   }
 
@@ -240,7 +241,6 @@
 
     img {
       height: 150px;
-      width: 150px;
     }
   }
 

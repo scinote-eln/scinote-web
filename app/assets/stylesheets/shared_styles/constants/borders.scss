@@ -14,3 +14,14 @@ $border-focus: 1px solid $brand-focus;
 $border-success: 1px solid $brand-success;
 $border-danger: 1px solid $brand-danger;
 $border-transparent: 1px solid transparent;
+
+.sci-divider {
+  background-image: linear-gradient(to right, var(--sn-sleepy-grey) 20%, rgba(255, 255, 255, 0) 0%);
+  background-position: top;
+  background-size: 5px 1px;
+  background-repeat: repeat-x;
+  display: inline-block;
+  flex-grow: 1;
+  height: 1px;
+  width: 100%;
+}

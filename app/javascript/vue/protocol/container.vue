@@ -1,24 +1,26 @@
 <template>
   <div v-if="protocol.id" class="task-protocol">
     <div ref="header" class="task-section-header ml-[-1rem] w-[calc(100%_+_2rem)] px-4 bg-sn-white sticky top-0 transition" v-if="!inRepository">
-      <div class="portocol-header-left-part truncate grow">
-        <template v-if="headerSticked && protocol.attributes.assignable_my_module_name">
-          <i class="sn-icon sn-icon-navigator sci--layout--navigator-open cursor-pointer p-1.5 border rounded border-sn-light-grey mr-4"></i>
-          <div @click="scrollTop" class="task-section-title w-[calc(100%_-_4rem)] cursor-pointer">
-            <h2 class="truncate">{{ protocol.attributes.assignable_my_module_name }}</h2>
-          </div>
-        </template>
-        <template v-else >
-          <a class="task-section-caret" tabindex="0" role="button" data-toggle="collapse" href="#protocol-content" aria-expanded="true" aria-controls="protocol-content">
-            <i class="sn-icon sn-icon-right"></i>
-            <div class="task-section-title">
-              <h2>{{ i18n.t('Protocol') }}</h2>
+      <div class="flex items-center grow">
+        <div class="portocol-header-left-part grow">
+          <template v-if="headerSticked && moduleName">
+            <i class="sn-icon sn-icon-navigator sci--layout--navigator-open cursor-pointer p-1.5 border rounded border-sn-light-grey mr-4"></i>
+            <div @click="scrollTop" class="task-section-title w-[calc(100%_-_4rem)] min-w-[5rem] cursor-pointer">
+              <h2 class="truncate leading-6">{{ moduleName }}</h2>
             </div>
-          </a>
-        </template>
-        <div :class="{'hidden': headerSticked}" >
-          <div class="my-module-protocol-status">
-            <!-- protocol status dropdown gets mounted here -->
+          </template>
+          <template v-else>
+            <a class="task-section-caret" tabindex="0" role="button" data-toggle="collapse" href="#protocol-content" aria-expanded="true" aria-controls="protocol-content">
+              <i class="sn-icon sn-icon-right"></i>
+              <div class="task-section-title truncate">
+                <h2>{{ i18n.t('Protocol') }}</h2>
+              </div>
+            </a>
+          </template>
+          <div :class="{'hidden': headerSticked}">
+            <div class="my-module-protocol-status">
+              <!-- protocol status dropdown gets mounted here -->
+            </div>
           </div>
         </div>
       </div>
@@ -63,7 +65,7 @@
       </div>
     </div>
     <div id="protocol-content" class="protocol-content collapse in" aria-expanded="true">
-      <div class="border-0 border-b border-dashed border-sn-light-grey" v-if="!inRepository"></div>
+      <div class="sci-divider" v-if="!inRepository"></div>
       <div class="mb-4">
         <div class="protocol-name mt-4" v-if="!inRepository">
           <InlineEdit
@@ -129,9 +131,9 @@
             </a>
           </div>
         </div>
-        <div class="border-0 border-b border-dashed border-sn-light-grey my-4" v-if="!inRepository"></div>
+        <div class="sci-divider my-4" v-if="!inRepository"></div>
         <div id="protocol-steps-container" :class=" inRepository ? 'protocol-steps collapse in' : ''">
-          <div v-if="urls.add_step_url && inRepository" class="py-5">
+          <div v-if="urls.add_step_url && inRepository" class="py-5 flex flex-row gap-8 justify-between">
             <a
               class="btn btn-secondary"
               :title="i18n.t('protocols.steps.new_step_title')"
@@ -141,6 +143,23 @@
                 <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
                 <span>{{ i18n.t("protocols.steps.new_step") }}</span>
             </a>
+            <div v-if="steps.length > 0" class="flex justify-between items-center gap-4">
+              <button @click="collapseSteps" class="btn btn-secondary flex px-4" tabindex="0">
+                {{ i18n.t("protocols.steps.collapse_label") }}
+              </button>
+              <button @click="expandSteps" class="btn btn-secondary flex px-4" tabindex="0">
+                {{ i18n.t("protocols.steps.expand_label") }}
+              </button>
+              <a v-if="steps.length > 0 && urls.reorder_steps_url"
+                class="btn btn-light icon-btn"
+                data-toggle="modal"
+                @click="startStepReorder"
+                @keyup.enter="startStepReorder"
+                :class="{'disabled': steps.length == 1}"
+                tabindex="0" >
+              <i class="sn-icon sn-icon-sort" aria-hidden="true"></i>
+          </a>
+          </div>
           </div>
           <div class="protocol-steps pb-8">
             <div v-for="(step, index) in steps" :key="step.id" class="step-block">
@@ -204,6 +223,8 @@
   import PublishProtocol from './modals/publish_protocol.vue'
 
   import UtilsMixin from '../mixins/utils.js'
+  import stackableHeadersMixin from '../mixins/stackableHeadersMixin';
+  import moduleNameObserver from '../mixins/moduleNameObserver';
 
   export default {
     name: 'ProtocolContainer',
@@ -214,7 +235,7 @@
       }
     },
     components: { Step, InlineEdit, ProtocolOptions, Tinymce, ReorderableItemsModal, ProtocolMetadata, PublishProtocol},
-    mixins: [UtilsMixin],
+    mixins: [UtilsMixin, stackableHeadersMixin, moduleNameObserver],
     computed: {
       inRepository() {
         return this.protocol.attributes.in_repository
@@ -235,17 +256,16 @@
         reordering: false,
         publishing: false,
         stepToReload: null,
-        headerSticked: false,
-        lastScrollTop: 0,
       }
     },
-    created() {
+    mounted() {
       $.get(this.protocolUrl, (result) => {
         this.protocol = result.data;
         this.$nextTick(() => {
           this.refreshProtocolStatus();
           if (!this.inRepository) {
             window.addEventListener('scroll', this.initStackableHeaders, false);
+            this.initStackableHeaders();
           }
         });
         $.get(this.urls.steps_url, (result) => {
@@ -259,6 +279,9 @@
       }
     },
     methods: {
+      getHeader() {
+        return this.$refs.header;
+      },
       reloadStep(step) {
         this.stepToReload = step;
       },
@@ -410,69 +433,6 @@
           $('.my_module-name .view-mode').trigger('click');
           $('.my_module-name .input-field').focus();
         }, 300)
-      },
-      initStackableHeaders() {
-        let protocolHeader = this.$refs.header;
-        let secondaryNavigation = document.querySelector('#taskSecondaryMenu');
-        let protocolHeaderHeight = protocolHeader.offsetHeight;
-        let protocolHeaderTop = protocolHeader.getBoundingClientRect().top;
-        let secondaryNavigationHeight = secondaryNavigation.offsetHeight;
-        let secondaryNavigationTop = secondaryNavigation.getBoundingClientRect().top;
-
-        // TinyMCE offset calculation
-        let stickyNavigationHeight = secondaryNavigationHeight;
-        if ($('.tox-editor-header').length > 0 && $('.tox-editor-header')[0].getBoundingClientRect().top > protocolHeaderTop) {
-          stickyNavigationHeight += protocolHeaderHeight;
-        }
-
-        // Add shadow to secondary navigation when it starts fly
-        if (secondaryNavigation.getBoundingClientRect().top == 0 && !this.headerSticked) {
-          secondaryNavigation.style.boxShadow = '0px 5px 8px 0px rgba(0, 0, 0, 0.10)';
-          secondaryNavigation.style.zIndex= 251;
-        } else {
-          secondaryNavigation.style.boxShadow = 'none';
-          if (secondaryNavigationTop > 10) secondaryNavigation.style.zIndex= 0;
-        }
-
-        if (protocolHeaderTop - 5 < protocolHeaderHeight) { // When secondary navigation touch protocol header
-          secondaryNavigation.style.top = protocolHeaderTop - protocolHeaderHeight + 'px'; // Secondary navigation starts slowly disappear
-          protocolHeader.style.boxShadow = '0px 5px 8px 0px rgba(0, 0, 0, 0.10)'; // Flying shadow
-          protocolHeader.style.zIndex= 250;
-
-          this.headerSticked = true;
-
-
-          if (this.lastScrollTop > window.scrollY) { // When user scroll up
-            let newSecondaryTop = secondaryNavigationTop - (window.scrollY - this.lastScrollTop); // Calculate new top position of secondary navigation
-            if (newSecondaryTop > 0) newSecondaryTop = 0;
-
-            secondaryNavigation.style.top = newSecondaryTop + 'px'; // Secondary navigation starts slowly appear
-            secondaryNavigation.style.zIndex= 251;
-            protocolHeader.style.top = secondaryNavigationHeight + newSecondaryTop - 1 + 'px'; // Protocol header starts getting offset to compensate secondary navigation position
-            // -1 to compensate small gap between protocol header and secondary navigation
-          } else { // When user scroll down
-            let newSecondaryTop = secondaryNavigationTop - (window.scrollY - this.lastScrollTop); // Calculate new top position of secondary navigation
-            if (newSecondaryTop * -1 > secondaryNavigationHeight ) newSecondaryTop = secondaryNavigationHeight * -1;
-
-            secondaryNavigation.style.top = newSecondaryTop + 'px'; // Secondary navigation starts slowly disappear
-            protocolHeader.style.top = newSecondaryTop + secondaryNavigationHeight - 1 + 'px'; // Protocol header starts getting offset to compensate secondary navigation position
-            // -1 to compensate small gap between protocol header and secondary navigation
-            if (newSecondaryTop * -1 >= secondaryNavigationHeight) secondaryNavigation.style.zIndex= 0;
-          }
-        } else {
-          // Just reset secondary navigation and protocol header styles to initial state
-          secondaryNavigation.style.top = '0px';
-          protocolHeader.style.boxShadow = 'none';
-          protocolHeader.style.zIndex= 0;
-          this.headerSticked = false;
-        }
-
-        // Apply TinyMCE offset
-        $('.tox-editor-header').css('top',
-          stickyNavigationHeight +  parseInt($(secondaryNavigation).css('top'), 10)
-        );
-
-        this.lastScrollTop = window.scrollY; // Save last scroll position to when user scroll up/down
       }
     }
   }

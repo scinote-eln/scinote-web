@@ -5,7 +5,7 @@ class RepositoryZipExportJob < ZipExportJob
 
   # Override
   def fill_content(dir, params)
-    repository = Repository.find(params[:repository_id])
+    repository = RepositoryBase.find(params[:repository_id])
     # Fetch rows in the same order as in the currently viewed datatable
     if params[:my_module_id]
       rows = if repository.is_a?(RepositorySnapshot)
@@ -36,5 +36,10 @@ class RepositoryZipExportJob < ZipExportJob
                                       nil,
                                       params[:my_module_id].present?)
     File.binwrite("#{dir}/export.csv", data)
+  end
+
+  def failed_notification_title
+    I18n.t('activejob.failure_notifiable_job.item_notification_title',
+           item: I18n.t('activejob.failure_notifiable_job.items.repository_item'))
   end
 end

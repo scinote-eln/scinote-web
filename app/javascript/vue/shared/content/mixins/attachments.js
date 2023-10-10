@@ -32,9 +32,7 @@ export default {
       this.uploadFiles(this.$refs.fileSelector.files);
     },
     openMarvinJsModal(button) {
-      MarvinJsEditor.initNewButton('.new-marvinjs-upload-button', () => {
-        this.loadAttachments
-      });
+      MarvinJsEditor.initNewButton('.new-marvinjs-upload-button', this.loadAttachments);
       button.click();
     },
     openWopiFileModal() {

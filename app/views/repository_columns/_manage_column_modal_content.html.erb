@@ -1,17 +1,17 @@
 <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
-  <button class="btn icon-btn btn-light btn-black manage-repo-column-index back-to-column-modal"
-          title="<%= t("libraries.manange_modal_column.button_tooltip") %>"
-          data-modal-url="<%= repository_repository_columns_path(@repository) %>"
-          data-action="new">
-    <span class="fas fa-arrow-left"></span>
-  </button>
   <h4 class="modal-title">
     <% if @repository_column.new_record? %>
       <%= t("libraries.manange_modal_column.new.title") %>
     <% else %>
       <%= t("libraries.manange_modal_column.edit.title", name:  @repository_column.name) %>
     <% end %>
+  <button class="btn icon-btn btn-light btn-black manage-repo-column-index back-to-column-modal"
+          title="<%= t("libraries.manange_modal_column.button_tooltip") %>"
+          data-modal-url="<%= repository_repository_columns_path(@repository) %>"
+          data-action="new">
+    <span class="sn-icon sn-icon-arrow-left"></span>
+  </button>
   </h4>
 </div>
 <div class="modal-body">

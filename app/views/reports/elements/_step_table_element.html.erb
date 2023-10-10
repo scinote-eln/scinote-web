@@ -11,7 +11,7 @@
           </em>
         </a>
       <% else %>
-        <% if table.try(:name) %>
+        <% if table.name.present? %>
           <em>
             <%= truncate(table.name, length: Constants::FILENAME_TRUNCATION_LENGTH) %>
           </em>

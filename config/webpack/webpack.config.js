@@ -42,7 +42,8 @@ const entryList = {
   vue_components_action_toolbar: './app/javascript/packs/vue/action_toolbar.js',
   vue_components_open_vector_editor: './app/javascript/packs/vue/open_vector_editor.js',
   vue_navigation_breadcrumbs: './app/javascript/packs/vue/navigation/breadcrumbs.js',
-  vue_protocol_file_import_modal: './app/javascript/packs/vue/protocol_file_import_modal.js'
+  vue_protocol_file_import_modal: './app/javascript/packs/vue/protocol_file_import_modal.js',
+  vue_components_export_stock_consumption_modal: './app/javascript/packs/vue/export_stock_consumption_modal.js'
 }
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949

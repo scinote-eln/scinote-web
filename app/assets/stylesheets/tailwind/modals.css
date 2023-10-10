@@ -57,11 +57,11 @@
   }
 
   .modal .modal-header {
-    @apply flex items-start flex-row-reverse;
+    @apply flex items-center flex-row-reverse;
   }
 
   .modal .modal-title {
-    @apply text-xl font-bold m-0 mr-auto;
+    @apply text-xl font-bold m-0 mr-auto flex items-center flex-row-reverse;
   }
 
   .modal .close {
