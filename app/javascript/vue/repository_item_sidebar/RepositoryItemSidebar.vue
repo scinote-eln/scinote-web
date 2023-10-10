@@ -8,7 +8,7 @@
       <div id="sticky-header-wrapper">
         <div class="header flex w-full">
           <h4 class="item-name my-auto truncate" :title="defaultColumns?.name">
-            {{ !defaultColumns?.archived ? i18n.t('labels.archived') : '' }}
+            {{ defaultColumns?.archived ? i18n.t('labels.archived') : '' }}
             {{ defaultColumns?.name }}
           </h4>
           <i id="close-icon" @click="toggleShowHideSidebar(currentItemUrl)"
@@ -98,8 +98,9 @@
                     <Reminder :value="column.value" :valueType="column.value_type" />
                   </span>
                   <component :is="column.data_type" :key="index" :data_type="column.data_type" :colId="column.id"
-                    :colName="column.name" :colVal="column.value" :repositoryRowId="repositoryRowId" :repositoryId="repository?.id"
-                    :permissions="permissions" @closeSidebar="toggleShowHideSidebar(null)" />
+                    :colName="column.name" :colVal="column.value" :repositoryRowId="repositoryRowId"
+                    :repositoryId="repository?.id" :permissions="permissions"
+                    @closeSidebar="toggleShowHideSidebar(null)" />
                   <div id="dashed-divider" :class="{ 'hidden': index === customColumns.length - 1 }"
                     class="flex h-[1px] py-0 border-dashed border-[1px] border-sn-light-grey">
                   </div>
@@ -234,10 +235,24 @@ export default {
   created() {
     window.repositoryItemSidebarComponent = this;
   },
+  mounted() {
+    // Add a click event listener to the document
+    document.addEventListener('click', this.handleOutsideClick);
+  },
   beforeDestroy() {
     delete window.repositoryItemSidebarComponent;
+    document.removeEventListener('click', this.handleDocumentClick);
   },
   methods: {
+    handleOutsideClick(event) {
+      if (!this.isShowing) return
+
+      const sidebar = this.$refs.wrapper;
+      // Check if the clicked element is not within the sidebar and it's not another item link
+      if (!sidebar.contains(event.target) && !event.target.closest('a')) {
+        this.toggleShowHideSidebar(null)
+      }
+    },
     toggleShowHideSidebar(repositoryRowUrl) {
       // initial click
       if (this.currentItemUrl === null) {
