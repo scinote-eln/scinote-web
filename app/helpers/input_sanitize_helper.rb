@@ -36,7 +36,6 @@ module InputSanitizeHelper
 
     # allow base64 images when sanitizing if base64_encoded_imgs is true
     sanitizer_config = Constants::INPUT_SANITIZE_CONFIG.deep_dup
-    sanitizer_config[:protocols]['img']['src'] << 'data' if options.fetch(:base64_encoded_imgs, false)
     text = sanitize_input(text, tags, sanitizer_config: sanitizer_config)
 
     if text =~ SmartAnnotations::TagToHtml::USER_REGEX || text =~ SmartAnnotations::TagToHtml::REGEX
