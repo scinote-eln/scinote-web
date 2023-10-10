@@ -36,7 +36,7 @@
     <% end %>
     <% if @settings.dig('task', 'protocol', 'step_files') %>
       <% assets.each do |asset| %>
-        <%= render partial: 'reports/elements/step_asset_element', locals: { asset: asset, export_all: false } %>
+        <%= render partial: 'reports/elements/step_asset_element', locals: { asset: asset, export_all: export_all } %>
       <% end %>
     <% end %>
     <% if @settings.dig('task', 'protocol', 'step_comments') %>

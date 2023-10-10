@@ -187,24 +187,15 @@ class TeamZipExportJob < ZipExportJob
   def prepare_preview(asset)
     if asset.previewable? && !asset.list?
       preview = asset.inline? ? asset.large_preview : asset.medium_preview
-      if preview.is_a?(ActiveStorage::Preview)
-        return unless preview.image.attached?
+      return unless preview.processed?
 
+      begin
         file_name = preview.image.filename.to_s
         file_data = preview.image.download
-      else
-        file_name = preview.blob.filename.to_s
-        file_data = nil
-
-        ActiveRecord::Base.transaction(requires_new: true) do
-          file_data = preview.processed.service.download(preview.key)
-        # handle files not processable by Vips (no preview available) or missing
-        rescue Vips::Error, ActiveStorage::FileNotFoundError => e
-          Rails.logger.error(e.message)
-          Rails.logger.error(e.backtrace.join("\n"))
-          raise ActiveRecord::Rollback
-        end
-        return nil if file_data.blank?
+      rescue ActiveStorage::FileNotFoundError => e
+        Rails.logger.error(e.message)
+        Rails.logger.error(e.backtrace.join("\n"))
+        return
       end
 
       {
