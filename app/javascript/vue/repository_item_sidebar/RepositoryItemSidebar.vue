@@ -93,7 +93,10 @@
                 {{ i18n.t('repositories.item_card.custom_columns_label') }}
               </div>
               <div v-if="customColumns?.length > 0" class="flex flex-col gap-4 w-[350px] h-auto">
-                <div v-for="(column, index) in customColumns" class="flex flex-col gap-4 w-[350px] h-auto">
+                <div v-for="(column, index) in customColumns" class="flex flex-col gap-4 w-[350px] h-auto relative">
+                  <span class="absolute right-2 top-6" v-if="column.value.reminder === true">
+                    <Reminder :value="column.value" :valueType="column.value_type" />
+                  </span>
                   <component :is="column.data_type" :key="index" :data_type="column.data_type" :colId="column.id"
                     :colName="column.name" :colVal="column.value" :repositoryRowId="repositoryRowId"
                     :permissions="permissions" @closeSidebar="toggleShowHideSidebar(null)" />
@@ -193,10 +196,12 @@ import RepositoryDateRangeValue from './repository_values/RepositoryDateRangeVal
 import RepositoryTimeRangeValue from './repository_values/RepositoryTimeRangeValue.vue'
 import RepositoryTimeValue from './repository_values/RepositoryTimeValue.vue'
 import ScrollSpy from './repository_values/ScrollSpy.vue';
+import Reminder from './reminder.vue'
 
 export default {
   name: 'RepositoryItemSidebar',
   components: {
+    Reminder,
     RepositoryStockValue,
     RepositoryTextValue,
     RepositoryNumberValue,
