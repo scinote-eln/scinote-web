@@ -19,6 +19,7 @@ Canaid::Permissions.register_for(Result) do
 
   can :delete_result do |user, result|
     result.archived? &&
+      !result.my_module.archived_branch? &&
       result.unlocked?(result) &&
       result.my_module.permission_granted?(user, MyModulePermissions::RESULTS_DELETE_ARCHIVED)
   end
@@ -30,7 +31,7 @@ Canaid::Permissions.register_for(ResultComment) do
   %i(manage_result_comment)
     .each do |perm|
     can perm do |_, comment|
-      !comment.result.my_module.archived_branch?
+      !comment.result.my_module.archived_branch? && comment.result.active?
     end
   end
 

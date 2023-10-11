@@ -1,6 +1,6 @@
 <template>
   <div class="content__attachments" :id='"content__attachments-" + parent.id'>
-    <div class="border-0 border-b border-dashed border-sn-light-grey my-6"></div>
+    <div class="sci-divider my-6"></div>
     <div class="content__attachments-actions">
       <div class="title">
         {{ i18n.t('protocols.steps.files', {count: attachments.length}) }}
@@ -32,6 +32,7 @@
         @attachment:viewMode="updateAttachmentViewMode"
         @attachment:delete="deleteAttachment(attachment.id)"
         @attachment:moved="attachmentMoved"
+        @attachment:uploaded="$emit('attachment:uploaded')"
       />
     </div>
   </div>
@@ -120,12 +121,12 @@
       },
       sortMenu() {
         let menu = [];
-        this.orderOptions.forEach((orderOption, i) => {
+        this.orderOptions.forEach((orderOption) => {
           menu.push({
             text: this.i18n.t(`general.sort_new.${orderOption}`),
             emit: 'attachment:order',
             params: orderOption,
-            dividerBefore: i === 2
+            active: this.parent.attributes.assets_order === orderOption
           })
         })
         return menu;

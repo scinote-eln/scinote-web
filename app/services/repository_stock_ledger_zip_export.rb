@@ -49,12 +49,13 @@ module RepositoryStockLedgerZipExport
     def generate_record_data(record)
       consumption_type = record.reference_type == 'MyModuleRepositoryRow' ? 'Task' : 'Inventory'
 
-      if record.amount.positive?
-        added_amount = record.amount.to_d
-        added_amount_unit = record.unit
-      else
+      if (consumption_type == 'Task' && record.amount.positive?) ||
+         (consumption_type == 'Inventory' && record.amount.negative?)
         consumed_amount = record.amount.abs.to_d
         consumed_amount_unit = record.unit
+      else
+        added_amount = record.amount.abs.to_d
+        added_amount_unit = record.unit
       end
 
       breadcrumbs_data = Array.new(4, '')
@@ -68,23 +69,23 @@ module RepositoryStockLedgerZipExport
         added_amount,
         added_amount_unit,
         record.user.full_name,
-        record.created_at.strftime(record.user.date_format),
-        record.repository_row.repository.team.name,
-        record.unit,
-        record.balance.to_d
+        I18n.l(record.created_at, format: :full),
+        record.balance.to_d,
+        record.unit
       ]
-
+      breadcrumbs_data = Array.new(5)
       if consumption_type == 'Task'
-        my_module = record.my_module_repository_row.my_module
+        my_module = record.my_module_repository_row&.my_module
         breadcrumbs_data = [
-          my_module.experiment.project.name,
-          my_module.experiment.name,
-          my_module.name,
-          my_module.code
+          my_module&.experiment&.project&.team&.name,
+          my_module&.experiment&.project&.name,
+          my_module&.experiment&.name,
+          my_module&.name,
+          my_module&.code
         ]
       end
 
-      row_data.insert(10, *breadcrumbs_data)
+      row_data.insert(9, *breadcrumbs_data)
       row_data
     end
   end

@@ -187,20 +187,15 @@ class TeamZipExportJob < ZipExportJob
   def prepare_preview(asset)
     if asset.previewable? && !asset.list?
       preview = asset.inline? ? asset.large_preview : asset.medium_preview
-      if preview.is_a?(ActiveStorage::Preview)
-        return unless preview.image.attached?
+      return unless preview.image.attached?
 
+      begin
         file_name = preview.image.filename.to_s
         file_data = preview.image.download
-      else
-        file_name = preview.blob.filename.to_s
-
-        begin
-          file_data = preview.processed.service.download(preview.key)
-        # handle files not processable by Vips (no preview available) or missing
-        rescue Vips::Error, ActiveStorage::FileNotFoundError
-          return nil
-        end
+      rescue ActiveStorage::FileNotFoundError => e
+        Rails.logger.error(e.message)
+        Rails.logger.error(e.backtrace.join("\n"))
+        return
       end
 
       {
@@ -278,5 +273,10 @@ class TeamZipExportJob < ZipExportJob
     end
 
     csv_file_path
+  end
+
+  def failed_notification_title
+    I18n.t('activejob.failure_notifiable_job.item_notification_title',
+           item: I18n.t('activejob.failure_notifiable_job.items.project'))
   end
 end

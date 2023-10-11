@@ -236,4 +236,10 @@ module ApplicationHelper
     # login_disclaimer: { title: "...", body: "...", action: "..." }
     ApplicationSettings.instance.values['login_disclaimer']
   end
+
+  def show_grey_background?
+    return false unless controller_name && action_name
+
+    Extends::COLORED_BACKGROUND_ACTIONS.include?("#{controller_name}/#{action_name}")
+  end
 end

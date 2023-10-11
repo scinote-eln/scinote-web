@@ -6,7 +6,11 @@ module ResultElements
     before_action :check_manage_permissions
 
     def move_targets
-      render json: { targets: @my_module.results.where.not(id: @result.id).map{ |i| [i.id, i.name] } }
+      targets = @my_module.results
+                          .active
+                          .where.not(id: @result.id)
+                          .map { |i| [i.id, i.name] }
+      render json: { targets: targets }
     end
 
     private
@@ -46,6 +50,7 @@ module ResultElements
         owner: current_user,
         team: @my_module.team,
         subject: @result,
+        project: @my_module.experiment.project,
         message_items: {
           result: @result.id
         }.merge(message_items)

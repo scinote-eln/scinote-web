@@ -27,20 +27,21 @@
                                options_from_collection_for_select(@import_data.available_fields,
                                                                   :first,
                                                                   :last),
-                               include_blank: t('repositories.parse_sheet.do_not_include_column'),
-                               hide_label: true) %>
-                  <br />
-                  <% if th.nil? %>
-                    <i><%= t('repositories.import_records.no_header_name') %></i>
-                  <% else %>
-                    <% if th.length > Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>
-                      <div class="modal-tooltip">
-                        <%= truncate(th, length: Constants::NAME_TRUNCATION_LENGTH_DROPDOWN) %>
-                      </div>
+                               { include_blank: t('repositories.parse_sheet.do_not_include_column'), hide_label: true },
+                               { class:'form-control' }) %>
+                  <div class="mt-8">
+                    <% if th.nil? %>
+                      <i><%= t('repositories.import_records.no_header_name') %></i>
                     <% else %>
-                      <%= th %>
+                      <% if th.length > Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>
+                        <div class="modal-tooltip">
+                          <%= truncate(th, length: Constants::NAME_TRUNCATION_LENGTH_DROPDOWN) %>
+                        </div>
+                      <% else %>
+                        <%= th %>
+                      <% end %>
                     <% end %>
-                  <% end %>
+                  </div>
                 </th>
               <% end %>
             </thead>

@@ -54,7 +54,7 @@
   </div>
 </div>
 <div class="modal-body">
-  <div class="file-preview-container">
+  <div class="file-preview-container <%= 'file-preview-container__wopi' if wopi_file?(asset) %>">
     <% if asset.previewable? %>
       <% if wopi_enabled? && wopi_file?(asset) %>
         <iframe class="wopi-file-preview" src="<%= asset.get_action_url(current_user, 'embedview') %>"></iframe>

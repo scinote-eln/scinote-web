@@ -13,7 +13,7 @@ class ResultTextSerializer < ActiveModel::Serializer
   end
 
   def placeholder
-    I18n.t('protocols.steps.text.placeholder')
+    I18n.t('my_modules.results.text.placeholder')
   end
 
   def parent_type

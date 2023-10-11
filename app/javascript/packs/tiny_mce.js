@@ -197,7 +197,7 @@ window.TinyMCE = (() => {
 
         editorToolbaroffset = 0;
 
-        $.each($('.sticky-header-element'), (_index, element) => {
+        $.each($('.sticky-header-element, .sticky-header'), (_index, element) => {
           editorToolbaroffset += $(element).outerHeight();
         });
 
@@ -311,6 +311,9 @@ window.TinyMCE = (() => {
             if (editor.getContent() !== '') {
               editorForm.find('.tinymce-status-badge').removeClass('hidden');
             }
+
+            // Remove transition class
+            $('.tox-editor-header').removeClass('tox-editor-dock-fadeout');
 
             // Init image toolbar
             initCssOverrides(editor);

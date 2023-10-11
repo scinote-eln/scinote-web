@@ -4,7 +4,7 @@
        @drop.prevent="dropFile"
        @dragenter.prevent="dragEnter($event)"
        @dragover.prevent
-       :class="{ 'draging-file': dragingFile, 'showing-comments': showCommentsSidebar, 'editing-name': editingName }"
+       :class="{ 'draging-file': dragingFile, 'editing-name': editingName }"
   >
     <div class="drop-message" @dragleave.prevent="!showFileModal ? dragingFile = false : null">
       {{ i18n.t('protocols.steps.drop_message', { position: step.attributes.position + 1 }) }}
@@ -71,7 +71,7 @@
           class="new-marvinjs-upload-button hidden"
           :data-object-id="step.id"
           ref="marvinJsButton"
-          :data-marvin-url="step.attributes.marvinjs_context.marvin_js_asset_url"
+          :data-marvin-url="step.attributes.marvinjs_context?.marvin_js_asset_url"
           :data-object-type="step.attributes.type"
           tabindex="0"
         ></span> <!-- Hidden element to support legacy code -->
@@ -108,7 +108,7 @@
         <component
           v-for="(element, index) in orderedElements"
           :is="elements[index].attributes.orderable_type"
-          :key="index"
+          :key="element.id"
           :element.sync="elements[index]"
           :inRepository="inRepository"
           :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"

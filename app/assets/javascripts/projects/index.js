@@ -7,7 +7,8 @@
 // - refresh project users tab after manage user modal is closed
 // - refactor view handling using library, ex. backbone.js
 
-/* global HelperModule dropdownSelector Sidebar Turbolinks filterDropdown InfiniteScroll AsyncDropdown GLOBAL_CONSTANTS */
+/* global HelperModule dropdownSelector Turbolinks filterDropdown InfiniteScroll
+ AsyncDropdown GLOBAL_CONSTANTS loadPlaceHolder */
 /* eslint-disable no-use-before-define */
 
 var ProjectsIndex = (function() {
@@ -403,14 +404,6 @@ var ProjectsIndex = (function() {
     });
   }
 
-  function loadPlaceHolder() {
-    let palceholder = '';
-    $.each(Array(pageSize), function() {
-      palceholder += $('#projectPlaceholder').html();
-    });
-    $(palceholder).insertAfter($(cardsWrapper).find('.table-header'));
-  }
-
   function initCardData(viewContainer, data) {
     viewContainer.data('projects-cards-url', data.projects_cards_url);
     viewContainer.removeClass('no-results no-data');
@@ -447,7 +440,7 @@ var ProjectsIndex = (function() {
     var viewContainer = $(cardsWrapper);
     var cardsUrl = viewContainer.data('projects-cards-url');
 
-    loadPlaceHolder();
+    loadPlaceHolder($(cardsWrapper), $('#projectPlaceholder'), '.project-placeholder');
     $.ajax({
       url: cardsUrl,
       type: 'GET',
@@ -574,7 +567,7 @@ var ProjectsIndex = (function() {
     function getFilterValues() {
       createdOnFromFilter = selectDate($createdOnFromFilter) || $createdOnFromFilter.val();
       createdOnToFilter = selectDate($createdOnToFilter) || $createdOnToFilter.val();
-      membersFilter = dropdownSelector.getValues($('.members-filter'));
+      membersFilter = dropdownSelector.getData($('.members-filter'));
       lookInsideFolders = $foldersCB.prop('checked') || '';
       archivedOnFromFilter = selectDate($archivedOnFromFilter) || $archivedOnFromFilter.val();
       archivedOnToFilter = selectDate($archivedOnToFilter) || $archivedOnToFilter.val();
@@ -585,12 +578,12 @@ var ProjectsIndex = (function() {
       getFilterValues();
 
       currentFilters = {
-        createdOnFromFilter: createdOnFromFilter,
-        createdOnToFilter: createdOnToFilter,
-        membersFilter: dropdownSelector.getData($('.members-filter')),
+        createdOnFromFilter: $createdOnFromFilter.val(),
+        createdOnToFilter: $createdOnToFilter.val(),
+        membersFilter: membersFilter,
         lookInsideFolders: lookInsideFolders,
-        archivedOnFromFilter: archivedOnFromFilter,
-        archivedOnToFilter: archivedOnToFilter,
+        archivedOnFromFilter: $archivedOnFromFilter.val(),
+        archivedOnToFilter: $archivedOnToFilter.val(),
         projectsViewSearch: projectsViewSearch
       };
     }

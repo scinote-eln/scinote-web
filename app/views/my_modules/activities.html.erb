@@ -27,9 +27,7 @@
             <div class="no-activities-message text-center <%= 'hidden' if @grouped_activities.keys.any? %>">
               <p><%= t('activities.index.no_activities_task_message') %></p>
             </div>
-            <div class="ga-activities-list"
-                data-activities-url="<%= activities_my_module_path(@my_module) %>"
-                data-starting-timestamp="<%= @starting_timestamp %>">
+            <div class="ga-activities-list" data-activities-url="<%= activities_my_module_path(@my_module) %>">
               <%= render partial: "global_activities/activity_list" %>
             </div>
             <div class="text-center">

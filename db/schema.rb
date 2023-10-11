@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_04_080206) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_03_114337) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -925,8 +925,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_04_080206) do
   create_table "result_texts", force: :cascade do |t|
     t.string "text"
     t.bigint "result_id", null: false
-    t.string "name", default: ""
+    t.string "name"
     t.index "trim_html_tags((text)::text) gin_trgm_ops", name: "index_result_texts_on_text", using: :gin
+    t.index ["name"], name: "index_result_texts_on_name", opclass: :gist_trgm_ops, using: :gist
     t.index ["result_id"], name: "index_result_texts_on_result_id"
   end
 
@@ -1004,8 +1005,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_04_080206) do
     t.string "text"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "name", default: ""
+    t.string "name"
     t.index "trim_html_tags((text)::text) gin_trgm_ops", name: "index_step_texts_on_text", using: :gin
+    t.index ["name"], name: "index_step_texts_on_name", opclass: :gist_trgm_ops, using: :gist
     t.index ["step_id"], name: "index_step_texts_on_step_id"
   end
 

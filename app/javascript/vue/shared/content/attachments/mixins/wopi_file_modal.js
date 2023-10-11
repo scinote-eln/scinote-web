@@ -1,4 +1,4 @@
-/* global HelperModule */
+/* global HelperModule animateSpinner renderFormError I18n */
 
 const FILENAME_MAX_LENGTH = 100;
 
@@ -19,36 +19,42 @@ export default {
         }
       });
 
-      $wopiModal.find('form').on(
-        'ajax:success',
-        (e, data, status) => {
-          if (status === 'success') {
-            $wopiModal.modal('hide');
-            window.open(data.edit_url, '_blank');
-            window.focus();
-          } else {
-            HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+      $wopiModal.find('form')
+        .on('submit', () => {
+          animateSpinner(null, true);
+        })
+        .on(
+          'ajax:success',
+          (e, data, status) => {
+            animateSpinner(null, false);
+            if (status === 'success') {
+              $wopiModal.modal('hide');
+              window.open(data.edit_url, '_blank');
+              window.focus();
+            } else {
+              HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+            }
+            requestCallback(e, data, status);
           }
-          requestCallback(e, data, status);
-        }
-      ).on('ajax:error', function(ev, response) {
-        var element;
-        var msg;
+        ).on('ajax:error', function(ev, response) {
+          let element;
+          let msg;
 
-        $(this).clearFormErrors();
+          animateSpinner(null, false);
+          $(this).clearFormErrors();
 
-        if (response.status === 400) {
-          element = $(this).find('#new-wopi-file-name');
-          msg = response.responseJSON.message.file.toString();
-        } else if (response.status === 403) {
-          element = $(this).find('#other-wopi-errors');
-          msg = I18n.t('assets.create_wopi_file.errors.forbidden');
-        } else if (response.status === 404) {
-          element = $(this).find('#other-wopi-errors');
-          msg = I18n.t('assets.create_wopi_file.errors.not_found');
-        }
-        renderFormError(undefined, element, msg);
-      });
+          if (response.status === 400) {
+            element = $(this).find('#new-wopi-file-name');
+            msg = response.responseJSON.message.file.toString();
+          } else if (response.status === 403) {
+            element = $(this).find('#other-wopi-errors');
+            msg = I18n.t('assets.create_wopi_file.errors.forbidden');
+          } else if (response.status === 404) {
+            element = $(this).find('#other-wopi-errors');
+            msg = I18n.t('assets.create_wopi_file.errors.not_found');
+          }
+          renderFormError(undefined, element, msg);
+        });
     }
   }
 };
