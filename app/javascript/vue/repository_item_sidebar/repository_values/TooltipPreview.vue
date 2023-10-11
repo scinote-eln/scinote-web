@@ -1,8 +1,8 @@
 <template>
   <div>
-    <img :src="this.medium_preview_url" @load="onImageLoaded($event)"
-      class="absolute bg-sn-light-grey text-sn-black rounded pointer-events-none flex shadow-lg"
-      :class="{ hidden: !showImage, 'top-0 transform -translate-y-full': showTop }"/>
+    <img :src="this?.medium_preview_url" @load="onImageLoaded($event)"
+      class="absolute bg-sn-light-grey text-sn-black rounded pointer-events-none flex shadow-lg z-10"
+      :class="{ hidden: !showImage, 'top-0 transform -translate-y-full': showTop }" />
   </div>
 </template>
 
@@ -37,9 +37,9 @@ export default {
 
       return (
         (rect.bottom + height) <=
-          (window.innerHeight || document.documentElement.clientHeight)
+        (window.innerHeight || document.documentElement.clientHeight)
       );
-}
+    }
 
   }
 }

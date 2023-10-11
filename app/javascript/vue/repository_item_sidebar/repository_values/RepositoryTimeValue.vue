@@ -13,7 +13,7 @@
     </div>
   </div>
 </template>
-  
+
 <script>
 export default {
   name: 'RepositoryTimeValue',
@@ -30,8 +30,8 @@ export default {
     }
   },
   created() {
-    this.formatted = this.colVal.formatted
-    this.datetime = this.colVal.datetime
+    this.formatted = this?.colVal?.formatted
+    this.datetime = this?.colVal?.datetime
   }
 }
 </script>

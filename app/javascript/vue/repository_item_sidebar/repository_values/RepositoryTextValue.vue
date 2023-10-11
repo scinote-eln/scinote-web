@@ -28,8 +28,8 @@ export default {
     colVal: Object
   },
   created() {
-    this.edit = this.colVal.edit
-    this.view = this.colVal.view
+    this.edit = this?.colVal?.edit
+    this.view = this?.colVal?.view
   }
 }
 </script>

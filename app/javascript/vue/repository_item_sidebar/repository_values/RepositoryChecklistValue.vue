@@ -8,17 +8,17 @@
         class="text-sn-dark-grey font-inter text-sm font-normal leading-5 grid grid-rows-2 grid-cols-2 overflow-auto h-12">
         <div v-for="(checklistItem, index) in allChecklistItems" :key="index">
           <div class="sci-checkbox-container">
-            <input type="checkbox" class="sci-checkbox" :value="checklistItem.value" v-model="selectedChecklistItems" />
+            <input type="checkbox" class="sci-checkbox" :value="checklistItem?.value" v-model="selectedChecklistItems" />
             <span class="sci-checkbox-label"></span>
           </div>
-          {{ checklistItem.label }}
+          {{ checklistItem?.label }}
         </div>
       </div>
       <div v-else
         class="text-sn-dark-grey font-inter text-sm font-normal leading-5 h-10 w-[370px] overflow-x-auto flex flex-wrap">
         <div v-for="(checklistItem, index) in allChecklistItems" :key="index">
           <div id="checklist-item" class="flex w-fit h-[18px] break-words mx-1">
-            {{ `${checklistItem.label} |` }}
+            {{ `${checklistItem?.label} |` }}
           </div>
         </div>
       </div>
@@ -47,7 +47,7 @@ export default {
     colVal: Array
   },
   created() {
-    this.allChecklistItems = this.colVal
+    this.allChecklistItems = this?.colVal
   }
 }
 </script>
