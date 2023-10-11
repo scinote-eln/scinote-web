@@ -1,14 +1,18 @@
 class ChecklistItem < ApplicationRecord
+
+  attr_accessor :with_paragraphs
+
   auto_strip_attributes :text, nullify: false
   validates :text,
             presence: true,
             length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :checklist, presence: true
   validates :checked, inclusion: { in: [true, false] }
-  validates :position, uniqueness: { scope: :checklist }, unless: -> { position.nil? }
+  validates :position, uniqueness: { scope: :checklist }
 
   belongs_to :checklist,
              inverse_of: :checklist_items
+  acts_as_list scope: :checklist, top_of_list: 0, sequential_updates: true
   belongs_to :created_by,
              foreign_key: 'created_by_id',
              class_name: 'User',
@@ -18,12 +22,49 @@ class ChecklistItem < ApplicationRecord
              class_name: 'User',
              optional: true
 
-  after_destroy :update_positions
-
   # conditional touch excluding checked updates
   after_destroy :touch_checklist
   after_save :touch_checklist
   after_touch :touch_checklist
+
+  def save_multiline!
+    if with_paragraphs
+      if new_record?
+        original_position = position
+        self.position = nil
+        save!
+        insert_at(original_position + 1)
+      else
+        save!
+      end
+      return [self]
+    end
+
+    items = []
+    if new_record?
+      start_position = position
+      text.split("\n").compact.each do |line|
+        new_item = checklist.checklist_items.create!(text: line)
+        new_item.insert_at(start_position + 1)
+        start_position = new_item.position
+        items.push(new_item)
+      end
+    else
+      item = self
+      text.split("\n").compact.each_with_index do |line, index|
+        if index.zero?
+          update!(text: line)
+          items.push(self)
+        else
+          new_item = checklist.checklist_items.create!(text: line)
+          new_item.insert_at(item.position + 1)
+          item = new_item
+          items.push(new_item)
+        end
+      end
+    end
+    items
+  end
 
   private
 
@@ -34,13 +75,5 @@ class ChecklistItem < ApplicationRecord
     # rubocop:disable Rails/SkipsModelValidations
     checklist.touch
     # rubocop:enable Rails/SkipsModelValidations
-  end
-
-  def update_positions
-    transaction do
-      checklist.checklist_items.order(position: :asc).each_with_index do |checklist_item, i|
-        checklist_item.update!(position: i)
-      end
-    end
   end
 end

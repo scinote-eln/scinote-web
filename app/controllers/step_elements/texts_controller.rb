@@ -5,7 +5,7 @@ module StepElements
     include ApplicationHelper
     include StepsActions
 
-    before_action :load_step_text, only: %i(update destroy duplicate)
+    before_action :load_step_text, only: %i(update destroy duplicate move)
 
     def create
       step_text = @step.step_texts.build
@@ -34,6 +34,31 @@ module StepElements
       render json: @step_text.errors, status: :unprocessable_entity
     end
 
+    def move
+      target = @protocol.steps.find_by(id: params[:target_id])
+      ActiveRecord::Base.transaction do
+        @step_text.update!(step: target)
+        @step_text.step_orderable_element.update!(step: target, position: target.step_orderable_elements.size)
+        @step.normalize_elements_position
+
+        log_step_activity(
+          :text_moved,
+          {
+            user: current_user.id,
+            text_name: @step_text.name,
+            step_position_original: @step.position + 1,
+            step_original: @step.id,
+            step_position_destination: target.position + 1,
+            step_destination: target.id
+          }
+        )
+
+        render json: @step_text, serializer: StepTextSerializer, user: current_user
+      rescue ActiveRecord::RecordInvalid
+        render json: @step_text.errors, status: :unprocessable_entity
+      end
+    end
+
     def destroy
       if @step_text.destroy
         log_step_activity(:text_deleted, { text_name: @step_text.name })
@@ -60,7 +85,7 @@ module StepElements
     private
 
     def step_text_params
-      params.require(:step_text).permit(:text)
+      params.require(:text_component).permit(:text, :name)
     end
 
     def load_step_text

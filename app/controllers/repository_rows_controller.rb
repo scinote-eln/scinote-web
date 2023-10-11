@@ -5,7 +5,7 @@ class RepositoryRowsController < ApplicationController
   include MyModulesHelper
 
   MAX_PRINTABLE_ITEM_NAME_LENGTH = 64
-  before_action :load_repository, except: %i(show print rows_to_print print_zpl
+  before_action :load_repository, except: %i(print rows_to_print print_zpl
                                              validate_label_template_columns actions_toolbar)
   before_action :load_repository_row_print, only: %i(print rows_to_print print_zpl validate_label_template_columns)
   before_action :load_repository_or_snapshot, only: %i(print rows_to_print print_zpl validate_label_template_columns)

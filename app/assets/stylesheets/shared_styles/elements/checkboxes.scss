@@ -36,7 +36,7 @@ input[type="checkbox"].sci-checkbox {
       @include font-awesome;
       animation-timing-function: $timing-function-sharp;
       background: $color-white;
-      border: $border-default;
+      border: 1px solid var(--sn-black);
       border-radius: 1px;
       color: $color-white;
       content: "";
@@ -51,27 +51,17 @@ input[type="checkbox"].sci-checkbox {
     }
   }
 
-  &:focus + .sci-checkbox-label {
-    &::before {
-      border: 1px solid $brand-primary;
-    }
-  }
-
   &.hidden + .sci-checkbox-label {
     display: none;
   }
 
   &:checked + .sci-checkbox-label {
     &::before {
-      background: $brand-primary;
-      border: 1px solid $brand-primary;
-      content: $font-fas-check;
-    }
-  }
+      background-color: var(--sn-science-blue);
+      background-image: image-url("icon_small/sn-check.svg");
+      background-position: center;
+      border: 1px solid var(--sn-science-blue);
 
-  &:focus:checked + .sci-checkbox-label {
-    &::before {
-      border: 1px solid $brand-complementary;
     }
   }
 
@@ -87,12 +77,16 @@ input[type="checkbox"].sci-checkbox {
     }
   }
 
+  &:focus {
+    outline: none;
+    outline-offset: 0;
+  }
+
   &:disabled {
     cursor: default;
 
     + .sci-checkbox-label {
       &::before {
-        background: $color-alto;
         border: $border-tertiary;
       }
     }

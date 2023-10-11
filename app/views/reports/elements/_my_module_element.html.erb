@@ -51,10 +51,10 @@
     <div class="row">
       <div class="col-xs-12">
         <% if my_module.description.present? %>
-          <%= custom_auto_link(my_module.prepare_for_report(:description, export_all),
+          <%= custom_auto_link(my_module.prepare_for_report(:description),
                                team: current_team,
                                simple_format: false,
-                               base64_encoded_imgs: export_all) %>
+                               base64_encoded_imgs: true) %>
         <% end %>
       </div>
     </div>
@@ -74,13 +74,31 @@
     <% end %>
 
     <% order_results_for_report(my_module.results, @settings.dig('task', 'result_order')).each do |result| %>
-      <% if result.is_asset && @settings.dig('task', 'file_results') %>
-        <%= render partial: 'reports/elements/my_module_result_asset_element', locals: { result: result, report: report, export_all: export_all } %>
-      <% elsif result.is_table && @settings.dig('task', 'table_results') %>
-        <%= render partial: 'reports/elements/my_module_result_table_element', locals: { result: result, export_all: export_all } %>
-      <% elsif result.is_text && @settings.dig('task', 'text_results') %>
-        <%= render partial: 'reports/elements/my_module_result_text_element', locals: { result: result, export_all: export_all } %>
+      <div class="result-name">
+        <%= result.name.presence || I18n.t('projects.reports.unnamed') %>
+        <% if result.archived? %>
+          <span class="label label-warning"><%= t('search.index.archived') %></span>
+        <% end %>
+      </div>
+
+      <% result.result_orderable_elements.each do |element| %>
+        <% if element.orderable_type == "ResultTable" %>
+          <%= render partial: 'reports/elements/my_module_result_table_element', locals: { result: result, export_all: export_all, element: element} %>
+        <% elsif element.orderable_type == "ResultText" %>
+          <%= render partial: 'reports/elements/my_module_result_text_element', locals: { result: result, export_all: export_all, element: element } %>
+        <% end %>
       <% end %>
+
+      <%= render partial: 'reports/elements/my_module_result_asset_element', locals: { result: result, report: report, export_all: export_all } %>
+      <div class="user-time">
+        <%= t('projects.reports.elements.result.user_time', user: result.user.full_name, timestamp: l(result.created_at, format: :full)) %>
+      </div>
+
+      <div class="report-element-children">
+        <% if @settings.dig('task', 'result_comments') %>
+          <%= render partial: 'reports/elements/result_comments_element', locals: { result: result } %>
+        <% end %>
+      </div>
     <% end %>
   </div><br>
 

@@ -68,10 +68,6 @@
 }
 
 .result {
-  .panel {
-    margin-left: 4.25em !important;
-  }
-
   .ql-editor {
     overflow-x: auto;
   }
@@ -87,6 +83,14 @@
   }
 }
 
+.result-head-left {
+  .result-collapse-link {
+    &:not(.collapsed) {
+      transform: rotate(90deg);
+    }
+  }
+}
+
 .edit-text-result {
   .form-group {
     display: flex;
@@ -94,3 +98,18 @@
   }
 }
 
+.comments-counter {
+  align-items: center;
+  background: var(--sn-grey);
+  border-radius: .5rem;
+  color: $color-white;
+  display: flex;
+  font-size: 10px;
+  height: 16px;
+  justify-content: center;
+  margin: 2px;
+  min-width: 16px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}

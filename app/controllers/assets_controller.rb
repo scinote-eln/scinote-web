@@ -65,6 +65,87 @@ class AssetsController < ApplicationController
                                           formats: :html) }
   end
 
+  def move_targets
+    if @assoc.is_a?(Step)
+      protocol = @assoc.protocol
+      render json: { targets: protocol.steps.order(:position).where.not(id: @assoc.id).map { |i| [i.id, i.name] } }
+    elsif @assoc.is_a?(Result)
+      my_module = @assoc.my_module
+      render json: { targets: my_module.results.active.where.not(id: @assoc.id).map { |i| [i.id, i.name] } }
+    else
+      render json: { targets: [] }
+    end
+  end
+
+  def move
+    case @assoc
+    when Step
+      target = @assoc.protocol.steps.find_by(id: params[:target_id])
+    when Result
+      target = @assoc.my_module.results.active.find_by(id: params[:target_id])
+      return render_404 unless target
+    end
+
+    ActiveRecord::Base.transaction do
+      if @assoc.is_a?(Step)
+        object_to_update = @asset.step_asset
+        object_to_update.update!(step: target)
+
+        if @assoc.protocol.in_module?
+          log_step_activity(
+            @asset.file.metadata[:asset_type] == 'marvinjs' ? :move_chemical_structure_on_step : :task_step_file_moved,
+            @assoc,
+            @assoc.my_module.project,
+            my_module: @assoc.my_module.id,
+            file: @asset.file_name,
+            user: current_user.id,
+            step_position_original: @asset.step.position + 1,
+            step_original: @asset.step.id,
+            step_position_destination: target.position + 1,
+            step_destination: target.id
+          )
+        else
+          log_step_activity(
+            @asset.file.metadata[:asset_type] == 'marvinjs' ? :move_chemical_structure_on_step_in_repository : :protocol_step_file_moved,
+            @assoc,
+            nil,
+            protocol: @assoc.protocol.id,
+            file: @asset.file_name,
+            user: current_user.id,
+            step_position_original: @asset.step.position + 1,
+            step_original: @asset.step.id,
+            step_position_destination: target.position + 1,
+            step_destination: target.id
+          )
+        end
+
+        render json: {}
+      elsif @assoc.is_a?(Result)
+        object_to_update = @asset.result_asset
+        object_to_update.update!(result: target)
+
+        type_of = {
+          'marvinjs' => :move_chemical_structure_on_result,
+          'gene_sequence' => :sequence_on_result_moved
+        }.fetch(@asset.file.metadata[:asset_type], :result_file_moved)
+
+        log_result_activity(
+          type_of,
+          @assoc,
+          file: @asset.file_name,
+          user: current_user.id,
+          result_original: @assoc.id,
+          result_destination: target.id
+        )
+
+        render json: {}
+      end
+    rescue ActiveRecord::RecordInvalid
+      render json: object_to_update.errors, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
+    end
+  end
+
   def file_url
     return render_404 unless @asset.file.attached?
 
@@ -182,22 +263,17 @@ class AssetsController < ApplicationController
 
       edit_url = edit_asset_url(step_asset.asset_id)
     elsif params[:element_type] == 'Result'
-      my_module = MyModule.find(params[:element_id].to_i)
-      render_403 and return unless can_manage_my_module?(my_module)
+      result = Result.find(params[:element_id].to_i)
+      render_403 and return unless can_manage_result?(result)
 
-      # First create result and then the asset
-      result = Result.create(name: asset.file_name,
-                             my_module: my_module,
-                             user: current_user)
       result_asset = ResultAsset.create!(result: result, asset: asset)
+      asset.update!(view_mode: result.assets_view_mode)
 
       edit_url = edit_asset_url(result_asset.asset_id)
     else
       render_404 and return
     end
 
-    # Prepare file preview in advance
-    asset.medium_preview.processed && asset.large_preview.processed
     # Return edit url and asset info
     render json: {
       attributes: AssetSerializer.new(asset, scope: { user: current_user }).as_json,
@@ -228,7 +304,11 @@ class AssetsController < ApplicationController
           )
         end
       when Result
-        log_result_activity(:edit_result, @assoc)
+        log_result_activity(
+          @asset.file.metadata[:asset_type] == 'gene_sequence' ? :sequence_on_result_deleted : :result_file_deleted,
+          @assoc,
+          file: @asset.file_name
+        )
       end
 
       render json: { flash: I18n.t('assets.file_deleted', file_name: escape_input(@asset.file_name)) }
@@ -242,6 +322,8 @@ class AssetsController < ApplicationController
   def load_vars
     @asset = Asset.find_by(id: params[:id])
     return render_404 unless @asset
+
+    current_user.permission_team = @asset.team
 
     @assoc ||= @asset.step
     @assoc ||= @asset.result
@@ -299,7 +381,7 @@ class AssetsController < ApplicationController
             message_items: message_items)
   end
 
-  def log_result_activity(type_of, result)
+  def log_result_activity(type_of, result, message_items)
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
@@ -307,8 +389,7 @@ class AssetsController < ApplicationController
             team: result.my_module.team,
             project: result.my_module.project,
             message_items: {
-              result: result.id,
-              type_of_result: t('activities.result_type.text')
-            })
+              result: result.id
+            }.merge(message_items))
   end
 end

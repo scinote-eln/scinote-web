@@ -123,7 +123,6 @@ class MyModulesController < ApplicationController
     end
 
     @next_page = activities.next_page
-    @starting_timestamp = activities.first&.created_at.to_i
 
     respond_to do |format|
       format.json do
@@ -132,8 +131,7 @@ class MyModulesController < ApplicationController
             partial: 'global_activities/activity_list',
             formats: :html
           ),
-          next_page: @next_page,
-          starting_timestamp: @starting_timestamp
+          next_page: @next_page
         }
       end
       format.html
@@ -365,7 +363,7 @@ class MyModulesController < ApplicationController
       log_activity(:change_status_on_task_flow, @my_module, my_module_status_old: old_status_id,
                    my_module_status_new: @my_module.my_module_status.id)
 
-      redirect_to protocols_my_module_path(@my_module)
+      render json: { status: :changed }
     else
       render json: { errors: @my_module.errors.messages.values.flatten.join('\n') }, status: :unprocessable_entity
     end
@@ -562,7 +560,7 @@ class MyModulesController < ApplicationController
 
   def activity_filters
     params.permit(
-      :page, :starting_timestamp, :from_date, :to_date, types: [], users: [], subjects: {}
+      :page, :from_date, :to_date, types: [], users: [], subjects: {}
     )
   end
 

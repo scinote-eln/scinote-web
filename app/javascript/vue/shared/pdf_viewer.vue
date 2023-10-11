@@ -11,7 +11,7 @@
     </div>
     <div class="pdf-toolbar">
       <button class="btn btn-light icon-btn prev-page">
-        <i class="fas fa-arrow-left"></i>
+        <i class="sn-icon sn-icon-arrow-left"></i>
       </button>
       <div class="page-counter sci-input-container">
         <input type="text" class="sci-input-field current-page" value=1>
@@ -19,7 +19,7 @@
         <span class="total-page">...</span>
       </div>
       <button class="btn btn-light icon-btn next-page">
-        <i class="sn-icon sn-icon-move"></i>
+        <i class="sn-icon sn-icon-arrow-right"></i>
       </button>
       <div class="divider"></div>
       <div class="zoom-page">

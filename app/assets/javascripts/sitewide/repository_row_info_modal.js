@@ -38,7 +38,6 @@
       });
       $('#modal-info-repository-row #bar-code-image').attr('src', barCodeCanvas.toDataURL('image/png'));
 
-
       $('#repository_row-info-table').DataTable({
         dom: 'RBltpi',
         stateSave: false,
@@ -62,6 +61,26 @@
     });
     e.preventDefault();
     return false;
+  });
+
+  $(document).on('click', '.export-consumption-button', function() {
+    let selectedRows = [];
+
+    if ($(this).attr('id') === 'exportStockConsumptionButton') {
+      selectedRows = RepositoryDatatable.selectedRows();
+    } else {
+      selectedRows = $('#modal-info-repository-row .print-label-button').data('rows');
+    }
+
+    window.initExportStockConsumptionModal();
+
+    if (window.exportStockConsumptionModalComponent) {
+      window.exportStockConsumptionModalComponent.fetchRepositoryData(
+        selectedRows,
+        { repository_id: $(this).data('objectId') },
+      );
+      $('#modal-info-repository-row').modal('hide');
+    }
   });
 
   $(document).on('click', '.print-label-button', function(e) {

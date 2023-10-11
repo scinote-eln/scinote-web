@@ -79,7 +79,7 @@
 
 @mixin not-started {
   border: 1px solid var(--sn-sleepy-grey);
-  color: var(--sn-black);
+  color: var(--sn-black) !important;
 }
 
 // Material design mixins

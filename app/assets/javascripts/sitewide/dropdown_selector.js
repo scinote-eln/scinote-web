@@ -381,6 +381,9 @@ var dropdownSelector = (function() {
           || (config.selectKeys || []).includes(e.keyCode)) {
           return;
         }
+        if (!dropdownContainer.hasClass('open')) {
+          dropdownContainer.find('.input-field').focus();
+        }
         e.stopPropagation();
         loadData(selectElement, dropdownContainer);
       })

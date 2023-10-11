@@ -33,10 +33,6 @@ html {
 
 /* Results index page */
 
-#results {
-  margin-top: 20px;
-}
-
 .navigation-results-counter {
   background-color: $color-concrete;
   border-radius: $border-radius-circle;
@@ -366,6 +362,18 @@ html {
 
     .task-selector-container {
       padding: .75em .75em 0 1em;
+
+      &.archived-task {
+        display: flex;
+        height: 2rem;
+        margin: 0 .75rem;
+        padding: 0;
+
+        .sci-checkbox-container {
+          display: flex;
+          margin: auto;
+        }
+      }
     }
 
     .panel-heading {

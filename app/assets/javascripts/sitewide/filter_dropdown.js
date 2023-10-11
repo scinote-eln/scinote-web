@@ -1,12 +1,15 @@
 var filterDropdown = (function() {
   var $filterContainer = '';
-  var $filtersEnabled = false;
+  let filtersEnabled = null;
+  let textFilterVal = null;
 
   function initClearButton() {
     $('.clear-button', $filterContainer).click(function(e) {
       e.stopPropagation();
       e.preventDefault();
       $filterContainer.trigger('filter:clear');
+      $filterContainer.removeClass('filters-applied');
+      textFilterVal = null;
     });
   }
 
@@ -26,6 +29,13 @@ var filterDropdown = (function() {
     var $textFilter = $('#textSearchFilterInput', $filterContainer);
 
     $filterContainer.on('show.bs.dropdown', function() {
+      if (!$(this).hasClass('filters-applied')) {
+        $(this).find('input').each(function() {
+          // .data-field inputs are dropdownSelector data fields
+          $(this).val($(this).hasClass('data-field') ? '[]' : '')
+        });
+      }
+
       let $filterDropdown = $filterContainer.find('.dropdown-menu');
       let teamId = $filterDropdown.data('team-id');
       $('#textSearchFilterHistory').find('li').remove();
@@ -33,22 +43,35 @@ var filterDropdown = (function() {
         let storagePath = `${$filterDropdown.data('search-field-history-key')}/${teamId}/recent_search_keywords`;
         let recentSearchKeywords = JSON.parse(localStorage.getItem(storagePath));
         $.each(recentSearchKeywords, function(i, keyword) {
-          $('#textSearchFilterHistory').append(
-            $(`<li class="dropdown-item">
+          const listItem = $(`<li class="dropdown-item">
               <a class="projects-search-keyword" href="#" data-keyword="${keyword}">
                 <i class="fas fa-history"></i>
                 <span class="keyword-text">${keyword}</span>
               </a>
-            </li>`)
-          );
+            </li>`);
+
+          listItem.find('.projects-search-keyword').click(function(e) {
+            e.preventDefault();
+            const clickedKeyword = $(this).data('keyword');
+            if (clickedKeyword?.trim().length > 0) {
+              textFilterVal = clickedKeyword;
+            }
+            else {
+              textFilterVal = null;
+            }
+          });
+          $('#textSearchFilterHistory').append(listItem);
         });
       } catch (error) {
         console.error(error);
       }
+      if (textFilterVal) {
+        $('#textSearchFilterInput').val(textFilterVal);
+      }
     }).on('hide.bs.dropdown', function(e) {
       if (e.target === e.currentTarget) {
         $('#textSearchFilterHistory').hide();
-        if (filtersEnabledFunction() || $filtersEnabled) {
+        if (filtersEnabledFunction() || filtersEnabled) {
           $('.apply-filters', $filterContainer).click();
         }
       }
@@ -92,9 +115,11 @@ var filterDropdown = (function() {
         }
         recentSearchKeywords.unshift(projectsViewSearch);
         localStorage.setItem(storagePath, JSON.stringify(recentSearchKeywords));
+
       } catch (error) {
         console.error(error);
       }
+
       $filterContainer.trigger('filter:apply');
       $(this).closest('.dropdown').removeClass('open');
     });
@@ -109,22 +134,22 @@ var filterDropdown = (function() {
   return {
     init: function(filtersEnabledFunction) {
       $filterContainer = $('.filter-container');
-      $filtersEnabled = false;
       initClearButton();
       preventDropdownClose();
       initApplyButton();
       initCloseButton();
       initSearchField(filtersEnabledFunction);
+      this.toggleFilterMark($filterContainer, filtersEnabled)
       return $filterContainer;
     },
-    toggleFilterMark: function(filterContainer, filtersEnabled) {
-      $filtersEnabled = filtersEnabled;
-      if (filtersEnabled) {
+    toggleFilterMark: function(filterContainer, filtersEnabledArg) {
+      if (filtersEnabledArg) {
         filterContainer.addClass('filters-applied');
+        filtersEnabled = filtersEnabledArg;
       } else {
         filterContainer.removeClass('filters-applied');
+        filtersEnabled = null;
       }
     }
-
   };
 }());

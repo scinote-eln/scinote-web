@@ -4,6 +4,8 @@ class StepText < ApplicationRecord
   include TinyMceImages
   include ActionView::Helpers::TextHelper
 
+  auto_strip_attributes :name, nullify: false
+  validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
   auto_strip_attributes :text, nullify: false
   validates :text, length:
     {
@@ -16,16 +18,11 @@ class StepText < ApplicationRecord
 
   scope :asc, -> { order('step_texts.created_at ASC') }
 
-  def name
-    return if text.blank?
-
-    strip_tags(text.truncate(64))
-  end
-
   def duplicate(step, position = nil)
     ActiveRecord::Base.transaction do
       new_step_text = step.step_texts.create!(
-        text: text
+        text: text,
+        name: name
       )
 
       # Copy steps tinyMce assets

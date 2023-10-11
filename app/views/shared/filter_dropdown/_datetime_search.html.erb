@@ -1,33 +1,36 @@
-<div class="select-block <%= container_class %>" <%= "data-view-mode=#{view_mode}" if view_mode %>>
+<div class="<%= container_class %> mb-6" <%= "data-view-mode=#{view_mode}" if view_mode %>>
     <div class="created-on-label">
-      <label><%= label %></label>
+      <label class="sci-label"><%= label %></label>
     </div>
-    <div class="datetime-picker-container">
-      <span class="sn-icon sn-icon-calendar"></span>
-      <input type="datetime"
-             data-toggle='date-time-picker'
-             class="form-control calendar-input from-date"
-             readonly
-             placeholder="<%= t('filters_modal.from_placeholder') %>"
-             data-date-format="<%= datetime_picker_format_full %>"
-             data-date-locale="<%= I18n.locale %>"
-             data-date-use-current="false"
-             value=""/>
-    </div>
-
-    <div class="connect-line"></div>
-
-    <div class="datetime-picker-container">
-      <span class="sn-icon sn-icon-calendar"></span>
-      <input type="datetime"
-             data-toggle='date-time-picker'
-             class="form-control calendar-input to-date"
-             readonly
-             placeholder="<%= t('filters_modal.to_placeholder') %>"
-             data-date-format="<%= datetime_picker_format_full %>"
-             data-date-locale="<%= I18n.locale %>"
-             data-date-use-current="false"
-             data-date-orientation="left"
-             value=""/>
+    <div class="flex items-center gap-5">
+      <div class="datetime-picker-container flex">
+        <span class="sn-icon sn-icon-calendar"></span>
+        <input type="datetime"
+              id="<%= "#{container_class}_from" %>"
+              data-linked-max="#<%= "#{container_class}_to" %>"
+              data-toggle='date-time-picker'
+              class="form-control calendar-input from-date"
+              readonly
+              placeholder="<%= t('filters_modal.from_placeholder') %>"
+              data-date-format="<%= datetime_picker_format_full %>"
+              data-date-locale="<%= I18n.locale %>"
+              data-date-use-current="false"
+              value=""/>
+      </div>
+      <div class="datetime-picker-container flex">
+        <span class="sn-icon sn-icon-calendar"></span>
+        <input type="datetime"
+              data-toggle='date-time-picker'
+              id="<%= "#{container_class}_to" %>"
+              data-linked-min="#<%= "#{container_class}_from" %>"
+              class="form-control calendar-input to-date"
+              readonly
+              placeholder="<%= t('filters_modal.to_placeholder') %>"
+              data-date-format="<%= datetime_picker_format_full %>"
+              data-date-locale="<%= I18n.locale %>"
+              data-date-use-current="false"
+              data-date-orientation="left"
+              value=""/>
+      </div>
     </div>
 </div>

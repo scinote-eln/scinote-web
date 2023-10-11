@@ -1,0 +1,25 @@
+<div
+  class="comment-container report"
+  data-field-to-update="message"
+  data-params-group="comment"
+  data-original-name="<%= comment.message %>"
+  data-response-field="comment"
+  data-smart-annotation="true"
+  data-edit-mode="0"
+>
+  <div class="avatar-placehodler">
+    <span class='global-avatar-container'>
+      <%= image_tag user_avatar_absolute_url(comment.user, :icon_small, true), class: 'avatar' %>
+    </span>
+  </div>
+  <div class="content-placeholder">
+    <div class="comment-name"><%= comment.user.full_name %></div>
+    <div class="comment-right">
+      <div class="comment-datetime"><%= l(comment.created_at, format: :full) %></div>
+    </div>
+    <div class="comment-message">
+          <div class="view-mode"><%= custom_auto_link(comment.message, team: current_team, simple_format: true) %></div>
+    </div>
+    <div class="error-block"></div>
+  </div>
+</div>

@@ -1,16 +1,11 @@
 <% result ||= report_element.result %>
-<% table = result.table %>
+<% table = element.orderable.table %>
 <% timestamp = table.created_at %>
 <% name = result.name %>
 <% export_all = defined?(export_all) && export_all %>
 <div class="report-element report-result-element report-result-table-element">
   <div class="report-element-header">
-    <div class="result-name">
-      <%= name %>
-      <% if result.archived? %>
-        <span class="label label-warning"><%= t('search.index.archived') %></span>
-      <% end %>
-    </div>
+   <div class="table-name">
     <% if defined? export_all and export_all %>
       <div class="table-name">
         <% file_link = @obj_filenames.dig(:tables, table.id, :file) %>
@@ -18,9 +13,16 @@
           <em><%= file_link&.split('/')&.last %></em>
         </a>
       </div>
+    <% else %>
+      <% if table.name.present? %>
+        <em>
+          <%= truncate(table.name, length: Constants::FILENAME_TRUNCATION_LENGTH) %>
+        </em>
+      <% end %>
     <% end %>
+   </div>
     <div class="user-time">
-      <%= t('projects.reports.elements.result_table.user_time', user: result.user.full_name, timestamp: l(timestamp, format: :full)) %>
+      <%= t('projects.reports.elements.result_table.user_time', timestamp: l(timestamp, format: :full)) %>
     </div>
   </div>
   <div class="report-element-body">
@@ -28,11 +30,6 @@
     <input type="hidden" class="hot-table-metadata" value="<%= table.metadata ? table.metadata.to_json : nil %>" />
     <div class="hot-table-container"></div>
     <table class="report-common-table-format"></table>
-  </div>
-  <div class="report-element-children">
-    <% if @settings.dig('task', 'result_comments') %>
-      <%= render partial: 'reports/elements/result_comments_element', locals: { result: result } %>
-    <% end %>
   </div>
   <% if defined?(children) %>
     <div class="report-element-children">

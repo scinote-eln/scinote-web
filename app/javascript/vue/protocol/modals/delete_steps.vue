@@ -3,7 +3,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
           <h4 class="modal-title">
             {{ i18n.t('protocols.steps.modals.delete_steps.title')}}
           </h4>
@@ -24,6 +24,9 @@
   export default {
     name: 'deleteStepsModal',
     mounted() {
+      // move modal to body to avoid z-index issues
+      $('body').append($(this.$refs.modal));
+
       $(this.$refs.modal).modal('show');
       $(this.$refs.modal).on('hidden.bs.modal', () => {
         this.$emit('close');

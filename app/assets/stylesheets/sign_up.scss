@@ -25,12 +25,8 @@
         margin-bottom: 24px;
       }
 
-      .sci-input-container:not(.field_with_errors) {
-        margin-bottom: 24px;
-
-        .minimum-password-length {
-          @include font-small;
-        }
+      .sci-input-container:not(.field_with_errors) .minimum-password-length {
+        @include font-small;
       }
 
       .sign-up-button {

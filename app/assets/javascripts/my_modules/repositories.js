@@ -5,7 +5,6 @@ initAssignedTasksDropdown I18n prepareRepositoryHeaderForExport initReminderDrop
 var MyModuleRepositories = (function() {
   const FULL_VIEW_MODAL = $('#myModuleRepositoryFullViewModal');
   const UPDATE_REPOSITORY_MODAL = $('#updateRepositoryRecordModal');
-  const STATUS_POLLING_INTERVAL = 10000;
   var SIMPLE_TABLE;
   var FULL_VIEW_TABLE;
   var FULL_VIEW_TABLE_SCROLLBAR;
@@ -423,7 +422,7 @@ var MyModuleRepositories = (function() {
       } else {
         setTimeout(function() {
           checkSnapshotStatus(snapshotItem);
-        }, STATUS_POLLING_INTERVAL);
+        }, GLOBAL_CONSTANTS.SLOW_STATUS_POLLING_INTERVAL);
       }
     });
   }
@@ -461,7 +460,7 @@ var MyModuleRepositories = (function() {
       var snapshotItem = $(this);
       setTimeout(function() {
         checkSnapshotStatus(snapshotItem);
-      }, STATUS_POLLING_INTERVAL);
+      }, GLOBAL_CONSTANTS.SLOW_STATUS_POLLING_INTERVAL);
     });
   }
 
@@ -508,7 +507,7 @@ var MyModuleRepositories = (function() {
           FULL_VIEW_MODAL.find('.snapshots-container-scrollbody').prepend(snapshotItem);
           setTimeout(function() {
             checkSnapshotStatus(snapshotItem);
-          }, STATUS_POLLING_INTERVAL);
+          }, GLOBAL_CONSTANTS.SLOW_STATUS_POLLING_INTERVAL);
           animateSpinner(null, false);
           refreshCreationSnapshotInfoText();
         }
