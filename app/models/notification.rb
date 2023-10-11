@@ -5,15 +5,10 @@ class Notification < ApplicationRecord
   has_many :users, through: :user_notifications
   belongs_to :generator_user, class_name: 'User', optional: true
 
+  include Noticed::Model
+  belongs_to :recipient, polymorphic: true
+
   enum type_of: Extends::NOTIFICATIONS_TYPES
-
-  def create_user_notification(user)
-    return if user == generator_user
-    return unless can_send_to_user?(user)
-    return unless user.enabled_notifications_for?(type_of.to_sym, :web)
-
-    user_notifications.create!(user: user)
-  end
 
   private
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_04_080206) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -377,12 +377,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_04_080206) do
   end
 
   create_table "notifications", force: :cascade do |t|
-    t.string "title"
-    t.string "message"
-    t.integer "type_of", null: false
-    t.bigint "generator_user_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.jsonb "params", default: {}, null: false
+    t.string "type", default: "LegacyNotification", null: false
+    t.datetime "read_at"
+    t.bigint "recipient_id"
+    t.string "recipient_type"
     t.index ["created_at"], name: "index_notifications_on_created_at"
   end
 
@@ -1347,7 +1348,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_04_080206) do
   add_foreign_key "my_modules", "users", column: "created_by_id"
   add_foreign_key "my_modules", "users", column: "last_modified_by_id"
   add_foreign_key "my_modules", "users", column: "restored_by_id"
-  add_foreign_key "notifications", "users", column: "generator_user_id"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_grants", "users", column: "resource_owner_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
