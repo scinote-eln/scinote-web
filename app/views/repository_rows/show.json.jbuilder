@@ -13,7 +13,7 @@ end
 json.default_columns do
   json.name @repository_row.name
   json.code @repository_row.code
-  json.added_on @repository_row.created_at
+  json.added_on I18n.l(@repository_row.created_at, format: :full)
   json.added_by @repository_row.created_by&.full_name
   json.archived @repository_row.archived?
 end
