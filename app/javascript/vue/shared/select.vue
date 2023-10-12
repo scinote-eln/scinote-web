@@ -72,6 +72,11 @@
     beforeDestroy() {
       document.removeEventListener('scroll', this.updateOptionPosition);
     },
+    watch: {
+      isOpen() {
+        this.isOpen && this.preventModalClose();
+      }
+    },
     methods: {
       preventBlur() {
         this.blurPrevented = true;
@@ -136,6 +141,19 @@
           this.$refs.optionsContainer.$el.querySelector('.ps__thumb-y').addEventListener('mouseup', this.allowBlur);
           document.addEventListener('mouseup', this.allowBlur);
         }, 100);
+      },
+      preventModalClose() {
+        // Prevents closing a Boostrap 3 modal if the clicked element of the dropdown
+        // is positioned outside the modal by temporarily making the backdrop 'static'
+        let $modal = $(this.$refs.container).parents('.modal');
+        if ($modal.length) {
+          $modal.data('bs.modal').options.backdrop = 'static';
+
+          document.addEventListener('mouseup', () => {
+            // restore modal closing on mouseup after a slight delay
+            setTimeout(() => $modal.data('bs.modal').options.backdrop = true, 100);
+          }, { once: true });
+        }
       }
     }
   }
