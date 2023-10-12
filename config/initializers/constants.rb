@@ -324,7 +324,7 @@ class Constants
   config = Sanitize::Config::RELAXED.deep_dup
   config[:attributes][:all] << 'id'
   config[:attributes][:all] << 'contenteditable'
-  config[:attributes][:all] << :data
+  config[:attributes]['img'] << 'data-mce-token'
   config[:protocols]['img']['src'] << 'data'
   INPUT_SANITIZE_CONFIG = Sanitize::Config.freeze_config(config)
 

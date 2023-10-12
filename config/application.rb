@@ -60,6 +60,8 @@ module Scinote
 
     config.x.connected_devices_enabled = ENV['CONNECTED_DEVICES_ENABLED'] == 'true'
 
+    config.x.custom_sanitizer_config = nil
+
     # Logging
     config.log_formatter = proc do |severity, datetime, progname, msg|
       "[#{datetime}] #{severity}: #{msg}\n"

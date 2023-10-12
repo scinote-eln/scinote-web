@@ -34,19 +34,22 @@ module Reports
         proxy.set_user(user, scope: :user, store: false)
         ApplicationController.renderer.defaults[:http_host] = Rails.application.routes.default_url_options[:host]
         renderer = ApplicationController.renderer.new(warden: proxy)
+        Rails.application.config.x.custom_sanitizer_config = build_custom_sanitizer_config
 
         file << renderer.render(
-          pdf: 'report', header: { html: { template: "reports/templates/#{template}/header",
-                                           locals: { report: report, user: user, logo: report_logo },
-                                           layout: 'reports/footer_header' } },
-                         footer: { html: { template: "reports/templates/#{template}/footer",
-                                           locals: { report: report, user: user, logo: report_logo },
-                                           layout: 'reports/footer_header' } },
-                         assigns: { settings: report.settings },
-                         locals: { report: report },
-                         disable_javascript: false,
-                         template: 'reports/report',
-                         formats: :pdf
+          pdf: 'report',
+          header: { html: { template: "reports/templates/#{template}/header",
+                            locals: { report: report, user: user, logo: report_logo },
+                            layout: 'reports/footer_header' } },
+          footer: { html: { template: "reports/templates/#{template}/footer",
+                            locals: { report: report, user: user, logo: report_logo },
+                            layout: 'reports/footer_header' } },
+          assigns: { settings: report.settings },
+          locals: { report: report },
+          disable_javascript: false,
+          disable_external_links: true,
+          template: 'reports/report',
+          formats: :pdf
         )
 
         file.rewind
@@ -69,6 +72,7 @@ module Reports
         )
         notification.create_user_notification(user)
       ensure
+        Rails.application.config.x.custom_sanitizer_config = nil
         I18n.backend.date_format = nil
         file.close(true)
       end
@@ -176,6 +180,15 @@ module Reports
 
     def report_logo
       'scinote_logo.svg'
+    end
+
+    def build_custom_sanitizer_config
+      sanitizer_config = Constants::INPUT_SANITIZE_CONFIG.deep_dup
+      sanitizer_config[:protocols] = {
+        'a' => { 'href' => ['http', 'https', :relative] },
+        'img' => { 'src' => %w(data) }
+      }
+      sanitizer_config
     end
 
     # Overrides method from FailedDeliveryNotifiableJob concern

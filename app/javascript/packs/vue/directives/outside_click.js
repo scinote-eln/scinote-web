@@ -3,16 +3,13 @@
 // eg v-click-outside="{handler: 'handlerToTrigger', exclude: [refs to ignore on click (eg 'searchInput', 'searchInputBtn')]}"
 // eslint-enable-next-line max-len
 
-let handleOutsideClick;
-
 export default {
   bind(el, binding, vnode) {
-    const { handler, exclude } = binding.value;
-
-    handleOutsideClick = (e) => {
+    el._vueClickOutside_ = (e) => {
       e.stopPropagation();
 
       let clickedOnExcludedEl = false;
+      const { exclude } = binding.value;
       exclude.forEach(refName => {
         if (!clickedOnExcludedEl) {
           const excludedEl = vnode.context.$refs[refName];
@@ -21,15 +18,17 @@ export default {
       });
 
       if (!el.contains(e.target) && !clickedOnExcludedEl) {
+        const { handler } = binding.value;
         vnode.context[handler]();
       }
     };
 
-    document.addEventListener('click', handleOutsideClick);
-    document.addEventListener('touchstart', handleOutsideClick);
+    document.addEventListener('click', el._vueClickOutside_);
+    document.addEventListener('touchstart', el._vueClickOutside_);
   },
-  unbind() {
-    document.removeEventListener('click', handleOutsideClick);
-    document.removeEventListener('touchstart', handleOutsideClick);
+  unbind(el) {
+    document.removeEventListener('click', el._vueClickOutside_);
+    document.removeEventListener('touchstart', el._vueClickOutside_);
+    el._vueClickOutside_ = null;
   }
 };
