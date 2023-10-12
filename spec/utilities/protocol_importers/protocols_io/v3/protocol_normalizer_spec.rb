@@ -39,7 +39,7 @@ describe ProtocolImporters::ProtocolsIo::V3::ProtocolNormalizer do
         allow(client_data).to receive_message_chain(:parsed_response)
           .and_return(protocols_io_single_protocol)
 
-        expect(subject.normalize_protocol(client_data).deep_stringify_keys).to be == normalized_protocol
+        expect(subject.normalize_protocol(client_data).deep_stringify_keys).to eq(normalized_protocol)
       end
     end
 

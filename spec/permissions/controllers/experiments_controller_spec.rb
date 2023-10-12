@@ -19,8 +19,20 @@ describe ExperimentsController, type: :controller do
     move: { id: 1 },
     module_archive: { id: 1 },
     fetch_workflow_img: { id: 1 },
-    sidebar: { id: 1 }
-  }, []
+    sidebar: { id: 1 },
+    my_modules: { id: 1 },
+    load_table: { id: 1 },
+    permissions: { id: 1 },
+    assigned_users_to_tasks: { id: 1 },
+    batch_clone_my_modules: { id: 1 },
+    search_tags: { id: 1 },
+    actions_dropdown: { id: 1 },
+    archive_my_modules: { id: 1 },
+    table: { id: 1 },
+    move_modules: { id: 1 },
+    move_modules_modal: { id: 1 },
+    view_type: { id: 1, view_type: 'table' },
+  }, [:set_breadcrumbs_items, :my_modules_view_mode]
 
   login_user
 
@@ -87,13 +99,13 @@ describe ExperimentsController, type: :controller do
 
     it_behaves_like "a controller action with permissions checking", :get, :clone_modal do
       let(:testable) { experiment }
-      let(:permissions) { [ExperimentPermissions::MANAGE] }
+      let(:permissions) { [ExperimentPermissions::READ] }
       let(:action_params) { { id: experiment.id } }
     end
 
     it_behaves_like "a controller action with permissions checking", :post, :clone do
       let(:testable) { experiment }
-      let(:permissions) { [ExperimentPermissions::MANAGE] }
+      let(:permissions) { [ExperimentPermissions::READ] }
       let(:action_params) { { id: experiment.id } }
     end
 

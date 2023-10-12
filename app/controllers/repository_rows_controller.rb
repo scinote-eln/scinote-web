@@ -84,6 +84,31 @@ class RepositoryRowsController < ApplicationController
     end
   end
 
+  def show
+    @repository_row = RepositoryRow.find_by(id: params[:id])
+    @my_module = MyModule.find_by(id: params[:my_module_id])
+    return render_404 unless @repository_row
+    return render_404 unless @repository_row.repository_id == params[:repository_id].to_i
+    return render_403 unless can_read_repository?(@repository_row.repository)
+    return render_403 if @my_module && !can_read_my_module?(@my_module)
+
+    if @my_module
+      @my_module_assign_error = if !can_assign_my_module_repository_rows?(@my_module)
+                                  I18n.t('repository_row.modal_info.assign_to_task_error.no_access')
+                                elsif @repository_row.my_modules.where(id: @my_module.id).any?
+                                  I18n.t('repository_row.modal_info.assign_to_task_error.already_assigned')
+                                end
+    end
+
+    @assigned_modules = @repository_row.my_modules.joins(experiment: :project)
+    @viewable_modules = @assigned_modules.viewable_by_user(current_user, current_user.teams)
+    @private_modules = @assigned_modules - @viewable_modules
+
+    render json: {
+      html: render_to_string(partial: 'repositories/repository_row_info_modal', formats: :html)
+    }
+  end
+
   def validate_label_template_columns
     label_template = LabelTemplate.where(team_id: current_team.id).find(params[:label_template_id])
 

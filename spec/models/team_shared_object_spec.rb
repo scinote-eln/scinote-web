@@ -7,16 +7,19 @@ describe TeamSharedObject, type: :model do
   let(:team) { create :team, created_by: user }
   let(:another_team) { create :team, created_by: user }
   let(:repository) { create :repository, team: team, created_by: user }
-  let(:team_shared_object) { build :team_shared_object, :read, team: another_team, shared_repository: repository }
+  let(:team_shared_object) { create :team_shared_object, :read, team: another_team, shared_object: repository }
 
   it 'is valid' do
     expect(team_shared_object).to be_valid
   end
 
+  it 'should be of class TeamSharedObject' do
+    expect(subject.class).to eq TeamSharedObject
+  end
 
-  describe 'Associations' do
-    it { is_expected.to belong_to(:team) }
-    it { is_expected.to belong_to(:shared_repository) }
-    it { is_expected.to belong_to(:shared_object) }
+  describe 'Relations' do
+    it { should belong_to(:team) }
+    it { should belong_to(:shared_object) }
+    it { should belong_to(:shared_repository).optional }
   end
 end
