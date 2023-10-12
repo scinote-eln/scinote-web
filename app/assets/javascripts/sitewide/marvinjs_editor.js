@@ -200,6 +200,8 @@ var MarvinJsEditorApi = (function() {
           $('#modal_link' + json.id + ' .attachment-label').text(json.file_name);
         }
         $(marvinJsModal).modal('hide');
+
+        config.editor.focus();
         config.button.dataset.inProgress = false;
 
         if (MarvinJsEditor.saveCallback) MarvinJsEditor.saveCallback();
