@@ -382,9 +382,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
     t.jsonb "params", default: {}, null: false
     t.string "type", null: false
     t.datetime "read_at"
-    t.bigint "recipient_id"
     t.string "recipient_type"
+    t.bigint "recipient_id"
     t.index ["created_at"], name: "index_notifications_on_created_at"
+    t.index ["recipient_type", "recipient_id"], name: "index_notifications_on_recipient"
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|

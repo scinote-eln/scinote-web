@@ -5,8 +5,7 @@ class MigrateNotificationToNoticed < ActiveRecord::Migration[7.0]
     add_column :notifications, :params, :jsonb, default: {}, null: false
     add_column :notifications, :type, :string
     add_column :notifications, :read_at, :datetime
-    add_column :notifications, :recipient_id, :bigint
-    add_column :notifications, :recipient_type, :string
+    add_reference :notifications, :recipient, polymorphic: true
 
     type_mapping = {
       0 => 'ActivityNotification',
@@ -27,7 +26,7 @@ class MigrateNotificationToNoticed < ActiveRecord::Migration[7.0]
       }
 
       params[:error] = notification.type_of == 7 if new_type == 'DeliveryNotification'
-      notification.update(
+      notification.update!(
         params: params,
         type: new_type,
         read_at: (user_notification.updated_at if user_notification.checked),
@@ -38,7 +37,8 @@ class MigrateNotificationToNoticed < ActiveRecord::Migration[7.0]
       )
     end
 
-    Notification.where(type: nil).destroy_all
+    UserNotification.delete_all
+    Notification.where(type: nil).delete_all
 
     change_column_null :notifications, :type, false
 
