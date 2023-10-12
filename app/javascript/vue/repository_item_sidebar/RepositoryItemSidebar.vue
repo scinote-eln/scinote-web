@@ -8,7 +8,7 @@
       <div id="sticky-header-wrapper">
         <div class="header flex w-full">
           <h4 class="item-name my-auto truncate" :title="defaultColumns?.name">
-            {{ !defaultColumns?.archived ? i18n.t('labels.archived') : '' }}
+            {{ defaultColumns?.archived ? i18n.t('labels.archived') : '' }}
             {{ defaultColumns?.name }}
           </h4>
           <i id="close-icon" @click="toggleShowHideSidebar(currentItemUrl)"
@@ -30,9 +30,9 @@
           <div id="information">
             <div ref="information-label" id="information-label"
               class="font-inter text-base font-semibold leading-7 mb-4 transition-colors duration-300">{{
-                i18n.t('repositories.item_card.title.information') }}
+                i18n.t('repositories.item_card.section.information') }}
             </div>
-            <div class="item-details">
+            <div>
               <div class="flex flex-col gap-4">
                 <!-- REPOSITORY NAME -->
                 <div class="flex flex-col ">
@@ -148,12 +148,13 @@
             <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px  "></div>
 
             <!-- QR -->
-            <div id="QR-wrapper" class="block">
-              <div ref="QR-label" id="QR-label"
-                class="font-inter text-base font-semibold leading-7 mb-4 transition-colors duration-300">QR</div>
-              <canvas id="bar-code-canvas" class="hidden"></canvas>
-              <img :src="barCodeSrc" />
-            </div>
+            <section id="qr-wrapper">
+              <div class="font-inter text-base font-semibold leading-7 mb-4 mt-0">{{ i18n.t('repositories.item_card.section.qr') }}</div>
+              <div class="bar-code-container">
+                <canvas id="bar-code-canvas" class="hidden"></canvas>
+                <img :src="barCodeSrc" />
+              </div>
+            </section>
           </div>
         </div>
 
@@ -170,10 +171,12 @@
       </div>
 
       <!-- BOTTOM -->
-      <div id="bottom" class="h-[100px] flex flex-col justify-end" :class="{ 'pb-6': customColumns?.length }">
+      <div id="bottom" class="h-[100px] flex flex-col justify-end mt-4" :class="{ 'pb-6': customColumns?.length }">
         <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px mb-6"></div>
         <div id="bottom-button-wrapper" class="flex h-10 justify-end">
-          <button class="btn btn-primary">Print Label</button>
+          <button type="button" class="btn btn-primary print-label-button" :data-rows="JSON.stringify([repositoryRowId])">
+            {{ i18n.t('repositories.item_card.print_label') }}
+          </button>
         </div>
       </div>
 
@@ -221,12 +224,12 @@ export default {
     return {
       currentItemUrl: null,
       dataLoading: false,
+      repositoryRowId: null,
       repository: null,
       defaultColumns: null,
       customColumns: null,
       assignedModules: null,
       isShowing: false,
-      assigned: 'Assigned to 3 private tasks that will not be displayed',
       barCodeSrc: null,
       permissions: null
     }
@@ -272,7 +275,7 @@ export default {
         url: repositoryRowUrl,
         dataType: 'json',
         success: (result) => {
-          this.repositoryRowId = result.id
+          this.repositoryRowId = result.id;
           this.repository = result.repository;
           this.defaultColumns = result.default_columns;
           this.customColumns = result.custom_columns;
@@ -286,14 +289,13 @@ export default {
       });
     },
     generateBarCode(text) {
-      if (!text) return
-      // generate the QR code
+      if(!text) return;
       const barCodeCanvas = bwipjs.toCanvas('bar-code-canvas', {
         bcid: 'qrcode',
         text,
         scale: 3
       });
-      this.barCodeSrc = barCodeCanvas.toDataURL('image/png')
+      this.barCodeSrc = barCodeCanvas.toDataURL('image/png');
     },
     privateModuleSize() {
       return this.assignedModules.total_assigned_size - this.assignedModules.viewable_modules.length;
