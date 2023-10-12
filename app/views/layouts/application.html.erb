@@ -49,6 +49,7 @@
     <%= stylesheet_link_tag 'tui_image_editor_styles' %>
     <%= javascript_include_tag 'vue_navigation_navigator' %>
     <%= javascript_include_tag 'vue_navigation_top_menu' %>
+    <style> :root { --navigator-navigation-width: <%= session[:navigator_width] || Constants::DEFAULT_NAV_WIDTH %>px; } </style>
   </head>
   <body
     class="<%= yield :body_class %> <%= 'navigator-collapsed' if !@navigator || session[:navigator_collapsed] %> <%= 'w-[98%]' if params[:controller] == 'label_templates' && params[:action] == 'show'%>"
