@@ -50,4 +50,20 @@
       }
     });
   });
+
+  $(document).on('click', '.export-consumption-button', function(e) {
+    const selectedRows = $(this).data('rows') || RepositoryDatatable.selectedRows();
+
+    e.preventDefault();
+
+    window.initExportStockConsumptionModal();
+
+    if (window.exportStockConsumptionModalComponent) {
+      window.exportStockConsumptionModalComponent.fetchRepositoryData(
+        selectedRows,
+        { repository_id: $(this).data('objectId') },
+      );
+      $('#modal-info-repository-row').modal('hide');
+    }
+  });
 }());

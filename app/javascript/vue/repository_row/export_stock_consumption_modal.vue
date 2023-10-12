@@ -14,7 +14,7 @@
           <h4 class="modal-title"> {{ i18n.t('zip_export.consumption_modal_label') }} </h4>
         </div>
         <div class="modal-body">
-          <p>{{ i18n.t('zip_export.consumption_header_html', { repository: this.repository?.name }) }} </p>
+          <p>{{ i18n.t('zip_export.consumption_header_html', { repository: repository?.name }) }} </p>
           <p v-html="i18n.t('zip_export.consumption_body_html')"> </p>
           <p class='pb-0' v-html="i18n.t('zip_export.consumption_footer_html')"></p>
         </div>
