@@ -9,10 +9,10 @@ class MigrateNotificationToNoticed < ActiveRecord::Migration[7.0]
     add_column :notifications, :recipient_type, :string
 
     type_mapping = {
-      'assignment' => 'ActivityNotification',
-      'recent_changes' => 'GeneralNotification',
-      'deliver' => 'DeliveryNotification',
-      'deliver_error' => 'DeliveryNotification'
+      0 => 'ActivityNotification',
+      1 => 'GeneralNotification',
+      5 => 'DeliveryNotification',
+      7 => 'DeliveryNotification'
     }
 
     UserNotification.includes(:notification).find_each do |user_notification|
@@ -26,8 +26,7 @@ class MigrateNotificationToNoticed < ActiveRecord::Migration[7.0]
         legacy: true
       }
 
-      params[:error] = notification.type_of == 'deliver_error' if new_type == 'DeliveryNotification'
-
+      params[:error] = notification.type_of == 7 if new_type == 'DeliveryNotification'
       notification.update(
         params: params,
         type: new_type,
