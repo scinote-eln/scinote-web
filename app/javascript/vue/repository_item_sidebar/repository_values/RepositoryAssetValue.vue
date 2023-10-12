@@ -4,7 +4,7 @@
       {{ colName }}
     </div>
     <div v-if="file_name" @mouseover="tooltipShowing = true" @mouseout="tooltipShowing = false"
-      class="w-fit cursor-pointer text-sn-science-blue">
+      class="w-fit cursor-pointer text-sn-science-blue relative">
       <a @click="$emit('closeSidebar')" class="file-preview-link" :id="modalPreviewLinkId" data-no-turbolink="true"
         data-id="true" data-status="asset-present" :data-preview-url=this.preview_url :href=this.url>
         {{ file_name }}
