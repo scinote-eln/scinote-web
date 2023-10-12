@@ -2152,7 +2152,7 @@ en:
           disabled_placeholder: "Select Experiment to enable Task"
           no_options_placeholder: "No tasks available to assign items"
       assign:
-        text: "Assign to this task"
+        text: "Assign to task"
         flash_all_assignments_success: "Successfully assigned %{count} item(s) to the task."
         flash_some_assignments_success: "Successfully assigned %{assigned_count} item(s) to the task. %{skipped_count} item(s) were already assigned to the task."
         flash_assignments_failure: "Failed to assign item(s) to task."
@@ -2227,6 +2227,7 @@ en:
       print_label: "Print label"
       assigned:
         empty: "This item is not assigned to any task."
+        assign: "Assign to task"
         private:
           one: "Assigned to %{count} private task"
           other: "Assigned to %{count} private tasks"
@@ -2476,7 +2477,7 @@ en:
       no_tasks: "This item in not assigned to any task."
       amount: "Amount: %{value}"
       unit: "Unit: %{unit}"
-      assign_to_task: "Assign to this task"
+      assign_to_task: "Assign to task"
       assign_to_task_error:
         no_access: "You can only view this task"
         already_assigned: "This item is already assigned to this task"
@@ -3500,7 +3501,7 @@ en:
       description: "Once you create items in the inventory, they will appear here."
     buttons:
       insert: "Insert"
-      assign: "Assign to this task"
+      assign: "Assign to task"
     projects: PROJECTS
     experiments: EXPERIMENTS
     tasks: TASKS

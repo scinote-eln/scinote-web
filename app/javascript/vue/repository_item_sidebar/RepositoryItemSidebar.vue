@@ -114,12 +114,21 @@
             <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px"></div>
 
             <!-- ASSIGNED -->
-            <section id="assigned_wrapper" class="flex flex-col ">
-              <div class="text-base font-semibold w-[350px] my-3 leading-7" ref="assigned-label">
+            <section id="assigned_wrapper" class="flex flex-col">
+              <div class="flex flex-row text-base font-semibold w-[350px] pb-4 leading-7 items-center justify-between" ref="assigned-label">
                 {{ i18n.t('repositories.item_card.section.assigned', {
                   count: assignedModules ?
                     assignedModules.total_assigned_size : 0
                 }) }}
+                <a v-if="actions?.assign_repository_row || (inRepository && !defaultColumns?.archived)"
+                  class="btn-text-link font-normal"
+                  :class= "{'assign-inventory-button': actions?.assign_repository_row,
+                            'disabled': actions?.assign_repository_row && actions.assign_repository_row.disabled }"
+                  :data-assign-url="actions?.assign_repository_row ? actions.assign_repository_row.assign_url : ''"
+                  :data-repository-row-id="repositoryRowId"
+                  @click="showRepositoryAssignModal">
+                  {{ i18n.t('repositories.item_card.assigned.assign') }}
+                </a>
               </div>
               <div v-if="assignedModules && assignedModules.total_assigned_size > 0">
                 <div v-if="privateModuleSize() > 0" class="pb-6">
@@ -233,7 +242,11 @@ export default {
       assignedModules: null,
       isShowing: false,
       barCodeSrc: null,
-      permissions: null
+      permissions: null,
+      repositoryRowUrl: null,
+      actions: null,
+      myModuleId: null,
+      inRepository: false
     }
   },
   created() {
@@ -242,6 +255,7 @@ export default {
   mounted() {
     // Add a click event listener to the document
     document.addEventListener('click', this.handleOutsideClick);
+    this.inRepository = $('.assign-items-to-task-modal-container').length > 0;
   },
   beforeDestroy() {
     delete window.repositoryItemSidebarComponent;
@@ -257,30 +271,34 @@ export default {
         this.toggleShowHideSidebar(null)
       }
     },
-    toggleShowHideSidebar(repositoryRowUrl) {
+    toggleShowHideSidebar(repositoryRowUrl, myModuleId = null) {
       // initial click
       if (this.currentItemUrl === null) {
-        this.isShowing = true
-        this.loadRepositoryRow(repositoryRowUrl)
-        this.currentItemUrl = repositoryRowUrl
+        this.myModuleId = myModuleId;
+        this.isShowing = true;
+        this.loadRepositoryRow(repositoryRowUrl);
+        this.currentItemUrl = repositoryRowUrl;
         return
       }
       // click on the same item - should just open/close it
       else if (this.currentItemUrl === repositoryRowUrl) {
-        this.isShowing = false
-        this.currentItemUrl = null
+        this.isShowing = false;
+        this.currentItemUrl = null;
+        this.myModuleId = null;
         return
       }
       // explicit close (from emit)
       else if (repositoryRowUrl === null) {
-        this.isShowing = false
-        this.currentItemUrl = null
+        this.isShowing = false;
+        this.currentItemUrl = null;
+        this.myModuleId = null;
         return
       }
       // click on a different item - should just fetch new data
       else {
-        this.loadRepositoryRow(repositoryRowUrl)
-        this.currentItemUrl = repositoryRowUrl
+        this.myModuleId = myModuleId;
+        this.loadRepositoryRow(repositoryRowUrl);
+        this.currentItemUrl = repositoryRowUrl;
         return
       }
     },
@@ -289,20 +307,32 @@ export default {
       $.ajax({
         method: 'GET',
         url: repositoryRowUrl,
+        data: { my_module_id: this.myModuleId },
         dataType: 'json',
         success: (result) => {
           this.repositoryRowId = result.id;
           this.repository = result.repository;
           this.defaultColumns = result.default_columns;
           this.customColumns = result.custom_columns;
-          this.dataLoading = false
+          this.dataLoading = false;
           this.assignedModules = result.assigned_modules;
+          this.actions = result.actions;
           this.permissions = result.permissions
           this.$nextTick(() => {
             this.generateBarCode(this.defaultColumns.code);
           });
         }
       });
+    },
+    reload() {
+      if(this.isShowing) {
+        this.loadRepositoryRow(this.currentItemUrl);
+      }
+    },
+    showRepositoryAssignModal() {
+      if (this.inRepository) {
+        window.AssignItemsToTaskModalComponentContainer.showModal([this.repositoryRowId]);
+      }
     },
     generateBarCode(text) {
       if(!text) return;
