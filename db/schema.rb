@@ -380,7 +380,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.jsonb "params", default: {}, null: false
-    t.string "type", default: "LegacyNotification", null: false
+    t.string "type", null: false
     t.datetime "read_at"
     t.bigint "recipient_id"
     t.string "recipient_type"

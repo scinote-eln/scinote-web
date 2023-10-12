@@ -27,7 +27,7 @@ module Reports
           message: I18n.t('projects.reports.index.generation.completed_notification_message',
                           report_link: "<a href='#{report_path}'>#{escape_input(report.name)}</a>",
                           team_name: escape_input(report.team.name))
-        ).deliver_later(user)
+        ).deliver(user)
 
         Reports::DocxPreviewJob.perform_now(report.id)
       ensure

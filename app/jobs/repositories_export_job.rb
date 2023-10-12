@@ -92,7 +92,7 @@ class RepositoriesExportJob < ApplicationJob
                                   .url_helpers
                                   .zip_exports_download_export_all_path(@zip_export)}'>" \
                     "#{@zip_export.zip_file_name}</a>"
-    ).deliver_later(@user)
+    ).deliver(@user)
   end
 
   # Overrides method from FailedDeliveryNotifiableJob concern

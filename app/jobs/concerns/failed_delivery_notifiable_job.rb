@@ -27,7 +27,7 @@ module FailedDeliveryNotifiableJob
       title: failed_notification_title,
       message: failed_notification_message,
       error: true
-    ).deliver_later(@user)
+    ).deliver(@user)
   end
 
   def failed_notification_title

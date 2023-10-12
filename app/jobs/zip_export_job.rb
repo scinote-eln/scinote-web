@@ -43,6 +43,6 @@ class ZipExportJob < ApplicationJob
                               .url_helpers
                               .zip_exports_download_path(@zip_export)}'>" \
                 "#{@zip_export.zip_file_name}</a>"
-    ).deliver_later(@user)
+    ).deliver(@user)
   end
 end

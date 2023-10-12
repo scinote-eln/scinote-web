@@ -142,7 +142,7 @@ module Protocols
                  "<a data-id='#{@protocol.id}'  data-turbolinks='false' " \
                  "href='#{Rails.application.routes.url_helpers.protocol_path(@protocol)}'>" \
                  "#{@protocol.name}</a>"
-      ).deliver_later(@user)
+      ).deliver(@user)
     end
 
     # Overrides method from FailedDeliveryNotifiableJob concern

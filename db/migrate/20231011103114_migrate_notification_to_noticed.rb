@@ -3,7 +3,7 @@
 class MigrateNotificationToNoticed < ActiveRecord::Migration[7.0]
   def up
     add_column :notifications, :params, :jsonb, default: {}, null: false
-    add_column :notifications, :type, :string, null: false, default: 'LegacyNotification'
+    add_column :notifications, :type, :string
     add_column :notifications, :read_at, :datetime
     add_column :notifications, :recipient_id, :bigint
     add_column :notifications, :recipient_type, :string
@@ -15,7 +15,7 @@ class MigrateNotificationToNoticed < ActiveRecord::Migration[7.0]
       'deliver_error' => 'DeliveryNotification'
     }
 
-    UserNotification.all.each do |user_notification|
+    UserNotification.includes(:notification).find_each do |user_notification|
       notification = user_notification.notification.dup
 
       new_type = type_mapping[notification.type_of]
@@ -27,6 +27,7 @@ class MigrateNotificationToNoticed < ActiveRecord::Migration[7.0]
       }
 
       params[:error] = notification.type_of == 'deliver_error' if new_type == 'DeliveryNotification'
+
       notification.update(
         params: params,
         type: new_type,
@@ -38,7 +39,9 @@ class MigrateNotificationToNoticed < ActiveRecord::Migration[7.0]
       )
     end
 
-    Notification.where(type: 'LegacyNotification').destroy_all
+    Notification.where(type: nil).destroy_all
+
+    change_column_null :notifications, :type, false
 
     remove_column :notifications, :type_of
     remove_column :notifications, :title
