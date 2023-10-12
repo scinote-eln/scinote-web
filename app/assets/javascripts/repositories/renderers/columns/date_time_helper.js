@@ -14,6 +14,31 @@ var DateTimeHelper = (function() {
     return ('0' + value).slice(-2);
   }
 
+  function setDateTimePickerOpeningDirection(event) {
+    const element = $(event.target);
+    const dateTimePickerWidget = $('.bootstrap-datetimepicker-widget');
+
+    const windowHeight = element.closest('table').offset().top;
+    const inputTop = element.offset().top;
+    const pickerHeight = $('.bootstrap-datetimepicker-widget').outerHeight();
+
+    if (inputTop - windowHeight > pickerHeight) {
+      dateTimePickerWidget.addClass('top')
+        .removeClass('bottom')
+        .css({
+          top: 'auto',
+          bottom: '36px',
+        });
+    } else {
+      dateTimePickerWidget.addClass('bottom')
+        .removeClass('top')
+        .css({
+          top: '36px',
+          bottom: 'auto',
+        });
+    }
+  }
+
   function recalcTimestamp(date, timeStr) {
     if (!isValidTimeStr(timeStr)) {
       date.setHours(0);
@@ -221,7 +246,11 @@ var DateTimeHelper = (function() {
       hourFormat: 24
     }).mask($cell.find('input[data-mask-type="time"]'));
 
-    $cell.find('.calendar-input').datetimepicker({ ignoreReadonly: true, locale: 'en', format: formatJS });
+    $cell.find('.calendar-input')
+      .datetimepicker({ ignoreReadonly: true, locale: 'en', format: formatJS })
+      .on('dp.show', (e) => {
+        setDateTimePickerOpeningDirection(e);
+      });
     initChangeEvents($cell);
   }
 
@@ -273,9 +302,13 @@ var DateTimeHelper = (function() {
 
     $cal1.on('dp.change', function(e) {
       $cal2.data('DateTimePicker').minDate(e.date);
+    }).on('dp.show', (e) => {
+      setDateTimePickerOpeningDirection(e);
     });
     $cal2.on('dp.change', function(e) {
       $cal1.data('DateTimePicker').maxDate(e.date);
+    }).on('dp.show', (e) => {
+      setDateTimePickerOpeningDirection(e);
     });
 
     initChangeEvents($cell);

@@ -12,14 +12,15 @@
         {{ shareValue }}
       </span>
     </button>
-
-    <shareModalContainer v-if="visibleShareModal"
-                         :shared="share"
-                         :shareableLinkUrl="shareableLinkUrl"
-                         :characterLimit="255"
-                         @enable="enableShare"
-                         @disable="disableShare"
-                         @close="closeModal"/>
+    <div ref="modal">
+      <shareModalContainer :shared="share"
+                           :open="visibleShareModal"
+                           :shareableLinkUrl="shareableLinkUrl"
+                           :characterLimit="255"
+                           @enable="enableShare"
+                           @disable="disableShare"
+                           @close="closeModal"/>
+    </div>
   </div>
 </template>
 
@@ -59,6 +60,10 @@
         return this.i18n.t(this.share ? 'my_modules.shareable_links.shared' : 'my_modules.shareable_links.share');
       }
     },
+    mounted() {
+      // move modal to body to avoid z-index issues
+      $('body').append($(this.$refs.modal));
+    },
     methods:{
       enableShare() {
         this.share = true;
@@ -72,7 +77,6 @@
       closeModal() {
         this.visibleShareModal = false;
       }
-
     }
   };
 </script>

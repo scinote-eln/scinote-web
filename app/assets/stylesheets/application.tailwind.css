@@ -1,10 +1,16 @@
 @import "tailwind/inputs";
 @import "tailwind/buttons";
+@import "tailwind/modals";
+@import "tailwind/flyouts";
+@import "tailwind/loader.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+.tw-hidden {
+  @apply hidden
+}
 
 html {
   font-size: 16px;

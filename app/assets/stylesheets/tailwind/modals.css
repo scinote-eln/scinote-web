@@ -1,0 +1,86 @@
+@layer components {
+  .modal-backdrop {
+    @apply fixed right-0 top-0 left-0 bottom-0 z-[1040] bg-sn-black;
+  }
+
+  .modal-backdrop.fade {
+    @apply opacity-0;
+  }
+
+  .modal-backdrop.in {
+    @apply opacity-40;
+  }
+
+  .modal-open {
+    @apply overflow-hidden;
+  }
+
+  .modal {
+    @apply fixed right-0 top-0 left-0 bottom-0 hidden overflow-hidden z-[1050];
+  }
+
+  .modal.fade {
+    @apply opacity-0;
+  }
+
+  .modal.fade.in {
+    @apply opacity-100;
+  }
+
+  .modal-open .modal {
+    @apply overflow-x-hidden overflow-y-auto;
+  }
+
+  .modal .modal-dialog {
+    @apply relative w-[600px] my-8 mx-auto;
+  }
+
+  .modal .modal-dialog.modal-sm {
+    @apply w-[400px];
+  }
+
+  .modal .modal-dialog.modal-lg {
+    @apply w-[900px];
+  }
+
+  .modal.fade .modal-dialog {
+    transform: translate(0, -25%);
+    transition: transform 0.3s ease-out;
+  }
+
+  .modal.in .modal-dialog {
+    transform: translate(0, 0);
+  }
+
+  .modal .modal-content {
+    @apply relative rounded outline-none shadow p-6 bg-sn-white;
+  }
+
+  .modal .modal-header {
+    @apply flex items-center flex-row-reverse;
+  }
+
+  .modal .modal-title {
+    @apply text-xl font-bold m-0 mr-auto flex items-center flex-row-reverse;
+  }
+
+  .modal .close {
+    @apply opacity-100 text-2xl leading-6 h-7 flex w-7 items-center justify-center;
+  }
+
+  .modal .close:hover {
+    @apply opacity-100;
+  }
+
+  .modal .modal-description {
+    @apply text-sm pt-1.5;
+  }
+
+  .modal .modal-body {
+    @apply relative py-6;
+  }
+
+  .modal .modal-footer {
+    @apply flex pt-6 justify-end gap-6 border-0 border-t border-solid border-sn-light-grey;
+  }
+}

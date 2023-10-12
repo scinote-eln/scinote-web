@@ -1,7 +1,17 @@
 <template>
-  <div class="date-time-picker">
-    <DatePicker v-if="!timeOnly" @change="updateDate" :selectorId="`${this.selectorId}_Date`" :defaultValue="defaultValue" />
-    <TimePicker v-if="!dateOnly" @change="updateTime" :selectorId="`${this.selectorId}_Time`" :defaultValue="getTime(defaultValue)" />
+  <div class="date-time-picker grow">
+    <DatePicker v-if="!timeOnly"
+      @change="updateDate"
+      :placeholder="placeholder"
+      :selectorId="`${this.selectorId}_Date`"
+      :defaultValue="defaultValue"
+    />
+    <TimePicker v-if="!dateOnly"
+      @change="updateTime"
+      :placeholder="placeholder"
+      :selectorId="`${this.selectorId}_Time`"
+      :defaultValue="getTime(defaultValue)"
+    />
   </div>
 </template>
 
@@ -15,7 +25,8 @@
       dateOnly: { type: Boolean, default: false },
       timeOnly: { type: Boolean, default: false },
       selectorId: { type: String, required: true },
-      defaultValue: {type: Date, required: false }
+      defaultValue: { type: Date, required: false },
+      placeholder: { type: String }
     },
     data() {
       return {

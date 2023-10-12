@@ -324,7 +324,8 @@ class Constants
   config = Sanitize::Config::RELAXED.deep_dup
   config[:attributes][:all] << 'id'
   config[:attributes][:all] << 'contenteditable'
-  config[:attributes][:all] << :data
+  config[:attributes]['img'] << 'data-mce-token'
+  config[:protocols]['img']['src'] << 'data'
   INPUT_SANITIZE_CONFIG = Sanitize::Config.freeze_config(config)
 
   REPOSITORY_DEFAULT_PAGE_SIZE = 10
@@ -409,6 +410,10 @@ class Constants
   DEFAULT_PRIVATE_TEAM_NAME = 'My projects'.freeze
 
   TEMPLATES_PROJECT_NAME = 'Templates'.freeze
+
+  # Interval time for polling status state
+  FAST_STATUS_POLLING_INTERVAL = 5000
+  SLOW_STATUS_POLLING_INTERVAL = 10000
 
   #                             )       \   /      (
   #                            /|\      )\_/(     /|\

@@ -51,15 +51,16 @@
           editDiv.find('input[type=text]').val(li.data('name'));
           editDiv.find('.edit-tag-color').colorselector('setColor', li.data('color'));
 
+          editDiv.find('.dropdown-colorselector > .dropdown-menu li a')
+            .on('click', function() {
+              // Change background of the <li>
+              const colorSelector = $(this);
+              const colorItem = colorSelector.parents('li.list-group-item');
+              colorItem.css('background-color', colorSelector.data('value'));
+            });
+
           li.find('div.tag-show').hide();
           editDiv.show();
-        });
-      manageTagsModalBody.find('div.tag-edit .dropdown-colorselector > .dropdown-menu li a')
-        .on('click', function() {
-          // Change background of the <li>
-          var $this = $(this);
-          var li = $this.parents('li.list-group-item');
-          li.css('background-color', $this.data('value'));
         });
       manageTagsModalBody.find('.remove-tag-link')
         .on('ajax:success', function(e, data) {
@@ -144,7 +145,7 @@
       manageTagsModalBody.html('');
     });
     // initialize my_module tab remote loading
-    $('#experimentTable, .my-modules-protocols-index')
+    $('#experimentTable, .my-modules-protocols-index, #experiment-canvas')
       .on('ajax:before', '.edit-tags-link', function() {
         manageTagsModal.modal('show');
       })

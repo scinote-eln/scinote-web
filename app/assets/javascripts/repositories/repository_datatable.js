@@ -6,7 +6,6 @@
 
 //= require repositories/row_editor.js
 
-
 var RepositoryDatatable = (function(global) {
   'use strict';
 
@@ -15,7 +14,6 @@ var RepositoryDatatable = (function(global) {
   var TABLE = null;
   var EDITABLE = false;
   var SELECT_ALL_SELECTOR = '#checkbox input[name=select_all]';
-  const STATUS_POLLING_INTERVAL = 10000;
 
   var rowsSelected = [];
   var rowsLocked = [];
@@ -66,7 +64,7 @@ var RepositoryDatatable = (function(global) {
   function updateButtons() {
     if (window.actionToolbarComponent) {
       window.actionToolbarComponent.fetchActions({ repository_row_ids: rowsSelected });
-      $('.dataTables_scrollBody').css('padding-bottom', `${rowsSelected.length > 0 ? 68 : 0}px`);
+      $('.dataTables_scrollBody').css('margin-bottom', `${rowsSelected.length > 0 ? 68 : 0}px`);
     }
 
     if (currentMode === 'viewMode') {
@@ -286,10 +284,6 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
-  function updateSelectedRowsForAssignments() {
-    window.AssignItemsToTaskModalComponent.setShowCallback(() => rowsSelected);
-  }
-
   function checkAvailableColumns() {
     $.ajax({
       url: $(TABLE_ID).data('available-columns'),
@@ -438,14 +432,15 @@ var RepositoryDatatable = (function(global) {
   }
 
   function initExportActions() {
-    $(document).on('click', '#exportRepositoriesButton', function(e) {
+    const exportModal = $('#exportRepositoryRowsModal');
+    $(document).on('click', '#exportRepositoryRowsButton', (e) => {
       e.preventDefault();
       e.stopPropagation();
 
-      $('#exportRepositoryModal').modal('show');
+      exportModal.modal('show');
     });
 
-    $('form#form-export').off().submit(function() {
+    $('form#form-repository-rows-export').off().submit(function() {
       var form = this;
       if (currentMode === 'viewMode') {
         // Remove all hidden fields
@@ -453,9 +448,9 @@ var RepositoryDatatable = (function(global) {
         $(form).find('input[name=header_ids\\[\\]]').remove();
 
         // Append visible column information
-        $('table' + TABLE_ID + ' thead tr th').each(function() {
-          var th = $(this);
-          var val = prepareRepositoryHeaderForExport(th);
+        $(`table${TABLE_ID} thead tr th`).each(function() {
+          const th = $(this);
+          const val = prepareRepositoryHeaderForExport(th);
 
           if (val) {
             appendInput(form, val, 'header_ids[]');
@@ -463,7 +458,7 @@ var RepositoryDatatable = (function(global) {
         });
 
         // Append records
-        $.each(rowsSelected, function(index, rowId) {
+        $.each(rowsSelected, (index, rowId) => {
           appendInput(form, rowId, 'row_ids[]');
         });
       }
@@ -472,7 +467,7 @@ var RepositoryDatatable = (function(global) {
         animateSpinner(null, true);
       })
       .on('ajax:complete', function() {
-        $('#exportRepositoryModal').modal('hide');
+        exportModal.modal('hide');
         animateSpinner(null, false);
       })
       .on('ajax:success', function(ev, data) {
@@ -495,7 +490,7 @@ var RepositoryDatatable = (function(global) {
   function checkSnapshottingStatus() {
     $.getJSON($(TABLE_ID).data('status-url'), (statusData) => {
       if (statusData.snapshot_provisioning) {
-        setTimeout(() => { checkSnapshottingStatus(); }, STATUS_POLLING_INTERVAL);
+        setTimeout(() => { checkSnapshottingStatus(); }, GLOBAL_CONSTANTS.SLOW_STATUS_POLLING_INTERVAL);
       } else {
         EDITABLE = statusData.editable;
         $('.repository-provisioning-notice').remove();
@@ -818,8 +813,16 @@ var RepositoryDatatable = (function(global) {
         initRepositoryViewSwitcher();
         DataTableHelpers.initLengthAppearance($(TABLE_ID).closest('.dataTables_wrapper'));
 
+        $('.dataTables_wrapper').on('click', '.pagination', () => {
+          const dataTablesScrollBody = document.querySelector('.dataTables_scrollBody');
+          dataTablesScrollBody.scrollTo(0, 0);
+        });
+
         $('.dataTables_filter').addClass('hidden');
         addRepositorySearch();
+
+        $(`.repository-table-head-${$(TABLE_ID).data('repository-id')}`).removeClass('hidden');
+        adjustTableHeader();
 
         $('.repository-toolbar, .pagination-row').removeClass('hidden');
 
@@ -880,7 +883,6 @@ var RepositoryDatatable = (function(global) {
     })
 
     initRowSelection();
-    updateSelectedRowsForAssignments();
 
     return TABLE;
   }
@@ -1016,7 +1018,7 @@ var RepositoryDatatable = (function(global) {
       e.preventDefault();
       e.stopPropagation();
 
-      window.AssignItemsToTaskModalComponentContainer.showModal();
+      window.AssignItemsToTaskModalComponentContainer.showModal(rowsSelected);
     })
     .on('click', '#deleteRepositoryRecords', function(e) {
       e.preventDefault();
@@ -1078,7 +1080,7 @@ var RepositoryDatatable = (function(global) {
     EDITABLE = $(TABLE_ID).data('editable');
     TABLE = dataTableInit();
     if ($(TABLE_ID).data('snapshot-provisioning')) {
-      setTimeout(() => { checkSnapshottingStatus(); }, STATUS_POLLING_INTERVAL);
+      setTimeout(() => { checkSnapshottingStatus(); }, GLOBAL_CONSTANTS.SLOW_STATUS_POLLING_INTERVAL);
     }
   }
 

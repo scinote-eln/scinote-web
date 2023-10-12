@@ -19,7 +19,9 @@
     background: inherit;
     border: 0;
     border-radius: 0;
-    height: auto;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
     min-height: 100%;
     padding: 0;
   }
@@ -33,6 +35,12 @@
     margin: 2rem;
     text-align: center;
     width: calc(100% - 4rem);
+
+    &.file-preview-container__wopi {
+      height: 100%;
+      margin: 0;
+      width: 100%;
+    }
 
     .asset-image {
       background-color: var(--sn-white);
@@ -72,6 +80,8 @@
     align-items: center;
     background: $color-white;
     display: flex;
+    flex-direction: row;
+    flex-shrink: 0;
     height: 4em;
     padding: 0 1em;
 
@@ -89,7 +99,7 @@
     align-items: center;
     background: transparent;
     display: flex;
-    height: calc(100vh - 8em);
+    flex-grow: 1;
     justify-content: center;
     overflow: hidden;
     padding: 0;
@@ -99,6 +109,7 @@
   .modal-footer {
     background: $color-white;
     height: 4em;
+    flex-shrink: 0;
     padding: 0 1em;
 
     .gallery {

@@ -10,17 +10,17 @@
     <div class="modal-dialog modal-sm" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">
-            {{ i18n.t("repositories.modal_assign_items_to_task.title") }}
-          </h4>
           <button
             type="button"
             class="close"
             data-dismiss="modal"
             aria-label="Close"
           >
-            <span aria-hidden="true">&times;</span>
-          </button>
+          <i class="sn-icon sn-icon-close"></i>
+        </button>
+        <h4 class="modal-title">
+          {{ i18n.t("repositories.modal_assign_items_to_task.title") }}
+        </h4>
         </div>
         <div class="modal-body">
           <div class="description">
@@ -145,11 +145,11 @@ export default {
   name: "AssignItemsToTaskModalContainer",
   props: {
     visibility: Boolean,
-    urls: Object
+    urls: Object,
+    rowsToAssign: Array
   },
   data() {
     return {
-      rowsToAssign: [],
       projects: [],
       experiments: [],
       tasks: [],
@@ -159,14 +159,10 @@ export default {
       projectsLoading: null,
       experimentsLoading: null,
       tasksLoading: null,
-      showCallback: null
     };
   },
   components: {
     SelectSearch
-  },
-  created() {
-    window.AssignItemsToTaskModalComponent = this;
   },
   mounted() {
     $(this.$refs.modal).on("shown.bs.modal", () => {
@@ -239,8 +235,6 @@ export default {
   methods: {
     showModal() {
       $(this.$refs.modal).modal("show");
-
-      this.rowsToAssign = this.showCallback();
     },
     hideModal() {
       $(this.$refs.modal).modal("hide");
@@ -317,10 +311,8 @@ export default {
       }).always(() => {
         this.resetSelectors();
         this.reloadTable();
+        window.repositoryItemSidebarComponent.reload();
       });
-    },
-    setShowCallback(callback) {
-      this.showCallback = callback;
     },
     reloadTable() {
       $('.repository-row-selector:checked').trigger('click');

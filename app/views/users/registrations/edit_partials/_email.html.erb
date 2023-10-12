@@ -25,9 +25,11 @@
         <%= f.label :email, t("users.registrations.edit.new_email_label") %>
         <%= f.email_field :email, class: "form-control sci-input-field", "data-role" => "edit" %>
       </div>
-      <div class="form-group sci-input-container">
+      <div class="form-group sci-input-container password-input-container">
         <%= f.label :current_password, t("users.registrations.edit.current_password_label") %> <i><%=t "users.registrations.edit.password_explanation" %></i>
-        <%= f.password_field :current_password, autocomplete: "off", class: "form-control sci-input-field", "data-role" => "clear", id: 'edit-email-current-password' %>
+        <div class="password-icon-wrapper">
+          <%= f.password_field :current_password, autocomplete: "off", class: "form-control sci-input-field", "data-role" => "clear", id: 'edit-email-current-password' %>
+        </div>
       </div>
       <div class="align-right">
         <a href="#" class="btn btn-light" data-action="cancel"><%=t "general.cancel" %></a>

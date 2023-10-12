@@ -1,7 +1,7 @@
-<div class="step-container" id="stepContainer<%= step.id %>" >
+<div class="step-container mt-[6px] mr-0 mb-6 ml-[-1em] pt-[8px] pr-[24px] pb-[8px] pl-0 border-solid border-[1px] border-[#fff]" id="stepContainer<%= step.id %>" >
   <div class="step-header">
     <div class="step-element-header no-hover">
-      <div class="step-controls">
+      <div class="step-controls flex items-center">
         <div class="step-element-grip-placeholder"></div>
         <a class="step-collapse-link hover:no-underline focus:no-underline"
           href="#stepBody<%= step.id %>"
@@ -9,7 +9,7 @@
           data-remote="true">
             <span class="sn-icon sn-icon-right "></span>
         </a>
-        <div class="step-complete-container mx-1.5 step-element--locked">
+        <div class="step-complete-container mx-2 step-element--locked">
           <div class="step-state <%= step.completed ? 'completed' : '' %>"
                tabindex="0"
           ></div>
@@ -23,7 +23,7 @@
         <%= render partial: "shareable_links/my_modules/inline_view", locals: { text: step.name, smart_annotation_enabled: false } %>
       </div>
     </div>
-    <div class="step-actions-container">
+    <div class="elements-actions-container">
       <a href="#"
          class="shareable-link-open-comments-sidebar btn icon-btn btn-light"
          data-turbolinks="false"
@@ -41,8 +41,8 @@
   </div>
 
   <div class="collapse in" id="stepBody<%= step.id %>">
-    <div class="step-elements">
-      <div class="step-timestamp">
+    <div class="step-elements !pl-[4.5rem]">
+      <div class="step-timestamp !m-0">
         <%= t('protocols.steps.timestamp_iso_html', date: step.created_at.iso8601, user: step.user.full_name) %>
       </div>
       <% step.step_orderable_elements.sort_by(&:position).each do |element| %>

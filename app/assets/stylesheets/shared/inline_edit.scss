@@ -1,95 +1,11 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
-.sci-inline-edit {
-  align-items: flex-start;
-  display: flex;
-  transition: .4s $timing-function-sharp border;
 
-  &.editing .sci-inline-edit__content {
-    .sci-inline-edit__content {
-      padding-top: 0;
-    }
-  }
+.sci-cursor-edit {
+  cursor: url("/images/icon_small/edit.svg") 0 16, auto;
+}
 
-  .sci-inline-edit__content {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    margin-left: -.25em;
-    margin-right: .5rem;
-    min-height: 30px;
-    padding-left: .25em;
-    position: relative;
-
-    textarea,
-    .sci-inline-edit__view {
-      line-height: 26px;
-      min-height: 30px;
-      padding: .1em .2em;
-    }
-
-    .sci-inline-edit__view {
-      border: 1px solid transparent;
-      cursor: pointer;
-      white-space: pre-wrap;
-      width: 100%;
-
-      &.blank {
-        color: $color-silver-chalice;
-      }
-
-      &.hover-border:hover {
-        border: 1px solid $color-silver;
-        border-radius: 3px;
-      }
-    }
-
-    textarea {
-      background-color: $color-white;
-      border: 1px solid $brand-focus;
-      border-radius: 4px;
-      outline: none;
-      overflow: hidden;
-      width: 100%;
-
-      &:focus {
-        outline: none;
-      }
-    }
-
-    .sci-inline-edit__error {
-      bottom: -16px;
-      color: $brand-danger;
-      font-size: 12px;
-      font-weight: normal;
-      line-height: 12px;
-      position: absolute;
-    }
-  }
-
-  &.editing {
-    margin-top: 0;
-
-    .sci-inline-edit__content {
-      &.error {
-        border-color: $brand-danger;
-        margin-bottom: 16px;
-
-        textarea {
-          border-color: $brand-danger;
-        }
-      }
-    }
-
-    .sci-inline-edit__control {
-      margin: 0 .25em;
-      max-height: 30px;
-      max-width: 30px;
-
-      &.btn-disabled {
-        background: $color-silver-chalice;
-        color: $color-concrete;
-      }
-    }
-  }
+.inline-edit-placeholder:empty::before {
+  content: attr(placeholder);
+  display: block;
 }

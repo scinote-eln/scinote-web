@@ -22,7 +22,7 @@ class Table < ApplicationRecord
   has_one :step_table, inverse_of: :table, dependent: :destroy
   has_one :step, through: :step_table
 
-  has_one :result_table, inverse_of: :table
+  has_one :result_table, inverse_of: :table, dependent: :destroy
   has_one :result, through: :result_table
   has_many :report_elements, inverse_of: :table, dependent: :destroy
 
@@ -41,7 +41,7 @@ class Table < ApplicationRecord
                    .pluck('step_tables.id')
 
     result_ids = Result.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-                       .joins(:result_table)
+                       .joins(:result_tables)
                        .distinct
                        .pluck('result_tables.id')
 
@@ -134,23 +134,44 @@ class Table < ApplicationRecord
     end
   end
 
-  def duplicate(step, user, position = nil)
-    ActiveRecord::Base.transaction do
-      new_table = step.tables.create!(
-        name: name,
-        contents: contents.encode('UTF-8', 'UTF-8'),
-        team: step.protocol.team,
-        created_by: user,
-        metadata: metadata,
-        last_modified_by: user
-      )
+  def duplicate(parent, user, position = nil)
+    case parent
+    when Step
+      ActiveRecord::Base.transaction do
+        new_table = parent.tables.create!(
+          name: name,
+          contents: contents.encode('UTF-8', 'UTF-8'),
+          team: parent.protocol.team,
+          created_by: user,
+          metadata: metadata,
+          last_modified_by: user
+        )
 
-      step.step_orderable_elements.create!(
-        position: position || step.step_orderable_elements.length,
-        orderable: new_table.step_table
-      )
+        parent.step_orderable_elements.create!(
+          position: position || parent.step_orderable_elements.length,
+          orderable: new_table.step_table
+        )
 
-      new_table
+        new_table
+      end
+    when Result
+      ActiveRecord::Base.transaction do
+        new_table = parent.tables.create!(
+          name: name,
+          contents: contents.encode('UTF-8', 'UTF-8'),
+          team: parent.my_module.team,
+          created_by: user,
+          metadata: metadata,
+          last_modified_by: user
+        )
+
+        parent.result_orderable_elements.create!(
+          position: position || parent.result_orderable_elements.length,
+          orderable: new_table.result_table
+        )
+
+        new_table
+      end
     end
   end
 end

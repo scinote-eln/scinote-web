@@ -81,10 +81,17 @@ hr {
 }
 
 .print-checklist-item {
+  display: flex;
   margin-bottom: 1em;
 
   span {
     vertical-align: top;
+  }
+
+  div {
+    margin-bottom: .7em;
+    margin-left: .7em;
+    white-space: pre-line;
   }
 }
 

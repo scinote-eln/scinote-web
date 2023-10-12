@@ -1,15 +1,9 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
 
-@import "components/checklist";
-@import "components/table";
 @import "components/text";
 
 .step-container {
-  --left-component-padding: 2rem;
-  border: $border-transparent;
-  margin: 6px 0 6px -1em;
-  padding: 8px 24px 8px 0;
 
   .step-header {
     align-items: flex-start;
@@ -17,12 +11,11 @@
     margin-bottom: 1.2em;
 
     .step-element-header {
-      align-items: baseline;
-      border-radius: 4px;
+      align-items: flex-start;
       display: flex;
-      flex-basis: 80%;
+      flex-basis: 100%;
       position: relative;
-      padding-top: .4em;
+      gap: .25rem;
 
       .step-name-edit-icon {
         background: linear-gradient(90deg,
@@ -45,7 +38,7 @@
       }
 
       .step-collapse-link {
-        display: inline-block;
+        display: flex;
         flex-shrink: 0;
         line-height: 24px;
         text-align: center;
@@ -62,12 +55,10 @@
       flex-shrink: 0;
       font-weight: bold;
       line-height: 24px;
-      margin: 0 4px;
     }
 
     .step-name-container {
       align-self: baseline;
-      flex-grow: 1;
       font-size: 16px;
       font-weight: bold;
 
@@ -78,85 +69,35 @@
 
     .step-state {
       align-self: center;
-      border: 1px solid $color-alto;
+      background-color: var(--sn-light-grey);
+      border: 1px solid transparent;
       border-radius: 50%;
       cursor: pointer;
-      height: 24px;
+      height: 20px;
+      position: relative;
       text-align: center;
-      width: 24px;
-      margin-bottom: -.5em;
+      width: 20px;
 
-      &:hover {
-        border-color: $brand-success;
+      &::after {
+        @include font-sn-icon;
+        color: $color-white;
+        content: $sn-icon-check;
+        position: absolute;
+        font-size: 18px !important;
+        left: 0;
+        height: 20px;
+        top: -3px;
       }
 
       &.completed {
-        background: $brand-success;
-        border: 2px solid $brand-success;
-
-        &::after {
-          @include font-awesome;
-          color: $color-white;
-          content: $font-fas-check;
-        }
-      }
-    }
-
-    .step-actions-container {
-      align-items: center;
-      display: flex;
-      justify-content: flex-end;
-      gap: .25rem;
-      flex-basis: 20%;
-
-      .disabled {
-        color: $color-silver-chalice;
-        pointer-events: none;
-      }
-
-      .dropdown-menu {
-        white-space: nowrap;
-      }
-
-      .insert-button {
-        .caret {
-          margin-left: .5em;
-        }
-      }
-
-      .insert-element-dropdown {
-        @include font-button;
-
-        min-width: 230px;
-        padding: 0;
-
-        li {
-          padding: .5em 1em;
-
-          &.action {
-            cursor: pointer;
-
-            &:hover {
-              background: $color-concrete;
-            }
-
-            .fas {
-              margin-right: .5em;
-            }
-          }
-
-          &.title {
-            @include font-small;
-            color: $color-alto;
-            text-transform: uppercase;
-          }
-        }
+        background: var(--sn-science-blue);
+        border: 1px solid var(--sn-science-blue);
       }
     }
   }
 
   .step-elements {
-    padding-left: calc(var(--left-component-padding) * 2);
+    padding-left: 2.5rem;
 
     .step-timestamp {
       position: relative;
@@ -180,7 +121,7 @@
 
   .comments-counter {
     align-items: center;
-    background: var(--sn-science-blue);
+    background: var(--sn-grey);
     border-radius: .5rem;
     color: $color-white;
     display: flex;
@@ -194,12 +135,8 @@
     top: 0;
 
     &.unseen {
-      background-color: $brand-complementary;
+      background-color: var(--sn-science-blue);
     }
-  }
-
-  &.showing-comments {
-    border: 1px dotted $brand-primary;
   }
 
   .drop-message {
@@ -265,72 +202,6 @@
   }
 }
 
-.step-element-header {
-  align-items: baseline;
-  border-radius: 4px;
-  display: flex;
-  min-height: 40px;
-  overflow: hidden;
-  position: relative;
-
-  &.editing-name {
-    .step-element-controls {
-      display: none;
-    }
-  }
-
-  .step-controls {
-    display: flex;
-    align-items: baseline;
-    min-height: 35px;
-  }
-
-  .sci-inline-edit {
-    width: 100%;
-  }
-
-  .step-element-name {
-    font-weight: bold;
-    width: 100%;
-
-
-    .step-element-number {
-      display: inline-block;
-      margin-right: 8px;
-    }
-  }
-
-  .step-element-controls {
-    background: linear-gradient(90deg,
-        transparent,
-        $color-concrete 15%,
-        $color-concrete 100%);
-    display: flex;
-    margin-left: auto;
-    position: absolute;
-    right: 0;
-    top: 0;
-
-    .fas {
-      font-size: 14px;
-    }
-  }
-
-  .step-element-controls,
-  .step-element-grip {
-    opacity: 0;
-  }
-
-  &:hover:not(.locked):not(.no-hover) {
-    background: $color-concrete;
-
-    .step-element-grip,
-    .step-element-controls {
-      opacity: 1;
-    }
-  }
-}
-
 .step-element-grip {
   color: $color-silver-chalice;
   cursor: pointer;
@@ -347,10 +218,6 @@
 }
 
 .sci-reorderable-items {
-  .modal-body {
-    padding-top: 0;
-  }
-
   .step-element-header {
     align-items: center;
     border-bottom: 1px solid $color-concrete;

@@ -1,6 +1,6 @@
 /* global I18n HelperModule truncateLongString animateSpinner RepositoryListColumnType RepositoryStockColumnType */
 /* global RepositoryDatatable RepositoryStatusColumnType RepositoryChecklistColumnType dropdownSelector RepositoryDateTimeColumnType */
-/* global RepositoryDateColumnType RepositoryDatatable */
+/* global RepositoryDateColumnType RepositoryDatatable _ */
 /* eslint-disable no-restricted-globals */
 
 
@@ -297,6 +297,8 @@ var RepositoryColumns = (function() {
         } else {
           thederName = el.innerText;
         }
+        thederName = _.escape(thederName);
+
         if (['row-name', 'archived-by', 'archived-on'].includes(el.id)) {
           visClass = '';
           visText = '';
@@ -305,7 +307,7 @@ var RepositoryColumns = (function() {
         let destroyButton = '';
 
         if (destroyUrl) {
-          destroyButton = `<button class="btn icon-btn btn-light delete-repo-column manage-repo-column"
+          destroyButton = `<button class="btn icon-btn btn-light btn-xs delete-repo-column manage-repo-column"
                               data-action="destroy"
                               data-modal-url="${destroyUrl}">
                               <span class="sn-icon sn-icon-delete" title="Delete"></span>
@@ -313,7 +315,7 @@ var RepositoryColumns = (function() {
         }
 
         let listItem = `<li class="col-list-el ${visLi} ${customColumn} ${editableRow}" data-position="${colIndex}" data-id="${colId}">
-          <i class="grippy"></i>
+          <i class="grippy sn-icon sn-icon-drag"></i>
           <span class="vis-controls">
             <span class="vis sn-icon ${visClass}" title="${visText}"></span>
           </span>
@@ -322,7 +324,7 @@ var RepositoryColumns = (function() {
             getColumnTypeText(el, colId) || '<i class="sn-icon sn-icon-locked-task"></i>'
           }</span>
           <span class="sci-btn-group manage-controls pull-right" data-view-mode="active">
-            <button class="btn icon-btn btn-light edit-repo-column manage-repo-column"
+            <button class="btn icon-btn btn-light btn-xs edit-repo-column manage-repo-column"
                     data-action="edit"
                     data-modal-url="${editUrl}">
               <span class="sn-icon sn-icon-edit" title="Edit"></span>

@@ -1,7 +1,7 @@
 <%= form_tag update_repository_stock_repository_repository_row_path(@repository, @repository_row), method: :post, remote: true, novalidate: true do %>
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>">
-      <span aria-hidden="true">&times;</span>
+      <i class="sn-icon sn-icon-close"></i>
     </button>
     <h4 class="modal-title" id="modal-delete-module-label">
       <% if repository_stock_value.new_record? %>
@@ -18,7 +18,7 @@
     <%= hidden_field_tag 'operator', 'set' %>
     <p><%= t('repository_stock_values.manage_modal.enter_amount') %></p>
     <div class="row">
-      <div class="col-sm-5">
+      <div class="col-sm-5 !pr-0">
         <label><%= t('repository_stock_values.manage_modal.operation') %></label>
         <% if repository_stock_value.id %>
           <div class="btn-group" role="group" aria-label="Operator group">

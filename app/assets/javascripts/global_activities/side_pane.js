@@ -287,7 +287,6 @@ var globalActivities = (function() {
           } else {
             noActivitiesMessage.addClass('hidden');
           }
-          $('.ga-activities-list').data('starting-timestamp', json.starting_timestamp);
           updateRunning = false;
           animateSpinner('.ga-main', false);
 

@@ -14,6 +14,7 @@ class MyModuleRepositoryRow < ApplicationRecord
              touch: true,
              inverse_of: :my_module_repository_rows
   belongs_to :repository_stock_unit_item, optional: true
+  has_many :repository_ledger_records, as: :reference
 
   validates :repository_row, uniqueness: { scope: :my_module }
 
@@ -61,7 +62,8 @@ class MyModuleRepositoryRow < ApplicationRecord
       user: last_modified_by || assigned_by,
       amount: delta,
       balance: stock_value.amount,
-      comment: comment
+      comment: comment,
+      unit: stock_value.repository_stock_unit_item&.data
     )
     stock_value.save!
     save!

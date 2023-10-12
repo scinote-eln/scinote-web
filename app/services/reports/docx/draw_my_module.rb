@@ -72,13 +72,22 @@ module Reports::Docx::DrawMyModule
 
     @docx.h4 I18n.t('Results') if my_module.results.any? && (%w(file_results table_results text_results).any? { |k| @settings.dig('task', k) })
     order_results_for_report(my_module.results, @settings.dig('task', 'result_order')).each do |result|
-      if result.is_asset && @settings.dig('task', 'file_results')
-        draw_result_asset(result, @settings)
-      elsif result.is_table && @settings.dig('task', 'table_results')
-        draw_result_table(result)
-      elsif result.is_text && @settings.dig('task', 'text_results')
-        draw_result_text(result)
+      @docx.p do
+        text result.name.presence || I18n.t('projects.reports.unnamed'), italic: true
+        text "  #{I18n.t('search.index.archived')} ", bold: true if result.archived?
+        text I18n.t('projects.reports.elements.result.user_time',
+                    timestamp: I18n.l(result.created_at, format: :full),
+                    user: result.user.full_name), color: color[:gray]
       end
+      draw_result_asset(result, @settings)
+      result.result_orderable_elements.each do |element|
+        if element.orderable_type == "ResultTable"
+          draw_result_table(element)
+        elsif element.orderable_type == "ResultText"
+          draw_result_text(element)
+        end
+      end
+      draw_result_comments(result) if @settings.dig('task', 'result_comments')
     end
 
     @docx.p

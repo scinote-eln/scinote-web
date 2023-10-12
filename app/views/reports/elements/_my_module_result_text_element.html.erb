@@ -1,37 +1,32 @@
 <% result ||= report_element.result %>
-<% result_text = result.result_text %>
-<% timestamp = result.created_at %>
-<% name = result.name %>
+<% result_text = element.orderable %>
+<% timestamp = element.created_at %>
 <% export_all = defined?(export_all) && export_all %>
 <div class="report-element report-result-element report-result-text-element">
   <div class="report-element-header">
-    <div class="result-name">
-      <%= name %>
-      <% if result.archived? %>
-        <span class="label label-warning"><%= t('search.index.archived') %></span>
+    <div class="text-name">
+      <% if result_text.name.present? %>
+        <em>
+          <%= truncate(result_text.name, length: Constants::FILENAME_TRUNCATION_LENGTH) %>
+        </em>
       <% end %>
     </div>
     <div class="user-time">
-      <%= t('projects.reports.elements.result_text.user_time', user: result.user.full_name, timestamp: l(timestamp, format: :full)) %>
+      <%= t("projects.reports.elements.result_text.user_time", timestamp: l(timestamp, format: :full)) %>
     </div>
   </div>
   <div class="report-element-body">
     <div class="row">
       <div class="col-xs-12">
         <div class="text-container ql-editor">
-          <%= custom_auto_link(result_text.prepare_for_report(:text, export_all),
+          <%= custom_auto_link(result_text.prepare_for_report(:text),
                                 team: current_team,
                                 simple_format: false,
                                 tags: %w(img),
-                                base64_encoded_imgs: export_all) %>
+                                base64_encoded_imgs: true) %>
         </div>
       </div>
     </div>
-  </div>
-  <div class="report-element-children">
-    <% if @settings.dig('task', 'result_comments') %>
-      <%= render partial: 'reports/elements/result_comments_element', locals: { result: result } %>
-    <% end %>
   </div>
   <% if defined?(children) %>
     <div class="report-element-children">

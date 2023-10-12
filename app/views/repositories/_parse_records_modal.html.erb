@@ -5,7 +5,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
         <h4 class="modal-title" id="parse-modal-title"><%= t('repositories.modal_parse.title') %></h4>
       </div>
       <%= form_with(url: import_records_repository_path(@import_data.repository, format: :json),
@@ -27,20 +27,21 @@
                                options_from_collection_for_select(@import_data.available_fields,
                                                                   :first,
                                                                   :last),
-                               include_blank: t('repositories.parse_sheet.do_not_include_column'),
-                               hide_label: true) %>
-                  <br />
-                  <% if th.nil? %>
-                    <i><%= t('repositories.import_records.no_header_name') %></i>
-                  <% else %>
-                    <% if th.length > Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>
-                      <div class="modal-tooltip">
-                        <%= truncate(th, length: Constants::NAME_TRUNCATION_LENGTH_DROPDOWN) %>
-                      </div>
+                               { include_blank: t('repositories.parse_sheet.do_not_include_column'), hide_label: true },
+                               { class:'form-control' }) %>
+                  <div class="mt-8">
+                    <% if th.nil? %>
+                      <i><%= t('repositories.import_records.no_header_name') %></i>
                     <% else %>
-                      <%= th %>
+                      <% if th.length > Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>
+                        <div class="modal-tooltip">
+                          <%= truncate(th, length: Constants::NAME_TRUNCATION_LENGTH_DROPDOWN) %>
+                        </div>
+                      <% else %>
+                        <%= th %>
+                      <% end %>
                     <% end %>
-                  <% end %>
+                  </div>
                 </th>
               <% end %>
             </thead>

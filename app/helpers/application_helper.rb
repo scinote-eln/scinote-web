@@ -144,7 +144,7 @@ module ApplicationHelper
 
       popover_for_user_name(user, team, false, false, base64_encoded_imgs)
     end
-    new_text
+    sanitize_input(new_text)
   end
 
   # Generate smart annotation link for one user object
@@ -235,5 +235,11 @@ module ApplicationHelper
   def login_disclaimer
     # login_disclaimer: { title: "...", body: "...", action: "..." }
     ApplicationSettings.instance.values['login_disclaimer']
+  end
+
+  def show_grey_background?
+    return false unless controller_name && action_name
+
+    Extends::COLORED_BACKGROUND_ACTIONS.include?("#{controller_name}/#{action_name}")
   end
 end

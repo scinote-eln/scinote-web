@@ -10,7 +10,7 @@ body.navigator-collapsed {
   --breadcrumbs-navigation-height: 44px;
   --left-navigation-width: 192px;
   --navbar-height: calc(var(--top-navigation-height) + var(--breadcrumbs-navigation-height));
-  --navigator-navigation-width: 240px;
+  --navigator-navigation-width: 224px;
   --title-row-height: 4em;
   --top-navigation-height: 72px;
   display: grid;
@@ -51,9 +51,6 @@ body.navigator-collapsed {
   .sci--layout-navigation-top {
     grid-area: top;
     height: var(--top-navigation-height);
-    position: sticky;
-    position: -webkit-sticky;
-    top: 0;
     width: 100%;
     z-index: 610;
   }
@@ -69,34 +66,46 @@ body.navigator-collapsed {
   }
 
   .sci--layout-navigation-navigator {
+    --navigator-top-margin: 0px;
+    background-color: var(--sn-white);
     grid-area: navigator;
-    height: calc(100vh - var(--top-navigation-height) - var(--breadcrumbs-navigation-height) - 1rem);
+    height: calc(100vh - var(--navbar-height) - 1rem - var(--navigator-top-margin));
     position: sticky;
     position: -webkit-sticky;
-    top: calc(var(--top-navigation-height) + var(--breadcrumbs-navigation-height));
-    transition: .4s $timing-function-sharp;
+    top: 1rem;
+    transition: width .4s $timing-function-sharp;
     width: var(--navigator-navigation-width);
     z-index: 550;
   }
 
   .sci--layout-navigation-breadcrumbs {
+    background-color: var(--sn-white);
     grid-area: breadcrumbs;
     height: var(--breadcrumbs-navigation-height);
-    position: sticky;
-    position: -webkit-sticky;
-    top: var(--top-navigation-height);
     transition: .4s $timing-function-sharp;
     width: 100%;
     z-index: 600;
   }
 
   .sci--layout-content {
+    background-color: var(--sn-white);
     grid-area: content;
-    padding: 0 1.5rem;
+    padding: 0 1rem;
     width: 100%;
 
     .container-fluid {
       padding: 1em; // override bootstrap and old pages support
+    }
+  }
+
+  &[data-grey-background="true"] {
+    background-color: var(--sn-super-light-grey);
+
+    .sci--layout-content,
+    .sci--layout-navigation-breadcrumbs,
+    .sci--layout-navigation-navigator {
+      background-color: var(--sn-super-light-grey);
+
     }
   }
 }
