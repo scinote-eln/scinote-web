@@ -2285,6 +2285,10 @@ en:
         no_checklist: 'No selection'
       repository_asset_value:
         no_asset: 'No file'
+        add_asset: 'Add file'
+        errors:
+          upload_failed_general: 'Upload failed. Something went wrong, please try again'
+          file_too_big: 'Upload failed. File size must be less than %{file_size} MB.'
       repository_time_value:
         no_time: 'No time'
       expand: 'Expand'
@@ -3709,6 +3713,7 @@ en:
     select: "Select"
     selected: "Selected"
     loading: "Loading..."
+    replace: "Replace"
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"

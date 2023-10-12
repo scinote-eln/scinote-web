@@ -3,6 +3,7 @@ class RepositoryRowsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
   include MyModulesHelper
+  include RepositoryDatatableHelper
 
   MAX_PRINTABLE_ITEM_NAME_LENGTH = 64
   before_action :load_repository, except: %i(print rows_to_print print_zpl
@@ -197,7 +198,15 @@ class RepositoryRowsController < ApplicationController
                        repository_column: update_params['repository_cells']&.keys&.first ||
                        I18n.t('repositories.table.row_name') })
       end
-      head :no_content
+
+      repository_cells = {}
+      @repository_row.repository_cells.each do |repository_cell|
+        repository_cells[repository_cell.repository_column_id] = serialize_repository_cell_value(repository_cell,
+                                                                                                 @repository.team,
+                                                                                                 @repository)
+      end
+
+      render json: repository_cells, status: :ok
     else
       render json: row_update.errors, status: :bad_request
     end

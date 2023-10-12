@@ -124,6 +124,7 @@
                                :inArchivedRepositoryRow="defaultColumns?.archived"
                                :permissions="permissions"
                                :updatePath="updatePath"
+                               :actions="actions"
                                @update="update" />
               </section>
 

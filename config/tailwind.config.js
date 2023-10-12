@@ -60,7 +60,10 @@ module.exports = {
       },
       boxShadow: {
         'flyout-shadow': '0px 1px 4px rgba(35, 31, 32, 0.15)',
-      }
+      },
+      transitionTimingFunction: {
+        sharp: 'cubic-bezier(.4, 0, .6, 1)',
+      },
     }
   },
   blocklist: [
