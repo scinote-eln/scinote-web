@@ -3,10 +3,10 @@
     class='bg-white overflow-auto gap-2.5 self-stretch  rounded-tl-4 rounded-bl-4 transition-transform ease-in-out transform shadow-lg'
     :class="{ 'translate-x-0 w-[565px] h-full': isShowing, 'transition-transform ease-in-out duration-400 transform translate-x-0 translate-x-full w-0': !isShowing }">
 
-    <div id="repository-item-sidebar" class="w-full h-full  py-6 px-6 bg-white flex flex-col">
+    <div id="repository-item-sidebar" class="w-full h-auto  pb-6 px-6 bg-white flex flex-col">
 
-      <div id="sticky-header-wrapper">
-        <div class="header flex w-full">
+      <div id="sticky-header-wrapper" class="sticky top-0 right-0 bg-white flex z-50 flex-col h-[102px] pt-6">
+        <div class="header flex w-full h-[30px]">
           <h4 class="item-name my-auto truncate" :title="defaultColumns?.name">
             {{ defaultColumns?.archived ? i18n.t('labels.archived') : '' }}
             {{ defaultColumns?.name }}
@@ -15,8 +15,8 @@
             class="sn-icon sn-icon-close ml-auto cursor-pointer my-auto mx-0"></i>
         </div>
 
-        <div id="divider" class="flex w-500 bg-sn-light-grey my-6 self-stretch h-px items-center pt-px">
-        </div>
+        <div id="divider" class="w-500 bg-sn-light-grey flex items-center self-stretch h-px my-6"></div>
+
       </div>
 
       <div v-if="dataLoading" class="h-full flex flex-grow-1">
@@ -160,13 +160,14 @@
         </div>
 
         <!-- NAVIGATION -->
-        <div id="navigation" class="flex item-end gap-x-4 min-w-[130px] h-[130px] sticky top-0 right-0">
+        <div ref="navigationRef" id="navigation"
+          class="flex item-end gap-x-4 min-w-[130px] min-h-[130px] h-fit absolute top-[102px] right-[24px] ">
           <scroll-spy :itemsToCreate="[
             { id: 'highlight-item-1', textId: 'text-item-1', labelAlias: 'information_label', label: 'information-label' },
             { id: 'highlight-item-2', textId: 'text-item-2', labelAlias: 'custom_columns_label', label: 'custom-columns-label' },
             { id: 'highlight-item-3', textId: 'text-item-3', labelAlias: 'assigned_label', label: 'assigned-label' },
             { id: 'highlight-item-4', textId: 'text-item-4', labelAlias: 'QR_label', label: 'QR-label' }
-          ]">
+          ]" :stickyHeaderHeightPx="102" :cardTopPaddingPx="null">
           </scroll-spy>
         </div>
       </div>

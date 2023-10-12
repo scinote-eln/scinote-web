@@ -1,4 +1,5 @@
 <template>
+  <!-- This will be re-implemented using vue2-scrollspy library in a following ticket -->
   <div class="flex gap-3">
     <div id="navigation-text">
       <div class="flex flex-col py-2 px-0 gap-3 self-stretch w-[130px] h-[130px]  justify-center items-center">
@@ -19,24 +20,41 @@
     </div>
   </div>
 </template>
-  
+
 <script>
 export default {
   name: 'ScrollSpy',
   props: {
     itemsToCreate: Array,
+    stickyHeaderHeightPx: Number || null,
+    cardTopPaddingPx: Number || null
   },
   data() {
     return {
       rootContainerEl: null,
       selectedNavText: null,
-      selectedNavIndicator: null
+      selectedNavIndicator: null,
+      positions: []
     }
   },
   created() {
     this.rootContainerEl = this.$parent.$refs.wrapper
+    this.rootContainerEl?.addEventListener('scroll', this.handleScrollBehaviour)
   },
+
   methods: {
+    handleScrollBehaviour() {
+      // used for keeping scroll spy sticky
+      this.updateNavigationPositionOnScroll()
+    },
+    updateNavigationPositionOnScroll() {
+      const navigationDom = this?.$parent?.$refs?.navigationRef
+      // Get the current scroll position
+      const scrollPosition = this?.rootContainerEl?.scrollTop
+      // Adjust navigationDom position equal to the scrollPosition + the header height and the card top padding (if present)
+      navigationDom.style.top = `${scrollPosition + this?.stickyHeaderHeightPx + this?.cardTopPaddingPx}px`;
+    },
+
     handleSideNavClick(e) {
       if (!this.rootContainerEl) {
         return
@@ -56,8 +74,8 @@ export default {
       // scrolling to desired section
       const domElToScrollTo = this.$parent.$refs[refToScrollTo]
       this.rootContainerEl.scrollTo({
-        top: domElToScrollTo.offsetTop,
-        behavior: "smooth"
+        top: domElToScrollTo.offsetTop - this?.stickyHeaderHeightPx - this?.cardTopPaddingPx,
+        behavior: "auto"
       })
 
       // flashing the title color to blue and back over 300ms
@@ -71,6 +89,6 @@ export default {
         clearTimeout(timeoutId)
       }, 500)
     }
-  }
+  },
 }
 </script>
