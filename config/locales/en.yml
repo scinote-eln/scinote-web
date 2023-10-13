@@ -2256,12 +2256,16 @@ en:
       repository_time_range_value:
         no_time_range: 'No time range'
       repository_text_value:
+        collapse: 'Collapse'
+        expand: 'Expand'
         no_text: 'No text'
       repository_stock_value:
         no_stock: 'No stock'
       repository_status_value:
         no_status: 'No selection'
       repository_number_value:
+        collapse: 'Collapse'
+        expand: 'Expand'
         no_number: 'No number'
       repository_list_value:
         no_list: 'No selection'
