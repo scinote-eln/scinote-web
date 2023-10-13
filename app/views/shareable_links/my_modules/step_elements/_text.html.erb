@@ -1,13 +1,14 @@
-<div class="step-text-container step-element--locked locked" tabindex="0">
+<div class="content__text-container locked" tabindex="0">
+  <div class="sci-divider my-6"></div>
   <% if element.name.present? %>
-    <div class="step-element-header step-element--locked mt-4">
-        <div class="step-element-name font-bold">
-          <%= render partial: "shareable_links/my_modules/inline_view", locals: { text: element.name, smart_annotation_enabled: false } %>
-          </div>
+    <div class="text-header h-9 flex rounded mb-1 items-center relative w-full group/text-header">
+      <div class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold">
+        <%= render partial: "shareable_links/my_modules/inline_view", locals: { text: element.name, smart_annotation_enabled: false } %>
+      </div>
     </div>
   <% end %>
   <% if element.text.present? %>
-    <div class="view-text-element">
+    <div class="flex rounded min-h-[2.25rem] mb-4 relative group/text_container content__text-body max-w-[90ch]">
       <%= smart_annotation_text(element.shareable_tinymce_render(:text)) %>
     </div>
   <% else %>

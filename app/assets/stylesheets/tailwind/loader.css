@@ -1,0 +1,6 @@
+@layer components {
+    .sci-loader {
+      @apply flex m-auto h-[30px] w-[30px] animate-spin;
+      background: image-url("sn-loader.svg") center center no-repeat;
+    }
+}

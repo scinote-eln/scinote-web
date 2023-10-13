@@ -6,7 +6,7 @@ class TeamRepositoriesController < ApplicationController
 
   # DELETE :team_id/repositories/:repository_id/team_repositories/:id
   def destroy
-    team_shared_object = @repository.team_shared_objects.find(destory_params[:id])
+    team_shared_object = @repository.team_shared_objects.find(destroy_params[:id])
     ActiveRecord::Base.transaction do
       log_activity(:unshare_inventory, team_shared_object)
       team_shared_object.destroy!
@@ -50,7 +50,7 @@ class TeamRepositoriesController < ApplicationController
     params.permit(:team_id, :repository_id, :target_team_id, :permission_level)
   end
 
-  def destory_params
+  def destroy_params
     params.permit(:team_id, :id)
   end
 

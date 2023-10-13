@@ -6,9 +6,9 @@
     "published_on": 1516132805,
     "version": 0,
     "source_id": 9451,
-    "name": "CUT\u0026RUN: Targeted in situ genome-wide profiling with high efficiency for low cell numbers",
+    "name": "CUT&amp;RUN: Targeted in situ genome-wide profiling with high efficiency for low cell numbers",
     "description": {
-      "body": "\u003cdiv class = \"text-blocks\"\u003e\u003cdiv class = \"text-block\"\u003eCleavage Under Targets and Release Using Nuclease (CUT\u0026RUN) is an epigenomic profiling strategy in which antibody-targeted controlled cleavage by micrococcal nuclease releases specific protein-DNA complexes into the supernatant for paired-end DNA sequencing. As only the targeted fragments enter into solution, and the vast majority of DNA is left behind, CUT\u0026RUN has exceptionally low background levels. CUT\u0026RUN outperforms the most widely used Chromatin Immunoprecipitation (ChIP) protocols in resolution, signal-to-noise, and depth of sequencing required. In contrast to ChIP, CUT\u0026RUN is free of solubility and DNA accessibility artifacts and can be used to profile insoluble chromatin and to detect long-range 3D contacts without cross-linking. Here we present an improved CUT\u0026RUN protocol that does not require isolation of nuclei and provides high-quality data starting with only 100 cells for a histone modification and 1000 cells for a transcription factor. From cells to purified DNA CUT\u0026RUN requires less than a day at the lab bench.\u003c/div\u003e\u003cdiv class = \"text-block\"\u003eIn summary, CUT\u0026RUN has several advantages over ChIP-seq: (1) The method is performed in situ in non-crosslinked cells and does not require chromatin fragmentation or solubilization; (2) The intrinsically low background allows low sequence depth and identification of low signal genomic features invisible to ChIP; (3) The simple procedure can be completed within a day and is suitable for robotic automation; (4) The method can be used with low cell numbers compared to existing methodologies; (5) A simple spike-in strategy can be used for accurate quantitation of protein-DNA interactions. As such, CUT\u0026RUN represents an attractive replacement for ChIPseq, which is one of the most popular methods in biological research.\u003c/div\u003e\u003c/div\u003e",
+      "body": "<div class = \"text-blocks\"><div class = \"text-block\">Cleavage Under Targets and Release Using Nuclease (CUT&RUN) is an epigenomic profiling strategy in which antibody-targeted controlled cleavage by micrococcal nuclease releases specific protein-DNA complexes into the supernatant for paired-end DNA sequencing. As only the targeted fragments enter into solution, and the vast majority of DNA is left behind, CUT&RUN has exceptionally low background levels. CUT&RUN outperforms the most widely used Chromatin Immunoprecipitation (ChIP) protocols in resolution, signal-to-noise, and depth of sequencing required. In contrast to ChIP, CUT&RUN is free of solubility and DNA accessibility artifacts and can be used to profile insoluble chromatin and to detect long-range 3D contacts without cross-linking. Here we present an improved CUT&RUN protocol that does not require isolation of nuclei and provides high-quality data starting with only 100 cells for a histone modification and 1000 cells for a transcription factor. From cells to purified DNA CUT&RUN requires less than a day at the lab bench.</div><div class = \"text-block\">In summary, CUT&RUN has several advantages over ChIP-seq: (1) The method is performed in situ in non-crosslinked cells and does not require chromatin fragmentation or solubilization; (2) The intrinsically low background allows low sequence depth and identification of low signal genomic features invisible to ChIP; (3) The simple procedure can be completed within a day and is suitable for robotic automation; (4) The method can be used with low cell numbers compared to existing methodologies; (5) A simple spike-in strategy can be used for accurate quantitation of protein-DNA interactions. As such, CUT&RUN represents an attractive replacement for ChIPseq, which is one of the most popular methods in biological research.</div></div>",
       "image": "https://s3.amazonaws.com/pr-journal/rzxfw26.png",
       "extra_content": []
     },
@@ -17,8 +17,22 @@
       {
         "source_id": 601564,
         "name": "Binding cells to beads",
+        "attachments": [
+          {
+            "url": "https://pbs.twimg.com/media/Cwu3zrZWQAA7axs.jpg",
+            "name": "First file"
+          },
+          {
+            "url": "http://something.com/wp-content/uploads/2014/11/14506718045_5b3e71dacd_o.jpg",
+            "name": "Second file"
+          },
+          {
+            "url": "http://something.com/wp-content/uploads/2014/11/14506718045_5b3e71dacd_o.jpg",
+            "name": "14506718045_5b3e71dacd_o.jpg"
+          }
+        ],
         "description": {
-          "body": "\u003cdiv class = \"text-blocks\"\u003e\u003cdiv class = \"text-block\"\u003e\u003cspan style = \":justify;\"\u003eHarvest fresh culture(s) at room temperature and count cells. The same protocol can be used for 100 to 250,000 mammalian cells per sample and/or digestion time point.\u003c/span\u003e\u003c/div\u003e\u003c/div\u003e",
+          "body": "<div class = \"text-blocks\"><div class = \"text-block\"><span style = \":justify;\">Harvest fresh culture(s) at room temperature and count cells. The same protocol can be used for 100 to 250,000 mammalian cells per sample and/or digestion time point.</span></div></div>",
           "components": [
             {
               "type": "amount",
@@ -60,11 +74,11 @@
             },
             {
               "type": "result",
-              "body": "\u003cdiv class = \"text-blocks\"\u003e\u003cdiv class = \"text-block\"\u003eCentrifuge 3 min... This is expected result with HTML.\u003c/div\u003e\u003c/div\u003e"
+              "body": "<div class = \"text-blocks\"><div class = \"text-block\">Centrifuge 3 min... This is expected result with HTML.</div></div>"
             },
             {
               "type": "warning",
-              "body": "\u003cdiv class = \"text-blocks\"\u003e\u003cdiv class = \"text-block\"\u003eCentrifuge 3 min... This is WARNING with HTML.\u003c/div\u003e\u003c/div\u003e",
+              "body": "<div class = \"text-blocks\"><div class = \"text-block\">Centrifuge 3 min... This is WARNING with HTML.</div></div>",
               "details": {
                 "link": "www.warnings.com/be_careful"
               }
@@ -99,34 +113,20 @@
             {
               "type": "note",
               "author": "Frank Jones",
-              "body": "\u003cdiv class = \"text-blocks\"\u003e\u003cdiv class = \"text-block\"\u003eCentrifuge 3 min... This is expected result with HTML.\u003c/div\u003e\u003c/div\u003e"
+              "body": "<div class = \"text-blocks\"><div class = \"text-block\">Centrifuge 3 min... This is expected result with HTML.</div></div>"
             }
           ]
         },
-        "attachments": [
-          {
-            "url": "https://pbs.twimg.com/media/Cwu3zrZWQAA7axs.jpg",
-            "name": "First file"
-          },
-          {
-            "url": "http://something.com/wp-content/uploads/2014/11/14506718045_5b3e71dacd_o.jpg",
-            "name": "Second file"
-          },
-          {
-            "url": "http://something.com/wp-content/uploads/2014/11/14506718045_5b3e71dacd_o.jpg",
-            "name": "14506718045_5b3e71dacd_o.jpg"
-          }
-        ],
         "position": 0
       },
       {
         "source_id": 601565,
         "name": "Binding cells to beads 2",
+        "attachments": [],
         "description": {
-          "body": "\u003cdiv class = \"text-blocks\"\u003e\u003cdiv class = \"text-block\"\u003eCentrifuge 3 min 600 x g at room temperature and withdraw liquid.\u003c/div\u003e\u003c/div\u003e",
+          "body": "<div class = \"text-blocks\"><div class = \"text-block\">Centrifuge 3 min 600 x g at room temperature and withdraw liquid.</div></div>",
           "components": []
         },
-        "attachments": [],
         "position": 1
       }
     ]

@@ -2,6 +2,7 @@
 @import "tailwind/buttons";
 @import "tailwind/modals";
 @import "tailwind/flyouts";
+@import "tailwind/loader.css";
 
 @tailwind base;
 @tailwind components;

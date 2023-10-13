@@ -112,6 +112,6 @@ class CommentsController < ApplicationController
   end
 
   def check_manage_permissions
-    comment_editable?(@comment)
+    render_403 unless comment_editable?(@comment)
   end
 end

@@ -101,6 +101,7 @@
       </div>
 
       <%= render "shared/comments/comments_sidebar" %>
+      <%= render "shared/repository_row_sidebar" %>
     </div>
 
     <%= render partial: 'shared/flash_alerts',
@@ -121,5 +122,7 @@
     <span style="display: none;" data-hook="application-body-end-html"></span>
 
     <%= javascript_include_tag 'prism' %>
+    <%= javascript_include_tag "vue_components_repository_item_sidebar" %>
+
   </body>
 </html>

@@ -288,9 +288,6 @@
 
   .dropdown-menu {
     @include font-button;
-    min-width: 200px;
-    padding: .5em 0;
-    z-index: 102;
 
     .divider-label {
       @include font-small;
