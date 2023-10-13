@@ -18,6 +18,9 @@ export default {
           HelperModule.flashAlertMsg(this.i18n.t('general.no_permissions'), 'danger');
         }
       });
+    },
+    reloadAttachments() {
+      this.$emit('attachment:uploaded');
     }
   }
 };

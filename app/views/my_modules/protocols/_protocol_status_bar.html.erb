@@ -1,21 +1,19 @@
-<div class="dropdown my-module-protocol-status">
-  <div class="flex items-center">
-    <% if @protocol.linked? %>
-      <span class="status-label linked">
-        [<%= t("my_modules.protocols.protocol_status_bar.linked") %>]
-      </span>
-    <% else %>
-      <span class="status-label">
-        [<%= t("my_modules.protocols.protocol_status_bar.unlinked") %>]
-      </span>
-    <% end %>
-    <a href="#" id="my-module-protocol-info-button" class="status-info
-      <%= 'parent-newer' if @protocol.parent_newer? %>
-      <%= 'protocol-newer' if @protocol.newer_than_parent? %>
-      " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <i class="sn-icon sn-icon-info"></i>
-    </a>
-  </div>
+<div class="flex items-center dropdown my-module-protocol-status whitespace-nowrap">
+  <% if @protocol.linked? %>
+    <span class="status-label linked">
+      [<%= t("my_modules.protocols.protocol_status_bar.linked") %>]
+    </span>
+  <% else %>
+    <span class="status-label">
+      [<%= t("my_modules.protocols.protocol_status_bar.unlinked") %>]
+    </span>
+  <% end %>
+  <a href="#" id="my-module-protocol-info-button" class="status-info dropdown-toggle
+    <%= 'parent-newer' if @protocol.parent_newer? %>
+    <%= 'protocol-newer' if @protocol.newer_than_parent? %>
+    " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <i class="sn-icon sn-icon-info"></i>
+  </a>
   <div class="dropdown-menu status-info-dropdown" aria-labelledby="my-module-protocol-info-button">
     <div class="dropdown-content">
         <div class="dropdown-header">
@@ -69,4 +67,6 @@
         </div>
       </div>
     </div>
+  </div>
 </div>
+

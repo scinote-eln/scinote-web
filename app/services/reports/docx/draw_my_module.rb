@@ -72,6 +72,13 @@ module Reports::Docx::DrawMyModule
 
     @docx.h4 I18n.t('Results') if my_module.results.any? && (%w(file_results table_results text_results).any? { |k| @settings.dig('task', k) })
     order_results_for_report(my_module.results, @settings.dig('task', 'result_order')).each do |result|
+      @docx.p do
+        text result.name.presence || I18n.t('projects.reports.unnamed'), italic: true
+        text "  #{I18n.t('search.index.archived')} ", bold: true if result.archived?
+        text I18n.t('projects.reports.elements.result.user_time',
+                    timestamp: I18n.l(result.created_at, format: :full),
+                    user: result.user.full_name), color: color[:gray]
+      end
       draw_result_asset(result, @settings)
       result.result_orderable_elements.each do |element|
         if element.orderable_type == "ResultTable"
@@ -80,6 +87,7 @@ module Reports::Docx::DrawMyModule
           draw_result_text(element)
         end
       end
+      draw_result_comments(result) if @settings.dig('task', 'result_comments')
     end
 
     @docx.p

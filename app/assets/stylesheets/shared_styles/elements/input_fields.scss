@@ -60,6 +60,10 @@
     }
   }
 
+  input.sci-input-field {
+    height: 36px !important;
+  }
+
   .sn-icon {
     bottom: 6px;
     position: absolute;
@@ -171,6 +175,46 @@
       &::placeholder {
         color: inherit;
       }
+    }
+  }
+
+  &.password-input-container {
+    .password-icon-wrapper {
+      position: relative;
+
+      input {
+        padding-right: 2.4em;
+      }
+    }
+
+    .sn-icon {
+      align-items: center;
+      display: flex;
+      height: 100%;
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 24px;
+    }
+
+    .help-block {
+      left: 0;
+      position: absolute;
+      width: 100%;
+
+      &:nth-of-type(2) { top: 60px; }
+      &:nth-of-type(3) { top: 120px; }
+    }
+
+    &.error::before,
+    &.has-error {
+      padding-bottom: 0;
+    }
+
+    &.has-error {
+      margin-bottom: inherit;
+      padding-bottom: 2em;
     }
   }
 }

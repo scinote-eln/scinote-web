@@ -417,7 +417,7 @@ GEM
     mini_magick (4.12.0)
     mini_mime (1.1.2)
     mini_portile2 (2.8.4)
-    minitest (5.18.1)
+    minitest (5.20.0)
     msgpack (1.7.1)
     multi_json (1.15.0)
     multi_test (1.1.0)
@@ -695,7 +695,7 @@ GEM
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     whacamole (1.2.0)
-    wicked_pdf (2.6.3)
+    wicked_pdf (2.7.0)
       activesupport
     xpath (3.2.0)
       nokogiri (~> 1.8)

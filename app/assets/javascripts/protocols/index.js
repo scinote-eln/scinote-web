@@ -1,7 +1,7 @@
 //= require protocols/import_export/import
 /* eslint-disable no-use-before-define, no-underscore-dangle, max-len, no-param-reassign */
-/* global ProtocolRepositoryHeader PdfPreview DataTableHelpers importProtocolFromFile _ PerfectSb
-          dropdownSelector filterDropdown I18n animateSpinner initHandsOnTable inlineEditing HelperModule */
+/* global ProtocolRepositoryHeader PdfPreview DataTableHelpers importProtocolFromFile _ PerfectSb protocolsIO
+  protocolSteps dropdownSelector filterDropdown I18n animateSpinner initHandsOnTable inlineEditing HelperModule */
 
 // Global variables
 var ProtocolsIndex = (function() {
@@ -127,6 +127,8 @@ var ProtocolsIndex = (function() {
     $filterDropdown.on('filter:clear', function() {
       dropdownSelector.clearData($publishedByFilter);
       dropdownSelector.clearData($accessByFilter);
+
+      $(this).find('input').val('');
       if ($publishedOnFromFilter.data('DateTimePicker')) $publishedOnFromFilter.data('DateTimePicker').clear();
       if ($publishedOnToFilter.data('DateTimePicker')) $publishedOnToFilter.data('DateTimePicker').clear();
       if ($modifiedOnFromFilter.data('DateTimePicker')) $modifiedOnFromFilter.data('DateTimePicker').clear();
@@ -443,6 +445,8 @@ var ProtocolsIndex = (function() {
       if ($(this).find('.modal-body').length === 0) {
         $.get(this.dataset.url, function(data) {
           $('#protocolsioModal').find('.modal-content').html(data.html);
+          protocolsIO();
+          protocolSteps();
           PerfectSb().init();
         });
       }
@@ -646,7 +650,7 @@ var ProtocolsIndex = (function() {
 
   function updateButtons() {
     window.actionToolbarComponent.fetchActions({ protocol_ids: rowsSelected });
-    $('.dataTables_scrollBody').css('padding-bottom', `${rowsSelected.length > 0 ? 68 : 0}px`);
+    $('.dataTables_scrollBody').css('margin-bottom', `${rowsSelected.length > 0 ? 46 : 0}px`);
   }
 
   function initLocalFileImport() {
@@ -660,6 +664,10 @@ var ProtocolsIndex = (function() {
 
     // Hack to hide "No file chosen" tooltip
     fileInput.attr('title', window.webkitURL ? ' ' : '');
+
+    fileInput.on('click', (ev) => {
+      ev.target.value = null;
+    });
 
     fileInput.on('change', function(ev) {
       var importUrl = fileInput.attr('data-import-url');

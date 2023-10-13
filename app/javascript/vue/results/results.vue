@@ -1,10 +1,14 @@
 <template>
   <div class="results-wrapper">
-    <ResultsToolbar :sort="sort"
+    <ResultsToolbar
+      ref="resultsToolbar"
+      :sort="sort"
       :canCreate="canCreate == 'true'"
       :archived="archived == 'true'"
       :active_url="active_url"
       :archived_url="archived_url"
+      :headerSticked="headerSticked"
+      :moduleName="moduleName"
       @setSort="setSort"
       @setFilters="setFilters"
       @newResult="createResult"
@@ -34,9 +38,13 @@
   import ResultsToolbar from './results_toolbar.vue';
   import Result from './result.vue';
 
+  import stackableHeadersMixin from '../mixins/stackableHeadersMixin';
+  import moduleNameObserver from '../mixins/moduleNameObserver';
+
   export default {
     name: 'Results',
     components: { ResultsToolbar, Result },
+    mixins: [stackableHeadersMixin, moduleNameObserver],
     props: {
       url: { type: String, required: true },
       canCreate: { type: String, required: true },
@@ -51,18 +59,24 @@
         filters: {},
         resultToReload: null,
         nextPageUrl: null,
-        loadingPage: false
+        loadingPage: false,
       }
     },
     mounted() {
       window.addEventListener('scroll', this.loadResults, false);
+      window.addEventListener('scroll', this.initStackableHeaders, false);
       this.nextPageUrl = this.url;
       this.loadResults();
+      this.initStackableHeaders();
     },
     beforeDestroy() {
       window.removeEventListener('scroll', this.loadResults, false);
+      window.removeEventListener('scroll', this.initStackableHeaders, false);
     },
     methods: {
+      getHeader() {
+        return this.$refs.resultsToolbar.$refs.resultsHeaderToolbar;
+      },
       reloadResult(result) {
         this.resultToReload = result;
       },

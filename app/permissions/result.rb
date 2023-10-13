@@ -30,7 +30,7 @@ Canaid::Permissions.register_for(ResultComment) do
   %i(manage_result_comment)
     .each do |perm|
     can perm do |_, comment|
-      !comment.result.my_module.archived_branch?
+      !comment.result.my_module.archived_branch? && comment.result.active?
     end
   end
 

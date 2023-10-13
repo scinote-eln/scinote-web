@@ -38,15 +38,10 @@ module Reports::Docx::DrawResultTable
       end
     end
     @docx.p do
-      text result.name, italic: true
-      text "  #{I18n.t('search.index.archived')} ", bold: true if result.archived?
-      text ' '
       text I18n.t 'projects.reports.elements.result_table.table_name', name: table.name
       text ' '
-      text I18n.t('projects.reports.elements.result_text.user_time',
+      text I18n.t('projects.reports.elements.result_table.user_time',
                   timestamp: I18n.l(timestamp, format: :full), user: result.user.full_name), color: color[:gray]
     end
-
-    draw_result_comments(result) if @settings.dig('task', 'result_comments')
   end
 end

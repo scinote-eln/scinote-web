@@ -33,11 +33,11 @@
     <div
       v-else
       ref="view"
-      class="grid sci-cursor-edit leading-5 border-0 py-1 outline-none inline-block border-solid border-y border-transparent"
+      class="grid sci-cursor-edit leading-5 border-0 py-1 outline-none border-solid border-y border-transparent"
       :class="{ 'text-sn-grey font-normal': isBlank, 'whitespace-pre-line': !singleLine }"
       @click="enableEdit($event)"
     >
-      <span :class="{'truncate': singleLine}" v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
+      <span :class="{'truncate': singleLine }" v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
       <span :class="{'truncate': singleLine}" v-else>{{newValue || placeholder}}</span>
     </div>
 
@@ -78,7 +78,7 @@
       return {
         editing: false,
         dirty: false,
-        newValue: ''
+        newValue: '',
       }
     },
     mixins: [UtilsMixin],
@@ -103,7 +103,7 @@
       },
       autofocus() {
         this.handleAutofocus();
-      }
+      },
     },
     computed: {
       isBlank() {
@@ -239,8 +239,8 @@
         if (this.editing && !this.singleLine) {
           this.$nextTick(() => {
             if (!this.$refs.input) return;
+            this.$refs.input.style.height = this.$refs.input.scrollHeight / 2  + 'px';
 
-            this.$refs.input.style.height = '0px';
             this.$refs.input.style.height = this.$refs.input.scrollHeight  + 'px';
           });
         }

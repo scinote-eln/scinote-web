@@ -16,8 +16,8 @@
     </div>
     <MenuDropdown
       class="ml-auto"
-      v-if="this.settingsMenu && this.settingsMenu.length > 0"
-      :listItems="this.settingsMenu.map((item) => { return { text: item.name, url: item.url } })"
+      v-if="settingsMenu && settingsMenu.length > 0"
+      :listItems="settingsMenuItems"
       :btnClasses="'btn btn-light icon-btn btn-black'"
       :position="'right'"
       :btnIcon="'sn-icon sn-icon-settings'"
@@ -89,7 +89,6 @@
         helpMenu: null,
         settingsMenu: null,
         userMenu: null,
-        showAboutModal: false,
         notificationsOpened: false,
         unseenNotificationsCount: 0
       }
@@ -109,6 +108,18 @@
     },
     beforeDestroy: function(){
       clearTimeout(this.unseenNotificationsTimeout);
+    },
+    computed: {
+      settingsMenuItems() {
+        return this.settingsMenu.map((item) => {
+          return { text: item.name, url: item.url } }
+        ).concat(
+          {
+            text: this.i18n.t('left_menu_bar.support_links.core_version'),
+            modalTarget: '#aboutModal', url: ''
+          }
+        )
+      }
     },
     methods: {
       fetchData() {

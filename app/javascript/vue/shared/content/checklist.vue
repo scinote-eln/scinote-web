@@ -1,9 +1,10 @@
 <template>
   <div class="content__checklist-container" >
-    <div class="border-0 border-b border-dashed border-sn-light-grey my-6" v-if="!inRepository"></div>
+    <div class="sci-divider my-6" v-if="!inRepository"></div>
     <div class="checklist-header flex rounded mb-1 items-center relative w-full group/checklist-header" :class="{ 'editing-name': editingName, 'locked': !element.attributes.orderable.urls.update_url }">
-      <div class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold" :class="{ 'pointer-events-none': locked } ">
+      <div class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold">
         <InlineEdit
+          :class="{ 'pointer-events-none': !element.attributes.orderable.urls.update_url }"
           :value="element.attributes.orderable.name"
           :sa_value="element.attributes.orderable.sa_name"
           :characterLimit="10000"
@@ -29,7 +30,7 @@
         @delete="showDeleteModal"
       ></MenuDropdown>
     </div>
-    <div v-if="element.attributes.orderable.urls.create_item_url || orderedChecklistItems.length > 0">
+    <div v-if="element.attributes.orderable.urls.create_item_url || orderedChecklistItems.length > 0" :class="{ 'pointer-events-none': locked }">
       <Draggable
         v-model="checklistItems"
         :ghostClass="'checklist-item-ghost'"
@@ -46,6 +47,7 @@
           :key="checklistItem.id"
           :checklistItem="checklistItem"
           :locked="locked"
+          :reordering="reordering"
           :reorderChecklistItemUrl="element.attributes.orderable.urls.reorder_url"
           :inRepository="inRepository"
           :draggable="checklistItems.length > 1"
@@ -122,7 +124,6 @@
       }
     },
     created() {
-
       if (this.isNew) {
         this.addItem(1);
       } else {
@@ -143,7 +144,7 @@
                                   });
       },
       locked() {
-        return this.reordering || this.editingName || !this.element.attributes.orderable.urls.update_url
+        return this.editingName || !this.element.attributes.orderable.urls.update_url
       },
       addingNewItem() {
         return this.checklistItems.find((item) => item.attributes.isNew);
@@ -184,7 +185,7 @@
       loadChecklistItems(insertAfter) {
         $.get(this.element.attributes.orderable.urls.checklist_items_url, (result) => {
           this.checklistItems = result.data;
-          if (insertAfter != null) {
+          if (insertAfter) {
             this.addItem(insertAfter);
           }
         });

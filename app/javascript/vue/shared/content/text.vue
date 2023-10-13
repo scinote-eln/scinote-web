@@ -1,6 +1,6 @@
 <template>
   <div class="content__text-container">
-    <div class="border-0 border-b border-dashed border-sn-light-grey my-6" v-if="!inRepository"></div>
+    <div class="sci-divider my-6" v-if="!inRepository"></div>
     <div class="text-header h-9 flex rounded mb-1 items-center relative w-full group/text-header" :class="{ 'editing-name': editingName, 'locked': !element.attributes.orderable.urls.update_url }">
       <div v-if="element.attributes.orderable.urls.update_url || element.attributes.orderable.name"
            class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold"

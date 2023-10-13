@@ -25,17 +25,21 @@
           <%= f.email_field :email, class: 'form-control sci-input-field' %>
         </div>
 
-        <div class="form-group sci-input-container">
+        <div class="form-group sci-input-container password-input-container">
           <%= f.label :password, t('users.registrations.new.password_label') %>
           <% if @minimum_password_length %>
           <em class="minimum-password-length"><%= t('users.registrations.new.minimum_password_length', password_length: @minimum_password_length) %></em>
           <% end %>
-          <%= f.password_field :password, autocomplete: 'off', class: 'form-control sci-input-field' %>
+          <div class="password-icon-wrapper">
+            <%= f.password_field :password, autocomplete: 'off', class: 'form-control sci-input-field' %>
+          </div>
         </div>
 
-        <div class="form-group sci-input-container" id="password_confirmation_form">
+        <div class="form-group sci-input-container password-input-container" id="password_confirmation_form">
           <%= f.label :password_confirmation, t('users.registrations.new.password_confirmation_label') %>
-          <%= f.password_field :password_confirmation, autocomplete: 'off', class: 'form-control sci-input-field' %>
+          <div class="password-icon-wrapper">
+            <%= f.password_field :password_confirmation, autocomplete: 'off', class: 'form-control sci-input-field' %>
+          </div>
         </div>
         <% if Rails.configuration.x.new_team_on_signup %>
           <div class="form-group sci-input-container" id="team_name_form">

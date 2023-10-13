@@ -17,13 +17,14 @@
           <span class="sci-checkbox-label" >
           </span>
         </div>
-        <div v-else class="w-6"></div>
+        <div v-else class="h-1 w-1 bg-sn-black rounded-full mt-auto mb-auto"></div>
         <div class="pr-24 relative flex items-start max-w-[90ch]"
              :class="{
               'pointer-events-none': !checklistItem.attributes.isNew && !updateUrl,
               'flex-grow': editingText,
              }">
           <InlineEdit
+            :class="{ 'pointer-events-none': reordering }"
             :value="checklistItem.attributes.text"
             :sa_value="checklistItem.attributes.sa_text"
             :characterLimit="10000"
@@ -79,6 +80,10 @@
       },
       reorderChecklistItemUrl: {
         type: String
+      },
+      reordering: {
+        type: Boolean,
+        required: true
       }
     },
     data() {

@@ -36,6 +36,12 @@
     text-align: center;
     width: calc(100% - 4rem);
 
+    &.file-preview-container__wopi {
+      height: 100%;
+      margin: 0;
+      width: 100%;
+    }
+
     .asset-image {
       background-color: var(--sn-white);
     }

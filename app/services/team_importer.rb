@@ -245,9 +245,12 @@ class TeamImporter
           res.result_comments.each do |comment|
             comment.save! if update_annotation(comment.message)
           end
-          next unless res.result_text
 
-          res.save! if update_annotation(res.result_text.text)
+          res.result_orderable_elements.each do |element|
+            next unless element.orderable_type == 'ResultText'
+
+            element.save! if update_annotation(element.orderable.text)
+          end
         end
       end
     end
@@ -750,10 +753,18 @@ class TeamImporter
 
   def create_protocols(protocols_json, my_module = nil, team = nil,
                        user_id = nil)
+
+    sorted_protocols = protocols_json.sort_by { |p| p['id'] }
+
     puts 'Creating protocols...'
-    protocols_json.each do |protocol_json|
+    sorted_protocols.each do |protocol_json|
       protocol = Protocol.new(protocol_json['protocol'])
       orig_protocol_id = protocol.id
+      protocol.last_modified_by_id =
+        user_id || find_user(protocol.last_modified_by_id)
+      protocol.published_by_id =
+        user_id || find_user(protocol.published_by_id)
+
       if protocol.name
         protocol_name_unique = false
         original_name = protocol.name
@@ -777,6 +788,7 @@ class TeamImporter
           end
         end
       end
+
       protocol.id = nil
       protocol.added_by_id = find_user(protocol.added_by_id)
       protocol.added_by_id ||= my_module.present? ? my_module.created_by_id : team.created_by_id
@@ -785,6 +797,7 @@ class TeamImporter
       protocol.restored_by_id = find_user(protocol.restored_by_id)
       protocol.my_module = my_module unless protocol.my_module_id.nil?
       protocol.skip_user_assignments = true
+      protocol.previous_version_id = @protocol_mappings[protocol.previous_version_id] if protocol.previous_version_id
       protocol.parent_id = @protocol_mappings[protocol.parent_id] unless protocol.parent_id.nil?
       protocol.save!
 
@@ -879,38 +892,6 @@ class TeamImporter
         user_id || find_user(result.last_modified_by_id)
       result.archived_by_id = find_user(result.archived_by_id)
       result.restored_by_id = find_user(result.restored_by_id)
-
-      if result_json['table'].present?
-        table = Table.new(result_json['table'])
-        orig_table_id = table.id
-        table.id = nil
-        table.created_by_id = user_id || find_user(table.created_by_id)
-        table.last_modified_by_id =
-          user_id || find_user(table.last_modified_by_id)
-        table.team = my_module.experiment.project.team
-        table.contents = Base64.decode64(table.contents)
-        table.data_vector = Base64.decode64(table.data_vector)
-        table.save!
-        @table_mappings[orig_table_id] = table.id
-        result.table = table
-      end
-
-      if result_json['asset'].present?
-        asset = create_asset(result_json['asset'],
-                             my_module.experiment.project.team,
-                             user_id)
-        result.asset = asset
-      end
-
-      if result_json['result_text'].present?
-        result_text = ResultText.new(result_json['result_text'])
-        orig_result_text_id = result_text.id
-        result_text.id = nil
-        result_text.result = result
-        result_text.save!
-        @result_text_mappings[orig_result_text_id] = result_text.id
-      end
-
       result.save!
       @result_mappings[orig_result_id] = result.id
       @result_counter += 1
@@ -924,6 +905,42 @@ class TeamImporter
           user_id || find_user(result_comment.last_modified_by_id)
         result_comment.result = result
         result_comment.save!
+      end
+
+      result_json['result_orderable_elements'].each do |element_json|
+        if element_json['orderable_type'] == 'ResultText'
+          orderable = ResultText.new(element_json['result_text'])
+          orig_result_text_id = orderable.id
+          orderable.result_id = result.id
+          orderable.id = nil
+          orderable.save!
+          @result_text_mappings[orig_result_text_id] = orderable.id
+        elsif element_json['orderable_type'] == 'ResultTable'
+          table = Table.new(element_json['table'])
+          orig_table_id = table.id
+          table.id = nil
+          table.created_by_id = user_id || find_user(table.created_by_id)
+          table.last_modified_by_id =
+            user_id || find_user(table.last_modified_by_id)
+          table.team = my_module.experiment.project.team
+          table.contents = Base64.decode64(table.contents)
+          table.data_vector = Base64.decode64(table.data_vector)
+          table.save!
+          @table_mappings[orig_table_id] = table.id
+          orderable = ResultTable.create!(result: result, table: table)
+        end
+        ResultOrderableElement.create!(
+          position: element_json['position'],
+          result: result,
+          orderable: orderable
+        )
+      end
+
+      result_json['assets'].each do |asset_json|
+        asset = create_asset(asset_json,
+                             my_module.experiment.project.team,
+                             user_id)
+        ResultAsset.create!(result: result, asset: asset)
       end
     end
   end

@@ -58,11 +58,16 @@ module ResultElements
     end
 
     def move
-      target = @my_module.results.find_by(id: params[:target_id])
+      target = @my_module.results.active.find_by(id: params[:target_id])
+      return head(:conflict) unless target
+
       result_table = @table.result_table
+
       ActiveRecord::Base.transaction do
         result_table.update!(result: target)
-        result_table.result_orderable_element.update!(result: target, position: target.result_orderable_elements.size)
+        result_table.result_orderable_element.destroy
+        new_orderable_element = target.result_orderable_elements.build(orderable: result_table)
+        new_orderable_element.insert_at(target.result_orderable_elements.count)
         @result.normalize_elements_position
 
         log_result_activity(

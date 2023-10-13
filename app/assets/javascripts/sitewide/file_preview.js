@@ -12,9 +12,12 @@ var FilePreviewModal = (function() {
       e.preventDefault();
       e.stopPropagation();
       if ($(this).closest('.attachments').data('preview')) params.preview = true;
-      params.gallery = $(`.file-preview-link[data-gallery-view-id=${galleryViewId}]`)
-        .toArray().sort((a, b) => $(a).closest('.asset').css('order') - $(b).closest('.asset').css('order'))
-        .map(i => i.dataset.id);
+      params.gallery = Array.from(new Set(
+        $(`.file-preview-link[data-gallery-view-id=${galleryViewId}]`)
+          .toArray()
+          .sort((a, b) => $(a).closest('.asset').css('order') - $(b).closest('.asset').css('order'))
+          .map(i => i.dataset.id)
+      ));
       $.get($(this).data('preview-url'), params, function(result) {
         $('#filePreviewModal .modal-content').html(result.html);
         $('#filePreviewModal').modal('show');

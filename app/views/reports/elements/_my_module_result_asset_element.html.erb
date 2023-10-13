@@ -7,7 +7,7 @@
         <%= file_extension_icon_html(asset, true) %>
       </span>
       <span class="result-name">
-        <%= result.name %>
+        <%= result.name.presence || I18n.t('projects.reports.unnamed') %>
         <% if result.archived? %>
           <span class="label label-warning"><%= t('search.index.archived') %></span>
         <% end %>
@@ -43,11 +43,6 @@
         </div>
       </div>
     <% end %>
-    <div class="report-element-children">
-      <% if @settings.dig('task', 'result_comments') %>
-        <%= render partial: 'reports/elements/result_comments_element', locals: { result: result } %>
-      <% end %>
-    </div>
     <% if defined?(children) %>
       <div class="report-element-children">
         <%= children %>

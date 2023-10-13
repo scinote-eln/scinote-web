@@ -240,9 +240,6 @@ en:
           attributes:
             text: Text is too long
             position: "Position has already been taken by another item in the checklist"
-  errors:
-    general: "Something went wrong."
-    general_text_too_long: 'Text is too long'
   storage:
     limit_reached: "Storage limit has been reached."
   helpers:
@@ -258,6 +255,12 @@ en:
     failure_notifiable_job:
       general_notification_title: "Your export failed. Please contact support."
       general_notification_message: "Request timestamp: %{request_timestamp}"
+      item_notification_title: "Your %{item} export failed. Please contact support."
+      items:
+        project: "Projects"
+        repository: "Inventories"
+        repository_item: "Items"
+        stock_consumption: "Stock consumption"
 
   head:
     title: "SciNote | %{title}"
@@ -666,6 +669,7 @@ en:
         no_active_experiment_archived_project: "This project is archived and can’t have active experiments."
     reports:
       print_title: "%{project} | Report"
+      unnamed: "(unnamed)"
       index:
         head_title: "Reports"
         new: "New report"
@@ -875,15 +879,17 @@ en:
           name: "%{repository} of task %{my_module}"
           table_name: "%{name}"
           no_items: "No items"
+        result:
+          user_time: "Added on %{timestamp} by %{user}."
         result_asset:
           file_name: "%{file}"
           user_time: "Added on %{timestamp} by %{user}."
           full_preview_attached: "[full document attached to report]"
         result_table:
           table_name: "%{name}"
-          user_time: "Added on %{timestamp} by %{user}."
+          user_time: "Table created on %{timestamp}."
         result_text:
-          user_time: "Added on %{timestamp} by %{user}."
+          user_time: "Text created on %{timestamp}"
         step:
           sidebar_name: "Step %{pos}: %{name}"
           step_pos: "Step %{pos}:"
@@ -895,6 +901,8 @@ en:
         step_table:
           table_name: "%{name}"
           user_time: "Table created on %{timestamp}."
+        step_text:
+          user_time: "Text created on %{timestamp}"
         step_well_plates_table:
           table_name: "%{name}"
           user_time: "Well plate created on %{timestamp}."
@@ -1254,7 +1262,7 @@ en:
       head_title: "%{project} | %{module} | Results"
       active_results: "Active results"
       archived_results: "Archived results"
-      default_name: "New result"
+      default_name: "Untitled result"
       placeholder: "Enter result name"
       add_label: "New result"
       add_title: "Create new result"
@@ -1281,7 +1289,7 @@ en:
         text: 'Text'
         checklist: 'Checklist'
         attachment: 'File'
-        add_file: 'File from your PC'
+        add_file: 'From your PC'
         checklist_item: 'Add new'
         well_plate_options:
           32_x_48: '1536 (32 x 48)'
@@ -1290,6 +1298,8 @@ en:
           6_x_8: '48 (6 x 8 )'
           6_x_4: '24 (6 x 4)'
           2_x_3: '6 (2 x 3)'
+      text:
+        placeholder: "Enter result text"
       sorts:
         updated_at_asc: "Modified first"
         updated_at_desc: "Modified last"
@@ -2107,8 +2117,10 @@ en:
     archive_record: "Archive"
     restore_record: "Restore"
     print_label: "Print label"
-    export_records: "Export items"
-    export_stock_consumption: "Export consumption"
+    exports:
+      export: "Export"
+      records: "Items"
+      stock_consumption: "Consumption"
     save_record: "Save"
     cancel_save: "Cancel"
     hide_reminders: "Clear all reminders"
@@ -3151,7 +3163,7 @@ en:
         text: 'Text'
         checklist: 'Checklist'
         attachment: 'File'
-        add_file: 'File from your PC'
+        add_file: 'From your PC'
         checklist_item: 'Add new'
         well_plate_options:
           32_x_48: '1536 (32 x 48)'
@@ -3316,8 +3328,8 @@ en:
     deliver:
       download_link: "Download link:"
       download_text: "Click the link to download the file."
-      email_subject: "Your SciNote export is ready!"
-      email_body_1: "The export of SciNote data that you requested is ready!"
+      email_subject: "Your SciNote data is ready!"
+      email_body_1: "The SciNote data that you requested is ready!"
       email_body_2: "You can find the link to download the file below, or in your SciNote notifications. Please keep in mind that the link will expire in 7 days for security reasons."
     show_all: "Show all notifications"
     show_more: "Show more notifications"
@@ -3328,6 +3340,7 @@ en:
       recent_changes: "Recent changes"
       system_message: "SciNote system message"
       deliver: 'Exportable content'
+      deliver_error: 'Exportable content'
     experiment_annotation_title: "%{user} mentioned you in experiment %{experiment}."
     experiment_annotation_message_html: "Project: %{project} | Experiment: %{experiment}"
     project_comment_annotation_title: "%{user} mentioned you in a comment on project %{project}."
@@ -3381,7 +3394,7 @@ en:
     wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel Online.'
     wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in PowerPoint Online.'
     create_wopi_file:
-      button_text: 'MS Office file'
+      button_text: 'New MS Office file'
       li_text: "Office file"
       modal_title: 'Create new Microsoft Office Online document'
       text_field_label: 'Document name'
@@ -3810,8 +3823,8 @@ en:
   To: 'To'
 
   marvinjs:
-    new_sketch: "New Chemical Drawing"
-    new_button: "Create Chemical Drawing"
+    new_sketch: "New chemical drawing"
+    new_button: "New chemical drawing"
     new_li_button: "Chemical drawing"
     structure_placeholder: "Click here to enter Chemical Drawing name"
     modal_name_title: "Chemical Drawing name:"
@@ -3875,6 +3888,8 @@ en:
     archived_state: "Archived state"
 
   errors:
+    general: "Something went wrong."
+    general_text_too_long: 'Text is too long'
     forbidden:
       title: "Access to this page is denied (403)."
       dialog:

@@ -927,8 +927,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
   create_table "result_texts", force: :cascade do |t|
     t.string "text"
     t.bigint "result_id", null: false
-    t.string "name", default: ""
+    t.string "name"
     t.index "trim_html_tags((text)::text) gin_trgm_ops", name: "index_result_texts_on_text", using: :gin
+    t.index ["name"], name: "index_result_texts_on_name", opclass: :gist_trgm_ops, using: :gist
     t.index ["result_id"], name: "index_result_texts_on_result_id"
   end
 
@@ -1006,8 +1007,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
     t.string "text"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "name", default: ""
+    t.string "name"
     t.index "trim_html_tags((text)::text) gin_trgm_ops", name: "index_step_texts_on_text", using: :gin
+    t.index ["name"], name: "index_step_texts_on_name", opclass: :gist_trgm_ops, using: :gist
     t.index ["step_id"], name: "index_step_texts_on_step_id"
   end
 

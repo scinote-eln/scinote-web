@@ -97,6 +97,7 @@ class RepositoriesExportJob < ApplicationJob
 
   # Overrides method from FailedDeliveryNotifiableJob concern
   def failed_notification_title
-    I18n.t('repositories.index.export.notification.error.title')
+    I18n.t('activejob.failure_notifiable_job.item_notification_title',
+           item: I18n.t('activejob.failure_notifiable_job.items.repository'))
   end
 end

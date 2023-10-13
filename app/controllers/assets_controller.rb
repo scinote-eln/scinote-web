@@ -71,16 +71,23 @@ class AssetsController < ApplicationController
       render json: { targets: protocol.steps.order(:position).where.not(id: @assoc.id).map { |i| [i.id, i.name] } }
     elsif @assoc.is_a?(Result)
       my_module = @assoc.my_module
-      render json: { targets: my_module.results.where.not(id: @assoc.id).map { |i| [i.id, i.name] } }
+      render json: { targets: my_module.results.active.where.not(id: @assoc.id).map { |i| [i.id, i.name] } }
     else
       render json: { targets: [] }
     end
   end
 
   def move
+    case @assoc
+    when Step
+      target = @assoc.protocol.steps.find_by(id: params[:target_id])
+    when Result
+      target = @assoc.my_module.results.active.find_by(id: params[:target_id])
+      return render_404 unless target
+    end
+
     ActiveRecord::Base.transaction do
       if @assoc.is_a?(Step)
-        target = @assoc.protocol.steps.find_by(id: params[:target_id])
         object_to_update = @asset.step_asset
         object_to_update.update!(step: target)
 
@@ -114,12 +121,16 @@ class AssetsController < ApplicationController
 
         render json: {}
       elsif @assoc.is_a?(Result)
-        target = @assoc.my_module.results.find_by(id: params[:target_id])
         object_to_update = @asset.result_asset
         object_to_update.update!(result: target)
 
+        type_of = {
+          'marvinjs' => :move_chemical_structure_on_result,
+          'gene_sequence' => :sequence_on_result_moved
+        }.fetch(@asset.file.metadata[:asset_type], :result_file_moved)
+
         log_result_activity(
-          @asset.file.metadata[:asset_type] == 'marvinjs' ? :move_chemical_structure_on_result : :result_file_moved,
+          type_of,
           @assoc,
           file: @asset.file_name,
           user: current_user.id,
@@ -252,22 +263,17 @@ class AssetsController < ApplicationController
 
       edit_url = edit_asset_url(step_asset.asset_id)
     elsif params[:element_type] == 'Result'
-      my_module = Result.find(params[:element_id].to_i).my_module
-      render_403 and return unless can_manage_my_module?(my_module)
+      result = Result.find(params[:element_id].to_i)
+      render_403 and return unless can_manage_result?(result)
 
-      # First create result and then the asset
-      result = Result.create(name: asset.file_name,
-                             my_module: my_module,
-                             user: current_user)
       result_asset = ResultAsset.create!(result: result, asset: asset)
+      asset.update!(view_mode: result.assets_view_mode)
 
       edit_url = edit_asset_url(result_asset.asset_id)
     else
       render_404 and return
     end
 
-    # Prepare file preview in advance
-    asset.medium_preview.processed && asset.large_preview.processed
     # Return edit url and asset info
     render json: {
       attributes: AssetSerializer.new(asset, scope: { user: current_user }).as_json,
@@ -299,7 +305,7 @@ class AssetsController < ApplicationController
         end
       when Result
         log_result_activity(
-          :result_file_deleted,
+          @asset.file.metadata[:asset_type] == 'gene_sequence' ? :sequence_on_result_deleted : :result_file_deleted,
           @assoc,
           file: @asset.file_name
         )
@@ -316,6 +322,8 @@ class AssetsController < ApplicationController
   def load_vars
     @asset = Asset.find_by(id: params[:id])
     return render_404 unless @asset
+
+    current_user.permission_team = @asset.team
 
     @assoc ||= @asset.step
     @assoc ||= @asset.result

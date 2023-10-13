@@ -329,13 +329,12 @@ function importProtocolFromFile(
   }
 
   function addStepTextPreview(stepEl, stepTextNode, folder, stepGuid) {
-    var itemId = $(stepTextNode).attr('id');
+    const itemName = $(stepTextNode).children('name').text();
+    const itemText = displayTinyMceAssetInDescription(stepTextNode, folder, stepGuid);
 
-    var itemText = displayTinyMceAssetInDescription(stepTextNode, folder, stepGuid);
-
-    var textEl = newPreviewElement(
+    const textEl = newPreviewElement(
       'step-text',
-      { text: itemText }
+      { name: itemName, text: itemText }
     );
 
     stepEl.append(textEl);
@@ -596,7 +595,7 @@ function importProtocolFromFile(
 
   function stepTextJson(stepTextNode, folderIndex, stepGuid) {
     var json = {};
-
+    json.name = stepTextNode.children('name').text();
     json.contents = $('<div></div>').html(
       stepTextNode.children('contents')
         .html()

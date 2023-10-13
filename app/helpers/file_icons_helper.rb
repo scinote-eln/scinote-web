@@ -19,13 +19,17 @@ module FileIconsHelper
     elsif Constants::FILE_PRESENTATION_FORMATS.include?(file_ext)
       'sn-icon-file-powerpoint'
     elsif %w(pdf).include?(file_ext)
-      'sn-icon-pdf'
+      'sn-icon-file-pdf'
     elsif %w(txt csv tab tex).include?(file_ext)
       'sn-icon-result-text'
     elsif Constants::WHITELISTED_IMAGE_TYPES.include?(file_ext)
       'sn-icon-result-image'
+    elsif asset.file.attached? && asset.file.metadata['asset_type'] == 'marvinjs'
+      'sn-icon-marvinjs'
+    elsif asset.file.attached? && asset.file.metadata['asset_type'] == 'gene_sequence'
+      'sn-icon-sequence-editor'
     else
-      'fa-paperclip'
+      'sn-icon-attachment'
     end
   end
 

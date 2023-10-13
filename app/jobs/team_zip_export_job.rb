@@ -194,13 +194,17 @@ class TeamZipExportJob < ZipExportJob
         file_data = preview.image.download
       else
         file_name = preview.blob.filename.to_s
+        file_data = nil
 
-        begin
+        ActiveRecord::Base.transaction(requires_new: true) do
           file_data = preview.processed.service.download(preview.key)
         # handle files not processable by Vips (no preview available) or missing
-        rescue Vips::Error, ActiveStorage::FileNotFoundError
-          return nil
+        rescue Vips::Error, ActiveStorage::FileNotFoundError => e
+          Rails.logger.error(e.message)
+          Rails.logger.error(e.backtrace.join("\n"))
+          raise ActiveRecord::Rollback
         end
+        return nil if file_data.blank?
       end
 
       {
@@ -278,5 +282,10 @@ class TeamZipExportJob < ZipExportJob
     end
 
     csv_file_path
+  end
+
+  def failed_notification_title
+    I18n.t('activejob.failure_notifiable_job.item_notification_title',
+           item: I18n.t('activejob.failure_notifiable_job.items.project'))
   end
 end
