@@ -2,16 +2,6 @@
 // scss-lint:disable NestingDepth
 
 .step-checklist-items {
-  .sci-inline-edit {
-    margin-top: 5px;
-
-    .sci-inline-edit__content {
-      margin-bottom: 7px;
-      margin-left: 0;
-      margin-right: .5em;
-    }
-  }
-
   .step-checklist-item {
     padding-left: 5px;
   }
@@ -58,14 +48,6 @@
 
   .step-checklist-item-ghost {
     border: 1px solid $brand-primary;
-  }
-
-  .sci-checkbox-container {
-    margin: 11px 0;
-
-    &.disabled {
-      pointer-events: none;
-    }
   }
 }
 
