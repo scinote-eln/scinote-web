@@ -1152,17 +1152,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
     t.index ["user_id"], name: "index_user_my_modules_on_user_id"
   end
 
-  create_table "user_notifications", force: :cascade do |t|
-    t.bigint "user_id"
-    t.bigint "notification_id"
-    t.boolean "checked", default: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.index ["checked"], name: "index_user_notifications_on_checked"
-    t.index ["notification_id"], name: "index_user_notifications_on_notification_id"
-    t.index ["user_id"], name: "index_user_notifications_on_user_id"
-  end
-
   create_table "user_projects", force: :cascade do |t|
     t.integer "role"
     t.bigint "user_id", null: false
@@ -1472,8 +1461,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
   add_foreign_key "user_my_modules", "my_modules"
   add_foreign_key "user_my_modules", "users"
   add_foreign_key "user_my_modules", "users", column: "assigned_by_id"
-  add_foreign_key "user_notifications", "notifications"
-  add_foreign_key "user_notifications", "users"
   add_foreign_key "user_projects", "projects"
   add_foreign_key "user_projects", "users"
   add_foreign_key "user_projects", "users", column: "assigned_by_id"

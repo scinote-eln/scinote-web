@@ -40,6 +40,7 @@ class MigrateNotificationToNoticed < ActiveRecord::Migration[7.0]
     UserNotification.delete_all
     Notification.where(type: nil).delete_all
 
+    drop_table :user_notifications
     change_column_null :notifications, :type, false
 
     remove_column :notifications, :type_of
