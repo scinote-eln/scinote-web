@@ -16,7 +16,9 @@ export default {
       exclude.forEach(refName => {
         if (!clickedOnExcludedEl) {
           const excludedEl = vnode.context.$refs[refName];
-          clickedOnExcludedEl = excludedEl?.contains(e.target);
+          if (!excludedEl) return;
+
+          clickedOnExcludedEl = (excludedEl._isVue ? excludedEl.$el : excludedEl).contains(e.target);
         }
       });
 
