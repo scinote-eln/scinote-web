@@ -9,8 +9,7 @@ class RepositoryRowsController < ApplicationController
                                              validate_label_template_columns actions_toolbar)
   before_action :load_repository_row_print, only: %i(print rows_to_print print_zpl validate_label_template_columns)
   before_action :load_repository_or_snapshot, only: %i(print rows_to_print print_zpl validate_label_template_columns)
-  before_action :load_repository_row, only: %i(update update_row_item assigned_task_list
-                                               active_reminder_repository_cells)
+  before_action :load_repository_row, only: %i(update update_cell assigned_task_list active_reminder_repository_cells)
   before_action :check_read_permissions, except: %i(create update delete_records
                                                     copy_records reminder_repository_cells
                                                     delete_records archive_records restore_records
@@ -18,7 +17,7 @@ class RepositoryRowsController < ApplicationController
   before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
   before_action :check_create_permissions, only: :create
   before_action :check_delete_permissions, only: %i(delete_records archive_records restore_records)
-  before_action :check_manage_permissions, only: %i(update copy_records)
+  before_action :check_manage_permissions, only: %i(update update_cell copy_records)
 
   def index
     @draw = params[:draw].to_i
@@ -170,14 +169,14 @@ class RepositoryRowsController < ApplicationController
     end
   end
 
-  def update_row_item
+  def update_cell
     row_cell_update =
       RepositoryRows::UpdateRepositoryCellService.call(
         repository_row: @repository_row, user: current_user, params: cell_update_params
       )
 
     if row_cell_update.succeed?
-      render status: :no_content
+      head :no_content
     else
       render json: row_update.errors, status: :bad_request
     end
