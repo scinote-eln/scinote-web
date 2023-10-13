@@ -101,12 +101,10 @@ module ApplicationHelper
   end
 
   def generate_annotation_notification(target_user, title, message)
-    notification = Notification.create(
-      type_of: :assignment,
+    GeneralNotification.with(
       title: sanitize_input(title),
       message: sanitize_input(message)
-    )
-    UserNotification.create(notification: notification, user: target_user) if target_user.assignments_notification
+    ).deliver_later(target_user)
   end
 
   def custom_link_open_new_tab(text)

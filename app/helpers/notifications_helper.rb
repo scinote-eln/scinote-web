@@ -18,14 +18,9 @@ module NotificationsHelper
       message = "#{I18n.t('search.index.team')} #{team.name}"
     end
 
-    notification = Notification.create(
-      type_of: :assignment,
+    GeneralNotification.with(
       title: sanitize_input(title),
       message: sanitize_input(message)
-    )
-
-    if target_user.assignments_notification
-      notification.create_user_notification(target_user)
-    end
+    ).deliver_later(target_user)
   end
 end

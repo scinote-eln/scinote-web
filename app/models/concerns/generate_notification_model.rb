@@ -14,15 +14,11 @@ module GenerateNotificationModel
     message = generate_activity_content(self, no_links: true, no_custom_links: true)
     description = generate_notification_description_elements(subject).reverse.join(' | ')
 
-    notification = Notification.create(
-      type_of: notification_type,
-      title: sanitize_input(message),
-      message: sanitize_input(description),
-      generator_user_id: owner.id
-    )
-
     notification_recipients.each do |user|
-      notification.create_user_notification(user)
+      ActivityNotification.with(
+        title: sanitize_input(message),
+        message: sanitize_input(description)
+      ).deliver_later(user)
     end
   end
 

@@ -14,13 +14,6 @@ class Extends
 
   # Extends enum types. Should not be freezed, as modules might append to this.
   # !!!Check all addons for the correct order!!!
-  # DEPRECATED 'system_message' in (SCI-2952, kept b/c of integer enums)
-  NOTIFICATIONS_TYPES = { assignment: 0,
-                          recent_changes: 1,
-                          system_message: 2, # DEPRECATED
-                          deliver: 5,
-                          deliver_error: 7 }
-
   TASKS_STATES = { uncompleted: 0,
                    completed: 1 }
 

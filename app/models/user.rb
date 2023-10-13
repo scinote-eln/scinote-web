@@ -307,8 +307,7 @@ class User < ApplicationRecord
            inverse_of: :created_by,
            dependent: :destroy
 
-  has_many :user_notifications, inverse_of: :user
-  has_many :notifications, through: :user_notifications
+  has_many :notifications, as: :recipient, dependent: :destroy, inverse_of: :recipient
   has_many :zip_exports, inverse_of: :user, dependent: :destroy
   has_many :view_states, dependent: :destroy
 

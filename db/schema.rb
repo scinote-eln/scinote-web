@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_03_114337) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -377,13 +377,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_03_114337) do
   end
 
   create_table "notifications", force: :cascade do |t|
-    t.string "title"
-    t.string "message"
-    t.integer "type_of", null: false
-    t.bigint "generator_user_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.jsonb "params", default: {}, null: false
+    t.string "type", null: false
+    t.datetime "read_at"
+    t.string "recipient_type"
+    t.bigint "recipient_id"
     t.index ["created_at"], name: "index_notifications_on_created_at"
+    t.index ["recipient_type", "recipient_id"], name: "index_notifications_on_recipient"
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|
@@ -1152,17 +1154,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_03_114337) do
     t.index ["user_id"], name: "index_user_my_modules_on_user_id"
   end
 
-  create_table "user_notifications", force: :cascade do |t|
-    t.bigint "user_id"
-    t.bigint "notification_id"
-    t.boolean "checked", default: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.index ["checked"], name: "index_user_notifications_on_checked"
-    t.index ["notification_id"], name: "index_user_notifications_on_notification_id"
-    t.index ["user_id"], name: "index_user_notifications_on_user_id"
-  end
-
   create_table "user_projects", force: :cascade do |t|
     t.integer "role"
     t.bigint "user_id", null: false
@@ -1349,7 +1340,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_03_114337) do
   add_foreign_key "my_modules", "users", column: "created_by_id"
   add_foreign_key "my_modules", "users", column: "last_modified_by_id"
   add_foreign_key "my_modules", "users", column: "restored_by_id"
-  add_foreign_key "notifications", "users", column: "generator_user_id"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_grants", "users", column: "resource_owner_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
@@ -1473,8 +1463,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_03_114337) do
   add_foreign_key "user_my_modules", "my_modules"
   add_foreign_key "user_my_modules", "users"
   add_foreign_key "user_my_modules", "users", column: "assigned_by_id"
-  add_foreign_key "user_notifications", "notifications"
-  add_foreign_key "user_notifications", "users"
   add_foreign_key "user_projects", "projects"
   add_foreign_key "user_projects", "users"
   add_foreign_key "user_projects", "users", column: "assigned_by_id"

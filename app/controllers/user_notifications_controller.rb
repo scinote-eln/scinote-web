@@ -10,14 +10,12 @@ class UserNotificationsController < ApplicationController
       next_page: notifications.next_page
     }
 
-    UserNotification.where(
-      notification_id: notifications.except(:select).where.not(type_of: 2).select(:id)
-    ).seen_by_user(current_user)
+    notifications.mark_as_read!
   end
 
   def unseen_counter
     render json: {
-      unseen: load_notifications.where('user_notifications.checked = ?', false).size
+      unseen: load_notifications.where(read_at: nil).size
     }
   end
 
@@ -25,7 +23,6 @@ class UserNotificationsController < ApplicationController
 
   def load_notifications
     current_user.notifications
-                .select(:id, :type_of, :title, :message, :created_at, 'user_notifications.checked')
                 .order(created_at: :desc)
   end
 
@@ -33,12 +30,12 @@ class UserNotificationsController < ApplicationController
     notifications.map do |notification|
       {
         id: notification.id,
-        type_of: notification.type_of,
-        title: notification.title,
-        message: notification.message,
+        type_of: notification.type,
+        title: notification.to_notification.title,
+        message: notification.to_notification.message,
         created_at: I18n.l(notification.created_at, format: :full),
         today: notification.created_at.today?,
-        checked: notification.checked
+        checked: notification.read_at.present?
       }
     end
   end
