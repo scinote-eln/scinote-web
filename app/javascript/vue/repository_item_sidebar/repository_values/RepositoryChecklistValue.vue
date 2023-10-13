@@ -47,7 +47,9 @@ export default {
     colVal: Array
   },
   created() {
-    this.allChecklistItems = this?.colVal
+    if (!this.colVal) return
+
+    this.allChecklistItems = this.colVal
   }
 }
 </script>

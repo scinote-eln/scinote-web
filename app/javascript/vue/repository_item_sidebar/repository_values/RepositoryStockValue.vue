@@ -38,9 +38,11 @@ export default {
     permissions: null
   },
   created() {
-    this.stock_formatted = this?.colVal?.stock_formatted
-    this.stock_amount = this?.colVal?.stock_amount
-    this.low_stock_threshold = this?.colVal?.low_stock_threshold
+    if (!this.colVal) return
+
+    this.stock_formatted = this.colVal.stock_formatted
+    this.stock_amount = this.colVal.stock_amount
+    this.low_stock_threshold = this.colVal.low_stock_threshold
   }
 }
 </script>

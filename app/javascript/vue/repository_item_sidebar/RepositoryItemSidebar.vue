@@ -98,9 +98,9 @@
                     <Reminder :value="column?.value" :valueType="column?.value_type" />
                   </span>
 
-                  <component :is="column?.data_type" :key="index" :data_type="column?.data_type" :colId="column?.id"
-                    :colName="column?.name" :colVal="column?.value" :repositoryRowId="repositoryRowId"
-                    :repositoryId="repository?.id"
+                  <component :is="column.data_type" :key="index" :data_type="column.data_type" :colId="column.id"
+                    :colName="column.name" :colVal="column.value" :repositoryRowId="repositoryRowId"
+                    :repositoryId="repository.id"
                     :permissions="permissions" @closeSidebar="toggleShowHideSidebar(null)" />
 
                   <div class="sci-divider" :class="{ 'hidden': index === customColumns?.length - 1 }"></div>
@@ -311,16 +311,16 @@ export default {
         data: { my_module_id: this.myModuleId },
         dataType: 'json',
         success: (result) => {
-          this.repositoryRowId = result?.id
-          this.repository = result?.repository;
-          this.defaultColumns = result?.default_columns;
-          this.customColumns = result?.custom_columns;
-          this.assignedModules = result?.assigned_modules;
-          this.permissions = result?.permissions
-          this.actions = result?.actions;
+          this.repositoryRowId = result.id
+          this.repository = result.repository;
+          this.defaultColumns = result.default_columns;
+          this.customColumns = result.custom_columns;
+          this.assignedModules = result.assigned_modules;
+          this.permissions = result.permissions
+          this.actions = result.actions;
           this.dataLoading = false
           this.$nextTick(() => {
-            this.generateBarCode(this?.defaultColumns?.code);
+            this.generateBarCode(this.defaultColumns.code);
           });
         }
       });

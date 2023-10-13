@@ -34,9 +34,11 @@ export default {
     colVal: Object
   },
   created() {
-    this.id = this?.colVal?.id
-    this.icon = this?.colVal?.icon
-    this.status = this?.colVal?.status
+    if (!this.colVal) return
+
+    this.id = this.colVal.id
+    this.icon = this.colVal.icon
+    this.status = this.colVal.status
   },
   methods: {
     parseEmoji(content) {

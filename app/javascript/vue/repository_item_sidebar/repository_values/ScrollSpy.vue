@@ -66,9 +66,9 @@ export default {
       if (!foundObj) return
 
       refToScrollTo = foundObj.label
-      this.selectedNavText = foundObj?.textId
-      this.selectedNavIndicator = foundObj?.id
-      const sectionLabels = this.itemsToCreate.map((obj) => obj?.label)
+      this.selectedNavText = foundObj.textId
+      this.selectedNavIndicator = foundObj.id
+      const sectionLabels = this.itemsToCreate.map((obj) => obj.label)
       const labelsToUnhighlight = sectionLabels.filter((i) => i !== refToScrollTo)
 
       // scrolling to desired section

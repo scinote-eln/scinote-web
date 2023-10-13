@@ -30,10 +30,12 @@ export default {
     colVal: Object
   },
   created() {
-    this.formatted = this?.colVal?.formatted
-    this.date_formatted = this?.colVal?.date_formatted
-    this.time_formatted = this?.colVal?.time_formatted
-    this.formatdatetimeted = this?.colVal?.datetime
+    if (!this.colVal) return
+
+    this.formatted = this.colVal.formatted
+    this.date_formatted = this.colVal.date_formatted
+    this.time_formatted = this.colVal.time_formatted
+    this.formatdatetimeted = this.colVal.datetime
   }
 }
 </script>
