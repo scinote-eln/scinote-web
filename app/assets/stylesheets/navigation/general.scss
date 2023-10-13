@@ -10,7 +10,6 @@ body.navigator-collapsed {
   --breadcrumbs-navigation-height: 44px;
   --left-navigation-width: 192px;
   --navbar-height: calc(var(--top-navigation-height) + var(--breadcrumbs-navigation-height));
-  --navigator-navigation-width: 224px;
   --title-row-height: 4em;
   --top-navigation-height: 72px;
   display: grid;
@@ -107,6 +106,11 @@ body.navigator-collapsed {
       background-color: var(--sn-super-light-grey);
 
     }
+  }
+
+  .resizable-r {
+    cursor: url("/images/icon_small/Resize.svg") 0 0, auto !important;
+    padding: 0 .8rem;
   }
 }
 
