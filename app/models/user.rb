@@ -513,40 +513,6 @@ class User < ApplicationRecord
     user_identities.exists?(provider: provider)
   end
 
-  # json friendly attributes
-  NOTIFICATIONS_TYPES = %w(assignments_notification recent_notification
-                           assignments_email_notification
-                           recent_email_notification)
-
-  # declare notifications getters
-  NOTIFICATIONS_TYPES.each do |name|
-    define_method(name) do
-      attr_name = name.gsub('_notification', '')
-      notifications_settings.fetch(attr_name.to_sym)
-    end
-  end
-
-  # declare notifications setters
-  NOTIFICATIONS_TYPES.each do |name|
-    define_method("#{name}=") do |value|
-      attr_name = name.gsub('_notification', '').to_sym
-      notifications_settings[attr_name] = value
-    end
-  end
-
-  def enabled_notifications_for?(notification_type, channel)
-    return true if %i(deliver deliver_error).include?(notification_type)
-
-    case channel
-    when :web
-      notification_type == :recent_changes && recent_notification ||
-        notification_type == :assignment && assignments_notification
-    when :email
-      notification_type == :recent_changes && recent_email_notification ||
-        notification_type == :assignment && assignments_email_notification
-    end
-  end
-
   def increase_daily_exports_counter!
     range = Time.now.utc.beginning_of_day.to_i..Time.now.utc.end_of_day.to_i
     last_export = export_vars[:last_export_timestamp] || 0

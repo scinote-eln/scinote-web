@@ -608,6 +608,7 @@ class Extends
     my_modules/activities
     results/index
     protocols/show
+    preferences/index
   )
 end
 
