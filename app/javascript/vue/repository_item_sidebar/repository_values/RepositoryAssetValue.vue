@@ -45,16 +45,18 @@ export default {
     colVal: Object
   },
   created() {
-    this.id = this?.colVal?.id
-    this.url = this?.colVal?.url
-    this.preview_url = this?.colVal?.preview_url
-    this.file_name = this?.colVal?.file_name
-    this.icon_html = this?.colVal?.icon_html
-    this.medium_preview_url = this?.colVal?.medium_preview_url
+    if (!this.colVal) return
+
+    this.id = this.colVal.id
+    this.url = this.colVal.url
+    this.preview_url = this.colVal.preview_url
+    this.file_name = this.colVal.file_name
+    this.icon_html = this.colVal.icon_html
+    this.medium_preview_url = this.colVal.medium_preview_url
   },
   computed: {
     modalPreviewLinkId() {
-      return `modal_link${this?.id}`
+      return `modal_link${this.id}`
     }
   },
 }

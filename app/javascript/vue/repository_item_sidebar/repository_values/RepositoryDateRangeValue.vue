@@ -29,8 +29,10 @@ export default {
     colVal: Object
   },
   created() {
-    this.start_time = this?.colVal?.start_time
-    this.end_time = this?.colVal?.end_time
+    if (!this.colVal) return
+
+    this.start_time = this.colVal.start_time
+    this.end_time = this.colVal.end_time
   }
 }
 </script>
