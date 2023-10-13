@@ -43,7 +43,7 @@
                   </span>
                 </div>
 
-                <div id="dashed-divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-light-grey"></div>
+                <div class="sci-divider"></div>
 
                 <!-- CODE -->
                 <div class="flex flex-col ">
@@ -54,7 +54,7 @@
                   </span>
                 </div>
 
-                <div id="dashed-divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-light-grey"></div>
+                <div class="sci-divider"></div>
 
                 <!-- ADDED ON -->
                 <div class="flex flex-col ">
@@ -66,7 +66,7 @@
                   </span>
                 </div>
 
-                <div id="dashed-divider" class="flex h-[1px] py-0  border-dashed border-[1px] border-sn-light-grey"></div>
+                <div class="sci-divider"></div>
 
                 <!-- ADDED BY -->
                 <div class="flex flex-col ">
@@ -94,16 +94,17 @@
               </div>
               <div v-if="customColumns?.length > 0" class="flex flex-col gap-4 w-[350px] h-auto">
                 <div v-for="(column, index) in customColumns" class="flex flex-col gap-4 w-[350px] h-auto relative">
-                  <span class="absolute right-2 top-6" v-if="column.value.reminder === true">
-                    <Reminder :value="column.value" :valueType="column.value_type" />
+                  <span class="absolute right-2 top-6" v-if="column?.value?.reminder === true">
+                    <Reminder :value="column?.value" :valueType="column?.value_type" />
                   </span>
-                  <component :is="column.data_type" :key="index" :data_type="column.data_type" :colId="column.id"
-                    :colName="column.name" :colVal="column.value" :repositoryRowId="repositoryRowId"
-                    :repositoryId="repository?.id" :permissions="permissions"
-                    @closeSidebar="toggleShowHideSidebar(null)" />
-                  <div id="dashed-divider" :class="{ 'hidden': index === customColumns.length - 1 }"
-                    class="flex h-[1px] py-0 border-dashed border-[1px] border-sn-light-grey">
-                  </div>
+
+                  <component :is="column?.data_type" :key="index" :data_type="column?.data_type" :colId="column?.id"
+                    :colName="column?.name" :colVal="column?.value" :repositoryRowId="repositoryRowId"
+                    :repositoryId="repository?.id"
+                    :permissions="permissions" @closeSidebar="toggleShowHideSidebar(null)" />
+
+                  <div class="sci-divider" :class="{ 'hidden': index === customColumns?.length - 1 }"></div>
+
                 </div>
               </div>
               <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
@@ -158,7 +159,7 @@
             <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px  "></div>
 
             <!-- QR -->
-            <section id="qr-wrapper">
+            <section id="qr-wrapper" ref="QR-label">
               <div class="font-inter text-base font-semibold leading-7 mb-4 mt-0">{{ i18n.t('repositories.item_card.section.qr') }}</div>
               <div class="bar-code-container">
                 <canvas id="bar-code-canvas" class="hidden"></canvas>
@@ -310,16 +311,16 @@ export default {
         data: { my_module_id: this.myModuleId },
         dataType: 'json',
         success: (result) => {
-          this.repositoryRowId = result.id;
-          this.repository = result.repository;
-          this.defaultColumns = result.default_columns;
-          this.customColumns = result.custom_columns;
-          this.dataLoading = false;
-          this.assignedModules = result.assigned_modules;
-          this.actions = result.actions;
-          this.permissions = result.permissions
+          this.repositoryRowId = result?.id
+          this.repository = result?.repository;
+          this.defaultColumns = result?.default_columns;
+          this.customColumns = result?.custom_columns;
+          this.assignedModules = result?.assigned_modules;
+          this.permissions = result?.permissions
+          this.actions = result?.actions;
+          this.dataLoading = false
           this.$nextTick(() => {
-            this.generateBarCode(this.defaultColumns.code);
+            this.generateBarCode(this?.defaultColumns?.code);
           });
         }
       });

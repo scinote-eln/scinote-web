@@ -3,7 +3,8 @@
     <div class="font-inter text-sm font-semibold leading-5">
       {{ colName }}
     </div>
-    <div v-if="status && icon" class="flex flex-row items-center text-sn-dark-grey font-inter text-sm font-normal leading-5 ">
+    <div v-if="status && icon"
+      class="flex flex-row items-center text-sn-dark-grey font-inter text-sm font-normal leading-5 ">
       <div v-html="parseEmoji(icon)" class="flex mr-1.5 h-6"></div>
       {{ status }}
     </div>
@@ -33,9 +34,9 @@ export default {
     colVal: Object
   },
   created() {
-    this.id = this.colVal.id
-    this.icon = this.colVal.icon
-    this.status = this.colVal.status
+    this.id = this?.colVal?.id
+    this.icon = this?.colVal?.icon
+    this.status = this?.colVal?.status
   },
   methods: {
     parseEmoji(content) {

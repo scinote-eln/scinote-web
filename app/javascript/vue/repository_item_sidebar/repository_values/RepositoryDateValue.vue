@@ -28,8 +28,8 @@ export default {
     colVal: Object
   },
   created() {
-    this.formatted = this.colVal.formatted
-    this.datetime = this.colVal.datetime
+    this.formatted = this?.colVal?.formatted
+    this.datetime = this?.colVal?.datetime
   }
 }
 </script>

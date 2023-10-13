@@ -5,7 +5,7 @@
     </div>
     <div v-if="start_time?.formatted && end_time?.formatted"
       class="text-sn-dark-grey font-inter text-sm font-normal leading-5 flex">
-      <div>{{ start_time.formatted }} - {{ end_time.formatted }}</div>
+      <div>{{ start_time?.formatted }} - {{ end_time?.formatted }}</div>
     </div>
     <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
       {{ i18n.t('repositories.item_card.repository_date_range_value.no_date_range') }}
@@ -29,8 +29,8 @@ export default {
     colVal: Object
   },
   created() {
-    this.start_time = this.colVal.start_time
-    this.end_time = this.colVal.end_time
+    this.start_time = this?.colVal?.start_time
+    this.end_time = this?.colVal?.end_time
   }
 }
 </script>

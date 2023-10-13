@@ -14,8 +14,8 @@
     </div>
     <div id="highlight-container" class="w-[1px] h-[130px] flex flex-col justify-evenly bg-sn-light-grey">
       <div v-for="(itemObj, index) in itemsToCreate" :key="index">
-        <div :id="itemObj.id" class="w-[5px] h-[28px] rounded-[11px]"
-          :class="{ 'bg-sn-science-blue relative left-[-2px]': itemObj.id === selectedNavIndicator }"></div>
+        <div :id="itemObj?.id" class="w-[5px] h-[28px] rounded-[11px]"
+          :class="{ 'bg-sn-science-blue relative left-[-2px]': itemObj?.id === selectedNavIndicator }"></div>
       </div>
     </div>
   </div>
@@ -62,13 +62,13 @@ export default {
       let refToScrollTo
       const targetId = e.target.id
 
-      const foundObj = this.itemsToCreate.find((obj) => obj.textId === targetId)
+      const foundObj = this.itemsToCreate.find((obj) => obj?.textId === targetId)
       if (!foundObj) return
 
       refToScrollTo = foundObj.label
-      this.selectedNavText = foundObj.textId
-      this.selectedNavIndicator = foundObj.id
-      const sectionLabels = this.itemsToCreate.map((obj) => obj.label)
+      this.selectedNavText = foundObj?.textId
+      this.selectedNavIndicator = foundObj?.id
+      const sectionLabels = this.itemsToCreate.map((obj) => obj?.label)
       const labelsToUnhighlight = sectionLabels.filter((i) => i !== refToScrollTo)
 
       // scrolling to desired section
