@@ -100,15 +100,15 @@ class NotificationExtends
 
   NOTIFICATIONS_GROUPS = {
     my_module: {
-      designation: %I[
+      my_module_designation: %I[
         designate_user_to_my_module_activity
         undesignate_user_from_my_module_activity
       ],
-      modified: %I[],
-      due_date: %I[
+      my_module_modified: %I[],
+      my_module_due_date: %I[
         my_module_due_date_reminder
       ],
-      comments: %I[
+      my_module_comments: %I[
         add_comment_to_module_activity
         edit_module_comment_activity
         delete_module_comment_activity
@@ -121,31 +121,31 @@ class NotificationExtends
       ]
     },
     project_experiment: {
-      access: %I[
+      project_experiment_access: %I[
         assign_user_to_project_activity
         unassign_user_from_project_activity
         project_grant_access_to_all_team_members_activity
         project_remove_access_from_all_team_members_activity
       ],
-      role_change: %I[
+      project_experiment_role_change: %I[
         change_user_role_on_project_activity
         change_user_role_on_experiment_activity
         change_user_role_on_my_module_activity
       ]
     },
     repository: {
-      stock: %I[
+      repository_stock: %I[
         item_low_stock_reminder
       ],
-      date_reminder: %I[
+      repository_date_reminder: %I[
         item_date_reminder
       ]
     },
     other: {
-      smart_annotation: %I[
+      other_smart_annotation: %I[
         smart_annotation_added
       ],
-      team_invitation: %I[
+      other_team_invitation: %I[
         invite_user_to_team_activity
         remove_user_from_team_activity
         change_users_role_on_team_activity
