@@ -298,8 +298,10 @@ export default {
       if (!this.isShowing) return
 
       const sidebar = this.$refs.wrapper;
-      // Check if the clicked element is not within the sidebar and it's not another item link
-      if (!sidebar.contains(event.target) && !event.target.closest('a')) {
+      // Check if the clicked element is not within the sidebar and it's not another item link or belogs to modal
+      if (!sidebar.contains(event.target) &&
+          !event.target.closest('a') &&
+          !event.target.closest('.modal')) {
         this.toggleShowHideSidebar(null)
       }
     },
