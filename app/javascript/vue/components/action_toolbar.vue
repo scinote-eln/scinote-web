@@ -1,6 +1,6 @@
 <template>
   <div v-if="!paramsAreBlank"
-       class="sn-action-toolbar p-4 w-full fixed bottom-0 rounded-t-md"
+       class="sn-action-toolbar p-4 w-full absolute rounded-t-md"
        :class="{ 'sn-action-toolbar--button-overflow': buttonOverflow }"
        :style="`width: ${width}px; bottom: ${bottomOffset}px; transform: translateX(${leftOffset}px)`">
     <div class="sn-action-toolbar__actions flex gap-4">
