@@ -33,7 +33,7 @@
           :btnText="i18n.t('my_modules.results.insert.button')"
           :position="'right'"
           :caret="true"
-          @create:table="(...args) => this.createElement('table', ...args)"
+          @create:table="(args) => args ? this.createElement('table', ...args) : this.createElement('table')"
           @create:checklist="createElement('checklist')"
           @create:text="createElement('text')"
           @create:file="openLoadFromComputer"
@@ -145,12 +145,12 @@
         attachmentsReady: false,
         showFileModal: false,
         wellPlateOptions: [
-          { text: I18n.t('protocols.steps.insert.well_plate_options.32_x_48'), emit: 'create:table', params: [32, 48] },
-          { text: I18n.t('protocols.steps.insert.well_plate_options.16_x_24'), emit: 'create:table', params: [16, 24] },
-          { text: I18n.t('protocols.steps.insert.well_plate_options.8_x_12'), emit: 'create:table', params: [8, 12] },
-          { text: I18n.t('protocols.steps.insert.well_plate_options.6_x_8'), emit: 'create:table', params: [6, 8] },
-          { text: I18n.t('protocols.steps.insert.well_plate_options.6_x_4'), emit: 'create:table', params: [6, 4] },
-          { text: I18n.t('protocols.steps.insert.well_plate_options.2_x_3'), emit: 'create:table', params: [2, 3] }
+          { text: I18n.t('protocols.steps.insert.well_plate_options.32_x_48'), emit: 'create:table', params: [[32, 48], true] },
+          { text: I18n.t('protocols.steps.insert.well_plate_options.16_x_24'), emit: 'create:table', params: [[16, 24], true] },
+          { text: I18n.t('protocols.steps.insert.well_plate_options.8_x_12'), emit: 'create:table', params: [[8, 12], true] },
+          { text: I18n.t('protocols.steps.insert.well_plate_options.6_x_8'), emit: 'create:table', params: [[6, 8], true] },
+          { text: I18n.t('protocols.steps.insert.well_plate_options.6_x_4'), emit: 'create:table', params: [[6, 4], true] },
+          { text: I18n.t('protocols.steps.insert.well_plate_options.2_x_3'), emit: 'create:table', params: [[2, 3], true] }
         ],
         editingName: false,
         confirmingDelete: false
