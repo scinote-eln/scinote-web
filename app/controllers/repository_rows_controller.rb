@@ -171,8 +171,8 @@ class RepositoryRowsController < ApplicationController
 
   def update_cell
     row_cell_update =
-      RepositoryRows::UpdateRepositoryCellService.call(
-        repository_row: @repository_row, user: current_user, params: cell_update_params
+      RepositoryRows::UpdateRepositoryRowService.call(
+        repository_row: @repository_row, user: current_user, params: update_cell_params
       )
 
     if row_cell_update.succeed?
@@ -440,8 +440,15 @@ class RepositoryRowsController < ApplicationController
     params.permit(repository_row: {}, repository_cells: {}).to_h
   end
 
-  def cell_update_params
-    params.permit(repository_row: {}, repository_cell: {})
+  def update_cell_params
+    params = update_params
+    new_params = {}
+    if params[:repository_row]
+      new_params.merge!(repository_row: params[:repository_row])
+    else
+      column_id, data = params[:repository_cells]&.first
+      new_params.merge!(repository_cells: { column_id => data })
+    end
   end
 
   def log_activity(type_of, repository_row)
