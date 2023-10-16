@@ -52,12 +52,6 @@ input[type="checkbox"].sci-toggle-checkbox {
     }
   }
 
-  &:focus + .sci-toggle-checkbox-label {
-    box-shadow: 0 0 0 4px var(--sn-science-blue-hover);
-    outline: 2px solid transparent;
-    outline-offset: 2px;
-  }
-
   &.hidden + .sci-toggle-checkbox-label {
     display: none;
   }

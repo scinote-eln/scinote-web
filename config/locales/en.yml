@@ -3317,14 +3317,30 @@ en:
 
   notifications:
     title: "Notifications"
-    email_settings: "E-mail notifications"
-    form:
-      assignments: "Assignment"
-      notification_scinote: 'Show in SciNote'
-      notification_email: 'Notify me via email'
-      assignments_description: 'Assignment notifications appear whenever you get assigned to a team, project, task.'
-      recent_notification: 'Recent changes'
-      recent_notification_description: 'Recent changes notifications appear whenever there is a change on a task you are assigned to.'
+    sub_title: "Define which updates to get notified and where"
+    in_app: "In-app"
+    email: "Email"
+    breadcrumb: "Preferences"
+    groups:
+      my_module: "Task"
+      project_experiment: "Project & Experiment"
+      repository: "Inventories & Items"
+      other: "Others"
+    sub_groups:
+      my_module_designation: "You are assigned to or unassigned from a task"
+      my_module_modified: "There is a change on assigned task"
+      my_module_due_date: "Due date & time on assigned task  (24h before)"
+      my_module_comments: "A comment is added or changed on a task you are assigned to​"
+      project_experiment_access: "You are added or removed from the Project"
+      project_experiment_role_change: "Your role on Project, Experiment or Task is changed"
+      repository_stock: "A stock gets low (low stock reminder)"
+      repository_date_reminder: "Date reminder"
+      other_smart_annotation: "You are mentioned (tagged) in any place of Scinote"
+      other_team_invitation: "You are invited or removed from the team"
+    notification:
+      my_module_due_date_reminder_html: "Due date for %{my_module_name} is coming up"
+      item_low_stock_reminder_html: "Item %{repository_item_name} is running low"
+      item_date_reminder_html: "Date reminder for %{repository_item_name} is coming up in %{value} %{units}"
     deliver:
       download_link: "Download link:"
       download_text: "Click the link to download the file."
