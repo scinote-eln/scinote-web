@@ -67,7 +67,8 @@ class RepositoryRowsController < ApplicationController
 
     if service.succeed?
       repository_row = service.repository_row
-      log_activity(:create_item_inventory, repository_row)
+      log_activity(:create_item_inventory, repository_row, { repository_row: repository_row.id,
+                                                             repository: @repository.id })
       repository_row.repository_cells.where(value_type: 'RepositoryTextValue').each do |repository_cell|
         record_annotation_notification(repository_row, repository_cell)
       end
@@ -150,7 +151,8 @@ class RepositoryRowsController < ApplicationController
 
     if row_update.succeed?
       if row_update.record_updated
-        log_activity(:edit_item_inventory, @repository_row)
+        log_activity(:edit_item_inventory, @repository_row, { repository_row: @repository_row.id,
+                                                              repository: @repository.id })
         @repository_row.repository_cells.where(value_type: 'RepositoryTextValue').each do |repository_cell|
           record_annotation_notification(@repository_row, repository_cell)
         end
@@ -181,6 +183,12 @@ class RepositoryRowsController < ApplicationController
       )
 
     if row_cell_update.succeed?
+      if row_cell_update.record_updated
+        log_activity(:edit_item_field_inventory, @repository_row,
+                     { repository_row: @repository_row.id,
+                       repository_column: update_params['repository_cells']&.keys&.first ||
+                       I18n.t('repositories.table.row_name') })
+      end
       head :no_content
     else
       render json: row_update.errors, status: :bad_request
@@ -194,7 +202,7 @@ class RepositoryRowsController < ApplicationController
         row = @repository.repository_rows.find_by(id: row_id)
         next unless row && can_manage_repository_rows?(@repository)
 
-        log_activity(:delete_item_inventory, row)
+        log_activity(:delete_item_inventory, row, { repository_row: row.id, repository: @repository.id })
         row.destroy && deleted_count += 1
       end
       if deleted_count.zero?
@@ -445,15 +453,12 @@ class RepositoryRowsController < ApplicationController
     params.permit(repository_row: :name, repository_cells: {}).to_h
   end
 
-  def log_activity(type_of, repository_row)
+  def log_activity(type_of, repository_row, message_items = {})
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
             subject: repository_row,
             team: @repository.team,
-            message_items: {
-              repository_row: repository_row.id,
-              repository: @repository.id
-            })
+            message_items: message_items)
   end
 end
