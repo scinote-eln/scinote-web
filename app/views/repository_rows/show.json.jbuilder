@@ -29,7 +29,7 @@ json.default_columns do
 end
 
 json.custom_columns do
-  json.array! @repository_row.repository.repository_columns.each do |repository_column|
+  json.array! repository_columns_ordered_by_state(@repository_row.repository).each do |repository_column|
     repository_cell = @repository_row.repository_cells.find_by(repository_column: repository_column)
     if repository_cell
       json.merge! **serialize_repository_cell_value(repository_cell, @repository.team, @repository, reminders_enabled: @reminders_present).merge(
