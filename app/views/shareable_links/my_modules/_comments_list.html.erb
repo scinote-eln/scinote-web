@@ -1,5 +1,5 @@
 <% user= nil %>
-<% oject.comments.order(created_at: :asc).each do |comment| %>
+<% object.comments.order(created_at: :asc).each do |comment| %>
   <div class="comment-container" data-comment-id="<%= comment.id %>">
     <% unless user == comment.user%>
       <div class="comment-header">
