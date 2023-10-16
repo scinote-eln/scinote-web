@@ -26,7 +26,7 @@
         </div>
 
         <div v-else class="flex flex-1 flex-grow-1 justify-between">
-          <div id="left-col" class="flex flex-col gap-4">
+          <div id="left-col" class="flex flex-col gap-4 w-96 self-start">
 
             <!-- INFORMATION -->
             <div id="information">
@@ -40,7 +40,7 @@
                   <div class="flex flex-col ">
                     <span class="inline-block font-semibold pb-[6px]">{{
                       i18n.t('repositories.item_card.default_columns.repository_name') }}</span>
-                    <span class="repository-name flex text-sn-dark-grey" :title="repository?.name">
+                    <span class="repository-name text-sn-dark-grey line-clamp-3" :title="repository?.name">
                       {{ repository?.name }}
                     </span>
                   </div>
@@ -51,7 +51,7 @@
                   <div class="flex flex-col ">
                     <span class="inline-block font-semibold pb-[6px]">{{ i18n.t('repositories.item_card.default_columns.id')
                     }}</span>
-                    <span class="inline-block text-sn-dark-grey" :title="defaultColumns?.code">
+                    <span class="inline-block text-sn-dark-grey line-clamp-3" :title="defaultColumns?.code">
                       {{ defaultColumns?.code }}
                     </span>
                   </div>
@@ -75,7 +75,7 @@
                     <span class="inline-block font-semibold pb-[6px]">{{
                       i18n.t('repositories.item_card.default_columns.added_by')
                     }}</span>
-                    <span class="inline-block text-sn-dark-grey" :title="defaultColumns?.added_by">
+                    <span class="inline-block text-sn-dark-grey line-clamp-3" :title="defaultColumns?.added_by">
                       {{ defaultColumns?.added_by }}
                     </span>
                   </div>
@@ -185,7 +185,7 @@
         </div>
 
         <!-- BOTTOM -->
-        <div id="bottom" class="h-[100px] flex flex-col justify-end mt-4" :class="{ 'pb-6': customColumns?.length }">
+        <div id="bottom" v-show="!dataLoading" class="h-[100px] flex flex-col justify-end mt-4 mb-6" :class="{ 'pb-6': customColumns?.length }">
           <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px mb-6"></div>
           <div id="bottom-button-wrapper" class="flex h-10 justify-end">
             <button type="button" class="btn btn-primary print-label-button" :data-rows="JSON.stringify([repositoryRowId])">
@@ -314,14 +314,14 @@ export default {
         data: { my_module_id: this.myModuleId },
         dataType: 'json',
         success: (result) => {
-          this.repositoryRowId = result.id
+          this.repositoryRowId = result.id;
           this.repository = result.repository;
           this.defaultColumns = result.default_columns;
           this.customColumns = result.custom_columns;
           this.assignedModules = result.assigned_modules;
-          this.permissions = result.permissions
+          this.permissions = result.permissions;
           this.actions = result.actions;
-          this.dataLoading = false
+          this.dataLoading = false;
           this.$nextTick(() => {
             this.generateBarCode(this.defaultColumns.code);
           });
