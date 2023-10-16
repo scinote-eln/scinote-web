@@ -170,9 +170,14 @@ class RepositoryRowsController < ApplicationController
   end
 
   def update_cell
+    return render_422(t('.invalid_params')) if
+      update_params['repository_row'].present? && update_params['repository_cells'].present?
+    return render_422(t('.invalid_params')) if
+      update_params['repository_cells'] && update_params['repository_cells'].size != 1
+
     row_cell_update =
       RepositoryRows::UpdateRepositoryRowService.call(
-        repository_row: @repository_row, user: current_user, params: update_cell_params
+        repository_row: @repository_row, user: current_user, params: update_params
       )
 
     if row_cell_update.succeed?
@@ -437,18 +442,7 @@ class RepositoryRowsController < ApplicationController
   end
 
   def update_params
-    params.permit(repository_row: {}, repository_cells: {}).to_h
-  end
-
-  def update_cell_params
-    params = update_params
-    new_params = {}
-    if params[:repository_row]
-      new_params.merge!(repository_row: params[:repository_row])
-    else
-      column_id, data = params[:repository_cells]&.first
-      new_params.merge!(repository_cells: { column_id => data })
-    end
+    params.permit(repository_row: :name, repository_cells: {}).to_h
   end
 
   def log_activity(type_of, repository_row)

@@ -44,7 +44,7 @@ module RepositoryRows
         end
 
         # Update invetory rows
-        @repository_row.attributes = params[:repository_row]
+        @repository_row.name = params[:repository_row][:name] if params.dig(:repository_row, :name).present?
 
         if @repository_row.changed?
           @repository_row.last_modified_by = @user
