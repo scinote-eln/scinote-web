@@ -34,7 +34,7 @@
                 class="font-inter text-base font-semibold leading-7 mb-4 transition-colors duration-300">{{
                   i18n.t('repositories.item_card.section.information') }}
               </div>
-              <div>
+              <div v-if="defaultColumns">
                 <div class="flex flex-col gap-4">
                   <!-- REPOSITORY NAME -->
                   <div class="flex flex-col ">
@@ -49,7 +49,8 @@
 
                   <!-- CODE -->
                   <div class="flex flex-col ">
-                    <span class="inline-block font-semibold pb-[6px]">{{ i18n.t('repositories.item_card.default_columns.id')
+                    <span class="inline-block font-semibold pb-[6px]">{{
+                      i18n.t('repositories.item_card.default_columns.id')
                     }}</span>
                     <span class="inline-block text-sn-dark-grey" :title="defaultColumns?.code">
                       {{ defaultColumns?.code }}
@@ -79,6 +80,30 @@
                       {{ defaultColumns?.added_by }}
                     </span>
                   </div>
+
+                  <!-- ARCHIVED ON -->
+                  <div v-if="defaultColumns.archived_on" class="flex flex-col ">
+                    <div class="sci-divider pb-4"></div>
+                    <span class="inline-block font-semibold pb-[6px]">{{
+                      i18n.t('repositories.item_card.default_columns.archived_on')
+                    }}</span>
+                    <span class="inline-block text-sn-dark-grey" :title="defaultColumns.archived_on">
+                      {{ defaultColumns.archived_on }}
+                    </span>
+                  </div>
+
+                  <!-- ARCHIVED BY -->
+                  <div v-if="defaultColumns.archived_by" class="flex flex-col ">
+                    <div class="sci-divider pb-4"></div>
+                    <span class="inline-block font-semibold pb-[6px]">{{
+                      i18n.t('repositories.item_card.default_columns.archived_by')
+                    }}</span>
+                    <span class="inline-block text-sn-dark-grey" :title="defaultColumns.archived_by.full_name">
+                      {{ defaultColumns.archived_by.full_name }}
+                    </span>
+                  </div>
+
+
                 </div>
               </div>
             </div>
@@ -102,8 +127,8 @@
 
                     <component :is="column.data_type" :key="index" :data_type="column.data_type" :colId="column.id"
                       :colName="column.name" :colVal="column.value" :repositoryRowId="repositoryRowId"
-                      :repositoryId="repository.id"
-                      :permissions="permissions" @closeSidebar="toggleShowHideSidebar(null)" />
+                      :repositoryId="repository.id" :permissions="permissions"
+                      @closeSidebar="toggleShowHideSidebar(null)" />
 
                     <div class="sci-divider" :class="{ 'hidden': index === customColumns?.length - 1 }"></div>
 
@@ -118,18 +143,19 @@
 
               <!-- ASSIGNED -->
               <section id="assigned_wrapper" class="flex flex-col">
-                <div class="flex flex-row text-base font-semibold w-[350px] pb-4 leading-7 items-center justify-between" ref="assigned-label">
+                <div class="flex flex-row text-base font-semibold w-[350px] pb-4 leading-7 items-center justify-between"
+                  ref="assigned-label">
                   {{ i18n.t('repositories.item_card.section.assigned', {
                     count: assignedModules ?
                       assignedModules.total_assigned_size : 0
                   }) }}
                   <a v-if="actions?.assign_repository_row || (inRepository && !defaultColumns?.archived)"
-                    class="btn-text-link font-normal"
-                    :class= "{'assign-inventory-button': actions?.assign_repository_row,
-                              'disabled': actions?.assign_repository_row && actions.assign_repository_row.disabled }"
+                    class="btn-text-link font-normal" :class="{
+                      'assign-inventory-button': actions?.assign_repository_row,
+                      'disabled': actions?.assign_repository_row && actions.assign_repository_row.disabled
+                    }"
                     :data-assign-url="actions?.assign_repository_row ? actions.assign_repository_row.assign_url : ''"
-                    :data-repository-row-id="repositoryRowId"
-                    @click="showRepositoryAssignModal">
+                    :data-repository-row-id="repositoryRowId" @click="showRepositoryAssignModal">
                     {{ i18n.t('repositories.item_card.assigned.assign') }}
                   </a>
                 </div>
@@ -162,7 +188,8 @@
 
               <!-- QR -->
               <section id="qr-wrapper" ref="QR-label">
-                <div class="font-inter text-base font-semibold leading-7 mb-4 mt-0">{{ i18n.t('repositories.item_card.section.qr') }}</div>
+                <div class="font-inter text-base font-semibold leading-7 mb-4 mt-0">{{
+                  i18n.t('repositories.item_card.section.qr') }}</div>
                 <div class="bar-code-container">
                   <canvas id="bar-code-canvas" class="hidden"></canvas>
                   <img :src="barCodeSrc" />
@@ -188,7 +215,8 @@
         <div id="bottom" class="h-[100px] flex flex-col justify-end mt-4" :class="{ 'pb-6': customColumns?.length }">
           <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px mb-6"></div>
           <div id="bottom-button-wrapper" class="flex h-10 justify-end">
-            <button type="button" class="btn btn-primary print-label-button" :data-rows="JSON.stringify([repositoryRowId])">
+            <button type="button" class="btn btn-primary print-label-button"
+              :data-rows="JSON.stringify([repositoryRowId])">
               {{ i18n.t('repositories.item_card.print_label') }}
             </button>
           </div>
@@ -329,7 +357,7 @@ export default {
       });
     },
     reload() {
-      if(this.isShowing) {
+      if (this.isShowing) {
         this.loadRepositoryRow(this.currentItemUrl);
       }
     },
@@ -339,7 +367,7 @@ export default {
       }
     },
     generateBarCode(text) {
-      if(!text) return;
+      if (!text) return;
       const barCodeCanvas = bwipjs.toCanvas('bar-code-canvas', {
         bcid: 'qrcode',
         text,

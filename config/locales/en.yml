@@ -2242,6 +2242,8 @@ en:
         added_on: "Added on"
         added_at: "Added at"
         added_by: "Added by"
+        archived_on: "Archived on"
+        archived_by: "Archived by"
       reminders:
         stock_low: "Only %{stock_formated} left."
         stock_empty: "No stock left"

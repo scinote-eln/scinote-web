@@ -26,6 +26,10 @@ json.default_columns do
   json.added_on I18n.l(@repository_row.created_at, format: :full)
   json.added_by @repository_row.created_by&.full_name
   json.archived @repository_row.archived?
+  if @repository_row.archived?
+    json.archived_on I18n.l(@repository_row.archived_on, format: :full)
+    json.archived_by @repository_row.archived_by
+  end
 end
 
 json.custom_columns do
