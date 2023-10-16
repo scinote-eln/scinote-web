@@ -9,7 +9,7 @@ class RepositoryRowsController < ApplicationController
                                              validate_label_template_columns actions_toolbar)
   before_action :load_repository_row_print, only: %i(print rows_to_print print_zpl validate_label_template_columns)
   before_action :load_repository_or_snapshot, only: %i(print rows_to_print print_zpl validate_label_template_columns)
-  before_action :load_repository_row, only: %i(update assigned_task_list active_reminder_repository_cells)
+  before_action :load_repository_row, only: %i(update update_cell assigned_task_list active_reminder_repository_cells)
   before_action :check_read_permissions, except: %i(create update delete_records
                                                     copy_records reminder_repository_cells
                                                     delete_records archive_records restore_records
@@ -17,7 +17,7 @@ class RepositoryRowsController < ApplicationController
   before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
   before_action :check_create_permissions, only: :create
   before_action :check_delete_permissions, only: %i(delete_records archive_records restore_records)
-  before_action :check_manage_permissions, only: %i(update copy_records)
+  before_action :check_manage_permissions, only: %i(update update_cell copy_records)
 
   def index
     @draw = params[:draw].to_i
@@ -164,6 +164,24 @@ class RepositoryRowsController < ApplicationController
           repository: escape_input(@repository.name)
         )
       }, status: :ok
+    else
+      render json: row_update.errors, status: :bad_request
+    end
+  end
+
+  def update_cell
+    return render_422(t('.invalid_params')) if
+      update_params['repository_row'].present? && update_params['repository_cells'].present?
+    return render_422(t('.invalid_params')) if
+      update_params['repository_cells'] && update_params['repository_cells'].size != 1
+
+    row_cell_update =
+      RepositoryRows::UpdateRepositoryRowService.call(
+        repository_row: @repository_row, user: current_user, params: update_params
+      )
+
+    if row_cell_update.succeed?
+      head :no_content
     else
       render json: row_update.errors, status: :bad_request
     end
@@ -424,7 +442,7 @@ class RepositoryRowsController < ApplicationController
   end
 
   def update_params
-    params.permit(repository_row: {}, repository_cells: {}).to_h
+    params.permit(repository_row: :name, repository_cells: {}).to_h
   end
 
   def log_activity(type_of, repository_row)
