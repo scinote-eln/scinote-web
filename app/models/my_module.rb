@@ -71,7 +71,7 @@ class MyModule < ApplicationRecord
   has_many :protocols, inverse_of: :my_module, dependent: :destroy
   has_many :steps, through: :protocols
   has_many :assets_in_steps, class_name: 'Asset', source: :assets, through: :steps
-  has_many :assets_in_results, class_name: 'Asset', source: :asset, through: :results
+  has_many :assets_in_results, class_name: 'Asset', source: :assets, through: :results
   # Associations for old activity type
   has_many :activities, inverse_of: :my_module
 
