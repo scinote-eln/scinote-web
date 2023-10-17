@@ -130,8 +130,13 @@ module Api
                 message_items: message_items)
       end
 
+      # Override, in order to handle special case for team owners
+      def load_project
+        @project = @team.projects.find(params.require(:project_id))
+      end
+
       def check_read_permissions
-        # team admins can always manage users, so they should also be able to read them
+        # team owners can always manage users, so they should also be able to read them
         unless can_read_project_users?(@project) || can_manage_project_users?(@project)
           raise PermissionError.new(Project, :read_users)
         end
