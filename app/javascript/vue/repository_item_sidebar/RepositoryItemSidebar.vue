@@ -148,7 +148,7 @@
                     count: assignedModules ?
                       assignedModules.total_assigned_size : 0
                   }) }}
-                  <a v-if="actions?.assign_repository_row || (inRepository && !defaultColumns?.archived)"
+                  <a v-if="actions?.assign_repository_row && !defaultColumns?.archived"
                     class="btn-text-link font-normal" :class="{
                       'assign-inventory-button': actions?.assign_repository_row,
                       'disabled': actions?.assign_repository_row && actions.assign_repository_row.disabled
