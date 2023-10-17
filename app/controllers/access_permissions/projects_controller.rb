@@ -115,6 +115,7 @@ module AccessPermissions
         @project.last_modified_by = current_user
         if permitted_default_public_user_role_params[:default_public_user_role_id].blank?
           # revoke all team members access
+          remove_access_from_all_team_members
           @project.visibility = :hidden
           previous_user_role_name = @project.default_public_user_role.name
           @project.default_public_user_role_id = nil
@@ -159,6 +160,19 @@ module AccessPermissions
       @project = current_team.projects.includes(user_assignments: %i(user user_role)).find_by(id: params[:id])
 
       render_404 unless @project
+    end
+
+    def remove_access_from_all_team_members
+      users = @project.assigned_users.reject { |user| user == current_user }
+      users.each do |user|
+        user_assignment = @project.user_assignments.find_by(user: user, team: current_team)
+
+        if user_assignment.last_with_permission?(ProjectPermissions::USERS_MANAGE, assigned: :manually)
+          raise ActiveRecord::RecordInvalid
+        end
+
+        propagate_job(user_assignment, destroy: true)
+      end
     end
 
     def propagate_job(user_assignment, destroy: false)
