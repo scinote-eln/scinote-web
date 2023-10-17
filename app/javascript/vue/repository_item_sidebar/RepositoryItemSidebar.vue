@@ -127,8 +127,7 @@
 
                     <component :is="column.data_type" :key="index" :data_type="column.data_type" :colId="column.id"
                       :colName="column.name" :colVal="column.value" :repositoryRowId="repositoryRowId"
-                      :repositoryId="repository.id" :permissions="permissions"
-                      @closeSidebar="toggleShowHideSidebar(null)" />
+                      :repositoryId="repository.id" :permissions="permissions" />
 
                     <div class="sci-divider" :class="{ 'hidden': index === customColumns?.length - 1 }"></div>
 
