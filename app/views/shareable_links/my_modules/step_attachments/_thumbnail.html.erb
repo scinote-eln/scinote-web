@@ -35,7 +35,7 @@
       <%= number_to_human_size(asset.file_size) %>
     </div>
     <div class="absolute bottom-4 w-[184px] grid grid-cols-[repeat(4,_2.5rem)] justify-between">
-      <%= link_to shared_protocol_asset_download_path(@shareable_link.uuid, asset), class: "btn btn-light icon-btn thumbnail-action-btn",data: { turbolinks: false } do %>
+      <%= link_to shared_asset_download_path(@shareable_link.uuid, asset), class: 'btn btn-light icon-btn thumbnail-action-btn', data: { turbolinks: false } do %>
         <span class="sn-icon sn-icon-export"></span>
       <% end %>
     </div>

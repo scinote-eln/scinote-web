@@ -52,7 +52,7 @@
         <% end %>
       <% end %>
       <% if step.step_assets.present? %>
-        <%= render partial: "shareable_links/my_modules/attachments", locals: { attachments: step.assets, step: step } %>
+        <%= render partial: "shareable_links/my_modules/attachments", locals: { attachments: step.assets } %>
       <% end %>
     </div>
   </div>
