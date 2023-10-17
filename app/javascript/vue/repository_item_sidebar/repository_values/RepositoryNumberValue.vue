@@ -2,13 +2,13 @@
   <div id="repository-number-value-wrapper" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
     <div class="font-inter text-sm font-semibold leading-5 flex justify-between">
       <div>{{ colName }}</div>
-      <div @click="toggleExpandContent" class="font-normal leading-5 btn-text-link">
+      <div @click="toggleExpandContent" v-show="expendable" class="font-normal leading-5 btn-text-link">
         {{ this.contentExpanded ? i18n.t('repositories.item_card.repository_number_value.collapse') :
           i18n.t('repositories.item_card.repository_number_value.expand') }}
       </div>
     </div>
     <div v-if="colVal" ref="numberRef"
-      class="text-sn-dark-grey font-inter text-sm font-normal leading-5 min-h-[20px] overflow-scroll"
+      class="text-sn-dark-grey font-inter text-sm font-normal leading-5 min-h-[20px] overflow-y-auto"
       :class="{ 'max-h-[60px]': !contentExpanded, 'max-h-[600px]': contentExpanded }">
       {{ colVal }}
     </div>
@@ -25,11 +25,18 @@ export default {
     data_type: String,
     colId: Number,
     colName: String,
-    colVal: Number
+    colVal: String
+  },
+  mounted() {
+    this.$nextTick(() => {
+      const textHeight = this.$refs.numberRef.scrollHeight
+      this.expendable = textHeight > 60 // 60px
+    })
   },
   data() {
     return {
-      contentExpanded: false
+      contentExpanded: false,
+      expendable: false,
     }
   },
   methods: {
