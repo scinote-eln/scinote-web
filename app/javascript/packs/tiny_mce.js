@@ -178,10 +178,12 @@ window.TinyMCE = (() => {
       if (typeof tinyMCE !== 'undefined') {
         // Hide element containing HTML view of RTE field
         const tinyMceContainer = $(selector).closest('form').find('.tinymce-view');
+        const editorForm = $(selector).closest('form');
         const tinyMceInitSize = tinyMceContainer.height();
-        $(selector).closest('.form-group, .tinymce-editor-container')
-          .before(`<div class="tinymce-placeholder" style="height:${tinyMceInitSize}px"></div>`);
+
+        editorForm.parent().height(tinyMceInitSize);
         tinyMceContainer.addClass('hidden');
+
         const plugins = `
           image table autosave autoresize link advlist codesample code autolink lists
           charmap anchor searchreplace wordcount visualblocks visualchars
@@ -301,11 +303,14 @@ window.TinyMCE = (() => {
             const editorForm = editorContainer.closest('form');
             const menuBar = editorForm.find('.tox-menubar');
 
-            $('.tinymce-placeholder').css('height', `${$(editor.editorContainer).height()}px`);
-            setTimeout(() => {
-              editorContainer.addClass('tox-tinymce--loaded');
-              $('.tinymce-placeholder').remove();
-            }, 400);
+            editorContainer.addClass('tox-tinymce--loaded');
+            const event = new CustomEvent('tinyMCEOpened', {
+              detail: {
+                target: editorForm.parent(),
+              }
+            });
+            window.dispatchEvent(event);
+            editorForm.parent().css('height', '');
 
             // Init saved status label
             if (editor.getContent() !== '') {
