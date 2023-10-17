@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class MigrateNotificationToNoticed < ActiveRecord::Migration[7.0]
+  class UserNotification < ApplicationRecord
+    belongs_to :notification
+  end
+
   def up
     add_column :notifications, :params, :jsonb, default: {}, null: false
     add_column :notifications, :type, :string

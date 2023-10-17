@@ -5,10 +5,9 @@
 # GeneralNotification.with(post: @post).deliver_later(current_user)
 # GeneralNotification.with(post: @post).deliver(current_user)
 
-class GeneralNotification < Noticed::Base
+class GeneralNotification < BaseNotification
   # Add your delivery methods
   #
-  deliver_by :database
   # deliver_by :email, mailer: "UserMailer"
   # deliver_by :slack
   # deliver_by :custom, class: "MyDeliveryMethod"
