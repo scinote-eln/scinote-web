@@ -25,7 +25,7 @@ export default {
     data_type: String,
     colId: Number,
     colName: String,
-    colVal: String
+    colVal: Number
   },
   mounted() {
     this.$nextTick(() => {
