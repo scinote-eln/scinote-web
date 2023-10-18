@@ -4,8 +4,8 @@
       {{ colName }}
     </div>
     <div v-if="status && icon"
-      class="flex flex-row items-center text-sn-dark-grey font-inter text-sm font-normal leading-5 ">
-      <div v-html="parseEmoji(icon)" class="flex mr-1.5 h-6"></div>
+      class="flex flex-row items-center text-sn-dark-grey font-inter text-sm font-normal leading-5 gap-1.5">
+      <div v-html="parseEmoji(icon)" class="flex h-6 w-6"></div>
       {{ status }}
     </div>
     <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
