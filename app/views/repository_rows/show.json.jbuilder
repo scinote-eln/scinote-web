@@ -26,10 +26,14 @@ json.default_columns do
   json.added_on I18n.l(@repository_row.created_at, format: :full)
   json.added_by @repository_row.created_by&.full_name
   json.archived @repository_row.archived?
+  if @repository_row.archived?
+    json.archived_on I18n.l(@repository_row.archived_on, format: :full)
+    json.archived_by @repository_row.archived_by
+  end
 end
 
 json.custom_columns do
-  json.array! @repository_row.repository.repository_columns.each do |repository_column|
+  json.array! repository_columns_ordered_by_state(@repository_row.repository).each do |repository_column|
     repository_cell = @repository_row.repository_cells.find_by(repository_column: repository_column)
     if repository_cell
       json.merge! **serialize_repository_cell_value(repository_cell, @repository.team, @repository, reminders_enabled: @reminders_present).merge(

@@ -31,32 +31,27 @@ export default {
   },
   data() {
     return {
-      rootContainerEl: null,
+      bodyContainerEl: null,
       selectedNavText: null,
       selectedNavIndicator: null,
       positions: []
     }
   },
   created() {
-    this.rootContainerEl = this.$parent.$refs.wrapper
-    this.rootContainerEl?.addEventListener('scroll', this.handleScrollBehaviour)
+    this.bodyContainerEl = this.$parent.$refs.bodyWrapper
+    this.bodyContainerEl?.addEventListener('scroll', this.updateNavigationPositionOnScroll)
   },
 
   methods: {
-    handleScrollBehaviour() {
-      // used for keeping scroll spy sticky
-      this.updateNavigationPositionOnScroll()
-    },
-    updateNavigationPositionOnScroll() {
+    updateNavigationPositionOnScroll(e) {
       const navigationDom = this?.$parent?.$refs?.navigationRef
       // Get the current scroll position
-      const scrollPosition = this?.rootContainerEl?.scrollTop
+      const scrollPosition = this?.bodyContainerEl?.scrollTop
       // Adjust navigationDom position equal to the scrollPosition + the header height and the card top padding (if present)
-      navigationDom.style.top = `${scrollPosition + this?.stickyHeaderHeightPx + this?.cardTopPaddingPx}px`;
+      // navigationDom.style.top = `${scrollPosition + this?.stickyHeaderHeightPx + this?.cardTopPaddingPx}px`;
     },
-
     handleSideNavClick(e) {
-      if (!this.rootContainerEl) {
+      if (!this.bodyContainerEl) {
         return
       }
       let refToScrollTo
@@ -70,11 +65,11 @@ export default {
       this.selectedNavIndicator = foundObj.id
       const sectionLabels = this.itemsToCreate.map((obj) => obj.label)
       const labelsToUnhighlight = sectionLabels.filter((i) => i !== refToScrollTo)
-
       // scrolling to desired section
       const domElToScrollTo = this.$parent.$refs[refToScrollTo]
-      this.rootContainerEl.scrollTo({
-        top: domElToScrollTo.offsetTop - this?.stickyHeaderHeightPx - this?.cardTopPaddingPx,
+      const top = domElToScrollTo.offsetTop - this?.stickyHeaderHeightPx - this?.cardTopPaddingPx;
+      this.bodyContainerEl.scrollTo({
+        top: top,
         behavior: "auto"
       })
 

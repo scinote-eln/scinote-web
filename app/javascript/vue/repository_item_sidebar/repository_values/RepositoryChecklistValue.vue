@@ -3,7 +3,7 @@
     <div class="font-inter text-sm font-semibold leading-5">
       {{ colName }}
     </div>
-    <div v-if="allChecklistItems">
+    <div v-if="allChecklistItems.length > 0">
       <div v-if="isEditing"
         class="text-sn-dark-grey font-inter text-sm font-normal leading-5 grid grid-rows-2 grid-cols-2 overflow-auto h-12">
         <div v-for="(checklistItem, index) in allChecklistItems" :key="index">
@@ -17,7 +17,7 @@
       <div v-else
         class="text-sn-dark-grey font-inter text-sm font-normal leading-5 h-10 w-[370px] overflow-x-auto flex flex-wrap">
         <div v-for="(checklistItem, index) in allChecklistItems" :key="index">
-          <div id="checklist-item" class="flex w-fit h-[18px] break-words mx-1">
+          <div id="checklist-item" class="flex w-fit h-[18px] break-words mr-1">
             {{ `${checklistItem?.label} |` }}
           </div>
         </div>

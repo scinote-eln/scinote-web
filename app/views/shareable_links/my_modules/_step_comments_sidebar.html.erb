@@ -14,7 +14,7 @@
     <div class="sidebar-body">
       <% if step.comments.present? %>
         <div class="comments-list">
-           <%= render partial: "shareable_links/my_modules/comments_list", locals: { step: step } %>
+           <%= render partial: "shareable_links/my_modules/comments_list", locals: { object: step } %>
         </div>
       <% else %>
         <div class="no-comments-placeholder !block">

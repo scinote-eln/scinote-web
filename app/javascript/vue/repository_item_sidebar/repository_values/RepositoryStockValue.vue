@@ -2,9 +2,8 @@
   <div id="repository-stock-value-wrapper" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
     <div class="font-inter text-sm font-semibold leading-5 relative">
       <span>{{ colName }}</span>
-      <a style="text-decoration: none;" class="absolute right-0 text-sn-science-blue visited:text-sn-science-blue hover:text-sn-science-blue
-               font-inter text-sm font-normal cursor-pointer export-consumption-button"
-        v-if="permissions?.can_export_repository_stock === true" :data-rows="JSON.stringify([repositoryRowId])"
+      <a style="text-decoration: none;" class="absolute right-0 btn-text-link font-normal export-consumption-button"
+        v-if="permissions?.can_export_repository_stock === true && colVal?.stock_formatted" :data-rows="JSON.stringify([repositoryRowId])"
         :data-object-id="repositoryId">
         {{ i18n.t('repositories.item_card.stock_export') }}
       </a>
