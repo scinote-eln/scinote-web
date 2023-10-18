@@ -3,7 +3,7 @@
     <div class="font-inter text-sm font-semibold leading-5 relative">
       <span>{{ colName }}</span>
       <a style="text-decoration: none;" class="absolute right-0 btn-text-link font-normal export-consumption-button"
-        v-if="permissions?.can_export_repository_stock === true" :data-rows="JSON.stringify([repositoryRowId])"
+        v-if="permissions?.can_export_repository_stock === true && colVal?.stock_formatted" :data-rows="JSON.stringify([repositoryRowId])"
         :data-object-id="repositoryId">
         {{ i18n.t('repositories.item_card.stock_export') }}
       </a>
