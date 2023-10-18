@@ -24,6 +24,7 @@
 <script>
 
 import NotificationItem from './notification_item.vue'
+import axios from '../../../packs/custom_axios.js';
 
 export default {
   name: 'NotificationsFlyout',
@@ -37,12 +38,13 @@ export default {
   data() {
     return {
       notifications: [],
-      nextPage: 1,
+      nextPageUrl: null,
       scrollBar: null,
       loadingPage: false
     }
   },
   created() {
+    this.nextPageUrl = this.notificationsUrl;
     this.loadNotifications();
   },
   mounted() {
@@ -58,23 +60,29 @@ export default {
       this.loadNotifications();
     },
     todayNotifications() {
-      return this.notifications.filter(n => n.today);
+      return this.notifications.filter(n => n.attributes.today);
     },
     olderNotifications() {
-      return this.notifications.filter(n => !n.today);
+      return this.notifications.filter(n => !n.attributes.today);
     }
   },
   methods: {
     loadNotifications() {
-      if (this.nextPage == null || this.loadingPage) return;
+      if (this.nextPageUrl == null || this.loadingPage) return;
 
       this.loadingPage = true;
-      $.getJSON(this.notificationsUrl, { page: this.nextPage }, (result) => {
-        this.notifications = this.notifications.concat(result.notifications);
-        this.nextPage = result.next_page;
-        this.loadingPage = false;
-        this.$emit('update:unseenNotificationsCount');
-      });
+
+      axios.get(this.nextPageUrl)
+        .then(response => {
+          this.notifications = this.notifications.concat(response.data.data);
+          this.nextPageUrl = response.data.links.next;
+          this.loadingPage = false;
+        })
+        .catch(error => {
+          this.loadingPage = false;
+        });
+
+
     }
   }
 }

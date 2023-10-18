@@ -5,10 +5,9 @@
 # DeliveryNotification.with(post: @post).deliver_later(current_user)
 # DeliveryNotification.with(post: @post).deliver(current_user)
 
-class DeliveryNotification < Noticed::Base
+class DeliveryNotification < BaseNotification
   # Add your delivery methods
   #
-  deliver_by :database
   # deliver_by :email, mailer: "UserMailer"
   # deliver_by :slack
   # deliver_by :custom, class: "MyDeliveryMethod"
