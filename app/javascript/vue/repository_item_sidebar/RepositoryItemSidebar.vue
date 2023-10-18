@@ -7,7 +7,7 @@
 
       <div id="sticky-header-wrapper" class="sticky top-0 right-0 bg-white flex z-50 flex-col h-[78px] pt-6">
         <div class="header flex w-full h-[30px] pr-6">
-          <h4 class="item-name my-auto truncate" :title="defaultColumns?.name">
+          <h4 class="item-name my-auto truncate text-xl" :title="defaultColumns?.name">
             {{ defaultColumns?.archived ? i18n.t('labels.archived') : '' }}
             {{ defaultColumns?.name }}
           </h4>
@@ -31,7 +31,7 @@
             <!-- INFORMATION -->
             <div id="information">
               <div ref="information-label" id="information-label"
-                class="font-inter text-base font-semibold leading-7 mb-4 transition-colors duration-300">{{
+                class="font-inter text-lg font-semibold leading-7 mb-4 transition-colors duration-300">{{
                   i18n.t('repositories.item_card.section.information') }}
               </div>
               <div v-if="defaultColumns">
@@ -116,7 +116,7 @@
               <!-- CUSTOM COLUMNS -->
               <div id="custom-columns-wrapper" class="flex flex-col min-h-[64px] h-auto">
                 <div ref="custom-columns-label" id="custom-columns-label"
-                  class="font-inter text-base font-semibold leading-7 pb-4 transition-colors duration-300">
+                  class="font-inter text-lg font-semibold leading-7 pb-4 transition-colors duration-300">
                   {{ i18n.t('repositories.item_card.custom_columns_label') }}
                 </div>
                 <div v-if="customColumns?.length > 0" class="flex flex-col gap-4 w-[350px] h-auto">
@@ -141,8 +141,8 @@
               <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px"></div>
 
               <!-- ASSIGNED -->
-              <section id="assigned_wrapper" class="flex flex-col">
-                <div class="flex flex-row text-base font-semibold w-[350px] pb-4 leading-7 items-center justify-between"
+              <section id="assigned_wrapper" class="flex flex-col gap-4">
+                <div class="flex flex-row text-lg font-semibold w-[350px] leading-7 items-center justify-between"
                   ref="assigned-label">
                   {{ i18n.t('repositories.item_card.section.assigned', {
                     count: assignedModules ?
@@ -158,15 +158,14 @@
                     {{ i18n.t('repositories.item_card.assigned.assign') }}
                   </a>
                 </div>
-                <div v-if="assignedModules && assignedModules.total_assigned_size > 0">
-                  <div v-if="privateModuleSize() > 0" class="pb-6">
-                    {{ i18n.t('repositories.item_card.assigned.private', { count: privateModuleSize() }) }}
-                    <hr v-if="assignedModules.viewable_modules.length > 0"
-                      class="h-1 w-[350px] m-0 mt-6 border-dashed border-1 border-sn-light-grey" />
+                <div v-if="assignedModules && assignedModules.total_assigned_size > 0" class="flex flex-col gap-4">
+                  <div v-if="privateModuleSize() > 0" class="flex flex-col gap-4">
+                    <div class="text-sn-dark-grey">{{ i18n.t('repositories.item_card.assigned.private', { count: privateModuleSize() }) }}</div>
+                    <div class="sci-divider" :class="{ 'hidden': assignedModules?.viewable_modules?.length == 0 }"></div>
                   </div>
                   <div v-for="(assigned, index) in assignedModules.viewable_modules" :key="`assigned_module_${index}`"
-                    class="flex flex-col w-[350px] mb-6 h-auto">
-                    <div class="flex flex-col gap-3">
+                    class="flex flex-col w-[350px] h-auto gap-4">
+                    <div class="flex flex-col gap-3.5">
                       <div v-for="(item, index_assigned) in assigned" :key="`assigned_element_${index_assigned}`">
                         {{ i18n.t(`repositories.item_card.assigned.labels.${item.type}`) }}
                         <a :href="item.url" class="text-sn-science-blue">
@@ -174,11 +173,10 @@
                         </a>
                       </div>
                     </div>
-                    <hr v-if="index < assignedModules.viewable_modules.length - 1"
-                      class="h-1 w-[350px] mt-6 mb-0 border-dashed border-1 border-sn-light-grey" />
+                    <div class="sci-divider" :class="{ 'hidden': index === assignedModules?.viewable_modules?.length - 1 }"></div>
                   </div>
                 </div>
-                <div v-else class="mb-3">
+                <div v-else class="text-sn-dark-grey">
                   {{ i18n.t('repositories.item_card.assigned.empty') }}
                 </div>
               </section>
@@ -187,11 +185,11 @@
 
               <!-- QR -->
               <section id="qr-wrapper" ref="QR-label">
-                <div class="font-inter text-base font-semibold leading-7 mb-4 mt-0">{{
+                <div class="font-inter text-lg font-semibold leading-7 mb-4 mt-0">{{
                   i18n.t('repositories.item_card.section.qr') }}</div>
                 <div class="bar-code-container">
                   <canvas id="bar-code-canvas" class="hidden"></canvas>
-                  <img :src="barCodeSrc" />
+                  <img :src="barCodeSrc"  class="w-[90px]"/>
                 </div>
               </section>
             </div>
