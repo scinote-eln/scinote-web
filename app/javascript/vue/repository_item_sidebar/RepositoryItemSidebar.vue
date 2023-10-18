@@ -160,7 +160,10 @@
                 </div>
                 <div v-if="assignedModules && assignedModules.total_assigned_size > 0" class="flex flex-col gap-4">
                   <div v-if="privateModuleSize() > 0" class="flex flex-col gap-4">
-                    <div class="text-sn-dark-grey">{{ i18n.t('repositories.item_card.assigned.private', { count: privateModuleSize() }) }}</div>
+                    <div class="text-sn-dark-grey">{{ i18n.t('repositories.item_card.assigned.private', {
+                      count:
+                        privateModuleSize()
+                    }) }}</div>
                     <div class="sci-divider" :class="{ 'hidden': assignedModules?.viewable_modules?.length == 0 }"></div>
                   </div>
                   <div v-for="(assigned, index) in assignedModules.viewable_modules" :key="`assigned_module_${index}`"
@@ -173,7 +176,8 @@
                         </a>
                       </div>
                     </div>
-                    <div class="sci-divider" :class="{ 'hidden': index === assignedModules?.viewable_modules?.length - 1 }"></div>
+                    <div class="sci-divider"
+                      :class="{ 'hidden': index === assignedModules?.viewable_modules?.length - 1 }"></div>
                   </div>
                 </div>
                 <div v-else class="text-sn-dark-grey">
@@ -189,7 +193,7 @@
                   i18n.t('repositories.item_card.section.qr') }}</div>
                 <div class="bar-code-container">
                   <canvas id="bar-code-canvas" class="hidden"></canvas>
-                  <img :src="barCodeSrc"  class="w-[90px]"/>
+                  <img :src="barCodeSrc" class="w-[90px]" />
                 </div>
               </section>
             </div>
@@ -197,7 +201,7 @@
 
           <!-- NAVIGATION -->
           <div ref="navigationRef" id="navigation"
-            class="flex item-end gap-x-4 min-w-[130px] min-h-[130px] h-fit absolute top-[102px] right-[24px] ">
+            class="flex item-end gap-x-4 min-w-[130px] min-h-[130px] h-fit sticky top-0 right-[24px] ">
             <scroll-spy :itemsToCreate="[
               { id: 'highlight-item-1', textId: 'text-item-1', labelAlias: 'information_label', label: 'information-label' },
               { id: 'highlight-item-2', textId: 'text-item-2', labelAlias: 'custom_columns_label', label: 'custom-columns-label' },
@@ -209,7 +213,8 @@
         </div>
 
         <!-- BOTTOM -->
-        <div id="bottom" v-show="!dataLoading" class="h-[100px] flex flex-col justify-end mt-4 mb-6" :class="{ 'pb-6': customColumns?.length }">
+        <div id="bottom" v-show="!dataLoading" class="h-[100px] flex flex-col justify-end mt-4 mb-6"
+          :class="{ 'pb-6': customColumns?.length }">
           <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px mb-6"></div>
           <div id="bottom-button-wrapper" class="flex h-10 justify-end">
             <button type="button" class="btn btn-primary print-label-button"
