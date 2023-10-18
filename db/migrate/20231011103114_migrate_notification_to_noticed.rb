@@ -22,6 +22,7 @@ class MigrateNotificationToNoticed < ActiveRecord::Migration[7.0]
       notification = user_notification.notification.dup
 
       new_type = type_mapping[notification.type_of]
+      new_type ||= 'GeneralNotification'
 
       params = {
         title: notification.title,
