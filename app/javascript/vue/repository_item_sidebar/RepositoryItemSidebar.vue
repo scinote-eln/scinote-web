@@ -295,11 +295,11 @@ export default {
       if (!this.isShowing) return
 
       const sidebar = this.$refs.wrapper;
-      // Check if the clicked element is not within the sidebar and it's not another item link or belogs to modal
-      if (!sidebar.contains(event.target) &&
-          !event.target.closest('a') &&
-          !event.target.closest('.modal')) {
-        this.toggleShowHideSidebar(null)
+      // Check if the clicked element is not within the sidebar and it's not another item link or belogs to modals
+      const selectors = ['a', '.modal', '.label-printing-progress-modal'];
+
+      if (!sidebar.contains(event.target) && !selectors.some(selector => event.target.closest(selector))) {
+        this.toggleShowHideSidebar(null);
       }
     },
     toggleShowHideSidebar(repositoryRowUrl, myModuleId = null) {
