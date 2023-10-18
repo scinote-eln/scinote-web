@@ -42,11 +42,11 @@
 
   function initResultsExpandCollapse() {
     $(document).on('click', '#results-collapse-btn', function() {
-      $('.result .panel-collapse').collapse('hide');
+      $('.result-container .collapse').collapse('hide');
     });
 
     $(document).on('click', '#results-expand-btn', function() {
-      $('.result .panel-collapse').collapse('show');
+      $('.result-container .collapse').collapse('show');
     });
   }
 
