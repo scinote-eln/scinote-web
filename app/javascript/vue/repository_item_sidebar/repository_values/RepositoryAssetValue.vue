@@ -1,11 +1,11 @@
 <template>
   <div id="repository-asset-value-wrapper" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
-    <div class="font-inter text-sm font-semibold leading-5">
+    <div class="font-inter text-sm font-semibold leading-5 truncate">
       {{ colName }}
     </div>
     <div v-if="file_name" @mouseover="tooltipShowing = true" @mouseout="tooltipShowing = false"
-      class="w-fit cursor-pointer text-sn-science-blue relative">
-      <a class="file-preview-link" :id="modalPreviewLinkId" data-no-turbolink="true"
+      class="w-full cursor-pointer text-sn-science-blue relative">
+      <a class="w-full inline-block file-preview-link truncate" :id="modalPreviewLinkId" data-no-turbolink="true"
         data-id="true" data-status="asset-present" :data-preview-url=this?.preview_url :href=this?.url>
         {{ file_name }}
       </a>

@@ -1,7 +1,7 @@
 <template>
   <div id="repository-number-value-wrapper" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
     <div class="font-inter text-sm font-semibold leading-5 flex justify-between">
-      <div>{{ colName }}</div>
+      <div class="truncate w-4/5">{{ colName }}</div>
       <div @click="toggleExpandContent" v-show="expendable" class="font-normal leading-5 btn-text-link">
         {{ this.contentExpanded ? i18n.t('repositories.item_card.repository_number_value.collapse') :
           i18n.t('repositories.item_card.repository_number_value.expand') }}
