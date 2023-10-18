@@ -11,6 +11,8 @@ class MigrateNotificationToNoticed < ActiveRecord::Migration[7.0]
     add_column :notifications, :read_at, :datetime
     add_reference :notifications, :recipient, polymorphic: true
 
+    Notification.reset_column_information
+
     type_mapping = {
       0 => 'ActivityNotification',
       1 => 'GeneralNotification',
