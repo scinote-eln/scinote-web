@@ -884,11 +884,10 @@ exports.LOG2E = function() {
 
 exports.LOG = function(number, base) {
   number = utils.parseNumber(number);
-  base = utils.parseNumber(base);
+  base = (base === undefined) ? 10 : utils.parseNumber(base);
   if (utils.anyIsError(number, base)) {
     return error.value;
   }
-  base = (base === undefined) ? 10 : base;
   return Math.log(number) / Math.log(base);
 };
 
