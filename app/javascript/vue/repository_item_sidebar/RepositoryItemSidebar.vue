@@ -157,10 +157,9 @@
                 </div>
                 <div v-if="assignedModules && assignedModules.total_assigned_size > 0" class="flex flex-col gap-4">
                   <div v-if="privateModuleSize() > 0" class="flex flex-col gap-4">
-                    <div class="text-sn-dark-grey">{{ i18n.t('repositories.item_card.assigned.private', {
-                      count:
-                        privateModuleSize()
-                    }) }}</div>
+                    <div class="text-sn-dark-grey">{{ i18n.t('repositories.item_card.assigned.private',
+                      { count: privateModuleSize() }) }}
+                    </div>
                     <div class="sci-divider" :class="{ 'hidden': assignedModules?.viewable_modules?.length == 0 }"></div>
                   </div>
                   <div v-for="(assigned, index) in assignedModules.viewable_modules" :key="`assigned_module_${index}`"
@@ -168,7 +167,7 @@
                     <div class="flex flex-col gap-3.5">
                       <div v-for="(item, index_assigned) in assigned" :key="`assigned_element_${index_assigned}`">
                         {{ i18n.t(`repositories.item_card.assigned.labels.${item.type}`) }}
-                        <a :href="item.url" class="text-sn-science-blue">
+                        <a :href="item.url" class="text-sn-science-blue hover:text-sn-science-blue">
                           {{ item.archived ? i18n.t('labels.archived') : '' }} {{ item.value }}
                         </a>
                       </div>

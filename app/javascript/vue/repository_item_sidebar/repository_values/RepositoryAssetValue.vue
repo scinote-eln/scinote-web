@@ -4,9 +4,10 @@
       {{ colName }}
     </div>
     <div v-if="file_name" @mouseover="tooltipShowing = true" @mouseout="tooltipShowing = false"
-      class="w-full cursor-pointer text-sn-science-blue relative">
-      <a class="w-full inline-block file-preview-link truncate" :id="modalPreviewLinkId" data-no-turbolink="true"
-        data-id="true" data-status="asset-present" :data-preview-url=this?.preview_url :href=this?.url>
+      class="w-full cursor-pointer  relative">
+      <a class="w-full inline-block file-preview-link truncate hover:no-underline hover:text-sn-science-blue text-sn-science-blue"
+        :id="modalPreviewLinkId" data-no-turbolink="true" data-id="true" data-status="asset-present"
+        :data-preview-url=this?.preview_url :href=this?.url>
         {{ file_name }}
       </a>
       <tooltip-preview v-if="tooltipShowing && medium_preview_url" :id="id" :url="url" :file_name="file_name"
