@@ -1,6 +1,6 @@
 <template>
   <div id="repository-asset-value-wrapper" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
-    <div class="font-inter text-sm font-semibold leading-5 truncate">
+    <div class="font-inter text-sm font-semibold leading-5 truncate" :title="colName">
       {{ colName }}
     </div>
     <div v-if="file_name" @mouseover="tooltipShowing = true" @mouseout="tooltipShowing = false"
