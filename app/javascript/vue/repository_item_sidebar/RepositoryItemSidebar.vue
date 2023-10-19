@@ -167,7 +167,7 @@
                     <div class="flex flex-col gap-3.5">
                       <div v-for="(item, index_assigned) in assigned" :key="`assigned_element_${index_assigned}`">
                         {{ i18n.t(`repositories.item_card.assigned.labels.${item.type}`) }}
-                        <a :href="item.url" class="text-sn-science-blue hover:text-sn-science-blue">
+                        <a :href="item.url" class="text-sn-science-blue hover:text-sn-science-blue hover:no-underline">
                           {{ item.archived ? i18n.t('labels.archived') : '' }} {{ item.value }}
                         </a>
                       </div>
