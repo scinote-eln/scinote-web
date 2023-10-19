@@ -2152,7 +2152,7 @@ en:
           disabled_placeholder: "Select Experiment to enable Task"
           no_options_placeholder: "No tasks available to assign items"
       assign:
-        text: "Assign to this task"
+        text: "Assign to task"
         flash_all_assignments_success: "Successfully assigned %{count} item(s) to the task."
         flash_some_assignments_success: "Successfully assigned %{assigned_count} item(s) to the task. %{skipped_count} item(s) were already assigned to the task."
         flash_assignments_failure: "Failed to assign item(s) to task."
@@ -2220,12 +2220,14 @@ en:
     my_module_assigned_snapshot_service:
       invalid_arguments: "Can't find %{key}"
     item_card:
-      title:
-        information: "Information"
       section:
+        information: "Information"
         assigned: "Assigned (%{count})"
+        qr: "QR"
+      print_label: "Print label"
       assigned:
         empty: "This item is not assigned to any task."
+        assign: "Assign to task"
         private:
           one: "Assigned to %{count} private task"
           other: "Assigned to %{count} private tasks"
@@ -2240,29 +2242,43 @@ en:
         added_on: "Added on"
         added_at: "Added at"
         added_by: "Added by"
-      custom_columns_label: "Custom columns"
+        archived_on: "Archived on"
+        archived_by: "Archived by"
+      reminders:
+        stock_low: "Only %{stock_formated} left."
+        stock_empty: "No stock left"
+        date_expiration: "This item is expiring in %{date_expiration}."
+        item_expired: "This item has expired."
+        day:
+          one: "day"
+          other: "days"
       stock_export: "Export"
-      no_custom_columns_label: 'This item has no custom columns'
+      custom_columns_label: "Custom columns"
+      no_custom_columns_label: "No custom columns"
       repository_time_range_value:
         no_time_range: 'No time range'
       repository_text_value:
+        collapse: 'Collapse'
+        expand: 'Expand'
         no_text: 'No text'
       repository_stock_value:
         no_stock: 'No stock'
       repository_status_value:
         no_status: 'No selection'
       repository_number_value:
+        collapse: 'Collapse'
+        expand: 'Expand'
         no_number: 'No number'
       repository_list_value:
         no_list: 'No selection'
       repository_date_value:
         no_date: 'No date'
-      repositoy_date_time_value:
-        no_date_time: 'No date & time'
+      repository_date_time_value:
+        no_date_time: 'No date and time'
       repository_date_time_range_value:
-        no_date_time_range: 'No date & time range'
+        no_date_time_range: 'No date and time range'
       repository_date_range_value:
-        no_date_range_value: 'No date range'
+        no_date_range: 'No date range'
       repository_checklist_value:
         no_checklist: 'No selection'
       repository_asset_value:
@@ -2469,7 +2485,7 @@ en:
       no_tasks: "This item in not assigned to any task."
       amount: "Amount: %{value}"
       unit: "Unit: %{unit}"
-      assign_to_task: "Assign to this task"
+      assign_to_task: "Assign to task"
       assign_to_task_error:
         no_access: "You can only view this task"
         already_assigned: "This item is already assigned to this task"
@@ -3493,7 +3509,7 @@ en:
       description: "Once you create items in the inventory, they will appear here."
     buttons:
       insert: "Insert"
-      assign: "Assign to this task"
+      assign: "Assign to task"
     projects: PROJECTS
     experiments: EXPERIMENTS
     tasks: TASKS

@@ -1,18 +1,17 @@
-<div class="attachment-container asset">
+<div class="attachment-container asset group">
   <%= link_to '#',
-          class: "shareable-file-preview-link",
-          id: "modal_link#{asset.id}",
-          data: {
-            no_turbolink: true,
-            id: asset.id
-          } do %>
+    class: "file-preview-link group-hover:hidden",
+    id: "modal_link#{asset.id}",
+    data: {
+      no_turbolink: true,
+      id: asset.id
+    } do %>
     <div class="attachment-preview <%= asset.file.attached? ? asset.file.metadata['asset_type'] : '' %>">
       <% if asset.previewable? && asset.medium_preview&.image&.attached? %>
         <%= image_tag asset.medium_preview.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
-            class: 'asset-preview-image',
-            style: 'opacity: 0' %>
+            class: 'rounded-sm' %>
       <% else %>
-        <i class="fas <%= file_fa_icon_class(asset) if asset.file_name %>"></i>
+        <div class="w-[186px] h-[186px] bg-sn-super-light-grey rounded-sm"></div>
       <% end %>
     </div>
     <div class="attachment-label"
@@ -21,12 +20,28 @@
          title="<%= asset.render_file_name %>">
       <%= asset.render_file_name %>
     </div>
-    <div class="attachment-metadata">
-      <%= t('assets.placeholder.modified_label') %> <span class="iso-formatted-date"><%= asset.updated_at.iso8601 if asset.updated_at %></span><br>
+  <% end %>
+  <div class="tw-hidden group-hover:block hovered-thumbnail h-full">
+    <a
+      href="#"
+      class="shareable-file-preview-link"
+      id="modal_link<%= asset.id %>"
+      data-no-turbolink="true"
+      data-id="<%= asset.id %>"
+    >
+      <%= asset.render_file_name %>
+    </a>
+    <div class="absolute bottom-16 text-sn-grey">
       <%= number_to_human_size(asset.file_size) %>
     </div>
-  <% end %>
-  <% if defined?(show_context) && show_context %>
-    <%= render partial: "shareable_links/my_modules/step_attachments/context_menu", locals: { asset: asset } %>
-  <% end %>
+    <div class="absolute bottom-4 w-[184px] grid grid-cols-[repeat(4,_2.5rem)] justify-between">
+      <%= link_to shared_asset_download_path(@shareable_link.uuid, asset), class: 'btn btn-light icon-btn thumbnail-action-btn', data: { turbolinks: false } do %>
+        <span class="sn-icon sn-icon-export"></span>
+      <% end %>
+    </div>
+    <% if defined?(show_context) && show_context %>
+      <%= render partial: "shareable_links/my_modules/step_attachments/context_menu", locals: { asset: asset } %>
+    <% end %>
+  </div>
+
 </div>

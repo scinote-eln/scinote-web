@@ -8,7 +8,7 @@
         <i class="sn-icon sn-icon-drag"></i>
       </div>
       <div class="flex items-start gap-2 grow" :class="{ 'done': checklistItem.attributes.checked }">
-        <div v-if="!inRepository" class="sci-checkbox-container my-1.5 border-0 border-y border-transparent border-solid" :class="{ 'disabled': !toggleUrl }">
+        <div v-if="!inRepository" class="sci-checkbox-container my-1.5 border-0 border-y border-transparent border-solid" :class="{ 'disabled': !toggleUrl }"  :style="toggleUrl && 'pointer-events: initial'">
           <input ref="checkbox"
                  type="checkbox"
                  class="sci-checkbox"

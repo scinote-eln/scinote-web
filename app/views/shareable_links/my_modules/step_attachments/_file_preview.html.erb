@@ -10,20 +10,9 @@
       <div class="modal-header">
         <span class="file-name"><%= asset.file.metadata[:name] || asset.file_name %></span>
         <div class="sci-btn-group">
-          <% if asset.step.present? %>
-            <%= link_to shared_protocol_asset_download_path(@shareable_link.uuid, asset),
-                        class: 'btn btn-light file-download-link',
-                        data: { turbolinks: false } do %>
-              <span class="sn-icon sn-icon-export"></span>
-              <%= t('Download') %>
-            <% end %>
-          <% elsif asset.result.present? %>
-            <%= link_to shared_protocol_result_asset_download_path(@shareable_link.uuid, asset),
-                        class: 'btn btn-light file-download-link',
-                        data: { turbolinks: false } do %>
-              <span class="sn-icon sn-icon-export"></span>
-              <%= t('Download') %>
-            <% end %>
+          <%= link_to shared_asset_download_path(@shareable_link.uuid, asset), class: 'btn btn-light file-download-link', data: { turbolinks: false } do %>
+            <span class="sn-icon sn-icon-export"></span>
+            <%= t('Download') %>
           <% end %>
           <button type="button" class="btn icon-btn btn-light" data-dismiss="modal"><span class="sn-icon sn-icon-close"></span></button>
         </div>

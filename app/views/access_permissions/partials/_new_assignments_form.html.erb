@@ -4,10 +4,10 @@
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
     <h4 class="modal-title">
-      <%= link_to assignable_path, remote: true, class: 'pull-left spacer', data: { action: 'swap-remote-container', target: '#user_assignments_modal' } do %>
+      <%= t '.title', resource_name: assignable.name %>
+      <%= link_to assignable_path, remote: true, class: 'pull-left mr-2', data: { action: 'swap-remote-container', target: '#user_assignments_modal' } do %>
         <i class="fas fa-arrow-left"></i>
       <% end %>
-      <%= t '.title', resource_name: assignable.name %>
     </h4>
   </div>
   <%= form_with(url: create_path, method: :post, html: { id: 'new-user-assignment-form', data: { remote: true, object_type: assignable.class.to_s.downcase } }) do |f| %>

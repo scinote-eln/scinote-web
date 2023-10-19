@@ -19,49 +19,47 @@
         <% end %>
       </div>
     </div>
+    <div class="actions-block gap-4">
+      <% if protocol.steps.length > 0 %>
+        <button class="btn btn-secondary" id="steps-collapse-btn" tabindex="0">
+          <%= t("protocols.steps.collapse_label") %>
+        </button>
+        <button class="btn btn-secondary" id="steps-expand-btn" tabindex="0">
+          <%= t("protocols.steps.expand_label") %>
+        </button>
+      <% end %>
+    </div>
   </div>
 
-  <div id="protocol-content" class="protocol-content collapse in" aria-expanded="true">
-    <div class="protocol-description">
-      <div class="protocol-name">
-        <span>
-          <%= protocol.name %>
-        </span>
-      </div>
-        
-        <div>
-          <div id="protocol-description-container" >
-            <% if protocol.description.present? %>
-              <div>
-                <%=  smart_annotation_text(protocol.shareable_tinymce_render(:description)) %>
-              </div>
-            <% else %>
-              <div class="empty-protocol-description">
-                 <%= t("protocols.no_text_placeholder") %>
-              </div>
-            <% end %>
-          </div>
-        </div>
+  <div id="protocol-content" class="protocol-content collapse in " aria-expanded="true">
+    <div class="sci-divider my-4"></div>
+    <div class="protocol-name">
+      <span>
+        <%= protocol.name %>
+      </span>
     </div>
+
     <div>
-      <div id="protocol-steps-container">
-        <% if protocol.steps.length > 0 %>
-          <div class="protocol-step-actions">
-            <button class="btn btn-light" id="steps-collapse-btn" tabindex="0">
-              <span class="sn-icon sn-icon-collapse"></span>
-              <%= t("protocols.steps.collapse_label") %>
-            </button>
-            <button class="btn btn-light" id="steps-expand-btn" tabindex="0">
-              <span class="sn-icon sn-icon-expand"></span>
-              <%= t("protocols.steps.expand_label") %>
-            </button>
+      <div id="protocol-description-container" >
+        <% if protocol.description.present? %>
+          <div>
+            <%=  smart_annotation_text(protocol.shareable_tinymce_render(:description)) %>
+          </div>
+        <% else %>
+          <div class="empty-protocol-description">
+              <%= t("protocols.no_text_placeholder") %>
           </div>
         <% end %>
+      </div>
+    </div>
+    <div class="sci-divider my-4"></div>
+    <div>
+      <div id="protocol-steps-container">
         <div class="protocol-steps">
           <% protocol.steps.sort_by(&:position).each do |step| %>
             <div class="step-block">
               <%= render partial: "shareable_links/my_modules/step", locals: { step: step } %>
-              <%= render partial: "shareable_links/my_modules/comments_sidebar", locals: { step: step } %>
+              <%= render partial: "shareable_links/my_modules/step_comments_sidebar", locals: { step: step } %>
             </div>
           <% end %>
         </div>

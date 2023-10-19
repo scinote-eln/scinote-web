@@ -7,7 +7,7 @@
   </span>
 </div>
 
-<div class="my-5 max-w-4xl flex-1 bg-sn-white">
+<div class="my-5 flex-1">
   <div class="my-module-position-container">
     <!-- Header Actions -->
     <%= render partial: 'shareable_links/my_modules/header_actions' %>
@@ -26,10 +26,6 @@
           <span class="task-details-code">
             <%= @my_module.code %>
           </span>
-        </div>
-
-        <div class="flex items-center gap-3">
-          <%= render partial: 'shareable_links/my_modules/task_flow_button', locals: { my_module: @my_module } if @my_module.my_module_status_flow %>
         </div>
       </div>
       <div id="details-container" class="task-details" data-shareable-link=<%= @shareable_link.uuid %>>

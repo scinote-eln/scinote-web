@@ -1,12 +1,13 @@
-<div class="step-table-container">
-  <div class="step-element-header step-element--locked">
+<div class="content__table-container">
+  <div class="sci-divider my-6"></div>
+  <div class="table-header h-9 flex rounded mb-3 items-center relative w-full group/table-header step-element--locked">
     <% if element.name.present? %>
-      <div class="step-element-name font-bold">
+      <div class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold">
         <%= render partial: "shareable_links/my_modules/inline_view", locals: { text: element.name, smart_annotation_enabled: false } %>
       </div>
     <% end %>
   </div>
-  <div class="step-table view locked" tabindex="0">
+  <div class="table-body group/table-body relative border-solid border-transparent view locked" tabindex="0">
     <input type="hidden" class="hot-table-contents" value="<%= element.contents_utf_8 %>" />
     <input type="hidden" class="hot-table-metadata" value="<%= element.metadata ? element.metadata.to_json : nil %>" />
     <div class="hot-table-container"></div>

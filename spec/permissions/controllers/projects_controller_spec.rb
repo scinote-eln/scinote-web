@@ -12,8 +12,10 @@ describe ProjectsController, type: :controller do
     show: { id: 1 },
     experiments_cards: { id: 1 },
     notifications: { id: 1 },
+    permissions: { id: 1 },
+    actions_dropdown: { id: 1 },
     view_type: { id: 1 }
-  }, [:current_folder]
+  }, [:current_folder, :set_breadcrumbs_items, :create_tag]
 
   login_user
 

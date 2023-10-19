@@ -10,7 +10,7 @@ describe StepsController, type: :controller do
   }
 
   let(:protocol_repo) do
-    create :protocol, :in_public_repository, team: team, added_by: user
+    create :protocol, :in_repository_draft, team: team, added_by: user
   end
   let(:step_repo) { create :step, protocol: protocol_repo }
 

@@ -1,26 +1,24 @@
 <template>
   <div id="repository-checklist-value-wrapper" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
-    <div class="font-inter text-sm font-semibold leading-5">
+    <div class="font-inter text-sm font-semibold leading-5 truncate">
       {{ colName }}
     </div>
-    <div v-if="allChecklistItems">
+    <div v-if="checklistItems.length > 0">
       <div v-if="isEditing"
         class="text-sn-dark-grey font-inter text-sm font-normal leading-5 grid grid-rows-2 grid-cols-2 overflow-auto h-12">
-        <div v-for="(checklistItem, index) in allChecklistItems" :key="index">
+        <div v-for="(checklistItem, index) in checklistItems" :key="index">
           <div class="sci-checkbox-container">
-            <input type="checkbox" class="sci-checkbox" :value="checklistItem.value" v-model="selectedChecklistItems" />
+            <input type="checkbox" class="sci-checkbox" :value="checklistItem?.value" v-model="selectedChecklistItems" />
             <span class="sci-checkbox-label"></span>
           </div>
-          {{ checklistItem.label }}
+          {{ checklistItem?.label }}
         </div>
       </div>
       <div v-else
-        class="text-sn-dark-grey font-inter text-sm font-normal leading-5 h-fit overflow-auto grid auto-rows-auto grid-cols-3">
-        <div v-for="(checklistItem, index) in allChecklistItems" :key="index">
-          <div id="checklist-item" class="min-w-max">
-            {{ `${checklistItem.label} |` }}
-          </div>
-        </div>
+        class="text-sn-dark-grey font-inter text-sm font-normal leading-5 w-[370px] overflow-x-auto flex flex-wrap gap-1">
+        <span v-for="(checklistItem, index) in checklistItems" :key="index" :id="`checklist-item-${index}`" class="flex w-fit break-words mr-1">
+          {{ index + 1 === checklistItems.length ? checklistItem?.label : `${checklistItem?.label} |` }}
+        </span>
       </div>
     </div>
     <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
@@ -36,7 +34,7 @@ export default {
     return {
       isEditing: false,
       id: null,
-      allChecklistItems: [],
+      checklistItems: [],
       selectedChecklistItems: []
     }
   },
@@ -47,7 +45,9 @@ export default {
     colVal: Array
   },
   created() {
-    this.allChecklistItems = this.colVal
+    if (!this.colVal) return
+
+    this.checklistItems = this.colVal
   }
 }
 </script>

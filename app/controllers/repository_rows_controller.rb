@@ -46,7 +46,9 @@ class RepositoryRowsController < ApplicationController
     @repository_row = @repository.repository_rows.find_by(id: params[:id])
     return render_404 unless @repository_row
 
-    @my_module = @repository_row.my_modules.find_by(id: params[:my_module_id])
+    @my_module = if params[:my_module_id].present?
+                   MyModule.repository_row_assignable_by_user(current_user).find_by(id: params[:my_module_id])
+                 end
     return render_403 if @my_module && !can_read_my_module?(@my_module)
 
     if @my_module
@@ -57,8 +59,14 @@ class RepositoryRowsController < ApplicationController
                                 end
     end
 
-    @assigned_modules = @repository_row.my_modules.joins(experiment: :project)
+    @assigned_modules = @repository_row.my_modules
+                                       .joins(experiment: :project)
+                                       .joins(:my_module_repository_rows)
+                                       .select('my_module_repository_rows.created_at, my_modules.*')
+                                       .order('my_module_repository_rows.created_at': :desc)
+                                       .distinct
     @viewable_modules = @assigned_modules.viewable_by_user(current_user, current_user.teams)
+    @reminders_present = @repository_row.repository_cells.with_active_reminder(@current_user).any?
   end
 
   def create

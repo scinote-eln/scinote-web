@@ -137,4 +137,18 @@
   .btn.btn-danger.disabled {
     @apply bg-sn-delete-red-disabled;
   }
+
+  .btn-text-link {
+    @apply text-sn-blue text-sm cursor-pointer
+  }
+
+  .btn-text-link:visited,
+  .btn-text-link:hover {
+    @apply text-sn-blue no-underline
+  }
+
+  .btn-text-link.disabled,
+  .btn-text-link:disabled {
+    @apply text-sn-sleepy-grey
+  }
 }
