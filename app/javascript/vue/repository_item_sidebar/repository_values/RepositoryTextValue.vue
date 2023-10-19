@@ -7,10 +7,8 @@
           i18n.t('repositories.item_card.repository_text_value.expand') }}
       </div>
     </div>
-    <div v-if="edit" ref="textRef" class="text-sn-dark-grey font-inter text-sm font-normal leading-5 overflow-y-auto"
-         :class="{ 'max-h-[60px]': !contentExpanded,
-                   'max-h-[600px]': contentExpanded }">
-      {{ edit }}
+    <div v-if="view" v-html="view" ref="textRef" class="text-sn-dark-grey font-inter text-sm font-normal leading-5 overflow-y-auto"
+         :class="{ 'max-h-[60px]': !contentExpanded, 'max-h-[600px]': contentExpanded }">
     </div>
     <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
       {{ i18n.t('repositories.item_card.repository_text_value.no_text') }}
