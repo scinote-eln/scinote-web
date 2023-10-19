@@ -417,6 +417,7 @@ class Constants
   SLOW_STATUS_POLLING_INTERVAL = 10000
 
   ASSET_SYNC_TOKEN_EXPIRATION = 1.year
+  ASSET_SYNC_URL = ENV['ASSET_SYNC_URL'].freeze
 
   #                             )       \   /      (
   #                            /|\      )\_/(     /|\

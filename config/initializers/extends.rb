@@ -610,6 +610,8 @@ class Extends
     www.gstatic.com/recaptcha/
   )
 
+  EXTERNAL_SERVICES << Constants::ASSET_SYNC_URL unless EXTERNAL_SERVICES.include?(Constants::ASSET_SYNC_URL)
+
   COLORED_BACKGROUND_ACTIONS = %w(
     my_modules/protocols
     my_modules/signatures

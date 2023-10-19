@@ -30,6 +30,7 @@
       @open_ove_editor="openOVEditor(attachment.attributes.urls.open_vector_editor_edit)"
       @open_marvinjs_editor="openMarvinJsEditor"
       @open_scinote_editor="openScinoteEditor"
+      @open_locally="openLocally"
       @delete="deleteModal = true"
       @viewMode="changeViewMode"
       @move="showMoveModal"
@@ -52,6 +53,7 @@
   import moveAssetModal from '../modal/move.vue'
   import MoveMixin from './mixins/move.js'
   import MenuDropdown from '../../menu_dropdown.vue'
+  import axios from '../../../../packs/custom_axios'
 
   export default {
     name: 'contextMenu',
@@ -101,6 +103,10 @@
           })
         }
         menu.push({
+          text: this.i18n.t('Open_locally'),
+          emit: 'open_locally'
+        })
+        menu.push({
           text: this.i18n.t('Download'),
           url: this.attachment.attributes.urls.download,
           url_target: '_blank'
@@ -132,6 +138,17 @@
       }
     },
     methods: {
+      async openLocally() {
+        try {
+          const response = await axios.get(this.attachment.attributes.urls.open_locally);
+          const data = response.data;
+          const syncUrl = GLOBAL_CONSTANTS.ASSET_SYNC_URL;
+          await axios.post(syncUrl, data);
+        } catch (error) {
+          console.error("Error in request:", error);
+        }
+      },
+      // TODO: add method to handle get to SciNote and then post to local URL
       changeViewMode(viewMode) {
         this.$emit('attachment:viewMode', viewMode)
         $.ajax({

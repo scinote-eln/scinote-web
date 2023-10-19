@@ -6,7 +6,7 @@ class AssetSyncController < ApplicationController
   before_action :authenticate_asset_sync_token!, only: :update
 
   def show
-    asset = Asset.find_by(params[:asset_id])
+    asset = Asset.find_by(id: params[:asset_id])
 
     head :forbidden unless asset && can_manage_asset?(asset)
 
