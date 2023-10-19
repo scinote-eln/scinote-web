@@ -6,7 +6,7 @@ class MigrateNotificationToNoticed < ActiveRecord::Migration[7.0]
   end
 
   def up
-    add_column :notifications, :params, :jsonb, default: {}, null: false
+    add_column :notifications, :params, :jsonb
     add_column :notifications, :type, :string
     add_column :notifications, :read_at, :datetime
     add_reference :notifications, :recipient, polymorphic: true
@@ -49,6 +49,8 @@ class MigrateNotificationToNoticed < ActiveRecord::Migration[7.0]
 
     drop_table :user_notifications
     change_column_null :notifications, :type, false
+    change_column_null :notifications, :params, false
+    change_column_default :notifications, :params, {}
 
     remove_column :notifications, :type_of
     remove_column :notifications, :title
