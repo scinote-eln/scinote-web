@@ -1,5 +1,5 @@
 <template>
-  <div ref="stepContainer" class="step-container"
+  <div ref="stepContainer" class="step-container pr-8"
        :id="`stepContainer${step.id}`"
        @drop.prevent="dropFile"
        @dragenter.prevent="dragEnter($event)"

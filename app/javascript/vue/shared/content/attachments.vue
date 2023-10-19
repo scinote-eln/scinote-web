@@ -1,5 +1,5 @@
 <template>
-  <div class="content__attachments" :id='"content__attachments-" + parent.id'>
+  <div class="content__attachments pr-8" :id='"content__attachments-" + parent.id'>
     <div class="sci-divider my-6"></div>
     <div class="content__attachments-actions">
       <div class="title">

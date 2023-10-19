@@ -1,5 +1,5 @@
 <template>
-  <div class="content__text-container">
+  <div class="content__text-container pr-8">
     <div class="sci-divider my-6" v-if="!inRepository"></div>
     <div class="text-header h-9 flex rounded mb-1 items-center relative w-full group/text-header" :class="{ 'editing-name': editingName, 'locked': !element.attributes.orderable.urls.update_url }">
       <div v-if="element.attributes.orderable.urls.update_url || element.attributes.orderable.name"
