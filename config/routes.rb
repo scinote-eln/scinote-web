@@ -1005,7 +1005,7 @@ Rails.application.routes.draw do
     end
   end
 
-  get 'asset_sync/:asset_id', to: 'asset_sync#show'
+  get 'asset_sync/:asset_id', to: 'asset_sync#show', as: :asset_sync_show
   put 'asset_sync', to: 'asset_sync#update'
 
   post 'global_activities', to: 'global_activities#index'
