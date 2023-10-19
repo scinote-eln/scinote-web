@@ -23,7 +23,7 @@ module RepositoryDatatable
         end
       end
 
-      if data[:stock_amount].zero?
+      if data[:stock_amount] <= 0
         data[:reminder] = true
         data[:reminder_text] = I18n.t('repositories.item_card.reminders.stock_empty')
       end
