@@ -4,7 +4,7 @@
   'use strict';
 
   $(document).on('click', '.record-info-link', function(e) {
-    const myModuleId = $('.my-modules-protocols-index').data('task-id');
+    const myModuleId = $('.my-module-content').data('task-id');
     const repositoryRowURL = $(this).attr('href');
 
     e.stopPropagation();
