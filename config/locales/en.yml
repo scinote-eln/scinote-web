@@ -1274,6 +1274,7 @@ en:
       published_table: "entered a table on %{timestamp}."
       published_text:  "entered a text on %{timestamp}."
       published_asset:  "uploaded a file on %{timestamp}."
+      drop_message: "Drop file to add to result %{name}"
       expand_label: "Expand All"
       collapse_label: "Collapse All"
       empty_name: "Add title"
