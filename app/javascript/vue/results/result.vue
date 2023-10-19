@@ -1,6 +1,17 @@
 <template>
-  <div class="result-wrapper bg-white p-4 mb-4 rounded">
-    <div class="result-header flex justify-between ">
+  <div class="result-wrapper p-4 mb-4 rounded relative"
+      @drop.prevent="dropFile"
+      @dragenter.prevent="dragEnter($event)"
+      @dragover.prevent
+      :class="{ 'bg-sn-super-light-blue': dragingFile, 'bg-white': !dragingFile }"
+  >
+    <div class="text-xl items-center flex text-sn-blue h-full justify-center left-0 absolute top-0 w-full"
+         v-if="dragingFile"
+         @dragleave.prevent="dragingFile = false">
+      {{ i18n.t('my_modules.results.drop_message', { name: result.attributes.name }) }}
+      <StorageUsage v-if="showStorageUsage()" :parent="result"/>
+    </div>
+    <div class="result-header flex justify-between" :class="{ 'opacity-0 pointer-events-none': dragingFile }">
       <div class="result-head-left flex items-start flex-grow gap-4">
         <a class="result-collapse-link hover:no-underline focus:no-underline py-0.5 border-0 border-y border-transparent border-solid text-sn-black"
             :href="'#resultBody' + result.id"
@@ -85,7 +96,7 @@
       @reorder="updateElementOrder"
       @close="closeReorderModal"
     />
-    <div class="collapse in pl-10" :id="'resultBody' + result.id">
+    <div class="collapse in pl-10"  :class="{ 'opacity-0 pointer-events-none': dragingFile }" :id="'resultBody' + result.id">
       <div v-for="(element, index) in orderedElements" :key="element.id">
         <component
           :is="elements[index].attributes.orderable_type"
@@ -130,12 +141,17 @@
   import WopiFileModal from '../shared/content/attachments/mixins/wopi_file_modal.js'
   import OveMixin from '../shared/content/attachments/mixins/ove.js'
   import UtilsMixin from '../mixins/utils.js'
+  import StorageUsage from '../shared/content/attachments/storage_usage.vue'
 
   export default {
     name: 'Results',
     props: {
       result: { type: Object, required: true },
-      resultToReload: { type: Number, required: false }
+      resultToReload: { type: Number, required: false },
+      activeDragResult: {
+        type: Number,
+        required: false
+      }
     },
     data() {
       return {
@@ -144,6 +160,7 @@
         attachments: [],
         attachmentsReady: false,
         showFileModal: false,
+        dragingFile: false,
         wellPlateOptions: [
           { text: I18n.t('protocols.steps.insert.well_plate_options.32_x_48'), emit: 'create:table', params: [[32, 48], true] },
           { text: I18n.t('protocols.steps.insert.well_plate_options.16_x_24'), emit: 'create:table', params: [[16, 24], true] },
@@ -164,13 +181,19 @@
       Attachments,
       InlineEdit,
       MenuDropdown,
-      deleteResultModal
+      deleteResultModal,
+      StorageUsage
     },
     watch: {
       resultToReload() {
         if (this.resultToReload == this.result.id) {
           this.loadElements();
           this.loadAttachments();
+        }
+      },
+      activeDragResult() {
+        if (this.activeDragResult != this.result.id && this.dragingFile) {
+          this.dragingFile = false;
         }
       }
     },
@@ -277,6 +300,20 @@
       this.loadElements();
     },
     methods: {
+      dragEnter(e) {
+        if (!this.urls.upload_attachment_url) return;
+
+        // Detect if dragged element is a file
+        // https://stackoverflow.com/a/8494918
+        let dt = e.dataTransfer;
+        if (dt.types && (dt.types.indexOf ? dt.types.indexOf('Files') != -1 : dt.types.contains('Files'))) {
+          this.dragingFile = true;
+          this.$emit('result:drag_enter', this.result.id);
+        }
+      },
+      showStorageUsage() {
+        return (this.elements.length || this.attachments.length) && !this.isCollapsed && this.result.attributes.storage_limit;
+      },
       openReorderModal() {
         this.reordering = true;
       },
