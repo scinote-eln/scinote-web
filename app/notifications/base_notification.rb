@@ -4,7 +4,8 @@ class BaseNotification < Noticed::Base
   deliver_by :database, if: :database_notification?
 
   def self.send_notifications(params, later: false)
-    recipients_class = "Recipients::#{NotificationExtends::NOTIFICATIONS_TYPES[params[:type]][:recipients_module]}".constantize
+    recipients_class =
+      "Recipients::#{NotificationExtends::NOTIFICATIONS_TYPES[subtype][:recipients_module]}".constantize
     recipients_class.new(params).recipients.each do |recipient|
       if later
         with(params).deliver_later(recipient)
@@ -12,6 +13,10 @@ class BaseNotification < Noticed::Base
         with(params).deliver(recipient)
       end
     end
+  end
+
+  def self.subtype
+    params[:type]
   end
 
   def subject; end
@@ -23,7 +28,8 @@ class BaseNotification < Noticed::Base
   end
 
   def notification_subgroup
-    NotificationExtends::NOTIFICATIONS_GROUPS.values.reduce({}, :merge)
-                                             .find { |_sg, n| n.include?(params[:type].to_sym) }[0]
+    NotificationExtends::NOTIFICATIONS_GROUPS.values.reduce({}, :merge).find do |_sg, n|
+      n.include?(self.class.subtype.to_sym)
+    end[0]
   end
 end

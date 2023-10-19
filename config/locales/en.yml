@@ -3339,8 +3339,8 @@ en:
       other_team_invitation: "You are invited or removed from the team"
     notification:
       my_module_due_date_reminder_html: "Due date for %{my_module_name} is coming up"
-      item_low_stock_reminder_html: "Item %{repository_item_name} is running low"
-      item_date_reminder_html: "Date reminder for %{repository_item_name} is coming up in %{value} %{units}"
+      item_low_stock_reminder_html: "Item %{repository_row_name} is running low"
+      item_date_reminder_html: "Date reminder for %{repository_row_name} is coming up in %{value} %{units}"
     deliver:
       download_link: "Download link:"
       download_text: "Click the link to download the file."
