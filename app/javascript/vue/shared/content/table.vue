@@ -1,5 +1,5 @@
 <template>
-  <div class="content__table-container">
+  <div class="content__table-container pr-8">
     <div class="sci-divider my-6" v-if="!inRepository"></div>
     <div class="table-header h-9 flex rounded mb-3 items-center relative w-full group/table-header" :class="{ 'editing-name': editingName, 'locked': locked }">
       <div v-if="!locked || element.attributes.orderable.name" :key="reloadHeader"

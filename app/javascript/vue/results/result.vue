@@ -1,5 +1,5 @@
 <template>
-  <div class="result-wrapper bg-white p-4 mb-4 rounded">
+  <div class="result-wrapper bg-white p-4 mb-4 rounded pr-8">
     <div class="result-header flex justify-between ">
       <div class="result-head-left flex items-start flex-grow gap-4">
         <a class="result-collapse-link hover:no-underline focus:no-underline py-0.5 border-0 border-y border-transparent border-solid text-sn-black"
