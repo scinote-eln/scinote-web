@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class NotificationExtends
   NOTIFICATIONS_TYPES = {
     designate_user_to_my_module_activity: {

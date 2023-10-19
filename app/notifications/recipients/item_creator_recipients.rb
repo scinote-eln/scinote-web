@@ -6,6 +6,6 @@ class Recipients::ItemCreatorRecipients
   end
 
   def recipients
-    []
+    [RepositoryRow.find(@params[:repository_row_id]).created_by]
   end
 end
