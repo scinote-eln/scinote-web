@@ -20,7 +20,7 @@
       </div>
 
 
-      <div ref="bodyWrapper" id="body-wrapper" class="overflow-auto h-[calc(100%-78px)] pt-6">
+      <div ref="bodyWrapper" id="body-wrapper" class="overflow-auto h-[calc(100%-78px)] pt-6 pr-6">
         <div v-if="dataLoading" class="h-full flex flex-grow-1">
           <div class="sci-loader"></div>
         </div>
@@ -213,8 +213,7 @@
         </div>
 
         <!-- BOTTOM -->
-        <div id="bottom" v-show="!dataLoading" class="h-[100px] flex flex-col justify-end mt-4 mb-6"
-          :class="{ 'pb-6': customColumns?.length }">
+        <div id="bottom" v-show="!dataLoading" class="h-[100px] flex flex-col justify-end mt-4 mb-6">
           <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px mb-6"></div>
           <div id="bottom-button-wrapper" class="flex h-10 justify-end">
             <button type="button" class="btn btn-primary print-label-button"
