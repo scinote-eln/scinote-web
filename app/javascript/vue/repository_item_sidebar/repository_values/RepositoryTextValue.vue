@@ -1,8 +1,8 @@
 <template>
   <div id="repository-text-value-wrapper" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
     <div class="font-inter text-sm font-semibold leading-5 flex justify-between">
-      <div class="truncate w-4/5">{{ colName }}</div>
-      <div @click="toggleExpandContent" v-show="expendable" class="font-normal leading-5 btn-text-link">
+      <div class="truncate" :class="{ 'w-4/5': expandable }" :title="colName">{{ colName }}</div>
+      <div @click="toggleExpandContent" v-show="expandable" class="font-normal leading-5 btn-text-link">
         {{ this.contentExpanded ? i18n.t('repositories.item_card.repository_text_value.collapse') :
           i18n.t('repositories.item_card.repository_text_value.expand') }}
       </div>
@@ -26,7 +26,7 @@ export default {
       edit: null,
       view: null,
       contentExpanded: false,
-      expendable: false
+      expandable: false
     }
   },
   props: {
@@ -49,7 +49,7 @@ export default {
   mounted() {
     this.$nextTick(() => {
       const textHeight = this.$refs.textRef.scrollHeight
-      this.expendable = textHeight > 60 // 60px
+      this.expandable = textHeight > 60 // 60px
     })
   },
 }
