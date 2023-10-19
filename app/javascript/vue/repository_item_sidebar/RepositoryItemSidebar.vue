@@ -7,9 +7,8 @@
 
       <div id="sticky-header-wrapper" class="sticky top-0 right-0 bg-white flex z-50 flex-col h-[78px] pt-6">
         <div class="header flex w-full h-[30px] pr-6">
-          <h4 class="item-name my-auto truncate text-xl" :title="defaultColumns?.name">
-            {{ defaultColumns?.archived ? i18n.t('labels.archived') : '' }}
-            {{ defaultColumns?.name }}
+          <h4 class="item-name my-auto truncate text-xl" :title="repositoryRowName">
+            {{ repositoryRowName }}
           </h4>
           <i id="close-icon" @click="toggleShowHideSidebar(currentItemUrl)"
             class="sn-icon sn-icon-close ml-auto cursor-pointer my-auto mx-0"></i>
@@ -285,6 +284,11 @@ export default {
   },
   created() {
     window.repositoryItemSidebarComponent = this;
+  },
+  computed: {
+    repositoryRowName() {
+      return this.defaultColumns?.archived ? `${I18n.t('labels.archived')} ${this.defaultColumns?.name}` : this.defaultColumns?.name;
+    }
   },
   mounted() {
     // Add a click event listener to the document

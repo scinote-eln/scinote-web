@@ -1,6 +1,6 @@
 <template>
   <div id="repository-time-value-wrapper" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
-    <div class="font-inter text-sm font-semibold leading-5">
+    <div class="font-inter text-sm font-semibold leading-5 truncate">
       {{ colName }}
     </div>
     <div v-if="formatted" class="text-sn-dark-grey font-inter text-sm font-normal leading-5 flex">
