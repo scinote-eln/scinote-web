@@ -1,7 +1,7 @@
 <template>
   <vue-resizable
     ref="vueResizable"
-    :max-width="600"
+    :max-width="400"
     :min-width="208"
     width="auto"
     height="100%"
@@ -134,13 +134,13 @@ export default {
     },
     onResizeStart() {
       document.body.style.cursor = 'url(/images/icon_small/Resize.svg) 0 0, auto';
-      $('.sci--layout-navigation-navigator').addClass('no-transition');
-      $('.sci--layout').addClass('no-transition');
+      $('.sci--layout-navigation-navigator').addClass('!transition-none');
+      $('.sci--layout').addClass('!transition-none');
     },
     onResizeEnd(event) {
       document.body.style.cursor = 'default';
-      $('.sci--layout-navigation-navigator').removeClass('no-transition');
-      $('.sci--layout').removeClass('no-transition');
+      $('.sci--layout-navigation-navigator').removeClass('!transition-none');
+      $('.sci--layout').removeClass('!transition-none');
       this.changeNavigatorState(event.width)
     },
     async changeNavigatorState(newWidth) {
