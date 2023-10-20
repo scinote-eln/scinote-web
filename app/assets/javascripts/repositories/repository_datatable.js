@@ -671,7 +671,7 @@ var RepositoryDatatable = (function(global) {
         visible: true,
         render: function(data, type, row) {
           return "<a href='" + row.recordInfoUrl + "'"
-                 + "class='record-info-link'>" + data + '</a>';
+                 + "class='record-info-link' data-e2e='e2e-TL-invInventory-" + data + "'>" + data + '</a>';
         }
       }, {
         // Added on column

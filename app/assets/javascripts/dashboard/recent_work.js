@@ -17,6 +17,7 @@ var DasboardRecentWorkWidget = (function() {
         recentWorkItemType.attr('title', `${item.type} ID: ${item.code}`);
         recentWorkItemType.tooltip();
       }
+      recentWorkItemType.attr('data-e2e', `e2e-TL-dashRecentWork-${item.name}`);
     });
   }
 

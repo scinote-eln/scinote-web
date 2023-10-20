@@ -29,7 +29,8 @@ module RepositoriesDatatableHelper
           'data-copy-modal-url': team_repository_copy_modal_path(team, repository_id: repository),
           'data-rename-modal-url': team_repository_rename_modal_path(team, repository_id: repository),
           'data-shared': repository.shared_with?(team),
-          'data-i-shared': repository.i_shared?(team)
+          'data-i-shared': repository.i_shared?(team),
+          'data-e2e': "e2e-RT-inventories-tableItemRow-#{repository.id}"
         }
       )
     end
