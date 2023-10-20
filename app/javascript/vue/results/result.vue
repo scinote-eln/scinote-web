@@ -5,124 +5,127 @@
       @dragover.prevent
       :class="{ 'bg-sn-super-light-blue': dragingFile, 'bg-white': !dragingFile }"
   >
-    <div class="text-xl items-center flex text-sn-blue h-full justify-center left-0 absolute top-0 w-full"
+    <div class="text-xl items-center flex flex-col text-sn-blue h-full justify-center left-0 absolute top-0 w-full"
          v-if="dragingFile"
          @dragleave.prevent="dragingFile = false">
       {{ i18n.t('my_modules.results.drop_message', { name: result.attributes.name }) }}
       <StorageUsage v-if="showStorageUsage()" :parent="result"/>
     </div>
-    <div class="result-header flex justify-between" :class="{ 'opacity-0 pointer-events-none': dragingFile }">
-      <div class="result-head-left flex items-start flex-grow gap-4">
-        <a class="result-collapse-link hover:no-underline focus:no-underline py-0.5 border-0 border-y border-transparent border-solid text-sn-black"
-            :href="'#resultBody' + result.id"
-            data-toggle="collapse"
-            data-remote="true">
-          <span class="sn-icon sn-icon-right "></span>
-        </a>
-        <InlineEdit
-          :value="result.attributes.name"
-          class="flex-grow font-bold text-base"
-          :class="{ 'pointer-events-none': !urls.update_url }"
-          :singleLine="false"
-          :characterLimit="255"
-          :allowBlank="false"
-          :attributeName="`${i18n.t('Result')} ${i18n.t('name')}`"
-          :autofocus="editingName"
-          :placeholder="i18n.t('my_modules.results.placeholder')"
-          :defaultValue="i18n.t('my_modules.results.default_name')"
-          :timestamp="i18n.t('protocols.steps.timestamp', {date: result.attributes.created_at, user: result.attributes.created_by })"
-          @editingEnabled="editingName = true"
-          @editingDisabled="editingName = false"
-          :editOnload="result.newResult == true"
-          @update="updateName"
-        />
-      </div>
-      <div class="result-head-right flex elements-actions-container">
-        <input type="file" class="hidden" ref="fileSelector" @change="loadFromComputer" multiple />
-        <MenuDropdown
-          :listItems="this.insertMenu"
-          :btnText="i18n.t('my_modules.results.insert.button')"
-          :position="'right'"
-          :caret="true"
-          @create:table="(args) => args ? this.createElement('table', ...args) : this.createElement('table')"
-          @create:checklist="createElement('checklist')"
-          @create:text="createElement('text')"
-          @create:file="openLoadFromComputer"
-          @create:wopi_file="openWopiFileModal"
-          @create:ove_file="openOVEditor"
-          @create:marvinjs_file="openMarvinJsModal($refs.marvinJsButton)"
-        ></MenuDropdown>
-        <span
-          class="new-marvinjs-upload-button hidden"
-          :data-object-id="result.id"
-          ref="marvinJsButton"
-          :data-marvin-url="result.attributes.marvinjs_context?.marvin_js_asset_url"
-          :data-object-type="result.attributes.type"
-          tabindex="0"
-        ></span> <!-- Hidden element to support legacy code -->
+    <div :class="{ 'opacity-0 pointer-events-none': dragingFile }">
+      <div class="result-header flex justify-between">
+        <div class="result-head-left flex items-start flex-grow gap-4">
+          <a class="result-collapse-link hover:no-underline focus:no-underline py-0.5 border-0 border-y border-transparent border-solid text-sn-black"
+              :href="'#resultBody' + result.id"
+              data-toggle="collapse"
+              data-remote="true"
+              @click="toggleCollapsed">
+            <span class="sn-icon sn-icon-right "></span>
+          </a>
+          <InlineEdit
+            :value="result.attributes.name"
+            class="flex-grow font-bold text-base"
+            :class="{ 'pointer-events-none': !urls.update_url }"
+            :singleLine="false"
+            :characterLimit="255"
+            :allowBlank="false"
+            :attributeName="`${i18n.t('Result')} ${i18n.t('name')}`"
+            :autofocus="editingName"
+            :placeholder="i18n.t('my_modules.results.placeholder')"
+            :defaultValue="i18n.t('my_modules.results.default_name')"
+            :timestamp="i18n.t('protocols.steps.timestamp', {date: result.attributes.created_at, user: result.attributes.created_by })"
+            @editingEnabled="editingName = true"
+            @editingDisabled="editingName = false"
+            :editOnload="result.newResult == true"
+            @update="updateName"
+          />
+        </div>
+        <div class="result-head-right flex elements-actions-container">
+          <input type="file" class="hidden" ref="fileSelector" @change="loadFromComputer" multiple />
+          <MenuDropdown
+            :listItems="this.insertMenu"
+            :btnText="i18n.t('my_modules.results.insert.button')"
+            :position="'right'"
+            :caret="true"
+            @create:table="(args) => args ? this.createElement('table', ...args) : this.createElement('table')"
+            @create:checklist="createElement('checklist')"
+            @create:text="createElement('text')"
+            @create:file="openLoadFromComputer"
+            @create:wopi_file="openWopiFileModal"
+            @create:ove_file="openOVEditor"
+            @create:marvinjs_file="openMarvinJsModal($refs.marvinJsButton)"
+          ></MenuDropdown>
+          <span
+            class="new-marvinjs-upload-button hidden"
+            :data-object-id="result.id"
+            ref="marvinJsButton"
+            :data-marvin-url="result.attributes.marvinjs_context?.marvin_js_asset_url"
+            :data-object-type="result.attributes.type"
+            tabindex="0"
+          ></span> <!-- Hidden element to support legacy code -->
 
-        <a href="#"
-          ref="comments"
-          class="open-comments-sidebar btn icon-btn btn-light"
-          data-turbolinks="false"
-          data-object-type="Result"
-          :data-object-id="result.id">
-          <i class="sn-icon sn-icon-comments"></i>
-          <span class="comments-counter" v-if="result.attributes.comments_count"
-                :id="`comment-count-${result.id}`">
-              {{ result.attributes.comments_count }}
-          </span>
-        </a>
+          <a href="#"
+            ref="comments"
+            class="open-comments-sidebar btn icon-btn btn-light"
+            data-turbolinks="false"
+            data-object-type="Result"
+            :data-object-id="result.id">
+            <i class="sn-icon sn-icon-comments"></i>
+            <span class="comments-counter" v-if="result.attributes.comments_count"
+                  :id="`comment-count-${result.id}`">
+                {{ result.attributes.comments_count }}
+            </span>
+          </a>
 
-        <MenuDropdown
-          v-if="!locked"
-          :listItems="this.actionsMenu"
-          :btnClasses="'btn btn-light icon-btn'"
-          :position="'right'"
-          :btnIcon="'sn-icon sn-icon-more-hori'"
-          @reorder="openReorderModal"
-          @duplicate="duplicateResult"
-          @archive="archiveResult"
-          @restore="restoreResult"
-          @delete="showDeleteModal"
-        ></MenuDropdown>
+          <MenuDropdown
+            v-if="!locked"
+            :listItems="this.actionsMenu"
+            :btnClasses="'btn btn-light icon-btn'"
+            :position="'right'"
+            :btnIcon="'sn-icon sn-icon-more-hori'"
+            @reorder="openReorderModal"
+            @duplicate="duplicateResult"
+            @archive="archiveResult"
+            @restore="restoreResult"
+            @delete="showDeleteModal"
+          ></MenuDropdown>
+        </div>
       </div>
-    </div>
-    <deleteResultModal v-if="confirmingDelete" @confirm="deleteResult" @cancel="closeDeleteModal"/>
+      <deleteResultModal v-if="confirmingDelete" @confirm="deleteResult" @cancel="closeDeleteModal"/>
 
-    <ReorderableItemsModal v-if="reordering"
-      :title="i18n.t('my_modules.modals.reorder_results.title')"
-      :items="reorderableElements"
-      @reorder="updateElementOrder"
-      @close="closeReorderModal"
-    />
-    <div class="collapse in pl-10"  :class="{ 'opacity-0 pointer-events-none': dragingFile }" :id="'resultBody' + result.id">
-      <div v-for="(element, index) in orderedElements" :key="element.id">
-        <component
-          :is="elements[index].attributes.orderable_type"
-          :element.sync="elements[index]"
-          :inRepository="false"
-          :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
-          :assignableMyModuleId="result.attributes.my_module_id"
-          :isNew="element.isNew"
-          @component:delete="deleteElement"
-          @update="updateElement"
-          @reorder="openReorderModal"
-          @component:insert="insertElement"
-          @moved="moveElement"
-        />
+      <ReorderableItemsModal v-if="reordering"
+        :title="i18n.t('my_modules.modals.reorder_results.title')"
+        :items="reorderableElements"
+        @reorder="updateElementOrder"
+        @close="closeReorderModal"
+      />
+      <div class="collapse in pl-10" :id="'resultBody' + result.id">
+        <div v-for="(element, index) in orderedElements" :key="element.id">
+          <component
+            :is="elements[index].attributes.orderable_type"
+            :element.sync="elements[index]"
+            :inRepository="false"
+            :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
+            :assignableMyModuleId="result.attributes.my_module_id"
+            :isNew="element.isNew"
+            @component:delete="deleteElement"
+            @update="updateElement"
+            @reorder="openReorderModal"
+            @component:insert="insertElement"
+            @moved="moveElement"
+          />
+        </div>
+        <Attachments v-if="attachments.length"
+                      :parent="result"
+                      :attachments="attachments"
+                      :attachmentsReady="attachmentsReady"
+                      @attachments:openFileModal="showFileModal = true"
+                      @attachment:deleted="attachmentDeleted"
+                      @attachment:uploaded="loadAttachments"
+                      @attachment:moved="moveAttachment"
+                      @attachments:order="changeAttachmentsOrder"
+                      @attachments:viewMode="changeAttachmentsViewMode"
+                      @attachment:viewMode="updateAttachmentViewMode"/>
       </div>
-      <Attachments v-if="attachments.length"
-                    :parent="result"
-                    :attachments="attachments"
-                    :attachmentsReady="attachmentsReady"
-                    @attachments:openFileModal="showFileModal = true"
-                    @attachment:deleted="attachmentDeleted"
-                    @attachment:uploaded="loadAttachments"
-                    @attachment:moved="moveAttachment"
-                    @attachments:order="changeAttachmentsOrder"
-                    @attachments:viewMode="changeAttachmentsViewMode"
-                    @attachment:viewMode="updateAttachmentViewMode"/>
     </div>
   </div>
 </template>
@@ -149,7 +152,6 @@
       result: { type: Object, required: true },
       resultToReload: { type: Number, required: false },
       activeDragResult: {
-        type: Number,
         required: false
       }
     },
@@ -170,7 +172,8 @@
           { text: I18n.t('protocols.steps.insert.well_plate_options.2_x_3'), emit: 'create:table', params: [[2, 3], true] }
         ],
         editingName: false,
-        confirmingDelete: false
+        confirmingDelete: false,
+        isCollapsed: false
       }
     },
     mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin],
@@ -300,6 +303,9 @@
       this.loadElements();
     },
     methods: {
+      toggleCollapsed() {
+        this.isCollapsed = !this.isCollapsed;
+      },
       dragEnter(e) {
         if (!this.urls.upload_attachment_url) return;
 
