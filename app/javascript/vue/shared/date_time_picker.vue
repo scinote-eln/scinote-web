@@ -1,16 +1,20 @@
 <template>
-  <div class="date-time-picker grow">
+  <div class="date-time-picker" :class="{ 'grow': !standAlone, 'flex': standAlone}">
     <DatePicker v-if="!timeOnly"
       @change="updateDate"
       :placeholder="placeholder"
       :selectorId="`${this.selectorId}_Date`"
       :defaultValue="defaultValue"
+      :standAlone="standAlone"
+      :className="dateClassName"
     />
     <TimePicker v-if="!dateOnly"
       @change="updateTime"
       :placeholder="placeholder"
       :selectorId="`${this.selectorId}_Time`"
       :defaultValue="getTime(defaultValue)"
+      :standAlone="standAlone"
+      :className="timeClassName"
     />
   </div>
 </template>
@@ -26,7 +30,10 @@
       timeOnly: { type: Boolean, default: false },
       selectorId: { type: String, required: true },
       defaultValue: { type: Date, required: false },
-      placeholder: { type: String }
+      placeholder: { type: String },
+      standAlone: { type: Boolean, default: false, required: false },
+      dateClassName: { type: String, default: '' },
+      timeClassName: { type: String, default: '' }
     },
     data() {
       return {

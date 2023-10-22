@@ -10,7 +10,6 @@
   export default {
     name: 'Reminder',
     props: {
-      valueType: null,
       value: null
     },
     computed: {
