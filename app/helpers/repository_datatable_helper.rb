@@ -16,7 +16,7 @@ module RepositoryDatatableHelper
       row = public_send("#{repository.class.name.underscore}_default_columns", record)
       row.merge!(
         DT_RowId: record.id,
-        DT_RowAttr: { 'data-state': row_style(record) },
+        DT_RowAttr: { 'data-state': row_style(record), 'data-e2e': "e2e-RT-invInventory-row-#{record.id}" },
         recordInfoUrl: Rails.application.routes.url_helpers.repository_repository_row_path(repository, record),
         rowRemindersUrl:
           Rails.application.routes.url_helpers
