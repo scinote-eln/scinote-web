@@ -8,7 +8,7 @@
         <i class="sn-icon sn-icon-drag"></i>
       </div>
       <div class="flex items-start gap-2 grow" :class="{ 'done': checklistItem.attributes.checked }">
-        <div v-if="!inRepository" class="sci-checkbox-container my-1.5 border-0 border-y border-transparent border-solid" :class="{ 'disabled': !toggleUrl }">
+        <div v-if="!inRepository" class="sci-checkbox-container my-1.5 border-0 border-y border-transparent border-solid" :class="{ 'disabled': !toggleUrl }"  :style="toggleUrl && 'pointer-events: initial'">
           <input ref="checkbox"
                  type="checkbox"
                  class="sci-checkbox"
@@ -17,7 +17,7 @@
           <span class="sci-checkbox-label" >
           </span>
         </div>
-        <div v-else class="w-6"></div>
+        <div v-else class="h-1 w-1 bg-sn-black rounded-full mt-auto mb-auto"></div>
         <div class="pr-24 relative flex items-start max-w-[90ch]"
              :class="{
               'pointer-events-none': !checklistItem.attributes.isNew && !updateUrl,

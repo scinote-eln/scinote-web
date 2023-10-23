@@ -16,7 +16,8 @@ describe ResultTablesController, type: :controller do
         result:
           { name: 'result name created',
             table_attributes:
-              { contents: '{\"data\":[[\"a\",\"b\",\"1\",null,null]]}' } } }
+              { contents: '{\"data\":[[\"a\",\"b\",\"1\",null,null]]}',
+                metadata: "{\"cells\":[{\"row\":\"0\",\"col\":\"0\",\"className\":\"\",\"calculated\":\"\"}]}" } } }
     end
 
     it 'calls create activity service' do

@@ -3,10 +3,12 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <button type="button" class="close" data-dismiss="modal" :aria-label="i18n.t('general.close')">
+            <i class="sn-icon sn-icon-close"></i>
+          </button>
         <h4 class="modal-title">{{ i18n.t(`protocols.import_modal.${state}.title`) }}</h4>
         </div>
-        <div class="modal-body text-xs" v-html="i18n.t(`protocols.import_modal.${state}.body_html`, { url: protocolTemplateTableUrl })">
+        <div class="modal-body text-sm" v-html="i18n.t(`protocols.import_modal.${state}.body_html`, { url: protocolTemplateTableUrl })">
         </div>
         <div class="modal-footer">
           <button v-if="state === 'confirm'" type="button"

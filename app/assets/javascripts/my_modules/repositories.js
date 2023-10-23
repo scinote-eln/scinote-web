@@ -182,8 +182,14 @@ var MyModuleRepositories = (function() {
       targets: 0,
       className: 'item-name',
       render: function(data, type, row) {
-        var recordName = "<a href='" + row.recordInfoUrl + "'"
-                         + "class='record-info-link'>" + data + '</a>';
+        let recordName;
+
+        if (row.recordInfoUrl) {
+          recordName = `<a href="${row.recordInfoUrl}" class="record-info-link">${data}</a>`;
+        } else {
+          recordName = `<div class="inline-block my-2 mx-0">${data}</div>`;
+        }
+
         if (row.hasActiveReminders) {
           recordName = `<div class="dropdown row-reminders-dropdown"
                           data-row-reminders-url="${row.rowRemindersUrl}" tabindex='-1'>

@@ -5,7 +5,7 @@ class RepositoryZipExportJob < ZipExportJob
 
   # Override
   def fill_content(dir, params)
-    repository = Repository.find(params[:repository_id])
+    repository = RepositoryBase.find(params[:repository_id])
     # Fetch rows in the same order as in the currently viewed datatable
     if params[:my_module_id]
       rows = if repository.is_a?(RepositorySnapshot)

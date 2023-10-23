@@ -61,7 +61,7 @@ describe AccessPermissions::MyModulesController, type: :controller do
         id: my_module.id,
         experiment_id: experiment.id,
         project_id: project.id,
-        my_module_member: {
+        user_assignment: {
           user_role_id: technician_role.id,
           user_id: viewer_user.id
         }

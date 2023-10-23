@@ -313,9 +313,15 @@ window.I18n = I18n;
 
 // Multiple modal support
 // https://stackoverflow.com/a/24914782
-$(document).on('shown.bs.modal', '.modal', function() {
-  const zIndex = 2040 + 10 * $('.modal:visible').length;
-  $(this).css('z-index', zIndex);
+$(document).on('show.bs.modal', '.modal', function() {
+  let zIndex;
+  if ($(this).hasClass('custom-z-index') ) {
+    zIndex = $(this).css('z-index');
+  } else {
+    zIndex = 2040 + 10 * $('.modal:visible').length;
+    $(this).css('z-index', zIndex);
+  }
+
   setTimeout(() => $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack'));
 });
 

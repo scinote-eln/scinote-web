@@ -183,7 +183,6 @@ var RepositoryDatatableRowEditor = (function() {
             class="${EDIT_FORM_CLASS_NAME} ${GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME}"
             action="${row.data().recordUpdateUrl}"
             method="patch"
-            data-remote="true"
             data-row-id="${itemId}">
         <input name="id" type="hidden" value="${itemId}" />
         <input name="request_url" type="hidden" value="${requestUrl}" />

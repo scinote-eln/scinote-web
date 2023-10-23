@@ -10,7 +10,7 @@ class RepositoryRowsController < ApplicationController
   before_action :load_repository_row_print, only: %i(print rows_to_print print_zpl validate_label_template_columns)
   before_action :load_repository_or_snapshot, only: %i(print rows_to_print print_zpl validate_label_template_columns)
   before_action :load_repository_row, only: %i(update assigned_task_list active_reminder_repository_cells)
-  before_action :check_read_permissions, except: %i(show create update delete_records
+  before_action :check_read_permissions, except: %i(create update delete_records
                                                     copy_records reminder_repository_cells
                                                     delete_records archive_records restore_records
                                                     actions_toolbar)
@@ -42,6 +42,33 @@ class RepositoryRowsController < ApplicationController
     render json: { custom_error: I18n.t('repositories.show.repository_filter.errors.value_not_found') }
   end
 
+  def show
+    @repository_row = @repository.repository_rows.find_by(id: params[:id])
+    return render_404 unless @repository_row
+
+    @my_module = if params[:my_module_id].present?
+                   MyModule.repository_row_assignable_by_user(current_user).find_by(id: params[:my_module_id])
+                 end
+    return render_403 if @my_module && !can_read_my_module?(@my_module)
+
+    if @my_module
+      @my_module_assign_error = if !can_assign_my_module_repository_rows?(@my_module)
+                                  I18n.t('repository_row.modal_info.assign_to_task_error.no_access')
+                                elsif @repository_row.my_modules.where(id: @my_module.id).any?
+                                  I18n.t('repository_row.modal_info.assign_to_task_error.already_assigned')
+                                end
+    end
+
+    @assigned_modules = @repository_row.my_modules
+                                       .joins(experiment: :project)
+                                       .joins(:my_module_repository_rows)
+                                       .select('my_module_repository_rows.created_at, my_modules.*')
+                                       .order('my_module_repository_rows.created_at': :desc)
+                                       .distinct
+    @viewable_modules = @assigned_modules.viewable_by_user(current_user, current_user.teams)
+    @reminders_present = @repository_row.repository_cells.with_active_reminder(@current_user).any?
+  end
+
   def create
     service = RepositoryRows::CreateRepositoryRowService
               .call(repository: @repository, user: current_user, params: update_params)
@@ -60,31 +87,6 @@ class RepositoryRowsController < ApplicationController
     else
       render json: service.errors, status: :bad_request
     end
-  end
-
-  def show
-    @repository_row = RepositoryRow.find_by(id: params[:id])
-    @my_module = MyModule.find_by(id: params[:my_module_id])
-    return render_404 unless @repository_row
-    return render_404 unless @repository_row.repository_id == params[:repository_id].to_i
-    return render_403 unless can_read_repository?(@repository_row.repository)
-    return render_403 if @my_module && !can_read_my_module?(@my_module)
-
-    if @my_module
-      @my_module_assign_error = if !can_assign_my_module_repository_rows?(@my_module)
-                                  I18n.t('repository_row.modal_info.assign_to_task_error.no_access')
-                                elsif @repository_row.my_modules.where(id: @my_module.id).any?
-                                  I18n.t('repository_row.modal_info.assign_to_task_error.already_assigned')
-                                end
-    end
-
-    @assigned_modules = @repository_row.my_modules.joins(experiment: :project)
-    @viewable_modules = @assigned_modules.viewable_by_user(current_user, current_user.teams)
-    @private_modules = @assigned_modules - @viewable_modules
-
-    render json: {
-      html: render_to_string(partial: 'repositories/repository_row_info_modal')
-    }
   end
 
   def validate_label_template_columns

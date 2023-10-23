@@ -30,7 +30,10 @@ var filterDropdown = (function() {
 
     $filterContainer.on('show.bs.dropdown', function() {
       if (!$(this).hasClass('filters-applied')) {
-        $(this).find('input').val('');
+        $(this).find('input').each(function() {
+          // .data-field inputs are dropdownSelector data fields
+          $(this).val($(this).hasClass('data-field') ? '[]' : '')
+        });
       }
 
       let $filterDropdown = $filterContainer.find('.dropdown-menu');

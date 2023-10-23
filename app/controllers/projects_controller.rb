@@ -350,7 +350,7 @@ class ProjectsController < ApplicationController
   def notifications
     @modules = @project.assigned_modules(current_user).order(due_date: :desc)
     render json: {
-      html: render_to_string(partial: 'notifications')
+      html: render_to_string(partial: 'notifications', formats: :html)
     }
   end
 
