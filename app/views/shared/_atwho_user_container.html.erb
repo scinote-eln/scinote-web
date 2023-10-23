@@ -18,8 +18,8 @@
     data-placement="top"
     data-toggle="popover"
     data-content=""
-    data-full-name="<%= user.full_name %>"
-    data-email="<%= user.email %>"
+    data-full-name="<%= escape_input(user.full_name) %>"
+    data-email="<%= escape_input(user.email) %>"
     data-popover-html="<%= popover_html %>"
     data-user-avatar-popover-absolute-url="<%= user_avatar_absolute_url(
       user,
@@ -27,7 +27,7 @@
       base64_encoded_imgs
     ) %>"
   >
-    <%= user.full_name %>
+    <%= escape_input(user.full_name) %>
   </a>
   <% unless skip_user_status || user_still_in_team %>
     <%= I18n.t('atwho.res.removed') %>
