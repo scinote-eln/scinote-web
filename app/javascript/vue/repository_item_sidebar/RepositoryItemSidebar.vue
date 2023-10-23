@@ -116,18 +116,13 @@
                   {{ i18n.t('repositories.item_card.custom_columns_label') }}
                 </div>
                 <div v-if="customColumns?.length > 0" class="flex flex-col gap-4 w-[350px] h-auto">
-                  <div v-for="(column, index) in customColumns" class="flex flex-col gap-4 w-[350px] h-auto relative">
-                    <span class="absolute right-2 top-6" v-if="column?.value?.reminder === true">
-                      <Reminder :value="column?.value" :valueType="column?.value_type" />
-                    </span>
-
-                    <component :is="column.data_type" :key="index" :data_type="column.data_type" :colId="column.id"
-                      :colName="column.name" :colVal="column.value" :repositoryRowId="repositoryRowId"
-                      :repositoryId="repository.id" :permissions="permissions" />
-
-                    <div class="sci-divider" :class="{ 'hidden': index === customColumns?.length - 1 }"></div>
-
-                  </div>
+                  <CustomColumns
+                    :customColumns="customColumns"
+                    :repositoryRowId="repositoryRowId"
+                    :repositoryId="repository.id"
+                    :permissions="permissions"
+                    :updatePath="updatePath"
+                  />
                 </div>
                 <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
                   {{ i18n.t('repositories.item_card.no_custom_columns_label') }}
@@ -228,44 +223,19 @@
 </template>
 
 <script>
-import RepositoryStockValue from './repository_values/RepositoryStockValue.vue';
-import RepositoryTextValue from './repository_values/RepositoryTextValue.vue';
-import RepositoryNumberValue from './repository_values/RepositoryNumberValue.vue';
-import RepositoryAssetValue from './repository_values/RepositoryAssetValue.vue';
-import RepositoryListValue from './repository_values/RepositoryListValue.vue';
-import RepositoryChecklistValue from './repository_values/RepositoryChecklistValue.vue';
-import RepositoryStatusValue from './repository_values/RepositoryStatusValue.vue';
-import RepositoryDateTimeValue from './repository_values/RepositoryDateTimeValue.vue';
-import RepositoryDateTimeRangeValue from './repository_values/RepositoryDateTimeRangeValue.vue';
-import RepositoryDateValue from './repository_values/RepositoryDateValue.vue';
-import RepositoryDateRangeValue from './repository_values/RepositoryDateRangeValue.vue';
-import RepositoryTimeRangeValue from './repository_values/RepositoryTimeRangeValue.vue'
-import RepositoryTimeValue from './repository_values/RepositoryTimeValue.vue'
 import ScrollSpy from './repository_values/ScrollSpy.vue';
-import Reminder from './reminder.vue'
+import CustomColumns from './customColumns.vue';
 
 export default {
   name: 'RepositoryItemSidebar',
   components: {
-    Reminder,
-    RepositoryStockValue,
-    RepositoryTextValue,
-    RepositoryNumberValue,
-    RepositoryAssetValue,
-    RepositoryListValue,
-    RepositoryChecklistValue,
-    RepositoryStatusValue,
-    RepositoryDateTimeValue,
-    RepositoryDateTimeRangeValue,
-    RepositoryDateValue,
-    RepositoryDateRangeValue,
-    RepositoryTimeRangeValue,
-    RepositoryTimeValue,
+    CustomColumns,
     'scroll-spy': ScrollSpy
   },
   data() {
     return {
       currentItemUrl: null,
+      updatePath: null,
       dataLoading: false,
       repositoryRowId: null,
       repository: null,
@@ -351,6 +321,7 @@ export default {
         success: (result) => {
           this.repositoryRowId = result.id;
           this.repository = result.repository;
+          this.updatePath = result.update_path;
           this.defaultColumns = result.default_columns;
           this.customColumns = result.custom_columns;
           this.assignedModules = result.assigned_modules;

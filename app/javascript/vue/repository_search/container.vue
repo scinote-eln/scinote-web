@@ -35,8 +35,12 @@
 </template>
 
 <script>
+import outsideClick from '../../packs/vue/directives/outside_click';
 export default {
   name: 'RepositorySearchContainer',
+  directives: {
+    'click-outside': outsideClick
+  },
   data() {
     return {
       barcodeSearchOpened: false,

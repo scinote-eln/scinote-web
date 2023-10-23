@@ -1,14 +1,24 @@
 <template>
-  <div class="sci-input-container time-container right-icon">
+  <div v-if="!standAlone" class="sci-input-container time-container right-icon">
     <input class="time-part sci-input-field"
-           @input="update"
-           :id="this.selectorId"
-           type="text"
-           data-mask-type="time"
-           v-model="value"
-           placeholder="HH:mm"/>
+      @input="update"
+      :id="this.selectorId"
+      type="text"
+      data-mask-type="time"
+      v-model="value"
+      placeholder="HH:mm"/>
     <i class="sn-icon sn-icon-created"></i>
   </div>
+  <span v-else :class="className">
+    <input class="time-part sci-input-field w-full inline-block m-0 p-0 border-none shadow-none outline-none"
+      @input="update"
+      :id="this.selectorId"
+      type="text"
+      data-mask-type="time"
+      v-model="value"
+      placeholder="HH:mm"
+    />
+  </span>
 </template>
 
 <script>
@@ -16,7 +26,9 @@
     name: 'TimePicker',
     props: {
       selectorId: { type: String, required: true },
-      defaultValue: { type: String, required: false }
+      defaultValue: { type: String, required: false },
+      standAlone: { type: Boolean, default: true, required: false },
+      className: { type: String, default: '', required: false }
     },
     data() {
       return {
