@@ -430,7 +430,7 @@ var ProjectsIndex = (function() {
       view_mode: $('.projects-index').data('view-mode'),
       sort: projectsCurrentSort,
       search: projectsViewSearch,
-      members: membersFilter,
+      members: membersFilter && membersFilter.map(m => m.value),
       created_on_from: createdOnFromFilter,
       created_on_to: createdOnToFilter,
       folders_search: lookInsideFolders,
