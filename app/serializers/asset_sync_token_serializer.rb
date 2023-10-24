@@ -10,7 +10,7 @@ class AssetSyncTokenSerializer < ActiveModel::Serializer
   end
 
   def url
-    object.asset.file.url
+    asset_sync_download_url(asset_id: object.asset)
   end
 
   def filename

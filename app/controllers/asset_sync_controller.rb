@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class AssetSyncController < ApplicationController
-  skip_before_action :authenticate_user!, only: :update
-  skip_before_action :verify_authenticity_token, only: :update
-  before_action :authenticate_asset_sync_token!, only: :update
+  skip_before_action :authenticate_user!, only: %i(update download)
+  skip_before_action :verify_authenticity_token, only: %i(update download)
+  before_action :authenticate_asset_sync_token!, only: %i(update download)
 
   def show
     asset = Asset.find_by(id: params[:asset_id])
@@ -17,6 +17,10 @@ class AssetSyncController < ApplicationController
     end
 
     render json: AssetSyncTokenSerializer.new(asset_sync_token).as_json
+  end
+
+  def download
+    redirect_to @asset.file.url
   end
 
   def update
