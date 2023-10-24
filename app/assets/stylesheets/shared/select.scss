@@ -43,6 +43,10 @@
     }
   }
 
+  &.error {
+    border-color: var(--sn-delete-red);
+  }
+
   .sn-select__options {
     display: none;
   }

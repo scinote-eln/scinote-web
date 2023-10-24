@@ -47,10 +47,10 @@ var RepositoryStockValues = (function() {
       $.ajax({
         url: $(this).closest('tr').data('manage-stock-url'),
         type: 'GET',
-        dataType: 'json',
+        dataType: 'html',
         success: (result) => {
           var $manageModal = $('#manage-repository-stock-value-modal');
-          $manageModal.find('.modal-content').html(result.html);
+          $manageModal.find('.modal-content').html($(result));
 
           dropdownSelector.init(UNIT_SELECTOR, {
             singleSelect: true,

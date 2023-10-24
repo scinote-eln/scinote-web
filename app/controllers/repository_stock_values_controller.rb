@@ -7,31 +7,37 @@ class RepositoryStockValuesController < ApplicationController
   before_action :check_manage_permissions
 
   def new
-    render json: {
-      html: render_to_string(
-        partial: 'repository_stock_values/manage_modal_content',
-        locals: {
-          repository_row: @repository_row,
-          repository_stock_column: @repository_column,
-          unit_items: @repository_column.repository_stock_unit_items,
-          repository_stock_value: RepositoryStockValue.new
-        }
-      )
-    }
+    respond_to do |format|
+      format.html do
+        render html: render_to_string(
+          partial: 'repository_stock_values/manage_modal_content',
+          locals: {
+            repository_row: @repository_row,
+            repository_stock_column: @repository_column,
+            unit_items: @repository_column.repository_stock_unit_items,
+            repository_stock_value: RepositoryStockValue.new
+          }
+        )
+      end
+      format.json
+    end
   end
 
   def edit
-    render json: {
-      html: render_to_string(
-        partial: 'repository_stock_values/manage_modal_content',
-        locals: {
-          repository_row: @repository_row,
-          repository_stock_column: @repository_column,
-          unit_items: @repository_column.repository_stock_unit_items,
-          repository_stock_value: @repository_stock_value
-        }
-      )
-    }
+    respond_to do |format|
+      format.html do
+        render html: render_to_string(
+          partial: 'repository_stock_values/manage_modal_content',
+          locals: {
+            repository_row: @repository_row,
+            repository_stock_column: @repository_column,
+            unit_items: @repository_column.repository_stock_unit_items,
+            repository_stock_value: @repository_stock_value
+          }
+        )
+      end
+      format.json
+    end
   end
 
   def create_or_update

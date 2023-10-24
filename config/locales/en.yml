@@ -2294,6 +2294,10 @@ en:
       expand: 'Expand'
       collapse: 'Collapse'
       dropdown_placeholder: 'Select'
+      date_time:
+        errors:
+          set_all_or_none: 'Needs to set both or none'
+          not_valid_range: 'Range is not valid.'
     highlight_component:
       information_label: 'Information'
       custom_columns_label: 'Custom columns'

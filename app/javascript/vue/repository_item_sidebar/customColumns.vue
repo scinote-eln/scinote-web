@@ -7,6 +7,7 @@
       <component
         :is="column.data_type"
         :key="index"
+        :actions="actions"
         :data_type="column.data_type"
         :colId="column.id"
         :colName="column.name"
