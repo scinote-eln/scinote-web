@@ -1,20 +1,14 @@
-import Vue from 'vue/dist/vue.esm';
+import PerfectScrollbar from 'vue3-perfect-scrollbar';
+import { createApp } from 'vue/dist/vue.esm-bundler.js';
+import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css';
 import ShareLinkContainer from '../../vue/shareable_links/container.vue';
-import PerfectScrollbar from 'vue2-perfect-scrollbar';
-import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css';
-
-
-Vue.use(PerfectScrollbar);
-
-Vue.prototype.i18n = window.I18n;
 
 function initShareTaskContainer() {
-  new Vue({
-    el: '.share-task-container',
-    components: {
-      'share-task-container': ShareLinkContainer
-    }
-  });
+  const app = createApp({});
+  app.component('ShareLinkContainer', ShareLinkContainer);
+  app.use(PerfectScrollbar);
+  app.config.globalProperties.i18n = window.I18n;
+  app.mount('.share-task-container');
 }
 
 initShareTaskContainer();

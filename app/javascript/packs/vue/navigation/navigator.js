@@ -1,19 +1,10 @@
-
-import Vue from 'vue/dist/vue.esm';
+import PerfectScrollbar from 'vue3-perfect-scrollbar';
+import { createApp } from 'vue/dist/vue.esm-bundler.js';
+import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css';
 import NavigatorContainer from '../../../vue/navigation/navigator.vue';
-import PerfectScrollbar from 'vue2-perfect-scrollbar';
-import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css';
-
-Vue.use(PerfectScrollbar);
-
-Vue.prototype.i18n = window.I18n;
 
 function addNavigationNavigatorContainer() {
-  let navigator = new Vue({
-    el: '#sciNavigationNavigatorContainer',
-    components: {
-      'navigator-container': NavigatorContainer
-    },
+  const app = createApp({
     data() {
       return {
         reloadCurrentLevel: false,
@@ -53,8 +44,12 @@ function addNavigationNavigatorContainer() {
       }
     }
   });
+  app.component('NavigatorContainer', NavigatorContainer);
+  app.use(PerfectScrollbar);
+  app.config.globalProperties.i18n = window.I18n;
+  app.mount('#sciNavigationNavigatorContainer');
 
-  window.navigatorContainer = navigator
+  window.navigatorContainer = app;
 }
 
 if (document.readyState !== 'loading') {
