@@ -43,7 +43,7 @@ module SmartAnnotations
         if object&.repository
           repository_name = fetch_repository_name(object)
           "<a href='#{ROUTES.repository_repository_row_path(object.repository, object)}' " \
-            "class='sa-link record-info-link text-sn-science-blue hover:text-sn-science-blue hover:no-underline'><span class='sa-type'>#{trim_repository_name(repository_name)}</span>" \
+            "class='sa-link record-info-link'><span class='sa-type'>#{trim_repository_name(repository_name)}</span>" \
             "#{object.name} #{object.archived? ? I18n.t('atwho.res.archived') : ''}</a>"
         else
           "<span class='sa-type'>Inv</span> #{name} #{I18n.t('atwho.res.deleted')}"
