@@ -69,4 +69,40 @@
       $('#modal-info-repository-row').modal('hide');
     }
   });
+  $(document).on('click', '.manage-repository-stock-value-link', (e) => {
+    e.preventDefault();
+
+    window.initManageStockValueModalComponent();
+    if (window.manageStockModalComponent) {
+      const link = $(e.target.closest('a'));
+      const stockValueUrl = link.data('manage-stock-url');
+      let repositoryRowId;
+      if ($(e.target.closest('a')).data('repository-row-id')) {
+        repositoryRowId = $(e.target.closest('a')).data('repository-row-id');
+      }
+      // get repository row id from table
+      if (!repositoryRowId) {
+        repositoryRowId = $(e.target).parents('tr').attr('id');
+      }
+      let updateStockValue;
+      if (stockValueUrl) {
+        updateStockValue = (data) => {
+          if (data.value) {
+            if (!data) return;
+            // update table cell
+            let cell;
+            if (repositoryRowId) cell = $('.dataTable').find(`tr#${repositoryRowId} td.item-stock`);
+            if (cell) {
+              cell.parent().data('manage-stock-url', data.manageStockUrl);
+              cell.html($.fn.dataTable.render.RepositoryStockValue(data));
+            }
+            // update item card stock column
+            const itemCardStock = $('#repository-item-sidebar .manage-repository-stock-value-link .stock-value')[0];
+            if (itemCardStock) itemCardStock.innerText = data.value.stock_formatted;
+          }
+        };
+        window.manageStockModalComponent.showModal(stockValueUrl, updateStockValue);
+      }
+    }
+  });
 }());

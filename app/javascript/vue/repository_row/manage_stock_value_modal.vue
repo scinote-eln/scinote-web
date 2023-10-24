@@ -28,7 +28,6 @@
               <div class="flex flex-col w-40">
                 <label class="text-sn-grey text-sm font-normal" for="operations">{{ i18n.t('repository_stock_values.manage_modal.operation') }}</label>
                 <Select
-                  v-bind:key="updateUrl"
                   :disabled="!stockValue?.id"
                   :value="operation"
                   :options="operations"
@@ -157,7 +156,7 @@
         stockValue: null,
         amount: 0,
         repositoryRowName: null,
-        updateUrl: null,
+        stockUrl: null,
         units: null,
         unit: null,
         reminderEnabled: false,
@@ -187,17 +186,12 @@
       }
     },
     created() {
-      window.manageStockValueModal = this;
+      window.manageStockModalComponent = this;
     },
     beforeDestroy() {
       delete window.manageStockModalComponent;
     },
     mounted() {
-      const $this = this;
-      $(this.$refs.modal).on('hide.bs.modal', function() {
-        $this.closeCallback && $this.closeCallback($this.stockValue.stock_formatted);
-        $this.stockValue = null;
-      });
       // Focus stock amount input field
       $(this.$refs.modal).on('show.bs.modal', function() {
         setTimeout(() => {
@@ -227,7 +221,7 @@
             this.reminderEnabled = result.stock_value.reminder_enabled
             this.lowStockTreshold = result.stock_value.low_stock_treshold
             this.operation = 1;
-            this.updateUrl = result.update_url;
+            this.stockUrl = result.stock_url;
             this.operations = [[1, 'set'], [2, 'add'], [3, 'remove']];
             this.errors = {};
           }
@@ -260,7 +254,7 @@
         const $this = this
         $.ajax({
           method: 'POST',
-          url: this.updateUrl,
+          url: this.stockUrl,
           dataType: 'json',
           data: {
             repository_stock_value: {
@@ -273,8 +267,9 @@
             change_amount: Math.abs(this.amount),
           },
           success: function(result) {
-            $this.stockValue.stock_formatted = result?.value?.stock_formatted;
+            $this.stockValue = null;
             $this.closeModal();
+            $this.closeCallback && $this.closeCallback(result);
           }
         })
       }

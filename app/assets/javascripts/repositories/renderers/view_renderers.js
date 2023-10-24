@@ -210,7 +210,8 @@ $.fn.dataTable.render.RepositoryStockValue = function(data) {
   if (data) {
     if (data.value) {
       if (data.stock_managable) {
-        return `<a class="manage-repository-stock-value-link stock-value-view-render stock-${data.stock_status}">
+        return `<a class="manage-repository-stock-value-link stock-value-view-render stock-${data.stock_status}"
+                 data-manage-stock-url=${data.value.stock_url}>
                   ${data.value.stock_formatted}
                   </a>`;
       }
@@ -220,7 +221,7 @@ $.fn.dataTable.render.RepositoryStockValue = function(data) {
                 </span>`;
     }
     if (data.stock_managable) {
-      return `<a class="manage-repository-stock-value-link not-assigned-stock">
+      return `<a class="manage-repository-stock-value-link not-assigned-stock" data-manage-stock-url=${data.stock_url}>
                 <i class="fas fa-box-open"></i>
                 ${I18n.t('libraries.manange_modal_column.stock_type.add_stock')}
               </a>`;

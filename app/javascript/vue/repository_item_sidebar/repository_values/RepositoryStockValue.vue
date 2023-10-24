@@ -8,12 +8,13 @@
         {{ i18n.t('repositories.item_card.stock_export') }}
       </a>
     </div>
-    <div
-      :class="`border-solid border-[1px] text-sn-dark-grey font-inter text-sm font-normal leading-5 w-full rounded relative sci-cursor-edit ${borderColor}`"
-      ref="view"
-      @click="enableEditing(); openEditModal();"
+    <a style="text-decoration: none;"
+      :class="`border-solid border-[1px] manage-repository-stock-value-link text-sn-dark-grey font-inter text-sm font-normal leading-5 w-full rounded relative sci-cursor-edit block ${borderColor}`"
+      @click="enableEditing"
+      :data-manage-stock-url="stockValueUrl"
+      :data-repository-row-id="repositoryId"
     >
-      <div v-if="values?.stock_formatted" class="text-sn-dark-grey font-inter text-sm font-normal leading-5 p-2">
+      <div v-if="values?.stock_formatted" class="text-sn-dark-grey font-inter text-sm font-normal leading-5 p-2 stock-value">
         {{ values.stock_formatted }}
       </div>
       <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5 p-2">
@@ -22,7 +23,7 @@
       <span class="absolute right-2 top-1.5" v-if="values?.reminder === true">
         <Reminder :value="colVal" />
       </span>
-    </div>
+    </a>
   </div>
 </template>
 
@@ -65,17 +66,11 @@
     methods: {
       enableEditing(){
         this.isEditing = true
-      },
-      disableEditing(value) {
-        this.isEditing = false;
-        if (value) {
-          let values = this.values || {}
-          values['stock_formatted'] = value;
-          this.values = values;
-        }
-      },
-      openEditModal() {
-        window.manageStockValueModal.showModal(this.stockValueUrl, this.disableEditing)
+        const $this = this;
+        // disable edit
+        $('#manageStockValueModal').on('hide.bs.modal', function() {
+          $this.isEditing = false;
+        })
       }
     }
   }
