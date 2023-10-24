@@ -146,9 +146,10 @@
           this.openNameModal();
           return;
         }
+        const { row = 0, col = 0 } = this.selectedCell || {};
 
         this.editingTable = true;
-        this.$nextTick(() => this.tableObject.selectCell(0,0));
+        this.$nextTick(() => this.tableObject.selectCell(row, col));
       },
       disableTableEdit() {
         this.editingTable = false;
@@ -254,6 +255,11 @@
           afterUnlisten: () => {
             this.updatingTableData = true;
             setTimeout(this.updateTable, 100) // delay makes cancel button work
+          },
+          afterSelection: (r, c, r2, c2) => {
+            if (r === r2 && c === c2) {
+              this.selectedCell = { row: r, col: c };
+            }
           }
         });
         this.$nextTick(this.tableObject.render);
