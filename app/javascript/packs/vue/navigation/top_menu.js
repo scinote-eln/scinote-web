@@ -1,21 +1,16 @@
-
-import Vue from 'vue/dist/vue.esm';
+import PerfectScrollbar from 'vue3-perfect-scrollbar';
+import { createApp } from 'vue/dist/vue.esm-bundler.js';
+import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css';
 import TopMenuContainer from '../../../vue/navigation/top_menu.vue';
-import PerfectScrollbar from 'vue2-perfect-scrollbar';
-import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css';
 import outsideClick from '../directives/outside_click';
 
-Vue.use(PerfectScrollbar);
-Vue.directive('click-outside', outsideClick);
-Vue.prototype.i18n = window.I18n;
-
 function addNavigationTopMenuContainer() {
-  new Vue({
-    el: '#sciNavigationTopMenuContainer',
-    components: {
-      'top-menu-container': TopMenuContainer
-    }
-  });
+  const app = createApp({});
+  app.component('TopMenuContainer', TopMenuContainer);
+  app.use(PerfectScrollbar);
+  app.directive('click-outside', outsideClick);
+  app.config.globalProperties.i18n = window.I18n;
+  app.mount('#sciNavigationTopMenuContainer');
 }
 
 if (document.readyState !== 'loading') {

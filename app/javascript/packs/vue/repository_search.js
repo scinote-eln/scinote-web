@@ -1,18 +1,15 @@
 import TurbolinksAdapter from 'vue-turbolinks';
-import Vue from 'vue/dist/vue.esm';
+import { createApp } from 'vue/dist/vue.esm-bundler.js';
 import RepositorySearchContainer from '../../vue/repository_search/container.vue';
 import outsideClick from './directives/outside_click';
 
-Vue.use(TurbolinksAdapter);
-Vue.prototype.i18n = window.I18n;
-Vue.directive('click-outside', outsideClick);
-
 window.initRepositorySearch = () => {
-  window.RepositorySearchComponent = new Vue({
-    el: '#inventorySearchComponent',
-    name: 'RepositorySearchComponent',
-    components: {
-      'repository_search_container': RepositorySearchContainer
-    }
-  });
+  const app = createApp({});
+  app.component('RepositorySearchContainer', RepositorySearchContainer);
+  app.use(TurbolinksAdapter);
+  app.directive('click-outside', outsideClick);
+  app.config.globalProperties.i18n = window.I18n;
+  app.mount('#inventorySearchComponent');
+
+  window.RepositorySearchComponent = app;
 }

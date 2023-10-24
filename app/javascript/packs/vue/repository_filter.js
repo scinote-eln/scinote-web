@@ -1,11 +1,8 @@
 /* global I18n */
 
 import TurbolinksAdapter from 'vue-turbolinks';
-import Vue from 'vue/dist/vue.esm';
+import { createApp } from 'vue/dist/vue.esm-bundler.js';
 import FilterContainer from '../../vue/repository_filter/container.vue';
-
-Vue.use(TurbolinksAdapter);
-Vue.prototype.i18n = window.I18n;
 
 const DEFAULT_FILTERS = [
   {
@@ -62,7 +59,6 @@ const DEFAULT_FILTERS = [
 
 window.repositoryFilterObject = null;
 window.initRepositoryFilter = () => {
-  Vue.prototype.dateFormat = $('#filterContainer').data('date-format')
   const defaultColumns = [
     { id: 'assigned', name: I18n.t('repositories.table.assigned_tasks'), data_type: 'RepositoryMyModuleValue' },
     { id: 'row_id', name: I18n.t('repositories.table.id'), data_type: 'RepositoryTextValue' },
@@ -72,8 +68,7 @@ window.initRepositoryFilter = () => {
     { id: 'archived_by', name: I18n.t('repositories.table.archived_by'), data_type: 'RepositoryUserValue' },
     { id: 'archived_on', name: I18n.t('repositories.table.archived_on'), data_type: 'RepositoryDateTimeValue' }
   ];
-  const repositoryFilterContainer = new Vue({
-    el: '#filterContainer',
+  const app = createApp({
     data: () => ({
       filters: [],
       defaultFilters: DEFAULT_FILTERS,
@@ -85,10 +80,6 @@ window.initRepositoryFilter = () => {
     }),
     created() {
       this.dataTableElement = $($('#filterContainer').data('datatable-id'));
-    },
-
-    components: {
-      'filter-container': FilterContainer
     },
     computed: {
       filtersJSON() {
@@ -143,6 +134,12 @@ window.initRepositoryFilter = () => {
       }
     }
   });
+  app.component('FilterContainer', FilterContainer);
+  app.use(TurbolinksAdapter);
+  app.config.globalProperties.i18n = window.I18n;
+  app.config.globalProperties.dateFormat = $('#filterContainer').data('date-format');
+  app.mount('#filterContainer');
+  const repositoryFilterContainer = app;
 
   $.get($('#filterContainer').data('my-modules-url'), (data) => {
     repositoryFilterContainer.my_modules = data.data;

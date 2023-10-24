@@ -36,7 +36,6 @@
   </div>
 </template>
 <script>
-  import PerfectScrollbar from 'vue2-perfect-scrollbar';
   import outsideClick from '../../packs/vue/directives/outside_click';
 
   export default {

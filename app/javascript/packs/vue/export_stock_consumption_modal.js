@@ -1,21 +1,17 @@
 /* global notTurbolinksPreview */
 
 import TurbolinksAdapter from 'vue-turbolinks';
-import Vue from 'vue/dist/vue.esm';
+import { createApp } from 'vue/dist/vue.esm-bundler.js';
 import ExportStockConsumptionModal from '../../vue/repository_row/export_stock_consumption_modal.vue';
-
-Vue.use(TurbolinksAdapter);
-Vue.prototype.i18n = window.I18n;
 
 window.initExportStockConsumptionModal = () => {
   if (window.exportStockConsumptionModalComponent) return;
 
   if (notTurbolinksPreview()) {
-    new Vue({
-      el: '#exportStockConsumtionModal',
-      components: {
-        ExportStockConsumptionModal,
-      },
-    });
+    const app = createApp({});
+    app.component('ExportStockConsumptionModal', ExportStockConsumptionModal);
+    app.use(TurbolinksAdapter);
+    app.config.globalProperties.i18n = window.I18n;
+    app.mount('#exportStockConsumtionModal');
   }
 };
