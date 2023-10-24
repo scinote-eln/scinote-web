@@ -46,8 +46,10 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      const textHeight = this.$refs.textRef.scrollHeight
-      this.expandable = textHeight > 60 // 60px
+      if (this.$refs.textRef) {
+        const textHeight = this.$refs.textRef.scrollHeight
+        this.expandable = textHeight > 60 // 60px
+      }
     })
   },
 }
