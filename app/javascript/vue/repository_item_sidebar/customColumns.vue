@@ -1,9 +1,6 @@
 <template>
   <div v-if="customColumns?.length > 0" class="flex flex-col gap-4 w-[350px] h-auto">
     <div v-for="(column, index) in customColumns" :key="column.id" class="flex flex-col gap-4 w-[350px] h-auto relative">
-      <span class="absolute right-2 top-6" v-if="column?.value?.reminder === true">
-        <Reminder :value="column?.value" :valueType="column?.value_type" />
-      </span>
       <component
         :is="column.data_type"
         :key="index"
@@ -32,7 +29,6 @@
 </template>
 
 <script>
-  import Reminder from './reminder.vue'
   import RepositoryStockValue from './repository_values/RepositoryStockValue.vue';
   import RepositoryTextValue from './repository_values/RepositoryTextValue.vue';
   import RepositoryNumberValue from './repository_values/RepositoryNumberValue.vue';
@@ -50,7 +46,6 @@
   export default {
     name: 'CustomColumns',
     components: {
-      Reminder,
       RepositoryStockValue,
       RepositoryTextValue,
       RepositoryNumberValue,
