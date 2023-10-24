@@ -12,7 +12,6 @@ module Api
           timestamps_filter(
             @inventory_column.repository_status_items
           )
-          .repository_status_items
           .page(params.dig(:page, :number))
           .per(params.dig(:page, :size))
 

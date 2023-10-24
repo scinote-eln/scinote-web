@@ -14,7 +14,7 @@ RSpec.describe 'Api::V1::ProtocolTemplateController', type: :request do
     @protocol_published = create(:protocol, :in_repository_published_version, team: @team, added_by: @user, parent: @protocol_published_original, version_number: 2)
     @protocol_published_draft = create(:protocol, :in_repository_draft, team: @team, added_by: @user,
                                        parent: @protocol_published_original, version_number: 3, name: @protocol_published_original.name)
-    
+
     @protocol_draft_second_team = create(:protocol, :in_repository_draft, team: @team2, added_by: @another_user)
 
     @valid_headers = { 'Authorization': 'Bearer ' + generate_token(@user.id) }
