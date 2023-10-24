@@ -168,6 +168,8 @@ class RepositoryDatatableService
   end
 
   def build_row_id_filter_condition(repository_rows, filter_element_params)
+    return repository_rows if filter_element_params.dig(:parameters, :text).blank?
+
     case filter_element_params[:operator]
     when 'contains'
       repository_rows
@@ -183,6 +185,8 @@ class RepositoryDatatableService
   end
 
   def build_name_filter_condition(repository_rows, filter_element_params)
+    return repository_rows if filter_element_params.dig(:parameters, :text).blank?
+
     case filter_element_params[:operator]
     when 'contains'
       repository_rows.where('repository_rows.name ILIKE ?',
@@ -351,14 +355,16 @@ class RepositoryDatatableService
   end
 
   def build_assigned_filter_condition(repository_rows, filter_element_params)
+    return repository_rows if filter_element_params.dig(:parameters, :my_module_ids).blank?
+
     case filter_element_params[:operator]
     when 'any_of'
       repository_rows.joins(:my_modules)
                      .where(my_modules: { id: filter_element_params.dig(:parameters, :my_module_ids) })
     when 'none_of'
       repository_rows.where('NOT EXISTS (SELECT NULL FROM my_module_repository_rows
-                                 WHERE my_module_repository_rows.repository_row_id = repository_rows.id AND
-                                       my_module_repository_rows.my_module_id IN (?))', filter_element_params.dig(:parameters, :my_module_ids))
+                             WHERE my_module_repository_rows.repository_row_id = repository_rows.id AND
+                             my_module_repository_rows.my_module_id IN (?))', filter_element_params.dig(:parameters, :my_module_ids))
     when 'all_of'
       repository_rows
         .joins(:my_modules)
