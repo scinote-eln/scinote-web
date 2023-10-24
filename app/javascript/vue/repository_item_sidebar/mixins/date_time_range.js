@@ -87,7 +87,7 @@ export default {
       return new Date()
     },
     hasMonthText(){
-      $('body').data('datetime-picker-format').match(/MMM/)
+      $('body').data('datetime-picker-format')?.match(/MMM/)
     },
     validateAndSave() {
       this.errorMessage = null;

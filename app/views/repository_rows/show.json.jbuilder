@@ -9,6 +9,7 @@ json.update_path update_cell_repository_repository_row_path(@repository, @reposi
 
 json.permissions do
   json.can_export_repository_stock can_export_repository_stock?(@repository_row.repository)
+  json.can_manage can_manage_repository_rows?(@repository_row.repository)
 end
 
 json.actions do
@@ -35,12 +36,38 @@ end
 json.custom_columns do
   json.array! repository_columns_ordered_by_state(@repository_row.repository).each do |repository_column|
     repository_cell = @repository_row.repository_cells.find_by(repository_column: repository_column)
+
+    data_type = repository_column.data_type
+    data_type = repository_cell.repository_column.data_type if repository_cell.present?
+
+    options = case data_type
+              when 'RepositoryListValue'
+                {
+                  options_path: items_repository_repository_columns_list_column_path(@repository,
+                                                                                     repository_cell.repository_column)
+                }
+              when 'RepositoryStatusValue'
+                {
+                  options_path: items_repository_repository_columns_status_column_path(@repository,
+                                                                                       repository_cell.repository_column)
+                }
+              when 'RepositoryChecklistValue'
+                {
+                  options_path: items_repository_repository_columns_checklist_column_path(@repository,
+                                                                                          repository_cell.repository_column)
+                }
+              else
+                {
+                  options_path: ''
+                }
+              end
+
     if repository_cell
       json.merge! **serialize_repository_cell_value(repository_cell, @repository.team, @repository, reminders_enabled: @reminders_present).merge(
         **repository_cell.repository_column.as_json(only: %i(id name data_type))
-      )
+      ).merge(options)
     else
-      json.merge! repository_column.as_json(only: %i(id name data_type))
+      json.merge! repository_column.as_json(only: %i(id name data_type)).merge(options)
     end
   end
 end
