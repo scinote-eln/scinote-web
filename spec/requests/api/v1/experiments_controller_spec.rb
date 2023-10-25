@@ -241,7 +241,7 @@ RSpec.describe "Api::V1::ExperimentsController", type: :request do
   describe 'PATCH experiment, #update' do
     before :all do
       @valid_headers['Content-Type'] = 'application/json'
-      @experiment = @valid_project.experiments.first
+      @experiment = @valid_project.experiments.active.first
     end
 
     let(:action) do

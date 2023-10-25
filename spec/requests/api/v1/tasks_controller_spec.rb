@@ -8,7 +8,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
 
     @user = create(:user)
     @another_user = create(:user)
-    @team1 = create(:team, created_by: @user)
+    @team1 = create(:team, :change_user_team, created_by: @user)
     @team2 = create(:team, created_by: @another_user)
     @valid_project = create(:project, name: Faker::Name.unique.name,
                             created_by: @user, team: @team1)
@@ -285,7 +285,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
       @valid_headers['Content-Type'] = 'application/json'
     end
 
-    let(:task) { @valid_experiment.my_modules.take }
+    let(:task) { @valid_experiment.my_modules.active.first }
 
     let(:action) do
       patch(

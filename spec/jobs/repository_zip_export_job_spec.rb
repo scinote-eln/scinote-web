@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'zip'
 
-describe RepositoryZipExport, type: :background_job do
+describe RepositoryZipExportJob, type: :job do
   let(:user) { create :user }
   let(:team) { create :team, created_by: user }
   let!(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
@@ -45,6 +45,12 @@ describe RepositoryZipExport, type: :background_job do
 
       @row_ids << row.id.to_s
     end
+
+    ZipExport.skip_callback(:create, :after, :self_destruct)
+  end
+
+  after do
+    ZipExport.set_callback(:create, :after, :self_destruct)
   end
 
   describe '#generate_zip/2' do
@@ -56,19 +62,17 @@ describe RepositoryZipExport, type: :background_job do
                      '-3',
                      '-5',
                      '-4'],
+        repository_id: repository.id,
         row_ids: @row_ids }
     end
 
     it 'generates a new zip export object' do
-      ZipExport.skip_callback(:create, :after, :self_destruct)
-      RepositoryZipExport.generate_zip(params, repository, user)
+      described_class.perform_now(user_id: user.id, params: params)
       expect(ZipExport.count).to eq 1
-      ZipExport.set_callback(:create, :after, :self_destruct)
     end
 
     it 'generates a zip with csv file with exported rows' do
-      ZipExport.skip_callback(:create, :after, :self_destruct)
-      RepositoryZipExport.generate_zip(params, repository, user)
+      described_class.perform_now(user_id: user.id, params: params)
       csv_zip_file = ZipExport.first.zip_file
       file_path = ActiveStorage::Blob.service.public_send(:path_for, csv_zip_file.key)
       parsed_csv_content = Zip::File.open(file_path) do |zip_file|
@@ -85,7 +89,6 @@ describe RepositoryZipExport, type: :background_job do
         expect(row_hash.fetch('Name')).to eq "row #{index}"
         index += 1
       end
-      ZipExport.set_callback(:create, :after, :self_destruct)
     end
   end
 end

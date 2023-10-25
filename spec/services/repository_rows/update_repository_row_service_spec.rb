@@ -119,8 +119,8 @@ describe RepositoryRows::UpdateRepositoryRowService do
     end
   end
 
-  context 'when service does not succeed' do
-    context 'when updates repository_row and cell, but fails' do
+  context 'when service does succeed with empty repository name' do
+    context 'when updates repository_row and cell' do
       let(:params) do
         {
           repository_cells: Hash[column.id, 'New value'],
@@ -128,26 +128,25 @@ describe RepositoryRows::UpdateRepositoryRowService do
         }
       end
 
-      it 'reverts cells update' do
+      it 'update cells, but not repository row name' do
         cell = RepositoryCell.create_with_value!(row, column, 'some data', user)
 
-        expect { service_call }.not_to(change { cell.reload.value.data })
+        expect { service_call }.to(change { cell.reload.value.data })
+        expect { service_call }.not_to(change { row.reload.name })
       end
     end
 
-    context 'when repository_row update fails' do
+    context 'when repository_row name update fails' do
       let(:params) do
         {
           repository_row: { name: '' }
         }
       end
 
-      it 'returns false for succeed' do
-        expect(service_call.succeed?).to be_falsey
-      end
-
-      it 'returns errors' do
-        expect(service_call.errors.count).to eq(1)
+      it 'returns true for succeed' do
+        expect(service_call.succeed?).to be_truthy
+        expect { service_call }.not_to(change { row.reload.name })
+        expect(service_call.errors.count).to eq(0)
       end
     end
   end
