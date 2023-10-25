@@ -37,24 +37,18 @@ json.custom_columns do
   json.array! repository_columns_ordered_by_state(@repository_row.repository).each do |repository_column|
     repository_cell = @repository_row.repository_cells.find_by(repository_column: repository_column)
 
-    data_type = repository_column.data_type
-    data_type = repository_cell.repository_column.data_type if repository_cell.present?
-
-    options = case data_type
+    options = case repository_column.data_type
               when 'RepositoryListValue'
                 {
-                  options_path: items_repository_repository_columns_list_column_path(@repository,
-                                                                                     repository_cell.repository_column)
+                  options_path: items_repository_repository_columns_list_column_path(@repository, repository_column)
                 }
               when 'RepositoryStatusValue'
                 {
-                  options_path: items_repository_repository_columns_status_column_path(@repository,
-                                                                                       repository_cell.repository_column)
+                  options_path: items_repository_repository_columns_status_column_path(@repository, repository_column)
                 }
               when 'RepositoryChecklistValue'
                 {
-                  options_path: items_repository_repository_columns_checklist_column_path(@repository,
-                                                                                          repository_cell.repository_column)
+                  options_path: items_repository_repository_columns_checklist_column_path(@repository, repository_column)
                 }
               else
                 {
