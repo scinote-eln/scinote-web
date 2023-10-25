@@ -8,7 +8,7 @@ module Reports::Docx::DrawResultTable
     color = @color
     obj = self
     table_data = JSON.parse(table.contents_utf_8)['data']
-    table_data = obj.add_headers_to_table(table_data, false)
+    table_data = obj.add_headers_to_table(table_data, table.metadata.dig('plateTemplate'))
 
     if table.metadata.present? && table.metadata['cells'].is_a?(Array)
       table.metadata['cells'].each do |cell|

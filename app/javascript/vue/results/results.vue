@@ -20,6 +20,7 @@
       <Result v-for="result in results" :key="result.id"
         :result="result"
         :resultToReload="resultToReload"
+        :activeDragResult="activeDragResult"
         @result:elements:loaded="resultToReload = null"
         @result:move_element="reloadResult"
         @result:attachments:loaded="resultToReload = null"
@@ -28,6 +29,7 @@
         @result:archived="removeResult"
         @result:deleted="removeResult"
         @result:restored="removeResult"
+        @result:drag_enter="dragEnter"
       />
     </div>
   </div>
@@ -60,6 +62,7 @@
         resultToReload: null,
         nextPageUrl: null,
         loadingPage: false,
+        activeDragResult: null
       }
     },
     mounted() {
@@ -130,6 +133,9 @@
       },
       removeResult(result_id) {
         this.results = this.results.filter((r) => r.id != result_id);
+      },
+      dragEnter(id) {
+        this.activeDragResult = id;
       }
     }
   }

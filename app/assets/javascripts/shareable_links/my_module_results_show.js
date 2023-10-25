@@ -31,19 +31,29 @@
     });
   }
 
+  function initResultComments() {
+    $(document).on('click', '.shareable-link-open-comments-sidebar', function(e) {
+      e.preventDefault();
+      $('.comments-sidebar').removeClass('open');
+
+      $($(this).data('objectTarget')).addClass('open');
+    });
+  }
+
   function initResultsExpandCollapse() {
     $(document).on('click', '#results-collapse-btn', function() {
-      $('.result .panel-collapse').collapse('hide');
+      $('.result-container .collapse').collapse('hide');
     });
 
     $(document).on('click', '#results-expand-btn', function() {
-      $('.result .panel-collapse').collapse('show');
+      $('.result-container .collapse').collapse('show');
     });
   }
 
   function initMyModuleResultsShow() {
     initAttachments();
     initResultsExpandCollapse();
+    initResultComments();
 
     $('.hot-table-container').each(function() {
       initializeHandsonTable($(this));

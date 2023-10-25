@@ -137,14 +137,13 @@ module ApplicationHelper
   # and outputs a popover with user information
   def smart_annotation_filter_users(text, team, base64_encoded_imgs: false)
     sa_user = /\[\@(.*?)~([0-9a-zA-Z]+)\]/
-    new_text = text.gsub(sa_user) do |el|
+    text.gsub(sa_user) do |el|
       match = el.match(sa_user)
       user = User.find_by_id(match[2].base62_decode)
       next unless user
 
       popover_for_user_name(user, team, false, false, base64_encoded_imgs)
     end
-    new_text
   end
 
   # Generate smart annotation link for one user object

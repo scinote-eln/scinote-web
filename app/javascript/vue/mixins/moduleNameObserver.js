@@ -21,7 +21,8 @@ export default {
   },
   methods: {
     observeChanges() {
-      const targetNode = document.querySelector('.my_module-name .view-mode');
+      const targetNode = document
+        .querySelector('.my_module-name .view-mode, .my_module-name .name-readonly-placeholder');
       if (!targetNode) return;
 
       this.moduleName = targetNode.textContent;

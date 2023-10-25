@@ -129,14 +129,14 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
             attributes: {
               text: 'Result text 1 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAA'\
                          'AACCAIAAAD91JpzAAAACXBIWXMAAC4jAAAuIwF4pT92AAAAE0lE'\
-                         'QVQIHWP8//8/AwMDExADAQAkBgMBOOSShwAAAABJRU5ErkJggg==" data-mce-token="a1">'
+                         'QVQIHWP8//8/AwMDExADAQAkBgMBOOSShwAAAABJRU5ErkJggg==" data-mce-token="1">'
             } },
           { type: 'tiny_mce_assets',
             attributes: {
               file_data: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAA'\
                          'AACCAIAAAD91JpzAAAACXBIWXMAAC4jAAAuIwF4pT92AAAAE0lE'\
                          'QVQIHWP8//8/AwMDExADAQAkBgMBOOSShwAAAABJRU5ErkJggg==',
-              file_token: 'a1',
+              file_token: '1',
               file_name: 'test.png'
             } }
         ]
@@ -198,7 +198,7 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
 
     it 'Response correct with old TinyMCE images' do
       hash_body = nil
-      @valid_tinymce_hash_body[:included][0][:attributes][:text] = 'Result text 1 [~tiny_mce_id:a1]'
+      @valid_tinymce_hash_body[:included][0][:attributes][:text] = 'Result text 1 [~tiny_mce_id:1]'
       post api_v1_team_project_experiment_task_results_path(
         team_id: @team1.id,
         project_id: @valid_project,

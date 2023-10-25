@@ -68,8 +68,10 @@ describe ProjectsController, type: :controller do
       let(:action) { put :update, params: params }
       let(:params) do
         { id: projects.first.id,
-          project: { name: projects.first.name, team_id: projects.first.team.id,
-                     visibility: projects.first.visibility } }
+          project: { name: projects.first.name,
+                     team_id: projects.first.team.id,
+                     visibility: projects.first.visibility,
+                     default_public_user_role_id: projects.first.default_public_user_role.id } }
       end
 
       it 'returns redirect response' do
@@ -78,10 +80,10 @@ describe ProjectsController, type: :controller do
         expect(response.media_type).to eq 'text/html'
       end
 
-      it 'calls create activity service (change_project_visibility)' do
+      it 'calls create activity service (project_grant_access_to_all_team_members)' do
         params[:project][:visibility] = 'visible'
         expect(Activities::CreateActivityService).to receive(:call)
-          .with(hash_including(activity_type: :change_project_visibility))
+          .with(hash_including(activity_type: :project_grant_access_to_all_team_members))
         action
       end
 

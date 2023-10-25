@@ -106,6 +106,10 @@
       if (this.isNew) {
         this.enableEditMode();
       }
+
+      this.$nextTick(() => {
+        this.highlightText();
+      })
     },
     computed: {
       actionMenu() {
@@ -167,6 +171,12 @@
         this.element.attributes.orderable.name = data.attributes.name
         this.element.attributes.orderable.updated_at = data.attributes.updated_at
         this.$emit('update', this.element, true)
+      },
+      highlightText() {
+        var textElement = $('.results-list')[0]
+        if (textElement) {
+          Prism.highlightAllUnder(textElement)
+        }
       }
     }
   }

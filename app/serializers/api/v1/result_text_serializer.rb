@@ -4,7 +4,7 @@ module Api
   module V1
     class ResultTextSerializer < ActiveModel::Serializer
       type :result_texts
-      attributes :text
+      attributes :name, :text
     end
   end
 end

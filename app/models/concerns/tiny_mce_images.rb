@@ -110,13 +110,17 @@ module TinyMceImages
           next if asset.object == self
           next unless asset.can_read?(user)
         else
-          url = image['src']
-          image_type = FastImage.type(url).to_s
-          next unless image_type
-
+          image_type = nil
           begin
-            new_image = Down.download(url, max_size: Rails.configuration.x.file_max_size_mb.megabytes)
-          rescue Down::TooLarge => e
+            uri = URI.parse(image['src'])
+            if uri.scheme != 'https'
+              uri.scheme = Rails.application.config.force_ssl ? 'https' : 'http'
+            end
+            image_type = FastImage.type(uri.to_s).to_s
+            next unless image_type
+
+            new_image = Down.download(uri.to_s, max_size: Rails.configuration.x.file_max_size_mb.megabytes)
+          rescue StandardError => e
             Rails.logger.error e.message
             next
           end

@@ -16,12 +16,19 @@ describe MyModulesController, type: :controller do
     update_description: { id: 1 },
     update_protocol_description: { id: 1 },
     protocols: { id: 1 },
+    protocol: { id: 1 },
+    update_protocol: { id: 1 },
+    provisioning_status: { id: 1 },
+    actions_dropdown: { id: 1 },
+    new: { id: 1, experiment_id: 1 },
+    create: { id: 1, experiment_id: 1 },
+    permissions: { id: 1 },
     results: { id: 1 },
     archive: { id: 1 },
     restore_group: { id: 1 },
     update_state: { id: 1 },
     canvas_dropdown_menu: { id: 1 }
-  }, []
+  }, [:set_breadcrumbs_items]
 
   login_user
 

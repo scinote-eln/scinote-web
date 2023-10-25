@@ -15,10 +15,10 @@
   <div class="report-element-body">
     <% if step_text.text.present? %>
       <%= custom_auto_link(step_text.prepare_for_report(:text),
-                            team: current_team,
-                            simple_format: false,
-                            tags: %w(img),
-                            base64_encoded_imgs: true) %>
+                           team: current_team,
+                           simple_format: false,
+                           tags: %w(img),
+                           base64_encoded_imgs: true) %>
     <% else %>
       <em><%= t('projects.reports.elements.step.no_description') %></em>
     <% end %>

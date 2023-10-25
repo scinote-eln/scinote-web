@@ -2,9 +2,7 @@ FactoryBot.define do
   factory :user_role do
     factory :owner_role do
       name { I18n.t('user_roles.predefined.owner') }
-      permissions { ProjectPermissions.constants.map { |const| ProjectPermissions.const_get(const) } +
-                      ExperimentPermissions.constants.map { |const| ExperimentPermissions.const_get(const) } +
-                      MyModulePermissions.constants.map { |const| MyModulePermissions.const_get(const) } }
+      permissions { PredefinedRoles::OWNER_PERMISSIONS }
       predefined { true }
     end
 

@@ -3,14 +3,20 @@
 require 'rails_helper'
 
 describe Settings, type: :model do
-  let(:settings) { build :settings }
+  let(:settings) { build(:settings) }
+  let(:application_settings) { build(:settings, :with_load_values_from_env_defined) }
+
+  it 'raises not NotImplementedError' do
+    expect { settings.load_values_from_env }.to raise_error(NotImplementedError)
+  end
+
 
   it 'is valid' do
-    expect(settings).to be_valid
+    expect(application_settings).to be_valid
   end
 
   it 'should be of class Settings' do
-    expect(subject.class).to eq Settings
+    expect(application_settings.class).to eq Settings
   end
 
   describe 'Database table' do

@@ -4,8 +4,16 @@ require 'sanitize'
 require 'cgi'
 
 module InputSanitizeHelper
-  def sanitize_input(html, _tags = [], _attributes = [], sanitizer_config: Constants::INPUT_SANITIZE_CONFIG)
-    Sanitize.fragment(html, sanitizer_config).html_safe
+  def sanitize_input(html, _tags = [], _attributes = [], sanitizer_config: nil)
+    config =
+      if Rails.application.config.x.custom_sanitizer_config.present?
+        Rails.application.config.x.custom_sanitizer_config
+      elsif sanitizer_config.present?
+        sanitizer_config
+      else
+        Constants::INPUT_SANITIZE_CONFIG
+      end
+    Sanitize.fragment(html, config).html_safe
   end
 
   def escape_input(text)

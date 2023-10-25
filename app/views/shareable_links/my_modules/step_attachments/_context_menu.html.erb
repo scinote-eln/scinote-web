@@ -3,10 +3,9 @@
     <i class="sn-icon sn-icon-more-hori"></i>
   </button>
 
-  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownAssetContextMenu">
+  <ul class="dropdown-menu dropdown-menu-right rounded !p-2.5 sn-shadow-menu-sm" aria-labelledby="dropdownAssetContextMenu">
     <li>
-      <%= link_to shared_protocol_asset_download_path(@shareable_link.uuid, asset), data: { turbolinks: false } do %>
-        <span class="sn-icon sn-icon-export"></span>
+      <%= link_to shared_asset_download_path(@shareable_link.uuid, asset), class: '!px-3 !py-2.5 hover:!bg-sn-super-light-blue !text-sn-blue', data: { turbolinks: false } do %>
         <%= t('Download') %>
       <% end %>
     </li>

@@ -7,6 +7,7 @@ describe MyModuleRepositoriesController, type: :controller do
 
   it_behaves_like "a controller with authentication", {
     index_dt: { my_module_id: 1, id: 1 },
+    create: { my_module_id: 1, id: 1, my_module_tag: { tag_id: 1, my_module_id: 1 } },
     update: { my_module_id: 1, id: 1 },
     update_repository_records_modal: { my_module_id: 1, id: 1 },
     assign_repository_records_modal: { my_module_id: 1, id: 1 },
