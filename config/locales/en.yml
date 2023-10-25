@@ -1274,6 +1274,7 @@ en:
       published_table: "entered a table on %{timestamp}."
       published_text:  "entered a text on %{timestamp}."
       published_asset:  "uploaded a file on %{timestamp}."
+      drop_message: "Drop file to add to result %{name}"
       expand_label: "Expand All"
       collapse_label: "Collapse All"
       empty_name: "Add title"
@@ -2254,7 +2255,7 @@ en:
           other: "days"
       stock_export: "Export"
       custom_columns_label: "Custom columns"
-      no_custom_columns_label: "This item has no custom columns"
+      no_custom_columns_label: "No custom columns"
       repository_time_range_value:
         no_time_range: 'No time range'
       repository_text_value:
