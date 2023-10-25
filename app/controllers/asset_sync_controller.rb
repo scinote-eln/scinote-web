@@ -20,7 +20,7 @@ class AssetSyncController < ApplicationController
   end
 
   def download
-    redirect_to @asset.file.url
+    redirect_to(@asset.file.url, allow_other_host: true)
   end
 
   def update
