@@ -16,6 +16,7 @@ module RepositoryDatatable
     end
 
     private
+
     def reminder_values
       data = {}
       if scope.dig(:options, :reminders_enabled) &&
@@ -37,6 +38,7 @@ module RepositoryDatatable
      end
      data
     end
+
     def stock_url
       if scope[:repository] && scope.dig(:options, :repository_row)
         edit_repository_stock_repository_repository_row_url(

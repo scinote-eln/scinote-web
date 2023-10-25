@@ -8,7 +8,7 @@
         :name="name"
         :value="value"
         :class="`${error ? 'error' : ''}`"
-        :placeholder="i18n.t('repository_stock_values.manage_modal.amount_placeholder_new')"
+        :placeholder="placeholder"
         :required="required"
         @input="updateValue"
       />
