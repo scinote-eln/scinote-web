@@ -1,82 +1,70 @@
 <template>
   <div class="date-time-picker grow">
-    <DatePicker v-if="!timeOnly"
-      @change="updateDate"
-      :placeholder="placeholder"
-      :selectorId="`${this.selectorId}_Date`"
-      :defaultValue="defaultValue"
-    />
-    <TimePicker v-if="!dateOnly"
-      @change="updateTime"
-      :placeholder="placeholder"
-      :selectorId="`${this.selectorId}_Time`"
-      :defaultValue="getTime(defaultValue)"
-    />
+    <VueDatePicker
+      v-if="mode == 'datetime'"
+      v-model="datetime"
+      :teleport="true"
+      :format="dateTimeFormat"
+      :placeholder="placeholder" ></VueDatePicker>
+
+    <VueDatePicker
+      v-if="mode == 'date'"
+      v-model="datetime"
+      :teleport="true"
+      :format="dateFormat"
+      :enable-time-picker="false"
+      :placeholder="placeholder" ></VueDatePicker>
+
+    <VueDatePicker
+      v-if="mode == 'time'"
+      v-model="datetime"
+      :teleport="true"
+      :format="timeFormat"
+      time-picker
+      :placeholder="placeholder" ></VueDatePicker>
   </div>
 </template>
 
 <script>
-  import TimePicker from './time_picker.vue'
-  import DatePicker from './date_picker.vue'
+  import VueDatePicker from '@vuepic/vue-datepicker';
 
   export default {
     name: 'DateTimePicker',
     props: {
-      dateOnly: { type: Boolean, default: false },
-      timeOnly: { type: Boolean, default: false },
-      selectorId: { type: String, required: true },
+      mode: { type: String, default: 'datetime' },
       defaultValue: { type: Date, required: false },
       placeholder: { type: String }
     },
     data() {
       return {
-        date: '',
-        time: '',
-        datetime: ''
+        datetime: this.defaultValue
       }
     },
     components: {
-      TimePicker,
-      DatePicker
+      VueDatePicker
     },
-    methods: {
-      updateDate(value) {
-        this.date = value;
-        this.updateDateTime();
-      },
-      getTime(dateTime) {
-        if(!this.isValidDate(dateTime)) return
-        return `${dateTime.getHours().toString().padStart(2, '0')}:${dateTime.getMinutes().toString().padStart(2, '0')}`
-      },
-      updateTime(value) {
-        this.time = value;
-        this.updateDateTime();
-      },
-      updateDateTime() {
-        this.recalcTimestamp();
-        this.$emit('change', this.datetime);
-      },
-
-      isValidTime() {
-        return /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(this.time);
-      },
-      isValidDate(date) {
-        return (date instanceof Date) && !isNaN(date.getTime());
-      },
-      recalcTimestamp() {
-        let date = this.timeOnly ? new Date() : this.date;
-        if (this.isValidDate(date) && (this.dateOnly || this.isValidTime())) {
-          if (this.dateOnly) {
-            date.setHours(0);
-            date.setMinutes(0);
-          } else {
-            date.setHours(this.time.split(':')[0]);
-            date.setMinutes(this.time.split(':')[1]);
+    watch: {
+      datetime: function () {
+        if (this.defaultValue != this.datetime) {
+          let newDate = this.datetime;
+          if (this.mode == 'time') {
+            newDate = new Date();
+            newDate.setHours(this.datetime.hours);
+            newDate.setMinutes(this.datetime.minutes);
           }
-          this.datetime = date
-        } else {
-          this.datetime = null;
+          this.$emit('change', newDate);
         }
+      }
+    },
+    computed: {
+      dateTimeFormat() {
+        return `${document.body.dataset.datetimePickerFormatVue} HH:mm`
+      },
+      dateFormat() {
+        return document.body.dataset.datetimePickerFormatVue
+      },
+      timeFormat() {
+        return 'HH:mm'
       }
     }
   }

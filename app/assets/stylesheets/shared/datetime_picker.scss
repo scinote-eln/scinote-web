@@ -1,5 +1,11 @@
 // scss-lint:disable SelectorDepth NestingDepth
 
+.dp--menu-wrapper {
+  .dp__action_buttons {
+    flex: 1;
+  }
+}
+
 .bootstrap-datetimepicker-widget {
   .glyphicon-calendar {
     margin: 0;
