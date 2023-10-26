@@ -23,6 +23,7 @@ export default {
         for (let i = 0; i < e.clipboardData.items.length; i++) {
           if (e.clipboardData.items[i].type.indexOf('image') !== -1) {
             image = e.clipboardData.items[i];
+            break;
           }
         }
       }
