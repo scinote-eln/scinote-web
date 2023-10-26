@@ -12,29 +12,68 @@
           <h4 class="modal-title">{{i18n.t('assets.from_clipboard.modal_title')}}</h4>
         </div>
         <div class="modal-body">
-          <p><strong>{{i18n.t('assets.from_clipboard.image_preview')}}</strong></p>
-          <canvas style="border:1px solid grey;max-width:400px;max-height:300px" id="clipboardPreview" />
-          <p><strong>{{i18n.t('assets.from_clipboard.file_name')}}</strong></p>
-          <div class="input-group">
-            <input id="clipboardImageName" type="text" class="form-control"
+          <label class="sci-label">{{i18n.t('assets.from_clipboard.image_preview')}}</label>
+          <div class="flex justify-center w-full">
+            <canvas class="max-h-80 max-w-lg rounded border border-solid border-sn-light-grey" ref="preview" />
+          </div>
+          <div class="w-full py-6">
+            <label class="sci-label">{{i18n.t(`assets.from_clipboard.select_${objectType}`)}}</label>
+            <SelectSearch
+              :value="target"
+              @change="setTarget"
+              :options="targets"
+              :isLoading="false"
+              :placeholder="
+                i18n.t(`protocols.steps.modals.move_element.${objectType}.search_placeholder`)
+              "
+              :searchPlaceholder="
+                i18n.t(`protocols.steps.modals.move_element.${objectType}.search_placeholder`)
+              "
+            />
+          </div>
+          <label class="sci-label">{{i18n.t('assets.from_clipboard.file_name')}}</label>
+          <div class="sci-input-container-v2">
+            <input id="clipboardImageName" type="text" class="sci-input-field !pr-16" v-model="fileName"
                     :placeholder="i18n.t('assets.from_clipboard.file_name_placeholder')" aria-describedby="image-name">
-              <span class="input-group-addon" id="image-name"></span>
+              <span class="absolute right-2.5 text-sn-grey ">
+                .{{ extension }}
+              </span>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" @click="cancel">{{i18n.t('general.cancel')}}</button>
-          <button type="button" class="btn btn-success" @click="uploadImage">{{i18n.t('assets.from_clipboard.add_image')}}</button>
+          <button type="button" class="btn btn-success" :disabled="!valid" @click="uploadImage">{{i18n.t('assets.from_clipboard.add_image')}}</button>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+  import SelectSearch from "../../select_search.vue";
+
   export default {
     name: 'clipboardPasteModal',
     props: {
-      parent: Object,
-      image: DataTransferItem
+      objects: Array,
+      image: DataTransferItem,
+      objectType: String,
+      selectedObjectId: String
+    },
+    data () {
+      return {
+        target: null,
+        targets: [],
+        fileName: '',
+        extension: '',
+      }
+    },
+    components: {
+      SelectSearch
+    },
+    computed: {
+      valid() {
+        return this.target && this.fileName.length > 0;
+      }
     },
     mounted() {
       $(this.$refs.modal).modal('show');
@@ -42,15 +81,26 @@
       $(this.$refs.modal).on('hidden.bs.modal', () => {
         this.$emit('cancel');
       });
+
+      if (this.selectedObjectId) this.target = this.selectedObjectId;
+      this.targets = this.objects.map((object) => {
+        return [
+          object.id,
+          object.attributes.name
+        ]
+      });
     },
     methods: {
+      setTarget(target) {
+        this.target = target;
+      },
       cancel() {
         $(this.$refs.modal).modal('hide');
       },
       appendImage(item) {
         let imageBlob = item.getAsFile();
         if (imageBlob) {
-          var canvas = document.getElementById('clipboardPreview');
+          var canvas = this.$refs.preview;
           var ctx = canvas.getContext('2d');
           var img = new Image();
           img.onload = function() {
@@ -63,12 +113,12 @@
           let extension = imageBlob.name.slice(
             (Math.max(0, imageBlob.name.lastIndexOf('.')) || Infinity) + 1
           );
-          $('#image-name').html('.' + extension); // add extension near file name
+          this.extension = extension;
           this.imageBlob = imageBlob;
         }
       },
       uploadImage() {
-        let newName = $('#clipboardImageName').val();
+        let newName = this.fileName;
         let imageBlog = this.imageBlob;
         // check if the name is set
         if (newName && newName.length > 0) {
@@ -82,7 +132,7 @@
           this.imageBlob = new File([blob], name, { type: imageBlog.type });
         }
         $(this.$refs.modal).modal('hide');
-        this.$emit('files', this.imageBlob);
+        this.$emit('files', this.imageBlob, this.target);
       }
     }
   }
