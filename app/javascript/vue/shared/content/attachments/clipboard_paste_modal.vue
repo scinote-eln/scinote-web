@@ -13,7 +13,9 @@
         </div>
         <div class="modal-body">
           <label class="sci-label">{{i18n.t('assets.from_clipboard.image_preview')}}</label>
-          <canvas class="w-full max-h-80 rounded border border-solid border-sn-light-grey" ref="preview" />
+          <div class="flex justify-center w-full">
+            <canvas class="max-h-80 max-w-lg rounded border border-solid border-sn-light-grey" ref="preview" />
+          </div>
           <div class="w-full py-6">
             <label class="sci-label">{{i18n.t('assets.from_clipboard.select_target')}}</label>
             <SelectSearch
