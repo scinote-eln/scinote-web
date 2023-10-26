@@ -6950,10 +6950,10 @@ tinycolor2@^1.4.1:
   resolved "https://registry.yarnpkg.com/tinycolor2/-/tinycolor2-1.6.0.tgz#f98007460169b0263b97072c5ae92484ce02d09e"
   integrity sha512-XPaBkWQJdsf3pLKJV9p4qN/S+fm2Oj8AIPo1BTUhg5oxkvm9+SVEGFdhyOz7tTdUTfvxMiAs4sp6/eZO2Ew+pw==
 
-tinymce@^6.5.1:
-  version "6.5.1"
-  resolved "https://registry.yarnpkg.com/tinymce/-/tinymce-6.5.1.tgz#f228bf2dc1abf28565523f359b849dad1706357d"
-  integrity sha512-J67fxJiX3tjvVqer1dg1+cOxMeE2P55ESGhaakvqGPbAUU45HnCMLSioaOsxV1KfcXustw9WJo0rtn1SNQlVKQ==
+tinymce@^6.7.1:
+  version "6.7.1"
+  resolved "https://registry.yarnpkg.com/tinymce/-/tinymce-6.7.1.tgz#62038eb298cfaeb4ffc7aae4d90401fc0bf9d7d7"
+  integrity sha512-SIGJgWk2d/X59VbO+i81QfNx2EP1P5t+sza2/1So3OLGtmMBhEJMag7sN/Mo8sq4s0niwb65Z51yLju32jP11g==
 
 tippy.js@^6.3.7:
   version "6.3.7"
