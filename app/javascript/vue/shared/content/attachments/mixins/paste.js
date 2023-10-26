@@ -19,8 +19,13 @@ export default {
     },
     getImagesFromClipboard(e) {
       let image = null;
-      if (e.clipboardData && e.clipboardData.items) image = e.clipboardData.items[0];
-      if (image && image.type.indexOf('image') === -1) image = null
+      if (e.clipboardData) {
+        for (let i = 0; i < e.clipboardData.items.length; i++) {
+          if (e.clipboardData.items[i].type.indexOf('image') !== -1) {
+            image = e.clipboardData.items[i];
+          }
+        }
+      }
       return image;
     },
   },
