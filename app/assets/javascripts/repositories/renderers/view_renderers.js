@@ -215,8 +215,8 @@ $.fn.dataTable.render.RepositoryStockValue = function(data) {
                   ${data.value.stock_formatted}
                   </a>`;
       }
-      return `<span class="stock-value-view-render
-                           ${data.displayWarnings ? `stock-${data.stock_status}` : ''}">
+      return `<span class="stock-value-view-render data-manage-stock-url=${data.value.stock_url}
+                            ${data.displayWarnings ? `stock-${data.stock_status}` : ''}">
                 ${data.value.stock_formatted}
                 </span>`;
     }

@@ -53,7 +53,7 @@ module RepositoryDatatableHelper
         # always add stock cell, even if empty
         row['stock'] =
           if stock_cell.present?
-            serialize_repository_cell_value(record.repository_stock_cell, team, repository, { repository_row: record })
+            serialize_repository_cell_value(record.repository_stock_cell, team, repository)
           else
             { stock_url: new_repository_stock_repository_repository_row_url(repository, record) }
           end

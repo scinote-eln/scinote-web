@@ -9,19 +9,20 @@
       </a>
     </div>
     <a style="text-decoration: none;"
-      :class="`border-solid border-[1px] manage-repository-stock-value-link text-sn-dark-grey font-inter text-sm font-normal leading-5 w-full rounded relative sci-cursor-edit block ${borderColor}`"
+      class="text-sn-dark-grey font-inter text-sm font-normal leading-5 w-full rounded relative block"
+      :class="editableClassName"
       @click="enableEditing"
       :data-manage-stock-url="stockValueUrl"
       :data-repository-row-id="repositoryId"
     >
-      <div v-if="values?.stock_formatted" class="text-sn-dark-grey font-inter text-sm font-normal leading-5 p-2 stock-value">
+      <div v-if="values?.stock_formatted" class="text-sn-dark-grey font-inter text-sm font-normal leading-5 stock-value">
         {{ values.stock_formatted }}
       </div>
-      <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5 p-2">
+      <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5 stock-value">
         {{ i18n.t('repositories.item_card.repository_stock_value.no_stock') }}
       </div>
-      <span class="absolute right-2 top-1.5" v-if="values?.reminder === true">
-        <Reminder :value="colVal" />
+      <span class="absolute right-2 reminder" :class="{ 'top-1.5': permissions?.can_manage, 'top-0': !permissions?.can_manage, hidden: !values?.reminder }">
+        <Reminder :value="values" />
       </span>
     </a>
   </div>
@@ -35,10 +36,13 @@
       Reminder
     },
     computed: {
-      borderColor() {
-        return this.isEditing ? 'border-sn-science-blue' : 'border-sn-light-grey hover:border-sn-sleepy-grey';
+      editableClassName() {
+        const className = 'border-solid border-[1px] p-2 manage-repository-stock-value-link sci-cursor-edit'
+        if (this.permissions.can_manage && this.isEditing) return `${className} border-sn-science-blue`;
+        if (this.permissions.can_manage) return `${className} border-sn-light-grey hover:border-sn-sleepy-grey`;
+        return ''
       }
-    },
+    }, 
     data() {
       return {
         stock_formatted: null,
@@ -62,6 +66,10 @@
     mounted() {
       this.values = this.colVal;
       this.stockValueUrl = this.actions.stock.stock_value_url
+      window.manageStockCallback = this.submitCallback;
+    },
+    unmounted(){
+      delete window.manageStockCallback
     },
     methods: {
       enableEditing(){
@@ -71,6 +79,9 @@
         $('#manageStockValueModal').on('hide.bs.modal', function() {
           $this.isEditing = false;
         })
+      },
+      submitCallback(values) {
+        if (values) this.values = values;
       }
     }
   }

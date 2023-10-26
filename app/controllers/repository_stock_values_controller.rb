@@ -26,10 +26,9 @@ class RepositoryStockValuesController < ApplicationController
     render json: {
       stock_managable: true,
       stock_status: @repository_stock_value.status,
-      manageStockUrl: edit_repository_stock_repository_repository_row_url(@repository, @repository_row)
     }.merge(
       serialize_repository_cell_value(
-        @repository_stock_value.repository_cell, current_team, @repository, repository_row: @repository_row
+        @repository_stock_value.repository_cell, current_team, @repository, reminders_enabled: true
       )
     )
   end

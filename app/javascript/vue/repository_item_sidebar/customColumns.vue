@@ -16,7 +16,6 @@
         :optionsPath="column.options_path"
         :inArchivedRepositoryRow="inArchivedRepositoryRow"
         :editingField="editingField"
-        :actions="actions"
         @setEditingField="editingField = $event"
         @update="update"
       />

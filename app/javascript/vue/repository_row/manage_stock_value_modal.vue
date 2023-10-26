@@ -261,7 +261,7 @@
               unit_item_id: this.unit,
               amount: this.newAmount,
               comment: this.comment,
-              low_stock_threshold: this.lowStockTreshold,
+              low_stock_threshold: this.reminderEnabled ? this.lowStockTreshold : null
             },
             operator: this.operations.find(operation => operation[0] = this.operation)?.[1],
             change_amount: Math.abs(this.amount),
