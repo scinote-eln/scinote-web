@@ -19,6 +19,7 @@ json.actions do
       json.disabled @my_module_assign_error.present?
     end
   end
+  json.direct_file_upload_path rails_direct_uploads_url
 end
 
 json.default_columns do

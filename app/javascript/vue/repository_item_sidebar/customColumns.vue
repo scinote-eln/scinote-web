@@ -18,6 +18,7 @@
         :optionsPath="column.options_path"
         :inArchivedRepositoryRow="inArchivedRepositoryRow"
         :editingField="editingField"
+        :actions="actions"
         @setEditingField="editingField = $event"
         @update="update"
       />
@@ -70,6 +71,7 @@
       repositoryRowId: { type: Number, default: null },
       repositoryId: { type: Number, default: null },
       inArchivedRepositoryRow: { type: Boolean, default: false },
+      actions: {type: Object, default: () => {}}
     },
     data() {
       return {
