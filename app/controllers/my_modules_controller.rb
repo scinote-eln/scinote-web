@@ -67,6 +67,7 @@ class MyModulesController < ApplicationController
         subject: @my_module,
         message_items: { my_module: @my_module.id }
       )
+      log_user_designation_activity
       redirect_to canvas_experiment_path(@experiment) if params[:my_module][:view_mode] == 'canvas'
     rescue ActiveRecord::RecordInvalid
       render json: @my_module.errors, status: :unprocessable_entity
@@ -543,6 +544,14 @@ class MyModulesController < ApplicationController
                 :change_task_due_date
               end
     log_activity(type_of, @my_module, message_items)
+  end
+
+  def log_user_designation_activity
+    users = User.where(id: params[:my_module][:user_ids])
+
+    users.each do |user|
+      log_activity(:designate_user_to_my_module, @my_module, { user_target: user.id })
+    end
   end
 
   def log_activity(type_of, my_module = nil, message_items = {})
