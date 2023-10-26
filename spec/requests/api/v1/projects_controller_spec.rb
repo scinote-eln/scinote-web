@@ -14,7 +14,7 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
       project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @team1)
     end
     2.times do
-      project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @teams.first, archived: true)
+      project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @team1, archived: true)
     end
 
     # unaccessable_projects
@@ -44,14 +44,14 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
 
     it 'Response with correct projects, only active' do
       hash_body = nil
-      get api_v1_team_projects_path(team_id: @teams.first.id, filter: { archived: false }),
+      get api_v1_team_projects_path(team_id: @team1.id, filter: { archived: false }),
           headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data].pluck('attributes').pluck('archived').none?).to be(true)
       expect(hash_body[:data]).to match(
         JSON.parse(
           ActiveModelSerializers::SerializableResource
-            .new(@teams.first.projects.active, each_serializer: Api::V1::ProjectSerializer)
+            .new(@team1.projects.active, each_serializer: Api::V1::ProjectSerializer)
             .to_json
         )['data']
       )
@@ -59,14 +59,14 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
 
     it 'Response with correct projects, only archived' do
       hash_body = nil
-      get api_v1_team_projects_path(team_id: @teams.first.id, filter: { archived: true }),
+      get api_v1_team_projects_path(team_id: @team1.id, filter: { archived: true }),
           headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data].pluck('attributes').pluck('archived').all?).to be(true)
       expect(hash_body[:data]).to match(
         JSON.parse(
           ActiveModelSerializers::SerializableResource
-            .new(@teams.first.projects.archived, each_serializer: Api::V1::ProjectSerializer)
+            .new(@team1.projects.archived, each_serializer: Api::V1::ProjectSerializer)
             .to_json
         )['data']
       )

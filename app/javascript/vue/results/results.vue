@@ -32,6 +32,14 @@
         @result:drag_enter="dragEnter"
       />
     </div>
+    <clipboardPasteModal v-if="showClipboardPasteModal"
+                         :image="pasteImages"
+                         :objects="results"
+                         :objectType="'result'"
+                         :selectedObjectId="firstObjectInViewport()"
+                         @files="uploadFilesToResult"
+                         @cancel="showClipboardPasteModal = false"
+    />
   </div>
 </template>
 
@@ -43,10 +51,13 @@
   import stackableHeadersMixin from '../mixins/stackableHeadersMixin';
   import moduleNameObserver from '../mixins/moduleNameObserver';
 
+  import clipboardPasteModal from '../shared/content/attachments/clipboard_paste_modal.vue'
+  import AssetPasteMixin from '../shared/content/attachments/mixins/paste.js'
+
   export default {
     name: 'Results',
-    components: { ResultsToolbar, Result },
-    mixins: [stackableHeadersMixin, moduleNameObserver],
+    components: { ResultsToolbar, Result, clipboardPasteModal },
+    mixins: [stackableHeadersMixin, moduleNameObserver, AssetPasteMixin],
     props: {
       url: { type: String, required: true },
       canCreate: { type: String, required: true },
@@ -136,6 +147,16 @@
       },
       dragEnter(id) {
         this.activeDragResult = id;
+      },
+      uploadFilesToResult(file, resultId) {
+        this.$children.find(child => child.result?.id == resultId).uploadFiles(file);
+      },
+      firstObjectInViewport() {
+        let result = $('.result-wrapper:not(.locked)').toArray().find(element => {
+          const { top, bottom } = element.getBoundingClientRect()
+          return bottom > 0 && top < window.innerHeight
+        })
+        return result ? result.dataset.id : null
       }
     }
   }
