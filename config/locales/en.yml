@@ -3454,9 +3454,10 @@ en:
       drop_label: 'Drop to add to Step'
       file_label: 'File'
     from_clipboard:
-      modal_title: 'Add image from clipboard'
-      image_preview: 'Image preview'
-      add_image: 'Add'
+      modal_title: 'Insert image from clipboard'
+      image_preview: 'Pasted image preview'
+      select_target: 'Select to which step you’d like to attach image'
+      add_image: 'Insert'
       file_name: 'File name'
       file_name_placeholder: 'Image'
     placeholder:
