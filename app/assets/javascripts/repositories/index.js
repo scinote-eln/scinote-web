@@ -75,7 +75,7 @@
           targets: 1,
           className: 'item-name',
           render: function(value, type, row) {
-            return `<a href="${row.repositoryUrl}" data-e2e="e2e-TL-inventories-${value}">${value}</a>`;
+            return `<a href="${row.repositoryUrl}" data-e2e="e2e-TL-inventories-Inventory-1">${value}</a>`;
           }
         }, {
           targets: 5,
