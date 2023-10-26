@@ -17,7 +17,7 @@
             <canvas class="max-h-80 max-w-lg rounded border border-solid border-sn-light-grey" ref="preview" />
           </div>
           <div class="w-full py-6">
-            <label class="sci-label">{{i18n.t('assets.from_clipboard.select_target')}}</label>
+            <label class="sci-label">{{i18n.t(`assets.from_clipboard.select_${objectType}`)}}</label>
             <SelectSearch
               :value="target"
               @change="setTarget"

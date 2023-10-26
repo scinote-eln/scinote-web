@@ -3456,7 +3456,8 @@ en:
     from_clipboard:
       modal_title: 'Insert image from clipboard'
       image_preview: 'Pasted image preview'
-      select_target: 'Select to which step you’d like to attach image'
+      select_step: 'Select to which step you’d like to attach image'
+      select_result: 'Select to which result you’d like to attach image'
       add_image: 'Insert'
       file_name: 'File name'
       file_name_placeholder: 'Image'
