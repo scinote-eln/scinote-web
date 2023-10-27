@@ -28,7 +28,8 @@ class RepositoryStockValuesController < ApplicationController
       stock_status: @repository_stock_value.status,
     }.merge(
       serialize_repository_cell_value(
-        @repository_stock_value.repository_cell, current_team, @repository, reminders_enabled: true
+        @repository_stock_value.repository_cell, current_team, @repository,
+        reminders_enabled: Repository.reminders_enabled?
       )
     )
   end
