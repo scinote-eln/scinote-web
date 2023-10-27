@@ -8,7 +8,8 @@
                   'sn-select--blank': !valueLabel,
                   'disabled cursor-default': disabled,
                   'cursor-pointer': !withEditCursor,
-                  'sci-cursor-edit hover:border-sn-sleepy-grey': !disabled && !isOpen && withEditCursor
+                  'sci-cursor-edit hover:border-sn-sleepy-grey': !disabled && !isOpen && withEditCursor,
+                  [className]: true
                 }">
     <slot>
       <button ref="focusElement" class="sn-select__value">
@@ -66,6 +67,7 @@
       initialValue: { type: [String, Number] },
       placeholder: { type: String },
       noOptionsPlaceholder: { type: String },
+      className: { type: String, default: '' },
       disabled: { type: Boolean, default: false }
     },
     directives: {

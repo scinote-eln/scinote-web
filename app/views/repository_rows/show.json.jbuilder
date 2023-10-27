@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+json.id @repository_row.id
 json.repository do
   json.id @repository.id
   json.name @repository.name
@@ -20,6 +21,13 @@ json.actions do
     end
   end
   json.direct_file_upload_path rails_direct_uploads_url
+  json.stock do
+    if @repository_row.has_stock?
+      json.stock_value_url edit_repository_stock_repository_repository_row_url(@repository, @repository_row)
+    elsif @repository.has_stock_management?
+      json.stock_value_url new_repository_stock_repository_repository_row_url(@repository, @repository_row)
+    end
+  end
 end
 
 json.default_columns do
@@ -58,8 +66,10 @@ json.custom_columns do
               end
 
     if repository_cell
-      json.merge! **serialize_repository_cell_value(repository_cell, @repository.team, @repository, reminders_enabled: @reminders_present).merge(
-        **repository_cell.repository_column.as_json(only: %i(id name data_type))
+      json.merge! serialize_repository_cell_value(
+        repository_cell, @repository.team, @repository, reminders_enabled: @reminders_present
+      ).merge(
+        repository_cell.repository_column.as_json(only: %i(id name data_type))
       ).merge(options)
     else
       json.merge! repository_column.as_json(only: %i(id name data_type)).merge(options)

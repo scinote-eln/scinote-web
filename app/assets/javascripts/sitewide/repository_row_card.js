@@ -69,4 +69,24 @@
       $('#modal-info-repository-row').modal('hide');
     }
   });
+  $(document).on('click', '.manage-repository-stock-value-link', (e) => {
+    e.preventDefault();
+
+    window.initManageStockValueModalComponent();
+    if (window.manageStockModalComponent) {
+      const $link = $(e.target).parents('a')[0] ? $(e.target).parents('a') : $(e.target);
+      const stockValueUrl = $link.data('manage-stock-url');
+      let updateCallback;
+      if (stockValueUrl) {
+        updateCallback = (data) => {
+          if (!data?.value) return;
+          // reload dataTable
+          if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload();
+          // update item card stock column
+          window.manageStockCallback && window.manageStockCallback(data.value)
+        };
+        window.manageStockModalComponent.showModal(stockValueUrl, updateCallback);
+      }
+    }
+  });
 }());
