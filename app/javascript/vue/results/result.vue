@@ -3,7 +3,8 @@
        @drop.prevent="dropFile"
        @dragenter.prevent="dragEnter($event)"
        @dragover.prevent
-       :class="{ 'bg-sn-super-light-blue': dragingFile, 'bg-white': !dragingFile }"
+       :data-id="result.id"
+       :class="{ 'bg-sn-super-light-blue': dragingFile, 'bg-white': !dragingFile, 'locked': locked }"
   >
     <div class="text-xl items-center flex flex-col text-sn-blue h-full justify-center left-0 absolute top-0 w-full"
          v-if="dragingFile"
