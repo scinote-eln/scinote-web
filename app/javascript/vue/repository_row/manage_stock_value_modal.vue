@@ -13,12 +13,14 @@
             <i class="sn-icon sn-icon-close"></i>
           </button>
           <h4 class="modal-title">
-            <template v-if="!!stockValue?.id">
-              {{ i18n.t('repository_stock_values.manage_modal.title', { item: repositoryRowName }) }}
-            </template>
-            <template v-else>
-              {{ i18n.t('repository_stock_values.manage_modal.edit_title', { item: repositoryRowName }) }}
-            </template>
+            <span class="truncate max-w-[525px] w-full m-auto">
+              <template v-if="stockValue?.id">
+                {{ i18n.t('repository_stock_values.manage_modal.edit_title', { item: repositoryRowName }) }}
+              </template>
+              <template v-else>
+                {{ i18n.t('repository_stock_values.manage_modal.title', { item: repositoryRowName }) }}
+              </template>
+            </span>
           </h4>
         </div>
         <div class="modal-body">

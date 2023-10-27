@@ -6,11 +6,13 @@
       <i class="sn-icon sn-icon-close"></i>
     </button>
     <h4 class="modal-title">
-      <% if @module_repository_row.stock_consumption %>
-        <%= t('my_modules.repository.stock_modal.title_edit', name: @repository_row.name)%>
-      <% else %>
-        <%= t('my_modules.repository.stock_modal.title', name: @repository_row.name)%>
-      <% end %>
+      <span class="truncate max-w-[325px] w-full m-auto">
+        <% if @module_repository_row.stock_consumption %>
+          <%= t('my_modules.repository.stock_modal.title_edit', name: @repository_row.name)%>
+        <% else %>
+          <%= t('my_modules.repository.stock_modal.title', name: @repository_row.name)%>
+        <% end %>
+      </span>
     </h4>
   </div>
   <div class="modal-body">
@@ -29,14 +31,11 @@
       </div>
       <span class="units"> <%= @stock_value.repository_stock_unit_item&.data %></span>
     </div>
-    <div class="sci-input-container comments-container"  data-error-text="<%= t('repository_stock_values.manage_modal.comment_limit') %>">
-      <%= f.label :comment, t('my_modules.repository.stock_modal.comment') %>
-      <%= f.text_field :comment, placeholder: t('my_modules.repository.stock_modal.enter_comment'), tabindex: 1, class: 'sci-input-field' %>
-    </div>
-    <div class="row mt-3">
+
+    <div class="row">
       <div class="col-sm-12">
         <div class="stock-update-view">
-          <div class="stock-initial-container <%= 'negative' if @stock_value.amount < 0 %>">
+          <div class="stock-initial-container bg-sn-super-light-grey <%= 'negative' if @stock_value.amount < 0 %>">
             <span class="subtitle"><%= t('repository_stock_values.manage_modal.current_stock') %></span>
             <span class="value"><%= @stock_value.formatted_value %></span>
             <span class="units"><%= @stock_value.repository_stock_unit_item&.data %></span>
@@ -44,13 +43,17 @@
           <div class="stock-arrow">
             <i class="sn-icon sn-icon-arrow-right"></i>
           </div>
-          <div class="stock-final-container ">
+          <div class="stock-final-container bg-sn-super-light-grey">
             <span class="subtitle"><%= t('repository_stock_values.manage_modal.new_stock') %></span>
             <span class="value">-</span>
             <span class="units"><%= @stock_value.repository_stock_unit_item&.data %></span>
           </div>
         </div>
       </div>
+    </div>
+    <div class="sci-input-container comments-container mt-3"  data-error-text="<%= t('repository_stock_values.manage_modal.comment_limit') %>">
+      <%= f.label :comment, t('my_modules.repository.stock_modal.comment') %>
+      <%= f.text_field :comment, placeholder: t('my_modules.repository.stock_modal.enter_comment'), tabindex: 1, class: 'sci-input-field' %>
     </div>
   </div>
   <div class="modal-footer">
