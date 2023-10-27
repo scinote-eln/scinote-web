@@ -430,7 +430,7 @@ var ProjectsIndex = (function() {
       view_mode: $('.projects-index').data('view-mode'),
       sort: projectsCurrentSort,
       search: projectsViewSearch,
-      members: membersFilter,
+      members: membersFilter && membersFilter.map(m => m.value),
       created_on_from: createdOnFromFilter,
       created_on_to: createdOnToFilter,
       folders_search: lookInsideFolders,
@@ -549,6 +549,8 @@ var ProjectsIndex = (function() {
     var datePicker = $field.data('DateTimePicker');
     if (datePicker && datePicker.date()) {
       return datePicker.date()._d.toUTCString();
+    } else if ($field.val()) {
+      return moment($field.val(), $field.data('dateFormat'))._d.toUTCString();
     }
     return null;
   }
@@ -565,9 +567,9 @@ var ProjectsIndex = (function() {
     let $textFilter = $('#textSearchFilterInput', $projectsFilter);
 
     function getFilterValues() {
-      createdOnFromFilter = selectDate($createdOnFromFilter) || $createdOnFromFilter.val();
-      createdOnToFilter = selectDate($createdOnToFilter) || $createdOnToFilter.val();
-      membersFilter = dropdownSelector.getValues($('.members-filter'));
+      createdOnFromFilter = selectDate($createdOnFromFilter);
+      createdOnToFilter = selectDate($createdOnToFilter);
+      membersFilter = dropdownSelector.getData($('.members-filter'));
       lookInsideFolders = $foldersCB.prop('checked') || '';
       archivedOnFromFilter = selectDate($archivedOnFromFilter) || $archivedOnFromFilter.val();
       archivedOnToFilter = selectDate($archivedOnToFilter) || $archivedOnToFilter.val();
@@ -578,12 +580,12 @@ var ProjectsIndex = (function() {
       getFilterValues();
 
       currentFilters = {
-        createdOnFromFilter: createdOnFromFilter,
-        createdOnToFilter: createdOnToFilter,
-        membersFilter: dropdownSelector.getData($('.members-filter')),
+        createdOnFromFilter: $createdOnFromFilter.val(),
+        createdOnToFilter: $createdOnToFilter.val(),
+        membersFilter: membersFilter,
         lookInsideFolders: lookInsideFolders,
-        archivedOnFromFilter: archivedOnFromFilter,
-        archivedOnToFilter: archivedOnToFilter,
+        archivedOnFromFilter: $archivedOnFromFilter.val(),
+        archivedOnToFilter: $archivedOnToFilter.val(),
         projectsViewSearch: projectsViewSearch
       };
     }

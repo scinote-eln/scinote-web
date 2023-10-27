@@ -4,8 +4,16 @@ require 'sanitize'
 require 'cgi'
 
 module InputSanitizeHelper
-  def sanitize_input(html, _tags = [], _attributes = [], sanitizer_config: Constants::INPUT_SANITIZE_CONFIG)
-    Sanitize.fragment(html, sanitizer_config).html_safe
+  def sanitize_input(html, _tags = [], _attributes = [], sanitizer_config: nil)
+    config =
+      if Rails.application.config.x.custom_sanitizer_config.present?
+        Rails.application.config.x.custom_sanitizer_config
+      elsif sanitizer_config.present?
+        sanitizer_config
+      else
+        Constants::INPUT_SANITIZE_CONFIG
+      end
+    Sanitize.fragment(html, config).html_safe
   end
 
   def escape_input(text)
@@ -36,7 +44,6 @@ module InputSanitizeHelper
 
     # allow base64 images when sanitizing if base64_encoded_imgs is true
     sanitizer_config = Constants::INPUT_SANITIZE_CONFIG.deep_dup
-    sanitizer_config[:protocols]['img']['src'] << 'data' if options.fetch(:base64_encoded_imgs, false)
     text = sanitize_input(text, tags, sanitizer_config: sanitizer_config)
 
     if text =~ SmartAnnotations::TagToHtml::USER_REGEX || text =~ SmartAnnotations::TagToHtml::REGEX

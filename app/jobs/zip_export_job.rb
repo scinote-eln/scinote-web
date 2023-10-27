@@ -16,6 +16,8 @@ class ZipExportJob < ApplicationJob
       @zip_export.zip_file.attach(io: File.open(full_zip_name), filename: zip_name)
       generate_notification!
     end
+  rescue Errno::ENOENT => e
+    Rails.logger.error(e.message)
   ensure
     FileUtils.rm_rf([zip_input_dir, full_zip_name], secure: true)
     I18n.backend.date_format = nil

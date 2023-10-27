@@ -60,7 +60,7 @@
     </div>
   </div>
   <div class="report-element-children">
-    <%= render partial: 'reports/elements/my_module_protocol_element', locals: { protocol: my_module.protocol, export_all: true } %>
+    <%= render partial: 'reports/elements/my_module_protocol_element', locals: { protocol: my_module.protocol, export_all: export_all } %>
 
     <% filter_steps_for_report(my_module.protocol.steps, @settings).order(:position).each do |step| %>
       <%= render partial: 'reports/elements/my_module_step_element', locals: { step: step, export_all: export_all } %>
@@ -85,7 +85,7 @@
         <% if element.orderable_type == "ResultTable" %>
           <%= render partial: 'reports/elements/my_module_result_table_element', locals: { result: result, export_all: export_all, element: element} %>
         <% elsif element.orderable_type == "ResultText" %>
-          <%= render partial: 'reports/elements/my_module_result_text_element', locals: { result: result, export_all: true, element: element } %>
+          <%= render partial: 'reports/elements/my_module_result_text_element', locals: { result: result, export_all: export_all, element: element } %>
         <% end %>
       <% end %>
 
@@ -110,7 +110,7 @@
 
   <% if @settings.dig('task', 'activities') %>
     <div class="report-element-children">
-      <%= render partial: 'reports/elements/my_module_activity_element', locals: { my_module: my_module, export_all: true } %>
+      <%= render partial: 'reports/elements/my_module_activity_element', locals: { my_module: my_module, export_all: export_all } %>
     </div>
   <% end %>
 </div>

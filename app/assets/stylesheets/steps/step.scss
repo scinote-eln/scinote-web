@@ -171,35 +171,35 @@
       pointer-events: none;
     }
   }
+}
 
-  .storage-usage {
-    @include font-small;
-    align-self: center;
-    color: $color-black;
-    display: flex;
-    margin-top: 1em;
-    width: 400px;
+.storage-usage {
+  @include font-small;
+  align-self: center;
+  color: $color-black;
+  display: flex;
+  margin-top: 1em;
+  width: 400px;
 
-    .progress-container {
-      background-color: $color-white;
-      border-radius: 2px;
-      flex-grow: 1;
-      height: 4px;
-      margin: 1em 1em 1em 0;
-      overflow: hidden;
+  .progress-container {
+    background-color: $color-white;
+    border-radius: 2px;
+    flex-grow: 1;
+    height: 4px;
+    margin: 1em 1em 1em 0;
+    overflow: hidden;
+    position: relative;
+
+    .progress-bar {
+      background-color: $brand-primary;
+      height: 100%;
       position: relative;
-
-      .progress-bar {
-        background-color: $brand-primary;
-        height: 100%;
-        position: relative;
-        transition: 1s $timing-function-sharp;
-      }
+      transition: 1s $timing-function-sharp;
     }
+  }
 
-    .progress-message {
-      line-height: 2em;
-    }
+  .progress-message {
+    line-height: 2em;
   }
 }
 

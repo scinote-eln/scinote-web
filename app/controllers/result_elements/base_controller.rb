@@ -50,6 +50,7 @@ module ResultElements
         owner: current_user,
         team: @my_module.team,
         subject: @result,
+        project: @my_module.experiment.project,
         message_items: {
           result: @result.id
         }.merge(message_items)

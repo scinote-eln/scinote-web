@@ -479,7 +479,7 @@ var dropdownSelector = (function() {
     $(window).scroll(() => { updateDropdownDirection(selectElement, dropdownContainer); });
 
     // When user will click away, we must close dropdown
-    $(window).click(() => {
+    $(document).click(() => {
       if (dropdownContainer.hasClass('open')) {
         dropdownContainer.find('.search-field').val('');
       }

@@ -49,6 +49,7 @@
     <%= stylesheet_link_tag 'tui_image_editor_styles' %>
     <%= javascript_include_tag 'vue_navigation_navigator' %>
     <%= javascript_include_tag 'vue_navigation_top_menu' %>
+    <style> :root { --navigator-navigation-width: <%= session[:navigator_width] || Constants::DEFAULT_NAV_WIDTH %>px; } </style>
   </head>
   <body
     class="<%= yield :body_class %> <%= 'navigator-collapsed' if !@navigator || session[:navigator_collapsed] %> <%= 'w-[98%]' if params[:controller] == 'label_templates' && params[:action] == 'show'%>"
@@ -100,6 +101,7 @@
       </div>
 
       <%= render "shared/comments/comments_sidebar" %>
+      <%= render "shared/repository_row_sidebar" %>
     </div>
 
     <%= render partial: 'shared/flash_alerts',
@@ -120,5 +122,7 @@
     <span style="display: none;" data-hook="application-body-end-html"></span>
 
     <%= javascript_include_tag 'prism' %>
+    <%= javascript_include_tag "vue_components_repository_item_sidebar" %>
+
   </body>
 </html>

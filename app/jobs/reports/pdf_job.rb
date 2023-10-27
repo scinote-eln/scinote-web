@@ -34,20 +34,34 @@ module Reports
         proxy.set_user(user, scope: :user, store: false)
         ApplicationController.renderer.defaults[:http_host] = Rails.application.routes.default_url_options[:host]
         renderer = ApplicationController.renderer.new(warden: proxy)
+        Rails.application.config.x.custom_sanitizer_config = build_custom_sanitizer_config
 
-        file << renderer.render(
-          pdf: 'report', header: { html: { template: "reports/templates/#{template}/header",
-                                           locals: { report: report, user: user, logo: report_logo },
-                                           layout: 'reports/footer_header' } },
-                         footer: { html: { template: "reports/templates/#{template}/footer",
-                                           locals: { report: report, user: user, logo: report_logo },
-                                           layout: 'reports/footer_header' } },
-                         assigns: { settings: report.settings },
-                         locals: { report: report },
-                         disable_javascript: false,
-                         template: 'reports/report',
-                         formats: :pdf
+        header_html = renderer.render_to_string(
+          template: "reports/templates/#{template}/header",
+          layout: false,
+          locals: { report: report, user: user, logo: report_logo }
         )
+        footer_html = renderer.render_to_string(
+          template: "reports/templates/#{template}/footer",
+          layout: false,
+          locals: { report: report, user: user, logo: report_logo }
+        )
+        report_html = renderer.render_to_string(
+          template: 'reports/report',
+          layout: false,
+          assigns: { settings: report.settings },
+          locals: { report: report, user: user }
+        )
+
+        Grover.new(
+          report_html,
+          format: 'A4',
+          print_background: true,
+          margin: { top: '2cm', bottom: '5cm', left: '1cm', right: '2cm' },
+          display_header_footer: true,
+          header_template: header_html,
+          footer_template: footer_html
+        ).to_pdf(file.path)
 
         file.rewind
 
@@ -68,6 +82,7 @@ module Reports
                           team_name: escape_input(report.team.name))
         ).deliver(user)
       ensure
+        Rails.application.config.x.custom_sanitizer_config = nil
         I18n.backend.date_format = nil
         file.close(true)
       end
@@ -149,15 +164,17 @@ module Reports
       title_page = Tempfile.new(['title_page', '.pdf'], binmode: true)
       merged_file = Tempfile.new(['report', '.pdf'], binmode: true)
 
-      title_page << renderer.render(
-        pdf: 'report', inline: renderer.render_to_string("reports/templates/#{template}/cover",
-                                                         layout: false,
-                                                         formats: :html,
-                                                         locals: { report: report, total_pages: total_pages.to_i, logo: report_logo }),
-                       disable_javascript: false,
-                       template: 'reports/report',
-                       formats: :pdf
+      title_page_html = renderer.render_to_string(
+        template: "reports/templates/#{template}/cover",
+        layout: false,
+        formats: :html,
+        locals: { report: report, total_pages: total_pages.to_i, logo: report_logo }
       )
+
+      Grover.new(
+        title_page_html,
+        format: 'A4'
+      ).to_pdf(title_page.path)
 
       title_page.rewind
 
@@ -175,6 +192,15 @@ module Reports
 
     def report_logo
       'scinote_logo.svg'
+    end
+
+    def build_custom_sanitizer_config
+      sanitizer_config = Constants::INPUT_SANITIZE_CONFIG.deep_dup
+      sanitizer_config[:protocols] = {
+        'a' => { 'href' => ['http', 'https', :relative] },
+        'img' => { 'src' => %w(data) }
+      }
+      sanitizer_config
     end
 
     # Overrides method from FailedDeliveryNotifiableJob concern

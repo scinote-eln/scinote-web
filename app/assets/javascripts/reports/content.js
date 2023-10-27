@@ -67,8 +67,8 @@
       metadata = metadataJson.val() || {};
       el.handsontable({
         disableVisualSelection: true,
-        rowHeaders: tableRowHeaders(metadata.plateTemplate),
-        colHeaders: tableColHeaders(metadata.plateTemplate),
+        rowHeaders: tableRowHeaders(JSON.parse(metadata).plateTemplate),
+        colHeaders: tableColHeaders(JSON.parse(metadata).plateTemplate),
         editor: false,
         copyPaste: false,
         formulas: true,

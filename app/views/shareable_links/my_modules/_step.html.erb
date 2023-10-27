@@ -1,26 +1,26 @@
-<div class="step-container mt-[6px] mr-0 mb-6 ml-[-1em] pt-[8px] pr-[24px] pb-[8px] pl-0 border-solid border-[1px] border-[#fff]" id="stepContainer<%= step.id %>" >
+<div class="step-container" id="stepContainer<%= step.id %>" >
   <div class="step-header">
     <div class="step-element-header no-hover">
-      <div class="step-controls flex items-center">
-        <div class="step-element-grip-placeholder"></div>
+      <div class="flex items-center gap-4">
         <a class="step-collapse-link hover:no-underline focus:no-underline"
           href="#stepBody<%= step.id %>"
           data-toggle="collapse"
           data-remote="true">
             <span class="sn-icon sn-icon-right "></span>
         </a>
-        <div class="step-complete-container mx-2 step-element--locked">
+        <div class="step-complete-container step-element--locked">
           <div class="step-state <%= step.completed ? 'completed' : '' %>"
                tabindex="0"
           ></div>
         </div>
         <div class="step-position">
-          <%= step.position + 1 %>  .
+          <%= step.position + 1 %>.
         </div>
       </div>
 
-      <div class="step-name-container">
+      <div class="step-name-container basis-[calc(100%_-_100px)] relative">
         <%= render partial: "shareable_links/my_modules/inline_view", locals: { text: step.name, smart_annotation_enabled: false } %>
+        <span class="mt-2 whitespace-nowrap truncate text-xs font-normal w-full absolute -bottom-5"><%= t('protocols.steps.timestamp_iso_html', date: step.created_at.iso8601, user: step.user.full_name) %></span>
       </div>
     </div>
     <div class="elements-actions-container">
@@ -41,10 +41,7 @@
   </div>
 
   <div class="collapse in" id="stepBody<%= step.id %>">
-    <div class="step-elements !pl-[4.5rem]">
-      <div class="step-timestamp !m-0">
-        <%= t('protocols.steps.timestamp_iso_html', date: step.created_at.iso8601, user: step.user.full_name) %>
-      </div>
+    <div class="step-elements">
       <% step.step_orderable_elements.sort_by(&:position).each do |element| %>
         <% if element.orderable_type == 'StepText' %>
           <%= render partial: "shareable_links/my_modules/step_elements/text", locals: { element: element.orderable } %>
@@ -55,8 +52,9 @@
         <% end %>
       <% end %>
       <% if step.step_assets.present? %>
-        <%= render partial: "shareable_links/my_modules/attachments", locals: { attachments: step.assets, step: step } %>
+        <%= render partial: "shareable_links/my_modules/attachments", locals: { attachments: step.assets } %>
       <% end %>
     </div>
   </div>
+  <div class="sci-divider my-6"></div>
 </div>

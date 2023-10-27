@@ -100,7 +100,7 @@ describe AccessPermissions::ProjectsController, type: :controller do
     let(:valid_params) do
       {
         id: project.id,
-        project_member: {
+        user_assignment: {
           user_role_id: technician_role.id,
           user_id: normal_user.id
         }
@@ -127,7 +127,7 @@ describe AccessPermissions::ProjectsController, type: :controller do
     let(:valid_params) do
       {
         id: project.id,
-        access_permissions_new_user_project_form: {
+        access_permissions_new_user_form: {
           resource_members: {
             0 => {
               assign: '1',
@@ -193,8 +193,7 @@ describe AccessPermissions::ProjectsController, type: :controller do
     it 'removes the user project and user assigment record' do
       expect {
         delete :destroy, params: valid_params, format: :json
-      }.to change(UserProject, :count).by(-1).and \
-        change(UserAssignment, :count).by(-1)
+      }.to change(UserAssignment, :count).by(-1)
     end
 
     it 'renders 403 if user does not have manage permissions on project' do

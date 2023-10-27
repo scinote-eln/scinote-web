@@ -63,7 +63,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
 
       expect(response).to have_http_status 200
       expect(JSON.parse(response.body)['data'].map { |item| item['id'] }).to(
-        eq([@my_module_repository_row.id.to_s])
+        eq([@repository_row.id.to_s])
       )
     end
   end
@@ -76,14 +76,14 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
           project_id: @project.id,
           experiment_id: @experiment.id,
           task_id: @my_module.id,
-          id: @my_module_repository_row.id
+          id: @repository_row.id
         ),
         headers: @valid_headers
       )
 
       expect(response).to have_http_status 200
       expect(JSON.parse(response.body)['data']['id']).to(
-        eq(@my_module_repository_row.id.to_s)
+        eq(@repository_row.id.to_s)
       )
     end
   end
@@ -112,7 +112,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
                project_id: @project.id,
                experiment_id: @experiment.id,
                task_id: @my_module.id,
-               id: @my_module_repository_row.id
+               id: @repository_row.id
              ),
              params: request_body.to_json,
              headers: @valid_headers)
@@ -130,7 +130,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
           hash_including(
             data: hash_including(
               type: 'inventory_items',
-              attributes: hash_including(stock_consumption: "100.0")            )
+              attributes: hash_including(stock_consumption: '100.0'))
           )
         )
       end
@@ -143,7 +143,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
                project_id: @project.id,
                experiment_id: @experiment.id,
                task_id: @my_module.id,
-               id: @my_module_repository_row.id
+               id: @repository_row.id
              ),
              params: request_body.to_json,
              headers: @valid_headers)
