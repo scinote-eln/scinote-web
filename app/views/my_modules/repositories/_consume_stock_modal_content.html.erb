@@ -2,17 +2,15 @@
               method: :post,
               html: { data: { remote: true } } do |f| %>
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('general.close') %>">
+    <button type="button" class="close self-start" data-dismiss="modal" aria-label="<%= t('general.close') %>">
       <i class="sn-icon sn-icon-close"></i>
     </button>
     <h4 class="modal-title">
-      <span class="truncate max-w-[325px] w-full m-auto">
-        <% if @module_repository_row.stock_consumption %>
-          <%= t('my_modules.repository.stock_modal.title_edit', name: @repository_row.name)%>
-        <% else %>
-          <%= t('my_modules.repository.stock_modal.title', name: @repository_row.name)%>
-        <% end %>
-      </span>
+      <% if @module_repository_row.stock_consumption %>
+        <%= t('my_modules.repository.stock_modal.title_edit', name: @repository_row.name)%>
+      <% else %>
+        <%= t('my_modules.repository.stock_modal.title', name: @repository_row.name)%>
+      <% end %>
     </h4>
   </div>
   <div class="modal-body">

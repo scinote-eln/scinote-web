@@ -9,18 +9,16 @@
     <div class="modal-dialog" role="document" v-if="stockValue">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" :aria-label="i18n.t('general.close')">
+          <button type="button" class="close self-start" data-dismiss="modal" :aria-label="i18n.t('general.close')">
             <i class="sn-icon sn-icon-close"></i>
           </button>
           <h4 class="modal-title">
-            <span class="truncate max-w-[525px] w-full m-auto">
-              <template v-if="stockValue?.id">
-                {{ i18n.t('repository_stock_values.manage_modal.edit_title', { item: repositoryRowName }) }}
-              </template>
-              <template v-else>
-                {{ i18n.t('repository_stock_values.manage_modal.title', { item: repositoryRowName }) }}
-              </template>
-            </span>
+            <template v-if="stockValue?.id">
+              {{ i18n.t('repository_stock_values.manage_modal.edit_title', { item: repositoryRowName }) }}
+            </template>
+            <template v-else>
+              {{ i18n.t('repository_stock_values.manage_modal.title', { item: repositoryRowName }) }}
+            </template>
           </h4>
         </div>
         <div class="modal-body">
