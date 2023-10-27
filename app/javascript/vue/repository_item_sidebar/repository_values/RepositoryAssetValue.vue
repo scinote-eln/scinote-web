@@ -1,7 +1,17 @@
 <template>
   <div id="repository-asset-value-wrapper" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
-    <div class="flex flex-row items-center font-inter text-sm font-semibold leading-5 truncate justify-between">
+    <div class="flex flex-row items-center font-inter text-sm font-semibold leading-5 truncate justify-between" :title="colName">
       {{ colName }}
+    </div>
+    <div v-if="file_name" @mouseover="tooltipShowing = true" @mouseout="tooltipShowing = false"
+      class="w-full cursor-pointer  relative">
+      <a class="w-full inline-block file-preview-link truncate hover:no-underline hover:text-sn-science-blue text-sn-science-blue"
+        :id="modalPreviewLinkId" data-no-turbolink="true" data-id="true" data-status="asset-present"
+        :data-preview-url=this?.preview_url :href=this?.url>
+        {{ file_name }}
+      </a>
+    </div>
+    <div>
       <a v-if="!file_name && (!uploading || error) && permissions?.can_manage && !inArchivedRepositoryRow "
          class="btn-text-link font-normal" @click="openFileChooser"> 
         {{ i18n.t('repositories.item_card.repository_asset_value.add_asset') }}

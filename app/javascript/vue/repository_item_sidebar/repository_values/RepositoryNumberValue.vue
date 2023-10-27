@@ -3,7 +3,7 @@
        class="flex flex-col min-h-[46px] h-auto gap-[6px]"
   >
     <div class="font-inter text-sm font-semibold leading-5 flex justify-between">
-      <div class="truncate w-4/5">{{ colName }}</div>
+      <div class="truncate" :class="{ 'w-4/5': expandable }" :title="colName">{{ colName }}</div>
       <div @click="toggleCollapse"
            v-show="expandable"
            class="font-normal leading-5 btn-text-link">

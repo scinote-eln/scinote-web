@@ -1274,6 +1274,7 @@ en:
       published_table: "entered a table on %{timestamp}."
       published_text:  "entered a text on %{timestamp}."
       published_asset:  "uploaded a file on %{timestamp}."
+      drop_message: "Drop file to add to result %{name}"
       expand_label: "Expand All"
       collapse_label: "Collapse All"
       empty_name: "Add title"
@@ -3220,7 +3221,7 @@ en:
       comments_tab: "Comments"
       no_description: "This step has no description."
       tables: "Tables"
-      files: "Attachments (%{count})"
+      files: "Files (%{count})"
       comments: "Comments"
       empty_checklist: "No items"
       comment_title: "%{user} at %{time}:"
@@ -3468,9 +3469,11 @@ en:
       drop_label: 'Drop to add to Step'
       file_label: 'File'
     from_clipboard:
-      modal_title: 'Add image from clipboard'
-      image_preview: 'Image preview'
-      add_image: 'Add'
+      modal_title: 'Insert image from clipboard'
+      image_preview: 'Pasted image preview'
+      select_step: 'Select to which step you’d like to attach image'
+      select_result: 'Select to which result you’d like to attach image'
+      add_image: 'Insert'
       file_name: 'File name'
       file_name_placeholder: 'Image'
     placeholder:

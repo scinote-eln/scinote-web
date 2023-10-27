@@ -60,9 +60,12 @@ export default {
   },
   data() {
     return {
+      edit: null,
+      view: null,
+      contentExpanded: false,
       expandable: false,
       collapsed: true
-    };
+    }
   },
   props: {
     data_type: String,
@@ -74,6 +77,10 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
+      if (this.$refs.textRef) {
+        const textHeight = this.$refs.textRef.scrollHeight
+        this.expandable = textHeight > 60 // 60px
+      }
       this.toggleExpandableState();
     });
   },

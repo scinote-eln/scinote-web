@@ -18,6 +18,7 @@
       class="ml-auto"
       v-if="settingsMenu && settingsMenu.length > 0"
       :listItems="settingsMenuItems"
+      :title="i18n.t('nav.settings')"
       :btnClasses="'btn btn-light icon-btn btn-black'"
       :position="'right'"
       :btnIcon="'sn-icon sn-icon-settings'"

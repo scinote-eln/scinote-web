@@ -751,7 +751,6 @@ var RepositoryDatatable = (function(global) {
         TABLE.context[0].oLanguage.sEmptyTable = archived ? I18n.t('repositories.show.no_archived_items') : I18n.t('repositories.show.no_items');
         TABLE.context[0].oLanguage.sZeroRecords = archived ? I18n.t('repositories.show.no_archived_items_matched') : I18n.t('repositories.show.no_items_matched');
         animateSpinner(this);
-        $('.record-info-link').off('click');
       },
       stateLoadCallback: function(settings, callback) {
         var repositoryId = $(TABLE_ID).data('repository-id');
@@ -864,6 +863,7 @@ var RepositoryDatatable = (function(global) {
     $(TABLE_ID).on('click', 'tbody td', function(ev) {
       // Skip if clicking on selector checkbox, edit icon or link
       if ($(ev.target).is('.row-reminders-icon, .repository-row-selector, .repository-row-edit-icon, a')) return;
+      if ($(ev.target).parents().is('a')) return;
 
       $(this).parent().find('.repository-row-selector').trigger('click');
     });

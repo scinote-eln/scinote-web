@@ -73,6 +73,8 @@ class Constants
   EXPERIMENT_LONG_DESCRIPTION = 80
   # Infinite scroll default elements per page
   DEFAULT_ELEMENTS_PER_PAGE = 20
+  # Default navigator width
+  DEFAULT_NAV_WIDTH = 208
 
   #=============================================================================
   # File and data memory size
@@ -325,6 +327,7 @@ class Constants
   config[:attributes][:all] << 'id'
   config[:attributes][:all] << 'contenteditable'
   config[:attributes]['img'] << 'data-mce-token'
+  config[:attributes]['img'] << 'data-source-type'
   config[:protocols]['img']['src'] << 'data'
   INPUT_SANITIZE_CONFIG = Sanitize::Config.freeze_config(config)
 

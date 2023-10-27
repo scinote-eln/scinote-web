@@ -1,7 +1,7 @@
 @layer components {
 
   .sci-label {
-    @apply text-sm font-medium text-sn-grey;
+    @apply text-sm font-medium text-sn-dark-grey;
   }
 
   .sci-input-container-v2 {

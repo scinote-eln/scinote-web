@@ -20,6 +20,9 @@ class NavigationsController < ApplicationController
 
   def navigator_state
     session[:navigator_collapsed] = params[:state] == 'collapsed'
+
+    width = params[:width].to_i
+    session[:navigator_width] = width if width.positive?
   end
 
   private

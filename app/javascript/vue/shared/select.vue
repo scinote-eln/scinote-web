@@ -32,14 +32,17 @@
         </div>
       </div>
       <div v-if="options.length" class="flex flex-col gap-[1px]">
-        <div v-for="option in options"
-             :key="option[0]"
-             @mousedown.prevent.stop="setValue(option[0])"
-             class="sn-select__option p-3 rounded cursor-pointer"
-             :class="{
-               'select__option-placeholder': option[2],
-               '!bg-sn-super-light-blue': option[0] == value,
-             }">
+        <div
+          v-for="option in options"
+          :key="option[0]"
+          @mousedown.prevent.stop="setValue(option[0])"
+          class="sn-select__option p-3 rounded"
+          :title="option[1]"
+          :class="{
+            'select__option-placeholder': option[2],
+            '!bg-sn-super-light-blue': option[0] == value,
+          }"
+        >
           {{ option[1] }}
         </div>
       </div>
