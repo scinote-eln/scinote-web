@@ -8,7 +8,7 @@
     </div>
   <% end %>
   <% if element.text.present? %>
-    <div class="rounded min-h-[2.25rem] mb-4 relative group/text_container content__text-body max-w-[90ch]">
+    <div class="rounded min-h-[2.25rem] mb-4 relative group/text_container content__text-body">
       <%= smart_annotation_text(element.shareable_tinymce_render(:text)) %>
     </div>
   <% else %>

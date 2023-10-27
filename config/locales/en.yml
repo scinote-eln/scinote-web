@@ -3206,7 +3206,7 @@ en:
       comments_tab: "Comments"
       no_description: "This step has no description."
       tables: "Tables"
-      files: "Attachments (%{count})"
+      files: "Files (%{count})"
       comments: "Comments"
       empty_checklist: "No items"
       comment_title: "%{user} at %{time}:"

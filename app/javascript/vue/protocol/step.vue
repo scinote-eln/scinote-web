@@ -1,5 +1,5 @@
 <template>
-  <div ref="stepContainer" class="step-container"
+  <div ref="stepContainer" class="step-container pr-8"
        :id="`stepContainer${step.id}`"
        @drop.prevent="dropFile"
        @dragenter.prevent="dragEnter($event)"
@@ -188,6 +188,10 @@
         type: Number,
         required: false
       },
+      activeDragStep: {
+        type: Number,
+        required: false
+      }
     },
     data() {
       return {
@@ -233,6 +237,11 @@
         if (this.stepToReload == this.step.id) {
           this.loadElements();
           this.loadAttachments();
+        }
+      },
+      activeDragStep() {
+        if (this.activeDragStep != this.step.id && this.dragingFile) {
+          this.dragingFile = false;
         }
       }
     },
@@ -341,6 +350,7 @@
         let dt = e.dataTransfer;
         if (dt.types && (dt.types.indexOf ? dt.types.indexOf('Files') != -1 : dt.types.contains('Files'))) {
           this.dragingFile = true;
+          this.$emit('step:drag_enter', this.step.id);
         }
       },
       loadAttachments() {
