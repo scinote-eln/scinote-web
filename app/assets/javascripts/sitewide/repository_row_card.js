@@ -83,7 +83,8 @@
           // reload dataTable
           if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload();
           // update item card stock column
-          window.manageStockCallback && window.manageStockCallback(data.value)
+          window.manageStockCallback && window.manageStockCallback(data.value);
+          $link.data('manageStockUrl', data.value.stock_url)
         };
         window.manageStockModalComponent.showModal(stockValueUrl, updateCallback);
       }
