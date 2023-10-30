@@ -40,6 +40,11 @@
         datetime: this.defaultValue
       }
     },
+    watch: {
+      defaultValue: function () {
+        this.datetime = this.defaultValue;
+      }
+    },
     components: {
       VueDatePicker
     },

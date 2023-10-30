@@ -488,16 +488,6 @@ class MyModulesController < ApplicationController
 
   def my_module_params
     permitted_params = params.require(:my_module).permit(:name, :description, :started_on, :due_date, :archived)
-
-    if permitted_params[:started_on].present?
-      permitted_params[:started_on] =
-        Time.zone.strptime(permitted_params[:started_on], I18n.backend.date_format.dup.gsub(/%-/, '%') + ' %H:%M')
-    end
-    if permitted_params[:due_date].present?
-      permitted_params[:due_date] =
-        Time.zone.strptime(permitted_params[:due_date], I18n.backend.date_format.dup.gsub(/%-/, '%') + ' %H:%M')
-    end
-
     permitted_params
   end
 

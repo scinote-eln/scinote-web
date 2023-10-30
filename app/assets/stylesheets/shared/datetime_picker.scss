@@ -6,6 +6,77 @@
   }
 }
 
+.dp__theme_light {
+  --dp-background-color: var(--sn-white);
+  --dp-text-color: var(--sn-black);
+  --dp-hover-color: var(--sn-super-light-grey);
+  --dp-hover-text-color: #212121;
+  --dp-hover-icon-color: #959595;
+  --dp-primary-color: var(--sn-blue);
+  --dp-primary-disabled-color: var(--sn-super-light-blue);
+  --dp-primary-text-color: var(--sn-white);
+  --dp-secondary-color: var(--sn-light-grey);
+  --dp-border-color: var(--sn-light-grey);
+  --dp-menu-border-color: var(--sn-light-grey);
+  --dp-border-color-hover: var(--sn-light-grey);
+  --dp-disabled-color: var(--sn-super-light-grey);
+  --dp-scroll-bar-background: var(--sn-white);
+  --dp-scroll-bar-color: var(--sn-grey);
+  --dp-success-color: var(--sn-blue);
+  --dp-success-color-disabled: var(--sn-super-light-blue);
+  --dp-icon-color: var(--sn-black);
+  --dp-danger-color: var(--sn-delete-red);
+  --dp-marker-color: var(--sn-delete-red-disabled);
+  --dp-tooltip-color: var(--sn-super-light-grey);
+  --dp-disabled-color-text: var(--sn-grey);
+  --dp-highlight-color: var(--sn-super-light-grey);
+  --dp-range-between-dates-background-color: var(--dp-hover-color, var(--sn-super-light-grey));
+  --dp-range-between-dates-text-color: var(--dp-hover-text-color, var(--sn-black));
+  --dp-range-between-border-color: var(--dp-hover-color, var(--sn-super-light-grey));
+}
+
+:root {
+  /*General*/
+  --dp-font-family: 'Roboto', sans-serif; /*Font family*/
+  --dp-border-radius: .25rem; /*Configurable border-radius*/
+  --dp-cell-border-radius: .25rem; /*Specific border radius for the calendar cell*/
+  --dp-common-transition: all 0.1s ease-in; /*Generic transition applied on buttons and calendar cells*/
+
+  /*Sizing*/
+  --dp-button-height: 2.5rem; /*Size for buttons in overlays*/
+  --dp-month-year-row-height: 2.5rem; /*Height of the month-year select row*/
+  --dp-month-year-row-button-size: 2.5rem; /*Specific height for the next/previous buttons*/
+  --dp-button-icon-height: 1.5rem; /*Icon sizing in buttons*/
+  --dp-cell-size: 2.5rem; /*Width and height of calendar cell*/
+  --dp-cell-padding: .25rem; /*Padding in the cell*/
+  --dp-common-padding: 1rem; /*Common padding used*/
+  --dp-input-icon-padding: 2.5rem; /*Padding on the left side of the input if icon is present*/
+  --dp-input-padding: .3em 2rem .3rem 1rem; /*Padding in the input*/
+  --dp-menu-min-width: 320px; /*Adjust the min width of the menu*/
+  --dp-action-buttons-padding: .5rem 1rem; /*Adjust padding for the action buttons in action row*/
+  --dp-action-button-height: 2.5rem; /*Adjust height for the action buttons in action row*/
+  --dp-row-margin:  .25rem 0; /*Adjust the spacing between rows in the calendar*/
+  --dp-calendar-header-cell-padding:  0.5rem; /*Adjust padding in calendar header cells*/
+  --dp-two-calendars-spacing:  .75rem; /*Space between multiple calendars*/
+  --dp-overlay-col-padding:  .25rem; /*Padding in the overlay column*/
+  --dp-time-inc-dec-button-size:  1.5rem; /*Sizing for arrow buttons in the time picker*/
+  --dp-menu-padding: .5rem; /*Menu padding*/
+
+  /*Font sizes*/
+  --dp-font-size: 1rem; /*Default font-size*/
+  --dp-preview-font-size: 0.8rem; /*Font size of the date preview in the action row*/
+  --dp-time-font-size: 3rem; /*Font size in the time picker*/
+
+  /*Transitions*/
+  --dp-animation-duration: 0.1s; /*Transition duration*/
+  --dp-menu-appear-transition-timing: cubic-bezier(.4, 0, 1, 1); /*Timing on menu appear animation*/
+  --dp-transition-timing: ease-out; /*Timing on slide animations*/
+}
+
+
+
+// Legacy
+
 .bootstrap-datetimepicker-widget {
   .glyphicon-calendar {
     margin: 0;

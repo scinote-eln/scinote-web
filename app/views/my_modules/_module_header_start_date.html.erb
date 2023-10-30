@@ -6,18 +6,11 @@
   </span>
   <% if start_date_editable %>
     <div class="datetime-picker-container" id="start-date">
-      <span class="sn-icon sn-icon-calendar"></span>
-      <input id="calendarStartDate"
-             type="datetime"
-             data-toggle='date-time-picker'
-             class="form-control calendar-input"
-             readonly
-             placeholder="<%= t('my_modules.details.no_start_date_placeholder') %>"
-             data-date-format="<%= datetime_picker_format_full %>"
-             data-date-locale="<%= I18n.locale %>"
-             data-date-use-current="false"
-             value="<%= my_module.started_on ? l(my_module.started_on, format: :full) : '' %>"/>
+      <div id="calendarStartDateContainer" class="vue-date-time-picker opacity-0">
+        <input type="hidden" ref="input" v-model="date" id="calendarStartDate" data-default="<%= my_module.started_on %>" />
+        <date-time-picker class="w-full" ref="vueDateTime" @change="updateDate" mode="date" :placeholder="'<%= t('my_modules.details.no_start_date_placeholder') %>'"></date-time-picker>
+      </div>
+      <span class="sn-icon sn-icon-close clear-date" data-toggle='clear-date-time-picker' data-target='calendarStartDate'></span>
     </div>
-    <span class="sn-icon sn-icon-close clear-date" data-toggle='clear-date-time-picker' data-target='calendarStartDate'></span>
   <% end %>
 </span>

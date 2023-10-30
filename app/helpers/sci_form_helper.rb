@@ -112,4 +112,10 @@ module SciFormHelper
     js_format << ' HH:mm'
     js_format
   end
+
+  def datetime_picker_format_full_vue
+    js_format = datetime_picker_format_date_only_vue
+    js_format << ' HH:mm'
+    js_format
+  end
 end
