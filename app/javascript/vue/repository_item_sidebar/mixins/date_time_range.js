@@ -20,13 +20,14 @@ export default {
       this.$emit('setEditingField', this.dateType)
     },
     saveChange() {
-      if (!this.isEditing || this.isSaving || !this.params || (this.params && !Object.keys(this.params).includes(this.colId?.toString()))) {
-        Object.assign(this.$data, {
-          isEditing: false, isSaving: false, errorMessage: null,
-        });
+      if (!this.isEditing ||
+          this.isSaving ||
+          !this.params ||
+          (this.params && !Object.keys(this.params).includes(this.colId?.toString()))) {
+        Object.assign(this.$data, { isEditing: false, isSaving: false, errorMessage: null });
         return;
       };
-      
+
       Object.assign(this.$data, { isSaving: true, errorMessage: null });
       const $this = this;
       $.ajax({
@@ -34,10 +35,13 @@ export default {
         url: $this.cellUpdatePath,
         dataType: 'json',
         data: { repository_cells: $this.params },
-        success: () => {
-          Object.assign($this.$data, {
-            isEditing: false, isSaving: false,
-          });
+        success: (result) => {
+          if(['date', 'dateTime', 'time'].includes(this.dateType)) {
+            const cellValue = result[this.colId];
+            this.values = cellValue?.value
+          }
+          Object.assign($this.$data, { isEditing: false, isSaving: false });
+          if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload();
         }
       });
     },

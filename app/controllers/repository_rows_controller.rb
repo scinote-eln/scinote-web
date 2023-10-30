@@ -200,10 +200,13 @@ class RepositoryRowsController < ApplicationController
       end
 
       repository_cells = {}
+      @reminders_present = @repository_row.repository_cells.with_active_reminder(@current_user).any?
       @repository_row.repository_cells.each do |repository_cell|
-        repository_cells[repository_cell.repository_column_id] = serialize_repository_cell_value(repository_cell,
-                                                                                                 @repository.team,
-                                                                                                 @repository)
+        repository_cells[repository_cell.repository_column_id] =
+          serialize_repository_cell_value(repository_cell,
+                                          @repository.team,
+                                          @repository,
+                                          reminders_enabled: @reminders_present)
       end
 
       render json: repository_cells, status: :ok
