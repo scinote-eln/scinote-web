@@ -1,10 +1,11 @@
 <template>
   <div>
-    <div 
+    <div
+      @click="enableEdit"
       v-click-outside="{ handler: 'validateAndSave', exclude: ['edit', 'view'] }"
-      :class="`border-solid border-[1px] text-sn-dark-grey font-inter text-sm font-normal leading-5 w-full rounded relative sci-cursor-edit ${ borderColor }`"
+      :class="editableClassName"
     >
-      <div v-if="dateType === 'date'" @click="enableEdit" class="p-2">
+      <div v-if="dateType === 'date'">
         <div v-if="isEditing || values?.datetime" ref="edit">
           <DateTimePicker
             @change="formatDateTime($event)"
@@ -15,10 +16,10 @@
           />
         </div>
         <div v-else ref="view" >
-          {{ i18n.t('repositories.item_card.repository_date_value.no_date') }}
+          {{ i18n.t(`repositories.item_card.repository_date_value.${canEdit ? 'placeholder' : 'no_date'}`) }}
         </div>
       </div>
-      <div v-else-if="dateType === 'dateRange'" @click="enableEdit" class="p-2">
+      <div v-else-if="dateType === 'dateRange'">
         <div v-if="isEditing || (timeFrom?.datetime && timeTo?.datetime)" ref="edit" class="w-full flex align-center">
           <div>
             <DateTimePicker
@@ -43,10 +44,10 @@
           </div>
         </div>
         <div v-else ref="view" >
-          {{ i18n.t('repositories.item_card.repository_date_range_value.no_date_range') }}
+          {{ i18n.t(`repositories.item_card.repository_date_range_value.${canEdit ? 'placeholder' : 'no_date_range'}`) }}
         </div>
       </div>
-      <div v-if="dateType === 'dateTime'"  @click="enableEdit" class="p-2">
+      <div v-if="dateType === 'dateTime'">
         <div v-if="isEditing || values?.datetime" ref="edit" class="w-full">
           <DateTimePicker
             @change="formatDateTime"
@@ -58,10 +59,10 @@
           />
         </div>
         <div v-else ref="view" >
-          {{ i18n.t('repositories.item_card.repository_date_time_value.no_date_time') }}
+          {{ i18n.t(`repositories.item_card.repository_date_time_value.${canEdit ? 'placeholder' : 'no_date_time'}`) }}
         </div>
       </div>
-      <div v-else-if="dateType === 'dateTimeRange'"  @click="enableEdit" class="p-2">
+      <div v-else-if="dateType === 'dateTimeRange'">
         <div v-if="isEditing || (timeFrom?.datetime && timeTo?.datetime)" ref="edit" class="w-full flex">
           <div>
             <DateTimePicker
@@ -90,10 +91,10 @@
           </div>
         </div>
         <div v-else ref="view" >
-          {{ i18n.t('repositories.item_card.repository_date_time_range_value.no_date_time_range') }}
+          {{ i18n.t(`repositories.item_card.repository_date_time_range_value.${canEdit ? 'placeholder' : 'no_date_time_range'}`) }}
         </div>
       </div>
-      <div v-else-if="dateType === 'time'" @click="enableEdit" class="p-2">
+      <div v-else-if="dateType === 'time'">
         <div v-if="isEditing || values?.datetime" ref="edit">
           <DateTimePicker
             @change="formatDateTime"
@@ -105,10 +106,10 @@
           />
         </div>
         <div v-else ref="view">
-          {{ i18n.t('repositories.item_card.repository_time_value.no_time') }}
+          {{ i18n.t(`repositories.item_card.repository_time_value.${ canEdit ? 'placeholder' : 'no_time'}`) }}
         </div>
       </div>
-      <div v-else-if="dateType === 'timeRange'" @click="enableEdit" class="p-2">
+      <div v-else-if="dateType === 'timeRange'">
         <div v-if="isEditing || (timeFrom?.datetime && timeTo?.datetime)" ref="edit" class="w-full flex">
           <div>
             <DateTimePicker
@@ -133,7 +134,7 @@
           </div>
         </div>
         <div v-else ref="view">
-          {{ i18n.t('repositories.item_card.repository_time_range_value.no_time_range') }}
+          {{ i18n.t(`repositories.item_card.repository_time_range_value.${canEdit ? 'placeholder' : 'no_time_range'}`) }}
         </div>
       </div>
       <span class="absolute right-2 top-1.5" v-if="values.reminder">
@@ -181,7 +182,18 @@
       startTime: null,
       endTime: null,
       editingField: false,
+      canEdit: { type: Boolean, default: false }
+
     },
+    computed: {
+      editableClassName() {
+        const className = 'border-solid border-[1px] p-2 text-sn-dark-grey font-inter text-sm font-normal leading-5 w-full rounded relative sci-cursor-edit'
+        if (this.canEdit && this.errorMessage) return `${className} border-sn-delete-red`;
+        if (this.canEdit && this.isEditing) return `${className} border-sn-science-blue`;
+        if (this.canEdit) return `${className} border-sn-light-grey hover:border-sn-sleepy-grey`;
+        return ''
+      }
+    }, 
     mounted() {
       this.cellUpdatePath = this.updatePath;
       this.values = this.colVal || {};

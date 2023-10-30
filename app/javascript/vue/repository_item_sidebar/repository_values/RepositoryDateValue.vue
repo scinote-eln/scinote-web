@@ -3,7 +3,16 @@
     <div class="font-inter text-sm font-semibold leading-5 truncate" :title="colName">
       {{ colName }}
     </div>
-    <DateTimeRange :editingField="editingField" @setEditingField="$emit('setEditingField', $event)" dateType="date" :colVal="colVal" :colId="colId" :updatePath="updatePath" :dataType="data_type" />
+    <DateTimeRange
+      :editingField="editingField"
+      @setEditingField="$emit('setEditingField', $event)"
+      dateType="date"
+      :colVal="colVal"
+      :colId="colId"
+      :updatePath="updatePath"
+      :dataType="data_type"
+      :canEdit="canEdit"
+    />
   </div>
 </template>
 
@@ -19,7 +28,8 @@ export default {
     colName: String,
     colVal: null,
     updatePath: null,
-    editingField: null
+    editingField: null,
+    canEdit: { type: Boolean, default: false }
   }
 }
 </script>

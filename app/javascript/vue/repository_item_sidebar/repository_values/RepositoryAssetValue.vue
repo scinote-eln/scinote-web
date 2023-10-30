@@ -1,6 +1,6 @@
 <template>
   <div id="repository-asset-value-wrapper" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
-    <div class="flex flex-row items-center font-inter text-sm font-semibold leading-5 truncate justify-between" :title="colName">
+    <div class="font-inter text-sm font-semibold leading-5 truncate" :title="colName">
       {{ colName }}
     </div>
     <div v-if="file_name" @mouseover="tooltipShowing = true" @mouseout="tooltipShowing = false"
@@ -11,8 +11,8 @@
         {{ file_name }}
       </a>
     </div>
-    <div>
-      <a v-if="!file_name && (!uploading || error) && permissions?.can_manage && !inArchivedRepositoryRow "
+    <div class="w-fit absolute right-0 top-7">
+      <a v-if="!file_name && (!uploading || error) && canEdit "
          class="btn-text-link font-normal" @click="openFileChooser"> 
         {{ i18n.t('repositories.item_card.repository_asset_value.add_asset') }}
       </a>
@@ -29,14 +29,14 @@
               :preview_url="preview_url" :icon_html="icon_html" :medium_preview_url="medium_preview_url">
             </tooltip-preview>
           </div>
-          <div v-if="permissions?.can_manage && !inArchivedRepositoryRow" class="flex whitespace-nowrap gap-4 pl-4">
+          <div v-if="canEdit" class="flex whitespace-nowrap gap-4 pl-4">
             <a class="btn-text-link font-normal" @click="openFileChooser"> {{ i18n.t('general.replace') }} </a>
             <a class="btn-text-link font-normal" @click="clearFile"> {{ i18n.t('general.delete') }} </a>
           </div>
         </div>
       </div>
-      <div v-else-if="!error" class="flex flex-row items-center text-sn-dark-grey font-inter text-sm font-normal leading-5 justify-between">
-        {{ i18n.t('repositories.item_card.repository_asset_value.no_asset') }}
+      <div v-else-if="!error" class="flex flex-row items-center text-sn-grey font-inter text-sm font-normal leading-5 justify-between">
+        {{ i18n.t(`repositories.item_card.repository_asset_value.${canEdit ? 'placeholder' : 'no_asset'}`) }}
       </div>
     </div>
     <div v-else class="bg-sn-light-grey h-1 w-full rounded-sm">
@@ -79,7 +79,7 @@ export default {
     permissions: Object,
     actions: Object,
     updatePath: String,
-    inArchivedRepositoryRow: Boolean,
+    canEdit: { type: Boolean, default: false }
   },
   created() {
     if (!this.colVal) return

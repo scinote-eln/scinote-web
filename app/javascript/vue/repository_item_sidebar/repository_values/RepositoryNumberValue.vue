@@ -71,7 +71,7 @@ export default {
   },
   data() {
     return {
-      expandable: true,
+      expandable: false,
       collapsed: true
     };
   },

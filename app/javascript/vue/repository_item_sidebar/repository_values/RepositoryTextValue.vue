@@ -41,7 +41,7 @@
       >
         {{ colVal?.edit }}
       </div>
-      <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5 px-4 py-2">
+      <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
         {{ i18n.t("repositories.item_card.repository_text_value.no_text") }}
       </div>
     </div>
