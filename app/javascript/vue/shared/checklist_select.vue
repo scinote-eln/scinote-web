@@ -22,14 +22,14 @@
                        }">
       <div v-if="withButtons" class="sticky z-10 top-0 bg-white">
         <div class="pb-1 pt-2.5 rounded flex gap-1 justify-start items-center">
-          <div class="btn btn-light"
+          <div class="btn btn-light !text-xs active:bg-sn-super-light-blue"
                @click="selectedValues = []"
                :class="{
                  'disabled cursor-default': !selectedValues.length,
                  'cursor-pointer': selectedValues.length
                }"
               >{{ i18n.t('general.clear') }}</div>
-          <div class="btn btn-light"
+          <div class="btn btn-light !text-xs active:bg-sn-super-light-blue"
                @click="selectedValues = options.map(option => option.id)"
                :class="{
                 'disabled cursor-default': options.length === selectedValues.length,

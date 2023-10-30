@@ -14,8 +14,9 @@
       </div>
     </div>
       <div v-if="canEdit">
-        <text-area :initialValue="colVal.toString()"
+        <text-area :initialValue="(colVal)?.toLocaleString('fullwide', {useGrouping:false}) || ''"
                    :noContentPlaceholder="noContentPlaceholder"
+                   :placeholder="i18n.t('repositories.item_card.repository_number_value.placeholder')"
                    :decimals="decimals"
                    :unEditableRef="`numberRef`"
                    :expandable="expandable"
@@ -60,7 +61,7 @@ export default {
     data_type: String,
     colId: Number,
     colName: String,
-    colVal: String,
+    colVal: Number,
     permissions: null,
     inArchivedRepositoryRow: Boolean,
   },

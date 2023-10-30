@@ -19,14 +19,14 @@
     </slot>
     <perfect-scrollbar ref="optionsContainer"
                        :style="optionPositionStyle"
-                       class="sn-select__options scroll-container p-2.5 block"
+                       class="sn-select__options scroll-container p-2.5 pt-0 block"
     >
-      <div v-if="withClearButton">
+      <div v-if="withClearButton" class="sticky z-10 top-0 pt-2.5 bg-white">
         <div @mousedown.prevent.stop="setValue(null)"
-             class="sn-select__option p-3 rounded"
+             class="btn btn-light !text-xs active:bg-sn-super-light-blue"
              :class="{
-               '!text-sn-blue cursor-pointer': value,
-               '!text-sn-grey hover:!bg-transparent !cursor-default select__option-placeholder': !value,
+               'disabled cursor-default': !value,
+               'cursor-pointer': value,
              }">
           {{ i18n.t('general.clear') }}
         </div>

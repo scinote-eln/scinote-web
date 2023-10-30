@@ -266,7 +266,7 @@ export default {
       if (!this.isShowing) return
 
       // Check if the clicked element is not within the sidebar and it's not another item link or belogs to modals
-      const selectors = ['a', '.modal', '.label-printing-progress-modal'];
+      const selectors = ['a', '.modal', '.label-printing-progress-modal', '.atwho-view'];
 
       if (!$(event.target).parents('#repository-item-sidebar-wrapper').length &&
         !selectors.some(selector => event.target.closest(selector))) {
@@ -359,7 +359,10 @@ export default {
           id: this.id,
           ...params,
         },
-      }).done(() => {
+      }).done((response) => {
+        for (const [id, customColumn] of Object.entries(response)) {
+           this.customColumns[id - 1]["value"] = customColumn.value;
+        }
         RepositoryDatatable.reload();
       });
     }

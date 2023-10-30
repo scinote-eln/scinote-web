@@ -8,7 +8,7 @@
               'max-h-[4rem]': collapsed,
               'max-h-[40rem]': !collapsed
             }"
-            :placeholder="i18n.t('repositories.item_card.repository_number_value.placeholder')"
+            :placeholder="placeholder"
             v-model="value"
             @keydown="handleKeydown"
             @blur="handleBlur" />
@@ -20,7 +20,10 @@
         :class="{ 'max-h-[4rem]': collapsed,
                   'max-h-[40rem]': !collapsed, }"
         @click="enableEdit">
-    <span v-html="value || noContentPlaceholder" ></span>
+    <span v-if="smartAnnotation"
+          v-html="sa_value || noContentPlaceholder"
+          class="[&>p]:mb-0"></span>
+    <span v-else>{{ value || noContentPlaceholder }}</span>
   </div>
 </template>
 
@@ -38,8 +41,11 @@ export default {
     collapsed: { type: Boolean, required: true },
     initialValue: String,
     noContentPlaceholder: String,
+    placeholder: String,
     decimals: { type: Number, default: null },
     unEditableRef: { type: String, required: true },
+    smartAnnotation: { type: Boolean, default: false },
+    sa_value: { type: String },
   },
   mounted() {
     this.value = this.initialValue;
@@ -85,6 +91,11 @@ export default {
       }
     },
     handleBlur() {
+      if ($('.atwho-view:visible').length) return;
+
+      if (this.smartAnnotation) {
+        this.value = this.$refs.textareaRef.value.trim() // Fix for smart annotation
+      }
       this.editing = false;
       this.toggleExpandableState();
       this.$emit('update', this.value);
@@ -105,6 +116,11 @@ export default {
       if (e && $(e.target).parent().hasClass('atwho-inserted')) return;
 
       this.editing = true;
+      this.$nextTick(() => {
+        if (this.smartAnnotation) {
+          SmartAnnotation.init($(this.$refs.textareaRef), false);
+        }
+      });
     },
     refreshTextareaHeight() {
       this.$nextTick(() => {
