@@ -3,6 +3,7 @@
     <div
       @click="enableEdit"
       v-click-outside="{ handler: 'validateAndSave', exclude: ['edit', 'view'] }"
+      class="text-sn-dark-grey font-inter text-sm font-normal leading-5 w-full rounded relative"
       :class="editableClassName"
     >
       <div v-if="dateType === 'date'">
@@ -187,7 +188,7 @@
     },
     computed: {
       editableClassName() {
-        const className = 'border-solid border-[1px] p-2 text-sn-dark-grey font-inter text-sm font-normal leading-5 w-full rounded relative sci-cursor-edit'
+        const className = 'border-solid border-[1px] p-2 sci-cursor-edit'
         if (this.canEdit && this.errorMessage) return `${className} border-sn-delete-red`;
         if (this.canEdit && this.isEditing) return `${className} border-sn-science-blue`;
         if (this.canEdit) return `${className} border-sn-light-grey hover:border-sn-sleepy-grey`;
