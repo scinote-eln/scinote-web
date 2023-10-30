@@ -1,22 +1,17 @@
 <template>
-  <div ref="wrapper"
-    id="repository-item-sidebar-wrapper"
-    class='items-sidebar-wrapper h-full bg-white gap-2.5 self-stretch rounded-tl-4 rounded-bl-4 shadow-lg
-           transition-all duration-500 ease-sharp'
-    :class="{ 'translate-x-0 w-[565px]': isShowing, 'translate-x-full w-0': !isShowing }">
+  <div ref="wrapper" id="repository-item-sidebar-wrapper"
+    class='items-sidebar-wrapper bg-white gap-2.5 self-stretch  rounded-tl-4 rounded-bl-4 transition-transform ease-in-out transform shadow-lg'
+    :class="{ 'translate-x-0 w-[565px] h-full': isShowing, 'transition-transform ease-in-out duration-400 transform translate-x-full w-0': !isShowing }">
 
     <div id="repository-item-sidebar" class="w-full h-full pl-6 bg-white flex flex-col">
 
-      <div id="sticky-header-wrapper" class="sticky top-0 right-0 bg-white flex z-50 flex-col h-[78px] pt-6">
+      <div ref="stickyHeaderRef" id="sticky-header-wrapper" class="sticky top-0 right-0 bg-white flex z-50 flex-col h-[78px] pt-6">
         <div class="header flex w-full h-[30px] pr-6">
           <repository-item-sidebar-title v-if="defaultColumns"
-                                         :editable="permissions?.can_manage && !defaultColumns?.archived"
-                                         :name="defaultColumns.name"
-                                         @update="update"
-          ></repository-item-sidebar-title>
-          <i id="close-icon"
-              @click="toggleShowHideSidebar(currentItemUrl)"
-              class="sn-icon sn-icon-close ml-auto cursor-pointer my-auto mx-0"></i>
+            :editable="permissions?.can_manage && !defaultColumns?.archived" :name="defaultColumns.name"
+            @update="update"></repository-item-sidebar-title>
+          <i id="close-icon" @click="toggleShowHideSidebar(currentItemUrl)"
+            class="sn-icon sn-icon-close ml-auto cursor-pointer my-auto mx-0"></i>
         </div>
         <div id="divider" class="w-500 bg-sn-light-grey flex items-center self-stretch h-px mt-6 mr-6"></div>
       </div>
@@ -119,14 +114,9 @@
                   class="font-inter text-lg font-semibold leading-7 pb-4 transition-colors duration-300">
                   {{ i18n.t('repositories.item_card.custom_columns_label') }}
                 </div>
-                <CustomColumns :customColumns="customColumns"
-                               :repositoryRowId="repositoryRowId"
-                               :repositoryId="repository?.id"
-                               :inArchivedRepositoryRow="defaultColumns?.archived"
-                               :permissions="permissions"
-                               :updatePath="updatePath"
-                               :actions="actions"
-                               @update="update" />
+                <CustomColumns :customColumns="customColumns" :repositoryRowId="repositoryRowId"
+                  :repositoryId="repository?.id" :inArchivedRepositoryRow="defaultColumns?.archived"
+                  :permissions="permissions" :updatePath="updatePath" :actions="actions" @update="update" />
               </section>
 
               <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px"></div>
@@ -192,7 +182,7 @@
           </div>
 
           <!-- NAVIGATION -->
-          <div ref="navigationRef" id="navigation"
+          <div v-if="isShowing" ref="navigationRef" id="navigation"
             class="flex item-end gap-x-4 min-w-[130px] min-h-[130px] h-fit sticky top-0 right-[24px] ">
             <scroll-spy :itemsToCreate="[
               { id: 'highlight-item-1', textId: 'text-item-1', labelAlias: 'information_label', label: 'information-label', sectionId: 'information-section' },
@@ -278,8 +268,8 @@ export default {
       // Check if the clicked element is not within the sidebar and it's not another item link or belogs to modals
       const selectors = ['a', '.modal', '.label-printing-progress-modal'];
 
-      if (!$(event.target).parents('#repository-item-sidebar-wrapper').length && 
-          !selectors.some(selector => event.target.closest(selector))) {
+      if (!$(event.target).parents('#repository-item-sidebar-wrapper').length &&
+        !selectors.some(selector => event.target.closest(selector))) {
         this.toggleShowHideSidebar(null);
       }
     },
