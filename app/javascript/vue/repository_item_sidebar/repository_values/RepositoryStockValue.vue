@@ -3,7 +3,7 @@
     <div class="font-inter text-sm font-semibold leading-5 relative">
       <span class="truncate w-full inline-block pr-[50px]" :title="colName">{{ colName }}</span>
       <a style="text-decoration: none;" class="absolute right-0 btn-text-link font-normal export-consumption-button"
-        v-if="permissions?.can_export_repository_stock === true && colVal?.stock_formatted" :data-rows="JSON.stringify([repositoryRowId])"
+        v-if="permissions?.can_export_repository_stock === true && values?.stock_formatted" :data-rows="JSON.stringify([repositoryRowId])"
         :data-object-id="repositoryId">
         {{ i18n.t('repositories.item_card.stock_export') }}
       </a>
@@ -12,13 +12,13 @@
       class="text-sn-dark-grey font-inter text-sm font-normal leading-5 w-full rounded relative block"
       :class="editableClassName"
       @click="enableEditing"
-      :data-manage-stock-url="stockValueUrl"
+      :data-manage-stock-url="values?.stock_url"
       :data-repository-row-id="repositoryId"
     >
-      <div v-if="values?.stock_formatted" class="text-sn-dark-grey font-inter text-sm font-normal leading-5 stock-value">
+      <div v-if="values?.stock_formatted" :data-manage-stock-url="values?.stock_url" class="text-sn-dark-grey font-inter text-sm font-normal leading-5 stock-value">
         {{ values.stock_formatted }}
       </div>
-      <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5 stock-value">
+      <div v-else :data-manage-stock-url="values?.stock_url" class="text-sn-dark-grey font-inter text-sm font-normal leading-5 stock-value">
         {{ i18n.t('repositories.item_card.repository_stock_value.no_stock') }}
       </div>
       <span class="absolute right-2 reminder" :class="{ 'top-1.5': permissions?.can_manage, 'top-0': !permissions?.can_manage, hidden: !values?.reminder }">
@@ -49,8 +49,7 @@
         stock_amount: null,
         low_stock_threshold: null,
         isEditing: null,
-        values: null,
-        stockValueUrl: null
+        values: null
       }
     },
     props: {
@@ -64,8 +63,8 @@
       actions: null, 
     },
     mounted() {
-      this.values = this.colVal;
-      this.stockValueUrl = this.actions.stock.stock_value_url
+      this.values = this.colVal || {};
+      this.values.stock_url = this.actions?.stock_value_url
       window.manageStockCallback = this.submitCallback;
     },
     unmounted(){
