@@ -1,6 +1,6 @@
 <template>
   <div id="repository-stock-value-wrapper" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
-    <div class="font-inter text-sm font-semibold leading-5 relative">
+    <div class="font-inter text-sm font-semibold leading-5 relative h-[20px]">
       <span class="truncate w-full inline-block pr-[50px]" :title="colName">{{ colName }}</span>
       <a style="text-decoration: none;" class="absolute right-0 btn-text-link font-normal export-consumption-button"
         v-if="permissions?.can_export_repository_stock === true && values?.stock_formatted" :data-rows="JSON.stringify([repositoryRowId])"
@@ -18,10 +18,10 @@
       <div v-if="values?.stock_formatted" :data-manage-stock-url="values?.stock_url" class="text-sn-dark-grey font-inter text-sm font-normal leading-5 stock-value">
         {{ values.stock_formatted }}
       </div>
-      <div v-else :data-manage-stock-url="values?.stock_url" class="text-sn-dark-grey font-inter text-sm font-normal leading-5 stock-value">
-        {{ i18n.t('repositories.item_card.repository_stock_value.no_stock') }}
+      <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5 stock-value">
+        {{ i18n.t(`repositories.item_card.repository_stock_value.${canEdit ? 'placeholder' : 'no_stock'}`) }}
       </div>
-      <span class="absolute right-2 reminder" :class="{ 'top-1.5': permissions?.can_manage, 'top-0': !permissions?.can_manage, hidden: !values?.reminder }">
+      <span class="absolute right-2 reminder" :class="{ 'top-1.5': canEdit, 'top-0': !canEdit, hidden: !values?.reminder }">
         <Reminder :value="values" />
       </span>
     </a>
@@ -38,8 +38,8 @@
     computed: {
       editableClassName() {
         const className = 'border-solid border-[1px] p-2 manage-repository-stock-value-link sci-cursor-edit'
-        if (this.permissions.can_manage && this.isEditing) return `${className} border-sn-science-blue`;
-        if (this.permissions.can_manage) return `${className} border-sn-light-grey hover:border-sn-sleepy-grey`;
+        if (this.canEdit && this.isEditing) return `${className} border-sn-science-blue`;
+        if (this.canEdit) return `${className} border-sn-light-grey hover:border-sn-sleepy-grey`;
         return ''
       }
     }, 
@@ -60,7 +60,8 @@
       repositoryId: Number,
       repositoryRowId: null,
       permissions: null,
-      actions: null, 
+      canEdit: { type: Boolean, default: false },
+      actions: null
     },
     mounted() {
       this.values = this.colVal || {};

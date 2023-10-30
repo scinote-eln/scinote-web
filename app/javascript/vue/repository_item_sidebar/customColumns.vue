@@ -1,5 +1,5 @@
 <template>
-  <div v-if="customColumns?.length > 0" class="flex flex-col gap-4 w-[350px] h-auto">
+  <div v-if="permissions && customColumns?.length > 0" class="flex flex-col gap-4 w-[350px] h-auto">
     <div v-for="(column, index) in customColumns" :key="column.id" class="flex flex-col gap-4 w-[350px] h-auto relative">
       <component
         :is="column.data_type"
@@ -15,6 +15,7 @@
         :updatePath="updatePath"
         :optionsPath="column.options_path"
         :inArchivedRepositoryRow="inArchivedRepositoryRow"
+        :canEdit="permissions.can_manage && !inArchivedRepositoryRow"
         :editingField="editingField"
         @setEditingField="editingField = $event"
         @update="update"

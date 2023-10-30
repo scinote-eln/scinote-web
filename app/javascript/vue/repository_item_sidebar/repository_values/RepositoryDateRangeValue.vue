@@ -10,6 +10,7 @@
       :colVal="colVal"
       :colId="colId"
       :updatePath="updatePath"
+      :canEdit="canEdit"
       :editingField="editingField"
       @setEditingField="$emit('setEditingField', $event)"
     />
@@ -28,7 +29,8 @@ import DateTimeRange from './DateTimeRange.vue';
       colName: String,
       colVal: null,
       updatePath: null,
-      editingField: null
+      editingField: null,
+      canEdit: { type: Boolean, default: false },
     }
   }
 </script>
