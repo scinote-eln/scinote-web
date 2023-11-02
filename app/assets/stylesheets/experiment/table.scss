@@ -467,11 +467,8 @@
     .clear-date {
       cursor: pointer;
       left: calc(100% - 16px);
-      position: absolute;
       text-align: center;
-      top: 0;
-      visibility: hidden;
-      width: 16px;
+      width: 24px;
 
       &.open {
         visibility: visible;
@@ -479,9 +476,6 @@
     }
 
     .date-text {
-      display: block;
-      position: relative;
-
       .alert-yellow {
         color: $brand-warning;
         margin-left: 4px;
@@ -497,7 +491,7 @@
       left: 0;
       position: absolute;
       top: 0;
-      width: calc(100% - 16px);
+      width: calc(100% - 24px);
 
       .calendar-due-date {
         opacity: 0;
