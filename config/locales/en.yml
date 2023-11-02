@@ -2221,6 +2221,7 @@ en:
     my_module_assigned_snapshot_service:
       invalid_arguments: "Can't find %{key}"
     item_card:
+      header_title: "Inventory item"
       section:
         information: "Information"
         assigned: "Assigned (%{count})"
@@ -3909,7 +3910,6 @@ en:
   Tables: "Tables"
   Repositories_team: "Inventories - %{team}"
   Repository: "Inventory"
-  Repository_row: "Inventory item"
   Reports: "Reports"
   Comments: "Comments"
   Step: "Step"
