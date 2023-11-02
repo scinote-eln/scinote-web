@@ -1,10 +1,11 @@
 <template>
-  <div ref="stepContainer" class="step-container"
+  <div ref="stepContainer" class="step-container pr-8"
        :id="`stepContainer${step.id}`"
        @drop.prevent="dropFile"
        @dragenter.prevent="dragEnter($event)"
        @dragover.prevent
-       :class="{ 'draging-file': dragingFile, 'editing-name': editingName }"
+       :data-id="step.id"
+       :class="{ 'draging-file': dragingFile, 'editing-name': editingName, 'locked': !urls.update_url }"
   >
     <div class="drop-message" @dragleave.prevent="!showFileModal ? dragingFile = false : null">
       {{ i18n.t('protocols.steps.drop_message', { position: step.attributes.position + 1 }) }}
@@ -134,12 +135,6 @@
       </div>
     </div>
     <deleteStepModal v-if="confirmingDelete" @confirm="deleteStep" @cancel="closeDeleteModal"/>
-    <clipboardPasteModal v-if="showClipboardPasteModal"
-                         :parent="step"
-                         :image="pasteImages"
-                         @files="uploadFiles"
-                         @cancel="showClipboardPasteModal = false"
-    />
     <ReorderableItemsModal v-if="reordering"
       :title="i18n.t('protocols.steps.modals.reorder_elements.title', { step_position: step.attributes.position + 1 })"
       :items="reorderableElements"
@@ -162,7 +157,6 @@
   import Checklist from '../shared/content/checklist.vue'
   import deleteStepModal from './modals/delete_step.vue'
   import Attachments from '../shared/content/attachments.vue'
-  import clipboardPasteModal from '../shared/content/attachments/clipboard_paste_modal.vue'
   import ReorderableItemsModal from '../shared/reorderable_items_modal.vue'
   import MenuDropdown from '../shared/menu_dropdown.vue'
 
@@ -194,6 +188,10 @@
         type: Number,
         required: false
       },
+      activeDragStep: {
+        type: Number,
+        required: false
+      }
     },
     data() {
       return {
@@ -202,7 +200,6 @@
         attachmentsReady: false,
         confirmingDelete: false,
         showFileModal: false,
-        showClipboardPasteModal: false,
         showCommentsSidebar: false,
         dragingFile: false,
         reordering: false,
@@ -226,7 +223,6 @@
       StepText,
       Checklist,
       deleteStepModal,
-      clipboardPasteModal,
       Attachments,
       StorageUsage,
       ReorderableItemsModal,
@@ -241,6 +237,11 @@
         if (this.stepToReload == this.step.id) {
           this.loadElements();
           this.loadAttachments();
+        }
+      },
+      activeDragStep() {
+        if (this.activeDragStep != this.step.id && this.dragingFile) {
+          this.dragingFile = false;
         }
       }
     },
@@ -349,6 +350,7 @@
         let dt = e.dataTransfer;
         if (dt.types && (dt.types.indexOf ? dt.types.indexOf('Files') != -1 : dt.types.contains('Files'))) {
           this.dragingFile = true;
+          this.$emit('step:drag_enter', this.step.id);
         }
       },
       loadAttachments() {
@@ -541,10 +543,6 @@
               rect.bottom <= (window.innerHeight || $(window).height()) &&
               rect.right <= (window.innerWidth || $(window).width())
           );
-      },
-      copyPasteImageModal(pasteImages) {
-        this.pasteImages = pasteImages;
-        this.showClipboardPasteModal = true;
       },
       insertElement(element) {
         let position = element.attributes.position;

@@ -238,7 +238,7 @@ RSpec.describe 'Api::V1::ProjectsController', type: :request do
   describe 'PATCH project, #update' do
     before :all do
       @valid_headers['Content-Type'] = 'application/json'
-      @project = @user.teams.first.projects.first
+      @project = @user.teams.first.projects.active.first
     end
 
     let(:action) do

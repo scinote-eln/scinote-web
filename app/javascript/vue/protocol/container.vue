@@ -171,6 +171,7 @@
                 @reorder="startStepReorder"
                 :inRepository="inRepository"
                 :stepToReload="stepToReload"
+                :activeDragStep="activeDragStep"
                 @step:delete="updateStepsPosition"
                 @step:update="updateStep"
                 @stepUpdated="refreshProtocolStatus"
@@ -179,6 +180,7 @@
                 @step:move_element="reloadStep"
                 @step:attachemnts:loaded="stepToReload = null"
                 @step:move_attachment="reloadStep"
+                @step:drag_enter="dragEnter"
                 :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
                 :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
               />
@@ -210,6 +212,14 @@
       @publish="publishProtocol"
       @cancel="closePublishModal"
     />
+    <clipboardPasteModal v-if="showClipboardPasteModal"
+                         :image="pasteImages"
+                         :objects="steps"
+                         :objectType="'step'"
+                         :selectedObjectId="firstObjectInViewport()"
+                         @files="uploadFilesToStep"
+                         @cancel="showClipboardPasteModal = false"
+    />
   </div>
 </template>
 
@@ -221,6 +231,8 @@
   import Tinymce from '../shared/tinymce.vue'
   import ReorderableItemsModal from '../shared/reorderable_items_modal.vue'
   import PublishProtocol from './modals/publish_protocol.vue'
+  import clipboardPasteModal from '../shared/content/attachments/clipboard_paste_modal.vue'
+  import AssetPasteMixin from '../shared/content/attachments/mixins/paste.js'
 
   import UtilsMixin from '../mixins/utils.js'
   import stackableHeadersMixin from '../mixins/stackableHeadersMixin';
@@ -234,8 +246,8 @@
         required: true
       }
     },
-    components: { Step, InlineEdit, ProtocolOptions, Tinymce, ReorderableItemsModal, ProtocolMetadata, PublishProtocol},
-    mixins: [UtilsMixin, stackableHeadersMixin, moduleNameObserver],
+    components: { Step, InlineEdit, ProtocolOptions, Tinymce, ReorderableItemsModal, ProtocolMetadata, PublishProtocol, clipboardPasteModal},
+    mixins: [UtilsMixin, stackableHeadersMixin, moduleNameObserver, AssetPasteMixin],
     computed: {
       inRepository() {
         return this.protocol.attributes.in_repository
@@ -245,7 +257,7 @@
       },
       urls() {
         return this.protocol.attributes.urls || {}
-      }
+      },
     },
     data() {
       return {
@@ -256,6 +268,7 @@
         reordering: false,
         publishing: false,
         stepToReload: null,
+        activeDragStep: null
       }
     },
     mounted() {
@@ -433,6 +446,19 @@
           $('.my_module-name .view-mode').trigger('click');
           $('.my_module-name .input-field').focus();
         }, 300)
+      },
+      dragEnter(id) {
+        this.activeDragStep = id;
+      },
+      uploadFilesToStep(file, stepId) {
+        this.$children.find(child => child.step?.id == stepId).uploadFiles(file);
+      },
+      firstObjectInViewport() {
+        let step = $('.step-container:not(.locked)').toArray().find(element => {
+          const { top, bottom } = element.getBoundingClientRect()
+          return bottom > 0 && top < window.innerHeight
+        })
+        return step ? step.dataset.id : null
       }
     }
   }

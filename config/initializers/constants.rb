@@ -73,6 +73,8 @@ class Constants
   EXPERIMENT_LONG_DESCRIPTION = 80
   # Infinite scroll default elements per page
   DEFAULT_ELEMENTS_PER_PAGE = 20
+  # Default navigator width
+  DEFAULT_NAV_WIDTH = 208
 
   #=============================================================================
   # File and data memory size
