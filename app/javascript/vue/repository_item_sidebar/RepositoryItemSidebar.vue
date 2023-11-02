@@ -1,8 +1,9 @@
 <template>
   <div ref="wrapper"
     id="repository-item-sidebar-wrapper"
-    class='items-sidebar-wrapper bg-white gap-2.5 self-stretch  rounded-tl-4 rounded-bl-4 transition-transform ease-in-out transform shadow-lg'
-    :class="{ 'translate-x-0 w-[565px] h-full': isShowing, 'transition-transform ease-in-out duration-400 transform translate-x-0 translate-x-full w-0': !isShowing }">
+    class='items-sidebar-wrapper h-full bg-white gap-2.5 self-stretch rounded-tl-4 rounded-bl-4 shadow-lg
+           transition-all duration-500 ease-sharp'
+    :class="{ 'translate-x-0 w-[565px]': isShowing, 'translate-x-full w-0': !isShowing }">
 
     <div id="repository-item-sidebar" class="w-full h-full pl-6 bg-white flex flex-col">
 
