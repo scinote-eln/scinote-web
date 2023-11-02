@@ -427,6 +427,9 @@
       },
       updateElement(element, skipRequest=false, callback) {
         let index = this.elements.findIndex((e) => e.id === element.id);
+
+        if (!this.elements[index]) return;
+
         this.elements[index].isNew = false;
 
         if (skipRequest) {
