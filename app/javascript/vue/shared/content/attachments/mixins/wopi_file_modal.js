@@ -19,16 +19,17 @@ export default {
         }
       });
 
-      $wopiModal.find('form')
-        .on('submit', () => {
-          animateSpinner(null, true);
-        })
+      $wopiModal.find('form').on('submit', () => {
+        animateSpinner(null, true);
+      })
         .on(
           'ajax:success',
           (e, data, status) => {
             animateSpinner(null, false);
             if (status === 'success') {
               $wopiModal.modal('hide');
+              $wopiModal.find('form').off('submit');
+              $wopiModal.find('form').off('ajax:success');
               window.open(data.edit_url, '_blank');
               window.focus();
             } else {
@@ -36,7 +37,8 @@ export default {
             }
             requestCallback(e, data, status);
           }
-        ).on('ajax:error', function(ev, response) {
+        )
+        .on('ajax:error', function(ev, response) {
           let element;
           let msg;
 
