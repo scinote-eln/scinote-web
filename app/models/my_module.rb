@@ -139,6 +139,10 @@ class MyModule < ApplicationRecord
     joins(experiment: :project).where(experiment: { projects: { team: teams } })
   end
 
+  def self.approaching_due_dates
+    where(notification_sent: false).select { |task| task.is_one_day_prior? }
+  end
+
   def parent
     experiment
   end
