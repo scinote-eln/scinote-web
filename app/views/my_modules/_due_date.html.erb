@@ -1,7 +1,9 @@
 <%= form_with model: @my_module, url: my_module_path(@my_module, format: :json), data: { remote: :true }, builder: SciFormHelper::SciFormBuilder do |f| %>
-  <%= f.datetime_picker :due_date,
-                        value: @my_module.due_date,
-                        label: t('my_modules.due_date.label'),
-                        clear: true,
-                        time: true %>
+  <label class="sci-label">
+    <%= t('my_modules.due_date.label') %>
+  </label>
+  <div  id="date-time-picker" class="vue-date-time-picker">
+    <input ref="input" type="hidden" v-model="date" name="my_module[due_date]" data-default="<%= @my_module.due_date %>" />
+    <date-time-picker class="w-64" @cleared="clearDate" ref="vueDateTime" @change="updateDate" mode="date"></date-time-picker>
+  </div>
 <% end %>

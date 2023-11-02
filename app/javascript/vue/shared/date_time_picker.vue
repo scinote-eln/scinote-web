@@ -50,6 +50,10 @@
     },
     watch: {
       datetime: function () {
+        if ( this.datetime == null) {
+          this.$emit('cleared');
+        }
+
         if (this.defaultValue != this.datetime) {
           let newDate = this.datetime;
           if (this.mode == 'time') {
