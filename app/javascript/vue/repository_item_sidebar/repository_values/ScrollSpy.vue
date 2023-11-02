@@ -1,21 +1,17 @@
 <template>
   <div class="flex gap-3">
-    <div id="navigation-text">
-      <div class="flex flex-col py-2 px-0 gap-3 self-stretch w-[130px] h-[130px]  justify-center items-center">
-        <div v-for="(itemObj, index) in itemsToCreate" :key="index"
-          class="flex flex-col w-[130px] h-[130px] justify-between text-right">
-          <div @click="handleSideNavClick" :id="itemObj?.textId" class="hover:cursor-pointer text-sn-grey"
-            :class="{ 'text-sn-science-blue': selectedNavText === itemObj?.textId }">{{
-              i18n.t(`repositories.highlight_component.${itemObj?.labelAlias}`) }}
-          </div>
-        </div>
+    <div id="navigation-text"
+      class="flex flex-col py-2 px-0 gap-3 self-stretch w-[130px] h-[130px] justify-center items-center">
+      <div v-for="navigationItem in itemsToCreate" :key="navigationItem.textId" @click="navigateToSection(navigationItem)"
+        class="nav-text-item flex flex-col w-[130px] h-[130px] justify-between text-right hover:cursor-pointer"
+        :class="{ 'text-sn-science-blue': selectedNavText === navigationItem.textId, 'text-sn-grey': selectedNavText !== navigationItem.textId }">
+        {{ i18n.t(`repositories.highlight_component.${navigationItem.labelAlias}`) }}
       </div>
     </div>
+
     <div id="highlight-container" class="w-[1px] h-[130px] flex flex-col justify-evenly bg-sn-light-grey">
-      <div v-for="(itemObj, index) in itemsToCreate" :key="index">
-        <div :id="itemObj?.id" class="w-[5px] h-[28px] rounded-[11px]"
-          :class="{ 'bg-sn-science-blue relative left-[-2px]': itemObj?.id === selectedNavIndicator }"></div>
-      </div>
+      <div v-for="navigationItem in itemsToCreate" :key="navigationItem.id" class="w-[5px] h-[28px] rounded-[11px]"
+        :class="{ 'bg-sn-science-blue relative left-[-2px]': selectedNavIndicator === navigationItem.id }"></div>
     </div>
   </div>
 </template>
@@ -35,176 +31,143 @@ export default {
       selectedNavText: null,
       selectedNavIndicator: null,
       sections: [],
-      prevSection: null,
-      scrollTimer: null,
-      shouldRecalculateWhenStopped: false
+      activeSection: null,
+      proximityThreshold: 60,
+      header: null,
+      previousScrollTop: 0,
+    };
+  },
+
+  computed: {
+    headerHeight() {
+      return this.header.getBoundingClientRect().height;
     }
   },
+
   mounted() {
-    this.bodyContainerEl = this.$parent.$refs.bodyWrapper
-    this.sections = this.$parent.$refs.scrollSpyContent.querySelectorAll('section[id]');
-    this.bodyContainerEl?.addEventListener('scroll', this.handleScroll)
-    this.highlightActiveSectionOnScroll()
+    this.initializeComponent();
   },
+
+  beforeDestroy() {
+    this.removeScrollListener();
+  },
+
+  watch: {
+    activeSection: 'highlightSection'
+  },
+
   methods: {
-    // If the user scrolls too fast to register movement, then we need to do something when the scrolling has stopped.
-    // When the scrolling has stopped and if we have permission to recalculate
-    // then we find the closest dom node relative to the target area and highlight it
-    scrollStopped() {
-      if (!this.shouldRecalculateWhenStopped) return
-
-      const bodyWrapperTargetAreaRectTop = this.bodyContainerEl.getBoundingClientRect().top;
-      const sectionRects = Array.from(this.sections).map((s) => {
-        const rect = s.getBoundingClientRect();
-        return {
-          top: rect.top,
-          right: rect.right,
-          bottom: rect.bottom,
-          left: rect.left,
-          width: rect.width,
-          height: rect.height,
-          id: s.getAttribute('id'),
-        };
-      });
-
-      const closestDomNodeToHighlight = this.findClosestDomNode(sectionRects, bodyWrapperTargetAreaRectTop)
-
-      // If user clicked on the navigation and not actually scrolled the scroll event still happened.
-      // However, in those cases top/bot values will be zero and we should not compute closestDomNode highlighting
-      if (closestDomNodeToHighlight.top !== 0 && closestDomNodeToHighlight.bottom !== 0) {
-        const id = closestDomNodeToHighlight.id
-        const foundMatchToHighlight = this.itemsToCreate.find((e) => e.sectionId === id)
-        this.selectedNavText = foundMatchToHighlight.textId
-        this.selectedNavIndicator = foundMatchToHighlight.id
-      }
+    initializeComponent() {
+      this.header = this.$parent.$refs.stickyHeaderRef;
+      this.bodyContainerEl = this.$parent.$refs.bodyWrapper;
+      this.sections = Array.from(this.$parent.$refs.scrollSpyContent.querySelectorAll('section[id]'));
+      this.proximityThreshold = this.headerHeight;
+      this.highlightSection(this.sections[0]);
+      this.addScrollListener();
     },
 
-    // For finding the closest dom node (to highlight)
-    findClosestDomNode(arr, referenceValue) {
-      if (arr.length === 0) {
-        return null;
-      }
-      let closestObject = arr[0];
-      let minDifference = Math.abs(arr[0].top - referenceValue);
-      for (let i = 1; i < arr.length; i++) {
-        const difference = Math.abs(arr[i].top - referenceValue);
-        if (difference < minDifference) {
-          minDifference = difference;
-          closestObject = arr[i];
-        }
-      }
-      return closestObject;
+    addScrollListener() {
+      this.bodyContainerEl?.addEventListener('scroll', this.handleScroll);
     },
 
-    // Handling scroll events
+    removeScrollListener() {
+      this.bodyContainerEl?.removeEventListener('scroll', this.handleScroll);
+    },
+
     handleScroll() {
-      this.shouldRecalculateWhenStopped = true
-      this.highlightActiveSectionOnScroll()
-      if (this.scrollTimer) {
-        clearTimeout(this.scrollTimer);
-      }
-      this.scrollTimer = setTimeout(this.scrollStopped, 200);
-    },
+      const currentScrollTop = this.bodyContainerEl.scrollTop;
 
-    // Highlighting active sections while scrolling
-    highlightActiveSectionOnScroll() {
-      if (!this.bodyContainerEl) return;
-
-      const bodyWrapperTargetAreaRect = this.bodyContainerEl.getBoundingClientRect();
-      const margin = this.targetAreaMargin;
-
-      // Far top position
-      if (this.bodyContainerEl.scrollTop === 0) {
-        this.shouldRecalculateWhenStopped = false
-        this.handleTopOrBotScrollPosition(this.sections[0]);
+      if (currentScrollTop === 0) {
+        this.setActiveSection(this.sections[0]);
         return;
       }
 
-      // Far bottom position
-      if (this.bodyContainerEl.scrollTop + this.bodyContainerEl.clientHeight === this.bodyContainerEl.scrollHeight) {
-        this.shouldRecalculateWhenStopped = false
-        this.handleTopOrBotScrollPosition(this.sections[this.sections.length - 1])
-        return
+      // Determine the scroll direction (down or up)
+      if (currentScrollTop > this.previousScrollTop) {
+        this.handleScrollDown();
+      } else {
+        this.handleScrollUp();
       }
 
-      // Checks when a section enters targetArea's boundary and highlights it
-      for (const section of this.sections) {
-        const sectionRect = section.getBoundingClientRect();
-        if (sectionRect === this.prevSection) continue;
+      this.previousScrollTop = currentScrollTop;
+    },
 
-        if (this.isSectionInBounds(sectionRect, bodyWrapperTargetAreaRect, margin)) {
-          this.handleSectionHighlight(section);
-        }
+    // scrolling from up -> down
+    // highlighting based on proximity to the header
+    handleScrollDown() {
+      const headerTop = this.getDistanceToTop(this.header);
+      const nearestSection = this.sections.reduce((acc, section) => {
+        const distance = Math.abs(headerTop - this.getDistanceToTop(section));
+        return distance < this.proximityThreshold ? section : acc;
+      }, null);
+
+      if (nearestSection) this.setActiveSection(nearestSection);
+    },
+
+    // scrolling from down -> up
+    // highlighting based on passing out of view
+    handleScrollUp() {
+      if (!this.activeSection) return;
+
+      const activeSectionRect = this.activeSection.getBoundingClientRect();
+      const containerRect = this.bodyContainerEl.getBoundingClientRect();
+
+      if (activeSectionRect.bottom < containerRect.top || activeSectionRect.top > containerRect.bottom) {
+        const previousSection = this.getPreviousSection(this.activeSection);
+        if (previousSection) this.setActiveSection(previousSection);
       }
     },
 
-    // For handling top/bottom most positions
-    handleTopOrBotScrollPosition(section) {
-      const sectionId = section.getAttribute('id');
-      const foundObj = this.itemsToCreate.find((obj) => obj?.sectionId === sectionId);
+    getPreviousSection(currentSection) {
+      const index = this.sections.indexOf(currentSection);
+      return index > 0 ? this.sections[index - 1] : null;
+    },
 
+    getDistanceToTop(el) {
+      return el.getBoundingClientRect().top;
+    },
+
+    setActiveSection(section) {
+      if (section !== this.activeSection) {
+        this.activeSection = section;
+        this.highlightSection(section);
+      }
+    },
+
+    highlightSection(section) {
+      const foundObj = this.itemsToCreate.find(obj => obj.sectionId === section.id);
       if (foundObj) {
         this.selectedNavText = foundObj.textId;
         this.selectedNavIndicator = foundObj.id;
       }
     },
 
-    // For checking if a section is within targetArea's boundaries
-    isSectionInBounds(sectionRect, targetAreaRect, margin) {
-      const upperBound = targetAreaRect.top - margin;
-      const lowerBound = targetAreaRect.top + margin;
-      return sectionRect.top >= upperBound && sectionRect.top <= lowerBound;
-    },
+    navigateToSection(navigationItem) {
+      if (!this.bodyContainerEl) return;
 
-    // For highlighting a section during scrolling
-    handleSectionHighlight(section) {
-      const sectionId = section.getAttribute('id');
-      const foundObj = this.itemsToCreate.find((obj) => obj?.sectionId === sectionId);
+      this.removeScrollListener();
+      this.activeSection = document.getElementById(navigationItem.sectionId);
+      this.selectedNavText = navigationItem.textId;
+      this.selectedNavIndicator = navigationItem.id;
 
-      if (foundObj) {
-        this.selectedNavText = foundObj.textId;
-        this.selectedNavIndicator = foundObj.id;
-        this.prevSection = section.getBoundingClientRect();
-      }
-    },
+      const domElToScrollTo = this.$parent.$refs[navigationItem.label];
+      const top = domElToScrollTo.offsetTop - (this.stickyHeaderHeightPx + this.cardTopPaddingPx);
 
-    // For handling clicks on the side navigation
-    handleSideNavClick(e) {
-      if (!this.bodyContainerEl) return
-      this.bodyContainerEl?.removeEventListener('scroll', this.handleScroll)
-
-      let refToScrollTo
-      const targetId = e.target.id
-      const foundObj = this.itemsToCreate.find((obj) => obj?.textId === targetId)
-      if (!foundObj) return
-
-      // Highlighting
-      refToScrollTo = foundObj.label
-      this.selectedNavText = foundObj.textId
-      this.selectedNavIndicator = foundObj.id
-      const sectionLabels = this.itemsToCreate.map((obj) => obj.label)
-      const labelsToUnhighlight = sectionLabels.filter((i) => i !== refToScrollTo)
-
-      // Scrolling to desired section
-      const domElToScrollTo = this.$parent.$refs[refToScrollTo]
-      const top = domElToScrollTo.offsetTop - this?.stickyHeaderHeightPx - this?.cardTopPaddingPx;
       this.bodyContainerEl.scrollTo({
-        top: top,
+        top,
         behavior: "auto"
-      })
+      });
 
-      // flashing the title color to blue and back over 300ms
-      domElToScrollTo?.classList.add('text-sn-science-blue')
-      labelsToUnhighlight.forEach(id => document.getElementById(id)?.classList.remove('text-sn-science-blue'))
-      setTimeout(() => {
-        domElToScrollTo?.classList.remove('text-sn-science-blue')
-      }, 300)
+      this.flashTitleColor(domElToScrollTo);
+      setTimeout(this.addScrollListener, 100);
+    },
 
-      setTimeout(() => {
-        this.bodyContainerEl?.addEventListener('scroll', this.handleScroll)
-      }, 100)
+    flashTitleColor(domEl) {
+      if (!domEl) return
 
-    }
-  },
+      domEl.classList.add('text-sn-science-blue');
+      setTimeout(() => domEl.classList.remove('text-sn-science-blue'), 300);
+    },
+  }
 }
 </script>
