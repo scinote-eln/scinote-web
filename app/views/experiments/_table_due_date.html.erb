@@ -3,28 +3,18 @@
 
 <div id="dueDateContainer" class="datetime-container"
      data-update-url="<%= my_module_path(my_module, user, format: :json) %>">
-  <span class="date-text" data-editable="<%= due_date_editable %>"
+  <span class="date-text relative flex items-center" data-editable="<%= due_date_editable %>"
         data-toggle="tooltip" data-placement="top" title="<%= due_status %>" data-due-status="<%= due_status %>">
     <span id="dueDateLabelContainer" class="view-block" >
       <%= render partial: "experiments/table_due_date_label" ,
                  locals: { my_module: my_module, user: user } %>
     </span>
     <% if due_date_editable %>
-      <div class="datetime-picker-container" id="due-date">
-          <input id="calendarDueDate<%= my_module.id %>"
-                type="datetime"
-                data-toggle='date-time-picker'
-                class="form-control calendar-input calendar-due-date "
-                readonly
-                placeholder="<%= t('my_modules.details.no_due_date_placeholder') %>"
-                data-date-format="<%= datetime_picker_format_full %>"
-                data-date-locale="<%= I18n.locale %>"
-                data-date-use-current="false"
-                data-date-orientation="left"
-                data-positioning-vertical="bottom"
-                value="<%= my_module.due_date ? l(my_module.due_date, format: :full) : '' %>"/>
+      <div class="datetime-picker-container vue-date-time-picker h-full" id="calendarDueDateContainer<%= my_module.id %>">
+        <input ref="input" type="hidden" v-model="date" id="calendarDueDate<%= my_module.id %>" data-default="<%= my_module.due_date %>" />
+        <date-time-picker class="opacity-0" ref="vueDateTime" @change="updateDate" mode="date" placeholder="<%= t('my_modules.details.no_due_date_placeholder') %>"></date-time-picker>
       </div>
-      <div class="sn-icon sn-icon-close clear-date"
+      <div class="sn-icon sn-icon-close clear-date <%= 'tw-hidden' if !my_module.due_date %>"
            data-toggle='clear-date-time-picker'
            data-target='calendarDueDate<%= my_module.id %>'>
       </div>

@@ -43,7 +43,7 @@ var ExperimnetTable = {
       return `<a href="${data.url}">${data.count}</a>`;
     },
     status: function(data) {
-      return `<div class="my-module-status ${data.light_color ? 'status-light' : ''}" 
+      return `<div class="my-module-status ${data.light_color ? 'status-light' : ''}"
         style="background-color: ${data.color}">${data.name}</div>`;
     },
     assigned: function(data) {
@@ -141,43 +141,32 @@ var ExperimnetTable = {
       let dateText = $(element).closest('.date-text');
       let clearDate = $(element).closest('.datetime-container').find('.clear-date');
 
-      $(element).on('dp.change', function() {
-        $.ajax({
-          url: dueDateContainer.data('update-url'),
-          type: 'PATCH',
-          dataType: 'json',
-          data: { my_module: { due_date: $(element).val() } },
-          success: function(result) {
-            dueDateContainer.find('#dueDateLabelContainer').html(result.table_due_date_label.html);
-            dateText.data('due-status', result.table_due_date_label.due_status);
+      $(`#calendarDueDateContainer${row.id}`).parent().on('dp:ready', () => {
+        $(element).data('dateTimePicker').onChange = () => {
+          $.ajax({
+            url: dueDateContainer.data('update-url'),
+            type: 'PATCH',
+            dataType: 'json',
+            data: { my_module: { due_date: $(element).val() } },
+            success: function(result) {
+              dueDateContainer.find('#dueDateLabelContainer').html(result.table_due_date_label.html);
+              dateText.data('due-status', result.table_due_date_label.due_status);
 
-            if ($(result.table_due_date_label.html).data('due-date')) {
-              clearDate.addClass('open');
+              if ($(result.table_due_date_label.html).data('due-date')) {
+                clearDate.removeClass('tw-hidden');
+              } else {
+                clearDate.addClass('tw-hidden');
+              }
             }
-          }
+          });
+        }
+
+        clearDate.on('click', () => {
+          $(element).data('dateTimePicker').clearDate();
         });
       });
 
-      $(element).on('dp.hide', function() {
-        dateText.attr('data-original-title', dateText.data('due-status'));
-        clearDate.removeClass('open');
-      });
-
-      $(element).on('dp.show', function() {
-        var datePicker = $('.bootstrap-datetimepicker-widget.dropdown-menu')[0];
-
-        // show full datepicker menu for due date
-        if (datePicker.getBoundingClientRect().bottom > window.innerHeight) {
-          datePicker.scrollIntoView(false);
-        } else if (datePicker.getBoundingClientRect().top < 0) {
-          datePicker.scrollIntoView();
-        }
-
-        dateText.attr('data-original-title', '').tooltip('hide');
-        if (dueDateContainer.find('.due-date-label').data('due-date')) {
-          clearDate.addClass('open');
-        }
-      });
+      window.initDateTimePickerComponent(`#calendarDueDateContainer${row.id}`);
     });
   },
   initMyModuleActions: function() {
