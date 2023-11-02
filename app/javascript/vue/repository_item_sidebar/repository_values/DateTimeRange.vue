@@ -138,7 +138,7 @@
           {{ i18n.t(`repositories.item_card.repository_time_range_value.${canEdit ? 'placeholder' : 'no_time_range'}`) }}
         </div>
       </div>
-      <span class="absolute right-2 top-1.5" v-if="values.reminder">
+      <span class="absolute right-2 top-1.5" v-if="values?.reminder">
         <Reminder :value="values" />
       </span>
     </div>
@@ -172,7 +172,10 @@
         cellUpdatePath: null,
         timeFrom: null,
         timeTo: null,
-        isEditing: false
+        isEditing: false,
+        initValue: null,
+        initStartDate: null,
+        initEndDate: null
       }
     },
     props: {
@@ -202,6 +205,9 @@
       this.timeTo = this.endTime
       this.errorMessage = null;
       this.setParams();
+      this.initDate = this.colVal?.datetime;
+      this.initStartDate = this.startTime?.datetime;
+      this.initEndDate = this.endTime?.datetime;
     },
     watch: {
       isEditing(newValue) {
