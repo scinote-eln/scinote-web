@@ -80,6 +80,19 @@ window.initRepositoryFilter = () => {
     }),
     created() {
       this.dataTableElement = $($('#filterContainer').data('datatable-id'));
+
+      $.get($('#filterContainer').data('my-modules-url'), (data) => {
+        this.my_modules = data.data;
+      });
+
+      $.get($('#filterContainer').data('columns-url'), (data) => {
+        const combinedColumns = data.response.concat(defaultColumns);
+        this.columns = combinedColumns.sort((a, b) => a.name > b.name ? 1 : -1);
+      });
+
+      $.get($('#filterContainer').data('saved-filters-url'), (data) => {
+        this.savedFilters = data.data;
+      });
     },
     computed: {
       filtersJSON() {
@@ -139,20 +152,6 @@ window.initRepositoryFilter = () => {
   app.config.globalProperties.i18n = window.I18n;
   app.config.globalProperties.dateFormat = $('#filterContainer').data('date-format');
   app.mount('#filterContainer');
-  const repositoryFilterContainer = app;
-
-  $.get($('#filterContainer').data('my-modules-url'), (data) => {
-    repositoryFilterContainer.my_modules = data.data;
-  });
-
-  $.get($('#filterContainer').data('columns-url'), (data) => {
-    const combinedColumns = data.response.concat(defaultColumns);
-    repositoryFilterContainer.columns = combinedColumns.sort((a, b) => a.name > b.name ? 1 : -1);
-  });
-
-  $.get($('#filterContainer').data('saved-filters-url'), (data) => {
-    repositoryFilterContainer.savedFilters = data.data;
-  });
 
   $('#filterContainer').on('click', (e) => {
     $('#filterContainer .dropdown-selector-container').removeClass('open')
@@ -163,5 +162,5 @@ window.initRepositoryFilter = () => {
     $('#filtersColumnsDropdown, #savedFiltersContainer').removeClass('open');
   });
 
-  window.repositoryFilterObject = repositoryFilterContainer;
+  window.repositoryFilterObject = app;
 };

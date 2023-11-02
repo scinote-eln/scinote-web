@@ -56,8 +56,10 @@
 
   // Bind ajax for editing due dates
   function initStartDatePicker() {
-    $('#calendarStartDate').on('dp.change', function() {
-      updateStartDate();
+    $('.datetime-picker-container#start-date').on('dp:ready', () => {
+      $('#calendarStartDate').data('dateTimePicker').onChange = () => {
+        updateStartDate();
+      };
     });
   }
 
@@ -82,8 +84,10 @@
 
   // Bind ajax for editing due dates
   function initDueDatePicker() {
-    $('#calendarDueDate').on('dp.change', function() {
-      updateDueDate();
+    $('.datetime-picker-container#due-date').on('dp:ready', () => {
+      $('#calendarDueDate').data('dateTimePicker').onChange = () => {
+        updateDueDate();
+      };
     });
   }
 

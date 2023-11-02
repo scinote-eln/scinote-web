@@ -49,6 +49,7 @@
     <%= stylesheet_link_tag 'tui_image_editor_styles' %>
     <%= javascript_include_tag 'vue_navigation_navigator' %>
     <%= javascript_include_tag 'vue_navigation_top_menu' %>
+    <%= javascript_include_tag 'vue_legacy_datetime_picker' %>
 
   </head>
   <body
@@ -63,6 +64,7 @@
     data-atwho-rep-items-url="<%= atwho_rep_items_team_path(current_team) %>"
     data-atwho-menu-items="<%= atwho_menu_items_team_path(current_team) %>"
     data-datetime-picker-format="<%= datetime_picker_format_date_only %>"
+    data-datetime-picker-format-vue="<%= datetime_picker_format_date_only_vue %>"
     <% end %>
   >
 
