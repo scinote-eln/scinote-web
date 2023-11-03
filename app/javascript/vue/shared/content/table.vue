@@ -126,8 +126,9 @@
       }
     },
     created() {
+      this.editingCell = false;
       window.addEventListener('beforeunload', (e) => {
-        if (this.editingTable) {
+        if (this.editingCell) {
           e.preventDefault();
           e.returnValue = '';
         }
@@ -268,12 +269,23 @@
           },
           afterSelectionEnd: () => {
             if (this.editingTable == false) return;
+            this.editingCell = false;
             this.updatingTableData = true;
 
             this.$nextTick(() => {
               this.update();
             });
-          }
+          },
+          beforeChange: () => {
+            this.editingCell = false;
+          },
+          beforeKeyDown: (e) => {
+            if (e.keyCode === 27) { // esc
+              this.editingCell = false;
+              return;
+            }
+            this.editingCell = true;
+          },
         });
         this.$nextTick(this.tableObject.render);
       }
