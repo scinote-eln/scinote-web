@@ -69,5 +69,5 @@
     });
   }
 
-  $(document).one('turbolinks:load', initNewUserAssignmentFormListener);
+  initNewUserAssignmentFormListener();
 }());
