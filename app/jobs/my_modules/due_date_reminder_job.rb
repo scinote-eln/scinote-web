@@ -6,7 +6,6 @@ class DueDateReminderJob < ApplicationJob
 
     my_modules.each do |task|
       TaskDueDateNotification.send_notifications({ my_module_id: task.id })
-      task.update(notification_sent: true)
     end
   end
 end

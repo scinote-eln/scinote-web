@@ -187,10 +187,6 @@ class MyModulesController < ApplicationController
         log_activity(:rename_task) if name_changed
         log_start_date_change_activity(start_date_changes) if start_date_changes.present?
         log_due_date_change_activity(due_date_changes) if due_date_changes.present?
-
-        if due_date_changes
-          @my_module.update(notification_sent: false)
-        end
       end
     end
     if saved
