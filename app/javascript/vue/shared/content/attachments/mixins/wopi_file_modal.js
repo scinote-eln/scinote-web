@@ -10,7 +10,7 @@ export default {
       $wopiModal.find('#element_id').val(object.id);
       $wopiModal.find('#element_type').val(object.attributes.type);
       $wopiModal.modal('show');
-      $($wopiModal).find('#new-wopi-file-name').focus();
+      $($wopiModal).find('#new-wopi-file-name').focus().val('');
 
       // Clear filename input error on input change if appropriate
       $wopiModal.on('input', '#new-wopi-file-name', (e) => {
