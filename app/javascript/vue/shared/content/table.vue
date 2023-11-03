@@ -125,6 +125,14 @@
         return menu;
       }
     },
+    created() {
+      window.addEventListener('beforeunload', (e) => {
+        if (this.editingTable) {
+          e.preventDefault();
+          e.returnValue = '';
+        }
+      });
+    },
     updated() {
       if(!this.updatingTableData) this.loadTableData();
     },
@@ -257,6 +265,14 @@
           afterUnlisten: () => {
             this.updatingTableData = true;
             setTimeout(this.updateTable, 100) // delay makes cancel button work
+          },
+          afterSelectionEnd: () => {
+            if (this.editingTable == false) return;
+            this.updatingTableData = true;
+
+            this.$nextTick(() => {
+              this.update();
+            });
           }
         });
         this.$nextTick(this.tableObject.render);
