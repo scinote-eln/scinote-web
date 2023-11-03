@@ -31,8 +31,6 @@ class MyModuleShareableLinksController < ApplicationController
   after_action -> { request.session_options[:skip] = true }
 
   def show
-    return render_403 unless can_read_my_module?(@my_module)
-
     render json: @my_module.shareable_link, serializer: ShareableLinksSerializer
   end
 
