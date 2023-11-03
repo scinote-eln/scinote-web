@@ -142,7 +142,7 @@ class MyModule < ApplicationRecord
 
   def self.approaching_due_dates
     where(due_date_notification_sent: false)
-      .where("due_date > ? AND due_date <= ?", DateTime.current, DateTime.current + 1.day)
+      .where('due_date > ? AND due_date <= ?', DateTime.current, DateTime.current + 1.day)
   end
 
   def parent
