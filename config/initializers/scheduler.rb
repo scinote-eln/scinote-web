@@ -21,3 +21,7 @@ if ENV['ENABLE_FLUICS_SYNC'] == 'true'
     LabelPrinters::Fluics::SyncService.new.sync_templates! if LabelPrinter.fluics.any?
   end
 end
+
+scheduler.every '1h' do
+  DueDateReminderJob.perform_now
+end
