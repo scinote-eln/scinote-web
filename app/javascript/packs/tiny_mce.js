@@ -205,6 +205,12 @@ window.TinyMCE = (() => {
           cache_suffix: '?v=6.5.1-19', // This suffix should be changed any time library is updated
           selector,
           skin: false,
+          editimage_fetch_image: img => new Promise((resolve) => {
+            // Appending a timestamp to an image URL bypasses Chrome’s cache, resolving occasional CORS errors
+            fetch(img.src + '?t=' + new Date().getTime())
+              .then(response => response.blob())
+              .then(blob => resolve(blob));
+          }),
           content_css: false,
           content_style: contentStyle,
           convert_urls: false,
