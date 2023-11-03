@@ -24,7 +24,13 @@ class AssetSyncController < ApplicationController
   end
 
   def update
-    head(:conflict) and return if @asset_sync_token.conflicts?(request.headers['VersionToken'])
+    if @asset_sync_token.conflicts?(request.headers['VersionToken'])
+      render(
+        json: AssetSyncTokenSerializer.new(conflicting_asset_copy_token).as_json,
+        status: :conflict
+      )
+      return
+    end
 
     @asset.file.attach(io: request.body, filename: @asset.file.filename)
     @asset.touch
@@ -33,6 +39,26 @@ class AssetSyncController < ApplicationController
   end
 
   # private
+
+  def conflicting_asset_copy_token
+    Asset.transaction do
+      new_asset = @asset.dup
+      new_asset.save
+      new_asset.file.attach(
+        io: request.body,
+        filename: "#{@asset.file.filename.base} (#{t('general.copy')}).#{@asset.file.filename.extension}"
+      )
+
+      case @asset.parent
+      when Step
+        StepAsset.create!(step: @asset.step, asset: new_asset)
+      when Result
+        ResultAsset.create!(result: @asset.result, asset: new_asset)
+      end
+
+      current_user.asset_sync_tokens.create!(asset_id: new_asset.id)
+    end
+  end
 
   def authenticate_asset_sync_token!
     @asset_sync_token = AssetSyncToken.find_by(token: request.headers['Authentication'])

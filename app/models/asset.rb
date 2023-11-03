@@ -466,6 +466,10 @@ class Asset < ApplicationRecord
     (result || step)&.my_module
   end
 
+  def parent
+    step || result || repository_cell
+  end
+
   private
 
   def tempdir
