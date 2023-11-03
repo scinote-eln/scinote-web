@@ -8,6 +8,7 @@ class MyModuleShareableLinksController < ApplicationController
                                             results_show)
   before_action :check_view_permissions, only: :show
   before_action :check_manage_permissions, except: %i(protocol_show
+                                                      show
                                                       repository_index_dt
                                                       repository_snapshot_index_dt
                                                       download_asset
@@ -30,6 +31,8 @@ class MyModuleShareableLinksController < ApplicationController
   after_action -> { request.session_options[:skip] = true }
 
   def show
+    return render_403 unless can_read_my_module?(@my_module)
+
     render json: @my_module.shareable_link, serializer: ShareableLinksSerializer
   end
 

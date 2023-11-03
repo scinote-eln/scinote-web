@@ -19,6 +19,7 @@
                            :characterLimit="255"
                            @enable="enableShare"
                            @disable="disableShare"
+                           :canShare="canShare"
                            @close="closeModal"/>
     </div>
   </div>
@@ -39,6 +40,10 @@
         required: true
       },
       disabled: {
+        type: Boolean,
+        default: false
+      },
+      canShare: {
         type: Boolean,
         default: false
       }
