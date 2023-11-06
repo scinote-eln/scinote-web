@@ -24,4 +24,5 @@ end
 
 scheduler.every '1h' do
   DueDateReminderJob.perform_now
+  RepositoryItemDateReminderJob.perform_now
 end

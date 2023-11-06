@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Recipients::ItemCreatorRecipients
+class Recipients::RepositoryRowCreator
   def initialize(params)
     @params = params
   end

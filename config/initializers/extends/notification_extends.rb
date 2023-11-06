@@ -78,10 +78,10 @@ class NotificationExtends
       recipients_module: :AssignedRecipients
     },
     item_low_stock_reminder: {
-      recipients_module: :ItemCreatorRecipients
+      recipients_module: :RepositoryRowCreator
     },
     item_date_reminder: {
-      recipients_module: :ItemCreatorRecipients
+      recipients_module: :RepositoryRowCreator
     },
     smart_annotation_added: {
       recipients_module: :AnnotatedRecipients
