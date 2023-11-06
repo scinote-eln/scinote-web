@@ -13,7 +13,6 @@
 
 var ProjectsIndex = (function() {
   var projectsWrapper = '#projectsWrapper';
-  var toolbarWrapper = '#toolbarWrapper';
   var cardsWrapper = '#cardsWrapper';
   var editProjectModal = '#edit-modal';
   var moveToModal = '#move-to-modal';
@@ -448,22 +447,13 @@ var ProjectsIndex = (function() {
       data: { ...requestParams, ...{ page: 1 } },
       success: function(data) {
         $(projectsWrapper).find('.projects-title').html(data.title_html);
-        $(toolbarWrapper).html(data.toolbar_html);
-        initProjectsViewModeSwitch();
+
         initCardData(viewContainer, data);
 
         selectedProjects.length = 0;
         selectedProjectFolders.length = 0;
 
         updateProjectsToolbar();
-        initProjectsFilters();
-        initSorting();
-
-        // set current sort item
-        if (projectsCurrentSort) {
-          $('#sortMenuDropdown a').removeClass('selected');
-          $(`#sortMenuDropdown a[data-sort="${projectsCurrentSort}"]`).addClass('selected');
-        }
 
         if (data.filtered) {
           $(projectsWrapper).find('.project-list-end-placeholder').remove();
@@ -546,9 +536,9 @@ var ProjectsIndex = (function() {
   }
 
   function selectDate($field) {
-    var datePicker = $field.data('DateTimePicker');
-    if (datePicker && datePicker.date()) {
-      return datePicker.date()._d.toUTCString();
+    let datePicker = $field.data('dateTimePicker');
+    if (datePicker && datePicker.date) {
+      return datePicker.date.toString();
     }
     return null;
   }
@@ -572,32 +562,6 @@ var ProjectsIndex = (function() {
       archivedOnFromFilter = selectDate($archivedOnFromFilter) || $archivedOnFromFilter.val();
       archivedOnToFilter = selectDate($archivedOnToFilter) || $archivedOnToFilter.val();
       projectsViewSearch = $textFilter.val();
-    }
-
-    function saveCurrentFilters() {
-      getFilterValues();
-
-      currentFilters = {
-        createdOnFromFilter: $createdOnFromFilter.val(),
-        createdOnToFilter: $createdOnToFilter.val(),
-        membersFilter: membersFilter,
-        lookInsideFolders: lookInsideFolders,
-        archivedOnFromFilter: $archivedOnFromFilter.val(),
-        archivedOnToFilter: $archivedOnToFilter.val(),
-        projectsViewSearch: projectsViewSearch
-      };
-    }
-
-    function loadCurrentFilters() {
-      if (!currentFilters) return;
-
-      $createdOnFromFilter.val(currentFilters.createdOnFromFilter);
-      $createdOnToFilter.val(currentFilters.createdOnToFilter);
-      $foldersCB.attr('checked', !!currentFilters.lookInsideFolders);
-      dropdownSelector.setData($('.members-filter'), currentFilters.membersFilter);
-      $archivedOnFromFilter.val(currentFilters.archivedOnFromFilter);
-      $archivedOnToFilter.val(currentFilters.archivedOnToFilter);
-      $textFilter.val(currentFilters.projectsViewSearch);
     }
 
     function filtersEnabled() {
@@ -638,7 +602,6 @@ var ProjectsIndex = (function() {
     });
 
     $filterDropdown.on('filter:apply', function() {
-      saveCurrentFilters();
       appliedFiltersMark();
       loadCardsView();
     });
@@ -648,12 +611,11 @@ var ProjectsIndex = (function() {
       currentFilters = null;
 
       dropdownSelector.clearData($membersFilter);
-      $createdOnFromFilter.val('');
-      $createdOnToFilter.val('');
-      $createdOnFromFilter.val('');
-      $createdOnToFilter.val('');
-      $archivedOnFromFilter.val('');
-      $archivedOnToFilter.val('');
+
+      $createdOnFromFilter.data('dateTimePicker').clearDate();
+      $createdOnToFilter.data('dateTimePicker').clearDate();
+      $archivedOnFromFilter.data('dateTimePicker').clearDate();
+      $archivedOnToFilter.data('dateTimePicker').clearDate();
       $foldersCB.prop('checked', false);
       $textFilter.val('');
     });
@@ -666,7 +628,6 @@ var ProjectsIndex = (function() {
       $('#folderSearchInfo').hide();
     });
 
-    loadCurrentFilters();
     appliedFiltersMark();
   }
 
@@ -708,10 +669,12 @@ var ProjectsIndex = (function() {
     initArchiveRestoreToolbarButtons();
     initEditButton();
     initMoveButton();
-    initProjectsViewModeSwitch();
     initSelectAllCheckbox();
     initArchiveRestoreButton();
     loadCardsView();
+    initProjectsViewModeSwitch();
+    initProjectsFilters();
+    initSorting();
     AsyncDropdown.init($(projectsWrapper));
 
     $(projectsWrapper).on('click', '.folder-card-selector', function() {
