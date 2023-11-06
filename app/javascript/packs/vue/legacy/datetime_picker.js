@@ -22,7 +22,11 @@ window.initDateTimePickerComponent = (id) => {
         let defaultDate =  new Date(this.$refs.input.dataset.default);
         this.date = defaultDate.toISOString();
         this.$refs.vueDateTime.datetime = defaultDate;
+      } else if (this.date) {
+        this.$refs.vueDateTime.datetime = new Date(this.date);
       }
+
+
       $(this.$refs.input).data('dateTimePicker', this);
       $(this.$el.parentElement).parent().trigger('dp:ready');
     },

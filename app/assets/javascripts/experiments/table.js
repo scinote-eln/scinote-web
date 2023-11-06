@@ -494,9 +494,9 @@ var ExperimnetTable = {
     }
   },
   selectDate: function($field) {
-    var datePicker = $field.data('DateTimePicker');
-    if (datePicker && datePicker.date()) {
-      return datePicker.date()._d.toUTCString();
+    var datePicker = $field.data('dateTimePicker');
+    if (datePicker && datePicker.date) {
+      return datePicker.date.toString();
     }
     return null;
   },
@@ -733,9 +733,7 @@ ExperimnetTable.filters.push({
   },
   active: (value) => { return value; },
   clearFilter: ($container) => {
-    if ($('.due-date-filter .from-date', $container).data('DateTimePicker')) {
-      $('.due-date-filter .from-date', $container).data('DateTimePicker').clear();
-    }
+    $('.due-date-filter .from-date', $container).data('dateTimePicker')?.clearDate();
   }
 });
 
@@ -748,9 +746,7 @@ ExperimnetTable.filters.push({
   },
   active: (value) => { return value; },
   clearFilter: ($container) => {
-    if ($('.due-date-filter .to-date', $container).data('DateTimePicker')) {
-      $('.due-date-filter .to-date', $container).data('DateTimePicker').clear();
-    }
+    $('.due-date-filter .to-date', $container).data('dateTimePicker')?.clearDate();
   }
 });
 
@@ -763,9 +759,7 @@ ExperimnetTable.filters.push({
   },
   active: (value) => { return value; },
   clearFilter: ($container) => {
-    if ($('.archived-on-filter .from-date', $container).data('DateTimePicker')) {
-      $('.archived-on-filter .from-date', $container).data('DateTimePicker').clear();
-    }
+    $('.archived-on-filter .from-date', $container).data('dateTimePicker')?.clearDate();
   }
 });
 
@@ -778,9 +772,7 @@ ExperimnetTable.filters.push({
   },
   active: (value) => { return value; },
   clearFilter: ($container) => {
-    if ($('.archived-on-filter .to-date', $container).data('DateTimePicker')) {
-      $('.archived-on-filter  .to-date', $container).data('DateTimePicker').clear();
-    }
+    $('.archived-on-filter  .to-date', $container).data('dateTimePicker')?.clearDate();
   }
 });
 

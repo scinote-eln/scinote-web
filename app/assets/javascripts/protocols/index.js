@@ -47,9 +47,9 @@ var ProtocolsIndex = (function() {
   }
 
   function selectDate($field) {
-    var datePicker = $field.data('DateTimePicker');
-    if (datePicker && datePicker.date()) {
-      return datePicker.date()._d.toUTCString();
+    var datePicker = $field.data('dateTimePicker');
+    if (datePicker && datePicker.date) {
+      return datePicker.date.toString();
     }
     return null;
   }
@@ -129,12 +129,12 @@ var ProtocolsIndex = (function() {
       dropdownSelector.clearData($accessByFilter);
 
       $(this).find('input').val('');
-      if ($publishedOnFromFilter.data('DateTimePicker')) $publishedOnFromFilter.data('DateTimePicker').clear();
-      if ($publishedOnToFilter.data('DateTimePicker')) $publishedOnToFilter.data('DateTimePicker').clear();
-      if ($modifiedOnFromFilter.data('DateTimePicker')) $modifiedOnFromFilter.data('DateTimePicker').clear();
-      if ($modifiedOnToFilter.data('DateTimePicker')) $modifiedOnToFilter.data('DateTimePicker').clear();
-      if ($archivedOnFromFilter.data('DateTimePicker')) $archivedOnFromFilter.data('DateTimePicker').clear();
-      if ($archivedOnToFilter.data('DateTimePicker')) $archivedOnToFilter.data('DateTimePicker').clear();
+      $publishedOnFromFilter.data('dateTimePicker')?.clearDate();
+      $publishedOnToFilter.data('dateTimePicker')?.clearDate();
+      $modifiedOnFromFilter.data('dateTimePicker')?.clearDate();
+      $modifiedOnToFilter.data('dateTimePicker')?.clearDate();
+      $archivedOnFromFilter.data('dateTimePicker')?.clearDate();
+      $archivedOnToFilter.data('dateTimePicker')?.clearDate();
       $hasDraft.prop('checked', false);
       $textFilter.val('');
     });
