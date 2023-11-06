@@ -164,8 +164,9 @@
                   </div>
                   <div v-for="(assigned, index) in assignedModules.viewable_modules" :key="`assigned_module_${index}`"
                     class="flex flex-col w-[350px] h-auto gap-4">
-                    <div class="flex flex-col gap-3.5">
-                      <div v-for="(item, index_assigned) in assigned" :key="`assigned_element_${index_assigned}`">
+                    <div class="flex flex-col gap-2">
+                      <div v-for="(item, index_assigned) in assigned" :key="`assigned_element_${index_assigned}`"
+                        class="text-sm">
                         {{ i18n.t(`repositories.item_card.assigned.labels.${item.type}`) }}
                         <a :href="item.url" class="text-sn-science-blue hover:text-sn-science-blue hover:no-underline">
                           {{ item.archived ? i18n.t('labels.archived') : '' }} {{ item.value }}
