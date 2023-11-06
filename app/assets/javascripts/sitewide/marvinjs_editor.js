@@ -321,6 +321,7 @@ $(document).on('click', '.gene-sequence-edit-button', function() {
 function initMarvinJs() {
   if (typeof (ChemicalizeMarvinJs) === 'undefined') {
     setTimeout(initMarvinJs, 100);
+    return;
   }
 
   MarvinJsEditor = MarvinJsEditorApi();
