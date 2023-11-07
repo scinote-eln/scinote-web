@@ -4,6 +4,8 @@
       v-if="mode == 'datetime'"
       v-model="datetime"
       :teleport="true"
+      text-input
+      time-picker-inline
       :format="dateTimeFormat"
       :placeholder="placeholder" ></VueDatePicker>
 
@@ -11,14 +13,16 @@
       v-if="mode == 'date'"
       v-model="datetime"
       :teleport="true"
+      text-input
       :format="dateFormat"
       :enable-time-picker="false"
       :placeholder="placeholder" ></VueDatePicker>
 
     <VueDatePicker
       v-if="mode == 'time'"
-      v-model="datetime"
+      v-model="time"
       :teleport="true"
+      text-input
       :format="timeFormat"
       time-picker
       :placeholder="placeholder" ></VueDatePicker>
@@ -37,30 +41,61 @@
     },
     data() {
       return {
-        datetime: this.defaultValue
+        datetime: this.defaultValue,
+        time: null
       }
     },
-    watch: {
-      defaultValue: function () {
-        this.datetime = this.defaultValue;
+    created() {
+      if (this.defaultValue) {
+        this.time = {
+                      hours: this.defaultValue.getHours(),
+                      minutes:this.defaultValue.getMinutes(),
+                    }
       }
     },
     components: {
       VueDatePicker
     },
     watch: {
+      defaultValue: function () {
+        this.datetime = this.defaultValue;
+        this.time = {
+          hours: this.defaultValue ? this.defaultValue.getHours() : 0,
+          minutes: this.defaultValue ? this.defaultValue.getMinutes() : 0
+        }
+      },
       datetime: function () {
+        if (this.mode == 'time') {
+          this.time = {
+            hours: this.datetime ? this.datetime.getHours() : 0,
+            minutes: this.datetime ? this.datetime.getMinutes() : 0
+          }
+          return
+        }
+
         if ( this.datetime == null) {
           this.$emit('cleared');
         }
 
         if (this.defaultValue != this.datetime) {
-          let newDate = this.datetime;
-          if (this.mode == 'time') {
-            newDate = new Date();
-            newDate.setHours(this.datetime.hours);
-            newDate.setMinutes(this.datetime.minutes);
-          }
+          this.$emit('change', this.datetime);
+        }
+      },
+      time: function () {
+        if (this.mode != 'time') return;
+
+        let newDate;
+
+        if (this.time) {
+          newDate = new Date();
+          newDate.setHours(this.time.hours);
+          newDate.setMinutes(this.time.minutes);
+        } else {
+          newDate = null;
+          this.$emit('cleared');
+        }
+
+        if (this.defaultValue != newDate) {
           this.$emit('change', newDate);
         }
       }
@@ -74,7 +109,7 @@
       },
       timeFormat() {
         return 'HH:mm'
-      }
+      },
     }
   }
 </script>

@@ -76,18 +76,7 @@ $.fn.dataTable.render.RepositoryNumberValueValidator = function($input) {
 };
 
 $.fn.dataTable.render.RepositoryDateTimeValueValidator = function($input) {
-  let $container = $input.parents('.datetime-container');
-  let $date = $container.find('input.date-part');
-  let $time = $container.find('input.time-part');
-
-  if (($date.val() === '') === ($time.val() === '')) {
-    return true;
-  }
-  $container.find('.date-container')
-    .addClass('error')
-    .attr('data-error-text', I18n.t('repositories.table.date_time.errors.set_all_or_none'));
-  $container.find('.time-container').addClass('error');
-  return false;
+  return true;
 };
 
 $.fn.dataTable.render.RepositoryDateValueValidator = function() {
@@ -99,11 +88,9 @@ $.fn.dataTable.render.RepositoryTimeValueValidator = function() {
 };
 
 $.fn.dataTable.render.RepositoryDateTimeRangeValueValidator = function($input) {
-  let $container = $input.parents('.datetime-container');
-  let $dateS = $container.find('.start-time input.date-part');
-  let $timeS = $container.find('.start-time input.time-part');
-  let $dateE = $container.find('.end-time input.date-part');
-  let $timeE = $container.find('.end-time input.time-part');
+  const $container = $input.parents('.datetime-container');
+  const $dateS = $container.find('.datetime.start');
+  const $dateE = $container.find('.datetime.end');
   let isValid = true;
   let errorMessage;
   let startTime;
@@ -111,14 +98,12 @@ $.fn.dataTable.render.RepositoryDateTimeRangeValueValidator = function($input) {
   let a = [];
 
   if ($input.val()) {
-    startTime = new Date(JSON.parse($input.val()).start_time);
-    endTime = new Date(JSON.parse($input.val()).end_time);
+    startTime = new Date($dateS.val());
+    endTime = new Date($dateE.val());
   }
 
   a.push($dateS.val() === '');
-  a.push($timeS.val() === '');
   a.push($dateE.val() === '');
-  a.push($timeE.val() === '');
 
   if (a.filter((v, i, arr) => arr.indexOf(v) === i).length > 1) {
     isValid = false;
@@ -133,22 +118,22 @@ $.fn.dataTable.render.RepositoryDateTimeRangeValueValidator = function($input) {
   }
 
   $container.find('.date-container').addClass('error');
-  $container.find('.time-container').addClass('error');
   $container.find('.date-container').first().attr('data-error-text', errorMessage);
   return false;
 };
 
 $.fn.dataTable.render.RepositoryDateRangeValueValidator = function($input) {
-  let $container = $input.parents('.datetime-container');
-  let $dateS = $container.find('.start-time input.date-part');
-  let $dateE = $container.find('.end-time input.date-part');
+  const $container = $input.parents('.datetime-container');
+  const $dateS = $container.find('.datetime.start');
+  const $dateE = $container.find('.datetime.end');
   let isValid = true;
   let errorMessage;
-  let endTime;
   let startTime;
+  let endTime;
+
   if ($input.val()) {
-    startTime = new Date(JSON.parse($input.val()).start_time);
-    endTime = new Date(JSON.parse($input.val()).end_time);
+    startTime = new Date($dateS.val());
+    endTime = new Date($dateE.val());
   }
 
   if (($dateS.val() === '') !== ($dateE.val() === '')) {
@@ -169,16 +154,23 @@ $.fn.dataTable.render.RepositoryDateRangeValueValidator = function($input) {
 };
 
 $.fn.dataTable.render.RepositoryTimeRangeValueValidator = function($input) {
-  let $container = $input.parents('.datetime-container');
-  let $timeS = $container.find('.start-time input.time-part');
-  let $timeE = $container.find('.end-time input.time-part');
+  const $container = $input.parents('.datetime-container');
+  const $dateS = $container.find('.datetime.start');
+  const $dateE = $container.find('.datetime.end');
   let isValid = true;
   let errorMessage;
+  let startTime;
+  let endTime;
 
-  if (($timeS.val() === '') !== ($timeE.val() === '')) {
+  if ($input.val()) {
+    startTime = new Date($dateS.val());
+    endTime = new Date($dateE.val());
+  }
+
+  if (($dateS.val() === '') !== ($dateE.val() === '')) {
     isValid = false;
     errorMessage = I18n.t('repositories.table.date_time.errors.set_all_or_none');
-  } else if ($timeS.val() > $timeE.val()) {
+  } else if (endTime < startTime) {
     isValid = false;
     errorMessage = I18n.t('repositories.table.date_time.errors.not_valid_range');
   }
@@ -186,7 +178,7 @@ $.fn.dataTable.render.RepositoryTimeRangeValueValidator = function($input) {
     return true;
   }
 
-  $container.find('.time-container').addClass('error');
-  $container.find('.time-container').first().attr('data-error-text', errorMessage);
+  $container.find('.date-container').addClass('error');
+  $container.find('.date-container').first().attr('data-error-text', errorMessage);
   return false;
 };

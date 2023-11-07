@@ -20,7 +20,7 @@ window.initDateTimePickerComponent = (id) => {
     mounted() {
       if (this.$refs.input.dataset.default) {
         let defaultDate =  new Date(this.$refs.input.dataset.default);
-        this.date = defaultDate.toISOString();
+        this.date = this.formatDate(defaultDate);
         this.$refs.vueDateTime.datetime = defaultDate;
       } else if (this.date) {
         this.$refs.vueDateTime.datetime = new Date(this.date);
@@ -31,15 +31,26 @@ window.initDateTimePickerComponent = (id) => {
       $(this.$el.parentElement).parent().trigger('dp:ready');
     },
     methods: {
+      formatDate(date) {
+        if (this.$refs.input.dataset.simpleFormat) {
+          const y = date.getFullYear();
+          const m = date.getMonth() + 1;
+          const d = date.getDate();
+          const hours = date.getHours();
+          const mins = date.getMinutes();
+          return `${y}/${m}/${d} ${hours}:${mins}`;
+        }
+        return date.toISOString();
+      },
       updateDate(date) {
-        this.date = date.toISOString();
+        this.date = this.formatDate(date);
         this.$nextTick(() => {
           if (this.onChange) this.onChange(date);
         });
 
       },
       setDate(date) {
-        this.date = date.toISOString();
+        this.date = this.formatDate(date);
         this.$refs.vueDateTime.datetime = date;
         this.$nextTick(() => {
           if (this.onChange) this.onChange(date);
