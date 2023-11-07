@@ -13,59 +13,49 @@
         }}
       </div>
     </div>
-    <div>
-      <inline-edit
-        v-if="permissions?.can_manage && !inArchivedRepositoryRow"
-        ref="textRef"
-        :value="colVal?.edit"
-        :placeholder="i18n.t('repositories.item_card.repository_text_value.placeholder')"
-        :noContentPlaceholder="i18n.t('repositories.item_card.repository_text_value.no_text')"
-        :allowBlank="true"
-        :smartAnnotation="false"
-        :attributeName="`${colName} `"
-        :allowNewLine="false"
-        :singleLine="false"
-        :expandable="true"
-        :collapsed="collapsed"
-        @editingEnabled="editing = true"
-        @editingDisabled="editing = false"
-        @update="update"
-      ></inline-edit>
-      <div v-else-if="colVal?.edit"
-           ref="textRef"
-           class="text-sn-dark-grey box-content font-inter text-sm font-normal leading-5 overflow-y-auto px-4 py-2 border-sn-light-grey border border-solid rounded"
-           :class="{
-             'max-h-[4rem]': collapsed,
-             'max-h-[40rem]': !collapsed
-           }"
-      >
-        {{ colVal?.edit }}
-      </div>
-      <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
-        {{ i18n.t("repositories.item_card.repository_text_value.no_text") }}
-      </div>
+
+    <div v-if="canEdit">
+      <text-area :initialValue="colVal?.edit"
+                 :noContentPlaceholder="noContentPlaceholder"
+                 :unEditableRef="`textRef`"
+                 :expandable="expandable"
+                 :collapsed="collapsed"
+                 @toggleExpandableState="toggleExpandableState"
+                 @update="update" />
+    </div>
+    <div v-else-if="colVal?.edit"
+          ref="textRef"
+          class="text-sn-dark-grey box-content text-sm font-normal leading-5 overflow-y-auto px-4 py-2
+              border-sn-light-grey border border-solid rounded w-[calc(100%-2rem)]]"
+          :class="{
+            'max-h-[4rem]': collapsed,
+            'max-h-[40rem]': !collapsed
+          }"
+    >
+      {{ colVal?.edit }}
+    </div>
+    <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5 px-4 py-2 w-[calc(100%-2rem)]]">
+      {{ i18n.t("repositories.item_card.repository_text_value.no_text") }}
     </div>
   </div>
 </template>
 
 <script>
-import InlineEdit from "../../shared/inline_edit.vue";
 import repositoryValueMixin from "./mixins/repository_value.js";
+import Textarea from "../Textarea.vue";
 
 export default {
   name: "RepositoryTextValue",
   mixins: [repositoryValueMixin],
   components: {
-    "inline-edit": InlineEdit
+    'text-area': Textarea,
   },
   data() {
     return {
-      edit: null,
-      view: null,
-      contentExpanded: false,
       expandable: false,
-      collapsed: true
-    }
+      collapsed: true,
+      textValue: '',
+    };
   },
   props: {
     data_type: String,
@@ -75,48 +65,23 @@ export default {
     permissions: null,
     inArchivedRepositoryRow: Boolean,
   },
-  mounted() {
-    this.$nextTick(() => {
-      if (this.$refs.textRef) {
-        const textHeight = this.$refs.textRef.scrollHeight
-        this.expandable = textHeight > 60 // 60px
-      }
-      this.toggleExpandableState();
-    });
+  created() {
+    // constants
+    this.noContentPlaceholder = this.i18n.t("repositories.item_card.repository_text_value.no_text");
   },
-  watch: {
-    editing() {
-      if (this.editing) return;
-
-      this.toggleExpandableState();
+  computed: {
+    canEdit() {
+      return this.permissions?.can_manage && !this.inArchivedRepositoryRow;
     }
   },
   methods: {
     toggleCollapse() {
-      if (this.expandable) {
-        this.collapsed = !this.collapsed;
-      }
+      if (!this.expandable) return;
+
+      this.collapsed = !this.collapsed;
     },
-    toggleExpandableState() {
-      if (!this.$refs.textRef) return;
-      let offsetHeight;
-      let scrollHeight;
-
-      if (Object.keys(this.$refs.textRef.$refs).length > 0) {
-        const keys = Object.keys(this.$refs.textRef.$refs)
-        keys.forEach((ref) => {
-          if (this.$refs.textRef.$refs[ref] !== undefined) {
-            offsetHeight = this.$refs.textRef.$refs[ref].offsetHeight;
-            scrollHeight = this.$refs.textRef.$refs[ref].scrollHeight;
-            this.expandable = scrollHeight > offsetHeight;
-          }
-        });
-        return;
-      }
-
-      offsetHeight = this.$refs.textRef.offsetHeight;
-      scrollHeight = this.$refs.textRef.scrollHeight;
-      this.expandable = scrollHeight > offsetHeight;
+    toggleExpandableState(expandable) {
+      this.expandable = expandable;
     },
   },
 };
