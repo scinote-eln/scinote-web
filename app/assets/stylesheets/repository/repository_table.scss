@@ -349,7 +349,28 @@
     }
 
     .date-container {
-      width: 160px;
+      &.datetime {
+        width: 240px;
+      }
+
+      &.time {
+        width: 120px;
+      }
+
+      &.date {
+        width: 200px;
+      }
+
+      &.error {
+        &::after {
+          color: $brand-danger;
+          content: attr(data-error-text);
+          font-size: 12px;
+          margin-top: -4px;
+          position: absolute;
+          top: 100%;
+        }
+      }
     }
 
     .time-container {
