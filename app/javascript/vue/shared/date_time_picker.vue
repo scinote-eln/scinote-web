@@ -3,8 +3,9 @@
     <VueDatePicker
       v-if="mode == 'datetime'"
       v-model="datetime"
-      :teleport="true"
+      :teleport="teleport"
       text-input
+      :clearable="clearable"
       time-picker-inline
       :format="dateTimeFormat"
       :placeholder="placeholder" ></VueDatePicker>
@@ -12,7 +13,8 @@
     <VueDatePicker
       v-if="mode == 'date'"
       v-model="datetime"
-      :teleport="true"
+      :teleport="teleport"
+      :clearable="clearable"
       text-input
       :format="dateFormat"
       :enable-time-picker="false"
@@ -21,7 +23,8 @@
     <VueDatePicker
       v-if="mode == 'time'"
       v-model="time"
-      :teleport="true"
+      :teleport="teleport"
+      :clearable="clearable"
       text-input
       :format="timeFormat"
       time-picker
@@ -36,6 +39,8 @@
     name: 'DateTimePicker',
     props: {
       mode: { type: String, default: 'datetime' },
+      clearable: { type: Boolean, default: false },
+      teleport: { type: Boolean, default: true },
       defaultValue: { type: Date, required: false },
       placeholder: { type: String }
     },
