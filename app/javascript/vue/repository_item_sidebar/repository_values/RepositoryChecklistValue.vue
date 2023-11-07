@@ -1,6 +1,6 @@
 <template>
   <div id="repository-checklist-value-wrapper" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
-    <div class="font-inter text-sm font-semibold leading-5 truncate"  :title="colName">
+    <div class="font-inter text-sm font-semibold leading-5 truncate" :title="colName">
       {{ colName }}
     </div>
     <div v-if="checklistItems.length > 0">
@@ -15,8 +15,9 @@
         </div>
       </div>
       <div v-else
-        class="text-sn-dark-grey font-inter text-sm font-normal leading-5 w-[370px] overflow-x-auto flex flex-wrap gap-1">
-        <span v-for="(checklistItem, index) in checklistItems" :key="index" :id="`checklist-item-${index}`" class="flex w-fit break-words mr-1">
+        class="text-sn-dark-grey font-inter text-sm font-normal leading-5 w-[370px] overflow-x-auto flex flex-wrap">
+        <span v-for="(checklistItem, index) in checklistItems" :key="index" :id="`checklist-item-${index}`"
+          class="flex w-fit break-words mr-1">
           {{ index + 1 === checklistItems.length ? checklistItem?.label : `${checklistItem?.label} |` }}
         </span>
       </div>
