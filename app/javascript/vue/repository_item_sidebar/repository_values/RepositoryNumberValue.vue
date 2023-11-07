@@ -18,6 +18,7 @@
                    :noContentPlaceholder="noContentPlaceholder"
                    :placeholder="i18n.t('repositories.item_card.repository_number_value.placeholder')"
                    :decimals="decimals"
+                   :isNumber="true"
                    :unEditableRef="`numberRef`"
                    :expandable="expandable"
                    :collapsed="collapsed"
@@ -42,7 +43,7 @@
 
 <script>
 import repositoryValueMixin from "./mixins/repository_value.js";
-import Textarea from "../Textarea.vue";
+import Textarea from "../../shared/Textarea.vue";
 
 export default {
   name: "RepositoryNumberValue",

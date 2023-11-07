@@ -45,7 +45,7 @@
 
 <script>
 import repositoryValueMixin from "./mixins/repository_value.js";
-import Textarea from "../Textarea.vue";
+import Textarea from "../../shared/Textarea.vue";
 
 export default {
   name: "RepositoryTextValue",
