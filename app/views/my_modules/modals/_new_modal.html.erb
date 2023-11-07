@@ -11,8 +11,8 @@
           <%= f.hidden_field :view_mode, value: view_mode%>
           <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <label class="sci-label"><%= t('experiments.canvas.new_my_module_modal.name') %></label>
               <div class="sci-input-container form-group">
-                <label><%= t('experiments.canvas.new_my_module_modal.name') %></label>
                 <%= text_field_tag 'my_module[name]', '', placeholder: t('experiments.canvas.new_my_module_modal.name_placeholder'), class: "sci-input-field" %>
               </div>
             </div>
@@ -20,21 +20,12 @@
           <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
               <div class="form-group">
-                <div class="sci-input-container right-icon my-module-due-date-container">
-                  <label for="my_module_due_date"><%= t('experiments.canvas.new_my_module_modal.due_date') %></label>
-                  <i class="sn-icon sn-icon-calendar"></i>
-                  <input id="my_module_due_date"
-                         type="datetime"
-                         name="my_module[due_date]"
-                         data-toggle='date-time-picker'
-                         class="sci-input-field calendar-input"
-                         readonly
-                         placeholder="<%= t('experiments.canvas.new_my_module_modal.due_date_placeholder') %>"
-                         data-date-format="<%= datetime_picker_format_full %>"
-                         data-date-locale="<%= I18n.locale %>"
-                         data-date-use-current="false"
-                         data-date-orientation="left"
-                         value=""/>
+                <div class="my-module-due-date-container">
+                  <label class="sci-label" for="my_module_due_date"><%= t('experiments.canvas.new_my_module_modal.due_date') %></label>
+                  <div  id="date-time-picker-my-module" class="vue-date-time-picker w-full">
+                    <input ref="input" type="hidden" class="calendar-input" id="date-time-picker-input" v-model="date" name="my_module[due_date]"  />
+                    <date-time-picker class="w-full" @cleared="clearDate" ref="vueDateTime" placeholder="<%= t('experiments.canvas.new_my_module_modal.due_date_placeholder') %>" @change="updateDate" mode="datetime"></date-time-picker>
+                  </div>
                 </div>
               </div>
             </div>
@@ -44,7 +35,7 @@
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
               <%= f.hidden_field :tag_ids%>
               <div class="form-group">
-                <label><%= t('experiments.canvas.new_my_module_modal.assigned_tags_label') %></label>
+                <label class="sci-label"><%= t('experiments.canvas.new_my_module_modal.assigned_tags_label') %></label>
                 <%= select_tag 'module-tags-selector', options_for_select([]),
                                       data: {
                                               'tags-create-url': project_create_tag_path(project_id: @experiment.project_id),
@@ -58,7 +49,7 @@
           <% if can_designate_users_to_new_task?(@experiment) %>
             <div class="row">
               <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <label><%= t('experiments.canvas.new_my_module_modal.assigned_users') %></label>
+                <label class="sci-label"><%= t('experiments.canvas.new_my_module_modal.assigned_users') %></label>
                 <%= select_tag 'my_module[user_ids]',
                               options_for_select(users.map{ |user|
                                 [
