@@ -76,7 +76,7 @@ RUN \
   librsvg2-2 \
   libvips42 \
   graphviz \
-  chromium \
+  chromium-driver \
   libfile-mimeinfo-perl && \
   npm install -g yarn && \
   yarn add puppeteer@npm:puppeteer-core && \
