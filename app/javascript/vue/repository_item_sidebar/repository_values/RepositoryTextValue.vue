@@ -17,7 +17,10 @@
     <div v-if="canEdit">
       <text-area :initialValue="colVal?.edit"
                  :noContentPlaceholder="noContentPlaceholder"
+                 :placeholder="i18n.t('repositories.item_card.repository_text_value.placeholder')"
                  :unEditableRef="`textRef`"
+                 :smartAnnotation="true"
+                 :sa_value="colVal?.view"
                  :expandable="expandable"
                  :collapsed="collapsed"
                  @toggleExpandableState="toggleExpandableState"
@@ -42,7 +45,7 @@
 
 <script>
 import repositoryValueMixin from "./mixins/repository_value.js";
-import Textarea from "../Textarea.vue";
+import Textarea from "../../shared/Textarea.vue";
 
 export default {
   name: "RepositoryTextValue",

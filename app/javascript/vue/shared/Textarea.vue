@@ -8,7 +8,7 @@
               'max-h-[4rem]': collapsed,
               'max-h-[40rem]': !collapsed
             }"
-            :placeholder="i18n.t('repositories.item_card.repository_number_value.placeholder')"
+            :placeholder="placeholder"
             v-model="value"
             @keydown="handleKeydown"
             @blur="handleBlur" />
@@ -20,7 +20,10 @@
         :class="{ 'max-h-[4rem]': collapsed,
                   'max-h-[40rem]': !collapsed, }"
         @click="enableEdit">
-    <span v-html="value || noContentPlaceholder" ></span>
+    <span v-if="smartAnnotation"
+          v-html="sa_value || noContentPlaceholder"
+          class="[&>p]:mb-0"></span>
+    <span v-else>{{ value || noContentPlaceholder }}</span>
   </div>
 </template>
 
@@ -38,8 +41,12 @@ export default {
     collapsed: { type: Boolean, required: true },
     initialValue: String,
     noContentPlaceholder: String,
-    decimals: { type: Number, default: null },
+    placeholder: String,
+    decimals: { type: Number, default: 0 },
+    isNumber: { type: Boolean, default: false },
     unEditableRef: { type: String, required: true },
+    smartAnnotation: { type: Boolean, default: false },
+    sa_value: { type: String },
   },
   mounted() {
     this.value = this.initialValue;
@@ -50,26 +57,27 @@ export default {
   beforeUpdate() {
     if (!this.$refs.textareaRef) return;
 
-    if (this.decimals !== null) this.validateNumberInput();
+    if (this.isNumber) this.enforceNumberInput();
   },
   watch: {
     initialValue: {
       handler() {
-        this.value = this.initialValue;
+        this.value = this.initialValue || '';
         this.toggleExpandableState();
       },
       deep: true,
     },
+    value() {
+      this.refreshTextareaHeight();
+    },
     editing() {
-      this.$nextTick(() => {
-        if (this.editing) {
-          this.setCaretAtEnd();
-          this.refreshTextareaHeight();
-          return;
-        }
+      if (this.editing) {
+        this.setCaretAtEnd();
+        this.refreshTextareaHeight();
+        return;
+      }
 
-        this.toggleExpandableState();
-      })
+      this.toggleExpandableState();
     },
   },
   computed: {
@@ -85,6 +93,11 @@ export default {
       }
     },
     handleBlur() {
+      if ($('.atwho-view:visible').length) return;
+
+      if (this.smartAnnotation) {
+        this.value = this.$refs.textareaRef.value.trim() // Fix for smart annotation
+      }
       this.editing = false;
       this.toggleExpandableState();
       this.$emit('update', this.value);
@@ -105,6 +118,11 @@ export default {
       if (e && $(e.target).parent().hasClass('atwho-inserted')) return;
 
       this.editing = true;
+      this.$nextTick(() => {
+        if (this.smartAnnotation) {
+          SmartAnnotation.init($(this.$refs.textareaRef), false);
+        }
+      });
     },
     refreshTextareaHeight() {
       this.$nextTick(() => {
@@ -122,7 +140,7 @@ export default {
         this.$refs.textareaRef.focus();
       });
     },
-    validateNumberInput() {
+    enforceNumberInput() {
       const regexp = this.decimals === 0 ? /[^0-9]/g : /[^0-9.]/g;
       const decimalsRegex = new RegExp(`^\\d*(\\.\\d{0,${this.decimals}})?`);
       let value = this.value;
