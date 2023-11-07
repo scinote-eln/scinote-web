@@ -58,6 +58,7 @@
         alwaysAllowSave: true,
         menuFilter: this.menuFilter,
         beforeReadOnlyChange: this.readOnlyHandler,
+        showCircularity: true,
         ToolBarProps: {
           toolList: [
             'saveTool',
