@@ -41,7 +41,8 @@ const entryList = {
   vue_components_action_toolbar: './app/javascript/packs/vue/action_toolbar.js',
   vue_components_open_vector_editor: './app/javascript/packs/vue/open_vector_editor.js',
   vue_navigation_breadcrumbs: './app/javascript/packs/vue/navigation/breadcrumbs.js',
-  vue_protocol_file_import_modal: './app/javascript/packs/vue/protocol_file_import_modal.js'
+  vue_protocol_file_import_modal: './app/javascript/packs/vue/protocol_file_import_modal.js',
+  vue_label_templates_table: './app/javascript/packs/vue/label_templates_table.js'
 }
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949
@@ -125,7 +126,10 @@ module.exports = {
   },
   resolve: {
     // Add additional file types
-    extensions: ['.js', '.jsx', '.scss', '.css', '.vue', '.less']
+    extensions: ['.js', '.jsx', '.scss', '.css', '.vue', '.less'],
+    alias: {
+      'vue$': 'vue/dist/vue.esm.js'
+    }
   },
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({
