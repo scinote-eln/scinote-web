@@ -56,6 +56,7 @@
 
   // Bind ajax for editing due dates
   function initStartDatePicker() {
+    window.initDateTimePickerComponent('#calendarStartDateContainer');
     $('.datetime-picker-container#start-date').on('dp:ready', () => {
       $('#calendarStartDate').data('dateTimePicker').onChange = () => {
         updateStartDate();
@@ -84,6 +85,7 @@
 
   // Bind ajax for editing due dates
   function initDueDatePicker() {
+    window.initDateTimePickerComponent('#calendarDueDateContainer');
     $('.datetime-picker-container#due-date').on('dp:ready', () => {
       $('#calendarDueDate').data('dateTimePicker').onChange = () => {
         updateDueDate();
