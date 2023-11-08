@@ -86,6 +86,7 @@
       return {
         editingName: false,
         editingTable: false,
+        editingCell: false,
         tableObject: null,
         nameModalOpen: false,
         reloadHeader: 0,
@@ -126,13 +127,10 @@
       }
     },
     created() {
-      this.editingCell = false;
-      window.addEventListener('beforeunload', (e) => {
-        if (this.editingCell) {
-          e.preventDefault();
-          e.returnValue = '';
-        }
-      });
+      window.addEventListener('beforeunload', this.showSaveWarning);
+    },
+    beforeDestroy() {
+      window.removeEventListener('beforeunload', this.showSaveWarning);
     },
     updated() {
       if(!this.updatingTableData) this.loadTableData();
@@ -149,6 +147,12 @@
       }
     },
     methods: {
+      showSaveWarning(e) {
+        if (this.editingCell) {
+          e.preventDefault();
+          e.returnValue = '';
+        }
+      },
       enableTableEdit() {
         if(this.locked) {
           return;
@@ -265,27 +269,25 @@
           readOnly: !this.editingTable,
           afterUnlisten: () => {
             this.updatingTableData = true;
-            setTimeout(this.updateTable, 100) // delay makes cancel button work
+            this.updateTable();
           },
-          afterSelectionEnd: () => {
+          afterChange: () => {
             if (this.editingTable == false) return;
-            this.editingCell = false;
             this.updatingTableData = true;
 
             this.$nextTick(() => {
-              this.update();
+              this.update(() => this.editingCell = false);
             });
-          },
-          beforeChange: () => {
-            this.editingCell = false;
           },
           beforeKeyDown: (e) => {
             if (e.keyCode === 27) { // esc
               this.editingCell = false;
               return;
             }
-            this.editingCell = true;
           },
+          afterBeginEditing: (e) => {
+            this.editingCell = true;
+          }
         });
         this.$nextTick(this.tableObject.render);
       }
