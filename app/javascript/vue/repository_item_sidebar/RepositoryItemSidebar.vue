@@ -187,7 +187,7 @@
 
             <!-- NAVIGATION -->
             <div v-if="isShowing" ref="navigationRef" id="navigation"
-              class="flex item-end gap-x-4 min-w-[130px] min-h-[130px] h-fit sticky top-0 right-[24px] ">
+              class="flex item-end gap-x-4 min-w-[130px] min-h-[130px] h-fit sticky top-0 right-[4px] ">
               <scroll-spy :itemsToCreate="[
                 { id: 'highlight-item-1', textId: 'text-item-1', labelAlias: 'information_label', label: 'information-label', sectionId: 'information-section' },
                 { id: 'highlight-item-2', textId: 'text-item-2', labelAlias: 'custom_columns_label', label: 'custom-columns-label', sectionId: 'custom-columns-section' },

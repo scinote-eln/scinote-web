@@ -35,7 +35,8 @@
           </div>
         </div>
       </div>
-      <div v-else-if="!error" class="flex flex-row items-center text-sn-grey font-inter text-sm font-normal leading-5 justify-between">
+      <div v-else-if="!error" class="flex flex-row items-center font-inter text-sm font-normal leading-5 justify-between"
+        :class="{ 'text-sn-dark-grey': !canEdit, 'text-sn-grey': canEdit }">
         {{ i18n.t(`repositories.item_card.repository_asset_value.${canEdit ? 'placeholder' : 'no_asset'}`) }}
       </div>
     </div>

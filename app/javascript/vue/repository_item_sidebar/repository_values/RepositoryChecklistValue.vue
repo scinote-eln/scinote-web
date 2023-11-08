@@ -5,7 +5,7 @@
     </div>
     <div v-if="checklistItems.length > 0">
       <checklist-select
-        v-if="permissions?.can_manage && !inArchivedRepositoryRow"
+        v-if="canEdit"
         @change="changeSelected"
         @update="update"
         :initialSelectedValues="colVal?.map(item => item.value)"
@@ -15,6 +15,8 @@
         :options="checklistItems"
         :placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
         :no-options-placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
+        className="h-[38px] !pl-3"
+        optionsClassName="max-h-[300px]"
       ></checklist-select>
       <div v-else
            class="text-sn-dark-grey font-inter text-sm font-normal leading-5 w-[370px] overflow-x-auto flex flex-wrap gap-1">
@@ -52,9 +54,8 @@ export default {
     colId: Number,
     colName: String,
     colVal: Array,
-    permissions: null,
     optionsPath: String,
-    inArchivedRepositoryRow: Boolean,
+    canEdit: Boolean
   },
   data() {
     return {

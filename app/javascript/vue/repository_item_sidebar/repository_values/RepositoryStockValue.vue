@@ -18,7 +18,7 @@
       <div v-if="values?.stock_formatted" :data-manage-stock-url="values?.stock_url" class="text-sn-dark-grey font-inter text-sm font-normal leading-5 stock-value">
         {{ values.stock_formatted }}
       </div>
-      <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5 stock-value">
+      <div v-else class="font-inter text-sm font-normal leading-5" :class="{ 'text-sn-dark-grey': !canEdit, 'text-sn-grey': canEdit }">
         {{ i18n.t(`repositories.item_card.repository_stock_value.${canEdit ? 'placeholder' : 'no_stock'}`) }}
       </div>
       <span class="absolute right-2 reminder" :class="{ 'top-1.5': canEdit, 'top-0': !canEdit, hidden: !values?.reminder }">

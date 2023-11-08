@@ -16,6 +16,7 @@
       class='inline-block m-0 p-0 w-full border-none shadow-none outline-none'
       :id="this.selectorId"
       :placeholder="placeholder || 'dd/mm/yyyy'"
+      :disabled="disabled"
     />
   </div>
 </template>
@@ -31,7 +32,8 @@
       useCurrent: { type: Boolean, default: true },
       defaultValue: { type: Date, default: null },
       standAlone: { type: Boolean, default: false, required: false },
-      className: { type: String, default: '' }
+      className: { type: String, default: '' },
+      disabled: { type: Boolean, default: false }
     },
     mounted() {
       $("#" + this.selectorId).datetimepicker(
