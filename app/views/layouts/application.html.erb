@@ -34,9 +34,15 @@
     <% end %>
 
     <%= favicon_link_tag "favicon.ico" %>
-    <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>
-    <%= favicon_link_tag "favicon-32.png", type: "image/png", size: "32x32" %>
-    <%= favicon_link_tag "favicon-48.png", type: "image/png", size: "48x48" %>
+    <%= favicon_link_tag "favicon-57x57.png", type: "image/png", size: "57x57" %>
+    <%= favicon_link_tag "favicon-72x72.png", type: "image/png", size: "72x72" %>
+    <%= favicon_link_tag "favicon-76x76.png", type: "image/png", size: "76x76" %>
+    <%= favicon_link_tag "favicon-114x114.png", type: "image/png", size: "114x114" %>
+    <%= favicon_link_tag "favicon-120x120.png", type: "image/png", size: "120x120" %>
+    <%= favicon_link_tag "favicon-144x144.png", type: "image/png", size: "144x144" %>
+    <%= favicon_link_tag "favicon-152x152.png", type: "image/png", size: "152x152" %>
+    <%= favicon_link_tag "favicon-180x180.png", type: "image/png", size: "180x180" %>
+
     <%= stylesheet_link_tag 'fontawesome' %>
 
     <%= stylesheet_link_tag 'prism' %>
@@ -52,6 +58,7 @@
     <%= javascript_include_tag 'vue_navigation_top_menu' %>
     <%= javascript_include_tag 'vue_legacy_datetime_picker' %>
 
+    <style> :root { --navigator-navigation-width: <%= session[:navigator_width] || Constants::DEFAULT_NAV_WIDTH %>px; } </style>
   </head>
   <body
     class="<%= yield :body_class %> <%= 'navigator-collapsed' if !@navigator || session[:navigator_collapsed] %> <%= 'w-[98%]' if params[:controller] == 'label_templates' && params[:action] == 'show'%>"

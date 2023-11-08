@@ -45,22 +45,17 @@ RUN \
 FROM ruby:3.2.2-bookworm AS runner
 MAINTAINER SciNote <info@scinote.net>
 
-ARG WKHTMLTOPDF_PACKAGE_URL=https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.bookworm_amd64.deb
-
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 RUN \
   --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked \
-  wget -q -O /tmp/wkhtmltox_amd64.deb $WKHTMLTOPDF_PACKAGE_URL && \
   DEBIAN_FRONTEND=noninteractive \
   apt-get update -qq && \
   apt-get install -y --no-install-recommends \
   fonts-droid-fallback \
   fonts-noto-mono \
   fonts-wqy-microhei \
-  fonts-wqy-zenhei \
-  /tmp/wkhtmltox_amd64.deb && \
-  rm /tmp/wkhtmltox_amd64.deb
+  fonts-wqy-zenhei
 
 RUN \
   --mount=type=cache,target=/var/cache/apt,sharing=locked \
@@ -81,7 +76,10 @@ RUN \
   librsvg2-2 \
   libvips42 \
   graphviz \
+  chromium-driver \
   libfile-mimeinfo-perl && \
+  npm install -g yarn && \
+  yarn add puppeteer@npm:puppeteer-core && \
   apt-get install -y libreoffice && \
   ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so
 

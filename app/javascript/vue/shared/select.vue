@@ -17,6 +17,7 @@
           :key="option[0]"
           @mousedown.prevent.stop="setValue(option[0])"
           class="sn-select__option p-3 rounded"
+          :title="option[1]"
           :class="{
             'select__option-placeholder': option[2],
             '!bg-sn-super-light-blue': option[0] == value,

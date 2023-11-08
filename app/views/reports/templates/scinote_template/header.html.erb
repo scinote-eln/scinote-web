@@ -1,24 +1,40 @@
+<!-- margins: top:2cm,bottom:2cm,left:1cm,right:1.5cm -->
+<!-- First line represents margins for pdf generation by Grover -->
 <style>
- .print-header {
+.print-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    line-height: 40px;
+    font-size: 13px;
+    width: 100%;
+    position: relative;
+}
+
+.print-header::after {
+    content: "";
+    position: absolute;
+    left: 40px;
+    right: 40px;
+    bottom: 0;
     border-bottom: 2px solid #a0a0a8;
-    line-height: 50px;
-  }
+    z-index: -1;
+}
 
-  .logo-img {
+.logo-img {
     display: inline-block;
-    margin: 0 0 0 30px;
-  }
+    margin: 0 0 0 70px;
+}
 
-  img {
-    width: 100px;
-  }
+img {
+    width: 80px;
+}
 
-  .page-numbers {
+.page-numbers {
     display: inline-block;
-    float: right;
-    margin: 0 30px 0 0;
+    padding-right: 60px;
     white-space: nowrap;
-  }
+}
 </style>
 <div class="print-header">
   <div class="logo-img">
@@ -28,7 +44,8 @@
       <%= image_tag logo %>
     <% end %>
   </div>
-  <div class="page-numbers pagination" data-page-offset="0">
-    Page <span class="page"></span> of <span class="topage"></span>
+
+  <div class="page-numbers">
+    Page <span class="pageNumber"></span> of <span class="totalPages"></span>
   </div>
 </div>

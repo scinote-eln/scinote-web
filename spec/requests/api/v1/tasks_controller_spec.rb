@@ -52,7 +52,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
     it 'Response with correct tasks, only active' do
       hash_body = nil
       get api_v1_team_project_experiment_tasks_path(
-        team_id: @teams.first.id,
+        team_id: @team1.id,
         project_id: @valid_project,
         experiment_id: @valid_experiment,
         filter: { archived: false }
@@ -71,7 +71,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
     it 'Response with correct tasks, only archived' do
       hash_body = nil
       get api_v1_team_project_experiment_tasks_path(
-        team_id: @teams.first.id,
+        team_id: @team1.id,
         project_id: @valid_project,
         experiment_id: @valid_experiment,
         filter: { archived: true }
@@ -285,7 +285,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
       @valid_headers['Content-Type'] = 'application/json'
     end
 
-    let(:task) { @valid_experiment.my_modules.take }
+    let(:task) { @valid_experiment.my_modules.active.first }
 
     let(:action) do
       patch(

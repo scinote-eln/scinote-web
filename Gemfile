@@ -28,8 +28,8 @@ gem 'omniauth-rails_csrf_protection', '~> 1.0'
 
 # Gems for API implementation
 gem 'active_model_serializers', '~> 0.10.7'
-gem 'json-jwt'
 gem 'jsonapi-renderer', '~> 0.2.2'
+gem 'json-jwt'
 gem 'jwt', '~> 1.5'
 gem 'kaminari'
 gem 'rack-attack'
@@ -50,6 +50,7 @@ gem 'deface', '~> 1.9'
 gem 'down', '~> 5.0'
 gem 'faker' # Generate fake data
 gem 'fastimage' # Light gem to get image resolution
+gem 'grover'
 gem 'httparty', '~> 0.21.0'
 gem 'i18n-js', '~> 3.6' # Localization in javascript files
 gem 'jbuilder' # JSON structures via a Builder-style DSL
@@ -62,7 +63,6 @@ gem 'roo', '~> 2.10.0' # Spreadsheet parser
 gem 'rotp'
 gem 'rqrcode', '~> 2.0' # QR code generator
 gem 'rubyzip', '>= 2.3.0' # will load new rubyzip version
-gem 'zip-zip' # will load compatibility for old rubyzip API.
 gem 'scenic', '~> 1.4'
 gem 'sdoc', '~> 1.0', group: :doc
 gem 'silencer' # Silence certain Rails logs
@@ -70,6 +70,7 @@ gem 'sneaky-save', git: 'https://github.com/einzige/sneaky-save'
 gem 'turbolinks', '~> 5.2.0'
 gem 'underscore-rails'
 gem 'wicked_pdf'
+gem 'zip-zip' # will load compatibility for old rubyzip API.
 
 gem 'aws-sdk-lambda'
 gem 'aws-sdk-rails'
@@ -86,8 +87,8 @@ gem 'discard'
 
 gem 'graphviz'
 
-gem 'jsbundling-rails'
 gem 'cssbundling-rails'
+gem 'jsbundling-rails'
 
 gem 'tailwindcss-rails', '~> 2.0'
 

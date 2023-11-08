@@ -44,7 +44,7 @@ RSpec.describe "Api::V1::ExperimentsController", type: :request do
 
     it 'Response with correct experiments, only active' do
       hash_body = nil
-      get api_v1_team_project_experiments_path(team_id: @teams.first.id,
+      get api_v1_team_project_experiments_path(team_id: @team1.id,
         project_id: @valid_project, filter: { archived: false }), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data].pluck('attributes').pluck('archived').none?).to be(true)
@@ -60,7 +60,7 @@ RSpec.describe "Api::V1::ExperimentsController", type: :request do
 
     it 'Response with correct experiments, only archived' do
       hash_body = nil
-      get api_v1_team_project_experiments_path(team_id: @teams.first.id,
+      get api_v1_team_project_experiments_path(team_id: @team1.id,
         project_id: @valid_project, filter: { archived: true }), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
       expect(hash_body[:data].pluck('attributes').pluck('archived').all?).to be(true)
@@ -241,7 +241,7 @@ RSpec.describe "Api::V1::ExperimentsController", type: :request do
   describe 'PATCH experiment, #update' do
     before :all do
       @valid_headers['Content-Type'] = 'application/json'
-      @experiment = @valid_project.experiments.first
+      @experiment = @valid_project.experiments.active.first
     end
 
     let(:action) do
