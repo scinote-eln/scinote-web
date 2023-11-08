@@ -19,7 +19,7 @@ window.initDateTimePickerComponent = (id) => {
     },
     mounted() {
       if (this.$refs.input.dataset.default) {
-        let defaultDate =  new Date(this.$refs.input.dataset.default);
+        const defaultDate = new Date(this.$refs.input.dataset.default.replace(/-/g, '/')); // Safari fix
         this.date = this.formatDate(defaultDate);
         this.$refs.vueDateTime.datetime = defaultDate;
       } else if (this.date) {
