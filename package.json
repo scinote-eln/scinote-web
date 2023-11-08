@@ -82,7 +82,6 @@
     "twemoji": "^12.1.4",
     "vue": "^3.3.4",
     "vue-loader": "^16.0.0",
-    "vue-turbolinks": "^2.2.1",
     "vue3-draggable-resizable": "^1.6.5",
     "vue3-perfect-scrollbar": "^1.6.1",
     "vuedraggable": "^4.1.0",

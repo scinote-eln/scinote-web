@@ -1,6 +1,6 @@
-import TurbolinksAdapter from 'vue-turbolinks';
 import { createApp } from 'vue/dist/vue.esm-bundler.js';
 import PrintModalContainer from '../../vue/repository_print_modal/container.vue';
+import { handleTurbolinks } from './helpers/turbolinks.js';
 
 function initPrintModalComponent() {
   const container = $('.print-label-modal-container');
@@ -29,9 +29,9 @@ function initPrintModalComponent() {
       }
     });
     app.component('PrintModalContainer', PrintModalContainer);
-    app.use(TurbolinksAdapter);
     app.config.globalProperties.i18n = window.I18n;
     app.mount('.print-label-modal-container');
+    handleTurbolinks(app);
     window.PrintModalComponent = app;
   }
 }

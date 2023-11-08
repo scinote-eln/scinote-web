@@ -7785,11 +7785,6 @@ vue-loader@^16.0.0:
     hash-sum "^2.0.0"
     loader-utils "^2.0.0"
 
-vue-turbolinks@^2.2.1:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/vue-turbolinks/-/vue-turbolinks-2.2.2.tgz#6b7b5c4120f5586907ef977be4b63a734bf8cd36"
-  integrity sha512-pPO2Fr+1UgdhUK9dc5OhjLSeYi5LZAm/VZBXOVQgLHCO31bRjAof/+W/e/6SHCbnb1xdZb1gW5T9MX0k9ejSAQ==
-
 vue3-draggable-resizable@^1.6.5:
   version "1.6.5"
   resolved "https://registry.yarnpkg.com/vue3-draggable-resizable/-/vue3-draggable-resizable-1.6.5.tgz#021b2c00bff2885ab4fa5981e03bf4f56f12cdac"

@@ -286,7 +286,7 @@
         })
       });
     },
-    beforeDestroy() {
+    beforeUnmount() {
       if (!this.inRepository) {
         window.removeEventListener('scroll', this.initStackableHeaders, false);
       }

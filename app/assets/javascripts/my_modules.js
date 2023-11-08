@@ -56,12 +56,12 @@
 
   // Bind ajax for editing due dates
   function initStartDatePicker() {
-    window.initDateTimePickerComponent('#calendarStartDateContainer');
     $('.datetime-picker-container#start-date').on('dp:ready', () => {
       $('#calendarStartDate').data('dateTimePicker').onChange = () => {
         updateStartDate();
       };
     });
+    window.initDateTimePickerComponent('#calendarStartDateContainer');
   }
 
   function updateDueDate() {
@@ -85,12 +85,12 @@
 
   // Bind ajax for editing due dates
   function initDueDatePicker() {
-    window.initDateTimePickerComponent('#calendarDueDateContainer');
     $('.datetime-picker-container#due-date').on('dp:ready', () => {
       $('#calendarDueDate').data('dateTimePicker').onChange = () => {
         updateDueDate();
       };
     });
+    window.initDateTimePickerComponent('#calendarDueDateContainer');
   }
 
   function initTagsSelector() {
