@@ -749,7 +749,7 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       )
     end
 
-    it 'Response with inventory cell, stock cell, missing stock unit' do
+    it 'Response with inventory cell, stock cell, empty stock unit' do
       hash_body = nil
       empty_item = create(:repository_row, repository: @valid_inventory)
       invalid_file_body = @valid_stock_body.deep_dup
@@ -759,9 +759,15 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
         inventory_id: @valid_inventory.id,
         item_id: empty_item.id
       ), params: invalid_file_body.to_json, headers: @valid_headers
-      expect(response).to have_http_status 404
+      expect(response).to have_http_status 201
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body['errors'][0]).to include('status': 404)
+      expect(hash_body[:data]).to match(
+        JSON.parse(
+          ActiveModelSerializers::SerializableResource
+            .new(RepositoryCell.last, serializer: Api::V1::InventoryCellSerializer)
+            .to_json
+        )['data']
+      )
     end
 
     it 'Response with inventory cell, stock cell, missing amount' do
