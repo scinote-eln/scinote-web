@@ -1,34 +1,29 @@
 <template>
   <div class="date-time-picker grow">
     <VueDatePicker
-      v-if="mode == 'datetime'"
-      v-model="datetime"
+      v-model="compDatetime"
       :teleport="teleport"
-      text-input
+      :text-input="true"
+      :no-today="true"
       :clearable="clearable"
-      time-picker-inline
-      :format="dateTimeFormat"
-      :placeholder="placeholder" ></VueDatePicker>
-
-    <VueDatePicker
-      v-if="mode == 'date'"
-      v-model="datetime"
-      :teleport="teleport"
-      :clearable="clearable"
-      text-input
-      :format="dateFormat"
-      :enable-time-picker="false"
-      :placeholder="placeholder" ></VueDatePicker>
-
-    <VueDatePicker
-      v-if="mode == 'time'"
-      v-model="time"
-      :teleport="teleport"
-      :clearable="clearable"
-      text-input
-      :format="timeFormat"
-      time-picker
-      :placeholder="placeholder" ></VueDatePicker>
+      :format="format"
+      :month-change-on-scroll="false"
+      :six-weeks="true"
+      :markers="markers"
+      :time-picker-inline="mode == 'datetime'"
+      :enable-time-picker="mode == 'datetime'"
+      :time-picker="mode == 'time'"
+      :placeholder="placeholder" >
+        <template #arrow-right>
+            <img class="slot-icon" src="/images/calendar/navigate_next.svg"/>
+        </template>
+        <template #arrow-left>
+            <img class="slot-icon" src="/images/calendar/navigate_before.svg"/>
+        </template>
+        <template #input-icon>
+            <img class="input-slot-image" src="/images/calendar/calendar.svg"/>
+        </template>
+    </VueDatePicker>
   </div>
 </template>
 
@@ -47,7 +42,14 @@
     data() {
       return {
         datetime: this.defaultValue,
-        time: null
+        time: null,
+        markers: [
+          {
+            date: new Date(),
+            type: 'dot',
+            color: '#3B99FD',
+          },
+        ]
       }
     },
     created() {
@@ -106,15 +108,27 @@
       }
     },
     computed: {
-      dateTimeFormat() {
+      compDatetime: {
+        get () {
+          if (this.mode == 'time') {
+            return this.time
+          } else {
+            return this.datetime
+          }
+        },
+        set (val) {
+          if (this.mode == 'time') {
+            this.time = val
+          } else {
+            this.datetime = val
+          }
+        }
+      },
+      format() {
+        if (this.mode == 'time') return 'HH:mm'
+        if (this.mode == 'date') return document.body.dataset.datetimePickerFormatVue
         return `${document.body.dataset.datetimePickerFormatVue} HH:mm`
-      },
-      dateFormat() {
-        return document.body.dataset.datetimePickerFormatVue
-      },
-      timeFormat() {
-        return 'HH:mm'
-      },
+      }
     }
   }
 </script>
