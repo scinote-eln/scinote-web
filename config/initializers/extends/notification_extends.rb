@@ -97,6 +97,10 @@ class NotificationExtends
     change_users_role_on_team_activity: {
       code: 94,
       recipients_module: :AssignedRecipients
+    },
+    giot_activity: {
+      code: 95,
+      recipients_module: :MyModuleDesignatedRecipients
     }
   }
 
@@ -120,6 +124,9 @@ class NotificationExtends
         add_comment_to_result_activity
         edit_result_comment_activity
         delete_result_comment_activity
+      ],
+      giot: %I[
+        giot_activity
       ]
     },
     project_experiment: {
