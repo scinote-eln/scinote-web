@@ -1,7 +1,6 @@
-import TurbolinksAdapter from 'vue-turbolinks';
 import { createApp } from 'vue/dist/vue.esm-bundler.js';
 import DateTimePicker from '../../../vue/shared/date_time_picker.vue';
-
+import { handleTurbolinks } from '../helpers/turbolinks.js';
 /*
 <div  id="date-time-picker" class="vue-date-time-picker">
   <input ref="input" type="hidden" v-model="date" id="legacy-id" data-default="" />
@@ -66,11 +65,9 @@ window.initDateTimePickerComponent = (id) => {
     }
   });
   app.component('DateTimePicker', DateTimePicker);
-  app.use(TurbolinksAdapter);
   app.config.globalProperties.i18n = window.I18n;
   app.mount(id);
-
-
+  handleTurbolinks(app);
 };
 
 document.addEventListener('turbolinks:load', () => {

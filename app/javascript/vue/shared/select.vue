@@ -70,7 +70,7 @@
     mounted() {
       document.addEventListener('scroll', this.updateOptionPosition);
     },
-    beforeDestroy() {
+    beforeUnmount() {
       document.removeEventListener('scroll', this.updateOptionPosition);
     },
     methods: {

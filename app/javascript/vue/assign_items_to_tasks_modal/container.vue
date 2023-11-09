@@ -184,7 +184,7 @@ export default {
       this.$emit("close");
     });
   },
-  beforeDestroy() {
+  beforeUnmount() {
     delete window.AssignItemsToTaskModalComponent;
   },
   computed: {
