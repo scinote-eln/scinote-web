@@ -6,7 +6,7 @@ class MigrateNotificationToNoticed < ActiveRecord::Migration[7.0]
   end
 
   def up
-    add_column :notifications, :params, :jsonb
+    add_column :notifications, :params, :jsonb, default: {}, null: false
     add_column :notifications, :type, :string
     add_column :notifications, :read_at, :datetime
     add_reference :notifications, :recipient, polymorphic: true
@@ -19,9 +19,8 @@ class MigrateNotificationToNoticed < ActiveRecord::Migration[7.0]
       5 => 'DeliveryNotification',
       7 => 'DeliveryNotification'
     }
-
     UserNotification.includes(:notification).find_each do |user_notification|
-      notification = user_notification.notification.dup
+      notification = user_notification.notification
 
       new_type = type_mapping[notification.type_of]
       new_type ||= 'GeneralNotification'
@@ -33,9 +32,10 @@ class MigrateNotificationToNoticed < ActiveRecord::Migration[7.0]
       }
 
       params[:error] = notification.type_of == 7 if new_type == 'DeliveryNotification'
-      notification.update!(
+      Notification.create!(
         params: params,
         type: new_type,
+        type_of: notification.type_of,
         read_at: (user_notification.updated_at if user_notification.checked),
         recipient_id: user_notification.user_id,
         recipient_type: 'User',
@@ -49,8 +49,6 @@ class MigrateNotificationToNoticed < ActiveRecord::Migration[7.0]
 
     drop_table :user_notifications
     change_column_null :notifications, :type, false
-    change_column_null :notifications, :params, false
-    change_column_default :notifications, :params, {}
 
     remove_column :notifications, :type_of
     remove_column :notifications, :title
