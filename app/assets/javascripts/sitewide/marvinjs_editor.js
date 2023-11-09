@@ -263,6 +263,7 @@ var MarvinJsEditorApi = (function() {
         } else if (config.mode === 'edit') {
           config.objectType = 'Asset';
           MarvinJsEditor.update(config);
+          location.reload();
         } else if (config.mode === 'new-tinymce') {
           config.objectType = 'TinyMceAsset';
           MarvinJsEditor.save(config);
