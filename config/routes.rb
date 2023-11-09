@@ -58,7 +58,7 @@ Rails.application.routes.draw do
       end
       collection do
         post :duplicate
-        post :delete
+        delete :delete
         get :datatable
         get :template_tags
         get :zpl_preview

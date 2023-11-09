@@ -50,13 +50,11 @@ class LabelTemplatesController < ApplicationController
       label_template.last_modified_by = current_user
       label_template.save!
       log_activity(:label_template_created, label_template)
-      redirect_to label_template_path(label_template, new_label: true)
+      render json: { redirect_url: label_template_path(label_template, new_label: true) }
     end
   rescue StandardError => e
     Rails.logger.error(e.message)
     Rails.logger.error(e.backtrace.join("\n"))
-    flash[:error] = I18n.t('errors.general')
-    redirect_to label_templates_path
   end
 
   def update
@@ -154,7 +152,7 @@ class LabelTemplatesController < ApplicationController
       actions:
         Toolbars::LabelTemplatesService.new(
           current_user,
-          label_template_ids: params[:label_template_ids].split(',')
+          label_template_ids: params[:item_ids].split(',')
         ).actions
     }
   end

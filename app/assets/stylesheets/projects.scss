@@ -568,6 +568,7 @@ li.module-hover {
 // New projects page
 
 .projects-index {
+  --content-header-size: 9em;
   .content-header {
     height: var(--content-header-size);
   }

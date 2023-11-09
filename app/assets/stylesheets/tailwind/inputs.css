@@ -5,7 +5,7 @@
   }
 
   .sci-input-container-v2 {
-    @apply relative h-[2.75rem] flex items-center;
+    @apply relative h-[2.75rem] flex items-center transition-all;
   }
 
   .sci-input-container-v2.input-sm {

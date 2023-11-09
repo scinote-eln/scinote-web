@@ -99,8 +99,10 @@
       updateOptionPosition() {
         const container = $(this.$refs.container);
         const rect = container.get(0).getBoundingClientRect();
+        const screenHeight = window.innerHeight;
         let width = rect.width;
         let top = rect.top + rect.height;
+        let bottom = screenHeight - rect.bottom + rect.height;
         let left = rect.left;
 
         const modal = container.parents('.modal-content');
@@ -108,6 +110,7 @@
         if (modal.length > 0) {
           const modalRect = modal.get(0).getBoundingClientRect();
           top -= modalRect.top;
+          bottom -= modalRect.bottom;
           left -= modalRect.left;
         }
 
