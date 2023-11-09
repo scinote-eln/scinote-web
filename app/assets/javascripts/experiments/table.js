@@ -609,9 +609,11 @@ var ExperimnetTable = {
 
     $.get(dataUrl, tableParams, (result) => {
       $(this.table).find('.table-row-placeholder, .table-row-placeholder-divider').remove();
-      this.appendRows(result.data);
-      this.initDueDatePicker(result.data);
-      this.handleNoResults();
+      setTimeout(() => {
+        this.appendRows(result.data);
+        this.initDueDatePicker(result.data);
+        this.handleNoResults();
+      }, 100);
 
       InfiniteScroll.init(this.table, {
         url: dataUrl,
@@ -621,9 +623,11 @@ var ExperimnetTable = {
         pageSize: this.pageSize,
         lastPage: !result.next_page,
         customResponse: (response) => {
-          this.appendRows(response.data);
-          this.initDueDatePicker(response.data);
-          this.initProvisioningStatusPolling();
+          setTimeout(() => {
+            this.appendRows(response.data);
+            this.initDueDatePicker(response.data);
+            this.initProvisioningStatusPolling();
+          }, 100);
         },
         customParams: (params) => {
           return { ...params, ...tableParams };
