@@ -1,11 +1,10 @@
 import { createApp } from 'vue/dist/vue.esm-bundler.js';
 import RepositorySearchContainer from '../../vue/repository_search/container.vue';
-import { handleTurbolinks } from './helpers/turbolinks.js';
+import { mountWithTurbolinks } from './helpers/turbolinks.js';
 
 window.initRepositorySearch = () => {
   const app = createApp({});
   app.component('RepositorySearchContainer', RepositorySearchContainer);
   app.config.globalProperties.i18n = window.I18n;
-  window.RepositorySearchComponent = app.mount('#inventorySearchComponent');
-  handleTurbolinks(app);
+  mountWithTurbolinks(app, '#inventorySearchComponent');
 }

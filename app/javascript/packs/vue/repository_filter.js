@@ -2,7 +2,7 @@
 
 import { createApp } from 'vue/dist/vue.esm-bundler.js';
 import FilterContainer from '../../vue/repository_filter/container.vue';
-import { handleTurbolinks } from './helpers/turbolinks.js';
+import { mountWithTurbolinks } from './helpers/turbolinks.js';
 
 const DEFAULT_FILTERS = [
   {
@@ -150,8 +150,7 @@ window.initRepositoryFilter = () => {
   app.component('FilterContainer', FilterContainer);
   app.config.globalProperties.i18n = window.I18n;
   app.config.globalProperties.dateFormat = $('#filterContainer').data('date-format');
-  window.repositoryFilterObject = app.mount('#filterContainer');
-  handleTurbolinks(app);
+  window.repositoryFilterObject = mountWithTurbolinks(app, '#filterContainer');
 
   $('#filterContainer').on('click', (e) => {
     $('#filterContainer .dropdown-selector-container').removeClass('open')

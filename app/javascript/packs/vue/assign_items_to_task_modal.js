@@ -3,7 +3,7 @@ import PerfectScrollbar from 'vue3-perfect-scrollbar';
 import { createApp } from 'vue/dist/vue.esm-bundler.js';
 import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css';
 import AssignItemsToTaskModalContainer from '../../vue/assign_items_to_tasks_modal/container.vue';
-import { handleTurbolinks } from './helpers/turbolinks.js';
+import { mountWithTurbolinks } from './helpers/turbolinks.js';
 
 function initAssignItemsToTaskModalComponent() {
   const container = $('.assign-items-to-task-modal-container');
@@ -34,8 +34,7 @@ function initAssignItemsToTaskModalComponent() {
     app.component('AssignItemsToTaskModalContainer', AssignItemsToTaskModalContainer);
     app.use(PerfectScrollbar);
     app.config.globalProperties.i18n = window.I18n;
-    window.AssignItemsToTaskModalComponentContainer = app.mount('.assign-items-to-task-modal-container');
-    handleTurbolinks(app);
+    window.AssignItemsToTaskModalComponentContainer = mountWithTurbolinks(app, '.assign-items-to-task-modal-container');
   }
 }
 
