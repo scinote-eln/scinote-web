@@ -47,9 +47,7 @@ function addNavigationNavigatorContainer() {
   app.component('NavigatorContainer', NavigatorContainer);
   app.use(PerfectScrollbar);
   app.config.globalProperties.i18n = window.I18n;
-  app.mount('#sciNavigationNavigatorContainer');
-
-  window.navigatorContainer = app;
+  window.navigatorContainer = app.mount('#sciNavigationNavigatorContainer');
 }
 
 if (document.readyState !== 'loading') {

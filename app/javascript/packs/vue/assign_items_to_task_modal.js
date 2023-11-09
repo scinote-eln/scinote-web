@@ -34,10 +34,8 @@ function initAssignItemsToTaskModalComponent() {
     app.component('AssignItemsToTaskModalContainer', AssignItemsToTaskModalContainer);
     app.use(PerfectScrollbar);
     app.config.globalProperties.i18n = window.I18n;
-    app.mount('.assign-items-to-task-modal-container');
+    window.AssignItemsToTaskModalComponentContainer = app.mount('.assign-items-to-task-modal-container');
     handleTurbolinks(app);
-
-    window.AssignItemsToTaskModalComponentContainer = app;
   }
 }
 

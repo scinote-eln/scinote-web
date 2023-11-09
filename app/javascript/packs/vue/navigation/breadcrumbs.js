@@ -10,6 +10,5 @@ const app = createApp({});
 app.component('Breadcrumbs', Breadcrumbs);
 app.use(PerfectScrollbar);
 app.config.globalProperties.i18n = window.I18n;
-app.mount('#breadcrumbs');
+window.breadcrumbsComponent = app.mount('#breadcrumbs');
 handleTurbolinks(app);
-window.breadcrumbsComponent = app;

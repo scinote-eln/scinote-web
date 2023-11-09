@@ -150,7 +150,7 @@ window.initRepositoryFilter = () => {
   app.component('FilterContainer', FilterContainer);
   app.config.globalProperties.i18n = window.I18n;
   app.config.globalProperties.dateFormat = $('#filterContainer').data('date-format');
-  app.mount('#filterContainer');
+  window.repositoryFilterObject = app.mount('#filterContainer');
   handleTurbolinks(app);
 
   $('#filterContainer').on('click', (e) => {
@@ -161,6 +161,4 @@ window.initRepositoryFilter = () => {
   $('#filtersDropdownButton').on('show.bs.dropdown', () => {
     $('#filtersColumnsDropdown, #savedFiltersContainer').removeClass('open');
   });
-
-  window.repositoryFilterObject = app;
 };

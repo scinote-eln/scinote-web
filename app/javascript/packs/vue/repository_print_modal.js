@@ -30,9 +30,8 @@ function initPrintModalComponent() {
     });
     app.component('PrintModalContainer', PrintModalContainer);
     app.config.globalProperties.i18n = window.I18n;
-    app.mount('.print-label-modal-container');
+    window.PrintModalComponent = app.mount('.print-label-modal-container');
     handleTurbolinks(app);
-    window.PrintModalComponent = app;
   }
 }
 
