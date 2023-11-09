@@ -363,7 +363,7 @@ export default {
         for (const [id, customColumn] of Object.entries(response)) {
            this.customColumns[id - 1]["value"] = customColumn.value;
         }
-        RepositoryDatatable.reload();
+        if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
       });
     }
   }

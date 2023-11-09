@@ -40,7 +40,7 @@
             :dateOnly="true"
             :defaultValue="dateValue(timeTo?.datetime)"
             :standAlone="true"
-            :dateClassName="hasMonthText() ? 'w-[135px]' : 'w-[90px]'"
+            :dateClassName="hasMonthText() ? 'w-[135px]' : 'ml-2 w-[90px]'"
             />
           </div>
         </div>
@@ -86,7 +86,7 @@
               :timeOnly="false"
               :dateOnly="false"
               :standAlone="true"
-              :dateClassName="hasMonthText() ? 'w-[135px]' : 'w-[90px]'"
+              :dateClassName="hasMonthText() ? 'w-[135px]' : 'ml-2 w-[90px]'"
               timeClassName="w-11"
             />
           </div>
@@ -130,7 +130,7 @@
               :timeOnly="true"
               :defaultValue="dateValue(timeTo?.datetime)"
               :standAlone="true"
-              timeClassName="w-11"
+              timeClassName="ml-2 w-11"
             />
           </div>
         </div>
