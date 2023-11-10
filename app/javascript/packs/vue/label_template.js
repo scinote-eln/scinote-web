@@ -1,6 +1,6 @@
 import { createApp } from 'vue/dist/vue.esm-bundler.js';
 import LabelTemplateContainer from '../../vue/label_template/container.vue';
-import { handleTurbolinks } from './helpers/turbolinks.js';
+import { mountWithTurbolinks } from './helpers/turbolinks.js';
 
 window.initLabelTemplateComponent = () => {
   const app = createApp({
@@ -15,8 +15,7 @@ window.initLabelTemplateComponent = () => {
   });
   app.component('LabelTemplateContainer', LabelTemplateContainer);
   app.config.globalProperties.i18n = window.I18n;
-  app.mount('#labelTemplateContainer');
-  handleTurbolinks(app);
+  mountWithTurbolinks(app, '#labelTemplateContainer');
 };
 
 initLabelTemplateComponent();
