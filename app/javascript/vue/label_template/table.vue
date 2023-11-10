@@ -97,11 +97,10 @@ export default {
   },
   methods: {
     labelNameRenderer(params) {
-      let name = params.data.name;
-      let editUrl = params.data.attributes.edit_url;
+      let editUrl = params.data.urls.show;
       return `<a href="${editUrl}">
-                ${name.icon_image_tag}
-                ${name.name}
+                ${params.data.icon_url}
+                ${params.data.name}
               </a>`
     },
     defaultRenderer(params) {

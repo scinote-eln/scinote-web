@@ -13,7 +13,7 @@
     >
       <label-templates-table
         :actions-url="'<%= actions_toolbar_label_templates_url %>'"
-        :data-source="'<%= datatable_label_templates_path(format: :json) %>'"
+        :data-source="'<%= label_templates_path(format: :json) %>'"
         :create-url="'<%= label_templates_path if can_manage_label_templates?(current_team) %>'"
         :sync-fluics-url="'<%= sync_fluics_templates_label_templates_path if can_manage_label_templates?(current_team) %>'"
       />

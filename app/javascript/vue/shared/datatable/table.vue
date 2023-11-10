@@ -158,6 +158,9 @@ export default {
     window.removeEventListener('resize', this.resize);
   },
   methods: {
+    formatData(data) {
+      return data.map( (item) => Object.assign({}, item.attributes, { id: item.id }) );
+    },
     resize() {
       if (this.tableState) return;
 
@@ -175,8 +178,8 @@ export default {
         })
         .then((response) => {
           this.selectedRows = [];
-          this.gridApi.setRowData(response.data.data);
-          this.totalPage = response.data.pageTotal;
+          this.gridApi.setRowData(this.formatData(response.data.data));
+          this.totalPage = response.data.meta.total_pages;
           this.$emit('tableReloaded');
         })
     },

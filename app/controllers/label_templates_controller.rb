@@ -16,7 +16,8 @@ class LabelTemplatesController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        render json: @label_templates, each_serializer: LabelTemplateSerializer, user: current_user
+        label_templates = Lists::LabelTemplatesService.new(@label_templates, params).call
+        render json: label_templates, each_serializer: Lists::LabelTemplateSerializer, user: current_user, meta: pagination_dict(label_templates)
       end
       format.html do
         unless LabelTemplate.enabled?
@@ -26,13 +27,6 @@ class LabelTemplatesController < ApplicationController
         render 'index'
       end
     end
-  end
-
-  def datatable
-    render json: ::LabelTemplateDatatable.new(
-      view_context,
-      @label_templates
-    )
   end
 
   def show
