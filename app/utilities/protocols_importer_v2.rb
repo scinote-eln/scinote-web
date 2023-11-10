@@ -137,7 +137,7 @@ class ProtocolsImporterV2
       step: step
     )
 
-    step_text.update!(text: populate_rte(params, step_text))
+    step_text.update!(text: populate_rte(params, step_text), name: params[:name])
 
     create_in_step!(step, step_text)
   end

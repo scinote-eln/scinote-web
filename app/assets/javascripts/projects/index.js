@@ -7,7 +7,8 @@
 // - refresh project users tab after manage user modal is closed
 // - refactor view handling using library, ex. backbone.js
 
-/* global HelperModule dropdownSelector Sidebar Turbolinks filterDropdown InfiniteScroll AsyncDropdown GLOBAL_CONSTANTS */
+/* global HelperModule dropdownSelector Turbolinks filterDropdown InfiniteScroll
+ AsyncDropdown GLOBAL_CONSTANTS loadPlaceHolder */
 /* eslint-disable no-use-before-define */
 
 var ProjectsIndex = (function() {
@@ -403,14 +404,6 @@ var ProjectsIndex = (function() {
     });
   }
 
-  function loadPlaceHolder() {
-    let palceholder = '';
-    $.each(Array(pageSize), function() {
-      palceholder += $('#projectPlaceholder').html();
-    });
-    $(palceholder).insertAfter($(cardsWrapper).find('.table-header'));
-  }
-
   function initCardData(viewContainer, data) {
     viewContainer.data('projects-cards-url', data.projects_cards_url);
     viewContainer.removeClass('no-results no-data');
@@ -437,7 +430,7 @@ var ProjectsIndex = (function() {
       view_mode: $('.projects-index').data('view-mode'),
       sort: projectsCurrentSort,
       search: projectsViewSearch,
-      members: membersFilter,
+      members: membersFilter && membersFilter.map(m => m.value),
       created_on_from: createdOnFromFilter,
       created_on_to: createdOnToFilter,
       folders_search: lookInsideFolders,
@@ -447,7 +440,7 @@ var ProjectsIndex = (function() {
     var viewContainer = $(cardsWrapper);
     var cardsUrl = viewContainer.data('projects-cards-url');
 
-    loadPlaceHolder();
+    loadPlaceHolder($(cardsWrapper), $('#projectPlaceholder'), '.project-placeholder');
     $.ajax({
       url: cardsUrl,
       type: 'GET',
@@ -473,7 +466,10 @@ var ProjectsIndex = (function() {
         }
 
         if (data.filtered) {
-          InfiniteScroll.removeScroll(cardsWrapper);
+          $(projectsWrapper).find('.project-list-end-placeholder').remove();
+          if (window.innerWidth > document.body.clientWidth) {
+            $($($(cardsWrapper).data('config').endOfListTemplate).html()).appendTo($(cardsWrapper));
+          }
         } else {
           InfiniteScroll.init(cardsWrapper, {
             url: cardsUrl,
@@ -490,7 +486,7 @@ var ProjectsIndex = (function() {
             }
           });
         }
-      },
+    },
       error: function() {
         viewContainer.html('Error loading project list');
       },
@@ -553,6 +549,8 @@ var ProjectsIndex = (function() {
     var datePicker = $field.data('DateTimePicker');
     if (datePicker && datePicker.date()) {
       return datePicker.date()._d.toUTCString();
+    } else if ($field.val()) {
+      return moment($field.val(), $field.data('dateFormat'))._d.toUTCString();
     }
     return null;
   }
@@ -569,9 +567,9 @@ var ProjectsIndex = (function() {
     let $textFilter = $('#textSearchFilterInput', $projectsFilter);
 
     function getFilterValues() {
-      createdOnFromFilter = selectDate($createdOnFromFilter) || $createdOnFromFilter.val();
-      createdOnToFilter = selectDate($createdOnToFilter) || $createdOnToFilter.val();
-      membersFilter = dropdownSelector.getValues($('.members-filter'));
+      createdOnFromFilter = selectDate($createdOnFromFilter);
+      createdOnToFilter = selectDate($createdOnToFilter);
+      membersFilter = dropdownSelector.getData($('.members-filter'));
       lookInsideFolders = $foldersCB.prop('checked') || '';
       archivedOnFromFilter = selectDate($archivedOnFromFilter) || $archivedOnFromFilter.val();
       archivedOnToFilter = selectDate($archivedOnToFilter) || $archivedOnToFilter.val();
@@ -582,12 +580,12 @@ var ProjectsIndex = (function() {
       getFilterValues();
 
       currentFilters = {
-        createdOnFromFilter: createdOnFromFilter,
-        createdOnToFilter: createdOnToFilter,
-        membersFilter: dropdownSelector.getData($('.members-filter')),
+        createdOnFromFilter: $createdOnFromFilter.val(),
+        createdOnToFilter: $createdOnToFilter.val(),
+        membersFilter: membersFilter,
         lookInsideFolders: lookInsideFolders,
-        archivedOnFromFilter: archivedOnFromFilter,
-        archivedOnToFilter: archivedOnToFilter,
+        archivedOnFromFilter: $archivedOnFromFilter.val(),
+        archivedOnToFilter: $archivedOnToFilter.val(),
         projectsViewSearch: projectsViewSearch
       };
     }

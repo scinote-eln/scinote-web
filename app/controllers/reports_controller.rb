@@ -53,7 +53,7 @@ class ReportsController < ApplicationController
       report = current_team.reports.new(project: @project)
     end
 
-    if lookup_context.template_exists?("reports/templates/#{template}/edit")
+    if Rails.root.join('app', 'views', 'reports', 'templates', template, 'edit.html.erb').exist?
       render json: {
         html: render_to_string(
           template: "reports/templates/#{template}/edit",
@@ -184,7 +184,7 @@ class ReportsController < ApplicationController
     log_activity(:generate_docx_report)
 
     ensure_report_template!
-    Reports::DocxJob.perform_later(@report.id, current_user.id, root_url)
+    Reports::DocxJob.perform_later(@report.id, user_id: current_user.id, root_url: root_url)
     render json: {
       message: I18n.t('projects.reports.index.generation.accepted_message')
     }
@@ -400,7 +400,7 @@ class ReportsController < ApplicationController
     log_activity(:generate_pdf_report)
 
     ensure_report_template!
-    Reports::PdfJob.perform_later(@report.id, current_user.id)
+    Reports::PdfJob.perform_later(@report.id, user_id: current_user.id)
   end
 
   def ensure_report_template!

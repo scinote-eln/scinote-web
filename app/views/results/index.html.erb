@@ -1,0 +1,34 @@
+<% provide(:head_title, t("my_modules.results.head_title", project: h(@project.name), module: h(@my_module.name)).html_safe) %>
+<% provide(:sidebar_title, t("sidebar.my_module.sidebar_title")) %>
+
+<%= content_for :sidebar do %>
+  <%= render partial: "shared/sidebar/#{@my_module.archived_branch? ? 'archived_my_module' : 'my_module'}",
+    locals: {
+      my_modules: @experiment.my_modules,
+      experiment: @experiment,
+      current_my_module: @my_module
+    }
+  %>
+<% end %>
+<%= render partial: 'shared/drag_n_drop_overlay' %>
+<%= render partial: 'assets/wopi/create_wopi_file_modal' %>
+
+<div class="content-pane flexible my-module-content my-modules-results with-grey-background" data-task-id="<%= @my_module.id %>">
+  <%= render partial: 'my_modules/header' %>
+  <%= render partial: 'my_modules/header_actions' %>
+
+  <div id="results" data-behaviour="vue">
+    <results url="<%= my_module_results_url(@my_module, view_mode: params[:view_mode]) %>"
+             active_url="<%= my_module_results_url(@my_module) %>"
+             archived_url="<%= my_module_results_url(@my_module, view_mode: :archived) %>"
+             can-create=<%= can_create_results?(@my_module) && !(params[:view_mode] == 'archived') %>
+             archived=<%= params[:view_mode] == 'archived' %>>
+  </div>
+</div>
+
+<%= javascript_include_tag "handsontable.full" %>
+<%= render partial: "shared/formulas_libraries" %>
+<%= render 'shared/tiny_mce_packs' %>
+<%= javascript_include_tag 'pdf_js' %>
+<%= stylesheet_link_tag 'pdf_js_styles' %>
+<%= javascript_include_tag 'vue_results' %>

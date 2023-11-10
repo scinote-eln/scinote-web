@@ -7,16 +7,13 @@
   </span>
 </div>
 
-<div class="my-5 max-w-4xl flex-1 bg-sn-white">
+<div class="my-5 flex-1">
   <div class="my-module-position-container">
     <!-- Header Actions -->
     <%= render partial: 'shareable_links/my_modules/header_actions' %>
     <!-- Details -->
     <div class="task-section task-information">
       <div id="task-details" class="task-section-header">
-          <div class="flex items-center gap-3">
-            <%= render partial: 'shareable_links/my_modules/task_flow_button', locals: { my_module: @my_module } if @my_module.my_module_status_flow %>
-          </div>
         <div class="task-details-container flex items-center mr-auto gap-2">
           <a class="task-section-caret" role="button" data-toggle="collapse" href="#details-container" aria-expanded="false" aria-controls="details-container">
             <i class="sn-icon sn-icon-right"></i>

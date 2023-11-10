@@ -20,6 +20,7 @@
       width: 100%;
 
       .dataTables_scrollHead {
+        flex-shrink: 0;
 
         thead {
           .sci-checkbox-container {
@@ -94,7 +95,7 @@
     }
 
     .dataTables_scrollBody {
-      height: 100%;
+      flex-grow: 1;
 
       td {
         padding: 8px;
@@ -206,11 +207,6 @@
 }
 
 #protocol-versions-modal {
-  .modal-body {
-    padding-bottom: 0;
-    padding-top: 0;
-  }
-
   .modal-footer {
     border: 0;
   }

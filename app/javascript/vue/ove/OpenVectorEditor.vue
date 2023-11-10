@@ -102,6 +102,7 @@
           }
         );
       }
+      this.$nextTick(this.attachEditorHelpCallback);
     },
     methods: {
       loadFile() {
@@ -115,7 +116,7 @@
         this.closeAfterSave = true;
         document.querySelector('[data-test=saveTool]').click()
       },
-      saveFile(opts, sequenceDataToSave, editorState, onSuccessCallback) {
+      saveFile(opts, sequenceDataToSave) {
         if (this.readOnly) return;
         blobToBase64(opts.pngFile).then((base64image) => {
           (this.fileUrl ? axios.patch : axios.post)(
@@ -147,8 +148,15 @@
           return menuOverride;
        });
       },
-
-      readOnlyHandler(val) { this.readOnly = val; return true }
+      readOnlyHandler(val) { this.readOnly = val; return true },
+      // override click event for github issue link in editor help -> about modal
+      attachEditorHelpCallback() {
+        $(window.document).on('click', '.bp3-dialog-container .bp3-dialog .bp3-alert-contents a', function(event) {
+          event.preventDefault();
+          $('.bp3-dialog .bp3-dialog-footer button[type*=submit]').trigger('click');
+          window.open($(event.target).attr('href'), '_blank');
+        })
+      }
     }
-  }
+}
  </script>

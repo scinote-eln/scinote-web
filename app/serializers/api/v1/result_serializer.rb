@@ -8,17 +8,21 @@ module Api
       belongs_to :user, serializer: UserSerializer
       has_one :result_text, key: :text,
                             serializer: ResultTextSerializer,
-                            class_name: 'ResultText',
-                            if: -> { object.is_text }
+                            class_name: 'ResultText' do |serializer|
+                              serializer.object.result_texts.first
+                            end
       has_one :result_table, key: :table,
                              serializer: ResultTableSerializer,
-                             class_name: 'ResultTable',
-                             if: -> { object.is_table }
+                             class_name: 'ResultTable' do |serializer|
+                               serializer.object.result_tables.first
+                             end
       has_one :result_asset, key: :file,
                              serializer: ResultAssetSerializer,
-                             class_name: 'ResultAsset',
-                             if: -> { object.is_asset }
+                             class_name: 'ResultAsset' do |serializer|
+                               serializer.object.result_assets.first
+                             end
       has_many :result_comments, key: :comments, serializer: CommentSerializer
+      has_many :result_orderable_elements, key: :result_elements, serializer: ResultOrderableElementSerializer
 
       include TimestampableModel
     end

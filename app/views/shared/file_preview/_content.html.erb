@@ -47,14 +47,11 @@
     <a class="btn btn-light file-download-link" href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>" data-turbolinks="false">
       <span class="sn-icon sn-icon-export"></span> <%= t('Download')%>
     </a>
-    <% if (asset.step || asset.result) && !preview %>
-      <%= render partial: 'assets/asset_context_menu', locals: { asset: asset, deletable: false, editable: false } %>
-    <% end %>
     <button type="button" class="btn icon-btn btn-light" data-dismiss="modal"><span class="sn-icon sn-icon-close"></span></button>
   </div>
 </div>
 <div class="modal-body">
-  <div class="file-preview-container">
+  <div class="file-preview-container <%= 'file-preview-container__wopi' if wopi_file?(asset) %>">
     <% if asset.previewable? %>
       <% if wopi_enabled? && wopi_file?(asset) %>
         <iframe class="wopi-file-preview" src="<%= asset.get_action_url(current_user, 'embedview') %>"></iframe>
@@ -70,8 +67,8 @@
     <% end %>
   </div>
 </div>
-<div class="modal-footer">
-  <% if gallery %>
+<% if gallery.present? %>
+  <div class="modal-footer">
     <div class="gallery">
       <% previous_asset = Asset.find_by(id: gallery.split(asset.id.to_s)[0]&.last) %>
       <% next_asset = Asset.find_by(id: gallery.split(asset.id.to_s)[1]&.first) %>
@@ -109,7 +106,7 @@
         <% end %>
       <% end %>
     </div>
-  <% end %>
-</div>
+  </div>
+<% end %>
 
 <%= javascript_include_tag 'shared/file_preview', nonce: true %>

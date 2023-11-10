@@ -4,7 +4,7 @@ module StepElements
   class ChecklistsController < BaseController
     include ApplicationHelper
     include StepsActions
-    before_action :load_checklist, only: %i(update destroy duplicate)
+    before_action :load_checklist, only: %i(update destroy duplicate move)
     def create
       checklist = @step.checklists.build(
         name: t('protocols.steps.checklist.default_name', position: @step.checklists.length + 1)
@@ -30,6 +30,31 @@ module StepElements
       render json: @checklist, serializer: ChecklistSerializer, user: current_user
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
+    end
+
+    def move
+      target = @protocol.steps.find_by(id: params[:target_id])
+      ActiveRecord::Base.transaction do
+        @checklist.update!(step: target)
+        @checklist.step_orderable_element.update!(step: target, position: target.step_orderable_elements.size)
+        @step.normalize_elements_position
+
+        log_step_activity(
+          :checklist_moved,
+          {
+            user: current_user.id,
+            checklist_name: @checklist.name,
+            step_position_original: @step.position + 1,
+            step_original: @step.id,
+            step_position_destination: target.position + 1,
+            step_destination: target.id
+          }
+        )
+
+        render json: @checklist, serializer: ChecklistSerializer, user: current_user
+      rescue ActiveRecord::RecordInvalid
+        render json: @checklist.errors, status: :unprocessable_entity
+      end
     end
 
     def destroy

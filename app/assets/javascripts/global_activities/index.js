@@ -21,7 +21,6 @@
       ev.preventDefault();
       animateSpinner(null, true);
       filters.page = moreButton.data('next-page');
-      filters.starting_timestamp = $('.ga-activities-list').data('starting-timestamp');
       $.ajax({
         url: $('.ga-activities-list').data('activities-url'),
         data: filters,

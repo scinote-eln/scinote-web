@@ -34,10 +34,10 @@ RSpec.shared_context 'reference_project_structure' do |config|
     let!(:team_assignment) { create :user_assignment, user: user, assignable: team, user_role: owner_role }
   end
 
-  let!(:project) { create(:project, team: team, created_by: user) }
-  let!(:projects) { create_list(:project, config[:projects], team: team, created_by: user) } if config[:projects]
+  let!(:project) { create(:project, team: team, created_by: user, default_public_user_role_id: team_assignment.user_role.id) }
+  let!(:projects) { create_list(:project, config[:projects], team: team, created_by: user, default_public_user_role_id: team_assignment.user_role.id) } if config[:projects]
 
-  let!(:experiment) { create :experiment, project: project, created_by: project.created_by} unless config[:skip_experiment]
+  let!(:experiment) { create :experiment, project: project, created_by: project.created_by } unless config[:skip_experiment]
   let!(:experiments) { create_list :experiment, config[:experiments], project: project, created_by: project.created_by } if config[:experiments]
 
   let!(:my_module) { create :my_module, experiment: experiment, created_by: experiment.created_by } unless config[:skip_my_module]

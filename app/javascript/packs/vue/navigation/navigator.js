@@ -8,7 +8,7 @@ Vue.use(PerfectScrollbar);
 
 Vue.prototype.i18n = window.I18n;
 
-window.addEventListener('DOMContentLoaded', () => {
+function addNavigationNavigatorContainer() {
   let navigator = new Vue({
     el: '#sciNavigationNavigatorContainer',
     components: {
@@ -16,17 +16,25 @@ window.addEventListener('DOMContentLoaded', () => {
     },
     data() {
       return {
-        navigatorCollapsed: false,
         reloadCurrentLevel: false,
         reloadChildrenLevel: false
       }
     },
     created() {
-      this.navigatorCollapsed = $('.sci--layout').attr('data-navigator-collapsed');
-
       $(document).on('inlineEditing:fieldUpdated', '.title-row .inline-editing-container', () => {
         this.reloadCurrentLevel = true;
       })
+    },
+    methods: {
+      toggleNavigatorState: function(newNavigatorState) {
+        let stateUrl = $('#sciNavigationNavigatorContainer').attr('data-navigator-state-url');
+        $.post(stateUrl, { state: newNavigatorState ? 'collapsed' : 'open' });
+        $('.sci--layout').attr('data-navigator-collapsed', newNavigatorState);
+        $('body').toggleClass('navigator-collapsed', newNavigatorState);
+
+        // refresh action toolbar width on navigator toggle, take into account transition time of .4s
+        if (window.actionToolbarComponent) setTimeout(window.actionToolbarComponent.setWidth, 401);
+      }
     },
     watch: {
       reloadCurrentLevel: function () {
@@ -42,18 +50,17 @@ window.addEventListener('DOMContentLoaded', () => {
             this.reloadChildrenLevel = false;
           });
         }
-      },
-      navigatorCollapsed: function () {
-        let stateUrl = $('#sciNavigationNavigatorContainer').attr('data-navigator-state-url');
-        $('.sci--layout').attr('data-navigator-collapsed', this.navigatorCollapsed);
-        $('body').toggleClass('navigator-collapsed', this.navigatorCollapsed);
-        $.post(stateUrl, {state: this.navigatorCollapsed ? 'collapsed' : 'open'});
-
-        // refresh action toolbar width on navigator toggle, take into account transition time of .4s
-        if (window.actionToolbarComponent) setTimeout(window.actionToolbarComponent.setWidth, 401);
       }
     }
   });
 
   window.navigatorContainer = navigator
-});
+}
+
+if (document.readyState !== 'loading') {
+  addNavigationNavigatorContainer();
+} else {
+  window.addEventListener('DOMContentLoaded', () => {
+    addNavigationNavigatorContainer();
+  });
+}

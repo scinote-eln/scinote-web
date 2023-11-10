@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_22_085412) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_03_114337) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -116,6 +116,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_22_085412) do
     t.bigint "last_modified_by_id"
     t.integer "position"
     t.index "trim_html_tags((text)::text) gin_trgm_ops", name: "index_checklist_items_on_text", using: :gin
+    t.index ["checklist_id", "position"], name: "index_checklist_items_on_checklist_id_and_position", unique: true
     t.index ["checklist_id"], name: "index_checklist_items_on_checklist_id"
     t.index ["created_by_id"], name: "index_checklist_items_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_checklist_items_on_last_modified_by_id"
@@ -735,6 +736,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_22_085412) do
     t.text "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "unit"
     t.index ["reference_type", "reference_id"], name: "index_repository_ledger_records_on_reference"
     t.index ["repository_stock_value_id"], name: "index_repository_ledger_records_on_repository_stock_value_id"
     t.index ["user_id"], name: "index_repository_ledger_records_on_user_id"
@@ -919,6 +921,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_22_085412) do
     t.index ["result_id", "asset_id"], name: "index_result_assets_on_result_id_and_asset_id"
   end
 
+  create_table "result_orderable_elements", force: :cascade do |t|
+    t.bigint "result_id", null: false
+    t.integer "position", null: false
+    t.string "orderable_type"
+    t.bigint "orderable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["orderable_type", "orderable_id"], name: "index_result_orderable_elements_on_orderable"
+    t.index ["result_id", "position"], name: "index_result_orderable_elements_on_result_id_and_position", unique: true
+  end
+
   create_table "result_tables", force: :cascade do |t|
     t.bigint "result_id", null: false
     t.bigint "table_id", null: false
@@ -926,9 +939,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_22_085412) do
   end
 
   create_table "result_texts", force: :cascade do |t|
-    t.string "text", null: false
+    t.string "text"
     t.bigint "result_id", null: false
+    t.string "name"
     t.index "trim_html_tags((text)::text) gin_trgm_ops", name: "index_result_texts_on_text", using: :gin
+    t.index ["name"], name: "index_result_texts_on_name", opclass: :gist_trgm_ops, using: :gist
     t.index ["result_id"], name: "index_result_texts_on_result_id"
   end
 
@@ -944,6 +959,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_22_085412) do
     t.bigint "archived_by_id"
     t.bigint "restored_by_id"
     t.datetime "restored_on", precision: nil
+    t.integer "assets_view_mode", default: 0
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_results_on_name", using: :gin
     t.index ["archived"], name: "index_results_on_archived"
     t.index ["archived_by_id"], name: "index_results_on_archived_by_id"
@@ -1005,7 +1021,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_22_085412) do
     t.string "text"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name"
     t.index "trim_html_tags((text)::text) gin_trgm_ops", name: "index_step_texts_on_text", using: :gin
+    t.index ["name"], name: "index_step_texts_on_name", opclass: :gist_trgm_ops, using: :gist
     t.index ["step_id"], name: "index_step_texts_on_step_id"
   end
 
@@ -1437,6 +1455,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_22_085412) do
   add_foreign_key "repository_text_values", "users", column: "last_modified_by_id"
   add_foreign_key "result_assets", "assets"
   add_foreign_key "result_assets", "results"
+  add_foreign_key "result_orderable_elements", "results"
   add_foreign_key "result_tables", "results"
   add_foreign_key "result_tables", "tables"
   add_foreign_key "result_texts", "results"

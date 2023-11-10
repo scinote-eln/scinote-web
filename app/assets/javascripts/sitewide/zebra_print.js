@@ -128,31 +128,33 @@ var zebraPrint = (function() {
       + printingStatus));
   }
 
-  function print(device, progressModal, numberOfCopies, printerName, labels) {
-    var counter = 0;
+  function print(device, progressModal, numberOfCopies, printerName, labels, labelIndex) {
+    if (labels.length <= labelIndex) {
+      updateProgressModalData(progressModal, printerName, PRINTER_STATUS_READY, PRINTER_STATUS_DONE);
+      return;
+    }
+
+    const label = labels[labelIndex];
+
+    function printNextLabel() {
+      print(device, progressModal, numberOfCopies, printerName, labels, labelIndex + 1);
+    }
+
+    function unsuccessfulPrint() {
+      updateProgressModalData(progressModal, printerName, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
+    }
+
     try {
       updateProgressModalData(progressModal, printerName, PRINTER_STATUS_READY, PRINTER_STATUS_PRINTING);
-      labels.forEach(function(label) {
-        for (counter = 0; counter < numberOfCopies; counter += 1) {
-          if (counter + 1 === parseInt(numberOfCopies, 10)) {
-            device.sendThenRead(
-              label,
-              () => {
-                updateProgressModalData(progressModal, printerName, PRINTER_STATUS_READY, PRINTER_STATUS_DONE);
-              },
-              (error)=> {
-                updateProgressModalData(progressModal, printerName, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
-              }
-            );
-          } else {
-            device.send(label, ()=>{}, (error)=> {
-              updateProgressModalData(progressModal, printerName, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
-            });
-          }
+      for (let counter = 0; counter < numberOfCopies; counter += 1) {
+        if (counter + 1 === parseInt(numberOfCopies, 10)) {
+          device.sendThenRead(label, printNextLabel, unsuccessfulPrint);
+        } else {
+          device.send(label, () => {}, unsuccessfulPrint);
         }
-      });
+      }
     } catch (error) {
-      updateProgressModalData(progressModal, printerName, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
+      unsuccessfulPrint();
     }
   }
 
@@ -204,8 +206,12 @@ var zebraPrint = (function() {
         getPrinterStatus(device).then((device) => {
           if (device.status === I18n.t('label_printers.modal_printing_status.printer_status.ready')) {
             print(
-              device, progressModal, printData.number_of_copies,
-              printData.printer_name, dataZebra.responseJSON.labels
+              device,
+              progressModal,
+              printData.number_of_copies,
+              printData.printer_name,
+              dataZebra.responseJSON.labels,
+              0,
             );
           } else {
             updateProgressModalData(progressModal, printData.printer_name, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);

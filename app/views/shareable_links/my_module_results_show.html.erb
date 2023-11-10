@@ -6,24 +6,22 @@
   </span>
 </div>
 
-<div class="my-5 max-w-4xl flex-1 bg-sn-white">
-  <div class="content-pane flexible">
+<div class="my-5 flex-1">
+  <div class="content-pane with-grey-background flexible">
     <%= render partial: 'shareable_links/my_modules/header_actions' %>
-    <div class="px-4">
-      <div class="mt-5" id="results-toolbar">
-        <div class="sci-btn-group collapse-expand-result">
-          <button class="btn btn-light" id="results-collapse-btn">
-            <span class="sn-icon sn-icon-up"></span>
-            <span class="hidden-xs-custom"><%= t'my_modules.results.collapse_label' %></span>
+    <div>
+      <div class="my-4 p-3 bg-sn-white" id="results-toolbar">
+        <div class="flex items-center gap-4 collapse-expand-result">
+          <button class="btn btn-secondary" id="results-collapse-btn">
+            <span><%= t'my_modules.results.collapse_label' %></span>
           </button>
-          <button class="btn btn-light" id="results-expand-btn">
-            <span class="sn-icon sn-icon-down"></span>
-            <span class="hidden-xs-custom"><%= t'my_modules.results.expand_label' %></span>
+          <button class="btn btn-secondary" id="results-expand-btn">
+            <span><%= t'my_modules.results.expand_label' %></span>
           </button>
         </div>
         <div class="sort-result-dropdown dropdown">
           <button id="sort-result-button" class="btn btn-light icon-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            <i class="sn-icon sn-icon-sort-up"></i>
+            <i class="sn-icon sn-icon-sort"></i>
           </button>
           <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="sort-result-button">
             <li><%= link_to t('general.sort_new.atoz'), shared_protocol_results_path(@shareable_link.uuid, page: params[:page], order: 'atoz'), class: (@results_order == 'atoz' ? 'selected' : '') %></li>
@@ -38,6 +36,7 @@
       <div id="results">
         <% @results.each do |result| %>
           <%= render partial: "shareable_links/my_modules/results/result", locals: { result: result, gallery: @gallery } %>
+          <%= render partial: "shareable_links/my_modules/result_comments_sidebar", locals: { result: result } %>
         <% end %>
       </div>
       <div class="kaminari-pagination">

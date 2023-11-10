@@ -30,6 +30,7 @@ const entryList = {
   pdf_js_worker: './app/javascript/packs/pdfjs/pdf_js_worker.js',
   vue_label_template: './app/javascript/packs/vue/label_template.js',
   vue_protocol: './app/javascript/packs/vue/protocol.js',
+  vue_results: './app/javascript/packs/vue/results.js',
   vue_repository_filter: './app/javascript/packs/vue/repository_filter.js',
   vue_repository_search: './app/javascript/packs/vue/repository_search.js',
   vue_repository_print_modal: './app/javascript/packs/vue/repository_print_modal.js',
@@ -37,11 +38,13 @@ const entryList = {
   vue_share_task_container: './app/javascript/packs/vue/share_task_container.js',
   vue_navigation_top_menu: './app/javascript/packs/vue/navigation/top_menu.js',
   vue_navigation_navigator: './app/javascript/packs/vue/navigation/navigator.js',
+  vue_components_repository_item_sidebar: './app/javascript/packs/vue/repository_item_sidebar.js',
   vue_components_action_toolbar: './app/javascript/packs/vue/action_toolbar.js',
   vue_components_open_vector_editor: './app/javascript/packs/vue/open_vector_editor.js',
   vue_navigation_breadcrumbs: './app/javascript/packs/vue/navigation/breadcrumbs.js',
   vue_protocol_file_import_modal: './app/javascript/packs/vue/protocol_file_import_modal.js',
   vue_components_item_relationships: './app/javascript/packs/vue/item_relationships.js',
+  vue_components_export_stock_consumption_modal: './app/javascript/packs/vue/export_stock_consumption_modal.js'
 }
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949

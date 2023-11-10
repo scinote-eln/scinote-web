@@ -20,6 +20,7 @@ function initAssignItemsToTaskModalComponent() {
       data() {
         return {
           visibility: false,
+          rowsToAssign: [],
           urls: {
             assign: container.data('assign-url'),
             projects: container.data('projects-url'),
@@ -29,7 +30,8 @@ function initAssignItemsToTaskModalComponent() {
         };
       },
       methods: {
-        showModal() {
+        showModal(repositoryRows) {
+          this.rowsToAssign = repositoryRows;
           this.visibility = true;
         },
         closeModal() {

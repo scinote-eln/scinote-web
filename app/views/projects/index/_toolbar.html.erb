@@ -65,16 +65,16 @@
         } do %>
           <%= render partial: 'shared/filter_dropdown/text_search', locals: {container_class: ''} %>
           <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'created-on-filter', label: t("filters_modal.created_on.label"), view_mode: nil } %>
-          <div class="select-block">
-            <label><%= t("projects.index.filters_modal.members.label") %></label>
+          <div class="select-block mb-6">
+            <label class="sci-label"><%= t("projects.index.filters_modal.members.label") %></label>
             <select class="members-filter"
                     data-ajax-url="<%= users_filter_projects_path %>"
                     data-placeholder="<%= t('projects.index.filters_modal.members.placeholder') %>">
             </select>
           </div>
           <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'archived-on-filter', label: t("filters_modal.archived_on.label"), view_mode: 'archived' } %>
-          <div class="select-block folders">
-            <span class="sci-checkbox-container">
+          <div class="select-block folders mb-6">
+            <span class="sci-checkbox-container mr-3">
               <%= check_box_tag :folder_search, 'accepted', false, {class: "sci-checkbox"} %>
               <span class="sci-checkbox-label"></span>
             </span>

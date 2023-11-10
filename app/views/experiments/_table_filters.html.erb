@@ -7,8 +7,8 @@
     <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'due-date-filter', label: t('experiments.table.filters.due_date'), view_mode: nil } %>
     <%= render partial: 'shared/filter_dropdown/datetime_search', locals: {container_class: 'archived-on-filter', label: t("filters_modal.archived_on.label"), view_mode: 'archived' } if params[:view_mode] == 'archived' %>
 
-    <div class="select-block status-container">
-      <label><%= t('experiments.table.filters.status') %></label>
+    <div class="select-block status-container mb-6">
+      <label class="sci-label"><%= t('experiments.table.filters.status') %></label>
       <select class="status-filter"
               data-placeholder="<%= t('experiments.table.filters.status_placeholder') %>">
         <% MyModuleStatus.all.order(:id).each do |status| %>
@@ -16,8 +16,8 @@
         <% end %>
       </select>
     </div>
-    <div class="select-block assigned-container">
-      <label><%= t('experiments.table.filters.assigned') %></label>
+    <div class="select-block assigned-container mb-6">
+      <label class="sci-label"><%= t('experiments.table.filters.assigned') %></label>
       <select class="assigned-filter"
               data-ajax-url="<%= assigned_users_to_tasks_experiment_path(@experiment) %>"
               data-placeholder="<%= t('experiments.table.filters.assigned_placeholder') %>">

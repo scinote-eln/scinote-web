@@ -23,7 +23,7 @@ var ProtocolRepositoryHeader = (function() {
   function initEditDescription() {
     var viewObject = $('#protocol_description_view');
     viewObject.on('click', function(e) {
-      if ($(e.target).hasClass('record-info-link')) return;
+      if ($(e.target).hasClass('record-info-link') || $(e.target).parent().hasClass('record-info-link')) return;
       TinyMCE.init('#protocol_description_textarea');
     }).on('click', 'a', function(e) {
       if ($(this).hasClass('record-info-link')) return;

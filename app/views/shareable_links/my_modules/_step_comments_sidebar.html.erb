@@ -1,0 +1,29 @@
+<div class="comments-sidebar !top-0 !h-screen" id="Step<%= step.id %>">
+  <div class="sidebar-content">
+    <div class="sidebar-header">
+      <div class="comments-subject-title">
+        <%= "#{step.position + 1} #{step.name}" %>
+      </div>
+      <div class="btn btn-light icon-btn close-btn">
+        <i class="sn-icon sn-icon-close"></i>
+      </div>
+      <div class="comments-subject-url">
+         <%= link_to(t('comments.step_url'), "#stepContainer#{step.id}", class: 'scroll-page-with-anchor') %>
+      </div>
+    </div>
+    <div class="sidebar-body">
+      <% if step.comments.present? %>
+        <div class="comments-list">
+           <%= render partial: "shareable_links/my_modules/comments_list", locals: { object: step } %>
+        </div>
+      <% else %>
+        <div class="no-comments-placeholder !block">
+          <%= image_tag 'comments/placeholder.svg', class: 'no-comments-image' %>
+          <h1><%= t('comments.empty_state.title') %></h1>
+          <p class="description"><%= t('comments.empty_state.description') %></p>
+        </div>
+      <% end %>
+    </div>
+     <div class="sidebar-footer"></div>
+  </div>
+</div>

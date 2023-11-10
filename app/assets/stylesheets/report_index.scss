@@ -22,7 +22,7 @@
 
 .reports-datatable {
   --content-header-size: 3.5rem;
-  height: calc(100vh - var(--navbar-height) - var(--content-header-size));
+  height: calc(100vh - var(--top-navigation-height) - var(--breadcrumbs-navigation-height) - var(--content-header-size));
 
   #reports-table_wrapper {
     display: flex;
@@ -38,10 +38,10 @@
       #reports-table_filter {
         margin-left: auto;
       }
-      
+
       .dataTables_filter {
         display: none;
-      } 
+      }
     }
 
     .dataTables_scroll {

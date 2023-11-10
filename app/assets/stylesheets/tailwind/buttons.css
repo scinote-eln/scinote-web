@@ -4,7 +4,8 @@
   }
 
   .btn {
-    @apply relative inline-flex items-center text-sm shrink-0 gap-2 justify-center leading-5 py-2 px-4 rounded border-0 appearance-none whitespace-nowrap cursor-pointer max-h-[40px];
+    @apply relative inline-flex items-center text-sm shrink-0 gap-2 justify-center leading-[22px] py-2 px-4 rounded border border-solid appearance-none whitespace-nowrap cursor-pointer max-h-[40px] focus:outline-none;
+    border-color: transparent;
   }
 
   .btn.icon-btn {
@@ -12,7 +13,7 @@
   }
 
   .btn.btn-lg {
-    @apply py-2.5 px-[1.125rem] text-base leading-5 max-h-[44px];
+    @apply py-2.5 px-[1.125rem] text-base leading-5 h-[44px];
   }
 
   .btn.btn-lg.icon-btn {
@@ -20,7 +21,7 @@
   }
 
   .btn.btn-sm {
-    @apply py-1.5 px-2.5 text-xs leading-5 max-h-[36px];
+    @apply py-1.5 px-2.5 text-xs leading-5 h-[36px];
   }
 
   .btn.btn-sm.icon-btn {
@@ -28,7 +29,7 @@
   }
 
   .btn.btn-xs {
-    @apply py-0.5 px-2.5 text-xs leading-5 max-h-[30px];
+    @apply py-0.5 px-2.5 text-xs leading-5 h-[30px];
   }
 
   .btn.btn-xs.icon-btn {
@@ -40,9 +41,7 @@
   }
 
   .btn:focus {
-    @apply no-underline outline-none;
-    box-shadow: 0px 0px 0px 4px var(--sn-science-blue-hover);
-    color: var(--sn-white);
+    @apply no-underline outline-none text-sn-white;
   }
 
   .btn:active {
@@ -56,99 +55,100 @@
 
   .btn.btn-primary,
   .btn.btn-success {
-    background-color: var(--sn-blue);
-    color: var(--sn-white);
+    @apply bg-sn-blue text-sn-white;
   }
 
   .btn.btn-primary:hover,
   .btn.btn-success:hover{
-    background-color: var(--sn-blue-hover);
-    color: var(--sn-white);
+    @apply bg-sn-blue-hover text-sn-white;
   }
 
   .btn.btn-primary:disabled,
   .btn.btn-primary.disabled,
   .btn.btn-success:disabled,
   .btn.btn-success.disabled {
-    background-color: var(--sn-light-grey);
-    border: 1px solid var(--sn-light-grey);
-    color: var(--sn-sleepy-grey);
+    @apply bg-sn-light-grey text-sn-sleepy-grey border-sn-light-grey;
   }
 
   .btn.btn-secondary,
   .btn.btn-default {
-    background-color: var(--sn-white);
-    border: 1px solid var(--sn-light-grey);
-    color: var(--sn-blue);
+    @apply bg-sn-white text-sn-blue border-sn-light-grey;
   }
 
   .btn.btn-shared {
-    background-color: var(--sn-science-blue);
-    border: 1px solid var(--sn-white);
-    color: var(--sn-white);
+    @apply bg-sn-science-blue text-sn-white border-sn-white;
   }
 
   .btn.btn-secondary:hover,
   .btn.btn-default:hover {
-    border: 1px solid var(--sn-blue-hover);
+    @apply  border-sn-blue-hover;
   }
 
   .btn.btn-shared:hover {
-    border: 1px solid var(--sn-light-grey);
+    @apply border-sn-light-grey;
   }
 
   .btn.btn-secondary:disabled,
   .btn.btn-secondary.disabled,
   .btn.btn-default:disabled,
   .btn.btn-default.disabled {
-    background-color: var(--sn-white);
-    color: var(--sn-sleepy-grey);
+    @apply bg-sn-white text-sn-sleepy-grey;
   }
 
   .btn.btn-shared:disabled,
   .btn.btn-shared.disabled {
-    background-color: var(--sn-white);
-    color: var(--sn-sleepy-grey);
-    border: 1px solid var(--sn-light-grey);
+    @apply bg-sn-white text-sn-sleepy-grey border-sn-light-grey;
   }
 
   .btn.btn-light {
-    background-color: transparent;
-    color: var(--sn-blue);
+    @apply bg-transparent text-sn-blue border-transparent;
   }
 
   .btn.btn-light.btn-black {
-    color: var(--sn-black);
+    @apply text-sn-black;
   }
 
   .btn.btn-light.btn-white {
-    color: var(--sn-white);
+    @apply text-sn-white;
   }
 
   .btn.btn-light.btn-white:hover {
-    background-color: transparent;
+    @apply bg-transparent;
   }
 
   .btn.btn-light:hover {
-    background-color: var(--sn-super-light-grey);
+    @apply bg-sn-super-light-grey;
   }
 
   .btn.btn-light:disabled,
   .btn.btn-light.disabled {
-    color: var(--sn-sleepy-grey);
+    @apply text-sn-sleepy-grey;
   }
 
   .btn.btn-danger {
-    background-color: var(--sn-delete-red);
-    color: var(--sn-white);
+    @apply bg-sn-delete-red text-sn-white;
   }
 
   .btn.btn-danger:hover {
-    background-color: var(--sn-delete-red-hover);
+    @apply bg-sn-delete-red-hover;
   }
 
   .btn.btn-danger:disabled,
   .btn.btn-danger.disabled {
-    background-color: var(--sn-delete-red-disabled);
+    @apply bg-sn-delete-red-disabled;
+  }
+
+  .btn-text-link {
+    @apply text-sn-blue text-sm cursor-pointer
+  }
+
+  .btn-text-link:visited,
+  .btn-text-link:hover {
+    @apply text-sn-blue no-underline
+  }
+
+  .btn-text-link.disabled,
+  .btn-text-link:disabled {
+    @apply text-sn-sleepy-grey
   }
 }

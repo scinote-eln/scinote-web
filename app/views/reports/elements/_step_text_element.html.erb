@@ -1,11 +1,24 @@
+<% timestamp = step_text.created_at %>
 <div class="report-element report-step-attachment-element report-step-text-element">
+  <div class="report-element-header">
+    <div class="text-name">
+      <% if step_text.name.present? %>
+        <em>
+          <%= truncate(step_text.name, length: Constants::FILENAME_TRUNCATION_LENGTH) %>
+        </em>
+      <% end %>
+    </div>
+    <div class="user-time">
+      <%= t("projects.reports.elements.step_text.user_time", timestamp: l(timestamp, format: :full)) %>
+    </div>
+  </div>
   <div class="report-element-body">
     <% if step_text.text.present? %>
-          <%= custom_auto_link(step_text.prepare_for_report(:text, export_all),
-                               team: current_team,
-                               simple_format: false,
-                               tags: %w(img),
-                               base64_encoded_imgs: export_all) %>
+      <%= custom_auto_link(step_text.prepare_for_report(:text),
+                           team: current_team,
+                           simple_format: false,
+                           tags: %w(img),
+                           base64_encoded_imgs: true) %>
     <% else %>
       <em><%= t('projects.reports.elements.step.no_description') %></em>
     <% end %>

@@ -5,7 +5,7 @@ require 'rails_helper'
 describe ProtocolsController, type: :controller do
   login_user
 
-  include_context 'reference_project_structure'
+  include_context 'reference_project_structure', { team_role: :owner }
 
   describe 'POST create' do
     let(:action) { post :create, params: params, format: :json }
@@ -78,10 +78,12 @@ describe ProtocolsController, type: :controller do
         protocol: {
           name: 'my_test_protocol',
           description: 'description',
-          authors: 'authors'
+          authors: 'authors',
+          elnVersion: '1.0',
         }
       }
     end
+
     let(:action) { post :import, params: params, format: :json }
 
     it 'calls create activity for importing protocols' do
@@ -98,9 +100,9 @@ describe ProtocolsController, type: :controller do
     end
   end
 
-  describe 'PUT description' do
+  describe 'PATCH description' do
     let(:protocol) do
-      create :protocol, :in_public_repository, team: team, added_by: user
+      create :protocol, :in_repository_draft, team: team, added_by: user
     end
     let(:params) do
       {
@@ -110,8 +112,7 @@ describe ProtocolsController, type: :controller do
         }
       }
     end
-    let(:action) { put :update_description, params: params, format: :json }
-
+    let(:action) { patch :update_description, params: params, format: :json }
     it 'calls create activity for updating description' do
       expect(Activities::CreateActivityService)
         .to(receive(:call)
@@ -126,14 +127,14 @@ describe ProtocolsController, type: :controller do
     end
   end
 
-  describe 'POST update_keywords' do
+  describe 'PATCH update_keywords' do
     let(:protocol) do
-      create :protocol, :in_public_repository, team: team, added_by: user
+      create :protocol, :in_repository_draft, team: team, added_by: user
     end
-    let(:action) { put :update_keywords, params: params, format: :json }
     let(:params) do
       { id: protocol.id, keywords: ['keyword-1', 'keyword-2'] }
     end
+    let(:action) { patch :update_keywords, params: params, format: :json }
 
     it 'calls create activity for updating keywords' do
       expect(Activities::CreateActivityService)
@@ -151,7 +152,7 @@ describe ProtocolsController, type: :controller do
 
   context 'update protocol' do
     let(:protocol_repo) do
-      create :protocol, :in_public_repository, name: ' test protocol',
+      create :protocol, :in_repository_published_original, name: ' test protocol',
                                                team: team,
                                                added_by: user
     end
@@ -165,7 +166,7 @@ describe ProtocolsController, type: :controller do
     let(:params) { { id: protocol.id } }
 
     describe 'POST revert' do
-      let(:action) { put :revert, params: params, format: :json }
+      let(:action) { post :revert, params: params, format: :json }
 
       it 'calls create activity for updating protocol in task from repository' do
         expect(Activities::CreateActivityService)
@@ -184,13 +185,13 @@ describe ProtocolsController, type: :controller do
 
   describe 'POST load_from_repository' do
     let(:protocol_source) do
-      create :protocol, :in_public_repository, team: team, added_by: user
+      create :protocol, :in_repository_published_original, team: team, added_by: user
     end
     let(:protocol) { create :protocol, team: team, added_by: user, my_module: my_module }
-    let(:action) { put :load_from_repository, params: params, format: :json }
     let(:params) do
       { source_id: protocol_source.id, id: protocol.id }
     end
+    let(:action) { post :load_from_repository, params: params, format: :json }
 
     it 'calls create activity for loading protocol to task from repository' do
       expect(Activities::CreateActivityService)
@@ -210,13 +211,14 @@ describe ProtocolsController, type: :controller do
     let(:protocol) do
       create :protocol, my_module: my_module, team: team, added_by: user
     end
-    let(:action) { put :load_from_file, params: params, format: :json }
     let(:params) do
       { id: protocol.id,
         protocol: { name: 'my_test_protocol',
                     description: 'description',
-                    authors: 'authors' } }
+                    authors: 'authors',
+                    elnVersion: '1.1'} }
     end
+    let(:action) { post :load_from_file, params: params, format: :json }
 
     it 'calls create activity for loading protocol to task from file' do
       expect(Activities::CreateActivityService)

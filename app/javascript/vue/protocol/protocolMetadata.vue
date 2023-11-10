@@ -1,5 +1,5 @@
 <template>
-  <div class="protocol-section protocol-information">
+  <div class="protocol-section protocol-information mb-4">
     <div id="protocol-details" class="protocol-section-header">
       <div class="protocol-details-container">
         <a class="protocol-section-caret" role="button" data-toggle="collapse" href="#details-container" aria-expanded="false" aria-controls="details-container">
@@ -56,7 +56,8 @@
               :value="protocol.attributes.authors"
               :placeholder="i18n.t('protocols.header.add_authors')"
               :allowBlank="true"
-              :attributeName="`${i18n.t('Protocol')} ${i18n.t('authors')}`"
+              :attributeName="`${i18n.t('Protocol')} ${i18n.t('protocols.header.authors_list')}`"
+              :characterLimit="10000"
               @update="updateAuthors"
             />
           </span>

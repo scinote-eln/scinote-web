@@ -11,7 +11,7 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <div class="panel-options pull-right">
-        <% if result.editable? && can_manage_my_module?(result.my_module) %>
+        <% if can_manage_my_module?(result.my_module) %>
           <a class="btn btn-light icon-btn edit-result-button <%= edit_result_button_class(result) %>" id="<%= result.id %>_edit" href="<%= edit_result_link(result) %>" data-remote="true" title="<%= t'my_modules.results.options.edit_title' %>">
             <span class="sn-icon sn-icon-edit"></span>
           </a>

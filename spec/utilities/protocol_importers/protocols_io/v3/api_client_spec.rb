@@ -10,7 +10,7 @@ describe ProtocolImporters::ProtocolsIo::V3::ApiClient do
       URL_PUBLICATIONS = "#{CONSTANTS[:base_uri]}publications"
 
       let(:query_params) do
-        { latest: '50' }
+        { latest: '20' }
       end
 
       let(:stub_protocols) do

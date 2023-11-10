@@ -1,7 +1,7 @@
 <template>
   <div class="sci-navigation--notificaitons-flyout-notification">
     <div class="sci-navigation--notificaitons-flyout-notification-icon" :class="notification.type_of">
-      <i class="fas" :class="icon"></i>
+      <i :class="icon"></i>
     </div>
     <div class="sci-navigation--notificaitons-flyout-notification-date">
       {{ notification.created_at }}
@@ -23,11 +23,13 @@ export default {
     icon() {
       switch(this.notification.type_of) {
         case 'deliver':
-          return 'fa-truck';
+          return 'fas fa-truck';
         case 'assignment':
-          return 'fa-list-alt';
+          return 'fas fa-list-alt';
         case 'recent_changes':
-          return 'fa-list-alt';
+          return 'fas fa-list-alt';
+        case 'deliver_error':
+          return 'sn-icon sn-icon-alert-warning';
       }
     }
   }

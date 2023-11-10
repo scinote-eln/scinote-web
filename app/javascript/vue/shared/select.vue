@@ -1,5 +1,5 @@
 <template>
-  <div @click="toggle" ref="container" class="sn-select" :class="{ 'sn-select--open': isOpen, 'sn-select--blank': !valueLabel, 'disabled': disabled }">
+  <div v-click-outside="{ handler: 'close', exclude: ['optionsContainer'] }" @click="toggle" ref="container" class="sn-select" :class="{ 'sn-select--open': isOpen, 'sn-select--blank': !valueLabel, 'disabled': disabled }">
     <slot>
       <button ref="focusElement" class="sn-select__value">
         <span>{{ valueLabel || (placeholder || i18n.t('general.select')) }}</span>
@@ -9,17 +9,23 @@
     <perfect-scrollbar
       ref="optionsContainer"
       :style="optionPositionStyle"
-      class="sn-select__options scroll-container"
+      class="sn-select__options scroll-container p-2.5 block"
     >
-      <template v-if="options.length">
+      <div v-if="options.length" class="flex flex-col gap-[1px]">
         <div
           v-for="option in options"
-          :key="option[0]" @mousedown.prevent.stop="setValue(option[0])"
-          class="sn-select__option"
+          :key="option[0]"
+          @mousedown.prevent.stop="setValue(option[0])"
+          class="sn-select__option p-3 rounded"
+          :title="option[1]"
+          :class="{
+            'select__option-placeholder': option[2],
+            '!bg-sn-super-light-blue': option[0] == value,
+          }"
         >
           {{ option[1] }}
         </div>
-      </template>
+      </div>
       <template v-else>
         <div
           class="sn-select__no-options"
@@ -32,6 +38,7 @@
 </template>
 <script>
   import PerfectScrollbar from 'vue2-perfect-scrollbar';
+  import outsideClick from '../../packs/vue/directives/outside_click';
 
   export default {
     name: 'Select',
@@ -43,12 +50,13 @@
       noOptionsPlaceholder: { type: String },
       disabled: { type: Boolean, default: false }
     },
-    comments: { PerfectScrollbar },
+    directives: {
+      'click-outside': outsideClick
+    },
     data() {
       return {
         isOpen: false,
-        optionPositionStyle: '',
-        blurPrevented: false
+        optionPositionStyle: ''
       }
     },
     computed: {
@@ -61,34 +69,13 @@
       }
     },
     mounted() {
-      this.focusElement.onblur = this.blur;
       document.addEventListener('scroll', this.updateOptionPosition);
     },
     beforeDestroy() {
       document.removeEventListener('scroll', this.updateOptionPosition);
     },
     methods: {
-      preventBlur() {
-        this.blurPrevented = true;
-      },
-      allowBlur() {
-        setTimeout(() => { this.blurPrevented = false }, 200);
-      },
-      blur() {
-        setTimeout(() => {
-          if (this.blurPrevented) {
-            this.focusElement.focus();
-          } else {
-            this.isOpen = false;
-            this.$emit('blur');
-          }
-        }, 100);
-      },
       toggle() {
-        if (this.isOpen && this.blurPrevented) {
-          return;
-        }
-
         this.isOpen = !this.isOpen;
 
         if (this.isOpen) {
@@ -98,14 +85,16 @@
           });
           this.$refs.optionsContainer.scrollTop = 0;
           this.updateOptionPosition();
-          this.setUpBlurHandlers();
         } else {
-          this.optionPositionStyle = '';
-          this.$emit('close');
+          this.close()
         }
       },
+      close() {
+        this.isOpen = false;
+        this.optionPositionStyle = '';
+        this.$emit('close');
+      },
       setValue(value) {
-        this.focusElement.blur();
         this.$emit('change', value);
       },
       updateOptionPosition() {
@@ -124,13 +113,6 @@
         }
 
         this.optionPositionStyle = `position: fixed; top: ${top}px; left: ${left}px; width: ${width}px`
-      },
-      setUpBlurHandlers() {
-        setTimeout(() => {
-          this.$refs.optionsContainer.$el.querySelector('.ps__thumb-y').addEventListener('mousedown', this.preventBlur);
-          this.$refs.optionsContainer.$el.querySelector('.ps__thumb-y').addEventListener('mouseup', this.allowBlur);
-          document.addEventListener('mouseup', this.allowBlur);
-        }, 100);
       }
     }
   }

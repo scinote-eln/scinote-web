@@ -49,14 +49,12 @@ class GlobalActivitiesController < ApplicationController
     end
 
     @next_page = activities.next_page
-    @starting_timestamp = activities.first&.created_at.to_i
 
     respond_to do |format|
       format.json do
         render json: {
           activities_html: render_to_string(partial: 'activity_list', formats: :html),
-          next_page: @next_page,
-          starting_timestamp: @starting_timestamp
+          next_page: @next_page
         }
       end
       format.html do
@@ -158,7 +156,7 @@ class GlobalActivitiesController < ApplicationController
 
   def activity_filters
     params.permit(
-      :page, :starting_timestamp, :from_date, :to_date, types: [], subjects: {}, users: [], teams: []
+      :page, :from_date, :to_date, types: [], subjects: {}, users: [], teams: []
     )
   end
 

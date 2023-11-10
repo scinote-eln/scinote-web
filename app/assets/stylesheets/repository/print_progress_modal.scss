@@ -10,6 +10,7 @@
   .modal-header {
     align-items: center;
     display: flex;
+    flex-direction: row;
     padding: .5em;
 
     .title {

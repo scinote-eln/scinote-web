@@ -42,7 +42,7 @@ module UserAssignments
         create :user_assignment, assignable: my_module_two, user: user_two, user_role: technician_role, assigned_by: user_one
 
         expect {
-          described_class.perform_now(project, user_two, technician_role, user_one, destroy: true)
+          described_class.perform_now(project, user_two.id, technician_role, user_one, destroy: true)
         }.to change(UserAssignment, :count).by(-4)
       end
 

@@ -12,7 +12,7 @@ var selectedRow = null;
 function initEditMyModuleDescription() {
   var viewObject = $('#my_module_description_view');
   viewObject.on('click', function(e) {
-    if ($(e.target).hasClass('record-info-link') || e.target.tagName === 'A') return;
+    if ($(e.target).hasClass('record-info-link') || $(e.target).parent().hasClass('record-info-link')) return;
     TinyMCE.init(
       '#my_module_description_textarea',
       {
@@ -342,7 +342,6 @@ function initProtocolSectionOpenEvent() {
     });
   });
 }
-
 /**
  * Initializes page
  */

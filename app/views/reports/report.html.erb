@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+  </head>
+  <body class="print-report-body">
+    <% if has_cover %>
+      <div style="break-after: page;"></div>
+    <% end %>
+    <div class="print-report">
+      <% report.root_elements.each do |el| %>
+        <%= render_report_element(el, local_assigns) %>
+      <% end %>
+    </div>
+  </body>
+</html>

@@ -2,7 +2,7 @@
 
 module StepElements
   class TablesController < BaseController
-    before_action :load_table, only: %i(update destroy duplicate)
+    before_action :load_table, only: %i(update destroy duplicate move)
 
     def create
       predefined_table_dimensions = create_table_params[:tableDimensions].map(&:to_i)
@@ -55,6 +55,32 @@ module StepElements
       render json: @table, serializer: TableSerializer, user: current_user
     rescue ActiveRecord::RecordInvalid
       head :unprocessable_entity
+    end
+
+    def move
+      target = @protocol.steps.find_by(id: params[:target_id])
+      step_table = @table.step_table
+      ActiveRecord::Base.transaction do
+        step_table.update!(step: target)
+        step_table.step_orderable_element.update!(step: target, position: target.step_orderable_elements.size)
+        @step.normalize_elements_position
+        render json: @table, serializer: TableSerializer, user: current_user
+
+        log_step_activity(
+          :table_moved,
+          {
+            user: current_user.id,
+            table_name: @table.name,
+            step_position_original: @step.position + 1,
+            step_original: @step.id,
+            step_position_destination: target.position + 1,
+            step_destination: target.id
+          }
+        )
+
+      rescue ActiveRecord::RecordInvalid
+        render json: step_table.errors, status: :unprocessable_entity
+      end
     end
 
     def destroy

@@ -1,4 +1,4 @@
-<div class="dropdown my-module-protocol-status">
+<div class="flex items-center dropdown my-module-protocol-status whitespace-nowrap">
   <% if @protocol.linked? %>
     <span class="status-label linked">
       [<%= t("my_modules.protocols.protocol_status_bar.linked") %>]
@@ -8,7 +8,7 @@
       [<%= t("my_modules.protocols.protocol_status_bar.unlinked") %>]
     </span>
   <% end %>
-  <a href="#" id="my-module-protocol-info-button" class="status-info
+  <a href="#" id="my-module-protocol-info-button" class="status-info dropdown-toggle
     <%= 'parent-newer' if @protocol.parent_newer? %>
     <%= 'protocol-newer' if @protocol.newer_than_parent? %>
     " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -67,4 +67,6 @@
         </div>
       </div>
     </div>
+  </div>
 </div>
+

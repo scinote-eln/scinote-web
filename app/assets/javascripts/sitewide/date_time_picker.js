@@ -5,8 +5,40 @@
     ev.preventDefault();
     ev.stopPropagation();
 
-    let dt = $(this);
-    let options = { ignoreReadonly: true };
+    const dt = $(this);
+
+    if (dt.data('DateTimePicker')) {
+      dt.data('DateTimePicker').show();
+      return;
+    }
+
+    const linkedMin = dt.data('linked-min');
+    const linkedMax =  dt.data('linked-max');
+
+    let options = {
+      ignoreReadonly: true,
+      useCurrent: false
+    }
+
+    if (linkedMin) {
+      if ($(linkedMin).val()) {
+        options.minDate = moment($(linkedMin).val(), $(linkedMin).data('dateFormat')).toDate();
+      }
+
+      $(linkedMin).on("dp.change", function (e) {
+          dt.data("DateTimePicker").minDate(e.date);
+      });
+    }
+
+    if (linkedMax) {
+      if ($(linkedMax).val()) {
+        options.maxDate = moment($(linkedMax).val(), $(linkedMax).data('dateFormat')).toDate();
+      }
+
+      $(linkedMax).on("dp.change", function (e) {
+          dt.data("DateTimePicker").maxDate(e.date);
+      });
+    }
 
     if (dt.data('DateTimePicker')) {
       dt.data('DateTimePicker').destroy();

@@ -23,13 +23,7 @@ class StepOrderableElement < ApplicationRecord
   def decrement_following_elements_positions
     step.with_lock do
       yield
-      step.step_orderable_elements
-          .where('position > ?', position)
-          .order(position: :asc).each do |step_orderable_element|
-        # find_each ignore any ordering
-        step_orderable_element.position -= 1
-        step_orderable_element.save!
-      end
+      step.normalize_elements_position
     end
   end
 end

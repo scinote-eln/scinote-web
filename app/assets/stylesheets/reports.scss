@@ -1,8 +1,6 @@
 // scss-lint:disable SelectorDepth
 // scss-lint:disable NestingDepth
 
-
-
 /* Index page */
 .report-table {
   margin-top: 20px;
@@ -235,6 +233,7 @@ label {
 /* GLOBAL REPORT ELEMENT STYLE */
 .report-element {
   width: 100%;
+  max-width: 270mm;
   margin-bottom: 15px;
 
 
@@ -430,8 +429,16 @@ label {
   }
 }
 
-/* Result text element style */
+// Text element style
+.report-step-text-element,
 .report-result-text-element {
+  .report-element-header {
+    .text-name {
+      font-size: 10pt;
+      font-weight: bold;
+    }
+  }
+
   .report-element-body {
     .text-container {
       border-radius: 4px;
@@ -466,6 +473,11 @@ label {
 .report-step-attachment-element {
   .report-element-header {
     border-bottom: none;
+
+    .step-name {
+      font-size: 10pt;
+      font-weight: bold;
+    }
 
     .attachment-icon {
       color: $color-emperor;
@@ -535,6 +547,23 @@ label {
 
   .report-element-body {
     padding-top: 0;
+  }
+
+  .report-checklist-item {
+    -webkit-box-pack: start; // for wkhtmltopdf compatibility
+    display: -webkit-box; // for wkhtmltopdf compatibility
+    display: flex;
+    justify-content: start;
+    margin-top: .5em;
+
+    div:nth-child(2) {
+      margin-top: .2em;
+    }
+
+    > div {
+      margin-left: .7em;
+      white-space: pre-wrap;
+    }
   }
 
   &:hover > .report-element-header .checklist-name {

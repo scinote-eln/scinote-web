@@ -192,6 +192,10 @@ en:
           attributes:
             step:
               wrong_step: "connected to the wrong step"
+        result_orderable_element:
+          attributes:
+            result:
+              wrong_result: "connected to the wrong result"
         repository_snapshot:
           attributes:
             selected:
@@ -232,9 +236,10 @@ en:
           attributes:
             output_id:
               creates_cycle: "mustn't create cycle"
-  errors:
-    general: "Something went wrong."
-    general_text_too_long: 'Text is too long'
+        checklist_item:
+          attributes:
+            text: Text is too long
+            position: "Position has already been taken by another item in the checklist"
   storage:
     limit_reached: "Storage limit has been reached."
   helpers:
@@ -245,6 +250,17 @@ en:
         full_name: "Full name"
         initials: "Initials"
         avatar: "Avatar"
+
+  activejob:
+    failure_notifiable_job:
+      general_notification_title: "Your export failed. Please contact support."
+      general_notification_message: "Request timestamp: %{request_timestamp}"
+      item_notification_title: "Your %{item} export failed. Please contact support."
+      items:
+        project: "Projects"
+        repository: "Inventories"
+        repository_item: "Items"
+        stock_consumption: "Stock consumption"
 
   head:
     title: "SciNote | %{title}"
@@ -368,6 +384,39 @@ en:
       results: "Results"
       activities: "Activity"
       archive: "Archived results"
+
+  attachments:
+    menu:
+      office_file: "New Office file"
+      chemical_drawing: "New chemical drawing"
+      file_from_pc: "File from your PC"
+    modified_label: "Modified:"
+    preview_menu: "View"
+    add: "ADD"
+    sort_by: "SORT BY"
+    attachments_view_mode: "ALL ATTACHMENTS VIEW SIZE"
+    new:
+      description: 'New'
+      uploading: 'Uploading'
+      file_too_big: 'Failed to upload: File size is too big'
+      no_more_space: 'Failed to upload: You ran out of space'
+      general_error: 'Failed to upload: Something went wrong, please try again'
+      leaving_warning: 'Your changes will be lost if you navigate away'
+    thumbnail:
+      buttons:
+        edit: "Edit"
+        move: "Move"
+        download: "Download"
+        delete: "Delete"
+    sort:
+      new_html: "Newest first &#8595;"
+      old_html: "Oldest first &#8593;"
+      atoz_html: "Name &#8595;"
+      ztoa_html: "Name &#8593;"
+    view_mode:
+      inline_html: "Large"
+      thumbnail_html: "Thumbnail"
+      list_html: "List"
 
   search:
     whole_word: "Match any whole word"
@@ -620,6 +669,7 @@ en:
         no_active_experiment_archived_project: "This project is archived and can’t have active experiments."
     reports:
       print_title: "%{project} | Report"
+      unnamed: "(unnamed)"
       index:
         head_title: "Reports"
         new: "New report"
@@ -829,15 +879,17 @@ en:
           name: "%{repository} of task %{my_module}"
           table_name: "%{name}"
           no_items: "No items"
+        result:
+          user_time: "Added on %{timestamp} by %{user}."
         result_asset:
           file_name: "%{file}"
           user_time: "Added on %{timestamp} by %{user}."
           full_preview_attached: "[full document attached to report]"
         result_table:
           table_name: "%{name}"
-          user_time: "Added on %{timestamp} by %{user}."
+          user_time: "Table created on %{timestamp}."
         result_text:
-          user_time: "Added on %{timestamp} by %{user}."
+          user_time: "Text created on %{timestamp}"
         step:
           sidebar_name: "Step %{pos}: %{name}"
           step_pos: "Step %{pos}:"
@@ -849,6 +901,8 @@ en:
         step_table:
           table_name: "%{name}"
           user_time: "Table created on %{timestamp}."
+        step_text:
+          user_time: "Text created on %{timestamp}"
         step_well_plates_table:
           table_name: "%{name}"
           user_time: "Well plate created on %{timestamp}."
@@ -948,6 +1002,7 @@ en:
     show:
       breadcrumb_index: 'Label templates'
       name_error_prefix: 'Label template name'
+      name_placeholder: 'Enter label template name'
       description_error_prefix: 'Label template description'
       description_title: 'Template description'
       description_placeholder: 'Enter the template description (optional)'
@@ -1064,7 +1119,7 @@ en:
     notes:
       title: "Notes"
       no_description: "No task description"
-      empty_description_edit_label: "Click here to start writing notes"
+      empty_description_edit_label: "Add notes"
     assigned_items:
       title: "Assigned items"
       assign_from: "Assign from"
@@ -1100,6 +1155,7 @@ en:
       option_delete: "Delete"
       confirm_delete: "Are you sure you want to permanently delete result?"
       delete_flash: "Successfully removed result <strong>%{result}</strong> from task <strong>%{module}</strong>."
+      archive_flash: "Successfully archived result <strong>%{result}</strong> in task <strong>%{module}</strong>"
       archived_on: "Archived on"
       archived_on_title: "Result archived on %{date} at %{time}."
       option_download: "Download"
@@ -1120,8 +1176,8 @@ en:
         unlinked: "unlinked"
         linked: "linked"
         no_description: "No protocol description"
-        enter_name: "Enter protocol name"
-        empty_description_edit_label: "Click here to enter Protocol Description (optional)"
+        enter_name: "Protocol title"
+        empty_description_edit_label: "Add description"
         keywords: "Keywords"
         no_keywords: "no keywords"
         protocol_created: "Protocol created:"
@@ -1204,7 +1260,12 @@ en:
       load_from_file_protocol_general_error: "Failed to load the protocol from file. It is likely that certain fields (protocol and individual step titles and names) contain too many or too few characters.(max is %{max} and min is %{min})"
     results:
       head_title: "%{project} | %{module} | Results"
-      add_label: "Add new result"
+      active_results: "Active results"
+      archived_results: "Archived results"
+      default_name: "Untitled result"
+      placeholder: "Enter result name"
+      add_label: "New result"
+      add_title: "Create new result"
       new_text_result: "Text"
       new_table_result: "Table"
       new_asset_result: "File"
@@ -1213,6 +1274,7 @@ en:
       published_table: "entered a table on %{timestamp}."
       published_text:  "entered a text on %{timestamp}."
       published_asset:  "uploaded a file on %{timestamp}."
+      drop_message: "Drop file to add to result %{name}"
       expand_label: "Expand All"
       collapse_label: "Collapse All"
       empty_name: "Add title"
@@ -1220,12 +1282,60 @@ en:
       info_tab: "Info"
       comments_tab: "Comments"
       comment_title: "%{user} at %{time}:"
+      insert:
+        button: 'Insert content'
+        title: 'Insert result content'
+        table: 'Table'
+        well_plate: 'Well plate'
+        text: 'Text'
+        checklist: 'Checklist'
+        attachment: 'File'
+        add_file: 'From your PC'
+        checklist_item: 'Add new'
+        well_plate_options:
+          32_x_48: '1536 (32 x 48)'
+          16_x_24: '384 (16 x 24)'
+          8_x_12: '96 (8 x 12)'
+          6_x_8: '48 (6 x 8 )'
+          6_x_4: '24 (6 x 4)'
+          2_x_3: '6 (2 x 3)'
+      text:
+        placeholder: "Enter result text"
+      sorts:
+        updated_at_asc: "Modified first"
+        updated_at_desc: "Modified last"
+        created_at_asc: "Created first"
+        created_at_desc: "Created last"
+        name_asc: "Name A to Z"
+        name_desc: "Name Z to A"
+      filters:
+        query:
+          label: 'Contains text'
+          placeholder: 'Enter search terms'
+        created_at:
+          label: 'Created date'
+        updated_at:
+          label: 'Modified date'
       options:
         comment_title: "Comments"
         no_comments: "No comments"
         new_comment: "New comment"
         edit_title: "Edit result"
         archive_title: "Archive result"
+      actions:
+        rearrange: "Rearrange"
+        archive: "Archive"
+        duplicate: "Duplicate"
+        restore: "Restore"
+        delete: "Delete"
+      move_modal:
+        search_placeholder: "Enter result name"
+        no_options_placeholder: "No results available to select"
+      delete_modal:
+        title: "Delete result"
+        description_1: "You’re about to delete the result. It might contain data you don’t want to lose. You won’t be able to get it back."
+        description_2: "Are you sure you want to delete it?"
+        confirm: "Delete forever"
     archive_results:
       preview: "View"
     activities:
@@ -1308,6 +1418,8 @@ en:
       snapshot_error:
         title: "Snapshot error"
         body_html: "<strong>%{repository}</strong> inventory snapshot failed to generate. Please contact support if this problem persists."
+      reorder_results:
+        title: "Rearrange result content"
     modules_list_partial:
       private_tasks_html: 'Assigned to <strong>%{nr}</strong> private task(s)'
       no_results:
@@ -1616,7 +1728,7 @@ en:
       disclaimer: "Anyone with the link can view the protocol and results pages of this task."
       too_long_text: "Text is too long (maximum number is %{counter} characters)"
       copy_success: "Shared link copied to clipboard"
-    destroy_modal: 
+    destroy_modal:
       title: "Deactivate shared link"
       description: "This action will permanently deactivate the shared link. Any user who has this link will no longer be able to access the task."
       deactivate: "Deactivate"
@@ -1809,6 +1921,10 @@ en:
         all_teams: "All teams (current & new)"
         all_teams_tooltip: "This will disable individual team settings"
         success_message: "Selected sharing options for the Inventory %{inventory_name} have been saved."
+      export:
+        notification:
+          error:
+            title: "Your Inventories export failed. Please contact support."
     show:
       name: "Name"
       archived_inventory_items: "%{repository_name} archived items"
@@ -1834,11 +1950,6 @@ en:
       error_searching: "Error searching, please try again"
       button_tooltip:
         new: "Create new item"
-        edit: "Edit item"
-        duplicate: "Duplicate"
-        export: "Export"
-        print_label: "Print label"
-        archive: "Archive"
         import: "Import"
         filters: "Filters"
         search: "Quick search"
@@ -2008,7 +2119,10 @@ en:
     archive_record: "Archive"
     restore_record: "Restore"
     print_label: "Print label"
-    export_record: "Export"
+    exports:
+      export: "Export"
+      records: "Items"
+      stock_consumption: "Consumption"
     save_record: "Save"
     cancel_save: "Cancel"
     hide_reminders: "Clear all reminders"
@@ -2040,7 +2154,7 @@ en:
           disabled_placeholder: "Select Experiment to enable Task"
           no_options_placeholder: "No tasks available to assign items"
       assign:
-        text: "Assign to this task"
+        text: "Assign to task"
         flash_all_assignments_success: "Successfully assigned %{count} item(s) to the task."
         flash_some_assignments_success: "Successfully assigned %{assigned_count} item(s) to the task. %{skipped_count} item(s) were already assigned to the task."
         flash_assignments_failure: "Failed to assign item(s) to task."
@@ -2107,6 +2221,77 @@ en:
       invalid_arguments: "Can't find %{key}"
     my_module_assigned_snapshot_service:
       invalid_arguments: "Can't find %{key}"
+    item_card:
+      section:
+        information: "Information"
+        assigned: "Assigned (%{count})"
+        qr: "QR"
+      print_label: "Print label"
+      assigned:
+        empty: "This item is not assigned to any task."
+        assign: "Assign to task"
+        private:
+          one: "Assigned to %{count} private task"
+          other: "Assigned to %{count} private tasks"
+        labels:
+          team: "Team:"
+          project: "Project:"
+          experiment: "Experiment:"
+          my_module: "Task:"
+      default_columns:
+        repository_name: "Inventory"
+        id: "Item ID"
+        added_on: "Added on"
+        added_at: "Added at"
+        added_by: "Added by"
+        archived_on: "Archived on"
+        archived_by: "Archived by"
+      reminders:
+        stock_low: "Only %{stock_formated} left."
+        stock_empty: "No stock left"
+        date_expiration: "This item is expiring in %{date_expiration}."
+        item_expired: "This item has expired."
+        day:
+          one: "day"
+          other: "days"
+      stock_export: "Export"
+      custom_columns_label: "Custom columns"
+      no_custom_columns_label: "No custom columns"
+      repository_time_range_value:
+        no_time_range: 'No time range'
+      repository_text_value:
+        collapse: 'Collapse'
+        expand: 'Expand'
+        no_text: 'No text'
+      repository_stock_value:
+        no_stock: 'No stock'
+      repository_status_value:
+        no_status: 'No selection'
+      repository_number_value:
+        collapse: 'Collapse'
+        expand: 'Expand'
+        no_number: 'No number'
+      repository_list_value:
+        no_list: 'No selection'
+      repository_date_value:
+        no_date: 'No date'
+      repository_date_time_value:
+        no_date_time: 'No date and time'
+      repository_date_time_range_value:
+        no_date_time_range: 'No date and time range'
+      repository_date_range_value:
+        no_date_range: 'No date range'
+      repository_checklist_value:
+        no_checklist: 'No selection'
+      repository_asset_value:
+        no_asset: 'No file'
+      repository_time_value:
+        no_time: 'No time'
+    highlight_component:
+      information_label: 'Information'
+      custom_columns_label: 'Custom columns'
+      assigned_label: 'Assigned'
+      QR_label: 'QR'
   repository_stock_values:
     manage_modal:
       title: "Stock %{item}"
@@ -2134,7 +2319,24 @@ en:
       reminder_at: "Reminder at"
       units_remaining: "%{unit} remaining."
       enter_ammount: "Enter an amount"
-
+    stock_export:
+      headers:
+        consumption_type: 'Consumption type'
+        item_name: 'Item name'
+        item_id: 'Item ID'
+        consumed_amount: 'Consumed amount'
+        consumed_amount_unit: 'Consumed amount unit'
+        added_amount: 'Added amount'
+        added_amount_unit: 'Added amount unit'
+        consumed_by: 'Consumed by'
+        consumed_on: 'Consumed on'
+        team: 'Team'
+        project: 'Project'
+        experiment: 'Experiment'
+        task: 'Task'
+        task_id: 'Task ID'
+        stock_amount_balance: 'Stock amount after update (balance)'
+        stock_balance_unit: 'Stock unit after update'
   libraries:
     manange_modal_column_index:
       title: "Manage columns"
@@ -2283,10 +2485,11 @@ en:
       no_tasks: "This item in not assigned to any task."
       amount: "Amount: %{value}"
       unit: "Unit: %{unit}"
-      assign_to_task: "Assign to this task"
+      assign_to_task: "Assign to task"
       assign_to_task_error:
         no_access: "You can only view this task"
         already_assigned: "This item is already assigned to this task"
+      export_consumption_label: "Export consumption"
     modal_print_label:
       head_title: "Print label - %{repository_row}"
       head_title_multiple: "Print label - %{repository_rows} rows"
@@ -2561,7 +2764,7 @@ en:
 
         connected_accounts:
           head_title: "Settings | Connected Accounts"
-          title: "Connected Accounts"
+          title: "Connected accounts"
           not_connected: "You have no Connected accounts"
           unlink_success: "Successfully unlinked"
           azure_ad:
@@ -2700,10 +2903,10 @@ en:
         body_html: "The import is taking longer than expected. You'll get a notice in Notifications when your protocol template is ready. You can close the window and continue with your work."
       done:
         title: "Importing finished"
-        body_html: 'The protocol has been successfully imported. You can access the draft of protocol template <a href="%{url}">here.</a>'
+        body_html: 'The protocol has been successfully imported. You can access protocol template in Notifications. You can also find it in the table of <a href="%{url}">protocol templates.</a>'
       failed:
         title: "Import failed"
-        body_html: "We're sorry, but the file import has failed. Please ensure you have a stable internet connection and try again. If the problem persists, please contact support for further assistance."
+        body_html: "We're sorry but the file import process has encountered an error. Please make another attempt, and if the issue persists, please contact support for further assistance."
       import: "Import"
       cancel: "Cancel"
       close: "Close"
@@ -2802,7 +3005,8 @@ en:
         title: "The import process has been successfully completed. You can download original file here: %{link}"
         message: "Protocol template:"
       import_protocol_notification_error:
-        title: "We're sorry, but the file import has failed. Please ensure you have a stable internet connection and try again. If the problem persists, please contact support for further assistance."
+        title: "Import failed"
+        message: "We're sorry but the file import process has encountered an error. Please make another attempt, and if the issue persists, please contact support for further assistance."
     export:
       export_results:
         title: "Export results"
@@ -2849,6 +3053,7 @@ en:
       added_by: "Created by:"
       keywords: "Keywords:"
       authors: "Authors:"
+      authors_list: "authors list"
       no_authors: "No authors"
       add_authors: "+ Add authors"
       add_keywords: "+ Add keywords"
@@ -2891,8 +3096,8 @@ en:
       edit: "Edit"
       clone_btn: "Copy"
       import: "Import"
-      import_eln: "From file (.eln)"
-      import_eln_docx: "From file (.docx, .eln)"
+      import_eln: "SciNote file (.eln)"
+      import_docx: "MS Word (.docx)"
       import_protocols_io: "From Protocols.io"
       modal_import_json_upload: "Upload"
       modal_import_json_title: "Import protocols.io file"
@@ -2987,13 +3192,14 @@ en:
           ztoa_html: "<i class=\"fas fa-sort-alpha-up\"></i>&nbsp;&nbsp;Name Z to A"
 
     steps:
-      placeholder: 'Enter step name'
+      placeholder: 'Step name'
       default_name: 'Untitled step'
       completed: 'Completed'
       uncompleted: 'Uncompleted'
       expand_label: "Expand All"
       collapse_label: "Collapse All"
       new_step: "New step"
+      new_step_title: "Create new step"
       subtitle: "Protocol Steps"
       no_steps: "Protocol has no steps."
       published_on_html: "Published on <em>%{timestamp}</em> by <em>%{user}</em>"
@@ -3001,7 +3207,7 @@ en:
       comments_tab: "Comments"
       no_description: "This step has no description."
       tables: "Tables"
-      files: "Attachments (%{count})"
+      files: "Files (%{count})"
       comments: "Comments"
       empty_checklist: "No items"
       comment_title: "%{user} at %{time}:"
@@ -3023,14 +3229,15 @@ en:
         duplicate: 'Duplicate'
         delete: 'Delete'
       insert:
-        button: 'Insert'
+        button: 'Insert content'
         title: 'Insert step content'
         table: 'Table'
         well_plate: 'Well plate'
         text: 'Text'
         checklist: 'Checklist'
         attachment: 'File'
-        checklist_item: 'Add a new checklist item...'
+        add_file: 'From your PC'
+        checklist_item: 'Add new'
         well_plate_options:
           32_x_48: '1536 (32 x 48)'
           16_x_24: '384 (16 x 24)'
@@ -3046,12 +3253,16 @@ en:
           description: 'Tables have become content blocks and require a name. To be able to edit the table, please add the name now:'
           save: 'Save table title'
           error: "Table name can't be empty"
+        table_name: "Table name"
       checklist:
+        placeholder: 'Enter checklist name'
         default_name: 'Checklist %{position}'
+        checklist_name: "Checklist name"
         empty_checklist: 'Doesn’t contain any checklist items'
       text:
         placeholder: 'Enter step text'
         empty_text: 'No text entered'
+        text_name: "Enter text name"
       plate:
         default_name: "Plate %{position}"
       modals:
@@ -3060,6 +3271,16 @@ en:
           description_1: 'You’re about to delete a content block from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
           description_2: 'Are you sure you want to delete it?'
           confirm: 'Delete forever'
+        move_element:
+          step:
+            title: Move to different step
+            targets_label: Select step
+            search_placeholder: "Enter step name"
+          result:
+            title: Move to different result
+            targets_label: Select result
+            untitled_result: Untitled result
+            search_placeholder: "Enter result name"
         delete_step:
           title: 'Delete step'
           description_1: 'You’re about to delete a whole step from your protocol. It might contain data you don’t want to lose. You won’t be able to get it back.'
@@ -3083,39 +3304,6 @@ en:
         duplicate_title: "Duplicate step"
         complete_title: "Complete step"
         uncomplete_title: "Restart step"
-      attachments:
-        menu:
-          office_file: "New Office file"
-          chemical_drawing: "New chemical drawing"
-          file_from_pc: "File from your PC"
-        modified_label: "Modified:"
-        manage: "Manage"
-        add: "ADD"
-        sort_by: "SORT BY"
-        attachments_view_mode: "ALL ATTACHMENTS VIEW SIZE"
-        file_modal:
-          title: "Add file"
-          drag_zone_title: "Upload a file from your PC"
-          drag_zone_description: "You can also drag & drop files to here or into steps to upload"
-          drag_zone_notification: "Drop files to add to step %{position}"
-          or: "or create new"
-        new:
-          description: 'New'
-          uploading: 'Uploading'
-          file_too_big: 'Failed to upload: File size is too big'
-          no_more_space: 'Failed to upload: You ran out of space'
-          general_error: 'Failed to upload: Something went wrong, please try again'
-          leaving_warning: 'Your changes will be lost if you navigate away'
-
-        sort:
-          new_html: "Newest first &#8595;"
-          old_html: "Oldest first &#8593;"
-          atoz_html: "Name &#8595;"
-          ztoa_html: "Name &#8593;"
-        view_mode:
-          inline_html: "<i class=\"fas fa-desktop\"></i> Extra large"
-          thumbnail_html: "<i class=\"sn-icon sn-icon-grid-view\"></i> Medium"
-          list_html: "<i class=\"sn-icon sn-icon-activities\"></i> List"
       new:
         add_step_title: "Add new step"
         tab_checklists: "Checklists"
@@ -3213,8 +3401,8 @@ en:
     deliver:
       download_link: "Download link:"
       download_text: "Click the link to download the file."
-      email_subject: "Your SciNote export is ready!"
-      email_body_1: "The export of SciNote data that you requested is ready!"
+      email_subject: "Your SciNote data is ready!"
+      email_body_1: "The SciNote data that you requested is ready!"
       email_body_2: "You can find the link to download the file below, or in your SciNote notifications. Please keep in mind that the link will expire in 7 days for security reasons."
     show_all: "Show all notifications"
     show_more: "Show more notifications"
@@ -3225,6 +3413,7 @@ en:
       recent_changes: "Recent changes"
       system_message: "SciNote system message"
       deliver: 'Exportable content'
+      deliver_error: 'Exportable content'
     experiment_annotation_title: "%{user} mentioned you in experiment %{experiment}."
     experiment_annotation_message_html: "Project: %{project} | Experiment: %{experiment}"
     project_comment_annotation_title: "%{user} mentioned you in a comment on project %{project}."
@@ -3266,9 +3455,11 @@ en:
       drop_label: 'Drop to add to Step'
       file_label: 'File'
     from_clipboard:
-      modal_title: 'Add image from clipboard'
-      image_preview: 'Image preview'
-      add_image: 'Add'
+      modal_title: 'Insert image from clipboard'
+      image_preview: 'Pasted image preview'
+      select_step: 'Select to which step you’d like to attach image'
+      select_result: 'Select to which result you’d like to attach image'
+      add_image: 'Insert'
       file_name: 'File name'
       file_name_placeholder: 'Image'
     placeholder:
@@ -3278,7 +3469,7 @@ en:
     wopi_supported_table_formats_title: 'Only .xlsx, .xlsm, .xlsb, .ods file formats are supported for editing in Excel Online.'
     wopi_supported_presentation_formats_title: 'Only .pptx, ppsx, .odp file formats are supported for editing in PowerPoint Online.'
     create_wopi_file:
-      button_text: 'MS Office file'
+      button_text: 'New MS Office file'
       li_text: "Office file"
       modal_title: 'Create new Microsoft Office Online document'
       text_field_label: 'Document name'
@@ -3292,14 +3483,15 @@ en:
         forbidden: 'You do not have permission to add files.'
         not_found: 'Element not found.'
     file_preview:
-      edit_in_scinote: "Edit in SciNote"
+      edit_in_scinote: "Edit"
       edit_in_marvinjs: "Edit in Marvin JS"
     context_menu:
-      set_view_size: "SET VIEW SIZE"
-      delete: "Delete file"
-      inline_html: "<i class=\"fas fa-desktop\"></i> Extra large"
-      thumbnail_html: "<i class=\"sn-icon sn-icon-grid-view\"></i> Medium"
-      list_html: "<i class=\"sn-icon sn-icon-activities\"></i> List"
+      set_view_size: "SET PREVIEW SIZE"
+      delete: "Delete"
+      move: "Move"
+      inline_html: "Large"
+      thumbnail_html: "Thumbnail"
+      list_html: "List"
     delete_file_modal:
       title: "Delete attachment"
       description_1_html: "You are about to delete <b>%{file_name}</b></p>"
@@ -3319,7 +3511,7 @@ en:
       description: "Once you create items in the inventory, they will appear here."
     buttons:
       insert: "Insert"
-      assign: "Assign to this task"
+      assign: "Assign to task"
     projects: PROJECTS
     experiments: EXPERIMENTS
     tasks: TASKS
@@ -3438,7 +3630,7 @@ en:
           title: "Manage access for %{resource_name}"
           description: "Changing a role will take away any permissions inherited from the project or the experiment. New permissions will apply only to this specific task."
   zip_export:
-    modal_label: 'Export inventory'
+    repositories_modal_label: 'Export inventory'
     notification_title: 'Your requested export package is ready!'
     expired_title: 'Looks like your link has expired.'
     expired_description: 'Please export the data again in order to receive a new link.'
@@ -3448,7 +3640,11 @@ en:
     repository_footer_html: 'Inventory will be exported in a .csv file format. You will receive <strong>email with a link</strong> where you can download it.'
     export_request_success: "Export request received. Your export request is being processed."
     export_error: "Error when creating zip export."
-
+    consumption_modal_label: 'Export consumption'
+    consumption_header_html: 'You are about to generate a consumption report for selected items in inventory %{repository}. The report will be saved in a .csv file format.'
+    consumption_body_html: 'After the report is prepared, you will be able to find the <strong>download link</strong> in both your SciNote notifications and email inbox.'
+    consumption_footer_html: 'For security reasons, please note that the link will only be <strong>valid for 7 days</strong>.'
+    consumption_generate: 'Export'
   webhooks:
     index:
       title: 'Webhooks'
@@ -3490,10 +3686,12 @@ en:
     newer_version_available: "Newer version of the text below has been saved in the browser. Do you want to restore it?"
   general:
     save: "Save"
+    move: "Move"
     update: "Update"
     edit: "Edit"
     delete: "Delete"
     cancel: "Cancel"
+    duplicate: "Duplicate"
     okay: "Okay"
     back: "Back"
     close: "Close"
@@ -3681,6 +3879,7 @@ en:
   ChecklistItem: "Checklist item"
   Checklists: "Checklists"
   Table: "Table"
+  Text: "Text"
   Tables: "Tables"
   Repositories_team: "Inventories - %{team}"
   Reports: "Reports"
@@ -3695,10 +3894,12 @@ en:
   Added: 'Added'
   by: 'by'
   name: 'name'
+  From: 'From'
+  To: 'To'
 
   marvinjs:
-    new_sketch: "New Chemical Drawing"
-    new_button: "Create Chemical Drawing"
+    new_sketch: "New chemical drawing"
+    new_button: "New chemical drawing"
     new_li_button: "Chemical drawing"
     structure_placeholder: "Click here to enter Chemical Drawing name"
     modal_name_title: "Chemical Drawing name:"
@@ -3762,6 +3963,8 @@ en:
     archived_state: "Archived state"
 
   errors:
+    general: "Something went wrong."
+    general_text_too_long: 'Text is too long'
     forbidden:
       title: "Access to this page is denied (403)."
       dialog:

@@ -51,7 +51,6 @@
     max-height: calc(100vh - 300px);
     min-height: 300px;
     padding: 0;
-    width: 475px;
 
     .dropdown-selector,
     .users-filter-dropdown {
@@ -60,10 +59,9 @@
 
     .header {
       align-items: center;
-      border-bottom: $border-default;
       display: flex;
       flex-shrink: 0;
-      padding: .25em 1em;
+      margin-bottom: 1.5rem;
 
       .title {
         @include font-h2;
@@ -113,20 +111,7 @@
       }
     }
 
-    .footer {
-      border-top: $border-default;
-      display: flex;
-      flex-shrink: 0;
-      padding: 1em;
-
-      .apply-button {
-        margin-left: 8px;
-      }
-
-      .clear-filters-btn {
-        margin-left: auto;
-      }
-
+    .sci-flyout-footer {
       .filters-columns-list {
         max-height: 300px;
         overflow-y: auto;
@@ -145,16 +130,16 @@
     .filters-list {
       flex-grow: 1;
       overflow-y: auto;
-      padding: .5em 1.6rem;
+      overflow-x: hidden;
     }
 
     .filter-container {
-      width: 424px;
-      margin-bottom: .5em;
+      margin-bottom: 1.5rem;
+      width: 552px;
 
       .filter-title {
-        @include font-small;
-        font-weight: bold;
+        color: var(--sn-grey);
+        margin-bottom: .25rem;
       }
 
       .filter-element {
@@ -226,6 +211,7 @@
 
       .filter-remove {
         margin-left: .5em;
+        margin-right: 1rem;
 
         .icon-btn {
           color: $color-silver-chalice;
@@ -240,8 +226,6 @@
 
   @media (max-width: 992px) {
     .filters-container {
-      width: 200px;
-
       .filter-container {
         .filter-attributes {
           display: flex;
