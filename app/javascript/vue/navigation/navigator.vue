@@ -12,7 +12,7 @@
     @resizing="onResizeMove"
     @resize-end="onResizeEnd"
   >
-    <div class="ml-4 h-full border rounded bg-sn-white flex flex-col right-0 absolute navigator-container">
+    <div class="ml-4 h-full w-full border rounded bg-sn-white flex flex-col right-0 absolute navigator-container">
       <div class="px-3 py-2.5 flex items-center relative leading-4">
         <i class="sn-icon sn-icon-navigator"></i>
         <div class="font-bold text-base pl-3">
