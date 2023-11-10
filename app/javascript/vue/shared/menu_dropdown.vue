@@ -1,5 +1,5 @@
 <template>
-  <div class="relative" v-if="listItems.length > 0" v-click-outside="closeMenu">
+  <div class="relative" v-if="listItems.length > 0 || alwaysShow" >
     <button ref="openBtn" :class="btnClasses" @click="showMenu = !showMenu">
       <i v-if="btnIcon" :class="btnIcon"></i>
       {{ btnText }}
@@ -23,7 +23,7 @@
           :class="{ 'bg-sn-super-light-blue': item.active }"
           :data-toggle="item.modalTarget && 'modal'"
           :data-target="item.modalTarget"
-          class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey"
+          class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey leading-5"
           @click="handleClick($event, item)"
         >
           {{ item.text }}
@@ -49,7 +49,7 @@
               :href="sub_item.url"
               :traget="sub_item.url_target || '_self'"
               :class="{ 'bg-sn-super-light-blue': item.active }"
-              class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey"
+              class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey leading-5"
               @click="handleClick($event, sub_item)"
             >
               {{ sub_item.text }}
@@ -75,6 +75,7 @@ export default {
     btnText: { type: String, required: false },
     btnIcon: { type: String, required: false },
     caret: { type: Boolean, default: false },
+    alwaysShow: { type: Boolean, default: false }
   },
   data() {
     return {
@@ -93,6 +94,7 @@ export default {
           this.$refs.flyout.style.marginBottom = `${this.$refs.openBtn.offsetHeight}px`;
           this.updateOpenDirectoin();
         })
+        this.$emit('open');
       }
     }
   },

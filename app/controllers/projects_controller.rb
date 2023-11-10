@@ -30,13 +30,21 @@ class ProjectsController < ApplicationController
   before_action :set_current_projects_view_type, only: %i(index cards)
   layout 'fluid'
 
-  def index; end
+  def index
+    respond_to do |format|
+      format.json do
+        projects = Lists::ProjectsService.new(current_team, current_user, current_folder, params).call
+        render json: projects, each_serializer: Lists::ProjectAndFolderSerializer, user: current_user, meta: pagination_dict(projects)
+      end
+      format.html do; end
+    end
+  end
 
   def cards
     overview_service = ProjectsOverviewService.new(current_team, current_user, current_folder, params)
     title = params[:view_mode] == 'archived' ? t('projects.index.head_title_archived') : t('projects.index.head_title')
 
-    if filters_included?
+    if false && filters_included?
       render json: {
         toolbar_html: render_to_string(partial: 'projects/index/toolbar'),
         filtered: true,
@@ -385,8 +393,7 @@ class ProjectsController < ApplicationController
       actions:
         Toolbars::ProjectsService.new(
           current_user,
-          project_ids: params[:project_ids].split(','),
-          project_folder_ids: params[:project_folder_ids].split(',')
+          items: JSON.parse(params[:items]),
         ).actions
     }
   end
