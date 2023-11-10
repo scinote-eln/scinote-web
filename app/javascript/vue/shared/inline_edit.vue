@@ -107,7 +107,10 @@
     },
     computed: {
       isBlank() {
-        return this.newValue.length === 0;
+        if (typeof this.newValue === 'string') {
+          return this.newValue.trim().length === 0;
+        }
+        return true; // treat as blank for non-string values
       },
       isContentDefault() {
         return this.newValue === this.defaultValue;
@@ -152,8 +155,11 @@
         this.$emit('blur');
         if (this.allowBlank || !this.isBlank) {
           this.$nextTick(this.update);
-        } else {
-          this.$emit('delete');
+        } else if (this.isBlank) {
+          this.newValue = this.value || '';
+        }
+        else {
+          this.$emit('delete')
         }
       },
       focus() {

@@ -1,6 +1,8 @@
 <template>
   <Select
     class="sn-select--search"
+    :withEditCursor="withEditCursor"
+    :withClearButton="withClearButton"
     :value="value"
     :options="currentOptions"
     :placeholder="placeholder"
@@ -23,6 +25,8 @@
   export default {
     name: 'SelectSearch',
     props: {
+      withClearButton: { type: Boolean, default: false },
+      withEditCursor: { type: Boolean, default: false },
       value: { type: [String, Number] },
       options: { type: Array, default: () => [] },
       optionsUrl: { type: String },

@@ -152,8 +152,13 @@
 <!-- Delete file modal -->
 <%= render partial: 'assets/asset_delete_modal' %>
 
+<!-- Manage Stock Modal -->
+<%= render partial: 'shared/manage_stock_value_modal' %>
+
+<!-- Consume Stock Modal -->
 <%= render partial: 'my_modules/repositories/consume_stock_modal'%>
 
+<%= javascript_include_tag 'inputmask' %>
 <%= stylesheet_link_tag 'datatables' %>
 <%= javascript_include_tag "handsontable.full" %>
 <%= render partial: "shared/formulas_libraries" %>

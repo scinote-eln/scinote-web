@@ -1,21 +1,20 @@
 <template>
-  <div ref="wrapper"
+  <div ref="wrapper" id="repository-item-sidebar-wrapper"
     class='items-sidebar-wrapper bg-white gap-2.5 self-stretch  rounded-tl-4 rounded-bl-4 transition-transform ease-in-out transform shadow-lg'
-    :class="{ 'translate-x-0 w-[565px] h-full': isShowing, 'transition-transform ease-in-out duration-400 transform translate-x-0 translate-x-full w-0': !isShowing }">
+    :class="{ 'translate-x-0 w-[565px] h-full': isShowing, 'transition-transform ease-in-out duration-400 transform translate-x-full w-0': !isShowing }">
 
     <div id="repository-item-sidebar" class="w-full h-full pl-6 bg-white flex flex-col">
 
-      <div id="sticky-header-wrapper" class="sticky top-0 right-0 bg-white flex z-50 flex-col h-[78px] pt-6">
+      <div ref="stickyHeaderRef" id="sticky-header-wrapper" class="sticky top-0 right-0 bg-white flex z-50 flex-col h-[78px] pt-6">
         <div class="header flex w-full h-[30px] pr-6">
-          <h4 class="item-name my-auto truncate text-xl" :title="repositoryRowName">
-            {{ repositoryRowName }}
-          </h4>
+          <repository-item-sidebar-title v-if="defaultColumns"
+            :editable="permissions?.can_manage && !defaultColumns?.archived" :name="defaultColumns.name"
+            @update="update"></repository-item-sidebar-title>
           <i id="close-icon" @click="toggleShowHideSidebar(currentItemUrl)"
             class="sn-icon sn-icon-close ml-auto cursor-pointer my-auto mx-0"></i>
         </div>
         <div id="divider" class="w-500 bg-sn-light-grey flex items-center self-stretch h-px mt-6 mr-6"></div>
       </div>
-
 
       <div ref="bodyWrapper" id="body-wrapper" class="overflow-y-auto overflow-x-hidden h-[calc(100%-78px)] pt-6 ">
         <div v-if="dataLoading" class="h-full flex flex-grow-1">
@@ -115,23 +114,9 @@
                   class="font-inter text-lg font-semibold leading-7 pb-4 transition-colors duration-300">
                   {{ i18n.t('repositories.item_card.custom_columns_label') }}
                 </div>
-                <div v-if="customColumns?.length > 0" class="flex flex-col gap-4 w-[350px] h-auto">
-                  <div v-for="(column, index) in customColumns" class="flex flex-col gap-4 w-[350px] h-auto relative">
-                    <span class="absolute right-2 top-6" v-if="column?.value?.reminder === true">
-                      <Reminder :value="column?.value" :valueType="column?.value_type" />
-                    </span>
-
-                    <component :is="column.data_type" :key="index" :data_type="column.data_type" :colId="column.id"
-                      :colName="column.name" :colVal="column.value" :repositoryRowId="repositoryRowId"
-                      :repositoryId="repository.id" :permissions="permissions" />
-
-                    <div class="sci-divider" :class="{ 'hidden': index === customColumns?.length - 1 }"></div>
-
-                  </div>
-                </div>
-                <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
-                  {{ i18n.t('repositories.item_card.no_custom_columns_label') }}
-                </div>
+                <CustomColumns :customColumns="customColumns" :repositoryRowId="repositoryRowId"
+                  :repositoryId="repository?.id" :inArchivedRepositoryRow="defaultColumns?.archived"
+                  :permissions="permissions" :updatePath="updatePath" :actions="actions" @update="update" />
               </section>
 
               <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px"></div>
@@ -197,7 +182,7 @@
           </div>
 
           <!-- NAVIGATION -->
-          <div ref="navigationRef" id="navigation"
+          <div v-if="isShowing" ref="navigationRef" id="navigation"
             class="flex item-end gap-x-4 min-w-[130px] min-h-[130px] h-fit sticky top-0 right-[24px] ">
             <scroll-spy :itemsToCreate="[
               { id: 'highlight-item-1', textId: 'text-item-1', labelAlias: 'information_label', label: 'information-label', sectionId: 'information-section' },
@@ -227,44 +212,23 @@
 </template>
 
 <script>
-import RepositoryStockValue from './repository_values/RepositoryStockValue.vue';
-import RepositoryTextValue from './repository_values/RepositoryTextValue.vue';
-import RepositoryNumberValue from './repository_values/RepositoryNumberValue.vue';
-import RepositoryAssetValue from './repository_values/RepositoryAssetValue.vue';
-import RepositoryListValue from './repository_values/RepositoryListValue.vue';
-import RepositoryChecklistValue from './repository_values/RepositoryChecklistValue.vue';
-import RepositoryStatusValue from './repository_values/RepositoryStatusValue.vue';
-import RepositoryDateTimeValue from './repository_values/RepositoryDateTimeValue.vue';
-import RepositoryDateTimeRangeValue from './repository_values/RepositoryDateTimeRangeValue.vue';
-import RepositoryDateValue from './repository_values/RepositoryDateValue.vue';
-import RepositoryDateRangeValue from './repository_values/RepositoryDateRangeValue.vue';
-import RepositoryTimeRangeValue from './repository_values/RepositoryTimeRangeValue.vue'
-import RepositoryTimeValue from './repository_values/RepositoryTimeValue.vue'
+import InlineEdit from '../shared/inline_edit.vue';
 import ScrollSpy from './repository_values/ScrollSpy.vue';
-import Reminder from './reminder.vue'
+import CustomColumns from './customColumns.vue';
+import RepositoryItemSidebarTitle from './Title.vue'
 
 export default {
   name: 'RepositoryItemSidebar',
   components: {
-    Reminder,
-    RepositoryStockValue,
-    RepositoryTextValue,
-    RepositoryNumberValue,
-    RepositoryAssetValue,
-    RepositoryListValue,
-    RepositoryChecklistValue,
-    RepositoryStatusValue,
-    RepositoryDateTimeValue,
-    RepositoryDateTimeRangeValue,
-    RepositoryDateValue,
-    RepositoryDateRangeValue,
-    RepositoryTimeRangeValue,
-    RepositoryTimeValue,
-    'scroll-spy': ScrollSpy
+    CustomColumns,
+    'repository-item-sidebar-title': RepositoryItemSidebarTitle,
+    'inline-edit': InlineEdit,
+    'scroll-spy': ScrollSpy,
   },
   data() {
     return {
       currentItemUrl: null,
+      updatePath: null,
       dataLoading: false,
       repositoryRowId: null,
       repository: null,
@@ -290,22 +254,22 @@ export default {
   },
   mounted() {
     // Add a click event listener to the document
-    document.addEventListener('click', this.handleOutsideClick);
+    document.addEventListener('mousedown', this.handleOutsideClick);
     this.inRepository = $('.assign-items-to-task-modal-container').length > 0;
   },
   beforeDestroy() {
     delete window.repositoryItemSidebarComponent;
-    document.removeEventListener('click', this.handleDocumentClick);
+    document.removeEventListener('mousedown', this.handleOutsideClick);
   },
   methods: {
     handleOutsideClick(event) {
       if (!this.isShowing) return
 
-      const sidebar = this.$refs.wrapper;
       // Check if the clicked element is not within the sidebar and it's not another item link or belogs to modals
-      const selectors = ['a', '.modal', '.label-printing-progress-modal'];
+      const selectors = ['a', '.modal', '.label-printing-progress-modal', '.atwho-view'];
 
-      if (!sidebar.contains(event.target) && !selectors.some(selector => event.target.closest(selector))) {
+      if (!$(event.target).parents('#repository-item-sidebar-wrapper').length &&
+        !selectors.some(selector => event.target.closest(selector))) {
         this.toggleShowHideSidebar(null);
       }
     },
@@ -350,6 +314,8 @@ export default {
         success: (result) => {
           this.repositoryRowId = result.id;
           this.repository = result.repository;
+          this.optionsPath = result.options_path;
+          this.updatePath = result.update_path;
           this.defaultColumns = result.default_columns;
           this.customColumns = result.custom_columns;
           this.assignedModules = result.assigned_modules;
@@ -383,6 +349,22 @@ export default {
     },
     privateModuleSize() {
       return this.assignedModules.total_assigned_size - this.assignedModules.viewable_modules.length;
+    },
+    update(params) {
+      $.ajax({
+        method: 'PUT',
+        url: this.updatePath,
+        dataType: 'json',
+        data: {
+          id: this.id,
+          ...params,
+        },
+      }).done((response) => {
+        for (const [id, customColumn] of Object.entries(response)) {
+           this.customColumns[id - 1]["value"] = customColumn.value;
+        }
+        RepositoryDatatable.reload();
+      });
     }
   }
 }

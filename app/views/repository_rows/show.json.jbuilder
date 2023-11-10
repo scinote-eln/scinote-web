@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
 json.id @repository_row.id
-
 json.repository do
   json.id @repository.id
   json.name @repository.name
 end
 
+json.update_path update_cell_repository_repository_row_path(@repository, @repository_row)
+
 json.permissions do
   json.can_export_repository_stock can_export_repository_stock?(@repository_row.repository)
+  json.can_manage can_manage_repository_rows?(@repository_row.repository)
 end
 
 json.actions do
@@ -17,6 +19,12 @@ json.actions do
       json.assign_url my_module_repositories_path(@my_module.id)
       json.disabled @my_module_assign_error.present?
     end
+  end
+  json.direct_file_upload_path rails_direct_uploads_url
+  if @repository_row.has_stock?
+    json.stock_value_url edit_repository_stock_repository_repository_row_url(@repository, @repository_row)
+  elsif @repository.has_stock_management?
+    json.stock_value_url new_repository_stock_repository_repository_row_url(@repository, @repository_row)
   end
 end
 
@@ -35,12 +43,34 @@ end
 json.custom_columns do
   json.array! repository_columns_ordered_by_state(@repository_row.repository).each do |repository_column|
     repository_cell = @repository_row.repository_cells.find_by(repository_column: repository_column)
+
+    options = case repository_column.data_type
+              when 'RepositoryListValue'
+                {
+                  options_path: items_repository_repository_columns_list_column_path(@repository, repository_column)
+                }
+              when 'RepositoryStatusValue'
+                {
+                  options_path: items_repository_repository_columns_status_column_path(@repository, repository_column)
+                }
+              when 'RepositoryChecklistValue'
+                {
+                  options_path: items_repository_repository_columns_checklist_column_path(@repository, repository_column)
+                }
+              else
+                {
+                  options_path: ''
+                }
+              end
+
     if repository_cell
-      json.merge! **serialize_repository_cell_value(repository_cell, @repository.team, @repository, reminders_enabled: @reminders_present).merge(
-        **repository_cell.repository_column.as_json(only: %i(id name data_type))
-      )
+      json.merge! serialize_repository_cell_value(
+        repository_cell, @repository.team, @repository, reminders_enabled: @reminders_present
+      ).merge(
+        repository_cell.repository_column.as_json(only: %i(id name data_type))
+      ).merge(options)
     else
-      json.merge! repository_column.as_json(only: %i(id name data_type))
+      json.merge! repository_column.as_json(only: %i(id name data_type)).merge(options)
     end
   end
 end

@@ -686,7 +686,6 @@ Rails.application.routes.draw do
         get :actions_toolbar
       end
     end
-
     resources :repositories do
       post 'repository_index',
            to: 'repository_rows#index',
@@ -742,6 +741,7 @@ Rails.application.routes.draw do
           get :relationships
           get :assigned_task_list
           get :active_reminder_repository_cells
+          put :update_cell
         end
         member do
           get 'repository_stock_value/new', to: 'repository_stock_values#new', as: 'new_repository_stock'

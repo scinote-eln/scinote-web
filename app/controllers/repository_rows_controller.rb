@@ -3,13 +3,14 @@ class RepositoryRowsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
   include MyModulesHelper
+  include RepositoryDatatableHelper
 
   MAX_PRINTABLE_ITEM_NAME_LENGTH = 64
   before_action :load_repository, except: %i(print rows_to_print print_zpl
                                              validate_label_template_columns actions_toolbar)
   before_action :load_repository_row_print, only: %i(print rows_to_print print_zpl validate_label_template_columns)
   before_action :load_repository_or_snapshot, only: %i(print rows_to_print print_zpl validate_label_template_columns)
-  before_action :load_repository_row, only: %i(update assigned_task_list active_reminder_repository_cells relationships)
+  before_action :load_repository_row, only: %i(update update_cell assigned_task_list active_reminder_repository_cells relationships)
   before_action :check_read_permissions, except: %i(create update delete_records
                                                     copy_records reminder_repository_cells
                                                     delete_records archive_records restore_records
@@ -17,7 +18,7 @@ class RepositoryRowsController < ApplicationController
   before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
   before_action :check_create_permissions, only: :create
   before_action :check_delete_permissions, only: %i(delete_records archive_records restore_records)
-  before_action :check_manage_permissions, only: %i(update copy_records)
+  before_action :check_manage_permissions, only: %i(update update_cell copy_records)
 
   def index
     @draw = params[:draw].to_i
@@ -75,7 +76,8 @@ class RepositoryRowsController < ApplicationController
 
     if service.succeed?
       repository_row = service.repository_row
-      log_activity(:create_item_inventory, repository_row)
+      log_activity(:create_item_inventory, repository_row, { repository_row: repository_row.id,
+                                                             repository: @repository.id })
       repository_row.repository_cells.where(value_type: 'RepositoryTextValue').each do |repository_cell|
         record_annotation_notification(repository_row, repository_cell)
       end
@@ -158,7 +160,8 @@ class RepositoryRowsController < ApplicationController
 
     if row_update.succeed?
       if row_update.record_updated
-        log_activity(:edit_item_inventory, @repository_row)
+        log_activity(:edit_item_inventory, @repository_row, { repository_row: @repository_row.id,
+                                                              repository: @repository.id })
         @repository_row.repository_cells.where(value_type: 'RepositoryTextValue').each do |repository_cell|
           record_annotation_notification(@repository_row, repository_cell)
         end
@@ -177,6 +180,38 @@ class RepositoryRowsController < ApplicationController
     end
   end
 
+  def update_cell
+    return render_422(t('.invalid_params')) if
+      update_params['repository_row'].present? && update_params['repository_cells'].present?
+    return render_422(t('.invalid_params')) if
+      update_params['repository_cells'] && update_params['repository_cells'].size != 1
+
+    row_cell_update =
+      RepositoryRows::UpdateRepositoryRowService.call(
+        repository_row: @repository_row, user: current_user, params: update_params
+      )
+
+    if row_cell_update.succeed?
+      if row_cell_update.record_updated
+        log_activity(:edit_item_field_inventory, @repository_row,
+                     { repository_row: @repository_row.id,
+                       repository_column: update_params['repository_cells']&.keys&.first ||
+                       I18n.t('repositories.table.row_name') })
+      end
+
+      repository_cells = {}
+      @repository_row.repository_cells.each do |repository_cell|
+        repository_cells[repository_cell.repository_column_id] = serialize_repository_cell_value(repository_cell,
+                                                                                                 @repository.team,
+                                                                                                 @repository)
+      end
+
+      render json: repository_cells, status: :ok
+    else
+      render json: row_update.errors, status: :bad_request
+    end
+  end
+
   def delete_records
     deleted_count = 0
     if selected_params
@@ -184,7 +219,7 @@ class RepositoryRowsController < ApplicationController
         row = @repository.repository_rows.find_by(id: row_id)
         next unless row && can_manage_repository_rows?(@repository)
 
-        log_activity(:delete_item_inventory, row)
+        log_activity(:delete_item_inventory, row, { repository_row: row.id, repository: @repository.id })
         row.destroy && deleted_count += 1
       end
       if deleted_count.zero?
@@ -440,18 +475,15 @@ class RepositoryRowsController < ApplicationController
   end
 
   def update_params
-    params.permit(repository_row: {}, repository_cells: {}).to_h
+    params.permit(repository_row: :name, repository_cells: {}).to_h
   end
 
-  def log_activity(type_of, repository_row)
+  def log_activity(type_of, repository_row, message_items = {})
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
             subject: repository_row,
             team: @repository.team,
-            message_items: {
-              repository_row: repository_row.id,
-              repository: @repository.id
-            })
+            message_items: message_items)
   end
 end
