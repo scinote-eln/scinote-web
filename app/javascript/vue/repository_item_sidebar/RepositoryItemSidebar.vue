@@ -6,6 +6,7 @@
       class='items-sidebar-wrapper bg-white gap-2.5 self-stretch rounded-tl-4 rounded-bl-4 shadow-lg h-full'>
 
       <div id="repository-item-sidebar" class="w-full h-full pl-6 bg-white flex flex-col">
+
         <div ref="stickyHeaderRef" id="sticky-header-wrapper"
           class="sticky top-0 right-0 bg-white flex z-50 flex-col h-[78px] pt-6">
           <div class="header flex w-full h-[30px] pr-6">
