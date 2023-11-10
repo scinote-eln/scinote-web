@@ -40,6 +40,29 @@ json.default_columns do
   end
 end
 
+json.relationships do
+  json.parents_count @repository_row.parent_connections_count
+  json.children_count @repository_row.child_connections_count
+  json.parents do
+    json.array! @repository_row.parent_repository_rows.each do |parent|
+      json.code parent.code
+      json.name parent.name
+      json.path repository_repository_row_path(parent.repository, parent)
+      json.repository_name parent.repository.name
+      json.repository_path repository_path(parent.repository)
+    end
+  end
+  json.children do
+    json.array! @repository_row.child_repository_rows.each do |child|
+      json.code child.code
+      json.name child.name
+      json.path repository_repository_row_path(child.repository, child)
+      json.repository_name child.repository.name
+      json.repository_path repository_path(child.repository)
+    end
+  end
+end
+
 json.custom_columns do
   json.array! repository_columns_ordered_by_state(@repository_row.repository).each do |repository_column|
     repository_cell = @repository_row.repository_cells.find_by(repository_column: repository_column)
@@ -82,4 +105,9 @@ json.assigned_modules do
       json.merge! serialize_assigned_my_module_value(my_module)
     end
   end
+end
+
+json.icons do
+  json.delimiter_path asset_path 'icon_small/navigate_next.svg'
+  json.unlink_path asset_path 'icon_small/unlink.svg'
 end

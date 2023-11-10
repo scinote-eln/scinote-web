@@ -2225,6 +2225,7 @@ en:
       header_title: "Inventory item"
       section:
         information: "Information"
+        relationships: "Relationships"
         assigned: "Assigned (%{count})"
         qr: "QR"
       print_label: "Print label"
@@ -2239,6 +2240,17 @@ en:
           project: "Project:"
           experiment: "Experiment:"
           my_module: "Task:"
+      relationships:
+        id: "ID: %{code}"
+        item: "Item: "
+        inventory: "Inventory: "
+        empty: "This item has no relationships assigned."
+        parents:
+          count: "Parents (%{count})"
+          empty: "This item has no parent relationship assigned."
+        children:
+          count: "Children (%{count})"
+          empty: "This item has no child relationship assigned."
       default_columns:
         repository_name: "Inventory"
         id: "Item ID"
@@ -2312,6 +2324,7 @@ en:
     highlight_component:
       information_label: 'Information'
       custom_columns_label: 'Custom columns'
+      relationships_label: 'Relationships'
       assigned_label: 'Assigned'
       QR_label: 'QR'
   repository_stock_values:
