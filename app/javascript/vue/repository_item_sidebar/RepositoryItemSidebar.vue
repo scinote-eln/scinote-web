@@ -1,17 +1,25 @@
 <template>
-  <transition
-    enter-class="translate-x-full w-0"
-    enter-active-class="transition-all ease-sharp duration-[588ms]"
-
-    leave-class="translate-x-0 w-[565px]"
-    leave-active-class="transition-all ease-sharp duration-[588ms]"
+  <transition enter-class="translate-x-full w-0" enter-active-class="transition-all ease-sharp duration-[588ms]"
+    leave-class="translate-x-0 w-[565px]" leave-active-class="transition-all ease-sharp duration-[588ms]"
     leave-to-class="translate-x-full w-0">
     <div ref="wrapper" v-show="isShowing" id="repository-item-sidebar-wrapper"
       class='items-sidebar-wrapper bg-white gap-2.5 self-stretch rounded-tl-4 rounded-bl-4 shadow-lg h-full'>
 
       <div id="repository-item-sidebar" class="w-full h-full pl-6 bg-white flex flex-col">
+        <div ref="stickyHeaderRef" id="sticky-header-wrapper"
+          class="sticky top-0 right-0 bg-white flex z-50 flex-col h-[78px] pt-6">
+          <div class="header flex w-full h-[30px] pr-6">
+            <repository-item-sidebar-title v-if="defaultColumns"
+              :editable="permissions?.can_manage && !defaultColumns?.archived" :name="defaultColumns.name"
+              @update="update"></repository-item-sidebar-title>
+            <i id="close-icon" @click="toggleShowHideSidebar(currentItemUrl)"
+              class="sn-icon sn-icon-close ml-auto cursor-pointer my-auto mx-0"></i>
+          </div>
+          <div id="divider" class="w-500 bg-sn-light-grey flex items-center self-stretch h-px mt-6 mr-6"></div>
+        </div>
 
-        <div ref="stickyHeaderRef" id="sticky-header-wrapper" class="sticky top-0 right-0 bg-white flex z-50 flex-col h-[78px] pt-6">
+        <div ref="stickyHeaderRef" id="sticky-header-wrapper"
+          class="sticky top-0 right-0 bg-white flex z-50 flex-col h-[78px] pt-6">
           <div class="header flex w-full h-[30px] pr-6">
             <repository-item-sidebar-title v-if="defaultColumns"
               :editable="permissions?.can_manage && !defaultColumns?.archived" :name="defaultColumns.name"
@@ -151,7 +159,8 @@
                       <div class="text-sn-dark-grey">{{ i18n.t('repositories.item_card.assigned.private',
                         { count: privateModuleSize() }) }}
                       </div>
-                      <div class="sci-divider" :class="{ 'hidden': assignedModules?.viewable_modules?.length == 0 }"></div>
+                      <div class="sci-divider" :class="{ 'hidden': assignedModules?.viewable_modules?.length == 0 }">
+                      </div>
                     </div>
                     <div v-for="(assigned, index) in assignedModules.viewable_modules" :key="`assigned_module_${index}`"
                       class="flex flex-col w-[350px] h-auto gap-4">
@@ -195,7 +204,7 @@
                 { id: 'highlight-item-2', textId: 'text-item-2', labelAlias: 'custom_columns_label', label: 'custom-columns-label', sectionId: 'custom-columns-section' },
                 { id: 'highlight-item-3', textId: 'text-item-3', labelAlias: 'assigned_label', label: 'assigned-label', sectionId: 'assigned-section' },
                 { id: 'highlight-item-4', textId: 'text-item-4', labelAlias: 'QR_label', label: 'QR-label', sectionId: 'qr-section' }
-              ]" :stickyHeaderHeightPx="102" :cardTopPaddingPx="null" :targetAreaMargin="30" v-show="isShowing">
+              ]" v-show="isShowing">
               </scroll-spy>
             </div>
           </div>
@@ -368,7 +377,7 @@ export default {
         },
       }).done((response) => {
         for (const [id, customColumn] of Object.entries(response)) {
-           this.customColumns[id - 1]["value"] = customColumn.value;
+          this.customColumns[id - 1]["value"] = customColumn.value;
         }
         RepositoryDatatable.reload();
       });
