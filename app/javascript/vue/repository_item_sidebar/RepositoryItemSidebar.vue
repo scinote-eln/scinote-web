@@ -1,214 +1,221 @@
 <template>
-  <div ref="wrapper" id="repository-item-sidebar-wrapper"
-    class='items-sidebar-wrapper bg-white gap-2.5 self-stretch  rounded-tl-4 rounded-bl-4 transition-transform ease-in-out transform shadow-lg'
-    :class="{ 'translate-x-0 w-[565px] h-full': isShowing, 'transition-transform ease-in-out duration-400 transform translate-x-full w-0': !isShowing }">
+  <transition
+    enter-class="translate-x-full w-0"
+    enter-active-class="transition-all ease-sharp duration-[588ms]"
 
-    <div id="repository-item-sidebar" class="w-full h-full pl-6 bg-white flex flex-col">
+    leave-class="translate-x-0 w-[565px]"
+    leave-active-class="transition-all ease-sharp duration-[588ms]"
+    leave-to-class="translate-x-full w-0">
+    <div ref="wrapper" v-show="isShowing" id="repository-item-sidebar-wrapper"
+      class='items-sidebar-wrapper bg-white gap-2.5 self-stretch rounded-tl-4 rounded-bl-4 shadow-lg h-full'>
 
-      <div ref="stickyHeaderRef" id="sticky-header-wrapper" class="sticky top-0 right-0 bg-white flex z-50 flex-col h-[78px] pt-6">
-        <div class="header flex w-full h-[30px] pr-6">
-          <repository-item-sidebar-title v-if="defaultColumns"
-            :editable="permissions?.can_manage && !defaultColumns?.archived" :name="defaultColumns.name"
-            @update="update"></repository-item-sidebar-title>
-          <i id="close-icon" @click="toggleShowHideSidebar(currentItemUrl)"
-            class="sn-icon sn-icon-close ml-auto cursor-pointer my-auto mx-0"></i>
+      <div id="repository-item-sidebar" class="w-full h-full pl-6 bg-white flex flex-col">
+
+        <div ref="stickyHeaderRef" id="sticky-header-wrapper" class="sticky top-0 right-0 bg-white flex z-50 flex-col h-[78px] pt-6">
+          <div class="header flex w-full h-[30px] pr-6">
+            <repository-item-sidebar-title v-if="defaultColumns"
+              :editable="permissions?.can_manage && !defaultColumns?.archived" :name="defaultColumns.name"
+              @update="update"></repository-item-sidebar-title>
+            <i id="close-icon" @click="toggleShowHideSidebar(currentItemUrl)"
+              class="sn-icon sn-icon-close ml-auto cursor-pointer my-auto mx-0"></i>
+          </div>
+          <div id="divider" class="w-500 bg-sn-light-grey flex items-center self-stretch h-px mt-6 mr-6"></div>
         </div>
-        <div id="divider" class="w-500 bg-sn-light-grey flex items-center self-stretch h-px mt-6 mr-6"></div>
-      </div>
 
-      <div ref="bodyWrapper" id="body-wrapper" class="overflow-y-auto overflow-x-hidden h-[calc(100%-78px)] pt-6 ">
-        <div v-if="dataLoading" class="h-full flex flex-grow-1">
-          <div class="sci-loader"></div>
-        </div>
+        <div ref="bodyWrapper" id="body-wrapper" class="overflow-y-auto overflow-x-hidden h-[calc(100%-78px)] pt-6 ">
+          <div v-if="dataLoading" class="h-full flex flex-grow-1">
+            <div class="sci-loader"></div>
+          </div>
 
-        <div v-else class="flex flex-1 flex-grow-1 justify-between" ref="scrollSpyContent">
+          <div v-else class="flex flex-1 flex-grow-1 justify-between" ref="scrollSpyContent">
 
-          <div id="left-col" class="flex flex-col gap-4">
+            <div id="left-col" class="flex flex-col gap-4">
 
-            <!-- INFORMATION -->
-            <section id="information-section">
-              <div ref="information-label" id="information-label"
-                class="font-inter text-lg font-semibold leading-7 mb-4 transition-colors duration-300">{{
-                  i18n.t('repositories.item_card.section.information') }}
-              </div>
-              <div v-if="defaultColumns">
-                <div class="flex flex-col gap-4">
-                  <!-- REPOSITORY NAME -->
-                  <div class="flex flex-col ">
-                    <span class="inline-block font-semibold pb-[6px]">{{
-                      i18n.t('repositories.item_card.default_columns.repository_name') }}</span>
-                    <span class="repository-name text-sn-dark-grey line-clamp-3" :title="repository?.name">
-                      {{ repository?.name }}
-                    </span>
-                  </div>
+              <!-- INFORMATION -->
+              <section id="information-section">
+                <div ref="information-label" id="information-label"
+                  class="font-inter text-lg font-semibold leading-7 mb-4 transition-colors duration-300">{{
+                    i18n.t('repositories.item_card.section.information') }}
+                </div>
+                <div v-if="defaultColumns">
+                  <div class="flex flex-col gap-4">
+                    <!-- REPOSITORY NAME -->
+                    <div class="flex flex-col ">
+                      <span class="inline-block font-semibold pb-[6px]">{{
+                        i18n.t('repositories.item_card.default_columns.repository_name') }}</span>
+                      <span class="repository-name text-sn-dark-grey line-clamp-3" :title="repository?.name">
+                        {{ repository?.name }}
+                      </span>
+                    </div>
 
-                  <div class="sci-divider"></div>
+                    <div class="sci-divider"></div>
 
-                  <!-- CODE -->
-                  <div class="flex flex-col ">
-                    <span class="inline-block font-semibold pb-[6px]">{{
-                      i18n.t('repositories.item_card.default_columns.id')
-                    }}</span>
-                    <span class="inline-block text-sn-dark-grey line-clamp-3" :title="defaultColumns?.code">
-                      {{ defaultColumns?.code }}
-                    </span>
-                  </div>
+                    <!-- CODE -->
+                    <div class="flex flex-col ">
+                      <span class="inline-block font-semibold pb-[6px]">{{
+                        i18n.t('repositories.item_card.default_columns.id')
+                      }}</span>
+                      <span class="inline-block text-sn-dark-grey line-clamp-3" :title="defaultColumns?.code">
+                        {{ defaultColumns?.code }}
+                      </span>
+                    </div>
 
-                  <div class="sci-divider"></div>
+                    <div class="sci-divider"></div>
 
-                  <!-- ADDED ON -->
-                  <div class="flex flex-col ">
-                    <span class="inline-block font-semibold pb-[6px]">{{
-                      i18n.t('repositories.item_card.default_columns.added_on')
-                    }}</span>
-                    <span class="inline-block text-sn-dark-grey" :title="defaultColumns?.added_on">
-                      {{ defaultColumns?.added_on }}
-                    </span>
-                  </div>
+                    <!-- ADDED ON -->
+                    <div class="flex flex-col ">
+                      <span class="inline-block font-semibold pb-[6px]">{{
+                        i18n.t('repositories.item_card.default_columns.added_on')
+                      }}</span>
+                      <span class="inline-block text-sn-dark-grey" :title="defaultColumns?.added_on">
+                        {{ defaultColumns?.added_on }}
+                      </span>
+                    </div>
 
-                  <div class="sci-divider"></div>
+                    <div class="sci-divider"></div>
 
-                  <!-- ADDED BY -->
-                  <div class="flex flex-col ">
-                    <span class="inline-block font-semibold pb-[6px]">{{
-                      i18n.t('repositories.item_card.default_columns.added_by')
-                    }}</span>
-                    <span class="inline-block text-sn-dark-grey line-clamp-3" :title="defaultColumns?.added_by">
-                      {{ defaultColumns?.added_by }}
-                    </span>
-                  </div>
+                    <!-- ADDED BY -->
+                    <div class="flex flex-col ">
+                      <span class="inline-block font-semibold pb-[6px]">{{
+                        i18n.t('repositories.item_card.default_columns.added_by')
+                      }}</span>
+                      <span class="inline-block text-sn-dark-grey line-clamp-3" :title="defaultColumns?.added_by">
+                        {{ defaultColumns?.added_by }}
+                      </span>
+                    </div>
 
-                  <!-- ARCHIVED ON -->
-                  <div v-if="defaultColumns.archived_on" class="flex flex-col ">
-                    <div class="sci-divider pb-4"></div>
-                    <span class="inline-block font-semibold pb-[6px]">{{
-                      i18n.t('repositories.item_card.default_columns.archived_on')
-                    }}</span>
-                    <span class="inline-block text-sn-dark-grey" :title="defaultColumns.archived_on">
-                      {{ defaultColumns.archived_on }}
-                    </span>
-                  </div>
+                    <!-- ARCHIVED ON -->
+                    <div v-if="defaultColumns.archived_on" class="flex flex-col ">
+                      <div class="sci-divider pb-4"></div>
+                      <span class="inline-block font-semibold pb-[6px]">{{
+                        i18n.t('repositories.item_card.default_columns.archived_on')
+                      }}</span>
+                      <span class="inline-block text-sn-dark-grey" :title="defaultColumns.archived_on">
+                        {{ defaultColumns.archived_on }}
+                      </span>
+                    </div>
 
-                  <!-- ARCHIVED BY -->
-                  <div v-if="defaultColumns.archived_by" class="flex flex-col ">
-                    <div class="sci-divider pb-4"></div>
-                    <span class="inline-block font-semibold pb-[6px]">{{
-                      i18n.t('repositories.item_card.default_columns.archived_by')
-                    }}</span>
-                    <span class="inline-block text-sn-dark-grey" :title="defaultColumns.archived_by.full_name">
-                      {{ defaultColumns.archived_by.full_name }}
-                    </span>
+                    <!-- ARCHIVED BY -->
+                    <div v-if="defaultColumns.archived_by" class="flex flex-col ">
+                      <div class="sci-divider pb-4"></div>
+                      <span class="inline-block font-semibold pb-[6px]">{{
+                        i18n.t('repositories.item_card.default_columns.archived_by')
+                      }}</span>
+                      <span class="inline-block text-sn-dark-grey" :title="defaultColumns.archived_by.full_name">
+                        {{ defaultColumns.archived_by.full_name }}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </section>
-
-            <div id="divider" class="w-500 bg-sn-light-grey flex items-center self-stretch h-px "></div>
-
-            <!-- CUSTOM COLUMNS, ASSIGNED, QR CODE -->
-            <div id="custom-col-assigned-qr-wrapper" class="flex flex-col gap-4">
-
-              <!-- CUSTOM COLUMNS -->
-              <section id="custom-columns-section" class="flex flex-col min-h-[64px] h-auto">
-                <div ref="custom-columns-label" id="custom-columns-label"
-                  class="font-inter text-lg font-semibold leading-7 pb-4 transition-colors duration-300">
-                  {{ i18n.t('repositories.item_card.custom_columns_label') }}
-                </div>
-                <CustomColumns :customColumns="customColumns" :repositoryRowId="repositoryRowId"
-                  :repositoryId="repository?.id" :inArchivedRepositoryRow="defaultColumns?.archived"
-                  :permissions="permissions" :updatePath="updatePath" :actions="actions" @update="update" />
               </section>
 
-              <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px"></div>
+              <div id="divider" class="w-500 bg-sn-light-grey flex items-center self-stretch h-px "></div>
 
-              <!-- ASSIGNED -->
-              <section id="assigned-section" class="flex flex-col" ref="assignedSectionRef">
-                <div
-                  class="flex flex-row text-base font-semibold w-[350px] pb-4 leading-7 items-center justify-between transition-colors duration-300"
-                  ref="assigned-label">
-                  {{ i18n.t('repositories.item_card.section.assigned', {
-                    count: assignedModules ?
-                      assignedModules.total_assigned_size : 0
-                  }) }}
-                  <a v-if="!defaultColumns?.archived && (inRepository || actions?.assign_repository_row)"
-                    class="btn-text-link font-normal" :class="{
-                      'assign-inventory-button': actions?.assign_repository_row,
-                      'disabled': actions?.assign_repository_row && actions.assign_repository_row.disabled
-                    }"
-                    :data-assign-url="actions?.assign_repository_row ? actions.assign_repository_row.assign_url : ''"
-                    :data-repository-row-id="repositoryRowId" @click="showRepositoryAssignModal">
-                    {{ i18n.t('repositories.item_card.assigned.assign') }}
-                  </a>
-                </div>
-                <div v-if="assignedModules && assignedModules.total_assigned_size > 0" class="flex flex-col gap-4">
-                  <div v-if="privateModuleSize() > 0" class="flex flex-col gap-4">
-                    <div class="text-sn-dark-grey">{{ i18n.t('repositories.item_card.assigned.private',
-                      { count: privateModuleSize() }) }}
-                    </div>
-                    <div class="sci-divider" :class="{ 'hidden': assignedModules?.viewable_modules?.length == 0 }"></div>
+              <!-- CUSTOM COLUMNS, ASSIGNED, QR CODE -->
+              <div id="custom-col-assigned-qr-wrapper" class="flex flex-col gap-4">
+
+                <!-- CUSTOM COLUMNS -->
+                <section id="custom-columns-section" class="flex flex-col min-h-[64px] h-auto">
+                  <div ref="custom-columns-label" id="custom-columns-label"
+                    class="font-inter text-lg font-semibold leading-7 pb-4 transition-colors duration-300">
+                    {{ i18n.t('repositories.item_card.custom_columns_label') }}
                   </div>
-                  <div v-for="(assigned, index) in assignedModules.viewable_modules" :key="`assigned_module_${index}`"
-                    class="flex flex-col w-[350px] h-auto gap-4">
-                    <div class="flex flex-col gap-3.5">
-                      <div v-for="(item, index_assigned) in assigned" :key="`assigned_element_${index_assigned}`">
-                        {{ i18n.t(`repositories.item_card.assigned.labels.${item.type}`) }}
-                        <a :href="item.url" class="text-sn-science-blue hover:text-sn-science-blue hover:no-underline">
-                          {{ item.archived ? i18n.t('labels.archived') : '' }} {{ item.value }}
-                        </a>
+                  <CustomColumns :customColumns="customColumns" :repositoryRowId="repositoryRowId"
+                    :repositoryId="repository?.id" :inArchivedRepositoryRow="defaultColumns?.archived"
+                    :permissions="permissions" :updatePath="updatePath" :actions="actions" @update="update" />
+                </section>
+
+                <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px"></div>
+
+                <!-- ASSIGNED -->
+                <section id="assigned-section" class="flex flex-col" ref="assignedSectionRef">
+                  <div
+                    class="flex flex-row text-base font-semibold w-[350px] pb-4 leading-7 items-center justify-between transition-colors duration-300"
+                    ref="assigned-label">
+                    {{ i18n.t('repositories.item_card.section.assigned', {
+                      count: assignedModules ?
+                        assignedModules.total_assigned_size : 0
+                    }) }}
+                    <a v-if="!defaultColumns?.archived && (inRepository || actions?.assign_repository_row)"
+                      class="btn-text-link font-normal" :class="{
+                        'assign-inventory-button': actions?.assign_repository_row,
+                        'disabled': actions?.assign_repository_row && actions.assign_repository_row.disabled
+                      }"
+                      :data-assign-url="actions?.assign_repository_row ? actions.assign_repository_row.assign_url : ''"
+                      :data-repository-row-id="repositoryRowId" @click="showRepositoryAssignModal">
+                      {{ i18n.t('repositories.item_card.assigned.assign') }}
+                    </a>
+                  </div>
+                  <div v-if="assignedModules && assignedModules.total_assigned_size > 0" class="flex flex-col gap-4">
+                    <div v-if="privateModuleSize() > 0" class="flex flex-col gap-4">
+                      <div class="text-sn-dark-grey">{{ i18n.t('repositories.item_card.assigned.private',
+                        { count: privateModuleSize() }) }}
                       </div>
+                      <div class="sci-divider" :class="{ 'hidden': assignedModules?.viewable_modules?.length == 0 }"></div>
                     </div>
-                    <div class="sci-divider"
-                      :class="{ 'hidden': index === assignedModules?.viewable_modules?.length - 1 }"></div>
+                    <div v-for="(assigned, index) in assignedModules.viewable_modules" :key="`assigned_module_${index}`"
+                      class="flex flex-col w-[350px] h-auto gap-4">
+                      <div class="flex flex-col gap-3.5">
+                        <div v-for="(item, index_assigned) in assigned" :key="`assigned_element_${index_assigned}`">
+                          {{ i18n.t(`repositories.item_card.assigned.labels.${item.type}`) }}
+                          <a :href="item.url" class="text-sn-science-blue hover:text-sn-science-blue hover:no-underline">
+                            {{ item.archived ? i18n.t('labels.archived') : '' }} {{ item.value }}
+                          </a>
+                        </div>
+                      </div>
+                      <div class="sci-divider"
+                        :class="{ 'hidden': index === assignedModules?.viewable_modules?.length - 1 }"></div>
+                    </div>
                   </div>
-                </div>
-                <div v-else class="text-sn-dark-grey">
-                  {{ i18n.t('repositories.item_card.assigned.empty') }}
-                </div>
-              </section>
+                  <div v-else class="text-sn-dark-grey">
+                    {{ i18n.t('repositories.item_card.assigned.empty') }}
+                  </div>
+                </section>
 
-              <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px  "></div>
+                <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px  "></div>
 
-              <!-- QR -->
-              <section id="qr-section" ref="QR-label">
-                <div class="font-inter text-base font-semibold leading-7 mb-4 mt-0 transition-colors duration-300">
-                  {{ i18n.t('repositories.item_card.section.qr') }}
-                </div>
-                <div class="bar-code-container">
-                  <canvas id="bar-code-canvas" class="hidden"></canvas>
-                  <img :src="barCodeSrc" class="w-[90px]" />
-                </div>
-              </section>
+                <!-- QR -->
+                <section id="qr-section" ref="QR-label">
+                  <div class="font-inter text-base font-semibold leading-7 mb-4 mt-0 transition-colors duration-300">
+                    {{ i18n.t('repositories.item_card.section.qr') }}
+                  </div>
+                  <div class="bar-code-container">
+                    <canvas id="bar-code-canvas" class="hidden"></canvas>
+                    <img :src="barCodeSrc" class="w-[90px]" />
+                  </div>
+                </section>
+              </div>
+            </div>
+
+            <!-- NAVIGATION -->
+            <div v-if="isShowing" ref="navigationRef" id="navigation"
+              class="flex item-end gap-x-4 min-w-[130px] min-h-[130px] h-fit sticky top-0 right-[24px] ">
+              <scroll-spy :itemsToCreate="[
+                { id: 'highlight-item-1', textId: 'text-item-1', labelAlias: 'information_label', label: 'information-label', sectionId: 'information-section' },
+                { id: 'highlight-item-2', textId: 'text-item-2', labelAlias: 'custom_columns_label', label: 'custom-columns-label', sectionId: 'custom-columns-section' },
+                { id: 'highlight-item-3', textId: 'text-item-3', labelAlias: 'assigned_label', label: 'assigned-label', sectionId: 'assigned-section' },
+                { id: 'highlight-item-4', textId: 'text-item-4', labelAlias: 'QR_label', label: 'QR-label', sectionId: 'qr-section' }
+              ]" :stickyHeaderHeightPx="102" :cardTopPaddingPx="null" :targetAreaMargin="30" v-show="isShowing">
+              </scroll-spy>
             </div>
           </div>
 
-          <!-- NAVIGATION -->
-          <div v-if="isShowing" ref="navigationRef" id="navigation"
-            class="flex item-end gap-x-4 min-w-[130px] min-h-[130px] h-fit sticky top-0 right-[24px] ">
-            <scroll-spy :itemsToCreate="[
-              { id: 'highlight-item-1', textId: 'text-item-1', labelAlias: 'information_label', label: 'information-label', sectionId: 'information-section' },
-              { id: 'highlight-item-2', textId: 'text-item-2', labelAlias: 'custom_columns_label', label: 'custom-columns-label', sectionId: 'custom-columns-section' },
-              { id: 'highlight-item-3', textId: 'text-item-3', labelAlias: 'assigned_label', label: 'assigned-label', sectionId: 'assigned-section' },
-              { id: 'highlight-item-4', textId: 'text-item-4', labelAlias: 'QR_label', label: 'QR-label', sectionId: 'qr-section' }
-            ]" :stickyHeaderHeightPx="102" :cardTopPaddingPx="null" :targetAreaMargin="30" v-show="isShowing">
-            </scroll-spy>
+          <!-- BOTTOM -->
+          <div id="bottom" v-show="!dataLoading" class="h-[100px] flex flex-col justify-end mt-4 mr-6"
+            :class="{ 'pb-6': customColumns?.length }">
+            <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px mb-6"></div>
+            <div id="bottom-button-wrapper" class="flex h-10 justify-end">
+              <button type="button" class="btn btn-primary print-label-button"
+                :data-rows="JSON.stringify([repositoryRowId])">
+                {{ i18n.t('repositories.item_card.print_label') }}
+              </button>
+            </div>
           </div>
         </div>
 
-        <!-- BOTTOM -->
-        <div id="bottom" v-show="!dataLoading" class="h-[100px] flex flex-col justify-end mt-4 mr-6"
-          :class="{ 'pb-6': customColumns?.length }">
-          <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px mb-6"></div>
-          <div id="bottom-button-wrapper" class="flex h-10 justify-end">
-            <button type="button" class="btn btn-primary print-label-button"
-              :data-rows="JSON.stringify([repositoryRowId])">
-              {{ i18n.t('repositories.item_card.print_label') }}
-            </button>
-          </div>
-        </div>
       </div>
-
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
