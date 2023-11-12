@@ -1,7 +1,7 @@
 <template>
   <div
     ref="modal"
-    class="modal fade" 
+    class="modal fade"
     tabindex="-1"
     role="dialog"
     aria-labelledby="manage-stock-value"
@@ -246,7 +246,7 @@
       validateAndsaveStockValue() {
         let newErrors = {};
         this.errors = newErrors;
-        if (!this.unit) 
+        if (!this.unit)
           newErrors['unit'] = I18n.t('repository_stock_values.manage_modal.unit_error');
         if (!this.amount)
           newErrors['amount'] = I18n.t('repository_stock_values.manage_modal.amount_error');

@@ -21,7 +21,6 @@
                          class="sn-select__options !relative !top-0 !left-[-1px] !shadow-none scroll-container px-2.5 pt-0 block"
                          :class="{ [optionsClassName]: true }"
       >
-  
         <div v-if="options.length" class="flex flex-col gap-[1px]">
           <div
             v-for="option in options"
@@ -63,7 +62,7 @@
       noOptionsPlaceholder: { type: String },
       className: { type: String, default: '' },
       optionsClassName: { type: String, default: '' },
-      disabled: { type: Boolean, default: false }
+      disabled: { type: Boolean, default: false },
     },
     directives: {
       'click-outside': vOnClickOutside

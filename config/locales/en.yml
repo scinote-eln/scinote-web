@@ -2224,6 +2224,21 @@ en:
     my_module_assigned_snapshot_service:
       invalid_arguments: "Can't find %{key}"
     item_card:
+      add_relationship_button_text: "Add"
+      repository_item_relationships_modal:
+        header_title: "Add relationship"
+        header_subtitle: "Select the fields below to create the desired relationship"
+        add_button: "Add"
+        cancel_button: "Cancel"
+        select_inventory_placeholder: "Select inventory name"
+        select_inventory_no_options_placeholder: "No inventory options"
+        select_item_placeholder: "Select item name or ID"
+        select_item_no_options_placeholder: "No items options"
+        select_relationship_placeholder: "Select relationship"
+        select_relationship_no_options_placeholder: "No relationship options"
+        inventory_section_title: "Inventory"
+        item_section_title: "Item"
+        relationship_section_title: "Relationship"
       header_title: "Inventory item"
       section:
         information: "Information"

@@ -2,7 +2,7 @@
   <div class="w-full relative" ref="container" v-click-outside="closeDropdown">
     <button ref="focusElement"
             class="btn flex justify-between items-center w-full outline-none border-[1px] bg-white rounded p-2
-                  font-inter text-sm font-normal leading-5"
+            font-inter text-sm font-normal leading-5"
             :class="{
               'sci-cursor-edit': !isOpen && withEditCursor,
               'border-sn-light-grey hover:border-sn-sleepy-grey': !isOpen,
@@ -64,12 +64,10 @@
 </template>
 
 <script>
-  import PerfectScrollbar from 'vue3-perfect-scrollbar';
-  import { vOnClickOutside } from '@vueuse/components'
+  import { vOnClickOutside } from '@vueuse/components';
 
   export default {
     name: 'ChecklistSelect',
-    comments: { PerfectScrollbar },
     props: {
       withButtons: { type: Boolean, default: false },
       withEditCursor: { type: Boolean, default: false },
@@ -79,7 +77,9 @@
       noOptionsPlaceholder: { type: String },
       disabled: { type: Boolean, default: false },
       className: { type: String, default: '' },
-      optionsClassName: { type: String, default: '' }
+      optionsClassName: { type: String, default: '' },
+      shouldUpdateWithoutValues: { type: Boolean, default: false },
+      shouldUpdateOnToggleClose: { type: Boolean, default: false }
     },
     directives: {
       'click-outside': vOnClickOutside
@@ -103,11 +103,11 @@
     },
     watch: {
       initialSelectedValues: {
-        handler: function (newVal) {
+        handler: function (newVal, oldVal) {
           this.selectedValues = newVal;
         },
         deep: true
-      }
+      },
     },
     methods: {
       toggle() {
@@ -115,7 +115,10 @@
         if (this.isOpen) {
           this.updateOptionPosition();
         } else {
-          this.closeDropdown();
+          if (this.shouldUpdateOnToggleClose && this.shouldUpdateWithoutValues) {
+            this.$emit('update', this.selectedValues);
+          }
+          this.close();
         }
       },
       updateOptionPosition() {
@@ -136,7 +139,13 @@
         if (!this.isOpen) return;
 
         this.isOpen = false;
-        this.$emit('update', this.selectedValues.length ? this.selectedValues : null);
+        if (this.shouldUpdateWithoutValues) {
+          this.$emit('update', this.selectedValues)
+
+        }
+        if (this.selectedValues.length && !this.shouldUpdateWithoutValues) {
+          this.$emit('update', this.selectedValues);
+        }
       },
       isSelected(id) {
         return this.selectedValues.includes(id);
