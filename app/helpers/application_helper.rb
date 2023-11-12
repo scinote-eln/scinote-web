@@ -101,7 +101,7 @@ module ApplicationHelper
   end
 
   def generate_annotation_notification(target_user, title, message)
-    GeneralNotification.with(
+    SmartAnnotationNotification.with(
       title: sanitize_input(title),
       message: sanitize_input(message)
     ).deliver_later(target_user)
