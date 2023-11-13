@@ -94,7 +94,7 @@ tests-ci:
 						-e ENABLE_USER_CONFIRMATION=false \
 						-e ENABLE_USER_REGISTRATION=true \
 						-e CORE_API_RATE_LIMIT=1000000 \
-						--rm web bash -c "rake db:create && rake db:migrate && bundle exec rspec ./spec/requests/api/"
+						--rm web bash -c "rake db:create && rake db:migrate && bundle exec rspec ./spec/"
 
 console:
 	@$(MAKE) rails cmd="rails console"
