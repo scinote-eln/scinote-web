@@ -16,7 +16,7 @@
 
     <div v-if="canEdit">
       <text-area :initialValue="colVal?.edit"
-                 :noContentPlaceholder="noContentPlaceholder"
+                 :noContentPlaceholder="i18n.t('repositories.item_card.repository_text_value.placeholder')"
                  :placeholder="i18n.t('repositories.item_card.repository_text_value.placeholder')"
                  :unEditableRef="`textRef`"
                  :smartAnnotation="true"
@@ -24,7 +24,8 @@
                  :expandable="expandable"
                  :collapsed="collapsed"
                  @toggleExpandableState="toggleExpandableState"
-                 @update="update" />
+                 @update="update"
+                 className="px-3" />
     </div>
     <div v-else-if="colVal?.edit"
           ref="textRef"
@@ -65,17 +66,11 @@ export default {
     colId: Number,
     colName: String,
     colVal: Object,
-    permissions: null,
-    inArchivedRepositoryRow: Boolean,
+    canEdit: { type: Boolean, default: false }
   },
   created() {
     // constants
     this.noContentPlaceholder = this.i18n.t("repositories.item_card.repository_text_value.no_text");
-  },
-  computed: {
-    canEdit() {
-      return this.permissions?.can_manage && !this.inArchivedRepositoryRow;
-    }
   },
   methods: {
     toggleCollapse() {

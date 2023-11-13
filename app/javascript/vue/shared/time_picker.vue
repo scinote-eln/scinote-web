@@ -15,6 +15,7 @@
       :id="this.selectorId"
       type="text"
       data-mask-type="time"
+      :disabled="disabled"
       v-model="value"
       placeholder="HH:mm"
     />
@@ -28,7 +29,8 @@
       selectorId: { type: String, required: true },
       defaultValue: { type: String, required: false },
       standAlone: { type: Boolean, default: true, required: false },
-      className: { type: String, default: '', required: false }
+      className: { type: String, default: '', required: false },
+      disabled: { type: Boolean, default: false }
     },
     data() {
       return {

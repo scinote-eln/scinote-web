@@ -2,23 +2,26 @@
   <textarea v-if="editing"
             ref="textareaRef"
             class="leading-5 inline-block outline-none border-solid font-normal border-[1px] box-content
-                  overflow-x-hidden overflow-y-auto resize-none rounded px-4 py-2 w-[calc(100%-2rem)]
+                  overflow-x-hidden overflow-y-auto resize-none rounded py-2 w-[calc(100%-1.5rem)]
                   border-sn-science-blue"
             :class="{
               'max-h-[4rem]': collapsed,
-              'max-h-[40rem]': !collapsed
+              'max-h-[40rem]': !collapsed,
+              [className]: true
             }"
             :placeholder="placeholder"
             v-model="value"
             @keydown="handleKeydown"
-            @blur="handleBlur" />
+            @blur="handleBlur"></textarea>
   <div v-else
         :ref="unEditableRef"
-        class="grid box-content sci-cursor-edit font-normal border-solid px-4 py-2 border-sn-light-grey rounded
-              leading-5 border outline-none hover:border-sn-sleepy-grey overflow-y-auto whitespace-pre-line
-              w-[calc(100%-2rem)]"
+        class="grid box-content sci-cursor-edit font-normal border-solid py-2 border-sn-light-grey rounded
+              leading-5 border outline-none hover:border-sn-sleepy-grey overflow-y-auto whitespace-pre-line"
         :class="{ 'max-h-[4rem]': collapsed,
-                  'max-h-[40rem]': !collapsed, }"
+                  'max-h-[40rem]': !collapsed,
+                  [className]: true,
+                  'text-sn-dark-grey': value, 'text-sn-grey': !value
+                }"
         @click="enableEdit">
     <span v-if="smartAnnotation"
           v-html="sa_value || noContentPlaceholder"
@@ -47,6 +50,7 @@ export default {
     unEditableRef: { type: String, required: true },
     smartAnnotation: { type: Boolean, default: false },
     sa_value: { type: String },
+    className: { type: String, default: false }
   },
   mounted() {
     this.value = this.initialValue;
