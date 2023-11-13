@@ -8,6 +8,9 @@ class Repository < RepositoryBase
   include RepositoryImportParser
   include ArchivableModel
 
+  ID_PREFIX = 'IN'
+  include PrefixedIdModel
+
   enum permission_level: Extends::SHARED_INVENTORIES_PERMISSION_LEVELS
 
   belongs_to :archived_by,
