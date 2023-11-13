@@ -7,29 +7,27 @@
 
       <div id="sticky-header-wrapper" class="sticky top-0 right-0 bg-white flex z-50 flex-col h-[78px] pt-6">
         <div class="header flex w-full h-[30px] pr-6">
-          <h4 class="item-name my-auto truncate text-xl" :title="defaultColumns?.name">
-            {{ defaultColumns?.archived ? i18n.t('labels.archived') : '' }}
-            {{ defaultColumns?.name }}
+          <h4 class="item-name my-auto truncate text-xl" :title="repositoryRowName">
+            {{ repositoryRowName }}
           </h4>
           <i id="close-icon" @click="toggleShowHideSidebar(currentItemUrl)"
             class="sn-icon sn-icon-close ml-auto cursor-pointer my-auto mx-0"></i>
         </div>
-
-        <div id="divider" class="w-500 bg-sn-light-grey flex items-center self-stretch h-px mt-6"></div>
-
+        <div id="divider" class="w-500 bg-sn-light-grey flex items-center self-stretch h-px mt-6 mr-6"></div>
       </div>
 
 
-      <div ref="bodyWrapper" id="body-wrapper" class="overflow-auto h-[calc(100%-78px)] pt-6">
+      <div ref="bodyWrapper" id="body-wrapper" class="overflow-y-auto overflow-x-hidden h-[calc(100%-78px)] pt-6 ">
         <div v-if="dataLoading" class="h-full flex flex-grow-1">
           <div class="sci-loader"></div>
         </div>
 
-        <div v-else class="flex flex-1 flex-grow-1 justify-between">
-          <div id="left-col" class="flex flex-col gap-4 w-96 self-start">
+        <div v-else class="flex flex-1 flex-grow-1 justify-between" ref="scrollSpyContent">
+
+          <div id="left-col" class="flex flex-col gap-4">
 
             <!-- INFORMATION -->
-            <div id="information">
+            <section id="information-section">
               <div ref="information-label" id="information-label"
                 class="font-inter text-lg font-semibold leading-7 mb-4 transition-colors duration-300">{{
                   i18n.t('repositories.item_card.section.information') }}
@@ -102,11 +100,9 @@
                       {{ defaultColumns.archived_by.full_name }}
                     </span>
                   </div>
-
-
                 </div>
               </div>
-            </div>
+            </section>
 
             <div id="divider" class="w-500 bg-sn-light-grey flex items-center self-stretch h-px "></div>
 
@@ -114,7 +110,7 @@
             <div id="custom-col-assigned-qr-wrapper" class="flex flex-col gap-4">
 
               <!-- CUSTOM COLUMNS -->
-              <div id="custom-columns-wrapper" class="flex flex-col min-h-[64px] h-auto">
+              <section id="custom-columns-section" class="flex flex-col min-h-[64px] h-auto">
                 <div ref="custom-columns-label" id="custom-columns-label"
                   class="font-inter text-lg font-semibold leading-7 pb-4 transition-colors duration-300">
                   {{ i18n.t('repositories.item_card.custom_columns_label') }}
@@ -136,19 +132,20 @@
                 <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
                   {{ i18n.t('repositories.item_card.no_custom_columns_label') }}
                 </div>
-              </div>
+              </section>
 
               <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px"></div>
 
               <!-- ASSIGNED -->
-              <section id="assigned_wrapper" class="flex flex-col gap-4">
-                <div class="flex flex-row text-lg font-semibold w-[350px] leading-7 items-center justify-between"
+              <section id="assigned-section" class="flex flex-col" ref="assignedSectionRef">
+                <div
+                  class="flex flex-row text-base font-semibold w-[350px] pb-4 leading-7 items-center justify-between transition-colors duration-300"
                   ref="assigned-label">
                   {{ i18n.t('repositories.item_card.section.assigned', {
                     count: assignedModules ?
                       assignedModules.total_assigned_size : 0
                   }) }}
-                  <a v-if="actions?.assign_repository_row && !defaultColumns?.archived"
+                  <a v-if="!defaultColumns?.archived && (inRepository || actions?.assign_repository_row)"
                     class="btn-text-link font-normal" :class="{
                       'assign-inventory-button': actions?.assign_repository_row,
                       'disabled': actions?.assign_repository_row && actions.assign_repository_row.disabled
@@ -160,7 +157,9 @@
                 </div>
                 <div v-if="assignedModules && assignedModules.total_assigned_size > 0" class="flex flex-col gap-4">
                   <div v-if="privateModuleSize() > 0" class="flex flex-col gap-4">
-                    <div class="text-sn-dark-grey">{{ i18n.t('repositories.item_card.assigned.private', { count: privateModuleSize() }) }}</div>
+                    <div class="text-sn-dark-grey">{{ i18n.t('repositories.item_card.assigned.private',
+                      { count: privateModuleSize() }) }}
+                    </div>
                     <div class="sci-divider" :class="{ 'hidden': assignedModules?.viewable_modules?.length == 0 }"></div>
                   </div>
                   <div v-for="(assigned, index) in assignedModules.viewable_modules" :key="`assigned_module_${index}`"
@@ -168,12 +167,13 @@
                     <div class="flex flex-col gap-3.5">
                       <div v-for="(item, index_assigned) in assigned" :key="`assigned_element_${index_assigned}`">
                         {{ i18n.t(`repositories.item_card.assigned.labels.${item.type}`) }}
-                        <a :href="item.url" class="text-sn-science-blue">
+                        <a :href="item.url" class="text-sn-science-blue hover:text-sn-science-blue hover:no-underline">
                           {{ item.archived ? i18n.t('labels.archived') : '' }} {{ item.value }}
                         </a>
                       </div>
                     </div>
-                    <div class="sci-divider" :class="{ 'hidden': index === assignedModules?.viewable_modules?.length - 1 }"></div>
+                    <div class="sci-divider"
+                      :class="{ 'hidden': index === assignedModules?.viewable_modules?.length - 1 }"></div>
                   </div>
                 </div>
                 <div v-else class="text-sn-dark-grey">
@@ -184,12 +184,13 @@
               <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px  "></div>
 
               <!-- QR -->
-              <section id="qr-wrapper" ref="QR-label">
-                <div class="font-inter text-lg font-semibold leading-7 mb-4 mt-0">{{
-                  i18n.t('repositories.item_card.section.qr') }}</div>
+              <section id="qr-section" ref="QR-label">
+                <div class="font-inter text-base font-semibold leading-7 mb-4 mt-0 transition-colors duration-300">
+                  {{ i18n.t('repositories.item_card.section.qr') }}
+                </div>
                 <div class="bar-code-container">
                   <canvas id="bar-code-canvas" class="hidden"></canvas>
-                  <img :src="barCodeSrc"  class="w-[90px]"/>
+                  <img :src="barCodeSrc" class="w-[90px]" />
                 </div>
               </section>
             </div>
@@ -197,19 +198,20 @@
 
           <!-- NAVIGATION -->
           <div ref="navigationRef" id="navigation"
-            class="flex item-end gap-x-4 min-w-[130px] min-h-[130px] h-fit absolute top-[102px] right-[24px] ">
+            class="flex item-end gap-x-4 min-w-[130px] min-h-[130px] h-fit sticky top-0 right-[24px] ">
             <scroll-spy :itemsToCreate="[
-              { id: 'highlight-item-1', textId: 'text-item-1', labelAlias: 'information_label', label: 'information-label' },
-              { id: 'highlight-item-2', textId: 'text-item-2', labelAlias: 'custom_columns_label', label: 'custom-columns-label' },
-              { id: 'highlight-item-3', textId: 'text-item-3', labelAlias: 'assigned_label', label: 'assigned-label' },
-              { id: 'highlight-item-4', textId: 'text-item-4', labelAlias: 'QR_label', label: 'QR-label' }
-            ]" :stickyHeaderHeightPx="102" :cardTopPaddingPx="null" v-show="isShowing">
+              { id: 'highlight-item-1', textId: 'text-item-1', labelAlias: 'information_label', label: 'information-label', sectionId: 'information-section' },
+              { id: 'highlight-item-2', textId: 'text-item-2', labelAlias: 'custom_columns_label', label: 'custom-columns-label', sectionId: 'custom-columns-section' },
+              { id: 'highlight-item-3', textId: 'text-item-3', labelAlias: 'assigned_label', label: 'assigned-label', sectionId: 'assigned-section' },
+              { id: 'highlight-item-4', textId: 'text-item-4', labelAlias: 'QR_label', label: 'QR-label', sectionId: 'qr-section' }
+            ]" :stickyHeaderHeightPx="102" :cardTopPaddingPx="null" :targetAreaMargin="30" v-show="isShowing">
             </scroll-spy>
           </div>
         </div>
 
         <!-- BOTTOM -->
-        <div id="bottom" v-show="!dataLoading" class="h-[100px] flex flex-col justify-end mt-4 mb-6" :class="{ 'pb-6': customColumns?.length }">
+        <div id="bottom" v-show="!dataLoading" class="h-[100px] flex flex-col justify-end mt-4 mr-6"
+          :class="{ 'pb-6': customColumns?.length }">
           <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px mb-6"></div>
           <div id="bottom-button-wrapper" class="flex h-10 justify-end">
             <button type="button" class="btn btn-primary print-label-button"
@@ -281,6 +283,11 @@ export default {
   created() {
     window.repositoryItemSidebarComponent = this;
   },
+  computed: {
+    repositoryRowName() {
+      return this.defaultColumns?.archived ? `${I18n.t('labels.archived')} ${this.defaultColumns?.name}` : this.defaultColumns?.name;
+    }
+  },
   mounted() {
     // Add a click event listener to the document
     document.addEventListener('click', this.handleOutsideClick);
@@ -295,11 +302,11 @@ export default {
       if (!this.isShowing) return
 
       const sidebar = this.$refs.wrapper;
-      // Check if the clicked element is not within the sidebar and it's not another item link or belogs to modal
-      if (!sidebar.contains(event.target) &&
-          !event.target.closest('a') &&
-          !event.target.closest('.modal')) {
-        this.toggleShowHideSidebar(null)
+      // Check if the clicked element is not within the sidebar and it's not another item link or belogs to modals
+      const selectors = ['a', '.modal', '.label-printing-progress-modal'];
+
+      if (!sidebar.contains(event.target) && !selectors.some(selector => event.target.closest(selector))) {
+        this.toggleShowHideSidebar(null);
       }
     },
     toggleShowHideSidebar(repositoryRowUrl, myModuleId = null) {

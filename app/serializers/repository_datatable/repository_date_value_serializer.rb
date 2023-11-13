@@ -20,11 +20,10 @@ module RepositoryDatatable
           data[:days_left] = days_left
           date_expiration =
             "#{days_left} #{I18n.t("repositories.item_card.reminders.day.#{days_left == 1 ? 'one' : 'other'}")}"
-          data[:text] =
-            "#{I18n.t('repositories.item_card.reminders.date_expiration', date_expiration: date_expiration)}\n
-             #{data[:reminder_message]}"
+          data[:reminder_text] =
+            I18n.t('repositories.item_card.reminders.date_expiration', date_expiration: date_expiration)
         elsif data[:reminder]
-          data[:text] = "#{I18n.t('repositories.item_card.reminders.item_expired')}\n#{data[:reminder_message]}"
+          data[:reminder_text] = I18n.t('repositories.item_card.reminders.item_expired')
         end
       end
       data

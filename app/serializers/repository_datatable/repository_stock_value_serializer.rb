@@ -16,10 +16,16 @@ module RepositoryDatatable
          value_object.low_stock_threshold.present?
         data[:reminder] = value_object.low_stock_threshold > value_object.data
         if data[:reminder] && (data[:stock_amount]).positive?
-          data[:text] = I18n.t('repositories.item_card.reminders.stock_low', stock_formated: data[:stock_formatted])
+          data[:reminder_text] =
+            I18n.t('repositories.item_card.reminders.stock_low', stock_formated: data[:stock_formatted])
         elsif data[:reminder]
-          data[:text] = I18n.t('repositories.item_card.reminders.stock_empty')
+          data[:reminder_text] = I18n.t('repositories.item_card.reminders.stock_empty')
         end
+      end
+
+      if data[:stock_amount] <= 0
+        data[:reminder] = true
+        data[:reminder_text] = I18n.t('repositories.item_card.reminders.stock_empty')
       end
       data
     end

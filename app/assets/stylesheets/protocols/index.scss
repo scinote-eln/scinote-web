@@ -20,7 +20,7 @@
       width: 100%;
 
       .dataTables_scrollHead {
-        overflow: visible !important;
+        flex-shrink: 0;
 
         thead {
           .sci-checkbox-container {

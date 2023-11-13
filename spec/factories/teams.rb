@@ -7,6 +7,9 @@ FactoryBot.define do
     description { Faker::Lorem.sentence }
     space_taken { 1048576 }
     without_templates { true }
+    after(:create) do |team|
+      team.created_by.update(current_team_id: team.id)
+    end
     trait :with_members do
       users { create_list :user, 3 }
     end
