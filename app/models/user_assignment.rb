@@ -3,7 +3,7 @@
 class UserAssignment < ApplicationRecord
   attr_accessor :assign
 
-  before_validation -> { self.team ||= (assignable.is_a?(Team) ? assignable : assignable.team) }
+  before_validation :set_assignable_team
   after_create :assign_team_child_objects, if: -> { assignable.is_a?(Team) }
   after_update :update_team_children_assignments, if: -> { assignable.is_a?(Team) && saved_change_to_user_role_id? }
   before_destroy :unassign_team_child_objects, if: -> { assignable.is_a?(Team) }
@@ -40,6 +40,10 @@ class UserAssignment < ApplicationRecord
   end
 
   private
+
+  def set_assignable_team
+    self.team ||= (assignable.is_a?(Team) ? assignable : assignable.team)
+  end
 
   def call_user_assignment_changed_hook
     assignable.__send__(:after_user_assignment_changed, self)

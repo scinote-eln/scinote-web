@@ -101,6 +101,6 @@ class TeamRepositoriesController < ApplicationController
             message_items: { repository: team_shared_object.shared_repository.id,
                              team: team_shared_object.team.id,
                              permission_level:
-                               Extends::SHARED_INVENTORIES_PL_MAPPINGS[team_repository.permission_level.to_sym] })
+                               Extends::SHARED_INVENTORIES_PL_MAPPINGS[team_shared_object.permission_level.to_sym] })
   end
 end
