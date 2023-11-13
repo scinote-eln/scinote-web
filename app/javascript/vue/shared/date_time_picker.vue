@@ -9,6 +9,8 @@
       :format="format"
       :month-change-on-scroll="false"
       :six-weeks="true"
+      :auto-apply="true"
+      :partial-flow="true"
       :markers="markers"
       :time-picker-inline="mode == 'datetime'"
       :enable-time-picker="mode == 'datetime'"
@@ -22,6 +24,9 @@
         </template>
         <template #input-icon>
             <img class="input-slot-image" src="/images/calendar/calendar.svg"/>
+        </template>
+        <template #clock-icon>
+            <img class="slot-icon" src="/images/calendar/clock.svg"/>
         </template>
     </VueDatePicker>
   </div>

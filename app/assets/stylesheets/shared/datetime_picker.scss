@@ -36,9 +36,7 @@
   }
 
   .dp--tp-wrap {
-    border-bottom: 1px solid var(--sn-light-grey);
     margin: 0 1rem 1rem;
-    padding-bottom: 1rem;
   }
 
   .dp__action_cancel {
@@ -52,6 +50,30 @@
 
   .dp__inner_nav {
     border-radius: .25rem;
+  }
+
+  .dp__tp_inline_btn_bar {
+    height: 2px;
+  }
+
+  .dp__calendar_item {
+    display: flex;
+    justify-content: center;
+  }
+
+
+  .dp__btn:hover {
+    .dp__tp_inline_btn_bar {
+      background-color: var(--sn-science-blue);
+    }
+  }
+
+  .dp--overlay-absolute {
+    padding: 1rem 1rem 0;
+  }
+
+  .dp__overlay_action {
+    width: calc(100% - 2rem);
   }
 
   .dp--arrow-btn-nav {
@@ -122,11 +144,11 @@
   --dp-month-year-row-height: 2.5rem; /*Height of the month-year select row*/
   --dp-month-year-row-button-size: 2.5rem; /*Specific height for the next/previous buttons*/
   --dp-button-icon-height: 1.5rem; /*Icon sizing in buttons*/
-  --dp-cell-size: 2.5rem; /*Width and height of calendar cell*/
-  --dp-cell-padding: .25rem; /*Padding in the cell*/
+  --dp-cell-size: 1.875rem; /*Width and height of calendar cell*/
+  --dp-cell-padding: 0rem; /*Padding in the cell*/
   --dp-common-padding: 1rem; /*Common padding used*/
   --dp-input-padding: .3em 2rem .3rem 1rem; /*Padding in the input*/
-  --dp-menu-min-width: 320px; /*Adjust the min width of the menu*/
+  --dp-menu-min-width: 342px; /*Adjust the min width of the menu*/
   --dp-action-row-padding: 0 1rem 1rem; /*Adjust padding for the action row*/
   --dp-action-buttons-padding: 0 .625rem; /*Adjust padding for the action buttons in action row*/
   --dp-action-button-height: 1.875rem; /*Adjust height for the action buttons in action row*/
