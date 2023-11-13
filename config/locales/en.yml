@@ -2053,6 +2053,8 @@ en:
       archived_on: "Archived on"
       archived_by: "Archived by"
       relationship: "Relationship"
+      children: "Children"
+      parents: "Parents"
       row_consumption: "Consumed"
       enter_row_name: "Enter name"
       locked_item: "This is read-only item."
