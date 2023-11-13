@@ -1,9 +1,10 @@
 <template>
-  <transition enter-class="translate-x-full w-0" enter-active-class="transition-all ease-sharp duration-[588ms]"
-    leave-class="translate-x-0 w-[565px]" leave-active-class="transition-all ease-sharp duration-[588ms]"
-    leave-to-class="translate-x-full w-0">
+  <transition enter-class="translate-x-full w-0"
+              enter-active-class="transition-all ease-sharp duration-[588ms]"
+              leave-active-class="transition-all ease-sharp duration-[588ms]"
+              leave-to-class="translate-x-full w-0">
     <div ref="wrapper" v-show="isShowing" id="repository-item-sidebar-wrapper"
-      class='items-sidebar-wrapper bg-white gap-2.5 self-stretch rounded-tl-4 rounded-bl-4 shadow-lg h-full'>
+      class='items-sidebar-wrapper bg-white gap-2.5 self-stretch rounded-tl-4 rounded-bl-4 shadow-lg h-full w-[565px]'>
 
       <div id="repository-item-sidebar" class="w-full h-full pl-6 bg-white flex flex-col">
 
@@ -289,9 +290,7 @@ export default {
       }
       // click on the same item - should just open/close it
       else if (this.currentItemUrl === repositoryRowUrl) {
-        this.isShowing = false;
-        this.currentItemUrl = null;
-        this.myModuleId = null;
+        this.isShowing = !this.isShowing;
         return
       }
       // explicit close (from emit)
@@ -301,8 +300,9 @@ export default {
         this.myModuleId = null;
         return
       }
-      // click on a different item - should just fetch new data
+      // click on a different item - if the item card is already showing should just fetch new data
       else {
+        this.isShowing = true;
         this.myModuleId = myModuleId;
         this.loadRepositoryRow(repositoryRowUrl);
         this.currentItemUrl = repositoryRowUrl;
