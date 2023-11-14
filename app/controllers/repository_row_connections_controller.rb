@@ -6,7 +6,6 @@ class RepositoryRowConnectionsController < ApplicationController
   before_action :check_read_permissions, except: :repositories
   before_action :load_repository_row, except: %i(repositories repository_rows)
   before_action :check_manage_permissions, except: %i(repositories repository_rows index)
-  skip_before_action :verify_authenticity_token
 
   def index
     parents = @repository_row.parent_connections
