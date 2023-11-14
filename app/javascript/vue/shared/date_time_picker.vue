@@ -1,6 +1,9 @@
 <template>
   <div class="date-time-picker grow">
     <VueDatePicker
+      :class="{
+        'only-time': mode == 'time',
+      }"
       v-model="compDatetime"
       :teleport="teleport"
       :text-input="true"
@@ -12,7 +15,6 @@
       :auto-apply="true"
       :partial-flow="true"
       :markers="markers"
-      :time-picker-inline="mode == 'datetime'"
       :enable-time-picker="mode == 'datetime'"
       :time-picker="mode == 'time'"
       :placeholder="placeholder" >
@@ -22,11 +24,23 @@
         <template #arrow-left>
             <img class="slot-icon" src="/images/calendar/navigate_before.svg"/>
         </template>
-        <template #input-icon>
+        <template v-if="mode == 'time'" #input-icon>
+            <img class="input-slot-image" src="/images/calendar/clock.svg"/>
+        </template>
+        <template v-else #input-icon>
             <img class="input-slot-image" src="/images/calendar/calendar.svg"/>
         </template>
         <template #clock-icon>
             <img class="slot-icon" src="/images/calendar/clock.svg"/>
+        </template>
+        <template #calendar-icon>
+            <img class="slot-icon" src="/images/calendar/calendar.svg"/>
+        </template>
+        <template #arrow-up>
+            <img class="slot-icon" src="/images/calendar/up.svg"/>
+        </template>
+        <template #arrow-down>
+            <img class="slot-icon" src="/images/calendar/down.svg"/>
         </template>
     </VueDatePicker>
   </div>
@@ -46,6 +60,7 @@
     },
     data() {
       return {
+        manualUpdate: false,
         datetime: this.defaultValue,
         time: null,
         markers: [
@@ -77,6 +92,11 @@
         }
       },
       datetime: function () {
+        if (this.manualUpdate) {
+          this.manualUpdate = false;
+          return;
+        }
+
         if (this.mode == 'time') {
           this.time = {
             hours: this.datetime ? this.datetime.getHours() : 0,
@@ -94,6 +114,11 @@
         }
       },
       time: function () {
+        if (this.manualUpdate) {
+          this.manualUpdate = false;
+          return;
+        }
+
         if (this.mode != 'time') return;
 
         let newDate;

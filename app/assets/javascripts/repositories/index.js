@@ -105,6 +105,7 @@
         }],
         fnInitComplete: function(e) {
           initActionToolbar();
+
           window.actionToolbarComponent.setReloadCallback(() =>
             initRepositoriesDataTable('#repositoriesList', archived));
           window.actionToolbarComponent.setBottomOffset(68);
