@@ -2363,6 +2363,8 @@ en:
         stock_balance_unit: 'Stock unit after update'
   repository_rows:
     invalid_params: "Invalid params"
+  repository_row_connections:
+    invalid_params: "Invalid params"
   libraries:
     manange_modal_column_index:
       title: "Manage columns"
