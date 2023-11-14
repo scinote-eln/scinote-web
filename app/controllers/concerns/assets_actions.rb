@@ -48,7 +48,7 @@ module AssetsActions
                 asset_name: { id: asset.id, value_for: 'file_name' },
                 action: action
               })
-    elsif asset.repository_cell.is_a?(RepositoryCell)
+    elsif asset.repository_cell.present?
       repository = asset.repository_cell.repository_row.repository
       Activities::CreateActivityService
         .call(activity_type: :edit_image_on_inventory_item,
