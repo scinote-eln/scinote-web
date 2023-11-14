@@ -92,17 +92,18 @@
         }
       },
       datetime: function () {
-        if (this.manualUpdate) {
-          this.manualUpdate = false;
-          return;
-        }
-
         if (this.mode == 'time') {
+
           this.time = {
             hours: this.datetime ? this.datetime.getHours() : 0,
             minutes: this.datetime ? this.datetime.getMinutes() : 0
           }
           return
+        }
+
+        if (this.manualUpdate) {
+          this.manualUpdate = false;
+          return;
         }
 
         if ( this.datetime == null) {
