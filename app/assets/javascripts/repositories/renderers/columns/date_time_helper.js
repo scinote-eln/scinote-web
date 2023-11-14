@@ -26,6 +26,7 @@ var DateTimeHelper = (function() {
                 id="datetimePicker${formId}${columnId}" />
           <date-time-picker class="w-full" @cleared="clearDate"
                             :teleport="false"
+                            :clearable="true"
                             ref="vueDateTime" @change="updateDate" mode="${mode}"
                             placeholder="${placeholder(mode)}"></date-time-picker>
         </div>
@@ -46,19 +47,21 @@ var DateTimeHelper = (function() {
 
     const inputFields = `
     <div class="datetime-container range-type ${mode}">
+        <input type="hidden" form="${formId}" class="column-range" name="repository_cells[${columnId}]"
+          value='${JSON.stringify({ start_time: startDateTime, end_time: endDateTime })}'>
         <div id="datetimeStartPickerComtainer${formId}${columnId}"
              class="date-container ${mode} vue-date-time-picker-filter min-w-[160px]">
           <input ref="input"
                 data-type="${columnType}"
                 data-simple-format="true"
                 form="${formId}"
-                name="repository_cells[${columnId}][start_time]"
                 class="datetime start" type="hidden"
                 data-default="${startDateTime}"
                 v-model="date"
                 id="datetimeStartPicker${formId}${columnId}" />
           <date-time-picker class="w-full" @cleared="clearDate"
                             :teleport="false"
+                            :clearable="true"
                             ref="vueDateTime" @change="updateDate"
                             mode="${mode}" placeholder="${placeholder(mode)}"></date-time-picker>
         </div>
@@ -69,13 +72,13 @@ var DateTimeHelper = (function() {
                 data-type="${columnType}"
                 data-simple-format="true"
                 form="${formId}"
-                name="repository_cells[${columnId}][end_time]"
                 class="datetime end" type="hidden"
                 data-default="${endDateTime}"
                 v-model="date"
                 id="datetimeEndPicker${formId}${columnId}" />
           <date-time-picker class="w-full" @cleared="clearDate"
                             :teleport="false"
+                            :clearable="true"
                             ref="vueDateTime" @change="updateDate" mode="${mode}"
                             placeholder="${placeholder(mode)}"></date-time-picker>
         </div>
