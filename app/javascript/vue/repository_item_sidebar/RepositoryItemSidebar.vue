@@ -105,7 +105,7 @@
 
             <div id="divider" class="w-500 bg-sn-light-grey flex items-center self-stretch h-px "></div>
 
-            <!-- CUSTOM COLUMNS, ASSIGNED, QR CODE -->
+            <!-- CUSTOM COLUMNS, RELATIONSHIPS, ASSIGNED, QR CODE -->
             <div id="custom-col-assigned-qr-wrapper" class="flex flex-col gap-4">
 
               <!-- CUSTOM COLUMNS -->
@@ -117,6 +117,82 @@
                 <CustomColumns :customColumns="customColumns" :repositoryRowId="repositoryRowId"
                   :repositoryId="repository?.id" :inArchivedRepositoryRow="defaultColumns?.archived"
                   :permissions="permissions" :updatePath="updatePath" :actions="actions" @update="update" />
+              </section>
+
+              <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px"></div>
+
+              <!-- RELATIONSHIPS -->
+              <section id="relationships-section" class="flex flex-col" ref="relationshipsSectionRef">
+                <div class="flex flex-row text-base font-semibold w-[350px] pb-4 leading-7 items-center justify-between transition-colors duration-300"
+                     ref="relationships-label">
+                  {{ i18n.t('repositories.item_card.section.relationships') }}
+                </div>
+                <template v-if="!parentsCount && !childrenCount">
+                  <div class="text-sn-dark-grey">
+                    {{ i18n.t('repositories.item_card.relationships.empty') }}
+                  </div>
+                </template>
+                <template v-else>
+                  <div class="font-inter text-sm leading-5 w-full">
+                    <div class="mb-3 font-semibold">{{ i18n.t('repositories.item_card.relationships.parents.count', { count: parentsCount || 0 }) }}</div>
+                    <div v-if="parentsCount">
+                      <details v-for="(parent) in parents" @toggle="updateOpenState(parent.code, $event.target.open)" :key="parent.code" class="flex flex-col font-normal gap-5 group cursor-default">
+                        <summary class="flex flex-row gap-3 mb-3 items-center">
+                          <img :src="icons.delimiter_path" class="w-3 h-3 cursor-pointer" :class="{ 'rotate-90': relationshipDetailsState[parent.code] }" />
+                          <span>
+                            <span>{{ i18n.t('repositories.item_card.relationships.item') }}</span>
+                            <a :href="parent.path" class="record-info-link btn-text-link !text-sn-science-blue">{{ parent.name }}</a>
+                            <a v-if="permissions?.can_manage" href="/" class="opacity-0 group-hover:opacity-100 cursor-pointer">
+                              <img :src="icons.unlink_path" />
+                            </a>
+                          </span>
+                        </summary>
+                        <p class="flex flex-col gap-3 mb-5 ml-6">
+                          <span>
+                            {{ i18n.t('repositories.item_card.relationships.id', { code: parent.code }) }}
+                          </span>
+                          <span>
+                            <span>{{ i18n.t('repositories.item_card.relationships.inventory') }}</span>
+                            <a :href="parent.repository_path" class="record-info-link btn-text-link !text-sn-science-blue">{{ parent.repository_name }}</a>
+                          </span>
+                        </p>
+                      </details>
+                    </div>
+                    <div v-else class="text-sn-dark-grey">
+                      {{ i18n.t('repositories.item_card.relationships.parents.empty') }}
+                    </div>
+                  </div>
+
+                  <div class="sci-divider pb-4"></div>
+
+                  <div class="font-inter text-sm leading-5 w-full">
+                    <div class="mb-3 font-semibold">{{ i18n.t('repositories.item_card.relationships.children.count', { count: childrenCount || 0 }) }}</div>
+                    <div v-if="childrenCount">
+                      <details v-for="(child) in children" :key="child.code" @toggle="updateOpenState(child.code, $event.target.open)" class="flex flex-col font-normal gap-5 group">
+                        <summary class="flex flex-row gap-3 mb-3 items-center">
+                          <img :src="icons.delimiter_path" class="w-3 h-3 cursor-pointer" :class="{ 'rotate-90': relationshipDetailsState[child.code] }"/>
+                          <span class="group/child">
+                            <span>{{ i18n.t('repositories.item_card.relationships.item') }}</span>
+                            <a :href="child.path" class="record-info-link btn-text-link !text-sn-science-blue">{{ child.name }}</a>
+                            <a v-if="permissions?.can_manage" href="/" class="opacity-0 group-hover:opacity-100 cursor-pointer">
+                              <img :src="icons.unlink_path" />
+                            </a>
+                          </span>
+                        </summary>
+                        <p class="flex flex-col gap-3 mb-5 ml-6">
+                          <span>{{ i18n.t('repositories.item_card.relationships.id', { code: child.code }) }}</span>
+                          <span>
+                            <span>{{ i18n.t('repositories.item_card.relationships.inventory') }}</span>
+                            <a :href="child.repository_path" class="record-info-link btn-text-link !text-sn-science-blue">{{ child.repository_name }}</a>
+                          </span>
+                        </p>
+                      </details>
+                    </div>
+                    <div v-else class="text-sn-dark-grey">
+                      {{ i18n.t('repositories.item_card.relationships.children.empty') }}
+                    </div>
+                  </div>
+                </template>
               </section>
 
               <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px"></div>
@@ -187,8 +263,9 @@
             <scroll-spy :itemsToCreate="[
               { id: 'highlight-item-1', textId: 'text-item-1', labelAlias: 'information_label', label: 'information-label', sectionId: 'information-section' },
               { id: 'highlight-item-2', textId: 'text-item-2', labelAlias: 'custom_columns_label', label: 'custom-columns-label', sectionId: 'custom-columns-section' },
-              { id: 'highlight-item-3', textId: 'text-item-3', labelAlias: 'assigned_label', label: 'assigned-label', sectionId: 'assigned-section' },
-              { id: 'highlight-item-4', textId: 'text-item-4', labelAlias: 'QR_label', label: 'QR-label', sectionId: 'qr-section' }
+              { id: 'highlight-item-3', textId: 'text-item-3', labelAlias: 'relationships_label', label: 'relationships-label', sectionId: 'relationships-section' },
+              { id: 'highlight-item-4', textId: 'text-item-4', labelAlias: 'assigned_label', label: 'assigned-label', sectionId: 'assigned-section' },
+              { id: 'highlight-item-5', textId: 'text-item-5', labelAlias: 'QR_label', label: 'QR-label', sectionId: 'qr-section' }
             ]" :stickyHeaderHeightPx="102" :cardTopPaddingPx="null" :targetAreaMargin="30" v-show="isShowing">
             </scroll-spy>
           </div>
@@ -234,6 +311,10 @@ export default {
       repository: null,
       defaultColumns: null,
       customColumns: null,
+      parentsCount: 0,
+      childrenCount: 0,
+      parents: null,
+      children: null,
       assignedModules: null,
       isShowing: false,
       barCodeSrc: null,
@@ -241,7 +322,9 @@ export default {
       repositoryRowUrl: null,
       actions: null,
       myModuleId: null,
-      inRepository: false
+      inRepository: false,
+      icons: null,
+      relationshipDetailsState: {},
     }
   },
   created() {
@@ -250,6 +333,18 @@ export default {
   computed: {
     repositoryRowName() {
       return this.defaultColumns?.archived ? `${I18n.t('labels.archived')} ${this.defaultColumns?.name}` : this.defaultColumns?.name;
+    }
+  },
+  watch: {
+    parents() {
+      this.parents.forEach(parent => {
+        this.$set(this.relationshipDetailsState, parent.code, false);
+      });
+    },
+    children() {
+      this.children.forEach(child => {
+        this.$set(this.relationshipDetailsState, child.code, false);
+      });
     }
   },
   mounted() {
@@ -317,11 +412,16 @@ export default {
           this.optionsPath = result.options_path;
           this.updatePath = result.update_path;
           this.defaultColumns = result.default_columns;
+          this.parentsCount = result.relationships.parents_count;
+          this.childrenCount = result.relationships.children_count;
+          this.parents = result.relationships.parents;
+          this.children = result.relationships.children;
           this.customColumns = result.custom_columns;
           this.assignedModules = result.assigned_modules;
           this.permissions = result.permissions;
           this.actions = result.actions;
           this.dataLoading = false;
+          this.icons = result.icons;
           this.$nextTick(() => {
             this.generateBarCode(this.defaultColumns.code);
           });
@@ -365,7 +465,10 @@ export default {
         }
         RepositoryDatatable.reload();
       });
-    }
+    },
+    updateOpenState(code, isOpen) {
+      this.$set(this.relationshipDetailsState, code, isOpen);
+    },
   }
 }
 </script>
