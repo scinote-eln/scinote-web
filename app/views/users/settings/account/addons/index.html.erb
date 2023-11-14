@@ -7,7 +7,58 @@
 
     <div>
       <h1 class="addons-title"><%= t('users.settings.account.addons.title') %></h1>
-
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-8 col-sm-9 col-md-9 col-lg-9">
+              <p class="manuscript-title"><%= t('users.settings.account.addons.desktop_app.title') %></p>
+              <p class="manuscript-description">
+                <span><%= t('users.settings.account.addons..desktop_app.description') %></span>
+              </p><br/>
+              <div class="buttons">
+                <% if @user_agent =~ /Windows/ %>
+                  <%= link_to '#',
+                              class: 'btn btn-primary new-project-btn',
+                              title: t('users.settings.account.addons.desktop_app.windows_button'),
+                              remote: true do %>
+                    <span class="hidden-xs"><%= t('users.settings.account.addons.desktop_app.windows_button') %></span>
+                  <% end %>
+                  <p class="text-xs mt-1" style="color: var(--sn-sleepy-grey);"><%= t('users.settings.account.addons.desktop_app.version') %> 5.16.5 (24419)</p>
+                <% elsif @user_agent =~ /Mac OS/ %>
+                  <%= link_to '#',
+                              class: 'btn btn-primary new-project-btn',
+                              title: t('users.settings.account.addons.desktop_app.macos_button'),
+                              remote: true do %>
+                    <span class="hidden-xs"><%= t('users.settings.account.addons.desktop_app.macos_button') %></span>
+                  <% end %>
+                  <p class="text-xs mt-1" style="color: var(--sn-sleepy-grey);"><%= t('users.settings.account.addons.desktop_app.version') %> 5.16.5 (24419)</p>
+                <% else %>
+                  <div class="flex">
+                    <div>
+                      <%= link_to '#',
+                                  class: 'btn btn-primary new-project-btn',
+                                  title: t('users.settings.account.addons.desktop_app.macos_button'),
+                                  remote: true do %>
+                        <span class="hidden-xs"><%= t('users.settings.account.addons.desktop_app.macos_button') %></span>
+                      <% end %>
+                      <p class="text-xs mt-1" style="color: var(--sn-sleepy-grey);"><%= t('users.settings.account.addons.desktop_app.version') %> 5.16.5 (24419)</p>
+                    </div>
+                    <div class="ml-2">
+                      <%= link_to '#',
+                                  class: 'btn btn-primary new-project-btn ml-2',
+                                  title: t('users.settings.account.addons.desktop_app.windows_button'),
+                                  remote: true do %>
+                        <span class="hidden-xs"><%= t('users.settings.account.addons.desktop_app.windows_button') %></span>
+                      <% end %>
+                      <p class="text-xs mt-1 ml-2" style="color: var(--sn-sleepy-grey);"><%= t('users.settings.account.addons.desktop_app.version') %> 5.16.5 (24419)</p>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div>
         <h2 class="addons-subtitle" ><%= t('users.settings.account.addons.scinote_addons') %></h2>
         <div data-hook="settings-addons-container">

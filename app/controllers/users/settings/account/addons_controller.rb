@@ -9,6 +9,7 @@ module Users
 
         def index
           @label_printer_any = LabelPrinter.any?
+          @user_agent = request.user_agent
         end
 
         private
