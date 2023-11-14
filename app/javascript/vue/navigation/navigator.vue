@@ -5,6 +5,7 @@
     :min-width="208"
     width="auto"
     height="100%"
+    class="!h-full"
     :active="['r']"
     @resize:start="onResizeStart"
     @resize:move="onResizeMove"

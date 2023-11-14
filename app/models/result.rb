@@ -43,9 +43,16 @@ class Result < ApplicationRecord
     new_query =
       Result
       .distinct
-      .left_outer_joins(:result_texts)
+      .left_outer_joins(:result_texts, result_tables: :table)
       .where(results: { my_module_id: module_ids })
-      .where_attributes_like(['results.name', 'result_texts.text'], query, options)
+      .where_attributes_like(
+        [
+          'results.name',
+          'result_texts.name',
+          'result_texts.text',
+          'tables.name'
+        ], query, options
+      )
 
     new_query = new_query.active unless include_archived
 
