@@ -23,12 +23,19 @@ module RepositoryZipExport
                       I18n.t('repositories.table.archived_by')
                     when -8
                       I18n.t('repositories.table.archived_on')
+                    when 'relationship'
+                      next
                     else
                       column = repository.repository_columns.find_by(id: c_id)
                       column ? column.name : nil
                     end
     end
     csv_header << I18n.t('repositories.table.row_consumption') if add_consumption
+
+    if column_ids.include? 'relationship'
+      csv_header << I18n.t('repositories.table.parents')
+      csv_header << I18n.t('repositories.table.children')
+    end
 
     CSV.generate do |csv|
       csv << csv_header
@@ -50,6 +57,8 @@ module RepositoryZipExport
                        row.archived? && row.archived_by.present? ? row.archived_by.full_name : ''
                      when -8
                        row.archived? && row.archived_on.present? ? I18n.l(row.archived_on, format: :full) : ''
+                     when 'relationship'
+                       next
                      else
                        cell = row.repository_cells.find_by(repository_column_id: c_id)
 
@@ -66,6 +75,11 @@ module RepositoryZipExport
         end
 
         csv_row << row.row_consumption(row.stock_consumption) if add_consumption
+        if column_ids.include? 'relationship'
+          csv_row << "\"#{row.parent_repository_rows.map(&:code).join("\;\s")}\""
+          csv_row << "\"#{row.child_repository_rows.map(&:code).join("\;\s")}\""
+        end
+
         csv << csv_row
       end
     end
