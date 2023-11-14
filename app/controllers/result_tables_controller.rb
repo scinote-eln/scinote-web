@@ -2,50 +2,11 @@ class ResultTablesController < ApplicationController
   include ResultsHelper
 
   before_action :load_vars, only: [:edit, :update, :download]
-  before_action :load_vars_nested, only: [:new, :create]
-  before_action :convert_contents_to_utf8, only: [:create, :update]
+  before_action :convert_contents_to_utf8, only: [:update]
 
   before_action :check_manage_permissions, only: %i(edit update)
-  before_action :check_create_permissions, only: %i(new create)
   before_action :check_archive_permissions, only: [:update]
-  before_action :check_view_permissions, except: %i(new create edit update)
-
-  def new
-    @table = Table.new
-    @result = Result.new(
-      user: current_user,
-      my_module: @my_module,
-      table: @table
-    )
-
-    render json: {
-      html: render_to_string({ partial: 'new', formats: :html })
-    }, status: :ok
-  end
-
-  def create
-    @table = Table.new(result_params[:table_attributes])
-    @table.metadata = JSON.parse(result_params[:table_attributes][:metadata])
-    @table.created_by = current_user
-    @table.team = current_team
-    @table.last_modified_by = current_user
-    @table.name = nil
-    @result = Result.new(
-      user: current_user,
-      my_module: @my_module,
-      name: result_params[:name],
-      table: @table
-    )
-    @result.last_modified_by = current_user
-
-    if @result.save && @table.save
-      log_activity(:add_result)
-      flash[:success] = t('result_tables.create.success_flash', module: @my_module.name)
-      redirect_to results_my_module_path(@my_module, page: params[:page], order: params[:order])
-    else
-      render json: @result.errors, status: :bad_request
-    end
-  end
+  before_action :check_view_permissions, except: %i(edit update)
 
   def edit
     render json: {
@@ -122,14 +83,6 @@ class ResultTablesController < ApplicationController
     end
   end
 
-  def load_vars_nested
-    @my_module = MyModule.find_by_id(params[:my_module_id])
-
-    unless @my_module
-      render_404
-    end
-  end
-
   def convert_contents_to_utf8
     if params.include? :result and
       params[:result].include? :table_attributes and
@@ -137,10 +90,6 @@ class ResultTablesController < ApplicationController
       params[:result][:table_attributes][:contents] =
         params[:result][:table_attributes][:contents].encode(Encoding::UTF_8).force_encoding(Encoding::UTF_8)
     end
-  end
-
-  def check_create_permissions
-    render_403 unless can_create_results?(@my_module)
   end
 
   def check_manage_permissions

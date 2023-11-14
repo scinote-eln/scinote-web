@@ -20,13 +20,40 @@ export default {
       this.$emit('setEditingField', this.dateType)
     },
     saveChange() {
-      if (!this.isEditing || this.isSaving || !this.params || (this.params && !Object.keys(this.params).includes(this.colId?.toString()))) {
-        Object.assign(this.$data, {
-          isEditing: false, isSaving: false, errorMessage: null,
-        });
+      if (!this.isEditing ||
+          this.isSaving ||
+          !this.params ||
+          (this.params && !Object.keys(this.params).includes(this.colId?.toString()))) {
+        Object.assign(this.$data, { isEditing: false, isSaving: false, errorMessage: null });
         return;
       };
-      
+
+      // Don't submit unless values changed
+      switch (true) {
+        case ['date', 'dateTime', 'time'].includes(this.dateType):
+          if(this.equalDates(this.params[this.colId], this.initDate)) {
+            Object.assign(this.$data, { isEditing: false, isSaving: false });
+            return;
+          }
+          if(this.dateType === 'time' && this.equalTimes(this.params[this.colId], this.initDate)) {
+            Object.assign(this.$data, { isEditing: false, isSaving: false });
+            return;
+          }
+        case ['dateRange', 'dateTimeRange', 'timeRange'].includes(this.dateType):
+          if (this.equalDates(this.timeFrom?.datetime, this.initStartDate) &&
+              this.equalDates(this.timeTo?.datetime, this.initEndDate)) {
+            Object.assign(this.$data, { isEditing: false, isSaving: false });
+            return;
+          }
+          if (this.dateType === 'timeRange' &&
+              this.equalTimes(this.timeFrom?.datetime, this.initStartDate) &&
+              this.equalTimes(this.timeTo?.datetime, this.initEndDate)) {
+            Object.assign(this.$data, { isEditing: false, isSaving: false });
+            return;
+          }
+        default:
+          break;
+      }
       Object.assign(this.$data, { isSaving: true, errorMessage: null });
       const $this = this;
       $.ajax({
@@ -34,10 +61,20 @@ export default {
         url: $this.cellUpdatePath,
         dataType: 'json',
         data: { repository_cells: $this.params },
-        success: () => {
-          Object.assign($this.$data, {
-            isEditing: false, isSaving: false,
-          });
+        success: (result) => {
+          const cellValue = result[this.colId];
+          switch (true) {
+            case ['date', 'dateTime', 'time'].includes(this.dateType):
+              this.values = cellValue?.value
+              this.initDate = cellValue?.value?.datetime
+            case ['dateRange', 'dateTimeRange', 'timeRange'].includes(this.dateType):
+              this.initStartDate = cellValue?.value?.start_time?.datetime;
+              this.initEndDate = cellValue?.value?.end_time?.datetime;
+            default:
+              break;
+          }
+          Object.assign($this.$data, { isEditing: false, isSaving: false });
+          if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
         }
       });
     },
@@ -58,6 +95,7 @@ export default {
       this.params = defaultParams;
     },
     formatDateTime(date, field = null) {
+      this.values = this.values ? this.values : { [this.colId]: {} }
       let params = this.params && this.params[this.colId] ? this.params : { [this.colId]: {} };
       let timeFrom = this.timeFrom || {};
       let timeTo = this.timeTo || {};
@@ -88,6 +126,13 @@ export default {
     },
     hasMonthText(){
       $('body').data('datetime-picker-format')?.match(/MMM/)
+    },
+    equalDates(date1, date2){
+      return new Date(date1).getTime() === new Date(date2).getTime();
+    },
+    equalTimes(date1, date2){
+      return new Date(date1).getHours() === new Date(date2).getHours() &&
+              new Date(date1).getMinutes() == new Date(date2).getMinutes()
     },
     validateAndSave() {
       this.errorMessage = null;

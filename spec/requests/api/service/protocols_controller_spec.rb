@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe "Api::Service::ProtocolsController", type: :request do
   before :all do
     @user = create(:user)
-    @team = create(:team, created_by: @user)
+    @team = create(:team, :change_user_team, created_by: @user)
 
     @project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @team)
     @experiment = create(:experiment, created_by: @user, last_modified_by: @user, project: @project, created_by: @user)

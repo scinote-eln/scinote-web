@@ -4,8 +4,9 @@
       <input type="text"
         v-if="singleLine"
         ref="input"
-        class="inline-block leading-5 outline-none pl-0 py-1 border-0 border-solid border-y w-full border-t-transparent"
+        class="inline-block leading-5 outline-none pl-0 border-0 border-solid border-y w-full border-t-transparent"
         :class="{
+          'py-1': !singleLine,
           'inline-edit-placeholder text-sn-grey caret-black': isBlank,
           'border-b-sn-delete-red': error,
           'border-b-sn-science-blue': !error,
@@ -33,8 +34,8 @@
     <div
       v-else
       ref="view"
-      class="grid sci-cursor-edit leading-5 border-0 py-1 outline-none border-solid border-y border-transparent"
-      :class="{ 'text-sn-grey font-normal': isBlank, 'whitespace-pre-line': !singleLine }"
+      class="grid sci-cursor-edit leading-5 border-0 outline-none border-solid border-y border-transparent"
+      :class="{ 'text-sn-grey font-normal': isBlank, 'whitespace-pre-line py-1': !singleLine }"
       @click="enableEdit($event)"
     >
       <span :class="{'truncate': singleLine }" v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>

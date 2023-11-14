@@ -1,6 +1,8 @@
 <template>
   <Select
-    class="sn-select--search"
+    class="sn-select sn-select--search"
+    :className="className"
+    :optionsClassName="optionsClassName"
     :withEditCursor="withEditCursor"
     :withClearButton="withClearButton"
     :value="value"
@@ -34,7 +36,9 @@
       searchPlaceholder: { type: String },
       noOptionsPlaceholder: { type: String },
       disabled: { type: Boolean },
-      isLoading: { type: Boolean, default: false }
+      isLoading: { type: Boolean, default: false },
+      className: { type: String, default: '' },
+      optionsClassName: { type: String, default: '' }
     },
     components: { Select },
     data() {

@@ -7,6 +7,7 @@
       :defaultValue="defaultValue"
       :standAlone="standAlone"
       :className="dateClassName"
+      :disabled="disabled"
     />
     <TimePicker v-if="!dateOnly"
       @change="updateTime"
@@ -15,6 +16,7 @@
       :defaultValue="getTime(defaultValue)"
       :standAlone="standAlone"
       :className="timeClassName"
+      :disabled="disabled"
     />
   </div>
 </template>
@@ -33,7 +35,8 @@
       placeholder: { type: String },
       standAlone: { type: Boolean, default: false, required: false },
       dateClassName: { type: String, default: '' },
-      timeClassName: { type: String, default: '' }
+      timeClassName: { type: String, default: '' },
+      disabled: { type: Boolean, default: false }
     },
     data() {
       return {

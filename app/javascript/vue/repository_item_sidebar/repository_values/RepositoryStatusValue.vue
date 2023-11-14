@@ -17,6 +17,8 @@
         :placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
         :no-options-placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
         :searchPlaceholder="i18n.t('repositories.item_card.dropdown_placeholder')"
+        className="h-[38px] !pl-3"
+        optionsClassName="max-h-[300px]"
       ></select-search>
       <div v-else-if="status && icon"
            class="flex flex-row items-center text-sn-dark-grey font-inter text-sm font-normal leading-5 gap-1.5">

@@ -1,35 +1,31 @@
 <template>
-  <div class="w-full relative" ref="container" v-click-outside="{ handler: 'close', exclude: [] }">
+  <div class="w-full relative" ref="container" v-click-outside="{ handler: 'close', exclude: ['optionsContainer'] }">
     <button ref="focusElement"
-            class="btn flex justify-between items-center w-full outline-none border-[1px] bg-white rounded p-2 pl-4
+            class="btn flex justify-between items-center w-full outline-none border-[1px] bg-white rounded p-2
                   font-inter text-sm font-normal leading-5"
             :class="{
               'sci-cursor-edit': !isOpen && withEditCursor,
               'border-sn-light-grey hover:border-sn-sleepy-grey': !isOpen,
-              'border-sn-science-blue': isOpen
+              'border-sn-science-blue': isOpen,
+              'text-sn-grey': !valueLabel,
+              [className]: true
             }"
             :disabled="disabled"
             @click="toggle">
-      <span>{{ valueLabel }}</span>
+      <span>{{ valueLabel || this.placeholder || this.i18n.t('general.select') }}</span>
       <i class="sn-icon" :class="{ 'sn-icon-down': !isOpen, 'sn-icon-up': isOpen}"></i>
     </button>
-    <perfect-scrollbar ref="optionsContainer"
-                       :style="optionPositionStyle"
-                       class="relative scroll-container p-2.5 pt-0 z-10 bg-white rounded border-[1px] border-sn-light-grey shadow-flyout-shadow max-h-[25rem]"
-                       :class="{
-                         'block': isOpen,
-                         'hidden': !isOpen
-                       }">
-      <div v-if="withButtons" class="sticky z-10 top-0 bg-white">
-        <div class="pb-1 pt-2.5 rounded flex gap-1 justify-start items-center">
-          <div class="btn btn-light !text-xs active:bg-sn-super-light-blue"
+    <div :style="optionPositionStyle" class="py-2.5 z-10 bg-white rounded border-[1px] border-sn-light-grey shadow-sn-menu-sm" :class="{ 'hidden': !isOpen }">
+      <div v-if="withButtons" class="px-2.5">
+        <div class="flex gap-2 pl-2 pb-2.5 justify-start items-center w-[calc(100%-10px)]">
+          <div class="btn btn-light !text-xs h-[30px] px-0 active:bg-sn-super-light-blue"
                @click="selectedValues = []"
                :class="{
                  'disabled cursor-default': !selectedValues.length,
                  'cursor-pointer': selectedValues.length
                }"
               >{{ i18n.t('general.clear') }}</div>
-          <div class="btn btn-light !text-xs active:bg-sn-super-light-blue"
+          <div class="btn btn-light !text-xs h-[30px] px-0 active:bg-sn-super-light-blue"
                @click="selectedValues = options.map(option => option.id)"
                :class="{
                 'disabled cursor-default': options.length === selectedValues.length,
@@ -38,30 +34,38 @@
           </div>
         </div>
       </div>
-      <div v-if="options.length" class="flex flex-col gap-[1px]">
-        <div v-for="option in options"
-             :key="option.id"
-             class="p-3 rounded hover:bg-sn-super-light-grey cursor-pointer flex gap-1 justify-start">
-          <div class="sci-checkbox-container">
-            <input v-model="selectedValues" :value="option.id" :id="option.id" type="checkbox" class="sci-checkbox project-card-selector mr-1">
-            <label :for="option.id" class="sci-checkbox-label"></label>
+      <perfect-scrollbar ref="optionsContainer"
+                         class="relative scroll-container px-2.5 pt-0"
+                         :class="{
+                           'block': isOpen,
+                           [optionsClassName]: true 
+                         }">
+        <div v-if="options.length" class="flex flex-col gap-[1px]">
+          <div v-for="option in options"
+               :key="option.id"
+               class="px-3 py-2 rounded hover:bg-sn-super-light-grey cursor-pointer flex gap-1 justify-start items-center">
+            <div class="sci-checkbox-container">
+              <input v-model="selectedValues" :value="option.id" :id="option.id" type="checkbox" class="sci-checkbox project-card-selector">
+              <label :for="option.id" class="sci-checkbox-label"></label>
+            </div>
+            <span class="text-ellipsis overflow-hidden max-h-[4rem] ml-1">{{ option.label }}</span>
           </div>
-          <span class="text-ellipsis overflow-hidden max-h-[4rem]">{{ option.label }}</span>
         </div>
-      </div>
-      <template v-else>
-        <div
-          class="sn-select__no-options"
-        >
-          {{ this.noOptionsPlaceholder }}
-        </div>
-      </template>
-    </perfect-scrollbar>
+        <template v-else>
+          <div
+            class="sn-select__no-options"
+          >
+            {{ this.noOptionsPlaceholder }}
+          </div>
+        </template>
+      </perfect-scrollbar>
+    </div>
   </div>
 </template>
 
 <script>
   import PerfectScrollbar from 'vue2-perfect-scrollbar';
+  import outsideClick from '../../packs/vue/directives/outside_click';
 
   export default {
     name: 'ChecklistSelect',
@@ -73,7 +77,12 @@
       options: { type: Array, default: () => [] },
       placeholder: { type: String },
       noOptionsPlaceholder: { type: String },
-      disabled: { type: Boolean, default: false }
+      disabled: { type: Boolean, default: false },
+      className: { type: String, default: '' },
+      optionsClassName: { type: String, default: '' }
+    },
+    directives: {
+      'click-outside': outsideClick
     },
     data() {
       return {
@@ -87,9 +96,7 @@
     },
     computed: {
       valueLabel() {
-        if (!this.selectedValues.length) {
-          return (this.placeholder || this.i18n.t('general.select'));
-        }
+        if (!this.selectedValues.length) return
 
         return `${this.selectedValues.length} ${this.i18n.t('general.selected')}`;
       }

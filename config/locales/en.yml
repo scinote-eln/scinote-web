@@ -2297,7 +2297,7 @@ en:
         placeholder: 'Enter date'
       repository_date_time_value:
         no_date_time: 'No date and time'
-        placeholder: 'Enter date and time'
+        placeholder: 'Enter date & time'
       repository_date_time_range_value:
         no_date_time_range: 'No date and time range'
         placeholder: 'Enter date & time range'
