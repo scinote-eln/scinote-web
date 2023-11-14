@@ -128,7 +128,7 @@
                 <!-- RELATIONSHIPS -->
                 <section id="relationships-section" class="flex flex-col" ref="relationshipsSectionRef">
                   <div class="flex flex-row text-base font-semibold w-[350px] pb-4 leading-7 items-center justify-between transition-colors duration-300"
-                       ref="relationships-label">
+                    ref="relationships-label">
                     {{ i18n.t('repositories.item_card.section.relationships') }}
                   </div>
                   <template v-if="!parentsCount && !childrenCount">
@@ -271,9 +271,9 @@
                 { id: 'highlight-item-1', textId: 'text-item-1', labelAlias: 'information_label', label: 'information-label', sectionId: 'information-section' },
                 { id: 'highlight-item-2', textId: 'text-item-2', labelAlias: 'custom_columns_label', label: 'custom-columns-label', sectionId: 'custom-columns-section' },
                 { id: 'highlight-item-3', textId: 'text-item-3', labelAlias: 'relationships_label', label: 'relationships-label', sectionId: 'relationships-section' },
-                { id: 'highlight-item-3', textId: 'text-item-3', labelAlias: 'assigned_label', label: 'assigned-label', sectionId: 'assigned-section' },
-                { id: 'highlight-item-4', textId: 'text-item-4', labelAlias: 'QR_label', label: 'QR-label', sectionId: 'qr-section' }
-              ]" v-show="isShowing">
+                { id: 'highlight-item-4', textId: 'text-item-4', labelAlias: 'assigned_label', label: 'assigned-label', sectionId: 'assigned-section' },
+                { id: 'highlight-item-5', textId: 'text-item-5', labelAlias: 'QR_label', label: 'QR-label', sectionId: 'qr-section' }
+              ]" v-show="isShowing" :initialSectionId="this.initialSectionId">
               </scroll-spy>
             </div>
           </div>
@@ -300,7 +300,7 @@
 import InlineEdit from '../shared/inline_edit.vue';
 import ScrollSpy from './repository_values/ScrollSpy.vue';
 import CustomColumns from './customColumns.vue';
-import RepositoryItemSidebarTitle from './Title.vue'
+import RepositoryItemSidebarTitle from './Title.vue';
 
 export default {
   name: 'RepositoryItemSidebar',
@@ -333,7 +333,8 @@ export default {
       inRepository: false,
       icons: null,
       relationshipDetailsState: {},
-    }
+      initialSectionId: null,
+    };
   },
   created() {
     window.repositoryItemSidebarComponent = this;
@@ -341,19 +342,19 @@ export default {
   computed: {
     repositoryRowName() {
       return this.defaultColumns?.archived ? `${I18n.t('labels.archived')} ${this.defaultColumns?.name}` : this.defaultColumns?.name;
-    }
+    },
   },
   watch: {
     parents() {
-      this.parents.forEach(parent => {
+      this.parents.forEach((parent) => {
         this.$set(this.relationshipDetailsState, parent.code, false);
       });
     },
     children() {
-      this.children.forEach(child => {
+      this.children.forEach((child) => {
         this.$set(this.relationshipDetailsState, child.code, false);
       });
-    }
+    },
   },
   mounted() {
     // Add a click event listener to the document
@@ -366,36 +367,37 @@ export default {
   },
   methods: {
     handleOutsideClick(event) {
-      if (!this.isShowing) return
+      if (!this.isShowing) return;
 
       // Check if the clicked element is not within the sidebar and it's not another item link or belogs to modals
       const selectors = ['a', '.modal', '.label-printing-progress-modal', '.atwho-view'];
 
-      if (!$(event.target).parents('#repository-item-sidebar-wrapper').length &&
-        !selectors.some(selector => event.target.closest(selector))) {
+      if (!$(event.target).parents('#repository-item-sidebar-wrapper').length
+        && !selectors.some((selector) => event.target.closest(selector))) {
         this.toggleShowHideSidebar(null);
       }
     },
-    toggleShowHideSidebar(repositoryRowUrl, myModuleId = null) {
+    toggleShowHideSidebar(repositoryRowUrl, myModuleId = null, initialSectionId = null) {
+      if (initialSectionId) {
+        this.initialSectionId = initialSectionId;
+      } else this.initialSectionId = null;
+
       // initial click
       if (this.currentItemUrl === null) {
         this.myModuleId = myModuleId;
         this.isShowing = true;
         this.loadRepositoryRow(repositoryRowUrl);
         this.currentItemUrl = repositoryRowUrl;
-        return
       }
       // click on the same item - should just open/close it
       else if (this.currentItemUrl === repositoryRowUrl) {
         this.isShowing = !this.isShowing;
-        return
       }
       // explicit close (from emit)
       else if (repositoryRowUrl === null) {
         this.isShowing = false;
         this.currentItemUrl = null;
         this.myModuleId = null;
-        return
       }
       // click on a different item - if the item card is already showing should just fetch new data
       else {
@@ -403,11 +405,10 @@ export default {
         this.myModuleId = myModuleId;
         this.loadRepositoryRow(repositoryRowUrl);
         this.currentItemUrl = repositoryRowUrl;
-        return
       }
     },
     loadRepositoryRow(repositoryRowUrl) {
-      this.dataLoading = true
+      this.dataLoading = true;
       $.ajax({
         method: 'GET',
         url: repositoryRowUrl,
@@ -432,7 +433,7 @@ export default {
           this.$nextTick(() => {
             this.generateBarCode(this.defaultColumns.code);
           });
-        }
+        },
       });
     },
     reload() {
@@ -450,7 +451,7 @@ export default {
       const barCodeCanvas = bwipjs.toCanvas('bar-code-canvas', {
         bcid: 'qrcode',
         text,
-        scale: 3
+        scale: 3,
       });
       this.barCodeSrc = barCodeCanvas.toDataURL('image/png');
     },
@@ -468,7 +469,7 @@ export default {
         },
       }).done((response) => {
         if (response) {
-          this.customColumns = this.customColumns.map(col => col.id === response.id ? { ...col, ...response } : col)
+          this.customColumns = this.customColumns.map((col) => (col.id === response.id ? { ...col, ...response } : col));
           if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
         }
       });
@@ -476,6 +477,6 @@ export default {
     updateOpenState(code, isOpen) {
       this.$set(this.relationshipDetailsState, code, isOpen);
     },
-  }
-}
+  },
+};
 </script>

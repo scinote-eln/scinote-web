@@ -6,8 +6,11 @@
   $(document).on('click', '.relationships-cell-wrapper', function(e) {
     e.stopPropagation();
     e.preventDefault();
-    const relationshipsUrl = $(this).attr('data-relationships-url');
-    window.itemRelationshipsModal.show(relationshipsUrl);
+    const myModuleId = $('.my-module-content').data('task-id');
+    // extract the href attribute from a neighboring column cell, required for sidebar to open
+    const repositoryRowURL = $(this).closest('tr').find('.sorting_1 a').attr('href');
+
+    window.repositoryItemSidebarComponent.toggleShowHideSidebar(repositoryRowURL, myModuleId, 'relationships-section');
   });
 
   $(document).on('click', '.record-info-link', function (e) {
@@ -17,7 +20,7 @@
     e.stopPropagation();
     e.preventDefault();
 
-    window.repositoryItemSidebarComponent.toggleShowHideSidebar(repositoryRowURL, myModuleId);
+    window.repositoryItemSidebarComponent.toggleShowHideSidebar(repositoryRowURL, myModuleId, null);
   });
 
   $(document).on('click', '.print-label-button', function(e) {
