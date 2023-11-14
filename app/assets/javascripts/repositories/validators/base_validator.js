@@ -91,6 +91,7 @@ $.fn.dataTable.render.RepositoryDateTimeRangeValueValidator = function($input) {
   const $container = $input.parents('.datetime-container');
   const $dateS = $container.find('.datetime.start');
   const $dateE = $container.find('.datetime.end');
+  const $submitField = $container.find('.column-range');
   let isValid = true;
   let errorMessage;
   let startTime;
@@ -114,6 +115,14 @@ $.fn.dataTable.render.RepositoryDateTimeRangeValueValidator = function($input) {
   }
 
   if (isValid) {
+    const oldValue = $submitField.val();
+    let newValue;
+    if ($dateS.val() && $dateE.val()) {
+      newValue = JSON.stringify({ start_time: $dateS.val(), end_time: $dateE.val() });
+    }
+    if (oldValue !== newValue) {
+      $submitField.val(newValue);
+    }
     return true;
   }
 
@@ -126,6 +135,7 @@ $.fn.dataTable.render.RepositoryDateRangeValueValidator = function($input) {
   const $container = $input.parents('.datetime-container');
   const $dateS = $container.find('.datetime.start');
   const $dateE = $container.find('.datetime.end');
+  const $submitField = $container.find('.column-range');
   let isValid = true;
   let errorMessage;
   let startTime;
@@ -145,6 +155,14 @@ $.fn.dataTable.render.RepositoryDateRangeValueValidator = function($input) {
   }
 
   if (isValid) {
+    const oldValue = $submitField.val();
+    let newValue;
+    if ($dateS.val() && $dateE.val()) {
+      newValue = JSON.stringify({ start_time: $dateS.val(), end_time: $dateE.val() });
+    }
+    if (oldValue !== newValue) {
+      $submitField.val(newValue);
+    }
     return true;
   }
 
@@ -157,6 +175,7 @@ $.fn.dataTable.render.RepositoryTimeRangeValueValidator = function($input) {
   const $container = $input.parents('.datetime-container');
   const $dateS = $container.find('.datetime.start');
   const $dateE = $container.find('.datetime.end');
+  const $submitField = $container.find('.column-range');
   let isValid = true;
   let errorMessage;
   let startTime;
@@ -175,6 +194,14 @@ $.fn.dataTable.render.RepositoryTimeRangeValueValidator = function($input) {
     errorMessage = I18n.t('repositories.table.date_time.errors.not_valid_range');
   }
   if (isValid) {
+    const oldValue = $submitField.val();
+    let newValue;
+    if ($dateS.val() && $dateE.val()) {
+      newValue = JSON.stringify({ start_time: $dateS.val(), end_time: $dateE.val() });
+    }
+    if (oldValue !== newValue) {
+      $submitField.val(newValue);
+    }
     return true;
   }
 
