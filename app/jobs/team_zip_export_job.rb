@@ -187,11 +187,19 @@ class TeamZipExportJob < ZipExportJob
   def prepare_preview(asset)
     if asset.previewable? && !asset.list?
       preview = asset.inline? ? asset.large_preview : asset.medium_preview
-      return unless preview.image.attached?
 
       begin
-        file_name = preview.image.filename.to_s
-        file_data = preview.image.download
+        if preview.is_a?(ActiveStorage::Preview)
+          return unless preview.image.attached?
+
+          file_name = preview.image.filename.to_s
+          file_data = preview.image.download
+        else
+          return unless preview.processed?
+
+          file_name = preview.blob.filename.to_s
+          file_data = preview.download
+        end
       rescue ActiveStorage::FileNotFoundError => e
         Rails.logger.error(e.message)
         Rails.logger.error(e.backtrace.join("\n"))

@@ -64,7 +64,6 @@ RSpec.describe 'Api::V1::ProtocolTemplateController', type: :request do
       get api_v1_team_protocol_template_path(id: @protocol_published_original.id, team_id: @team.id), headers: @valid_headers
 
       expect { hash_body = json }.not_to raise_exception
-
       parsed_data = JSON.parse(
         ActiveModelSerializers::SerializableResource
           .new(@protocol_published_original, serializer: Api::V1::ProtocolTemplateSerializer)

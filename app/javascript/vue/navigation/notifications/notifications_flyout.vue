@@ -6,16 +6,18 @@
     </div>
     <hr>
     <perfect-scrollbar ref="scrollContainer" class="sci--navigation--notificaitons-flyout-notifications">
-      <div class="sci-navigation--notificaitons-flyout-subtitle" v-if="todayNotifications.length" >
+      <div class="sci-navigation--notificaitons-flyout-subtitle" v-if="todayNotifications.length">
         {{ i18n.t('nav.notifications.today') }}
       </div>
-      <NotificationItem v-for="notification in todayNotifications" :key="notification.type_of + '-' + notification.id" :notification="notification" />
-      <div class="sci-navigation--notificaitons-flyout-subtitle" v-if="olderNotifications.length" >
+      <NotificationItem v-for="notification in todayNotifications" :key="notification.type_of + '-' + notification.id"
+        :notification="notification" />
+      <div class="sci-navigation--notificaitons-flyout-subtitle" v-if="olderNotifications.length">
         {{ i18n.t('nav.notifications.older') }}
       </div>
-      <NotificationItem v-for="notification in olderNotifications" :key="notification.type_of + '-' + notification.id" :notification="notification" />
+      <NotificationItem v-for="notification in olderNotifications" :key="notification.type_of + '-' + notification.id"
+        :notification="notification" />
       <div class="next-page-loader">
-        <img src="/images/medium/loading.svg" v-if="loadingPage"/>
+        <img src="/images/medium/loading.svg" v-if="loadingPage" />
       </div>
     </perfect-scrollbar>
   </div>
@@ -47,11 +49,16 @@ export default {
   },
   mounted() {
     let container = this.$refs.scrollContainer.$el
+    document.body.style.overflow = 'hidden'
+
     container.addEventListener('ps-scroll-y', (e) => {
       if (e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight - 20) {
         this.loadNotifications();
       }
     })
+  },
+  destroyed() {
+    document.body.style.overflow = 'scroll'
   },
   computed: {
     filteredNotifications() {

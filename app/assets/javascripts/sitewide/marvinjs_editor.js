@@ -201,6 +201,8 @@ var MarvinJsEditorApi = (function() {
           $('#modal_link' + json.id + ' .attachment-label').text(json.file_name);
         }
         $(marvinJsModal).modal('hide');
+
+        config.editor.focus();
         config.button.dataset.inProgress = false;
 
         if (MarvinJsEditor.saveCallback) MarvinJsEditor.saveCallback();
@@ -261,6 +263,7 @@ var MarvinJsEditorApi = (function() {
         } else if (config.mode === 'edit') {
           config.objectType = 'Asset';
           MarvinJsEditor.update(config);
+          location.reload();
         } else if (config.mode === 'new-tinymce') {
           config.objectType = 'TinyMceAsset';
           MarvinJsEditor.save(config);
@@ -319,6 +322,7 @@ $(document).on('click', '.gene-sequence-edit-button', function() {
 function initMarvinJs() {
   if (typeof (ChemicalizeMarvinJs) === 'undefined') {
     setTimeout(initMarvinJs, 100);
+    return;
   }
 
   MarvinJsEditor = MarvinJsEditorApi();
