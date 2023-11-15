@@ -62,6 +62,10 @@ input[type="checkbox"].sci-toggle-checkbox {
     display: none;
   }
 
+  &:disabled {
+    cursor: not-allowed;
+  }
+
   &:checked + .sci-toggle-checkbox-label {
     border-color: var(--sn-blue);
 
