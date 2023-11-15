@@ -73,6 +73,7 @@ module Api
 
       def load_team
         @team = current_user.teams.find(params.require(:team_id))
+        current_user.permission_team = @team
         raise PermissionError.new(Team, :read) unless can_read_team?(@team)
       end
 

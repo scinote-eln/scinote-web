@@ -47,9 +47,6 @@
     <a class="btn btn-light file-download-link" href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>" data-turbolinks="false">
       <span class="sn-icon sn-icon-export"></span> <%= t('Download')%>
     </a>
-    <% if (asset.step || asset.result) && !preview %>
-      <%= render partial: 'assets/asset_context_menu', locals: { asset: asset, deletable: false, editable: false } %>
-    <% end %>
     <button type="button" class="btn icon-btn btn-light" data-dismiss="modal"><span class="sn-icon sn-icon-close"></span></button>
   </div>
 </div>

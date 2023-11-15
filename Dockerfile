@@ -1,8 +1,6 @@
 FROM ruby:3.2.2-bookworm
 MAINTAINER SciNote <info@scinote.net>
 
-ARG WKHTMLTOPDF_PACKAGE_URL=https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.bookworm_amd64.deb
-
 # additional dependecies
 # libreoffice for file preview generation
 RUN apt-get update -qq && \
@@ -10,7 +8,6 @@ RUN apt-get update -qq && \
   libjemalloc2 \
   libssl-dev \
   nodejs \
-  npm \
   postgresql-client \
   default-jre-headless \
   poppler-utils \
@@ -23,13 +20,14 @@ RUN apt-get update -qq && \
   fonts-wqy-microhei \
   fonts-wqy-zenhei \
   libfile-mimeinfo-perl \
-  chromium-driver && \
-  wget -q -O /tmp/wkhtmltox_amd64.deb $WKHTMLTOPDF_PACKAGE_URL && \
-  apt-get install -y /tmp/wkhtmltox_amd64.deb && \
-  rm /tmp/wkhtmltox_amd64.deb && \
-  npm install -g yarn && \
+  chromium-driver \
+  yarnpkg && \
   ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so && \
   rm -rf /var/lib/apt/lists/*
+
+ENV PATH=/usr/share/nodejs/yarn/bin:$PATH
+
+RUN yarn add puppeteer@npm:puppeteer-core 
 
 ENV BUNDLE_PATH /usr/local/bundle/
 

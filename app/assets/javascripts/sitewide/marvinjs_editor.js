@@ -16,6 +16,7 @@ var MarvinJsEditorApi = (function() {
   var sketchName = marvinJsModal.find('.file-name input');
   var marvinJsMode = marvinJsContainer.data('marvinjsMode');
 
+
   // Facade api actions
   var marvinJsExportImage = (childFuction, options = {}) => {
     if (marvinJsMode === 'remote') {
@@ -200,6 +201,8 @@ var MarvinJsEditorApi = (function() {
           $('#modal_link' + json.id + ' .attachment-label').text(json.file_name);
         }
         $(marvinJsModal).modal('hide');
+
+        config.editor.focus();
         config.button.dataset.inProgress = false;
 
         if (MarvinJsEditor.saveCallback) MarvinJsEditor.saveCallback();
@@ -217,6 +220,8 @@ var MarvinJsEditorApi = (function() {
     var objectType = dataset.objectType;
     var marvinUrl = dataset.marvinUrl;
     var container = dataset.sketchContainer;
+
+
     MarvinJsEditor.open({
       mode: 'new',
       objectId: objectId,
@@ -242,6 +247,7 @@ var MarvinJsEditorApi = (function() {
         setTimeout(() => { MarvinJsEditor.open(config); }, 100);
         return false;
       }
+
       preloadActions(config);
       $(marvinJsModal).modal('show');
       $(marvinJsObject)
@@ -257,6 +263,7 @@ var MarvinJsEditorApi = (function() {
         } else if (config.mode === 'edit') {
           config.objectType = 'Asset';
           MarvinJsEditor.update(config);
+          location.reload();
         } else if (config.mode === 'new-tinymce') {
           config.objectType = 'TinyMceAsset';
           MarvinJsEditor.save(config);
@@ -312,10 +319,15 @@ $(document).on('click', '.gene-sequence-edit-button', function() {
   window.showIFrameModal(editButton.data('sequence-edit-url'));
 });
 
-$(document).on('turbolinks:load', function() {
+function initMarvinJs() {
+  if (typeof (ChemicalizeMarvinJs) === 'undefined') {
+    setTimeout(initMarvinJs, 100);
+    return;
+  }
+
   MarvinJsEditor = MarvinJsEditorApi();
   if (MarvinJsEditor.enabled()) {
-    if ($('#marvinjs-editor')[0].dataset.marvinjsMode === 'remote' && typeof (ChemicalizeMarvinJs) !== 'undefined') {
+    if ($('#marvinjs-editor')[0].dataset.marvinjsMode === 'remote') {
       ChemicalizeMarvinJs.createEditor('#marvinjs-sketch').then(function(marvin) {
         marvin.setDisplaySettings({ toolbars: 'reporting' });
         marvinJsRemoteEditor = marvin;
@@ -323,4 +335,8 @@ $(document).on('turbolinks:load', function() {
     }
   }
   MarvinJsEditor.initNewButton('.new-marvinjs-upload-button');
+}
+
+$(document).on('turbolinks:load', function() {
+  initMarvinJs();
 });
