@@ -467,12 +467,14 @@
     .clear-date {
       cursor: pointer;
       left: calc(100% - 16px);
+      margin-left: auto;
+      opacity: 0;
       text-align: center;
       width: 24px;
+    }
 
-      &.open {
-        visibility: visible;
-      }
+    &:hover .clear-date {
+      opacity: 1;
     }
 
     .date-text {
