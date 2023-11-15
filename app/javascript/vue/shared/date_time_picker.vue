@@ -1,6 +1,7 @@
 <template>
   <div class="date-time-picker grow">
     <VueDatePicker
+      ref="datetimePicker"
       :class="{
         'only-time': mode == 'time',
       }"
@@ -15,6 +16,7 @@
       :auto-apply="true"
       :partial-flow="true"
       :markers="markers"
+      week-start="0"
       :enable-time-picker="mode == 'datetime'"
       :time-picker="mode == 'time'"
       :placeholder="placeholder" >
@@ -160,6 +162,17 @@
         if (this.mode == 'date') return document.body.dataset.datetimePickerFormatVue
         return `${document.body.dataset.datetimePickerFormatVue} HH:mm`
       }
+    },
+    mounted() {
+      window.addEventListener('resize', this.close);
+    },
+    unmounted() {
+      window.removeEventListener('resize', this.close);
+    },
+    methods: {
+      close() {
+        this.$refs.datetimePicker.closeMenu();
+      },
     }
   }
 </script>

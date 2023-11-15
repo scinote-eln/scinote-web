@@ -3381,6 +3381,7 @@ en:
     formats:
       full_js: "D.M.YYYY HH:mm"
       full: "%{date_format} %H:%M"
+      default: "%Y/%m/%d %H:%M"
       full_with_tz: "%{date_format} %H:%M %z"
       full_with_comma: "%{date_format}, %H:%M"
       full_date: "%{date_format}"

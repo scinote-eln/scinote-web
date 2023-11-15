@@ -166,7 +166,9 @@ var ExperimnetTable = {
         });
       });
 
-      window.initDateTimePickerComponent(`#calendarDueDateContainer${row.id}`);
+      if ($(`#calendarDueDateContainer${row.id}`).length > 0) {
+        window.initDateTimePickerComponent(`#calendarDueDateContainer${row.id}`);
+      }
     });
   },
   initMyModuleActions: function() {
