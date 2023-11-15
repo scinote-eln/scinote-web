@@ -142,6 +142,7 @@
 <script>
   import Select from './../shared/select.vue';
   import Input from './../shared/input.vue';
+  import Decimal from 'decimal.js';
 
   export default {
     name: 'ManageStockValueModal',
@@ -154,7 +155,7 @@
         operation: null,
         operations: [],
         stockValue: null,
-        amount: 0,
+        amount: '',
         repositoryRowName: null,
         stockUrl: null,
         units: null,
@@ -175,14 +176,21 @@
         return unit ? unit[1] : ''
       },
       newAmount: function() {
+        const currentAmount = new Decimal(this.stockValue.amount || 0);
+        const amount = new Decimal(this.amount || 0)
+        let value;
         switch (this.operation) {
           case 2:
-            if (this.amount) return parseFloat(this.stockValue.amount) + this.amount
+            value = currentAmount.plus(amount);
+            break;
           case 3:
-            if(this.amount) return parseFloat(this.stockValue.amount) - this.amount
+            value = currentAmount.minus(amount);
+            break;
           default:
-            return this.amount
+            value = amount;
+            break;
         }
+        return Number(value)
       }
     },
     created() {
@@ -215,7 +223,7 @@
           success: (result) => {
             this.repositoryRowName = result.repository_row_name
             this.stockValue = result.stock_value
-            this.amount = parseFloat(result.stock_value.amount)
+            this.amount = Number(new Decimal(result.stock_value.amount || 0))
             this.units = result.stock_value.units
             this.unit = result.stock_value.unit
             this.reminderEnabled = result.stock_value.reminder_enabled
@@ -242,7 +250,7 @@
           newErrors['unit'] = I18n.t('repository_stock_values.manage_modal.unit_error');
         if (!this.amount)
           newErrors['amount'] = I18n.t('repository_stock_values.manage_modal.amount_error');
-        if (parseFloat(this.amount) && this.amount < 0)
+        if (this.amount && this.amount < 0)
           newErrors['amount'] = I18n.t('repository_stock_values.manage_modal.negative_error');
         if (this.reminderEnabled && !this.lowStockTreshold)
           newErrors['tresholdAmount'] = I18n.t('repository_stock_values.manage_modal.amount_error');
