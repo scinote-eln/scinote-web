@@ -1,5 +1,5 @@
 <template>
-  <div class="content__text-container">
+  <div class="content__text-container pr-8">
     <div class="sci-divider my-6" v-if="!inRepository"></div>
     <div class="text-header h-9 flex rounded mb-1 items-center relative w-full group/text-header" :class="{ 'editing-name': editingName, 'locked': !element.attributes.orderable.urls.update_url }">
       <div v-if="element.attributes.orderable.urls.update_url || element.attributes.orderable.name"
@@ -30,7 +30,7 @@
         @delete="showDeleteModal"
       ></MenuDropdown>
     </div>
-    <div class="flex rounded min-h-[2.25rem] mb-4 relative group/text_container content__text-body max-w-[90ch]" :class="{ 'edit': inEditMode, 'component__element--locked': !element.attributes.orderable.urls.update_url }" @keyup.enter="enableEditMode($event)" tabindex="0">
+    <div class="flex rounded min-h-[2.25rem] mb-4 relative group/text_container content__text-body" :class="{ 'edit': inEditMode, 'component__element--locked': !element.attributes.orderable.urls.update_url }" @keyup.enter="enableEditMode($event)" tabindex="0">
       <Tinymce
         v-if="element.attributes.orderable.urls.update_url"
         :value="element.attributes.orderable.text"

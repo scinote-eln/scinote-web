@@ -1,5 +1,5 @@
 <template>
-  <div class="content__table-container">
+  <div class="content__table-container pr-8">
     <div class="sci-divider my-6" v-if="!inRepository"></div>
     <div class="table-header h-9 flex rounded mb-3 items-center relative w-full group/table-header" :class="{ 'editing-name': editingName, 'locked': locked }">
       <div v-if="!locked || element.attributes.orderable.name" :key="reloadHeader"
@@ -86,6 +86,7 @@
       return {
         editingName: false,
         editingTable: false,
+        editingCell: false,
         tableObject: null,
         nameModalOpen: false,
         reloadHeader: 0,
@@ -125,6 +126,12 @@
         return menu;
       }
     },
+    created() {
+      window.addEventListener('beforeunload', this.showSaveWarning);
+    },
+    beforeDestroy() {
+      window.removeEventListener('beforeunload', this.showSaveWarning);
+    },
     updated() {
       if(!this.updatingTableData) this.loadTableData();
     },
@@ -140,6 +147,12 @@
       }
     },
     methods: {
+      showSaveWarning(e) {
+        if (this.editingCell) {
+          e.preventDefault();
+          e.returnValue = '';
+        }
+      },
       enableTableEdit() {
         if(this.locked) {
           return;
@@ -256,7 +269,24 @@
           readOnly: !this.editingTable,
           afterUnlisten: () => {
             this.updatingTableData = true;
-            setTimeout(this.updateTable, 100) // delay makes cancel button work
+            this.updateTable();
+          },
+          afterChange: () => {
+            if (this.editingTable == false) return;
+            this.updatingTableData = true;
+
+            this.$nextTick(() => {
+              this.update(() => this.editingCell = false);
+            });
+          },
+          beforeKeyDown: (e) => {
+            if (e.keyCode === 27) { // esc
+              this.editingCell = false;
+              return;
+            }
+          },
+          afterBeginEditing: (e) => {
+            this.editingCell = true;
           }
         });
         this.$nextTick(this.tableObject.render);

@@ -6,8 +6,6 @@
 export default {
   bind(el, binding, vnode) {
     el._vueClickOutside_ = (e) => {
-      e.stopPropagation();
-
       let clickedOnExcludedEl = false;
       const { exclude } = binding.value;
       exclude.forEach(refName => {

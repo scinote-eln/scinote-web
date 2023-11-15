@@ -68,10 +68,10 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
         inventory_id: @team1.repositories.first.id
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body[:data]).to match(
+      expect(hash_body[:data]).to match_array(
         JSON.parse(
           ActiveModelSerializers::SerializableResource
-            .new(@valid_inventory.repository_rows.limit(10),
+            .new(@valid_inventory.repository_rows.order(:id).limit(10),
                  each_serializer: Api::V1::InventoryItemSerializer,
                  include: :inventory_cells)
             .to_json
@@ -88,19 +88,19 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
         include: 'inventory_cells'
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body[:data]).to match(
+      expect(hash_body[:data]).to match_array(
         JSON.parse(
           ActiveModelSerializers::SerializableResource
-            .new(@valid_inventory.repository_rows.limit(10),
+            .new(@valid_inventory.repository_rows.order(:id).limit(10),
                  each_serializer: Api::V1::InventoryItemSerializer,
                  include: :inventory_cells)
             .to_json
         )['data']
       )
-      expect(hash_body[:included]).to match(
+      expect(hash_body[:included]).to match_array(
         JSON.parse(
           ActiveModelSerializers::SerializableResource
-            .new(@valid_inventory.repository_rows.limit(10),
+            .new(@valid_inventory.repository_rows.order(:id).limit(10),
                  each_serializer: Api::V1::InventoryItemSerializer,
                  include: :inventory_cells)
             .to_json
@@ -115,7 +115,7 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
         inventory_id: @team1.repositories.first.id
       ), params: { page: { size: 100 } }, headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body[:data]).to match(
+      expect(hash_body[:data]).to match_array(
         JSON.parse(
           ActiveModelSerializers::SerializableResource
             .new(@valid_inventory.repository_rows.limit(100),

@@ -28,6 +28,7 @@ module UserAssignments
                            .where(user_assignments: { user: users })
                            .where(projects: project)
       # rubocop:disable Rails/SkipsModelValidations
+      UserMyModule.where(user: users, my_module: my_modules).delete_all # remove designated users
       UserAssignment.where(assignable_type: 'MyModule', assignable_id: my_modules, user: users).delete_all
       my_modules.update_all(updated_at: Time.current)
       # rubocop:enable Rails/SkipsModelValidations

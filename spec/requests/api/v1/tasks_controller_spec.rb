@@ -285,7 +285,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
       @valid_headers['Content-Type'] = 'application/json'
     end
 
-    let(:task) { @valid_experiment.my_modules.take }
+    let(:task) { @valid_experiment.my_modules.active.first }
 
     let(:action) do
       patch(

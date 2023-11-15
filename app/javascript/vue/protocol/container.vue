@@ -171,6 +171,7 @@
                 @reorder="startStepReorder"
                 :inRepository="inRepository"
                 :stepToReload="stepToReload"
+                :activeDragStep="activeDragStep"
                 @step:delete="updateStepsPosition"
                 @step:update="updateStep"
                 @stepUpdated="refreshProtocolStatus"
@@ -179,6 +180,7 @@
                 @step:move_element="reloadStep"
                 @step:attachemnts:loaded="stepToReload = null"
                 @step:move_attachment="reloadStep"
+                @step:drag_enter="dragEnter"
                 :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
                 :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
               />
@@ -266,6 +268,7 @@
         reordering: false,
         publishing: false,
         stepToReload: null,
+        activeDragStep: null
       }
     },
     mounted() {
@@ -443,6 +446,9 @@
           $('.my_module-name .view-mode').trigger('click');
           $('.my_module-name .input-field').focus();
         }, 300)
+      },
+      dragEnter(id) {
+        this.activeDragStep = id;
       },
       uploadFilesToStep(file, stepId) {
         this.$children.find(child => child.step?.id == stepId).uploadFiles(file);

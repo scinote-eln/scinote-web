@@ -22,20 +22,114 @@ export default {
   mounted() {
     this.secondaryNavigation = document.querySelector('#taskSecondaryMenu');
 
-    this.resizeObserver = new ResizeObserver((entries) => {
-      entries.forEach((entry) => {
-        this.taskSecondaryMenuHeight = entry.target.offsetHeight;
+    if (this.secondaryNavigation) {
+      this.resizeObserver = new ResizeObserver((entries) => {
+        entries.forEach((entry) => {
+          this.taskSecondaryMenuHeight = entry.target.offsetHeight;
+        });
       });
-    });
 
-    this.resizeObserver.observe(this.secondaryNavigation);
+      this.resizeObserver.observe(this.secondaryNavigation);
+    }
+    window.addEventListener('tinyMCEOpened', (e) => {
+      this.handleTinyMCEOpened(e.detail.target);
+    });
   },
   beforeDestroy() {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
     }
+    window.removeEventListener('tinyMCEOpened', this.handleTinyMCEOpened);
   },
   methods: {
+    handleTinyMCEOpened(target) {
+      const getVisibleHeight = (elemTop, elemHeight) => {
+        let visibleHeight = 0;
+        if (elemTop >= 0) {
+          visibleHeight = Math.min(elemHeight, window.innerHeight - elemTop);
+        } else if (elemTop + elemHeight > 0) {
+          visibleHeight = elemTop + elemHeight;
+        }
+        return visibleHeight;
+      };
+
+      let headerHeight = 0;
+      let headerTop = 0;
+      let secondaryNavigationHeight = 0;
+      let secondaryNavigationTop = 0;
+
+      if (this.headerRef) {
+        headerHeight = this.headerRef.offsetHeight;
+        headerTop = this.headerRef.getBoundingClientRect().top;
+      }
+
+      if (this.secondaryNavigation) {
+        secondaryNavigationHeight = this.secondaryNavigation.offsetHeight;
+        secondaryNavigationTop = this.secondaryNavigation.getBoundingClientRect().top;
+      }
+
+      const editorHeaderTop = target.offset().top;
+      let totalHeight = 0;
+
+      const visibleHeaderHeight = getVisibleHeight(headerTop, headerHeight);
+      if (headerTop + visibleHeaderHeight < editorHeaderTop) {
+        totalHeight += visibleHeaderHeight;
+      }
+
+      const visibleSecondaryNavHeight = getVisibleHeight(secondaryNavigationTop, secondaryNavigationHeight);
+      if (secondaryNavigationTop + visibleSecondaryNavHeight < editorHeaderTop) {
+        totalHeight += visibleSecondaryNavHeight;
+      }
+
+      const editorHeader = $('.tox-editor-header');
+
+      // For Protocol Templates
+      if (!this.headerRef && !this.secondaryNavigation) {
+        if (target[0].getBoundingClientRect().top < 0 && editorHeader.css('position') !== 'fixed') {
+          $('html, body').animate({
+            scrollTop: target.offset().top - editorHeader.outerHeight(),
+          }, 100); // 100ms works best for editorHeader to be fully visible
+        } else {
+          editorHeader.css('left', '');
+        }
+        return;
+      }
+
+      // Handle opening TinyMCE toolbars when only a small bottom area of editor is visible
+      const targetBottom = target[0].getBoundingClientRect().bottom;
+      if (targetBottom < 3 * headerHeight) {
+        this.$nextTick(() => {
+          if (editorHeader.css('position') === 'fixed') {
+            editorHeader.css({
+              top: totalHeight - 1,
+              left: '',
+            });
+          }
+          $('html, body').animate({
+            scrollTop: target.offset().top + (visibleHeaderHeight + visibleSecondaryNavHeight),
+          }, 100);
+        });
+        return;
+      }
+
+      const headerBottom = this.headerRef.getBoundingClientRect().bottom;
+      // Handle showing TinyMCE toolbar for fixed/static position of toolbar
+      if (editorHeader.css('position') === 'fixed') {
+        editorHeader.css('left', '');
+        if (this.headerSticked) {
+          editorHeader.css('top', totalHeight - 1);
+        }
+      } else if (headerTop < (visibleHeaderHeight + visibleSecondaryNavHeight)
+        && target[0].getBoundingClientRect().top <= headerBottom) {
+        this.$nextTick(() => {
+          $('html, body').animate({
+            scrollTop: target.offset().top + (visibleHeaderHeight + visibleSecondaryNavHeight),
+          }, 100);
+        });
+      }
+
+      target.focus();
+    },
     initStackableHeaders() {
       const header = this.headerRef;
       const headerHeight = header.offsetHeight;
@@ -93,7 +187,7 @@ export default {
       // Apply TinyMCE offset
       $('.tox-editor-header').css(
         'top',
-        stickyNavigationHeight + parseInt($(this.secondaryNavigation).css('top'), 10)
+        stickyNavigationHeight + parseInt($(this.secondaryNavigation).css('top'), 10) - 1,
       );
       this.lastScrollTop = window.scrollY; // Save last scroll position to when user scroll up/down
     },
