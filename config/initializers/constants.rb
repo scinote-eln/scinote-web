@@ -362,7 +362,7 @@ class Constants
   }
   9.times do |i|
     REPOSITORY_TABLE_DEFAULT_STATE['columns'] << {
-      'visible' => (i < 7),
+      'visible' => (i < 7 && i != 4), # relationship column is hidden by default
       'searchable' => (i >= 1 && i != 4), # Checkboxes and relationship column is not searchable
       'search' => { 'search' => '',
                     'smart' => true,

@@ -134,82 +134,75 @@
                     ref="relationships-label">
                     {{ i18n.t('repositories.item_card.section.relationships') }}
                   </div>
-                  <template v-if="!parentsCount && !childrenCount">
-                    <div class="text-sn-dark-grey">
-                      {{ i18n.t('repositories.item_card.relationships.empty') }}
+                  <div class="font-inter text-sm leading-5 w-full">
+                    <div class="flex flex-row justify-between">
+                      <div class="mb-3 font-semibold">{{ i18n.t('repositories.item_card.relationships.parents.count', { count: parentsCount || 0 }) }}</div>
+                      <a class="btn-text-link font-normal" @click="handleOpenAddRelationshipsModal($event, 'parent')">
+                        {{ i18n.t('repositories.item_card.add_relationship_button_text') }}
+                      </a>
                     </div>
-                  </template>
-                  <template v-else>
-                    <div class="font-inter text-sm leading-5 w-full">
-                      <div class="flex flex-row justify-between">
-                        <div class="mb-3 font-semibold">{{ i18n.t('repositories.item_card.relationships.parents.count', { count: parentsCount || 0 }) }}</div>
-                        <a class="btn-text-link font-normal" @click="handleOpenAddRelationshipsModal($event, 'parent')">
-                          {{ i18n.t('repositories.item_card.add_relationship_button_text') }}
-                        </a>
-                      </div>
-                      <div v-if="parentsCount">
-                        <details v-for="(parent) in parents" @toggle="updateOpenState(parent.code, $event.target.open)" :key="parent.code" class="flex flex-col font-normal gap-5 group cursor-default">
-                          <summary class="flex flex-row gap-3 mb-3 items-center">
-                            <img :src="icons.delimiter_path" class="w-3 h-3 cursor-pointer" :class="{ 'rotate-90': relationshipDetailsState[parent.code] }" />
-                            <span>
-                              <span>{{ i18n.t('repositories.item_card.relationships.item') }}</span>
-                              <a :href="parent.path" class="record-info-link btn-text-link !text-sn-science-blue">{{ parent.name }}</a>
-                              <a v-if="permissions?.can_manage" href="/" class="opacity-0 group-hover:opacity-100 cursor-pointer">
-                                <img :src="icons.unlink_path" />
-                              </a>
-                            </span>
-                          </summary>
-                          <p class="flex flex-col gap-3 mb-5 ml-6">
-                            <span>
-                              {{ i18n.t('repositories.item_card.relationships.id', { code: parent.code }) }}
-                            </span>
-                            <span>
-                              <span>{{ i18n.t('repositories.item_card.relationships.inventory') }}</span>
-                              <a :href="parent.repository_path" class="record-info-link btn-text-link !text-sn-science-blue">{{ parent.repository_name }}</a>
-                            </span>
-                          </p>
-                        </details>
-                      </div>
-                      <div v-else class="text-sn-dark-grey">
-                        {{ i18n.t('repositories.item_card.relationships.parents.empty') }}
-                      </div>
+                    <div v-if="parentsCount">
+                      <details v-for="(parent) in parents" @toggle="updateOpenState(parent.code, $event.target.open)" :key="parent.code" class="flex flex-col font-normal gap-5 group cursor-default">
+                        <summary class="flex flex-row gap-3 mb-3 items-center">
+                          <img :src="icons.delimiter_path" class="w-3 h-3 cursor-pointer" :class="{ 'rotate-90': relationshipDetailsState[parent.code] }" />
+                          <span>
+                            <span>{{ i18n.t('repositories.item_card.relationships.item') }}</span>
+                            <a :href="parent.path" class="record-info-link btn-text-link !text-sn-science-blue">{{ parent.name }}</a>
+                            <a v-if="permissions?.can_manage" href="/" class="opacity-0 group-hover:opacity-100 cursor-pointer">
+                              <img :src="icons.unlink_path" />
+                            </a>
+                          </span>
+                        </summary>
+                        <p class="flex flex-col gap-3 mb-5 ml-6">
+                          <span>
+                            {{ i18n.t('repositories.item_card.relationships.id', { code: parent.code }) }}
+                          </span>
+                          <span>
+                            <span>{{ i18n.t('repositories.item_card.relationships.inventory') }}</span>
+                            <a :href="parent.repository_path" class="record-info-link btn-text-link !text-sn-science-blue">{{ parent.repository_name }}</a>
+                          </span>
+                        </p>
+                      </details>
                     </div>
+                    <div v-else class="text-sn-dark-grey h-5">
+                      {{ i18n.t('repositories.item_card.relationships.parents.empty') }}
+                    </div>
+                  </div>
 
-                    <div class="sci-divider pb-4"></div>
+                  <div class="sci-divider pb-4"></div>
 
-                    <div class="font-inter text-sm leading-5 w-full">
-                      <div class="flex flex-row justify-between">
-                        <div class="mb-3 font-semibold">{{ i18n.t('repositories.item_card.relationships.children.count', { count: childrenCount || 0 }) }}</div>
-                        <a class="btn-text-link font-normal" @click="handleOpenAddRelationshipsModal($event, 'child')">
-                          {{ i18n.t('repositories.item_card.add_relationship_button_text') }}
-                        </a>
-                      </div>
-                      <div v-if="childrenCount">
-                        <details v-for="(child) in children" :key="child.code" @toggle="updateOpenState(child.code, $event.target.open)" class="flex flex-col font-normal gap-5 group">
-                          <summary class="flex flex-row gap-3 mb-3 items-center">
-                            <img :src="icons.delimiter_path" class="w-3 h-3 cursor-pointer" :class="{ 'rotate-90': relationshipDetailsState[child.code] }"/>
-                            <span class="group/child">
-                              <span>{{ i18n.t('repositories.item_card.relationships.item') }}</span>
-                              <a :href="child.path" class="record-info-link btn-text-link !text-sn-science-blue">{{ child.name }}</a>
-                              <a v-if="permissions?.can_manage" href="/" class="opacity-0 group-hover:opacity-100 cursor-pointer">
-                                <img :src="icons.unlink_path" />
-                              </a>
-                            </span>
-                          </summary>
-                          <p class="flex flex-col gap-3 mb-5 ml-6">
-                            <span>{{ i18n.t('repositories.item_card.relationships.id', { code: child.code }) }}</span>
-                            <span>
-                              <span>{{ i18n.t('repositories.item_card.relationships.inventory') }}</span>
-                              <a :href="child.repository_path" class="record-info-link btn-text-link !text-sn-science-blue">{{ child.repository_name }}</a>
-                            </span>
-                          </p>
-                        </details>
-                      </div>
-                      <div v-else class="text-sn-dark-grey">
-                        {{ i18n.t('repositories.item_card.relationships.children.empty') }}
-                      </div>
+                  <div class="font-inter text-sm leading-5 w-full">
+                    <div class="flex flex-row justify-between">
+                      <div class="mb-3 font-semibold">{{ i18n.t('repositories.item_card.relationships.children.count', { count: childrenCount || 0 }) }}</div>
+                      <a class="btn-text-link font-normal" @click="handleOpenAddRelationshipsModal($event, 'child')">
+                        {{ i18n.t('repositories.item_card.add_relationship_button_text') }}
+                      </a>
                     </div>
-                  </template>
+                    <div v-if="childrenCount">
+                      <details v-for="(child) in children" :key="child.code" @toggle="updateOpenState(child.code, $event.target.open)" class="flex flex-col font-normal gap-5 group">
+                        <summary class="flex flex-row gap-3 mb-3 items-center">
+                          <img :src="icons.delimiter_path" class="w-3 h-3 cursor-pointer" :class="{ 'rotate-90': relationshipDetailsState[child.code] }"/>
+                          <span class="group/child">
+                            <span>{{ i18n.t('repositories.item_card.relationships.item') }}</span>
+                            <a :href="child.path" class="record-info-link btn-text-link !text-sn-science-blue">{{ child.name }}</a>
+                            <a v-if="permissions?.can_manage" href="/" class="opacity-0 group-hover:opacity-100 cursor-pointer">
+                              <img :src="icons.unlink_path" />
+                            </a>
+                          </span>
+                        </summary>
+                        <p class="flex flex-col gap-3 mb-5 ml-6">
+                          <span>{{ i18n.t('repositories.item_card.relationships.id', { code: child.code }) }}</span>
+                          <span>
+                            <span>{{ i18n.t('repositories.item_card.relationships.inventory') }}</span>
+                            <a :href="child.repository_path" class="record-info-link btn-text-link !text-sn-science-blue">{{ child.repository_name }}</a>
+                          </span>
+                        </p>
+                      </details>
+                    </div>
+                    <div v-else class="text-sn-dark-grey h-5">
+                      {{ i18n.t('repositories.item_card.relationships.children.empty') }}
+                    </div>
+                  </div>
                 </section>
 
                 <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px"></div>
@@ -280,6 +273,7 @@
             <!-- NAVIGATION -->
             <div v-if="isShowing && !dataLoading" ref="navigationRef" id="navigation"
               class="flex item-end gap-x-4 min-w-[130px] min-h-[130px] h-fit sticky top-0 pr-6 [scrollbar-gutter:stable_both-edges] ">
+
               <scroll-spy :itemsToCreate="[
                 {
                   id: 'highlight-item-1',
@@ -300,7 +294,8 @@
                   textId: 'text-item-3',
                   labelAlias: 'relationships_label',
                   label: 'relationships-label',
-                  sectionId: 'relationships-section' },
+                  sectionId: 'relationships-section'
+                },
                 {
                   id: 'highlight-item-4',
                   textId: 'text-item-4',
@@ -314,9 +309,8 @@
                   labelAlias: 'QR_label',
                   label: 'QR-label',
                   sectionId: 'qr-section'
-                }
-              ]" v-show="isShowing">
-              </scroll-spy>
+                },
+              ]" v-show="isShowing" />
             </div>
           </div>
 
@@ -375,6 +369,7 @@ export default {
       inRepository: false,
       icons: null,
       relationshipDetailsState: {},
+      relationshipsEnabled: false,
       initialSectionId: null,
     };
   },
@@ -487,6 +482,7 @@ export default {
           this.optionsPath = result.options_path;
           this.updatePath = result.update_path;
           this.defaultColumns = result.default_columns;
+          this.relationshipsEnabled = result.relationships.enabled;
           this.parentsCount = result.relationships.parents_count;
           this.childrenCount = result.relationships.children_count;
           this.parents = result.relationships.parents;
