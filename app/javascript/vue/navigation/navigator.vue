@@ -1,17 +1,18 @@
 <template>
-  <vue-resizable
+  <Vue3DraggableResizable
+    :initW="getNavigatorWidth()"
     ref="vueResizable"
-    :max-width="400"
-    :min-width="208"
-    width="auto"
-    height="100%"
-    class="!h-full"
-    :active="['r']"
-    @resize:start="onResizeStart"
-    @resize:move="onResizeMove"
-    @resize:end="onResizeEnd"
+    :minW="208"
+    :disabledH="true"
+    :handles="['mr']"
+    :resizable="true"
+    :draggable="false"
+    class="max-w-[400px] !h-full"
+    @resize-start="onResizeStart"
+    @resizing="onResizeMove"
+    @resize-end="onResizeEnd"
   >
-    <div class="ml-4 h-full border rounded relative bg-sn-white flex flex-col right-0 absolute navigator-container">
+    <div class="ml-4 h-full w-full border rounded bg-sn-white flex flex-col right-0 absolute navigator-container">
       <div class="px-3 py-2.5 flex items-center relative leading-4">
         <i class="sn-icon sn-icon-navigator"></i>
         <div class="font-bold text-base pl-3">
@@ -31,20 +32,20 @@
                       :archived="archived" />
       </perfect-scrollbar>
     </div>
-  </vue-resizable>
+  </Vue3DraggableResizable>
 </template>
 
 <script>
 
 import NavigatorItem from './navigator_item.vue'
-import VueResizable from 'vue-resizable'
 import axios from '../../packs/custom_axios.js';
+import Vue3DraggableResizable from 'vue3-draggable-resizable'
 
 export default {
   name : 'NavigatorContainer',
   components: {
     NavigatorItem,
-    VueResizable
+    Vue3DraggableResizable
   },
   data() {
     return {
@@ -54,7 +55,7 @@ export default {
       navigatorYScroll: 0,
       navigatorXScroll: 0,
       currentItemId: null,
-      archived: null
+      archived: null,
     }
   },
   props: {
@@ -128,10 +129,11 @@ export default {
     },
     getNavigatorWidth() {
       const computedStyle = getComputedStyle(document.documentElement);
-      return computedStyle.getPropertyValue('--navigator-navigation-width').trim();
+      return parseInt(computedStyle.getPropertyValue('--navigator-navigation-width').trim());
     },
     onResizeMove(event) {
-      document.documentElement.style.setProperty('--navigator-navigation-width', event.width + 'px');
+      if (event.w > 400) event.w = 400;
+      document.documentElement.style.setProperty('--navigator-navigation-width', event.w + 'px');
     },
     onResizeStart() {
       document.body.style.cursor = 'url(/images/icon_small/Resize.svg) 0 0, auto';
@@ -139,10 +141,11 @@ export default {
       $('.sci--layout').addClass('!transition-none');
     },
     onResizeEnd(event) {
+      if (event.w > 400) event.w = 400;
       document.body.style.cursor = 'default';
       $('.sci--layout-navigation-navigator').removeClass('!transition-none');
       $('.sci--layout').removeClass('!transition-none');
-      this.changeNavigatorState(event.width)
+      this.changeNavigatorState(event.w)
     },
     async changeNavigatorState(newWidth) {
       try {

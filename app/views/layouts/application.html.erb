@@ -24,6 +24,7 @@
     <%= javascript_include_tag 'application' %>
     <%= javascript_include_tag 'session_end' %>
     <%= javascript_include_tag 'sidebar_toggle' %>
+    <%= stylesheet_link_tag 'application_pack', media: 'all' %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
 
 
@@ -55,6 +56,8 @@
     <%= stylesheet_link_tag 'tui_image_editor_styles' %>
     <%= javascript_include_tag 'vue_navigation_navigator' %>
     <%= javascript_include_tag 'vue_navigation_top_menu' %>
+    <%= javascript_include_tag 'vue_legacy_datetime_picker' %>
+
     <style> :root { --navigator-navigation-width: <%= session[:navigator_width] || Constants::DEFAULT_NAV_WIDTH %>px; } </style>
   </head>
   <body
@@ -69,6 +72,7 @@
     data-atwho-rep-items-url="<%= atwho_rep_items_team_path(current_team) %>"
     data-atwho-menu-items="<%= atwho_menu_items_team_path(current_team) %>"
     data-datetime-picker-format="<%= datetime_picker_format_date_only %>"
+    data-datetime-picker-format-vue="<%= datetime_picker_format_date_only_vue %>"
     <% end %>
   >
 

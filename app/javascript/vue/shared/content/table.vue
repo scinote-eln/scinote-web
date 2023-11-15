@@ -129,7 +129,7 @@
     created() {
       window.addEventListener('beforeunload', this.showSaveWarning);
     },
-    beforeDestroy() {
+    beforeUnmount() {
       window.removeEventListener('beforeunload', this.showSaveWarning);
     },
     updated() {
