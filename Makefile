@@ -89,7 +89,7 @@ tests-ci:
 						-e MAIL_FROM=MAIL_FROM \
 						-e MAIL_REPLYTO=MAIL_REPLYTO \
 						-e RAILS_ENV=test \
-						-e MAIL_SERVER_URL=localhost:3000 \
+						-e MAIL_SERVER_URL=http://localhost:3000 \
 						-e ENABLE_RECAPTCHA=false \
 						-e ENABLE_USER_CONFIRMATION=false \
 						-e ENABLE_USER_REGISTRATION=true \
