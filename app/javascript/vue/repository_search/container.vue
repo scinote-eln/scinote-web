@@ -40,7 +40,7 @@ import { vOnClickOutside } from '@vueuse/components'
 export default {
   name: 'RepositorySearchContainer',
   directives: {
-    'click-outside': outsideClick
+    'click-outside': vOnClickOutside
   },
   data() {
     return {

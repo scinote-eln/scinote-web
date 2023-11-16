@@ -1,24 +1,10 @@
-import TurbolinksAdapter from 'vue-turbolinks';
-import Vue from 'vue/dist/vue.esm';
-import PerfectScrollbar from 'vue2-perfect-scrollbar';
-import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css';
+import PerfectScrollbar from 'vue3-perfect-scrollbar';
+import { createApp } from 'vue/dist/vue.esm-bundler.js';
 import ManageStockValueModal from '../../vue/repository_row/manage_stock_value_modal.vue';
+import { mountWithTurbolinks } from './helpers/turbolinks.js';
 
-Vue.use(PerfectScrollbar);
-Vue.use(TurbolinksAdapter);
-Vue.prototype.i18n = window.I18n;
-
-window.initManageStockValueModalComponent = () => {
-  if (window.manageStockModalComponent) return;
-
-  if (notTurbolinksPreview()) {
-    new Vue({
-      el: '#manageStockValueModal',
-      components: {
-        'manage-stock-value-modal': ManageStockValueModal,
-      },
-    });
-  }
-};
-
-initManageStockValueModalComponent();
+const app = createApp({});
+app.component('ManageStockValueModal', ManageStockValueModal);
+app.use(PerfectScrollbar);
+app.config.globalProperties.i18n = window.I18n;
+mountWithTurbolinks(app, '#manageStockValueModal');

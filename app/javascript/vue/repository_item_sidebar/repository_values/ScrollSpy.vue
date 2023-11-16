@@ -54,8 +54,10 @@ export default {
 
   methods: {
     initializeComponent() {
-      this.bodyContainerEl = this.$parent.$refs.bodyWrapper;
-      this.sections = Array.from(this.$parent.$refs.scrollSpyContent.querySelectorAll('section[id]'));
+      const bodyWrapperEl = document.getElementById('body-wrapper')
+      const scrollSpyContentEl = document.getElementById('scrollSpyContent')
+      this.bodyContainerEl = bodyWrapperEl
+      this.sections = Array.from(scrollSpyContentEl.querySelectorAll('section[id]'));
       this.addScrollListener();
     },
 
@@ -169,8 +171,7 @@ export default {
 
       const scrollableArea = this.bodyContainerEl;
       const foundObj = this.arrOfThresholds.find((obj) => obj.id === navigationItem.sectionId)
-
-      const domElToScrollTo = this.$parent.$refs[navigationItem.label];
+      const domElToScrollTo = document.getElementById(navigationItem.label)
 
       if (foundObj.index === 0) {
         // scroll to top

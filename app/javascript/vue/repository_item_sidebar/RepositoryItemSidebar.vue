@@ -25,7 +25,7 @@
             <div class="sci-loader"></div>
           </div>
 
-          <div v-else class="flex flex-1 flex-grow-1 justify-between" ref="scrollSpyContent">
+          <div v-else class="flex flex-1 flex-grow-1 justify-between" ref="scrollSpyContent" id="scrollSpyContent">
 
             <div id="left-col" class="flex flex-col gap-4">
 
@@ -129,7 +129,9 @@
                 <section id="assigned-section" class="flex flex-col" ref="assignedSectionRef">
                   <div
                     class="flex flex-row text-base font-semibold w-[350px] pb-4 leading-7 items-center justify-between transition-colors duration-300"
-                    ref="assigned-label">
+                    ref="assigned-label"
+                    id="assigned-label"
+                    >
                     {{ i18n.t('repositories.item_card.section.assigned', {
                       count: assignedModules ?
                         assignedModules.total_assigned_size : 0
@@ -175,7 +177,7 @@
 
                 <!-- QR -->
                 <section id="qr-section" ref="QR-label">
-                  <div class="font-inter text-base font-semibold leading-7 mb-4 mt-0 transition-colors duration-300">
+                  <div id="QR-label" class="font-inter text-base font-semibold leading-7 mb-4 mt-0 transition-colors duration-300">
                     {{ i18n.t('repositories.item_card.section.qr') }}
                   </div>
                   <div class="bar-code-container">
@@ -187,7 +189,7 @@
             </div>
 
             <!-- NAVIGATION -->
-            <div v-if="isShowing" ref="navigationRef" id="navigation"
+            <div v-if="isShowing && !dataLoading" ref="navigationRef" id="navigation"
               class="flex item-end gap-x-4 min-w-[130px] min-h-[130px] h-fit sticky top-0 right-[4px] ">
               <scroll-spy :itemsToCreate="[
                 { id: 'highlight-item-1', textId: 'text-item-1', labelAlias: 'information_label', label: 'information-label', sectionId: 'information-section' },

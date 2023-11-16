@@ -2,7 +2,7 @@
   <div>
     <div
       @click="enableEdit"
-      v-click-outside="{ handler: 'validateAndSave', exclude: ['edit', 'view'] }"
+      v-click-outside="validateAndSave"
       class="text-sn-dark-grey font-inter text-sm font-normal leading-5 w-full rounded relative"
       :class="editableClassName"
     >
@@ -158,7 +158,7 @@
 </template>
 
 <script>
-  import outsideClick from './../../../packs/vue/directives/outside_click';
+  import { vOnClickOutside } from '@vueuse/components'
   import date_time_range from './../mixins/date_time_range';
   import DateTimePicker from '../../shared/date_time_picker.vue';
   import Reminder from './../reminder.vue';
@@ -166,12 +166,12 @@
   export default {
     name: 'DateTimeRange',
     mixins: [date_time_range],
-    components: { 
+    components: {
       DateTimePicker,
       Reminder
     },
     directives: {
-      'click-outside': outsideClick
+      'click-outside': vOnClickOutside
     },
     data() {
       return {
@@ -206,7 +206,7 @@
         if (this.canEdit) return `${className} border-sn-light-grey hover:border-sn-sleepy-grey`;
         return ''
       }
-    }, 
+    },
     mounted() {
       this.cellUpdatePath = this.updatePath;
       this.values = this.colVal || {};
