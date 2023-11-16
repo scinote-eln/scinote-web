@@ -1,7 +1,7 @@
 <template>
-  <div 
-    class="flex items-center mr-3 flex-nowrap relative" 
-    v-click-outside="{handler: 'closeSearchInputs', exclude: ['searchInput', 'searchInputBtn', 'barcodeSearchInput', 'barcodeSearchInputBtn']}"
+  <div
+    class="flex items-center mr-3 flex-nowrap relative"
+    v-click-outside="closeSearchInputs"
   >
     <button :class="{hidden: searchOpened}" ref='searchInputBtn' class="btn btn-light btn-black icon-btn" :title="i18n.t('repositories.show.search_button_tooltip')" @click="openSearch">
       <i class="sn-icon sn-icon-search"></i>
@@ -35,7 +35,8 @@
 </template>
 
 <script>
-import outsideClick from '../../packs/vue/directives/outside_click';
+import { vOnClickOutside } from '@vueuse/components'
+
 export default {
   name: 'RepositorySearchContainer',
   directives: {
@@ -48,6 +49,9 @@ export default {
       searchOpened: false,
       value: ''
     }
+  },
+  directives: {
+    'click-outside': vOnClickOutside
   },
   watch: {
     barcodeValue() {

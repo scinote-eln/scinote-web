@@ -15,18 +15,21 @@
             :dragClass="'step-checklist-item-drag'"
             :chosenClass="'step-checklist-item-chosen'"
             :handle="'.step-element-grip'"
+            item-key="id"
           >
-            <div v-for="(item, index) in reorderedItems" :key="item.id" class="step-element-header flex items-center">
-              <div class="step-element-grip step-element-grip--draggable">
-                <i class="sn-icon sn-icon-drag"></i>
+            <template #item="{element, index}">
+              <div class="step-element-header flex items-center">
+                <div class="step-element-grip step-element-grip--draggable">
+                  <i class="sn-icon sn-icon-drag"></i>
+                </div>
+                <div class="step-element-name text-center">
+                  <strong v-if="includeNumbers" class="step-element-number">{{ index + 1 }}</strong>
+                  <i v-if="element.attributes.icon" class="fas" :class="element.attributes.icon"></i>
+                  <span :title="nameWithFallbacks(element)" v-if="nameWithFallbacks(element)">{{ nameWithFallbacks(element) }}</span>
+                  <span :title="element.attributes.placeholder" v-else class="step-element-name-placeholder">{{ element.attributes.placeholder }}</span>
+                </div>
               </div>
-              <div class="step-element-name text-center">
-                <strong v-if="includeNumbers" class="step-element-number">{{ index + 1 }}</strong>
-                <i v-if="item.attributes.icon" class="fas" :class="item.attributes.icon"></i>
-                <span :title="nameWithFallbacks(item)" v-if="nameWithFallbacks(item)">{{ nameWithFallbacks(item) }}</span>
-                <span :title="item.attributes.placeholder" v-else class="step-element-name-placeholder">{{ item.attributes.placeholder }}</span>
-              </div>
-            </div>
+            </template>
           </Draggable>
         </div>
       </div>

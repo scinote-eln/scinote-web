@@ -1,4 +1,13 @@
 .sci--layout-navigation-navigator {
+  .handle-mr {
+    display: block !important;
+    height: 100%;
+    opacity: 0;
+    right: -2px;
+    top: 0;
+  }
+
+
   .menu-item:not(.active):hover {
     background-color: var(--sn-super-light-grey);
 

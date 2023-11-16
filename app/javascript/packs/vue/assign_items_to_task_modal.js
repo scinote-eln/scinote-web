@@ -1,22 +1,14 @@
-import TurbolinksAdapter from 'vue-turbolinks';
-import Vue from 'vue/dist/vue.esm';
-import AssignItemsToTaskModalContainer from '../../vue/assign_items_to_tasks_modal/container.vue';
-import PerfectScrollbar from 'vue2-perfect-scrollbar';
-import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css';
 
-Vue.use(TurbolinksAdapter);
-Vue.use(PerfectScrollbar);
-Vue.prototype.i18n = window.I18n;
+import PerfectScrollbar from 'vue3-perfect-scrollbar';
+import { createApp } from 'vue/dist/vue.esm-bundler.js';
+import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css';
+import AssignItemsToTaskModalContainer from '../../vue/assign_items_to_tasks_modal/container.vue';
+import { mountWithTurbolinks } from './helpers/turbolinks.js';
 
 function initAssignItemsToTaskModalComponent() {
   const container = $('.assign-items-to-task-modal-container');
   if (container.length) {
-    window.AssignItemsToTaskModalComponentContainer = new Vue({
-      el: '.assign-items-to-task-modal-container',
-      name: 'AssignItemsToTaskModalComponent',
-      components: {
-        'assign-items-to-task-modal-container': AssignItemsToTaskModalContainer
-      },
+    const app = createApp({
       data() {
         return {
           visibility: false,
@@ -39,6 +31,10 @@ function initAssignItemsToTaskModalComponent() {
         }
       }
     });
+    app.component('AssignItemsToTaskModalContainer', AssignItemsToTaskModalContainer);
+    app.use(PerfectScrollbar);
+    app.config.globalProperties.i18n = window.I18n;
+    window.AssignItemsToTaskModalComponentContainer = mountWithTurbolinks(app, '.assign-items-to-task-modal-container');
   }
 }
 

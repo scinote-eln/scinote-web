@@ -1,8 +1,8 @@
 <template>
-  <div class="content__checklist-item">
-    <div class="checklist-item-header flex rounded pl-10 ml-[-2.325rem] items-center relative w-full group/checklist-item-header" :class="{ 'locked': locked || editingText, 'editing-name': editingText }">
+  <div class="content__checklist-item pl-10 ml-[-2.325rem]">
+    <div class="checklist-item-header flex rounded items-center relative w-full group/checklist-item-header" :class="{ 'locked': locked || editingText, 'editing-name': editingText }">
       <div v-if="reorderChecklistItemUrl"
-        class="absolute h-6 cursor-grab justify-center left-0 top-0.5 px-2 tw-hidden text-sn-grey element-grip step-element-grip--draggable"
+        class="absolute h-6 cursor-grab justify-center left-[-2.325rem] top-0.5 px-2 tw-hidden text-sn-grey element-grip step-element-grip--draggable"
         :class="{ 'group-hover/checklist-item-header:flex': (!locked && !editingText && draggable) }"
       >
         <i class="sn-icon sn-icon-drag"></i>

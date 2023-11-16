@@ -88,8 +88,6 @@
         $.get(`/jobs/${this.jobId}/status`, (data) => {
           let status = data.status;
 
-          console.log(data)
-
           switch (status) {
             case 'pending':
               break;

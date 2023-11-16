@@ -1,36 +1,60 @@
 <template>
-  <div class="date-time-picker" :class="{ 'grow': !standAlone, 'flex': standAlone}">
-    <DatePicker v-if="!timeOnly"
-      @change="updateDate"
-      :placeholder="placeholder"
-      :selectorId="`${this.selectorId}_Date`"
-      :defaultValue="defaultValue"
-      :standAlone="standAlone"
-      :className="dateClassName"
-      :disabled="disabled"
-    />
-    <TimePicker v-if="!dateOnly"
-      @change="updateTime"
-      :placeholder="placeholder"
-      :selectorId="`${this.selectorId}_Time`"
-      :defaultValue="getTime(defaultValue)"
-      :standAlone="standAlone"
-      :className="timeClassName"
-      :disabled="disabled"
-    />
+  <div class="date-time-picker grow">
+    <VueDatePicker
+      :class="{
+        'only-time': mode == 'time',
+      }"
+      v-model="compDatetime"
+      :teleport="teleport"
+      :text-input="true"
+      :no-today="true"
+      :clearable="clearable"
+      :format="format"
+      :month-change-on-scroll="false"
+      :six-weeks="true"
+      :auto-apply="true"
+      :partial-flow="true"
+      :markers="markers"
+      :enable-time-picker="mode == 'datetime'"
+      :time-picker="mode == 'time'"
+      :placeholder="placeholder" >
+        <template #arrow-right>
+            <img class="slot-icon" src="/images/calendar/navigate_next.svg"/>
+        </template>
+        <template #arrow-left>
+            <img class="slot-icon" src="/images/calendar/navigate_before.svg"/>
+        </template>
+        <template v-if="mode == 'time'" #input-icon>
+            <img class="input-slot-image" src="/images/calendar/clock.svg"/>
+        </template>
+        <template v-else #input-icon>
+            <img class="input-slot-image" src="/images/calendar/calendar.svg"/>
+        </template>
+        <template #clock-icon>
+            <img class="slot-icon" src="/images/calendar/clock.svg"/>
+        </template>
+        <template #calendar-icon>
+            <img class="slot-icon" src="/images/calendar/calendar.svg"/>
+        </template>
+        <template #arrow-up>
+            <img class="slot-icon" src="/images/calendar/up.svg"/>
+        </template>
+        <template #arrow-down>
+            <img class="slot-icon" src="/images/calendar/down.svg"/>
+        </template>
+    </VueDatePicker>
   </div>
 </template>
 
 <script>
-  import TimePicker from './time_picker.vue'
-  import DatePicker from './date_picker.vue'
+  import VueDatePicker from '@vuepic/vue-datepicker';
 
   export default {
     name: 'DateTimePicker',
     props: {
-      dateOnly: { type: Boolean, default: false },
-      timeOnly: { type: Boolean, default: false },
-      selectorId: { type: String, required: true },
+      mode: { type: String, default: 'datetime' },
+      clearable: { type: Boolean, default: false },
+      teleport: { type: Boolean, default: true },
       defaultValue: { type: Date, required: false },
       placeholder: { type: String },
       standAlone: { type: Boolean, default: false, required: false },
@@ -40,53 +64,105 @@
     },
     data() {
       return {
-        date: '',
-        time: '',
-        datetime: ''
+        manualUpdate: false,
+        datetime: this.defaultValue,
+        time: null,
+        markers: [
+          {
+            date: new Date(),
+            type: 'dot',
+            color: '#3B99FD',
+          },
+        ]
+      }
+    },
+    created() {
+      if (this.defaultValue) {
+        this.time = {
+                      hours: this.defaultValue.getHours(),
+                      minutes:this.defaultValue.getMinutes(),
+                    }
       }
     },
     components: {
-      TimePicker,
-      DatePicker
+      VueDatePicker
     },
-    methods: {
-      updateDate(value) {
-        this.date = value;
-        this.updateDateTime();
-      },
-      getTime(dateTime) {
-        if(!this.isValidDate(dateTime)) return
-        return `${dateTime.getHours().toString().padStart(2, '0')}:${dateTime.getMinutes().toString().padStart(2, '0')}`
-      },
-      updateTime(value) {
-        this.time = value;
-        this.updateDateTime();
-      },
-      updateDateTime() {
-        this.recalcTimestamp();
-        this.$emit('change', this.datetime);
-      },
-
-      isValidTime() {
-        return /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(this.time);
-      },
-      isValidDate(date) {
-        return (date instanceof Date) && !isNaN(date.getTime());
-      },
-      recalcTimestamp() {
-        let date = this.timeOnly ? new Date() : this.date;
-        if (this.isValidDate(date) && (this.dateOnly || this.isValidTime())) {
-          if (this.dateOnly) {
-            date.setHours(0);
-            date.setMinutes(0);
-          } else {
-            date.setHours(this.time.split(':')[0]);
-            date.setMinutes(this.time.split(':')[1]);
-          }
-          this.datetime = date
-        } else {
-          this.datetime = null;
+    watch: {
+      defaultValue: function () {
+        this.datetime = this.defaultValue;
+        this.time = {
+          hours: this.defaultValue ? this.defaultValue.getHours() : 0,
+          minutes: this.defaultValue ? this.defaultValue.getMinutes() : 0
         }
+      },
+      datetime: function () {
+        if (this.mode == 'time') {
+
+          this.time = {
+            hours: this.datetime ? this.datetime.getHours() : 0,
+            minutes: this.datetime ? this.datetime.getMinutes() : 0
+          }
+          return
+        }
+
+        if (this.manualUpdate) {
+          this.manualUpdate = false;
+          return;
+        }
+
+        if ( this.datetime == null) {
+          this.$emit('cleared');
+        }
+
+        if (this.defaultValue != this.datetime) {
+          this.$emit('change', this.datetime);
+        }
+      },
+      time: function () {
+        if (this.manualUpdate) {
+          this.manualUpdate = false;
+          return;
+        }
+
+        if (this.mode != 'time') return;
+
+        let newDate;
+
+        if (this.time) {
+          newDate = new Date();
+          newDate.setHours(this.time.hours);
+          newDate.setMinutes(this.time.minutes);
+        } else {
+          newDate = null;
+          this.$emit('cleared');
+        }
+
+        if (this.defaultValue != newDate) {
+          this.$emit('change', newDate);
+        }
+      }
+    },
+    computed: {
+      compDatetime: {
+        get () {
+          if (this.mode == 'time') {
+            return this.time
+          } else {
+            return this.datetime
+          }
+        },
+        set (val) {
+          if (this.mode == 'time') {
+            this.time = val
+          } else {
+            this.datetime = val
+          }
+        }
+      },
+      format() {
+        if (this.mode == 'time') return 'HH:mm'
+        if (this.mode == 'date') return document.body.dataset.datetimePickerFormatVue
+        return `${document.body.dataset.datetimePickerFormatVue} HH:mm`
       }
     }
   }

@@ -4,11 +4,6 @@
   <%= content_for :sidebar do %>
    <%= render partial: "/shared/sidebar/templates_sidebar", locals: {active: :label} %>
   <% end %>
-
-  <% content_for :head do %>
-    <meta name="turbolinks-cache-control" content="no-cache">
-  <% end %>
-
   <%= stylesheet_link_tag 'datatables' %>
 
 

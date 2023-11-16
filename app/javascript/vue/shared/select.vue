@@ -1,16 +1,5 @@
 <template>
-  <div @click="toggle"
-       ref="container"
-       v-click-outside="{ handler: 'close', exclude: ['optionsContainer'] }"
-       class="sn-select"
-       :class="{
-                  'sn-select--open': isOpen,
-                  'sn-select--blank': !valueLabel,
-                  'disabled cursor-default': disabled,
-                  'cursor-pointer': !withEditCursor,
-                  'sci-cursor-edit hover:border-sn-sleepy-grey': !disabled && !isOpen && withEditCursor,
-                  [className]: true
-                }">
+  <div v-click-outside="close" @click="toggle" ref="container" class="sn-select" :class="{ 'sn-select--open': isOpen, 'sn-select--blank': !valueLabel, 'disabled': disabled }">
     <slot>
       <button ref="focusElement" class="sn-select__value">
         <span>{{ valueLabel || (placeholder || i18n.t('general.select')) }}</span>
@@ -60,8 +49,7 @@
   </div>
 </template>
 <script>
-  import PerfectScrollbar from 'vue2-perfect-scrollbar';
-  import outsideClick from '../../packs/vue/directives/outside_click';
+  import { vOnClickOutside } from '@vueuse/components'
 
   export default {
     name: 'Select',
@@ -78,7 +66,7 @@
       disabled: { type: Boolean, default: false }
     },
     directives: {
-      'click-outside': outsideClick
+      'click-outside': vOnClickOutside
     },
     data() {
       return {
@@ -98,7 +86,7 @@
     mounted() {
       document.addEventListener('scroll', this.updateOptionPosition);
     },
-    beforeDestroy() {
+    beforeUnmount() {
       document.removeEventListener('scroll', this.updateOptionPosition);
     },
     methods: {
