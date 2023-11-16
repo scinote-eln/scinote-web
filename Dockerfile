@@ -8,7 +8,6 @@ RUN apt-get update -qq && \
   libjemalloc2 \
   libssl-dev \
   nodejs \
-  npm \
   postgresql-client \
   default-jre-headless \
   poppler-utils \
@@ -21,11 +20,14 @@ RUN apt-get update -qq && \
   fonts-wqy-microhei \
   fonts-wqy-zenhei \
   libfile-mimeinfo-perl \
-  chromium-driver && \
-  npm install -g yarn && \
-  yarn add puppeteer@npm:puppeteer-core && \
+  chromium-driver \
+  yarnpkg && \
   ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so && \
   rm -rf /var/lib/apt/lists/*
+
+ENV PATH=/usr/share/nodejs/yarn/bin:$PATH
+
+RUN yarn add puppeteer@npm:puppeteer-core 
 
 ENV BUNDLE_PATH /usr/local/bundle/
 

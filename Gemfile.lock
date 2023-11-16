@@ -731,6 +731,7 @@ DEPENDENCIES
   fastimage
   figaro
   graphviz
+  grover
   httparty (~> 0.21.0)
   i18n-js (~> 3.6)
   image_processing

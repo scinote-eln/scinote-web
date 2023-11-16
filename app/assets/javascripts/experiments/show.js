@@ -37,6 +37,7 @@
         // Add and show modal
         $(experimentWrapper).append($.parseHTML(result.html));
         $(newMyModuleModal).modal('show');
+        window.initDateTimePickerComponent(`#date-time-picker-my-module`);
         $(newMyModuleModal).find("input[type='text']").focus();
 
         // Remove modal when it gets closed

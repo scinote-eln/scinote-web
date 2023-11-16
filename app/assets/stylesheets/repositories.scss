@@ -226,7 +226,6 @@
 
   .file-preview-link {
     display: inline-block;
-    min-width: 140px;
     padding-left: 5px;
   }
 }
@@ -495,7 +494,7 @@
   }
 
   .repository-edit-overlay--pagination {
-    bottom: 0;
+    bottom: .5rem;
     height: 5em;
     line-height: 5em;
     padding: .5em;

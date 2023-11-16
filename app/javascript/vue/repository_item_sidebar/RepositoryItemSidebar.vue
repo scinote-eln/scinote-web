@@ -358,7 +358,7 @@ export default {
     document.addEventListener('mousedown', this.handleOutsideClick);
     this.inRepository = $('.assign-items-to-task-modal-container').length > 0;
   },
-  beforeDestroy() {
+  beforeUnmount() {
     delete window.repositoryItemSidebarComponent;
     document.removeEventListener('mousedown', this.handleOutsideClick);
   },

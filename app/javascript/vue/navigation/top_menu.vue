@@ -107,7 +107,7 @@
       // Track name update in user profile settings
       $(document).on('inlineEditing::updated', '.inline-editing-container[data-field-to-update="full_name"]', this.fetchData);
     },
-    beforeDestroy: function(){
+    beforeUnmount: function(){
       clearTimeout(this.unseenNotificationsTimeout);
     },
     computed: {

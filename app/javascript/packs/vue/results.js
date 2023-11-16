@@ -1,19 +1,11 @@
-import TurbolinksAdapter from 'vue-turbolinks';
-import Vue from 'vue/dist/vue.esm';
+import PerfectScrollbar from 'vue3-perfect-scrollbar';
+import { createApp } from 'vue/dist/vue.esm-bundler.js';
 import Results from '../../vue/results/results.vue';
-import PerfectScrollbar from 'vue2-perfect-scrollbar';
-import outsideClick from './directives/outside_click';
+import { mountWithTurbolinks } from './helpers/turbolinks.js';
 
-
-Vue.use(PerfectScrollbar);
-Vue.use(TurbolinksAdapter);
-Vue.directive('click-outside', outsideClick);
-Vue.prototype.i18n = window.I18n;
-Vue.prototype.ActiveStoragePreviews = window.ActiveStoragePreviews;
-
-new Vue({
-  el: '#results',
-  components: {
-    Results
-  }
-});
+const app = createApp({});
+app.component('Results', Results);
+app.use(PerfectScrollbar);
+app.config.globalProperties.i18n = window.I18n;
+app.config.globalProperties.ActiveStoragePreviews = window.ActiveStoragePreviews;
+mountWithTurbolinks(app, '#results');

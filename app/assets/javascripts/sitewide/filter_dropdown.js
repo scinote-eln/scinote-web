@@ -131,6 +131,14 @@ var filterDropdown = (function() {
     });
   }
 
+  function initDateTimePickerComponent() {
+    const dateTimePickers = document.querySelectorAll('.vue-date-time-picker-filter');
+    dateTimePickers.forEach((dateTimePicker) => {
+      $((`#${dateTimePicker.id}`)).removeClass('vue-date-time-picker-filter');
+      window.initDateTimePickerComponent(`#${dateTimePicker.id}`);
+    });
+  }
+
   return {
     init: function(filtersEnabledFunction) {
       $filterContainer = $('.filter-container');
@@ -138,6 +146,7 @@ var filterDropdown = (function() {
       preventDropdownClose();
       initApplyButton();
       initCloseButton();
+      initDateTimePickerComponent();
       initSearchField(filtersEnabledFunction);
       this.toggleFilterMark($filterContainer, filtersEnabled)
       return $filterContainer;
