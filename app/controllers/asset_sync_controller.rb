@@ -38,6 +38,10 @@ class AssetSyncController < ApplicationController
     render json: AssetSyncTokenSerializer.new(@asset_sync_token).as_json
   end
 
+  def api_url
+    render plain: Constants::ASSET_SYNC_URL
+  end
+
   # private
 
   def conflicting_asset_copy_token
