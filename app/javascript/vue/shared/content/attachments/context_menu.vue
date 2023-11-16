@@ -142,7 +142,8 @@
         try {
           const response = await axios.get(this.attachment.attributes.urls.open_locally);
           const data = response.data;
-          const syncUrl = GLOBAL_CONSTANTS.ASSET_SYNC_URL;
+          const syncUrlResponse = await axios.get('/asset_sync_api_url');
+          const syncUrl = syncUrlResponse.data;
           await axios.post(syncUrl, data);
         } catch (error) {
           console.error("Error in request:", error);

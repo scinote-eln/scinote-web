@@ -1005,6 +1005,7 @@ Rails.application.routes.draw do
   get 'asset_sync/:asset_id', to: 'asset_sync#show', as: :asset_sync_show
   get 'asset_sync/:asset_id/download', to: 'asset_sync#download', as: :asset_sync_download
   put 'asset_sync', to: 'asset_sync#update'
+  get '/asset_sync_api_url', to: 'asset_sync#api_url'
 
   post 'global_activities', to: 'global_activities#index'
 
