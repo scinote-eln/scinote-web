@@ -67,7 +67,7 @@
           orderable: false,
           render: function() {
             return `<div class="sci-checkbox-container">
-                      <input class='repository-row-selector sci-checkbox' type='checkbox'>
+                      <input class='repository-row-selector sci-checkbox' type='checkbox' data-e2e="e2e-CB-inventory">
                       <span class='sci-checkbox-label'></span>
                     </div>`;
           }
@@ -75,7 +75,7 @@
           targets: 1,
           className: 'item-name',
           render: function(value, type, row) {
-            return `<a href="${row.repositoryUrl}">${value}</a>`;
+            return `<a href="${row.repositoryUrl}" data-e2e="e2e-TL-inventories-Inventory-1">${value}</a>`;
           }
         }, {
           targets: 5,
