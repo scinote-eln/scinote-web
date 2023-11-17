@@ -47,5 +47,13 @@
         <%= render partial: "users/shared/azure_sign_in_links", locals: { resource_name: resource_name } %>
       </div>
     <% end %>
+
+    <%- if sso_enabled? && openid_connect_configured? %>
+      <div class="azure-sign-in-actions">
+        <%= form_tag user_openid_connect_omniauth_authorize_path, method: :post do %>
+          <%= submit_tag t('devise.sessions.new.openid_connect_submit'), class: 'btn btn-primary' %>
+        <% end %>
+      </div>
+    <% end %>
   <% end %>
 </div>
