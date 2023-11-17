@@ -365,15 +365,18 @@ class RepositoriesController < ApplicationController
   end
 
   def export_repository_stock_items
-    repository_rows = @repository.repository_rows.where(id: params[:row_ids])
+    repository_rows = @repository.repository_rows.where(id: params[:row_ids]).pluck(:id, :name)
     if repository_rows.any?
       RepositoryStockZipExportJob.perform_later(
         user_id: current_user.id,
         params: {
-          repository_row_ids: repository_rows.pluck(:id)
+          repository_row_ids: repository_rows.map { |row| row[0] }
         }
       )
-      log_activity(:export_inventory_stock_consumption, inventory_items: repository_rows.pluck(:name).join(', '))
+      log_activity(
+        :export_inventory_stock_consumption,
+        inventory_items: repository_rows.map { |row| row[1] }.join(', ')
+      )
       render json: { message: t('zip_export.export_request_success') }
     else
       render json: { message: t('zip_export.export_error') }, status: :unprocessable_entity
