@@ -4,6 +4,7 @@ class AssetSyncController < ApplicationController
   skip_before_action :authenticate_user!, only: %i(update download)
   skip_before_action :verify_authenticity_token, only: %i(update download)
   before_action :authenticate_asset_sync_token!, only: %i(update download)
+  before_action :check_asset_sync
 
   def show
     asset = Asset.find_by(id: params[:asset_id])
@@ -42,7 +43,7 @@ class AssetSyncController < ApplicationController
     render plain: Constants::ASSET_SYNC_URL
   end
 
-  # private
+  private
 
   def conflicting_asset_copy_token
     Asset.transaction do
@@ -73,5 +74,9 @@ class AssetSyncController < ApplicationController
     @current_user = @asset_sync_token.user
 
     head :forbidden unless can_manage_asset?(@asset)
+  end
+
+  def check_asset_sync
+    render_404 if ENV['ASSET_SYNC_URL'].blank?
   end
 end

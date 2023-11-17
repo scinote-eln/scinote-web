@@ -102,10 +102,12 @@
             emit: 'open_scinote_editor',
           })
         }
-        menu.push({
-          text: this.i18n.t('Open_locally'),
-          emit: 'open_locally'
-        })
+        if (this.attachment.attributes.urls.open_locally) {
+          menu.push({
+            text: this.i18n.t('Open_locally'),
+            emit: 'open_locally'
+          })
+        }
         menu.push({
           text: this.i18n.t('Download'),
           url: this.attachment.attributes.urls.download,
