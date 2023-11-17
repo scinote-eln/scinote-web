@@ -197,7 +197,7 @@ class TeamZipExportJob < ZipExportJob
         else
           return unless preview.processed?
 
-          file_name = preview.filename.to_s
+          file_name = preview.blob.filename.to_s
           file_data = preview.download
         end
       rescue ActiveStorage::FileNotFoundError => e

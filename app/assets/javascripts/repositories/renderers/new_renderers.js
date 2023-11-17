@@ -78,27 +78,27 @@ $.fn.dataTable.render.newRepositoryNumberValue = function(formId, columnId, $cel
 };
 
 $.fn.dataTable.render.newRepositoryDateTimeValue = function(formId, columnId, $cell) {
-  DateTimeHelper.initDateTimeEditMode(formId, columnId, $cell, '', 'RepositoryDateTimeValue');
+  DateTimeHelper.initDateTimeEditMode(formId, columnId, $cell, 'datetime', 'RepositoryDateTimeValue');
 };
 
 $.fn.dataTable.render.newRepositoryTimeValue = function(formId, columnId, $cell) {
-  DateTimeHelper.initDateTimeEditMode(formId, columnId, $cell, 'timeonly', 'RepositoryTimeValue');
+  DateTimeHelper.initDateTimeEditMode(formId, columnId, $cell, 'time', 'RepositoryTimeValue');
 };
 
 $.fn.dataTable.render.newRepositoryDateValue = function(formId, columnId, $cell) {
-  DateTimeHelper.initDateTimeEditMode(formId, columnId, $cell, 'dateonly', 'RepositoryDateValue');
+  DateTimeHelper.initDateTimeEditMode(formId, columnId, $cell, 'date', 'RepositoryDateValue');
 };
 
 $.fn.dataTable.render.newRepositoryDateTimeRangeValue = function(formId, columnId, $cell) {
-  DateTimeHelper.initDateTimeRangeEditMode(formId, columnId, $cell, '', 'RepositoryDateTimeRangeValue');
+  DateTimeHelper.initDateTimeRangeEditMode(formId, columnId, $cell, 'datetime', 'RepositoryDateTimeRangeValue');
 };
 
 $.fn.dataTable.render.newRepositoryDateRangeValue = function(formId, columnId, $cell) {
-  DateTimeHelper.initDateTimeRangeEditMode(formId, columnId, $cell, 'dateonly', 'RepositoryDateRangeValue');
+  DateTimeHelper.initDateTimeRangeEditMode(formId, columnId, $cell, 'date', 'RepositoryDateRangeValue');
 };
 
 $.fn.dataTable.render.newRepositoryTimeRangeValue = function(formId, columnId, $cell) {
-  DateTimeHelper.initDateTimeRangeEditMode(formId, columnId, $cell, 'timeonly', 'RepositoryTimeRangeValue');
+  DateTimeHelper.initDateTimeRangeEditMode(formId, columnId, $cell, 'time', 'RepositoryTimeRangeValue');
 };
 
 $.fn.dataTable.render.newRepositoryStockValue = function() {

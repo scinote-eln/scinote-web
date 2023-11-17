@@ -263,6 +263,7 @@ var MarvinJsEditorApi = (function() {
         } else if (config.mode === 'edit') {
           config.objectType = 'Asset';
           MarvinJsEditor.update(config);
+          location.reload();
         } else if (config.mode === 'new-tinymce') {
           config.objectType = 'TinyMceAsset';
           MarvinJsEditor.save(config);
@@ -321,6 +322,7 @@ $(document).on('click', '.gene-sequence-edit-button', function() {
 function initMarvinJs() {
   if (typeof (ChemicalizeMarvinJs) === 'undefined') {
     setTimeout(initMarvinJs, 100);
+    return;
   }
 
   MarvinJsEditor = MarvinJsEditorApi();

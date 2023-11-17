@@ -83,7 +83,7 @@
       this.loadResults();
       this.initStackableHeaders();
     },
-    beforeDestroy() {
+    beforeUnmount() {
       window.removeEventListener('scroll', this.loadResults, false);
       window.removeEventListener('scroll', this.initStackableHeaders, false);
     },

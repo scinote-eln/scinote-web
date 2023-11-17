@@ -35,7 +35,7 @@ export default {
       this.handleTinyMCEOpened(e.detail.target);
     });
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
     }
@@ -83,32 +83,49 @@ export default {
 
       const editorHeader = $('.tox-editor-header');
 
-      // For Protocol Templates only reset the left value
+      // For Protocol Templates
       if (!this.headerRef && !this.secondaryNavigation) {
-        editorHeader.css('left', '');
+        if (target[0].getBoundingClientRect().top < 0 && editorHeader.css('position') !== 'fixed') {
+          $('html, body').animate({
+            scrollTop: target.offset().top - editorHeader.outerHeight(),
+          }, 100); // 100ms works best for editorHeader to be fully visible
+        } else {
+          editorHeader.css('left', '');
+        }
         return;
       }
 
       // Handle opening TinyMCE toolbars when only a small bottom area of editor is visible
       const targetBottom = target[0].getBoundingClientRect().bottom;
       if (targetBottom < 3 * headerHeight) {
-        $('html, body').animate({
-          scrollTop: target.offset().top,
-        }, 800);
+        this.$nextTick(() => {
+          if (editorHeader.css('position') === 'fixed') {
+            editorHeader.css({
+              top: totalHeight - 1,
+              left: '',
+            });
+          }
+          $('html, body').animate({
+            scrollTop: target.offset().top + (visibleHeaderHeight + visibleSecondaryNavHeight),
+          }, 100);
+        });
         return;
       }
 
+      const headerBottom = this.headerRef.getBoundingClientRect().bottom;
       // Handle showing TinyMCE toolbar for fixed/static position of toolbar
       if (editorHeader.css('position') === 'fixed') {
-        editorHeader.css({
-          top: totalHeight - 1,
-          left: '',
-        });
+        editorHeader.css('left', '');
+        if (this.headerSticked) {
+          editorHeader.css('top', totalHeight - 1);
+        }
       } else if (headerTop < (visibleHeaderHeight + visibleSecondaryNavHeight)
-        && target[0].getBoundingClientRect().top <= headerTop) {
-        $('html, body').animate({
-              scrollTop: editorHeader.offset().top
-          }, 800);
+        && target[0].getBoundingClientRect().top <= headerBottom) {
+        this.$nextTick(() => {
+          $('html, body').animate({
+            scrollTop: target.offset().top + (visibleHeaderHeight + visibleSecondaryNavHeight),
+          }, 100);
+        });
       }
 
       target.focus();

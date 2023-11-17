@@ -53,9 +53,9 @@
     methods: {
       updateFilter(params) {
         if (params.value !== '' && params.value !== undefined && params.value !== null) {
-          this.$set(this.filterValues, params.key, params.value);
+          this.filterValues[params.key] = params.value;
         } else {
-          this.$delete(this.filterValues, params.key);
+          delete this.filterValues[params.key];
         }
       },
       applyFilters() {
