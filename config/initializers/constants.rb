@@ -173,10 +173,10 @@ class Constants
   #=============================================================================
 
   TAG_COLORS = %i(
-    #E2F0C1
+    #C4D3A0
     #5EC66F
     #46C3C8
-    #BDDDEF
+    #A3CCE4
     #3B99FD
     #104DA9
     #6F2DC1
@@ -189,7 +189,7 @@ class Constants
     #663300
     #1D2939
     #98A2B3
-    #D0D5DD
+    #DCE0E7
   ).freeze
 
   # Theme colors
