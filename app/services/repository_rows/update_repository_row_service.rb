@@ -4,7 +4,7 @@ module RepositoryRows
   class UpdateRepositoryRowService
     extend Service
 
-    attr_reader :repository_row, :params, :errors, :record_updated
+    attr_reader :repository_row, :params, :errors, :record_updated, :cell, :column
 
     def initialize(repository_row:, user:, params:)
       @repository_row = repository_row
@@ -41,6 +41,8 @@ module RepositoryRows
             cell.value.update_data!(value, @user)
             @record_updated = true
           end
+          @cell = cell
+          @column = column
         end
 
         # Update invetory rows

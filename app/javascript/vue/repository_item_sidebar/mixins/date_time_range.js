@@ -62,19 +62,19 @@ export default {
         dataType: 'json',
         data: { repository_cells: $this.params },
         success: (result) => {
-          const cellValue = result[this.colId];
+          const cellValue = result?.value;
           switch (true) {
             case ['date', 'dateTime', 'time'].includes(this.dateType):
-              this.values = cellValue?.value
-              this.initDate = cellValue?.value?.datetime
+              this.values = cellValue
+              this.initDate = cellValue?.datetime
             case ['dateRange', 'dateTimeRange', 'timeRange'].includes(this.dateType):
-              this.initStartDate = cellValue?.value?.start_time?.datetime;
-              this.initEndDate = cellValue?.value?.end_time?.datetime;
+              this.initStartDate = cellValue?.start_time?.datetime;
+              this.initEndDate = cellValue?.end_time?.datetime;
             default:
               break;
           }
-          Object.assign($this.$data, { isEditing: false, isSaving: false });
-          if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
+          Object.assign($this.$data, { isEditing: false, isSaving: false, values: result?.value });
+          reloadTableRow(result)
         }
       });
     },

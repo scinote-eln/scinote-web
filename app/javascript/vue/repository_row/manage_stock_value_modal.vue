@@ -36,7 +36,7 @@
               </div>
               <div class="flex flex-col w-40">
                 <Input
-                  @input="amount = $event"
+                  @update="value => amount = value"
                   name="stock_amount"
                   id="stock-amount"
                   :inputClass="`sci-input-container-v2 ${errors.amount ? 'error' : ''}`"
@@ -95,7 +95,7 @@
             </div>
             <div v-if="reminderEnabled" class="stock-reminder-value flex gap-2 items-center">
               <Input
-                  @input="lowStockTreshold = $event"
+                  @update="value => lowStockTreshold = value"
                   name="treshold_amount"
                   id="treshold-amount"
                   fieldClass="flex gap-2"
@@ -117,7 +117,7 @@
             <div class="sci-input-container flex flex-col" :data-error-text="i18n.t('repository_stock_values.manage_modal.comment_limit')">
               <label class="text-sn-grey text-sm font-normal" for="stock-value-comment">{{ i18n.t('repository_stock_values.manage_modal.comment') }}</label>
               <input class="sci-input-field"
-                @input="comment = e.target.value"
+                @input="event => comment = event.target.value"
                 type="text"
                 name="comment"
                 id="stock-value-comment"

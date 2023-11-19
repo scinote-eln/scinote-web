@@ -80,8 +80,7 @@
       if (stockValueUrl) {
         updateCallback = (data) => {
           if (!data?.value) return;
-          // reload dataTable
-          if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload();
+          reloadTableRow(data);
           // update item card stock column
           window.manageStockCallback && window.manageStockCallback(data.value);
           $link.data('manageStockUrl', data.value.stock_url)
@@ -91,3 +90,27 @@
     }
   });
 }());
+
+const reloadTableRow = function(data) {
+  const row = $('.dataTable').find(`tr#${data.row_id}`);
+  let rowData = $('.dataTable').DataTable().row(row).data();
+
+  if (data.name) {
+    // handle assigned repositories
+    if ($('.dataTable').parents('.assigned-repository-container').length) {
+      rowData['0'] = data.name;
+    } else {
+      rowData['3'] = data.name;
+    }
+    $('.dataTable').DataTable().row(row).data(rowData);
+    return;
+  }
+  const reminder = Object.entries(rowData).find(([, attr]) => attr === 'hasActiveReminders');
+  const column = Object.entries(rowData).find(([_idx, { value_type }]) => value_type === data.value_type);
+
+  if (!column) return;
+  if (reminder) rowData[reminder[0]] = data.hasActiveReminders;
+  rowData[column[0]] = { ...rowData[column[0]], value: data.value };
+
+  $('.dataTable').DataTable().row(row).data(rowData);
+}
