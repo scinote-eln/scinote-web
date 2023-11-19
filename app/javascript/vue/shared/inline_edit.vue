@@ -93,6 +93,11 @@
       }
     },
     watch: {
+      value(newVal, oldVal) {
+        if (newVal !== oldVal) {
+          this.newValue = newVal
+        }
+      },
       editing() {
         this.refreshTexareaHeight()
       },
