@@ -37,7 +37,7 @@
       </div>
       <div v-else-if="!error" class="flex flex-row items-center font-inter text-sm font-normal leading-5 justify-between"
         :class="{ 'text-sn-dark-grey': !canEdit, 'text-sn-grey': canEdit }">
-        {{ i18n.t(`repositories.item_card.repository_asset_value.${canEdit ? 'placeholder' : 'no_asset'}`) }}
+        {{ i18n.t('repositories.item_card.repository_asset_value.no_asset') }}
       </div>
     </div>
     <div v-else class="bg-sn-light-grey h-1 w-full rounded-sm">
