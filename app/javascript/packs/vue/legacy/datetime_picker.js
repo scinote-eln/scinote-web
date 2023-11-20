@@ -32,6 +32,8 @@ window.initDateTimePickerComponent = (id) => {
     },
     methods: {
       formatDate(date) {
+        if (!(date instanceof Date)) return null;
+
         if (this.$refs.input.dataset.simpleFormat) {
           const y = date.getFullYear();
           const m = date.getMonth() + 1;

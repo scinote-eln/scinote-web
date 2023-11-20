@@ -108,6 +108,10 @@ export default {
               }, (result) => {
                 fileObject.id = result.data.id;
                 fileObject.attributes = result.data.attributes;
+                this.attachments.splice(filePosition, 1);
+                setTimeout(() => {
+                  this.attachments.push(fileObject);
+                }, 0);
               }).fail(() => {
                 fileObject.error = I18n.t('attachments.new.general_error');
                 this.attachments.splice(filePosition, 1);

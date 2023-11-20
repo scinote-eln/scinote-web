@@ -110,6 +110,7 @@
           v-for="(element, index) in orderedElements"
           :is="elements[index].attributes.orderable_type"
           :key="element.id"
+          class="step-element"
           :element.sync="elements[index]"
           :inRepository="inRepository"
           :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
@@ -189,7 +190,6 @@
         required: false
       },
       activeDragStep: {
-        type: Number,
         required: false
       }
     },
@@ -507,9 +507,10 @@
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         }).done(() => {
           this.$parent.$nextTick(() => {
-            const children = this.$children
-            const lastChild = children[children.length - 1]
-            lastChild.$el.scrollIntoView(false)
+            const children = this.$refs.stepContainer.querySelectorAll(".step-element");
+            const lastChild = children[children.length - 1];
+
+            lastChild.scrollIntoView(false)
             window.scrollBy({
               top: 200,
               behavior: 'smooth'

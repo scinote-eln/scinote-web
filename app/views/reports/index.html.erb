@@ -4,6 +4,10 @@
   <%= hidden_field_tag :show_report_preview, nil, class: "file-preview-link", data: { preview_url: document_preview_report_path(params[:preview_report_id], report_type: params[:preview_type]) } %>
 <% end %>
 
+<% content_for :head do %>
+  <meta id="cache-directive" name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
 <div class="content-pane flexible reports-index">
   <%= render partial: 'reports/index_header' %>
   <div id="content-reports-index">
