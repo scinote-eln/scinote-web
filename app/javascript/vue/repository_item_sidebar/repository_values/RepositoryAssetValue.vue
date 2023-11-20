@@ -3,17 +3,9 @@
     <div class="font-inter text-sm font-semibold leading-5 truncate" :title="colName">
       {{ colName }}
     </div>
-    <div v-if="file_name" @mouseover="tooltipShowing = true" @mouseout="tooltipShowing = false"
-      class="w-full cursor-pointer  relative">
-      <a class="w-full inline-block file-preview-link truncate hover:no-underline hover:text-sn-science-blue text-sn-science-blue"
-        :id="modalPreviewLinkId" data-no-turbolink="true" data-id="true" data-status="asset-present"
-        :data-preview-url=this?.preview_url :href=this?.url>
-        {{ file_name }}
-      </a>
-    </div>
     <div class="w-fit absolute right-0 top-7">
       <a v-if="!file_name && (!uploading || error) && canEdit "
-         class="btn-text-link font-normal" @click="openFileChooser"> 
+         class="btn-text-link font-normal" @click="openFileChooser">
         {{ i18n.t('repositories.item_card.repository_asset_value.add_asset') }}
       </a>
     </div>
@@ -124,7 +116,7 @@ export default {
       }
 
       const upload = new ActiveStorage.DirectUpload(file,
-                                                    this.actions.direct_file_upload_path, 
+                                                    this.actions.direct_file_upload_path,
                                                     {
                                                       directUploadWillStoreFileWithXHR: (request) => {
                                                         request.upload.addEventListener('progress', (e) => {
