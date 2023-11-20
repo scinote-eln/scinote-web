@@ -2353,13 +2353,18 @@ en:
         consumed_on: 'Consumed on'
         team: 'Team'
         project: 'Project'
+        project_id: 'Project ID'
         experiment: 'Experiment'
+        experiment_id: 'Experiment ID'
         task: 'Task'
         task_id: 'Task ID'
         stock_amount_balance: 'Stock amount after update (balance)'
         stock_balance_unit: 'Stock unit after update'
   repository_rows:
     invalid_params: "Invalid params"
+  repository_ledger_records:
+    errors:
+      my_module_references_missing: 'Task references are not set'
   libraries:
     manange_modal_column_index:
       title: "Manage columns"

@@ -63,7 +63,13 @@ class MyModuleRepositoryRow < ApplicationRecord
       amount: delta,
       balance: stock_value.amount,
       comment: comment,
-      unit: stock_value.repository_stock_unit_item&.data
+      unit: stock_value.repository_stock_unit_item&.data,
+      my_module_references: {
+        my_module_id: my_module.id,
+        experiment_id: my_module.experiment.id,
+        project_id: my_module.experiment.project.id,
+        team_id: my_module.experiment.project.team.id
+      }
     )
     stock_value.save!
     save!
