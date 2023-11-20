@@ -206,20 +206,24 @@ class RepositoryRowsController < ApplicationController
                        repository_column: update_params['repository_cells']&.keys&.first ||
                        I18n.t('repositories.table.row_name') })
       end
-
-      repository_cells = {}
       @reminders_present = @repository_row.repository_cells.with_active_reminder(@current_user).any?
-      @repository_row.repository_cells.each do |repository_cell|
-        repository_cells[repository_cell.repository_column_id] =
-          serialize_repository_cell_value(repository_cell,
-                                          @repository.team,
-                                          @repository,
-                                          reminders_enabled: @reminders_present)
-      end
 
-      render json: repository_cells, status: :ok
+      return render json: { name: @repository_row.name } if update_params['repository_row'].present?
+
+      column = row_cell_update.column
+      cell = row_cell_update.cell
+      data = { value_type: column.data_type, id: column.id, value: nil }
+
+      return render json: data if cell.blank?
+
+      data['hasActiveReminders'] = @reminders_present
+      data.merge! serialize_repository_cell_value(cell,
+                                                  @repository.team,
+                                                  @repository,
+                                                  reminders_enabled: @reminders_present)
+      render json: data
     else
-      render json: row_update.errors, status: :bad_request
+      render json: row_cell_update.errors, status: :bad_request
     end
   end
 

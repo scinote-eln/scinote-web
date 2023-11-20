@@ -52,12 +52,12 @@
       updateValue($event) {
         switch (this.type) {
           case 'text':
-            this.$emit('input', $event.target.value);
+            this.$emit('update', $event.target.value);
             break;
           case 'number':
             const newValue = this.formatDecimalValue($event.target.value);
             this.$refs.input.value = newValue;
-            if (!isNaN(newValue)) this.$emit('input', newValue);
+            if (!isNaN(newValue)) this.$emit('update', newValue);
             break
           default:
             break;

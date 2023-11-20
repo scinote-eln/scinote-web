@@ -152,7 +152,7 @@ export default {
           }
         },
         success: (result) => {
-          let assetRepositoryCell = result[this.colId]?.value;
+          let assetRepositoryCell = result?.value;
           this.uploading = false;
 
           if (assetRepositoryCell) {
@@ -165,6 +165,7 @@ export default {
           } else {
             this.file_name = '';
           }
+          if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
         },
         error: () => {
           this.error = I18n.t('repositories.item_card.repository_asset_value.errors.upload_failed_general');

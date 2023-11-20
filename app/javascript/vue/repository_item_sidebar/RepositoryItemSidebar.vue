@@ -367,10 +367,10 @@ export default {
           ...params,
         },
       }).done((response) => {
-        for (const [id, customColumn] of Object.entries(response)) {
-          this.customColumns[id - 1]["value"] = customColumn.value;
+        if (response) {
+          this.customColumns = this.customColumns.map(col => col.id === response.id ? { ...col, ...response } : col)
+          if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
         }
-        if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
       });
     }
   }
