@@ -20,29 +20,27 @@ module RepositoryRows
       @repository_row.with_lock do
         # Update invetory row's cells
         params[:repository_cells]&.each do |column_id, value|
-          column = @repository_row.repository.repository_columns.find_by(id: column_id)
-          next unless column
+          @column = @repository_row.repository.repository_columns.find_by(id: column_id)
+          next unless @column
 
-          cell = @repository_row.repository_cells.find_by(repository_column_id: column.id)
+          @cell = @repository_row.repository_cells.find_by(repository_column_id: @column.id)
 
-          if cell.present? && value.blank?
-            cell.destroy!
+          if @cell.present? && value.blank?
+            @cell.destroy!
             @record_updated = true
             next
-          elsif cell.blank? && value.present?
-            RepositoryCell.create_with_value!(@repository_row, column, value, @user)
+          elsif @cell.blank? && value.present?
+            RepositoryCell.create_with_value!(@repository_row, @column, value, @user)
             @record_updated = true
             next
-          elsif cell.blank? && value.blank?
+          elsif @cell.blank? && value.blank?
             next
           end
 
-          if cell.value.data_different?(value)
-            cell.value.update_data!(value, @user)
+          if @cell.value.data_different?(value)
+            @cell.value.update_data!(value, @user)
             @record_updated = true
           end
-          @cell = cell
-          @column = column
         end
 
         # Update invetory rows

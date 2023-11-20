@@ -208,8 +208,7 @@ class RepositoryRowsController < ApplicationController
       end
       @reminders_present = @repository_row.repository_cells.with_active_reminder(@current_user).any?
 
-      return render json: { name: @repository_row.name } if
-        update_params['repository_row'].present?
+      return render json: { name: @repository_row.name } if update_params['repository_row'].present?
 
       column = row_cell_update.column
       cell = row_cell_update.cell
