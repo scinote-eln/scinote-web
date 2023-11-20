@@ -1,11 +1,15 @@
 <template>
   <div>
+    <div ref="dateTimeRangeOverlay"
+         class="fixed top-0 left-0 right-0 bottom-0 bg-transparent z-[999] hidden">
+    </div>
     <div
       @click="enableEdit"
       v-click-outside="validateAndSave"
       class="text-sn-dark-grey font-inter text-sm font-normal leading-5 w-full rounded relative"
       :class="editableClassName"
     >
+      <!-- DATE -->
       <div v-if="dateType === 'date'">
         <div v-if="isEditing || values?.datetime" ref="edit">
           <DateTimePicker
@@ -21,6 +25,8 @@
           {{ i18n.t(`repositories.item_card.repository_date_value.${canEdit ? 'placeholder' : 'no_date'}`) }}
         </div>
       </div>
+
+      <!-- DATE RANGE -->
       <div v-else-if="dateType === 'dateRange'">
         <div v-if="isEditing || (timeFrom?.datetime && timeTo?.datetime)" ref="edit" class="w-full flex align-center">
           <div>
@@ -38,12 +44,12 @@
           <div>
             <DateTimePicker
               :disabled="!canEdit"
-            @change="formatDateTime($event, 'end_time')"
-            :selectorId="`DatePickerEnd${colId}`"
-            :dateOnly="true"
-            :defaultValue="dateValue(timeTo?.datetime)"
-            :standAlone="true"
-            :dateClassName="hasMonthText() ? 'w-[135px]' : 'ml-2 w-[90px]'"
+              @change="formatDateTime($event, 'end_time')"
+              :selectorId="`DatePickerEnd${colId}`"
+              :dateOnly="true"
+              :defaultValue="dateValue(timeTo?.datetime)"
+              :standAlone="true"
+              :dateClassName="hasMonthText() ? 'w-[135px]' : 'ml-2 w-[90px]'"
             />
           </div>
         </div>
@@ -51,6 +57,8 @@
           {{ i18n.t(`repositories.item_card.repository_date_range_value.${canEdit ? 'placeholder' : 'no_date_range'}`) }}
         </div>
       </div>
+
+      <!-- DATE-TIME -->
       <div v-if="dateType === 'dateTime'">
         <div v-if="isEditing || values?.datetime" ref="edit" class="w-full">
           <DateTimePicker
@@ -67,6 +75,8 @@
           {{ i18n.t(`repositories.item_card.repository_date_time_value.${canEdit ? 'placeholder' : 'no_date_time'}`) }}
         </div>
       </div>
+
+      <!-- DATE-TIME RANGE -->
       <div v-else-if="dateType === 'dateTimeRange'">
         <div v-if="isEditing || (timeFrom?.datetime && timeTo?.datetime)" ref="edit" class="w-full flex">
           <div>
@@ -101,6 +111,8 @@
           {{ i18n.t(`repositories.item_card.repository_date_time_range_value.${canEdit ? 'placeholder' : 'no_date_time_range'}`) }}
         </div>
       </div>
+
+      <!-- TIME -->
       <div v-else-if="dateType === 'time'">
         <div v-if="isEditing || values?.datetime" ref="edit">
           <DateTimePicker
@@ -117,6 +129,8 @@
           {{ i18n.t(`repositories.item_card.repository_time_value.${ canEdit ? 'placeholder' : 'no_time'}`) }}
         </div>
       </div>
+
+      <!-- TIME RANGE -->
       <div v-else-if="dateType === 'timeRange'">
         <div v-if="isEditing || (timeFrom?.datetime && timeTo?.datetime)" ref="edit" class="w-full flex">
           <div>
@@ -207,6 +221,47 @@
         return ''
       }
     },
+    methods: {
+      showOverlay() {
+        const overlay = this.$refs.dateTimeRangeOverlay;
+        overlay.classList.remove('hidden');
+      },
+      hideOverlay() {
+        const overlay = this.$refs.dateTimeRangeOverlay;
+        overlay.classList.add('hidden');
+      },
+      bringCalendarToFront() {
+        const calendarEl = document.querySelector('.dp__instance_calendar');
+        calendarEl.classList.add('z-[9999]');
+      },
+      preventBodyScrolling() {
+        document.body.classList.add('overflow-hidden');
+        document.body.classList.remove('overflow-auto');
+      },
+      allowBodyScrolling() {
+        document.body.classList.remove('overflow-hidden');
+        document.body.classList.add('overflow-auto');
+      },
+      focusClearedInput() {
+        const firstInput = $(this.$refs.edit)?.find('input')[0];
+        const secondInput = $(this.$refs.edit)?.find('input')[1];
+
+        // first is empty
+        if (!firstInput.value) {
+          firstInput.focus();
+          firstInput.click();
+        }
+        // second is empty
+        if (!secondInput.value) {
+          secondInput.focus();
+          secondInput.click();
+        }
+
+        this.preventBodyScrolling();
+        this.showOverlay();
+        this.bringCalendarToFront();
+      },
+    },
     mounted() {
       this.cellUpdatePath = this.updatePath;
       this.values = this.colVal || {};
@@ -225,7 +280,18 @@
         this.$nextTick(() => {
           $(this.$refs.edit)?.find('input')[0]?.focus();
         })
-      }
+      },
+      errorMessage(newVal) {
+        if (newVal !== null) {
+          this.$nextTick(() => {
+            this.focusClearedInput();
+          });
+        }
+        if (newVal === null) {
+          this.hideOverlay();
+          this.allowBodyScrolling();
+        }
+      },
     }
   }
 </script>
