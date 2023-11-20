@@ -18,6 +18,7 @@
     />
     <div class="results-list">
       <Result v-for="result in results" :key="result.id"
+        ref="results"
         :result="result"
         :resultToReload="resultToReload"
         :activeDragResult="activeDragResult"
@@ -149,7 +150,7 @@
         this.activeDragResult = id;
       },
       uploadFilesToResult(file, resultId) {
-        this.$children.find(child => child.result?.id == resultId).uploadFiles(file);
+        this.$refs.results.find(child => child.result?.id == resultId).uploadFiles(file);
       },
       firstObjectInViewport() {
         let result = $('.result-wrapper:not(.locked)').toArray().find(element => {

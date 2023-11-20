@@ -88,18 +88,25 @@
     watch: {
       defaultValue: function () {
         this.datetime = this.defaultValue;
-        this.time = {
-          hours: this.defaultValue ? this.defaultValue.getHours() : 0,
-          minutes: this.defaultValue ? this.defaultValue.getMinutes() : 0
+        if (this.defaultValue) {
+          this.time = {
+            hours: this.defaultValue.getHours(),
+            minutes: this.defaultValue.getMinutes()
+          }
         }
       },
       datetime: function () {
         if (this.mode == 'time') {
 
+          this.time = null;
+
+          if (this.datetime) {
           this.time = {
-            hours: this.datetime ? this.datetime.getHours() : 0,
-            minutes: this.datetime ? this.datetime.getMinutes() : 0
+            hours: this.datetime.getHours(),
+            minutes: this.datetime.getMinutes()
           }
+        }
+
           return
         }
 
@@ -131,7 +138,10 @@
           newDate.setHours(this.time.hours);
           newDate.setMinutes(this.time.minutes);
         } else {
-          newDate = null;
+          newDate = {
+            hours: null,
+            minutes: null
+          };
           this.$emit('cleared');
         }
 
