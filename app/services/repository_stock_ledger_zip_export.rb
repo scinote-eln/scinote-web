@@ -53,10 +53,10 @@ module RepositoryStockLedgerZipExport
 
       if (consumption_type == 'Task' && record.amount.positive?) ||
          (consumption_type == 'Inventory' && record.amount.negative?)
-        consumed_amount = record.amount.abs.to_d
+        consumed_amount = record.amount.abs
         consumed_amount_unit = record.unit
       else
-        added_amount = record.amount.abs.to_d
+        added_amount = record.amount.abs
         added_amount_unit = record.unit
       end
 
@@ -70,7 +70,7 @@ module RepositoryStockLedgerZipExport
         added_amount_unit,
         record.user.full_name,
         I18n.l(record.created_at, format: :full),
-        record.balance.to_d,
+        record.balance,
         record.unit
       ]
       breadcrumbs_data =
