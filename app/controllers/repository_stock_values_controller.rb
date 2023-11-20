@@ -24,7 +24,6 @@ class RepositoryStockValuesController < ApplicationController
     end
 
     render json: {
-      row_id: @repository_row.id,
       stock_managable: true,
       stock_status: @repository_stock_value.status,
     }.merge(

@@ -74,7 +74,7 @@ export default {
               break;
           }
           Object.assign($this.$data, { isEditing: false, isSaving: false, values: result?.value });
-          reloadTableRow(result)
+          if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
         }
       });
     },

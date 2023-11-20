@@ -369,7 +369,7 @@ export default {
       }).done((response) => {
         if (response) {
           this.customColumns = this.customColumns.map(col => col.id === response.id ? { ...col, ...response } : col)
-          reloadTableRow(response)
+          if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
         }
       });
     }
