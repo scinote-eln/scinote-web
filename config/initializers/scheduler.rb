@@ -23,6 +23,6 @@ if ENV['ENABLE_FLUICS_SYNC'] == 'true'
 end
 
 scheduler.every '1h' do
-  DueDateReminderJob.perform_now
+  MyModules::DueDateReminderJob.perform_now
   RepositoryItemDateReminderJob.perform_now
 end
