@@ -1,10 +1,5 @@
 # frozen_string_literal: true
 
-# To deliver this notification:
-#
-# ActivityNotification.with(post: @post).deliver_later(current_user)
-# ActivityNotification.with(post: @post).deliver(current_user)
-
 class ActivityNotification < BaseNotification
   include SearchHelper
   include GlobalActivitiesHelper
@@ -13,15 +8,6 @@ class ActivityNotification < BaseNotification
   include ApplicationHelper
   include ActiveRecord::Sanitization::ClassMethods
   include Rails.application.routes.url_helpers
-  # Add your delivery methods
-  #
-  # deliver_by :email, mailer: "UserMailer"
-  # deliver_by :slack
-  # deliver_by :custom, class: "MyDeliveryMethod"
-
-  # Add required params
-  #
-  # param :post
 
   def message
     params[:message] if params[:legacy]
@@ -38,9 +24,6 @@ class ActivityNotification < BaseNotification
   def subject
     activity.subject unless params[:legacy]
   end
-  # def url
-  #   post_path(params[:post])
-  # end
 
   private
 
