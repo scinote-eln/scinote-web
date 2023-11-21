@@ -1,21 +1,26 @@
 <template>
   <div class="mb-6">
-    <label class="sci-label">{{ filter.label }}</label>
-    <div class="flex items-center gap-2 flex-col">
-      <DateTimePicker
-        class="w-full"
-        @change="updateDateFrom"
-        :placeholder="i18n.t('From')"
-        :dateOnly="true"
-        :selectorId="`DatePicker${filter.key}`"
-      />
-      <DateTimePicker
-        class="w-full"
-        @change="updateDateTo"
-        :placeholder="i18n.t('To')"
-        :dateOnly="true"
-        :selectorId="`DatePickerTo${filter.key}`"
-      />
+    <div class="flex items-center gap-6 flex-col">
+      <div class="w-full">
+        <label class="sci-label">{{ filter.label }} ({{ i18n.t('general.from') }})</label>
+        <DateTimePicker
+          class="w-full"
+          @change="updateDateFrom"
+          :placeholder="i18n.t('From')"
+          :dateOnly="true"
+          :selectorId="`DatePicker${filter.key}`"
+        />
+      </div>
+      <div class="w-full">
+        <label class="sci-label">{{ filter.label }} ({{ i18n.t('general.to') }})</label>
+        <DateTimePicker
+          class="w-full"
+          @change="updateDateTo"
+          :placeholder="i18n.t('To')"
+          :dateOnly="true"
+          :selectorId="`DatePickerTo${filter.key}`"
+        />
+      </div>
     </div>
   </div>
 </template>

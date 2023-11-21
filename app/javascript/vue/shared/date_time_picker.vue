@@ -7,7 +7,6 @@
       }"
       v-model="compDatetime"
       :teleport="teleport"
-      :text-input="true"
       :no-today="true"
       :clearable="clearable"
       :format="format"

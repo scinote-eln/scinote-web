@@ -260,7 +260,7 @@ var MyModuleRepositories = (function() {
 
   function addRepositorySearch() {
     $(`<div id="inventorySearchComponent">
-      <repository_search_container/>
+      <repository-search-container/>
     </div>`).appendTo('.filter-container');
     initRepositorySearch();
   }

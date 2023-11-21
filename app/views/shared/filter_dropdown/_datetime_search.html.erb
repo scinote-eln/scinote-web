@@ -1,19 +1,22 @@
 <div class="<%= container_class %> mb-6" <%= "data-view-mode=#{view_mode}" if view_mode %>>
-    <div class="created-on-label">
-      <label class="sci-label"><%= label %></label>
-    </div>
-    <div class="flex items-center flex-col gap-2">
-      <div class="datetime-picker-container flex w-full">
-        <div id="<%= "#{container_class}_from_container" %>" class="vue-date-time-picker-filter grow">
-          <input ref="input" class="from-date" type="hidden" v-model="date" id="<%= "#{container_class}_from" %>" />
-          <date-time-picker class="w-full" @cleared="clearDate" ref="vueDateTime" @change="updateDate" mode="datetime" placeholder="<%= t('filters_modal.from_placeholder') %>"></date-time-picker>
-        </div>
+  <div class="flex flex-col gap-6">
+    <div class="datetime-picker-container w-full">
+      <div class="created-on-label">
+        <label class="sci-label"><%= label %> (<%= t('general.from') %>)</label>
       </div>
-      <div class="datetime-picker-container flex w-full">
-        <div id="<%= "#{container_class}_to_container" %>" class="vue-date-time-picker-filter grow">
-          <input ref="input" class="to-date" type="hidden" v-model="date" id="<%= "#{container_class}_to" %>" />
-          <date-time-picker class="w-full" @cleared="clearDate" ref="vueDateTime" @change="updateDate" mode="datetime" placeholder="<%= t('filters_modal.to_placeholder') %>"></date-time-picker>
-        </div>
+      <div id="<%= "#{container_class}_from_container" %>" class="vue-date-time-picker-filter grow">
+        <input ref="input" class="from-date" type="hidden" v-model="date" id="<%= "#{container_class}_from" %>" />
+        <date-time-picker class="w-full" @cleared="clearDate" ref="vueDateTime" @change="updateDate" mode="datetime" placeholder="<%= t('filters_modal.from_placeholder') %>"></date-time-picker>
       </div>
     </div>
+    <div class="datetime-picker-container w-full">
+      <div class="created-on-label">
+        <label class="sci-label"><%= label %> (<%= t('general.to') %>)</label>
+      </div>
+      <div id="<%= "#{container_class}_to_container" %>" class="vue-date-time-picker-filter grow">
+        <input ref="input" class="to-date" type="hidden" v-model="date" id="<%= "#{container_class}_to" %>" />
+        <date-time-picker class="w-full" @cleared="clearDate" ref="vueDateTime" @change="updateDate" mode="datetime" placeholder="<%= t('filters_modal.to_placeholder') %>"></date-time-picker>
+      </div>
+    </div>
+  </div>
 </div>
