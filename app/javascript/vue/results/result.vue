@@ -1,10 +1,10 @@
 <template>
-  <div class="result-wrapper p-4 mb-4 rounded relative"
-      @drop.prevent="dropFile"
-      @dragenter.prevent="dragEnter($event)"
-      @dragover.prevent
-      :data-id="result.id"
-      :class="{ 'bg-sn-super-light-blue': dragingFile, 'bg-white': !dragingFile, 'locked': locked }"
+  <div class="result-wrapper p-4 mb-4 rounded pr-8 relative"
+       @drop.prevent="dropFile"
+       @dragenter.prevent="dragEnter($event)"
+       @dragover.prevent
+       :data-id="result.id"
+       :class="{ 'bg-sn-super-light-blue': dragingFile, 'bg-white': !dragingFile, 'locked': locked }"
   >
     <div class="text-xl items-center flex flex-col text-sn-blue h-full justify-center left-0 absolute top-0 w-full"
          v-if="dragingFile"
@@ -103,6 +103,7 @@
         <div v-for="(element, index) in orderedElements" :key="element.id">
           <component
             :is="elements[index].attributes.orderable_type"
+            class="result-element"
             :element.sync="elements[index]"
             :inRepository="false"
             :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
@@ -433,8 +434,8 @@
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         }).done(() => {
           this.$parent.$nextTick(() => {
-            const children = this.$children
-            const lastChild = children[children.length - 1]
+            const children = this.$refs.stepContainer.querySelectorAll(".result-element");
+            const lastChild = children[children.length - 1];
             lastChild.$el.scrollIntoView(false)
             window.scrollBy({
               top: 200,

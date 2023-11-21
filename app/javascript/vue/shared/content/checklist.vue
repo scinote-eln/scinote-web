@@ -1,5 +1,5 @@
 <template>
-  <div class="content__checklist-container" >
+  <div class="content__checklist-container pr-8" >
     <div class="sci-divider my-6" v-if="!inRepository"></div>
     <div class="checklist-header flex rounded mb-1 items-center relative w-full group/checklist-header" :class="{ 'editing-name': editingName, 'locked': !element.attributes.orderable.urls.update_url }">
       <div class="grow-1 text-ellipsis whitespace-nowrap grow my-1 font-bold">
@@ -38,26 +38,27 @@
         :chosenClass="'checklist-item-chosen'"
         :forceFallback="true"
         :handle="'.element-grip'"
+        item-key="id"
         :disabled="editingItem || checklistItems.length < 2 || !element.attributes.orderable.urls.reorder_url"
         @start="startReorder"
         @end="endReorder"
       >
-        <ChecklistItem
-          v-for="checklistItem in orderedChecklistItems"
-          :key="checklistItem.id"
-          :checklistItem="checklistItem"
-          :locked="locked"
-          :reordering="reordering"
-          :reorderChecklistItemUrl="element.attributes.orderable.urls.reorder_url"
-          :inRepository="inRepository"
-          :draggable="checklistItems.length > 1"
-          @editStart="editingItem = true"
-          @editEnd="editingItem = false"
-          @update="saveItem"
-          @toggle="saveItemChecked"
-          @removeItem="removeItem"
-          @component:delete="removeItem"
-        />
+        <template #item="{element}">
+          <ChecklistItem
+            :checklistItem="element"
+            :locked="locked"
+            :reordering="reordering"
+            :reorderChecklistItemUrl="this.element.attributes.orderable.urls.reorder_url"
+            :inRepository="inRepository"
+            :draggable="checklistItems.length > 1"
+            @editStart="editingItem = true"
+            @editEnd="editingItem = false"
+            @update="saveItem"
+            @toggle="saveItemChecked"
+            @removeItem="removeItem"
+            @component:delete="removeItem"
+          />
+        </template>
       </Draggable>
       <div v-if="element.attributes.orderable.urls.create_item_url && !addingNewItem"
            class="flex items-center gap-1 text-sn-blue cursor-pointer mb-2 mt-1 "

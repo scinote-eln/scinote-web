@@ -1,5 +1,5 @@
 <template>
-  <div ref="stepContainer" class="step-container"
+  <div ref="stepContainer" class="step-container pr-8"
        :id="`stepContainer${step.id}`"
        @drop.prevent="dropFile"
        @dragenter.prevent="dragEnter($event)"
@@ -110,6 +110,7 @@
           v-for="(element, index) in orderedElements"
           :is="elements[index].attributes.orderable_type"
           :key="element.id"
+          class="step-element"
           :element.sync="elements[index]"
           :inRepository="inRepository"
           :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
@@ -188,6 +189,9 @@
         type: Number,
         required: false
       },
+      activeDragStep: {
+        required: false
+      }
     },
     data() {
       return {
@@ -233,6 +237,11 @@
         if (this.stepToReload == this.step.id) {
           this.loadElements();
           this.loadAttachments();
+        }
+      },
+      activeDragStep() {
+        if (this.activeDragStep != this.step.id && this.dragingFile) {
+          this.dragingFile = false;
         }
       }
     },
@@ -341,6 +350,7 @@
         let dt = e.dataTransfer;
         if (dt.types && (dt.types.indexOf ? dt.types.indexOf('Files') != -1 : dt.types.contains('Files'))) {
           this.dragingFile = true;
+          this.$emit('step:drag_enter', this.step.id);
         }
       },
       loadAttachments() {
@@ -419,6 +429,9 @@
       },
       updateElement(element, skipRequest=false, callback) {
         let index = this.elements.findIndex((e) => e.id === element.id);
+
+        if (!this.elements[index]) return;
+
         this.elements[index].isNew = false;
 
         if (skipRequest) {
@@ -494,9 +507,10 @@
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         }).done(() => {
           this.$parent.$nextTick(() => {
-            const children = this.$children
-            const lastChild = children[children.length - 1]
-            lastChild.$el.scrollIntoView(false)
+            const children = this.$refs.stepContainer.querySelectorAll(".step-element");
+            const lastChild = children[children.length - 1];
+
+            lastChild.scrollIntoView(false)
             window.scrollBy({
               top: 200,
               behavior: 'smooth'

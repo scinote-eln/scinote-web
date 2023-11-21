@@ -1,6 +1,6 @@
 <template>
   <div ref="modal"
-       class="modal fade" 
+       class="modal fade"
        id="exportStockConsumptionModal"
        tabindex="-1"
        role="dialog"
@@ -22,7 +22,7 @@
           <button type='button' class='btn btn-secondary' data-dismiss='modal' id='close-modal-export-stock-consumption'>
             {{ i18n.t('general.cancel') }}
           </button>
-          
+
           <button class="btn btn-success" id="export-stock-consumption" @click="exportConsumption">
             {{ i18n.t('zip_export.consumption_generate') }}
           </button>
@@ -47,7 +47,7 @@
     created() {
       window.exportStockConsumptionModalComponent = this;
     },
-    beforeDestroy() {
+    beforeUnmount() {
       delete window.exportStockConsumptionModalComponent;
     },
     methods: {

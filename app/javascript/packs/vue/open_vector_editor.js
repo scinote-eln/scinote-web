@@ -1,11 +1,8 @@
-import TurbolinksAdapter from 'vue-turbolinks';
-import Vue from 'vue/dist/vue.esm';
+import { createApp } from 'vue/dist/vue.esm-bundler.js';
 import OpenVectorEditor from '../../vue/ove/OpenVectorEditor.vue';
+import { mountWithTurbolinks } from './helpers/turbolinks.js';
 
-Vue.use(TurbolinksAdapter);
-Vue.prototype.i18n = window.I18n;
-
-new Vue({
-  el: '#open-vector-editor',
-  components: { OpenVectorEditor }
-});
+const app = createApp({});
+app.component('OpenVectorEditor', OpenVectorEditor);
+app.config.globalProperties.i18n = window.I18n;
+mountWithTurbolinks(app, '#open-vector-editor');

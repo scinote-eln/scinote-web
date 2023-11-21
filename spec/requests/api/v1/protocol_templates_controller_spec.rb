@@ -27,13 +27,14 @@ RSpec.describe 'Api::V1::ProtocolTemplateController', type: :request do
         team_id: @team.id
       ), headers: @valid_headers
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(Protocol.latest_available_versions(@team), each_serializer: Api::V1::ProtocolTemplateSerializer)
-            .to_json
-        )['data']
-      )
+
+      parsed_data = JSON.parse(
+        ActiveModelSerializers::SerializableResource
+          .new(Protocol.latest_available_versions(@team), each_serializer: Api::V1::ProtocolTemplateSerializer)
+          .to_json
+      )['data']
+
+      expect(hash_body[:data]).to match_array(parsed_data)
     end
 
     it 'When invalid request, user in not member of the team' do
@@ -63,13 +64,13 @@ RSpec.describe 'Api::V1::ProtocolTemplateController', type: :request do
       get api_v1_team_protocol_template_path(id: @protocol_published_original.id, team_id: @team.id), headers: @valid_headers
 
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body[:data]).to match(
-        JSON.parse(
-          ActiveModelSerializers::SerializableResource
-            .new(@protocol_published_original, serializer: Api::V1::ProtocolTemplateSerializer)
-            .to_json
-        )['data']
-      )
+      parsed_data = JSON.parse(
+        ActiveModelSerializers::SerializableResource
+          .new(@protocol_published_original, serializer: Api::V1::ProtocolTemplateSerializer)
+          .to_json
+      )['data']
+
+      expect(hash_body[:data]).to match_array(parsed_data)
     end
 
     it 'When invalid request, user in not member of the team' do

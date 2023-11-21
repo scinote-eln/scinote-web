@@ -1,34 +1,52 @@
 <template>
-  <div class="w-[208px] ml-4 h-full border rounded relative bg-sn-white flex flex-col right-0 absolute navigator-container">
-    <div class="px-3 py-2.5 flex items-center relative leading-4">
-      <i class="sn-icon sn-icon-navigator"></i>
-      <div class="font-bold text-base pl-3">
-        {{ i18n.t('navigator.title') }}
+  <Vue3DraggableResizable
+    :initW="getNavigatorWidth()"
+    ref="vueResizable"
+    :minW="208"
+    v-model:w="width"
+    :disabledH="true"
+    :handles="['mr']"
+    :resizable="true"
+    :draggable="false"
+    class="max-w-[400px] !h-full"
+    @resize-start="onResizeStart"
+    @resizing="onResizeMove"
+    @resize-end="onResizeEnd"
+  >
+    <div class="ml-4 h-full w-[calc(100%_-_1rem)] border rounded bg-sn-white flex flex-col right-0 absolute navigator-container">
+      <div class="px-3 py-2.5 flex items-center relative leading-4">
+        <i class="sn-icon sn-icon-navigator"></i>
+        <div class="font-bold text-base pl-3">
+          {{ i18n.t('navigator.title') }}
+        </div>
+        <i @click="$emit('navigator:colapse')" class="sn-icon sn-icon-close ml-auto cursor-pointer absolute right-2.5 top-2.5"></i>
       </div>
-      <i @click="$emit('navigator:colapse')" class="sn-icon sn-icon-close ml-auto cursor-pointer absolute right-2.5 top-2.5"></i>
+      <perfect-scrollbar @ps-scroll-y="onScrollY" @ps-scroll-x="onScrollX" ref="scrollContainer" class="grow py-2 relative px-2 scroll-container w-[calc(100%_-_.25rem)]">
+        <NavigatorItem v-for="item in sortedMenuItems"
+                      :key="item.id"
+                      :currentItemId="currentItemId"
+                      :item="item"
+                      :firstLevel="true"
+                      :reloadCurrentLevel="reloadCurrentLevel"
+                      :paddingLeft="0"
+                      :reloadChildrenLevel="reloadChildrenLevel"
+                      :archived="archived" />
+      </perfect-scrollbar>
     </div>
-    <perfect-scrollbar @ps-scroll-y="onScrollY" @ps-scroll-x="onScrollX" ref="scrollContainer" class="grow py-2 relative px-2 scroll-container">
-      <NavigatorItem v-for="item in sortedMenuItems"
-                     :key="item.id"
-                     :currentItemId="currentItemId"
-                     :item="item"
-                     :firstLevel="true"
-                     :reloadCurrentLevel="reloadCurrentLevel"
-                     :paddingLeft="0"
-                     :reloadChildrenLevel="reloadChildrenLevel"
-                     :archived="archived" />
-    </perfect-scrollbar>
-  </div>
+  </Vue3DraggableResizable>
 </template>
 
 <script>
 
 import NavigatorItem from './navigator_item.vue'
+import axios from '../../packs/custom_axios.js';
+import Vue3DraggableResizable from 'vue3-draggable-resizable'
 
 export default {
   name : 'NavigatorContainer',
   components: {
-    NavigatorItem
+    NavigatorItem,
+    Vue3DraggableResizable
   },
   data() {
     return {
@@ -38,7 +56,8 @@ export default {
       navigatorYScroll: 0,
       navigatorXScroll: 0,
       currentItemId: null,
-      archived: null
+      archived: null,
+      width: null
     }
   },
   props: {
@@ -70,6 +89,9 @@ export default {
       }
     });
   },
+  mounted() {
+    this.$refs.vueResizable.style.width = this.getNavigatorWidth()
+  },
   watch: {
     archived() {
       this.loadTree();
@@ -89,21 +111,55 @@ export default {
       this.currentItemId = $('#active_navigator_item').val();
       this.archived = $('#active_navigator_archived').val() === 'true';
     },
-    loadTree() {
+    async loadTree() {
       if (!this.navigatorUrl) return;
 
-      $.get(this.navigatorUrl, {archived: this.archived}, (data) => {
-        this.menuItems = [];
-        this.$nextTick(() => {
-          this.menuItems = data.items;
+      try {
+        const { data } = await axios.get(this.navigatorUrl, {
+          params: { archived: this.archived }
         });
-      })
+        this.menuItems = data.items;
+      } catch (error) {
+        console.error('An error occurred while fetching the data', error);
+      }
     },
     onScrollY({target}) {
       this.navigatorYScroll = target.scrollTop;
     },
     onScrollX({target}) {
       this.navigatorXScroll = target.scrollLeft;
+    },
+    getNavigatorWidth() {
+      const computedStyle = getComputedStyle(document.documentElement);
+      return parseInt(computedStyle.getPropertyValue('--navigator-navigation-width').trim());
+    },
+    onResizeMove(event) {
+      if (event.w > 400) event.w = 400;
+      document.documentElement.style.setProperty('--navigator-navigation-width', event.w + 'px');
+    },
+    onResizeStart() {
+      document.body.style.cursor = 'url(/images/icon_small/Resize.svg) 0 0, auto';
+      $('.sci--layout-navigation-navigator').addClass('!transition-none');
+      $('.sci--layout').addClass('!transition-none');
+    },
+    onResizeEnd(event) {
+      if (event.w > 400) {
+        event.w = 400;
+        this.width = 400;
+      }
+      document.body.style.cursor = 'default';
+      $('.sci--layout-navigation-navigator').removeClass('!transition-none');
+      $('.sci--layout').removeClass('!transition-none');
+      this.changeNavigatorState(event.w)
+    },
+    async changeNavigatorState(newWidth) {
+      try {
+        const navigatorContainer = document.getElementById('sciNavigationNavigatorContainer');
+        const stateUrl = navigatorContainer.getAttribute('data-navigator-state-url');
+        await axios.post(stateUrl, { width: newWidth });
+      } catch (error) {
+        console.error('An error occurred while sending the request', error);
+      }
     }
   },
 }

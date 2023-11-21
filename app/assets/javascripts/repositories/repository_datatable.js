@@ -791,6 +791,7 @@ var RepositoryDatatable = (function(global) {
       fnInitComplete: function() {
         window.initActionToolbar();
         window.actionToolbarComponent.setBottomOffset(68);
+
         initHeaderTooltip();
         disableCheckboxToggleOnCheckboxPreview();
 

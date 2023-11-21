@@ -14,7 +14,7 @@ export default {
   mounted() {
     this.observeChanges();
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.observer) {
       this.observer.disconnect();
     }

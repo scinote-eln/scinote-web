@@ -18,6 +18,7 @@
       class="ml-auto"
       v-if="settingsMenu && settingsMenu.length > 0"
       :listItems="settingsMenuItems"
+      :title="i18n.t('nav.settings')"
       :btnClasses="'btn btn-light icon-btn btn-black'"
       :position="'right'"
       :btnIcon="'sn-icon sn-icon-settings'"
@@ -106,7 +107,7 @@
       // Track name update in user profile settings
       $(document).on('inlineEditing::updated', '.inline-editing-container[data-field-to-update="full_name"]', this.fetchData);
     },
-    beforeDestroy: function(){
+    beforeUnmount: function(){
       clearTimeout(this.unseenNotificationsTimeout);
     },
     computed: {

@@ -1,14 +1,16 @@
 <template>
   <div class="mb-6">
     <label class="sci-label">{{ filter.label }}</label>
-    <div class="flex items-center gap-5">
+    <div class="flex items-center gap-2 flex-col">
       <DateTimePicker
+        class="w-full"
         @change="updateDateFrom"
         :placeholder="i18n.t('From')"
         :dateOnly="true"
         :selectorId="`DatePicker${filter.key}`"
       />
       <DateTimePicker
+        class="w-full"
         @change="updateDateTo"
         :placeholder="i18n.t('To')"
         :dateOnly="true"

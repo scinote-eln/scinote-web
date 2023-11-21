@@ -3206,7 +3206,7 @@ en:
       comments_tab: "Comments"
       no_description: "This step has no description."
       tables: "Tables"
-      files: "Attachments (%{count})"
+      files: "Files (%{count})"
       comments: "Comments"
       empty_checklist: "No items"
       comment_title: "%{user} at %{time}:"
@@ -3381,6 +3381,7 @@ en:
     formats:
       full_js: "D.M.YYYY HH:mm"
       full: "%{date_format} %H:%M"
+      default: "%Y/%m/%d %H:%M"
       full_with_tz: "%{date_format} %H:%M %z"
       full_with_comma: "%{date_format}, %H:%M"
       full_date: "%{date_format}"
