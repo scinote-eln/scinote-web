@@ -176,7 +176,7 @@
         return unit ? unit[1] : ''
       },
       newAmount: function() {
-        const currentAmount = new Decimal(this.stockValue.amount || 0);
+        const currentAmount = new Decimal(this.stockValue?.amount || 0);
         const amount = new Decimal(this.amount || 0)
         let value;
         switch (this.operation) {
@@ -271,7 +271,7 @@
               comment: this.comment,
               low_stock_threshold: this.reminderEnabled ? this.lowStockTreshold : null
             },
-            operator: this.operations.find(operation => operation[0] = this.operation)?.[1],
+            operator: this.operations.find(operation => operation[0] == this.operation)?.[1],
             change_amount: Math.abs(this.amount),
           },
           success: function(result) {
