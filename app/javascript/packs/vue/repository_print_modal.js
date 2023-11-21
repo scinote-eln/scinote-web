@@ -25,12 +25,15 @@ function initPrintModalComponent() {
       methods: {
         closeModal() {
           this.showModal = false;
+        },
+        openModal() {
+          this.showModal = true;
         }
       }
     });
     app.component('PrintModalContainer', PrintModalContainer);
     app.config.globalProperties.i18n = window.I18n;
-    mountWithTurbolinks(app, '.print-label-modal-container');
+    window.PrintModalComponent = mountWithTurbolinks(app, '.print-label-modal-container');
   }
 }
 
