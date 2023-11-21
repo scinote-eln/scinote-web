@@ -3706,6 +3706,8 @@ en:
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"
+    from: 'from'
+    to: 'to'
     leaving_unsaved_warning: "You have made some changes, are you sure you want to leave this page?"
     no_comments: "No comments!"
     more_comments: "More comments"

@@ -501,7 +501,7 @@ var RepositoryDatatable = (function(global) {
 
   function addRepositorySearch() {
     $(`<div id="inventorySearchComponent">
-      <repository_search_container/>
+      <repository-search-container/>
     </div>`).appendTo('.repository-search-container');
     initRepositorySearch();
   }
