@@ -3381,6 +3381,7 @@ en:
     formats:
       full_js: "D.M.YYYY HH:mm"
       full: "%{date_format} %H:%M"
+      default: "%Y/%m/%d %H:%M"
       full_with_tz: "%{date_format} %H:%M %z"
       full_with_comma: "%{date_format}, %H:%M"
       full_date: "%{date_format}"
@@ -3705,6 +3706,8 @@ en:
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"
+    from: 'from'
+    to: 'to'
     leaving_unsaved_warning: "You have made some changes, are you sure you want to leave this page?"
     no_comments: "No comments!"
     more_comments: "More comments"

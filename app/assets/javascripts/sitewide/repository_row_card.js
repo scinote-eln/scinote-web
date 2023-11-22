@@ -20,7 +20,7 @@
     e.stopPropagation();
 
     if (typeof PrintModalComponent !== 'undefined') {
-      PrintModalComponent.showModal = true;
+      PrintModalComponent.openModal();
       if (selectedRows && selectedRows.length) {
         $('#modal-info-repository-row').modal('hide');
         PrintModalComponent.row_ids = selectedRows;

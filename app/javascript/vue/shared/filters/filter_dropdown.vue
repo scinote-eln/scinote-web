@@ -9,7 +9,7 @@
             <i class="sn-icon sn-icon-close"></i>
           </button>
         </div>
-        <div class="sci-flyout-body">
+        <div class="sci-flyout-body max-h-[400px] overflow-y-auto perfect-scrollbar relative w-[calc(100%_+_1.125rem)] pr-5">
           <div v-for="filter in filters" :key="filter.key + resetFilters" class="">
             <Component :is="`${filter.type}Filter`" :filter="filter" :value="filterValues[filter.key]" @update="updateFilter" />
           </div>
@@ -53,9 +53,9 @@
     methods: {
       updateFilter(params) {
         if (params.value !== '' && params.value !== undefined && params.value !== null) {
-          this.$set(this.filterValues, params.key, params.value);
+          this.filterValues[params.key] = params.value;
         } else {
-          this.$delete(this.filterValues, params.key);
+          delete this.filterValues[params.key];
         }
       },
       applyFilters() {

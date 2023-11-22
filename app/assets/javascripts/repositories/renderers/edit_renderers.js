@@ -75,37 +75,37 @@ $.fn.dataTable.render.editRepositoryStatusValue = function(formId, columnId, cel
 $.fn.dataTable.render.editRepositoryDateTimeValue = function(formId, columnId, cell) {
   let $cell = $(cell.node());
 
-  DateTimeHelper.initDateTimeEditMode(formId, columnId, $cell, '', 'RepositoryDateTimeValue');
+  DateTimeHelper.initDateTimeEditMode(formId, columnId, $cell, 'datetime', 'RepositoryDateTimeValue');
 };
 
 $.fn.dataTable.render.editRepositoryDateValue = function(formId, columnId, cell) {
   let $cell = $(cell.node());
 
-  DateTimeHelper.initDateTimeEditMode(formId, columnId, $cell, 'dateonly', 'RepositoryDateValue');
+  DateTimeHelper.initDateTimeEditMode(formId, columnId, $cell, 'date', 'RepositoryDateValue');
 };
 
 $.fn.dataTable.render.editRepositoryTimeValue = function(formId, columnId, cell) {
   let $cell = $(cell.node());
 
-  DateTimeHelper.initDateTimeEditMode(formId, columnId, $cell, 'timeonly', 'RepositoryTimeValue');
+  DateTimeHelper.initDateTimeEditMode(formId, columnId, $cell, 'time', 'RepositoryTimeValue');
 };
 
 $.fn.dataTable.render.editRepositoryDateTimeRangeValue = function(formId, columnId, cell) {
   let $cell = $(cell.node());
 
-  DateTimeHelper.initDateTimeRangeEditMode(formId, columnId, $cell, '', 'RepositoryDateTimeRangeValue');
+  DateTimeHelper.initDateTimeRangeEditMode(formId, columnId, $cell, 'datetime', 'RepositoryDateTimeRangeValue');
 };
 
 $.fn.dataTable.render.editRepositoryDateRangeValue = function(formId, columnId, cell) {
   let $cell = $(cell.node());
 
-  DateTimeHelper.initDateTimeRangeEditMode(formId, columnId, $cell, 'dateonly', 'RepositoryDateRangeValue');
+  DateTimeHelper.initDateTimeRangeEditMode(formId, columnId, $cell, 'date', 'RepositoryDateRangeValue');
 };
 
 $.fn.dataTable.render.editRepositoryTimeRangeValue = function(formId, columnId, cell) {
   let $cell = $(cell.node());
 
-  DateTimeHelper.initDateTimeRangeEditMode(formId, columnId, $cell, 'timeonly', 'RepositoryTimeRangeValue');
+  DateTimeHelper.initDateTimeRangeEditMode(formId, columnId, $cell, 'time', 'RepositoryTimeRangeValue');
 };
 
 $.fn.dataTable.render.editRepositoryChecklistValue = function(formId, columnId, cell) {

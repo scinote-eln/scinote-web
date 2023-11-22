@@ -11,7 +11,7 @@
     <template v-if="!isPreset">
       <div class="datetime-filter-attributes">
         <div class="filter-datepicker-input">
-          <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`" :defaultValue="null" />
+          <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`" :defaultValue="date" />
         </div>
         <div class="between-delimiter vertical" v-if="operator == 'between'"></div>
         <div class="filter-datepicker-to-input">

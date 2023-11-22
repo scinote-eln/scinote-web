@@ -141,43 +141,34 @@ var ExperimnetTable = {
       let dateText = $(element).closest('.date-text');
       let clearDate = $(element).closest('.datetime-container').find('.clear-date');
 
-      $(element).on('dp.change', function() {
-        $.ajax({
-          url: dueDateContainer.data('update-url'),
-          type: 'PATCH',
-          dataType: 'json',
-          data: { my_module: { due_date: $(element).val() } },
-          success: function(result) {
-            dueDateContainer.find('#dueDateLabelContainer').html(result.table_due_date_label.html);
-            dateText.data('due-status', result.table_due_date_label.due_status);
+      $(`#calendarDueDateContainer${row.id}`).parent().on('dp:ready', () => {
+        $(element).data('dateTimePicker').onChange = () => {
+          $.ajax({
+            url: dueDateContainer.data('update-url'),
+            type: 'PATCH',
+            dataType: 'json',
+            data: { my_module: { due_date: $(element).val() } },
+            success: function(result) {
+              dueDateContainer.find('#dueDateLabelContainer').html(result.table_due_date_label.html);
+              dateText.data('due-status', result.table_due_date_label.due_status);
 
-            if ($(result.table_due_date_label.html).data('due-date')) {
-              clearDate.addClass('open');
+              if ($(result.table_due_date_label.html).data('due-date')) {
+                clearDate.removeClass('tw-hidden');
+              } else {
+                clearDate.addClass('tw-hidden');
+              }
             }
-          }
+          });
+        }
+
+        clearDate.on('click', () => {
+          $(element).data('dateTimePicker').clearDate();
         });
       });
 
-      $(element).on('dp.hide', function() {
-        dateText.attr('data-original-title', dateText.data('due-status'));
-        clearDate.removeClass('open');
-      });
-
-      $(element).on('dp.show', function() {
-        var datePicker = $('.bootstrap-datetimepicker-widget.dropdown-menu')[0];
-
-        // show full datepicker menu for due date
-        if (datePicker.getBoundingClientRect().bottom > window.innerHeight) {
-          datePicker.scrollIntoView(false);
-        } else if (datePicker.getBoundingClientRect().top < 0) {
-          datePicker.scrollIntoView();
-        }
-
-        dateText.attr('data-original-title', '').tooltip('hide');
-        if (dueDateContainer.find('.due-date-label').data('due-date')) {
-          clearDate.addClass('open');
-        }
-      });
+      if ($(`#calendarDueDateContainer${row.id}`).length > 0) {
+        window.initDateTimePickerComponent(`#calendarDueDateContainer${row.id}`);
+      }
     });
   },
   initMyModuleActions: function() {
@@ -505,9 +496,9 @@ var ExperimnetTable = {
     }
   },
   selectDate: function($field) {
-    var datePicker = $field.data('DateTimePicker');
-    if (datePicker && datePicker.date()) {
-      return datePicker.date()._d.toUTCString();
+    var datePicker = $field.data('dateTimePicker');
+    if (datePicker && datePicker.date) {
+      return datePicker.date.toString();
     }
     return null;
   },
@@ -748,9 +739,7 @@ ExperimnetTable.filters.push({
   },
   active: (value) => { return value; },
   clearFilter: ($container) => {
-    if ($('.due-date-filter .from-date', $container).data('DateTimePicker')) {
-      $('.due-date-filter .from-date', $container).data('DateTimePicker').clear();
-    }
+    $('.due-date-filter .from-date', $container).data('dateTimePicker')?.clearDate();
   }
 });
 
@@ -763,9 +752,7 @@ ExperimnetTable.filters.push({
   },
   active: (value) => { return value; },
   clearFilter: ($container) => {
-    if ($('.due-date-filter .to-date', $container).data('DateTimePicker')) {
-      $('.due-date-filter .to-date', $container).data('DateTimePicker').clear();
-    }
+    $('.due-date-filter .to-date', $container).data('dateTimePicker')?.clearDate();
   }
 });
 
@@ -778,9 +765,7 @@ ExperimnetTable.filters.push({
   },
   active: (value) => { return value; },
   clearFilter: ($container) => {
-    if ($('.archived-on-filter .from-date', $container).data('DateTimePicker')) {
-      $('.archived-on-filter .from-date', $container).data('DateTimePicker').clear();
-    }
+    $('.archived-on-filter .from-date', $container).data('dateTimePicker')?.clearDate();
   }
 });
 
@@ -793,9 +778,7 @@ ExperimnetTable.filters.push({
   },
   active: (value) => { return value; },
   clearFilter: ($container) => {
-    if ($('.archived-on-filter .to-date', $container).data('DateTimePicker')) {
-      $('.archived-on-filter  .to-date', $container).data('DateTimePicker').clear();
-    }
+    $('.archived-on-filter  .to-date', $container).data('dateTimePicker')?.clearDate();
   }
 });
 

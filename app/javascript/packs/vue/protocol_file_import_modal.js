@@ -1,18 +1,12 @@
-import TurbolinksAdapter from 'vue-turbolinks';
-import Vue from 'vue/dist/vue.esm';
+import { createApp } from 'vue/dist/vue.esm-bundler.js';
 import ProtocolFileImportModal from '../../vue/protocol_import/file_import_modal.vue';
-
-
-Vue.use(TurbolinksAdapter);
-Vue.prototype.i18n = window.I18n;
+import { mountWithTurbolinks } from './helpers/turbolinks.js';
 
 window.initProtocolFileImportModalComponent = () => {
-  new Vue({
-    el: '#protocolFileImportModal',
-    components: {
-      'protocol-file-import-modal': ProtocolFileImportModal
-    }
-  });
+  const app = createApp({});
+  app.component('ProtocolFileImportModal', ProtocolFileImportModal);
+  app.config.globalProperties.i18n = window.I18n;
+  mountWithTurbolinks(app, '#protocolFileImportModal');
 };
 
 initProtocolFileImportModalComponent();
