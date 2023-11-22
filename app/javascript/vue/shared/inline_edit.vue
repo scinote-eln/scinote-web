@@ -4,8 +4,9 @@
       <input type="text"
         v-if="singleLine"
         ref="input"
-        class="inline-block leading-5 outline-none pl-0 py-1 border-0 border-solid border-y w-full border-t-transparent"
+        class="inline-block leading-5 outline-none pl-0 border-0 border-solid border-y w-full border-t-transparent"
         :class="{
+          'py-1': !singleLine,
           'inline-edit-placeholder text-sn-grey caret-black': isBlank,
           'border-b-sn-delete-red': error,
           'border-b-sn-science-blue': !error,
@@ -33,8 +34,8 @@
     <div
       v-else
       ref="view"
-      class="grid sci-cursor-edit leading-5 border-0 py-1 outline-none border-solid border-y border-transparent"
-      :class="{ 'text-sn-grey font-normal': isBlank, 'whitespace-pre-line': !singleLine }"
+      class="grid sci-cursor-edit leading-5 border-0 outline-none border-solid border-y border-transparent"
+      :class="{ 'text-sn-grey font-normal': isBlank, 'whitespace-pre-line py-1': !singleLine }"
       @click="enableEdit($event)"
     >
       <span :class="{'truncate': singleLine }" v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
@@ -92,6 +93,11 @@
       }
     },
     watch: {
+      value(newVal, oldVal) {
+        if (newVal !== oldVal) {
+          this.newValue = newVal
+        }
+      },
       editing() {
         this.refreshTexareaHeight()
       },
@@ -107,7 +113,10 @@
     },
     computed: {
       isBlank() {
-        return this.newValue.length === 0;
+        if (typeof this.newValue === 'string') {
+          return this.newValue.trim().length === 0;
+        }
+        return true; // treat as blank for non-string values
       },
       isContentDefault() {
         return this.newValue === this.defaultValue;
@@ -152,8 +161,11 @@
         this.$emit('blur');
         if (this.allowBlank || !this.isBlank) {
           this.$nextTick(this.update);
-        } else {
-          this.$emit('delete');
+        } else if (this.isBlank) {
+          this.newValue = this.value || '';
+        }
+        else {
+          this.$emit('delete')
         }
       },
       focus() {

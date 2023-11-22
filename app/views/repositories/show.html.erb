@@ -73,12 +73,12 @@
            locals: { repository: @repository } %>
 
 <%= render partial: 'repository_columns/manage_column_modal', locals: { my_module_page: false } %>
-<%= render partial: "repository_stock_values/manage_modal" %>
 <%= render partial: "toolbar_buttons" %>
 <%= render partial: "assign_items_to_task_modal" %>
 
 <%= render partial: 'repository_filters' %>
 <%= render partial: 'save_repository_filter_modal' %>
+<%= render partial: 'shared/manage_stock_value_modal' %>
 
 
 <%= javascript_include_tag 'vue_components_action_toolbar' %>

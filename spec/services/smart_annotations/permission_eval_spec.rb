@@ -6,7 +6,7 @@ describe SmartAnnotations::PermissionEval do
   let(:subject) { described_class }
   let(:user) { create :user }
   let(:another_user) { create :user }
-  let(:team) { create :team, created_by: user }
+  let(:team) { create :team, :change_user_team, created_by: user }
   let(:another_team) { create :team }
   let!(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
   let!(:team_assignment) { create_user_assignment(team, owner_role, user) }

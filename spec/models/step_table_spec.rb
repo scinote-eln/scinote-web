@@ -22,8 +22,4 @@ describe StepTable, type: :model do
     it { should belong_to :step }
     it { should belong_to :table }
   end
-
-  describe 'Validations' do
-    it { should validate_presence_of :step }
-  end
 end

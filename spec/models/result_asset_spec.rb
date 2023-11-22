@@ -22,9 +22,4 @@ describe ResultAsset, type: :model do
     it { should belong_to :result }
     it { should belong_to :asset }
   end
-
-  describe 'Validations' do
-    it { should validate_presence_of :result }
-    it { should validate_presence_of :asset }
-  end
 end

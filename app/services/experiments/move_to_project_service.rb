@@ -8,9 +8,9 @@ module Experiments
     attr_reader :errors
 
     def initialize(experiment_id:, project_id:, user_id:)
-      @exp = Experiment.find experiment_id
-      @project = Project.find project_id
-      @user = User.find user_id
+      @exp = Experiment.find_by(id: experiment_id)
+      @project = Project.find_by(id: project_id)
+      @user = User.find_by(id: user_id)
       @original_project = @exp&.project
       @errors = {}
     end
