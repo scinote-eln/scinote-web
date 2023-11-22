@@ -9,6 +9,14 @@ Canaid::Permissions.register_for(RepositoryBase) do
       user.teams.include?(repository.team) || repository.shared_with?(user.current_team)
     end
   end
+
+  can :export_repository_stock do |user, repository|
+    if repository.is_a?(Repository)
+      can_read_repository?(user, repository) && repository.has_stock_management?
+    else
+      false
+    end
+  end
 end
 
 Canaid::Permissions.register_for(Repository) do
@@ -97,9 +105,5 @@ Canaid::Permissions.register_for(Repository) do
 
   can :manage_repository_stock do |user, repository|
     RepositoryBase.stock_management_enabled? && can_manage_repository_rows?(user, repository)
-  end
-
-  can :export_repository_stock do |user, repository|
-    can_read_repository?(user, repository) && repository.has_stock_management?
   end
 end
