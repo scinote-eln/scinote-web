@@ -4,7 +4,8 @@ ruby:
 
 eslint:
   enabled: true
-  config_file: app/assets/.eslintrc.json
+  version: 8.1.0
+  config_file: .eslintrc.json
 
 scss:
   config_file: .scss-lint.yml
