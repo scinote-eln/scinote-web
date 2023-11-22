@@ -39,6 +39,9 @@ import { vOnClickOutside } from '@vueuse/components'
 
 export default {
   name: 'RepositorySearchContainer',
+  directives: {
+    'click-outside': vOnClickOutside
+  },
   data() {
     return {
       barcodeSearchOpened: false,

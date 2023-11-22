@@ -68,6 +68,7 @@ window.initRepositoryFilter = () => {
     { id: 'archived_by', name: I18n.t('repositories.table.archived_by'), data_type: 'RepositoryUserValue' },
     { id: 'archived_on', name: I18n.t('repositories.table.archived_on'), data_type: 'RepositoryDateTimeValue' }
   ];
+  const defFilters = JSON.parse(JSON.stringify(DEFAULT_FILTERS));
   const app = createApp({
     data: () => ({
       filters: [],
@@ -124,12 +125,12 @@ window.initRepositoryFilter = () => {
         this.reloadDataTable();
       },
       clearFilters() {
-        this.filters = this.filters
-          .map(filter => {
-            const newFilter = { ...filter };
-            newFilter.data["parameters"] = {};
-            return newFilter;
-          });
+        this.filters.forEach((filter, index) => {
+          const newFilter = { ...filter };
+          newFilter.data['parameters'] = {};
+          newFilter.data['operator'] = defFilters[index].data['operator'];
+          return newFilter;
+        });
         this.filterName = null;
         this.dataTableElement.removeAttr('data-repository-filter-json');
         $('#modalSaveRepositoryTableFilter').data('repositoryTableFilterId', null);

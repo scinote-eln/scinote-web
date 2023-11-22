@@ -23,6 +23,10 @@ module PrefixedIdModel
 
     self::PREFIXED_ID_SQL = "('#{self::ID_PREFIX}' || #{table_name}.id)".freeze
 
+    def self.code(id)
+      "#{self::ID_PREFIX}#{id}"
+    end
+
     def code
       "#{self.class::ID_PREFIX}#{id}"
     end

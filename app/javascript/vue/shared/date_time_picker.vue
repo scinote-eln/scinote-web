@@ -57,7 +57,11 @@
       clearable: { type: Boolean, default: false },
       teleport: { type: Boolean, default: true },
       defaultValue: { type: Date, required: false },
-      placeholder: { type: String }
+      placeholder: { type: String },
+      standAlone: { type: Boolean, default: false, required: false },
+      dateClassName: { type: String, default: '' },
+      timeClassName: { type: String, default: '' },
+      disabled: { type: Boolean, default: false }
     },
     data() {
       return {

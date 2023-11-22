@@ -3,39 +3,32 @@
     <div class="font-inter text-sm font-semibold leading-5 truncate" :title="colName">
       {{ colName }}
     </div>
-    <div v-if="formatted" class="text-sn-dark-grey font-inter text-sm font-normal leading-5 flex">
-      <div>{{ formatted }}</div>
-    </div>
-    <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
-      {{ i18n.t('repositories.item_card.repository_date_time_value.no_date_time') }}
-    </div>
+    <DateTimeRange
+      :editingField="editingField"
+      @setEditingField="$emit('setEditingField', $event)"
+      dateType="dateTime"
+      :colVal="colVal"
+      :colId="colId"
+      :updatePath="updatePath"
+      :canEdit="canEdit"
+    />
   </div>
 </template>
 
 <script>
-export default {
-  name: 'RepositoryDateTimeValue',
-  data() {
-    return {
-      formatted: null,
-      date_formatted: null,
-      time_formatted: null,
-      datetime: null
-    }
-  },
-  props: {
-    data_type: String,
-    colId: Number,
-    colName: String,
-    colVal: Object
-  },
-  created() {
-    if (!this.colVal) return
+  import DateTimeRange from './DateTimeRange.vue';
 
-    this.formatted = this.colVal.formatted
-    this.date_formatted = this.colVal.date_formatted
-    this.time_formatted = this.colVal.time_formatted
-    this.formatdatetimeted = this.colVal.datetime
+  export default {
+    name: 'RepositoryDateTimeValue',
+    components: { DateTimeRange },
+    props: {
+      data_type: String,
+      colId: Number,
+      colName: String,
+      colVal: Object,
+      updatePath: String,
+      editingField: null,
+      canEdit: { type: Boolean, default: false }
+    }
   }
-}
 </script>

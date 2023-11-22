@@ -17,6 +17,8 @@ module RepositoryStockLedgerZipExport
     project
     experiment
     task
+    project_id
+    experiment_id
     task_id
     stock_amount_balance
     stock_balance_unit
@@ -51,14 +53,12 @@ module RepositoryStockLedgerZipExport
 
       if (consumption_type == 'Task' && record.amount.positive?) ||
          (consumption_type == 'Inventory' && record.amount.negative?)
-        consumed_amount = record.amount.abs.to_d
+        consumed_amount = record.amount.abs
         consumed_amount_unit = record.unit
       else
-        added_amount = record.amount.abs.to_d
+        added_amount = record.amount.abs
         added_amount_unit = record.unit
       end
-
-      breadcrumbs_data = Array.new(4, '')
 
       row_data = [
         consumption_type,
@@ -70,23 +70,45 @@ module RepositoryStockLedgerZipExport
         added_amount_unit,
         record.user.full_name,
         I18n.l(record.created_at, format: :full),
-        record.balance.to_d,
+        record.balance,
         record.unit
       ]
-      breadcrumbs_data = Array.new(5)
-      if consumption_type == 'Task'
-        my_module = record.my_module_repository_row&.my_module
-        breadcrumbs_data = [
-          my_module&.experiment&.project&.team&.name,
-          my_module&.experiment&.project&.name,
-          my_module&.experiment&.name,
-          my_module&.name,
-          my_module&.code
-        ]
-      end
+      breadcrumbs_data =
+        if consumption_type == 'Task'
+          build_breadcrumbs(record)
+        else
+          Array.new(7)
+        end
 
       row_data.insert(9, *breadcrumbs_data)
       row_data
+    end
+
+    def build_breadcrumbs(record)
+      if record.my_module_repository_row.present?
+        my_module = record.my_module_repository_row.my_module
+        [
+          my_module.experiment.project.team.name,
+          my_module.experiment.project.name,
+          my_module.experiment.name,
+          my_module.name,
+          my_module.experiment.project.code,
+          my_module.experiment.code,
+          my_module.code
+        ]
+      elsif record.my_module_references.present?
+        [
+          Team.find_by(id: record.my_module_references['team_id'])&.name,
+          nil,
+          nil,
+          nil,
+          Project.code(record.my_module_references['project_id']),
+          Experiment.code(record.my_module_references['experiment_id']),
+          MyModule.code(record.my_module_references['my_module_id'])
+        ]
+      else
+        Array.new(7)
+      end
     end
   end
 end
