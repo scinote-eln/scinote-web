@@ -295,7 +295,7 @@ export default {
   },
   beforeUnmount() {
     delete window.repositoryItemSidebarComponent;
-    document.removeEventListener('click', this.handleDocumentClick);
+    document.removeEventListener('click', this.handleOutsideClick);
   },
   methods: {
     handleOutsideClick(event) {
