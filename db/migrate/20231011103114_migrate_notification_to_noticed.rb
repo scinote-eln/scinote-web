@@ -19,7 +19,7 @@ class MigrateNotificationToNoticed < ActiveRecord::Migration[7.0]
       5 => 'DeliveryNotification',
       7 => 'DeliveryNotification'
     }
-    UserNotification.includes(:notification).find_each do |user_notification|
+    UserNotification.where('created_at > ?', 3.months.ago).includes(:notification).find_each do |user_notification|
       notification = user_notification.notification
 
       new_type = type_mapping[notification.type_of]
