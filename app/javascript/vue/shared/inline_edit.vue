@@ -73,7 +73,8 @@
       smartAnnotation: { type: Boolean, default: false },
       editOnload: { type: Boolean, default: false },
       defaultValue: { type: String, default: '' },
-      singleLine: { type: Boolean, default: true }
+      singleLine: { type: Boolean, default: true },
+      preventLeavingUntilFilled: { type: Boolean, default: false }
     },
     data() {
       return {
@@ -122,7 +123,11 @@
         return this.newValue === this.defaultValue;
       },
       error() {
-        if(!this.allowBlank && this.isBlank) {
+        if (!this.allowBlank && this.isBlank) {
+          if (this.preventLeavingUntilFilled) {
+            this.addPreventFromLeaving(document.body);
+          }
+
           return this.i18n.t('inline_edit.errors.blank', { attribute: this.attributeName })
         }
         if(this.characterLimit && this.newValue.length > this.characterLimit) {
@@ -146,10 +151,25 @@
           )
         }
 
+        this.removePreventFromLeaving(document.body);
         return false
       }
     },
     methods: {
+      removePreventFromLeaving(domEl) {
+        domEl.removeEventListener('click', this.preventClicks, true);
+        domEl.removeEventListener('mousedown', this.preventClicks, true);
+        domEl.removeEventListener('mouseup', this.preventClicks, true);
+      },
+      addPreventFromLeaving(domEl) {
+        domEl.addEventListener('click', this.preventClicks, true);
+        domEl.addEventListener('mousedown', this.preventClicks, true);
+        domEl.addEventListener('mouseup', this.preventClicks, true);
+      },
+      preventClicks(event) {
+        event.stopPropagation();
+        event.preventDefault();
+      },
       handleAutofocus() {
         if (this.autofocus || !this.placeholder && this.isBlank || this.editOnload && this.isBlank) {
           this.enableEdit();
