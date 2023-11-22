@@ -97,7 +97,7 @@
     computed: {
       valueLabel() {
         if (!this.selectedValues.length) return
-
+        if (this.selectedValues.length === 1) return this.options.find(({id}) => id === this.selectedValues[0])?.label
         return `${this.selectedValues.length} ${this.i18n.t('general.selected')}`;
       }
     },
@@ -136,9 +136,7 @@
         if (!this.isOpen) return;
 
         this.isOpen = false;
-        if (this.selectedValues.length) {
-          this.$emit('update', this.selectedValues);
-        }
+        this.$emit('update', this.selectedValues.length ? this.selectedValues : null);
       },
       isSelected(id) {
         return this.selectedValues.includes(id);

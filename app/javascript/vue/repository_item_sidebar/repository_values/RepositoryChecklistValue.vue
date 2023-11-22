@@ -3,12 +3,11 @@
     <div class="font-inter text-sm font-semibold leading-5 truncate" :title="colName">
       {{ colName }}
     </div>
-    <div v-if="checklistItems.length > 0">
+    <div v-if="canEdit">
       <checklist-select
-        v-if="canEdit"
         @change="changeSelected"
         @update="update"
-        :initialSelectedValues="colVal?.map(item => item.value)"
+        :initialSelectedValues="selectedValues"
         :withButtons="true"
         :withEditCursor="true"
         ref="ChecklistSelector"
@@ -18,19 +17,19 @@
         className="h-[38px] !pl-3"
         optionsClassName="max-h-[300px]"
       ></checklist-select>
-      <div v-else
-           class="text-sn-dark-grey font-inter text-sm font-normal leading-5 w-[370px] overflow-x-auto flex flex-wrap gap-1">
-        <span v-for="(checklistItem, index) in checklistItems"
-              :key="index"
-              :id="`checklist-item-${index}`"
-              class="flex w-fit break-words mr-1">
-          {{
-            index + 1 === checklistItems.length
-              ? checklistItem?.label
-              : `${checklistItem?.label} |`
-          }}
-        </span>
-      </div>
+    </div>
+    <div v-else-if="selectedChecklistItems?.length > 0"
+         class="text-sn-dark-grey font-inter text-sm font-normal leading-5 w-[370px] overflow-x-auto flex flex-wrap gap-1">
+      <span v-for="(checklistItem, index) in selectedChecklistItems"
+            :key="index"
+            :id="`checklist-item-${index}`"
+            class="flex w-fit break-words mr-1">
+        {{
+          index + 1 === selectedChecklistItems.length
+            ? checklistItem?.label
+            : `${checklistItem?.label} |`
+        }}
+      </span>
     </div>
     <div v-else
          class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
@@ -62,11 +61,16 @@ export default {
       id: null,
       isLoading: false,
       checklistItems: [],
-      selectedChecklistItems: []
+      selectedChecklistItems: [],
+      selectedValues: []
     };
   },
   mounted() {
     this.fetchChecklistItems();
+    if(this.colVal) {
+      this.selectedChecklistItems = Array.isArray(this.colVal) ? this.colVal : [this.colVal];
+      this.selectedValues = this.selectedChecklistItems.map(item => item?.value);
+    }
   },
   methods: {
     fetchChecklistItems() {
