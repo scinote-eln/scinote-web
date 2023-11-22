@@ -478,6 +478,9 @@ GEM
     omniauth_openid_connect (0.7.1)
       omniauth (>= 1.9, < 3)
       openid_connect (~> 2.2)
+    omniauth-saml (2.1.0)
+      omniauth (~> 2.0)
+      ruby-saml (~> 1.12)
     openid_connect (2.2.0)
       activemodel
       attr_required (>= 1.0.0)
@@ -646,6 +649,9 @@ GEM
       rubocop (>= 1.33.0, < 2.0)
     ruby-progressbar (1.13.0)
     ruby-rc4 (0.1.5)
+    ruby-saml (1.16.0)
+      nokogiri (>= 1.13.10)
+      rexml
     ruby-vips (2.1.4)
       ffi (~> 1.12)
     ruby2_keywords (0.0.5)
@@ -815,6 +821,7 @@ DEPENDENCIES
   omniauth-linkedin-oauth2
   omniauth-okta!
   omniauth-rails_csrf_protection (~> 1.0)
+  omniauth-saml
   omniauth_openid_connect
   overcommit
   pg (~> 1.5)
