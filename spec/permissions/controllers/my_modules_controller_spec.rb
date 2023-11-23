@@ -23,12 +23,11 @@ describe MyModulesController, type: :controller do
     new: { id: 1, experiment_id: 1 },
     create: { id: 1, experiment_id: 1 },
     permissions: { id: 1 },
-    results: { id: 1 },
     archive: { id: 1 },
     restore_group: { id: 1 },
     update_state: { id: 1 },
     canvas_dropdown_menu: { id: 1 }
-  }, [:set_breadcrumbs_items]
+  }, %i(set_breadcrumbs_items)
 
   login_user
 
@@ -92,12 +91,6 @@ describe MyModulesController, type: :controller do
     end
 
     it_behaves_like "a controller action with permissions checking", :get, :protocols do
-      let(:testable) { my_module }
-      let(:permissions) { [MyModulePermissions::READ] }
-      let(:action_params) { { id: my_module.id } }
-    end
-
-    it_behaves_like "a controller action with permissions checking", :get, :results do
       let(:testable) { my_module }
       let(:permissions) { [MyModulePermissions::READ] }
       let(:action_params) { { id: my_module.id } }

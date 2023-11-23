@@ -13,6 +13,10 @@ describe ReportsController, type: :controller do
                     name: 'test repot A1', description: 'test description A1'
   end
 
+  before(:all) do
+    MyModuleStatusFlow.ensure_default
+  end
+
   describe 'POST create' do
     context 'in JSON format' do
       let(:action) { post :create, params: params, format: :json }

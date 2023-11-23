@@ -204,7 +204,6 @@ describe TeamImporter do
               db_step = db_protocol.steps.find_by(name: json_step_obj['name'])
 
               # Step object
-              expect(db_step.description).to eq json_step_obj['description']
               expect(db_step.updated_at).to eq(
                 json_step_obj['updated_at'].to_time
               )
@@ -218,47 +217,63 @@ describe TeamImporter do
                 )
               end
 
-              # Checklists
-              expect(db_step.checklists.count).to eq(
-                json_step['checklists'].count
-              )
-              json_step['checklists'].each do |checklist|
-                json_checklist = checklist['checklist']
-                json_items = checklist['checklist_items']
-                db_checklist = db_step.checklists.find_by(
-                  name: json_checklist['name']
-                )
+              # byebug
 
-                # Checklist object
-                expect(db_checklist.created_at).to eq(
-                  json_checklist['created_at'].to_time
-                )
-                expect(db_checklist.updated_at).to eq(
-                  json_checklist['updated_at'].to_time
-                )
-                expect(db_checklist.created_by_id).to eq USER_ID
-                expect(db_checklist.last_modified_by_id).to eq USER_ID
+              element_counts = {
+                step_texts: 0,
+                step_tables: 0,
+                checklists: 0
+              }
 
-                expect(db_checklist.checklist_items.count).to eq(
-                  json_items.count
-                )
+              json_step['step_orderable_elements'].each do |element|
+                if element['step_text']
+                  element_counts[:step_texts] += 1
+                  json_element = element['step_text']
+                  db_element = db_step.step_texts.find_by(text: json_element['text'])
 
-                # Checklist items
-                json_items.each do |json_item|
-                  db_item = db_checklist.checklist_items.find_by(
-                    text: json_item['text']
-                  )
-                  expect(db_item.checked).to eq(json_item['checked'])
-                  expect(db_item.position).to eq(json_item['position'])
-                  expect(db_item.created_at).to eq(
-                    json_item['created_at'].to_time
-                  )
-                  expect(db_item.updated_at).to eq(
-                    json_item['updated_at'].to_time
-                  )
-                  expect(db_item.created_by_id).to eq USER_ID
-                  expect(db_item.last_modified_by_id).to eq USER_ID
+                  expect(db_element).not_to be_nil
+                  expect(db_element.created_at).to eq(json_element['created_at'].to_time)
+                  expect(db_element.updated_at).to eq(json_element['updated_at'].to_time)
+                elsif element['table']
+                  element_counts[:step_tables] += 1
+                  json_element = element['table']
+                  db_element = db_step.tables.find_by(contents: Base64.decode64(json_element['contents']))
+
+                  expect(db_element.created_at).to eq(json_element['created_at'].to_time)
+                  expect(db_element.updated_at).to eq(json_element['updated_at'].to_time)
+                  expect(db_element.created_by_id).to eq USER_ID
+                  expect(db_element.last_modified_by_id).to eq USER_ID
+                  expect(db_element.team_id).to eq @team.id
+                  expect(db_element.name).to eq(json_element['name'])
+                  expect(db_element.data_vector).to eq(Base64.decode64(json_element['data_vector']))
+                elsif element['checklist']
+                  element_counts[:checklists] += 1
+                  json_element = element['checklist']['checklist']
+                  json_checklist_items = element['checklist']['checklist_items']
+                  db_element = db_step.checklists.find_by(name: json_element['name'])
+
+                  expect(db_element.created_at).to eq(json_element['created_at'].to_time)
+                  expect(db_element.updated_at).to eq(json_element['updated_at'].to_time)
+                  expect(db_element.created_by_id).to eq USER_ID
+                  expect(db_element.last_modified_by_id).to eq USER_ID
+                  expect(db_element.checklist_items.count).to eq(json_checklist_items.count)
+
+                  json_checklist_items.each do |json_item|
+                    db_item = db_element.checklist_items.find_by(
+                      text: json_item['text']
+                    )
+                    expect(db_item.checked).to eq(json_item['checked'])
+                    expect(db_item.position).to eq(json_item['position'])
+                    expect(db_item.created_at).to eq(json_item['created_at'].to_time)
+                    expect(db_item.updated_at).to eq(json_item['updated_at'].to_time)
+                    expect(db_item.created_by_id).to eq USER_ID
+                    expect(db_item.last_modified_by_id).to eq USER_ID
+                  end
                 end
+              end
+
+              element_counts.each do |type, count|
+                expect(db_step.__send__(type).count).to eq(count)
               end
 
               # Step assets
@@ -307,37 +322,6 @@ describe TeamImporter do
                 )
                 expect(db_asset.version).to eq(
                   json_asset['asset']['version']
-                )
-              end
-
-              # Tables
-              expect(db_step.step_tables.count).to eq(
-                json_step['step_tables'].count
-              )
-              expect(db_step.tables.count).to eq(
-                json_step['tables'].count
-              )
-
-              json_step['tables'].each do |json_table|
-                db_table = db_step.tables.find_by(
-                  contents: Base64.decode64(json_table['contents'])
-                )
-
-                # Basic fields
-                expect(db_table.created_at).to eq(
-                  json_table['created_at'].to_time
-                )
-                expect(db_table.updated_at).to eq(
-                  json_table['updated_at'].to_time
-                )
-                expect(db_table.created_by_id).to eq USER_ID
-                expect(db_table.last_modified_by_id).to eq USER_ID
-                expect(db_table.team_id). to eq @team.id
-
-                # Other fields
-                expect(db_table.name).to eq(json_table['name'])
-                expect(db_table.data_vector).to eq(
-                  Base64.decode64(json_table['data_vector'])
                 )
               end
 

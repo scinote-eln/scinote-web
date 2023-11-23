@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_22_125004) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -104,6 +104,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
     t.index ["created_by_id"], name: "index_assets_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_assets_on_last_modified_by_id"
     t.index ["team_id"], name: "index_assets_on_team_id"
+  end
+
+  create_table "bmt_filters", force: :cascade do |t|
+    t.string "name", null: false
+    t.json "filters", null: false
+    t.bigint "created_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_bmt_filters_on_created_by_id"
   end
 
   create_table "checklist_items", force: :cascade do |t|
@@ -255,6 +264,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
     t.index ["team_id"], name: "index_label_templates_on_team_id"
   end
 
+  create_table "logs", force: :cascade do |t|
+    t.integer "action_type", null: false
+    t.string "user_name"
+    t.jsonb "details", default: {}, null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.index ["created_at", "action_type"], name: "index_logs_on_created_at_and_action_type"
+  end
+
   create_table "my_module_groups", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -363,6 +381,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
     t.bigint "changing_from_my_module_status_id"
     t.jsonb "last_transition_error"
     t.integer "provisioning_status"
+    t.boolean "due_date_notification_sent", default: false
     t.index "(('TA'::text || id)) gin_trgm_ops", name: "index_my_modules_on_my_module_code", using: :gin
     t.index "trim_html_tags((description)::text) gin_trgm_ops", name: "index_my_modules_on_description", using: :gin
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_my_modules_on_name", using: :gin
@@ -649,6 +668,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
     t.index ["repository_column_id"], name: "index_repository_cells_on_repository_column_id"
     t.index ["repository_row_id", "repository_column_id"], name: "index_repository_cells_on_repository_row_and_repository_column", unique: true
     t.index ["repository_row_id"], name: "index_repository_cells_on_repository_row_id"
+    t.index ["value_type", "value_id"], name: "index_repository_cells_on_value"
     t.index ["value_type", "value_id"], name: "index_repository_cells_on_value_type_and_value_id"
   end
 
@@ -723,6 +743,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
     t.bigint "last_modified_by_id", null: false
     t.string "type"
     t.datetime "data_dup", precision: nil
+    t.boolean "notification_sent", default: false
     t.index "((data)::date)", name: "index_repository_date_time_values_on_data_as_date", where: "((type)::text = 'RepositoryDateValue'::text)"
     t.index "((data)::time without time zone)", name: "index_repository_date_time_values_on_data_as_time", where: "((type)::text = 'RepositoryTimeValue'::text)"
     t.index ["data"], name: "index_repository_date_time_values_on_data_as_date_time", where: "((type)::text = 'RepositoryDateTimeValue'::text)"
@@ -739,6 +760,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "unit"
+    t.jsonb "my_module_references"
     t.index ["reference_type", "reference_id"], name: "index_repository_ledger_records_on_reference"
     t.index ["repository_stock_value_id"], name: "index_repository_ledger_records_on_repository_stock_value_id"
     t.index ["user_id"], name: "index_repository_ledger_records_on_user_id"
@@ -956,6 +978,75 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
     t.index ["user_id"], name: "index_results_on_user_id"
   end
 
+  create_table "scinote_ai_manuscripts", force: :cascade do |t|
+    t.bigint "user_id"
+    t.text "job_id", null: false
+    t.text "keywords", null: false
+    t.text "doi_numbers", null: false
+    t.jsonb "request_json", default: "{}", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.index ["user_id"], name: "index_scinote_ai_manuscripts_on_user_id"
+  end
+
+  create_table "scinote_common_labviva_orders_lists", force: :cascade do |t|
+    t.string "order_id"
+    t.integer "user_id"
+    t.jsonb "order"
+  end
+
+  create_table "scinote_common_repository_labviva_values", force: :cascade do |t|
+    t.string "data"
+    t.string "lvid"
+    t.string "sku"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.integer "created_by_id", null: false
+    t.integer "last_modified_by_id", null: false
+  end
+
+  create_table "scinote_enterprise_electronic_signature_requests", force: :cascade do |t|
+    t.string "type"
+    t.integer "group"
+    t.integer "reminder_count", default: 0, null: false
+    t.bigint "user_id"
+    t.string "signable_type"
+    t.bigint "signable_id"
+    t.bigint "fulfilled_by_id"
+    t.bigint "created_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "fulfillable", default: true
+    t.bigint "user_role_id"
+    t.index ["fulfilled_by_id"], name: "electronic_signature_requests_on_fulfilled_by_id"
+    t.index ["signable_type", "signable_id"], name: "electronic_signature_requests_on_signable_type_and_signable_id"
+    t.index ["user_id"], name: "electronic_signature_requests_on_user_id"
+    t.index ["user_role_id"], name: "index_electronic_signature_requests_on_user_role_id"
+  end
+
+  create_table "scinote_enterprise_electronic_signatures", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "user_full_name", null: false
+    t.string "user_role", null: false
+    t.string "user_email", null: false
+    t.text "comment"
+    t.integer "action"
+    t.integer "type_of_signature"
+    t.integer "reference_object_id"
+    t.integer "reference_object_name"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.boolean "revoked", default: false
+    t.bigint "my_module_status_id"
+    t.string "signable_type"
+    t.bigint "signable_id"
+    t.bigint "revoked_by_id"
+    t.index ["created_at"], name: "index_scinote_enterprise_electronic_signatures_on_created_at"
+    t.index ["my_module_status_id"], name: "index_electronic_signatures_on_my_module_status_id"
+    t.index ["signable_type", "signable_id"], name: "electronic_signatures_signable_fkey"
+    t.index ["user_id"], name: "index_scinote_enterprise_electronic_signatures_on_user_id"
+  end
+
   create_table "settings", force: :cascade do |t|
     t.text "type", null: false
     t.jsonb "values", default: {}, null: false
@@ -1032,6 +1123,22 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
     t.index ["position"], name: "index_steps_on_position"
     t.index ["protocol_id"], name: "index_steps_on_protocol_id"
     t.index ["user_id"], name: "index_steps_on_user_id"
+  end
+
+  create_table "system_notifications", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.string "modal_title"
+    t.text "modal_body"
+    t.boolean "show_on_login", default: false
+    t.datetime "source_created_at", precision: nil
+    t.bigint "source_id"
+    t.datetime "last_time_changed_at", precision: nil, null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.index ["last_time_changed_at"], name: "index_system_notifications_on_last_time_changed_at"
+    t.index ["source_created_at"], name: "index_system_notifications_on_source_created_at"
+    t.index ["source_id"], name: "index_system_notifications_on_source_id", unique: true
   end
 
   create_table "tables", force: :cascade do |t|
@@ -1179,6 +1286,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
     t.index ["last_modified_by_id"], name: "index_user_roles_on_last_modified_by_id"
   end
 
+  create_table "user_system_notifications", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "system_notification_id"
+    t.datetime "seen_at", precision: nil
+    t.datetime "read_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.index ["read_at"], name: "index_user_system_notifications_on_read_at"
+    t.index ["seen_at"], name: "index_user_system_notifications_on_seen_at"
+    t.index ["system_notification_id"], name: "index_user_system_notifications_on_system_notification_id"
+    t.index ["user_id", "system_notification_id"], name: "index_user_system_notifications_on_user_and_notification_id", unique: true
+    t.index ["user_id"], name: "index_user_system_notifications_on_user_id"
+  end
+
   create_table "user_teams", force: :cascade do |t|
     t.integer "role", default: 1, null: false
     t.bigint "user_id", null: false
@@ -1240,6 +1361,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
+  create_table "versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.string "event", null: false
+    t.string "whodunnit"
+    t.text "object"
+    t.text "object_changes"
+    t.integer "team_id"
+    t.datetime "created_at", precision: nil
+    t.string "item_subtype"
+    t.index ["item_type", "item_id", "team_id"], name: "index_versions_on_item_type_and_item_id_and_team_id"
+  end
+
   create_table "view_states", force: :cascade do |t|
     t.jsonb "state"
     t.bigint "user_id"
@@ -1248,6 +1382,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["user_id"], name: "index_view_states_on_user_id"
+    t.index ["viewable_type", "viewable_id"], name: "index_view_states_on_viewable"
     t.index ["viewable_type", "viewable_id"], name: "index_view_states_on_viewable_type_and_viewable_id"
   end
 
@@ -1303,6 +1438,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
   add_foreign_key "asset_text_data", "assets"
   add_foreign_key "assets", "users", column: "created_by_id"
   add_foreign_key "assets", "users", column: "last_modified_by_id"
+  add_foreign_key "bmt_filters", "users", column: "created_by_id"
   add_foreign_key "checklist_items", "checklists"
   add_foreign_key "checklist_items", "users", column: "created_by_id"
   add_foreign_key "checklist_items", "users", column: "last_modified_by_id"
@@ -1434,6 +1570,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
   add_foreign_key "results", "users", column: "archived_by_id"
   add_foreign_key "results", "users", column: "last_modified_by_id"
   add_foreign_key "results", "users", column: "restored_by_id"
+  add_foreign_key "scinote_ai_manuscripts", "users"
+  add_foreign_key "scinote_common_repository_labviva_values", "users", column: "created_by_id"
+  add_foreign_key "scinote_common_repository_labviva_values", "users", column: "last_modified_by_id"
+  add_foreign_key "scinote_enterprise_electronic_signature_requests", "scinote_enterprise_electronic_signatures", column: "fulfilled_by_id"
+  add_foreign_key "scinote_enterprise_electronic_signatures", "scinote_enterprise_electronic_signatures", column: "revoked_by_id"
   add_foreign_key "shareable_links", "teams"
   add_foreign_key "shareable_links", "users", column: "created_by_id"
   add_foreign_key "shareable_links", "users", column: "last_modified_by_id"
@@ -1468,6 +1609,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
   add_foreign_key "user_projects", "users", column: "assigned_by_id"
   add_foreign_key "user_roles", "users", column: "created_by_id"
   add_foreign_key "user_roles", "users", column: "last_modified_by_id"
+  add_foreign_key "user_system_notifications", "system_notifications"
   add_foreign_key "user_teams", "teams"
   add_foreign_key "user_teams", "users"
   add_foreign_key "user_teams", "users", column: "assigned_by_id"
@@ -1477,4 +1619,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_103114) do
   add_foreign_key "wopi_actions", "wopi_apps"
   add_foreign_key "wopi_apps", "wopi_discoveries"
   add_foreign_key "zip_exports", "users"
+
+  create_view "datatables_teams", sql_definition: <<-SQL
+      SELECT teams.id,
+      teams.name,
+      user_teams.role,
+      ( SELECT count(*) AS count
+             FROM user_teams user_teams_1
+            WHERE (user_teams_1.team_id = teams.id)) AS members,
+          CASE
+              WHEN (teams.created_by_id = user_teams.user_id) THEN false
+              ELSE true
+          END AS can_be_left,
+      user_teams.id AS user_team_id,
+      user_teams.user_id
+     FROM (teams
+       JOIN user_teams ON ((teams.id = user_teams.team_id)));
+  SQL
 end

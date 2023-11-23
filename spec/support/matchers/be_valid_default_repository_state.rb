@@ -16,7 +16,7 @@ RSpec::Matchers.define :be_valid_default_repository_table_state do |nr_of_cols|
       'columns',
       'start' => 0,
       'length' => 10,
-      'order' => [[2, 'asc']],
+      'order' => [[3, 'asc']],
       'assigned' => 'assigned',
       'ColReorder' => cols_array
     )

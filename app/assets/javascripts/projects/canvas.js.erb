@@ -763,6 +763,8 @@ function bindEditDueDateAjax() {
     editDueDateModalBody.html(data.html);
     editDueDateModalTitle.text(data.title);
 
+    window.initDateTimePickerComponent('#date-time-picker');
+
     // Add listener to form inside modal
     editDueDateModalBody.find("form")
     .on("ajax:success", function(ev2, data2, status2) {

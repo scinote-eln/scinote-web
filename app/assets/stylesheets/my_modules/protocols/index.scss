@@ -248,6 +248,10 @@
       top: 0;
       width: 100%;
 
+      .dp__input_wrap {
+        opacity: 0;
+      }
+
       #calendarDueDate {
         opacity: 0;
       }

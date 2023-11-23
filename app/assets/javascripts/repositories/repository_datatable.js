@@ -501,7 +501,7 @@ var RepositoryDatatable = (function(global) {
 
   function addRepositorySearch() {
     $(`<div id="inventorySearchComponent">
-      <repository_search_container/>
+      <repository-search-container/>
     </div>`).appendTo('.repository-search-container');
     initRepositorySearch();
   }
@@ -667,7 +667,7 @@ var RepositoryDatatable = (function(global) {
         visible: true,
         render: function(data, type, row) {
           return "<a href='" + row.recordInfoUrl + "'"
-                 + "class='record-info-link'>" + data + '</a>';
+                 + "class='record-info-link' data-e2e='e2e-TL-invInventory-Item-" + row.DT_RowId + "'>" + data + '</a>';
         }
       }, {
         // Added on column
@@ -791,6 +791,7 @@ var RepositoryDatatable = (function(global) {
       fnInitComplete: function() {
         window.initActionToolbar();
         window.actionToolbarComponent.setBottomOffset(68);
+
         initHeaderTooltip();
         disableCheckboxToggleOnCheckboxPreview();
 

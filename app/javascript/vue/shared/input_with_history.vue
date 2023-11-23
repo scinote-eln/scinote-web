@@ -7,6 +7,7 @@
              :placeholder="placeholder"
              :id="id"
              type="text"
+             autocomplete="off"
              class="sci-input-field"
              @focus="showHistory"
              @blur="hideHistory"

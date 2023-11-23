@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe "Api::Service::ExperimentsController", type: :request do
   before :all do
     @user = create(:user)
-    @team = create(:team, created_by: @user)
+    @team = create(:team, :change_user_team, created_by: @user)
     @valid_project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @team)
     @unaccessible_project = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @team)
     @unaccessible_project.user_assignments.destroy_all

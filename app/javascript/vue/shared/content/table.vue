@@ -86,6 +86,7 @@
       return {
         editingName: false,
         editingTable: false,
+        editingCell: false,
         tableObject: null,
         nameModalOpen: false,
         reloadHeader: 0,
@@ -125,6 +126,12 @@
         return menu;
       }
     },
+    created() {
+      window.addEventListener('beforeunload', this.showSaveWarning);
+    },
+    beforeUnmount() {
+      window.removeEventListener('beforeunload', this.showSaveWarning);
+    },
     updated() {
       if(!this.updatingTableData) this.loadTableData();
     },
@@ -140,6 +147,12 @@
       }
     },
     methods: {
+      showSaveWarning(e) {
+        if (this.editingCell) {
+          e.preventDefault();
+          e.returnValue = '';
+        }
+      },
       enableTableEdit() {
         if(this.locked) {
           return;
@@ -263,6 +276,24 @@
             if (r === r2 && c === c2) {
               this.selectedCell = { row: r, col: c };
             }
+            this.updateTable();
+          },
+          afterChange: () => {
+            if (this.editingTable == false) return;
+            this.updatingTableData = true;
+
+            this.$nextTick(() => {
+              this.update(() => this.editingCell = false);
+            });
+          },
+          beforeKeyDown: (e) => {
+            if (e.keyCode === 27) { // esc
+              this.editingCell = false;
+              return;
+            }
+          },
+          afterBeginEditing: (e) => {
+            this.editingCell = true;
           }
         });
         this.$nextTick(this.tableObject.render);

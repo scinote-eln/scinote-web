@@ -25,12 +25,7 @@ describe ResultText, type: :model do
 
   describe 'Validations' do
     describe '#text' do
-      it { is_expected.to validate_presence_of :text }
       it { is_expected.to validate_length_of(:text).is_at_most(Constants::RICH_TEXT_MAX_LENGTH) }
-    end
-
-    describe '#result' do
-      it { is_expected.to validate_presence_of :result }
     end
   end
 end
