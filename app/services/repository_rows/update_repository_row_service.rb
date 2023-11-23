@@ -27,6 +27,7 @@ module RepositoryRows
 
           if @cell.present? && value.blank?
             @cell.destroy!
+            @cell = nil
             @record_updated = true
             next
           elsif @cell.blank? && value.present?
