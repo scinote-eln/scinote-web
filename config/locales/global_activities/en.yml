@@ -316,6 +316,9 @@ en:
       result_text_moved_html: "%{user} moved text <strong>%{text_name}</strong> from result %{result_original} to result %{result_destination}."
       result_table_moved_html: "%{user} moved table <strong>%{table_name}</strong> from result %{result_original} to result %{result_destination}."
       move_chemical_structure_on_result_html: "%{user} moved chemical structure <strong>%{file}</strong> from result %{result_original} to result %{result_destination}."
+      edit_task_step_file_locally_html: "%{user} locally edited file %{file} on protocol's step %{step_position_original} %{step} on task %{my_module}"
+      edit_protocol_template_file_locally_html: "%{user} locally edited file %{file} on protocol's step %{step_position_original} %{step} with SciNote Edit in Protocol repository"
+      edit_task_result_file_locally_html: "%{user} locally edited file %{file} on result %{result}"
     activity_name:
       create_project: "Project created"
       rename_project: "Project renamed"
@@ -586,6 +589,9 @@ en:
       result_text_moved: "Result text moved"
       result_table_moved: "Result table moved"
       move_chemical_structure_on_result: "Chemical structure on result moved"
+      edit_task_step_file_locally: "File on task step edited locally"
+      edit_protocol_template_file_locally: "File on protocol templates edited locally"
+      edit_task_result_file_locally: "File on task result edited locally"
 
     activity_group:
       projects: "Projects"

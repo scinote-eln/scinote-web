@@ -35,11 +35,54 @@ class AssetSyncController < ApplicationController
     @asset.file.attach(io: request.body, filename: @asset.file.filename)
     @asset.touch
 
+    log_activity
+
     render json: AssetSyncTokenSerializer.new(@asset_sync_token).as_json
   end
 
   def api_url
     render plain: Constants::ASSET_SYNC_URL
+  end
+
+  def log_activity
+    assoc ||= @asset.step
+    assoc ||= @asset.result
+
+    case assoc
+    when Step
+      if assoc.protocol.in_module?
+        log_step_activity(
+          :edit_task_step_file_locally,
+          assoc,
+          assoc.my_module.project,
+          my_module: assoc.my_module.id,
+          file: @asset.file_name,
+          user: current_user.id,
+          step_position_original: @asset.step.position + 1,
+          step: assoc.id
+        )
+      else
+        log_step_activity(
+          :edit_protocol_template_file_locally,
+          assoc,
+          nil,
+          {
+            file: @asset.file_name,
+            user: current_user.id,
+            step_position_original: @asset.step.position + 1,
+            step: assoc.id
+          }
+        )
+      end
+    when Result
+      log_result_activity(
+        :edit_task_result_file_locally,
+        assoc,
+        file: @asset.file_name,
+        user: current_user.id,
+        result: Result.first.id
+      )
+    end
   end
 
   # private
@@ -73,5 +116,31 @@ class AssetSyncController < ApplicationController
     @current_user = @asset_sync_token.user
 
     head :forbidden unless can_manage_asset?(@asset)
+  end
+
+  def log_step_activity(type_of, step, project = nil, message_items = {})
+    default_items = { step: step.id,
+                      step_position: { id: step.id, value_for: 'position_plus_one' } }
+    message_items = default_items.merge(message_items)
+
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: User.first,
+            subject: step.protocol,
+            team: step.protocol.team,
+            project: project,
+            message_items: message_items)
+  end
+
+  def log_result_activity(type_of, result, message_items)
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: result,
+            team: result.my_module.team,
+            project: result.my_module.project,
+            message_items: {
+              result: result.id
+            }.merge(message_items))
   end
 end
