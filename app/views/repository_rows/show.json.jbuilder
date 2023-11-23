@@ -57,6 +57,12 @@ json.custom_columns do
                 {
                   options_path: items_repository_repository_columns_checklist_column_path(@repository, repository_column)
                 }
+              when 'RepositoryNumberValue'
+                {
+                  decimals: repository_column.metadata.fetch(
+                    'decimals', Constants::REPOSITORY_NUMBER_TYPE_DEFAULT_DECIMALS
+                  ).to_i
+                }
               else
                 {
                   options_path: ''

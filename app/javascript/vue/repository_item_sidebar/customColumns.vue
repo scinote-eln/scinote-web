@@ -15,6 +15,7 @@
         :updatePath="updatePath"
         :optionsPath="column.options_path"
         :inArchivedRepositoryRow="inArchivedRepositoryRow"
+        :decimals="column.decimals"
         :canEdit="permissions.can_manage && !inArchivedRepositoryRow"
         :editingField="editingField"
         @setEditingField="editingField = $event"
