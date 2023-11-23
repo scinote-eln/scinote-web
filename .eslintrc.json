@@ -21,6 +21,20 @@
       {
         "beforeLineComment": false
       }
+    ],
+    "max-len": [
+      "error",
+      {
+        "code": 120
+      }
+    ],
+    "vue/max-len": [
+      "error",
+      {
+        "code": 120,
+        "template": 240,
+        "tabWidth": 2
+      }
     ]
   },
   "globals": {

@@ -1,12 +1,12 @@
 <template>
   <div class="date-time-picker grow">
     <VueDatePicker
+      ref="datetimePicker"
       :class="{
         'only-time': mode == 'time',
       }"
       v-model="compDatetime"
       :teleport="teleport"
-      :text-input="true"
       :no-today="true"
       :clearable="clearable"
       :format="format"
@@ -15,6 +15,7 @@
       :auto-apply="true"
       :partial-flow="true"
       :markers="markers"
+      week-start="0"
       :enable-time-picker="mode == 'datetime'"
       :time-picker="mode == 'time'"
       :placeholder="placeholder" >
@@ -90,18 +91,25 @@
     watch: {
       defaultValue: function () {
         this.datetime = this.defaultValue;
-        this.time = {
-          hours: this.defaultValue ? this.defaultValue.getHours() : 0,
-          minutes: this.defaultValue ? this.defaultValue.getMinutes() : 0
+        if (this.defaultValue) {
+          this.time = {
+            hours: this.defaultValue.getHours(),
+            minutes: this.defaultValue.getMinutes()
+          }
         }
       },
       datetime: function () {
         if (this.mode == 'time') {
 
+          this.time = null;
+
+          if (this.datetime) {
           this.time = {
-            hours: this.datetime ? this.datetime.getHours() : 0,
-            minutes: this.datetime ? this.datetime.getMinutes() : 0
+            hours: this.datetime.getHours(),
+            minutes: this.datetime.getMinutes()
           }
+        }
+
           return
         }
 
@@ -133,7 +141,10 @@
           newDate.setHours(this.time.hours);
           newDate.setMinutes(this.time.minutes);
         } else {
-          newDate = null;
+          newDate = {
+            hours: null,
+            minutes: null
+          };
           this.$emit('cleared');
         }
 
@@ -164,6 +175,17 @@
         if (this.mode == 'date') return document.body.dataset.datetimePickerFormatVue
         return `${document.body.dataset.datetimePickerFormatVue} HH:mm`
       }
+    },
+    mounted() {
+      window.addEventListener('resize', this.close);
+    },
+    unmounted() {
+      window.removeEventListener('resize', this.close);
+    },
+    methods: {
+      close() {
+        this.$refs.datetimePicker.closeMenu();
+      },
     }
   }
 </script>

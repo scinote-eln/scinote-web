@@ -103,6 +103,7 @@
         <div v-for="(element, index) in orderedElements" :key="element.id">
           <component
             :is="elements[index].attributes.orderable_type"
+            class="result-element"
             :element.sync="elements[index]"
             :inRepository="false"
             :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
@@ -433,8 +434,8 @@
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         }).done(() => {
           this.$parent.$nextTick(() => {
-            const children = this.$children
-            const lastChild = children[children.length - 1]
+            const children = this.$refs.stepContainer.querySelectorAll(".result-element");
+            const lastChild = children[children.length - 1];
             lastChild.$el.scrollIntoView(false)
             window.scrollBy({
               top: 200,

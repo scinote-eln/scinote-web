@@ -4,6 +4,10 @@
 <% provide(:sidebar_url, sidebar_repositories_path) %>
 <% provide(:sidebar_title, t('sidebar.repositories.sidebar_title')) %>
 
+<% content_for :head do %>
+  <meta id="cache-directive" name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
 <div class="content-pane repository-show <%=  @repository.archived? || params[:archived] ? "archived" : "active" %>" data-table-url="<%= load_table_repository_path(@repository) %>">
   <div id="repository-toolbar" class="content-header">
     <div class="title-row">

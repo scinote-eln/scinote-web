@@ -3,17 +3,9 @@
     <div class="font-inter text-sm font-semibold leading-5 truncate" :title="colName">
       {{ colName }}
     </div>
-    <div v-if="file_name" @mouseover="tooltipShowing = true" @mouseout="tooltipShowing = false"
-      class="w-full cursor-pointer  relative">
-      <a class="w-full inline-block file-preview-link truncate hover:no-underline hover:text-sn-science-blue text-sn-science-blue"
-        :id="modalPreviewLinkId" data-no-turbolink="true" data-id="true" data-status="asset-present"
-        :data-preview-url=this?.preview_url :href=this?.url>
-        {{ file_name }}
-      </a>
-    </div>
     <div class="w-fit absolute right-0 top-7">
       <a v-if="!file_name && (!uploading || error) && canEdit "
-         class="btn-text-link font-normal" @click="openFileChooser"> 
+         class="btn-text-link font-normal" @click="openFileChooser">
         {{ i18n.t('repositories.item_card.repository_asset_value.add_asset') }}
       </a>
     </div>
@@ -37,7 +29,7 @@
       </div>
       <div v-else-if="!error" class="flex flex-row items-center font-inter text-sm font-normal leading-5 justify-between"
         :class="{ 'text-sn-dark-grey': !canEdit, 'text-sn-grey': canEdit }">
-        {{ i18n.t(`repositories.item_card.repository_asset_value.${canEdit ? 'placeholder' : 'no_asset'}`) }}
+        {{ i18n.t('repositories.item_card.repository_asset_value.no_asset') }}
       </div>
     </div>
     <div v-else class="bg-sn-light-grey h-1 w-full rounded-sm">
@@ -124,7 +116,7 @@ export default {
       }
 
       const upload = new ActiveStorage.DirectUpload(file,
-                                                    this.actions.direct_file_upload_path, 
+                                                    this.actions.direct_file_upload_path,
                                                     {
                                                       directUploadWillStoreFileWithXHR: (request) => {
                                                         request.upload.addEventListener('progress', (e) => {
@@ -152,7 +144,7 @@ export default {
           }
         },
         success: (result) => {
-          let assetRepositoryCell = result[this.colId]?.value;
+          let assetRepositoryCell = result?.value;
           this.uploading = false;
 
           if (assetRepositoryCell) {
@@ -165,6 +157,7 @@ export default {
           } else {
             this.file_name = '';
           }
+          if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
         },
         error: () => {
           this.error = I18n.t('repositories.item_card.repository_asset_value.errors.upload_failed_general');

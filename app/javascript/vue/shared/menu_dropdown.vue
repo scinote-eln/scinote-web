@@ -1,5 +1,5 @@
 <template>
-  <div class="relative" v-if="listItems.length > 0" >
+  <div class="relative" v-if="listItems.length > 0" v-click-outside="closeMenu">
     <button ref="openBtn" :class="btnClasses" @click="showMenu = !showMenu">
       <i v-if="btnIcon" :class="btnIcon"></i>
       {{ btnText }}
@@ -15,7 +15,7 @@
             '!mb-0': !openUp,
          }"
          v-if="showMenu"
-         v-click-outside="closeMenu">
+    >
       <span v-for="(item, i) in listItems" :key="i" class="contents">
         <div v-if="item.dividerBefore" class="border-0 border-t border-solid border-sn-light-grey"></div>
         <a :href="item.url" v-if="!item.submenu"

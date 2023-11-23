@@ -29,8 +29,7 @@
     </div>
     <div v-else-if="colVal?.edit"
           ref="textRef"
-          class="text-sn-dark-grey box-content text-sm font-normal leading-5 overflow-y-auto px-4 py-2
-              border-sn-light-grey border border-solid rounded w-[calc(100%-2rem)]]"
+          class="text-sn-dark-grey box-content text-sm font-normal leading-5 overflow-y-auto pr-3 py-2 rounded w-[calc(100%-2rem)]]"
           :class="{
             'max-h-[4rem]': collapsed,
             'max-h-[40rem]': !collapsed
@@ -38,7 +37,7 @@
     >
       {{ colVal?.edit }}
     </div>
-    <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5 px-4 py-2 w-[calc(100%-2rem)]]">
+    <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5 pr-3 py-2 w-[calc(100%-2rem)]]">
       {{ i18n.t("repositories.item_card.repository_text_value.no_text") }}
     </div>
   </div>

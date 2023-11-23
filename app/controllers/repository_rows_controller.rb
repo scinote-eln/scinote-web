@@ -6,11 +6,13 @@ class RepositoryRowsController < ApplicationController
   include RepositoryDatatableHelper
 
   MAX_PRINTABLE_ITEM_NAME_LENGTH = 64
-  before_action :load_repository, except: %i(print rows_to_print print_zpl
+  before_action :load_repository, except: %i(show print rows_to_print print_zpl
                                              validate_label_template_columns actions_toolbar)
   before_action :load_repository_row_print, only: %i(print rows_to_print print_zpl validate_label_template_columns)
+  before_action :load_show_vars, only: %i(show)
   before_action :load_repository_or_snapshot, only: %i(print rows_to_print print_zpl validate_label_template_columns)
-  before_action :load_repository_row, only: %i(update update_cell assigned_task_list active_reminder_repository_cells relationships)
+  before_action :load_repository_row, only: %i(update update_cell assigned_task_list
+                                               active_reminder_repository_cells relationships)
   before_action :check_read_permissions, except: %i(create update delete_records
                                                     copy_records reminder_repository_cells
                                                     delete_records archive_records restore_records
@@ -44,9 +46,6 @@ class RepositoryRowsController < ApplicationController
   end
 
   def show
-    @repository_row = @repository.repository_rows.find_by(id: params[:id])
-    return render_404 unless @repository_row
-
     respond_to do |format|
       format.html do
         redirect_to repository_path(@repository)
@@ -206,20 +205,24 @@ class RepositoryRowsController < ApplicationController
                        repository_column: update_params['repository_cells']&.keys&.first ||
                        I18n.t('repositories.table.row_name') })
       end
-
-      repository_cells = {}
       @reminders_present = @repository_row.repository_cells.with_active_reminder(@current_user).any?
-      @repository_row.repository_cells.each do |repository_cell|
-        repository_cells[repository_cell.repository_column_id] =
-          serialize_repository_cell_value(repository_cell,
-                                          @repository.team,
-                                          @repository,
-                                          reminders_enabled: @reminders_present)
-      end
 
-      render json: repository_cells, status: :ok
+      return render json: { name: @repository_row.name } if update_params['repository_row'].present?
+
+      column = row_cell_update.column
+      cell = row_cell_update.cell
+      data = { value_type: column.data_type, id: column.id, value: nil }
+
+      return render json: data if cell.blank?
+
+      data['hasActiveReminders'] = @reminders_present
+      data.merge! serialize_repository_cell_value(cell,
+                                                  @repository.team,
+                                                  @repository,
+                                                  reminders_enabled: @reminders_present)
+      render json: data
     else
-      render json: row_update.errors, status: :bad_request
+      render json: row_cell_update.errors, status: :bad_request
     end
   end
 
@@ -377,6 +380,15 @@ class RepositoryRowsController < ApplicationController
     @repository ||= RepositorySnapshot.find_by(id: @repository_row&.first&.repository_id)
 
     render_404 unless @repository
+  end
+
+  def load_show_vars
+    @repository = Repository.accessible_by_teams(current_team).find_by(id: params[:repository_id])
+    @repository ||= RepositorySnapshot.find_by(id: params[:repository_id])
+    return render_404 unless @repository
+
+    @repository_row = @repository.repository_rows.eager_load(:repository_columns).find_by(id: params[:id])
+    render_404 unless @repository_row
   end
 
   def load_repository_row

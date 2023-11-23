@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_03_114337) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_23_091358) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -737,6 +737,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_03_114337) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "unit"
+    t.jsonb "my_module_references"
     t.index ["reference_type", "reference_id"], name: "index_repository_ledger_records_on_reference"
     t.index ["repository_stock_value_id"], name: "index_repository_ledger_records_on_repository_stock_value_id"
     t.index ["user_id"], name: "index_repository_ledger_records_on_user_id"

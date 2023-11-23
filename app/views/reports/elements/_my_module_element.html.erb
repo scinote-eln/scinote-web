@@ -67,38 +67,40 @@
     <% end %>
 
 
-    <% if %w(file_results table_results text_results).any? { |k| @settings.dig('task', k) } %>
+    <% if my_module.results.any? && %w(file_results table_results text_results).any? { |k| @settings.dig('task', k) } %>
       <div class="results-title-name">
         <%= t('projects.reports.elements.module.results') %>
       </div><br>
-    <% end %>
 
-    <% order_results_for_report(my_module.results, @settings.dig('task', 'result_order')).each do |result| %>
-      <div class="result-name">
-        <%= result.name.presence || I18n.t('projects.reports.unnamed') %>
-        <% if result.archived? %>
-          <span class="label label-warning"><%= t('search.index.archived') %></span>
-        <% end %>
-      </div>
+      <% order_results_for_report(my_module.results, @settings.dig('task', 'result_order')).each do |result| %>
+        <div class="result-name">
+          <%= result.name.presence || I18n.t('projects.reports.unnamed') %>
+          <% if result.archived? %>
+            <span class="label label-warning"><%= t('search.index.archived') %></span>
+          <% end %>
+        </div>
 
-      <% result.result_orderable_elements.each do |element| %>
-        <% if element.orderable_type == "ResultTable" %>
-          <%= render partial: 'reports/elements/my_module_result_table_element', locals: { result: result, export_all: export_all, element: element} %>
-        <% elsif element.orderable_type == "ResultText" %>
-          <%= render partial: 'reports/elements/my_module_result_text_element', locals: { result: result, export_all: export_all, element: element } %>
+        <% result.result_orderable_elements.each do |element| %>
+          <% if element.orderable_type == "ResultTable" && @settings.dig('task', 'table_results') %>
+            <%= render partial: 'reports/elements/my_module_result_table_element', locals: { result: result, export_all: export_all, element: element} %>
+          <% elsif element.orderable_type == "ResultText" && @settings.dig('task', 'text_results') %>
+            <%= render partial: 'reports/elements/my_module_result_text_element', locals: { result: result, export_all: export_all, element: element } %>
+          <% end %>
         <% end %>
+
+        <% if @settings.dig('task', 'file_results')  %>
+          <%= render partial: 'reports/elements/my_module_result_asset_element', locals: { result: result, report: report, export_all: export_all } %>
+          <div class="user-time">
+            <%= t('projects.reports.elements.result.user_time', user: result.user.full_name, timestamp: l(result.created_at, format: :full)) %>
+          </div>
+        <% end %>
+
+        <div class="report-element-children">
+          <% if @settings.dig('task', 'result_comments') %>
+            <%= render partial: 'reports/elements/result_comments_element', locals: { result: result } %>
+          <% end %>
+        </div>
       <% end %>
-
-      <%= render partial: 'reports/elements/my_module_result_asset_element', locals: { result: result, report: report, export_all: export_all } %>
-      <div class="user-time">
-        <%= t('projects.reports.elements.result.user_time', user: result.user.full_name, timestamp: l(result.created_at, format: :full)) %>
-      </div>
-
-      <div class="report-element-children">
-        <% if @settings.dig('task', 'result_comments') %>
-          <%= render partial: 'reports/elements/result_comments_element', locals: { result: result } %>
-        <% end %>
-      </div>
     <% end %>
   </div><br>
 

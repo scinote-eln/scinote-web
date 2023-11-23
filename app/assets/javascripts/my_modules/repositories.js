@@ -137,7 +137,8 @@ var MyModuleRepositories = (function() {
     } else {
       columnDefs.push({
         targets: 2,
-        className: 'item-name'
+        className: 'item-name',
+        render: (data, type, row) => `<a href="${row.recordInfoUrl}" class="record-info-link">${data}</a>`,
       });
     }
 
@@ -188,13 +189,7 @@ var MyModuleRepositories = (function() {
       targets: 0,
       className: 'item-name',
       render: function(data, type, row) {
-        let recordName;
-
-        if (row.recordInfoUrl) {
-          recordName = `<a href="${row.recordInfoUrl}" class="record-info-link">${data}</a>`;
-        } else {
-          recordName = `<div class="inline-block my-2 mx-0">${data}</div>`;
-        }
+        let recordName = `<a href="${row.recordInfoUrl}" class="record-info-link">${data}</a>`;
 
         if (row.hasActiveReminders) {
           recordName = `<div class="dropdown row-reminders-dropdown"
@@ -266,7 +261,7 @@ var MyModuleRepositories = (function() {
 
   function addRepositorySearch() {
     $(`<div id="inventorySearchComponent">
-      <repository_search_container/>
+      <repository-search-container/>
     </div>`).appendTo('.filter-container');
     initRepositorySearch();
   }

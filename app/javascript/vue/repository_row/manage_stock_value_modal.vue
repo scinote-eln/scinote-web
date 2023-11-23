@@ -36,7 +36,7 @@
               </div>
               <div class="flex flex-col w-40">
                 <Input
-                  @input="amount = $event"
+                  @update="value => amount = value"
                   name="stock_amount"
                   id="stock-amount"
                   :inputClass="`sci-input-container-v2 ${errors.amount ? 'error' : ''}`"
@@ -95,7 +95,7 @@
             </div>
             <div v-if="reminderEnabled" class="stock-reminder-value flex gap-2 items-center">
               <Input
-                  @input="lowStockTreshold = $event"
+                  @update="value => lowStockTreshold = value"
                   name="treshold_amount"
                   id="treshold-amount"
                   fieldClass="flex gap-2"
@@ -117,7 +117,7 @@
             <div class="sci-input-container flex flex-col" :data-error-text="i18n.t('repository_stock_values.manage_modal.comment_limit')">
               <label class="text-sn-grey text-sm font-normal" for="stock-value-comment">{{ i18n.t('repository_stock_values.manage_modal.comment') }}</label>
               <input class="sci-input-field"
-                @input="comment = e.target.value"
+                @input="event => comment = event.target.value"
                 type="text"
                 name="comment"
                 id="stock-value-comment"
@@ -142,6 +142,7 @@
 <script>
   import Select from './../shared/select.vue';
   import Input from './../shared/input.vue';
+  import Decimal from 'decimal.js';
 
   export default {
     name: 'ManageStockValueModal',
@@ -154,7 +155,7 @@
         operation: null,
         operations: [],
         stockValue: null,
-        amount: 0,
+        amount: '',
         repositoryRowName: null,
         stockUrl: null,
         units: null,
@@ -175,14 +176,21 @@
         return unit ? unit[1] : ''
       },
       newAmount: function() {
+        const currentAmount = new Decimal(this.stockValue?.amount || 0);
+        const amount = new Decimal(this.amount || 0)
+        let value;
         switch (this.operation) {
           case 2:
-            if (this.amount) return parseFloat(this.stockValue.amount) + this.amount
+            value = currentAmount.plus(amount);
+            break;
           case 3:
-            if(this.amount) return parseFloat(this.stockValue.amount) - this.amount
+            value = currentAmount.minus(amount);
+            break;
           default:
-            return this.amount
+            value = amount;
+            break;
         }
+        return Number(value)
       }
     },
     created() {
@@ -215,7 +223,7 @@
           success: (result) => {
             this.repositoryRowName = result.repository_row_name
             this.stockValue = result.stock_value
-            this.amount = parseFloat(result.stock_value.amount)
+            this.amount = Number(new Decimal(result.stock_value.amount || 0))
             this.units = result.stock_value.units
             this.unit = result.stock_value.unit
             this.reminderEnabled = result.stock_value.reminder_enabled
@@ -242,7 +250,7 @@
           newErrors['unit'] = I18n.t('repository_stock_values.manage_modal.unit_error');
         if (!this.amount)
           newErrors['amount'] = I18n.t('repository_stock_values.manage_modal.amount_error');
-        if (parseFloat(this.amount) && this.amount < 0)
+        if (this.amount && this.amount < 0)
           newErrors['amount'] = I18n.t('repository_stock_values.manage_modal.negative_error');
         if (this.reminderEnabled && !this.lowStockTreshold)
           newErrors['tresholdAmount'] = I18n.t('repository_stock_values.manage_modal.amount_error');
@@ -263,7 +271,7 @@
               comment: this.comment,
               low_stock_threshold: this.reminderEnabled ? this.lowStockTreshold : null
             },
-            operator: this.operations.find(operation => operation[0] = this.operation)?.[1],
+            operator: this.operations.find(operation => operation[0] == this.operation)?.[1],
             change_amount: Math.abs(this.amount),
           },
           success: function(result) {

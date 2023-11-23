@@ -17,7 +17,7 @@ module RepositoryDatatableHelper
       row = public_send("#{repository.class.name.underscore}_default_columns", record)
       row.merge!(
         DT_RowId: record.id,
-        DT_RowAttr: { 'data-state': row_style(record) },
+        DT_RowAttr: { 'data-state': row_style(record), 'data-e2e': "e2e-RT-invInventory-row-#{record.id}" },
         recordInfoUrl: Rails.application.routes.url_helpers.repository_repository_row_path(repository, record),
         rowRemindersUrl:
           Rails.application.routes.url_helpers
@@ -110,6 +110,7 @@ module RepositoryDatatableHelper
         DT_RowId: record.id,
         DT_RowAttr: { 'data-state': row_style(record) },
         '0': escape_input(record.name),
+        recordInfoUrl: Rails.application.routes.url_helpers.repository_repository_row_path(record.repository, record),
         rowRemindersUrl:
           Rails.application.routes.url_helpers
                .active_reminder_repository_cells_repository_repository_row_url(
@@ -117,11 +118,6 @@ module RepositoryDatatableHelper
                  record
                )
       }
-
-      unless record.repository.is_a?(RepositorySnapshot)
-        row['recordInfoUrl'] = Rails.application.routes.url_helpers.repository_repository_row_path(record.repository,
-                                                                                                   record)
-      end
 
       if reminders_enabled
         row['hasActiveReminders'] = record.has_active_stock_reminders || record.has_active_datetime_reminders

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full relative" ref="container" v-click-outside="{ handler: 'close', exclude: ['optionsContainer'] }">
+  <div class="w-full relative" ref="container" v-click-outside="closeDropdown">
     <button ref="focusElement"
             class="btn flex justify-between items-center w-full outline-none border-[1px] bg-white rounded p-2
                   font-inter text-sm font-normal leading-5"
@@ -38,7 +38,7 @@
                          class="relative scroll-container px-2.5 pt-0"
                          :class="{
                            'block': isOpen,
-                           [optionsClassName]: true 
+                           [optionsClassName]: true
                          }">
         <div v-if="options.length" class="flex flex-col gap-[1px]">
           <div v-for="option in options"
@@ -64,8 +64,8 @@
 </template>
 
 <script>
-  import PerfectScrollbar from 'vue2-perfect-scrollbar';
-  import outsideClick from '../../packs/vue/directives/outside_click';
+  import PerfectScrollbar from 'vue3-perfect-scrollbar';
+  import { vOnClickOutside } from '@vueuse/components'
 
   export default {
     name: 'ChecklistSelect',
@@ -82,7 +82,7 @@
       optionsClassName: { type: String, default: '' }
     },
     directives: {
-      'click-outside': outsideClick
+      'click-outside': vOnClickOutside
     },
     data() {
       return {
@@ -97,7 +97,7 @@
     computed: {
       valueLabel() {
         if (!this.selectedValues.length) return
-
+        if (this.selectedValues.length === 1) return this.options.find(({id}) => id === this.selectedValues[0])?.label
         return `${this.selectedValues.length} ${this.i18n.t('general.selected')}`;
       }
     },
@@ -115,7 +115,7 @@
         if (this.isOpen) {
           this.updateOptionPosition();
         } else {
-          this.close();
+          this.closeDropdown();
         }
       },
       updateOptionPosition() {
@@ -132,13 +132,11 @@
           this.selectedValues.push(id);
         }
       },
-      close() {
+      closeDropdown() {
         if (!this.isOpen) return;
 
         this.isOpen = false;
-        if (this.selectedValues.length) {
-          this.$emit('update', this.selectedValues);
-        }
+        this.$emit('update', this.selectedValues.length ? this.selectedValues : null);
       },
       isSelected(id) {
         return this.selectedValues.includes(id);

@@ -4,9 +4,8 @@
     <div :class="inputClass">
       <input ref="input"
         :id="id"
-        :type="type"
         :name="name"
-        :value="value"
+        :value="inputValue"
         :class="`${error ? 'error' : ''}`"
         :placeholder="placeholder"
         :required="required"
@@ -42,20 +41,23 @@
       autoFocus: { type: Boolean, default: false },
       error: { type: String, required: false }
     },
-    watch: {
-      value: function(newVal) {
-        this.inputValue = newVal;
+    computed: {
+      inputValue() {
+        if (this.type === 'text') return this.value;
+
+        return isNaN(this.value) ? '' : this.value;
       }
     },
     methods: {
       updateValue($event) {
         switch (this.type) {
           case 'text':
-            this.$emit('input', $event.target.value);
+            this.$emit('update', $event.target.value);
             break;
           case 'number':
             const newValue = this.formatDecimalValue($event.target.value);
-            this.$emit('input', parseFloat(newValue));
+            this.$refs.input.value = newValue;
+            if (!isNaN(newValue)) this.$emit('update', newValue);
             break
           default:
             break;
@@ -63,7 +65,7 @@
       },
       formatDecimalValue(value) {
         let decimalValue = value.replace(/[^-0-9.]/g, '');
-        if (this.decimals === 0) {
+        if (this.decimals === '0') {
           return decimalValue.split('.')[0];
         }
         return decimalValue.match(new RegExp(`^-?\\d*(\\.\\d{0,${this.decimals}})?`))[0];

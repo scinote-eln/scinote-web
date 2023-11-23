@@ -27,7 +27,7 @@
     e.stopPropagation();
 
     if (typeof PrintModalComponent !== 'undefined') {
-      PrintModalComponent.showModal = true;
+      PrintModalComponent.openModal();
       if (selectedRows && selectedRows.length) {
         $('#modal-info-repository-row').modal('hide');
         PrintModalComponent.row_ids = selectedRows;
@@ -88,7 +88,7 @@
         updateCallback = (data) => {
           if (!data?.value) return;
           // reload dataTable
-          if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload();
+          if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
           // update item card stock column
           window.manageStockCallback && window.manageStockCallback(data.value);
           $link.data('manageStockUrl', data.value.stock_url)

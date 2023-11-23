@@ -7,6 +7,10 @@
   <% end %>
   <% provide(:container_class, 'no-second-nav-container') %>
 
+  <% content_for :head do %>
+    <meta id="cache-directive" name="turbolinks-cache-control" content="no-cache">
+  <% end %>
+
   <div class="content-pane flexible protocols-index <%= @type %>">
     <div class="content-header sticky-header">
       <div class="title-row">
