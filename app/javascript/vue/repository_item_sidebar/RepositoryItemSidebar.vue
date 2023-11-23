@@ -1,5 +1,5 @@
 <template>
-  <transition enter-class="translate-x-full w-0"
+  <transition enter-from-class="translate-x-full w-0"
               enter-active-class="transition-all ease-sharp duration-[588ms]"
               leave-active-class="transition-all ease-sharp duration-[588ms]"
               leave-to-class="translate-x-full w-0">
