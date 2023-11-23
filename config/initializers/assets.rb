@@ -81,7 +81,6 @@ Rails.application.config.assets.precompile += %w(label_printers/zebra_settings.j
 Rails.application.config.assets.precompile += %w(repositories/index.js)
 Rails.application.config.assets.precompile += %w(repositories/share_modal.js)
 Rails.application.config.assets.precompile += %w(repositories/edit.js)
-Rails.application.config.assets.precompile += %w(repositories/stock.js)
 Rails.application.config.assets.precompile += %w(repositories/repository_datatable.js)
 Rails.application.config.assets.precompile += %w(global_activities/index.js)
 Rails.application.config.assets.precompile += %w(repositories/show.js)

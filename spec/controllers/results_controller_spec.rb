@@ -13,7 +13,10 @@ describe ResultsController, type: :controller do
 
     let(:action) { delete :destroy, params: params }
     let(:params) do
-      { id: result_text.result.id }
+      {
+        my_module_id: result_text.result.my_module.id,
+        id: result_text.result.id
+      }
     end
 
     before do

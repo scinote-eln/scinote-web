@@ -3,9 +3,10 @@
 .dp--menu-wrapper {
   font-weight: normal;
 
-  .dp__menu {
+  .dp__menu,
+  &.dp__menu {
     border: 0;
-    box-shadow: 0px 32px 64px -12px rgba(16, 24, 40, 0.14);
+    box-shadow: 0px 4px 16px rgba(35, 31, 32, 0.15)
   }
 
   .dp__action_buttons {
@@ -26,19 +27,34 @@
   }
 
   .dp__month_year_row {
-    margin-bottom: 1rem;
+    margin-bottom: .5rem;
   }
 
   .dp__menu_inner {
-    border-bottom: 1px solid var(--sn-light-grey);
-    margin: 0 1rem 1rem;
+    margin: 0 1rem;
     padding: 1rem 0;
   }
 
+  .dp__time_picker_overlay_container {
+    padding-bottom: .5rem;
+  }
+
+  .dp__button_bottom {
+    background-color: var(--sn-white);
+    margin-bottom: .5rem;
+  }
+
   .dp--tp-wrap {
-    border-bottom: 1px solid var(--sn-light-grey);
-    margin: 0 1rem 1rem;
-    padding-bottom: 1rem;
+    border-top: 1px solid var(--sn-light-grey);
+    padding: .5rem 1rem;
+
+    .dp__time_display {
+      margin: .5rem 0;
+    }
+
+    .dp__button_bottom {
+      margin-bottom: 0;
+    }
   }
 
   .dp__action_cancel {
@@ -52,6 +68,25 @@
 
   .dp__inner_nav {
     border-radius: .25rem;
+  }
+
+  .dp__tp_inline_btn_bar {
+    height: 2px;
+  }
+
+  .dp__calendar_item {
+    display: flex;
+    justify-content: center;
+  }
+
+  .dp__btn:hover {
+    .dp__tp_inline_btn_bar {
+      background-color: var(--sn-science-blue);
+    }
+  }
+
+  .dp__overlay_container {
+    padding-bottom: .5rem;
   }
 
   .dp--arrow-btn-nav {
@@ -80,6 +115,15 @@
   }
 }
 
+.dp__main.only-time {
+  .dp--tp-wrap {
+    border-top: none;
+  }
+
+  .dp__overlay_container {
+    padding-bottom: 0;
+  }
+}
 
 .dp__theme_light {
   --dp-background-color: var(--sn-white);
@@ -122,15 +166,15 @@
   --dp-month-year-row-height: 2.5rem; /*Height of the month-year select row*/
   --dp-month-year-row-button-size: 2.5rem; /*Specific height for the next/previous buttons*/
   --dp-button-icon-height: 1.5rem; /*Icon sizing in buttons*/
-  --dp-cell-size: 2.5rem; /*Width and height of calendar cell*/
-  --dp-cell-padding: .25rem; /*Padding in the cell*/
+  --dp-cell-size: 1.875rem; /*Width and height of calendar cell*/
+  --dp-cell-padding: 0rem; /*Padding in the cell*/
   --dp-common-padding: 1rem; /*Common padding used*/
   --dp-input-padding: .3em 2rem .3rem 1rem; /*Padding in the input*/
-  --dp-menu-min-width: 320px; /*Adjust the min width of the menu*/
+  --dp-menu-min-width: 276px; /*Adjust the min width of the menu*/
   --dp-action-row-padding: 0 1rem 1rem; /*Adjust padding for the action row*/
   --dp-action-buttons-padding: 0 .625rem; /*Adjust padding for the action buttons in action row*/
   --dp-action-button-height: 1.875rem; /*Adjust height for the action buttons in action row*/
-  --dp-row-margin:  .25rem 0; /*Adjust the spacing between rows in the calendar*/
+  --dp-row-margin: 2px 0; /*Adjust the spacing between rows in the calendar*/
   --dp-calendar-header-cell-padding:  .5rem; /*Adjust padding in calendar header cells*/
   --dp-two-calendars-spacing:  .75rem; /*Space between multiple calendars*/
   --dp-overlay-col-padding:  .25rem; /*Padding in the overlay column*/
@@ -141,7 +185,7 @@
   /*Font sizes*/
   --dp-font-size: .875rem; /*Default font-size*/
   --dp-preview-font-size: .75rem; /*Font size of the date preview in the action row*/
-  --dp-time-font-size: 3rem; /*Font size in the time picker*/
+  --dp-time-font-size: 1.875rem; /*Font size in the time picker*/
 
   /*Transitions*/
   --dp-animation-duration: 0.1s; /*Transition duration*/

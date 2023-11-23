@@ -4,7 +4,6 @@
   border-color: var(--sn-light-grey);
   border-radius: $border-radius-default;
   box-sizing: border-box;
-  cursor: pointer;
   display: flex;
   padding: .5rem .625rem .5rem 1rem;
   position: relative;
@@ -37,12 +36,15 @@
 
   &.disabled {
     background: var(--sn-sleepy-grey);
-    cursor: default;
     pointer-events: none;
 
     .caret {
       border-top-color: var(--sn-grey);
     }
+  }
+
+  &.error {
+    border-color: var(--sn-delete-red);
   }
 
   .sn-select__options {

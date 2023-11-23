@@ -3,6 +3,7 @@
     :initW="getNavigatorWidth()"
     ref="vueResizable"
     :minW="208"
+    v-model:w="width"
     :disabledH="true"
     :handles="['mr']"
     :resizable="true"
@@ -12,7 +13,7 @@
     @resizing="onResizeMove"
     @resize-end="onResizeEnd"
   >
-    <div class="ml-4 h-full w-full border rounded bg-sn-white flex flex-col right-0 absolute navigator-container">
+    <div class="ml-4 h-full w-[calc(100%_-_1rem)] border rounded bg-sn-white flex flex-col right-0 absolute navigator-container">
       <div class="px-3 py-2.5 flex items-center relative leading-4">
         <i class="sn-icon sn-icon-navigator"></i>
         <div class="font-bold text-base pl-3">
@@ -20,7 +21,7 @@
         </div>
         <i @click="$emit('navigator:colapse')" class="sn-icon sn-icon-close ml-auto cursor-pointer absolute right-2.5 top-2.5"></i>
       </div>
-      <perfect-scrollbar @ps-scroll-y="onScrollY" @ps-scroll-x="onScrollX" ref="scrollContainer" class="grow py-2 relative px-2 scroll-container">
+      <perfect-scrollbar @ps-scroll-y="onScrollY" @ps-scroll-x="onScrollX" ref="scrollContainer" class="grow py-2 relative px-2 scroll-container w-[calc(100%_-_.25rem)]">
         <NavigatorItem v-for="item in sortedMenuItems"
                       :key="item.id"
                       :currentItemId="currentItemId"
@@ -56,6 +57,7 @@ export default {
       navigatorXScroll: 0,
       currentItemId: null,
       archived: null,
+      width: null
     }
   },
   props: {
@@ -141,7 +143,10 @@ export default {
       $('.sci--layout').addClass('!transition-none');
     },
     onResizeEnd(event) {
-      if (event.w > 400) event.w = 400;
+      if (event.w > 400) {
+        event.w = 400;
+        this.width = 400;
+      }
       document.body.style.cursor = 'default';
       $('.sci--layout-navigation-navigator').removeClass('!transition-none');
       $('.sci--layout').removeClass('!transition-none');

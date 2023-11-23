@@ -50,8 +50,12 @@ describe MyModuleStatusFlow, type: :model do
   describe 'self.ensure_default' do
     context 'when there is no global flow' do
       it 'adds new global workflow' do
-        expect { described_class.ensure_default }
-          .to change { MyModuleStatusFlow.global.count }.by(1).and(change { MyModuleStatus.count }.by(3))
+        initial_global_count = MyModuleStatusFlow.global.count
+        initial_module_status_count = MyModuleStatus.count
+        method_result = described_class.ensure_default
+
+        expect(MyModuleStatusFlow.global.count - initial_global_count).to eq(1)
+        expect(MyModuleStatus.count - initial_module_status_count).to eq(method_result.count)
       end
     end
 

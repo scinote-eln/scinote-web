@@ -48,7 +48,7 @@
         @editingDisabled="disableEditMode"
         @editingEnabled="enableEditMode"
       />
-      <div class="view-text-element" v-else-if="element.attributes.orderable.text_view" v-html="element.attributes.orderable.text_view"></div>
+      <div class="view-text-element" v-else-if="element.attributes.orderable.text_view" v-html="wrapTables"></div>
       <div v-else class="text-sn-grey">
         {{ i18n.t("protocols.steps.text.empty_text") }}
       </div>
@@ -112,6 +112,16 @@
       })
     },
     computed: {
+      wrapTables() {
+        const container = $(`<span>${this.element.attributes.orderable.text_view}</span>`);
+        container.find('table').toArray().forEach((table) => {
+          if ($(table).parent().hasClass('table-wrapper')) return;
+          $(table).css('float', 'none').wrapAll(`
+            <div class="table-wrapper" style="overflow: auto; width: 100%"></div>
+          `);
+        });
+        return container.prop('outerHTML');
+      },
       actionMenu() {
         let menu = [];
         if (this.element.attributes.orderable.urls.update_url) {

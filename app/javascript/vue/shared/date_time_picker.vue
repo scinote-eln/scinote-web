@@ -1,16 +1,21 @@
 <template>
   <div class="date-time-picker grow">
     <VueDatePicker
+      ref="datetimePicker"
+      :class="{
+        'only-time': mode == 'time',
+      }"
       v-model="compDatetime"
       :teleport="teleport"
-      :text-input="true"
       :no-today="true"
       :clearable="clearable"
       :format="format"
       :month-change-on-scroll="false"
       :six-weeks="true"
+      :auto-apply="true"
+      :partial-flow="true"
       :markers="markers"
-      :time-picker-inline="mode == 'datetime'"
+      week-start="0"
       :enable-time-picker="mode == 'datetime'"
       :time-picker="mode == 'time'"
       :placeholder="placeholder" >
@@ -20,8 +25,23 @@
         <template #arrow-left>
             <img class="slot-icon" src="/images/calendar/navigate_before.svg"/>
         </template>
-        <template #input-icon>
+        <template v-if="mode == 'time'" #input-icon>
+            <img class="input-slot-image" src="/images/calendar/clock.svg"/>
+        </template>
+        <template v-else #input-icon>
             <img class="input-slot-image" src="/images/calendar/calendar.svg"/>
+        </template>
+        <template #clock-icon>
+            <img class="slot-icon" src="/images/calendar/clock.svg"/>
+        </template>
+        <template #calendar-icon>
+            <img class="slot-icon" src="/images/calendar/calendar.svg"/>
+        </template>
+        <template #arrow-up>
+            <img class="slot-icon" src="/images/calendar/up.svg"/>
+        </template>
+        <template #arrow-down>
+            <img class="slot-icon" src="/images/calendar/down.svg"/>
         </template>
     </VueDatePicker>
   </div>
@@ -37,10 +57,15 @@
       clearable: { type: Boolean, default: false },
       teleport: { type: Boolean, default: true },
       defaultValue: { type: Date, required: false },
-      placeholder: { type: String }
+      placeholder: { type: String },
+      standAlone: { type: Boolean, default: false, required: false },
+      dateClassName: { type: String, default: '' },
+      timeClassName: { type: String, default: '' },
+      disabled: { type: Boolean, default: false }
     },
     data() {
       return {
+        manualUpdate: false,
         datetime: this.defaultValue,
         time: null,
         markers: [
@@ -66,18 +91,31 @@
     watch: {
       defaultValue: function () {
         this.datetime = this.defaultValue;
-        this.time = {
-          hours: this.defaultValue ? this.defaultValue.getHours() : 0,
-          minutes: this.defaultValue ? this.defaultValue.getMinutes() : 0
+        if (this.defaultValue) {
+          this.time = {
+            hours: this.defaultValue.getHours(),
+            minutes: this.defaultValue.getMinutes()
+          }
         }
       },
       datetime: function () {
         if (this.mode == 'time') {
+
+          this.time = null;
+
+          if (this.datetime) {
           this.time = {
-            hours: this.datetime ? this.datetime.getHours() : 0,
-            minutes: this.datetime ? this.datetime.getMinutes() : 0
+            hours: this.datetime.getHours(),
+            minutes: this.datetime.getMinutes()
           }
+        }
+
           return
+        }
+
+        if (this.manualUpdate) {
+          this.manualUpdate = false;
+          return;
         }
 
         if ( this.datetime == null) {
@@ -89,6 +127,11 @@
         }
       },
       time: function () {
+        if (this.manualUpdate) {
+          this.manualUpdate = false;
+          return;
+        }
+
         if (this.mode != 'time') return;
 
         let newDate;
@@ -98,7 +141,10 @@
           newDate.setHours(this.time.hours);
           newDate.setMinutes(this.time.minutes);
         } else {
-          newDate = null;
+          newDate = {
+            hours: null,
+            minutes: null
+          };
           this.$emit('cleared');
         }
 
@@ -129,6 +175,17 @@
         if (this.mode == 'date') return document.body.dataset.datetimePickerFormatVue
         return `${document.body.dataset.datetimePickerFormatVue} HH:mm`
       }
+    },
+    mounted() {
+      window.addEventListener('resize', this.close);
+    },
+    unmounted() {
+      window.removeEventListener('resize', this.close);
+    },
+    methods: {
+      close() {
+        this.$refs.datetimePicker.closeMenu();
+      },
     }
   }
 </script>
