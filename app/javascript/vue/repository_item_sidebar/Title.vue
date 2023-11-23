@@ -17,6 +17,7 @@ export default {
   components: {
     "inline-edit": InlineEdit
   },
+  emits: ['update'],
   props: {
     editable: Boolean,
     name: String,
