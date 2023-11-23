@@ -27,16 +27,22 @@ module RepositoryStockLedgerZipExport
   def self.to_csv(repository_row_ids)
     csv_header = COLUMNS.map { |col| I18n.t("repository_stock_values.stock_export.headers.#{col}") }
     repository_ledger_records = load_records(repository_row_ids)
+    decimal_precision = 0
+    if (repository = repository_ledger_records.first&.repository_row&.repository)
+      decimal_precision = repository.repository_stock_column.metadata['decimals'].to_i || 0
+    end
 
     CSV.generate do |csv|
       csv << csv_header
       repository_ledger_records.each do |record|
-        csv << generate_record_data(record)
+        csv << generate_record_data(record, decimal_precision)
       end
     end
   end
 
   class << self
+    include ActionView::Helpers::NumberHelper
+
     private
 
     def load_records(repository_row_ids)
@@ -48,7 +54,7 @@ module RepositoryStockLedgerZipExport
         .order(:created_at)
     end
 
-    def generate_record_data(record)
+    def generate_record_data(record, precision)
       consumption_type = record.reference_type == 'MyModuleRepositoryRow' ? 'Task' : 'Inventory'
 
       if (consumption_type == 'Task' && record.amount.positive?) ||
@@ -64,13 +70,13 @@ module RepositoryStockLedgerZipExport
         consumption_type,
         record.repository_row.name,
         record.repository_row.code,
-        consumed_amount,
+        format_amount(consumed_amount, precision),
         consumed_amount_unit,
-        added_amount,
+        format_amount(added_amount, precision),
         added_amount_unit,
         record.user.full_name,
         I18n.l(record.created_at, format: :full),
-        record.balance,
+        format_amount(record.balance, precision),
         record.unit
       ]
       breadcrumbs_data =
@@ -109,6 +115,13 @@ module RepositoryStockLedgerZipExport
       else
         Array.new(7)
       end
+    end
+
+    def format_amount(amount, precision)
+      # strip insignificant zeros only when precision is zero
+      return amount if amount.nil? || !precision.zero?
+
+      number_with_precision(amount, strip_insignificant_zeros: true)
     end
   end
 end
