@@ -9,6 +9,10 @@ describe TeamSharedObject, type: :model do
   let(:repository) { create :repository, team: team, created_by: user }
   let(:team_shared_object) { create :team_shared_object, :read, team: another_team, shared_object: repository }
 
+  before do
+    allow_any_instance_of(TeamSharedObject).to receive(:team_cannot_be_the_same)
+  end
+
   it 'is valid' do
     expect(team_shared_object).to be_valid
   end

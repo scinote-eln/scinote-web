@@ -1,20 +1,20 @@
 <template>
   <div class="flex gap-3">
-    <div id="navigation-text">
-      <div class="flex flex-col py-2 px-0 gap-3 self-stretch w-[130px] h-[130px]  justify-center items-center">
-        <div v-for="(itemObj, index) in itemsToCreate" :key="index"
-          class="flex flex-col w-[130px] h-[130px] justify-between text-right">
-          <div @click="handleSideNavClick" :id="itemObj?.textId" class="hover:cursor-pointer text-sn-grey"
-            :class="{ 'text-sn-science-blue': selectedNavText === itemObj?.textId }">{{
-              i18n.t(`repositories.highlight_component.${itemObj?.labelAlias}`) }}
-          </div>
-        </div>
+    <div id="navigation-text"
+         v-if="thresholds.length"
+         class="flex flex-col py-2 px-0 gap-3 self-stretch w-[130px] h-[130px] justify-center items-center">
+      <div v-for="(navigationItem, index) in itemsToCreate" :key="navigationItem.textId"
+        @click="navigateToSection(navigationItem)"
+        class="text-sn-grey nav-text-item flex flex-col w-[130px] h-[130px] justify-between text-right hover:cursor-pointer"
+        :class="{ 'text-sn-science-blue': navigationItemsStatus[index] }">
+        {{ i18n.t(`repositories.highlight_component.${navigationItem.labelAlias}`) }}
       </div>
     </div>
+
     <div id="highlight-container" class="w-[1px] h-[130px] flex flex-col justify-evenly bg-sn-light-grey">
-      <div v-for="(itemObj, index) in itemsToCreate" :key="index">
-        <div :id="itemObj?.id" class="w-[5px] h-[28px] rounded-[11px]"
-          :class="{ 'bg-sn-science-blue relative left-[-2px]': itemObj?.id === selectedNavIndicator }"></div>
+      <div v-for="(navigationItem, index) in itemsToCreate" :key="navigationItem.id"
+        class="w-[5px] h-[28px] rounded-[11px]"
+        :class="{ 'bg-sn-science-blue relative left-[-2px]': navigationItemsStatus[index] }">
       </div>
     </div>
   </div>
@@ -23,188 +23,232 @@
 <script>
 export default {
   name: 'ScrollSpy',
+
   props: {
     itemsToCreate: Array,
-    stickyHeaderHeightPx: Number || null,
-    cardTopPaddingPx: Number || null,
-    targetAreaMargin: Number || null
   },
+
   data() {
     return {
       bodyContainerEl: null,
-      selectedNavText: null,
-      selectedNavIndicator: null,
       sections: [],
-      prevSection: null,
-      scrollTimer: null,
-      shouldRecalculateWhenStopped: false
-    }
+      sectionsWithHeight: [],
+      allSectionsCumulativeHeight: null,
+      thresholds: [],
+      navigationItemsStatus: [], // highlighted or not
+      scrollPosition: null,
+      centerOfScrollThumb: null,
+    };
   },
-  mounted() {
-    this.bodyContainerEl = this.$parent.$refs.bodyWrapper
-    this.sections = this.$parent.$refs.scrollSpyContent.querySelectorAll('section[id]');
-    this.bodyContainerEl?.addEventListener('scroll', this.handleScroll)
-    this.highlightActiveSectionOnScroll()
-  },
-  methods: {
-    // If the user scrolls too fast to register movement, then we need to do something when the scrolling has stopped.
-    // When the scrolling has stopped and if we have permission to recalculate
-    // then we find the closest dom node relative to the target area and highlight it
-    scrollStopped() {
-      if (!this.shouldRecalculateWhenStopped) return
 
-      const bodyWrapperTargetAreaRectTop = this.bodyContainerEl.getBoundingClientRect().top;
-      const sectionRects = Array.from(this.sections).map((s) => {
-        const rect = s.getBoundingClientRect();
+  mounted() {
+    console.log('mounted');
+    window.addEventListener('resize', this.handleResize);
+    this.initializeComponent();
+    this.$nextTick(() => {
+      this.calculateAllSectionsCumulativeHeight()
+      this.calculateSectionsHeight();
+      this.constructThresholds()
+      this.handleScroll()
+
+      if (!this.initialSectionId) {
+        this.navigateToSection(this.itemsToCreate[0])
+      }
+      else {
+        const itemToNavigateTo = this.itemsToCreate.find((item) => item.sectionId === this.initialSectionId)
+        this.navigateToSection(itemToNavigateTo)
+      }
+    });
+  },
+
+  beforeDestroy() {
+    window.removeEventListener('resize', this.handleResize);
+    this.removeScrollListener();
+  },
+
+  methods: {
+    initializeComponent() {
+      const bodyWrapperEl = document.getElementById('body-wrapper')
+      const scrollSpyContentEl = document.getElementById('scrollSpyContent')
+      this.bodyContainerEl = bodyWrapperEl
+      this.sections = Array.from(scrollSpyContentEl.querySelectorAll('section[id]'));
+      this.navigationItemsStatus = Array(this.sections.length).fill(false);
+      this.navigationItemsStatus[0] = true;
+      this.addScrollListener();
+    },
+
+    addScrollListener() {
+      this.bodyContainerEl?.addEventListener('scroll', this.handleScroll);
+    },
+
+    removeScrollListener() {
+      this.bodyContainerEl?.removeEventListener('scroll', this.handleScroll);
+    },
+
+    calculateAllSectionsCumulativeHeight() {
+      let totalHeight = 0
+
+      this.itemsToCreate.forEach((item) => {
+        const sectionEl = document.getElementById(item.sectionId);
+        totalHeight += sectionEl.offsetHeight
+      })
+      this.allSectionsCumulativeHeight = totalHeight
+    },
+
+    calculateSectionsHeight() {
+      // Initialize an array to store the height data for each section
+      this.sectionsWithHeight = this.itemsToCreate.map(item => {
+        // Find the DOM element for the section
+        const sectionEl = document.getElementById(item.sectionId);
+
+        // Calculate the height of the section as a percentage of the total scrollable height
+        const heightPx = sectionEl.offsetHeight;
+        const percentHeight = Math.round((heightPx / this.allSectionsCumulativeHeight) * 100);
+
+        // Return an object containing the section ID and its percentage height
         return {
-          top: rect.top,
-          right: rect.right,
-          bottom: rect.bottom,
-          left: rect.left,
-          width: rect.width,
-          height: rect.height,
-          id: s.getAttribute('id'),
+          sectionId: item.sectionId,
+          heightPx: heightPx,
+          percentHeight: percentHeight
         };
       });
-
-      const closestDomNodeToHighlight = this.findClosestDomNode(sectionRects, bodyWrapperTargetAreaRectTop)
-
-      // If user clicked on the navigation and not actually scrolled the scroll event still happened.
-      // However, in those cases top/bot values will be zero and we should not compute closestDomNode highlighting
-      if (closestDomNodeToHighlight.top !== 0 && closestDomNodeToHighlight.bottom !== 0) {
-        const id = closestDomNodeToHighlight.id
-        const foundMatchToHighlight = this.itemsToCreate.find((e) => e.sectionId === id)
-        this.selectedNavText = foundMatchToHighlight.textId
-        this.selectedNavIndicator = foundMatchToHighlight.id
-      }
     },
 
-    // For finding the closest dom node (to highlight)
-    findClosestDomNode(arr, referenceValue) {
-      if (arr.length === 0) {
-        return null;
-      }
-      let closestObject = arr[0];
-      let minDifference = Math.abs(arr[0].top - referenceValue);
-      for (let i = 1; i < arr.length; i++) {
-        const difference = Math.abs(arr[i].top - referenceValue);
-        if (difference < minDifference) {
-          minDifference = difference;
-          closestObject = arr[i];
+    // Constructs and populates array of thresholds with threshold objects.
+    // Each object stores id, index, and threshold values (from/to) for a section, based
+    // on the % of vertical space of scrollable content that they occupy
+    constructThresholds() {
+      const scrollableArea = this.bodyContainerEl;
+      const deltaTravel = scrollableArea.scrollHeight - scrollableArea.clientHeight
+      const viewportHeight = scrollableArea.clientHeight;
+      const scrollableAreaHeight = scrollableArea.scrollHeight;
+      const scrollThumbHeight = Math.round(viewportHeight / scrollableAreaHeight * viewportHeight);
+      const scrollThumbCenter = Math.round(scrollThumbHeight / 2)
+      this.centerOfScrollThumb = scrollThumbCenter
+      this.scrollPosition = scrollThumbCenter
+
+      let prevThreshold = scrollThumbCenter
+
+      for (let i = 0; i < this.sectionsWithHeight.length; i++) {
+        // first section
+        if (i === 0) {
+          const from = prevThreshold
+          const to = Math.round(deltaTravel * this.sectionsWithHeight[i].percentHeight / 100) + prevThreshold
+          const id = this.sectionsWithHeight[i].sectionId
+          prevThreshold = to + 1
+          const threshold = {
+            id,
+            index: i,
+            from,
+            to
+          }
+          this.thresholds[i] = threshold
+        }
+        // last section
+        else if (i === this.sectionsWithHeight.length - 1) {
+          const from = prevThreshold
+          const to = scrollableArea.scrollHeight
+          const id = this.sectionsWithHeight[i].sectionId
+          const threshold = {
+            id,
+            index: i,
+            from,
+            to
+          }
+          this.thresholds[i] = threshold
+        }
+        else {
+          // other sections
+          const from = prevThreshold
+          const to = Math.round(deltaTravel * this.sectionsWithHeight[i].percentHeight / 100) + prevThreshold - 1
+          const id = this.sectionsWithHeight[i].sectionId
+          prevThreshold = to + 1
+          const threshold = {
+            id,
+            index: i,
+            from,
+            to
+          }
+          this.thresholds[i] = threshold
         }
       }
-      return closestObject;
     },
 
-    // Handling scroll events
+    // Handling scroll event
     handleScroll() {
-      this.shouldRecalculateWhenStopped = true
-      this.highlightActiveSectionOnScroll()
-      if (this.scrollTimer) {
-        clearTimeout(this.scrollTimer);
-      }
-      this.scrollTimer = setTimeout(this.scrollStopped, 200);
+      const scrollableArea = this.bodyContainerEl;
+      const scrollThumbsDistanceFromTop = scrollableArea.scrollTop + this.centerOfScrollThumb;
+      this.scrollPosition = scrollThumbsDistanceFromTop;
+      this.updateNavigationItemsStatusOnScroll();
     },
 
-    // Highlighting active sections while scrolling
-    highlightActiveSectionOnScroll() {
+    // Navigating (scrolling into view) via click
+    navigateToSection(navigationItem) {
       if (!this.bodyContainerEl) return;
+      this.removeScrollListener();
 
-      const bodyWrapperTargetAreaRect = this.bodyContainerEl.getBoundingClientRect();
-      const margin = this.targetAreaMargin;
+      const scrollableArea = this.bodyContainerEl;
+      const foundThreshold = this.thresholds.find((obj) => obj.id === navigationItem.sectionId)
+      const domElToScrollTo = document.getElementById(navigationItem.label)
 
-      // Far top position
-      if (this.bodyContainerEl.scrollTop === 0) {
-        this.shouldRecalculateWhenStopped = false
-        this.handleTopOrBotScrollPosition(this.sections[0]);
-        return;
+      if (foundThreshold.index === 0) {
+        // scroll to top
+        this.bodyContainerEl.scrollTo({
+          top: 0,
+          behavior: "auto"
+        });
       }
-
-      // Far bottom position
-      if (this.bodyContainerEl.scrollTop + this.bodyContainerEl.clientHeight === this.bodyContainerEl.scrollHeight) {
-        this.shouldRecalculateWhenStopped = false
-        this.handleTopOrBotScrollPosition(this.sections[this.sections.length - 1])
-        return
+      else if (foundThreshold.index === this.thresholds.length - 1) {
+        // scroll to bottom
+        this.bodyContainerEl.scrollTo({
+          top: 99999,
+          behavior: "auto"
+        });
       }
+      else {
+        // scroll to the start of a section's threshold, adjusted for the center thumb value (true center)
+        scrollableArea.scrollTop = foundThreshold.from - this.centerOfScrollThumb
+      }
+      this.flashTitleColor(domElToScrollTo);
 
-      // Checks when a section enters targetArea's boundary and highlights it
-      for (const section of this.sections) {
-        const sectionRect = section.getBoundingClientRect();
-        if (sectionRect === this.prevSection) continue;
+      this.updateNavigationItemsStatusOnClick(this.itemsToCreate.indexOf(navigationItem) || 0);
+      setTimeout(() => this.addScrollListener(), 1500);
+    },
 
-        if (this.isSectionInBounds(sectionRect, bodyWrapperTargetAreaRect, margin)) {
-          this.handleSectionHighlight(section);
+    flashTitleColor(domEl) {
+      if (!domEl) return
+
+      domEl.classList.add('text-sn-science-blue');
+      setTimeout(() => domEl.classList.remove('text-sn-science-blue'), 300);
+    },
+
+    handleResize() {
+      this.$nextTick(() => {
+        this.calculateAllSectionsCumulativeHeight()
+        this.calculateSectionsHeight();
+        this.constructThresholds()
+      });
+    },
+
+    updateNavigationItemsStatusOnScroll() {
+      this.thresholds.forEach((threshold, index) => {
+        this.navigationItemsStatus[index] = false;
+
+        if (threshold?.from <= this.scrollPosition && this.scrollPosition <= threshold?.to) {
+          this.navigationItemsStatus[index] = true;
         }
-      }
+      });
     },
 
-    // For handling top/bottom most positions
-    handleTopOrBotScrollPosition(section) {
-      const sectionId = section.getAttribute('id');
-      const foundObj = this.itemsToCreate.find((obj) => obj?.sectionId === sectionId);
+    updateNavigationItemsStatusOnClick(itemIndex) {
+      this.thresholds.forEach((_, index) => {
+        this.navigationItemsStatus[index] = false;
 
-      if (foundObj) {
-        this.selectedNavText = foundObj.textId;
-        this.selectedNavIndicator = foundObj.id;
-      }
+        if (index === itemIndex) {
+          this.navigationItemsStatus[index] = true;
+        }
+      });
     },
-
-    // For checking if a section is within targetArea's boundaries
-    isSectionInBounds(sectionRect, targetAreaRect, margin) {
-      const upperBound = targetAreaRect.top - margin;
-      const lowerBound = targetAreaRect.top + margin;
-      return sectionRect.top >= upperBound && sectionRect.top <= lowerBound;
-    },
-
-    // For highlighting a section during scrolling
-    handleSectionHighlight(section) {
-      const sectionId = section.getAttribute('id');
-      const foundObj = this.itemsToCreate.find((obj) => obj?.sectionId === sectionId);
-
-      if (foundObj) {
-        this.selectedNavText = foundObj.textId;
-        this.selectedNavIndicator = foundObj.id;
-        this.prevSection = section.getBoundingClientRect();
-      }
-    },
-
-    // For handling clicks on the side navigation
-    handleSideNavClick(e) {
-      if (!this.bodyContainerEl) return
-      this.bodyContainerEl?.removeEventListener('scroll', this.handleScroll)
-
-      let refToScrollTo
-      const targetId = e.target.id
-      const foundObj = this.itemsToCreate.find((obj) => obj?.textId === targetId)
-      if (!foundObj) return
-
-      // Highlighting
-      refToScrollTo = foundObj.label
-      this.selectedNavText = foundObj.textId
-      this.selectedNavIndicator = foundObj.id
-      const sectionLabels = this.itemsToCreate.map((obj) => obj.label)
-      const labelsToUnhighlight = sectionLabels.filter((i) => i !== refToScrollTo)
-
-      // Scrolling to desired section
-      const domElToScrollTo = this.$parent.$refs[refToScrollTo]
-      const top = domElToScrollTo.offsetTop - this?.stickyHeaderHeightPx - this?.cardTopPaddingPx;
-      this.bodyContainerEl.scrollTo({
-        top: top,
-        behavior: "auto"
-      })
-
-      // flashing the title color to blue and back over 300ms
-      domElToScrollTo?.classList.add('text-sn-science-blue')
-      labelsToUnhighlight.forEach(id => document.getElementById(id)?.classList.remove('text-sn-science-blue'))
-      setTimeout(() => {
-        domElToScrollTo?.classList.remove('text-sn-science-blue')
-      }, 300)
-
-      setTimeout(() => {
-        this.bodyContainerEl?.addEventListener('scroll', this.handleScroll)
-      }, 100)
-
-    }
-  },
+  }
 }
 </script>

@@ -3,6 +3,10 @@
 require 'rails_helper'
 
 describe Connection, type: :model do
+  before do
+    allow_any_instance_of(Connection).to receive(:ensure_non_cyclical)
+  end
+
   let(:connection) { build :connection }
 
   it 'is valid' do

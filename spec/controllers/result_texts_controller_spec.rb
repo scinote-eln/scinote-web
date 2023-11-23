@@ -9,26 +9,6 @@ describe ResultTextsController, type: :controller do
     result_text: true
   }
 
-  describe 'POST create' do
-    let(:action) { post :create, params: params, format: :json }
-    let(:params) do
-      { my_module_id: my_module.id,
-        result: { name: 'result name created',
-                  result_text_attributes: { text: 'result text created' } } }
-    end
-
-    it 'calls create activity service' do
-      expect(Activities::CreateActivityService).to receive(:call)
-        .with(hash_including(activity_type: :add_result))
-      action
-    end
-
-    it 'adds activity in DB' do
-      expect { action }
-        .to(change { Activity.count })
-    end
-  end
-
   describe '#update' do
     let(:action) { put :update, params: params, format: :json }
     let(:params) do

@@ -167,6 +167,7 @@
                 <i class="sn-icon sn-icon-new-task"></i>
               </div>
               <Step
+                ref="steps"
                 :step.sync="steps[index]"
                 @reorder="startStepReorder"
                 :inRepository="inRepository"
@@ -451,7 +452,7 @@
         this.activeDragStep = id;
       },
       uploadFilesToStep(file, stepId) {
-        this.$children.find(child => child.step?.id == stepId).uploadFiles(file);
+        this.$refs.steps.find(child => child.step?.id == stepId).uploadFiles(file);
       },
       firstObjectInViewport() {
         let step = $('.step-container:not(.locked)').toArray().find(element => {

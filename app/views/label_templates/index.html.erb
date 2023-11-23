@@ -1,6 +1,11 @@
 <% if current_team %>
   <% provide(:sidebar_title, t('sidebar.templates.sidebar_title')) %>
   <% provide(:container_class, "no-second-nav-container") %>
+
+  <% content_for :head do %>
+    <meta id="cache-directive" name="turbolinks-cache-control" content="no-cache">
+  <% end %>
+
   <%= content_for :sidebar do %>
    <%= render partial: "/shared/sidebar/templates_sidebar", locals: {active: :label} %>
   <% end %>

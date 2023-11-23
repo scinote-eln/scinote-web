@@ -4,6 +4,10 @@
 <% provide(:sidebar_url, sidebar_repositories_path) %>
 <% provide(:sidebar_title, t('sidebar.repositories.sidebar_title')) %>
 
+<% content_for :head do %>
+  <meta id="cache-directive" name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
 <div class="content-pane repository-show <%=  @repository.archived? || params[:archived] ? "archived" : "active" %>" data-table-url="<%= load_table_repository_path(@repository) %>">
   <div id="repository-toolbar" class="content-header">
     <div class="title-row">
@@ -69,12 +73,12 @@
            locals: { repository: @repository } %>
 
 <%= render partial: 'repository_columns/manage_column_modal', locals: { my_module_page: false } %>
-<%= render partial: "repository_stock_values/manage_modal" %>
 <%= render partial: "toolbar_buttons" %>
 <%= render partial: "assign_items_to_task_modal" %>
 
 <%= render partial: 'repository_filters' %>
 <%= render partial: 'save_repository_filter_modal' %>
+<%= render partial: 'shared/manage_stock_value_modal' %>
 
 
 <%= javascript_include_tag 'vue_components_action_toolbar' %>

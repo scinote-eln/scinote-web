@@ -44,6 +44,7 @@ const entryList = {
   vue_navigation_breadcrumbs: './app/javascript/packs/vue/navigation/breadcrumbs.js',
   vue_protocol_file_import_modal: './app/javascript/packs/vue/protocol_file_import_modal.js',
   vue_components_export_stock_consumption_modal: './app/javascript/packs/vue/export_stock_consumption_modal.js',
+  vue_components_manage_stock_value_modal: './app/javascript/packs/vue/manage_stock_value_modal.js',
   vue_legacy_datetime_picker: './app/javascript/packs/vue/legacy/datetime_picker.js',
 }
 

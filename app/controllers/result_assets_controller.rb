@@ -2,36 +2,9 @@ class ResultAssetsController < ApplicationController
   include ResultsHelper
 
   before_action :load_vars, only: %i(edit update)
-  before_action :load_vars_nested, only: %i(new create)
 
   before_action :check_manage_permissions, only: %i(edit update)
-  before_action :check_create_permissions, only: %i(new create)
   before_action :check_archive_permissions, only: [:update]
-
-  def new
-    @asset = Asset.new
-    @result = Result.new(
-      user: current_user,
-      my_module: @my_module,
-      asset: @asset
-    )
-
-    render json: {
-      html: render_to_string(partial: 'new')
-    }
-  end
-
-  def create
-    obj = create_multiple_results
-    if obj.fetch(:status)
-      flash[:success] = t('result_assets.create.success_flash',
-                          module: @my_module.name)
-      redirect_to results_my_module_path(@my_module, page: params[:page], order: params[:order])
-    else
-      flash[:error] = t('result_assets.error_flash')
-      render json: {}, status: :bad_request
-    end
-  end
 
   def edit
     render json: {
@@ -129,15 +102,6 @@ class ResultAssetsController < ApplicationController
     else
       render_404
     end
-  end
-
-  def load_vars_nested
-    @my_module = MyModule.find_by_id(params[:my_module_id])
-    render_404 unless @my_module
-  end
-
-  def check_create_permissions
-    render_403 unless can_create_results?(@my_module)
   end
 
   def check_manage_permissions

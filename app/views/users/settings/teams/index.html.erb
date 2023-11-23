@@ -2,6 +2,10 @@
 <% provide(:head_title, t("users.settings.teams.head_title")) %>
 <% provide(:container_class, "no-second-nav-container") %>
 
+<% content_for :head do %>
+  <meta id="cache-directive" name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
 <%= render partial: "users/settings/sidebar" %>
 <div class="tab-content">
   <div class="tab-pane content-pane" role="tabpanel"></div>

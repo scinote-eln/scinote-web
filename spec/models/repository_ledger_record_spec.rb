@@ -28,7 +28,7 @@ describe RepositoryLedgerRecord, type: :model do
   end
 
   describe 'Associations' do
-    it { should belong_to(:repository_stock_value).optional }
+    it { should belong_to(:repository_stock_value) }
     it { should belong_to(:reference) }
     it { should belong_to(:user) }
   end
