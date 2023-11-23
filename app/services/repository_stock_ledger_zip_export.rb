@@ -27,15 +27,11 @@ module RepositoryStockLedgerZipExport
   def self.to_csv(repository_row_ids)
     csv_header = COLUMNS.map { |col| I18n.t("repository_stock_values.stock_export.headers.#{col}") }
     repository_ledger_records = load_records(repository_row_ids)
-    decimal_precision = 0
-    if (repository = repository_ledger_records.first&.repository_row&.repository)
-      decimal_precision = repository.repository_stock_column.metadata['decimals'].to_i || 0
-    end
 
     CSV.generate do |csv|
       csv << csv_header
       repository_ledger_records.each do |record|
-        csv << generate_record_data(record, decimal_precision)
+        csv << generate_record_data(record)
       end
     end
   end
@@ -54,7 +50,7 @@ module RepositoryStockLedgerZipExport
         .order(:created_at)
     end
 
-    def generate_record_data(record, precision)
+    def generate_record_data(record)
       consumption_type = record.reference_type == 'MyModuleRepositoryRow' ? 'Task' : 'Inventory'
 
       if (consumption_type == 'Task' && record.amount.positive?) ||
@@ -70,13 +66,13 @@ module RepositoryStockLedgerZipExport
         consumption_type,
         record.repository_row.name,
         record.repository_row.code,
-        format_amount(consumed_amount, precision),
+        number_with_precision(consumed_amount, strip_insignificant_zeros: true),
         consumed_amount_unit,
-        format_amount(added_amount, precision),
+        number_with_precision(added_amount, strip_insignificant_zeros: true),
         added_amount_unit,
         record.user.full_name,
         I18n.l(record.created_at, format: :full),
-        format_amount(record.balance, precision),
+        number_with_precision(record.balance, strip_insignificant_zeros: true),
         record.unit
       ]
       breadcrumbs_data =
@@ -115,13 +111,6 @@ module RepositoryStockLedgerZipExport
       else
         Array.new(7)
       end
-    end
-
-    def format_amount(amount, precision)
-      # strip insignificant zeros only when precision is zero
-      return amount if amount.nil? || !precision.zero?
-
-      number_with_precision(amount, strip_insignificant_zeros: true)
     end
   end
 end
