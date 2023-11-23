@@ -1,45 +1,45 @@
 # frozen_string_literal: true
 
 module Api
-  module V1
-    class TablesController < BaseController
-      before_action :load_team, :load_project, :load_experiment, :load_task, :load_protocol, :load_step
-      before_action only: :show do
-        load_table(:id)
+  module V2
+    class ResultTablesController < BaseController
+      before_action :load_team, :load_project, :load_experiment, :load_task, :load_result
+      before_action only: %i(show update destroy) do
+        load_result_table(:id)
       end
-      before_action :load_table_for_managing, only: %i(update destroy)
+      before_action :check_manage_permission, only: %i(create update destroy)
 
       def index
-        tables = timestamps_filter(@step.tables).page(params.dig(:page, :number))
-                                                .per(params.dig(:page, :size))
+        result_tables = timestamps_filter(@result.result_tables).page(params.dig(:page, :number))
+                                                                .per(params.dig(:page, :size))
 
-        render jsonapi: tables, each_serializer: TableSerializer
+        render jsonapi: result_tables, each_serializer: ResultTableSerializer
       end
 
       def show
-        render jsonapi: @table, serializer: TableSerializer
+        render jsonapi: @table.result_table, serializer: ResultTableSerializer
       end
 
       def create
-        raise PermissionError.new(Protocol, :create) unless can_manage_protocol_in_module?(@protocol)
+        table = @result.tables.new(table_params.merge!(team: @team, created_by: current_user))
 
-        table = @step.tables.new(table_params.merge!(team: @team, created_by: current_user))
-        @step.with_lock do
-          table.save!
-          @step.step_orderable_elements.create!(
-            position: @step.step_orderable_elements.size,
-            orderable: table.step_table
+        @result.with_lock do
+          @result.result_orderable_elements.create!(
+            position: @result.result_orderable_elements.size,
+            orderable: table.result_table
           )
+
+          table.save!
         end
 
-        render jsonapi: table, serializer: TableSerializer, status: :created
+        render jsonapi: table.result_table, serializer: ResultTableSerializer, status: :created
       end
 
       def update
         @table.assign_attributes(table_params)
 
         if @table.changed? && @table.save!
-          render jsonapi: @table, serializer: TableSerializer, status: :ok
+          render jsonapi: @table.result_table, serializer: ResultTableSerializer
         else
           render body: nil, status: :no_content
         end
@@ -51,6 +51,16 @@ module Api
       end
 
       private
+
+      def check_manage_permission
+        raise PermissionError.new(Result, :manage) unless can_manage_result?(@result)
+      end
+
+      def convert_plate_template(metadata_params)
+        if metadata_params.present? && metadata_params['plateTemplate']
+          metadata_params['plateTemplate'] = ActiveRecord::Type::Boolean.new.cast(metadata_params['plateTemplate'])
+        end
+      end
 
       def table_params
         raise TypeError unless params.require(:data).require(:type) == 'tables'
@@ -67,17 +77,6 @@ module Api
         convert_plate_template(attributes_params[:metadata])
         validate_metadata_params(attributes_params)
         attributes_params
-      end
-
-      def load_table_for_managing
-        @table = @step.tables.find(params.require(:id))
-        raise PermissionError.new(Protocol, :manage) unless can_manage_protocol_in_module?(@protocol)
-      end
-
-      def convert_plate_template(metadata_params)
-        if metadata_params.present? && metadata_params['plateTemplate']
-          metadata_params['plateTemplate'] = ActiveRecord::Type::Boolean.new.cast(metadata_params['plateTemplate'])
-        end
       end
 
       def validate_metadata_params(attributes_params)
