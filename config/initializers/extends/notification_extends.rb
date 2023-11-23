@@ -86,13 +86,13 @@ class NotificationExtends
     smart_annotation_added: {
       recipients_module: :AnnotatedRecipients
     },
-    invite_user_to_team_activity: {
+    invite_user_to_team: {
       code: 92,
-      recipients_module: :AssignedRecipients
+      recipients_module: :DirectRecipient
     },
-    remove_user_from_team_activity: {
+    remove_user_from_team: {
       code: 93,
-      recipients_module: :AssignedRecipients
+      recipients_module: :DirectRecipient
     },
     change_users_role_on_team_activity: {
       code: 94,
@@ -148,8 +148,8 @@ class NotificationExtends
         smart_annotation_added
       ],
       other_team_invitation: %I[
-        invite_user_to_team_activity
-        remove_user_from_team_activity
+        invite_user_to_team
+        remove_user_from_team
         change_users_role_on_team_activity
       ]
     }
