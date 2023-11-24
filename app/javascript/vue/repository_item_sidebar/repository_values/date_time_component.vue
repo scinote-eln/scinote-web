@@ -1,7 +1,9 @@
 <template>
   <div class="flex flex-col gap-2">
-    <DateTimePicker :defaultValue="defaultStartDate" @change="updateStartDate" :mode="mode" :clearable="true"/>
-    <DateTimePicker :defaultValue="defaultEndDate" v-if="range" @change="updateEndDate" :mode="mode" :clearable="true"/>
+    <DateTimePicker :defaultValue="defaultStartDate" @change="updateStartDate" :mode="mode" :clearable="true"
+                    :readonly="!canEdit"/>
+    <DateTimePicker :defaultValue="defaultEndDate" v-if="range" @change="updateEndDate" :mode="mode" :clearable="true"
+                    :readonly="!canEdit"/>
   </div>
 </template>
 
@@ -27,7 +29,7 @@
       colVal: { type: Object, default: {} },
       colId: Number,
       updatePath: String,
-      canEdit: { type: Boolean, default: false }
+      canEdit: { type: Boolean, default: false },
     },
     created() {
       if (this.range) {

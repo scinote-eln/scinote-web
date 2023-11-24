@@ -18,6 +18,7 @@
       week-start="0"
       :enable-time-picker="mode == 'datetime'"
       :time-picker="mode == 'time'"
+      :readonly="readonly"
       :placeholder="placeholder" >
         <template #arrow-right>
             <img class="slot-icon" src="/images/calendar/navigate_next.svg"/>
@@ -61,6 +62,7 @@
       standAlone: { type: Boolean, default: false, required: false },
       dateClassName: { type: String, default: '' },
       timeClassName: { type: String, default: '' },
+      readonly: { type: Boolean, default: false },
       disabled: { type: Boolean, default: false }
     },
     data() {
