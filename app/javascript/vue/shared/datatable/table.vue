@@ -1,7 +1,17 @@
 <template>
   <div class="flex flex-col h-full">
     <div class="relative flex flex-col flex-grow z-10">
-      <Toolbar :toolbarActions="toolbarActions" @toolbar:action="emitAction" :searchValue="searchValue" @search:change="setSearchValue" />
+      <Toolbar
+        :toolbarActions="toolbarActions"
+        @toolbar:action="emitAction"
+        :searchValue="searchValue"
+        @search:change="setSearchValue"
+        :activePageUrl="activePageUrl"
+        :archivedPageUrl="archivedPageUrl"
+        :currentViewMode="currentViewMode"
+        :filters="filters"
+        @applyFilters="applyFilters"
+      />
       <ag-grid-vue
         class="ag-theme-alpine w-full flex-grow h-full z-10"
         :class="{'opacity-0': initializing}"
@@ -90,7 +100,22 @@ export default {
     reloadingTable: {
       type: Boolean,
       default: false
-    }
+    },
+    activePageUrl: {
+      type: String,
+    },
+    archivedPageUrl: {
+      type: String,
+    },
+    currentViewMode: {
+      type: String,
+      default: 'active'
+    },
+    filters: {
+      type: Array,
+      default: () => []
+    },
+
   },
   data() {
     return {
@@ -106,7 +131,8 @@ export default {
       totalPage: 0,
       selectedRows: [],
       searchValue: '',
-      initializing: true
+      initializing: true,
+      activeFilters: {}
     };
   },
   components: {
@@ -198,7 +224,9 @@ export default {
             per_page: this.perPage,
             page: this.page,
             order: this.order,
-            search: this.searchValue
+            search: this.searchValue,
+            view_mode: this.currentViewMode,
+            filters: this.activeFilters
           }
         })
         .then((response) => {
@@ -264,6 +292,10 @@ export default {
       if (e.column.colId !== 'rowMenu') {
           e.node.setSelected(true);
       }
+    },
+    applyFilters(filters) {
+      this.activeFilters = filters;
+      this.loadData();
     }
   }
 };

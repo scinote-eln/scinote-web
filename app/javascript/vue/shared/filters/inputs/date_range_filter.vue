@@ -1,8 +1,8 @@
 <template>
   <div class="mb-6">
-    <div class="flex items-center gap-6 flex-col">
-      <div class="w-full">
-        <label class="sci-label">{{ filter.label }} ({{ i18n.t('general.from') }})</label>
+    <div class="flex flex-col">
+      <label class="sci-label">{{ filter.label }}</label>
+      <div class="w-full mb-2">
         <DateTimePicker
           class="w-full"
           @change="updateDateFrom"
@@ -12,7 +12,6 @@
         />
       </div>
       <div class="w-full">
-        <label class="sci-label">{{ filter.label }} ({{ i18n.t('general.to') }})</label>
         <DateTimePicker
           class="w-full"
           @change="updateDateTo"

@@ -393,7 +393,7 @@ class ProjectsController < ApplicationController
       actions:
         Toolbars::ProjectsService.new(
           current_user,
-          items: JSON.parse(params[:items]),
+          items: JSON.parse(params[:items])
         ).actions
     }
   end

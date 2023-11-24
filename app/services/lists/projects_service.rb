@@ -5,7 +5,7 @@ module Lists
       @user = user
       @current_folder = folder
       @params = params
-      @view_mode = ''
+      @filters = params[:filters] || {}
     end
 
     def call
@@ -15,10 +15,14 @@ module Lists
       projects = filter_project_records(projects)
       folders = filter_project_folder_records(folders)
 
-      projects = projects.where(project_folder: @current_folder)
-      folders = folders.where(parent_folder: @current_folder)
+      if @filters[:folder_search].present? && @filters[:folder_search] == 'true'
+        records = projects
+      else
+        projects = projects.where(project_folder: @current_folder)
+        folders = folders.where(parent_folder: @current_folder)
 
-      records = projects + folders
+        records = projects + folders
+      end
 
       records = sort_records(records)
       paginate_records(records)
@@ -50,31 +54,29 @@ module Lists
     end
 
     def filter_project_records(records)
-      return records
+      records = records.archived if @params[:view_mode] == 'archived'
+      records = records.active if @params[:view_mode] == 'active'
 
-      records = records.archived if @view_mode == 'archived'
-      records = records.active if @view_mode == 'active'
-      if @params[:search].present?
-        records = records.where_attributes_like(['projects.name', Project::PREFIXED_ID_SQL], @params[:search])
+      if @filters[:query].present?
+        records = records.where_attributes_like(['projects.name', Project::PREFIXED_ID_SQL], @filters[:query])
       end
-      if @params[:members].present?
-        records = records.joins(:user_assignments).where(user_assignments: { user_id: @params[:members] })
+
+      if @filters[:members].present?
+        records = records.joins(:user_assignments).where(user_assignments: { user_id: @filters[:members] })
       end
-      records = records.where('projects.created_at > ?', @params[:created_on_from]) if @params[:created_on_from].present?
-      records = records.where('projects.created_at < ?', @params[:created_on_to]) if @params[:created_on_to].present?
-      records = records.where('projects.archived_on < ?', @params[:archived_on_to]) if @params[:archived_on_to].present?
-      if @params[:archived_on_from].present?
-        records = records.where('projects.archived_on > ?', @params[:archived_on_from])
+      records = records.where('projects.created_at > ?', @filters[:created_on_from]) if @filters[:created_on_from].present?
+      records = records.where('projects.created_at < ?', @filters[:created_on_to]) if @filters[:created_on_to].present?
+      records = records.where('projects.archived_on < ?', @filters[:archived_on_to]) if @filters[:archived_on_to].present?
+      if @filters[:archived_on_from].present?
+        records = records.where('projects.archived_on > ?', @filters[:archived_on_from])
       end
       records
     end
 
     def filter_project_folder_records(records)
-      return records
-
       records = records.archived if @view_mode == 'archived'
       records = records.active if @view_mode == 'active'
-      records = records.where_attributes_like('project_folders.name', @params[:search]) if @params[:search].present?
+      records = records.where_attributes_like('project_folders.name', @filters[:query]) if @filters[:query].present?
       records
     end
 

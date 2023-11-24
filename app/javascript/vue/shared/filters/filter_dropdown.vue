@@ -9,7 +9,7 @@
             <i class="sn-icon sn-icon-close"></i>
           </button>
         </div>
-        <div class="sci-flyout-body max-h-[400px] overflow-y-auto perfect-scrollbar relative w-[calc(100%_+_1.125rem)] pr-5">
+        <div class="sci-flyout-body max-h-[400px] relative w-[calc(100%_+_1.125rem)] pr-5">
           <div v-for="filter in filters" :key="filter.key + resetFilters" class="">
             <Component :is="`${filter.type}Filter`" :filter="filter" :value="filterValues[filter.key]" @update="updateFilter" />
           </div>

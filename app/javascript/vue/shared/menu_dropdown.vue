@@ -1,5 +1,5 @@
 <template>
-  <div class="relative" v-if="listItems.length > 0 || alwaysShow" >
+  <div class="relative" v-if="listItems.length > 0 || alwaysShow" v-click-outside="closeMenu" >
     <button ref="openBtn" :class="btnClasses" @click="showMenu = !showMenu">
       <i v-if="btnIcon" :class="btnIcon"></i>
       {{ btnText }}

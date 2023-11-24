@@ -7,6 +7,10 @@
                :toolbarActions="toolbarActions"
                :actionsUrl="actionsUrl"
                :withRowMenu="true"
+               :activePageUrl="activePageUrl"
+               :archivedPageUrl="archivedPageUrl"
+               :currentViewMode="currentViewMode"
+               :filters="filters"
                @tableReloaded="reloadingTable = false"
       />
   </div>
@@ -38,6 +42,16 @@ export default {
     },
     createFolderUrl: {
       type: String,
+    },
+    activePageUrl: {
+      type: String,
+    },
+    archivedPageUrl: {
+      type: String,
+    },
+    currentViewMode: {
+      type: String,
+      required: true
     }
   },
   data() {
@@ -79,13 +93,40 @@ export default {
         left: left,
         right: []
       }
+    },
+    filters() {
+      let filters = [{
+                      key: 'query',
+                      type: 'Text'
+                    },
+                    {
+                      key: 'created_at',
+                      type: 'DateRange',
+                      label: this.i18n.t("filters_modal.created_on.label"),
+                    }]
+
+      if (this.currentViewMode === 'archived') {
+        filters.push({
+          key: 'archived_at',
+          type: 'DateRange',
+          label: this.i18n.t("filters_modal.archived_on.label"),
+        })
+      }
+
+      filters.push({
+        key: 'folder_search',
+        type: 'Checkbox',
+        label: this.i18n.t("projects.index.filters_modal.folders.label"),
+      })
+
+      return filters
     }
   },
   methods: {
     nameRenderer(params) {
       let showUrl = params.data.urls.show;
       return `<a href="${showUrl}" class="flex items-center gap-1">
-                ${params.data.folder ? 'sn-icon mini sn-icon-mini-folder-left' : ''}
+                ${params.data.folder ? '<i class="sn-icon mini sn-icon-mini-folder-left"></i>' : ''}
                 ${params.data.name}
               </a>`
     },

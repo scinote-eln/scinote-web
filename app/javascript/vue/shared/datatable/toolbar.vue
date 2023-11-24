@@ -1,5 +1,5 @@
 <template>
-  <div class="flex py-4 items-center">
+  <div class="flex py-4 items-center justify-between">
     <div class="flex items-center gap-4">
       <a v-for="action in toolbarActions.left" :key="action.label"
           :class="action.buttonStyle"
@@ -9,7 +9,19 @@
         {{ action.label }}
       </a>
     </div>
-    <div class="ml-auto flex items-center gap-4">
+    <div>
+      <div v-if="archivedPageUrl" class="flex items-center gap-4">
+        <MenuDropdown
+          :listItems="this.viewModes"
+          :btnClasses="'btn btn-light icon-btn'"
+          :btnText="i18n.t(`projects.index.${currentViewMode}`)"
+          :caret="true"
+          :position="'right'"
+          @open="loadActions"
+        ></MenuDropdown>
+      </div>
+    </div>
+    <div class="flex items-center gap-4">
       <a v-for="action in toolbarActions.right" :key="action.label"
           :class="action.buttonStyle"
           :href="action.path"
@@ -17,7 +29,7 @@
         <i :class="action.icon"></i>
         {{ action.label }}
       </a>
-      <div class="sci-input-container-v2" :class="{'w-48': showSearch, 'w-11': !showSearch}">
+      <div v-if="filters.length == 0"  class="sci-input-container-v2" :class="{'w-48': showSearch, 'w-11': !showSearch}">
         <input
           ref="searchInput"
           class="sci-input-field !pr-8"
@@ -30,11 +42,15 @@
         />
         <i class="sn-icon sn-icon-search !m-2.5 !ml-auto right-0"></i>
       </div>
+      <FilterDropdown v-else :filters="filters" @applyFilters="applyFilters" />
     </div>
   </div>
 </template>
 
 <script>
+import MenuDropdown from '../menu_dropdown.vue'
+import FilterDropdown from '../filters/filter_dropdown.vue';
+
 export default {
   name: 'Toolbar',
   props: {
@@ -44,6 +60,32 @@ export default {
     },
     searchValue: {
       type: String,
+    },
+    activePageUrl: {
+      type: String,
+    },
+    archivedPageUrl: {
+      type: String,
+    },
+    currentViewMode: {
+      type: String,
+      default: 'active'
+    },
+    filters: {
+      type: Array,
+      default: () => []
+    }
+  },
+  components: {
+    MenuDropdown,
+    FilterDropdown
+  },
+  computed: {
+    viewModes() {
+      return [
+        { text: this.i18n.t('projects.index.active'), url: this.activePageUrl},
+        { text: this.i18n.t('projects.index.archived'), url: this.archivedPageUrl }
+      ]
     }
   },
   data() {
@@ -76,7 +118,10 @@ export default {
         case 'link':
           break;
       }
-    }
+    },
+    applyFilters(filters) {
+      this.$emit('applyFilters', filters);
+    },
   }
 }
 </script>

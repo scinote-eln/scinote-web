@@ -38,14 +38,15 @@ module Lists
     def urls
       {
         show: project? ? project_path(object) : project_folder_path(object),
-        actions: actions_toolbar_projects_path(items: [{id: object.id, type: project? ? 'projects' : 'project_folders'}].to_json)
+        actions: actions_toolbar_projects_path(items: [{ id: object.id,
+                                                         type: project? ? 'projects' : 'project_folders' }].to_json)
       }
     end
 
     private
 
     def project?
-      object.class == Project
+      object.instance_of?(Project)
     end
   end
 end
