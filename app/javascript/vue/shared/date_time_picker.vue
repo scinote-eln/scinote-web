@@ -18,10 +18,6 @@
       week-start="0"
       :enable-time-picker="mode == 'datetime'"
       :time-picker="mode == 'time'"
-      :hide-input-icon="inputIconHidden"
-      :input-class-name="inputClassName"
-      @open="this.$emit('open')"
-      @close="this.$emit('close')"
       :placeholder="placeholder" >
         <template #arrow-right>
             <img class="slot-icon" src="/images/calendar/navigate_next.svg"/>
@@ -52,141 +48,144 @@
 </template>
 
 <script>
-import VueDatePicker from '@vuepic/vue-datepicker';
+  import VueDatePicker from '@vuepic/vue-datepicker';
 
-export default {
-  name: 'DateTimePicker',
-  props: {
-    mode: { type: String, default: 'datetime' },
-    clearable: { type: Boolean, default: false },
-    teleport: { type: Boolean, default: true },
-    defaultValue: { type: Date, required: false },
-    placeholder: { type: String },
-    inputIconHidden: { type: Boolean, default: false },
-    inputClassName: { type: String, default: null },
-    disabled: { type: Boolean, default: false },
-  },
-  data() {
-    return {
-      manualUpdate: false,
-      datetime: this.defaultValue,
-      time: null,
-      markers: [
-        {
-          date: new Date(),
-          type: 'dot',
-          color: '#3B99FD',
-        },
-      ],
-    };
-  },
-  created() {
-    if (this.defaultValue) {
-      this.time = {
-        hours: this.defaultValue.getHours(),
-        minutes: this.defaultValue.getMinutes(),
-      };
-    }
-  },
-  components: {
-    VueDatePicker,
-  },
-  watch: {
-    defaultValue() {
-      this.datetime = this.defaultValue;
+  export default {
+    name: 'DateTimePicker',
+    props: {
+      mode: { type: String, default: 'datetime' },
+      clearable: { type: Boolean, default: false },
+      teleport: { type: Boolean, default: true },
+      defaultValue: { type: Date, required: false },
+      placeholder: { type: String },
+      standAlone: { type: Boolean, default: false, required: false },
+      dateClassName: { type: String, default: '' },
+      timeClassName: { type: String, default: '' },
+      disabled: { type: Boolean, default: false }
+    },
+    data() {
+      return {
+        manualUpdate: false,
+        datetime: this.defaultValue,
+        time: null,
+        markers: [
+          {
+            date: new Date(),
+            type: 'dot',
+            color: '#3B99FD',
+          },
+        ]
+      }
+    },
+    created() {
       if (this.defaultValue) {
         this.time = {
-          hours: this.defaultValue.getHours(),
-          minutes: this.defaultValue.getMinutes(),
-        };
+                      hours: this.defaultValue.getHours(),
+                      minutes:this.defaultValue.getMinutes(),
+                    }
       }
     },
-    datetime() {
-      if (this.mode === 'time') {
-        this.time = null;
+    components: {
+      VueDatePicker
+    },
+    watch: {
+      defaultValue: function () {
+        this.datetime = this.defaultValue;
+        if (this.defaultValue) {
+          this.time = {
+            hours: this.defaultValue.getHours(),
+            minutes: this.defaultValue.getMinutes()
+          }
+        }
+      },
+      datetime: function () {
+        if (this.mode == 'time') {
 
-        if (this.datetime) {
+          this.time = null;
+
+          if (this.datetime) {
           this.time = {
             hours: this.datetime.getHours(),
-            minutes: this.datetime.getMinutes(),
-          };
+            minutes: this.datetime.getMinutes()
+          }
         }
 
-        return;
-      }
-
-      if (this.manualUpdate) {
-        this.manualUpdate = false;
-        return;
-      }
-
-      if (this.datetime === null) {
-        this.$emit('cleared');
-      }
-
-      if (this.defaultValue !== this.datetime) {
-        this.$emit('change', this.datetime);
-      }
-    },
-    time() {
-      if (this.manualUpdate) {
-        this.manualUpdate = false;
-        return;
-      }
-
-      if (this.mode !== 'time') return;
-
-      let newDate;
-
-      if (this.time) {
-        newDate = new Date();
-        newDate.setHours(this.time.hours);
-        newDate.setMinutes(this.time.minutes);
-      } else {
-        newDate = {
-          hours: null,
-          minutes: null,
-        };
-        this.$emit('cleared');
-      }
-
-      if (this.defaultValue !== newDate) {
-        this.$emit('change', newDate);
-      }
-    },
-  },
-  computed: {
-    compDatetime: {
-      get() {
-        if (this.mode === 'time') {
-          return this.time;
+          return
         }
-        return this.datetime;
+
+        if (this.manualUpdate) {
+          this.manualUpdate = false;
+          return;
+        }
+
+        if ( this.datetime == null) {
+          this.$emit('cleared');
+        }
+
+        if (this.defaultValue != this.datetime) {
+          this.$emit('change', this.datetime);
+        }
       },
-      set(val) {
-        if (this.mode === 'time') {
-          this.time = val;
+      time: function () {
+        if (this.manualUpdate) {
+          this.manualUpdate = false;
+          return;
+        }
+
+        if (this.mode != 'time') return;
+
+        let newDate;
+
+        if (this.time) {
+          newDate = new Date();
+          newDate.setHours(this.time.hours);
+          newDate.setMinutes(this.time.minutes);
         } else {
-          this.datetime = val;
+          newDate = {
+            hours: null,
+            minutes: null
+          };
+          this.$emit('cleared');
+        }
+
+        if (this.defaultValue != newDate) {
+          this.$emit('change', newDate);
+        }
+      }
+    },
+    computed: {
+      compDatetime: {
+        get () {
+          if (this.mode == 'time') {
+            return this.time
+          } else {
+            return this.datetime
+          }
+        },
+        set (val) {
+          if (this.mode == 'time') {
+            this.time = val
+          } else {
+            this.datetime = val
+          }
         }
       },
+      format() {
+        if (this.mode == 'time') return 'HH:mm'
+        if (this.mode == 'date') return document.body.dataset.datetimePickerFormatVue
+        return `${document.body.dataset.datetimePickerFormatVue} HH:mm`
+      }
     },
-    format() {
-      if (this.mode === 'time') return 'HH:mm';
-      if (this.mode === 'date') return document.body.dataset.datetimePickerFormatVue;
-      return `${document.body.dataset.datetimePickerFormatVue} HH:mm`;
+    mounted() {
+      window.addEventListener('resize', this.close);
     },
-  },
-  mounted() {
-    window.addEventListener('resize', this.close);
-  },
-  unmounted() {
-    window.removeEventListener('resize', this.close);
-  },
-  methods: {
-    close() {
-      this.$refs.datetimePicker.closeMenu();
+    unmounted() {
+      window.removeEventListener('resize', this.close);
     },
-  },
-};
+    methods: {
+      close() {
+        this.$refs.datetimePicker.closeMenu();
+      },
+    }
+  }
 </script>
