@@ -290,11 +290,6 @@ export default {
         this.currentItemUrl = repositoryRowUrl;
         return
       }
-      // click on the same item - should just open/close it
-      else if (this.currentItemUrl === repositoryRowUrl) {
-        this.isShowing = !this.isShowing;
-        return
-      }
       // explicit close (from emit)
       else if (repositoryRowUrl === null) {
         this.isShowing = false;
