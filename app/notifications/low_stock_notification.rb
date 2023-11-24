@@ -8,7 +8,7 @@ class LowStockNotification < BaseNotification
     )
   end
 
-  def subtype
+  def self.subtype
     :item_low_stock_reminder
   end
 
