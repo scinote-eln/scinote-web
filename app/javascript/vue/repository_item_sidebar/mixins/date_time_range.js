@@ -6,7 +6,7 @@ export default {
   },
   computed: {
     borderColor() {
-      if (this.errorMessage) return 'border-sn-delete-red'; 
+      if (this.errorMessage) return 'border-sn-delete-red';
       if (this.isEditing) return 'border-sn-science-blue';
       return 'border-sn-light-grey hover:border-sn-sleepy-grey';
     },
@@ -91,7 +91,6 @@ export default {
         default:
           break;
       }
-          
       this.params = defaultParams;
     },
     formatDateTime(date, field = null) {
@@ -121,6 +120,11 @@ export default {
       this.params = params;
     },
     dateValue(date) {
+      const typesThatCantBeEmpty = ['dateRange', 'dateTimeRange'];
+      if (date && (date.currentTarget === null) && typesThatCantBeEmpty.includes(this.dateType)) {
+        this.errorMessage = I18n.t('repositories.item_card.date_time.errors.select_valid_value');
+        return;
+      }
       if(date) return new Date(date)
       return new Date()
     },
@@ -165,4 +169,4 @@ export default {
       this.saveChange();
     }
   },
-}; 
+};

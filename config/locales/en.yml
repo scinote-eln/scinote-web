@@ -2323,6 +2323,8 @@ en:
         errors:
           set_all_or_none: 'Needs to set both or none'
           not_valid_range: 'Range is not valid.'
+          select_valid_value: 'Select a valid date or date-time value'
+          browser_alert_message: 'You have made some changes, are you sure you want to leave this page?'
     highlight_component:
       information_label: 'Information'
       custom_columns_label: 'Custom columns'
