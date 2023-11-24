@@ -37,6 +37,8 @@ module RepositoryStockLedgerZipExport
   end
 
   class << self
+    include ActionView::Helpers::NumberHelper
+
     private
 
     def load_records(repository_row_ids)
@@ -64,13 +66,13 @@ module RepositoryStockLedgerZipExport
         consumption_type,
         record.repository_row.name,
         record.repository_row.code,
-        consumed_amount,
+        number_with_precision(consumed_amount, strip_insignificant_zeros: true),
         consumed_amount_unit,
-        added_amount,
+        number_with_precision(added_amount, strip_insignificant_zeros: true),
         added_amount_unit,
         record.user.full_name,
         I18n.l(record.created_at, format: :full),
-        record.balance,
+        number_with_precision(record.balance, strip_insignificant_zeros: true),
         record.unit
       ]
       breadcrumbs_data =

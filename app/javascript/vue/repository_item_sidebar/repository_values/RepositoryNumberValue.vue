@@ -65,11 +65,8 @@ export default {
     colName: String,
     colVal: Number,
     permissions: null,
+    decimals: { type: Number, default: 0 },
     canEdit: { type: Boolean, defaul: false}
-  },
-  created() {
-    // constants
-    this.decimals = Number(document.getElementById(`${this.colId}`).dataset['metadataDecimals']) || 0;
   },
   methods: {
     toggleCollapse() {
