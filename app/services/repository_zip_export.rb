@@ -76,8 +76,15 @@ module RepositoryZipExport
 
         csv_row << row.row_consumption(row.stock_consumption) if add_consumption
         if column_ids.include? 'relationship'
-          csv_row << "\"#{row.parent_repository_rows.map(&:code).join("\;\s")}\""
-          csv_row << "\"#{row.child_repository_rows.map(&:code).join("\;\s")}\""
+          parents = row.parent_repository_rows.map(&:code)
+          children = row.child_repository_rows.map(&:code)
+          csv_row << if parents.any?
+                       "\"#{parents.join(";\s")}\""
+                     elsif children.any?
+                       "\"#{children.join(";\s")}\""
+                     else
+                       ''
+                     end
         end
 
         csv << csv_row

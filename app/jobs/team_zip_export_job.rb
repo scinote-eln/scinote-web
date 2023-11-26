@@ -251,7 +251,7 @@ class TeamZipExportJob < ZipExportJob
     csv_file_path = "#{path}/#{repo_name}.csv"
 
     # Define headers and columns IDs
-    col_ids = [-3, -4, -5, -6] + repo.repository_columns.map(&:id)
+    col_ids = [-3, -4, -5, -6, 'relationship'] + repo.repository_columns.map(&:id)
 
     # Define callback function for file name
     assets = {}
