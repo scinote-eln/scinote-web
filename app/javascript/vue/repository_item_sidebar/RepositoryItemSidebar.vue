@@ -128,7 +128,7 @@
                 <!-- ASSIGNED -->
                 <section id="assigned-section" class="flex flex-col" ref="assignedSectionRef">
                   <div
-                    class="flex flex-row text-base font-semibold w-[350px] pb-4 leading-7 items-center justify-between transition-colors duration-300"
+                    class="flex flex-row text-lg font-semibold w-[350px] pb-4 leading-7 items-center justify-between transition-colors duration-300"
                     ref="assigned-label"
                     id="assigned-label"
                     >
@@ -156,7 +156,7 @@
                     </div>
                     <div v-for="(assigned, index) in assignedModules.viewable_modules" :key="`assigned_module_${index}`"
                       class="flex flex-col w-[350px] h-auto gap-4">
-                      <div class="flex flex-col gap-3.5">
+                      <div class="flex flex-col gap-2">
                         <div v-for="(item, index_assigned) in assigned" :key="`assigned_element_${index_assigned}`">
                           {{ i18n.t(`repositories.item_card.assigned.labels.${item.type}`) }}
                           <a :href="item.url" class="text-sn-science-blue hover:text-sn-science-blue hover:no-underline">
@@ -177,7 +177,7 @@
 
                 <!-- QR -->
                 <section id="qr-section" ref="QR-label">
-                  <div id="QR-label" class="font-inter text-base font-semibold leading-7 mb-4 mt-0 transition-colors duration-300">
+                  <div id="QR-label" class="font-inter text-lg font-semibold leading-7 mb-4 mt-0 transition-colors duration-300">
                     {{ i18n.t('repositories.item_card.section.qr') }}
                   </div>
                   <div class="bar-code-container">
