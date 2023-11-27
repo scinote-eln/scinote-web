@@ -615,6 +615,17 @@ class Extends
     protocols/show
     preferences/index
   )
+
+  DEFAULT_USER_NOTIFICATION_SETTINGS = {
+    my_module_designation: {
+      email: false,
+      in_app: true
+    },
+    other_smart_annotation: {
+      email: false,
+      in_app: true
+    }
+  }
 end
 
 # rubocop:enable Style/MutableConstant

@@ -41,7 +41,7 @@ class User < ApplicationRecord
       recent: true,
       recent_email: false,
       system_message_email: false
-    }
+    }.merge(Extends::DEFAULT_USER_NOTIFICATION_SETTINGS)
   }.freeze
 
   DEFAULT_OTP_DRIFT_TIME_SECONDS = 10
@@ -607,6 +607,8 @@ class User < ApplicationRecord
     if Rails.application.config.x.disable_local_passwords
       throw(:warden, message: I18n.t('devise.failure.auth_method_disabled'))
     end
+
+    update_notification_settings
   end
 
   def my_module_visible_table_columns
@@ -656,5 +658,12 @@ class User < ApplicationRecord
 
   def clear_view_cache
     Rails.cache.delete_matched(%r{^views\/users\/#{id}-})
+  end
+
+  def update_notification_settings
+    if settings.dig(:notifications_settings, :my_module_designation, :in_app)
+      settings[:notifications_settings][:project_experiment_access][:in_app] = true
+      settings[:notifications_settings][:other_team_invitation][:in_app] = true
+    end
   end
 end
