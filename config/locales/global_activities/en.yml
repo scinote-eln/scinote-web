@@ -479,7 +479,7 @@ en:
       delete_chemical_structure_on_protocol: "Chemical structure on protocol deleted"
       delete_chemical_structure_on_task: "Chemical structure on task deleted"
       protocol_description_in_task_edited: "Protocol description in task edited"
-      protocol_name_in_task_edited: "Protocol name in task edited."
+      protocol_name_in_task_edited: "Protocol name in task edited"
       export_inventory_items_assigned_to_task: "Task-assigned inventory items exported (live version)"
       export_inventory_snapshot_items_assigned_to_task: "Task-assigned inventory items exported (snapshot)"
       change_status_on_task_flow: "Task status changed"
