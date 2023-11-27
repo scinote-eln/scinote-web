@@ -147,16 +147,15 @@
                     <div v-if="parentsCount">
                       <details v-for="(parent) in parents" @toggle="updateOpenState(parent.code, $event.target.open)" :key="parent.code" class="flex flex-col font-normal gap-5 group cursor-default">
                         <summary class="flex flex-row gap-3 mb-3 items-center">
-                          <img :src="icons.delimiter_path" class="w-3 h-3 cursor-pointer" :class="{ 'rotate-90': relationshipDetailsState[parent.code] }" />
+                          <img :src="icons.delimiter_path" class="w-3 h-3 cursor-pointer"
+                               :class="{ 'rotate-90': relationshipDetailsState[parent.code] }" />
                           <span>
                             <span>{{ i18n.t('repositories.item_card.relationships.item') }}</span>
                             <a :href="parent.path" class="record-info-link btn-text-link !text-sn-science-blue">{{ parent.name }}</a>
-                            <a v-if="permissions.can_manage"
-                              href="/"
-                              class="opacity-0 group-hover:opacity-100 cursor-pointer"
-                            >
+                            <button v-if="permissions?.can_manage" @click="openUnlinkModal(parent)"
+                                    class=" ml-2 bg-transparent border-none opacity-0 group-hover:opacity-100 cursor-pointer">
                               <img :src="icons.unlink_path" />
-                            </a>
+                            </button>
                           </span>
                         </summary>
                         <p class="flex flex-col gap-3 mb-5 ml-6">
@@ -194,12 +193,10 @@
                           <span class="group/child">
                             <span>{{ i18n.t('repositories.item_card.relationships.item') }}</span>
                             <a :href="child.path" class="record-info-link btn-text-link !text-sn-science-blue">{{ child.name }}</a>
-                            <a v-if="permissions.can_manage"
-                              href="/"
-                              class="opacity-0 group-hover:opacity-100 cursor-pointer"
-                            >
+                            <button v-if="permissions?.can_manage" @click="openUnlinkModal(child)"
+                                    class="ml-2 bg-transparent border-none opacity-0 group-hover:opacity-100 cursor-pointer">
                               <img :src="icons.unlink_path" />
-                            </a>
+                            </button>
                           </span>
                         </summary>
                         <p class="flex flex-col gap-3 mb-5 ml-6">
@@ -309,6 +306,10 @@
       </div>
     </div>
   </transition>
+
+  <Teleport to="body">
+    <unlink-modal v-if="selectedToUnlink" @cancel="closeUnlinkModal" @unlink="unlinkItem" />
+  </Teleport>
 </template>
 
 <script>
@@ -316,6 +317,8 @@ import InlineEdit from '../shared/inline_edit.vue';
 import ScrollSpy from './repository_values/ScrollSpy.vue';
 import CustomColumns from './customColumns.vue';
 import RepositoryItemSidebarTitle from './Title.vue';
+import UnlinkModal from './unlink_modal.vue';
+import axios from '../../packs/custom_axios.js';
 
 export default {
   name: 'RepositoryItemSidebar',
@@ -324,6 +327,7 @@ export default {
     'repository-item-sidebar-title': RepositoryItemSidebarTitle,
     'inline-edit': InlineEdit,
     'scroll-spy': ScrollSpy,
+    'unlink-modal': UnlinkModal,
   },
   data() {
     return {
@@ -350,6 +354,7 @@ export default {
       notification: null,
       relationshipDetailsState: {},
       relationshipsEnabled: false,
+      selectedToUnlink: null,
       initialSectionId: null,
     };
   },
@@ -367,13 +372,13 @@ export default {
     },
   },
   watch: {
-    parents() {
-      this.parents.forEach((parent) => {
+    parents(newParents) {
+      newParents.forEach((parent) => {
         this.relationshipDetailsState[parent.code] = false;
       });
     },
-    children() {
-      this.children.forEach((child) => {
+    children(newChildren) {
+      newChildren.forEach((child) => {
         this.relationshipDetailsState[child.code] = false;
       });
     },
@@ -478,8 +483,8 @@ export default {
           this.assignedModules = result.assigned_modules;
           this.permissions = result.permissions;
           this.actions = result.actions;
-          this.dataLoading = false;
           this.icons = result.icons;
+          this.dataLoading = false;
           this.notification = result.notification;
           this.$nextTick(() => {
             this.generateBarCode(this.defaultColumns.code);
@@ -526,7 +531,19 @@ export default {
       });
     },
     updateOpenState(code, isOpen) {
-      this.$set(this.relationshipDetailsState, code, isOpen);
+      this.relationshipDetailsState[code] = isOpen;
+    },
+    openUnlinkModal(item) {
+      this.selectedToUnlink = item;
+    },
+    closeUnlinkModal() {
+      this.selectedToUnlink = null;
+    },
+    async unlinkItem() {
+      await axios.delete(this.selectedToUnlink.unlink_path);
+      this.loadRepositoryRow(this.currentItemUrl);
+      if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
+      this.selectedToUnlink = null;
     },
   },
 };

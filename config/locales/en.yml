@@ -2268,6 +2268,10 @@ en:
         children:
           count: "Children (%{count})"
           empty: ""
+        unlink_modal:
+          title: "Unlink item"
+          description: "Are you sure you want to unlink the item? Reconnection is possible later if needed."
+          unlink: "Unlink"
       default_columns:
         repository_name: "Inventory"
         id: "Item ID"
