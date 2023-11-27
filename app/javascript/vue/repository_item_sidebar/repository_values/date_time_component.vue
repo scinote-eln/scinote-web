@@ -1,9 +1,34 @@
 <template>
   <div class="flex flex-col gap-2">
-    <DateTimePicker :defaultValue="defaultStartDate" @closed="update" @change="updateStartDate" :mode="mode" :placeholder="placeholder" :clearable="true"/>
-    <div v-if="range" class="w-0.5 h-3 bg-sn-grey mx-auto"></div> <!-- divider -->
-    <DateTimePicker :defaultValue="defaultEndDate" @closed="update" v-if="range" @change="updateEndDate" :placeholder="placeholder" :mode="mode" :clearable="true"/>
-    <div class="text-xs text-sn-delete-red" v-if="error">{{ error }}</div>
+    <template v-if="!canEdit">
+      <span v-if="range">
+        <template v-if="colVal.start_time && colVal.end_time">
+          {{ colVal.start_time.formatted }} - {{ colVal.end_time.formatted }}
+        </template>
+        <template v-else>
+          {{ viewPlaceholder }}
+        </template>
+      </span>
+      <span v-else >
+        <template v-if="colVal.datetime">
+          {{ colVal.datetime.formatted }}
+        </template>
+        <template v-else>
+          {{ viewPlaceholder }}
+        </template>
+      </span>
+    </template>
+    <template v-else>
+      <div>
+        <span class="text-xs capitalize" v-if="range">{{  i18n.t('general.from') }}</span>
+        <DateTimePicker :defaultValue="defaultStartDate" @closed="update" @change="updateStartDate" :mode="mode" :placeholder="placeholder" :clearable="true"/>
+      </div>
+      <div>
+        <span class="text-xs capitalize" v-if="range">{{  i18n.t('general.to') }}</span>
+        <DateTimePicker :defaultValue="defaultEndDate" @closed="update" v-if="range" @change="updateEndDate" :placeholder="placeholder" :mode="mode" :clearable="true"/>
+      </div>
+      <div class="text-xs text-sn-delete-red" v-if="error">{{ error }}</div>
+    </template>
   </div>
 </template>
 
@@ -70,6 +95,25 @@
             return this.i18n.t('repositories.item_card.repository_time_value.placeholder');
           case 'datetime':
             return this.i18n.t('repositories.item_card.repository_date_time_value.placeholder');
+        }
+      },
+      viewPlaceholder() {
+        switch (this.mode) {
+          case 'date':
+            if (this.range) {
+              return this.i18n.t('repositories.item_card.repository_date_range_value.no_date_range');
+            }
+            return this.i18n.t('repositories.item_card.repository_date_value.no_date');
+          case 'time':
+            if (this.range) {
+              return this.i18n.t('repositories.item_card.repository_time_range_value.no_time_range');
+            }
+            return this.i18n.t('repositories.item_card.repository_time_value.no_time');
+          case 'datetime':
+            if (this.range) {
+              return this.i18n.t('repositories.item_card.repository_date_time_range_value.no_date_time_range');
+            }
+            return this.i18n.t('repositories.item_card.repository_date_time_value.no_date_time');
         }
       }
     },
