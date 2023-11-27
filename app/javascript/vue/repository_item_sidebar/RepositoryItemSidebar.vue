@@ -190,12 +190,36 @@
 
             <!-- NAVIGATION -->
             <div v-if="isShowing && !dataLoading" ref="navigationRef" id="navigation"
-              class="flex item-end gap-x-4 min-w-[130px] min-h-[130px] h-fit sticky top-0 right-[4px] ">
+              class="flex item-end gap-x-4 min-w-[130px] min-h-[130px] h-fit sticky top-0 pr-6 [scrollbar-gutter:stable_both-edges] ">
               <scroll-spy :itemsToCreate="[
-                { id: 'highlight-item-1', textId: 'text-item-1', labelAlias: 'information_label', label: 'information-label', sectionId: 'information-section' },
-                { id: 'highlight-item-2', textId: 'text-item-2', labelAlias: 'custom_columns_label', label: 'custom-columns-label', sectionId: 'custom-columns-section' },
-                { id: 'highlight-item-3', textId: 'text-item-3', labelAlias: 'assigned_label', label: 'assigned-label', sectionId: 'assigned-section' },
-                { id: 'highlight-item-4', textId: 'text-item-4', labelAlias: 'QR_label', label: 'QR-label', sectionId: 'qr-section' }
+                {
+                  id: 'highlight-item-1',
+                  textId: 'text-item-1',
+                  labelAlias: 'information_label',
+                  label: 'information-label',
+                  sectionId: 'information-section'
+                },
+                {
+                  id: 'highlight-item-2',
+                  textId: 'text-item-2',
+                  labelAlias: 'custom_columns_label',
+                  label: 'custom-columns-label',
+                  sectionId: 'custom-columns-section'
+                },
+                {
+                  id: 'highlight-item-3',
+                  textId: 'text-item-3',
+                  labelAlias: 'assigned_label',
+                  label: 'assigned-label',
+                  sectionId: 'assigned-section'
+                },
+                {
+                  id: 'highlight-item-4',
+                  textId: 'text-item-4',
+                  labelAlias: 'QR_label',
+                  label: 'QR-label',
+                  sectionId: 'qr-section'
+                }
               ]" v-show="isShowing">
               </scroll-spy>
             </div>
