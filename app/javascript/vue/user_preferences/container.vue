@@ -51,7 +51,7 @@
               <td class="p-2.5 text-base w-32">{{ i18n.t('notifications.email') }}</td>
             </tr>
           </div>
-          <template v-for="(_notifications, subGroup, i) in notificationsGroups[group]" >
+          <template v-for="(_notifications, subGroup, i) in notificationsGroups[group]" v-if="subGroup !== 'always_on'">
             <tr :key="subGroup"
                 class="text-base border-transparent border-b-sn-super-light-grey border-solid"
                 :class="{'border-t-sn-super-light-grey': i == 0}"

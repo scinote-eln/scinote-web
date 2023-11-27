@@ -624,6 +624,10 @@ class Extends
     other_smart_annotation: {
       email: false,
       in_app: true
+    },
+    always_on: {
+      email: true,
+      in_app: true
     }
   }
 end
