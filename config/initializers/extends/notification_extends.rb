@@ -151,7 +151,8 @@ class NotificationExtends
         invite_user_to_team
         remove_user_from_team
         change_users_role_on_team_activity
-      ]
+      ],
+      always_on: []
     }
   }
 end
