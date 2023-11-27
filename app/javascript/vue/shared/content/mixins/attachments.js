@@ -108,6 +108,10 @@ export default {
               }, (result) => {
                 fileObject.id = result.data.id;
                 fileObject.attributes = result.data.attributes;
+                this.attachments.splice(filePosition, 1);
+                setTimeout(() => {
+                  this.attachments.push(fileObject);
+                }, 0);
               }).fail(() => {
                 fileObject.error = I18n.t('attachments.new.general_error');
                 this.attachments.splice(filePosition, 1);
@@ -136,8 +140,8 @@ export default {
     changeAttachmentsViewMode(viewMode) {
       this.attachmentsParent.attributes.assets_view_mode = viewMode;
       this.attachments.forEach((attachment) => {
-        this.$set(attachment.attributes, 'view_mode', viewMode);
-        this.$set(attachment.attributes, 'asset_order', this.viewModeOrder[viewMode]);
+        attachment.attributes['view_mode'] = viewMode;
+        attachment.attributes['asset_order'] = this.viewModeOrder[viewMode];
       });
       $.post(this.attachmentsParent.attributes.urls.update_asset_view_mode_url, {
         assets_view_mode: viewMode
@@ -145,8 +149,8 @@ export default {
     },
     updateAttachmentViewMode(id, viewMode) {
       const attachment = this.attachments.find(e => e.id === id);
-      this.$set(attachment.attributes, 'view_mode', viewMode);
-      this.$set(attachment.attributes, 'asset_order', this.viewModeOrder[viewMode]);
+      attachment.attributes['view_mode'] = viewMode;
+      attachment.attributes['asset_order'] = this.viewModeOrder[viewMode];
     }
   }
 };

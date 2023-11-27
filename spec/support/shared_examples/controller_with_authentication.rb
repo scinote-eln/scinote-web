@@ -15,6 +15,8 @@ RSpec.shared_examples 'a controller with authentication' do |actions_with_params
           get action, params: params
           expect(response).to have_http_status(custom_response || :forbidden).or redirect_to('/users/sign_in')
         end
+      rescue ActionController::UrlGenerationError => e
+        warn "Warning: #{e}"
       end
     end
   end

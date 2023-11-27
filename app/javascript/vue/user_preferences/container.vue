@@ -40,8 +40,8 @@
         <p>{{ i18n.t('notifications.sub_title') }}</p>
       </div>
       <table v-if="notificationsSettings">
-        <template v-for="(_subGroups, group) in notificationsGroups" >
-          <div class="contents" :key="group">
+        <template v-for="(_subGroups, group) in notificationsGroups" :key="group">
+          <div class="contents">
             <tr>
               <td colspan=3 class="pt-6"><h3>{{ i18n.t(`notifications.groups.${group}`) }}</h3></td>
             </tr>
@@ -51,8 +51,8 @@
               <td class="p-2.5 text-base w-32">{{ i18n.t('notifications.email') }}</td>
             </tr>
           </div>
-          <template v-for="(_notifications, subGroup, i) in notificationsGroups[group]" v-if="subGroup !== 'always_on'">
-            <tr :key="subGroup"
+          <template v-for="(_notifications, subGroup, i) in notificationsGroups[group]" :key="subGroup" v-if="subGroup !== 'always_on'">
+            <tr
                 class="text-base border-transparent border-b-sn-super-light-grey border-solid"
                 :class="{'border-t-sn-super-light-grey': i == 0}"
             >

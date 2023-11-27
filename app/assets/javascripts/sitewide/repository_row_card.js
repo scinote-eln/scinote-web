@@ -20,7 +20,7 @@
     e.stopPropagation();
 
     if (typeof PrintModalComponent !== 'undefined') {
-      PrintModalComponent.showModal = true;
+      PrintModalComponent.openModal();
       if (selectedRows && selectedRows.length) {
         $('#modal-info-repository-row').modal('hide');
         PrintModalComponent.row_ids = selectedRows;
@@ -67,6 +67,27 @@
         { repository_id: $(this).data('objectId') },
       );
       $('#modal-info-repository-row').modal('hide');
+    }
+  });
+  $(document).on('click', '.manage-repository-stock-value-link', (e) => {
+    e.preventDefault();
+
+    window.initManageStockValueModalComponent();
+    if (window.manageStockModalComponent) {
+      const $link = $(e.target).parents('a')[0] ? $(e.target).parents('a') : $(e.target);
+      const stockValueUrl = $link.data('manage-stock-url');
+      let updateCallback;
+      if (stockValueUrl) {
+        updateCallback = (data) => {
+          if (!data?.value) return;
+          // reload dataTable
+          if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
+          // update item card stock column
+          window.manageStockCallback && window.manageStockCallback(data.value);
+          $link.data('manageStockUrl', data.value.stock_url)
+        };
+        window.manageStockModalComponent.showModal(stockValueUrl, updateCallback);
+      }
     }
   });
 }());

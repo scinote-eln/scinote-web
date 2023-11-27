@@ -3,7 +3,7 @@
 Grover.configure do |config|
   config.options = {
     cache: false,
-    executable_path: '/usr/bin/chromium',
+    executable_path: './bin/chromium',
     launch_args: ['--no-sandbox']
   }
 end

@@ -6,7 +6,7 @@ class BaseNotification < Noticed::Base
 
   def self.send_notifications(params, later: false)
     recipients_class =
-      "Recipients::#{NotificationExtends::NOTIFICATIONS_TYPES[params[:type]][:recipients_module]}".constantize
+      "Recipients::#{NotificationExtends::NOTIFICATIONS_TYPES[subtype || params[:type]][:recipients_module]}".constantize
     recipients_class.new(params).recipients.each do |recipient|
       if later
         with(params).deliver_later(recipient)
@@ -16,8 +16,10 @@ class BaseNotification < Noticed::Base
     end
   end
 
+  def self.subtype; end
+
   def subtype
-    params[:type]
+    self.class.subtype || params[:type]
   end
 
   def subject; end

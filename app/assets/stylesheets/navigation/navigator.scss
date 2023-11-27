@@ -1,4 +1,14 @@
 .sci--layout-navigation-navigator {
+  .handle-mr {
+    cursor: url("/images/icon_small/resize_cursor.svg") 0 0, auto !important;
+    display: block !important;
+    height: 100%;
+    opacity: 0;
+    top: 0;
+    width: 10px;
+  }
+
+
   .menu-item:not(.active):hover {
     background-color: var(--sn-super-light-grey);
 

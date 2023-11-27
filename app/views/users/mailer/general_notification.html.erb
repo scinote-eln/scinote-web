@@ -1,0 +1,8 @@
+<p>Hello <%= @user.name %>,</p>
+
+<p><%= I18n.t("notifications.email_title") %></p>
+<p>Type: <%= @notification.title %></p>
+
+<p>
+  <%= sanitize_input(prepend_server_url_to_links(@notification.message)) %>
+</p>

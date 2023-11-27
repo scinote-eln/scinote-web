@@ -21,10 +21,10 @@ class MyModulesController < ApplicationController
                                                     update_protocol_description restore_group
                                                     save_table_state actions_toolbar)
   before_action :check_update_state_permissions, only: :update_state
-  before_action :set_inline_name_editing, only: %i(protocols results activities archive)
-  before_action :load_experiment_my_modules, only: %i(protocols results activities archive)
-  before_action :set_breadcrumbs_items, only: %i(results protocols activities archive)
-  before_action :set_navigator, only: %i(protocols results activities archive)
+  before_action :set_inline_name_editing, only: %i(protocols activities archive)
+  before_action :load_experiment_my_modules, only: %i(protocols activities archive)
+  before_action :set_breadcrumbs_items, only: %i(protocols activities archive)
+  before_action :set_navigator, only: %i(protocols activities archive)
 
   layout 'fluid'.freeze
 
@@ -305,22 +305,6 @@ class MyModulesController < ApplicationController
     render json: protocol.errors, status: :unprocessable_entity
   end
 
-  def results
-    @results_order = params[:order] || 'new'
-
-    @results = @my_module.archived_branch? ? @my_module.results : @my_module.results.active
-    @results = @results.page(params[:page]).per(Constants::RESULTS_PER_PAGE_LIMIT)
-
-    @results = case @results_order
-               when 'old' then @results.order(created_at: :asc)
-               when 'old_updated' then @results.order(updated_at: :asc)
-               when 'new_updated' then @results.order(updated_at: :desc)
-               when 'atoz' then @results.order(name: :asc)
-               when 'ztoa' then @results.order(name: :desc)
-               else @results.order(created_at: :desc)
-               end
-  end
-
   def archive
     @archived_results = @my_module.archived_results
   end
@@ -492,11 +476,11 @@ class MyModulesController < ApplicationController
 
     if permitted_params[:started_on].present?
       permitted_params[:started_on] =
-        Time.zone.strptime(permitted_params[:started_on], I18n.backend.date_format.dup.gsub(/%-/, '%') + ' %H:%M')
+        Time.zone.strptime(permitted_params[:started_on], '%Y/%m/%d %H:%M')
     end
     if permitted_params[:due_date].present?
       permitted_params[:due_date] =
-        Time.zone.strptime(permitted_params[:due_date], I18n.backend.date_format.dup.gsub(/%-/, '%') + ' %H:%M')
+        Time.zone.strptime(permitted_params[:due_date], '%Y/%m/%d %H:%M')
     end
 
     permitted_params
@@ -577,6 +561,7 @@ class MyModulesController < ApplicationController
     smart_annotation_notification(
       old_text: old_text,
       new_text: @my_module.description,
+      subject: @my_module,
       title: t('notifications.my_module_description_annotation_title',
                my_module: @my_module.name,
                user: current_user.full_name),
@@ -591,6 +576,7 @@ class MyModulesController < ApplicationController
     smart_annotation_notification(
       old_text: old_text,
       new_text: @my_module.protocol.description,
+      subject: @my_module,
       title: t('notifications.my_module_protocol_annotation_title',
                my_module: @my_module.name,
                user: current_user.full_name),

@@ -6,19 +6,12 @@
   </span>
   <% if due_date_editable %>
     <div class="datetime-picker-container" id="due-date">
-      <span class="sn-icon sn-icon-calendar"></span>
-      <input id="calendarDueDate"
-             type="datetime"
-             data-toggle='date-time-picker'
-             class="form-control calendar-input"
-             readonly
-             placeholder="<%= t('my_modules.details.no_due_date_placeholder') %>"
-             data-date-format="<%= datetime_picker_format_full %>"
-             data-date-locale="<%= I18n.locale %>"
-             data-date-use-current="false"
-             data-date-orientation="left"
-             value="<%= my_module.due_date ? l(my_module.due_date, format: :full) : '' %>"/>
+      <div id="calendarDueDateContainer">
+        <input type="hidden" ref="input" v-model="date" data-simple-format="true" id="calendarDueDate" data-default="<%= l(my_module.due_date, format: :default) if my_module.due_date %>
+        " />
+        <date-time-picker class="w-full" ref="vueDateTime" :teleport="false" @change="updateDate" mode="datetime" :placeholder="'<%= t('my_modules.details.no_due_date_placeholder') %>'"></date-time-picker>
+      </div>
+      <span class="sn-icon sn-icon-close clear-date" data-toggle='clear-date-time-picker' data-target='calendarDueDate'></span>
     </div>
-    <span class="sn-icon sn-icon-close clear-date" data-toggle='clear-date-time-picker' data-target='calendarDueDate'></span>
   <% end %>
 </span>

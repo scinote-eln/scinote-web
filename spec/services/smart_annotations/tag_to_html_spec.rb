@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe SmartAnnotations::TagToHtml do
   let!(:user) { create :user }
-  let!(:team) { create :team, created_by: user }
+  let!(:team) { create :team, :change_user_team, created_by: user }
   let!(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
   let!(:team_assignment) { create_user_assignment(team, owner_role, user) }
   let!(:project) { create :project, name: 'my project', team: team }

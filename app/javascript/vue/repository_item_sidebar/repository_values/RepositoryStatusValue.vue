@@ -3,47 +3,102 @@
     <div class="font-inter text-sm font-semibold leading-5 truncate" :title="colName">
       {{ colName }}
     </div>
-    <div v-if="status && icon"
-      class="flex flex-row items-center text-sn-dark-grey font-inter text-sm font-normal leading-5 gap-1.5">
-      <div v-html="parseEmoji(icon)" class="flex h-6 w-6"></div>
-      {{ status }}
-    </div>
-    <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
-      {{ i18n.t('repositories.item_card.repository_status_value.no_status') }}
+    <div>
+      <select-search
+        v-if="permissions?.can_manage && !inArchivedRepositoryRow"
+        @change="changeSelected"
+        @update="update"
+        :value="selected"
+        :withClearButton="true"
+        :withEditCursor="true"
+        ref="DropdownSelector"
+        :options="options"
+        :isLoading="isLoading"
+        :placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
+        :no-options-placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
+        :searchPlaceholder="i18n.t('repositories.item_card.dropdown_placeholder')"
+        className="h-[38px] !pl-3"
+        optionsClassName="max-h-[300px]"
+      ></select-search>
+      <div v-else-if="status && icon"
+           class="flex flex-row items-center text-sn-dark-grey font-inter text-sm font-normal leading-5 gap-1.5">
+        <div v-html="parseEmoji(icon)" class="flex h-6 w-6"></div>
+        {{ status }}
+      </div>
+      <div
+        v-else
+        class="text-sn-dark-grey font-inter text-sm font-normal leading-5"
+      >
+        {{ i18n.t("repositories.item_card.repository_status_value.no_status") }}
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-
-import twemoji from 'twemoji';
+import SelectSearch from "../../shared/select_search.vue";
+import repositoryValueMixin from "./mixins/repository_value.js";
+import twemoji from "twemoji";
 
 export default {
-  name: 'RepositoryStatusValue',
+  name: "RepositoryStatusValue",
+  components: {
+    "select-search": SelectSearch
+  },
+  mixins: [repositoryValueMixin],
   data() {
     return {
       id: null,
       icon: null,
-      status: null
-    }
+      status: null,
+      selected: null,
+      isLoading: true,
+      options: []
+    };
   },
   props: {
     data_type: String,
     colId: Number,
     colName: String,
-    colVal: Object
+    colVal: Object,
+    optionsPath: String,
+    permissions: null,
+    inArchivedRepositoryRow: Boolean,
   },
   created() {
-    if (!this.colVal) return
+    if (!this.colVal) return;
 
-    this.id = this.colVal.id
-    this.icon = this.colVal.icon
-    this.status = this.colVal.status
+    this.id = this.colVal.id;
+    this.icon = this.colVal.icon;
+    this.status = this.colVal.status;
+  },
+  mounted() {
+    this.isLoading = true;
+
+    $.get(this.optionsPath, data => {
+      if (Array.isArray(data)) {
+        this.options = data.map(option => {
+          const { value, label } = option;
+          return [value, label];
+        });
+        return false;
+      }
+      this.options = [];
+    }).always(() => {
+      this.isLoading = false;
+      this.selected = this.id;
+    });
   },
   methods: {
+    changeSelected(id) {
+      this.selected = id;
+      if (id) {
+        this.update(id);
+      }
+    },
     parseEmoji(content) {
       return twemoji.parse(content);
     }
   }
-}
+};
 </script>

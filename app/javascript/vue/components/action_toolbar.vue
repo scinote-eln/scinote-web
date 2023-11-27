@@ -111,7 +111,7 @@
       this.$nextTick(this.setWidth);
       window.addEventListener('scroll', this.setLeftOffset);
     },
-    beforeDestroy() {
+    beforeUnmount() {
       delete window.actionToolbarComponent;
       window.removeEventListener('scroll', this.setLeftOffset);
     },

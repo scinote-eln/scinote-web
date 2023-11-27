@@ -1,11 +1,8 @@
 /* global I18n */
 
-import TurbolinksAdapter from 'vue-turbolinks';
-import Vue from 'vue/dist/vue.esm';
+import { createApp } from 'vue/dist/vue.esm-bundler.js';
 import FilterContainer from '../../vue/repository_filter/container.vue';
-
-Vue.use(TurbolinksAdapter);
-Vue.prototype.i18n = window.I18n;
+import { mountWithTurbolinks } from './helpers/turbolinks.js';
 
 const DEFAULT_FILTERS = [
   {
@@ -62,7 +59,6 @@ const DEFAULT_FILTERS = [
 
 window.repositoryFilterObject = null;
 window.initRepositoryFilter = () => {
-  Vue.prototype.dateFormat = $('#filterContainer').data('date-format')
   const defaultColumns = [
     { id: 'assigned', name: I18n.t('repositories.table.assigned_tasks'), data_type: 'RepositoryMyModuleValue' },
     { id: 'row_id', name: I18n.t('repositories.table.id'), data_type: 'RepositoryTextValue' },
@@ -72,8 +68,8 @@ window.initRepositoryFilter = () => {
     { id: 'archived_by', name: I18n.t('repositories.table.archived_by'), data_type: 'RepositoryUserValue' },
     { id: 'archived_on', name: I18n.t('repositories.table.archived_on'), data_type: 'RepositoryDateTimeValue' }
   ];
-  const repositoryFilterContainer = new Vue({
-    el: '#filterContainer',
+  const defFilters = JSON.parse(JSON.stringify(DEFAULT_FILTERS));
+  const app = createApp({
     data: () => ({
       filters: [],
       defaultFilters: DEFAULT_FILTERS,
@@ -85,10 +81,19 @@ window.initRepositoryFilter = () => {
     }),
     created() {
       this.dataTableElement = $($('#filterContainer').data('datatable-id'));
-    },
 
-    components: {
-      'filter-container': FilterContainer
+      $.get($('#filterContainer').data('my-modules-url'), (data) => {
+        this.my_modules = data.data;
+      });
+
+      $.get($('#filterContainer').data('columns-url'), (data) => {
+        const combinedColumns = data.response.concat(defaultColumns);
+        this.columns = combinedColumns.sort((a, b) => a.name > b.name ? 1 : -1);
+      });
+
+      $.get($('#filterContainer').data('saved-filters-url'), (data) => {
+        this.savedFilters = data.data;
+      });
     },
     computed: {
       filtersJSON() {
@@ -120,12 +125,12 @@ window.initRepositoryFilter = () => {
         this.reloadDataTable();
       },
       clearFilters() {
-        this.filters = this.filters
-          .map(filter => {
-            const newFilter = { ...filter };
-            newFilter.data["parameters"] = {};
-            return newFilter;
-          });
+        this.filters.forEach((filter, index) => {
+          const newFilter = { ...filter };
+          newFilter.data['parameters'] = {};
+          newFilter.data['operator'] = defFilters[index].data['operator'];
+          return newFilter;
+        });
         this.filterName = null;
         this.dataTableElement.removeAttr('data-repository-filter-json');
         $('#modalSaveRepositoryTableFilter').data('repositoryTableFilterId', null);
@@ -143,19 +148,10 @@ window.initRepositoryFilter = () => {
       }
     }
   });
-
-  $.get($('#filterContainer').data('my-modules-url'), (data) => {
-    repositoryFilterContainer.my_modules = data.data;
-  });
-
-  $.get($('#filterContainer').data('columns-url'), (data) => {
-    const combinedColumns = data.response.concat(defaultColumns);
-    repositoryFilterContainer.columns = combinedColumns.sort((a, b) => a.name > b.name ? 1 : -1);
-  });
-
-  $.get($('#filterContainer').data('saved-filters-url'), (data) => {
-    repositoryFilterContainer.savedFilters = data.data;
-  });
+  app.component('FilterContainer', FilterContainer);
+  app.config.globalProperties.i18n = window.I18n;
+  app.config.globalProperties.dateFormat = $('#filterContainer').data('date-format');
+  window.repositoryFilterObject = mountWithTurbolinks(app, '#filterContainer');
 
   $('#filterContainer').on('click', (e) => {
     $('#filterContainer .dropdown-selector-container').removeClass('open')
@@ -165,6 +161,4 @@ window.initRepositoryFilter = () => {
   $('#filtersDropdownButton').on('show.bs.dropdown', () => {
     $('#filtersColumnsDropdown, #savedFiltersContainer').removeClass('open');
   });
-
-  window.repositoryFilterObject = repositoryFilterContainer;
 };

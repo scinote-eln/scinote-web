@@ -6,6 +6,7 @@ RSpec.describe Users::SessionsController, type: :controller do
   describe 'POST #create' do
     before do
       @request.env['devise.mapping'] = Devise.mappings[:user]
+      user.confirm
     end
 
     let(:user) { create :user }
@@ -75,6 +76,7 @@ RSpec.describe Users::SessionsController, type: :controller do
   describe 'POST #authenticate_with_two_factor' do
     before do
       @request.env['devise.mapping'] = Devise.mappings[:user]
+      user.confirm
     end
 
     let(:user) { create :user }

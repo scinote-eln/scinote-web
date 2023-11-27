@@ -9,14 +9,13 @@ RUN \
   apt-get install -y --no-install-recommends \
   libssl-dev \
   nodejs \
-  npm \
-  postgresql-client && \
-  npm install -g yarn
+  yarnpkg \
+  postgresql-client
 
 ENV APP_HOME /usr/src/app
 ENV RAILS_ENV=production
 ENV GEM_HOME=$APP_HOME/vendor/bundle/ruby/3.2.0
-ENV PATH=$GEM_HOME/bin:$PATH
+ENV PATH=$GEM_HOME/bin:/usr/share/nodejs/yarn/bin:$PATH
 ENV BUNDLE_APP_CONFIG=.bundle
 ENV BUNDLE_BUILD__SASSC=--disable-march-tune-native
 
@@ -69,7 +68,7 @@ RUN \
   libjemalloc2 \
   groff-base \
   postgresql-client \
-  npm \
+  nodejs \
   awscli \
   netcat-openbsd \
   poppler-utils \
@@ -77,9 +76,9 @@ RUN \
   libvips42 \
   graphviz \
   chromium \
-  libfile-mimeinfo-perl && \
-  npm install -g yarn && \
-  yarn add puppeteer@npm:puppeteer-core && \
+  libfile-mimeinfo-perl \
+  yarnpkg && \
+  /usr/share/nodejs/yarn/bin/yarn add puppeteer@npm:puppeteer-core && \
   apt-get install -y libreoffice && \
   ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so
 

@@ -473,7 +473,7 @@ class Asset < ApplicationRecord
 
   def previewable_image?
     preview_image.attached? ||
-      file.blob&.content_type =~ %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}}
+      file.blob&.content_type&.match?(%r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}})
   end
 
   def step_or_result_or_repository_asset_value
