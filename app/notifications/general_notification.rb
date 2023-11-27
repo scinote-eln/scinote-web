@@ -12,4 +12,8 @@ class GeneralNotification < BaseNotification
   def subtype
     params[:type]
   end
+
+  def subject
+    params[:subject]
+  end
 end
