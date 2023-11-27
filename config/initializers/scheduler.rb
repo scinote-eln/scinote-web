@@ -25,3 +25,7 @@ end
 scheduler.every '1h' do
   DueDateReminderJob.perform_now
 end
+
+scheduler.every '1d' do
+  NotificationCleanupJob.perform_now
+end
