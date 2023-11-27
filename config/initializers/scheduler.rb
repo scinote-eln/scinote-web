@@ -26,3 +26,7 @@ scheduler.every '1h' do
   MyModules::DueDateReminderJob.perform_now
   RepositoryItemDateReminderJob.perform_now
 end
+
+scheduler.every '1d' do
+  NotificationCleanupJob.perform_now
+end
