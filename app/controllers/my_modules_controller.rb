@@ -561,6 +561,7 @@ class MyModulesController < ApplicationController
     smart_annotation_notification(
       old_text: old_text,
       new_text: @my_module.description,
+      subject: @my_module,
       title: t('notifications.my_module_description_annotation_title',
                my_module: @my_module.name,
                user: current_user.full_name),
@@ -575,6 +576,7 @@ class MyModulesController < ApplicationController
     smart_annotation_notification(
       old_text: old_text,
       new_text: @my_module.protocol.description,
+      subject: @my_module,
       title: t('notifications.my_module_protocol_annotation_title',
                my_module: @my_module.name,
                user: current_user.full_name),

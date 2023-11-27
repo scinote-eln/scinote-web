@@ -4,11 +4,11 @@ class NotificationExtends
   NOTIFICATIONS_TYPES = {
     designate_user_to_my_module_activity: {
       code: 13,
-      recipients_module: :MyModuleDesignatedRecipients
+      recipients_module: :DesignateToMyModuleRecipients
     },
     undesignate_user_from_my_module_activity: {
       code: 14,
-      recipients_module: :MyModuleDesignatedRecipients
+      recipients_module: :DesignateToMyModuleRecipients
     },
     my_module_due_date_reminder: {
       recipients_module: :MyModuleDesignatedRecipients
@@ -84,7 +84,7 @@ class NotificationExtends
       recipients_module: :RepositoryRowCreator
     },
     smart_annotation_added: {
-      recipients_module: :AnnotatedRecipients
+      recipients_module: :DirectRecipient
     },
     invite_user_to_team: {
       code: 92,
