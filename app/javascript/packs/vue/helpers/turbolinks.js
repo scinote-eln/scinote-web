@@ -1,5 +1,5 @@
 function mountWithTurbolinks(app, target, callback = null) {
-  const originalHtml = document.querySelector(target).innerHTML;
+  const originalHtml = document.querySelector(target)?.innerHTML;
   const cacheDisabled = document.querySelector('#cache-directive');
   const event = cacheDisabled ? 'turbolinks:before-render' : 'turbolinks:before-cache';
 
