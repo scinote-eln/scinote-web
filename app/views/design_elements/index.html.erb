@@ -1,0 +1,218 @@
+<div>
+  <h1>Select</h1>
+  <div id="selects" class="flex items-center gap-4 flex-wrap">
+    <div class="flex basis-full items-center gap-4">
+      <span>Sizes:</span>
+      <button class="btn btn-light" :class="{'!border-sn-blue': size == 'xs'}" @click="size = 'xs'">XS</button>
+      <button class="btn btn-light" :class="{'!border-sn-blue': size == 'sm'}" @click="size = 'sm'">SM</button>
+      <button class="btn btn-light" :class="{'!border-sn-blue': size == 'md'}" @click="size = 'md'">MD</button>
+
+    </div>
+    <div class="w-64">
+      <label>Simple select</label>
+      <select-dropdown
+        :options="simpleOptions"
+        placeholder="Select an option"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Simple select disabled</label>
+      <select-dropdown
+        :options="simpleOptions"
+        placeholder="Select an option"
+        :disabled="true"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Simple select with long options</label>
+      <select-dropdown
+        :options="longOptions"
+        placeholder="Select an option"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Simple select with predefined value</label>
+      <select-dropdown
+        value="5"
+        :options="simpleOptions"
+        placeholder="Select an option"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Clearable select</label>
+      <select-dropdown
+        value="5"
+        :options="simpleOptions"
+        placeholder="Select an option"
+        :clearable="true"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Simple select with search</label>
+      <select-dropdown
+        :options="simpleOptions"
+        placeholder="Select an option"
+        no-options-placeholder="No options found"
+        :searchable="true"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Clearable select with search</label>
+      <select-dropdown
+        value="5"
+        :options="simpleOptions"
+        placeholder="Select an option"
+        :clearable="true"
+        :searchable="true"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Multiselect</label>
+      <select-dropdown
+        :options="simpleOptions"
+        placeholder="Select an option"
+        few-options-placeholder="options selected"
+        all-options-placeholder="All options selected"
+        :multiple="true"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Multiselect with predefined value</label>
+      <select-dropdown
+        :value="['5', '6', '2']"
+        :options="simpleOptions"
+        placeholder="Select an option"
+        few-options-placeholder="options selected"
+        all-options-placeholder="All options selected"
+        :multiple="true"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Multiselect with checkboxes</label>
+      <select-dropdown
+        :options="simpleOptions"
+        placeholder="Select an option"
+        few-options-placeholder="options selected"
+        all-options-placeholder="All options selected"
+        :with-checkboxes="true"
+        :multiple="true"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Multiselect with search</label>
+      <select-dropdown
+        :options="simpleOptions"
+        placeholder="Select an option"
+        few-options-placeholder="options selected"
+        all-options-placeholder="All options selected"
+        no-options-placeholder="No options found"
+        :searchable="true"
+        :multiple="true"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Clearable multiselect</label>
+      <select-dropdown
+        :options="simpleOptions"
+        placeholder="Select an option"
+        few-options-placeholder="options selected"
+        all-options-placeholder="All options selected"
+        no-options-placeholder="No options found"
+        :clearable="true"
+        :multiple="true"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Select with AJAX source</label>
+      <select-dropdown
+        options-url="<%= test_select_design_elements_path %>"
+        placeholder="Select an option"
+        no-options-placeholder="No options found"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Select with AJAX with predefined</label>
+      <select-dropdown
+        value="5"
+        options-url="<%= test_select_design_elements_path %>"
+        placeholder="Select an option"
+        no-options-placeholder="No options found"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Select with AJAX source with search</label>
+      <select-dropdown
+        options-url="<%= test_select_design_elements_path %>"
+        placeholder="Select an option"
+        no-options-placeholder="No options found"
+
+        :searchable="true"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Multiselect with AJAX source</label>
+      <select-dropdown
+        options-url="<%= test_select_design_elements_path %>"
+        placeholder="Select an option"
+        no-options-placeholder="No options found"
+        few-options-placeholder="options selected"
+        all-options-placeholder="All options selected"
+        :size="size"
+        :multiple="true"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Multiselect with AJAX/checkboxes</label>
+      <select-dropdown
+        options-url="<%= test_select_design_elements_path %>"
+        placeholder="Select an option"
+        no-options-placeholder="No options found"
+        few-options-placeholder="options selected"
+        all-options-placeholder="All options selected"
+        :size="size"
+        :multiple="true"
+        :with-checkboxes="true"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Select with custom renderer</label>
+      <select-dropdown
+        :options="simpleOptions"
+        placeholder="Select an option"
+        :option-renderer="renderer"
+        :label-renderer="renderer"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Multiselect with custom renderer</label>
+      <select-dropdown
+        :options="simpleOptions"
+        placeholder="Select an option"
+        :option-renderer="renderer"
+        :label-renderer="renderer"
+        few-options-placeholder="options selected"
+        all-options-placeholder="All options selected"
+        :multiple="true"
+        :size="size"
+      ></select-dropdown>
+    </div>
+  </div>
+</div>
+
+<%= javascript_include_tag 'vue_design_system_select' %>

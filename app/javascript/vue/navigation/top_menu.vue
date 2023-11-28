@@ -5,14 +5,11 @@
       <i class="sn-icon sn-icon-search"></i>
     </div>
     <div v-if="currentTeam" class="w-64">
-      <Select
+      <SelectDropdown
         :value="currentTeam"
         :options="teams"
-        :placeholder="'test'"
-        :noOptionsPlaceholder="'test'"
-        v-bind:disabled="false"
         @change="switchTeam"
-      ></Select>
+      ></SelectDropdown>
     </div>
     <MenuDropdown
       class="ml-auto"
@@ -63,7 +60,7 @@
 <script>
   import NotificationsFlyout from './notifications/notifications_flyout.vue';
   import DropdownSelector from '../shared/dropdown_selector.vue';
-  import Select from "../shared/select.vue";
+  import SelectDropdown from "../shared/select_dropdown.vue";
   import MenuDropdown from '../shared/menu_dropdown.vue';
 
   export default {
@@ -71,8 +68,8 @@
     components: {
       DropdownSelector,
       NotificationsFlyout,
-      Select,
-      MenuDropdown
+      MenuDropdown,
+      SelectDropdown
     },
     props: {
       url: String,
