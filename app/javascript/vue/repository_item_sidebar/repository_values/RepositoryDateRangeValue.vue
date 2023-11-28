@@ -1,13 +1,12 @@
 <template>
   <div class="flex flex-col gap-2">
-    <div class="text-sm font-bold truncate" :title="colName">
-      {{ colName }}
-    </div>
+
     <DateTimeComponent
       mode="date"
       :range="true"
       :colVal="colVal"
       :colId="colId"
+      :colName="colName"
       :updatePath="updatePath"
       :canEdit="canEdit"
     />

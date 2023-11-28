@@ -1,4 +1,10 @@
 <template>
+  <div class="flex gap-1">
+    <div class="text-sm font-bold truncate" :title="colName">
+      {{ colName }}
+    </div>
+    <div v-if="colVal.reminder" class="bg-sn-alert-passion w-1.5 h-1.5 rounded" :title="colVal.reminder_text"></div>
+  </div>
   <div class="flex flex-col gap-2">
     <template v-if="!canEdit">
       <span v-if="range">
@@ -57,7 +63,8 @@
       colVal: { type: Object, default: {} },
       colId: Number,
       updatePath: String,
-      canEdit: { type: Boolean, default: false }
+      canEdit: { type: Boolean, default: false },
+      colName: String,
     },
     created() {
       if (this.range) {
