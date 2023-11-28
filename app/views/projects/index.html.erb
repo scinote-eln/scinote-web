@@ -2,13 +2,26 @@
 <% provide(:sidebar_url, sidebar_team_path(current_team, project_folder_id: current_folder&.id)) %>
 <% provide(:container_class, 'no-second-nav-container') %>
 
-<%= content_for :sidebar do %>
-  <%= render partial: 'shared/sidebar/projects', locals: { team: current_team, sort: nil, view_mode: projects_view_mode } if current_team %>
-<% end %>
-
 <div id="projectsWrapper" class="content-pane flexible projects-index <%= projects_view_mode %>" data-view-mode="<%= projects_view_mode %>" data-e2e="e2e-projects-container">
   <%= render partial: 'projects/index/header', locals: { current_folder: current_folder} %>
 
+  <div id="ProjectsList" class="fixed-content-body">
+    <projects-list
+      actions-url="<%= actions_toolbar_projects_url %>"
+      data-source="<%= projects_path(format: :json) %>"
+      active-page-url="<%= projects_path(view_mode: :active) %>"
+      archived-page-url="<%= projects_path(view_mode: :archived) %>"
+      current-view-mode="<%= params[:view_mode] || :active %>"
+      create-url="<%= projects_path if can_create_projects?(current_team) %>"
+      create-folder-url="<%= project_folders_path if can_create_project_folders?(current_team)  %>"
+    />
+  </div>
+  <%= javascript_include_tag 'vue_projects_list' %>
+
+
+  <div id="toolbarWrapper" class="toolbar-row" data-width-breakpoint="750">
+    <%= render partial: 'projects/index/toolbar' %>
+  </div>
   <span style="display: none;" data-hook="projects-index-html"></span>
 
   <%= render partial: 'projects/index/modals/edit_modal' %>

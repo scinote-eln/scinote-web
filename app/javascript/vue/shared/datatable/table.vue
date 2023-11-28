@@ -1,21 +1,34 @@
 <template>
   <div class="flex flex-col h-full">
-    <div class="relative flex flex-col flex-grow">
-      <Toolbar :toolbarActions="toolbarActions" @toolbar:action="emitAction" :searchValue="searchValue" @search:change="setSearchValue" />
+    <div class="relative flex flex-col flex-grow z-10">
+      <Toolbar
+        :toolbarActions="toolbarActions"
+        @toolbar:action="emitAction"
+        :searchValue="searchValue"
+        @search:change="setSearchValue"
+        :activePageUrl="activePageUrl"
+        :archivedPageUrl="archivedPageUrl"
+        :currentViewMode="currentViewMode"
+        :filters="filters"
+        @applyFilters="applyFilters"
+      />
       <ag-grid-vue
-        class="ag-theme-alpine w-full flex-grow h-full"
+        class="ag-theme-alpine w-full flex-grow h-full z-10"
         :class="{'opacity-0': initializing}"
         :columnDefs="columnDefs"
         :rowData="rowData"
         :defaultColDef="defaultColDef"
         :rowSelection="'multiple'"
+        :suppressRowTransform="true"
         :gridOptions="gridOptions"
+        :suppressRowClickSelection="true"
         @grid-ready="onGridReady"
         @first-data-rendered="onFirstDataRendered"
         @sortChanged="setOrder"
         @columnResized="saveColumnsState"
         @columnMoved="saveColumnsState"
         @rowSelected="setSelectedRows"
+        @cellClicked="clickCell"
         :CheckboxSelectionCallback="withCheckboxes"
       >
       </ag-grid-vue>
@@ -52,6 +65,7 @@ import Pagination from './pagination.vue';
 import CustomHeader from './tableHeader';
 import ActionToolbar from './action_toolbar.vue';
 import Toolbar from './toolbar.vue';
+import RowMenuRenderer from './row_menu_renderer.vue';
 
 export default {
   name: "App",
@@ -59,6 +73,10 @@ export default {
     withCheckboxes: {
       type: Boolean,
       default: true,
+    },
+    withRowMenu: {
+      type: Boolean,
+      default: false,
     },
     tableId: {
       type: String,
@@ -82,7 +100,22 @@ export default {
     reloadingTable: {
       type: Boolean,
       default: false
-    }
+    },
+    activePageUrl: {
+      type: String,
+    },
+    archivedPageUrl: {
+      type: String,
+    },
+    currentViewMode: {
+      type: String,
+      default: 'active'
+    },
+    filters: {
+      type: Array,
+      default: () => []
+    },
+
   },
   data() {
     return {
@@ -98,7 +131,8 @@ export default {
       totalPage: 0,
       selectedRows: [],
       searchValue: '',
-      initializing: true
+      initializing: true,
+      activeFilters: {}
     };
   },
   components: {
@@ -108,7 +142,8 @@ export default {
     Pagination,
     agColumnHeader: CustomHeader,
     ActionToolbar,
-    Toolbar
+    Toolbar,
+    RowMenuRenderer
   },
   computed: {
     perPageOptions() {
@@ -121,7 +156,7 @@ export default {
     },
     actionsParams() {
       return {
-        item_ids: this.selectedRows.map(row => row.id).join(',')
+        items: JSON.stringify(this.selectedRows.map(row => { return {id: row.id, type: row.type} }))
       }
     },
     gridOptions() {
@@ -139,7 +174,23 @@ export default {
         checkboxSelection: true,
         width: 48,
         minWidth: 48,
-        resizable: false
+        resizable: false,
+        pinned: 'left'
+      });
+    }
+
+    if (this.withRowMenu) {
+      this.columnDefs.push({
+        field: "rowMenu",
+        headerName: '',
+        width: 42,
+        minWidth: 42,
+        resizable: false,
+        sortable: false,
+        cellRenderer: 'RowMenuRenderer',
+        cellStyle: {overflow: 'visible'},
+        pinned: 'right'
+
       });
     }
   },
@@ -159,7 +210,7 @@ export default {
   },
   methods: {
     formatData(data) {
-      return data.map( (item) => Object.assign({}, item.attributes, { id: item.id }) );
+      return data.map( (item) => Object.assign({}, item.attributes, { id: item.id, type: item.type }) );
     },
     resize() {
       if (this.tableState) return;
@@ -173,7 +224,9 @@ export default {
             per_page: this.perPage,
             page: this.page,
             order: this.order,
-            search: this.searchValue
+            search: this.searchValue,
+            view_mode: this.currentViewMode,
+            filters: this.activeFilters
           }
         })
         .then((response) => {
@@ -233,6 +286,15 @@ export default {
     },
     setSearchValue(value) {
       this.searchValue = value;
+      this.loadData();
+    },
+    clickCell(e) {
+      if (e.column.colId !== 'rowMenu') {
+          e.node.setSelected(true);
+      }
+    },
+    applyFilters(filters) {
+      this.activeFilters = filters;
       this.loadData();
     }
   }

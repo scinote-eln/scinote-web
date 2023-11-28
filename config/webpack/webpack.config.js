@@ -46,7 +46,8 @@ const entryList = {
   vue_components_export_stock_consumption_modal: './app/javascript/packs/vue/export_stock_consumption_modal.js',
   vue_components_manage_stock_value_modal: './app/javascript/packs/vue/manage_stock_value_modal.js',
   vue_legacy_datetime_picker: './app/javascript/packs/vue/legacy/datetime_picker.js',
-  vue_label_templates_table: './app/javascript/packs/vue/label_templates_table.js'
+  vue_label_templates_table: './app/javascript/packs/vue/label_templates_table.js',
+  vue_projects_list: './app/javascript/packs/vue/projects_list.js',
 }
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949

@@ -1,6 +1,11 @@
 <template>
   <div class="mb-6">
-    <inputWithHistory :modelValue="value" :label="filter.label" @update:modelValue="update" :placeholder="filter.placeholder" :id="'textSearch' + filter.key"/>
+    <inputWithHistory
+      :modelValue="value"
+      :label="filter.label || i18n.t('filters_modal.text.label')"
+       @update:modelValue="update"
+       :placeholder="filter.placeholder || i18n.t('filters_modal.text.placeholder')"
+       :id="'textSearch' + filter.key"/>
   </div>
 </template>
 

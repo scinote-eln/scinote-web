@@ -19,7 +19,7 @@
 </template>
  <script>
   export default {
-    name: 'deleteStepModal',
+    name: 'confirmationModal',
     props: {
       title: {
         type: String,

@@ -146,7 +146,7 @@ class LabelTemplatesController < ApplicationController
       actions:
         Toolbars::LabelTemplatesService.new(
           current_user,
-          label_template_ids: params[:item_ids].split(',')
+          label_template_ids: JSON.parse(params[:items]).map { |i| i['id'] }
         ).actions
     }
   end
