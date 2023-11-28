@@ -759,7 +759,7 @@ en:
           assigned_items_description: "Inventories selected below will only contain the items that you assigned to the tasks directly."
           include_all_assigned_iitems: "Include all assigned items from the following inventories"
           results: "Results"
-          all_results: "Include all results"
+          all_results: "Include all results elements"
           order_results: "Order results"
           atoz: "Name A to Z"
           ztoa: "Name Z to A"
@@ -767,12 +767,12 @@ en:
           old: "Added first"
           new_updated: "Modified last"
           old_updated: "Modified first"
-          file_results: "File results"
+          file_results: "Result files"
           insert_pages_from_pdf: "Insert pages from PDF and docx files into the report"
           pdf_warning: "This may increase report generation time."
-          table_results: "Table results"
-          text_results: "Text results"
-          results_comments: "Include all result comments"
+          table_results: "Result tables"
+          text_results: "Result texts"
+          results_comments: "Result comments"
           additional_content: "Additional content"
           task_activity: "Include task activity"
           archived: "[archived]"
@@ -2308,6 +2308,8 @@ en:
         errors:
           set_all_or_none: 'Needs to set both or none'
           not_valid_range: 'Range is not valid.'
+          select_valid_value: 'Select a valid date or date-time value'
+          browser_alert_message: 'You have made some changes, are you sure you want to leave this page?'
     highlight_component:
       information_label: 'Information'
       custom_columns_label: 'Custom columns'

@@ -13,7 +13,7 @@
         }}
       </div>
     </div>
-    <div v-if="canEdit" class="w-full">
+    <div v-if="canEdit" class="w-full contents">
       <text-area :initialValue="(colVal)?.toLocaleString('fullwide', {useGrouping:false}) || ''"
                   :noContentPlaceholder="i18n.t('repositories.item_card.repository_number_value.placeholder')"
                   :placeholder="i18n.t('repositories.item_card.repository_number_value.placeholder')"
@@ -65,11 +65,8 @@ export default {
     colName: String,
     colVal: Number,
     permissions: null,
-    canEdit: { type: Boolean, defaul: false}
-  },
-  created() {
-    // constants
-    this.decimals = Number(document.getElementById(`${this.colId}`).dataset['metadataDecimals']) || 0;
+    decimals: { type: Number, default: 0 },
+    canEdit: { type: Boolean, default: false },
   },
   methods: {
     toggleCollapse() {
