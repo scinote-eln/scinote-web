@@ -40,7 +40,7 @@
                 :placeholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_inventory_placeholder')"
                 :noOptionsPlaceholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_inventory_no_options_placeholder')"
                 :searchPlaceholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_inventory_placeholder')"
-              </select-search>
+              ></select-search>
             </div>
           </div>
 
@@ -72,7 +72,7 @@
                 :placeholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_relationship_placeholder')"
                 :noOptionsPlaceholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_relationship_no_options_placeholder')"
                 :searchPlaceholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_relationship_placeholder')"
-              </select-search>
+              ></select-search>
             </div>
           </div>
         </div>
