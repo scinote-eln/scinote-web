@@ -183,8 +183,8 @@ export default {
       this.columnDefs.push({
         field: "rowMenu",
         headerName: '',
-        width: 72,
-        minWidth: 72,
+        width: 42,
+        minWidth: 42,
         resizable: false,
         sortable: false,
         cellRenderer: 'RowMenuRenderer',

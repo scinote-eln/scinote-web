@@ -1,8 +1,8 @@
 <template>
-  <div class="flex items-center">
+  <div class="items-center -ml-1.5 my-2">
     <MenuDropdown
       :listItems="this.formattedList"
-      :btnClasses="'btn btn-light icon-btn'"
+      btnClasses="bg-transparent w-6 h-6 border-0 p-0 flex"
       :position="'right'"
       :alwaysShow="true"
       :btnIcon="'sn-icon sn-icon-more-hori'"

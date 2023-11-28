@@ -32,25 +32,25 @@ module Lists
 
     def fetch_projects
       @team.projects
-        .includes(:team, user_assignments: %i(user user_role))
-        .includes(:project_comments, experiments: { my_modules: { my_module_status: :my_module_status_implications } })
-        .visible_to(@user, @team)
-        .left_outer_joins(:project_comments)
-        .select('projects.*')
-        .select('COUNT(DISTINCT comments.id) AS comment_count')
-        .group('projects.id')
+           .includes(:team, user_assignments: %i(user user_role))
+           .includes(:project_comments, experiments: { my_modules: { my_module_status: :my_module_status_implications } })
+           .visible_to(@user, @team)
+           .left_outer_joins(:project_comments)
+           .select('projects.*')
+           .select('COUNT(DISTINCT comments.id) AS comment_count')
+           .group('projects.id')
     end
 
     def fetch_project_folders
       project_folders = @team.project_folders
-                            .includes(:team)
-                            .joins('LEFT OUTER JOIN project_folders child_folders
+                             .includes(:team)
+                             .joins('LEFT OUTER JOIN project_folders child_folders
                                     ON child_folders.parent_folder_id = project_folders.id')
-                            .left_outer_joins(:projects)
+                             .left_outer_joins(:projects)
       project_folders.select('project_folders.*')
-                    .select('COUNT(DISTINCT projects.id) AS projects_count')
-                    .select('COUNT(DISTINCT child_folders.id) AS folders_count')
-                    .group('project_folders.id')
+                     .select('COUNT(DISTINCT projects.id) AS projects_count')
+                     .select('COUNT(DISTINCT child_folders.id) AS folders_count')
+                     .group('project_folders.id')
     end
 
     def filter_project_records(records)
@@ -64,9 +64,15 @@ module Lists
       if @filters[:members].present?
         records = records.joins(:user_assignments).where(user_assignments: { user_id: @filters[:members] })
       end
-      records = records.where('projects.created_at > ?', @filters[:created_on_from]) if @filters[:created_on_from].present?
+      if @filters[:created_on_from].present?
+        records = records.where('projects.created_at > ?',
+                                @filters[:created_on_from])
+      end
       records = records.where('projects.created_at < ?', @filters[:created_on_to]) if @filters[:created_on_to].present?
-      records = records.where('projects.archived_on < ?', @filters[:archived_on_to]) if @filters[:archived_on_to].present?
+      if @filters[:archived_on_to].present?
+        records = records.where('projects.archived_on < ?',
+                                @filters[:archived_on_to])
+      end
       if @filters[:archived_on_from].present?
         records = records.where('projects.archived_on > ?', @filters[:archived_on_from])
       end
