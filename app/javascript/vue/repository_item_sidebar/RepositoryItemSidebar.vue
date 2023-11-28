@@ -138,7 +138,12 @@
                   </template>
                   <template v-else>
                     <div class="font-inter text-sm leading-5 w-full">
-                      <div class="mb-3 font-semibold">{{ i18n.t('repositories.item_card.relationships.parents.count', { count: parentsCount || 0 }) }}</div>
+                      <div class="flex flex-row justify-between">
+                        <div class="mb-3 font-semibold">{{ i18n.t('repositories.item_card.relationships.parents.count', { count: parentsCount || 0 }) }}</div>
+                        <a class="btn-text-link font-normal" @click="handleOpenAddRelationshipsModal($event, 'parent')">
+                          {{ i18n.t('repositories.item_card.add_relationship_button_text') }}
+                        </a>
+                      </div>
                       <div v-if="parentsCount">
                         <details v-for="(parent) in parents" @toggle="updateOpenState(parent.code, $event.target.open)" :key="parent.code" class="flex flex-col font-normal gap-5 group cursor-default">
                           <summary class="flex flex-row gap-3 mb-3 items-center">
@@ -170,7 +175,12 @@
                     <div class="sci-divider pb-4"></div>
 
                     <div class="font-inter text-sm leading-5 w-full">
-                      <div class="mb-3 font-semibold">{{ i18n.t('repositories.item_card.relationships.children.count', { count: childrenCount || 0 }) }}</div>
+                      <div class="flex flex-row justify-between">
+                        <div class="mb-3 font-semibold">{{ i18n.t('repositories.item_card.relationships.children.count', { count: childrenCount || 0 }) }}</div>
+                        <a class="btn-text-link font-normal" @click="handleOpenAddRelationshipsModal($event, 'child')">
+                          {{ i18n.t('repositories.item_card.add_relationship_button_text') }}
+                        </a>
+                      </div>
                       <div v-if="childrenCount">
                         <details v-for="(child) in children" :key="child.code" @toggle="updateOpenState(child.code, $event.target.open)" class="flex flex-col font-normal gap-5 group">
                           <summary class="flex flex-row gap-3 mb-3 items-center">
@@ -347,12 +357,12 @@ export default {
   watch: {
     parents() {
       this.parents.forEach((parent) => {
-        this.$set(this.relationshipDetailsState, parent.code, false);
+        this.relationshipDetailsState[parent.code] = false;
       });
     },
     children() {
       this.children.forEach((child) => {
-        this.$set(this.relationshipDetailsState, child.code, false);
+        this.relationshipDetailsState[child.code] = false;
       });
     },
   },
@@ -366,6 +376,11 @@ export default {
     document.removeEventListener('mousedown', this.handleOutsideClick);
   },
   methods: {
+    handleOpenAddRelationshipsModal(event, parentOrChild) {
+      event.stopPropagation();
+      event.preventDefault();
+      window.repositoryItemRelationshipsModal.show(parentOrChild);
+    },
     handleOutsideClick(event) {
       if (!this.isShowing) return;
 

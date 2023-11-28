@@ -38,7 +38,7 @@
       disabled: { type: Boolean },
       isLoading: { type: Boolean, default: false },
       className: { type: String, default: '' },
-      optionsClassName: { type: String, default: '' }
+      optionsClassName: { type: String, default: '' },
     },
     components: { Select },
     data() {
