@@ -162,10 +162,10 @@
           this.openNameModal();
           return;
         }
-        const { row = 0, col = 0 } = this.selectedCell || {};
 
+        const { row = 0, col = 0 } = this.selectedCell || {};
         this.editingTable = true;
-        this.$nextTick(() => this.tableObject.selectCell(row, col));
+        this.$nextTick(() => this.tableObject.selectCell(row,col));
       },
       disableTableEdit() {
         this.editingTable = false;
@@ -270,13 +270,12 @@
           readOnly: !this.editingTable,
           afterUnlisten: () => {
             this.updatingTableData = true;
-            setTimeout(this.updateTable, 100) // delay makes cancel button work
+            this.updateTable();
           },
           afterSelection: (r, c, r2, c2) => {
             if (r === r2 && c === c2) {
               this.selectedCell = { row: r, col: c };
             }
-            this.updateTable();
           },
           afterChange: () => {
             if (this.editingTable == false) return;
