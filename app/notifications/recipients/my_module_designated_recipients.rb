@@ -9,7 +9,7 @@ class Recipients::MyModuleDesignatedRecipients
     if @params[:activity_id]
       activity_recipients
     else
-      # other recipients
+      MyModule.find(@params[:my_module_id]).designated_users
     end
   end
 
