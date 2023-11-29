@@ -80,7 +80,10 @@ module RepositoryZipExport
           children = row.child_repository_rows.map(&:code)
           csv_row << if parents.any?
                        "\"#{parents.join(";\s")}\""
-                     elsif children.any?
+                     else
+                       ''
+                     end
+          csv_row << if children.any?
                        "\"#{children.join(";\s")}\""
                      else
                        ''
