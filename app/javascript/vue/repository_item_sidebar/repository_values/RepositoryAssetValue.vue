@@ -5,10 +5,10 @@
         {{ colName }}
       </div>
       <a v-if="!file_name && (!uploading || error) && canEdit"
-        class="btn-text-link font-normal" @click="openFileChooser">
+        class="btn-text-link font-normal min-w-fit pl-4" @click="openFileChooser">
         {{ i18n.t('repositories.item_card.repository_asset_value.add_asset') }}
       </a>
-      <div v-if="file_name && !uploading && canEdit" class="flex whitespace-nowrap gap-4 pl-4">
+      <div v-if="file_name && !uploading && canEdit" class="flex whitespace-nowrap gap-4 min-w-fit pl-4">
         <a class="btn-text-link font-normal" @click="openFileChooser">
           {{ i18n.t('general.replace') }}
         </a>
