@@ -12,7 +12,6 @@
       <label>Simple select</label>
       <select-dropdown
         :options="simpleOptions"
-        placeholder="Select an option"
         :size="size"
       ></select-dropdown>
     </div>
@@ -20,7 +19,6 @@
       <label>Simple select disabled</label>
       <select-dropdown
         :options="simpleOptions"
-        placeholder="Select an option"
         :disabled="true"
         :size="size"
       ></select-dropdown>
@@ -29,7 +27,6 @@
       <label>Simple select with long options</label>
       <select-dropdown
         :options="longOptions"
-        placeholder="Select an option"
         :size="size"
       ></select-dropdown>
     </div>
@@ -38,7 +35,6 @@
       <select-dropdown
         value="5"
         :options="simpleOptions"
-        placeholder="Select an option"
         :size="size"
       ></select-dropdown>
     </div>
@@ -47,7 +43,6 @@
       <select-dropdown
         value="5"
         :options="simpleOptions"
-        placeholder="Select an option"
         :clearable="true"
         :size="size"
       ></select-dropdown>
@@ -56,8 +51,6 @@
       <label>Simple select with search</label>
       <select-dropdown
         :options="simpleOptions"
-        placeholder="Select an option"
-        no-options-placeholder="No options found"
         :searchable="true"
         :size="size"
       ></select-dropdown>
@@ -66,8 +59,6 @@
       <label>Clearable select with search</label>
       <select-dropdown
         value="5"
-        :options="simpleOptions"
-        placeholder="Select an option"
         :clearable="true"
         :searchable="true"
         :size="size"
@@ -77,9 +68,6 @@
       <label>Multiselect</label>
       <select-dropdown
         :options="simpleOptions"
-        placeholder="Select an option"
-        few-options-placeholder="options selected"
-        all-options-placeholder="All options selected"
         :multiple="true"
         :size="size"
       ></select-dropdown>
@@ -89,9 +77,6 @@
       <select-dropdown
         :value="['5', '6', '2']"
         :options="simpleOptions"
-        placeholder="Select an option"
-        few-options-placeholder="options selected"
-        all-options-placeholder="All options selected"
         :multiple="true"
         :size="size"
       ></select-dropdown>
@@ -100,11 +85,9 @@
       <label>Multiselect with checkboxes</label>
       <select-dropdown
         :options="simpleOptions"
-        placeholder="Select an option"
-        few-options-placeholder="options selected"
-        all-options-placeholder="All options selected"
         :with-checkboxes="true"
         :multiple="true"
+        :clearable="true"
         :size="size"
       ></select-dropdown>
     </div>
@@ -112,10 +95,6 @@
       <label>Multiselect with search</label>
       <select-dropdown
         :options="simpleOptions"
-        placeholder="Select an option"
-        few-options-placeholder="options selected"
-        all-options-placeholder="All options selected"
-        no-options-placeholder="No options found"
         :searchable="true"
         :multiple="true"
         :size="size"
@@ -125,10 +104,6 @@
       <label>Clearable multiselect</label>
       <select-dropdown
         :options="simpleOptions"
-        placeholder="Select an option"
-        few-options-placeholder="options selected"
-        all-options-placeholder="All options selected"
-        no-options-placeholder="No options found"
         :clearable="true"
         :multiple="true"
         :size="size"
@@ -138,8 +113,6 @@
       <label>Select with AJAX source</label>
       <select-dropdown
         options-url="<%= test_select_design_elements_path %>"
-        placeholder="Select an option"
-        no-options-placeholder="No options found"
         :size="size"
       ></select-dropdown>
     </div>
@@ -148,8 +121,6 @@
       <select-dropdown
         value="5"
         options-url="<%= test_select_design_elements_path %>"
-        placeholder="Select an option"
-        no-options-placeholder="No options found"
         :size="size"
       ></select-dropdown>
     </div>
@@ -157,9 +128,6 @@
       <label>Select with AJAX source with search</label>
       <select-dropdown
         options-url="<%= test_select_design_elements_path %>"
-        placeholder="Select an option"
-        no-options-placeholder="No options found"
-
         :searchable="true"
         :size="size"
       ></select-dropdown>
@@ -168,10 +136,6 @@
       <label>Multiselect with AJAX source</label>
       <select-dropdown
         options-url="<%= test_select_design_elements_path %>"
-        placeholder="Select an option"
-        no-options-placeholder="No options found"
-        few-options-placeholder="options selected"
-        all-options-placeholder="All options selected"
         :size="size"
         :multiple="true"
       ></select-dropdown>
@@ -180,10 +144,6 @@
       <label>Multiselect with AJAX/checkboxes</label>
       <select-dropdown
         options-url="<%= test_select_design_elements_path %>"
-        placeholder="Select an option"
-        no-options-placeholder="No options found"
-        few-options-placeholder="options selected"
-        all-options-placeholder="All options selected"
         :size="size"
         :multiple="true"
         :with-checkboxes="true"
@@ -193,7 +153,6 @@
       <label>Select with custom renderer</label>
       <select-dropdown
         :options="simpleOptions"
-        placeholder="Select an option"
         :option-renderer="renderer"
         :label-renderer="renderer"
         :size="size"
@@ -203,11 +162,8 @@
       <label>Multiselect with custom renderer</label>
       <select-dropdown
         :options="simpleOptions"
-        placeholder="Select an option"
         :option-renderer="renderer"
         :label-renderer="renderer"
-        few-options-placeholder="options selected"
-        all-options-placeholder="All options selected"
         :multiple="true"
         :size="size"
       ></select-dropdown>

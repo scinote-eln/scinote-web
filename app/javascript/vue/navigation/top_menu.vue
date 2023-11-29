@@ -59,7 +59,7 @@
 
 <script>
   import NotificationsFlyout from './notifications/notifications_flyout.vue';
-  import DropdownSelector from '../shared/dropdown_selector.vue';
+  import DropdownSelector from '../shared/legacy/dropdown_selector.vue';
   import SelectDropdown from "../shared/select_dropdown.vue";
   import MenuDropdown from '../shared/menu_dropdown.vue';
 

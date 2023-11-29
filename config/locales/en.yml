@@ -3806,7 +3806,11 @@ en:
     no_teams:
       title: "Your dashboard is empty!"
       text: "You should request access from your team administrators."
-
+    select_dropdown:
+      placeholder: "Select an option"
+      few_options_placeholder: 'options selected'
+      all_options_placeholder: 'All options selected'
+      no_options_placeholder: 'No options found'
   api:
     core:
       status_ok: "Ok"

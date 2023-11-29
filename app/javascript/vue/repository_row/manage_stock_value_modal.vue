@@ -1,7 +1,7 @@
 <template>
   <div
     ref="modal"
-    class="modal fade" 
+    class="modal fade"
     tabindex="-1"
     role="dialog"
     aria-labelledby="manage-stock-value"
@@ -27,12 +27,12 @@
             <fieldset class="w-full flex justify-between">
               <div class="flex flex-col w-40">
                 <label class="text-sn-grey text-sm font-normal" for="operations">{{ i18n.t('repository_stock_values.manage_modal.operation') }}</label>
-                <Select
+                <SelectDropdown
                   :disabled="!stockValue?.id"
                   :value="operation"
                   :options="operations"
                   @change="setOperation"
-                ></Select>
+                ></SelectDropdown>
               </div>
               <div class="flex flex-col w-40">
                 <Input
@@ -56,14 +56,14 @@
                 <label :class="`text-sm font-normal ${errors.unit ? 'text-sn-delete-red' : 'text-sn-grey'}`" for="stock-unit">
                   {{ i18n.t('repository_stock_values.manage_modal.unit') }}
                 </label>
-                <Select
+                <SelectDropdown
                   :disabled="[2, 3].includes(operation)"
                   :value="unit"
                   :options="units"
                   :placeholder="i18n.t('repository_stock_values.manage_modal.unit_prompt')"
                   @change="unit = $event"
                   :className="`${errors.unit ? 'error' : ''}`"
-                ></Select>
+                ></SelectDropdown>
                 <div class="text-sn-delete-red text-xs" :class="{ visible: errors.unit, invisible: !errors.unit }">
                   {{ errors.unit }}
                 </div>
@@ -140,14 +140,14 @@
 </template>
 
 <script>
-  import Select from './../shared/select.vue';
-  import Input from './../shared/input.vue';
+  import SelectDropdown from './../shared/select_dropdown.vue';
+  import Input from '../shared/legacy/input.vue';
   import Decimal from 'decimal.js';
 
   export default {
     name: 'ManageStockValueModal',
     components: {
-      Select,
+      SelectDropdown,
       Input
     },
     data() {
@@ -246,7 +246,7 @@
       validateAndsaveStockValue() {
         let newErrors = {};
         this.errors = newErrors;
-        if (!this.unit) 
+        if (!this.unit)
           newErrors['unit'] = I18n.t('repository_stock_values.manage_modal.unit_error');
         if (!this.amount)
           newErrors['amount'] = I18n.t('repository_stock_values.manage_modal.amount_error');

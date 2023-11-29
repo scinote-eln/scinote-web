@@ -12,20 +12,20 @@
       <template v-if="!isOpen || !searchable">
         <div class="truncate" v-if="labelRenderer && label" v-html="label"></div>
         <div class="truncate" v-else-if="label">{{ label }}</div>
-        <div class="text-sn-grey truncate" v-else>{{ placeholder }}</div>
+        <div class="text-sn-grey truncate" v-else>{{ placeholder || this.i18n.t('general.select_dropdown.placeholder') }}</div>
       </template>
       <input type="text"
              ref="search"
              v-else
              v-model="query"
-             :placeholder="label || placeholder"
+             :placeholder="label || placeholder || this.i18n.t('general.select_dropdown.placeholder')"
              class="w-full border-0 outline-none pl-0 placeholder:text-sn-grey" />
       <i v-if="canClear" @click="clear" class="sn-icon ml-auto sn-icon-close"></i>
       <i v-else class="sn-icon ml-auto" :class="{ 'sn-icon-down': !isOpen, 'sn-icon-up': isOpen, 'text-sn-grey': disabled}"></i>
     </div>
     <div v-if="isOpen" ref="flyout" class="bg-white sn-shadow-menu-sm rounded w-full fixed z-50">
       <div v-if="multiple && withCheckboxes" class="p-2.5 pb-0">
-        <div @click="selectAll" :class="sizeClass" class="border-transparent border-solid border-b-sn-light-grey py-1.5 px-3  cursor-pointer flex items-center gap-2 shrink-0">
+        <div @click="selectAll" :class="sizeClass" class="border-x-0 border-transparent border-solid border-b-sn-light-grey py-1.5 px-3  cursor-pointer flex items-center gap-2 shrink-0">
           <div class="sn-checkbox-icon"
               :class="selectAllState"
           ></div>
@@ -51,7 +51,7 @@
           </div>
         </template>
         <div v-if="filteredOptions.length === 0" class="text-sn-grey text-center py-2.5">
-          {{ noOptionsPlaceholder }}
+          {{ noOptionsPlaceholder || this.i18n.t('general.select_dropdown.no_options_placeholder') }}
         </div>
       </perfect-scrollbar>
     </div>
@@ -68,7 +68,7 @@ export default {
     value: { type: [String, Number, Array] },
     options: { type: Array, default: () => [] },
     optionsUrl: { type: String },
-    placeholder: { type: String },
+    placeholder: { type: String},
     noOptionsPlaceholder: { type: String },
     fewOptionsPlaceholder: { type: String },
     allOptionsPlaceholder: { type: String },
@@ -138,18 +138,19 @@ export default {
     multipleLabel() {
       if (!this.newValue) return false;
 
-      this.selectAllState = 'indeterminate'
+      this.selectAllState = 'unchecked';
 
       if (this.newValue.length === 0) {
-        this.selectAllState = 'unchecked';
         return false;
       } else if (this.newValue.length === 1) {
+        this.selectAllState = 'indeterminate'
         return this.renderLabel(this.rawOptions.find(option => option[0] === this.newValue[0]))
       } else if (this.newValue.length === this.rawOptions.length) {
         this.selectAllState = 'checked';
-        return this.allOptionsPlaceholder
+        return this.allOptionsPlaceholder || this.i18n.t('general.select_dropdown.all_options_placeholder')
       } else {
-        return `${this.newValue.length} ${this.fewOptionsPlaceholder}`
+        this.selectAllState = 'indeterminate'
+        return `${this.newValue.length} ${this.fewOptionsPlaceholder || this.i18n.t('general.select_dropdown.few_options_placeholder')}`
       }
     },
   },
@@ -199,7 +200,7 @@ export default {
       if (!this.disabled) this.isOpen = true
     },
     clear() {
-      this.newValue = null
+      this.newValue = this.multiple ? [] : null;
       this.query = '';
       this.$emit('change', this.newValue)
     },
@@ -243,6 +244,13 @@ export default {
         let top = rect.top + rect.height;
         let bottom = screenHeight - rect.bottom + rect.height;
         let left = rect.left;
+
+        const modal = field.closest('.modal-content');
+        if (modal) {
+          const modalRect = modal.getBoundingClientRect();
+          top -= modalRect.top;
+          left -= modalRect.left;
+        }
 
         flyout.style.width = `${width}px`;
         flyout.style.top = `${top}px`;
