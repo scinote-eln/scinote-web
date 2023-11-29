@@ -16,8 +16,8 @@
         </template>
       </span>
       <span v-else >
-        <template v-if="colVal.datetime">
-          {{ colVal.datetime.formatted }}
+        <template v-if="colVal.formatted">
+          {{ colVal.formatted }}
         </template>
         <template v-else>
           {{ viewPlaceholder }}
