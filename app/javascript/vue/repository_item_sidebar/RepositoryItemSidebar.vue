@@ -14,7 +14,7 @@
             <repository-item-sidebar-title v-if="defaultColumns"
               :editable="permissions?.can_manage && !defaultColumns?.archived" :name="defaultColumns.name"
               @update="update"></repository-item-sidebar-title>
-            <i id="close-icon" @click="toggleShowHideSidebar(currentItemUrl)"
+            <i id="close-icon" @click="toggleShowHideSidebar(null)"
               class="sn-icon sn-icon-close ml-auto cursor-pointer my-auto mx-0"></i>
           </div>
           <div id="divider" class="w-500 bg-sn-light-grey flex items-center self-stretch h-px mt-6 mr-6"></div>
@@ -27,7 +27,7 @@
 
           <div v-else class="flex flex-1 flex-grow-1 justify-between" ref="scrollSpyContent" id="scrollSpyContent">
 
-            <div id="left-col" class="flex flex-col gap-4">
+            <div id="left-col" class="flex flex-col gap-4 max-w-[350px]">
 
               <!-- INFORMATION -->
               <section id="information-section">
@@ -312,23 +312,27 @@ export default {
         this.isShowing = true;
         this.loadRepositoryRow(repositoryRowUrl);
         this.currentItemUrl = repositoryRowUrl;
-        return
+        return;
+      }
+      // same item click
+      if (repositoryRowUrl === this.currentItemUrl) {
+        if (this.isShowing) {
+          this.toggleShowHideSidebar(null);
+        }
+        return;
       }
       // explicit close (from emit)
-      else if (repositoryRowUrl === null) {
+      if (repositoryRowUrl === null) {
         this.isShowing = false;
         this.currentItemUrl = null;
         this.myModuleId = null;
-        return
+        return;
       }
       // click on a different item - if the item card is already showing should just fetch new data
-      else {
-        this.isShowing = true;
-        this.myModuleId = myModuleId;
-        this.loadRepositoryRow(repositoryRowUrl);
-        this.currentItemUrl = repositoryRowUrl;
-        return
-      }
+      this.isShowing = true;
+      this.myModuleId = myModuleId;
+      this.loadRepositoryRow(repositoryRowUrl);
+      this.currentItemUrl = repositoryRowUrl;
     },
     loadRepositoryRow(repositoryRowUrl) {
       this.dataLoading = true
