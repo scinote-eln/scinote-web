@@ -3,7 +3,7 @@
 </template>
 
 <script>
-  import Select from '../../select.vue';
+  import Select from '../../legacy/select.vue';
 
   export default {
     name: 'SelectFilter',

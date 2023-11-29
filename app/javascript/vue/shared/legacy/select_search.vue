@@ -22,7 +22,7 @@
 </template>
 
 <script>
-  import Select from './legacy/select.vue'
+  import Select from './select.vue'
 
   export default {
     name: 'SelectSearch',

@@ -45,11 +45,11 @@
       <div class="flex items-center gap-4">
         {{ i18n.t('datatable.show') }}
         <div class="w-36">
-          <Select
+          <SelectDropdown
             :value="perPage"
             :options="perPageOptions"
             @change="setPerPage"
-          ></Select>
+          ></SelectDropdown>
         </div>
       </div>
     </div>
@@ -59,7 +59,7 @@
 <script>
 import { AgGridVue } from "ag-grid-vue3";
 import axios from '../../../packs/custom_axios.js';
-import Select from '../select.vue';
+import SelectDropdown from '../select_dropdown.vue';
 import PerfectScrollbar from 'vue3-perfect-scrollbar';
 import Pagination from './pagination.vue';
 import CustomHeader from './tableHeader';
@@ -137,7 +137,7 @@ export default {
   },
   components: {
     AgGridVue,
-    Select,
+    SelectDropdown,
     PerfectScrollbar,
     Pagination,
     agColumnHeader: CustomHeader,

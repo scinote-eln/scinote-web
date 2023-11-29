@@ -91,7 +91,7 @@
 <script>
 
   import InlineEdit from '../shared/inline_edit.vue'
-  import DropdownSelector from '../shared/dropdown_selector.vue'
+  import DropdownSelector from '../shared/legacy/dropdown_selector.vue'
 
   export default {
     name: 'ProtocolMetadata',

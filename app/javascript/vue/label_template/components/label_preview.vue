@@ -90,7 +90,7 @@
     { value: 24, label: '24 dpmm (600 dpi)' }
   ]
 
-  import DropdownSelector from '../../shared/dropdown_selector.vue'
+  import DropdownSelector from '../../shared/legacy/dropdown_selector.vue'
 
   export default {
     name: 'LabelPreview',
