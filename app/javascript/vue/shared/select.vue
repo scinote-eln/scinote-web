@@ -79,7 +79,7 @@
         return option && option[1];
       },
       focusElement() {
-        return this.$refs.focusElement || this.$scopedSlots.default()[0].context.$refs.focusElement;
+        return this.$refs.focusElement || this.$parent.$refs.focusElement;
       }
     },
     mounted() {

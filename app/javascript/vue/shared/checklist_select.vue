@@ -12,12 +12,12 @@
             }"
             :disabled="disabled"
             @click="toggle">
-      <span>{{ valueLabel || this.placeholder || this.i18n.t('general.select') }}</span>
+      <span class="overflow-hidden text-ellipsis">{{ valueLabel || this.placeholder || this.i18n.t('general.select') }}</span>
       <i class="sn-icon" :class="{ 'sn-icon-down': !isOpen, 'sn-icon-up': isOpen}"></i>
     </button>
     <div :style="optionPositionStyle" class="py-2.5 z-10 bg-white rounded border-[1px] border-sn-light-grey shadow-sn-menu-sm" :class="{ 'hidden': !isOpen }">
-      <div v-if="withButtons" class="px-2.5">
-        <div class="flex gap-2 pl-2 pb-2.5 justify-start items-center w-[calc(100%-10px)]">
+      <div v-if="withButtons" class="px-2.5 pb-[1px]">
+        <div class="flex gap-2 pl-2 justify-start items-center w-[calc(100%-10px)]">
           <div class="btn btn-light !text-xs h-[30px] px-0 active:bg-sn-super-light-blue"
                @click="selectedValues = []"
                :class="{
@@ -48,7 +48,7 @@
               <input v-model="selectedValues" :value="option.id" :id="option.id" type="checkbox" class="sci-checkbox project-card-selector">
               <label :for="option.id" class="sci-checkbox-label"></label>
             </div>
-            <span class="text-ellipsis overflow-hidden max-h-[4rem] ml-1">{{ option.label }}</span>
+            <span :title="option.label" class="text-ellipsis overflow-hidden max-h-[4rem] ml-1 whitespace-normal line-clamp-3">{{ option.label }}</span>
           </div>
         </div>
         <template v-else>

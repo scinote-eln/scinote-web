@@ -1,6 +1,7 @@
 <template>
   <Select
-    class="sn-select sn-select--search"
+    class="sn-select sn-select--search hover:border-sn-sleepy-grey"
+    :class="customClass"
     :className="className"
     :optionsClassName="optionsClassName"
     :withEditCursor="withEditCursor"
@@ -39,6 +40,7 @@
       isLoading: { type: Boolean, default: false },
       className: { type: String, default: '' },
       optionsClassName: { type: String, default: '' },
+      customClass: { type: String, default: '' }
     },
     components: { Select },
     data() {
