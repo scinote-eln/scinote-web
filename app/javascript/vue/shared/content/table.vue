@@ -35,8 +35,8 @@
          @keyup.enter="!editingTable && enableTableEdit()">
       <div ref="hotTable" class="hot-table-container" @click="!editingTable && enableTableEdit()">
       </div>
-      <div v-if="editingTable" class="text-xs pt-3 pb-2 text-sn-grey">
-        {{ i18n.t('protocols.steps.table.edit_message') }}
+      <div class="text-xs pt-3 pb-2 text-sn-grey h-1">
+        <span v-if="editingTable">{{ i18n.t('protocols.steps.table.edit_message') }}</span>
       </div>
     </div>
     <deleteElementModal v-if="confirmingDelete" @confirm="deleteElement" @cancel="closeDeleteModal"/>
@@ -269,8 +269,7 @@
           preventOverflow: 'horizontal',
           readOnly: !this.editingTable,
           afterUnlisten: () => {
-            this.updatingTableData = true;
-            this.updateTable();
+            this.editingTable = false;
           },
           afterSelection: (r, c, r2, c2) => {
             if (r === r2 && c === c2) {
