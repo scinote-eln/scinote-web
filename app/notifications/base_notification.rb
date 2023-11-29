@@ -2,7 +2,7 @@
 
 class BaseNotification < Noticed::Base
   deliver_by :database, if: :database_notification?
-  deliver_by :email, mailer: 'NotificationMailer', method: :general_notification, if: :email_notification?
+  deliver_by :email, mailer: 'AppMailer', method: :general_notification, if: :email_notification?
 
   def self.send_notifications(params, later: false)
     recipients_class =
