@@ -92,7 +92,7 @@ export default {
   methods: {
     changeSelected(id) {
       this.selected = id;
-      if (id) {
+      if (id || id === null) {
         this.update(id);
       }
     },
