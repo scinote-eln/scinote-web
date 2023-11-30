@@ -12,8 +12,11 @@
           class="sticky top-0 right-0 bg-white flex z-50 flex-col h-[78px] pt-6">
           <div class="header flex w-full h-[30px] pr-6">
             <repository-item-sidebar-title v-if="defaultColumns"
-              :editable="permissions?.can_manage && !defaultColumns?.archived" :name="defaultColumns.name"
-              @update="update"></repository-item-sidebar-title>
+              :editable="permissions?.can_manage && !defaultColumns?.archived"
+              :name="defaultColumns.name"
+              :archived="defaultColumns.archived"
+              @update="update">
+            </repository-item-sidebar-title>
             <i id="close-icon" @click="toggleShowHideSidebar(null)"
               class="sn-icon sn-icon-close ml-auto cursor-pointer my-auto mx-0"></i>
           </div>
