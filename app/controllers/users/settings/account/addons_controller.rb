@@ -10,6 +10,7 @@ module Users
         def index
           @label_printer_any = LabelPrinter.any?
           @user_agent = request.user_agent
+          @version_urls = YAML.safe_load(ENV['SCINOTE_EDIT_VERSION_URL'])
         end
 
         private
