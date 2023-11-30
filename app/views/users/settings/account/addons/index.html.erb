@@ -23,7 +23,7 @@
                               target: '_blank' do %>
                     <span class="hidden-xs"><%= t('users.settings.account.addons.desktop_app.windows_button') %></span>
                   <% end %>
-                  <p class="text-xs mt-1" style="color: var(--sn-sleepy-grey);"><%= t('users.settings.account.addons.desktop_app.version') %><%= @version_urls[0]['version'] %></p>
+                  <p class="text-xs mt-1" style="color: var(--sn-sleepy-grey);"><%= t('users.settings.account.addons.desktop_app.version') %> <%= @version_urls[0]['version'] %></p>
                 <% elsif @user_agent =~ /Mac OS/ %>
                   <%= link_to @version_urls[1]['url'],
                               class: 'btn btn-primary new-project-btn',
@@ -31,7 +31,7 @@
                               target: '_blank' do %>
                     <span class="hidden-xs"><%= t('users.settings.account.addons.desktop_app.macos_button') %></span>
                   <% end %>
-                  <p class="text-xs mt-1" style="color: var(--sn-sleepy-grey);"><%= t('users.settings.account.addons.desktop_app.version') %><%= @version_urls[1]['version'] %></p>
+                  <p class="text-xs mt-1" style="color: var(--sn-sleepy-grey);"><%= t('users.settings.account.addons.desktop_app.version') %> <%= @version_urls[1]['version'] %></p>
                 <% else %>
                   <div class="flex">
                     <div>
