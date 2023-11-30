@@ -153,6 +153,13 @@ export default {
         return `${this.newValue.length} ${this.fewOptionsPlaceholder || this.i18n.t('general.select_dropdown.few_options_placeholder')}`
       }
     },
+    valueChanged() {
+      if (this.multiple) {
+        return !this.compareArrays(this.newValue, this.value)
+      } else {
+        return this.newValue != this.value
+      }
+    }
   },
   mounted() {
     document.addEventListener('scroll', this.setPosition);
@@ -205,8 +212,10 @@ export default {
       this.$emit('change', this.newValue)
     },
     close() {
+      if (!this.isOpen) return;
+
       this.isOpen = false
-      if (this.newValue != this.value) {
+      if (this.valueChanged) {
         this.$emit('change', this.newValue)
       }
       this.query = '';
@@ -274,6 +283,15 @@ export default {
             })
           })
       }
+    },
+    compareArrays(arr1, arr2) {
+      if (!arr1 || !arr2) return false;
+      if (arr1.length !== arr2.length) return false;
+
+      for (let i = 0; i < arr1.length; i++) {
+        if (!arr2.includes(arr1[i])) return false;
+      }
+      return true;
     }
   },
 }

@@ -51,33 +51,21 @@ module Toolbars
     def edit_action
       return unless @single
 
+      action = {
+        name: 'edit',
+        label: I18n.t('projects.index.edit_option'),
+        icon: 'sn-icon sn-icon-edit',
+        button_class: 'edit-btn',
+        type: :emit
+      }
+
       if @items.first.is_a?(Project)
-        project = @items.first
-
-        return unless can_manage_project?(project)
-
-        {
-          name: 'edit',
-          label: I18n.t('projects.index.edit_option'),
-          icon: 'sn-icon sn-icon-edit',
-          button_class: 'edit-btn',
-          path: edit_project_path(project),
-          type: :emit
-        }
+        return unless can_manage_project?(@items.first)
       else
-        project_folder = @items.first
-
-        return unless can_create_project_folders?(project_folder.team)
-
-        {
-          name: 'edit',
-          label: I18n.t('projects.index.edit_option'),
-          icon: 'sn-icon sn-icon-edit',
-          button_class: 'edit-btn',
-          path: edit_project_folder_path(project_folder),
-          type: :emit
-        }
+        return unless can_create_project_folders?(@items.first.team)
       end
+
+      action
     end
 
     def access_action
@@ -120,11 +108,24 @@ module Toolbars
     def export_action
       return unless @items.all? { |item| item.is_a?(Project) ? can_export_project?(item) : true }
 
+      num_projects = @items.length
+      limit = TeamZipExport.exports_limit
+      num_of_requests_left = @current_user.exports_left - 1
+      team = @items.first.team
+
+      message = "<p>#{I18n.t('projects.export_projects.modal_text_p1_html', num_projects: num_projects, team: team)}</p>
+                 <p>#{I18n.t('projects.export_projects.modal_text_p2_html')}</p>"
+      unless limit.zero?
+        message += "<p><i>#{I18n.t('projects.export_projects.modal_text_p3_html', limit: limit, num: num_of_requests_left)}</i></p>"
+      end
+
       {
+        items: @items,
         name: 'export',
         label: I18n.t('projects.export_projects.export_button'),
         icon: 'sn-icon sn-icon-export',
-        path: export_projects_modal_team_path(@items.first.team),
+        message: message,
+        path: export_projects_team_path(team),
         type: :emit
       }
     end
@@ -167,7 +168,7 @@ module Toolbars
         name: 'delete_folders',
         label: I18n.t('general.delete'),
         icon: 'sn-icon sn-icon-delete',
-        path: destroy_modal_project_folders_path(project_folder_ids: @items.map(&:id)),
+        path: destroy_project_folders_path,
         type: :emit
       }
     end

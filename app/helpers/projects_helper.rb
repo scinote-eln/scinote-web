@@ -30,34 +30,13 @@ module ProjectsHelper
     conns.to_s[1..-2]
   end
 
-  def sidebar_folders_tree(team, user, sort, folders_only: false)
+  def folders_tree(team, user)
     sort ||= team.current_view_state(user).state.dig('projects', 'active', 'sort')
     if projects_view_mode_archived?
-      records = ProjectFolder.archived.inner_folders(team)
-      records += team.projects.archived.visible_to(user, team) unless folders_only
+      records = ProjectFolder.archived.inner_folders(team).order(:name).select(:id, :name, :parent_folder_id)
     else
-      records = ProjectFolder.active.inner_folders(team)
-      records += team.projects.active.visible_to(user, team) unless folders_only
-      sort = 'new' if %w(archived_old archived_new).include?(sort)
+      records = ProjectFolder.active.inner_folders(team).order(:name).select(:id, :name, :parent_folder_id)
     end
-    records = case sort
-              when 'new'
-                records.sort_by(&:created_at).reverse!
-              when 'old'
-                records.sort_by(&:created_at)
-              when 'atoz'
-                records.sort_by { |c| c.name.downcase }
-              when 'ztoa'
-                records.sort_by { |c| c.name.downcase }.reverse!
-              when 'id_asc'
-                records.sort_by(&:id)
-              when 'id_desc'
-                records.sort_by(&:id).reverse!
-              when 'archived_old'
-                records.sort_by(&:archived_on)
-              when 'archived_new'
-                records.sort_by(&:archived_on).reverse!
-              end
     folders_recursive_builder(nil, records)
   end
 

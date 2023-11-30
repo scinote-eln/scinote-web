@@ -9,10 +9,20 @@
         :activePageUrl="activePageUrl"
         :archivedPageUrl="archivedPageUrl"
         :currentViewMode="currentViewMode"
+        :currentViewRender="currentViewRender"
+        :viewRenders="viewRenders"
         :filters="filters"
         @applyFilters="applyFilters"
+        @setTableView="switchViewRender('table')"
+        @setCardsView="switchViewRender('cards')"
       />
+      <div v-if="currentViewRender === 'cards'" class="flex-grow basis-64 overflow-y-auto overflow-x-visible p-2 -ml-2">
+        <div class="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+          <slot v-for="element in rowData" :key="element.id" name="card" :dtComponent="this" :params="element"></slot>
+        </div>
+      </div>
       <ag-grid-vue
+        v-if="currentViewRender === 'table'"
         class="ag-theme-alpine w-full flex-grow h-full z-10"
         :class="{'opacity-0': initializing}"
         :columnDefs="columnDefs"
@@ -111,11 +121,13 @@ export default {
       type: String,
       default: 'active'
     },
+    viewRenders: {
+      type: Object,
+    },
     filters: {
       type: Array,
       default: () => []
-    },
-
+    }
   },
   data() {
     return {
@@ -132,7 +144,9 @@ export default {
       selectedRows: [],
       searchValue: '',
       initializing: true,
-      activeFilters: {}
+      activeFilters: {},
+      currentViewRender: 'table',
+      cardCheckboxes: []
     };
   },
   components: {
@@ -188,8 +202,11 @@ export default {
         resizable: false,
         sortable: false,
         cellRenderer: 'RowMenuRenderer',
-        cellStyle: {overflow: 'visible'},
-        pinned: 'right'
+        cellRendererParams: {
+          dtComponent: this
+        },
+        pinned: 'right',
+        cellStyle: {padding: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'visible'}
 
       });
     }
@@ -232,6 +249,7 @@ export default {
         .then((response) => {
           this.selectedRows = [];
           this.gridApi.setRowData(this.formatData(response.data.data));
+          this.rowData = this.formatData(response.data.data);
           this.totalPage = response.data.meta.total_pages;
           this.$emit('tableReloaded');
         })
@@ -255,6 +273,7 @@ export default {
     },
     setPerPage(value) {
       this.perPage = value;
+      this.page = 1;
       this.loadData();
     },
     setPage(page) {
@@ -296,6 +315,13 @@ export default {
     applyFilters(filters) {
       this.activeFilters = filters;
       this.loadData();
+    },
+    switchViewRender(view) {
+      if (this.currentViewRender === view) return;
+
+      this.currentViewRender = view;
+      this.initializing = true;
+      this.selectedRows = [];
     }
   }
 };

@@ -114,7 +114,8 @@ export default {
       }
 
       if (item.emit) {
-        this.$emit(item.emit, item.params)
+        this.$emit(item.emit, item.params);
+        this.$emit('dtEvent', item.emit, item);
       }
 
       this.closeMenu();

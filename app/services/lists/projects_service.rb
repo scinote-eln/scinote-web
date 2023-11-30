@@ -80,8 +80,8 @@ module Lists
     end
 
     def filter_project_folder_records(records)
-      records = records.archived if @view_mode == 'archived'
-      records = records.active if @view_mode == 'active'
+      records = records.archived if @params[:view_mode] == 'archived'
+      records = records.active if @params[:view_mode] == 'active'
       records = records.where_attributes_like('project_folders.name', @filters[:query]) if @filters[:query].present?
       records
     end
