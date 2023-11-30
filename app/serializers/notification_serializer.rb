@@ -39,7 +39,7 @@ class NotificationSerializer < ActiveModel::Serializer
       url = project_path(subject)
     when Experiment
       parent = subject.project
-      url = experiment_path(subject)
+      url = my_modules_experiment_path(subject)
     when MyModule
       parent = subject.experiment
       url = protocols_my_module_path(subject)
