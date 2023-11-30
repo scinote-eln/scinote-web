@@ -36,7 +36,7 @@ class RepositoryRowConnectionsController < ApplicationController
   end
 
   def create
-    # Filtter exixting relations from params
+    # Filter existing relations from params
     relation_ids = connection_params[:relation_ids].map(&:to_i) -
                    @repository_row.public_send("#{@relation}_connections").pluck("#{@relation}_id") -
                    [@repository_row.id]
@@ -48,6 +48,12 @@ class RepositoryRowConnectionsController < ApplicationController
           "#{@relation}": row
         }
         @repository_row.public_send("#{@relation}_connections").build attributes
+
+        log_activity(:inventory_item_relationships_linked,
+                     @repository_row.repository,
+                     { inventory_item: @repository_row.name,
+                       linked_inventory_item: row.name,
+                       relationship_type: @relation })
       end
       @repository_row.save!
     end
@@ -73,9 +79,20 @@ class RepositoryRowConnectionsController < ApplicationController
   end
 
   def destroy
-    connection = @repository_row.parent_connections.or(@repository_row.child_connections).find(params[:id])
-    connection.destroy
-    head :no_content
+    RepositoryRowConnection.transaction do
+      connection = @repository_row.parent_connections.or(@repository_row.child_connections).find(params[:id])
+      unlinked_item = connection.parent?(@repository_row) ? connection.child : connection.parent
+
+      log_activity(:inventory_item_relationships_unlinked,
+                   @repository_row.repository,
+                   { inventory_item: @repository_row.name,
+                     unlinked_inventory_item: unlinked_item.name })
+
+      connection.destroy!
+      head :no_content
+    rescue StandardError
+      head :unprocessable_entity
+    end
   end
 
   def repositories
@@ -135,5 +152,16 @@ class RepositoryRowConnectionsController < ApplicationController
 
   def connection_params
     params.require(:repository_row_connection).permit(:connection_repository_id, :relation, relation_ids: [])
+  end
+
+  def log_activity(type_of, repository, message_items = {})
+    message_items = { repository: repository.id }.merge(message_items)
+
+    Activities::CreateActivityService
+      .call(activity_type: type_of,
+            owner: current_user,
+            subject: repository,
+            team: repository.team,
+            message_items: message_items)
   end
 end

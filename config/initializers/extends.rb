@@ -492,7 +492,9 @@ class Extends
     export_inventories: 293,
     edit_image_on_inventory_item: 294,
     edit_wopi_file_on_inventory_item: 295,
-    export_inventory_stock_consumption: 296
+    export_inventory_stock_consumption: 296,
+    inventory_item_relationships_linked: 297,
+    inventory_item_relationships_unlinked: 298
   }
 
   ACTIVITY_GROUPS = {
@@ -506,7 +508,7 @@ class Extends
     experiment: [*27..31, 57, 141, 165],
     reports: [48, 50, 49, 163, 164],
     inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77,
-                  78, 96, 107, 113, 114, *133..136, 180, 181, 182, *292..296],
+                  78, 96, 107, 113, 114, *133..136, 180, 181, 182, *292..298],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 170, 173, 179, 187, 186,
                           190, 191, *204..215, 220, 223, 227, 228, 229, *230..235,
