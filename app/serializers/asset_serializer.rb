@@ -131,14 +131,20 @@ class AssetSerializer < ActiveModel::Serializer
         start_edit_image: start_edit_image_path(object),
         delete: asset_destroy_path(object),
         move_targets: asset_move_tagets_path(object),
-        move: asset_move_path(object),
-        open_locally: asset_sync_show_path(object)
+        move: asset_move_path(object)
       )
     end
     urls[:open_vector_editor_edit] = edit_gene_sequence_asset_path(object.id) if can_manage_asset?(user, object)
+    urls[:open_locally] = asset_sync_show_path(object) if can_manage_asset?(user, object) && can_open_locally?
     urls[:wopi_action] = object.get_action_url(user, 'embedview') if wopi && can_manage_asset?(user, object)
     urls[:blob] = rails_blob_path(object.file, disposition: 'attachment') if object.file.attached?
 
     urls
+  end
+
+  private
+
+  def can_open_locally?
+    ENV['ASSET_SYNC_URL'].present?
   end
 end
