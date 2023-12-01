@@ -54,9 +54,10 @@
         endDate: null,
         error: null,
         defaultStartDate: null,
-        defaultEndDate: null
+        defaultEndDate: null,
       }
     },
+    inject: ['reloadRepoItemSidebar'],
     props: {
       mode: String,
       range: { type: Boolean, default: false },
@@ -171,7 +172,10 @@
           success: () => {
             this.defaultStartDate = this.startDate;
             this.defaultEndDate = this.endDate;
-            if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
+            if ($('.dataTable')[0]) {
+              $('.dataTable').DataTable().ajax.reload(null, false);
+              this.reloadRepoItemSidebar();
+            }
           }
         });
       },

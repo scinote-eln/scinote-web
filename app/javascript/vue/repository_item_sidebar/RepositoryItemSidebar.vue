@@ -279,6 +279,11 @@ export default {
       inRepository: false
     }
   },
+  provide() {
+    return {
+      reloadRepoItemSidebar: this.reload,
+    }
+  },
   created() {
     window.repositoryItemSidebarComponent = this;
   },
