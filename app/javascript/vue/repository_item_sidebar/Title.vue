@@ -4,7 +4,7 @@
     :preventLeavingUntilFilled="true"
     :attributeName="`${i18n.t('repositories.item_card.header_title')}`" :singleLine="true"
     @editingEnabled="editingName = true" @editingDisabled="editingName = false" @update="updateName" @delete="handleDelete"></inline-edit>
-  <h4 v-else class="item-name my-auto truncate text-xl" :title="name">
+  <h4 v-else class="item-name my-auto truncate text-xl" :title="computedName">
     {{ computedName }}
   </h4>
 </template>
