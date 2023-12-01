@@ -1,5 +1,5 @@
 <template>
-  <div class="items-center -ml-1.5 my-2">
+  <div>
     <MenuDropdown
       :listItems="this.formattedList"
       btnClasses="bg-transparent w-6 h-6 border-0 p-0 flex"
@@ -7,6 +7,7 @@
       :alwaysShow="true"
       :btnIcon="'sn-icon sn-icon-more-hori'"
       @open="loadActions"
+      @dtEvent="handleEvents"
     ></MenuDropdown>
   </div>
 </template>
@@ -41,6 +42,8 @@ export default {
           newItem.url = item.path
         }
 
+        newItem.params = item
+
         return newItem
       })
     }
@@ -53,9 +56,10 @@ export default {
         .then((response) => {
           this.actionsMenu = response.data.actions
         })
-        .catch((error) => {
-          console.log(error)
-        })
+    },
+    handleEvents(event, option) {
+      const dt = this.params.dtComponent
+      dt.$emit(event, option.params, [this.params.data])
     }
   }
 }

@@ -2,10 +2,14 @@ module Lists
   class ProjectAndFolderSerializer < ActiveModel::Serializer
     include Rails.application.routes.url_helpers
 
-    attributes :name, :code, :created_at, :archived_on, :users, :hidden, :urls, :folder
+    attributes :name, :code, :created_at, :archived_on, :users, :hidden, :urls, :folder, :folder_info, :default_public_user_role_id
 
     def folder
       !project?
+    end
+
+    def default_public_user_role_id
+      object.default_public_user_role_id if project?
     end
 
     def code
@@ -36,11 +40,26 @@ module Lists
     end
 
     def urls
-      {
+      urls_list = {
         show: project? ? project_path(object) : project_folder_path(object),
         actions: actions_toolbar_projects_path(items: [{ id: object.id,
                                                          type: project? ? 'projects' : 'project_folders' }].to_json)
       }
+
+      if project?
+        urls_list[:update] = project_path(object)
+      else
+        urls_list[:update] = project_folder_path(object)
+      end
+
+
+      urls_list
+    end
+
+    def folder_info
+      if folder
+        I18n.t('projects.index.folder.description', projects_count: object.projects_count, folders_count: object.folders_count)
+      end
     end
 
     private

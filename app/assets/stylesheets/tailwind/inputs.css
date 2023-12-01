@@ -77,4 +77,13 @@
   .sci-input-container-v2 .history-flyout li:hover {
     @apply bg-sn-super-light-grey;
   }
+
+  .sci-input-container-v2.error input {
+    @apply border-sn-alert-passion;
+  }
+
+  .sci-input-container-v2.error::after {
+    @apply absolute -bottom-5 text-sn-alert-passion text-xs;
+    content: attr(data-error);
+  }
 }

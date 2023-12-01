@@ -1,15 +1,46 @@
 <template>
-  <div class="mb-6">TODO</div>
+  <div class="mb-6">
+    <label class="sci-label">{{ filter.label }}</label>
+    <SelectDropdown
+      :optionsUrl="filter.optionsUrl"
+      :selectedValue="value"
+      :multiple="true"
+      :with-checkboxes="true"
+      :placeholder="filter.placeholder"
+      :optionRenderer="filter.optionRenderer"
+      :labelRenderer="filter.labelRenderer"
+      @change="change"
+    > </SelectDropdown>
+  </div>
 </template>
 
 <script>
-  import Select from '../../legacy/select.vue';
+  import SelectDropdown from '../../select_dropdown.vue';
 
   export default {
     name: 'SelectFilter',
     props: {
       filter: { type: Object, required: true }
     },
-    components: { Select }
+    data: function() {
+      return {
+        value: []
+      }
+    },
+    watch: {
+      value: function() {
+        let value = this.value;
+        if (this.value.length == 0) {
+          value = null;
+        }
+        this.$emit('update', { key: this.filter.key, value: value });
+      }
+    },
+    components: { SelectDropdown },
+    methods: {
+      change: function(value) {
+        this.value = value;
+      }
+    },
   }
 </script>

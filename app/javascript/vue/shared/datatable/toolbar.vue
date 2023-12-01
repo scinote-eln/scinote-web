@@ -10,14 +10,24 @@
       </a>
     </div>
     <div>
-      <div v-if="archivedPageUrl" class="flex items-center gap-4">
+      <div class="flex items-center gap-4">
         <MenuDropdown
-          :listItems="this.viewModes"
+          v-if="archivedPageUrl"
+          :listItems="this.viewRendersMenu"
+          :btnClasses="'btn btn-light icon-btn'"
+          :btnText="i18n.t(`toolbar.${currentViewRender}_view`)"
+          :caret="true"
+          :position="'right'"
+          @setCardsView="$emit('setCardsView')"
+          @setTableView="$emit('setTableView')"
+        ></MenuDropdown>
+        <MenuDropdown
+          v-if="archivedPageUrl"
+          :listItems="this.viewModesMenu"
           :btnClasses="'btn btn-light icon-btn'"
           :btnText="i18n.t(`projects.index.${currentViewMode}`)"
           :caret="true"
           :position="'right'"
-          @open="loadActions"
         ></MenuDropdown>
       </div>
     </div>
@@ -74,6 +84,14 @@ export default {
     filters: {
       type: Array,
       default: () => []
+    },
+    viewRenders: {
+      type: Array,
+      required: true
+    },
+    currentViewRender: {
+      type: String,
+      required: true
     }
   },
   components: {
@@ -81,11 +99,24 @@ export default {
     FilterDropdown
   },
   computed: {
-    viewModes() {
+    viewModesMenu() {
       return [
         { text: this.i18n.t('projects.index.active'), url: this.activePageUrl},
         { text: this.i18n.t('projects.index.archived'), url: this.archivedPageUrl }
       ]
+    },
+    viewRendersMenu() {
+      return this.viewRenders.map((view) => {
+        const type = view.type;
+        switch (type) {
+          case 'cards':
+            return { text: this.i18n.t('toolbar.cards_view'), emit: 'setCardsView'};
+          case 'table':
+            return { text: this.i18n.t('toolbar.table_view'), emit: 'setTableView'};
+          default:
+            return view;
+        }
+      })
     }
   },
   data() {

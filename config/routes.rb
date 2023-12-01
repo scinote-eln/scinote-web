@@ -369,6 +369,7 @@ Rails.application.routes.draw do
         post 'restore_group'
         put 'view_type', to: 'teams#view_type'
         get 'actions_toolbar'
+        get :user_roles
       end
     end
 
@@ -376,6 +377,7 @@ Rails.application.routes.draw do
       get 'cards', to: 'projects#cards'
 
       collection do
+        get :tree
         post 'move_to', to: 'project_folders#move_to', defaults: { format: 'json' }
         get 'move_to_modal', to: 'project_folders#move_to_modal', defaults: { format: 'json' }
         post 'destroy', to: 'project_folders#destroy', as: 'destroy', defaults: { format: 'json' }

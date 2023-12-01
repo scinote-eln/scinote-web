@@ -552,6 +552,7 @@ en:
       delete_button: "Delete"
       edit_option: "Edit"
       archive_option: "Archive"
+      archive_confirm_title: "Archive project"
       archive_confirm: "Are you sure you want to archive this project?"
       restore_option: "Restore"
       project_members_access: "Access"
@@ -598,9 +599,11 @@ en:
         title: "Move %{items}"
         description: "Select where you want to move your %{items}"
         submit: "Move"
+        find_folder: "Find folder"
+        projects: "Projects"
         items:
           projects: 'projects'
-          folders: 'folders'
+          project_folders: 'folders'
           projects_and_folders: 'projects & folders'
       modal_delete_folders:
         title: "Delete project folder(s)"
@@ -3740,6 +3743,7 @@ en:
     selected: "Selected"
     loading: "Loading..."
     replace: "Replace"
+    archive: "Archive"
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"
