@@ -6,8 +6,8 @@ module Lists
     include Rails.application.routes.url_helpers
 
     attributes :name, :language_type, :urls, :type,
-              :default, :format, :modified_by, :created_by,
-              :created_at, :updated_at, :id, :icon_url, :description
+               :default, :format, :modified_by, :created_by,
+               :created_at, :updated_at, :id, :icon_url, :description
 
     def icon_url
       ActionController::Base.helpers.image_tag(

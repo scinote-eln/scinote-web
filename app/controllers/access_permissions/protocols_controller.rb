@@ -6,6 +6,8 @@ module AccessPermissions
     before_action :check_read_permissions, only: %i(show)
     before_action :check_manage_permissions, except: %i(show)
 
+    def show; end
+
     def new
       @user_assignment = UserAssignment.new(
         assignable: @protocol,
@@ -14,31 +16,7 @@ module AccessPermissions
       )
     end
 
-    def show; end
-
     def edit; end
-
-    def update
-      @user_assignment = @protocol.user_assignments.find_by(
-        user_id: permitted_update_params[:user_id],
-        team: current_team
-      )
-
-      # prevent role change if it would result in no manually assigned users having the user management permission
-      new_user_role = UserRole.find(permitted_update_params[:user_role_id])
-      if !new_user_role.has_permission?(ProtocolPermissions::USERS_MANAGE) &&
-         @user_assignment.last_with_permission?(ProtocolPermissions::USERS_MANAGE, assigned: :manually)
-        raise ActiveRecord::RecordInvalid
-      end
-
-      @user_assignment.update!(permitted_update_params)
-      log_activity(:protocol_template_access_changed, { user_target: @user_assignment.user.id,
-                                                        role: @user_assignment.user_role.name })
-
-      render :protocol_member
-    rescue ActiveRecord::RecordInvalid
-      render json: { flash: t('access_permissions.update.failure') }, status: :unprocessable_entity
-    end
 
     def create
       ActiveRecord::Base.transaction do
@@ -81,6 +59,28 @@ module AccessPermissions
         render json: { flash: errors }, status: :unprocessable_entity
         raise ActiveRecord::Rollback
       end
+    end
+
+    def update
+      @user_assignment = @protocol.user_assignments.find_by(
+        user_id: permitted_update_params[:user_id],
+        team: current_team
+      )
+
+      # prevent role change if it would result in no manually assigned users having the user management permission
+      new_user_role = UserRole.find(permitted_update_params[:user_role_id])
+      if !new_user_role.has_permission?(ProtocolPermissions::USERS_MANAGE) &&
+         @user_assignment.last_with_permission?(ProtocolPermissions::USERS_MANAGE, assigned: :manually)
+        raise ActiveRecord::RecordInvalid
+      end
+
+      @user_assignment.update!(permitted_update_params)
+      log_activity(:protocol_template_access_changed, { user_target: @user_assignment.user.id,
+                                                        role: @user_assignment.user_role.name })
+
+      render :protocol_member
+    rescue ActiveRecord::RecordInvalid
+      render json: { flash: t('access_permissions.update.failure') }, status: :unprocessable_entity
     end
 
     def destroy

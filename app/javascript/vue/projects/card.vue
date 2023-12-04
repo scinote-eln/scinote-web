@@ -12,7 +12,7 @@
       <div>{{ params.code }}</div>
       <RowMenuRenderer :params="{data: params, dtComponent: dtComponent}" class="ml-auto"/>
     </div>
-    <a :href="params.urls.show" class="font-bold mb-4 text-sn-black hover:no-underline hover:text-sn-black">
+    <a :href="params.urls.show" :class="{'pointer-events-none text-sn-grey': !params.urls.show}" class="font-bold mb-4 text-sn-black hover:no-underline hover:text-sn-black">
       {{ params.name }}
     </a>
     <div class="grid gap-2 grid-cols-[80px_auto] mt-auto">
@@ -27,7 +27,7 @@
       <span class="font-bold">{{ params.hidden ? i18n.t('projects.index.hidden') : i18n.t('projects.index.visible') }}</span>
 
       <span class="text-sn-grey">{{ i18n.t('projects.index.card.users') }}</span>
-      <UsersRenderer :params="{data: params, value: params.users}" class="-mt-2.5" />
+      <UsersRenderer :params="{data: params, value: params.users, dtComponent: dtComponent}" class="-mt-2.5" />
     </div>
   </div>
   <div v-else class="p-4 rounded sn-shadow-flyout flex flex-col">

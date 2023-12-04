@@ -25,7 +25,7 @@
         v-if="currentViewRender === 'table'"
         class="ag-theme-alpine w-full flex-grow h-full z-10"
         :class="{'opacity-0': initializing}"
-        :columnDefs="columnDefs"
+        :columnDefs="extendedColumnDefs"
         :rowData="rowData"
         :defaultColDef="defaultColDef"
         :rowSelection="'multiple'"
@@ -177,38 +177,48 @@ export default {
       return {
         suppressCellFocus: true
       }
-    }
-  },
-  beforeMount() {
-    if (this.withCheckboxes) {
-      this.columnDefs.unshift({
-        field: "checkbox",
-        headerCheckboxSelection: true,
-        headerCheckboxSelectionFilteredOnly: true,
-        checkboxSelection: true,
-        width: 48,
-        minWidth: 48,
-        resizable: false,
-        pinned: 'left'
+    },
+    extendedColumnDefs() {
+      let columns = this.columnDefs.map(column => {
+        return {
+          ...column,
+          cellRendererParams: {
+            dtComponent: this
+          }
+        }
       });
-    }
 
-    if (this.withRowMenu) {
-      this.columnDefs.push({
-        field: "rowMenu",
-        headerName: '',
-        width: 42,
-        minWidth: 42,
-        resizable: false,
-        sortable: false,
-        cellRenderer: 'RowMenuRenderer',
-        cellRendererParams: {
-          dtComponent: this
-        },
-        pinned: 'right',
-        cellStyle: {padding: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'visible'}
+      if (this.withCheckboxes) {
+        columns.unshift({
+          field: "checkbox",
+          headerCheckboxSelection: true,
+          headerCheckboxSelectionFilteredOnly: true,
+          checkboxSelection: true,
+          width: 48,
+          minWidth: 48,
+          resizable: false,
+          pinned: 'left'
+        });
+      }
 
-      });
+      if (this.withRowMenu) {
+        columns.push({
+          field: "rowMenu",
+          headerName: '',
+          width: 42,
+          minWidth: 42,
+          resizable: false,
+          sortable: false,
+          cellRenderer: 'RowMenuRenderer',
+          cellRendererParams: {
+            dtComponent: this
+          },
+          pinned: 'right',
+          cellStyle: {padding: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'visible'}
+        });
+      }
+
+      return columns;
     }
   },
   watch: {
@@ -308,7 +318,7 @@ export default {
       this.loadData();
     },
     clickCell(e) {
-      if (e.column.colId !== 'rowMenu') {
+      if (e.column.colId !== 'rowMenu' && e.column.userProvidedColDef.notSelectable !== true) {
           e.node.setSelected(true);
       }
     },

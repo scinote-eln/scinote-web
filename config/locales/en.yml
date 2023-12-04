@@ -3591,7 +3591,7 @@ en:
     remove_access: "Remove access"
     grant_access: "Grant new access"
     create:
-      success: "You have successfully granted access to %{count} member(s)."
+      success: "You have successfully granted access to %{member_name}."
       failure: "Something went wrong"
     destroy:
       success: "You have successfully removed %{member_name}."
@@ -3621,9 +3621,9 @@ en:
       my_module_member_field:
         reset: "Inherit role"
         reset_description: "The inherited role from project or experiment will be applied"
-      project: "Project"
-      project_tooltip: "This role was set on this project."
-      project_tooltip_inherit: "This role was inherited from the project."
+      projects: "Project"
+      projects_tooltip: "This role was set on this project."
+      projects_tooltip_inherit: "This role was inherited from the project."
       protocol: "Protocol"
       protocol_tooltip: "This role was set on this protocol."
       protocol_tooltip_inherit: "This role was inherited from the protocol."

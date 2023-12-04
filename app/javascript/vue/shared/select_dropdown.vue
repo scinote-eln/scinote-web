@@ -23,43 +23,46 @@
       <i v-if="canClear" @click="clear" class="sn-icon ml-auto sn-icon-close"></i>
       <i v-else class="sn-icon ml-auto" :class="{ 'sn-icon-down': !isOpen, 'sn-icon-up': isOpen, 'text-sn-grey': disabled}"></i>
     </div>
-    <div v-if="isOpen" ref="flyout" class="bg-white sn-shadow-menu-sm rounded w-full fixed z-50">
-      <div v-if="multiple && withCheckboxes" class="p-2.5 pb-0">
-        <div @click="selectAll" :class="sizeClass" class="border-x-0 border-transparent border-solid border-b-sn-light-grey py-1.5 px-3  cursor-pointer flex items-center gap-2 shrink-0">
-          <div class="sn-checkbox-icon"
-              :class="selectAllState"
-          ></div>
-          {{ i18n.t('general.select_all') }}
-        </div>
-      </div>
-      <perfect-scrollbar class="p-2.5 flex flex-col max-h-80 relative" :class="{ 'pt-0': withCheckboxes }">
-        <template v-for="option in filteredOptions" :key="option[0]">
-          <div
-            @click="setValue(option[0])"
-            class="py-1.5 px-3 rounded cursor-pointer flex items-center gap-2 shrink-0"
-            :class="[sizeClass, {'!bg-sn-super-light-blue': valueSelected(option[0])}]"
-          >
-            <div v-if="withCheckboxes"
-                 class="sn-checkbox-icon"
-                 :class="{
-                  'checked': valueSelected(option[0]),
-                  'unchecked': !valueSelected(option[0]),
-                 }"
+    <teleport to="body">
+      <div v-if="isOpen" ref="flyout" class="bg-white inline-block sn-shadow-menu-sm rounded w-full fixed z-[3000]">
+        <div v-if="multiple && withCheckboxes" class="p-2.5 pb-0">
+          <div @click="selectAll" :class="sizeClass" class="border-x-0 border-transparent border-solid border-b-sn-light-grey py-1.5 px-3  cursor-pointer flex items-center gap-2 shrink-0">
+            <div class="sn-checkbox-icon"
+                :class="selectAllState"
             ></div>
-            <div v-if="optionRenderer" v-html="optionRenderer(option)"></div>
-            <div v-else >{{ option[1] }}</div>
+            {{ i18n.t('general.select_all') }}
           </div>
-        </template>
-        <div v-if="filteredOptions.length === 0" class="text-sn-grey text-center py-2.5">
-          {{ noOptionsPlaceholder || this.i18n.t('general.select_dropdown.no_options_placeholder') }}
         </div>
-      </perfect-scrollbar>
-    </div>
+        <perfect-scrollbar class="p-2.5 flex flex-col max-h-80 relative" :class="{ 'pt-0': withCheckboxes }">
+          <template v-for="option in filteredOptions" :key="option[0]">
+            <div
+              @click="setValue(option[0])"
+              class="py-1.5 px-3 rounded cursor-pointer flex items-center gap-2 shrink-0"
+              :class="[sizeClass, {'!bg-sn-super-light-blue': valueSelected(option[0])}]"
+            >
+              <div v-if="withCheckboxes"
+                  class="sn-checkbox-icon"
+                  :class="{
+                    'checked': valueSelected(option[0]),
+                    'unchecked': !valueSelected(option[0]),
+                  }"
+              ></div>
+              <div v-if="optionRenderer" v-html="optionRenderer(option)"></div>
+              <div v-else >{{ option[1] }}</div>
+            </div>
+          </template>
+          <div v-if="filteredOptions.length === 0" class="text-sn-grey text-center py-2.5">
+            {{ noOptionsPlaceholder || this.i18n.t('general.select_dropdown.no_options_placeholder') }}
+          </div>
+        </perfect-scrollbar>
+      </div>
+    </teleport>
   </div>
 
 </template>
 
 <script>
+import FixedFlyoutMixin from './mixins/fixed_flyout.js';
 import { vOnClickOutside } from '@vueuse/components'
 
 export default {
@@ -91,8 +94,10 @@ export default {
       fetchedOptions: [],
       selectAllState: 'unchecked',
       query: '',
+      fixedWidth: true
     }
   },
+  mixins: [FixedFlyoutMixin],
   computed: {
     sizeClass() {
       switch (this.size) {
@@ -162,15 +167,11 @@ export default {
     }
   },
   mounted() {
-    document.addEventListener('scroll', this.setPosition);
     this.newValue = this.value;
     if (!this.newValue && this.multiple) {
       this.newValue = []
     }
     this.fetchOptions();
-  },
-  beforeUnmount() {
-    document.removeEventListener('scroll', this.setPosition);
   },
   watch: {
     isOpen() {
@@ -239,38 +240,6 @@ export default {
         this.newValue = this.rawOptions.map(option => option[0])
       }
       this.$emit('change', this.newValue)
-    },
-    setPosition() {
-        const field= this.$refs.field;
-        const flyout = this.$refs.flyout;
-        const rect = field.getBoundingClientRect();
-        const screenHeight = window.innerHeight;
-
-        if (!this.isOpen) return;
-
-        let width = rect.width;
-        let height = rect.height;
-        let top = rect.top + rect.height;
-        let bottom = screenHeight - rect.bottom + rect.height;
-        let left = rect.left;
-
-        const modal = field.closest('.modal-content');
-        if (modal) {
-          const modalRect = modal.getBoundingClientRect();
-          top -= modalRect.top;
-          left -= modalRect.left;
-        }
-
-        flyout.style.width = `${width}px`;
-        flyout.style.top = `${top}px`;
-        flyout.style.left = `${left}px`;
-        if (bottom < top) {
-          flyout.style.marginTop = `${(height + flyout.offsetHeight)* -1}px`;
-          flyout.style.boxShadow = '0px -16px 32px 0px rgba(16, 24, 40, 0.07)';
-        } else {
-          flyout.style.marginTop = '';
-          flyout.style.boxShadow = '';
-        }
     },
     fetchOptions() {
       if (this.optionsUrl) {
