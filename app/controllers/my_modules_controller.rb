@@ -534,6 +534,8 @@ class MyModulesController < ApplicationController
     users = User.where(id: params[:my_module][:user_ids])
 
     users.each do |user|
+      next if current_user.id == user.id
+
       log_activity(:designate_user_to_my_module, @my_module, { user_target: user.id })
     end
   end
