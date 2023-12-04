@@ -106,7 +106,7 @@ export default {
         twemoji.size = "24x24";
         twemoji.base = '/images/twemoji/';
         twemoji.parse(this.$refs.container);
-      }, 100);
+      }, 300);
     }
   }
 };
