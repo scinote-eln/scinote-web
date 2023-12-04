@@ -24,7 +24,7 @@ module RepositoryDatatable
          !scope[:repository].is_a?(RepositorySnapshot) &&
          value_object.data.present? &&
          value_object.low_stock_threshold.present?
-        data[:reminder] = value_object.low_stock_threshold > value_object.data
+        data[:reminder] = value_object.low_stock_threshold >= value_object.data
         if data[:reminder] && value_object.data&.positive?
           data[:reminder_text] =
             I18n.t('repositories.item_card.reminders.stock_low', stock_formated: value_object.formatted)
