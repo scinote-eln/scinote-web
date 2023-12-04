@@ -1,6 +1,6 @@
 <template>
   <Select
-    class="sn-select sn-select--search"
+    class="sn-select sn-select--search hover:border-sn-sleepy-grey"
     :class="customClass"
     :className="className"
     :optionsClassName="optionsClassName"
