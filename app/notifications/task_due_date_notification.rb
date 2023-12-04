@@ -3,7 +3,7 @@
 class TaskDueDateNotification < BaseNotification
   def message
     I18n.t(
-      'notifications.notification.my_module_due_date_reminder_html',
+      'notifications.content.my_module_due_date_reminder.message_html',
       my_module_name: subject.name
     )
   end
