@@ -3444,7 +3444,7 @@ en:
     content:
       my_module_due_date_reminder:
         title_html: "Task due date reminder"
-        message_html: "Due date for a task %{my_module_name} is coming up."
+        message_html: "Due date for the task %{my_module_name} is coming up."
       item_low_stock_reminder:
         title_html: "Item stock reminder"
         message_html: "Item %{repository_row_name} in inventory %{repository} is running low."
