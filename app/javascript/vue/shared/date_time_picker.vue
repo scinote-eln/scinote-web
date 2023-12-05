@@ -5,6 +5,8 @@
       :class="{
         'only-time': mode == 'time',
       }"
+      @closed="closedHandler"
+      @cleared="clearedHandler"
       v-model="compDatetime"
       :teleport="teleport"
       :no-today="true"
@@ -57,7 +59,11 @@
       clearable: { type: Boolean, default: false },
       teleport: { type: Boolean, default: true },
       defaultValue: { type: Date, required: false },
-      placeholder: { type: String }
+      placeholder: { type: String },
+      standAlone: { type: Boolean, default: false, required: false },
+      dateClassName: { type: String, default: '' },
+      timeClassName: { type: String, default: '' },
+      disabled: { type: Boolean, default: false }
     },
     data() {
       return {
@@ -87,7 +93,7 @@
     watch: {
       defaultValue: function () {
         this.datetime = this.defaultValue;
-        if (this.defaultValue) {
+        if (this.defaultValue instanceof Date) {
           this.time = {
             hours: this.defaultValue.getHours(),
             minutes: this.defaultValue.getMinutes()
@@ -99,7 +105,7 @@
 
           this.time = null;
 
-          if (this.datetime) {
+          if (this.datetime instanceof Date) {
           this.time = {
             hours: this.datetime.getHours(),
             minutes: this.datetime.getMinutes()
@@ -182,6 +188,12 @@
       close() {
         this.$refs.datetimePicker.closeMenu();
       },
+      closedHandler() {
+        this.$emit('closed');
+      },
+      clearedHandler() {
+        this.$emit('cleared');
+      }
     }
   }
 </script>

@@ -30,6 +30,7 @@ module Users
 
       email = auth.info.email
       email ||= auth.dig(:extra, :raw_info, :id_token_claims, :emails)&.first
+      auth.uid ||= auth.dig(:extra, :raw_info, :sub)
       user = User.from_omniauth(auth)
 
       # User found in database so just signing in

@@ -17,4 +17,18 @@ class RepositoryLedgerRecord < ApplicationRecord
              end),
              optional: true, foreign_key: :reference_id, inverse_of: :repository_ledger_records
   has_one :repository_row, through: :repository_stock_value
+
+  validate :my_module_references_present?, if: -> { reference.is_a?(MyModuleRepositoryRow) }
+
+  private
+
+  def my_module_references_present?
+    return if my_module_references.present? &&
+              my_module_references['my_module_id'].is_a?(Integer) &&
+              my_module_references['experiment_id'].is_a?(Integer) &&
+              my_module_references['project_id'].is_a?(Integer) &&
+              my_module_references['team_id'].is_a?(Integer)
+
+    errors.add(:base, I18n.t('repository_ledger_records.errors.my_module_references_missing'))
+  end
 end

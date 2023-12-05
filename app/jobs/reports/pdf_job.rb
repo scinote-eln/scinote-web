@@ -222,7 +222,11 @@ module Reports
       merged_file
     end
 
-    def prepend_title_page
+    def prepend_title_page(file, template, report, renderer)
+      unless File.exist?(Rails.root.join('app', 'views', 'reports', 'templates', template, 'cover.html.erb'))
+        return file
+      end
+
       total_pages = 0
 
       IO.popen(['pdfinfo', @file.path], 'r+') do |f|

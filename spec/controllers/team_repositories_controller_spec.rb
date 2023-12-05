@@ -8,7 +8,7 @@ describe TeamRepositoriesController, type: :controller do
   include_context 'reference_project_structure'
 
   let(:repository) { create :repository, team: team, created_by: user }
-  let(:target_team) { create :team, created_by: user}
+  let(:target_team) { create :team, created_by: user }
 
   describe 'DELETE destroy' do
     let(:second_team) { create :team, created_by: user }
@@ -16,7 +16,7 @@ describe TeamRepositoriesController, type: :controller do
 
     context 'when resource can be deleted' do
       let(:action) do
-        delete :destroy, params: { team_id: team.id, id: team_repository.id }
+        delete :destroy, params: { repository_id: repository.id, team_id: team.id, id: team_repository.id }
       end
 
       it 'renders 204' do

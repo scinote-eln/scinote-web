@@ -1,41 +1,29 @@
 <template>
-  <div id="repository-date-time-value-wrapper" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
-    <div class="font-inter text-sm font-semibold leading-5 truncate" :title="colName">
-      {{ colName }}
-    </div>
-    <div v-if="formatted" class="text-sn-dark-grey font-inter text-sm font-normal leading-5 flex">
-      <div>{{ formatted }}</div>
-    </div>
-    <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
-      {{ i18n.t('repositories.item_card.repository_date_time_value.no_date_time') }}
-    </div>
+  <div class="flex flex-col gap-2">
+    <DateTimeComponent
+      mode="datetime"
+      :colVal="colVal"
+      :colId="colId"
+      :colName="colName"
+      :updatePath="updatePath"
+      :canEdit="canEdit"
+    />
   </div>
 </template>
 
 <script>
-export default {
-  name: 'RepositoryDateTimeValue',
-  data() {
-    return {
-      formatted: null,
-      date_formatted: null,
-      time_formatted: null,
-      datetime: null
-    }
-  },
-  props: {
-    data_type: String,
-    colId: Number,
-    colName: String,
-    colVal: Object
-  },
-  created() {
-    if (!this.colVal) return
+  import DateTimeComponent from './date_time_component.vue';
 
-    this.formatted = this.colVal.formatted
-    this.date_formatted = this.colVal.date_formatted
-    this.time_formatted = this.colVal.time_formatted
-    this.formatdatetimeted = this.colVal.datetime
+  export default {
+    name: 'RepositoryDateTimeValue',
+    components: { DateTimeComponent },
+    props: {
+      data_type: String,
+      colId: Number,
+      colName: String,
+      colVal: Object,
+      updatePath: String,
+      canEdit: { type: Boolean, default: false }
+    }
   }
-}
 </script>

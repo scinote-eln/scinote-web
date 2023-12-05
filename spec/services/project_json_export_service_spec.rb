@@ -3,7 +3,7 @@ require 'rails_helper'
 describe ProjectsJsonExportService do
   before :all do
     @user = create(:user)
-    @team = create(:team, created_by: @user)
+    @team = create(:team, :change_user_team, created_by: @user)
 
     @accessible_project_1 = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @team)
     @accessible_project_2 = create(:project, name: Faker::Name.unique.name, created_by: @user, team: @team)
