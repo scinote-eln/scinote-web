@@ -8,7 +8,7 @@ class AssetSerializer < ActiveModel::Serializer
   include InputSanitizeHelper
   include ApplicationHelper
 
-  attributes :file_name, :view_mode, :icon, :urls, :updated_at_formatted,
+  attributes :file_name, :file_extension, :view_mode, :icon, :urls, :updated_at_formatted,
              :file_size, :medium_preview, :large_preview, :asset_type, :wopi,
              :wopi_context, :pdf_previewable, :file_size_formatted, :asset_order,
              :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached, :parent_type
@@ -19,6 +19,10 @@ class AssetSerializer < ActiveModel::Serializer
 
   def file_name
     object.render_file_name
+  end
+
+  def file_extension
+    File.extname(object.file_name)[1..]
   end
 
   def updated_at
@@ -135,16 +139,15 @@ class AssetSerializer < ActiveModel::Serializer
       )
     end
     urls[:open_vector_editor_edit] = edit_gene_sequence_asset_path(object.id) if can_manage_asset?(user, object)
-    urls[:open_locally] = asset_sync_show_path(object) if can_manage_asset?(user, object) && can_open_locally?
+
+    if can_manage_asset?(user, object) && can_open_asset_locally?(user, object)
+      urls[:open_locally] = asset_sync_show_path(object)
+      urls[:open_locally_api] = Constants::ASSET_SYNC_URL
+    end
+
     urls[:wopi_action] = object.get_action_url(user, 'embedview') if wopi && can_manage_asset?(user, object)
     urls[:blob] = rails_blob_path(object.file, disposition: 'attachment') if object.file.attached?
 
     urls
-  end
-
-  private
-
-  def can_open_locally?
-    ENV['ASSET_SYNC_URL'].present?
   end
 end
