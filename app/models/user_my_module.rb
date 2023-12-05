@@ -9,7 +9,7 @@ class UserMyModule < ApplicationRecord
   belongs_to :my_module, inverse_of: :user_my_modules, touch: true
 
   def log_activity(type_of, current_user)
-    return if current_user == user
+    return if current_user.id == user.id
 
     Activities::CreateActivityService
       .call(activity_type: type_of,
