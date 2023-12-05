@@ -3432,7 +3432,6 @@ en:
       other: "Others"
     sub_groups:
       my_module_designation: "You were assigned to or unassigned from a task"
-      my_module_modified: "There is a change on assigned task"
       my_module_due_date: "Due date & time reminder on assigned task (24h before)"
       my_module_comments: "A comment was added or edited on a task you are assigned to"
       project_experiment_access: "You were added or removed from a Project"

@@ -106,7 +106,6 @@ class NotificationExtends
         designate_user_to_my_module_activity
         undesignate_user_from_my_module_activity
       ],
-      my_module_modified: %I[],
       my_module_due_date: %I[
         my_module_due_date_reminder
       ],
