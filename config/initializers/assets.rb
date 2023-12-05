@@ -111,6 +111,7 @@ Rails.application.config.assets.precompile += %w(reports/template_helpers.js)
 Rails.application.config.assets.precompile += %w(shareable_links/my_module_protocol_show.js)
 Rails.application.config.assets.precompile += %w(shareable_links/repositories.js)
 Rails.application.config.assets.precompile += %w(shareable_links/date_formatting.js)
+Rails.application.config.assets.precompile += %w(shareable_links/handson_table_wraping.js)
 Rails.application.config.assets.precompile += %w(shareable_links/my_module_results_show.js)
 
 # Libraries needed for Handsontable formulas
