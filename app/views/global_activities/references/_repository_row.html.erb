@@ -7,6 +7,12 @@
                             team,
                             subject.repository.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
                             title: subject.repository.name) %>
+  <% elsif type_of == 'delete_item_inventory' && values.dig('message_items', 'repository', 'id') %>
+    <% repository = Repository.find(values.dig('message_items', 'repository', 'id')) %>
+    <%= route_to_other_team(repository_path(repository.id, team: repository.team.id),
+                        team,
+                        repository.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),
+                        title: repository.name) %>
   <% else %>
     <span title="<%= breadcrumbs['repository'] %>">
       <%= breadcrumbs['repository']&.truncate(Constants::NAME_TRUNCATION_LENGTH) %>

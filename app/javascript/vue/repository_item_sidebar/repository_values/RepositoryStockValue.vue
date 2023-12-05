@@ -15,7 +15,8 @@
       :data-manage-stock-url="values?.stock_url"
       :data-repository-row-id="repositoryId"
     >
-      <div v-if="values?.stock_formatted" :data-manage-stock-url="values?.stock_url" class="text-sn-dark-grey font-inter text-sm font-normal leading-5 stock-value">
+      <div v-if="values?.stock_formatted" :data-manage-stock-url="values?.stock_url"
+        class="text-sn-dark-grey font-inter text-sm font-normal leading-5 stock-value overflow-hidden text-ellipsis whitespace-nowrap">
         {{ values.stock_formatted }}
       </div>
       <div v-else class="font-inter text-sm font-normal leading-5" :class="{ 'text-sn-dark-grey': !canEdit, 'text-sn-grey': canEdit }">
@@ -37,18 +38,18 @@
     },
     computed: {
       editableClassName() {
-        const className = 'border-solid border-[1px] p-2 manage-repository-stock-value-link sci-cursor-edit'
+        const className = 'border-solid border-[1px] p-2 pl-3 manage-repository-stock-value-link sci-cursor-edit'
         if (this.canEdit && this.isEditing) return `${className} border-sn-science-blue`;
         if (this.canEdit) return `${className} border-sn-light-grey hover:border-sn-sleepy-grey`;
         return ''
       }
-    }, 
+    },
     data() {
       return {
         stock_formatted: null,
         stock_amount: null,
         low_stock_threshold: null,
-        isEditing: null,
+        isEditing: false,
         values: null
       }
     },

@@ -1,5 +1,5 @@
 <template>
-  <div id="repository-status-value-wrapper" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
+  <div ref="container" id="repository-status-value-wrapper" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
     <div class="font-inter text-sm font-semibold leading-5 truncate" :title="colName">
       {{ colName }}
     </div>
@@ -17,7 +17,7 @@
         :placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
         :no-options-placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
         :searchPlaceholder="i18n.t('repositories.item_card.dropdown_placeholder')"
-        className="h-[38px] !pl-3"
+        customClass="!h-[38px] !pl-2 sci-cursor-edit"
         optionsClassName="max-h-[300px]"
       ></select-search>
       <div v-else-if="status && icon"
@@ -88,16 +88,25 @@ export default {
       this.isLoading = false;
       this.selected = this.id;
     });
+    this.replaceEmojiesInDropdown();
   },
   methods: {
     changeSelected(id) {
       this.selected = id;
-      if (id) {
+      if (id || id === null) {
         this.update(id);
+        this.replaceEmojiesInDropdown();
       }
     },
     parseEmoji(content) {
       return twemoji.parse(content);
+    },
+    replaceEmojiesInDropdown() {
+      setTimeout(() => {
+        twemoji.size = "24x24";
+        twemoji.base = '/images/twemoji/';
+        twemoji.parse(this.$refs.container);
+      }, 300);
     }
   }
 };

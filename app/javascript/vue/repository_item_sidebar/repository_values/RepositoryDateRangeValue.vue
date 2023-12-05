@@ -1,35 +1,30 @@
 <template>
-  <div id="repository-date-range-value-wrapper" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
-    <div class="font-inter text-sm font-semibold leading-5 truncate" :title="colName">
-      {{ colName }}
-    </div>
-    <DateTimeRange
-      dateType="dateRange"
-      :startTime="colVal?.start_time"
-      :endTime="colVal?.end_time"
+  <div class="flex flex-col gap-2">
+
+    <DateTimeComponent
+      mode="date"
+      :range="true"
       :colVal="colVal"
       :colId="colId"
+      :colName="colName"
       :updatePath="updatePath"
       :canEdit="canEdit"
-      :editingField="editingField"
-      @setEditingField="$emit('setEditingField', $event)"
     />
   </div>
 </template>
 
 <script>
-import DateTimeRange from './DateTimeRange.vue';
+import DateTimeComponent from './date_time_component.vue';
 
   export default {
     name: 'RepositoryDateRangeValue',
-    components: { DateTimeRange },
+    components: { DateTimeComponent },
     props: {
       data_type: String,
       colId: Number,
       colName: String,
-      colVal: null,
-      updatePath: null,
-      editingField: null,
+      colVal: Object,
+      updatePath: String,
       canEdit: { type: Boolean, default: false },
     }
   }
