@@ -1,8 +1,5 @@
 <template>
   <div class="sci-navigation--notificaitons-flyout-notification">
-    <div class="sci-navigation--notificaitons-flyout-notification-icon" :class="notification.attributes.type_of">
-      <i :class="icon"></i>
-    </div>
     <div class="sci-navigation--notificaitons-flyout-notification-date">
       {{ notification.attributes.created_at }}
     </div>
