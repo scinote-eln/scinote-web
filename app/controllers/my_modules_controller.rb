@@ -531,7 +531,7 @@ class MyModulesController < ApplicationController
   end
 
   def log_user_designation_activity
-    users = User.where(id: params[:my_module][:user_ids])
+    users = User.where.not(id: current_user.id).where(id: params[:my_module][:user_ids])
 
     users.each do |user|
       log_activity(:designate_user_to_my_module, @my_module, { user_target: user.id })
