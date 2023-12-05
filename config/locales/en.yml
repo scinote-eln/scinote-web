@@ -395,6 +395,8 @@ en:
     add: "ADD"
     sort_by: "SORT BY"
     attachments_view_mode: "ALL ATTACHMENTS VIEW SIZE"
+    open_locally_in: "Open in %{application}"
+    open_locally: "Open locally"
     new:
       description: 'New'
       uploading: 'Uploading'
@@ -3867,7 +3869,6 @@ en:
   Add: "Add"
   Asset: "File"
   Assets: "Files"
-  Open_locally: "Open locally"
   Download: "Download"
   Edit: "Edit"
   Save: "Save"
