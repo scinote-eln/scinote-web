@@ -84,8 +84,6 @@
 
     .sci-navigation--notificaitons-flyout-notification {
       border-bottom: $border-tertiary;
-      display: grid;
-      grid-template-columns: max-content auto;
       padding: 1rem 0;
 
       .sci-navigation--notificaitons-flyout-notification-icon {
