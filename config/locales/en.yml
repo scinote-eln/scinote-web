@@ -3444,13 +3444,13 @@ en:
     content:
       my_module_due_date_reminder:
         title_html: "Task due date reminder"
-        message_html: "Due date for %{my_module_name} is coming up"
+        message_html: "Due date for a task %{my_module_name} is coming up."
       item_low_stock_reminder:
         title_html: "Item stock reminder"
-        message_html: "Item %{repository_row_name} is running low"
+        message_html: "Item %{repository_row_name} in inventory %{repository} is running low."
       item_date_reminder:
         title_html: "Item date reminder"
-        message_html: "Date reminder for %{repository_row_name} is coming up in %{value} %{units}"
+        message_html: "Date reminder for %{repository_row_name} is coming up in %{value} %{units}."
     deliver:
       download_link: "Download link:"
       download_text: "Click the link to download the file."
