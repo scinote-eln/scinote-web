@@ -13,3 +13,4 @@ json.html controller.render_to_string(
 )
 
 json.flash @message
+json.user_assignment_job_id @project.user_assignment_job_id

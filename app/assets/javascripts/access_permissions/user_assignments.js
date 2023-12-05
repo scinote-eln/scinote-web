@@ -3,6 +3,24 @@
 (function() {
   'use strict';
 
+  function pollUserAssignmentJobStatus(jobId, counter = 1) {
+    if (counter > 10) return;
+
+    setTimeout(() => {
+      $.ajax({
+        url: `jobs/${jobId}/status`,
+        success: (data) => {
+          if (data.status === 'done') {
+            // eslint-disable-next-line no-undef
+            ProjectsIndex.loadCardsView();
+          } else {
+            pollUserAssignmentJobStatus(jobId, counter + 1);
+          }
+        },
+      });
+    }, 500 * counter);
+  }
+
   function initNewUserAssignmentFormListener() {
     $(document).on('change', 'form#new-user-assignment-form', function() {
       let values = [];
@@ -43,6 +61,8 @@
     });
 
     $(document).on('ajax:success', 'form#new-user-assignment-form', function(_e, data) {
+      if (data.user_assignment_job_id) pollUserAssignmentJobStatus(data.user_assignment_job_id);
+
       $('#user_assignments_modal').replaceWith($(data.html).find('#user_assignments_modal'));
       HelperModule.flashAlertMsg(data.flash, 'success');
     });
@@ -57,6 +77,8 @@
     });
 
     $(document).on('ajax:success', 'form.member-item', function(_e, data) {
+      if (data.user_assignment_job_id) pollUserAssignmentJobStatus(data.user_assignment_job_id);
+
       if (data.flash) {
         HelperModule.flashAlertMsg(data.flash, 'success');
       }
