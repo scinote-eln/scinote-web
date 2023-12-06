@@ -35,8 +35,10 @@ module AccessPermissions
 
       @user_assignment.update!(permitted_update_params)
 
-      log_activity(:change_user_role_on_project, { user_target: @user_assignment.user.id,
-                                                   role: @user_assignment.user_role.name })
+      unless current_user.id == @user_assignment.user.id
+        log_activity(:change_user_role_on_project, { user_target: @user_assignment.user.id,
+                                                    role: @user_assignment.user_role.name })
+      end
       propagate_job(@user_assignment)
 
       render :project_member
@@ -69,8 +71,10 @@ module AccessPermissions
               assigned: :manually
             )
 
-            log_activity(:assign_user_to_project, { user_target: user_assignment.user.id,
-                                                    role: user_assignment.user_role.name })
+            unless current_user.id == user_assignment.user.id
+              log_activity(:assign_user_to_project, { user_target: user_assignment.user.id,
+                                                      role: user_assignment.user_role.name })
+            end
             created_count += 1
             propagate_job(user_assignment)
           end
@@ -100,8 +104,11 @@ module AccessPermissions
       end
 
       propagate_job(user_assignment, destroy: true)
-      log_activity(:unassign_user_from_project, { user_target: user_assignment.user.id,
-                                                  role: user_assignment.user_role.name })
+
+      unless current_user.id == user_assignment.user.id
+        log_activity(:unassign_user_from_project, { user_target: user_assignment.user.id,
+          role: user_assignment.user_role.name })
+      end
 
       render json: { flash: t('access_permissions.destroy.success', member_name: escape_input(user.full_name)) }
     rescue ActiveRecord::RecordInvalid
