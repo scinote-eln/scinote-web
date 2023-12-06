@@ -142,7 +142,7 @@ class Project < ApplicationRecord
       experiments: {
         active: { sort: 'new' },
         archived: { sort: 'new' },
-        view_type: 'cards'
+        view_type: 'table'
       }
     }
   end
