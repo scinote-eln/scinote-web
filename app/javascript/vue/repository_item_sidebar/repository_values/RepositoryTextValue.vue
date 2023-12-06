@@ -1,56 +1,85 @@
 <template>
-  <div id="repository-text-value-wrapper" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
+  <div id="repository-text-value-wrapper"
+       class="flex flex-col min-h-[46px] h-auto gap-[6px]">
     <div class="font-inter text-sm font-semibold leading-5 flex justify-between">
       <div class="truncate" :class="{ 'w-4/5': expandable }" :title="colName">{{ colName }}</div>
-      <div @click="toggleExpandContent" v-show="expandable" class="font-normal leading-5 btn-text-link">
-        {{ this.contentExpanded ? i18n.t('repositories.item_card.repository_text_value.collapse') :
-          i18n.t('repositories.item_card.repository_text_value.expand') }}
+      <div @click="toggleCollapse"
+           v-show="expandable"
+           class="font-normal leading-5 btn-text-link">
+        {{
+          collapsed
+            ? i18n.t("repositories.item_card.repository_text_value.expand")
+            : i18n.t("repositories.item_card.repository_text_value.collapse")
+        }}
       </div>
     </div>
-    <div v-if="view" v-html="view" ref="textRef" class="text-sn-dark-grey font-inter text-sm font-normal leading-5 overflow-y-auto"
-         :class="{ 'max-h-[60px]': !contentExpanded, 'max-h-[600px]': contentExpanded }">
+
+    <div v-if="canEdit" class="w-full contents">
+      <text-area :initialValue="colVal?.edit"
+                 :noContentPlaceholder="i18n.t('repositories.item_card.repository_text_value.placeholder')"
+                 :placeholder="i18n.t('repositories.item_card.repository_text_value.placeholder')"
+                 :unEditableRef="`textRef`"
+                 :smartAnnotation="true"
+                 :sa_value="colVal?.view"
+                 :expandable="expandable"
+                 :collapsed="collapsed"
+                 @toggleExpandableState="toggleExpandableState"
+                 @update="update"
+                 className="px-3" />
     </div>
-    <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
-      {{ i18n.t('repositories.item_card.repository_text_value.no_text') }}
+    <div v-else-if="colVal?.edit"
+          ref="textRef"
+          class="text-sn-dark-grey box-content text-sm font-normal leading-5 overflow-y-auto pr-3 rounded w-[calc(100%-2rem)]]"
+          :class="{
+            'max-h-[4rem]': collapsed,
+            'max-h-[40rem]': !collapsed
+          }"
+    >
+      {{ colVal?.edit }}
+    </div>
+    <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5 pr-3 py-2 w-[calc(100%-2rem)]]">
+      {{ i18n.t("repositories.item_card.repository_text_value.no_text") }}
     </div>
   </div>
 </template>
 
 <script>
+import repositoryValueMixin from "./mixins/repository_value.js";
+import Textarea from "../../shared/Textarea.vue";
+
 export default {
-  name: 'RepositoryTextValue',
+  name: "RepositoryTextValue",
+  mixins: [repositoryValueMixin],
+  components: {
+    'text-area': Textarea,
+  },
   data() {
     return {
-      edit: null,
-      view: null,
-      contentExpanded: false,
-      expandable: false
-    }
+      expandable: false,
+      collapsed: true,
+      textValue: '',
+    };
   },
   props: {
     data_type: String,
     colId: Number,
     colName: String,
-    colVal: Object
-  },
-  methods: {
-    toggleExpandContent() {
-      this.contentExpanded = !this.contentExpanded
-    },
+    colVal: Object,
+    canEdit: { type: Boolean, default: false }
   },
   created() {
-    if (!this.colVal) return
+    // constants
+    this.noContentPlaceholder = this.i18n.t("repositories.item_card.repository_text_value.no_text");
+  },
+  methods: {
+    toggleCollapse() {
+      if (!this.expandable) return;
 
-    this.edit = this.colVal.edit
-    this.view = this.colVal.view
+      this.collapsed = !this.collapsed;
+    },
+    toggleExpandableState(expandable) {
+      this.expandable = expandable;
+    },
   },
-  mounted() {
-    this.$nextTick(() => {
-      if (this.$refs.textRef) {
-        const textHeight = this.$refs.textRef.scrollHeight
-        this.expandable = textHeight > 60 // 60px
-      }
-    })
-  },
-}
+};
 </script>

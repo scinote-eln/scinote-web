@@ -6,47 +6,10 @@ class ResultTextsController < ApplicationController
   include Rails.application.routes.url_helpers
 
   before_action :load_vars, only: [:edit, :update, :download]
-  before_action :load_vars_nested, only: [:new, :create]
 
   before_action :check_manage_permissions, only: %i(edit update)
-  before_action :check_create_permissions, only: %i(new create)
   before_action :check_archive_permissions, only: [:update]
-  before_action :check_view_permissions, except: %i(new create edit update)
-
-  def new
-    @result = Result.new(
-      user: current_user,
-      my_module: @my_module
-    )
-    @result.build_result_text
-
-    render json: {
-      html: render_to_string({ partial: 'new', formats: :html })
-    }, status: :ok
-  end
-
-  def create
-    @result_text = ResultText.new(result_params[:result_text_attributes])
-    @result = Result.new(
-      user: current_user,
-      my_module: @my_module,
-      name: result_params[:name],
-      result_text: @result_text
-    )
-    @result.last_modified_by = current_user
-
-    if @result.save && @result_text.save
-      # link tiny_mce_assets to the text result
-      TinyMceAsset.update_images(@result_text, params[:tiny_mce_images], current_user)
-
-      result_annotation_notification
-      log_activity(:add_result)
-      flash[:success] = t('result_texts.create.success_flash', module: @my_module.name)
-      redirect_to results_my_module_path(@my_module, page: params[:page], order: params[:order])
-    else
-      render json: @result.errors, status: :bad_request
-    end
-  end
+  before_action :check_view_permissions, except: %i(edit update)
 
   def edit
     render json: {
@@ -128,18 +91,6 @@ class ResultTextsController < ApplicationController
     else
       render_404
     end
-  end
-
-  def load_vars_nested
-    @my_module = MyModule.find_by_id(params[:my_module_id])
-
-    unless @my_module
-      render_404
-    end
-  end
-
-  def check_create_permissions
-    render_403 unless can_create_results?(@my_module)
   end
 
   def check_manage_permissions

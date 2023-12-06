@@ -9,11 +9,11 @@
       @dropdown:changed="updateOperator" />
     </div>
     <div class="filter-datepicker-input">
-      <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`" :onlyDate="true"  :defaultValue="date || fallbackDate()" />
+      <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`" :mode="'date'" :defaultValue="date || fallbackDate()" />
     </div>
     <span class="between-delimiter">—</span>
     <div class="filter-datepicker-to-input">
-      <DateTimePicker @change="updateDateTo" :selectorId="`DatePickerTo${filter.id}`" :onlyDate="true" :defaultValue="dateTo || fallbackDate(7 * 24 * 60 * 60)" />
+      <DateTimePicker @change="updateDateTo" :selectorId="`DatePickerTo${filter.id}`" :mode="'date'" :defaultValue="dateTo || fallbackDate(7 * 24 * 60 * 60)" />
     </div>
   </div>
 </template>
@@ -22,7 +22,7 @@
   import FilterMixin from '../mixins/filter.js'
   import RangeDateTimeFilterMixin from '../mixins/filters/range_date_time_filter.js'
   import DropdownSelector from '../../shared/dropdown_selector.vue'
-  import DateTimePicker from '../../shared/date_picker.vue'
+  import DateTimePicker from '../../shared/date_time_picker.vue'
 
   export default {
     name: 'RepositoryDateRangeValue',

@@ -1,7 +1,3 @@
-<% content_for :head do %>
-  <meta name="turbolinks-cache-control" content="no-cache">
-<% end %>
-
 <% provide(:head_title, t("protocols.index.head_title")) %>
 
 <% if current_team %>
@@ -10,6 +6,10 @@
    <%= render partial: "/shared/sidebar/templates_sidebar", locals: {active: :protocol} %>
   <% end %>
   <% provide(:container_class, 'no-second-nav-container') %>
+
+  <% content_for :head do %>
+    <meta id="cache-directive" name="turbolinks-cache-control" content="no-cache">
+  <% end %>
 
   <div class="content-pane flexible protocols-index <%= @type %>">
     <div class="content-header sticky-header">
@@ -35,7 +35,7 @@
 <% end %>
 
 <div id="protocolFileImportModal">
-  <protocol-file-import-modal 
+  <protocol-file-import-modal
     import-url="<%= import_docx_protocols_path %>"
     protocol-template-table-url="<%= protocols_path %>"
   />

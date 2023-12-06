@@ -35,7 +35,7 @@ export default {
       this.handleTinyMCEOpened(e.detail.target);
     });
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
     }

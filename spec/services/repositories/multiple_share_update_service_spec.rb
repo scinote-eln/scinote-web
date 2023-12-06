@@ -47,14 +47,19 @@ describe Repositories::MultipleShareUpdateService do
                                                     team_ids_for_unshare: [team2.id])
     end
 
-    it 'removes TeamRepository record' do
-      create :team_shared_object, :write, team: team2, shared_repository: repository
+    let(:team_shared_object) { create :team_shared_object, :write, team: team2, shared_repository: repository }
 
-      expect { service_call }.to change { TeamRepository.count }.by(-1)
+    before do
+      allow_any_instance_of(TeamSharedObject).to receive(:team_cannot_be_the_same)
+    end
+
+    it 'removes TeamRepository record' do
+      create :team_shared_object, :write, team: team2, shared_object: repository
+      expect { service_call }.to change { repository.team_shared_objects.count }.by(-1)
     end
 
     it 'adds Activity record' do
-      create :team_shared_object, :write, team: team2, shared_repository: repository
+      create :team_shared_object, :write, team: team2, shared_object: repository
 
       expect { service_call }.to(change { Activity.all.count }.by(1))
     end
@@ -83,14 +88,18 @@ describe Repositories::MultipleShareUpdateService do
       )
     end
 
+    before do
+      allow_any_instance_of(TeamSharedObject).to receive(:team_cannot_be_the_same)
+    end
+
     it 'updates permission for share record' do
-      tr = create :team_shared_object, :write, team: team2, shared_repository: repository
+      tr = create :team_shared_object, :write, team: team2, shared_object: repository
 
       expect { service_call }.to(change { tr.reload.permission_level })
     end
 
     it 'adds Activity record' do
-      create :team_shared_object, :write, team: team2, shared_repository: repository
+      create :team_shared_object, :write, team: team2, shared_object: repository
 
       expect { service_call }.to(change { Activity.all.count }.by(1))
     end

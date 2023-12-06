@@ -33,17 +33,16 @@ describe Result, type: :model do
     it { should belong_to(:archived_by).class_name('User').optional }
     it { should belong_to(:last_modified_by).class_name('User').optional }
     it { should belong_to(:restored_by).class_name('User').optional }
-    it { should have_one :result_asset }
-    it { should have_one :asset }
-    it { should have_one :result_table }
-    it { should have_one :table }
-    it { should have_one :result_text }
+    it { should have_many :result_assets }
+    it { should have_many :assets }
+    it { should have_many :result_tables }
+    it { should have_many :tables }
+    it { should have_many :result_texts }
     it { should have_many :result_comments }
     it { should have_many :report_elements }
   end
 
   describe 'Validations' do
-    it { should validate_presence_of :user }
     it do
       should validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH)
     end

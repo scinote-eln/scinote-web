@@ -50,7 +50,7 @@ GIT
 
 GIT
   remote: https://github.com/scinote-eln/yomu
-  revision: 020ab670b2919f3b436e926a890d1dad23d75676
+  revision: 09b7b4910f59453970aab03d7b3ddb60b41db89a
   branch: master
   specs:
     yomu (0.2.4)
@@ -731,6 +731,7 @@ DEPENDENCIES
   fastimage
   figaro
   graphviz
+  grover
   httparty (~> 0.21.0)
   i18n-js (~> 3.6)
   image_processing

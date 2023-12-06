@@ -144,8 +144,7 @@ module Reports
         script_tag_options: @script_tag_options,
         page_ranges: "#{cover_pages_shift}-999999",
         emulate_media: 'screen',
-        display_url: "#{Rails.application.config.force_ssl ? 'https' : 'http'}://" \
-                     "#{Rails.application.routes.default_url_options[:host]}"
+        display_url: Rails.application.routes.default_url_options[:host]
       ).to_pdf(@file.path)
     end
 
@@ -223,7 +222,11 @@ module Reports
       merged_file
     end
 
-    def prepend_title_page
+    def prepend_title_page(file, template, report, renderer)
+      unless File.exist?(Rails.root.join('app', 'views', 'reports', 'templates', template, 'cover.html.erb'))
+        return file
+      end
+
       total_pages = 0
 
       IO.popen(['pdfinfo', @file.path], 'r+') do |f|
@@ -249,8 +252,7 @@ module Reports
         script_tag_options: @script_tag_options,
         emulate_media: 'screen',
         print_background: true,
-        display_url: "#{Rails.application.config.force_ssl ? 'https' : 'http'}://" \
-                     "#{Rails.application.routes.default_url_options[:host]}"
+        display_url: Rails.application.routes.default_url_options[:host]
       ).to_pdf(title_page.path)
 
       title_page.rewind

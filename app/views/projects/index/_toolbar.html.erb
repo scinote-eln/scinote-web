@@ -1,13 +1,13 @@
 <div id="projectsToolbar" class="projects-toolbar">
   <div class="form-inline">
-    <div class="project-actions">
+    <div class="project-actions" data-e2e="e2e-CO-projects-actionsToolbar">
       <span class="left">
         <!-- new project button -->
         <% if current_team && can_create_projects?(current_team) %>
           <%= link_to new_project_path(project_folder_id: current_folder),
                       class: 'btn btn-primary new-project-btn',
                       title: t('projects.index.new_tooltip'),
-                      data: { view_mode: 'active' },
+                      data: { view_mode: 'active', e2e: 'e2e-BT-project-newProject' },
                       remote: true do %>
             <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
             <span class="hidden-xs"><%= t('projects.index.new') %></span>
@@ -85,8 +85,8 @@
                 <%= t("projects.index.filters_modal.folders.popover_html") %>
               </div>
             </div>
-          <% end %>
-        </div>
+          </div>
+        <% end %>
         <div class="dropdown sort-menu" title="<%= t("general.sort.title") %>">
           <button class="btn btn-light btn-black icon-btn dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <span><i class="sn-icon sn-icon-sort-down"></i></span>

@@ -1,14 +1,12 @@
-<div class="datetime-picker-container"
-     id="<%= id %>"
-     data-id="<%= id %>"
-     data-use-current="<%= use_current %>"
-     data-datetime-picker-format="<%= datetime_picker_format_date_only %>">
-  <% if label %>
-    <label class="control-label required" for="calendar-<%= id %>"><%= label %></label>
-  <% end %>
-  <span class="sn-icon sn-icon-calendar"></span>
-  <input type="datetime" class="form-control calendar-input" name="calendar[<%= id %>]" id="calendar-<%= id %>" readonly="" data-ts="" placeholder="<%= placeholder %>" value="<%= defined?(setDate) ? setDate : '' %>"/>
-
-  <%= javascript_include_tag 'global_activities/date_picker' %>
-
+<div class="datetime-picker-container">
+  <div  id="date-time-picker-<%= id %>" class="vue-date-time-picker w-full">
+    <% selected_date = '' %>
+    <% selected_date = setDate if defined?(setDate) %>
+    <% selected_date = use_current %>
+    <% if label %>
+      <label class="sci-label" for="calendar-<%= id %>"><%= label %></label>
+    <% end %>
+    <input ref="input" type="hidden" class="calendar-input" id="calendar-<%= id %>" v-model="date" name="calendar[<%= id %>]" data-default="<%= defined?(setDate) ? setDate : '' %>" />
+    <date-time-picker class="w-full" @cleared="clearDate" ref="vueDateTime" placeholder="<%= placeholder %>" @change="updateDate" mode="date"></date-time-picker>
+  </div>
 </div>

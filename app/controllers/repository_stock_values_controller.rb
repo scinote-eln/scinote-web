@@ -6,33 +6,9 @@ class RepositoryStockValuesController < ApplicationController
   before_action :load_vars
   before_action :check_manage_permissions
 
-  def new
-    render json: {
-      html: render_to_string(
-        partial: 'repository_stock_values/manage_modal_content',
-        locals: {
-          repository_row: @repository_row,
-          repository_stock_column: @repository_column,
-          unit_items: @repository_column.repository_stock_unit_items,
-          repository_stock_value: RepositoryStockValue.new
-        }
-      )
-    }
-  end
+  def new; end
 
-  def edit
-    render json: {
-      html: render_to_string(
-        partial: 'repository_stock_values/manage_modal_content',
-        locals: {
-          repository_row: @repository_row,
-          repository_stock_column: @repository_column,
-          unit_items: @repository_column.repository_stock_unit_items,
-          repository_stock_value: @repository_stock_value
-        }
-      )
-    }
-  end
+  def edit; end
 
   def create_or_update
     ActiveRecord::Base.transaction do
@@ -50,8 +26,12 @@ class RepositoryStockValuesController < ApplicationController
     render json: {
       stock_managable: true,
       stock_status: @repository_stock_value.status,
-      manageStockUrl: edit_repository_stock_repository_repository_row_url(@repository, @repository_row)
-    }.merge(serialize_repository_cell_value(@repository_stock_value.repository_cell, current_team, @repository))
+    }.merge(
+      serialize_repository_cell_value(
+        @repository_stock_value.repository_cell, current_team, @repository,
+        reminders_enabled: Repository.reminders_enabled?
+      )
+    )
   end
 
   private

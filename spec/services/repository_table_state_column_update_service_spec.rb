@@ -34,7 +34,7 @@ describe RepositoryTableStateColumnUpdateService do
                             last_modified_by: user_2
   end
   let!(:default_order) do
-    [[2, 'asc']]
+    [[3, 'asc']]
   end
   let!(:default_column_def) do
     { 'visible' => true,

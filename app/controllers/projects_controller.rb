@@ -69,7 +69,6 @@ class ProjectsController < ApplicationController
         projects_cards_url: projects_cards_url,
         title_html: title_html,
         next_page: cards.next_page,
-        toolbar_html: render_to_string(partial: 'projects/index/toolbar'),
         cards_html: render_to_string(
           partial: 'projects/index/team_projects',
           locals: { cards: cards, view_mode: params[:view_mode] }

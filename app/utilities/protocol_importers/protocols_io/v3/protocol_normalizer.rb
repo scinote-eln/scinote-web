@@ -19,7 +19,7 @@ module ProtocolImporters
             published_on: protocol_hash[:published_on],
             version: protocol_hash[:version_id],
             source_id: protocol_hash[:id],
-            name: unescape(protocol_hash[:title]),
+            name: protocol_hash[:title] ? unescape(protocol_hash[:title]) : nil,
             description: {
               body: protocol_hash[:description],
               image: protocol_hash[:image][:source],
