@@ -33,7 +33,7 @@
           <%= t("projects.reports.wizard.third_step.protocol_step") %>
           <div class="divider"></div>
           <ul class="step-contents report-protocol-settings">
-            <% %i(completed_steps uncompleted_steps step_texts step_checklists step_files step_tables step_well_plates step_comments).each do |step_content| %>
+            <% %i(completed_steps uncompleted_steps step_texts step_files step_tables step_well_plates step_checklists step_comments).each do |step_content| %>
               <li>
                 <span class="sci-checkbox-container">
                   <input type="checkbox" class="sci-checkbox protocol-setting" value="<%= step_content %>" <%= 'checked' if report.settings.dig(:task, :protocol, step_content) %> />
@@ -129,6 +129,14 @@
           <div class="divider"></div>
           <ul class="results-type-contents report-result-settings">
             <li>
+              <span class="sci-checkbox-container">
+                <input type="checkbox" class="sci-checkbox task-setting" value="text_results" <%= 'checked' if report.settings.dig(:task, :text_results) %>/>
+                <span class="sci-checkbox-label"></span>
+              </span>
+              <%= t("projects.reports.wizard.third_step.text_results") %>
+              <div class="divider"></div>
+            </li>
+            <li>
               <div class="file-result-title-container">
                 <span class="sci-checkbox-container">
                   <input type="checkbox" class="sci-checkbox task-setting" value="file_results" <%= 'checked' if report.settings.dig(:task, :file_results) %>/>
@@ -159,21 +167,13 @@
             </li>
             <li>
               <span class="sci-checkbox-container">
-                <input type="checkbox" class="sci-checkbox task-setting" value="text_results" <%= 'checked' if report.settings.dig(:task, :text_results) %>/>
+                <input type="checkbox" class="sci-checkbox task-setting" value="result_comments" <%= 'checked' if report.settings.dig(:task, :result_comments) %>/>
                 <span class="sci-checkbox-label"></span>
               </span>
-              <%= t("projects.reports.wizard.third_step.text_results") %>
+              <%= t("projects.reports.wizard.third_step.results_comments") %>
               <div class="divider"></div>
             </li>
           </ul>
-        </li>
-        <li>
-          <span class="sci-checkbox-container">
-            <input type="checkbox" class="sci-checkbox task-setting" value="result_comments" <%= 'checked' if report.settings.dig(:task, :result_comments) %>/>
-            <span class="sci-checkbox-label"></span>
-          </span>
-          <%= t("projects.reports.wizard.third_step.results_comments") %>
-          <div class="divider"></div>
         </li>
       </ul>
       <div class="divider"></div>

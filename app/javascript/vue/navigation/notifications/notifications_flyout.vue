@@ -49,7 +49,6 @@ export default {
   },
   mounted() {
     let container = this.$refs.scrollContainer.$el
-    document.body.style.overflow = 'hidden'
 
     container.addEventListener('ps-scroll-y', (e) => {
       if (e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight - 20) {
@@ -57,8 +56,8 @@ export default {
       }
     })
   },
-  destroyed() {
-    document.body.style.overflow = 'scroll'
+  beforeUnmount() {
+    document.body.style.overflow = 'scroll';
   },
   computed: {
     filteredNotifications() {

@@ -120,11 +120,6 @@ export default {
       this.params = params;
     },
     dateValue(date) {
-      const typesThatCantBeEmpty = ['dateRange', 'dateTimeRange'];
-      if (date && (date.currentTarget === null) && typesThatCantBeEmpty.includes(this.dateType)) {
-        this.errorMessage = I18n.t('repositories.item_card.date_time.errors.select_valid_value');
-        return;
-      }
       if(date) return new Date(date)
       return new Date()
     },

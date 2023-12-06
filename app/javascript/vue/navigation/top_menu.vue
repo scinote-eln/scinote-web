@@ -122,6 +122,15 @@
         )
       }
     },
+    watch: {
+      notificationsOpened(newVal) {
+        if (newVal === true) {
+          document.body.style.overflow = 'hidden';
+        } else if (newVal === false) {
+            document.body.style.overflow = 'scroll';
+          }
+      }
+    },
     methods: {
       fetchData() {
         $.get(this.url, (result) => {

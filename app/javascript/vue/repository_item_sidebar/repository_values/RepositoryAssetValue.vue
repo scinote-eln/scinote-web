@@ -1,29 +1,34 @@
 <template>
   <div id="repository-asset-value-wrapper" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
-    <div class="font-inter text-sm font-semibold leading-5 truncate" :title="colName">
-      {{ colName }}
-    </div>
-    <div class="w-fit absolute right-0 top-7">
-      <a v-if="!file_name && (!uploading || error) && canEdit "
-         class="btn-text-link font-normal" @click="openFileChooser">
+    <div class="flex flex-row justify-between">
+      <div class="font-inter text-sm font-semibold leading-5 truncate" :title="colName">
+        {{ colName }}
+      </div>
+      <a v-if="!file_name && (!uploading || error) && canEdit"
+        class="btn-text-link font-normal min-w-fit pl-4" @click="openFileChooser">
         {{ i18n.t('repositories.item_card.repository_asset_value.add_asset') }}
       </a>
+      <div v-if="file_name && !uploading && canEdit" class="flex whitespace-nowrap gap-4 min-w-fit pl-4">
+        <a class="btn-text-link font-normal" @click="openFileChooser">
+          {{ i18n.t('general.replace') }}
+        </a>
+        <a class="btn-text-link font-normal" @click="clearFile">
+          {{ i18n.t('general.delete') }}
+        </a>
+      </div>
     </div>
+
     <div v-if="!uploading">
       <div v-if="file_name">
         <div class="flex flex-row justify-between">
-          <div class="w-full cursor-pointer text-sn-science-blue relative" @mouseover="tooltipShowing = true" @mouseout="tooltipShowing = false">
-            <a class="w-full inline-block file-preview-link truncate" :id="modalPreviewLinkId" data-no-turbolink="true"
+          <div class="w-full cursor-pointer relative" @mouseover="tooltipShowing = true" @mouseout="tooltipShowing = false">
+            <a class="w-full inline-block file-preview-link truncate text-sn-science-blue" :id="modalPreviewLinkId" data-no-turbolink="true"
               data-id="true" data-status="asset-present" :data-preview-url=this?.preview_url :href=this?.url>
               {{ file_name }}
             </a>
             <tooltip-preview v-if="tooltipShowing && medium_preview_url" :id="id" :url="url" :file_name="file_name"
               :preview_url="preview_url" :icon_html="icon_html" :medium_preview_url="medium_preview_url">
             </tooltip-preview>
-          </div>
-          <div v-if="canEdit" class="flex whitespace-nowrap gap-4 pl-4">
-            <a class="btn-text-link font-normal" @click="openFileChooser"> {{ i18n.t('general.replace') }} </a>
-            <a class="btn-text-link font-normal" @click="clearFile"> {{ i18n.t('general.delete') }} </a>
           </div>
         </div>
       </div>

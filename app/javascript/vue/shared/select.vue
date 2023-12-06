@@ -21,7 +21,7 @@
                          class="sn-select__options !relative !top-0 !left-[-1px] !shadow-none scroll-container px-2.5 pt-0 block"
                          :class="{ [optionsClassName]: true }"
       >
-  
+
         <div v-if="options.length" class="flex flex-col gap-[1px]">
           <div
             v-for="option in options"
@@ -80,7 +80,7 @@
         return option && option[1];
       },
       focusElement() {
-        return this.$refs.focusElement || this.$scopedSlots.default()[0].context.$refs.focusElement;
+        return this.$refs.focusElement || this.$parent.$refs.focusElement;
       }
     },
     mounted() {
