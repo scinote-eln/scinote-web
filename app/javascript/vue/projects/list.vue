@@ -21,6 +21,7 @@
              @delete_folders="deleteFolder"
              @export="exportProjects"
              @move="move"
+             @access="access"
   >
     <template #card="data">
       <ProjectCard :params="data.params" :dtComponent="data.dtComponent" ></ProjectCard>
@@ -37,14 +38,14 @@
   <ConfirmationModal
     :title="i18n.t('projects.index.modal_delete_folders.title')"
     :description="folderDeleteDescription"
-    :confirmClass="'btn btn-danger'"
+    confirmClass="btn btn-danger"
     :confirmText="i18n.t('projects.index.modal_delete_folders.confirm_button')"
     ref="deleteFolderModal"
   ></ConfirmationModal>
   <ConfirmationModal
     :title="i18n.t('projects.export_projects.modal_title')"
     :description="exportDescription"
-    :confirmClass="'btn btn-primary'"
+    confirmClass="btn btn-primary"
     :confirmText="i18n.t('projects.export_projects.export_button')"
     ref="exportModal"
   ></ConfirmationModal>
@@ -53,6 +54,7 @@
   <NewProjectModal v-if="newProject" :createUrl="createUrl" :currentFolderId="currentFolderId" :userRolesUrl="userRolesUrl" @close="newProject = false" @create="updateTable" />
   <NewFolderModal v-if="newFolder" :createFolderUrl="createFolderUrl" :currentFolderId="currentFolderId" :viewMode="currentViewMode" @close="newFolder = false" @create="updateTable" />
   <MoveModal v-if="objectsToMove" :moveToUrl="moveToUrl" :selectedObjects="objectsToMove" :foldersTreeUrl="foldersTreeUrl" @close="objectsToMove = null" @move="updateTable" />
+  <AccessModal v-if="accessModalParams" :params="accessModalParams" @close="accessModalParams = null" @refresh="this.reloadingTable = true" />
 </template>
 
 <script>
@@ -67,6 +69,7 @@ import EditFolderModal from './modals/edit_folder.vue'
 import NewProjectModal from './modals/new.vue'
 import NewFolderModal from './modals/new_folder.vue'
 import MoveModal from './modals/move.vue'
+import AccessModal from '../shared/access_modal/modal.vue'
 
 export default {
   name: 'ProjectsList',
@@ -79,7 +82,8 @@ export default {
     EditFolderModal,
     NewProjectModal,
     NewFolderModal,
-    MoveModal
+    MoveModal,
+    AccessModal
   },
   props: {
     dataSource: { type: String, required: true },
@@ -97,6 +101,7 @@ export default {
   },
   data() {
     return {
+      accessModalParams: null,
       newProject: false,
       newFolder: false,
       editProject: null,
@@ -110,7 +115,7 @@ export default {
                     { field: "code", headerName: this.i18n.t('projects.index.card.id'), sortable: true },
                     { field: "created_at", headerName: this.i18n.t('projects.index.card.start_date'), sortable: true },
                     { field: "hidden", headerName: this.i18n.t('projects.index.card.visibility'), cellRenderer: this.visibiltyRenderer, sortable: false },
-                    { field: "users", headerName: this.i18n.t('projects.index.card.users'), cellRenderer: 'UsersRenderer', sortable: false, minWidth: 210 }
+                    { field: "users", headerName: this.i18n.t('projects.index.card.users'), cellRenderer: 'UsersRenderer', sortable: false, minWidth: 210, notSelectable: true }
                   ]
     }
   },
@@ -195,7 +200,7 @@ export default {
     },
     nameRenderer(params) {
       let showUrl = params.data.urls.show;
-      return `<a href="${showUrl}" class="flex items-center gap-1">
+      return `<a href="${showUrl}" class="flex items-center gap-1 hover:no-underline ${!showUrl ? 'pointer-events-none text-sn-grey' : ''}">
                 ${params.data.folder ? '<i class="sn-icon mini sn-icon-mini-folder-left"></i>' : ''}
                 ${params.data.name}
               </a>`
@@ -207,6 +212,12 @@ export default {
     openComments(_params, rows) {
       this.$refs.commentButton.dataset.objectId = rows[0].id;
       this.$refs.commentButton.click();
+    },
+    access(event, rows) {
+      this.accessModalParams = {
+        object: rows[0],
+        roles_path: this.userRolesUrl,
+      }
     },
     async archive(event, rows) {
       const ok = await this.$refs.archiveModal.show()

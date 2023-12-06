@@ -77,17 +77,9 @@ module Toolbars
 
       return unless can_manage_team?(project.team) || can_read_project?(project)
 
-      path = if can_manage_project_users?(project)
-               edit_access_permissions_project_path(project)
-             else
-               access_permissions_project_path(project)
-             end
-
       {
         name: 'access',
         label: I18n.t('general.access'),
-        icon: 'sn-icon sn-icon-project-member-access',
-        path: path,
         type: :emit
       }
     end

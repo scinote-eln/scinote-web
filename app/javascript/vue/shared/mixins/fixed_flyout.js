@@ -1,0 +1,71 @@
+export default {
+  data() {
+    return {
+      overflowContainerScrollTop: 0,
+    };
+  },
+  watch: {
+    isOpen() {
+      if (this.isOpen) {
+        this.$nextTick(() => {
+          this.overflowContainerListener();
+        });
+      }
+    },
+  },
+  methods: {
+    overflowContainerListener() {
+      const { field, flyout } = this.$refs;
+      if (!field || !flyout) return;
+
+      let fieldRect = field.getBoundingClientRect();
+
+      if (this.overflowContainerScrollTop !== fieldRect.top) {
+        this.setPosition();
+      }
+      this.overflowContainerScrollTop = fieldRect.top;
+
+      setTimeout(() => {
+        this.overflowContainerListener();
+      }, 10);
+    },
+    setPosition() {
+      const { field, flyout } = this.$refs;
+
+      if (!field || !flyout) return;
+
+      const rect = field.getBoundingClientRect();
+      const screenHeight = window.innerHeight;
+
+      const windowHasScroll = document.documentElement.scrollHeight > document.documentElement.clientHeight;
+      let rightScrollOffset = 0;
+      const { left, width } = rect;
+      const top = rect.top + rect.height;
+      const bottom = screenHeight - rect.bottom + rect.height;
+      const right = window.innerWidth - rect.right;
+      if (windowHasScroll) {
+        rightScrollOffset = 14;
+      }
+
+      if (this.fixedWidth) {
+        flyout.style.width = `${width}px`;
+      } else {
+        flyout.style.minWidth = `${width}px`;
+      }
+      if (this.position === 'right') {
+        flyout.style.right = `${right - rightScrollOffset}px`;
+      } else {
+        flyout.style.left = `${left}px`;
+      }
+      if (bottom < top) {
+        flyout.style.bottom = `${bottom}px`;
+        flyout.style.top = 'unset';
+        flyout.style.boxShadow = '0px -16px 32px 0px rgba(16, 24, 40, 0.07)';
+      } else {
+        flyout.style.top = `${top}px`;
+        flyout.style.bottom = 'unset';
+        flyout.style.boxShadow = '';
+      }
+    },
+  },
+};

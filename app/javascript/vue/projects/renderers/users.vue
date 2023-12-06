@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!params.data.folder" class="flex items-center gap-1 cursor pointer h-10">
+  <div v-if="!params.data.folder" class="flex items-center gap-1 cursor-pointer h-10" @click="openAccessModal">
     <div v-for="(user, i) in visibleUsers" :key="i" :title="user.full_name">
       <img :src="user.avatar" class="w-7 h-7" />
     </div>
@@ -18,7 +18,7 @@ export default {
   props: {
     params: {
       required: true
-    }
+    },
   },
   computed: {
     users() {
@@ -32,6 +32,11 @@ export default {
     },
     hiddenUsersTitle() {
       return this.hiddenUsers.map((user) => user.full_name).join("\u000d")
+    }
+  },
+  methods: {
+    openAccessModal() {
+      this.params.dtComponent.$emit('access', {} ,[this.params.data]);
     }
   }
 
