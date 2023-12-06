@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_23_091358) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_07_163821) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -657,9 +657,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_091358) do
     t.bigint "last_modified_by_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "external_id"
     t.index "trim_html_tags((data)::text) gin_trgm_ops", name: "index_repository_checklist_items_on_data", using: :gin
+    t.index "trim_html_tags((external_id)::text) gin_trgm_ops", name: "index_repository_checklist_items_on_external_id", using: :gin
     t.index ["created_by_id"], name: "index_repository_checklist_items_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_repository_checklist_items_on_last_modified_by_id"
+    t.index ["repository_column_id", "external_id"], name: "unique_index_repository_checklist_items_on_external_id", unique: true
     t.index ["repository_column_id"], name: "index_repository_checklist_items_on_repository_column_id"
   end
 
@@ -750,9 +753,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_091358) do
     t.bigint "last_modified_by_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.string "external_id"
+    t.index "trim_html_tags((external_id)::text) gin_trgm_ops", name: "index_repository_list_items_on_external_id", using: :gin
     t.index "trim_html_tags(data) gin_trgm_ops", name: "index_repository_list_items_on_data", using: :gin
     t.index ["created_by_id"], name: "index_repository_list_items_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_repository_list_items_on_last_modified_by_id"
+    t.index ["repository_column_id", "external_id"], name: "unique_index_repository_list_items_on_external_id", unique: true
     t.index ["repository_column_id"], name: "index_repository_list_items_on_repository_column_id"
   end
 
@@ -817,7 +823,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_091358) do
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_repository_rows_on_name", using: :gin
     t.index ["archived"], name: "index_repository_rows_on_archived"
     t.index ["archived_by_id"], name: "index_repository_rows_on_archived_by_id"
-    t.index ["external_id"], name: "unique_index_repository_rows_on_external_id", unique: true
+    t.index ["repository_id", "external_id"], name: "unique_index_repository_rows_on_external_id", unique: true
     t.index ["repository_id"], name: "index_repository_rows_on_repository_id"
     t.index ["restored_by_id"], name: "index_repository_rows_on_restored_by_id"
   end

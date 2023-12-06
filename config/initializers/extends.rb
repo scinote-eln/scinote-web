@@ -144,6 +144,8 @@ class Extends
     RepositoryStockValue
   )
 
+  STI_PRELOAD_CLASSES = %w(LinkedRepository)
+
   # Array of preload relations used in search query for repository rows
   REPOSITORY_ROWS_PRELOAD_RELATIONS = []
 

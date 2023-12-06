@@ -209,6 +209,9 @@
     },
     methods: {
       setOperation($event) {
+        if ($event !== this.operation) {
+          this.amount = null;
+        }
         this.operation = $event;
         if ([2, 3].includes($event)) {
           this.unit = this.stockValue.unit;
