@@ -3,7 +3,7 @@
 <div class="ga-breadcrumb">
   <%= image_tag 'icon_small/experiment.svg' %>
   <% if subject&.navigable? %>
-    <% path = subject.archived? ? project_path(subject.project, view_mode: :archived) : my_modules_experiment_path(subject) %>
+    <% path = subject.archived? ? experiments_path(project_id: subject.project, view_mode: :archived) : my_modules_experiment_path(subject) %>
     <%= route_to_other_team(path,
                             team,
                             subject.name&.truncate(Constants::NAME_TRUNCATION_LENGTH),

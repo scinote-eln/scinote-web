@@ -8,7 +8,7 @@ module Navigator
       {
         id: project.code,
         name: project.name,
-        url: project_path(project, view_mode: archived ? 'archived' : 'active'),
+        url: experiments_path(project_id: project, view_mode: archived ? 'archived' : 'active'),
         archived: project.archived,
         type: :project,
         has_children: project.has_children,

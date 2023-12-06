@@ -243,7 +243,7 @@ module Dashboard
       when 'Experiment'
         my_modules_experiment_path(object_id)
       when 'Project'
-        project_path(object_id)
+        experiments_path(project_id: object_id)
       when 'Protocol'
         protocol_path(Protocol.find(object_id).latest_published_version_or_self.id)
       when 'RepositoryBase'

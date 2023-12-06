@@ -26,8 +26,8 @@ class ProjectsController < ApplicationController
   before_action :load_exp_sort_var, only: :show
   before_action :reset_invalid_view_state, only: %i(index cards show)
   before_action :set_folder_inline_name_editing, only: %i(index cards)
-  before_action :set_breadcrumbs_items, only: %i(index show)
-  before_action :set_navigator, only: %i(index show)
+  before_action :set_breadcrumbs_items, only: :index
+  before_action :set_navigator, only: :index
   before_action :set_current_projects_view_type, only: %i(index cards)
   layout 'fluid'
 
@@ -35,9 +35,12 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       format.json do
         projects = Lists::ProjectsService.new(current_team, current_user, current_folder, params).call
-        render json: projects, each_serializer: Lists::ProjectAndFolderSerializer, user: current_user, meta: pagination_dict(projects)
+        render json: projects, each_serializer: Lists::ProjectAndFolderSerializer, user: current_user,
+               meta: pagination_dict(projects)
       end
-      format.html do; end
+      format.html do
+        render 'projects/index'
+      end
     end
   end
 

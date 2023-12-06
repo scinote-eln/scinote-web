@@ -8,10 +8,10 @@ class ExperimentsController < ApplicationController
   include Rails.application.routes.url_helpers
   include Breadcrumbs
 
-  before_action :load_project, only: %i(new create archive_group restore_group)
+  before_action :load_project, only: %i(index new create archive_group restore_group)
   before_action :load_experiment, except: %i(new create archive_group restore_group
-                                             inventory_assigning_experiment_filter actions_toolbar)
-  before_action :check_read_permissions, except: %i(edit archive clone move new
+                                             inventory_assigning_experiment_filter actions_toolbar index)
+  before_action :check_read_permissions, except: %i(index edit archive clone move new
                                                     create archive_group restore_group
                                                     inventory_assigning_experiment_filter actions_toolbar)
   before_action :check_canvas_read_permissions, only: %i(canvas)
@@ -21,11 +21,26 @@ class ExperimentsController < ApplicationController
   before_action :check_archive_permissions, only: :archive
   before_action :check_clone_permissions, only: %i(clone_modal clone)
   before_action :check_move_permissions, only: %i(move_modal move)
-  before_action :set_inline_name_editing, only: %i(canvas table module_archive)
-  before_action :set_breadcrumbs_items, only: %i(canvas table module_archive)
-  before_action :set_navigator, only: %i(canvas module_archive table)
+  before_action :set_inline_name_editing, only: %i(index canvas table module_archive)
+  before_action :set_breadcrumbs_items, only: %i(index canvas table module_archive)
+  before_action :set_navigator, only: %i(index canvas module_archive table)
 
   layout 'fluid'
+
+  def index
+    respond_to do |format|
+      format.json do
+        experiments = Lists::ExperimentsService.new(@project.experiments,
+                                                    params.merge(project: @project),
+                                                    user: current_user).call
+        render json: experiments, each_serializer: Lists::ExperimentSerializer, user: current_user,
+               meta: pagination_dict(experiments)
+      end
+      format.html do
+        render 'experiments/index'
+      end
+    end
+  end
 
   def new
     @experiment = Experiment.new
@@ -44,7 +59,7 @@ class ExperimentsController < ApplicationController
     if @experiment.save
       experiment_annotation_notification
       log_activity(:create_experiment, @experiment)
-      flash[:success] = t('experiments.create.success_flash',
+      flash[:success] = t('.success_flash',
                           experiment: @experiment.name)
 
       render json: { path: my_modules_experiment_url(@experiment) }, status: :ok
@@ -164,7 +179,7 @@ class ExperimentsController < ApplicationController
         end
         format.html do
           flash[:success] = t('experiments.update.success_flash', experiment: @experiment.name)
-          redirect_to project_path(@experiment.project)
+          redirect_to experiments_path(project_id: @experiment.project)
         end
       end
     else
@@ -268,7 +283,7 @@ class ExperimentsController < ApplicationController
     else
       flash[:error] = t('experiments.clone.error_flash',
                         experiment: @experiment.name)
-      redirect_to project_path(@experiment.project)
+      redirect_to experiments_path(project_id: @experiment.project)
     end
   end
 
@@ -587,15 +602,27 @@ class ExperimentsController < ApplicationController
   end
 
   def set_inline_name_editing
-    return unless can_manage_experiment?(@experiment)
+    if @experiment
+      return unless can_manage_experiment?(@experiment)
 
-    @inline_editable_title_config = {
-      name: 'title',
-      params_group: 'experiment',
-      item_id: @experiment.id,
-      field_to_udpate: 'name',
-      path_to_update: experiment_path(@experiment)
-    }
+      @inline_editable_title_config = {
+        name: 'title',
+        params_group: 'experiment',
+        item_id: @experiment.id,
+        field_to_udpate: 'name',
+        path_to_update: experiment_path(@experiment)
+      }
+    else
+      return unless can_manage_project?(@project)
+
+      @inline_editable_title_config = {
+        name: 'title',
+        params_group: 'project',
+        item_id: @project.id,
+        field_to_udpate: 'name',
+        path_to_update: project_path(@project)
+      }
+    end
   end
 
   def experiment_annotation_notification(old_text = nil)
@@ -677,10 +704,18 @@ class ExperimentsController < ApplicationController
   end
 
   def set_navigator
-    @navigator = {
-      url: tree_navigator_experiment_path(@experiment),
-      archived: (action_name == 'module_archive' || params[:view_mode] == 'archived'),
-      id: @experiment.code
-    }
+    @navigator = if @experiment
+                   {
+                     url: tree_navigator_experiment_path(@experiment),
+                     archived: (action_name == 'module_archive' || params[:view_mode] == 'archived'),
+                     id: @experiment.code
+                   }
+                 else
+                   {
+                     url: tree_navigator_project_path(@project),
+                     archived: (action_name == 'index' && params[:view_mode] == 'archived'),
+                     id: @project.code
+                   }
+                 end
   end
 end

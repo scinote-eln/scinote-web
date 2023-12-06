@@ -8,7 +8,7 @@
 <% else %>
   <% if can_read_project?(project) %>
     <% if link_to_page == :show %>
-      <%= route_to_other_team project_path(project),
+      <%= route_to_other_team experiments_path(project_id: project),
                               project.team,
                               text %>
     <%  else %>

@@ -15,7 +15,6 @@ Given("I'm on the Protocols result archived page of a {string} task") do |task_n
   visit archive_my_module_path(m)
 end
 
-
 # Change methods to steps
 # Settings
 def visit_profile_page
@@ -39,7 +38,7 @@ end
 
 def visit_project_page(project_name)
   p = Project.find_by(name: project_name)
-  visit project_path(p)
+  visit experiments_path(project_id: p)
 end
 
 # Experiment
@@ -60,7 +59,6 @@ end
 def inventories_page
   visit repositories_path
 end
-
 
 def inventory_page(inventory_name)
   i = Repository.find_by(name: inventory_name)
