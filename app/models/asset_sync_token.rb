@@ -18,7 +18,7 @@ class AssetSyncToken < ApplicationRecord
   end
 
   def conflicts?(token)
-    version_token != token
+    asset.locked? || version_token != token
   end
 
   private

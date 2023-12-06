@@ -52,13 +52,14 @@
   import deleteAttachmentModal from './delete_modal.vue'
   import moveAssetModal from '../modal/move.vue'
   import MoveMixin from './mixins/move.js'
+  import OpenLocallyMixin from './mixins/open_locally.js'
   import MenuDropdown from '../../menu_dropdown.vue'
   import axios from '../../../../packs/custom_axios'
 
   export default {
     name: 'contextMenu',
     components: { deleteAttachmentModal, moveAssetModal, MenuDropdown },
-    mixins: [MoveMixin],
+    mixins: [MoveMixin, OpenLocallyMixin],
     props: {
       attachment: {
         type: Object,
@@ -102,10 +103,16 @@
             emit: 'open_scinote_editor',
           })
         }
-        menu.push({
-          text: this.i18n.t('Open_locally'),
-          emit: 'open_locally'
-        })
+        if (this.canOpenLocally) {
+          const text = this.localAppName ?
+            this.i18n.t('attachments.open_locally_in', { application: this.localAppName }) :
+            this.i18n.t('attachments.open_locally')
+
+          menu.push({
+            text: text,
+            emit: 'open_locally'
+          })
+        }
         menu.push({
           text: this.i18n.t('Download'),
           url: this.attachment.attributes.urls.download,
@@ -138,18 +145,6 @@
       }
     },
     methods: {
-      async openLocally() {
-        try {
-          const response = await axios.get(this.attachment.attributes.urls.open_locally);
-          const data = response.data;
-          const syncUrlResponse = await axios.get('/asset_sync_api_url');
-          const syncUrl = syncUrlResponse.data;
-          await axios.post(syncUrl, data);
-        } catch (error) {
-          console.error("Error in request:", error);
-        }
-      },
-      // TODO: add method to handle get to SciNote and then post to local URL
       changeViewMode(viewMode) {
         this.$emit('attachment:viewMode', viewMode)
         $.ajax({

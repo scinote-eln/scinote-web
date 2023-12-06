@@ -614,7 +614,8 @@ class Extends
   )
 
   if Constants::ASSET_SYNC_URL && EXTERNAL_SERVICES.exclude?(Constants::ASSET_SYNC_URL)
-    EXTERNAL_SERVICES << Constants::ASSET_SYNC_URL
+    asset_sync_url = URI.parse(Constants::ASSET_SYNC_URL)
+    EXTERNAL_SERVICES << "#{asset_sync_url.scheme}://#{asset_sync_url.host}:#{asset_sync_url.port}"
   end
 
   COLORED_BACKGROUND_ACTIONS = %w(
