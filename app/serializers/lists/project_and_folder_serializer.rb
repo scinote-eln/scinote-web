@@ -51,7 +51,7 @@ module Lists
 
     def urls
       urls_list = {
-        show: project? ? project_path(object) : project_folder_path(object),
+        show: project? ? experiments_path(project_id: object) : project_folder_path(object),
         actions: actions_toolbar_projects_path(items: [{ id: object.id,
                                                          type: project? ? 'projects' : 'project_folders' }].to_json)
       }
@@ -59,7 +59,7 @@ module Lists
       urls_list[:show] = nil if project? && !can_read_project?(object)
 
       urls_list[:update] = if project?
-                             project_path(object)
+                             experiments_path(project_id: object)
                            else
                              project_folder_path(object)
                            end

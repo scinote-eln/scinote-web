@@ -49,6 +49,7 @@ const entryList = {
   vue_legacy_datetime_picker: './app/javascript/packs/vue/legacy/datetime_picker.js',
   vue_label_templates_table: './app/javascript/packs/vue/label_templates_table.js',
   vue_projects_list: './app/javascript/packs/vue/projects_list.js',
+  vue_experiments_list: './app/javascript/packs/vue/experiments_list.js',
   vue_design_system_select: './app/javascript/packs/vue/design_system/select.js'
 }
 

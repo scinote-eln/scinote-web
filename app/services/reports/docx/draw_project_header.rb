@@ -11,7 +11,7 @@ module Reports::Docx::DrawProjectHeader
 
     @docx.h1 do
       link I18n.t('projects.reports.elements.project_header.title', project: project.name),
-           scinote_url + Rails.application.routes.url_helpers.project_path(project),
+           scinote_url + Rails.application.routes.url_helpers.experiments_path(project_id: project),
            link_style
     end
 

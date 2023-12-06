@@ -386,7 +386,7 @@ Rails.application.routes.draw do
     end
     get 'project_folders/:project_folder_id', to: 'projects#index', as: :project_folder_projects
 
-    resources :experiments, only: %i(show edit update) do
+    resources :experiments, only: %i(index show edit update) do
       collection do
         get 'inventory_assigning_experiment_filter'
         get 'edit', action: :edit
