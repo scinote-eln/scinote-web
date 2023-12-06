@@ -111,7 +111,7 @@ class RepositoryStockValue < ApplicationRecord
     self.repository_stock_unit_item = repository_cell
                                       .repository_column
                                       .repository_stock_unit_items
-                                      .find(new_data[:unit_item_id])
+                                      .find_by(id: new_data[:unit_item_id])
     self.last_modified_by = user
     new_amount = new_data[:amount].to_d
     delta = new_amount - amount.to_d
@@ -157,7 +157,7 @@ class RepositoryStockValue < ApplicationRecord
       value.repository_stock_unit_item = value.repository_cell
                                               .repository_column
                                               .repository_stock_unit_items
-                                              .find(payload['unit_item_id'])
+                                              .find_by(id: payload['unit_item_id'])
       value
     else
       raise ActiveRecord::RecordInvalid, 'Missing amount value'
