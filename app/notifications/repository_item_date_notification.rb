@@ -4,7 +4,7 @@ class RepositoryItemDateNotification < BaseNotification
   def message
     unit = human_readable_unit(column.metadata['reminder_unit'], column.metadata['reminder_value'])
     I18n.t(
-      'notifications.notification.item_date_reminder_html',
+      'notifications.content.item_date_reminder.message_html',
       repository_row_name: subject.name,
       value: column.metadata['reminder_value'],
       units: unit
@@ -29,7 +29,7 @@ class RepositoryItemDateNotification < BaseNotification
     if params[:repository_date_time_value_id]
       RepositoryDateTimeValue.find(params[:repository_date_time_value_id]).update(notification_sent: true)
     elsif params[:repository_date_value_id]
-      RepositoryDateVal7ue.find(params[:repository_date_value_id]).update(notification_sent: true)
+      RepositoryDateValue.find(params[:repository_date_value_id]).update(notification_sent: true)
     end
   end
 
