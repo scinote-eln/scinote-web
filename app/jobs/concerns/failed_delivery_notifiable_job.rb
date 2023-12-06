@@ -24,12 +24,11 @@ module FailedDeliveryNotifiableJob
     @user = User.find_by(id: arguments.last[:user_id])
     return if @user.blank?
 
-    notification = Notification.create!(
-      type_of: :deliver_error,
+    DeliveryNotification.with(
       title: failed_notification_title,
-      message: failed_notification_message
-    )
-    notification.create_user_notification(@user)
+      message: failed_notification_message,
+      error: true
+    ).deliver(@user)
   end
 
   def failed_notification_title

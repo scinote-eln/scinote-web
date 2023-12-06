@@ -602,6 +602,7 @@ class ExperimentsController < ApplicationController
     smart_annotation_notification(
       old_text: old_text,
       new_text: @experiment.description,
+      subject: @experiment,
       title: t('notifications.experiment_annotation_title',
                experiment: @experiment.name,
                user: current_user.full_name),

@@ -15,6 +15,7 @@
     @blur="blur"
     @open="open"
     @close="close"
+    @focus="focus"
   >
     <input ref="focusElement" v-model="query" type="text" class="sn-select__search-input" :placeholder="searchPlaceholder" />
     <span class="sn-select__value">{{ valueLabel || (placeholder || i18n.t('general.select')) }}</span>
@@ -77,6 +78,9 @@
       }
     },
     methods: {
+      focus() {
+        this.$refs.focusElement.focus();
+      },
       blur() {
         this.isOpen = false;
         this.$emit('blur');

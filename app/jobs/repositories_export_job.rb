@@ -83,18 +83,16 @@ class RepositoriesExportJob < ApplicationJob
   end
 
   def generate_notification
-    notification = Notification.create!(
-      type_of: :deliver,
+    DeliveryNotification.with(
       title: I18n.t('zip_export.notification_title'),
-      message:  "<a data-id='#{@zip_export.id}' " \
-                "data-turbolinks='false' " \
-                "href='#{Rails.application
-                              .routes
-                              .url_helpers
-                              .zip_exports_download_export_all_path(@zip_export)}'>" \
-                "#{@zip_export.zip_file_name}</a>"
-    )
-    notification.create_user_notification(@user)
+      message: "<a data-id='#{@zip_export.id}' " \
+                    "data-turbolinks='false' " \
+                    "href='#{Rails.application
+                                  .routes
+                                  .url_helpers
+                                  .zip_exports_download_export_all_path(@zip_export)}'>" \
+                    "#{@zip_export.zip_file_name}</a>"
+    ).deliver(@user)
   end
 
   # Overrides method from FailedDeliveryNotifiableJob concern

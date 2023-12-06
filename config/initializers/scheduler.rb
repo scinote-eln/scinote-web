@@ -21,3 +21,14 @@ if ENV['ENABLE_FLUICS_SYNC'] == 'true'
     LabelPrinters::Fluics::SyncService.new.sync_templates! if LabelPrinter.fluics.any?
   end
 end
+
+reminder_job_interval = ENV['REMINDER_JOB_INTERVAL'] || '1h'
+
+scheduler.every reminder_job_interval do
+  MyModules::DueDateReminderJob.perform_now
+  RepositoryItemDateReminderJob.perform_now
+end
+
+scheduler.every '1d' do
+  NotificationCleanupJob.perform_now
+end
