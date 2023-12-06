@@ -89,7 +89,6 @@ describe User, type: :model do
     it { should have_many :archived_protocols }
     it { should have_many :restored_protocols }
     it { should have_many :assigned_my_module_repository_rows }
-    it { should have_many :user_notifications }
     it { should have_many :notifications }
     it { should have_many :zip_exports }
     it { should have_many(:shareable_links).dependent(:destroy) }
@@ -146,14 +145,6 @@ describe User, type: :model do
       expect(user.name).to_not eq 'Tinker'
       expect(user.name).to eq 'Axe'
     end
-  end
-
-  describe 'user settings' do
-    it { is_expected.to respond_to(:time_zone) }
-    it { is_expected.to respond_to(:assignments_notification) }
-    it { is_expected.to respond_to(:assignments_email_notification) }
-    it { is_expected.to respond_to(:recent_notification) }
-    it { is_expected.to respond_to(:recent_email_notification) }
   end
 
   describe 'user variables' do
