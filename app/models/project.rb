@@ -14,8 +14,6 @@ class Project < ApplicationRecord
 
   enum visibility: { hidden: 0, visible: 1 }
 
-  attr_accessor :user_assignment_job_id
-
   auto_strip_attributes :name, nullify: false
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
@@ -339,11 +337,11 @@ class Project < ApplicationRecord
   def auto_assign_project_members
     return if skip_user_assignments
 
-    self.user_assignment_job_id = UserAssignments::ProjectGroupAssignmentJob.perform_later(
+    UserAssignments::ProjectGroupAssignmentJob.perform_now(
       team,
       self,
       last_modified_by&.id || created_by&.id
-    ).job_id
+    )
   end
 
   def bulk_assignment?

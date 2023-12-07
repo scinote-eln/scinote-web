@@ -11,4 +11,3 @@ json.form controller.render_to_string(
   },
   layout: false
 )
-json.user_assignment_job_id @project.user_assignment_job_id

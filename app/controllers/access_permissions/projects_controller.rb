@@ -103,10 +103,7 @@ module AccessPermissions
       log_activity(:unassign_user_from_project, { user_target: user_assignment.user.id,
                                                   role: user_assignment.user_role.name })
 
-      render json: {
-        flash: t('access_permissions.destroy.success', member_name: escape_input(user.full_name)),
-        user_assignment_job_id: @project.user_assignment_job_id
-      }
+      render json: { flash: t('access_permissions.destroy.success', member_name: escape_input(user.full_name)) }
     rescue ActiveRecord::RecordInvalid
       render json: { flash: t('access_permissions.destroy.failure') },
              status: :unprocessable_entity
@@ -165,13 +162,13 @@ module AccessPermissions
     end
 
     def propagate_job(user_assignment, destroy: false)
-      @project.user_assignment_job_id = UserAssignments::PropagateAssignmentJob.perform_later(
+      UserAssignments::PropagateAssignmentJob.perform_now(
         @project,
         user_assignment.user.id,
         user_assignment.user_role,
         current_user.id,
         destroy: destroy
-      ).job_id
+      )
     end
 
     def check_manage_permissions
