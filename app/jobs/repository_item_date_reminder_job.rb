@@ -12,11 +12,15 @@ class RepositoryItemDateReminderJob < ApplicationJob
 
   def process_repository_values(model, comparison_value)
     model
-      .where(notification_sent: false)
-      .where('data <= ?', comparison_value)
       .joins(repository_cell: { repository_column: :repository })
-      .where(repositories: { type: 'Repository' })
-      .find_each do |value|
+      .where(notification_sent: false, repositories: { type: 'Repository' })
+      .where('repository_date_time_values.updated_at >= ?', 2.days.ago)
+      .where( # date(time) values that are within the reminder range
+        "data <= " \
+        "(?::timestamp + CAST(((repository_columns.metadata->>'reminder_unit')::int * " \
+        "(repository_columns.metadata->>'reminder_value')::int) || ' seconds' AS Interval))",
+        comparison_value
+      ).find_each do |value|
         RepositoryItemDateNotification
           .send_notifications({ "#{value.class.name.underscore}_id": value.id,
                                 repository_row_id: value.repository_cell.repository_row_id,
