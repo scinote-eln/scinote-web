@@ -99,7 +99,13 @@ module AccessPermissions
         raise ActiveRecord::RecordInvalid
       end
 
-      propagate_job(user_assignment, destroy: true)
+      UserAssignments::PropagateAssignmentJob.perform_now(
+        @project,
+        user_assignment.user.id,
+        user_assignment.user_role,
+        current_user.id,
+        destroy: true
+      )
       log_activity(:unassign_user_from_project, { user_target: user_assignment.user.id,
                                                   role: user_assignment.user_role.name })
 
@@ -162,7 +168,7 @@ module AccessPermissions
     end
 
     def propagate_job(user_assignment, destroy: false)
-      UserAssignments::PropagateAssignmentJob.perform_now(
+      UserAssignments::PropagateAssignmentJob.perform_later(
         @project,
         user_assignment.user.id,
         user_assignment.user_role,
