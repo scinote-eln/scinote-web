@@ -55,7 +55,7 @@
         </div>
         <ul class="webhooks-list collapse" id="activityFilter<%= filter.id %>">
           <li class="create-webhook-container hidden">
-            <%= form_with model: Webhook.new, url: users_settings_webhooks_path(filter_id: filter.id, sort: @current_sort), class: 'webhook-form' do |f| %>
+            <%= form_with model: Webhook.new, url: users_settings_webhooks_path(filter_id: filter.id, sort: @current_sort), class: 'webhook-form', data: { remote: true } do |f| %>
               <%= render partial: 'webhook_form', locals: {f: f} %>
             <% end %>
           </li>
