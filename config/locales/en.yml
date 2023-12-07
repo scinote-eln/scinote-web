@@ -762,7 +762,7 @@ en:
           assigned_items_description: "Inventories selected below will only contain the items that you assigned to the tasks directly."
           include_all_assigned_iitems: "Include all assigned items from the following inventories"
           results: "Results"
-          all_results: "Include all results"
+          all_results: "Include all results elements"
           order_results: "Order results"
           atoz: "Name A to Z"
           ztoa: "Name Z to A"
@@ -770,12 +770,12 @@ en:
           old: "Added first"
           new_updated: "Modified last"
           old_updated: "Modified first"
-          file_results: "File results"
+          file_results: "Result files"
           insert_pages_from_pdf: "Insert pages from PDF and docx files into the report"
           pdf_warning: "This may increase report generation time."
-          table_results: "Table results"
-          text_results: "Text results"
-          results_comments: "Include all result comments"
+          table_results: "Result tables"
+          text_results: "Result texts"
+          results_comments: "Result comments"
           additional_content: "Additional content"
           task_activity: "Include task activity"
           archived: "[archived]"
@@ -2311,6 +2311,8 @@ en:
         errors:
           set_all_or_none: 'Needs to set both or none'
           not_valid_range: 'Range is not valid.'
+          select_valid_value: 'Select a valid date or date-time value'
+          browser_alert_message: 'You have made some changes, are you sure you want to leave this page?'
     highlight_component:
       information_label: 'Information'
       custom_columns_label: 'Custom columns'
@@ -3422,14 +3424,35 @@ en:
 
   notifications:
     title: "Notifications"
-    email_settings: "E-mail notifications"
-    form:
-      assignments: "Assignment"
-      notification_scinote: 'Show in SciNote'
-      notification_email: 'Notify me via email'
-      assignments_description: 'Assignment notifications appear whenever you get assigned to a team, project, task.'
-      recent_notification: 'Recent changes'
-      recent_notification_description: 'Recent changes notifications appear whenever there is a change on a task you are assigned to.'
+    sub_title: "Define which updates to get notified and where"
+    in_app: "In-app"
+    email: "Email"
+    breadcrumb: "Preferences"
+    groups:
+      my_module: "Task"
+      project_experiment: "Project & Experiment"
+      repository: "Inventories & Items"
+      other: "Others"
+    sub_groups:
+      my_module_designation: "You were assigned to or unassigned from a task"
+      my_module_due_date: "Due date & time reminder on assigned task (24h before)"
+      my_module_comments: "A comment was added or edited on a task you are assigned to"
+      project_experiment_access: "You were added or removed from a Project"
+      project_experiment_role_change: "Your role on Project, Experiment, or Task was changed"
+      repository_stock: "Low stock reminder"
+      repository_date_reminder: "Date reminder"
+      other_smart_annotation: "You were tagged"
+      other_team_invitation: "You were invited or removed from the team"
+    content:
+      my_module_due_date_reminder:
+        title_html: "Task due date reminder"
+        message_html: "Due date for the task %{my_module_name} is coming up."
+      item_low_stock_reminder:
+        title_html: "Item stock reminder"
+        message_html: "Item %{repository_row_name} in inventory %{repository} is running low."
+      item_date_reminder:
+        title_html: "Item date reminder"
+        message_html: "Date reminder for %{repository_row_name} is coming up in %{value} %{units}."
     deliver:
       download_link: "Download link:"
       download_text: "Click the link to download the file."

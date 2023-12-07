@@ -14,7 +14,7 @@
         :options="checklistItems"
         :placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
         :no-options-placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
-        className="h-[38px] !pl-3"
+        className="h-[38px] pl-3"
         optionsClassName="max-h-[300px]"
       ></checklist-select>
     </div>

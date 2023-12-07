@@ -14,7 +14,7 @@
       </div>
     </div>
 
-    <div v-if="canEdit">
+    <div v-if="canEdit" class="w-full contents">
       <text-area :initialValue="colVal?.edit"
                  :noContentPlaceholder="i18n.t('repositories.item_card.repository_text_value.placeholder')"
                  :placeholder="i18n.t('repositories.item_card.repository_text_value.placeholder')"
@@ -29,7 +29,7 @@
     </div>
     <div v-else-if="colVal?.edit"
           ref="textRef"
-          class="text-sn-dark-grey box-content text-sm font-normal leading-5 overflow-y-auto pr-3 py-2 rounded w-[calc(100%-2rem)]]"
+          class="text-sn-dark-grey box-content text-sm font-normal leading-5 overflow-y-auto pr-3 rounded w-[calc(100%-2rem)]]"
           :class="{
             'max-h-[4rem]': collapsed,
             'max-h-[40rem]': !collapsed

@@ -21,7 +21,6 @@
                          class="sn-select__options !relative !top-0 !left-[-1px] !shadow-none scroll-container px-2.5 pt-0 block"
                          :class="{ [optionsClassName]: true }"
       >
-  
         <div v-if="options.length" class="flex flex-col gap-[1px]">
           <div
             v-for="option in options"
@@ -78,9 +77,6 @@
       valueLabel() {
         let option = this.options.find((o) => o[0] === this.value);
         return option && option[1];
-      },
-      focusElement() {
-        return this.$refs.focusElement || this.$scopedSlots.default()[0].context.$refs.focusElement;
       }
     },
     mounted() {
@@ -96,7 +92,8 @@
         if (this.isOpen) {
           this.$emit('open');
           this.$nextTick(() => {
-            this.focusElement.focus();
+            this.$emit('focus');
+            this.$refs.focusElement?.focus();
           });
           this.$refs.optionsContainer.scrollTop = 0;
           this.updateOptionPosition();

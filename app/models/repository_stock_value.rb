@@ -18,6 +18,8 @@ class RepositoryStockValue < ApplicationRecord
   validates :low_stock_threshold, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 
   before_save :update_consumption_stock_units, if: :repository_stock_unit_item_id_changed?
+  after_save :send_low_stock_notification, if: -> { status == :low }
+
   after_create do
     next if is_a?(RepositoryStockConsumptionValue)
 
@@ -111,7 +113,7 @@ class RepositoryStockValue < ApplicationRecord
     self.repository_stock_unit_item = repository_cell
                                       .repository_column
                                       .repository_stock_unit_items
-                                      .find(new_data[:unit_item_id])
+                                      .find_by(id: new_data[:unit_item_id])
     self.last_modified_by = user
     new_amount = new_data[:amount].to_d
     delta = new_amount - amount.to_d
@@ -157,7 +159,7 @@ class RepositoryStockValue < ApplicationRecord
       value.repository_stock_unit_item = value.repository_cell
                                               .repository_column
                                               .repository_stock_unit_items
-                                              .find(payload['unit_item_id'])
+                                              .find_by(id: payload['unit_item_id'])
       value
     else
       raise ActiveRecord::RecordInvalid, 'Missing amount value'
@@ -198,5 +200,9 @@ class RepositoryStockValue < ApplicationRecord
     repository_cell.repository_row
                    .my_module_repository_rows
                    .update_all(repository_stock_unit_item_id: repository_stock_unit_item_id)
+  end
+
+  def send_low_stock_notification
+    LowStockNotification.send_notifications({ repository_row_id: repository_cell.repository_row_id })
   end
 end

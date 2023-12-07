@@ -17,7 +17,7 @@
         :placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
         :no-options-placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
         :searchPlaceholder="i18n.t('repositories.item_card.dropdown_placeholder')"
-        className="h-[38px] !pl-3"
+        customClass="!h-[38px] !pl-3 sci-cursor-edit"
         optionsClassName="max-h-[300px]"
       ></select-search>
       <div v-else-if="text"

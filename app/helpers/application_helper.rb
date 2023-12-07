@@ -71,6 +71,7 @@ module ApplicationHelper
     message = options.fetch(:message) { :message_must_be_present }
     old_text = options[:old_text] || ''
     new_text = options[:new_text]
+    subject = options[:subject]
     return if new_text.blank?
 
     sa_user = /\[\@(.*?)~([0-9a-zA-Z]+)\]/
@@ -96,17 +97,19 @@ module ApplicationHelper
       target_user = User.find_by_id(user_id)
       next unless target_user
 
-      generate_annotation_notification(target_user, title, message)
+      generate_annotation_notification(target_user, title, subject)
     end
   end
 
-  def generate_annotation_notification(target_user, title, message)
-    notification = Notification.create(
-      type_of: :assignment,
-      title: sanitize_input(title),
-      message: sanitize_input(message)
+  def generate_annotation_notification(target_user, title, subject)
+    GeneralNotification.send_notifications(
+      {
+        type: :smart_annotation_added,
+        title: sanitize_input(title),
+        subject: subject,
+        user: target_user
+      }
     )
-    UserNotification.create(notification: notification, user: target_user) if target_user.assignments_notification
   end
 
   def custom_link_open_new_tab(text)

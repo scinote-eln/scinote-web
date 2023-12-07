@@ -357,6 +357,7 @@ class RepositoriesController < ApplicationController
     if repositories.present? && current_user.has_available_exports?
       current_user.increase_daily_exports_counter!
       RepositoriesExportJob.perform_later(repositories.pluck(:id), user_id: current_user.id, team_id: current_team.id)
+      log_activity(:export_inventories, inventories: repositories.pluck(:name).join(', '))
       render json: { message: t('zip_export.export_request_success') }
     else
       render json: { message: t('zip_export.export_error') }, status: :unprocessable_entity
@@ -364,13 +365,17 @@ class RepositoriesController < ApplicationController
   end
 
   def export_repository_stock_items
-    row_ids = @repository.repository_rows.where(id: params[:row_ids]).pluck(:id)
-    if row_ids.any?
+    repository_rows = @repository.repository_rows.where(id: params[:row_ids]).pluck(:id, :name)
+    if repository_rows.any?
       RepositoryStockZipExportJob.perform_later(
         user_id: current_user.id,
         params: {
-          repository_row_ids: row_ids
+          repository_row_ids: repository_rows.map { |row| row[0] }
         }
+      )
+      log_activity(
+        :export_inventory_stock_consumption,
+        inventory_items: repository_rows.map { |row| row[1] }.join(', ')
       )
       render json: { message: t('zip_export.export_request_success') }
     else
@@ -532,14 +537,23 @@ class RepositoriesController < ApplicationController
   end
 
   def log_activity(type_of, message_items = {})
-    message_items = { repository: @repository.id }.merge(message_items)
+    if @repository.present?
+      message_items = { repository: @repository.id }.merge(message_items)
 
-    Activities::CreateActivityService
-      .call(activity_type: type_of,
-            owner: current_user,
-            subject: @repository,
-            team: @repository.team,
-            message_items: message_items)
+      Activities::CreateActivityService
+        .call(activity_type: type_of,
+              owner: current_user,
+              subject: @repository,
+              team: @repository.team,
+              message_items: message_items)
+    else
+      Activities::CreateActivityService
+        .call(activity_type: type_of,
+              owner: current_user,
+              subject: @current_team,
+              team: @current_team,
+              message_items: message_items)
+    end
   end
 
   def set_breadcrumbs_items

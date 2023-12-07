@@ -4,9 +4,9 @@ module Users
       class PreferencesController < ApplicationController
         before_action :load_user, only: [
           :index,
-          :update,
-          :update_togglable_settings
+          :update
         ]
+        before_action :set_breadcrumbs_items, only: %i(index)
         layout 'fluid'
 
         def index
@@ -20,30 +20,6 @@ module Users
           end
         end
 
-        def update_togglable_settings
-          read_from_params(:assignments_notification) do |val|
-            @user.assignments_notification = val
-          end
-          read_from_params(:recent_notification) do |val|
-            @user.recent_notification = val
-          end
-          read_from_params(:recent_notification_email) do |val|
-            @user.recent_email_notification = val
-          end
-          read_from_params(:assignments_notification_email) do |val|
-            @user.assignments_email_notification = val
-          end
-          if @user.save
-            render json: {
-              status: :ok
-            }
-          else
-            render json: {
-              status: :unprocessable_entity
-            }
-          end
-        end
-
         private
 
         def load_user
@@ -51,11 +27,20 @@ module Users
         end
 
         def update_params
-          params.require(:user).permit(:time_zone, :date_format)
+          params.require(:user).permit(:time_zone, :date_format, notifications_settings: {})
         end
 
         def read_from_params(name)
           yield(params.include?(name) ? true : false)
+        end
+
+        def set_breadcrumbs_items
+          @breadcrumbs_items = [{
+            label: t('notifications.breadcrumb'),
+            url: preferences_path
+          }]
+
+          @breadcrumbs_items
         end
       end
     end

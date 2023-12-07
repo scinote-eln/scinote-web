@@ -21,7 +21,7 @@
             </template>
           </h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body !pt-[6px]">
           <p class="text-sm pb-6"> {{ i18n.t('repository_stock_values.manage_modal.enter_amount') }}</p>
           <form class="flex flex-col gap-6" @submit.prevent novalidate>
             <fieldset class="w-full flex justify-between">
@@ -72,17 +72,17 @@
             <template v-if="stockValue?.id">
               <div class="flex justify-between w-full items-center">
                 <div class="flex flex-col w-[220px] h-24 border-rounded bg-sn-super-light-grey justify-between text-center">
-                  <span class="text-sm text-sn-grey leading-5">{{ i18n.t('repository_stock_values.manage_modal.current_stock') }}</span>
+                  <span class="text-sm text-sn-grey leading-5 pt-2">{{ i18n.t('repository_stock_values.manage_modal.current_stock') }}</span>
                   <span class="text-2xl text-sn-black font-semibold leading-8" :class="{ 'text-sn-delete-red': stockValue.amount < 0 }">{{ stockValue.amount }}</span>
-                  <span class="text-sm text0sn-black leading-5">{{ initUnitLabel }}</span>
+                  <span class="text-sm text0sn-black leading-5 pb-2">{{ initUnitLabel }}</span>
                 </div>
                 <i class="sn-icon sn-icon-arrow-right"></i>
                 <div class="flex flex-col w-[220px] h-24 border-rounded bg-sn-super-light-grey justify-between text-center">
-                  <span class="text-sm text-sn-grey leading-5">{{ i18n.t('repository_stock_values.manage_modal.new_stock') }}</span>
+                  <span class="text-sm text-sn-grey leading-5 pt-2">{{ i18n.t('repository_stock_values.manage_modal.new_stock') }}</span>
                   <span class="text-2xl text-sn-black font-semibold leading-8" :class="{ 'text-sn-delete-red': newAmount < 0 }">
                     {{ (newAmount || newAmount === 0) ? newAmount : '-' }}
                   </span>
-                  <span class="text-sm text0sn-black leading-5">{{ unitLabel }}</span>
+                  <span class="text-sm text0sn-black leading-5 pb-2">{{ unitLabel }}</span>
                 </div>
               </div>
             </template>
@@ -209,6 +209,9 @@
     },
     methods: {
       setOperation($event) {
+        if ($event !== this.operation) {
+          this.amount = null;
+        }
         this.operation = $event;
         if ([2, 3].includes($event)) {
           this.unit = this.stockValue.unit;

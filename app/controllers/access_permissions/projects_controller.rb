@@ -77,8 +77,10 @@ module AccessPermissions
 
       @user_assignment.update!(permitted_update_params)
 
-      log_activity(:change_user_role_on_project, { user_target: @user_assignment.user.id,
-                                                   role: @user_assignment.user_role.name })
+      unless current_user.id == @user_assignment.user.id
+        log_activity(:change_user_role_on_project, { user_target: @user_assignment.user.id,
+                                                    role: @user_assignment.user_role.name })
+      end
       propagate_job(@user_assignment)
 
       render :project_member

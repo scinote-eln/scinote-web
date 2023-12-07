@@ -84,8 +84,6 @@
 
     .sci-navigation--notificaitons-flyout-notification {
       border-bottom: $border-tertiary;
-      display: grid;
-      grid-template-columns: max-content auto;
       padding: 1rem 0;
 
       .sci-navigation--notificaitons-flyout-notification-icon {
@@ -94,7 +92,7 @@
         border-radius: 50%;
         color: $color-white;
         display: flex;
-        grid-row: 1 / 4;
+        grid-row: 1 / 5;
         height: 2rem;
         justify-content: center;
         margin-right: .75rem;
