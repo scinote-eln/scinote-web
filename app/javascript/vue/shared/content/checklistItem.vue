@@ -40,7 +40,7 @@
             @update="updateText"
             @delete="removeItem()"
             @keypress="keyPressHandler"
-            @blur="editingText = false"
+            @blur="onBlurHandler"
           />
           <span v-if="!editingText && (!checklistItem.attributes.urls || deleteUrl)" class="absolute right-0 top-0.5 leading-6 tw-hidden group-hover/checklist-item-header:inline-block !text-sn-blue cursor-pointer" @click="showDeleteModal" tabindex="0">
             <i class="sn-icon sn-icon-delete"></i>
@@ -138,6 +138,11 @@
         if (!this.toggleUrl) return
         this.checklistItem.attributes.checked = this.$refs.checkbox.checked;
         this.$emit('toggle', this.checklistItem);
+      },
+      onBlurHandler() {
+        this.$nextTick(() => {
+          this.editingText = false;
+        });
       },
       updateText(text, withKey) {
         if (text.length === 0) {
