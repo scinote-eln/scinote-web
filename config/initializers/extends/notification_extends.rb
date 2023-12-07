@@ -96,7 +96,7 @@ class NotificationExtends
     },
     change_users_role_on_team_activity: {
       code: 94,
-      recipients_module: :AssignedRecipients
+      recipients_module: :UserChangedRecipient
     }
   }
 
