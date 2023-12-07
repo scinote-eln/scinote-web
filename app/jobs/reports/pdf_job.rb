@@ -220,9 +220,9 @@ module Reports
       merged_file
     end
 
-    def prepend_title_page(file, template, report, renderer)
-      unless File.exist?(Rails.root.join('app', 'views', 'reports', 'templates', template, 'cover.html.erb'))
-        return file
+    def prepend_title_page
+      unless File.exist?(Rails.root.join('app', 'views', 'reports', 'templates', @template, 'cover.html.erb'))
+        return @file
       end
 
       total_pages = 0
