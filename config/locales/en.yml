@@ -1805,10 +1805,10 @@ en:
     destroy:
       success_flash: "File result successfully deleted."
     wopi_open_file: "Open in %{app}"
-    wopi_edit_file: "Edit in %{app}"
-    wopi_word: "Word for the web"
-    wopi_excel: "Excel for the web"
-    wopi_powerpoint: "PowerPoint for the web"
+    wopi_edit_file: "Open in %{app}"
+    wopi_word: "MS Word online"
+    wopi_excel: "Excel online"
+    wopi_powerpoint: "PowerPoint online"
     error_flash: 'Something went wrong! Please try again later.'
 
   result_tables:
@@ -3522,8 +3522,8 @@ en:
         forbidden: 'You do not have permission to add files.'
         not_found: 'Element not found.'
     file_preview:
-      edit_in_scinote: "Edit"
-      edit_in_marvinjs: "Edit in Marvin JS"
+      edit_in_scinote: "Open in image editor"
+      edit_in_marvinjs: "Open in Marvin JS"
     context_menu:
       set_view_size: "SET PREVIEW SIZE"
       delete: "Delete"
@@ -3957,7 +3957,7 @@ en:
     new_sequence: "Sequence"
     new_sequence_file: "New sequence"
     default_sequence_name: "New sequence"
-    edit_sequence: "Edit in Sequence editor"
+    edit_sequence: "Open in sequence editor"
     sequence_name_placeholder: "Click here to enter sequence name"
     editor:
       tooltips:
