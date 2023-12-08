@@ -97,6 +97,9 @@ class NotificationExtends
     change_users_role_on_team_activity: {
       code: 94,
       recipients_module: :UserChangedRecipient
+    },
+    delivery: {
+      recipients_module: :DirectRecipient
     }
   }
 
@@ -151,7 +154,9 @@ class NotificationExtends
         remove_user_from_team
         change_users_role_on_team_activity
       ],
-      always_on: []
+      always_on: %I[
+        delivery
+      ]
     }
   }
 end
