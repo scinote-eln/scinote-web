@@ -20,6 +20,7 @@
       <perfect-scrollbar ref="optionsContainer"
                          class="sn-select__options !relative !top-0 !left-[-1px] !shadow-none scroll-container px-2.5 pt-0 block"
                          :class="{ [optionsClassName]: true }"
+                         @ps-scroll-y="onScroll"
       >
         <div v-if="options.length" class="flex flex-col gap-[1px]">
           <div
@@ -48,10 +49,11 @@
   </div>
 </template>
 <script>
-  import { vOnClickOutside } from '@vueuse/components'
+  import { vOnClickOutside } from '@vueuse/components';
 
   export default {
     name: 'Select',
+    emits: ['close', 'reached-end', 'open', 'change'],
     props: {
       withClearButton: { type: Boolean, default: false },
       withEditCursor: { type: Boolean, default: false },
@@ -70,7 +72,8 @@
     data() {
       return {
         isOpen: false,
-        optionPositionStyle: ''
+        optionPositionStyle: '',
+        currentContentHeight: 0,
       }
     },
     computed: {
@@ -103,9 +106,21 @@
           this.close()
         }
       },
+      onScroll() {
+        const scrollObj = this.$refs.optionsContainer.ps;
+
+        if (scrollObj) {
+          const reachedEnd = scrollObj.reach.y === 'end';
+          if (reachedEnd && this.contentHeight !== scrollObj.contentHeight) {
+            this.$emit('reached-end');
+            this.contentHeight = scrollObj.contentHeight;
+          }
+        }
+      },
       close() {
         this.isOpen = false;
         this.optionPositionStyle = '';
+        this.$refs.optionsContainer.$el.scrollTop = 0;
         this.$emit('close');
       },
       setValue(value) {

@@ -1,5 +1,5 @@
 <template>
-  <div ref="repositoryItemRelationshipsModal" @keydown.esc="cancel" id="repositoryItemRelationshipsModal" tabindex="-1" role="dialog"
+  <div ref="repositoryItemRelationshipsModal" @keydown.esc="close" id="repositoryItemRelationshipsModal" tabindex="-1" role="dialog"
     class="modal ">
     <div class="modal-dialog modal-sm" role="document">
       <div class="modal-content w-[400px] h-[498px] m-auto">
@@ -10,7 +10,7 @@
           <!-- header title with close icon -->
           <div class="h-[30px] w-full flex flex-row-reverse">
             <i id="close-icon" class="sn-icon sn-icon-close ml-auto cursor-pointer my-auto mx-0" data-dismiss="modal"
-              aria-label="Close"></i>
+              aria-label="Close" @click="close"></i>
             <h4 class="modal-title" id="modal-destroy-team-label">
               {{ i18n.t('repositories.item_card.repository_item_relationships_modal.header_title') }}
             </h4>
@@ -24,22 +24,22 @@
 
         </div>
 
-        <div v-if="isLoading" class="flex justify-center h-40 w-auto">
-          <div class="m-auto h-fit w-fit">{{ i18n.t('general.loading') }}</div>
-        </div>
-
-        <div v-else class="modal-body flex flex-col gap-6">
+        <div class="modal-body flex flex-col gap-6">
           <!-- inventory -->
           <div class="flex flex-col gap-[7px]">
             <div class="h-5 whitespace-nowrap overflow-auto">
               {{ i18n.t('repositories.item_card.repository_item_relationships_modal.inventory_section_title') }}</div>
             <div class="h-11">
-              <select-search ref="ChangeSelectedInventoryDropdownSelector" @change="changeSelectedInventory"
-                :value="selectedInventoryValue" :withClearButton="false" :withEditCursor="false"
-                :options="inventoryOptions" :isLoading="isLoading"
+              <select-search ref="ChangeSelectedInventoryDropdownSelector" @change="changeSelectedInventory" :value="selectedInventoryValue"
+                :options="inventoryOptions"
+                :isLoading="isLoadingInventories"
+                :lazyLoadEnabled="true"
+                :optionsUrl="inventoriesUrl"
                 :placeholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_inventory_placeholder')"
                 :noOptionsPlaceholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_inventory_no_options_placeholder')"
                 :searchPlaceholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_inventory_placeholder')"
+                @update-options="updateInventories"
+                @reached-end="fetchInventories"
               ></select-search>
             </div>
           </div>
@@ -49,14 +49,24 @@
             <div class="h-5 whitespace-nowrap overflow-auto">
               {{ i18n.t('repositories.item_card.repository_item_relationships_modal.item_section_title') }}</div>
             <div class="h-11">
-              <checklist-select :shouldUpdateWithoutValues="true" :withButtons="false" :withEditCursor="false"
-                ref="ChangeSelectedItemChecklistSelector" :options="itemOptions"
+              <ChecklistSearch
+                ref="ChangeSelectedItemChecklistSelector"
+                :shouldUpdateWithoutValues="true"
+                :lazyLoadEnabled="true"
+                :withButtons="false"
+                :withEditCursor="false"
+                optionsClassName="max-h-[300px]"
+                :optionsUrl="inventoryItemsUrl"
+                :options="itemOptions"
                 :placeholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_item_placeholder')"
                 :noOptionsPlaceholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_item_no_options_placeholder')"
-                :initialSelectedValues="this.selectedItemValues.map((val) => val.id)" @update="handleUpdate"
+                :initialSelectedValues="selectedItemValues"
                 :shouldUpdateOnToggleClose="true"
-                >
-              </checklist-select>
+                :params="itemParams"
+                @update-options="updateInventoryItems"
+                @update="selectedItemValues = $event"
+                @reached-end="() => fetchInventoryItems(selectedInventoryValue)"
+              ></ChecklistSearch>
             </div>
           </div>
 
@@ -66,13 +76,14 @@
               {{ i18n.t('repositories.item_card.repository_item_relationships_modal.relationship_section_title') }}
             </div>
             <div class="h-11">
-              <select-search ref="ChangeSelectedRelationshipDropdownSelector" @change="changeSelectedRelationship"
-                :value="selectedRelationshipValue" :withClearButton="false" :withEditCursor="false"
-                :options="relationshipOptions" :isLoading="isLoading"
+              <Select
+                ref="ChangeSelectedRelationshipDropdownSelector"
+                class="hover:border-sn-sleepy-grey"
+                @change="selectedRelationshipValue = $event"
+                :value="selectedRelationshipValue"
+                :options="[['parent', 'Parent'], ['child', 'Child']]"
                 :placeholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_relationship_placeholder')"
-                :noOptionsPlaceholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_relationship_no_options_placeholder')"
-                :searchPlaceholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_relationship_placeholder')"
-              ></select-search>
+              ></Select>
             </div>
           </div>
         </div>
@@ -80,11 +91,11 @@
         <!-- footer -->
         <div class="modal-footer">
           <div class="flex justify-end gap-4">
-            <button class="btn btn-secondary w-[78px] h-10 whitespace-nowrap overflow-auto" @click="cancel">
+            <button class="btn btn-secondary w-[78px] h-10 whitespace-nowrap" @click="close">
               {{ i18n.t('repositories.item_card.repository_item_relationships_modal.cancel_button') }}
             </button>
-            <button class="btn btn-primary w-[59px] h-10 whitespace-nowrap overflow-auto"
-              :class="{ 'disabled': !shouldEnableAddButton }" @click="add">
+            <button class="btn btn-primary w-[59px] h-10 whitespace-nowrap"
+              :class="{ 'disabled': !shouldEnableAddButton }" @click="() => addRelation(selectedRelationshipValue)">
               {{ i18n.t('repositories.item_card.repository_item_relationships_modal.add_button') }}
             </button>
           </div>
@@ -96,12 +107,16 @@
 
 <script>
 import SelectSearch from '../shared/select_search.vue';
+import ChecklistSearch from '../shared/checklist_search.vue';
+import Select from '../shared/select.vue';
 import ChecklistSelect from '../shared/checklist_select.vue';
 
 export default {
   name: 'RepositoryItemRelationshipsModal',
   components: {
     'select-search': SelectSearch,
+    ChecklistSearch,
+    Select,
     'checklist-select': ChecklistSelect,
   },
   created() {
@@ -109,13 +124,19 @@ export default {
   },
   data() {
     return {
-      isLoading: false,
+      isLoadingInventories: false,
+      inventoriesUrl: '',
+      inventoryItemsUrl: '',
+      createConnectionUrl: '',
+      createConnectionUrlValue: '',
       selectedInventoryValue: null,
       selectedItemValues: [],
       selectedRelationshipValue: null,
-      inventoryOptions: [{ 0: 1, 1: 'Participants database' }, { 0: 2, 1: 'Inventory Option 2' }, { 0: 3, 1: 'Inventory Option 3' }, { 0: 4, 1: 'Inventory Option 4' }],
-      itemOptions: [{ id: 1, label: 'SEPA-STASE' }, { id: 2, label: 'GTC' }, { id: 3, label: 'DESTIL-MACRO' }, { id: 4, label: 'ARNESSLIM-L' }],
-      relationshipOptions: [{ 0: 1, 1: 'Parent' }, { 0: 2, 1: 'Child' }],
+      inventoryOptions: [],
+      itemOptions: [],
+      nextInventoriesPage: 1,
+      nextItemsPage: 1,
+      itemParams: [],
     };
   },
   computed: {
@@ -124,35 +145,99 @@ export default {
     },
   },
   methods: {
-    setParentOrChild(parentOrChild) {
-      const lowerCaseParentOrChild = parentOrChild.toLowerCase();
-      const foundRelationshipOption = this.relationshipOptions.find((option) => option[1].toLowerCase() === lowerCaseParentOrChild);
-      this.selectedRelationshipValue = foundRelationshipOption[0];
+    fetchInventories() {
+      if (!this.nextInventoriesPage) return;
+
+      this.loadingInventories = true;
+      $.ajax({
+        url: `${this.inventoriesUrl}?page=${this.nextInventoriesPage}`,
+        success: (result) => {
+          this.inventoryOptions = this.inventoryOptions.concat(result.data.map((val) => [val.id, val.name]));
+          this.loadingInventories = false;
+          this.nextInventoriesPage = result.next_page;
+        },
+      });
     },
-    handleUpdate(selectedValues) {
-      const updatedItemOptions = this.itemOptions.filter((itemOption) => selectedValues.includes(itemOption.id));
-      this.selectedItemValues = updatedItemOptions;
+    fetchInventoryItems(inventoryValue = null) {
+      if (!inventoryValue || !this.nextItemsPage) return;
+
+      this.loadingItems = true;
+      $.ajax({
+        url: `${this.inventoryItemsUrl}/?page=${this.nextItemsPage}&repository_id=${inventoryValue}`,
+        success: (result) => {
+          this.itemOptions = this.itemOptions.concat(result.data.map((val) => ({ id: val.id, label: val.name })));
+          this.loadingItems = false;
+          this.nextItemsPage = result.next_page;
+        },
+      });
     },
-    show(parentOrChild) {
+    updateInventories(currentOptions, result) {
+      this.inventoryOptions = currentOptions.concat(result.data?.map((val) => [val.id, val.name]));
+    },
+    updateInventoryItems(currentOptions, result) {
+      this.itemOptions = currentOptions.concat(result.data.map(({ id, name }) => ({ id, label: name })));
+    },
+    show(params = {}) {
+      const { relation, optionUrls, addRelationCallback } = params;
       $(this.$refs.repositoryItemRelationshipsModal).modal('show');
-      if (parentOrChild) {
-        this.setParentOrChild(parentOrChild);
+      this.inventoriesUrl = optionUrls.inventories_url;
+      this.inventoryItemsUrl = optionUrls.inventory_items_url;
+      this.createConnectionUrl = optionUrls.create_url;
+      this.addRelationCallback = addRelationCallback;
+      if (['parent', 'child'].includes(relation)) {
+        this.selectedRelationshipValue = relation;
       }
+      this.$nextTick(() => {
+        this.fetchInventories();
+      });
     },
     changeSelectedInventory(value) {
       this.selectedInventoryValue = value;
+      this.itemOptions = [];
+      this.nextItemsPage = 1;
+      if (value) {
+        this.loadingItems = true;
+        this.itemParams = [`repository_id=${value}`];
+      }
+      this.$nextTick(() => {
+        this.fetchInventoryItems(value);
+      });
     },
-    changeSelectedRelationship(value) {
-      this.selectedRelationshipValue = value;
-    },
-    cancel() {
-      this.selectedInventoryValue = null;
-      this.selectedItemValues = [];
-      this.selectedRelationshipValue = null;
+    close() {
+      Object.assign(this.$data, {
+        selectedInventoryValue: null,
+        selectedItemValues: [],
+        selectedRelationshipValue: null,
+        nextInventoriesPage: 1,
+        nextItemsPage: 1,
+        inventoriesUrl: '',
+        inventoryItemsUrl: '',
+        createConnectionUrl: '',
+        itemOptions: [],
+        inventoryOptions: [],
+        itemParams: [],
+      });
       $(this.$refs.repositoryItemRelationshipsModal).modal('hide');
     },
-    add() {
-      $(this.$refs.repositoryItemRelationshipsModal).modal('hide');
+    addRelation(relation) {
+      const $this = this;
+      $.ajax({
+        url: this.createConnectionUrl,
+        method: 'POST',
+        dataType: 'json',
+        data: {
+          repository_row_connection: {
+            relation: this.selectedRelationshipValue,
+            relation_ids: this.selectedItemValues,
+            connection_repository_id: this.selectedInventoryValue,
+          },
+        },
+        success: (result) => {
+          $this.addRelationCallback(result, relation);
+          if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
+        },
+      });
+      this.close();
     },
   },
 };

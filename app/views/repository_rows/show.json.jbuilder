@@ -26,6 +26,11 @@ json.actions do
   elsif @repository.has_stock_management?
     json.stock_value_url new_repository_stock_repository_repository_row_url(@repository, @repository_row)
   end
+  json.row_connections do
+    json.inventories_url repository_row_connections_repositories_url
+    json.inventory_items_url repository_row_connections_repository_rows_url
+    json.create_url repository_repository_row_repository_row_connections_url(@repository, @repository_row)
+  end
 end
 
 json.default_columns do
@@ -44,7 +49,7 @@ json.relationships do
   json.parents_count @repository_row.parent_connections_count
   json.children_count @repository_row.child_connections_count
   json.parents do
-    json.array! @repository_row.parent_repository_rows.each do |parent|
+    json.array! @repository_row.parent_repository_rows.preload(:repository).each do |parent|
       json.code parent.code
       json.name parent.name
       json.path repository_repository_row_path(parent.repository, parent)
@@ -53,7 +58,7 @@ json.relationships do
     end
   end
   json.children do
-    json.array! @repository_row.child_repository_rows.each do |child|
+    json.array! @repository_row.child_repository_rows.preload(:repository).each do |child|
       json.code child.code
       json.name child.name
       json.path repository_repository_row_path(child.repository, child)

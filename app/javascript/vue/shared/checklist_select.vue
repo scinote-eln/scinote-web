@@ -1,20 +1,22 @@
 <template>
   <div class="w-full relative" ref="container" v-click-outside="closeDropdown">
-    <button ref="focusElement"
-            class="btn flex justify-between items-center w-full outline-none border-[1px] bg-white rounded p-2
-            font-inter text-sm font-normal leading-5"
-            :class="{
-              'sci-cursor-edit': !isOpen && withEditCursor,
-              'border-sn-light-grey hover:border-sn-sleepy-grey': !isOpen,
-              'border-sn-science-blue': isOpen,
-              'text-sn-grey': !valueLabel,
-              [className]: true
-            }"
-            :disabled="disabled"
-            @click="toggle">
-      <span class="overflow-hidden text-ellipsis">{{ valueLabel || this.placeholder || this.i18n.t('general.select') }}</span>
-      <i class="sn-icon" :class="{ 'sn-icon-down': !isOpen, 'sn-icon-up': isOpen}"></i>
-    </button>
+    <slot>
+      <button ref="focusElement"
+              class="btn flex justify-between items-center w-full outline-none border-[1px] bg-white rounded p-2
+              font-inter text-sm font-normal leading-5"
+              :class="{
+                'sci-cursor-edit': !isOpen && withEditCursor,
+                'border-sn-light-grey hover:border-sn-sleepy-grey': !isOpen,
+                'border-sn-science-blue': isOpen,
+                'text-sn-grey': !valueLabel,
+                [className]: true
+              }"
+              :disabled="disabled"
+              @click="isOpen = !isOpen">
+        <span class="overflow-hidden text-ellipsis">{{ valueLabel || this.placeholder || this.i18n.t('general.select') }}</span>
+        <i class="sn-icon" :class="{ 'sn-icon-down': !isOpen, 'sn-icon-up': isOpen}"></i>
+      </button>
+    </slot>
     <div :style="optionPositionStyle" class="py-2.5 z-10 bg-white rounded border-[1px] border-sn-light-grey shadow-sn-menu-sm" :class="{ 'hidden': !isOpen }">
       <div v-if="withButtons" class="px-2.5 pb-[1px]">
         <div class="flex gap-2 pl-2 justify-start items-center w-[calc(100%-10px)]">
@@ -39,7 +41,8 @@
                          :class="{
                            'block': isOpen,
                            [optionsClassName]: true
-                         }">
+                         }"
+                         @ps-scroll-y="onScroll">
         <div v-if="options.length" class="flex flex-col gap-[1px]">
           <div v-for="option in options"
                :key="option.id"
@@ -68,6 +71,7 @@
 
   export default {
     name: 'ChecklistSelect',
+    emits: ['close', 'update', 'reached-end', 'update-selected-values'],
     props: {
       withButtons: { type: Boolean, default: false },
       withEditCursor: { type: Boolean, default: false },
@@ -77,6 +81,7 @@
       noOptionsPlaceholder: { type: String },
       disabled: { type: Boolean, default: false },
       className: { type: String, default: '' },
+      shouldOpen: { type: Boolean },
       optionsClassName: { type: String, default: '' },
       shouldUpdateWithoutValues: { type: Boolean, default: false },
       shouldUpdateOnToggleClose: { type: Boolean, default: false }
@@ -99,7 +104,10 @@
         if (!this.selectedValues.length) return
         if (this.selectedValues.length === 1) return this.options.find(({id}) => id === this.selectedValues[0])?.label
         return `${this.selectedValues.length} ${this.i18n.t('general.selected')}`;
-      }
+      },
+      focusElement() {
+        return this.$refs.focusElement || this.$parent.$refs.focusElement;
+      },
     },
     watch: {
       initialSelectedValues: {
@@ -108,19 +116,28 @@
         },
         deep: true
       },
-    },
-    methods: {
-      toggle() {
-        this.isOpen = !this.isOpen;
-        if (this.isOpen) {
+      shouldOpen(value) {
+        this.isOpen = value;
+      },
+      isOpen(value) {
+        if (value) {
           this.updateOptionPosition();
+          this.$refs.optionsContainer.scrollTop = 0;
+          this.$nextTick(() => {
+            this.focusElement.focus();
+          });
         } else {
           if (this.shouldUpdateOnToggleClose && this.shouldUpdateWithoutValues) {
             this.$emit('update', this.selectedValues);
           }
-          this.close();
+          this.closeDropdown();
         }
       },
+      selectedValues(values) {
+        this.$emit('update-selected-values', values);
+      },
+    },
+    methods: {
       updateOptionPosition() {
         const container = $(this.$refs.container);
         const rect = container.get(0).getBoundingClientRect();
@@ -141,10 +158,22 @@
         this.isOpen = false;
         if (this.shouldUpdateWithoutValues) {
           this.$emit('update', this.selectedValues)
-
         }
         if (this.selectedValues.length && !this.shouldUpdateWithoutValues) {
           this.$emit('update', this.selectedValues);
+        }
+        this.$emit('close');
+        this.$refs.optionsContainer.$el.scrollTop = 0;
+      },
+      onScroll() {
+        const scrollObj = this.$refs.optionsContainer.ps;
+
+        if (scrollObj) {
+          const reachedEnd = scrollObj.reach.y === 'end';
+          if (reachedEnd && this.contentHeight !== scrollObj.contentHeight) {
+            this.$emit('reached-end');
+            this.contentHeight = scrollObj.contentHeight;
+          }
         }
       },
       isSelected(id) {
