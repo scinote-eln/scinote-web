@@ -616,6 +616,30 @@ var MyModuleRepositories = (function() {
         FULL_VIEW_MODAL.focus();
       });
       e.stopPropagation();
+      toggleEmptyModal();
+    });
+  }
+
+  // Fix for focusing input fields on inventory item card
+  function toggleEmptyModal() {
+    const textareaFixModal = `
+      <div
+        class="modal fade custom-z-index"
+        id="textareaFixModal"
+        tabindex="-1"
+        role="dialog">
+        <div class="modal-dialog" role="document">
+        </div>
+      </div>`;
+    $(textareaFixModal).appendTo('#assigned-items-container');
+    $('#textareaFixModal').on('show.bs.modal', () => {
+      setTimeout(() => {
+        $('#textareaFixModal').modal('hide');
+      }, 100);
+    });
+    $('#textareaFixModal').modal('show');
+    FULL_VIEW_MODAL.on('hide.bs.modal', () => {
+      $('#textareaFixModal').remove();
     });
   }
 
