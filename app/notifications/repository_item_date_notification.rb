@@ -2,11 +2,11 @@
 
 class RepositoryItemDateNotification < BaseNotification
   def message
-    unit = human_readable_unit(column.metadata['reminder_unit'], column.metadata['reminder_value'])
+    unit = human_readable_unit(params[:reminder_unit], params[:reminder_value])
     I18n.t(
       'notifications.content.item_date_reminder.message_html',
       repository_row_name: subject.name,
-      value: column.metadata['reminder_value'],
+      value: params[:reminder_value],
       units: unit
     )
   end
@@ -21,10 +21,14 @@ class RepositoryItemDateNotification < BaseNotification
 
   def subject
     RepositoryRow.find(params[:repository_row_id])
+  rescue ActiveRecord::RecordNotFound
+    NonExistantRecord.new(params[:repository_row_name])
   end
 
   def column
     RepositoryColumn.find(params[:repository_column_id])
+  rescue ActiveRecord::RecordNotFound
+    NonExistantRecord.new(params[:repository_column_name])
   end
 
   after_deliver do

@@ -19,9 +19,13 @@ class LowStockNotification < BaseNotification
 
   def subject
     RepositoryRow.find(params[:repository_row_id])
+  rescue ActiveRecord::RecordNotFound
+    NonExistantRecord.new(params[:repository_row_name])
   end
 
   def repository
-    Repository.find(subject.repository_id)
+    Repository.find(params[:repository_id])
+  rescue ActiveRecord::RecordNotFound
+    NonExistantRecord.new(params[:repository_name])
   end
 end
