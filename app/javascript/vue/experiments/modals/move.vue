@@ -55,8 +55,8 @@ export default {
           project_id: this.targetProject,
         },
       }).then((response) => {
-        this.$emit('submit');
-        window.location.replace(response.data.url);
+        this.$emit('move');
+        HelperModule.flashAlertMsg(response.data.message, 'success');
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.message, 'danger');
       });

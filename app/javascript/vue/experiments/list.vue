@@ -18,6 +18,7 @@
     @showDescription="showDescription"
     @duplicate="duplicate"
     @move="move"
+    @edit="edit"
   >
     <template> </template>
   </DataTable>
@@ -41,7 +42,12 @@
     v-if="moveModalObject"
     :experiment="moveModalObject"
     @close="moveModalObject = null"
-    @submit="updateTable"/>
+    @move="updateTable"/>
+  <EditModal
+    v-if="editModalObject"
+    :experiment="editModalObject"
+    @close="editModalObject = null"
+    @update="updateTable"/>
 </template>
 
 <script>
@@ -56,6 +62,7 @@ import NameRenderer from './renderers/name.vue';
 import DescriptionModal from './modals/description.vue';
 import DuplicateModal from './modals/duplicate.vue';
 import MoveModal from './modals/move.vue';
+import EditModal from './modals/edit.vue';
 
 export default {
   name: 'ExperimentsList',
@@ -65,6 +72,7 @@ export default {
     DescriptionModal,
     DuplicateModal,
     MoveModal,
+    EditModal,
   },
   props: {
     dataSource: { type: String, required: true },
@@ -75,6 +83,7 @@ export default {
   },
   data() {
     return {
+      editModalObject: null,
       moveModalObject: null,
       duplicateModalObject: null,
       descriptionModalObject: null,
@@ -172,6 +181,7 @@ export default {
   },
   methods: {
     updateTable() {
+      this.editModalObject = null;
       this.moveModalObject = null;
       this.duplicateModalObject = null;
       this.descriptionModalObject = null;
@@ -204,6 +214,9 @@ export default {
     },
     move(_e, experiment) {
       [this.moveModalObject] = experiment;
+    },
+    edit(_e, experiment) {
+      [this.editModalObject] = experiment;
     },
   },
 };

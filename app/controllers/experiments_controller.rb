@@ -173,25 +173,9 @@ class ExperimentsController < ApplicationController
                       end
       log_activity(activity_type, @experiment)
 
-      respond_to do |format|
-        format.json do
-          render json: {}, status: :ok
-        end
-        format.html do
-          flash[:success] = t('experiments.update.success_flash', experiment: @experiment.name)
-          redirect_to experiments_path(project_id: @experiment.project)
-        end
-      end
+      render json: { message: t('experiments.update.success_flash', experiment: @experiment.name) }, status: :ok
     else
-      respond_to do |format|
-        format.json do
-          render json: @experiment.errors, status: :unprocessable_entity
-        end
-        format.html do
-          flash[:alert] = t('experiments.update.error_flash')
-          redirect_back(fallback_location: root_path)
-        end
-      end
+      render json: { message: @experiment.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -293,8 +277,10 @@ class ExperimentsController < ApplicationController
                           experiment: @experiment.name)
       render json: { url: canvas_experiment_path(service.cloned_experiment) }
     else
-      render json: { message: t('experiments.clone.error_flash',
-                     experiment: @experiment.name) }, status: :unprocessable_entity
+      render json: {
+        message: t('experiments.clone.error_flash',
+        experiment: @experiment.name)
+      }, status: :unprocessable_entity
     end
   end
 
@@ -328,7 +314,7 @@ class ExperimentsController < ApplicationController
                     project_id: move_experiment_param,
                     user_id: current_user.id)
     if service.succeed?
-      flash[:success] = t('experiments.move.success_flash',
+      message = t('experiments.move.success_flash',
                           experiment: @experiment.name)
       status = :ok
       view_state = @experiment.current_view_state(current_user)
