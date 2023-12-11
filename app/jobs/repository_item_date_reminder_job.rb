@@ -21,10 +21,19 @@ class RepositoryItemDateReminderJob < ApplicationJob
         "(repository_columns.metadata->>'reminder_value')::int) || ' seconds' AS Interval))",
         comparison_value
       ).find_each do |value|
+        repository_row = RepositoryRow.find(value.repository_cell.repository_row_id)
+        repository_column = RepositoryColumn.find(value.repository_cell.repository_column_id)
+
         RepositoryItemDateNotification
-          .send_notifications({ "#{value.class.name.underscore}_id": value.id,
-                                repository_row_id: value.repository_cell.repository_row_id,
-                                repository_column_id: value.repository_cell.repository_column_id })
+          .send_notifications({
+                                "#{value.class.name.underscore}_id": value.id,
+                                repository_row_id: repository_row.id,
+                                repository_row_name: repository_row.name,
+                                repository_column_id: repository_column.id,
+                                repository_column_name: repository_column.name,
+                                reminder_unit: repository_column.metadata['reminder_unit'],
+                                reminder_value: repository_column.metadata['reminder_value']
+                              })
       end
   end
 end

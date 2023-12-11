@@ -33,6 +33,8 @@ class NotificationSerializer < ActiveModel::Serializer
   private
 
   def generate_breadcrumbs(subject, breadcrumbs)
+    return [] if subject.is_a?(NonExistantRecord)
+
     case subject
     when Project
       parent = subject.team
