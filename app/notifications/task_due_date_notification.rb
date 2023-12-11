@@ -12,7 +12,9 @@ class TaskDueDateNotification < BaseNotification
     :my_module_due_date_reminder
   end
 
-  def title; end
+  def title
+    I18n.t('notifications.content.my_module_due_date_reminder.title_html')
+  end
 
   def subject
     MyModule.find(params[:my_module_id])
