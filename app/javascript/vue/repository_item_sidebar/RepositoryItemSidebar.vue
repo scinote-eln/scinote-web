@@ -374,6 +374,7 @@ export default {
       myModuleId: null,
       inRepository: false,
       icons: null,
+      notification: null,
       relationshipDetailsState: {},
       initialSectionId: null,
     };
@@ -427,7 +428,13 @@ export default {
         }
       };
       window.repositoryItemRelationshipsModal.show(
-        { relation, addRelationCallback, optionUrls: { ...this.actions.row_connections } },
+        {
+          relation,
+          addRelationCallback,
+          optionUrls: { ...this.actions.row_connections },
+          notificationIconPath: this.icons.notification_path,
+          notification: this.notification,
+        },
       );
     },
     handleOutsideClick(event) {
@@ -497,6 +504,7 @@ export default {
           this.actions = result.actions;
           this.dataLoading = false;
           this.icons = result.icons;
+          this.notification = result.notification;
           this.$nextTick(() => {
             this.generateBarCode(this.defaultColumns.code);
           });
