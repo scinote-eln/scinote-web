@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Lists
   class ProjectAndFolderSerializer < ActiveModel::Serializer
     include Rails.application.routes.url_helpers
@@ -51,7 +53,7 @@ module Lists
 
     def urls
       urls_list = {
-        show: project? ? project_path(object) : project_folder_path(object),
+        show: project? ? experiments_path(project_id: object) : project_folder_path(object),
         actions: actions_toolbar_projects_path(items: [{ id: object.id,
                                                          type: project? ? 'projects' : 'project_folders' }].to_json)
       }
@@ -59,13 +61,14 @@ module Lists
       urls_list[:show] = nil if project? && !can_read_project?(object)
 
       urls_list[:update] = if project?
-                             project_path(object)
+                             experiments_path(project_id: object)
                            else
                              project_folder_path(object)
                            end
 
+      urls_list[:show_access] = access_permissions_project_path(object)
       if project? && can_manage_project_users?(object)
-        urls_list[:show_access] = access_permissions_project_path(object)
+        urls_list[:update_access] = access_permissions_project_path(object)
         urls_list[:new_access] = new_access_permissions_project_path(id: object.id)
         urls_list[:create_access] = access_permissions_projects_path(id: object.id)
         urls_list[:default_public_user_role_path] =

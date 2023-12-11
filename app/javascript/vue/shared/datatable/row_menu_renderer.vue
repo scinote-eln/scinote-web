@@ -13,54 +13,53 @@
 </template>
 
 <script>
-import MenuDropdown from '../menu_dropdown.vue'
+import MenuDropdown from '../menu_dropdown.vue';
 import axios from '../../../packs/custom_axios.js';
 
 export default {
   name: 'RowMenuRenderer',
   props: {
     params: {
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      actionsMenu: []
-    }
+      actionsMenu: [],
+    };
   },
   components: {
-    MenuDropdown
+    MenuDropdown,
   },
   computed: {
     formattedList() {
       return this.actionsMenu.map((item) => {
-        let newItem = { text: item.label }
-        if (item.type == 'emit') {
-          newItem.emit = item.name
+        const newItem = { text: item.label };
+        if (item.type === 'emit') {
+          newItem.emit = item.name;
         }
-        if (item.type == 'link') {
-          newItem.url = item.path
+        if (item.type === 'link') {
+          newItem.url = item.path;
         }
 
-        newItem.params = item
+        newItem.params = item;
 
-        return newItem
-      })
-    }
+        return newItem;
+      });
+    },
   },
   methods: {
     loadActions() {
-      if (this.actionsMenu.length > 0) return
-
+      if (this.actionsMenu.length > 0) return;
       axios.get(this.params.data.urls.actions)
         .then((response) => {
-          this.actionsMenu = response.data.actions
-        })
+          this.actionsMenu = response.data.actions;
+        });
     },
     handleEvents(event, option) {
-      const dt = this.params.dtComponent
-      dt.$emit(event, option.params, [this.params.data])
-    }
-  }
-}
+      const dt = this.params.dtComponent;
+      dt.$emit(event, option.params, [this.params.data]);
+    },
+  },
+};
 </script>

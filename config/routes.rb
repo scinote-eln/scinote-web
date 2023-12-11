@@ -386,7 +386,7 @@ Rails.application.routes.draw do
     end
     get 'project_folders/:project_folder_id', to: 'projects#index', as: :project_folder_projects
 
-    resources :experiments, only: %i(show edit update) do
+    resources :experiments, only: %i(index show edit update) do
       collection do
         get 'inventory_assigning_experiment_filter'
         get 'edit', action: :edit
@@ -427,6 +427,8 @@ Rails.application.routes.draw do
         post :archive_my_modules
         post :batch_clone_my_modules
         get :search_tags
+        get :projects_to_clone
+        get :projects_to_move
       end
     end
 

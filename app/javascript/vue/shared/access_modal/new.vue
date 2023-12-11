@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <i class="sn-icon sn-icon-close"></i>
+      </button>
       <h4 class="modal-title truncate flex items-center gap-4">
         {{ i18n.t('access_permissions.partials.new_assignments_form.title', {resource_name: params.object.name}) }}
         <button class="close" @click="$emit('changeMode', 'editView')">
@@ -12,7 +14,9 @@
     <div class="modal-body">
       <div class="mb-4">
         <div class="sci-input-container-v2 left-icon">
-          <input type="text" v-model="query" class="sci-input-field" autofocus="true" :placeholder="i18n.t('access_permissions.partials.new_assignments_form.find_people_html')" />
+          <input type="text" v-model="query" class="sci-input-field"
+                 autofocus="true"
+                 :placeholder="i18n.t('access_permissions.partials.new_assignments_form.find_people_html')" />
           <i class="sn-icon sn-icon-search"></i>
         </div>
       </div>
@@ -53,20 +57,21 @@
 </template>
 
 <script>
-import MenuDropdown from "../../shared/menu_dropdown.vue";
+/* global HelperModule */
+import MenuDropdown from '../menu_dropdown.vue';
 import axios from '../../../packs/custom_axios.js';
 
 export default {
   props: {
     params: {
       type: Object,
-      required: true
+      required: true,
     },
     visible: {
-      type: Boolean
+      type: Boolean,
     },
     default_role: {
-      type: Number
+      type: Number,
     },
   },
   emits: ['changeMode'],
@@ -79,19 +84,19 @@ export default {
   },
   computed: {
     rolesFromatted() {
-      return this.roles.map((role) => {
-        return {
+      return this.roles.map((role) => (
+        {
           emit: 'setRole',
           text: role[1],
-          params: role[0]
+          params: role[0],
         }
-      });
+      ));
     },
     filteredUsers() {
-      return this.unAssignedUsers.filter((user) => {
-        return user.attributes.name.toLowerCase().includes(this.query.toLowerCase());
-      });
-    }
+      return this.unAssignedUsers.filter((user) => (
+        user.attributes.name.toLowerCase().includes(this.query.toLowerCase())
+      ));
+    },
   },
   data() {
     return {
@@ -105,20 +110,20 @@ export default {
       axios.get(this.params.object.urls.new_access)
         .then((response) => {
           this.unAssignedUsers = response.data.data;
-        })
+        });
     },
     getRoles() {
       axios.get(this.params.roles_path)
         .then((response) => {
           this.roles = response.data.data;
-        })
+        });
     },
-    assignRole(id, role_id) {
+    assignRole(id, roleId) {
       axios.post(this.params.object.urls.create_access, {
         user_assignment: {
           user_id: id,
-          user_role_id: role_id
-        }
+          user_role_id: roleId,
+        },
       })
         .then((response) => {
           this.$emit('modified');
@@ -126,11 +131,10 @@ export default {
           this.getUnAssignedUsers();
 
           if (id === 'all') {
-            this.$emit('changeVisibility', true, role_id);
+            this.$emit('changeVisibility', true, roleId);
           }
-        })
+        });
     },
-  }
-
-}
+  },
+};
 </script>

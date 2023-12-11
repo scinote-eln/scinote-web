@@ -27,7 +27,8 @@
       <ProjectCard :params="data.params" :dtComponent="data.dtComponent" ></ProjectCard>
     </template>
   </DataTable>
-  <a href="#" ref="commentButton" class="open-comments-sidebar hidden" data-turbolinks="false" data-object-type="Project" data-object-id=""></a>
+  <a href="#" ref="commentButton" class="open-comments-sidebar hidden"
+     data-turbolinks="false" data-object-type="Project" data-object-id=""></a>
   <ConfirmationModal
     :title="i18n.t('projects.index.archive_confirm_title')"
     :description="i18n.t('projects.index.archive_confirm')"
@@ -49,27 +50,38 @@
     :confirmText="i18n.t('projects.export_projects.export_button')"
     ref="exportModal"
   ></ConfirmationModal>
-  <EditProjectModal v-if="editProject" :userRolesUrl="userRolesUrl" :project="editProject" @close="editProject = null" @update="updateTable" />
-  <EditFolderModal v-if="editFolder" :folder="editFolder" @close="editFolder = null" @update="updateTable" />
-  <NewProjectModal v-if="newProject" :createUrl="createUrl" :currentFolderId="currentFolderId" :userRolesUrl="userRolesUrl" @close="newProject = false" @create="updateTable" />
-  <NewFolderModal v-if="newFolder" :createFolderUrl="createFolderUrl" :currentFolderId="currentFolderId" :viewMode="currentViewMode" @close="newFolder = false" @create="updateTable" />
-  <MoveModal v-if="objectsToMove" :moveToUrl="moveToUrl" :selectedObjects="objectsToMove" :foldersTreeUrl="foldersTreeUrl" @close="objectsToMove = null" @move="updateTable" />
-  <AccessModal v-if="accessModalParams" :params="accessModalParams" @close="accessModalParams = null" @refresh="this.reloadingTable = true" />
+  <EditProjectModal v-if="editProject" :userRolesUrl="userRolesUrl"
+                    :project="editProject" @close="editProject = null" @update="updateTable" />
+  <EditFolderModal v-if="editFolder" :folder="editFolder"
+                   @close="editFolder = null" @update="updateTable" />
+  <NewProjectModal v-if="newProject" :createUrl="createUrl"
+                   :currentFolderId="currentFolderId" :userRolesUrl="userRolesUrl"
+                   @close="newProject = false" @create="updateTable" />
+  <NewFolderModal v-if="newFolder" :createFolderUrl="createFolderUrl"
+                  :currentFolderId="currentFolderId" :viewMode="currentViewMode"
+                  @close="newFolder = false" @create="updateTable" />
+  <MoveModal v-if="objectsToMove" :moveToUrl="moveToUrl"
+             :selectedObjects="objectsToMove" :foldersTreeUrl="foldersTreeUrl"
+             @close="objectsToMove = null" @move="updateTable" />
+  <AccessModal v-if="accessModalParams" :params="accessModalParams"
+               @close="accessModalParams = null" @refresh="this.reloadingTable = true" />
 </template>
 
 <script>
+/* global HelperModule */
+
 import axios from '../../packs/custom_axios.js';
 
-import DataTable from '../shared/datatable/table.vue'
-import UsersRenderer from './renderers/users.vue'
-import ProjectCard from './card.vue'
-import ConfirmationModal from '../shared/confirmation_modal.vue'
-import EditProjectModal from './modals/edit.vue'
-import EditFolderModal from './modals/edit_folder.vue'
-import NewProjectModal from './modals/new.vue'
-import NewFolderModal from './modals/new_folder.vue'
-import MoveModal from './modals/move.vue'
-import AccessModal from '../shared/access_modal/modal.vue'
+import DataTable from '../shared/datatable/table.vue';
+import UsersRenderer from './renderers/users.vue';
+import ProjectCard from './card.vue';
+import ConfirmationModal from '../shared/confirmation_modal.vue';
+import EditProjectModal from './modals/edit.vue';
+import EditFolderModal from './modals/edit_folder.vue';
+import NewProjectModal from './modals/new.vue';
+import NewFolderModal from './modals/new_folder.vue';
+import MoveModal from './modals/move.vue';
+import AccessModal from '../shared/access_modal/modal.vue';
 
 export default {
   name: 'ProjectsList',
@@ -83,7 +95,7 @@ export default {
     NewProjectModal,
     NewFolderModal,
     MoveModal,
-    AccessModal
+    AccessModal,
   },
   props: {
     dataSource: { type: String, required: true },
@@ -111,23 +123,49 @@ export default {
       folderDeleteDescription: '',
       exportDescription: '',
       columnDefs: [
-                    { field: "name", flex: 1, headerName: this.i18n.t('projects.index.card.name'), sortable: true, cellRenderer: this.nameRenderer },
-                    { field: "code", headerName: this.i18n.t('projects.index.card.id'), sortable: true },
-                    { field: "created_at", headerName: this.i18n.t('projects.index.card.start_date'), sortable: true },
-                    { field: "hidden", headerName: this.i18n.t('projects.index.card.visibility'), cellRenderer: this.visibiltyRenderer, sortable: false },
-                    { field: "users", headerName: this.i18n.t('projects.index.card.users'), cellRenderer: 'UsersRenderer', sortable: false, minWidth: 210, notSelectable: true }
-                  ]
-    }
+        {
+          field: 'name',
+          flex: 1,
+          headerName: this.i18n.t('projects.index.card.name'),
+          sortable: true,
+          cellRenderer: this.nameRenderer,
+        },
+        {
+          field: 'code',
+          headerName: this.i18n.t('projects.index.card.id'),
+          sortable: true,
+        },
+        {
+          field: 'created_at',
+          headerName: this.i18n.t('projects.index.card.start_date'),
+          sortable: true,
+        },
+        {
+          field: 'hidden',
+          headerName: this.i18n.t('projects.index.card.visibility'),
+          cellRenderer: this.visibiltyRenderer,
+          sortable: false,
+        },
+        {
+          field: 'users',
+          headerName: this.i18n.t('projects.index.card.users'),
+          cellRenderer: 'UsersRenderer',
+          sortable: false,
+          minWidth: 210,
+          notSelectable: true,
+        },
+      ],
+    };
   },
   computed: {
     viewRenders() {
       return [
-        {type: 'table'},
-        {type: 'cards'}
-      ]
+        { type: 'table' },
+        { type: 'cards' },
+      ];
     },
     toolbarActions() {
-      let left = []
+      const left = [];
       if (this.createUrl && this.currentViewMode !== 'archived') {
         left.push({
           name: 'create',
@@ -135,8 +173,8 @@ export default {
           label: this.i18n.t('projects.index.new'),
           type: 'emit',
           path: this.createUrl,
-          buttonStyle: 'btn btn-primary'
-        })
+          buttonStyle: 'btn btn-primary',
+        });
       }
       if (this.createFolderUrl) {
         left.push({
@@ -146,30 +184,32 @@ export default {
           type: 'emit',
           path: this.createFolderUrl,
           buttonStyle: 'btn btn-light',
-        })
+        });
       }
       return {
-        left: left,
-        right: []
-      }
+        left,
+        right: [],
+      };
     },
     filters() {
-      let filters = [{
-                      key: 'query',
-                      type: 'Text'
-                    },
-                    {
-                      key: 'created_at',
-                      type: 'DateRange',
-                      label: this.i18n.t("filters_modal.created_on.label"),
-                    }]
+      const filters = [
+        {
+          key: 'query',
+          type: 'Text',
+        },
+        {
+          key: 'created_at',
+          type: 'DateRange',
+          label: this.i18n.t('filters_modal.created_on.label'),
+        },
+      ];
 
       if (this.currentViewMode === 'archived') {
         filters.push({
           key: 'archived_at',
           type: 'DateRange',
-          label: this.i18n.t("filters_modal.archived_on.label"),
-        })
+          label: this.i18n.t('filters_modal.archived_on.label'),
+        });
       }
 
       filters.push({
@@ -178,35 +218,37 @@ export default {
         optionsUrl: this.usersFilterUrl,
         optionRenderer: this.usersFilterRenderer,
         labelRenderer: this.usersFilterRenderer,
-        label: this.i18n.t("projects.index.filters_modal.members.label"),
-        placeholder: this.i18n.t("projects.index.filters_modal.members.placeholder"),
-      })
+        label: this.i18n.t('projects.index.filters_modal.members.label'),
+        placeholder: this.i18n.t('projects.index.filters_modal.members.placeholder'),
+      });
 
       filters.push({
         key: 'folder_search',
         type: 'Checkbox',
-        label: this.i18n.t("projects.index.filters_modal.folders.label"),
-      })
+        label: this.i18n.t('projects.index.filters_modal.folders.label'),
+      });
 
-      return filters
-    }
+      return filters;
+    },
   },
   methods: {
     usersFilterRenderer(option) {
       return `<div class="flex items-center gap-2">
                 <img src="${option[2].avatar_url}" class="rounded-full w-6 h-6" />
                 <span>${option[1]}</span>
-              </div>`
+              </div>`;
     },
     nameRenderer(params) {
-      let showUrl = params.data.urls.show;
-      return `<a href="${showUrl}" class="flex items-center gap-1 hover:no-underline ${!showUrl ? 'pointer-events-none text-sn-grey' : ''}">
+      const showUrl = params.data.urls.show;
+      return `<a href="${showUrl}"
+                 class="flex items-center gap-1 hover:no-underline
+                        ${!showUrl ? 'pointer-events-none text-sn-grey' : ''}">
                 ${params.data.folder ? '<i class="sn-icon mini sn-icon-mini-folder-left"></i>' : ''}
                 ${params.data.name}
-              </a>`
+              </a>`;
     },
     visibiltyRenderer(params) {
-      if (params.data.type !== 'projects') return ''
+      if (params.data.type !== 'projects') return '';
       return params.data.hidden ? this.i18n.t('projects.index.hidden') : this.i18n.t('projects.index.visible');
     },
     openComments(_params, rows) {
@@ -217,13 +259,13 @@ export default {
       this.accessModalParams = {
         object: rows[0],
         roles_path: this.userRolesUrl,
-      }
+      };
     },
     async archive(event, rows) {
-      const ok = await this.$refs.archiveModal.show()
+      const ok = await this.$refs.archiveModal.show();
       if (ok) {
         axios.post(event.path, { project_ids: rows.map((row) => row.id) }).then((response) => {
-          this.reloadingTable = true
+          this.reloadingTable = true;
           HelperModule.flashAlertMsg(response.data.message, 'success');
         }).catch((error) => {
           HelperModule.flashAlertMsg(error.response.data.error, 'danger');
@@ -232,7 +274,7 @@ export default {
     },
     restore(event, rows) {
       axios.post(event.path, { project_ids: rows.map((row) => row.id) }).then((response) => {
-        this.reloadingTable = true
+        this.reloadingTable = true;
         HelperModule.flashAlertMsg(response.data.message, 'success');
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
@@ -240,10 +282,10 @@ export default {
     },
     edit(event, rows) {
       if (rows[0].folder) {
-        this.editFolder = rows[0]
-        return
+        [this.editFolder] = rows;
+        return;
       }
-      this.editProject = rows[0]
+      [this.editProject] = rows;
     },
     create() {
       this.newProject = true;
@@ -260,14 +302,14 @@ export default {
       this.reloadingTable = true;
     },
     async deleteFolder(event, rows) {
-      const description =`
-        <p>${this.i18n.t('projects.index.modal_delete_folders.description_1_html', {number: rows.length}) }</p>
-        <p>${this.i18n.t('projects.index.modal_delete_folders.description_2')}</p>`
+      const description = `
+        <p>${this.i18n.t('projects.index.modal_delete_folders.description_1_html', { number: rows.length })}</p>
+        <p>${this.i18n.t('projects.index.modal_delete_folders.description_2')}</p>`;
       this.folderDeleteDescription = description;
       const ok = await this.$refs.deleteFolderModal.show();
       if (ok) {
         axios.post(event.path, { project_folder_ids: rows.map((row) => row.id) }).then((response) => {
-          this.reloadingTable = true
+          this.reloadingTable = true;
           HelperModule.flashAlertMsg(response.data.message, 'success');
         }).catch((error) => {
           HelperModule.flashAlertMsg(error.response.data.error, 'danger');
@@ -276,13 +318,13 @@ export default {
     },
     async exportProjects(event, rows) {
       this.exportDescription = event.message;
-      const ok = await this.$refs.exportModal.show()
+      const ok = await this.$refs.exportModal.show();
       if (ok) {
         axios.post(event.path, {
           project_ids: rows.filter((row) => !row.folder).map((row) => row.id),
           project_folder_ids: rows.filter((row) => row.folder).map((row) => row.id),
         }).then((response) => {
-          this.reloadingTable = true
+          this.reloadingTable = true;
           HelperModule.flashAlertMsg(response.data.message, 'success');
         }).catch((error) => {
           HelperModule.flashAlertMsg(error.response.data.error, 'danger');
@@ -291,8 +333,8 @@ export default {
     },
     move(event, rows) {
       this.objectsToMove = rows;
-    }
-  }
-}
+    },
+  },
+};
 
 </script>

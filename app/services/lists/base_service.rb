@@ -6,6 +6,7 @@ module Lists
       @raw_data = raw_data
       @params = params
       @user = user
+      @filters = params[:filters] || {}
     end
 
     def call

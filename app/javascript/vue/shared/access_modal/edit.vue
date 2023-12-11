@@ -1,20 +1,30 @@
 <template>
   <div>
     <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
+      <button type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
       <h4 class="modal-title truncate !block">
-        {{ i18n.t(`access_permissions.${params.object.type}.modals.edit_modal.title`, {resource_name: params.object.name}) }}
+        {{ i18n.t(`access_permissions.${params.object.type}.modals.edit_modal.title`, {
+          resource_name: params.object.name
+        }) }}
       </h4>
     </div>
     <div class="modal-body">
       <div class="h-[60vh] overflow-y-auto">
-        <div v-for="userAssignment in manuallyAssignedUsers" :key="userAssignment.id" class="p-2 flex items-center gap-2">
+        <div v-for="userAssignment in manuallyAssignedUsers"
+             :key="userAssignment.id"
+             class="p-2 flex items-center gap-2">
           <div>
             <img :src="userAssignment.attributes.user.avatar_url" class="rounded-full w-8 h-8">
           </div>
-          <div>{{ userAssignment.attributes.user.name }}</div>
+          <div>
+            <div>{{ userAssignment.attributes.user.name }}</div>
+            <div class="text-xs text-sn-grey">{{ userAssignment.attributes.inherit_message }}</div>
+          </div>
           <MenuDropdown
-            v-if="!userAssignment.attributes.last_owner"
+            v-if="!userAssignment.attributes.last_owner && params.object.urls.update_access"
             class="ml-auto"
             :listItems="rolesFromatted"
             :btnText="userAssignment.attributes.user_role.name"
@@ -35,8 +45,10 @@
           <div>
             {{ i18n.t('access_permissions.everyone_else', { team_name: params.object.team }) }}
           </div>
-          <i class="sn-icon sn-icon-info" :title='this.autoAssignedUsers.map((ua) => ua.attributes.user.name).join("\u000d")'></i>
+          <i class="sn-icon sn-icon-info"
+             :title='this.autoAssignedUsers.map((ua) => ua.attributes.user.name).join("\u000d")'></i>
           <MenuDropdown
+            v-if="params.object.top_level_assignable && params.object.urls.update_access"
             class="ml-auto"
             :listItems="rolesFromatted"
             :btnText="this.roles.find((role) => role[0] == default_role)[1]"
@@ -45,10 +57,14 @@
             @setRole="(...args) => this.changeDefaultRole(...args)"
             @removeRole="() => this.changeDefaultRole()"
           ></MenuDropdown>
+          <div class="ml-auto btn btn-light pointer-events-none" v-else>
+            {{ this.roles.find((role) => role[0] == default_role)[1] }}
+            <div class="h-6 w-6"></div>
+          </div>
         </div>
       </div>
     </div>
-    <div v-if="params.object.top_level_assignable" class="modal-footer">
+    <div v-if="params.object.urls.new_access" class="modal-footer">
       <button class="btn-light ml-auto btn" @click="$emit('changeMode', 'newView')">
         <i class="sn-icon sn-icon-new-task"></i>
         {{ i18n.t('access_permissions.grant_access') }}
@@ -58,21 +74,23 @@
 </template>
 
 <script>
-import MenuDropdown from "../../shared/menu_dropdown.vue";
+/* global HelperModule */
+
+import MenuDropdown from '../menu_dropdown.vue';
 import axios from '../../../packs/custom_axios.js';
 
 export default {
   props: {
     params: {
       type: Object,
-      required: true
+      required: true,
     },
     visible: {
-      type: Boolean
+      type: Boolean,
     },
     default_role: {
-      type: Number
-    }
+      type: Number,
+    },
   },
   emits: ['changeMode', 'modified'],
   mounted() {
@@ -84,31 +102,43 @@ export default {
   },
   computed: {
     rolesFromatted() {
-      let roles = this.roles.map((role) => {
-        return {
+      let roles = [];
+
+      if (!this.params.object.top_level_assignable) {
+        roles.push({
+          emit: 'setRole',
+          text: this.i18n.t('access_permissions.reset'),
+          params: 'reset',
+        });
+      }
+
+      roles = roles.concat(this.roles.map((role) => (
+        {
           emit: 'setRole',
           text: role[1],
-          params: role[0]
+          params: role[0],
         }
-      });
+      )));
 
-      roles.push({
-        dividerBefore: true,
-        emit: 'removeRole',
-        text: this.i18n.t('access_permissions.remove_access'),
-      });
+      if (this.params.object.top_level_assignable) {
+        roles.push({
+          dividerBefore: true,
+          emit: 'removeRole',
+          text: this.i18n.t('access_permissions.remove_access'),
+        });
+      }
 
-      return roles
+      return roles;
     },
     manuallyAssignedUsers() {
-      return this.assignedUsers.filter((user) => {
-        return user.attributes.assigned === 'manually';
-      });
+      return this.assignedUsers.filter((user) => (
+        user.attributes.assigned === 'manually'
+      ));
     },
     autoAssignedUsers() {
-      return this.assignedUsers.filter((user) => {
-        return user.attributes.assigned === 'automatically';
-      });
+      return this.assignedUsers.filter((user) => (
+        user.attributes.assigned === 'automatically'
+      ));
     },
   },
   data() {
@@ -123,56 +153,55 @@ export default {
       axios.get(this.params.object.urls.show_access)
         .then((response) => {
           this.assignedUsers = response.data.data;
-        })
+        });
     },
     getRoles() {
       axios.get(this.params.roles_path)
         .then((response) => {
           this.roles = response.data.data;
-        })
+        });
     },
-    changeRole(id, role_id) {
-      axios.put(this.params.object.urls.show_access, {
+    changeRole(id, roleId) {
+      axios.put(this.params.object.urls.update_access, {
         user_assignment: {
           user_id: id,
-          user_role_id: role_id
-        }
-      }).then((response) => {
+          user_role_id: roleId,
+        },
+      }).then(() => {
         this.$emit('modified');
         this.getAssignedUsers();
-      })
+      });
     },
     removeRole(id) {
-      axios.delete(this.params.object.urls.show_access, {
+      axios.delete(this.params.object.urls.update_access, {
         data: {
-          user_id: id
-        }
+          user_id: id,
+        },
       }).then((response) => {
         this.$emit('modified');
         HelperModule.flashAlertMsg(response.data.message, 'success');
         this.getAssignedUsers();
-      })
+      });
     },
-    changeDefaultRole(role_id) {
+    changeDefaultRole(roleId) {
       axios.put(this.params.object.urls.default_public_user_role_path, {
         project: {
-          default_public_user_role_id: role_id || ''
-        }
+          default_public_user_role_id: roleId || '',
+        },
       }).then((response) => {
         this.$emit('modified');
-        if (!role_id) {
+        if (!roleId) {
           this.$emit('changeVisibility', false, null);
         } else {
-          this.$emit('changeVisibility', true, role_id);
+          this.$emit('changeVisibility', true, roleId);
         }
         if (response.data.message) {
           HelperModule.flashAlertMsg(response.data.message, 'success');
         }
-      })
+      });
     },
     removeDefaultRole() {
     },
-  }
-
-}
+  },
+};
 </script>

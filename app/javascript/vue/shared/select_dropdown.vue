@@ -12,7 +12,9 @@
       <template v-if="!isOpen || !searchable">
         <div class="truncate" v-if="labelRenderer && label" v-html="label"></div>
         <div class="truncate" v-else-if="label">{{ label }}</div>
-        <div class="text-sn-grey truncate" v-else>{{ placeholder || this.i18n.t('general.select_dropdown.placeholder') }}</div>
+        <div class="text-sn-grey truncate" v-else>
+          {{ placeholder || this.i18n.t('general.select_dropdown.placeholder') }}
+        </div>
       </template>
       <input type="text"
              ref="search"
@@ -21,12 +23,17 @@
              :placeholder="label || placeholder || this.i18n.t('general.select_dropdown.placeholder')"
              class="w-full border-0 outline-none pl-0 placeholder:text-sn-grey" />
       <i v-if="canClear" @click="clear" class="sn-icon ml-auto sn-icon-close"></i>
-      <i v-else class="sn-icon ml-auto" :class="{ 'sn-icon-down': !isOpen, 'sn-icon-up': isOpen, 'text-sn-grey': disabled}"></i>
+      <i v-else class="sn-icon ml-auto"
+                :class="{ 'sn-icon-down': !isOpen, 'sn-icon-up': isOpen, 'text-sn-grey': disabled}"></i>
     </div>
     <teleport to="body">
-      <div v-if="isOpen" ref="flyout" class="bg-white inline-block sn-shadow-menu-sm rounded w-full fixed z-[3000]">
+      <div v-if="isOpen" ref="flyout"
+           class="sn-dropdown bg-white inline-block sn-shadow-menu-sm rounded w-full
+                  fixed z-[3000]">
         <div v-if="multiple && withCheckboxes" class="p-2.5 pb-0">
-          <div @click="selectAll" :class="sizeClass" class="border-x-0 border-transparent border-solid border-b-sn-light-grey py-1.5 px-3  cursor-pointer flex items-center gap-2 shrink-0">
+          <div @click="selectAll" :class="sizeClass"
+               class="border-x-0 border-transparent border-solid border-b-sn-light-grey
+                      py-1.5 px-3  cursor-pointer flex items-center gap-2 shrink-0">
             <div class="sn-checkbox-icon"
                 :class="selectAllState"
             ></div>
@@ -62,8 +69,8 @@
 </template>
 
 <script>
+import { vOnClickOutside } from '@vueuse/components';
 import FixedFlyoutMixin from './mixins/fixed_flyout.js';
-import { vOnClickOutside } from '@vueuse/components'
 
 export default {
   name: 'SelectDropdown',
@@ -71,7 +78,7 @@ export default {
     value: { type: [String, Number, Array] },
     options: { type: Array, default: () => [] },
     optionsUrl: { type: String },
-    placeholder: { type: String},
+    placeholder: { type: String },
     noOptionsPlaceholder: { type: String },
     fewOptionsPlaceholder: { type: String },
     allOptionsPlaceholder: { type: String },
@@ -85,7 +92,7 @@ export default {
     clearable: { type: Boolean, default: false },
   },
   directives: {
-    'click-outside': vOnClickOutside
+    'click-outside': vOnClickOutside,
   },
   data() {
     return {
@@ -94,51 +101,50 @@ export default {
       fetchedOptions: [],
       selectAllState: 'unchecked',
       query: '',
-      fixedWidth: true
-    }
+      fixedWidth: true,
+    };
   },
   mixins: [FixedFlyoutMixin],
   computed: {
     sizeClass() {
       switch (this.size) {
         case 'xs':
-          return 'min-h-[36px]'
+          return 'min-h-[36px]';
         case 'sm':
-          return 'min-h-[40px]'
+          return 'min-h-[40px]';
         case 'md':
-          return 'min-h-[44px]'
+          return 'min-h-[44px]';
+        default:
+          return 'min-h-[44px]';
       }
     },
     canClear() {
-      return this.clearable && this.label && this.isOpen
+      return this.clearable && this.label && this.isOpen;
     },
     rawOptions() {
       if (this.optionsUrl) {
-        return this.fetchedOptions
-      } else {
-        return this.options
+        return this.fetchedOptions;
       }
+      return this.options;
     },
     filteredOptions() {
-      if (this.query.length > 0 && !this.optionsUrl ) {
-        return this.rawOptions.filter(option => {
-          return option[1].toLowerCase().includes(this.query.toLowerCase())
-        })
-      } else {
-        return this.rawOptions
+      if (this.query.length > 0 && !this.optionsUrl) {
+        return this.rawOptions.filter((option) => (
+          option[1].toLowerCase().includes(this.query.toLowerCase())
+        ));
       }
+      return this.rawOptions;
     },
     label() {
       if (this.multiple) {
-        return this.multipleLabel
-      } else {
-        return this.singleLabel
+        return this.multipleLabel;
       }
+      return this.singleLabel;
     },
 
     singleLabel() {
-      const option = this.rawOptions.find(option => option[0] === this.newValue)
-      return this.renderLabel(option)
+      const option = this.rawOptions.find((i) => i[0] === this.newValue);
+      return this.renderLabel(option);
     },
     multipleLabel() {
       if (!this.newValue) return false;
@@ -147,29 +153,31 @@ export default {
 
       if (this.newValue.length === 0) {
         return false;
-      } else if (this.newValue.length === 1) {
-        this.selectAllState = 'indeterminate'
-        return this.renderLabel(this.rawOptions.find(option => option[0] === this.newValue[0]))
-      } else if (this.newValue.length === this.rawOptions.length) {
-        this.selectAllState = 'checked';
-        return this.allOptionsPlaceholder || this.i18n.t('general.select_dropdown.all_options_placeholder')
-      } else {
-        this.selectAllState = 'indeterminate'
-        return `${this.newValue.length} ${this.fewOptionsPlaceholder || this.i18n.t('general.select_dropdown.few_options_placeholder')}`
       }
+      if (this.newValue.length === 1) {
+        this.selectAllState = 'indeterminate';
+        return this.renderLabel(this.rawOptions.find((option) => option[0] === this.newValue[0]));
+      }
+      if (this.newValue.length === this.rawOptions.length) {
+        this.selectAllState = 'checked';
+        return this.allOptionsPlaceholder || this.i18n.t('general.select_dropdown.all_options_placeholder');
+      }
+      this.selectAllState = 'indeterminate';
+      return `${this.newValue.length} ${
+        this.fewOptionsPlaceholder || this.i18n.t('general.select_dropdown.few_options_placeholder')
+      }`;
     },
     valueChanged() {
       if (this.multiple) {
-        return !this.compareArrays(this.newValue, this.value)
-      } else {
-        return this.newValue != this.value
+        return !this.compareArrays(this.newValue, this.value);
       }
-    }
+      return this.newValue !== this.value;
+    },
   },
   mounted() {
     this.newValue = this.value;
     if (!this.newValue && this.multiple) {
-      this.newValue = []
+      this.newValue = [];
     }
     this.fetchOptions();
   },
@@ -179,7 +187,7 @@ export default {
         this.$nextTick(() => {
           this.setPosition();
           this.$refs.search?.focus();
-        })
+        });
       }
     },
     query() {
@@ -191,77 +199,81 @@ export default {
       if (!option) return false;
 
       if (this.labelRenderer) {
-        return this.labelRenderer(option)
-      } else {
-        return option[1]
+        return this.labelRenderer(option);
       }
+      return option[1];
     },
     valueSelected(value) {
       if (!this.newValue) return false;
       if (this.multiple) {
         return this.newValue.includes(value);
-      } else {
-        return this.newValue == value;
       }
+      return this.newValue === value;
     },
     open() {
-      if (!this.disabled) this.isOpen = true
+      if (!this.disabled) this.isOpen = true;
     },
     clear() {
       this.newValue = this.multiple ? [] : null;
       this.query = '';
-      this.$emit('change', this.newValue)
+      this.$emit('change', this.newValue);
     },
-    close() {
+    close(e) {
+      if (e && e.target.closest('.sn-dropdown')) return;
+
       if (!this.isOpen) return;
 
-      this.isOpen = false
-      if (this.valueChanged) {
-        this.$emit('change', this.newValue)
-      }
-      this.query = '';
+      this.$nextTick(() => {
+        this.isOpen = false;
+        if (this.valueChanged) {
+          this.$emit('change', this.newValue);
+        }
+        this.query = '';
+      });
     },
     setValue(value) {
-      if(this.multiple) {
+      if (this.multiple) {
         if (this.newValue.includes(value)) {
-          this.newValue = this.newValue.filter(v => v != value)
+          this.newValue = this.newValue.filter((v) => v !== value);
         } else {
-          this.newValue.push(value)
+          this.newValue.push(value);
         }
       } else {
-        this.newValue = value
-        this.close()
+        this.newValue = value;
+        this.$nextTick(() => {
+          this.close();
+        });
       }
     },
     selectAll() {
       if (this.selectAllState === 'checked') {
-        this.newValue = []
+        this.newValue = [];
       } else {
-        this.newValue = this.rawOptions.map(option => option[0])
+        this.newValue = this.rawOptions.map((option) => option[0]);
       }
-      this.$emit('change', this.newValue)
+      this.$emit('change', this.newValue);
     },
     fetchOptions() {
       if (this.optionsUrl) {
         fetch(`${this.optionsUrl}?query=${this.query || ''}`)
-          .then(response => response.json())
-          .then(data => {
+          .then((response) => response.json())
+          .then((data) => {
             this.fetchedOptions = data.data;
             this.$nextTick(() => {
               this.setPosition();
-            })
-          })
+            });
+          });
       }
     },
     compareArrays(arr1, arr2) {
       if (!arr1 || !arr2) return false;
       if (arr1.length !== arr2.length) return false;
 
-      for (let i = 0; i < arr1.length; i++) {
+      for (let i = 0; i < arr1.length; i += 1) {
         if (!arr2.includes(arr1[i])) return false;
       }
       return true;
-    }
+    },
   },
-}
+};
 </script>

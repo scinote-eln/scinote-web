@@ -42,7 +42,11 @@
         :CheckboxSelectionCallback="withCheckboxes"
       >
       </ag-grid-vue>
-      <ActionToolbar v-if="selectedRows.length > 0 && actionsUrl" :actionsUrl="actionsUrl" :params="actionsParams" @toolbar:action="emitAction" />
+      <ActionToolbar
+        v-if="selectedRows.length > 0 && actionsUrl"
+        :actionsUrl="actionsUrl"
+        :params="actionsParams"
+        @toolbar:action="emitAction" />
     </div>
     <div class="flex items-center py-4">
       <div class="mr-auto">
@@ -67,10 +71,10 @@
 </template>
 
 <script>
-import { AgGridVue } from "ag-grid-vue3";
+import { AgGridVue } from 'ag-grid-vue3';
+import PerfectScrollbar from 'vue3-perfect-scrollbar';
 import axios from '../../../packs/custom_axios.js';
 import SelectDropdown from '../select_dropdown.vue';
-import PerfectScrollbar from 'vue3-perfect-scrollbar';
 import Pagination from './pagination.vue';
 import CustomHeader from './tableHeader';
 import ActionToolbar from './action_toolbar.vue';
@@ -78,7 +82,7 @@ import Toolbar from './toolbar.vue';
 import RowMenuRenderer from './row_menu_renderer.vue';
 
 export default {
-  name: "App",
+  name: 'App',
   props: {
     withCheckboxes: {
       type: Boolean,
@@ -105,11 +109,11 @@ export default {
     },
     toolbarActions: {
       type: Object,
-      required: true
+      required: true,
     },
     reloadingTable: {
       type: Boolean,
-      default: false
+      default: false,
     },
     activePageUrl: {
       type: String,
@@ -119,15 +123,15 @@ export default {
     },
     currentViewMode: {
       type: String,
-      default: 'active'
+      default: 'active',
     },
     viewRenders: {
       type: Object,
     },
     filters: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
   data() {
     return {
@@ -135,7 +139,7 @@ export default {
       gridApi: null,
       columnApi: null,
       defaultColDef: {
-        resizable: true
+        resizable: true,
       },
       perPage: 20,
       page: 1,
@@ -146,7 +150,7 @@ export default {
       initializing: true,
       activeFilters: {},
       currentViewRender: 'table',
-      cardCheckboxes: []
+      cardCheckboxes: [],
     };
   },
   components: {
@@ -157,11 +161,11 @@ export default {
     agColumnHeader: CustomHeader,
     ActionToolbar,
     Toolbar,
-    RowMenuRenderer
+    RowMenuRenderer,
   },
   computed: {
     perPageOptions() {
-      return [10, 20, 50, 100].map(value => [ value, `${value} ${this.i18n.t('datatable.rows')}` ]);
+      return [10, 20, 50, 100].map((value) => ([value, `${value} ${this.i18n.t('datatable.rows')}`]));
     },
     tableState() {
       if (!localStorage.getItem(`datatable:${this.tableId}_columns_state`)) return null;
@@ -170,40 +174,38 @@ export default {
     },
     actionsParams() {
       return {
-        items: JSON.stringify(this.selectedRows.map(row => { return {id: row.id, type: row.type} }))
-      }
+        items: JSON.stringify(this.selectedRows.map((row) => ({ id: row.id, type: row.type }))),
+      };
     },
     gridOptions() {
       return {
-        suppressCellFocus: true
-      }
+        suppressCellFocus: true,
+      };
     },
     extendedColumnDefs() {
-      let columns = this.columnDefs.map(column => {
-        return {
-          ...column,
-          cellRendererParams: {
-            dtComponent: this
-          }
-        }
-      });
+      const columns = this.columnDefs.map((column) => ({
+        ...column,
+        cellRendererParams: {
+          dtComponent: this,
+        },
+      }));
 
       if (this.withCheckboxes) {
         columns.unshift({
-          field: "checkbox",
+          field: 'checkbox',
           headerCheckboxSelection: true,
           headerCheckboxSelectionFilteredOnly: true,
           checkboxSelection: true,
           width: 48,
           minWidth: 48,
           resizable: false,
-          pinned: 'left'
+          pinned: 'left',
         });
       }
 
       if (this.withRowMenu) {
         columns.push({
-          field: "rowMenu",
+          field: 'rowMenu',
           headerName: '',
           width: 42,
           minWidth: 42,
@@ -211,22 +213,28 @@ export default {
           sortable: false,
           cellRenderer: 'RowMenuRenderer',
           cellRendererParams: {
-            dtComponent: this
+            dtComponent: this,
           },
           pinned: 'right',
-          cellStyle: {padding: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'visible'}
+          cellStyle: {
+            padding: 0,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            overflow: 'visible',
+          },
         });
       }
 
       return columns;
-    }
+    },
   },
   watch: {
     reloadingTable() {
       if (this.reloadingTable) {
         this.loadData();
       }
-    }
+    },
   },
   mounted() {
     this.loadData();
@@ -237,7 +245,11 @@ export default {
   },
   methods: {
     formatData(data) {
-      return data.map( (item) => Object.assign({}, item.attributes, { id: item.id, type: item.type }) );
+      return data.map((item) => ({
+        ...item.attributes,
+        id: item.id,
+        type: item.type,
+      }));
     },
     resize() {
       if (this.tableState) return;
@@ -253,8 +265,8 @@ export default {
             order: this.order,
             search: this.searchValue,
             view_mode: this.currentViewMode,
-            filters: this.activeFilters
-          }
+            filters: this.activeFilters,
+          },
         })
         .then((response) => {
           this.selectedRows = [];
@@ -262,7 +274,7 @@ export default {
           this.rowData = this.formatData(response.data.data);
           this.totalPage = response.data.meta.total_pages;
           this.$emit('tableReloaded');
-        })
+        });
     },
     onGridReady(params) {
       this.gridApi = params.api;
@@ -271,14 +283,14 @@ export default {
       if (this.tableState) {
         this.columnApi.applyColumnState({
           state: this.tableState,
-          applyOrder: true
+          applyOrder: true,
         });
       }
       setTimeout(() => {
         this.initializing = false;
       }, 200);
     },
-    onFirstDataRendered(params) {
+    onFirstDataRendered() {
       this.resize();
     },
     setPerPage(value) {
@@ -291,13 +303,14 @@ export default {
       this.loadData();
     },
     setOrder() {
-      const orderState = this.columnApi.getColumnState().filter(column => column.sort).map(column => {
-        return {
+      const orderState = this.columnApi.getColumnState()
+        .filter((column) => column.sort)
+        .map((column) => ({
           column: column.colId,
-          dir: column.sort
-        }
-      });
-      this.order = orderState[0];
+          dir: column.sort,
+        }));
+      const [order] = orderState;
+      this.order = order;
       this.saveColumnsState();
       this.loadData();
     },
@@ -319,7 +332,7 @@ export default {
     },
     clickCell(e) {
       if (e.column.colId !== 'rowMenu' && e.column.userProvidedColDef.notSelectable !== true) {
-          e.node.setSelected(true);
+        e.node.setSelected(true);
       }
     },
     applyFilters(filters) {
@@ -332,7 +345,7 @@ export default {
       this.currentViewRender = view;
       this.initializing = true;
       this.selectedRows = [];
-    }
-  }
+    },
+  },
 };
 </script>
