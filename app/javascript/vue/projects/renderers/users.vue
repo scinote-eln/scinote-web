@@ -3,7 +3,8 @@
     <div v-for="(user, i) in visibleUsers" :key="i" :title="user.full_name">
       <img :src="user.avatar" class="w-7 h-7" />
     </div>
-    <div v-if="hiddenUsers.length > 0" :title="hiddenUsersTitle" class="flex shrink-0 items-center justify-center w-7 h-7 text-xs rounded-full bg-sn-dark-grey text-sn-white">
+    <div v-if="hiddenUsers.length > 0" :title="hiddenUsersTitle"
+        class="flex shrink-0 items-center justify-center w-7 h-7 text-xs rounded-full bg-sn-dark-grey text-sn-white">
       +{{ hiddenUsers.length }}
     </div>
     <div class="flex items-center shrink-0 justify-center w-7 h-7 rounded-full bg-sn-light-grey text-sn-dark-grey">
@@ -17,28 +18,27 @@ export default {
   name: 'UsersRenderer',
   props: {
     params: {
-      required: true
+      required: true,
     },
   },
   computed: {
     users() {
-      return this.params.value || []
+      return this.params.value || [];
     },
     visibleUsers() {
-      return this.users.slice(0, 4)
+      return this.users.slice(0, 4);
     },
     hiddenUsers() {
-      return this.users.slice(4)
+      return this.users.slice(4);
     },
     hiddenUsersTitle() {
-      return this.hiddenUsers.map((user) => user.full_name).join("\u000d")
-    }
+      return this.hiddenUsers.map((user) => user.full_name).join('\u000d');
+    },
   },
   methods: {
     openAccessModal() {
-      this.params.dtComponent.$emit('access', {} ,[this.params.data]);
-    }
-  }
-
-}
+      this.params.dtComponent.$emit('access', {}, [this.params.data]);
+    },
+  },
+};
 </script>

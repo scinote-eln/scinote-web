@@ -6,7 +6,7 @@
         all: params.data.total_tasks
       }) }}
       <div class="py-1">
-        <div class="w-48 h-1 bg-sn-light-grey">
+        <div class="w-24 h-1 bg-sn-light-grey">
           <div class="h-full bg-sn-blue" :style="{
             width: params.data.completed_tasks / params.data.total_tasks * 100 + '%'
           }"></div>

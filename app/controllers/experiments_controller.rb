@@ -267,6 +267,18 @@ class ExperimentsController < ApplicationController
     }
   end
 
+  def projects_to_clone
+    projects = @experiment.project.team.projects.active
+                          .with_user_permission(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
+                          .map { |p| [p.id, p.name] }
+    render json: { data: projects }, status: :ok
+  end
+
+  def projects_to_move
+    projects = @experiment.movable_projects(current_user).map { |p| [p.id, p.name] }
+    render json: { data: projects }, status: :ok
+  end
+
   # POST: clone_experiment(id)
   def clone
     project = current_team.projects.find(move_experiment_param)
@@ -279,11 +291,10 @@ class ExperimentsController < ApplicationController
     if service.succeed?
       flash[:success] = t('experiments.clone.success_flash',
                           experiment: @experiment.name)
-      redirect_to canvas_experiment_path(service.cloned_experiment)
+      render json: { url: canvas_experiment_path(service.cloned_experiment) }
     else
-      flash[:error] = t('experiments.clone.error_flash',
-                        experiment: @experiment.name)
-      redirect_to experiments_path(project_id: @experiment.project)
+      render json: { message: t('experiments.clone.error_flash',
+                     experiment: @experiment.name) }, status: :unprocessable_entity
     end
   end
 
@@ -534,7 +545,7 @@ class ExperimentsController < ApplicationController
       actions:
         Toolbars::ExperimentsService.new(
           current_user,
-          experiment_ids: params[:experiment_ids].split(',')
+          experiment_ids: JSON.parse(params[:items]).map { |i| i['id'] }
         ).actions
     }
   end

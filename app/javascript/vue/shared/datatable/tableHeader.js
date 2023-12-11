@@ -1,6 +1,7 @@
 export default {
   template: `
-    <div class="w-full grid items-center gap-2 grid-cols-[auto_1.5rem] cursor-pointer" @click="onSortRequested((activeSort == 'asc' ? 'desc' : 'asc'), $event)">
+    <div class="w-full grid items-center gap-2 grid-cols-[auto_1.5rem] cursor-pointer"
+         @click="onSortRequested((activeSort == 'asc' ? 'desc' : 'asc'), $event)">
       <div v-if="params.html" class="customHeaderLabel truncate" v-html="params.html"></div>
       <div v-else class="customHeaderLabel truncate">{{ params.displayName }}</div>
       <div v-if="activeSort == 'asc'" class="customSortDownLabel text-sn-sleepy-grey">

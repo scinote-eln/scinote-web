@@ -24,51 +24,83 @@
 </template>
 
 <script>
+/* global HelperModule */
+
 import axios from '../../packs/custom_axios.js';
 
-import DataTable from '../shared/datatable/table.vue'
-import DeleteModal from '../shared/confirmation_modal.vue'
+import DataTable from '../shared/datatable/table.vue';
+import DeleteModal from '../shared/confirmation_modal.vue';
 
 export default {
   name: 'LabelTemplatesTable',
   components: {
     DataTable,
-    DeleteModal
+    DeleteModal,
   },
   props: {
     dataSource: {
       type: String,
-      required: true
+      required: true,
     },
     actionsUrl: {
       type: String,
-      required: true
+      required: true,
     },
     createUrl: {
       type: String,
     },
     syncFluicsUrl: {
       type: String,
-    }
+    },
   },
   data() {
     return {
       reloadingTable: false,
-      columnDefs: [ { field: "default", headerName: '', width: 80, minWidth: 80,
-                      cellRenderer: this.defaultRenderer, sortable: true, headerComponentParams: { html: '<i class="fas fa-thumbtack"></i>' } },
-                    { field: "name", headerName: this.i18n.t('label_templates.index.thead_name'), cellRenderer: this.labelNameRenderer, sortable: true},
-                    { field: "format", headerName: this.i18n.t('label_templates.index.format'), sortable: true },
-                    { field: "description", headerName: this.i18n.t('label_templates.index.description'), sortable: true },
-                    { field: "modified_by", headerName: this.i18n.t('label_templates.index.updated_by'), sortable: true },
-                    { field: "updated_at", headerName: this.i18n.t('label_templates.index.updated_at'), sortable: true },
-                    { field: "created_by", headerName: this.i18n.t('label_templates.index.created_by'), sortable: true },
-                    { field: "created_at", headerName: this.i18n.t('label_templates.index.created_at'), sortable: true }
-                  ]
-    }
+      columnDefs: [
+        {
+          field: 'default',
+          headerName: '',
+          width: 80,
+          minWidth: 80,
+          cellRenderer: this.defaultRenderer,
+          sortable: true,
+          headerComponentParams: { html: '<i class="fas fa-thumbtack"></i>' },
+        }, {
+          field: 'name',
+          headerName: this.i18n.t('label_templates.index.thead_name'),
+          cellRenderer: this.labelNameRenderer,
+          sortable: true,
+        }, {
+          field: 'format',
+          headerName: this.i18n.t('label_templates.index.format'),
+          sortable: true,
+        }, {
+          field: 'description',
+          headerName: this.i18n.t('label_templates.index.description'),
+          sortable: true,
+        }, {
+          field: 'modified_by',
+          headerName: this.i18n.t('label_templates.index.updated_by'),
+          sortable: true,
+        }, {
+          field: 'updated_at',
+          headerName: this.i18n.t('label_templates.index.updated_at'),
+          sortable: true,
+        }, {
+          field: 'created_by',
+          headerName: this.i18n.t('label_templates.index.created_by'),
+          sortable: true,
+        }, {
+          field: 'created_at',
+          headerName: this.i18n.t('label_templates.index.created_at'),
+          sortable: true,
+        },
+      ],
+    };
   },
   computed: {
     toolbarActions() {
-      let left = []
+      const left = [];
       if (this.createUrl) {
         left.push({
           name: 'create',
@@ -76,8 +108,8 @@ export default {
           label: this.i18n.t('label_templates.index.toolbar.new'),
           type: 'emit',
           path: this.createUrl,
-          buttonStyle: 'btn btn-primary'
-        })
+          buttonStyle: 'btn btn-primary',
+        });
       }
       if (this.syncFluicsUrl) {
         left.push({
@@ -86,30 +118,30 @@ export default {
           label: this.i18n.t('label_templates.index.toolbar.update_fluics_labels'),
           type: 'emit',
           path: this.syncFluicsUrl,
-          buttonStyle: 'btn btn-light'
-        })
+          buttonStyle: 'btn btn-light',
+        });
       }
       return {
-        left: left,
-        right: []
-      }
-    }
+        left,
+        right: [],
+      };
+    },
   },
   methods: {
     labelNameRenderer(params) {
-      let editUrl = params.data.urls.show;
+      const editUrl = params.data.urls.show;
       return `<a href="${editUrl}">
                 ${params.data.icon_url}
                 ${params.data.name}
-              </a>`
+              </a>`;
     },
     defaultRenderer(params) {
-      let defaultSelected = params.data.default;
+      const defaultSelected = params.data.default;
       return defaultSelected ? '<i class="fas fa-thumbtack"></i>' : '';
     },
     setDefault(action) {
       axios.post(action.path).then((response) => {
-        this.reloadingTable = true
+        this.reloadingTable = true;
         HelperModule.flashAlertMsg(response.data.message, 'success');
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
@@ -117,7 +149,7 @@ export default {
     },
     duplicate(action, rows) {
       axios.post(action.path, { selected_ids: rows.map((row) => row.id) }).then((response) => {
-        this.reloadingTable = true
+        this.reloadingTable = true;
         HelperModule.flashAlertMsg(response.data.message, 'success');
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
@@ -126,28 +158,28 @@ export default {
     createTemplate(action) {
       axios.post(action.path).then((response) => {
         window.location.href = response.data.redirect_url;
-      })
+      });
     },
     syncFluicsLabels(action) {
       axios.post(action.path).then((response) => {
-        this.reloadingTable = true
+        this.reloadingTable = true;
         HelperModule.flashAlertMsg(response.data.message, 'success');
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
     },
     async deleteTemplates(action, rows) {
-      const ok = await this.$refs.deleteModal.show()
+      const ok = await this.$refs.deleteModal.show();
       if (ok) {
         axios.delete(action.path, { data: { selected_ids: rows.map((row) => row.id) } }).then((response) => {
-          this.reloadingTable = true
+          this.reloadingTable = true;
           HelperModule.flashAlertMsg(response.data.message, 'success');
         }).catch((error) => {
           HelperModule.flashAlertMsg(error.response.data.error, 'danger');
         });
       }
-    }
-  }
-}
+    },
+  },
+};
 
 </script>

@@ -1,17 +1,14 @@
 export default {
   methods: {
     itemSelected() {
-      let item = this.dtComponent.selectedRows.find((item) => {
-        return item.id == this.params.id;
-      });
+      const item = this.dtComponent.selectedRows.find((i) => (i.id === this.params.id));
 
       if (item) {
-        this.dtComponent.selectedRows = this.dtComponent.selectedRows.filter((item) => {
-          return item.id != this.params.id;
-        });
+        this.dtComponent.selectedRows = this.dtComponent.selectedRows
+          .filter((i) => (i.id !== this.params.id));
       } else {
         this.dtComponent.selectedRows.push(this.params);
       }
-    }
-  }
-}
+    },
+  },
+};

@@ -25,7 +25,7 @@ export default {
   },
   methods: {
     showMore() {
-
+      this.params.dtComponent.$emit('showDescription', null, [this.params.data]);
     },
   },
 };

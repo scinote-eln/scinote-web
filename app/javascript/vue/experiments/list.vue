@@ -13,22 +13,58 @@
     :filters="filters"
     :viewRenders="viewRenders"
     @tableReloaded="reloadingTable = false"
+    @archive="archive"
+    @restore="restore"
+    @showDescription="showDescription"
+    @duplicate="duplicate"
+    @move="move"
   >
     <template> </template>
   </DataTable>
+
+  <ConfirmationModal
+    :title="i18n.t('experiments.index.archive_confirm_title')"
+    :description="i18n.t('experiments.index.archive_confirm')"
+    :confirmClass="'btn btn-primary'"
+    :confirmText="i18n.t('general.archive')"
+    ref="archiveModal"
+  ></ConfirmationModal>
+  <DescriptionModal
+    v-if="descriptionModalObject"
+    :experiment="descriptionModalObject"
+    @close="descriptionModalObject = null"/>
+  <DuplicateModal
+    v-if="duplicateModalObject"
+    :experiment="duplicateModalObject"
+    @close="duplicateModalObject = null"/>
+  <MoveModal
+    v-if="moveModalObject"
+    :experiment="moveModalObject"
+    @close="moveModalObject = null"
+    @submit="updateTable"/>
 </template>
 
 <script>
+/* global HelperModule */
 
+import axios from '../../packs/custom_axios.js';
 import DataTable from '../shared/datatable/table.vue';
 import DescriptionRenderer from './renderers/description.vue';
+import ConfirmationModal from '../shared/confirmation_modal.vue';
 import CompletedTasksRenderer from './renderers/completed_tasks.vue';
 import NameRenderer from './renderers/name.vue';
+import DescriptionModal from './modals/description.vue';
+import DuplicateModal from './modals/duplicate.vue';
+import MoveModal from './modals/move.vue';
 
 export default {
   name: 'ExperimentsList',
   components: {
     DataTable,
+    ConfirmationModal,
+    DescriptionModal,
+    DuplicateModal,
+    MoveModal,
   },
   props: {
     dataSource: { type: String, required: true },
@@ -39,6 +75,9 @@ export default {
   },
   data() {
     return {
+      moveModalObject: null,
+      duplicateModalObject: null,
+      descriptionModalObject: null,
       reloadingTable: false,
     };
   },
@@ -82,6 +121,7 @@ export default {
         headerName: this.i18n.t('experiments.card.completed_task'),
         cellRenderer: CompletedTasksRenderer,
         sortable: false,
+        minWidth: 120,
       });
       columns.push({
         field: 'description',
@@ -130,6 +170,41 @@ export default {
       return filters;
     },
   },
-  methods: {},
+  methods: {
+    updateTable() {
+      this.moveModalObject = null;
+      this.duplicateModalObject = null;
+      this.descriptionModalObject = null;
+      this.reloadingTable = true;
+    },
+    async archive(event, rows) {
+      const ok = await this.$refs.archiveModal.show();
+      if (ok) {
+        axios.post(event.path, { experiment_ids: rows.map((row) => row.id) }).then((response) => {
+          this.reloadingTable = true;
+          HelperModule.flashAlertMsg(response.data.message, 'success');
+        }).catch((error) => {
+          HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+        });
+      }
+    },
+    restore(event, rows) {
+      axios.post(event.path, { experiment_ids: rows.map((row) => row.id) }).then((response) => {
+        this.reloadingTable = true;
+        HelperModule.flashAlertMsg(response.data.message, 'success');
+      }).catch((error) => {
+        HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+      });
+    },
+    showDescription(_e, experiment) {
+      [this.descriptionModalObject] = experiment;
+    },
+    duplicate(_e, experiment) {
+      [this.duplicateModalObject] = experiment;
+    },
+    move(_e, experiment) {
+      [this.moveModalObject] = experiment;
+    },
+  },
 };
 </script>

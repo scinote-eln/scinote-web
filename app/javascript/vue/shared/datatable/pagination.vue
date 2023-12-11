@@ -35,13 +35,12 @@ export default {
     currentPage: {
       type: Number,
       required: true,
-    }
-
+    },
   },
   computed: {
     pages() {
-      let pages = [];
-      for (let i = 1; i <= this.totalPage; i++) {
+      const pages = [];
+      for (let i = 1; i <= this.totalPage; i += 1) {
         if (i >= this.currentPage - 2 || this.totalPage <= 5) {
           pages.push(i);
         }
@@ -51,7 +50,7 @@ export default {
         }
       }
       return pages;
-    }
+    },
   },
-}
+};
 </script>

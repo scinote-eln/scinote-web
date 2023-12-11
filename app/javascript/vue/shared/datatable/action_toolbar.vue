@@ -8,7 +8,8 @@
         {{ i18n.t('action_toolbar.no_actions') }}
       </div>
       <div v-for="action in actions" :key="action.name" class="sn-action-toolbar__action shrink-0">
-        <a :class="`rounded flex gap-2 items-center py-1.5 px-2.5 bg-sn-white color-sn-blue hover:no-underline focus:no-underline ${action.button_class}`"
+        <a :class="`rounded flex gap-2 items-center py-1.5 px-2.5
+                  bg-sn-white color-sn-blue hover:no-underline focus:no-underline ${action.button_class}`"
           :href="(['link', 'remote-modal']).includes(action.type) ? action.path : '#'"
           :id="action.button_id"
           :title="action.label"
@@ -22,51 +23,53 @@
 </template>
 
 <script>
-  export default {
-    name: 'ActionToolbar',
-    props: {
-      actionsUrl: { type: String, required: true },
-      params: { type: Object }
-    },
-    data() {
-      return {
-        actions: [],
-        multiple: false,
-        reloadCallback: null,
-        loaded: false,
-        loading: true
-      }
-    },
-    watch: {
-      params() {
-        this.loadActions()
-      }
-    },
-    created() {
+export default {
+  name: 'ActionToolbar',
+  props: {
+    actionsUrl: { type: String, required: true },
+    params: { type: Object },
+  },
+  data() {
+    return {
+      actions: [],
+      multiple: false,
+      reloadCallback: null,
+      loaded: false,
+      loading: true,
+    };
+  },
+  watch: {
+    params() {
       this.loadActions();
     },
-    methods: {
-      loadActions() {
-        this.loading = true;
-        this.loaded = false;
-        $.get(`${this.actionsUrl}?${new URLSearchParams(this.params).toString()}`, (data) => {
-          this.actions = data.actions;
-          this.loading = false;
-          this.loaded = true;
-        });
-      },
-      doAction(action, event) {
-        switch(action.type) {
-          case 'emit':
-            event.preventDefault();
-            this.$emit('toolbar:action', action);
-            // do nothing, this is handled by legacy code based on the button class
-            break;
-          case 'link':
-            // do nothing, already handled by href
-            break;
-        }
+  },
+  created() {
+    this.loadActions();
+  },
+  methods: {
+    loadActions() {
+      this.loading = true;
+      this.loaded = false;
+      $.get(`${this.actionsUrl}?${new URLSearchParams(this.params).toString()}`, (data) => {
+        this.actions = data.actions;
+        this.loading = false;
+        this.loaded = true;
+      });
+    },
+    doAction(action, event) {
+      switch (action.type) {
+        case 'emit':
+          event.preventDefault();
+          this.$emit('toolbar:action', action);
+          // do nothing, this is handled by legacy code based on the button class
+          break;
+        case 'link':
+          // do nothing, already handled by href
+          break;
+        default:
+          break;
       }
-    }
-  }
+    },
+  },
+};
 </script>

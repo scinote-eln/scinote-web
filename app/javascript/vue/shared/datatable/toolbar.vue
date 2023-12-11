@@ -39,7 +39,9 @@
         <i :class="action.icon"></i>
         {{ action.label }}
       </a>
-      <div v-if="filters.length == 0"  class="sci-input-container-v2" :class="{'w-48': showSearch, 'w-11': !showSearch}">
+      <div v-if="filters.length == 0"
+           class="sci-input-container-v2"
+           :class="{'w-48': showSearch, 'w-11': !showSearch}">
         <input
           ref="searchInput"
           class="sci-input-field !pr-8"
@@ -58,7 +60,7 @@
 </template>
 
 <script>
-import MenuDropdown from '../menu_dropdown.vue'
+import MenuDropdown from '../menu_dropdown.vue';
 import FilterDropdown from '../filters/filter_dropdown.vue';
 
 export default {
@@ -66,7 +68,7 @@ export default {
   props: {
     toolbarActions: {
       type: Object,
-      required: true
+      required: true,
     },
     searchValue: {
       type: String,
@@ -79,57 +81,57 @@ export default {
     },
     currentViewMode: {
       type: String,
-      default: 'active'
+      default: 'active',
     },
     filters: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     viewRenders: {
       type: Array,
-      required: true
+      required: true,
     },
     currentViewRender: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   components: {
     MenuDropdown,
-    FilterDropdown
+    FilterDropdown,
   },
   computed: {
     viewModesMenu() {
       return [
-        { text: this.i18n.t('projects.index.active'), url: this.activePageUrl},
-        { text: this.i18n.t('projects.index.archived'), url: this.archivedPageUrl }
-      ]
+        { text: this.i18n.t('projects.index.active'), url: this.activePageUrl },
+        { text: this.i18n.t('projects.index.archived'), url: this.archivedPageUrl },
+      ];
     },
     viewRendersMenu() {
       return this.viewRenders.map((view) => {
-        const type = view.type;
+        const { type } = view;
         switch (type) {
           case 'cards':
-            return { text: this.i18n.t('toolbar.cards_view'), emit: 'setCardsView'};
+            return { text: this.i18n.t('toolbar.cards_view'), emit: 'setCardsView' };
           case 'table':
-            return { text: this.i18n.t('toolbar.table_view'), emit: 'setTableView'};
+            return { text: this.i18n.t('toolbar.table_view'), emit: 'setTableView' };
           default:
             return view;
         }
-      })
-    }
+      });
+    },
   },
   data() {
     return {
-      showSearch: false
-    }
+      showSearch: false,
+    };
   },
   watch: {
     searchValue() {
       if (this.searchValue.length > 0) {
         this.openSearch();
       }
-    }
+    },
   },
   methods: {
     openSearch() {
@@ -141,18 +143,20 @@ export default {
       }
     },
     doAction(action, event) {
-      switch(action.type) {
+      switch (action.type) {
         case 'emit':
           event.preventDefault();
           this.$emit('toolbar:action', action);
           break;
         case 'link':
           break;
+        default:
+          break;
       }
     },
     applyFilters(filters) {
       this.$emit('applyFilters', filters);
     },
-  }
-}
+  },
+};
 </script>

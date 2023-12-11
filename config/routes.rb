@@ -427,6 +427,8 @@ Rails.application.routes.draw do
         post :archive_my_modules
         post :batch_clone_my_modules
         get :search_tags
+        get :projects_to_clone
+        get :projects_to_move
       end
     end
 

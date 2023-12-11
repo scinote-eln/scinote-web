@@ -33,10 +33,14 @@ module Lists
     end
 
     def urls
-      urls_list = {}
-      urls_list[:show] = table_experiment_path(object)
-
-      urls_list
+      {
+        show: table_experiment_path(object),
+        actions: actions_toolbar_experiments_path(items: [{ id: object.id }].to_json),
+        projects_to_clone: projects_to_clone_experiment_path(object),
+        projects_to_move: projects_to_move_experiment_path(object),
+        clone: clone_experiment_path(object),
+        move: move_experiment_path(object)
+      }
     end
 
     def workflow_img
