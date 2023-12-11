@@ -36,7 +36,7 @@ class BaseNotification < Noticed::Base
 
   def notification_subgroup
     NotificationExtends::NOTIFICATIONS_GROUPS.values.reduce({}, :merge).find do |_sg, n|
-      n.include?(subtype&.to_sym)
-    end&.[](0)
+      n.include?(subtype.to_sym)
+    end[0]
   end
 end
