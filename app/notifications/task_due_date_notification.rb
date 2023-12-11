@@ -1,13 +1,6 @@
 # frozen_string_literal: true
 
 class TaskDueDateNotification < BaseNotification
-  def message
-    I18n.t(
-      'notifications.content.my_module_due_date_reminder.message_html',
-      my_module_name: subject.name
-    )
-  end
-
   def self.subtype
     :my_module_due_date_reminder
   end
