@@ -18,25 +18,24 @@
 
 <script>
 
-import SelectDropdown from "../../shared/select_dropdown.vue";
-import axios from '../../../packs/custom_axios.js';
-import modal_mixin from "../../shared/modal_mixin";
+import SelectDropdown from '../select_dropdown.vue';
+import modalMixin from '../modal_mixin';
 import editView from './edit.vue';
 import newView from './new.vue';
 
 export default {
-  name: "AccessModal",
+  name: 'AccessModal',
   props: {
     params: {
       type: Object,
-      required: true
+      required: true,
     },
   },
-  mixins: [modal_mixin],
+  mixins: [modalMixin],
   components: {
     SelectDropdown,
     editView,
-    newView
+    newView,
   },
   data() {
     return {
@@ -63,6 +62,6 @@ export default {
       this.visible = status;
       this.default_role = role;
     },
-  }
-}
+  },
+};
 </script>

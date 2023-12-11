@@ -8,7 +8,8 @@ module Lists
     include ActionView::Helpers::TextHelper
 
     attributes :name, :code, :created_at, :updated_at, :workflow_img, :description, :completed_tasks,
-               :total_tasks, :archived_on, :urls, :sa_description
+               :total_tasks, :archived_on, :urls, :sa_description, :default_public_user_role_id, :team,
+               :top_level_assignable, :hidden
 
     def created_at
       I18n.l(object.created_at, format: :full_date)
@@ -20,6 +21,22 @@ module Lists
                        simple_format: false,
                        tags: %w(img),
                        team: object.project.team)
+    end
+
+    def default_public_user_role_id
+      object.project.default_public_user_role_id
+    end
+
+    def hidden
+      object.project.hidden?
+    end
+
+    def top_level_assignable
+      false
+    end
+
+    def team
+      object.project.team.name
     end
 
     def updated_at
@@ -43,15 +60,21 @@ module Lists
     end
 
     def urls
-      {
+      urls_list = {
         show: table_experiment_path(object),
         actions: actions_toolbar_experiments_path(items: [{ id: object.id }].to_json),
         projects_to_clone: projects_to_clone_experiment_path(object),
         projects_to_move: projects_to_move_experiment_path(object),
         clone: clone_experiment_path(object),
         move: move_experiment_path(object),
-        update: experiment_path(object)
+        update: experiment_path(object),
+        show_access: access_permissions_experiment_path(object)
       }
+
+      if can_manage_project_users?(object.project)
+        urls_list[:update_access] = access_permissions_experiment_path(object)
+      end
+      urls_list
     end
 
     def workflow_img

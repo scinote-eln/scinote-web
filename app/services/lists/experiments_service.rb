@@ -33,12 +33,37 @@ module Lists
     end
 
     def filter_records(records)
-      return records unless @params[:search]
+      if @filters[:query].present?
+        records = records.where_attributes_like(
+          ['experiments.name', 'experiments.description', "('EX' || experiments.id)"],
+          @filters[:query]
+        )
+      end
 
-      records.where_attributes_like(
-        ['experiments.name', 'experiments.description', "('EX' || experiments.id)"],
-        @params[:search]
-      )
+      if @filters[:created_at_from].present?
+        records = records.where('experiments.created_at > ?', @filters[:created_at_from])
+      end
+      if @filters[:created_at_to].present?
+        records = records.where('experiments.created_at < ?',
+                                @filters[:created_at_to])
+      end
+      if @filters[:updated_on_from].present?
+        records = records.where('experiments.updated_at > ?', @filters[:updated_on_from])
+      end
+      if @filters[:updated_on_to].present?
+        records = records.where('experiments.updated_at < ?',
+                                @filters[:updated_on_to])
+      end
+
+      if @filters[:archived_on_from].present?
+        records = records.where('COALESCE(experiments.archived_on, projects.archived_on) > ?',
+                                @filters[:archived_on_from])
+      end
+      if @filters[:archived_on_to].present?
+        records = records.where('COALESCE(experiments.archived_on, projects.archived_on) < ?',
+                                @filters[:archived_on_to])
+      end
+      records
     end
 
     def sortable_columns

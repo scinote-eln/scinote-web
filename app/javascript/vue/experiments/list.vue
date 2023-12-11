@@ -19,8 +19,12 @@
     @duplicate="duplicate"
     @move="move"
     @edit="edit"
+    @create="create"
+    @access="access"
   >
-    <template> </template>
+    <template #card="data">
+      <ExperimentCard :params="data.params" :dtComponent="data.dtComponent" ></ExperimentCard>
+    </template>
   </DataTable>
 
   <ConfirmationModal
@@ -48,6 +52,13 @@
     :experiment="editModalObject"
     @close="editModalObject = null"
     @update="updateTable"/>
+  <NewModal
+    v-if="newModalOpen"
+    :createUrl="createUrl"
+    @close="newModalOpen = false"
+    @create="updateTable"/>
+  <AccessModal v-if="accessModalParams" :params="accessModalParams"
+              @close="accessModalParams = null" @refresh="this.reloadingTable = true" />
 </template>
 
 <script>
@@ -63,6 +74,9 @@ import DescriptionModal from './modals/description.vue';
 import DuplicateModal from './modals/duplicate.vue';
 import MoveModal from './modals/move.vue';
 import EditModal from './modals/edit.vue';
+import NewModal from './modals/new.vue';
+import AccessModal from '../shared/access_modal/modal.vue';
+import ExperimentCard from './card.vue';
 
 export default {
   name: 'ExperimentsList',
@@ -73,6 +87,9 @@ export default {
     DuplicateModal,
     MoveModal,
     EditModal,
+    NewModal,
+    AccessModal,
+    ExperimentCard,
   },
   props: {
     dataSource: { type: String, required: true },
@@ -80,9 +97,13 @@ export default {
     activePageUrl: { type: String },
     archivedPageUrl: { type: String },
     currentViewMode: { type: String, required: true },
+    createUrl: { type: String, required: true },
+    userRolesUrl: { type: String, required: true },
   },
   data() {
     return {
+      accessModalParams: null,
+      newModalOpen: false,
       editModalObject: null,
       moveModalObject: null,
       duplicateModalObject: null,
@@ -174,13 +195,27 @@ export default {
           type: 'DateRange',
           label: this.i18n.t('filters_modal.created_on.label'),
         },
+        {
+          key: 'created_at',
+          type: 'DateRange',
+          label: this.i18n.t('filters_modal.updated_on.label'),
+        },
       ];
+
+      if (this.currentViewMode === 'archived') {
+        filters.push({
+          key: 'archived_on',
+          type: 'DateRange',
+          label: this.i18n.t('filters_modal.archived_on.label'),
+        });
+      }
 
       return filters;
     },
   },
   methods: {
     updateTable() {
+      this.newModalOpen = false;
       this.editModalObject = null;
       this.moveModalObject = null;
       this.duplicateModalObject = null;
@@ -217,6 +252,15 @@ export default {
     },
     edit(_e, experiment) {
       [this.editModalObject] = experiment;
+    },
+    create() {
+      this.newModalOpen = true;
+    },
+    access(event, rows) {
+      this.accessModalParams = {
+        object: rows[0],
+        roles_path: this.userRolesUrl,
+      };
     },
   },
 };
