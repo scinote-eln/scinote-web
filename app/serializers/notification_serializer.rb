@@ -68,7 +68,7 @@ class NotificationSerializer < ActiveModel::Serializer
       url = label_template_path(subject)
     when Team
       parent = nil
-      url = projects_path
+      url = projects_path(team: subject.id)
     end
 
     breadcrumbs << { name: subject.name, url: url } if subject.name.present?
