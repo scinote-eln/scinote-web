@@ -14,7 +14,11 @@ class LowStockNotification < BaseNotification
   end
 
   def title
-    I18n.t('notifications.content.item_low_stock_reminder.title_html')
+    I18n.t(
+      'notifications.content.item_low_stock_reminder.message_html',
+      repository_row_name: subject.name,
+      repository: repository.name
+    )
   end
 
   def subject
