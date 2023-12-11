@@ -24,6 +24,14 @@ class BaseNotification < Noticed::Base
 
   def subject; end
 
+  def message
+    params[:message]
+  end
+
+  def title
+    params[:title]
+  end
+
   private
 
   def database_notification?
