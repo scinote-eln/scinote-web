@@ -413,10 +413,22 @@ export default {
     document.removeEventListener('mousedown', this.handleOutsideClick);
   },
   methods: {
-    handleOpenAddRelationshipsModal(event, parentOrChild) {
+    handleOpenAddRelationshipsModal(event, relation) {
       event.stopPropagation();
       event.preventDefault();
-      window.repositoryItemRelationshipsModal.show(parentOrChild);
+      const addRelationCallback = (data, connectionRelation) => {
+        if (connectionRelation === 'parent') {
+          this.parentsCount = data.parents.length;
+          this.parents = data.parents;
+        }
+        if (connectionRelation === 'child') {
+          this.childrenCount = data.children.length;
+          this.children = data.children;
+        }
+      };
+      window.repositoryItemRelationshipsModal.show(
+        { relation, addRelationCallback, optionUrls: { ...this.actions.row_connections } },
+      );
     },
     handleOutsideClick(event) {
       if (!this.isShowing) return;
