@@ -13,7 +13,10 @@ class TaskDueDateNotification < BaseNotification
   end
 
   def title
-    I18n.t('notifications.content.my_module_due_date_reminder.title_html')
+    I18n.t(
+      'notifications.content.my_module_due_date_reminder.message_html',
+      my_module_name: subject.name
+    )
   end
 
   def subject
