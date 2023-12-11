@@ -1,8 +1,8 @@
 <div class="modal fade" id="modal-info-repository-row" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
-    <div class="modal-content" data-e2e="e2e-MD-invInventoryItem">
+    <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close" data-e2e="e2e-BT-invInventoryItem-cancel"></i></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
         <h4 class="modal-title">
           <%= t('repository_row.modal_info.head_title', repository_row: @repository_row.name) %>
           <%= @repository_row.archived? ? I18n.t('atwho.res.archived') : '' %>
@@ -138,8 +138,8 @@
             </button>
           </span>
         <% else %>
-          <button data-e2e="e2e-BT-invInventoryItem-close" type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.close')%></button>
-          <button data-e2e="e2e-BT-invInventoryItem-print" type="button" class="btn btn-primary print-label-button"  data-rows="[<%= @repository_row.id %>]"><%= t('repository_row.modal_print_label.print_label') %></button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.close')%></button>
+          <button type="button" class="btn btn-primary print-label-button"  data-rows="[<%= @repository_row.id %>]"><%= t('repository_row.modal_print_label.print_label') %></button>
         <% end %>
       </div>
     </div>

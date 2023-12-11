@@ -3,13 +3,13 @@
     <div class="modal-dialog" role="document" data-e2e="e2e-MD-invNewInventory">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-e2e="e2e-BT-invNewInventory-close"><i class="sn-icon sn-icon-close"></i></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-e2e="e2e-BT-invNewInventoryMD-close"><i class="sn-icon sn-icon-close"></i></button>
           <h3 class="modal-title" id="create-repo-modal-label">
             <%= t("repositories.index.modal_create.title") %>
           </h3>
         </div>
         <div class="modal-body">
-          <div class="form-group sci-input-container" data-e2e="e2e-IF-invNewInventory-input">
+          <div class="form-group sci-input-container">
             <label><%= t("repositories.index.modal_create.name_label") %> </label>
             <%= f.text_field :name,
                              autofocus: true,
@@ -18,8 +18,8 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" data-e2e="e2e-BT-invNewInventory-cancel" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
-          <%= f.submit t("repositories.index.modal_create.submit"), class: "btn btn-success", 'data-e2e':"e2e-BT-invNewInventory-create" %>
+          <button type="button" data-e2e="e2e-BT-invNewInventoryMD-cancel" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
+          <%= f.submit t("repositories.index.modal_create.submit"), class: "btn btn-success", 'data-e2e':"e2e-BT-invNewInventoryMD-create" %>
         </div>
       </div>
     </div>
