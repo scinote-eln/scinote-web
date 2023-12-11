@@ -15,7 +15,9 @@ class RepositoryItemDateNotification < BaseNotification
     :item_date_reminder
   end
 
-  def title; end
+  def title
+    I18n.t('notifications.content.item_date_reminder.title_html')
+  end
 
   def subject
     RepositoryRow.find(params[:repository_row_id])
@@ -36,6 +38,8 @@ class RepositoryItemDateNotification < BaseNotification
   private
 
   def human_readable_unit(seconds, value)
+    return unless seconds
+
     units_hash = {
       '2419200' => 'month',
       '604800' => 'week',
