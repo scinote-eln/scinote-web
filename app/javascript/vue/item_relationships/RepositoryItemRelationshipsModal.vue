@@ -2,7 +2,7 @@
   <div ref="repositoryItemRelationshipsModal" @keydown.esc="close" id="repositoryItemRelationshipsModal" tabindex="-1" role="dialog"
     class="modal ">
     <div class="modal-dialog modal-sm" role="document">
-      <div class="modal-content w-[400px] h-[498px] m-auto">
+      <div class="modal-content w-[400px] m-auto">
 
         <!-- header -->
         <div class="modal-header h-[76px] flex !flex-col gap-[6px]">
@@ -24,7 +24,7 @@
 
         </div>
 
-        <div class="modal-body flex flex-col gap-6">
+        <div class="modal-body flex flex-col gap-6" :class="{ '!pb-3': warning }">
           <!-- inventory -->
           <div class="flex flex-col gap-[7px]">
             <div class="h-5 whitespace-nowrap overflow-auto">
@@ -88,6 +88,18 @@
           </div>
         </div>
 
+        <!-- Warning -->
+        <template v-if="warning">
+          <hr class="bg-sn-light-grey mb-6 mt-3" />
+          <div class="w-full mb-6">
+            <div class="flex align-center gap-2.5">
+              <img class="w-6 h-6" :src="notificationIconPath" alt="warning" />
+              <span class="my-auto">{{ warning.message }}</span>
+            </div>
+            <div v-html="warning.support_html" class="pl-2.5"></div>
+          </div>
+        </template>
+
         <!-- footer -->
         <div class="modal-footer">
           <div class="flex justify-end gap-4">
@@ -137,6 +149,8 @@ export default {
       nextInventoriesPage: 1,
       nextItemsPage: 1,
       itemParams: [],
+      warning: null,
+      notificationIconPath: null,
     };
   },
   computed: {
@@ -178,12 +192,21 @@ export default {
       this.itemOptions = currentOptions.concat(result.data.map(({ id, name }) => ({ id, label: name })));
     },
     show(params = {}) {
-      const { relation, optionUrls, addRelationCallback } = params;
+      const {
+        relation,
+        optionUrls,
+        addRelationCallback,
+        notificationIconPath,
+        warning,
+      } = params;
       $(this.$refs.repositoryItemRelationshipsModal).modal('show');
       this.inventoriesUrl = optionUrls.inventories_url;
       this.inventoryItemsUrl = optionUrls.inventory_items_url;
       this.createConnectionUrl = optionUrls.create_url;
       this.addRelationCallback = addRelationCallback;
+      this.notificationIconPath = notificationIconPath;
+      this.warning = warning;
+
       if (['parent', 'child'].includes(relation)) {
         this.selectedRelationshipValue = relation;
       }

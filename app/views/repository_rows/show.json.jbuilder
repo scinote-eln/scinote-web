@@ -5,6 +5,7 @@ json.repository do
   json.id @repository.id
   json.name @repository.name
 end
+json.warning @warning
 
 json.update_path update_cell_repository_repository_row_path(@repository, @repository_row)
 
@@ -121,4 +122,5 @@ end
 json.icons do
   json.delimiter_path asset_path 'icon_small/navigate_next.svg'
   json.unlink_path asset_path 'icon_small/unlink.svg'
+  json.notification_path asset_path 'icon_small/info.svg'
 end
