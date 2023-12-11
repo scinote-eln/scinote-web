@@ -374,7 +374,7 @@ export default {
       myModuleId: null,
       inRepository: false,
       icons: null,
-      warning: null,
+      notification: null,
       relationshipDetailsState: {},
       initialSectionId: null,
     };
@@ -433,7 +433,7 @@ export default {
           addRelationCallback,
           optionUrls: { ...this.actions.row_connections },
           notificationIconPath: this.icons.notification_path,
-          warning: this.warning,
+          notification: this.notification,
         },
       );
     },
@@ -504,7 +504,7 @@ export default {
           this.actions = result.actions;
           this.dataLoading = false;
           this.icons = result.icons;
-          this.warning = result.warning;
+          this.notification = result.notification;
           this.$nextTick(() => {
             this.generateBarCode(this.defaultColumns.code);
           });

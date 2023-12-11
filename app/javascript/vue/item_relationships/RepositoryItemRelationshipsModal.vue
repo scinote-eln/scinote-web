@@ -24,7 +24,7 @@
 
         </div>
 
-        <div class="modal-body flex flex-col gap-6" :class="{ '!pb-3': warning }">
+        <div class="modal-body flex flex-col gap-6" :class="{ '!pb-3': notification }">
           <!-- inventory -->
           <div class="flex flex-col gap-[7px]">
             <div class="h-5 whitespace-nowrap overflow-auto">
@@ -88,15 +88,15 @@
           </div>
         </div>
 
-        <!-- Warning -->
-        <template v-if="warning">
+        <!-- Notification -->
+        <template v-if="notification">
           <hr class="bg-sn-light-grey mb-6 mt-3" />
           <div class="w-full mb-6">
             <div class="flex align-center gap-2.5">
               <img class="w-6 h-6" :src="notificationIconPath" alt="warning" />
-              <span class="my-auto">{{ warning.message }}</span>
+              <span class="my-auto">{{ notification.message }}</span>
             </div>
-            <div v-html="warning.support_html" class="pl-2.5"></div>
+            <div v-html="notification.support_html" class="pl-2.5"></div>
           </div>
         </template>
 
@@ -149,7 +149,7 @@ export default {
       nextInventoriesPage: 1,
       nextItemsPage: 1,
       itemParams: [],
-      warning: null,
+      notification: null,
       notificationIconPath: null,
     };
   },
@@ -197,7 +197,7 @@ export default {
         optionUrls,
         addRelationCallback,
         notificationIconPath,
-        warning,
+        notification,
       } = params;
       $(this.$refs.repositoryItemRelationshipsModal).modal('show');
       this.inventoriesUrl = optionUrls.inventories_url;
@@ -205,7 +205,7 @@ export default {
       this.createConnectionUrl = optionUrls.create_url;
       this.addRelationCallback = addRelationCallback;
       this.notificationIconPath = notificationIconPath;
-      this.warning = warning;
+      this.notification = notification;
 
       if (['parent', 'child'].includes(relation)) {
         this.selectedRelationshipValue = relation;

@@ -5,7 +5,7 @@ json.repository do
   json.id @repository.id
   json.name @repository.name
 end
-json.warning @warning
+json.notification @notification
 
 json.update_path update_cell_repository_repository_row_path(@repository, @repository_row)
 
