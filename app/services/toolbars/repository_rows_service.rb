@@ -130,7 +130,7 @@ module Toolbars
 
     def export_actions
       {
-        name: 'export',
+        name: 'export_group',
         type: :group,
         group_label: I18n.t('repositories.exports.export'),
         actions: [export_items_action, export_consumption_action].compact
