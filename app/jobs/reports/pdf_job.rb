@@ -168,6 +168,10 @@ module Reports
           message: I18n.t('projects.reports.index.generation.completed_notification_message',
                           report_link: "<a href='#{report_path}'>#{escape_input(@report.name)}</a>",
                           team_name: escape_input(@report.team.name)),
+          subject_id: @report.id,
+          subject_class: 'Report',
+          subject_name: @report.name,
+          report_type: 'pdf',
           user: @user
         }
       )
