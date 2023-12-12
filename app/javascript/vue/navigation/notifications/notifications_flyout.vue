@@ -83,6 +83,7 @@ export default {
           this.notifications = this.notifications.concat(response.data.data);
           this.nextPageUrl = response.data.links.next;
           this.loadingPage = false;
+          this.$emit('update:unseenNotificationsCount');
         })
         .catch(error => {
           this.loadingPage = false;
