@@ -65,6 +65,13 @@ class NotificationSerializer < ActiveModel::Serializer
     when RepositoryRow
       parent = subject.team
       url = repository_path(subject.repository)
+    when Report
+      parent = subject.team
+      url = reports_path(
+        preview_report_id: subject.id,
+        preview_type: object.params[:report_type],
+        team_id: subject.team.id
+      )
     when LabelTemplate
       parent = subject.team
       url = label_template_path(subject)
