@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap2">
+  <div class="flex flex-col gap-2">
     <DateTimeComponent
       mode="date"
       :colVal="colVal"

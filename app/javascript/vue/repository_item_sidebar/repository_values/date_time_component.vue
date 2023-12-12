@@ -3,11 +3,11 @@
     <div class="text-sm font-bold truncate" :title="colName">
       {{ colName }}
     </div>
-    <div v-if="colVal.reminder" class="bg-sn-alert-passion w-1.5 h-1.5 rounded" :title="colVal.reminder_text"></div>
+    <div v-if="colVal.reminder" class="bg-sn-alert-passion w-1.5 h-1.5 min-w-[0.375rem] min-h-[0.375rem] rounded hover:cursor-pointer" :title="colVal.reminder_text"></div>
   </div>
   <div class="flex flex-col gap-2">
     <template v-if="!canEdit">
-      <span v-if="range">
+      <span v-if="range" class="text-sn-grey">
         <template v-if="colVal.start_time && colVal.end_time">
           {{ colVal.start_time.formatted }} - {{ colVal.end_time.formatted }}
         </template>
@@ -15,7 +15,7 @@
           {{ viewPlaceholder }}
         </template>
       </span>
-      <span v-else >
+      <span v-else class="text-sn-grey">
         <template v-if="colVal.formatted">
           {{ colVal.formatted }}
         </template>

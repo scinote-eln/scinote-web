@@ -1,7 +1,10 @@
 <template>
   <div id="repository-stock-value-wrapper" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
-    <div class="font-inter text-sm font-semibold leading-5 relative h-[20px]">
-      <span class="truncate w-full inline-block pr-[50px]" :title="colName">{{ colName }}</span>
+    <div class="font-inter text-sm font-semibold leading-5 relative h-[20px] flex flex-row">
+      <div class="flex flex-row gap-1">
+        <span class="truncate w-fit inline-block" :title="colName">{{ colName }}</span>
+        <div v-if="values?.reminder" class="bg-sn-alert-passion w-1.5 h-1.5 min-w-[0.375rem] min-h-[0.375rem] rounded hover:cursor-pointer" :title="values.reminder_text"></div>
+      </div>
       <a style="text-decoration: none;" class="absolute right-0 btn-text-link font-normal export-consumption-button"
         v-if="permissions?.can_export_repository_stock === true && values?.stock_formatted" :data-rows="JSON.stringify([repositoryRowId])"
         :data-object-id="repositoryId">
@@ -22,9 +25,6 @@
       <div v-else class="font-inter text-sm font-normal leading-5" :class="{ 'text-sn-dark-grey': !canEdit, 'text-sn-grey': canEdit }">
         {{ i18n.t(`repositories.item_card.repository_stock_value.${canEdit ? 'placeholder' : 'no_stock'}`) }}
       </div>
-      <span class="absolute right-2 reminder" :class="{ 'top-1.5': canEdit, 'top-0': !canEdit, hidden: !values?.reminder }">
-        <Reminder :value="values" />
-      </span>
     </a>
   </div>
 </template>

@@ -86,8 +86,8 @@
                 </div>
               </div>
             </template>
-            <div class="repository-stock-reminder-selector">
-              <div class="sci-checkbox-container">
+            <div class="repository-stock-reminder-selector flex">
+              <div class="sci-checkbox-container my-auto">
                 <input type="checkbox" name="reminder-enabled" tabindex="4" class="sci-checkbox" id="reminder-selector-checkbox" :checked="reminderEnabled" @change="reminderEnabled = $event.target.checked"/>
                 <span class="sci-checkbox-label"></span>
               </div>
@@ -233,7 +233,7 @@
             this.lowStockTreshold = result.stock_value.low_stock_treshold
             this.operation = 1;
             this.stockUrl = result.stock_url;
-            this.operations = [[1, 'set'], [2, 'add'], [3, 'remove']];
+            this.operations = [[1, `${I18n.t('repository_stock_values.manage_modal.set')}`], [2, `${I18n.t('repository_stock_values.manage_modal.add')}`], [3, `${I18n.t('repository_stock_values.manage_modal.remove')}`]];
             this.errors = {};
           }
         });
