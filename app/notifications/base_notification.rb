@@ -35,7 +35,12 @@ class BaseNotification < Noticed::Base
   private
 
   def database_notification?
-    recipient.notifications_settings.dig(notification_subgroup.to_s, 'in_app')
+    # always save all notifications,
+    # but flag if they should display in app or not
+
+    params[:hide_in_app] = recipient.notifications_settings.dig(notification_subgroup.to_s, 'in_app') != true
+
+    true
   end
 
   def email_notification?
