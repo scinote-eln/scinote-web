@@ -10,7 +10,7 @@
       </a>
     </div>
     <div>
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-2">
         <MenuDropdown
           v-if="archivedPageUrl"
           :listItems="this.viewRendersMenu"
@@ -31,7 +31,7 @@
         ></MenuDropdown>
       </div>
     </div>
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-2">
       <a v-for="action in toolbarActions.right" :key="action.label"
           :class="action.buttonStyle"
           :href="action.path"
@@ -39,6 +39,13 @@
         <i :class="action.icon"></i>
         {{ action.label }}
       </a>
+      <button
+        v-if="currentViewRender === 'table'"
+        @click="showColumnsModal = true"
+        class="btn btn-light icon-btn"
+      >
+        <i class="sn-icon sn-icon-reports"></i>
+      </button>
       <div v-if="filters.length == 0"
            class="sci-input-container-v2"
            :class="{'w-48': showSearch, 'w-11': !showSearch}">
@@ -56,55 +63,73 @@
       </div>
       <FilterDropdown v-else :filters="filters" @applyFilters="applyFilters" />
     </div>
+    <teleport to="body">
+      <ColumnsModal
+        :tableState="tableState"
+        :columnDefs="columnDefs"
+        @hideColumn="(column) => $emit('hideColumn', column)"
+        @showColumn="(column) => $emit('showColumn', column)"
+        v-if="showColumnsModal"
+        @close="showColumnsModal = false" />
+    </teleport>
   </div>
 </template>
 
 <script>
 import MenuDropdown from '../menu_dropdown.vue';
 import FilterDropdown from '../filters/filter_dropdown.vue';
+import ColumnsModal from './modals/columns.vue';
 
 export default {
   name: 'Toolbar',
   props: {
     toolbarActions: {
       type: Object,
-      required: true,
+      required: true
     },
     searchValue: {
-      type: String,
+      type: String
     },
     activePageUrl: {
-      type: String,
+      type: String
     },
     archivedPageUrl: {
-      type: String,
+      type: String
     },
     currentViewMode: {
       type: String,
-      default: 'active',
+      default: 'active'
     },
     filters: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     viewRenders: {
       type: Array,
-      required: true,
+      required: true
     },
     currentViewRender: {
       type: String,
-      required: true,
+      required: true
     },
+    columnDefs: {
+      type: Array,
+      required: true
+    },
+    tableState: {
+      type: Object
+    }
   },
   components: {
     MenuDropdown,
     FilterDropdown,
+    ColumnsModal
   },
   computed: {
     viewModesMenu() {
       return [
         { text: this.i18n.t('projects.index.active'), url: this.activePageUrl },
-        { text: this.i18n.t('projects.index.archived'), url: this.archivedPageUrl },
+        { text: this.i18n.t('projects.index.archived'), url: this.archivedPageUrl }
       ];
     },
     viewRendersMenu() {
@@ -115,15 +140,18 @@ export default {
             return { text: this.i18n.t('toolbar.cards_view'), emit: 'setCardsView' };
           case 'table':
             return { text: this.i18n.t('toolbar.table_view'), emit: 'setTableView' };
+          case 'custom':
+            return { text: view.name, url: view.url };
           default:
             return view;
         }
       });
-    },
+    }
   },
   data() {
     return {
       showSearch: false,
+      showColumnsModal: false
     };
   },
   watch: {
@@ -131,7 +159,7 @@ export default {
       if (this.searchValue.length > 0) {
         this.openSearch();
       }
-    },
+    }
   },
   methods: {
     openSearch() {
@@ -156,7 +184,7 @@ export default {
     },
     applyFilters(filters) {
       this.$emit('applyFilters', filters);
-    },
-  },
+    }
+  }
 };
 </script>

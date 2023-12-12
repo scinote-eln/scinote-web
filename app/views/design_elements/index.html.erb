@@ -168,6 +168,27 @@
         :size="size"
       ></select-dropdown>
     </div>
+    <div class="w-64">
+      <label>Multiselect with tags view</label>
+      <select-dropdown
+        :options="simpleOptions"
+        :tags-view="true"
+        :multiple="true"
+        :size="size"
+        :clearable="true"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Multiselect with tags view searchable</label>
+      <select-dropdown
+        :options="simpleOptions"
+        :tags-view="true"
+        :multiple="true"
+        :size="size"
+        :clearable="true"
+        :searchable="true"
+      ></select-dropdown>
+    </div>
   </div>
 </div>
 

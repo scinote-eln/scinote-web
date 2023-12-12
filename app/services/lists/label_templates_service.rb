@@ -18,13 +18,13 @@ module Lists
                        "('#{Extends::LABEL_TEMPLATE_FORMAT_MAP.to_json}'::jsonb -> label_templates.type)::text " \
                        "AS label_format"
                      )
-      LabelTemplate.from(res, :label_templates)
+      @records = LabelTemplate.from(res, :label_templates)
     end
 
-    def filter_records(records)
-      return records unless @params[:search]
+    def filter_records
+      return unless @params[:search]
 
-      records.where_attributes_like(
+      @records = @records.where_attributes_like(
         ['label_templates.name', 'label_templates.label_format', 'label_templates.description',
          'label_templates.modified_by', 'label_templates.created_by_user'],
         @params[:search]

@@ -42,6 +42,10 @@ class ExperimentsController < ApplicationController
     end
   end
 
+  def assigned_users
+    render json: User.where(id: @experiment.user_assignments.select(:user_id)), each_serializer: UserSerializer
+  end
+
   def new
     @experiment = Experiment.new
     render json: {
@@ -261,6 +265,12 @@ class ExperimentsController < ApplicationController
   def projects_to_move
     projects = @experiment.movable_projects(current_user).map { |p| [p.id, p.name] }
     render json: { data: projects }, status: :ok
+  end
+
+  def experiments_to_move
+    experiments = @experiment.project.experiments.active.where.not(id: @experiment)
+                             .managable_by_user(current_user).order(name: :asc).map { |e| [e.id, e.name] }
+    render json: { data: experiments }, status: :ok
   end
 
   # POST: clone_experiment(id)
@@ -664,10 +674,10 @@ class ExperimentsController < ApplicationController
       when 'canvas'
         module_archive_experiment_path(@experiment)
       else
-        table_experiment_path(@experiment, view_mode: :archived)
+        my_modules_path(experiment_id: @experiment, view_mode: :archived)
       end
     else
-      view_type == 'canvas' ? canvas_experiment_path(@experiment) : table_experiment_path(@experiment)
+      view_type == 'canvas' ? canvas_experiment_path(@experiment) : my_modules_path(experiment_id: @experiment)
     end
   end
 

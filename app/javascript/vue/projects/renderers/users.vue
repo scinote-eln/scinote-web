@@ -33,12 +33,12 @@ export default {
     },
     hiddenUsersTitle() {
       return this.hiddenUsers.map((user) => user.full_name).join('\u000d');
-    },
+    }
   },
   methods: {
     openAccessModal() {
       this.params.dtComponent.$emit('access', {}, [this.params.data]);
-    },
-  },
+    }
+  }
 };
 </script>

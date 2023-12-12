@@ -1,5 +1,7 @@
 <template>
-  <div v-if="!params.folder" class="p-4 rounded sn-shadow-flyout flex flex-col">
+  <div v-if="!params.folder"
+       :class="{'bg-sn-light-grey': dtComponent.currentViewMode === 'archived'}"
+       class="p-4 rounded sn-shadow-flyout flex flex-col">
     <div class="flex items-center gap-2 mb-2">
       <div class="sci-checkbox-container">
         <input
@@ -21,7 +23,7 @@
       <span class="text-sn-grey">{{ i18n.t('projects.index.card.start_date') }}</span>
       <span class="font-bold">{{ params.created_at }}</span>
 
-      <template v-if="params.archived_on">
+      <template v-if="dtComponent.viewMode == 'archived'">
         <span class="text-sn-grey">{{ i18n.t('projects.index.card.archived_date') }}</span>
         <span class="font-bold">{{ params.archived_on }}</span>
       </template>

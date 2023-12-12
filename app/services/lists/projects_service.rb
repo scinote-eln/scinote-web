@@ -6,6 +6,7 @@ module Lists
       @current_folder = folder
       @params = params
       @filters = params[:filters] || {}
+      @records = []
     end
 
     def call
@@ -16,16 +17,17 @@ module Lists
       folders = filter_project_folder_records(folders)
 
       if @filters[:folder_search].present? && @filters[:folder_search] == 'true'
-        records = projects
+        @records = projects
       else
         projects = projects.where(project_folder: @current_folder)
         folders = folders.where(parent_folder: @current_folder)
 
-        records = projects + folders
+        @records = projects + folders
       end
 
-      records = sort_records(records)
-      paginate_records(records)
+      sort_records
+      paginate_records
+      @records
     end
 
     private
@@ -86,33 +88,33 @@ module Lists
       records
     end
 
-    def sort_records(records)
-      return records unless @params[:order]
+    def sort_records
+      return unless @params[:order]
 
       sort = "#{order_params[:column]}_#{sort_direction(order_params)}"
 
       case sort
       when 'created_at_ASC'
-        records.sort_by(&:created_at).reverse!
+        @records = @records.sort_by(&:created_at).reverse!
       when 'created_at_DESC'
-        records.sort_by(&:created_at)
+        @records = @records.sort_by(&:created_at)
       when 'name_ASC'
-        records.sort_by { |c| c.name.downcase }
+        @records = @records.sort_by { |c| c.name.downcase }
       when 'name_DESC'
-        records.sort_by { |c| c.name.downcase }.reverse!
+        @records = @records.sort_by { |c| c.name.downcase }.reverse!
       when 'code_ASC'
-        records.sort_by(&:id)
+        @records = @records.sort_by(&:id)
       when 'code_DESC'
-        records.sort_by(&:id).reverse!
+        @records = @records.sort_by(&:id).reverse!
       when 'archived_on_ASC'
-        records.sort_by(&:archived_on)
+        @records = @records.sort_by(&:archived_on)
       when 'archived_on_DESC'
-        records.sort_by(&:archived_on).reverse!
+        @records = @records.sort_by(&:archived_on).reverse!
       end
     end
 
-    def paginate_records(records)
-      Kaminari.paginate_array(records).page(@params[:page]).per(@params[:per_page])
+    def paginate_records
+      @records = Kaminari.paginate_array(@records).page(@params[:page]).per(@params[:per_page])
     end
   end
 end

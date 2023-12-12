@@ -12,8 +12,8 @@ export default {
   name: 'NameRenderer',
   props: {
     params: {
-      required: true,
-    },
-  },
+      required: true
+    }
+  }
 };
 </script>

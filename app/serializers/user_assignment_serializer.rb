@@ -46,7 +46,7 @@ class UserAssignmentSerializer < ActiveModel::Serializer
     when Project
       parent.user_assignments.find_by(user: object.user)
     when Experiment
-      parent_assigned(parent.permission_parent)
+      parent_assignment(parent.permission_parent)
     end
   end
 

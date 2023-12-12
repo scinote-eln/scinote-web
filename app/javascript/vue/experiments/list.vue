@@ -6,7 +6,6 @@
     :reloadingTable="reloadingTable"
     :toolbarActions="toolbarActions"
     :actionsUrl="actionsUrl"
-    :withRowMenu="true"
     :activePageUrl="activePageUrl"
     :archivedPageUrl="archivedPageUrl"
     :currentViewMode="currentViewMode"
@@ -89,7 +88,7 @@ export default {
     EditModal,
     NewModal,
     AccessModal,
-    ExperimentCard,
+    ExperimentCard
   },
   props: {
     dataSource: { type: String, required: true },
@@ -98,7 +97,7 @@ export default {
     archivedPageUrl: { type: String },
     currentViewMode: { type: String, required: true },
     createUrl: { type: String, required: true },
-    userRolesUrl: { type: String, required: true },
+    userRolesUrl: { type: String, required: true }
   },
   data() {
     return {
@@ -108,7 +107,7 @@ export default {
       moveModalObject: null,
       duplicateModalObject: null,
       descriptionModalObject: null,
-      reloadingTable: false,
+      reloadingTable: false
     };
   },
   computed: {
@@ -119,30 +118,30 @@ export default {
           flex: 1,
           headerName: this.i18n.t('experiments.card.name'),
           sortable: true,
-          cellRenderer: NameRenderer,
+          cellRenderer: NameRenderer
         },
         {
           field: 'code',
           headerName: this.i18n.t('experiments.id'),
-          sortable: true,
+          sortable: true
         },
         {
           field: 'created_at',
           headerName: this.i18n.t('experiments.card.start_date'),
-          sortable: true,
+          sortable: true
         },
         {
           field: 'updated_at',
           headerName: this.i18n.t('experiments.card.modified_date'),
-          sortable: true,
-        },
+          sortable: false
+        }
       ];
 
       if (this.currentViewMode === 'archived') {
         columns.push({
           field: 'archived_on',
           headerName: this.i18n.t('experiments.card.archived_date'),
-          sortable: true,
+          sortable: true
         });
       }
 
@@ -151,7 +150,7 @@ export default {
         headerName: this.i18n.t('experiments.card.completed_task'),
         cellRenderer: CompletedTasksRenderer,
         sortable: false,
-        minWidth: 120,
+        minWidth: 120
       });
       columns.push({
         field: 'description',
@@ -159,7 +158,7 @@ export default {
         sortable: false,
         cellStyle: { 'white-space': 'normal' },
         cellRenderer: DescriptionRenderer,
-        autoHeight: true,
+        autoHeight: true
       });
 
       return columns;
@@ -170,48 +169,50 @@ export default {
     toolbarActions() {
       const left = [];
 
-      left.push({
-        name: 'create',
-        icon: 'sn-icon sn-icon-new-task',
-        label: this.i18n.t('experiments.toolbar.new_button'),
-        type: 'emit',
-        path: this.createUrl,
-        buttonStyle: 'btn btn-primary',
-      });
+      if (this.createUrl) {
+        left.push({
+          name: 'create',
+          icon: 'sn-icon sn-icon-new-task',
+          label: this.i18n.t('experiments.toolbar.new_button'),
+          type: 'emit',
+          path: this.createUrl,
+          buttonStyle: 'btn btn-primary'
+        });
+      }
 
       return {
         left,
-        right: [],
+        right: []
       };
     },
     filters() {
       const filters = [
         {
           key: 'query',
-          type: 'Text',
+          type: 'Text'
         },
         {
           key: 'created_at',
           type: 'DateRange',
-          label: this.i18n.t('filters_modal.created_on.label'),
+          label: this.i18n.t('filters_modal.created_on.label')
         },
         {
           key: 'created_at',
           type: 'DateRange',
-          label: this.i18n.t('filters_modal.updated_on.label'),
-        },
+          label: this.i18n.t('filters_modal.updated_on.label')
+        }
       ];
 
       if (this.currentViewMode === 'archived') {
         filters.push({
           key: 'archived_on',
           type: 'DateRange',
-          label: this.i18n.t('filters_modal.archived_on.label'),
+          label: this.i18n.t('filters_modal.archived_on.label')
         });
       }
 
       return filters;
-    },
+    }
   },
   methods: {
     updateTable() {
@@ -259,9 +260,9 @@ export default {
     access(event, rows) {
       this.accessModalParams = {
         object: rows[0],
-        roles_path: this.userRolesUrl,
+        roles_path: this.userRolesUrl
       };
-    },
-  },
+    }
+  }
 };
 </script>

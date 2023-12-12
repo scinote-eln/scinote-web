@@ -83,14 +83,14 @@ export default {
   props: {
     params: {
       type: Object,
-      required: true,
+      required: true
     },
     visible: {
-      type: Boolean,
+      type: Boolean
     },
     default_role: {
-      type: Number,
-    },
+      type: Number
+    }
   },
   emits: ['changeMode', 'modified'],
   mounted() {
@@ -98,7 +98,7 @@ export default {
     this.getRoles();
   },
   components: {
-    MenuDropdown,
+    MenuDropdown
   },
   computed: {
     rolesFromatted() {
@@ -108,7 +108,7 @@ export default {
         roles.push({
           emit: 'setRole',
           text: this.i18n.t('access_permissions.reset'),
-          params: 'reset',
+          params: 'reset'
         });
       }
 
@@ -116,7 +116,7 @@ export default {
         {
           emit: 'setRole',
           text: role[1],
-          params: role[0],
+          params: role[0]
         }
       )));
 
@@ -124,7 +124,7 @@ export default {
         roles.push({
           dividerBefore: true,
           emit: 'removeRole',
-          text: this.i18n.t('access_permissions.remove_access'),
+          text: this.i18n.t('access_permissions.remove_access')
         });
       }
 
@@ -139,12 +139,12 @@ export default {
       return this.assignedUsers.filter((user) => (
         user.attributes.assigned === 'automatically'
       ));
-    },
+    }
   },
   data() {
     return {
       assignedUsers: [],
-      roles: [],
+      roles: []
 
     };
   },
@@ -165,8 +165,8 @@ export default {
       axios.put(this.params.object.urls.update_access, {
         user_assignment: {
           user_id: id,
-          user_role_id: roleId,
-        },
+          user_role_id: roleId
+        }
       }).then(() => {
         this.$emit('modified');
         this.getAssignedUsers();
@@ -175,8 +175,8 @@ export default {
     removeRole(id) {
       axios.delete(this.params.object.urls.update_access, {
         data: {
-          user_id: id,
-        },
+          user_id: id
+        }
       }).then((response) => {
         this.$emit('modified');
         HelperModule.flashAlertMsg(response.data.message, 'success');
@@ -186,8 +186,8 @@ export default {
     changeDefaultRole(roleId) {
       axios.put(this.params.object.urls.default_public_user_role_path, {
         project: {
-          default_public_user_role_id: roleId || '',
-        },
+          default_public_user_role_id: roleId || ''
+        }
       }).then((response) => {
         this.$emit('modified');
         if (!roleId) {
@@ -201,7 +201,7 @@ export default {
       });
     },
     removeDefaultRole() {
-    },
-  },
+    }
+  }
 };
 </script>

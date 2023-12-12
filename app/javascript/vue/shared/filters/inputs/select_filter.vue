@@ -3,6 +3,7 @@
     <label class="sci-label">{{ filter.label }}</label>
     <SelectDropdown
       :optionsUrl="filter.optionsUrl"
+      :options="filter.options"
       :selectedValue="value"
       :multiple="true"
       :with-checkboxes="true"

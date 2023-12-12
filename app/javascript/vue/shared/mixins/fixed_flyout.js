@@ -2,6 +2,7 @@ export default {
   data() {
     return {
       overflowContainerScrollTop: 0,
+      overflowContainerScrollLeft: 0
     };
   },
   watch: {
@@ -18,11 +19,17 @@ export default {
       const { field, flyout } = this.$refs;
       if (!field || !flyout) return;
 
-      let fieldRect = field.getBoundingClientRect();
+      const fieldRect = field.getBoundingClientRect();
 
       if (this.overflowContainerScrollTop !== fieldRect.top) {
         this.setPosition();
       }
+
+      if (this.overflowContainerScrollLeft !== fieldRect.left) {
+        this.setPosition();
+      }
+
+      this.overflowContainerScrollLeft = fieldRect.left;
       this.overflowContainerScrollTop = fieldRect.top;
 
       setTimeout(() => {
@@ -66,6 +73,6 @@ export default {
         flyout.style.bottom = 'unset';
         flyout.style.boxShadow = '';
       }
-    },
-  },
+    }
+  }
 };

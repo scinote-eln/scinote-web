@@ -80,6 +80,7 @@ module Toolbars
       {
         name: 'access',
         label: I18n.t('general.access'),
+        icon: 'sn-icon sn-icon-project-member-access',
         type: :emit
       }
     end
