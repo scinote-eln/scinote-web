@@ -12,6 +12,8 @@ window.initManageStockValueModalComponent = () => {
     app.component('ManageStockValueModal', ManageStockValueModal);
     app.use(PerfectScrollbar);
     app.config.globalProperties.i18n = window.I18n;
-    mountWithTurbolinks(app, '#manageStockValueModal');
+    mountWithTurbolinks(app, '#manageStockValueModal', () => {
+      window.manageStockModalComponent = null;
+    });
   }
 };
