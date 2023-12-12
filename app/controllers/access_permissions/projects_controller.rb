@@ -69,10 +69,9 @@ module AccessPermissions
               assigned: :manually
             )
 
-            unless current_user.id == user_assignment.user.id
-              log_activity(:assign_user_to_project, { user_target: user_assignment.user.id,
-                                                      role: user_assignment.user_role.name })
-            end
+            log_activity(:assign_user_to_project, { user_target: user_assignment.user.id,
+                                                    role: user_assignment.user_role.name })
+
             created_count += 1
             propagate_job(user_assignment)
           end
@@ -103,10 +102,8 @@ module AccessPermissions
 
       propagate_job(user_assignment, destroy: true)
 
-      unless current_user.id == user_assignment.user.id
-        log_activity(:unassign_user_from_project, { user_target: user_assignment.user.id,
-          role: user_assignment.user_role.name })
-      end
+      log_activity(:unassign_user_from_project, { user_target: user_assignment.user.id,
+                                                  role: user_assignment.user_role.name })
 
       render json: { flash: t('access_permissions.destroy.success', member_name: escape_input(user.full_name)) }
     rescue ActiveRecord::RecordInvalid
