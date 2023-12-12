@@ -32,7 +32,7 @@ module Reports
             subject_class: 'Report',
             subject_name: report.name,
             report_type: 'docx',
-            user: @user
+            user: user
           }
         )
 
