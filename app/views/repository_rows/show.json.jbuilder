@@ -47,6 +47,7 @@ json.default_columns do
 end
 
 json.relationships do
+  json.enabled repository_row_connections_enabled
   json.parents_count @repository_row.parent_connections_count
   json.children_count @repository_row.child_connections_count
   json.parents do

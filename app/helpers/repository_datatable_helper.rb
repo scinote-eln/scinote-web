@@ -28,6 +28,7 @@ module RepositoryDatatableHelper
         relationshipsUrl:
           Rails.application.routes.url_helpers
                .relationships_repository_repository_row_url(record.repository_id, record.id),
+        relationships_enabled: repository_row_connections_enabled,
         code: record.code
       )
 
@@ -315,5 +316,9 @@ module RepositoryDatatableHelper
 
   def display_stock_warnings?(repository)
     !repository.is_a?(RepositorySnapshot)
+  end
+
+  def repository_row_connections_enabled
+    Repository.repository_row_connections_enabled?
   end
 end

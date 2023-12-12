@@ -25,7 +25,7 @@ RSpec::Matchers.define :be_valid_default_repository_table_state do |nr_of_cols|
     expect(state['columns'].length).to eq(cols_length)
     state['columns'].each_with_index do |val, i|
       expect(val).to include(
-        'visible' => !([7, 8].include? i),
+        'visible' => !([4, 7, 8].include? i),
         'searchable' => (![0, 4].include?(i)),
         'search' => {
           'search' => '', 'smart' => true, 'regex' => false, 'caseInsensitive' => true

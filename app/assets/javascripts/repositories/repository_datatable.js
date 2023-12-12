@@ -672,7 +672,6 @@ var RepositoryDatatable = (function(global) {
       }, {
         targets: 4,
         class: 'relationship',
-        visible: true,
         searchable: false,
         orderable: true,
         render: function(data, type, row) {
@@ -752,7 +751,6 @@ var RepositoryDatatable = (function(global) {
 
         // Hide edit button if not all selected rows are on the current page
         $('#editRepositoryRecord').prop('disabled', !allSelectedRowsAreOnPage());
-
         TABLE.columns([archivedOnIndex, archivedByIndex]).visible(archived);
       },
       preDrawCallback: function() {

@@ -2264,10 +2264,10 @@ en:
         empty: "This item has no relationships assigned."
         parents:
           count: "Parents (%{count})"
-          empty: "This item has no parent relationship assigned."
+          empty: ""
         children:
           count: "Children (%{count})"
-          empty: "This item has no child relationship assigned."
+          empty: ""
       default_columns:
         repository_name: "Inventory"
         id: "Item ID"
