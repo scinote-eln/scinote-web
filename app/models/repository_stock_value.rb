@@ -203,8 +203,10 @@ class RepositoryStockValue < ApplicationRecord
   end
 
   def send_low_stock_notification
-    repository_row = RepositoryRow.find(repository_cell.repository_row_id)
-    repository = Repository.find(repository_row.repository_id)
+    repository_row = repository_cell.repository_row
+    repository = repository_row.repository
+
+    return unless repository.class.name == 'Repository'
 
     LowStockNotification.send_notifications({
                                               repository_row_id: repository_cell.repository_row_id,
