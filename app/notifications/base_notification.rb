@@ -4,7 +4,7 @@ class BaseNotification < Noticed::Base
   deliver_by :database, if: :database_notification?
   deliver_by :email, mailer: 'AppMailer', method: :general_notification, if: :email_notification?
 
-  def self.send_notifications(params, later: false)
+  def self.send_notifications(params, later: true)
     recipients_class =
       "Recipients::#{NotificationExtends::NOTIFICATIONS_TYPES[subtype || params[:type]][:recipients_module]}".constantize
     recipients_class.new(params).recipients.each do |recipient|
