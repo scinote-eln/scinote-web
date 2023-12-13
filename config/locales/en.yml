@@ -406,7 +406,7 @@ en:
       leaving_warning: 'Your changes will be lost if you navigate away'
     thumbnail:
       buttons:
-        edit: "Edit"
+        open: "Open"
         move: "Move"
         download: "Download"
         delete: "Delete"

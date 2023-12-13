@@ -1,6 +1,11 @@
 <template>
   <div class="relative" v-if="listItems.length > 0" v-click-outside="closeMenu">
-    <button ref="openBtn" :class="btnClasses" @click="showMenu = !showMenu">
+    <button
+      ref="openBtn"
+      :class="btnClasses"
+      :title="showMenu ? '' : title"
+      @click="showMenu = !showMenu"
+    >
       <i v-if="btnIcon" :class="btnIcon"></i>
       {{ btnText }}
       <i v-if="caret && showMenu" class="sn-icon sn-icon-up"></i>
@@ -74,6 +79,7 @@ export default {
     btnClasses: { type: String, default: 'btn btn-light' },
     btnText: { type: String, required: false },
     btnIcon: { type: String, required: false },
+    title: { type: String, default: '' },
     caret: { type: Boolean, default: false },
   },
   data() {
