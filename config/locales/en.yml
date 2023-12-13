@@ -3429,14 +3429,35 @@ en:
 
   notifications:
     title: "Notifications"
-    email_settings: "E-mail notifications"
-    form:
-      assignments: "Assignment"
-      notification_scinote: 'Show in SciNote'
-      notification_email: 'Notify me via email'
-      assignments_description: 'Assignment notifications appear whenever you get assigned to a team, project, task.'
-      recent_notification: 'Recent changes'
-      recent_notification_description: 'Recent changes notifications appear whenever there is a change on a task you are assigned to.'
+    sub_title: "Define which updates to get notified and where"
+    in_app: "In-app"
+    email: "Email"
+    breadcrumb: "Preferences"
+    groups:
+      my_module: "Task"
+      project_experiment: "Project & Experiment"
+      repository: "Inventories & Items"
+      other: "Others"
+    sub_groups:
+      my_module_designation: "You were assigned to or unassigned from a task"
+      my_module_due_date: "Due date & time reminder on assigned task (24h before)"
+      my_module_comments: "A comment was added or edited on a task you are assigned to"
+      project_experiment_access: "You were added or removed from a Project"
+      project_experiment_role_change: "Your role on Project, Experiment, or Task was changed"
+      repository_stock: "Low stock reminder"
+      repository_date_reminder: "Date reminder"
+      other_smart_annotation: "You were tagged"
+      other_team_invitation: "You were invited or removed from the team"
+    content:
+      my_module_due_date_reminder:
+        title_html: "Task due date reminder"
+        message_html: "Due date for the task %{my_module_name} is coming up."
+      item_low_stock_reminder:
+        title_html: "Item stock reminder"
+        message_html: "Item %{repository_row_name} in inventory %{repository} is running low."
+      item_date_reminder:
+        title_html: "Item date reminder"
+        message_html: "Date reminder for %{repository_row_name} is coming up in %{value} %{units}."
     deliver:
       download_link: "Download link:"
       download_text: "Click the link to download the file."

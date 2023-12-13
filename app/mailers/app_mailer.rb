@@ -22,4 +22,16 @@ class AppMailer < Devise::Mailer
     }.merge(opts)
     mail(headers)
   end
+
+  def general_notification(opts = {})
+    @user = params[:recipient]
+    @notification = params[:record].to_notification
+
+    mail(
+      {
+        to: @user.email,
+        subject: I18n.t('notifications.email_title')
+      }.merge(opts)
+    )
+  end
 end

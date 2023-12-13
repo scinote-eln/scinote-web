@@ -41,7 +41,7 @@ class User < ApplicationRecord
       recent: true,
       recent_email: false,
       system_message_email: false
-    }
+    }.merge(Extends::DEFAULT_USER_NOTIFICATION_SETTINGS)
   }.freeze
 
   DEFAULT_OTP_DRIFT_TIME_SECONDS = 10
@@ -307,8 +307,7 @@ class User < ApplicationRecord
            inverse_of: :created_by,
            dependent: :destroy
 
-  has_many :user_notifications, inverse_of: :user
-  has_many :notifications, through: :user_notifications
+  has_many :notifications, as: :recipient, dependent: :destroy, inverse_of: :recipient
   has_many :zip_exports, inverse_of: :user, dependent: :destroy
   has_many :view_states, dependent: :destroy
 
@@ -323,7 +322,6 @@ class User < ApplicationRecord
   has_many :hidden_repository_cell_reminders, dependent: :destroy
 
   before_validation :downcase_email!
-  before_destroy :destroy_notifications
 
   def name
     full_name
@@ -515,40 +513,6 @@ class User < ApplicationRecord
     user_identities.exists?(provider: provider)
   end
 
-  # json friendly attributes
-  NOTIFICATIONS_TYPES = %w(assignments_notification recent_notification
-                           assignments_email_notification
-                           recent_email_notification)
-
-  # declare notifications getters
-  NOTIFICATIONS_TYPES.each do |name|
-    define_method(name) do
-      attr_name = name.gsub('_notification', '')
-      notifications_settings.fetch(attr_name.to_sym)
-    end
-  end
-
-  # declare notifications setters
-  NOTIFICATIONS_TYPES.each do |name|
-    define_method("#{name}=") do |value|
-      attr_name = name.gsub('_notification', '').to_sym
-      notifications_settings[attr_name] = value
-    end
-  end
-
-  def enabled_notifications_for?(notification_type, channel)
-    return true if %i(deliver deliver_error).include?(notification_type)
-
-    case channel
-    when :web
-      notification_type == :recent_changes && recent_notification ||
-        notification_type == :assignment && assignments_notification
-    when :email
-      notification_type == :recent_changes && recent_email_notification ||
-        notification_type == :assignment && assignments_email_notification
-    end
-  end
-
   def increase_daily_exports_counter!
     range = Time.now.utc.beginning_of_day.to_i..Time.now.utc.end_of_day.to_i
     last_export = export_vars[:last_export_timestamp] || 0
@@ -669,25 +633,6 @@ class User < ApplicationRecord
     return unless email
 
     self.email = email.downcase
-  end
-
-  def destroy_notifications
-    # Find all notifications where user is the only reference
-    # on the notification, and destroy all such notifications
-    # (user_notifications are destroyed when notification is
-    # destroyed). We try to do this efficiently (hence in_groups_of).
-    nids_all = notifications.pluck(:id)
-    nids_all.in_groups_of(1000, false) do |nids|
-      Notification
-        .where(id: nids)
-        .joins(:user_notifications)
-        .group('notifications.id')
-        .having('count(notification_id) <= 1')
-        .destroy_all
-    end
-
-    # Now, simply destroy all user notification relations left
-    user_notifications.destroy_all
   end
 
   def clear_view_cache

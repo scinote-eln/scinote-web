@@ -67,6 +67,7 @@ class MyModulesController < ApplicationController
         subject: @my_module,
         message_items: { my_module: @my_module.id }
       )
+      log_user_designation_activity
       redirect_to canvas_experiment_path(@experiment) if params[:my_module][:view_mode] == 'canvas'
     rescue ActiveRecord::RecordInvalid
       render json: @my_module.errors, status: :unprocessable_entity
@@ -529,6 +530,14 @@ class MyModulesController < ApplicationController
     log_activity(type_of, @my_module, message_items)
   end
 
+  def log_user_designation_activity
+    users = User.where.not(id: current_user.id).where(id: params[:my_module][:user_ids])
+
+    users.each do |user|
+      log_activity(:designate_user_to_my_module, @my_module, { user_target: user.id })
+    end
+  end
+
   def log_activity(type_of, my_module = nil, message_items = {})
     my_module ||= @my_module
     message_items = { my_module: my_module.id }.merge(message_items)
@@ -552,6 +561,7 @@ class MyModulesController < ApplicationController
     smart_annotation_notification(
       old_text: old_text,
       new_text: @my_module.description,
+      subject: @my_module,
       title: t('notifications.my_module_description_annotation_title',
                my_module: @my_module.name,
                user: current_user.full_name),
@@ -566,6 +576,7 @@ class MyModulesController < ApplicationController
     smart_annotation_notification(
       old_text: old_text,
       new_text: @my_module.protocol.description,
+      subject: @my_module,
       title: t('notifications.my_module_protocol_annotation_title',
                my_module: @my_module.name,
                user: current_user.full_name),
