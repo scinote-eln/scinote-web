@@ -18,13 +18,13 @@ class LinkedRepository < Repository
   def default_sortable_columns
     [
       'assigned',
-      'repository_rows.external_id',
       'repository_rows.id',
       'repository_rows.name',
       'repository_rows.created_at',
       'users.full_name',
       'repository_rows.archived_on',
-      'archived_bies_repository_rows.full_name'
+      'archived_bies_repository_rows.full_name',
+      'repository_rows.external_id'
     ]
   end
 
