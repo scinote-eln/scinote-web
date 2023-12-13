@@ -22,6 +22,7 @@ class UserNotificationsController < ApplicationController
 
   def load_notifications
     current_user.notifications
+                .in_app
                 .order(created_at: :desc)
   end
 

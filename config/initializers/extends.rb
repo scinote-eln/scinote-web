@@ -517,12 +517,6 @@ class Extends
 
   TOP_LEVEL_ASSIGNABLES = %w(Project Team Protocol Repository).freeze
 
-  SHARED_INVENTORIES_PERMISSION_LEVELS = {
-    not_shared: 0,
-    shared_read: 1,
-    shared_write: 2
-  }.freeze
-
   SHARED_OBJECTS_PERMISSION_LEVELS = {
     not_shared: 0,
     shared_read: 1,

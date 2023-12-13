@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class LinkedRepository < Repository
+  enum permission_level: Extends::SHARED_OBJECTS_PERMISSION_LEVELS.except(:shared_write)
+
+  def shareable_write?
+    false
+  end
+
   def default_table_state
     state = Constants::REPOSITORY_TABLE_DEFAULT_STATE.deep_dup
     state['order'] = [[3, 'asc']]

@@ -14,7 +14,7 @@
         v-model="newValue"
         @keydown="handleKeypress"
         @blur="handleBlur"
-        @keyup.escape="cancelEdit"
+        @keyup.escape="cancelEdit && this.atWhoOpened"
         @focus="setCaretAtEnd"/>
       <textarea v-else
         ref="input"
@@ -28,7 +28,7 @@
         v-model="newValue"
         @keydown="handleKeypress"
         @blur="handleBlur"
-        @keyup.escape="cancelEdit"
+        @keyup.escape="cancelEdit && this.atWhoOpened"
         @focus="setCaretAtEnd"/>
     </template>
     <div
@@ -240,6 +240,9 @@
         sel.collapse(sel.anchorNode, offset);
       },
       handleKeypress(e) {
+        this.atWhoOpened = $('.atwho-view:visible').length > 0
+        if (this.atWhoOpened) return;
+
         if (e.key == 'Escape') {
           this.cancelEdit();
         } else if (e.key == 'Enter' && this.saveOnEnter && e.shiftKey == false) {

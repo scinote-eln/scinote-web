@@ -34,15 +34,18 @@ class ZipExportJob < ApplicationJob
   end
 
   def generate_notification!
-    DeliveryNotification.with(
-      title: I18n.t('zip_export.notification_title'),
-      message: "<a data-id='#{@zip_export.id}' " \
-                "data-turbolinks='false' " \
-                "href='#{Rails.application
-                              .routes
-                              .url_helpers
-                              .zip_exports_download_path(@zip_export)}'>" \
-                "#{@zip_export.zip_file_name}</a>"
-    ).deliver(@user)
+    DeliveryNotification.send_notifications(
+      {
+        title: I18n.t('zip_export.notification_title'),
+        message: "<a data-id='#{@zip_export.id}' " \
+                  "data-turbolinks='false' " \
+                  "href='#{Rails.application
+                                .routes
+                                .url_helpers
+                                .zip_exports_download_path(@zip_export)}'>" \
+                  "#{@zip_export.zip_file_name}</a>",
+        user: @user
+      }
+    )
   end
 end

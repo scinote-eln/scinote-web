@@ -1,36 +1,23 @@
 # frozen_string_literal: true
 
-# To deliver this notification:
-#
-# DeliveryNotification.with(post: @post).deliver_later(current_user)
-# DeliveryNotification.with(post: @post).deliver(current_user)
-
 class DeliveryNotification < BaseNotification
-  # Add your delivery methods
-  #
-  # deliver_by :email, mailer: "UserMailer"
-  # deliver_by :slack
-  # deliver_by :custom, class: "MyDeliveryMethod"
+  def self.subtype
+    :delivery
+  end
 
-  # Add required params
-  #
-  # param :post
-
-  # Define helper methods to make rendering easier.
-  #
   def message
-    # if params[:legacy]
     params[:message]
-    # else
-    # new logic
-    # end
   end
 
   def title
-    # if params[:legacy]
     params[:title]
-    # else
-    # new logic
-    # end
+  end
+
+  def subject
+    return unless params[:subject_id] && params[:subject_class]
+
+    params[:subject_class].constantize.find(params[:subject_id])
+  rescue ActiveRecord::RecordNotFound
+    NonExistantRecord.new(params[:subject_name])
   end
 end

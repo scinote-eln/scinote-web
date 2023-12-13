@@ -59,7 +59,7 @@ Canaid::Permissions.register_for(Repository) do
 
   # repository: share
   can :share_repository do |user, repository|
-    can_manage_repository?(user, repository)
+    !repository.shared_with?(user.current_team) && repository.permission_granted?(user, RepositoryPermissions::SHARE)
   end
 
   # repository: make a snapshot with assigned rows

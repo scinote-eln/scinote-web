@@ -12,15 +12,28 @@ class RepositoryItemDateReminderJob < ApplicationJob
 
   def process_repository_values(model, comparison_value)
     model
-      .where(notification_sent: false)
-      .where('data <= ?', comparison_value)
       .joins(repository_cell: { repository_column: :repository })
-      .where(repositories: { type: 'Repository' })
-      .find_each do |value|
+      .where(notification_sent: false, repositories: { type: 'Repository' })
+      .where('repository_date_time_values.updated_at >= ?', 2.days.ago)
+      .where( # date(time) values that are within the reminder range
+        "data <= " \
+        "(?::timestamp + CAST(((repository_columns.metadata->>'reminder_unit')::int * " \
+        "(repository_columns.metadata->>'reminder_value')::int) || ' seconds' AS Interval))",
+        comparison_value
+      ).find_each do |value|
+        repository_row = RepositoryRow.find(value.repository_cell.repository_row_id)
+        repository_column = RepositoryColumn.find(value.repository_cell.repository_column_id)
+
         RepositoryItemDateNotification
-          .send_notifications({ "#{value.class.name.underscore}_id": value.id,
-                                repository_row_id: value.repository_cell.repository_row_id,
-                                repository_column_id: value.repository_cell.repository_column_id })
+          .send_notifications({
+                                "#{value.class.name.underscore}_id": value.id,
+                                repository_row_id: repository_row.id,
+                                repository_row_name: repository_row.name,
+                                repository_column_id: repository_column.id,
+                                repository_column_name: repository_column.name,
+                                reminder_unit: repository_column.metadata['reminder_unit'],
+                                reminder_value: repository_column.metadata['reminder_value']
+                              })
       end
   end
 end

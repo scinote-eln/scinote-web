@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 class RepositoryItemDateNotification < BaseNotification
-  def message
+  def self.subtype
+    :item_date_reminder
+  end
+
+  def title
     unit = human_readable_unit(column.metadata['reminder_unit'], column.metadata['reminder_value'])
     I18n.t(
       'notifications.content.item_date_reminder.message_html',
@@ -11,18 +15,16 @@ class RepositoryItemDateNotification < BaseNotification
     )
   end
 
-  def self.subtype
-    :item_date_reminder
-  end
-
-  def title; end
-
   def subject
     RepositoryRow.find(params[:repository_row_id])
+  rescue ActiveRecord::RecordNotFound
+    NonExistantRecord.new(params[:repository_row_name])
   end
 
   def column
     RepositoryColumn.find(params[:repository_column_id])
+  rescue ActiveRecord::RecordNotFound
+    NonExistantRecord.new(params[:repository_column_name])
   end
 
   after_deliver do
@@ -36,6 +38,8 @@ class RepositoryItemDateNotification < BaseNotification
   private
 
   def human_readable_unit(seconds, value)
+    return unless seconds
+
     units_hash = {
       '2419200' => 'month',
       '604800' => 'week',
