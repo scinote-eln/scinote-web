@@ -17,6 +17,6 @@ class TaskDueDateNotification < BaseNotification
   end
 
   after_deliver do
-    MyModule.find(params[:my_module_id]).update(due_date_notification_sent: true)
+    MyModule.find(params[:my_module_id]).update_column(:due_date_notification_sent, true)
   end
 end
