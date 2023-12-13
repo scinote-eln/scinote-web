@@ -13,4 +13,17 @@ class RepositoryRowConnection < ApplicationRecord
   belongs_to :last_modified_by, class_name: 'User'
 
   validates :parent_id, uniqueness: { scope: :child_id }
+  validate :prevent_self_connections, :prevent_reciprocal_connections
+
+  private
+
+  def prevent_self_connections
+    errors.add(:base, 'A repository_row cannot have a connection with itself') if parent_id == child_id
+  end
+
+  def prevent_reciprocal_connections
+    if parent_id && child_id && RepositoryRowConnection.exists?(parent_id: child_id, child_id: parent_id)
+      errors.add(:base, 'Reciprocal connections are not allowed')
+    end
+  end
 end
