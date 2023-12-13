@@ -1079,6 +1079,7 @@ class ProtocolsController < ApplicationController
     smart_annotation_notification(
       old_text: old_text,
       new_text: @protocol.description,
+      subject: @protocol,
       title: t('notifications.protocol_description_annotation_title',
                user: current_user.full_name,
                protocol: @protocol.name),

@@ -15,17 +15,11 @@ describe Notification, type: :model do
 
   describe 'Database table' do
     it { should have_db_column :id }
-    it { should have_db_column :title }
-    it { should have_db_column :message }
-    it { should have_db_column :type_of }
-    it { should have_db_column :generator_user_id }
     it { should have_db_column :created_at }
     it { should have_db_column :updated_at }
   end
 
   describe 'Relations' do
-    it { should belong_to(:generator_user).class_name('User').optional }
-    it { should have_many :users }
-    it { should have_many :user_notifications }
+    it { should belong_to(:recipient) }
   end
 end

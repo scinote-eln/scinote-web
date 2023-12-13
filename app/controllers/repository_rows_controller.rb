@@ -452,6 +452,7 @@ class RepositoryRowsController < ApplicationController
     smart_annotation_notification(
       old_text: old_text,
       new_text: cell.value.data,
+      subject: cell.repository_column.repository,
       title: t('notifications.repository_annotation_title',
                user: current_user.full_name,
                column: cell.repository_column.name,

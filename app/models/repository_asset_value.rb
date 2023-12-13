@@ -70,6 +70,7 @@ class RepositoryAssetValue < ApplicationRecord
     asset.last_modified_by = user
     self.last_modified_by = user
     asset.save! && save!
+    asset.post_process_file(repository_cell.repository_column.repository.team)
   end
 
   def snapshot!(cell_snapshot)

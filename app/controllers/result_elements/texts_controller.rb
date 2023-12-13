@@ -100,6 +100,7 @@ module ResultElements
       smart_annotation_notification(
         old_text: (old_text if old_text),
         new_text: @result_text.text,
+        subject: @result,
         title: t('notifications.result_annotation_title',
                  result: @result.name,
                  user: current_user.full_name),

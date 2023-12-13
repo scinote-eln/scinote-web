@@ -71,6 +71,7 @@ module AccessPermissions
 
             log_activity(:assign_user_to_project, { user_target: user_assignment.user.id,
                                                     role: user_assignment.user_role.name })
+
             created_count += 1
             propagate_job(user_assignment)
           end
@@ -106,6 +107,7 @@ module AccessPermissions
         current_user.id,
         destroy: true
       )
+
       log_activity(:unassign_user_from_project, { user_target: user_assignment.user.id,
                                                   role: user_assignment.user_role.name })
 

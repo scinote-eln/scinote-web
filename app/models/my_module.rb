@@ -20,6 +20,7 @@ class MyModule < ApplicationRecord
 
   before_validation :archiving_and_restoring_extras, on: :update, if: :archived_changed?
   before_save -> { report_elements.destroy_all }, if: -> { !new_record? && experiment_id_changed? }
+  before_save :reset_due_date_notification_sent, if: -> { due_date_changed? }
   around_save :exec_status_consequences, if: :my_module_status_id_changed?
   before_create :create_blank_protocol
   before_create :assign_default_status_flow
@@ -137,6 +138,11 @@ class MyModule < ApplicationRecord
     return self if teams.blank?
 
     joins(experiment: :project).where(experiment: { projects: { team: teams } })
+  end
+
+  def self.approaching_due_dates
+    where(due_date_notification_sent: false)
+      .where('due_date > ? AND due_date <= ?', DateTime.current, DateTime.current + 1.day)
   end
 
   def parent
@@ -527,6 +533,10 @@ class MyModule < ApplicationRecord
       MyModuleStatusConsequencesJob
         .perform_now(self, my_module_status.my_module_status_consequences.to_a, status_changing_direction)
     end
+  end
+
+  def reset_due_date_notification_sent
+    self.due_date_notification_sent = false
   end
 
   def archiving_and_restoring_extras

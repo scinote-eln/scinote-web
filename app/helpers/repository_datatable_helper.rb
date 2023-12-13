@@ -236,13 +236,13 @@ module RepositoryDatatableHelper
   def linked_repository_default_columns(record)
     {
       '1': assigned_row(record),
-      '2': escape_input(record.external_id),
-      '3': record.code,
-      '4': escape_input(record.name),
-      '5': I18n.l(record.created_at, format: :full),
-      '6': escape_input(record.created_by.full_name),
-      '7': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
-      '8': escape_input(record.archived_by&.full_name)
+      '2': record.code,
+      '3': escape_input(record.name),
+      '4': I18n.l(record.created_at, format: :full),
+      '5': escape_input(record.created_by.full_name),
+      '6': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
+      '7': escape_input(record.archived_by&.full_name),
+      '8': escape_input(record.external_id)
     }
   end
 
