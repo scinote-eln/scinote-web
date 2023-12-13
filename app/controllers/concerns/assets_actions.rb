@@ -48,6 +48,19 @@ module AssetsActions
                 asset_name: { id: asset.id, value_for: 'file_name' },
                 action: action
               })
+    elsif asset.repository_cell.present?
+      repository = asset.repository_cell.repository_row.repository
+      Activities::CreateActivityService
+        .call(activity_type: :edit_image_on_inventory_item,
+              owner: current_user,
+              subject: repository,
+              team: repository.team,
+              message_items: {
+                repository: repository.id,
+                repository_row: asset.repository_cell.repository_row.id,
+                asset_name: { id: asset.id, value_for: 'file_name' },
+                action: action
+              })
     end
   end
 end

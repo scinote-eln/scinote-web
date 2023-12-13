@@ -14,13 +14,6 @@ class Extends
 
   # Extends enum types. Should not be freezed, as modules might append to this.
   # !!!Check all addons for the correct order!!!
-  # DEPRECATED 'system_message' in (SCI-2952, kept b/c of integer enums)
-  NOTIFICATIONS_TYPES = { assignment: 0,
-                          recent_changes: 1,
-                          system_message: 2, # DEPRECATED
-                          deliver: 5,
-                          deliver_error: 7 }
-
   TASKS_STATES = { uncompleted: 0,
                    completed: 1 }
 
@@ -143,6 +136,8 @@ class Extends
     RepositoryTimeRangeValue
     RepositoryStockValue
   )
+
+  STI_PRELOAD_CLASSES = %w(LinkedRepository)
 
   # Array of preload relations used in search query for repository rows
   REPOSITORY_ROWS_PRELOAD_RELATIONS = []
@@ -493,24 +488,28 @@ class Extends
     sequence_on_result_deleted: 289,
     sequence_on_result_moved: 290,
     move_chemical_structure_on_result: 291,
-    edit_item_field_inventory: 292
+    edit_item_field_inventory: 292,
+    export_inventories: 293,
+    edit_image_on_inventory_item: 294,
+    edit_wopi_file_on_inventory_item: 295,
+    export_inventory_stock_consumption: 296
   }
 
   ACTIVITY_GROUPS = {
     projects: [*0..7, 32, 33, 34, 95, 108, 65, 109, *158..162, 241, 242, 243],
-    task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, 169, 172, 178, *257..273, *284..291],
+    task_results: [23, 26, 25, 42, 24, 40, 41, 99, 110, 122, 116, 128, 169, 172, 178, *246..248, *257..273, *284..291],
     task: [8, 58, 9, 59, *10..14, 35, 36, 37, 53, 54, *60..63, 138, 139, 140, 64, 66, 106, 126, 120, 132,
-           *146..148, 166, 246, 247, 248],
+           148, 166],
     task_protocol: [15, 22, 16, 18, 19, 20, 21, 17, 38, 39, 100, 111, 45, 46, 47, 121, 124, 115, 118, 127, 130, 137,
-                    217, 168, 171, 177, 184, 185, 188, 189, *192..203, 222, 224, 225, 226, 236, *249..252, *274..278],
+                    168, 171, 177, 184, 185, 188, 189, *192..203, 221, 222, 224, 225, 226, 236, *249..252, *274..278],
     task_inventory: [55, 56, 146, 147, 183],
     experiment: [*27..31, 57, 141, 165],
     reports: [48, 50, 49, 163, 164],
     inventories: [70, 71, 105, 144, 145, 72, 73, 74, 102, 142, 143, 75, 76, 77,
-                  78, 96, 107, 113, 114, *133..136, 180, 181, 182, 292],
+                  78, 96, 107, 113, 114, *133..136, 180, 181, 182, *292..296],
     protocol_repository: [80, 103, 89, 87, 79, 90, 91, 88, 85, 86, 84, 81, 82,
                           83, 101, 112, 123, 125, 117, 119, 129, 131, 170, 173, 179, 187, 186,
-                          190, 191, *204..215, 220, 221, 223, 227, 228, 229, *230..235,
+                          190, 191, *204..215, 220, 223, 227, 228, 229, *230..235,
                           *237..240, *253..256, *279..283],
     team: [92, 94, 93, 97, 104, 244, 245],
     label_templates: [*216..219]
@@ -617,7 +616,23 @@ class Extends
     my_modules/activities
     results/index
     protocols/show
+    preferences/index
   )
+
+  DEFAULT_USER_NOTIFICATION_SETTINGS = {
+    my_module_designation: {
+      email: false,
+      in_app: true
+    },
+    other_smart_annotation: {
+      email: false,
+      in_app: true
+    },
+    always_on: {
+      email: true,
+      in_app: true
+    }
+  }
 end
 
 # rubocop:enable Style/MutableConstant
