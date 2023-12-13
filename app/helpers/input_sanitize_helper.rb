@@ -41,7 +41,7 @@ module InputSanitizeHelper
     format_opt = wrapper_tag.merge(sanitize: false)
     base64_encoded_imgs = options.fetch(:base64_encoded_imgs, false)
     text = simple_format(text, {}, format_opt) if simple_f
-
+    custom_url_name = options[:custom_url_name]
     # allow base64 images when sanitizing if base64_encoded_imgs is true
     sanitizer_config = Constants::INPUT_SANITIZE_CONFIG.deep_dup
     text = sanitize_input(text, tags, sanitizer_config: sanitizer_config)
@@ -54,6 +54,8 @@ module InputSanitizeHelper
       html: { target: '_blank' },
       link: :urls,
       sanitize: false
-    ).html_safe
+    ) do |text_value|
+      custom_url_name ? sanitize_input(custom_url_name, tags, sanitizer_config: sanitizer_config) : text_value
+    end.html_safe
   end
 end
