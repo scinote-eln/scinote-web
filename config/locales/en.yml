@@ -3907,6 +3907,9 @@ en:
         read_users_permission:
           title: "Permission denied"
           detail: "You don't have permission to read users on %{model}"
+        mutually_exclusive_params_error:
+          title: "Mutually Exclusive Parameters"
+          detail: "Parameters %{first_param} and %{second_param} should not be specified at the same time."
         update_stock_consumption_permission:
           title: "Permission denied"
           detail: "You don't have permisson to update stock consumption on this task item."
