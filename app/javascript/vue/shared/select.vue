@@ -80,9 +80,6 @@
       valueLabel() {
         let option = this.options.find((o) => o[0] === this.value);
         return option && option[1];
-      },
-      focusElement() {
-        return this.$refs.focusElement || this.$parent.$refs.focusElement;
       }
     },
     mounted() {
@@ -98,7 +95,8 @@
         if (this.isOpen) {
           this.$emit('open');
           this.$nextTick(() => {
-            this.focusElement.focus();
+            this.$emit('focus');
+            this.$refs.focusElement?.focus();
           });
           this.$refs.optionsContainer.scrollTop = 0;
           this.updateOptionPosition();

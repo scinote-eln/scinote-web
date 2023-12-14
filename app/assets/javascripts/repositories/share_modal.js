@@ -1,7 +1,7 @@
 /* global HelperModule PerfectScrollbar */
 
 // eslint-disable-next-line no-unused-vars
-var ShareModal = (function() {
+const ShareModal = (function() {
   function init() {
     var form = $('.share-repo-modal').find('form');
     var sharedCBs = form.find("input[name='share_team_ids[]']");
@@ -13,21 +13,18 @@ var ShareModal = (function() {
     form.find('.teams-list').find('input.sci-checkbox, .permission-selector')
       .toggleClass('hidden', selectAllCheckbox.is(':checked'));
     form.find('.all-teams .sci-toggle-checkbox')
-      .toggleClass('hidden', !selectAllCheckbox.is(':checked'))
-      .attr('disabled', !selectAllCheckbox.is(':checked'));
+      .toggleClass('hidden', !selectAllCheckbox.is(':checked'));
 
     selectAllCheckbox.change(function() {
       form.find('.teams-list').find('input.sci-checkbox, .permission-selector')
         .toggleClass('hidden', this.checked);
-      form.find('.all-teams .sci-toggle-checkbox').toggleClass('hidden', !this.checked)
-        .attr('disabled', !this.checked);
+      form.find('.all-teams .sci-toggle-checkbox').toggleClass('hidden', !this.checked);
     });
 
     sharedCBs.change(function() {
       var selectedTeams = form.find('.teams-list .sci-checkbox:checked').length;
       form.find('#select_all_teams').prop('indeterminate', selectedTeams > 0);
-      $('#editable_' + this.value).toggleClass('hidden', !this.checked)
-        .attr('disabled', !this.checked);
+      $('#editable_' + this.value).toggleClass('hidden', !this.checked);
     });
 
     if (form.find('.teams-list').length) new PerfectScrollbar(form.find('.teams-list')[0]);

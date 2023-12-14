@@ -141,7 +141,7 @@
     transition: .2s;
     transition-property: top, bottom, box-shadow;
     width: 100%;
-    z-index: 100;
+    z-index: 999;
 
     .empty-dropdown {
       opacity: .6;

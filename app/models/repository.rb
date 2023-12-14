@@ -11,7 +11,7 @@ class Repository < RepositoryBase
   ID_PREFIX = 'IN'
   include PrefixedIdModel
 
-  enum permission_level: Extends::SHARED_INVENTORIES_PERMISSION_LEVELS
+  enum permission_level: Extends::SHARED_OBJECTS_PERMISSION_LEVELS
 
   belongs_to :archived_by,
              foreign_key: :archived_by_id,
@@ -55,8 +55,8 @@ class Repository < RepositoryBase
       .where(team: teams)
       .or(accessible_repositories.where(team_shared_objects: { team: teams }))
       .or(accessible_repositories
-            .where(permission_level: [Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:shared_read],
-                                      Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:shared_write]]))
+            .where(permission_level: [Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_read],
+                                      Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:shared_write]]))
     accessible_repositories.distinct
   }
 
@@ -110,6 +110,10 @@ class Repository < RepositoryBase
 
   def self.filter_by_teams(teams = [])
     teams.blank? ? self : where(team: teams)
+  end
+
+  def shareable_write?
+    true
   end
 
   def permission_parent
@@ -204,7 +208,7 @@ class Repository < RepositoryBase
         new_repo = dup
         new_repo.created_by = created_by
         new_repo.name = name
-        new_repo.permission_level = Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:not_shared]
+        new_repo.permission_level = Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:not_shared]
         new_repo.save!
 
         # Clone columns (only if new_repo was saved)

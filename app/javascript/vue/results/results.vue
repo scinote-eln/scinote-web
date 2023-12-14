@@ -132,7 +132,7 @@
           }
         ).then(
           (response) => {
-            this.results = [response.data.data, ...this.results];
+            this.results = [{ newResult: true, ...response.data.data }, ...this.results];
             window.scrollTo(0, 0);
           }
         );

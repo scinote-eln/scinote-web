@@ -35,7 +35,7 @@ class RepositoryZipExportJob < ZipExportJob
                                       repository,
                                       nil,
                                       params[:my_module_id].present?)
-    File.binwrite("#{dir}/export.csv", data)
+    File.binwrite("#{dir}/export.csv", data.encode('UTF-8', invalid: :replace, undef: :replace))
   end
 
   def failed_notification_title

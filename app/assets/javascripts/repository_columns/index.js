@@ -262,6 +262,10 @@ var RepositoryColumns = (function() {
       if (!_.isEmpty(searchText)) {
         TABLE.search(searchText).draw();
       }
+      const scrollBody = $('.dataTables_scrollBody');
+      if (scrollBody[0].offsetWidth > scrollBody[0].clientWidth) {
+        scrollBody.css('width', `calc(100% + ${scrollBody[0].offsetWidth - scrollBody[0].clientWidth}px)`);
+      }
     });
   }
 

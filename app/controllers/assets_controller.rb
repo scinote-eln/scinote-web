@@ -264,11 +264,7 @@ class AssetsController < ApplicationController
     end
 
     # Return edit url and asset info
-    render json: {
-      attributes: AssetSerializer.new(asset, scope: { user: current_user }).as_json,
-      success: true,
-      edit_url: edit_url
-    }, status: :ok
+    render json: asset, scope: { user: current_user }
   end
 
   def destroy
