@@ -30,7 +30,7 @@
       @open_ove_editor="openOVEditor(attachment.attributes.urls.open_vector_editor_edit)"
       @open_marvinjs_editor="openMarvinJsEditor"
       @open_scinote_editor="openScinoteEditor"
-      @open_locally="openLocally"
+      @open_locally="openLocallyButton"
       @delete="deleteModal = true"
       @viewMode="changeViewMode"
       @move="showMoveModal"
@@ -41,6 +41,12 @@
         @confirm="deleteAttachment"
         @cancel="deleteModal = false"
     />
+    <editLaunchingApplicationModal
+        v-if="editAppModal"
+        :fileName="attachment.attributes.file_name"
+        :application="this.localAppName"
+        @cancel="editAppModal = false"
+    />
     <moveAssetModal v-if="movingAttachment"
                       :parent_type="attachment.attributes.parent_type"
                       :targets_url="attachment.attributes.urls.move_targets"
@@ -50,6 +56,7 @@
 
 <script>
   import deleteAttachmentModal from './delete_modal.vue'
+  import editLaunchingApplicationModal from './edit_launching_application_modal.vue'
   import moveAssetModal from '../modal/move.vue'
   import MoveMixin from './mixins/move.js'
   import OpenLocallyMixin from './mixins/open_locally.js'
@@ -58,7 +65,7 @@
 
   export default {
     name: 'contextMenu',
-    components: { deleteAttachmentModal, moveAssetModal, MenuDropdown },
+    components: { deleteAttachmentModal, moveAssetModal, MenuDropdown, editLaunchingApplicationModal },
     mixins: [MoveMixin, OpenLocallyMixin],
     props: {
       attachment: {
@@ -70,7 +77,8 @@
     data() {
       return {
         viewModeOptions: ['inline', 'thumbnail', 'list'],
-        deleteModal: false
+        deleteModal: false,
+        editAppModal: false
       }
     },
     computed: {
@@ -170,6 +178,10 @@
           this.reloadAttachments
         );
         $(this.$refs.marvinjsEditButton).trigger('click');
+      },
+      openLocallyButton() {
+        this.editAppModal = true;
+        this.$emit(this.openLocally())
       },
       openScinoteEditor() {
         $(this.$refs.imageEditButton).trigger('click');
