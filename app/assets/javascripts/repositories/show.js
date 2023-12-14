@@ -20,6 +20,7 @@
     formGroup.append(
       '<span class="help-block">' + XHR.responseJSON.message + '</span>'
     );
+    HelperModule.flashAlertMsg(XHR.responseJSON.message, 'danger');
   }
 
   function handleSuccessfulSubmit(data) {
