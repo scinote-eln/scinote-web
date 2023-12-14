@@ -36,29 +36,36 @@
       @move="showMoveModal"
     ></MenuDropdown>
     <deleteAttachmentModal
-        v-if="deleteModal"
-        :fileName="attachment.attributes.file_name"
-        @confirm="deleteAttachment"
-        @cancel="deleteModal = false"
+      v-if="deleteModal"
+      :fileName="attachment.attributes.file_name"
+      @confirm="deleteAttachment"
+      @cancel="deleteModal = false"
     />
-    <moveAssetModal v-if="movingAttachment"
-                      :parent_type="attachment.attributes.parent_type"
-                      :targets_url="attachment.attributes.urls.move_targets"
-                      @confirm="moveAttachment($event)" @cancel="closeMoveModal"/>
+    <moveAssetModal
+      v-if="movingAttachment"
+      :parent_type="attachment.attributes.parent_type"
+      :targets_url="attachment.attributes.urls.move_targets"
+      @confirm="moveAttachment($event)" @cancel="closeMoveModal"
+    />
+    <NoPredefinedAppModal
+      v-if="showNoPredefinedAppModal"
+      :fileName="attachment.attributes.file_name"
+      @confirm="showNoPredefinedAppModal = false"
+    />
   </div>
 </template>
 
 <script>
   import deleteAttachmentModal from './delete_modal.vue'
   import moveAssetModal from '../modal/move.vue'
+  import NoPredefinedAppModal from '../modal/no_predefined_app_modal.vue'
   import MoveMixin from './mixins/move.js'
   import OpenLocallyMixin from './mixins/open_locally.js'
   import MenuDropdown from '../../menu_dropdown.vue'
-  import axios from '../../../../packs/custom_axios'
 
   export default {
     name: 'contextMenu',
-    components: { deleteAttachmentModal, moveAssetModal, MenuDropdown },
+    components: { deleteAttachmentModal, moveAssetModal, MenuDropdown, NoPredefinedAppModal },
     mixins: [MoveMixin, OpenLocallyMixin],
     props: {
       attachment: {
@@ -70,7 +77,8 @@
     data() {
       return {
         viewModeOptions: ['inline', 'thumbnail', 'list'],
-        deleteModal: false
+        deleteModal: false,
+        showNoPredefinedAppModal: false
       }
     },
     computed: {

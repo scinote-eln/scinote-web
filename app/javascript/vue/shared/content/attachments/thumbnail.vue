@@ -112,10 +112,17 @@
       @confirm="deleteAttachment"
       @cancel="deleteModal = false"
     />
-    <moveAssetModal v-if="movingAttachment"
-                      :parent_type="attachment.attributes.parent_type"
-                      :targets_url="attachment.attributes.urls.move_targets"
-                      @confirm="moveAttachment($event)" @cancel="closeMoveModal"/>
+    <moveAssetModal 
+      v-if="movingAttachment"
+      :parent_type="attachment.attributes.parent_type"
+      :targets_url="attachment.attributes.urls.move_targets"
+      @confirm="moveAttachment($event)" @cancel="closeMoveModal"
+    />
+    <NoPredefinedAppModal
+      v-if="showNoPredefinedAppModal"
+      :fileName="attachment.attributes.file_name"
+      @confirm="showNoPredefinedAppModal = false"
+    />
   </div>
 
 </template>
@@ -126,12 +133,13 @@
   import ContextMenu from './context_menu.vue'
   import deleteAttachmentModal from './delete_modal.vue'
   import MoveAssetModal from '../modal/move.vue'
+  import NoPredefinedAppModal from '../modal/no_predefined_app_modal.vue'
   import MoveMixin from './mixins/move.js'
 
   export default {
     name: 'thumbnailAttachment',
     mixins: [ContextMenuMixin, AttachmentMovedMixin, MoveMixin],
-    components: { ContextMenu, deleteAttachmentModal, MoveAssetModal},
+    components: { ContextMenu, deleteAttachmentModal, MoveAssetModal, NoPredefinedAppModal },
     props: {
       attachment: {
         type: Object,
@@ -145,7 +153,8 @@
     data() {
       return {
         isHovered: false,
-        deleteModal: false
+        deleteModal: false,
+        showNoPredefinedAppModal: false
       };
     },
     mounted() {

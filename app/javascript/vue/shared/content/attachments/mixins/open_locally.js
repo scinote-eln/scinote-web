@@ -43,6 +43,10 @@ export default {
       }
     },
     async openLocally() {
+      if (this.localAppName === null) {
+          this.showNoPredefinedAppModal = true
+        return
+      }
       try {
         const response = await axios.get(this.attachment.attributes.urls.open_locally);
         const data = response.data;

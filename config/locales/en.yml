@@ -3560,6 +3560,10 @@ en:
     empty_office_file:
       description: "The file is empty. Please add some data before saving the file."
       reload: "Reload file"
+    asset_sync:
+      body_text_html: "The specified application for accessing the <b>%{file_name}</b> is not preconfigured. To successfully open this file, please set up the appropriate application in your local environment beforehand.</p>"
+      no_predefined_app: "I understand"
+      set_up_app: "Set up an application to open this file"
 
   atwho:
     no_results:
