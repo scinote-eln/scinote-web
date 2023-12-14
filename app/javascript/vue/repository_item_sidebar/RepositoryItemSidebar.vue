@@ -137,7 +137,7 @@
                   <div class="font-inter text-sm leading-5 w-full">
                     <div class="flex flex-row justify-between">
                       <div class="mb-3 font-semibold">{{ i18n.t('repositories.item_card.relationships.parents.count', { count: parentsCount || 0 }) }}</div>
-                      <a class="btn-text-link font-normal" @click="handleOpenAddRelationshipsModal($event, 'parent')">
+                      <a class="relationships-add-link btn-text-link font-normal" @click="handleOpenAddRelationshipsModal($event, 'parent')">
                         {{ i18n.t('repositories.item_card.add_relationship_button_text') }}
                       </a>
                     </div>
@@ -174,7 +174,7 @@
                   <div class="font-inter text-sm leading-5 w-full">
                     <div class="flex flex-row justify-between">
                       <div class="mb-3 font-semibold">{{ i18n.t('repositories.item_card.relationships.children.count', { count: childrenCount || 0 }) }}</div>
-                      <a class="btn-text-link font-normal" @click="handleOpenAddRelationshipsModal($event, 'child')">
+                      <a class="relationships-add-link btn-text-link font-normal" @click="handleOpenAddRelationshipsModal($event, 'child')">
                         {{ i18n.t('repositories.item_card.add_relationship_button_text') }}
                       </a>
                     </div>
