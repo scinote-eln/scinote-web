@@ -36,9 +36,10 @@ export default {
       button.click();
     },
     openWopiFileModal() {
-      this.initWopiFileModal(this.attachmentsParent, (_e, data, status) => {
+      this.initWopiFileModal(this.attachmentsParent, (_e, attachmentData, status) => {
         if (status === 'success') {
-          this.addAttachment(data)
+          const attachment = attachmentData.data;
+          this.addAttachment(attachment);
         } else {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         }

@@ -664,6 +664,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_28_123835) do
     t.index "trim_html_tags((data)::text) gin_trgm_ops", name: "index_repository_checklist_items_on_data", using: :gin
     t.index "trim_html_tags((external_id)::text) gin_trgm_ops", name: "index_repository_checklist_items_on_external_id", using: :gin
     t.index ["created_by_id"], name: "index_repository_checklist_items_on_created_by_id"
+    t.index ["external_id"], name: "unique_index_repository_checklist_items_on_external_id", unique: true
     t.index ["last_modified_by_id"], name: "index_repository_checklist_items_on_last_modified_by_id"
     t.index ["repository_column_id", "external_id"], name: "unique_index_repository_checklist_items_on_external_id", unique: true
     t.index ["repository_column_id"], name: "index_repository_checklist_items_on_repository_column_id"
@@ -761,6 +762,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_28_123835) do
     t.index "trim_html_tags((external_id)::text) gin_trgm_ops", name: "index_repository_list_items_on_external_id", using: :gin
     t.index "trim_html_tags(data) gin_trgm_ops", name: "index_repository_list_items_on_data", using: :gin
     t.index ["created_by_id"], name: "index_repository_list_items_on_created_by_id"
+    t.index ["external_id"], name: "unique_index_repository_list_items_on_external_id", unique: true
     t.index ["last_modified_by_id"], name: "index_repository_list_items_on_last_modified_by_id"
     t.index ["repository_column_id", "external_id"], name: "unique_index_repository_list_items_on_external_id", unique: true
     t.index ["repository_column_id"], name: "index_repository_list_items_on_repository_column_id"

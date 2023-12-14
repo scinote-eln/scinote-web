@@ -5,7 +5,6 @@
             type="button"
             :class="shareClass"
             :title="shareValue"
-            :disabled="disabled"
             @click="openModal">
       <span class="sn-icon sn-icon-shared"></span>
       <span class="text-sm">
@@ -19,6 +18,7 @@
                            :characterLimit="255"
                            @enable="enableShare"
                            @disable="disableShare"
+                           :canShare="canShare"
                            @close="closeModal"/>
     </div>
   </div>
@@ -38,7 +38,7 @@
         type: String,
         required: true
       },
-      disabled: {
+      canShare: {
         type: Boolean,
         default: false
       }

@@ -6,7 +6,7 @@
         <share-task-container
           shareable-link-url="<%= my_module_shareable_link_path(@my_module) %>"
           :shared="<%= @my_module.shared? %>"
-          :disabled="<%= !can_share_my_module?(@my_module) %>" />
+          :can-share="<%= can_share_my_module?(@my_module) %>" />
       </div>
 
       <%= javascript_include_tag 'vue_share_task_container' %>
