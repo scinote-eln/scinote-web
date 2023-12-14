@@ -106,7 +106,11 @@
 .dp__input_wrap {
   .dp__input_icon {
     height: 1.5rem;
-    left: .5rem;
+    left: .75rem;
+  }
+
+  .dp__clear_icon {
+    width: 1.375rem;
   }
 
   .dp__input {
@@ -154,6 +158,13 @@
   --dp-range-between-border-color: var(--dp-hover-color, var(--sn-super-light-grey));
 }
 
+.dp__input_focus {
+  &:hover {
+    border-color: var(--sn-science-blue);
+  }
+  border-color: var(--sn-science-blue);
+}
+
 :root {
   /*General*/
   --dp-font-family: inherit; /*Font family*/
@@ -180,7 +191,7 @@
   --dp-overlay-col-padding:  .25rem; /*Padding in the overlay column*/
   --dp-time-inc-dec-button-size:  1.5rem; /*Sizing for arrow buttons in the time picker*/
   --dp-menu-padding: 1rem; /*Menu padding*/
-  --dp-input-icon-padding: 2rem; /*Padding on the left side of the input if icon is present*/
+  --dp-input-icon-padding: 2.25rem; /*Padding on the left side of the input if icon is present*/
 
   /*Font sizes*/
   --dp-font-size: .875rem; /*Default font-size*/

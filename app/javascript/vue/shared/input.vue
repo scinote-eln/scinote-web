@@ -3,6 +3,7 @@
     <label v-if="showLabel" :class="labelClass" :for="id">{{ label }}</label>
     <div :class="inputClass">
       <input ref="input"
+        :type="type"
         :id="id"
         :name="name"
         :value="inputValue"

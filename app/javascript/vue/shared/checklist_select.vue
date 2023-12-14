@@ -2,7 +2,7 @@
   <div class="w-full relative" ref="container" v-click-outside="closeDropdown">
     <slot>
       <button ref="focusElement"
-              class="btn flex justify-between items-center w-full outline-none border-[1px] bg-white rounded p-2
+              class="btn flex justify-between items-center w-full outline-none border-[1px] bg-white rounded sn-select
               font-inter text-sm font-normal leading-5"
               :class="{
                 'sci-cursor-edit': !isOpen && withEditCursor,
@@ -19,7 +19,7 @@
     </slot>
     <div :style="optionPositionStyle" class="py-2.5 z-10 bg-white rounded border-[1px] border-sn-light-grey shadow-sn-menu-sm" :class="{ 'hidden': !isOpen }">
       <div v-if="withButtons" class="px-2.5 pb-[1px]">
-        <div class="flex gap-2 pl-2 justify-start items-center w-[calc(100%-10px)]">
+        <div class="flex gap-2 pl-[0.625rem] justify-start items-center w-[calc(100%-10px)]">
           <div class="btn btn-light !text-xs h-[30px] px-0 active:bg-sn-super-light-blue"
                @click="selectedValues = []"
                :class="{
@@ -46,7 +46,10 @@
         <div v-if="options.length" class="flex flex-col gap-[1px]">
           <div v-for="option in options"
                :key="option.id"
-               class="px-3 py-2 rounded hover:bg-sn-super-light-grey cursor-pointer flex gap-1 justify-start items-center">
+               class="px-3 py-2 rounded hover:bg-sn-super-light-grey cursor-pointer flex gap-1 justify-start items-center"
+               :class="option.id === this.lastSelectedItem ? 'bg-sn-super-light-blue' : ''"
+               @change="toggleOption"
+               >
             <div class="sci-checkbox-container">
               <input v-model="selectedValues" :value="option.id" :id="option.id" type="checkbox" class="sci-checkbox project-card-selector">
               <label :for="option.id" class="sci-checkbox-label"></label>
@@ -93,7 +96,8 @@
       return {
         selectedValues: [],
         isOpen: false,
-        optionPositionStyle: ''
+        optionPositionStyle: '',
+        lastSelectedItem: null
       }
     },
     mounted() {
@@ -132,6 +136,7 @@
           }
           this.closeDropdown();
         }
+        this.lastSelectedItem = null;
       },
       selectedValues(values) {
         this.$emit('update-selected-values', values);
@@ -145,11 +150,14 @@
         let height = rect.height;
         this.optionPositionStyle = `position: absolute; top: ${height}px; left: 0px; width: ${width}px`
       },
-      toggleOption(id) {
-        if (this.selectedValues.includes(id)) {
-          this.selectedValues = this.selectedValues.filter((value) => value !== id);
+      toggleOption(option) {
+        const optionId = option.target._value;
+
+        // tracking last selected for highlighting
+        if (this.selectedValues.includes(optionId)) {
+          this.lastSelectedItem = optionId;
         } else {
-          this.selectedValues.push(id);
+          this.lastSelectedItem = null;
         }
       },
       closeDropdown() {
@@ -176,9 +184,6 @@
           }
         }
       },
-      isSelected(id) {
-        return this.selectedValues.includes(id);
-      }
     }
   }
 </script>
