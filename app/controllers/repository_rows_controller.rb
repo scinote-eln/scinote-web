@@ -210,7 +210,7 @@ class RepositoryRowsController < ApplicationController
       return render json: { name: @repository_row.name } if update_params['repository_row'].present?
 
       column = row_cell_update.column
-      cell = row_cell_update.cell
+      cell = row_cell_update.cell&.reload || row_cell_update.cell
       data = { value_type: column.data_type, id: column.id, value: nil }
 
       return render json: data if cell.blank?
@@ -452,6 +452,7 @@ class RepositoryRowsController < ApplicationController
     smart_annotation_notification(
       old_text: old_text,
       new_text: cell.value.data,
+      subject: cell.repository_column.repository,
       title: t('notifications.repository_annotation_title',
                user: current_user.full_name,
                column: cell.repository_column.name,

@@ -615,6 +615,7 @@ var ExperimnetTable = {
         this.appendRows(result.data);
         this.initDueDatePicker(result.data);
         this.handleNoResults();
+        this.initProvisioningStatusPolling();
       }, 100);
 
       InfiniteScroll.init(this.table, {

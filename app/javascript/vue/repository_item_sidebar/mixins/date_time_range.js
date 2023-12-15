@@ -6,7 +6,7 @@ export default {
   },
   computed: {
     borderColor() {
-      if (this.errorMessage) return 'border-sn-delete-red'; 
+      if (this.errorMessage) return 'border-sn-delete-red';
       if (this.isEditing) return 'border-sn-science-blue';
       return 'border-sn-light-grey hover:border-sn-sleepy-grey';
     },
@@ -91,7 +91,6 @@ export default {
         default:
           break;
       }
-          
       this.params = defaultParams;
     },
     formatDateTime(date, field = null) {
@@ -165,4 +164,4 @@ export default {
       this.saveChange();
     }
   },
-}; 
+};

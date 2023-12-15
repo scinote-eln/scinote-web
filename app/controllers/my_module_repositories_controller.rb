@@ -264,6 +264,7 @@ class MyModuleRepositoriesController < ApplicationController
     smart_annotation_notification(
       old_text: nil,
       new_text: comment,
+      subject: module_repository_row.repository_row,
       title: t('notifications.my_module_consumption_comment_annotation_title',
                repository_item: module_repository_row.repository_row.name,
                repository: @repository.name,

@@ -57,6 +57,10 @@ var RepositoryDatatable = (function(global) {
   }
 
   function restoreColumnSizes() {
+    const scrollBody = $('.dataTables_scrollBody');
+    if (scrollBody[0].offsetWidth > scrollBody[0].clientWidth) {
+      scrollBody.css('width', `calc(100% + ${scrollBody[0].offsetWidth - scrollBody[0].clientWidth}px)`);
+    }
     TABLE.colResize.restore();
   }
 

@@ -1,5 +1,5 @@
 <template>
-  <transition enter-class="translate-x-full w-0"
+  <transition enter-from-class="translate-x-full w-0"
               enter-active-class="transition-all ease-sharp duration-[588ms]"
               leave-active-class="transition-all ease-sharp duration-[588ms]"
               leave-to-class="translate-x-full w-0">
@@ -12,9 +12,12 @@
           class="sticky top-0 right-0 bg-white flex z-50 flex-col h-[78px] pt-6">
           <div class="header flex w-full h-[30px] pr-6">
             <repository-item-sidebar-title v-if="defaultColumns"
-              :editable="permissions?.can_manage && !defaultColumns?.archived" :name="defaultColumns.name"
-              @update="update"></repository-item-sidebar-title>
-            <i id="close-icon" @click="toggleShowHideSidebar(currentItemUrl)"
+              :editable="permissions?.can_manage && !defaultColumns?.archived"
+              :name="defaultColumns.name"
+              :archived="defaultColumns.archived"
+              @update="update">
+            </repository-item-sidebar-title>
+            <i id="close-icon" @click="toggleShowHideSidebar(null)"
               class="sn-icon sn-icon-close ml-auto cursor-pointer my-auto mx-0"></i>
           </div>
           <div id="divider" class="w-500 bg-sn-light-grey flex items-center self-stretch h-px mt-6 mr-6"></div>
@@ -27,7 +30,7 @@
 
           <div v-else class="flex flex-1 flex-grow-1 justify-between" ref="scrollSpyContent" id="scrollSpyContent">
 
-            <div id="left-col" class="flex flex-col gap-4">
+            <div id="left-col" class="flex flex-col gap-4 max-w-[350px]">
 
               <!-- INFORMATION -->
               <section id="information-section">
@@ -128,7 +131,7 @@
                 <!-- ASSIGNED -->
                 <section id="assigned-section" class="flex flex-col" ref="assignedSectionRef">
                   <div
-                    class="flex flex-row text-base font-semibold w-[350px] pb-4 leading-7 items-center justify-between transition-colors duration-300"
+                    class="flex flex-row text-lg font-semibold w-[350px] pb-4 leading-7 items-center justify-between transition-colors duration-300"
                     ref="assigned-label"
                     id="assigned-label"
                     >
@@ -156,7 +159,7 @@
                     </div>
                     <div v-for="(assigned, index) in assignedModules.viewable_modules" :key="`assigned_module_${index}`"
                       class="flex flex-col w-[350px] h-auto gap-4">
-                      <div class="flex flex-col gap-3.5">
+                      <div class="flex flex-col gap-2">
                         <div v-for="(item, index_assigned) in assigned" :key="`assigned_element_${index_assigned}`">
                           {{ i18n.t(`repositories.item_card.assigned.labels.${item.type}`) }}
                           <a :href="item.url" class="text-sn-science-blue hover:text-sn-science-blue hover:no-underline">
@@ -177,7 +180,7 @@
 
                 <!-- QR -->
                 <section id="qr-section" ref="QR-label">
-                  <div id="QR-label" class="font-inter text-base font-semibold leading-7 mb-4 mt-0 transition-colors duration-300">
+                  <div id="QR-label" class="font-inter text-lg font-semibold leading-7 mb-4 mt-0 transition-colors duration-300">
                     {{ i18n.t('repositories.item_card.section.qr') }}
                   </div>
                   <div class="bar-code-container">
@@ -190,12 +193,36 @@
 
             <!-- NAVIGATION -->
             <div v-if="isShowing && !dataLoading" ref="navigationRef" id="navigation"
-              class="flex item-end gap-x-4 min-w-[130px] min-h-[130px] h-fit sticky top-0 right-[4px] ">
+              class="flex item-end gap-x-4 min-w-[130px] min-h-[130px] h-fit sticky top-0 pr-6 [scrollbar-gutter:stable_both-edges] ">
               <scroll-spy :itemsToCreate="[
-                { id: 'highlight-item-1', textId: 'text-item-1', labelAlias: 'information_label', label: 'information-label', sectionId: 'information-section' },
-                { id: 'highlight-item-2', textId: 'text-item-2', labelAlias: 'custom_columns_label', label: 'custom-columns-label', sectionId: 'custom-columns-section' },
-                { id: 'highlight-item-3', textId: 'text-item-3', labelAlias: 'assigned_label', label: 'assigned-label', sectionId: 'assigned-section' },
-                { id: 'highlight-item-4', textId: 'text-item-4', labelAlias: 'QR_label', label: 'QR-label', sectionId: 'qr-section' }
+                {
+                  id: 'highlight-item-1',
+                  textId: 'text-item-1',
+                  labelAlias: 'information_label',
+                  label: 'information-label',
+                  sectionId: 'information-section'
+                },
+                {
+                  id: 'highlight-item-2',
+                  textId: 'text-item-2',
+                  labelAlias: 'custom_columns_label',
+                  label: 'custom-columns-label',
+                  sectionId: 'custom-columns-section'
+                },
+                {
+                  id: 'highlight-item-3',
+                  textId: 'text-item-3',
+                  labelAlias: 'assigned_label',
+                  label: 'assigned-label',
+                  sectionId: 'assigned-section'
+                },
+                {
+                  id: 'highlight-item-4',
+                  textId: 'text-item-4',
+                  labelAlias: 'QR_label',
+                  label: 'QR-label',
+                  sectionId: 'qr-section'
+                }
               ]" v-show="isShowing">
               </scroll-spy>
             </div>
@@ -252,6 +279,11 @@ export default {
       inRepository: false
     }
   },
+  provide() {
+    return {
+      reloadRepoItemSidebar: this.reload,
+    }
+  },
   created() {
     window.repositoryItemSidebarComponent = this;
   },
@@ -288,28 +320,27 @@ export default {
         this.isShowing = true;
         this.loadRepositoryRow(repositoryRowUrl);
         this.currentItemUrl = repositoryRowUrl;
-        return
+        return;
       }
-      // click on the same item - should just open/close it
-      else if (this.currentItemUrl === repositoryRowUrl) {
-        this.isShowing = !this.isShowing;
-        return
+      // same item click
+      if (repositoryRowUrl === this.currentItemUrl) {
+        if (this.isShowing) {
+          this.toggleShowHideSidebar(null);
+        }
+        return;
       }
       // explicit close (from emit)
-      else if (repositoryRowUrl === null) {
+      if (repositoryRowUrl === null) {
         this.isShowing = false;
         this.currentItemUrl = null;
         this.myModuleId = null;
-        return
+        return;
       }
       // click on a different item - if the item card is already showing should just fetch new data
-      else {
-        this.isShowing = true;
-        this.myModuleId = myModuleId;
-        this.loadRepositoryRow(repositoryRowUrl);
-        this.currentItemUrl = repositoryRowUrl;
-        return
-      }
+      this.isShowing = true;
+      this.myModuleId = myModuleId;
+      this.loadRepositoryRow(repositoryRowUrl);
+      this.currentItemUrl = repositoryRowUrl;
     },
     loadRepositoryRow(repositoryRowUrl) {
       this.dataLoading = true

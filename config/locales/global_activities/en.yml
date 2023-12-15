@@ -317,6 +317,10 @@ en:
       result_text_moved_html: "%{user} moved text <strong>%{text_name}</strong> from result %{result_original} to result %{result_destination}."
       result_table_moved_html: "%{user} moved table <strong>%{table_name}</strong> from result %{result_original} to result %{result_destination}."
       move_chemical_structure_on_result_html: "%{user} moved chemical structure <strong>%{file}</strong> from result %{result_original} to result %{result_destination}."
+      export_inventories_html: "%{user} exported inventory %{inventories}"
+      edit_image_on_inventory_item_html: "%{user} edited image %{asset_name} on inventory item %{repository_row} in inventory %{repository}: %{action}."
+      edit_wopi_file_on_inventory_item_html: "%{user} edited Office online file %{asset_name} on inventory item %{repository_row} in inventory %{repository}: %{action}."
+      export_inventory_stock_consumption_html: "%{user} exported stock consumption for inventory item(s) %{inventory_items} in inventory %{repository}."
     activity_name:
       create_project: "Project created"
       rename_project: "Project renamed"
@@ -477,7 +481,7 @@ en:
       delete_chemical_structure_on_protocol: "Chemical structure on protocol deleted"
       delete_chemical_structure_on_task: "Chemical structure on task deleted"
       protocol_description_in_task_edited: "Protocol description in task edited"
-      protocol_name_in_task_edited: "Protocol name in task edited."
+      protocol_name_in_task_edited: "Protocol name in task edited"
       export_inventory_items_assigned_to_task: "Task-assigned inventory items exported (live version)"
       export_inventory_snapshot_items_assigned_to_task: "Task-assigned inventory items exported (snapshot)"
       change_status_on_task_flow: "Task status changed"
@@ -588,7 +592,10 @@ en:
       result_text_moved: "Result text moved"
       result_table_moved: "Result table moved"
       move_chemical_structure_on_result: "Chemical structure on result moved"
-
+      export_inventories: "Inventories exported"
+      edit_image_on_inventory_item: "Inventory item image edited"
+      edit_wopi_file_on_inventory_item: "Inventory item wopi file edited"
+      export_inventory_stock_consumption: "Inventory stock consumptions exported"
     activity_group:
       projects: "Projects"
       task_results: "Task results"

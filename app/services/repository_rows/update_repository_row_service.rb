@@ -27,10 +27,11 @@ module RepositoryRows
 
           if @cell.present? && value.blank?
             @cell.destroy!
+            @cell = nil
             @record_updated = true
             next
           elsif @cell.blank? && value.present?
-            RepositoryCell.create_with_value!(@repository_row, @column, value, @user)
+            @cell = RepositoryCell.create_with_value!(@repository_row, @column, value, @user)
             @record_updated = true
             next
           elsif @cell.blank? && value.blank?

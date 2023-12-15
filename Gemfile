@@ -57,6 +57,7 @@ gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'logging', '~> 2.0.0'
 gem 'nested_form_fields'
 gem 'nokogiri', '~> 1.14.3' # HTML/XML parser
+gem 'noticed'
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'rgl' # Graph framework for project diagram calculations
 gem 'roo', '~> 2.10.0' # Spreadsheet parser
