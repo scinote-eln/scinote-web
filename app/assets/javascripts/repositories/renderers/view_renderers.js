@@ -206,7 +206,7 @@ $.fn.dataTable.render.AssignedTasksValue = function(data, row) {
   return tasksLinkHTML;
 };
 
-$.fn.dataTable.render.RepositoryStockValue = function(data) {
+$.fn.dataTable.render.RepositoryStockValue = function (data) {
   if (data) {
     if (data.value) {
       if (data.stock_managable) {
