@@ -1,16 +1,16 @@
 <div class="modal fade" id="deleteRepositoryRecord" tabindex="-1" role="dialog" aria-labelledby="deleteRepositoryRecordLabel">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog" role="document" data-e2e="e2e-MD-invInventoryDeleteAT">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
+        <button type="button" data-e2e="e2e-BT-invInventoryDeleteMD-close" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
         <h4 class="modal-title"><%= t("repositories.modal_delete_record.title") %></h4>
       </div>
       <div class="modal-body">
         <%= t("repositories.modal_delete_record.notice") %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t("general.cancel")%></button>
-        <button type="button" class="btn btn-danger delete-record-modal-button" data-dismiss="modal">
+        <button type="button" data-e2e="e2e-BT-invInventoryDeleteMD-cancel" class="btn btn-secondary" data-dismiss="modal"><%= t("general.cancel")%></button>
+        <button type="button" data-e2e="e2e-BT-invInventoryDeleteMD-delete" class="btn btn-danger delete-record-modal-button" data-dismiss="modal">
           <%= t("repositories.modal_delete_record.delete") %>
         </button>
       </div>

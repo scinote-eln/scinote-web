@@ -15,7 +15,8 @@ $.fn.dataTable.render.editRowName = function(formId, cell) {
              name="repository_row[name]"
              value=""
              placeholder="${I18n.t('repositories.table.enter_row_name')}"
-             data-type="RowName">
+             data-type="RowName"
+             data-e2e="e2e-IF-invInventoryEditItemTR-name">
     </div>
   `);
   $cell.find('input').val(text);
