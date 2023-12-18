@@ -57,7 +57,7 @@ module RepositoryDatatableHelper
           else
             { stock_url: new_repository_stock_repository_repository_row_url(repository, record) }
           end
-        row['stock'][:stock_managable] = stock_managable
+        row['stock'][:stock_managable] = stock_managable && record.active?
         row['stock']['displayWarnings'] = display_stock_warnings?(repository)
         row['stock'][:stock_status] = stock_cell&.value&.status
 
