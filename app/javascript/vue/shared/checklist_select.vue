@@ -47,7 +47,7 @@
           <div v-for="option in options"
                :key="option.id"
                class="px-3 py-2 rounded hover:bg-sn-super-light-grey cursor-pointer flex gap-1 justify-start items-center"
-               :class="option.id === this.lastSelectedItem ? 'bg-sn-super-light-blue' : ''"
+               :class="option.id === this.lastSelectedOption ? 'bg-sn-super-light-blue' : ''"
                @change="toggleOption"
                >
             <div class="sci-checkbox-container">
@@ -97,7 +97,7 @@
         selectedValues: [],
         isOpen: false,
         optionPositionStyle: '',
-        lastSelectedItem: null
+        lastSelectedOption: null
       }
     },
     mounted() {
@@ -136,7 +136,7 @@
           }
           this.closeDropdown();
         }
-        this.lastSelectedItem = null;
+        this.lastSelectedOption = null;
       },
       selectedValues(values) {
         this.$emit('update-selected-values', values);
@@ -152,13 +152,10 @@
       },
       toggleOption(option) {
         const optionId = option.target._value;
-
-        // tracking last selected for highlighting
-        if (this.selectedValues.includes(optionId)) {
-          this.lastSelectedItem = optionId;
-        } else {
-          this.lastSelectedItem = null;
-        }
+        this.setLastSelected(optionId);
+      },
+      setLastSelected(optionId) {
+        this.lastSelectedOption = this.selectedValues.includes(optionId) ? optionId : null;
       },
       closeDropdown() {
         if (!this.isOpen) return;
