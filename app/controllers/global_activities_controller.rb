@@ -8,8 +8,8 @@ class GlobalActivitiesController < ApplicationController
   def index
     # Preload filter format
     #   {
-    #     from_date: "YYYY-MM-DD",
     #     to_date: "YYYY-MM-DD",
+    #     from_date: "YYYY-MM-DD",
     #     teams: [*team_ids],
     #     types: [*activity_type_ids],
     #     users: [*user_ids],
@@ -21,8 +21,8 @@ class GlobalActivitiesController < ApplicationController
 
     # Example
     #   {
+    #     to_date: "2018-02-28",
     #     from_date: "2019-03-29",
-    #     to_date: "2019-03-29",
     #     teams: [1,2],
     #     types: [32,33,34],
     #     users: [1,2,3],

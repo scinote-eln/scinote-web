@@ -87,7 +87,7 @@ module Users
         end
 
         if filters['to_date'] || filters['from_date']
-          result.push("#{t('global_activities.index.period_label')} #{filters['from_date']} - #{filters['to_date']}")
+          result.push("#{t('global_activities.index.period_label')} #{filters['to_date']} - #{filters['from_date']}")
         end
 
         filters['subjects']&.each do |subject, ids|
