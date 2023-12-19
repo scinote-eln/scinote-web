@@ -48,16 +48,16 @@
           })
         }
         if (this.canOpenLocally) {
-            console.log(this.localAppName)
-          const text = this.localAppName ?
-            this.i18n.t('attachments.open_locally_in', { application: this.localAppName }) :
-            this.i18n.t('attachments.open_locally')
+          const text = this.localAppName
+            ? this.i18n.t('attachments.open_locally_in', { application: this.localAppName })
+            : this.i18n.t('attachments.open_locally')
 
           menu.push({
             text: text,
             emit: 'open_locally'
           })
         }
+
         return menu;
       }
     }
