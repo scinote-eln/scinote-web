@@ -3,6 +3,23 @@
 module Api
   module V2
     class StepsController < ::Api::V1::StepsController
+      def index
+        steps = timestamps_filter(@protocol.steps).page(params.dig(:page, :number))
+                                                  .per(params.dig(:page, :size))
+
+        render jsonapi: steps, each_serializer: StepSerializer,
+               include: include_params,
+               rte_rendering: render_rte?,
+               team: @team
+      end
+
+      def show
+        render jsonapi: @step, serializer: StepSerializer,
+               include: include_params,
+               rte_rendering: render_rte?,
+               team: @team
+      end
+
       def create
         raise PermissionError.new(Protocol, :create) unless can_manage_protocol_in_module?(@protocol)
 
