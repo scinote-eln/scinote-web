@@ -137,7 +137,10 @@
                   <div class="font-inter text-sm leading-5 w-full">
                     <div class="flex flex-row justify-between">
                       <div class="mb-3 font-semibold">{{ i18n.t('repositories.item_card.relationships.parents.count', { count: parentsCount || 0 }) }}</div>
-                      <a class="relationships-add-link btn-text-link font-normal" @click="handleOpenAddRelationshipsModal($event, 'parent')">
+                      <a
+                        v-if="permissions?.can_manage"
+                        class="relationships-add-link btn-text-link font-normal"
+                        @click="handleOpenAddRelationshipsModal($event, 'parent')">
                         {{ i18n.t('repositories.item_card.add_relationship_button_text') }}
                       </a>
                     </div>
@@ -174,7 +177,10 @@
                   <div class="font-inter text-sm leading-5 w-full">
                     <div class="flex flex-row justify-between">
                       <div class="mb-3 font-semibold">{{ i18n.t('repositories.item_card.relationships.children.count', { count: childrenCount || 0 }) }}</div>
-                      <a class="relationships-add-link btn-text-link font-normal" @click="handleOpenAddRelationshipsModal($event, 'child')">
+                      <a
+                        v-if="permissions?.can_manage"
+                        class="relationships-add-link btn-text-link font-normal"
+                        @click="handleOpenAddRelationshipsModal($event, 'child')">
                         {{ i18n.t('repositories.item_card.add_relationship_button_text') }}
                       </a>
                     </div>
@@ -429,6 +435,7 @@ export default {
           optionUrls: { ...this.actions.row_connections },
           notificationIconPath: this.icons.notification_path,
           notification: this.notification,
+          canManage: this.permissions?.can_manage
         },
       );
     },

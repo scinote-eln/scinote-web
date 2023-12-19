@@ -1,5 +1,11 @@
 <template>
-  <div ref="repositoryItemRelationshipsModal" @keydown.esc="close" id="repositoryItemRelationshipsModal" tabindex="-1" role="dialog"
+  <div
+    v-if="canManage"
+    ref="repositoryItemRelationshipsModal"
+    @keydown.esc="close"
+    id="repositoryItemRelationshipsModal"
+    tabindex="-1"
+    role="dialog"
     class="modal ">
     <div class="modal-dialog modal-sm" role="document">
       <div class="modal-content w-[400px] m-auto">
@@ -151,6 +157,7 @@ export default {
       itemParams: [],
       notification: null,
       notificationIconPath: null,
+      canManage: null
     };
   },
   computed: {
@@ -198,14 +205,18 @@ export default {
         addRelationCallback,
         notificationIconPath,
         notification,
+        canManage
       } = params;
-      $(this.$refs.repositoryItemRelationshipsModal).modal('show');
       this.inventoriesUrl = optionUrls.inventories_url;
       this.inventoryItemsUrl = optionUrls.inventory_items_url;
       this.createConnectionUrl = optionUrls.create_url;
       this.addRelationCallback = addRelationCallback;
       this.notificationIconPath = notificationIconPath;
       this.notification = notification;
+      this.canManage = canManage;
+      this.$nextTick(() => {
+        $(this.$refs.repositoryItemRelationshipsModal).modal('show');
+      });
 
       if (['parent', 'child'].includes(relation)) {
         this.selectedRelationshipValue = relation;
@@ -239,6 +250,7 @@ export default {
         itemOptions: [],
         inventoryOptions: [],
         itemParams: [],
+        canManage: null
       });
       $(this.$refs.repositoryItemRelationshipsModal).modal('hide');
     },
