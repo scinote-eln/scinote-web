@@ -48,13 +48,11 @@ class ProtocolsImporterV2
   private
 
   def create_in_step!(step, new_orderable)
-    ActiveRecord::Base.transaction do
-      new_orderable.save!
-      step.step_orderable_elements.create!(
-        position: step.step_orderable_elements.length,
-        orderable: new_orderable
-      )
-    end
+    new_orderable.save!
+    step.step_orderable_elements.create!(
+      position: step.step_orderable_elements.size,
+      orderable: new_orderable
+    )
   end
 
   def populate_protocol(protocol, protocol_json)
