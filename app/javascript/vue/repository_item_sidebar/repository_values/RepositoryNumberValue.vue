@@ -66,7 +66,16 @@ export default {
     colVal: Number,
     permissions: null,
     decimals: { type: Number, default: 0 },
-    canEdit: { type: Boolean, default: false },
+    canEdit: { type: Boolean, default: false }
+  },
+  mounted() {
+    const maxCollapsedHeight = 60;
+    const numberRefEl = this.$refs.numberRef;
+    this.$nextTick(() => {
+      if (!numberRefEl) return;
+      const isExpandable = numberRefEl.scrollHeight > maxCollapsedHeight;
+      this.expandable = isExpandable;
+    });
   },
   methods: {
     toggleCollapse() {
@@ -76,7 +85,7 @@ export default {
     },
     toggleExpandableState(expandable) {
       this.expandable = expandable;
-    },
+    }
   }
 };
 </script>

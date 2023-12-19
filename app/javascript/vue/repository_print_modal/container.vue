@@ -5,17 +5,17 @@
         <div v-if="availablePrinters.length > 0" class="printers-available">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
-            <p class="modal-title">
-              <template v-if="rows.length == 1">
-                <b>{{ i18n.t('repository_row.modal_print_label.head_title', {repository_row: rows[0].attributes.name}) }}</b>
+            <div class="modal-title">
+              <div v-if="rows.length == 1" class="flex flex-row">
+                <div class="font-bold">{{ i18n.t('repository_row.modal_print_label.head_title', {repository_row: rows[0].attributes.name}) }}</div>
                 <span class="id-label">
                   {{ i18n.t('repository_row.modal_print_label.id_label', {repository_row_id: rows[0].attributes.code}) }}
                 </span>
-              </template>
-              <template v-else>
-                <b>{{ i18n.t('repository_row.modal_print_label.head_title_multiple', {repository_rows: rows.length}) }}</b>
-              </template>
-            </p>
+              </div>
+              <div v-else>
+                <div class="font-bold">{{ i18n.t('repository_row.modal_print_label.head_title_multiple', {repository_rows: rows.length}) }}</div>
+              </div>
+            </div>
           </div>
           <div class="modal-body">
             <div class=printers-container>
@@ -129,6 +129,7 @@
       })
 
       $(this.$refs.modal).on('hidden.bs.modal', () => {
+        this.copies = 1;
         this.zebraPrinters = null;
         this.$emit('close');
       });
