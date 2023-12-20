@@ -33,8 +33,10 @@
       PrintModalComponent.openModal();
       if (selectedRows && selectedRows.length) {
         $('#modal-info-repository-row').modal('hide');
+        PrintModalComponent.repository_id = $(this).data('repositoryId');
         PrintModalComponent.row_ids = selectedRows;
       } else {
+        PrintModalComponent.repository_id = RepositoryDatatable.repositoryId();
         PrintModalComponent.row_ids = [...RepositoryDatatable.selectedRows()];
       }
     }

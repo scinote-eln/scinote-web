@@ -1144,6 +1144,7 @@ var RepositoryDatatable = (function(global) {
       clearRowSelection();
     },
     selectedRows: () => { return rowsSelected; },
+    repositoryId: () => $(TABLE_ID).data('repository-id'),
     redrawTableOnSidebarToggle: redrawTableOnSidebarToggle,
     checkAvailableColumns: checkAvailableColumns
   });

@@ -99,6 +99,7 @@ export default {
   props: {
     showModal: Boolean,
     row_ids: Array,
+    repository_id: Number,
     urls: Object
   },
   data() {
@@ -166,7 +167,7 @@ export default {
       }
     },
     row_ids() {
-      $.get(this.urls.rows, { rows: this.row_ids }, (result) => {
+      $.get(this.urls.rows, { repository_id: this.repository_id, row_ids: this.row_ids }, (result) => {
         this.rows = result.data;
       });
     }
@@ -194,7 +195,11 @@ export default {
     validateTemplate() {
       if (!this.selectedTemplate || this.row_ids.length == 0) return;
 
-      $.post(this.urls.printValidation, { label_template_id: this.selectedTemplate.id, rows: this.row_ids }, (result) => {
+      $.post(this.urls.printValidation, {
+        repository_id: this.repository_id,
+        label_template_id: this.selectedTemplate.id,
+        row_ids: this.row_ids
+      }, (result) => {
         this.labelTemplateError = null;
         this.labelTemplateCode = result.label_code;
       }).fail((result) => {
@@ -213,12 +218,14 @@ export default {
               printer_name: this.selectedPrinter.attributes.name,
               number_of_copies: this.copies,
               label_template_id: this.selectedTemplate.id,
-              rows: this.row_ids
+              row_ids: this.row_ids,
+              repository_id: this.repository_id
             }
           );
         } else {
           $.post(this.urls.print, {
-            rows: this.row_ids,
+            row_ids: this.row_ids,
+            repository_id: this.repository_id,
             label_printer_id: this.selectedPrinter.id,
             label_template_id: this.selectedTemplate.id,
             copies: this.copies
