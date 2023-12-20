@@ -78,7 +78,7 @@ class Team < ApplicationRecord
       projects: {
         active: { sort: 'new' },
         archived: { sort: 'new' },
-        view_type: 'cards'
+        view_type: 'table'
       }
     }
   end
