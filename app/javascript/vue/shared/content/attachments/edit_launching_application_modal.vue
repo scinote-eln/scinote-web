@@ -9,7 +9,10 @@
           <h2 class="modal-title">{{ i18n.t('assets.edit_launching_application_modal.title') }}</h2>
         </div>
         <div class="modal-body">
-          <p v-html="i18n.t('assets.edit_launching_application_modal.description', { file_name: fileName, application: application })"></p>
+          <p v-html="i18n.t(
+            'assets.edit_launching_application_modal.description',
+            { file_name: fileName, application: application }
+          )"></p>
         </div>
         <div class="modal-footer">
           <button type='button' class='btn btn-secondary' @click="cancel">
@@ -20,22 +23,22 @@
     </div>
   </div>
 </template>
- <script>
-  export default {
-    name: 'editLaunchingApplicationModal',
-    props: {
-      fileName: String, application: String
-    },
-    mounted() {
-      $(this.$refs.modal).modal('show');
-      $(this.$refs.modal).on('hidden.bs.modal', () => {
-        this.$emit('cancel');
-      });
-    },
-    methods: {
-      cancel() {
-        $(this.$refs.modal).modal('hide');
-      }
+<script>
+export default {
+  name: 'editLaunchingApplicationModal',
+  props: {
+    fileName: String, application: String
+  },
+  mounted() {
+    $(this.$refs.modal).modal('show');
+    $(this.$refs.modal).on('hidden.bs.modal', () => {
+      this.$emit('cancel');
+    });
+  },
+  methods: {
+    cancel() {
+      $(this.$refs.modal).modal('hide');
     }
   }
+}
 </script>

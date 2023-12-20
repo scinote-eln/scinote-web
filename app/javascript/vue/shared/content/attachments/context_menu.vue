@@ -181,7 +181,7 @@
       },
       openLocallyButton() {
         this.editAppModal = true;
-        this.$emit(this.openLocally())
+        this.$emit(this.openLocally());
       },
       openScinoteEditor() {
         $(this.$refs.imageEditButton).trigger('click');
