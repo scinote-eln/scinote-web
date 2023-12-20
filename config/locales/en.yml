@@ -86,6 +86,13 @@ en:
         no_local_user_map: "No local user record found"
         no_email: "Email is missing in auth token"
         failed_to_save: "Failed to create new user"
+    openid_connect:
+      provider_name: "OpenID Connect"
+      errors:
+        generic: "Failed to sign in user"
+        no_local_user_map: "No local user record found"
+        no_email: "Email is missing in auth token"
+        failed_to_save: "Failed to create new user"
     okta:
       provider_name: "Okta"
       sign_in_label: "Sign in with Okta"

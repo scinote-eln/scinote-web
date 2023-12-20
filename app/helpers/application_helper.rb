@@ -205,6 +205,10 @@ module ApplicationHelper
     ApplicationSettings.instance.values['azure_ad_apps'].present?
   end
 
+  def openid_connect_configured?
+    ApplicationSettings.instance.values['openid_connect'].present?
+  end
+
   def wopi_enabled?
     ENV['WOPI_ENABLED'] == 'true'
   end

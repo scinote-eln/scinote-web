@@ -32,6 +32,30 @@ AZURE_SETUP_PROC = lambda do |env|
   env['omniauth.strategy'].options[:base_azure_url] = "#{conf_uri.scheme || 'https'}://#{conf_uri.host}"
 end
 
+OPENID_CONNECT_SETUP_PROC = lambda do |env|
+  settings = ApplicationSettings.instance
+  provider_conf = settings.values['openid_connect']
+  raise StandardError, 'No OpenID Connect config available for sign in' if provider_conf.blank?
+
+  client_options = {
+    identifier: provider_conf['client_id'],
+    secret: provider_conf['client_secret'],
+    redirect_uri: Rails.application.routes.url_helpers.user_openid_connect_omniauth_callback_url
+  }
+
+  unless provider_conf['discovery']
+    client_options[:authorize_url] = provider_conf['authorize_url'] if provider_conf['authorize_url']
+    client_options[:token_url] = provider_conf['token_url'] if provider_conf['token_url']
+    client_options[:user_info_url] = provider_conf['authorize_url'] if provider_conf['user_info_url']
+  end
+
+  env['omniauth.strategy'].options[:name] = 'openid_connect'
+  env['omniauth.strategy'].options[:scope] = %i(openid email profile)
+  env['omniauth.strategy'].options[:issuer] = provider_conf['issuer_url']
+  env['omniauth.strategy'].options[:discovery] = provider_conf['discovery'] == true
+  env['omniauth.strategy'].options[:client_options] = client_options
+end
+
 OKTA_SETUP_PROC = lambda do |env|
   settings = ApplicationSettings.instance
   provider_conf = settings.values['okta']
@@ -65,6 +89,10 @@ end
 
 Rails.application.config.middleware.use OmniAuth::Builder do
   provider OmniAuth::Strategies::CustomAzureActiveDirectory, setup: AZURE_SETUP_PROC
+end
+
+Rails.application.config.middleware.use OmniAuth::Builder do
+  provider OmniAuth::Strategies::OpenIDConnect, setup: OPENID_CONNECT_SETUP_PROC
 end
 
 Rails.application.config.middleware.use OmniAuth::Builder do

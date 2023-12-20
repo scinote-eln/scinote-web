@@ -24,6 +24,7 @@ gem 'omniauth', '~> 2.1'
 gem 'omniauth-azure-activedirectory-v2'
 gem 'omniauth-linkedin-oauth2'
 gem 'omniauth-okta', git: 'https://github.com/scinote-eln/omniauth-okta', branch: 'org_auth_server_support'
+gem 'omniauth_openid_connect'
 gem 'omniauth-rails_csrf_protection', '~> 1.0'
 
 # Gems for API implementation
