@@ -209,6 +209,10 @@ module ApplicationHelper
     ApplicationSettings.instance.values['openid_connect'].present?
   end
 
+  def saml_configured?
+    ApplicationSettings.instance.values['saml'].present?
+  end
+
   def wopi_enabled?
     ENV['WOPI_ENABLED'] == 'true'
   end

@@ -26,6 +26,7 @@ gem 'omniauth-linkedin-oauth2'
 gem 'omniauth-okta', git: 'https://github.com/scinote-eln/omniauth-okta', branch: 'org_auth_server_support'
 gem 'omniauth_openid_connect'
 gem 'omniauth-rails_csrf_protection', '~> 1.0'
+gem 'omniauth-saml'
 
 # Gems for API implementation
 gem 'active_model_serializers', '~> 0.10.7'

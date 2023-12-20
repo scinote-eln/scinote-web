@@ -55,5 +55,13 @@
         <% end %>
       </div>
     <% end %>
+
+    <% if sso_enabled? && saml_configured? %>
+      <div class="azure-sign-in-actions">
+        <%= form_tag user_saml_omniauth_authorize_path, method: :post do %>
+          <%= submit_tag t('devise.sessions.new.saml_submit'), class: 'btn btn-primary' %>
+        <% end %>
+      </div>
+    <% end %>
   <% end %>
 </div>

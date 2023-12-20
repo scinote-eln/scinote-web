@@ -87,6 +87,17 @@ OKTA_SETUP_PROC = lambda do |env|
   env['omniauth.strategy'].options[:client_options] = client_options
 end
 
+SAML_SETUP_PROC = lambda do |env|
+  settings = ApplicationSettings.instance
+  provider_conf = settings.values['saml']
+  raise StandardError, 'No SAML config available for sign in' if provider_conf.blank?
+
+  env['omniauth.strategy'].options[:idp_sso_service_url] = provider_conf['idp_sso_service_url']
+  env['omniauth.strategy'].options[:idp_cert] = provider_conf['idp_cert']
+  env['omniauth.strategy'].options[:sp_entity_id] = provider_conf['sp_entity_id']
+  env['omniauth.strategy'].options[:uid_attribute] = 'uid'
+end
+
 Rails.application.config.middleware.use OmniAuth::Builder do
   provider OmniAuth::Strategies::CustomAzureActiveDirectory, setup: AZURE_SETUP_PROC
 end
@@ -97,6 +108,10 @@ end
 
 Rails.application.config.middleware.use OmniAuth::Builder do
   provider OmniAuth::Strategies::Okta, setup: OKTA_SETUP_PROC
+end
+
+Rails.application.config.middleware.use OmniAuth::Builder do
+  provider OmniAuth::Strategies::SAML, setup: SAML_SETUP_PROC
 end
 
 OmniAuth.config.logger = Rails.logger

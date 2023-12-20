@@ -162,7 +162,7 @@ class Extends
                                         'RepositoryStatusValue' => 'status',
                                         'RepositoryStockValue' => 'stock' }
 
-  OMNIAUTH_PROVIDERS = %i(linkedin customazureactivedirectory okta openid_connect)
+  OMNIAUTH_PROVIDERS = %i(linkedin customazureactivedirectory okta openid_connect saml)
 
   INITIAL_USER_OPTIONS = {}
 
