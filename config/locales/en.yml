@@ -2052,7 +2052,7 @@ en:
       added_by: "Added by"
       archived_on: "Archived on"
       archived_by: "Archived by"
-      relationship: "Relationship"
+      relationships: "Relationships"
       children: "Children"
       parents: "Parents"
       row_consumption: "Consumed"
