@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Api::V2::StepElements::TextsController', type: :request do
+RSpec.describe 'Api::V2::StepElements::StepElements::TextsController', type: :request do
   before :all do
     @user = create(:user)
     @team = create(:team, created_by: @user)
@@ -86,7 +86,7 @@ RSpec.describe 'Api::V2::StepElements::TextsController', type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'step_texts',
+            type: 'texts',
             attributes: {
              text: "<p>Hello!</p>"
             }
@@ -110,7 +110,7 @@ RSpec.describe 'Api::V2::StepElements::TextsController', type: :request do
         expect(json).to match(
           hash_including(
             data: hash_including(
-              type: 'step_texts',
+              type: 'texts',
               attributes: hash_including(text: '<p>Hello!</p>')
             )
           )
@@ -122,7 +122,7 @@ RSpec.describe 'Api::V2::StepElements::TextsController', type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'step_texts',
+            type: 'texts',
             attributes: {
             }
           }
@@ -155,7 +155,7 @@ RSpec.describe 'Api::V2::StepElements::TextsController', type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'step_texts',
+            type: 'texts',
             attributes: {
               text: '<h1>Hello!</h1>'
             }
@@ -175,7 +175,7 @@ RSpec.describe 'Api::V2::StepElements::TextsController', type: :request do
         expect(json).to match(
           hash_including(
             data: hash_including(
-              type: 'step_texts',
+              type: 'texts',
               attributes: hash_including(
                 text: '<h1>Hello!</h1>'
               )
@@ -189,7 +189,7 @@ RSpec.describe 'Api::V2::StepElements::TextsController', type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'step_texts',
+            type: 'texts',
             attributes: {
             }
           }

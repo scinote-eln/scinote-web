@@ -2,21 +2,9 @@
 
 module Api
   module V2
-    class ResultAssetSerializer < ActiveModel::Serializer
-      type :assets
+    class ResultAssetSerializer < Api::V1::ResultAssetSerializer
+      type :attachments
       attributes :file_id, :file_name, :file_size, :file_type, :file_url
-
-      def file_id
-        object.asset&.id
-      end
-
-      def file_name
-        object.asset&.file_name
-      end
-
-      def file_size
-        object.asset&.file_size
-      end
 
       def file_type
         object.asset&.content_type

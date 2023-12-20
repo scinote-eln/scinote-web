@@ -3,7 +3,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Api::V2::ResultTextsController', type: :request do
+RSpec.describe 'Api::V2::ResultElements::TextsController', type: :request do
   let(:user) { create(:user) }
   let(:team) { create(:team, created_by: user) }
   let(:project) { create(:project, team: team, created_by: user) }
@@ -14,7 +14,7 @@ RSpec.describe 'Api::V2::ResultTextsController', type: :request do
   let(:valid_headers) { { Authorization: "Bearer #{generate_token(user.id)}", 'Content-Type': 'application/json' } }
 
   let(:api_path) do
-    api_v2_team_project_experiment_task_result_result_texts_path(
+    api_v2_team_project_experiment_task_result_texts_path(
       team_id: team.id,
       project_id: project.id,
       experiment_id: experiment.id,
@@ -45,7 +45,7 @@ RSpec.describe 'Api::V2::ResultTextsController', type: :request do
 
     context 'when result is not found' do
       it 'renders 404' do
-        get api_v2_team_project_experiment_task_result_result_texts_path(
+        get api_v2_team_project_experiment_task_result_texts_path(
           team_id: team.id,
           project_id: project.id,
           experiment_id: experiment.id,
@@ -64,7 +64,7 @@ RSpec.describe 'Api::V2::ResultTextsController', type: :request do
     context 'when has valid params' do
       it 'renders 200' do
         hash_body = nil
-        get api_v2_team_project_experiment_task_result_result_text_path(
+        get api_v2_team_project_experiment_task_result_text_path(
           team_id: team.id,
           project_id: project.id,
           experiment_id: experiment.id,
@@ -95,7 +95,7 @@ RSpec.describe 'Api::V2::ResultTextsController', type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'result_texts',
+            type: 'texts',
             attributes: {
               name: 'Result text',
               text: '<p>Hello!</p>'
@@ -133,7 +133,7 @@ RSpec.describe 'Api::V2::ResultTextsController', type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'result_texts',
+            type: 'texts',
             attributes: {}
           }
         }
@@ -150,7 +150,7 @@ RSpec.describe 'Api::V2::ResultTextsController', type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'result_texts',
+            type: 'texts',
             attributes: {
               name: 'Result text',
               text: "Result text 1 <img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAA" \
@@ -195,7 +195,7 @@ RSpec.describe 'Api::V2::ResultTextsController', type: :request do
     let(:result_text) { create(:result_text, result: result) }
     let(:result_text_archived) { create(:result_text, result: result_archived) }
     let(:action) do
-      patch(api_v2_team_project_experiment_task_result_result_text_path(
+      patch(api_v2_team_project_experiment_task_result_text_path(
         team_id: team.id,
         project_id: project.id,
         experiment_id: experiment.id,
@@ -205,7 +205,7 @@ RSpec.describe 'Api::V2::ResultTextsController', type: :request do
       ), params: request_body.to_json, headers: valid_headers)
     end
     let(:action_archived) do
-      patch(api_v2_team_project_experiment_task_result_result_text_path(
+      patch(api_v2_team_project_experiment_task_result_text_path(
         team_id: team.id,
         project_id: project.id,
         experiment_id: experiment.id,
@@ -219,7 +219,7 @@ RSpec.describe 'Api::V2::ResultTextsController', type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'result_texts',
+            type: 'texts',
             attributes: {
               name: 'Result text',
               text: '<h1>Hello!</h1>'
@@ -253,7 +253,7 @@ RSpec.describe 'Api::V2::ResultTextsController', type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'result_texts',
+            type: 'texts',
             attributes: {}
           }
         }
@@ -270,7 +270,7 @@ RSpec.describe 'Api::V2::ResultTextsController', type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'result_texts',
+            type: 'texts',
             attributes: {
               name: 'Result text',
               text: '<h1>Hello!</h1>'
@@ -290,7 +290,7 @@ RSpec.describe 'Api::V2::ResultTextsController', type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'result_texts',
+            type: 'texts',
             attributes: {
               name: 'Result text',
               text: 'Result text 1 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAA'\
@@ -335,7 +335,7 @@ RSpec.describe 'Api::V2::ResultTextsController', type: :request do
     let(:result_text) { create(:result_text, result: result) }
     let(:result_text_archived) { create(:result_text, result: result_archived) }
     let(:action) do
-      delete(api_v2_team_project_experiment_task_result_result_text_path(
+      delete(api_v2_team_project_experiment_task_result_text_path(
         team_id: team.id,
         project_id: project.id,
         experiment_id: experiment.id,
@@ -346,7 +346,7 @@ RSpec.describe 'Api::V2::ResultTextsController', type: :request do
     end
 
     let(:action_archived) do
-      delete(api_v2_team_project_experiment_task_result_result_text_path(
+      delete(api_v2_team_project_experiment_task_result_text_path(
         team_id: team.id,
         project_id: project.id,
         experiment_id: experiment.id,
