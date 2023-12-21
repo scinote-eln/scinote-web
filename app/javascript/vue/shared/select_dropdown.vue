@@ -2,13 +2,14 @@
   <div v-click-outside="close" class="w-full">
     <div
       ref="field"
-      class="px-3 border border-solid border-sn-light-grey rounded flex items-center cursor-pointer"
+      class="px-3 py-1 border border-solid border-sn-light-grey rounded flex items-center cursor-pointer"
       @click="open"
       :class="[sizeClass, {
         'border-sn-blue': isOpen,
         'bg-sn-sleepy-grey': disabled
       }]"
     >
+    <template v-if="!tagsView">
       <template v-if="!isOpen || !searchable">
         <div class="truncate" v-if="labelRenderer && label" v-html="label"></div>
         <div class="truncate" v-else-if="label">{{ label }}</div>
@@ -22,6 +23,25 @@
              v-model="query"
              :placeholder="label || placeholder || this.i18n.t('general.select_dropdown.placeholder')"
              class="w-full border-0 outline-none pl-0 placeholder:text-sn-grey" />
+      </template>
+      <div v-else class="flex items-center gap-1 flex-wrap">
+        <div v-for="tag in tags" class="px-2 py-1 rounded-sm bg-sn-super-light-grey flex items-center gap-1">
+          <div class="truncate" v-if="labelRenderer" v-html="tag.label"></div>
+          <div class="truncate" v-else>{{ tag.label }}</div>
+          <i @click="removeTag(tag.value)" class="sn-icon mini ml-auto sn-icon-close cursor-pointer"></i>
+        </div>
+        <input type="text"
+               ref="search"
+               v-if="searchable && isOpen"
+               v-model="query"
+               :placeholder="tags.length > 0 ? '' : (placeholder || this.i18n.t('general.select_dropdown.placeholder'))"
+               :style="{ width: searchInputSize }"
+               :class="{ 'pl-2': tags.length > 0 }"
+               class="border-0 outline-none pl-0 py-1 placeholder:text-sn-grey" />
+        <div v-else-if="tags.length == 0" class="text-sn-grey truncate">
+          {{ placeholder || this.i18n.t('general.select_dropdown.placeholder') }}
+        </div>
+      </div>
       <i v-if="canClear" @click="clear" class="sn-icon ml-auto sn-icon-close"></i>
       <i v-else class="sn-icon ml-auto"
                 :class="{ 'sn-icon-down': !isOpen, 'sn-icon-up': isOpen, 'text-sn-grey': disabled}"></i>
@@ -43,7 +63,7 @@
         <perfect-scrollbar class="p-2.5 flex flex-col max-h-80 relative" :class="{ 'pt-0': withCheckboxes }">
           <template v-for="option in filteredOptions" :key="option[0]">
             <div
-              @click="setValue(option[0])"
+              @click.stop="setValue(option[0])"
               class="py-1.5 px-3 rounded cursor-pointer flex items-center gap-2 shrink-0"
               :class="[sizeClass, {'!bg-sn-super-light-blue': valueSelected(option[0])}]"
             >
@@ -90,6 +110,7 @@ export default {
     withCheckboxes: { type: Boolean, default: false },
     searchable: { type: Boolean, default: false },
     clearable: { type: Boolean, default: false },
+    tagsView: { type: Boolean, default: false }
   },
   directives: {
     'click-outside': vOnClickOutside,
@@ -119,7 +140,7 @@ export default {
       }
     },
     canClear() {
-      return this.clearable && this.label && this.isOpen;
+      return this.clearable && this.label && this.isOpen && !this.tagsView;
     },
     rawOptions() {
       if (this.optionsUrl) {
@@ -141,7 +162,17 @@ export default {
       }
       return this.singleLabel;
     },
+    tags() {
+      if (!this.newValue) return [];
 
+      return this.newValue.map((value) => {
+        const option = this.rawOptions.find((i) => i[0] === value);
+        return {
+          value,
+          label: this.renderLabel(option)
+        };
+      });
+    },
     singleLabel() {
       const option = this.rawOptions.find((i) => i[0] === this.newValue);
       return this.renderLabel(option);
@@ -173,6 +204,19 @@ export default {
       }
       return this.newValue !== this.value;
     },
+    searchInputSize() {
+      let characterCount = 10;
+
+      if (this.tags.length === 0) {
+        characterCount = (this.placeholder || this.i18n.t('general.select_dropdown.placeholder')).length;
+      }
+
+      if (this.query.length > 0) {
+        characterCount = this.query.length;
+      }
+
+      return `${(characterCount * 8) + 16}px`;
+    }
   },
   mounted() {
     this.newValue = this.value;
@@ -232,6 +276,8 @@ export default {
       });
     },
     setValue(value) {
+      this.query = '';
+
       if (this.multiple) {
         if (this.newValue.includes(value)) {
           this.newValue = this.newValue.filter((v) => v !== value);
@@ -244,6 +290,10 @@ export default {
           this.close();
         });
       }
+    },
+    removeTag(value) {
+      this.newValue = this.newValue.filter((v) => v !== value);
+      this.$emit('change', this.newValue);
     },
     selectAll() {
       if (this.selectAllState === 'checked') {

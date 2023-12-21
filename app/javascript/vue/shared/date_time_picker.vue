@@ -1,5 +1,5 @@
 <template>
-  <div class="date-time-picker grow">
+  <div class="date-time-picker grow" :class="`size-${size}`" >
     <VueDatePicker
       ref="datetimePicker"
       :class="{
@@ -27,7 +27,10 @@
         <template #arrow-left>
             <img class="slot-icon" src="/images/calendar/navigate_before.svg"/>
         </template>
-        <template v-if="mode == 'time'" #input-icon>
+        <template v-if="customIcon" #input-icon>
+            <i :class="customIcon + ' -ml-1'"></i>
+        </template>
+        <template v-else-if="mode == 'time'" #input-icon>
             <img class="input-slot-image" src="/images/calendar/clock.svg"/>
         </template>
         <template v-else #input-icon>
@@ -64,6 +67,8 @@ export default {
     dateClassName: { type: String, default: '' },
     timeClassName: { type: String, default: '' },
     disabled: { type: Boolean, default: false },
+    customIcon: { type: String },
+    size: { type: String, default: 'xs' }
   },
   data() {
     return {

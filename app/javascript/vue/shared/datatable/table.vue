@@ -12,11 +12,16 @@
         :currentViewRender="currentViewRender"
         :viewRenders="viewRenders"
         :filters="filters"
+        :columnDefs="columnDefs"
+        :tableState="tableState"
         @applyFilters="applyFilters"
         @setTableView="switchViewRender('table')"
         @setCardsView="switchViewRender('cards')"
+        @hideColumn="hideColumn"
+        @showColumn="showColumn"
       />
-      <div v-if="currentViewRender === 'cards'" class="flex-grow basis-64 overflow-y-auto overflow-x-visible p-2 -ml-2">
+      <div v-if="currentViewRender === 'cards'"
+           class="flex-grow basis-64 overflow-y-auto overflow-x-visible p-2 -ml-2">
         <div class="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
           <slot v-for="element in rowData" :key="element.id" name="card" :dtComponent="this" :params="element"></slot>
         </div>
@@ -24,7 +29,7 @@
       <ag-grid-vue
         v-if="currentViewRender === 'table'"
         class="ag-theme-alpine w-full flex-grow h-full z-10"
-        :class="{'opacity-0': initializing}"
+        :class="{'opacity-0': initializing, 'tw-hidden': dataLoading}"
         :columnDefs="extendedColumnDefs"
         :rowData="rowData"
         :defaultColDef="defaultColDef"
@@ -32,16 +37,20 @@
         :suppressRowTransform="true"
         :gridOptions="gridOptions"
         :suppressRowClickSelection="true"
+        :getRowClass="getRowClass"
         @grid-ready="onGridReady"
         @first-data-rendered="onFirstDataRendered"
         @sortChanged="setOrder"
-        @columnResized="saveColumnsState"
-        @columnMoved="saveColumnsState"
+        @columnResized="saveTableState"
+        @columnMoved="saveTableState"
         @rowSelected="setSelectedRows"
         @cellClicked="clickCell"
         :CheckboxSelectionCallback="withCheckboxes"
       >
       </ag-grid-vue>
+      <div v-if="dataLoading" class="flex items-center justify-center w-full flex-grow h-full z-10">
+        <img src="/images/medium/loading.svg" alt="Loading" />
+      </div>
       <ActionToolbar
         v-if="selectedRows.length > 0 && actionsUrl"
         :actionsUrl="actionsUrl"
@@ -86,52 +95,52 @@ export default {
   props: {
     withCheckboxes: {
       type: Boolean,
-      default: true,
+      default: true
     },
     withRowMenu: {
       type: Boolean,
-      default: false,
+      default: false
     },
     tableId: {
       type: String,
-      required: true,
+      required: true
     },
     columnDefs: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     dataUrl: {
       type: String,
-      required: true,
+      required: true
     },
     actionsUrl: {
-      type: String,
+      type: String
     },
     toolbarActions: {
       type: Object,
-      required: true,
+      required: true
     },
     reloadingTable: {
       type: Boolean,
-      default: false,
+      default: false
     },
     activePageUrl: {
-      type: String,
+      type: String
     },
     archivedPageUrl: {
-      type: String,
+      type: String
     },
     currentViewMode: {
       type: String,
-      default: 'active',
+      default: 'active'
     },
     viewRenders: {
-      type: Object,
+      type: Object
     },
     filters: {
       type: Array,
-      default: () => [],
-    },
+      default: () => []
+    }
   },
   data() {
     return {
@@ -139,7 +148,7 @@ export default {
       gridApi: null,
       columnApi: null,
       defaultColDef: {
-        resizable: true,
+        resizable: true
       },
       perPage: 20,
       page: 1,
@@ -151,6 +160,7 @@ export default {
       activeFilters: {},
       currentViewRender: 'table',
       cardCheckboxes: [],
+      dataLoading: true
     };
   },
   components: {
@@ -161,7 +171,7 @@ export default {
     agColumnHeader: CustomHeader,
     ActionToolbar,
     Toolbar,
-    RowMenuRenderer,
+    RowMenuRenderer
   },
   computed: {
     perPageOptions() {
@@ -174,20 +184,21 @@ export default {
     },
     actionsParams() {
       return {
-        items: JSON.stringify(this.selectedRows.map((row) => ({ id: row.id, type: row.type }))),
+        items: JSON.stringify(this.selectedRows.map((row) => ({ id: row.id, type: row.type })))
       };
     },
     gridOptions() {
       return {
-        suppressCellFocus: true,
+        suppressCellFocus: true
       };
     },
     extendedColumnDefs() {
       const columns = this.columnDefs.map((column) => ({
         ...column,
         cellRendererParams: {
-          dtComponent: this,
+          dtComponent: this
         },
+        comparator: () => false
       }));
 
       if (this.withCheckboxes) {
@@ -196,10 +207,11 @@ export default {
           headerCheckboxSelection: true,
           headerCheckboxSelectionFilteredOnly: true,
           checkboxSelection: true,
+          suppressMovable: true,
           width: 48,
           minWidth: 48,
           resizable: false,
-          pinned: 'left',
+          pinned: 'left'
         });
       }
 
@@ -211,23 +223,23 @@ export default {
           minWidth: 42,
           resizable: false,
           sortable: false,
+          suppressMovable: true,
           cellRenderer: 'RowMenuRenderer',
           cellRendererParams: {
-            dtComponent: this,
+            dtComponent: this
           },
-          pinned: 'right',
           cellStyle: {
             padding: 0,
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            overflow: 'visible',
-          },
+            overflow: 'visible'
+          }
         });
       }
 
       return columns;
-    },
+    }
   },
   watch: {
     reloadingTable() {
@@ -235,6 +247,19 @@ export default {
         this.loadData();
       }
     },
+    currentViewRender() {
+      this.saveTableState();
+    },
+    perPage() {
+      this.saveTableState();
+    }
+  },
+  created() {
+    if (this.tableState) {
+      this.currentViewRender = this.tableState.currentViewRender || 'table';
+      this.perPage = this.tableState.perPage || 20;
+      [this.order] = this.getOrder(this.tableState.columnsState);
+    }
   },
   mounted() {
     this.loadData();
@@ -244,17 +269,34 @@ export default {
     window.removeEventListener('resize', this.resize);
   },
   methods: {
+    getRowClass() {
+      if (this.currentViewMode === 'archived') {
+        return '!bg-sn-light-grey';
+      }
+      return '';
+    },
     formatData(data) {
       return data.map((item) => ({
         ...item.attributes,
         id: item.id,
-        type: item.type,
+        type: item.type
       }));
     },
     resize() {
       if (this.tableState) return;
 
       this.gridApi.sizeColumnsToFit();
+    },
+    reloadTable() {
+      if (this.dataLoading) return;
+
+      this.dataLoading = true;
+      if (this.gridApi) {
+        this.gridApi.setRowData([]);
+      }
+      this.rowData = [];
+      this.page = 1;
+      this.loadData();
     },
     loadData() {
       axios
@@ -265,15 +307,18 @@ export default {
             order: this.order,
             search: this.searchValue,
             view_mode: this.currentViewMode,
-            filters: this.activeFilters,
-          },
+            filters: this.activeFilters
+          }
         })
         .then((response) => {
           this.selectedRows = [];
-          this.gridApi.setRowData(this.formatData(response.data.data));
+          if (this.gridApi) {
+            this.gridApi.setRowData(this.formatData(response.data.data));
+          }
           this.rowData = this.formatData(response.data.data);
           this.totalPage = response.data.meta.total_pages;
           this.$emit('tableReloaded');
+          this.dataLoading = false;
         });
     },
     onGridReady(params) {
@@ -282,8 +327,8 @@ export default {
 
       if (this.tableState) {
         this.columnApi.applyColumnState({
-          state: this.tableState,
-          applyOrder: true,
+          state: this.tableState.columnsState,
+          applyOrder: true
         });
       }
       setTimeout(() => {
@@ -296,29 +341,30 @@ export default {
     setPerPage(value) {
       this.perPage = value;
       this.page = 1;
-      this.loadData();
+      this.reloadTable();
     },
     setPage(page) {
       this.page = page;
       this.loadData();
     },
     setOrder() {
-      const orderState = this.columnApi.getColumnState()
-        .filter((column) => column.sort)
-        .map((column) => ({
-          column: column.colId,
-          dir: column.sort,
-        }));
+      const orderState = this.getOrder(this.columnApi.getColumnState());
       const [order] = orderState;
       this.order = order;
-      this.saveColumnsState();
-      this.loadData();
+      this.saveTableState();
+      this.reloadTable();
     },
-    saveColumnsState() {
-      if (!this.columnApi) return;
-
-      const columnsState = this.columnApi.getColumnState();
-      localStorage.setItem(`datatable:${this.tableId}_columns_state`, JSON.stringify(columnsState));
+    saveTableState() {
+      let columnsState = this.tableState?.columnsState;
+      if (this.columnApi) {
+        columnsState = this.columnApi.getColumnState();
+      }
+      const tableState = {
+        columnsState: columnsState || [],
+        currentViewRender: this.currentViewRender,
+        perPage: this.perPage
+      };
+      localStorage.setItem(`datatable:${this.tableId}_columns_state`, JSON.stringify(tableState));
     },
     setSelectedRows() {
       this.selectedRows = this.gridApi.getSelectedRows();
@@ -328,7 +374,7 @@ export default {
     },
     setSearchValue(value) {
       this.searchValue = value;
-      this.loadData();
+      this.reloadTable();
     },
     clickCell(e) {
       if (e.column.colId !== 'rowMenu' && e.column.userProvidedColDef.notSelectable !== true) {
@@ -337,7 +383,7 @@ export default {
     },
     applyFilters(filters) {
       this.activeFilters = filters;
-      this.loadData();
+      this.reloadTable();
     },
     switchViewRender(view) {
       if (this.currentViewRender === view) return;
@@ -346,6 +392,23 @@ export default {
       this.initializing = true;
       this.selectedRows = [];
     },
-  },
+    hideColumn(column) {
+      this.columnApi.setColumnVisible(column.field, false);
+      this.saveTableState();
+    },
+    showColumn(column) {
+      this.columnApi.setColumnVisible(column.field, true);
+      this.saveTableState();
+    },
+    getOrder(columnsState) {
+      if (!columnsState) return null;
+
+      return columnsState.filter((column) => column.sort)
+        .map((column) => ({
+          column: column.colId,
+          dir: column.sort
+        }));
+    }
+  }
 };
 </script>

@@ -5,7 +5,6 @@
              :reloadingTable="reloadingTable"
              :toolbarActions="toolbarActions"
              :actionsUrl="actionsUrl"
-             :withRowMenu="true"
              :activePageUrl="activePageUrl"
              :archivedPageUrl="archivedPageUrl"
              :currentViewMode="currentViewMode"
@@ -152,7 +151,7 @@ export default {
           cellRenderer: 'UsersRenderer',
           sortable: false,
           minWidth: 210,
-          notSelectable: true,
+          notSelectable: true
         },
       ],
     };
@@ -229,7 +228,7 @@ export default {
       });
 
       return filters;
-    },
+    }
   },
   methods: {
     usersFilterRenderer(option) {

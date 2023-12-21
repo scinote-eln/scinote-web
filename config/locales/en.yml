@@ -1539,6 +1539,8 @@ en:
         assigned_html: 'Assigned to'
         tags_html: 'Tags'
         comments_html: 'Comments'
+      archive_confirm_title: "Archive task"
+      archive_confirm: "Are you sure you want to archive this task?"
       modal_move_modules:
         title: "Move task(s) to experiment"
         confirm: "Move"
@@ -1630,7 +1632,7 @@ en:
         save_tag: "Save tag."
         cancel_tag: "Cancel changes to the tag."
         create: "Add"
-        create_new: "New"
+        create_new: "Create new tag"
       edit:
         id: "ID:"
         new_module: "New task"
@@ -3768,6 +3770,7 @@ en:
     loading: "Loading..."
     replace: "Replace"
     archive: "Archive"
+    assign: "Assign"
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"

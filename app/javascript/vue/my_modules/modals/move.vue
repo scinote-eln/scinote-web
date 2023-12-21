@@ -6,20 +6,19 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <i class="sn-icon sn-icon-close"></i>
           </button>
-          <h4 class="modal-title truncate !block" id="edit-project-modal-label" :title="experiment.name">
-            {{ i18n.t("experiments.move.modal_title", { experiment: experiment.name }) }}
+          <h4 class="modal-title truncate !block" id="edit-project-modal-label" :title="my_module.name">
+            {{ i18n.t('experiments.table.modal_move_modules.title') }}
           </h4>
         </div>
         <div class="modal-body">
-          <p><small>{{ i18n.t("experiments.move.notice") }}</small></p>
-          <SelectDropdown :optionsUrl="experiment.urls.projects_to_move"
-                          :value="targetProject"
-                          @change="changeProject" />
+          <SelectDropdown :optionsUrl="my_module.urls.experiments_to_move"
+                          :value="targetExperiment"
+                          @change="changeExperiment" />
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-          <button class="btn btn-primary" :disabled="!targetProject" @click="submit" type="submit">
-            {{ i18n.t('experiments.move.modal_submit') }}
+          <button class="btn btn-primary" :disabled="!targetExperiment" @click="submit" type="submit">
+            {{ i18n.t('experiments.table.modal_move_modules.confirm') }}
           </button>
         </div>
       </div>
@@ -37,23 +36,22 @@ import modalMixin from '../../shared/modal_mixin';
 export default {
   name: 'MoveModal',
   props: {
-    experiment: Object,
+    my_module: Object
   },
   mixins: [modalMixin],
   components: {
-    SelectDropdown,
+    SelectDropdown
   },
   data() {
     return {
-      targetProject: null,
+      targetExperiment: null
     };
   },
   methods: {
     submit() {
-      axios.post(this.experiment.urls.move, {
-        experiment: {
-          project_id: this.targetProject,
-        },
+      axios.post(this.my_module.urls.move, {
+        to_experiment_id: this.targetExperiment,
+        my_module_ids: [this.my_module.id]
       }).then((response) => {
         this.$emit('move');
         HelperModule.flashAlertMsg(response.data.message, 'success');
@@ -61,9 +59,9 @@ export default {
         HelperModule.flashAlertMsg(error.response.data.message, 'danger');
       });
     },
-    changeProject(project) {
-      this.targetProject = project;
-    },
-  },
+    changeExperiment(experiment) {
+      this.targetExperiment = experiment;
+    }
+  }
 };
 </script>

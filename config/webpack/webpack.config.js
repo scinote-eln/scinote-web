@@ -50,6 +50,7 @@ const entryList = {
   vue_label_templates_table: './app/javascript/packs/vue/label_templates_table.js',
   vue_projects_list: './app/javascript/packs/vue/projects_list.js',
   vue_experiments_list: './app/javascript/packs/vue/experiments_list.js',
+  vue_my_modules_list: './app/javascript/packs/vue/my_modules_list.js',
   vue_design_system_select: './app/javascript/packs/vue/design_system/select.js'
 }
 

@@ -329,7 +329,7 @@ Rails.application.routes.draw do
       # Activities popup (JSON) for individual project in projects index,
       # as well as all activities page for single project (HTML)
       resources :project_activities, path: '/activities', only: [:index]
-      resources :tags, only: [:create, :update, :destroy]
+      resources :tags, only: %i(index create update destroy)
       post :create_tag
 
       resources :reports,
@@ -395,6 +395,7 @@ Rails.application.routes.draw do
         get 'actions_toolbar'
       end
       member do
+        get :assigned_users
         get 'permissions'
         get 'actions_dropdown'
         put :view_type
@@ -429,12 +430,13 @@ Rails.application.routes.draw do
         get :search_tags
         get :projects_to_clone
         get :projects_to_move
+        get :experiments_to_move
       end
     end
 
     # Show action is a popup (JSON) for individual module in full-zoom canvas,
     # as well as 'module info' page for single module (HTML)
-    resources :my_modules, path: '/modules', only: [:show, :update] do
+    resources :my_modules, path: '/modules', only: [:show, :update, :index] do
       post 'save_table_state', on: :collection, defaults: { format: 'json' }
 
       collection do
@@ -450,6 +452,7 @@ Rails.application.routes.draw do
       resources :my_module_tags, path: '/tags', only: [:index, :create, :destroy] do
         collection do
           get :search_tags
+          get :assigned_tags
         end
         member do
           post :destroy_by_tag_id

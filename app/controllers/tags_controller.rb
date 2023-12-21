@@ -1,12 +1,17 @@
 class TagsController < ApplicationController
-  before_action :load_vars, only: [:create, :update, :destroy]
+  before_action :load_vars, only: %i(index create update destroy)
   before_action :load_vars_nested, only: [:update, :destroy]
   before_action :check_manage_permissions, only: %i(create update destroy)
+
+  def index
+    render json: @project.tags, each_serializer: TagSerializer
+  end
 
   def create
     @tag = Tag.new(tag_params)
     @tag.created_by = current_user
     @tag.last_modified_by = current_user
+    @tag.project ||= @project
 
     if @tag.name.blank?
       @tag.name = t("tags.create.new_name")
