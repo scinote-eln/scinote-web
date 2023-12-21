@@ -26,4 +26,20 @@ class RepositoryRowConnection < ApplicationRecord
       errors.add(:base, 'Reciprocal connections are not allowed')
     end
   end
+
+  def parent?(repository_row)
+    parent_id == repository_row.id
+  end
+
+  def child?(repository_row)
+    child_id == repository_row.id
+  end
+
+  def relationship_type(repository_row)
+    return :parent if parent?(repository_row)
+
+    return :child if child?(repository_row)
+
+    nil
+  end
 end
