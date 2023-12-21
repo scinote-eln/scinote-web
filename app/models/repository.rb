@@ -129,6 +129,7 @@ class Repository < RepositoryBase
       'assigned',
       'repository_rows.id',
       'repository_rows.name',
+      'relationships',
       'repository_rows.created_at',
       'users.full_name',
       'repository_rows.archived_on',

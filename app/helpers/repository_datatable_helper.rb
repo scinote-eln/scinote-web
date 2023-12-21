@@ -231,7 +231,7 @@ module RepositoryDatatableHelper
       '1': assigned_row(record),
       '2': record.code,
       '3': escape_input(record.name),
-      '4': record.relationship_count,
+      '4': "#{record.parent_connections_count || 0} / #{record.child_connections_count || 0}",
       '5': I18n.l(record.created_at, format: :full),
       '6': escape_input(record.created_by.full_name),
       '7': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),

@@ -3,12 +3,12 @@
 (function() {
   'use strict';
 
-  $(document).on('click', '.relationships-cell-wrapper', function(e) {
+  $(document).on('click', '.relationships-info-link', (e) => {
+    const myModuleId = $('.my-module-content').data('task-id');
+    const repositoryRowURL = $(e.target).attr('href');
+
     e.stopPropagation();
     e.preventDefault();
-    const myModuleId = $('.my-module-content').data('task-id');
-    // extract the href attribute from a neighboring column cell, required for sidebar to open
-    const repositoryRowURL = $(this).closest('tr').find('.sorting_1 a').attr('href');
 
     window.repositoryItemSidebarComponent.toggleShowHideSidebar(repositoryRowURL, myModuleId, 'relationships-section');
   });

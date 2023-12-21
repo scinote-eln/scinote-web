@@ -269,15 +269,10 @@ $.fn.dataTable.render.defaultRepositoryStockConsumptionValue = function() {
 };
 
 $.fn.dataTable.render.RelationshipValue = function(data, row) {
-  if (data > 0) {
-    return `<div class="relationships-cell-wrapper flex flex-wrap items-center w-fit"
-              data-relationships-url="${row.relationshipsUrl}">
-              <i class="sn-icon sn-icon-navigator"></i>
-              <a class="bg-sn-science-blue flex flex-wrap text-white w-4 h-4
-                        ml-2 rounded-lg content-center justify-center text-xs" href='#'>
-                ${data}
-              </a>
-            </div>`;
-  }
-  return '';
+  return `<a
+            style="text-decoration: none !important;"
+            class="relationships-info-link !text-sn-science-blue !no-underline pl-4"
+            href=${row.recordInfoUrl}>
+            ${data}
+          </a>`;
 };
