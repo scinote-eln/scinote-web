@@ -184,7 +184,6 @@ export default {
           columns.push(column);
         }
       });
-      columns.push(...window.externalMyModuleColumns);
     }
 
     const filters = [
