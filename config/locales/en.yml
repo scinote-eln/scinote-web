@@ -2250,8 +2250,8 @@ en:
         empty: "This item is not assigned to any task."
         assign: "Assign to task"
         private:
-          one: "Assigned to %{count} private task"
-          other: "Assigned to %{count} private tasks"
+          one: "Assigned to %{count} private task that will not be displayed"
+          other: "Assigned to %{count} private tasks that will not be displayed"
         labels:
           team: "Team:"
           project: "Project:"

@@ -71,6 +71,15 @@ export default {
     // constants
     this.noContentPlaceholder = this.i18n.t("repositories.item_card.repository_text_value.no_text");
   },
+  mounted() {
+    const maxCollapsedHeight = 60;
+    const textRefEl = this.$refs.textRef;
+    this.$nextTick(() => {
+      if (!textRefEl) return;
+      const isExpandable = textRefEl.scrollHeight > maxCollapsedHeight;
+      this.expandable = isExpandable;
+    });
+  },
   methods: {
     toggleCollapse() {
       if (!this.expandable) return;
