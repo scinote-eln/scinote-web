@@ -12,7 +12,7 @@
           class="sticky top-0 right-0 bg-white flex z-50 flex-col h-[78px] pt-6">
           <div class="header flex w-full h-[30px] pr-6">
             <repository-item-sidebar-title v-if="defaultColumns"
-              :editable="permissions?.can_manage && !defaultColumns?.archived"
+              :editable="permissions.can_manage && !defaultColumns?.archived"
               :name="defaultColumns.name"
               :archived="defaultColumns.archived"
               @update="update">
@@ -137,7 +137,10 @@
                   <div class="font-inter text-sm leading-5 w-full">
                     <div class="flex flex-row justify-between">
                       <div class="mb-3 font-semibold">{{ i18n.t('repositories.item_card.relationships.parents.count', { count: parentsCount || 0 }) }}</div>
-                      <a class="relationships-add-link btn-text-link font-normal" @click="handleOpenAddRelationshipsModal($event, 'parent')">
+                      <a
+                        v-if="permissions.can_manage"
+                        class="relationships-add-link btn-text-link font-normal"
+                        @click="handleOpenAddRelationshipsModal($event, 'parent')">
                         {{ i18n.t('repositories.item_card.add_relationship_button_text') }}
                       </a>
                     </div>
@@ -148,7 +151,10 @@
                           <span>
                             <span>{{ i18n.t('repositories.item_card.relationships.item') }}</span>
                             <a :href="parent.path" class="record-info-link btn-text-link !text-sn-science-blue">{{ parent.name }}</a>
-                            <a v-if="permissions?.can_manage" href="/" class="opacity-0 group-hover:opacity-100 cursor-pointer">
+                            <a v-if="permissions.can_manage"
+                              href="/"
+                              class="opacity-0 group-hover:opacity-100 cursor-pointer"
+                            >
                               <img :src="icons.unlink_path" />
                             </a>
                           </span>
@@ -174,7 +180,10 @@
                   <div class="font-inter text-sm leading-5 w-full">
                     <div class="flex flex-row justify-between">
                       <div class="mb-3 font-semibold">{{ i18n.t('repositories.item_card.relationships.children.count', { count: childrenCount || 0 }) }}</div>
-                      <a class="relationships-add-link btn-text-link font-normal" @click="handleOpenAddRelationshipsModal($event, 'child')">
+                      <a
+                        v-if="permissions.can_manage"
+                        class="relationships-add-link btn-text-link font-normal"
+                        @click="handleOpenAddRelationshipsModal($event, 'child')">
                         {{ i18n.t('repositories.item_card.add_relationship_button_text') }}
                       </a>
                     </div>
@@ -185,7 +194,10 @@
                           <span class="group/child">
                             <span>{{ i18n.t('repositories.item_card.relationships.item') }}</span>
                             <a :href="child.path" class="record-info-link btn-text-link !text-sn-science-blue">{{ child.name }}</a>
-                            <a v-if="permissions?.can_manage" href="/" class="opacity-0 group-hover:opacity-100 cursor-pointer">
+                            <a v-if="permissions.can_manage"
+                              href="/"
+                              class="opacity-0 group-hover:opacity-100 cursor-pointer"
+                            >
                               <img :src="icons.unlink_path" />
                             </a>
                           </span>
@@ -365,7 +377,7 @@ export default {
       assignedModules: null,
       isShowing: false,
       barCodeSrc: null,
-      permissions: null,
+      permissions: {},
       repositoryRowUrl: null,
       actions: null,
       myModuleId: null,
@@ -432,6 +444,7 @@ export default {
           optionUrls: { ...this.actions.row_connections },
           notificationIconPath: this.icons.notification_path,
           notification: this.notification,
+          canManage: this.permissions.can_manage
         },
       );
     },
