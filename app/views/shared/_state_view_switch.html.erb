@@ -1,16 +1,16 @@
 <div class="dropdown view-switch" >
   <div href="#" class="btn btn-light btn-black view-switch-button prevent-shrink <%= "disabled" if disabled %>" id="viewSwitchButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-    <span class="state-view-switch-btn-name" data-e2e="e2e-TX-invInventoryViewSwitchRT-selected"><%= archived ? t('toolbar.archived_state') : t('toolbar.active_state') %></span>
+    <span class="state-view-switch-btn-name" data-e2e="e2e-TX-viewSwitchRT-selected"><%= archived ? t('toolbar.archived_state') : t('toolbar.active_state') %></span>
     <span class="sn-icon sn-icon-down"></span>
   </div>
   <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="viewSwitchButton">
     <% if switchable %>
-      <li class="view-switch-active" data-e2e="e2e-BT-invInventoryViewSwitchRT-active">
+      <li class="view-switch-active" data-e2e="e2e-BT-viewSwitchRT-active">
         <%= link_to active_url, class: "#{ 'form-dropdown-state-item prevent-shrink' unless archived }" do %>
           <%= t('toolbar.active_state') %>
         <% end %>
       </li>
-      <li class="view-switch-archived" data-e2e="e2e-BT-invInventoryViewSwitchRT-archived">
+      <li class="view-switch-archived" data-e2e="e2e-BT-viewSwitchRT-archived">
         <%= link_to archived_url, class: "#{ 'form-dropdown-state-item prevent-shrink' if archived }"  do %>
           <%= t('toolbar.archived_state') %>
         <% end %>
