@@ -15,6 +15,14 @@ class RepositoryRowConnection < ApplicationRecord
   validates :parent_id, uniqueness: { scope: :child_id }
   validate :prevent_self_connections, :prevent_reciprocal_connections
 
+  def parent?(repository_row)
+    parent_id == repository_row.id
+  end
+
+  def child?(repository_row)
+    child_id == repository_row.id
+  end
+
   private
 
   def prevent_self_connections
@@ -25,14 +33,6 @@ class RepositoryRowConnection < ApplicationRecord
     if parent_id && child_id && RepositoryRowConnection.exists?(parent_id: child_id, child_id: parent_id)
       errors.add(:base, 'Reciprocal connections are not allowed')
     end
-  end
-
-  def parent?(repository_row)
-    parent_id == repository_row.id
-  end
-
-  def child?(repository_row)
-    child_id == repository_row.id
   end
 
   def relationship_type(repository_row)
