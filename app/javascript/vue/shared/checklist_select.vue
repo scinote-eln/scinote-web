@@ -46,9 +46,11 @@
         <div v-if="options.length" class="flex flex-col gap-[1px]">
           <div v-for="option in options"
                :key="option.id"
-               class="px-3 py-2 rounded hover:bg-sn-super-light-grey cursor-pointer flex gap-1 justify-start items-center"
+               class="checklist px-3 py-2 rounded hover:bg-sn-super-light-grey cursor-pointer
+                flex gap-1 justify-start items-center"
                :class="option.id === this.lastSelectedOption ? 'bg-sn-super-light-blue' : ''"
                @change="toggleOption"
+               @click="triggerLabelClick($event, option.id)"
                >
             <div class="sci-checkbox-container">
               <input v-model="selectedValues" :value="option.id" :id="option.id" type="checkbox" class="sci-checkbox project-card-selector">
@@ -170,6 +172,12 @@
         this.$emit('close');
         this.$refs.optionsContainer.$el.scrollTop = 0;
       },
+    triggerLabelClick(event, optionId) {
+      if ($(event.target).hasClass('sci-checkbox')) return;
+      if ($(event.target).hasClass('sci-checkbox-label')) return;
+
+      $(event.target).closest('.checklist').find(`#${optionId}`).trigger('click');
+    },
       onScroll() {
         const scrollObj = this.$refs.optionsContainer.ps;
 
