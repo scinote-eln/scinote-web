@@ -105,7 +105,7 @@ namespace :v2 do
           resources :protocols, only: :show do
             resources :steps, except: %i(new edit) do
               scope module: 'step_elements' do
-                resources :assets, except: %i(new edit)
+                resources :assets, except: %i(new edit), path: 'attachments'
                 resources :checklists, except: %i(new edit) do
                   resources :checklist_items, except: %i(new edit), as: :items
                 end
