@@ -215,7 +215,7 @@ var protocolsIO = function() {
           animateSpinner(modal, false);
           modal.modal('hide');
           HelperModule.flashAlertMsg(data.message, 'success');
-          ProtocolsIndex.reloadTable();
+          window.protocolsTable.$refs.table.updateTable();
         },
         error: function(data) {
           showFormErrors(modal, data.responseJSON.validation_errors);

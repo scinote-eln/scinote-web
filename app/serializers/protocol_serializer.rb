@@ -96,7 +96,9 @@ class ProtocolSerializer < ActiveModel::Serializer
       save_as_draft_url: save_as_draft_url,
       versions_modal_url: versions_modal_url,
       version_comment_url: version_comment_url,
-      print_protocol_url: print_protocol_url
+      print_protocol_url: print_protocol_url,
+      versions_modal: versions_modal_protocol_path(object.parent || object),
+      redirect_to_protocols: protocols_path
     }
   end
 

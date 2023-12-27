@@ -1,18 +1,30 @@
 <template>
   <div class="flex py-4 items-center justify-between">
     <div class="flex items-center gap-4">
-      <a v-for="action in toolbarActions.left" :key="action.label"
-          :class="action.buttonStyle"
-          :href="action.path"
-          @click="doAction(action, $event)">
-        <i :class="action.icon"></i>
-        {{ action.label }}
-      </a>
+      <template v-for="action in toolbarActions.left" :key="action.label">
+        <a v-if="action.type === 'emit'"
+           :class="action.buttonStyle"
+           :href="action.path"
+           @click="doAction(action, $event)">
+          <i :class="action.icon"></i>
+          {{ action.label }}
+        </a>
+        <MenuDropdown
+          v-if="action.type === 'menu'"
+          :listItems="action.menuItems"
+          :btnClasses="action.buttonStyle"
+          :btnText="action.label"
+          :btnIcon="action.icon"
+          :caret="true"
+          :position="'right'"
+          @dtEvent="handleEvent"
+        ></MenuDropdown>
+      </template>
     </div>
     <div>
       <div class="flex items-center gap-2">
         <MenuDropdown
-          v-if="archivedPageUrl"
+          v-if="viewRenders"
           :listItems="this.viewRendersMenu"
           :btnClasses="'btn btn-light icon-btn'"
           :btnText="i18n.t(`toolbar.${currentViewRender}_view`)"
@@ -59,7 +71,9 @@
           :placeholder="'Search...'"
           @change="$emit('search:change', $event.target.value)"
         />
-        <i class="sn-icon sn-icon-search !m-2.5 !ml-auto right-0"></i>
+        <i v-if="searchValue.length === 0" class="sn-icon sn-icon-search !m-2.5 !ml-auto right-0"></i>
+        <i v-else class="sn-icon sn-icon-close !m-2.5 !ml-auto right-0 cursor-pointer z-10"
+                  @click="$emit('search:change', '')"></i>
       </div>
       <FilterDropdown v-else :filters="filters" @applyFilters="applyFilters" />
     </div>
@@ -105,7 +119,6 @@ export default {
       default: () => []
     },
     viewRenders: {
-      type: Array,
       required: true
     },
     currentViewRender: {
@@ -184,6 +197,9 @@ export default {
     },
     applyFilters(filters) {
       this.$emit('applyFilters', filters);
+    },
+    handleEvent(event) {
+      this.$emit('toolbar:action', { name: event });
     }
   }
 };

@@ -1,7 +1,8 @@
 //= require protocols/import_export/import
 /* eslint-disable no-use-before-define, no-underscore-dangle, max-len, no-param-reassign */
-/* global ProtocolRepositoryHeader PdfPreview DataTableHelpers importProtocolFromFile _ PerfectSb protocolsIO
-  protocolSteps dropdownSelector filterDropdown I18n animateSpinner initHandsOnTable inlineEditing HelperModule */
+/* global ProtocolRepositoryHeader PdfPreview DataTableHelpers importProtocolFromFile
+   protocolFileImportModal PerfectSb protocolsIO
+   protocolSteps dropdownSelector filterDropdown I18n animateSpinner initHandsOnTable inlineEditing HelperModule */
 
 // Global variables
 var ProtocolsIndex = (function() {
@@ -27,10 +28,10 @@ var ProtocolsIndex = (function() {
    * Initializes page
    */
   function init() {
-    window.initActionToolbar();
-    window.actionToolbarComponent.setReloadCallback(reloadTable);
+    // window.initActionToolbar();
+    // window.actionToolbarComponent.setReloadCallback(reloadTable);
     // make room for pagination
-    window.actionToolbarComponent.setBottomOffset(68);
+    // window.actionToolbarComponent.setBottomOffset(68);
     updateButtons();
     initProtocolsTable();
     initKeywordFiltering();
@@ -38,6 +39,7 @@ var ProtocolsIndex = (function() {
     initLinkedChildrenModal();
     initModals();
     initVersionsModal();
+    initLocalFileImport();
   }
 
   function reloadTable() {
@@ -267,7 +269,6 @@ var ProtocolsIndex = (function() {
         let protocolFilters = $($('#protocolFilters').html());
         $(protocolFilters).appendTo('.protocols-container .protocol-filters');
 
-        initLocalFileImport();
         initProtocolsFilters();
         initRowSelection();
       },
@@ -649,8 +650,6 @@ var ProtocolsIndex = (function() {
   }
 
   function updateButtons() {
-    window.actionToolbarComponent.fetchActions({ protocol_ids: rowsSelected });
-    $('.dataTables_scrollBody').css('margin-bottom', `${rowsSelected.length > 0 ? 46 : 0}px`);
   }
 
   function initLocalFileImport() {
@@ -673,7 +672,6 @@ var ProtocolsIndex = (function() {
       var importUrl = fileInput.attr('data-import-url');
       var teamId = fileInput.attr('data-team-id');
       var type = fileInput.attr('data-type');
-
       if(ev.target.files[0].name.split('.').pop() === 'eln') {
         importProtocolFromFile(
           ev.target.files[0],
@@ -691,14 +689,14 @@ var ProtocolsIndex = (function() {
 
             if (nrSuccessful) {
               HelperModule.flashAlertMsg(I18n.t('protocols.index.import_results.message_ok_html', { count: nrSuccessful }), 'success');
-              reloadTable();
+              window.protocolsTable.$refs.table.updateTable();
             } else {
               HelperModule.flashAlertMsg(I18n.t('protocols.index.import_results.message_failed'), 'danger');
             }
           }
         );
       } else {
-        protocolFileImportModal.init(ev.target.files, reloadTable);
+        protocolFileImportModal.init(ev.target.files, window.protocolsTable.$refs.table.updateTable());
       }
       // $(this).val('');
     });
