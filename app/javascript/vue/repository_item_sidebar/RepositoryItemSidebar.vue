@@ -165,7 +165,9 @@
                           </span>
                           <span>
                             <span>{{ i18n.t('repositories.item_card.relationships.inventory') }}</span>
-                            <a :href="parent.repository_path" class="record-info-link btn-text-link !text-sn-science-blue">{{ parent.repository_name }}</a>
+                            <a :href="parent.repository_path" class="btn-text-link !text-sn-science-blue">
+                              {{ parent.repository_name }}
+                            </a>
                           </span>
                         </p>
                       </details>
@@ -206,7 +208,9 @@
                           <span>{{ i18n.t('repositories.item_card.relationships.id', { code: child.code }) }}</span>
                           <span>
                             <span>{{ i18n.t('repositories.item_card.relationships.inventory') }}</span>
-                            <a :href="child.repository_path" class="record-info-link btn-text-link !text-sn-science-blue">{{ child.repository_name }}</a>
+                            <a :href="child.repository_path" class="btn-text-link !text-sn-science-blue">
+                              {{ child.repository_name }}
+                            </a>
                           </span>
                         </p>
                       </details>
