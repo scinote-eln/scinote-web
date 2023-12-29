@@ -1515,7 +1515,7 @@ en:
       success: 'Successfully duplicated %{count} task(s) as template.'
       duplicating: 'Duplicating contents...'
     move:
-      modal_title: 'Move experiment %{experiment}'
+      modal_title: 'Move experiment(s)'
       notice: 'Moving is possible to projects, where you have permissions to create experiments and tasks.'
       target_project: 'Target project'
       label_title: 'Move'

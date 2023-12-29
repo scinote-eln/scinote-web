@@ -87,18 +87,14 @@ module Toolbars
     end
 
     def move_action
-      return unless @single
-
-      experiment = @experiments.first
-
-      return unless can_move_experiment?(experiment)
+      return unless @experiments.all? { |experiment| can_move_experiment?(experiment) }
 
       {
         name: 'move',
         label: I18n.t('experiments.toolbar.move_button'),
         icon: 'sn-icon sn-icon-move',
         button_class: 'move-experiments-btn',
-        path: move_modal_experiments_path(id: experiment.id),
+        path: move_modal_experiments_path(ids: @experiments.map(&:id)),
         type: 'remote-modal'
       }
     end
