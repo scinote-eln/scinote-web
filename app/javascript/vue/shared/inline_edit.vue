@@ -15,6 +15,7 @@
         @keydown="handleKeypress"
         @blur="handleBlur"
         @keyup.escape="cancelEdit && this.atWhoOpened"
+        @paste="$emit('paste', e)"
         @focus="setCaretAtEnd"/>
       <textarea v-else
         ref="input"
@@ -29,6 +30,7 @@
         @keydown="handleKeypress"
         @blur="handleBlur"
         @keyup.escape="cancelEdit && this.atWhoOpened"
+        @paste="$emit('paste', e)"
         @focus="setCaretAtEnd"/>
     </template>
     <div
