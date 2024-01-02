@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="canManage"
+    v-if="canConnectRows"
     ref="repositoryItemRelationshipsModal"
     @keydown.esc="close"
     id="repositoryItemRelationshipsModal"
@@ -157,7 +157,7 @@ export default {
       itemParams: [],
       notification: null,
       notificationIconPath: null,
-      canManage: null
+      canConnectRows: null
     };
   },
   computed: {
@@ -205,7 +205,7 @@ export default {
         addRelationCallback,
         notificationIconPath,
         notification,
-        canManage
+        canConnectRows
       } = params;
       this.inventoriesUrl = optionUrls.inventories_url;
       this.inventoryItemsUrl = optionUrls.inventory_items_url;
@@ -213,7 +213,7 @@ export default {
       this.addRelationCallback = addRelationCallback;
       this.notificationIconPath = notificationIconPath;
       this.notification = notification;
-      this.canManage = canManage;
+      this.canConnectRows = canConnectRows;
       this.$nextTick(() => {
         $(this.$refs.repositoryItemRelationshipsModal).modal('show');
       });
@@ -250,7 +250,7 @@ export default {
         itemOptions: [],
         inventoryOptions: [],
         itemParams: [],
-        canManage: null
+        canConnectRows: null
       });
       $(this.$refs.repositoryItemRelationshipsModal).modal('hide');
     },

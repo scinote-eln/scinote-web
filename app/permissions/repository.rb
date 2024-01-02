@@ -88,6 +88,13 @@ Canaid::Permissions.register_for(Repository) do
     repository.permission_granted?(user, RepositoryPermissions::ROWS_UPDATE)
   end
 
+  # create row connections
+  can :connect_repository_rows do |user, repository|
+    repository.repository_snapshots.provisioning.none? &&
+      (repository.shared_with?(user.current_team) ? repository.shared_with_write?(user.current_team) : true) &&
+      repository.permission_granted?(user, RepositoryPermissions::ROWS_UPDATE)
+  end
+
   can :delete_repository_rows do |user, repository|
     repository.permission_granted?(user, RepositoryPermissions::ROWS_DELETE)
   end
