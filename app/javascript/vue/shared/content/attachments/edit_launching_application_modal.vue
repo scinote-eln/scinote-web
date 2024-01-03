@@ -27,7 +27,7 @@
 export default {
   name: 'editLaunchingApplicationModal',
   props: {
-    fileName: String, application: String
+    fileName: String, application: String,
   },
   mounted() {
     $(this.$refs.modal).modal('show');
@@ -38,7 +38,7 @@ export default {
   methods: {
     cancel() {
       $(this.$refs.modal).modal('hide');
-    }
-  }
+    },
+  },
 };
 </script>

@@ -56,7 +56,7 @@
 
 <script>
   import deleteAttachmentModal from './delete_modal.vue'
-  import editLaunchingApplicationModal from './edit_launching_application_modal.vue'
+  import editLaunchingApplicationModal from './edit_launching_application_modal.vue';
   import moveAssetModal from '../modal/move.vue'
   import MoveMixin from './mixins/move.js'
   import OpenLocallyMixin from './mixins/open_locally.js'
@@ -78,7 +78,7 @@
       return {
         viewModeOptions: ['inline', 'thumbnail', 'list'],
         deleteModal: false,
-        editAppModal: false
+        editAppModal: false,
       }
     },
     computed: {
