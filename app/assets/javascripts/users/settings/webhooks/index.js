@@ -24,13 +24,24 @@
     });
   }
   $('.activity-filters-list').on('ajax:error', '.webhook-form', function(e, data) {
-    $(this).renderFormErrors('webhook', data.responseJSON.errors);
+    const { errors } = data.responseJSON;
+    // display url errors with data-error-text attribute
+    if (errors.url) {
+      $(this).find('.url-input-container').addClass('error').attr('data-error-text', `${errors.url.join(', ')}`);
+      delete errors.url;
+    }
+    $(this).renderFormErrors('webhook', errors);
   });
 
   $('.activity-filters-list').on('click', '.create-webhook', function() {
     let filterElement = $(this).closest('.filter-element');
     filterElement.find('.webhooks-list').collapse('show');
     filterElement.find('.create-webhook-container').removeClass('hidden');
+  });
+
+  // clear url form errors
+  $('.activity-filters-list').on('click', '.cancel-action, .save-webhook', () => {
+    $('.url-input-container').removeClass('error').attr('data-error-text', '');
   });
 
   $('.activity-filters-list').on('click', '.create-webhook-container .cancel-action', function(e) {

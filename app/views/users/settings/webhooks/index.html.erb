@@ -111,7 +111,7 @@
                 </div>
               </div>
               <div class="edit-webhook-container hidden">
-                <%= form_with model: webhook, url: users_settings_webhook_path(webhook, filter_id: filter.id, sort: @current_sort), class: 'webhook-form', method: :patch do |f| %>
+                <%= form_with model: webhook, url: users_settings_webhook_path(webhook, filter_id: filter.id, sort: @current_sort), class: 'webhook-form', method: :patch, data: { remote: true } do |f| %>
                   <%= render partial: 'webhook_form', locals: {f: f} %>
                 <% end %>
               </div>
