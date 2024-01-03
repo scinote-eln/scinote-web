@@ -130,8 +130,8 @@
 
                 <!-- RELATIONSHIPS -->
                 <section id="relationships-section" class="flex flex-col" ref="relationshipsSectionRef">
-                  <div class="flex flex-row text-base font-semibold w-[350px] pb-4 leading-7 items-center justify-between transition-colors duration-300"
-                    ref="relationships-label">
+                  <div ref="relationships-label" id="relationships-label"
+                    class="font-inter text-lg font-semibold leading-7 mb-4 transition-colors duration-300">
                     {{ i18n.t('repositories.item_card.section.relationships') }}
                   </div>
                   <div class="font-inter text-sm leading-5 w-full">
