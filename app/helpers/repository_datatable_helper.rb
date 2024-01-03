@@ -2,6 +2,7 @@
 
 module RepositoryDatatableHelper
   include InputSanitizeHelper
+  include Rails.application.routes.url_helpers
 
   def prepare_row_columns(repository_rows, repository, columns_mappings, team, options = {})
     has_stock_management = repository.has_stock_management?
@@ -16,7 +17,7 @@ module RepositoryDatatableHelper
       row = public_send("#{repository.class.name.underscore}_default_columns", record)
       row.merge!(
         DT_RowId: record.id,
-        DT_RowAttr: { 'data-state': row_style(record) },
+        DT_RowAttr: { 'data-state': row_style(record), 'data-e2e': "e2e-RT-invInventory-row-#{record.id}" },
         recordInfoUrl: Rails.application.routes.url_helpers.repository_repository_row_path(repository, record),
         rowRemindersUrl:
           Rails.application.routes.url_helpers
@@ -47,20 +48,6 @@ module RepositoryDatatableHelper
       end
 
       if has_stock_management
-        row['manageStockUrl'] = if record.has_stock?
-                                  Rails.application.routes.url_helpers
-                                       .edit_repository_stock_repository_repository_row_url(
-                                         repository,
-                                         record
-                                       )
-                                else
-                                  Rails.application.routes.url_helpers
-                                       .new_repository_stock_repository_repository_row_url(
-                                         repository,
-                                         record
-                                       )
-                                end
-
         stock_cell = record.repository_cells.find { |cell| cell.value_type == 'RepositoryStockValue' }
 
         # always add stock cell, even if empty
@@ -68,7 +55,7 @@ module RepositoryDatatableHelper
           if stock_cell.present?
             serialize_repository_cell_value(record.repository_stock_cell, team, repository)
           else
-            {}
+            { stock_url: new_repository_stock_repository_repository_row_url(repository, record) }
           end
         row['stock'][:stock_managable] = stock_managable
         row['stock']['displayWarnings'] = display_stock_warnings?(repository)
@@ -119,6 +106,7 @@ module RepositoryDatatableHelper
         DT_RowId: record.id,
         DT_RowAttr: { 'data-state': row_style(record) },
         '0': escape_input(record.name),
+        recordInfoUrl: Rails.application.routes.url_helpers.repository_repository_row_path(record.repository, record),
         rowRemindersUrl:
           Rails.application.routes.url_helpers
                .active_reminder_repository_cells_repository_repository_row_url(
@@ -126,11 +114,6 @@ module RepositoryDatatableHelper
                  record
                )
       }
-
-      unless record.repository.is_a?(RepositorySnapshot)
-        row['recordInfoUrl'] = Rails.application.routes.url_helpers.repository_repository_row_path(record.repository,
-                                                                                                   record)
-      end
 
       if reminders_enabled
         row['hasActiveReminders'] = record.has_active_stock_reminders || record.has_active_datetime_reminders
@@ -253,13 +236,13 @@ module RepositoryDatatableHelper
   def linked_repository_default_columns(record)
     {
       '1': assigned_row(record),
-      '2': escape_input(record.external_id),
-      '3': record.code,
-      '4': escape_input(record.name),
-      '5': I18n.l(record.created_at, format: :full),
-      '6': escape_input(record.created_by.full_name),
-      '7': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
-      '8': escape_input(record.archived_by&.full_name)
+      '2': record.code,
+      '3': escape_input(record.name),
+      '4': I18n.l(record.created_at, format: :full),
+      '5': escape_input(record.created_by.full_name),
+      '6': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
+      '7': escape_input(record.archived_by&.full_name),
+      '8': escape_input(record.external_id)
     }
   end
 

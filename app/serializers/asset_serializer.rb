@@ -30,7 +30,7 @@ class AssetSerializer < ActiveModel::Serializer
   end
 
   def updated_at_formatted
-    I18n.l(object.updated_at, format: :full_date) if object.updated_at
+    I18n.l(object.updated_at, format: :full_with_comma) if object.updated_at
   end
 
   def parent_type

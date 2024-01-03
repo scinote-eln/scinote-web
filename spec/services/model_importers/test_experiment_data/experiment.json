@@ -83,7 +83,6 @@
                     "steps": [
                         {
                             "assets": [],
-                            "checklists": [],
                             "step": {
                                 "completed": false,
                                 "completed_on": null,
@@ -97,10 +96,19 @@
                                 "updated_at": "2019-01-21T13:31:55.921Z",
                                 "user_id": 1
                             },
+                            "step_orderable_elements": [
+                                {
+                                    "position": 0,
+                                    "step_text": {
+                                        "created_at": "2019-01-21T13:04:30.562Z",
+                                        "updated_at": "2019-01-21T13:04:30.562Z",
+                                        "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">"
+                                    }
+                                }
+                            ],
                             "step_assets": [],
                             "step_comments": [],
-                            "step_tables": [],
-                            "tables": []
+                            "step_tables": []
                         }
                     ]
                 }
@@ -170,59 +178,10 @@
                     "steps": [
                         {
                             "assets": [],
-                            "checklists": [
-                                {
-                                    "checklist": {
-                                        "created_at": "2019-01-21T13:04:30.562Z",
-                                        "created_by_id": null,
-                                        "id": 2,
-                                        "last_modified_by_id": null,
-                                        "name": "Guide",
-                                        "step_id": 18,
-                                        "updated_at": "2019-01-21T13:04:30.562Z"
-                                    },
-                                    "checklist_items": [
-                                        {
-                                            "checked": false,
-                                            "checklist_id": 2,
-                                            "created_at": "2019-01-21T13:04:30.565Z",
-                                            "created_by_id": null,
-                                            "id": 8,
-                                            "last_modified_by_id": null,
-                                            "position": 0,
-                                            "text": "Wolf",
-                                            "updated_at": "2019-01-21T13:04:30.565Z"
-                                        },
-                                        {
-                                            "checked": true,
-                                            "checklist_id": 2,
-                                            "created_at": "2019-01-21T13:04:30.568Z",
-                                            "created_by_id": null,
-                                            "id": 9,
-                                            "last_modified_by_id": null,
-                                            "position": 1,
-                                            "text": "Cat",
-                                            "updated_at": "2019-01-21T13:04:32.708Z"
-                                        },
-                                        {
-                                            "checked": false,
-                                            "checklist_id": 2,
-                                            "created_at": "2019-01-21T13:04:30.570Z",
-                                            "created_by_id": null,
-                                            "id": 10,
-                                            "last_modified_by_id": null,
-                                            "position": 2,
-                                            "text": "Bull",
-                                            "updated_at": "2019-01-21T13:04:30.570Z"
-                                        }
-                                    ]
-                                }
-                            ],
                             "step": {
                                 "completed": false,
                                 "completed_on": null,
                                 "created_at": "2019-01-21T13:04:30.558Z",
-                                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">",
                                 "id": 18,
                                 "last_modified_by_id": 1,
                                 "name": "Lonelier step",
@@ -234,7 +193,65 @@
                             "step_assets": [],
                             "step_comments": [],
                             "step_tables": [],
-                            "tables": []
+                            "step_orderable_elements": [
+                                {   
+                                    "checklist": {
+                                        "position": 0,
+                                        "checklist": {
+                                            "created_at": "2019-01-21T13:04:30.562Z",
+                                            "created_by_id": null,
+                                            "id": 2,
+                                            "last_modified_by_id": null,
+                                            "name": "Guide",
+                                            "step_id": 18,
+                                            "updated_at": "2019-01-21T13:04:30.562Z"
+                                        },
+                                        "checklist_items": [
+                                            {
+                                                "checked": false,
+                                                "checklist_id": 2,
+                                                "created_at": "2019-01-21T13:04:30.565Z",
+                                                "created_by_id": null,
+                                                "id": 8,
+                                                "last_modified_by_id": null,
+                                                "position": 0,
+                                                "text": "Wolf",
+                                                "updated_at": "2019-01-21T13:04:30.565Z"
+                                            },
+                                            {
+                                                "checked": true,
+                                                "checklist_id": 2,
+                                                "created_at": "2019-01-21T13:04:30.568Z",
+                                                "created_by_id": null,
+                                                "id": 9,
+                                                "last_modified_by_id": null,
+                                                "position": 1,
+                                                "text": "Cat",
+                                                "updated_at": "2019-01-21T13:04:32.708Z"
+                                            },
+                                            {
+                                                "checked": false,
+                                                "checklist_id": 2,
+                                                "created_at": "2019-01-21T13:04:30.570Z",
+                                                "created_by_id": null,
+                                                "id": 10,
+                                                "last_modified_by_id": null,
+                                                "position": 2,
+                                                "text": "Bull",
+                                                "updated_at": "2019-01-21T13:04:30.570Z"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "position": 0,
+                                    "step_text":{
+                                        "created_at": "2019-01-21T13:04:30.562Z",
+                                        "updated_at": "2019-01-21T13:04:30.562Z",
+                                        "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">"
+                                    }
+                                }                                 
+                            ]
                         }
                     ]
                 }
@@ -316,12 +333,10 @@
                                     }
                                 }
                             ],
-                            "checklists": [],
                             "step": {
                                 "completed": false,
                                 "completed_on": null,
                                 "created_at": "2019-01-21T13:09:35.466Z",
-                                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">",
                                 "id": 20,
                                 "last_modified_by_id": 1,
                                 "name": "Workflow 2 step",
@@ -330,6 +345,16 @@
                                 "updated_at": "2019-01-21T13:10:06.292Z",
                                 "user_id": 1
                             },
+                            "step_orderable_elements": [
+                                {
+                                    "position": 0,
+                                    "step_text": {
+                                        "created_at": "2019-01-21T13:04:30.562Z",
+                                        "updated_at": "2019-01-21T13:04:30.562Z",
+                                        "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">"
+                                    }
+                                }  
+                            ],
                             "step_assets": [
                                 {
                                     "asset_id": 21,
@@ -338,8 +363,7 @@
                                 }
                             ],
                             "step_comments": [],
-                            "step_tables": [],
-                            "tables": []
+                            "step_tables": []
                         }
                     ]
                 }
@@ -406,12 +430,10 @@
                     "steps": [
                         {
                             "assets": [],
-                            "checklists": [],
                             "step": {
                                 "completed": false,
                                 "completed_on": null,
                                 "created_at": "2019-01-21T13:05:20.547Z",
-                                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">",
                                 "id": 19,
                                 "last_modified_by_id": 1,
                                 "name": "USB step",
@@ -432,24 +454,35 @@
                                     "user_id": 1
                                 }
                             ],
+                            "step_orderable_elements": [
+                                {
+                                    "position": 0,
+                                    "table": {
+                                        "contents": "eyJkYXRhIjpbWyIxIixudWxsLG51bGwsbnVsbCxudWxsXSxbbnVsbCwiMiIs\nbnVsbCxudWxsLG51bGxdLFtudWxsLG51bGwsIjMiLG51bGwsbnVsbF0sW251\nbGwsbnVsbCxudWxsLCI0IixudWxsXSxbbnVsbCxudWxsLG51bGwsbnVsbCwi\nNSJdXX0=\n",
+                                        "created_at": "2019-01-21T13:05:20.550Z",
+                                        "created_by_id": 1,
+                                        "data_vector": "JzEnOjEgJzInOjcgJzMnOjEzICc0JzoxOSAnNSc6MjUgJ251bGwnOjIsMyw0\nLDUsNiw4LDksMTAsMTEsMTIsMTQsMTUsMTYsMTcsMTgsMjAsMjEsMjIsMjMs\nMjQ=\n",
+                                        "id": 5,
+                                        "last_modified_by_id": null,
+                                        "name": "USB table",
+                                        "team_id": 1,
+                                        "updated_at": "2019-01-21T13:05:20.550Z"
+                                    }
+                                },
+                                {
+                                    "position": 1,
+                                    "step_text": {
+                                        "created_at": "2019-01-21T13:04:30.562Z",
+                                        "updated_at": "2019-01-21T13:04:30.562Z",
+                                        "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">"
+                                    }
+                                }  
+                            ],
                             "step_tables": [
                                 {
                                     "id": 2,
                                     "step_id": 19,
                                     "table_id": 5
-                                }
-                            ],
-                            "tables": [
-                                {
-                                    "contents": "eyJkYXRhIjpbWyIxIixudWxsLG51bGwsbnVsbCxudWxsXSxbbnVsbCwiMiIs\nbnVsbCxudWxsLG51bGxdLFtudWxsLG51bGwsIjMiLG51bGwsbnVsbF0sW251\nbGwsbnVsbCxudWxsLCI0IixudWxsXSxbbnVsbCxudWxsLG51bGwsbnVsbCwi\nNSJdXX0=\n",
-                                    "created_at": "2019-01-21T13:05:20.550Z",
-                                    "created_by_id": 1,
-                                    "data_vector": "JzEnOjEgJzInOjcgJzMnOjEzICc0JzoxOSAnNSc6MjUgJ251bGwnOjIsMyw0\nLDUsNiw4LDksMTAsMTEsMTIsMTQsMTUsMTYsMTcsMTgsMjAsMjEsMjIsMjMs\nMjQ=\n",
-                                    "id": 5,
-                                    "last_modified_by_id": null,
-                                    "name": "USB table",
-                                    "team_id": 1,
-                                    "updated_at": "2019-01-21T13:05:20.550Z"
                                 }
                             ]
                         }
@@ -525,12 +558,10 @@
                     "steps": [
                         {
                             "assets": [],
-                            "checklists": [],
                             "step": {
                                 "completed": true,
                                 "completed_on": "2019-01-19T10:56:48.558Z",
                                 "created_at": "2019-01-19T08:52:33.490Z",
-                                "description": "Compare response of PVYNTN, cab4 and PR1 genes in mock/virus inoculated potatoes & in time",
                                 "id": 1,
                                 "last_modified_by_id": null,
                                 "name": "Gene expression",
@@ -540,6 +571,16 @@
                                 "user_id": 1
                             },
                             "step_assets": [],
+                            "step_orderable_elements": [
+                                {
+                                    "position": 0,
+                                    "step_text": {
+                                        "created_at": "2019-01-21T13:04:30.562Z",
+                                        "updated_at": "2019-01-21T13:04:30.562Z",
+                                        "text": "Compare response of PVYNTN, cab4 and PR1 genes in mock/virus inoculated potatoes & in time"
+                                    }
+                                }  
+                            ],
                             "step_comments": [
                                 {
                                     "associated_id": 1,
@@ -551,15 +592,14 @@
                                     "user_id": 1
                                 }
                             ],
-                            "step_tables": [],
-                            "tables": []
+                            "step_tables": []
                         }
                     ]
                 }
             ],
             "results": [
                 {
-                    "asset": null,
+                    "assets": [],
                     "result": {
                         "archived": false,
                         "archived_by_id": null,
@@ -575,40 +615,47 @@
                         "user_id": 1
                     },
                     "result_comments": [],
-                    "result_text": null,
-                    "table": {
-                        "contents": "eyJkYXRhIjpbWyIiLCIiLCIiLG51bGwsbnVsbF0sWyIiLCIiLCIiLG51bGws\nbnVsbF0sWyJncm91cC90aW1lIiwiMSBkcGkiLCI2IGRwaSIsIiIsIiJdLFsi\nUFZZTlROIiwiMSIsIjEiLCIiLCIiXSxbIm1vY2siLCIxIiwiMSIsIiIsIiJd\nLFtudWxsLG51bGwsbnVsbCxudWxsLG51bGxdXX0=\n",
-                        "created_at": "2019-01-21T12:44:58.086Z",
-                        "created_by_id": 1,
-                        "data_vector": "JzEnOjYsMTEsMTIsMTQsMTUgJzYnOjggJ2RwaSc6Nyw5ICdncm91cC90aW1l\nJzo1ICdtb2NrJzoxMyAnbnVsbCc6MSwyLDMsNCwxNiwxNywxOCwxOSwyMCAn\ncHZ5bnRuJzoxMA==\n",
-                        "id": 1,
-                        "last_modified_by_id": null,
-                        "name": "",
-                        "team_id": 1,
-                        "updated_at": "2019-01-21T12:44:58.093Z"
-                    }
+                    "result_orderable_elements": [
+                        {
+                            "orderable_type": "ResultTable",
+                            "position": 0,
+                            "table": {
+                                "contents": "eyJkYXRhIjpbWyIiLCIiLCIiLG51bGwsbnVsbF0sWyIiLCIiLCIiLG51bGws\nbnVsbF0sWyJncm91cC90aW1lIiwiMSBkcGkiLCI2IGRwaSIsIiIsIiJdLFsi\nUFZZTlROIiwiMSIsIjEiLCIiLCIiXSxbIm1vY2siLCIxIiwiMSIsIiIsIiJd\nLFtudWxsLG51bGwsbnVsbCxudWxsLG51bGxdXX0=\n",
+                                "created_at": "2019-01-21T12:44:58.086Z",
+                                "created_by_id": 1,
+                                "data_vector": "JzEnOjYsMTEsMTIsMTQsMTUgJzYnOjggJ2RwaSc6Nyw5ICdncm91cC90aW1l\nJzo1ICdtb2NrJzoxMyAnbnVsbCc6MSwyLDMsNCwxNiwxNywxOCwxOSwyMCAn\ncHZ5bnRuJzoxMA==\n",
+                                "id": 1,
+                                "last_modified_by_id": null,
+                                "name": "",
+                                "team_id": 1,
+                                "updated_at": "2019-01-21T12:44:58.093Z"
+                            }
+                        }
+                    ]
                 },
                 {
-                    "asset": {
-                        "asset": {
-                            "created_at": "2019-01-21T12:45:29.138Z",
-                            "created_by_id": 1,
-                            "estimated_size": 232,
-                            "file_processing": null,
-                            "id": 1,
-                            "last_modified_by_id": 1,
-                            "lock": null,
-                            "lock_ttl": null,
-                            "team_id": 1,
-                            "updated_at": "2019-01-21T13:06:01.610Z",
-                            "version": 1
-                        },
-                        "asset_blob": {
-                            "filename": "samples.txt",
-                            "content_type": "text/plain",
-                            "byte_size": 69
+                    "assets": [
+                        {
+                            "asset": {
+                                "created_at": "2019-01-21T12:45:29.138Z",
+                                "created_by_id": 1,
+                                "estimated_size": 232,
+                                "file_processing": null,
+                                "id": 1,
+                                "last_modified_by_id": 1,
+                                "lock": null,
+                                "lock_ttl": null,
+                                "team_id": 1,
+                                "updated_at": "2019-01-21T13:06:01.610Z",
+                                "version": 1
+                            },
+                            "asset_blob": {
+                                "filename": "samples.txt",
+                                "content_type": "text/plain",
+                                "byte_size": 69
+                            }
                         }
-                    },
+                    ],
                     "result": {
                         "archived": true,
                         "archived_by_id": 1,
@@ -624,8 +671,7 @@
                         "user_id": 1
                     },
                     "result_comments": [],
-                    "result_text": null,
-                    "table": {}
+                    "result_orderable_elements": []
                 }
             ],
             "task_comments": [
@@ -759,103 +805,10 @@
                     "steps": [
                         {
                             "assets": [],
-                            "checklists": [
-                                {
-                                    "checklist": {
-                                        "created_at": "2019-01-21T12:44:58.537Z",
-                                        "created_by_id": null,
-                                        "id": 1,
-                                        "last_modified_by_id": null,
-                                        "name": "Mastermix",
-                                        "step_id": 9,
-                                        "updated_at": "2019-01-21T12:44:58.537Z"
-                                    },
-                                    "checklist_items": [
-                                        {
-                                            "checked": true,
-                                            "checklist_id": 1,
-                                            "created_at": "2019-01-21T12:44:58.540Z",
-                                            "created_by_id": null,
-                                            "id": 1,
-                                            "last_modified_by_id": null,
-                                            "position": null,
-                                            "text": "RT buffer",
-                                            "updated_at": "2019-01-21T12:50:40.690Z"
-                                        },
-                                        {
-                                            "checked": true,
-                                            "checklist_id": 1,
-                                            "created_at": "2019-01-21T12:44:58.542Z",
-                                            "created_by_id": null,
-                                            "id": 2,
-                                            "last_modified_by_id": null,
-                                            "position": null,
-                                            "text": "dNTP mix",
-                                            "updated_at": "2019-01-21T12:50:41.287Z"
-                                        },
-                                        {
-                                            "checked": false,
-                                            "checklist_id": 1,
-                                            "created_at": "2019-01-21T12:44:58.543Z",
-                                            "created_by_id": null,
-                                            "id": 3,
-                                            "last_modified_by_id": null,
-                                            "position": null,
-                                            "text": "Random Primers",
-                                            "updated_at": "2019-01-21T12:44:58.543Z"
-                                        },
-                                        {
-                                            "checked": false,
-                                            "checklist_id": 1,
-                                            "created_at": "2019-01-21T12:44:58.545Z",
-                                            "created_by_id": null,
-                                            "id": 4,
-                                            "last_modified_by_id": null,
-                                            "position": null,
-                                            "text": "RNase inhibitor",
-                                            "updated_at": "2019-01-21T12:44:58.545Z"
-                                        },
-                                        {
-                                            "checked": false,
-                                            "checklist_id": 1,
-                                            "created_at": "2019-01-21T12:44:58.547Z",
-                                            "created_by_id": null,
-                                            "id": 5,
-                                            "last_modified_by_id": null,
-                                            "position": null,
-                                            "text": "Reverse transcriptase",
-                                            "updated_at": "2019-01-21T12:44:58.547Z"
-                                        },
-                                        {
-                                            "checked": false,
-                                            "checklist_id": 1,
-                                            "created_at": "2019-01-21T12:44:58.548Z",
-                                            "created_by_id": null,
-                                            "id": 6,
-                                            "last_modified_by_id": null,
-                                            "position": null,
-                                            "text": "Optional: Luciferase mRNA (denatured)",
-                                            "updated_at": "2019-01-21T12:44:58.548Z"
-                                        },
-                                        {
-                                            "checked": false,
-                                            "checklist_id": 1,
-                                            "created_at": "2019-01-21T12:44:58.550Z",
-                                            "created_by_id": null,
-                                            "id": 7,
-                                            "last_modified_by_id": null,
-                                            "position": null,
-                                            "text": "H2O to 12.5 ul",
-                                            "updated_at": "2019-01-21T12:44:58.550Z"
-                                        }
-                                    ]
-                                }
-                            ],
                             "step": {
                                 "completed": true,
                                 "completed_on": "2019-01-17T13:52:32.426Z",
                                 "created_at": "2019-01-17T13:15:20.691Z",
-                                "description": "High Capacity cDNA Reverse Transcription Kit (Applied Biosystems)",
                                 "id": 9,
                                 "last_modified_by_id": null,
                                 "name": "Prepare mastermix for RT",
@@ -864,19 +817,118 @@
                                 "updated_at": "2019-01-21T12:44:58.539Z",
                                 "user_id": 1
                             },
+                            "step_orderable_elements": [
+                                {   "position": 0,
+                                    "step_text": {
+                                        "created_at": "2019-01-21T13:04:30.562Z",
+                                        "updated_at": "2019-01-21T13:04:30.562Z",
+                                        "text": "High Capacity cDNA Reverse Transcription Kit (Applied Biosystems)"
+                                    }
+                                },
+                                {
+                                    "checklist": {
+                                        "position": 1,
+                                        "checklist": {
+                                            "created_at": "2019-01-21T12:44:58.537Z",
+                                            "created_by_id": null,
+                                            "id": 1,
+                                            "last_modified_by_id": null,
+                                            "name": "Mastermix",
+                                            "step_id": 9,
+                                            "updated_at": "2019-01-21T12:44:58.537Z"
+                                        },
+                                        "checklist_items": [
+                                            {
+                                                "checked": true,
+                                                "checklist_id": 1,
+                                                "created_at": "2019-01-21T12:44:58.540Z",
+                                                "created_by_id": null,
+                                                "id": 1,
+                                                "last_modified_by_id": null,
+                                                "position": 0,
+                                                "text": "RT buffer",
+                                                "updated_at": "2019-01-21T12:50:40.690Z"
+                                            },
+                                            {
+                                                "checked": true,
+                                                "checklist_id": 1,
+                                                "created_at": "2019-01-21T12:44:58.542Z",
+                                                "created_by_id": null,
+                                                "id": 2,
+                                                "last_modified_by_id": null,
+                                                "position": 1,
+                                                "text": "dNTP mix",
+                                                "updated_at": "2019-01-21T12:50:41.287Z"
+                                            },
+                                            {
+                                                "checked": false,
+                                                "checklist_id": 1,
+                                                "created_at": "2019-01-21T12:44:58.543Z",
+                                                "created_by_id": null,
+                                                "id": 3,
+                                                "last_modified_by_id": null,
+                                                "position": 2,
+                                                "text": "Random Primers",
+                                                "updated_at": "2019-01-21T12:44:58.543Z"
+                                            },
+                                            {
+                                                "checked": false,
+                                                "checklist_id": 1,
+                                                "created_at": "2019-01-21T12:44:58.545Z",
+                                                "created_by_id": null,
+                                                "id": 4,
+                                                "last_modified_by_id": null,
+                                                "position": 3,
+                                                "text": "RNase inhibitor",
+                                                "updated_at": "2019-01-21T12:44:58.545Z"
+                                            },
+                                            {
+                                                "checked": false,
+                                                "checklist_id": 1,
+                                                "created_at": "2019-01-21T12:44:58.547Z",
+                                                "created_by_id": null,
+                                                "id": 5,
+                                                "last_modified_by_id": null,
+                                                "position": 4,
+                                                "text": "Reverse transcriptase",
+                                                "updated_at": "2019-01-21T12:44:58.547Z"
+                                            },
+                                            {
+                                                "checked": false,
+                                                "checklist_id": 1,
+                                                "created_at": "2019-01-21T12:44:58.548Z",
+                                                "created_by_id": null,
+                                                "id": 6,
+                                                "last_modified_by_id": null,
+                                                "position": 5,
+                                                "text": "Optional: Luciferase mRNA (denatured)",
+                                                "updated_at": "2019-01-21T12:44:58.548Z"
+                                            },
+                                            {
+                                                "checked": false,
+                                                "checklist_id": 1,
+                                                "created_at": "2019-01-21T12:44:58.550Z",
+                                                "created_by_id": null,
+                                                "id": 7,
+                                                "last_modified_by_id": null,
+                                                "position": 6,
+                                                "text": "H2O to 12.5 ul",
+                                                "updated_at": "2019-01-21T12:44:58.550Z"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
                             "step_assets": [],
                             "step_comments": [],
-                            "step_tables": [],
-                            "tables": []
+                            "step_tables": []
                         },
                         {
                             "assets": [],
-                            "checklists": [],
                             "step": {
                                 "completed": false,
                                 "completed_on": null,
                                 "created_at": "2019-01-17T12:58:06.802Z",
-                                "description": "25\u00b0C for 10 min 37\u00b0C for 2 h",
                                 "id": 10,
                                 "last_modified_by_id": null,
                                 "name": "RT reaction",
@@ -885,10 +937,20 @@
                                 "updated_at": "2019-01-21T12:44:58.483Z",
                                 "user_id": 1
                             },
+
                             "step_assets": [],
                             "step_comments": [],
                             "step_tables": [],
-                            "tables": []
+                            "step_orderable_elements": [
+                                {   
+                                    "position": 0,
+                                    "step_text": {
+                                        "created_at": "2019-01-21T13:04:30.562Z",
+                                        "updated_at": "2019-01-21T13:04:30.562Z",
+                                        "text": "25\u00b0C for 10 min 37\u00b0C for 2 h"
+                                    }
+                                }
+                            ]
                         },
                         {
                             "assets": [],
@@ -897,7 +959,6 @@
                                 "completed": true,
                                 "completed_on": "2019-01-17T17:37:06.427Z",
                                 "created_at": "2019-01-17T09:35:43.770Z",
-                                "description": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>1 ug of RNA denature at 80\u00b0C for 5 min --&gt; ice</p></body></html>",
                                 "id": 8,
                                 "last_modified_by_id": 1,
                                 "name": "RNA denaturation",
@@ -906,6 +967,30 @@
                                 "updated_at": "2019-01-21T12:57:51.929Z",
                                 "user_id": 1
                             },
+                            "step_orderable_elements": [
+                                {   
+                                    "position": 0,
+                                    "step_text": {
+                                        "created_at": "2019-01-21T13:04:30.562Z",
+                                        "updated_at": "2019-01-21T13:04:30.562Z",
+                                        "text": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<html><body><p>1 ug of RNA denature at 80\u00b0C for 5 min --&gt; ice</p></body></html>"
+                                    }
+                                },
+                                {
+                                    "position": 1,
+                                    "table": {
+                                        "contents": "eyJkYXRhIjpbWyIxMSIsIjIyIiwiMzMiLCI0NCIsIjU1Il0sW251bGwsbnVs\nbCxudWxsLG51bGwsbnVsbF0sW251bGwsbnVsbCxudWxsLG51bGwsbnVsbF0s\nW251bGwsbnVsbCxudWxsLG51bGwsbnVsbF0sW251bGwsbnVsbCxudWxsLG51\nbGwsIjY3OCJdXX0=\n",
+                                        "created_at": "2019-01-21T12:57:51.923Z",
+                                        "created_by_id": 1,
+                                        "data_vector": "JzExJzoxICcyMic6MiAnMzMnOjMgJzQ0Jzo0ICc1NSc6NSAnNjc4JzoyNSAn\nbnVsbCc6Niw3LDgsOSwxMCwxMSwxMiwxMywxNCwxNSwxNiwxNywxOCwxOSwy\nMCwyMSwyMiwyMywyNA==\n",
+                                        "id": 4,
+                                        "last_modified_by_id": null,
+                                        "name": "",
+                                        "team_id": 1,
+                                        "updated_at": "2019-01-21T12:57:51.923Z"
+                                    }
+                                }
+                            ],
                             "step_assets": [],
                             "step_comments": [],
                             "step_tables": [
@@ -913,19 +998,6 @@
                                     "id": 1,
                                     "step_id": 8,
                                     "table_id": 4
-                                }
-                            ],
-                            "tables": [
-                                {
-                                    "contents": "eyJkYXRhIjpbWyIxMSIsIjIyIiwiMzMiLCI0NCIsIjU1Il0sW251bGwsbnVs\nbCxudWxsLG51bGwsbnVsbF0sW251bGwsbnVsbCxudWxsLG51bGwsbnVsbF0s\nW251bGwsbnVsbCxudWxsLG51bGwsbnVsbF0sW251bGwsbnVsbCxudWxsLG51\nbGwsIjY3OCJdXX0=\n",
-                                    "created_at": "2019-01-21T12:57:51.923Z",
-                                    "created_by_id": 1,
-                                    "data_vector": "JzExJzoxICcyMic6MiAnMzMnOjMgJzQ0Jzo0ICc1NSc6NSAnNjc4JzoyNSAn\nbnVsbCc6Niw3LDgsOSwxMCwxMSwxMiwxMywxNCwxNSwxNiwxNywxOCwxOSwy\nMCwyMSwyMiwyMywyNA==\n",
-                                    "id": 4,
-                                    "last_modified_by_id": null,
-                                    "name": "",
-                                    "team_id": 1,
-                                    "updated_at": "2019-01-21T12:57:51.923Z"
                                 }
                             ]
                         }
@@ -1082,12 +1154,10 @@
                                     }
                                 }
                             ],
-                            "checklists": [],
                             "step": {
                                 "completed": false,
                                 "completed_on": null,
                                 "created_at": "2019-01-18T16:27:28.209Z",
-                                "description": null,
                                 "id": 7,
                                 "last_modified_by_id": null,
                                 "name": "Use Nano chip for testing RNA integrity",
@@ -1096,6 +1166,7 @@
                                 "updated_at": "2019-01-21T13:06:04.592Z",
                                 "user_id": 1
                             },
+                            "step_orderable_elements": [],
                             "step_assets": [
                                 {
                                     "asset_id": 8,
@@ -1104,34 +1175,35 @@
                                 }
                             ],
                             "step_comments": [],
-                            "step_tables": [],
-                            "tables": []
+                            "step_tables": []
                         }
                     ]
                 }
             ],
             "results": [
                 {
-                    "asset": {
-                        "asset": {
-                            "created_at": "2019-01-21T12:45:32.847Z",
-                            "created_by_id": 1,
-                            "estimated_size": 46131,
-                            "file_processing": null,
-                            "id": 9,
-                            "last_modified_by_id": 1,
-                            "lock": null,
-                            "lock_ttl": null,
-                            "team_id": 1,
-                            "updated_at": "2019-01-21T12:45:44.269Z",
-                            "version": 1
-                        },
-                        "asset_blob": {
-                            "filename": "Bioanalyser_result.JPG",
-                            "content_type": "image/jpeg",
-                            "byte_size": 41938
+                    "assets":[ 
+                        {
+                            "asset": {
+                                "created_at": "2019-01-21T12:45:32.847Z",
+                                "created_by_id": 1,
+                                "estimated_size": 46131,
+                                "file_processing": null,
+                                "id": 9,
+                                "last_modified_by_id": 1,
+                                "lock": null,
+                                "lock_ttl": null,
+                                "team_id": 1,
+                                "updated_at": "2019-01-21T12:45:44.269Z",
+                                "version": 1
+                            },
+                            "asset_blob": {
+                                "filename": "Bioanalyser_result.JPG",
+                                "content_type": "image/jpeg",
+                                "byte_size": 41938
+                            }
                         }
-                    },
+                    ],
                     "result": {
                         "archived": true,
                         "archived_by_id": 1,
@@ -1146,9 +1218,8 @@
                         "updated_at": "2019-01-21T13:16:01.326Z",
                         "user_id": 1
                     },
-                    "result_comments": [],
-                    "result_text": null,
-                    "table": {}
+                    "result_orderable_elements": [],
+                    "result_comments": []
                 }
             ],
             "task_comments": [],

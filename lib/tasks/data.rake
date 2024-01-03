@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+# rubocop:disable Metrics/BlockLength
+
 namespace :data do
   Rails.logger = Logger.new(STDOUT)
 
@@ -5,7 +9,6 @@ namespace :data do
   task clean_temp_files: :environment do
     Rails.logger.info "Cleaning temporary files older than 3 days"
     TempFile.where("created_at < ?", 3.days.ago).each do |tmp_file|
-
       TempFile.transaction do
         begin
           tmp_file.destroy!
@@ -194,4 +197,37 @@ namespace :data do
       end
     end
   end
+
+  desc 'Reset protocols creator user assignments'
+  task reset_protocols_creator_user_assignments: :environment do
+    ActiveRecord::Base.transaction do
+      owner_role = UserRole.find_predefined_owner_role
+      protocols =
+        Protocol.where(protocol_type: Protocol::REPOSITORY_TYPES)
+                .joins('LEFT OUTER JOIN "user_assignments" ON "user_assignments"."assignable_type" = \'Protocol\' ' \
+                       'AND "user_assignments"."assignable_id" = "protocols"."id" ' \
+                       'AND "user_assignments"."assigned" = 1 ' \
+                       'AND "user_assignments"."user_id" = "protocols"."added_by_id"')
+                .where('"user_assignments"."id" IS NULL')
+                .distinct
+      protocols.find_each do |protocol|
+        new_user_assignment = protocol.user_assignments
+                                      .find_or_initialize_by(user: protocol.added_by, team: protocol.team)
+        new_user_assignment.user_role = owner_role
+        new_user_assignment.assigned_by = protocol.added_by
+        new_user_assignment.assigned = :manually
+        new_user_assignment.save!
+      end
+    end
+  end
+
+  desc 'Extract missing asset texts'
+  task extract_missing_asset_texts: :environment do
+    Asset.joins(:file_blob)
+         .where.missing(:asset_text_datum)
+         .where(file_blob: { content_type: Constants::TEXT_EXTRACT_FILE_TYPES })
+         .find_each(&:extract_asset_text)
+  end
 end
+
+# rubocop:enable Metrics/BlockLength

@@ -406,7 +406,7 @@ en:
       leaving_warning: 'Your changes will be lost if you navigate away'
     thumbnail:
       buttons:
-        edit: "Edit"
+        open: "Open"
         move: "Move"
         download: "Download"
         delete: "Delete"
@@ -761,7 +761,7 @@ en:
           assigned_items_description: "Inventories selected below will only contain the items that you assigned to the tasks directly."
           include_all_assigned_iitems: "Include all assigned items from the following inventories"
           results: "Results"
-          all_results: "Include all results"
+          all_results: "Include all results elements"
           order_results: "Order results"
           atoz: "Name A to Z"
           ztoa: "Name Z to A"
@@ -769,12 +769,12 @@ en:
           old: "Added first"
           new_updated: "Modified last"
           old_updated: "Modified first"
-          file_results: "File results"
+          file_results: "Result files"
           insert_pages_from_pdf: "Insert pages from PDF and docx files into the report"
           pdf_warning: "This may increase report generation time."
-          table_results: "Table results"
-          text_results: "Text results"
-          results_comments: "Include all result comments"
+          table_results: "Result tables"
+          text_results: "Result texts"
+          results_comments: "Result comments"
           additional_content: "Additional content"
           task_activity: "Include task activity"
           archived: "[archived]"
@@ -1805,10 +1805,10 @@ en:
     destroy:
       success_flash: "File result successfully deleted."
     wopi_open_file: "Open in %{app}"
-    wopi_edit_file: "Edit in %{app}"
-    wopi_word: "Word for the web"
-    wopi_excel: "Excel for the web"
-    wopi_powerpoint: "PowerPoint for the web"
+    wopi_edit_file: "Open in %{app}"
+    wopi_word: "MS Word online"
+    wopi_excel: "Excel online"
+    wopi_powerpoint: "PowerPoint online"
     error_flash: 'Something went wrong! Please try again later.'
 
   result_tables:
@@ -2223,6 +2223,7 @@ en:
     my_module_assigned_snapshot_service:
       invalid_arguments: "Can't find %{key}"
     item_card:
+      header_title: "Inventory item"
       section:
         information: "Information"
         assigned: "Assigned (%{count})"
@@ -2260,11 +2261,14 @@ en:
       no_custom_columns_label: "No custom columns"
       repository_time_range_value:
         no_time_range: 'No time range'
+        placeholder: 'Enter time range'
       repository_text_value:
         collapse: 'Collapse'
         expand: 'Expand'
-        no_text: 'No text'
+        no_text: 'No content'
+        placeholder: 'Enter text'
       repository_stock_value:
+        placeholder: 'Enter stock'
         no_stock: 'No stock'
       repository_status_value:
         no_status: 'No selection'
@@ -2272,22 +2276,42 @@ en:
         collapse: 'Collapse'
         expand: 'Expand'
         no_number: 'No number'
+        placeholder: 'Enter number'
       repository_list_value:
         no_list: 'No selection'
       repository_date_value:
         no_date: 'No date'
+        placeholder: 'Enter date'
       repository_date_time_value:
         no_date_time: 'No date and time'
+        placeholder: 'Enter date & time'
       repository_date_time_range_value:
         no_date_time_range: 'No date and time range'
+        placeholder: 'Enter date & time range'
       repository_date_range_value:
         no_date_range: 'No date range'
+        placeholder: 'Enter date range'
       repository_checklist_value:
         no_checklist: 'No selection'
       repository_asset_value:
         no_asset: 'No file'
+        placeholder: 'Enter asset'
+        add_asset: 'Add file'
+        errors:
+          upload_failed_general: 'Upload failed. Something went wrong, please try again'
+          file_too_big: 'Upload failed. File size must be less than %{file_size} MB.'
       repository_time_value:
         no_time: 'No time'
+        placeholder: 'Enter time'
+      expand: 'Expand'
+      collapse: 'Collapse'
+      dropdown_placeholder: 'Select'
+      date_time:
+        errors:
+          set_all_or_none: 'Needs to set both or none'
+          not_valid_range: 'Range is not valid.'
+          select_valid_value: 'Select a valid date or date-time value'
+          browser_alert_message: 'You have made some changes, are you sure you want to leave this page?'
     highlight_component:
       information_label: 'Information'
       custom_columns_label: 'Custom columns'
@@ -2333,11 +2357,18 @@ en:
         consumed_on: 'Consumed on'
         team: 'Team'
         project: 'Project'
+        project_id: 'Project ID'
         experiment: 'Experiment'
+        experiment_id: 'Experiment ID'
         task: 'Task'
         task_id: 'Task ID'
         stock_amount_balance: 'Stock amount after update (balance)'
         stock_balance_unit: 'Stock unit after update'
+  repository_rows:
+    invalid_params: "Invalid params"
+  repository_ledger_records:
+    errors:
+      my_module_references_missing: 'Task references are not set'
   libraries:
     manange_modal_column_index:
       title: "Manage columns"
@@ -3389,6 +3420,7 @@ en:
     formats:
       full_js: "D.M.YYYY HH:mm"
       full: "%{date_format} %H:%M"
+      default: "%Y/%m/%d %H:%M"
       full_with_tz: "%{date_format} %H:%M %z"
       full_with_comma: "%{date_format}, %H:%M"
       full_date: "%{date_format}"
@@ -3397,14 +3429,35 @@ en:
 
   notifications:
     title: "Notifications"
-    email_settings: "E-mail notifications"
-    form:
-      assignments: "Assignment"
-      notification_scinote: 'Show in SciNote'
-      notification_email: 'Notify me via email'
-      assignments_description: 'Assignment notifications appear whenever you get assigned to a team, project, task.'
-      recent_notification: 'Recent changes'
-      recent_notification_description: 'Recent changes notifications appear whenever there is a change on a task you are assigned to.'
+    sub_title: "Define which updates to get notified and where"
+    in_app: "In-app"
+    email: "Email"
+    breadcrumb: "Preferences"
+    groups:
+      my_module: "Task"
+      project_experiment: "Project & Experiment"
+      repository: "Inventories & Items"
+      other: "Others"
+    sub_groups:
+      my_module_designation: "You were assigned to or unassigned from a task"
+      my_module_due_date: "Due date & time reminder on assigned task (24h before)"
+      my_module_comments: "A comment was added or edited on a task you are assigned to"
+      project_experiment_access: "You were added or removed from a Project"
+      project_experiment_role_change: "Your role on Project, Experiment, or Task was changed"
+      repository_stock: "Low stock reminder"
+      repository_date_reminder: "Date reminder"
+      other_smart_annotation: "You were tagged"
+      other_team_invitation: "You were invited or removed from the team"
+    content:
+      my_module_due_date_reminder:
+        title_html: "Task due date reminder"
+        message_html: "Due date for the task %{my_module_name} is coming up."
+      item_low_stock_reminder:
+        title_html: "Item stock reminder"
+        message_html: "Item %{repository_row_name} in inventory %{repository} is running low."
+      item_date_reminder:
+        title_html: "Item date reminder"
+        message_html: "Date reminder for %{repository_row_name} is coming up in %{value} %{units}."
     deliver:
       download_link: "Download link:"
       download_text: "Click the link to download the file."
@@ -3490,8 +3543,8 @@ en:
         forbidden: 'You do not have permission to add files.'
         not_found: 'Element not found.'
     file_preview:
-      edit_in_scinote: "Edit"
-      edit_in_marvinjs: "Edit in Marvin JS"
+      edit_in_scinote: "Open in image editor"
+      edit_in_marvinjs: "Open in Marvin JS"
     context_menu:
       set_view_size: "SET PREVIEW SIZE"
       delete: "Delete"
@@ -3694,6 +3747,8 @@ en:
   general:
     save: "Save"
     move: "Move"
+    clear: "Clear"
+    select_all: "Select all"
     update: "Update"
     edit: "Edit"
     delete: "Delete"
@@ -3710,10 +3765,14 @@ en:
     download: "Download"
     access: "Access"
     select: "Select"
+    selected: "Selected"
     loading: "Loading..."
+    replace: "Replace"
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"
+    from: 'from'
+    to: 'to'
     leaving_unsaved_warning: "You have made some changes, are you sure you want to leave this page?"
     no_comments: "No comments!"
     more_comments: "More comments"
@@ -3890,6 +3949,7 @@ en:
   Text: "Text"
   Tables: "Tables"
   Repositories_team: "Inventories - %{team}"
+  Repository: "Inventory"
   Reports: "Reports"
   Comments: "Comments"
   Step: "Step"
@@ -3918,7 +3978,7 @@ en:
     new_sequence: "Sequence"
     new_sequence_file: "New sequence"
     default_sequence_name: "New sequence"
-    edit_sequence: "Edit in Sequence editor"
+    edit_sequence: "Open in sequence editor"
     sequence_name_placeholder: "Click here to enter sequence name"
     editor:
       tooltips:

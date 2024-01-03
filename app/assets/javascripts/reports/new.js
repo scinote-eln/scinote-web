@@ -1327,6 +1327,17 @@ function reportHandsonTableConverter() {
     $.get($('#templateSelector').data('valuesEditorPath'), params, function(result) {
       $('.report-template-values-container').removeClass('hidden');
       $('.report-template-values-container').html(result.html);
+
+      $('.section').each(function() {
+        var section = $(this);
+        var collapseButton = section.find('.sn-icon-down');
+        var valuesContainer = section.find('.values-container');
+
+        if (valuesContainer.children().length === 0) {
+          collapseButton.hide();
+        }
+      });
+
       $('.report-template-value-dropdown').each(function() {
         dropdownSelector.init($(this), {
           noEmptyOption: true

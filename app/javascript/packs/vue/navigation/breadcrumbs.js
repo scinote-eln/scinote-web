@@ -1,17 +1,13 @@
-import TurbolinksAdapter from 'vue-turbolinks';
-import Vue from 'vue/dist/vue.esm';
+
+import PerfectScrollbar from 'vue3-perfect-scrollbar';
+import { createApp } from 'vue/dist/vue.esm-bundler.js';
+import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css';
 import Breadcrumbs from '../../../vue/navigation/breadcrumbs/breadcrumbs.vue';
-import PerfectScrollbar from 'vue2-perfect-scrollbar';
-import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css';
+import { mountWithTurbolinks } from '../helpers/turbolinks.js';
 
-Vue.use(TurbolinksAdapter);
-Vue.use(PerfectScrollbar);
-Vue.prototype.i18n = window.I18n;
 
-window.breadcrumbsComponent = new Vue({
-  el: '#breadcrumbs',
-  name: 'BreadcrumbsContainer',
-  components: {
-    breadcrumbs: Breadcrumbs
-  }
-});
+const app = createApp({});
+app.component('Breadcrumbs', Breadcrumbs);
+app.use(PerfectScrollbar);
+app.config.globalProperties.i18n = window.I18n;
+window.breadcrumbsComponent = mountWithTurbolinks(app, '#breadcrumbs');

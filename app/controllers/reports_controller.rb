@@ -53,7 +53,7 @@ class ReportsController < ApplicationController
       report = current_team.reports.new(project: @project)
     end
 
-    if Rails.root.join('app', 'views', 'reports', 'templates', template, 'edit.html.erb').exist?
+    if lookup_context.any_templates?("reports/templates/#{template}/edit")
       render json: {
         html: render_to_string(
           template: "reports/templates/#{template}/edit",

@@ -60,6 +60,7 @@ class TeamRepositoriesController < ApplicationController
 
   def check_sharing_permissions
     render_403 unless can_share_repository?(@repository)
+    render_403 if !@repository.shareable_write? && update_params[:write_permissions].present?
   end
 
   def teams_to_share
@@ -101,6 +102,6 @@ class TeamRepositoriesController < ApplicationController
             message_items: { repository: team_shared_object.shared_repository.id,
                              team: team_shared_object.team.id,
                              permission_level:
-                               Extends::SHARED_INVENTORIES_PL_MAPPINGS[team_repository.permission_level.to_sym] })
+                               Extends::SHARED_INVENTORIES_PL_MAPPINGS[team_shared_object.permission_level.to_sym] })
   end
 end

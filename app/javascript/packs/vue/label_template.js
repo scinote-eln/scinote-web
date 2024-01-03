@@ -1,17 +1,9 @@
-import TurbolinksAdapter from 'vue-turbolinks';
-import Vue from 'vue/dist/vue.esm';
+import { createApp } from 'vue/dist/vue.esm-bundler.js';
 import LabelTemplateContainer from '../../vue/label_template/container.vue';
-
-Vue.use(TurbolinksAdapter);
-Vue.prototype.i18n = window.I18n;
+import { mountWithTurbolinks } from './helpers/turbolinks.js';
 
 window.initLabelTemplateComponent = () => {
-
-  new Vue({
-    el: '#labelTemplateContainer',
-    components: {
-      'label-template-container': LabelTemplateContainer
-    },
+  const app = createApp({
     data() {
       return {
         labelTemplateUrl: $('#labelTemplateContainer').data('label-template-url'),
@@ -21,6 +13,9 @@ window.initLabelTemplateComponent = () => {
       };
     }
   });
+  app.component('LabelTemplateContainer', LabelTemplateContainer);
+  app.config.globalProperties.i18n = window.I18n;
+  mountWithTurbolinks(app, '#labelTemplateContainer');
 };
 
 initLabelTemplateComponent();

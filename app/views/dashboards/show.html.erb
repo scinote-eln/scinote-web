@@ -1,7 +1,7 @@
 <% provide :head_title, t('nav.label.dashboard') %>
 
 <% if current_team %>
-  <div class="dashboard-view">
+  <div class="dashboard-view" data-e2e="e2e-CO-dashboard">
     <div class="dashboard-background"></div>
     <div class="dashboard-header">
       <%= render partial: 'quick_start' %>

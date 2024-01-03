@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { PerfectScrollbar } from 'vue2-perfect-scrollbar';
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar';
 
 export default {
   name: "BreadcrumbsDropdown",

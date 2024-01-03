@@ -1,21 +1,25 @@
 /* global HelperModule */
 
-import TurbolinksAdapter from 'vue-turbolinks';
-import Vue from 'vue/dist/vue.esm';
+import PerfectScrollbar from 'vue3-perfect-scrollbar';
+import { createApp } from 'vue/dist/vue.esm-bundler.js';
 import ProtocolContainer from '../../vue/protocol/container.vue';
-import PerfectScrollbar from 'vue2-perfect-scrollbar';
-import outsideClick from './directives/outside_click';
-
-
-Vue.use(PerfectScrollbar);
-Vue.use(TurbolinksAdapter);
-Vue.directive('click-outside', outsideClick);
-Vue.prototype.i18n = window.I18n;
-Vue.prototype.inlineEditing = window.inlineEditing;
-Vue.prototype.ActiveStoragePreviews = window.ActiveStoragePreviews;
+import { mountWithTurbolinks } from './helpers/turbolinks.js';
 
 window.initProtocolComponent = () => {
-  Vue.prototype.dateFormat = $('#protocolContainer').data('date-format');
+  const app = createApp({
+    data() {
+      return {
+        protocolUrl: $('#protocolContainer').data('protocol-url'),
+      };
+    },
+  });
+  app.component('ProtocolContainer', ProtocolContainer);
+  app.use(PerfectScrollbar);
+  app.config.globalProperties.i18n = window.I18n;
+  app.config.globalProperties.inlineEditing = window.inlineEditing;
+  app.config.globalProperties.ActiveStoragePreviews = window.ActiveStoragePreviews;
+  app.config.globalProperties.dateFormat = $('#protocolContainer').data('date-format');
+  mountWithTurbolinks(app, '#protocolContainer');
 
   $('.protocols-show').on('click', '#protocol-versions-modal .delete-draft', (e) => {
     const url = e.currentTarget.dataset.url;
@@ -27,18 +31,6 @@ window.initProtocolComponent = () => {
 
   $('#deleteDraftModal form').on('ajax:error', function(_ev, data) {
     HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
-  });
-
-  new Vue({
-    el: '#protocolContainer',
-    components: {
-      'protocol-container': ProtocolContainer
-    },
-    data() {
-      return {
-        protocolUrl: $('#protocolContainer').data('protocol-url')
-      };
-    }
   });
 };
 

@@ -144,8 +144,7 @@ module Reports
         script_tag_options: @script_tag_options,
         page_ranges: "#{cover_pages_shift}-999999",
         emulate_media: 'screen',
-        display_url: "#{Rails.application.config.force_ssl ? 'https' : 'http'}://" \
-                     "#{Rails.application.routes.default_url_options[:host]}"
+        display_url: Rails.application.routes.default_url_options[:host]
       ).to_pdf(@file.path)
     end
 
@@ -163,14 +162,19 @@ module Reports
     def create_notification_for_user
       report_path = Rails.application.routes.url_helpers
                          .reports_path(team: @report.team.id, preview_report_id: @report.id, preview_type: :pdf)
-      notification = Notification.create(
-        type_of: :deliver,
-        title: I18n.t('projects.reports.index.generation.completed_pdf_notification_title'),
-        message: I18n.t('projects.reports.index.generation.completed_notification_message',
-                        report_link: "<a href='#{report_path}'>#{escape_input(@report.name)}</a>",
-                        team_name: escape_input(@report.team.name))
+      DeliveryNotification.send_notifications(
+        {
+          title: I18n.t('projects.reports.index.generation.completed_pdf_notification_title'),
+          message: I18n.t('projects.reports.index.generation.completed_notification_message',
+                          report_link: "<a href='#{report_path}'>#{escape_input(@report.name)}</a>",
+                          team_name: escape_input(@report.team.name)),
+          subject_id: @report.id,
+          subject_class: 'Report',
+          subject_name: @report.name,
+          report_type: 'pdf',
+          user: @user
+        }
       )
-      notification.create_user_notification(@user)
     end
 
     def append_result_asset_previews
@@ -224,6 +228,10 @@ module Reports
     end
 
     def prepend_title_page
+      unless File.exist?(Rails.root.join('app', 'views', 'reports', 'templates', @template, 'cover.html.erb'))
+        return @file
+      end
+
       total_pages = 0
 
       IO.popen(['pdfinfo', @file.path], 'r+') do |f|
@@ -249,8 +257,7 @@ module Reports
         script_tag_options: @script_tag_options,
         emulate_media: 'screen',
         print_background: true,
-        display_url: "#{Rails.application.config.force_ssl ? 'https' : 'http'}://" \
-                     "#{Rails.application.routes.default_url_options[:host]}"
+        display_url: Rails.application.routes.default_url_options[:host]
       ).to_pdf(title_page.path)
 
       title_page.rewind

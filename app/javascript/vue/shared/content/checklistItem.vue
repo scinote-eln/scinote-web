@@ -1,8 +1,8 @@
 <template>
-  <div class="content__checklist-item">
-    <div class="checklist-item-header flex rounded pl-10 ml-[-2.325rem] items-center relative w-full group/checklist-item-header" :class="{ 'locked': locked || editingText, 'editing-name': editingText }">
+  <div class="content__checklist-item pl-10 ml-[-2.325rem]">
+    <div class="checklist-item-header flex rounded items-center relative w-full group/checklist-item-header" :class="{ 'locked': locked || editingText, 'editing-name': editingText }">
       <div v-if="reorderChecklistItemUrl"
-        class="absolute h-6 cursor-grab justify-center left-0 top-0.5 px-2 tw-hidden text-sn-grey element-grip step-element-grip--draggable"
+        class="absolute h-6 cursor-grab justify-center left-[-2.325rem] top-0.5 px-2 tw-hidden text-sn-grey element-grip step-element-grip--draggable"
         :class="{ 'group-hover/checklist-item-header:flex': (!locked && !editingText && draggable) }"
       >
         <i class="sn-icon sn-icon-drag"></i>
@@ -40,7 +40,7 @@
             @update="updateText"
             @delete="removeItem()"
             @keypress="keyPressHandler"
-            @blur="editingText = false"
+            @blur="onBlurHandler"
           />
           <span v-if="!editingText && (!checklistItem.attributes.urls || deleteUrl)" class="absolute right-0 top-0.5 leading-6 tw-hidden group-hover/checklist-item-header:inline-block !text-sn-blue cursor-pointer" @click="showDeleteModal" tabindex="0">
             <i class="sn-icon sn-icon-delete"></i>
@@ -138,6 +138,11 @@
         if (!this.toggleUrl) return
         this.checklistItem.attributes.checked = this.$refs.checkbox.checked;
         this.$emit('toggle', this.checklistItem);
+      },
+      onBlurHandler() {
+        this.$nextTick(() => {
+          this.editingText = false;
+        });
       },
       updateText(text, withKey) {
         if (text.length === 0) {

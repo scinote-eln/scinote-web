@@ -94,9 +94,27 @@ module SciFormHelper
     js_format
   end
 
+  def datetime_picker_format_date_only_vue
+    js_format = I18n.backend.date_format.dup
+    js_format.gsub!(/%-d/, 'd')
+    js_format.gsub!(/%d/, 'dd')
+    js_format.gsub!(/%-m/, 'M')
+    js_format.gsub!(/%m/, 'MM')
+    js_format.gsub!(/%b/, 'MMM')
+    js_format.gsub!(/%B/, 'MMMM')
+    js_format.gsub!('%Y', 'yyyy')
+    js_format
+  end
+
   # Returns date and time format string for Bootstrap DateTimePicker
   def datetime_picker_format_full
     js_format = datetime_picker_format_date_only
+    js_format << ' HH:mm'
+    js_format
+  end
+
+  def datetime_picker_format_full_vue
+    js_format = datetime_picker_format_date_only_vue
     js_format << ' HH:mm'
     js_format
   end

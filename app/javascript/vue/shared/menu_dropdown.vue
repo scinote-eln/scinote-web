@@ -1,6 +1,11 @@
 <template>
-  <div class="relative" v-if="listItems.length > 0" >
-    <button ref="openBtn" :class="btnClasses" @click="showMenu = !showMenu">
+  <div class="relative" v-if="listItems.length > 0" v-click-outside="closeMenu">
+    <button
+      ref="openBtn"
+      :class="btnClasses"
+      :title="showMenu ? '' : title"
+      @click="showMenu = !showMenu"
+    >
       <i v-if="btnIcon" :class="btnIcon"></i>
       {{ btnText }}
       <i v-if="caret && showMenu" class="sn-icon sn-icon-up"></i>
@@ -15,7 +20,7 @@
             '!mb-0': !openUp,
          }"
          v-if="showMenu"
-         v-click-outside="{handler: 'closeMenu', exclude: ['openBtn', 'flyout']}">
+    >
       <span v-for="(item, i) in listItems" :key="i" class="contents">
         <div v-if="item.dividerBefore" class="border-0 border-t border-solid border-sn-light-grey"></div>
         <a :href="item.url" v-if="!item.submenu"
@@ -64,6 +69,7 @@
 <script>
 
 import isInViewPort from './isInViewPort.js';
+import { vOnClickOutside } from '@vueuse/components'
 
 export default {
   name: 'DropdownMenu',
@@ -73,6 +79,7 @@ export default {
     btnClasses: { type: String, default: 'btn btn-light' },
     btnText: { type: String, required: false },
     btnIcon: { type: String, required: false },
+    title: { type: String, default: '' },
     caret: { type: Boolean, default: false },
   },
   data() {
@@ -80,6 +87,9 @@ export default {
       showMenu: false,
       openUp: false
     }
+  },
+  directives: {
+    'click-outside': vOnClickOutside
   },
   watch: {
     showMenu() {

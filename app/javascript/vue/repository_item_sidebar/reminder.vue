@@ -1,4 +1,4 @@
-<template v-if="value.reminder === true">
+<template v-if="value?.reminder === true">
   <div class="inline-block float-right cursor-pointer relative" :title="reminderTitle"
      tabindex='-1'>
     <i class="sn-icon sn-icon-notifications row-reminders-icon"></i>
@@ -10,19 +10,18 @@
   export default {
     name: 'Reminder',
     props: {
-      valueType: null,
       value: null
     },
     computed: {
       reminderColor() {
-        if (this.value.reminder && (this.value.stock_amount > 0 || this.value.days_left > 0)) {
+        if (this.value?.reminder && (this.value?.stock_amount > 0 || this.value?.days_left > 0)) {
           return 'bg-sn-alert-brittlebush';
         }
         return 'bg-sn-alert-passion';
       },
       reminderTitle() {
-        let title = this.value.reminder_text
-        if (this.value.reminder_message) title = `${title}\n${this.value.reminder_message}`;
+        let title = this.value?.reminder_text
+        if (this.value?.reminder_message) title = `${title}\n${this.value?.reminder_message}`;
   
         return title;
       }

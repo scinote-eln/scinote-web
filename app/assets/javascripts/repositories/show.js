@@ -25,12 +25,7 @@
   function handleSuccessfulSubmit(data) {
     $('#modal-import-records').modal('hide');
     $(data.html).appendTo('body').promise().done(function() {
-      $('#parse-records-modal')
-        .modal('show')
-        .on('hidden.bs.modal', function() {
-          animateSpinner();
-          location.reload();
-        });
+      $('#parse-records-modal').modal('show');
       repositoryRecordsImporter();
     });
   }
@@ -42,19 +37,11 @@
   }
 
   function initParseRecordsModal() {
-    var modal = $('#parse-records-modal');
     var form = $('#form-records-file');
     var submitBtn = form.find('input[type="submit"]');
-    var closeBtn = modal.find('.close-button');
     form.on('ajax:success', function(ev, data) {
       $('#modal-import-records').modal('hide');
       $(data.html).appendTo('body').promise().done(function() {
-        $('#parse-records-modal')
-          .modal('show')
-          .on('hidden.bs.modal', function() {
-            animateSpinner();
-            location.reload();
-          });
         repositoryRecordsImporter();
       });
     }).on('ajax:error', function(ev, data) {
@@ -80,8 +67,6 @@
         contentType: false
       });
     });
-
-    closeBtn.on('click', pageReload);
   }
 
   function initImportRecordsModal() {
@@ -89,9 +74,6 @@
       $('#modal-import-records').modal('show');
       initParseRecordsModal();
     });
-
-    const closeBtn = $('#modal-import-records').find('.close-button');
-    closeBtn.on('click', pageReload);
   }
 
   $('.repository-title-name .inline-editing-container').on('inlineEditing::updated', function(e, value, viewValue) {

@@ -149,6 +149,19 @@ module WopiUtil
                 asset_name: { id: @asset.id, value_for: 'file_name' },
                 action: action
               })
+    elsif @assoc.is_a?(RepositoryCell)
+      repository = @assoc.repository_row.repository
+      Activities::CreateActivityService
+        .call(activity_type: :edit_wopi_file_on_inventory_item,
+              owner: current_user,
+              subject: repository,
+              team: repository.team,
+              message_items: {
+                repository: repository.id,
+                repository_row: @assoc.repository_row.id,
+                asset_name: { id: @asset.id, value_for: 'file_name' },
+                action: action
+              })
     end
   end
 end

@@ -107,7 +107,7 @@
       // Track name update in user profile settings
       $(document).on('inlineEditing::updated', '.inline-editing-container[data-field-to-update="full_name"]', this.fetchData);
     },
-    beforeDestroy: function(){
+    beforeUnmount: function(){
       clearTimeout(this.unseenNotificationsTimeout);
     },
     computed: {
@@ -120,6 +120,15 @@
             modalTarget: '#aboutModal', url: ''
           }
         )
+      }
+    },
+    watch: {
+      notificationsOpened(newVal) {
+        if (newVal === true) {
+          document.body.style.overflow = 'hidden';
+        } else if (newVal === false) {
+            document.body.style.overflow = 'scroll';
+          }
       }
     },
     methods: {

@@ -1,6 +1,11 @@
 <template>
   <Select
-    class="sn-select--search"
+    class="sn-select sn-select--search hover:border-sn-sleepy-grey"
+    :class="customClass"
+    :className="className"
+    :optionsClassName="optionsClassName"
+    :withEditCursor="withEditCursor"
+    :withClearButton="withClearButton"
     :value="value"
     :options="currentOptions"
     :placeholder="placeholder"
@@ -10,6 +15,7 @@
     @blur="blur"
     @open="open"
     @close="close"
+    @focus="focus"
   >
     <input ref="focusElement" v-model="query" type="text" class="sn-select__search-input" :placeholder="searchPlaceholder" />
     <span class="sn-select__value">{{ valueLabel || (placeholder || i18n.t('general.select')) }}</span>
@@ -23,6 +29,8 @@
   export default {
     name: 'SelectSearch',
     props: {
+      withClearButton: { type: Boolean, default: false },
+      withEditCursor: { type: Boolean, default: false },
       value: { type: [String, Number] },
       options: { type: Array, default: () => [] },
       optionsUrl: { type: String },
@@ -30,7 +38,10 @@
       searchPlaceholder: { type: String },
       noOptionsPlaceholder: { type: String },
       disabled: { type: Boolean },
-      isLoading: { type: Boolean, default: false }
+      isLoading: { type: Boolean, default: false },
+      className: { type: String, default: '' },
+      optionsClassName: { type: String, default: '' },
+      customClass: { type: String, default: '' }
     },
     components: { Select },
     data() {
@@ -67,6 +78,9 @@
       }
     },
     methods: {
+      focus() {
+        this.$refs.focusElement.focus();
+      },
       blur() {
         this.isOpen = false;
         this.$emit('blur');

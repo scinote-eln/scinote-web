@@ -4,8 +4,9 @@
       <input type="text"
         v-if="singleLine"
         ref="input"
-        class="inline-block leading-5 outline-none pl-0 py-1 border-0 border-solid border-y w-full border-t-transparent"
+        class="inline-block leading-5 outline-none pl-0 border-0 border-solid border-y w-full border-t-transparent"
         :class="{
+          'py-1': !singleLine,
           'inline-edit-placeholder text-sn-grey caret-black': isBlank,
           'border-b-sn-delete-red': error,
           'border-b-sn-science-blue': !error,
@@ -13,7 +14,7 @@
         v-model="newValue"
         @keydown="handleKeypress"
         @blur="handleBlur"
-        @keyup.escape="cancelEdit"
+        @keyup.escape="cancelEdit && this.atWhoOpened"
         @focus="setCaretAtEnd"/>
       <textarea v-else
         ref="input"
@@ -27,14 +28,14 @@
         v-model="newValue"
         @keydown="handleKeypress"
         @blur="handleBlur"
-        @keyup.escape="cancelEdit"
+        @keyup.escape="cancelEdit && this.atWhoOpened"
         @focus="setCaretAtEnd"/>
     </template>
     <div
       v-else
       ref="view"
-      class="grid sci-cursor-edit leading-5 border-0 py-1 outline-none border-solid border-y border-transparent"
-      :class="{ 'text-sn-grey font-normal': isBlank, 'whitespace-pre-line': !singleLine }"
+      class="grid sci-cursor-edit leading-5 border-0 outline-none border-solid border-y border-transparent"
+      :class="{ 'text-sn-grey font-normal': isBlank, 'whitespace-pre-line py-1': !singleLine }"
       @click="enableEdit($event)"
     >
       <span :class="{'truncate': singleLine }" v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
@@ -72,7 +73,8 @@
       smartAnnotation: { type: Boolean, default: false },
       editOnload: { type: Boolean, default: false },
       defaultValue: { type: String, default: '' },
-      singleLine: { type: Boolean, default: true }
+      singleLine: { type: Boolean, default: true },
+      preventLeavingUntilFilled: { type: Boolean, default: false }
     },
     data() {
       return {
@@ -92,6 +94,11 @@
       }
     },
     watch: {
+      value(newVal, oldVal) {
+        if (newVal !== oldVal) {
+          this.newValue = newVal
+        }
+      },
       editing() {
         this.refreshTexareaHeight()
       },
@@ -107,13 +114,20 @@
     },
     computed: {
       isBlank() {
-        return this.newValue.length === 0;
+        if (typeof this.newValue === 'string') {
+          return this.newValue.trim().length === 0;
+        }
+        return true; // treat as blank for non-string values
       },
       isContentDefault() {
         return this.newValue === this.defaultValue;
       },
       error() {
-        if(!this.allowBlank && this.isBlank) {
+        if (!this.allowBlank && this.isBlank) {
+          if (this.preventLeavingUntilFilled) {
+            this.addPreventFromLeaving(document.body);
+          }
+
           return this.i18n.t('inline_edit.errors.blank', { attribute: this.attributeName })
         }
         if(this.characterLimit && this.newValue.length > this.characterLimit) {
@@ -137,10 +151,25 @@
           )
         }
 
+        this.removePreventFromLeaving(document.body);
         return false
       }
     },
     methods: {
+      removePreventFromLeaving(domEl) {
+        domEl.removeEventListener('click', this.preventClicks, true);
+        domEl.removeEventListener('mousedown', this.preventClicks, true);
+        domEl.removeEventListener('mouseup', this.preventClicks, true);
+      },
+      addPreventFromLeaving(domEl) {
+        domEl.addEventListener('click', this.preventClicks, true);
+        domEl.addEventListener('mousedown', this.preventClicks, true);
+        domEl.addEventListener('mouseup', this.preventClicks, true);
+      },
+      preventClicks(event) {
+        event.stopPropagation();
+        event.preventDefault();
+      },
       handleAutofocus() {
         if (this.autofocus || !this.placeholder && this.isBlank || this.editOnload && this.isBlank) {
           this.enableEdit();
@@ -152,8 +181,11 @@
         this.$emit('blur');
         if (this.allowBlank || !this.isBlank) {
           this.$nextTick(this.update);
-        } else {
-          this.$emit('delete');
+        } else if (this.isBlank) {
+          this.newValue = this.value || '';
+        }
+        else {
+          this.$emit('delete')
         }
       },
       focus() {
@@ -208,6 +240,9 @@
         sel.collapse(sel.anchorNode, offset);
       },
       handleKeypress(e) {
+        this.atWhoOpened = $('.atwho-view:visible').length > 0
+        if (this.atWhoOpened) return;
+
         if (e.key == 'Escape') {
           this.cancelEdit();
         } else if (e.key == 'Enter' && this.saveOnEnter && e.shiftKey == false) {

@@ -175,6 +175,8 @@ class TeamImporter
       i += 1 while experiment_names.include?("#{exp_name} (#{i})")
       experiment_json['experiment']['name'] = "#{exp_name} (#{i})"
     end
+    experiment = nil
+
     ActiveRecord::Base.transaction do
       ActiveRecord::Base.no_touching do
         experiment = create_experiment(experiment_json, project, user_id)
@@ -193,9 +195,9 @@ class TeamImporter
           UserAssignments::GenerateUserAssignmentsJob.perform_now(my_module, user.id)
         end
         puts "Imported experiment: #{experiment.id}"
-        return experiment
       end
     end
+    experiment
   ensure
     # Reset callbacks
     MyModule.set_callback(:create, :before, :create_blank_protocol)
