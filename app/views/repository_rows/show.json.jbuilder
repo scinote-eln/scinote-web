@@ -52,20 +52,30 @@ json.relationships do
   json.children_count @repository_row.child_connections_count
   json.parents do
     json.array! @repository_row.parent_repository_rows.preload(:repository).each do |parent|
+      json.id parent.id
       json.code parent.code
       json.name parent.name
       json.path repository_repository_row_path(parent.repository, parent)
       json.repository_name parent.repository.name
       json.repository_path repository_path(parent.repository)
+      json.unlink_path repository_repository_row_repository_row_connection_path(parent.repository,
+                                                                                parent,
+                                                                                @repository_row.parent_connections
+                                                                                               .find_by(parent: parent))
     end
   end
   json.children do
     json.array! @repository_row.child_repository_rows.preload(:repository).each do |child|
+      json.id child.id
       json.code child.code
       json.name child.name
       json.path repository_repository_row_path(child.repository, child)
       json.repository_name child.repository.name
       json.repository_path repository_path(child.repository)
+      json.unlink_path repository_repository_row_repository_row_connection_path(child.repository,
+                                                                                child,
+                                                                                @repository_row.child_connections
+                                                                                               .find_by(child: child))
     end
   end
 end
