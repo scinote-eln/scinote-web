@@ -109,6 +109,7 @@ module Api
             blob = create_blob_from_params
             asset = Asset.create!(file: blob, team: @team)
           end
+          asset.post_process_file(@team)
           ResultAsset.create!(asset: asset, result: @result)
         end
       end
@@ -123,6 +124,7 @@ module Api
             blob = create_blob_from_params
             @result.asset.update!(file: blob)
           end
+          asset.post_process_file(@team)
           new_checksum = @result.asset.file.blob.checksum
         end
         @asset_result_updated = old_checksum != new_checksum
