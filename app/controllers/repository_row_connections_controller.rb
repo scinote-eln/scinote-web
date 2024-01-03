@@ -98,6 +98,7 @@ class RepositoryRowConnectionsController < ApplicationController
   def repositories
     repositories = Repository.accessible_by_teams(current_team)
                              .search_by_name_and_id(current_user, current_user.teams, params[:query])
+                             .order(name: :asc)
                              .page(params[:page] || 1)
                              .per(Constants::SEARCH_LIMIT)
     render json: {
@@ -110,6 +111,7 @@ class RepositoryRowConnectionsController < ApplicationController
   def repository_rows
     repository_rows = @repository.repository_rows
                                  .search_by_name_and_id(current_user, current_user.teams, params[:query])
+                                 .order(name: :asc)
                                  .page(params[:page] || 1)
                                  .per(Constants::SEARCH_LIMIT)
     render json: {
