@@ -332,8 +332,8 @@ export default {
     },
     move(event, rows) {
       this.objectsToMove = rows;
-    },
-  },
+    }
+  }
 };
 
 </script>

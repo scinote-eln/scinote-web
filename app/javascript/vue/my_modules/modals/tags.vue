@@ -61,8 +61,8 @@
                        py-2.5 hover:bg-sn-super-light-grey"
                @click="createTag()"
           >
-            <div class="h-8 w-8 rounded relative border-sn-gray border-solid">
-              <div class="absolute top-1 left-1 rounded-full w-1 h-1 bg-white border-sn-gray  border-solid"></div>
+            <div class="h-8 w-8 rounded relative border-sn-grey border-solid">
+              <div class="absolute top-1 left-1 rounded-full w-1 h-1 bg-white border-sn-grey  border-solid"></div>
             </div>
             <div>{{ i18n.t('experiments.canvas.modal_manage_tags.create_new') }}</div>
           </div>

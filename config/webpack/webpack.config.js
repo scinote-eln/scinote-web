@@ -51,8 +51,9 @@ const entryList = {
   vue_projects_list: './app/javascript/packs/vue/projects_list.js',
   vue_experiments_list: './app/javascript/packs/vue/experiments_list.js',
   vue_my_modules_list: './app/javascript/packs/vue/my_modules_list.js',
-  vue_design_system_select: './app/javascript/packs/vue/design_system/select.js'
-}
+  vue_design_system_select: './app/javascript/packs/vue/design_system/select.js',
+  vue_protocols_list: './app/javascript/packs/vue/protocols_list.js'
+};
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949
 // Get paths to all engines' folders

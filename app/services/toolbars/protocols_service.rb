@@ -39,8 +39,7 @@ module Toolbars
         name: 'versions',
         label: I18n.t('protocols.index.toolbar.versions'),
         icon: 'sn-icon sn-icon-versions',
-        button_id: 'protocolVersions',
-        type: :legacy
+        type: :emit
       }
     end
 
@@ -55,29 +54,18 @@ module Toolbars
         label: I18n.t('protocols.index.toolbar.duplicate'),
         icon: 'sn-icon sn-icon-duplicate',
         path: clone_protocols_path,
-        type: :request,
-        request_method: :post
+        type: :emit
       }
     end
 
     def access_action
       return unless @single
 
-      protocol = @protocols.first
-
-      path = if can_manage_protocol_users?(protocol)
-               edit_access_permissions_protocol_path(protocol)
-             else
-               access_permissions_protocol_path(protocol)
-             end
-
       {
         name: 'access',
         label: I18n.t('protocols.index.toolbar.access'),
         icon: 'sn-icon sn-icon-project-member-access',
-        button_class: 'access-btn',
-        path: path,
-        type: 'remote-modal'
+        type: :emit
       }
     end
 
@@ -91,7 +79,7 @@ module Toolbars
         label: I18n.t('protocols.index.toolbar.export'),
         icon: 'sn-icon sn-icon-export',
         path: export_protocols_path(protocol_ids: @protocols.pluck(:id)),
-        type: :download
+        type: :emit
       }
     end
 
@@ -103,8 +91,7 @@ module Toolbars
         label: I18n.t('protocols.index.toolbar.archive'),
         icon: 'sn-icon sn-icon-archive',
         path: archive_protocols_path,
-        type: :request,
-        request_method: :post
+        type: :emit
       }
     end
 
@@ -112,12 +99,11 @@ module Toolbars
       return unless @protocols.all? { |p| can_restore_protocol_in_repository?(p) }
 
       {
-        name: 'archive',
+        name: 'restore',
         label: I18n.t('protocols.index.toolbar.restore'),
         icon: 'sn-icon sn-icon-restore',
         path: restore_protocols_path,
-        type: :request,
-        request_method: :post
+        type: :emit
       }
     end
   end
