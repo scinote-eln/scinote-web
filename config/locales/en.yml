@@ -220,7 +220,7 @@ en:
             configuration:
               disabled: 'Webhooks are disabled'
             url:
-              not_valid: 'Not valid URL'
+              not_valid: 'not valid URL'
         result_text:
           attributes:
             text:
