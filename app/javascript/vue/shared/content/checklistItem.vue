@@ -35,12 +35,14 @@
             :attributeName="`${i18n.t('ChecklistItem')} ${i18n.t('name')}`"
             :editOnload="checklistItem.attributes.isNew"
             :smartAnnotation="true"
+            :allowNewLine="true"
             @editingEnabled="enableTextEdit"
             @editingDisabled="disableTextEdit"
             @update="updateText"
             @delete="removeItem()"
             @keypress="keyPressHandler"
             @blur="onBlurHandler"
+            @paste="pasteHandler"
           />
           <span v-if="!editingText && (!checklistItem.attributes.urls || deleteUrl)" class="absolute right-0 top-0.5 leading-6 tw-hidden group-hover/checklist-item-header:inline-block !text-sn-blue cursor-pointer" @click="showDeleteModal" tabindex="0">
             <i class="sn-icon sn-icon-delete"></i>
@@ -164,9 +166,15 @@
         this.$emit('update', this.checklistItem, withKey);
       },
       keyPressHandler(e) {
-        if (e.key === 'Enter' && e.shiftKey) {
+        if (
+          ((e.shiftKey || e.metaKey) && e.key === 'Enter')
+          || ((e.ctrlKey || e.metaKey) && e.key === 'v')
+        ) {
           this.checklistItem.attributes.with_paragraphs = true;
         }
+      },
+      pasteHandler() {
+        this.checklistItem.attributes.with_paragraphs = true;
       },
     }
   }
