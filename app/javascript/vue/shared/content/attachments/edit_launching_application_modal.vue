@@ -40,5 +40,5 @@
         $(this.$refs.modal).modal('hide');
       }
     }
-  }
+  };
 </script>
