@@ -86,7 +86,6 @@ class AssetSyncController < ApplicationController
     end
   end
 
-
   private
 
   def conflicting_asset_copy_token
@@ -145,7 +144,7 @@ class AssetSyncController < ApplicationController
               result: result.id
             }.merge(message_items))
   end
-  
+
   def check_asset_sync
     render_404 if ENV['ASSET_SYNC_URL'].blank?
   end
