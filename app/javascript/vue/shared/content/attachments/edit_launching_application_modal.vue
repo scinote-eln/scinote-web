@@ -25,20 +25,20 @@
 </template>
 <script>
 export default {
-  name: 'editLaunchingApplicationModal',
-  props: {
-    fileName: String, application: String
-  },
-  mounted() {
-    $(this.$refs.modal).modal('show');
-    $(this.$refs.modal).on('hidden.bs.modal', () => {
-      this.$emit('cancel');
-    });
-  },
-  methods: {
-    cancel() {
-      $(this.$refs.modal).modal('hide');
-    }
+name: 'editLaunchingApplicationModal',
+props: {
+  fileName: String, application: String
+},
+mounted() {
+  $(this.$refs.modal).modal('show');
+  $(this.$refs.modal).on('hidden.bs.modal', () => {
+    this.$emit('cancel');
+  });
+},
+methods: {
+  cancel() {
+    $(this.$refs.modal).modal('hide');
   }
+}
 }
 </script>
