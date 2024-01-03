@@ -298,6 +298,7 @@ class ExperimentsController < ApplicationController
   # POST: move_experiment(id)
   def move
     move_response = nil
+    status = nil
 
     ActiveRecord::Base.transaction do
       @experiments.each do |experiment|
@@ -317,11 +318,11 @@ class ExperimentsController < ApplicationController
           status = :unprocessable_entity
         end
 
-        move_response = { message: message, path: path, status: status }
+        move_response = { message: message, path: path }
       end
     end
 
-    render json: move_response
+    render json: move_response, status: status
   end
 
   def move_modules_modal
