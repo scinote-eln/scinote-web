@@ -131,7 +131,7 @@ class RepositoryRowConnectionsController < ApplicationController
     @connection_repository = Repository.accessible_by_teams(current_team)
                                        .find_by(id: connection_params[:connection_repository_id])
     return render_404 unless @connection_repository
-    return render_403 unless can_manage_repository_rows?(@connection_repository)
+    return render_403 unless can_connect_repository_rows?(@connection_repository)
   end
 
   def load_repository
@@ -149,7 +149,7 @@ class RepositoryRowConnectionsController < ApplicationController
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_repository_rows?(@repository)
+    render_403 unless can_connect_repository_rows?(@repository)
   end
 
   def connection_params

@@ -138,7 +138,7 @@
                     <div class="flex flex-row justify-between">
                       <div class="mb-3 font-semibold">{{ i18n.t('repositories.item_card.relationships.parents.count', { count: parentsCount || 0 }) }}</div>
                       <a
-                        v-if="permissions.can_manage"
+                        v-if="permissions.can_connect_rows"
                         class="relationships-add-link btn-text-link font-normal"
                         @click="handleOpenAddRelationshipsModal($event, 'parent')">
                         {{ i18n.t('repositories.item_card.add_relationship_button_text') }}
@@ -152,7 +152,7 @@
                           <span>
                             <span>{{ i18n.t('repositories.item_card.relationships.item') }}</span>
                             <a :href="parent.path" class="record-info-link btn-text-link !text-sn-science-blue">{{ parent.name }}</a>
-                            <button v-if="permissions?.can_manage" @click="openUnlinkModal(parent)"
+                            <button v-if="permissions.can_connect_rows" @click="openUnlinkModal(parent)"
                                     class=" ml-2 bg-transparent border-none opacity-0 group-hover:opacity-100 cursor-pointer">
                               <img :src="icons.unlink_path" />
                             </button>
@@ -182,7 +182,7 @@
                     <div class="flex flex-row justify-between">
                       <div class="mb-3 font-semibold">{{ i18n.t('repositories.item_card.relationships.children.count', { count: childrenCount || 0 }) }}</div>
                       <a
-                        v-if="permissions.can_manage"
+                        v-if="permissions.can_connect_rows"
                         class="relationships-add-link btn-text-link font-normal"
                         @click="handleOpenAddRelationshipsModal($event, 'child')">
                         {{ i18n.t('repositories.item_card.add_relationship_button_text') }}
@@ -195,7 +195,7 @@
                           <span class="group/child">
                             <span>{{ i18n.t('repositories.item_card.relationships.item') }}</span>
                             <a :href="child.path" class="record-info-link btn-text-link !text-sn-science-blue">{{ child.name }}</a>
-                            <button v-if="permissions?.can_manage" @click="openUnlinkModal(child)"
+                            <button v-if="permissions.can_connect_rows" @click="openUnlinkModal(child)"
                                     class="ml-2 bg-transparent border-none opacity-0 group-hover:opacity-100 cursor-pointer">
                               <img :src="icons.unlink_path" />
                             </button>
@@ -417,7 +417,7 @@ export default {
           optionUrls: { ...this.actions.row_connections },
           notificationIconPath: this.icons.notification_path,
           notification: this.notification,
-          canManage: this.permissions.can_manage
+          canConnectRows: this.permissions.can_connect_rows
         },
       );
     },
