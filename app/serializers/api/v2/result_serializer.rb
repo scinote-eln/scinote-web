@@ -8,7 +8,7 @@ module Api
       belongs_to :user, serializer: Api::V1::UserSerializer
 
       has_many :result_comments, key: :comments, serializer: Api::V1::CommentSerializer
-      has_many :result_texts, key: :texts, serializer: ResultTextSerializer
+      has_many :result_texts, key: :result_texts, serializer: ResultTextSerializer
       has_many :result_tables, key: :tables, serializer: ResultTableSerializer
       has_many :result_assets, key: :assets, serializer: ResultAssetSerializer
       has_many :result_orderable_elements, key: :result_elements, serializer: ResultOrderableElementSerializer

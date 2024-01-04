@@ -58,7 +58,7 @@ module Api
         end
 
         def result_text_params
-          raise TypeError unless params.require(:data).require(:type) == 'texts'
+          raise TypeError unless params.require(:data).require(:type) == 'result_texts'
 
           params.require(:data).require(:attributes).permit(:text, :name)
         end

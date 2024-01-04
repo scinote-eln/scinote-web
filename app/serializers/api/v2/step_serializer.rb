@@ -15,7 +15,7 @@ module Api
       has_many :assets, serializer: Api::V1::AssetSerializer
       has_many :checklists, serializer: Api::V1::ChecklistSerializer
       has_many :tables, serializer: Api::V1::TableSerializer
-      has_many :step_texts, key: :texts, serializer: StepTextSerializer
+      has_many :step_texts, serializer: Api::V1::StepTextSerializer
       has_many :step_comments, key: :comments, serializer: Api::V1::CommentSerializer
       has_many :step_orderable_elements, key: :step_elements, serializer: Api::V1::StepOrderableElementSerializer
 

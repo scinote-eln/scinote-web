@@ -3,7 +3,7 @@
 module Api
   module V2
     class ResultTextSerializer < ActiveModel::Serializer
-      type :texts
+      type :result_texts
       attributes :name, :text
 
       def text

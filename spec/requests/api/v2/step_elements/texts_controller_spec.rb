@@ -86,7 +86,7 @@ RSpec.describe 'Api::V2::StepElements::StepElements::TextsController', type: :re
       let(:request_body) do
         {
           data: {
-            type: 'texts',
+            type: 'step_texts',
             attributes: {
              text: "<p>Hello!</p>"
             }
@@ -110,7 +110,7 @@ RSpec.describe 'Api::V2::StepElements::StepElements::TextsController', type: :re
         expect(json).to match(
           hash_including(
             data: hash_including(
-              type: 'texts',
+              type: 'step_texts',
               attributes: hash_including(text: '<p>Hello!</p>')
             )
           )
@@ -122,7 +122,7 @@ RSpec.describe 'Api::V2::StepElements::StepElements::TextsController', type: :re
       let(:request_body) do
         {
           data: {
-            type: 'texts',
+            type: 'step_texts',
             attributes: {
             }
           }
@@ -155,7 +155,7 @@ RSpec.describe 'Api::V2::StepElements::StepElements::TextsController', type: :re
       let(:request_body) do
         {
           data: {
-            type: 'texts',
+            type: 'step_texts',
             attributes: {
               text: '<h1>Hello!</h1>'
             }
@@ -175,7 +175,7 @@ RSpec.describe 'Api::V2::StepElements::StepElements::TextsController', type: :re
         expect(json).to match(
           hash_including(
             data: hash_including(
-              type: 'texts',
+              type: 'step_texts',
               attributes: hash_including(
                 text: '<h1>Hello!</h1>'
               )
@@ -189,7 +189,7 @@ RSpec.describe 'Api::V2::StepElements::StepElements::TextsController', type: :re
       let(:request_body) do
         {
           data: {
-            type: 'texts',
+            type: 'step_texts',
             attributes: {
             }
           }

@@ -95,7 +95,7 @@ RSpec.describe 'Api::V2::ResultElements::TextsController', type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'texts',
+            type: 'result_texts',
             attributes: {
               name: 'Result text',
               text: '<p>Hello!</p>'
@@ -133,7 +133,7 @@ RSpec.describe 'Api::V2::ResultElements::TextsController', type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'texts',
+            type: 'result_texts',
             attributes: {}
           }
         }
@@ -150,7 +150,7 @@ RSpec.describe 'Api::V2::ResultElements::TextsController', type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'texts',
+            type: 'result_texts',
             attributes: {
               name: 'Result text',
               text: "Result text 1 <img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAA" \
@@ -219,7 +219,7 @@ RSpec.describe 'Api::V2::ResultElements::TextsController', type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'texts',
+            type: 'result_texts',
             attributes: {
               name: 'Result text',
               text: '<h1>Hello!</h1>'
@@ -253,7 +253,7 @@ RSpec.describe 'Api::V2::ResultElements::TextsController', type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'texts',
+            type: 'result_texts',
             attributes: {}
           }
         }
@@ -270,7 +270,7 @@ RSpec.describe 'Api::V2::ResultElements::TextsController', type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'texts',
+            type: 'result_texts',
             attributes: {
               name: 'Result text',
               text: '<h1>Hello!</h1>'
@@ -290,7 +290,7 @@ RSpec.describe 'Api::V2::ResultElements::TextsController', type: :request do
       let(:request_body) do
         {
           data: {
-            type: 'texts',
+            type: 'result_texts',
             attributes: {
               name: 'Result text',
               text: 'Result text 1 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAA'\
