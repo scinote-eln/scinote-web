@@ -308,6 +308,8 @@ class TeamImporter
   end
 
   def create_label_templates(label_templates_json, team)
+    return if team.blank?
+
     # Destroy default templates generated on team creation
     team.label_templates.where.not(type: 'FluicsLabelTemplate').destroy_all
     label_templates_json.each do |template_json|

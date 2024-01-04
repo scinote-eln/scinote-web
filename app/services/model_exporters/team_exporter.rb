@@ -39,6 +39,8 @@ module ModelExporters
     private
 
     def team(team)
+      return if team.blank?
+
       @tiny_mce_assets_to_copy.push(team.tiny_mce_assets) if team.tiny_mce_assets.present?
       {
         team: team,

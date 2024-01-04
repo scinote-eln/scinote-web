@@ -174,7 +174,11 @@ class LabelTemplatesController < ApplicationController
   end
 
   def load_label_templates
-    @label_templates = LabelTemplate.enabled? ? current_team.label_templates : current_team.label_templates.default
+    @label_templates = if current_team.present? && LabelTemplate.enabled?
+                         current_team.label_templates
+                       else
+                         LabelTemplate.default
+                       end
   end
 
   def load_label_template
