@@ -29,6 +29,7 @@
                   :data-object-type="groupAction.item_type"
                   :data-object-id="groupAction.item_id"
                   :data-action="groupAction.type"
+                  :data-e2e="`e2e-BT-actionToolbar-${groupAction.name}`"
                   @click="closeExportDropdown($event); doAction(groupAction, $event);">
                   <span class="sn-action-toolbar__button-text">{{ groupAction.label }}</span>
                 </a>
@@ -46,6 +47,7 @@
             :data-object-type="action.actions[0].item_type"
             :data-object-id="action.actions[0].item_id"
             :data-action="action.actions[0].type"
+            :data-e2e="`e2e-BT-actionToolbar-${action.name}`"
             @click="doAction(action.actions[0], $event);">
             <i :class="action.actions[0].icon"></i>
             <span class="sn-action-toolbar__button-text">{{ action.group_label }}</span>
@@ -61,6 +63,7 @@
             :data-object-type="action.item_type"
             :data-object-id="action.item_id"
             :data-action="action.type"
+            :data-e2e="`e2e-BT-actionToolbar-${action.name}`"
             @click="doAction(action, $event)">
             <i :class="action.icon"></i>
             <span class="sn-action-toolbar__button-text">{{ action.label }}</span>

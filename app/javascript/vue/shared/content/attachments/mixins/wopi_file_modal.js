@@ -30,7 +30,7 @@ export default {
               $wopiModal.modal('hide');
               $wopiModal.find('form').off('submit');
               $wopiModal.find('form').off('ajax:success');
-              window.open(data.edit_url, '_blank');
+              window.open(data.data.attributes.urls.edit_asset, '_blank');
               window.focus();
             } else {
               HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');

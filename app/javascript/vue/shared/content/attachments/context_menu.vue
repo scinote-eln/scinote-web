@@ -30,7 +30,7 @@
       @open_ove_editor="openOVEditor(attachment.attributes.urls.open_vector_editor_edit)"
       @open_marvinjs_editor="openMarvinJsEditor"
       @open_scinote_editor="openScinoteEditor"
-      @open_locally="openLocally"
+      @open_locally="openLocallyButton"
       @delete="deleteModal = true"
       @viewMode="changeViewMode"
       @move="showMoveModal"
@@ -52,11 +52,18 @@
       :fileName="attachment.attributes.file_name"
       @confirm="showNoPredefinedAppModal = false"
     />
+    <editLaunchingApplicationModal
+        v-if="editAppModal"
+        :fileName="attachment.attributes.file_name"
+        :application="this.localAppName"
+        @cancel="editAppModal = false"
+    />
   </div>
 </template>
 
 <script>
 import deleteAttachmentModal from './delete_modal.vue'
+import editLaunchingApplicationModal from './edit_launching_application_modal.vue';
 import moveAssetModal from '../modal/move.vue'
 import NoPredefinedAppModal from '../modal/no_predefined_app_modal.vue'
 import MoveMixin from './mixins/move.js'
@@ -65,7 +72,7 @@ import MenuDropdown from '../../menu_dropdown.vue'
 
 export default {
   name: 'contextMenu',
-  components: { deleteAttachmentModal, moveAssetModal, MenuDropdown, NoPredefinedAppModal },
+  components: { deleteAttachmentModal, moveAssetModal, MenuDropdown, NoPredefinedAppModal, editLaunchingApplicationModal },
   mixins: [MoveMixin, OpenLocallyMixin],
   props: {
     attachment: {
@@ -78,6 +85,7 @@ export default {
     return {
       viewModeOptions: ['inline', 'thumbnail', 'list'],
       deleteModal: false,
+      editAppModal: false,
       showNoPredefinedAppModal: false
     };
   },
@@ -178,6 +186,10 @@ export default {
         this.reloadAttachments
       );
       $(this.$refs.marvinjsEditButton).trigger('click');
+    },
+    openLocallyButton() {
+      this.editAppModal = true;
+      this.$emit(this.openLocally());
     },
     openScinoteEditor() {
       $(this.$refs.imageEditButton).trigger('click');

@@ -120,7 +120,7 @@ class Asset < ApplicationRecord
 
       new_query = new_query.where(
         "(active_storage_blobs.filename #{like} ? " \
-        "OR asset_text_data.data_vector @@ to_tsquery(?))",
+        "OR asset_text_data.data_vector @@ plainto_tsquery(?))",
         a_query,
         s_query
       )
@@ -141,7 +141,7 @@ class Asset < ApplicationRecord
                      .tr('\'', '"')
       new_query = new_query.where(
         "(active_storage_blobs.filename #{like} ANY (array[?]) " \
-        "OR asset_text_data.data_vector @@ to_tsquery(?))",
+        "OR asset_text_data.data_vector @@ plainto_tsquery(?))",
         a_query,
         s_query
       )
@@ -153,9 +153,9 @@ class Asset < ApplicationRecord
                            .limit(Constants::SEARCH_LIMIT)
                            .offset((page - 1) * Constants::SEARCH_LIMIT)
       Asset.select(
-        "assets_search.*, ts_headline(assets_search.data, to_tsquery('" +
-        sanitize_sql_for_conditions(s_query) +
-        "'), 'StartSel=<mark>, StopSel=</mark>') AS headline"
+        "assets_search.*, " \
+        "ts_headline(assets_search.data, plainto_tsquery('#{sanitize_sql_for_conditions(s_query)}'), " \
+        "'StartSel=<mark>, StopSel=</mark>') AS headline"
       ).from(new_query, 'assets_search')
     else
       new_query

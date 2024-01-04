@@ -2,7 +2,8 @@
   <transition enter-from-class="translate-x-full w-0"
               enter-active-class="transition-all ease-sharp duration-[588ms]"
               leave-active-class="transition-all ease-sharp duration-[588ms]"
-              leave-to-class="translate-x-full w-0">
+              leave-to-class="translate-x-full w-0"
+              v-click-outside="handleOutsideClick">
     <div ref="wrapper" v-show="isShowing" id="repository-item-sidebar-wrapper"
       class='items-sidebar-wrapper bg-white gap-2.5 self-stretch rounded-tl-4 rounded-bl-4 shadow-lg h-full w-[565px]'>
 
@@ -233,7 +234,7 @@
             :class="{ 'pb-6': customColumns?.length }">
             <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px mb-6"></div>
             <div id="bottom-button-wrapper" class="flex h-10 justify-end">
-              <button type="button" class="btn btn-primary print-label-button"
+              <button type="button" class="btn btn-primary print-label-button" data-e2e="e2e-BT-invInventoryItemSB-print"
                 :data-rows="JSON.stringify([repositoryRowId])">
                 {{ i18n.t('repositories.item_card.print_label') }}
               </button>
@@ -247,6 +248,7 @@
 </template>
 
 <script>
+import { vOnClickOutside } from '@vueuse/components';
 import InlineEdit from '../shared/inline_edit.vue';
 import ScrollSpy from './repository_values/ScrollSpy.vue';
 import CustomColumns from './customColumns.vue';
@@ -259,6 +261,9 @@ export default {
     'repository-item-sidebar-title': RepositoryItemSidebarTitle,
     'inline-edit': InlineEdit,
     'scroll-spy': ScrollSpy,
+  },
+  directives: {
+    'click-outside': vOnClickOutside
   },
   data() {
     return {
@@ -294,22 +299,23 @@ export default {
   },
   mounted() {
     // Add a click event listener to the document
-    document.addEventListener('mousedown', this.handleOutsideClick);
     this.inRepository = $('.assign-items-to-task-modal-container').length > 0;
   },
   beforeUnmount() {
     delete window.repositoryItemSidebarComponent;
-    document.removeEventListener('mousedown', this.handleOutsideClick);
   },
   methods: {
     handleOutsideClick(event) {
-      if (!this.isShowing) return
+      if (!this.isShowing) return;
 
-      // Check if the clicked element is not within the sidebar and it's not another item link or belogs to modals
-      const selectors = ['a', '.modal', '.label-printing-progress-modal', '.atwho-view'];
+      const allowedSelectors = ['a', '.modal', '.label-printing-progress-modal', '.atwho-view'];
+      const excludeSelectors = ['#myModuleRepositoryFullViewModal'];
 
-      if (!$(event.target).parents('#repository-item-sidebar-wrapper').length &&
-        !selectors.some(selector => event.target.closest(selector))) {
+      const isOutsideSidebar = !$(event.target).parents('#repository-item-sidebar-wrapper').length;
+      const isAllowedClick = !allowedSelectors.some((selector) => event.target.closest(selector));
+      const isExcludedClick = excludeSelectors.some((selector) => event.target.closest(selector));
+
+      if (isOutsideSidebar && (isAllowedClick || isExcludedClick)) {
         this.toggleShowHideSidebar(null);
       }
     },
