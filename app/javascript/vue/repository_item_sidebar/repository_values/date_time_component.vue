@@ -10,7 +10,7 @@
   </div>
   <div class="flex flex-col gap-2">
     <template v-if="!canEdit">
-      <span v-if="range" class="text-sn-grey">
+      <span v-if="range" class="text-sn-dark-grey">
         <template v-if="colVal.start_time && colVal.end_time">
           {{ colVal.start_time.formatted }} - {{ colVal.end_time.formatted }}
         </template>
@@ -18,7 +18,7 @@
           {{ viewPlaceholder }}
         </template>
       </span>
-      <span v-else class="text-sn-grey">
+      <span v-else class="text-sn-dark-grey">
         <template v-if="colVal.formatted">
           {{ colVal.formatted }}
         </template>
