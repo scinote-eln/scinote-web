@@ -33,50 +33,50 @@
 </template>
 
 <script>
-  export default {
-    name: 'ExportStockConsumptionModal',
-    props: {
-      exportUrl: { type: String, required: true }
+export default {
+  name: 'ExportStockConsumptionModal',
+  props: {
+    exportUrl: { type: String, required: true }
+  },
+  data() {
+    return {
+      repository: null,
+      selectedRows: []
+    };
+  },
+  created() {
+    window.exportStockConsumptionModalComponent = this;
+  },
+  beforeUnmount() {
+    delete window.exportStockConsumptionModalComponent;
+  },
+  methods: {
+    exportConsumption() {
+      $.post(this.repository.export_consumption_url, { row_ids: this.selectedRows })
+        .done((data) => {
+          HelperModule.flashAlertMsg(data.message, 'success');
+        })
+        .fail((data) => {
+          HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
+        })
+        .always(() => {
+          this.closeModal();
+        });
     },
-    data() {
-      return {
-        repository: null,
-        selectedRows: []
-      }
-    },
-    created() {
-      window.exportStockConsumptionModalComponent = this;
-    },
-    beforeUnmount() {
-      delete window.exportStockConsumptionModalComponent;
-    },
-    methods: {
-      exportConsumption() {
-        $.post(this.repository.export_consumption_url, { row_ids: this.selectedRows })
-          .done((data) => {
-            HelperModule.flashAlertMsg(data.message, 'success');
-          })
-          .fail((data) => {
-            HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
-          })
-          .always(() => {
-            this.closeModal();
-          });
-      },
-      fetchRepositoryData(selectedRows, params) {
-        this.selectedRows = selectedRows;
-        $.get(this.exportUrl, params)
-        .done( (data) => {
+    fetchRepositoryData(selectedRows, params) {
+      this.selectedRows = selectedRows;
+      $.get(this.exportUrl, params)
+        .done((data) => {
           this.repository = data;
           this.showModal();
         });
-      },
-      closeModal() {
-        $(this.$refs.modal).modal('hide');
-      },
-      showModal() {
-        $(this.$refs.modal).modal('show');
-      }
+    },
+    closeModal() {
+      $(this.$refs.modal).modal('hide');
+    },
+    showModal() {
+      $(this.$refs.modal).modal('show');
     }
   }
+};
 </script>

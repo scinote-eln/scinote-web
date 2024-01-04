@@ -55,24 +55,24 @@
 </template>
 
 <script>
-  import blockedIcon from '../images/pdf_js/blocked.svg'
+import blockedIcon from '../images/pdf_js/blocked.svg';
 
-  export default {
-    name: 'PdfViewer',
-    props: {
-      pdf: { type: Object, required: true }
-    },
-    data() {
-      return {
-        blockedIcon,
-        value: ''
-      }
-    },
-    mounted() {
-      // from legacy code in app/assets/javascripts/sitewide/pdf_preview.js
-      PdfPreview.initCanvas();
-    },
-    methods: {
-    }
+export default {
+  name: 'PdfViewer',
+  props: {
+    pdf: { type: Object, required: true }
+  },
+  data() {
+    return {
+      blockedIcon,
+      value: ''
+    };
+  },
+  mounted() {
+    // from legacy code in app/assets/javascripts/sitewide/pdf_preview.js
+    PdfPreview.initCanvas();
+  },
+  methods: {
   }
+};
 </script>

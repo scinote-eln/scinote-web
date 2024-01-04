@@ -72,123 +72,123 @@
 </template>
 
 <script>
-  import { vOnClickOutside } from '@vueuse/components';
+import { vOnClickOutside } from '@vueuse/components';
 
-  export default {
-    name: 'ChecklistSelect',
-    emits: ['close', 'update', 'reached-end', 'update-selected-values'],
-    props: {
-      withButtons: { type: Boolean, default: false },
-      withEditCursor: { type: Boolean, default: false },
-      initialSelectedValues: { type: Array, default: () => [] },
-      options: { type: Array, default: () => [] },
-      placeholder: { type: String },
-      noOptionsPlaceholder: { type: String },
-      disabled: { type: Boolean, default: false },
-      className: { type: String, default: '' },
-      shouldOpen: { type: Boolean },
-      optionsClassName: { type: String, default: '' },
-      shouldUpdateWithoutValues: { type: Boolean, default: false },
-      shouldUpdateOnToggleClose: { type: Boolean, default: false }
+export default {
+  name: 'ChecklistSelect',
+  emits: ['close', 'update', 'reached-end', 'update-selected-values'],
+  props: {
+    withButtons: { type: Boolean, default: false },
+    withEditCursor: { type: Boolean, default: false },
+    initialSelectedValues: { type: Array, default: () => [] },
+    options: { type: Array, default: () => [] },
+    placeholder: { type: String },
+    noOptionsPlaceholder: { type: String },
+    disabled: { type: Boolean, default: false },
+    className: { type: String, default: '' },
+    shouldOpen: { type: Boolean },
+    optionsClassName: { type: String, default: '' },
+    shouldUpdateWithoutValues: { type: Boolean, default: false },
+    shouldUpdateOnToggleClose: { type: Boolean, default: false }
+  },
+  directives: {
+    'click-outside': vOnClickOutside
+  },
+  data() {
+    return {
+      selectedValues: [],
+      isOpen: false,
+      optionPositionStyle: '',
+      lastSelectedOption: null
+    };
+  },
+  mounted() {
+    this.selectedValues = this.initialSelectedValues;
+  },
+  computed: {
+    valueLabel() {
+      if (!this.selectedValues.length) return;
+      if (this.selectedValues.length === 1) return this.options.find(({ id }) => id === this.selectedValues[0])?.label;
+      return `${this.selectedValues.length} ${this.i18n.t('general.selected')}`;
     },
-    directives: {
-      'click-outside': vOnClickOutside
+    focusElement() {
+      return this.$refs.focusElement || this.$parent.$refs.focusElement;
+    }
+  },
+  watch: {
+    initialSelectedValues: {
+      handler(newVal, oldVal) {
+        this.selectedValues = newVal;
+      },
+      deep: true
     },
-    data() {
-      return {
-        selectedValues: [],
-        isOpen: false,
-        optionPositionStyle: '',
-        lastSelectedOption: null
-      }
+    shouldOpen(value) {
+      this.isOpen = value;
     },
-    mounted() {
-      this.selectedValues = this.initialSelectedValues;
-    },
-    computed: {
-      valueLabel() {
-        if (!this.selectedValues.length) return
-        if (this.selectedValues.length === 1) return this.options.find(({id}) => id === this.selectedValues[0])?.label
-        return `${this.selectedValues.length} ${this.i18n.t('general.selected')}`;
-      },
-      focusElement() {
-        return this.$refs.focusElement || this.$parent.$refs.focusElement;
-      },
-    },
-    watch: {
-      initialSelectedValues: {
-        handler: function (newVal, oldVal) {
-          this.selectedValues = newVal;
-        },
-        deep: true
-      },
-      shouldOpen(value) {
-        this.isOpen = value;
-      },
-      isOpen(value) {
-        if (value) {
-          this.updateOptionPosition();
-          this.$refs.optionsContainer.scrollTop = 0;
-          this.$nextTick(() => {
-            this.focusElement.focus();
-          });
-        } else {
-          if (this.shouldUpdateOnToggleClose && this.shouldUpdateWithoutValues) {
-            this.$emit('update', this.selectedValues);
-          }
-          this.closeDropdown();
-        }
-        this.lastSelectedOption = null;
-      },
-      selectedValues(values) {
-        this.$emit('update-selected-values', values);
-      },
-    },
-    methods: {
-      updateOptionPosition() {
-        const container = $(this.$refs.container);
-        const rect = container.get(0).getBoundingClientRect();
-        let width = rect.width;
-        let height = rect.height;
-        this.optionPositionStyle = `position: absolute; top: ${height}px; left: 0px; width: ${width}px`
-      },
-      toggleOption(option) {
-        const optionId = option.target._value;
-        this.setLastSelected(optionId);
-      },
-      setLastSelected(optionId) {
-        this.lastSelectedOption = this.selectedValues.includes(optionId) ? optionId : null;
-      },
-      closeDropdown() {
-        if (!this.isOpen) return;
-
-        this.isOpen = false;
-        if (this.shouldUpdateWithoutValues) {
-          this.$emit('update', this.selectedValues)
-        }
-        if (this.selectedValues.length && !this.shouldUpdateWithoutValues) {
+    isOpen(value) {
+      if (value) {
+        this.updateOptionPosition();
+        this.$refs.optionsContainer.scrollTop = 0;
+        this.$nextTick(() => {
+          this.focusElement.focus();
+        });
+      } else {
+        if (this.shouldUpdateOnToggleClose && this.shouldUpdateWithoutValues) {
           this.$emit('update', this.selectedValues);
         }
-        this.$emit('close');
-        this.$refs.optionsContainer.$el.scrollTop = 0;
-      },
+        this.closeDropdown();
+      }
+      this.lastSelectedOption = null;
+    },
+    selectedValues(values) {
+      this.$emit('update-selected-values', values);
+    }
+  },
+  methods: {
+    updateOptionPosition() {
+      const container = $(this.$refs.container);
+      const rect = container.get(0).getBoundingClientRect();
+      const { width } = rect;
+      const { height } = rect;
+      this.optionPositionStyle = `position: absolute; top: ${height}px; left: 0px; width: ${width}px`;
+    },
+    toggleOption(option) {
+      const optionId = option.target._value;
+      this.setLastSelected(optionId);
+    },
+    setLastSelected(optionId) {
+      this.lastSelectedOption = this.selectedValues.includes(optionId) ? optionId : null;
+    },
+    closeDropdown() {
+      if (!this.isOpen) return;
+
+      this.isOpen = false;
+      if (this.shouldUpdateWithoutValues) {
+        this.$emit('update', this.selectedValues);
+      }
+      if (this.selectedValues.length && !this.shouldUpdateWithoutValues) {
+        this.$emit('update', this.selectedValues);
+      }
+      this.$emit('close');
+      this.$refs.optionsContainer.$el.scrollTop = 0;
+    },
     triggerLabelClick(event, optionId) {
       if ($(event.target).hasClass('sci-checkbox')) return;
       if ($(event.target).hasClass('sci-checkbox-label')) return;
 
       $(event.target).closest('.checklist').find(`#${optionId}`).trigger('click');
     },
-      onScroll() {
-        const scrollObj = this.$refs.optionsContainer.ps;
+    onScroll() {
+      const scrollObj = this.$refs.optionsContainer.ps;
 
-        if (scrollObj) {
-          const reachedEnd = scrollObj.reach.y === 'end';
-          if (reachedEnd && this.contentHeight !== scrollObj.contentHeight) {
-            this.$emit('reached-end');
-            this.contentHeight = scrollObj.contentHeight;
-          }
+      if (scrollObj) {
+        const reachedEnd = scrollObj.reach.y === 'end';
+        if (reachedEnd && this.contentHeight !== scrollObj.contentHeight) {
+          this.$emit('reached-end');
+          this.contentHeight = scrollObj.contentHeight;
         }
-      },
+      }
     }
   }
+};
 </script>

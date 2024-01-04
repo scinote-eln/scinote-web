@@ -40,64 +40,64 @@
     </div>
   </div>
 </template>
- <script>
-  import axios from '../../../../packs/custom_axios.js';
-  import SelectSearch from "../../select_search.vue";
+<script>
+import axios from '../../../../packs/custom_axios.js';
+import SelectSearch from '../../select_search.vue';
 
-  export default {
-    name: 'moveElementModal',
-    props: {
-      parent_type: {
-        type: String,
-        required: true
-      },
-      targets_url: {
-        type: String,
-        required: true
-      }
+export default {
+  name: 'moveElementModal',
+  props: {
+    parent_type: {
+      type: String,
+      required: true
     },
-    data () {
-      return {
-        target: null,
-        targets: []
-      }
+    targets_url: {
+      type: String,
+      required: true
+    }
+  },
+  data() {
+    return {
+      target: null,
+      targets: []
+    };
+  },
+  components: {
+    SelectSearch
+  },
+  mounted() {
+    $(this.$refs.modal).modal('show');
+    $(this.$refs.modal).on('hidden.bs.modal', () => {
+      this.$emit('cancel');
+    });
+    this.fetchTargets();
+  },
+  methods: {
+    setTarget(target) {
+      this.target = target;
     },
-    components: {
-      SelectSearch
+    fetchTargets() {
+      axios.get(this.targets_url)
+        .then((response) => {
+          this.targets = response.data.targets;
+        });
     },
-    mounted() {
-      $(this.$refs.modal).modal('show');
-      $(this.$refs.modal).on('hidden.bs.modal', () => {
-        this.$emit('cancel');
-      });
-      this.fetchTargets();
+    confirm() {
+      $(this.$refs.modal).modal('hide');
+      this.$emit('confirm', this.target);
     },
-    methods: {
-      setTarget(target) {
-        this.target = target;
-      },
-      fetchTargets() {
-        axios.get(this.targets_url)
-          .then(response => {
-            this.targets = response.data.targets;
-          })
-      },
-      confirm() {
-        $(this.$refs.modal).modal('hide');
-        this.$emit('confirm', this.target);
-      },
-      cancel() {
-        $(this.$refs.modal).modal('hide');
-      }
-    },
-    computed: {
-      targetOptions() {
-        return this.targets.map(target => [
-          target[0],
-          target[1] || this.i18n.t('protocols.steps.modals.move_element.result.untitled_result'),
-          target[1] === null ? true : false
-        ]);
-      }
+    cancel() {
+      $(this.$refs.modal).modal('hide');
+    }
+  },
+  computed: {
+    targetOptions() {
+      return this.targets.map((target) => [
+        target[0],
+        target[1] || this.i18n.t('protocols.steps.modals.move_element.result.untitled_result'),
+        target[1] === null
+      ]);
     }
   }
+};
 </script>

@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  import DateTimeComponent from './date_time_component.vue';
+import DateTimeComponent from './date_time_component.vue';
 
 export default {
   name: 'RepositoryDateValue',
@@ -26,5 +26,5 @@ export default {
     editingField: null,
     canEdit: { type: Boolean, default: false }
   }
-}
+};
 </script>

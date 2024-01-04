@@ -333,7 +333,7 @@ export default {
     'repository-item-sidebar-title': RepositoryItemSidebarTitle,
     'inline-edit': InlineEdit,
     'scroll-spy': ScrollSpy,
-    'unlink-modal': UnlinkModal,
+    'unlink-modal': UnlinkModal
   },
   directives: {
     'click-outside': vOnClickOutside
@@ -364,13 +364,13 @@ export default {
       relationshipDetailsState: {},
       relationshipsEnabled: false,
       selectedToUnlink: null,
-      initialSectionId: null,
+      initialSectionId: null
     };
   },
   provide() {
     return {
-      reloadRepoItemSidebar: this.reload,
-    }
+      reloadRepoItemSidebar: this.reload
+    };
   },
   created() {
     window.repositoryItemSidebarComponent = this;
@@ -378,7 +378,7 @@ export default {
   computed: {
     repositoryRowName() {
       return this.defaultColumns?.archived ? `${I18n.t('labels.archived')} ${this.defaultColumns?.name}` : this.defaultColumns?.name;
-    },
+    }
   },
   watch: {
     parents(newParents) {
@@ -390,7 +390,7 @@ export default {
       newChildren.forEach((child) => {
         this.relationshipDetailsState[child.code] = false;
       });
-    },
+    }
   },
   mounted() {
     // Add a click event listener to the document
@@ -421,7 +421,7 @@ export default {
           notificationIconPath: this.icons.notification_path,
           notification: this.notification,
           canConnectRows: this.permissions.can_connect_rows
-        },
+        }
       );
     },
     handleOutsideClick(event) {
@@ -499,7 +499,7 @@ export default {
           this.$nextTick(() => {
             this.generateBarCode(this.defaultColumns.code);
           });
-        },
+        }
       });
     },
     reload() {
@@ -517,7 +517,7 @@ export default {
       const barCodeCanvas = bwipjs.toCanvas('bar-code-canvas', {
         bcid: 'qrcode',
         text,
-        scale: 3,
+        scale: 3
       });
       this.barCodeSrc = barCodeCanvas.toDataURL('image/png');
     },
@@ -531,8 +531,8 @@ export default {
         dataType: 'json',
         data: {
           id: this.id,
-          ...params,
-        },
+          ...params
+        }
       }).done((response) => {
         if (response) {
           this.customColumns = this.customColumns.map((col) => (col.id === response.id ? { ...col, ...response } : col));
@@ -554,7 +554,7 @@ export default {
       this.loadRepositoryRow(this.currentItemUrl);
       if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
       this.selectedToUnlink = null;
-    },
-  },
+    }
+  }
 };
 </script>

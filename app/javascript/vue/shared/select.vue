@@ -49,101 +49,101 @@
   </div>
 </template>
 <script>
-  import { vOnClickOutside } from '@vueuse/components';
+import { vOnClickOutside } from '@vueuse/components';
 
-  export default {
-    name: 'Select',
-    emits: ['close', 'reached-end', 'open', 'change'],
-    props: {
-      withClearButton: { type: Boolean, default: false },
-      withEditCursor: { type: Boolean, default: false },
-      value: { type: [String, Number] },
-      options: { type: Array, default: () => [] },
-      initialValue: { type: [String, Number] },
-      placeholder: { type: String },
-      noOptionsPlaceholder: { type: String },
-      className: { type: String, default: '' },
-      optionsClassName: { type: String, default: '' },
-      disabled: { type: Boolean, default: false },
-    },
-    directives: {
-      'click-outside': vOnClickOutside
-    },
-    data() {
-      return {
-        isOpen: false,
-        optionPositionStyle: '',
-        currentContentHeight: 0,
+export default {
+  name: 'Select',
+  emits: ['close', 'reached-end', 'open', 'change'],
+  props: {
+    withClearButton: { type: Boolean, default: false },
+    withEditCursor: { type: Boolean, default: false },
+    value: { type: [String, Number] },
+    options: { type: Array, default: () => [] },
+    initialValue: { type: [String, Number] },
+    placeholder: { type: String },
+    noOptionsPlaceholder: { type: String },
+    className: { type: String, default: '' },
+    optionsClassName: { type: String, default: '' },
+    disabled: { type: Boolean, default: false }
+  },
+  directives: {
+    'click-outside': vOnClickOutside
+  },
+  data() {
+    return {
+      isOpen: false,
+      optionPositionStyle: '',
+      currentContentHeight: 0
+    };
+  },
+  computed: {
+    valueLabel() {
+      const option = this.options.find((o) => o[0] === this.value);
+      return option && option[1];
+    }
+  },
+  mounted() {
+    document.addEventListener('scroll', this.updateOptionPosition);
+  },
+  beforeUnmount() {
+    document.removeEventListener('scroll', this.updateOptionPosition);
+  },
+  methods: {
+    toggle() {
+      this.isOpen = !this.isOpen;
+
+      if (this.isOpen) {
+        this.$emit('open');
+        this.$nextTick(() => {
+          this.$emit('focus');
+          this.$refs.focusElement?.focus();
+        });
+        this.$refs.optionsContainer.scrollTop = 0;
+        this.updateOptionPosition();
+      } else {
+        this.close();
       }
     },
-    computed: {
-      valueLabel() {
-        let option = this.options.find((o) => o[0] === this.value);
-        return option && option[1];
+    onScroll() {
+      const scrollObj = this.$refs.optionsContainer.ps;
+
+      if (scrollObj) {
+        const reachedEnd = scrollObj.reach.y === 'end';
+        if (reachedEnd && this.contentHeight !== scrollObj.contentHeight) {
+          this.$emit('reached-end');
+          this.contentHeight = scrollObj.contentHeight;
+        }
       }
     },
-    mounted() {
-      document.addEventListener('scroll', this.updateOptionPosition);
+    close() {
+      this.isOpen = false;
+      this.optionPositionStyle = '';
+      this.$refs.optionsContainer.$el.scrollTop = 0;
+      this.$emit('close');
     },
-    beforeUnmount() {
-      document.removeEventListener('scroll', this.updateOptionPosition);
+    setValue(value) {
+      this.$emit('change', value);
     },
-    methods: {
-      toggle() {
-        this.isOpen = !this.isOpen;
+    updateOptionPosition() {
+      const container = $(this.$refs.container);
+      const rect = container.get(0).getBoundingClientRect();
+      const { width } = rect;
+      const { height } = rect;
+      let top = rect.top + rect.height;
+      let { left } = rect;
 
-        if (this.isOpen) {
-          this.$emit('open');
-          this.$nextTick(() => {
-            this.$emit('focus');
-            this.$refs.focusElement?.focus();
-          });
-          this.$refs.optionsContainer.scrollTop = 0;
-          this.updateOptionPosition();
-        } else {
-          this.close()
-        }
-      },
-      onScroll() {
-        const scrollObj = this.$refs.optionsContainer.ps;
+      const modal = container.parents('.modal-content');
 
-        if (scrollObj) {
-          const reachedEnd = scrollObj.reach.y === 'end';
-          if (reachedEnd && this.contentHeight !== scrollObj.contentHeight) {
-            this.$emit('reached-end');
-            this.contentHeight = scrollObj.contentHeight;
-          }
-        }
-      },
-      close() {
-        this.isOpen = false;
-        this.optionPositionStyle = '';
-        this.$refs.optionsContainer.$el.scrollTop = 0;
-        this.$emit('close');
-      },
-      setValue(value) {
-        this.$emit('change', value);
-      },
-      updateOptionPosition() {
-        const container = $(this.$refs.container);
-        const rect = container.get(0).getBoundingClientRect();
-        let width = rect.width;
-        let height = rect.height;
-        let top = rect.top + rect.height;
-        let left = rect.left;
-
-        const modal = container.parents('.modal-content');
-
-        if (modal.length > 0) {
-          const modalRect = modal.get(0).getBoundingClientRect();
-          top -= modalRect.top;
-          left -= modalRect.left;
-          this.optionPositionStyle = `position: fixed; top: ${top}px; left: ${left}px; width: ${width}px`
-        } else {
-          container.addClass('relative');
-          this.optionPositionStyle = `position: absolute; top: ${height}px; left: 0px; width: ${width}px`
-        }
+      if (modal.length > 0) {
+        const modalRect = modal.get(0).getBoundingClientRect();
+        top -= modalRect.top;
+        left -= modalRect.left;
+        this.optionPositionStyle = `position: fixed; top: ${top}px; left: ${left}px; width: ${width}px`;
+      } else {
+        container.addClass('relative');
+        this.optionPositionStyle = `position: absolute; top: ${height}px; left: 0px; width: ${width}px`;
       }
     }
   }
+};
 </script>

@@ -43,20 +43,20 @@
 </template>
 
 <script>
-import repositoryValueMixin from "./mixins/repository_value.js";
-import Textarea from "../../shared/Textarea.vue";
+import repositoryValueMixin from './mixins/repository_value.js';
+import Textarea from '../../shared/Textarea.vue';
 
 export default {
-  name: "RepositoryNumberValue",
+  name: 'RepositoryNumberValue',
   mixins: [repositoryValueMixin],
   components: {
-    'text-area': Textarea,
+    'text-area': Textarea
   },
   data() {
     return {
       expandable: false,
       collapsed: true,
-      numberValue: '',
+      numberValue: ''
     };
   },
   props: {

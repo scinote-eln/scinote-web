@@ -63,7 +63,7 @@ export default {
 
   props: {
     itemsToCreate: { type: Array, default: () => items },
-    initialSectionId: String || null,
+    initialSectionId: String || null
   },
 
   data() {
@@ -75,7 +75,7 @@ export default {
       thresholds: [],
       navigationItemsStatus: [], // highlighted or not
       scrollPosition: null,
-      centerOfScrollThumb: null,
+      centerOfScrollThumb: null
     };
   },
   mounted() {
@@ -143,7 +143,7 @@ export default {
         return {
           sectionId: item.sectionId,
           heightPx,
-          percentHeight,
+          percentHeight
         };
       });
     },
@@ -174,7 +174,7 @@ export default {
             id,
             index: i,
             from,
-            to,
+            to
           };
           this.thresholds[i] = threshold;
         } else if (i === this.sectionsWithHeight.length - 1) {
@@ -186,7 +186,7 @@ export default {
             id,
             index: i,
             from,
-            to,
+            to
           };
           this.thresholds[i] = threshold;
         } else {
@@ -199,7 +199,7 @@ export default {
             id,
             index: i,
             from,
-            to,
+            to
           };
           this.thresholds[i] = threshold;
         }
@@ -227,13 +227,13 @@ export default {
         // scroll to top
         this.bodyContainerEl.scrollTo({
           top: 0,
-          behavior: 'auto',
+          behavior: 'auto'
         });
       } else if (foundThreshold.index === this.thresholds.length - 1) {
         // scroll to bottom
         this.bodyContainerEl.scrollTo({
           top: 99999,
-          behavior: 'auto',
+          behavior: 'auto'
         });
       } else {
         // scroll to the start of a section's threshold, adjusted for the center thumb value (true center)
@@ -278,7 +278,7 @@ export default {
           this.navigationItemsStatus[index] = true;
         }
       });
-    },
-  },
+    }
+  }
 };
 </script>

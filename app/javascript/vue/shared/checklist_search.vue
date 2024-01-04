@@ -57,7 +57,7 @@ export default {
     isLoading: { type: Boolean, default: false },
     params: { type: Array, default: () => [] },
     optionsUrl: { type: String, required: true },
-    lazyLoadEnabled: { type: Boolean, default: false },
+    lazyLoadEnabled: { type: Boolean, default: false }
   },
   components: { checklistSelect },
   emits: ['reached-end', 'update-options'],
@@ -68,7 +68,7 @@ export default {
       shouldOpen: false,
       nextPage: 1,
       isLazyLoading: false,
-      selectedValues: [],
+      selectedValues: []
     };
   },
   created() {
@@ -97,7 +97,7 @@ export default {
     },
     options() {
       this.currentOptions = this.options;
-    },
+    }
   },
   computed: {
     valueLabel() {
@@ -114,7 +114,7 @@ export default {
       if (this.lazyLoadEnabled && this.nextPage) url = `${url}&page=${this.nextPage}`;
       if (this.params.length) url = `${url}&${this.params.join('&')}`;
       return url;
-    },
+    }
   },
   methods: {
     handleReachedEnd() {
@@ -137,9 +137,9 @@ export default {
             return;
           }
           this.currentOptions = result;
-        },
+        }
       });
-    },
-  },
+    }
+  }
 };
 </script>

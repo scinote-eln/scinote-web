@@ -135,7 +135,7 @@ export default {
     'select-search': SelectSearch,
     ChecklistSearch,
     Select,
-    'checklist-select': ChecklistSelect,
+    'checklist-select': ChecklistSelect
   },
   created() {
     window.repositoryItemRelationshipsModal = this;
@@ -162,8 +162,8 @@ export default {
   },
   computed: {
     shouldEnableAddButton() {
-      return ((this.selectedInventoryValue !== null) && (this.selectedRelationshipValue !== null) && (this.selectedItemValues.length > 0))
-    },
+      return ((this.selectedInventoryValue !== null) && (this.selectedRelationshipValue !== null) && (this.selectedItemValues.length > 0));
+    }
   },
   methods: {
     fetchInventories() {
@@ -176,7 +176,7 @@ export default {
           this.inventoryOptions = this.inventoryOptions.concat(result.data.map((val) => [val.id, val.name]));
           this.loadingInventories = false;
           this.nextInventoriesPage = result.next_page;
-        },
+        }
       });
     },
     fetchInventoryItems(inventoryValue = null) {
@@ -189,7 +189,7 @@ export default {
           this.itemOptions = this.itemOptions.concat(result.data.map((val) => ({ id: val.id, label: val.name })));
           this.loadingItems = false;
           this.nextItemsPage = result.next_page;
-        },
+        }
       });
     },
     updateInventories(currentOptions, result) {
@@ -264,16 +264,16 @@ export default {
           repository_row_connection: {
             relation: this.selectedRelationshipValue,
             relation_ids: this.selectedItemValues,
-            connection_repository_id: this.selectedInventoryValue,
-          },
+            connection_repository_id: this.selectedInventoryValue
+          }
         },
         success: (result) => {
           $this.addRelationCallback(result, relation);
           if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
-        },
+        }
       });
       this.close();
-    },
-  },
+    }
+  }
 };
 </script>
