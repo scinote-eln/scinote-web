@@ -231,9 +231,22 @@
             this.unit = result.stock_value.unit
             this.reminderEnabled = result.stock_value.reminder_enabled
             this.lowStockTreshold = result.stock_value.low_stock_treshold
-            this.operation = 1;
+            this.operation = `${I18n.t('repository_stock_values.manage_modal.values.set')}`;
             this.stockUrl = result.stock_url;
-            this.operations = [[1, `${I18n.t('repository_stock_values.manage_modal.set')}`], [2, `${I18n.t('repository_stock_values.manage_modal.add')}`], [3, `${I18n.t('repository_stock_values.manage_modal.remove')}`]];
+            this.operations = [
+              [
+                `${I18n.t('repository_stock_values.manage_modal.values.set')}`,
+                `${I18n.t('repository_stock_values.manage_modal.set')}`
+              ],
+              [
+                `${I18n.t('repository_stock_values.manage_modal.values.add')}`,
+                `${I18n.t('repository_stock_values.manage_modal.add')}`
+              ],
+              [
+                `${I18n.t('repository_stock_values.manage_modal.values.remove')}`,
+                `${I18n.t('repository_stock_values.manage_modal.remove')}`
+              ]
+            ];
             this.errors = {};
           }
         });
@@ -274,7 +287,7 @@
               comment: this.comment,
               low_stock_threshold: this.reminderEnabled ? this.lowStockTreshold : null
             },
-            operator: this.operations.find(operation => operation[0] == this.operation)?.[1],
+            operator: this.operations.find(operation => operation[0] == this.operation)?.[0],
             change_amount: Math.abs(this.amount),
           },
           success: function(result) {
