@@ -44,7 +44,7 @@ export default {
     },
     async openLocally() {
       if (this.localAppName === null) {
-          this.showNoPredefinedAppModal = true
+          this.showNoPredefinedAppModal = true;
         return
       }
       try {

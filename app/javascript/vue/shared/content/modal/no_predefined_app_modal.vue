@@ -18,22 +18,23 @@
     </div>
   </div>
 </template>
- <script>
-  export default {
-    name: 'NoPredefinedAppModal',
-    props: {
-      fileName: String
-    },
-    mounted() {
-      $(this.$refs.modal).modal('show');
-      $(this.$refs.modal).on('hidden.bs.modal', () => {
-        this.$emit('confirm');
-      });
-    },
-    methods: {
-      confirm() {
-        $(this.$refs.modal).modal('hide');
-      }
+
+<script>
+export default {
+  name: 'NoPredefinedAppModal',
+  props: {
+    fileName: String
+  },
+  mounted() {
+    $(this.$refs.modal).modal('show');
+    $(this.$refs.modal).on('hidden.bs.modal', () => {
+      this.$emit('confirm');
+    });
+  },
+  methods: {
+    confirm() {
+      $(this.$refs.modal).modal('hide');
     }
   }
+}
 </script>

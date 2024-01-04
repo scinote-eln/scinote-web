@@ -112,7 +112,7 @@
       @confirm="deleteAttachment"
       @cancel="deleteModal = false"
     />
-    <moveAssetModal 
+    <moveAssetModal
       v-if="movingAttachment"
       :parent_type="attachment.attributes.parent_type"
       :targets_url="attachment.attributes.urls.move_targets"
@@ -128,58 +128,58 @@
 </template>
 
 <script>
-  import AttachmentMovedMixin from './mixins/attachment_moved.js'
-  import ContextMenuMixin from './mixins/context_menu.js'
-  import ContextMenu from './context_menu.vue'
-  import deleteAttachmentModal from './delete_modal.vue'
-  import MoveAssetModal from '../modal/move.vue'
-  import NoPredefinedAppModal from '../modal/no_predefined_app_modal.vue'
-  import MoveMixin from './mixins/move.js'
+import AttachmentMovedMixin from './mixins/attachment_moved.js'
+import ContextMenuMixin from './mixins/context_menu.js'
+import ContextMenu from './context_menu.vue'
+import deleteAttachmentModal from './delete_modal.vue'
+import MoveAssetModal from '../modal/move.vue'
+import NoPredefinedAppModal from '../modal/no_predefined_app_modal.vue'
+import MoveMixin from './mixins/move.js'
 
-  export default {
-    name: 'thumbnailAttachment',
-    mixins: [ContextMenuMixin, AttachmentMovedMixin, MoveMixin],
-    components: { ContextMenu, deleteAttachmentModal, MoveAssetModal, NoPredefinedAppModal },
-    props: {
-      attachment: {
-        type: Object,
-        required: true
-      },
-      parentId: {
-        type: Number,
-        required: true
-      }
+export default {
+  name: 'thumbnailAttachment',
+  mixins: [ContextMenuMixin, AttachmentMovedMixin, MoveMixin],
+  components: { ContextMenu, deleteAttachmentModal, MoveAssetModal, NoPredefinedAppModal },
+  props: {
+    attachment: {
+      type: Object,
+      required: true
     },
-    data() {
-      return {
-        isHovered: false,
-        deleteModal: false,
-        showNoPredefinedAppModal: false
-      };
-    },
-    mounted() {
+    parentId: {
+      type: Number,
+      required: true
+    }
+  },
+  data() {
+    return {
+      isHovered: false,
+      deleteModal: false,
+      showNoPredefinedAppModal: false
+    };
+  },
+  mounted() {
+    $(this.$nextTick(function() {
+      $(`.attachment-preview img`)
+        .on('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
+        .on('load', (event) => ActiveStoragePreviews.showPreview(event))
+    }))
+  },
+  watch: {
+    isHovered: function(newValue) {
+      // reload thumbnail on mouse out
+      if (newValue) return;
+
       $(this.$nextTick(function() {
         $(`.attachment-preview img`)
           .on('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
           .on('load', (event) => ActiveStoragePreviews.showPreview(event))
       }))
-    },
-    watch: {
-      isHovered: function(newValue) {
-        // reload thumbnail on mouse out
-        if(newValue) return;
-
-        $(this.$nextTick(function() {
-          $(`.attachment-preview img`)
-            .on('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
-            .on('load', (event) => ActiveStoragePreviews.showPreview(event))
-        }))
-      }
-    },
-    methods: {
-      openOVEditor(url) {
-        window.showIFrameModal(url);
-      }
+    }
+  },
+  methods: {
+    openOVEditor(url) {
+      window.showIFrameModal(url);
     }
   }
+}
 </script>
