@@ -62,17 +62,23 @@
 </template>
 
 <script>
-import deleteAttachmentModal from './delete_modal.vue'
+import deleteAttachmentModal from './delete_modal.vue';
 import editLaunchingApplicationModal from './edit_launching_application_modal.vue';
-import moveAssetModal from '../modal/move.vue'
-import NoPredefinedAppModal from '../modal/no_predefined_app_modal.vue'
-import MoveMixin from './mixins/move.js'
-import OpenLocallyMixin from './mixins/open_locally.js'
-import MenuDropdown from '../../menu_dropdown.vue'
+import moveAssetModal from '../modal/move.vue';
+import NoPredefinedAppModal from '../modal/no_predefined_app_modal.vue';
+import MoveMixin from './mixins/move.js';
+import OpenLocallyMixin from './mixins/open_locally.js';
+import MenuDropdown from '../../menu_dropdown.vue';
 
 export default {
   name: 'contextMenu',
-  components: { deleteAttachmentModal, moveAssetModal, MenuDropdown, NoPredefinedAppModal, editLaunchingApplicationModal },
+  components: {
+    deleteAttachmentModal,
+    moveAssetModal,
+    MenuDropdown,
+    NoPredefinedAppModal,
+    editLaunchingApplicationModal
+  },
   mixins: [MoveMixin, OpenLocallyMixin],
   props: {
     attachment: {

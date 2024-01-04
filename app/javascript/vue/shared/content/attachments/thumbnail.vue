@@ -144,20 +144,26 @@
 </template>
 
 <script>
-import AttachmentMovedMixin from './mixins/attachment_moved.js'
-import ContextMenuMixin from './mixins/context_menu.js'
-import ContextMenu from './context_menu.vue'
-import deleteAttachmentModal from './delete_modal.vue'
-import MenuDropdown from '../../../shared/menu_dropdown.vue'
-import MoveAssetModal from '../modal/move.vue'
-import NoPredefinedAppModal from '../modal/no_predefined_app_modal.vue'
-import MoveMixin from './mixins/move.js'
-import OpenLocallyMixin from './mixins/open_locally.js'
+import AttachmentMovedMixin from './mixins/attachment_moved.js';
+import ContextMenuMixin from './mixins/context_menu.js';
+import ContextMenu from './context_menu.vue';
+import deleteAttachmentModal from './delete_modal.vue';
+import MenuDropdown from '../../../shared/menu_dropdown.vue';
+import MoveAssetModal from '../modal/move.vue';
+import NoPredefinedAppModal from '../modal/no_predefined_app_modal.vue';
+import MoveMixin from './mixins/move.js';
+import OpenLocallyMixin from './mixins/open_locally.js';
 
 export default {
   name: 'thumbnailAttachment',
   mixins: [ContextMenuMixin, AttachmentMovedMixin, MoveMixin, OpenLocallyMixin],
-  components: { ContextMenu, deleteAttachmentModal, MoveAssetModal, NoPredefinedAppModal, MenuDropdown },
+  components: {
+    ContextMenu,
+    deleteAttachmentModal,
+    MoveAssetModal,
+    NoPredefinedAppModal,
+    MenuDropdown
+  },
   props: {
     attachment: {
       type: Object,
@@ -177,7 +183,7 @@ export default {
   },
   computed: {
     openOptions() {
-      let options = [];
+      const options = [];
       if (this.attachment.attributes.wopi && this.attachment.attributes.urls.edit_asset) {
         options.push({
           text: this.attachment.attributes.wopi_context.button_text,
@@ -188,30 +194,30 @@ export default {
       if (this.attachment.attributes.asset_type === 'gene_sequence' && this.attachment.attributes.urls.open_vector_editor_edit) {
         options.push({
           text: this.i18n.t('open_vector_editor.edit_sequence'),
-          emit: 'open_ove_editor',
+          emit: 'open_ove_editor'
         });
       }
       if (this.attachment.attributes.asset_type === 'marvinjs' && this.attachment.attributes.urls.marvin_js_start_edit) {
         options.push({
           text: this.i18n.t('assets.file_preview.edit_in_marvinjs'),
-          emit: 'open_marvinjs_editor',
-        })
+          emit: 'open_marvinjs_editor'
+        });
       }
       if (this.attachment.attributes.asset_type !== 'marvinjs'
           && this.attachment.attributes.image_editable
           && this.attachment.attributes.urls.start_edit_image) {
         options.push({
           text: this.i18n.t('assets.file_preview.edit_in_scinote'),
-          emit: 'open_scinote_editor',
-        })
+          emit: 'open_scinote_editor'
+        });
       }
       if (this.canOpenLocally) {
-        const text = this.localAppName ?
-          this.i18n.t('attachments.open_locally_in', { application: this.localAppName }) :
-          this.i18n.t('attachments.open_locally')
+        const text = this.localAppName
+          ? this.i18n.t('attachments.open_locally_in', { application: this.localAppName })
+          : this.i18n.t('attachments.open_locally');
 
         options.push({
-          text: text,
+          text,
           emit: 'open_locally'
         });
       }
@@ -219,22 +225,22 @@ export default {
     },
   },
   mounted() {
-    $(this.$nextTick(function() {
-      $(`.attachment-preview img`)
+    $(this.$nextTick(() => {
+      $('.attachment-preview img')
         .on('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
-        .on('load', (event) => ActiveStoragePreviews.showPreview(event))
-    }))
+        .on('load', (event) => ActiveStoragePreviews.showPreview(event));
+    }));
   },
   watch: {
-    isHovered: function(newValue) {
+    isHovered(newValue) {
       // reload thumbnail on mouse out
       if (newValue) return;
 
-      $(this.$nextTick(function() {
-        $(`.attachment-preview img`)
+      $(this.$nextTick(() => {
+        $('.attachment-preview img')
           .on('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
-          .on('load', (event) => ActiveStoragePreviews.showPreview(event))
-      }))
+          .on('load', (event) => ActiveStoragePreviews.showPreview(event));
+      }));
     }
   },
   methods: {
@@ -242,5 +248,5 @@ export default {
       window.showIFrameModal(url);
     }
   }
-}
+};
 </script>
