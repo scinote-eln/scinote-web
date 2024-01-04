@@ -88,6 +88,7 @@
         multiple: false,
         params: {},
         reloadCallback: null,
+        actionsLoadedCallback: null,
         loaded: false,
         loading: false,
         width: 0,
@@ -107,6 +108,7 @@
           this.actions = data.actions;
           this.loading = false;
           this.setButtonOverflow();
+          if (this.actionsLoadedCallback) this.$nextTick(this.actionsLoadedCallback);
         });
       }, 10);
     },
@@ -160,6 +162,9 @@
       },
       setReloadCallback(func) {
         this.reloadCallback = func;
+      },
+      setActionsLoadedCallback(func) {
+        this.actionsLoadedCallback = func;
       },
       doAction(action, event) {
         switch(action.type) {
