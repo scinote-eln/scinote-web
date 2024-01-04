@@ -32,6 +32,7 @@
                       v-model="sharedEnabled"
                       id="checkbox"
                       class="sci-toggle-checkbox"
+                      :disabled="!canShare"
                       tabindex="0"
                       @change="checkboxChange"
                       @keyup.enter="handleCheckboxEnter"/>
@@ -46,7 +47,7 @@
                           :class="{ 'error': error }"
                           v-model="description"
                           :placeholder="i18n.t('shareable_links.modal.description_placeholder')"
-                          :disabled="!sharedEnabled"
+                          :disabled="!sharedEnabled || !canShare"
                           @focus="editing = true">
                 </textarea>
               </div>
@@ -110,6 +111,10 @@
       characterLimit: {
         type: Number,
         default: null
+      },
+      canShare: {
+        type: Boolean,
+        default: false
       }
     },
     data() {

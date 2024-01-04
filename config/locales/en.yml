@@ -220,7 +220,7 @@ en:
             configuration:
               disabled: 'Webhooks are disabled'
             url:
-              not_valid: 'Not valid URL'
+              not_valid: 'not valid URL'
         result_text:
           attributes:
             text:
@@ -1299,7 +1299,8 @@ en:
           16_x_24: '384 (16 x 24)'
           8_x_12: '96 (8 x 12)'
           6_x_8: '48 (6 x 8 )'
-          6_x_4: '24 (6 x 4)'
+          4_x_6: '24 (4 x 6)'
+          3_x_4: '12 (3 x 4)'
           2_x_3: '6 (2 x 3)'
       text:
         placeholder: "Enter result text"
@@ -1941,7 +1942,7 @@ en:
         archived_on: "Inventory archived on"
         archived_by: "by"
       filter_inventory_items: "Search items"
-      filter_inventory_items_with_ean: "Search with EAN code"
+      filter_inventory_items_with_ean: "Search with barcode"
       search_button_tooltip: "Quick search"
       ean_search_button_tooltip: "Barcode search"
       no_items: "No items here"
@@ -3081,7 +3082,7 @@ en:
       protocol_description: 'Protocol description'
       protocol_steps: 'Protocol steps'
       publish: 'Publish'
-      save_as_draft: 'Save as draft'
+      save_as_draft: 'Create new draft'
       draft: 'Draft'
       version: "Version:"
       published_on: "Published on:"
@@ -3206,7 +3207,7 @@ en:
         revision: "Version %{version}"
         revision_publishing_info: "Published on %{published_on}, by %{published_by}"
         publish: "Publish"
-        save_as_draft: "Save as draft"
+        save_as_draft: "Create new draft"
         comment_placeholder: "Click here to enter revision notes"
       protocolsio:
         search_bar_placeholder: 'Search for protocols'
@@ -3281,7 +3282,8 @@ en:
           16_x_24: '384 (16 x 24)'
           8_x_12: '96 (8 x 12)'
           6_x_8: '48 (6 x 8 )'
-          6_x_4: '24 (6 x 4)'
+          4_x_6: '24 (4 x 6)'
+          3_x_4: '12 (3 x 4)'
           2_x_3: '6 (2 x 3)'
       table:
         default_name: 'Table %{position}'
@@ -3553,10 +3555,10 @@ en:
       thumbnail_html: "Thumbnail"
       list_html: "List"
     delete_file_modal:
-      title: "Delete attachment"
+      title: "Delete file"
       description_1_html: "You are about to delete <b>%{file_name}</b></p>"
       description_2: "Are you sure you want to continue?"
-      confirm_button: "Delete attachment"
+      confirm_button: "Delete"
     empty_office_file:
       description: "The file is empty. Please add some data before saving the file."
       reload: "Reload file"

@@ -21,16 +21,16 @@ module Activities
 
     def filter_date!
       @activity_filters = @activity_filters.where(
-        "(CASE "\
-        "WHEN (filter ->> 'to_date') = '' " \
+        "(CASE " \
+        "WHEN ((filter ->> 'to_date') = '') IS NOT FALSE " \
         "THEN :date >= '-infinity'::date " \
         "ELSE :date >= (filter ->> 'to_date')::date " \
         "END) " \
-        " AND " \
-        "(CASE "\
-        "WHEN (filter ->> 'from_date') = '' " \
+        "AND " \
+        "(CASE " \
+        "WHEN ((filter ->> 'from_date') = '') IS NOT FALSE " \
         "THEN :date <= 'infinity'::date " \
-        "ELSE :date <=  (filter ->> 'from_date')::date "\
+        "ELSE :date <=  (filter ->> 'from_date')::date " \
         "END)",
         date: @activity.created_at.to_date
       )
