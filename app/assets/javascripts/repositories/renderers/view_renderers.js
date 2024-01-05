@@ -271,7 +271,7 @@ $.fn.dataTable.render.defaultRepositoryStockConsumptionValue = function() {
 $.fn.dataTable.render.RelationshipValue = function(data, row) {
   return `<a
             style="text-decoration: none !important;"
-            class="relationships-info-link !text-sn-science-blue !no-underline pl-4"
+            class="relationships-info-link !text-sn-blue !no-underline pl-4"
             href=${row.recordInfoUrl}>
             ${data}
           </a>`;
