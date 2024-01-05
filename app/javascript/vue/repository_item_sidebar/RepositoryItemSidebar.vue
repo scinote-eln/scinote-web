@@ -30,12 +30,12 @@
 
           <div v-else class="flex flex-1 flex-grow-1 justify-between" ref="scrollSpyContent" id="scrollSpyContent">
 
-            <div id="left-col" class="flex flex-col gap-4 max-w-[350px]">
+            <div id="left-col" class="flex flex-col gap-6 max-w-[350px]">
 
               <!-- INFORMATION -->
               <section id="information-section">
                 <div ref="information-label" id="information-label"
-                  class="font-inter text-lg font-semibold leading-7 mb-4 transition-colors duration-300">{{
+                  class="font-inter text-lg font-semibold leading-7 mb-6 transition-colors duration-300">{{
                     i18n.t('repositories.item_card.section.information') }}
                 </div>
                 <div v-if="defaultColumns">
@@ -113,12 +113,12 @@
               <div id="divider" class="w-500 bg-sn-light-grey flex items-center self-stretch h-px "></div>
 
               <!-- CUSTOM COLUMNS, RELATIONSHIPS, ASSIGNED, QR CODE -->
-              <div id="custom-col-assigned-qr-wrapper" class="flex flex-col gap-4">
+              <div id="custom-col-assigned-qr-wrapper" class="flex flex-col gap-6">
 
                 <!-- CUSTOM COLUMNS -->
                 <section id="custom-columns-section" class="flex flex-col min-h-[64px] h-auto">
                   <div ref="custom-columns-label" id="custom-columns-label"
-                    class="font-inter text-lg font-semibold leading-7 pb-4 transition-colors duration-300">
+                    class="font-inter text-lg font-semibold leading-7 mb-6 transition-colors duration-300">
                     {{ i18n.t('repositories.item_card.custom_columns_label') }}
                   </div>
                   <CustomColumns :customColumns="customColumns" :repositoryRowId="repositoryRowId"
@@ -131,12 +131,14 @@
                 <!-- RELATIONSHIPS -->
                 <section id="relationships-section" class="flex flex-col" ref="relationshipsSectionRef">
                   <div ref="relationships-label" id="relationships-label"
-                    class="font-inter text-lg font-semibold leading-7 mb-4 transition-colors duration-300">
+                    class="font-inter text-lg font-semibold leading-7 mb-6 transition-colors duration-300">
                     {{ i18n.t('repositories.item_card.section.relationships') }}
                   </div>
                   <div class="font-inter text-sm leading-5 w-full">
-                    <div class="flex flex-row justify-between">
-                      <div class="mb-3 font-semibold">{{ i18n.t('repositories.item_card.relationships.parents.count', { count: parentsCount || 0 }) }}</div>
+                    <div class="flex flex-row justify-between mb-4">
+                      <div class="font-semibold">
+                        {{ i18n.t('repositories.item_card.relationships.parents.count', { count: parentsCount || 0 }) }}
+                      </div>
                       <a
                         v-if="permissions.can_connect_rows"
                         class="relationships-add-link btn-text-link font-normal"
@@ -145,9 +147,9 @@
                       </a>
                     </div>
                     <div v-if="parentsCount">
-                      <details v-for="(parent) in parents" @toggle="updateOpenState(parent.code, $event.target.open)" :key="parent.code" class="flex flex-col font-normal gap-5 group cursor-default">
-                        <summary class="flex flex-row gap-3 mb-3 items-center">
-                          <img :src="icons.delimiter_path" class="w-3 h-3 cursor-pointer"
+                      <details v-for="(parent) in parents" @toggle="updateOpenState(parent.code, $event.target.open)" :key="parent.code" class="flex flex-col font-normal gap-4 group cursor-default">
+                        <summary class="flex flex-row gap-3 mb-4 items-center">
+                          <img :src="icons.delimiter_path" class="w-3 h-3 cursor-pointer self-start mt-1"
                                :class="{ 'rotate-90': relationshipDetailsState[parent.code] }" />
                           <span>
                             <span>{{ i18n.t('repositories.item_card.relationships.item') }}</span>
@@ -158,7 +160,7 @@
                             </button>
                           </span>
                         </summary>
-                        <p class="flex flex-col gap-3 mb-5 ml-6">
+                        <p class="flex flex-col gap-3 ml-6 mb-4">
                           <span>
                             {{ i18n.t('repositories.item_card.relationships.id', { code: parent.code }) }}
                           </span>
@@ -171,7 +173,7 @@
                         </p>
                       </details>
                     </div>
-                    <div v-else class="text-sn-dark-grey h-5">
+                    <div v-else class="text-sn-dark-grey max-h-5">
                       {{ i18n.t('repositories.item_card.relationships.parents.empty') }}
                     </div>
                   </div>
@@ -179,8 +181,10 @@
                   <div class="sci-divider pb-4"></div>
 
                   <div class="font-inter text-sm leading-5 w-full">
-                    <div class="flex flex-row justify-between">
-                      <div class="mb-3 font-semibold">{{ i18n.t('repositories.item_card.relationships.children.count', { count: childrenCount || 0 }) }}</div>
+                    <div class="flex flex-row justify-between" :class="{ 'mb-4': childrenCount }">
+                      <div class="font-semibold">
+                        {{ i18n.t('repositories.item_card.relationships.children.count', { count: childrenCount || 0 }) }}
+                      </div>
                       <a
                         v-if="permissions.can_connect_rows"
                         class="relationships-add-link btn-text-link font-normal"
@@ -189,9 +193,12 @@
                       </a>
                     </div>
                     <div v-if="childrenCount">
-                      <details v-for="(child) in children" :key="child.code" @toggle="updateOpenState(child.code, $event.target.open)" class="flex flex-col font-normal gap-5 group">
-                        <summary class="flex flex-row gap-3 mb-3 items-center">
-                          <img :src="icons.delimiter_path" class="w-3 h-3 cursor-pointer" :class="{ 'rotate-90': relationshipDetailsState[child.code] }"/>
+                      <details v-for="(child) in children" :key="child.code" @toggle="updateOpenState(child.code, $event.target.open)"
+                               class="flex flex-col font-normal gap-4 group last-of-type:[&>p:last-child]:mb-0">
+                        <summary class="flex flex-row gap-3 mb-4 items-center"
+                                 :class="{ 'group-last-of-type:mb-0': !relationshipDetailsState[child.code] }">
+                          <img :src="icons.delimiter_path" class="w-3 h-3 cursor-pointer self-start mt-1"
+                               :class="{ 'rotate-90': relationshipDetailsState[child.code] }"/>
                           <span class="group/child">
                             <span>{{ i18n.t('repositories.item_card.relationships.item') }}</span>
                             <a :href="child.path" class="record-info-link btn-text-link !text-sn-science-blue">{{ child.name }}</a>
@@ -201,7 +208,7 @@
                             </button>
                           </span>
                         </summary>
-                        <p class="flex flex-col gap-3 mb-5 ml-6">
+                        <p class="flex flex-col gap-3 ml-6 mb-4">
                           <span>{{ i18n.t('repositories.item_card.relationships.id', { code: child.code }) }}</span>
                           <span>
                             <span>{{ i18n.t('repositories.item_card.relationships.inventory') }}</span>
@@ -212,7 +219,7 @@
                         </p>
                       </details>
                     </div>
-                    <div v-else class="text-sn-dark-grey h-5">
+                    <div v-else class="text-sn-dark-grey max-h-5">
                       {{ i18n.t('repositories.item_card.relationships.children.empty') }}
                     </div>
                   </div>
@@ -223,7 +230,7 @@
                 <!-- ASSIGNED -->
                 <section id="assigned-section" class="flex flex-col" ref="assignedSectionRef">
                   <div
-                    class="flex flex-row text-lg font-semibold w-[350px] pb-4 leading-7 items-center justify-between transition-colors duration-300"
+                    class="flex flex-row text-lg font-semibold w-[350px] mb-6 leading-7 items-center justify-between transition-colors duration-300"
                     ref="assigned-label"
                     id="assigned-label"
                     >
@@ -275,7 +282,7 @@
 
                 <!-- QR -->
                 <section id="qr-section" ref="QR-label">
-                  <div id="QR-label" class="font-inter text-lg font-semibold leading-7 mb-4 mt-0 transition-colors duration-300">
+                  <div id="QR-label" class="font-inter text-lg font-semibold leading-7 mb-6 mt-0 transition-colors duration-300">
                     {{ i18n.t('repositories.item_card.section.qr') }}
                   </div>
                   <div class="bar-code-container">
