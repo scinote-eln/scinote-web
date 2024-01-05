@@ -17,7 +17,7 @@
           <span class="sci-checkbox-label" >
           </span>
         </div>
-        <div v-else class="h-1 w-1 bg-sn-black rounded-full mt-auto mb-auto"></div>
+        <div v-else class="h-1 w-1 bg-sn-black rounded-full mt-3"></div>
         <div class="pr-24 relative flex items-start max-w-[90ch]"
              :class="{
               'pointer-events-none': !checklistItem.attributes.isNew && !updateUrl,
