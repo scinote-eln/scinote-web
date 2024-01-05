@@ -16,8 +16,9 @@
         {{ attachment.attributes.file_name }}
       </span>
     </a>
-    <div v-if="attachment.attributes.medium_preview !== null" class="attachment-image-tooltip bg-white sn-shadow-menu-sm" >
-      <img :src="this.imageLoadError ? attachment.attributes.urls.blob : attachment.attributes.medium_preview" @error="handleImageError"/>
+    <div v-if="attachment.attributes.medium_preview !== null" class="attachment-image-tooltip bg-white sn-shadow-menu-sm">
+      <img :src="this.imageLoadError ? attachment.attributes.urls.blob : attachment.attributes.medium_preview" @error="ActiveStoragePreviews.reCheckPreview"
+            @load="ActiveStoragePreviews.showPreview"/>
     </div>
     <div class="file-metadata">
       <span>

@@ -191,8 +191,8 @@
             this.defaultEndDate = this.endDate;
             if ($('.dataTable')[0]) {
               $('.dataTable').DataTable().ajax.reload(null, false);
-              this.reloadRepoItemSidebar();
             }
+            this.reloadRepoItemSidebar();
           }
         });
       },

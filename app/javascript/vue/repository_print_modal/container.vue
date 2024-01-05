@@ -1,6 +1,6 @@
 <template>
   <div ref="modal" class="modal fade" id="modal-print-repository-row-label" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog" role="document" data-e2e="e2e-MD-printLabel">
       <div class="modal-content">
         <div v-if="availablePrinters.length > 0" class="printers-available">
           <div class="modal-header">
@@ -70,7 +70,7 @@
         </div>
         <div v-else class="no-printers-available">
           <div class="modal-body no-printers-container">
-            <button type="button" class="close modal-absolute-close-button" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
+            <button type="button" class="close modal-absolute-close-button" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close" data-e2e="e2e-BT-printLabelMD-close"></i></button>
             <img src='/images/printers/no_available_printers.png'>
             <p class="no-printer-title">
               {{ i18n.t('repository_row.modal_print_label.no_printers.title') }}
@@ -80,7 +80,7 @@
             </p>
           </div>
           <div class="modal-footer">
-            <a :href="urls.fluicsInfo" target="blank" class="btn btn-primary" >
+            <a :href="urls.fluicsInfo" target="blank" class="btn btn-primary" data-e2e="e2e-BT-printLabelMD-visitBlog" >
               {{ i18n.t('repository_row.modal_print_label.no_printers.visit_blog') }}
             </a>
           </div>

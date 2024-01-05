@@ -7,10 +7,6 @@ Rails.application.routes.draw do
 
   # Addons
 
-  def draw(routes_name)
-    instance_eval(File.read(Rails.root.join("config/routes/#{routes_name}.rb")))
-  end
-
   constraints UserSubdomain do
     devise_for :users, controllers: { registrations: 'users/registrations',
                                       sessions: 'users/sessions',
@@ -960,6 +956,8 @@ Rails.application.routes.draw do
           end
         end
       end
+
+      draw(:api_v2) if Rails.configuration.x.core_api_v2_enabled
     end
   end
 

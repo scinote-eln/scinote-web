@@ -81,6 +81,7 @@ namespace :v2, module: 'v1' do
               resources :step_texts, only: %i(index show create update destroy), path: 'step_texts'
             end
           end
+
           get 'activities', to: 'tasks#activities'
         end
       end
@@ -111,6 +112,19 @@ namespace :v2 do
             resources :result_assets, only: %i(index show create update destroy), path: 'assets'
             resources :result_tables, only: %i(index show create update destroy), path: 'tables'
             resources :result_texts, only: %i(index show create update destroy)
+          end
+
+          resources :protocols, only: :show do
+            resources :steps, except: %i(new edit) do
+              scope module: 'step_elements' do
+                resources :assets, except: %i(new edit)
+                resources :checklists, except: %i(new edit) do
+                  resources :checklist_items, except: %i(new edit), as: :items
+                end
+                resources :tables, except: %i(new edit)
+                resources :texts, except: %i(new edit)
+              end
+            end
           end
         end
       end
