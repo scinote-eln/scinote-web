@@ -11,14 +11,14 @@ module Api
 
         def index
           result_assets =
-            timestamps_filter(@result.result_assets).page(params.dig(:page, :number))
-                                                    .per(params.dig(:page, :size))
+            timestamps_filter(@result.assets).page(params.dig(:page, :number))
+                                             .per(params.dig(:page, :size))
 
-          render jsonapi: result_assets, each_serializer: Api::V2::ResultAssetSerializer
+          render jsonapi: result_assets, each_serializer: Api::V2::AssetSerializer
         end
 
         def show
-          render jsonapi: @asset.result_asset, serializer: Api::V2::ResultAssetSerializer
+          render jsonapi: @asset, serializer: Api::V2::AssetSerializer
         end
 
         def create
@@ -36,8 +36,8 @@ module Api
           asset.save!(context: :on_api_upload)
           asset.post_process_file
 
-          render jsonapi: asset.result_asset,
-                 serializer: Api::V2::ResultAssetSerializer,
+          render jsonapi: asset,
+                 serializer: Api::V2::AssetSerializer,
                  status: :created
         end
 

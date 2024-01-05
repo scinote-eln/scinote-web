@@ -37,7 +37,7 @@ RSpec.describe 'Api::V2::ResultElements::AssetsController', type: :request do
         expect(hash_body[:data]).to match_array(
           JSON.parse(
             ActiveModelSerializers::SerializableResource
-              .new(result.result_assets, each_serializer: Api::V2::ResultAssetSerializer)
+              .new(result.result_assets, each_serializer: Api::V2::AssetSerializer)
               .to_json
           )['data']
         )
@@ -79,7 +79,7 @@ RSpec.describe 'Api::V2::ResultElements::AssetsController', type: :request do
         expect(hash_body[:data]).to match(
           JSON.parse(
             ActiveModelSerializers::SerializableResource
-              .new(result_asset, serializer: Api::V2::ResultAssetSerializer)
+              .new(result_asset.asset, serializer: Api::V2::AssetSerializer)
               .to_json
           )['data']
         )
@@ -125,7 +125,7 @@ RSpec.describe 'Api::V2::ResultElements::AssetsController', type: :request do
         expect(hash_body[:data]).to match(
           JSON.parse(
             ActiveModelSerializers::SerializableResource
-              .new(ResultAsset.last, serializer: Api::V2::ResultAssetSerializer)
+              .new(ResultAsset.last.asset, serializer: Api::V2::AssetSerializer)
               .to_json
           )['data']
         )
