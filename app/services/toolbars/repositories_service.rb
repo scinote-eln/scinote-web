@@ -34,12 +34,10 @@ module Toolbars
       return unless @single && can_manage_repository?(@repository)
 
       {
-        name: 'rename',
+        name: :update,
         label: I18n.t('libraries.index.buttons.edit'),
-        button_id: 'renameRepoBtn',
         icon: 'sn-icon sn-icon-edit',
-        path: team_repository_rename_modal_path(@current_team, repository_id: @repository),
-        type: 'remote-modal'
+        type: :emit
       }
     end
 
@@ -47,12 +45,10 @@ module Toolbars
       return unless @single && can_create_repositories?(@current_team)
 
       {
-        name: 'duplicate',
+        name: :duplicate,
         label: I18n.t('libraries.index.buttons.duplicate'),
-        button_id: 'copyRepoBtn',
         icon: 'sn-icon sn-icon-duplicate',
-        path: team_repository_copy_modal_path(@current_team, repository_id: @repository),
-        type: 'remote-modal'
+        type: :emit
       }
     end
 
@@ -60,12 +56,13 @@ module Toolbars
       return unless @repositories.all? { |repository| can_read_repository?(repository) }
 
       {
-        name: 'export',
+        name: :export,
         label: I18n.t('libraries.index.buttons.export'),
-        button_id: 'exportRepoBtn',
         icon: 'sn-icon sn-icon-export',
-        path: export_modal_team_repositories_path(@current_team, counter: @repositories.length),
-        type: 'remote-modal'
+        path: export_repositories_team_path(@current_team),
+        export_limit: TeamZipExport.exports_limit,
+        num_of_requests_left: @current_user.exports_left - 1,
+        type: :emit
       }
     end
 
@@ -73,13 +70,11 @@ module Toolbars
       return unless @repositories.all? { |repository| can_archive_repository?(repository) }
 
       {
-        name: 'archive',
+        name: :archive,
         label: I18n.t('libraries.index.buttons.archive'),
-        button_id: 'archiveRepoBtn',
         icon: 'sn-icon sn-icon-archive',
         path: archive_team_repositories_path(@current_team),
-        type: :request,
-        request_method: :post
+        type: :emit
       }
     end
 
@@ -87,12 +82,10 @@ module Toolbars
       return unless @single && can_share_repository?(@repository)
 
       {
-        name: 'share',
+        name: :share,
         label: I18n.t('repositories.index.share_inventory'),
         icon: 'sn-icon sn-icon-shared',
-        button_class: 'share-repository-button',
-        path: team_repository_share_modal_path(@current_team, repository_id: @repository),
-        type: 'remote-modal'
+        type: :emit
       }
     end
 
@@ -100,13 +93,11 @@ module Toolbars
       return unless @repositories.all? { |repository| can_archive_repository?(repository) }
 
       {
-        name: 'restore',
+        name: :restore,
         label: I18n.t('libraries.index.buttons.restore'),
         icon: 'sn-icon sn-icon-restore',
-        button_id: 'restoreRepoBtn',
         path: restore_team_repositories_path(@current_team),
-        type: :request,
-        request_method: :post
+        type: :emit
       }
     end
 
@@ -114,12 +105,11 @@ module Toolbars
       return unless @single && can_delete_repository?(@repository)
 
       {
-        name: 'delete',
+        name: :delete,
         label: I18n.t('libraries.index.buttons.delete'),
         icon: 'sn-icon sn-icon-delete',
-        button_id: 'deleteRepoBtn',
-        path: team_repository_destroy_modal_path(@current_team, repository_id: @repository),
-        type: 'remote-modal'
+        path: team_repository_path(@current_team, @repository),
+        type: :emit
       }
     end
   end
