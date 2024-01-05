@@ -30,34 +30,36 @@
       @open_ove_editor="openOVEditor(attachment.attributes.urls.open_vector_editor_edit)"
       @open_marvinjs_editor="openMarvinJsEditor"
       @open_scinote_editor="openScinoteEditor"
-      @open_locally="openLocallyButton"
+      @open_locally="openLocally"
       @delete="deleteModal = true"
       @viewMode="changeViewMode"
       @move="showMoveModal"
     ></MenuDropdown>
-    <deleteAttachmentModal
-      v-if="deleteModal"
-      :fileName="attachment.attributes.file_name"
-      @confirm="deleteAttachment"
-      @cancel="deleteModal = false"
-    />
-    <moveAssetModal
-      v-if="movingAttachment"
-      :parent_type="attachment.attributes.parent_type"
-      :targets_url="attachment.attributes.urls.move_targets"
-      @confirm="moveAttachment($event)" @cancel="closeMoveModal"
-    />
-    <NoPredefinedAppModal
-      v-if="showNoPredefinedAppModal"
-      :fileName="attachment.attributes.file_name"
-      @confirm="showNoPredefinedAppModal = false"
-    />
-    <editLaunchingApplicationModal
-        v-if="editAppModal"
+    <Teleport to="body">
+      <deleteAttachmentModal
+        v-if="deleteModal"
         :fileName="attachment.attributes.file_name"
-        :application="this.localAppName"
-        @cancel="editAppModal = false"
-    />
+        @confirm="deleteAttachment"
+        @cancel="deleteModal = false"
+      />
+      <moveAssetModal
+        v-if="movingAttachment"
+        :parent_type="attachment.attributes.parent_type"
+        :targets_url="attachment.attributes.urls.move_targets"
+        @confirm="moveAttachment($event)" @cancel="closeMoveModal"
+      />
+      <NoPredefinedAppModal
+        v-if="showNoPredefinedAppModal"
+        :fileName="attachment.attributes.file_name"
+        @confirm="showNoPredefinedAppModal = false"
+      />
+      <editLaunchingApplicationModal
+          v-if="editAppModal"
+          :fileName="attachment.attributes.file_name"
+          :application="this.localAppName"
+          @cancel="editAppModal = false"
+      />
+    </Teleport>
   </div>
 </template>
 
@@ -192,10 +194,6 @@ export default {
         this.reloadAttachments
       );
       $(this.$refs.marvinjsEditButton).trigger('click');
-    },
-    openLocallyButton() {
-      this.editAppModal = true;
-      this.$emit(this.openLocally());
     },
     openScinoteEditor() {
       $(this.$refs.imageEditButton).trigger('click');

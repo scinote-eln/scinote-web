@@ -3566,6 +3566,9 @@ en:
       body_text_html: "The specified application for accessing the <b>%{file_name}</b> is not preconfigured. To successfully open this file, please set up the appropriate application in your local environment beforehand.</p>"
       no_predefined_app: "I understand"
       set_up_app: "Set up an application to open this file"
+    edit_launching_application_modal:
+      title: "Launching application"
+      description: "%{file_name} will now open in %{application}. Saved changes in %{application} will automatically be synced in SciNote."
 
   atwho:
     no_results:
