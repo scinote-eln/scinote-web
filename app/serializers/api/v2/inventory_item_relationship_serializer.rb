@@ -5,10 +5,10 @@ module Api
     class InventoryItemRelationshipSerializer < ActiveModel::Serializer
       type :inventory_item_relationships
 
-      belongs_to :parent, serializer: InventoryItemSerializer
-      belongs_to :child, serializer: InventoryItemSerializer
-      belongs_to :created_by, serializer: UserSerializer
-      belongs_to :last_modified_by, serializer: UserSerializer
+      belongs_to :parent, serializer: Api::V1::InventoryItemSerializer
+      belongs_to :child, serializer: Api::V1::InventoryItemSerializer
+      belongs_to :created_by, serializer: Api::V1::UserSerializer
+      belongs_to :last_modified_by, serializer: Api::V1::UserSerializer
     end
   end
 end
