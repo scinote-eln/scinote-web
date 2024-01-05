@@ -308,7 +308,14 @@ export default {
     handleOutsideClick(event) {
       if (!this.isShowing) return;
 
-      const allowedSelectors = ['a', '.modal', '.label-printing-progress-modal', '.atwho-view'];
+      const allowedSelectors = [
+        'a',
+        '.modal',
+        '.dp__instance_calendar',
+        '.label-printing-progress-modal',
+        '.atwho-view'
+      ];
+
       const excludeSelectors = ['#myModuleRepositoryFullViewModal'];
 
       const isOutsideSidebar = !$(event.target).parents('#repository-item-sidebar-wrapper').length;
@@ -348,7 +355,7 @@ export default {
       this.loadRepositoryRow(repositoryRowUrl);
       this.currentItemUrl = repositoryRowUrl;
     },
-    loadRepositoryRow(repositoryRowUrl) {
+    loadRepositoryRow(repositoryRowUrl, scrollTop = 0) {
       this.dataLoading = true
       $.ajax({
         method: 'GET',
@@ -368,13 +375,17 @@ export default {
           this.dataLoading = false;
           this.$nextTick(() => {
             this.generateBarCode(this.defaultColumns.code);
+
+            // if scrollTop was provided, scroll to it
+            this.$nextTick(() => { this.$refs.bodyWrapper.scrollTop = scrollTop; });
           });
         }
       });
     },
     reload() {
       if (this.isShowing) {
-        this.loadRepositoryRow(this.currentItemUrl);
+        // perserve scrollTop on reload
+        this.loadRepositoryRow(this.currentItemUrl, this.$refs.bodyWrapper.scrollTop);
       }
     },
     showRepositoryAssignModal() {
