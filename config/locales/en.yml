@@ -2361,6 +2361,10 @@ en:
       add: "Add"
       remove: "Remove"
       set: "Set to"
+      values:
+        add: "add"
+        set: "set"
+        remove: "remove"
       amount: "Amount"
       amount_placeholder: "Enter amount"
       amount_placeholder_new: "100, 2000, ..."
