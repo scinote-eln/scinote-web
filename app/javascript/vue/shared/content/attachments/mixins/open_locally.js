@@ -39,16 +39,21 @@ export default {
 
         this.localAppName = response.data.application;
       } catch (error) {
-        console.error("Error in request: ", error);
+        console.error('Error in request: ', error);
       }
     },
     async openLocally() {
+      if (this.localAppName === null) {
+        this.showNoPredefinedAppModal = true;
+        return;
+      }
+
+      this.editAppModal = true;
       try {
-        const response = await axios.get(this.attachment.attributes.urls.open_locally);
-        const data = response.data;
+        const { data } = await axios.get(this.attachment.attributes.urls.open_locally);
         await axios.post(this.attachment.attributes.urls.open_locally_api + '/download', data);
       } catch (error) {
-        console.error("Error in request:", error);
+        console.error('Error in request:', error);
       }
     }
   }
