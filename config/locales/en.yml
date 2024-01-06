@@ -2228,7 +2228,7 @@ en:
       add_relationship_button_text: "Add"
       repository_item_relationships_modal:
         header_title: "Add relationship"
-        header_subtitle: "Select the fields below to create the desired relationship"
+        header_subtitle: "Select the fields below to add new relationship."
         add_button: "Add"
         cancel_button: "Cancel"
         select_inventory_placeholder: "Select inventory name"
@@ -3802,6 +3802,7 @@ en:
     selected: "Selected"
     loading: "Loading..."
     replace: "Replace"
+    options_selected: 'options selected'
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"
