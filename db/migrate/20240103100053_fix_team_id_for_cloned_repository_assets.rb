@@ -10,7 +10,7 @@ class FixTeamIdForClonedRepositoryAssets < ActiveRecord::Migration[7.0]
       'INNER JOIN "repository_cells" ON "repository_cells"."repository_column_id" = "repository_columns"."id" ' \
       'INNER JOIN "repository_asset_values" ON "repository_asset_values"."id" = "repository_cells"."value_id" ' \
       'AND "repository_cells"."value_type" = \'RepositoryAssetValue\' ' \
-      'WHERE "assets"."team_id" != "repositories"."team_id"'
+      'WHERE "repository_asset_values"."asset_id" = "assets"."id" AND "assets"."team_id" != "repositories"."team_id"'
     )
   end
 end
