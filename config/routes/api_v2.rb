@@ -68,19 +68,7 @@ namespace :v2, module: 'v1' do
           resources :task_assignments, only: %i(index create destroy),
                     path: 'task_assignments',
                     as: :task_assignments
-          resources :protocols, only: %i(index show) do
-            resources :steps, only: %i(index show create update destroy) do
-              resources :assets, only: %i(index show create), path: 'attachments'
-              resources :checklists, only: %i(index show create update destroy), path: 'checklists' do
-                resources :checklist_items,
-                          only: %i(index show create update destroy),
-                          as: :items,
-                          path: 'items'
-              end
-              resources :tables, only: %i(index show create update destroy), path: 'tables'
-              resources :step_texts, only: %i(index show create update destroy), path: 'step_texts'
-            end
-          end
+          resources :protocols, only: %i(index show)
 
           get 'activities', to: 'tasks#activities'
         end
