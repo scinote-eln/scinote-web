@@ -141,7 +141,7 @@
                         {{ i18n.t('repositories.item_card.relationships.parents.count', { count: parentsCount || 0 }) }}
                       </div>
                       <a
-                        v-if="permissions.can_connect_rows"
+                      v-if="permissions.can_connect_rows && !defaultColumns.archived"
                         class="relationships-add-link btn-text-link font-normal"
                         @click="handleOpenAddRelationshipsModal($event, 'parent')">
                         {{ i18n.t('repositories.item_card.add_relationship_button_text') }}
@@ -155,8 +155,11 @@
                           <span>
                             <span>{{ i18n.t('repositories.item_card.relationships.item') }}</span>
                             <a :href="parent.path" class="record-info-link btn-text-link !text-sn-science-blue">{{ parent.name }}</a>
-                            <button v-if="permissions.can_connect_rows" @click="openUnlinkModal(parent)"
-                                    class=" ml-2 bg-transparent border-none opacity-0 group-hover:opacity-100 cursor-pointer">
+                            <button
+                              v-if="permissions.can_connect_rows && !defaultColumns.archived"
+                              @click="openUnlinkModal(parent)"
+                              class=" ml-2 bg-transparent border-none opacity-0 group-hover:opacity-100 cursor-pointer"
+                            >
                               <img :src="icons.unlink_path" />
                             </button>
                           </span>
@@ -187,7 +190,7 @@
                         {{ i18n.t('repositories.item_card.relationships.children.count', { count: childrenCount || 0 }) }}
                       </div>
                       <a
-                        v-if="permissions.can_connect_rows"
+                        v-if="permissions.can_connect_rows && !defaultColumns.archived"
                         class="relationships-add-link btn-text-link font-normal"
                         @click="handleOpenAddRelationshipsModal($event, 'child')">
                         {{ i18n.t('repositories.item_card.add_relationship_button_text') }}
@@ -203,8 +206,11 @@
                           <span class="group/child">
                             <span>{{ i18n.t('repositories.item_card.relationships.item') }}</span>
                             <a :href="child.path" class="record-info-link btn-text-link !text-sn-science-blue">{{ child.name }}</a>
-                            <button v-if="permissions.can_connect_rows" @click="openUnlinkModal(child)"
-                                    class="ml-2 bg-transparent border-none opacity-0 group-hover:opacity-100 cursor-pointer">
+                            <button
+                              v-if="permissions.can_connect_rows && !defaultColumns.archived"
+                              @click="openUnlinkModal(child)"
+                              class="ml-2 bg-transparent border-none opacity-0 group-hover:opacity-100 cursor-pointer"
+                            >
                               <img :src="icons.unlink_path" />
                             </button>
                           </span>
@@ -353,7 +359,7 @@ export default {
       dataLoading: false,
       repositoryRowId: null,
       repository: null,
-      defaultColumns: null,
+      defaultColumns: {},
       customColumns: null,
       parentsCount: 0,
       childrenCount: 0,
@@ -557,12 +563,32 @@ export default {
     closeUnlinkModal() {
       this.selectedToUnlink = null;
     },
+    /* eslint-disable no-undef */
     async unlinkItem() {
-      await axios.delete(this.selectedToUnlink.unlink_path);
-      this.loadRepositoryRow(this.currentItemUrl);
-      if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
-      this.selectedToUnlink = null;
+      try {
+        await axios.delete(this.selectedToUnlink.unlink_path);
+        HelperModule.flashAlertMsg(
+          I18n.t(
+            'repositories.item_card.relationships.unlink_modal.success',
+            { from_connection: this.defaultColumns.name, to_connection: this.selectedToUnlink.name }
+          ),
+          'success'
+        );
+        this.loadRepositoryRow(this.currentItemUrl);
+        if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
+      } catch {
+        HelperModule.flashAlertMsg(
+          I18n.t(
+            'repositories.item_card.relationships.unlink_modal.error',
+            { from_connection: this.defaultColumns.name, to_connection: this.selectedToUnlink.name }
+          ),
+          'danger'
+        );
+      } finally {
+        this.selectedToUnlink = null;
+      }
     }
+  /* eslint-enable no-undef */
   }
 };
 </script>

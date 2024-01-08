@@ -69,7 +69,9 @@ class RepositoryRowConnectionsController < ApplicationController
   def destroy
     RepositoryRowConnection.transaction do
       connection = @repository_row.parent_connections.or(@repository_row.child_connections).find(params[:id])
-      unlinked_item = connection.parent?(@repository_row) ? connection.child : connection.parent
+      unlinked_item = connection.parent?(@repository_row) ? connection.parent : connection.child
+
+      raise "can't unlink archived inventory item" if unlinked_item.archived?
 
       log_activity(:inventory_item_relationships_unlinked,
                    @repository_row.repository,
@@ -119,11 +121,12 @@ class RepositoryRowConnectionsController < ApplicationController
     @connection_repository = Repository.accessible_by_teams(current_team)
                                        .find_by(id: connection_params[:connection_repository_id])
     return render_404 unless @connection_repository
-    return render_403 unless can_connect_repository_rows?(@connection_repository)
+
+    render_403 unless can_connect_repository_rows?(@connection_repository)
   end
 
   def load_repository
-    @repository = Repository.accessible_by_teams(current_team).find_by(id: params[:repository_id])
+    @repository = Repository.accessible_by_teams([current_user.teams]).find_by(id: params[:repository_id])
     render_404 unless @repository
   end
 
@@ -158,22 +161,29 @@ class RepositoryRowConnectionsController < ApplicationController
   end
 
   def connected_rows_by_relation_type
-    repository_rows = if @relation_type == 'parent'
-                        @repository_row.parent_repository_rows
-                      else
-                        @repository_row.child_repository_rows
-                      end
+    repository_row_connections = if @relation_type == 'parent'
+                                   @repository_row.parent_connections.preload(parent: :repository)
+                                 else
+                                   @repository_row.child_connections.preload(child: :repository)
+                                 end
 
-    repository_rows.preload(:repository)
-                   .map do |repository_row|
-                     {
-                       name: repository_row.name,
-                       code: repository_row.code,
-                       path: repository_repository_row_path(repository_row.repository, repository_row),
-                       repository_name: repository_row.repository.name,
-                       repository_path: repository_path(repository_row.repository)
-                     }
-                   end
+    repository_row_connections.order(created_at: :asc)
+                              .map do |connection|
+                                row = connection.try(@relation_type.to_s)
+                                {
+                                  id: row.id,
+                                  name: row.name,
+                                  code: row.code,
+                                  path: repository_repository_row_path(row.repository, row),
+                                  repository_name: row.repository.name,
+                                  repository_path: repository_path(row.repository),
+                                  unlink_path: repository_repository_row_repository_row_connection_path(
+                                    @repository,
+                                    @repository_row,
+                                    connection
+                                  )
+                                }
+                              end
   end
 
   def log_activity(type_of, repository, message_items = {})

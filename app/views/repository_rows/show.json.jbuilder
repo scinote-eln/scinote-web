@@ -59,8 +59,8 @@ json.relationships do
       json.path repository_repository_row_path(parent.repository, parent)
       json.repository_name parent.repository.name
       json.repository_path repository_path(parent.repository)
-      json.unlink_path repository_repository_row_repository_row_connection_path(parent.repository,
-                                                                                parent,
+      json.unlink_path repository_repository_row_repository_row_connection_path(@repository,
+                                                                                @repository_row,
                                                                                 @repository_row.parent_connections
                                                                                                .find_by(parent: parent))
     end
@@ -73,8 +73,8 @@ json.relationships do
       json.path repository_repository_row_path(child.repository, child)
       json.repository_name child.repository.name
       json.repository_path repository_path(child.repository)
-      json.unlink_path repository_repository_row_repository_row_connection_path(child.repository,
-                                                                                child,
+      json.unlink_path repository_repository_row_repository_row_connection_path(@repository,
+                                                                                @repository_row,
                                                                                 @repository_row.child_connections
                                                                                                .find_by(child: child))
     end

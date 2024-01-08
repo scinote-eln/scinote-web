@@ -2273,6 +2273,8 @@ en:
           title: "Unlink item"
           description: "Are you sure you want to unlink the item? Reconnection is possible later if needed."
           unlink: "Unlink"
+          success: "Successfully unlinked %{to_connection} from %{from_connection}."
+          error: "Unlinking %{to_connection} and %{from_connection} failed. Please try again."
       default_columns:
         repository_name: "Inventory"
         id: "Item ID"
