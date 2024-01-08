@@ -789,11 +789,10 @@ Rails.application.routes.draw do
         end
       end
     end
-
-    namespace :repository_row_connections do
-      get :repositories
-      get :repository_rows
-    end
+    get 'repository_row_connections/repositories',
+        to: 'repository_row_connections#repositories', as: 'repository_row_connections_repositories'
+    get 'repository_row_connections/repositories/:repository_id/repository_rows/:repository_row_id/repository_rows',
+        to: 'repository_row_connections#repository_rows', as: 'repository_row_connections_repositories_repository_rows'
 
     resources :connected_devices, controller: 'users/connected_devices', only: %i(destroy)
 

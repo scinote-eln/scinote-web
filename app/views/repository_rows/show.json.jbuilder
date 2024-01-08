@@ -29,8 +29,8 @@ json.actions do
     json.stock_value_url new_repository_stock_repository_repository_row_url(@repository, @repository_row)
   end
   json.row_connections do
-    json.inventories_url repository_row_connections_repositories_url
-    json.inventory_items_url repository_row_connections_repository_rows_url
+    json.inventories_url repository_row_connections_repositories_url(@repository, @repository_row)
+    json.inventory_items_url repository_row_connections_repositories_repository_rows_url(@repository, @repository_row)
     json.create_url repository_repository_row_repository_row_connections_url(@repository, @repository_row)
   end
 end

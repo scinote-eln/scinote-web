@@ -128,15 +128,13 @@
 import SelectSearch from '../shared/select_search.vue';
 import ChecklistSearch from '../shared/checklist_search.vue';
 import Select from '../shared/select.vue';
-import ChecklistSelect from '../shared/checklist_select.vue';
 
 export default {
   name: 'RepositoryItemRelationshipsModal',
   components: {
     'select-search': SelectSearch,
     ChecklistSearch,
-    Select,
-    'checklist-select': ChecklistSelect
+    Select
   },
   created() {
     window.repositoryItemRelationshipsModal = this;
@@ -185,7 +183,7 @@ export default {
 
       this.loadingItems = true;
       $.ajax({
-        url: `${this.inventoryItemsUrl}/?page=${this.nextItemsPage}&repository_id=${inventoryValue}`,
+        url: `${this.inventoryItemsUrl}/?page=${this.nextItemsPage}&selected_repository_id=${inventoryValue}`,
         success: (result) => {
           this.itemOptions = this.itemOptions.concat(result.data.map((val) => ({ id: val.id, label: val.name })));
           this.loadingItems = false;
@@ -232,7 +230,7 @@ export default {
       this.nextItemsPage = 1;
       if (value) {
         this.loadingItems = true;
-        this.itemParams = [`repository_id=${value}`];
+        this.itemParams = [`selected_repository_id=${value}`];
       }
       this.$nextTick(() => {
         this.fetchInventoryItems(value);

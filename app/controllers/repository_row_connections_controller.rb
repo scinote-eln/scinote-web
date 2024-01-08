@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class RepositoryRowConnectionsController < ApplicationController
-  before_action :load_repository, except: %i(repositories)
+  before_action :load_repository, except: :repositories
   before_action :load_create_vars, only: :create
   before_action :check_read_permissions, except: :repositories
-  before_action :load_repository_row, except: %i(repositories repository_rows)
-  before_action :check_manage_permissions, only: %i(create destroy)
+  before_action :load_repository_row, except: :repositories
+  before_action :check_manage_permissions, only: %i(create destroy repository_rows)
 
   def index
     parents = @repository_row.parent_connections
@@ -97,11 +97,19 @@ class RepositoryRowConnectionsController < ApplicationController
   end
 
   def repository_rows
-    repository_rows = @repository.repository_rows
-                                 .search_by_name_and_id(current_user, current_user.teams, params[:query])
-                                 .order(name: :asc)
-                                 .page(params[:page] || 1)
-                                 .per(Constants::SEARCH_LIMIT)
+    @selected_repository = Repository.accessible_by_teams(current_team).find_by(id: params[:selected_repository_id])
+
+    return render_404 unless @selected_repository
+
+    parent_row_ids = @repository_row.parent_repository_rows.pluck(:id)
+    child_row_ids = @repository_row.child_repository_rows.pluck(:id)
+    connected_row_ids = parent_row_ids + child_row_ids + [@repository_row.id]
+    repository_rows = @selected_repository.repository_rows
+                                          .where.not(id: connected_row_ids)
+                                          .search_by_name_and_id(current_user, current_user.teams, params[:query])
+                                          .order(name: :asc)
+                                          .page(params[:page] || 1)
+                                          .per(Constants::SEARCH_LIMIT)
     render json: {
       data: repository_rows.select(:id, :name, :archived, :repository_id)
                            .preload(:repository)

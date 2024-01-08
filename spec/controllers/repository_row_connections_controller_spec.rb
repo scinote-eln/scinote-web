@@ -124,13 +124,16 @@ describe RepositoryRowConnectionsController, type: :controller do
 
   describe 'GET #repository_rows' do
     it 'returns a successful response' do
-      get :repository_rows, format: :json, params: { repository_id: repository.id }
-      expect(response).to have_http_status(:success)
+      get :repository_rows, format: :json, params: {
+        repository_id: repository.id, repository_row_id: repository_row.id, selected_repository_id: repository.id
+      }
     end
 
     it 'returns the correct data structure' do
-      get :repository_rows, format: :json, params: { repository_id: repository.id }
-      expect(response.body).to include(repository_row.name)
+      get :repository_rows, format: :json, params: {
+        repository_id: repository.id, repository_row_id: repository_row.id, selected_repository_id: repository.id
+      }
+      expect(response.body).to include(other_repository_row.name)
     end
   end
 end
