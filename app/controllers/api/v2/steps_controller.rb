@@ -7,14 +7,14 @@ module Api
         steps = timestamps_filter(@protocol.steps).page(params.dig(:page, :number))
                                                   .per(params.dig(:page, :size))
 
-        render jsonapi: steps, each_serializer: StepSerializer,
+        render jsonapi: steps, each_serializer: Api::V2::StepSerializer,
                include: include_params,
                rte_rendering: render_rte?,
                team: @team
       end
 
       def show
-        render jsonapi: @step, serializer: StepSerializer,
+        render jsonapi: @step, serializer: Api::V2::StepSerializer,
                include: include_params,
                rte_rendering: render_rte?,
                team: @team
@@ -31,7 +31,7 @@ module Api
                                last_modified_by_id: current_user.id)
           )
         end
-        render jsonapi: @step, serializer: StepSerializer, status: :created
+        render jsonapi: @step, serializer: Api::V2::StepSerializer, status: :created
       end
 
       def update
@@ -48,7 +48,7 @@ module Api
                                   num_completed: completed_steps.to_s,
                                   num_all: all_steps.to_s)
           end
-          render jsonapi: @step, serializer: StepSerializer, status: :ok
+          render jsonapi: @step, serializer: Api::V2::StepSerializer, status: :ok
         else
           render body: nil, status: :no_content
         end
