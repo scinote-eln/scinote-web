@@ -12,7 +12,6 @@ RSpec.describe RepositoryRowConnection, type: :model do
     it { should have_db_column(:child_id).of_type(:integer) }
     it { should have_db_column(:created_by_id).of_type(:integer) }
     it { should have_db_column(:last_modified_by_id).of_type(:integer) }
-    it { should have_db_index([:parent_id, :child_id]).unique(true) }
     it { should have_db_index(:parent_id) }
     it { should have_db_index(:child_id) }
     it { should have_db_index(:created_by_id) }

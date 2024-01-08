@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_28_123835) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_07_092907) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -792,17 +792,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_28_123835) do
   end
 
   create_table "repository_row_connections", force: :cascade do |t|
-    t.bigint "parent_id"
-    t.bigint "child_id"
+    t.bigint "parent_id", null: false
+    t.bigint "child_id", null: false
     t.bigint "created_by_id"
     t.bigint "last_modified_by_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index "LEAST(parent_id, child_id), GREATEST(parent_id, child_id)", name: "index_repository_row_connections_on_connection_pair", unique: true
     t.index ["child_id"], name: "index_repository_row_connections_on_child_id"
     t.index ["created_by_id"], name: "index_repository_row_connections_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_repository_row_connections_on_last_modified_by_id"
-    t.index ["parent_id", "child_id"], name: "index_repository_row_connections_on_parent_id_and_child_id", unique: true
     t.index ["parent_id"], name: "index_repository_row_connections_on_parent_id"
+    t.check_constraint "parent_id <> child_id", name: "constraint_repository_row_connections_on_self_connection"
   end
 
   create_table "repository_rows", force: :cascade do |t|
