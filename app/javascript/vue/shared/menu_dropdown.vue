@@ -63,8 +63,8 @@
 
 <script>
 
+import { vOnClickOutside } from '@vueuse/components';
 import isInViewPort from './isInViewPort.js';
-import { vOnClickOutside } from '@vueuse/components'
 
 export default {
   name: 'DropdownMenu',
@@ -74,13 +74,13 @@ export default {
     btnClasses: { type: String, default: 'btn btn-light' },
     btnText: { type: String, required: false },
     btnIcon: { type: String, required: false },
-    caret: { type: Boolean, default: false },
+    caret: { type: Boolean, default: false }
   },
   data() {
     return {
       showMenu: false,
       openUp: false
-    }
+    };
   },
   directives: {
     'click-outside': vOnClickOutside
@@ -92,7 +92,7 @@ export default {
         this.$nextTick(() => {
           this.$refs.flyout.style.marginBottom = `${this.$refs.openBtn.offsetHeight}px`;
           this.updateOpenDirectoin();
-        })
+        });
       }
     }
   },
@@ -112,7 +112,7 @@ export default {
       }
 
       if (item.emit) {
-        this.$emit(item.emit, item.params)
+        this.$emit(item.emit, item.params);
       }
 
       this.closeMenu();
@@ -126,5 +126,5 @@ export default {
       });
     }
   }
-}
+};
 </script>

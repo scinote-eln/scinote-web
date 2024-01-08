@@ -48,7 +48,7 @@
 export default {
   name: 'ItemRelationshipsModal',
   created() {
-    window.itemRelationshipsModal = this
+    window.itemRelationshipsModal = this;
   },
   data() {
     return {
@@ -56,25 +56,24 @@ export default {
       rowCode: null,
       parents: [],
       children: []
-    }
+    };
   },
   methods: {
     show(relationshipsUrl) {
-
       $(this.$refs.itemRelationshipsModal).modal('show');
-      this.fetchItemRelationshipsData(relationshipsUrl)
+      this.fetchItemRelationshipsData(relationshipsUrl);
     },
     fetchItemRelationshipsData(relationshipsUrl) {
-      this.isLoading = true
+      this.isLoading = true;
       $.ajax({
         method: 'GET',
         url: relationshipsUrl,
         dataType: 'json',
         success: (result) => {
-          this.isLoading = false
-          this.parents = result.parents
-          this.children = result.children
-          this.rowCode = result.repository_row.code
+          this.isLoading = false;
+          this.parents = result.parents;
+          this.children = result.children;
+          this.rowCode = result.repository_row.code;
         }
       });
     },
@@ -82,5 +81,5 @@ export default {
       $(this.$refs.itemRelationshipsModal).modal('hide');
     }
   }
-}
+};
 </script>

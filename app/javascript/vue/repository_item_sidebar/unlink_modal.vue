@@ -35,7 +35,7 @@ export default {
     confirm() {
       this.hide(() => {
         this.$emit('unlink');
-      })
+      });
     },
     hide(callback) {
       $(this.$refs.modal).one('hidden.bs.modal', () => {
@@ -44,5 +44,5 @@ export default {
       $(this.$refs.modal).modal('hide');
     }
   }
-}
+};
 </script>

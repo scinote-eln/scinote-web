@@ -45,20 +45,20 @@
 </template>
 
 <script>
-import repositoryValueMixin from "./mixins/repository_value.js";
-import Textarea from "../../shared/Textarea.vue";
+import repositoryValueMixin from './mixins/repository_value.js';
+import Textarea from '../../shared/Textarea.vue';
 
 export default {
-  name: "RepositoryTextValue",
+  name: 'RepositoryTextValue',
   mixins: [repositoryValueMixin],
   components: {
-    'text-area': Textarea,
+    'text-area': Textarea
   },
   data() {
     return {
       expandable: false,
       collapsed: true,
-      textValue: '',
+      textValue: ''
     };
   },
   props: {
@@ -70,7 +70,7 @@ export default {
   },
   created() {
     // constants
-    this.noContentPlaceholder = this.i18n.t("repositories.item_card.repository_text_value.no_text");
+    this.noContentPlaceholder = this.i18n.t('repositories.item_card.repository_text_value.no_text');
   },
   mounted() {
     const maxCollapsedHeight = 60;
@@ -89,7 +89,7 @@ export default {
     },
     toggleExpandableState(expandable) {
       this.expandable = expandable;
-    },
-  },
+    }
+  }
 };
 </script>

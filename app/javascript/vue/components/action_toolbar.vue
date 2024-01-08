@@ -74,136 +74,135 @@
 </template>
 
 <script>
-  import {debounce} from '../shared/debounce.js';
+import { debounce } from '../shared/debounce.js';
 
-  export default {
-    name: 'ActionToolbar',
-    props: {
-      actionsUrl: { type: String, required: true }
-    },
-    data() {
-      return {
-        actions: [],
-        shown: false,
-        multiple: false,
-        params: {},
-        reloadCallback: null,
-        actionsLoadedCallback: null,
-        loaded: false,
-        loading: false,
-        width: 0,
-        bottomOffset: 0,
-        leftOffset: 0,
-        buttonOverflow: false
-      }
-    },
-    created() {
-      window.actionToolbarComponent = this;
-      window.onresize = this.setWidth;
+export default {
+  name: 'ActionToolbar',
+  props: {
+    actionsUrl: { type: String, required: true }
+  },
+  data() {
+    return {
+      actions: [],
+      shown: false,
+      multiple: false,
+      params: {},
+      reloadCallback: null,
+      actionsLoadedCallback: null,
+      loaded: false,
+      loading: false,
+      width: 0,
+      bottomOffset: 0,
+      leftOffset: 0,
+      buttonOverflow: false
+    };
+  },
+  created() {
+    window.actionToolbarComponent = this;
+    window.onresize = this.setWidth;
 
-      this.debouncedFetchActions = debounce((params) => {
-        this.params = params;
+    this.debouncedFetchActions = debounce((params) => {
+      this.params = params;
 
-        $.get(`${this.actionsUrl}?${new URLSearchParams(this.params).toString()}`, (data) => {
-          this.actions = data.actions;
-          this.loading = false;
-          this.setButtonOverflow();
-          if (this.actionsLoadedCallback) this.$nextTick(this.actionsLoadedCallback);
-        });
-      }, 10);
-    },
-    mounted() {
-      this.$nextTick(this.setWidth);
-      window.addEventListener('scroll', this.setLeftOffset);
-    },
-    beforeUnmount() {
-      delete window.actionToolbarComponent;
-      window.removeEventListener('scroll', this.setLeftOffset);
-    },
-    computed: {
-      paramsAreBlank() {
-        let values = Object.values(this.params);
-
-        if (values.length === 0) return true;
-
-        return !values.some((v) => v.length);
-      }
-    },
-    methods: {
-      setWidth() {
-        this.width = $(this.$el).parent().width();
+      $.get(`${this.actionsUrl}?${new URLSearchParams(this.params).toString()}`, (data) => {
+        this.actions = data.actions;
+        this.loading = false;
         this.setButtonOverflow();
-      },
-      setButtonOverflow() {
-        // detects if the last action button is outside the toolbar container
-        this.buttonOverflow = false;
+        if (this.actionsLoadedCallback) this.$nextTick(this.actionsLoadedCallback);
+      });
+    }, 10);
+  },
+  mounted() {
+    this.$nextTick(this.setWidth);
+    window.addEventListener('scroll', this.setLeftOffset);
+  },
+  beforeUnmount() {
+    delete window.actionToolbarComponent;
+    window.removeEventListener('scroll', this.setLeftOffset);
+  },
+  computed: {
+    paramsAreBlank() {
+      const values = Object.values(this.params);
 
-        this.$nextTick(() => {
-          if (
-                !(this.$el.getBoundingClientRect &&
-                document.querySelector('.sn-action-toolbar__action:last-child'))
-              ) return;
+      if (values.length === 0) return true;
 
-          let containerRect = this.$el.getBoundingClientRect();
-          let lastActionRect = document.querySelector('.sn-action-toolbar__action:last-child').getBoundingClientRect();
+      return !values.some((v) => v.length);
+    }
+  },
+  methods: {
+    setWidth() {
+      this.width = $(this.$el).parent().width();
+      this.setButtonOverflow();
+    },
+    setButtonOverflow() {
+      // detects if the last action button is outside the toolbar container
+      this.buttonOverflow = false;
 
-          this.buttonOverflow = containerRect.left + containerRect.width < lastActionRect.left + lastActionRect.width;
-        });
-      },
-      setLeftOffset() {
-        this.leftOffset = -(window.pageXOffset || document.documentElement.scrollLeft);
-      },
-      setBottomOffset(pixels) {
-        this.bottomOffset = pixels;
-      },
-      fetchActions(params) {
-        this.loading = true;
-        this.debouncedFetchActions(params);
-      },
-      setReloadCallback(func) {
-        this.reloadCallback = func;
-      },
-      setActionsLoadedCallback(func) {
-        this.actionsLoadedCallback = func;
-      },
-      doAction(action, event) {
-        switch(action.type) {
-          case 'legacy':
-            // do nothing, this is handled by legacy code based on the button class
-            break;
-          case 'link':
-            // do nothing, already handled by href
-            break;
-          case 'modal':
-            // do nothihg, boostrap modal handled by data-toggle="modal" and data-target
-          case 'remote-modal':
-            // do nothing, handled by the data-action="remote-modal" binding
-            break;
-          case 'download':
-            event.stopPropagation();
-            window.location.href = action.path;
-            break;
-          case 'request':
-            event.stopPropagation();
+      this.$nextTick(() => {
+        if (
+          !(this.$el.getBoundingClientRect
+                && document.querySelector('.sn-action-toolbar__action:last-child'))
+        ) return;
 
-            $.ajax({
-              type: action.request_method,
-              url: action.path,
-              data: this.params
-            }).done((data) => {
-              HelperModule.flashAlertMsg(data.responseJSON && data.responseJSON.message || data.message, 'success');
-            }).fail((data) => {
-              HelperModule.flashAlertMsg(data.responseJSON && data.responseJSON.message || data.message, 'danger');
-            }).always(() => {
-              if (this.reloadCallback) this.reloadCallback();
-            });
-            break;
-        }
-      },
-      closeExportDropdown(event) {
-        event.preventDefault();
-        $(event.target).closest('.export-actions-dropdown').removeClass('open')
+        const containerRect = this.$el.getBoundingClientRect();
+        const lastActionRect = document.querySelector('.sn-action-toolbar__action:last-child').getBoundingClientRect();
+
+        this.buttonOverflow = containerRect.left + containerRect.width < lastActionRect.left + lastActionRect.width;
+      });
+    },
+    setLeftOffset() {
+      this.leftOffset = -(window.pageXOffset || document.documentElement.scrollLeft);
+    },
+    setBottomOffset(pixels) {
+      this.bottomOffset = pixels;
+    },
+    fetchActions(params) {
+      this.loading = true;
+      this.debouncedFetchActions(params);
+    },
+    setReloadCallback(func) {
+      this.reloadCallback = func;
+    },
+    setActionsLoadedCallback(func) {
+      this.actionsLoadedCallback = func;
+    },
+    doAction(action, event) {
+      switch (action.type) {
+        case 'legacy':
+          // do nothing, this is handled by legacy code based on the button class
+          break;
+        case 'link':
+          // do nothing, already handled by href
+          break;
+        case 'modal':
+          // do nothihg, boostrap modal handled by data-toggle="modal" and data-target
+        case 'remote-modal':
+          // do nothing, handled by the data-action="remote-modal" binding
+          break;
+        case 'download':
+          event.stopPropagation();
+          window.location.href = action.path;
+          break;
+        case 'request':
+          event.stopPropagation();
+          $.ajax({
+            type: action.request_method,
+            url: action.path,
+            data: this.params
+          }).done((data) => {
+            HelperModule.flashAlertMsg(data.responseJSON && data.responseJSON.message || data.message, 'success');
+          }).fail((data) => {
+            HelperModule.flashAlertMsg(data.responseJSON && data.responseJSON.message || data.message, 'danger');
+          }).always(() => {
+            if (this.reloadCallback) this.reloadCallback();
+          });
+          break;
       }
+    },
+    closeExportDropdown(event) {
+      event.preventDefault();
+      $(event.target).closest('.export-actions-dropdown').removeClass('open');
     }
   }
+};
 </script>

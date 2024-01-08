@@ -30,60 +30,61 @@
 </template>
 
 <script>
-  import Reminder from '../reminder.vue';
-  export default {
-    name: 'RepositoryStockValue',
-    components: {
-      Reminder
+import Reminder from '../reminder.vue';
+
+export default {
+  name: 'RepositoryStockValue',
+  components: {
+    Reminder
+  },
+  computed: {
+    editableClassName() {
+      const className = 'border-solid border-[1px] p-2 pl-3 manage-repository-stock-value-link sci-cursor-edit';
+      if (this.canEdit && this.isEditing) return `${className} border-sn-science-blue`;
+      if (this.canEdit) return `${className} border-sn-light-grey hover:border-sn-sleepy-grey`;
+      return '';
+    }
+  },
+  data() {
+    return {
+      stock_formatted: null,
+      stock_amount: null,
+      low_stock_threshold: null,
+      isEditing: false,
+      values: null
+    };
+  },
+  props: {
+    data_type: String,
+    colId: Number,
+    colName: String,
+    colVal: Object,
+    repositoryId: Number,
+    repositoryRowId: null,
+    permissions: null,
+    canEdit: { type: Boolean, default: false },
+    actions: null
+  },
+  mounted() {
+    this.values = this.colVal || {};
+    this.values.stock_url = this.actions?.stock_value_url;
+    window.manageStockCallback = this.submitCallback;
+  },
+  unmounted() {
+    delete window.manageStockCallback;
+  },
+  methods: {
+    enableEditing() {
+      this.isEditing = true;
+      const $this = this;
+      // disable edit
+      $('#manageStockValueModal').on('hide.bs.modal', () => {
+        $this.isEditing = false;
+      });
     },
-    computed: {
-      editableClassName() {
-        const className = 'border-solid border-[1px] p-2 pl-3 manage-repository-stock-value-link sci-cursor-edit'
-        if (this.canEdit && this.isEditing) return `${className} border-sn-science-blue`;
-        if (this.canEdit) return `${className} border-sn-light-grey hover:border-sn-sleepy-grey`;
-        return ''
-      }
-    },
-    data() {
-      return {
-        stock_formatted: null,
-        stock_amount: null,
-        low_stock_threshold: null,
-        isEditing: false,
-        values: null
-      }
-    },
-    props: {
-      data_type: String,
-      colId: Number,
-      colName: String,
-      colVal: Object,
-      repositoryId: Number,
-      repositoryRowId: null,
-      permissions: null,
-      canEdit: { type: Boolean, default: false },
-      actions: null
-    },
-    mounted() {
-      this.values = this.colVal || {};
-      this.values.stock_url = this.actions?.stock_value_url
-      window.manageStockCallback = this.submitCallback;
-    },
-    unmounted(){
-      delete window.manageStockCallback
-    },
-    methods: {
-      enableEditing(){
-        this.isEditing = true
-        const $this = this;
-        // disable edit
-        $('#manageStockValueModal').on('hide.bs.modal', function() {
-          $this.isEditing = false;
-        })
-      },
-      submitCallback(values) {
-        if (values) this.values = values;
-      }
+    submitCallback(values) {
+      if (values) this.values = values;
     }
   }
+};
 </script>

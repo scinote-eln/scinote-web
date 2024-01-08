@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { vOnClickOutside } from '@vueuse/components'
+import { vOnClickOutside } from '@vueuse/components';
 
 export default {
   name: 'RepositorySearchContainer',
@@ -48,7 +48,7 @@ export default {
       barcodeValue: '',
       searchOpened: false,
       value: ''
-    }
+    };
   },
   directives: {
     'click-outside': vOnClickOutside
@@ -94,7 +94,6 @@ export default {
         setTimeout(() => {
           this.barcodeSearchOpened = false;
         }, 100);
-
       }
     },
     closeSearch() {
@@ -118,5 +117,5 @@ export default {
       this.closeBarcodeSearch();
     }
   }
-}
+};
 </script>

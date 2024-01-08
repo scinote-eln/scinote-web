@@ -68,53 +68,53 @@
 </template>
 
 <script>
-  import AttachmentMovedMixin from './mixins/attachment_moved.js';
-  import ContextMenuMixin from './mixins/context_menu.js';
-  import ContextMenu from './context_menu.vue';
-  import PdfViewer from '../../pdf_viewer.vue';
+import AttachmentMovedMixin from './mixins/attachment_moved.js';
+import ContextMenuMixin from './mixins/context_menu.js';
+import ContextMenu from './context_menu.vue';
+import PdfViewer from '../../pdf_viewer.vue';
 
-  export default {
-    name: 'inlineAttachment',
-    mixins: [ContextMenuMixin, AttachmentMovedMixin],
-    components: { ContextMenu, PdfViewer },
-    props: {
-      attachment: {
-        type: Object,
-        required: true
-      },
-      parentId: {
-        type: Number,
-        required: true
-      }
+export default {
+  name: 'inlineAttachment',
+  mixins: [ContextMenuMixin, AttachmentMovedMixin],
+  components: { ContextMenu, PdfViewer },
+  props: {
+    attachment: {
+      type: Object,
+      required: true
     },
-    data() {
-      return {
-        showWopi: false
-      }
-    },
-    mounted() {
-      this.showWopi = this.attachment.attributes.file_size > 0;
-      $(this.$nextTick(function() {
-        $(`.image-container img`)
-          .on('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
-          .on('load', (event) => ActiveStoragePreviews.showPreview(event))
-      }))
-    },
-    methods: {
-      reloadAsset() {
-        $.ajax({
-          method: 'GET',
-          url: this.attachment.attributes.urls.load_asset,
-          data: {
-            asset: {view_mode: this.attachment.attributes.view_mode}
-          },
-          success: (data) => {
-            if (!(data.html.includes('empty-office-file'))) {
-              this.showWopi = true;
-            }
+    parentId: {
+      type: Number,
+      required: true
+    }
+  },
+  data() {
+    return {
+      showWopi: false
+    };
+  },
+  mounted() {
+    this.showWopi = this.attachment.attributes.file_size > 0;
+    $(this.$nextTick(() => {
+      $('.image-container img')
+        .on('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
+        .on('load', (event) => ActiveStoragePreviews.showPreview(event));
+    }));
+  },
+  methods: {
+    reloadAsset() {
+      $.ajax({
+        method: 'GET',
+        url: this.attachment.attributes.urls.load_asset,
+        data: {
+          asset: { view_mode: this.attachment.attributes.view_mode }
+        },
+        success: (data) => {
+          if (!(data.html.includes('empty-office-file'))) {
+            this.showWopi = true;
           }
-        })
-      }
-    },
+        }
+      });
+    }
   }
+};
 </script>
