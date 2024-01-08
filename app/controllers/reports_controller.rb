@@ -21,7 +21,17 @@ class ReportsController < ApplicationController
   after_action :generate_pdf_report, only: %i(create update generate_pdf)
 
   # Index showing all reports of a single project
-  def index; end
+  def index
+    respond_to do |format|
+      format.json do
+        reports = Lists::ReportsService.new(current_team.reports, params).call
+        render json: reports, each_serializer: Lists::ReportSerializer, user: current_user, meta: pagination_dict(current_team.reports)
+      end
+      format.html do
+        render 'reports/index'
+      end
+    end
+  end
 
   def datatable
     render json: ::ReportDatatable.new(
