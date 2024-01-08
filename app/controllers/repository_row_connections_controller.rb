@@ -36,46 +36,34 @@ class RepositoryRowConnectionsController < ApplicationController
   end
 
   def create
-    # Filter existing relations from params
-    relation_ids = connection_params[:relation_ids].map(&:to_i) -
-                   @repository_row.public_send("#{@relation}_connections").pluck("#{@relation}_id") -
-                   [@repository_row.id]
     RepositoryRowConnection.transaction do
-      @connection_repository.repository_rows.where(id: relation_ids).find_each do |row|
-        attributes = {
-          created_by: current_user,
-          last_modified_by: current_user,
-          "#{@relation}": row
-        }
-        @repository_row.public_send("#{@relation}_connections").build attributes
-
+      @connection_repository.repository_rows
+                            .where(id: connection_params[:relation_ids])
+                            .where.not(id: @repository_row.id)
+                            .where.not(
+                              id: if @relation_type == 'parent'
+                                    @repository_row.parent_connections.select(:parent_id)
+                                  else
+                                    @repository_row.child_connections.select(:child_id)
+                                  end
+                            )
+                            .find_each do |linked_repository_row|
+        build_connection(linked_repository_row)
         log_activity(:inventory_item_relationships_linked,
                      @repository_row.repository,
                      { inventory_item: @repository_row.name,
-                       linked_inventory_item: row.name,
-                       relationship_type: @relation })
+                       linked_inventory_item: linked_repository_row.name,
+                       relationship_type: @relation_type == 'parent' ? 'parent' : 'child' })
       end
-      @repository_row.save!
-    end
 
-    if @repository_row.valid?
-      relations = @repository_row.public_send("#{@relation}_repository_rows")
-                                 .preload(:repository)
-                                 .map do |row|
-                                   {
-                                     name: row.name,
-                                     code: row.code,
-                                     path: repository_repository_row_path(row.repository, row),
-                                     repository_name: row.repository.name,
-                                     repository_path: repository_path(row.repository)
-                                   }
-                                 end
-      render json: {
-        "#{@relation.pluralize}": relations
-      }
-    else
-      render json: { errors: @repository_row.errors.full_messages }, status: :unprocessable_entity
+      @repository_row.save!
+
+      relation_key = @relation_type == 'parent' ? :parents : :children
+      render json: { relation_key => connected_rows_by_relation_type }
     end
+  rescue ActiveRecord::RecordInvalid => e
+    Rails.logger.error e.message
+    render json: { errors: @repository_row.errors.full_messages }, status: :unprocessable_entity
   end
 
   def destroy
@@ -124,9 +112,9 @@ class RepositoryRowConnectionsController < ApplicationController
   private
 
   def load_create_vars
-    @relation = 'parent' if connection_params[:relation] == 'parent'
-    @relation = 'child' if connection_params[:relation] == 'child'
-    return render_422(t('.invalid_params')) unless @relation
+    @relation_type = connection_params[:relation] if connection_params[:relation].in?(%w(parent child))
+
+    return render_422(t('.invalid_params')) unless @relation_type
 
     @connection_repository = Repository.accessible_by_teams(current_team)
                                        .find_by(id: connection_params[:connection_repository_id])
@@ -154,6 +142,38 @@ class RepositoryRowConnectionsController < ApplicationController
 
   def connection_params
     params.require(:repository_row_connection).permit(:connection_repository_id, :relation, relation_ids: [])
+  end
+
+  def build_connection(linked_repository_row)
+    connection_params = {
+      created_by: current_user,
+      last_modified_by: current_user
+    }
+
+    if @relation_type == 'parent'
+      @repository_row.parent_connections.build(connection_params.merge(parent: linked_repository_row))
+    else
+      @repository_row.child_connections.build(connection_params.merge(child: linked_repository_row))
+    end
+  end
+
+  def connected_rows_by_relation_type
+    repository_rows = if @relation_type == 'parent'
+                        @repository_row.parent_repository_rows
+                      else
+                        @repository_row.child_repository_rows
+                      end
+
+    repository_rows.preload(:repository)
+                   .map do |repository_row|
+                     {
+                       name: repository_row.name,
+                       code: repository_row.code,
+                       path: repository_repository_row_path(repository_row.repository, repository_row),
+                       repository_name: repository_row.repository.name,
+                       repository_path: repository_path(repository_row.repository)
+                     }
+                   end
   end
 
   def log_activity(type_of, repository, message_items = {})
