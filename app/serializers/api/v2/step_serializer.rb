@@ -12,7 +12,7 @@ module Api
       attribute :completed_on, if: -> { object.completed? }
       belongs_to :user, serializer: Api::V1::UserSerializer
       belongs_to :protocol, serializer: Api::V1::ProtocolSerializer
-      has_many :assets, serializer: Api::V1::AssetSerializer
+      has_many :assets, serializer: AssetSerializer
       has_many :checklists, serializer: Api::V1::ChecklistSerializer
       has_many :tables, serializer: Api::V1::TableSerializer
       has_many :step_texts, serializer: Api::V1::StepTextSerializer
