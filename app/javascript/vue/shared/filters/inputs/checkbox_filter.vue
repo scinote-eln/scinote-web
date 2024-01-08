@@ -9,20 +9,21 @@
 </template>
 
 <script>
-  export default {
-    name: 'CheckboxFilter',
-    props: {
-      filter: { type: Object, required: true }
-    },
-    data: function() {
-      return {
-        value: false
-      }
-    },
-    watch: {
-      value: function() {
-        this.$emit('update', { key: this.filter.key, value: this.value });
-      }
-    },
+export default {
+  name: 'CheckboxFilter',
+  props: {
+    filter: { type: Object, required: true },
+    values: { type: Object }
+  },
+  data() {
+    return {
+      value: this.values[this.filter.key]
+    };
+  },
+  watch: {
+    value() {
+      this.$emit('update', { key: this.filter.key, value: this.value || null });
+    }
   }
+};
 </script>

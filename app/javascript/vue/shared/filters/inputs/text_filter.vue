@@ -1,7 +1,7 @@
 <template>
   <div class="mb-6">
     <inputWithHistory
-      :modelValue="value"
+      :modelValue="values[filter.key]"
       :label="filter.label || i18n.t('filters_modal.text.label')"
        @update:modelValue="update"
        :placeholder="filter.placeholder || i18n.t('filters_modal.text.placeholder')"
@@ -10,21 +10,21 @@
 </template>
 
 <script>
-  import inputWithHistory from '../../input_with_history.vue';
+import inputWithHistory from '../../input_with_history.vue';
 
-  export default {
-    name: 'TextFilter',
-    props: {
-      filter: { type: Object, required: true },
-      value: { type: String }
-    },
-    components: {
-      inputWithHistory
-    },
-    methods: {
-      update(value) {
-        this.$emit('update', { key: this.filter.key, value: value });
-      }
+export default {
+  name: 'TextFilter',
+  props: {
+    filter: { type: Object, required: true },
+    values: { type: Object }
+  },
+  components: {
+    inputWithHistory
+  },
+  methods: {
+    update(value) {
+      this.$emit('update', { key: this.filter.key, value });
     }
   }
+};
 </script>

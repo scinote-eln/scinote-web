@@ -29,7 +29,7 @@
       <ag-grid-vue
         v-if="currentViewRender === 'table'"
         class="ag-theme-alpine w-full flex-grow h-full z-10"
-        :class="{'opacity-0': initializing, 'tw-hidden': dataLoading}"
+        :class="{'opacity-0': initializing }"
         :columnDefs="extendedColumnDefs"
         :rowData="rowData"
         :defaultColDef="defaultColDef"
@@ -48,8 +48,8 @@
         :CheckboxSelectionCallback="withCheckboxes"
       >
       </ag-grid-vue>
-      <div v-if="dataLoading" class="flex items-center justify-center w-full flex-grow h-full z-10">
-        <img src="/images/medium/loading.svg" alt="Loading" />
+      <div v-if="dataLoading" class="flex absolute top-0 items-center justify-center w-full flex-grow h-full z-10">
+        <img src="/images/medium/loading.svg" alt="Loading" class="p-4 rounded-xl bg-sn-white" />
       </div>
       <ActionToolbar
         v-if="selectedRows.length > 0 && actionsUrl"
@@ -291,14 +291,10 @@ export default {
       if (this.dataLoading) return;
 
       this.dataLoading = true;
-      if (this.gridApi) {
-        this.gridApi.setRowData([]);
-      }
-      this.rowData = [];
       this.page = 1;
-      this.loadData();
+      this.loadData(true);
     },
-    loadData() {
+    loadData(reload = false) {
       axios
         .get(this.dataUrl, {
           params: {
@@ -311,6 +307,12 @@ export default {
           }
         })
         .then((response) => {
+          if (reload) {
+            if (this.gridApi) {
+              this.gridApi.setRowData([]);
+            }
+            this.rowData = [];
+          }
           this.selectedRows = [];
           if (this.gridApi) {
             this.gridApi.setRowData(this.formatData(response.data.data));
