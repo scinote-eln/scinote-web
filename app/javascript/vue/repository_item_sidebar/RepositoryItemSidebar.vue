@@ -130,7 +130,7 @@
                 <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px"></div>
 
                 <!-- RELATIONSHIPS -->
-                <section id="relationships-section" class="flex flex-col" ref="relationshipsSectionRef">
+                <section v-if="!repository?.is_snapshot" id="relationships-section" class="flex flex-col" ref="relationshipsSectionRef">
                   <div ref="relationships-label" id="relationships-label"
                     class="font-inter text-lg font-semibold leading-7 mb-6 transition-colors duration-300">
                     {{ i18n.t('repositories.item_card.section.relationships') }}
@@ -226,7 +226,7 @@
                   </div>
                 </section>
 
-                <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px"></div>
+                <div v-if="!repository?.is_snapshot" id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px"></div>
 
                 <!-- ASSIGNED -->
                 <section id="assigned-section" class="flex flex-col" ref="assignedSectionRef">
@@ -298,7 +298,7 @@
             <div v-if="isShowing && !dataLoading" ref="navigationRef" id="navigation"
               class="flex item-end gap-x-4 min-w-[130px] min-h-[130px] h-fit sticky top-0 pr-6 [scrollbar-gutter:stable_both-edges] ">
 
-              <scroll-spy v-show="isShowing" :initialSectionId="initialSectionId" />
+              <scroll-spy v-show="isShowing" :itemsToCreate="filterNavigationItems()" :initialSectionId="initialSectionId" />
             </div>
           </div>
 
@@ -333,6 +333,44 @@ import CustomColumns from './customColumns.vue';
 import RepositoryItemSidebarTitle from './Title.vue';
 import UnlinkModal from './unlink_modal.vue';
 import axios from '../../packs/custom_axios.js';
+
+const items = [
+  {
+    id: 'highlight-item-1',
+    textId: 'text-item-1',
+    labelAlias: 'information_label',
+    label: 'information-label',
+    sectionId: 'information-section'
+  },
+  {
+    id: 'highlight-item-2',
+    textId: 'text-item-2',
+    labelAlias: 'custom_columns_label',
+    label: 'custom-columns-label',
+    sectionId: 'custom-columns-section'
+  },
+  {
+    id: 'highlight-item-3',
+    textId: 'text-item-3',
+    labelAlias: 'relationships_label',
+    label: 'relationships-label',
+    sectionId: 'relationships-section'
+  },
+  {
+    id: 'highlight-item-4',
+    textId: 'text-item-4',
+    labelAlias: 'assigned_label',
+    label: 'assigned-label',
+    sectionId: 'assigned-section'
+  },
+  {
+    id: 'highlight-item-5',
+    textId: 'text-item-5',
+    labelAlias: 'QR_label',
+    label: 'QR-label',
+    sectionId: 'qr-section'
+  }
+];
 
 export default {
   name: 'RepositoryItemSidebar',
@@ -370,7 +408,6 @@ export default {
       icons: null,
       notification: null,
       relationshipDetailsState: {},
-      relationshipsEnabled: false,
       selectedToUnlink: null,
       initialSectionId: null
     };
@@ -408,6 +445,12 @@ export default {
     delete window.repositoryItemSidebarComponent;
   },
   methods: {
+    filterNavigationItems() {
+      if (this.repository.is_snapshot) {
+        return items.filter((item) => item.id !== 'highlight-item-3');
+      }
+      return items;
+    },
     handleOpenAddRelationshipsModal(event, relation) {
       event.stopPropagation();
       event.preventDefault();
@@ -492,7 +535,6 @@ export default {
           this.optionsPath = result.options_path;
           this.updatePath = result.update_path;
           this.defaultColumns = result.default_columns;
-          this.relationshipsEnabled = result.relationships.enabled;
           this.parentsCount = result.relationships.parents_count;
           this.childrenCount = result.relationships.children_count;
           this.parents = result.relationships.parents;
