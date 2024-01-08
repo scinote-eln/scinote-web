@@ -130,9 +130,7 @@ var MyModuleRepositories = (function() {
       }, {
         targets: 4,
         class: 'relationship',
-        render: function(data, row) {
-          return $.fn.dataTable.render.RelationshipValue(data, row);
-        }
+        render: (data, type, row) => $.fn.dataTable.render.RelationshipValue(data, row)
       });
     } else {
       columnDefs.push({
