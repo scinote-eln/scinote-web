@@ -19,8 +19,11 @@
               v-for="column in columnDefs"
               :key="column.field"
               @click="toggleColumn(column, columnVisbile(column))"
-              class="flex items-center gap-4 py-2.5 px-3 cursor-pointer"
-              :class="{'hover:bg-sn-super-light-grey': column.field !== 'name'}"
+              class="flex items-center gap-4 py-2.5 px-3"
+              :class="{
+                'cursor-pointer': column.field !== 'name',
+                'hover:bg-sn-super-light-grey': column.field !== 'name'
+              }"
             >
               <div v-if="column.field === 'name'" class="w-6 h-6"></div>
               <template v-else>
@@ -61,6 +64,8 @@ export default {
       return !this.currentTableState.columnsState?.find((col) => col.colId === column.field).hide;
     },
     toggleColumn(column, visible) {
+      if (column.field === 'name') return;
+
       this.currentTableState.columnsState.find((col) => col.colId === column.field).hide = visible;
       if (visible) {
         this.$emit('hideColumn', column);

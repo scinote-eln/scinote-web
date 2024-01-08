@@ -197,6 +197,9 @@ Rails.application.routes.draw do
           get 'actions_toolbar'
           get 'export_modal'
         end
+        member do
+          get :shareable_teams
+        end
         get 'destroy_modal', to: 'repositories#destroy_modal',
             defaults: { format: 'json' }
         get 'rename_modal', to: 'repositories#rename_modal',

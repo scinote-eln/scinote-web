@@ -59,7 +59,7 @@ export default {
     })
   },
   beforeUnmount() {
-    document.body.style.overflow = 'scroll';
+    document.body.style.overflow = 'auto';
   },
   computed: {
     filteredNotifications() {
