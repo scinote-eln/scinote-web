@@ -105,7 +105,7 @@ export default {
       if (this.selectedValues.length === 1) {
         return this.currentOptions.find(({ id }) => id === this.selectedValues[0])?.label;
       }
-      return `${this.selectedValues.length} ${this.i18n.t('general.selected')}`;
+      return `${this.selectedValues.length} ${this.i18n.t('general.options_selected')}`;
     },
     optionsUrlValue() {
       if (!this.optionsUrl) return '';

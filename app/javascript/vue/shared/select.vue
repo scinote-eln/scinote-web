@@ -6,7 +6,9 @@
       </button>
       <i class="sn-icon" :class="{ 'sn-icon-down': !isOpen, 'sn-icon-up': isOpen}"></i>
     </slot>
-    <div :style="optionPositionStyle" class="py-2.5 bg-white z-10 shadow-sn-menu-sm" :class="{ 'hidden': !isOpen }">
+    <div :style="optionPositionStyle" class="py-2.5 bg-white z-10 shadow-sn-menu-sm rounded"
+      :class="{ 'hidden': !isOpen }"
+    >
       <div v-if="withClearButton" class="px-2 pb-2.5">
         <div @mousedown.prevent.stop="setValue(null)"
              class="btn btn-light !text-xs pl-3 active:bg-sn-super-light-blue"
@@ -27,7 +29,7 @@
             v-for="option in options"
             :key="option[0]"
             @mousedown.prevent.stop="setValue(option[0])"
-            class="sn-select__option p-3 rounded shadow-none"
+            class="sn-select__option p-3 rounded shadow-none option-label"
             :title="option[1]"
             :class="{
               'select__option-placeholder': option[2],

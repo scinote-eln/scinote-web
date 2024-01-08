@@ -23,7 +23,7 @@
           </div>
 
           <!-- header subtitle -->
-          <div class="h-10 overflow-hidden break-words text-sn-dark-grey text-sm font-normal leading-5"
+          <div class="h-10 overflow-hidden break-words text-sn-dark-grey text-sm font-normal leading-5 self-start"
             style="-webkit-box-orient: vertical; -webkit-line-clamp: 2; display: -webkit-box;">
             {{ i18n.t('repositories.item_card.repository_item_relationships_modal.header_subtitle') }}
           </div>
@@ -41,6 +41,7 @@
                 :isLoading="isLoadingInventories"
                 :lazyLoadEnabled="true"
                 :optionsUrl="inventoriesUrl"
+                optionsClassName="inventory-options"
                 :placeholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_inventory_placeholder')"
                 :noOptionsPlaceholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_inventory_no_options_placeholder')"
                 :searchPlaceholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_inventory_placeholder')"
@@ -61,7 +62,7 @@
                 :lazyLoadEnabled="true"
                 :withButtons="false"
                 :withEditCursor="false"
-                optionsClassName="max-h-[300px]"
+                optionsClassName="item-options"
                 :optionsUrl="inventoryItemsUrl"
                 :options="itemOptions"
                 :placeholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_item_placeholder')"
