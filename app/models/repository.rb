@@ -275,6 +275,10 @@ class Repository < RepositoryBase
                            .destroy_all
   end
 
+  def archived_branch?
+    archived?
+  end
+
   private
 
   def sync_name_with_snapshots

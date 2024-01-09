@@ -192,4 +192,8 @@ class RepositoryRow < ApplicationRecord
   def relationship_count
     parent_connections.size + child_connections.size
   end
+
+  def archived_branch?
+    archived?
+  end
 end
