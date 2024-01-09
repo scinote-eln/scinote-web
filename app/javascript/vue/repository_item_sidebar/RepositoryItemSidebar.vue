@@ -308,7 +308,8 @@
             <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px mb-6"></div>
             <div id="bottom-button-wrapper" class="flex h-10 justify-end">
               <button type="button" class="btn btn-primary print-label-button" data-e2e="e2e-BT-invInventoryItemSB-print"
-                :data-rows="JSON.stringify([repositoryRowId])">
+                :data-rows="JSON.stringify([repositoryRowId])"
+                :data-repository-id="repository?.id">
                 {{ i18n.t('repositories.item_card.print_label') }}
               </button>
             </div>
