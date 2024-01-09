@@ -5,7 +5,7 @@
               leave-to-class="translate-x-full w-0"
               v-click-outside="handleOutsideClick">
     <div ref="wrapper" v-show="isShowing" id="repository-item-sidebar-wrapper"
-      class='items-sidebar-wrapper bg-white gap-2.5 self-stretch rounded-tl-4 rounded-bl-4 shadow-lg h-full w-[565px]'>
+      class='items-sidebar-wrapper bg-white gap-2.5 self-stretch rounded-tl-4 rounded-bl-4 sn-shadow-menu-lg h-full w-[565px]'>
 
       <div id="repository-item-sidebar" class="w-full h-full pl-6 bg-white flex flex-col">
 
