@@ -327,6 +327,7 @@ class RepositoriesController < ApplicationController
       render json: {
         html: render_to_string(
           partial: 'shared/flash_errors',
+          formats: :html,
           locals: { error_title: t('repositories.import_records.error_message.errors_list_title'),
                     error: t('repositories.import_records.error_message.no_repository_name') }
         )

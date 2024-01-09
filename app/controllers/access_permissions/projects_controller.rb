@@ -95,7 +95,13 @@ module AccessPermissions
         raise ActiveRecord::RecordInvalid
       end
 
-      propagate_job(user_assignment, destroy: true)
+      UserAssignments::PropagateAssignmentJob.perform_now(
+        @project,
+        user_assignment.user.id,
+        user_assignment.user_role,
+        current_user.id,
+        destroy: true
+      )
 
       user_assignment.destroy!
 

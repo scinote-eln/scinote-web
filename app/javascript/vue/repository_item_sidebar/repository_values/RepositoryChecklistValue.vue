@@ -23,7 +23,7 @@
       <span v-for="(checklistItem, index) in selectedChecklistItems"
             :key="index"
             :id="`checklist-item-${index}`"
-            class="flex w-fit break-words mr-1">
+            class="flex w-fit break-words">
         {{
           index + 1 === selectedChecklistItems.length
             ? checklistItem?.label

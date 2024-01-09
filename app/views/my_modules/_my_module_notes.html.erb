@@ -1,5 +1,5 @@
 <div class="task-notes">
-  <div class="task-notes-content">
+  <div class="task-notes-content text-base">
     <% if can_update_my_module_description?(@my_module) %>
       <%= render partial: "my_modules/description_form" %>
     <% elsif @my_module.description.present? %>

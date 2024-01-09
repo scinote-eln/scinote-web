@@ -262,6 +262,10 @@ var RepositoryColumns = (function() {
       if (!_.isEmpty(searchText)) {
         TABLE.search(searchText).draw();
       }
+      const scrollBody = $('.dataTables_scrollBody');
+      if (scrollBody[0].offsetWidth > scrollBody[0].clientWidth) {
+        scrollBody.css('width', `calc(100% + ${scrollBody[0].offsetWidth - scrollBody[0].clientWidth}px)`);
+      }
     });
   }
 
@@ -381,14 +385,16 @@ var RepositoryColumns = (function() {
 
   function initBackToManageColumns() {
     var $manageModal = $(manageModal);
-    $manageModal.on('click', '.back-to-column-modal', function() {
+    $manageModal.on('click', '.back-to-column-modal', function(e) {
+      e.stopImmediatePropagation();
       var button = $(this);
       initManageColumnModal(button);
     });
   }
 
   function initColumnsButton() {
-    $(document).on('click', '.manage-repo-column-index', function() {
+    $(document).on('click', '.manage-repo-column-index', function(e) {
+      e.stopImmediatePropagation();
       var button = $(this);
       initManageColumnModal(button);
     });

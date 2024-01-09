@@ -95,7 +95,7 @@
               </a>
             </div>
           </div>
-          <div id="protocol-description-container" :class=" inRepository ? 'protocol-description collapse in' : ''" >
+          <div id="protocol-description-container" class="text-base" :class=" inRepository ? 'protocol-description collapse in' : ''" >
             <div v-if="urls.update_protocol_description_url">
               <Tinymce
                 :value="protocol.attributes.description"

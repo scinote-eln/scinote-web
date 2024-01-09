@@ -13,7 +13,8 @@ $.fn.dataTable.render.newRowName = function(formId, $cell) {
              name="repository_row[name]"
              value=""
              placeholder="${I18n.t('repositories.table.enter_row_name')}"
-             data-type="RowName">
+             data-type="RowName"
+             data-e2e="e2e-IF-invInventoryNewItemTR-name">
     </div>
   `);
 };

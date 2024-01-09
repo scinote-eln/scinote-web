@@ -37,6 +37,8 @@ class ActivitiesService
                     to: Time.zone.parse(filters[:to_date]).beginning_of_day.utc)
       elsif filters[:from_date].present? && filters[:to_date].blank?
         query.where('created_at <= :from', from: Time.zone.parse(filters[:from_date]).end_of_day.utc)
+      elsif filters[:from_date].blank? && filters[:to_date].present?
+        query.where('created_at >= :to', to: Time.zone.parse(filters[:to_date]).beginning_of_day.utc)
       else
         query
       end

@@ -113,7 +113,7 @@
     },
     computed: {
       wrapTables() {
-        const container = $(`<span>${this.element.attributes.orderable.text_view}</span>`);
+        const container = $(`<span class="text-base">${this.element.attributes.orderable.text_view}</span>`);
         container.find('table').toArray().forEach((table) => {
           if ($(table).parent().hasClass('table-wrapper')) return;
           $(table).css('float', 'none').wrapAll(`

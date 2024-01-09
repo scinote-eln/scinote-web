@@ -98,9 +98,9 @@ export default {
     },
     reloadCurrentLevel: function() {
       if (this.reloadCurrentLevel && (
-            this.currentItemId.length == 0 ||
-            this.menuItems.filter(item => item.id == this.currentItemId)
-          )) {
+        this.currentItemId?.length === 0
+          || this.menuItems.filter((item) => item.id === this.currentItemId)
+      )) {
         this.loadTree();
       }
     }
