@@ -78,9 +78,9 @@ class RepositoryRowConnectionsController < ApplicationController
 
       connection.destroy!
       head :no_content
-    rescue StandardError
-      head :unprocessable_entity
     end
+  rescue StandardError
+    head :unprocessable_entity
   end
 
   def repositories
