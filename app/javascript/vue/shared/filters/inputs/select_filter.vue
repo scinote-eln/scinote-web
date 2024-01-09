@@ -4,7 +4,7 @@
     <SelectDropdown
       :optionsUrl="filter.optionsUrl"
       :options="filter.options"
-      :selectedValue="value"
+      :value="value"
       :multiple="true"
       :with-checkboxes="true"
       :placeholder="filter.placeholder"
@@ -16,32 +16,33 @@
 </template>
 
 <script>
-  import SelectDropdown from '../../select_dropdown.vue';
+import SelectDropdown from '../../select_dropdown.vue';
 
-  export default {
-    name: 'SelectFilter',
-    props: {
-      filter: { type: Object, required: true }
-    },
-    data: function() {
-      return {
-        value: []
+export default {
+  name: 'SelectFilter',
+  props: {
+    filter: { type: Object, required: true },
+    values: Object
+  },
+  data() {
+    return {
+      value: this.values[this.filter.key]
+    };
+  },
+  watch: {
+    value() {
+      let { value } = this;
+      if (this.value.length === 0) {
+        value = null;
       }
-    },
-    watch: {
-      value: function() {
-        let value = this.value;
-        if (this.value.length == 0) {
-          value = null;
-        }
-        this.$emit('update', { key: this.filter.key, value: value });
-      }
-    },
-    components: { SelectDropdown },
-    methods: {
-      change: function(value) {
-        this.value = value;
-      }
-    },
+      this.$emit('update', { key: this.filter.key, value });
+    }
+  },
+  components: { SelectDropdown },
+  methods: {
+    change(value) {
+      this.value = value;
+    }
   }
+};
 </script>
