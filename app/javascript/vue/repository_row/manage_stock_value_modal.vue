@@ -57,7 +57,7 @@
                   {{ i18n.t('repository_stock_values.manage_modal.unit') }}
                 </label>
                 <Select
-                  :disabled="[2, 3].includes(operation)"
+                  :disabled="['add', 'remove'].includes(operation)"
                   :value="unit"
                   :options="units"
                   :placeholder="i18n.t('repository_stock_values.manage_modal.unit_prompt')"
@@ -180,10 +180,10 @@ export default {
       const amount = new Decimal(this.amount || 0);
       let value;
       switch (this.operation) {
-        case 2:
+        case 'add':
           value = currentAmount.plus(amount);
           break;
-        case 3:
+        case 'remove':
           value = currentAmount.minus(amount);
           break;
         default:
@@ -213,7 +213,7 @@ export default {
         this.amount = null;
       }
       this.operation = $event;
-      if ([2, 3].includes($event)) {
+      if (['add', 'remove'].includes($event)) {
         this.unit = this.stockValue.unit;
       }
     },
@@ -231,22 +231,15 @@ export default {
           this.unit = result.stock_value.unit;
           this.reminderEnabled = result.stock_value.reminder_enabled;
           this.lowStockTreshold = result.stock_value.low_stock_treshold;
-          this.operation = `${I18n.t('repository_stock_values.manage_modal.values.set')}`;
+          this.operation = 'set';
           this.stockUrl = result.stock_url;
+          /* eslint-disable no-undef */
           this.operations = [
-            [
-              `${I18n.t('repository_stock_values.manage_modal.values.set')}`,
-              `${I18n.t('repository_stock_values.manage_modal.set')}`
-            ],
-            [
-              `${I18n.t('repository_stock_values.manage_modal.values.add')}`,
-              `${I18n.t('repository_stock_values.manage_modal.add')}`
-            ],
-            [
-              `${I18n.t('repository_stock_values.manage_modal.values.remove')}`,
-              `${I18n.t('repository_stock_values.manage_modal.remove')}`
-            ]
+            ['set', `${I18n.t('repository_stock_values.manage_modal.set')}`],
+            ['add', `${I18n.t('repository_stock_values.manage_modal.add')}`],
+            ['remove', `${I18n.t('repository_stock_values.manage_modal.remove')}`]
           ];
+          /* eslint-enable no-undef */
           this.errors = {};
         }
       });
@@ -287,8 +280,6 @@ export default {
           change_amount: Math.abs(this.amount)
 
         },
-        operator: this.operations.find((operation) => operation[0] == this.operation)?.[1],
-        change_amount: Math.abs(this.amount),
         success: (result) => {
           $this.stockValue = null;
           $this.closeModal();
