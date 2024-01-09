@@ -46,7 +46,7 @@
         <div class="task-notes">
           <div class="task-notes-content">
             <% if @my_module.description.present? %>
-              <div class="rtf-view overflow-auto w-full max-w-[54rem]">
+              <div class="rtf-view overflow-auto w-full">
                 <%= smart_annotation_text(@my_module.shareable_tinymce_render(:description)) %>
               </div>
             <% else %>
