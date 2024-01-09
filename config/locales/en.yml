@@ -2404,6 +2404,7 @@ en:
     invalid_params: "Invalid params"
   repository_row_connections:
     invalid_params: "Invalid params"
+    unable_to_unlink: "can't unlink archived inventory item"
   repository_ledger_records:
     errors:
       my_module_references_missing: 'Task references are not set'

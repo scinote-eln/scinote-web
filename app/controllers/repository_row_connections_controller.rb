@@ -71,7 +71,7 @@ class RepositoryRowConnectionsController < ApplicationController
       connection = @repository_row.parent_connections.or(@repository_row.child_connections).find(params[:id])
       unlinked_item = connection.parent?(@repository_row) ? connection.parent : connection.child
 
-      raise "can't unlink archived inventory item" if unlinked_item.archived?
+      raise t('repository_row_connections.unable_to_unlink') unless can_unlink_connection?(unlinked_item)
 
       log_activity(:inventory_item_relationships_unlinked,
                    @repository_row.repository,
