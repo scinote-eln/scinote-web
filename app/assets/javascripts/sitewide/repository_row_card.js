@@ -93,7 +93,7 @@
         updateCallback = (data) => {
           if (!data?.value) return;
           // reload dataTable
-          if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
+          if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
           // update item card stock column
           window.manageStockCallback && window.manageStockCallback(data.value);
           $link.data('manageStockUrl', data.value.stock_url)
