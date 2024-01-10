@@ -51,8 +51,8 @@ class RepositoryRowConnectionsController < ApplicationController
         build_connection(linked_repository_row)
         log_activity(:inventory_item_relationships_linked,
                      @repository_row.repository,
-                     { inventory_item: @repository_row.name,
-                       linked_inventory_item: linked_repository_row.name,
+                     { repository_row: @repository_row.id,
+                       repository_row_linked: linked_repository_row.id,
                        relationship_type: @relation_type == 'parent' ? 'parent' : 'child' })
       end
 
@@ -69,12 +69,12 @@ class RepositoryRowConnectionsController < ApplicationController
   def destroy
     RepositoryRowConnection.transaction do
       connection = @repository_row.parent_connections.or(@repository_row.child_connections).find(params[:id])
-      unlinked_item = connection.parent?(@repository_row) ? connection.child : connection.parent
+      unlinked_repository_row = connection.parent?(@repository_row) ? connection.child : connection.parent
 
       log_activity(:inventory_item_relationships_unlinked,
                    @repository_row.repository,
-                   { inventory_item: @repository_row.name,
-                     unlinked_inventory_item: unlinked_item.name })
+                   { repository_row: @repository_row.id,
+                     repository_row_unlinked: unlinked_repository_row.id })
 
       connection.destroy!
       head :no_content
