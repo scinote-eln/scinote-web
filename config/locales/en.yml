@@ -34,6 +34,7 @@ en:
         remember_me: "Remember me"
         submit: "Log in"
         azure_ad_submit: "Sign in with Azure AD"
+        openid_connect_submit: "Sign in with OpenID Connect"
         saml_submit: "Sign in with SAML"
       2fa:
         title: "Two-factor authentication"
