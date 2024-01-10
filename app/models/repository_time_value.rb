@@ -48,5 +48,9 @@ class RepositoryTimeValue < RepositoryDateTimeValueBase
     nil
   end
 
+  def formatted_data
+    data.strftime('%H:%M')
+  end
+
   alias export_formatted formatted
 end

@@ -50,5 +50,13 @@ class RepositoryTimeRangeValue < RepositoryDateTimeRangeValueBase
     value
   end
 
+  def formatted_start_time
+    start_time.strftime('%H:%M')
+  end
+
+  def formatted_end_time
+    end_time.strftime('%H:%M')
+  end
+
   alias export_formatted formatted
 end

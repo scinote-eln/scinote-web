@@ -69,5 +69,9 @@ class RepositoryDateValue < RepositoryDateTimeValueBase
     nil
   end
 
+  def formatted_data
+    data.strftime(I18n.backend.date_format.to_s)
+  end
+
   alias export_formatted formatted
 end

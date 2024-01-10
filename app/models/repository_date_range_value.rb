@@ -59,5 +59,13 @@ class RepositoryDateRangeValue < RepositoryDateTimeRangeValueBase
     save!
   end
 
+  def formatted_start_time
+    start_time.strftime(I18n.backend.date_format.to_s)
+  end
+
+  def formatted_end_time
+    end_time.strftime(I18n.backend.date_format.to_s)
+  end
+
   alias export_formatted formatted
 end
