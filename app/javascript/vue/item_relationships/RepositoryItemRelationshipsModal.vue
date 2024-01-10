@@ -270,7 +270,7 @@ export default {
         },
         success: (result) => {
           $this.addRelationCallback(result, relation);
-          if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
+          if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
         }
       });
       this.close();

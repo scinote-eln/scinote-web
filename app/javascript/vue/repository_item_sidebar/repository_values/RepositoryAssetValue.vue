@@ -166,7 +166,7 @@ export default {
           } else {
             this.file_name = '';
           }
-          if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
+          if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
         },
         error: () => {
           this.error = I18n.t('repositories.item_card.repository_asset_value.errors.upload_failed_general');

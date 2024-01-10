@@ -186,10 +186,10 @@ export default {
         success: () => {
           this.defaultStartDate = this.startDate;
           this.defaultEndDate = this.endDate;
-          if ($('.dataTable')[0]) {
-            $('.dataTable').DataTable().ajax.reload(null, false);
-            this.reloadRepoItemSidebar();
+          if ($('.dataTable.repository-dataTable')[0]) {
+            $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
           }
+          this.reloadRepoItemSidebar();
         }
       });
     },
