@@ -95,15 +95,17 @@ namespace :v2 do
       resources :experiments do
         resources :tasks do
           resources :results, only: %i(index create show update destroy) do
-            resources :result_assets, only: %i(index show create update destroy), path: 'assets'
-            resources :result_tables, only: %i(index show create update destroy), path: 'tables'
-            resources :result_texts, only: %i(index show create update destroy)
+            scope module: 'result_elements' do
+              resources :assets, except: %i(new edit), path: 'attachments'
+              resources :tables, except: %i(new edit), path: 'tables'
+              resources :texts, except: %i(new edit)
+            end
           end
 
           resources :protocols, only: :show do
             resources :steps, except: %i(new edit) do
               scope module: 'step_elements' do
-                resources :assets, except: %i(new edit)
+                resources :assets, except: %i(new edit), path: 'attachments'
                 resources :checklists, except: %i(new edit) do
                   resources :checklist_items, except: %i(new edit), as: :items
                 end

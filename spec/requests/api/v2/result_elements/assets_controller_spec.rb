@@ -4,7 +4,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Api::V2::ResultAssetsController', type: :request do
+RSpec.describe 'Api::V2::ResultElements::AssetsController', type: :request do
   let(:user) { create(:user) }
   let(:team) { create(:team, created_by: user) }
   let(:project) { create(:project, team: team, created_by: user) }
@@ -15,7 +15,7 @@ RSpec.describe 'Api::V2::ResultAssetsController', type: :request do
   let(:valid_headers) { { Authorization: "Bearer #{generate_token(user.id)}", 'Content-Type': 'application/json' } }
 
   let(:api_path) do
-    api_v2_team_project_experiment_task_result_result_assets_path(
+    api_v2_team_project_experiment_task_result_assets_path(
       team_id: team.id,
       project_id: project.id,
       experiment_id: experiment.id,
@@ -24,7 +24,7 @@ RSpec.describe 'Api::V2::ResultAssetsController', type: :request do
     )
   end
 
-  describe 'GET result_assets, #index' do
+  describe 'GET result assets, #index' do
     let(:result_asset) { create(:result_asset, result: result) }
 
     context 'when has valid params' do
@@ -37,7 +37,7 @@ RSpec.describe 'Api::V2::ResultAssetsController', type: :request do
         expect(hash_body[:data]).to match_array(
           JSON.parse(
             ActiveModelSerializers::SerializableResource
-              .new(result.result_assets, each_serializer: Api::V2::ResultAssetSerializer)
+              .new(result.result_assets, each_serializer: Api::V2::AssetSerializer)
               .to_json
           )['data']
         )
@@ -46,7 +46,7 @@ RSpec.describe 'Api::V2::ResultAssetsController', type: :request do
 
     context 'when result is not found' do
       it 'renders 404' do
-        get api_v2_team_project_experiment_task_result_result_assets_path(
+        get api_v2_team_project_experiment_task_result_assets_path(
           team_id: team.id,
           project_id: project.id,
           experiment_id: experiment.id,
@@ -65,7 +65,7 @@ RSpec.describe 'Api::V2::ResultAssetsController', type: :request do
     context 'when has valid params' do
       it 'renders 200' do
         hash_body = nil
-        get api_v2_team_project_experiment_task_result_result_asset_path(
+        get api_v2_team_project_experiment_task_result_asset_path(
           team_id: team.id,
           project_id: project.id,
           experiment_id: experiment.id,
@@ -79,7 +79,7 @@ RSpec.describe 'Api::V2::ResultAssetsController', type: :request do
         expect(hash_body[:data]).to match(
           JSON.parse(
             ActiveModelSerializers::SerializableResource
-              .new(result_asset, serializer: Api::V2::ResultAssetSerializer)
+              .new(result_asset.asset, serializer: Api::V2::AssetSerializer)
               .to_json
           )['data']
         )
@@ -125,7 +125,7 @@ RSpec.describe 'Api::V2::ResultAssetsController', type: :request do
         expect(hash_body[:data]).to match(
           JSON.parse(
             ActiveModelSerializers::SerializableResource
-              .new(ResultAsset.last, serializer: Api::V2::ResultAssetSerializer)
+              .new(ResultAsset.last.asset, serializer: Api::V2::AssetSerializer)
               .to_json
           )['data']
         )
@@ -155,7 +155,7 @@ RSpec.describe 'Api::V2::ResultAssetsController', type: :request do
     let(:result_asset_archived) { create(:result_asset, result: result_archived) }
 
     let(:action) do
-      delete(api_v2_team_project_experiment_task_result_result_asset_path(
+      delete(api_v2_team_project_experiment_task_result_asset_path(
         team_id: team.id,
         project_id: project.id,
         experiment_id: experiment.id,
@@ -166,7 +166,7 @@ RSpec.describe 'Api::V2::ResultAssetsController', type: :request do
     end
 
     let(:action_archived) do
-      delete(api_v2_team_project_experiment_task_result_result_asset_path(
+      delete(api_v2_team_project_experiment_task_result_asset_path(
         team_id: team.id,
         project_id: project.id,
         experiment_id: experiment.id,

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Api::V2::StepElements::TextsController', type: :request do
+RSpec.describe 'Api::V2::StepElements::StepElements::TextsController', type: :request do
   before :all do
     @user = create(:user)
     @team = create(:team, created_by: @user)

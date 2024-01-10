@@ -117,9 +117,8 @@
         fnReset: function() {
             let self = this;
             this._fnGetAllColumns().forEach(function(column) {
-                if (column.sWidth == null) {
-                    return;
-                }
+
+                if (typeof column.sWidth !== 'string' || column.sWidth === null) return;
 
 		let widthResult = column.sWidth.match(/(\d+)/i),
                     oldWidth = widthResult != null ? parseInt(widthResult[0]) : 0,
@@ -149,9 +148,8 @@
             self.s.state.originalTableWidth = this._fnGetTable().width();
 
             cols.forEach(function (column) {
-		if (column.sWidth == null) {
-                    return;
-                }
+
+		        if (typeof column.sWidth !== 'string' || column.sWidth === null) return;
 
                 let widthResult = column.sWidth.match(/(\d+)/i),
                     oldWidth = widthResult != null ? parseInt(widthResult[0]) : 0,

@@ -14,6 +14,8 @@
   });
 
   $(document).on('click', '.print-label-button', function(e) {
+    $.removeData($(this)[0], 'rows');
+
     var selectedRows = $(this).data('rows');
 
     e.preventDefault();

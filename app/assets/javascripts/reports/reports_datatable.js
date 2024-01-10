@@ -100,8 +100,18 @@
     }
   }
 
+  function initActionButtons() {
+    initUpdatePDFReport();
+    initGenerateDocxReport();
+    initUpdateDocxReport();
+    initEditReport();
+    initSaveReportPDFToInventory();
+    initDeleteReports();
+  }
+
   function updateButtons() {
     if (window.actionToolbarComponent) {
+      window.actionToolbarComponent.setActionsLoadedCallback(initActionButtons);
       window.actionToolbarComponent.fetchActions({ report_ids: CHECKBOX_SELECTOR.selectedRows });
       $('.dataTables_scrollBody').css('padding-bottom', `${CHECKBOX_SELECTOR.selectedRows.length > 0 ? 68 : 0}px`);
     }
@@ -263,7 +273,7 @@
   }
 
   function initUpdatePDFReport() {
-    $(document).on('click', '#updatePdf', function(ev) {
+    $('#updatePdf').on('click', function(ev) {
       ev.stopPropagation();
       ev.preventDefault();
 
@@ -283,7 +293,7 @@
   }
 
   function initGenerateDocxReport() {
-    $(document).on('click', '#requestDocx', function(ev) {
+    $('#requestDocx').on('click', function(ev) {
       ev.stopPropagation();
       ev.preventDefault();
       $(this).closest('.dropdown-menu').dropdown('toggle');
@@ -292,7 +302,7 @@
   }
 
   function initUpdateDocxReport() {
-    $(document).on('click', '#updateDocx', function(ev) {
+    $('#updateDocx').on('click', function(ev) {
       ev.stopPropagation();
       ev.preventDefault();
 
@@ -325,7 +335,7 @@
   }
 
   function initSaveReportPDFToInventory() {
-    $(document).on('click', '#savePdfToInventoryButton', function(ev) {
+    $('#savePdfToInventoryButton').on('click', function(ev) {
       ev.preventDefault();
       ev.stopPropagation();
 
@@ -347,7 +357,7 @@
   }
 
   function initDeleteReports() {
-    $(document).on('click', '#delete-reports-btn', function() {
+    $('#delete-reports-btn').on('click', function() {
       if (CHECKBOX_SELECTOR.selectedRows.length > 0) {
         $('#report-ids').attr('value', '[' + CHECKBOX_SELECTOR.selectedRows + ']');
         $('#delete-reports-modal').modal('show');
@@ -376,10 +386,4 @@
   $('#show_report_preview').click();
 
   initDatatable();
-  initUpdatePDFReport();
-  initGenerateDocxReport();
-  initUpdateDocxReport();
-  initEditReport();
-  initSaveReportPDFToInventory();
-  initDeleteReports();
 }());
