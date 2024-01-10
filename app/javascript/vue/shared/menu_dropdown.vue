@@ -1,6 +1,11 @@
 <template>
-  <div class="relative" v-if="listItems.length > 0" v-click-outside="closeMenu">
-    <button ref="openBtn" :class="btnClasses" @click="showMenu = !showMenu">
+  <div class="relative" v-if="listItems.length > 0" v-click-outside="closeMenuAndEmit">
+    <button
+      ref="openBtn"
+      :class="btnClasses"
+      :title="showMenu ? '' : title"
+      @click="showMenu = !showMenu"
+    >
       <i v-if="btnIcon" :class="btnIcon"></i>
       {{ btnText }}
       <i v-if="caret && showMenu" class="sn-icon sn-icon-up"></i>
@@ -86,7 +91,11 @@ export default {
     'click-outside': vOnClickOutside
   },
   watch: {
-    showMenu() {
+    showMenu(newValue) {
+      if (newValue) {
+        this.$emit('menu-visibility-changed', newValue);
+      }
+
       if (this.showMenu) {
         this.openUp = false;
         this.$nextTick(() => {
@@ -105,6 +114,14 @@ export default {
   methods: {
     closeMenu() {
       this.showMenu = false;
+    },
+    closeMenuAndEmit(event) {
+      const isClickInsideModal = event.target.closest('.modal');
+
+      if (!isClickInsideModal) {
+        this.showMenu = false;
+        this.$emit('menu-visibility-changed', false);
+      }
     },
     handleClick(event, item) {
       if (!item.url) {
