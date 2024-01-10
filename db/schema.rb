@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_07_092907) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_05_162611) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -1071,7 +1071,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_092907) do
     t.tsvector "data_vector"
     t.string "name", default: ""
     t.integer "team_id"
-    t.jsonb "metadata"
+    t.jsonb "metadata", default: {}
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_tables_on_name", using: :gin
     t.index ["created_at"], name: "index_tables_on_created_at"
     t.index ["created_by_id"], name: "index_tables_on_created_by_id"
