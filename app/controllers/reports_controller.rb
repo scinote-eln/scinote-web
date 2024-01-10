@@ -21,7 +21,18 @@ class ReportsController < ApplicationController
   after_action :generate_pdf_report, only: %i(create update generate_pdf)
 
   # Index showing all reports of a single project
-  def index; end
+  def index
+    respond_to do |format|
+      format.json do
+        reports = Lists::ReportsService.new(Report.viewable_by_user(current_user, current_team), params).call
+        render json: reports, each_serializer: Lists::ReportSerializer,
+               user: current_user, meta: pagination_dict(reports)
+      end
+      format.html do
+        render 'index'
+      end
+    end
+  end
 
   def datatable
     render json: ::ReportDatatable.new(
@@ -137,7 +148,7 @@ class ReportsController < ApplicationController
   # Destroy multiple entries action
   def destroy
     begin
-      report_ids = JSON.parse(params[:report_ids])
+      report_ids = params[:report_ids]
     rescue
       render_404
     end
@@ -151,25 +162,11 @@ class ReportsController < ApplicationController
       report.destroy
     end
 
-    redirect_to reports_path
+    render json: { message: I18n.t('projects.reports.index.modal_delete.success') }
   end
 
   def status
-    docx = @report.docx_file.attached? ? document_preview_report_path(@report, report_type: :docx) : nil
-    pdf = @report.pdf_file.attached? ? document_preview_report_path(@report, report_type: :pdf) : nil
-
-    render json: {
-      docx: {
-        processing: @report.docx_processing?,
-        preview_url: docx,
-        error: @report.docx_error?
-      },
-      pdf: {
-        processing: @report.pdf_processing?,
-        preview_url: pdf,
-        error: @report.pdf_error?
-      }
-    }
+    render json: @report, serializer: Lists::ReportSerializer
   end
 
   # Generation actions
@@ -283,7 +280,7 @@ class ReportsController < ApplicationController
   end
 
   def available_repositories
-    render json: { results: @available_repositories }, status: :ok
+    render json: { data: @available_repositories.map { |r| [r.id, r.name] } }
   end
 
   def document_preview
@@ -302,7 +299,7 @@ class ReportsController < ApplicationController
       actions:
         Toolbars::ReportsService.new(
           current_user,
-          report_ids: params[:report_ids].split(',')
+          report_ids: JSON.parse(params[:items]).map { |i| i['id'] }
         ).actions
     }
   end
@@ -380,7 +377,7 @@ class ReportsController < ApplicationController
   end
 
   def save_pdf_params
-    params.permit(:repository_id, :respository_column_id, :repository_item_id)
+    params.permit(:repository_id, :repository_column_id, :repository_item_id)
   end
 
   def log_activity(type_of, report = @report)

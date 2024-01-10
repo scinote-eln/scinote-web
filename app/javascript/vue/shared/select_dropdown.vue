@@ -91,6 +91,7 @@
 <script>
 import { vOnClickOutside } from '@vueuse/components';
 import FixedFlyoutMixin from './mixins/fixed_flyout.js';
+import axios from '../../packs/custom_axios.js';
 
 export default {
   name: 'SelectDropdown',
@@ -110,7 +111,8 @@ export default {
     withCheckboxes: { type: Boolean, default: false },
     searchable: { type: Boolean, default: false },
     clearable: { type: Boolean, default: false },
-    tagsView: { type: Boolean, default: false }
+    tagsView: { type: Boolean, default: false },
+    urlParams: { type: Object, default: () => ({}) }
   },
   directives: {
     'click-outside': vOnClickOutside,
@@ -305,10 +307,10 @@ export default {
     },
     fetchOptions() {
       if (this.optionsUrl) {
-        fetch(`${this.optionsUrl}?query=${this.query || ''}`)
-          .then((response) => response.json())
-          .then((data) => {
-            this.fetchedOptions = data.data;
+        const params = { query: this.query, ...this.urlParams };
+        axios.get(this.optionsUrl, { params })
+          .then((response) => {
+            this.fetchedOptions = response.data.data;
             this.$nextTick(() => {
               this.setPosition();
             });

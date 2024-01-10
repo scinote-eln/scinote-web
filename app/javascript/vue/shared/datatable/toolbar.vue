@@ -2,7 +2,7 @@
   <div class="flex py-4 items-center justify-between">
     <div class="flex items-center gap-4">
       <template v-for="action in toolbarActions.left" :key="action.label">
-        <a v-if="action.type === 'emit'"
+        <a v-if="action.type === 'emit' || action.type === 'link'"
            :class="action.buttonStyle"
            :href="action.path"
            @click="doAction(action, $event)">
