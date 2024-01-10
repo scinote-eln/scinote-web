@@ -205,7 +205,7 @@ RSpec.describe 'Api::V2::StepsController', type: :request do
         expect(response).to have_http_status 200
       end
 
-      it 'returns well formated response' do
+      it 'returns well formatted response' do
         action
 
         expect(json).to match(

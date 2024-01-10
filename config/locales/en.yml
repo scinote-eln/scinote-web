@@ -2053,6 +2053,9 @@ en:
       added_by: "Added by"
       archived_on: "Archived on"
       archived_by: "Archived by"
+      relationships: "Relationships"
+      children: "Children"
+      parents: "Parents"
       row_consumption: "Consumed"
       enter_row_name: "Enter name"
       locked_item: "This is read-only item."
@@ -2222,9 +2225,25 @@ en:
     my_module_assigned_snapshot_service:
       invalid_arguments: "Can't find %{key}"
     item_card:
+      add_relationship_button_text: "Add"
+      repository_item_relationships_modal:
+        header_title: "Add relationship"
+        header_subtitle: "Select the fields below to add new relationship."
+        add_button: "Add"
+        cancel_button: "Cancel"
+        select_inventory_placeholder: "Select inventory name"
+        select_inventory_no_options_placeholder: "No inventory options"
+        select_item_placeholder: "Select item name or ID"
+        select_item_no_options_placeholder: "No items options"
+        select_relationship_placeholder: "Select relationship"
+        select_relationship_no_options_placeholder: "No relationship options"
+        inventory_section_title: "Inventory"
+        item_section_title: "Item"
+        relationship_section_title: "Relationship"
       header_title: "Inventory item"
       section:
         information: "Information"
+        relationships: "Relationships"
         assigned: "Assigned (%{count})"
         qr: "QR"
       print_label: "Print label"
@@ -2232,13 +2251,28 @@ en:
         empty: "This item is not assigned to any task."
         assign: "Assign to task"
         private:
-          one: "Assigned to %{count} private task"
-          other: "Assigned to %{count} private tasks"
+          one: "Assigned to %{count} private task that will not be displayed"
+          other: "Assigned to %{count} private tasks that will not be displayed"
         labels:
           team: "Team:"
           project: "Project:"
           experiment: "Experiment:"
           my_module: "Task:"
+      relationships:
+        id: "ID: %{code}"
+        item: "Item: "
+        inventory: "Inventory: "
+        empty: "This item has no relationships assigned."
+        parents:
+          count: "Parents (%{count})"
+          empty: ""
+        children:
+          count: "Children (%{count})"
+          empty: ""
+        unlink_modal:
+          title: "Unlink item"
+          description: "Are you sure you want to unlink the item? Reconnection is possible later if needed."
+          unlink: "Unlink"
       default_columns:
         repository_name: "Inventory"
         id: "Item ID"
@@ -2314,6 +2348,7 @@ en:
     highlight_component:
       information_label: 'Information'
       custom_columns_label: 'Custom columns'
+      relationships_label: 'Relationships'
       assigned_label: 'Assigned'
       QR_label: 'QR'
   repository_stock_values:
@@ -2364,6 +2399,8 @@ en:
         stock_amount_balance: 'Stock amount after update (balance)'
         stock_balance_unit: 'Stock unit after update'
   repository_rows:
+    invalid_params: "Invalid params"
+  repository_row_connections:
     invalid_params: "Invalid params"
   repository_ledger_records:
     errors:
@@ -3761,6 +3798,7 @@ en:
     selected: "Selected"
     loading: "Loading..."
     replace: "Replace"
+    options_selected: 'options selected'
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"
@@ -3872,6 +3910,9 @@ en:
         read_users_permission:
           title: "Permission denied"
           detail: "You don't have permission to read users on %{model}"
+        mutually_exclusive_params_error:
+          title: "Mutually Exclusive Parameters"
+          detail: "Parameters %{first_param} and %{second_param} should not be specified at the same time."
         update_stock_consumption_permission:
           title: "Permission denied"
           detail: "You don't have permisson to update stock consumption on this task item."

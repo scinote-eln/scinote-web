@@ -30,55 +30,55 @@
 </template>
 
 <script>
-  import RepositoryStockValue from './repository_values/RepositoryStockValue.vue';
-  import RepositoryTextValue from './repository_values/RepositoryTextValue.vue';
-  import RepositoryNumberValue from './repository_values/RepositoryNumberValue.vue';
-  import RepositoryAssetValue from './repository_values/RepositoryAssetValue.vue';
-  import RepositoryListValue from './repository_values/RepositoryListValue.vue';
-  import RepositoryChecklistValue from './repository_values/RepositoryChecklistValue.vue';
-  import RepositoryStatusValue from './repository_values/RepositoryStatusValue.vue';
-  import RepositoryDateTimeValue from './repository_values/RepositoryDateTimeValue.vue';
-  import RepositoryDateTimeRangeValue from './repository_values/RepositoryDateTimeRangeValue.vue';
-  import RepositoryDateValue from './repository_values/RepositoryDateValue.vue';
-  import RepositoryDateRangeValue from './repository_values/RepositoryDateRangeValue.vue';
-  import RepositoryTimeRangeValue from './repository_values/RepositoryTimeRangeValue.vue'
-  import RepositoryTimeValue from './repository_values/RepositoryTimeValue.vue'
+import RepositoryStockValue from './repository_values/RepositoryStockValue.vue';
+import RepositoryTextValue from './repository_values/RepositoryTextValue.vue';
+import RepositoryNumberValue from './repository_values/RepositoryNumberValue.vue';
+import RepositoryAssetValue from './repository_values/RepositoryAssetValue.vue';
+import RepositoryListValue from './repository_values/RepositoryListValue.vue';
+import RepositoryChecklistValue from './repository_values/RepositoryChecklistValue.vue';
+import RepositoryStatusValue from './repository_values/RepositoryStatusValue.vue';
+import RepositoryDateTimeValue from './repository_values/RepositoryDateTimeValue.vue';
+import RepositoryDateTimeRangeValue from './repository_values/RepositoryDateTimeRangeValue.vue';
+import RepositoryDateValue from './repository_values/RepositoryDateValue.vue';
+import RepositoryDateRangeValue from './repository_values/RepositoryDateRangeValue.vue';
+import RepositoryTimeRangeValue from './repository_values/RepositoryTimeRangeValue.vue';
+import RepositoryTimeValue from './repository_values/RepositoryTimeValue.vue';
 
-  export default {
-    name: 'CustomColumns',
-    components: {
-      RepositoryStockValue,
-      RepositoryTextValue,
-      RepositoryNumberValue,
-      RepositoryAssetValue,
-      RepositoryListValue,
-      RepositoryChecklistValue,
-      RepositoryStatusValue,
-      RepositoryDateTimeValue,
-      RepositoryDateTimeRangeValue,
-      RepositoryDateValue,
-      RepositoryDateRangeValue,
-      RepositoryTimeRangeValue,
-      RepositoryTimeValue
-    },
-    props: {
-      customColumns: { type: Array, default: () => [] },
-      permissions: { type: Object, default: () => {} },
-      updatePath: { type: String, default: '' },
-      repositoryRowId: { type: Number, default: null },
-      repositoryId: { type: Number, default: null },
-      inArchivedRepositoryRow: { type: Boolean, default: false },
-      actions: {type: Object, default: () => {}}
-    },
-    data() {
-      return {
-        editingField: null
-      }
-    },
-    methods: {
-      update(params) {
-        this.$emit('update', params);
-      }
+export default {
+  name: 'CustomColumns',
+  components: {
+    RepositoryStockValue,
+    RepositoryTextValue,
+    RepositoryNumberValue,
+    RepositoryAssetValue,
+    RepositoryListValue,
+    RepositoryChecklistValue,
+    RepositoryStatusValue,
+    RepositoryDateTimeValue,
+    RepositoryDateTimeRangeValue,
+    RepositoryDateValue,
+    RepositoryDateRangeValue,
+    RepositoryTimeRangeValue,
+    RepositoryTimeValue
+  },
+  props: {
+    customColumns: { type: Array, default: () => [] },
+    permissions: { type: Object, default: () => {} },
+    updatePath: { type: String, default: '' },
+    repositoryRowId: { type: Number, default: null },
+    repositoryId: { type: Number, default: null },
+    inArchivedRepositoryRow: { type: Boolean, default: false },
+    actions: { type: Object, default: () => {} }
+  },
+  data() {
+    return {
+      editingField: null
+    };
+  },
+  methods: {
+    update(params) {
+      this.$emit('update', params);
     }
   }
+};
 </script>

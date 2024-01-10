@@ -25,7 +25,7 @@
 
 <script>
 
-import NotificationItem from './notification_item.vue'
+import NotificationItem from './notification_item.vue';
 import axios from '../../../packs/custom_axios.js';
 
 export default {
@@ -43,20 +43,20 @@ export default {
       nextPageUrl: null,
       scrollBar: null,
       loadingPage: false
-    }
+    };
   },
   created() {
     this.nextPageUrl = this.notificationsUrl;
     this.loadNotifications();
   },
   mounted() {
-    let container = this.$refs.scrollContainer.$el
+    const container = this.$refs.scrollContainer.$el;
 
     container.addEventListener('ps-scroll-y', (e) => {
       if (e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight - 20) {
         this.loadNotifications();
       }
-    })
+    });
   },
   beforeUnmount() {
     document.body.style.overflow = 'scroll';
@@ -66,10 +66,10 @@ export default {
       this.loadNotifications();
     },
     todayNotifications() {
-      return this.notifications.filter(n => n.attributes.today);
+      return this.notifications.filter((n) => n.attributes.today);
     },
     olderNotifications() {
-      return this.notifications.filter(n => !n.attributes.today);
+      return this.notifications.filter((n) => !n.attributes.today);
     }
   },
   methods: {
@@ -79,18 +79,16 @@ export default {
       this.loadingPage = true;
 
       axios.get(this.nextPageUrl)
-        .then(response => {
+        .then((response) => {
           this.notifications = this.notifications.concat(response.data.data);
           this.nextPageUrl = response.data.links.next;
           this.loadingPage = false;
           this.$emit('update:unseenNotificationsCount');
         })
-        .catch(error => {
+        .catch((error) => {
           this.loadingPage = false;
         });
-
-
     }
   }
-}
+};
 </script>

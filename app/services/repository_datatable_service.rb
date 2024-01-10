@@ -81,6 +81,8 @@ class RepositoryDatatableService
                       .select('COUNT(DISTINCT all_my_module_repository_rows.id) AS "assigned_my_modules_count"')
                       .select('COUNT(DISTINCT my_modules.experiment_id) AS "assigned_experiments_count"')
                       .select('COUNT(DISTINCT experiments.project_id) AS "assigned_projects_count"')
+                      .select('COALESCE(parent_connections_count, 0) + COALESCE(child_connections_count, 0)
+                               AS "relationships_count"')
     repository_rows = repository_rows.preload(Extends::REPOSITORY_ROWS_PRELOAD_RELATIONS)
 
     sort_rows(order_by_column, repository_rows)
@@ -500,6 +502,8 @@ class RepositoryDatatableService
       records.group('users.full_name').order("users.full_name #{dir}")
     when 'consumed_stock'
       records.order("#{@sortable_columns[column_id - 1]} #{dir}")
+    when 'relationships'
+      records.order("relationships_count #{dir}")
     else
       records.group(@sortable_columns[column_id - 1]).order("#{@sortable_columns[column_id - 1]} #{dir}")
     end

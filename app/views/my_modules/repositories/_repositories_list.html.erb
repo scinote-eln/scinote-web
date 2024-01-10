@@ -27,7 +27,7 @@
          data-footer-label="<%= assigned_repository_simple_view_footer_label(repository) %>"
          data-name-column-id="<%=  assigned_repository_simple_view_name_column_id(repository) %>"
     >
-      <table class="table hidden repository-table"
+      <table class="table hidden repository-table repository-dataTable"
              data-stock-management="<%= repository.has_stock_management? %>"
              data-stock-consumption-editable="<%= can_update_my_module_stock_consumption?(@my_module) %>">
         <thead>

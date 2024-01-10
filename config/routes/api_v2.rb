@@ -34,6 +34,7 @@ namespace :v2, module: 'v1' do
                   only: %i(index create show update destroy),
                   path: 'cells',
                   as: :cells
+        resources :inventory_item_relationships, only: %i(create destroy)
       end
     end
     resources :projects, only: %i(index show create update) do
@@ -68,6 +69,7 @@ namespace :v2, module: 'v1' do
                     path: 'task_assignments',
                     as: :task_assignments
           resources :protocols, only: %i(index show)
+
           get 'activities', to: 'tasks#activities'
         end
       end

@@ -54,128 +54,124 @@
   </div>
 </template>
 
- <script>
-  import DeleteMixin from './mixins/delete.js'
-  import InlineEdit from '../inline_edit.vue'
-  import deleteElementModal from './modal/delete.vue'
+<script>
+import DeleteMixin from './mixins/delete.js';
+import InlineEdit from '../inline_edit.vue';
+import deleteElementModal from './modal/delete.vue';
 
-  export default {
-    name: 'ChecklistItem',
-    components: { InlineEdit, deleteElementModal },
-    mixins: [DeleteMixin],
-    props: {
-      checklistItem: {
-        type: Object,
-        required: true
-      },
-      locked: {
-        type: Boolean,
-        default: false
-      },
-      draggable: {
-        type: Boolean,
-        default: false
-      },
-      inRepository: {
-        type: Boolean,
-        required: true
-      },
-      reorderChecklistItemUrl: {
-        type: String
-      },
-      reordering: {
-        type: Boolean,
-        required: true
-      }
+export default {
+  name: 'ChecklistItem',
+  components: { InlineEdit, deleteElementModal },
+  mixins: [DeleteMixin],
+  props: {
+    checklistItem: {
+      type: Object,
+      required: true
     },
-    data() {
-      return {
-        editingText: false,
-        deleting: false
-      }
+    locked: {
+      type: Boolean,
+      default: false
     },
-    computed: {
-      element() { // remap and alias to work with delete mixin
-        return({
-          attributes: {
-            orderable: this.checklistItem.attributes,
-            position: this.checklistItem.attributes.position
-         }
-        });
-      },
-      updateUrl() {
-        if (!this.checklistItem.attributes.urls) return
-
-        return this.checklistItem.attributes.urls.update_url;
-      },
-      toggleUrl() {
-        if (!this.checklistItem.attributes.urls) return
-
-        return this.checklistItem.attributes.urls.toggle_url;
-      },
-      deleteUrl() {
-        if (!this.checklistItem.attributes.urls) return
-
-        return this.checklistItem.attributes.urls.delete_url;
-      }
+    draggable: {
+      type: Boolean,
+      default: false
     },
-    methods: {
-      enableTextEdit() {
-        this.editingText = true;
-        this.$emit('editStart');
-      },
-      disableTextEdit() {
-        if (this.checklistItem.attributes.isNew) {
-          if (this.deleting) return
-
-          this.removeItem();
-          this.$emit('editEnd');
-          this.editingText = false;
-          return;
+    inRepository: {
+      type: Boolean,
+      required: true
+    },
+    reorderChecklistItemUrl: {
+      type: String
+    },
+    reordering: {
+      type: Boolean,
+      required: true
+    }
+  },
+  data() {
+    return {
+      editingText: false,
+      deleting: false
+    };
+  },
+  computed: {
+    element() { // remap and alias to work with delete mixin
+      return ({
+        attributes: {
+          orderable: this.checklistItem.attributes,
+          position: this.checklistItem.attributes.position
         }
-        this.editingText = false;
+      });
+    },
+    updateUrl() {
+      if (!this.checklistItem.attributes.urls) return;
+
+      return this.checklistItem.attributes.urls.update_url;
+    },
+    toggleUrl() {
+      if (!this.checklistItem.attributes.urls) return;
+
+      return this.checklistItem.attributes.urls.toggle_url;
+    },
+    deleteUrl() {
+      if (!this.checklistItem.attributes.urls) return;
+
+      return this.checklistItem.attributes.urls.delete_url;
+    }
+  },
+  methods: {
+    enableTextEdit() {
+      this.editingText = true;
+      this.$emit('editStart');
+    },
+    disableTextEdit() {
+      if (this.checklistItem.attributes.isNew) {
+        if (this.deleting) return;
+
+        this.removeItem();
         this.$emit('editEnd');
-      },
-      toggleChecked(e) {
-        if (!this.toggleUrl) return
-        this.checklistItem.attributes.checked = this.$refs.checkbox.checked;
-        this.$emit('toggle', this.checklistItem);
-      },
-      onBlurHandler() {
-        this.$nextTick(() => {
-          this.editingText = false;
-        });
-      },
-      updateText(text, withKey) {
-        if (text.length === 0) {
-          this.disableTextEdit();
-        } else {
-          this.checklistItem.attributes.text = text;
-          this.update(withKey);
-        }
-      },
-      removeItem() {
-        this.deleting = true;
-        if (this.deleteUrl) {
-          this.deleteElement();
-        } else {
-          this.$emit('removeItem', this.checklistItem.attributes.position);
-        }
-      },
-      update(withKey) {
-        this.$emit('update', this.checklistItem, withKey);
-      },
-      keyPressHandler(e) {
-        if (
-          ((e.shiftKey || e.metaKey) && e.key === 'Enter')
+      }
+    },
+    toggleChecked(e) {
+      if (!this.toggleUrl) return;
+      this.checklistItem.attributes.checked = this.$refs.checkbox.checked;
+      this.$emit('toggle', this.checklistItem);
+    },
+    onBlurHandler() {
+      this.$nextTick(() => {
+        this.editingText = false;
+      });
+    },
+    updateText(text, withKey) {
+      if (text.length === 0) {
+        this.disableTextEdit();
+      } else {
+        this.checklistItem.attributes.text = text;
+        this.update(withKey);
+      }
+    },
+    removeItem() {
+      this.deleting = true;
+      if (this.deleteUrl) {
+        this.deleteElement();
+      } else {
+        this.$emit('removeItem', this.checklistItem.attributes.position);
+      }
+    },
+    update(withKey) {
+      this.$emit('update', this.checklistItem, withKey);
+    },
+    keyPressHandler(e) {
+      if (
+        ((e.shiftKey || e.metaKey) && e.key === 'Enter')
           || ((e.ctrlKey || e.metaKey) && e.key === 'v')
-        ) {
-          this.checklistItem.attributes.with_paragraphs = true;
-        }
-      },
-      pasteHandler() {
+      ) {
         this.checklistItem.attributes.with_paragraphs = true;
-      },
+      }
+    },
+    pasteHandler() {
+      this.checklistItem.attributes.with_paragraphs = true;
     }
   }
+};
 </script>

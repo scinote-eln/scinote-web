@@ -19,8 +19,8 @@ export default {
     return {
       showTop: false,
       showImage: false,
-      imageLoading: false,
-    }
+      imageLoading: false
+    };
   },
   props: {
     tooltipId: String,
@@ -31,8 +31,8 @@ export default {
     medium_preview_url: String || null,
     defaultLoaderHeight: {
       type: Number,
-      default: 254,
-    },
+      default: 254
+    }
   },
   methods: {
     onImageLoaded(event) {
@@ -53,11 +53,11 @@ export default {
       const rect = el.parentElement.getBoundingClientRect();
 
       return (
-        (rect.bottom + height) <=
-        (window.innerHeight || document.documentElement.clientHeight)
+        (rect.bottom + height)
+        <= (window.innerHeight || document.documentElement.clientHeight)
       );
     }
 
   }
-}
+};
 </script>

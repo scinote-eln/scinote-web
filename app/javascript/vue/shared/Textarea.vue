@@ -32,11 +32,11 @@
 
 <script>
 export default {
-  name: "Textarea",
+  name: 'Textarea',
   data() {
     return {
       value: '',
-      editing: false,
+      editing: false
     };
   },
   props: {
@@ -69,7 +69,7 @@ export default {
         this.value = this.initialValue || '';
         this.toggleExpandableState();
       },
-      deep: true,
+      deep: true
     },
     value() {
       this.refreshTextareaHeight();
@@ -82,7 +82,7 @@ export default {
       }
 
       this.toggleExpandableState();
-    },
+    }
   },
   computed: {
     canEdit() {
@@ -100,7 +100,7 @@ export default {
       if ($('.atwho-view:visible').length) return;
 
       if (this.smartAnnotation) {
-        this.value = this.$refs.textareaRef.value.trim() // Fix for smart annotation
+        this.value = this.$refs.textareaRef.value.trim(); // Fix for smart annotation
       }
       this.editing = false;
       this.toggleExpandableState();
@@ -111,7 +111,7 @@ export default {
         if (!this.$refs[this.unEditableRef]) return;
 
         const maxCollapsedHeight = '80';
-        const scrollHeight = this.$refs[this.unEditableRef].scrollHeight;
+        const { scrollHeight } = this.$refs[this.unEditableRef];
         const expandable = scrollHeight > maxCollapsedHeight;
         this.$emit('toggleExpandableState', expandable);
       });
@@ -134,7 +134,7 @@ export default {
         const textarea = this.$refs.textareaRef;
         textarea.style.height = '0px';
         // 16px is the height of the textarea's line
-        textarea.style.height = textarea.scrollHeight - 16 + 'px';
+        textarea.style.height = `${textarea.scrollHeight - 16}px`;
       });
     },
     setCaretAtEnd() {
@@ -147,11 +147,11 @@ export default {
     enforceNumberInput() {
       const regexp = this.decimals === 0 ? /[^0-9]/g : /[^0-9.]/g;
       const decimalsRegex = new RegExp(`^\\d*(\\.\\d{0,${this.decimals}})?`);
-      let value = this.value;
+      let { value } = this;
       value = value.replace(regexp, '');
       value = value.match(decimalsRegex)[0];
       this.value = value;
     }
-  },
+  }
 };
 </script>

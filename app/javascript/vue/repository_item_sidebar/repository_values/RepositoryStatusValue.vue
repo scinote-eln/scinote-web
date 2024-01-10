@@ -36,14 +36,14 @@
 </template>
 
 <script>
-import SelectSearch from "../../shared/select_search.vue";
-import repositoryValueMixin from "./mixins/repository_value.js";
-import twemoji from "twemoji";
+import twemoji from 'twemoji';
+import SelectSearch from '../../shared/select_search.vue';
+import repositoryValueMixin from './mixins/repository_value.js';
 
 export default {
-  name: "RepositoryStatusValue",
+  name: 'RepositoryStatusValue',
   components: {
-    "select-search": SelectSearch
+    'select-search': SelectSearch
   },
   mixins: [repositoryValueMixin],
   data() {
@@ -63,7 +63,7 @@ export default {
     colVal: Object,
     optionsPath: String,
     permissions: null,
-    inArchivedRepositoryRow: Boolean,
+    inArchivedRepositoryRow: Boolean
   },
   created() {
     if (!this.colVal) return;
@@ -75,9 +75,9 @@ export default {
   mounted() {
     this.isLoading = true;
 
-    $.get(this.optionsPath, data => {
+    $.get(this.optionsPath, (data) => {
       if (Array.isArray(data)) {
-        this.options = data.map(option => {
+        this.options = data.map((option) => {
           const { value, label } = option;
           return [value, label];
         });
@@ -103,7 +103,7 @@ export default {
     },
     replaceEmojiesInDropdown() {
       setTimeout(() => {
-        twemoji.size = "24x24";
+        twemoji.size = '24x24';
         twemoji.base = '/images/twemoji/';
         twemoji.parse(this.$refs.container);
       }, 300);

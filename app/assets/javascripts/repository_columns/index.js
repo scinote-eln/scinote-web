@@ -283,7 +283,7 @@ var RepositoryColumns = (function() {
     var scrollPosition = $columnsList.scrollTop();
     // Clear the list
     $columnsList.find('li[data-position]').remove();
-    _.each(TABLE.columns().header(), function(el, index) {
+    _.each(TABLE.columns().header(), (el) => {
       if (!el.dataset.unmanageable) {
         let colId = $(el).attr('id');
         let colIndex = $(el).attr('data-column-index');

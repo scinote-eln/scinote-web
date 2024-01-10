@@ -5,17 +5,17 @@
         <div v-if="availablePrinters.length > 0" class="printers-available">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
-            <p class="modal-title">
-              <template v-if="rows.length == 1">
-                <b>{{ i18n.t('repository_row.modal_print_label.head_title', {repository_row: rows[0].attributes.name}) }}</b>
+            <div class="modal-title">
+              <div v-if="rows.length == 1" class="flex flex-row">
+                <div class="font-bold">{{ i18n.t('repository_row.modal_print_label.head_title', {repository_row: rows[0].attributes.name}) }}</div>
                 <span class="id-label">
                   {{ i18n.t('repository_row.modal_print_label.id_label', {repository_row_id: rows[0].attributes.code}) }}
                 </span>
-              </template>
-              <template v-else>
-                <b>{{ i18n.t('repository_row.modal_print_label.head_title_multiple', {repository_rows: rows.length}) }}</b>
-              </template>
-            </p>
+              </div>
+              <div v-else>
+                <div class="font-bold">{{ i18n.t('repository_row.modal_print_label.head_title_multiple', {repository_rows: rows.length}) }}</div>
+              </div>
+            </div>
           </div>
           <div class="modal-body">
             <div class=printers-container>
@@ -91,174 +91,178 @@
 </template>
 
 <script>
-  import DropdownSelector from '../shared/dropdown_selector.vue'
-  import LabelPreview from '../label_template/components/label_preview.vue'
+import DropdownSelector from '../shared/dropdown_selector.vue';
+import LabelPreview from '../label_template/components/label_preview.vue';
 
-  export default {
-    name: 'PrintModalContainer',
-    props: {
-      showModal: Boolean,
-      row_ids: Array,
-      urls: Object
+export default {
+  name: 'PrintModalContainer',
+  props: {
+    showModal: Boolean,
+    row_ids: Array,
+    repository_id: Number,
+    urls: Object
+  },
+  data() {
+    return {
+      rows: [],
+      printers: [],
+      templates: [],
+      selectedPrinter: null,
+      selectedTemplate: null,
+      copies: 1,
+      zebraPrinters: null,
+      labelTemplateError: null,
+      labelTemplateCode: null
+    };
+  },
+  components: {
+    DropdownSelector,
+    LabelPreview
+  },
+  mounted() {
+    $.get(this.urls.labelTemplates, (result) => {
+      this.templates = result.data;
+      this.selectDefaultLabelTemplate();
+    });
+
+    $.get(this.urls.printers, (result) => {
+      this.printers = result.data;
+    });
+
+    $(this.$refs.modal).on('hidden.bs.modal', () => {
+      this.copies = 1;
+      this.zebraPrinters = null;
+      this.$emit('close');
+    });
+  },
+  computed: {
+    availableTemplates() {
+      let { templates } = this;
+      if (this.selectedPrinter && this.selectedPrinter.attributes.type_of === 'zebra') {
+        templates = templates.filter((i) => i.attributes.type === 'ZebraLabelTemplate');
+      }
+
+      return templates.map((i) => ({
+        value: i.id,
+        label: i.attributes.name,
+        params: {
+          icon: i.attributes.icon_url,
+          description: i.attributes.description || ''
+        }
+      })).sort((temp1, temp2) => (temp1.label?.toLowerCase() > temp2.label?.toLowerCase() ? 1 : -1));
     },
-    data() {
-      return {
-        rows: [],
-        printers: [],
-        templates: [],
-        selectedPrinter: null,
-        selectedTemplate: null,
-        copies: 1,
-        zebraPrinters: null,
-        labelTemplateError: null,
-        labelTemplateCode: null
+    availablePrinters() {
+      return this.printers.map((i) => ({
+        value: i.id,
+        label: i.attributes.display_name
+      }));
+    }
+  },
+  watch: {
+    showModal() {
+      if (this.showModal) {
+        this.initZebraPrinter();
+        $(this.$refs.modal).modal('show');
+        this.validateTemplate();
       }
     },
-    components: {
-      DropdownSelector,
-      LabelPreview
+    row_ids() {
+      $.get(this.urls.rows, { repository_id: this.repository_id, row_ids: this.row_ids }, (result) => {
+        this.rows = result.data;
+      });
+    }
+  },
+  methods: {
+    selectDefaultLabelTemplate() {
+      if (this.selectedPrinter && this.templates) {
+        const template = this.templates.find((i) => i.attributes.default
+            && i.type.includes(this.selectedPrinter.attributes.type_of));
+        if (template) {
+          this.$nextTick(() => {
+            this.$refs.labelTemplateDropdown.selectValues(template.id);
+          });
+        }
+      }
     },
-    mounted() {
-      $.get(this.urls.labelTemplates, (result) => {
-        this.templates = result.data
-        this.selectDefaultLabelTemplate();
-      })
+    selectPrinter(value) {
+      this.selectedPrinter = this.printers.find((i) => i.id === value);
+      this.selectDefaultLabelTemplate();
+    },
+    selectTemplate(value) {
+      this.selectedTemplate = this.templates.find((i) => i.id === value);
+      this.validateTemplate();
+    },
+    validateTemplate() {
+      if (!this.selectedTemplate || this.row_ids.length == 0) return;
 
-      $.get(this.urls.printers, (result) => {
-        this.printers = result.data
-      })
-
-      $(this.$refs.modal).on('hidden.bs.modal', () => {
-        this.zebraPrinters = null;
-        this.$emit('close');
+      $.post(this.urls.printValidation, {
+        repository_id: this.repository_id,
+        label_template_id: this.selectedTemplate.id,
+        row_ids: this.row_ids
+      }, (result) => {
+        this.labelTemplateError = null;
+        this.labelTemplateCode = result.label_code;
+      }).fail((result) => {
+        this.labelTemplateError = result.responseJSON.error;
+        this.labelTemplateCode = result.responseJSON.label_code;
       });
     },
-    computed: {
-      availableTemplates() {
-        let templates = this.templates;
-        if (this.selectedPrinter && this.selectedPrinter.attributes.type_of === 'zebra') {
-          templates = templates.filter(i => i.attributes.type === 'ZebraLabelTemplate')
-        }
-
-        return templates.map(i => {
-          return {
-            value: i.id,
-            label: i.attributes.name,
-            params: {
-              icon: i.attributes.icon_url,
-              description: i.attributes.description || ''
-            }
-          }
-        }).sort((temp1, temp2) => (temp1.label?.toLowerCase() > temp2.label?.toLowerCase() ? 1 : -1));
-      },
-      availablePrinters() {
-        return this.printers.map(i => {
-          return {
-            value: i.id,
-            label: i.attributes.display_name
-          }
-        })
-      }
-    },
-    watch: {
-      showModal() {
-        if (this.showModal) {
-          this.initZebraPrinter();
-          $(this.$refs.modal).modal('show');
-          this.validateTemplate();
-        }
-      },
-      row_ids() {
-        $.get(this.urls.rows, {rows: this.row_ids}, (result) => {
-          this.rows = result.data
-        })
-      }
-    },
-    methods: {
-      selectDefaultLabelTemplate() {
-        if (this.selectedPrinter && this.templates) {
-          let template = this.templates.find(i => i.attributes.default
-            && i.type.includes(this.selectedPrinter.attributes.type_of));
-          if (template) {
-            this.$nextTick(() => {
-              this.$refs.labelTemplateDropdown.selectValues(template.id);
-            });
-          }
-        }
-      },
-      selectPrinter(value) {
-        this.selectedPrinter = this.printers.find(i => i.id === value)
-        this.selectDefaultLabelTemplate();
-      },
-      selectTemplate(value) {
-        this.selectedTemplate = this.templates.find(i => i.id === value);
-        this.validateTemplate();
-      },
-      validateTemplate() {
-        if (!this.selectedTemplate || this.row_ids.length == 0) return;
-
-        $.post(this.urls.printValidation, {label_template_id: this.selectedTemplate.id, rows: this.row_ids}, (result) => {
-          this.labelTemplateError = null;
-          this.labelTemplateCode = result.label_code;
-        }).fail((result) => {
-          this.labelTemplateError = result.responseJSON.error;
-          this.labelTemplateCode = result.responseJSON.label_code;
-        })
-      },
-      submitPrint() {
-        this.$nextTick(() => {
-          if (this.selectedPrinter.attributes.type_of === 'zebra') {
-            this.zebraPrinters.print(
-              this.urls.zebraProgress,
-              '.label-printing-progress-modal',
-              '#modal-print-repository-row-label',
-              {
-                printer_name: this.selectedPrinter.attributes.name,
-                number_of_copies: this.copies,
-                label_template_id: this.selectedTemplate.id,
-                rows: this.row_ids
-              }
-            );
-          } else {
-            $.post(this.urls.print, {
-              rows: this.row_ids,
-              label_printer_id: this.selectedPrinter.id,
+    submitPrint() {
+      this.$nextTick(() => {
+        if (this.selectedPrinter.attributes.type_of === 'zebra') {
+          this.zebraPrinters.print(
+            this.urls.zebraProgress,
+            '.label-printing-progress-modal',
+            '#modal-print-repository-row-label',
+            {
+              printer_name: this.selectedPrinter.attributes.name,
+              number_of_copies: this.copies,
               label_template_id: this.selectedTemplate.id,
-              copies: this.copies
-            }, (data) => {
-              $(this.$refs.modal).modal('hide');
-              this.$emit('close');
-              PrintProgressModal.init(data);
-            })
-          }
-        });
-      },
-      initZebraPrinter() {
-        this.zebraPrinters = zebraPrint.init($('#LabelPrinterSelector'), {
-          clearSelectorOnFirstDevice: false,
-          appendDevice: (device) => {
-            this.printers.push({
-              id: `zebra${this.printers.length}`,
-              attributes: {
-                name: device.name,
-                display_name: device.name,
-                type_of: 'zebra'
-              }
-            })
-          }
-        }, false);
-      },
-      templateOption(option) {
-        return `
+              row_ids: this.row_ids,
+              repository_id: this.repository_id
+            }
+          );
+        } else {
+          $.post(this.urls.print, {
+            row_ids: this.row_ids,
+            repository_id: this.repository_id,
+            label_printer_id: this.selectedPrinter.id,
+            label_template_id: this.selectedTemplate.id,
+            copies: this.copies
+          }, (data) => {
+            $(this.$refs.modal).modal('hide');
+            this.$emit('close');
+            PrintProgressModal.init(data);
+          });
+        }
+      });
+    },
+    initZebraPrinter() {
+      this.zebraPrinters = zebraPrint.init($('#LabelPrinterSelector'), {
+        clearSelectorOnFirstDevice: false,
+        appendDevice: (device) => {
+          this.printers.push({
+            id: `zebra${this.printers.length}`,
+            attributes: {
+              name: device.name,
+              display_name: device.name,
+              type_of: 'zebra'
+            }
+          });
+        }
+      }, false);
+    },
+    templateOption(option) {
+      return `
           <div class="label-template-option" data-toggle="tooltip" data-placement="right" title="${option.params.description}">
             <img src="${option.params.icon}" style=""></img>
             ${option.label}
           </div>
-        `
-      },
-      initTooltip() {
-        $('[data-toggle="tooltip"]').tooltip();
-      }
+        `;
+    },
+    initTooltip() {
+      $('[data-toggle="tooltip"]').tooltip();
     }
   }
+};
 </script>
