@@ -57,6 +57,10 @@ var RepositoryDatatable = (function(global) {
   }
 
   function restoreColumnSizes() {
+    const scrollBody = $('.dataTables_scrollBody');
+    if (scrollBody[0].offsetWidth > scrollBody[0].clientWidth) {
+      scrollBody.css('width', `calc(100% + ${scrollBody[0].offsetWidth - scrollBody[0].clientWidth}px)`);
+    }
     TABLE.colResize.restore();
   }
 
@@ -667,7 +671,7 @@ var RepositoryDatatable = (function(global) {
         visible: true,
         render: function(data, type, row) {
           return "<a href='" + row.recordInfoUrl + "'"
-                 + "class='record-info-link' data-e2e='e2e-TL-invInventory-Item-" + row.DT_RowId + "'>" + data + '</a>';
+                 + "class='record-info-link' data-e2e='e2e-TL-invInventoryTR-Item-" + row.DT_RowId + "'>" + data + '</a>';
         }
       }, {
         // Added on column

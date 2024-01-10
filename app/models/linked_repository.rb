@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class LinkedRepository < Repository
+  enum permission_level: Extends::SHARED_OBJECTS_PERMISSION_LEVELS.except(:shared_write)
+
+  def shareable_write?
+    false
+  end
+
   def default_table_state
     state = Constants::REPOSITORY_TABLE_DEFAULT_STATE.deep_dup
     state['order'] = [[3, 'asc']]
@@ -12,13 +18,13 @@ class LinkedRepository < Repository
   def default_sortable_columns
     [
       'assigned',
-      'repository_rows.external_id',
       'repository_rows.id',
       'repository_rows.name',
       'repository_rows.created_at',
       'users.full_name',
       'repository_rows.archived_on',
-      'archived_bies_repository_rows.full_name'
+      'archived_bies_repository_rows.full_name',
+      'repository_rows.external_id'
     ]
   end
 

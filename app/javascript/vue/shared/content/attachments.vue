@@ -90,6 +90,10 @@
     },
     computed: {
       attachmentsOrdered() {
+        if (this.attachments.some((attachment) => attachment.attributes.uploading)) {
+          return this.attachments;
+        }
+
         return this.attachments.sort((a, b) => {
           if (a.attributes.asset_order == b.attributes.asset_order) {
             switch(this.parent.attributes.assets_order) {
@@ -157,7 +161,6 @@
       deleteAttachment(id) {
         this.$emit('attachment:deleted', id)
       },
-
       initMarvinJS() {
         // legacy logic from app/assets/javascripts/sitewide/marvinjs_editor.js
         MarvinJsEditor.initNewButton(
@@ -165,16 +168,6 @@
           () => this.$emit('attachment:uploaded')
         );
       },
-      openWopiFileModal() {
-        this.initWopiFileModal(this.parent, (_e, data, status) => {
-          if (status === 'success') {
-            this.$emit('attachment:uploaded', data);
-          } else {
-            HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
-          }
-        });
-      },
-
       handleDropdownPosition() {
         this.$refs.actionsDropdownButton.classList.toggle("dropup", !this.isInViewport(this.$refs.actionsDropdown));
       },

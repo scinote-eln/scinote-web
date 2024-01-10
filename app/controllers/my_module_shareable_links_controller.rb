@@ -8,6 +8,7 @@ class MyModuleShareableLinksController < ApplicationController
                                             results_show)
   before_action :check_view_permissions, only: :show
   before_action :check_manage_permissions, except: %i(protocol_show
+                                                      show
                                                       repository_index_dt
                                                       repository_snapshot_index_dt
                                                       download_asset

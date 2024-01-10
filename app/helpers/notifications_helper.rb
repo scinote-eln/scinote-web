@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NotificationsHelper
   def send_email_notification(user, notification)
     AppMailer.delay.notification(user.id, notification)
@@ -17,14 +19,17 @@ module NotificationsHelper
                        team: team.name,
                        assigned_by_user: user.name)
       end
-      message = "#{I18n.t('search.index.team')} #{team.name}"
     end
 
-    GeneralNotification.send_notifications({
-                                             type: role ? :invite_user_to_team : :remove_user_from_team,
-                                             title: sanitize_input(title),
-                                             message: sanitize_input(message),
-                                             user: target_user
-                                           })
+    GeneralNotification.send_notifications(
+      {
+        type: role ? :invite_user_to_team : :remove_user_from_team,
+        title: sanitize_input(title),
+        subject_id: team.id,
+        subject_class: team.class.name,
+        subject_name: team.respond_to?(:name) && team.name,
+        user: target_user
+      }
+    )
   end
 end

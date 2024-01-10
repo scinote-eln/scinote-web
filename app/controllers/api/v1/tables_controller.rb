@@ -88,9 +88,13 @@ module Api
           metadata_cells = metadata[:cells]
           data = contents['data']
 
-          if data.present? && data[0].present? && (data.size * data[0].size) < metadata_cells.size
-            error_message = I18n.t('api.core.errors.table.metadata.detail_too_many_cells')
-            raise ActionController::BadRequest, error_message
+          if data.present? && data[0].present?
+            data_size = (data[0].is_a?(Array) ? data.size * data[0].size : data.size)
+
+            if data_size < metadata_cells.size
+              error_message = I18n.t('api.core.errors.table.metadata.detail_too_many_cells')
+              raise ActionController::BadRequest, error_message
+            end
           end
         end
       end

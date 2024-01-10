@@ -60,6 +60,7 @@ class TeamRepositoriesController < ApplicationController
 
   def check_sharing_permissions
     render_403 unless can_share_repository?(@repository)
+    render_403 if !@repository.shareable_write? && update_params[:write_permissions].present?
   end
 
   def teams_to_share
