@@ -73,6 +73,7 @@
                 @update-options="updateInventoryItems"
                 @update="selectedItemValues = $event"
                 @reached-end="() => fetchInventoryItems(selectedInventoryValue)"
+                :disabled="!this.selectedInventoryValue"
               ></ChecklistSearch>
             </div>
           </div>
@@ -163,7 +164,7 @@ export default {
   },
   computed: {
     shouldEnableAddButton() {
-      return ((this.selectedInventoryValue !== null) && (this.selectedRelationshipValue !== null) && (this.selectedItemValues.length > 0));
+      return (this.selectedInventoryValue && (this.selectedRelationshipValue !== null) && (this.selectedItemValues.length > 0));
     }
   },
   methods: {
