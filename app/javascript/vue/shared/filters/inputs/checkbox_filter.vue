@@ -12,16 +12,17 @@
 export default {
   name: 'CheckboxFilter',
   props: {
-    filter: { type: Object, required: true }
+    filter: { type: Object, required: true },
+    values: { type: Object }
   },
   data() {
     return {
-      value: false
-    }
+      value: this.values[this.filter.key]
+    };
   },
   watch: {
     value() {
-      this.$emit('update', { key: this.filter.key, value: this.value });
+      this.$emit('update', { key: this.filter.key, value: this.value || null });
     }
   }
 };

@@ -64,13 +64,13 @@ module Lists
       end
 
       if @filters[:members].present?
-        records = records.joins(:user_assignments).where(user_assignments: { user_id: @filters[:members] })
+        records = records.joins(:user_assignments).where(user_assignments: { user_id: @filters[:members].values })
       end
-      if @filters[:created_on_from].present?
+      if @filters[:created_at_from].present?
         records = records.where('projects.created_at > ?',
-                                @filters[:created_on_from])
+                                @filters[:created_at_from])
       end
-      records = records.where('projects.created_at < ?', @filters[:created_on_to]) if @filters[:created_on_to].present?
+      records = records.where('projects.created_at < ?', @filters[:created_at_to]) if @filters[:created_at_to].present?
       if @filters[:archived_on_to].present?
         records = records.where('projects.archived_on < ?',
                                 @filters[:archived_on_to])

@@ -48,7 +48,7 @@
     </div>
     <teleport to="body">
       <div v-if="isOpen" ref="flyout"
-           class="sn-dropdown bg-white inline-block sn-shadow-menu-sm rounded w-full
+           class="sn-select-dropdown bg-white inline-block sn-shadow-menu-sm rounded w-full
                   fixed z-[3000]">
         <div v-if="multiple && withCheckboxes" class="p-2.5 pb-0">
           <div @click="selectAll" :class="sizeClass"
@@ -263,7 +263,7 @@ export default {
       this.$emit('change', this.newValue);
     },
     close(e) {
-      if (e && e.target.closest('.sn-dropdown')) return;
+      if (e && e.target.closest('.sn-select-dropdown')) return;
 
       if (!this.isOpen) return;
 

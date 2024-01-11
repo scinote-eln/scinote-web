@@ -4,7 +4,7 @@
     <SelectDropdown
       :optionsUrl="filter.optionsUrl"
       :options="filter.options"
-      :selectedValue="value"
+      :value="value"
       :multiple="true"
       :with-checkboxes="true"
       :placeholder="filter.placeholder"
@@ -21,16 +21,17 @@ import SelectDropdown from '../../select_dropdown.vue';
 export default {
   name: 'SelectFilter',
   props: {
-    filter: { type: Object, required: true }
+    filter: { type: Object, required: true },
+    values: Object
   },
   data() {
     return {
-      value: []
+      value: this.values[this.filter.key]
     };
   },
   watch: {
     value() {
-      let {value} = this;
+      let { value } = this;
       if (this.value.length === 0) {
         value = null;
       }

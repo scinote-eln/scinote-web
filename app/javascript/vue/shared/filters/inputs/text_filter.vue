@@ -1,7 +1,7 @@
 <template>
   <div class="mb-6">
     <inputWithHistory
-      :modelValue="value"
+      :modelValue="values[filter.key]"
       :label="filter.label || i18n.t('filters_modal.text.label')"
        @update:modelValue="update"
        :placeholder="filter.placeholder || i18n.t('filters_modal.text.placeholder')"
@@ -16,7 +16,7 @@ export default {
   name: 'TextFilter',
   props: {
     filter: { type: Object, required: true },
-    value: { type: String }
+    values: { type: Object }
   },
   components: {
     inputWithHistory
