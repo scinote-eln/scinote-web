@@ -61,6 +61,7 @@ module.exports = {
       boxShadow: {
         'flyout-shadow': '0px 1px 4px rgba(35, 31, 32, 0.15)',
         'sn-menu-sm': '0px 16px 32px 0px rgba(16, 24, 40, 0.07)',
+        'sn-classic-drop-shadow': '0px 0px 64px -12px rgba(16, 24, 40, 0.16)',
       },
       transitionTimingFunction: {
         sharp: 'cubic-bezier(.4, 0, .6, 1)',

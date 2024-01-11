@@ -19,23 +19,23 @@
     </div>
   </div>
 </template>
- <script>
-  export default {
-    name: 'deleteShareableLinkModal',
-    mounted() {
-      $(this.$refs.modal).modal('show');
-      $(this.$refs.modal).on('hidden.bs.modal', () => {
-        this.$emit('cancel');
-      });
+<script>
+export default {
+  name: 'deleteShareableLinkModal',
+  mounted() {
+    $(this.$refs.modal).modal('show');
+    $(this.$refs.modal).on('hidden.bs.modal', () => {
+      this.$emit('cancel');
+    });
+  },
+  methods: {
+    confirm() {
+      this.$emit('confirm');
+      $(this.$refs.modal).modal('hide');
     },
-    methods: {
-      confirm() {
-        this.$emit('confirm');
-        $(this.$refs.modal).modal('hide');
-      },
-      cancel() {
-        $(this.$refs.modal).modal('hide');
-      }
+    cancel() {
+      $(this.$refs.modal).modal('hide');
     }
   }
+};
 </script>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_28_123835) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_05_162611) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -791,6 +791,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_28_123835) do
     t.index ["last_modified_by_id"], name: "index_repository_number_values_on_last_modified_by_id"
   end
 
+  create_table "repository_row_connections", force: :cascade do |t|
+    t.bigint "parent_id", null: false
+    t.bigint "child_id", null: false
+    t.bigint "created_by_id"
+    t.bigint "last_modified_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index "LEAST(parent_id, child_id), GREATEST(parent_id, child_id)", name: "index_repository_row_connections_on_connection_pair", unique: true
+    t.index ["child_id"], name: "index_repository_row_connections_on_child_id"
+    t.index ["created_by_id"], name: "index_repository_row_connections_on_created_by_id"
+    t.index ["last_modified_by_id"], name: "index_repository_row_connections_on_last_modified_by_id"
+    t.index ["parent_id"], name: "index_repository_row_connections_on_parent_id"
+    t.check_constraint "parent_id <> child_id", name: "constraint_repository_row_connections_on_self_connection"
+  end
+
   create_table "repository_rows", force: :cascade do |t|
     t.integer "repository_id"
     t.bigint "created_by_id", null: false
@@ -805,6 +820,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_28_123835) do
     t.bigint "archived_by_id"
     t.bigint "restored_by_id"
     t.string "external_id"
+    t.integer "parent_connections_count"
+    t.integer "child_connections_count"
     t.index "(('IT'::text || id)) gin_trgm_ops", name: "index_repository_rows_on_repository_row_code", using: :gin
     t.index "((id)::text) gin_trgm_ops", name: "index_repository_rows_on_id_text", using: :gin
     t.index "date_trunc('minute'::text, archived_on)", name: "index_repository_rows_on_archived_on_as_date_time_minutes"
@@ -1054,7 +1071,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_28_123835) do
     t.tsvector "data_vector"
     t.string "name", default: ""
     t.integer "team_id"
-    t.jsonb "metadata"
+    t.jsonb "metadata", default: {}
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_tables_on_name", using: :gin
     t.index ["created_at"], name: "index_tables_on_created_at"
     t.index ["created_by_id"], name: "index_tables_on_created_by_id"
@@ -1415,6 +1432,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_28_123835) do
   add_foreign_key "repository_list_values", "users", column: "last_modified_by_id"
   add_foreign_key "repository_number_values", "users", column: "created_by_id"
   add_foreign_key "repository_number_values", "users", column: "last_modified_by_id"
+  add_foreign_key "repository_row_connections", "repository_rows", column: "child_id"
+  add_foreign_key "repository_row_connections", "repository_rows", column: "parent_id"
+  add_foreign_key "repository_row_connections", "users", column: "created_by_id"
+  add_foreign_key "repository_row_connections", "users", column: "last_modified_by_id"
   add_foreign_key "repository_rows", "users", column: "archived_by_id"
   add_foreign_key "repository_rows", "users", column: "created_by_id"
   add_foreign_key "repository_rows", "users", column: "last_modified_by_id"

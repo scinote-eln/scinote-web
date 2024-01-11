@@ -27,39 +27,40 @@
 </template>
 
 <script>
-  import FilterMixin from '../mixins/filter.js'
-  import DropdownSelector from '../../shared/legacy/dropdown_selector.vue'
-  export default {
-    name: 'RepositoryListValue',
-    mixins: [FilterMixin],
-    data() {
-      return {
-        operators: [
-          { value: 'any_of', label: this.i18n.t('repositories.show.repository_filter.filters.operators.any_of') },
-          { value: 'none_of', label: this.i18n.t('repositories.show.repository_filter.filters.operators.none_of') }
-        ],
-        operator: 'any_of',
-        value: []
-      }
-    },
-    components: {
-      DropdownSelector
-    },
-    watch: {
-      value() {
-        this.parameters = { item_ids: this.value };
-        this.updateFilter();
-      }
-    },
-    methods: {
-      updateValue(value) {
-        this.value = value;
-      }
-    },
-    computed: {
-      isBlank(){
-        return this.operator == 'any_of' && this.value.length == 0;
-      }
+import FilterMixin from '../mixins/filter.js';
+import DropdownSelector from '../../shared/legacy/dropdown_selector.vue';
+
+export default {
+  name: 'RepositoryListValue',
+  mixins: [FilterMixin],
+  data() {
+    return {
+      operators: [
+        { value: 'any_of', label: this.i18n.t('repositories.show.repository_filter.filters.operators.any_of') },
+        { value: 'none_of', label: this.i18n.t('repositories.show.repository_filter.filters.operators.none_of') }
+      ],
+      operator: 'any_of',
+      value: []
+    };
+  },
+  components: {
+    DropdownSelector
+  },
+  watch: {
+    value() {
+      this.parameters = { item_ids: this.value };
+      this.updateFilter();
+    }
+  },
+  methods: {
+    updateValue(value) {
+      this.value = value;
+    }
+  },
+  computed: {
+    isBlank() {
+      return this.operator == 'any_of' && this.value.length == 0;
     }
   }
+};
 </script>

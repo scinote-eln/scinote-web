@@ -684,15 +684,6 @@ Rails.application.routes.draw do
 
     resources :comments, only: %i(index create update destroy)
 
-    resources :repository_rows, only: %i() do
-      collection do
-        get :rows_to_print
-        post :print
-        get :print_zpl
-        post :validate_label_template_columns
-        get :actions_toolbar
-      end
-    end
     resources :repositories do
       post 'repository_index',
            to: 'repository_rows#index',
@@ -745,10 +736,17 @@ Rails.application.routes.draw do
       resources :repository_table_filters, only: %i(index show create update destroy)
       resources :repository_rows, only: %i(create show update) do
         member do
+          get :relationships
           get :assigned_task_list
           get :active_reminder_repository_cells
           put :update_cell
         end
+
+        collection do
+          get :actions_toolbar
+        end
+
+        resources :repository_row_connections, only: %i(index create destroy)
         member do
           get 'repository_stock_value/new', to: 'repository_stock_values#new', as: 'new_repository_stock'
           get 'repository_stock_value/edit', to: 'repository_stock_values#edit', as: 'edit_repository_stock'
@@ -764,6 +762,10 @@ Rails.application.routes.draw do
         get :sidebar
         post 'available_rows', to: 'repository_rows#available_rows', defaults: { format: 'json' }
         get 'export_repository_stock_items_modal'
+        get :rows_to_print, to: 'repository_rows#rows_to_print'
+        get :print_zpl, to: 'repository_rows#print_zpl'
+        post :validate_label_template_columns, to: 'repository_rows#validate_label_template_columns'
+        post :print, to: 'repository_rows#print'
       end
 
       member do
@@ -797,6 +799,11 @@ Rails.application.routes.draw do
           end
         end
       end
+    end
+
+    namespace :repository_row_connections do
+      get :repositories
+      get :repository_rows
     end
 
     resources :connected_devices, controller: 'users/connected_devices', only: %i(destroy)

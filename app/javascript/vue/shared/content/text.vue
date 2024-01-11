@@ -61,133 +61,135 @@
   </div>
 </template>
 
- <script>
-  import DeleteMixin from './mixins/delete.js'
-  import MoveMixin from './mixins/move.js'
-  import DuplicateMixin from './mixins/duplicate.js'
-  import deleteElementModal from './modal/delete.vue'
-  import moveElementModal from './modal/move.vue'
-  import InlineEdit from '../inline_edit.vue'
-  import Tinymce from '../tinymce.vue'
-  import MenuDropdown from '../menu_dropdown.vue'
+<script>
+import DeleteMixin from './mixins/delete.js';
+import MoveMixin from './mixins/move.js';
+import DuplicateMixin from './mixins/duplicate.js';
+import deleteElementModal from './modal/delete.vue';
+import moveElementModal from './modal/move.vue';
+import InlineEdit from '../inline_edit.vue';
+import Tinymce from '../tinymce.vue';
+import MenuDropdown from '../menu_dropdown.vue';
 
-  export default {
-    name: 'TextContent',
-    components: { deleteElementModal, Tinymce, moveElementModal, InlineEdit, MenuDropdown },
-    mixins: [DeleteMixin, DuplicateMixin, MoveMixin],
-    props: {
-      element: {
-        type: Object,
-        required: true
-      },
-      inRepository: {
-        type: Boolean,
-        required: true
-      },
-      reorderElementUrl: {
-        type: String
-      },
-      isNew: {
-        type: Boolean,
-        default: false
-      },
-      assignableMyModuleId: {
-        type: Number,
-        required: false
-      }
+export default {
+  name: 'TextContent',
+  components: {
+    deleteElementModal, Tinymce, moveElementModal, InlineEdit, MenuDropdown
+  },
+  mixins: [DeleteMixin, DuplicateMixin, MoveMixin],
+  props: {
+    element: {
+      type: Object,
+      required: true
     },
-    data() {
-      return {
-        inEditMode: false,
-        editingName: false,
-      }
+    inRepository: {
+      type: Boolean,
+      required: true
     },
-    mounted() {
-      if (this.isNew) {
-        this.enableEditMode();
-      }
+    reorderElementUrl: {
+      type: String
+    },
+    isNew: {
+      type: Boolean,
+      default: false
+    },
+    assignableMyModuleId: {
+      type: Number,
+      required: false
+    }
+  },
+  data() {
+    return {
+      inEditMode: false,
+      editingName: false
+    };
+  },
+  mounted() {
+    if (this.isNew) {
+      this.enableEditMode();
+    }
 
-      this.$nextTick(() => {
-        this.highlightText();
-      })
-    },
-    computed: {
-      wrapTables() {
-        const container = $(`<span class="text-base">${this.element.attributes.orderable.text_view}</span>`);
-        container.find('table').toArray().forEach((table) => {
-          if ($(table).parent().hasClass('table-wrapper')) return;
-          $(table).css('float', 'none').wrapAll(`
+    this.$nextTick(() => {
+      this.highlightText();
+    });
+  },
+  computed: {
+    wrapTables() {
+      const container = $(`<span class="text-base">${this.element.attributes.orderable.text_view}</span>`);
+      container.find('table').toArray().forEach((table) => {
+        if ($(table).parent().hasClass('table-wrapper')) return;
+        $(table).css('float', 'none').wrapAll(`
             <div class="table-wrapper" style="overflow: auto; width: 100%"></div>
           `);
-        });
-        return container.prop('outerHTML');
-      },
-      actionMenu() {
-        let menu = [];
-        if (this.element.attributes.orderable.urls.update_url) {
-          menu.push({
-            text: I18n.t('general.edit'),
-            emit: 'edit'
-          });
-        }
-        if (this.element.attributes.orderable.urls.duplicate_url) {
-          menu.push({
-            text: I18n.t('general.duplicate'),
-            emit: 'duplicate'
-          });
-        }
-        if (this.element.attributes.orderable.urls.move_targets_url) {
-          menu.push({
-            text: I18n.t('general.move'),
-            emit: 'move'
-          });
-        }
-        if (this.element.attributes.orderable.urls.delete_url) {
-          menu.push({
-            text: I18n.t('general.delete'),
-            emit: 'delete'
-          });
-        }
-        return menu;
-      }
+      });
+      return container.prop('outerHTML');
     },
-    methods: {
-      enableEditMode() {
-        if (!this.element.attributes.orderable.urls.update_url) return
-        if (this.inEditMode) return
-        this.inEditMode = true
-      },
-      disableEditMode() {
-        this.inEditMode = false
-      },
-      enableNameEdit() {
-        this.editingName = true;
-      },
-      disableNameEdit() {
-        this.editingName = false;
-      },
-      updateName(name) {
-        this.element.attributes.orderable.name = name;
-        $.ajax({
-          url: this.element.attributes.orderable.urls.update_url,
-          method: 'PUT',
-          data: { text_component: {name: name} }
-        })
-        this.$emit('update', this.element, true)
-      },
-      updateText(data) {
-        this.element.attributes.orderable.text_view = data.attributes.text_view
-        this.element.attributes.orderable.text = data.attributes.text
-        this.element.attributes.orderable.name = data.attributes.name
-        this.element.attributes.orderable.updated_at = data.attributes.updated_at
-        this.$emit('update', this.element, true)
-      },
-      highlightText() {
-        var textElement = $('.results-list')[0]
-        if (textElement) {
-          Prism.highlightAllUnder(textElement)
-        }
+    actionMenu() {
+      const menu = [];
+      if (this.element.attributes.orderable.urls.update_url) {
+        menu.push({
+          text: I18n.t('general.edit'),
+          emit: 'edit'
+        });
+      }
+      if (this.element.attributes.orderable.urls.duplicate_url) {
+        menu.push({
+          text: I18n.t('general.duplicate'),
+          emit: 'duplicate'
+        });
+      }
+      if (this.element.attributes.orderable.urls.move_targets_url) {
+        menu.push({
+          text: I18n.t('general.move'),
+          emit: 'move'
+        });
+      }
+      if (this.element.attributes.orderable.urls.delete_url) {
+        menu.push({
+          text: I18n.t('general.delete'),
+          emit: 'delete'
+        });
+      }
+      return menu;
+    }
+  },
+  methods: {
+    enableEditMode() {
+      if (!this.element.attributes.orderable.urls.update_url) return;
+      if (this.inEditMode) return;
+      this.inEditMode = true;
+    },
+    disableEditMode() {
+      this.inEditMode = false;
+    },
+    enableNameEdit() {
+      this.editingName = true;
+    },
+    disableNameEdit() {
+      this.editingName = false;
+    },
+    updateName(name) {
+      this.element.attributes.orderable.name = name;
+      $.ajax({
+        url: this.element.attributes.orderable.urls.update_url,
+        method: 'PUT',
+        data: { text_component: { name } }
+      });
+      this.$emit('update', this.element, true);
+    },
+    updateText(data) {
+      this.element.attributes.orderable.text_view = data.attributes.text_view;
+      this.element.attributes.orderable.text = data.attributes.text;
+      this.element.attributes.orderable.name = data.attributes.name;
+      this.element.attributes.orderable.updated_at = data.attributes.updated_at;
+      this.$emit('update', this.element, true);
+    },
+    highlightText() {
+      const textElement = $('.results-list')[0];
+      if (textElement) {
+        Prism.highlightAllUnder(textElement);
       }
     }
   }
+};
 </script>

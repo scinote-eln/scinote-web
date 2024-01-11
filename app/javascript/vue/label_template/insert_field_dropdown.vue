@@ -82,30 +82,30 @@ export default {
   props: {
     labelTemplate: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   data() {
     return {
       fields: {
         default: [],
         common: [],
-        repositories: [],
+        repositories: []
       },
       openLogoModal: false,
       logoDimension: null,
-      searchValue: '',
+      searchValue: ''
     };
   },
   components: { LogoInsertModal },
   computed: {
     tooltipTemplate() {
       return `<div class="tooltip" role="tooltip">
-                <div class="tooltip-arrow"></div>
-                <div class="tooltip-body">
-                  <div class="tooltip-inner"></div>
-                </div>
-              </div>`;
+                  <div class="tooltip-arrow"></div>
+                  <div class="tooltip-body">
+                    <div class="tooltip-inner"></div>
+                  </div>
+                </div>`;
     },
     filteredFields() {
       this.$nextTick(() => {
@@ -113,28 +113,24 @@ export default {
         $('[data-toggle="tooltip"]').tooltip();
       });
 
-      if (this.searchValue.length === 0) {
+      if (this.searchValue.length == 0) {
         return this.fields;
       }
       return {
         default: this.filterArray(this.fields.default, 'key'),
         common: this.filterArray(this.fields.common, 'key'),
-        repositories: this.filterArray(this.fields.repositories, 'repository_name').map((repo) => (
-          { ...repo, tags: this.filterArray(repo.tags, 'key') }
-        )),
+        repositories: this.filterArray(this.fields.repositories, 'repository_name').map((repo) => ({ ...repo, tags: this.filterArray(repo.tags, 'key') }))
       };
     },
     noResults() {
-      const defaultField = this.filteredFields.default;
-      return defaultField.concat(this.filteredFields.common, this.filteredFields.repositories).length === 0;
-    },
+      return this.filteredFields.default.concat(this.filteredFields.common, this.filteredFields.repositories).length === 0;
+    }
   },
   mounted() {
     $.get(this.labelTemplate.attributes.urls.fields, (result) => {
       result.default.map((value) => {
-        const newValue = value;
-        newValue.key = this.i18n.t(`label_templates.default_columns.${value.key}`);
-        return newValue;
+        value.key = this.i18n.t(`label_templates.default_columns.${value.key}`);
+        return value;
       });
 
       this.fields = result;
@@ -153,7 +149,7 @@ export default {
   },
   methods: {
     insertTag(field) {
-      if (field.id === 'logo') {
+      if (field.id == 'logo') {
         this.logoDimension = field.dimension;
         this.openLogoModal = true;
         return;
@@ -163,9 +159,9 @@ export default {
     filterArray(array, key) {
       return array.filter((field) => (
         field[key].toLowerCase().indexOf(this.searchValue.toLowerCase()) !== -1
-        || field.tags
+            || field.tags
       ));
-    },
-  },
+    }
+  }
 };
 </script>

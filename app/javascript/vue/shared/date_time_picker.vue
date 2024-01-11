@@ -79,21 +79,21 @@ export default {
         {
           date: new Date(),
           type: 'dot',
-          color: '#3B99FD',
-        },
-      ],
+          color: '#3B99FD'
+        }
+      ]
     };
   },
   created() {
     if (this.defaultValue) {
       this.time = {
         hours: this.defaultValue.getHours(),
-        minutes: this.defaultValue.getMinutes(),
+        minutes: this.defaultValue.getMinutes()
       };
     }
   },
   components: {
-    VueDatePicker,
+    VueDatePicker
   },
   watch: {
     defaultValue() {
@@ -101,7 +101,7 @@ export default {
       if (this.defaultValue instanceof Date) {
         this.time = {
           hours: this.defaultValue.getHours(),
-          minutes: this.defaultValue.getMinutes(),
+          minutes: this.defaultValue.getMinutes()
         };
       }
     },
@@ -112,7 +112,7 @@ export default {
         if (this.datetime instanceof Date) {
           this.time = {
             hours: this.datetime.getHours(),
-            minutes: this.datetime.getMinutes(),
+            minutes: this.datetime.getMinutes()
           };
         }
 
@@ -149,7 +149,7 @@ export default {
       } else {
         newDate = {
           hours: null,
-          minutes: null,
+          minutes: null
         };
         this.$emit('cleared');
       }
@@ -157,7 +157,7 @@ export default {
       if (this.defaultValue !== newDate) {
         this.$emit('change', newDate);
       }
-    },
+    }
   },
   computed: {
     compDatetime: {
@@ -173,13 +173,13 @@ export default {
         } else {
           this.datetime = val;
         }
-      },
+      }
     },
     format() {
       if (this.mode === 'time') return 'HH:mm';
       if (this.mode === 'date') return document.body.dataset.datetimePickerFormatVue;
       return `${document.body.dataset.datetimePickerFormatVue} HH:mm`;
-    },
+    }
   },
   mounted() {
     window.addEventListener('resize', this.close);
@@ -196,7 +196,7 @@ export default {
     },
     clearedHandler() {
       this.$emit('cleared');
-    },
-  },
+    }
+  }
 };
 </script>

@@ -127,7 +127,7 @@
 import SelectDropdown from "../shared/select_dropdown.vue";
 
 export default {
-  name: "AssignItemsToTaskModalContainer",
+  name: 'AssignItemsToTaskModalContainer',
   props: {
     visibility: Boolean,
     urls: Object,
@@ -143,17 +143,17 @@ export default {
       selectedTask: null,
       projectsLoading: null,
       experimentsLoading: null,
-      tasksLoading: null,
+      tasksLoading: null
     };
   },
   components: {
     SelectDropdown
   },
   mounted() {
-    $(this.$refs.modal).on("shown.bs.modal", () => {
+    $(this.$refs.modal).on('shown.bs.modal', () => {
       this.projectsLoading = true;
 
-      $.get(this.projectURL, data => {
+      $.get(this.projectURL, (data) => {
         if (Array.isArray(data)) {
           this.projects = data;
           return false;
@@ -164,9 +164,9 @@ export default {
       });
     });
 
-    $(this.$refs.modal).on("hidden.bs.modal", () => {
+    $(this.$refs.modal).on('hidden.bs.modal', () => {
       this.resetSelectors();
-      this.$emit("close");
+      this.$emit('close');
     });
   },
   beforeUnmount() {
@@ -176,36 +176,36 @@ export default {
     experimentsSelectorPlaceholder() {
       if (this.selectedProject) {
         return this.i18n.t(
-          "repositories.modal_assign_items_to_task.body.experiment_select.placeholder"
+          'repositories.modal_assign_items_to_task.body.experiment_select.placeholder'
         );
       }
       return this.i18n.t(
-        "repositories.modal_assign_items_to_task.body.experiment_select.disabled_placeholder"
+        'repositories.modal_assign_items_to_task.body.experiment_select.disabled_placeholder'
       );
     },
     tasksSelectorPlaceholder() {
       if (this.selectedExperiment) {
         return this.i18n.t(
-          "repositories.modal_assign_items_to_task.body.task_select.placeholder"
+          'repositories.modal_assign_items_to_task.body.task_select.placeholder'
         );
       }
       return this.i18n.t(
-        "repositories.modal_assign_items_to_task.body.task_select.disabled_placeholder"
+        'repositories.modal_assign_items_to_task.body.task_select.disabled_placeholder'
       );
     },
     projectURL() {
       return `${this.urls.projects}`;
     },
     experimentURL() {
-      return `${this.urls.experiments}?project_id=${this.selectedProject ||
-        ""}`;
+      return `${this.urls.experiments}?project_id=${this.selectedProject
+        || ''}`;
     },
     taskURL() {
-      return `${this.urls.tasks}?experiment_id=${this.selectedExperiment ||
-        ""}`;
+      return `${this.urls.tasks}?experiment_id=${this.selectedExperiment
+        || ''}`;
     },
     assignURL() {
-      return this.urls.assign.replace(":module_id", this.selectedTask);
+      return this.urls.assign.replace(':module_id', this.selectedTask);
     }
   },
   watch: {
@@ -219,10 +219,10 @@ export default {
   },
   methods: {
     showModal() {
-      $(this.$refs.modal).modal("show");
+      $(this.$refs.modal).modal('show');
     },
     hideModal() {
-      $(this.$refs.modal).modal("hide");
+      $(this.$refs.modal).modal('hide');
     },
     changeProject(value) {
       this.selectedProject = value;
@@ -230,7 +230,7 @@ export default {
       this.resetTaskSelector();
 
       this.experimentsLoading = true;
-      $.get(this.experimentURL, data => {
+      $.get(this.experimentURL, (data) => {
         if (Array.isArray(data)) {
           this.experiments = data;
           return false;
@@ -245,7 +245,7 @@ export default {
       this.resetTaskSelector();
 
       this.tasksLoading = true;
-      $.get(this.taskURL, data => {
+      $.get(this.taskURL, (data) => {
         if (Array.isArray(data)) {
           this.tasks = data;
           return false;
@@ -280,16 +280,16 @@ export default {
 
       $.ajax({
         url: this.assignURL,
-        type: "PATCH",
-        dataType: "json",
+        type: 'PATCH',
+        dataType: 'json',
         data: { rows_to_assign: this.rowsToAssign }
-      }).done(({assigned_count}) => {
+      }).done(({ assigned_count }) => {
         const skipped_count = this.rowsToAssign.length - assigned_count;
 
         if (skipped_count) {
-          HelperModule.flashAlertMsg(this.i18n.t('repositories.modal_assign_items_to_task.assign.flash_some_assignments_success', {assigned_count: assigned_count, skipped_count: skipped_count }), 'success');
+          HelperModule.flashAlertMsg(this.i18n.t('repositories.modal_assign_items_to_task.assign.flash_some_assignments_success', { assigned_count, skipped_count }), 'success');
         } else {
-          HelperModule.flashAlertMsg(this.i18n.t('repositories.modal_assign_items_to_task.assign.flash_all_assignments_success', {count: assigned_count}), 'success');
+          HelperModule.flashAlertMsg(this.i18n.t('repositories.modal_assign_items_to_task.assign.flash_all_assignments_success', { count: assigned_count }), 'success');
         }
       }).fail(() => {
         HelperModule.flashAlertMsg(this.i18n.t('repositories.modal_assign_items_to_task.assign.flash_assignments_failure'), 'danger');

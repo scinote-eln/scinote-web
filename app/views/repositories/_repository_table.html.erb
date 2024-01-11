@@ -1,6 +1,6 @@
 <div class="repository-table">
   <div class="repository-table-error"></div>
-  <table id="repository-table-<%= repository.id %>" class="table table--reorderable-columns"
+  <table id="repository-table-<%= repository.id %>" class="table table--reorderable-columns repository-dataTable"
     data-current-uri="<%= request.original_url %>"
     data-repository-id="<%= repository.id %>"
     data-source="<%= repository_index_link %>"
@@ -37,6 +37,7 @@
         <th id="assigned" data-unmanageable="true"><%= t("repositories.table.assigned") %></th>
         <th id="row-id"><%= t("repositories.table.id") %></th>
         <th id="row-name"><%= t("repositories.table.row_name") %></th>
+        <th id="relationship" title="<%= t("repositories.table.relationships") %>"><%= t("repositories.table.relationships") %></th>
         <th id="added-on" ><%= t("repositories.table.added_on") %></th>
         <th id="added-by" ><%= t("repositories.table.added_by") %></th>
         <th id="archived-on"><%= t("repositories.table.archived_on") %></th>

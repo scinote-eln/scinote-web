@@ -30,7 +30,8 @@
           <div v-else class="-mx-2.5 px-2.5 group relative">
             <span
               :class="{ 'bg-sn-super-light-blue': item.active }"
-              class="flex group items-center rounded relative text-sn-blue whitespace-nowrap px-3 py-2.5 hover:no-underline cursor-pointer group-hover:bg-sn-super-light-blue hover:!bg-sn-super-light-grey"
+              class="flex group items-center rounded relative text-sn-blue whitespace-nowrap px-3 py-2.5 hover:no-underline cursor-pointer
+                     group-hover:bg-sn-super-light-blue hover:!bg-sn-super-light-grey"
             >
               {{ item.text }}
               <i class="sn-icon sn-icon-right ml-auto"></i>
@@ -80,7 +81,7 @@ export default {
   data() {
     return {
       isOpen: false
-    }
+    };
   },
   directives: {
     'click-outside': vOnClickOutside
@@ -92,7 +93,7 @@ export default {
         this.$emit('open');
         this.$nextTick(() => {
           this.setPosition();
-        })
+        });
       }
     }
   },
@@ -112,5 +113,5 @@ export default {
       this.closeMenu();
     }
   }
-}
+};
 </script>
