@@ -36,7 +36,7 @@
             <div class="h-5 whitespace-nowrap overflow-auto">
               {{ i18n.t('repositories.item_card.repository_item_relationships_modal.inventory_section_title') }}</div>
             <div class="h-11">
-              <select-search ref="ChangeSelectedInventoryDropdownSelector" @change="changeSelectedInventory" :value="selectedInventoryValue"
+              <select-search ref="ChangeSelectedInventoryDropdownSelector" :value="selectedInventoryValue"
                 :options="inventoryOptions"
                 :isLoading="isLoadingInventories"
                 :lazyLoadEnabled="true"
@@ -47,6 +47,7 @@
                 :searchPlaceholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_inventory_placeholder')"
                 @update-options="updateInventories"
                 @reached-end="fetchInventories"
+                @change="changeSelectedInventory"
               ></select-search>
             </div>
           </div>
@@ -227,7 +228,10 @@ export default {
       });
     },
     changeSelectedInventory(value) {
+      if (value === this.selectedInventoryValue) return;
+
       this.selectedInventoryValue = value;
+      this.resetSelectedItemValues();
       this.itemOptions = [];
       this.nextItemsPage = 1;
       if (value) {
@@ -274,6 +278,9 @@ export default {
         }
       });
       this.close();
+    },
+    resetSelectedItemValues() {
+      this.selectedItemValues = [];
     }
   }
 };
