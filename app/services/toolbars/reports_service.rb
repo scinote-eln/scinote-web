@@ -34,7 +34,6 @@ module Toolbars
         name: 'edit',
         label: I18n.t('projects.reports.index.edit'),
         icon: 'sn-icon sn-icon-edit',
-        button_id: 'edit-report-btn',
         path: edit_project_report_path(@report.project_id, @report.id),
         type: :link
       }
@@ -47,7 +46,7 @@ module Toolbars
         name: 'update_pdf',
         label: I18n.t('projects.reports.index.update_pdf'),
         icon: 'fas fa-file-pdf',
-        button_id: 'updatePdf'
+        type: :emit
       }
     end
 
@@ -55,11 +54,10 @@ module Toolbars
       return unless @report && can_manage_report?(@report)
 
       {
-        name: 'save_pdf_to_inventory',
+        name: 'save_pdf_to_repository',
         label: I18n.t('projects.reports.index.save_pdf_to_inventory'),
         icon: 'fas fa-save',
-        button_id: 'savePdfToInventoryButton',
-        path: save_pdf_to_inventory_modal_report_path(@report.id)
+        type: :emit
       }
     end
 
@@ -70,10 +68,10 @@ module Toolbars
       label = @report.docx_file_status == 'docx_empty' ? I18n.t('projects.reports.index.request_docx') : I18n.t('projects.reports.index.update_docx')
 
       {
-        name: 'generate_docx_action',
+        name: 'update_docx',
         label: label,
         icon: 'sn-icon sn-icon-file-word',
-        button_id: button_id
+        type: :emit
       }
     end
 
@@ -84,8 +82,8 @@ module Toolbars
         name: 'delete',
         label: I18n.t('projects.reports.index.delete'),
         icon: 'sn-icon sn-icon-delete',
-        button_id: 'delete-reports-btn',
-        type: :link
+        path: reports_destroy_path,
+        type: :emit
       }
     end
   end

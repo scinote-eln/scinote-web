@@ -38,7 +38,7 @@ module ReportActions
         raise ReportActions::RepositoryPermissionError, I18n.t('projects.reports.new.no_permissions')
       end
 
-      @repository_column = @repository.repository_columns.find(@params[:respository_column_id])
+      @repository_column = @repository.repository_columns.find(@params[:repository_column_id])
       @repository_row = @repository.repository_rows.find(@params[:repository_item_id])
     end
 
