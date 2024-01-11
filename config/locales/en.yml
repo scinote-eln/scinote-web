@@ -2754,11 +2754,11 @@ en:
             description: 'Print labels of custom styles and sizes in seconds flat from your PC or Mac via your Zebra printer connected via USB, Internet or LAN.'
             details: 'Details'
           desktop_app:
-            title: 'SciNote File Editor desktop app'
-            description: 'Download the SciNote File Editor desktop app to automatically edit files using locally installed software'
+            title: 'SciNote Edit'
+            description: 'Download the SciNote Edit desktop app to automatically edit files using locally installed software.'
             macos_button: 'Download for macOS'
             windows_button: 'Download for Windows'
-            version: 'Version'
+            version: 'Version %{version}'
         label_printer:
           fluics_printer: "FLUICS Print: Label printers"
           zebra_printer: 'Zebra label printers'

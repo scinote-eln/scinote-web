@@ -605,6 +605,8 @@ class Extends
     *.nr-data.net
     www.recaptcha.net/
     www.gstatic.com/recaptcha/
+    extras.scinote.net
+    https://www.scinote.net
   )
 
   if Constants::ASSET_SYNC_URL && EXTERNAL_SERVICES.exclude?(Constants::ASSET_SYNC_URL)
