@@ -8,12 +8,12 @@
     </button>
     <teleport to="body">
       <div ref="flyout"
+          v-if="isOpen"
           class="fixed z-[3000] bg-sn-white inline-block rounded p-2.5 sn-shadow-menu-sm flex flex-col gap-[1px]"
           :class="{
               'right-0': position === 'right',
               'left-0': position === 'left',
           }"
-          v-if="isOpen"
       >
         <span v-for="(item, i) in listItems" :key="i" class="contents">
           <div v-if="item.dividerBefore" class="border-0 border-t border-solid border-sn-light-grey"></div>

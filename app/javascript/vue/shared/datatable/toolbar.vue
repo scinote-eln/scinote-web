@@ -76,6 +76,28 @@
                   @click="$emit('search:change', '')"></i>
       </div>
       <FilterDropdown v-else :filters="filters" @applyFilters="applyFilters" />
+      <GeneralDropdown v-if="currentViewRender === 'cards'" ref="dropdown" position="right">
+        <template v-slot:field>
+          <button class="btn btn-light icon-btn">
+            <i class="sn-icon sn-icon-sort-down"></i>
+          </button>
+        </template>
+        <template v-slot:flyout >
+          <div class="min-w-[12rem]">
+            <div v-for="col in sortableColumns"
+                class="flex whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue items-center h-11
+                        hover:no-underline cursor-pointer hover:bg-sn-super-light-grey leading-5"
+                :key="col.field"
+                @click="$emit('sort', col.field, (order?.dir === 'asc' ? 'desc' : 'asc'))">
+              <span>{{ col.headerName }}</span>
+              <div v-if="order && order.column === col.field" class="ml-auto">
+                <i v-if="order.dir === 'asc'" class="sn-icon sn-icon-sort-up"></i>
+                <i v-else class="sn-icon sn-icon-sort-down"></i>
+              </div>
+            </div>
+          </div>
+        </template>
+      </GeneralDropdown>
     </div>
     <teleport to="body">
       <ColumnsModal
@@ -91,6 +113,7 @@
 
 <script>
 import MenuDropdown from '../menu_dropdown.vue';
+import GeneralDropdown from '../general_dropdown.vue';
 import FilterDropdown from '../filters/filter_dropdown.vue';
 import ColumnsModal from './modals/columns.vue';
 
@@ -131,12 +154,16 @@ export default {
     },
     tableState: {
       type: Object
+    },
+    order: {
+      type: Object
     }
   },
   components: {
     MenuDropdown,
     FilterDropdown,
-    ColumnsModal
+    ColumnsModal,
+    GeneralDropdown
   },
   computed: {
     viewModesMenu() {
@@ -159,6 +186,9 @@ export default {
             return view;
         }
       });
+    },
+    sortableColumns() {
+      return this.columnDefs.filter((column) => column.sortable);
     }
   },
   data() {

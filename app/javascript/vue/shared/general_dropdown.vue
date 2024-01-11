@@ -58,9 +58,7 @@ export default {
   },
   methods: {
     closeMenu(e) {
-
       if (e && e.target.closest('.sn-dropdown, .sn-select-dropdown, .dp__instance_calendar')) return;
-
       this.isOpen = false;
     }
   }

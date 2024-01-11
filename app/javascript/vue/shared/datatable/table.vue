@@ -14,9 +14,11 @@
         :filters="filters"
         :columnDefs="columnDefs"
         :tableState="tableState"
+        :order="order"
         @applyFilters="applyFilters"
         @setTableView="switchViewRender('table')"
         @setCardsView="switchViewRender('cards')"
+        @sort="applyOrder"
         @hideColumn="hideColumn"
         @showColumn="showColumn"
       />
@@ -248,6 +250,8 @@ export default {
       }
     },
     currentViewRender() {
+      this.columnApi = null;
+      this.gridApi = null;
       this.saveTableState();
     },
     perPage() {
@@ -258,7 +262,7 @@ export default {
     if (this.tableState) {
       this.currentViewRender = this.tableState.currentViewRender || 'table';
       this.perPage = this.tableState.perPage || 20;
-      [this.order] = this.getOrder(this.tableState.columnsState);
+      this.order = this.tableState.order;
     }
   },
   mounted() {
@@ -328,6 +332,13 @@ export default {
       this.columnApi = params.columnApi;
 
       if (this.tableState) {
+        if (this.order) {
+          this.tableState.columnsState.forEach((column) => {
+            const updatedColumn = column;
+            updatedColumn.sort = this.order.column === column.colId ? this.order.dir : null;
+            return updatedColumn;
+          });
+        }
         this.columnApi.applyColumnState({
           state: this.tableState.columnsState,
           applyOrder: true
@@ -363,6 +374,7 @@ export default {
       }
       const tableState = {
         columnsState: columnsState || [],
+        order: this.order,
         currentViewRender: this.currentViewRender,
         perPage: this.perPage
       };
@@ -410,6 +422,14 @@ export default {
           column: column.colId,
           dir: column.sort
         }));
+    },
+    applyOrder(column, dir) {
+      this.order = {
+        column,
+        dir
+      };
+      this.saveTableState();
+      this.reloadTable();
     }
   }
 };
