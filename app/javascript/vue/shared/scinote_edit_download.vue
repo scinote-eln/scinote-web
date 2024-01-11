@@ -40,7 +40,9 @@
             <span class="hidden-xs">{{ i18n.t('users.settings.account.addons.desktop_app.windows_button') }}</span>
           </a>
           <p class="text-xs mt-1" style="color: var(--sn-sleepy-grey);">
-            {{ i18n.t('users.settings.account.addons.desktop_app.version', { version: this.responseData[0]['version']}) }}
+            {{ i18n.t('users.settings.account.addons.desktop_app.version',
+              { version: this.responseData[0]['version']})
+            }}
           </p>
         </div>
 
@@ -54,7 +56,9 @@
             <span class="hidden-xs">{{ i18n.t('users.settings.account.addons.desktop_app.macos_button') }}</span>
           </a>
           <p class="text-xs mt-1" style="color: var(--sn-sleepy-grey);">
-            {{ i18n.t('users.settings.account.addons.desktop_app.version', { version: this.responseData[1]['version']}) }}
+            {{ i18n.t('users.settings.account.addons.desktop_app.version',
+              { version: this.responseData[1]['version']})
+            }}
           </p>
         </div>
       </div>
@@ -66,12 +70,12 @@
 export default {
   name: 'ScinoteEditDownload',
   props: {
-    data: { type: String, required: true },
+    data: { type: String, required: true }
   },
   data() {
     return {
       userAgent: this.data,
-      responseData: {},
+      responseData: {}
     };
   },
   computed: {
@@ -80,7 +84,7 @@ export default {
     },
     isMac() {
       return /Mac OS/.test(this.userAgent);
-    },
+    }
   },
   created() {
     window.scinoteEditDownload = this;
@@ -94,7 +98,7 @@ export default {
       $.get('https://extras.scinote.net/scinote-edit/latest.json', (result) => {
         this.responseData = result;
       });
-    },
-  },
+    }
+  }
 };
 </script>
