@@ -58,9 +58,10 @@
 </template>
 
 <script>
+/* global HelperModule */
 import NotificationsFlyout from './notifications/notifications_flyout.vue';
 import DropdownSelector from '../shared/legacy/dropdown_selector.vue';
-import Select from '../shared/select.vue';
+import SelectDropdown from '../shared/select_dropdown.vue';
 import MenuDropdown from '../shared/menu_dropdown.vue';
 
 export default {
@@ -68,7 +69,7 @@ export default {
   components: {
     DropdownSelector,
     NotificationsFlyout,
-    Select,
+    SelectDropdown,
     MenuDropdown
   },
   props: {
@@ -142,15 +143,14 @@ export default {
       });
     },
     switchTeam(team) {
-      if (this.currentTeam == team) return;
+      if (this.currentTeam === team) return;
 
-      const newTeam = this.teams.find((e) => e[0] == team);
+      const newTeam = this.teams.find((e) => e[0] === team);
 
       if (!newTeam) return;
 
       $.post(this.teamSwitchUrl, { team_id: team }, (result) => {
         this.currentTeam = result.current_team;
-        dropdownSelector.selectValues('#sciNavigationTeamSelector', this.currentTeam);
         $('body').attr('data-current-team-id', this.currentTeam);
         window.open(this.rootUrl, '_self');
       }).fail((msg) => {
@@ -168,10 +168,9 @@ export default {
       });
     },
     refreshCurrentTeam() {
-      const newTeam = parseInt($('body').attr('data-current-team-id'));
+      const newTeam = parseInt($('body').attr('data-current-team-id'), 10);
       if (newTeam !== this.currentTeam) {
         this.currentTeam = newTeam;
-        dropdownSelector.selectValues('#sciNavigationTeamSelector', this.currentTeam);
       }
     }
   }

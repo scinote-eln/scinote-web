@@ -56,13 +56,8 @@
                 <label :class="`text-sm font-normal ${errors.unit ? 'text-sn-delete-red' : 'text-sn-grey'}`" for="stock-unit">
                   {{ i18n.t('repository_stock_values.manage_modal.unit') }}
                 </label>
-<<<<<<< HEAD
                 <SelectDropdown
-                  :disabled="[2, 3].includes(operation)"
-=======
-                <Select
                   :disabled="['add', 'remove'].includes(operation)"
->>>>>>> develop
                   :value="unit"
                   :options="units"
                   :placeholder="i18n.t('repository_stock_values.manage_modal.unit_prompt')"

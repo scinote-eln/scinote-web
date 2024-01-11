@@ -107,11 +107,11 @@
   .dp__input_icon {
     display: flex;
     height: 1.5rem;
-    left: .75rem;
-  }
+    left: .5rem;
 
-  .dp__clear_icon {
-    width: 1.375rem;
+    img {
+      width: 1rem;
+    }
   }
 
   .dp__input {

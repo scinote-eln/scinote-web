@@ -26,7 +26,7 @@
 
 <script>
 import Select from './select.vue';
-import { debounce } from './debounce';
+import { debounce } from '../debounce';
 
 export default {
   name: 'SelectSearch',

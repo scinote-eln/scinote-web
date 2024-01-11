@@ -38,7 +38,7 @@
 
 <script>
 import checklistSelect from './checklist_select.vue';
-import { debounce } from './debounce';
+import { debounce } from '../debounce';
 
 export default {
   name: 'ChecklistSearch',
