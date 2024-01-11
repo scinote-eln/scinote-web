@@ -7,7 +7,7 @@
               :class="{
                 'sci-cursor-edit': !isOpen && withEditCursor,
                 'border-sn-light-grey hover:border-sn-sleepy-grey': !isOpen,
-                'border-sn-science-blue': isOpen,
+                'sn-select--open': isOpen,
                 'text-sn-grey': !valueLabel,
                 [className]: true
               }"

@@ -1,8 +1,8 @@
 <template>
-  <div id="repository-stock-value-wrapper" class="flex flex-col min-min-h-[46px] h-auto gap-[6px]">
+  <div id="repository-stock-value-wrapper" class="flex flex-col min-min-h-[46px] h-auto gap-2">
     <div class="font-inter text-sm font-semibold leading-5 relative h-[20px] flex flex-row">
       <div class="flex flex-row gap-1">
-        <span class="truncate w-fit inline-block" :title="colName">{{ colName }}</span>
+        <span class="truncate w-fit inline-block max-w-[18rem]" :title="colName">{{ colName }}</span>
         <div v-if="values?.reminder" >
           <div v-if="isBetweenThresholdAndDepleted"
             class="bg-sn-alert-brittlebush w-1.5 h-1.5 min-w-[0.375rem] min-h-[0.375rem] rounded hover:cursor-pointer"
