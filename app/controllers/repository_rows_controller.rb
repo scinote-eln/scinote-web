@@ -272,11 +272,9 @@ class RepositoryRowsController < ApplicationController
         "#{link_to(t('projects.reports.new.save_PDF_to_inventory_modal.here'),
                    repository_path(@repository),
                    data: { 'no-turbolink' => true })}"
-      render json: { no_items: no_items_string },
-                   status: :ok
+      render json: { no_items: no_items_string }, status: :unprocessable_entity
     else
-      render json: { results: load_available_rows },
-                   status: :ok
+      render json: { results: load_available_rows }, status: :ok
     end
   end
 

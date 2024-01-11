@@ -258,9 +258,9 @@ Rails.application.routes.draw do
     end
     get 'reports/datatable', to: 'reports#datatable'
     get 'reports/new_template_values', to: 'reports#new_template_values', defaults: { format: 'json' }
-    post 'reports/available_repositories', to: 'reports#available_repositories',
+    get 'reports/available_repositories', to: 'reports#available_repositories',
                                            defaults: { format: 'json' }
-    post 'available_asset_type_columns',
+    get 'available_asset_type_columns',
           to: 'repository_columns#available_asset_type_columns',
           defaults: { format: 'json' }
     post 'reports/destroy', to: 'reports#destroy'
@@ -760,7 +760,7 @@ Rails.application.routes.draw do
 
       collection do
         get :sidebar
-        post 'available_rows', to: 'repository_rows#available_rows', defaults: { format: 'json' }
+        get 'available_rows', to: 'repository_rows#available_rows', defaults: { format: 'json' }
         get 'export_repository_stock_items_modal'
         get :rows_to_print, to: 'repository_rows#rows_to_print'
         get :print_zpl, to: 'repository_rows#print_zpl'

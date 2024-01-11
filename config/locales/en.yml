@@ -718,6 +718,7 @@ en:
           head_title: "Delete report/s"
           message: "Are you sure to delete selected report/s?"
           delete: "Delete"
+          success: "Report/s successfully deleted."
       wizard:
         statuses:
           step_1: "Select project"

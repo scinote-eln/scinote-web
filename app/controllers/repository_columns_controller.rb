@@ -83,15 +83,7 @@ class RepositoryColumnsController < ApplicationController
   end
 
   def available_asset_type_columns
-    if @asset_columns.blank?
-      render json: {
-        no_items: t(
-          'projects.reports.new.save_PDF_to_inventory_modal.no_columns'
-        )
-      }
-    else
-      render json: { results: @asset_columns }, status: :ok
-    end
+    render json: { data: @asset_columns.map { |c| [c.id, c.name] } }, status: :ok
   end
 
   def available_columns
