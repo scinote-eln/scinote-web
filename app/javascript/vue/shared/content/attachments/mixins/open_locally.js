@@ -37,7 +37,9 @@ export default {
           `${this.attachment.attributes.urls.open_locally_api}/default-application/${this.attachment.attributes.file_extension}`
         );
 
-        this.localAppName = response.data.application;
+        if (response.data.application.toLowerCase() !== 'pick an app') {
+          this.localAppName = response.data.application;
+        }
       } catch (error) {
         console.error('Error in request: ', error);
       }
