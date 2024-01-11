@@ -145,7 +145,8 @@ export default {
 
     if (this.isNew) {
       // needs to first update to save metadata at table creation
-      this.update(() => { this.enableTableEdit(); });
+      // updating is triggered by the afterChange hook
+      this.enableTableEdit();
     }
   },
   methods: {
