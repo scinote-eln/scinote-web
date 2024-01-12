@@ -20,7 +20,7 @@
         @hideColumn="hideColumn"
         @showColumn="showColumn"
       />
-      <div v-if="currentViewRender === 'cards'"
+      <div v-if="currentViewRender === 'cards'" ref="cardsContainer" @scroll="handleScroll"
            class="flex-grow basis-64 overflow-y-auto overflow-x-visible p-2 -ml-2">
         <div class="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
           <slot v-for="element in rowData" :key="element.id" name="card" :dtComponent="this" :params="element"></slot>
@@ -43,6 +43,7 @@
         @sortChanged="setOrder"
         @columnResized="saveTableState"
         @columnMoved="saveTableState"
+        @bodyScroll="handleScroll"
         @rowSelected="setSelectedRows"
         @cellClicked="clickCell"
         :CheckboxSelectionCallback="withCheckboxes"
@@ -57,7 +58,7 @@
         :params="actionsParams"
         @toolbar:action="emitAction" />
     </div>
-    <div class="flex items-center py-4">
+    <div v-if="scrollMode == 'pages'" class="flex items-center py-4">
       <div class="mr-auto">
         <Pagination
           :totalPage="totalPage"
@@ -140,6 +141,10 @@ export default {
     filters: {
       type: Array,
       default: () => []
+    },
+    scrollMode: {
+      type: String,
+      default: 'infinite'
     }
   },
   data() {
@@ -160,7 +165,8 @@ export default {
       activeFilters: {},
       currentViewRender: 'table',
       cardCheckboxes: [],
-      dataLoading: true
+      dataLoading: true,
+      lastPage: false
     };
   },
   components: {
@@ -248,6 +254,8 @@ export default {
       }
     },
     currentViewRender() {
+      this.columnApi = null;
+      this.gridApi = null;
       this.saveTableState();
     },
     perPage() {
@@ -269,6 +277,21 @@ export default {
     window.removeEventListener('resize', this.resize);
   },
   methods: {
+    handleScroll() {
+      let target = null;
+      if (this.currentViewRender === 'cards') {
+        target = this.$refs.cardsContainer;
+      } else {
+        target = document.querySelector('.ag-body-viewport');
+      }
+      if (target.scrollTop + target.clientHeight >= target.scrollHeight - 50) {
+        if (this.dataLoading || this.lastPage) return;
+
+        this.dataLoading = true;
+        this.page += 1;
+        this.loadData();
+      }
+    },
     getRowClass() {
       if (this.currentViewMode === 'archived') {
         return '!bg-sn-light-grey';
@@ -313,11 +336,29 @@ export default {
             }
             this.rowData = [];
           }
-          this.selectedRows = [];
-          if (this.gridApi) {
-            this.gridApi.setRowData(this.formatData(response.data.data));
+
+          if (this.scrollMode === 'pages') {
+            this.selectedRows = [];
+            if (this.gridApi) {
+              this.gridApi.setRowData(this.formatData(response.data.data));
+            }
+            this.rowData = this.formatData(response.data.data);
+          } else {
+            const newRows = this.rowData.slice();
+            this.formatData(response.data.data).forEach((row) => {
+              newRows.push(row);
+            });
+            this.rowData = newRows;
+            if (this.gridApi) {
+              const viewport = document.querySelector('.ag-body-viewport');
+              const { scrollTop } = viewport;
+              this.gridApi.setRowData(this.rowData);
+              this.$nextTick(() => {
+                viewport.scrollTop = scrollTop;
+              });
+            }
+            this.lastPage = !response.data.meta.next_page;
           }
-          this.rowData = this.formatData(response.data.data);
           this.totalPage = response.data.meta.total_pages;
           this.$emit('tableReloaded');
           this.dataLoading = false;
@@ -343,6 +384,7 @@ export default {
     setPerPage(value) {
       this.perPage = value;
       this.page = 1;
+      this.lastPage = false;
       this.reloadTable();
     },
     setPage(page) {
