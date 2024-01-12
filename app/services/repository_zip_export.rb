@@ -32,7 +32,7 @@ module RepositoryZipExport
     end
     csv_header << I18n.t('repositories.table.row_consumption') if add_consumption
 
-    CSV.generate do |csv|
+    CSV.generate(force_quotes: true) do |csv|
       csv << csv_header
       rows.each do |row|
         csv_row = []
