@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class RepositoryRowConnectionsController < ApplicationController
-  before_action :load_repository, except: %i(repositories)
+  before_action :load_repository, except: :repositories
   before_action :load_create_vars, only: :create
   before_action :check_read_permissions, except: :repositories
-  before_action :load_repository_row, except: %i(repositories repository_rows)
+  before_action :load_repository_row, except: :repositories
   before_action :check_manage_permissions, only: %i(create destroy)
 
   def index
@@ -97,11 +97,16 @@ class RepositoryRowConnectionsController < ApplicationController
   end
 
   def repository_rows
-    repository_rows = @repository.repository_rows
-                                 .search_by_name_and_id(current_user, current_user.teams, params[:query])
-                                 .order(name: :asc)
-                                 .page(params[:page] || 1)
-                                 .per(Constants::SEARCH_LIMIT)
+    selected_repository = Repository.accessible_by_teams(current_team).find(params[:selected_repository_id])
+
+    repository_rows = selected_repository.repository_rows
+                                         .where.not(id: @repository_row.id)
+                                         .where.not(id: @repository_row.parent_connections.select(:parent_id))
+                                         .where.not(id: @repository_row.child_connections.select(:child_id))
+                                         .search_by_name_and_id(current_user, current_user.teams, params[:query])
+                                         .order(name: :asc)
+                                         .page(params[:page] || 1)
+                                         .per(Constants::SEARCH_LIMIT)
     render json: {
       data: repository_rows.select(:id, :name, :archived, :repository_id)
                            .preload(:repository)

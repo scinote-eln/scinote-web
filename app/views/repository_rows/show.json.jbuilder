@@ -31,7 +31,8 @@ json.actions do
   end
   json.row_connections do
     json.inventories_url repository_row_connections_repositories_url
-    json.inventory_items_url repository_row_connections_repository_rows_url
+    json.inventory_items_url repository_rows_repository_repository_row_repository_row_connections_path(@repository,
+                                                                                                       @repository_row)
     json.create_url repository_repository_row_repository_row_connections_url(@repository, @repository_row)
   end
 end
