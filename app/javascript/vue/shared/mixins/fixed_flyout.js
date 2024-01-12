@@ -9,14 +9,16 @@ export default {
     isOpen() {
       if (this.isOpen) {
         this.$nextTick(() => {
+          this.setPosition();
           this.overflowContainerListener();
         });
       }
-    },
+    }
   },
   methods: {
     overflowContainerListener() {
       const { field, flyout } = this.$refs;
+
       if (!field || !flyout) return;
 
       const fieldRect = field.getBoundingClientRect();
