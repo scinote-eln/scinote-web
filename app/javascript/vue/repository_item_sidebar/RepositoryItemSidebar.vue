@@ -326,6 +326,8 @@
 </template>
 
 <script>
+/* global HelperModule I18n */
+
 import { vOnClickOutside } from '@vueuse/components';
 import InlineEdit from '../shared/inline_edit.vue';
 import ScrollSpy from './repository_values/ScrollSpy.vue';
@@ -611,10 +613,28 @@ export default {
       this.selectedToUnlink = null;
     },
     async unlinkItem() {
-      await axios.delete(this.selectedToUnlink.unlink_path);
-      this.loadRepositoryRow(this.currentItemUrl);
-      if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
-      this.selectedToUnlink = null;
+      try {
+        await axios.delete(this.selectedToUnlink.unlink_path);
+        HelperModule.flashAlertMsg(
+          I18n.t(
+            'repositories.item_card.relationships.unlink_modal.success',
+            { from_connection: this.defaultColumns.name, to_connection: this.selectedToUnlink.name }
+          ),
+          'success'
+        );
+        this.loadRepositoryRow(this.currentItemUrl);
+        if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
+      } catch {
+        HelperModule.flashAlertMsg(
+          I18n.t(
+            'repositories.item_card.relationships.unlink_modal.error',
+            { from_connection: this.defaultColumns.name, to_connection: this.selectedToUnlink.name }
+          ),
+          'danger'
+        );
+      } finally {
+        this.selectedToUnlink = null;
+      }
     }
   }
 };
