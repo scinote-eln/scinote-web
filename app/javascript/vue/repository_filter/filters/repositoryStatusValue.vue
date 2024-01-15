@@ -6,6 +6,7 @@
         :options="this.operators"
         :selectedValue="this.operator"
         :selectorId="`OperatorSelector${this.filter.id}`"
+        :data-e2e="`e2e-DD-invInventoryFilterCO-option${this.filter.column.id}`"
         @dropdown:changed="updateOperator"
       />
     </div>
@@ -21,6 +22,7 @@
       :dataSelectMultipleAllSelected="this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryStatusValue.all_selected')"
       :selectorId="`DropdownSelector${this.filter.id}`"
       :placeholder="this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryStatusValue.select_placeholder', {name: this.filter.column.name})"
+      :data-e2e="`e2e-DC-invInventoryFilterCO-input${this.filter.column.id}`"
       @dropdown:changed="updateValue"
     />
   </div>

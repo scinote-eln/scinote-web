@@ -6,6 +6,7 @@
         :options="this.operators"
         :selectedValue="this.operator"
         :selectorId="`OperatorSelector${this.filter.id}`"
+        :data-e2e="`e2e-DD-invInventoryFilterCO-option${this.filter.column.id}`"
         @dropdown:changed="updateOperator"
       />
     </div>
@@ -15,6 +16,7 @@
         type="text"
         name="value"
         v-model="value"
+        :data-e2e="`e2e-IF-invInventoryFilterCO-input${this.filter.column.id}`"
         :placeholder= "this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryTextValue.input_placeholder',{name: this.filter.column.name})"
       />
     </div>

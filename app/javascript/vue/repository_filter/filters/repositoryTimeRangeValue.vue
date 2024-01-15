@@ -6,14 +6,15 @@
       :options="operators"
       :selectorId="`OperatorSelector${filter.id}`"
       :selectedValue="operator"
+      :data-e2e="`e2e-DD-invInventoryFilterCO-option${this.filter.column.id}`"
       @dropdown:changed="updateOperator" />
     </div>
     <div class="filter-datepicker-input">
-      <DateTimePicker @change="updateDate" :selectorId="`TimePicker${filter.id}`" :mode="'time'"  :defaultValue="date || fallbackDate()" />
+      <DateTimePicker @change="updateDate" :data-e2e="`e2e-TP-invInventoryFilterCO-inputFrom${this.filter.column.id}`" :selectorId="`TimePicker${filter.id}`" :mode="'time'"  :defaultValue="date || fallbackDate()" />
     </div>
     <span class="between-delimiter">—</span>
     <div class="filter-datepicker-to-input">
-      <DateTimePicker @change="updateDateTo" :selectorId="`TimePickerTo${filter.id}`" :mode="'time'" :defaultValue="dateTo || fallbackDate(7 * 24 * 60 * 60)" />
+      <DateTimePicker @change="updateDateTo" :data-e2e="`e2e-TP-invInventoryFilterCO-inputTo${this.filter.column.id}`" :selectorId="`TimePickerTo${filter.id}`" :mode="'time'" :defaultValue="dateTo || fallbackDate(7 * 24 * 60 * 60)" />
     </div>
   </div>
 </template>
