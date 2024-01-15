@@ -252,7 +252,11 @@ export default {
   watch: {
     reloadingTable() {
       if (this.reloadingTable) {
-        this.loadData();
+        if (this.scrollMode === 'pages') {
+          this.loadData();
+        } else {
+          this.reloadTable();
+        }
       }
     },
     currentViewRender() {
