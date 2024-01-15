@@ -735,7 +735,7 @@ Rails.application.routes.draw do
           get :actions_toolbar
         end
 
-        resources :repository_row_connections, only: %i(index create destroy) do
+        resources :repository_row_connections, only: %i(create destroy) do
           collection do
             get :repository_rows
           end
