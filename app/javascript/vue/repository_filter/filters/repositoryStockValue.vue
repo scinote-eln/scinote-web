@@ -6,7 +6,7 @@
         :options="this.operators"
         :selectedValue="this.operator"
         :selectorId="`OperatorSelector${this.filter.id}`"
-        :data-e2e="`e2e-DD-invInventoryFilterCO-option${this.filter.column.name.replace(/[\s-]+/g, '')}`"
+        :data-e2e="`e2e-DD-invInventoryFilterCO-option${this.filter.column.id}`"
         @dropdown:changed="updateOperator"
       />
     </div>
@@ -16,7 +16,7 @@
         type="text"
         name="value"
         v-model="value"
-        :data-e2e="`e2e-IF-invInventoryFilterCO-input${this.filter.column.name.replace(/[\s-]+/g, '')}`"
+        :data-e2e="`e2e-IF-invInventoryFilterCO-input${this.filter.column.id}`"
         :placeholder= "this.i18n.t('repositories.show.repository_filter.filters.types.RepositoryStockValue.input_placeholder')"
       />
     </div>
@@ -48,7 +48,7 @@
         :selectedValue="this.stock_unit"
         :options="this.prepareUnitOptions()"
         :selectorId="`StockUnitSelector${this.filter.id}`"
-        :data-e2e="`e2e-DD-invInventoryFilterCO-input${this.filter.column.name.replace(/[\s-]+/g, '')}`"
+        :data-e2e="`e2e-DD-invInventoryFilterCO-input${this.filter.column.id}`"
         @dropdown:changed="updateStockUnit"
       />
     </div>
