@@ -499,6 +499,8 @@ export default {
       }
     },
     toggleShowHideSidebar(repositoryRowUrl, myModuleId = null, initialSectionId = null) {
+      // opening from a bootstrap modal - should close the modal upon itemcard open
+      this.handleOpeningFromBootstrapModal();
       if (initialSectionId) {
         this.initialSectionId = initialSectionId;
       } else this.initialSectionId = null;
@@ -530,6 +532,15 @@ export default {
       this.myModuleId = myModuleId;
       this.loadRepositoryRow(repositoryRowUrl);
       this.currentItemUrl = repositoryRowUrl;
+    },
+    handleOpeningFromBootstrapModal() {
+      const layout = document.querySelector('.sci--layout');
+      const openModals = layout.querySelectorAll('.modal');
+      openModals.forEach((modal) => {
+        if ($(modal).hasClass('in') && !$(modal).hasClass('full-screen')) {
+          $(modal).modal('hide');
+        }
+      });
     },
     loadRepositoryRow(repositoryRowUrl, scrollTop = 0) {
       this.dataLoading = true
