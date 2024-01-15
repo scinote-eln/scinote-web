@@ -12,6 +12,7 @@
         :data-id="attachment.id"
         :data-gallery-view-id="parentId"
         :data-preview-url="attachment.attributes.urls.preview"
+        :data-e2e="`e2e-BT-attachment-${attachment.id}`"
     >
       <div class="attachment-preview" :class= "attachment.attributes.asset_type">
         <img v-if="attachment.attributes.medium_preview !== null"

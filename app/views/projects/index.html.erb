@@ -6,7 +6,7 @@
   <%= render partial: 'shared/sidebar/projects', locals: { team: current_team, sort: nil, view_mode: projects_view_mode } if current_team %>
 <% end %>
 
-<div id="projectsWrapper" class="content-pane flexible projects-index <%= projects_view_mode %>" data-view-mode="<%= projects_view_mode %>" data-e2e="e2e-projects-container">
+<div id="projectsWrapper" class="content-pane flexible projects-index <%= projects_view_mode %>" data-view-mode="<%= projects_view_mode %>" data-e2e="e2e-CO-projects">
   <%= render partial: 'projects/index/header', locals: { current_folder: current_folder} %>
 
   <span style="display: none;" data-hook="projects-index-html"></span>

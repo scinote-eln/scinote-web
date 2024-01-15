@@ -1,12 +1,12 @@
-<div class="activity-card">
-  <div class="activity-text">
+<div class="activity-card" data-e2e="e2e-CO-activities-activityCard">
+  <div class="activity-text" data-e2e="e2e-CO-activities-activityText">
     <% if activity.old_activity?  %>
       <%= sanitize_input(activity.message) %>
     <% else %>
       <%= generate_activity_content(activity) %>
     <% end %>
   </div>
-  <div class="activity-info">
+  <div class="activity-info" data-e2e="e2e-CO-activities-activityInfo">
     <div class="activity-timestamp">
       <%= activity.created_at.strftime('%H:%M') %>
     </div>

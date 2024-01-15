@@ -6,10 +6,10 @@
   <%= form_with(url: export_repository_team_path(repository),
                          html: { id: 'form-repository-rows-export' },
                          data: { remote: true }) do |f| %>
-     <div class="modal-dialog" role="document" data-e2e="e2e-MD-invInventoryExportAT">
+     <div class="modal-dialog" role="document" data-e2e="e2e-MD-invInventoryExportItemsAT">
        <div class="modal-content">
          <div class="modal-header">
-           <button type="button" data-e2e="e2e-BT-invInventoryExportMD-close" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
+           <button type="button" data-e2e="e2e-BT-exportMD-close" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
            <h4 class="modal-title"><%=t 'zip_export.repositories_modal_label' %></h4>
          </div>
          <div class="modal-body">
@@ -18,8 +18,8 @@
            <div><%=t 'zip_export.repository_footer_html' %></div>
          </div>
          <div class="modal-footer">
-           <button type='button' data-e2e='e2e-BT-invInventoryExportMD-cancel' class='btn btn-secondary' data-dismiss='modal' id='close-modal-export-repository-rows'><%= t('general.cancel')%></button>
-           <%= f.submit t('my_modules.repository.export'), id: "export-repository-rows", class: "btn btn-success" %>
+           <button type='button' data-e2e='e2e-BT-exportMD-cancel' class='btn btn-secondary' data-dismiss='modal' id='close-modal-export-repository-rows'><%= t('general.cancel')%></button>
+           <%= f.submit t('my_modules.repository.export'), id: "export-repository-rows", class: "btn btn-success", data: {e2e: 'e2e-BT-exportMD-export'} %>
          </div>
        </div>
      </div>
