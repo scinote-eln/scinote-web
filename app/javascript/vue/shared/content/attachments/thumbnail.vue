@@ -44,7 +44,7 @@
       </div>
       <div class="absolute bottom-4 w-[184px] grid grid-cols-[repeat(4,_2.5rem)] justify-between">
         <MenuDropdown
-            v-if="isHovered && openOptions.length > 1"
+            v-if="showOptions && openOptions.length > 1"
             :listItems="openOptions"
             :btnClasses="'btn btn-light icon-btn thumbnail-action-btn'"
             :position="'left'"
@@ -177,7 +177,7 @@ export default {
   },
   data() {
     return {
-      isHovered: false,
+      showOptions: false,
       deleteModal: false,
       isMenuOpen: false,
       showNoPredefinedAppModal: false
@@ -234,7 +234,7 @@ export default {
     }));
   },
   watch: {
-    isHovered(newValue) {
+    showOptions(newValue) {
       // reload thumbnail on mouse out
       if (newValue) return;
 
