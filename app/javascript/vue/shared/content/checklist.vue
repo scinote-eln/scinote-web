@@ -80,215 +80,216 @@
   </div>
 </template>
 
- <script>
-  import DeleteMixin from './mixins/delete.js'
-  import MoveMixin from './mixins/move.js'
-  import DuplicateMixin from './mixins/duplicate.js'
-  import deleteElementModal from './modal/delete.vue'
-  import InlineEdit from '../inline_edit.vue'
-  import ChecklistItem from './checklistItem.vue'
-  import Draggable from 'vuedraggable'
-  import moveElementModal from './modal/move.vue'
-  import MenuDropdown from '../menu_dropdown.vue'
+<script>
+import Draggable from 'vuedraggable';
+import DeleteMixin from './mixins/delete.js';
+import MoveMixin from './mixins/move.js';
+import DuplicateMixin from './mixins/duplicate.js';
+import deleteElementModal from './modal/delete.vue';
+import InlineEdit from '../inline_edit.vue';
+import ChecklistItem from './checklistItem.vue';
+import moveElementModal from './modal/move.vue';
+import MenuDropdown from '../menu_dropdown.vue';
 
-  export default {
-    name: 'Checklist',
-    components: { deleteElementModal, InlineEdit, ChecklistItem, Draggable, moveElementModal, MenuDropdown },
-    mixins: [DeleteMixin, DuplicateMixin, MoveMixin],
-    props: {
-      element: {
-        type: Object,
-        required: true
-      },
-      inRepository: {
-        type: Boolean,
-        required: true
-      },
-      reorderElementUrl: {
-        type: String
-      },
-      isNew: {
-        type: Boolean,
-        default: false
-      },
-      assignableMyModuleId: {
-        type: Number,
-        required: false
-      }
+export default {
+  name: 'Checklist',
+  components: {
+    deleteElementModal, InlineEdit, ChecklistItem, Draggable, moveElementModal, MenuDropdown
+  },
+  mixins: [DeleteMixin, DuplicateMixin, MoveMixin],
+  props: {
+    element: {
+      type: Object,
+      required: true
     },
-    data() {
-      return {
-        checklistItems: [],
-        editingName: false,
-        reordering: false,
-        editingItem: false,
-      }
+    inRepository: {
+      type: Boolean,
+      required: true
     },
-    created() {
-      if (this.isNew) {
-        this.addItem(1);
-      } else {
-        this.loadChecklistItems();
-      }
+    reorderElementUrl: {
+      type: String
     },
-    watch: {
-      element() {
-        this.loadChecklistItems();
-      }
+    isNew: {
+      type: Boolean,
+      default: false
     },
-    computed: {
-      orderedChecklistItems() {
-        return this.checklistItems.sort((a, b) => a.attributes.position - b.attributes.position || b.id - a.id)
-                                  .map((item, index) => {
-                                    item.attributes.position = index + 1;
-                                    return item;
-                                  });
-      },
-      locked() {
-        return this.editingName || !this.element.attributes.orderable.urls.update_url
-      },
-      addingNewItem() {
-        return this.checklistItems.find((item) => item.attributes.isNew);
-      },
-      actionMenu() {
-        let menu = [];
-        if (this.element.attributes.orderable.urls.update_url) {
-          menu.push({
-            text: I18n.t('general.edit'),
-            emit: 'edit'
-          });
-        }
-        if (this.element.attributes.orderable.urls.duplicate_url) {
-          menu.push({
-            text: I18n.t('general.duplicate'),
-            emit: 'duplicate'
-          });
-        }
-        if (this.element.attributes.orderable.urls.move_targets_url) {
-          menu.push({
-            text: I18n.t('general.move'),
-            emit: 'move'
-          });
-        }
-        if (this.element.attributes.orderable.urls.delete_url) {
-          menu.push({
-            text: I18n.t('general.delete'),
-            emit: 'delete'
-          });
-        }
-        return menu;
-      }
-    },
-    methods: {
-      update: function() {
-        this.$emit('update', this.element, false)
-      },
-      loadChecklistItems(insertAfter) {
-        $.get(this.element.attributes.orderable.urls.checklist_items_url, (result) => {
-          this.checklistItems = result.data;
-          if (insertAfter) {
-            this.addItem(insertAfter);
-          }
+    assignableMyModuleId: {
+      type: Number,
+      required: false
+    }
+  },
+  data() {
+    return {
+      checklistItems: [],
+      editingName: false,
+      reordering: false,
+      editingItem: false
+    };
+  },
+  created() {
+    if (this.isNew) {
+      this.addItem(1);
+    } else {
+      this.loadChecklistItems();
+    }
+  },
+  watch: {
+    element() {
+      this.loadChecklistItems();
+    }
+  },
+  computed: {
+    orderedChecklistItems() {
+      return this.checklistItems.sort((a, b) => a.attributes.position - b.attributes.position || b.id - a.id)
+        .map((item, index) => {
+          item.attributes.position = index + 1;
+          return item;
         });
-      },
-      updateName(name) {
-        this.element.attributes.orderable.name = name;
-        this.editingName = false;
-        this.update();
-      },
-      postItem(item) {
-        item.attributes.position = item.attributes.position - 1;
-        $.post(this.element.attributes.orderable.urls.create_item_url, item).done((result) => {
-          this.loadChecklistItems(result.data[result.data.length - 1].attributes.position)
-        }).fail((e) => {
-          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+    },
+    locked() {
+      return this.editingName || !this.element.attributes.orderable.urls.update_url;
+    },
+    addingNewItem() {
+      return this.checklistItems.find((item) => item.attributes.isNew);
+    },
+    actionMenu() {
+      const menu = [];
+      if (this.element.attributes.orderable.urls.update_url) {
+        menu.push({
+          text: I18n.t('general.edit'),
+          emit: 'edit'
         });
-
-        // Fake element during loading
-        item.id = 'new' + Math.floor(Math.random() * 1000000000);
-        this.checklistItems.push(item);
-
-      },
-      saveItem(item, key) {
-        if (item.id > 0) {
-          let insertAfter = key === 'Enter' ? item.attributes.position : null;
-          $.ajax({
-            url: item.attributes.urls.update_url,
-            type: 'PATCH',
-            data: item,
-            success: () => {
-              this.loadChecklistItems(insertAfter)
-            },
-            error: (xhr) => setFlashErrors(xhr.responseJSON.errors)
-          });
-        } else {
-          this.postItem(item, key);
+      }
+      if (this.element.attributes.orderable.urls.duplicate_url) {
+        menu.push({
+          text: I18n.t('general.duplicate'),
+          emit: 'duplicate'
+        });
+      }
+      if (this.element.attributes.orderable.urls.move_targets_url) {
+        menu.push({
+          text: I18n.t('general.move'),
+          emit: 'move'
+        });
+      }
+      if (this.element.attributes.orderable.urls.delete_url) {
+        menu.push({
+          text: I18n.t('general.delete'),
+          emit: 'delete'
+        });
+      }
+      return menu;
+    }
+  },
+  methods: {
+    update() {
+      this.$emit('update', this.element, false);
+    },
+    loadChecklistItems(insertAfter) {
+      $.get(this.element.attributes.orderable.urls.checklist_items_url, (result) => {
+        this.checklistItems = result.data;
+        if (insertAfter) {
+          this.addItem(insertAfter);
         }
-      },
-      saveItemChecked(item) {
+      });
+    },
+    updateName(name) {
+      this.element.attributes.orderable.name = name;
+      this.editingName = false;
+      this.update();
+    },
+    postItem(item) {
+      item.attributes.position = item.attributes.position - 1;
+      $.post(this.element.attributes.orderable.urls.create_item_url, item).done((result) => {
+        this.loadChecklistItems(result.data[result.data.length - 1].attributes.position);
+      }).fail((e) => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+      });
+
+      // Fake element during loading
+      item.id = `new${Math.floor(Math.random() * 1000000000)}`;
+      this.checklistItems.push(item);
+    },
+    saveItem(item, key) {
+      if (item.id > 0) {
+        const insertAfter = key === 'Enter' ? item.attributes.position : null;
         $.ajax({
-          url: item.attributes.urls.toggle_url,
+          url: item.attributes.urls.update_url,
           type: 'PATCH',
-          data: { attributes: { checked: item.attributes.checked } },
-          success: (result) => {
-            this.checklistItems.find(
-              (i) => i.id === item.id
-            ).attributes.checked = result.data.attributes.checked;
+          data: item,
+          success: () => {
+            this.loadChecklistItems(insertAfter);
           },
-          error: () => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')
+          error: (xhr) => setFlashErrors(xhr.responseJSON.errors)
         });
-      },
-      addItem(insertAfter) {
-        this.checklistItems.push(
-          {
-            attributes: {
-              text: '',
-              checked: false,
-              position: insertAfter,
-              isNew: true
-            }
+      } else {
+        this.postItem(item, key);
+      }
+    },
+    saveItemChecked(item) {
+      $.ajax({
+        url: item.attributes.urls.toggle_url,
+        type: 'PATCH',
+        data: { attributes: { checked: item.attributes.checked } },
+        success: (result) => {
+          this.checklistItems.find(
+            (i) => i.id === item.id
+          ).attributes.checked = result.data.attributes.checked;
+        },
+        error: () => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger')
+      });
+    },
+    addItem(insertAfter) {
+      this.checklistItems.push(
+        {
+          attributes: {
+            text: '',
+            checked: false,
+            position: insertAfter,
+            isNew: true
           }
-        );
-        this.checklistItems = this.orderedChecklistItems;
-      },
-      removeItem(position) {
-        this.checklistItems = this.orderedChecklistItems.filter((item) => item.attributes.position !== position);
-      },
-      startReorder() {
-        this.reordering = true;
-      },
-      endReorder(event) {
-        this.reordering = false;
-        if(
-          Number.isInteger(event.newIndex)
+        }
+      );
+      this.checklistItems = this.orderedChecklistItems;
+    },
+    removeItem(position) {
+      this.checklistItems = this.orderedChecklistItems.filter((item) => item.attributes.position !== position);
+    },
+    startReorder() {
+      this.reordering = true;
+    },
+    endReorder(event) {
+      this.reordering = false;
+      if (
+        Number.isInteger(event.newIndex)
           && Number.isInteger(event.oldIndex)
           && event.newIndex !== event.oldIndex
-        ){
-          let position = this.orderedChecklistItems[event.newIndex]?.attributes.position;
-          let id = this.checklistItems[event.oldIndex]?.id;
-          this.checklistItems[event.oldIndex].attributes.position = position + (event.newIndex > event.oldIndex ? 1 : -1);
-          this.saveItemOrder(id, position);
-        }
-      },
-      saveItemOrder(id, position) {
-        $.ajax({
-          type: "POST",
-          url: this.element.attributes.orderable.urls.reorder_url,
-          data: JSON.stringify({ attributes: { id, position } }),
-          contentType: "application/json",
-          dataType: "json",
-          error: (xhr) => this.setFlashErrors(xhr.responseJSON.errors),
-          success: () => this.loadChecklistItems()
-        });
-      },
-      setFlashErrors(errors) {
-        for(const key in errors){
-          HelperModule.flashAlertMsg(
-            this.i18n.t(`activerecord.errors.models.checklist_item.attributes.${key}`),
-            'danger'
-          )
-        }
+      ) {
+        const position = this.orderedChecklistItems[event.newIndex]?.attributes.position;
+        const id = this.checklistItems[event.oldIndex]?.id;
+        this.checklistItems[event.oldIndex].attributes.position = position + (event.newIndex > event.oldIndex ? 1 : -1);
+        this.saveItemOrder(id, position);
+      }
+    },
+    saveItemOrder(id, position) {
+      $.ajax({
+        type: 'POST',
+        url: this.element.attributes.orderable.urls.reorder_url,
+        data: JSON.stringify({ attributes: { id, position } }),
+        contentType: 'application/json',
+        dataType: 'json',
+        error: (xhr) => this.setFlashErrors(xhr.responseJSON.errors),
+        success: () => this.loadChecklistItems()
+      });
+    },
+    setFlashErrors(errors) {
+      for (const key in errors) {
+        HelperModule.flashAlertMsg(
+          this.i18n.t(`activerecord.errors.models.checklist_item.attributes.${key}`),
+          'danger'
+        );
       }
     }
   }
+};
 </script>

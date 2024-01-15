@@ -48,12 +48,12 @@
 </template>
 
 <script>
-import TooltipPreview from './TooltipPreview.vue'
+import TooltipPreview from './TooltipPreview.vue';
 
 export default {
   name: 'RepositoryAssetvalue',
   components: {
-    "tooltip-preview": TooltipPreview
+    'tooltip-preview': TooltipPreview
   },
   data() {
     return {
@@ -67,7 +67,7 @@ export default {
       uploading: false,
       progress: 0,
       error: false
-    }
+    };
   },
   props: {
     data_type: String,
@@ -80,18 +80,18 @@ export default {
     canEdit: { type: Boolean, default: false }
   },
   created() {
-    if (!this.colVal) return
+    if (!this.colVal) return;
 
-    this.id = this.colVal.id
-    this.url = this.colVal.url
-    this.preview_url = this.colVal.preview_url
-    this.file_name = this.colVal.file_name
-    this.icon_html = this.colVal.icon_html
-    this.medium_preview_url = this.colVal.medium_preview_url
+    this.id = this.colVal.id;
+    this.url = this.colVal.url;
+    this.preview_url = this.colVal.preview_url;
+    this.file_name = this.colVal.file_name;
+    this.icon_html = this.colVal.icon_html;
+    this.medium_preview_url = this.colVal.medium_preview_url;
   },
   computed: {
     modalPreviewLinkId() {
-      return `modal_link${this.id}`
+      return `modal_link${this.id}`;
     }
   },
   methods: {
@@ -114,21 +114,25 @@ export default {
       this.error = '';
 
       if (file.size > GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB * 1024 * 1024) {
-        this.error = I18n.t('repositories.item_card.repository_asset_value.errors.file_too_big',
-                            { file_size: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB });
+        this.error = I18n.t(
+          'repositories.item_card.repository_asset_value.errors.file_too_big',
+          { file_size: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB }
+        );
         this.uploading = false;
         return;
       }
 
-      const upload = new ActiveStorage.DirectUpload(file,
-                                                    this.actions.direct_file_upload_path,
-                                                    {
-                                                      directUploadWillStoreFileWithXHR: (request) => {
-                                                        request.upload.addEventListener('progress', (e) => {
-                                                          this.progress = parseInt((e.loaded / e.total) * 100, 10);
-                                                        });
-                                                      }
-                                                    });
+      const upload = new ActiveStorage.DirectUpload(
+        file,
+        this.actions.direct_file_upload_path,
+        {
+          directUploadWillStoreFileWithXHR: (request) => {
+            request.upload.addEventListener('progress', (e) => {
+              this.progress = parseInt((e.loaded / e.total) * 100, 10);
+            });
+          }
+        }
+      );
 
       upload.create((error, blob) => {
         if (error) {
@@ -149,7 +153,7 @@ export default {
           }
         },
         success: (result) => {
-          let assetRepositoryCell = result?.value;
+          const assetRepositoryCell = result?.value;
           this.uploading = false;
 
           if (assetRepositoryCell) {
@@ -162,7 +166,7 @@ export default {
           } else {
             this.file_name = '';
           }
-          if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
+          if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
         },
         error: () => {
           this.error = I18n.t('repositories.item_card.repository_asset_value.errors.upload_failed_general');
@@ -171,5 +175,5 @@ export default {
       });
     }
   }
-}
+};
 </script>

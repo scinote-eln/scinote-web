@@ -40,33 +40,33 @@
 </template>
 
 <script>
-  import AttachmentMovedMixin from './mixins/attachment_moved.js';
-  import ContextMenuMixin from './mixins/context_menu.js'
-  import ContextMenu from './context_menu.vue'
+import AttachmentMovedMixin from './mixins/attachment_moved.js';
+import ContextMenuMixin from './mixins/context_menu.js';
+import ContextMenu from './context_menu.vue';
 
-  export default {
-    name: 'listAttachment',
-    mixins: [ContextMenuMixin, AttachmentMovedMixin],
-    components: { ContextMenu },
-    props: {
-      attachment: {
-        type: Object,
-        required: true
-      },
-      parentId: {
-        type: Number,
-        required: true
-      },
+export default {
+  name: 'listAttachment',
+  mixins: [ContextMenuMixin, AttachmentMovedMixin],
+  components: { ContextMenu },
+  props: {
+    attachment: {
+      type: Object,
+      required: true
     },
-    data() {
-      return {
-        imageLoadError: false
-      };
-    },
-    methods: {
-      handleImageError() {
-        this.imageLoadError = true;
-      }
+    parentId: {
+      type: Number,
+      required: true
+    }
+  },
+  data() {
+    return {
+      imageLoadError: false
+    };
+  },
+  methods: {
+    handleImageError() {
+      this.imageLoadError = true;
     }
   }
+};
 </script>

@@ -674,8 +674,16 @@ var RepositoryDatatable = (function(global) {
                  + "class='record-info-link' data-e2e='e2e-TL-invInventoryTR-Item-" + row.DT_RowId + "'>" + data + '</a>';
         }
       }, {
-        // Added on column
         targets: 4,
+        class: 'relationship',
+        searchable: false,
+        orderable: true,
+        render: function(data, type, row) {
+          return $.fn.dataTable.render.RelationshipValue(data, row);
+        }
+      }, {
+        // Added on column
+        targets: 5,
         class: 'added-on',
         visible: true
       }, {
@@ -747,7 +755,6 @@ var RepositoryDatatable = (function(global) {
 
         // Hide edit button if not all selected rows are on the current page
         $('#editRepositoryRecord').prop('disabled', !allSelectedRowsAreOnPage());
-
         TABLE.columns([archivedOnIndex, archivedByIndex]).visible(archived);
       },
       preDrawCallback: function() {
@@ -1137,6 +1144,7 @@ var RepositoryDatatable = (function(global) {
       clearRowSelection();
     },
     selectedRows: () => { return rowsSelected; },
+    repositoryId: () => $(TABLE_ID).data('repository-id'),
     redrawTableOnSidebarToggle: redrawTableOnSidebarToggle,
     checkAvailableColumns: checkAvailableColumns
   });

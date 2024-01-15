@@ -16,7 +16,7 @@
         </div>
         <div class="modal-footer">
           <button type='button' class='btn btn-secondary' @click="cancel">
-            {{ i18n.t('general.cancel') }}
+            {{ i18n.t('general.close') }}
           </button>
         </div>
       </div>

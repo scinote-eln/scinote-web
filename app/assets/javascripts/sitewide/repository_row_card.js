@@ -3,14 +3,24 @@
 (function() {
   'use strict';
 
-  $(document).on('click', '.record-info-link', function(e) {
+  $(document).on('click', '.relationships-info-link', (e) => {
+    const myModuleId = $('.my-module-content').data('task-id');
+    const repositoryRowURL = $(e.target).attr('href');
+
+    e.stopPropagation();
+    e.preventDefault();
+
+    window.repositoryItemSidebarComponent.toggleShowHideSidebar(repositoryRowURL, myModuleId, 'relationships-section');
+  });
+
+  $(document).on('click', '.record-info-link', function (e) {
     const myModuleId = $('.my-module-content').data('task-id');
     const repositoryRowURL = $(this).attr('href');
 
     e.stopPropagation();
     e.preventDefault();
 
-    window.repositoryItemSidebarComponent.toggleShowHideSidebar(repositoryRowURL, myModuleId);
+    window.repositoryItemSidebarComponent.toggleShowHideSidebar(repositoryRowURL, myModuleId, null);
   });
 
   $(document).on('click', '.print-label-button', function(e) {
@@ -25,8 +35,10 @@
       PrintModalComponent.openModal();
       if (selectedRows && selectedRows.length) {
         $('#modal-info-repository-row').modal('hide');
+        PrintModalComponent.repository_id = $(this).data('repositoryId');
         PrintModalComponent.row_ids = selectedRows;
       } else {
+        PrintModalComponent.repository_id = RepositoryDatatable.repositoryId();
         PrintModalComponent.row_ids = [...RepositoryDatatable.selectedRows()];
       }
     }
@@ -83,7 +95,7 @@
         updateCallback = (data) => {
           if (!data?.value) return;
           // reload dataTable
-          if ($('.dataTable')[0]) $('.dataTable').DataTable().ajax.reload(null, false);
+          if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
           // update item card stock column
           window.manageStockCallback && window.manageStockCallback(data.value);
           $link.data('manageStockUrl', data.value.stock_url)

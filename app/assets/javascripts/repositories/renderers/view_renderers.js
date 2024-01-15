@@ -267,3 +267,12 @@ $.fn.dataTable.render.RepositoryStockConsumptionValue = function(data = {}) {
 $.fn.dataTable.render.defaultRepositoryStockConsumptionValue = function() {
   return $.fn.dataTable.render.RepositoryStockConsumptionValue();
 };
+
+$.fn.dataTable.render.RelationshipValue = function(data, row) {
+  return `<a
+            style="text-decoration: none !important;"
+            class="relationships-info-link !text-sn-blue !no-underline pl-4"
+            href=${row.recordInfoUrl}>
+            ${data}
+          </a>`;
+};
