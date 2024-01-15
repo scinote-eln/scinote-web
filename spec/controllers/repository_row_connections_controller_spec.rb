@@ -123,14 +123,44 @@ describe RepositoryRowConnectionsController, type: :controller do
   end
 
   describe 'GET #repository_rows' do
+    let!(:child_repository_row) { create :repository_row, repository: repository }
+    let!(:parent_repository_row) { create :repository_row, repository: repository }
+
+    let!(:child_connection) do
+      create :repository_row_connection,
+             parent: repository_row,
+             child: child_repository_row,
+             created_by: user,
+             last_modified_by: user
+    end
+    let!(:parent_connection) do
+      create :repository_row_connection,
+             child: repository_row,
+             parent: parent_repository_row,
+             created_by: user,
+             last_modified_by: user
+    end
+
     it 'returns a successful response' do
-      get :repository_rows, format: :json, params: { repository_id: repository.id }
+      get :repository_rows, format: :json, params: {
+        repository_id: repository.id,
+        repository_row_id: repository_row.id,
+        selected_repository_id: repository.id
+      }
       expect(response).to have_http_status(:success)
     end
 
     it 'returns the correct data structure' do
-      get :repository_rows, format: :json, params: { repository_id: repository.id }
-      expect(response.body).to include(repository_row.name)
+      get :repository_rows, format: :json, params: {
+        repository_id: repository.id,
+        repository_row_id: repository_row.id,
+        selected_repository_id: repository.id
+      }
+
+      expect(response.body).not_to include(repository_row.name)
+      expect(response.body).not_to include(child_repository_row.name)
+      expect(response.body).not_to include(parent_repository_row.name)
+      expect(response.body).to include(other_repository_row.name)
     end
   end
 end
