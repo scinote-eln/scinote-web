@@ -1,5 +1,5 @@
 <template>
-  <div class="filter-container">
+  <div class="filter-container" >
     <div class='filter-title'>{{ filter.column.name }}</div>
     <div class="filter-element">
       <div class="filter-body">
@@ -9,7 +9,7 @@
           :my_modules='my_modules'
           @filter:update="updateFilter" />
       </div>
-      <div class="filter-remove">
+      <div class="filter-remove" :data-e2e="'e2e-BT-invInventoryFilterCO-remove'+filter.column.id">
         <button class="btn btn-light icon-btn" @click="$emit('filter:delete')">
           <i class="sn-icon sn-icon-delete"></i>
         </button>
