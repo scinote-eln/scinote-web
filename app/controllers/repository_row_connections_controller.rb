@@ -145,7 +145,7 @@ class RepositoryRowConnectionsController < ApplicationController
       repository_row = @relation_type == 'parent' ? connection.parent : connection.child
 
       {
-        name: repository_row.name,
+        name: repository_row.name_with_label,
         code: repository_row.code,
         path: repository_repository_row_path(repository_row.repository, repository_row),
         repository_name: repository_row.repository.name,
