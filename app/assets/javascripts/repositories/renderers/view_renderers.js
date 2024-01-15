@@ -164,7 +164,7 @@ $.fn.dataTable.render.defaultRepositoryNumberValue = function() {
 
 $.fn.dataTable.render.RepositoryNumberValue = function(data) {
   return `<span class="number-value" data-value="${data.value}">
-            ${data.value}
+            ${data.value.toLocaleString('en-US', { timeZone: 'UTC' })}
           </span>`;
 };
 
