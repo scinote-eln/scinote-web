@@ -10,6 +10,7 @@
     <% if user_signed_in? %>
       <meta name="expiration-url" content="<%= users_expire_in_path %>">
       <meta name="revive-url" content="<%= users_revive_session_path %>">
+      <meta name="user-settings-url" content="<%= users_settings_user_settings_path %>">
     <% end %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag 'bootstrap_pack', media: 'all' %>

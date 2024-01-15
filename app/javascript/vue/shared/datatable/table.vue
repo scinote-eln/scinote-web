@@ -168,7 +168,9 @@ export default {
       currentViewRender: 'table',
       cardCheckboxes: [],
       dataLoading: true,
-      lastPage: false
+      lastPage: false,
+      tableState: null,
+      userSettingsUrl: null
     };
   },
   components: {
@@ -184,11 +186,6 @@ export default {
   computed: {
     perPageOptions() {
       return [10, 20, 50, 100].map((value) => ([value, `${value} ${this.i18n.t('datatable.rows')}`]));
-    },
-    tableState() {
-      if (!localStorage.getItem(`datatable:${this.tableId}_columns_state`)) return null;
-
-      return JSON.parse(localStorage.getItem(`datatable:${this.tableId}_columns_state`));
     },
     actionsParams() {
       return {
@@ -247,6 +244,9 @@ export default {
       }
 
       return columns;
+    },
+    stateKey() {
+      return `${this.tableId}_${this.currentViewMode}_state`;
     }
   },
   watch: {
@@ -264,14 +264,8 @@ export default {
       this.saveTableState();
     }
   },
-  created() {
-    if (this.tableState) {
-      this.currentViewRender = this.tableState.currentViewRender || 'table';
-      this.perPage = this.tableState.perPage || 20;
-      this.order = this.tableState.order;
-    }
-  },
   mounted() {
+    this.userSettingsUrl = document.querySelector('meta[name="user-settings-url"]').getAttribute('content');
     this.loadData();
     window.addEventListener('resize', this.resize);
   },
@@ -293,6 +287,39 @@ export default {
         this.page += 1;
         this.loadData();
       }
+    },
+    fetchAndApplyTableState() {
+      axios
+        .get(this.userSettingsUrl, {
+          params: {
+            key: this.stateKey
+          }
+        })
+        .then((response) => {
+          if (response.data.data) {
+            const { currentViewRender, columnsState, perPage, order } = response.data.data;
+            this.tableState = response.data.data;
+            this.currentViewRender = currentViewRender;
+            this.columnsState = columnsState;
+            this.perPage = perPage;
+            this.order = order;
+
+            if (this.order) {
+              this.tableState.columnsState.forEach((column) => {
+                const updatedColumn = column;
+                updatedColumn.sort = this.order.column === column.colId ? this.order.dir : null;
+                return updatedColumn;
+              });
+            }
+            this.columnApi.applyColumnState({
+              state: this.tableState.columnsState,
+              applyOrder: true
+            });
+          }
+          setTimeout(() => {
+            this.initializing = false;
+          }, 200);
+        });
     },
     getRowClass() {
       if (this.currentViewMode === 'archived') {
@@ -370,22 +397,7 @@ export default {
       this.gridApi = params.api;
       this.columnApi = params.columnApi;
 
-      if (this.tableState) {
-        if (this.order) {
-          this.tableState.columnsState.forEach((column) => {
-            const updatedColumn = column;
-            updatedColumn.sort = this.order.column === column.colId ? this.order.dir : null;
-            return updatedColumn;
-          });
-        }
-        this.columnApi.applyColumnState({
-          state: this.tableState.columnsState,
-          applyOrder: true
-        });
-      }
-      setTimeout(() => {
-        this.initializing = false;
-      }, 200);
+      this.fetchAndApplyTableState();
     },
     onFirstDataRendered() {
       this.resize();
@@ -408,17 +420,18 @@ export default {
       this.reloadTable();
     },
     saveTableState() {
-      let columnsState = this.tableState?.columnsState;
-      if (this.columnApi) {
-        columnsState = this.columnApi.getColumnState();
-      }
+      const columnsState = this.columnApi ? this.columnApi.getColumnState() : this.tableState?.columnsState || [];
       const tableState = {
-        columnsState: columnsState || [],
+        columnsState,
         order: this.order,
         currentViewRender: this.currentViewRender,
         perPage: this.perPage
       };
-      localStorage.setItem(`datatable:${this.tableId}_columns_state`, JSON.stringify(tableState));
+      const settings = {
+        key: this.stateKey,
+        data: tableState
+      };
+      axios.put(this.userSettingsUrl, { settings: [settings] });
     },
     setSelectedRows() {
       this.selectedRows = this.gridApi.getSelectedRows();

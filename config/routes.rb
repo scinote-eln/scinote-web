@@ -136,11 +136,14 @@ Rails.application.routes.draw do
 
     namespace :users do
       namespace :settings do
+        resource :user_settings, only: %i(show update)
+
         resources :teams, only: [] do
           collection do
             post :switch
           end
         end
+
         resources :webhooks, only: %i(index create update destroy) do
           collection do
             post :destroy_filter
@@ -149,7 +152,6 @@ Rails.application.routes.draw do
         end
       end
     end
-
 
     # Invite users
     devise_scope :user do

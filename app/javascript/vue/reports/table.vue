@@ -1,7 +1,7 @@
 <template>
   <div class="h-full">
     <DataTable :columnDefs="columnDefs"
-               :tableId="'reportTemplates'"
+               :tableId="'ReportTemplates'"
                :dataUrl="dataSource"
                :reloadingTable="reloadingTable"
                :toolbarActions="toolbarActions"

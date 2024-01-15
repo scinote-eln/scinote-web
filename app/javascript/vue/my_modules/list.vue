@@ -2,7 +2,7 @@
   <DataTable
     ref="table"
     :columnDefs="columnDefs"
-    tableId="MyModulesList"
+    tableId="MyModuleList"
     :dataUrl="dataSource"
     :reloadingTable="reloadingTable"
     :toolbarActions="toolbarActions"
