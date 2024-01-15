@@ -79,6 +79,7 @@ export default {
     btnClasses: { type: String, default: 'btn btn-light' },
     btnText: { type: String, required: false },
     btnIcon: { type: String, required: false },
+    title: { type: String, default: '' },
     caret: { type: Boolean, default: false }
   },
   data() {

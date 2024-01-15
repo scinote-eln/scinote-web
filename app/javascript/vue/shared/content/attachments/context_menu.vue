@@ -83,7 +83,6 @@ export default {
     editLaunchingApplicationModal
   },
   mixins: [MoveMixin, OpenLocallyMixin],
-  components: { deleteAttachmentModal, moveAssetModal, MenuDropdown },
   props: {
     attachment: {
       type: Object,
