@@ -9,7 +9,7 @@
           :my_modules='my_modules'
           @filter:update="updateFilter" />
       </div>
-      <div class="filter-remove" :data-e2e="'e2e-BT-invInventoryFilterCO-remove'+filter.column.name.replace(/[\s-]+/g, '')">
+      <div class="filter-remove" :data-e2e="'e2e-BT-invInventoryFilterCO-remove'+filter.column.id">
         <button class="btn btn-light icon-btn" @click="$emit('filter:delete')">
           <i class="sn-icon sn-icon-delete"></i>
         </button>
