@@ -20,26 +20,26 @@
     </div>
   </div>
 </template>
- <script>
-  export default {
-    name: 'deleteStepsModal',
-    mounted() {
-      // move modal to body to avoid z-index issues
-      $('body').append($(this.$refs.modal));
+<script>
+export default {
+  name: 'deleteStepsModal',
+  mounted() {
+    // move modal to body to avoid z-index issues
+    $('body').append($(this.$refs.modal));
 
-      $(this.$refs.modal).modal('show');
-      $(this.$refs.modal).on('hidden.bs.modal', () => {
-        this.$emit('close');
-      });
+    $(this.$refs.modal).modal('show');
+    $(this.$refs.modal).on('hidden.bs.modal', () => {
+      this.$emit('close');
+    });
+  },
+  methods: {
+    confirm() {
+      $(this.$refs.modal).modal('hide');
+      this.$emit('confirm');
     },
-    methods: {
-      confirm() {
-        $(this.$refs.modal).modal('hide');
-        this.$emit('confirm');
-      },
-      cancel() {
-        $(this.$refs.modal).modal('hide');
-      }
+    cancel() {
+      $(this.$refs.modal).modal('hide');
     }
   }
+};
 </script>

@@ -61,24 +61,24 @@
 </template>
 
 <script>
-import BreadcrumbsDropdown from "./breadcrumbs_dropdown.vue";
+import BreadcrumbsDropdown from './breadcrumbs_dropdown.vue';
 
 const State = Object.freeze({
-  INITIAL: "initial",
-  EXPENDED: "expended",
-  SHORTENED: "shortened",
-  SHORTENED_COLLAPSED: "shortened_collapsed"
+  INITIAL: 'initial',
+  EXPENDED: 'expended',
+  SHORTENED: 'shortened',
+  SHORTENED_COLLAPSED: 'shortened_collapsed'
 });
 const dropdownWidth = 60;
 export default {
-  name: "Breadcrumbs",
+  name: 'Breadcrumbs',
   props: {
     breadcrumbsItems: String,
     delimiterUrl: String
   },
   data() {
     return {
-      dropdownWidth: dropdownWidth,
+      dropdownWidth,
       State,
       state: State.INITIAL,
       items: [],
@@ -136,10 +136,9 @@ export default {
       } else if (this.state === this.State.SHORTENED) {
         if (width < scrollWidth) {
           this.state = this.State.SHORTENED_COLLAPSED;
-          let visibleWidth =
-            this.dropdownWidth +
-            this.$refs.firstItem.offsetWidth +
-            this.$refs.lastItem.offsetWidth;
+          let visibleWidth = this.dropdownWidth
+            + this.$refs.firstItem.offsetWidth
+            + this.$refs.lastItem.offsetWidth;
           let index = this.middleItems.length - 1;
 
           while (visibleWidth <= width && index >= 0) {

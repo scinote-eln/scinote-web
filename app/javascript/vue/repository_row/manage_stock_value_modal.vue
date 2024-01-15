@@ -57,7 +57,7 @@
                   {{ i18n.t('repository_stock_values.manage_modal.unit') }}
                 </label>
                 <Select
-                  :disabled="[2, 3].includes(operation)"
+                  :disabled="['add', 'remove'].includes(operation)"
                   :value="unit"
                   :options="units"
                   :placeholder="i18n.t('repository_stock_values.manage_modal.unit_prompt')"
@@ -86,8 +86,8 @@
                 </div>
               </div>
             </template>
-            <div class="repository-stock-reminder-selector">
-              <div class="sci-checkbox-container">
+            <div class="repository-stock-reminder-selector flex">
+              <div class="sci-checkbox-container my-auto">
                 <input type="checkbox" name="reminder-enabled" tabindex="4" class="sci-checkbox" id="reminder-selector-checkbox" :checked="reminderEnabled" @change="reminderEnabled = $event.target.checked"/>
                 <span class="sci-checkbox-label"></span>
               </div>
@@ -140,150 +140,153 @@
 </template>
 
 <script>
-  import Select from './../shared/select.vue';
-  import Input from './../shared/input.vue';
-  import Decimal from 'decimal.js';
+import Decimal from 'decimal.js';
+import Select from '../shared/select.vue';
+import Input from '../shared/input.vue';
 
-  export default {
-    name: 'ManageStockValueModal',
-    components: {
-      Select,
-      Input
+export default {
+  name: 'ManageStockValueModal',
+  components: {
+    Select,
+    Input
+  },
+  data() {
+    return {
+      operation: null,
+      operations: [],
+      stockValue: null,
+      amount: '',
+      repositoryRowName: null,
+      stockUrl: null,
+      units: null,
+      unit: null,
+      reminderEnabled: false,
+      lowStockTreshold: null,
+      comment: null,
+      errors: {}
+    };
+  },
+  computed: {
+    unitLabel() {
+      const currentUnit = this.units?.find((option) => option[0] === this.unit);
+      return currentUnit ? currentUnit[1] : '';
     },
-    data() {
-      return {
-        operation: null,
-        operations: [],
-        stockValue: null,
-        amount: '',
-        repositoryRowName: null,
-        stockUrl: null,
-        units: null,
-        unit: null,
-        reminderEnabled: false,
-        lowStockTreshold: null,
-        comment: null,
-        errors: {}
+    initUnitLabel() {
+      const unit = this.units?.find((option) => option[0] === this.stockValue?.unit);
+      return unit ? unit[1] : '';
+    },
+    newAmount() {
+      const currentAmount = new Decimal(this.stockValue?.amount || 0);
+      const amount = new Decimal(this.amount || 0);
+      let value;
+      switch (this.operation) {
+        case 'add':
+          value = currentAmount.plus(amount);
+          break;
+        case 'remove':
+          value = currentAmount.minus(amount);
+          break;
+        default:
+          value = amount;
+          break;
+      }
+      return Number(value);
+    }
+  },
+  created() {
+    window.manageStockModalComponent = this;
+  },
+  beforeDestroy() {
+    delete window.manageStockModalComponent;
+  },
+  mounted() {
+    // Focus stock amount input field
+    $(this.$refs.modal).on('show.bs.modal', () => {
+      setTimeout(() => {
+        $('#stock-amount')[0]?.focus();
+      }, 500);
+    });
+  },
+  methods: {
+    setOperation($event) {
+      if ($event !== this.operation) {
+        this.amount = null;
+      }
+      this.operation = $event;
+      if (['add', 'remove'].includes($event)) {
+        this.unit = this.stockValue.unit;
       }
     },
-    computed: {
-      unitLabel: function() {
-        const currentUnit = this.units?.find(option => option[0] === this.unit);
-        return currentUnit ? currentUnit[1] : ''
-      },
-      initUnitLabel: function() {
-        const unit = this.units?.find(option => option[0] === this.stockValue?.unit);
-        return unit ? unit[1] : ''
-      },
-      newAmount: function() {
-        const currentAmount = new Decimal(this.stockValue?.amount || 0);
-        const amount = new Decimal(this.amount || 0)
-        let value;
-        switch (this.operation) {
-          case 2:
-            value = currentAmount.plus(amount);
-            break;
-          case 3:
-            value = currentAmount.minus(amount);
-            break;
-          default:
-            value = amount;
-            break;
+    fetchStockValueData(stockValueUrl) {
+      if (!stockValueUrl) return;
+      $.ajax({
+        method: 'GET',
+        url: stockValueUrl,
+        dataType: 'json',
+        success: (result) => {
+          this.repositoryRowName = result.repository_row_name;
+          this.stockValue = result.stock_value;
+          this.amount = Number(new Decimal(result.stock_value.amount || 0));
+          this.units = result.stock_value.units;
+          this.unit = result.stock_value.unit;
+          this.reminderEnabled = result.stock_value.reminder_enabled;
+          this.lowStockTreshold = result.stock_value.low_stock_treshold;
+          this.operation = 'set';
+          this.stockUrl = result.stock_url;
+          /* eslint-disable no-undef */
+          this.operations = [
+            ['set', `${I18n.t('repository_stock_values.manage_modal.set')}`],
+            ['add', `${I18n.t('repository_stock_values.manage_modal.add')}`],
+            ['remove', `${I18n.t('repository_stock_values.manage_modal.remove')}`]
+          ];
+          /* eslint-enable no-undef */
+          this.errors = {};
         }
-        return Number(value)
-      }
-    },
-    created() {
-      window.manageStockModalComponent = this;
-    },
-    beforeDestroy() {
-      delete window.manageStockModalComponent;
-    },
-    mounted() {
-      // Focus stock amount input field
-      $(this.$refs.modal).on('show.bs.modal', function() {
-        setTimeout(() => {
-          $('#stock-amount')[0]?.focus()
-        }, 500)
       });
     },
-    methods: {
-      setOperation($event) {
-        if ($event !== this.operation) {
-          this.amount = null;
-        }
-        this.operation = $event;
-        if ([2, 3].includes($event)) {
-          this.unit = this.stockValue.unit;
-        }
-      },
-      fetchStockValueData(stockValueUrl) {
-        if (!stockValueUrl) return;
-        $.ajax({
-          method: 'GET',
-          url: stockValueUrl,
-          dataType: 'json',
-          success: (result) => {
-            this.repositoryRowName = result.repository_row_name
-            this.stockValue = result.stock_value
-            this.amount = Number(new Decimal(result.stock_value.amount || 0))
-            this.units = result.stock_value.units
-            this.unit = result.stock_value.unit
-            this.reminderEnabled = result.stock_value.reminder_enabled
-            this.lowStockTreshold = result.stock_value.low_stock_treshold
-            this.operation = 1;
-            this.stockUrl = result.stock_url;
-            this.operations = [[1, 'set'], [2, 'add'], [3, 'remove']];
-            this.errors = {};
-          }
-        });
-      },
-      closeModal() {
-        $(this.$refs.modal).modal('hide');
-      },
-      showModal(stockValueUrl, closeCallback) {
-        $(this.$refs.modal).modal('show');
-        this.fetchStockValueData(stockValueUrl);
-        this.closeCallback = closeCallback;
-      },
-      validateAndsaveStockValue() {
-        let newErrors = {};
-        this.errors = newErrors;
-        if (!this.unit)
-          newErrors['unit'] = I18n.t('repository_stock_values.manage_modal.unit_error');
-        if (!this.amount)
-          newErrors['amount'] = I18n.t('repository_stock_values.manage_modal.amount_error');
-        if (this.amount && this.amount < 0)
-          newErrors['amount'] = I18n.t('repository_stock_values.manage_modal.negative_error');
-        if (this.reminderEnabled && !this.lowStockTreshold)
-          newErrors['tresholdAmount'] = I18n.t('repository_stock_values.manage_modal.amount_error');
+    closeModal() {
+      $(this.$refs.modal).modal('hide');
+    },
+    showModal(stockValueUrl, closeCallback) {
+      $(this.$refs.modal).modal('show');
+      this.fetchStockValueData(stockValueUrl);
+      this.closeCallback = closeCallback;
+    },
+    validateAndsaveStockValue() {
+      const newErrors = {};
+      this.errors = newErrors;
+      if (!this.unit) { newErrors.unit = I18n.t('repository_stock_values.manage_modal.unit_error'); }
+      if (!this.amount) { newErrors.amount = I18n.t('repository_stock_values.manage_modal.amount_error'); }
+      if (this.amount && this.amount < 0) { newErrors.amount = I18n.t('repository_stock_values.manage_modal.negative_error'); }
+      if (this.reminderEnabled && !this.lowStockTreshold) { newErrors.tresholdAmount = I18n.t('repository_stock_values.manage_modal.amount_error'); }
 
-        this.errors = newErrors;
+      this.errors = newErrors;
 
-        if (!$.isEmptyObject(newErrors)) return;
+      if (!$.isEmptyObject(newErrors)) return;
 
-        const $this = this
-        $.ajax({
-          method: 'POST',
-          url: this.stockUrl,
-          dataType: 'json',
-          data: {
-            repository_stock_value: {
-              unit_item_id: this.unit,
-              amount: this.newAmount,
-              comment: this.comment,
-              low_stock_threshold: this.reminderEnabled ? this.lowStockTreshold : null
-            },
-            operator: this.operations.find(operation => operation[0] == this.operation)?.[1],
-            change_amount: Math.abs(this.amount),
+      const $this = this;
+      $.ajax({
+        method: 'POST',
+        url: this.stockUrl,
+        dataType: 'json',
+        data: {
+          repository_stock_value: {
+            unit_item_id: this.unit,
+            amount: this.newAmount,
+            comment: this.comment,
+            low_stock_threshold: this.reminderEnabled ? this.lowStockTreshold : null
           },
-          success: function(result) {
-            $this.stockValue = null;
-            $this.closeModal();
-            $this.closeCallback && $this.closeCallback(result);
-          }
-        })
-      }
+          operator: this.operations.find((operation) => operation[0] == this.operation)?.[0],
+          change_amount: Math.abs(this.amount)
+
+        },
+        success: (result) => {
+          $this.stockValue = null;
+          $this.closeModal();
+          $this.closeCallback && $this.closeCallback(result);
+        }
+      });
     }
   }
+};
 </script>

@@ -20,6 +20,8 @@ describe RepositoryRow, type: :model do
     it { should have_db_column :name }
     it { should have_db_column :created_at }
     it { should have_db_column :updated_at }
+    it { should have_db_column :parent_connections_count }
+    it { should have_db_column :child_connections_count }
   end
 
   describe 'Relations' do
@@ -30,6 +32,10 @@ describe RepositoryRow, type: :model do
     it { should have_many :repository_columns }
     it { should have_many :my_module_repository_rows }
     it { should have_many :my_modules }
+    it { should have_many(:child_connections).class_name('RepositoryRowConnection').with_foreign_key('parent_id').dependent(:destroy).inverse_of(:parent) }
+    it { should have_many(:child_repository_rows).through(:child_connections).source(:child) }
+    it { should have_many(:parent_connections).class_name('RepositoryRowConnection').with_foreign_key('child_id').dependent(:destroy).inverse_of(:child) }
+    it { should have_many(:parent_repository_rows).through(:parent_connections).source(:parent) }
   end
 
   describe 'Validations' do
@@ -151,6 +157,47 @@ describe RepositoryRow, type: :model do
         it 'returns times of archiving parent' do
           expect(repository_row.archived_on).to be_eql(archived_repository.archived_on)
         end
+      end
+    end
+  end
+
+  describe '.relationship_count' do
+    context 'when first created' do
+      let(:repository_row) { create :repository_row }
+      it 'returns zero' do
+        expect(repository_row.relationship_count).to be_zero
+      end
+    end
+
+    context 'when it has only parents' do
+      let(:nbr_of_parents) { 3 }
+      let(:repository_row) { create :repository_row, :with_parents, nbr_of_parents: nbr_of_parents }
+
+      it 'returns the number of parents' do
+        expect(repository_row.relationship_count).to be_eql(nbr_of_parents)
+      end
+    end
+
+    context 'when it has only children' do
+      let(:nbr_of_children) { 4 }
+      let(:repository_row) { create :repository_row, :with_children, nbr_of_children: nbr_of_children }
+
+      it 'returns the number of children' do
+        expect(repository_row.relationship_count).to be_eql(nbr_of_children)
+      end
+    end
+
+    context 'when it has both children and parents' do
+      let(:nbr_of_children) { 4 }
+      let(:nbr_of_parents) { 5 }
+      let(:repository_row) { create :repository_row,
+                                    :with_children,
+                                    :with_parents,
+                                    nbr_of_parents: nbr_of_parents,
+                                    nbr_of_children: nbr_of_children }
+
+      it 'returns the total sum of children and parents' do
+        expect(repository_row.relationship_count).to be_eql(nbr_of_children + nbr_of_parents)
       end
     end
   end

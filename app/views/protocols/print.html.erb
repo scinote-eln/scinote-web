@@ -58,7 +58,7 @@
           <div class="page-break"></div>
           <div data-role="hot-table" class="hot-table">
             <%= hidden_field(table, :contents, value: table.contents_utf_8, class: "hot-contents") %>
-            <%= hidden_field(table, :metadata, value: table.metadata ? table.metadata.to_json : nil, class: "hot-metadata" ) %>
+            <%= hidden_field(table, :metadata, value: table.metadata.to_json, class: "hot-metadata" ) %>
             <div data-role="step-hot-table" class="step-result-hot-table"></div>
           </div>
         </div>

@@ -90,74 +90,74 @@
 </template>
 <script>
 
-  import InlineEdit from '../shared/inline_edit.vue'
-  import DropdownSelector from '../shared/dropdown_selector.vue'
+import InlineEdit from '../shared/inline_edit.vue';
+import DropdownSelector from '../shared/dropdown_selector.vue';
 
-  export default {
-    name: 'ProtocolMetadata',
-    components: { InlineEdit, DropdownSelector },
-    props: {
-      protocol: {
-        type: Object,
-        required: true
-      },
-    },
-    computed: {
-      titleVersion() {
-        const createdFromVersion = this.protocol.attributes.created_from_version;
+export default {
+  name: 'ProtocolMetadata',
+  components: { InlineEdit, DropdownSelector },
+  props: {
+    protocol: {
+      type: Object,
+      required: true
+    }
+  },
+  computed: {
+    titleVersion() {
+      const createdFromVersion = this.protocol.attributes.created_from_version;
 
-        if (this.protocol.attributes.published) {
-          return this.protocol.attributes.version;
-        }
-
-        if (!createdFromVersion) {
-          return this.i18n.t('protocols.draft');
-        }
-
-        return this.i18n.t('protocols.header.draft_with_from_version', {nr: createdFromVersion});
+      if (this.protocol.attributes.published) {
+        return this.protocol.attributes.version;
       }
-    },
-    methods: {
-      saveAsdraft() {
-        $.post(this.protocol.attributes.urls.save_as_draft_url)
-      },
-      updateAuthors(authors) {
-        $.ajax({
-          type: 'PATCH',
-          url: this.protocol.attributes.urls.update_protocol_authors_url,
-          data: { protocol: { authors: authors } },
-          success: (result) => {
-            this.$emit('update', result.data.attributes)
-          },
-          error: (data) => {
-            HelperModule.flashAlertMsg(data.responseJSON ? Object.values(data.responseJSON).join(', ') : I18n.t('errors.general'), 'danger');
-          }
-        });
-      },
-      updateKeywords(keywords) {
-        $.ajax({
-          type: 'PATCH',
-          url: this.protocol.attributes.urls.update_protocol_keywords_url,
-          data: { keywords: keywords },
-          success: (result) => {
-            this.$emit('update', result.data.attributes)
-          }
-        });
-      },
-      openVersionsModal() {
-        $.get(this.protocol.attributes.urls.versions_modal_url, (data) => {
-          let versionsModal = '#protocol-versions-modal'
-          $('.protocols-show').append($.parseHTML(data.html));
-          $(versionsModal).modal('show');
-          inlineEditing.init();
-          $(versionsModal).find('[data-toggle="tooltip"]').tooltip();
 
-          // Remove modal when it gets closed
-          $(versionsModal).on('hidden.bs.modal', () => {
-            $(versionsModal).remove();
-          });
-        });
+      if (!createdFromVersion) {
+        return this.i18n.t('protocols.draft');
       }
+
+      return this.i18n.t('protocols.header.draft_with_from_version', { nr: createdFromVersion });
+    }
+  },
+  methods: {
+    saveAsdraft() {
+      $.post(this.protocol.attributes.urls.save_as_draft_url);
+    },
+    updateAuthors(authors) {
+      $.ajax({
+        type: 'PATCH',
+        url: this.protocol.attributes.urls.update_protocol_authors_url,
+        data: { protocol: { authors } },
+        success: (result) => {
+          this.$emit('update', result.data.attributes);
+        },
+        error: (data) => {
+          HelperModule.flashAlertMsg(data.responseJSON ? Object.values(data.responseJSON).join(', ') : I18n.t('errors.general'), 'danger');
+        }
+      });
+    },
+    updateKeywords(keywords) {
+      $.ajax({
+        type: 'PATCH',
+        url: this.protocol.attributes.urls.update_protocol_keywords_url,
+        data: { keywords },
+        success: (result) => {
+          this.$emit('update', result.data.attributes);
+        }
+      });
+    },
+    openVersionsModal() {
+      $.get(this.protocol.attributes.urls.versions_modal_url, (data) => {
+        const versionsModal = '#protocol-versions-modal';
+        $('.protocols-show').append($.parseHTML(data.html));
+        $(versionsModal).modal('show');
+        inlineEditing.init();
+        $(versionsModal).find('[data-toggle="tooltip"]').tooltip();
+
+        // Remove modal when it gets closed
+        $(versionsModal).on('hidden.bs.modal', () => {
+          $(versionsModal).remove();
+        });
+      });
     }
   }
+};
 </script>

@@ -90,156 +90,155 @@
 </template>
 
 <script>
-  import deleteShareableLinkModal from './delete_shareable_link.vue'
+import deleteShareableLinkModal from './delete_shareable_link.vue';
 
-  export default {
-    name: "shareModalContainer",
-    components: { deleteShareableLinkModal },
-    props: {
-      open: {
-        type: Boolean,
-        required: true
-      },
-      shared: {
-        type: Boolean,
-        default: false
-      },
-      shareableLinkUrl: {
-        type: String,
-        required: true
-      },
-      characterLimit: {
-        type: Number,
-        default: null
-      },
-      canShare: {
-        type: Boolean,
-        default: false
+export default {
+  name: 'shareModalContainer',
+  components: { deleteShareableLinkModal },
+  props: {
+    open: {
+      type: Boolean,
+      required: true
+    },
+    shared: {
+      type: Boolean,
+      default: false
+    },
+    shareableLinkUrl: {
+      type: String,
+      required: true
+    },
+    characterLimit: {
+      type: Number,
+      default: null
+    },
+    canShare: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
+    return {
+      editing: false,
+      shareableData: {},
+      description: '',
+      sharedEnabled: false,
+      characterCount: 0,
+      confirmingDelete: false,
+      dirty: false
+    };
+  },
+  watch: {
+    shared() {
+      this.sharedEnabled = this.shared;
+    },
+    open() {
+      this.open ? this.showModal() : this.hideModal();
+    }
+  },
+  mounted() {
+    $(this.$refs.modal).on('hidden.bs.modal', () => {
+      if (!this.confirmingDelete) {
+        this.$emit('close');
       }
-    },
-    data() {
-      return {
-        editing: false,
-        shareableData: {},
-        description: '',
-        sharedEnabled: false,
-        characterCount: 0,
-        description: '',
-        confirmingDelete: false,
-        dirty: false
-      };
-    },
-    watch: {
-      shared() {
-        this.sharedEnabled = this.shared;
-      },
-      open() {
-        this.open ? this.showModal() : this.hideModal();
+    });
+  },
+  created() {
+    this.sharedEnabled = this.shared;
+    if (this.sharedEnabled) {
+      $.get(this.shareableLinkUrl, (result) => {
+        this.shareableData = result.data;
+        this.description = this.shareableData.attributes.description || '';
+        this.$nextTick(() => {
+          this.initCharacterCount();
+        });
+      });
+    }
+  },
+  computed: {
+    error() {
+      if (this.characterLimit && this.description.length > this.characterLimit) {
+        return this.i18n.t('shareable_links.modal.too_long_text', { counter: this.characterLimit });
       }
+      return false;
+    }
+  },
+  methods: {
+    showModal() {
+      $(this.$refs.modal).modal('show');
     },
-    mounted() {
-      $(this.$refs.modal).on('hidden.bs.modal', () => {
-        if (!this.confirmingDelete) {
-          this.$emit('close');
+    hideModal() {
+      $(this.$refs.modal).modal('hide');
+    },
+    copy(value) {
+      navigator.clipboard.writeText(value).then(
+        () => {
+          HelperModule.flashAlertMsg(this.i18n.t('shareable_links.modal.copy_success'), 'success');
+        }
+      );
+    },
+    saveDescription() {
+      this.dirty = true;
+      $.ajax({
+        url: this.shareableLinkUrl,
+        type: 'PATCH',
+        data: { description: this.description },
+        success: (result) => {
+          this.shareableData = result.data;
+          this.dirty = false;
+          this.editing = false;
         }
       });
     },
-    created() {
-      this.sharedEnabled = this.shared;
+    cancelDescriptionEdit() {
+      this.description = this.shareableData.attributes.description || '';
+      this.editing = false;
+    },
+    initCharacterCount() {
+      $(this.$refs.textarea).on('input change paste keydown', () => {
+        this.characterCount = this.$refs.textarea.value.length;
+      });
+    },
+    handleCheckboxEnter() {
+      this.sharedEnabled = !this.sharedEnabled;
+      this.checkboxChange();
+    },
+    checkboxChange() {
       if (this.sharedEnabled) {
-        $.get(this.shareableLinkUrl, (result) => {
+        $.post(this.shareableLinkUrl, { description: this.description }, (result) => {
           this.shareableData = result.data;
-          this.description = this.shareableData.attributes.description || '';
-          this.$nextTick(() => {
-            this.initCharacterCount();
-          });
+          this.$emit('enable');
+          this.copy(this.shareableData.attributes.shareable_url);
         });
+      } else {
+        this.hideModal();
+        this.confirmingDelete = true;
       }
     },
-    computed: {
-      error() {
-        if(this.characterLimit && this.description.length > this.characterLimit) {
-          return this.i18n.t('shareable_links.modal.too_long_text', {counter: this.characterLimit});
-        }
-        return false;
-      }
-    },
-    methods:{
-      showModal() {
-        $(this.$refs.modal).modal('show');
-      },
-      hideModal() {
-        $(this.$refs.modal).modal('hide');
-      },
-      copy(value) {
-        navigator.clipboard.writeText(value).then(
-          () => {
-            HelperModule.flashAlertMsg(this.i18n.t('shareable_links.modal.copy_success'), 'success');
-          }
-        );
-      },
-      saveDescription() {
-        this.dirty = true;
-        $.ajax({
-          url: this.shareableLinkUrl,
-          type: 'PATCH',
-          data: {description: this.description},
-          success: (result) => {
-            this.shareableData = result.data;
-            this.dirty = false;
-            this.editing = false;
-          }
-        });
-      },
-      cancelDescriptionEdit() {
-        this.description = this.shareableData.attributes.description || '';
-        this.editing = false;
-      },
-      initCharacterCount() {
-        $(this.$refs.textarea).on('input change paste keydown', () => {
-          this.characterCount = this.$refs.textarea.value.length;
-        });
-      },
-      handleCheckboxEnter() {
-        this.sharedEnabled = !this.sharedEnabled;
-        this.checkboxChange();
-      },
-      checkboxChange() {
-        if(this.sharedEnabled ) {
-          $.post(this.shareableLinkUrl, { description: this.description }, (result) => {
-            this.shareableData = result.data;
-            this.$emit('enable');
-            this.copy(this.shareableData.attributes.shareable_url);
-          });
-        } else {
-          this.hideModal();
-          this.confirmingDelete = true;
-        }
-      },
-      deleteLink() {
-        this.dirty = true;
-        $.ajax({
-          url:  this.shareableLinkUrl,
-          type: 'DELETE',
-          success: () => {
-            this.shareableData = {};
-            this.description = '';
-            this.dirty = false;
+    deleteLink() {
+      this.dirty = true;
+      $.ajax({
+        url: this.shareableLinkUrl,
+        type: 'DELETE',
+        success: () => {
+          this.shareableData = {};
+          this.description = '';
+          this.dirty = false;
 
-            this.$emit('disable');
-            this.$emit('close');
-          },
-          error: () => {
-            this.dirty = false;
-          }
-        });
-      },
-      closeDeleteModal() {
-        this.confirmingDelete = false;
-        if (!this.dirty) {
+          this.$emit('disable');
           this.$emit('close');
+        },
+        error: () => {
+          this.dirty = false;
         }
+      });
+    },
+    closeDeleteModal() {
+      this.confirmingDelete = false;
+      if (!this.dirty) {
+        this.$emit('close');
       }
     }
-  };
+  }
+};
 </script>

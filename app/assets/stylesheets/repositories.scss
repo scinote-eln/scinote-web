@@ -513,3 +513,22 @@
     }
   }
 }
+
+#repositoryItemRelationshipsModal {
+  .item-options {
+    max-height: 23rem;
+
+    .option-label {
+      -webkit-line-clamp: 1;
+    }
+  }
+
+  .inventory-options {
+    left: 0 !important;
+    max-height: 28rem;
+
+    .option-label {
+      cursor: pointer;
+    }
+  }
+}

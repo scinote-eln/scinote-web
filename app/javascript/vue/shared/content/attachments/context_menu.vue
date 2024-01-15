@@ -34,6 +34,7 @@
       @delete="deleteModal = true"
       @viewMode="changeViewMode"
       @move="showMoveModal"
+      @menu-visibility-changed="$emit('menu-visibility-changed', $event)"
     ></MenuDropdown>
     <Teleport to="body">
       <deleteAttachmentModal
@@ -82,6 +83,7 @@ export default {
     editLaunchingApplicationModal
   },
   mixins: [MoveMixin, OpenLocallyMixin],
+  components: { deleteAttachmentModal, moveAssetModal, MenuDropdown },
   props: {
     attachment: {
       type: Object,
@@ -162,7 +164,7 @@ export default {
             emit: 'viewMode',
             params: viewMode,
             dividerBefore: i === 0
-          })
+          });
         });
       }
       return menu;

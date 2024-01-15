@@ -1,16 +1,17 @@
 <div class="print-label-modal-container"
-  data-print-url="<%= print_repository_rows_path %>"
-  data-zebra-progress-url="<%= print_zpl_repository_rows_path%>"
+  data-print-url="<%= print_repositories_path %>"
+  data-zebra-progress-url="<%= print_zpl_repositories_path %>"
   data-printers-url="<%= label_printers_path(format: :json) %>"
   data-label-templates-url="<%= label_templates_path(format: :json) %>"
-  data-rows-url="<%= rows_to_print_repository_rows_path %>"
-  data-print-validation-url="<%= validate_label_template_columns_repository_rows_path %>"
+  data-rows-url="<%= rows_to_print_repositories_path %>"
+  data-print-validation-url="<%= validate_label_template_columns_repositories_path %>"
   data-label-preview-url="<%= zpl_preview_label_templates_path %>"
   data-fluics-info-url="<%= Constants::SCINOTE_FLUICS_URL %>"
 >
   <print-modal-container
     :show-modal = "showModal"
     :row_ids = "row_ids"
+    :repository_id="repository_id"
     :urls = "urls"
     @close="closeModal"
   ></print-modal-container>

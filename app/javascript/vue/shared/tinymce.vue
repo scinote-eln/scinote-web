@@ -54,62 +54,36 @@
 </template>
 
 <script>
-  import UtilsMixin from '../mixins/utils.js';
+import UtilsMixin from '../mixins/utils.js';
 
-  export default {
-    name: 'Tinymce',
-    props: {
-      value: String,
-      value_html: String,
-      placeholder: String,
-      updateUrl: String,
-      objectType: String,
-      objectId: Number,
-      fieldName: String,
-      lastUpdated: Number,
-      inEditMode: Boolean,
-      assignableMyModuleId: Number,
-      characterLimit: {
-        type: Number,
-        default: null
-      }
-    },
-    data() {
-      return {
-        characterCount: 0,
-        blurEventHandler: null,
-        active: false
-      }
-    },
-    mixins: [ UtilsMixin ],
-    watch: {
-      inEditMode() {
-        if (this.inEditMode) {
-          this.initTinymce();
-        } else {
-          this.wrapTables();
-        }
-
-        this.initCodeHighlight();
-      },
-      characterCount() {
-        if (this.editorInstance()) {
-          this.editorInstance().blurDisabled = this.error != false ;
-        }
-      }
-    },
-    computed: {
-      error() {
-        if(this.characterLimit && this.characterCount > this.characterLimit) {
-          return(
-            this.i18n.t('errors.general_text_too_long')
-          );
-        }
-
-        return false
-      }
-    },
-    mounted() {
+export default {
+  name: 'Tinymce',
+  props: {
+    value: String,
+    value_html: String,
+    placeholder: String,
+    updateUrl: String,
+    objectType: String,
+    objectId: Number,
+    fieldName: String,
+    lastUpdated: Number,
+    inEditMode: Boolean,
+    assignableMyModuleId: Number,
+    characterLimit: {
+      type: Number,
+      default: null
+    }
+  },
+  data() {
+    return {
+      characterCount: 0,
+      blurEventHandler: null,
+      active: false
+    };
+  },
+  mixins: [UtilsMixin],
+  watch: {
+    inEditMode() {
       if (this.inEditMode) {
         this.initTinymce();
       } else {
@@ -118,67 +92,92 @@
 
       this.initCodeHighlight();
     },
-    methods: {
-      initTinymce(e) {
-        let textArea = `#${this.objectType}_textarea_${this.objectId}`;
-
-        if (this.active) return;
-        if (e && $(e.target).prop("tagName") === 'A') return;
-        if (e && $(e.target).hasClass('atwho-user-popover')) return;
-        if (e && $(e.target).hasClass('record-info-link')) return;
-        if (e && $(e.target).parent().hasClass('record-info-link')) return;
-        if (e && $(e.target).parent().hasClass('atwho-inserted')) return;
-
-        TinyMCE.init(textArea, {
-            onSaveCallback: (data) => {
-              if (data.data) {
-                this.$emit('update', data.data)
-              }
-              this.$emit('editingDisabled');
-              this.wrapTables();
-              this.initCodeHighlight();
-            },
-            afterInitCallback: () => {
-              this.active = true;
-              this.initCharacterCount();
-              this.$emit('editingEnabled');
-            },
-            placeholder: this.placeholder,
-            assignableMyModuleId: this.assignableMyModuleId
-          }
-        )
-      },
-      getStaticUrl(name) {
-        return $(`meta[name=\'${name}\']`).attr('content');
-      },
-      wrapTables() {
-        this.$nextTick(() => {
-          TinyMCE.wrapTables($(this.$el).find('.tinymce-view'));
-        });
-      },
-      initCharacterCount() {
-        if (!this.editorInstance()) return;
-
-        this.characterCount = this.editorInstance().plugins.wordcount.body.getCharacterCount();
-        this.editorInstance().on('input change paste keydown', (e) => {
-          e.currentTarget && (this.characterCount = this.editorInstance().plugins.wordcount.body.getCharacterCount());
-        });
-
-        this.editorInstance().on('remove', () => this.active = false);
-
-        // clear error on cancel
-        $(this.editorInstance().container).find('.tinymce-cancel-button').on('click', ()=> {
-          this.characterCount = 0;
-        });
-      },
-      editorInstance() {
-        return tinyMCE.activeEditor;
-      },
-      initCodeHighlight() {
-        this.$nextTick(() => {
-          Prism.highlightAllUnder(this.$el);
-        });
+    characterCount() {
+      if (this.editorInstance()) {
+        this.editorInstance().blurDisabled = this.error != false;
       }
     }
+  },
+  computed: {
+    error() {
+      if (this.characterLimit && this.characterCount > this.characterLimit) {
+        return (
+          this.i18n.t('errors.general_text_too_long')
+        );
+      }
+
+      return false;
+    }
+  },
+  mounted() {
+    if (this.inEditMode) {
+      this.initTinymce();
+    } else {
+      this.wrapTables();
+    }
+
+    this.initCodeHighlight();
+  },
+  methods: {
+    initTinymce(e) {
+      const textArea = `#${this.objectType}_textarea_${this.objectId}`;
+
+      if (this.active) return;
+      if (e && $(e.target).prop('tagName') === 'A') return;
+      if (e && $(e.target).hasClass('atwho-user-popover')) return;
+      if (e && $(e.target).hasClass('record-info-link')) return;
+      if (e && $(e.target).parent().hasClass('record-info-link')) return;
+      if (e && $(e.target).parent().hasClass('atwho-inserted')) return;
+
+      TinyMCE.init(textArea, {
+        onSaveCallback: (data) => {
+          if (data.data) {
+            this.$emit('update', data.data);
+          }
+          this.$emit('editingDisabled');
+          this.wrapTables();
+          this.initCodeHighlight();
+        },
+        afterInitCallback: () => {
+          this.active = true;
+          this.initCharacterCount();
+          this.$emit('editingEnabled');
+        },
+        placeholder: this.placeholder,
+        assignableMyModuleId: this.assignableMyModuleId
+      });
+    },
+    getStaticUrl(name) {
+      return $(`meta[name=\'${name}\']`).attr('content');
+    },
+    wrapTables() {
+      this.$nextTick(() => {
+        TinyMCE.wrapTables($(this.$el).find('.tinymce-view'));
+      });
+    },
+    initCharacterCount() {
+      if (!this.editorInstance()) return;
+
+      this.characterCount = this.editorInstance().plugins.wordcount.body.getCharacterCount();
+      this.editorInstance().on('input change paste keydown', (e) => {
+        e.currentTarget && (this.characterCount = this.editorInstance().plugins.wordcount.body.getCharacterCount());
+      });
+
+      this.editorInstance().on('remove', () => this.active = false);
+
+      // clear error on cancel
+      $(this.editorInstance().container).find('.tinymce-cancel-button').on('click', () => {
+        this.characterCount = 0;
+      });
+    },
+    editorInstance() {
+      return tinyMCE.activeEditor;
+    },
+    initCodeHighlight() {
+      this.$nextTick(() => {
+        Prism.highlightAllUnder(this.$el);
+      });
+    }
   }
+};
 </script>
