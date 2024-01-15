@@ -33,7 +33,8 @@ export default {
     btnText: { type: String, required: false },
     btnIcon: { type: String, required: false },
     caret: { type: Boolean, default: false },
-    alwaysShow: { type: Boolean, default: false }
+    alwaysShow: { type: Boolean, default: false },
+    closeDropdown: { type: Boolean, default: false }
   },
   data() {
     return {

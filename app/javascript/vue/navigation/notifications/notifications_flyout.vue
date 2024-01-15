@@ -5,7 +5,7 @@
       <i class="sn-icon sn-icon-close" @click="$emit('close')"></i>
     </div>
     <hr>
-    <perfect-scrollbar ref="scrollContainer" class="sci--navigation--notificaitons-flyout-notifications">
+    <perfect-scrollbar @wheel="preventPropagation" ref="scrollContainer" class="sci--navigation--notificaitons-flyout-notifications">
       <div class="sci-navigation--notificaitons-flyout-subtitle" v-if="todayNotifications.length">
         {{ i18n.t('nav.notifications.today') }}
       </div>
@@ -73,6 +73,10 @@ export default {
     }
   },
   methods: {
+    preventPropagation(e) {
+      e.stopPropagation();
+      e.preventDefault();
+    },
     loadNotifications() {
       if (this.nextPageUrl == null || this.loadingPage) return;
 

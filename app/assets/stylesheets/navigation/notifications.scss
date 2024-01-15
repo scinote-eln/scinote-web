@@ -4,14 +4,6 @@
 .sci--navigation--notificaitons-flyout-container {
   position: relative;
 
-  .sci--navigation--notificaitons-flyout-backdrop {
-    bottom: 0;
-    left: 0;
-    position: fixed;
-    right: 0;
-    top: 0;
-  }
-
   .has-unseen {
     &::after {
       align-items: center;
@@ -31,99 +23,94 @@
       white-space: nowrap;
     }
   }
+}
 
   .sci--navigation--notificaitons-flyout {
-    background-color: $color-white;
-    border-radius: 0 0  $border-radius-default $border-radius-default;
-    box-shadow: $flyout-shadow;
     display: flex;
     flex-direction: column;
-    height: calc(100vh - var(--top-navigation-height) - 2em);
+    height: calc(100vh - 8rem);
     padding: 1.5rem;
-    position: absolute;
-    right: 0;
-    top: calc(var(--top-navigation-height) - 1.5rem);
     width: 400px;
 
-    .sci--navigation--notificaitons-flyout-title {
-      @include font-h2;
+  .sci--navigation--notificaitons-flyout-title {
+    @include font-h2;
+    align-items: center;
+    display: flex;
+    margin-bottom: .625rem;
+
+    .sn-icon {
+      @include font-button;
+      cursor: pointer;
+      margin-left: auto;
+    }
+  }
+
+  hr {
+    margin: .625rem 0;
+  }
+
+  .sci-navigation--notificaitons-flyout-subtitle {
+    @include font-main;
+    line-height: 2.25rem;
+    margin-bottom: .625rem;
+  }
+
+  .sci--navigation--notificaitons-flyout-notifications {
+    margin-left: -1.5rem;
+    overscroll-behavior: contain;
+    padding: 0 1.5rem;
+    position: relative;
+    width: calc(100% + 3rem);
+
+    .next-page-loader {
       align-items: center;
       display: flex;
-      margin-bottom: .625rem;
+      justify-content: center;
+      margin: 1rem 0;
+    }
+  }
 
-      .sn-icon {
-        @include font-button;
+  .sci-navigation--notificaitons-flyout-notification {
+    border-bottom: $border-tertiary;
+    padding: 1rem 0;
+
+    .sci-navigation--notificaitons-flyout-notification-icon {
+      align-items: center;
+      background-color: $brand-primary;
+      border-radius: 50%;
+      color: $color-white;
+      display: flex;
+      grid-row: 1 / 5;
+      height: 2rem;
+      justify-content: center;
+      margin-right: .75rem;
+      width: 2rem;
+
+      &.deliver {
+        background-color: $brand-warning;
+      }
+
+      &.system {
+        background-color: $brand-success;
+      }
+    }
+
+    .sci-navigation--notificaitons-flyout-notification-date {
+      @include font-small;
+      color: $color-silver-chalice;
+    }
+
+    .sci-navigation--notificaitons-flyout-notification-title {
+      margin: .25rem 0;
+
+      &:not([data-seen="true"]) {
+        font-weight: bold;
+      }
+    }
+
+    .sci-navigation--notificaitons-flyout-notification-message {
+      &[data-notification="system"] {
         cursor: pointer;
-        margin-left: auto;
-      }
-    }
-
-    hr {
-      margin: .625rem 0;
-    }
-
-    .sci-navigation--notificaitons-flyout-subtitle {
-      @include font-main;
-      line-height: 2.25rem;
-      margin-bottom: .625rem;
-    }
-
-    .sci--navigation--notificaitons-flyout-notifications {
-      margin-left: -1.5rem;
-      padding: 0 1.5rem;
-      position: relative;
-      width: calc(100% + 3rem);
-
-      .next-page-loader {
-        align-items: center;
-        display: flex;
-        justify-content: center;
-        margin: 1rem 0;
-      }
-    }
-
-    .sci-navigation--notificaitons-flyout-notification {
-      border-bottom: $border-tertiary;
-      padding: 1rem 0;
-
-      .sci-navigation--notificaitons-flyout-notification-icon {
-        align-items: center;
-        background-color: $brand-primary;
-        border-radius: 50%;
-        color: $color-white;
-        display: flex;
-        grid-row: 1 / 5;
-        height: 2rem;
-        justify-content: center;
-        margin-right: .75rem;
-        width: 2rem;
-
-        &.deliver {
-          background-color: $brand-warning;
-        }
-
-        &.system {
-          background-color: $brand-success;
-        }
-      }
-
-      .sci-navigation--notificaitons-flyout-notification-date {
-        @include font-small;
-        color: $color-silver-chalice;
-      }
-
-      .sci-navigation--notificaitons-flyout-notification-title {
-        margin: .25rem 0;
-
-        &:not([data-seen="true"]) {
-          font-weight: bold;
-        }
-      }
-
-      .sci-navigation--notificaitons-flyout-notification-message {
-        &[data-notification="system"] {
-          cursor: pointer;
-        }
       }
     }
   }
