@@ -2,7 +2,9 @@
   <div class="sci--navigation--notificaitons-flyout">
     <div class="sci--navigation--notificaitons-flyout-title">
       {{ i18n.t('nav.notifications.title') }}
-      <i class="sn-icon sn-icon-close" @click="$emit('close')"></i>
+      <a class="ml-auto cursor-pointer" :href="'/users/settings/account/preferences'" :title="i18n.t('nav.settings')">
+        {{ i18n.t('nav.settings') }}
+      </a>
     </div>
     <hr>
     <perfect-scrollbar ref="scrollContainer" class="sci--navigation--notificaitons-flyout-notifications">
