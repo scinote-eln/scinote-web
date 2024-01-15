@@ -26,12 +26,14 @@ class RepositoryRowConnection < ApplicationRecord
   private
 
   def prevent_self_connections
-    errors.add(:base, 'A repository_row cannot have a connection with itself') if parent_id == child_id
+    if parent_id == child_id
+      errors.add(:base, I18n.t('activerecord.errors.models.repository_row_connection.self_connection'))
+    end
   end
 
   def prevent_reciprocal_connections
     if parent_id && child_id && RepositoryRowConnection.exists?(parent_id: child_id, child_id: parent_id)
-      errors.add(:base, 'Reciprocal connections are not allowed')
+      errors.add(:base, I18n.t('activerecord.errors.models.repository_row_connection.reciprocal_connection'))
     end
   end
 

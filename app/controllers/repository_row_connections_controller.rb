@@ -7,34 +7,6 @@ class RepositoryRowConnectionsController < ApplicationController
   before_action :load_repository_row, except: :repositories
   before_action :check_manage_permissions, only: %i(create destroy)
 
-  def index
-    parents = @repository_row.parent_connections
-                             .joins('INNER JOIN repository_rows ON
-                                    repository_rows.id = repository_row_connections.parent_id')
-                             .select(:id, 'repository_rows.id AS repository_row_id',
-                                     'repository_rows.name AS repository_row_name')
-                             .map do |row|
-                               {
-                                 id: row.id,
-                                 name: row.repository_row_name,
-                                 code: "#{RepositoryRow::ID_PREFIX}#{row.repository_row_id}"
-                               }
-                             end
-    children = @repository_row.child_connections
-                              .joins('INNER JOIN repository_rows ON
-                                     repository_rows.id = repository_row_connections.child_id')
-                              .select(:id, 'repository_rows.id AS repository_row_id',
-                                      'repository_rows.name AS repository_row_name')
-                              .map do |row|
-                                {
-                                  id: row.id,
-                                  name: row.repository_row_name,
-                                  code: "#{RepositoryRow::ID_PREFIX}#{row.repository_row_id}"
-                                }
-                              end
-    render json: { parents: parents, children: children }
-  end
-
   def create
     RepositoryRowConnection.transaction do
       @connection_repository.repository_rows
@@ -109,7 +81,6 @@ class RepositoryRowConnectionsController < ApplicationController
                                          .per(Constants::SEARCH_LIMIT)
     render json: {
       data: repository_rows.select(:id, :name, :archived, :repository_id)
-                           .preload(:repository)
                            .map { |row| { id: row.id, name: row.name_with_label } },
       next_page: repository_rows.next_page
     }
