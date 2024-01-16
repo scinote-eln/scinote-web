@@ -29,6 +29,16 @@
             <div class="sci-loader"></div>
           </div>
 
+          <div v-else-if="!dataLoading && loadingError" class="h-full flex flex-grow-1">
+            <div class="flex flex-col items-center justify-center h-full pr-6 mx-14">
+              <i class=" text-sn-alert-passion sn-icon sn-icon-large sn-icon-alert-warning"></i>
+              <div class="text-center">
+                <h4 class="font-inter text-lg mt-3">{{ i18n.t('repositories.item_card.errors.load_error_header') }}</h4>
+                <div class="font-inter text-sm">{{ i18n.t('repositories.item_card.errors.load_error_description') }}</div>
+              </div>
+            </div>
+          </div>
+
           <div v-else class="flex flex-1 flex-grow-1 justify-between" ref="scrollSpyContent" id="scrollSpyContent">
 
             <div id="left-col" class="flex flex-col gap-6 max-w-[350px]">
@@ -303,7 +313,7 @@
           </div>
 
           <!-- BOTTOM -->
-          <div id="bottom" v-show="!dataLoading" class="h-[100px] flex flex-col justify-end mt-4 mr-6"
+          <div id="bottom" v-show="!dataLoading && !loadingError" class="h-[100px] flex flex-col justify-end mt-4 mr-6"
             :class="{ 'pb-6': customColumns?.length }">
             <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px mb-6"></div>
             <div id="bottom-button-wrapper" class="flex h-10 justify-end">
@@ -411,7 +421,8 @@ export default {
       notification: null,
       relationshipDetailsState: {},
       selectedToUnlink: null,
-      initialSectionId: null
+      initialSectionId: null,
+      loadingError: false
     };
   },
   provide() {
@@ -543,7 +554,11 @@ export default {
       });
     },
     loadRepositoryRow(repositoryRowUrl, scrollTop = 0) {
-      this.dataLoading = true
+      this.dataLoading = true;
+      this.loadingError = false;
+      if (this.defaultColumns?.name) {
+        this.defaultColumns.name = '';
+      }
       $.ajax({
         method: 'GET',
         url: repositoryRowUrl,
@@ -572,6 +587,10 @@ export default {
             // if scrollTop was provided, scroll to it
             this.$nextTick(() => { this.$refs.bodyWrapper.scrollTop = scrollTop; });
           });
+        },
+        error: () => {
+          this.loadingError = true;
+          this.dataLoading = false;
         }
       });
     },
