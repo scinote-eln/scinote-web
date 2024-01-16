@@ -8,6 +8,7 @@ export default {
   watch: {
     isOpen() {
       if (this.isOpen) {
+        this.$emit('open');
         this.$nextTick(() => {
           this.setPosition();
           this.overflowContainerListener();
