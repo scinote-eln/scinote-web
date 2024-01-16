@@ -559,39 +559,36 @@ export default {
       if (this.defaultColumns?.name) {
         this.defaultColumns.name = '';
       }
-      $.ajax({
-        method: 'GET',
-        url: repositoryRowUrl,
-        data: { my_module_id: this.myModuleId },
-        dataType: 'json',
-        success: (result) => {
-          this.repositoryRowId = result.id;
-          this.repository = result.repository;
-          this.optionsPath = result.options_path;
-          this.updatePath = result.update_path;
-          this.defaultColumns = result.default_columns;
-          this.parentsCount = result.relationships.parents_count;
-          this.childrenCount = result.relationships.children_count;
-          this.parents = result.relationships.parents;
-          this.children = result.relationships.children;
-          this.customColumns = result.custom_columns;
-          this.assignedModules = result.assigned_modules;
-          this.permissions = result.permissions;
-          this.actions = result.actions;
-          this.icons = result.icons;
-          this.dataLoading = false;
-          this.notification = result.notification;
-          this.$nextTick(() => {
-            this.generateBarCode(this.defaultColumns.code);
+      axios.get(
+        repositoryRowUrl,
+        { my_module_id: this.myModuleId }
+      ).then((response) => {
+        const result = response.data;
+        this.repositoryRowId = result.id;
+        this.repository = result.repository;
+        this.optionsPath = result.options_path;
+        this.updatePath = result.update_path;
+        this.defaultColumns = result.default_columns;
+        this.parentsCount = result.relationships.parents_count;
+        this.childrenCount = result.relationships.children_count;
+        this.parents = result.relationships.parents;
+        this.children = result.relationships.children;
+        this.customColumns = result.custom_columns;
+        this.assignedModules = result.assigned_modules;
+        this.permissions = result.permissions;
+        this.actions = result.actions;
+        this.icons = result.icons;
+        this.dataLoading = false;
+        this.notification = result.notification;
+        this.$nextTick(() => {
+          this.generateBarCode(this.defaultColumns.code);
 
-            // if scrollTop was provided, scroll to it
-            this.$nextTick(() => { this.$refs.bodyWrapper.scrollTop = scrollTop; });
-          });
-        },
-        error: () => {
-          this.loadingError = true;
-          this.dataLoading = false;
-        }
+          // if scrollTop was provided, scroll to it
+          this.$nextTick(() => { this.$refs.bodyWrapper.scrollTop = scrollTop; });
+        });
+      }).catch(() => {
+        this.loadingError = true;
+        this.dataLoading = false;
       });
     },
     reload() {
@@ -618,17 +615,16 @@ export default {
       return this.assignedModules.total_assigned_size - this.assignedModules.viewable_modules.length;
     },
     update(params) {
-      $.ajax({
-        method: 'PUT',
-        url: this.updatePath,
-        dataType: 'json',
-        data: {
+      axios.put(
+        this.updatePath,
+        {
           id: this.id,
           ...params
         }
-      }).done((response) => {
-        if (response) {
-          this.customColumns = this.customColumns.map((col) => (col.id === response.id ? { ...col, ...response } : col));
+      ).then((response) => {
+        const result = response.data;
+        if (result) {
+          this.customColumns = this.customColumns.map((col) => (col.id === result.id ? { ...col, ...result } : col));
           if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
         }
       });
