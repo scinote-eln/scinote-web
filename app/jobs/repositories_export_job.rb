@@ -48,7 +48,9 @@ class RepositoriesExportJob < ApplicationJob
     csv_file = FileUtils.touch("#{path}/#{repository_name}.csv").first
 
     # Define headers and columns IDs
-    col_ids = [-3, -4, -5, -6, -7, -8] + repository.repository_columns.map(&:id)
+    col_ids = [-3, -4, -5, -6, -7, -8]
+    col_ids << -9 if Repository.repository_row_connections_enabled?
+    col_ids += repository.repository_columns.map(&:id)
 
     # Define callback function for file name
     assets = {}
@@ -66,7 +68,7 @@ class RepositoriesExportJob < ApplicationJob
 
     # Generate CSV
     csv_data = RepositoryZipExport.to_csv(repository.repository_rows, col_ids, @user, repository, handle_name_func)
-    File.binwrite(csv_file, csv_data)
+    File.binwrite(csv_file, csv_data.encode('UTF-8', invalid: :replace, undef: :replace))
 
     # Save all attachments (it doesn't work directly in callback function
     assets.each do |asset, asset_path|
