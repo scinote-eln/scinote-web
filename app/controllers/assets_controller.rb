@@ -193,7 +193,7 @@ class AssetsController < ApplicationController
     # release previous image space
     @asset.team.release_space(orig_file_size)
     # Post process file here
-    @asset.post_process_file(@asset.team)
+    @asset.post_process_file
     @asset.step&.protocol&.update(updated_at: Time.zone.now)
 
     render_html = if [Result, Step].include?(@assoc.class)
