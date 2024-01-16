@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_07_163821) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_05_162611) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -376,6 +376,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_163821) do
     t.bigint "changing_from_my_module_status_id"
     t.jsonb "last_transition_error"
     t.integer "provisioning_status"
+    t.boolean "due_date_notification_sent", default: false
     t.index "(('TA'::text || id)) gin_trgm_ops", name: "index_my_modules_on_my_module_code", using: :gin
     t.index "trim_html_tags((description)::text) gin_trgm_ops", name: "index_my_modules_on_description", using: :gin
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_my_modules_on_name", using: :gin
@@ -390,13 +391,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_163821) do
   end
 
   create_table "notifications", force: :cascade do |t|
-    t.string "title"
-    t.string "message"
-    t.integer "type_of", null: false
-    t.bigint "generator_user_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.jsonb "params", default: {}, null: false
+    t.string "type", null: false
+    t.datetime "read_at"
+    t.string "recipient_type"
+    t.bigint "recipient_id"
     t.index ["created_at"], name: "index_notifications_on_created_at"
+    t.index ["recipient_type", "recipient_id"], name: "index_notifications_on_recipient"
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|
@@ -674,6 +677,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_163821) do
     t.index "trim_html_tags((data)::text) gin_trgm_ops", name: "index_repository_checklist_items_on_data", using: :gin
     t.index "trim_html_tags((external_id)::text) gin_trgm_ops", name: "index_repository_checklist_items_on_external_id", using: :gin
     t.index ["created_by_id"], name: "index_repository_checklist_items_on_created_by_id"
+    t.index ["external_id"], name: "unique_index_repository_checklist_items_on_external_id", unique: true
     t.index ["last_modified_by_id"], name: "index_repository_checklist_items_on_last_modified_by_id"
     t.index ["repository_column_id", "external_id"], name: "unique_index_repository_checklist_items_on_external_id", unique: true
     t.index ["repository_column_id"], name: "index_repository_checklist_items_on_repository_column_id"
@@ -737,6 +741,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_163821) do
     t.bigint "last_modified_by_id", null: false
     t.string "type"
     t.datetime "data_dup", precision: nil
+    t.boolean "notification_sent", default: false
     t.index "((data)::date)", name: "index_repository_date_time_values_on_data_as_date", where: "((type)::text = 'RepositoryDateValue'::text)"
     t.index "((data)::time without time zone)", name: "index_repository_date_time_values_on_data_as_time", where: "((type)::text = 'RepositoryTimeValue'::text)"
     t.index ["data"], name: "index_repository_date_time_values_on_data_as_date_time", where: "((type)::text = 'RepositoryDateTimeValue'::text)"
@@ -770,6 +775,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_163821) do
     t.index "trim_html_tags((external_id)::text) gin_trgm_ops", name: "index_repository_list_items_on_external_id", using: :gin
     t.index "trim_html_tags(data) gin_trgm_ops", name: "index_repository_list_items_on_data", using: :gin
     t.index ["created_by_id"], name: "index_repository_list_items_on_created_by_id"
+    t.index ["external_id"], name: "unique_index_repository_list_items_on_external_id", unique: true
     t.index ["last_modified_by_id"], name: "index_repository_list_items_on_last_modified_by_id"
     t.index ["repository_column_id", "external_id"], name: "unique_index_repository_list_items_on_external_id", unique: true
     t.index ["repository_column_id"], name: "index_repository_list_items_on_repository_column_id"
@@ -798,6 +804,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_163821) do
     t.index ["last_modified_by_id"], name: "index_repository_number_values_on_last_modified_by_id"
   end
 
+  create_table "repository_row_connections", force: :cascade do |t|
+    t.bigint "parent_id", null: false
+    t.bigint "child_id", null: false
+    t.bigint "created_by_id"
+    t.bigint "last_modified_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index "LEAST(parent_id, child_id), GREATEST(parent_id, child_id)", name: "index_repository_row_connections_on_connection_pair", unique: true
+    t.index ["child_id"], name: "index_repository_row_connections_on_child_id"
+    t.index ["created_by_id"], name: "index_repository_row_connections_on_created_by_id"
+    t.index ["last_modified_by_id"], name: "index_repository_row_connections_on_last_modified_by_id"
+    t.index ["parent_id"], name: "index_repository_row_connections_on_parent_id"
+    t.check_constraint "parent_id <> child_id", name: "constraint_repository_row_connections_on_self_connection"
+  end
+
   create_table "repository_rows", force: :cascade do |t|
     t.integer "repository_id"
     t.bigint "created_by_id", null: false
@@ -812,6 +833,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_163821) do
     t.bigint "archived_by_id"
     t.bigint "restored_by_id"
     t.string "external_id"
+    t.integer "parent_connections_count"
+    t.integer "child_connections_count"
     t.index "(('IT'::text || id)) gin_trgm_ops", name: "index_repository_rows_on_repository_row_code", using: :gin
     t.index "((id)::text) gin_trgm_ops", name: "index_repository_rows_on_id_text", using: :gin
     t.index "date_trunc('minute'::text, archived_on)", name: "index_repository_rows_on_archived_on_as_date_time_minutes"
@@ -1061,7 +1084,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_163821) do
     t.tsvector "data_vector"
     t.string "name", default: ""
     t.integer "team_id"
-    t.jsonb "metadata"
+    t.jsonb "metadata", default: {}
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_tables_on_name", using: :gin
     t.index ["created_at"], name: "index_tables_on_created_at"
     t.index ["created_by_id"], name: "index_tables_on_created_by_id"
@@ -1170,17 +1193,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_163821) do
     t.index ["assigned_by_id"], name: "index_user_my_modules_on_assigned_by_id"
     t.index ["my_module_id"], name: "index_user_my_modules_on_my_module_id"
     t.index ["user_id"], name: "index_user_my_modules_on_user_id"
-  end
-
-  create_table "user_notifications", force: :cascade do |t|
-    t.bigint "user_id"
-    t.bigint "notification_id"
-    t.boolean "checked", default: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.index ["checked"], name: "index_user_notifications_on_checked"
-    t.index ["notification_id"], name: "index_user_notifications_on_notification_id"
-    t.index ["user_id"], name: "index_user_notifications_on_user_id"
   end
 
   create_table "user_projects", force: :cascade do |t|
@@ -1371,7 +1383,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_163821) do
   add_foreign_key "my_modules", "users", column: "created_by_id"
   add_foreign_key "my_modules", "users", column: "last_modified_by_id"
   add_foreign_key "my_modules", "users", column: "restored_by_id"
-  add_foreign_key "notifications", "users", column: "generator_user_id"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_grants", "users", column: "resource_owner_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
@@ -1436,6 +1447,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_163821) do
   add_foreign_key "repository_list_values", "users", column: "last_modified_by_id"
   add_foreign_key "repository_number_values", "users", column: "created_by_id"
   add_foreign_key "repository_number_values", "users", column: "last_modified_by_id"
+  add_foreign_key "repository_row_connections", "repository_rows", column: "child_id"
+  add_foreign_key "repository_row_connections", "repository_rows", column: "parent_id"
+  add_foreign_key "repository_row_connections", "users", column: "created_by_id"
+  add_foreign_key "repository_row_connections", "users", column: "last_modified_by_id"
   add_foreign_key "repository_rows", "users", column: "archived_by_id"
   add_foreign_key "repository_rows", "users", column: "created_by_id"
   add_foreign_key "repository_rows", "users", column: "last_modified_by_id"
@@ -1495,8 +1510,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_163821) do
   add_foreign_key "user_my_modules", "my_modules"
   add_foreign_key "user_my_modules", "users"
   add_foreign_key "user_my_modules", "users", column: "assigned_by_id"
-  add_foreign_key "user_notifications", "notifications"
-  add_foreign_key "user_notifications", "users"
   add_foreign_key "user_projects", "projects"
   add_foreign_key "user_projects", "users"
   add_foreign_key "user_projects", "users", column: "assigned_by_id"

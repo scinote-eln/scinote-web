@@ -54,7 +54,7 @@ export default {
     reloadCurrentLevel: Boolean,
     reloadChildrenLevel: Boolean
   },
-  data: function() {
+  data() {
     return {
       childrenExpanded: false,
       childrenLoaded: false,
@@ -62,13 +62,13 @@ export default {
     };
   },
   computed: {
-    hasChildren: function() {
+    hasChildren() {
       if (this.item.disabled) return false;
       if (this.item.has_children) return true;
       if (this.children && this.children.length > 0) return true;
-      return false
+      return false;
     },
-    sortedMenuItems: function() {
+    sortedMenuItems() {
       if (!this.children) return [];
 
       return this.children.sort((a, b) => {
@@ -81,44 +81,43 @@ export default {
         return 0;
       });
     },
-    activeItem: function() {
+    activeItem() {
       return this.item.id == this.currentItemId;
     },
-    itemIcon: function() {
-      switch(this.item.type) {
+    itemIcon() {
+      switch (this.item.type) {
         case 'folder':
           return 'sn-icon mini sn-icon-mini-folder-left';
         default:
           return null;
       }
     },
-    itemToolTip: function() {
-      if (this.item.type == 'folder')
-        return this.item.name;
-      return this.i18n.t('sidebar.elements_tooltip', { type: this.i18n.t(`activerecord.models.${this.item.type}`), name: this.item.name});
+    itemToolTip() {
+      if (this.item.type == 'folder') return this.item.name;
+      return this.i18n.t('sidebar.elements_tooltip', { type: this.i18n.t(`activerecord.models.${this.item.type}`), name: this.item.name });
     }
   },
-  created: function() {
+  created() {
     if (this.item.children) this.children = this.item.children;
   },
-  mounted: function() {
+  mounted() {
     this.selectItem();
   },
   watch: {
-    currentItemId: function() {
+    currentItemId() {
       this.selectItem();
     },
-    reloadChildrenLevel: function() {
+    reloadChildrenLevel() {
       if (this.reloadChildrenLevel && this.item.id == this.currentItemId) {
         this.loadChildren();
       }
     },
-    reloadCurrentLevel: function() {
+    reloadCurrentLevel() {
       if (this.reloadCurrentLevel && this.children.find((item) => item.id == this.currentItemId)) {
         this.loadChildren();
       }
     },
-    children: function() {
+    children() {
       if (this.children && this.children.length > 0) {
         this.childrenExpanded = true;
       } else if (this.childrenLoaded) {
@@ -127,21 +126,21 @@ export default {
     }
   },
   methods: {
-    toggleChildren: function() {
+    toggleChildren() {
       this.childrenExpanded = !this.childrenExpanded;
       if (this.childrenExpanded) this.loadChildren();
     },
-    loadChildren: function() {
-      $.get(this.item.children_url, {archived: this.archived}, (data) => {
+    loadChildren() {
+      $.get(this.item.children_url, { archived: this.archived }, (data) => {
         this.children = data.items;
         this.childrenLoaded = true;
       });
     },
-    treeExpand: function() {
+    treeExpand() {
       this.childrenExpanded = true;
       this.$emit('item:expand');
     },
-    selectItem: function() {
+    selectItem() {
       if (this.activeItem && !this.childrenExpanded) {
         this.$emit('item:expand');
         if (this.hasChildren) {
@@ -150,6 +149,6 @@ export default {
         }
       }
     }
-  },
-}
+  }
+};
 </script>

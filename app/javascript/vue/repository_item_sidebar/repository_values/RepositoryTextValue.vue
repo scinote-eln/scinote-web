@@ -27,15 +27,16 @@
                  @update="update"
                  className="px-3" />
     </div>
-    <div v-else-if="colVal?.edit"
-          ref="textRef"
-          class="text-sn-dark-grey box-content text-sm font-normal leading-5 overflow-y-auto pr-3 rounded w-[calc(100%-2rem)]]"
-          :class="{
-            'max-h-[4rem]': collapsed,
-            'max-h-[40rem]': !collapsed
-          }"
+    <div v-else-if="colVal?.view"
+         ref="textRef"
+         v-html="colVal?.view"
+         class="text-sn-dark-grey box-content text-sm font-normal leading-5
+                overflow-y-auto pr-3 rounded w-[calc(100%-2rem)]]"
+         :class="{
+           'max-h-[4rem]': collapsed,
+           'max-h-[40rem]': !collapsed
+         }"
     >
-      {{ colVal?.edit }}
     </div>
     <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5 pr-3 py-2 w-[calc(100%-2rem)]]">
       {{ i18n.t("repositories.item_card.repository_text_value.no_text") }}
@@ -44,20 +45,20 @@
 </template>
 
 <script>
-import repositoryValueMixin from "./mixins/repository_value.js";
-import Textarea from "../../shared/Textarea.vue";
+import repositoryValueMixin from './mixins/repository_value.js';
+import Textarea from '../../shared/Textarea.vue';
 
 export default {
-  name: "RepositoryTextValue",
+  name: 'RepositoryTextValue',
   mixins: [repositoryValueMixin],
   components: {
-    'text-area': Textarea,
+    'text-area': Textarea
   },
   data() {
     return {
       expandable: false,
       collapsed: true,
-      textValue: '',
+      textValue: ''
     };
   },
   props: {
@@ -69,7 +70,16 @@ export default {
   },
   created() {
     // constants
-    this.noContentPlaceholder = this.i18n.t("repositories.item_card.repository_text_value.no_text");
+    this.noContentPlaceholder = this.i18n.t('repositories.item_card.repository_text_value.no_text');
+  },
+  mounted() {
+    const maxCollapsedHeight = 60;
+    const textRefEl = this.$refs.textRef;
+    this.$nextTick(() => {
+      if (!textRefEl) return;
+      const isExpandable = textRefEl.scrollHeight > maxCollapsedHeight;
+      this.expandable = isExpandable;
+    });
   },
   methods: {
     toggleCollapse() {
@@ -79,7 +89,7 @@ export default {
     },
     toggleExpandableState(expandable) {
       this.expandable = expandable;
-    },
-  },
+    }
+  }
 };
 </script>

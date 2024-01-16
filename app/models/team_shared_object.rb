@@ -4,6 +4,7 @@ class TeamSharedObject < ApplicationRecord
   enum permission_level: Extends::SHARED_OBJECTS_PERMISSION_LEVELS.except(:not_shared)
 
   after_create :assign_shared_inventories, if: -> { shared_object.is_a?(Repository) }
+  before_destroy :unlink_unshared_items, if: -> { shared_object.is_a?(Repository) }
   before_destroy :unassign_unshared_items, if: -> { shared_object.is_a?(Repository) }
   before_destroy :unassign_unshared_inventories, if: -> { shared_object.is_a?(Repository) }
 
@@ -54,5 +55,23 @@ class TeamSharedObject < ApplicationRecord
 
   def unassign_unshared_inventories
     team.repository_sharing_user_assignments.where(assignable: shared_object).find_each(&:destroy!)
+  end
+
+  def unlink_unshared_items
+    repository_rows_ids = shared_object.repository_rows.select(:id)
+    rows_to_unlink = RepositoryRow.joins("LEFT JOIN repository_row_connections \
+                                         ON repository_rows.id = repository_row_connections.parent_id \
+                                         OR repository_rows.id = repository_row_connections.child_id")
+                                  .where("repository_row_connections.parent_id IN (?) \
+                                         OR repository_row_connections.child_id IN (?)",
+                                         repository_rows_ids,
+                                         repository_rows_ids)
+                                  .joins(:repository)
+                                  .where(repositories: { team: team })
+
+    RepositoryRowConnection.where(parent: rows_to_unlink, child: repository_rows_ids)
+                           .destroy_all
+    RepositoryRowConnection.where(parent: repository_rows_ids, child: rows_to_unlink)
+                           .destroy_all
   end
 end

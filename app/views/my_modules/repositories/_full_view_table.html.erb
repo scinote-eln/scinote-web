@@ -1,4 +1,4 @@
-<table class="table"
+<table class="table repository-dataTable"
        data-id="<%= @repository.id %>"
        data-type="live"
        data-source="<%= index_dt_my_module_repository_path(@my_module, @repository) %>"
@@ -26,6 +26,7 @@
       <% end %>
       <th id="row-id"><%= t("repositories.table.id") %></th>
       <th id="row-name"><%= t("repositories.table.row_name") %></th>
+      <th id="relationship"><%= t("repositories.table.relationships") %></th>
       <th id="added-on"><%= t("repositories.table.added_on") %></th>
       <th id="added-by"><%= t("repositories.table.added_by") %></th>
       <th id="archived-on"><%= t("repositories.table.archived_on") %></th>

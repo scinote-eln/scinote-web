@@ -30,7 +30,7 @@ class AssetSerializer < ActiveModel::Serializer
   end
 
   def updated_at_formatted
-    I18n.l(object.updated_at, format: :full_date) if object.updated_at
+    I18n.l(object.updated_at, format: :full_with_comma) if object.updated_at
   end
 
   def parent_type
@@ -120,7 +120,7 @@ class AssetSerializer < ActiveModel::Serializer
   def urls
     urls = {
       preview: asset_file_preview_path(object),
-      download: (rails_blob_path(object.file, disposition: 'attachment') if attached),
+      download: (asset_download_path(object) if attached),
       load_asset: load_asset_path(object),
       asset_file: asset_file_url_path(object),
       marvin_js: marvin_js_asset_path(object),

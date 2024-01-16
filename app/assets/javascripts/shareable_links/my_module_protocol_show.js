@@ -37,11 +37,9 @@
   function initializeHandsonTable(el) {
     var input = el.siblings('input.hot-table-contents');
     var inputObj = JSON.parse(input.attr('value'));
-    var metadataJson = el.siblings('input.hot-table-metadata');
     var data = inputObj.data;
-    var metadata;
+    const metadata = JSON.parse(el.siblings('input.hot-table-metadata').val() || '{}');
 
-    metadata = JSON.parse(metadataJson.val() || '{}');
     el.handsontable({
       disableVisualSelection: true,
       rowHeaders: tableColRowName.tableRowHeaders(metadata.plateTemplate),

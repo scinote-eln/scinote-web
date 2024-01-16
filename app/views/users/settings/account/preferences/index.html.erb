@@ -1,106 +1,17 @@
 <% provide(:head_title, t("users.settings.account.preferences.head_title")) %>
-<% provide(:container_class, "no-second-nav-container") %>
 
-<%= render partial: "users/settings/sidebar" %>
-<div class="tab-content user-account-preferences">
-  <div class="tab-pane content-pane active" role="tabpanel">
-
-    <div class="row">
-      <div class="col-xs-12 col-sm-12">
-        <h1 class="preferences-title"><%= t('users.settings.account.preferences.title') %></h1>
-        <div class="time-zone-container">
-          <%= label_tag t("users.settings.account.preferences.edit.time_zone_label") %>
-          <div class="time-zone-selector-container">
-            <%= select_tag "time-zone-input-field",
-                            options_for_select(
-                              ActiveSupport::TimeZone.all.map{ |tz|
-                                [tz.formatted_offset + " " + tz.name, tz.name]
-                              },
-                              @user.settings[:time_zone]
-                            ),{
-                              'data-path-to-update': update_preferences_path(format: :json),
-                              class: 'hidden'
-                            }
-            %>
-          </div>
-          <small><%= t("users.settings.account.preferences.edit.time_zone_sublabel") %></small>
-        </div>
-
-        <div class="date-format-container">
-          <%= label_tag t("users.settings.account.preferences.edit.date_format_label") %>
-          <div class="date-format-selector-container">
-            <%= select_tag "date-format-input-field",
-                            options_for_select(
-                              Constants::SUPPORTED_DATE_FORMATS.map { |df|
-                                ["#{l(Time.new(2024, 4, 22), format: :full_date, date_format: df)}", df]
-                              },
-                              @user.settings[:date_format]
-                            ),{
-                              'data-path-to-update': update_preferences_path(format: :json),
-                              class: 'hidden'
-                            }
-            %>
-          </div>
-          <small><%= t("users.settings.account.preferences.edit.date_format_sublabel") %></small>
-        </div>
-        <hr>
-        <%= form_for(@user,
-                     url: update_togglable_settings_path(format: :json),
-                     html: { method: :post, id: 'togglable-settings-panel' },
-                     remote: true) do |f| %>
-          <div class="preferences-settings-container">
-            <h4><%= t('notifications.title') %></h4>
-            <div class="row">
-              <div class="col-sm-12">
-                <strong><%=t 'notifications.form.assignments' %></strong>
-                <p><%=t 'notifications.form.assignments_description' %></p>
-                <div class="row">
-                  <div class="col-sm-4">
-                    <%=t 'notifications.form.notification_scinote' %>
-                  </div>
-                  <div class="col-sm-8">
-                    <%= check_box_tag :assignments_notification, @user.assignments_notification %>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-4">
-                    <%=t 'notifications.form.notification_email' %>
-                  </div>
-                  <div class="col-sm-8">
-                    <%= check_box_tag :assignments_notification_email, @user.assignments_email_notification %>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-12">
-                  <strong><%=t 'notifications.form.recent_notification' %></strong>
-                  <p><%=t 'notifications.form.recent_notification_description' %></p>
-                  <div class="row">
-                    <div class="col-sm-4">
-                      <%=t 'notifications.form.notification_scinote' %>
-                    </div>
-                    <div class="col-sm-8">
-                      <%= check_box_tag :recent_notification, @user.recent_notification %>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-sm-4">
-                      <%=t 'notifications.form.notification_email' %>
-                    </div>
-                    <div class="col-sm-8">
-                      <%= check_box_tag :recent_notification_email, @user.recent_email_notification %>
-                    </div>
-                  </div>
-              </div>
-            </div>
-          </div>
-        <% end %>
-        <br>
-      </div>
-    </div>
-  </div>
-  <div class="tab-pane tab-pane-settings" role="tabpanel"></div>
+<div id="user_preferences" class="contents">
+  <user-preferences
+    :update-url = "'<%= update_preferences_path(format: :json) %>'"
+    :user-settings = "<%= @user.settings.to_json %>"
+    :time-zones = "<%= ActiveSupport::TimeZone.all.map{ |tz|
+                                [ tz.name, tz.formatted_offset + " " + tz.name]
+                              }.to_json %>"
+    :date-formats = "<%= Constants::SUPPORTED_DATE_FORMATS.map { |df|
+                                [df, "#{l(Time.new(2024, 4, 22), format: :full_date, date_format: df)}"]
+                              }.to_json %>"
+    :notifications-groups = "<%= NotificationExtends::NOTIFICATIONS_GROUPS.to_json %>"
+  />
 </div>
 
-<%= javascript_include_tag "users/settings/account/preferences/index" %>
+<%= javascript_include_tag "vue_user_preferences" %>

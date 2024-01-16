@@ -10,7 +10,7 @@ class AssetSyncToken < ApplicationRecord
   validates :token, uniqueness: true, presence: true
 
   def version_token
-    asset.updated_at.to_i.to_s
+    asset.file.checksum
   end
 
   def token_valid?

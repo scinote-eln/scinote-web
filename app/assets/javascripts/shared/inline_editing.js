@@ -148,9 +148,6 @@ let inlineEditing = (function() {
         $(editBlocks).click();
       }
     })
-    .on('blur', `${editBlocks} textarea, ${editBlocks} input`, function(e) {
-      saveAllEditFields();
-    })
     .on('click', editBlocks, function(e) {
     // 'A' mean that, if we click on <a></a> element we will not go in edit mode
       var container = $(this);

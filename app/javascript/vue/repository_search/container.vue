@@ -3,7 +3,7 @@
     class="flex items-center mr-3 flex-nowrap relative"
     v-click-outside="closeSearchInputs"
   >
-    <button :class="{hidden: searchOpened}" ref='searchInputBtn' class="btn btn-light btn-black icon-btn" :title="i18n.t('repositories.show.search_button_tooltip')" @click="openSearch">
+    <button :class="{hidden: searchOpened}" ref='searchInputBtn' class="btn btn-light btn-black icon-btn" data-e2e="e2e-BT-invInventoryRT-search" :title="i18n.t('repositories.show.search_button_tooltip')" @click="openSearch">
       <i class="sn-icon sn-icon-search"></i>
     </button>
     <div v-if="searchOpened || barcodeSearchOpened" class="w-52 flex">
@@ -28,14 +28,14 @@
         <i class='sn-icon sn-icon-barcode barcode-scanner !mr-2.5'></i>
       </div>
     </div>
-    <button :class="{hidden: barcodeSearchOpened}" ref='barcodeSearchInputBtn' class="btn btn-light btn-black icon-btn ml-2" :title="i18n.t('repositories.show.ean_search_button_tooltip')" @click="openBarcodeSearch">
+    <button :class="{hidden: barcodeSearchOpened}" ref='barcodeSearchInputBtn' class="btn btn-light btn-black icon-btn ml-2" data-e2e="e2e-BT-invInventoryRT-barcode" :title="i18n.t('repositories.show.ean_search_button_tooltip')" @click="openBarcodeSearch">
       <i class='sn-icon sn-icon-barcode barcode-scanner'></i>
     </button>
   </div>
 </template>
 
 <script>
-import { vOnClickOutside } from '@vueuse/components'
+import { vOnClickOutside } from '@vueuse/components';
 
 export default {
   name: 'RepositorySearchContainer',
@@ -48,7 +48,7 @@ export default {
       barcodeValue: '',
       searchOpened: false,
       value: ''
-    }
+    };
   },
   directives: {
     'click-outside': vOnClickOutside
@@ -94,7 +94,6 @@ export default {
         setTimeout(() => {
           this.barcodeSearchOpened = false;
         }, 100);
-
       }
     },
     closeSearch() {
@@ -118,5 +117,5 @@ export default {
       this.closeBarcodeSearch();
     }
   }
-}
+};
 </script>

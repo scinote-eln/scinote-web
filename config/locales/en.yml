@@ -215,12 +215,15 @@ en:
               must_exist: Filter cannot be saved because one or more columns no longer exist. Please update your filter before saving.
             parameters:
               must_be_valid: Filter cannot be saved because some filter values no longer exist. Please update your filter before saving.
+        repository_row_connection:
+          self_connection: 'A repository_row cannot have a connection with itself'
+          reciprocal_connection: 'Reciprocal connections are not allowed'
         webhook:
           attributes:
             configuration:
               disabled: 'Webhooks are disabled'
             url:
-              not_valid: 'Not valid URL'
+              not_valid: 'not valid URL'
         result_text:
           attributes:
             text:
@@ -406,7 +409,7 @@ en:
       leaving_warning: 'Your changes will be lost if you navigate away'
     thumbnail:
       buttons:
-        edit: "Edit"
+        open: "Open"
         move: "Move"
         download: "Download"
         delete: "Delete"
@@ -1299,7 +1302,8 @@ en:
           16_x_24: '384 (16 x 24)'
           8_x_12: '96 (8 x 12)'
           6_x_8: '48 (6 x 8 )'
-          6_x_4: '24 (6 x 4)'
+          4_x_6: '24 (4 x 6)'
+          3_x_4: '12 (3 x 4)'
           2_x_3: '6 (2 x 3)'
       text:
         placeholder: "Enter result text"
@@ -1941,7 +1945,7 @@ en:
         archived_on: "Inventory archived on"
         archived_by: "by"
       filter_inventory_items: "Search items"
-      filter_inventory_items_with_ean: "Search with EAN code"
+      filter_inventory_items_with_ean: "Search with barcode"
       search_button_tooltip: "Quick search"
       ean_search_button_tooltip: "Barcode search"
       no_items: "No items here"
@@ -2054,6 +2058,9 @@ en:
       added_by: "Added by"
       archived_on: "Archived on"
       archived_by: "Archived by"
+      relationships: "Relationships"
+      children: "Children"
+      parents: "Parents"
       row_consumption: "Consumed"
       enter_row_name: "Enter name"
       locked_item: "This is read-only item."
@@ -2223,9 +2230,25 @@ en:
     my_module_assigned_snapshot_service:
       invalid_arguments: "Can't find %{key}"
     item_card:
+      add_relationship_button_text: "Add"
+      repository_item_relationships_modal:
+        header_title: "Add relationship"
+        header_subtitle: "Select the fields below to add new relationship."
+        add_button: "Add"
+        cancel_button: "Cancel"
+        select_inventory_placeholder: "Select inventory name"
+        select_inventory_no_options_placeholder: "No inventory options"
+        select_item_placeholder: "Select item name or ID"
+        select_item_no_options_placeholder: "No items options"
+        select_relationship_placeholder: "Select relationship"
+        select_relationship_no_options_placeholder: "No relationship options"
+        inventory_section_title: "Inventory"
+        item_section_title: "Item"
+        relationship_section_title: "Relationship"
       header_title: "Inventory item"
       section:
         information: "Information"
+        relationships: "Relationships"
         assigned: "Assigned (%{count})"
         qr: "QR"
       print_label: "Print label"
@@ -2233,13 +2256,28 @@ en:
         empty: "This item is not assigned to any task."
         assign: "Assign to task"
         private:
-          one: "Assigned to %{count} private task"
-          other: "Assigned to %{count} private tasks"
+          one: "Assigned to %{count} private task that will not be displayed"
+          other: "Assigned to %{count} private tasks that will not be displayed"
         labels:
           team: "Team:"
           project: "Project:"
           experiment: "Experiment:"
           my_module: "Task:"
+      relationships:
+        id: "ID: %{code}"
+        item: "Item: "
+        inventory: "Inventory: "
+        empty: "This item has no relationships assigned."
+        parents:
+          count: "Parents (%{count})"
+          empty: ""
+        children:
+          count: "Children (%{count})"
+          empty: ""
+        unlink_modal:
+          title: "Unlink item"
+          description: "Are you sure you want to unlink the item? Reconnection is possible later if needed."
+          unlink: "Unlink"
       default_columns:
         repository_name: "Inventory"
         id: "Item ID"
@@ -2315,6 +2353,7 @@ en:
     highlight_component:
       information_label: 'Information'
       custom_columns_label: 'Custom columns'
+      relationships_label: 'Relationships'
       assigned_label: 'Assigned'
       QR_label: 'QR'
   repository_stock_values:
@@ -2365,6 +2404,8 @@ en:
         stock_amount_balance: 'Stock amount after update (balance)'
         stock_balance_unit: 'Stock unit after update'
   repository_rows:
+    invalid_params: "Invalid params"
+  repository_row_connections:
     invalid_params: "Invalid params"
   repository_ledger_records:
     errors:
@@ -2753,11 +2794,11 @@ en:
             description: 'Print labels of custom styles and sizes in seconds flat from your PC or Mac via your Zebra printer connected via USB, Internet or LAN.'
             details: 'Details'
           desktop_app:
-            title: 'SciNote File Editor desktop app'
-            description: 'Download the SciNote File Editor desktop app to automatically edit files using locally installed software'
+            title: 'SciNote Edit'
+            description: 'Download the SciNote Edit desktop app to automatically edit files using locally installed software.'
             macos_button: 'Download for macOS'
             windows_button: 'Download for Windows'
-            version: 'Version'
+            version: 'Version %{version}'
         label_printer:
           fluics_printer: "FLUICS Print: Label printers"
           zebra_printer: 'Zebra label printers'
@@ -3081,7 +3122,7 @@ en:
       protocol_description: 'Protocol description'
       protocol_steps: 'Protocol steps'
       publish: 'Publish'
-      save_as_draft: 'Save as draft'
+      save_as_draft: 'Create new draft'
       draft: 'Draft'
       version: "Version:"
       published_on: "Published on:"
@@ -3206,7 +3247,7 @@ en:
         revision: "Version %{version}"
         revision_publishing_info: "Published on %{published_on}, by %{published_by}"
         publish: "Publish"
-        save_as_draft: "Save as draft"
+        save_as_draft: "Create new draft"
         comment_placeholder: "Click here to enter revision notes"
       protocolsio:
         search_bar_placeholder: 'Search for protocols'
@@ -3281,7 +3322,8 @@ en:
           16_x_24: '384 (16 x 24)'
           8_x_12: '96 (8 x 12)'
           6_x_8: '48 (6 x 8 )'
-          6_x_4: '24 (6 x 4)'
+          4_x_6: '24 (4 x 6)'
+          3_x_4: '12 (3 x 4)'
           2_x_3: '6 (2 x 3)'
       table:
         default_name: 'Table %{position}'
@@ -3429,14 +3471,35 @@ en:
 
   notifications:
     title: "Notifications"
-    email_settings: "E-mail notifications"
-    form:
-      assignments: "Assignment"
-      notification_scinote: 'Show in SciNote'
-      notification_email: 'Notify me via email'
-      assignments_description: 'Assignment notifications appear whenever you get assigned to a team, project, task.'
-      recent_notification: 'Recent changes'
-      recent_notification_description: 'Recent changes notifications appear whenever there is a change on a task you are assigned to.'
+    sub_title: "Define which updates to get notified and where"
+    in_app: "In-app"
+    email: "Email"
+    breadcrumb: "Preferences"
+    groups:
+      my_module: "Task"
+      project_experiment: "Project & Experiment"
+      repository: "Inventories & Items"
+      other: "Others"
+    sub_groups:
+      my_module_designation: "You were assigned to or unassigned from a task"
+      my_module_due_date: "Due date & time reminder on assigned task (24h before)"
+      my_module_comments: "A comment was added or edited on a task you are assigned to"
+      project_experiment_access: "You were added or removed from a Project"
+      project_experiment_role_change: "Your role on Project, Experiment, or Task was changed"
+      repository_stock: "Low stock reminder"
+      repository_date_reminder: "Date reminder"
+      other_smart_annotation: "You were tagged"
+      other_team_invitation: "You were invited or removed from the team"
+    content:
+      my_module_due_date_reminder:
+        title_html: "Task due date reminder"
+        message_html: "Due date for the task %{my_module_name} is coming up."
+      item_low_stock_reminder:
+        title_html: "Item stock reminder"
+        message_html: "Item %{repository_row_name} in inventory %{repository} is running low."
+      item_date_reminder:
+        title_html: "Item date reminder"
+        message_html: "Date reminder for %{repository_row_name} is coming up in %{value} %{units}."
     deliver:
       download_link: "Download link:"
       download_text: "Click the link to download the file."
@@ -3532,13 +3595,20 @@ en:
       thumbnail_html: "Thumbnail"
       list_html: "List"
     delete_file_modal:
-      title: "Delete attachment"
+      title: "Delete file"
       description_1_html: "You are about to delete <b>%{file_name}</b></p>"
       description_2: "Are you sure you want to continue?"
-      confirm_button: "Delete attachment"
+      confirm_button: "Delete"
     empty_office_file:
       description: "The file is empty. Please add some data before saving the file."
       reload: "Reload file"
+    asset_sync:
+      body_text_html: "The specified application for accessing the <b>%{file_name}</b> is not preconfigured. To successfully open this file, please set up the appropriate application in your local environment beforehand.</p>"
+      no_predefined_app: "I understand"
+      set_up_app: "Set up an application to open this file"
+    edit_launching_application_modal:
+      title: "Launching application"
+      description: "%{file_name} will now open in %{application}. Saved changes in %{application} will automatically be synced in SciNote."
 
   atwho:
     no_results:
@@ -3747,6 +3817,7 @@ en:
     selected: "Selected"
     loading: "Loading..."
     replace: "Replace"
+    options_selected: 'options selected'
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
     'no': "No"
@@ -3858,6 +3929,9 @@ en:
         read_users_permission:
           title: "Permission denied"
           detail: "You don't have permission to read users on %{model}"
+        mutually_exclusive_params_error:
+          title: "Mutually Exclusive Parameters"
+          detail: "Parameters %{first_param} and %{second_param} should not be specified at the same time."
         update_stock_consumption_permission:
           title: "Permission denied"
           detail: "You don't have permisson to update stock consumption on this task item."

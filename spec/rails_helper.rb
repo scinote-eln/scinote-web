@@ -7,6 +7,7 @@ require_relative 'support/controller_macros'
 ENV['RAILS_ENV'] = 'test'
 
 ENV['CORE_API_V1_ENABLED'] = 'true'
+ENV['CORE_API_V2_ENABLED'] = 'true'
 
 require File.expand_path('../../config/environment', __FILE__)
 # Prevent database truncation if the environment is production

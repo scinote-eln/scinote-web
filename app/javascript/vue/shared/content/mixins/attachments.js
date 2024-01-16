@@ -36,9 +36,10 @@ export default {
       button.click();
     },
     openWopiFileModal() {
-      this.initWopiFileModal(this.attachmentsParent, (_e, data, status) => {
+      this.initWopiFileModal(this.attachmentsParent, (_e, attachmentData, status) => {
         if (status === 'success') {
-          this.addAttachment(data)
+          const attachment = attachmentData.data;
+          this.addAttachment(attachment);
         } else {
           HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         }
@@ -96,10 +97,7 @@ export default {
           upload.create((error, blob) => {
             if (error) {
               fileObject.error = I18n.t('attachments.new.general_error');
-              this.attachments.splice(filePosition, 1);
-              setTimeout(() => {
-                this.attachments.push(fileObject);
-              }, 0);
+              this.attachments = this.attachments.with(filePosition, fileObject);
               reject(error);
             } else {
               const signedId = blob.signed_id;
@@ -108,16 +106,10 @@ export default {
               }, (result) => {
                 fileObject.id = result.data.id;
                 fileObject.attributes = result.data.attributes;
-                this.attachments.splice(filePosition, 1);
-                setTimeout(() => {
-                  this.attachments.push(fileObject);
-                }, 0);
+                this.attachments = this.attachments.with(filePosition, fileObject);
               }).fail(() => {
                 fileObject.error = I18n.t('attachments.new.general_error');
-                this.attachments.splice(filePosition, 1);
-                setTimeout(() => {
-                  this.attachments.push(fileObject);
-                }, 0);
+                this.attachments = this.attachments.with(filePosition, fileObject);
               });
               filesUploadedCntr += 1;
               if (filesUploadedCntr === filesToUploadCntr) {

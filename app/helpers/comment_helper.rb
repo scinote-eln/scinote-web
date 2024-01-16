@@ -125,6 +125,7 @@ module CommentHelper
     smart_annotation_notification(
       old_text: old_text,
       new_text: comment.message,
+      subject: result,
       title: t('notifications.result_comment_annotation_title',
                result: result.name,
                user: current_user.full_name),
@@ -147,6 +148,7 @@ module CommentHelper
     smart_annotation_notification(
       old_text: old_text,
       new_text: comment.message,
+      subject: project,
       title: t('notifications.project_comment_annotation_title',
                project: project.name,
                user: current_user.full_name),
@@ -160,6 +162,7 @@ module CommentHelper
     smart_annotation_notification(
       old_text: old_text,
       new_text: comment.message,
+      subject: step.protocol,
       title: t('notifications.step_comment_annotation_title',
                step: step.name,
                user: current_user.full_name),
@@ -184,6 +187,7 @@ module CommentHelper
     smart_annotation_notification(
       old_text: old_text,
       new_text: comment.message,
+      subject: my_module,
       title: t('notifications.my_module_comment_annotation_title',
                my_module: my_module.name,
                user: current_user.full_name),

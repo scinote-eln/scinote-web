@@ -6,11 +6,12 @@ describe UserMyModulesController, type: :controller do
   login_user
 
   include_context 'reference_project_structure'
+  let(:other_user) { create :user }
 
   describe 'POST create' do
     let(:action) { post :create, params: params, format: :json }
     let(:params) do
-      { my_module_id: my_module.id, user_my_module: { user_id: user.id } }
+      { my_module_id: my_module.id, user_my_module: { user_id: other_user.id } }
     end
 
     it 'calls create activity for assigning user to task' do

@@ -48,7 +48,9 @@ module RepositoryActions
         name: "#{name} (1)",
         created_by_id: user_id,
         created_at: timestamp,
-        updated_at: timestamp }
+        updated_at: timestamp,
+        parent_connections_count: 0,
+        child_connections_count: 0 }
     end
   end
 end

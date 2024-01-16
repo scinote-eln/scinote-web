@@ -127,6 +127,10 @@ var MyModuleRepositories = (function() {
         render: function(data, type, row) {
           return "<a href='" + row.recordInfoUrl + "' class='record-info-link'>" + data + '</a>';
         }
+      }, {
+        targets: 4,
+        class: 'relationship',
+        render: (data, type, row) => $.fn.dataTable.render.RelationshipValue(data, row)
       });
     } else {
       columnDefs.push({

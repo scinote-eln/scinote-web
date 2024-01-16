@@ -13,17 +13,17 @@
 </template>
 
 <script>
-  export default {
-    name: 'emptyAttachment',
-    props: {
-      attachment: {
-        type: Object,
-        required: true
-      },
-      parentId: {
-        type: Number,
-        required: true
-      }
+export default {
+  name: 'emptyAttachment',
+  props: {
+    attachment: {
+      type: Object,
+      required: true
+    },
+    parentId: {
+      type: Number,
+      required: true
     }
   }
+};
 </script>

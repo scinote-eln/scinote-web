@@ -2,7 +2,9 @@
   <div class="sci--navigation--notificaitons-flyout">
     <div class="sci--navigation--notificaitons-flyout-title">
       {{ i18n.t('nav.notifications.title') }}
-      <i class="sn-icon sn-icon-close" @click="$emit('close')"></i>
+      <a class="ml-auto cursor-pointer" :href="this.preferencesUrl" :title="i18n.t('nav.settings')">
+        {{ i18n.t('nav.settings') }}
+      </a>
     </div>
     <hr>
     <perfect-scrollbar ref="scrollContainer" class="sci--navigation--notificaitons-flyout-notifications">
@@ -25,7 +27,8 @@
 
 <script>
 
-import NotificationItem from './notification_item.vue'
+import NotificationItem from './notification_item.vue';
+import axios from '../../../packs/custom_axios.js';
 
 export default {
   name: 'NotificationsFlyout',
@@ -34,27 +37,29 @@ export default {
   },
   props: {
     notificationsUrl: String,
-    unseenNotificationsCount: Number
+    unseenNotificationsCount: Number,
+    preferencesUrl: String
   },
   data() {
     return {
       notifications: [],
-      nextPage: 1,
+      nextPageUrl: null,
       scrollBar: null,
       loadingPage: false
-    }
+    };
   },
   created() {
+    this.nextPageUrl = this.notificationsUrl;
     this.loadNotifications();
   },
   mounted() {
-    let container = this.$refs.scrollContainer.$el
+    const container = this.$refs.scrollContainer.$el;
 
     container.addEventListener('ps-scroll-y', (e) => {
       if (e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight - 20) {
         this.loadNotifications();
       }
-    })
+    });
   },
   beforeUnmount() {
     document.body.style.overflow = 'scroll';
@@ -64,24 +69,29 @@ export default {
       this.loadNotifications();
     },
     todayNotifications() {
-      return this.notifications.filter(n => n.today);
+      return this.notifications.filter((n) => n.attributes.today);
     },
     olderNotifications() {
-      return this.notifications.filter(n => !n.today);
+      return this.notifications.filter((n) => !n.attributes.today);
     }
   },
   methods: {
     loadNotifications() {
-      if (this.nextPage == null || this.loadingPage) return;
+      if (this.nextPageUrl == null || this.loadingPage) return;
 
       this.loadingPage = true;
-      $.getJSON(this.notificationsUrl, { page: this.nextPage }, (result) => {
-        this.notifications = this.notifications.concat(result.notifications);
-        this.nextPage = result.next_page;
-        this.loadingPage = false;
-        this.$emit('update:unseenNotificationsCount');
-      });
+
+      axios.get(this.nextPageUrl)
+        .then((response) => {
+          this.notifications = this.notifications.concat(response.data.data);
+          this.nextPageUrl = response.data.links.next;
+          this.loadingPage = false;
+          this.$emit('update:unseenNotificationsCount');
+        })
+        .catch((error) => {
+          this.loadingPage = false;
+        });
     }
   }
-}
+};
 </script>

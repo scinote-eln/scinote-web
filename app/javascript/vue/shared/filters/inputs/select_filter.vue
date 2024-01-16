@@ -3,13 +3,13 @@
 </template>
 
 <script>
-  import Select from '../../select.vue';
+import Select from '../../select.vue';
 
-  export default {
-    name: 'SelectFilter',
-    props: {
-      filter: { type: Object, required: true }
-    },
-    components: { Select }
-  }
+export default {
+  name: 'SelectFilter',
+  props: {
+    filter: { type: Object, required: true }
+  },
+  components: { Select }
+};
 </script>
