@@ -251,7 +251,9 @@ class TeamZipExportJob < ZipExportJob
     csv_file_path = "#{path}/#{repo_name}.csv"
 
     # Define headers and columns IDs
-    col_ids = [-3, -4, -5, -6, 'relationship'] + repo.repository_columns.map(&:id)
+    col_ids = [-3, -4, -5, -6]
+    col_ids << -9 if Repository.repository_row_connections_enabled?
+    col_ids += repo.repository_columns.map(&:id)
 
     # Define callback function for file name
     assets = {}
@@ -269,7 +271,7 @@ class TeamZipExportJob < ZipExportJob
 
     # Generate CSV
     csv_data = RepositoryZipExport.to_csv(repo.repository_rows, col_ids, @user, repo, handle_name_func)
-    File.binwrite(csv_file_path, csv_data)
+    File.binwrite(csv_file_path, csv_data.encode('UTF-8', invalid: :replace, undef: :replace))
 
     # Save all attachments (it doesn't work directly in callback function
     assets.each do |asset, asset_path|
