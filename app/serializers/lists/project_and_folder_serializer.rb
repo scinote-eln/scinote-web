@@ -61,7 +61,7 @@ module Lists
       urls_list[:show] = nil if project? && !can_read_project?(object)
 
       urls_list[:update] = if project?
-                             experiments_path(project_id: object)
+                             project_path(object)
                            else
                              project_folder_path(object)
                            end

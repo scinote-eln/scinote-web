@@ -12,7 +12,7 @@ class ReportsController < ApplicationController
   before_action :load_available_repositories, only: %i(index save_pdf_to_inventory_modal available_repositories)
   before_action :check_project_read_permissions, only: %i(create edit update generate_pdf
                                                           generate_docx new_template_values project_contents)
-  before_action :check_read_permissions, except: %i(index datatable new create edit update destroy actions_toolbar generate_pdf
+  before_action :check_read_permissions, except: %i(index new create edit update destroy actions_toolbar generate_pdf
                                                     generate_docx new_template_values project_contents
                                                     available_repositories)
   before_action :check_create_permissions, only: %i(new create)
@@ -32,14 +32,6 @@ class ReportsController < ApplicationController
         render 'index'
       end
     end
-  end
-
-  def datatable
-    render json: ::ReportDatatable.new(
-      view_context,
-      current_user,
-      Report.viewable_by_user(current_user, current_team)
-    )
   end
 
   # Report grouped by modules
