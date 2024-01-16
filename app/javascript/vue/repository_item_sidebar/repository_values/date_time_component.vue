@@ -1,7 +1,4 @@
 <template>
-  <div ref="dateTimeRangeOverlay"
-         class="fixed top-0 left-0 right-0 bottom-0 bg-transparent z-[99] hidden">
-    </div>
   <div class="flex gap-1">
     <div class="text-sm font-bold truncate" :title="colName">
       {{ colName }}
@@ -30,11 +27,11 @@
     <template v-else>
       <div>
         <span class="text-xs capitalize" v-if="range">{{  i18n.t('general.from') }}</span>
-        <DateTimePicker :defaultValue="defaultStartDate" @closed="update" @change="updateStartDate" :mode="mode" :placeholder="placeholder" :clearable="true" ref="dateTimePickerFrom"/>
+        <DateTimePicker :defaultValue="defaultStartDate" @closed="update" @change="updateStartDate" :mode="mode" :placeholder="placeholder" :clearable="true"/>
       </div>
       <div>
         <span class="text-xs capitalize" v-if="range">{{  i18n.t('general.to') }}</span>
-        <DateTimePicker :defaultValue="defaultEndDate" @closed="update" v-if="range" @change="updateEndDate" :placeholder="placeholder" :mode="mode" :clearable="true" ref="dateTimePickerTo"/>
+        <DateTimePicker :defaultValue="defaultEndDate" @closed="update" v-if="range" @change="updateEndDate" :placeholder="placeholder" :mode="mode" :clearable="true"/>
       </div>
       <div class="text-xs text-sn-delete-red" v-if="error">{{ error }}</div>
     </template>
@@ -57,9 +54,7 @@ export default {
       endDate: null,
       error: null,
       defaultStartDate: null,
-      defaultEndDate: null,
-      fromPicker: null,
-      toPicker: null
+      defaultEndDate: null
     };
   },
   inject: ['reloadRepoItemSidebar'],
@@ -80,18 +75,6 @@ export default {
 
     this.defaultStartDate = this.startDate;
     this.defaultEndDate = this.endDate;
-  },
-  mounted() {
-    this.fromPicker = this.$refs.dateTimePickerFrom;
-    this.toPicker = this.$refs.dateTimePickerTo;
-    document.addEventListener('click', this.logClick);
-    document.addEventListener('keydown', this.handleKeyDown);
-  },
-  beforeUnmount() {
-    this.fromPicker = null;
-    this.toPicker = null;
-    document.removeEventListener('click', this.logClick);
-    document.removeEventListener('keydown', this.handleKeyDown);
   },
   computed: {
     value: {
@@ -202,71 +185,6 @@ export default {
       const hours = date.getHours();
       const mins = date.getMinutes();
       return `${y}/${m}/${d} ${hours}:${mins}`;
-    },
-    showOverlay() {
-      const overlay = this.$refs.dateTimeRangeOverlay;
-      overlay.classList.remove('hidden');
-    },
-    hideOverlay() {
-      const overlay = this.$refs.dateTimeRangeOverlay;
-      overlay.classList.add('hidden');
-    },
-    preventBodyScrolling() {
-      document.body.classList.add('overflow-hidden');
-      document.body.classList.remove('overflow-auto');
-    },
-    allowBodyScrolling() {
-      document.body.classList.remove('overflow-hidden');
-      document.body.classList.add('overflow-auto');
-    },
-    bringCalendarToFront() {
-      const calendarEl = document.querySelector('.dp__instance_calendar');
-      calendarEl.classList.add('z-[9999]');
-    },
-    focusClearedInput() {
-      if (!this.fromPicker.datetime) {
-        const fromInput = this.fromPicker.$el.querySelector('input');
-        fromInput.focus();
-        fromInput.click();
-      }
-      if (!this.toPicker.datetime) {
-        const toInput = this.toPicker.$el.querySelector('input');
-        toInput.focus();
-        toInput.click();
-      }
-
-      this.preventBodyScrolling();
-      this.showOverlay();
-      this.$nextTick(() => {
-        this.bringCalendarToFront();
-      });
-    },
-    logClick() {
-      if (this.error) this.focusClearedInput();
-    },
-    handleKeyDown(event) {
-      if (event.key === 'Escape' || (event.ctrlKey && event.key === 'z')) {
-        if (this.startDate === null && this.fromPicker) {
-          this.startDate = this.defaultStartDate;
-          this.fromPicker.datetime = this.defaultStartDate;
-          this.error = null;
-        }
-        if (this.endDate === null && this.toPicker) {
-          this.endDate = this.defaultEndDate;
-          this.toPicker.datetime = this.defaultEndDate;
-          this.error = null;
-        }
-      }
-    }
-  },
-  watch: {
-    error(newVal) {
-      if (newVal !== null) {
-        this.focusClearedInput();
-      } else {
-        this.hideOverlay();
-        this.allowBodyScrolling();
-      }
     }
   }
 };
