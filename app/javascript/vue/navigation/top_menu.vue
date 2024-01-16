@@ -36,6 +36,7 @@
       <NotificationsFlyout
         v-if="notificationsOpened"
         :notificationsUrl="notificationsUrl"
+        :preferencesUrl="this.userMenu[1].url"
         :unseenNotificationsCount="unseenNotificationsCount"
         @update:unseenNotificationsCount="checkUnseenNotifications()"
         @close="notificationsOpened = false" />
