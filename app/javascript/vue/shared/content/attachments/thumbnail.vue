@@ -44,8 +44,10 @@
       </div>
       <div class="absolute bottom-4 w-[184px] grid grid-cols-[repeat(4,_2.5rem)] justify-between">
         <MenuDropdown
-            v-if="showOptions && openOptions.length > 1"
-            :listItems="openOptions"
+            v-if="showOptions && multipleOpenOptions.length > 1"
+            @open_locally="openLocally"
+            @open_scinote_editor="openScinoteEditor"
+            :listItems="multipleOpenOptions"
             :btnClasses="'btn btn-light icon-btn thumbnail-action-btn'"
             :position="'left'"
             :btnIcon="'sn-icon sn-icon-open'"
@@ -140,8 +142,19 @@
       :fileName="attachment.attributes.file_name"
       @confirm="showNoPredefinedAppModal = false"
     />
+    <a  class="image-edit-button hidden"
+      v-if="attachment.attributes.asset_type != 'marvinjs'
+            && attachment.attributes.image_editable
+            && attachment.attributes.urls.start_edit_image"
+      ref="imageEditButton"
+      :data-image-id="attachment.id"
+      :data-image-name="attachment.attributes.file_name"
+      :data-image-url="attachment.attributes.urls.asset_file"
+      :data-image-quality="attachment.attributes.image_context.quality"
+      :data-image-mime-type="attachment.attributes.image_context.type"
+      :data-image-start-edit-url="attachment.attributes.urls.start_edit_image"
+    ></a>
   </div>
-
 </template>
 
 <script>
@@ -184,25 +197,13 @@ export default {
     };
   },
   computed: {
-    openOptions() {
+    multipleOpenOptions() {
       const options = [];
       if (this.attachment.attributes.wopi && this.attachment.attributes.urls.edit_asset) {
         options.push({
           text: this.attachment.attributes.wopi_context.button_text,
           url: this.attachment.attributes.urls.edit_asset,
           url_target: '_blank'
-        });
-      }
-      if (this.attachment.attributes.asset_type === 'gene_sequence' && this.attachment.attributes.urls.open_vector_editor_edit) {
-        options.push({
-          text: this.i18n.t('open_vector_editor.edit_sequence'),
-          emit: 'open_ove_editor'
-        });
-      }
-      if (this.attachment.attributes.asset_type === 'marvinjs' && this.attachment.attributes.urls.marvin_js_start_edit) {
-        options.push({
-          text: this.i18n.t('assets.file_preview.edit_in_marvinjs'),
-          emit: 'open_marvinjs_editor'
         });
       }
       if (this.attachment.attributes.asset_type !== 'marvinjs'
@@ -248,6 +249,9 @@ export default {
   methods: {
     openOVEditor(url) {
       window.showIFrameModal(url);
+    },
+    openScinoteEditor() {
+      this.$refs.imageEditButton.click();
     },
     handleMouseLeave() {
       if (!this.isMenuOpen) {
