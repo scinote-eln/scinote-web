@@ -148,7 +148,6 @@ var filterDropdown = (function() {
       initCloseButton();
       initDateTimePickerComponent();
       initSearchField(filtersEnabledFunction);
-      this.toggleFilterMark($filterContainer, filtersEnabled)
       return $filterContainer;
     },
     toggleFilterMark: function(filterContainer, filtersEnabledArg) {
