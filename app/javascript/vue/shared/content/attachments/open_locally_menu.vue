@@ -47,7 +47,7 @@ export default {
           text: this.attachment.wopi_context.button_text,
           url: this.attachment.urls.edit_asset,
           url_target: '_blank',
-        }),
+        });
       }
       if (this.canOpenLocally) {
         const text = this.localAppName
