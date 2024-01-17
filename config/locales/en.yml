@@ -1890,16 +1890,16 @@ en:
         alert_line_2: "all references to inventory items will be rendered as invalid."
         delete: "Delete"
       modal_rename:
-        title_html: "Edit inventory: %{name}"
+        title_html: "Rename inventory: %{name}"
         name: "Inventory name"
         name_placeholder: "My inventory"
         rename: "Save"
       modal_copy:
-        title_html: "Copy inventory: %{name}"
+        title_html: "Duplicate inventory: %{name}"
         name: "New inventory name"
         description: "Only the structure of the inventory is going to be copied."
         name_placeholder: "My inventory"
-        copy: "Copy"
+        copy: "Duplicate"
       modal_export:
         title: "Export Inventories"
         description_p1_html:
