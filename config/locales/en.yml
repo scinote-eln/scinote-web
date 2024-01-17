@@ -1526,6 +1526,7 @@ en:
       no_projects: 'No projects: You don’t have edit access to any other projects.'
     table:
       head_title: "%{experiment} | Overview"
+      move_success_flash: "Successfully moved experiment(s) to project %{project}."
       column:
         id_html: 'ID'
         task_name_html: 'Task name'

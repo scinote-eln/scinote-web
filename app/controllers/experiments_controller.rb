@@ -297,8 +297,7 @@ class ExperimentsController < ApplicationController
 
   # POST: move_experiment(id)
   def move
-    move_response = nil
-    status = nil
+    project = Project.find_by(id: params[:project_id])
 
     ActiveRecord::Base.transaction do
       @experiments.each do |experiment|
@@ -309,20 +308,18 @@ class ExperimentsController < ApplicationController
                         user_id: current_user.id)
         if service.succeed?
           flash[:success] = t('experiments.move.success_flash', experiment: experiment.name)
-          status = :ok
           view_state = experiment.current_view_state(current_user)
           view_type = view_state.state['my_modules']['view_type'] || 'canvas'
-          path = view_mode_redirect_url(view_type)
         else
-          message = "#{service.errors.values.join('. ')}."
-          status = :unprocessable_entity
+          render json: {
+            message: service.errors.values.join('. ')
+          }, status: :unprocessable_entity
         end
-
-        move_response = { message: message, path: path }
       end
     end
 
-    render json: move_response, status: status
+    render json: { message: t('experiments.table.move_success_flash',
+      project: escape_input(project.name)), path: project_path(project) }
   end
 
   def move_modules_modal
