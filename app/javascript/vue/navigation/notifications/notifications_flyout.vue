@@ -2,7 +2,7 @@
   <div class="sci--navigation--notificaitons-flyout">
     <div class="sci--navigation--notificaitons-flyout-title">
       {{ i18n.t('nav.notifications.title') }}
-      <a class="ml-auto cursor-pointer" :href="this.preferencesUrl" :title="i18n.t('nav.settings')">
+      <a class="ml-auto cursor-pointer font-normal" :href="this.preferencesUrl" :title="i18n.t('nav.settings')">
         {{ i18n.t('nav.settings') }}
       </a>
     </div>
