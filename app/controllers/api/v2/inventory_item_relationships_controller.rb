@@ -12,8 +12,8 @@ module Api
         child = @relation == :child ? @inventory_item : @inventory_item_to_link
 
         @connection = RepositoryRowConnection.create!(
-          parent_id: parent,
-          child_id: child,
+          parent: parent,
+          child: child,
           created_by: current_user,
           last_modified_by: current_user
         )
