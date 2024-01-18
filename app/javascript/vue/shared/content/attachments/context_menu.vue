@@ -1,5 +1,8 @@
 <template>
-  <div class="asset-context-menu" ref="menu">
+  <div class="asset-context-menu"
+       ref="menu"
+       @mouseenter="fetchLocalAppInfo"
+  >
     <a  class="marvinjs-edit-button hidden"
         v-if="attachment.attributes.asset_type == 'marvinjs' && attachment.attributes.urls.marvin_js_start_edit"
         ref="marvinjsEditButton"

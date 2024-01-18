@@ -1,8 +1,9 @@
 <template>
   <div class="attachment-container asset"
        :data-asset-id="attachment.id"
-       @mouseover="showOptions = true"
+       @mouseenter="handleMouseEnter"
        @mouseleave="handleMouseLeave"
+       v-click-outside="handleClickOutsideThumbnail"
   >
     <a  :class="{ hidden: showOptions }"
         :href="attachment.attributes.urls.blob"
@@ -44,14 +45,15 @@
       </div>
       <div class="absolute bottom-4 w-[184px] grid grid-cols-[repeat(4,_2.5rem)] justify-between">
         <MenuDropdown
-            v-if="showOptions && multipleOpenOptions.length > 1"
-            @open_locally="openLocally"
-            @open_scinote_editor="openScinoteEditor"
+            v-if="multipleOpenOptions.length > 1"
             :listItems="multipleOpenOptions"
             :btnClasses="'btn btn-light icon-btn thumbnail-action-btn'"
             :position="'left'"
             :btnIcon="'sn-icon sn-icon-open'"
             :title="i18n.t('attachments.thumbnail.buttons.open')"
+            @menu-visibility-changed="handleMenuVisibilityChange"
+            @open_locally="openLocally"
+            @open_scinote_editor="openScinoteEditor"
         ></MenuDropdown>
         <a class="btn btn-light icon-btn thumbnail-action-btn"
            v-else-if="canOpenLocally"
@@ -167,6 +169,7 @@ import MoveAssetModal from '../modal/move.vue';
 import NoPredefinedAppModal from '../modal/no_predefined_app_modal.vue';
 import MoveMixin from './mixins/move.js';
 import OpenLocallyMixin from './mixins/open_locally.js';
+import { vOnClickOutside } from '@vueuse/components';
 
 export default {
   name: 'thumbnailAttachment',
@@ -195,6 +198,9 @@ export default {
       isMenuOpen: false,
       showNoPredefinedAppModal: false
     };
+  },
+  directives: {
+    'click-outside': vOnClickOutside
   },
   computed: {
     multipleOpenOptions() {
@@ -258,10 +264,25 @@ export default {
         this.showOptions = false;
       }
     },
-    handleMenuVisibilityChange(newValue) {
-      this.isMenuOpen = newValue;
-      this.showOptions = newValue;
-    }
+    async handleMouseEnter() {
+      await this.fetchLocalAppInfo();
+      this.showOptions = true;
+    },
+    handleMenuVisibilityChange({ isMenuOpen, showOptions }) {
+      if (isMenuOpen !== null) {
+        this.isMenuOpen = isMenuOpen;
+      }
+      if (showOptions !== null) {
+        this.showOptions = showOptions;
+      }
+    },
+    handleClickOutsideThumbnail(event) {
+      const isClickInsideModal = event.target.closest('.modal');
+      if (!isClickInsideModal) {
+        this.showOptions = false;
+        this.isMenuOpen = false;
+      }
+    },
   }
 };
 </script>
