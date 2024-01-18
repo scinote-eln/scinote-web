@@ -86,9 +86,7 @@ export default {
   methods: {
     changeSelected(value) {
       this.selected = value;
-      if (value) {
-        this.update(value);
-      }
+      this.update(value);
     }
   }
 };
