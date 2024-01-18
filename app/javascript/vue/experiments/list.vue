@@ -26,13 +26,6 @@
     </template>
   </DataTable>
 
-  <ConfirmationModal
-    :title="i18n.t('experiments.index.archive_confirm_title')"
-    :description="i18n.t('experiments.index.archive_confirm')"
-    :confirmClass="'btn btn-primary'"
-    :confirmText="i18n.t('general.archive')"
-    ref="archiveModal"
-  ></ConfirmationModal>
   <DescriptionModal
     v-if="descriptionModalObject"
     :experiment="descriptionModalObject"
@@ -224,15 +217,12 @@ export default {
       this.reloadingTable = true;
     },
     async archive(event, rows) {
-      const ok = await this.$refs.archiveModal.show();
-      if (ok) {
-        axios.post(event.path, { experiment_ids: rows.map((row) => row.id) }).then((response) => {
-          this.reloadingTable = true;
-          HelperModule.flashAlertMsg(response.data.message, 'success');
-        }).catch((error) => {
-          HelperModule.flashAlertMsg(error.response.data.error, 'danger');
-        });
-      }
+      axios.post(event.path, { experiment_ids: rows.map((row) => row.id) }).then((response) => {
+        this.reloadingTable = true;
+        HelperModule.flashAlertMsg(response.data.message, 'success');
+      }).catch((error) => {
+        HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+      });
     },
     restore(event, rows) {
       axios.post(event.path, { experiment_ids: rows.map((row) => row.id) }).then((response) => {
