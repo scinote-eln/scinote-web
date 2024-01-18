@@ -5,7 +5,7 @@ module Lists
     include Rails.application.routes.url_helpers
     include Canaid::Helpers::PermissionsHelper
 
-    attributes :name, :code, :created_at, :archived_on, :users, :hidden, :urls, :folder,
+    attributes :name, :code, :created_at, :archived_on, :users, :urls, :folder,
                :folder_info, :default_public_user_role_id, :team, :top_level_assignable
 
     def team
@@ -29,15 +29,11 @@ module Lists
     end
 
     def created_at
-      I18n.l(object.created_at, format: :full) if project?
+      I18n.l(object.created_at, format: :full_date) if project?
     end
 
     def archived_on
       I18n.l(object.archived_on, format: :full) if project? && object.archived_on
-    end
-
-    def hidden
-      object.hidden? if project?
     end
 
     def users

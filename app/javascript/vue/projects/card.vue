@@ -27,10 +27,6 @@
         <span class="text-sn-grey">{{ i18n.t('projects.index.card.archived_date') }}</span>
         <span class="font-bold">{{ params.archived_on }}</span>
       </template>
-      <span class="text-sn-grey">{{ i18n.t('projects.index.card.visibility') }}</span>
-      <span class="font-bold">
-        {{ params.hidden ? i18n.t('projects.index.hidden') : i18n.t('projects.index.visible') }}
-      </span>
       <span class="text-sn-grey">{{ i18n.t('projects.index.card.users') }}</span>
       <UsersRenderer :params="{data: params, value: params.users, dtComponent: dtComponent}" class="-mt-2.5" />
     </div>
