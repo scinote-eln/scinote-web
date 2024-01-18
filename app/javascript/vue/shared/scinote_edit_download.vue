@@ -63,6 +63,13 @@
         </div>
       </div>
     </template>
+
+    <a :href="'https://knowledgebase.scinote.net/en/knowledge/how-to-use-scinote-edit'"
+        :title="i18n.t('users.settings.account.addons.more_info')"
+        target="_blank">
+      <span class="sn-icon sn-icon-open"></span>
+      {{ i18n.t('users.settings.account.addons.more_info') }}
+    </a>
   </div>
 </template>
 
