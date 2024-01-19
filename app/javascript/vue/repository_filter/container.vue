@@ -19,7 +19,7 @@
           />
         </div>
       </div>
-      <button type="button" class="close" @click="$emit('hide-dropdown')" aria-label="<%= t('general.close') %>">
+      <button type="button" class="close" @click="$emit('hide-dropdown')" aria-label="<%= t('general.close') %>" data-e2e="e2e-BT-invInventoryFilterCO-close">
         <i class="sn-icon sn-icon-close"></i>
       </button>
     </div>
@@ -45,10 +45,10 @@
           />
         </div>
       </div>
-      <button class="btn btn-secondary clear-filters-btn prevent-shrink" @click="clearFilters">
+      <button class="btn btn-secondary clear-filters-btn prevent-shrink" @click="clearFilters" data-e2e="e2e-BT-invInventoryFilterCO-clear">
         {{ i18n.t('repositories.show.filters.clear') }}
       </button>
-      <button @click="$emit('filters:apply')" class="btn btn-primary apply-button prevent-shrink">
+      <button @click="$emit('filters:apply')" class="btn btn-primary apply-button prevent-shrink" data-e2e="e2e-BT-invInventoryFilterCO-showResults">
         {{ i18n.t('repositories.show.filters.apply') }}
       </button>
     </div>

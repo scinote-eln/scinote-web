@@ -1,0 +1,10 @@
+<div class="content-pane flexible <%= params[:archived] ? :archived : :active %> repositories-index">
+  <div class="content-header">
+    <div class="title-row">
+      <h1 data-view-mode="active"><%= t('libraries.index.head_title') %></h1>
+      <h1 data-view-mode="archived"><span><%= t('labels.archived')%></span>&nbsp;<%= t('libraries.index.head_title_archived') %></h1>
+    </div>
+  </div>
+  <div class="content-body" data-e2e="e2e-CO-inventories">
+  </div>
+</div>

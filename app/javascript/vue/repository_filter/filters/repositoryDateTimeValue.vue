@@ -6,16 +6,17 @@
       :options="operators"
       :selectorId="`OperatorSelector${filter.id}`"
       :selectedValue="operator"
+      :data-e2e="`e2e-DD-invInventoryFilterCO-option${this.filter.column.id}`"
       @dropdown:changed="updateOperator" />
     </div>
     <template v-if="!isPreset">
       <div class="datetime-filter-attributes">
         <div class="filter-datepicker-input">
-          <DateTimePicker @change="updateDate" :selectorId="`DatePicker${filter.id}`" :defaultValue="date" />
+          <DateTimePicker @change="updateDate" :data-e2e="`e2e-DP-invInventoryFilterCO-input${this.filter.column.id}`" :selectorId="`DatePicker${filter.id}`" :defaultValue="date" />
         </div>
         <div class="between-delimiter vertical" v-if="operator == 'between'"></div>
         <div class="filter-datepicker-to-input">
-          <DateTimePicker @change="updateDateTo" v-if="operator == 'between'" :selectorId="`DatePickerTo${filter.id}`" :defaultValue="dateTo || fallbackDate(7 * 24 * 60 * 60)" />
+          <DateTimePicker @change="updateDateTo" :data-e2e="`e2e-DP-invInventoryFilterCO-inputUpdate${this.filter.column.id}`" v-if="operator == 'between'" :selectorId="`DatePickerTo${filter.id}`" :defaultValue="dateTo || fallbackDate(7 * 24 * 60 * 60)" />
         </div>
       </div>
     </template>

@@ -730,7 +730,11 @@ Rails.application.routes.draw do
           get :actions_toolbar
         end
 
-        resources :repository_row_connections, only: %i(index create destroy)
+        resources :repository_row_connections, only: %i(create destroy) do
+          collection do
+            get :repository_rows
+          end
+        end
         member do
           get 'repository_stock_value/new', to: 'repository_stock_values#new', as: 'new_repository_stock'
           get 'repository_stock_value/edit', to: 'repository_stock_values#edit', as: 'edit_repository_stock'
@@ -787,7 +791,6 @@ Rails.application.routes.draw do
 
     namespace :repository_row_connections do
       get :repositories
-      get :repository_rows
     end
 
     resources :connected_devices, controller: 'users/connected_devices', only: %i(destroy)

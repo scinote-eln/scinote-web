@@ -1,0 +1,195 @@
+<div>
+  <h1>Select</h1>
+  <div id="selects" class="flex items-center gap-4 flex-wrap">
+    <div class="flex basis-full items-center gap-4">
+      <span>Sizes:</span>
+      <button class="btn btn-light" :class="{'!border-sn-blue': size == 'xs'}" @click="size = 'xs'">XS</button>
+      <button class="btn btn-light" :class="{'!border-sn-blue': size == 'sm'}" @click="size = 'sm'">SM</button>
+      <button class="btn btn-light" :class="{'!border-sn-blue': size == 'md'}" @click="size = 'md'">MD</button>
+
+    </div>
+    <div class="w-64">
+      <label>Simple select</label>
+      <select-dropdown
+        :options="simpleOptions"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Simple select disabled</label>
+      <select-dropdown
+        :options="simpleOptions"
+        :disabled="true"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Simple select with long options</label>
+      <select-dropdown
+        :options="longOptions"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Simple select with predefined value</label>
+      <select-dropdown
+        value="5"
+        :options="simpleOptions"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Clearable select</label>
+      <select-dropdown
+        value="5"
+        :options="simpleOptions"
+        :clearable="true"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Simple select with search</label>
+      <select-dropdown
+        :options="simpleOptions"
+        :searchable="true"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Clearable select with search</label>
+      <select-dropdown
+        value="5"
+        :clearable="true"
+        :searchable="true"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Multiselect</label>
+      <select-dropdown
+        :options="simpleOptions"
+        :multiple="true"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Multiselect with predefined value</label>
+      <select-dropdown
+        :value="['5', '6', '2']"
+        :options="simpleOptions"
+        :multiple="true"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Multiselect with checkboxes</label>
+      <select-dropdown
+        :options="simpleOptions"
+        :with-checkboxes="true"
+        :multiple="true"
+        :clearable="true"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Multiselect with search</label>
+      <select-dropdown
+        :options="simpleOptions"
+        :searchable="true"
+        :multiple="true"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Clearable multiselect</label>
+      <select-dropdown
+        :options="simpleOptions"
+        :clearable="true"
+        :multiple="true"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Select with AJAX source</label>
+      <select-dropdown
+        options-url="<%= test_select_design_elements_path %>"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Select with AJAX with predefined</label>
+      <select-dropdown
+        value="5"
+        options-url="<%= test_select_design_elements_path %>"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Select with AJAX source with search</label>
+      <select-dropdown
+        options-url="<%= test_select_design_elements_path %>"
+        :searchable="true"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Multiselect with AJAX source</label>
+      <select-dropdown
+        options-url="<%= test_select_design_elements_path %>"
+        :size="size"
+        :multiple="true"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Multiselect with AJAX/checkboxes</label>
+      <select-dropdown
+        options-url="<%= test_select_design_elements_path %>"
+        :size="size"
+        :multiple="true"
+        :with-checkboxes="true"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Select with custom renderer</label>
+      <select-dropdown
+        :options="simpleOptions"
+        :option-renderer="renderer"
+        :label-renderer="renderer"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Multiselect with custom renderer</label>
+      <select-dropdown
+        :options="simpleOptions"
+        :option-renderer="renderer"
+        :label-renderer="renderer"
+        :multiple="true"
+        :size="size"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Multiselect with tags view</label>
+      <select-dropdown
+        :options="simpleOptions"
+        :tags-view="true"
+        :multiple="true"
+        :size="size"
+        :clearable="true"
+      ></select-dropdown>
+    </div>
+    <div class="w-64">
+      <label>Multiselect with tags view searchable</label>
+      <select-dropdown
+        :options="simpleOptions"
+        :tags-view="true"
+        :multiple="true"
+        :size="size"
+        :clearable="true"
+        :searchable="true"
+      ></select-dropdown>
+    </div>
+  </div>
+</div>
+
+<%= javascript_include_tag 'vue_design_system_select' %>

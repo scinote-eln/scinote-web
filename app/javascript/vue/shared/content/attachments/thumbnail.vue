@@ -1,10 +1,10 @@
 <template>
   <div class="attachment-container asset"
        :data-asset-id="attachment.id"
-       @mouseover="isHovered = true"
-       @mouseleave="isHovered = false"
+       @mouseover="showOptions = true"
+       @mouseleave="handleMouseLeave"
   >
-    <a  :class="{ hidden: isHovered }"
+    <a  :class="{ hidden: showOptions }"
         :href="attachment.attributes.urls.blob"
         class="file-preview-link file-name"
         :id="`modal_link${attachment.id}`"
@@ -12,6 +12,7 @@
         :data-id="attachment.id"
         :data-gallery-view-id="parentId"
         :data-preview-url="attachment.attributes.urls.preview"
+        :data-e2e="`e2e-BT-attachment-${attachment.id}`"
     >
       <div class="attachment-preview" :class= "attachment.attributes.asset_type">
         <img v-if="attachment.attributes.medium_preview !== null"
@@ -27,7 +28,7 @@
         {{ attachment.attributes.file_name }}
       </div>
     </a>
-    <div :class="{ hidden: !isHovered }" class="hovered-thumbnail h-full">
+    <div :class="{ hidden: !showOptions }" class="hovered-thumbnail h-full">
       <a
         :href="attachment.attributes.urls.blob"
         class="file-preview-link file-name"
@@ -98,12 +99,13 @@
       </div>
     </div>
     <ContextMenu
-      v-if="isHovered"
+      v-show="showOptions"
       :attachment="attachment"
       @attachment:viewMode="updateViewMode"
       @attachment:delete="deleteAttachment"
       @attachment:moved="attachmentMoved"
       @attachment:uploaded="reloadAttachments"
+      @menu-visibility-changed="handleMenuVisibilityChange"
       :withBorder="true"
     />
     <deleteAttachmentModal
@@ -144,7 +146,8 @@ export default {
   },
   data() {
     return {
-      isHovered: false,
+      showOptions: false,
+      isMenuOpen: false,
       deleteModal: false
     };
   },
@@ -170,6 +173,15 @@ export default {
   methods: {
     openOVEditor(url) {
       window.showIFrameModal(url);
+    },
+    handleMouseLeave() {
+      if (!this.isMenuOpen) {
+        this.showOptions = false;
+      }
+    },
+    handleMenuVisibilityChange(newValue) {
+      this.isMenuOpen = newValue;
+      this.showOptions = newValue;
     }
   }
 };

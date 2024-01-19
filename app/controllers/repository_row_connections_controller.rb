@@ -1,39 +1,11 @@
 # frozen_string_literal: true
 
 class RepositoryRowConnectionsController < ApplicationController
-  before_action :load_repository, except: %i(repositories)
+  before_action :load_repository, except: :repositories
   before_action :load_create_vars, only: :create
   before_action :check_read_permissions, except: :repositories
-  before_action :load_repository_row, except: %i(repositories repository_rows)
+  before_action :load_repository_row, except: :repositories
   before_action :check_manage_permissions, only: %i(create destroy)
-
-  def index
-    parents = @repository_row.parent_connections
-                             .joins('INNER JOIN repository_rows ON
-                                    repository_rows.id = repository_row_connections.parent_id')
-                             .select(:id, 'repository_rows.id AS repository_row_id',
-                                     'repository_rows.name AS repository_row_name')
-                             .map do |row|
-                               {
-                                 id: row.id,
-                                 name: row.repository_row_name,
-                                 code: "#{RepositoryRow::ID_PREFIX}#{row.repository_row_id}"
-                               }
-                             end
-    children = @repository_row.child_connections
-                              .joins('INNER JOIN repository_rows ON
-                                     repository_rows.id = repository_row_connections.child_id')
-                              .select(:id, 'repository_rows.id AS repository_row_id',
-                                      'repository_rows.name AS repository_row_name')
-                              .map do |row|
-                                {
-                                  id: row.id,
-                                  name: row.repository_row_name,
-                                  code: "#{RepositoryRow::ID_PREFIX}#{row.repository_row_id}"
-                                }
-                              end
-    render json: { parents: parents, children: children }
-  end
 
   def create
     RepositoryRowConnection.transaction do
@@ -97,14 +69,18 @@ class RepositoryRowConnectionsController < ApplicationController
   end
 
   def repository_rows
-    repository_rows = @repository.repository_rows
-                                 .search_by_name_and_id(current_user, current_user.teams, params[:query])
-                                 .order(name: :asc)
-                                 .page(params[:page] || 1)
-                                 .per(Constants::SEARCH_LIMIT)
+    selected_repository = Repository.accessible_by_teams(current_team).find(params[:selected_repository_id])
+
+    repository_rows = selected_repository.repository_rows
+                                         .where.not(id: @repository_row.id)
+                                         .where.not(id: @repository_row.parent_connections.select(:parent_id))
+                                         .where.not(id: @repository_row.child_connections.select(:child_id))
+                                         .search_by_name_and_id(current_user, current_user.teams, params[:query])
+                                         .order(name: :asc)
+                                         .page(params[:page] || 1)
+                                         .per(Constants::SEARCH_LIMIT)
     render json: {
       data: repository_rows.select(:id, :name, :archived, :repository_id)
-                           .preload(:repository)
                            .map { |row| { id: row.id, name: row.name_with_label } },
       next_page: repository_rows.next_page
     }
@@ -159,22 +135,28 @@ class RepositoryRowConnectionsController < ApplicationController
   end
 
   def connected_rows_by_relation_type
-    repository_rows = if @relation_type == 'parent'
-                        @repository_row.parent_repository_rows
-                      else
-                        @repository_row.child_repository_rows
-                      end
+    repository_connections = if @relation_type == 'parent'
+                               @repository_row.parent_connections
+                             else
+                               @repository_row.child_connections
+                             end
 
-    repository_rows.preload(:repository)
-                   .map do |repository_row|
-                     {
-                       name: repository_row.name,
-                       code: repository_row.code,
-                       path: repository_repository_row_path(repository_row.repository, repository_row),
-                       repository_name: repository_row.repository.name,
-                       repository_path: repository_path(repository_row.repository)
-                     }
-                   end
+    repository_connections.map do |connection|
+      repository_row = @relation_type == 'parent' ? connection.parent : connection.child
+
+      {
+        name: repository_row.name_with_label,
+        code: repository_row.code,
+        path: repository_repository_row_path(repository_row.repository, repository_row),
+        repository_name: repository_row.repository.name,
+        repository_path: repository_path(repository_row.repository),
+        unlink_path: repository_repository_row_repository_row_connection_path(
+          repository_row.repository,
+          repository_row,
+          connection
+        )
+      }
+    end
   end
 
   def log_activity(type_of, repository, message_items = {})

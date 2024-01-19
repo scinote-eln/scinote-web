@@ -36,7 +36,7 @@
             <div class="h-5 whitespace-nowrap overflow-auto">
               {{ i18n.t('repositories.item_card.repository_item_relationships_modal.inventory_section_title') }}</div>
             <div class="h-11">
-              <select-search ref="ChangeSelectedInventoryDropdownSelector" @change="changeSelectedInventory" :value="selectedInventoryValue"
+              <select-search ref="ChangeSelectedInventoryDropdownSelector" :value="selectedInventoryValue"
                 :options="inventoryOptions"
                 :isLoading="isLoadingInventories"
                 :lazyLoadEnabled="true"
@@ -47,6 +47,7 @@
                 :searchPlaceholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_inventory_placeholder')"
                 @update-options="updateInventories"
                 @reached-end="fetchInventories"
+                @change="changeSelectedInventory"
               ></select-search>
             </div>
           </div>
@@ -73,6 +74,7 @@
                 @update-options="updateInventoryItems"
                 @update="selectedItemValues = $event"
                 @reached-end="() => fetchInventoryItems(selectedInventoryValue)"
+                :disabled="!this.selectedInventoryValue"
               ></ChecklistSearch>
             </div>
           </div>
@@ -128,15 +130,13 @@
 import SelectSearch from '../shared/legacy/select_search.vue';
 import ChecklistSearch from '../shared/legacy/checklist_search.vue';
 import Select from '../shared/legacy/select.vue';
-import ChecklistSelect from '../shared/legacy/checklist_select.vue';
 
 export default {
   name: 'RepositoryItemRelationshipsModal',
   components: {
     'select-search': SelectSearch,
     ChecklistSearch,
-    Select,
-    'checklist-select': ChecklistSelect
+    Select
   },
   created() {
     window.repositoryItemRelationshipsModal = this;
@@ -163,7 +163,7 @@ export default {
   },
   computed: {
     shouldEnableAddButton() {
-      return ((this.selectedInventoryValue !== null) && (this.selectedRelationshipValue !== null) && (this.selectedItemValues.length > 0));
+      return (this.selectedInventoryValue && (this.selectedRelationshipValue !== null) && (this.selectedItemValues.length > 0));
     }
   },
   methods: {
@@ -172,7 +172,10 @@ export default {
 
       this.loadingInventories = true;
       $.ajax({
-        url: `${this.inventoriesUrl}?page=${this.nextInventoriesPage}`,
+        url: this.inventoriesUrl,
+        data: {
+          page: this.nextInventoriesPage
+        },
         success: (result) => {
           this.inventoryOptions = this.inventoryOptions.concat(result.data.map((val) => [val.id, val.name]));
           this.loadingInventories = false;
@@ -185,7 +188,11 @@ export default {
 
       this.loadingItems = true;
       $.ajax({
-        url: `${this.inventoryItemsUrl}/?page=${this.nextItemsPage}&repository_id=${inventoryValue}`,
+        url: this.inventoryItemsUrl,
+        data: {
+          page: this.nextItemsPage,
+          selected_repository_id: inventoryValue
+        },
         success: (result) => {
           this.itemOptions = this.itemOptions.concat(result.data.map((val) => ({ id: val.id, label: val.name })));
           this.loadingItems = false;
@@ -227,12 +234,15 @@ export default {
       });
     },
     changeSelectedInventory(value) {
+      if (value === this.selectedInventoryValue) return;
+
       this.selectedInventoryValue = value;
+      this.resetSelectedItemValues();
       this.itemOptions = [];
       this.nextItemsPage = 1;
       if (value) {
         this.loadingItems = true;
-        this.itemParams = [`repository_id=${value}`];
+        this.itemParams = { selected_repository_id: value };
       }
       this.$nextTick(() => {
         this.fetchInventoryItems(value);
@@ -274,6 +284,9 @@ export default {
         }
       });
       this.close();
+    },
+    resetSelectedItemValues() {
+      this.selectedItemValues = [];
     }
   }
 };

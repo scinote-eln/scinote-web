@@ -21,48 +21,11 @@
 </template>
 
 <script>
-const items = [
-  {
-    id: 'highlight-item-1',
-    textId: 'text-item-1',
-    labelAlias: 'information_label',
-    label: 'information-label',
-    sectionId: 'information-section'
-  },
-  {
-    id: 'highlight-item-2',
-    textId: 'text-item-2',
-    labelAlias: 'custom_columns_label',
-    label: 'custom-columns-label',
-    sectionId: 'custom-columns-section'
-  },
-  {
-    id: 'highlight-item-3',
-    textId: 'text-item-3',
-    labelAlias: 'relationships_label',
-    label: 'relationships-label',
-    sectionId: 'relationships-section'
-  },
-  {
-    id: 'highlight-item-4',
-    textId: 'text-item-4',
-    labelAlias: 'assigned_label',
-    label: 'assigned-label',
-    sectionId: 'assigned-section'
-  },
-  {
-    id: 'highlight-item-5',
-    textId: 'text-item-5',
-    labelAlias: 'QR_label',
-    label: 'QR-label',
-    sectionId: 'qr-section'
-  }
-];
 export default {
   name: 'ScrollSpy',
 
   props: {
-    itemsToCreate: { type: Array, default: () => items },
+    itemsToCreate: { type: Array, default: [] },
     initialSectionId: String || null
   },
 
@@ -237,7 +200,9 @@ export default {
         });
       } else {
         // scroll to the start of a section's threshold, adjusted for the center thumb value (true center)
-        scrollableArea.scrollTop = foundThreshold.from - this.centerOfScrollThumb;
+        this.$nextTick(() => {
+          scrollableArea.scrollTop = foundThreshold.from - this.centerOfScrollThumb;
+        });
       }
       this.flashTitleColor(domElToScrollTo);
 

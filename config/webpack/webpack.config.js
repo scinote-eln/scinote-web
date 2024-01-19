@@ -43,7 +43,6 @@ const entryList = {
   vue_components_open_vector_editor: './app/javascript/packs/vue/open_vector_editor.js',
   vue_navigation_breadcrumbs: './app/javascript/packs/vue/navigation/breadcrumbs.js',
   vue_protocol_file_import_modal: './app/javascript/packs/vue/protocol_file_import_modal.js',
-  vue_components_item_relationships: './app/javascript/packs/vue/item_relationships.js',
   vue_components_repository_item_relationships: './app/javascript/packs/vue/repository_item_relationships.js',
   vue_components_export_stock_consumption_modal: './app/javascript/packs/vue/export_stock_consumption_modal.js',
   vue_user_preferences: './app/javascript/packs/vue/user_preferences.js',

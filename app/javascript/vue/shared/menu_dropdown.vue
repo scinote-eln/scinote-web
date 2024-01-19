@@ -89,6 +89,14 @@ export default {
     closeMenu() {
       this.isOpen = false;
     },
+    closeMenuAndEmit(event) {
+      const isClickInsideModal = event.target.closest('.modal');
+
+      if (!isClickInsideModal) {
+        this.showMenu = false;
+        this.$emit('menu-visibility-changed', false);
+      }
+    },
     handleClick(event, item) {
       if (!item.url) {
         event.preventDefault();

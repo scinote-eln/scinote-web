@@ -7,7 +7,7 @@
               :class="{
                 'sci-cursor-edit': !isOpen && withEditCursor,
                 'border-sn-light-grey hover:border-sn-sleepy-grey': !isOpen,
-                'border-sn-science-blue': isOpen,
+                'sn-select--open': isOpen,
                 'text-sn-grey': !valueLabel,
                 [className]: true
               }"
@@ -48,7 +48,7 @@
                :key="option.id"
                class="checklist px-3 py-2 rounded hover:bg-sn-super-light-grey cursor-pointer
                 flex gap-1 justify-start items-center"
-               :class="option.id === this.lastSelectedOption ? 'bg-sn-super-light-blue' : ''"
+               :class="option.id === this.lastSelectedOption ? 'bg-sn-super-light-blue hover:bg-sn-super-light-blue' : ''"
                @change="toggleOption"
                @click="triggerLabelClick($event, option.id)"
                >

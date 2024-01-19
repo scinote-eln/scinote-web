@@ -19,6 +19,7 @@
       :btnClasses="'btn btn-light icon-btn btn-black'"
       :position="'right'"
       :btnIcon="'sn-icon sn-icon-settings'"
+      :data-e2e="'e2e-DD-topMenu-settings'"
     ></MenuDropdown>
     <GeneralDropdown
       v-if="user"
@@ -26,7 +27,7 @@
       position="right"
       class="sci--navigation--notificaitons-flyout-container">
       <template v-slot:field>
-        <button class="btn btn-light icon-btn btn-black"
+        <button class="btn btn-light icon-btn btn-black" :data-e2e="'e2e-DD-topMenu-notifications'"
               :title="i18n.t('nav.notifications.title')"
               :class="{ 'has-unseen': unseenNotificationsCount > 0 }"
               :data-unseen="unseenNotificationsCount"
@@ -43,7 +44,7 @@
       </template>
     </GeneralDropdown>
     <div v-if="user" class="dropdown" :title="i18n.t('nav.user_profile')">
-      <div class="sci--navigation--top-menu-user btn btn-light icon-btn btn-black" data-toggle="dropdown">
+      <div class="sci--navigation--top-menu-user btn btn-light icon-btn btn-black" data-toggle="dropdown" data-e2e="e2e-DD-topMenu-avatar">
         <img class="avatar w-6 h-6" :src="user.avatar_url">
       </div>
       <div class="dropdown-menu dropdown-menu-right rounded !p-2.5 sn-shadow-menu-sm">

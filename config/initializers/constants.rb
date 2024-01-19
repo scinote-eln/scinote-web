@@ -428,6 +428,9 @@ class Constants
   FAST_STATUS_POLLING_INTERVAL = 5000
   SLOW_STATUS_POLLING_INTERVAL = 10000
 
+  # Grover timeout in ms
+  GROVER_TIMEOUT_MS = 300000
+
   #                             )       \   /      (
   #                            /|\      )\_/(     /|\
   #   *                       / | \    (/\|/\)   / | \                      *
