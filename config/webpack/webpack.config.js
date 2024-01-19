@@ -49,7 +49,8 @@ const entryList = {
   vue_components_manage_stock_value_modal: './app/javascript/packs/vue/manage_stock_value_modal.js',
   vue_legacy_datetime_picker: './app/javascript/packs/vue/legacy/datetime_picker.js',
   vue_open_locally_menu: './app/javascript/packs/vue/open_locally_menu.js',
-  vue_scinote_edit_download: './app/javascript/packs/vue/scinote_edit_download.js'
+  vue_scinote_edit_download: './app/javascript/packs/vue/scinote_edit_download.js',
+  vue_design_system_modals: './app/javascript/packs/vue/design_system/modals.js'
 }
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949
