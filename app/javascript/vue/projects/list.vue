@@ -140,12 +140,6 @@ export default {
           sortable: true,
         },
         {
-          field: 'hidden',
-          headerName: this.i18n.t('projects.index.card.visibility'),
-          cellRenderer: this.visibiltyRenderer,
-          sortable: false,
-        },
-        {
           field: 'users',
           headerName: this.i18n.t('projects.index.card.users'),
           cellRenderer: 'UsersRenderer',
@@ -245,10 +239,6 @@ export default {
                 ${params.data.folder ? '<i class="sn-icon mini sn-icon-mini-folder-left"></i>' : ''}
                 ${params.data.name}
               </a>`;
-    },
-    visibiltyRenderer(params) {
-      if (params.data.type !== 'projects') return '';
-      return params.data.hidden ? this.i18n.t('projects.index.hidden') : this.i18n.t('projects.index.visible');
     },
     openComments(_params, rows) {
       this.$refs.commentButton.dataset.objectId = rows[0].id;
