@@ -35,10 +35,8 @@ module AccessPermissions
 
       @user_assignment.update!(permitted_update_params)
 
-      unless current_user.id == @user_assignment.user.id
-        log_activity(:change_user_role_on_project, { user_target: @user_assignment.user.id,
-                                                    role: @user_assignment.user_role.name })
-      end
+      log_activity(:change_user_role_on_project, { user_target: @user_assignment.user.id,
+                                                   role: @user_assignment.user_role.name })
       propagate_job(@user_assignment)
 
       render :project_member
@@ -71,10 +69,9 @@ module AccessPermissions
               assigned: :manually
             )
 
-            unless current_user.id == user_assignment.user.id
-              log_activity(:assign_user_to_project, { user_target: user_assignment.user.id,
-                                                      role: user_assignment.user_role.name })
-            end
+            log_activity(:assign_user_to_project, { user_target: user_assignment.user.id,
+                                                    role: user_assignment.user_role.name })
+
             created_count += 1
             propagate_job(user_assignment)
           end
@@ -103,12 +100,16 @@ module AccessPermissions
         raise ActiveRecord::RecordInvalid
       end
 
-      propagate_job(user_assignment, destroy: true)
+      UserAssignments::PropagateAssignmentJob.perform_now(
+        @project,
+        user_assignment.user.id,
+        user_assignment.user_role,
+        current_user.id,
+        destroy: true
+      )
 
-      unless current_user.id == user_assignment.user.id
-        log_activity(:unassign_user_from_project, { user_target: user_assignment.user.id,
-          role: user_assignment.user_role.name })
-      end
+      log_activity(:unassign_user_from_project, { user_target: user_assignment.user.id,
+                                                  role: user_assignment.user_role.name })
 
       render json: { flash: t('access_permissions.destroy.success', member_name: escape_input(user.full_name)) }
     rescue ActiveRecord::RecordInvalid

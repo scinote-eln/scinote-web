@@ -11,7 +11,6 @@ module LabelTemplates
     def initialize(label_template, repository_row)
       @label_template = label_template
       @repository_row = repository_row
-      @repository_columns = RepositoryColumn.where(repository_id: @repository_row.repository_id).pluck(:name)
     end
 
     def render
@@ -48,7 +47,7 @@ module LabelTemplates
       case key
       when /^c_(.*)/
         name = Regexp.last_match(1)
-        unless @repository_columns.include?(name)
+        unless @repository_row.repository_columns.find_by(name: name)
           raise LabelTemplates::ColumnNotFoundError, I18n.t('label_templates.repository_row.errors.column_not_found')
         end
 

@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :notification do
     recipient_type { 'User' }
-    recipient_id { 1 }
+    recipient_id { FactoryBot.create(:user).id }
     read_at { Time.now }
   end
 end

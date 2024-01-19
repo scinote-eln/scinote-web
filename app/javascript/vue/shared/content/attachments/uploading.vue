@@ -22,29 +22,29 @@
   </div>
 </template>
 <script>
-  export default {
-    name: 'uploadingAttachment',
-    props: {
-      attachment: {
-        type: Object,
-        required: true
-      },
-      parentId: {
-        type: Number,
-        required: true
-      }
+export default {
+  name: 'uploadingAttachment',
+  props: {
+    attachment: {
+      type: Object,
+      required: true
     },
-    computed: {
-      attachmentViewMode() {
-        switch(this.attachment.attributes.view_mode) {
-          case 'inline':
-            return 'inline-attachment-container'
-          case 'list':
-            return 'list-attachment-container'
-          default:
-            return 'attachment-container'
-        }
+    parentId: {
+      type: Number,
+      required: true
+    }
+  },
+  computed: {
+    attachmentViewMode() {
+      switch (this.attachment.attributes.view_mode) {
+        case 'inline':
+          return 'inline-attachment-container';
+        case 'list':
+          return 'list-attachment-container';
+        default:
+          return 'attachment-container';
       }
     }
   }
+};
 </script>

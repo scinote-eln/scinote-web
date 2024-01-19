@@ -33,7 +33,7 @@
             'max-h-[4rem]': collapsed,
             'max-h-[40rem]': !collapsed
           }">
-      {{ colVal }}
+      {{ colVal.toLocaleString('en-US', { timezone: 'UTC' }) }}
     </div>
     <div v-else
           class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
@@ -43,20 +43,20 @@
 </template>
 
 <script>
-import repositoryValueMixin from "./mixins/repository_value.js";
-import Textarea from "../../shared/Textarea.vue";
+import repositoryValueMixin from './mixins/repository_value.js';
+import Textarea from '../../shared/Textarea.vue';
 
 export default {
-  name: "RepositoryNumberValue",
+  name: 'RepositoryNumberValue',
   mixins: [repositoryValueMixin],
   components: {
-    'text-area': Textarea,
+    'text-area': Textarea
   },
   data() {
     return {
       expandable: false,
       collapsed: true,
-      numberValue: '',
+      numberValue: ''
     };
   },
   props: {
@@ -66,7 +66,16 @@ export default {
     colVal: Number,
     permissions: null,
     decimals: { type: Number, default: 0 },
-    canEdit: { type: Boolean, default: false },
+    canEdit: { type: Boolean, default: false }
+  },
+  mounted() {
+    const maxCollapsedHeight = 60;
+    const numberRefEl = this.$refs.numberRef;
+    this.$nextTick(() => {
+      if (!numberRefEl) return;
+      const isExpandable = numberRefEl.scrollHeight > maxCollapsedHeight;
+      this.expandable = isExpandable;
+    });
   },
   methods: {
     toggleCollapse() {
@@ -76,7 +85,7 @@ export default {
     },
     toggleExpandableState(expandable) {
       this.expandable = expandable;
-    },
+    }
   }
 };
 </script>

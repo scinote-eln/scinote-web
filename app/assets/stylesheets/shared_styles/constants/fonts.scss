@@ -49,6 +49,10 @@ $sn-icon-check: "\e95f";
   &.mini {
     font-size: 16px !important;
   }
+
+  &.sn-icon-large {
+    font-size: 36px !important;
+  }
 }
 
 @mixin font-h1 {

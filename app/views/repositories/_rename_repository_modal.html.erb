@@ -2,10 +2,10 @@
   <%= form_with model: @repository,
                 url: team_repository_path(id: @repository, format: :json),
                 data: { remote: true } do |f| %>
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog" role="document" data-e2e="e2e-MD-invRenameAT">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-e2e="e2e-BT-invRenameMD-close">
             <i class="sn-icon sn-icon-close"></i>
           </button>
           <h3 class="modal-title"><%= t("repositories.index.modal_rename.title_html", name: @repository.name ) %></h3>
@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <%= f.submit t("repositories.index.modal_rename.rename"), class: "btn btn-success" %>
+          <%= f.submit t("repositories.index.modal_rename.rename"), class: "btn btn-success", data: { e2e: "e2e-BT-invRenameMD-save" } %>
         </div>
       </div>
     </div>

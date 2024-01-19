@@ -7,7 +7,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
+        <button type="button" data-e2e="e2e-BT-exportMD-close" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
         <h4 class="modal-title"><%= t('repositories.index.modal_export.title') %></h4>
       </div>
       <div class="modal-body">
@@ -23,11 +23,12 @@
         </p>
       </div>
       <div class="modal-footer">
-        <button id="export-repositories-modal-cancel" type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
+        <button id="export-repositories-modal-cancel" data-e2e="e2e-BT-exportMD-cancel" type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
         <button id="export-repositories-modal-submit"
                 type="button"
                 class="btn btn-primary"
-                data-export-url="<%= export_repositories_team_path(current_team) %>">
+                data-export-url="<%= export_repositories_team_path(current_team) %>"
+                data-e2e="e2e-BT-exportMD-export">
           <%=t "repositories.index.modal_export.export" %>
         </button>
       </div>

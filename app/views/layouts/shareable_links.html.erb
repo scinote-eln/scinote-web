@@ -30,16 +30,17 @@
   </head>
   <body id="sci-shareable-links" data-datetime-picker-format="YYYY-MM-DD">
     <div class="flex shareable-links">
-      <div class="sticky top-0 w-80 h-screen px-6 py-6 flex flex-col
-                  border-0 border-r border-solid border-sn-sleepy-grey">
+      <div class="sticky top-0 h-screen px-6 py-6 flex flex-col
+                  border-0 border-r border-solid border-sn-sleepy-grey w-[15vw]">
         <%= render "shareable_links/my_modules/left_navigation" %>
       </div>
-      <div class="flex flex-col flex-1 min-h-screen p-4 bg-sn-super-light-grey">
+      <div class="flex flex-col flex-1 min-h-screen p-4 bg-sn-super-light-grey w-[85vw]">
         <%= yield %>
       </div>
     </div>
 
     <%= javascript_include_tag 'prism' %>
     <%= javascript_include_tag 'shareable_links/date_formatting' %>
+    <%= javascript_include_tag 'shareable_links/handson_table_wraping' %>
   </body>
 </html>

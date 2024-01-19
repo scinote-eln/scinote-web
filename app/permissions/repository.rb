@@ -59,7 +59,7 @@ Canaid::Permissions.register_for(Repository) do
 
   # repository: share
   can :share_repository do |user, repository|
-    can_manage_repository?(user, repository)
+    !repository.shared_with?(user.current_team) && repository.permission_granted?(user, RepositoryPermissions::SHARE)
   end
 
   # repository: make a snapshot with assigned rows
@@ -86,6 +86,12 @@ Canaid::Permissions.register_for(Repository) do
   # repository: update/delete records
   can :manage_repository_rows do |user, repository|
     repository.permission_granted?(user, RepositoryPermissions::ROWS_UPDATE)
+  end
+
+  # create row connections
+  can :connect_repository_rows do |user, repository|
+    repository.repository_snapshots.provisioning.none? &&
+      repository.permission_granted?(user, RepositoryPermissions::ROWS_UPDATE)
   end
 
   can :delete_repository_rows do |user, repository|

@@ -164,7 +164,7 @@ $.fn.dataTable.render.defaultRepositoryNumberValue = function() {
 
 $.fn.dataTable.render.RepositoryNumberValue = function(data) {
   return `<span class="number-value" data-value="${data.value}">
-            ${data.value}
+            ${data.value.toLocaleString('en-US', { timeZone: 'UTC' })}
           </span>`;
 };
 
@@ -266,4 +266,13 @@ $.fn.dataTable.render.RepositoryStockConsumptionValue = function(data = {}) {
 
 $.fn.dataTable.render.defaultRepositoryStockConsumptionValue = function() {
   return $.fn.dataTable.render.RepositoryStockConsumptionValue();
+};
+
+$.fn.dataTable.render.RelationshipValue = function(data, row) {
+  return `<a
+            style="text-decoration: none !important;"
+            class="relationships-info-link !text-sn-blue !no-underline pl-4"
+            href=${row.recordInfoUrl}>
+            ${data}
+          </a>`;
 };

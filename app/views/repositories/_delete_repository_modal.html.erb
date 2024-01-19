@@ -1,8 +1,8 @@
 <div class="modal fade" id="delete-repo-modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog" role="document" data-e2e="e2e-MD-invDeleteAT">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-e2e="e2e-BT-invDeleteMD-close">
           <i class="sn-icon sn-icon-close"></i>
         </button>
         <h4 class="modal-title"><%= t("repositories.index.modal_delete.title_html", name: @repository.name) %></h4>
@@ -20,7 +20,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t("general.cancel")%></button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" data-e2e="e2e-BT-invDeleteMD-cancel"><%= t("general.cancel")%></button>
         <%= link_to t('repositories.index.modal_delete.delete'),
                     team_repository_path(id: @repository),
                     id: "confirm-repo-delete",

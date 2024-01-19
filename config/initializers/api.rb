@@ -10,4 +10,6 @@ Rails.application.configure do
   config.x.core_api_rate_limit = ENV['CORE_API_RATE_LIMIT'] ? ENV['CORE_API_RATE_LIMIT'].to_i : 1000
 
   config.x.core_api_v1_enabled = ENV['CORE_API_V1_ENABLED'] || false
+
+  config.x.core_api_v2_enabled = ENV['CORE_API_V2_ENABLED'] || false
 end

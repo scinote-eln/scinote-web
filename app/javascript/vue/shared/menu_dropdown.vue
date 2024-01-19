@@ -1,6 +1,11 @@
 <template>
-  <div class="relative" v-if="listItems.length > 0" v-click-outside="closeMenu">
-    <button ref="openBtn" :class="btnClasses" @click="showMenu = !showMenu">
+  <div class="relative" v-if="listItems.length > 0" v-click-outside="closeMenuAndEmit">
+    <button
+      ref="openBtn"
+      :class="btnClasses"
+      :title="showMenu ? '' : title"
+      @click="showMenu = !showMenu"
+    >
       <i v-if="btnIcon" :class="btnIcon"></i>
       {{ btnText }}
       <i v-if="caret && showMenu" class="sn-icon sn-icon-up"></i>
@@ -63,8 +68,8 @@
 
 <script>
 
+import { vOnClickOutside } from '@vueuse/components';
 import isInViewPort from './isInViewPort.js';
-import { vOnClickOutside } from '@vueuse/components'
 
 export default {
   name: 'DropdownMenu',
@@ -74,25 +79,29 @@ export default {
     btnClasses: { type: String, default: 'btn btn-light' },
     btnText: { type: String, required: false },
     btnIcon: { type: String, required: false },
-    caret: { type: Boolean, default: false },
+    caret: { type: Boolean, default: false }
   },
   data() {
     return {
       showMenu: false,
       openUp: false
-    }
+    };
   },
   directives: {
     'click-outside': vOnClickOutside
   },
   watch: {
-    showMenu() {
+    showMenu(newValue) {
+      if (newValue) {
+        this.$emit('menu-visibility-changed', newValue);
+      }
+
       if (this.showMenu) {
         this.openUp = false;
         this.$nextTick(() => {
           this.$refs.flyout.style.marginBottom = `${this.$refs.openBtn.offsetHeight}px`;
           this.updateOpenDirectoin();
-        })
+        });
       }
     }
   },
@@ -106,13 +115,21 @@ export default {
     closeMenu() {
       this.showMenu = false;
     },
+    closeMenuAndEmit(event) {
+      const isClickInsideModal = event.target.closest('.modal');
+
+      if (!isClickInsideModal) {
+        this.showMenu = false;
+        this.$emit('menu-visibility-changed', false);
+      }
+    },
     handleClick(event, item) {
       if (!item.url) {
         event.preventDefault();
       }
 
       if (item.emit) {
-        this.$emit(item.emit, item.params)
+        this.$emit(item.emit, item.params);
       }
 
       this.closeMenu();
@@ -126,5 +143,5 @@ export default {
       });
     }
   }
-}
+};
 </script>

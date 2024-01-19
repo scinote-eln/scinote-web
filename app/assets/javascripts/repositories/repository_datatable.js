@@ -57,6 +57,10 @@ var RepositoryDatatable = (function(global) {
   }
 
   function restoreColumnSizes() {
+    const scrollBody = $('.dataTables_scrollBody');
+    if (scrollBody[0].offsetWidth > scrollBody[0].clientWidth) {
+      scrollBody.css('width', `calc(100% + ${scrollBody[0].offsetWidth - scrollBody[0].clientWidth}px)`);
+    }
     TABLE.colResize.restore();
   }
 
@@ -667,11 +671,19 @@ var RepositoryDatatable = (function(global) {
         visible: true,
         render: function(data, type, row) {
           return "<a href='" + row.recordInfoUrl + "'"
-                 + "class='record-info-link' data-e2e='e2e-TL-invInventory-Item-" + row.DT_RowId + "'>" + data + '</a>';
+                 + "class='record-info-link' data-e2e='e2e-TL-invInventoryTR-Item-" + row.DT_RowId + "'>" + data + '</a>';
+        }
+      }, {
+        targets: 4,
+        class: 'relationship',
+        searchable: false,
+        orderable: true,
+        render: function(data, type, row) {
+          return $.fn.dataTable.render.RelationshipValue(data, row);
         }
       }, {
         // Added on column
-        targets: 4,
+        targets: 5,
         class: 'added-on',
         visible: true
       }, {
@@ -743,7 +755,6 @@ var RepositoryDatatable = (function(global) {
 
         // Hide edit button if not all selected rows are on the current page
         $('#editRepositoryRecord').prop('disabled', !allSelectedRowsAreOnPage());
-
         TABLE.columns([archivedOnIndex, archivedByIndex]).visible(archived);
       },
       preDrawCallback: function() {
@@ -1133,6 +1144,7 @@ var RepositoryDatatable = (function(global) {
       clearRowSelection();
     },
     selectedRows: () => { return rowsSelected; },
+    repositoryId: () => $(TABLE_ID).data('repository-id'),
     redrawTableOnSidebarToggle: redrawTableOnSidebarToggle,
     checkAvailableColumns: checkAvailableColumns
   });

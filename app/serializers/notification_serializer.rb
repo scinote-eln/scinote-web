@@ -33,6 +33,8 @@ class NotificationSerializer < ActiveModel::Serializer
   private
 
   def generate_breadcrumbs(subject, breadcrumbs)
+    return [] if subject.is_a?(NonExistantRecord)
+
     case subject
     when Project
       parent = subject.team
@@ -63,12 +65,19 @@ class NotificationSerializer < ActiveModel::Serializer
     when RepositoryRow
       parent = subject.team
       url = repository_path(subject.repository)
+    when Report
+      parent = subject.team
+      url = reports_path(
+        preview_report_id: subject.id,
+        preview_type: object.params[:report_type],
+        team_id: subject.team.id
+      )
     when LabelTemplate
       parent = subject.team
       url = label_template_path(subject)
     when Team
       parent = nil
-      url = projects_path
+      url = projects_path(team: subject.id)
     end
 
     breadcrumbs << { name: subject.name, url: url } if subject.name.present?

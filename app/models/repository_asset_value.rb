@@ -70,11 +70,14 @@ class RepositoryAssetValue < ApplicationRecord
     asset.last_modified_by = user
     self.last_modified_by = user
     asset.save! && save!
+    asset.post_process_file(repository_cell.repository_column.repository.team)
   end
 
   def snapshot!(cell_snapshot)
     value_snapshot = dup
     asset_snapshot = asset.dup
+    # Needed to handle shared repositories from another teams
+    asset_snapshot.team_id = cell_snapshot.repository_column.repository.team_id
 
     asset_snapshot.save!
 

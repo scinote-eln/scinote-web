@@ -106,7 +106,9 @@ module ApplicationHelper
       {
         type: :smart_annotation_added,
         title: sanitize_input(title),
-        subject: subject,
+        subject_id: subject.id,
+        subject_class: subject.class.name,
+        subject_name: subject.respond_to?(:name) && subject.name,
         user: target_user
       }
     )

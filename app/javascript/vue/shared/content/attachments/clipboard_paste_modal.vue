@@ -49,91 +49,89 @@
   </div>
 </template>
 <script>
-  import SelectSearch from "../../select_search.vue";
+import SelectSearch from '../../select_search.vue';
 
-  export default {
-    name: 'clipboardPasteModal',
-    props: {
-      objects: Array,
-      image: DataTransferItem,
-      objectType: String,
-      selectedObjectId: String
+export default {
+  name: 'clipboardPasteModal',
+  props: {
+    objects: Array,
+    image: DataTransferItem,
+    objectType: String,
+    selectedObjectId: String
+  },
+  data() {
+    return {
+      target: null,
+      targets: [],
+      fileName: '',
+      extension: ''
+    };
+  },
+  components: {
+    SelectSearch
+  },
+  computed: {
+    valid() {
+      return this.target && this.fileName.length > 0;
+    }
+  },
+  mounted() {
+    $(this.$refs.modal).modal('show');
+    this.appendImage(this.image);
+    $(this.$refs.modal).on('hidden.bs.modal', () => {
+      this.$emit('cancel');
+    });
+
+    if (this.selectedObjectId) this.target = this.selectedObjectId;
+    this.targets = this.objects.map((object) => [
+      object.id,
+      object.attributes.name
+    ]);
+  },
+  methods: {
+    setTarget(target) {
+      this.target = target;
     },
-    data () {
-      return {
-        target: null,
-        targets: [],
-        fileName: '',
-        extension: '',
+    cancel() {
+      $(this.$refs.modal).modal('hide');
+    },
+    appendImage(item) {
+      const imageBlob = item.getAsFile();
+      if (imageBlob) {
+        const canvas = this.$refs.preview;
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        img.onload = function () {
+          canvas.width = this.width;
+          canvas.height = this.height;
+          ctx.drawImage(img, 0, 0);
+        };
+        const URLObj = window.URL || window.webkitURL;
+        img.src = URLObj.createObjectURL(imageBlob);
+        const extension = imageBlob.name.slice(
+          (Math.max(0, imageBlob.name.lastIndexOf('.')) || Infinity) + 1
+        );
+        this.extension = extension;
+        this.imageBlob = imageBlob;
       }
     },
-    components: {
-      SelectSearch
-    },
-    computed: {
-      valid() {
-        return this.target && this.fileName.length > 0;
-      }
-    },
-    mounted() {
-      $(this.$refs.modal).modal('show');
-      this.appendImage(this.image);
-      $(this.$refs.modal).on('hidden.bs.modal', () => {
-        this.$emit('cancel');
-      });
-
-      if (this.selectedObjectId) this.target = this.selectedObjectId;
-      this.targets = this.objects.map((object) => {
-        return [
-          object.id,
-          object.attributes.name
-        ]
-      });
-    },
-    methods: {
-      setTarget(target) {
-        this.target = target;
-      },
-      cancel() {
-        $(this.$refs.modal).modal('hide');
-      },
-      appendImage(item) {
-        let imageBlob = item.getAsFile();
-        if (imageBlob) {
-          var canvas = this.$refs.preview;
-          var ctx = canvas.getContext('2d');
-          var img = new Image();
-          img.onload = function() {
-            canvas.width = this.width;
-            canvas.height = this.height;
-            ctx.drawImage(img, 0, 0);
-          };
-          let URLObj = window.URL || window.webkitURL;
-          img.src = URLObj.createObjectURL(imageBlob);
-          let extension = imageBlob.name.slice(
-            (Math.max(0, imageBlob.name.lastIndexOf('.')) || Infinity) + 1
-          );
-          this.extension = extension;
-          this.imageBlob = imageBlob;
-        }
-      },
-      uploadImage() {
-        let newName = this.fileName;
-        let imageBlog = this.imageBlob;
-        // check if the name is set
-        if (newName && newName.length > 0) {
-          let extension = imageBlog.name.slice(
-            (Math.max(0, imageBlog.name.lastIndexOf('.')) || Infinity) + 1
-          );
+    uploadImage() {
+      const newName = this.fileName;
+      const imageBlog = this.imageBlob;
+      // check if the name is set
+      if (newName && newName.length > 0) {
+        const extension = imageBlog.name.slice(
+          (Math.max(0, imageBlog.name.lastIndexOf('.')) || Infinity) + 1
+        );
           // hack to inject custom name in File object
-          let name = newName + '.' + extension;
-          let blob = imageBlog.slice(0, imageBlog.size, imageBlog.type);
-          // make new blob with the correct name;
-          this.imageBlob = new File([blob], name, { type: imageBlog.type });
-        }
-        $(this.$refs.modal).modal('hide');
-        this.$emit('files', this.imageBlob, this.target);
+        const name = `${newName}.${extension}`;
+        const blob = imageBlog.slice(0, imageBlog.size, imageBlog.type);
+        // make new blob with the correct name;
+        this.imageBlob = new File([blob], name, { type: imageBlog.type });
       }
+      $(this.$refs.modal).modal('hide');
+      this.$emit('files', this.imageBlob, this.target);
     }
   }
+};
 </script>

@@ -75,137 +75,135 @@
   </div>
 </template>
 
- <script>
-  const DPI_RESOLUTION_OPTIONS = [
-    { value: 6, label: '152 dpi' },
-    { value: 8, label: '203 dpi' },
-    { value: 12, label: '300 dpi'},
-    { value: 24, label: '600 dpi' }
-  ]
+<script>
+import DropdownSelector from '../../shared/dropdown_selector.vue';
 
-  const DPMM_RESOLUTION_OPTIONS = [
-    { value: 6, label: '6 dpmm (152 dpi)' },
-    { value: 8, label: '8 dpmm (203 dpi)' },
-    { value: 12, label: '12 dpmm (300 dpi)' },
-    { value: 24, label: '24 dpmm (600 dpi)' }
-  ]
+const DPI_RESOLUTION_OPTIONS = [
+  { value: 6, label: '152 dpi' },
+  { value: 8, label: '203 dpi' },
+  { value: 12, label: '300 dpi' },
+  { value: 24, label: '600 dpi' }
+];
 
-  import DropdownSelector from '../../shared/dropdown_selector.vue'
+const DPMM_RESOLUTION_OPTIONS = [
+  { value: 6, label: '6 dpmm (152 dpi)' },
+  { value: 8, label: '8 dpmm (203 dpi)' },
+  { value: 12, label: '12 dpmm (300 dpi)' },
+  { value: 24, label: '24 dpmm (600 dpi)' }
+];
 
-  export default {
-    name: 'LabelPreview',
-    components: { DropdownSelector },
-    props: {
-      template: { type: Object, required: true},
-      zpl: { type: String, required: true },
-      previewUrl: { type: String, required: true },
-      viewOnly: {
-        type: Boolean,
-        default: false
-      }
+export default {
+  name: 'LabelPreview',
+  components: { DropdownSelector },
+  props: {
+    template: { type: Object, required: true },
+    zpl: { type: String, required: true },
+    previewUrl: { type: String, required: true },
+    viewOnly: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
+    return {
+      DPMM_RESOLUTION_OPTIONS,
+      DPI_RESOLUTION_OPTIONS,
+      optionsOpen: false,
+      width: this.template.attributes.unit == 'in' ? this.template.attributes.width_mm / 25.4 : this.template.attributes.width_mm,
+      height: this.template.attributes.unit == 'in' ? this.template.attributes.height_mm / 25.4 : this.template.attributes.height_mm,
+      unit: this.template.attributes.unit,
+      density: this.template.attributes.density,
+      base64Image: null,
+      imageStyle: ''
+    };
+  },
+  mounted() {
+    this.refreshPreview();
+  },
+  computed: {
+    widthMm() {
+      return this.unit === 'in' ? this.width * 25.4 : this.width;
     },
-    data() {
-      return {
-        DPMM_RESOLUTION_OPTIONS,
-        DPI_RESOLUTION_OPTIONS,
-        optionsOpen: false,
-        width: this.template.attributes.unit == 'in' ? this.template.attributes.width_mm / 25.4 : this.template.attributes.width_mm,
-        height: this.template.attributes.unit == 'in' ? this.template.attributes.height_mm / 25.4 : this.template.attributes.height_mm,
-        unit: this.template.attributes.unit,
-        density: this.template.attributes.density,
-        base64Image: null,
-        imageStyle: ''
-      }
+    heightMm() {
+      return this.unit === 'in' ? this.height * 25.4 : this.height;
     },
-    mounted() {
+    canManage() {
+      return this.template.attributes.urls.update;
+    }
+  },
+  watch: {
+    unit() {
+      this.setDefaults();
+    },
+    zpl() {
       this.refreshPreview();
     },
-    computed: {
-      widthMm() {
-        return this.unit === 'in' ? this.width * 25.4 : this.width;
-      },
-      heightMm() {
-        return this.unit === 'in' ? this.height * 25.4 : this.height;
-      },
-      canManage() {
-        return this.template.attributes.urls.update;
+    template() {
+      this.unit = this.template.attributes.unit;
+      this.width = this.template.attributes.unit == 'in' ? this.template.attributes.width_mm / 25.4 : this.template.attributes.width_mm;
+      this.height = this.template.attributes.unit == 'in' ? this.template.attributes.height_mm / 25.4 : this.template.attributes.height_mm;
+      this.density = this.template.attributes.density;
+    }
+  },
+  methods: {
+    setDefaults() {
+      !this.unit && (this.unit = 'in');
+      !this.density && (this.density = 12);
+      !this.width && (this.width = this.unit === 'in' ? 2 : 50.8);
+      !this.height && (this.height = this.unit === 'in' ? 1 : 25.4);
+    },
+    recalculateUnits() {
+      if (this.unit === 'in') {
+        this.width /= 25.4;
+        this.height /= 25.4;
+      } else {
+        this.width *= 25.4;
+        this.height *= 25.4;
       }
     },
-    watch: {
-      unit() {
-        this.setDefaults();
-      },
-      zpl() {
-        this.refreshPreview();
-      },
-      template() {
-        this.unit = this.template.attributes.unit
-        this.width = this.template.attributes.unit == 'in' ? this.template.attributes.width_mm / 25.4 : this.template.attributes.width_mm
-        this.height = this.template.attributes.unit == 'in' ? this.template.attributes.height_mm / 25.4 : this.template.attributes.height_mm
-        this.density = this.template.attributes.density
-      }
-    },
-    methods: {
-      setDefaults() {
-        !this.unit && (this.unit = 'in');
-        !this.density && (this.density = 12);
-        !this.width && (this.width = this.unit === 'in' ? 2 : 50.8);
-        !this.height && (this.height = this.unit === 'in' ? 1 : 25.4);
-      },
-      recalculateUnits() {
-        if (this.unit === 'in') {
-          this.width /= 25.4;
-          this.height /= 25.4;
-        } else {
-          this.width *= 25.4;
-          this.height *= 25.4;
-        }
-      },
-      refreshPreview() {
-        if (this.zpl.length === 0) return;
+    refreshPreview() {
+      if (this.zpl.length === 0) return;
 
-        this.base64Image = null;
+      this.base64Image = null;
 
-        $.ajax({
-          url: this.previewUrl,
-          type: 'GET',
-          data: {
-            zpl: this.zpl,
-            width: this.widthMm,
-            height: this.heightMm,
-            density: this.density
-          },
-          success: (result) => {
-            this.base64Image = result.base64_preview;
-            if (this.base64Image.length > 0) {
-              this.$emit('preview:valid');
-            } else {
-              this.$emit('preview:invalid');
-            }
-          },
-          error: (result) => {
-            this.base64Image = '';
+      $.ajax({
+        url: this.previewUrl,
+        type: 'GET',
+        data: {
+          zpl: this.zpl,
+          width: this.widthMm,
+          height: this.heightMm,
+          density: this.density
+        },
+        success: (result) => {
+          this.base64Image = result.base64_preview;
+          if (this.base64Image.length > 0) {
+            this.$emit('preview:valid');
+          } else {
             this.$emit('preview:invalid');
           }
+        },
+        error: (result) => {
+          this.base64Image = '';
+          this.$emit('preview:invalid');
+        }
 
-        });
-      },
-      updateUnit(unit) {
-        if (this.unit === unit) return;
-        this.unit = unit;
-        this.recalculateUnits();
-        this.$emit('unit:update', this.unit);
-      },
-      updateDensity(density) {
-        this.density = density;
-        this.$emit('density:update', this.density);
-      },
-      densityLabel() {
-        let resolutions = this.unit === 'in' ? DPI_RESOLUTION_OPTIONS :  DPMM_RESOLUTION_OPTIONS;
-        return resolutions.find(element => {
-          return element.value === this.density;
-        }).label;
-      }
+      });
+    },
+    updateUnit(unit) {
+      if (this.unit === unit) return;
+      this.unit = unit;
+      this.recalculateUnits();
+      this.$emit('unit:update', this.unit);
+    },
+    updateDensity(density) {
+      this.density = density;
+      this.$emit('density:update', this.density);
+    },
+    densityLabel() {
+      const resolutions = this.unit === 'in' ? DPI_RESOLUTION_OPTIONS : DPMM_RESOLUTION_OPTIONS;
+      return resolutions.find((element) => element.value === this.density).label;
     }
   }
- </script>
+};
+</script>

@@ -141,8 +141,14 @@ class MyModule < ApplicationRecord
   end
 
   def self.approaching_due_dates
-    where(due_date_notification_sent: false)
-      .where('due_date > ? AND due_date <= ?', DateTime.current, DateTime.current + 1.day)
+    joins(experiment: :project)
+      .active
+      .where(
+        due_date_notification_sent: false,
+        projects: { archived: false },
+        experiments: { archived: false }
+      )
+      .where('my_modules.due_date > ? AND my_modules.due_date <= ?', DateTime.current, DateTime.current + 1.day)
   end
 
   def parent

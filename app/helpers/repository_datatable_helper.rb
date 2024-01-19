@@ -17,14 +17,19 @@ module RepositoryDatatableHelper
       row = public_send("#{repository.class.name.underscore}_default_columns", record)
       row.merge!(
         DT_RowId: record.id,
-        DT_RowAttr: { 'data-state': row_style(record), 'data-e2e': "e2e-RT-invInventory-row-#{record.id}" },
+        DT_RowAttr: { 'data-state': row_style(record), 'data-e2e': "e2e-TR-invInventory-bodyRow-#{record.id}" },
         recordInfoUrl: Rails.application.routes.url_helpers.repository_repository_row_path(repository, record),
         rowRemindersUrl:
           Rails.application.routes.url_helpers
                .active_reminder_repository_cells_repository_repository_row_url(
                  repository,
                  record
-               )
+               ),
+        relationshipsUrl:
+          Rails.application.routes.url_helpers
+               .relationships_repository_repository_row_url(record.repository_id, record.id),
+        relationships_enabled: repository_row_connections_enabled,
+        code: record.code
       )
 
       if reminders_enabled
@@ -57,7 +62,7 @@ module RepositoryDatatableHelper
           else
             { stock_url: new_repository_stock_repository_repository_row_url(repository, record) }
           end
-        row['stock'][:stock_managable] = stock_managable
+        row['stock'][:stock_managable] = stock_managable && record.active?
         row['stock']['displayWarnings'] = display_stock_warnings?(repository)
         row['stock'][:stock_status] = stock_cell&.value&.status
 
@@ -226,23 +231,24 @@ module RepositoryDatatableHelper
       '1': assigned_row(record),
       '2': record.code,
       '3': escape_input(record.name),
-      '4': I18n.l(record.created_at, format: :full),
-      '5': escape_input(record.created_by.full_name),
-      '6': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
-      '7': escape_input(record.archived_by&.full_name)
+      '4': "#{record.parent_connections_count || 0} / #{record.child_connections_count || 0}",
+      '5': I18n.l(record.created_at, format: :full),
+      '6': escape_input(record.created_by.full_name),
+      '7': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
+      '8': escape_input(record.archived_by&.full_name)
     }
   end
 
   def linked_repository_default_columns(record)
     {
       '1': assigned_row(record),
-      '2': escape_input(record.external_id),
-      '3': record.code,
-      '4': escape_input(record.name),
-      '5': I18n.l(record.created_at, format: :full),
-      '6': escape_input(record.created_by.full_name),
-      '7': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
-      '8': escape_input(record.archived_by&.full_name)
+      '2': record.code,
+      '3': escape_input(record.name),
+      '4': I18n.l(record.created_at, format: :full),
+      '5': escape_input(record.created_by.full_name),
+      '6': (record.archived_on ? I18n.l(record.archived_on, format: :full) : ''),
+      '7': escape_input(record.archived_by&.full_name),
+      '8': escape_input(record.external_id)
     }
   end
 
@@ -310,5 +316,9 @@ module RepositoryDatatableHelper
 
   def display_stock_warnings?(repository)
     !repository.is_a?(RepositorySnapshot)
+  end
+
+  def repository_row_connections_enabled
+    Repository.repository_row_connections_enabled?
   end
 end
