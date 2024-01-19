@@ -15,11 +15,6 @@ export default {
         this.attachment.attributes.asset_type !== 'marvinjs'
     }
   },
-  mounted() {
-    this.$nextTick(() => {
-      this.fetchLocalAppInfo();
-    });
-  },
   methods: {
     async fetchLocalAppInfo() {
       try {

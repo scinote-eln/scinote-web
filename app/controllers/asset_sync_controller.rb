@@ -126,7 +126,7 @@ class AssetSyncController < ApplicationController
 
     Activities::CreateActivityService
       .call(activity_type: type_of,
-            owner: User.first,
+            owner: current_user,
             subject: step.protocol,
             team: step.protocol.team,
             project: project,

@@ -1,5 +1,6 @@
 <template>
-  <div class="result-wrapper p-4 mb-4 rounded pr-8 relative"
+  <div ref="resultContainer"
+       class="result-wrapper p-4 mb-4 rounded pr-8 relative"
        @drop.prevent="dropFile"
        @dragenter.prevent="dragEnter($event)"
        @dragover.prevent
@@ -434,9 +435,10 @@ export default {
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       }).done(() => {
         this.$parent.$nextTick(() => {
-          const children = this.$refs.stepContainer.querySelectorAll('.result-element');
+          const children = this.$refs.resultContainer.querySelectorAll('.result-element');
           const lastChild = children[children.length - 1];
-          lastChild.$el.scrollIntoView(false);
+
+          lastChild.scrollIntoView(false);
           window.scrollBy({
             top: 200,
             behavior: 'smooth'
