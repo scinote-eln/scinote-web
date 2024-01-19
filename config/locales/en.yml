@@ -2278,6 +2278,8 @@ en:
           title: "Unlink item"
           description: "Are you sure you want to unlink the item? Reconnection is possible later if needed."
           unlink: "Unlink"
+          success: "Successfully unlinked %{to_connection} from %{from_connection}."
+          error: "Unlinking %{to_connection} and %{from_connection} failed. Please try again."
       default_columns:
         repository_name: "Inventory"
         id: "Item ID"
@@ -2350,6 +2352,9 @@ en:
           not_valid_range: 'Range is not valid.'
           select_valid_value: 'Select a valid date or date-time value'
           browser_alert_message: 'You have made some changes, are you sure you want to leave this page?'
+      errors:
+        load_error_header: 'Your team does not have the necessary permissions to view the details of this item.'
+        load_error_description: 'To obtain access, reach out to your team administrator.'
     highlight_component:
       information_label: 'Information'
       custom_columns_label: 'Custom columns'

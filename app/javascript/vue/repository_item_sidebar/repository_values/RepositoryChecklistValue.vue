@@ -8,6 +8,7 @@
         @change="changeSelected"
         @update="update"
         :initialSelectedValues="selectedValues"
+        :shouldUpdateWithoutValues="true"
         :withButtons="true"
         :withEditCursor="true"
         ref="ChecklistSelector"

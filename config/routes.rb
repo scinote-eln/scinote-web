@@ -1023,4 +1023,8 @@ Rails.application.routes.draw do
   end
 
   resources :gene_sequence_assets, only: %i(new create edit update)
+
+  if Rails.env.development? || ENV['ENABLE_DESIGN_ELEMENTS'] == 'true'
+    resources :design_elements, only: %i(index)
+  end
 end

@@ -200,7 +200,9 @@ export default {
         });
       } else {
         // scroll to the start of a section's threshold, adjusted for the center thumb value (true center)
-        scrollableArea.scrollTop = foundThreshold.from - this.centerOfScrollThumb;
+        this.$nextTick(() => {
+          scrollableArea.scrollTop = foundThreshold.from - this.centerOfScrollThumb;
+        });
       }
       this.flashTitleColor(domElToScrollTo);
 

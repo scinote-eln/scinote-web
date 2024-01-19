@@ -29,6 +29,16 @@
             <div class="sci-loader"></div>
           </div>
 
+          <div v-else-if="!dataLoading && loadingError" class="h-full flex flex-grow-1">
+            <div class="flex flex-col items-center justify-center h-full pr-6 mx-14">
+              <i class=" text-sn-alert-passion sn-icon sn-icon-large sn-icon-alert-warning"></i>
+              <div class="text-center">
+                <h4 class="font-inter text-lg mt-3">{{ i18n.t('repositories.item_card.errors.load_error_header') }}</h4>
+                <div class="font-inter text-sm">{{ i18n.t('repositories.item_card.errors.load_error_description') }}</div>
+              </div>
+            </div>
+          </div>
+
           <div v-else class="flex flex-1 flex-grow-1 justify-between" ref="scrollSpyContent" id="scrollSpyContent">
 
             <div id="left-col" class="flex flex-col gap-6 max-w-[350px]">
@@ -303,7 +313,7 @@
           </div>
 
           <!-- BOTTOM -->
-          <div id="bottom" v-show="!dataLoading" class="h-[100px] flex flex-col justify-end mt-4 mr-6"
+          <div id="bottom" v-show="!dataLoading && !loadingError" class="h-[100px] flex flex-col justify-end mt-4 mr-6"
             :class="{ 'pb-6': customColumns?.length }">
             <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px mb-6"></div>
             <div id="bottom-button-wrapper" class="flex h-10 justify-end">
@@ -326,6 +336,8 @@
 </template>
 
 <script>
+/* global HelperModule I18n */
+
 import { vOnClickOutside } from '@vueuse/components';
 import InlineEdit from '../shared/inline_edit.vue';
 import ScrollSpy from './repository_values/ScrollSpy.vue';
@@ -409,7 +421,8 @@ export default {
       notification: null,
       relationshipDetailsState: {},
       selectedToUnlink: null,
-      initialSectionId: null
+      initialSectionId: null,
+      loadingError: false
     };
   },
   provide() {
@@ -497,6 +510,8 @@ export default {
       }
     },
     toggleShowHideSidebar(repositoryRowUrl, myModuleId = null, initialSectionId = null) {
+      // opening from a bootstrap modal - should close the modal upon itemcard open
+      this.handleOpeningFromBootstrapModal();
       if (initialSectionId) {
         this.initialSectionId = initialSectionId;
       } else this.initialSectionId = null;
@@ -529,37 +544,51 @@ export default {
       this.loadRepositoryRow(repositoryRowUrl);
       this.currentItemUrl = repositoryRowUrl;
     },
-    loadRepositoryRow(repositoryRowUrl, scrollTop = 0) {
-      this.dataLoading = true
-      $.ajax({
-        method: 'GET',
-        url: repositoryRowUrl,
-        data: { my_module_id: this.myModuleId },
-        dataType: 'json',
-        success: (result) => {
-          this.repositoryRowId = result.id;
-          this.repository = result.repository;
-          this.optionsPath = result.options_path;
-          this.updatePath = result.update_path;
-          this.defaultColumns = result.default_columns;
-          this.parentsCount = result.relationships.parents_count;
-          this.childrenCount = result.relationships.children_count;
-          this.parents = result.relationships.parents;
-          this.children = result.relationships.children;
-          this.customColumns = result.custom_columns;
-          this.assignedModules = result.assigned_modules;
-          this.permissions = result.permissions;
-          this.actions = result.actions;
-          this.icons = result.icons;
-          this.dataLoading = false;
-          this.notification = result.notification;
-          this.$nextTick(() => {
-            this.generateBarCode(this.defaultColumns.code);
-
-            // if scrollTop was provided, scroll to it
-            this.$nextTick(() => { this.$refs.bodyWrapper.scrollTop = scrollTop; });
-          });
+    handleOpeningFromBootstrapModal() {
+      const layout = document.querySelector('.sci--layout');
+      const openModals = layout.querySelectorAll('.modal');
+      openModals.forEach((modal) => {
+        if ($(modal).hasClass('in') && !$(modal).hasClass('full-screen')) {
+          $(modal).modal('hide');
         }
+      });
+    },
+    loadRepositoryRow(repositoryRowUrl, scrollTop = 0) {
+      this.dataLoading = true;
+      this.loadingError = false;
+      if (this.defaultColumns?.name) {
+        this.defaultColumns.name = '';
+      }
+      axios.get(
+        repositoryRowUrl,
+        { my_module_id: this.myModuleId }
+      ).then((response) => {
+        const result = response.data;
+        this.repositoryRowId = result.id;
+        this.repository = result.repository;
+        this.optionsPath = result.options_path;
+        this.updatePath = result.update_path;
+        this.defaultColumns = result.default_columns;
+        this.parentsCount = result.relationships.parents_count;
+        this.childrenCount = result.relationships.children_count;
+        this.parents = result.relationships.parents;
+        this.children = result.relationships.children;
+        this.customColumns = result.custom_columns;
+        this.assignedModules = result.assigned_modules;
+        this.permissions = result.permissions;
+        this.actions = result.actions;
+        this.icons = result.icons;
+        this.dataLoading = false;
+        this.notification = result.notification;
+        this.$nextTick(() => {
+          this.generateBarCode(this.defaultColumns.code);
+
+          // if scrollTop was provided, scroll to it
+          this.$nextTick(() => { this.$refs.bodyWrapper.scrollTop = scrollTop; });
+        });
+      }).catch(() => {
+        this.loadingError = true;
+        this.dataLoading = false;
       });
     },
     reload() {
@@ -586,17 +615,16 @@ export default {
       return this.assignedModules.total_assigned_size - this.assignedModules.viewable_modules.length;
     },
     update(params) {
-      $.ajax({
-        method: 'PUT',
-        url: this.updatePath,
-        dataType: 'json',
-        data: {
+      axios.put(
+        this.updatePath,
+        {
           id: this.id,
           ...params
         }
-      }).done((response) => {
-        if (response) {
-          this.customColumns = this.customColumns.map((col) => (col.id === response.id ? { ...col, ...response } : col));
+      ).then((response) => {
+        const result = response.data;
+        if (result) {
+          this.customColumns = this.customColumns.map((col) => (col.id === result.id ? { ...col, ...result } : col));
           if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
         }
       });
@@ -611,10 +639,28 @@ export default {
       this.selectedToUnlink = null;
     },
     async unlinkItem() {
-      await axios.delete(this.selectedToUnlink.unlink_path);
-      this.loadRepositoryRow(this.currentItemUrl);
-      if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
-      this.selectedToUnlink = null;
+      try {
+        await axios.delete(this.selectedToUnlink.unlink_path);
+        HelperModule.flashAlertMsg(
+          I18n.t(
+            'repositories.item_card.relationships.unlink_modal.success',
+            { from_connection: this.defaultColumns.name, to_connection: this.selectedToUnlink.name }
+          ),
+          'success'
+        );
+        this.loadRepositoryRow(this.currentItemUrl);
+        if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
+      } catch {
+        HelperModule.flashAlertMsg(
+          I18n.t(
+            'repositories.item_card.relationships.unlink_modal.error',
+            { from_connection: this.defaultColumns.name, to_connection: this.selectedToUnlink.name }
+          ),
+          'danger'
+        );
+      } finally {
+        this.selectedToUnlink = null;
+      }
     }
   }
 };

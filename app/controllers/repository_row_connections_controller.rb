@@ -135,22 +135,28 @@ class RepositoryRowConnectionsController < ApplicationController
   end
 
   def connected_rows_by_relation_type
-    repository_rows = if @relation_type == 'parent'
-                        @repository_row.parent_repository_rows
-                      else
-                        @repository_row.child_repository_rows
-                      end
+    repository_connections = if @relation_type == 'parent'
+                               @repository_row.parent_connections
+                             else
+                               @repository_row.child_connections
+                             end
 
-    repository_rows.preload(:repository)
-                   .map do |repository_row|
-                     {
-                       name: repository_row.name,
-                       code: repository_row.code,
-                       path: repository_repository_row_path(repository_row.repository, repository_row),
-                       repository_name: repository_row.repository.name,
-                       repository_path: repository_path(repository_row.repository)
-                     }
-                   end
+    repository_connections.map do |connection|
+      repository_row = @relation_type == 'parent' ? connection.parent : connection.child
+
+      {
+        name: repository_row.name_with_label,
+        code: repository_row.code,
+        path: repository_repository_row_path(repository_row.repository, repository_row),
+        repository_name: repository_row.repository.name,
+        repository_path: repository_path(repository_row.repository),
+        unlink_path: repository_repository_row_repository_row_connection_path(
+          repository_row.repository,
+          repository_row,
+          connection
+        )
+      }
+    end
   end
 
   def log_activity(type_of, repository, message_items = {})
