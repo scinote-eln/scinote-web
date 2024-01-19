@@ -2804,6 +2804,7 @@ en:
             macos_button: 'Download for macOS'
             windows_button: 'Download for Windows'
             version: 'Version %{version}'
+          more_info: 'More info'
         label_printer:
           fluics_printer: "FLUICS Print: Label printers"
           zebra_printer: 'Zebra label printers'
