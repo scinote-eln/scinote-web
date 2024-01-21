@@ -299,27 +299,27 @@ class ExperimentsController < ApplicationController
   def move
     project = Project.find_by(id: params[:project_id])
 
-    ActiveRecord::Base.transaction do
+    project.transaction do
       @experiments.each do |experiment|
-        @experiment = experiment
-        service = Experiments::MoveToProjectService
+        Experiments::MoveToProjectService
                   .call(experiment_id: experiment.id,
                         project_id: params[:project_id],
                         user_id: current_user.id)
-        if service.succeed?
-          flash[:success] = t('experiments.move.success_flash', experiment: experiment.name)
-          view_state = experiment.current_view_state(current_user)
-          view_type = view_state.state['my_modules']['view_type'] || 'canvas'
-        else
-          render json: {
-            message: service.errors.values.join('. ')
-          }, status: :unprocessable_entity
-        end
       end
-    end
 
-    render json: { message: t('experiments.table.move_success_flash',
-      project: escape_input(project.name)), path: project_path(project) }
+      flash[:success] = t('experiments.table.move_success_flash', project: escape_input(project.name))
+      render json: { message: t('experiments.table.move_success_flash',
+        project: escape_input(project.name)), path: project_path(project) }
+    rescue StandardError => e
+      Rails.logger.error(e.message)
+      Rails.logger.error(e.backtrace.join("\n"))
+      render json: {
+        message: t('experiments.table.move_success_flash', project: escape_input(project.name))
+      }, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
+    end
+  rescue ActiveRecord::RecordNotFound
+    render_404
   end
 
   def move_modules_modal

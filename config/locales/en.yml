@@ -1527,6 +1527,7 @@ en:
     table:
       head_title: "%{experiment} | Overview"
       move_success_flash: "Successfully moved experiment(s) to project %{project}."
+      error_flash: "Failed to move experiment(s) to project %{project}."
       column:
         id_html: 'ID'
         task_name_html: 'Task name'
