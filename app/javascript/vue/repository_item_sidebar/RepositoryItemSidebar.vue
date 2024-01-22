@@ -546,12 +546,8 @@ export default {
     },
     handleOpeningFromBootstrapModal() {
       const layout = document.querySelector('.sci--layout');
-      const openModals = layout.querySelectorAll('.modal');
-      openModals.forEach((modal) => {
-        if ($(modal).hasClass('in') && !$(modal).hasClass('full-screen')) {
-          $(modal).modal('hide');
-        }
-      });
+      const openModals = layout.querySelectorAll('.modal.in:not(.modal-full-screen)');
+      openModals.forEach((modal) => $(modal).modal('hide'));
     },
     loadRepositoryRow(repositoryRowUrl, scrollTop = 0) {
       this.dataLoading = true;
