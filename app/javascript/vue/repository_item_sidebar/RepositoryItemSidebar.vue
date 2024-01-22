@@ -159,7 +159,7 @@
                     </div>
                     <div v-if="parentsCount">
                       <details v-for="(parent) in parents" @toggle="updateOpenState(parent.code, $event.target.open)" :key="parent.code" class="flex flex-col font-normal gap-4 group cursor-default">
-                        <summary class="flex flex-row gap-3 mb-4 relative">
+                        <summary class="flex flex-row gap-3 mb-4 relative group">
                           <img :src="icons.delimiter_path" class="w-3 h-3 cursor-pointer flex-shrink-0 relative top-1"
                                :class="{ 'rotate-90': relationshipDetailsState[parent.code] }" />
                           <span>
@@ -206,7 +206,7 @@
                     <div v-if="childrenCount">
                       <details v-for="(child) in children" :key="child.code" @toggle="updateOpenState(child.code, $event.target.open)"
                                class="flex flex-col font-normal gap-4 group-last-of-type:[&>p:last-child]:mb-0">
-                        <summary class="flex flex-row gap-3 mb-4 relative"
+                        <summary class="flex flex-row gap-3 mb-4 relative group"
                                  :class="{ 'group-last-of-type:mb-0': !relationshipDetailsState[child.code] }">
                           <img :src="icons.delimiter_path" class="w-3 h-3 flex-shrink-0 cursor-pointer relative top-1"
                                :class="{ 'rotate-90': relationshipDetailsState[child.code] }"/>
