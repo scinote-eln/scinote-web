@@ -29,13 +29,6 @@
   <a href="#" ref="commentButton" class="open-comments-sidebar hidden"
      data-turbolinks="false" data-object-type="Project" data-object-id=""></a>
   <ConfirmationModal
-    :title="i18n.t('projects.index.archive_confirm_title')"
-    :description="i18n.t('projects.index.archive_confirm')"
-    :confirmClass="'btn btn-primary'"
-    :confirmText="i18n.t('general.archive')"
-    ref="archiveModal"
-  ></ConfirmationModal>
-  <ConfirmationModal
     :title="i18n.t('projects.index.modal_delete_folders.title')"
     :description="folderDeleteDescription"
     confirmClass="btn btn-danger"
@@ -251,15 +244,12 @@ export default {
       };
     },
     async archive(event, rows) {
-      const ok = await this.$refs.archiveModal.show();
-      if (ok) {
-        axios.post(event.path, { project_ids: rows.map((row) => row.id) }).then((response) => {
-          this.reloadingTable = true;
-          HelperModule.flashAlertMsg(response.data.message, 'success');
-        }).catch((error) => {
-          HelperModule.flashAlertMsg(error.response.data.error, 'danger');
-        });
-      }
+      axios.post(event.path, { project_ids: rows.map((row) => row.id) }).then((response) => {
+        this.reloadingTable = true;
+        HelperModule.flashAlertMsg(response.data.message, 'success');
+      }).catch((error) => {
+        HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+      });
     },
     restore(event, rows) {
       axios.post(event.path, { project_ids: rows.map((row) => row.id) }).then((response) => {

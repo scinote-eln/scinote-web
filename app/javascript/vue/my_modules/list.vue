@@ -33,13 +33,6 @@
             :assignedUsersUrl="assignedUsersUrl"
             @create="updateTable"
             @close="newModalOpen = false" />
-  <ConfirmationModal
-    :title="i18n.t('experiments.table.archive_confirm_title')"
-    :description="i18n.t('experiments.table.archive_confirm')"
-    :confirmClass="'btn btn-primary'"
-    :confirmText="i18n.t('general.archive')"
-    ref="archiveModal"
-  ></ConfirmationModal>
   <EditModal v-if="editModalObject"
              :my_module="editModalObject"
              @close="editModalObject = null"
@@ -269,15 +262,12 @@ export default {
       this.moveModalObject = null;
     },
     async archive(event, rows) {
-      const ok = await this.$refs.archiveModal.show();
-      if (ok) {
-        axios.post(event.path, { my_modules: rows.map((row) => row.id) }).then((response) => {
-          this.reloadingTable = true;
-          HelperModule.flashAlertMsg(response.data.message, 'success');
-        }).catch((error) => {
-          HelperModule.flashAlertMsg(error.response.data.error, 'danger');
-        });
-      }
+      axios.post(event.path, { my_modules: rows.map((row) => row.id) }).then((response) => {
+        this.reloadingTable = true;
+        HelperModule.flashAlertMsg(response.data.message, 'success');
+      }).catch((error) => {
+        HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+      });
     },
     restore(event, rows) {
       axios.post(event.path, { my_modules_ids: rows.map((row) => row.id), view: 'table' }).then((response) => {

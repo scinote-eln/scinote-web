@@ -555,8 +555,6 @@ en:
       delete_button: "Delete"
       edit_option: "Edit"
       archive_option: "Archive"
-      archive_confirm_title: "Archive project"
-      archive_confirm: "Are you sure you want to archive this project?"
       restore_option: "Restore"
       project_members_access: "Access"
       comments_option: "Comments"
@@ -1472,8 +1470,6 @@ en:
       clone_option: "Duplicate"
       move_option: "Move"
       archive_option: "Archive"
-      archive_confirm_title: "Archive experiment"
-      archive_confirm: "Are you sure you want to archive this experiment?"
       restore_option: "Restore"
       more_link: "More"
       experiment_access: "Access"
@@ -1544,8 +1540,6 @@ en:
         assigned_html: 'Assigned to'
         tags_html: 'Tags'
         comments_html: 'Comments'
-      archive_confirm_title: "Archive task"
-      archive_confirm: "Are you sure you want to archive this task?"
       modal_move_modules:
         title: "Move task(s) to experiment"
         confirm: "Move"
