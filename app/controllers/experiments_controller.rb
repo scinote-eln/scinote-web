@@ -313,11 +313,7 @@ class ExperimentsController < ApplicationController
     end
 
     render json: {
-      workflowimg: render_to_string(
-        partial: 'projects/show/workflow_img',
-        locals: { experiment: @experiment },
-        formats: :html
-      )
+      workflowimg_url: rails_blob_path(@experiment.workflowimg, only_path: true),
     }
   end
 
