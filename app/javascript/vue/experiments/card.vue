@@ -39,8 +39,11 @@
           }
         ) }}</span>
       </div>
-      <div class="h-20 w-20 p-0.5 bg-sn-light-grey rounded-sm shrink-0 ml-auto">
-        <img :src="params.workflow_img" class="max-h-18 max-w-[72px]">
+      <div class="h-20 w-20 p-0.5 bg-sn-light-grey rounded-sm shrink-0 ml-auto relative">
+        <div v-if="imageLoading" class="flex absolute top-0 items-center justify-center w-full flex-grow h-full z-10">
+          <img src="/images/medium/loading.svg" alt="Loading" />
+        </div>
+        <img v-else :src="workflow_img" class="max-h-18 max-w-[72px]">
       </div>
     </div>
     <div class="py-2">
@@ -58,6 +61,7 @@
 
 import RowMenuRenderer from '../shared/datatable/row_menu_renderer.vue';
 import CardSelectorMixin from '../shared/datatable/mixins/card_selector.js';
+import workflowImgMixin from './workflow_img_mixin.js';
 import Description from './renderers/description.vue';
 
 export default {
@@ -70,6 +74,6 @@ export default {
     RowMenuRenderer,
     Description,
   },
-  mixins: [CardSelectorMixin],
+  mixins: [CardSelectorMixin, workflowImgMixin],
 };
 </script>

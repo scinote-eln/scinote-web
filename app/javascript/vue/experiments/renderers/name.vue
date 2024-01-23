@@ -1,19 +1,26 @@
 <template>
   <div class="relative leading-5 h-full flex items-center gap-2 truncate">
-    <div class="h-10 w-10 p-0.5 bg-sn-light-grey rounded-sm shrink-0">
-      <img :src="params.data.workflow_img" class="max-h-9 max-w-[36px]">
+    <div class="h-10 w-10 p-0.5 bg-sn-light-grey rounded-sm shrink-0 relative">
+      <div v-if="imageLoading" class="flex absolute top-0 items-center justify-center w-full flex-grow h-full z-10">
+        <img src="/images/medium/loading.svg" alt="Loading" class="w-4 h-4" />
+      </div>
+      <img v-else :src="workflow_img" class="max-h-9 max-w-[36px]">
     </div>
     <a :href="params.data.urls.show" class="hover:no-underline truncate">{{ params.data.name  }}</a>
   </div>
 </template>
 
 <script>
+
+import workflowImgMixin from '../workflow_img_mixin.js';
+
 export default {
   name: 'NameRenderer',
   props: {
     params: {
       required: true
     }
-  }
+  },
+  mixins: [workflowImgMixin]
 };
 </script>

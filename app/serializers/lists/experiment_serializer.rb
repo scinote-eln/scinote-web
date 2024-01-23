@@ -15,6 +15,10 @@ module Lists
       I18n.l(object.created_at, format: :full_date)
     end
 
+    def workflow_img
+      rails_blob_path(object.workflowimg, only_path: true) if object.workflowimg.attached?
+    end
+
     def sa_description
       @user = scope[:user] || @instance_options[:user]
       custom_auto_link(object.description,
@@ -68,7 +72,8 @@ module Lists
         clone: clone_experiment_path(object),
         move: move_experiment_path(object),
         update: experiment_path(object),
-        show_access: access_permissions_experiment_path(object)
+        show_access: access_permissions_experiment_path(object),
+        workflow_img: fetch_workflow_img_experiment_path(object)
       }
 
       if can_manage_project_users?(object.project)
