@@ -1519,7 +1519,7 @@ en:
       success: 'Successfully duplicated %{count} task(s) as template.'
       duplicating: 'Duplicating contents...'
     move:
-      modal_title: 'Move experiment %{experiment}'
+      modal_title: 'Move experiment(s)'
       notice: 'Moving is possible to projects, where you have permissions to create experiments and tasks.'
       target_project: 'Target project'
       label_title: 'Move'
@@ -1530,6 +1530,8 @@ en:
       no_projects: 'No projects: You don’t have edit access to any other projects.'
     table:
       head_title: "%{experiment} | Overview"
+      move_success_flash: "Successfully moved experiment(s) to project %{project}."
+      move_error_flash: "Failed to move experiment(s) to project %{project}."
       column:
         id_html: 'ID'
         task_name_html: 'Task name'
