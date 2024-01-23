@@ -8,6 +8,7 @@
              :activePageUrl="activePageUrl"
              :archivedPageUrl="archivedPageUrl"
              :currentViewMode="currentViewMode"
+             scrollMode="infinite"
              :filters="filters"
              :viewRenders="viewRenders"
              @tableReloaded="reloadingTable = false"
