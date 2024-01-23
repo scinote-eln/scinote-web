@@ -239,7 +239,7 @@
                 <div v-if="!repository?.is_snapshot" id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px"></div>
 
                 <!-- ASSIGNED -->
-                <section id="assigned-section" class="flex flex-col" ref="assignedSectionRef">
+                <section v-if="!repository?.is_snapshot" id="assigned-section" class="flex flex-col" ref="assignedSectionRef">
                   <div
                     class="flex flex-row text-lg font-semibold w-[350px] mb-6 leading-7 items-center justify-between transition-colors duration-300"
                     ref="assigned-label"
@@ -289,7 +289,7 @@
                   </div>
                 </section>
 
-                <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px  "></div>
+                <div v-if="!repository?.is_snapshot" id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px  "></div>
 
                 <!-- QR -->
                 <section id="qr-section" ref="QR-label">
@@ -352,35 +352,40 @@ const items = [
     textId: 'text-item-1',
     labelAlias: 'information_label',
     label: 'information-label',
-    sectionId: 'information-section'
+    sectionId: 'information-section',
+    showInSnapshot: true
   },
   {
     id: 'highlight-item-2',
     textId: 'text-item-2',
     labelAlias: 'custom_columns_label',
     label: 'custom-columns-label',
-    sectionId: 'custom-columns-section'
+    sectionId: 'custom-columns-section',
+    showInSnapshot: true
   },
   {
     id: 'highlight-item-3',
     textId: 'text-item-3',
     labelAlias: 'relationships_label',
     label: 'relationships-label',
-    sectionId: 'relationships-section'
+    sectionId: 'relationships-section',
+    showInSnapshot: false
   },
   {
     id: 'highlight-item-4',
     textId: 'text-item-4',
     labelAlias: 'assigned_label',
     label: 'assigned-label',
-    sectionId: 'assigned-section'
+    sectionId: 'assigned-section',
+    showInSnapshot: false
   },
   {
     id: 'highlight-item-5',
     textId: 'text-item-5',
     labelAlias: 'QR_label',
     label: 'QR-label',
-    sectionId: 'qr-section'
+    sectionId: 'qr-section',
+    showInSnapshot: true
   }
 ];
 
@@ -460,7 +465,7 @@ export default {
   methods: {
     filterNavigationItems() {
       if (this.repository.is_snapshot) {
-        return items.filter((item) => item.id !== 'highlight-item-3');
+        return items.filter((item) => item.showInSnapshot);
       }
       return items;
     },
