@@ -1,21 +1,27 @@
 <template>
-  <div class="sn-open-locally-menu">
-    <div v-if="!this.canOpenLocally && (this.attachment.wopi && this.attachment.urls.edit_asset)">
-        <a :href="`${this.attachment.urls.edit_asset}`" target="_blank"
-        class="block whitespace-nowrap rounded px-3 py-2.5
-               hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey">
-            {{ this.attachment.wopi_context.button_text }}
-        </a>
+  <div class="sn-open-locally-menu" @mouseenter="fetchLocalAppInfo">
+    <div v-if="!canOpenLocally && (attachment.attributes.wopi && attachment.attributes.urls.edit_asset)">
+      <a :href="`${attachment.attributes.urls.edit_asset}`" target="_blank"
+      class="block whitespace-nowrap rounded px-3 py-2.5
+              hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey">
+          {{ attachment.attributes.wopi_context.button_text }}
+      </a>
     </div>
     <div v-else>
-        <MenuDropdown
-          class="ml-auto"
-          :listItems="this.menu"
-          :btnClasses="`btn btn-light icon-btn !bg-sn-white`"
-          :position="'right'"
-          :btnText="'Open in'"
-          @open_locally="openLocally"
-        ></MenuDropdown>
+      <MenuDropdown
+        class="ml-auto"
+        :listItems="menu"
+        :btnClasses="`btn btn-light icon-btn !bg-sn-white`"
+        :position="'right'"
+        :btnText="'Open in'"
+        @open_locally="openLocally"
+      ></MenuDropdown>
+      <Teleport to="body">
+        <UpdateVersionModal
+          v-if="showUpdateVersionModal"
+          @cancel="showUpdateVersionModal = false"
+        />
+      </Teleport>
     </div>
   </div>
 </template>
@@ -23,17 +29,21 @@
 <script>
 import OpenLocallyMixin from './mixins/open_locally.js';
 import MenuDropdown from '../../menu_dropdown.vue';
+import UpdateVersionModal from '../modal/update_version_modal.vue';
 
 export default {
   name: 'OpenLocallyMenu',
   mixins: [OpenLocallyMixin],
-  components: { MenuDropdown },
+  components: { MenuDropdown, UpdateVersionModal },
+  data: {
+    showUpdateVersionModal: false
+  },
   props: {
-    data: { type: String, required: true },
+    attachment: { type: Object, required: true }
   },
   created() {
+    this.fetchLocalAppInfo();
     window.openLocallyMenu = this;
-    this.attachment = JSON.parse(this.data);
   },
   beforeUnmount() {
     delete window.openLocallyMenuComponent;
@@ -42,10 +52,10 @@ export default {
     menu() {
       const menu = [];
 
-      if (this.attachment.wopi && this.attachment.urls.edit_asset) {
+      if (this.attachment.attributes.wopi && this.attachment.attributes.urls.edit_asset) {
         menu.push({
-          text: this.attachment.wopi_context.button_text,
-          url: this.attachment.urls.edit_asset,
+          text: this.attachment.attributes.wopi_context.button_text,
+          url: this.attachment.attributes.urls.edit_asset,
           url_target: '_blank',
         });
       }
@@ -62,6 +72,6 @@ export default {
 
       return menu;
     },
-  },
+  }
 };
 </script>

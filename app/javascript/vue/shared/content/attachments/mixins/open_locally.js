@@ -1,10 +1,12 @@
 import axios from '../../../../../packs/custom_axios.js';
+import { satisfies } from 'compare-versions';
 
 export default {
   data() {
     return {
       localAppName: null,
-      scinoteEditRunning: false
+      scinoteEditRunning: false,
+      scinoteEditVersion: null      
     };
   },
   computed: {
@@ -24,6 +26,7 @@ export default {
 
         if (statusResponse.status === 200) {
           this.scinoteEditRunning = true;
+          this.scinoteEditVersion = statusResponse.data.version;
         } else {
           return;
         }
@@ -40,7 +43,10 @@ export default {
       }
     },
     async openLocally() {
-      if (this.localAppName === null) {
+      if (this.isWrongVersion(this.scinoteEditVersion)) {
+        this.showUpdateVersionModal = true;
+        return;
+      } else if (this.localAppName === null) {
         this.showNoPredefinedAppModal = true;
         return;
       }
@@ -52,6 +58,12 @@ export default {
       } catch (error) {
         console.error('Error in request:', error);
       }
+    },
+    isWrongVersion(version) {
+      const min = GLOBAL_CONSTANTS.MIN_SCINOTE_EDIT_VERSION;
+      const max = GLOBAL_CONSTANTS.MAX_SCINOTE_EDIT_VERSION;
+      version = "3.0"
+      return !satisfies(version, `${min} - ${max}`);
     }
   }
 }

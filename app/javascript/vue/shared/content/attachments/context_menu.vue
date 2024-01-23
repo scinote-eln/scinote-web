@@ -57,11 +57,15 @@
         :fileName="attachment.attributes.file_name"
         @confirm="showNoPredefinedAppModal = false"
       />
+      <UpdateVersionModal
+        v-if="showUpdateVersionModal"
+        @cancel="showUpdateVersionModal = false"
+      />
       <editLaunchingApplicationModal
-          v-if="editAppModal"
-          :fileName="attachment.attributes.file_name"
-          :application="this.localAppName"
-          @cancel="editAppModal = false"
+        v-if="editAppModal"
+        :fileName="attachment.attributes.file_name"
+        :application="this.localAppName"
+        @cancel="editAppModal = false"
       />
     </Teleport>
   </div>
@@ -72,6 +76,7 @@ import deleteAttachmentModal from './delete_modal.vue';
 import editLaunchingApplicationModal from './edit_launching_application_modal.vue';
 import moveAssetModal from '../modal/move.vue';
 import NoPredefinedAppModal from '../modal/no_predefined_app_modal.vue';
+import UpdateVersionModal from '../modal/update_version_modal.vue';
 import MoveMixin from './mixins/move.js';
 import OpenLocallyMixin from './mixins/open_locally.js';
 import MenuDropdown from '../../menu_dropdown.vue';
@@ -83,6 +88,7 @@ export default {
     moveAssetModal,
     MenuDropdown,
     NoPredefinedAppModal,
+    UpdateVersionModal,
     editLaunchingApplicationModal
   },
   mixins: [MoveMixin, OpenLocallyMixin],
@@ -98,7 +104,8 @@ export default {
       viewModeOptions: ['inline', 'thumbnail', 'list'],
       deleteModal: false,
       editAppModal: false,
-      showNoPredefinedAppModal: false
+      showNoPredefinedAppModal: false,
+      showUpdateVersionModal: false
     };
   },
   computed: {
