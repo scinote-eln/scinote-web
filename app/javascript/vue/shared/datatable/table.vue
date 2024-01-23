@@ -146,7 +146,7 @@ export default {
     },
     scrollMode: {
       type: String,
-      default: 'infinite'
+      default: 'pages'
     }
   },
   data() {
@@ -219,7 +219,8 @@ export default {
           width: 48,
           minWidth: 48,
           resizable: false,
-          pinned: 'left'
+          pinned: 'left',
+          lockPosition: 'left'
         });
       }
 
