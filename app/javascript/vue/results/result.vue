@@ -192,7 +192,7 @@ export default {
   },
   watch: {
     resultToReload() {
-      if (this.resultToReload === this.result.id) {
+      if (Number(this.resultToReload) === Number(this.result.id)) {
         this.loadElements();
         this.loadAttachments();
       }
