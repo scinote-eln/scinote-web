@@ -13,7 +13,7 @@
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" @click="cancel">{{ i18n.t('general.cancel') }}</button>
-          <ScinoteEditDownload 
+          <ScinoteEditDownload
             :data="userAgent"
             :isUpdateVersionModal="true"
           />
@@ -50,5 +50,5 @@ export default {
       $(this.$refs.modal).modal('hide');
     }
   }
-}
+};
 </script>

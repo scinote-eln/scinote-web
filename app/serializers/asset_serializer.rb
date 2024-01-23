@@ -11,7 +11,7 @@ class AssetSerializer < ActiveModel::Serializer
   attributes :file_name, :file_extension, :view_mode, :icon, :urls, :updated_at_formatted,
              :file_size, :medium_preview, :large_preview, :asset_type, :wopi,
              :wopi_context, :pdf_previewable, :file_size_formatted, :asset_order,
-             :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached, :parent_type
+             :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached, :parent_type, :edit_version_range
 
   def icon
     file_fa_icon_class(object)
@@ -115,6 +115,10 @@ class AssetSerializer < ActiveModel::Serializer
     when 'list'
       2
     end
+  end
+
+  def edit_version_range
+    { min: Constants::MIN_SCINOTE_EDIT_VERSION, max: Constants::MAX_SCINOTE_EDIT_VERSION }
   end
 
   def urls

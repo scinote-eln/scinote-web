@@ -400,6 +400,7 @@ en:
     attachments_view_mode: "ALL ATTACHMENTS VIEW SIZE"
     open_locally_in: "Open in %{application}"
     open_locally: "Open locally"
+    open_in: "Open in"
     new:
       description: 'New'
       uploading: 'Uploading'

@@ -6,22 +6,25 @@ export default {
     return {
       localAppName: null,
       scinoteEditRunning: false,
-      scinoteEditVersion: null      
+      scinoteEditVersion: null
     };
   },
   computed: {
+    attributes() {
+      return this.attachment.attributes;
+    },
     canOpenLocally() {
-      return this.scinoteEditRunning &&
-        !!this.attachment.attributes.urls.open_locally &&
-        this.attachment.attributes.asset_type !== 'gene_sequence' &&
-        this.attachment.attributes.asset_type !== 'marvinjs'
+      return this.scinoteEditRunning
+             && !!this.attributes.urls.open_locally
+             && this.attributes.asset_type !== 'gene_sequence'
+             && this.attributes.asset_type !== 'marvinjs';
     }
   },
   methods: {
     async fetchLocalAppInfo() {
       try {
         const statusResponse = await axios.get(
-          `${this.attachment.attributes.urls.open_locally_api}/status`
+          `${this.attributes.urls.open_locally_api}/status`
         );
 
         if (statusResponse.status === 200) {
@@ -32,7 +35,7 @@ export default {
         }
 
         const response = await axios.get(
-          `${this.attachment.attributes.urls.open_locally_api}/default-application/${this.attachment.attributes.file_extension}`
+          `${this.attributes.urls.open_locally_api}/default-application/${this.attributes.file_extension}`
         );
 
         if (response.data.application.toLowerCase() !== 'pick an app') {
@@ -53,16 +56,14 @@ export default {
 
       this.editAppModal = true;
       try {
-        const { data } = await axios.get(this.attachment.attributes.urls.open_locally);
-        await axios.post(this.attachment.attributes.urls.open_locally_api + '/download', data);
+        const { data } = await axios.get(this.attributes.urls.open_locally);
+        await axios.post(`${this.attributes.urls.open_locally_api}/download`, data);
       } catch (error) {
         console.error('Error in request:', error);
       }
     },
     isWrongVersion(version) {
-      const min = GLOBAL_CONSTANTS.MIN_SCINOTE_EDIT_VERSION;
-      const max = GLOBAL_CONSTANTS.MAX_SCINOTE_EDIT_VERSION;
-      version = "3.0"
+      const { min, max } = this.attributes.edit_version_range;
       return !satisfies(version, `${min} - ${max}`);
     }
   }

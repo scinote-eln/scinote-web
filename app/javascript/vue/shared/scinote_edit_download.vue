@@ -97,10 +97,10 @@ export default {
       return this.responseData && this.responseData.length > 0 && !this.isUpdateVersionModal;
     },
     getWindowsHref() {
-      return this.responseData && this.responseData.length > 0 ? this.responseData[0]['url'] : '#'
+      return this.responseData && this.responseData.length > 0 ? this.responseData[0].url : '#';
     },
     getMacHref() {
-      return this.responseData && this.responseData.length > 0 ? this.responseData[1]['url'] : '#'
+      return this.responseData && this.responseData.length > 0 ? this.responseData[1].url : '#';
     }
   },
   created() {

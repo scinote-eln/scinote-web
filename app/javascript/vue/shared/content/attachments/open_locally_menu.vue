@@ -9,13 +9,19 @@
     </div>
     <div v-else>
       <MenuDropdown
+        v-if="menu.length > 1"
         class="ml-auto"
         :listItems="menu"
         :btnClasses="`btn btn-light icon-btn !bg-sn-white`"
         :position="'right'"
-        :btnText="'Open in'"
-        @open_locally="openLocally"
+        :btnText="i18n.t('attachments.open_in')"
+        :caret="true"
+        @open-locally="openLocally"
+        @open-scinote-editor="openImageEditor"
       ></MenuDropdown>
+      <a v-else-if="menu.length === 1" class="btn btn-light !bg-sn-white" :href="menu[0].url" :target="menu[0].target" @click="this[this.menu[0].emit]()">
+        {{ menu[0].text }}
+      </a>
       <Teleport to="body">
         <UpdateVersionModal
           v-if="showUpdateVersionModal"
@@ -56,9 +62,17 @@ export default {
         menu.push({
           text: this.attachment.attributes.wopi_context.button_text,
           url: this.attachment.attributes.urls.edit_asset,
-          url_target: '_blank',
+          url_target: '_blank'
         });
       }
+
+      if (this.attachment.attributes.image_editable) {
+        menu.push({
+          text: this.i18n.t('assets.file_preview.edit_in_scinote'),
+          emit: 'openScinoteEditor'
+        });
+      }
+
       if (this.canOpenLocally) {
         const text = this.localAppName
           ? this.i18n.t('attachments.open_locally_in', { application: this.localAppName })
@@ -66,12 +80,17 @@ export default {
 
         menu.push({
           text,
-          emit: 'open_locally',
+          emit: 'openLocally'
         });
       }
 
       return menu;
     },
+  },
+  methods: {
+    openImageEditor() {
+      document.getElementById('editImageButton').click();
+    }
   }
 };
 </script>

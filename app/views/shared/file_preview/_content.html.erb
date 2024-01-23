@@ -27,7 +27,7 @@
         </button>
 
       <% elsif asset.editable_image? %>
-        <button class="btn btn-light image-edit-button"
+        <button id="editImageButton" class="btn btn-light image-edit-button hidden"
           data-image-id="<%= asset.id %>"
           data-image-name="<%= asset.file_name %>"
           data-image-url="<%= asset_file_url_path(asset) %>"
@@ -38,6 +38,9 @@
           <span class="sn-icon sn-icon-edit"></span>
           <%= t('assets.file_preview.edit_in_scinote') %>
         </button>
+        <div id="openLocallyMenu" data-behaviour="vue">
+          <open-locally-menu :attachment="<%= { attributes: AssetSerializer.new(asset, scope: { user: current_user }).as_json }.to_json %>" />
+        </div>
       <% end %>
     <% end %>
     <a class="btn btn-light file-download-link" href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>" data-turbolinks="false">
