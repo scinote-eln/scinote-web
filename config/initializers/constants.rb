@@ -338,6 +338,7 @@ class Constants
   config[:attributes]['img'] << 'data-mce-token'
   config[:attributes]['img'] << 'data-source-type'
   config[:attributes]['a'] << 'data-turbolinks'
+  config[:attributes]['a'] << 'target'
   config[:protocols]['img']['src'] << 'data'
   INPUT_SANITIZE_CONFIG = Sanitize::Config.freeze_config(config)
 
