@@ -1,21 +1,27 @@
 <template>
   <div class="sn-open-locally-menu">
-    <div v-if="!this.canOpenLocally && (this.attachment.wopi && this.attachment.urls.edit_asset)">
-        <a :href="`${this.attachment.urls.edit_asset}`" target="_blank"
+    <div v-if="!this.canOpenLocally && (this.attachment.attributes.wopi && this.attachment.attributes.urls.edit_asset)">
+        <a :href="`${this.attachment.attributes.urls.edit_asset}`" target="_blank"
         class="block whitespace-nowrap rounded px-3 py-2.5
                hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey">
-            {{ this.attachment.wopi_context.button_text }}
+            {{ this.attachment.attributes.wopi_context.button_text }}
         </a>
     </div>
     <div v-else>
         <MenuDropdown
+          v-if="this.menu.length > 1"
           class="ml-auto"
           :listItems="this.menu"
           :btnClasses="`btn btn-light icon-btn !bg-sn-white`"
           :position="'right'"
-          :btnText="'Open in'"
-          @open_locally="openLocally"
+          :btnText="i18n.t('attachments.open_in')"
+          :caret="true"
+          @openLocally="openLocally"
+          @openImageEditor="openImageEditor"
         ></MenuDropdown>
+        <a v-else-if="this.menu.length === 1" class="btn btn-light !bg-sn-white" :href="this.menu[0].url" :target="this.menu[0].target" @click="this[this.menu[0].emit]()">
+          {{ this.menu[0].text }}
+        </a>
     </div>
   </div>
 </template>
@@ -32,23 +38,28 @@ export default {
     data: { type: String, required: true },
   },
   created() {
-    window.openLocallyMenu = this;
-    this.attachment = JSON.parse(this.data);
-  },
-  beforeUnmount() {
-    delete window.openLocallyMenuComponent;
+    this.attachment = { attributes: JSON.parse(this.data) };
+    this.fetchLocalAppInfo();
   },
   computed: {
     menu() {
       const menu = [];
 
-      if (this.attachment.wopi && this.attachment.urls.edit_asset) {
+      if (this.attachment.attributes.wopi && this.attachment.attributes.urls.edit_asset) {
         menu.push({
-          text: this.attachment.wopi_context.button_text,
-          url: this.attachment.urls.edit_asset,
-          url_target: '_blank',
+          text: this.attachment.attributes.wopi_context.button_text,
+          url: this.attachment.attributes.urls.edit_asset,
+          url_target: '_blank'
         });
       }
+
+      if (this.attachment.attributes.image_editable) {
+        menu.push({
+          text: this.i18n.t('assets.file_preview.edit_in_scinote'),
+          emit: 'openImageEditor'
+        });
+      }
+
       if (this.canOpenLocally) {
         const text = this.localAppName
           ? this.i18n.t('attachments.open_locally_in', { application: this.localAppName })
@@ -56,12 +67,17 @@ export default {
 
         menu.push({
           text,
-          emit: 'open_locally',
+          emit: 'openLocally'
         });
       }
 
       return menu;
     },
   },
+  methods: {
+    openImageEditor() {
+      document.getElementById('editImageButton').click();
+    }
+  }
 };
 </script>
