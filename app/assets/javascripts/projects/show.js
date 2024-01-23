@@ -335,10 +335,9 @@
         if (data.path) {
           window.location.replace(data.path);
         }
-        refreshCurrentView();
       })
       .on('ajax:error', '.experiment-action-form', function(ev, data) {
-        $(this).renderFormErrors('experiment', data.responseJSON);
+        HelperModule.flashAlertMsg(data.responseJSON.message, 'danger');
       });
 
     window.initActionToolbar();

@@ -297,14 +297,16 @@ class ExperimentsController < ApplicationController
 
   # POST: move_experiment(id)
   def move
-    project = Project.find_by(id: params[:project_id])
+    project = Project.viewable_by_user(current_user, current_team)
+                     .find_by(id: params[:project_id])
 
     project.transaction do
       @experiments.each do |experiment|
-        Experiments::MoveToProjectService
+        service = Experiments::MoveToProjectService
                   .call(experiment_id: experiment.id,
                         project_id: params[:project_id],
                         user_id: current_user.id)
+        raise StandardError unless service.succeed?
       end
 
       flash[:success] = t('experiments.table.move_success_flash', project: escape_input(project.name))
@@ -314,7 +316,7 @@ class ExperimentsController < ApplicationController
       Rails.logger.error(e.message)
       Rails.logger.error(e.backtrace.join("\n"))
       render json: {
-        message: t('experiments.table.move_success_flash', project: escape_input(project.name))
+        message: t('experiments.table.move_error_flash', project: escape_input(project.name))
       }, status: :unprocessable_entity
       raise ActiveRecord::Rollback
     end
