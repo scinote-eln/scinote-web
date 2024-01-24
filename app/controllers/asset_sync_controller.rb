@@ -34,7 +34,7 @@ class AssetSyncController < ApplicationController
     end
 
     @asset.file.attach(io: request.body, filename: @asset.file.filename)
-    @asset.touch
+    @asset.update(last_modified_by: current_user)
 
     log_activity
 
