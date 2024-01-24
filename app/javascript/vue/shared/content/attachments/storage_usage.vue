@@ -15,20 +15,20 @@
   </div>
 </template>
 <script>
-  export default {
-    name: 'StorageUsage',
-    props: {
-      parent: {
-        type: Object,
-        required: true,
-      },
-    },
-    computed: {
-      storagePrecentage() {
-        let used = this.parent.attributes.storage_limit.used;
-        let total = this.parent.attributes.storage_limit.total;
-        return ((used / total) * 100);
-      }
+export default {
+  name: 'StorageUsage',
+  props: {
+    parent: {
+      type: Object,
+      required: true
+    }
+  },
+  computed: {
+    storagePrecentage() {
+      const { used } = this.parent.attributes.storage_limit;
+      const { total } = this.parent.attributes.storage_limit;
+      return ((used / total) * 100);
     }
   }
+};
 </script>

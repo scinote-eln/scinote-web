@@ -98,22 +98,22 @@
   </div>
 </template>
 
- <script>
-import DeleteStepsModals from './modals/delete_steps'
+<script>
+import DeleteStepsModals from './modals/delete_steps';
 
 export default {
 
-  name: "ProtocolOptions",
+  name: 'ProtocolOptions',
   components: { DeleteStepsModals },
   data() {
     return {
       stepsDeleting: false
-    }
+    };
   },
   props: {
     protocol: {
       type: Object,
-      required: true,
+      required: true
     },
     canDeleteSteps: {
       type: Boolean,
@@ -135,29 +135,29 @@ export default {
     },
     loadProtocol() {
       $.get(
-        this.protocol.attributes.urls.load_from_repo_url + "?type=recent"
+        `${this.protocol.attributes.urls.load_from_repo_url}?type=recent`
       ).done((data) => {
-        $(this.$refs.loadProtocol).trigger("ajax:success", data);
+        $(this.$refs.loadProtocol).trigger('ajax:success', data);
       });
     },
     unlinkProtocol() {
       $.get(this.protocol.attributes.urls.unlink_url).done((data) => {
-        $(this.$refs.unlinkProtocol).trigger("ajax:success", data);
+        $(this.$refs.unlinkProtocol).trigger('ajax:success', data);
       });
     },
     updateProtocol() {
       $.get(this.protocol.attributes.urls.update_protocol_url).done((data) => {
-        $(this.$refs.updateProtocol).trigger("ajax:success", data);
+        $(this.$refs.updateProtocol).trigger('ajax:success', data);
       });
     },
     revertProtocol() {
       $.get(this.protocol.attributes.urls.revert_protocol_url).done((data) => {
-        $(this.$refs.revertProtocol).trigger("ajax:success", data);
+        $(this.$refs.revertProtocol).trigger('ajax:success', data);
       });
     },
     deleteSteps() {
-      this.$emit('protocol:delete_steps')
+      this.$emit('protocol:delete_steps');
     }
-  },
+  }
 };
 </script>

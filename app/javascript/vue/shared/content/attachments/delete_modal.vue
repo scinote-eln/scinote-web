@@ -24,26 +24,26 @@
     </div>
   </div>
 </template>
- <script>
-  export default {
-    name: 'deleteAttachmentModal',
-    props: {
-      fileName: String
+<script>
+export default {
+  name: 'deleteAttachmentModal',
+  props: {
+    fileName: String
+  },
+  mounted() {
+    $(this.$refs.modal).modal('show');
+    $(this.$refs.modal).on('hidden.bs.modal', () => {
+      this.$emit('cancel');
+    });
+  },
+  methods: {
+    confirm() {
+      $(this.$refs.modal).modal('hide');
+      this.$emit('confirm');
     },
-    mounted() {
-      $(this.$refs.modal).modal('show');
-      $(this.$refs.modal).on('hidden.bs.modal', () => {
-        this.$emit('cancel');
-      });
-    },
-    methods: {
-      confirm() {
-        $(this.$refs.modal).modal('hide');
-        this.$emit('confirm');
-      },
-      cancel() {
-        $(this.$refs.modal).modal('hide');
-      }
+    cancel() {
+      $(this.$refs.modal).modal('hide');
     }
   }
+};
 </script>

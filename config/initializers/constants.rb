@@ -358,12 +358,12 @@ class Constants
     'order' => [[3, 'asc']], # Default sorting by 'name' column
     'columns' => [],
     'assigned' => 'assigned',
-    'ColReorder' => [*0..7]
+    'ColReorder' => [*0..8]
   }
-  8.times do |i|
+  9.times do |i|
     REPOSITORY_TABLE_DEFAULT_STATE['columns'] << {
-      'visible' => (i < 6),
-      'searchable' => (i >= 1), # Checkboxes column is not searchable
+      'visible' => (i < 7 && i != 4), # relationship column is hidden by default
+      'searchable' => (i >= 1 && i != 4), # Checkboxes and relationship column is not searchable
       'search' => { 'search' => '',
                     'smart' => true,
                     'regex' => false,
@@ -427,6 +427,9 @@ class Constants
   # Interval time for polling status state
   FAST_STATUS_POLLING_INTERVAL = 5000
   SLOW_STATUS_POLLING_INTERVAL = 10000
+
+  # Grover timeout in ms
+  GROVER_TIMEOUT_MS = 300000
 
   #                             )       \   /      (
   #                            /|\      )\_/(     /|\

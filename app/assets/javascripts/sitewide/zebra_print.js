@@ -178,7 +178,8 @@ var zebraPrint = (function() {
         printer_name: string,
         number_of_copies: int,
         label_template_id: int,
-        repository_row_ids: array[]
+        repository_row_ids: array[],
+        repository_id: int
       }
     */
     print: function(modalUrl, progressModal, printModal, printData) {

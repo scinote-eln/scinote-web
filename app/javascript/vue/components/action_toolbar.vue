@@ -2,7 +2,8 @@
   <div v-if="!paramsAreBlank"
        class="sn-action-toolbar p-4 w-full fixed bottom-0 rounded-t-md"
        :class="{ 'sn-action-toolbar--button-overflow': buttonOverflow }"
-       :style="`width: ${width}px; bottom: ${bottomOffset}px; transform: translateX(${leftOffset}px)`">
+       :style="`width: ${width}px; bottom: ${bottomOffset}px; transform: translateX(${leftOffset}px)`"
+       :data-e2e="`e2e-CO-actionToolbar`">
     <div class="sn-action-toolbar__actions flex gap-4">
       <div v-if="loading && !actions.length" class="sn-action-toolbar__action">
         <a class="rounded flex items-center py-1.5 px-2.5 bg-transparent text-transparent no-underline"></a>
@@ -12,7 +13,7 @@
       </div>
       <div v-for="action in actions" :key="action.name" class="sn-action-toolbar__action shrink-0">
           <div v-if="action.type === 'group' && Array.isArray(action.actions) && action.actions.length > 1" class="export-actions-dropdown sci-dropdown dropup">
-            <button class="btn btn-primary dropdown-toggle single-object-action rounded" type="button" id="exportDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <button class="btn btn-primary dropdown-toggle single-object-action rounded" type="button" id="exportDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-e2e="e2e-DD-actionToolbar-export">
               <i class="sn-icon sn-icon-export"></i>
               <span>{{ action.group_label }}</span>
               <span class="sn-icon sn-icon-down"></span>
@@ -29,7 +30,6 @@
                   :data-object-type="groupAction.item_type"
                   :data-object-id="groupAction.item_id"
                   :data-action="groupAction.type"
-                  :data-e2e="`e2e-BT-actionToolbar-${groupAction.name}`"
                   @click="closeExportDropdown($event); doAction(groupAction, $event);">
                   <span class="sn-action-toolbar__button-text">{{ groupAction.label }}</span>
                 </a>
@@ -47,7 +47,7 @@
             :data-object-type="action.actions[0].item_type"
             :data-object-id="action.actions[0].item_id"
             :data-action="action.actions[0].type"
-            :data-e2e="`e2e-BT-actionToolbar-${action.name}`"
+            :data-e2e="`e2e-BT-actionToolbar-${action.name === 'export_group' ? 'export' : action.name}`"
             @click="doAction(action.actions[0], $event);">
             <i :class="action.actions[0].icon"></i>
             <span class="sn-action-toolbar__button-text">{{ action.group_label }}</span>
@@ -63,7 +63,7 @@
             :data-object-type="action.item_type"
             :data-object-id="action.item_id"
             :data-action="action.type"
-            :data-e2e="`e2e-BT-actionToolbar-${action.name}`"
+            :data-e2e="`e2e-BT-actionToolbar-${action.name === 'export_group' ? 'export' : action.name}`"
             @click="doAction(action, $event)">
             <i :class="action.icon"></i>
             <span class="sn-action-toolbar__button-text">{{ action.label }}</span>
@@ -74,136 +74,135 @@
 </template>
 
 <script>
-  import {debounce} from '../shared/debounce.js';
+import { debounce } from '../shared/debounce.js';
 
-  export default {
-    name: 'ActionToolbar',
-    props: {
-      actionsUrl: { type: String, required: true }
-    },
-    data() {
-      return {
-        actions: [],
-        shown: false,
-        multiple: false,
-        params: {},
-        reloadCallback: null,
-        actionsLoadedCallback: null,
-        loaded: false,
-        loading: false,
-        width: 0,
-        bottomOffset: 0,
-        leftOffset: 0,
-        buttonOverflow: false
-      }
-    },
-    created() {
-      window.actionToolbarComponent = this;
-      window.onresize = this.setWidth;
+export default {
+  name: 'ActionToolbar',
+  props: {
+    actionsUrl: { type: String, required: true }
+  },
+  data() {
+    return {
+      actions: [],
+      shown: false,
+      multiple: false,
+      params: {},
+      reloadCallback: null,
+      actionsLoadedCallback: null,
+      loaded: false,
+      loading: false,
+      width: 0,
+      bottomOffset: 0,
+      leftOffset: 0,
+      buttonOverflow: false
+    };
+  },
+  created() {
+    window.actionToolbarComponent = this;
+    window.onresize = this.setWidth;
 
-      this.debouncedFetchActions = debounce((params) => {
-        this.params = params;
+    this.debouncedFetchActions = debounce((params) => {
+      this.params = params;
 
-        $.get(`${this.actionsUrl}?${new URLSearchParams(this.params).toString()}`, (data) => {
-          this.actions = data.actions;
-          this.loading = false;
-          this.setButtonOverflow();
-          if (this.actionsLoadedCallback) this.$nextTick(this.actionsLoadedCallback);
-        });
-      }, 10);
-    },
-    mounted() {
-      this.$nextTick(this.setWidth);
-      window.addEventListener('scroll', this.setLeftOffset);
-    },
-    beforeUnmount() {
-      delete window.actionToolbarComponent;
-      window.removeEventListener('scroll', this.setLeftOffset);
-    },
-    computed: {
-      paramsAreBlank() {
-        let values = Object.values(this.params);
-
-        if (values.length === 0) return true;
-
-        return !values.some((v) => v.length);
-      }
-    },
-    methods: {
-      setWidth() {
-        this.width = $(this.$el).parent().width();
+      $.get(`${this.actionsUrl}?${new URLSearchParams(this.params).toString()}`, (data) => {
+        this.actions = data.actions;
+        this.loading = false;
         this.setButtonOverflow();
-      },
-      setButtonOverflow() {
-        // detects if the last action button is outside the toolbar container
-        this.buttonOverflow = false;
+        if (this.actionsLoadedCallback) this.$nextTick(this.actionsLoadedCallback);
+      });
+    }, 10);
+  },
+  mounted() {
+    this.$nextTick(this.setWidth);
+    window.addEventListener('scroll', this.setLeftOffset);
+  },
+  beforeUnmount() {
+    delete window.actionToolbarComponent;
+    window.removeEventListener('scroll', this.setLeftOffset);
+  },
+  computed: {
+    paramsAreBlank() {
+      const values = Object.values(this.params);
 
-        this.$nextTick(() => {
-          if (
-                !(this.$el.getBoundingClientRect &&
-                document.querySelector('.sn-action-toolbar__action:last-child'))
-              ) return;
+      if (values.length === 0) return true;
 
-          let containerRect = this.$el.getBoundingClientRect();
-          let lastActionRect = document.querySelector('.sn-action-toolbar__action:last-child').getBoundingClientRect();
+      return !values.some((v) => v.length);
+    }
+  },
+  methods: {
+    setWidth() {
+      this.width = $(this.$el).parent().width();
+      this.setButtonOverflow();
+    },
+    setButtonOverflow() {
+      // detects if the last action button is outside the toolbar container
+      this.buttonOverflow = false;
 
-          this.buttonOverflow = containerRect.left + containerRect.width < lastActionRect.left + lastActionRect.width;
-        });
-      },
-      setLeftOffset() {
-        this.leftOffset = -(window.pageXOffset || document.documentElement.scrollLeft);
-      },
-      setBottomOffset(pixels) {
-        this.bottomOffset = pixels;
-      },
-      fetchActions(params) {
-        this.loading = true;
-        this.debouncedFetchActions(params);
-      },
-      setReloadCallback(func) {
-        this.reloadCallback = func;
-      },
-      setActionsLoadedCallback(func) {
-        this.actionsLoadedCallback = func;
-      },
-      doAction(action, event) {
-        switch(action.type) {
-          case 'legacy':
-            // do nothing, this is handled by legacy code based on the button class
-            break;
-          case 'link':
-            // do nothing, already handled by href
-            break;
-          case 'modal':
-            // do nothihg, boostrap modal handled by data-toggle="modal" and data-target
-          case 'remote-modal':
-            // do nothing, handled by the data-action="remote-modal" binding
-            break;
-          case 'download':
-            event.stopPropagation();
-            window.location.href = action.path;
-            break;
-          case 'request':
-            event.stopPropagation();
+      this.$nextTick(() => {
+        if (
+          !(this.$el.getBoundingClientRect
+                && document.querySelector('.sn-action-toolbar__action:last-child'))
+        ) return;
 
-            $.ajax({
-              type: action.request_method,
-              url: action.path,
-              data: this.params
-            }).done((data) => {
-              HelperModule.flashAlertMsg(data.responseJSON && data.responseJSON.message || data.message, 'success');
-            }).fail((data) => {
-              HelperModule.flashAlertMsg(data.responseJSON && data.responseJSON.message || data.message, 'danger');
-            }).always(() => {
-              if (this.reloadCallback) this.reloadCallback();
-            });
-            break;
-        }
-      },
-      closeExportDropdown(event) {
-        event.preventDefault();
-        $(event.target).closest('.export-actions-dropdown').removeClass('open')
+        const containerRect = this.$el.getBoundingClientRect();
+        const lastActionRect = document.querySelector('.sn-action-toolbar__action:last-child').getBoundingClientRect();
+
+        this.buttonOverflow = containerRect.left + containerRect.width < lastActionRect.left + lastActionRect.width;
+      });
+    },
+    setLeftOffset() {
+      this.leftOffset = -(window.pageXOffset || document.documentElement.scrollLeft);
+    },
+    setBottomOffset(pixels) {
+      this.bottomOffset = pixels;
+    },
+    fetchActions(params) {
+      this.loading = true;
+      this.debouncedFetchActions(params);
+    },
+    setReloadCallback(func) {
+      this.reloadCallback = func;
+    },
+    setActionsLoadedCallback(func) {
+      this.actionsLoadedCallback = func;
+    },
+    doAction(action, event) {
+      switch (action.type) {
+        case 'legacy':
+          // do nothing, this is handled by legacy code based on the button class
+          break;
+        case 'link':
+          // do nothing, already handled by href
+          break;
+        case 'modal':
+          // do nothihg, boostrap modal handled by data-toggle="modal" and data-target
+        case 'remote-modal':
+          // do nothing, handled by the data-action="remote-modal" binding
+          break;
+        case 'download':
+          event.stopPropagation();
+          window.location.href = action.path;
+          break;
+        case 'request':
+          event.stopPropagation();
+          $.ajax({
+            type: action.request_method,
+            url: action.path,
+            data: this.params
+          }).done((data) => {
+            HelperModule.flashAlertMsg(data.responseJSON && data.responseJSON.message || data.message, 'success');
+          }).fail((data) => {
+            HelperModule.flashAlertMsg(data.responseJSON && data.responseJSON.message || data.message, 'danger');
+          }).always(() => {
+            if (this.reloadCallback) this.reloadCallback();
+          });
+          break;
       }
+    },
+    closeExportDropdown(event) {
+      event.preventDefault();
+      $(event.target).closest('.export-actions-dropdown').removeClass('open');
     }
   }
+};
 </script>

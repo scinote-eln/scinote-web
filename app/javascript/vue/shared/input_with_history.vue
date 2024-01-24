@@ -28,52 +28,51 @@
 </template>
 
 <script>
-  export default {
-    name: 'inputWithHistory',
-    props: {
-      label: { type: String },
-      modelValue: { type: String },
-      placeholder: { type: String },
-      id: { type: String }
+export default {
+  name: 'inputWithHistory',
+  props: {
+    label: { type: String },
+    modelValue: { type: String },
+    placeholder: { type: String },
+    id: { type: String }
+  },
+  data() {
+    return {
+      previousQueries: [],
+      historyShown: false
+    };
+  },
+  mounted() {
+    this.previousQueries = JSON.parse(localStorage.getItem(this.id) || '[]');
+  },
+  methods: {
+    showHistory() {
+      this.historyShown = true;
     },
-    data() {
-      return {
-        previousQueries: [],
-        historyShown: false
-      }
+    hideHistory() {
+      setTimeout(() => {
+        this.historyShown = false;
+      }, 200);
     },
-    mounted() {
-      this.previousQueries = JSON.parse(localStorage.getItem(this.id) || '[]');
+    selectFromHistory(value) {
+      this.$emit('update:modelValue', value);
     },
-    methods: {
-      showHistory() {
-        this.historyShown = true;
-      },
-      hideHistory() {
-        setTimeout(() => {
-          this.historyShown = false;
-        }, 200);
-      },
-      selectFromHistory(value) {
-        this.$emit('update:modelValue', value)
-      },
-      saveQuery(event) {
-        let newValue = event.target.value
+    saveQuery(event) {
+      const newValue = event.target.value;
 
-        if (newValue == this.modelValue) return;
+      if (newValue == this.modelValue) return;
 
-        if (newValue.length > 0) {
-          this.previousQueries.push(newValue)
+      if (newValue.length > 0) {
+        this.previousQueries.push(newValue);
 
-          if (this.previousQueries.length > 5) {
-            this.previousQueries.shift();
-          }
-
-          localStorage.setItem(this.id, JSON.stringify(this.previousQueries));
-
+        if (this.previousQueries.length > 5) {
+          this.previousQueries.shift();
         }
-        this.$emit('update:modelValue', newValue)
+
+        localStorage.setItem(this.id, JSON.stringify(this.previousQueries));
       }
+      this.$emit('update:modelValue', newValue);
     }
   }
+};
 </script>

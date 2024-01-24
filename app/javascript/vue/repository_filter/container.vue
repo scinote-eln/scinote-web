@@ -19,7 +19,7 @@
           />
         </div>
       </div>
-      <button type="button" class="close" @click="$emit('hide-dropdown')" aria-label="<%= t('general.close') %>">
+      <button type="button" class="close" @click="$emit('hide-dropdown')" aria-label="<%= t('general.close') %>" data-e2e="e2e-BT-invInventoryFilterCO-close">
         <i class="sn-icon sn-icon-close"></i>
       </button>
     </div>
@@ -45,116 +45,119 @@
           />
         </div>
       </div>
-      <button class="btn btn-secondary clear-filters-btn prevent-shrink" @click="clearFilters">
+      <button class="btn btn-secondary clear-filters-btn prevent-shrink" @click="clearFilters" data-e2e="e2e-BT-invInventoryFilterCO-clear">
         {{ i18n.t('repositories.show.filters.clear') }}
       </button>
-      <button @click="$emit('filters:apply')" class="btn btn-primary apply-button prevent-shrink">
+      <button @click="$emit('filters:apply')" class="btn btn-primary apply-button prevent-shrink" data-e2e="e2e-BT-invInventoryFilterCO-showResults">
         {{ i18n.t('repositories.show.filters.apply') }}
       </button>
     </div>
   </div>
 </template>
 
- <script>
-  import ColumnElement from './column.vue'
-  import FiltersList from './filters_list.vue'
-  import SavedFilterElement from './saved_filter.vue'
+<script>
+import ColumnElement from './column.vue';
+import FiltersList from './filters_list.vue';
+import SavedFilterElement from './saved_filter.vue';
 
-  export default {
-    name: 'FilterContainer',
-    props: {
-      defaultFilters: Array,
-      my_modules: Array,
-      container: Object,
-      columns: Array,
-      savedFilters: Array,
-      canManageFilters: Boolean,
-      filterName: String, default: () => null
+export default {
+  name: 'FilterContainer',
+  props: {
+    defaultFilters: Array,
+    my_modules: Array,
+    container: Object,
+    columns: Array,
+    savedFilters: Array,
+    canManageFilters: Boolean,
+    filterName: String,
+    default: () => null
+  },
+  data() {
+    return {
+      filters: this.defaultFilters,
+      savedFilterScrollbar: null,
+      filterListKey: true
+    };
+  },
+  components: { ColumnElement, FiltersList, SavedFilterElement },
+  methods: {
+    addFilter(column) {
+      const id = this.filters.length ? this.filters[this.filters.length - 1].id + 1 : 1;
+      this.filters.push({
+        id, column, isBlank: true, data: {}
+      });
     },
-    data() {
-      return {
-        filters: this.defaultFilters,
-        savedFilterScrollbar: null,
-        filterListKey: true
-      }
+    updateFilter(filter) {
+      const index = this.filters.findIndex((f) => f.id === filter.id);
+      this.filters[index].data = filter.data;
+      this.filters[index].isBlank = filter.isBlank;
+      this.$emit('filters:update', this.filters);
     },
-    components: { ColumnElement, FiltersList, SavedFilterElement },
-    methods: {
-      addFilter(column) {
-        const id = this.filters.length ? this.filters[this.filters.length - 1].id + 1 : 1
-        this.filters.push({ id: id, column: column, isBlank: true, data: {} });
-      },
-      updateFilter(filter) {
-        const index = this.filters.findIndex((f) => f.id === filter.id);
-        this.filters[index].data = filter.data;
-        this.filters[index].isBlank = filter.isBlank;
-        this.$emit("filters:update", this.filters);
-      },
-      clearFilters() {
-        this.$emit('filters:clear');
-        this.filterListKey = !this.filterListKey;
-      },
-      deleteFilter(index) {
-        this.filters.splice(index, 1);
-      },
-      closeDropdowns() {
-        this.closeColumnsFilters();
-        this.closeSavedFilters();
-      },
-      closeColumnsFilters() {
-        $('#filtersColumnsDropdown').removeClass('open');
-      },
-      toggleColumnsFilters(e) {
-        e.stopPropagation();
-        $('.filters-columns-list').scrollTop(0);
-        this.closeSavedFilters();
-        $('#filtersColumnsDropdown').toggleClass('open');
-      },
-      loadFilters(filterUrl) {
-        this.filters = [];
-        $.get(filterUrl, (data) => {
-          let filters = [];
-          let rawFilters = data.data.attributes.default_columns.concat((data.included || []).map(f => f.attributes))
-          let id = 0;
-          $.each(rawFilters, (i, f) => {
-            filters.push({
-              id: id,
-              column: this.columns.find(c => c.id == f.repository_column_id),
-              isBlank: false,
-              data: {
-                operator: f.operator,
-                parameters: f.parameters
-              }
-            });
-            id++;
-          })
-          this.$emit('filters:update-current-name', data.data.attributes.name);
-          this.filters = filters;
-
-          // set up save modal
-          let $saveFiltersModal = $('#modalSaveRepositoryTableFilter');
-          let $overwriteLink = $('#overwriteFilterLink');
-          $overwriteLink.removeClass('hidden');
-          $saveFiltersModal.data('repositoryTableFilterId', data.data.id);
-          $('#currentFilterName').html(data.data.attributes.name);
-          $saveFiltersModal.data('repositoryTableFilterName', data.data.attributes.name);
+    clearFilters() {
+      this.$emit('filters:clear');
+      this.filterListKey = !this.filterListKey;
+    },
+    deleteFilter(index) {
+      this.filters.splice(index, 1);
+    },
+    closeDropdowns() {
+      this.closeColumnsFilters();
+      this.closeSavedFilters();
+    },
+    closeColumnsFilters() {
+      $('#filtersColumnsDropdown').removeClass('open');
+    },
+    toggleColumnsFilters(e) {
+      e.stopPropagation();
+      $('.filters-columns-list').scrollTop(0);
+      this.closeSavedFilters();
+      $('#filtersColumnsDropdown').toggleClass('open');
+    },
+    loadFilters(filterUrl) {
+      this.filters = [];
+      $.get(filterUrl, (data) => {
+        const filters = [];
+        const rawFilters = data.data.attributes.default_columns.concat((data.included || []).map((f) => f.attributes));
+        let id = 0;
+        $.each(rawFilters, (i, f) => {
+          filters.push({
+            id,
+            column: this.columns.find((c) => c.id == f.repository_column_id),
+            isBlank: false,
+            data: {
+              operator: f.operator,
+              parameters: f.parameters
+            }
+          });
+          id++;
         });
-      },
-      closeSavedFilters() {
-        $('#savedFiltersContainer').removeClass('open');
-        return true;
-      },
-      toggleSavedFilters(e) {
-        e.stopPropagation();
-        $('.saved-filters-list').scrollTop(0);
-        if (this.savedFilterScrollbar) {
-          this.savedFilterScrollbar.update();
-        } else {
-          this.savedFilterScrollbar = new PerfectScrollbar($('.saved-filters-list')[0]);
-        }
-        this.closeColumnsFilters();
-        $('#savedFiltersContainer').toggleClass('open');
-      },
+        this.$emit('filters:update-current-name', data.data.attributes.name);
+        this.filters = filters;
+
+        // set up save modal
+        const $saveFiltersModal = $('#modalSaveRepositoryTableFilter');
+        const $overwriteLink = $('#overwriteFilterLink');
+        $overwriteLink.removeClass('hidden');
+        $saveFiltersModal.data('repositoryTableFilterId', data.data.id);
+        $('#currentFilterName').html(data.data.attributes.name);
+        $saveFiltersModal.data('repositoryTableFilterName', data.data.attributes.name);
+      });
+    },
+    closeSavedFilters() {
+      $('#savedFiltersContainer').removeClass('open');
+      return true;
+    },
+    toggleSavedFilters(e) {
+      e.stopPropagation();
+      $('.saved-filters-list').scrollTop(0);
+      if (this.savedFilterScrollbar) {
+        this.savedFilterScrollbar.update();
+      } else {
+        this.savedFilterScrollbar = new PerfectScrollbar($('.saved-filters-list')[0]);
+      }
+      this.closeColumnsFilters();
+      $('#savedFiltersContainer').toggleClass('open');
     }
   }
- </script>
+};
+</script>

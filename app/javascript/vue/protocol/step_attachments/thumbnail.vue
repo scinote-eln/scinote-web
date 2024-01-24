@@ -44,21 +44,22 @@
 </template>
 
 <script>
-  import ContextMenuMixin from './mixins/context_menu.js'
-  import ContextMenu from './context_menu.vue'
-  export default {
-    name: 'thumbnailAttachment',
-    mixins: [ContextMenuMixin],
-    components: { ContextMenu },
-    props: {
-      attachment: {
-        type: Object,
-        required: true
-      },
-      stepId: {
-        type: Number,
-        required: true
-      }
+import ContextMenuMixin from './mixins/context_menu.js';
+import ContextMenu from './context_menu.vue';
+
+export default {
+  name: 'thumbnailAttachment',
+  mixins: [ContextMenuMixin],
+  components: { ContextMenu },
+  props: {
+    attachment: {
+      type: Object,
+      required: true
+    },
+    stepId: {
+      type: Number,
+      required: true
     }
   }
+};
 </script>

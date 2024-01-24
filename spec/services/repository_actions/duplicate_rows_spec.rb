@@ -22,6 +22,7 @@ describe RepositoryActions::DuplicateRows do
   describe '#call' do
     before do
       @rows_ids = []
+      @rows = []
 
       3.times do |index|
         row = create :repository_row, name: "row (#{index})",
@@ -40,7 +41,17 @@ describe RepositoryActions::DuplicateRows do
                  repository_column: list_column
                }
         @rows_ids << row.id.to_s
+        @rows << row
       end
+
+      create :repository_row_connection, parent:  @rows.first,
+                                         child: @rows.second,
+                                         created_by: user,
+                                         last_modified_by: user
+      create :repository_row_connection, parent:  @rows.last,
+                                         child: @rows.first,
+                                         created_by: user,
+                                         last_modified_by: user
     end
 
     it 'generates a duplicate of selected items' do
@@ -92,6 +103,19 @@ describe RepositoryActions::DuplicateRows do
     it 'adds 3 activities in DB' do
       expect { described_class.new(user, repository, @rows_ids).call }
         .to(change { Activity.count }.by(3))
+    end
+
+    it 'do not create new connections in DB' do
+      expect { described_class.new(user, repository, @rows_ids).call }
+        .to(change { RepositoryRowConnection.count }.by(0))
+    end
+
+    it 'reset connections counters' do
+      described_class.new(user, repository, [@rows_ids.first]).call
+      duplicated_row = repository.repository_rows.order('created_at ASC').last
+
+      expect(duplicated_row.parent_connections_count).to eq 0
+      expect(duplicated_row.child_connections_count).to eq 0
     end
   end
 end

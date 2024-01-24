@@ -48,254 +48,256 @@
   </div>
 </template>
 
- <script>
-  import DeleteMixin from './mixins/delete.js'
-  import MoveMixin from './mixins/move.js'
-  import DuplicateMixin from './mixins/duplicate.js'
-  import deleteElementModal from './modal/delete.vue'
-  import InlineEdit from '../inline_edit.vue'
-  import TableNameModal from './modal/table_name.vue'
-  import moveElementModal from './modal/move.vue'
-  import MenuDropdown from '../menu_dropdown.vue'
+<script>
+import DeleteMixin from './mixins/delete.js';
+import MoveMixin from './mixins/move.js';
+import DuplicateMixin from './mixins/duplicate.js';
+import deleteElementModal from './modal/delete.vue';
+import InlineEdit from '../inline_edit.vue';
+import TableNameModal from './modal/table_name.vue';
+import moveElementModal from './modal/move.vue';
+import MenuDropdown from '../menu_dropdown.vue';
 
-  export default {
-    name: 'ContentTable',
-    components: { deleteElementModal, InlineEdit, TableNameModal, moveElementModal, MenuDropdown },
-    mixins: [DeleteMixin, DuplicateMixin, MoveMixin],
-    props: {
-      element: {
-        type: Object,
-        required: true
-      },
-      inRepository: {
-        type: Boolean,
-        required: true
-      },
-      reorderElementUrl: {
-        type: String
-      },
-      isNew: {
-        type: Boolean, default: false
-      },
-      assignableMyModuleId: {
-        type: Number,
-        required: false
+export default {
+  name: 'ContentTable',
+  components: {
+    deleteElementModal, InlineEdit, TableNameModal, moveElementModal, MenuDropdown
+  },
+  mixins: [DeleteMixin, DuplicateMixin, MoveMixin],
+  props: {
+    element: {
+      type: Object,
+      required: true
+    },
+    inRepository: {
+      type: Boolean,
+      required: true
+    },
+    reorderElementUrl: {
+      type: String
+    },
+    isNew: {
+      type: Boolean, default: false
+    },
+    assignableMyModuleId: {
+      type: Number,
+      required: false
+    }
+  },
+  data() {
+    return {
+      editingName: false,
+      editingTable: false,
+      editingCell: false,
+      tableObject: null,
+      nameModalOpen: false,
+      reloadHeader: 0,
+      updatingTableData: false
+    };
+  },
+  computed: {
+    locked() {
+      return !this.element.attributes.orderable.urls.update_url;
+    },
+    actionMenu() {
+      const menu = [];
+      if (this.element.attributes.orderable.urls.update_url) {
+        menu.push({
+          text: I18n.t('general.edit'),
+          emit: 'edit'
+        });
+      }
+      if (this.element.attributes.orderable.urls.duplicate_url) {
+        menu.push({
+          text: I18n.t('general.duplicate'),
+          emit: 'duplicate'
+        });
+      }
+      if (this.element.attributes.orderable.urls.move_targets_url) {
+        menu.push({
+          text: I18n.t('general.move'),
+          emit: 'move'
+        });
+      }
+      if (this.element.attributes.orderable.urls.delete_url) {
+        menu.push({
+          text: I18n.t('general.delete'),
+          emit: 'delete'
+        });
+      }
+      return menu;
+    }
+  },
+  created() {
+    window.addEventListener('beforeunload', this.showSaveWarning);
+  },
+  beforeUnmount() {
+    window.removeEventListener('beforeunload', this.showSaveWarning);
+  },
+  updated() {
+    if (!this.updatingTableData) this.loadTableData();
+  },
+  beforeUpdate() {
+    if (!this.updatingTableData) this.tableObject.destroy();
+  },
+  mounted() {
+    this.loadTableData();
+
+    if (this.isNew) {
+      // needs to first update to save metadata at table creation
+      // updating is triggered by the afterChange hook
+      this.enableTableEdit();
+    }
+  },
+  methods: {
+    showSaveWarning(e) {
+      if (this.editingCell) {
+        e.preventDefault();
+        e.returnValue = '';
       }
     },
-    data() {
-      return {
-        editingName: false,
-        editingTable: false,
-        editingCell: false,
-        tableObject: null,
-        nameModalOpen: false,
-        reloadHeader: 0,
-        updatingTableData: false
+    enableTableEdit() {
+      if (this.locked) {
+        return;
       }
-    },
-    computed: {
-      locked() {
-        return !this.element.attributes.orderable.urls.update_url
-      },
-      actionMenu() {
-        let menu = [];
-        if (this.element.attributes.orderable.urls.update_url) {
-          menu.push({
-            text: I18n.t('general.edit'),
-            emit: 'edit'
-          });
-        }
-        if (this.element.attributes.orderable.urls.duplicate_url) {
-          menu.push({
-            text: I18n.t('general.duplicate'),
-            emit: 'duplicate'
-          });
-        }
-        if (this.element.attributes.orderable.urls.move_targets_url) {
-          menu.push({
-            text: I18n.t('general.move'),
-            emit: 'move'
-          });
-        }
-        if (this.element.attributes.orderable.urls.delete_url) {
-          menu.push({
-            text: I18n.t('general.delete'),
-            emit: 'delete'
-          });
-        }
-        return menu;
+
+      if (!this.element.attributes.orderable.name) {
+        this.openNameModal();
+        return;
       }
-    },
-    created() {
-      window.addEventListener('beforeunload', this.showSaveWarning);
-    },
-    beforeUnmount() {
-      window.removeEventListener('beforeunload', this.showSaveWarning);
-    },
-    updated() {
-      if(!this.updatingTableData) this.loadTableData();
-    },
-    beforeUpdate() {
-      if(!this.updatingTableData) this.tableObject.destroy();
-    },
-    mounted() {
-      this.loadTableData();
 
-      if (this.isNew) {
-        // needs to first update to save metadata at table creation
-        this.update(() => { this.enableTableEdit() });
-      }
+      const { row = 0, col = 0 } = this.selectedCell || {};
+      this.editingTable = true;
+      this.$nextTick(() => this.tableObject.selectCell(row, col));
     },
-    methods: {
-      showSaveWarning(e) {
-        if (this.editingCell) {
-          e.preventDefault();
-          e.returnValue = '';
-        }
-      },
-      enableTableEdit() {
-        if(this.locked) {
-          return;
-        }
+    disableTableEdit() {
+      this.editingTable = false;
+      this.updatingTableData = false;
+    },
+    enableNameEdit() {
+      this.editingName = true;
+    },
+    disableNameEdit() {
+      this.editingName = false;
+    },
+    updateName(name) {
+      this.element.attributes.orderable.name = name;
+      // Prevents the table from being updated when the name is updated
+      this.updatingTableData = true;
+      this.update(() => {
+        this.updatingTableData = false;
+      });
+    },
+    openNameModal() {
+      this.tableObject.deselectCell();
+      this.nameModalOpen = true;
+    },
+    updateEmptyName(name) {
+      this.disableNameEdit();
 
-        if (!this.element.attributes.orderable.name) {
-          this.openNameModal();
-          return;
-        }
+      // force reload header to properly reset name inline edit
+      this.reloadHeader += 1;
 
-        const { row = 0, col = 0 } = this.selectedCell || {};
-        this.editingTable = true;
-        this.$nextTick(() => this.tableObject.selectCell(row,col));
-      },
-      disableTableEdit() {
+      this.element.attributes.orderable.name = name;
+      this.$emit('update', this.element, false, () => {
+        this.nameModalOpen = false;
+        this.enableTableEdit();
+      });
+    },
+    updateTable() {
+      if (this.editingTable === false) return;
+
+      this.update(() => {
         this.editingTable = false;
         this.updatingTableData = false;
-      },
-      enableNameEdit() {
-        this.editingName = true;
-      },
-      disableNameEdit() {
-        this.editingName = false;
-      },
-      updateName(name) {
-        this.element.attributes.orderable.name = name;
-        // Prevents the table from being updated when the name is updated
-        this.updatingTableData = true;
-        this.update(() => {
-          this.updatingTableData = false;
+      });
+    },
+    update(callback = () => {}) {
+      this.element.attributes.orderable.contents = JSON.stringify({ data: this.tableObject.getData() });
+      const metadata = this.element.attributes.orderable.metadata || {};
+      if (metadata.plateTemplate) {
+        this.element.attributes.orderable.metadata = JSON.stringify({
+          cells: this.tableObject
+            .getCellsMeta()
+            .filter((e) => !!e)
+            .map((x) => {
+              const { row, col } = x;
+              return {
+                row,
+                col,
+                className: x.className || ''
+              };
+            })
         });
-      },
-      openNameModal() {
-        this.tableObject.deselectCell();
-        this.nameModalOpen = true;
-      },
-      updateEmptyName(name) {
-        this.disableNameEdit();
-
-        // force reload header to properly reset name inline edit
-        this.reloadHeader = this.reloadHeader + 1;
-
-        this.element.attributes.orderable.name = name;
-        this.$emit('update', this.element, false, () => {
-          this.nameModalOpen = false;
-          this.enableTableEdit();
+      } else {
+        this.element.attributes.orderable.metadata = JSON.stringify({
+          cells: this.tableObject
+            .getCellsMeta()
+            .filter((e) => !!e)
+            .map((x) => {
+              const { row, col } = x;
+              const plugins = this.tableObject.plugin;
+              const cellId = plugins.utils.translateCellCoords({ row, col });
+              const calculated = plugins.matrix.getItem(cellId)?.value
+                                || this.tableObject.getDataAtCell(row, col)
+                                || null;
+              return {
+                row,
+                col,
+                className: x.className || '',
+                calculated
+              };
+            })
         });
-      },
-      updateTable() {
-        if (this.editingTable == false) return;
-
-        this.update(() => {
-          this.editingTable = false;
-          this.updatingTableData = false;
-        });
-      },
-      update(callback = () => {}) {
-        this.element.attributes.orderable.contents = JSON.stringify({ data: this.tableObject.getData() });
-        let metadata = this.element.attributes.orderable.metadata || {};
-        if (metadata.plateTemplate) {
-            this.element.attributes.orderable.metadata = JSON.stringify({
-              cells: this.tableObject
-                         .getCellsMeta()
-                         .filter(e => !!e)
-                         .map((x) => {
-                              const {row, col} = x;
-                              return {
-                                row: row,
-                                col: col,
-                                className: x.className || '',
-                              }
-                          })
-            });
-          } else {
-            this.element.attributes.orderable.metadata = JSON.stringify({
-              cells: this.tableObject
-                         .getCellsMeta()
-                         .filter(e => !!e)
-                         .map((x) => {
-                              const {row, col} = x;
-                              const plugins = this.tableObject.plugin;
-                              const cellId = plugins.utils.translateCellCoords({row, col});
-                              const calculated = plugins.matrix.getItem(cellId)?.value ||
-                                this.tableObject.getDataAtCell(row, col) ||
-                                null;
-                              return {
-                                row: row,
-                                col: col,
-                                className: x.className || '',
-                                calculated: calculated
-                              }
-                          })
-            });
-        }
-
-        this.$emit('update', this.element, false, callback)
-      },
-      loadTableData() {
-        let container = this.$refs.hotTable;
-        let data = JSON.parse(this.element.attributes.orderable.contents);
-        let metadata = this.element.attributes.orderable.metadata || {};
-        let formulasEnabled = metadata.plateTemplate ? false : true;
-
-        this.tableObject = new Handsontable(container, {
-          data: data.data,
-          width: '100%',
-          startRows: 5,
-          startCols: 5,
-          rowHeaders: tableColRowName.tableRowHeaders(metadata.plateTemplate),
-          colHeaders: tableColRowName.tableColHeaders(metadata.plateTemplate),
-          cell: metadata.cells || [],
-          contextMenu: this.editingTable,
-          formulas: formulasEnabled,
-          preventOverflow: 'horizontal',
-          readOnly: !this.editingTable,
-          afterUnlisten: () => {
-            this.editingTable = false;
-          },
-          afterSelection: (r, c, r2, c2) => {
-            if (r === r2 && c === c2) {
-              this.selectedCell = { row: r, col: c };
-            }
-          },
-          afterChange: () => {
-            if (this.editingTable == false) return;
-            this.updatingTableData = true;
-
-            this.$nextTick(() => {
-              this.update(() => this.editingCell = false);
-            });
-          },
-          beforeKeyDown: (e) => {
-            if (e.keyCode === 27) { // esc
-              this.editingCell = false;
-              return;
-            }
-          },
-          afterBeginEditing: (e) => {
-            this.editingCell = true;
-          }
-        });
-        this.$nextTick(this.tableObject.render);
       }
+
+      this.$emit('update', this.element, false, callback);
+    },
+    loadTableData() {
+      const container = this.$refs.hotTable;
+      const data = JSON.parse(this.element.attributes.orderable.contents);
+      const metadata = this.element.attributes.orderable.metadata || {};
+      const formulasEnabled = !metadata.plateTemplate;
+
+      this.tableObject = new Handsontable(container, {
+        data: data.data,
+        width: '100%',
+        startRows: 5,
+        startCols: 5,
+        rowHeaders: tableColRowName.tableRowHeaders(metadata.plateTemplate),
+        colHeaders: tableColRowName.tableColHeaders(metadata.plateTemplate),
+        cell: metadata.cells || [],
+        contextMenu: this.editingTable,
+        formulas: formulasEnabled,
+        preventOverflow: 'horizontal',
+        readOnly: !this.editingTable,
+        afterUnlisten: () => {
+          this.editingTable = false;
+        },
+        afterSelection: (r, c, r2, c2) => {
+          if (r === r2 && c === c2) {
+            this.selectedCell = { row: r, col: c };
+          }
+        },
+        afterChange: () => {
+          if (this.editingTable === false) return;
+          this.updatingTableData = true;
+
+          this.$nextTick(() => {
+            this.update(() => this.editingCell = false);
+          });
+        },
+        beforeKeyDown: (e) => {
+          if (e.keyCode === 27) { // esc
+            this.editingCell = false;
+          }
+        },
+        afterBeginEditing: (e) => {
+          this.editingCell = true;
+        }
+      });
+      this.$nextTick(this.tableObject.render);
     }
   }
+};
 </script>

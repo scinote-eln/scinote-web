@@ -31,6 +31,10 @@ class RepositoryBase < ApplicationRecord
     ApplicationSettings.instance.values['stock_management_enabled']
   end
 
+  def self.repository_row_connections_enabled?
+    ApplicationSettings.instance.values['repository_row_connections_enabled']
+  end
+
   def self.reminders_enabled?
     RepositoryBase.stock_management_enabled?
   end

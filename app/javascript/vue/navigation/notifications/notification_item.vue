@@ -26,7 +26,7 @@ export default {
   },
   computed: {
     icon() {
-      switch(this.notification.attributes.type_of) {
+      switch (this.notification.attributes.type_of) {
         case 'deliver':
           return 'fas fa-truck';
         case 'assignment':
@@ -38,5 +38,5 @@ export default {
       }
     }
   }
-}
+};
 </script>

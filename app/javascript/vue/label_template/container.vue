@@ -107,214 +107,217 @@
   </div>
 </template>
 
- <script>
+<script>
 
- import InlineEdit from '../shared/inline_edit.vue'
- import InsertFieldDropdown from './insert_field_dropdown.vue'
- import LabelPreview from './components/label_preview.vue'
+import InlineEdit from '../shared/inline_edit.vue';
+import InsertFieldDropdown from './insert_field_dropdown.vue';
+import LabelPreview from './components/label_preview.vue';
 
-  export default {
-    name: 'LabelTemplateContainer',
-    props: {
-      labelTemplateUrl: String,
-      labelTemplatesUrl: String,
-      previewUrl: String,
-      newLabel: Boolean
+export default {
+  name: 'LabelTemplateContainer',
+  props: {
+    labelTemplateUrl: String,
+    labelTemplatesUrl: String,
+    previewUrl: String,
+    newLabel: Boolean
+  },
+  data() {
+    return {
+      labelTemplate: {
+        attributes: {}
+      },
+      editingName: false,
+      editingDescription: false,
+      editingContent: false,
+      newContent: '',
+      newLabelWidth: null,
+      newLabelHeight: null,
+      newLabelDensity: null,
+      newLabelUnit: null,
+      previewContent: '',
+      previewValid: false,
+      skipSave: false,
+      codeErrorMessage: '',
+      cursorPos: 0
+    };
+  },
+  watch: {
+    newContent() {
+      this.showErrors();
     },
-    data() {
-      return {
-        labelTemplate: {
-          attributes: {}
-        },
-        editingName: false,
-        editingDescription: false,
-        editingContent: false,
-        newContent: '',
-        newLabelWidth: null,
-        newLabelHeight: null,
-        newLabelDensity: null,
-        newLabelUnit: null,
-        previewContent: '',
-        previewValid: false,
-        skipSave: false,
-        codeErrorMessage: '',
-        cursorPos: 0
-      }
+    previewValid() {
+      this.showErrors();
+    }
+  },
+  computed: {
+    hasError() {
+      return this.codeErrorMessage.length > 0;
     },
-    watch: {
-      newContent() {
-        this.showErrors();
-      },
-      previewValid() {
-        this.showErrors();
-      }
+    canManage() {
+      return this.labelTemplate.attributes.urls.update && this.notFluics;
     },
-    computed: {
-      hasError() {
-        return this.codeErrorMessage.length > 0
-      },
-      canManage() {
-        return this.labelTemplate.attributes.urls.update && this.notFluics
-      },
-      notFluics() {
-        return this.labelTemplate.attributes.type !== "FluicsLabelTemplate"
-      }
+    notFluics() {
+      return this.labelTemplate.attributes.type !== 'FluicsLabelTemplate';
+    }
+  },
+  components: { InlineEdit, InsertFieldDropdown, LabelPreview },
+  created() {
+    $.get(this.labelTemplateUrl, (result) => {
+      this.labelTemplate = result.data;
+      this.newContent = this.labelTemplate.attributes.content;
+      this.previewContent = this.labelTemplate.attributes.content;
+      this.newLabelWidth = this.labelTemplate.attributes.width_mm;
+      this.newLabelHeight = this.labelTemplate.attributes.height_mm;
+      this.newLabelDensity = this.labelTemplate.attributes.density;
+      this.newLabelUnit = this.labelTemplate.attributes.unit;
+    });
+  },
+  methods: {
+    setNewHeight(val) {
+      this.newLabelHeight = val;
     },
-    components: {InlineEdit, InsertFieldDropdown, LabelPreview},
-    created() {
-      $.get(this.labelTemplateUrl, (result) => {
-        this.labelTemplate = result.data
-        this.newContent = this.labelTemplate.attributes.content
-        this.previewContent = this.labelTemplate.attributes.content
-        this.newLabelWidth = this.labelTemplate.attributes.width_mm
-        this.newLabelHeight = this.labelTemplate.attributes.height_mm
-        this.newLabelDensity = this.labelTemplate.attributes.density
-        this.newLabelUnit = this.labelTemplate.attributes.unit
-      })
+    setNewWidth(val) {
+      this.newLabelWidth = val;
     },
-    methods: {
-      setNewHeight(val) {
-        this.newLabelHeight = val;
-      },
-      setNewWidth(val) {
-        this.newLabelWidth = val;
-      },
-      setNewDensity(val) {
-        this.newLabelDensity = val;
-      },
-      setNewUnit(val) {
-        this.newLabelUnit = val;
-      },
-      enableContentEdit() {
-        this.editingContent = true;
-        this.$nextTick(() => {
-          this.$refs.contentInput.focus();
-          const contentInput = this.$refs.contentInput;
-          const contentLength = contentInput.value.length;
-          contentInput.setSelectionRange(contentLength, contentLength);
-        });
-      },
-      disableContentEdit() {
-        this.editingContent = false;
-        this.newContent = this.labelTemplate.attributes.content;
-        this.previewContent = this.labelTemplate.attributes.content;
-      },
-      updateName(newName) {
-        $.ajax({
-          url: this.labelTemplate.attributes.urls.update,
-          type: 'PATCH',
-          data: {label_template: {name: newName}},
-          success: (result) => {
-            this.labelTemplate.attributes.name = result.data.attributes.name
-          }
-        });
-      },
-      updateDescription(newDescription) {
-        $.ajax({
-          url: this.labelTemplate.attributes.urls.update,
-          type: 'PATCH',
-          data: {label_template: {description: newDescription}},
-          success: (result) => {
-            this.labelTemplate.attributes.description = result.data.attributes.description
-          }
-        });
-      },
-      updateContent() {
-        this.previewValid = true;
-
-        this.saveLabelDimensions();
-
-        if (!this.editingContent) return;
-
-        if (this.skipSave) {
-          this.skipSave = false;
-          return;
+    setNewDensity(val) {
+      this.newLabelDensity = val;
+    },
+    setNewUnit(val) {
+      this.newLabelUnit = val;
+    },
+    enableContentEdit() {
+      this.editingContent = true;
+      this.$nextTick(() => {
+        this.$refs.contentInput.focus();
+        const { contentInput } = this.$refs;
+        const contentLength = contentInput.value.length;
+        contentInput.setSelectionRange(contentLength, contentLength);
+      });
+    },
+    disableContentEdit() {
+      this.editingContent = false;
+      this.newContent = this.labelTemplate.attributes.content;
+      this.previewContent = this.labelTemplate.attributes.content;
+    },
+    updateName(newName) {
+      $.ajax({
+        url: this.labelTemplate.attributes.urls.update,
+        type: 'PATCH',
+        data: { label_template: { name: newName } },
+        success: (result) => {
+          this.labelTemplate.attributes.name = result.data.attributes.name;
         }
+      });
+    },
+    updateDescription(newDescription) {
+      $.ajax({
+        url: this.labelTemplate.attributes.urls.update,
+        type: 'PATCH',
+        data: { label_template: { description: newDescription } },
+        success: (result) => {
+          this.labelTemplate.attributes.description = result.data.attributes.description;
+        }
+      });
+    },
+    updateContent() {
+      this.previewValid = true;
 
-        this.$nextTick(() => {
-          if (this.hasError) return;
+      this.saveLabelDimensions();
 
-          $.ajax({
-            url: this.labelTemplate.attributes.urls.update,
-            type: 'PATCH',
-            data: {label_template: {
-              content: this.newContent,
-            }},
-            success: (result) => {
-              this.labelTemplate.attributes.content = result.data.attributes.content;
-              this.editingContent = false;
+      if (!this.editingContent) return;
+
+      if (this.skipSave) {
+        this.skipSave = false;
+        return;
+      }
+
+      this.$nextTick(() => {
+        if (this.hasError) return;
+
+        $.ajax({
+          url: this.labelTemplate.attributes.urls.update,
+          type: 'PATCH',
+          data: {
+            label_template: {
+              content: this.newContent
             }
-          });
+          },
+          success: (result) => {
+            this.labelTemplate.attributes.content = result.data.attributes.content;
+            this.editingContent = false;
+          }
         });
-      },
-      saveLabelDimensions() {
-        if (this.newLabelWidth == this.labelTemplate.attributes.width_mm &&
-            this.newLabelHeight == this.labelTemplate.attributes.height_mm &&
-            this.newLabelDensity == this.labelTemplate.attributes.density &&
-            this.newLabelUnit == this.labelTemplate.attributes.unit) {
-          return
-        }
+      });
+    },
+    saveLabelDimensions() {
+      if (this.newLabelWidth == this.labelTemplate.attributes.width_mm
+            && this.newLabelHeight == this.labelTemplate.attributes.height_mm
+            && this.newLabelDensity == this.labelTemplate.attributes.density
+            && this.newLabelUnit == this.labelTemplate.attributes.unit) {
+        return;
+      }
 
-        $.ajax({
-          url: this.labelTemplate.attributes.urls.update,
-          type: 'PATCH',
-          data: {label_template: {
+      $.ajax({
+        url: this.labelTemplate.attributes.urls.update,
+        type: 'PATCH',
+        data: {
+          label_template: {
             width_mm: this.newLabelWidth,
             height_mm: this.newLabelHeight,
             density: this.newLabelDensity,
             unit: this.newLabelUnit
-          }},
-          success: (result) => {
-            this.labelTemplate.attributes.width_mm = result.data.attributes.width_mm;
-            this.labelTemplate.attributes.height_mm = result.data.attributes.height_mm;
-            this.labelTemplate.attributes.density = result.data.attributes.density;
-            this.labelTemplate.attributes.unit = result.data.attributes.unit;
           }
-        });
-      },
-      generatePreview(skipSave = false) {
-        this.skipSave = skipSave;
-        if (!skipSave && this.previewContent === this.newContent && this.previewValid) {
-          this.updateContent();
-        } else {
-          this.previewContent = this.newContent;
+        },
+        success: (result) => {
+          this.labelTemplate.attributes.width_mm = result.data.attributes.width_mm;
+          this.labelTemplate.attributes.height_mm = result.data.attributes.height_mm;
+          this.labelTemplate.attributes.density = result.data.attributes.density;
+          this.labelTemplate.attributes.unit = result.data.attributes.unit;
         }
+      });
+    },
+    generatePreview(skipSave = false) {
+      this.skipSave = skipSave;
+      if (!skipSave && this.previewContent === this.newContent && this.previewValid) {
+        this.updateContent();
+      } else {
+        this.previewContent = this.newContent;
+      }
+    },
+    invalidPreview() {
+      this.previewValid = false;
+      this.skipSave = false;
+    },
+    saveCursorPosition() {
+      this.cursorPos = $(this.$refs.contentInput).prop('selectionStart');
+    },
+    insertTag(tag) {
+      this.enableContentEdit();
+      const textBefore = this.newContent.substring(0, this.cursorPos);
+      const textAfter = this.newContent.substring(this.cursorPos, this.newContent.length);
+      this.newContent = textBefore + tag + textAfter;
+      this.cursorPos += tag.length;
 
-      },
-      invalidPreview() {
-        this.previewValid = false;
-        this.skipSave = false;
-      },
-      saveCursorPosition() {
-        this.cursorPos = $(this.$refs.contentInput).prop('selectionStart');
-      },
-      insertTag(tag) {
-        this.enableContentEdit();
-        let textBefore = this.newContent.substring(0,  this.cursorPos);
-        let textAfter  = this.newContent.substring(this.cursorPos, this.newContent.length);
-        this.newContent = textBefore + tag + textAfter;
-        this.cursorPos = this.cursorPos + tag.length;
-
-        this.$nextTick(() => {
-          $(this.$refs.contentInput).prop('selectionStart', this.cursorPos);
-          $(this.$refs.contentInput).prop('selectionEnd', this.cursorPos);
-        });
-      },
-      showErrors() {
-        if (this.editingContent) {
-          if (this.newContent.length === 0) {
-            this.codeErrorMessage = this.i18n.t('label_templates.show.code_errors.empty')
-          } else if (this.newContent.length > 10000) {
-            this.codeErrorMessage = this.i18n.t('label_templates.show.code_errors.too_long')
-          } else if (!this.previewValid) {
-            this.codeErrorMessage = this.i18n.t('label_templates.show.code_errors.invalid')
-          } else {
-            this.codeErrorMessage = ''
-          }
+      this.$nextTick(() => {
+        $(this.$refs.contentInput).prop('selectionStart', this.cursorPos);
+        $(this.$refs.contentInput).prop('selectionEnd', this.cursorPos);
+      });
+    },
+    showErrors() {
+      if (this.editingContent) {
+        if (this.newContent.length === 0) {
+          this.codeErrorMessage = this.i18n.t('label_templates.show.code_errors.empty');
+        } else if (this.newContent.length > 10000) {
+          this.codeErrorMessage = this.i18n.t('label_templates.show.code_errors.too_long');
+        } else if (!this.previewValid) {
+          this.codeErrorMessage = this.i18n.t('label_templates.show.code_errors.invalid');
         } else {
-          this.codeErrorMessage = ''
+          this.codeErrorMessage = '';
         }
+      } else {
+        this.codeErrorMessage = '';
       }
     }
   }
- </script>
+};
+</script>

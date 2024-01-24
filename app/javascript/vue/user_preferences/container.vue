@@ -79,11 +79,11 @@
 
 <script>
 
-import SelectSearch from "../shared/select_search.vue";
+import SelectSearch from '../shared/select_search.vue';
 import axios from '../../packs/custom_axios.js';
 
 export default {
-  name: "UserPreferences",
+  name: 'UserPreferences',
   props: {
     userSettings: Object,
     timeZones: Array,
@@ -91,7 +91,7 @@ export default {
     updateUrl: String,
     notificationsGroups: Object
   },
-  data: function() {
+  data() {
     return {
       selectedTimeZone: null,
       selectedDateFormat: null,
@@ -101,12 +101,11 @@ export default {
   created() {
     this.selectedTimeZone = this.userSettings.time_zone;
     this.selectedDateFormat = this.userSettings.date_format;
-    this.notificationsSettings = {...this.emptySettings, ...this.userSettings.notifications_settings};
-
+    this.notificationsSettings = { ...this.emptySettings, ...this.userSettings.notifications_settings };
   },
   computed: {
     emptySettings() {
-      let settings = {};
+      const settings = {};
       for (const group in this.notificationsGroups) {
         for (const subGroup in this.notificationsGroups[group]) {
           settings[subGroup] = { in_app: false, email: false };
@@ -116,27 +115,26 @@ export default {
     }
   },
   components: {
-    SelectSearch,
-    PerfectScrollbar
+    SelectSearch
   },
   methods: {
     setTimeZone(value) {
       this.selectedTimeZone = value;
       axios.put(this.updateUrl, {
-          user: { time_zone: value }
-      })
+        user: { time_zone: value }
+      });
     },
     setDateFormat(value) {
       this.selectedDateFormat = value;
       axios.put(this.updateUrl, {
-          user: { date_format: value }
-      })
+        user: { date_format: value }
+      });
     },
     setNotificationsSettings() {
       axios.put(this.updateUrl, {
-          user: { notifications_settings: this.notificationsSettings }
-      })
+        user: { notifications_settings: this.notificationsSettings }
+      });
     }
-  },
-}
+  }
+};
 </script>

@@ -6,18 +6,20 @@
          id="activities-group-<%= date %>-button"
          data-toggle="collapse"
          data-turbolinks="false"
-         data-target="#activities-group-<%= date %>">
+         data-target="#activities-group-<%= date %>"
+         data-e2e="e2e-TL-activities-date-<%= date %>">
         <span class="sn-icon sn-icon-right"></span>
         <%= l(Time.parse(date), format: :full_date) %>
       </a>
     </div>
     <div class="date-activities">
       <div class="activities-counter-label">
-        <strong><%= activities.length %></strong>
+        <strong data-e2e="e2e-TX-activities-counter-<%= date %>"><%= activities.length %></strong>
         <%= t("activities.index.#{'activity'.pluralize(activities.length)}_counter_label") %>
       </div>
       <div class="collapse in activities-group"
           id="activities-group-<%= date %>"
+          data-e2e="e2e-CO-activities-group-<%= date %>"
           data-button-link="<%= "#activities-group-#{date}-button" %>">
           <% activities.each do |activity| %>
             <%= render partial: 'global_activities/activity', locals: { activity: activity } %>

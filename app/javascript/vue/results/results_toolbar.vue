@@ -14,7 +14,6 @@
       </button>
     </div>
 
-
     <div class="dropdown view-switch flex items-center">
       <div class="btn btn-secondary view-switch-button prevent-shrink" :class="{'mr-3': headerSticked}" id="viewSwitchButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
         <span v-if="archived" class="state-view-switch-btn-name">{{ i18n.t('my_modules.results.archived_results') }}</span>
@@ -55,89 +54,87 @@
 </template>
 
 <script>
-  const SORTS = [
-    'updated_at_asc',
-    'updated_at_desc',
-    'created_at_asc',
-    'created_at_desc',
-    'name_asc',
-    'name_desc'
-  ];
+import FilterDropdown from '../shared/filters/filter_dropdown.vue';
+import MenuDropdown from '../shared/menu_dropdown.vue';
 
-  import FilterDropdown from '../shared/filters/filter_dropdown.vue';
-  import MenuDropdown from '../shared/menu_dropdown.vue'
+const SORTS = [
+  'updated_at_asc',
+  'updated_at_desc',
+  'created_at_asc',
+  'created_at_desc',
+  'name_asc',
+  'name_desc'
+];
 
-  export default {
-    name: 'ResultsToolbar',
-    props: {
-      sort: { type: String, required: true },
-      canCreate: { type: Boolean, required: true },
-      archived: { type: Boolean, required: true },
-      headerSticked: { type: Boolean, required: true },
-      active_url: { type: String, required: true },
-      archived_url: { type: String, required: true },
-      moduleName: { type: String, required: true }
-    },
-    data() {
-      return {
-        filters: null
+export default {
+  name: 'ResultsToolbar',
+  props: {
+    sort: { type: String, required: true },
+    canCreate: { type: Boolean, required: true },
+    archived: { type: Boolean, required: true },
+    headerSticked: { type: Boolean, required: true },
+    active_url: { type: String, required: true },
+    archived_url: { type: String, required: true },
+    moduleName: { type: String, required: true }
+  },
+  data() {
+    return {
+      filters: null
+    };
+  },
+  components: { FilterDropdown, MenuDropdown },
+  created() {
+    this.filters = [
+      {
+        key: 'query',
+        type: 'Text',
+        label: this.i18n.t('my_modules.results.filters.query.label'),
+        placeholder: this.i18n.t('my_modules.results.filters.query.placeholder')
+      },
+      {
+        key: 'created_at',
+        type: 'DateRange',
+        label: this.i18n.t('my_modules.results.filters.created_at.label')
+      },
+      {
+        key: 'updated_at',
+        type: 'DateRange',
+        label: this.i18n.t('my_modules.results.filters.updated_at.label')
       }
-    },
-    components: { FilterDropdown, MenuDropdown },
-    created() {
-      this.filters = [
-        {
-          key: 'query',
-          type: 'Text',
-          label: this.i18n.t('my_modules.results.filters.query.label'),
-          placeholder: this.i18n.t('my_modules.results.filters.query.placeholder')
-        },
-        {
-          key: 'created_at',
-          type: 'DateRange',
-          label: this.i18n.t('my_modules.results.filters.created_at.label')
-        },
-        {
-          key: 'updated_at',
-          type: 'DateRange',
-          label: this.i18n.t('my_modules.results.filters.updated_at.label')
-        }
-      ];
+    ];
 
-      this.sorts = SORTS;
+    this.sorts = SORTS;
+  },
+  computed: {
+    sortMenu() {
+      return this.sorts.map((sort) => ({
+        text: this.i18n.t(`my_modules.results.sorts.${sort}`),
+        emit: 'sort',
+        params: sort,
+        active: sort == this.sort
+      }));
+    }
+  },
+  methods: {
+    setSort(sort) {
+      this.$emit('setSort', sort);
     },
-    computed: {
-      sortMenu() {
-        return this.sorts.map(sort => {
-          return {
-            text: this.i18n.t(`my_modules.results.sorts.${sort}`),
-            emit: 'sort',
-            params: sort,
-            active: sort == this.sort
-          }
-        })
-      }
+    setFilters(filters) {
+      this.$emit('setFilters', filters);
     },
-    methods: {
-      setSort(sort) {
-        this.$emit('setSort', sort);
-      },
-      setFilters(filters) {
-        this.$emit('setFilters', filters);
-      },
-      collapseResults() {
-        $('.result-wrapper .collapse').collapse('hide')
-      },
-      expandResults() {
-        $('.result-wrapper .collapse').collapse('show')
-      },
-      scrollTop() {
-        window.scrollTo(0, 0);
-        setTimeout(() => {
-          $('.my_module-name .view-mode').trigger('click');
-          $('.my_module-name .input-field').focus();
-        }, 300)
-      }
+    collapseResults() {
+      $('.result-wrapper .collapse').collapse('hide');
+    },
+    expandResults() {
+      $('.result-wrapper .collapse').collapse('show');
+    },
+    scrollTop() {
+      window.scrollTo(0, 0);
+      setTimeout(() => {
+        $('.my_module-name .view-mode').trigger('click');
+        $('.my_module-name .input-field').focus();
+      }, 300);
     }
   }
+};
 </script>

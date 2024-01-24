@@ -25,7 +25,8 @@ export default {
   name: 'ScrollSpy',
 
   props: {
-    itemsToCreate: Array,
+    itemsToCreate: { type: Array, default: [] },
+    initialSectionId: String || null
   },
 
   data() {
@@ -37,25 +38,23 @@ export default {
       thresholds: [],
       navigationItemsStatus: [], // highlighted or not
       scrollPosition: null,
-      centerOfScrollThumb: null,
+      centerOfScrollThumb: null
     };
   },
-
   mounted() {
     window.addEventListener('resize', this.handleResize);
     this.initializeComponent();
     this.$nextTick(() => {
-      this.calculateAllSectionsCumulativeHeight()
+      this.calculateAllSectionsCumulativeHeight();
       this.calculateSectionsHeight();
-      this.constructThresholds()
-      this.handleScroll()
+      this.constructThresholds();
+      this.handleScroll();
 
       if (!this.initialSectionId) {
-        this.navigateToSection(this.itemsToCreate[0])
-      }
-      else {
-        const itemToNavigateTo = this.itemsToCreate.find((item) => item.sectionId === this.initialSectionId)
-        this.navigateToSection(itemToNavigateTo)
+        this.navigateToSection(this.itemsToCreate[0]);
+      } else {
+        const itemToNavigateTo = this.itemsToCreate.find((item) => item.sectionId === this.initialSectionId);
+        this.navigateToSection(itemToNavigateTo);
       }
     });
   },
@@ -64,12 +63,11 @@ export default {
     window.removeEventListener('resize', this.handleResize);
     this.removeScrollListener();
   },
-
   methods: {
     initializeComponent() {
-      const bodyWrapperEl = document.getElementById('body-wrapper')
-      const scrollSpyContentEl = document.getElementById('scrollSpyContent')
-      this.bodyContainerEl = bodyWrapperEl
+      const bodyWrapperEl = document.getElementById('body-wrapper');
+      const scrollSpyContentEl = document.getElementById('scrollSpyContent');
+      this.bodyContainerEl = bodyWrapperEl;
       this.sections = Array.from(scrollSpyContentEl.querySelectorAll('section[id]'));
       this.navigationItemsStatus = Array(this.sections.length).fill(false);
       this.navigationItemsStatus[0] = true;
@@ -85,18 +83,18 @@ export default {
     },
 
     calculateAllSectionsCumulativeHeight() {
-      let totalHeight = 0
+      let totalHeight = 0;
 
       this.itemsToCreate.forEach((item) => {
         const sectionEl = document.getElementById(item.sectionId);
-        totalHeight += sectionEl.offsetHeight
-      })
-      this.allSectionsCumulativeHeight = totalHeight
+        totalHeight += sectionEl.offsetHeight;
+      });
+      this.allSectionsCumulativeHeight = totalHeight;
     },
 
     calculateSectionsHeight() {
       // Initialize an array to store the height data for each section
-      this.sectionsWithHeight = this.itemsToCreate.map(item => {
+      this.sectionsWithHeight = this.itemsToCreate.map((item) => {
         // Find the DOM element for the section
         const sectionEl = document.getElementById(item.sectionId);
 
@@ -107,8 +105,8 @@ export default {
         // Return an object containing the section ID and its percentage height
         return {
           sectionId: item.sectionId,
-          heightPx: heightPx,
-          percentHeight: percentHeight
+          heightPx,
+          percentHeight
         };
       });
     },
@@ -118,57 +116,55 @@ export default {
     // on the % of vertical space of scrollable content that they occupy
     constructThresholds() {
       const scrollableArea = this.bodyContainerEl;
-      const deltaTravel = scrollableArea.scrollHeight - scrollableArea.clientHeight
+      const deltaTravel = scrollableArea.scrollHeight - scrollableArea.clientHeight;
       const viewportHeight = scrollableArea.clientHeight;
       const scrollableAreaHeight = scrollableArea.scrollHeight;
       const scrollThumbHeight = Math.round(viewportHeight / scrollableAreaHeight * viewportHeight);
-      const scrollThumbCenter = Math.round(scrollThumbHeight / 2)
-      this.centerOfScrollThumb = scrollThumbCenter
-      this.scrollPosition = scrollThumbCenter
+      const scrollThumbCenter = Math.round(scrollThumbHeight / 2);
+      this.centerOfScrollThumb = scrollThumbCenter;
+      this.scrollPosition = scrollThumbCenter;
 
-      let prevThreshold = scrollThumbCenter
+      let prevThreshold = scrollThumbCenter;
 
       for (let i = 0; i < this.sectionsWithHeight.length; i++) {
         // first section
         if (i === 0) {
-          const from = prevThreshold
-          const to = Math.round(deltaTravel * this.sectionsWithHeight[i].percentHeight / 100) + prevThreshold
-          const id = this.sectionsWithHeight[i].sectionId
-          prevThreshold = to + 1
+          const from = prevThreshold;
+          const to = Math.round(deltaTravel * this.sectionsWithHeight[i].percentHeight / 100) + prevThreshold;
+          const id = this.sectionsWithHeight[i].sectionId;
+          prevThreshold = to + 1;
           const threshold = {
             id,
             index: i,
             from,
             to
-          }
-          this.thresholds[i] = threshold
-        }
-        // last section
-        else if (i === this.sectionsWithHeight.length - 1) {
-          const from = prevThreshold
-          const to = scrollableArea.scrollHeight
-          const id = this.sectionsWithHeight[i].sectionId
+          };
+          this.thresholds[i] = threshold;
+        } else if (i === this.sectionsWithHeight.length - 1) {
+          // last section
+          const from = prevThreshold;
+          const to = scrollableArea.scrollHeight;
+          const id = this.sectionsWithHeight[i].sectionId;
           const threshold = {
             id,
             index: i,
             from,
             to
-          }
-          this.thresholds[i] = threshold
-        }
-        else {
+          };
+          this.thresholds[i] = threshold;
+        } else {
           // other sections
-          const from = prevThreshold
-          const to = Math.round(deltaTravel * this.sectionsWithHeight[i].percentHeight / 100) + prevThreshold - 1
-          const id = this.sectionsWithHeight[i].sectionId
-          prevThreshold = to + 1
+          const from = prevThreshold;
+          const to = Math.round(deltaTravel * this.sectionsWithHeight[i].percentHeight / 100) + prevThreshold - 1;
+          const id = this.sectionsWithHeight[i].sectionId;
+          prevThreshold = to + 1;
           const threshold = {
             id,
             index: i,
             from,
             to
-          }
-          this.thresholds[i] = threshold
+          };
+          this.thresholds[i] = threshold;
         }
       }
     },
@@ -187,26 +183,26 @@ export default {
       this.removeScrollListener();
 
       const scrollableArea = this.bodyContainerEl;
-      const foundThreshold = this.thresholds.find((obj) => obj.id === navigationItem.sectionId)
-      const domElToScrollTo = document.getElementById(navigationItem.label)
+      const foundThreshold = this.thresholds.find((obj) => obj.id === navigationItem.sectionId);
+      const domElToScrollTo = document.getElementById(navigationItem.label);
 
       if (foundThreshold.index === 0) {
         // scroll to top
         this.bodyContainerEl.scrollTo({
           top: 0,
-          behavior: "auto"
+          behavior: 'auto'
         });
-      }
-      else if (foundThreshold.index === this.thresholds.length - 1) {
+      } else if (foundThreshold.index === this.thresholds.length - 1) {
         // scroll to bottom
         this.bodyContainerEl.scrollTo({
           top: 99999,
-          behavior: "auto"
+          behavior: 'auto'
         });
-      }
-      else {
+      } else {
         // scroll to the start of a section's threshold, adjusted for the center thumb value (true center)
-        scrollableArea.scrollTop = foundThreshold.from - this.centerOfScrollThumb
+        this.$nextTick(() => {
+          scrollableArea.scrollTop = foundThreshold.from - this.centerOfScrollThumb;
+        });
       }
       this.flashTitleColor(domElToScrollTo);
 
@@ -215,7 +211,7 @@ export default {
     },
 
     flashTitleColor(domEl) {
-      if (!domEl) return
+      if (!domEl) return;
 
       domEl.classList.add('text-sn-science-blue');
       setTimeout(() => domEl.classList.remove('text-sn-science-blue'), 300);
@@ -223,9 +219,9 @@ export default {
 
     handleResize() {
       this.$nextTick(() => {
-        this.calculateAllSectionsCumulativeHeight()
+        this.calculateAllSectionsCumulativeHeight();
         this.calculateSectionsHeight();
-        this.constructThresholds()
+        this.constructThresholds();
       });
     },
 
@@ -247,7 +243,7 @@ export default {
           this.navigationItemsStatus[index] = true;
         }
       });
-    },
+    }
   }
-}
+};
 </script>

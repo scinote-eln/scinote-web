@@ -10,28 +10,28 @@
 </template>
 
 <script>
-import InlineEdit from "../shared/inline_edit.vue";
+import InlineEdit from '../shared/inline_edit.vue';
 
 export default {
-  name: "RepositoryItemSidebarTitle",
+  name: 'RepositoryItemSidebarTitle',
   components: {
-    "inline-edit": InlineEdit
+    'inline-edit': InlineEdit
   },
   emits: ['update'],
   props: {
     editable: Boolean,
     name: String,
-    archived: Boolean,
+    archived: Boolean
   },
   computed: {
     computedName() {
       return this.archived ? `(A) ${this.name}` : this.name;
-    },
+    }
   },
   methods: {
     updateName(name) {
-      this.$emit('update', { 'repository_row': { name: name } });
-    },
-  },
+      this.$emit('update', { repository_row: { name } });
+    }
+  }
 };
 </script>

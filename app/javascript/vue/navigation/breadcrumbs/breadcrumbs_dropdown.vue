@@ -41,7 +41,7 @@
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar';
 
 export default {
-  name: "BreadcrumbsDropdown",
+  name: 'BreadcrumbsDropdown',
   props: {
     items: Array,
     delimiterUrl: String

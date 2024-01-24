@@ -27,54 +27,54 @@
 </template>
 
 <script>
-  export default {
-    name: 'TableNameModal',
-    props: {
-      element: {
-        type: Object,
-        required: true
-      }
+export default {
+  name: 'TableNameModal',
+  props: {
+    element: {
+      type: Object,
+      required: true
+    }
+  },
+  data() {
+    return {
+      name: null
+    };
+  },
+  computed: {
+    defaultName() {
+      return this.i18n.t('protocols.steps.table.default_name', { position: this.element.attributes.position + 1 });
     },
-    data() {
-      return {
-        name: null
-      }
+    error() {
+      return !this.name;
+    }
+  },
+  mounted() {
+    this.initModal();
+    $(this.$refs.modal).modal('show');
+  },
+  methods: {
+    initModal() {
+      this.name = this.defaultName;
+      $(this.$refs.modal).on('shown.bs.modal', () => {
+        $(this.$refs.input).focus();
+      });
     },
-    computed: {
-      defaultName() {
-        return this.i18n.t('protocols.steps.table.default_name', { position: this.element.attributes.position + 1 });
-      },
-      error() {
-        return !this.name;
-      }
+    cancel() {
+      this.hide(() => {
+        this.$emit('cancel');
+      });
     },
-    mounted() {
-      this.initModal();
-      $(this.$refs.modal).modal('show');
+    update() {
+      this.hide(() => {
+        this.$emit('update', this.name);
+      });
     },
-    methods: {
-      initModal() {
-        this.name = this.defaultName;
-        $(this.$refs.modal).on('shown.bs.modal', () => {
-          $(this.$refs.input).focus();
-        });
-      },
-      cancel() {
-        this.hide(() => {
-          this.$emit('cancel');
-        });
-      },
-      update() {
-       this.hide(() => {
-          this.$emit('update', this.name);
-       })
-      },
-      hide(callback) {
-        $(this.$refs.modal).on('hidden.bs.modal', () => {
-          callback();
-        });
-        $(this.$refs.modal).modal('hide');
-      }
+    hide(callback) {
+      $(this.$refs.modal).on('hidden.bs.modal', () => {
+        callback();
+      });
+      $(this.$refs.modal).modal('hide');
     }
   }
+};
 </script>

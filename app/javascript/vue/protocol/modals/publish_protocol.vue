@@ -30,30 +30,30 @@
     </div>
   </div>
 </template>
- <script>
-  export default {
-    name: 'publishProtocol',
-    props: {
-      protocol: {
-        type: Object,
-        required: true
-      }
+<script>
+export default {
+  name: 'publishProtocol',
+  props: {
+    protocol: {
+      type: Object,
+      required: true
+    }
+  },
+  mounted() {
+    $(this.$refs.modal).modal('show');
+    $(this.$refs.modal).on('hidden.bs.modal', () => {
+      this.$emit('cancel');
+    });
+    $(this.$refs.textarea).focus();
+  },
+  methods: {
+    confirm() {
+      $(this.$refs.modal).modal('hide');
+      this.$emit('publish', this.protocol.attributes.version_comment);
     },
-    mounted() {
-      $(this.$refs.modal).modal('show');
-      $(this.$refs.modal).on('hidden.bs.modal', () => {
-        this.$emit('cancel');
-      });
-      $(this.$refs.textarea).focus();
-    },
-    methods: {
-      confirm() {
-        $(this.$refs.modal).modal('hide');
-        this.$emit('publish', this.protocol.attributes.version_comment);
-      },
-      cancel() {
-        $(this.$refs.modal).modal('hide');
-      }
+    cancel() {
+      $(this.$refs.modal).modal('hide');
     }
   }
+};
 </script>

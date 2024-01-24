@@ -35,13 +35,13 @@
 </template>
 
 <script>
-import SelectSearch from "../../shared/select_search.vue";
-import repositoryValueMixin from "./mixins/repository_value.js";
+import SelectSearch from '../../shared/select_search.vue';
+import repositoryValueMixin from './mixins/repository_value.js';
 
 export default {
-  name: "RepositoryListValue",
+  name: 'RepositoryListValue',
   components: {
-    "select-search": SelectSearch
+    'select-search': SelectSearch
   },
   mixins: [repositoryValueMixin],
   props: {
@@ -51,7 +51,7 @@ export default {
     colVal: Object,
     optionsPath: String,
     permissions: null,
-    inArchivedRepositoryRow: Boolean,
+    inArchivedRepositoryRow: Boolean
   },
   data() {
     return {
@@ -69,9 +69,9 @@ export default {
   mounted() {
     this.isLoading = true;
 
-    $.get(this.optionsPath, data => {
+    $.get(this.optionsPath, (data) => {
       if (Array.isArray(data)) {
-        this.options = data.map(option => {
+        this.options = data.map((option) => {
           const { value, label } = option;
           return [value, label];
         });
@@ -86,9 +86,7 @@ export default {
   methods: {
     changeSelected(value) {
       this.selected = value;
-      if (value) {
-        this.update(value);
-      }
+      this.update(value);
     }
   }
 };

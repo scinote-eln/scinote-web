@@ -4,13 +4,16 @@ json.id @repository_row.id
 json.repository do
   json.id @repository.id
   json.name @repository.name
+  json.is_snapshot @repository.is_a?(RepositorySnapshot)
 end
+json.notification @notification
 
 json.update_path update_cell_repository_repository_row_path(@repository, @repository_row)
 
 json.permissions do
   json.can_export_repository_stock can_export_repository_stock?(@repository)
   json.can_manage can_manage_repository_rows?(@repository) if @repository.is_a?(Repository)
+  json.can_connect_rows can_connect_repository_rows?(@repository) if @repository.is_a?(Repository)
 end
 
 json.actions do
@@ -26,6 +29,12 @@ json.actions do
   elsif @repository.has_stock_management?
     json.stock_value_url new_repository_stock_repository_repository_row_url(@repository, @repository_row)
   end
+  json.row_connections do
+    json.inventories_url repository_row_connections_repositories_url
+    json.inventory_items_url repository_rows_repository_repository_row_repository_row_connections_path(@repository,
+                                                                                                       @repository_row)
+    json.create_url repository_repository_row_repository_row_connections_url(@repository, @repository_row)
+  end
 end
 
 json.default_columns do
@@ -37,6 +46,39 @@ json.default_columns do
   if @repository_row.archived?
     json.archived_on I18n.l(@repository_row.archived_on, format: :full)
     json.archived_by @repository_row.archived_by
+  end
+end
+
+json.relationships do
+  json.parents_count @repository_row.parent_connections_count
+  json.children_count @repository_row.child_connections_count
+  json.parents do
+    json.array! @repository_row.parent_repository_rows.preload(:repository).each do |parent|
+      json.id parent.id
+      json.code parent.code
+      json.name parent.name_with_label
+      json.path repository_repository_row_path(parent.repository, parent)
+      json.repository_name parent.repository.name_with_label
+      json.repository_path repository_path(parent.repository)
+      json.unlink_path repository_repository_row_repository_row_connection_path(parent.repository,
+                                                                                parent,
+                                                                                @repository_row.parent_connections
+                                                                                               .find_by(parent: parent))
+    end
+  end
+  json.children do
+    json.array! @repository_row.child_repository_rows.preload(:repository).each do |child|
+      json.id child.id
+      json.code child.code
+      json.name child.name_with_label
+      json.path repository_repository_row_path(child.repository, child)
+      json.repository_name child.repository.name_with_label
+      json.repository_path repository_path(child.repository)
+      json.unlink_path repository_repository_row_repository_row_connection_path(child.repository,
+                                                                                child,
+                                                                                @repository_row.child_connections
+                                                                                               .find_by(child: child))
+    end
   end
 end
 
@@ -88,4 +130,10 @@ json.assigned_modules do
       json.merge! serialize_assigned_my_module_value(my_module)
     end
   end
+end
+
+json.icons do
+  json.delimiter_path asset_path 'icon_small/navigate_next.svg'
+  json.unlink_path asset_path 'icon_small/unlink.svg'
+  json.notification_path asset_path 'icon_small/info.svg'
 end

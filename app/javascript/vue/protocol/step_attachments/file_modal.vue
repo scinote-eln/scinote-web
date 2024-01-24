@@ -77,88 +77,88 @@
     </div>
   </div>
 </template>
- <script>
-  import StorageUsage from '../storage_usage.vue'
+<script>
+import StorageUsage from '../storage_usage.vue';
 
-  import WopiFileModal from './mixins/wopi_file_modal.js'
+import WopiFileModal from './mixins/wopi_file_modal.js';
 
-  export default {
-    name: 'fileModal',
-    props: {
-      step: Object
-    },
-    data() {
-      return {
-        dragingFile: false,
-        attachmentsChanged: false
+export default {
+  name: 'fileModal',
+  props: {
+    step: Object
+  },
+  data() {
+    return {
+      dragingFile: false,
+      attachmentsChanged: false
+    };
+  },
+  components: { StorageUsage },
+  mixins: [WopiFileModal],
+  mounted() {
+    $(this.$refs.modal).modal('show');
+    MarvinJsEditor.initNewButton('.add-file-modal .new-marvinjs-upload-button', () => {
+      this.attachmentsChanged = true;
+      $(this.$refs.modal).modal('hide');
+    });
+    $(this.$refs.modal).on('hidden.bs.modal', () => {
+      global.removeEventListener('paste', this.onImageFilePaste, false);
+
+      if (this.attachmentsChanged) {
+        this.$emit('attachmentsChanged');
+      } else {
+        this.cancel();
       }
+    });
+    global.addEventListener('paste', this.onImageFilePaste, false);
+  },
+  methods: {
+    cancel() {
+      $(this.$refs.modal).modal('hide');
+      this.$nextTick(() => this.$emit('cancel'));
     },
-    components: {StorageUsage},
-    mixins: [WopiFileModal],
-    mounted() {
-      $(this.$refs.modal).modal('show');
-      MarvinJsEditor.initNewButton('.add-file-modal .new-marvinjs-upload-button', () => {
-        this.attachmentsChanged = true;
-        $(this.$refs.modal).modal('hide');
-      });
-      $(this.$refs.modal).on('hidden.bs.modal', () => {
-        global.removeEventListener('paste', this.onImageFilePaste, false);
-
-        if (this.attachmentsChanged) {
-          this.$emit('attachmentsChanged');
-        } else {
-          this.cancel();
-        }
-      });
-      global.addEventListener('paste', this.onImageFilePaste, false);
-    },
-    methods: {
-      cancel() {
-        $(this.$refs.modal).modal('hide');
-        this.$nextTick(() => this.$emit('cancel'));
-      },
-      onImageFilePaste (pasteEvent) {
-        if (pasteEvent.clipboardData !== false) {
-          let items = pasteEvent.clipboardData.items
-          for (let i = 0; i < items.length; i += 1) {
-            if (items[i].type.indexOf('image') !== -1) {
-              this.$emit('copyPasteImageModal', items[i]);
-              $(this.$refs.modal).modal('hide');
-              return
-            }
-          }
-        }
-      },
-      dropFile(e) {
-        e.stopPropagation();
-        if (e.dataTransfer && e.dataTransfer.files.length) {
-          this.$emit('files', e.dataTransfer.files);
-          $(this.$refs.modal).modal('hide');
-        }
-      },
-      uploadFiles() {
-        this.$emit('files', this.$refs.fileSelector.files);
-        $(this.$refs.modal).modal('hide');
-        this.$parent.$parent.$nextTick(() => {
-          this.$parent.$el.scrollIntoView(false)
-        });
-      },
-      openMarvinJsModal() {
-      },
-      openWopiFileModal() {
-        this.initWopiFileModal(this.step, (_e, data, status) => {
-          if (status === 'success') {
+    onImageFilePaste(pasteEvent) {
+      if (pasteEvent.clipboardData !== false) {
+        const { items } = pasteEvent.clipboardData;
+        for (let i = 0; i < items.length; i += 1) {
+          if (items[i].type.indexOf('image') !== -1) {
+            this.$emit('copyPasteImageModal', items[i]);
             $(this.$refs.modal).modal('hide');
-            this.$emit('attachmentUploaded', data);
-          } else {
-            HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+            return;
           }
-        });
-      },
-      openOVEditor() {
-        $(this.$refs.modal).modal('hide');
-        window.showIFrameModal(this.step.attributes.open_vector_editor_context.new_sequence_asset_url);
+        }
       }
+    },
+    dropFile(e) {
+      e.stopPropagation();
+      if (e.dataTransfer && e.dataTransfer.files.length) {
+        this.$emit('files', e.dataTransfer.files);
+        $(this.$refs.modal).modal('hide');
+      }
+    },
+    uploadFiles() {
+      this.$emit('files', this.$refs.fileSelector.files);
+      $(this.$refs.modal).modal('hide');
+      this.$parent.$parent.$nextTick(() => {
+        this.$parent.$el.scrollIntoView(false);
+      });
+    },
+    openMarvinJsModal() {
+    },
+    openWopiFileModal() {
+      this.initWopiFileModal(this.step, (_e, data, status) => {
+        if (status === 'success') {
+          $(this.$refs.modal).modal('hide');
+          this.$emit('attachmentUploaded', data);
+        } else {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+        }
+      });
+    },
+    openOVEditor() {
+      $(this.$refs.modal).modal('hide');
+      window.showIFrameModal(this.step.attributes.open_vector_editor_context.new_sequence_asset_url);
     }
   }
+};
 </script>

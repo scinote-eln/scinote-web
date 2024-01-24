@@ -8,13 +8,14 @@
         @change="changeSelected"
         @update="update"
         :initialSelectedValues="selectedValues"
+        :shouldUpdateWithoutValues="true"
         :withButtons="true"
         :withEditCursor="true"
         ref="ChecklistSelector"
         :options="checklistItems"
         :placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
         :no-options-placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
-        className="h-[38px] pl-3"
+        className="h-[38px] !pl-3"
         optionsClassName="max-h-[300px]"
       ></checklist-select>
     </div>
@@ -39,14 +40,14 @@
 </template>
 
 <script>
-import ChecklistSelect from "../../shared/checklist_select.vue";
-import repositoryValueMixin from "./mixins/repository_value.js";
+import ChecklistSelect from '../../shared/checklist_select.vue';
+import repositoryValueMixin from './mixins/repository_value.js';
 
 export default {
-  name: "RepositoryChecklistValue",
+  name: 'RepositoryChecklistValue',
   mixins: [repositoryValueMixin],
   components: {
-    "checklist-select": ChecklistSelect
+    'checklist-select': ChecklistSelect
   },
   props: {
     data_type: String,
@@ -67,20 +68,20 @@ export default {
   },
   mounted() {
     this.fetchChecklistItems();
-    if(this.colVal) {
+    if (this.colVal) {
       this.selectedChecklistItems = Array.isArray(this.colVal) ? this.colVal : [this.colVal];
-      this.selectedValues = this.selectedChecklistItems.map(item => item?.value);
+      this.selectedValues = this.selectedChecklistItems.map((item) => item?.value);
     }
   },
   methods: {
     fetchChecklistItems() {
       this.isLoading = true;
 
-      $.get(this.optionsPath, data => {
+      $.get(this.optionsPath, (data) => {
         if (Array.isArray(data)) {
-          this.checklistItems = data.map(option => {
+          this.checklistItems = data.map((option) => {
             const { value, label } = option;
-            return { id: value, label: label };
+            return { id: value, label };
           });
           return false;
         }

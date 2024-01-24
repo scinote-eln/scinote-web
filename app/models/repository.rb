@@ -8,6 +8,9 @@ class Repository < RepositoryBase
   include RepositoryImportParser
   include ArchivableModel
 
+  ID_PREFIX = 'IN'
+  include PrefixedIdModel
+
   enum permission_level: Extends::SHARED_OBJECTS_PERMISSION_LEVELS
 
   belongs_to :archived_by,
@@ -34,6 +37,7 @@ class Repository < RepositoryBase
   after_save :assign_globally_shared_inventories, if: -> { saved_change_to_permission_level? && globally_shared? }
   after_save :unassign_globally_shared_inventories, if: -> { saved_change_to_permission_level? && !globally_shared? }
   after_save :unassign_unshared_items, if: :saved_change_to_permission_level
+  after_save :unlink_unshared_items, if: -> { saved_change_to_permission_level? && !globally_shared? }
 
   validates :name,
             presence: true,
@@ -125,6 +129,7 @@ class Repository < RepositoryBase
       'assigned',
       'repository_rows.id',
       'repository_rows.name',
+      'relationships',
       'repository_rows.created_at',
       'users.full_name',
       'repository_rows.archived_on',
@@ -248,6 +253,30 @@ class Repository < RepositoryBase
                          .where.not(my_module: { experiment: { projects: { team: team } } })
                          .where.not(my_module: { experiment: { projects: { team: teams_shared_with } } })
                          .destroy_all
+  end
+
+  def unlink_unshared_items
+    repository_rows_ids = repository_rows.select(:id)
+    rows_to_unlink = RepositoryRow.joins("LEFT JOIN repository_row_connections \
+                                         ON repository_rows.id = repository_row_connections.parent_id \
+                                         OR repository_rows.id = repository_row_connections.child_id")
+                                  .where("repository_row_connections.parent_id IN (?) \
+                                         OR repository_row_connections.child_id IN (?)",
+                                         repository_rows_ids,
+                                         repository_rows_ids)
+                                  .joins(:repository)
+                                  .where.not(repositories: self)
+                                  .where.not(repositories: { team: team })
+                                  .distinct
+
+    RepositoryRowConnection.where(parent: repository_rows_ids, child: rows_to_unlink)
+                           .destroy_all
+    RepositoryRowConnection.where(child: repository_rows_ids, parent: rows_to_unlink)
+                           .destroy_all
+  end
+
+  def archived_branch?
+    archived?
   end
 
   private

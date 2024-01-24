@@ -60,26 +60,4 @@ module DatabaseHelper
       "AS t WHERE t.id = #{id};"
     ).getvalue(0, 0).to_i
   end
-
-  # Adds a check constraint to the table
-  def add_check_constraint(table, constraint_name, constraint)
-    ActiveRecord::Base.connection.execute(
-      "ALTER TABLE " \
-      "#{table} " \
-      "DROP CONSTRAINT IF EXISTS #{constraint_name}, " \
-      "ADD CONSTRAINT " \
-      "#{constraint_name} " \
-      "CHECK ( #{constraint} ) " \
-      "not valid;"
-    )
-  end
-
-  # Remove constraint from the table
-  def drop_constraint(table, constraint_name)
-    ActiveRecord::Base.connection.execute(
-      "ALTER TABLE " \
-      "#{table} " \
-      "DROP CONSTRAINT IF EXISTS #{constraint_name}; "
-    )
-  end
 end

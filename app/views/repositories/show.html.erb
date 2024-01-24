@@ -8,7 +8,7 @@
   <meta id="cache-directive" name="turbolinks-cache-control" content="no-cache">
 <% end %>
 
-<div class="content-pane repository-show <%=  @repository.archived? || params[:archived] ? "archived" : "active" %>" data-table-url="<%= load_table_repository_path(@repository) %>">
+<div class="content-pane repository-show <%=  @repository.archived? || params[:archived] ? "archived" : "active" %>" data-table-url="<%= load_table_repository_path(@repository) %>" data-e2e="e2e-CO-invInventory-<%= @repository.id %>">
   <div id="repository-toolbar" class="content-header">
     <div class="title-row">
       <% if @repository.active? %>
@@ -60,7 +60,7 @@
   %>
 
   <div id="actionToolbar" data-behaviour="vue">
-    <action-toolbar actions-url="<%= actions_toolbar_repository_rows_url %>" />
+    <action-toolbar actions-url="<%= actions_toolbar_repository_repository_rows_path(@repository) %>" />
   </div>
 </div>
 

@@ -8,25 +8,25 @@
 </template>
 
 <script>
-  export default {
-    name: 'SavedFilterElement',
-    props: {
-      savedFilter: Object,
-      canManageFilters: Boolean
+export default {
+  name: 'SavedFilterElement',
+  props: {
+    savedFilter: Object,
+    canManageFilters: Boolean
+  },
+  methods: {
+    loadFilters() {
+      this.$emit('savedFilter:load', this.savedFilter.attributes.show_url);
     },
-    methods: {
-      loadFilters() {
-        this.$emit('savedFilter:load', this.savedFilter.attributes.show_url)
-      },
-      deleteFilter() {
-        $.ajax({
-          url: this.savedFilter.attributes.delete_url,
-          type: 'DELETE',
-          success: ()=> {
-            this.$emit('savedFilter:delete')
-          }
-        });
-      }
+    deleteFilter() {
+      $.ajax({
+        url: this.savedFilter.attributes.delete_url,
+        type: 'DELETE',
+        success: () => {
+          this.$emit('savedFilter:delete');
+        }
+      });
     }
   }
+};
 </script>

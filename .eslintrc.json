@@ -25,13 +25,13 @@
     "max-len": [
       "error",
       {
-        "code": 120
+        "code": 180
       }
     ],
     "vue/max-len": [
       "error",
       {
-        "code": 120,
+        "code": 180,
         "template": 240,
         "tabWidth": 2
       }

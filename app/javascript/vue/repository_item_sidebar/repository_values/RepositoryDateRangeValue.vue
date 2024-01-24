@@ -16,16 +16,16 @@
 <script>
 import DateTimeComponent from './date_time_component.vue';
 
-  export default {
-    name: 'RepositoryDateRangeValue',
-    components: { DateTimeComponent },
-    props: {
-      data_type: String,
-      colId: Number,
-      colName: String,
-      colVal: Object,
-      updatePath: String,
-      canEdit: { type: Boolean, default: false },
-    }
+export default {
+  name: 'RepositoryDateRangeValue',
+  components: { DateTimeComponent },
+  props: {
+    data_type: String,
+    colId: Number,
+    colName: String,
+    colVal: Object,
+    updatePath: String,
+    canEdit: { type: Boolean, default: false }
   }
+};
 </script>

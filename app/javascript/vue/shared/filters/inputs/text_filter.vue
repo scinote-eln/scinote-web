@@ -5,21 +5,21 @@
 </template>
 
 <script>
-  import inputWithHistory from '../../input_with_history.vue';
+import inputWithHistory from '../../input_with_history.vue';
 
-  export default {
-    name: 'TextFilter',
-    props: {
-      filter: { type: Object, required: true },
-      value: { type: String }
-    },
-    components: {
-      inputWithHistory
-    },
-    methods: {
-      update(value) {
-        this.$emit('update', { key: this.filter.key, value: value });
-      }
+export default {
+  name: 'TextFilter',
+  props: {
+    filter: { type: Object, required: true },
+    value: { type: String }
+  },
+  components: {
+    inputWithHistory
+  },
+  methods: {
+    update(value) {
+      this.$emit('update', { key: this.filter.key, value });
     }
   }
+};
 </script>

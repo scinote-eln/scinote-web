@@ -18,5 +18,37 @@ FactoryBot.define do
       restored_on { Time.zone.now }
       restored_by { created_by }
     end
+
+    trait :with_children do
+      transient do
+        nbr_of_children { 2 }
+      end
+
+      after(:create) do |repository_row, evaluator|
+        evaluator.nbr_of_children.times do
+          child_row_repository = create(:repository)
+          child_row = create(:repository_row, repository: child_row_repository)
+          repository_row.child_connections.create!(child: child_row,
+                                                   created_by: repository_row.created_by,
+                                                   last_modified_by: repository_row.created_by)
+        end
+      end
+    end
+
+    trait :with_parents do
+      transient do
+        nbr_of_parents { 2 }
+      end
+
+      after(:create) do |repository_row, evaluator|
+        evaluator.nbr_of_parents.times do
+          parent_row_repository = create(:repository)
+          parent_row = create(:repository_row, repository: parent_row_repository)
+          repository_row.parent_connections.create!(parent: parent_row,
+                                                    created_by: repository_row.created_by,
+                                                    last_modified_by: repository_row.created_by)
+        end
+      end
+    end
   end
 end

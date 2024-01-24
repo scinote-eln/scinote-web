@@ -37,112 +37,112 @@
 </template>
 
 <script>
-  export default {
-    name: 'DropdownSelector',
-    props: {
-      options: Array,
-      selectorId: String,
-      groupSelector: {
-        type: Boolean,
-        default: false
-      },
-      noEmptyOption: {
-        type: Boolean,
-        default: true
-      },
-      placeholder: {
-        type: String,
-        default: ''
-      },
-      selectedValue: {
-        type: [String, Number, Boolean, Array],
-        default: null
-      },
-      singleSelect: {
-        type: Boolean,
-        default: true
-      },
-      closeOnSelect: {
-        type: Boolean,
-        default: true
-      },
-      selectAppearance: {
-        type: String,
-        default: 'simple'
-      },
-      disableSearch: {
-        type: Boolean,
-        default: false
-      },
-      labelHTML: {
-        type: Boolean,
-        default: false
-      },
-      tagLabel: {
-        type: Function
-      },
-      optionClass: {
-        type: String,
-        default: ''
-      },
-      dataCombineTags: {
-        type: Boolean,
-        default: false
-      },
-      dataSelectMultipleAllSelected: {
-        type: String,
-        default: ''
-      },
-      dataSelectMultipleName: {
-        type: String,
-        default: ''
-      },
-      optionLabel: {
-        type: Function
-      },
-      onOpen: {
-        type: Function
-      },
-      inputTagMode: {
-        type: Boolean,
-        default: false
-      },
-      viewMode: {
-        type: Boolean,
-        default: false
-      },
-      onChange: Function
+export default {
+  name: 'DropdownSelector',
+  props: {
+    options: Array,
+    selectorId: String,
+    groupSelector: {
+      type: Boolean,
+      default: false
+    },
+    noEmptyOption: {
+      type: Boolean,
+      default: true
+    },
+    placeholder: {
+      type: String,
+      default: ''
+    },
+    selectedValue: {
+      type: [String, Number, Boolean, Array],
+      default: null
+    },
+    singleSelect: {
+      type: Boolean,
+      default: true
+    },
+    closeOnSelect: {
+      type: Boolean,
+      default: true
+    },
+    selectAppearance: {
+      type: String,
+      default: 'simple'
+    },
+    disableSearch: {
+      type: Boolean,
+      default: false
+    },
+    labelHTML: {
+      type: Boolean,
+      default: false
+    },
+    tagLabel: {
+      type: Function
+    },
+    optionClass: {
+      type: String,
+      default: ''
+    },
+    dataCombineTags: {
+      type: Boolean,
+      default: false
+    },
+    dataSelectMultipleAllSelected: {
+      type: String,
+      default: ''
+    },
+    dataSelectMultipleName: {
+      type: String,
+      default: ''
+    },
+    optionLabel: {
+      type: Function
+    },
+    onOpen: {
+      type: Function
+    },
+    inputTagMode: {
+      type: Boolean,
+      default: false
+    },
+    viewMode: {
+      type: Boolean,
+      default: false
+    },
+    onChange: Function
 
-    },
-    mounted: function() {
-      dropdownSelector.init(`#${this.selectorId}`, {
-        inputTagMode: this.inputTagMode,
-        optionClass: this.optionClass,
-        optionLabel: this.optionLabel,
-        noEmptyOption: this.noEmptyOption,
-        singleSelect: this.singleSelect,
-        closeOnSelect: this.closeOnSelect,
-        selectAppearance: this.selectAppearance,
-        disableSearch: this.disableSearch,
-        tagLabel: this.tagLabel,
-        labelHTML: this.labelHTML,
-        onOpen: this.onOpen,
-        onChange: () => {
-          if (this.onChange) this.onChange();
-          this.selectChanged(dropdownSelector.getValues(`#${this.selectorId}`))
-        }
-      });
-    },
-    methods: {
-      selectChanged(value) {
-        this.$emit(
-          'dropdown:changed',
-          value
-        );
-      },
-      selectValues(value) {
-        dropdownSelector.selectValues(`#${this.selectorId}`, value);
+  },
+  mounted() {
+    dropdownSelector.init(`#${this.selectorId}`, {
+      inputTagMode: this.inputTagMode,
+      optionClass: this.optionClass,
+      optionLabel: this.optionLabel,
+      noEmptyOption: this.noEmptyOption,
+      singleSelect: this.singleSelect,
+      closeOnSelect: this.closeOnSelect,
+      selectAppearance: this.selectAppearance,
+      disableSearch: this.disableSearch,
+      tagLabel: this.tagLabel,
+      labelHTML: this.labelHTML,
+      onOpen: this.onOpen,
+      onChange: () => {
+        if (this.onChange) this.onChange();
+        this.selectChanged(dropdownSelector.getValues(`#${this.selectorId}`));
       }
+    });
+  },
+  methods: {
+    selectChanged(value) {
+      this.$emit(
+        'dropdown:changed',
+        value
+      );
+    },
+    selectValues(value) {
+      dropdownSelector.selectValues(`#${this.selectorId}`, value);
     }
   }
+};
 </script>

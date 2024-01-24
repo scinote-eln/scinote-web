@@ -38,12 +38,12 @@
 
 <script>
 
-import NavigatorItem from './navigator_item.vue'
+import Vue3DraggableResizable from 'vue3-draggable-resizable';
+import NavigatorItem from './navigator_item.vue';
 import axios from '../../packs/custom_axios.js';
-import Vue3DraggableResizable from 'vue3-draggable-resizable'
 
 export default {
-  name : 'NavigatorContainer',
+  name: 'NavigatorContainer',
   components: {
     NavigatorItem,
     Vue3DraggableResizable
@@ -58,7 +58,7 @@ export default {
       currentItemId: null,
       archived: null,
       width: null
-    }
+    };
   },
   props: {
     reloadCurrentLevel: Boolean,
@@ -90,13 +90,13 @@ export default {
     });
   },
   mounted() {
-    this.$refs.vueResizable.style.width = this.getNavigatorWidth()
+    this.$refs.vueResizable.style.width = this.getNavigatorWidth();
   },
   watch: {
     archived() {
       this.loadTree();
     },
-    reloadCurrentLevel: function() {
+    reloadCurrentLevel() {
       if (this.reloadCurrentLevel && (
         this.currentItemId?.length === 0
           || this.menuItems.filter((item) => item.id === this.currentItemId)
@@ -123,10 +123,10 @@ export default {
         console.error('An error occurred while fetching the data', error);
       }
     },
-    onScrollY({target}) {
+    onScrollY({ target }) {
       this.navigatorYScroll = target.scrollTop;
     },
-    onScrollX({target}) {
+    onScrollX({ target }) {
       this.navigatorXScroll = target.scrollLeft;
     },
     getNavigatorWidth() {
@@ -135,7 +135,7 @@ export default {
     },
     onResizeMove(event) {
       if (event.w > 400) event.w = 400;
-      document.documentElement.style.setProperty('--navigator-navigation-width', event.w + 'px');
+      document.documentElement.style.setProperty('--navigator-navigation-width', `${event.w}px`);
     },
     onResizeStart() {
       document.body.style.cursor = 'url(/images/icon_small/Resize.svg) 0 0, auto';
@@ -150,7 +150,7 @@ export default {
       document.body.style.cursor = 'default';
       $('.sci--layout-navigation-navigator').removeClass('!transition-none');
       $('.sci--layout').removeClass('!transition-none');
-      this.changeNavigatorState(event.w)
+      this.changeNavigatorState(event.w);
     },
     async changeNavigatorState(newWidth) {
       try {
@@ -161,6 +161,6 @@ export default {
         console.error('An error occurred while sending the request', error);
       }
     }
-  },
-}
+  }
+};
 </script>

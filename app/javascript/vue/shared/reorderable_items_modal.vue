@@ -36,53 +36,53 @@
     </div>
   </div>
 </template>
- <script>
-  import Draggable from 'vuedraggable'
+<script>
+import Draggable from 'vuedraggable';
 
-  export default {
-    name: 'ReorderableItems',
-    components: {
-      Draggable
+export default {
+  name: 'ReorderableItems',
+  components: {
+    Draggable
+  },
+  props: {
+    title: {
+      type: String,
+      required: true
     },
-    props: {
-      title: {
-        type: String,
-        required: true
-      },
-      items: {
-        type: Array,
-        required: true,
-      },
-      includeNumbers: {
-        type: Boolean,
-        default: false
-      }
+    items: {
+      type: Array,
+      required: true
     },
-    data() {
-      return {
-        reorderedItems: [...this.items]
-      }
+    includeNumbers: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
+    return {
+      reorderedItems: [...this.items]
+    };
+  },
+  mounted() {
+    window.$(this.$refs.modal).modal('show');
+    window.$(this.$refs.modal).on('hidden.bs.modal', () => {
+      this.close();
+    });
+  },
+  methods: {
+    close() {
+      this.$emit('reorder', this.reorderedItems);
+      this.$emit('close');
     },
-    mounted() {
-      window.$(this.$refs.modal).modal('show');
-      window.$(this.$refs.modal).on('hidden.bs.modal', () => {
-        this.close();
-      })
+    getTitle(item) {
+      const $item_html = $(item.attributes.text);
+      $item_html.remove('table, img');
+      const str = $item_html.text().trim();
+      return str.length > 56 ? `${str.slice(0, 56)}...` : str;
     },
-    methods: {
-      close() {
-        this.$emit('reorder', this.reorderedItems);
-        this.$emit('close');
-      },
-      getTitle(item) {
-        let $item_html = $(item.attributes.text);
-        $item_html.remove('table, img');
-        let str = $item_html.text().trim();
-        return str.length > 56 ? str.slice(0, 56) + "..." : str;
-      },
-      nameWithFallbacks(item) {
-        return this.getTitle(item) || item.attributes.name;
-      }
+    nameWithFallbacks(item) {
+      return this.getTitle(item) || item.attributes.name;
     }
   }
+};
 </script>

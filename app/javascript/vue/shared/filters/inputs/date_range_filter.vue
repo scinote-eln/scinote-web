@@ -26,33 +26,33 @@
 </template>
 
 <script>
-  import DateTimePicker from '../../date_time_picker.vue'
+import DateTimePicker from '../../date_time_picker.vue';
 
-  export default {
-    name: 'DateRangeFilter',
-    props: {
-      filter: { type: Object, required: true }
+export default {
+  name: 'DateRangeFilter',
+  props: {
+    filter: { type: Object, required: true }
+  },
+  components: { DateTimePicker },
+  data() {
+    return {
+      dateFrom: null,
+      dateTo: null
+    };
+  },
+  methods: {
+    updateDateFrom(value) {
+      this.dateFrom = value;
+      this.updateFilter();
     },
-    components: { DateTimePicker },
-    data() {
-      return {
-        dateFrom: null,
-        dateTo: null
-      }
+    updateDateTo(value) {
+      this.dateTo = value;
+      this.updateFilter();
     },
-    methods: {
-      updateDateFrom(value) {
-        this.dateFrom = value;
-        this.updateFilter();
-      },
-      updateDateTo(value) {
-        this.dateTo = value;
-        this.updateFilter();
-      },
-      updateFilter() {
-        this.$emit('update', { key: `${this.filter.key}_from`, value: this.dateFrom });
-        this.$emit('update', { key: `${this.filter.key}_to`, value: this.dateTo });
-      }
+    updateFilter() {
+      this.$emit('update', { key: `${this.filter.key}_from`, value: this.dateFrom });
+      this.$emit('update', { key: `${this.filter.key}_to`, value: this.dateTo });
     }
   }
+};
 </script>

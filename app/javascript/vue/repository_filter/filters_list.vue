@@ -12,19 +12,19 @@
 </template>
 
 <script>
-  import FilterElement from './filter.vue'
+import FilterElement from './filter.vue';
 
-    export default {
-    name: 'FiltersList',
-    props: {
-      filters: Array,
-      my_modules: Array,
-    },
-    components: {FilterElement},
-    methods: {
-      updateFilter(value) {
-        this.$emit('filter:update', value)
-      }
+export default {
+  name: 'FiltersList',
+  props: {
+    filters: Array,
+    my_modules: Array
+  },
+  components: { FilterElement },
+  methods: {
+    updateFilter(value) {
+      this.$emit('filter:update', value);
     }
   }
+};
 </script>

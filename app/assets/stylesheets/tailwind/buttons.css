@@ -1,16 +1,3 @@
-/* Hide arrows on number type input field */
-@layer utilities {
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-
-  input[type=number] {
-    -moz-appearance: textfield;
-  }
-}
-
 @layer components {
   .sci-btn-group {
     @apply inline-flex items-center gap-2 relative;

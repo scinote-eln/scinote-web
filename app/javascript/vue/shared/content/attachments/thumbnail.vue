@@ -1,10 +1,10 @@
 <template>
   <div class="attachment-container asset"
        :data-asset-id="attachment.id"
-       @mouseover="isHovered = true"
-       @mouseleave="isHovered = false"
+       @mouseover="showOptions = true"
+       @mouseleave="handleMouseLeave"
   >
-    <a  :class="{ hidden: isHovered }"
+    <a  :class="{ hidden: showOptions }"
         :href="attachment.attributes.urls.blob"
         class="file-preview-link file-name"
         :id="`modal_link${attachment.id}`"
@@ -12,6 +12,7 @@
         :data-id="attachment.id"
         :data-gallery-view-id="parentId"
         :data-preview-url="attachment.attributes.urls.preview"
+        :data-e2e="`e2e-BT-attachment-${attachment.id}`"
     >
       <div class="attachment-preview" :class= "attachment.attributes.asset_type">
         <img v-if="attachment.attributes.medium_preview !== null"
@@ -27,7 +28,7 @@
         {{ attachment.attributes.file_name }}
       </div>
     </a>
-    <div :class="{ hidden: !isHovered }" class="hovered-thumbnail h-full">
+    <div :class="{ hidden: !showOptions }" class="hovered-thumbnail h-full">
       <a
         :href="attachment.attributes.urls.blob"
         class="file-preview-link file-name"
@@ -98,12 +99,13 @@
       </div>
     </div>
     <ContextMenu
-      v-if="isHovered"
+      v-show="showOptions"
       :attachment="attachment"
       @attachment:viewMode="updateViewMode"
       @attachment:delete="deleteAttachment"
       @attachment:moved="attachmentMoved"
       @attachment:uploaded="reloadAttachments"
+      @menu-visibility-changed="handleMenuVisibilityChange"
       :withBorder="true"
     />
     <deleteAttachmentModal
@@ -121,56 +123,66 @@
 </template>
 
 <script>
-  import AttachmentMovedMixin from './mixins/attachment_moved.js'
-  import ContextMenuMixin from './mixins/context_menu.js'
-  import ContextMenu from './context_menu.vue'
-  import deleteAttachmentModal from './delete_modal.vue'
-  import MoveAssetModal from '../modal/move.vue'
-  import MoveMixin from './mixins/move.js'
+import AttachmentMovedMixin from './mixins/attachment_moved.js';
+import ContextMenuMixin from './mixins/context_menu.js';
+import ContextMenu from './context_menu.vue';
+import deleteAttachmentModal from './delete_modal.vue';
+import MoveAssetModal from '../modal/move.vue';
+import MoveMixin from './mixins/move.js';
 
-  export default {
-    name: 'thumbnailAttachment',
-    mixins: [ContextMenuMixin, AttachmentMovedMixin, MoveMixin],
-    components: { ContextMenu, deleteAttachmentModal, MoveAssetModal},
-    props: {
-      attachment: {
-        type: Object,
-        required: true
-      },
-      parentId: {
-        type: Number,
-        required: true
-      }
+export default {
+  name: 'thumbnailAttachment',
+  mixins: [ContextMenuMixin, AttachmentMovedMixin, MoveMixin],
+  components: { ContextMenu, deleteAttachmentModal, MoveAssetModal },
+  props: {
+    attachment: {
+      type: Object,
+      required: true
     },
-    data() {
-      return {
-        isHovered: false,
-        deleteModal: false
-      };
-    },
-    mounted() {
-      $(this.$nextTick(function() {
-        $(`.attachment-preview img`)
+    parentId: {
+      type: Number,
+      required: true
+    }
+  },
+  data() {
+    return {
+      showOptions: false,
+      isMenuOpen: false,
+      deleteModal: false
+    };
+  },
+  mounted() {
+    $(this.$nextTick(() => {
+      $('.attachment-preview img')
+        .on('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
+        .on('load', (event) => ActiveStoragePreviews.showPreview(event));
+    }));
+  },
+  watch: {
+    isHovered(newValue) {
+      // reload thumbnail on mouse out
+      if (newValue) return;
+
+      $(this.$nextTick(() => {
+        $('.attachment-preview img')
           .on('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
-          .on('load', (event) => ActiveStoragePreviews.showPreview(event))
-      }))
+          .on('load', (event) => ActiveStoragePreviews.showPreview(event));
+      }));
+    }
+  },
+  methods: {
+    openOVEditor(url) {
+      window.showIFrameModal(url);
     },
-    watch: {
-      isHovered: function(newValue) {
-        // reload thumbnail on mouse out
-        if(newValue) return;
-
-        $(this.$nextTick(function() {
-          $(`.attachment-preview img`)
-            .on('error', (event) => ActiveStoragePreviews.reCheckPreview(event))
-            .on('load', (event) => ActiveStoragePreviews.showPreview(event))
-        }))
+    handleMouseLeave() {
+      if (!this.isMenuOpen) {
+        this.showOptions = false;
       }
     },
-    methods: {
-      openOVEditor(url) {
-        window.showIFrameModal(url);
-      }
+    handleMenuVisibilityChange(newValue) {
+      this.isMenuOpen = newValue;
+      this.showOptions = newValue;
     }
   }
+};
 </script>
