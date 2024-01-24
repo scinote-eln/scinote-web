@@ -9,7 +9,7 @@ class AssetSyncController < ApplicationController
   def show
     asset = Asset.find_by(id: params[:asset_id])
 
-    head :forbidden unless asset && can_manage_asset?(asset)
+    render_error(:forbidden) and return unless asset && can_manage_asset?(asset)
 
     asset_sync_token = current_user.asset_sync_tokens.find_or_create_by(asset_id: params[:asset_id])
 
@@ -26,10 +26,9 @@ class AssetSyncController < ApplicationController
 
   def update
     if @asset_sync_token.conflicts?(request.headers['VersionToken'])
-      render(
-        json: AssetSyncTokenSerializer.new(conflicting_asset_copy_token).as_json,
-        status: :conflict
-      )
+      conflict_response = AssetSyncTokenSerializer.new(conflicting_asset_copy_token).as_json
+      error_message = { message: I18n.t('assets.conflict_error', filename: @asset.file.filename) }
+      render json: conflict_response.merge(error_message), status: :conflict
       return
     end
 
@@ -88,6 +87,16 @@ class AssetSyncController < ApplicationController
 
   private
 
+  def render_error(status, filename = nil, message = nil)
+    message ||= if filename.present?
+                  I18n.t('assets.default_error_with_filename', filename: filename)
+                else
+                  I18n.t('assets.default_error')
+                end
+
+    render json: { message: message }, status: status
+  end
+
   def conflicting_asset_copy_token
     Asset.transaction do
       new_asset = @asset.dup
@@ -111,12 +120,12 @@ class AssetSyncController < ApplicationController
   def authenticate_asset_sync_token!
     @asset_sync_token = AssetSyncToken.find_by(token: request.headers['Authentication'])
 
-    head(:unauthorized) and return unless @asset_sync_token&.token_valid?
+    render_error(:unauthorized) and return unless @asset_sync_token&.token_valid?
 
     @asset = @asset_sync_token.asset
     @current_user = @asset_sync_token.user
 
-    head :forbidden unless can_manage_asset?(@asset)
+    render_error(:forbidden, @asset.file.filename) and return unless can_manage_asset?(@asset)
   end
 
   def log_step_activity(type_of, step, project = nil, message_items = {})
