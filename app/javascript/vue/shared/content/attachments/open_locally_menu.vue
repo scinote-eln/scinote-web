@@ -17,7 +17,7 @@
         :btnText="i18n.t('attachments.open_in')"
         :caret="true"
         @open-locally="openLocally"
-        @open-scinote-editor="openImageEditor"
+        @open-image-editor="openImageEditor"
       ></MenuDropdown>
       <a v-else-if="menu.length === 1" class="btn btn-light !bg-sn-white" :href="menu[0].url" :target="menu[0].target" @click="this[this.menu[0].emit]()">
         {{ menu[0].text }}
@@ -69,7 +69,7 @@ export default {
       if (this.attachment.attributes.image_editable) {
         menu.push({
           text: this.i18n.t('assets.file_preview.edit_in_scinote'),
-          emit: 'openScinoteEditor'
+          emit: 'openImageEditor'
         });
       }
 
