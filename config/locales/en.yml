@@ -1547,7 +1547,7 @@ en:
         success_flash: "Successfully moved task(s) to experiment %{experiment}."
         error_flash: "Failed to move task(s) to experiment %{experiment}."
       column_display_modal:
-        title: 'Task data display'
+        title: 'Columns display'
         description: 'Click the eye buttons to hide or show columns in the table'
         id: 'ID'
         task_name: 'Task name'
