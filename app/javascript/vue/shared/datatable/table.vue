@@ -253,11 +253,7 @@ export default {
   watch: {
     reloadingTable() {
       if (this.reloadingTable) {
-        if (this.scrollMode === 'pages') {
-          this.loadData();
-        } else {
-          this.reloadTable();
-        }
+        this.updateTable();
       }
     },
     currentViewRender() {
@@ -316,6 +312,13 @@ export default {
       if (this.tableState) return;
 
       this.gridApi.sizeColumnsToFit();
+    },
+    updateTable() {
+      if (this.scrollMode === 'pages') {
+        this.loadData();
+      } else {
+        this.reloadTable();
+      }
     },
     reloadTable() {
       if (this.dataLoading) return;

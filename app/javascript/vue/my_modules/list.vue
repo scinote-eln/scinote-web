@@ -153,7 +153,8 @@ export default {
       field: 'designated',
       headerName: this.i18n.t('experiments.table.column.assigned_html'),
       sortable: false,
-      cellRenderer: DesignatedUsers
+      cellRenderer: DesignatedUsers,
+      minWidth: 220
     });
     columns.push({
       field: 'tags',
