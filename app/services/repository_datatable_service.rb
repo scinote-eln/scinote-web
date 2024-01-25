@@ -10,7 +10,7 @@ class RepositoryDatatableService
   include MyModulesHelper
   attr_reader :repository_rows, :all_count, :mappings
 
-  PREDEFINED_COLUMNS = %w(row_id row_name added_on added_by archived_on archived_by assigned).freeze
+  PREDEFINED_COLUMNS = %w(row_id row_name added_on added_by archived_on archived_by assigned relationships).freeze
 
   def initialize(repository, params, user, my_module = nil)
     @repository = repository
@@ -154,6 +154,8 @@ class RepositoryDatatableService
       build_row_id_filter_condition(repository_rows, filter_element_params)
     when 'row_name'
       build_name_filter_condition(repository_rows, filter_element_params)
+    when 'relationships'
+      build_relationship_filter_condition(repository_rows, filter_element_params)
     when 'added_on'
       build_added_on_filter_condition(repository_rows, filter_element_params)
     when 'added_by'
@@ -199,6 +201,25 @@ class RepositoryDatatableService
                    "%#{ActiveRecord::Base.sanitize_sql_like(filter_element_params.dig(:parameters, :text))}%")
     else
       raise ArgumentError, 'Wrong operator for RepositoryRow Name!'
+    end
+  end
+
+  def build_relationship_filter_condition(repository_rows, filter_element_params)
+    case filter_element_params[:operator]
+    when 'contains'
+      return repository_rows if filter_element_params.dig(:parameters, :text).blank?
+
+      text = "%#{ActiveRecord::Base.sanitize_sql_like(filter_element_params.dig(:parameters, :text))}%"
+      repository_rows.left_outer_joins(:parent_connections, :child_connections)
+                     .where("('#{RepositoryRow::ID_PREFIX}' || repository_row_connections.parent_id)::text ILIKE ?
+                            OR ('#{RepositoryRow::ID_PREFIX}' || repository_row_connections.child_id)::text ILIKE ?",
+                            text, text)
+    when 'contains_relationship'
+      repository_rows.where('child_connections_count > 0 OR parent_connections_count > 0')
+    when 'doesnt_contain_relationship'
+      repository_rows.where('COALESCE(parent_connections_count, 0) = 0 AND COALESCE(child_connections_count, 0) = 0')
+    else
+      raise ArgumentError, 'Wrong operator for RepositoryRow Relationship!'
     end
   end
 

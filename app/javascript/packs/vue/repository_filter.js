@@ -38,6 +38,16 @@ const DEFAULT_FILTERS = [
   {
     id: 4,
     column: {
+      data_type: 'RepositoryRelationshipValue',
+      id: 'relationships',
+      name: I18n.t('repositories.table.relationships')
+    },
+    data: { operator: 'contains' },
+    isBlank: true
+  },
+  {
+    id: 5,
+    column: {
       data_type: 'RepositoryDateTimeValue',
       id: 'added_on',
       name: I18n.t('repositories.table.added_on')
@@ -46,7 +56,7 @@ const DEFAULT_FILTERS = [
     isBlank: true
   },
   {
-    id: 5,
+    id: 6,
     column: {
       data_type: 'RepositoryUserValue',
       id: 'added_by',
@@ -63,6 +73,7 @@ window.initRepositoryFilter = () => {
     { id: 'assigned', name: I18n.t('repositories.table.assigned_tasks'), data_type: 'RepositoryMyModuleValue' },
     { id: 'row_id', name: I18n.t('repositories.table.id'), data_type: 'RepositoryTextValue' },
     { id: 'row_name', name: I18n.t('repositories.table.row_name'), data_type: 'RepositoryTextValue' },
+    { id: 'relationships', name: I18n.t('repositories.table.relationships'), data_type: 'RepositoryRelationshipValue' },
     { id: 'added_on', name: I18n.t('repositories.table.added_on'), data_type: 'RepositoryDateTimeValue' },
     { id: 'added_by', name: I18n.t('repositories.table.added_by'), data_type: 'RepositoryUserValue' },
     { id: 'archived_by', name: I18n.t('repositories.table.archived_by'), data_type: 'RepositoryUserValue' },

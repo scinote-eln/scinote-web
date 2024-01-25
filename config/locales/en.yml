@@ -1981,6 +1981,8 @@ en:
             operators:
               contains: "Contains"
               does_not_contain: "Doesn’t contain"
+              contains_relationship: "Contains relationships"
+              does_not_contain_relationship: "Doesn’t contain relationships"
               equal_to: "Equal to"
               unequal_to: "Not equal to"
               greater_than: "Greater than"
@@ -2020,6 +2022,8 @@ en:
                 input_placeholder: "Enter text"
               RepositoryTextValue:
                 input_placeholder: "Enter %{name}"
+              RepositoryRelationshipValue:
+                input_placeholder: "Enter related item ID"
               RepositoryNumberValue:
                 input_placeholder: "Enter %{name}"
                 to_placeholder: "To"
