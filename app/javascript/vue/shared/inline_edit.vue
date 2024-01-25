@@ -270,8 +270,8 @@ export default {
       this.newValue = this.$refs.input.value.trim(); // Fix for smart annotation
 
       this.editing = false;
-      this.$emit('editingDisabled');
       this.$emit('update', this.newValue, withKey);
+      this.$emit('editingDisabled');
     },
     refreshTexareaHeight() {
       if (this.editing && !this.singleLine) {

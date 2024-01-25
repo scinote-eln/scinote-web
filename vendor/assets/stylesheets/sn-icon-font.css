@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'SN-icon-font';
-  src:  url('fonts/SN-icon-font.eot?x922k8');
-  src:  url('fonts/SN-icon-font.eot?x922k8#iefix') format('embedded-opentype'),
-    url('fonts/SN-icon-font.woff2?x922k8') format('woff2'),
-    url('fonts/SN-icon-font.ttf?x922k8') format('truetype'),
-    url('fonts/SN-icon-font.woff?x922k8') format('woff'),
-    url('fonts/SN-icon-font.svg?x922k8#SN-icon-font') format('svg');
+  src:  url('fonts/SN-icon-font.eot?y70bbt');
+  src:  url('fonts/SN-icon-font.eot?y70bbt#iefix') format('embedded-opentype'),
+    url('fonts/SN-icon-font.woff2?y70bbt') format('woff2'),
+    url('fonts/SN-icon-font.ttf?y70bbt') format('truetype'),
+    url('fonts/SN-icon-font.woff?y70bbt') format('woff'),
+    url('fonts/SN-icon-font.svg?y70bbt#SN-icon-font') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -397,4 +397,58 @@
 }
 .sn-icon-sequence-editor:before {
   content: "\e97b";
+}
+.sn-icon-file-unknown:before {
+  content: "\e97c";
+}
+.sn-icon-file-eln:before {
+  content: "\e97d";
+}
+.sn-icon-arrow-s-down:before {
+  content: "\e97e";
+}
+.sn-icon-arrow-s-up:before {
+  content: "\e97f";
+}
+.sn-icon-arrow-s-left:before {
+  content: "\e980";
+}
+.sn-icon-arrow-s-right:before {
+  content: "\e981";
+}
+.sn-icon-add-text:before {
+  content: "\e982";
+}
+.sn-icon-add-file:before {
+  content: "\e983";
+}
+.sn-icon-add-photo-camera:before {
+  content: "\e984";
+}
+.sn-icon-link:before {
+  content: "\e985";
+}
+.sn-icon-link-s:before {
+  content: "\e986";
+}
+.sn-icon-unlink:before {
+  content: "\e987";
+}
+.sn-icon-unlink-s:before {
+  content: "\e988";
+}
+.sn-icon-link-italic:before {
+  content: "\e989";
+}
+.sn-icon-link-italic-s:before {
+  content: "\e98a";
+}
+.sn-icon-unlink-italic:before {
+  content: "\e98b";
+}
+.sn-icon-unlink-italic-s:before {
+  content: "\e98c";
+}
+.sn-icon-open:before {
+  content: "\e98d";
 }

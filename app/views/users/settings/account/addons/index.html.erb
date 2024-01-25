@@ -7,7 +7,6 @@
 
     <div>
       <h1 class="addons-title"><%= t('users.settings.account.addons.title') %></h1>
-
       <div>
         <h2 class="addons-subtitle" ><%= t('users.settings.account.addons.scinote_addons') %></h2>
         <div data-hook="settings-addons-container">
@@ -17,6 +16,24 @@
         </div>
       </div>
     </div>
+    <br>
+    <% if ENV['ASSET_SYNC_URL'] %>
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-8 col-sm-9 col-md-9 col-lg-9">
+              <p class="manuscript-title"><%= t('users.settings.account.addons.desktop_app.title') %></p>
+              <p class="manuscript-description">
+                <span><%= t('users.settings.account.addons.desktop_app.description') %></span>
+              </p><br/>
+              <div id="scinoteEditDownload" data-behaviour="vue">
+                <scinote-edit-download data="<%= @user_agent %>">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
     <div class="row printer-settings">
       <div class="col-xs-12 col-sm-12">
         <h2 class="addons-subtitle"><%= t('users.settings.account.addons.label_printers') %></h2>
@@ -66,3 +83,5 @@
   </div>
   <div class="tab-pane tab-pane-settings" role="tabpanel"></div>
 </div>
+
+<%= javascript_include_tag "vue_scinote_edit_download", nonce: true %>

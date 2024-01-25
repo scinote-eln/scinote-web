@@ -1,5 +1,5 @@
 <template>
-  <div class="relative" v-if="listItems.length > 0" v-click-outside="closeMenuAndEmit">
+  <div class="relative" v-if="listItems.length > 0" v-click-outside="closeMenu">
     <button
       ref="openBtn"
       :class="btnClasses"
@@ -79,6 +79,7 @@ export default {
     btnClasses: { type: String, default: 'btn btn-light' },
     btnText: { type: String, required: false },
     btnIcon: { type: String, required: false },
+    title: { type: String, default: '' },
     caret: { type: Boolean, default: false }
   },
   data() {
@@ -92,9 +93,10 @@ export default {
   },
   watch: {
     showMenu(newValue) {
-      if (newValue) {
-        this.$emit('menu-visibility-changed', newValue);
-      }
+      this.$emit('menu-visibility-changed', {
+        isMenuOpen: newValue,
+        showOptions: newValue ? true : null
+      });
 
       if (this.showMenu) {
         this.openUp = false;
@@ -114,14 +116,6 @@ export default {
   methods: {
     closeMenu() {
       this.showMenu = false;
-    },
-    closeMenuAndEmit(event) {
-      const isClickInsideModal = event.target.closest('.modal');
-
-      if (!isClickInsideModal) {
-        this.showMenu = false;
-        this.$emit('menu-visibility-changed', false);
-      }
     },
     handleClick(event, item) {
       if (!item.url) {

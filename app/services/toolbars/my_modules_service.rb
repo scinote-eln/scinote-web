@@ -88,11 +88,7 @@ module Toolbars
     end
 
     def move_action
-      return unless @single
-
-      my_module = @my_modules.first
-
-      return unless can_move_my_module?(my_module)
+      return unless @my_modules.all? { |my_module| can_move_my_module?(my_module) }
 
       {
         name: 'move',

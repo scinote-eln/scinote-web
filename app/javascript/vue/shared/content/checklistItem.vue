@@ -1,6 +1,6 @@
 <template>
-  <div class="content__checklist-item pl-10 ml-[-2.325rem]">
-    <div class="checklist-item-header flex rounded items-center relative w-full group/checklist-item-header" :class="{ 'locked': locked || editingText, 'editing-name': editingText }">
+  <div class="content__checklist-item pl-10 ml-[-2.325rem] group/checklist-item-header">
+    <div class="checklist-item-header flex rounded items-center relative w-full" :class="{ 'locked': locked || editingText, 'editing-name': editingText }">
       <div v-if="reorderChecklistItemUrl"
         class="absolute h-6 cursor-grab justify-center left-[-2.325rem] top-0.5 px-2 tw-hidden text-sn-grey element-grip step-element-grip--draggable"
         :class="{ 'group-hover/checklist-item-header:flex': (!locked && !editingText && draggable) }"
@@ -8,7 +8,8 @@
         <i class="sn-icon sn-icon-drag"></i>
       </div>
       <div class="flex items-start gap-2 grow" :class="{ 'done': checklistItem.attributes.checked }">
-        <div v-if="!inRepository" class="sci-checkbox-container my-1.5 border-0 border-y border-transparent border-solid" :class="{ 'disabled': !toggleUrl }"  :style="toggleUrl && 'pointer-events: initial'">
+        <div v-if="!inRepository" class="sci-checkbox-container my-1.5 border-0 border-y border-transparent border-solid"
+             :class="{ 'disabled': !toggleUrl }"  :style="toggleUrl && 'pointer-events: initial'">
           <input ref="checkbox"
                  type="checkbox"
                  class="sci-checkbox"
@@ -42,9 +43,10 @@
             @delete="removeItem()"
             @keypress="keyPressHandler"
             @blur="onBlurHandler"
-            @paste="pasteHandler"
           />
-          <span v-if="!editingText && (!checklistItem.attributes.urls || deleteUrl)" class="absolute right-0 top-0.5 leading-6 tw-hidden group-hover/checklist-item-header:inline-block !text-sn-blue cursor-pointer" @click="showDeleteModal" tabindex="0">
+          <span v-if="!editingText && (!checklistItem.attributes.urls || deleteUrl)"
+                class="absolute right-0 top-0.5 leading-6 tw-hidden group-hover/checklist-item-header:inline-block !text-sn-blue cursor-pointer"
+                @click="showDeleteModal" tabindex="0">
             <i class="sn-icon sn-icon-delete"></i>
           </span>
         </div>
@@ -127,8 +129,7 @@ export default {
     disableTextEdit() {
       if (this.checklistItem.attributes.isNew) {
         if (this.deleting) return;
-
-        this.removeItem();
+        if (this.checklistItem.attributes.text.length === 0) this.removeItem();
         this.$emit('editEnd');
       }
     },
@@ -162,15 +163,9 @@ export default {
       this.$emit('update', this.checklistItem, withKey);
     },
     keyPressHandler(e) {
-      if (
-        ((e.shiftKey || e.metaKey) && e.key === 'Enter')
-          || ((e.ctrlKey || e.metaKey) && e.key === 'v')
-      ) {
+      if ((e.shiftKey || e.metaKey) && e.key === 'Enter') {
         this.checklistItem.attributes.with_paragraphs = true;
       }
-    },
-    pasteHandler() {
-      this.checklistItem.attributes.with_paragraphs = true;
     }
   }
 };
