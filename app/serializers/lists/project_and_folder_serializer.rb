@@ -5,7 +5,7 @@ module Lists
     include Rails.application.routes.url_helpers
     include Canaid::Helpers::PermissionsHelper
 
-    attributes :name, :code, :created_at, :archived_on, :users, :urls, :folder,
+    attributes :name, :code, :created_at, :archived_on, :users, :urls, :folder, :hidden,
                :folder_info, :default_public_user_role_id, :team, :top_level_assignable
 
     def team
@@ -18,6 +18,10 @@ module Lists
 
     def top_level_assignable
       project?
+    end
+
+    def hidden
+      object.hidden? if project?
     end
 
     def default_public_user_role_id

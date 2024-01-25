@@ -54,6 +54,7 @@
       <button
         v-if="currentViewRender === 'table'"
         @click="showColumnsModal = true"
+        :title="i18n.t('experiments.table.column_display_modal.title')"
         class="btn btn-light icon-btn"
       >
         <i class="sn-icon sn-icon-reports"></i>

@@ -321,6 +321,7 @@ export default {
       if (this.dataLoading) return;
 
       this.dataLoading = true;
+      this.selectedRows = [];
       this.page = 1;
       this.loadData(true);
     },
