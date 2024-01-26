@@ -1,6 +1,6 @@
 <template>
   <div class="flex py-4 items-center justify-between">
-    <div class="flex items-center gap-4">
+    <div class="flex flex-1 items-center gap-4">
       <template v-for="action in toolbarActions.left" :key="action.label">
         <a v-if="action.type === 'emit' || action.type === 'link'"
            :class="action.buttonStyle"
@@ -21,7 +21,7 @@
         ></MenuDropdown>
       </template>
     </div>
-    <div>
+    <div class="flex-none">
       <div class="flex items-center gap-2">
         <MenuDropdown
           v-if="viewRenders"
@@ -43,7 +43,7 @@
         ></MenuDropdown>
       </div>
     </div>
-    <div class="flex items-center gap-2">
+    <div class="flex flex-1 justify-end gap-2">
       <a v-for="action in toolbarActions.right" :key="action.label"
           :class="action.buttonStyle"
           :href="action.path"
@@ -51,16 +51,7 @@
         <i :class="action.icon"></i>
         {{ action.label }}
       </a>
-      <button
-        v-if="currentViewRender === 'table'"
-        @click="showColumnsModal = true"
-        :title="i18n.t('experiments.table.column_display_modal.title')"
-        class="btn btn-light icon-btn"
-      >
-        <i class="sn-icon sn-icon-reports"></i>
-      </button>
-      <div v-if="filters.length == 0"
-           class="sci-input-container-v2"
+      <div class="sci-input-container-v2"
            :class="{'w-48': showSearch, 'w-11': !showSearch}">
         <input
           ref="searchInput"
@@ -76,7 +67,15 @@
         <i v-else class="sn-icon sn-icon-close !m-2.5 !ml-auto right-0 cursor-pointer z-10"
                   @click="$emit('search:change', '')"></i>
       </div>
-      <FilterDropdown v-else :filters="filters" @applyFilters="applyFilters" />
+      <button
+        v-if="currentViewRender === 'table'"
+        @click="showColumnsModal = true"
+        :title="i18n.t('experiments.table.column_display_modal.title')"
+        class="btn btn-light icon-btn"
+      >
+        <i class="sn-icon sn-icon-reports"></i>
+      </button>
+      <FilterDropdown :filters="filters" @applyFilters="applyFilters" />
       <GeneralDropdown v-if="currentViewRender === 'cards'" ref="dropdown" position="right">
         <template v-slot:field>
           <button class="btn btn-light icon-btn">

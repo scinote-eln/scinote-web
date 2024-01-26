@@ -59,6 +59,10 @@ module Lists
       records = records.archived if @params[:view_mode] == 'archived'
       records = records.active if @params[:view_mode] == 'active'
 
+      if @params[:search].present?
+        records = records.where_attributes_like(['projects.name', Project::PREFIXED_ID_SQL], @params[:search])
+      end
+
       if @filters[:query].present?
         records = records.where_attributes_like(['projects.name', Project::PREFIXED_ID_SQL], @filters[:query])
       end
@@ -85,6 +89,7 @@ module Lists
       records = records.archived if @params[:view_mode] == 'archived'
       records = records.active if @params[:view_mode] == 'active'
       records = records.where_attributes_like('project_folders.name', @filters[:query]) if @filters[:query].present?
+      records = records.where_attributes_like('project_folders.name', @params[:search]) if @params[:search].present?
       records
     end
 
