@@ -686,6 +686,11 @@ var RepositoryDatatable = (function(global) {
         targets: 5,
         class: 'added-on',
         visible: true
+      },{
+        // Added by column
+        targets: 6,
+        class: 'added-by',
+        visible: true
       }, {
         targets: '_all',
         render: function(data) {
@@ -776,8 +781,8 @@ var RepositoryDatatable = (function(global) {
             var state = localStorage.getItem(`datatables_repositories_state/${repositoryId}/${viewType}`);
 
             json.state.start = state !== null ? JSON.parse(state).start : 0;
-            if (json.state.columns[6]) json.state.columns[6].visible = archived;
             if (json.state.columns[7]) json.state.columns[7].visible = archived;
+            if (json.state.columns[8]) json.state.columns[8].visible = archived;
             if (json.state.search) delete json.state.search;
 
             if (json.state.ColSizes && json.state.ColSizes.length > 0) {
