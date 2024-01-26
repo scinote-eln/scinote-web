@@ -203,6 +203,7 @@ export default {
     extendedColumnDefs() {
       const columns = this.columnDefs.map((column) => ({
         ...column,
+        minWidth: column.minWidth || 110,
         cellRendererParams: {
           dtComponent: this
         },
@@ -285,6 +286,8 @@ export default {
   },
   methods: {
     handleScroll() {
+      if (this.scrollMode === 'pages') return;
+
       let target = null;
       if (this.currentViewRender === 'cards') {
         target = this.$refs.cardsContainer;
@@ -315,7 +318,7 @@ export default {
     resize() {
       if (this.tableState) return;
 
-      this.gridApi.sizeColumnsToFit();
+      this.columnApi?.autoSizeAllColumns();
     },
     reloadTable() {
       if (this.dataLoading) return;
