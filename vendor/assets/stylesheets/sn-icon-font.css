@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'SN-icon-font';
-  src:  url('fonts/SN-icon-font.eot?y70bbt');
-  src:  url('fonts/SN-icon-font.eot?y70bbt#iefix') format('embedded-opentype'),
-    url('fonts/SN-icon-font.woff2?y70bbt') format('woff2'),
-    url('fonts/SN-icon-font.ttf?y70bbt') format('truetype'),
-    url('fonts/SN-icon-font.woff?y70bbt') format('woff'),
-    url('fonts/SN-icon-font.svg?y70bbt#SN-icon-font') format('svg');
+  src:  url('fonts/SN-icon-font.eot?h4j5vh');
+  src:  url('fonts/SN-icon-font.eot?h4j5vh#iefix') format('embedded-opentype'),
+    url('fonts/SN-icon-font.woff2?h4j5vh') format('woff2'),
+    url('fonts/SN-icon-font.ttf?h4j5vh') format('truetype'),
+    url('fonts/SN-icon-font.woff?h4j5vh') format('woff'),
+    url('fonts/SN-icon-font.svg?h4j5vh#SN-icon-font') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -451,4 +451,22 @@
 }
 .sn-icon-open:before {
   content: "\e98d";
+}
+.sn-icon-history-search:before {
+  content: "\e98e";
+}
+.sn-icon-item:before {
+  content: "\e98f";
+}
+.sn-icon-move-arrows:before {
+  content: "\e990";
+}
+.sn-icon-refresh:before {
+  content: "\e992";
+}
+.sn-icon-pin:before {
+  content: "\e993";
+}
+.sn-icon-pinned:before {
+  content: "\e994";
 }
