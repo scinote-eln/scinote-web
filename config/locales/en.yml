@@ -2792,6 +2792,7 @@ en:
             printer_details: "Printer details"
             details: "Details"
             enter_api_key: "Enter API key"
+            set_up: "Set up"
             enabled: "Enabled"
           fluics_printer:
             title: "FLUICS Print"
