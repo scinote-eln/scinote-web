@@ -224,7 +224,7 @@
       },
       createdRow: addAttributesToRow,
       initComplete: function(settings) {
-        initActionToolbar();
+        window.initActionToolbar();
         actionToolbarComponent.setBottomOffset(68);
 
         const { nTableWrapper: dataTableWrapper } = settings;
