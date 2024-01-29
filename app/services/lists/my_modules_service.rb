@@ -30,6 +30,10 @@ module Lists
     end
 
     def filter_records
+      if @params[:search].present?
+        @records = @records.where_attributes_like(['my_modules.name', MyModule::PREFIXED_ID_SQL], @params[:search])
+      end
+
       @filters.each do |name, value|
         __send__("#{name}_filter", value) if value.present?
       end
