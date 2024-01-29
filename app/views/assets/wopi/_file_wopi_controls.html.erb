@@ -7,9 +7,10 @@
     <%= wopi_button_text(asset, 'edit') %>
   <% end %>
 <% else %>
-  <%= content_tag :div, '',
+  <%= content_tag :button, '',
           id: 'wopi_file_edit_button',
-          class: 'btn btn-light',
+          class: 'btn btn-light  cursor-not-allowed',
+          style: "pointer-events: all;",
           target: '_blank',
           title: title,
           disabled: true do %>
