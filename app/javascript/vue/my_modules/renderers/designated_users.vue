@@ -24,14 +24,18 @@
                 :placeholder="i18n.t('experiments.table.search')" />
         <i class="sn-icon sn-icon-search"></i>
       </div>
-      <div class="max-h-80 overflow-y-auto">
+      <div class="h-64 overflow-y-auto">
         <div v-for="user in allUsers"
-             :key="user.value"
-             @click="selectUser(user)"
-             :class="{ '!bg-sn-super-light-blue': selectedUsers.includes(user.value) }"
-             class="whitespace-nowrap rounded px-3 py-2.5 flex items-center gap-2
+            :key="user.value"
+            @click="selectUser(user)"
+            :class="{ '!bg-sn-super-light-blue': selectedUsers.includes(user.value) }"
+            class="whitespace-nowrap rounded px-3 py-2.5 flex items-center gap-2
                     hover:no-underline cursor-pointer hover:bg-sn-super-light-grey leading-5"
           >
+            <div class="sci-checkbox-container">
+              <input type="checkbox" class="sci-checkbox" :checked="selectedUsers.includes(user.value)" />
+              <label class="sci-checkbox-label"></label>
+            </div>
             <img :src="user.params.avatar_url" class="w-7 h-7" />
             {{ user.label }}
         </div>
@@ -95,7 +99,7 @@ export default {
     closeFlyout() {
       this.query = '';
       if (this.changed) {
-        this.params.dtComponent.loadData();
+        this.params.dtComponent.updateTable();
         this.changed = false;
       }
     },
@@ -115,7 +119,8 @@ export default {
             my_module_id: this.params.data.id,
             user_id: user.value
           }
-        }).then(() => {
+        }).then((response) => {
+          this.allUsers.find((u) => u.value === user.value).params.unassign_url = response.data.unassign_url;
           this.selectedUsers.push(user.value);
         });
       }
