@@ -106,7 +106,6 @@ export default {
     const columns = [
       {
         field: 'name',
-        flex: 1,
         headerName: this.i18n.t('experiments.table.column.task_name_html'),
         sortable: true,
         cellRenderer: this.nameRenderer
