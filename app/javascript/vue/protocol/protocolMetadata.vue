@@ -135,10 +135,11 @@ export default {
       });
     },
     updateKeywords(keywords) {
+      const uniqueKeywords = [...new Set(keywords.map((kw) => kw.trim()).filter((kw) => !!kw))];
       $.ajax({
         type: 'PATCH',
         url: this.protocol.attributes.urls.update_protocol_keywords_url,
-        data: { keywords },
+        data: { keywords: uniqueKeywords },
         success: (result) => {
           this.$emit('update', result.data.attributes);
         }
