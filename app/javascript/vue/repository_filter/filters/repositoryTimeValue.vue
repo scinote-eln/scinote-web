@@ -11,11 +11,19 @@
     </div>
     <template v-if="!isPreset">
       <div class="filter-datepicker-input">
-        <DateTimePicker @change="updateDate" :data-e2e="`e2e-TP-invInventoryFilterCO-input${this.filter.column.id}`" :selectorId="`TimePicker${filter.id}`" :mode="'time'"  :defaultValue="date || fallbackDate()" />
+        <DateTimePicker @change="updateDate"
+                        :data-e2e="`e2e-TP-invInventoryFilterCO-input${this.filter.column.id}`"
+                        :selectorId="`TimePicker${filter.id}`"
+                        :mode="'time'"
+                        :defaultValue="date" />
       </div>
       <span class="between-delimiter" v-if="operator == 'between'">—</span>
       <div class="filter-datepicker-to-input" v-if="operator == 'between'">
-        <DateTimePicker @change="updateDateTo" :data-e2e="`e2e-TP-invInventoryFilterCO-inputUpdate${this.filter.column.id}`" :selectorId="`TimePickerTo${filter.id}`" :mode="'time'" :defaultValue="dateTo || fallbackDate(7 * 24 * 60 * 60)" />
+        <DateTimePicker @change="updateDateTo"
+                        :data-e2e="`e2e-TP-invInventoryFilterCO-inputUpdate${this.filter.column.id}`"
+                        :selectorId="`TimePickerTo${filter.id}`"
+                        :mode="'time'"
+                        :defaultValue="dateTo" />
       </div>
     </template>
   </div>
