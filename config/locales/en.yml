@@ -3676,13 +3676,15 @@ en:
         submit: "Grant access"
         submit_singular: "Grant access to 1 member"
         submit_plural: "Grant access to {num} members"
-        find_people_html: "Find people"
+        find_people_html: "Search members"
+        grant_access: "Grant new access"
+        people_with_access: "People with access"
       new_protocol_assignments_form:
         title: "Select members"
         submit: "Grant access"
         submit_singular: "Grant access to 1 member"
         submit_plural: "Grant access to {num} members"
-        find_people_html: "Find people"
+        find_people_html: "Search members"
       experiment_member_field:
         reset: "Inherit role"
         reset_description: "The inherited role from project will be applied"

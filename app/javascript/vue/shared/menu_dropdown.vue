@@ -9,7 +9,7 @@
     <teleport to="body">
       <div ref="flyout"
           v-if="isOpen"
-          class="fixed z-[3000] bg-sn-white inline-block rounded p-2.5 sn-shadow-menu-sm flex flex-col gap-[1px]"
+          class="fixed z-[3000] sn-menu-dropdown bg-sn-white inline-block rounded p-2.5 sn-shadow-menu-sm flex flex-col gap-[1px]"
           :class="{
               'right-0': position === 'right',
               'left-0': position === 'left',

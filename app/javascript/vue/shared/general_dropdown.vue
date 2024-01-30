@@ -1,6 +1,6 @@
 <template>
   <div class="relative" v-click-outside="closeMenu" >
-    <div ref="field" class="cursor-pointer" @click.stop="isOpen = !isOpen">
+    <div ref="field" class="cursor-pointer" @click.stop="isOpen = (!isOpen || fieldOnlyOpen)">
       <slot name="field"></slot>
     </div>
     <teleport to="body">
@@ -34,7 +34,8 @@ export default {
     btnIcon: { type: String, required: false },
     caret: { type: Boolean, default: false },
     alwaysShow: { type: Boolean, default: false },
-    closeDropdown: { type: Boolean, default: false }
+    closeDropdown: { type: Boolean, default: false },
+    fieldOnlyOpen: { type: Boolean, default: false }
   },
   data() {
     return {
@@ -59,7 +60,7 @@ export default {
   },
   methods: {
     closeMenu(e) {
-      if (e && e.target.closest('.sn-dropdown, .sn-select-dropdown, .dp__instance_calendar')) return;
+      if (e && e.target.closest('.sn-dropdown, .sn-select-dropdown, .sn-menu-dropdown, .dp__instance_calendar')) return;
       this.isOpen = false;
     }
   }
