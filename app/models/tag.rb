@@ -16,7 +16,7 @@ class Tag < ApplicationRecord
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User', optional: true
   belongs_to :project
   has_many :my_module_tags, inverse_of: :tag, dependent: :destroy
-  has_many :my_modules, through: :my_module_tags
+  has_many :my_modules, through: :my_module_tags, dependent: :destroy
 
   def self.search(user,
                   include_archived,

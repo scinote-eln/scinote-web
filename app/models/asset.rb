@@ -26,22 +26,15 @@ class Asset < ApplicationRecord
   validate :wopi_filename_valid, on: :wopi_file_creation
   validate :check_file_size, on: :on_api_upload
 
-  belongs_to :created_by,
-             foreign_key: 'created_by_id',
-             class_name: 'User',
-             optional: true
-  belongs_to :last_modified_by,
-             foreign_key: 'last_modified_by_id',
-             class_name: 'User',
-             optional: true
+  belongs_to :created_by, class_name: 'User', optional: true
+  belongs_to :last_modified_by, class_name: 'User', optional: true
   belongs_to :team, optional: true
   has_one :step_asset, inverse_of: :asset, dependent: :destroy
-  has_one :step, through: :step_asset, touch: true, dependent: :nullify
+  has_one :step, through: :step_asset, touch: true
   has_one :result_asset, inverse_of: :asset, dependent: :destroy
-  has_one :result, through: :result_asset, touch: true, dependent: :nullify
+  has_one :result, through: :result_asset, touch: true
   has_one :repository_asset_value, inverse_of: :asset, dependent: :destroy
-  has_one :repository_cell, through: :repository_asset_value,
-    dependent: :nullify
+  has_one :repository_cell, through: :repository_asset_value
   has_many :report_elements, inverse_of: :asset, dependent: :destroy
   has_one :asset_text_datum, inverse_of: :asset, dependent: :destroy
   has_many :asset_sync_tokens, dependent: :destroy
