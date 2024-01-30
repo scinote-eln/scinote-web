@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_15_114821) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_15_140943) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -74,6 +74,19 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_15_114821) do
     t.jsonb "filter", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "asset_sync_tokens", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "asset_id", null: false
+    t.string "token"
+    t.datetime "expires_at", precision: nil
+    t.datetime "revoked_at", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["asset_id"], name: "index_asset_sync_tokens_on_asset_id"
+    t.index ["token"], name: "index_asset_sync_tokens_on_token", unique: true
+    t.index ["user_id"], name: "index_asset_sync_tokens_on_user_id"
   end
 
   create_table "asset_text_data", force: :cascade do |t|
@@ -1325,6 +1338,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_15_114821) do
   add_foreign_key "activities", "my_modules"
   add_foreign_key "activities", "projects"
   add_foreign_key "activities", "users", column: "owner_id"
+  add_foreign_key "asset_sync_tokens", "assets"
+  add_foreign_key "asset_sync_tokens", "users"
   add_foreign_key "asset_text_data", "assets"
   add_foreign_key "assets", "users", column: "created_by_id"
   add_foreign_key "assets", "users", column: "last_modified_by_id"

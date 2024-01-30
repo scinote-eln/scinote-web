@@ -81,11 +81,7 @@ module Toolbars
     end
 
     def move_action
-      return unless @single
-
-      experiment = @experiments.first
-
-      return unless can_move_experiment?(experiment)
+      return unless @experiments.all? { |experiment| can_move_experiment?(experiment) }
 
       {
         name: 'move',

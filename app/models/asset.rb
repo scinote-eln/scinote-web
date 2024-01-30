@@ -44,6 +44,7 @@ class Asset < ApplicationRecord
     dependent: :nullify
   has_many :report_elements, inverse_of: :asset, dependent: :destroy
   has_one :asset_text_datum, inverse_of: :asset, dependent: :destroy
+  has_many :asset_sync_tokens, dependent: :destroy
 
   scope :sort_assets, lambda { |sort_value = 'new'|
     sort = case sort_value
@@ -463,6 +464,10 @@ class Asset < ApplicationRecord
 
   def my_module
     (result || step)&.my_module
+  end
+
+  def parent
+    step || result || repository_cell
   end
 
   private

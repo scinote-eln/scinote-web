@@ -1,6 +1,6 @@
 <template>
   <div class="relative" v-if="listItems.length > 0 || alwaysShow" v-click-outside="closeMenu" >
-    <button ref="field" :class="btnClasses" @click="isOpen = !isOpen">
+    <button ref="field" :class="btnClasses" :title="title" @click="isOpen = !isOpen">
       <i v-if="btnIcon" :class="btnIcon"></i>
       {{ btnText }}
       <i v-if="caret && isOpen" class="sn-icon sn-icon-up"></i>
@@ -74,7 +74,8 @@ export default {
     btnText: { type: String, required: false },
     btnIcon: { type: String, required: false },
     caret: { type: Boolean, default: false },
-    alwaysShow: { type: Boolean, default: false }
+    alwaysShow: { type: Boolean, default: false },
+    title: { type: String, default: '' }
   },
   data() {
     return {
@@ -88,14 +89,6 @@ export default {
   methods: {
     closeMenu() {
       this.isOpen = false;
-    },
-    closeMenuAndEmit(event) {
-      const isClickInsideModal = event.target.closest('.modal');
-
-      if (!isClickInsideModal) {
-        this.showMenu = false;
-        this.$emit('menu-visibility-changed', false);
-      }
     },
     handleClick(event, item) {
       if (!item.url) {

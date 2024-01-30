@@ -1,0 +1,115 @@
+<div class="modal" id="protocol-versions-modal" class="protocol-versions-modal" tabindex="-1" role="dialog" aria-labelledby="protocol-versions-modal-label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
+        <h4 class="modal-title" id="protocol-versions-modal-label">
+          <%= t('protocols.index.versions.title', protocol: @protocol.name) %>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <% if @protocol.initial_draft? || @protocol.draft.present? %>
+          <% draft = @protocol.initial_draft? ? @protocol : @protocol.draft %>
+          <div class="protocol-version-row">
+            <div class="protocol-version-metadata">
+              <div class="protocol-link">
+                <%= link_to protocol_path(draft) do %>
+                  <% if draft.previous_version %>
+                    <%= t('protocols.index.versions.draft_html', parent_version: draft.previous_version.version_number) %>
+                  <% else %>
+                    <%= t('protocols.index.versions.first_draft_html') %>
+                  <% end %>
+                <% end %>
+              </div>
+              <div class="protocol-metadata">
+                <% if draft.last_modified_by.present? %>
+                  <%= t('protocols.index.versions.draft_full_modification_info',
+                        modified_on: draft.updated_at.present? ? l(draft.updated_at, format: :full_date) : '',
+                        modified_by: draft.last_modified_by&.full_name) %>
+                <% else %>
+                    <%= t('protocols.index.versions.draft_update_modification_info',
+                          modified_on: draft.updated_at.present? ? l(draft.updated_at, format: :full_date) : '') %>
+                <%end%>
+              </div>
+              <div class="protocol-actions">
+                <% if can_publish_protocol_in_repository?(draft) %>
+                  <%= button_to publish_protocol_path(draft),
+                                params: { view: 'show' },
+                                class: 'btn btn-light publish-draft',
+                                method: :post do %>
+                    <%= image_tag 'icon_small/publish.svg' %>
+                    <%= t('protocols.index.versions.publish') %>
+                  <% end %>
+                <% end %>
+                <% if can_delete_protocol_draft_in_repository?(draft) %>
+                  <div data-url="<%= destroy_draft_protocol_path(draft) %>" class="btn btn-light delete-draft">
+                    <i class="sn-icon sn-icon-delete"></i>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+            <div class="protocol-version-comment">
+              <% if can_manage_protocol_draft_in_repository?(draft) && can_publish_protocol_in_repository?(draft) %>
+                <div
+                    class="protocol-comment-container inline-init-handler"
+                    data-field-to-update="version_comment"
+                    data-params-group="protocol"
+                    data-path-to-update="<%= update_version_comment_protocol_path(draft) %>"
+                    data-original-name="<%= draft.version_comment %>"
+                    data-response-field="version_comment"
+                    data-edit-mode="0"
+                  >
+                  <div class="protocol-comment-message sci-input-container">
+                    <div class="view-mode" data-placeholder="<%= t('protocols.index.versions.comment_placeholder') %>"><%= draft.version_comment %></div>
+                    <%= text_area_tag 'version_comment', draft.version_comment, disabled: true, class: 'smart-text-area hidden sci-input-field' %>
+                  </div>
+                  <div class="edit-buttons">
+                    <span class="cancel-button btn btn-secondary"><%= t('general.cancel') %></span>
+                    <span class="save-button btn btn-primary"><%= t('general.save') %></span>
+                  </div>
+                </div>
+              <% else %>
+                <%= draft.version_comment %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+        <% @published_versions.each do |protocol_version| %>
+          <div class="protocol-version-row">
+            <div class="protocol-version-metadata">
+              <div class="protocol-link">
+                <%= link_to protocol_path(protocol_version) do %>
+                  <b><%= t('protocols.index.versions.revision', version: protocol_version.version_number) %></b>
+                <% end %>
+              </div>
+              <div class="protocol-metadata">
+                <%= t('protocols.index.versions.revision_publishing_info',
+                      published_on: protocol_version.published_on.present? ? l(protocol_version.published_on, format: :full_date) : '',
+                      published_by: protocol_version.published_by&.full_name) %>
+              </div>
+              <div class="protocol-actions">
+                <% if can_save_protocol_version_as_draft?(@protocol) %>
+                  <%= button_to save_as_draft_protocol_path(protocol_version),
+                                class: "btn btn-light icon-btn save-as-draft",
+                                title: t('protocols.index.versions.save_as_draft'),
+                                disabled: @protocol.draft.present?,
+                                method: :post,
+                                data: {
+                                  placement: :left,
+                                  toggle: :tooltip
+                                } do %>
+                    <i class="sn-icon sn-icon-duplicate"></i>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+            <div class="protocol-version-comment">
+              <%= protocol_version.version_comment %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <div class="modal-footer"></div>
+    </div>
+  </div>
+</div>
