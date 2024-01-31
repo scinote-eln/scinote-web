@@ -1551,8 +1551,13 @@ en:
         success_flash: "Successfully moved task(s) to experiment %{experiment}."
         error_flash: "Failed to move task(s) to experiment %{experiment}."
       column_display_modal:
-        title: 'Columns display'
+        title: 'Manage columns'
         description: 'Click the eye buttons to hide or show columns in the table'
+        reset_to_default: 'Reset to default'
+        confirmation:
+          title: 'Reset to defaults'
+          description_html: 'With confirmation the order, width and visibility of columns will be set to the default values.<br><br><b>Are you sure you want to to reset to default?</b>'
+          confirm: 'Reset'
         id: 'ID'
         task_name: 'Task name'
         due_date: 'Due date'

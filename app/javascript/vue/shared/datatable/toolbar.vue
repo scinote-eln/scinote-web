@@ -105,8 +105,21 @@
         :columnDefs="columnDefs"
         @hideColumn="(column) => $emit('hideColumn', column)"
         @showColumn="(column) => $emit('showColumn', column)"
+        @unPinColumn="(column) => $emit('unPinColumn', column)"
+        @pinColumn="(column) => $emit('pinColumn', column)"
+        @reorderColumns="(columns) => $emit('reorderColumns', columns)"
+        @resetToDefault="resetToDefault"
         v-if="showColumnsModal"
         @close="showColumnsModal = false" />
+    </teleport>
+    <teleport to="body">
+      <ConfirmationModal
+        :title="i18n.t('experiments.table.column_display_modal.confirmation.title')"
+        :description="i18n.t('experiments.table.column_display_modal.confirmation.description_html')"
+        confirmClass="btn btn-primary"
+        :confirmText="i18n.t('experiments.table.column_display_modal.confirmation.confirm')"
+        ref="resetColumnModal"
+      ></ConfirmationModal>
     </teleport>
   </div>
 </template>
@@ -116,6 +129,7 @@ import MenuDropdown from '../menu_dropdown.vue';
 import GeneralDropdown from '../general_dropdown.vue';
 import FilterDropdown from '../filters/filter_dropdown.vue';
 import ColumnsModal from './modals/columns.vue';
+import ConfirmationModal from '../confirmation_modal.vue';
 
 export default {
   name: 'Toolbar',
@@ -163,7 +177,8 @@ export default {
     MenuDropdown,
     FilterDropdown,
     ColumnsModal,
-    GeneralDropdown
+    GeneralDropdown,
+    ConfirmationModal
   },
   computed: {
     viewModesMenu() {
@@ -230,6 +245,12 @@ export default {
     },
     handleEvent(event) {
       this.$emit('toolbar:action', { name: event });
+    },
+    async resetToDefault() {
+      const ok = await this.$refs.resetColumnModal.show();
+      if (ok) {
+        this.$emit('resetColumnsToDefault');
+      }
     }
   }
 };
