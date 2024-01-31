@@ -624,6 +624,7 @@ class Extends
     protocols/show
     preferences/index
     addons/index
+    addons/quartzy_index
   )
 
   DEFAULT_USER_NOTIFICATION_SETTINGS = {
