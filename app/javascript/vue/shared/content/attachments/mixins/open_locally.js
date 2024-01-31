@@ -1,11 +1,19 @@
 import axios from '../../../../../packs/custom_axios.js';
+import editLaunchingApplicationModal from '../../modal/edit_launching_application_modal.vue';
+import NoPredefinedAppModal from '../../modal/no_predefined_app_modal.vue';
 
 export default {
   data() {
     return {
       localAppName: null,
-      scinoteEditRunning: false
+      scinoteEditRunning: false,
+      showNoPredefinedAppModal: false,
+      editAppModal: false
     };
+  },
+  components: {
+    editLaunchingApplicationModal,
+    NoPredefinedAppModal
   },
   computed: {
     canOpenLocally() {

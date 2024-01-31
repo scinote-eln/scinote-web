@@ -12,17 +12,31 @@
           v-if="this.menu.length > 1"
           class="ml-auto"
           :listItems="this.menu"
-          :btnClasses="`btn btn-light icon-btn !bg-sn-white`"
+          :btnClasses="`btn btn-light icon-btn`"
           :position="'right'"
           :btnText="i18n.t('attachments.open_in')"
           :caret="true"
           @openLocally="openLocally"
           @openImageEditor="openImageEditor"
         ></MenuDropdown>
-        <a v-else-if="this.menu.length === 1" class="btn btn-light !bg-sn-white" :href="this.menu[0].url" :target="this.menu[0].target" @click="this[this.menu[0].emit]()">
+        <a v-else-if="this.menu.length === 1" class="btn btn-light" :href="this.menu[0].url" :target="this.menu[0].target" @click="this[this.menu[0].emit]()">
           {{ this.menu[0].text }}
         </a>
     </div>
+
+    <Teleport to="body">
+      <NoPredefinedAppModal
+        v-if="showNoPredefinedAppModal"
+        :fileName="attachment.attributes.file_name"
+        @confirm="showNoPredefinedAppModal = false"
+      />
+      <editLaunchingApplicationModal
+          v-if="editAppModal"
+          :fileName="attachment.attributes.file_name"
+          :application="this.localAppName"
+          @cancel="editAppModal = false"
+      />
+    </Teleport>
   </div>
 </template>
 
@@ -53,7 +67,7 @@ export default {
         });
       }
 
-      if (this.attachment.attributes.image_editable) {
+      if (this.attachment.attributes.image_editable && !this.canOpenLocally) {
         menu.push({
           text: this.i18n.t('assets.file_preview.edit_in_scinote'),
           emit: 'openImageEditor'
