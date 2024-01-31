@@ -16,7 +16,6 @@ describe ExperimentsController, type: :controller do
     archive_group: { project_id: 1 },
     restore_group: { project_id: 1 },
     clone: { id: 1 },
-    move: { id: 1 },
     module_archive: { id: 1 },
     fetch_workflow_img: { id: 1 },
     sidebar: { id: 1 },
@@ -112,13 +111,13 @@ describe ExperimentsController, type: :controller do
     it_behaves_like "a controller action with permissions checking", :get, :move_modal do
       let(:testable) { experiment }
       let(:permissions) { [ExperimentPermissions::MANAGE] }
-      let(:action_params) { { id: experiment.id } }
+      let(:action_params) { { ids: [experiment.id] } }
     end
 
     it_behaves_like "a controller action with permissions checking", :post, :move do
       let(:testable) { experiment }
       let(:permissions) { [ExperimentPermissions::MANAGE] }
-      let(:action_params) { { id: experiment.id } }
+      let(:action_params) { { ids: [experiment.id], project_id: project.id } }
     end
 
     it_behaves_like "a controller action with permissions checking", :get, :module_archive do
