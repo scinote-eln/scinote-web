@@ -139,7 +139,7 @@ class RepositoryDatatableService
     adv_search_params[:filter_elements].each_with_index do |filter_element_params, index|
       repository_rows =
         if PREDEFINED_COLUMNS.include?(filter_element_params[:repository_column_id])
-          add_predefined_column_filter_condition(repository_rows, filter_element_params)
+          add_predefined_column_filter_condition(repository_rows, filter_element_params, index)
         else
           add_custom_column_filter_condition(repository_rows, filter, index, filter_element_params)
         end
@@ -148,14 +148,14 @@ class RepositoryDatatableService
     repository_rows
   end
 
-  def add_predefined_column_filter_condition(repository_rows, filter_element_params)
+  def add_predefined_column_filter_condition(repository_rows, filter_element_params, index = nil)
     case filter_element_params[:repository_column_id]
     when 'row_id'
       build_row_id_filter_condition(repository_rows, filter_element_params)
     when 'row_name'
       build_name_filter_condition(repository_rows, filter_element_params)
     when 'relationships'
-      build_relationship_filter_condition(repository_rows, filter_element_params)
+      build_relationship_filter_condition(repository_rows, filter_element_params, index)
     when 'added_on'
       build_added_on_filter_condition(repository_rows, filter_element_params)
     when 'added_by'
@@ -204,20 +204,22 @@ class RepositoryDatatableService
     end
   end
 
-  def build_relationship_filter_condition(repository_rows, filter_element_params)
+  def build_relationship_filter_condition(repository_rows, filter_element_params, index)
     case filter_element_params[:operator]
     when 'contains'
-      return repository_rows if filter_element_params.dig(:parameters, :text).blank?
-
       text = "%#{ActiveRecord::Base.sanitize_sql_like(filter_element_params.dig(:parameters, :text))}%"
-      repository_rows.left_outer_joins(:parent_connections, :child_connections)
-                     .where("('#{RepositoryRow::ID_PREFIX}' || repository_row_connections.parent_id)::text ILIKE ?
-                            OR ('#{RepositoryRow::ID_PREFIX}' || repository_row_connections.child_id)::text ILIKE ?",
-                            text, text)
+      repository_rows.joins("LEFT OUTER JOIN repository_row_connections rrc_#{index} ON
+          rrc_#{index}.parent_id = repository_rows.id OR rrc_#{index}.child_id = repository_rows.id
+          LEFT OUTER JOIN repository_rows crr_#{index} ON
+          rrc_#{index}.parent_id = crr_#{index}.id OR rrc_#{index}.child_id = crr_#{index}.id")
+                     .where("crr_#{index}.name ILIKE ? OR ('#{RepositoryRow::ID_PREFIX}' ||
+                            crr_#{index}.id)::text ILIKE ?", text, text)
     when 'contains_relationship'
-      repository_rows.where('child_connections_count > 0 OR parent_connections_count > 0')
+      repository_rows.where('repository_rows.child_connections_count > 0 OR
+          repository_rows.parent_connections_count > 0')
     when 'doesnt_contain_relationship'
-      repository_rows.where('COALESCE(parent_connections_count, 0) = 0 AND COALESCE(child_connections_count, 0) = 0')
+      repository_rows.where('COALESCE(repository_rows.parent_connections_count, 0) = 0 AND
+          COALESCE(repository_rows.child_connections_count, 0) = 0')
     else
       raise ArgumentError, 'Wrong operator for RepositoryRow Relationship!'
     end

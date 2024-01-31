@@ -2023,7 +2023,7 @@ en:
               RepositoryTextValue:
                 input_placeholder: "Enter %{name}"
               RepositoryRelationshipValue:
-                input_placeholder: "Enter related item ID"
+                input_placeholder: "Enter related item ID or name"
               RepositoryNumberValue:
                 input_placeholder: "Enter %{name}"
                 to_placeholder: "To"

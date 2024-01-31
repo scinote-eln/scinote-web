@@ -38,7 +38,7 @@ export default {
         { value: 'contains_relationship', label: this.i18n.t('repositories.show.repository_filter.filters.operators.contains_relationship') },
         { value: 'doesnt_contain_relationship', label: this.i18n.t('repositories.show.repository_filter.filters.operators.does_not_contain_relationship') }
       ],
-      operator: 'contains_relationship',
+      operator: 'contains',
       value: ''
     };
   },
