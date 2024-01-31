@@ -8,15 +8,17 @@ class ExperimentsController < ApplicationController
   include Rails.application.routes.url_helpers
   include Breadcrumbs
 
-  before_action :load_project, only: %i(new create archive_group restore_group)
+  before_action :load_project, only: %i(new create archive_group restore_group move)
   before_action :load_experiment, except: %i(new create archive_group restore_group
-                                             inventory_assigning_experiment_filter actions_toolbar move_modal move)
+                                             inventory_assigning_experiment_filter actions_toolbar
+                                             move move_modal)
   before_action :load_experiments, only: %i(move_modal move)
-  before_action :check_read_permissions, except: %i(edit archive clone move new
+  before_action :check_move_permissions, only: %i(move_modal move)
+  before_action :check_read_permissions, except: %i(edit archive clone move move_modal new
                                                     create archive_group restore_group
-                                                    inventory_assigning_experiment_filter actions_toolbar move_modal)
+                                                    inventory_assigning_experiment_filter actions_toolbar)
   before_action :check_canvas_read_permissions, only: %i(canvas)
-  before_action :check_create_permissions, only: %i(new create)
+  before_action :check_create_permissions, only: %i(new create move)
   before_action :check_manage_permissions, only: %i(edit batch_clone_my_modules)
   before_action :check_update_permissions, only: %i(update)
   before_action :check_archive_permissions, only: :archive
@@ -254,7 +256,7 @@ class ExperimentsController < ApplicationController
 
   # POST: clone_experiment(id)
   def clone
-    project = current_team.projects.find(move_experiment_param)
+    @project = current_team.projects.find(move_experiment_param)
     return render_403 unless can_create_project_experiments?(project)
 
     service = Experiments::CopyExperimentAsTemplateService.call(experiment: @experiment,
@@ -297,10 +299,7 @@ class ExperimentsController < ApplicationController
 
   # POST: move_experiment(id)
   def move
-    project = Project.viewable_by_user(current_user, current_team)
-                     .find_by(id: params[:project_id])
-
-    project.transaction do
+    @project.transaction do
       @experiments.each do |experiment|
         service = Experiments::MoveToProjectService
                   .call(experiment_id: experiment.id,
@@ -309,14 +308,14 @@ class ExperimentsController < ApplicationController
         raise StandardError unless service.succeed?
       end
 
-      flash[:success] = t('experiments.table.move_success_flash', project: escape_input(project.name))
+      flash[:success] = t('experiments.table.move_success_flash', project: escape_input(@project.name))
       render json: { message: t('experiments.table.move_success_flash',
-        project: escape_input(project.name)), path: project_path(project) }
+                                project: escape_input(@project.name)), path: project_path(@project) }
     rescue StandardError => e
       Rails.logger.error(e.message)
       Rails.logger.error(e.backtrace.join("\n"))
       render json: {
-        message: t('experiments.table.move_error_flash', project: escape_input(project.name))
+        message: t('experiments.table.move_error_flash', project: escape_input(@project.name))
       }, status: :unprocessable_entity
       raise ActiveRecord::Rollback
     end
@@ -596,7 +595,7 @@ class ExperimentsController < ApplicationController
   end
 
   def check_move_permissions
-    render_403 unless can_move_experiment?(@experiment)
+    render_403 unless @experiments.all? { |e| can_move_experiment?(e) }
   end
 
   def set_inline_name_editing
