@@ -9,6 +9,12 @@ import { mountWithTurbolinks } from '../helpers/turbolinks.js';
 */
 
 window.initDateTimePickerComponent = (id) => {
+  const elementWithIdPresent = document.querySelector(id);
+  if (!elementWithIdPresent) {
+    console.warn("datetime_picker.js -> window.initDateTimePickerComponent: couldn't find element with id: ", id);
+    return;
+  }
+
   const app = createApp({
     data() {
       return {
