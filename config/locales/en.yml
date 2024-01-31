@@ -2584,6 +2584,7 @@ en:
         title: "There seems to be no printer available"
         description: "To learn more about printing labels and label printers please visit our blog."
         visit_blog: "Visit blog"
+      general_error: "Something went wrong"
     reminder:
       clear: "Clear"
       low_stock_title: "Item running low"
