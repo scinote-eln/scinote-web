@@ -6,9 +6,9 @@
     id="repositoryItemRelationshipsModal"
     tabindex="-1"
     role="dialog"
-    class="modal ">
+    class="modal">
     <div class="modal-dialog modal-sm" role="document">
-      <div class="modal-content w-[400px] m-auto">
+      <div class="modal-content w-[400px] m-auto" v-click-outside="handleClickOutside">
 
         <!-- header -->
         <div class="modal-header h-[76px] flex !flex-col gap-[6px]">
@@ -167,6 +167,10 @@ export default {
     }
   },
   methods: {
+    handleClickOutside() {
+      this.selectedInventoryValue = null;
+      this.resetSelectedItemValues();
+    },
     fetchInventories() {
       if (!this.nextInventoriesPage) return;
 
