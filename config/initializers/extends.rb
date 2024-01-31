@@ -623,6 +623,7 @@ class Extends
     results/index
     protocols/show
     preferences/index
+    addons/index
   )
 
   DEFAULT_USER_NOTIFICATION_SETTINGS = {
