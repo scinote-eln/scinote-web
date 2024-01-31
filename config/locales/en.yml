@@ -399,6 +399,7 @@ en:
     sort_by: "SORT BY"
     attachments_view_mode: "ALL ATTACHMENTS VIEW SIZE"
     open_locally_in: "Open in %{application}"
+    open_in: "Open in"
     open_locally: "Open locally"
     new:
       description: 'New'
