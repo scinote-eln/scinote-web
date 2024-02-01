@@ -30,7 +30,7 @@
         @delete="showDeleteModal"
       ></MenuDropdown>
     </div>
-    <div v-if="element.attributes.orderable.urls.create_item_url || orderedChecklistItems.length > 0" :class="{ 'pointer-events-none': locked }">
+    <div v-if="element.attributes.orderable.urls.create_item_url || checklistItems.length > 0" :class="{ 'pointer-events-none': locked }">
       <Draggable
         v-model="checklistItems"
         :ghostClass="'checklist-item-ghost'"
@@ -63,8 +63,8 @@
       <div v-if="element.attributes.orderable.urls.create_item_url && !addingNewItem"
            class="flex items-center gap-1 text-sn-blue cursor-pointer mb-2 mt-1 "
            tabindex="0"
-           @keyup.enter="addItem(orderedChecklistItems.length + 1)"
-           @click="addItem(orderedChecklistItems.length + 1)">
+           @keyup.enter="addItem(checklistItems[checklistItems.length - 1]?.id)"
+           @click="addItem(checklistItems[checklistItems.length - 1]?.id)">
         <i class="sn-icon sn-icon-new-task w-6 text-center inline-block"></i>
         {{ i18n.t('protocols.steps.insert.checklist_item') }}
       </div>
@@ -81,6 +81,9 @@
 </template>
 
 <script>
+
+/* global HelperModule I18n */
+
 import Draggable from 'vuedraggable';
 import DeleteMixin from './mixins/delete.js';
 import MoveMixin from './mixins/move.js';
@@ -90,6 +93,7 @@ import InlineEdit from '../inline_edit.vue';
 import ChecklistItem from './checklistItem.vue';
 import moveElementModal from './modal/move.vue';
 import MenuDropdown from '../menu_dropdown.vue';
+import axios from '../../../packs/custom_axios.js';
 
 export default {
   name: 'Checklist',
@@ -128,7 +132,7 @@ export default {
   },
   created() {
     if (this.isNew) {
-      this.addItem(1);
+      this.addItem();
     } else {
       this.loadChecklistItems();
     }
@@ -139,13 +143,6 @@ export default {
     }
   },
   computed: {
-    orderedChecklistItems() {
-      return this.checklistItems.sort((a, b) => a.attributes.position - b.attributes.position || b.id - a.id)
-        .map((item, index) => {
-          item.attributes.position = index + 1;
-          return item;
-        });
-    },
     locked() {
       return this.editingName || !this.element.attributes.orderable.urls.update_url;
     },
@@ -199,20 +196,23 @@ export default {
       this.update();
     },
     postItem(item) {
-      item.attributes.position = item.attributes.position - 1;
-      $.post(this.element.attributes.orderable.urls.create_item_url, item).done((result) => {
-        this.loadChecklistItems(result.data[result.data.length - 1].attributes.position);
-      }).fail((e) => {
+      const position = this.checklistItems.findIndex((i) => i.id === item.id);
+      let afterId = null;
+      if (position > 0) {
+        afterId = this.checklistItems[position - 1].id;
+      }
+      axios.post(this.element.attributes.orderable.urls.create_item_url, {
+        attributes: item.attributes,
+        after_id: afterId
+      }).then((result) => {
+        this.loadChecklistItems(result.data.data[result.data.data.length - 1].id);
+      }).catch(() => {
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
-
-      // Fake element during loading
-      item.id = `new${Math.floor(Math.random() * 1000000000)}`;
-      this.checklistItems.push(item);
     },
     saveItem(item, key) {
       if (item.id > 0) {
-        const insertAfter = key === 'Enter' ? item.attributes.position : null;
+        const insertAfter = key === 'Enter' ? item.id : null;
         $.ajax({
           url: item.attributes.urls.update_url,
           type: 'PATCH',
@@ -220,7 +220,7 @@ export default {
           success: () => {
             this.loadChecklistItems(insertAfter);
           },
-          error: (xhr) => setFlashErrors(xhr.responseJSON.errors)
+          error: (xhr) => this.setFlashErrors(xhr.responseJSON.errors)
         });
       } else {
         this.postItem(item, key);
@@ -240,20 +240,23 @@ export default {
       });
     },
     addItem(insertAfter) {
-      this.checklistItems.push(
+      const afterIndex = this.checklistItems.findIndex((i) => i.id === insertAfter);
+      this.checklistItems.splice(
+        afterIndex + 1,
+        0,
         {
+          id: `new${Math.floor(Math.random() * 1000000000)}`,
           attributes: {
             text: '',
             checked: false,
-            position: insertAfter,
-            isNew: true
+            isNew: true,
+            with_paragraphs: false
           }
         }
       );
-      this.checklistItems = this.orderedChecklistItems;
     },
     removeItem(position) {
-      this.checklistItems = this.orderedChecklistItems.filter((item) => item.attributes.position !== position);
+      this.checklistItems = this.checklistItems.filter((item) => item.attributes.position !== position);
     },
     startReorder() {
       this.reordering = true;
@@ -265,21 +268,26 @@ export default {
           && Number.isInteger(event.oldIndex)
           && event.newIndex !== event.oldIndex
       ) {
-        const position = this.orderedChecklistItems[event.newIndex]?.attributes.position;
-        const id = this.checklistItems[event.oldIndex]?.id;
-        this.checklistItems[event.oldIndex].attributes.position = position + (event.newIndex > event.oldIndex ? 1 : -1);
-        this.saveItemOrder(id, position);
+        let afterId = null;
+        if (event.newIndex > 0) {
+          if (event.newIndex > event.oldIndex) {
+            afterId = this.checklistItems[event.newIndex - 1].id;
+          } else {
+            afterId = this.checklistItems[event.newIndex + 1].id;
+          }
+        }
+        const id = this.checklistItems[event.newIndex]?.id;
+        this.saveItemOrder(id, afterId);
       }
     },
-    saveItemOrder(id, position) {
-      $.ajax({
-        type: 'POST',
-        url: this.element.attributes.orderable.urls.reorder_url,
-        data: JSON.stringify({ attributes: { id, position } }),
-        contentType: 'application/json',
-        dataType: 'json',
-        error: (xhr) => this.setFlashErrors(xhr.responseJSON.errors),
-        success: () => this.loadChecklistItems()
+    saveItemOrder(id, afterId) {
+      axios.post(this.element.attributes.orderable.urls.reorder_url, {
+        id,
+        after_id: afterId
+      }).then(() => {
+        this.loadChecklistItems();
+      }).catch((e) => {
+        this.setFlashErrors(e.response.errors);
       });
     },
     setFlashErrors(errors) {

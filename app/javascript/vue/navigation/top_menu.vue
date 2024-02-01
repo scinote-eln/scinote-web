@@ -19,26 +19,32 @@
       :btnClasses="'btn btn-light icon-btn btn-black'"
       :position="'right'"
       :btnIcon="'sn-icon sn-icon-settings'"
+      :data-e2e="'e2e-DD-topMenu-settings'"
     ></MenuDropdown>
-    <div v-if="user" class="sci--navigation--notificaitons-flyout-container" >
-      <button class="btn btn-light icon-btn btn-black"
+    <GeneralDropdown
+      v-if="user"
+      ref="notificationDropdown"
+      position="right"
+      class="sci--navigation--notificaitons-flyout-container">
+      <template v-slot:field>
+        <button class="btn btn-light icon-btn btn-black" :data-e2e="'e2e-DD-topMenu-notifications'"
               :title="i18n.t('nav.notifications.title')"
               :class="{ 'has-unseen': unseenNotificationsCount > 0 }"
               :data-unseen="unseenNotificationsCount"
-              data-toggle="dropdown"
-              @click="notificationsOpened = !notificationsOpened">
-        <i class="sn-icon sn-icon-notifications"></i>
-      </button>
-      <div v-if="notificationsOpened" class="sci--navigation--notificaitons-flyout-backdrop" @click="notificationsOpened = false"></div>
-      <NotificationsFlyout
-        v-if="notificationsOpened"
-        :notificationsUrl="notificationsUrl"
-        :unseenNotificationsCount="unseenNotificationsCount"
-        @update:unseenNotificationsCount="checkUnseenNotifications()"
-        @close="notificationsOpened = false" />
-    </div>
+              data-toggle="dropdown">
+          <i class="sn-icon sn-icon-notifications"></i>
+        </button>
+      </template>
+      <template v-slot:flyout >
+        <NotificationsFlyout
+          :notificationsUrl="notificationsUrl"
+          :unseenNotificationsCount="unseenNotificationsCount"
+          @update:unseenNotificationsCount="checkUnseenNotifications()"
+          @close="$refs.notificationDropdown.$refs.field.click();"/>
+      </template>
+    </GeneralDropdown>
     <div v-if="user" class="dropdown" :title="i18n.t('nav.user_profile')">
-      <div class="sci--navigation--top-menu-user btn btn-light icon-btn btn-black" data-toggle="dropdown">
+      <div class="sci--navigation--top-menu-user btn btn-light icon-btn btn-black" data-toggle="dropdown" data-e2e="e2e-DD-topMenu-avatar">
         <img class="avatar w-6 h-6" :src="user.avatar_url">
       </div>
       <div class="dropdown-menu dropdown-menu-right rounded !p-2.5 sn-shadow-menu-sm">
@@ -63,6 +69,7 @@ import NotificationsFlyout from './notifications/notifications_flyout.vue';
 import DropdownSelector from '../shared/legacy/dropdown_selector.vue';
 import SelectDropdown from '../shared/select_dropdown.vue';
 import MenuDropdown from '../shared/menu_dropdown.vue';
+import GeneralDropdown from '../shared/general_dropdown.vue';
 
 export default {
   name: 'TopMenuContainer',
@@ -70,7 +77,8 @@ export default {
     DropdownSelector,
     NotificationsFlyout,
     SelectDropdown,
-    MenuDropdown
+    MenuDropdown,
+    GeneralDropdown
   },
   props: {
     url: String,
@@ -88,7 +96,6 @@ export default {
       helpMenu: null,
       settingsMenu: null,
       userMenu: null,
-      notificationsOpened: false,
       unseenNotificationsCount: 0
     };
   },
@@ -117,15 +124,6 @@ export default {
           url: ''
         }
       );
-    }
-  },
-  watch: {
-    notificationsOpened(newVal) {
-      if (newVal === true) {
-        document.body.style.overflow = 'hidden';
-      } else if (newVal === false) {
-        document.body.style.overflow = 'scroll';
-      }
     }
   },
   methods: {

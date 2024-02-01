@@ -12,62 +12,6 @@ describe RepositoryRowConnectionsController, type: :controller do
   let!(:repository_row) { create :repository_row, repository: repository, created_by: user }
   let!(:other_repository_row) { create :repository_row, repository: repository, created_by: user }
 
-  describe '#index' do
-    it 'results in unsuccessful response with non-existing repository_id' do
-      get :index, format: :json, params: { repository_id: -1, repository_row_id: repository_row.id }
-      expect(response).to have_http_status(:not_found)
-    end
-
-    it 'results in unsuccessful response with non-existing repository_row_id' do
-      get :index, format: :json, params: { repository_id: other_repository.id, repository_row_id: repository_row.id }
-      expect(response).to have_http_status(:not_found)
-    end
-
-    it 'returns a successful response with valid repository and repository_row' do
-      get :index, format: :json, params: { repository_id: repository.id, repository_row_id: repository_row.id }
-      expect(response).to have_http_status(:success)
-    end
-
-    context 'with valid params' do
-      context 'with no connections' do
-        it 'returns the correct json response' do
-          get :index, format: :json, params: { repository_id: repository.id, repository_row_id: repository_row.id }
-          expect(response.body).to eq({ parents: [], children: [] }.to_json)
-        end
-      end
-      
-      context 'with some connections' do
-        let!(:child_repository_row) { create :repository_row, name: 'child' }
-        let!(:parent_repository_row) { create :repository_row, name: 'parent' }
-
-        let!(:child_connection) { create :repository_row_connection,
-                                        parent: repository_row,
-                                        child: child_repository_row,
-                                        created_by: user,
-                                        last_modified_by: user }
-        let!(:parent_connection) { create :repository_row_connection,
-                                         child: repository_row,
-                                         parent: parent_repository_row,
-                                         created_by: user,
-                                         last_modified_by: user }
-
-        it 'returns the correct json response' do
-          get :index, format: :json, params: { repository_id: repository.id, repository_row_id: repository_row.id }
-          expect(response.body).to eq({ parents: [{
-                                                    id: parent_connection.id,
-                                                    name: parent_repository_row.name,
-                                                    code: "#{RepositoryRow::ID_PREFIX}#{parent_repository_row.id}"
-                                                  }],
-                                        children: [{
-                                                     id: child_connection.id,
-                                                     name: child_repository_row.name,
-                                                     code: "#{RepositoryRow::ID_PREFIX}#{child_repository_row.id}"
-                                                  }] }.to_json)
-        end
-      end
-    end
-  end
-
   describe 'POST #create' do
     context 'with valid parameters' do
       let(:create_params) do
@@ -123,14 +67,44 @@ describe RepositoryRowConnectionsController, type: :controller do
   end
 
   describe 'GET #repository_rows' do
+    let!(:child_repository_row) { create :repository_row, repository: repository }
+    let!(:parent_repository_row) { create :repository_row, repository: repository }
+
+    let!(:child_connection) do
+      create :repository_row_connection,
+             parent: repository_row,
+             child: child_repository_row,
+             created_by: user,
+             last_modified_by: user
+    end
+    let!(:parent_connection) do
+      create :repository_row_connection,
+             child: repository_row,
+             parent: parent_repository_row,
+             created_by: user,
+             last_modified_by: user
+    end
+
     it 'returns a successful response' do
-      get :repository_rows, format: :json, params: { repository_id: repository.id }
+      get :repository_rows, format: :json, params: {
+        repository_id: repository.id,
+        repository_row_id: repository_row.id,
+        selected_repository_id: repository.id
+      }
       expect(response).to have_http_status(:success)
     end
 
     it 'returns the correct data structure' do
-      get :repository_rows, format: :json, params: { repository_id: repository.id }
-      expect(response.body).to include(repository_row.name)
+      get :repository_rows, format: :json, params: {
+        repository_id: repository.id,
+        repository_row_id: repository_row.id,
+        selected_repository_id: repository.id
+      }
+
+      expect(response.body).not_to include(repository_row.name)
+      expect(response.body).not_to include(child_repository_row.name)
+      expect(response.body).not_to include(parent_repository_row.name)
+      expect(response.body).to include(other_repository_row.name)
     end
   end
 end

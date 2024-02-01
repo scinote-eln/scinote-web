@@ -326,7 +326,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :projects, except: [:destroy] do
+    resources :projects, except: [:destroy, :new, :show, :edit] do
       # Activities popup (JSON) for individual project in projects index,
       # as well as all activities page for single project (HTML)
       resources :project_activities, path: '/activities', only: [:index]
@@ -352,23 +352,12 @@ Rails.application.routes.draw do
           post 'restore_group' # restore group of experiments
         end
       end
-      member do
-        # Notifications popup for individual project in projects index
-        get 'notifications'
-        get 'permissions'
-        get 'experiments_cards'
-        get 'sidebar'
-        get 'actions_dropdown'
-        put 'view_type'
-      end
 
       collection do
         get 'inventory_assigning_project_filter'
-        get 'cards', to: 'projects#cards'
         get 'users_filter'
         post 'archive_group'
         post 'restore_group'
-        put 'view_type', to: 'teams#view_type'
         get 'actions_toolbar'
         get :user_roles
       end
@@ -387,21 +376,16 @@ Rails.application.routes.draw do
     end
     get 'project_folders/:project_folder_id', to: 'projects#index', as: :project_folder_projects
 
-    resources :experiments, only: %i(index show edit update) do
+    resources :experiments, only: %i(index update) do
       collection do
         get 'inventory_assigning_experiment_filter'
-        get 'edit', action: :edit
         get 'clone_modal', action: :clone_modal
         get 'move_modal', action: :move_modal
         get 'actions_toolbar'
       end
       member do
         get :assigned_users
-        get 'permissions'
-        get 'actions_dropdown'
         put :view_type
-        get :table
-        get :load_table
         get :move_modules_modal
         post :move_modules
         get :my_modules
@@ -748,7 +732,11 @@ Rails.application.routes.draw do
           get :actions_toolbar
         end
 
-        resources :repository_row_connections, only: %i(index create destroy)
+        resources :repository_row_connections, only: %i(create destroy) do
+          collection do
+            get :repository_rows
+          end
+        end
         member do
           get 'repository_stock_value/new', to: 'repository_stock_values#new', as: 'new_repository_stock'
           get 'repository_stock_value/edit', to: 'repository_stock_values#edit', as: 'edit_repository_stock'
@@ -805,7 +793,6 @@ Rails.application.routes.draw do
 
     namespace :repository_row_connections do
       get :repositories
-      get :repository_rows
     end
 
     resources :connected_devices, controller: 'users/connected_devices', only: %i(destroy)
@@ -1016,6 +1003,11 @@ Rails.application.routes.draw do
       post :start_editing
     end
   end
+
+  get 'asset_sync/:asset_id', to: 'asset_sync#show', as: :asset_sync_show
+  get 'asset_sync/:asset_id/download', to: 'asset_sync#download', as: :asset_sync_download
+  put 'asset_sync', to: 'asset_sync#update'
+  get '/asset_sync_api_url', to: 'asset_sync#api_url'
 
   post 'global_activities', to: 'global_activities#index'
 

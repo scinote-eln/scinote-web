@@ -1,5 +1,6 @@
 <template>
-  <div class="result-wrapper p-4 mb-4 rounded pr-8 relative"
+  <div ref="resultContainer"
+       class="result-wrapper p-4 mb-4 rounded pr-8 relative"
        @drop.prevent="dropFile"
        @dragenter.prevent="dragEnter($event)"
        @dragover.prevent
@@ -170,7 +171,8 @@ export default {
         { text: I18n.t('protocols.steps.insert.well_plate_options.16_x_24'), emit: 'create:table', params: [[16, 24], true] },
         { text: I18n.t('protocols.steps.insert.well_plate_options.8_x_12'), emit: 'create:table', params: [[8, 12], true] },
         { text: I18n.t('protocols.steps.insert.well_plate_options.6_x_8'), emit: 'create:table', params: [[6, 8], true] },
-        { text: I18n.t('protocols.steps.insert.well_plate_options.6_x_4'), emit: 'create:table', params: [[6, 4], true] },
+        { text: I18n.t('protocols.steps.insert.well_plate_options.4_x_6'), emit: 'create:table', params: [[4, 6], true] },
+        { text: I18n.t('protocols.steps.insert.well_plate_options.3_x_4'), emit: 'create:table', params: [[3, 4], true] },
         { text: I18n.t('protocols.steps.insert.well_plate_options.2_x_3'), emit: 'create:table', params: [[2, 3], true] }
       ],
       editingName: false,
@@ -191,7 +193,7 @@ export default {
   },
   watch: {
     resultToReload() {
-      if (this.resultToReload === this.result.id) {
+      if (Number(this.resultToReload) === Number(this.result.id)) {
         this.loadElements();
         this.loadAttachments();
       }
@@ -434,9 +436,10 @@ export default {
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       }).done(() => {
         this.$parent.$nextTick(() => {
-          const children = this.$refs.stepContainer.querySelectorAll('.result-element');
+          const children = this.$refs.resultContainer.querySelectorAll('.result-element');
           const lastChild = children[children.length - 1];
-          lastChild.$el.scrollIntoView(false);
+
+          lastChild.scrollIntoView(false);
           window.scrollBy({
             top: 200,
             behavior: 'smooth'

@@ -9,21 +9,21 @@ module RepositoryZipExport
     add_consumption = in_module && !repository.is_a?(RepositorySnapshot) && repository.has_stock_management?
     column_ids.each do |c_id|
       case c_id
-      when '-1', '-2'
+      when -1, -2
         next
-      when '-3'
+      when -3
         csv_header << I18n.t('repositories.table.id')
-      when '-4'
+      when -4
         csv_header << I18n.t('repositories.table.row_name')
-      when '-5'
+      when -5
         csv_header << I18n.t('repositories.table.added_by')
-      when '-6'
+      when -6
         csv_header << I18n.t('repositories.table.added_on')
-      when '-7'
+      when -7
         csv_header << I18n.t('repositories.table.archived_by')
-      when '-8'
+      when -8
         csv_header << I18n.t('repositories.table.archived_on')
-      when 'relationship'
+      when -9
         csv_header << I18n.t('repositories.table.parents')
         csv_header << I18n.t('repositories.table.children')
       else
@@ -38,23 +38,23 @@ module RepositoryZipExport
         csv_row = []
         column_ids.each do |c_id|
           case c_id
-          when '-1', '-2'
+          when -1, -2
             next
-          when '-3'
+          when -3
             csv_row << (repository.is_a?(RepositorySnapshot) ? row.parent_id : row.id)
-          when '-4'
+          when -4
             csv_row << row.name
-          when '-5'
+          when -5
             csv_row << row.created_by.full_name
-          when '-6'
+          when -6
             csv_row << I18n.l(row.created_at, format: :full)
-          when '-7'
+          when -7
             csv_row << (row.archived? && row.archived_by.present? ? row.archived_by.full_name : '')
-          when '-8'
+          when -8
             csv_row << (row.archived? && row.archived_on.present? ? I18n.l(row.archived_on, format: :full) : '')
-          when 'relationship'
-            csv_row << row.parent_repository_rows.map(&:code).join('; ')
-            csv_row << row.child_repository_rows.map(&:code).join('; ')
+          when -9
+            csv_row << row.parent_repository_rows.map(&:code).join(' | ')
+            csv_row << row.child_repository_rows.map(&:code).join(' | ')
           else
             cell = row.repository_cells.find_by(repository_column_id: c_id)
 

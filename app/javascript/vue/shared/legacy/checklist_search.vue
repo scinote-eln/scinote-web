@@ -81,7 +81,7 @@ export default {
         return;
       }
 
-      if (this.optionsUrlValue) {
+      if (this.optionsUrl) {
         // reset current options and next page when lazy loading is enabled
         if (this.lazyLoadEnabled) {
           this.currentOptions = [];
@@ -106,14 +106,6 @@ export default {
         return this.currentOptions.find(({ id }) => id === this.selectedValues[0])?.label;
       }
       return `${this.selectedValues.length} ${this.i18n.t('general.options_selected')}`;
-    },
-    optionsUrlValue() {
-      if (!this.optionsUrl) return '';
-
-      let url = `${this.optionsUrl}?query=${this.query || ''}`;
-      if (this.lazyLoadEnabled && this.nextPage) url = `${url}&page=${this.nextPage}`;
-      if (this.params.length) url = `${url}&${this.params.join('&')}`;
-      return url;
     }
   },
   methods: {
@@ -128,7 +120,12 @@ export default {
       if (!this.nextPage || !this.optionsUrl) return;
 
       $.ajax({
-        url: this.optionsUrlValue,
+        url: this.optionsUrl,
+        data: {
+          ...(this.query && { query: this.query }),
+          ...(this.lazyLoadEnabled && this.nextPage && { page: this.nextPage }),
+          ...this.params
+        },
         success: (result) => {
           if (this.lazyLoadEnabled) {
             this.nextPage = result.next_page;

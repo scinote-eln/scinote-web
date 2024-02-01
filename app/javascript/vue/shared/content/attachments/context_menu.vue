@@ -1,5 +1,8 @@
 <template>
-  <div class="asset-context-menu" ref="menu">
+  <div class="asset-context-menu"
+       ref="menu"
+       @mouseenter="fetchLocalAppInfo"
+  >
     <a  class="marvinjs-edit-button hidden"
         v-if="attachment.attributes.asset_type == 'marvinjs' && attachment.attributes.urls.marvin_js_start_edit"
         ref="marvinjsEditButton"
@@ -30,33 +33,59 @@
       @open_ove_editor="openOVEditor(attachment.attributes.urls.open_vector_editor_edit)"
       @open_marvinjs_editor="openMarvinJsEditor"
       @open_scinote_editor="openScinoteEditor"
+      @open_locally="openLocally"
       @delete="deleteModal = true"
       @viewMode="changeViewMode"
       @move="showMoveModal"
+      @menu-visibility-changed="$emit('menu-visibility-changed', $event)"
     ></MenuDropdown>
-    <deleteAttachmentModal
+    <Teleport to="body">
+      <deleteAttachmentModal
         v-if="deleteModal"
         :fileName="attachment.attributes.file_name"
         @confirm="deleteAttachment"
         @cancel="deleteModal = false"
-    />
-    <moveAssetModal v-if="movingAttachment"
-                      :parent_type="attachment.attributes.parent_type"
-                      :targets_url="attachment.attributes.urls.move_targets"
-                      @confirm="moveAttachment($event)" @cancel="closeMoveModal"/>
+      />
+      <moveAssetModal
+        v-if="movingAttachment"
+        :parent_type="attachment.attributes.parent_type"
+        :targets_url="attachment.attributes.urls.move_targets"
+        @confirm="moveAttachment($event)" @cancel="closeMoveModal"
+      />
+      <NoPredefinedAppModal
+        v-if="showNoPredefinedAppModal"
+        :fileName="attachment.attributes.file_name"
+        @confirm="showNoPredefinedAppModal = false"
+      />
+      <editLaunchingApplicationModal
+          v-if="editAppModal"
+          :fileName="attachment.attributes.file_name"
+          :application="this.localAppName"
+          @cancel="editAppModal = false"
+      />
+    </Teleport>
   </div>
 </template>
 
 <script>
 import deleteAttachmentModal from './delete_modal.vue';
+import editLaunchingApplicationModal from './edit_launching_application_modal.vue';
 import moveAssetModal from '../modal/move.vue';
+import NoPredefinedAppModal from '../modal/no_predefined_app_modal.vue';
 import MoveMixin from './mixins/move.js';
+import OpenLocallyMixin from './mixins/open_locally.js';
 import MenuDropdown from '../../menu_dropdown.vue';
 
 export default {
   name: 'contextMenu',
-  components: { deleteAttachmentModal, moveAssetModal, MenuDropdown },
-  mixins: [MoveMixin],
+  components: {
+    deleteAttachmentModal,
+    moveAssetModal,
+    MenuDropdown,
+    NoPredefinedAppModal,
+    editLaunchingApplicationModal
+  },
+  mixins: [MoveMixin, OpenLocallyMixin],
   props: {
     attachment: {
       type: Object,
@@ -67,7 +96,9 @@ export default {
   data() {
     return {
       viewModeOptions: ['inline', 'thumbnail', 'list'],
-      deleteModal: false
+      deleteModal: false,
+      editAppModal: false,
+      showNoPredefinedAppModal: false
     };
   },
   computed: {
@@ -93,11 +124,21 @@ export default {
         });
       }
       if (this.attachment.attributes.asset_type !== 'marvinjs'
-            && this.attachment.attributes.image_editable
-            && this.attachment.attributes.urls.start_edit_image) {
+          && this.attachment.attributes.image_editable
+          && this.attachment.attributes.urls.start_edit_image) {
         menu.push({
           text: this.i18n.t('assets.file_preview.edit_in_scinote'),
           emit: 'open_scinote_editor'
+        });
+      }
+      if (this.canOpenLocally) {
+        const text = this.localAppName
+          ? this.i18n.t('attachments.open_locally_in', { application: this.localAppName })
+          : this.i18n.t('attachments.open_locally');
+
+        menu.push({
+          text,
+          emit: 'open_locally'
         });
       }
       menu.push({

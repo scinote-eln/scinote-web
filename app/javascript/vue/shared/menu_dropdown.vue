@@ -1,6 +1,6 @@
 <template>
   <div class="relative" v-if="listItems.length > 0 || alwaysShow" v-click-outside="closeMenu" >
-    <button ref="field" :class="btnClasses" @click="isOpen = !isOpen">
+    <button ref="field" :class="btnClasses" :title="title" @click="isOpen = !isOpen">
       <i v-if="btnIcon" :class="btnIcon"></i>
       {{ btnText }}
       <i v-if="caret && isOpen" class="sn-icon sn-icon-up"></i>
@@ -9,7 +9,7 @@
     <teleport to="body">
       <div ref="flyout"
           v-if="isOpen"
-          class="fixed z-[3000] bg-sn-white inline-block rounded p-2.5 sn-shadow-menu-sm flex flex-col gap-[1px]"
+          class="fixed z-[3000] sn-menu-dropdown bg-sn-white inline-block rounded p-2.5 sn-shadow-menu-sm flex flex-col gap-[1px]"
           :class="{
               'right-0': position === 'right',
               'left-0': position === 'left',
@@ -74,7 +74,8 @@ export default {
     btnText: { type: String, required: false },
     btnIcon: { type: String, required: false },
     caret: { type: Boolean, default: false },
-    alwaysShow: { type: Boolean, default: false }
+    alwaysShow: { type: Boolean, default: false },
+    title: { type: String, default: '' }
   },
   data() {
     return {

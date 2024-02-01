@@ -4,6 +4,7 @@ json.id @repository_row.id
 json.repository do
   json.id @repository.id
   json.name @repository.name
+  json.is_snapshot @repository.is_a?(RepositorySnapshot)
 end
 json.notification @notification
 
@@ -30,7 +31,8 @@ json.actions do
   end
   json.row_connections do
     json.inventories_url repository_row_connections_repositories_url
-    json.inventory_items_url repository_row_connections_repository_rows_url
+    json.inventory_items_url repository_rows_repository_repository_row_repository_row_connections_path(@repository,
+                                                                                                       @repository_row)
     json.create_url repository_repository_row_repository_row_connections_url(@repository, @repository_row)
   end
 end
@@ -48,7 +50,6 @@ json.default_columns do
 end
 
 json.relationships do
-  json.enabled repository_row_connections_enabled
   json.parents_count @repository_row.parent_connections_count
   json.children_count @repository_row.child_connections_count
   json.parents do

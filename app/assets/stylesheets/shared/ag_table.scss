@@ -1,7 +1,7 @@
 .ag-root-wrapper {
   --agg-row-border-color: var(--sn-light-grey);
   --ag-odd-row-background-color: var(--sn-white);
-  --ag-header-background-color: var(--sn-light-grey);
+  --ag-header-background-color: transparent;
   --ag-selected-row-background-color: var(--sn-super-light-blue);
   --ag-range-selection-border: var(--sn-science-blue);
   --ag-grid-size: .5rem;
@@ -20,6 +20,11 @@
 
   .ag-header {
     border-bottom: 0;
+  }
+
+  .ag-pinned-left-header,
+  .ag-header-container {
+    background-color: var(--sn-light-grey);
   }
 
   .ag-input-field-input {

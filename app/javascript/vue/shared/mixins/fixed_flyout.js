@@ -8,6 +8,7 @@ export default {
   watch: {
     isOpen() {
       if (this.isOpen) {
+        this.$emit('open');
         this.$nextTick(() => {
           this.setPosition();
           this.overflowContainerListener();
@@ -70,10 +71,12 @@ export default {
         flyout.style.bottom = `${bottom}px`;
         flyout.style.top = 'unset';
         flyout.style.boxShadow = '0px -16px 32px 0px rgba(16, 24, 40, 0.07)';
+        flyout.style.maxHeight = `${screenHeight - bottom - 25}px`;
       } else {
         flyout.style.top = `${top}px`;
         flyout.style.bottom = 'unset';
         flyout.style.boxShadow = '';
+        flyout.style.maxHeight = `${screenHeight - top - 25}px`;
       }
     }
   }

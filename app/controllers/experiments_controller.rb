@@ -8,22 +8,22 @@ class ExperimentsController < ApplicationController
   include Rails.application.routes.url_helpers
   include Breadcrumbs
 
-  before_action :load_project, only: %i(index new create archive_group restore_group)
-  before_action :load_experiment, except: %i(new create archive_group restore_group
+  before_action :load_project, only: %i(index create archive_group restore_group)
+  before_action :load_experiment, except: %i(create archive_group restore_group
                                              inventory_assigning_experiment_filter actions_toolbar index)
   before_action :check_read_permissions, except: %i(index edit archive clone move new
                                                     create archive_group restore_group
-                                                    inventory_assigning_experiment_filter actions_toolbar)
+                                                    inventory_assigning_experiment_filter actions_toolbar move_modal)
   before_action :check_canvas_read_permissions, only: %i(canvas)
-  before_action :check_create_permissions, only: %i(new create)
-  before_action :check_manage_permissions, only: %i(edit batch_clone_my_modules)
-  before_action :check_update_permissions, only: %i(update)
+  before_action :check_create_permissions, only: :create
+  before_action :check_manage_permissions, only: :batch_clone_my_modules
+  before_action :check_update_permissions, only: :update
   before_action :check_archive_permissions, only: :archive
   before_action :check_clone_permissions, only: %i(clone_modal clone)
   before_action :check_move_permissions, only: %i(move_modal move)
-  before_action :set_inline_name_editing, only: %i(index canvas table module_archive)
-  before_action :set_breadcrumbs_items, only: %i(index canvas table module_archive)
-  before_action :set_navigator, only: %i(index canvas module_archive table)
+  before_action :set_inline_name_editing, only: %i(index canvas module_archive)
+  before_action :set_breadcrumbs_items, only: %i(index canvas module_archive)
+  before_action :set_navigator, only: %i(index canvas module_archive)
 
   layout 'fluid'
 
@@ -46,15 +46,6 @@ class ExperimentsController < ApplicationController
     render json: User.where(id: @experiment.user_assignments.select(:user_id)), each_serializer: UserSerializer
   end
 
-  def new
-    @experiment = Experiment.new
-    render json: {
-      html: render_to_string(
-        partial: 'new_modal', formats: :html
-      )
-    }
-  end
-
   def create
     @experiment = Experiment.new(experiment_params)
     @experiment.created_by = current_user
@@ -72,24 +63,6 @@ class ExperimentsController < ApplicationController
     end
   end
 
-  def show
-    render json: {
-      html: render_to_string(partial: 'experiments/details_modal', formats: :html)
-    }
-  end
-
-  def permissions
-    if stale?([@experiment, @experiment.project])
-      render json: {
-        editable: can_manage_experiment?(@experiment),
-        moveable: can_move_experiment?(@experiment),
-        archivable: can_archive_experiment?(@experiment),
-        restorable: can_restore_experiment?(@experiment),
-        duplicable: can_clone_experiment?(@experiment)
-      }
-    end
-  end
-
   def canvas
     @project = @experiment.project
     @active_modules = unless @experiment.archived_branch?
@@ -101,40 +74,6 @@ class ExperimentsController < ApplicationController
                                    .select('COUNT(DISTINCT comments.id) as task_comments_count')
                                    .select('my_modules.*').group(:id)
                       end
-  end
-
-  def table
-    @project = @experiment.project
-    @experiment.current_view_state(current_user)
-    @my_module_visible_table_columns = current_user.my_module_visible_table_columns
-
-    view_state = @experiment.current_view_state(current_user)
-    @current_sort = view_state.state.dig('my_modules', my_modules_view_mode(@project), 'sort') || 'atoz'
-  end
-
-  def my_modules_view_mode(my_module)
-    return 'archived' if  my_module.archived?
-
-    params[:view_mode] == 'archived' ? 'archived' : 'active'
-  end
-
-  def load_table
-    active_view_mode = params[:view_mode] != 'archived'
-    my_modules = nil
-
-    unless @experiment.archived_branch? && active_view_mode
-      my_modules = @experiment.my_modules.readable_by_user(current_user)
-
-      unless @experiment.archived_branch?
-        my_modules = if active_view_mode
-                       my_modules.active
-                     else
-                       my_modules.archived
-                     end
-      end
-    end
-
-    render json: Experiments::TableViewService.new(@experiment, my_modules, current_user, params).call
   end
 
   def my_modules
@@ -150,12 +89,6 @@ class ExperimentsController < ApplicationController
     view_state.save!
 
     redirect_to view_mode_redirect_url(view_type_params)
-  end
-
-  def edit
-    render json: {
-      html: render_to_string(partial: 'edit_modal', formats: :html)
-    }
   end
 
   def update
@@ -242,19 +175,6 @@ class ExperimentsController < ApplicationController
     end
   end
 
-  # GET: clone_modal_experiment_path(id)
-  def clone_modal
-    @projects = @experiment.project.team.projects.active
-                           .with_user_permission(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
-    render json: {
-      html: render_to_string(
-        partial: 'clone_modal',
-        locals: { view_mode: params[:view_mode] },
-        formats: :html
-      )
-    }
-  end
-
   def projects_to_clone
     projects = @experiment.project.team.projects.active
                           .with_user_permission(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
@@ -294,14 +214,6 @@ class ExperimentsController < ApplicationController
     end
   end
 
-  # GET: move_modal_experiment_path(id)
-  def move_modal
-    @projects = @experiment.movable_projects(current_user)
-    render json: {
-      html: render_to_string(partial: 'move_modal', formats: :html)
-    }
-  end
-
   def search_tags
     tags = @experiment.project.tags.where.not(id: JSON.parse(params[:selected_tags]))
                       .where_attributes_like(:name, params[:query])
@@ -319,23 +231,31 @@ class ExperimentsController < ApplicationController
 
   # POST: move_experiment(id)
   def move
-    service = Experiments::MoveToProjectService
-              .call(experiment_id: @experiment.id,
-                    project_id: move_experiment_param,
-                    user_id: current_user.id)
-    if service.succeed?
-      message = t('experiments.move.success_flash',
-                          experiment: @experiment.name)
-      status = :ok
-      view_state = @experiment.current_view_state(current_user)
-      view_type = view_state.state['my_modules']['view_type'] || 'canvas'
-      path = view_mode_redirect_url(view_type)
-    else
-      message = "#{service.errors.values.join('. ')}."
-      status = :unprocessable_entity
-    end
+    project = Project.viewable_by_user(current_user, current_team)
+                     .find_by(id: params[:project_id])
 
-    render json: { message: message, path: path }, status: status
+    project.transaction do
+      @experiments.each do |experiment|
+        service = Experiments::MoveToProjectService
+                  .call(experiment_id: experiment.id,
+                        project_id: params[:project_id],
+                        user_id: current_user.id)
+        raise StandardError unless service.succeed?
+      end
+
+      flash[:success] = t('experiments.table.move_success_flash', project: escape_input(project.name))
+      render json: { message: t('experiments.table.move_success_flash',
+        project: escape_input(project.name)), path: project_path(project) }
+    rescue StandardError => e
+      Rails.logger.error(e.message)
+      Rails.logger.error(e.backtrace.join("\n"))
+      render json: {
+        message: t('experiments.table.move_error_flash', project: escape_input(project.name))
+      }, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
+    end
+  rescue ActiveRecord::RecordNotFound
+    render_404
   end
 
   def move_modules_modal
@@ -401,35 +321,7 @@ class ExperimentsController < ApplicationController
     end
 
     render json: {
-      workflowimg: render_to_string(
-        partial: 'projects/show/workflow_img',
-        locals: { experiment: @experiment },
-        formats: :html
-      )
-    }
-  end
-
-  def sidebar
-    view_state = @experiment.current_view_state(current_user)
-    view_mode = params[:view_mode].presence || 'active'
-    default_sort = view_state.state.dig('my_modules', view_mode, 'sort') || 'atoz'
-    my_modules = if @experiment.archived_branch?
-                   @experiment.my_modules
-                 elsif params[:view_mode] == 'archived'
-                   @experiment.my_modules.archived
-                 else
-                   @experiment.my_modules.active
-                 end
-
-    my_modules = sort_my_modules(my_modules, params[:sort].presence || default_sort)
-    render json: {
-      html: render_to_string(
-        partial: if params[:view_mode] == 'archived'
-                    'shared/sidebar/archived_my_modules'
-                  else
-                    'shared/sidebar/my_modules'
-                  end, locals: { experiment: @experiment, my_modules: my_modules }
-      )
+      workflowimg_url: rails_blob_path(@experiment.workflowimg, only_path: true),
     }
   end
 
@@ -456,17 +348,6 @@ class ExperimentsController < ApplicationController
     return render plain: [].to_json if experiments.blank?
 
     render json: experiments
-  end
-
-  def actions_dropdown
-    if stale?([@experiment, @experiment.project])
-      render json: {
-        html: render_to_string(
-          partial: 'projects/show/experiment_actions_dropdown',
-          locals: { experiment: @experiment }
-        )
-      }
-    end
   end
 
   def assigned_users_to_tasks
@@ -551,6 +432,11 @@ class ExperimentsController < ApplicationController
   def load_experiment
     @experiment = Experiment.preload(user_assignments: %i(user user_role)).find_by(id: params[:id])
     render_404 unless @experiment
+  end
+
+  def load_experiments
+    @experiments = Experiment.preload(user_assignments: %i(user user_role)).where(id: params[:ids])
+    render_404 unless @experiments
   end
 
   def load_project

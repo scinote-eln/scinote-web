@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_05_162611) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_15_140943) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_trgm"
@@ -74,6 +74,19 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_05_162611) do
     t.jsonb "filter", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "asset_sync_tokens", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "asset_id", null: false
+    t.string "token"
+    t.datetime "expires_at", precision: nil
+    t.datetime "revoked_at", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["asset_id"], name: "index_asset_sync_tokens_on_asset_id"
+    t.index ["token"], name: "index_asset_sync_tokens_on_token", unique: true
+    t.index ["user_id"], name: "index_asset_sync_tokens_on_user_id"
   end
 
   create_table "asset_text_data", force: :cascade do |t|
@@ -621,11 +634,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_05_162611) do
     t.datetime "restored_on", precision: nil
     t.bigint "archived_by_id"
     t.bigint "restored_by_id"
+    t.string "external_id"
     t.index ["archived"], name: "index_repositories_on_archived"
     t.index ["archived_by_id"], name: "index_repositories_on_archived_by_id"
     t.index ["discarded_at"], name: "index_repositories_on_discarded_at"
     t.index ["my_module_id"], name: "index_repositories_on_my_module_id"
     t.index ["restored_by_id"], name: "index_repositories_on_restored_by_id"
+    t.index ["team_id", "external_id"], name: "unique_index_repositories_on_external_id", unique: true
     t.index ["team_id"], name: "index_repositories_on_team_id"
   end
 
@@ -662,9 +677,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_05_162611) do
     t.datetime "updated_at", null: false
     t.string "external_id"
     t.index "trim_html_tags((data)::text) gin_trgm_ops", name: "index_repository_checklist_items_on_data", using: :gin
-    t.index "trim_html_tags((external_id)::text) gin_trgm_ops", name: "index_repository_checklist_items_on_external_id", using: :gin
     t.index ["created_by_id"], name: "index_repository_checklist_items_on_created_by_id"
-    t.index ["external_id"], name: "unique_index_repository_checklist_items_on_external_id", unique: true
     t.index ["last_modified_by_id"], name: "index_repository_checklist_items_on_last_modified_by_id"
     t.index ["repository_column_id", "external_id"], name: "unique_index_repository_checklist_items_on_external_id", unique: true
     t.index ["repository_column_id"], name: "index_repository_checklist_items_on_repository_column_id"
@@ -759,10 +772,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_05_162611) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.string "external_id"
-    t.index "trim_html_tags((external_id)::text) gin_trgm_ops", name: "index_repository_list_items_on_external_id", using: :gin
     t.index "trim_html_tags(data) gin_trgm_ops", name: "index_repository_list_items_on_data", using: :gin
     t.index ["created_by_id"], name: "index_repository_list_items_on_created_by_id"
-    t.index ["external_id"], name: "unique_index_repository_list_items_on_external_id", unique: true
     t.index ["last_modified_by_id"], name: "index_repository_list_items_on_last_modified_by_id"
     t.index ["repository_column_id", "external_id"], name: "unique_index_repository_list_items_on_external_id", unique: true
     t.index ["repository_column_id"], name: "index_repository_list_items_on_repository_column_id"
@@ -826,7 +837,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_05_162611) do
     t.index "((id)::text) gin_trgm_ops", name: "index_repository_rows_on_id_text", using: :gin
     t.index "date_trunc('minute'::text, archived_on)", name: "index_repository_rows_on_archived_on_as_date_time_minutes"
     t.index "date_trunc('minute'::text, created_at)", name: "index_repository_rows_on_created_at_as_date_time_minutes"
-    t.index "trim_html_tags((external_id)::text) gin_trgm_ops", name: "index_repository_rows_on_external_id", using: :gin
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_repository_rows_on_name", using: :gin
     t.index ["archived"], name: "index_repository_rows_on_archived"
     t.index ["archived_by_id"], name: "index_repository_rows_on_archived_by_id"
@@ -1328,6 +1338,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_05_162611) do
   add_foreign_key "activities", "my_modules"
   add_foreign_key "activities", "projects"
   add_foreign_key "activities", "users", column: "owner_id"
+  add_foreign_key "asset_sync_tokens", "assets"
+  add_foreign_key "asset_sync_tokens", "users"
   add_foreign_key "asset_text_data", "assets"
   add_foreign_key "assets", "users", column: "created_by_id"
   add_foreign_key "assets", "users", column: "last_modified_by_id"

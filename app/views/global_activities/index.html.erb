@@ -1,6 +1,6 @@
 <% provide :head_title, t('nav.label.activities') %>
 
-<div class="global-activities-container">
+<div class="global-activities-container" data-e2e="e2e-CO-activities">
   <div id="filters" data-filters='<%= @filters.to_json %>' ></div>
   <div class="ga-top">
     <%= render partial: "top_pane" %>

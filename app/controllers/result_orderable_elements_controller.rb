@@ -5,9 +5,9 @@ class ResultOrderableElementsController < ApplicationController
   before_action :check_manage_permissions
 
   def reorder
-    params[:result_orderable_element_positions].each do |id, position|
-      result_element = @result.result_orderable_elements.find(id)
-      ActiveRecord::Base.transaction do
+    ActiveRecord::Base.transaction do
+      params[:result_orderable_element_positions].each do |id, position|
+        result_element = @result.result_orderable_elements.find(id)
         result_element.insert_at(position)
       end
     end

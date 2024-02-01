@@ -8,6 +8,7 @@
              :activePageUrl="activePageUrl"
              :archivedPageUrl="archivedPageUrl"
              :currentViewMode="currentViewMode"
+             scrollMode="infinite"
              :filters="filters"
              :viewRenders="viewRenders"
              @tableReloaded="reloadingTable = false"
@@ -28,13 +29,6 @@
   </DataTable>
   <a href="#" ref="commentButton" class="open-comments-sidebar hidden"
      data-turbolinks="false" data-object-type="Project" data-object-id=""></a>
-  <ConfirmationModal
-    :title="i18n.t('projects.index.archive_confirm_title')"
-    :description="i18n.t('projects.index.archive_confirm')"
-    :confirmClass="'btn btn-primary'"
-    :confirmText="i18n.t('general.archive')"
-    ref="archiveModal"
-  ></ConfirmationModal>
   <ConfirmationModal
     :title="i18n.t('projects.index.modal_delete_folders.title')"
     :description="folderDeleteDescription"
@@ -140,12 +134,6 @@ export default {
           sortable: true,
         },
         {
-          field: 'hidden',
-          headerName: this.i18n.t('projects.index.card.visibility'),
-          cellRenderer: this.visibiltyRenderer,
-          sortable: false,
-        },
-        {
           field: 'users',
           headerName: this.i18n.t('projects.index.card.users'),
           cellRenderer: 'UsersRenderer',
@@ -246,10 +234,6 @@ export default {
                 ${params.data.name}
               </a>`;
     },
-    visibiltyRenderer(params) {
-      if (params.data.type !== 'projects') return '';
-      return params.data.hidden ? this.i18n.t('projects.index.hidden') : this.i18n.t('projects.index.visible');
-    },
     openComments(_params, rows) {
       this.$refs.commentButton.dataset.objectId = rows[0].id;
       this.$refs.commentButton.click();
@@ -261,15 +245,12 @@ export default {
       };
     },
     async archive(event, rows) {
-      const ok = await this.$refs.archiveModal.show();
-      if (ok) {
-        axios.post(event.path, { project_ids: rows.map((row) => row.id) }).then((response) => {
-          this.reloadingTable = true;
-          HelperModule.flashAlertMsg(response.data.message, 'success');
-        }).catch((error) => {
-          HelperModule.flashAlertMsg(error.response.data.error, 'danger');
-        });
-      }
+      axios.post(event.path, { project_ids: rows.map((row) => row.id) }).then((response) => {
+        this.reloadingTable = true;
+        HelperModule.flashAlertMsg(response.data.message, 'success');
+      }).catch((error) => {
+        HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+      });
     },
     restore(event, rows) {
       axios.post(event.path, { project_ids: rows.map((row) => row.id) }).then((response) => {

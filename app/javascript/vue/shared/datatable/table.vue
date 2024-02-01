@@ -21,6 +21,10 @@
         @sort="applyOrder"
         @hideColumn="hideColumn"
         @showColumn="showColumn"
+        @pinColumn="pinColumn"
+        @unPinColumn="unPinColumn"
+        @reorderColumns="reorderColumns"
+        @resetColumnsToDefault="resetColumnsToDefault"
       />
       <div v-if="currentViewRender === 'cards'" ref="cardsContainer" @scroll="handleScroll"
            class="flex-grow basis-64 overflow-y-auto overflow-x-visible p-2 -ml-2">
@@ -146,7 +150,7 @@ export default {
     },
     scrollMode: {
       type: String,
-      default: 'infinite'
+      default: 'pages'
     }
   },
   data() {
@@ -200,6 +204,7 @@ export default {
     extendedColumnDefs() {
       const columns = this.columnDefs.map((column) => ({
         ...column,
+        minWidth: column.minWidth || 110,
         cellRendererParams: {
           dtComponent: this
         },
@@ -215,8 +220,10 @@ export default {
           suppressMovable: true,
           width: 48,
           minWidth: 48,
-          resizable: false,
-          pinned: 'left'
+          maxWidth: 48,
+          resizable: true,
+          pinned: 'left',
+          lockPosition: 'left'
         });
       }
 
@@ -252,7 +259,7 @@ export default {
   watch: {
     reloadingTable() {
       if (this.reloadingTable) {
-        this.loadData();
+        this.updateTable();
       }
     },
     currentViewRender() {
@@ -274,6 +281,8 @@ export default {
   },
   methods: {
     handleScroll() {
+      if (this.scrollMode === 'pages') return;
+
       let target = null;
       if (this.currentViewRender === 'cards') {
         target = this.$refs.cardsContainer;
@@ -337,12 +346,20 @@ export default {
     resize() {
       if (this.tableState) return;
 
-      this.gridApi.sizeColumnsToFit();
+      this.columnApi?.autoSizeAllColumns();
+    },
+    updateTable() {
+      if (this.scrollMode === 'pages') {
+        this.loadData();
+      } else {
+        this.reloadTable();
+      }
     },
     reloadTable() {
       if (this.dataLoading) return;
 
       this.dataLoading = true;
+      this.selectedRows = [];
       this.page = 1;
       this.loadData(true);
     },
@@ -432,6 +449,7 @@ export default {
         data: tableState
       };
       axios.put(this.userSettingsUrl, { settings: [settings] });
+      this.tableState = tableState;
     },
     setSelectedRows() {
       this.selectedRows = this.gridApi.getSelectedRows();
@@ -465,6 +483,23 @@ export default {
     },
     showColumn(column) {
       this.columnApi.setColumnVisible(column.field, true);
+      this.saveTableState();
+    },
+    pinColumn(column) {
+      this.columnApi.setColumnPinned(column.field, 'left');
+      this.saveTableState();
+    },
+    unPinColumn(column) {
+      this.columnApi.setColumnPinned(column.field, null);
+      this.saveTableState();
+    },
+    reorderColumns(columns) {
+      this.columnApi.moveColumns(columns, 1);
+      this.saveTableState();
+    },
+    resetColumnsToDefault() {
+      this.columnApi.resetColumnState();
+      this.columnApi.autoSizeAllColumns();
       this.saveTableState();
     },
     getOrder(columnsState) {

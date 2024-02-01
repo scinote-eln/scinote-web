@@ -2,10 +2,12 @@
   <div class="sci--navigation--notificaitons-flyout">
     <div class="sci--navigation--notificaitons-flyout-title">
       {{ i18n.t('nav.notifications.title') }}
-      <i class="sn-icon sn-icon-close" @click="$emit('close')"></i>
+      <a class="ml-auto cursor-pointer text-sm font-normal" :href="this.preferencesUrl" :title="i18n.t('nav.settings')">
+        {{ i18n.t('nav.settings') }}
+      </a>
     </div>
     <hr>
-    <perfect-scrollbar ref="scrollContainer" class="sci--navigation--notificaitons-flyout-notifications">
+    <perfect-scrollbar @wheel="preventPropagation" ref="scrollContainer" class="sci--navigation--notificaitons-flyout-notifications">
       <div class="sci-navigation--notificaitons-flyout-subtitle" v-if="todayNotifications.length">
         {{ i18n.t('nav.notifications.today') }}
       </div>
@@ -35,7 +37,8 @@ export default {
   },
   props: {
     notificationsUrl: String,
-    unseenNotificationsCount: Number
+    unseenNotificationsCount: Number,
+    preferencesUrl: String
   },
   data() {
     return {
@@ -73,6 +76,10 @@ export default {
     }
   },
   methods: {
+    preventPropagation(e) {
+      e.stopPropagation();
+      e.preventDefault();
+    },
     loadNotifications() {
       if (this.nextPageUrl == null || this.loadingPage) return;
 

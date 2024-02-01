@@ -2,7 +2,8 @@
   <div v-if="!paramsAreBlank"
        class="sn-action-toolbar p-4 w-full fixed bottom-0 rounded-t-md"
        :class="{ 'sn-action-toolbar--button-overflow': buttonOverflow }"
-       :style="`width: ${width}px; bottom: ${bottomOffset}px; transform: translateX(${leftOffset}px)`">
+       :style="`width: ${width}px; bottom: ${bottomOffset}px; transform: translateX(${leftOffset}px)`"
+       :data-e2e="`e2e-CO-actionToolbar`">
     <div class="sn-action-toolbar__actions flex gap-4">
       <div v-if="loading && !actions.length" class="sn-action-toolbar__action">
         <a class="rounded flex items-center py-1.5 px-2.5 bg-transparent text-transparent no-underline"></a>
@@ -12,7 +13,7 @@
       </div>
       <div v-for="action in actions" :key="action.name" class="sn-action-toolbar__action shrink-0">
           <div v-if="action.type === 'group' && Array.isArray(action.actions) && action.actions.length > 1" class="export-actions-dropdown sci-dropdown dropup">
-            <button class="btn btn-primary dropdown-toggle single-object-action rounded" type="button" id="exportDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <button class="btn btn-primary dropdown-toggle single-object-action rounded" type="button" id="exportDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-e2e="e2e-DD-actionToolbar-export">
               <i class="sn-icon sn-icon-export"></i>
               <span>{{ action.group_label }}</span>
               <span class="sn-icon sn-icon-down"></span>
@@ -29,7 +30,6 @@
                   :data-object-type="groupAction.item_type"
                   :data-object-id="groupAction.item_id"
                   :data-action="groupAction.type"
-                  :data-e2e="`e2e-BT-actionToolbar-${groupAction.name}`"
                   @click="closeExportDropdown($event); doAction(groupAction, $event);">
                   <span class="sn-action-toolbar__button-text">{{ groupAction.label }}</span>
                 </a>
@@ -47,7 +47,7 @@
             :data-object-type="action.actions[0].item_type"
             :data-object-id="action.actions[0].item_id"
             :data-action="action.actions[0].type"
-            :data-e2e="`e2e-BT-actionToolbar-${action.name}`"
+            :data-e2e="`e2e-BT-actionToolbar-${action.name === 'export_group' ? 'export' : action.name}`"
             @click="doAction(action.actions[0], $event);">
             <i :class="action.actions[0].icon"></i>
             <span class="sn-action-toolbar__button-text">{{ action.group_label }}</span>
@@ -63,7 +63,7 @@
             :data-object-type="action.item_type"
             :data-object-id="action.item_id"
             :data-action="action.type"
-            :data-e2e="`e2e-BT-actionToolbar-${action.name}`"
+            :data-e2e="`e2e-BT-actionToolbar-${action.name === 'export_group' ? 'export' : action.name}`"
             @click="doAction(action, $event)">
             <i :class="action.icon"></i>
             <span class="sn-action-toolbar__button-text">{{ action.label }}</span>

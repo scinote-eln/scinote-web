@@ -11,15 +11,6 @@ module Api
 
       class FilterParamError < StandardError; end
 
-      class MutuallyExclusiveParamsError < StandardError
-        attr_reader :first_param, :second_param
-
-        def initialize(first_param, second_param)
-          @first_param = first_param
-          @second_param = second_param
-        end
-      end
-
       class PermissionError < StandardError
         attr_reader :klass, :mode
 
@@ -34,14 +25,6 @@ module Api
         logger.error e.backtrace.join("\n")
         render_error(I18n.t('api.core.errors.general.title'),
                      I18n.t('api.core.errors.general.detail'),
-                     :bad_request)
-      end
-
-      rescue_from MutuallyExclusiveParamsError do |e|
-        render_error(I18n.t('api.core.errors.mutually_exclusive_params_error.title'),
-                     I18n.t('api.core.errors.mutually_exclusive_params_error.detail',
-                            first_param: e.first_param,
-                            second_param: e.second_param),
                      :bad_request)
       end
 
