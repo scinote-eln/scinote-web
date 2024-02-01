@@ -31,4 +31,8 @@ Canaid::Permissions.register_for(Asset) do
       end
     end
   end
+
+  can :open_asset_locally do |_user, asset|
+    ENV['ASSET_SYNC_URL'].present?
+  end
 end

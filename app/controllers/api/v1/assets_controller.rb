@@ -34,7 +34,7 @@ module Api
         end
 
         asset.save!(context: :on_api_upload)
-        asset.post_process_file
+        asset.post_process_file(@team)
 
         render jsonapi: asset,
                serializer: AssetSerializer,

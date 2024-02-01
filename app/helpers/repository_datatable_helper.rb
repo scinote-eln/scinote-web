@@ -52,6 +52,11 @@ module RepositoryDatatableHelper
           serialize_repository_cell_value(cell, team, repository, reminders_enabled: reminders_enabled)
       end
 
+      if repository.repository_columns.stock_type.exists?
+        stock_cell = record.repository_cells.find { |cell| cell.value_type == 'RepositoryStockValue' }
+        row['stock'] = serialize_repository_cell_value(record.repository_stock_cell, team, repository) if stock_cell.present?
+      end
+
       if has_stock_management
         stock_cell = record.repository_cells.find { |cell| cell.value_type == 'RepositoryStockValue' }
 

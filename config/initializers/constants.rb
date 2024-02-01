@@ -428,8 +428,15 @@ class Constants
   FAST_STATUS_POLLING_INTERVAL = 5000
   SLOW_STATUS_POLLING_INTERVAL = 10000
 
+  ASSET_SYNC_TOKEN_EXPIRATION = 1.year
+  ASSET_SYNC_URL = ENV['ASSET_SYNC_URL'].freeze
+
   # Grover timeout in ms
   GROVER_TIMEOUT_MS = 300000
+
+  # SciNote Edit supported versions
+  MIN_SCINOTE_EDIT_VERSION = ENV['MIN_SCINOTE_EDIT_VERSION'].freeze
+  MAX_SCINOTE_EDIT_VERSION = ENV['MAX_SCINOTE_EDIT_VERSION'].freeze
 
   #                             )       \   /      (
   #                            /|\      )\_/(     /|\

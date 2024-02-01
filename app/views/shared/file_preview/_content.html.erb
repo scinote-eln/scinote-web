@@ -3,13 +3,9 @@
   <div class="sci-btn-group">
     <% if can_edit && !preview %>
       <% if wopi_enabled? && wopi_file?(asset) %>
-        <% edit_supported, title = wopi_file_edit_button_status(asset) %>
-        <%= render partial: 'assets/wopi/file_wopi_controls',
-          locals: {
-            asset: asset,
-            edit_supported: edit_supported,
-            title: title
-          } %>
+        <div id="openLocallyMenu" data-behaviour="vue">
+          <open-locally-menu :attachment="<%= { attributes: AssetSerializer.new(asset, scope: { user: current_user }).as_json }.to_json %>" />
+        </div>
       <% elsif asset.file.metadata[:asset_type] == 'marvinjs' %>
         <button class="btn btn-light marvinjs-edit-button"
           data-sketch-id="<%= asset.id %>"
@@ -31,7 +27,7 @@
         </button>
 
       <% elsif asset.editable_image? %>
-        <button class="btn btn-light image-edit-button"
+        <button id="editImageButton" class="btn btn-light image-edit-button hidden"
           data-image-id="<%= asset.id %>"
           data-image-name="<%= asset.file_name %>"
           data-image-url="<%= asset_file_url_path(asset) %>"
@@ -43,6 +39,9 @@
           <%= t('assets.file_preview.edit_in_scinote') %>
         </button>
       <% end %>
+      <div id="openLocallyMenu" data-behaviour="vue">
+        <open-locally-menu :attachment="<%= { attributes: AssetSerializer.new(asset, scope: { user: current_user }).as_json }.to_json %>" />
+      </div>
     <% end %>
     <a class="btn btn-light file-download-link" href="<%= rails_blob_path(asset.file, disposition: 'attachment') %>" data-turbolinks="false">
       <span class="sn-icon sn-icon-export"></span> <%= t('Download')%>
@@ -110,3 +109,4 @@
 <% end %>
 
 <%= javascript_include_tag 'shared/file_preview', nonce: true %>
+<%= javascript_include_tag "vue_open_locally_menu", nonce: true %>

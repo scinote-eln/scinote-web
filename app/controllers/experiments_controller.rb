@@ -8,19 +8,21 @@ class ExperimentsController < ApplicationController
   include Rails.application.routes.url_helpers
   include Breadcrumbs
 
-  before_action :load_project, only: %i(new create archive_group restore_group)
+  before_action :load_project, only: %i(new create archive_group restore_group move)
   before_action :load_experiment, except: %i(new create archive_group restore_group
-                                             inventory_assigning_experiment_filter actions_toolbar)
-  before_action :check_read_permissions, except: %i(edit archive clone move new
+                                             inventory_assigning_experiment_filter actions_toolbar
+                                             move move_modal)
+  before_action :load_experiments, only: %i(move_modal move)
+  before_action :check_move_permissions, only: %i(move_modal move)
+  before_action :check_read_permissions, except: %i(edit archive clone move move_modal new
                                                     create archive_group restore_group
                                                     inventory_assigning_experiment_filter actions_toolbar)
   before_action :check_canvas_read_permissions, only: %i(canvas)
-  before_action :check_create_permissions, only: %i(new create)
+  before_action :check_create_permissions, only: %i(new create move)
   before_action :check_manage_permissions, only: %i(edit batch_clone_my_modules)
   before_action :check_update_permissions, only: %i(update)
   before_action :check_archive_permissions, only: :archive
   before_action :check_clone_permissions, only: %i(clone_modal clone)
-  before_action :check_move_permissions, only: %i(move_modal move)
   before_action :set_inline_name_editing, only: %i(canvas table module_archive)
   before_action :set_breadcrumbs_items, only: %i(canvas table module_archive)
   before_action :set_navigator, only: %i(canvas module_archive table)
@@ -254,7 +256,7 @@ class ExperimentsController < ApplicationController
 
   # POST: clone_experiment(id)
   def clone
-    project = current_team.projects.find(move_experiment_param)
+    @project = current_team.projects.find(move_experiment_param)
     return render_403 unless can_create_project_experiments?(project)
 
     service = Experiments::CopyExperimentAsTemplateService.call(experiment: @experiment,
@@ -274,7 +276,7 @@ class ExperimentsController < ApplicationController
 
   # GET: move_modal_experiment_path(id)
   def move_modal
-    @projects = @experiment.movable_projects(current_user)
+    @projects = @experiments.first.movable_projects(current_user)
     render json: {
       html: render_to_string(partial: 'move_modal', formats: :html)
     }
@@ -297,23 +299,28 @@ class ExperimentsController < ApplicationController
 
   # POST: move_experiment(id)
   def move
-    service = Experiments::MoveToProjectService
-              .call(experiment_id: @experiment.id,
-                    project_id: move_experiment_param,
-                    user_id: current_user.id)
-    if service.succeed?
-      flash[:success] = t('experiments.move.success_flash',
-                          experiment: @experiment.name)
-      status = :ok
-      view_state = @experiment.current_view_state(current_user)
-      view_type = view_state.state['my_modules']['view_type'] || 'canvas'
-      path = view_mode_redirect_url(view_type)
-    else
-      message = "#{service.errors.values.join('. ')}."
-      status = :unprocessable_entity
-    end
+    @project.transaction do
+      @experiments.each do |experiment|
+        service = Experiments::MoveToProjectService
+                  .call(experiment_id: experiment.id,
+                        project_id: params[:project_id],
+                        user_id: current_user.id)
+        raise StandardError unless service.succeed?
+      end
 
-    render json: { message: message, path: path }, status: status
+      flash[:success] = t('experiments.table.move_success_flash', project: escape_input(@project.name))
+      render json: { message: t('experiments.table.move_success_flash',
+                                project: escape_input(@project.name)), path: project_path(@project) }
+    rescue StandardError => e
+      Rails.logger.error(e.message)
+      Rails.logger.error(e.backtrace.join("\n"))
+      render json: {
+        message: t('experiments.table.move_error_flash', project: escape_input(@project.name))
+      }, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
+    end
+  rescue ActiveRecord::RecordNotFound
+    render_404
   end
 
   def move_modules_modal
@@ -531,6 +538,11 @@ class ExperimentsController < ApplicationController
     render_404 unless @experiment
   end
 
+  def load_experiments
+    @experiments = Experiment.preload(user_assignments: %i(user user_role)).where(id: params[:ids])
+    render_404 unless @experiments
+  end
+
   def load_project
     @project = Project.find_by(id: params[:project_id])
     render_404 unless @project
@@ -583,7 +595,7 @@ class ExperimentsController < ApplicationController
   end
 
   def check_move_permissions
-    render_403 unless can_move_experiment?(@experiment)
+    render_403 unless @experiments.all? { |e| can_move_experiment?(e) }
   end
 
   def set_inline_name_editing

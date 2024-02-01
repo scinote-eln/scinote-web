@@ -387,6 +387,8 @@ Rails.application.routes.draw do
         get 'clone_modal', action: :clone_modal
         get 'move_modal', action: :move_modal
         get 'actions_toolbar'
+        get 'move_modal' # return modal with move options
+        post 'move' # move experiment
       end
       member do
         get 'permissions'
@@ -410,8 +412,6 @@ Rails.application.routes.draw do
         post 'archive' # archive experiment
         get 'clone_modal' # return modal with clone options
         post 'clone' # clone experiment
-        get 'move_modal' # return modal with move options
-        post 'move' # move experiment
         get 'fetch_workflow_img' # Get updated workflow img
         get 'modules/new', to: 'my_modules#new'
         post 'modules', to: 'my_modules#create'
@@ -1007,6 +1007,11 @@ Rails.application.routes.draw do
     end
   end
 
+  get 'asset_sync/:asset_id', to: 'asset_sync#show', as: :asset_sync_show
+  get 'asset_sync/:asset_id/download', to: 'asset_sync#download', as: :asset_sync_download
+  put 'asset_sync', to: 'asset_sync#update'
+  get '/asset_sync_api_url', to: 'asset_sync#api_url'
+
   post 'global_activities', to: 'global_activities#index'
 
   constraints WopiSubdomain do
@@ -1018,4 +1023,8 @@ Rails.application.routes.draw do
   end
 
   resources :gene_sequence_assets, only: %i(new create edit update)
+
+  if Rails.env.development? || ENV['ENABLE_DESIGN_ELEMENTS'] == 'true'
+    resources :design_elements, only: %i(index)
+  end
 end

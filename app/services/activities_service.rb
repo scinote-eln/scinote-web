@@ -14,10 +14,6 @@ class ActivitiesService
 
     if filters[:subjects].present?
       subjects_with_children = load_subjects_children(filters[:subjects])
-      if subjects_with_children['Project']
-        query = query.where('project_id IN (?)', subjects_with_children['Project'])
-        subjects_with_children = subjects_with_children.except('Project')
-      end
       where_condition = subjects_with_children.to_h.map { '(subject_type = ? AND subject_id IN(?))' }.join(' OR ')
       where_arguments = subjects_with_children.to_h.flatten
       if subjects_with_children[:my_module]

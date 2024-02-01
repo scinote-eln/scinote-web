@@ -3,66 +3,109 @@
 
 <%= render partial: 'users/settings/sidebar' %>
 <div class="tab-content user-account-addons">
-  <div class="tab-pane content-pane active" role="tabpanel">
+  <div role="tabpanel">
 
-    <div>
-      <h1 class="addons-title"><%= t('users.settings.account.addons.title') %></h1>
+    <h1 id="scinote-addons-title" class="mt-0 pb-1.5 text-sn-black"><%= t('users.settings.account.addons.title') %></h1>
 
-      <div>
-        <h2 class="addons-subtitle" ><%= t('users.settings.account.addons.scinote_addons') %></h2>
+    <div id="scinote-addons-wrapper" class="flex flex-col bg-sn-white p-4 rounded mb-6">
+        <h2 class="my-0 pb-6 text-sn-black" ><%= t('users.settings.account.addons.scinote_addons') %></h2>
         <div data-hook="settings-addons-container">
           <em data-hook="settings-addons-no-addons">
             <%= t('users.settings.account.addons.no_addons') %>
           </em>
         </div>
-      </div>
     </div>
-    <div class="row printer-settings">
-      <div class="col-xs-12 col-sm-12">
-        <h2 class="addons-subtitle"><%= t('users.settings.account.addons.label_printers') %></h2>
-        <div class="printers-container">
-          <div class="printer">
-            <div class="header">
-              <div class="title">
-                <%= t('users.settings.account.addons.zebra_printer.title') %>
-              </div>
-              <div class="control">
-                <%= t('users.settings.account.addons.printers.enabled') %>
-                <i class="sn-icon sn-icon-check"></i>
-              </div>
+
+    <%# scinote edit %>
+    <% if ENV['ASSET_SYNC_URL'].present? %>
+      <div class="bg-sn-white rounded p-4 mb-6">
+          <div class="font-bold my-0 pb-2 text-sn-black"><%= t('users.settings.account.addons.desktop_app.title') %></div>
+          <div class="pb-6 text-sn-dark-grey">
+            <%= t('users.settings.account.addons.desktop_app.description') %>
+          </div>
+          <div id="scinoteEditDownload" data-behaviour="vue">
+            <scinote-edit-download data="<%= @user_agent %>">
+          </div>
+      </div>
+    <% end %>
+
+    <%# label printers %>
+    <div id="printer-settings" class="flex flex-col gap-6 rounded bg-sn-white mb-6 p-4">
+      <h2 class="my-0 text-sn-black"><%= t('users.settings.account.addons.label_printers') %></h2>
+
+      <%# zebra printer %>
+      <div class="flex flex-row justify-between">
+        <%# left part %>
+        <div id="left-part" class="flex flex-col">
+          <%# title %>
+          <div class="flex flex-row justify-between pb-2">
+            <div class="font-bold text-sn-black">
+              <%= t('users.settings.account.addons.zebra_printer.title') %>
             </div>
-            <div class="description">
-              <%= t('users.settings.account.addons.zebra_printer.description') %>
-            </div>
-              <%= link_to t('users.settings.account.addons.printers.details'), zebra_settings_path(), class: 'printer-details' %>
+          </div>
+          <%# description text %>
+          <div class="text-sn-dark-grey pb-6">
+            <%= t('users.settings.account.addons.zebra_printer.description') %>
+          </div>
+          <%# button %>
+          <div>
+            <%= link_to t('users.settings.account.addons.printers.details'), zebra_settings_path(), class: 'text-sn-blue' %>
           </div>
         </div>
-        <div class="printers-container">
-          <div class="printer">
-            <div class="header">
-              <div class="title">
-                <%= t('users.settings.account.addons.fluics_printer.title') %>
-              </div>
-              <div class="control">
+        <%# right-part %>
+        <div id="right-part" class="flex flex-row min-w-fit items-start">
+          <div class="flex items-center gap-2">
+              <div class="text-sn-black">
                 <%= t('users.settings.account.addons.printers.enabled') %>
-                <i class="sn-icon sn-icon-check"></i>
               </div>
+              <i class="sn-icon sn-icon-check"></i>
+          </div>
+        </div>
+      </div>
+
+      <%# solid line divider %>
+      <div id="divider" class="w-500 bg-sn-light-grey flex items-center self-stretch h-px"></div>
+
+      <%# fluics printer %>
+      <div class="flex flex-row justify-between">
+        <%# left part %>
+        <div id="left-part" class="flex flex-col">
+          <%# title %>
+          <div class="flex flex-row justify-between pb-2">
+            <div class="font-bold text-sn-black">
+              <%= t('users.settings.account.addons.fluics_printer.title') %>
             </div>
-            <div class="description">
-              <%= t('users.settings.account.addons.fluics_printer.description') %>
-            </div>
+          </div>
+          <%# description text %>
+          <div class="text-sn-dark-grey pb-6">
+            <%= t('users.settings.account.addons.fluics_printer.description') %>
+          </div>
+          <%# button %>
+          <div>
             <% if !@label_printer_any && can_manage_label_printers? %>
               <%= link_to label_printers_path(), class: 'printer-details btn btn-primary' do %>
-                <i class="fas fa-key"></i>
-                <%= t('users.settings.account.addons.printers.enter_api_key') %>
+                <%= t('users.settings.account.addons.printers.set_up') %>
               <% end %>
             <% else %>
-              <%= link_to t('users.settings.account.addons.printers.printer_details'), label_printers_path(), class: 'printer-details' %>
+              <%= link_to t('users.settings.account.addons.printers.details'), label_printers_path(), class: 'text-sn-blue' %>
             <% end %>
           </div>
         </div>
+        <%# right-part %>
+        <div id="right-part" class="flex flex-row min-w-fit items-start">
+          <div class="flex items-center gap-2">
+              <div class="text-sn-black">
+                <%= t('users.settings.account.addons.printers.enabled') %>
+              </div>
+              <i class="sn-icon sn-icon-check"></i>
+          </div>
+        </div>
       </div>
     </div>
+
+    <%# Integrations inserted here via deface %>
   </div>
   <div class="tab-pane tab-pane-settings" role="tabpanel"></div>
 </div>
+
+<%= javascript_include_tag "vue_scinote_edit_download", nonce: true %>

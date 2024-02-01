@@ -187,6 +187,7 @@ class AssetsController < ApplicationController
     return render_403 unless can_read_team?(@asset.team)
 
     @asset.file.attach(io: params.require(:image), filename: orig_file_name)
+    @asset.last_modified_by = current_user
     @asset.save!
     create_edit_image_activity(@asset, current_user, :finish_editing)
     # release previous image space

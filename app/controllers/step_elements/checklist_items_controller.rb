@@ -18,7 +18,7 @@ module StepElements
       checklist_item = @checklist.checklist_items.new(checklist_item_params.merge!(created_by: current_user))
       new_items = []
       ActiveRecord::Base.transaction do
-        new_items = checklist_item.save_multiline!
+        new_items = checklist_item.save_multiline!(after_id: params[:after_id])
         new_items.each do |item|
           log_activity(
             "#{@step.protocol.in_module? ? :task : :protocol}_step_checklist_item_added",
@@ -102,9 +102,10 @@ module StepElements
     end
 
     def reorder
-      checklist_item = @checklist.checklist_items.find(checklist_item_params[:id])
+      checklist_item = @checklist.checklist_items.find(params[:id])
       ActiveRecord::Base.transaction do
-        checklist_item.insert_at(checklist_item_params[:position])
+        insert_at = (@checklist.checklist_items.find_by(id: params[:after_id])&.position || 0)
+        checklist_item.insert_at(insert_at)
       end
       render json: params[:checklist_item_positions], status: :ok
     rescue ActiveRecord::RecordInvalid
