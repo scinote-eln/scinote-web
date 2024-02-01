@@ -5,7 +5,6 @@
          class="btn btn-primary new-project-btn"
          :title="i18n.t('users.settings.account.addons.desktop_app.windows_button')"
          role="button"
-         data-remote="true"
          target="_blank">
         <span class="hidden-xs">{{ i18n.t('users.settings.account.addons.desktop_app.windows_button') }}</span>
       </a>
@@ -19,7 +18,6 @@
          class="btn btn-primary new-project-btn"
          :title="i18n.t('users.settings.account.addons.desktop_app.macos_button')"
          role="button"
-         data-remote="true"
          target="_blank">
         <span class="hidden-xs">{{ i18n.t('users.settings.account.addons.desktop_app.macos_button') }}</span>
       </a>
@@ -35,7 +33,6 @@
              class="btn btn-primary new-project-btn"
              :title="i18n.t('users.settings.account.addons.desktop_app.windows_button')"
              role="button"
-             data-remote="true"
              target="_blank">
             <span class="hidden-xs">{{ i18n.t('users.settings.account.addons.desktop_app.windows_button') }}</span>
           </a>
@@ -51,7 +48,6 @@
              class="btn btn-primary new-project-btn"
              :title="i18n.t('users.settings.account.addons.desktop_app.macos_button')"
              role="button"
-             data-remote="true"
              target="_blank">
             <span class="hidden-xs">{{ i18n.t('users.settings.account.addons.desktop_app.macos_button') }}</span>
           </a>
