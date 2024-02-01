@@ -410,6 +410,8 @@ export default {
           this.totalPage = response.data.meta.total_pages;
           this.$emit('tableReloaded');
           this.dataLoading = false;
+
+          this.handleScroll();
         });
     },
     onGridReady(params) {
