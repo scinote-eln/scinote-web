@@ -198,7 +198,9 @@ export default {
     },
     gridOptions() {
       return {
-        suppressCellFocus: true
+        suppressCellFocus: true,
+        rowHeight: 40,
+        headerHeight: 40
       };
     },
     extendedColumnDefs() {
@@ -218,9 +220,9 @@ export default {
           headerCheckboxSelectionFilteredOnly: true,
           checkboxSelection: true,
           suppressMovable: true,
-          width: 48,
-          minWidth: 48,
-          maxWidth: 48,
+          width: 40,
+          minWidth: 40,
+          maxWidth: 40,
           resizable: true,
           pinned: 'left',
           lockPosition: 'left'
@@ -332,7 +334,7 @@ export default {
     },
     getRowClass() {
       if (this.currentViewMode === 'archived') {
-        return '!bg-sn-light-grey';
+        return '!bg-sn-super-light-grey';
       }
       return '';
     },

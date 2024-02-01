@@ -1,7 +1,7 @@
 <template>
   <GeneralDropdown @open="loadUsers" @close="closeFlyout">
     <template v-slot:field>
-      <div v-if="!params.data.folder" class="flex items-center gap-1 cursor-pointer h-10" @click="openAccessModal">
+      <div v-if="!params.data.folder" class="flex items-center gap-1 cursor-pointer h-9" @click="openAccessModal">
         <div v-for="(user, i) in visibleUsers" :key="i" :title="user.full_name">
           <img :src="user.avatar" class="w-7 h-7" />
         </div>

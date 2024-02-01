@@ -62,7 +62,7 @@ export default {
           due_date: this.formatDate(value)
         }
       }).then(() => {
-        this.params.dtComponent.loadData();
+        this.params.dtComponent.updateTable();
       });
     },
     formatDate(date) {

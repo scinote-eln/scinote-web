@@ -2,7 +2,7 @@
   <div class="relative">
     <GeneralDropdown ref="dropdown" position="right" @close="$emit('applyFilters', filterValues)">
       <template v-slot:field>
-        <button class="btn btn-light icon-btn"
+        <button class="btn btn-light icon-btn btn-black"
                 :title="i18n.t('filters_modal.title')">
           <i class="sn-icon sn-icon-filter"></i>
           <div
