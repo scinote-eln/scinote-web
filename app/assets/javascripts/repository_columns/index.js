@@ -224,17 +224,6 @@ var RepositoryColumns = (function() {
     });
   }
 
-  function generateColumnNameTooltip(name) {
-    var maxLength = $(TABLE_ID).data('max-dropdown-length');
-    if ($.trim(name).length > maxLength) {
-      return `<div class="modal-tooltip">
-                <span>${truncateLongString(name, maxLength)}</span>
-                <span class="modal-tooltiptext">${name}</span>
-              </div>`;
-    }
-    return name;
-  }
-
   function toggleColumnVisibility() {
     $(columnsList).find('.vis').on('click', function(event) {
       const $this = $(this);
@@ -323,8 +312,8 @@ var RepositoryColumns = (function() {
           <span class="vis-controls">
             <span class="vis sn-icon ${visClass}" title="${visText}"></span>
           </span>
-          <span class="text">${generateColumnNameTooltip(thederName)}</span>
-          <span class="column-type pull-right">${
+          <div class="text truncate" title="${thederName}">${thederName}</div>
+          <span class="column-type pull-right shrink-0">${
             getColumnTypeText(el, colId) || '<i class="sn-icon sn-icon-locked-task"></i>'
           }</span>
           <span class="sci-btn-group manage-controls pull-right" data-view-mode="active">
