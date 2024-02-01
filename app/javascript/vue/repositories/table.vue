@@ -130,8 +130,7 @@ export default {
       },
       {
         field: 'nr_of_rows',
-        headerName: this.i18n.t('libraries.index.table.number_of_items'),
-        sortable: true
+        headerName: this.i18n.t('libraries.index.table.number_of_items')
       },
       {
         field: 'shared_label',

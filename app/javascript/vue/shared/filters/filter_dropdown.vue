@@ -19,7 +19,7 @@
             <i class="sn-icon sn-icon-close"></i>
           </button>
         </div>
-        <div class="max-h-[400px] p-3.5 pt-0.5 overflow-y-auto">
+        <div class="max-h-[400px] p-3.5 pt-0">
           <div v-for="filter in filters" :key="filter.key">
             <Component
               :is="`${filter.type}Filter`"
@@ -28,7 +28,7 @@
               @update="updateFilter" />
           </div>
         </div>
-        <div class="p-3.5 pt-0.5 flex items-center justify-end gap-4 sticky-buttons">
+        <div class="p-3.5 pt-0.5 flex items-center justify-end gap-4">
           <div @click.prevent="clearFilters" class="btn btn-secondary">
             {{ i18n.t('filters_modal.clear_btn') }}
           </div>
