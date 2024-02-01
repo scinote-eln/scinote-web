@@ -4,10 +4,10 @@ export default {
          @click="onSortRequested((activeSort == 'asc' ? 'desc' : 'asc'), $event)">
       <div v-if="params.html" class="customHeaderLabel truncate" v-html="params.html"></div>
       <div v-else class="customHeaderLabel truncate">{{ params.displayName }}</div>
-      <div v-if="activeSort == 'asc'" class="customSortDownLabel text-sn-sleepy-grey">
+      <div v-if="activeSort == 'asc'" class="customSortDownLabel text-sn-black">
         <i class="sn-icon sn-icon-sort-up"></i>
       </div>
-      <div v-if="activeSort == 'desc'" class="customSortUpLabel text-sn-sleepy-grey">
+      <div v-if="activeSort == 'desc'" class="customSortUpLabel text-sn-black">
         <i class="sn-icon sn-icon-sort-down"></i>
       </div>
     </div>

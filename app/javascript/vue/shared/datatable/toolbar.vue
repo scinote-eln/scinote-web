@@ -26,7 +26,7 @@
         <MenuDropdown
           v-if="viewRenders"
           :listItems="this.viewRendersMenu"
-          :btnClasses="'btn btn-light icon-btn'"
+          :btnClasses="'btn btn-light icon-btn btn-black'"
           :btnText="i18n.t(`toolbar.${currentViewRender}_view`)"
           :caret="true"
           :position="'right'"
@@ -36,7 +36,7 @@
         <MenuDropdown
           v-if="archivedPageUrl"
           :listItems="this.viewModesMenu"
-          :btnClasses="'btn btn-light icon-btn'"
+          :btnClasses="'btn btn-light icon-btn btn-black'"
           :btnText="i18n.t(`projects.index.${currentViewMode}`)"
           :caret="true"
           :position="'right'"
@@ -67,18 +67,18 @@
         <i v-else class="sn-icon sn-icon-close !m-2.5 !ml-auto right-0 cursor-pointer z-10"
                   @click="$emit('search:change', '')"></i>
       </div>
+      <FilterDropdown :filters="filters" @applyFilters="applyFilters" />
       <button
         v-if="currentViewRender === 'table'"
         @click="showColumnsModal = true"
         :title="i18n.t('experiments.table.column_display_modal.title')"
-        class="btn btn-light icon-btn"
+        class="btn btn-light icon-btn btn-black"
       >
-        <i class="sn-icon sn-icon-reports"></i>
+        <i class="sn-icon sn-icon-manage-table"></i>
       </button>
-      <FilterDropdown :filters="filters" @applyFilters="applyFilters" />
       <GeneralDropdown v-if="currentViewRender === 'cards'" ref="dropdown" position="right">
         <template v-slot:field>
-          <button class="btn btn-light icon-btn">
+          <button class="btn btn-light icon-btn btn-black">
             <i class="sn-icon sn-icon-sort-down"></i>
           </button>
         </template>
