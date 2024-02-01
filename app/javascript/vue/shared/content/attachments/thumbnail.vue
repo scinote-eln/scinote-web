@@ -145,6 +145,10 @@
       :fileName="attachment.attributes.file_name"
       @confirm="showNoPredefinedAppModal = false"
     />
+    <UpdateVersionModal
+      v-if="showUpdateVersionModal"
+      @cancel="showUpdateVersionModal = false"
+    />
     <a  class="image-edit-button hidden"
       v-if="attachment.attributes.asset_type != 'marvinjs'
             && attachment.attributes.image_editable
@@ -167,7 +171,6 @@ import ContextMenu from './context_menu.vue';
 import deleteAttachmentModal from './delete_modal.vue';
 import MenuDropdown from '../../../shared/menu_dropdown.vue';
 import MoveAssetModal from '../modal/move.vue';
-import NoPredefinedAppModal from '../modal/no_predefined_app_modal.vue';
 import MoveMixin from './mixins/move.js';
 import OpenLocallyMixin from './mixins/open_locally.js';
 import { vOnClickOutside } from '@vueuse/components';
@@ -179,7 +182,6 @@ export default {
     ContextMenu,
     deleteAttachmentModal,
     MoveAssetModal,
-    NoPredefinedAppModal,
     MenuDropdown
   },
   props: {
@@ -196,8 +198,7 @@ export default {
     return {
       showOptions: false,
       deleteModal: false,
-      isMenuOpen: false,
-      showNoPredefinedAppModal: false
+      isMenuOpen: false
     };
   },
   directives: {

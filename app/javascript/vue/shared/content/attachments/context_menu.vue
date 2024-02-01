@@ -57,11 +57,15 @@
         :fileName="attachment.attributes.file_name"
         @confirm="showNoPredefinedAppModal = false"
       />
+      <UpdateVersionModal
+        v-if="showUpdateVersionModal"
+        @cancel="showUpdateVersionModal = false"
+      />
       <editLaunchingApplicationModal
-          v-if="editAppModal"
-          :fileName="attachment.attributes.file_name"
-          :application="this.localAppName"
-          @cancel="editAppModal = false"
+        v-if="editAppModal"
+        :fileName="attachment.attributes.file_name"
+        :application="this.localAppName"
+        @cancel="editAppModal = false"
       />
     </Teleport>
   </div>

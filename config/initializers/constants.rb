@@ -434,6 +434,10 @@ class Constants
   # Grover timeout in ms
   GROVER_TIMEOUT_MS = 300000
 
+  # SciNote Edit supported versions
+  MIN_SCINOTE_EDIT_VERSION = ENV['MIN_SCINOTE_EDIT_VERSION'].freeze
+  MAX_SCINOTE_EDIT_VERSION = ENV['MAX_SCINOTE_EDIT_VERSION'].freeze
+
   #                             )       \   /      (
   #                            /|\      )\_/(     /|\
   #   *                       / | \    (/\|/\)   / | \                      *

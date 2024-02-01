@@ -401,6 +401,7 @@ en:
     open_locally_in: "Open in %{application}"
     open_in: "Open in"
     open_locally: "Open locally"
+    open_in: "Open in"
     new:
       description: 'New'
       uploading: 'Uploading'
@@ -3614,10 +3615,13 @@ en:
     empty_office_file:
       description: "The file is empty. Please add some data before saving the file."
       reload: "Reload file"
-    asset_sync:
+    no_predefined_app_modal:
       body_text_html: "The specified application for accessing the <b>%{file_name}</b> is not preconfigured. To successfully open this file, please set up the appropriate application in your local environment beforehand.</p>"
-      no_predefined_app: "I understand"
+      understand_button: "I understand"
       set_up_app: "Set up an application to open this file"
+    update_version_modal:
+      title: "Update required"
+      body_text_html: "The current version of the SciNote Edit application is no longer supported. To ensure a seamless and secure user experience, we recommend installing to the latest version."
     edit_launching_application_modal:
       title: "Launching application"
       description: "%{file_name} will now open in %{application}. Saved changes in %{application} will automatically be synced in SciNote."
