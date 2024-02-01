@@ -559,7 +559,7 @@ export default {
       }
       axios.get(
         repositoryRowUrl,
-        { my_module_id: this.myModuleId }
+        { params: { my_module_id: this.myModuleId } }
       ).then((response) => {
         const result = response.data;
         this.repositoryRowId = result.id;
