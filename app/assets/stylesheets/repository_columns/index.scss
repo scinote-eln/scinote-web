@@ -108,6 +108,12 @@
       z-index: 99999999;
     }
 
+    .modal-tooltip > span:first-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     .col-list-el {
       align-items: center;
       background: $color-white;
@@ -120,6 +126,7 @@
 
       .manage-controls {
         display: none;
+        white-space: nowrap;
       }
 
       .text {

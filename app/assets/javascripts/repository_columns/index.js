@@ -228,7 +228,7 @@ var RepositoryColumns = (function() {
     var maxLength = $(TABLE_ID).data('max-dropdown-length');
     if ($.trim(name).length > maxLength) {
       return `<div class="modal-tooltip">
-                ${truncateLongString(name, maxLength)}
+                <span>${truncateLongString(name, maxLength)}</span>
                 <span class="modal-tooltiptext">${name}</span>
               </div>`;
     }

@@ -1,0 +1,16 @@
+<div>
+  <h1>Modals</h1>
+  <div id="modals" class="flex items-center gap-4 flex-wrap mt-6">
+    <button @click="showWizard = true" class="btn btn-primary">Show Wizard Modal</button>
+    <wizard-modal
+      v-if="showWizard"
+      @close="showWizard = false"
+      @alert="fireAlert"
+      :params="wizardParams"
+      :config="wizardConfig"
+    />
+  </div>
+</div>
+
+
+<%= javascript_include_tag 'vue_design_system_modals' %>
