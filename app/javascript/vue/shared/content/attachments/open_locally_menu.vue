@@ -8,27 +8,39 @@
       </a>
     </div>
     <div v-else>
-      <MenuDropdown
-        v-if="menu.length > 1"
-        class="ml-auto"
-        :listItems="menu"
-        :btnClasses="`btn btn-light icon-btn !bg-sn-white`"
-        :position="'right'"
-        :btnText="i18n.t('attachments.open_in')"
-        :caret="true"
-        @open-locally="openLocally"
-        @open-image-editor="openImageEditor"
-      ></MenuDropdown>
-      <a v-else-if="menu.length === 1" class="btn btn-light !bg-sn-white" :href="menu[0].url" :target="menu[0].target" @click="this[this.menu[0].emit]()">
-        {{ menu[0].text }}
-      </a>
-      <Teleport to="body">
-        <UpdateVersionModal
-          v-if="showUpdateVersionModal"
-          @cancel="showUpdateVersionModal = false"
-        />
-      </Teleport>
+        <MenuDropdown
+          v-if="this.menu.length > 1"
+          class="ml-auto"
+          :listItems="this.menu"
+          :btnClasses="`btn btn-light icon-btn`"
+          :position="'right'"
+          :btnText="i18n.t('attachments.open_in')"
+          :caret="true"
+          @open-locally="openLocally"
+          @open-image-editor="openImageEditor"
+        ></MenuDropdown>
+        <a v-else-if="menu.length === 1" class="btn btn-light !bg-sn-white" :href="menu[0].url" :target="menu[0].target" @click="this[this.menu[0].emit]()">
+          {{ menu[0].text }}
+        </a>
     </div>
+
+    <Teleport to="body">
+      <NoPredefinedAppModal
+        v-if="showNoPredefinedAppModal"
+        :fileName="attachment.attributes.file_name"
+        @confirm="showNoPredefinedAppModal = false"
+      />
+      <editLaunchingApplicationModal
+        v-if="editAppModal"
+        :fileName="attachment.attributes.file_name"
+        :application="this.localAppName"
+        @cancel="editAppModal = false"
+      />
+      <UpdateVersionModal
+        v-if="showUpdateVersionModal"
+        @cancel="showUpdateVersionModal = false"
+      />
+    </Teleport>
   </div>
 </template>
 
@@ -41,9 +53,6 @@ export default {
   name: 'OpenLocallyMenu',
   mixins: [OpenLocallyMixin],
   components: { MenuDropdown, UpdateVersionModal },
-  data: {
-    showUpdateVersionModal: false
-  },
   props: {
     attachment: { type: Object, required: true }
   },
@@ -66,7 +75,7 @@ export default {
         });
       }
 
-      if (this.attachment.attributes.image_editable) {
+      if (this.attachment.attributes.image_editable && !this.canOpenLocally) {
         menu.push({
           text: this.i18n.t('assets.file_preview.edit_in_scinote'),
           emit: 'openImageEditor'

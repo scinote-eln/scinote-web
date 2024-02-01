@@ -3,6 +3,7 @@
 module TinyMceImages
   extend ActiveSupport::Concern
 
+  # rubocop:disable Metrics/BlockLength:
   included do
     has_many :tiny_mce_assets,
              as: :object,
@@ -22,18 +23,13 @@ module TinyMceImages
       tiny_mce_assets.each do |tm_asset|
         next unless tm_asset&.image&.attached?
 
-        begin
-          new_tm_asset_src = tm_asset.convert_variant_to_base64(tm_asset.preview)
-        rescue ActiveStorage::FileNotFoundError
-          next
-        end
         html_description = Nokogiri::HTML(description)
         tm_asset_to_update = html_description.css(
           "img[data-mce-token=\"#{Base62.encode(tm_asset.id)}\"]"
         )[0]
         next unless tm_asset_to_update
 
-        tm_asset_to_update.attributes['src'].value = new_tm_asset_src
+        tm_asset_to_update.attributes['src'].value = tm_asset.convert_to_base64
         description = html_description.css('body').inner_html.to_s
       end
       description
@@ -225,4 +221,5 @@ module TinyMceImages
       end
     end
   end
+  # rubocop:enable Metrics/BlockLength:
 end

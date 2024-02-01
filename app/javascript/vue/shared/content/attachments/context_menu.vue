@@ -73,10 +73,7 @@
 
 <script>
 import deleteAttachmentModal from './delete_modal.vue';
-import editLaunchingApplicationModal from './edit_launching_application_modal.vue';
 import moveAssetModal from '../modal/move.vue';
-import NoPredefinedAppModal from '../modal/no_predefined_app_modal.vue';
-import UpdateVersionModal from '../modal/update_version_modal.vue';
 import MoveMixin from './mixins/move.js';
 import OpenLocallyMixin from './mixins/open_locally.js';
 import MenuDropdown from '../../menu_dropdown.vue';
@@ -86,10 +83,7 @@ export default {
   components: {
     deleteAttachmentModal,
     moveAssetModal,
-    MenuDropdown,
-    NoPredefinedAppModal,
-    UpdateVersionModal,
-    editLaunchingApplicationModal
+    MenuDropdown
   },
   mixins: [MoveMixin, OpenLocallyMixin],
   props: {
@@ -102,10 +96,7 @@ export default {
   data() {
     return {
       viewModeOptions: ['inline', 'thumbnail', 'list'],
-      deleteModal: false,
-      editAppModal: false,
-      showNoPredefinedAppModal: false,
-      showUpdateVersionModal: false
+      deleteModal: false
     };
   },
   computed: {

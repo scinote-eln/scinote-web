@@ -36,7 +36,12 @@ namespace :v2 do
                 path: 'items',
                 only: [],
                 as: :items do
-        resources :inventory_item_relationships, only: %i(create destroy)
+        resources :child_relationships,
+                  only: %i(index show create destroy),
+                  controller: :inventory_item_child_relationships
+        resources :parent_relationships,
+                  only: %i(index show create destroy),
+                  controller: :inventory_item_parent_relationships
       end
     end
   end

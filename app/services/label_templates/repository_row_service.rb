@@ -17,7 +17,7 @@ module LabelTemplates
       errors = []
       keys = @label_template.content.scan(/(?<=\{\{).*?(?=\}\})/).uniq
       label = keys.reduce(@label_template.content.dup) do |rendered_content, key|
-        rendered_content.gsub!(/\{\{#{key}\}\}/, fetch_value(key))
+        rendered_content.gsub!(Regexp.new(Regexp.escape("{{#{key}}}")), fetch_value(key))
       rescue LabelTemplates::ColumnNotFoundError,
              LabelTemplates::LogoNotFoundError,
              LabelTemplates::LogoParamsError => e

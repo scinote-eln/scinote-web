@@ -1,14 +1,25 @@
 import axios from '../../../../../packs/custom_axios.js';
 import { satisfies } from 'compare-versions';
+// import editLaunchingApplicationModal from '../../modal/edit_launching_application_modal.vue';
+// import NoPredefinedAppModal from '../../modal/no_predefined_app_modal.vue';
+// import UpdateVersionModal from '../../modal/update_version_modal.vue';
 
 export default {
   data() {
     return {
       localAppName: null,
       scinoteEditRunning: false,
-      scinoteEditVersion: null
+      scinoteEditVersion: null,
+      showNoPredefinedAppModal: false,
+      showUpdateVersionModal: false,
+      editAppModal: false
     };
   },
+  // components: {
+  //   editLaunchingApplicationModal,
+  //   NoPredefinedAppModal,
+  //   UpdateVersionModal
+  // },
   computed: {
     attributes() {
       return this.attachment.attributes;
