@@ -98,7 +98,7 @@ export default {
       this.close();
     },
     columnVisbile(column) {
-      return !this.currentTableState.columnsState?.find((col) => col.colId === column.field)?.hide;
+      return !this.currentTableState.columnsState?.find((col) => col.colId === column.field).hide;
     },
     columnPinned(column) {
       return this.currentTableState.columnsState?.find((col) => col.colId === column.field).pinned;
