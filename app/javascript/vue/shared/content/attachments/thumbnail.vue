@@ -171,8 +171,6 @@ import ContextMenu from './context_menu.vue';
 import deleteAttachmentModal from './delete_modal.vue';
 import MenuDropdown from '../../../shared/menu_dropdown.vue';
 import MoveAssetModal from '../modal/move.vue';
-import NoPredefinedAppModal from '../modal/no_predefined_app_modal.vue';
-import UpdateVersionModal from '../modal/update_version_modal.vue';
 import MoveMixin from './mixins/move.js';
 import OpenLocallyMixin from './mixins/open_locally.js';
 import { vOnClickOutside } from '@vueuse/components';
@@ -184,8 +182,6 @@ export default {
     ContextMenu,
     deleteAttachmentModal,
     MoveAssetModal,
-    NoPredefinedAppModal,
-    UpdateVersionModal,
     MenuDropdown
   },
   props: {
@@ -202,9 +198,7 @@ export default {
     return {
       showOptions: false,
       deleteModal: false,
-      isMenuOpen: false,
-      showNoPredefinedAppModal: false,
-      showUpdateVersionModal: false
+      isMenuOpen: false
     };
   },
   directives: {
