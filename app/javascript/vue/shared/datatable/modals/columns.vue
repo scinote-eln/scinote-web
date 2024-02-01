@@ -61,7 +61,7 @@ export default {
   mixins: [modalMixin],
   methods: {
     columnVisbile(column) {
-      return !this.currentTableState.columnsState?.find((col) => col.colId === column.field).hide;
+      return !this.currentTableState.columnsState?.find((col) => col.colId === column.field)?.hide;
     },
     toggleColumn(column, visible) {
       if (column.field === 'name') return;

@@ -146,7 +146,7 @@ export default {
     },
     scrollMode: {
       type: String,
-      default: 'infinite'
+      default: 'pages'
     }
   },
   data() {
@@ -197,12 +197,15 @@ export default {
     },
     gridOptions() {
       return {
-        suppressCellFocus: true
+        suppressCellFocus: true,
+        suppressPinning: true,
+        suppressMovableColumns: true
       };
     },
     extendedColumnDefs() {
       const columns = this.columnDefs.map((column) => ({
         ...column,
+        minWidth: column.minWidth || 110,
         cellRendererParams: {
           dtComponent: this
         },
@@ -219,7 +222,8 @@ export default {
           width: 48,
           minWidth: 48,
           resizable: false,
-          pinned: 'left'
+          pinned: 'left',
+          lockPosition: 'left'
         });
       }
 
@@ -252,11 +256,7 @@ export default {
   watch: {
     reloadingTable() {
       if (this.reloadingTable) {
-        if (this.scrollMode === 'pages') {
-          this.loadData();
-        } else {
-          this.reloadTable();
-        }
+        this.updateTable();
       }
     },
     currentViewRender() {
@@ -284,6 +284,8 @@ export default {
   },
   methods: {
     handleScroll() {
+      if (this.scrollMode === 'pages') return;
+
       let target = null;
       if (this.currentViewRender === 'cards') {
         target = this.$refs.cardsContainer;
@@ -314,12 +316,20 @@ export default {
     resize() {
       if (this.tableState) return;
 
-      this.gridApi.sizeColumnsToFit();
+      this.columnApi?.autoSizeAllColumns();
+    },
+    updateTable() {
+      if (this.scrollMode === 'pages') {
+        this.loadData();
+      } else {
+        this.reloadTable();
+      }
     },
     reloadTable() {
       if (this.dataLoading) return;
 
       this.dataLoading = true;
+      this.selectedRows = [];
       this.page = 1;
       this.loadData(true);
     },

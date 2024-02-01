@@ -58,6 +58,9 @@ class TeamSharedObject < ApplicationRecord
   end
 
   def unlink_unshared_items
+    # We keep all the other teams shared with and the repository's own team
+    teams_ids = shared_object.teams_shared_with.where.not(id: team).pluck(:id)
+    teams_ids << shared_object.team_id
     repository_rows_ids = shared_object.repository_rows.select(:id)
     rows_to_unlink = RepositoryRow.joins("LEFT JOIN repository_row_connections \
                                          ON repository_rows.id = repository_row_connections.parent_id \
@@ -67,11 +70,17 @@ class TeamSharedObject < ApplicationRecord
                                          repository_rows_ids,
                                          repository_rows_ids)
                                   .joins(:repository)
-                                  .where(repositories: { team: team })
+                                  .where.not(repositories: { team: teams_ids })
+                                  .select(:id)
 
-    RepositoryRowConnection.where(parent: rows_to_unlink, child: repository_rows_ids)
-                           .destroy_all
-    RepositoryRowConnection.where(parent: repository_rows_ids, child: rows_to_unlink)
+    RepositoryRowConnection.where("(repository_row_connections.parent_id IN (?) \
+                                   AND repository_row_connections.child_id IN (?)) \
+                                   OR (repository_row_connections.parent_id IN (?) \
+                                   AND repository_row_connections.child_id IN (?))",
+                                  repository_rows_ids,
+                                  rows_to_unlink,
+                                  rows_to_unlink,
+                                  repository_rows_ids)
                            .destroy_all
   end
 end

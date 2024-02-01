@@ -11,6 +11,7 @@
     :currentViewMode="currentViewMode"
     :filters="filters"
     :viewRenders="viewRenders"
+    scrollMode="infinite"
     @tableReloaded="reloadingTable = false"
     @archive="archive"
     @restore="restore"

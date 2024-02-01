@@ -31,9 +31,16 @@ module Lists
     end
 
     def filter_records
+      if @params[:search].present?
+        @records = @records.where_attributes_like(
+          ['experiments.name', 'experiments.description', Experiment::PREFIXED_ID_SQL],
+          @params[:search]
+        )
+      end
+
       if @filters[:query].present?
         @records = @records.where_attributes_like(
-          ['experiments.name', 'experiments.description', "('EX' || experiments.id)"],
+          ['experiments.name', 'experiments.description', Experiment::PREFIXED_ID_SQL],
           @filters[:query]
         )
       end

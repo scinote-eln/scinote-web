@@ -13,7 +13,7 @@ class ExperimentsController < ApplicationController
                                              inventory_assigning_experiment_filter actions_toolbar index)
   before_action :check_read_permissions, except: %i(index edit archive clone move new
                                                     create archive_group restore_group
-                                                    inventory_assigning_experiment_filter actions_toolbar)
+                                                    inventory_assigning_experiment_filter actions_toolbar move_modal)
   before_action :check_canvas_read_permissions, only: %i(canvas)
   before_action :check_create_permissions, only: :create
   before_action :check_manage_permissions, only: :batch_clone_my_modules
@@ -231,23 +231,31 @@ class ExperimentsController < ApplicationController
 
   # POST: move_experiment(id)
   def move
-    service = Experiments::MoveToProjectService
-              .call(experiment_id: @experiment.id,
-                    project_id: move_experiment_param,
-                    user_id: current_user.id)
-    if service.succeed?
-      message = t('experiments.move.success_flash',
-                          experiment: @experiment.name)
-      status = :ok
-      view_state = @experiment.current_view_state(current_user)
-      view_type = view_state.state['my_modules']['view_type'] || 'canvas'
-      path = view_mode_redirect_url(view_type)
-    else
-      message = "#{service.errors.values.join('. ')}."
-      status = :unprocessable_entity
-    end
+    project = Project.viewable_by_user(current_user, current_team)
+                     .find_by(id: params[:project_id])
 
-    render json: { message: message, path: path }, status: status
+    project.transaction do
+      @experiments.each do |experiment|
+        service = Experiments::MoveToProjectService
+                  .call(experiment_id: experiment.id,
+                        project_id: params[:project_id],
+                        user_id: current_user.id)
+        raise StandardError unless service.succeed?
+      end
+
+      flash[:success] = t('experiments.table.move_success_flash', project: escape_input(project.name))
+      render json: { message: t('experiments.table.move_success_flash',
+        project: escape_input(project.name)), path: project_path(project) }
+    rescue StandardError => e
+      Rails.logger.error(e.message)
+      Rails.logger.error(e.backtrace.join("\n"))
+      render json: {
+        message: t('experiments.table.move_error_flash', project: escape_input(project.name))
+      }, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
+    end
+  rescue ActiveRecord::RecordNotFound
+    render_404
   end
 
   def move_modules_modal
@@ -313,11 +321,7 @@ class ExperimentsController < ApplicationController
     end
 
     render json: {
-      workflowimg: render_to_string(
-        partial: 'projects/show/workflow_img',
-        locals: { experiment: @experiment },
-        formats: :html
-      )
+      workflowimg_url: rails_blob_path(@experiment.workflowimg, only_path: true),
     }
   end
 
@@ -428,6 +432,11 @@ class ExperimentsController < ApplicationController
   def load_experiment
     @experiment = Experiment.preload(user_assignments: %i(user user_role)).find_by(id: params[:id])
     render_404 unless @experiment
+  end
+
+  def load_experiments
+    @experiments = Experiment.preload(user_assignments: %i(user user_role)).where(id: params[:ids])
+    render_404 unless @experiments
   end
 
   def load_project

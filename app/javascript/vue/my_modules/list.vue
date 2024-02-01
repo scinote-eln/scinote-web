@@ -12,6 +12,7 @@
     :currentViewMode="currentViewMode"
     :filters="filters"
     :viewRenders="viewRenders"
+    scrollMode="infinite"
     @tableReloaded="reloadingTable = false"
     @create="newModalOpen = true"
     @edit="edit"
@@ -105,7 +106,6 @@ export default {
     const columns = [
       {
         field: 'name',
-        flex: 1,
         headerName: this.i18n.t('experiments.table.column.task_name_html'),
         sortable: true,
         cellRenderer: this.nameRenderer
@@ -152,7 +152,8 @@ export default {
       field: 'designated',
       headerName: this.i18n.t('experiments.table.column.assigned_html'),
       sortable: false,
-      cellRenderer: DesignatedUsers
+      cellRenderer: DesignatedUsers,
+      minWidth: 220
     });
     columns.push({
       field: 'tags',

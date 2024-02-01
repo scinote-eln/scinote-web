@@ -398,6 +398,8 @@ en:
     add: "ADD"
     sort_by: "SORT BY"
     attachments_view_mode: "ALL ATTACHMENTS VIEW SIZE"
+    open_locally_in: "Open in %{application}"
+    open_locally: "Open locally"
     new:
       description: 'New'
       uploading: 'Uploading'
@@ -407,7 +409,7 @@ en:
       leaving_warning: 'Your changes will be lost if you navigate away'
     thumbnail:
       buttons:
-        edit: "Edit"
+        open: "Open"
         move: "Move"
         download: "Download"
         delete: "Delete"
@@ -1518,7 +1520,7 @@ en:
       success: 'Successfully duplicated %{count} task(s) as template.'
       duplicating: 'Duplicating contents...'
     move:
-      modal_title: 'Move experiment %{experiment}'
+      modal_title: 'Move experiment(s)'
       notice: 'Moving is possible to projects, where you have permissions to create experiments and tasks.'
       target_project: 'Target project'
       label_title: 'Move'
@@ -1529,6 +1531,8 @@ en:
       no_projects: 'No projects: You don’t have edit access to any other projects.'
     table:
       head_title: "%{experiment} | Overview"
+      move_success_flash: "Successfully moved experiment(s) to project %{project}."
+      move_error_flash: "Failed to move experiment(s) to project %{project}."
       column:
         id_html: 'ID'
         task_name_html: 'Task name'
@@ -1547,7 +1551,7 @@ en:
         success_flash: "Successfully moved task(s) to experiment %{experiment}."
         error_flash: "Failed to move task(s) to experiment %{experiment}."
       column_display_modal:
-        title: 'Task data display'
+        title: 'Columns display'
         description: 'Click the eye buttons to hide or show columns in the table'
         id: 'ID'
         task_name: 'Task name'
@@ -1592,7 +1596,7 @@ en:
         archived_tasks: 'Go to Archived tasks'
         active_tasks: 'Go to Active tasks'
       add_tag: '+ Add tag'
-      search: 'Search...'
+      search: 'Manage assignees'
       not_set: 'not set'
       archive_group:
         success_flash: "<strong>%{number}</strong> task(s) successfully archived."
@@ -1808,10 +1812,10 @@ en:
     destroy:
       success_flash: "File result successfully deleted."
     wopi_open_file: "Open in %{app}"
-    wopi_edit_file: "Edit in %{app}"
-    wopi_word: "Word for the web"
-    wopi_excel: "Excel for the web"
-    wopi_powerpoint: "PowerPoint for the web"
+    wopi_edit_file: "Open in %{app}"
+    wopi_word: "MS Word online"
+    wopi_excel: "Excel online"
+    wopi_powerpoint: "PowerPoint online"
     error_flash: 'Something went wrong! Please try again later.'
 
   result_tables:
@@ -1889,16 +1893,16 @@ en:
         alert_line_2: "all references to inventory items will be rendered as invalid."
         delete: "Delete"
       modal_rename:
-        title_html: "Edit inventory: %{name}"
+        title_html: "Rename inventory: %{name}"
         name: "Inventory name"
         name_placeholder: "My inventory"
         rename: "Save"
       modal_copy:
-        title_html: "Copy inventory: %{name}"
+        title_html: "Duplicate inventory: %{name}"
         name: "New inventory name"
         description: "Only the structure of the inventory is going to be copied."
         name_placeholder: "My inventory"
-        copy: "Copy"
+        copy: "Duplicate"
       modal_export:
         title: "Export Inventories"
         description_p1_html:
@@ -2797,6 +2801,13 @@ en:
             title: 'Zebra label printers'
             description: 'Print labels of custom styles and sizes in seconds flat from your PC or Mac via your Zebra printer connected via USB, Internet or LAN.'
             details: 'Details'
+          desktop_app:
+            title: 'SciNote Edit'
+            description: 'Download the SciNote Edit desktop app to automatically edit files using locally installed software.'
+            macos_button: 'Download for macOS'
+            windows_button: 'Download for Windows'
+            version: 'Version %{version}'
+          more_info: 'More info'
         label_printer:
           fluics_printer: "FLUICS Print: Label printers"
           zebra_printer: 'Zebra label printers'
@@ -3320,6 +3331,7 @@ en:
           16_x_24: '384 (16 x 24)'
           8_x_12: '96 (8 x 12)'
           6_x_8: '48 (6 x 8 )'
+          6_x_4: '24 (6 x 4)'
           4_x_6: '24 (4 x 6)'
           3_x_4: '12 (3 x 4)'
           2_x_3: '6 (2 x 3)'
@@ -3583,8 +3595,8 @@ en:
         forbidden: 'You do not have permission to add files.'
         not_found: 'Element not found.'
     file_preview:
-      edit_in_scinote: "Edit"
-      edit_in_marvinjs: "Edit in Marvin JS"
+      edit_in_scinote: "Open in image editor"
+      edit_in_marvinjs: "Open in Marvin JS"
     context_menu:
       set_view_size: "SET PREVIEW SIZE"
       delete: "Delete"
@@ -3600,6 +3612,16 @@ en:
     empty_office_file:
       description: "The file is empty. Please add some data before saving the file."
       reload: "Reload file"
+    asset_sync:
+      body_text_html: "The specified application for accessing the <b>%{file_name}</b> is not preconfigured. To successfully open this file, please set up the appropriate application in your local environment beforehand.</p>"
+      no_predefined_app: "I understand"
+      set_up_app: "Set up an application to open this file"
+    edit_launching_application_modal:
+      title: "Launching application"
+      description: "%{file_name} will now open in %{application}. Saved changes in %{application} will automatically be synced in SciNote."
+    conflict_error: "A newer version of the file was already present in the SciNote web app and your file was saved as “%{filename}”. Close this window and re-open file to get the latest changes."
+    default_error: "An error occurred while saving to SciNote. Please save changes to your open document using “Save As…” to avoid losing any working changes."
+    default_error_with_filename: "An error occurred while saving “%{filename}” to SciNote. Please save changes to your open document using “Save As…” to avoid losing any working changes."
 
   atwho:
     no_results:
@@ -3676,13 +3698,15 @@ en:
         submit: "Grant access"
         submit_singular: "Grant access to 1 member"
         submit_plural: "Grant access to {num} members"
-        find_people_html: "Find people"
+        find_people_html: "Search members"
+        grant_access: "Grant new access"
+        people_with_access: "People with access"
       new_protocol_assignments_form:
         title: "Select members"
         submit: "Grant access"
         submit_singular: "Grant access to 1 member"
         submit_plural: "Grant access to {num} members"
-        find_people_html: "Find people"
+        find_people_html: "Search members"
       experiment_member_field:
         reset: "Inherit role"
         reset_description: "The inherited role from project will be applied"
@@ -3797,6 +3821,7 @@ en:
     delete: "Delete"
     cancel: "Cancel"
     confirm: "Confirm"
+    copy: "Copy"
     duplicate: "Duplicate"
     okay: "Okay"
     back: "Back"
@@ -4031,7 +4056,7 @@ en:
     new_sequence: "Sequence"
     new_sequence_file: "New sequence"
     default_sequence_name: "New sequence"
-    edit_sequence: "Edit in Sequence editor"
+    edit_sequence: "Open in sequence editor"
     sequence_name_placeholder: "Click here to enter sequence name"
     editor:
       tooltips:
