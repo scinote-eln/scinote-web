@@ -197,7 +197,9 @@ export default {
     },
     gridOptions() {
       return {
-        suppressCellFocus: true
+        suppressCellFocus: true,
+        suppressPinning: true,
+        suppressMovableColumns: true
       };
     },
     extendedColumnDefs() {
