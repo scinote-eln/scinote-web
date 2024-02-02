@@ -44,9 +44,11 @@ OPENID_CONNECT_SETUP_PROC = lambda do |env|
   }
 
   unless provider_conf['discovery']
-    client_options[:authorize_url] = provider_conf['authorize_url'] if provider_conf['authorize_url']
-    client_options[:token_url] = provider_conf['token_url'] if provider_conf['token_url']
-    client_options[:user_info_url] = provider_conf['authorize_url'] if provider_conf['user_info_url']
+    client_options[:host] = provider_conf['host']
+    client_options[:authorization_endpoint] = provider_conf['authorization_endpoint']
+    client_options[:token_endpoint] = provider_conf['token_endpoint']
+    client_options[:userinfo_endpoint] = provider_conf['userinfo_endpoint']
+    client_options[:jwks_uri] = provider_conf['jwks_uri']
   end
 
   env['omniauth.strategy'].options[:name] = 'openid_connect'
