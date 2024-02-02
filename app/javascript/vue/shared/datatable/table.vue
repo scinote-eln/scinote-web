@@ -200,7 +200,8 @@ export default {
       return {
         suppressCellFocus: true,
         rowHeight: 40,
-        headerHeight: 40
+        headerHeight: 40,
+        getRowId: (params) => `e2e-TB-row-${params.data.id}`
       };
     },
     extendedColumnDefs() {
