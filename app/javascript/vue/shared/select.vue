@@ -1,7 +1,7 @@
 <template>
   <div v-click-outside="close" @click="toggle" ref="container" class="sn-select" :class="{ 'sn-select--open': isOpen, 'sn-select--blank': !valueLabel, 'disabled': disabled }">
     <slot>
-      <button ref="focusElement" class="sn-select__value">
+      <button ref="focusElement" class="sn-select__value" @click.prevent="">
         <span>{{ valueLabel || (placeholder || i18n.t('general.select')) }}</span>
       </button>
       <i class="sn-icon" :class="{ 'sn-icon-down': !isOpen, 'sn-icon-up': isOpen}"></i>
@@ -55,7 +55,7 @@ import { vOnClickOutside } from '@vueuse/components';
 
 export default {
   name: 'Select',
-  emits: ['close', 'reached-end', 'open', 'change'],
+  emits: ['close', 'reached-end', 'open', 'change', 'focus'],
   props: {
     withClearButton: { type: Boolean, default: false },
     withEditCursor: { type: Boolean, default: false },
