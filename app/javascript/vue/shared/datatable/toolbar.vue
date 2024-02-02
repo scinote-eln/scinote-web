@@ -1,10 +1,11 @@
 <template>
-  <div class="flex py-4 items-center justify-between">
+  <div class="flex py-4 items-center justify-between" data-e2e="e2e-CO-topToolbar">
     <div class="flex flex-1 items-center gap-4">
       <template v-for="action in toolbarActions.left" :key="action.label">
         <a v-if="action.type === 'emit' || action.type === 'link'"
            :class="action.buttonStyle"
            :href="action.path"
+           :data-e2e="`e2e-BT-topToolbar-${action.name}`"
            @click="doAction(action, $event)">
           <i :class="action.icon"></i>
           {{ action.label }}

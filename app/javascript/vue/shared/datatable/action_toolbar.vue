@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 w-full rounded bg-sn-light-grey min-h-[68px]">
+  <div class="p-4 w-full rounded bg-sn-light-grey min-h-[68px]" data-e2e="e2e-CO-actionToolbar">
     <div class="flex gap-4 items-center h-full">
       <div v-if="loading && !actions.length" class="sn-action-toolbar__action">
         <a class="rounded flex items-center py-1.5 px-2.5 bg-transparent text-transparent no-underline"></a>
@@ -13,6 +13,7 @@
           :href="(['link', 'remote-modal']).includes(action.type) ? action.path : '#'"
           :id="action.button_id"
           :title="action.label"
+          :data-e2e="`e2e-BT-actionToolbar-${action.name}`"
           @click="doAction(action, $event)">
           <i :class="action.icon"></i>
           <span class="sn-action-toolbar__button-text">{{ action.label }}</span>

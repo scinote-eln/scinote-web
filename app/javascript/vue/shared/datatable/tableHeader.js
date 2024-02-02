@@ -1,6 +1,7 @@
 export default {
   template: `
     <div class="w-full grid items-center gap-2 grid-cols-[auto_1.5rem] cursor-pointer"
+         :data-e2e="'e2e-CO-TableHeader-' + params.column.colId "
          @click="onSortRequested((activeSort == 'asc' ? 'desc' : 'asc'), $event)">
       <div v-if="params.html" class="customHeaderLabel truncate" v-html="params.html"></div>
       <div v-else class="customHeaderLabel truncate">{{ params.displayName }}</div>
@@ -14,7 +15,7 @@ export default {
   `,
   data() {
     return {
-      activeSort: null,
+      activeSort: null
     };
   },
   beforeMount() {},
@@ -36,6 +37,6 @@ export default {
       if (!this.params.enableSorting) return;
 
       this.params.setSort(order, event.shiftKey);
-    },
-  },
+    }
+  }
 };
