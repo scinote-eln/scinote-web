@@ -7,27 +7,28 @@
 
     <h1 id="scinote-addons-title" class="mt-0 pb-1.5 text-sn-black"><%= t('users.settings.account.addons.title') %></h1>
 
-    <div id="scinote-addons-wrapper" class="flex flex-col bg-sn-white p-4 rounded mb-6">
-        <h2 class="my-0 pb-6 text-sn-black" ><%= t('users.settings.account.addons.scinote_addons') %></h2>
-        <div data-hook="settings-addons-container">
-          <em data-hook="settings-addons-no-addons">
-            <%= t('users.settings.account.addons.no_addons') %>
-          </em>
-        </div>
-    </div>
-
     <%# scinote edit %>
     <% if ENV['ASSET_SYNC_URL'].present? %>
       <div class="bg-sn-white rounded p-4 mb-6">
-          <div class="font-bold my-0 pb-2 text-sn-black"><%= t('users.settings.account.addons.desktop_app.title') %></div>
-          <div class="pb-6 text-sn-dark-grey">
-            <%= t('users.settings.account.addons.desktop_app.description') %>
-          </div>
-          <div id="scinoteEditDownload" data-behaviour="vue">
-            <scinote-edit-download data="<%= @user_agent %>">
-          </div>
+        <h2 class="text-sn-black my-0 pb-6"><%= t('users.settings.account.addons.desktop_app.scinote_apps') %></h2>
+        <div class="font-bold my-0 pb-2 text-sn-black"><%= t('users.settings.account.addons.desktop_app.scinote_edit') %></div>
+        <div class="pb-6 text-sn-dark-grey">
+          <%= t('users.settings.account.addons.desktop_app.description') %>
+        </div>
+        <div id="scinoteEditDownload" data-behaviour="vue">
+          <scinote-edit-download data="<%= @user_agent %>">
+        </div>
       </div>
     <% end %>
+
+    <div id="scinote-addons-wrapper" class="flex flex-col bg-sn-white p-4 rounded mb-6">
+      <h2 class="my-0 pb-6 text-sn-black" ><%= t('users.settings.account.addons.scinote_addons') %></h2>
+      <div data-hook="settings-addons-container">
+        <em data-hook="settings-addons-no-addons">
+          <%= t('users.settings.account.addons.no_addons') %>
+        </em>
+      </div>
+    </div>
 
     <%# label printers %>
     <div id="printer-settings" class="flex flex-col gap-6 rounded bg-sn-white mb-6 p-4">
