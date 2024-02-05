@@ -645,7 +645,6 @@ Rails.application.routes.draw do
         get 'load_from_repository_modal',
             to: 'protocols#load_from_repository_modal'
         post 'load_from_repository', to: 'protocols#load_from_repository'
-        post 'load_from_file', to: 'protocols#load_from_file'
 
         get 'copy_to_repository_modal', to: 'protocols#copy_to_repository_modal'
         post 'copy_to_repository', to: 'protocols#copy_to_repository'
