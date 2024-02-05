@@ -68,7 +68,6 @@ window.initRepositoryFilter = () => {
     { id: 'archived_by', name: I18n.t('repositories.table.archived_by'), data_type: 'RepositoryUserValue' },
     { id: 'archived_on', name: I18n.t('repositories.table.archived_on'), data_type: 'RepositoryDateTimeValue' }
   ];
-  const defFilters = JSON.parse(JSON.stringify(DEFAULT_FILTERS));
   const app = createApp({
     data: () => ({
       filters: [],
@@ -127,8 +126,8 @@ window.initRepositoryFilter = () => {
       clearFilters() {
         this.filters.forEach((filter, index) => {
           const newFilter = { ...filter };
-          newFilter.data['parameters'] = {};
-          newFilter.data['operator'] = defFilters[index].data['operator'];
+          newFilter.data.parameters = {};
+          newFilter.data.operator = '';
           return newFilter;
         });
         this.filterName = null;
