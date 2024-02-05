@@ -135,7 +135,7 @@ class AssetSerializer < ActiveModel::Serializer
       )
     end
     urls[:open_vector_editor_edit] = edit_gene_sequence_asset_path(object.id) if can_manage_asset?(user, object)
-    urls[:wopi_action] = object.get_action_url(user, 'embedview') if wopi && can_manage_asset?(user, object)
+    urls[:wopi_action] = object.get_action_url(user, 'embedview') if wopi
     urls[:blob] = rails_blob_path(object.file, disposition: 'attachment') if object.file.attached?
 
     urls
