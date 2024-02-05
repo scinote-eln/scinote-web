@@ -206,31 +206,4 @@ describe ProtocolsController, type: :controller do
         .to(change { Activity.count })
     end
   end
-
-  describe 'POST load_from_file' do
-    let(:protocol) do
-      create :protocol, my_module: my_module, team: team, added_by: user
-    end
-    let(:params) do
-      { id: protocol.id,
-        protocol: { name: 'my_test_protocol',
-                    description: 'description',
-                    authors: 'authors',
-                    elnVersion: '1.1'} }
-    end
-    let(:action) { post :load_from_file, params: params, format: :json }
-
-    it 'calls create activity for loading protocol to task from file' do
-      expect(Activities::CreateActivityService)
-        .to(receive(:call)
-              .with(hash_including(activity_type:
-                                     :load_protocol_to_task_from_file)))
-      action
-    end
-
-    it 'adds activity in DB' do
-      expect { action }
-        .to(change { Activity.count })
-    end
-  end
 end
