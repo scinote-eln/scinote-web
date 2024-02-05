@@ -404,6 +404,7 @@ class MyModulesController < ApplicationController
 
     my_modules = experiment.my_modules
                            .where(my_modules: { id: assignable_my_modules })
+                           .order(:name)
                            .pluck(:id, :name)
 
     return render plain: [].to_json if my_modules.blank?
