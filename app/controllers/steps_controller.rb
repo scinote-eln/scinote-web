@@ -42,7 +42,7 @@ class StepsController < ApplicationController
         view_mode: @step.assets_view_mode
       )
       @asset.file.attach(params[:signed_blob_id])
-      @asset.post_process_file(@protocol.team)
+      @asset.post_process_file
 
       default_message_items = {
         step: @step.id,

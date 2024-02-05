@@ -24,7 +24,7 @@ class MarvinJsService
                           team_id: current_team.id)
       attach_file(asset.file, file, params)
       asset.save!
-      asset.post_process_file(current_team)
+      asset.post_process_file
       connect_asset(asset, params, current_user)
     end
 
@@ -41,7 +41,7 @@ class MarvinJsService
       file = generate_image(params)
       attach_file(attachment, file, params)
       asset.update(last_modified_by: current_user) if asset.is_a?(Asset)
-      asset.post_process_file(current_team) if asset.class == Asset
+      asset.post_process_file if asset.instance_of?(Asset)
       asset
     end
 
