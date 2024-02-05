@@ -56,7 +56,7 @@ class MyModule < ApplicationRecord
   delegate :my_module_status_flow, to: :my_module_status, allow_nil: true
   has_many :results, inverse_of: :my_module, dependent: :destroy
   has_many :my_module_tags, inverse_of: :my_module, dependent: :destroy
-  has_many :tags, through: :my_module_tags
+  has_many :tags, through: :my_module_tags, dependent: :destroy
   has_many :task_comments, foreign_key: :associated_id, dependent: :destroy
   has_many :inputs, class_name: 'Connection', foreign_key: 'input_id', inverse_of: :to, dependent: :destroy
   has_many :outputs, class_name: 'Connection', foreign_key: 'output_id', inverse_of: :from, dependent: :destroy

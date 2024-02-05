@@ -24,7 +24,7 @@ class Repository < RepositoryBase
              inverse_of: :restored_repositories,
              optional: true
   has_many :team_shared_objects, as: :shared_object, dependent: :destroy
-  has_many :teams_shared_with, through: :team_shared_objects, source: :team
+  has_many :teams_shared_with, through: :team_shared_objects, source: :team, dependent: :destroy
   has_many :repository_snapshots,
            class_name: 'RepositorySnapshot',
            foreign_key: :parent_id,
