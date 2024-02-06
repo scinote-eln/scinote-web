@@ -200,17 +200,13 @@ class Repository < RepositoryBase
     fields
   end
 
-  def copy(created_by, name)
+  def copy(created_by, new_name)
     new_repo = nil
 
     begin
       Repository.transaction do
         # Clone the repository object
-        new_repo = dup
-        new_repo.created_by = created_by
-        new_repo.name = name
-        new_repo.permission_level = Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:not_shared]
-        new_repo.save!
+        new_repo = Repository.create!(name: new_name, team:, created_by:)
 
         # Clone columns (only if new_repo was saved)
         repository_columns.find_each do |col|
