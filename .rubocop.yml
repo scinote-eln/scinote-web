@@ -9,7 +9,7 @@ AllCops:
     - "spec/**/*"
   NewCops: enable
   UseCache: false
-  TargetRubyVersion: 3.0
+  TargetRubyVersion: 3.1
 
 ##################### Style ####################################
 
