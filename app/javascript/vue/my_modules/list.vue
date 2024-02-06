@@ -26,6 +26,7 @@
   <TagsModal v-if="tagsModalObject"
               :params="tagsModalObject"
               :tagsColors="tagsColors"
+              :projectName="projectName"
               :projectTagsUrl="projectTagsUrl"
               @close="updateTable" />
   <NewModal v-if="newModalOpen"
@@ -88,7 +89,8 @@ export default {
     projectTagsUrl: { type: String, required: true },
     assignedUsersUrl: { type: String, required: true },
     usersFilterUrl: { type: String, required: true },
-    statusesList: { type: Array, required: true }
+    statusesList: { type: Array, required: true },
+    projectName: { type: String }
   },
   data() {
     return {
