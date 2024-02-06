@@ -32,7 +32,7 @@
   <% end %>
   <% if can_move_experiment?(experiment) && !archived %>
     <li>
-      <%= link_to move_modal_experiment_url(experiment),
+      <%= link_to move_modal_experiments_path(ids: experiment.id),
                   remote: true, type: 'button',
                   class: 'move-experiment' do %>
         <i class="sn-icon sn-icon-move"></i>
