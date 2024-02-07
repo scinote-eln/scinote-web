@@ -37,8 +37,8 @@ class AssetSyncController < ApplicationController
     end
 
     ActiveRecord::Base.transaction do
-      @asset.file.attach(io: request.body, filename: @asset.file.filename)
       @asset.update(last_modified_by: current_user)
+      @asset.file.attach(io: request.body, filename: @asset.file.filename)
 
       log_activity(:edit)
     end
