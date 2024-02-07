@@ -39,8 +39,8 @@ class MarvinJsService
       return unless attachment
 
       file = generate_image(params)
-      attach_file(attachment, file, params)
       asset.update(last_modified_by: current_user) if asset.is_a?(Asset)
+      attach_file(attachment, file, params)
       asset.post_process_file if asset.instance_of?(Asset)
       asset
     end
