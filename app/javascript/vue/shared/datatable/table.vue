@@ -50,6 +50,8 @@
         @columnResized="saveTableState"
         @columnMoved="saveTableState"
         @bodyScroll="handleScroll"
+        @columnPinned="handlePin"
+        @columnVisible="handleVisibility"
         @rowSelected="setSelectedRows"
         @cellClicked="clickCell"
         :CheckboxSelectionCallback="withCheckboxes"
@@ -300,6 +302,18 @@ export default {
         this.loadData();
       }
     },
+    handlePin(event) {
+      if (event.pinned === 'right') {
+        this.columnApi.setColumnPinned(event.column.colId, null);
+      }
+      this.saveTableState();
+    },
+    handleVisibility(event) {
+      if (!event.visible && event.source !== 'api') {
+        this.columnApi.setColumnVisible(event.column.colId, true);
+      }
+      this.saveTableState();
+    },
     fetchAndApplyTableState() {
       axios
         .get(this.userSettingsUrl, {
@@ -327,6 +341,8 @@ export default {
               state: this.tableState.columnsState,
               applyOrder: true
             });
+          } else {
+            this.saveTableState();
           }
           setTimeout(() => {
             this.initializing = false;
@@ -484,19 +500,15 @@ export default {
     },
     hideColumn(column) {
       this.columnApi.setColumnVisible(column.field, false);
-      this.saveTableState();
     },
     showColumn(column) {
       this.columnApi.setColumnVisible(column.field, true);
-      this.saveTableState();
     },
     pinColumn(column) {
       this.columnApi.setColumnPinned(column.field, 'left');
-      this.saveTableState();
     },
     unPinColumn(column) {
       this.columnApi.setColumnPinned(column.field, null);
-      this.saveTableState();
     },
     reorderColumns(columns) {
       this.columnApi.moveColumns(columns, 1);

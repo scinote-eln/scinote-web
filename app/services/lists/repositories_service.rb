@@ -13,12 +13,14 @@ module Lists
                             'LEFT OUTER JOIN users AS archivers ' \
                             'ON repositories.archived_by_id = archivers.id'
                           )
-                          .includes(:repository_rows)
+                          .joins(:repository_rows)
                           .joins(:team)
-                          .select('repositories.* AS repositories')
-                          .select('teams.name AS team_name')
-                          .select('creators.full_name AS created_by_user')
-                          .select('archivers.full_name AS archived_by_user')
+                          .select('repositories.*')
+                          .select('MAX(teams.name) AS team_name')
+                          .select('COUNT(repository_rows.*) AS row_count')
+                          .select('MAX(creators.full_name) AS created_by_user')
+                          .select('MAX(archivers.full_name) AS archived_by_user')
+                          .group('repositories.id')
 
       view_mode = @params[:view_mode] || 'active'
 
@@ -47,7 +49,8 @@ module Lists
         created_by: 'creators.full_name',
         created_at: 'repositories.created_at',
         archived_on: 'repositories.archived_on',
-        archived_by: 'archivers.full_name'
+        archived_by: 'archivers.full_name',
+        nr_of_rows: 'row_count'
       }
     end
   end
