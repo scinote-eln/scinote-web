@@ -34,7 +34,7 @@
         v-if="editAppModal"
         :fileName="attachment.attributes.file_name"
         :application="this.localAppName"
-        @cancel="editAppModal = false"
+        @close="editAppModal = false"
       />
       <UpdateVersionModal
         v-if="showUpdateVersionModal"

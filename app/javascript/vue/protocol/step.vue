@@ -129,6 +129,7 @@
                     @attachments:openFileModal="showFileModal = true"
                     @attachment:deleted="attachmentDeleted"
                     @attachment:uploaded="loadAttachments"
+                    @attachment:changed="reloadAttachment"
                     @attachments:order="changeAttachmentsOrder"
                     @attachment:moved="moveAttachment"
                     @attachments:viewMode="changeAttachmentsViewMode"
@@ -166,6 +167,7 @@
   import WopiFileModal from '../shared/content/attachments/mixins/wopi_file_modal.js'
   import OveMixin from '../shared/content/attachments/mixins/ove.js'
   import StorageUsage from '../shared/content/attachments/storage_usage.vue'
+  import axios from '../../packs/custom_axios';
 
   export default {
     name: 'StepContainer',
@@ -368,6 +370,25 @@
             this.attachmentsReady = true
           }
         });
+        this.showFileModal = false;
+      },
+      reloadAttachment(attachmentId) {
+        const index = this.attachments.findIndex(attachment => attachment.id === attachmentId);
+        const attachmentUrl = this.attachments[index].attributes.urls.asset_show
+
+        axios.get(attachmentUrl)
+          .then((response) => {
+            const updatedAttachment = response.data.data;
+            const index = this.attachments.findIndex(attachment => attachment.id === attachmentId);
+
+            if (index !== -1) {
+              this.attachments[index] = updatedAttachment;
+            }
+          })
+          .catch((error) => {
+            console.error("Failed to reload attachment:", error);
+          });
+
         this.showFileModal = false;
       },
       loadElements() {

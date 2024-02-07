@@ -812,6 +812,8 @@ Rails.application.routes.draw do
     get 'files/:id/file_url', to: 'assets#file_url', as: 'asset_file_url'
     get 'files/:id/download', to: 'assets#download', as: 'asset_download'
     get 'files/:id/edit', to: 'assets#edit', as: 'edit_asset'
+    get 'files/:id/checksum', to: 'assets#checksum', as: 'asset_checksum'
+    get 'files/:id/show', to: 'assets#show', as: 'asset_show'
     patch 'files/:id/toggle_view_mode', to: 'assets#toggle_view_mode', as: 'toggle_view_mode'
     get 'files/:id/load_asset', to: 'assets#load_asset', as: 'load_asset'
     post 'files/:id/update_image', to: 'assets#update_image',

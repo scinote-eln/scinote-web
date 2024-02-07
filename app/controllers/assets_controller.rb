@@ -145,6 +145,14 @@ class AssetsController < ApplicationController
     redirect_to rails_blob_path(@asset.file, disposition: 'attachment')
   end
 
+  def show
+    if @asset
+      render json: @asset, serializer: AssetSerializer, user: current_user
+    else
+      render json: { error: 'Asset not found' }, status: :not_found
+    end
+  end
+
   def edit
     action = @asset.file_size.zero? && !@asset.locked? ? 'editnew' : 'edit'
     @action_url = append_wd_params(@asset.get_action_url(current_user, action, false))
@@ -301,6 +309,10 @@ class AssetsController < ApplicationController
     else
       render json: {}, status: :unprocessable_entity
     end
+  end
+
+  def checksum
+    render json: { checksum: @asset.file.blob.checksum }
   end
 
   private
