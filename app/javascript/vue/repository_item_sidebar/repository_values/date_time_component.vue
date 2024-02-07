@@ -131,10 +131,16 @@ export default {
       this.endDate = date;
       if (!(this.endDate instanceof Date)) this.update();
     },
+    trimSecondsAndMilliseconds(date) {
+      return date.setSeconds(0, 0);
+    },
     validateValue() {
       this.error = null;
       // Date is not changed
-      if (this.defaultStartDate === this.startDate && this.defaultEndDate === this.endDate) return false;
+      if (this.trimSecondsAndMilliseconds(this.defaultStartDate) === this.trimSecondsAndMilliseconds(this.startDate)
+      && this.trimSecondsAndMilliseconds(this.defaultEndDate) === this.trimSecondsAndMilliseconds(this.endDate)) {
+        return false;
+      }
 
       if (this.range) {
         // Both empty
