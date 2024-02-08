@@ -5,7 +5,7 @@ module Lists
     include Canaid::Helpers::PermissionsHelper
     include Rails.application.routes.url_helpers
 
-    attributes :name, :nr_of_rows, :shared, :shared_label, :ishared,
+    attributes :name, :code, :nr_of_rows, :shared, :shared_label, :ishared,
                :team, :created_at, :created_by, :archived_on, :archived_by,
                :urls, :shared_read, :shared_write, :shareable_write
 

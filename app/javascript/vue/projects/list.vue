@@ -137,7 +137,7 @@ export default {
           field: 'users',
           headerName: this.i18n.t('projects.index.card.users'),
           cellRenderer: 'UsersRenderer',
-          sortable: false,
+          sortable: true,
           minWidth: 210,
           notSelectable: true
         },

@@ -127,7 +127,7 @@ export default {
         {
           field: 'updated_at',
           headerName: this.i18n.t('experiments.card.modified_date'),
-          sortable: false
+          sortable: true
         }
       ];
 
@@ -143,13 +143,13 @@ export default {
         field: 'total_tasks',
         headerName: this.i18n.t('experiments.card.completed_task'),
         cellRenderer: CompletedTasksRenderer,
-        sortable: false,
+        sortable: true,
         minWidth: 120
       });
       columns.push({
         field: 'description',
         headerName: this.i18n.t('experiments.card.description'),
-        sortable: false,
+        sortable: true,
         cellStyle: { 'white-space': 'normal' },
         cellRenderer: DescriptionRenderer,
         autoHeight: true
