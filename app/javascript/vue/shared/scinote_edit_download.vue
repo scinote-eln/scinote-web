@@ -60,7 +60,7 @@
       </div>
     </template>
 
-    <a :href="'https://knowledgebase.scinote.net/en/knowledge/how-to-use-scinote-edit'"
+    <a v-if="!isUpdateVersionModal" :href="'https://knowledgebase.scinote.net/en/knowledge/how-to-use-scinote-edit'"
         :title="i18n.t('users.settings.account.addons.more_info')"
         class="text-sn-blue"
         target="_blank">
