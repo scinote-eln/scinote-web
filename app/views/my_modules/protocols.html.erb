@@ -155,6 +155,32 @@
 <!-- Consume Stock Modal -->
 <%= render partial: 'my_modules/repositories/consume_stock_modal'%>
 
+<!-- Tags modal -->
+<div id="tagsModalContainer" class="vue-tags-modal">
+  <div ref="tagsModal" id="tagsModalComponent"></div>
+  <teleport to="body">
+    <tags-modal v-if="tagsModalOpen"
+      :params="<%=
+        {
+          id: @my_module.id,
+          permissions: {
+            manage_tags: can_manage_my_module_tags?(@my_module)
+          },
+          urls: {
+            assigned_tags: assigned_tags_my_module_my_module_tags_path(@my_module),
+            assign_tags: my_module_my_module_tags_path(@my_module)
+          }
+        }.to_json
+      %>"
+      :tags-colors="<%= Constants::TAG_COLORS.to_json %>"
+      project-name="<%= @experiment.project.name  %>"
+      project-tags-url="<%= project_tags_path(@experiment.project) %>"
+      @close="close"
+      @tags-loaded="syncTags"
+    />
+  </teleport>
+</div>
+
 <%= javascript_include_tag 'inputmask' %>
 <%= stylesheet_link_tag 'datatables' %>
 <%= javascript_include_tag "handsontable.full" %>
@@ -169,4 +195,4 @@
 <%= javascript_include_tag "protocols/new_protocol" %>
 
 <%= javascript_include_tag 'vue_protocol' %>
-
+<%= javascript_include_tag 'vue_legacy_tags_modal' %>

@@ -141,7 +141,7 @@ import ConfirmationModal from '../../shared/confirmation_modal.vue';
 
 export default {
   name: 'TagsModal',
-  emits: ['close'],
+  emits: ['close', 'tagsLoaded'],
   props: {
     params: {
       required: true
@@ -231,6 +231,7 @@ export default {
             tag.assigned = false;
           }
         });
+        this.$emit('tagsLoaded', this.allTags);
         this.loadingTags = false;
       });
     },
