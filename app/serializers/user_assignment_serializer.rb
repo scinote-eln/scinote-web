@@ -18,7 +18,7 @@ class UserAssignmentSerializer < ActiveModel::Serializer
     {
       id: object.user.id,
       name: object.user.name,
-      avatar_url: avatar_path(object, :icon_small)
+      avatar_url: avatar_path(object.user, :icon_small)
     }
   end
 
