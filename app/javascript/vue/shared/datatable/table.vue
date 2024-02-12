@@ -213,6 +213,7 @@ export default {
         cellRendererParams: {
           dtComponent: this
         },
+        pinned: (column.field === 'name' ? 'left' : null),
         comparator: () => false
       }));
 
