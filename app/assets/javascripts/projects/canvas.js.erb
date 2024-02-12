@@ -933,17 +933,9 @@ function bindEditTagsAjax(elements) {
 
   // initialize my_module tab remote loading
   $(elements).find("a.edit-tags-link")
-  .on("ajax:before", function () {
-    var moduleId = $(this).closest(".panel-default").attr("data-module-id");
-    manageTagsModal.attr("data-module-id", moduleId);
-    manageTagsModal.modal('show');
-  })
-  .on("ajax:success", function (e, data) {
-    $("#manage-module-tags-modal-module").text(data.my_module.name);
-    initTagsModalBody(data);
-  })
   .on('click', function(){
     $(this).addClass('updated-module-tags');
+    var modal = $(this).closest(".panel-default").find('.tags-modal-component').data('tagsModal').open();
   });
 }
 
