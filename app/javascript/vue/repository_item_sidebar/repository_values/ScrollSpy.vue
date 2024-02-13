@@ -2,16 +2,16 @@
   <div class="flex gap-3">
     <div id="navigation-text"
          v-if="thresholds.length"
-         class="flex flex-col py-2 px-0 gap-3 self-stretch w-[130px] h-[130px] justify-center items-center">
+         class="flex flex-col w-[130px] gap-3 py-2">
       <div v-for="(navigationItem, index) in itemsToCreate" :key="navigationItem.textId"
         @click="navigateToSection(navigationItem)"
-        class="text-sn-grey nav-text-item flex flex-col w-[130px] h-[130px] justify-between text-right hover:cursor-pointer"
+        class="text-sn-grey nav-text-item flex flex-col w-[130px] h-fit text-right hover:cursor-pointer"
         :class="{ 'text-sn-science-blue': navigationItemsStatus[index] }">
         {{ i18n.t(`repositories.highlight_component.${navigationItem.labelAlias}`) }}
       </div>
     </div>
 
-    <div id="highlight-container" class="w-[1px] h-[130px] flex flex-col justify-evenly bg-sn-light-grey">
+    <div id="highlight-container" class="w-[1px] flex flex-col justify-evenly bg-sn-light-grey">
       <div v-for="(navigationItem, index) in itemsToCreate" :key="navigationItem.id"
         class="w-[5px] h-[28px] rounded-[11px]"
         :class="{ 'bg-sn-science-blue relative left-[-2px]': navigationItemsStatus[index] }">
@@ -58,7 +58,6 @@ export default {
       }
     });
   },
-
   beforeDestroy() {
     window.removeEventListener('resize', this.handleResize);
     this.removeScrollListener();
