@@ -211,13 +211,13 @@ class RepositoryDatatableService
 
       repository_rows.where(
         id: repository_rows.left_outer_joins(:parent_repository_rows, :child_repository_rows)
-                           .where("child_repository_rows_repository_rows.name ILIKE ? OR
-                                  parent_repository_rows_repository_rows.name ILIKE ? OR
+                           .where("trim_html_tags(child_repository_rows_repository_rows.name)::text ILIKE ? OR
+                                  trim_html_tags(parent_repository_rows_repository_rows.name)::text ILIKE ? OR
                                   ('#{RepositoryRow::ID_PREFIX}' ||
                                   child_repository_rows_repository_rows.id)::text ILIKE ? OR
                                   ('#{RepositoryRow::ID_PREFIX}' ||
                                   parent_repository_rows_repository_rows.id)::text ILIKE ?",
-                                  text, text, text, text).pluck(:id)
+                                  text, text, text, text).select(:id)
       )
     when 'contains_relationship'
       repository_rows = repository_rows.left_outer_joins(:parent_connections, :child_connections)
