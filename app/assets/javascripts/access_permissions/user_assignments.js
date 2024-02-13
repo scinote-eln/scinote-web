@@ -45,6 +45,10 @@
     $(document).on('ajax:success', 'form#new-user-assignment-form', function(_e, data) {
       $('#user_assignments_modal').replaceWith($(data.html).find('#user_assignments_modal'));
       HelperModule.flashAlertMsg(data.flash, 'success');
+
+      if (window.actionToolbarComponent?.reloadCallback) {
+        window.actionToolbarComponent.reloadCallback();
+      }
     });
 
     $(document).on('ajax:error', 'form#new-user-assignment-form', function(_e, data) {
@@ -59,6 +63,10 @@
     $(document).on('ajax:success', 'form.member-item', function(_e, data) {
       if (data.flash) {
         HelperModule.flashAlertMsg(data.flash, 'success');
+      }
+
+      if (window.actionToolbarComponent?.reloadCallback) {
+        window.actionToolbarComponent.reloadCallback();
       }
     });
 
