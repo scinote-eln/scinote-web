@@ -146,7 +146,22 @@ class ProtocolsDatatable < CustomDatatable
   end
 
   def get_raw_records_base
-    records = Protocol.latest_available_versions(@team)
+    team_protocols = Protocol.where(team: @team)
+    original_without_versions = team_protocols
+                                .left_outer_joins(:published_versions)
+                                .in_repository_published_original
+                                .where(published_versions: { id: nil })
+                                .select(:id)
+    published_versions = team_protocols
+                         .in_repository_published_version
+                         .order(:parent_id, version_number: :desc)
+                         .select('DISTINCT ON (parent_id) id')
+    new_drafts = team_protocols
+                 .where(protocol_type: Protocol.protocol_types[:in_repository_draft], parent_id: nil)
+                 .select(:id)
+
+    records = Protocol.where('protocols.id IN (?) OR protocols.id IN (?) OR protocols.id IN (?)',
+                             original_without_versions, published_versions, new_drafts)
 
     records = @type == :archived ? records.archived : records.active
 
