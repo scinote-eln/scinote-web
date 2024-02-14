@@ -1556,7 +1556,7 @@ en:
         reset_to_default: 'Reset to default'
         confirmation:
           title: 'Reset to defaults'
-          description_html: 'With confirmation the order, width and visibility of columns will be set to the default values.<br><br><b>Are you sure you want to to reset to default?</b>'
+          description_html: 'Once reset, the order, width, and visibility of columns will be returned to the default values.<br><br><b>Are you sure you want to reset to default?</b>'
           confirm: 'Reset'
         id: 'ID'
         task_name: 'Task name'
