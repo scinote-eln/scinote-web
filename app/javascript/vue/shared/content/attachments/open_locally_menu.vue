@@ -28,7 +28,7 @@
       <NoPredefinedAppModal
         v-if="showNoPredefinedAppModal"
         :fileName="attachment.attributes.file_name"
-        @confirm="showNoPredefinedAppModal = false"
+        @close="showNoPredefinedAppModal = false"
       />
       <editLaunchingApplicationModal
         v-if="editAppModal"
@@ -38,7 +38,7 @@
       />
       <UpdateVersionModal
         v-if="showUpdateVersionModal"
-        @cancel="showUpdateVersionModal = false"
+        @close="showUpdateVersionModal = false"
       />
     </Teleport>
   </div>

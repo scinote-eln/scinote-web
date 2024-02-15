@@ -55,11 +55,11 @@
       <NoPredefinedAppModal
         v-if="showNoPredefinedAppModal"
         :fileName="attachment.attributes.file_name"
-        @confirm="showNoPredefinedAppModal = false"
+        @close="showNoPredefinedAppModal = false"
       />
       <UpdateVersionModal
         v-if="showUpdateVersionModal"
-        @cancel="showUpdateVersionModal = false"
+        @close="showUpdateVersionModal = false"
       />
       <editLaunchingApplicationModal
         v-if="editAppModal"

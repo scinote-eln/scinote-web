@@ -57,6 +57,8 @@ export default {
           this.localAppName = response.data.application;
         }
       } catch (error) {
+        if (error.response?.status === 404) return; // all good, no app was found for the file
+
         console.error('Error in request: ', error);
       }
     },
@@ -107,7 +109,7 @@ export default {
         clearInterval(this.pollingInterval);
         this.pollingInterval = null;
       }
-    }    
+    }
   }
 }
 
