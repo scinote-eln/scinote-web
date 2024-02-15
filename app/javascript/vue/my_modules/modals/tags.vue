@@ -37,12 +37,12 @@
                   <label class="sci-checkbox-label"></label>
                 </div>
                 <div v-if="!tag.editing" @click="startEditMode(tag)"
-                     class="flex grow"
-                     :class="{'cursor-pointer': canManage}"
-                >
-                  <div class="h-6 px-1.5 flex items-center truncate text-sn-white rounded" :style="{ backgroundColor: tag.attributes.color }">
-                    {{ tag.attributes.name }}
-                  </div>
+                     class="h-6 px-1.5 flex items-center max-w-80 truncate text-sn-white rounded"
+                     :class="{
+                       'cursor-pointer': canManage
+                     }"
+                     :style="{ backgroundColor: tag.attributes.color }">
+                  {{ tag.attributes.name }}
                 </div>
                 <template v-else>
                   <GeneralDropdown>
@@ -63,7 +63,7 @@
                       </div>
                     </template>
                   </GeneralDropdown>
-                  <input type="text" :value="tag.attributes.name" class="border-0 focus:outline-none bg-transparent" @change="updateTagName($event.target.value, tag)"/>
+                  <input type="text" :value="tag.attributes.name" class="border-0 grow focus:outline-none bg-transparent" @change="updateTagName($event.target.value, tag)"/>
                   <i @click.stop="finishEditMode($event, tag)" class="sn-icon sn-icon-check cursor-pointer ml-auto"></i>
                 </template>
                 <i  v-if="canManage" @click.stop="deleteTag(tag)"
