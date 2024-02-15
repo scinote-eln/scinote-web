@@ -19,7 +19,7 @@
           @open-locally="openLocally"
           @open-image-editor="openImageEditor"
         ></MenuDropdown>
-        <a v-else-if="menu.length === 1" class="btn btn-light" :href="menu[0].url" :target="menu[0].target" @click="this[this.menu[0].emit]()">
+        <a v-else-if="menu.length === 1" class="btn btn-light" :href="menu[0].url" :target="menu[0].url_target" @click="this[this.menu[0].emit]()">
           {{ menu[0].text }}
         </a>
     </div>
