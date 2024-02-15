@@ -132,7 +132,13 @@ module Lists
     end
 
     def tags
-      object.tags.length
+      object.tags.map do |tag|
+        {
+          id: tag.id,
+          name: tag.name,
+          color: tag.color
+        }
+      end
     end
 
     def comments
