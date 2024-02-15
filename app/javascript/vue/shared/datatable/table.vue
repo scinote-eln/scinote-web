@@ -168,6 +168,7 @@ export default {
       order: null,
       totalPage: 0,
       selectedRows: [],
+      keepSelection: false,
       searchValue: '',
       initializing: true,
       activeFilters: {},
@@ -375,13 +376,13 @@ export default {
         this.reloadTable();
       }
     },
-    reloadTable() {
+    reloadTable(clearSelection = true) {
       if (this.dataLoading) return;
 
       this.dataLoading = true;
-      this.selectedRows = [];
+      if (clearSelection) this.selectedRows = [];
       this.page = 1;
-      this.loadData(true);
+      this.loadData();
     },
     loadData(reload = false) {
       axios
@@ -397,40 +398,39 @@ export default {
         })
         .then((response) => {
           if (reload) {
-            if (this.gridApi) {
-              this.gridApi.setRowData([]);
-            }
+            if (this.gridApi) this.gridApi.setRowData([]);
             this.rowData = [];
           }
 
           if (this.scrollMode === 'pages') {
-            this.selectedRows = [];
-            if (this.gridApi) {
-              this.gridApi.setRowData(this.formatData(response.data.data));
-            }
+            if (this.gridApi) this.gridApi.setRowData(this.formatData(response.data.data));
             this.rowData = this.formatData(response.data.data);
           } else {
-            const newRows = this.rowData.slice();
-            this.formatData(response.data.data).forEach((row) => {
-              newRows.push(row);
-            });
-            this.rowData = newRows;
-            if (this.gridApi) {
-              const viewport = document.querySelector('.ag-body-viewport');
-              const { scrollTop } = viewport;
-              this.gridApi.setRowData(this.rowData);
-              this.$nextTick(() => {
-                viewport.scrollTop = scrollTop;
-              });
-            }
-            this.lastPage = !response.data.meta.next_page;
+            this.handleInfiniteScroll(response);
           }
           this.totalPage = response.data.meta.total_pages;
           this.$emit('tableReloaded');
           this.dataLoading = false;
+          this.restoreSelection();
 
           this.handleScroll();
         });
+    },
+    handleInfiniteScroll(response) {
+      const newRows = this.rowData.slice();
+      this.formatData(response.data.data).forEach((row) => {
+        newRows.push(row);
+      });
+      this.rowData = newRows;
+      if (this.gridApi) {
+        const viewport = document.querySelector('.ag-body-viewport');
+        const { scrollTop } = viewport;
+        this.gridApi.setRowData(this.rowData);
+        this.$nextTick(() => {
+          viewport.scrollTop = scrollTop;
+        });
+      }
+      this.lastPage = !response.data.meta.next_page;
     },
     onGridReady(params) {
       this.gridApi = params.api;
@@ -445,18 +445,18 @@ export default {
       this.perPage = value;
       this.page = 1;
       this.lastPage = false;
-      this.reloadTable();
+      this.reloadTable(false);
     },
     setPage(page) {
       this.page = page;
-      this.loadData();
+      this.loadData(false);
     },
     setOrder() {
       const orderState = this.getOrder(this.columnApi.getColumnState());
       const [order] = orderState;
       this.order = order;
       this.saveTableState();
-      this.reloadTable();
+      this.reloadTable(false);
     },
     saveTableState() {
       const columnsState = this.columnApi ? this.columnApi.getColumnState() : this.tableState?.columnsState || [];
@@ -473,8 +473,23 @@ export default {
       axios.put(this.userSettingsUrl, { settings: [settings] });
       this.tableState = tableState;
     },
-    setSelectedRows() {
-      this.selectedRows = this.gridApi.getSelectedRows();
+    restoreSelection() {
+      if (this.gridApi) {
+        this.gridApi.forEachNode((node) => {
+          if (this.selectedRows.find((row) => row.id === node.data.id)) {
+            node.setSelected(true);
+          }
+        });
+      }
+    },
+    setSelectedRows(e) {
+      if (!this.rowData.find((row) => row.id === e.data.id)) return;
+
+      if (e.node.isSelected()) {
+        this.selectedRows.push(e.data);
+      } else {
+        this.selectedRows = this.selectedRows.filter((row) => row.id !== e.data.id);
+      }
     },
     emitAction(action) {
       this.$emit(action.name, action, this.selectedRows);
@@ -535,7 +550,7 @@ export default {
         dir
       };
       this.saveTableState();
-      this.reloadTable();
+      this.reloadTable(false);
     }
   }
 };
