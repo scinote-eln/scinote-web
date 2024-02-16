@@ -223,7 +223,7 @@ class Asset < ApplicationRecord
     raise ArgumentError, 'Destination asset should be persisted first!' unless to_asset.persisted?
 
     file.blob.open do |tmp_file|
-      to_blob = ActiveStorage::Blob.create_and_upload!(io: tmp_file, filename: blob.filename, metadata: blob.metadata)
+      to_blob = ActiveStorage::Blob.create_and_upload!(io: tmp_file, filename: blob.filename)
       to_asset.file.attach(to_blob)
     end
 
