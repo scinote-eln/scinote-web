@@ -26,16 +26,22 @@ class AssetSyncController < ApplicationController
 
   def update
     if @asset_sync_token.conflicts?(request.headers['VersionToken'])
-      conflict_response = AssetSyncTokenSerializer.new(conflicting_asset_copy_token).as_json
-      error_message = { message: I18n.t('assets.conflict_error', filename: @asset.file.filename) }
-      render json: conflict_response.merge(error_message), status: :conflict
+      ActiveRecord::Base.transaction do
+        conflict_response = AssetSyncTokenSerializer.new(conflicting_asset_copy_token).as_json
+        error_message = { message: I18n.t('assets.conflict_error', filename: @asset.file.filename) }
+        log_activity(:create)
+        render json: conflict_response.merge(error_message), status: :conflict
+      end
+
       return
     end
 
-    @asset.file.attach(io: request.body, filename: @asset.file.filename)
-    @asset.update(last_modified_by: current_user)
+    ActiveRecord::Base.transaction do
+      @asset.update(last_modified_by: current_user)
+      @asset.file.attach(io: request.body, filename: @asset.file.filename)
 
-    log_activity
+      log_activity(:edit)
+    end
 
     render json: AssetSyncTokenSerializer.new(@asset_sync_token).as_json
   end
@@ -44,44 +50,12 @@ class AssetSyncController < ApplicationController
     render plain: Constants::ASSET_SYNC_URL
   end
 
-  def log_activity
-    assoc ||= @asset.step
-    assoc ||= @asset.result
-
-    case assoc
-    when Step
-      if assoc.protocol.in_module?
-        log_step_activity(
-          :edit_task_step_file_locally,
-          assoc,
-          assoc.my_module.project,
-          my_module: assoc.my_module.id,
-          file: @asset.file_name,
-          user: current_user.id,
-          step_position_original: @asset.step.position + 1,
-          step: assoc.id
-        )
-      else
-        log_step_activity(
-          :edit_protocol_template_file_locally,
-          assoc,
-          nil,
-          {
-            file: @asset.file_name,
-            user: current_user.id,
-            step_position_original: @asset.step.position + 1,
-            step: assoc.id
-          }
-        )
-      end
-    when Result
-      log_result_activity(
-        :edit_task_result_file_locally,
-        assoc,
-        file: @asset.file_name,
-        user: current_user.id,
-        result: Result.first.id
-      )
+  def log_activity(action)
+    case action
+    when :edit
+      log_edit_activity
+    when :create
+      log_create_activity
     end
   end
 
@@ -113,6 +87,8 @@ class AssetSyncController < ApplicationController
         ResultAsset.create!(result: @asset.result, asset: new_asset)
       end
 
+      @asset = new_asset.reload
+
       current_user.asset_sync_tokens.create!(asset_id: new_asset.id)
     end
   end
@@ -128,7 +104,80 @@ class AssetSyncController < ApplicationController
     render_error(:forbidden, @asset.file.filename) and return unless can_manage_asset?(@asset)
   end
 
-  def log_step_activity(type_of, step, project = nil, message_items = {})
+  def log_create_activity
+    assoc = @asset.step
+    assoc ||= @asset.result
+
+    case assoc
+    when Step
+      type_of = assoc.protocol.in_module? ? :task_step_file_added : :protocol_step_file_added
+      message_items = {
+        step: assoc.id,
+        step_position: { id: assoc.id,
+                         value_for: 'position_plus_one' },
+        file: @asset.file_name,
+        my_module: assoc.protocol.in_module? ? assoc.my_module.id : nil,
+        protocol: assoc.protocol.in_module? ? nil : assoc.protocol.id
+      }.compact
+      project = assoc.protocol.in_module? ? assoc.my_module.project : nil
+    when Result
+      type_of = :result_file_added
+      message_items = { result: assoc }
+      project = assoc.my_module.project
+    end
+
+    Activities::CreateActivityService.call(
+      activity_type: type_of,
+      owner: current_user,
+      team: assoc.team,
+      subject: @asset,
+      project: project,
+      message_items: message_items
+    )
+  end
+
+  def log_edit_activity
+    assoc ||= @asset.step
+    assoc ||= @asset.result
+
+    case assoc
+    when Step
+      if assoc.protocol.in_module?
+        log_step_edit_activity(
+          :edit_task_step_file_locally,
+          assoc,
+          assoc.my_module.project,
+          my_module: assoc.my_module.id,
+          file: @asset.file_name,
+          user: current_user.id,
+          step_position_original: @asset.step.position + 1,
+          step: assoc.id
+        )
+      else
+        log_step_edit_activity(
+          :edit_protocol_template_file_locally,
+          assoc,
+          nil,
+          {
+            file: @asset.file_name,
+            user: current_user.id,
+            step_position_original: @asset.step.position + 1,
+            step: assoc.id
+          }
+        )
+      end
+    when Result
+      log_result_edit_activity(
+        :edit_task_result_file_locally,
+        assoc,
+        file: @asset.file_name,
+        user: current_user.id,
+        result: Result.first.id
+      )
+    end
+  end
+
+  def log_step_edit_activity(type_of, step, project = nil, message_items = {})
     default_items = { step: step.id,
                       step_position: { id: step.id, value_for: 'position_plus_one' } }
     message_items = default_items.merge(message_items)
@@ -142,7 +191,7 @@ class AssetSyncController < ApplicationController
             message_items: message_items)
   end
 
-  def log_result_activity(type_of, result, message_items)
+  def log_result_edit_activity(type_of, result, message_items)
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,

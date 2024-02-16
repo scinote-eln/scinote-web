@@ -76,7 +76,7 @@ class ReportDatatable < CustomDatatable
   end
 
   def docx_file(report)
-    docx = document_preview_report_path(report, report_type: :docx) if report.docx_file.attached?
+    docx = document_preview_report_path(report, report_type: :docx) if report.docx_preview_file.attached?
     {
       processing: report.docx_processing?,
       preview_url: docx,

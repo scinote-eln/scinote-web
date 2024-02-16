@@ -6,7 +6,9 @@
       <div v-for="(navigationItem, index) in itemsToCreate" :key="navigationItem.textId"
         @click="navigateToSection(navigationItem)"
         class="text-sn-grey nav-text-item flex flex-col w-[130px] h-[130px] justify-between text-right hover:cursor-pointer"
-        :class="{ 'text-sn-science-blue': navigationItemsStatus[index] }">
+        :class="{ 'text-sn-science-blue': navigationItemsStatus[index] }"
+        :data-e2e="'e2e-BT-repoItemSB-' + navigationItem.labelAlias"
+        >
         {{ i18n.t(`repositories.highlight_component.${navigationItem.labelAlias}`) }}
       </div>
     </div>

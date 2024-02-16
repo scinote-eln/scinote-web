@@ -12,7 +12,7 @@
           <p v-html="i18n.t('assets.update_version_modal.body_text_html')"></p>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" @click="cancel">{{ i18n.t('general.cancel') }}</button>
+          <button class="btn btn-secondary" @click="close">{{ i18n.t('general.cancel') }}</button>
           <ScinoteEditDownload
             :data="userAgent"
             :isUpdateVersionModal="true"
@@ -25,29 +25,20 @@
 
 <script>
 import ScinoteEditDownload from '../../../../vue/shared/scinote_edit_download.vue';
+import modalMixin from '../../modal_mixin';
 
 export default {
   name: 'UpdateVersionModal',
   components: {
     ScinoteEditDownload
   },
+  mixins: [modalMixin],
   props: {
     fileName: String
   },
   computed: {
     userAgent() {
       return window.navigator.userAgent;
-    }
-  },
-  mounted() {
-    $(this.$refs.modal).modal('show');
-    $(this.$refs.modal).on('hidden.bs.modal', () => {
-      this.$emit('cancel');
-    });
-  },
-  methods: {
-    cancel() {
-      $(this.$refs.modal).modal('hide');
     }
   }
 };

@@ -25,7 +25,9 @@
                  :collapsed="collapsed"
                  @toggleExpandableState="toggleExpandableState"
                  @update="update"
-                 className="px-3" />
+                 className="px-3"
+                 :data-e2e="'e2e-IF-repoItemSBcustomColumns-input' + colId"
+                />
     </div>
     <div v-else-if="colVal?.view"
          ref="textRef"

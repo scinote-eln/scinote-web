@@ -11,7 +11,9 @@ class AssetSerializer < ActiveModel::Serializer
   attributes :file_name, :file_extension, :view_mode, :icon, :urls, :updated_at_formatted,
              :file_size, :medium_preview, :large_preview, :asset_type, :wopi,
              :wopi_context, :pdf_previewable, :file_size_formatted, :asset_order,
-             :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached, :parent_type, :edit_version_range
+             :updated_at, :metadata, :image_editable, :image_context, :pdf, :attached, :parent_type,
+             :edit_version_range
+  attribute :checksum, if: :sync_url_present?
 
   def icon
     file_fa_icon_class(object)
@@ -97,6 +99,10 @@ class AssetSerializer < ActiveModel::Serializer
     object.editable_image?
   end
 
+  def checksum
+    object.file.checksum
+  end
+
   def image_context
     if image_editable
       {
@@ -147,11 +153,18 @@ class AssetSerializer < ActiveModel::Serializer
     if can_manage_asset?(user, object) && can_open_asset_locally?(user, object)
       urls[:open_locally] = asset_sync_show_path(object)
       urls[:open_locally_api] = Constants::ASSET_SYNC_URL
+      urls[:asset_show] = asset_show_path(object)
+      urls[:asset_checksum] = asset_checksum_path(object)
     end
 
     urls[:wopi_action] = object.get_action_url(user, 'embedview') if wopi && can_manage_asset?(user, object)
     urls[:blob] = rails_blob_path(object.file, disposition: 'attachment') if object.file.attached?
 
     urls
+  end
+
+  def sync_url_present?
+    user = scope[:user] || @instance_options[:user]
+    can_open_asset_locally?(user, object)
   end
 end

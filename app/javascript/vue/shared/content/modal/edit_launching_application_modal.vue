@@ -1,5 +1,5 @@
 <template>
-  <div ref="modal" @keydown.esc="cancel" class="modal" role="dialog" aria-hidden="true" tabindex="-1">
+  <div ref="modal" @keydown.esc="close" class="modal" role="dialog" aria-hidden="true" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -15,7 +15,7 @@
           )"></p>
         </div>
         <div class="modal-footer">
-          <button type='button' class='btn btn-secondary' @click="cancel">
+          <button type='button' class='btn btn-secondary' @click="close">
             {{ i18n.t('general.close') }}
           </button>
         </div>
@@ -24,21 +24,12 @@
   </div>
 </template>
 <script>
+import modalMixin from '../../modal_mixin';
 export default {
   name: 'editLaunchingApplicationModal',
   props: {
     fileName: String, application: String,
   },
-  mounted() {
-    $(this.$refs.modal).modal('show');
-    $(this.$refs.modal).on('hidden.bs.modal', () => {
-      this.$emit('cancel');
-    });
-  },
-  methods: {
-    cancel() {
-      $(this.$refs.modal).modal('hide');
-    },
-  },
+  mixins: [modalMixin]
 };
 </script>

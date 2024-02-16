@@ -19,6 +19,7 @@
         :searchPlaceholder="i18n.t('repositories.item_card.dropdown_placeholder')"
         customClass="!h-[38px] !pl-2 sci-cursor-edit"
         optionsClassName="max-h-[300px]"
+        :data-e2e="'e2e-DD-repoItemSBcustomColumns-input' + colId"
       ></select-search>
       <div v-else-if="status && icon"
            class="flex flex-row items-center text-sn-dark-grey font-inter text-sm font-normal leading-5 gap-1.5">

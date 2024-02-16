@@ -125,30 +125,39 @@
       @attachment:delete="deleteAttachment"
       @attachment:moved="attachmentMoved"
       @attachment:uploaded="reloadAttachments"
+      @attachment:changed="$emit('attachment:changed', $event)"
       @menu-visibility-changed="handleMenuVisibilityChange"
       :withBorder="true"
     />
-    <deleteAttachmentModal
-      v-if="deleteModal"
-      :fileName="attachment.attributes.file_name"
-      @confirm="deleteAttachment"
-      @cancel="deleteModal = false"
-    />
-    <moveAssetModal
-      v-if="movingAttachment"
-      :parent_type="attachment.attributes.parent_type"
-      :targets_url="attachment.attributes.urls.move_targets"
-      @confirm="moveAttachment($event)" @cancel="closeMoveModal"
-    />
-    <NoPredefinedAppModal
-      v-if="showNoPredefinedAppModal"
-      :fileName="attachment.attributes.file_name"
-      @confirm="showNoPredefinedAppModal = false"
-    />
-    <UpdateVersionModal
-      v-if="showUpdateVersionModal"
-      @cancel="showUpdateVersionModal = false"
-    />
+    <Teleport to="body">
+      <deleteAttachmentModal
+        v-if="deleteModal"
+        :fileName="attachment.attributes.file_name"
+        @confirm="deleteAttachment"
+        @cancel="deleteModal = false"
+      />
+      <moveAssetModal
+        v-if="movingAttachment"
+        :parent_type="attachment.attributes.parent_type"
+        :targets_url="attachment.attributes.urls.move_targets"
+        @confirm="moveAttachment($event)" @cancel="closeMoveModal"
+      />
+      <NoPredefinedAppModal
+        v-if="showNoPredefinedAppModal"
+        :fileName="attachment.attributes.file_name"
+        @close="showNoPredefinedAppModal = false"
+      />
+      <UpdateVersionModal
+        v-if="showUpdateVersionModal"
+        @close="showUpdateVersionModal = false"
+      />
+      <editLaunchingApplicationModal
+        v-if="editAppModal"
+        :fileName="attachment.attributes.file_name"
+        :application="this.localAppName"
+        @close="editAppModal = false"
+      />
+    </Teleport>
     <a  class="image-edit-button hidden"
       v-if="attachment.attributes.asset_type != 'marvinjs'
             && attachment.attributes.image_editable

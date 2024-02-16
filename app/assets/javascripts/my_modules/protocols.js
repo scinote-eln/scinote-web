@@ -288,48 +288,6 @@ function refreshProtocolStatusBar() {
   });
 }
 
-function initImport() {
-  var fileInput = $("[data-action='load-from-file']");
-
-  // Make sure multiple selections of same file
-  // always prompt new modal
-  fileInput.find("input[type='file']").on('click', function() {
-    this.value = null;
-  });
-
-  // Hack to hide "No file chosen" tooltip
-  fileInput.attr('title', window.URL ? ' ' : '');
-
-  fileInput.on('change', function(ev) {
-    var importUrl = fileInput.attr('data-import-url');
-    importProtocolFromFile(
-      ev.target.files[0],
-      importUrl,
-      null,
-      true,
-      function(datas) {
-        var data = datas[0];
-        if (data.status === 'ok') {
-          // Simply reload page
-          location.reload();
-        } else if (data.status === 'locked') {
-          alert(I18n.t('my_modules.protocols.load_from_file_error_locked'));
-        } else {
-          if (data.status === 'size_too_large') {
-            alert(I18n.t('my_modules.protocols.load_from_file_size_error',
-              { size: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB }));
-          } else {
-            alert(I18n.t('my_modules.protocols.load_from_file_error'));
-          }
-          animateSpinner(null, false);
-        }
-      }
-    );
-    // Clear input on self
-    $(this).val('');
-  });
-}
-
 function initDetailsDropdown() {
   $('#task-details .task-section-caret').on('click', function() {
     if (!$('.task-details').hasClass('collapsing')) {
@@ -355,7 +313,6 @@ function init() {
   initEditProtocolDescription();
   initLinkUpdate();
   initLoadFromRepository();
-  initImport();
   initProtocolSectionOpenEvent();
   initDetailsDropdown();
 }

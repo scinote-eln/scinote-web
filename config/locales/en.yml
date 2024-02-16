@@ -2821,7 +2821,8 @@ en:
             description: 'Print labels of custom styles and sizes in seconds flat from your PC or Mac via your Zebra printer connected via USB, Internet or LAN.'
             details: 'Details'
           desktop_app:
-            title: 'SciNote Edit'
+            scinote_apps: "SciNote apps"
+            scinote_edit: 'SciNote Edit'
             description: 'Download the SciNote Edit desktop app to automatically edit files using locally installed software.'
             macos_button: 'Download for macOS'
             windows_button: 'Download for Windows'
@@ -3637,7 +3638,7 @@ en:
       set_up_app: "Set up an application to open this file"
     update_version_modal:
       title: "Update required"
-      body_text_html: "The current version of the SciNote Edit application is no longer supported. To ensure a seamless and secure user experience, we recommend installing to the latest version."
+      body_text_html: "The current version of the SciNote Edit application is no longer supported. To ensure a seamless and secure user experience, we recommend updating to the latest version."
     edit_launching_application_modal:
       title: "Launching application"
       description: "%{file_name} will now open in %{application}. Saved changes in %{application} will automatically be synced in SciNote."
