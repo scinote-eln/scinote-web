@@ -3,7 +3,9 @@
     <div class="modal-dialog !w-[900px]" role="document">
       <div class="modal-content !p-0 grid grid-cols-3">
         <div class="bg-sn-super-light-grey p-6 mb-1.5">
-          <h3 class="mb-1.5">{{ config.title }}</h3>
+          <div class="flex justify-start mb-1.5">
+            <h3 class="modal-title">{{ config.title }}</h3>
+          </div>
           <div v-if="config.subtitle" class="text-sn-dark-grey">
             {{ config.subtitle }}
           </div>
@@ -18,7 +20,13 @@
               ></div>
               <div class="flex items-center gap-3">
                 <div class="rounded bg-white border border-sn-sleepy-grey p-1.5">
-                  <i :class="step.icon"></i>
+                  <i :class="[
+                    step.icon,
+                    {
+                      'text-sn-dark-grey': index <= activeStep,
+                      'text-sn-grey': index > activeStep
+                    }
+                  ]"></i>
                 </div>
                 <span
                   class="font-bold text-xs"

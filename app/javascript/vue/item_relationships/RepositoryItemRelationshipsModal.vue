@@ -48,6 +48,7 @@
                 @update-options="updateInventories"
                 @reached-end="fetchInventories"
                 @change="changeSelectedInventory"
+                data-e2e="e2e-DD-repoItemRelationshipsMD-inventory"
               ></select-search>
             </div>
           </div>
@@ -75,6 +76,7 @@
                 @update="selectedItemValues = $event"
                 @reached-end="() => fetchInventoryItems(selectedInventoryValue)"
                 :disabled="!this.selectedInventoryValue"
+                data-e2e="e2e-DC-repoItemRelationshipsMD-item"
               ></ChecklistSearch>
             </div>
           </div>
@@ -92,6 +94,7 @@
                 :value="selectedRelationshipValue"
                 :options="[['parent', 'Parent'], ['child', 'Child']]"
                 :placeholder="i18n.t('repositories.item_card.repository_item_relationships_modal.select_relationship_placeholder')"
+                data-e2e="e2e-DD-repoItemRelationshipsMD-relationship"
               ></Select>
             </div>
           </div>
@@ -112,11 +115,11 @@
         <!-- footer -->
         <div class="modal-footer">
           <div class="flex justify-end gap-4">
-            <button class="btn btn-secondary w-[78px] h-10 whitespace-nowrap" @click="close">
+            <button class="btn btn-secondary w-[78px] h-10 whitespace-nowrap" @click="close" data-e2e="e2e-BT-repoItemRelationshipsMD-cancel">
               {{ i18n.t('repositories.item_card.repository_item_relationships_modal.cancel_button') }}
             </button>
             <button class="btn btn-primary w-[59px] h-10 whitespace-nowrap"
-              :class="{ 'disabled': !shouldEnableAddButton }" @click="() => addRelation(selectedRelationshipValue)">
+              :class="{ 'disabled': !shouldEnableAddButton }" @click="() => addRelation(selectedRelationshipValue)" data-e2e="e2e-BT-repoItemRelationshipsMD-add">
               {{ i18n.t('repositories.item_card.repository_item_relationships_modal.add_button') }}
             </button>
           </div>

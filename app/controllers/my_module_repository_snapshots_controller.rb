@@ -34,7 +34,7 @@ class MyModuleRepositorySnapshotsController < ApplicationController
   end
 
   def create
-    repository_snapshot = RepositorySnapshot.create_preliminary(@repository, @my_module, current_user)
+    repository_snapshot = RepositorySnapshot.create_preliminary!(@repository, @my_module, current_user)
     RepositorySnapshotProvisioningJob.perform_later(repository_snapshot)
 
     render json: {

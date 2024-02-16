@@ -960,10 +960,9 @@ class TeamImporter
     asset.last_modified_by_id =
       user_id || find_user(asset.last_modified_by_id)
     asset.team = team
-    asset.in_template = true if @is_template
     asset.save!
     asset.file.attach(io: file, filename: File.basename(file))
-    asset.post_process_file(team)
+    asset.post_process_file
     @asset_mappings[orig_asset_id] = asset.id
     @asset_counter += 1
     asset

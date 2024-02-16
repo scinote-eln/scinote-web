@@ -155,7 +155,7 @@ class ReportsController < ApplicationController
   end
 
   def status
-    docx = @report.docx_file.attached? ? document_preview_report_path(@report, report_type: :docx) : nil
+    docx = @report.docx_preview_file.attached? ? document_preview_report_path(@report, report_type: :docx) : nil
     pdf = @report.pdf_file.attached? ? document_preview_report_path(@report, report_type: :pdf) : nil
 
     render json: {

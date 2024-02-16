@@ -56,11 +56,22 @@ var SmartAnnotation = (function() {
         at: at,
         callbacks: {
           remoteFilter: function(query, callback) {
+
+            // show loader after .25 seconds and block other tab clicks
+            var loaderTimeout = setTimeout(function() {
+              $('.atwho-scroll-container').css({ height: '100px' });
+              $('.atwho-scroll-container').html('<div class="loading-overlay" style="padding: 20px"></div>');
+              $('.atwho-header-res').css({ 'pointer-events': 'none' });
+            }, 250);
+
             var $currentAtWho = $(`.atwho-view[data-at-who-id=${$(field).attr('data-smart-annotation')}]`);
             var filterType;
             var params = { query: query };
             filterType = FilterTypeEnum[$currentAtWho.find('.tab-pane.active').data('object-type')];
             if (!filterType) {
+              clearTimeout(loaderTimeout);
+              $('.atwho-header-res').css({ 'pointer-events': '' });
+
               callback([{ name: '' }]);
               return false;
             }
@@ -73,6 +84,9 @@ var SmartAnnotation = (function() {
               }
             }
             $.getJSON(filterType.dataUrl, params, function(data) {
+              clearTimeout(loaderTimeout);
+              $('.atwho-header-res').css({ 'pointer-events': '' });
+
               localStorage.setItem('smart_annotation_states/teams/' + data.team, JSON.stringify({
                 tag: filterType.tag,
                 repository: data.repository

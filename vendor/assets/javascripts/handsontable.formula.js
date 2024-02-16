@@ -219,7 +219,7 @@
           iterators: iterators
         }
 
-      } else { // other value
+      } /* else { // other value
 
         // increment or decrement  values for more than 2 selected cells
         if (rlength >= 2 || clength >= 2) {
@@ -281,7 +281,7 @@
           }
         }
 
-      }
+      } */
 
       return {
         value: value,

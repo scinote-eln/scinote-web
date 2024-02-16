@@ -91,6 +91,7 @@ class GeneSequenceAssetsController < ApplicationController
       file.blob.metadata['name'] = params[:sequence_name]
       file.save!
       @asset.view_mode = view_mode || @parent.assets_view_mode
+      @asset.last_modified_by = current_user
       @asset.save!
     end
   end

@@ -42,7 +42,7 @@
   <!-- Move experiment -->
   <% if can_move_experiment?(experiment) %>
     <li>
-      <%= link_to move_modal_experiment_url(experiment),
+      <%= link_to move_modal_experiments_path(ids: [experiment.id]),
                   remote: true,
                   class: 'move-experiment experiment-action-link' do %>
         <i class="sn-icon sn-icon-move"></i>
