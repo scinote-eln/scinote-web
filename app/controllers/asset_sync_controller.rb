@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class AssetSyncController < ApplicationController
+  include FileIconsHelper
+
   skip_before_action :authenticate_user!, only: %i(update download)
   skip_before_action :verify_authenticity_token, only: %i(update download)
   before_action :authenticate_asset_sync_token!, only: %i(update download)
@@ -32,8 +34,17 @@ class AssetSyncController < ApplicationController
       return
     end
 
-    @asset.file.attach(io: request.body, filename: @asset.file.filename)
-    @asset.touch
+    orig_file_size = @asset.file_size
+
+    if wopi_file?(@asset)
+      @asset.update_contents(request.body)
+    else
+      @asset.file.attach(io: request.body, filename: @asset.file.filename)
+      @asset.touch
+    end
+
+    @asset.team.release_space(orig_file_size)
+    @asset.post_process_file(@asset.team)
 
     log_activity
 
