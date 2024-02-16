@@ -87,10 +87,14 @@ class AssetSyncController < ApplicationController
     Asset.transaction do
       new_asset = @asset.dup
       new_asset.save
-      new_asset.file.attach(
+
+      blob = ActiveStorage::Blob.create_and_upload!(
         io: request.body,
-        filename: "#{@asset.file.filename.base} (#{t('general.copy')}).#{@asset.file.filename.extension}"
+        filename: "#{@asset.file.filename.base} (#{t('general.copy')}).#{@asset.file.filename.extension}",
+        metadata: @asset.blob.metadata
       )
+
+      new_asset.file.attach(blob)
 
       case @asset.parent
       when Step
@@ -100,6 +104,8 @@ class AssetSyncController < ApplicationController
       end
 
       @asset = new_asset.reload
+
+      new_asset.post_process_file
 
       current_user.asset_sync_tokens.create!(asset_id: new_asset.id)
     end
