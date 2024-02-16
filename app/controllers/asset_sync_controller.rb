@@ -50,7 +50,7 @@ class AssetSyncController < ApplicationController
       end
 
       @asset.team.release_space(orig_file_size)
-      @asset.post_process_file(@asset.team)
+      @asset.post_process_file
 
       log_activity(:edit)
     end
