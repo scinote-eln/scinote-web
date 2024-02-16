@@ -74,6 +74,8 @@ class ExperimentsController < ApplicationController
                                    .select('COUNT(DISTINCT comments.id) as task_comments_count')
                                    .select('my_modules.*').group(:id)
                       end
+
+    save_view_type('canvas')
   end
 
   def my_modules
@@ -454,6 +456,12 @@ class ExperimentsController < ApplicationController
 
   def view_type_params
     params.require(:experiment).require(:view_type)
+  end
+
+  def save_view_type(view_type)
+    view_state = @experiment.current_view_state(current_user)
+    view_state.state['my_modules']['view_type'] = view_type
+    view_state.save!
   end
 
   def check_read_permissions
