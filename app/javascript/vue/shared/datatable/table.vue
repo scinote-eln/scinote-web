@@ -48,7 +48,7 @@
         @first-data-rendered="onFirstDataRendered"
         @sortChanged="setOrder"
         @columnResized="saveTableState"
-        @columnMoved="saveTableState"
+        @columnMoved="onColumnMoved"
         @bodyScroll="handleScroll"
         @columnPinned="handlePin"
         @columnVisible="handleVisibility"
@@ -66,7 +66,7 @@
         :params="actionsParams"
         @toolbar:action="emitAction" />
     </div>
-    <div v-if="scrollMode == 'pages'" class="flex items-center py-4">
+    <div v-if="scrollMode == 'pages'" class="flex items-center py-4" :class="{'opacity-0': initializing }">
       <div class="mr-auto">
         <Pagination
           :totalPage="totalPage"
@@ -177,7 +177,9 @@ export default {
       dataLoading: true,
       lastPage: false,
       tableState: null,
-      userSettingsUrl: null
+      userSettingsUrl: null,
+      fetchedTableState: null,
+      gridReady: false
     };
   },
   components: {
@@ -276,10 +278,18 @@ export default {
     },
     perPage() {
       this.saveTableState();
+    },
+    fetchedTableState(newValue) {
+      if (newValue !== null && this.gridReady) {
+        this.applyTableState(newValue);
+      }
     }
   },
-  mounted() {
+  created() {
     this.userSettingsUrl = document.querySelector('meta[name="user-settings-url"]').getAttribute('content');
+    this.fetchTableState();
+  },
+  mounted() {
     this.loadData();
     window.addEventListener('resize', this.resize);
   },
@@ -316,40 +326,42 @@ export default {
       }
       this.saveTableState();
     },
-    fetchAndApplyTableState() {
-      axios
-        .get(this.userSettingsUrl, {
-          params: {
-            key: this.stateKey
-          }
-        })
+    fetchTableState() {
+      axios.get(this.userSettingsUrl, { params: { key: this.stateKey } })
         .then((response) => {
           if (response.data.data) {
-            const { currentViewRender, columnsState, perPage, order } = response.data.data;
-            this.tableState = response.data.data;
-            this.currentViewRender = currentViewRender;
-            this.columnsState = columnsState;
-            this.perPage = perPage;
-            this.order = order;
-
-            if (this.order) {
-              this.tableState.columnsState.forEach((column) => {
-                const updatedColumn = column;
-                updatedColumn.sort = this.order.column === column.colId ? this.order.dir : null;
-                return updatedColumn;
-              });
+            this.fetchedTableState = response.data.data;
+            if (this.gridReady && this.fetchedTableState) {
+              this.applyTableState(this.fetchedTableState);
             }
-            this.columnApi.applyColumnState({
-              state: this.tableState.columnsState,
-              applyOrder: true
-            });
           } else {
+            this.initializing = false;
             this.saveTableState();
           }
-          setTimeout(() => {
-            this.initializing = false;
-          }, 200);
         });
+    },
+    applyTableState(state) {
+      const { currentViewRender, columnsState, perPage, order } = state;
+      this.tableState = state;
+      this.currentViewRender = currentViewRender;
+      this.columnsState = columnsState;
+      this.perPage = perPage;
+      this.order = order;
+
+      if (this.order) {
+        this.tableState.columnsState.forEach((column) => {
+          const updatedColumn = column;
+          updatedColumn.sort = this.order.column === column.colId ? this.order.dir : null;
+          return updatedColumn;
+        });
+      }
+      this.columnApi.applyColumnState({
+        state: this.tableState.columnsState,
+        applyOrder: true
+      });
+      setTimeout(() => {
+        this.initializing = false;
+      }, 200);
     },
     getRowClass() {
       if (this.currentViewMode === 'archived') {
@@ -435,8 +447,10 @@ export default {
     onGridReady(params) {
       this.gridApi = params.api;
       this.columnApi = params.columnApi;
-
-      this.fetchAndApplyTableState();
+      this.gridReady = true;
+      if (this.fetchedTableState) {
+        this.applyTableState(this.fetchedTableState);
+      }
     },
     onFirstDataRendered() {
       this.resize();
@@ -459,6 +473,9 @@ export default {
       this.reloadTable(false);
     },
     saveTableState() {
+      if (this.initializing) {
+        return;
+      }
       const columnsState = this.columnApi ? this.columnApi.getColumnState() : this.tableState?.columnsState || [];
       const tableState = {
         columnsState,
@@ -551,6 +568,11 @@ export default {
       };
       this.saveTableState();
       this.reloadTable(false);
+    },
+    onColumnMoved(event) {
+      if (event.finished) {
+        this.saveTableState();
+      }
     }
   }
 };

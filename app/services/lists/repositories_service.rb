@@ -45,11 +45,11 @@ module Lists
     def sortable_columns
       @sortable_columns ||= {
         name: 'repositories.name',
-        team: 'teams.name',
-        created_by: 'creators.full_name',
+        team: 'team_name',
+        created_by: 'created_by_user',
         created_at: 'repositories.created_at',
         archived_on: 'repositories.archived_on',
-        archived_by: 'archivers.full_name',
+        archived_by: 'archived_by_user',
         nr_of_rows: 'row_count'
       }
     end
