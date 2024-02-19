@@ -257,10 +257,10 @@ class ExperimentsController < ApplicationController
   # POST: clone_experiment(id)
   def clone
     @project = current_team.projects.find(move_experiment_param)
-    return render_403 unless can_create_project_experiments?(project)
+    return render_403 unless can_create_project_experiments?(@project)
 
     service = Experiments::CopyExperimentAsTemplateService.call(experiment: @experiment,
-                                                                project: project,
+                                                                project: @project,
                                                                 user: current_user)
 
     if service.succeed?
