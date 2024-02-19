@@ -570,7 +570,7 @@ en:
         visibility: "Visible to"
         users: "Members"
         name: "Project name"
-        archived_date: "Archived"
+        archived_date: "Archived on"
       end_of_list_placeholder: 'You’ve reached the end of the list'
       folder:
         description: "%{projects_count} projects | %{folders_count} folders"
@@ -1462,7 +1462,7 @@ en:
       id: "ID"
       start_date: "Start date"
       modified_date: "Modified date"
-      archived_date: "Archived date"
+      archived_date: "Archived on"
       completed_task: "Completed"
       completed_value: "%{completed}/%{all} tasks"
       description: "Description"
@@ -1537,7 +1537,7 @@ en:
         id_html: 'ID'
         task_name_html: 'Task name'
         due_date_html: 'Due date'
-        archived_html: 'Archived'
+        archived_html: 'Archived on'
         age_html: 'Age'
         results_html: 'Results'
         status_html: 'Status'
@@ -4100,7 +4100,7 @@ en:
     updated_on:
       label: "Modified date"
     archived_on:
-      label: "Archived date"
+      label: "Archived on"
     recent_searches_label: "Recent searches"
     show_btn:
      one: "Show results"

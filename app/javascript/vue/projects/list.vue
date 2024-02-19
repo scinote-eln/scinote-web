@@ -114,37 +114,48 @@ export default {
       objectsToMove: null,
       reloadingTable: false,
       folderDeleteDescription: '',
-      exportDescription: '',
-      columnDefs: [
-        {
-          field: 'name',
-          flex: 1,
-          headerName: this.i18n.t('projects.index.card.name'),
-          sortable: true,
-          cellRenderer: this.nameRenderer,
-        },
-        {
-          field: 'code',
-          headerName: this.i18n.t('projects.index.card.id'),
-          sortable: true,
-        },
-        {
-          field: 'created_at',
-          headerName: this.i18n.t('projects.index.card.start_date'),
-          sortable: true,
-        },
-        {
-          field: 'users',
-          headerName: this.i18n.t('projects.index.card.users'),
-          cellRenderer: 'UsersRenderer',
-          sortable: false,
-          minWidth: 210,
-          notSelectable: true
-        },
-      ],
+      exportDescription: ''
     };
   },
   computed: {
+    columnDefs() {
+      const columns = [{
+        field: 'name',
+        flex: 1,
+        headerName: this.i18n.t('projects.index.card.name'),
+        sortable: true,
+        cellRenderer: this.nameRenderer,
+      },
+      {
+        field: 'code',
+        headerName: this.i18n.t('projects.index.card.id'),
+        sortable: true,
+      },
+      {
+        field: 'created_at',
+        headerName: this.i18n.t('projects.index.card.start_date'),
+        sortable: true,
+      },
+      {
+        field: 'users',
+        headerName: this.i18n.t('projects.index.card.users'),
+        cellRenderer: 'UsersRenderer',
+        sortable: false,
+        minWidth: 210,
+        notSelectable: true
+      },
+      ];
+
+      if (this.currentViewMode === 'archived') {
+        columns.push({
+          field: 'archived_on',
+          headerName: this.i18n.t('projects.index.card.archived_date'),
+          sortable: true
+        });
+      }
+
+      return columns;
+    },
     viewRenders() {
       return [
         { type: 'table' },
