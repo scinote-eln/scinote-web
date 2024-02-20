@@ -46,44 +46,46 @@
       <i v-else class="sn-icon ml-auto"
                 :class="{ 'sn-icon-down': !isOpen, 'sn-icon-up': isOpen, 'text-sn-grey': disabled}"></i>
     </div>
-    <teleport to="body">
-      <div v-if="isOpen" ref="flyout"
-           class="sn-select-dropdown bg-white inline-block sn-shadow-menu-sm rounded w-full
-                  fixed z-[3000]">
-        <div v-if="multiple && withCheckboxes" class="p-2.5 pb-0">
-          <div @click="selectAll" :class="sizeClass"
-               class="border-x-0 border-transparent border-solid border-b-sn-light-grey
-                      py-1.5 px-3  cursor-pointer flex items-center gap-2 shrink-0">
-            <div class="sn-checkbox-icon"
-                :class="selectAllState"
-            ></div>
-            {{ i18n.t('general.select_all') }}
-          </div>
-        </div>
-        <perfect-scrollbar class="p-2.5 flex flex-col max-h-80 relative" :class="{ 'pt-0': withCheckboxes }">
-          <template v-for="option in filteredOptions" :key="option[0]">
-            <div
-              @click.stop="setValue(option[0])"
-              class="py-1.5 px-3 rounded cursor-pointer flex items-center gap-2 shrink-0"
-              :class="[sizeClass, {'!bg-sn-super-light-blue': valueSelected(option[0])}]"
-            >
-              <div v-if="withCheckboxes"
-                  class="sn-checkbox-icon"
-                  :class="{
-                    'checked': valueSelected(option[0]),
-                    'unchecked': !valueSelected(option[0]),
-                  }"
+    <template v-if="isOpen">
+      <teleport to="body">
+        <div ref="flyout"
+            class="sn-select-dropdown bg-white inline-block sn-shadow-menu-sm rounded w-full
+                    fixed z-[3000]">
+          <div v-if="multiple && withCheckboxes" class="p-2.5 pb-0">
+            <div @click="selectAll" :class="sizeClass"
+                class="border-x-0 border-transparent border-solid border-b-sn-light-grey
+                        py-1.5 px-3  cursor-pointer flex items-center gap-2 shrink-0">
+              <div class="sn-checkbox-icon"
+                  :class="selectAllState"
               ></div>
-              <div v-if="optionRenderer" v-html="optionRenderer(option)"></div>
-              <div v-else >{{ option[1] }}</div>
+              {{ i18n.t('general.select_all') }}
             </div>
-          </template>
-          <div v-if="filteredOptions.length === 0" class="text-sn-grey text-center py-2.5">
-            {{ noOptionsPlaceholder || this.i18n.t('general.select_dropdown.no_options_placeholder') }}
           </div>
-        </perfect-scrollbar>
-      </div>
-    </teleport>
+          <perfect-scrollbar class="p-2.5 flex flex-col max-h-80 relative" :class="{ 'pt-0': withCheckboxes }">
+            <template v-for="option in filteredOptions" :key="option[0]">
+              <div
+                @click.stop="setValue(option[0])"
+                class="py-1.5 px-3 rounded cursor-pointer flex items-center gap-2 shrink-0"
+                :class="[sizeClass, {'!bg-sn-super-light-blue': valueSelected(option[0])}]"
+              >
+                <div v-if="withCheckboxes"
+                    class="sn-checkbox-icon"
+                    :class="{
+                      'checked': valueSelected(option[0]),
+                      'unchecked': !valueSelected(option[0]),
+                    }"
+                ></div>
+                <div v-if="optionRenderer" v-html="optionRenderer(option)"></div>
+                <div v-else >{{ option[1] }}</div>
+              </div>
+            </template>
+            <div v-if="filteredOptions.length === 0" class="text-sn-grey text-center py-2.5">
+              {{ noOptionsPlaceholder || this.i18n.t('general.select_dropdown.no_options_placeholder') }}
+            </div>
+          </perfect-scrollbar>
+        </div>
+      </teleport>
+    </template>
   </div>
 
 </template>
