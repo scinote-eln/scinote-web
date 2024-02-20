@@ -8,7 +8,7 @@ import { mountWithTurbolinks } from '../helpers/turbolinks.js';
 </div>
 */
 
-window.initDateTimePickerComponent = (id) => {
+window.initDateTimePickerComponent = (id, withTurbolinks = true) => {
   const elementWithIdPresent = document.querySelector(id);
   if (!elementWithIdPresent) {
     console.warn("datetime_picker.js -> window.initDateTimePickerComponent: couldn't find element with id: ", id);
@@ -76,7 +76,12 @@ window.initDateTimePickerComponent = (id) => {
   });
   app.component('DateTimePicker', DateTimePicker);
   app.config.globalProperties.i18n = window.I18n;
-  mountWithTurbolinks(app, id);
+  if (withTurbolinks) {
+    mountWithTurbolinks(app, id);
+  } else {
+    app.mount(id);
+  }
+  return app;
 };
 
 document.addEventListener('turbolinks:load', () => {

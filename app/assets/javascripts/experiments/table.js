@@ -2,6 +2,7 @@
           initBSTooltips filterDropdown dropdownSelector Sidebar HelperModule notTurbolinksPreview _ */
 
 var ExperimnetTable = {
+  mountedDueDateVueApps: [],
   selectedId: [],
   table: '.experiment-table',
   tableContainer: '.experiment-table-container',
@@ -167,7 +168,8 @@ var ExperimnetTable = {
       });
 
       if ($(`#calendarDueDateContainer${row.id}`).length > 0) {
-        window.initDateTimePickerComponent(`#calendarDueDateContainer${row.id}`);
+        const app = window.initDateTimePickerComponent(`#calendarDueDateContainer${row.id}`, false);
+        this.mountedDueDateVueApps.push(app);
       }
     });
   },
@@ -600,7 +602,13 @@ var ExperimnetTable = {
       });
     });
   },
+  unmountDueDateVueApps: function() {
+    while (this.mountedDueDateVueApps.length > 0) {
+      this.mountedDueDateVueApps.pop().unmount();
+    }
+  },
   loadTable: function() {
+    this.unmountDueDateVueApps();
     var tableParams = {
       filters: this.activeFilters,
       sort: this.myModulesCurrentSort
