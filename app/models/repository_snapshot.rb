@@ -37,17 +37,16 @@ class RepositorySnapshot < RepositoryBase
       .where(my_module: { experiments: { project: project } })
   }
 
-  def self.create_preliminary(repository, my_module, created_by = nil)
+  def self.create_preliminary!(repository, my_module, created_by = nil)
     created_by ||= repository.created_by
-    repository_snapshot = repository.dup.becomes(RepositorySnapshot)
-    repository_snapshot.assign_attributes(type: RepositorySnapshot.name,
-                                          original_repository: repository,
-                                          my_module: my_module,
-                                          created_by: created_by,
-                                          team: my_module.experiment.project.team,
-                                          permission_level: Extends::SHARED_OBJECTS_PERMISSION_LEVELS[:not_shared])
-    repository_snapshot.provisioning!
-    repository_snapshot.reload
+    create!(
+      name: repository.name,
+      original_repository: repository,
+      team: my_module.experiment.project.team,
+      status: :provisioning,
+      my_module:,
+      created_by:
+    )
   end
 
   def default_table_state

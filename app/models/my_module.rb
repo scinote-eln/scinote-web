@@ -56,7 +56,7 @@ class MyModule < ApplicationRecord
   delegate :my_module_status_flow, to: :my_module_status, allow_nil: true
   has_many :results, inverse_of: :my_module, dependent: :destroy
   has_many :my_module_tags, inverse_of: :my_module, dependent: :destroy
-  has_many :tags, through: :my_module_tags
+  has_many :tags, through: :my_module_tags, dependent: :destroy
   has_many :task_comments, foreign_key: :associated_id, dependent: :destroy
   has_many :inputs, class_name: 'Connection', foreign_key: 'input_id', inverse_of: :to, dependent: :destroy
   has_many :outputs, class_name: 'Connection', foreign_key: 'output_id', inverse_of: :from, dependent: :destroy
@@ -338,7 +338,7 @@ class MyModule < ApplicationRecord
     ]
     data = []
     rows = repository.assigned_rows(self).includes(:created_by).order(created_at: order)
-    if repository.has_stock_management?
+    if repository.has_stock_management? && repository.has_stock_consumption?
       headers.push(I18n.t('repositories.table.row_consumption'))
       rows = rows.left_joins(my_module_repository_rows: :repository_stock_unit_item)
                  .select(
@@ -352,7 +352,7 @@ class MyModule < ApplicationRecord
       row_json << (row.archived ? "#{row.name} [#{I18n.t('general.archived')}]" : row.name)
       row_json << I18n.l(row.created_at, format: :full)
       row_json << row.created_by.full_name
-      if repository.has_stock_management?
+      if repository.has_stock_management? && repository.has_stock_consumption?
         if repository.is_a?(RepositorySnapshot)
           consumed_stock = row.repository_stock_consumption_cell&.value&.formatted
           row_json << (consumed_stock || 0)
@@ -378,11 +378,15 @@ class MyModule < ApplicationRecord
 
     repository.repository_columns.order(:id).each do |column|
       if column.data_type == 'RepositoryStockValue'
-        headers.push(I18n.t('repositories.table.row_consumption'))
-      else
+        if repository.has_stock_consumption?
+          headers.push(I18n.t('repositories.table.row_consumption'))
+          custom_columns.push(column.id)
+        end
+      elsif column.data_type != 'RepositoryStockConsumptionValue' &&
+            !(repository.is_a?(RepositorySnapshot) && column.data_type == 'RepositoryStockConsumptionValue')
         headers.push(column.name)
+        custom_columns.push(column.id)
       end
-      custom_columns.push(column.id)
     end
 
     records = repository.assigned_rows(self)

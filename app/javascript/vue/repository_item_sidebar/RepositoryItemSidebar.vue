@@ -16,7 +16,8 @@
               :editable="permissions.can_manage && !defaultColumns?.archived"
               :name="defaultColumns.name"
               :archived="defaultColumns.archived"
-              @update="update">
+              @update="update"
+              data-e2e="e2e-TX-repoItemSB-title">
             </repository-item-sidebar-title>
             <i id="close-icon" @click="toggleShowHideSidebar(null)"
               class="sn-icon sn-icon-close ml-auto cursor-pointer my-auto mx-0"></i>
@@ -55,7 +56,7 @@
                     <div class="flex flex-col ">
                       <span class="inline-block font-semibold pb-[6px]">{{
                         i18n.t('repositories.item_card.default_columns.repository_name') }}</span>
-                      <span class="repository-name text-sn-dark-grey line-clamp-3" :title="repository?.name">
+                      <span class="repository-name text-sn-dark-grey line-clamp-3" :title="repository?.name" data-e2e="e2e-TX-repoItemSBinformation-inventory">
                         {{ repository?.name }}
                       </span>
                     </div>
@@ -67,7 +68,7 @@
                       <span class="inline-block font-semibold pb-[6px]">{{
                         i18n.t('repositories.item_card.default_columns.id')
                       }}</span>
-                      <span class="inline-block text-sn-dark-grey line-clamp-3" :title="defaultColumns?.code">
+                      <span class="inline-block text-sn-dark-grey line-clamp-3" :title="defaultColumns?.code" data-e2e="e2e-TX-repoItemSBinformation-itemID">
                         {{ defaultColumns?.code }}
                       </span>
                     </div>
@@ -79,7 +80,7 @@
                       <span class="inline-block font-semibold pb-[6px]">{{
                         i18n.t('repositories.item_card.default_columns.added_on')
                       }}</span>
-                      <span class="inline-block text-sn-dark-grey" :title="defaultColumns?.added_on">
+                      <span class="inline-block text-sn-dark-grey" :title="defaultColumns?.added_on" data-e2e="e2e-TX-repoItemSBinformation-addedOn">
                         {{ defaultColumns?.added_on }}
                       </span>
                     </div>
@@ -91,7 +92,7 @@
                       <span class="inline-block font-semibold pb-[6px]">{{
                         i18n.t('repositories.item_card.default_columns.added_by')
                       }}</span>
-                      <span class="inline-block text-sn-dark-grey line-clamp-3" :title="defaultColumns?.added_by">
+                      <span class="inline-block text-sn-dark-grey line-clamp-3" :title="defaultColumns?.added_by" data-e2e="e2e-TX-repoItemSBinformation-addedBy">
                         {{ defaultColumns?.added_by }}
                       </span>
                     </div>
@@ -102,7 +103,7 @@
                       <span class="inline-block font-semibold pb-[6px]">{{
                         i18n.t('repositories.item_card.default_columns.archived_on')
                       }}</span>
-                      <span class="inline-block text-sn-dark-grey" :title="defaultColumns.archived_on">
+                      <span class="inline-block text-sn-dark-grey" :title="defaultColumns.archived_on" data-e2e="e2e-TX-repoItemSBinformation-archivedOn">
                         {{ defaultColumns.archived_on }}
                       </span>
                     </div>
@@ -113,7 +114,7 @@
                       <span class="inline-block font-semibold pb-[6px]">{{
                         i18n.t('repositories.item_card.default_columns.archived_by')
                       }}</span>
-                      <span class="inline-block text-sn-dark-grey" :title="defaultColumns.archived_by.full_name">
+                      <span class="inline-block text-sn-dark-grey" :title="defaultColumns.archived_by.full_name" data-e2e="e2e-TX-repoItemSBinformation-archivedBy">
                         {{ defaultColumns.archived_by.full_name }}
                       </span>
                     </div>
@@ -147,13 +148,15 @@
                   </div>
                   <div class="font-inter text-sm leading-5 w-full">
                     <div class="flex flex-row justify-between mb-4">
-                      <div class="font-semibold">
+                      <div class="font-semibold" data-e2e="e2e-TX-repoItemSBrelationships-parents">
                         {{ i18n.t('repositories.item_card.relationships.parents.count', { count: parentsCount || 0 }) }}
                       </div>
                       <a
                         v-if="permissions.can_connect_rows"
                         class="relationships-add-link btn-text-link font-normal"
-                        @click="handleOpenAddRelationshipsModal($event, 'parent')">
+                        @click="handleOpenAddRelationshipsModal($event, 'parent')"
+                        data-e2e="e2e-TL-repoItemSBrelationships-addParents"
+                        >
                         {{ i18n.t('repositories.item_card.add_relationship_button_text') }}
                       </a>
                     </div>
@@ -193,13 +196,15 @@
 
                   <div class="font-inter text-sm leading-5 w-full">
                     <div class="flex flex-row justify-between" :class="{ 'mb-4': childrenCount }">
-                      <div class="font-semibold">
+                      <div class="font-semibold" data-e2e="e2e-TX-repoItemSBrelationships-children">
                         {{ i18n.t('repositories.item_card.relationships.children.count', { count: childrenCount || 0 }) }}
                       </div>
                       <a
                         v-if="permissions.can_connect_rows"
                         class="relationships-add-link btn-text-link font-normal"
-                        @click="handleOpenAddRelationshipsModal($event, 'child')">
+                        @click="handleOpenAddRelationshipsModal($event, 'child')"
+                        data-e2e="e2e-TL-repoItemSBrelationships-addChildren"
+                        >
                         {{ i18n.t('repositories.item_card.add_relationship_button_text') }}
                       </a>
                     </div>
@@ -244,6 +249,7 @@
                     class="flex flex-row text-lg font-semibold w-[350px] mb-6 leading-7 items-center justify-between transition-colors duration-300"
                     ref="assigned-label"
                     id="assigned-label"
+                    data-e2e="e2e-TX-repoItemSB-assigned"
                     >
                     {{ i18n.t('repositories.item_card.section.assigned', {
                       count: assignedModules ?
@@ -255,7 +261,7 @@
                         'disabled': actions?.assign_repository_row && actions.assign_repository_row.disabled
                       }"
                       :data-assign-url="actions?.assign_repository_row ? actions.assign_repository_row.assign_url : ''"
-                      :data-repository-row-id="repositoryRowId" @click="showRepositoryAssignModal">
+                      :data-repository-row-id="repositoryRowId" @click="showRepositoryAssignModal" data-e2e="e2e-TL-repoItemSBassigned-assignToTask">
                       {{ i18n.t('repositories.item_card.assigned.assign') }}
                     </a>
                   </div>
@@ -314,7 +320,7 @@
             :class="{ 'pb-6': customColumns?.length }">
             <div id="divider" class="w-500 bg-sn-light-grey flex px-8 items-center self-stretch h-px mb-6"></div>
             <div id="bottom-button-wrapper" class="flex h-10 justify-end">
-              <button type="button" class="btn btn-primary print-label-button" data-e2e="e2e-BT-invInventoryItemSB-print"
+              <button type="button" class="btn btn-primary print-label-button" data-e2e="e2e-BT-repoItemSB-print"
                 :data-rows="JSON.stringify([repositoryRowId])"
                 :data-repository-id="repository?.id">
                 {{ i18n.t('repositories.item_card.print_label') }}

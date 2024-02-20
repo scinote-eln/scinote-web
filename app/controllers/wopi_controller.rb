@@ -201,8 +201,8 @@ class WopiController < ActionController::Base
           logger.warn 'WOPI: replacing file'
 
           @team.release_space(@asset.estimated_size)
-          @asset.update_contents(request.body)
           @asset.last_modified_by = @user
+          @asset.update_contents(request.body)
           @asset.save
 
           @team.take_space(@asset.estimated_size)

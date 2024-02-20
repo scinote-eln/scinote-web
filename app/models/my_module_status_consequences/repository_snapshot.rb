@@ -8,7 +8,7 @@ module MyModuleStatusConsequences
 
     def forward(my_module)
       my_module.assigned_repositories.each do |repository|
-        repository_snapshot = ::RepositorySnapshot.create_preliminary(repository, my_module)
+        repository_snapshot = ::RepositorySnapshot.create_preliminary!(repository, my_module)
         service = Repositories::SnapshotProvisioningService.call(repository_snapshot: repository_snapshot)
 
         unless service.succeed?

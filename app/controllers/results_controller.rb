@@ -90,7 +90,7 @@ class ResultsController < ApplicationController
         view_mode: @result.assets_view_mode
       )
       @asset.file.attach(params[:signed_blob_id])
-      @asset.post_process_file(@my_module.team)
+      @asset.post_process_file
     end
 
     log_activity(:result_file_added, { file: @asset.file_name, result: @result })

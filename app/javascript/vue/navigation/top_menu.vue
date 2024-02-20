@@ -38,6 +38,7 @@
       <NotificationsFlyout
         v-if="notificationsOpened"
         :notificationsUrl="notificationsUrl"
+        :preferencesUrl="this.userMenu.find((item) => item.name === i18n.t('users.settings.sidebar.account_nav.preferences'))?.url"
         :unseenNotificationsCount="unseenNotificationsCount"
         @update:unseenNotificationsCount="checkUnseenNotifications()"
         @close="notificationsOpened = false" />

@@ -2,6 +2,7 @@
 
 require 'active_storage/previewer/libreoffice_previewer'
 require 'active_storage/analyzer/image_analyzer/custom_image_magick'
+require 'active_storage/analyzer/text_extraction_analyzer'
 require 'active_storage/downloader'
 
 # Enable PDF previews for files
@@ -11,6 +12,7 @@ Rails.application.config.active_storage.previewers = [ActiveStorage::Previewer::
                                                       ActiveStorage::Previewer::LibreofficePreviewer]
 
 Rails.application.config.active_storage.analyzers.prepend(ActiveStorage::Analyzer::ImageAnalyzer::CustomImageMagick)
+Rails.application.config.active_storage.analyzers.append(ActiveStorage::Analyzer::TextExtractionAnalyzer)
 
 Rails.application.config.active_storage.variable_content_types << 'image/svg+xml'
 

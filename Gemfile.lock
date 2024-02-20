@@ -422,7 +422,7 @@ GEM
     mime-types-data (3.2023.0218.1)
     mini_magick (4.12.0)
     mini_mime (1.1.2)
-    mini_portile2 (2.8.4)
+    mini_portile2 (2.8.5)
     minitest (5.20.0)
     msgpack (1.7.1)
     multi_json (1.15.0)
@@ -443,12 +443,12 @@ GEM
       net-protocol
     newrelic_rpm (9.2.2)
     nio4r (2.7.0)
-    nokogiri (1.14.5)
-      mini_portile2 (~> 2.8.0)
+    nokogiri (1.16.2)
+      mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.14.5-arm64-darwin)
+    nokogiri (1.16.2-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.14.5-x86_64-linux)
+    nokogiri (1.16.2-x86_64-linux)
       racc (~> 1.4)
     noticed (1.6.3)
       http (>= 4.0.0)
@@ -508,7 +508,7 @@ GEM
     puma (6.4.2)
       nio4r (~> 2.0)
     raabro (1.4.0)
-    racc (1.7.1)
+    racc (1.7.3)
     rack (2.2.7)
     rack-attack (6.6.1)
       rack (>= 1.0, < 3)
@@ -769,7 +769,7 @@ DEPENDENCIES
   logging (~> 2.0.0)
   nested_form_fields
   newrelic_rpm
-  nokogiri (~> 1.14.3)
+  nokogiri (~> 1.16.2)
   noticed
   omniauth (~> 2.1)
   omniauth-azure-activedirectory-v2

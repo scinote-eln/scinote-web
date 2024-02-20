@@ -18,7 +18,6 @@ module Reports
         Reports::Docx.new(report, docx, user: user, scinote_url: root_url).draw
         docx.save
         report.docx_file.attach(io: file, filename: 'report.docx')
-        report.docx_ready!
         report_path = Rails.application.routes.url_helpers
                            .reports_path(team: report.team.id, preview_report_id: report.id, preview_type: :docx)
 
@@ -37,6 +36,7 @@ module Reports
         )
 
         Reports::DocxPreviewJob.perform_now(report.id)
+        report.docx_ready!
       ensure
         I18n.backend.date_format = nil
         file.close

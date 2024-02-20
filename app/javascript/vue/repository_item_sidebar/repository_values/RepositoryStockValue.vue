@@ -26,6 +26,7 @@
       @click="enableEditing"
       :data-manage-stock-url="values?.stock_url"
       :data-repository-row-id="repositoryId"
+      :data-e2e="'e2e-BT-repoItemSBcustomColumns-input' + colId"
     >
       <div v-if="values?.stock_formatted" :data-manage-stock-url="values?.stock_url"
         class="text-sn-dark-grey font-inter text-sm font-normal leading-5 stock-value overflow-hidden text-ellipsis whitespace-nowrap">

@@ -26,24 +26,18 @@ class Asset < ApplicationRecord
   validate :wopi_filename_valid, on: :wopi_file_creation
   validate :check_file_size, on: :on_api_upload
 
-  belongs_to :created_by,
-             foreign_key: 'created_by_id',
-             class_name: 'User',
-             optional: true
-  belongs_to :last_modified_by,
-             foreign_key: 'last_modified_by_id',
-             class_name: 'User',
-             optional: true
+  belongs_to :created_by, class_name: 'User', optional: true
+  belongs_to :last_modified_by, class_name: 'User', optional: true
   belongs_to :team, optional: true
   has_one :step_asset, inverse_of: :asset, dependent: :destroy
-  has_one :step, through: :step_asset, touch: true, dependent: :nullify
+  has_one :step, through: :step_asset, touch: true
   has_one :result_asset, inverse_of: :asset, dependent: :destroy
-  has_one :result, through: :result_asset, touch: true, dependent: :nullify
+  has_one :result, through: :result_asset, touch: true
   has_one :repository_asset_value, inverse_of: :asset, dependent: :destroy
-  has_one :repository_cell, through: :repository_asset_value,
-    dependent: :nullify
+  has_one :repository_cell, through: :repository_asset_value
   has_many :report_elements, inverse_of: :asset, dependent: :destroy
   has_one :asset_text_datum, inverse_of: :asset, dependent: :destroy
+  has_many :asset_sync_tokens, dependent: :destroy
 
   scope :sort_assets, lambda { |sort_value = 'new'|
     sort = case sort_value
@@ -56,7 +50,7 @@ class Asset < ApplicationRecord
     joins(file_attachment: :blob).order(sort)
   }
 
-  attr_accessor :file_content, :file_info, :in_template
+  attr_accessor :file_content, :file_info
 
   before_save :reset_file_processing, if: -> { file.new_record? }
 
@@ -229,7 +223,7 @@ class Asset < ApplicationRecord
     raise ArgumentError, 'Destination asset should be persisted first!' unless to_asset.persisted?
 
     file.blob.open do |tmp_file|
-      to_blob = ActiveStorage::Blob.create_and_upload!(io: tmp_file, filename: blob.filename, metadata: blob.metadata)
+      to_blob = ActiveStorage::Blob.create_and_upload!(io: tmp_file, filename: blob.filename)
       to_asset.file.attach(to_blob)
     end
 
@@ -244,7 +238,7 @@ class Asset < ApplicationRecord
       end
     end
 
-    to_asset.post_process_file(to_asset.team)
+    to_asset.post_process_file
   end
 
   def image?
@@ -279,19 +273,9 @@ class Asset < ApplicationRecord
     pdf? || (previewable_document?(blob) && Rails.application.config.x.enable_pdf_previews)
   end
 
-  def post_process_file(team = nil)
-    # Extract asset text if it's of correct type
-    if text?
-      Rails.logger.info "Asset #{id}: Creating extract text job"
-      # The extract_asset_text also includes
-      # estimated size calculation
-      Delayed::Job.enqueue(AssetTextExtractionJob.new(id, in_template))
-    elsif marvinjs?
-      extract_asset_text
-    else
-      # Update asset's estimated size immediately
-      update_estimated_size(team)
-    end
+  def post_process_file
+    # Update asset's estimated size immediately
+    update_estimated_size unless text? || marvinjs?
 
     if Rails.application.config.x.enable_pdf_previews && previewable_document?(blob)
       PdfPreviewJob.perform_later(id)
@@ -299,43 +283,10 @@ class Asset < ApplicationRecord
     end
   end
 
-  def extract_asset_text(in_template = false)
-    self.in_template = in_template
-
-    if marvinjs?
-      mjs_doc = Nokogiri::XML(file.metadata[:description])
-      mjs_doc.remove_namespaces!
-      text_data = mjs_doc.search("//Field[@name='text']").collect(&:text).join(' ')
-    else
-      blob.open do |tmp_file|
-        text_data = Yomu.new(tmp_file.path).text
-      end
-    end
-
-    if asset_text_datum.present?
-      # Update existing text datum if it exists
-      asset_text_datum.update(data: text_data)
-    else
-      # Create new text datum
-      AssetTextDatum.create(data: text_data, asset: self)
-    end
-
-    Rails.logger.info "Asset #{id}: Asset file successfully extracted"
-
-    # Finally, update asset's estimated size to include
-    # the data vector
-    update_estimated_size(team)
-  rescue StandardError => e
-    Rails.logger.fatal(
-      "Asset #{id}: Error extracting contents from asset "\
-      "file #{file.blob.key}: #{e.message}"
-    )
-  end
-
   # If team is provided, its space_taken
   # is updated as well
-  def update_estimated_size(team = nil)
-    return if file_size.blank? || in_template
+  def update_estimated_size
+    return if file_size.blank?
 
     es = file_size
     if asset_text_datum.present? && asset_text_datum.persisted?
@@ -463,6 +414,10 @@ class Asset < ApplicationRecord
 
   def my_module
     (result || step)&.my_module
+  end
+
+  def parent
+    step || result || repository_cell
   end
 
   private

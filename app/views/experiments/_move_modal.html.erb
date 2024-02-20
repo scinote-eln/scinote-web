@@ -1,10 +1,10 @@
 <div class="modal move-experiment-modal"
-     id="move-experiment-modal-<%= @experiment.id %>"
+     id="move-experiment-modal-<%= params[:ids] %>"
      tabindex="-1"
      role="dialog"
      aria-labelledby="move-experiment-modal-label">
      <%= form_with model: @experiment,
-                   url: move_experiment_path(@experiment),
+                   url: move_experiments_path(ids: params[:ids]),
                    method: :post,
                    data: { remote: true },
                    html: { class: 'experiment-action-form' } do |f| %>
@@ -12,11 +12,11 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
-          <h4 class="modal-title" id="move-experiment-modal-label"><%= t("experiments.move.modal_title", experiment: @experiment.name ) %></h5>
+          <h4 class="modal-title" id="move-experiment-modal-label"><%= t("experiments.move.modal_title") %></h5>
         </div>
         <div class="modal-body">
           <p><small><%= t("experiments.move.notice") %></small></p>
-          <% if @projects.any? && can_manage_all_experiment_my_modules?(@experiment) %>
+          <% if @projects.any? && @experiments.all? { |experiment| can_move_experiment?(experiment) } %>
             <%= f.select :project_id, options_for_select(@projects.collect { |p| [ p.name, p.id ] }),
                         { label: t("experiments.move.target_project") }, { class: "form-control selectpicker", "data-role" => "clear" } %>
           <% else %>
@@ -24,15 +24,18 @@
               <i class="fas fa-exclamation-triangle"></i>
               <% if @projects.blank? %>
                 <%= t("experiments.move.no_projects") %>
-              <% elsif !can_manage_all_experiment_my_modules?(@experiment) %>
+              <% elsif !@experiments.all? { |experiment| can_move_experiment?(experiment) }  %>
                 <%= t("experiments.move.task_permission") %>
               <% end %>
             </div>
           <% end %>
         </div>
+        <% params[:ids].each do |id| %>
+          <%= f.hidden_field :ids, multiple: true, value: id %>
+        <% end %>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
-          <% if @projects.any? && can_manage_all_experiment_my_modules?(@experiment) %>
+          <% if @projects.any? && @experiments.all? { |experiment| can_manage_all_experiment_my_modules?(experiment) }  %>
             <%= f.submit t("experiments.move.modal_submit"), class: "btn btn-primary" %>
           <% end %>
         </div>

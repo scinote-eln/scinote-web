@@ -27,13 +27,13 @@ class ChecklistItem < ApplicationRecord
   after_save :touch_checklist
   after_touch :touch_checklist
 
-  def save_multiline!
+  def save_multiline!(after_id: nil)
+    at_position = checklist.checklist_items.find_by(id: after_id).position if after_id
+
     if with_paragraphs
       if new_record?
-        original_position = position
-        self.position = nil
         save!
-        insert_at(original_position + 1)
+        insert_at(at_position + 1) || 0
       else
         save!
       end
@@ -42,7 +42,7 @@ class ChecklistItem < ApplicationRecord
 
     items = []
     if new_record?
-      start_position = position
+      start_position = at_position || 0
       text.split("\n").compact.each do |line|
         new_item = checklist.checklist_items.create!(text: line)
         new_item.insert_at(start_position + 1)

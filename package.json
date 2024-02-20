@@ -43,6 +43,7 @@
     "bootstrap": "^3.4.1",
     "bootstrap-select": "^1.13.18",
     "bwip-js": "^3.0.1",
+    "compare-versions": "^6.1.0",
     "compression-webpack-plugin": "8.0.1",
     "croppie": "^2.6.4",
     "css-loader": "^6.7.3",
