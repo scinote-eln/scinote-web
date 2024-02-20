@@ -111,7 +111,7 @@
                 @update="updateDescription"
               />
             </div>
-            <div v-else-if="protocol.attributes.description_view" v-html="protocol.attributes.description_view"></div>
+            <div v-else-if="protocol.attributes.description_view" v-html="wrappedTables" class="view-text-element"></div>
             <div v-else class="empty-protocol-description">
               {{ i18n.t("protocols.no_text_placeholder") }}
             </div>
@@ -252,6 +252,9 @@ export default {
   },
   mixins: [UtilsMixin, stackableHeadersMixin, moduleNameObserver, AssetPasteMixin],
   computed: {
+    wrappedTables() {
+      return window.wrapTables(this.protocol.attributes.description_view);
+    },
     inRepository() {
       return this.protocol.attributes.in_repository;
     },
