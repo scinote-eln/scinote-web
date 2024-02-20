@@ -230,6 +230,9 @@ export default {
     this.fetchOptions();
   },
   watch: {
+    value(newValue) {
+      this.newValue = newValue;
+    },
     isOpen() {
       if (this.isOpen) {
         this.$nextTick(() => {
