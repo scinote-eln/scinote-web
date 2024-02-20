@@ -36,6 +36,16 @@ class RepositoryZipExportJob < ZipExportJob
                                       nil,
                                       params[:my_module_id].present?)
     File.binwrite("#{dir}/export.csv", data.encode('UTF-8', invalid: :replace, undef: :replace))
+
+    # Generate XLSX
+    xlsx_data = RepositoryXlsxExport.to_xlsx(rows,
+                                             params[:header_ids].map(&:to_i),
+                                             @user,
+                                             repository,
+                                             nil, # Assuming handle_file_name_func is similar to CSV generation
+                                             params[:my_module_id].present?)
+
+    File.binwrite("#{dir}/export.xlsx", xlsx_data)
   end
 
   def failed_notification_title

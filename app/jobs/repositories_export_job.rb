@@ -46,6 +46,7 @@ class RepositoriesExportJob < ApplicationJob
 
     # CSV file
     csv_file = FileUtils.touch("#{path}/#{repository_name}.csv").first
+    xlsx_file = FileUtils.touch("#{path}/#{repository_name}.xlsx").first
 
     # Define headers and columns IDs
     col_ids = [-3, -4, -5, -6, -7, -8]
@@ -69,6 +70,10 @@ class RepositoriesExportJob < ApplicationJob
     # Generate CSV
     csv_data = RepositoryZipExport.to_csv(repository.repository_rows, col_ids, @user, repository, handle_name_func)
     File.binwrite(csv_file, csv_data.encode('UTF-8', invalid: :replace, undef: :replace))
+
+    # Generate XLSX
+    xlsx_data = RepositoryXlsxExport.to_xlsx(repository.repository_rows, col_ids, @user, repository, handle_name_func)
+    File.binwrite(xlsx_file, xlsx_data)
 
     # Save all attachments (it doesn't work directly in callback function
     assets.each do |asset, asset_path|
