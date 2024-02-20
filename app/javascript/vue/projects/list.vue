@@ -124,17 +124,17 @@ export default {
         flex: 1,
         headerName: this.i18n.t('projects.index.card.name'),
         sortable: true,
-        cellRenderer: this.nameRenderer,
+        cellRenderer: this.nameRenderer
       },
       {
         field: 'code',
         headerName: this.i18n.t('projects.index.card.id'),
-        sortable: true,
+        sortable: true
       },
       {
         field: 'created_at',
         headerName: this.i18n.t('projects.index.card.start_date'),
-        sortable: true,
+        sortable: true
       },
       {
         field: 'users',
@@ -143,8 +143,7 @@ export default {
         sortable: false,
         minWidth: 210,
         notSelectable: true
-      },
-      ];
+      }];
 
       if (this.currentViewMode === 'archived') {
         columns.push({
