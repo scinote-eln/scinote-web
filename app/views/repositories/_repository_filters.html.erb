@@ -23,6 +23,7 @@
         data-user-utc-offset="<%= ActiveSupport::TimeZone.find_tzinfo(current_user.time_zone).utc_offset %>"
       >
         <filter-container
+          v-if="open"
           :columns.sync="columns"
           :my_modules.sync="my_modules"
           :default-filters="defaultFilters"
