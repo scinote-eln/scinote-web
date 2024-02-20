@@ -122,7 +122,8 @@ export default {
         {
           field: 'created_at',
           headerName: this.i18n.t('experiments.card.start_date'),
-          sortable: true
+          sortable: true,
+          minWidth: 130
         },
         {
           field: 'updated_at',

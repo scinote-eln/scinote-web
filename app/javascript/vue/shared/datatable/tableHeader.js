@@ -1,6 +1,7 @@
 export default {
   template: `
-    <div class="w-full grid items-center gap-2 grid-cols-[auto_1.5rem] cursor-pointer"
+    <div class="w-full grid items-center gap-2 grid-cols-[auto_1.5rem]"
+         :class="{'cursor-pointer': params.enableSorting}"
          :data-e2e="'e2e-CO-TableHeader-' + params.column.colId "
          @click="onSortRequested((activeSort == 'asc' ? 'desc' : 'asc'), $event)">
       <div v-if="params.html" class="customHeaderLabel truncate" v-html="params.html"></div>

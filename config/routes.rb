@@ -376,7 +376,9 @@ Rails.application.routes.draw do
     end
     get 'project_folders/:project_folder_id', to: 'projects#index', as: :project_folder_projects
 
-    resources :experiments, only: %i(index update) do
+    get 'projects/:project_id', to: 'experiments#index'
+    get 'projects/:project_id/experiments', to: 'experiments#index', as: :experiments
+    resources :experiments, only: %i(update) do
       collection do
         get 'inventory_assigning_experiment_filter'
         get 'clone_modal', action: :clone_modal
@@ -421,7 +423,9 @@ Rails.application.routes.draw do
 
     # Show action is a popup (JSON) for individual module in full-zoom canvas,
     # as well as 'module info' page for single module (HTML)
-    resources :my_modules, path: '/modules', only: [:show, :update, :index] do
+    get 'experiments/:experiment_id/table', to: 'my_modules#index'
+    get 'experiments/:experiment_id/modules', to: 'my_modules#index', as: :my_modules
+    resources :my_modules, path: '/modules', only: [:show, :update] do
       post 'save_table_state', on: :collection, defaults: { format: 'json' }
 
       collection do

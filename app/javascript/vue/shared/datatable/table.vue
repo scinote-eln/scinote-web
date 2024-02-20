@@ -382,7 +382,7 @@ export default {
       this.dataLoading = true;
       if (clearSelection) this.selectedRows = [];
       this.page = 1;
-      this.loadData();
+      this.loadData(true);
     },
     loadData(reload = false) {
       axios
