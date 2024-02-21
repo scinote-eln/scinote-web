@@ -76,7 +76,7 @@ class ProtocolsController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        protocols = Lists::ProtocolsService.new(Protocol.latest_available_versions(@current_team), params).call
+        protocols = Lists::ProtocolsService.new(Protocol.where(team: @current_team), params).call
         render json: protocols,
                each_serializer: Lists::ProtocolSerializer,
                user: current_user,
