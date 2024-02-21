@@ -348,7 +348,14 @@ class MyModulesController < ApplicationController
       log_activity(:change_status_on_task_flow, @my_module, my_module_status_old: old_status_id,
                    my_module_status_new: @my_module.my_module_status.id)
 
-      render json: { status: :changed }
+      render json: {
+        status: :changed,
+        html: render_to_string(
+          partial: 'my_modules/status_flow/task_flow_button',
+          locals: { my_module: @my_module },
+          formats: :html
+        )
+      }
     else
       render json: { errors: @my_module.errors.messages.values.flatten.join('\n') }, status: :unprocessable_entity
     end
