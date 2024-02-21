@@ -320,9 +320,7 @@ $(document).on('click', '.gene-sequence-edit-button', function() {
 });
 
 function initMarvinJs() {
-  if (!window.MarvinJsEditor) {
-    MarvinJsEditor = MarvinJsEditorApi();
-  }
+  MarvinJsEditor = MarvinJsEditorApi();
 
   if (MarvinJsEditor.enabled()) {
     if (typeof (ChemicalizeMarvinJs) === 'undefined') {
