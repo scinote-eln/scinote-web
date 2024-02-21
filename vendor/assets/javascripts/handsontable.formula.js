@@ -199,12 +199,12 @@
     var beforeAutofillInsidePopulate = function(index, direction, data, deltas, iterators, selected) {
       var instance = this;
 
-      var r = index.row,
-          c = index.col,
+      var rlength = data.length, // rows
+          clength = data[0].length, //cols
+          r = index.row % rlength,
+          c = index.col % clength,
           value = data[r][c],
-          delta = 0,
-          rlength = data.length, // rows
-          clength = data ? data[0].length : 0; //cols
+          delta = 0;
 
       if (value[0] === '=') { // formula
 
@@ -219,7 +219,7 @@
           iterators: iterators
         }
 
-      } else { // other value
+      } /* else { // other value
 
         // increment or decrement  values for more than 2 selected cells
         if (rlength >= 2 || clength >= 2) {
@@ -281,7 +281,7 @@
           }
         }
 
-      }
+      } */
 
       return {
         value: value,

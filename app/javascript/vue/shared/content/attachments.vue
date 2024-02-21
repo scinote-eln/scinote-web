@@ -33,6 +33,7 @@
         @attachment:delete="deleteAttachment(attachment.id)"
         @attachment:moved="attachmentMoved"
         @attachment:uploaded="$emit('attachment:uploaded')"
+        @attachment:changed="$emit('attachment:changed', $event)"
       />
     </div>
   </div>

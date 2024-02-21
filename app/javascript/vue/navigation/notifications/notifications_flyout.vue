@@ -2,7 +2,9 @@
   <div class="sci--navigation--notificaitons-flyout">
     <div class="sci--navigation--notificaitons-flyout-title">
       {{ i18n.t('nav.notifications.title') }}
-      <i class="sn-icon sn-icon-close" @click="$emit('close')"></i>
+      <a class="ml-auto cursor-pointer text-sm font-normal" :href="this.preferencesUrl" :title="i18n.t('nav.settings')">
+        {{ i18n.t('nav.settings') }}
+      </a>
     </div>
     <hr>
     <perfect-scrollbar ref="scrollContainer" class="sci--navigation--notificaitons-flyout-notifications">
@@ -35,7 +37,8 @@ export default {
   },
   props: {
     notificationsUrl: String,
-    unseenNotificationsCount: Number
+    unseenNotificationsCount: Number,
+    preferencesUrl: String
   },
   data() {
     return {

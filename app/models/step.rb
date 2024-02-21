@@ -38,9 +38,9 @@ class Step < ApplicationRecord
   has_many :step_comments, foreign_key: :associated_id, dependent: :destroy
   has_many :step_texts, inverse_of: :step, dependent: :destroy
   has_many :step_assets, inverse_of: :step, dependent: :destroy
-  has_many :assets, through: :step_assets
+  has_many :assets, through: :step_assets, dependent: :destroy
   has_many :step_tables, inverse_of: :step, dependent: :destroy
-  has_many :tables, through: :step_tables
+  has_many :tables, through: :step_tables, dependent: :destroy
   has_many :report_elements, inverse_of: :step, dependent: :destroy
 
   accepts_nested_attributes_for :checklists,

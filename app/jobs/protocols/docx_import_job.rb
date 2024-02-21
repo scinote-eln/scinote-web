@@ -120,7 +120,7 @@ module Protocols
       asset.file.attach(io: StringIO.new(Base64.decode64(step_element_json['contents'])), filename: 'file.blob')
       asset.save!
       step.step_assets.create!(asset: asset)
-      asset.post_process_file(@protocol.team)
+      asset.post_process_file
     end
 
     def create_step_orderable_element!(step, orderable)

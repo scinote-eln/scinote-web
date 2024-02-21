@@ -24,11 +24,11 @@ class MarvinJsService
                           team_id: current_team.id)
       attach_file(asset.file, file, params)
       asset.save!
-      asset.post_process_file(current_team)
+      asset.post_process_file
       connect_asset(asset, params, current_user)
     end
 
-    def update_sketch(params, _current_user, current_team)
+    def update_sketch(params, current_user, current_team)
       if params[:object_type] == 'TinyMceAsset'
         asset = current_team.tiny_mce_assets.find(Base62.decode(params[:id]))
         attachment = asset&.image
@@ -39,8 +39,9 @@ class MarvinJsService
       return unless attachment
 
       file = generate_image(params)
+      asset.update(last_modified_by: current_user) if asset.is_a?(Asset)
       attach_file(attachment, file, params)
-      asset.post_process_file(current_team) if asset.class == Asset
+      asset.post_process_file if asset.instance_of?(Asset)
       asset
     end
 

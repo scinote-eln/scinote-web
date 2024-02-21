@@ -70,7 +70,7 @@ class RepositoryAssetValue < ApplicationRecord
     asset.last_modified_by = user
     self.last_modified_by = user
     asset.save! && save!
-    asset.post_process_file(repository_cell.repository_column.repository.team)
+    asset.post_process_file
   end
 
   def snapshot!(cell_snapshot)
@@ -104,7 +104,7 @@ class RepositoryAssetValue < ApplicationRecord
       value.asset.file.attach(io: StringIO.new(Base64.decode64(payload[:file_data])), filename: payload[:file_name])
     end
 
-    value.asset.post_process_file(team)
+    value.asset.post_process_file
     value
   end
 
