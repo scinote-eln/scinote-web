@@ -8,7 +8,6 @@
         v-if="permissions?.can_manage && !inArchivedRepositoryRow"
         ref="DropdownSelector"
         @change="changeSelected"
-        @update="update"
         :value="selected"
         :options="options"
         :searchable="true"

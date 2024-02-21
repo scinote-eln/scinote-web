@@ -7,7 +7,6 @@
       <SelectDropdown
         v-if="permissions?.can_manage && !inArchivedRepositoryRow"
         @change="changeSelected"
-        @update="update"
         :value="selected"
         ref="DropdownSelector"
         :options="options"
