@@ -30,9 +30,10 @@ class ProjectsController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        projects = Lists::ProjectsService.new(current_team, current_user, current_folder, params).call
+        project_service = Lists::ProjectsService.new(current_team, current_user, current_folder, params)
+        projects = project_service.call
         render json: projects, each_serializer: Lists::ProjectAndFolderSerializer, user: current_user,
-               meta: pagination_dict(projects)
+               meta: project_service.page_dict
       end
       format.html do
         render 'projects/index'
