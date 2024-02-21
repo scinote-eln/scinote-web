@@ -15,7 +15,6 @@
   --ag-icon-font-code-checkbox-indeterminate: asset-url("checkbox/indeterminate.svg");
   --ag-input-focus-box-shadow: none;
   --ag-cell-horizontal-padding: .75rem;
-
   border: 0;
 
   .ag-cell {
@@ -29,6 +28,10 @@
 
   .ag-input-field-input {
     cursor: pointer;
+  }
+
+  .ag-header-cell-resize {
+    width: 1rem;
   }
 
   .ag-input-field-input:focus {

@@ -75,7 +75,7 @@
         :title="i18n.t('experiments.table.column_display_modal.title')"
         class="btn btn-light icon-btn btn-black"
       >
-        <i class="sn-icon sn-icon-manage-table"></i>
+        <i class="sn-icon sn-icon-manage-columns"></i>
       </button>
       <GeneralDropdown v-if="currentViewRender === 'cards'" ref="dropdown" position="right">
         <template v-slot:field>
@@ -252,6 +252,7 @@ export default {
       if (ok) {
         this.$emit('resetColumnsToDefault');
       }
+      this.showColumnsModal = true;
     }
   }
 };

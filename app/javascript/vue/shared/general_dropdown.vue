@@ -3,19 +3,20 @@
     <div ref="field" class="cursor-pointer" @click.stop="isOpen = (!isOpen || fieldOnlyOpen)">
       <slot name="field"></slot>
     </div>
-    <teleport to="body">
-      <div ref="flyout"
-          class="sn-dropdown fixed z-[3000] bg-sn-white inline-block
-                 rounded p-2.5 sn-shadow-menu-sm"
-          :class="{
-              'right-0': position === 'right',
-              'left-0': position === 'left',
-          }"
-          v-if="isOpen"
-      >
-        <slot name="flyout"></slot>
-      </div>
-    </teleport>
+    <template v-if="isOpen">
+      <teleport to="body">
+        <div ref="flyout"
+            class="sn-dropdown fixed z-[3000] bg-sn-white inline-block
+                  rounded p-2.5 sn-shadow-menu-sm"
+            :class="{
+                'right-0': position === 'right',
+                'left-0': position === 'left',
+            }"
+        >
+          <slot name="flyout"></slot>
+        </div>
+      </teleport>
+    </template>
   </div>
 </template>
 
