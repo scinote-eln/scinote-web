@@ -19,7 +19,6 @@ module Lists
                           .select('teams.name AS team_name')
                           .select('creators.full_name AS created_by_user')
                           .select('archivers.full_name AS archived_by_user')
-                          .select('repositories.id')
 
       view_mode = @params[:view_mode] || 'active'
 
