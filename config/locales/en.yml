@@ -3689,6 +3689,7 @@ en:
     reset: "Inherit role"
     remove_access: "Remove access"
     grant_access: "Grant new access"
+    you: "you"
     create:
       success: "You have successfully granted access to %{member_name}."
       failure: "Something went wrong"

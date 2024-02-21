@@ -10,11 +10,11 @@ module AccessPermissions
 
     def show
       render json: @my_module.user_assignments.includes(:user_role, :user).order('users.full_name ASC'),
-             each_serializer: UserAssignmentSerializer
+             each_serializer: UserAssignmentSerializer, user: current_user
     end
 
     def new
-      render json: @available_users, each_serializer: UserSerializer
+      render json: @available_users, each_serializer: UserSerializer, user: current_user
     end
     def edit; end
 
