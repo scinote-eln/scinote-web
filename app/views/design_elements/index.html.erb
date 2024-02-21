@@ -1,7 +1,19 @@
+<%
+  icons_list = []
+  icons_file = File.join(Rails.root, 'vendor', 'assets', 'stylesheets', 'sn-icon-font.css')
+  File.open(icons_file, 'r') do |f|
+    f.each_line do |line|
+      if line.match(/sn-icon-([a-z0-9-]+):before/)
+        icons_list << $1
+      end
+    end
+  end
+%>
+
 <%= render partial: 'select' %>
 
 <%= render partial: 'modals' %>
 
-<%= render partial: 'icons' %>
+<%= render partial: 'icons', locals: {icons_list: icons_list} %>
 
-<%= render partial: 'button' %>
+<%= render partial: 'button', locals: {icons_list: icons_list} %>

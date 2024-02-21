@@ -177,7 +177,7 @@ export default {
     },
     changeDefaultRole(roleId) {
       axios.put(this.params.object.urls.default_public_user_role_path, {
-        project: {
+        object: {
           default_public_user_role_id: roleId || ''
         }
       }).then((response) => {

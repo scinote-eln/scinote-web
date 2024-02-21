@@ -11,11 +11,11 @@ module AccessPermissions
 
     def show
       render json: @protocol.user_assignments.includes(:user_role, :user).order('users.full_name ASC'),
-             each_serializer: UserAssignmentSerializer
+             each_serializer: UserAssignmentSerializer, user: current_user
     end
 
     def new
-      render json: @available_users, each_serializer: UserSerializer
+      render json: @available_users, each_serializer: UserSerializer, user: current_user
     end
 
     def edit; end
@@ -103,10 +103,10 @@ module AccessPermissions
                                                           role: user_assignment.user_role.name })
       end
 
-      render json: { flash: t('access_permissions.destroy.success', member_name: user.full_name) }
+      render json: { message: t('access_permissions.destroy.success', member_name: user.full_name) }
     rescue ActiveRecord::RecordInvalid => e
       Rails.logger.error e.message
-      render json: { flash: t('access_permissions.destroy.failure') }, status: :unprocessable_entity
+      render json: { message: t('access_permissions.destroy.failure') }, status: :unprocessable_entity
       raise ActiveRecord::Rollback
     end
 
@@ -135,7 +135,7 @@ module AccessPermissions
     private
 
     def permitted_default_public_user_role_params
-      params.require(:protocol).permit(:default_public_user_role_id)
+      params.require(:object).permit(:default_public_user_role_id)
     end
 
     def permitted_update_params

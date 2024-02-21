@@ -15,9 +15,12 @@ class UserAssignmentSerializer < ActiveModel::Serializer
   end
 
   def user
+    current_user = instance_options[:user]
+    name = object.user.name
+    name += " (#{I18n.t('access_permissions.you')})" if current_user == object.user
     {
       id: object.user.id,
-      name: object.user.name,
+      name: name,
       avatar_url: avatar_path(object.user, :icon_small)
     }
   end
