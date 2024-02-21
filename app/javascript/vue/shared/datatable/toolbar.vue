@@ -68,7 +68,7 @@
         <i v-else class="sn-icon sn-icon-close !m-2.5 !ml-auto right-0 cursor-pointer z-10"
                   @click="$emit('search:change', '')"></i>
       </div>
-      <FilterDropdown :filters="filters" @applyFilters="applyFilters" />
+      <FilterDropdown v-if="filters.length" :filters="filters" @applyFilters="applyFilters" />
       <button
         v-if="currentViewRender === 'table'"
         @click="showColumnsModal = true"
