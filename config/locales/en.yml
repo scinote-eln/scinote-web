@@ -1338,7 +1338,7 @@ en:
         delete: "Delete"
       move_modal:
         search_placeholder: "Enter result name"
-        no_options_placeholder: "No results available to select"
+        no_options_placeholder: "No steps available to select"
       delete_modal:
         title: "Delete result"
         description_1: "You’re about to delete the result. It might contain data you don’t want to lose. You won’t be able to get it back."
