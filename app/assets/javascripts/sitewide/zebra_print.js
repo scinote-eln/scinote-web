@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-undef */
-/* global I18n */
+/* global HelperModule I18n */
 /* eslint-disable no-unused-vars, no-use-before-define */
 
 /* config = {
@@ -218,6 +218,8 @@ var zebraPrint = (function() {
             updateProgressModalData(progressModal, printData.printer_name, PRINTER_STATUS_ERROR, PRINTER_STATUS_ERROR);
           }
         });
+      }).fail(() => {
+        HelperModule.flashAlertMsg(I18n.t('repository_row.modal_print_label.general_error'), 'danger');
       });
     }
   };

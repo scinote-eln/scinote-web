@@ -19,9 +19,9 @@ class Result < ApplicationRecord
   delegate :team, to: :my_module
   has_many :result_orderable_elements, inverse_of: :result, dependent: :destroy
   has_many :result_assets, inverse_of: :result, dependent: :destroy
-  has_many :assets, through: :result_assets
+  has_many :assets, through: :result_assets, dependent: :destroy
   has_many :result_tables, inverse_of: :result, dependent: :destroy
-  has_many :tables, through: :result_tables
+  has_many :tables, through: :result_tables, dependent: :destroy
   has_many :result_texts, inverse_of: :result, dependent: :destroy
   has_many :result_comments, inverse_of: :result, foreign_key: :associated_id, dependent: :destroy
   has_many :report_elements, inverse_of: :result, dependent: :destroy

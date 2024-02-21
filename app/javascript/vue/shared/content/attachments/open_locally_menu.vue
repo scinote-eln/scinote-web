@@ -1,45 +1,68 @@
 <template>
-  <div class="sn-open-locally-menu">
-    <div v-if="!this.canOpenLocally && (this.attachment.attributes.wopi && this.attachment.attributes.urls.edit_asset)">
-        <a :href="`${this.attachment.attributes.urls.edit_asset}`" target="_blank"
-        class="block whitespace-nowrap rounded px-3 py-2.5
-               hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey">
-            {{ this.attachment.attributes.wopi_context.button_text }}
-        </a>
+  <div class="sn-open-locally-menu" @mouseenter="fetchLocalAppInfo">
+    <div v-if="!canOpenLocally && (attachment.attributes.wopi && attachment.attributes.urls.edit_asset)">
+      <a :href="`${attachment.attributes.urls.edit_asset}`" target="_blank"
+      class="block whitespace-nowrap rounded px-3 py-2.5
+              hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey">
+          {{ attachment.attributes.wopi_context.button_text }}
+      </a>
     </div>
-    <div v-else>
+    <div v-else-if="!usesWebIntegration">
         <MenuDropdown
           v-if="this.menu.length > 1"
           class="ml-auto"
           :listItems="this.menu"
-          :btnClasses="`btn btn-light icon-btn !bg-sn-white`"
+          :btnClasses="`btn btn-light icon-btn`"
           :position="'right'"
           :btnText="i18n.t('attachments.open_in')"
           :caret="true"
-          @openLocally="openLocally"
-          @openImageEditor="openImageEditor"
+          @open-locally="openLocally"
+          @open-image-editor="openImageEditor"
         ></MenuDropdown>
-        <a v-else-if="this.menu.length === 1" class="btn btn-light !bg-sn-white" :href="this.menu[0].url" :target="this.menu[0].target" @click="this[this.menu[0].emit]()">
-          {{ this.menu[0].text }}
+        <a v-else-if="menu.length === 1" class="btn btn-light" :href="menu[0].url" :target="menu[0].url_target" @click="this[this.menu[0].emit]()">
+          {{ menu[0].text }}
         </a>
     </div>
+
+    <Teleport to="body">
+      <NoPredefinedAppModal
+        v-if="showNoPredefinedAppModal"
+        :fileName="attachment.attributes.file_name"
+        @close="showNoPredefinedAppModal = false"
+      />
+      <editLaunchingApplicationModal
+        v-if="editAppModal"
+        :fileName="attachment.attributes.file_name"
+        :application="this.localAppName"
+        @close="editAppModal = false"
+      />
+      <UpdateVersionModal
+        v-if="showUpdateVersionModal"
+        @close="showUpdateVersionModal = false"
+      />
+    </Teleport>
   </div>
 </template>
 
 <script>
 import OpenLocallyMixin from './mixins/open_locally.js';
 import MenuDropdown from '../../menu_dropdown.vue';
+import UpdateVersionModal from '../modal/update_version_modal.vue';
 
 export default {
   name: 'OpenLocallyMenu',
   mixins: [OpenLocallyMixin],
-  components: { MenuDropdown },
+  components: { MenuDropdown, UpdateVersionModal },
   props: {
-    data: { type: String, required: true },
+    attachment: { type: Object, required: true },
+    disableLocalOpen: { type: Boolean, default: false }
   },
   created() {
-    this.attachment = { attributes: JSON.parse(this.data) };
     this.fetchLocalAppInfo();
+    window.openLocallyMenu = this;
+  },
+  beforeUnmount() {
+    delete window.openLocallyMenuComponent;
   },
   computed: {
     menu() {
@@ -60,7 +83,7 @@ export default {
         });
       }
 
-      if (this.canOpenLocally) {
+      if (this.canOpenLocally && !this.disableLocalOpen) {
         const text = this.localAppName
           ? this.i18n.t('attachments.open_locally_in', { application: this.localAppName })
           : this.i18n.t('attachments.open_locally');
@@ -73,6 +96,10 @@ export default {
 
       return menu;
     },
+    usesWebIntegration() {
+      return this.attachment.attributes.asset_type === 'gene_sequence'
+        || this.attachment.attributes.asset_type === 'marvinjs';
+    }
   },
   methods: {
     openImageEditor() {

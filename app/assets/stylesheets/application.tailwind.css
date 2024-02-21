@@ -26,6 +26,15 @@ html {
   opacity: 1;
 }
 
+.scroll-container.ps-transparent .ps__rail-y{
+  background-color: transparent;
+
+  &::after,
+  &::before {
+    background-color: transparent;
+  }
+}
+
 .scroll-container .ps__thumb-y{
   background-color: var(--sn-grey);
   opacity: 1;

@@ -54,9 +54,6 @@ class ProtocolsController < ApplicationController
   before_action :check_load_from_repository_permissions, only: [
     :load_from_repository
   ]
-  before_action :check_load_from_file_permissions, only: [
-    :load_from_file
-  ]
   before_action :check_copy_to_repository_permissions, only: %i(
     copy_to_repository
   )
@@ -70,7 +67,7 @@ class ProtocolsController < ApplicationController
   before_action :check_protocolsio_import_permissions,
                 only: %i(protocolsio_import_create protocolsio_import_save)
 
-  before_action :set_importer, only: %i(load_from_file import)
+  before_action :set_importer, only: :import
   before_action :set_inline_name_editing, only: :show
   before_action :set_breadcrumbs_items, only: %i(index show)
 
@@ -515,41 +512,6 @@ class ProtocolsController < ApplicationController
       render json: {
         message: t('my_modules.protocols.load_from_repository_error_locked')
       }, status: :bad_request
-    end
-  end
-
-  def load_from_file
-    # This is actually very similar to import
-    if @protocol.can_destroy?
-      transaction_error = false
-      Protocol.transaction do
-        @importer.import_into_existing(
-          @protocol, @protocol_json
-        )
-      rescue StandardError => e
-        transaction_error = true
-        Rails.logger.error(e.message)
-        Rails.logger.error(e.backtrace.join("\n"))
-        raise ActiveRecord::Rollback
-      end
-
-      if transaction_error
-        format.json do
-          render json: { status: :error }, status: :bad_request
-        end
-      else
-        # Everything good, record activity, display flash & render 200
-        log_activity(:load_protocol_to_task_from_file,
-                     @protocol.my_module.experiment.project,
-                     my_module: @my_module.id)
-        flash[:success] = t(
-          'my_modules.protocols.load_from_file_flash'
-        )
-        flash.keep(:success)
-        render json: { status: :ok }, status: :ok
-      end
-    else
-      render json: { status: :locked }, status: :bad_request
     end
   end
 
@@ -1059,19 +1021,6 @@ class ProtocolsController < ApplicationController
     render_403 unless @protocol.present? && @source.present? &&
                       (can_manage_protocol_in_module?(@protocol) &&
                        can_read_protocol_in_repository?(@source))
-  end
-
-  def check_load_from_file_permissions
-    @protocol_json = params[:protocol]
-    @protocol = Protocol.find_by_id(params[:id])
-    @my_module = @protocol.my_module
-
-    if @protocol_json.blank? ||
-       @protocol.blank? ||
-       @my_module.blank? ||
-       !can_manage_protocol_in_module?(@protocol)
-      render_403
-    end
   end
 
   def check_copy_to_repository_permissions

@@ -74,10 +74,10 @@ class RepositoryRow < ApplicationRecord
           source: :value,
           source_type: 'RepositoryStockValue'
 
-  has_many :repository_columns, through: :repository_cells
+  has_many :repository_columns, through: :repository_cells, dependent: :destroy
   has_many :my_module_repository_rows,
            inverse_of: :repository_row, dependent: :destroy
-  has_many :my_modules, through: :my_module_repository_rows
+  has_many :my_modules, through: :my_module_repository_rows, dependent: :destroy
   has_many :child_connections,
            class_name: 'RepositoryRowConnection',
            foreign_key: :parent_id,
@@ -86,7 +86,8 @@ class RepositoryRow < ApplicationRecord
   has_many :child_repository_rows,
            through: :child_connections,
            class_name: 'RepositoryRow',
-           source: :child
+           source: :child,
+           dependent: :destroy
   has_many :parent_connections,
            class_name: 'RepositoryRowConnection',
            foreign_key: :child_id,
@@ -95,7 +96,8 @@ class RepositoryRow < ApplicationRecord
   has_many :parent_repository_rows,
            through: :parent_connections,
            class_name: 'RepositoryRow',
-           source: :parent
+           source: :parent,
+           dependent: :destroy
 
   auto_strip_attributes :name, nullify: false
   validates :name,

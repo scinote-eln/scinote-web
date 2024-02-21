@@ -91,6 +91,7 @@
 </template>
 
 <script>
+/* global HelperModule */
 import DropdownSelector from '../shared/legacy/dropdown_selector.vue';
 import LabelPreview from '../label_template/components/label_preview.vue';
 
@@ -203,8 +204,14 @@ export default {
         this.labelTemplateError = null;
         this.labelTemplateCode = result.label_code;
       }).fail((result) => {
-        this.labelTemplateError = result.responseJSON.error;
-        this.labelTemplateCode = result.responseJSON.label_code;
+        if (result.responseJSON) {
+          this.labelTemplateError = result.responseJSON.error;
+          this.labelTemplateCode = result.responseJSON.label_code;
+        } else {
+          this.labelTemplateError = null;
+          this.labelTemplateCode = null;
+          HelperModule.flashAlertMsg(this.i18n.t('repository_row.modal_print_label.general_error'), 'danger');
+        }
       });
     },
     submitPrint() {
@@ -233,6 +240,8 @@ export default {
             $(this.$refs.modal).modal('hide');
             this.$emit('close');
             PrintProgressModal.init(data);
+          }).fail(() => {
+            HelperModule.flashAlertMsg(this.i18n.t('repository_row.modal_print_label.general_error'), 'danger');
           });
         }
       });

@@ -399,7 +399,9 @@ en:
     sort_by: "SORT BY"
     attachments_view_mode: "ALL ATTACHMENTS VIEW SIZE"
     open_locally_in: "Open in %{application}"
+    open_in: "Open in"
     open_locally: "Open locally"
+    open_in: "Open in"
     new:
       description: 'New'
       uploading: 'Uploading'
@@ -2594,6 +2596,7 @@ en:
         title: "There seems to be no printer available"
         description: "To learn more about printing labels and label printers please visit our blog."
         visit_blog: "Visit blog"
+      general_error: "Something went wrong"
     reminder:
       clear: "Clear"
       low_stock_title: "Item running low"
@@ -2802,6 +2805,7 @@ en:
             printer_details: "Printer details"
             details: "Details"
             enter_api_key: "Enter API key"
+            set_up: "Set up"
             enabled: "Enabled"
           fluics_printer:
             title: "FLUICS Print"
@@ -2811,7 +2815,8 @@ en:
             description: 'Print labels of custom styles and sizes in seconds flat from your PC or Mac via your Zebra printer connected via USB, Internet or LAN.'
             details: 'Details'
           desktop_app:
-            title: 'SciNote Edit'
+            scinote_apps: "SciNote apps"
+            scinote_edit: 'SciNote Edit'
             description: 'Download the SciNote Edit desktop app to automatically edit files using locally installed software.'
             macos_button: 'Download for macOS'
             windows_button: 'Download for Windows'
@@ -3621,10 +3626,13 @@ en:
     empty_office_file:
       description: "The file is empty. Please add some data before saving the file."
       reload: "Reload file"
-    asset_sync:
+    no_predefined_app_modal:
       body_text_html: "The specified application for accessing the <b>%{file_name}</b> is not preconfigured. To successfully open this file, please set up the appropriate application in your local environment beforehand.</p>"
-      no_predefined_app: "I understand"
+      understand_button: "I understand"
       set_up_app: "Set up an application to open this file"
+    update_version_modal:
+      title: "Update required"
+      body_text_html: "The current version of the SciNote Edit application is no longer supported. To ensure a seamless and secure user experience, we recommend updating to the latest version."
     edit_launching_application_modal:
       title: "Launching application"
       description: "%{file_name} will now open in %{application}. Saved changes in %{application} will automatically be synced in SciNote."

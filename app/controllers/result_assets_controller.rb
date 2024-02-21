@@ -60,7 +60,7 @@ class ResultAssetsController < ApplicationController
           team.save
 
           # Post process new file if neccesary
-          @result.asset.post_process_file(team) if asset_changed && @result.asset.present?
+          @result.asset.post_process_file if asset_changed && @result.asset.present?
 
           log_activity(:edit_result)
         end
@@ -133,7 +133,7 @@ class ResultAssetsController < ApplicationController
                                 last_modified_by: current_user)
         results << result
         # Post process file here
-        asset.post_process_file(@my_module.experiment.project.team)
+        asset.post_process_file
         log_activity(:add_result, result)
       end
 

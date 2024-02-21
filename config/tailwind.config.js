@@ -8,7 +8,7 @@ module.exports = {
     './app/javascript/**/*.vue',
     './app/assets/javascripts/**/*.js',
     './app/views/**/*.{erb,haml,html,slim}',
-    './addons/**/*.{erb,haml,html,slim}',
+    './addons/**/*.{erb,haml,html,slim,vue}'
   ],
   corePlugins: {
     preflight: false

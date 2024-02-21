@@ -17,6 +17,8 @@
     var formGroup = $('#form-records-file').find('.form-group');
     formGroup.addClass('has-error');
     formGroup.find('.help-block').remove();
+    $('#form-records-file input[type="submit"]').removeAttr('disabled');
+    $('#parse-sheet-loader').addClass('hidden');
     formGroup.append(
       '<span class="help-block">' + XHR.responseJSON.message + '</span>'
     );
@@ -24,6 +26,8 @@
   }
 
   function handleSuccessfulSubmit(data) {
+    $('#form-records-file input[type="submit"]').removeAttr('disabled');
+    $('#parse-sheet-loader').addClass('hidden');
     $('#modal-import-records').modal('hide');
     $(data.html).appendTo('body').promise().done(function() {
       $('#parse-records-modal').modal('show');
@@ -54,6 +58,8 @@
 
     submitBtn.on('click', function(event) {
       var data = new FormData();
+      submitBtn.attr('disabled', true);
+      $('#parse-sheet-loader').removeClass('hidden');
       event.preventDefault();
       event.stopPropagation();
       data.append('file', document.getElementById('file').files[0]);

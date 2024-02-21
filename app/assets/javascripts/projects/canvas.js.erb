@@ -1364,6 +1364,9 @@ function bindNewModuleAction(gridDistX, gridDistY) {
 
   function handleNewNameConfirm(ev) {
     var input = $("#new-module-name-input");
+
+    input.parent().removeClass("has-error");
+    input.next("span.help-block").remove();
     // Validate module name
     var moduleNameValid = textValidator(ev, input,
       <%= Constants::NAME_MIN_LENGTH %>, <%= Constants::NAME_MAX_LENGTH %>,

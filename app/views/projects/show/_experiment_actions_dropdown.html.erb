@@ -1,0 +1,78 @@
+<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="experimentActionsDropdown">
+  <% if experiment.archived? && can_restore_experiment?(experiment) %>
+    <li class="form-dropdown-item">
+      <%= button_to(experiment_path(experiment, format: :json),
+                    method: :put,
+                    remote: true,
+                    class: 'btn btn-light justify-start',
+                    form_class: 'experiment-action-form',
+                    params: { experiment: { archived: false } }) do %>
+        <i class="sn-icon sn-icon-restore"></i>
+        <span><%= t('experiments.index.restore_option') %></span>
+      <% end %>
+    </li>
+  <% end %>
+  <!-- Edit experiment -->
+  <% if experiment.active? && can_manage_experiment?(experiment) %>
+    <li>
+      <%= link_to edit_experiment_url(experiment),
+                  remote: true,
+                  class: 'edit-experiment experiment-action-link' do %>
+        <i class="sn-icon sn-icon-edit"></i>
+        <span><%= t('experiments.index.edit_option') %></span>
+      <% end %>
+    </li>
+  <% end %>
+  <!-- Set or view user experiment assignments -->
+  <% if can_manage_experiment_users?(experiment) %>
+    <li class="form-dropdown-item">
+      <%= link_to edit_access_permissions_experiment_path(experiment), data: { action: 'remote-modal'} do %>
+        <i class="sn-icon sn-icon-project-member-access"></i>
+        <span><%= t('experiments.index.experiment_access') %></span>
+      <% end %>
+    </li>
+  <% else %>
+    <li class="form-dropdown-item">
+      <%= link_to access_permissions_experiment_path(experiment), data: { action: 'remote-modal'} do %>
+        <i class="sn-icon sn-icon-project-member-access"></i>
+        <span><%= t('experiments.index.experiment_access') %></span>
+      <% end %>
+    </li>
+  <% end %>
+  <!-- Move experiment -->
+  <% if can_move_experiment?(experiment) %>
+    <li>
+      <%= link_to move_modal_experiments_path(ids: [experiment.id]),
+                  remote: true,
+                  class: 'move-experiment experiment-action-link' do %>
+        <i class="sn-icon sn-icon-move"></i>
+        <span><%= t('experiments.index.move_option') %></span>
+      <% end %>
+    </li>
+  <% end %>
+  <!-- Duplicate experiment -->
+  <% if can_clone_experiment?(experiment) %>
+    <li>
+      <%= link_to clone_modal_experiment_url(experiment),
+                  remote: true, type: 'button',
+                  class: 'clone-experiment experiment-action-link' do %>
+        <i class="sn-icon sn-icon-duplicate"></i>
+        <span><%= t('experiments.index.clone_option') %></span>
+      <% end %>
+    </li>
+  <% end %>
+  <!-- Archive/restore experiment -->
+  <% if experiment.active? && can_archive_experiment?(experiment) %>
+    <li class="form-dropdown-item">
+      <%= button_to(archive_experiment_path(experiment),
+                    method: :post,
+                    remote: true,
+                    class: 'btn btn-light justify-start',
+                    form_class: 'experiment-action-form',
+                    data: { confirm: t('experiments.index.archive_confirm') } ) do %>
+        <i class="sn-icon sn-icon-archive"></i>
+        <span><%= t('experiments.index.archive_option') %></span>
+    <% end %>
+    </li>
+  <% end %>
+</ul>

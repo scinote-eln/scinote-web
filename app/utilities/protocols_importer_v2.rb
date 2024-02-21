@@ -95,7 +95,7 @@ class ProtocolsImporterV2
 
     # Post process assets
     asset_ids.each do |asset_id|
-      Asset.find(asset_id).post_process_file(protocol.team)
+      Asset.find(asset_id).post_process_file
     end
   end
 

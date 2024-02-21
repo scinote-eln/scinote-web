@@ -384,6 +384,8 @@ Rails.application.routes.draw do
         get 'clone_modal', action: :clone_modal
         get 'move_modal', action: :move_modal
         get 'actions_toolbar'
+        get 'move_modal' # return modal with move options
+        post 'move' # move experiment
       end
       member do
         get :assigned_users
@@ -404,8 +406,6 @@ Rails.application.routes.draw do
         post 'archive' # archive experiment
         get 'clone_modal' # return modal with clone options
         post 'clone' # clone experiment
-        get 'move_modal' # return modal with move options
-        post 'move' # move experiment
         get 'fetch_workflow_img' # Get updated workflow img
         get 'modules/new', to: 'my_modules#new'
         post 'modules', to: 'my_modules#create'
@@ -646,7 +646,6 @@ Rails.application.routes.draw do
         get 'load_from_repository_modal',
             to: 'protocols#load_from_repository_modal'
         post 'load_from_repository', to: 'protocols#load_from_repository'
-        post 'load_from_file', to: 'protocols#load_from_file'
 
         get 'copy_to_repository_modal', to: 'protocols#copy_to_repository_modal'
         post 'copy_to_repository', to: 'protocols#copy_to_repository'
@@ -814,6 +813,8 @@ Rails.application.routes.draw do
     get 'files/:id/file_url', to: 'assets#file_url', as: 'asset_file_url'
     get 'files/:id/download', to: 'assets#download', as: 'asset_download'
     get 'files/:id/edit', to: 'assets#edit', as: 'edit_asset'
+    get 'files/:id/checksum', to: 'assets#checksum', as: 'asset_checksum'
+    get 'files/:id/show', to: 'assets#show', as: 'asset_show'
     patch 'files/:id/toggle_view_mode', to: 'assets#toggle_view_mode', as: 'toggle_view_mode'
     get 'files/:id/load_asset', to: 'assets#load_asset', as: 'load_asset'
     post 'files/:id/update_image', to: 'assets#update_image',

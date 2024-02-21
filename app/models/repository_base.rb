@@ -43,6 +43,10 @@ class RepositoryBase < ApplicationRecord
     self.class.stock_management_enabled? && repository_columns.stock_type.exists?
   end
 
+  def has_stock_consumption?
+    true
+  end
+
   def cell_preload_includes
     cell_includes = []
     repository_columns.pluck(:data_type).each do |data_type|

@@ -1,61 +1,57 @@
 <template>
   <div class="buttons">
     <template v-if="isWindows">
-      <a :href="responseData[0]['url']"
+      <a :href="getWindowsHref"
          class="btn btn-primary new-project-btn"
          :title="i18n.t('users.settings.account.addons.desktop_app.windows_button')"
          role="button"
-         data-remote="true"
          target="_blank">
         <span class="hidden-xs">{{ i18n.t('users.settings.account.addons.desktop_app.windows_button') }}</span>
       </a>
-      <p class="text-xs mt-1" style="color: var(--sn-sleepy-grey);">
+      <div v-if="showButtonLabel" class="text-xs pt-2 pb-6" style="color: var(--sn-sleepy-grey);">
         {{ i18n.t('users.settings.account.addons.desktop_app.version', { version: this.responseData[0]['version']}) }}
-      </p>
+      </div>
     </template>
 
     <template v-else-if="isMac">
-      <a :href="responseData[1]['url']"
+      <a :href="getMacHref"
          class="btn btn-primary new-project-btn"
          :title="i18n.t('users.settings.account.addons.desktop_app.macos_button')"
          role="button"
-         data-remote="true"
          target="_blank">
         <span class="hidden-xs">{{ i18n.t('users.settings.account.addons.desktop_app.macos_button') }}</span>
       </a>
-      <p class="text-xs mt-1" style="color: var(--sn-sleepy-grey);">
+      <div v-if="showButtonLabel" class="text-xs pt-2 pb-6" style="color: var(--sn-sleepy-grey);">
         {{ i18n.t('users.settings.account.addons.desktop_app.version', { version: this.responseData[1]['version']}) }}
-      </p>
+      </div>
     </template>
 
     <template v-else>
       <div class="flex">
         <div>
-          <a :href="responseData[0]['url']"
+          <a :href="getWindowsHref"
              class="btn btn-primary new-project-btn"
              :title="i18n.t('users.settings.account.addons.desktop_app.windows_button')"
              role="button"
-             data-remote="true"
              target="_blank">
             <span class="hidden-xs">{{ i18n.t('users.settings.account.addons.desktop_app.windows_button') }}</span>
           </a>
-          <p class="text-xs mt-1" style="color: var(--sn-sleepy-grey);">
+          <div v-if="showButtonLabel" class="text-xs pt-2 pb-6" style="color: var(--sn-sleepy-grey);">
             {{ i18n.t('users.settings.account.addons.desktop_app.version',
               { version: this.responseData[0]['version']})
             }}
-          </p>
+          </div>
         </div>
 
         <div class="ml-2">
-          <a :href="responseData[1]['url']"
+          <a :href="getMacHref"
              class="btn btn-primary new-project-btn"
              :title="i18n.t('users.settings.account.addons.desktop_app.macos_button')"
              role="button"
-             data-remote="true"
              target="_blank">
             <span class="hidden-xs">{{ i18n.t('users.settings.account.addons.desktop_app.macos_button') }}</span>
           </a>
-          <p class="text-xs mt-1" style="color: var(--sn-sleepy-grey);">
+          <p v-if="showButtonLabel" class="text-xs pt-2 pb-6" style="color: var(--sn-sleepy-grey);">
             {{ i18n.t('users.settings.account.addons.desktop_app.version',
               { version: this.responseData[1]['version']})
             }}
@@ -64,8 +60,9 @@
       </div>
     </template>
 
-    <a :href="'https://knowledgebase.scinote.net/en/knowledge/how-to-use-scinote-edit'"
+    <a v-if="!isUpdateVersionModal" :href="'https://knowledgebase.scinote.net/en/knowledge/how-to-use-scinote-edit'"
         :title="i18n.t('users.settings.account.addons.more_info')"
+        class="text-sn-blue"
         target="_blank">
       <span class="sn-icon sn-icon-open"></span>
       {{ i18n.t('users.settings.account.addons.more_info') }}
@@ -77,12 +74,13 @@
 export default {
   name: 'ScinoteEditDownload',
   props: {
-    data: { type: String, required: true }
+    data: { type: String, required: true },
+    isUpdateVersionModal: { type: Boolean, required: false }
   },
   data() {
     return {
       userAgent: this.data,
-      responseData: {}
+      responseData: []
     };
   },
   computed: {
@@ -91,6 +89,15 @@ export default {
     },
     isMac() {
       return /Mac OS/.test(this.userAgent);
+    },
+    showButtonLabel() {
+      return this.responseData && this.responseData.length > 0 && !this.isUpdateVersionModal;
+    },
+    getWindowsHref() {
+      return this.responseData && this.responseData.length > 0 ? this.responseData[0].url : '#';
+    },
+    getMacHref() {
+      return this.responseData && this.responseData.length > 0 ? this.responseData[1].url : '#';
     }
   },
   created() {

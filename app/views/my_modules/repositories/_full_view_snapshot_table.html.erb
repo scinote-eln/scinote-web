@@ -19,15 +19,17 @@
       <th id="added-on"><%= t("repositories.table.added_on") %></th>
       <th id="added-by"><%= t("repositories.table.added_by") %></th>
       <% @repository_snapshot.repository_columns.order(:parent_id).each do |column| %>
-        <th class="repository-column"
-            id="<%= column.id %>"
-            data-type="<%= column.data_type %>"
-            <% column.metadata.each do |k, v| %>
-              <%= "data-metadata-#{k}=#{v}" %>
-            <% end %>
-        >
-          <%= display_tooltip(column.name) %>
-        </th>
+        <% if column.data_type != 'RepositoryStockConsumptionValue' || @repository_snapshot.has_stock_consumption? %>
+          <th class="repository-column"
+              id="<%= column.id %>"
+              data-type="<%= column.data_type %>"
+              <% column.metadata.each do |k, v| %>
+                <%= "data-metadata-#{k}=#{v}" %>
+              <% end %>
+          >
+            <%= display_tooltip(column.name) %>
+          </th>
+        <% end %>
       <% end %>
     </tr>
   </thead>
