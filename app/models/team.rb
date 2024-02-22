@@ -23,16 +23,10 @@ class Team < ApplicationRecord
                       maximum: Constants::NAME_MAX_LENGTH }
   validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
 
-  belongs_to :created_by,
-             foreign_key: 'created_by_id',
-             class_name: 'User',
-             optional: true
-  belongs_to :last_modified_by,
-             foreign_key: 'last_modified_by_id',
-             class_name: 'User',
-             optional: true
-  has_many :users, through: :user_assignments
-  has_many :projects, inverse_of: :team
+  belongs_to :created_by, class_name: 'User', optional: true
+  belongs_to :last_modified_by, class_name: 'User', optional: true
+  has_many :users, through: :user_assignments, dependent: :destroy
+  has_many :projects, inverse_of: :team, dependent: :destroy
   has_many :project_folders, inverse_of: :team, dependent: :destroy
   has_many :protocols, inverse_of: :team, dependent: :destroy
   has_many :repository_protocols,
@@ -41,7 +35,8 @@ class Team < ApplicationRecord
                                      in_repository_draft
                                      in_repository_published_version))
            end),
-           class_name: 'Protocol'
+           class_name: 'Protocol',
+           dependent: :destroy
   has_many :protocol_keywords, inverse_of: :team, dependent: :destroy
   has_many :tiny_mce_assets, inverse_of: :team, dependent: :destroy
   has_many :repositories, dependent: :destroy
@@ -53,8 +48,13 @@ class Team < ApplicationRecord
   has_many :team_shared_repositories,
            -> { where(shared_object_type: 'RepositoryBase') },
            class_name: 'TeamSharedObject',
-           inverse_of: :team
-  has_many :shared_repositories, through: :team_shared_objects, source: :shared_object, source_type: 'RepositoryBase'
+           inverse_of: :team,
+           dependent: :destroy
+  has_many :shared_repositories,
+           through: :team_shared_objects,
+           source: :shared_object,
+           source_type: 'RepositoryBase',
+           dependent: :destroy
   has_many :repository_sharing_user_assignments,
            (lambda do |team|
              joins(
@@ -64,11 +64,13 @@ class Team < ApplicationRecord
              ).where(team_id: team.id)
              .where.not('user_assignments.team_id = repositories.team_id')
            end),
-           class_name: 'UserAssignment'
+           class_name: 'UserAssignment',
+           dependent: :destroy
   has_many :shared_by_user_repositories,
            through: :repository_sharing_user_assignments,
            source: :assignable,
-           source_type: 'RepositoryBase'
+           source_type: 'RepositoryBase',
+           dependent: :destroy
   has_many :shareable_links, inverse_of: :team, dependent: :destroy
 
   attr_accessor :without_templates

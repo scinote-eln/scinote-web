@@ -123,6 +123,11 @@ export default {
       } else if (this.childrenLoaded) {
         this.item.has_children = false;
       }
+    },
+    archived() {
+      if (this.childrenExpanded) {
+        this.loadChildren();
+      }
     }
   },
   methods: {

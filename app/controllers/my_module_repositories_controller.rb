@@ -130,7 +130,7 @@ class MyModuleRepositoriesController < ApplicationController
     render json: {
       html: render_to_string(
         partial: 'my_modules/repositories/full_view_table',
-        locals: { include_stock_consumption: params[:include_stock_consumption] }
+        locals: { include_stock_consumption: params[:include_stock_consumption] == 'true' }
       )
     }
   end

@@ -90,5 +90,13 @@ input[type="checkbox"].sci-checkbox {
         border: $border-tertiary;
       }
     }
+
+    &:checked + .sci-checkbox-label {
+      &::before {
+        background-color: var(--sn-sleepy-grey);
+        border: 1px solid var(--sn-sleepy-grey);
+
+      }
+    }
   }
 }

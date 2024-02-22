@@ -14,7 +14,7 @@
 
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" @click="cancel">{{ i18n.t('general.cancel') }}</button>
+          <button class="btn btn-secondary" @click="close">{{ i18n.t('general.cancel') }}</button>
           <button class="btn btn-danger" @click="confirm">{{ i18n.t('protocols.steps.modals.delete_element.confirm')}}</button>
         </div>
       </div>
@@ -22,21 +22,15 @@
   </div>
 </template>
 <script>
+import modalMixin from '../../modal_mixin';
+
 export default {
   name: 'deleteElementModal',
-  mounted() {
-    $(this.$refs.modal).modal('show');
-    $(this.$refs.modal).on('hidden.bs.modal', () => {
-      this.$emit('cancel');
-    });
-  },
+  mixins: [modalMixin],
   methods: {
     confirm() {
-      $(this.$refs.modal).modal('hide');
       this.$emit('confirm');
-    },
-    cancel() {
-      $(this.$refs.modal).modal('hide');
+      this.$nextTick(() => this.close);
     }
   }
 };

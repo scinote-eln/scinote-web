@@ -376,12 +376,16 @@ Rails.application.routes.draw do
     end
     get 'project_folders/:project_folder_id', to: 'projects#index', as: :project_folder_projects
 
-    resources :experiments, only: %i(index update) do
+    get 'projects/:project_id', to: 'experiments#index'
+    get 'projects/:project_id/experiments', to: 'experiments#index', as: :experiments
+    resources :experiments, only: %i(update) do
       collection do
         get 'inventory_assigning_experiment_filter'
         get 'clone_modal', action: :clone_modal
         get 'move_modal', action: :move_modal
         get 'actions_toolbar'
+        get 'move_modal' # return modal with move options
+        post 'move' # move experiment
       end
       member do
         get :assigned_users
@@ -402,8 +406,6 @@ Rails.application.routes.draw do
         post 'archive' # archive experiment
         get 'clone_modal' # return modal with clone options
         post 'clone' # clone experiment
-        get 'move_modal' # return modal with move options
-        post 'move' # move experiment
         get 'fetch_workflow_img' # Get updated workflow img
         get 'modules/new', to: 'my_modules#new'
         post 'modules', to: 'my_modules#create'
@@ -421,7 +423,9 @@ Rails.application.routes.draw do
 
     # Show action is a popup (JSON) for individual module in full-zoom canvas,
     # as well as 'module info' page for single module (HTML)
-    resources :my_modules, path: '/modules', only: [:show, :update, :index] do
+    get 'experiments/:experiment_id/table', to: 'my_modules#index'
+    get 'experiments/:experiment_id/modules', to: 'my_modules#index', as: :my_modules
+    resources :my_modules, path: '/modules', only: [:show, :update] do
       post 'save_table_state', on: :collection, defaults: { format: 'json' }
 
       collection do
@@ -642,7 +646,6 @@ Rails.application.routes.draw do
         get 'load_from_repository_modal',
             to: 'protocols#load_from_repository_modal'
         post 'load_from_repository', to: 'protocols#load_from_repository'
-        post 'load_from_file', to: 'protocols#load_from_file'
 
         get 'copy_to_repository_modal', to: 'protocols#copy_to_repository_modal'
         post 'copy_to_repository', to: 'protocols#copy_to_repository'
@@ -810,6 +813,8 @@ Rails.application.routes.draw do
     get 'files/:id/file_url', to: 'assets#file_url', as: 'asset_file_url'
     get 'files/:id/download', to: 'assets#download', as: 'asset_download'
     get 'files/:id/edit', to: 'assets#edit', as: 'edit_asset'
+    get 'files/:id/checksum', to: 'assets#checksum', as: 'asset_checksum'
+    get 'files/:id/show', to: 'assets#show', as: 'asset_show'
     patch 'files/:id/toggle_view_mode', to: 'assets#toggle_view_mode', as: 'toggle_view_mode'
     get 'files/:id/load_asset', to: 'assets#load_asset', as: 'load_asset'
     post 'files/:id/update_image', to: 'assets#update_image',

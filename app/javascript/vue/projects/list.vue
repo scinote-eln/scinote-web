@@ -88,7 +88,7 @@ export default {
     NewProjectModal,
     NewFolderModal,
     MoveModal,
-    AccessModal,
+    AccessModal
   },
   props: {
     dataSource: { type: String, required: true },
@@ -102,7 +102,7 @@ export default {
     userRolesUrl: { type: String },
     currentFolderId: { type: String },
     foldersTreeUrl: { type: String },
-    moveToUrl: { type: String },
+    moveToUrl: { type: String }
   },
   data() {
     return {
@@ -114,41 +114,51 @@ export default {
       objectsToMove: null,
       reloadingTable: false,
       folderDeleteDescription: '',
-      exportDescription: '',
-      columnDefs: [
-        {
-          field: 'name',
-          flex: 1,
-          headerName: this.i18n.t('projects.index.card.name'),
-          sortable: true,
-          cellRenderer: this.nameRenderer,
-        },
-        {
-          field: 'code',
-          headerName: this.i18n.t('projects.index.card.id'),
-          sortable: true,
-        },
-        {
-          field: 'created_at',
-          headerName: this.i18n.t('projects.index.card.start_date'),
-          sortable: true,
-        },
-        {
-          field: 'users',
-          headerName: this.i18n.t('projects.index.card.users'),
-          cellRenderer: 'UsersRenderer',
-          sortable: false,
-          minWidth: 210,
-          notSelectable: true
-        },
-      ],
+      exportDescription: ''
     };
   },
   computed: {
+    columnDefs() {
+      const columns = [{
+        field: 'name',
+        flex: 1,
+        headerName: this.i18n.t('projects.index.card.name'),
+        sortable: true,
+        cellRenderer: this.nameRenderer
+      },
+      {
+        field: 'code',
+        headerName: this.i18n.t('projects.index.card.id'),
+        sortable: true
+      },
+      {
+        field: 'created_at',
+        headerName: this.i18n.t('projects.index.card.start_date'),
+        sortable: true
+      },
+      {
+        field: 'users',
+        headerName: this.i18n.t('projects.index.card.users'),
+        cellRenderer: 'UsersRenderer',
+        sortable: false,
+        minWidth: 210,
+        notSelectable: true
+      }];
+
+      if (this.currentViewMode === 'archived') {
+        columns.push({
+          field: 'archived_on',
+          headerName: this.i18n.t('projects.index.card.archived_date'),
+          sortable: true
+        });
+      }
+
+      return columns;
+    },
     viewRenders() {
       return [
         { type: 'table' },
-        { type: 'cards' },
+        { type: 'cards' }
       ];
     },
     toolbarActions() {
@@ -160,7 +170,7 @@ export default {
           label: this.i18n.t('projects.index.new'),
           type: 'emit',
           path: this.createUrl,
-          buttonStyle: 'btn btn-primary',
+          buttonStyle: 'btn btn-primary'
         });
       }
       if (this.createFolderUrl) {
@@ -170,32 +180,32 @@ export default {
           label: this.i18n.t('projects.index.new_folder'),
           type: 'emit',
           path: this.createFolderUrl,
-          buttonStyle: 'btn btn-light',
+          buttonStyle: 'btn btn-light'
         });
       }
       return {
         left,
-        right: [],
+        right: []
       };
     },
     filters() {
       const filters = [
         {
           key: 'query',
-          type: 'Text',
+          type: 'Text'
         },
         {
           key: 'created_at',
           type: 'DateRange',
-          label: this.i18n.t('filters_modal.created_on.label'),
-        },
+          label: this.i18n.t('filters_modal.created_on.label')
+        }
       ];
 
       if (this.currentViewMode === 'archived') {
         filters.push({
           key: 'archived_at',
           type: 'DateRange',
-          label: this.i18n.t('filters_modal.archived_on.label'),
+          label: this.i18n.t('filters_modal.archived_on.label')
         });
       }
 
@@ -206,13 +216,13 @@ export default {
         optionRenderer: this.usersFilterRenderer,
         labelRenderer: this.usersFilterRenderer,
         label: this.i18n.t('projects.index.filters_modal.members.label'),
-        placeholder: this.i18n.t('projects.index.filters_modal.members.placeholder'),
+        placeholder: this.i18n.t('projects.index.filters_modal.members.placeholder')
       });
 
       filters.push({
         key: 'folder_search',
         type: 'Checkbox',
-        label: this.i18n.t('projects.index.filters_modal.folders.label'),
+        label: this.i18n.t('projects.index.filters_modal.folders.label')
       });
 
       return filters;
@@ -241,7 +251,7 @@ export default {
     access(event, rows) {
       this.accessModalParams = {
         object: rows[0],
-        roles_path: this.userRolesUrl,
+        roles_path: this.userRolesUrl
       };
     },
     async archive(event, rows) {
@@ -302,7 +312,7 @@ export default {
       if (ok) {
         axios.post(event.path, {
           project_ids: rows.filter((row) => !row.folder).map((row) => row.id),
-          project_folder_ids: rows.filter((row) => row.folder).map((row) => row.id),
+          project_folder_ids: rows.filter((row) => row.folder).map((row) => row.id)
         }).then((response) => {
           this.reloadingTable = true;
           HelperModule.flashAlertMsg(response.data.message, 'success');

@@ -13,6 +13,7 @@
         :searchable="true"
         :placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
         :no-options-placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
+        :data-e2e="'e2e-DD-repoItemSBcustomColumns-input' + colId"
       ></SelectDropdown>
       <div v-else-if="status && icon"
            class="flex flex-row items-center text-sn-dark-grey font-inter text-sm font-normal leading-5 gap-1.5">

@@ -82,7 +82,8 @@ Canaid::Permissions.register_for(Experiment) do
   end
 
   can :move_experiment do |user, experiment|
-    experiment.permission_granted?(user, ExperimentPermissions::MANAGE)
+    experiment.permission_granted?(user, ExperimentPermissions::MANAGE) &&
+      can_manage_all_experiment_my_modules?(experiment)
   end
 
   can :designate_users_to_new_task do |user, experiment|

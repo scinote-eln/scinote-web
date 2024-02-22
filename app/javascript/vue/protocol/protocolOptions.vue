@@ -123,7 +123,6 @@ export default {
   mounted() {
     // Legacy global functions from app/assets/javascripts/my_modules/protocols.js
     initLoadFromRepository();
-    initImport();
     initLinkUpdate();
   },
   methods: {

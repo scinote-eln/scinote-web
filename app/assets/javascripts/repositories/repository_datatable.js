@@ -179,7 +179,7 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
-  function changeToViewMode() {
+  function changeToViewMode(restoreSizes = true) {
     currentMode = 'viewMode';
     // Table specific stuff
     TABLE.button(0).enable(true);
@@ -192,7 +192,7 @@ var RepositoryDatatable = (function(global) {
 
     updateButtons();
     disableCheckboxToggleOnCheckboxPreview();
-    restoreColumnSizes();
+    if (restoreSizes) restoreColumnSizes();
   }
 
   function changeToEditMode() {
@@ -626,7 +626,6 @@ var RepositoryDatatable = (function(global) {
 
           return JSON.stringify(d);
         },
-        complete: restoreColumnSizes,
         global: false,
         type: 'POST'
       },
@@ -748,7 +747,7 @@ var RepositoryDatatable = (function(global) {
         var archivedOnIndex = TABLE.column('#archived-on').index();
         var archivedByIndex = TABLE.column('#archived-by').index();
         animateSpinner(this, false);
-        changeToViewMode();
+        changeToViewMode(false);
         updateDataTableSelectAllCtrl();
 
         // Prevent row toggling when selecting user smart annotation link
@@ -865,8 +864,6 @@ var RepositoryDatatable = (function(global) {
           clearTimeout(resizeTimeout);
           resizeTimeout = setTimeout(restoreColumnSizes, 200);
         });
-
-        restoreColumnSizes();
       }
     });
 
