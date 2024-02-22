@@ -47,7 +47,7 @@
         @grid-ready="onGridReady"
         @first-data-rendered="onFirstDataRendered"
         @sortChanged="setOrder"
-        @columnResized="saveTableState"
+        @columnResized="onColumnResized"
         @columnMoved="onColumnMoved"
         @bodyScroll="handleScroll"
         @columnPinned="handlePin"
@@ -570,6 +570,11 @@ export default {
       this.reloadTable(false);
     },
     onColumnMoved(event) {
+      if (event.finished) {
+        this.saveTableState();
+      }
+    },
+    onColumnResized(event) {
       if (event.finished) {
         this.saveTableState();
       }
