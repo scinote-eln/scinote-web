@@ -9,7 +9,7 @@ module Lists
       task_comments: { user: :teams },
       user_assignments: :user,
       designated_users: {},
-      experiment: :project
+      experiment: { project: :team }
     }
 
     private
