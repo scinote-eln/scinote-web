@@ -44,7 +44,7 @@
         data: { my_module: { status_id: item.data('state-id') } },
         success: function(result) {
           animateSpinner(null, false);
-          location.reload();
+          $('.task-sharing-and-flows .status-flow-container').replaceWith(result.html);
         },
         error: function(e) {
           animateSpinner(null, false);
