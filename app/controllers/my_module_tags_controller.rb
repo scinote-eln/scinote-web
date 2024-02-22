@@ -27,6 +27,10 @@ class MyModuleTagsController < ApplicationController
     }
   end
 
+  def assigned_tags
+    render json: @my_module.my_module_tags, each_serializer: MyModuleTagSerializer
+  end
+
   def canvas_index
     experiment = Experiment.find(params[:id])
     return render_403 unless can_read_experiment?(experiment)

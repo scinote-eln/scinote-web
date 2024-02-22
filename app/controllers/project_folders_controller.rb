@@ -13,6 +13,10 @@ class ProjectFoldersController < ApplicationController
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: %i(archive move_to)
 
+  def tree
+    render json: folders_tree(current_team, current_user)
+  end
+
   def new
     @project_folder =
       current_team.project_folders.new(parent_folder: current_folder, archived: projects_view_mode_archived?)
@@ -48,11 +52,11 @@ class ProjectFoldersController < ApplicationController
       move_projects(destination_folder)
       move_folders(destination_folder)
     end
-    render json: { flash: I18n.t('projects.move.success_flash') }
+    render json: { message: I18n.t('projects.move.success_flash') }
   rescue StandardError => e
     Rails.logger.error e.message
     Rails.logger.error e.backtrace.join("\n")
-    render json: { flash: I18n.t('projects.move.error_flash') }, status: :bad_request
+    render json: { error: I18n.t('projects.move.error_flash') }, status: :bad_request
   end
 
   def move_to_modal
@@ -109,7 +113,7 @@ class ProjectFoldersController < ApplicationController
     if counter.positive?
       render json: { message: t('projects.delete_folders.success_flash', number: counter) }
     else
-      render json: { message: t('projects.delete_folders.error_flash') }, status: :unprocessable_entity
+      render json: { error: t('projects.delete_folders.error_flash') }, status: :unprocessable_entity
     end
   end
 
@@ -132,13 +136,9 @@ class ProjectFoldersController < ApplicationController
   end
 
   def move_params
-    parsed_params = ActionController::Parameters.new(
-      movables: JSON.parse(params[:movables]),
-      destination_folder_id: params[:destination_folder_id]
-    )
-    parsed_params.require(:destination_folder_id)
-    parsed_params.require(:movables)
-    parsed_params.permit(:destination_folder_id, movables: %i(id type))
+    params.require(:destination_folder_id)
+    params.require(:movables)
+    params.permit(:destination_folder_id, movables: %i(id type))
   end
 
   def check_create_permissions
@@ -150,7 +150,7 @@ class ProjectFoldersController < ApplicationController
   end
 
   def move_projects(destination_folder)
-    project_ids = move_params[:movables].collect { |movable| movable[:id] if movable[:type] == 'project' }.compact
+    project_ids = move_params[:movables].collect { |movable| movable[:id] if movable[:type] == 'projects' }.compact
     return if project_ids.blank?
 
     current_team.projects.where(id: project_ids).each do |project|
@@ -167,7 +167,7 @@ class ProjectFoldersController < ApplicationController
   end
 
   def move_folders(destination_folder)
-    folder_ids = move_params[:movables].collect { |movable| movable[:id] if movable[:type] == 'project_folder' }.compact
+    folder_ids = move_params[:movables].collect { |movable| movable[:id] if movable[:type] == 'project_folders' }.compact
     return if folder_ids.blank?
 
     current_team.project_folders.where(id: folder_ids).each do |folder|

@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import SelectSearch from '../../shared/select_search.vue';
+import SelectSearch from '../../shared/legacy/select_search.vue';
 import repositoryValueMixin from './mixins/repository_value.js';
 
 export default {

@@ -27,12 +27,12 @@
             <fieldset class="w-full flex justify-between">
               <div class="flex flex-col w-40">
                 <label class="text-sn-grey text-sm font-normal" for="operations">{{ i18n.t('repository_stock_values.manage_modal.operation') }}</label>
-                <Select
+                <SelectDropdown
                   :disabled="!stockValue?.id"
                   :value="operation"
                   :options="operations"
                   @change="setOperation"
-                ></Select>
+                ></SelectDropdown>
               </div>
               <div class="flex flex-col w-40">
                 <Input
@@ -56,14 +56,14 @@
                 <label :class="`text-sm font-normal ${errors.unit ? 'text-sn-delete-red' : 'text-sn-grey'}`" for="stock-unit">
                   {{ i18n.t('repository_stock_values.manage_modal.unit') }}
                 </label>
-                <Select
+                <SelectDropdown
                   :disabled="['add', 'remove'].includes(operation)"
                   :value="unit"
                   :options="units"
                   :placeholder="i18n.t('repository_stock_values.manage_modal.unit_prompt')"
                   @change="unit = $event"
                   :className="`${errors.unit ? 'error' : ''}`"
-                ></Select>
+                ></SelectDropdown>
                 <div class="text-sn-delete-red text-xs" :class="{ visible: errors.unit, invisible: !errors.unit }">
                   {{ errors.unit }}
                 </div>
@@ -141,8 +141,8 @@
 
 <script>
 import Decimal from 'decimal.js';
-import Select from '../shared/select.vue';
-import Input from '../shared/input.vue';
+import Select from '../shared/legacy/select.vue';
+import Input from '../shared/legacy/input.vue';
 
 export default {
   name: 'ManageStockValueModal',

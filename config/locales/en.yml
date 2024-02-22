@@ -559,7 +559,6 @@ en:
       delete_button: "Delete"
       edit_option: "Edit"
       archive_option: "Archive"
-      archive_confirm: "Are you sure you want to archive this project?"
       restore_option: "Restore"
       project_members_access: "Access"
       comments_option: "Comments"
@@ -573,7 +572,7 @@ en:
         visibility: "Visible to"
         users: "Members"
         name: "Project name"
-        archived_date: "Archived"
+        archived_date: "Archived on"
       end_of_list_placeholder: 'You’ve reached the end of the list'
       folder:
         description: "%{projects_count} projects | %{folders_count} folders"
@@ -605,9 +604,11 @@ en:
         title: "Move %{items}"
         description: "Select where you want to move your %{items}"
         submit: "Move"
+        find_folder: "Find folder"
+        projects: "Projects"
         items:
           projects: 'projects'
-          folders: 'folders'
+          project_folders: 'folders'
           projects_and_folders: 'projects & folders'
       modal_delete_folders:
         title: "Delete project folder(s)"
@@ -722,6 +723,7 @@ en:
           head_title: "Delete report/s"
           message: "Are you sure to delete selected report/s?"
           delete: "Delete"
+          success: "Report/s successfully deleted."
       wizard:
         statuses:
           step_1: "Select project"
@@ -1462,7 +1464,7 @@ en:
       id: "ID"
       start_date: "Start date"
       modified_date: "Modified date"
-      archived_date: "Archived date"
+      archived_date: "Archived on"
       completed_task: "Completed"
       completed_value: "%{completed}/%{all} tasks"
       description: "Description"
@@ -1472,7 +1474,6 @@ en:
       clone_option: "Duplicate"
       move_option: "Move"
       archive_option: "Archive"
-      archive_confirm: "Are you sure you want to archive this project?"
       restore_option: "Restore"
       more_link: "More"
       experiment_access: "Access"
@@ -1538,7 +1539,7 @@ en:
         id_html: 'ID'
         task_name_html: 'Task name'
         due_date_html: 'Due date'
-        archived_html: 'Archived'
+        archived_html: 'Archived on'
         age_html: 'Age'
         results_html: 'Results'
         status_html: 'Status'
@@ -1552,8 +1553,13 @@ en:
         success_flash: "Successfully moved task(s) to experiment %{experiment}."
         error_flash: "Failed to move task(s) to experiment %{experiment}."
       column_display_modal:
-        title: 'Task data display'
+        title: 'Manage columns'
         description: 'Click the eye buttons to hide or show columns in the table'
+        reset_to_default: 'Reset to default'
+        confirmation:
+          title: 'Reset to defaults'
+          description_html: 'With confirmation the order, width and visibility of columns will be set to the default values.<br><br><b>Are you sure you want to to reset to default?</b>'
+          confirm: 'Reset'
         id: 'ID'
         task_name: 'Task name'
         due_date: 'Due date'
@@ -1597,7 +1603,8 @@ en:
         archived_tasks: 'Go to Archived tasks'
         active_tasks: 'Go to Active tasks'
       add_tag: '+ Add tag'
-      search: 'Search...'
+      used_tags: 'Used tags'
+      search: 'Manage assignees'
       not_set: 'not set'
       archive_group:
         success_flash: "<strong>%{number}</strong> task(s) successfully archived."
@@ -1626,17 +1633,20 @@ en:
       reload_on_submit: "Save action is running. Reloading this page may cause unexpected behavior."
       modal_manage_tags:
         head_title: "Manage tags"
+        head_title_read: "Tags"
         subtitle: "Showing tags of task %{module}"
         no_tags: "No tags!"
         edit_tag: "Edit tag."
         remove_tag: "Remove tag from task %{module}."
         delete_tag: "Permanently delete tag from all tasks."
-        delete_tag_confirmation: "Deleting a tag will remove it from all tagged tasks. Are you sure you wish to continue?"
-        explanatory_text: "Add a set of tags to mark the tasks inside this project. Changing the tag applies to all tagged tasks. Deleting a tag removes it from all tagged tasks."
+        delete_tag_confirmation: "Deleting a tag will remove it from all tagged tasks. You wont be able to get it back.<br><br><b>Are you sure you wish to continue?</b>"
+        explanatory_text: "Add a set of tags to mark the tasks inside this project."
+        project_tags: "%{project} project tags"
         save_tag: "Save tag."
         cancel_tag: "Cancel changes to the tag."
         create: "Add"
-        create_new: "New"
+        create_new: "Create a new tag"
+        new_tag_name: "Tag name"
       edit:
         id: "ID:"
         new_module: "New task"
@@ -3687,8 +3697,9 @@ en:
     reset: "Inherit role"
     remove_access: "Remove access"
     grant_access: "Grant new access"
+    you: "you"
     create:
-      success: "You have successfully granted access to %{count} member(s)."
+      success: "You have successfully granted access to %{member_name}."
       failure: "Something went wrong"
     destroy:
       success: "You have successfully removed %{member_name}."
@@ -3705,20 +3716,22 @@ en:
         submit: "Grant access"
         submit_singular: "Grant access to 1 member"
         submit_plural: "Grant access to {num} members"
-        find_people_html: "Find people"
+        find_people_html: "Search members"
+        grant_access: "Grant new access"
+        people_with_access: "People with access"
       new_protocol_assignments_form:
         title: "Select members"
         submit: "Grant access"
         submit_singular: "Grant access to 1 member"
         submit_plural: "Grant access to {num} members"
-        find_people_html: "Find people"
+        find_people_html: "Search members"
       experiment_member_field:
         reset: "Inherit role"
         reset_description: "The inherited role from project will be applied"
       my_module_member_field:
         reset: "Inherit role"
         reset_description: "The inherited role from project or experiment will be applied"
-      project: "Project"
+      projects: "Project"
       project_tooltip: "This role was set on this project."
       project_tooltip_inherit: "This role was inherited from the project."
       protocol: "Protocol"
@@ -3800,6 +3813,9 @@ en:
       secret_key_hint: "(Optional) A secret key that will be included in the Webhook-Secret-Key header, for authentication purposes."
   # This section contains general words that can be used in any parts of
   # application.
+  datatable:
+    show: 'Show:'
+    rows: 'rows'
   tiny_mce:
     upload_window_title: 'Insert an image from your computer'
     upload_window_label: 'Choose an image'
@@ -3822,6 +3838,7 @@ en:
     edit: "Edit"
     delete: "Delete"
     cancel: "Cancel"
+    confirm: "Confirm"
     copy: "Copy"
     duplicate: "Duplicate"
     okay: "Okay"
@@ -3837,6 +3854,8 @@ en:
     selected: "Selected"
     loading: "Loading..."
     replace: "Replace"
+    archive: "Archive"
+    assign: "Assign"
     options_selected: 'options selected'
     # In order to use the strings 'yes' and 'no' as keys, you need to wrap them with quotes
     'yes': "Yes"
@@ -3904,7 +3923,11 @@ en:
     no_teams:
       title: "Your dashboard is empty!"
       text: "You should request access from your team administrators."
-
+    select_dropdown:
+      placeholder: "Select an option"
+      few_options_placeholder: 'options selected'
+      all_options_placeholder: 'All options selected'
+      no_options_placeholder: 'No options found'
   api:
     core:
       status_ok: "Ok"
@@ -4086,7 +4109,7 @@ en:
     updated_on:
       label: "Modified date"
     archived_on:
-      label: "Archived date"
+      label: "Archived on"
     recent_searches_label: "Recent searches"
     show_btn:
      one: "Show results"

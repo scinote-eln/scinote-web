@@ -1,0 +1,51 @@
+<%
+  sizes = {
+    large: 'btn-lg',
+    medium: '',
+    small: 'btn-sm',
+    x_small: 'btn-xs'
+  }
+
+  btn_types = {
+    primary: 'btn-primary',
+    secondary: 'btn-secondary',
+    tertiary: 'btn-light',
+    tertiary_black: 'btn-light btn-black',
+    danger: 'btn-danger'
+  }
+%>
+
+
+<h1>Button</h1>
+<div class="grid grid-cols-4 gap-6">
+  <% sizes.each do |size_name, size_class| %>
+    <div>
+      <% btn_types.each do |type_name, type_class| %>
+        <div class="mb-6">
+          <div class="sci-label ">
+            <%= type_name.to_s.humanize %>, <%= size_name.to_s.humanize %>
+          </div>
+          <div class="flex gap-2 items-center flex-wrap">
+            <button class="btn <%= type_class %> <%= size_class %>">
+              Button
+            </button>
+            <button class="btn <%= type_class %> <%= size_class %>">
+              <i class="sn-icon sn-icon-<%= icons_list.sample %>"></i>
+              Button
+            </button>
+            <button class="btn <%= type_class %> <%= size_class %>">
+              Button
+              <i class="sn-icon sn-icon-<%= icons_list.sample %>"></i>
+            </button>
+            <button class="btn <%= type_class %> <%= size_class %>" disabled="true">
+              Button
+            </button>
+            <button class="btn <%= type_class %> <%= size_class %> icon-btn">
+              <i class="sn-icon sn-icon-<%= icons_list.sample %>"></i>
+            </button>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

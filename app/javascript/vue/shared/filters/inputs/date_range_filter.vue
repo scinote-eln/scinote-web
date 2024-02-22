@@ -1,21 +1,26 @@
 <template>
-  <div class="mb-6">
-    <div class="flex items-center gap-6 flex-col">
-      <div class="w-full">
-        <label class="sci-label">{{ filter.label }} ({{ i18n.t('general.from') }})</label>
+  <div @click.stop class="mb-6">
+    <div class="flex flex-col">
+      <label class="sci-label">{{ filter.label }}</label>
+      <div class="w-full mb-2">
         <DateTimePicker
+          :defaultValue="dateFrom"
           class="w-full"
           @change="updateDateFrom"
+          @cleared="updateDateFrom"
+          :clearable="true"
           :placeholder="i18n.t('From')"
           :dateOnly="true"
           :selectorId="`DatePicker${filter.key}`"
         />
       </div>
       <div class="w-full">
-        <label class="sci-label">{{ filter.label }} ({{ i18n.t('general.to') }})</label>
         <DateTimePicker
+        :defaultValue="dateTo"
           class="w-full"
           @change="updateDateTo"
+          @cleared="updateDateTo"
+          :clearable="true"
           :placeholder="i18n.t('To')"
           :dateOnly="true"
           :selectorId="`DatePickerTo${filter.key}`"
@@ -31,13 +36,14 @@ import DateTimePicker from '../../date_time_picker.vue';
 export default {
   name: 'DateRangeFilter',
   props: {
-    filter: { type: Object, required: true }
+    filter: { type: Object, required: true },
+    values: { type: Object, required: true }
   },
   components: { DateTimePicker },
   data() {
     return {
-      dateFrom: null,
-      dateTo: null
+      dateFrom: this.values[`${this.filter.key}_from`],
+      dateTo: this.values[`${this.filter.key}_to`]
     };
   },
   methods: {

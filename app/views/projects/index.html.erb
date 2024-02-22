@@ -2,66 +2,26 @@
 <% provide(:sidebar_url, sidebar_team_path(current_team, project_folder_id: current_folder&.id)) %>
 <% provide(:container_class, 'no-second-nav-container') %>
 
-<%= content_for :sidebar do %>
-  <%= render partial: 'shared/sidebar/projects', locals: { team: current_team, sort: nil, view_mode: projects_view_mode } if current_team %>
-<% end %>
+<div id="projectsWrapper" class="content-pane flexible projects-index <%= projects_view_mode %>" data-view-mode="<%= projects_view_mode %>" data-e2e="e2e-projects-container">
+  <%= render partial: 'projects/header', locals: { current_folder: current_folder} %>
 
-<div id="projectsWrapper" class="content-pane flexible projects-index <%= projects_view_mode %>" data-view-mode="<%= projects_view_mode %>" data-e2e="e2e-CO-projects">
-  <%= render partial: 'projects/index/header', locals: { current_folder: current_folder} %>
-
-  <span style="display: none;" data-hook="projects-index-html"></span>
-
-  <%= render partial: 'projects/index/modals/edit_modal' %>
-  <%= render partial: 'projects/index/modals/move_to_modal' %>
-  <%= render partial: 'projects/index/modals/manage_users' %>
-  <%= render partial: 'projects/index/modals/export_projects' %>
-
-  <div class="projects-container">
-    <div class="cards-wrapper <%= cards_view_type_class(@current_view_type) %>"
-         id="cardsWrapper"
-         data-projects-cards-url="<%= @current_folder ? project_folder_cards_url(@current_folder) : cards_projects_url %>">
-      <div class="table-header">
-        <div class="table-header-cell select-all-checkboxes">
-          <div class="sci-checkbox-container">
-            <input value="1" type="checkbox" class="sci-checkbox select-all">
-            <span class="sci-checkbox-label"></span>
-          </div>
-        </div>
-        <div class="table-header-cell"><%= t('.card.name') %></div>
-        <div class="table-header-cell"><%= t('.card.id') %></div>
-        <div class="table-header-cell"><%= t('.card.start_date') %></div>
-        <div class="table-header-cell" data-view-mode="archived"><%= t('.card.archived_date') %></div>
-        <div class="table-header-cell"><%= t('.card.visibility') %></div>
-        <div class="table-header-cell"><%= t('.card.users') %></div>
-        <div class="table-header-cell"></div>
-      </div>
-    </div>
-
-    <div id="actionToolbar" data-behaviour="vue">
-      <action-toolbar actions-url="<%= actions_toolbar_projects_url %>" />
-    </div>
+  <div id="ProjectsList" class="fixed-content-body">
+    <projects-list
+      actions-url="<%= actions_toolbar_projects_path %>"
+      users-filter-url="<%= users_filter_projects_path %>"
+      data-source="<%= projects_path(project_folder_id: current_folder&.id, format: :json) %>"
+      active-page-url="<%= projects_path(roject_folder_id: current_folder&.id, view_mode: :active) %>"
+      archived-page-url="<%= projects_path(roject_folder_id: current_folder&.id, view_mode: :archived) %>"
+      current-view-mode="<%= params[:view_mode] || :active %>"
+      current-folder-id="<%= current_folder&.id %>"
+      create-url="<%= projects_path if can_create_projects?(current_team) %>"
+      create-folder-url="<%= project_folders_path if can_create_project_folders?(current_team)  %>"
+      user-roles-url="<%= user_roles_projects_path %>"
+      folders-tree-url="<%= tree_project_folders_path(view_mode: params[:view_mode]) %>"
+      move-to-url="<%= move_to_project_folders_path %>"
+    />
   </div>
+  <%= javascript_include_tag 'vue_projects_list' %>
 </div>
 
-<template id="projectPlaceholder">
-  <div class="project-placeholder card">
-    <% 4.times do |i| %>
-      <div class="placeholder-element line-<%= i %>"></div>
-    <% end %>
-    <% 3.times do |i| %>
-      <div class="placeholder-element circle circle-<%= i %>"></div>
-    <% end %>
-  </div>
-</template>
-
-<template id="projectEndOfList">
-  <div class="project-list-end-placeholder">
-    <i class="fas fa-flag-checkered"></i>
-    <span><%= t('.end_of_list_placeholder') %></span>
-    <i class="fas fa-flag-checkered"></i>
-  </div>
-</template>
-
-<%= javascript_include_tag "vue_components_action_toolbar" %>
-<%= javascript_include_tag "projects/index" %>
 

@@ -1,6 +1,11 @@
 <template>
   <div class="mb-6">
-    <inputWithHistory :modelValue="value" :label="filter.label" @update:modelValue="update" :placeholder="filter.placeholder" :id="'textSearch' + filter.key"/>
+    <inputWithHistory
+      :modelValue="values[filter.key]"
+      :label="filter.label || i18n.t('filters_modal.text.label')"
+       @update:modelValue="update"
+       :placeholder="filter.placeholder || i18n.t('filters_modal.text.placeholder')"
+       :id="'textSearch' + filter.key"/>
   </div>
 </template>
 
@@ -11,7 +16,7 @@ export default {
   name: 'TextFilter',
   props: {
     filter: { type: Object, required: true },
-    value: { type: String }
+    values: { type: Object }
   },
   components: {
     inputWithHistory

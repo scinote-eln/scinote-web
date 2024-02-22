@@ -7,7 +7,15 @@ module AccessPermissions
     before_action :check_read_permissions, only: %i(show)
     before_action :check_manage_permissions, only: %i(edit update)
 
-    def show; end
+    def show
+      render json: @experiment.user_assignments.includes(:user_role, :user).order('users.full_name ASC'),
+             each_serializer: UserAssignmentSerializer, user: current_user
+    end
+
+    def new
+      render json: @available_users, each_serializer: UserSerializer, user: current_user
+    end
+
 
     def edit; end
 
@@ -36,7 +44,7 @@ module AccessPermissions
 
       log_change_activity
 
-      render :experiment_member
+      render json: {}, status: :ok
     end
 
     private

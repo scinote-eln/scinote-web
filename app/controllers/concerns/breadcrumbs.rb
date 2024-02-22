@@ -52,7 +52,7 @@ module Breadcrumbs
     @breadcrumbs_items.push(
       {
         label: project.name,
-        url: project_path(project, view_mode: archived_branch ? :archived : :active),
+        url: experiments_path(project_id: project, view_mode: archived_branch ? :archived : :active),
         archived: archived_branch
       }
     )

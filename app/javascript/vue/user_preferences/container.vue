@@ -79,7 +79,7 @@
 
 <script>
 
-import SelectSearch from '../shared/select_search.vue';
+import SelectSearch from "../shared/legacy/select_search.vue";
 import axios from '../../packs/custom_axios.js';
 
 export default {
