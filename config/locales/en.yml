@@ -983,7 +983,7 @@ en:
     index:
       head_title: 'Label templates'
       search_templates: 'Search labels'
-      thead_name: 'Name'
+      thead_name: 'Label name'
       format: 'Format'
       description: 'Description'
       updated_by: 'Last updated by'
@@ -1460,7 +1460,7 @@ en:
       archive_button: "Archive"
       restore_button: "Restore"
     card:
-      name: "Experiment"
+      name: "Experiment name"
       id: "ID"
       start_date: "Start date"
       modified_date: "Modified date"
@@ -2538,7 +2538,7 @@ en:
       head_title: "Inventories"
       head_title_archived: "Archived Inventories"
       table:
-        name: "Name"
+        name: "Inventory name"
         number_of_items: "No. of items"
         shared: "Shared"
         ownership: "Ownership"
@@ -3210,7 +3210,7 @@ en:
       archive_action: "Archive"
       archive_flash_html: "<b>%{count} protocol</b> template(s) successfully archived."
       thead:
-        name: "Name"
+        name: "Protocol name"
         id: "ID"
         keywords: "Keywords"
         nr_of_linked_children: "Linked tasks"
