@@ -567,10 +567,10 @@ en:
       comment_placeholder: "Your Message"
       more_comments: "More Comments"
       card:
-        start_date: "Start date"
+        start_date: "Started on"
         id: "ID"
         visibility: "Visible to"
-        users: "Members"
+        users: "Access"
         name: "Project name"
         archived_date: "Archived on"
       end_of_list_placeholder: 'You’ve reached the end of the list'
@@ -694,9 +694,9 @@ en:
         thead_project_name: "Project name"
         thead_name: "Report name"
         thead_created_by: "Created by"
-        thead_last_modified_by: "Last modified by"
-        thead_created_at: "Creation date"
-        thead_updated_at: "Last update date"
+        thead_last_modified_by: "Updated by"
+        thead_created_at: "Created on"
+        thead_updated_at: "Updated on"
         thead_id: "ID"
         no_reports: "No reports!"
         pdf: "PDF"
@@ -986,8 +986,8 @@ en:
       thead_name: 'Name'
       format: 'Format'
       description: 'Description'
-      updated_by: 'Last updated by'
-      updated_at: 'Last updated on'
+      updated_by: 'Updated by'
+      updated_at: 'Updated on'
       created_by: 'Created by'
       created_at: 'Created on'
       templates_duplicated: '[%{count}] Label template(s) successfully copied'
@@ -1462,7 +1462,7 @@ en:
     card:
       name: "Experiment"
       id: "ID"
-      start_date: "Start date"
+      start_date: "Started on"
       modified_date: "Modified date"
       archived_date: "Archived on"
       completed_task: "Completed"
@@ -1538,7 +1538,7 @@ en:
       column:
         id_html: 'ID'
         task_name_html: 'Task name'
-        due_date_html: 'Due date'
+        due_date_html: 'Due'
         archived_html: 'Archived on'
         age_html: 'Age'
         results_html: 'Results'
@@ -1558,7 +1558,7 @@ en:
         reset_to_default: 'Reset to default'
         confirmation:
           title: 'Reset to defaults'
-          description_html: 'With confirmation the order, width and visibility of columns will be set to the default values.<br><br><b>Are you sure you want to to reset to default?</b>'
+          description_html: 'Once reset, the order, width, and visibility of columns will be returned to the default values.<br><br><b>Are you sure you want to reset to default?</b>'
           confirm: 'Reset'
         id: 'ID'
         task_name: 'Task name'
@@ -1710,7 +1710,7 @@ en:
         comment_placeholder: "Your Message"
         new_comment: "New comment"
       full_zoom:
-        due_date: "Due date"
+        due_date: "Due"
         no_due_date: "not set"
         status_transitioning_label: "Transitioning to:"
         no_access: "You don’t have permission to view this task"
@@ -2068,7 +2068,7 @@ en:
       assigned_search: 'Search...'
       assigned_tooltip: "%{tasks} tasks in &#10;%{experiments} experiments,&#10;%{projects} projects"
       row_name: "Name"
-      added_on: "Added on"
+      added_on: "Created on"
       added_by: "Added by"
       archived_on: "Archived on"
       archived_by: "Archived by"
@@ -2541,9 +2541,9 @@ en:
         name: "Name"
         number_of_items: "No. of items"
         shared: "Shared"
-        ownership: "Ownership"
-        added_on: "Added on"
-        added_by: "Added by"
+        ownership: "Owned by"
+        added_on: "Created on"
+        added_by: "Created by"
         archived_on: "Archived on"
         archived_by: "Archived by"
       shared_for_viewing: "For viewing"
