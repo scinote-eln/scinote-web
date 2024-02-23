@@ -42,6 +42,22 @@ class SearchController < ApplicationController
   def new
   end
 
+  def quick
+    results = [
+      Project.first,
+      Experiment.first,
+      MyModule.first,
+      Protocol.first,
+      RepositoryRow.first,
+      Result.first,
+      Step.first,
+      Report.first,
+      LabelTemplate.first
+    ].compact
+
+    render json: results, each_serializer: QuickSearchSerializer
+  end
+
   private
 
   def load_vars
