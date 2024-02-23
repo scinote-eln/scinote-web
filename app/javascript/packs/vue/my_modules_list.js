@@ -7,6 +7,6 @@ const app = createApp();
 app.component('MyModulesList', MyModulesList);
 app.config.globalProperties.i18n = window.I18n;
 app.use(PerfectScrollbar);
-window.myModulesList = mountWithTurbolinks(app, '#MyModulesList', () => {
+mountWithTurbolinks(app, '#MyModulesList', () => {
   delete window.myModulesList;
 });
