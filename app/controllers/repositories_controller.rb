@@ -305,10 +305,14 @@ class RepositoriesController < ApplicationController
     render_403 unless can_create_repository_rows?(Repository.accessible_by_teams(current_team)
                                                             .find_by_id(import_params[:id]))
 
+    # Access the checkbox values from params
+    can_edit_existing_items = params[:edit_existing_items_checkbox]
+    should_overwrite_with_empty_cells = params[:overwrite_with_empty_cells]
+
     # Check if there exist mapping for repository record (it's mandatory)
     if import_params[:mappings].value?('-1')
       import_records = repostiory_import_actions
-      status = import_records.import!
+      status = import_records.import!(can_edit_existing_items, should_overwrite_with_empty_cells)
 
       if status[:status] == :ok
         log_activity(:import_inventory_items,

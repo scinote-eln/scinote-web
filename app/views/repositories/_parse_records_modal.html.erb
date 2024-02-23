@@ -14,6 +14,20 @@
       <%= f.hidden_field :team_id, value: current_team.id %>
       <div class="modal-body">
         <p><%= t("repositories.parse_sheet.help_text") %></p>
+        <div class="form-check">
+          <div class="sci-checkbox-container">
+            <%= f.check_box :edit_existing_items_checkbox, { class: 'sci-checkbox'} %>
+            <span class="sci-checkbox-label"></span>
+          </div>
+          <%= f.label :edit_existing_items_checkbox, t("repositories.parse_sheet.edit_existing_items_checkbox") %>
+        </div>
+        <div class="form-check">
+          <div class="sci-checkbox-container">
+            <%= f.check_box :overwrite_with_empty_cells, { class: 'sci-checkbox', checked: false} %>
+            <span class="sci-checkbox-label"></span>
+          </div>
+          <%= f.label :overwrite_with_empty_cells, t("repositories.parse_sheet.overwrite_with_empty_cells") %>
+        </div>
         <div style="overflow-x: scroll">
           <table class="table parse-records-table" style="display: block">
             <thead>

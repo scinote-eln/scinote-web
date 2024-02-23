@@ -8,20 +8,22 @@ module ImportRepository
       @user = options.fetch(:user)
     end
 
-    def import!
-      status = run_import_actions
+    def import!(can_edit_existing_items, should_overwrite_with_empty_cells)
+      status = run_import_actions(can_edit_existing_items, should_overwrite_with_empty_cells)
       @temp_file.destroy
       status
     end
 
     private
 
-    def run_import_actions
+    def run_import_actions(can_edit_existing_items, should_overwrite_with_empty_cells)
       @temp_file.file.open do |temp_file|
         @repository.import_records(
           SpreadsheetParser.open_spreadsheet(temp_file),
           @mappings,
-          @user
+          @user,
+          can_edit_existing_items,
+          should_overwrite_with_empty_cells
         )
       end
     end
