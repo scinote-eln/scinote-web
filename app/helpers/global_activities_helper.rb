@@ -68,11 +68,15 @@ module GlobalActivitiesHelper
 
       path = repository_path(obj.repository, team: obj.repository.team.id)
     when Project
-      path = obj.archived? ? projects_path : project_path(obj)
+      path = obj.archived? ? projects_path : experiments_path(project_id: obj)
     when Experiment
       return current_value unless obj.navigable?
 
-      path = obj.archived? ? project_path(obj.project, view_mode: :archived) : my_modules_experiment_path(obj)
+      path = if obj.archived?
+               experiments_path(project_id: obj.project, view_mode: :archived)
+             else
+               my_modules_experiment_path(obj)
+             end
     when MyModule
       return current_value unless obj.navigable?
 

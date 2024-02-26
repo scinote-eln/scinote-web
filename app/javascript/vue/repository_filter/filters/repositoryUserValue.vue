@@ -33,7 +33,7 @@
 
 <script>
 import FilterMixin from '../mixins/filter.js';
-import DropdownSelector from '../../shared/dropdown_selector.vue';
+import DropdownSelector from '../../shared/legacy/dropdown_selector.vue';
 
 export default {
   name: 'RepositoryUserValue',

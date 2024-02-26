@@ -48,7 +48,7 @@
 
 <script>
 import FilterMixin from '../mixins/filter.js';
-import DropdownSelector from '../../shared/dropdown_selector.vue';
+import DropdownSelector from '../../shared/legacy/dropdown_selector.vue';
 
 export default {
   name: 'RepositoryNumberValue',
@@ -97,8 +97,8 @@ export default {
   },
   computed: {
     isBlank() {
-      return (!this.value && this.operator != 'between')
-               || ((!this.to || !this.from) && this.operator == 'between');
+      return (!this.value && this.operator !== 'between')
+               || ((!this.to || !this.from) && this.operator === 'between');
     }
   }
 };

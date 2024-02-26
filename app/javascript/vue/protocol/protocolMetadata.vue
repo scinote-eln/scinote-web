@@ -2,7 +2,8 @@
   <div class="protocol-section protocol-information mb-4">
     <div id="protocol-details" class="protocol-section-header">
       <div class="protocol-details-container">
-        <a class="protocol-section-caret" role="button" data-toggle="collapse" href="#details-container" aria-expanded="false" aria-controls="details-container">
+        <a class="protocol-section-caret" role="button" data-toggle="collapse"
+           href="#details-container" aria-expanded="false" aria-controls="details-container">
           <i class="sn-icon sn-icon-right"></i>
           <span id="protocolDetailsLabel" class="protocol-section-title">
             <h2>
@@ -13,12 +14,21 @@
         </a>
       </div>
       <div class="actions-block">
-        <a class="btn btn-light icon-btn pull-right" :href="protocol.attributes.urls.print_protocol_url" target="_blank">
+        <a class="btn btn-light icon-btn pull-right"
+           :href="protocol.attributes.urls.print_protocol_url" target="_blank">
           <span class="sn-icon sn-icon-printer" aria-hidden="true"></span>
         </a>
-        <button class="btn btn-light" @click="openVersionsModal">{{ i18n.t("protocols.header.versions") }}</button>
-        <button v-if="protocol.attributes.urls.publish_url" @click="$emit('publish')" class="btn btn-primary">{{ i18n.t("protocols.header.publish") }}</button>
-        <button v-if="protocol.attributes.urls.save_as_draft_url" v-bind:disabled="protocol.attributes.has_draft" @click="saveAsdraft" class="btn btn-secondary">{{ i18n.t("protocols.header.save_as_draft") }}</button>
+        <button class="btn btn-light" @click="openVersionsModal">
+          {{ i18n.t("protocols.header.versions") }}
+        </button>
+        <button v-if="protocol.attributes.urls.publish_url"
+                @click="$emit('publish')" class="btn btn-primary">
+          {{ i18n.t("protocols.header.publish") }}</button>
+        <button v-if="protocol.attributes.urls.save_as_draft_url"
+                v-bind:disabled="protocol.attributes.has_draft"
+                @click="saveAsdraft" class="btn btn-secondary">
+          {{ i18n.t("protocols.header.save_as_draft") }}
+        </button>
       </div>
     </div>
     <div id="details-container" class="protocol-details collapse in">
@@ -87,20 +97,32 @@
       </div>
     </div>
   </div>
+  <Teleport to="body">
+    <VersionsModal v-if="VersionsModalObject" :protocol="VersionsModalObject"
+                 @close="VersionsModalObject = null"
+                 @reloadPage="reloadPage"
+                 @redirectToProtocols="redirectToProtocols"/>
+  </Teleport>
 </template>
 <script>
-
+/* global HelperModule */
 import InlineEdit from '../shared/inline_edit.vue';
-import DropdownSelector from '../shared/dropdown_selector.vue';
+import DropdownSelector from '../shared/legacy/dropdown_selector.vue';
+import VersionsModal from '../protocols/modals/versions.vue';
 
 export default {
   name: 'ProtocolMetadata',
-  components: { InlineEdit, DropdownSelector },
+  components: { InlineEdit, DropdownSelector, VersionsModal },
   props: {
     protocol: {
       type: Object,
       required: true
-    }
+    },
+  },
+  data() {
+    return {
+      VersionsModalObject: null
+    };
   },
   computed: {
     titleVersion() {
@@ -130,7 +152,13 @@ export default {
           this.$emit('update', result.data.attributes);
         },
         error: (data) => {
-          HelperModule.flashAlertMsg(data.responseJSON ? Object.values(data.responseJSON).join(', ') : I18n.t('errors.general'), 'danger');
+          let message;
+          if (data.responseJSON) {
+            message = Object.values(data.responseJSON).join(', ');
+          } else {
+            message = this.i18n.t('errors.general');
+          }
+          HelperModule.flashAlertMsg(message);
         }
       });
     },
@@ -146,18 +174,18 @@ export default {
       });
     },
     openVersionsModal() {
-      $.get(this.protocol.attributes.urls.versions_modal_url, (data) => {
-        const versionsModal = '#protocol-versions-modal';
-        $('.protocols-show').append($.parseHTML(data.html));
-        $(versionsModal).modal('show');
-        inlineEditing.init();
-        $(versionsModal).find('[data-toggle="tooltip"]').tooltip();
-
-        // Remove modal when it gets closed
-        $(versionsModal).on('hidden.bs.modal', () => {
-          $(versionsModal).remove();
-        });
-      });
+      this.VersionsModalObject = {
+        id: this.protocol.id,
+        urls: {
+          versions_modal: this.protocol.attributes.urls.versions_modal
+        }
+      };
+    },
+    reloadPage() {
+      window.location.reload();
+    },
+    redirectToProtocols() {
+      window.location.href = this.protocol.attributes.urls.redirect_to_protocols;
     }
   }
 };

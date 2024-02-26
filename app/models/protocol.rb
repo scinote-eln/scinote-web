@@ -160,6 +160,7 @@ class Protocol < ApplicationRecord
            dependent: :destroy
   has_many :protocol_keywords, through: :protocol_protocol_keywords
   has_many :steps, inverse_of: :protocol, dependent: :destroy
+  has_many :users, through: :user_assignments
 
   def self.search(user,
                   include_archived,

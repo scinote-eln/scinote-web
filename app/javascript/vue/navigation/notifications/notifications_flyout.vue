@@ -7,7 +7,7 @@
       </a>
     </div>
     <hr>
-    <perfect-scrollbar ref="scrollContainer" class="sci--navigation--notificaitons-flyout-notifications">
+    <perfect-scrollbar @wheel="preventPropagation" ref="scrollContainer" class="sci--navigation--notificaitons-flyout-notifications">
       <div class="sci-navigation--notificaitons-flyout-subtitle" v-if="todayNotifications.length">
         {{ i18n.t('nav.notifications.today') }}
       </div>
@@ -62,7 +62,7 @@ export default {
     });
   },
   beforeUnmount() {
-    document.body.style.overflow = 'scroll';
+    document.body.style.overflow = 'auto';
   },
   computed: {
     filteredNotifications() {
@@ -76,6 +76,10 @@ export default {
     }
   },
   methods: {
+    preventPropagation(e) {
+      e.stopPropagation();
+      e.preventDefault();
+    },
     loadNotifications() {
       if (this.nextPageUrl == null || this.loadingPage) return;
 

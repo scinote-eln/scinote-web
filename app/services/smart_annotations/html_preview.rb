@@ -18,7 +18,9 @@ module SmartAnnotations
       def generate_prj_snippet(_, object)
         return "<span class='sa-type'>Prj</span>#{object.name} #{I18n.t('atwho.res.archived')}" if object.archived?
 
-        "<a class='sa-link' href='#{ROUTES.project_path(object)}'><span class='sa-type'>Prj</span>#{object.name}</a>"
+        "<a class='sa-link' href='#{ROUTES.experiments_path(project_id: object)}'>
+          <span class='sa-type'>Prj</span>#{object.name}
+        </a>"
       end
 
       def generate_exp_snippet(_, object)

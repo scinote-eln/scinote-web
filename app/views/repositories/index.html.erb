@@ -3,65 +3,26 @@
 
 <% if current_team %>
   <% provide(:sidebar_url, sidebar_repositories_path) %>
-  <% provide(:sidebar_title, t('sidebar.repositories.sidebar_title')) %>
-  <%= content_for :sidebar do %>
-   <%= render partial: "sidebar", locals: { repositories: @repositories, archived: params[:archived] } %>
-  <% end %>
-  <%= render "view_archived_btn" %>
-<% end %>
-
-<!-- table template -->
-<template id="RepositoriesListTable">
-  <table id="repositoriesList" class="table"
-         data-source="<%= team_repositories_path(current_team, format: :json) %>">
-    <thead>
-      <tr>
-        <th>
-          <div class="sci-checkbox-container">
-            <input value="1" type="checkbox" class="sci-checkbox select-all-checkbox">
-            <span class="sci-checkbox-label"></span>
-          </div>
-        </th>
-        <th><%= t('libraries.index.table.name') %></th>
-        <th><%= t('libraries.index.table.number_of_items') %></th>
-        <th><%= t('libraries.index.table.shared') %></th>
-        <th><%= t('libraries.index.table.ownership') %></th>
-        <th><%= t('libraries.index.table.added_on') %></th>
-        <th><%= t('libraries.index.table.added_by') %></th>
-        <th><%= t('libraries.index.table.archived_on') %></th>
-        <th><%= t('libraries.index.table.archived_by') %></th>
-      </tr>
-    </thead>
-  </table>
-</template>
-
-<!-- Repositories action buttons -->
-<template id="repositoriesListButtons">
-  <% if can_create_repositories?(current_team) %>
-    <a id="createRepoBtn" class="btn btn-primary" title="<%= t('libraries.index.no_libraries.create_new_button_tooltip') %>"
-      data-remote="true"
-      data-view-mode="active"
-      href="<%= create_modal_team_repositories_path(current_team) %>">
-      <span class="sn-icon sn-icon-new-task"></span>
-      <span class="hidden-xs"><%= t('libraries.index.no_libraries.create_new_button') %></span>
-    </a>
-  <% end %>
-
-  <%= render partial: 'shared/state_view_switch', locals: {
-          disabled: false,
-          switchable: true,
-          archived: params[:archived],
-          active_url: repositories_path,
-          archived_url: repositories_path(archived: true),
-        } %>
+  <div class="content-pane flexible <%= params[:archived] ? :archived : :active %> repositories-index">
+    <div class="content-header">
+      <div class="title-row">
+        <h1 data-view-mode="active"><%= t('libraries.index.head_title') %></h1>
+        <h1 data-view-mode="archived"><span><%= t('labels.archived')%></span>&nbsp;<%= t('libraries.index.head_title_archived') %></h1>
+      </div>
+    </div>
+    <div class="content-body" data-e2e="e2e-inventories-container">
+      <div id="repositoriesTable" class="fixed-content-body">
+        <repositories-table
+          actions-url="<%= actions_toolbar_team_repositories_path(current_team) %>"
+          data-source="<%= repositories_path(format: :json) %>"
+          create-url="<%= repositories_path if can_create_repositories?(current_team) %>"
+          active-page-url="<%= repositories_path %>"
+          archived-page-url="<%= repositories_path(view_mode: :archived) %>"
+          current-view-mode="<%= params[:view_mode] || :active %>"
+        />
+      </div>
+    </div>
   </div>
-</template>
 
-<div id="actionToolbar" data-behaviour="vue">
-  <action-toolbar actions-url="<%= actions_toolbar_team_repositories_url(current_team) %>" />
-</div>
-
-<%= javascript_include_tag "vue_components_action_toolbar" %>
-<%= javascript_include_tag "repositories/index" %>
-<%= javascript_include_tag "repositories/share_modal" %>
-<%= stylesheet_link_tag 'datatables' %>
+  <%= javascript_include_tag 'vue_repositories_table' %>
+<% end %>

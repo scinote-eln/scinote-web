@@ -1,0 +1,11 @@
+<div>
+  <h1>Icons</h1>
+  <div class="flex flex-wrap gap-6 mb-6">
+    <% icons_list.each do |icon| %>
+      <div class="flex items-center flex-col w-24">
+        <span class="sn-icon sn-icon-<%= icon %>" style="font-size: 48px !important"></span>
+        <span class="text-xs text-sn-grey text-center"><%= icon %></span>
+      </div>
+    <% end %>
+  </div>
+</div>

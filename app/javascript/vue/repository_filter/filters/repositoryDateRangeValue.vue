@@ -30,7 +30,7 @@
 <script>
 import FilterMixin from '../mixins/filter.js';
 import RangeDateTimeFilterMixin from '../mixins/filters/range_date_time_filter.js';
-import DropdownSelector from '../../shared/dropdown_selector.vue';
+import DropdownSelector from '../../shared/legacy/dropdown_selector.vue';
 import DateTimePicker from '../../shared/date_time_picker.vue';
 
 export default {

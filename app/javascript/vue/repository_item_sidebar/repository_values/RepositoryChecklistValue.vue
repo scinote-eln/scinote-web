@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import ChecklistSelect from '../../shared/checklist_select.vue';
+import ChecklistSelect from '../../shared/legacy/checklist_select.vue';
 import repositoryValueMixin from './mixins/repository_value.js';
 
 export default {

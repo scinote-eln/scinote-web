@@ -36,7 +36,7 @@ import RepositoryStatusValue from './filters/repositoryStatusValue.vue';
 import RepositoryChecklistValue from './filters/repositoryChecklistValue.vue';
 import RepositoryUserValue from './filters/repositoryUserValue.vue';
 import RepositoryStockValue from './filters/repositoryStockValue.vue';
-import DropdownSelector from '../shared/dropdown_selector.vue';
+import DropdownSelector from '../shared/legacy/dropdown_selector.vue';
 
 export default {
   name: 'FilterElement',
