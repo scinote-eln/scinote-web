@@ -49,11 +49,7 @@
   </div>
   <div class="row row-v-margin">
     <div class="col-xs-12">
-       <%= link_to t('my_modules.details.info_popover.view_task_access'),
-                      can_manage_my_module_users?(@my_module) ?
-                        edit_access_permissions_my_module_path(@my_module) :
-                        access_permissions_my_module_path(@my_module),
-                      data: { action: 'remote-modal'} %>
+       <%= link_to t('my_modules.details.info_popover.view_task_access'), nil, id: "openAccessModal" %>
     </div>
   </div>
 </div>

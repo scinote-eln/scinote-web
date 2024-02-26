@@ -180,6 +180,18 @@
     />
   </teleport>
 </div>
+<div id="accessModalContainer" class="vue-access-modal"
+     data-url="<%= my_module_path(@my_module, format: :json) %>"
+     data-roles-url="<%= user_roles_projects_path %>"
+>
+  <div ref="accessModal" id="accessModalComponent"></div>
+  <teleport to="body">
+    <access-modal
+      v-if="accessModalOpen"
+      :params="params"
+      @close="accessModalOpen = false" />
+  </teleport>
+</div>
 
 <%= javascript_include_tag 'inputmask' %>
 <%= stylesheet_link_tag 'datatables' %>
@@ -196,3 +208,4 @@
 
 <%= javascript_include_tag 'vue_protocol' %>
 <%= javascript_include_tag 'vue_legacy_tags_modal' %>
+<%= javascript_include_tag 'vue_legacy_access_modal' %>

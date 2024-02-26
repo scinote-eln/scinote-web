@@ -64,6 +64,16 @@
   <% end %>
 </div>
 
+<div id="accessModalContainer" class="vue-access-modal">
+  <div ref="accessModal" id="accessModalComponent"></div>
+  <teleport to="body">
+    <access-modal
+      v-if="accessModalOpen"
+      :params="params"
+      @close="accessModalOpen = false" />
+  </teleport>
+</div>
+
 <!-- Manage tags modal -->
 <%= render partial: "my_modules/modals/manage_module_tags_modal", locals: { my_module: nil } %>
 <%= javascript_include_tag("my_modules/tags") %>
@@ -76,3 +86,4 @@
 <%= javascript_include_tag("eventPause-min") %>
 
 <%= javascript_include_tag("projects/canvas") %>
+<%= javascript_include_tag 'vue_legacy_access_modal' %>
