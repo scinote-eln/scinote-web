@@ -1,9 +1,6 @@
 <template>
   <div class="sci--navigation--top-menu-container">
-    <div v-if="user" class="sci--navigation--top-menu-search left-icon sci-input-container-v2" :class="{'disabled' : !currentTeam}" :title="i18n.t('nav.search')">
-      <input type="text" :placeholder="i18n.t('nav.search')" @change="searchValue"/>
-      <i class="sn-icon sn-icon-search"></i>
-    </div>
+    <QuickSearch v-if="user" :quickSearchUrl="quickSearchUrl" :searchUrl="searchUrl" :currentTeam="currentTeam"></QuickSearch>
     <div v-if="currentTeam" class="w-64">
       <SelectDropdown
         :value="currentTeam"
@@ -70,6 +67,7 @@ import DropdownSelector from '../shared/legacy/dropdown_selector.vue';
 import SelectDropdown from '../shared/select_dropdown.vue';
 import MenuDropdown from '../shared/menu_dropdown.vue';
 import GeneralDropdown from '../shared/general_dropdown.vue';
+import QuickSearch from './quick_search.vue';
 
 export default {
   name: 'TopMenuContainer',
@@ -78,12 +76,14 @@ export default {
     NotificationsFlyout,
     SelectDropdown,
     MenuDropdown,
-    GeneralDropdown
+    GeneralDropdown,
+    QuickSearch
   },
   props: {
     url: String,
     notificationsUrl: String,
-    unseenNotificationsUrl: String
+    unseenNotificationsUrl: String,
+    quickSearchUrl: String
   },
   data() {
     return {

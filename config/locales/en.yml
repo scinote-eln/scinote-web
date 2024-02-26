@@ -426,6 +426,14 @@ en:
       list_html: "List"
 
   search:
+    quick_search:
+      experiments: "Experiments"
+      tasks: "Tasks"
+      results: "Results"
+      inventory_items: "Inventory items"
+      all_results: "All search results for \"%{query}\""
+      empty_title: "No quick search results found."
+      empty_description: "Quick search only checks titles. Press enter or click \"All search results for '%{query}'\" to find all available matches."
     whole_word: "Match any whole word"
     whole_phrase: "Match whole phrase"
     match_case: "Match case sensitive"
