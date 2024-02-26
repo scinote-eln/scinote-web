@@ -1,6 +1,6 @@
 <template>
   <DataTable
-    ref="table"
+    ref="list"
     :columnDefs="columnDefs"
     tableId="MyModuleList"
     :dataUrl="dataSource"
@@ -64,7 +64,7 @@ import MoveModal from './modals/move.vue';
 import AccessModal from '../shared/access_modal/modal.vue';
 
 export default {
-  name: 'ExperimentsList',
+  name: 'MyModulesList',
   components: {
     DataTable,
     ConfirmationModal,
@@ -222,6 +222,9 @@ export default {
 
     this.columnDefs = columns;
     this.filters = filters;
+  },
+  mounted() {
+    window.myModulesList = this;
   },
   computed: {
     viewRenders() {
