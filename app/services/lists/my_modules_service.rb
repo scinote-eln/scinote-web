@@ -86,28 +86,28 @@ module Lists
         @records = @records.order(my_module_status_id: :desc)
       when 'designated_ASC'
         @records = @records.left_joins(:user_my_modules)
-                         .group('my_modules.id')
-                         .order(Arel.sql('COUNT(DISTINCT user_my_modules.id) ASC'))
+                           .group('my_modules.id')
+                           .order(Arel.sql('COUNT(DISTINCT user_my_modules.id) ASC'))
       when 'designated_DESC'
         @records = @records.left_joins(:user_my_modules)
-                         .group('my_modules.id')
-                         .order(Arel.sql('COUNT(DISTINCT user_my_modules.id) DESC'))
+                           .group('my_modules.id')
+                           .order(Arel.sql('COUNT(DISTINCT user_my_modules.id) DESC'))
       when 'results_ASC'
         @records = @records.left_joins(:results)
-                         .group('my_modules.id')
-                         .order(Arel.sql('COUNT(DISTINCT results.id) ASC'))
+                           .group('my_modules.id')
+                           .order(Arel.sql('COUNT(DISTINCT results.id) ASC'))
       when 'results_DESC'
         @records = @records.left_joins(:results)
-                         .group('my_modules.id')
-                         .order(Arel.sql('COUNT(DISTINCT results.id) DESC'))
+                           .group('my_modules.id')
+                           .order(Arel.sql('COUNT(DISTINCT results.id) DESC'))
       when 'tags_ASC'
         @records = @records.left_joins(:tags)
-                         .group('my_modules.id')
-                         .order(Arel.sql('COUNT(DISTINCT tags.id) ASC'))
+                           .group('my_modules.id')
+                           .order(Arel.sql('COUNT(DISTINCT tags.id) ASC'))
       when 'tags_DESC'
         @records = @records.left_joins(:tags)
-                         .group('my_modules.id')
-                         .order(Arel.sql('COUNT(DISTINCT tags.id) DESC'))
+                           .group('my_modules.id')
+                           .order(Arel.sql('COUNT(DISTINCT tags.id) DESC'))
       else
         __send__("#{sortable_columns[order_params[:column].to_sym]}_sort", sort_direction(order_params))
       end
