@@ -68,7 +68,7 @@ import ShareRepositoryModal from './modals/share.vue';
 import DataTable from '../shared/datatable/table.vue';
 
 export default {
-  name: 'LabelTemplatesTable',
+  name: 'RepositoriesTable',
   components: {
     DataTable,
     ConfirmationModal,

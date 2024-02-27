@@ -269,6 +269,9 @@ export default {
     reloadingTable() {
       if (this.reloadingTable) {
         this.updateTable();
+        this.$nextTick(() => {
+          this.selectedRows = [];
+        });
       }
     },
     currentViewRender() {
