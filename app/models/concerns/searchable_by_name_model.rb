@@ -20,10 +20,10 @@ module SearchableByNameModel
 
       sql_q = sql_q.where(id: viewable_by_user(user, teams))
 
-      sql_q.limit(Constants::SEARCH_LIMIT)
+      sql_q.limit(options[:limit] || Constants::SEARCH_LIMIT)
     end
 
-    def self.search_by_name_and_id(user, teams = [], query = nil)
+    def self.search_by_name_and_id(user, teams = [], query = nil, options = {})
       return if user.blank? || teams.blank?
 
       sanitized_query = ActiveRecord::Base.sanitize_sql_like(query.to_s)
@@ -34,7 +34,7 @@ module SearchableByNameModel
         "%#{sanitized_query}%", "%#{sanitized_query}%"
       )
 
-      sql_q.limit(Constants::SEARCH_LIMIT)
+      sql_q.limit(options[:limit] || Constants::SEARCH_LIMIT)
     end
   end
   # rubocop:enable Metrics/BlockLength

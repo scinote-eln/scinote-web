@@ -33,6 +33,12 @@ class ProjectFolder < ApplicationRecord
 
   scope :top_level, -> { where(parent_folder: nil) }
 
+  def self.viewable_by_user(user, teams)
+    joins(team: :users)
+      .where(teams: { user_assignments: { user: user } })
+      .where(team: teams)
+  end
+
   def self.search(user, _include_archived, query = nil, page = 1, current_team = nil, options = {})
     new_query = if current_team
                   current_team.project_folders.where_attributes_like(:name, query, options)

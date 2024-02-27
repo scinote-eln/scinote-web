@@ -2,6 +2,7 @@
 
 class LabelTemplate < ApplicationRecord
   include SearchableModel
+  include SearchableByNameModel
 
   belongs_to :team
   belongs_to :created_by, class_name: 'User', optional: true
@@ -16,6 +17,17 @@ class LabelTemplate < ApplicationRecord
   validate :ensure_single_default_template!
 
   scope :default, -> { where(default: true) }
+
+  def self.viewable_by_user(user, teams)
+    joins("INNER JOIN user_assignments team_user_assignments
+             ON team_user_assignments.assignable_id = label_templates.team_id
+             AND team_user_assignments.assignable_type = 'Team'
+             AND team_user_assignments.user_id = #{user.id}
+           INNER JOIN user_roles team_user_roles
+             ON team_user_roles.id = team_user_assignments.user_role_id
+             AND team_user_roles.permissions @> ARRAY['#{TeamPermissions::LABEL_TEMPLATES_READ}']::varchar[]")
+      .where(team: teams)
+  end
 
   def self.enabled?
     ApplicationSettings.instance.values['label_templates_enabled'] == true
