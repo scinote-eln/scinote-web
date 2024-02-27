@@ -115,6 +115,10 @@ module Lists
         @records = @records.sort_by(&:archived_on)
       when 'archived_on_DESC'
         @records = @records.sort_by(&:archived_on).reverse!
+      when 'users_ASC'
+        @records = @records.sort_by { |project| project.users.count }
+      when 'users_DESC'
+        @records = @records.sort_by { |project| project.users.count }.reverse!
       end
     end
 

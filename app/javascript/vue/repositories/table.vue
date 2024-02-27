@@ -129,6 +129,11 @@ export default {
         cellRenderer: this.nameRenderer
       },
       {
+        field: 'code',
+        headerName: this.i18n.t('libraries.index.table.id'),
+        sortable: true
+      },
+      {
         field: 'nr_of_rows',
         headerName: this.i18n.t('libraries.index.table.number_of_items'),
         sortable: true

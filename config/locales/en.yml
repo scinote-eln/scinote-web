@@ -2539,6 +2539,7 @@ en:
       head_title_archived: "Archived Inventories"
       table:
         name: "Inventory name"
+        id: "ID"
         number_of_items: "No. of items"
         shared: "Shared"
         ownership: "Owned by"

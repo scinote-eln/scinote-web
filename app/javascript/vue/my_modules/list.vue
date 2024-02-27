@@ -126,18 +126,18 @@ export default {
       {
         field: 'results',
         headerName: this.i18n.t('experiments.table.column.results_html'),
-        sortable: false,
+        sortable: true,
         cellRenderer: this.resultsRenderer
       },
       {
         field: 'age',
         headerName: this.i18n.t('experiments.table.column.age_html'),
-        sortable: false
+        sortable: true
       },
       {
         field: 'status',
         headerName: this.i18n.t('experiments.table.column.status_html'),
-        sortable: false,
+        sortable: true,
         cellRenderer: this.statusRenderer
       }
     ];
@@ -153,14 +153,14 @@ export default {
     columns.push({
       field: 'designated',
       headerName: this.i18n.t('experiments.table.column.assigned_html'),
-      sortable: false,
+      sortable: true,
       cellRenderer: DesignatedUsers,
       minWidth: 220
     });
     columns.push({
       field: 'tags',
       headerName: this.i18n.t('experiments.table.column.tags_html'),
-      sortable: false,
+      sortable: true,
       cellRenderer: TagsRenderer
     });
     columns.push({

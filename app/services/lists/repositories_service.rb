@@ -50,7 +50,8 @@ module Lists
         created_at: 'repositories.created_at',
         archived_on: 'repositories.archived_on',
         archived_by: 'archived_by_user',
-        nr_of_rows: 'row_count'
+        nr_of_rows: 'row_count',
+        code: 'repositories.id'
       }
     end
   end
