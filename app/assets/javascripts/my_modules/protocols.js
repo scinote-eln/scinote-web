@@ -305,6 +305,28 @@ function initProtocolSectionOpenEvent() {
     });
   });
 }
+
+function initAccessModal() {
+  $('#openAccessModal').on('click', (e) => {
+    e.preventDefault();
+    const container = document.getElementById('accessModalContainer');
+    $.get(container.dataset.url, (data) => {
+      const object = {
+        ...data.data.attributes,
+        id: data.data.id,
+        type: data.data.type
+      };
+      const { rolesUrl } = container.dataset;
+      const params = {
+        object: object,
+        roles_path: rolesUrl
+      };
+      const modal = $('#accessModalComponent').data('accessModal');
+      modal.params = params;
+      modal.open();
+    });
+  });
+}
 /**
  * Initializes page
  */
@@ -315,6 +337,7 @@ function init() {
   initLoadFromRepository();
   initProtocolSectionOpenEvent();
   initDetailsDropdown();
+  initAccessModal();
 }
 
 init();

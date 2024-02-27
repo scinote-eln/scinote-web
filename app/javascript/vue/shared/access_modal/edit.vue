@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="roles.length > 0 && visible" class="p-2 flex items-center gap-2 border-solid border-0 border-b border-b-sn-sleepy-grey">
+    <div v-if="roles.length > 0 && visible && default_role" class="p-2 flex items-center gap-2 border-solid border-0 border-b border-b-sn-sleepy-grey">
       <div>
         <img src="/images/icon/team.png" class="rounded-full w-8 h-8">
       </div>
@@ -56,7 +56,6 @@
 
 <script>
 /* global HelperModule */
-
 import MenuDropdown from '../menu_dropdown.vue';
 import axios from '../../../packs/custom_axios.js';
 
