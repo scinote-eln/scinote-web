@@ -336,7 +336,7 @@ export default {
             }
           } else {
             this.initializing = false;
-            this.saveTableState();
+            this.gridApi.sizeColumnsToFit();
           }
         });
     },
@@ -549,8 +549,7 @@ export default {
     },
     resetColumnsToDefault() {
       this.columnApi.resetColumnState();
-      this.columnApi.autoSizeAllColumns();
-      this.saveTableState();
+      this.gridApi.sizeColumnsToFit();
     },
     getOrder(columnsState) {
       if (!columnsState) return null;
