@@ -34,8 +34,8 @@
                       class="sci-toggle-checkbox"
                       :disabled="!canShare"
                       tabindex="0"
-                      @change="checkboxChange"
-                      @keyup.enter="handleCheckboxEnter"/>
+                      @click.prevent="checkboxChange"
+                      @keyup.enter="checkboxChange"/>
                 <span class="sci-toggle-checkbox-label"></span>
               </span>
             </div>
@@ -199,12 +199,8 @@ export default {
         this.characterCount = this.$refs.textarea.value.length;
       });
     },
-    handleCheckboxEnter() {
-      this.sharedEnabled = !this.sharedEnabled;
-      this.checkboxChange();
-    },
     checkboxChange() {
-      if (this.sharedEnabled) {
+      if (!this.sharedEnabled) {
         $.post(this.shareableLinkUrl, { description: this.description }, (result) => {
           this.shareableData = result.data;
           this.$emit('enable');
@@ -224,6 +220,7 @@ export default {
           this.shareableData = {};
           this.description = '';
           this.dirty = false;
+          this.sharedEnabled = false;
 
           this.$emit('disable');
           this.$emit('close');

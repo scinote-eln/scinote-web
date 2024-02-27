@@ -10,7 +10,7 @@
     <a href="#" id="selectLiveVersionButton" class="list-group-item live-version-item version-button"
        data-id="<%= @repository.id %>"
        data-selected="<%= @repository_snapshots.select{ |s| s.selected == true }.blank? %>"
-       data-table-url="<%= full_view_table_my_module_repository_path(@my_module, @repository, include_stock_consumption: true) %>"
+       data-table-url="<%= full_view_table_my_module_repository_path(@my_module, @repository, include_stock_consumption: @repository.has_stock_consumption?) %>"
     >
       <h2 class="list-group-item-heading">
         <%= t('my_modules.repository.snapshots.full_view.live') %>

@@ -23,6 +23,7 @@ module Lists
       due_date_formatted
       permissions
       default_public_user_role_id
+      team
     )
 
     def attributes(_options = {})
@@ -132,7 +133,13 @@ module Lists
     end
 
     def tags
-      object.tags.length
+      object.tags.map do |tag|
+        {
+          id: tag.id,
+          name: tag.name,
+          color: tag.color
+        }
+      end
     end
 
     def comments
@@ -141,6 +148,10 @@ module Lists
         count: object.comments.count,
         count_unseen: count_unseen_comments(object, @user)
       }
+    end
+
+    def team
+      object.team.name
     end
   end
 end

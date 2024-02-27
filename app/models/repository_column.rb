@@ -4,7 +4,7 @@ class RepositoryColumn < ApplicationRecord
   belongs_to :repository_snapshot, foreign_key: :repository_id, optional: true
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
   has_many :repository_cells, dependent: :destroy
-  has_many :repository_rows, through: :repository_cells
+  has_many :repository_rows, through: :repository_cells, dependent: :destroy
   has_many :repository_list_items, -> { order('data ASC') }, dependent: :destroy,
                                                              index_errors: true,
                                                              inverse_of: :repository_column

@@ -5,14 +5,14 @@
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="sn-icon sn-icon-close"></i></button>
           <h4 class="modal-title" id="modal-delete-result-element">
-            {{ i18n.t('assets.asset_sync.set_up_app') }}
+            {{ i18n.t('assets.no_predefined_app_modal.set_up_app') }}
           </h4>
         </div>
         <div class="modal-body">
-          <p v-html="i18n.t('assets.asset_sync.body_text_html', { file_name: fileName })"></p>
+          <p v-html="i18n.t('assets.no_predefined_app_modal.body_text_html', { file_name: fileName })"></p>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-primary" @click="confirm">{{ this.i18n.t('assets.asset_sync.no_predefined_app') }}</button>
+          <button class="btn btn-primary" @click="close">{{ this.i18n.t('assets.no_predefined_app_modal.understand_button') }}</button>
         </div>
       </div>
     </div>
@@ -20,21 +20,13 @@
 </template>
 
 <script>
+import modalMixin from '../../modal_mixin';
+
 export default {
   name: 'NoPredefinedAppModal',
+  mixins: [modalMixin],
   props: {
     fileName: String
-  },
-  mounted() {
-    $(this.$refs.modal).modal('show');
-    $(this.$refs.modal).on('hidden.bs.modal', () => {
-      this.$emit('confirm');
-    });
-  },
-  methods: {
-    confirm() {
-      $(this.$refs.modal).modal('hide');
-    }
   }
 };
 </script>

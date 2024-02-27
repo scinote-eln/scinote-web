@@ -15,6 +15,7 @@
       users-filter-url="<%= users_filter_projects_path %>"v
       user-roles-url="<%= user_roles_projects_path %>"
       :tags-colors="<%= Constants::TAG_COLORS.to_json %>"
+      project-name="<%= @experiment.project.name %>"
       :statuses-list="<%= MyModuleStatus.all.order(:id).map{ |i| [i.id, i.name] }.to_json %>"
       project-tags-url="<%= project_tags_path(@experiment.project) %>"
       canvas-url="<%= view_mode == 'active' ? canvas_experiment_path(@experiment) : module_archive_experiment_path(@experiment) %>"

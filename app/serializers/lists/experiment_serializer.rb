@@ -70,7 +70,6 @@ module Lists
         projects_to_clone: projects_to_clone_experiment_path(object),
         projects_to_move: projects_to_move_experiment_path(object),
         clone: clone_experiment_path(object),
-        move: move_experiment_path(object),
         update: experiment_path(object),
         show_access: access_permissions_experiment_path(object),
         workflow_img: fetch_workflow_img_experiment_path(object)

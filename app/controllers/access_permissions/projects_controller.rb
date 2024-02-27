@@ -11,11 +11,11 @@ module AccessPermissions
 
     def show
       render json: @project.user_assignments.includes(:user_role, :user).order('users.full_name ASC'),
-             each_serializer: UserAssignmentSerializer
+             each_serializer: UserAssignmentSerializer, user: current_user
     end
 
     def new
-      render json: @available_users, each_serializer: UserSerializer
+      render json: @available_users, each_serializer: UserSerializer, user: current_user
     end
 
     def edit; end
@@ -147,7 +147,7 @@ module AccessPermissions
     private
 
     def permitted_default_public_user_role_params
-      params.require(:project).permit(:default_public_user_role_id)
+      params.require(:object).permit(:default_public_user_role_id)
     end
 
     def permitted_update_params

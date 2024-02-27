@@ -47,9 +47,11 @@
         @grid-ready="onGridReady"
         @first-data-rendered="onFirstDataRendered"
         @sortChanged="setOrder"
-        @columnResized="saveTableState"
-        @columnMoved="saveTableState"
+        @columnResized="onColumnResized"
+        @columnMoved="onColumnMoved"
         @bodyScroll="handleScroll"
+        @columnPinned="handlePin"
+        @columnVisible="handleVisibility"
         @rowSelected="setSelectedRows"
         @cellClicked="clickCell"
         :CheckboxSelectionCallback="withCheckboxes"
@@ -64,7 +66,7 @@
         :params="actionsParams"
         @toolbar:action="emitAction" />
     </div>
-    <div v-if="scrollMode == 'pages'" class="flex items-center py-4">
+    <div v-if="scrollMode == 'pages'" class="flex items-center py-4" :class="{'opacity-0': initializing }">
       <div class="mr-auto">
         <Pagination
           :totalPage="totalPage"
@@ -166,6 +168,7 @@ export default {
       order: null,
       totalPage: 0,
       selectedRows: [],
+      keepSelection: false,
       searchValue: '',
       initializing: true,
       activeFilters: {},
@@ -174,7 +177,9 @@ export default {
       dataLoading: true,
       lastPage: false,
       tableState: null,
-      userSettingsUrl: null
+      userSettingsUrl: null,
+      fetchedTableState: null,
+      gridReady: false
     };
   },
   components: {
@@ -211,6 +216,7 @@ export default {
         cellRendererParams: {
           dtComponent: this
         },
+        pinned: (column.field === 'name' ? 'left' : null),
         comparator: () => false
       }));
 
@@ -272,10 +278,18 @@ export default {
     },
     perPage() {
       this.saveTableState();
+    },
+    fetchedTableState(newValue) {
+      if (newValue !== null && this.gridReady) {
+        this.applyTableState(newValue);
+      }
     }
   },
-  mounted() {
+  created() {
     this.userSettingsUrl = document.querySelector('meta[name="user-settings-url"]').getAttribute('content');
+    this.fetchTableState();
+  },
+  mounted() {
     this.loadData();
     window.addEventListener('resize', this.resize);
   },
@@ -300,38 +314,54 @@ export default {
         this.loadData();
       }
     },
-    fetchAndApplyTableState() {
-      axios
-        .get(this.userSettingsUrl, {
-          params: {
-            key: this.stateKey
-          }
-        })
+    handlePin(event) {
+      if (event.pinned === 'right') {
+        this.columnApi.setColumnPinned(event.column.colId, null);
+      }
+      this.saveTableState();
+    },
+    handleVisibility(event) {
+      if (!event.visible && event.source !== 'api') {
+        this.columnApi.setColumnVisible(event.column.colId, true);
+      }
+      this.saveTableState();
+    },
+    fetchTableState() {
+      axios.get(this.userSettingsUrl, { params: { key: this.stateKey } })
         .then((response) => {
           if (response.data.data) {
-            const { currentViewRender, columnsState, perPage, order } = response.data.data;
-            this.tableState = response.data.data;
-            this.currentViewRender = currentViewRender;
-            this.columnsState = columnsState;
-            this.perPage = perPage;
-            this.order = order;
-
-            if (this.order) {
-              this.tableState.columnsState.forEach((column) => {
-                const updatedColumn = column;
-                updatedColumn.sort = this.order.column === column.colId ? this.order.dir : null;
-                return updatedColumn;
-              });
+            this.fetchedTableState = response.data.data;
+            if (this.gridReady && this.fetchedTableState) {
+              this.applyTableState(this.fetchedTableState);
             }
-            this.columnApi.applyColumnState({
-              state: this.tableState.columnsState,
-              applyOrder: true
-            });
-          }
-          setTimeout(() => {
+          } else {
             this.initializing = false;
-          }, 200);
+            this.saveTableState();
+          }
         });
+    },
+    applyTableState(state) {
+      const { currentViewRender, columnsState, perPage, order } = state;
+      this.tableState = state;
+      this.currentViewRender = currentViewRender;
+      this.columnsState = columnsState;
+      this.perPage = perPage;
+      this.order = order;
+
+      if (this.order) {
+        this.tableState.columnsState.forEach((column) => {
+          const updatedColumn = column;
+          updatedColumn.sort = this.order.column === column.colId ? this.order.dir : null;
+          return updatedColumn;
+        });
+      }
+      this.columnApi.applyColumnState({
+        state: this.tableState.columnsState,
+        applyOrder: true
+      });
+      setTimeout(() => {
+        this.initializing = false;
+      }, 200);
     },
     getRowClass() {
       if (this.currentViewMode === 'archived') {
@@ -358,11 +388,11 @@ export default {
         this.reloadTable();
       }
     },
-    reloadTable() {
+    reloadTable(clearSelection = true) {
       if (this.dataLoading) return;
 
       this.dataLoading = true;
-      this.selectedRows = [];
+      if (clearSelection) this.selectedRows = [];
       this.page = 1;
       this.loadData(true);
     },
@@ -380,46 +410,47 @@ export default {
         })
         .then((response) => {
           if (reload) {
-            if (this.gridApi) {
-              this.gridApi.setRowData([]);
-            }
+            if (this.gridApi) this.gridApi.setRowData([]);
             this.rowData = [];
           }
 
           if (this.scrollMode === 'pages') {
-            this.selectedRows = [];
-            if (this.gridApi) {
-              this.gridApi.setRowData(this.formatData(response.data.data));
-            }
+            if (this.gridApi) this.gridApi.setRowData(this.formatData(response.data.data));
             this.rowData = this.formatData(response.data.data);
           } else {
-            const newRows = this.rowData.slice();
-            this.formatData(response.data.data).forEach((row) => {
-              newRows.push(row);
-            });
-            this.rowData = newRows;
-            if (this.gridApi) {
-              const viewport = document.querySelector('.ag-body-viewport');
-              const { scrollTop } = viewport;
-              this.gridApi.setRowData(this.rowData);
-              this.$nextTick(() => {
-                viewport.scrollTop = scrollTop;
-              });
-            }
-            this.lastPage = !response.data.meta.next_page;
+            this.handleInfiniteScroll(response);
           }
           this.totalPage = response.data.meta.total_pages;
           this.$emit('tableReloaded');
           this.dataLoading = false;
+          this.restoreSelection();
 
           this.handleScroll();
         });
     },
+    handleInfiniteScroll(response) {
+      const newRows = this.rowData.slice();
+      this.formatData(response.data.data).forEach((row) => {
+        newRows.push(row);
+      });
+      this.rowData = newRows;
+      if (this.gridApi) {
+        const viewport = document.querySelector('.ag-body-viewport');
+        const { scrollTop } = viewport;
+        this.gridApi.setRowData(this.rowData);
+        this.$nextTick(() => {
+          viewport.scrollTop = scrollTop;
+        });
+      }
+      this.lastPage = !response.data.meta.next_page;
+    },
     onGridReady(params) {
       this.gridApi = params.api;
       this.columnApi = params.columnApi;
-
-      this.fetchAndApplyTableState();
+      this.gridReady = true;
+      if (this.fetchedTableState) {
+        this.applyTableState(this.fetchedTableState);
+      }
     },
     onFirstDataRendered() {
       this.resize();
@@ -428,20 +459,23 @@ export default {
       this.perPage = value;
       this.page = 1;
       this.lastPage = false;
-      this.reloadTable();
+      this.reloadTable(false);
     },
     setPage(page) {
       this.page = page;
-      this.loadData();
+      this.loadData(false);
     },
     setOrder() {
       const orderState = this.getOrder(this.columnApi.getColumnState());
       const [order] = orderState;
       this.order = order;
       this.saveTableState();
-      this.reloadTable();
+      this.reloadTable(false);
     },
     saveTableState() {
+      if (this.initializing) {
+        return;
+      }
       const columnsState = this.columnApi ? this.columnApi.getColumnState() : this.tableState?.columnsState || [];
       const tableState = {
         columnsState,
@@ -456,8 +490,23 @@ export default {
       axios.put(this.userSettingsUrl, { settings: [settings] });
       this.tableState = tableState;
     },
-    setSelectedRows() {
-      this.selectedRows = this.gridApi.getSelectedRows();
+    restoreSelection() {
+      if (this.gridApi) {
+        this.gridApi.forEachNode((node) => {
+          if (this.selectedRows.find((row) => row.id === node.data.id)) {
+            node.setSelected(true);
+          }
+        });
+      }
+    },
+    setSelectedRows(e) {
+      if (!this.rowData.find((row) => row.id === e.data.id)) return;
+
+      if (e.node.isSelected()) {
+        this.selectedRows.push(e.data);
+      } else {
+        this.selectedRows = this.selectedRows.filter((row) => row.id !== e.data.id);
+      }
     },
     emitAction(action) {
       this.$emit(action.name, action, this.selectedRows);
@@ -484,19 +533,15 @@ export default {
     },
     hideColumn(column) {
       this.columnApi.setColumnVisible(column.field, false);
-      this.saveTableState();
     },
     showColumn(column) {
       this.columnApi.setColumnVisible(column.field, true);
-      this.saveTableState();
     },
     pinColumn(column) {
       this.columnApi.setColumnPinned(column.field, 'left');
-      this.saveTableState();
     },
     unPinColumn(column) {
       this.columnApi.setColumnPinned(column.field, null);
-      this.saveTableState();
     },
     reorderColumns(columns) {
       this.columnApi.moveColumns(columns, 1);
@@ -522,7 +567,17 @@ export default {
         dir
       };
       this.saveTableState();
-      this.reloadTable();
+      this.reloadTable(false);
+    },
+    onColumnMoved(event) {
+      if (event.finished) {
+        this.saveTableState();
+      }
+    },
+    onColumnResized(event) {
+      if (event.finished) {
+        this.saveTableState();
+      }
     }
   }
 };

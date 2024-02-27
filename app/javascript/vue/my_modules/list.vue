@@ -1,6 +1,6 @@
 <template>
   <DataTable
-    ref="table"
+    ref="list"
     :columnDefs="columnDefs"
     tableId="MyModuleList"
     :dataUrl="dataSource"
@@ -26,6 +26,7 @@
   <TagsModal v-if="tagsModalObject"
               :params="tagsModalObject"
               :tagsColors="tagsColors"
+              :projectName="projectName"
               :projectTagsUrl="projectTagsUrl"
               @close="updateTable" />
   <NewModal v-if="newModalOpen"
@@ -63,7 +64,7 @@ import MoveModal from './modals/move.vue';
 import AccessModal from '../shared/access_modal/modal.vue';
 
 export default {
-  name: 'ExperimentsList',
+  name: 'MyModulesList',
   components: {
     DataTable,
     ConfirmationModal,
@@ -88,7 +89,8 @@ export default {
     projectTagsUrl: { type: String, required: true },
     assignedUsersUrl: { type: String, required: true },
     usersFilterUrl: { type: String, required: true },
-    statusesList: { type: Array, required: true }
+    statusesList: { type: Array, required: true },
+    projectName: { type: String }
   },
   data() {
     return {
@@ -220,6 +222,9 @@ export default {
 
     this.columnDefs = columns;
     this.filters = filters;
+  },
+  mounted() {
+    window.myModulesList = this;
   },
   computed: {
     viewRenders() {

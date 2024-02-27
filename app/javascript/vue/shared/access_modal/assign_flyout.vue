@@ -34,7 +34,11 @@
             <div>
               <img :src="user.attributes.avatar_url" class="rounded-full w-8 h-8">
             </div>
-            <div>{{ user.attributes.name }}</div>
+            <div>
+              {{
+                `${user.attributes.name}${user.attributes.current_user ? ` (${i18n.t('access_permissions.you')})` : ''}`
+              }}
+            </div>
             <MenuDropdown
               class="ml-auto"
               :listItems="rolesFromatted"

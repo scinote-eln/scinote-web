@@ -1,10 +1,10 @@
 <div class="modal move-experiment-modal"
-     id="move-experiment-modal-<%=  @experiments.map(&:id) %>"
+     id="move-experiment-modal-<%= params[:ids] %>"
      tabindex="-1"
      role="dialog"
      aria-labelledby="move-experiment-modal-label">
      <%= form_with model: @experiment,
-                   url: move_experiment_path(id: @experiments.map(&:id)),
+                   url: move_experiments_path(ids: params[:ids]),
                    method: :post,
                    data: { remote: true },
                    html: { class: 'experiment-action-form' } do |f| %>
@@ -16,7 +16,7 @@
         </div>
         <div class="modal-body">
           <p><small><%= t("experiments.move.notice") %></small></p>
-          <% if @projects.any? && @experiments.all? { |experiment| can_manage_all_experiment_my_modules?(experiment) } %>
+          <% if @projects.any? && @experiments.all? { |experiment| can_move_experiment?(experiment) } %>
             <%= f.select :project_id, options_for_select(@projects.collect { |p| [ p.name, p.id ] }),
                         { label: t("experiments.move.target_project") }, { class: "form-control selectpicker", "data-role" => "clear" } %>
           <% else %>
@@ -24,14 +24,14 @@
               <i class="fas fa-exclamation-triangle"></i>
               <% if @projects.blank? %>
                 <%= t("experiments.move.no_projects") %>
-              <% elsif !@experiments.all? { |experiment| can_manage_all_experiment_my_modules?(experiment) }  %>
+              <% elsif !@experiments.all? { |experiment| can_move_experiment?(experiment) }  %>
                 <%= t("experiments.move.task_permission") %>
               <% end %>
             </div>
           <% end %>
         </div>
-        <% @experiments.each do |experiment| %>
-          <%= f.hidden_field :ids, multiple: true, value: experiment.id %>
+        <% params[:ids].each do |id| %>
+          <%= f.hidden_field :ids, multiple: true, value: id %>
         <% end %>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>

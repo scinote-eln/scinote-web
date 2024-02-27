@@ -25,12 +25,12 @@
          data-name-column-id="<%=  assigned_repository_simple_view_name_column_id(repository) %>"
     >
       <table class="table repository-table"
-             data-stock-management="<%= repository.has_stock_management? %>"
+             data-stock-management="<%= repository.has_stock_management? && repository.has_stock_consumption? %>"
              data-stock-consumption-editable="false">
         <thead>
           <tr>
             <th class="row-name"><%= t("repositories.table.row_name") %></th>
-            <% if repository.has_stock_management? %>
+            <% if repository.has_stock_management? && repository.has_stock_consumption? %>
               <th class="row-stock" data-columns-visible="false"><%= repository.repository_stock_column.name %></th>
               <th class="row-consumption" data-columns-visible="false"><%= t("repositories.table.row_consumption") %></th>
             <% end %>

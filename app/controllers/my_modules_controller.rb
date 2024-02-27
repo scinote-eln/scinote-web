@@ -38,6 +38,7 @@ class MyModulesController < ApplicationController
                meta: pagination_dict(my_modules)
       end
       format.html do
+        save_view_type('table')
         render 'my_modules/index'
       end
     end
@@ -91,9 +92,16 @@ class MyModulesController < ApplicationController
   end
 
   def show
-    render json: {
-      html: render_to_string(partial: 'show')
-    }
+    respond_to do |format|
+      format.html do
+        render json: {
+          html: render_to_string(partial: 'show')
+        }
+      end
+      format.json do
+        render json: @my_module, serializer: Lists::MyModuleSerializer, user: current_user
+      end
+    end
   end
 
   # Description modal window in full-zoom canvas
@@ -571,6 +579,12 @@ class MyModulesController < ApplicationController
     users.each do |user|
       log_activity(:designate_user_to_my_module, @my_module, { user_target: user.id })
     end
+  end
+
+  def save_view_type(view_type)
+    view_state = @experiment.current_view_state(current_user)
+    view_state.state['my_modules']['view_type'] = view_type
+    view_state.save!
   end
 
   def log_activity(type_of, my_module = nil, message_items = {})

@@ -4,7 +4,7 @@
   }
 
   .btn {
-    @apply relative inline-flex items-center text-sm shrink-0 gap-2 justify-center leading-[22px] py-2 px-4 rounded border border-solid appearance-none whitespace-nowrap cursor-pointer max-h-[40px] focus:outline-none;
+    @apply relative inline-flex items-center text-sm shrink-0 gap-2 justify-center px-4 rounded border border-solid appearance-none whitespace-nowrap cursor-pointer h-[40px] focus:outline-none;
     border-color: transparent;
   }
 
@@ -13,7 +13,7 @@
   }
 
   .btn.btn-lg {
-    @apply py-2.5 px-[1.125rem] text-base leading-5 h-[44px];
+    @apply px-[1.125rem] text-base h-[44px];
   }
 
   .btn.btn-lg.icon-btn {
@@ -21,7 +21,7 @@
   }
 
   .btn.btn-sm {
-    @apply py-1.5 px-2.5 text-xs leading-5 h-[36px];
+    @apply px-2.5 text-xs h-[36px];
   }
 
   .btn.btn-sm.icon-btn {
@@ -29,7 +29,7 @@
   }
 
   .btn.btn-xs {
-    @apply py-0.5 px-2.5 text-xs leading-5 h-[30px];
+    @apply px-2.5 text-xs h-[30px];
   }
 
   .btn.btn-xs.icon-btn {
