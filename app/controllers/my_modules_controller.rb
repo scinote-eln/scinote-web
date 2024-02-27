@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MyModulesController < ApplicationController
   include TeamsHelper
   include ActionView::Helpers::TextHelper
@@ -121,8 +123,16 @@ class MyModulesController < ApplicationController
     if @my_module.last_transition_error && @my_module.last_transition_error['type'] == 'repository_snapshot'
       flash[:repository_snapshot_error] = @my_module.last_transition_error
     end
+    response = { status_changing: @my_module.status_changing? }
+    unless @my_module.status_changing?
+      response[:html] = render_to_string(
+        partial: 'my_modules/status_flow/task_flow_button',
+        locals: { my_module: @my_module },
+        formats: :html
+      )
+    end
 
-    render json: { status_changing: @my_module.status_changing? }
+    render json: response
   end
 
   def canvas_dropdown_menu
@@ -379,6 +389,7 @@ class MyModulesController < ApplicationController
 
       render json: {
         status: :changed,
+        status_changing: @my_module.status_changing?,
         html: render_to_string(
           partial: 'my_modules/status_flow/task_flow_button',
           locals: { my_module: @my_module },
