@@ -2990,6 +2990,18 @@ en:
     draft: "Draft"
     draft_name: "(Draft) %{name}"
     no_text_placeholder: 'No protocol description'
+    table:
+      filters:
+        label_name_and_keywords: 'Name and keywords'
+        published_on: 'Published on'
+        modified_on: 'Modified on'
+        has_draft: 'Has draft'
+        published_by:
+          label: 'Published by'
+          placeholder: 'Select a publisher'
+        members:
+          label: 'Access'
+          placeholder: 'Select who has access'
     reorder_steps:
         button: "Rearrange steps"
         modal:
@@ -4101,7 +4113,6 @@ en:
     title: "Filters"
     text:
       label: "Contains text"
-      label_name_and_keywords: "Name and keywords"
       placeholder: "Enter search terms..."
     from_placeholder: "From"
     to_placeholder: "To"

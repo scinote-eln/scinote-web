@@ -66,14 +66,53 @@ module Lists
     end
 
     def filter_records
-      return if @params[:search].blank?
+      if @params[:search].present?
+        @records = @records.where(
+          "LOWER(\"protocols\".\"name\") LIKE :search OR
+          LOWER(\"protocol_keywords\".\"name\") LIKE :search OR
+          LOWER(#{PREFIXED_ID_SQL}) LIKE :search",
+          search: "%#{@params[:search].to_s.downcase}%"
+        )
+      end
 
-      @records = @records.where(
-        "LOWER(\"protocols\".\"name\") LIKE :search OR
-         LOWER(\"protocol_keywords\".\"name\") LIKE :search OR
-         LOWER(#{PREFIXED_ID_SQL}) LIKE :search",
-        search: "%#{@params[:search].to_s.downcase}%"
-      )
+      if @filters[:name_and_keywords].present?
+        @records = @records.where_attributes_like(['protocols.name', 'protocol_keywords.name'],
+                                                  @filters[:name_and_keywords])
+      end
+
+      if @filters[:published_on_from].present?
+        @records = @records.where('protocols.published_on > ?', @filters[:published_on_from])
+      end
+
+      if @filters[:published_on_to].present?
+        @records = @records.where('protocols.published_on < ?', @filters[:published_on_to])
+      end
+
+      if @filters[:modified_on_from].present?
+        @records = @records.where('protocols.updated_at > ?', @filters[:modified_on_from])
+      end
+
+      if @filters[:modified_on_to].present?
+        @records = @records.where('protocols.updated_at < ?', @filters[:modified_on_to])
+      end
+
+      if @filters[:published_by].present?
+        @records = @records.where(protocols: { published_by_id: @filters[:published_by].values })
+      end
+
+      if @filters[:members].present?
+        @records = @records.where(all_user_assignments: { user_id: @filters[:members].values })
+      end
+
+      if @filters[:has_draft].present?
+        @records =
+          @records
+          .joins("LEFT OUTER JOIN protocols protocol_drafts " \
+                 "ON protocol_drafts.protocol_type = #{Protocol.protocol_types[:in_repository_draft]} " \
+                 "AND (protocol_drafts.parent_id = protocols.id OR protocol_drafts.parent_id = protocols.parent_id)")
+          .where('protocols.protocol_type = ? OR protocol_drafts.id IS NOT NULL',
+                 Protocol.protocol_types[:in_repository_draft])
+      end
     end
 
     def sortable_columns

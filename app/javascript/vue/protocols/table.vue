@@ -9,6 +9,7 @@
                :activePageUrl="activePageUrl"
                :archivedPageUrl="archivedPageUrl"
                :actionsUrl="actionsUrl"
+               :filters="filters"
                @create="create"
                @archive="archive"
                @restore="restore"
@@ -91,6 +92,10 @@ export default {
       required: true
     },
     userRolesUrl: {
+      type: String,
+      required: true
+    },
+    usersFilterUrl: {
       type: String,
       required: true
     }
@@ -221,6 +226,48 @@ export default {
         left,
         right: []
       };
+    },
+    filters() {
+      return [
+        {
+          key: 'name_and_keywords',
+          type: 'Text',
+          label: this.i18n.t('protocols.table.filters.label_name_and_keywords')
+        },
+        {
+          key: 'published_on',
+          type: 'DateRange',
+          label: this.i18n.t('protocols.table.filters.published_on')
+        },
+        {
+          key: 'modified_on',
+          type: 'DateRange',
+          label: this.i18n.t('protocols.table.filters.modified_on')
+        },
+        {
+          key: 'published_by',
+          type: 'Select',
+          optionsUrl: this.usersFilterUrl,
+          optionRenderer: this.usersFilterRenderer,
+          labelRenderer: this.usersFilterRenderer,
+          label: this.i18n.t('protocols.table.filters.published_by.label'),
+          placeholder: this.i18n.t('protocols.table.filters.published_by.placeholder')
+        },
+        {
+          key: 'members',
+          type: 'Select',
+          optionsUrl: this.usersFilterUrl,
+          optionRenderer: this.usersFilterRenderer,
+          labelRenderer: this.usersFilterRenderer,
+          label: this.i18n.t('protocols.table.filters.members.label'),
+          placeholder: this.i18n.t('protocols.table.filters.members.placeholder')
+        },
+        {
+          key: 'has_draft',
+          type: 'Checkbox',
+          label: this.i18n.t('protocols.table.filters.has_draft')
+        }
+      ];
     }
   },
   methods: {
@@ -291,6 +338,12 @@ export default {
         return `<a href="${urls.show}">${name}</a>`;
       }
       return `<span class="text-sn-grey">${name}</span>`;
+    },
+    usersFilterRenderer(option) {
+      return `<div class="flex items-center gap-2">
+                <img src="${option[2].avatar_url}" class="rounded-full w-6 h-6" />
+                <span>${option[1]}</span>
+              </div>`;
     }
   }
 };
