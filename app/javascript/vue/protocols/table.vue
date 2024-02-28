@@ -119,7 +119,7 @@ export default {
         sortable: true
       },
       {
-        field: 'versions',
+        field: 'has_draft',
         headerName: this.i18n.t('protocols.index.thead.versions'),
         sortable: true,
         cellRenderer: 'VersionsRenderer',
