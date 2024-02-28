@@ -28,12 +28,15 @@
         <div v-for="user in allUsers"
             :key="user.value"
             @click="selectUser(user)"
-            :class="{ '!bg-sn-super-light-blue': selectedUsers.includes(user.value) }"
+            :class="{
+              '!bg-sn-super-light-blue': selectedUsers.includes(user.value),
+              'cursor-pointer hover:bg-sn-super-light-grey': canManage
+            }"
             class="whitespace-nowrap rounded px-3 py-2.5 flex items-center gap-2
-                    hover:no-underline cursor-pointer hover:bg-sn-super-light-grey leading-5"
+                    hover:no-underline leading-5"
           >
             <div class="sci-checkbox-container">
-              <input type="checkbox" class="sci-checkbox" :checked="selectedUsers.includes(user.value)" />
+              <input type="checkbox" class="sci-checkbox" :disabled="!canManage" :checked="selectedUsers.includes(user.value)" />
               <label class="sci-checkbox-label"></label>
             </div>
             <img :src="user.params.avatar_url" class="w-7 h-7" />
@@ -62,6 +65,9 @@ export default {
   computed: {
     users() {
       return this.params.data.designated_users;
+    },
+    canManage() {
+      return this.params.data.permissions.manage_designated_users;
     },
     visibleUsers() {
       return this.users.slice(0, 4);
@@ -104,6 +110,10 @@ export default {
       }
     },
     selectUser(user) {
+      if (!this.canManage) {
+        return;
+      }
+
       this.changed = true;
 
       if (this.selectedUsers.includes(user.value)) {

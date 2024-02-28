@@ -3,7 +3,7 @@
     <div class="w-9 h-9">
       <div class="w-9 h-9 cursor-pointer flex items-center justify-center"
            @click="$emit('setPage', currentPage - 1)"
-           v-if="totalPage > 5 && currentPage > 1">
+           v-if="currentPage > 1">
         <i class="sn-icon sn-icon-left cursor-pointer"></i>
       </div>
     </div>
@@ -17,7 +17,7 @@
     <div class="w-9 h-9">
       <div class="w-9 h-9 cursor-pointer flex items-center justify-center"
            @click="$emit('setPage', currentPage + 1)"
-           v-if="totalPage - currentPage > 2 && totalPage > 5">
+           v-if="totalPage > currentPage">
         <i class="sn-icon sn-icon-right cursor-pointer"></i>
       </div>
     </div>
