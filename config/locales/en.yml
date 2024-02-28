@@ -573,6 +573,8 @@ en:
         users: "Access"
         name: "Project name"
         archived_date: "Archived on"
+        comments: 'Comments'
+        updated_at: 'Updated on'
       end_of_list_placeholder: 'You’ve reached the end of the list'
       folder:
         description: "%{projects_count} projects | %{folders_count} folders"

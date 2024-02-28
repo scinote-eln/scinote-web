@@ -119,6 +119,10 @@ module Lists
         @records = @records.sort_by { |project| project.users.count }
       when 'users_DESC'
         @records = @records.sort_by { |project| project.users.count }.reverse!
+      when 'updated_at_ASC'
+        @records = @records.sort_by(&:updated_at).reverse!
+      when 'updated_at_DESC'
+        @records = @records.sort_by(&:updated_at)
       end
     end
 
