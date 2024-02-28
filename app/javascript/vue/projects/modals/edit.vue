@@ -63,7 +63,7 @@ export default {
   data() {
     return {
       name: this.project.name,
-      visible: this.project.visible,
+      visible: !this.project.hidden,
       defaultRole: this.project.default_public_user_role_id,
       error: null,
     };
