@@ -102,7 +102,7 @@ class ProtocolsController < ApplicationController
 
     @published_versions = @protocol.published_versions_with_original.order(version_number: :desc)
 
-    if @protocol.draft.present?
+    if @protocol.draft.present? || @protocol.initial_draft?
       draft = @protocol.initial_draft? ? @protocol : @protocol.draft
       draft_hash = ProtocolDraftSerializer.new(draft, scope: current_user).as_json
     end
