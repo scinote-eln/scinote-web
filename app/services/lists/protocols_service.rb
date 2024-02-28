@@ -87,7 +87,7 @@ module Lists
         assigned_users: 'nr_of_assigned_users',
         published_by: 'full_username_str',
         published_on: 'published_on',
-        udpated_at: 'updated_at',
+        updated_at: 'updated_at',
         archived_by: 'archived_full_username_str',
         archived_on: 'archived_on'
       }

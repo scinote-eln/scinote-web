@@ -56,7 +56,7 @@
            :class="{'w-48': showSearch, 'w-11': !showSearch}">
         <input
           ref="searchInput"
-          class="sci-input-field !pr-8"
+          class="sci-input-field !pr-9"
           type="text"
           @focus="openSearch"
           @blur="hideSearch"

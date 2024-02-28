@@ -290,7 +290,6 @@ export default {
     this.fetchTableState();
   },
   mounted() {
-    this.loadData();
     window.addEventListener('resize', this.resize);
   },
   beforeDestroy() {
@@ -338,6 +337,8 @@ export default {
             this.initializing = false;
             this.gridApi.sizeColumnsToFit();
           }
+
+          this.loadData();
         });
     },
     applyTableState(state) {
