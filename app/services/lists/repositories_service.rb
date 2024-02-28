@@ -5,15 +5,11 @@ module Lists
     private
 
     def fetch_records
-      @records = @raw_data.joins(
-        'LEFT OUTER JOIN users AS creators ' \
-        'ON repositories.created_by_id = creators.id'
-      )
-                          .joins(
-                            'LEFT OUTER JOIN users AS archivers ' \
-                            'ON repositories.archived_by_id = archivers.id'
-                          )
-                          .joins(:repository_rows)
+      @records = @raw_data.joins('LEFT OUTER JOIN users AS creators ' \
+                                 'ON repositories.created_by_id = creators.id')
+                          .joins('LEFT OUTER JOIN users AS archivers ' \
+                                 'ON repositories.archived_by_id = archivers.id')
+                          .left_outer_joins(:repository_rows)
                           .joins(:team)
                           .select('repositories.*')
                           .select('MAX(teams.name) AS team_name')
