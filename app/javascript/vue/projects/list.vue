@@ -245,7 +245,7 @@ export default {
               </a>`;
     },
     openComments(_params, rows) {
-      this.$refs.commentButton.dataset.objectId = rows[0].id;
+      $(this.$refs.commentButton).data('objectId', rows[0].id);
       this.$refs.commentButton.click();
     },
     access(event, rows) {

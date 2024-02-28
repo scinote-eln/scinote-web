@@ -206,7 +206,7 @@ export default {
         suppressCellFocus: true,
         rowHeight: 40,
         headerHeight: 40,
-        getRowId: (params) => `e2e-TB-row-${params.data.id}`
+        getRowId: (params) => `e2e-TB-row-${params.data.code || params.data.id}`
       };
     },
     extendedColumnDefs() {
@@ -359,7 +359,9 @@ export default {
         state: this.tableState.columnsState,
         applyOrder: true
       });
+
       setTimeout(() => {
+        this.gridApi.refreshHeader();
         this.initializing = false;
       }, 200);
     },
