@@ -240,8 +240,9 @@ export default {
     duplicate(_e, experiment) {
       [this.duplicateModalObject] = experiment;
     },
-    move(_e, experiment) {
-      [this.moveModalObject] = experiment;
+    move(_e, rows) {
+      [this.moveModalObject] = rows;
+      this.moveModalObject.experimentIds = rows.map((exp) => exp.id);
     },
     edit(_e, experiment) {
       [this.editModalObject] = experiment;
