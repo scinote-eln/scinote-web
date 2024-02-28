@@ -5,7 +5,7 @@ module Lists
     include Canaid::Helpers::PermissionsHelper
     include Rails.application.routes.url_helpers
 
-    attributes :name, :code, :keywords, :linked_tasks, :nr_of_versions, :assigned_users, :published_by,
+    attributes :name, :original_code, :keywords, :linked_tasks, :nr_of_versions, :assigned_users, :published_by,
                :published_on, :updated_at, :archived_by, :archived_on, :urls, :default_public_user_role_id,
                :hidden, :top_level_assignable, :has_draft, :team
 
@@ -86,8 +86,8 @@ module Lists
       end
 
       if has_draft
-        object.initial_draft? ? object : object.draft
-        urls_list[:show_draft] = protocol_path(object)
+        draft = object.initial_draft? ? object : object.draft || object.parent.draft
+        urls_list[:show_draft] = protocol_path(draft)
       end
 
       if can_manage_protocol_users?(object)
