@@ -30,7 +30,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button type="button" :disabled="!validName" class="btn btn-primary">
+            <button type="submit" :disabled="!validName" class="btn btn-primary">
               {{ i18n.t('experiments.edit.modal_create') }}
             </button>
           </div>
