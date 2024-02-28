@@ -36,6 +36,7 @@
           :docx-parser-enabled="<%= Protocol.docx_parser_enabled? %>"
           user-roles-url="<%= user_roles_projects_path %>"
           :create-url="'<%= protocols_path if can_create_protocols_in_repository?(current_team) %>'"
+          users-filter-url="<%= users_filter_projects_path %>"
         />
       </div>
     </div>
