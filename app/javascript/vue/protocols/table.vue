@@ -114,7 +114,7 @@ export default {
         cellRenderer: this.nameRenderer
       },
       {
-        field: 'code',
+        field: 'original_code',
         headerName: this.i18n.t('protocols.index.thead.id'),
         sortable: true
       },
