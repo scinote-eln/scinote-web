@@ -32,7 +32,7 @@
                   :value="operation"
                   :options="operations"
                   @change="setOperation"
-                ></SelectDropdown>
+                />
               </div>
               <div class="flex flex-col w-40">
                 <Input
@@ -63,7 +63,7 @@
                   :placeholder="i18n.t('repository_stock_values.manage_modal.unit_prompt')"
                   @change="unit = $event"
                   :className="`${errors.unit ? 'error' : ''}`"
-                ></SelectDropdown>
+                />
                 <div class="text-sn-delete-red text-xs" :class="{ visible: errors.unit, invisible: !errors.unit }">
                   {{ errors.unit }}
                 </div>
@@ -141,13 +141,13 @@
 
 <script>
 import Decimal from 'decimal.js';
-import Select from '../shared/legacy/select.vue';
 import Input from '../shared/legacy/input.vue';
+import SelectDropdown from '../shared/select_dropdown.vue';
 
 export default {
   name: 'ManageStockValueModal',
   components: {
-    Select,
+    SelectDropdown,
     Input
   },
   data() {
