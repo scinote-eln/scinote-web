@@ -130,7 +130,7 @@
           <button type='button' class='btn btn-secondary' data-dismiss='modal'>
             {{ i18n.t('general.cancel') }}
           </button>
-          <button class="btn btn-primary" @click="validateAndsaveStockValue">
+          <button class="btn btn-primary" @click="validateAndsaveStockValue" :disabled="isSaving">
             {{ i18n.t('repository_stock_values.manage_modal.save_stock') }}
           </button>
         </div>
@@ -161,6 +161,7 @@ export default {
       units: null,
       unit: null,
       reminderEnabled: false,
+      isSaving: false,
       lowStockTreshold: null,
       comment: null,
       errors: {}
@@ -263,6 +264,7 @@ export default {
       this.errors = newErrors;
 
       if (!$.isEmptyObject(newErrors)) return;
+      this.isSaving = true;
 
       const $this = this;
       $.ajax({
@@ -282,6 +284,7 @@ export default {
         },
         success: (result) => {
           $this.stockValue = null;
+          $this.isSaving = false;
           $this.closeModal();
           $this.closeCallback && $this.closeCallback(result);
         }
