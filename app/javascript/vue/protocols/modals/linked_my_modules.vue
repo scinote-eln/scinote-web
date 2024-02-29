@@ -35,6 +35,14 @@
               </a>
             </div>
           </div>
+          <div class="flex mt-4">
+            <Pagination
+              v-if="totalPage"
+              :totalPage="totalPage"
+              :currentPage="page"
+              @setPage="setPage"
+            ></Pagination>
+          </div>
         </div>
         <div class="modal-footer items-center">
           {{ i18n.t("protocols.index.linked_children.show_version") }}
@@ -57,6 +65,7 @@
 import SelectDropdown from '../../shared/select_dropdown.vue';
 import axios from '../../../packs/custom_axios.js';
 import modalMixin from '../../shared/modal_mixin';
+import Pagination from '../../shared/datatable/pagination.vue';
 
 export default {
   name: 'NewProtocolModal',
@@ -65,13 +74,16 @@ export default {
   },
   mixins: [modalMixin],
   components: {
-    SelectDropdown
+    SelectDropdown,
+    Pagination
   },
   data() {
     return {
       linkedMyModules: [],
       versionsList: [],
-      selectedVersion: 'All'
+      selectedVersion: 'All',
+      page: 1,
+      totalPage: null
     };
   },
   mounted() {
@@ -80,13 +92,14 @@ export default {
   },
   methods: {
     loadLinkedMyModules() {
-      const urlParams = {};
+      const urlParams = { page: this.page };
       if (this.selectedVersion !== 'All') {
         urlParams.version = this.selectedVersion;
       }
       axios.get(this.protocol.urls.linked_my_modules, { params: urlParams })
         .then((response) => {
-          this.linkedMyModules = response.data;
+          this.linkedMyModules = response.data.data;
+          this.totalPage = response.data.total_pages;
         });
     },
     loadVersions() {
@@ -97,6 +110,11 @@ export default {
     },
     changeSelectedVersion(version) {
       this.selectedVersion = version;
+      this.page = 1;
+      this.loadLinkedMyModules();
+    },
+    setPage(page) {
+      this.page = page;
       this.loadLinkedMyModules();
     }
   }
