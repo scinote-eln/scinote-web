@@ -145,7 +145,8 @@ export default {
       {
         field: 'team',
         headerName: this.i18n.t('libraries.index.table.ownership'),
-        sortable: true
+        sortable: true,
+        cellRenderer: ({ data: { team } }) => `<span title="${team}">${team}</span>`
       },
       {
         field: 'created_at',
@@ -155,7 +156,8 @@ export default {
       {
         field: 'created_by',
         headerName: this.i18n.t('libraries.index.table.added_by'),
-        sortable: true
+        sortable: true,
+        cellRenderer: ({ data: { created_by: createdBy } }) => `<span title="${createdBy}">${createdBy}</span>`
       }];
 
       if (this.currentViewMode === 'archived') {
@@ -167,7 +169,8 @@ export default {
         columns.push({
           field: 'archived_by',
           headerName: this.i18n.t('libraries.index.table.archived_by'),
-          sortable: true
+          sortable: true,
+          cellRenderer: ({ data: { archived_by: archivedBy } }) => `<span title="${archivedBy}">${archivedBy}</span>`
         });
       }
 
@@ -297,7 +300,8 @@ export default {
       if (shared || ishared) {
         sharedIcon = '<i class="fas fa-users"></i>';
       }
-      return `<a class="hover:no-underline flex items-center gap-1" href="${urls.show}">${sharedIcon}${name}</a>`;
+      return `<a class="hover:no-underline flex items-center gap-1"
+                 title="${name}" href="${urls.show}">${sharedIcon}${name}</a>`;
     }
   }
 };

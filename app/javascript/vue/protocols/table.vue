@@ -154,7 +154,8 @@ export default {
       {
         field: 'published_by',
         headerName: this.i18n.t('protocols.index.thead.published_by'),
-        sortable: true
+        sortable: true,
+        cellRenderer: ({ data: { published_by: publishedBy } }) => `<span title="${publishedBy || ''}">${publishedBy || ''}</span>`
       },
       {
         field: 'published_on',
@@ -171,7 +172,8 @@ export default {
         columns.push({
           field: 'archived_by',
           headerName: this.i18n.t('protocols.index.thead.archived_by'),
-          sortable: true
+          sortable: true,
+          cellRenderer: ({ data: { archived_by: archivedBy } }) => `<span title="${archivedBy || ''}">${archivedBy || ''}</span>`
         });
         columns.push({
           field: 'archived_on',
@@ -335,9 +337,9 @@ export default {
     nameRenderer(params) {
       const { urls, name } = params.data;
       if (urls.show) {
-        return `<a href="${urls.show}">${name}</a>`;
+        return `<a href="${urls.show}" title="${name}">${name}</a>`;
       }
-      return `<span class="text-sn-grey">${name}</span>`;
+      return `<span class="text-sn-grey" title="${name}">${name}</span>`;
     },
     usersFilterRenderer(option) {
       return `<div class="flex items-center gap-2">

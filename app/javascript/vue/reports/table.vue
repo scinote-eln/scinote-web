@@ -83,11 +83,13 @@ export default {
         {
           field: 'project_name',
           headerName: this.i18n.t('projects.reports.index.thead_project_name'),
-          sortable: true
+          sortable: true,
+          cellRenderer: ({ data: { project_name: projectName } }) => `<span title="${projectName}">${projectName}</span>`
         }, {
           field: 'name',
           headerName: this.i18n.t('projects.reports.index.thead_name'),
-          sortable: true
+          sortable: true,
+          cellRenderer: ({ data: { name } }) => `<span title="${name}">${name}</span>`
         }, {
           field: 'code',
           headerName: this.i18n.t('projects.reports.index.thead_id'),
@@ -105,11 +107,13 @@ export default {
         }, {
           field: 'created_by_name',
           headerName: this.i18n.t('projects.reports.index.thead_created_by'),
-          sortable: true
+          sortable: true,
+          cellRenderer: ({ data: { created_by_name: createdByName } }) => `<span title="${createdByName}">${createdByName}</span>`
         }, {
           field: 'modified_by_name',
           headerName: this.i18n.t('projects.reports.index.thead_last_modified_by'),
-          sortable: true
+          sortable: true,
+          cellRenderer: ({ data: { modified_by_name: modifiedByName } }) => `<span title="${modifiedByName}">${modifiedByName}</span>`
         }, {
           field: 'created_at',
           headerName: this.i18n.t('projects.reports.index.thead_created_at'),
