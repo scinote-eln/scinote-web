@@ -67,6 +67,7 @@ import axios from '../../packs/custom_axios.js';
 
 import DataTable from '../shared/datatable/table.vue';
 import UsersRenderer from './renderers/users.vue';
+import CommentsRenderer from '../shared/datatable/renderers/comments.vue';
 import ProjectCard from './card.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
 import EditProjectModal from './modals/edit.vue';
@@ -137,11 +138,23 @@ export default {
         sortable: true
       },
       {
+        field: 'updated_at',
+        headerName: this.i18n.t('projects.index.card.updated_at'),
+        sortable: true
+      },
+      {
         field: 'users',
         headerName: this.i18n.t('projects.index.card.users'),
         cellRenderer: 'UsersRenderer',
         sortable: false,
         minWidth: 210,
+        notSelectable: true
+      },
+      {
+        field: 'comments',
+        headerName: this.i18n.t('projects.index.card.comments'),
+        sortable: false,
+        cellRenderer: CommentsRenderer,
         notSelectable: true
       }];
 

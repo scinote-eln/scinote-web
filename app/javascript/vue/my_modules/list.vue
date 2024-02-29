@@ -57,7 +57,7 @@ import DueDateRenderer from './renderers/due_date.vue';
 import DesignatedUsers from './renderers/designated_users.vue';
 import TagsModal from './modals/tags.vue';
 import TagsRenderer from './renderers/tags.vue';
-import CommentsRenderer from './renderers/comments.vue';
+import CommentsRenderer from '../shared/datatable/renderers/comments.vue';
 import NewModal from './modals/new.vue';
 import EditModal from './modals/edit.vue';
 import MoveModal from './modals/move.vue';

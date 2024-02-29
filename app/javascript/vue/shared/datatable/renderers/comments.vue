@@ -1,9 +1,9 @@
 <template>
-  <span v-if="!params.data.permissions.create_comments">0</span>
+  <span v-if="!params.data.permissions.create_comments && params.data.comments.count === 0">0</span>
   <a v-else
      href="#"
      class="open-comments-sidebar" tabindex=0 :id="'comment-count-' + params.data.id"
-     data-object-type="MyModule" :data-object-id="params.data.id">
+     :data-object-type="objectType" :data-object-id="params.data.id">
     <template v-if="params.data.comments.count > 0">
       {{ params.data.comments.count }}
     </template>
@@ -24,6 +24,18 @@ export default {
   props: {
     params: {
       required: true
+    }
+  },
+  computed: {
+    objectType() {
+      switch (this.params.data.type) {
+        case 'my_modules':
+          return 'MyModule';
+        case 'projects':
+          return 'Project';
+        default:
+          return '';
+      }
     }
   },
   methods: {
