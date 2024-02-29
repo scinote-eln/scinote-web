@@ -54,9 +54,8 @@ export default {
   methods: {
     async submit() {
       this.disableSubmit = true;
-      await axios.post(this.experiment.urls.move, {
-        project_id: this.targetProject,
-        ids: this.experiment.experimentIds
+      await axios.post(this.experiment.movePath, {
+        project_id: this.targetProject
       }).then((response) => {
         this.$emit('move');
         window.location.replace(response.data.path);

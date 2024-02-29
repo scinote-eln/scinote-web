@@ -69,7 +69,6 @@ module Lists
         actions: actions_toolbar_experiments_path(items: [{ id: object.id }].to_json),
         projects_to_clone: projects_to_clone_experiment_path(object),
         projects_to_move: projects_to_move_experiment_path(object),
-        move: move_experiments_path,
         clone: clone_experiment_path(object),
         update: experiment_path(object),
         show_access: access_permissions_experiment_path(object),
