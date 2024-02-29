@@ -81,7 +81,7 @@ export default {
         this.error = null;
         this.$emit('create');
       }).catch((error) => {
-        this.error = error.response.data.name;
+        this.error = error.response.data.error;
       });
     },
     changeRole(role) {

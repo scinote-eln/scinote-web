@@ -13,7 +13,7 @@
           </div>
           <div class="modal-body">
             <label class="sci-label">{{ i18n.t('experiments.new.name') }}</label>
-            <div  class="sci-input-container-v2 mb-4">
+            <div class="sci-input-container-v2 mb-6" :class="{'error': error}" :data-error="error">
               <input type="text" class="sci-input-field"
                      v-model="name"
                      autofocus ref="input"
@@ -54,6 +54,7 @@ export default {
     return {
       name: '',
       description: '',
+      error: null
     };
   },
   computed: {
@@ -76,7 +77,7 @@ export default {
         this.$emit('create');
         window.location.replace(response.data.path);
       }).catch((error) => {
-        HelperModule.flashAlertMsg(error.response.data.message, 'danger');
+        this.error = error.response.data.name[0];
       });
     },
   },
