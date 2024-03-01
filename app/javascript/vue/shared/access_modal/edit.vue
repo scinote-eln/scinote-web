@@ -31,10 +31,13 @@
         <div>
           <img :src="userAssignment.attributes.user.avatar_url" class="rounded-full w-8 h-8">
         </div>
-        <div>
-          <div>{{ userAssignment.attributes.user.name }}</div>
-          <div class="text-xs text-sn-grey">{{ userAssignment.attributes.inherit_message }}</div>
+        <div class="truncate"
+             :title="userAssignment.attributes.user.name"
+        >{{ userAssignment.attributes.user.name }}</div>
+        <div v-if="userAssignment.attributes.current_user" class="text-nowrap">
+          {{ `(${i18n.t('access_permissions.you')})` }}
         </div>
+        <div class="text-xs text-sn-grey text-nowrap">{{ userAssignment.attributes.inherit_message }}</div>
         <MenuDropdown
           v-if="!userAssignment.attributes.last_owner && params.object.urls.update_access"
           class="ml-auto"

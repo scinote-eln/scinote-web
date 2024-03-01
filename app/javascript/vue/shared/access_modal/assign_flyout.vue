@@ -3,7 +3,7 @@
     <div class="sci-label mb-2">
       {{ i18n.t('access_permissions.partials.new_assignments_form.grant_access') }}
     </div>
-    <GeneralDropdown @open="$emit('assigningNewUsers', true)" @close="$emit('assigningNewUsers', false)" :fieldOnlyOpen="true">
+    <GeneralDropdown @open="$emit('assigningNewUsers', true)" @close="$emit('assigningNewUsers', false)" :fieldOnlyOpen="true" :fixed-width="true">
       <template v-slot:field>
         <div class="sci-input-container-v2 left-icon">
           <input type="text" v-model="query" class="sci-input-field"
@@ -31,14 +31,13 @@
           ></MenuDropdown>
         </div>
         <perfect-scrollbar class="h-80 relative">
-          <div v-for="user in filteredUsers" :key="user.id" class="py-2 flex items-center gap-2">
+          <div v-for="user in filteredUsers" :key="user.id" class="py-2 flex items-center w-full">
             <div>
               <img :src="user.attributes.avatar_url" class="rounded-full w-8 h-8">
             </div>
-            <div>
-              {{
-                `${user.attributes.name}${user.attributes.current_user ? ` (${i18n.t('access_permissions.you')})` : ''}`
-              }}
+            <div class="truncate ml-2" :title="user.attributes.name">{{ user.attributes.name }}</div>
+            <div v-if="user.attributes.current_user" class="text-nowrap">
+              {{ `(${i18n.t('access_permissions.you')})` }}
             </div>
             <MenuDropdown
               class="ml-auto"
