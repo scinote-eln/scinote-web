@@ -35,7 +35,7 @@
 import axios from '../../../packs/custom_axios.js';
 
 export default {
-  name: 'DocxRenderer',
+  name: 'PdfRenderer',
   props: {
     params: {
       required: true
