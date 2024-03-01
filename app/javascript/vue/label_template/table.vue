@@ -82,7 +82,6 @@ export default {
           field: 'modified_by',
           headerName: this.i18n.t('label_templates.index.updated_by'),
           sortable: true,
-          cellRenderer: ({ data: { modified_by: modifiedBy } }) => `<span title="${modifiedBy}">${modifiedBy}</span>`
         }, {
           field: 'updated_at',
           headerName: this.i18n.t('label_templates.index.updated_at'),
@@ -91,7 +90,6 @@ export default {
           field: 'created_by',
           headerName: this.i18n.t('label_templates.index.created_by'),
           sortable: true,
-          cellRenderer: ({ data: { created_by: createdBy } }) => `<span title="${createdBy}">${createdBy}</span>`
         }, {
           field: 'created_at',
           headerName: this.i18n.t('label_templates.index.created_at'),

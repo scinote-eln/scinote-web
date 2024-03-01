@@ -154,8 +154,7 @@ export default {
       {
         field: 'published_by',
         headerName: this.i18n.t('protocols.index.thead.published_by'),
-        sortable: true,
-        cellRenderer: ({ data: { published_by: publishedBy } }) => `<span title="${publishedBy || ''}">${publishedBy || ''}</span>`
+        sortable: true
       },
       {
         field: 'published_on',
@@ -172,8 +171,7 @@ export default {
         columns.push({
           field: 'archived_by',
           headerName: this.i18n.t('protocols.index.thead.archived_by'),
-          sortable: true,
-          cellRenderer: ({ data: { archived_by: archivedBy } }) => `<span title="${archivedBy || ''}">${archivedBy || ''}</span>`
+          sortable: true
         });
         columns.push({
           field: 'archived_on',

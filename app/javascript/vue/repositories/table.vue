@@ -145,8 +145,7 @@ export default {
       {
         field: 'team',
         headerName: this.i18n.t('libraries.index.table.ownership'),
-        sortable: true,
-        cellRenderer: ({ data: { team } }) => `<span title="${team}">${team}</span>`
+        sortable: true
       },
       {
         field: 'created_at',
@@ -156,8 +155,7 @@ export default {
       {
         field: 'created_by',
         headerName: this.i18n.t('libraries.index.table.added_by'),
-        sortable: true,
-        cellRenderer: ({ data: { created_by: createdBy } }) => `<span title="${createdBy}">${createdBy}</span>`
+        sortable: true
       }];
 
       if (this.currentViewMode === 'archived') {
@@ -169,8 +167,7 @@ export default {
         columns.push({
           field: 'archived_by',
           headerName: this.i18n.t('libraries.index.table.archived_by'),
-          sortable: true,
-          cellRenderer: ({ data: { archived_by: archivedBy } }) => `<span title="${archivedBy}">${archivedBy}</span>`
+          sortable: true
         });
       }
 
