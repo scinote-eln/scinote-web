@@ -129,17 +129,22 @@ class ProtocolsController < ApplicationController
       records = records.where(parent_id: @protocol.published_versions)
                        .or(records.where(parent_id: @protocol.id))
     end
-    records.preload(my_module: { experiment: :project }).distinct
+    records = records.preload(my_module: { experiment: :project })
+                     .distinct.order(updated_at: :desc).page(params[:page]).per(10)
 
-    render json: records.map { |record|
-      {
-        my_module_name: record.my_module.name,
-        experiment_name: record.my_module.experiment.name,
-        project_name: record.my_module.experiment.project.name,
-        my_module_url: protocols_my_module_path(record.my_module),
-        experiment_url: my_modules_path(experiment_id: record.my_module.experiment.id),
-        project_url: experiments_path(project_id: record.my_module.experiment.project.id)
-      }
+    render json: {
+      data: records.map { |record|
+        {
+          my_module_name: record.my_module.name,
+          experiment_name: record.my_module.experiment.name,
+          project_name: record.my_module.experiment.project.name,
+          my_module_url: protocols_my_module_path(record.my_module),
+          experiment_url: my_modules_path(experiment_id: record.my_module.experiment.id),
+          project_url: experiments_path(project_id: record.my_module.experiment.project.id)
+        }
+      },
+      next_page: records.next_page,
+      total_pages: records.total_pages
     }
   end
 
