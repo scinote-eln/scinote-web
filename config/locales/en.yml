@@ -567,7 +567,8 @@ en:
       comment_placeholder: "Your Message"
       more_comments: "More Comments"
       card:
-        start_date: "Started on"
+        start_date: "Created on"
+        updated_on: "Updated on"
         id: "ID"
         visibility: "Visible to"
         users: "Access"
@@ -1464,13 +1465,13 @@ en:
     card:
       name: "Experiment name"
       id: "ID"
-      start_date: "Started on"
-      modified_date: "Modified date"
+      start_date: "Created on"
+      modified_date: "Updated on"
       archived_date: "Archived on"
       completed_task: "Completed"
       completed_value: "%{completed}/%{all} tasks"
       description: "Description"
-      more: "more"
+      more: "More"
     index:
       edit_option: "Edit"
       clone_option: "Duplicate"

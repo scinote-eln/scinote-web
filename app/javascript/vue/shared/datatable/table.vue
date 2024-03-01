@@ -534,6 +534,7 @@ export default {
       if (this.currentViewRender === view) return;
 
       this.currentViewRender = view;
+      this.saveTableState();
       this.initializing = true;
       this.selectedRows = [];
     },
