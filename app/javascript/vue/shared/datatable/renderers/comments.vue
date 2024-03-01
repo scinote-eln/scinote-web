@@ -11,7 +11,7 @@
       +
     </template>
     <span v-if="params.data.comments.count_unseen > 0"
-          class="unseen-comments inline-flex align-super text-xs font-semibold rounded-full bg-sn-science-blue text-sn-white w-3.5 h-3.5 items-center justify-center">
+          class="unseen-comments inline-flex align-super text-xs rounded-full bg-sn-science-blue text-sn-white w-3.5 h-3.5 items-center justify-center">
       {{params.data.comments.count_unseen }}
     </span>
   </a>
