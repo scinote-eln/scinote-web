@@ -59,12 +59,9 @@ export default {
       columnDefs: [
         {
           field: 'default',
-          headerName: '',
-          width: 80,
-          minWidth: 80,
+          headerName: this.i18n.t('label_templates.index.default_label'),
           cellRenderer: this.defaultRenderer,
           sortable: true,
-          headerComponentParams: { html: '<i class="fas fa-thumbtack"></i>' },
         }, {
           field: 'name',
           headerName: this.i18n.t('label_templates.index.thead_name'),
@@ -74,6 +71,7 @@ export default {
           field: 'format',
           headerName: this.i18n.t('label_templates.index.format'),
           sortable: true,
+          cellRenderer: ({ data: { format, icon_url: iconUrl } }) => `<span>${iconUrl}</span> <span>${format}</span>`
         }, {
           field: 'description',
           headerName: this.i18n.t('label_templates.index.description'),
@@ -114,11 +112,11 @@ export default {
       if (this.syncFluicsUrl) {
         left.push({
           name: 'sync_fluics',
-          icon: 'fas fa-sync',
+          icon: 'sn-icon sn-icon-refresh',
           label: this.i18n.t('label_templates.index.toolbar.update_fluics_labels'),
           type: 'emit',
           path: this.syncFluicsUrl,
-          buttonStyle: 'btn btn-light',
+          buttonStyle: 'btn btn-light'
         });
       }
       return {
@@ -131,13 +129,12 @@ export default {
     labelNameRenderer(params) {
       const editUrl = params.data.urls.show;
       return `<a href="${editUrl}" title="${params.data.name}">
-                ${params.data.icon_url}
                 ${params.data.name}
               </a>`;
     },
     defaultRenderer(params) {
       const defaultSelected = params.data.default;
-      return defaultSelected ? '<i class="fas fa-thumbtack"></i>' : '';
+      return defaultSelected ? '<i class="sn-icon sn-icon-approval"></i>' : '';
     },
     setDefault(action) {
       axios.post(action.path).then((response) => {
