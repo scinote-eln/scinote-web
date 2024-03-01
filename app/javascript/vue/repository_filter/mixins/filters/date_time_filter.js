@@ -82,6 +82,9 @@ export default {
       }
     },
     updateDate(date) {
+      if (this.date && date && (this.date.setSeconds(0, 0) === date.setSeconds(0, 0))) {
+        return;
+      }
       this.date = date;
       this.updateValue();
     },
