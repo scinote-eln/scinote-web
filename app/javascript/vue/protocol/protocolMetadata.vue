@@ -141,7 +141,9 @@ export default {
   },
   methods: {
     saveAsdraft() {
-      $.post(this.protocol.attributes.urls.save_as_draft_url);
+      $.post(this.protocol.attributes.urls.save_as_draft_url, (result) => {
+        window.location.replace(result.url);
+      });
     },
     updateAuthors(authors) {
       $.ajax({
