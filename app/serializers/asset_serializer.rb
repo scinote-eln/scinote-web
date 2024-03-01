@@ -157,7 +157,7 @@ class AssetSerializer < ActiveModel::Serializer
       urls[:asset_checksum] = asset_checksum_path(object)
     end
 
-    urls[:wopi_action] = object.get_action_url(user, 'embedview') if wopi && can_manage_asset?(user, object)
+    urls[:wopi_action] = object.get_action_url(user, 'embedview') if wopi
     urls[:blob] = rails_blob_path(object.file, disposition: 'attachment') if object.file.attached?
 
     urls
