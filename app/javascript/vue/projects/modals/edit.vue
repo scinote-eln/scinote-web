@@ -29,12 +29,12 @@
             </div>
             <div class="mt-6" :class="{'hidden': !visible}">
               <label class="sci-label">{{ i18n.t("user_assignment.select_default_user_role") }}</label>
-              <SelectDropdown :optionsUrl="userRolesUrl" :value="defaultRole" @change="changeRole" />
+              <SelectDropdown :options="userRoles" :value="defaultRole" @change="changeRole" />
             </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" type="submit">
+            <button class="btn btn-primary" type="submit" :disabled="visible && !defaultRole">
               {{ i18n.t('projects.index.modal_edit_project.submit') }}
             </button>
           </div>
@@ -60,12 +60,25 @@ export default {
   components: {
     SelectDropdown,
   },
+  watch: {
+    visible(newValue) {
+      if (newValue) {
+        [this.defaultRole] = this.userRoles.find((role) => role[1] === 'Viewer');
+      } else {
+        this.defaultRole = null;
+      }
+    }
+  },
+  mounted() {
+    this.fetchUserRoles();
+  },
   data() {
     return {
       name: this.project.name,
       visible: !this.project.hidden,
       defaultRole: this.project.default_public_user_role_id,
       error: null,
+      userRoles: []
     };
   },
   methods: {
@@ -86,6 +99,14 @@ export default {
     changeRole(role) {
       this.defaultRole = role;
     },
+    fetchUserRoles() {
+      if (this.userRolesUrl) {
+        axios.get(this.userRolesUrl)
+          .then((response) => {
+            this.userRoles = response.data.data;
+          });
+      }
+    }
   },
 };
 </script>

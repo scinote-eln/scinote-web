@@ -36,7 +36,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" type="submit" :disabled="visible && !defaultRole">
+            <button class="btn btn-primary" type="submit" :disabled="disableSubmit || (visible && !defaultRole)">
               {{ i18n.t('projects.index.modal_new_project.create') }}
             </button>
           </div>

@@ -64,8 +64,6 @@ module Lists
           count: object.comments.count,
           count_unseen: count_unseen_comments(object, @user)
         }
-      else
-        {}
       end
     end
 
@@ -98,7 +96,7 @@ module Lists
 
     def permissions
       {
-        create_comments: comment_addable?(object)
+        create_comments: can_create_project_comments?(object)
       }
     end
 
