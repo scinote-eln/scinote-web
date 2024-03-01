@@ -335,9 +335,9 @@ export default {
     nameRenderer(params) {
       const { urls, name } = params.data;
       if (urls.show) {
-        return `<a href="${urls.show}">${name}</a>`;
+        return `<a href="${urls.show}" title="${name}">${name}</a>`;
       }
-      return `<span class="text-sn-grey">${name}</span>`;
+      return `<span class="text-sn-grey" title="${name}">${name}</span>`;
     },
     usersFilterRenderer(option) {
       return `<div class="flex items-center gap-2">

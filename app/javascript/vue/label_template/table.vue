@@ -130,7 +130,7 @@ export default {
   methods: {
     labelNameRenderer(params) {
       const editUrl = params.data.urls.show;
-      return `<a href="${editUrl}">
+      return `<a href="${editUrl}" title="${params.data.name}">
                 ${params.data.icon_url}
                 ${params.data.name}
               </a>`;

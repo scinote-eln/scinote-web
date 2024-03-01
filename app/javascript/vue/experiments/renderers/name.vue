@@ -6,7 +6,10 @@
       </div>
       <img v-else :src="workflow_img" class="max-h-9 max-w-[36px]">
     </div>
-    <a :href="params.data.urls.show" class="hover:no-underline truncate">{{ params.data.name  }}</a>
+    <a :href="params.data.urls.show" class="hover:no-underline truncate"
+        :title="params.data.name">
+      {{ params.data.name  }}
+    </a>
   </div>
 </template>
 

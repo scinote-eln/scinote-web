@@ -252,7 +252,8 @@ export default {
       const showUrl = params.data.urls.show;
       return `<a href="${showUrl}"
                  class="flex items-center gap-1 hover:no-underline
-                        ${!showUrl ? 'pointer-events-none text-sn-grey' : ''}">
+                        ${!showUrl ? 'pointer-events-none text-sn-grey' : ''}"
+                 title="${params.data.name}">
                 ${params.data.folder ? '<i class="sn-icon mini sn-icon-mini-folder-left"></i>' : ''}
                 ${params.data.name}
               </a>`;

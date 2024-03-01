@@ -297,7 +297,8 @@ export default {
       if (shared || ishared) {
         sharedIcon = '<i class="fas fa-users"></i>';
       }
-      return `<a class="hover:no-underline flex items-center gap-1" href="${urls.show}">${sharedIcon}${name}</a>`;
+      return `<a class="hover:no-underline flex items-center gap-1"
+                 title="${name}" href="${urls.show}">${sharedIcon}${name}</a>`;
     }
   }
 };

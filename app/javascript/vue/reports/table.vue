@@ -87,7 +87,8 @@ export default {
         }, {
           field: 'name',
           headerName: this.i18n.t('projects.reports.index.thead_name'),
-          sortable: true
+          sortable: true,
+          cellRenderer: ({ data: { name } }) => `<span title="${name}">${name}</span>`
         }, {
           field: 'code',
           headerName: this.i18n.t('projects.reports.index.thead_id'),
