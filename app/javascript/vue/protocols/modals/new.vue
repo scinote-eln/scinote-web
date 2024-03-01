@@ -30,12 +30,12 @@
             </div>
             <div class="mt-6" :class="{'hidden': !visible}">
               <label class="sci-label">{{ i18n.t("protocols.new_protocol_modal.role_label") }}</label>
-              <SelectDropdown :optionsUrl="userRolesUrl" :value="defaultRole" @change="changeRole" />
+              <SelectDropdown :options="userRoles" :value="defaultRole" @change="changeRole" />
             </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-            <button class="btn btn-primary" type="submit">
+            <button class="btn btn-primary" type="submit" :disabled="visible && !defaultRole">
               {{ i18n.t('protocols.new_protocol_modal.create_new') }}
             </button>
           </div>
@@ -61,11 +61,24 @@ export default {
   components: {
     SelectDropdown
   },
+  watch: {
+    visible(newValue) {
+      if (newValue) {
+        [this.defaultRole] = this.userRoles.find((role) => role[1] === 'Viewer');
+      } else {
+        this.defaultRole = null;
+      }
+    }
+  },
+  mounted() {
+    this.fetchUserRoles();
+  },
   data() {
     return {
       name: '',
       visible: false,
       defaultRole: null,
+      userRoles: [],
       error: null
     };
   },
@@ -86,6 +99,14 @@ export default {
     },
     changeRole(role) {
       this.defaultRole = role;
+    },
+    fetchUserRoles() {
+      if (this.userRolesUrl) {
+        axios.get(this.userRolesUrl)
+          .then((response) => {
+            this.userRoles = response.data.data;
+          });
+      }
     }
   }
 };
