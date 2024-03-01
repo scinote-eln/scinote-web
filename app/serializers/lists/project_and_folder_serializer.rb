@@ -96,7 +96,7 @@ module Lists
 
     def permissions
       {
-        create_comments: can_create_project_comments?(object)
+        create_comments: project? ? can_create_project_comments?(object) : false
       }
     end
 
