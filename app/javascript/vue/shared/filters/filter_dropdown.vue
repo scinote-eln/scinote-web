@@ -19,7 +19,7 @@
             <i class="sn-icon sn-icon-close"></i>
           </button>
         </div>
-        <div class="max-h-[40vh] px-3.5 overflow-y-auto">
+        <div class="max-h-[40vh] px-3.5 overflow-y-auto max-w-[400px]">
           <div v-for="filter in filters" :key="filter.key">
             <Component
               :is="`${filter.type}Filter`"
