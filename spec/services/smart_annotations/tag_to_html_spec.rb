@@ -25,7 +25,7 @@ describe SmartAnnotations::TagToHtml do
   describe 'Parsed text' do
     it 'returns a existing string with smart annotation' do
       expect(subject.html).to eq(
-        "My annotation of <a class='sa-link' href='/projects/#{project.id}'>" \
+        "My annotation of <a class='sa-link' href='/projects/#{project.id}/experiments'>" \
         "<span class='sa-type'>Prj</span>my project</a>"
       )
     end
