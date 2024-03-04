@@ -178,7 +178,6 @@ export default {
       lastPage: false,
       tableState: null,
       userSettingsUrl: null,
-      fetchedTableState: null,
       gridReady: false
     };
   },
@@ -281,11 +280,6 @@ export default {
     },
     perPage() {
       this.saveTableState();
-    },
-    fetchedTableState(newValue) {
-      if (newValue !== null && this.gridReady) {
-        this.applyTableState(newValue);
-      }
     }
   },
   created() {
@@ -335,9 +329,8 @@ export default {
       axios.get(this.userSettingsUrl, { params: { key: this.stateKey } })
         .then((response) => {
           if (response.data.data) {
-            this.fetchedTableState = response.data.data;
-            if (this.gridReady && this.fetchedTableState) {
-              this.applyTableState(this.fetchedTableState);
+            if (this.gridReady) {
+              this.applyTableState(response.data.data);
             }
           } else {
             this.initializing = false;
@@ -459,8 +452,8 @@ export default {
       this.gridApi = params.api;
       this.columnApi = params.columnApi;
       this.gridReady = true;
-      if (this.fetchedTableState) {
-        this.applyTableState(this.fetchedTableState);
+      if (this.tableState) {
+        this.applyTableState(this.tableState);
       }
     },
     onFirstDataRendered() {
@@ -539,6 +532,7 @@ export default {
       if (this.currentViewRender === view) return;
 
       this.currentViewRender = view;
+      this.tableState.currentViewRender = view;
       this.saveTableState();
       this.initializing = true;
       this.selectedRows = [];
