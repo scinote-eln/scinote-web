@@ -217,7 +217,7 @@ export default {
           dtComponent: this
         },
         pinned: (column.field === 'name' ? 'left' : null),
-        comparator: () => false
+        comparator: () => null
       }));
 
       if (this.withCheckboxes) {
@@ -308,6 +308,9 @@ export default {
       } else {
         target = document.querySelector('.ag-body-viewport');
       }
+
+      if (!target) return;
+
       if (target.scrollTop + target.clientHeight >= target.scrollHeight - 50) {
         if (this.dataLoading || this.lastPage) return;
 
@@ -365,7 +368,9 @@ export default {
       });
 
       setTimeout(() => {
-        this.gridApi.refreshHeader();
+        if (this.gridApi) {
+          this.gridApi.refreshHeader();
+        }
         this.initializing = false;
       }, 200);
     },
