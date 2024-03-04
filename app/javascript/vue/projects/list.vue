@@ -146,14 +146,14 @@ export default {
         field: 'users',
         headerName: this.i18n.t('projects.index.card.users'),
         cellRenderer: 'UsersRenderer',
-        sortable: false,
+        sortable: true,
         minWidth: 210,
         notSelectable: true
       },
       {
         field: 'comments',
         headerName: this.i18n.t('projects.index.card.comments'),
-        sortable: false,
+        sortable: true,
         cellRenderer: CommentsRenderer,
         notSelectable: true
       }];
