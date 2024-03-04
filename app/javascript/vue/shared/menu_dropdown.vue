@@ -87,6 +87,11 @@ export default {
     'click-outside': vOnClickOutside
   },
   mixins: [FixedFlyoutMixin],
+  watch: {
+    isOpen(newValue) {
+      this.$emit('menu-visibility-changed', newValue);
+    }
+  },
   methods: {
     closeMenu() {
       this.isOpen = false;
