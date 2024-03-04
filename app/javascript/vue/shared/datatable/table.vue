@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col h-full">
+  <div class="flex flex-col h-full" :class="{'pb-4': windowScrollerSeen && selectedRows.length === 0}">
     <div class="relative flex flex-col flex-grow z-10">
       <Toolbar
         :toolbarActions="toolbarActions"
@@ -179,7 +179,8 @@ export default {
       tableState: null,
       userSettingsUrl: null,
       fetchedTableState: null,
-      gridReady: false
+      gridReady: false,
+      windowScrollerSeen: false
     };
   },
   components: {
@@ -383,6 +384,7 @@ export default {
       }));
     },
     resize() {
+      this.windowScrollerSeen = document.documentElement.scrollWidth > document.documentElement.clientWidth;
       if (this.tableState) return;
 
       this.columnApi?.autoSizeAllColumns();
