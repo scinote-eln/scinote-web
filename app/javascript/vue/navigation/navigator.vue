@@ -30,6 +30,7 @@
                       :reloadCurrentLevel="reloadCurrentLevel"
                       :paddingLeft="0"
                       :reloadChildrenLevel="reloadChildrenLevel"
+                      :reloadExpandedChildrenLevel="reloadExpandedChildrenLevel"
                       :archived="archived" />
       </perfect-scrollbar>
     </div>
@@ -62,7 +63,8 @@ export default {
   },
   props: {
     reloadCurrentLevel: Boolean,
-    reloadChildrenLevel: Boolean
+    reloadChildrenLevel: Boolean,
+    reloadExpandedChildrenLevel: Boolean
   },
   computed: {
     sortedMenuItems() {
