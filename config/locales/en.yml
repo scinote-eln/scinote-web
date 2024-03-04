@@ -985,6 +985,7 @@ en:
         logo_params_error: 'Failed to parse logo parameters!'
     index:
       head_title: 'Label templates'
+      default_label: "Default label"
       search_templates: 'Search labels'
       thead_name: 'Label name'
       format: 'Format'
