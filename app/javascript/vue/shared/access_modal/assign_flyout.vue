@@ -7,8 +7,6 @@
       <template v-slot:field>
         <div class="sci-input-container-v2 left-icon">
           <input type="text" v-model="query" class="sci-input-field"
-                  autofocus="true"
-                  ref="input"
                   :placeholder="i18n.t('access_permissions.partials.new_assignments_form.find_people_html')" />
           <i class="sn-icon sn-icon-search"></i>
         </div>
@@ -81,9 +79,6 @@ export default {
   mounted() {
     this.getUnAssignedUsers();
     this.getRoles();
-    this.$nextTick(() => {
-      this.$refs.input?.focus();
-    });
   },
   components: {
     MenuDropdown,
