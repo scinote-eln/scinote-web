@@ -69,14 +69,14 @@
                 :class="[sizeClass, {'!bg-sn-super-light-blue': valueSelected(option[0])}]"
               >
                 <div v-if="withCheckboxes"
-                    class="sn-checkbox-icon"
+                    class="sn-checkbox-icon shrink-0"
                     :class="{
                       'checked': valueSelected(option[0]),
                       'unchecked': !valueSelected(option[0]),
                     }"
                 ></div>
-                <div v-if="optionRenderer" v-html="optionRenderer(option)"></div>
-                <div v-else >{{ option[1] }}</div>
+                <div class="truncate" v-if="optionRenderer" v-html="optionRenderer(option)"></div>
+                <div class="truncate" v-else >{{ option[1] }}</div>
               </div>
             </template>
             <div v-if="filteredOptions.length === 0" class="text-sn-grey text-center py-2.5">

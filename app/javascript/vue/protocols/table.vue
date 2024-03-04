@@ -342,7 +342,7 @@ export default {
     usersFilterRenderer(option) {
       return `<div class="flex items-center gap-2">
                 <img src="${option[2].avatar_url}" class="rounded-full w-6 h-6" />
-                <span>${option[1]}</span>
+                <span class="truncate" title="${option[1]}">${option[1]}</span>
               </div>`;
     }
   }
