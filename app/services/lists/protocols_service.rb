@@ -120,7 +120,7 @@ module Lists
         name: 'name',
         code: 'id',
         parent_id: 'adjusted_parent_id',
-        versions: 'nr_of_versions',
+        has_draft: 'nr_of_versions',
         keywords: 'protocol_keywords_str',
         linked_tasks: 'nr_of_linked_tasks',
         assigned_users: 'nr_of_assigned_users',
