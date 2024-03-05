@@ -341,7 +341,7 @@ export default {
             }
           } else {
             this.initializing = false;
-            this.gridApi.sizeColumnsToFit();
+            this.gridApi?.sizeColumnsToFit();
           }
 
           this.loadData();
