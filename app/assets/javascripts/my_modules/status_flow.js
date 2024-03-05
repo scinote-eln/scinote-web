@@ -1,4 +1,4 @@
-/* global animateSpinner */
+/* global animateSpinner GLOBAL_CONSTANTS */
 
 (function() {
   $('.task-sharing-and-flows').on('click', '#viewTaskFlow', function() {
@@ -19,7 +19,7 @@
       if (statusData.status_changing) {
         setTimeout(() => { checkStatusState(); }, GLOBAL_CONSTANTS.FAST_STATUS_POLLING_INTERVAL);
       } else {
-        location.reload();
+        $('.task-sharing-and-flows .status-flow-container').replaceWith(statusData.html);
       }
     });
   }
@@ -44,7 +44,10 @@
         data: { my_module: { status_id: item.data('state-id') } },
         success: function(result) {
           animateSpinner(null, false);
-          location.reload();
+          $('.task-sharing-and-flows .status-flow-container').replaceWith(result.html);
+          if (result.status_changing) {
+            setTimeout(() => { checkStatusState(); }, GLOBAL_CONSTANTS.FAST_STATUS_POLLING_INTERVAL);
+          }
         },
         error: function(e) {
           animateSpinner(null, false);
