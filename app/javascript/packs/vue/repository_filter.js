@@ -70,6 +70,7 @@ window.initRepositoryFilter = () => {
   ];
   const app = createApp({
     data: () => ({
+      open: false,
       filters: [],
       defaultFilters: DEFAULT_FILTERS,
       columns: [],
@@ -79,19 +80,29 @@ window.initRepositoryFilter = () => {
       filterName: null
     }),
     created() {
-      this.dataTableElement = $($('#filterContainer').data('datatable-id'));
+      $('#filtersDropdownButton').on('show.bs.dropdown', () => {
+        this.open = true;
+        this.dataTableElement = $($('#filterContainer').data('datatable-id'));
 
-      $.get($('#filterContainer').data('my-modules-url'), (data) => {
-        this.my_modules = data.data;
+        $.get($('#filterContainer').data('my-modules-url'), (data) => {
+          this.my_modules = data.data;
+        });
+
+        $.get($('#filterContainer').data('columns-url'), (data) => {
+          const combinedColumns = data.response.concat(defaultColumns);
+          this.columns = combinedColumns.sort((a, b) => (a.name > b.name ? 1 : -1));
+        });
+
+        $.get($('#filterContainer').data('saved-filters-url'), (data) => {
+          this.savedFilters = data.data;
+        });
+
+        $('#filtersColumnsDropdown, #savedFiltersContainer').removeClass('open');
       });
 
-      $.get($('#filterContainer').data('columns-url'), (data) => {
-        const combinedColumns = data.response.concat(defaultColumns);
-        this.columns = combinedColumns.sort((a, b) => a.name > b.name ? 1 : -1);
-      });
-
-      $.get($('#filterContainer').data('saved-filters-url'), (data) => {
-        this.savedFilters = data.data;
+      $('#filterContainer').on('click', (e) => {
+        $('#filterContainer .dropdown-selector-container').removeClass('open');
+        e.stopPropagation();
       });
     },
     computed: {
@@ -151,13 +162,4 @@ window.initRepositoryFilter = () => {
   app.config.globalProperties.i18n = window.I18n;
   app.config.globalProperties.dateFormat = $('#filterContainer').data('date-format');
   window.repositoryFilterObject = mountWithTurbolinks(app, '#filterContainer');
-
-  $('#filterContainer').on('click', (e) => {
-    $('#filterContainer .dropdown-selector-container').removeClass('open')
-    e.stopPropagation();
-  });
-
-  $('#filtersDropdownButton').on('show.bs.dropdown', () => {
-    $('#filtersColumnsDropdown, #savedFiltersContainer').removeClass('open');
-  });
 };
