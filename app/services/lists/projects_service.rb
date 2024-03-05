@@ -139,7 +139,7 @@ module Lists
     end
 
     def project_users_count(object)
-      project?(object) ? object.users.count : 0
+      project?(object) ? object.users.count : -1
     end
 
     def project?(object)
