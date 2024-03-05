@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="group w-full h-full">
     <template v-if="pdf.error">
       <span class="flex items-center gap-1 text-sn-delete-red">
         <i class="fas fa-exclamation-triangle"></i>
@@ -25,7 +25,7 @@
     <span v-else-if="pdf.processing" class="processing pdf">
       {{ i18n.t('projects.reports.index.generating') }}
     </span>
-    <a v-else href="#" @click.prevent="generate">
+    <a v-else class="hidden group-hover:!block" href="#" @click.prevent="generate">
       {{ i18n.t('projects.reports.index.generate') }}
     </a>
   </div>
