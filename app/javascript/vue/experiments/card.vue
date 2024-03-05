@@ -24,7 +24,7 @@
         <span class="text-sn-dark-grey">{{ i18n.t('experiments.card.start_date') }}</span>
         <span class="font-bold">{{ params.created_at }}</span>
 
-        <template v-if="dtComponent.viewMode == 'archived'">
+        <template v-if="dtComponent.currentViewMode == 'archived'">
           <span class="text-sn-dark-grey">{{ i18n.t('experiments.card.archived_date') }}</span>
           <span class="font-bold">{{ params.archived_on }}</span>
         </template>
