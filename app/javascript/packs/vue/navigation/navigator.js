@@ -8,7 +8,8 @@ function addNavigationNavigatorContainer() {
     data() {
       return {
         reloadCurrentLevel: false,
-        reloadChildrenLevel: false
+        reloadChildrenLevel: false,
+        reloadExpandedChildrenLevel: false
       }
     },
     created() {
@@ -25,6 +26,14 @@ function addNavigationNavigatorContainer() {
 
         // refresh action toolbar width on navigator toggle, take into account transition time of .4s
         if (window.actionToolbarComponent) setTimeout(window.actionToolbarComponent.setWidth, 401);
+      },
+      reloadNavigator(withExpandedChildren = false) {
+        this.reloadCurrentLevel = true;
+        if (withExpandedChildren) {
+          this.reloadExpandedChildrenLevel = true;
+        } else {
+          this.reloadChildrenLevel = true;
+        }
       }
     },
     watch: {
@@ -39,6 +48,13 @@ function addNavigationNavigatorContainer() {
         if (this.reloadChildrenLevel) {
           this.$nextTick(() => {
             this.reloadChildrenLevel = false;
+          });
+        }
+      },
+      reloadExpandedChildrenLevel() {
+        if (this.reloadExpandedChildrenLevel) {
+          this.$nextTick(() => {
+            this.reloadExpandedChildrenLevel = false;
           });
         }
       }

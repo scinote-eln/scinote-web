@@ -44,18 +44,18 @@
     ref="exportModal"
   ></ConfirmationModal>
   <EditProjectModal v-if="editProject" :userRolesUrl="userRolesUrl"
-                    :project="editProject" @close="editProject = null" @update="updateTable" />
+                    :project="editProject" @close="editProject = null" @update="updateTable(); updateNavigator()" />
   <EditFolderModal v-if="editFolder" :folder="editFolder"
-                   @close="editFolder = null" @update="updateTable" />
+                   @close="editFolder = null" @update="updateTable(); updateNavigator()" />
   <NewProjectModal v-if="newProject" :createUrl="createUrl"
                    :currentFolderId="currentFolderId" :userRolesUrl="userRolesUrl"
-                   @close="newProject = false" @create="updateTable" />
+                   @close="newProject = false" @create="updateTable(); updateNavigator()" />
   <NewFolderModal v-if="newFolder" :createFolderUrl="createFolderUrl"
                   :currentFolderId="currentFolderId" :viewMode="currentViewMode"
-                  @close="newFolder = false" @create="updateTable" />
+                  @close="newFolder = false" @create="updateTable(); updateNavigator()" />
   <MoveModal v-if="objectsToMove" :moveToUrl="moveToUrl"
              :selectedObjects="objectsToMove" :foldersTreeUrl="foldersTreeUrl"
-             @close="objectsToMove = null" @move="updateTable" />
+             @close="objectsToMove = null" @move="updateTable(); updateNavigator(true)" />
   <AccessModal v-if="accessModalParams" :params="accessModalParams"
                @close="accessModalParams = null" @refresh="this.reloadingTable = true" />
 </template>
@@ -304,6 +304,9 @@ export default {
       this.newFolder = false;
       this.objectsToMove = null;
       this.reloadingTable = true;
+    },
+    updateNavigator(withExpanedChildren = false) {
+      window.navigatorContainer.reloadNavigator(withExpanedChildren);
     },
     async deleteFolder(event, rows) {
       const description = `
