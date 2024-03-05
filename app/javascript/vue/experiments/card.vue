@@ -57,7 +57,7 @@
         <div v-if="imageLoading" class="flex absolute top-0 items-center justify-center w-full flex-grow h-full z-10">
           <img src="/images/medium/loading.svg" alt="Loading" />
         </div>
-        <img v-else :src="workflow_img" class="max-h-18 max-w-[72px]">
+        <img v-else-if="!hasError" :src="workflow_img" @error="hasError = true" class="max-h-full max-w-full">
       </div>
     </div>
     <Description :params="{data: params, value: params.description, dtComponent: dtComponent}" />

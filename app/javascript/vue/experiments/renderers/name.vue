@@ -4,7 +4,7 @@
       <div v-if="imageLoading" class="flex absolute top-0 items-center justify-center w-full flex-grow h-full z-10">
         <img src="/images/medium/loading.svg" alt="Loading" class="w-4 h-4" />
       </div>
-      <img v-else :src="workflow_img" class="max-h-9 max-w-[36px]">
+      <img v-else-if="!hasError" :src="workflow_img" @error="hasError = true" class="max-h-9 max-w-[36px]">
     </div>
     <a :href="params.data.urls.show" class="hover:no-underline truncate"
         :title="params.data.name">
