@@ -21,7 +21,7 @@
               <label class="sci-label">
                 {{ i18n.t("projects.reports.new.save_PDF_to_inventory_modal.inventory") }}
               </label>
-              <SelectDropdown :optionsUrl="repositoriesUrl" @change="changeRepository" />
+              <SelectDropdown :optionsUrl="repositoriesUrl" @change="changeRepository" :searchable="true" />
             </div>
             <div v-if="selectedRepository" class="mb-4">
               <label class="sci-label">
@@ -29,13 +29,14 @@
               </label>
               <SelectDropdown :optionsUrl="columnsUrl"
                 :urlParams="{repository_id: selectedRepository}"
+                :searchable="true"
                 @change="changeColumn" />
             </div>
             <div v-if="selectedColumn && !rowsError" class="mb-4">
               <label class="sci-label">
                 {{ i18n.t("projects.reports.new.save_PDF_to_inventory_modal.inventory_item") }}
               </label>
-              <SelectDropdown :options="formattedRowsList" @change="changeRow" />
+              <SelectDropdown :options="formattedRowsList" @change="changeRow" :searchable="true" />
             </div>
             <div v-if="rowsError" class="mb-4" v-html="rowsError"></div>
             <div
