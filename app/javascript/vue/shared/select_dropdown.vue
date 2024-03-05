@@ -253,7 +253,7 @@ export default {
     },
     query() {
       if (this.optionsUrl) this.fetchOptions();
-    },
+    }
   },
   methods: {
     renderLabel(option) {
@@ -299,7 +299,7 @@ export default {
         if (this.newValue.includes(value)) {
           this.newValue = this.newValue.filter((v) => v !== value);
         } else {
-          this.newValue.push(value);
+          this.newValue = [...this.newValue, value];
         }
       } else {
         this.newValue = value;
