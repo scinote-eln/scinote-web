@@ -319,7 +319,7 @@ function init() {
 init();
 
 const viewMode = new URLSearchParams(window.location.search).get('view_mode');
-if (viewMode === 'archived') {
+if (['archived', 'locked'].includes(viewMode)) {
   setTimeout(() => {
     const notesContainerEl = document.getElementById('notes-container');
     window.wrapTables(notesContainerEl);
