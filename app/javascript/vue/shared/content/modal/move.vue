@@ -23,7 +23,7 @@
               "
               :no-options-placeholder="
                 i18n.t(
-                  'my_modules.results.move_modal.no_options_placeholder'
+                  `my_modules.results.move_modal.${parent_type}.no_options_placeholder`
                 )
               "
               :searchPlaceholder="
