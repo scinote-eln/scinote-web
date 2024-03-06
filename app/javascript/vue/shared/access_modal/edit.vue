@@ -63,7 +63,7 @@ import MenuDropdown from '../menu_dropdown.vue';
 import axios from '../../../packs/custom_axios.js';
 
 export default {
-  emits: ['modified', 'usersReloaded', 'changeVisibility'],
+  emits: ['modified', 'usersReloaded', 'changeVisibility', 'assigningNewUsers'],
   props: {
     params: {
       type: Object,
