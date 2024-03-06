@@ -76,7 +76,7 @@ class ProtocolsController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        protocols = Lists::ProtocolsService.new(Protocol.where(team: @current_team), params).call
+        protocols = Lists::ProtocolsService.new(Protocol.viewable_by_user(current_user, @current_team), params).call
         render json: protocols,
                each_serializer: Lists::ProtocolSerializer,
                user: current_user,
@@ -86,15 +86,6 @@ class ProtocolsController < ApplicationController
         render 'index'
       end
     end
-  end
-
-  def datatable
-    render json: ::ProtocolsDatatable.new(
-      view_context,
-      @current_team,
-      @type,
-      current_user
-    )
   end
 
   def versions_modal
@@ -490,19 +481,16 @@ class ProtocolsController < ApplicationController
       transaction_error = false
       Protocol.transaction do
         @protocol.load_from_repository(@source, current_user)
-      rescue StandardError
+      rescue StandardError => e
+        Rails.logger.error(e.message)
+        Rails.logger.error(e.backtrace.join("\n"))
         transaction_error = true
         raise ActiveRecord::Rollback
       end
 
       if transaction_error
         # Bad request error
-        format.json do
-          render json: {
-            message: t('my_modules.protocols.load_from_repository_error')
-          },
-          status: :bad_request
-        end
+        render json: { message: t('my_modules.protocols.load_from_repository_error') }, status: :bad_request
       else
         # Everything good, record activity, display flash & render 200
         log_activity(:load_protocol_to_task_from_repository,
@@ -511,7 +499,7 @@ class ProtocolsController < ApplicationController
                      protocol_repository: @protocol.parent.id)
         flash[:success] = t('my_modules.protocols.load_from_repository_flash')
         flash.keep(:success)
-        render json: {}, status: :ok
+        render json: {}
       end
     else
       render json: {

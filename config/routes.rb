@@ -656,7 +656,6 @@ Rails.application.routes.draw do
         put :update_version_comment
       end
       collection do
-        post 'datatable', to: 'protocols#datatable'
         post 'archive', to: 'protocols#archive'
         post 'restore', to: 'protocols#restore'
         post 'clone', to: 'protocols#clone'
