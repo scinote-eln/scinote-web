@@ -8,9 +8,8 @@ module Lists
 
     def fetch_records
       original_without_versions = @raw_data
-                                  .left_outer_joins(:published_versions)
+                                  .where.missing(:published_versions)
                                   .in_repository_published_original
-                                  .where(published_versions: { id: nil })
                                   .select(:id)
       published_versions = @raw_data
                            .in_repository_published_version
@@ -118,8 +117,7 @@ module Lists
     def sortable_columns
       @sortable_columns ||= {
         name: 'name',
-        code: 'id',
-        parent_id: 'adjusted_parent_id',
+        code: 'adjusted_parent_id',
         has_draft: 'nr_of_versions',
         keywords: 'protocol_keywords_str',
         linked_tasks: 'nr_of_linked_tasks',

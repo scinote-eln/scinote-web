@@ -5,9 +5,13 @@ module Lists
     include Canaid::Helpers::PermissionsHelper
     include Rails.application.routes.url_helpers
 
-    attributes :name, :original_code, :keywords, :linked_tasks, :nr_of_versions, :assigned_users, :published_by,
+    attributes :name, :code, :keywords, :linked_tasks, :nr_of_versions, :assigned_users, :published_by,
                :published_on, :updated_at, :archived_by, :archived_on, :urls, :default_public_user_role_id,
                :hidden, :top_level_assignable, :has_draft, :team
+
+    def code
+      object.parent&.code || object.code
+    end
 
     def keywords
       object.protocol_keywords.map(&:name)

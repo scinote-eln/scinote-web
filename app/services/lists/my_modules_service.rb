@@ -43,7 +43,7 @@ module Lists
       @sortable_columns ||= {
         due_date: 'due_date',
         name: 'name',
-        id: 'id',
+        code: 'id',
         archived_on: 'archived_on',
         age: 'age',
         status: 'status',
