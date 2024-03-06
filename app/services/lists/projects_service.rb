@@ -34,8 +34,7 @@ module Lists
 
     def fetch_projects
       @team.projects
-           .includes(:team, user_assignments: %i(user user_role))
-           .includes(:project_comments, experiments: { my_modules: { my_module_status: :my_module_status_implications } })
+           .includes(:team, :project_comments, user_assignments: %i(user user_role))
            .visible_to(@user, @team)
            .left_outer_joins(:project_comments)
            .select('projects.*')
