@@ -29,10 +29,8 @@ window.initAccessModalComponent = (id) => {
   mountWithTurbolinks(app, id);
 };
 
-document.addEventListener('turbolinks:load', () => {
-  const accessModalContainers = document.querySelectorAll('.vue-access-modal:not(.initialized)');
-  accessModalContainers.forEach((container) => {
-    $(container).addClass('initialized');
-    window.initAccessModalComponent(`#${container.id}`);
-  });
+const accessModalContainers = document.querySelectorAll('.vue-access-modal:not(.initialized)');
+accessModalContainers.forEach((container) => {
+  $(container).addClass('initialized');
+  window.initAccessModalComponent(`#${container.id}`);
 });
