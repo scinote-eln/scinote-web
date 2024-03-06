@@ -1,7 +1,7 @@
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
+      <div class="modal-content ">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <i class="sn-icon sn-icon-close"></i>
@@ -17,21 +17,21 @@
                  :title="myModule.project_name"
                  class="hover:no-underline flex items-center gap-1 shrink-0">
                 <i class="sn-icon sn-icon-projects"></i>
-                <span class="truncate max-w-[160px]">{{ myModule.project_name }}</span>
+                <span class="truncate max-w-[130px]">{{ myModule.project_name }}</span>
               </a>
               <span>/</span>
               <a :href="myModule.experiment_url"
                  :title="myModule.experiment_name"
                  class="hover:no-underline flex items-center gap-1 shrink-0">
                 <i class="sn-icon sn-icon-experiment"></i>
-                <span class="truncate max-w-[160px]">{{ myModule.experiment_name }}</span>
+                <span class="truncate max-w-[130px]">{{ myModule.experiment_name }}</span>
               </a>
               <span>/</span>
               <a :href="myModule.my_module_url"
                  :title="myModule.my_module_name"
                  class="hover:no-underline flex items-center gap-1 shrink-0">
                 <i class="sn-icon sn-icon-task"></i>
-                <span class="truncate max-w-[160px]">{{ myModule.my_module_name }}</span>
+                <span class="truncate max-w-[130px]">{{ myModule.my_module_name }}</span>
               </a>
             </div>
           </div>

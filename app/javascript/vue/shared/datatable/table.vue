@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col h-full" :class="{'pb-4': windowScrollerSeen && selectedRows.length === 0}">
+  <div v-if="!stateLoading" class="flex flex-col h-full" :class="{'pb-4': windowScrollerSeen && selectedRows.length === 0}">
     <div class="relative flex flex-col flex-grow z-10">
       <Toolbar
         :toolbarActions="toolbarActions"
@@ -175,10 +175,10 @@ export default {
       currentViewRender: 'table',
       cardCheckboxes: [],
       dataLoading: true,
+      stateLoading: true,
       lastPage: false,
       tableState: null,
       userSettingsUrl: null,
-      fetchedTableState: null,
       gridReady: false,
       windowScrollerSeen: false
     };
@@ -275,18 +275,8 @@ export default {
         });
       }
     },
-    currentViewRender() {
-      this.columnApi = null;
-      this.gridApi = null;
-      this.saveTableState();
-    },
     perPage() {
       this.saveTableState();
-    },
-    fetchedTableState(newValue) {
-      if (newValue !== null && this.gridReady) {
-        this.applyTableState(newValue);
-      }
     }
   },
   created() {
@@ -332,29 +322,26 @@ export default {
       }
       this.saveTableState();
     },
+    // Table states
     fetchTableState() {
       axios.get(this.userSettingsUrl, { params: { key: this.stateKey } })
         .then((response) => {
           if (response.data.data) {
-            this.fetchedTableState = response.data.data;
-            if (this.gridReady && this.fetchedTableState) {
-              this.applyTableState(this.fetchedTableState);
+            this.tableState = response.data.data;
+            this.currentViewRender = this.tableState.currentViewRender;
+            this.perPage = this.tableState.perPage;
+            this.order = this.tableState.order;
+            if (this.currentViewRender === 'cards') {
+              this.initializing = false;
             }
-          } else {
-            this.initializing = false;
-            this.gridApi?.sizeColumnsToFit();
           }
-
+          this.stateLoading = false;
           this.loadData();
         });
     },
-    applyTableState(state) {
-      const { currentViewRender, columnsState, perPage, order } = state;
-      this.tableState = state;
-      this.currentViewRender = currentViewRender;
+    applyTableState() {
+      const { columnsState } = this.tableState;
       this.columnsState = columnsState;
-      this.perPage = perPage;
-      this.order = order;
 
       if (this.order) {
         this.tableState.columnsState.forEach((column) => {
@@ -369,11 +356,26 @@ export default {
       });
 
       setTimeout(() => {
-        if (this.gridApi) {
-          this.gridApi.refreshHeader();
-        }
         this.initializing = false;
       }, 200);
+    },
+    saveTableState() {
+      if (this.initializing) {
+        return;
+      }
+      const columnsState = this.columnApi ? this.columnApi.getColumnState() : this.tableState?.columnsState || [];
+      const tableState = {
+        columnsState,
+        order: this.order,
+        currentViewRender: this.currentViewRender,
+        perPage: this.perPage
+      };
+      const settings = {
+        key: this.stateKey,
+        data: tableState
+      };
+      axios.put(this.userSettingsUrl, { settings: [settings] });
+      this.tableState = tableState;
     },
     getRowClass() {
       if (this.currentViewMode === 'archived') {
@@ -461,8 +463,11 @@ export default {
       this.gridApi = params.api;
       this.columnApi = params.columnApi;
       this.gridReady = true;
-      if (this.fetchedTableState) {
-        this.applyTableState(this.fetchedTableState);
+      if (this.tableState) {
+        this.applyTableState();
+      } else {
+        this.gridApi.sizeColumnsToFit();
+        this.initializing = false;
       }
     },
     onFirstDataRendered() {
@@ -484,24 +489,6 @@ export default {
       this.order = order;
       this.saveTableState();
       this.reloadTable(false);
-    },
-    saveTableState() {
-      if (this.initializing) {
-        return;
-      }
-      const columnsState = this.columnApi ? this.columnApi.getColumnState() : this.tableState?.columnsState || [];
-      const tableState = {
-        columnsState,
-        order: this.order,
-        currentViewRender: this.currentViewRender,
-        perPage: this.perPage
-      };
-      const settings = {
-        key: this.stateKey,
-        data: tableState
-      };
-      axios.put(this.userSettingsUrl, { settings: [settings] });
-      this.tableState = tableState;
     },
     restoreSelection() {
       if (this.gridApi) {
@@ -539,8 +526,9 @@ export default {
     },
     switchViewRender(view) {
       if (this.currentViewRender === view) return;
-
       this.currentViewRender = view;
+      this.columnApi = null;
+      this.gridApi = null;
       this.saveTableState();
       this.initializing = true;
       this.selectedRows = [];
