@@ -22,6 +22,7 @@
               :class="{ 'bg-sn-super-light-blue': item.active }"
               :data-toggle="item.modalTarget && 'modal'"
               :data-target="item.modalTarget"
+              :data-e2e="item.data_e2e"
               class="block whitespace-nowrap rounded px-3 py-2.5 hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey leading-5"
               @click="handleClick($event, item)"
             >
