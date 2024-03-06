@@ -38,7 +38,7 @@
               }}
             </label>
 
-            <SelectSearch
+            <SelectDropdown
               :value="selectedProject"
               ref="projectsSelector"
               @change="changeProject"
@@ -54,11 +54,6 @@
                   'repositories.modal_assign_items_to_task.body.project_select.no_options_placeholder'
                 )
               "
-              :searchPlaceholder="
-                i18n.t(
-                  'repositories.modal_assign_items_to_task.body.project_select.placeholder'
-                )
-              "
             />
           </div>
 
@@ -71,7 +66,7 @@
               }}
             </label>
 
-            <SelectSearch
+            <SelectDropdown
               :value="selectedExperiment"
               :disabled="!selectedProject"
               ref="experimentsSelector"
@@ -82,11 +77,6 @@
               :no-options-placeholder="
                 i18n.t(
                   'repositories.modal_assign_items_to_task.body.experiment_select.no_options_placeholder'
-                )
-              "
-              :searchPlaceholder="
-                i18n.t(
-                  'repositories.modal_assign_items_to_task.body.experiment_select.placeholder'
                 )
               "
             />
@@ -101,7 +91,7 @@
               }}
             </label>
 
-            <SelectSearch
+            <SelectDropdown
               :value="selectedTask"
               :disabled="!selectedExperiment"
               ref="tasksSelector"
@@ -112,11 +102,6 @@
               :no-options-placeholder="
                 i18n.t(
                   'repositories.modal_assign_items_to_task.body.task_select.no_options_placeholder'
-                )
-              "
-              :searchPlaceholder="
-                i18n.t(
-                  'repositories.modal_assign_items_to_task.body.task_select.placeholder'
                 )
               "
             />
@@ -139,7 +124,7 @@
 </template>
 
 <script>
-import SelectSearch from '../shared/select_search.vue';
+import SelectDropdown from "../shared/select_dropdown.vue";
 
 export default {
   name: 'AssignItemsToTaskModalContainer',
@@ -162,7 +147,7 @@ export default {
     };
   },
   components: {
-    SelectSearch
+    SelectDropdown
   },
   mounted() {
     $(this.$refs.modal).on('shown.bs.modal', () => {

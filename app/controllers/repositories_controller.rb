@@ -11,7 +11,7 @@ class RepositoriesController < ApplicationController
 
   before_action :load_repository, except: %i(index create create_modal sidebar archive restore actions_toolbar
                                              export_modal export_repositories)
-  before_action :load_repositories, only: %i(index show sidebar)
+  before_action :load_repositories, only: :index
   before_action :load_repositories_for_archiving, only: :archive
   before_action :load_repositories_for_restoring, only: :restore
   before_action :check_view_all_permissions, only: %i(index sidebar)
@@ -35,7 +35,9 @@ class RepositoriesController < ApplicationController
         render 'index'
       end
       format.json do
-        render json: prepare_repositories_datatable(@repositories, current_team, params)
+        repositories = Lists::RepositoriesService.new(@repositories, params).call
+        render json: repositories, each_serializer: Lists::RepositorySerializer, user: current_user,
+               meta: pagination_dict(repositories)
       end
     end
   end
@@ -93,6 +95,11 @@ class RepositoriesController < ApplicationController
     render json: { html: render_to_string(partial: 'share_repository_modal', formats: :html) }
   end
 
+  def shareable_teams
+    teams = current_user.teams - [@repository.team]
+    render json: teams, each_serializer: ShareableTeamSerializer, repository: @repository
+  end
+
   def hide_reminders
     # synchronously hide currently visible reminders
     if params[:visible_reminder_repository_row_ids].present?
@@ -122,12 +129,9 @@ class RepositoriesController < ApplicationController
 
     if @repository.save
       log_activity(:create_inventory)
-
-      flash[:success] = t('repositories.index.modal_create.success_flash_html', name: @repository.name)
-      render json: { url: repository_path(@repository) }
+      render json: { message: t('repositories.index.modal_create.success_flash_html', name: @repository.name) }
     else
-      render json: @repository.errors,
-        status: :unprocessable_entity
+      render json: @repository.errors, status: :unprocessable_entity
     end
   end
 
@@ -163,14 +167,14 @@ class RepositoriesController < ApplicationController
   end
 
   def destroy
-    flash[:success] = t('repositories.index.delete_flash',
-                        name: @repository.name)
-
     log_activity(:delete_inventory) # Log before delete id
 
     @repository.discard
     @repository.destroy_discarded(current_user.id)
-    redirect_to team_repositories_path(archived: true)
+
+    render json: {
+      message: t('repositories.index.delete_flash', name: @repository.name)
+    }
   end
 
   def rename_modal
@@ -240,13 +244,8 @@ class RepositoriesController < ApplicationController
       if !copied_repository
         render json: { name: ['Server error'] }, status: :unprocessable_entity
       else
-        flash[:success] = t(
-          'repositories.index.copy_flash',
-          old: @repository.name,
-          new: copied_repository.name
-        )
         render json: {
-          url: repository_path(copied_repository)
+          message: t('repositories.index.copy_flash', old: @repository.name, new: copied_repository.name)
         }
       end
     end
@@ -426,7 +425,7 @@ class RepositoriesController < ApplicationController
         Toolbars::RepositoriesService.new(
           current_user,
           current_team,
-          repository_ids: params[:repository_ids].split(',')
+          repository_ids: JSON.parse(params[:items]).map { |i| i['id'] }
         ).actions
     }
   end
@@ -450,12 +449,7 @@ class RepositoriesController < ApplicationController
   end
 
   def load_repositories
-    @repositories = Repository.accessible_by_teams(current_team).order('repositories.created_at ASC')
-    @repositories = if params[:archived] == 'true' || @repository&.archived?
-                      @repositories.archived
-                    else
-                      @repositories.active
-                    end
+    @repositories = Repository.accessible_by_teams(current_team)
   end
 
   def load_repositories_for_archiving

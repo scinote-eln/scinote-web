@@ -2,21 +2,62 @@
 
 module AccessPermissions
   class ProtocolsController < ApplicationController
+    include InputSanitizeHelper
+
     before_action :set_protocol
     before_action :check_read_permissions, only: %i(show)
     before_action :check_manage_permissions, except: %i(show)
+    before_action :available_users, only: %i(new create)
 
-    def new
-      @user_assignment = UserAssignment.new(
-        assignable: @protocol,
-        assigned_by: current_user,
-        team: current_team
-      )
+    def show
+      render json: @protocol.user_assignments.includes(:user_role, :user).order('users.full_name ASC'),
+             each_serializer: UserAssignmentSerializer, user: current_user
     end
 
-    def show; end
+    def new
+      render json: @available_users, each_serializer: UserSerializer, user: current_user
+    end
 
     def edit; end
+
+    def create
+      ActiveRecord::Base.transaction do
+        created_count = 0
+        if permitted_create_params[:user_id] == 'all'
+          @protocol.update!(visibility: :visible, default_public_user_role_id: permitted_create_params[:user_role_id])
+          log_activity(:protocol_template_access_granted_all_team_members,
+                         { team: @protocol.team.id, role: @protocol.default_public_user_role&.name })
+        else
+          user_assignment = UserAssignment.find_or_initialize_by(
+            assignable: @protocol,
+            user_id: permitted_create_params[:user_id],
+            team: current_team
+          )
+
+          user_assignment.update!(
+            user_role_id: permitted_create_params[:user_role_id],
+            assigned_by: current_user,
+            assigned: :manually
+          )
+
+          log_activity(:protocol_template_access_granted, { user_target: user_assignment.user.id,
+                                                              role: user_assignment.user_role.name })
+          created_count += 1
+        end
+
+        @message = if created_count.zero?
+                     t('access_permissions.create.success', member_name: t('access_permissions.all_team'))
+                   else
+                     t('access_permissions.create.success', member_name: escape_input(user_assignment.user.name))
+                   end
+        render json: { message: @message }
+      rescue ActiveRecord::RecordInvalid => e
+        Rails.logger.error e.message
+        errors = @protocol.errors.present? ? @protocol.errors&.map(&:message)&.join(',') : e.message
+        render json: { flash: errors }, status: :unprocessable_entity
+        raise ActiveRecord::Rollback
+      end
+    end
 
     def update
       @user_assignment = @protocol.user_assignments.find_by(
@@ -38,49 +79,6 @@ module AccessPermissions
       render :protocol_member
     rescue ActiveRecord::RecordInvalid
       render json: { flash: t('access_permissions.update.failure') }, status: :unprocessable_entity
-    end
-
-    def create
-      ActiveRecord::Base.transaction do
-        created_count = 0
-        permitted_create_params[:resource_members].each do |_k, user_assignment_params|
-          next unless user_assignment_params[:assign] == '1'
-
-          if user_assignment_params[:user_id] == 'all'
-            @protocol.update!(default_public_user_role_id: user_assignment_params[:user_role_id])
-            log_activity(:protocol_template_access_granted_all_team_members,
-                         { team: @protocol.team.id, role: @protocol.default_public_user_role&.name })
-          else
-            user_assignment = UserAssignment.find_or_initialize_by(
-              assignable: @protocol,
-              user_id: user_assignment_params[:user_id],
-              team: current_team
-            )
-
-            user_assignment.update!(
-              user_role_id: user_assignment_params[:user_role_id],
-              assigned_by: current_user,
-              assigned: :manually
-            )
-
-            created_count += 1
-            log_activity(:protocol_template_access_granted, { user_target: user_assignment.user.id,
-                                                              role: user_assignment.user_role.name })
-          end
-        end
-
-        @message = if created_count.zero?
-                     t('access_permissions.create.success', count: t('access_permissions.all_team'))
-                   else
-                     t('access_permissions.create.success', count: created_count)
-                   end
-        render :edit
-      rescue ActiveRecord::RecordInvalid => e
-        Rails.logger.error e.message
-        errors = @protocol.errors.present? ? @protocol.errors&.map(&:message)&.join(',') : e.message
-        render json: { flash: errors }, status: :unprocessable_entity
-        raise ActiveRecord::Rollback
-      end
     end
 
     def destroy
@@ -105,10 +103,10 @@ module AccessPermissions
                                                           role: user_assignment.user_role.name })
       end
 
-      render json: { flash: t('access_permissions.destroy.success', member_name: user.full_name) }
+      render json: { message: t('access_permissions.destroy.success', member_name: user.full_name) }
     rescue ActiveRecord::RecordInvalid => e
       Rails.logger.error e.message
-      render json: { flash: t('access_permissions.destroy.failure') }, status: :unprocessable_entity
+      render json: { message: t('access_permissions.destroy.failure') }, status: :unprocessable_entity
       raise ActiveRecord::Rollback
     end
 
@@ -137,7 +135,7 @@ module AccessPermissions
     private
 
     def permitted_default_public_user_role_params
-      params.require(:protocol).permit(:default_public_user_role_id)
+      params.require(:object).permit(:default_public_user_role_id)
     end
 
     def permitted_update_params
@@ -146,8 +144,17 @@ module AccessPermissions
     end
 
     def permitted_create_params
-      params.require(:access_permissions_new_user_form)
-            .permit(resource_members: %i(assign user_id user_role_id))
+      params.require(:user_assignment)
+            .permit(%i(user_id user_role_id))
+    end
+
+    def available_users
+      # automatically assigned or not assigned to project
+      @available_users = current_team.users.where(
+        id: @protocol.user_assignments.automatically_assigned.select(:user_id)
+      ).or(
+        current_team.users.where.not(id: @protocol.users.select(:id))
+      ).order('users.full_name ASC')
     end
 
     def set_protocol

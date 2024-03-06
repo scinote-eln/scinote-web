@@ -130,9 +130,9 @@
 </template>
 
 <script>
-import SelectSearch from '../shared/select_search.vue';
-import ChecklistSearch from '../shared/checklist_search.vue';
-import Select from '../shared/select.vue';
+import SelectSearch from '../shared/legacy/select_search.vue';
+import ChecklistSearch from '../shared/legacy/checklist_search.vue';
+import Select from '../shared/legacy/select.vue';
 
 export default {
   name: 'RepositoryItemRelationshipsModal',

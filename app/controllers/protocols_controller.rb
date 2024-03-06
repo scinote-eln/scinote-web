@@ -19,6 +19,7 @@ class ProtocolsController < ApplicationController
     protocol_status_bar
     linked_children
     linked_children_datatable
+    versions_list
     permissions
   )
   before_action :switch_team_with_param, only: %i(index protocolsio_index)
@@ -72,7 +73,20 @@ class ProtocolsController < ApplicationController
 
   layout 'fluid'
 
-  def index; end
+  def index
+    respond_to do |format|
+      format.json do
+        protocols = Lists::ProtocolsService.new(Protocol.where(team: @current_team), params).call
+        render json: protocols,
+               each_serializer: Lists::ProtocolSerializer,
+               user: current_user,
+               meta: pagination_dict(protocols)
+      end
+      format.html do
+        render 'index'
+      end
+    end
+  end
 
   def datatable
     render json: ::ProtocolsDatatable.new(
@@ -87,8 +101,17 @@ class ProtocolsController < ApplicationController
     return render_403 unless @protocol.in_repository_published_original? || @protocol.initial_draft?
 
     @published_versions = @protocol.published_versions_with_original.order(version_number: :desc)
+
+    if @protocol.draft.present?
+      draft = @protocol.initial_draft? ? @protocol : @protocol.draft
+      draft_hash = ProtocolDraftSerializer.new(draft, scope: current_user).as_json
+    end
+
     render json: {
-      html: render_to_string(partial: 'protocols/index/protocol_versions_modal')
+      draft: draft_hash,
+      versions: @published_versions.map do |version|
+        ProtocolVersionSerializer.new(version, scope: current_user).as_json
+      end
     }
   end
 
@@ -97,12 +120,33 @@ class ProtocolsController < ApplicationController
   end
 
   def linked_children
-    render json: {
-      title: I18n.t('protocols.index.linked_children.title',
-                    protocol: escape_input(@protocol.name)),
-      html: render_to_string(partial: 'protocols/index/linked_children_modal_body',
-                             locals: { protocol: @protocol })
+    if params[:version].present?
+      records = @protocol.published_versions_with_original
+                         .find_by!(version_number: params[:version])
+                         .linked_children
+    else
+      records = Protocol.where(protocol_type: Protocol.protocol_types[:linked])
+      records = records.where(parent_id: @protocol.published_versions)
+                       .or(records.where(parent_id: @protocol.id))
+    end
+    records.preload(my_module: { experiment: :project }).distinct
+
+    render json: records.map { |record|
+      {
+        my_module_name: record.my_module.name,
+        experiment_name: record.my_module.experiment.name,
+        project_name: record.my_module.experiment.project.name,
+        my_module_url: protocols_my_module_path(record.my_module),
+        experiment_url: my_modules_path(experiment_id: record.my_module.experiment.id),
+        project_url: experiments_path(project_id: record.my_module.experiment.project.id)
+      }
     }
+  end
+
+  def versions_list
+    render json: { versions: (@protocol.parent || @protocol).published_versions_with_original
+                                                            .order(version_number: :desc)
+                                                            .map(&:version_number) }
   end
 
   def linked_children_datatable
@@ -152,8 +196,12 @@ class ProtocolsController < ApplicationController
                    nil,
                    protocol: @protocol.id)
 
-      flash[:success] = I18n.t('protocols.delete_draft_modal.success')
-      redirect_to protocols_path
+      if params[:version_modal]
+        render json: { message: I18n.t('protocols.delete_draft_modal.success') }
+      else
+        flash[:success] = I18n.t('protocols.delete_draft_modal.success')
+        redirect_to protocols_path
+      end
     rescue ActiveRecord::RecordNotDestroyed => e
       Rails.logger.error e.message
       render json: { message: e.message }, status: :unprocessable_entity
@@ -325,17 +373,15 @@ class ProtocolsController < ApplicationController
       draft = @protocol.save_as_draft(current_user)
 
       if draft.invalid?
-        flash[:error] = draft.errors.full_messages.join(', ')
-        redirect_to protocols_path
+        render json: { error: draft.errors.messages.map { |_, value| value }.join(' ') }, status: :unprocessable_entity
       else
         log_activity(:protocol_template_draft_created, nil, protocol: @protocol.id)
-        redirect_to protocol_path(draft)
+        render json: { url: protocol_path(draft) }
       end
     rescue StandardError => e
       Rails.logger.error(e.message)
       Rails.logger.error(e.backtrace.join("\n"))
-      flash[:error] = I18n.t('errors.general')
-      redirect_to protocols_path
+      render json: { error: I18n.t('errors.general') }, status: :unprocessable_entity
       raise ActiveRecord::Rollback
     end
   end
@@ -785,7 +831,7 @@ class ProtocolsController < ApplicationController
       actions:
         Toolbars::ProtocolsService.new(
           current_user,
-          protocol_ids: params[:protocol_ids].split(',')
+          protocol_ids: JSON.parse(params[:items]).map { |i| i['id'] }
         ).actions
     }
   end

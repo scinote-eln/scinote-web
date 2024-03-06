@@ -1,0 +1,22 @@
+<div class="content-header sticky-header">
+  <div class="title-row">
+      <i class="sn-icon sn-icon-navigator sci--layout--navigator-open cursor-pointer p-1.5 border rounded border-sn-light-grey mr-4"></i>
+      <% if current_folder&.name && @inline_editable_title_config.present? %>
+        <h1 data-view-mode="active" class="projects-title">
+          <%= render partial: "shared/inline_editing",
+                     locals: {
+                        initial_value: current_folder.name,
+                        config: @inline_editable_title_config
+                     } %>
+        </h1>
+      <% else %>
+        <h1 data-view-mode="active" class="projects-title name-readonly-placeholder">
+          <%= current_folder&.name || t('projects.index.head_title') %>
+        </h1>
+      <% end %>
+    <h1 data-view-mode="archived">
+      <span><%= t('labels.archived')%></span>&nbsp;
+      <span class="projects-title name-readonly-placeholder"><%= current_folder&.name || t('projects.index.head_title_archived') %></span>
+    </h1>
+  </div>
+</div>

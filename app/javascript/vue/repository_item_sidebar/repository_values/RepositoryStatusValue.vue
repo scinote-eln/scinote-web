@@ -4,23 +4,17 @@
       {{ colName }}
     </div>
     <div>
-      <select-search
+      <SelectDropdown
         v-if="permissions?.can_manage && !inArchivedRepositoryRow"
         @change="changeSelected"
-        @update="update"
         :value="selected"
-        :withClearButton="true"
-        :withEditCursor="true"
         ref="DropdownSelector"
         :options="options"
-        :isLoading="isLoading"
+        :searchable="true"
         :placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
         :no-options-placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
-        :searchPlaceholder="i18n.t('repositories.item_card.dropdown_placeholder')"
-        customClass="!h-[38px] !pl-2 sci-cursor-edit"
-        optionsClassName="max-h-[300px]"
         :data-e2e="'e2e-DD-repoItemSBcustomColumns-input' + colId"
-      ></select-search>
+      ></SelectDropdown>
       <div v-else-if="status && icon"
            class="flex flex-row items-center text-sn-dark-grey font-inter text-sm font-normal leading-5 gap-1.5">
         <div v-html="parseEmoji(icon)" class="flex h-6 w-6"></div>
@@ -38,13 +32,13 @@
 
 <script>
 import twemoji from 'twemoji';
-import SelectSearch from '../../shared/select_search.vue';
+import SelectDropdown from '../../shared/select_dropdown.vue';
 import repositoryValueMixin from './mixins/repository_value.js';
 
 export default {
   name: 'RepositoryStatusValue',
   components: {
-    'select-search': SelectSearch
+    SelectDropdown
   },
   mixins: [repositoryValueMixin],
   data() {

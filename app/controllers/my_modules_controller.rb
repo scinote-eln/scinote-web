@@ -8,9 +8,9 @@ class MyModulesController < ApplicationController
   include MyModulesHelper
   include Breadcrumbs
 
-  before_action :load_vars, except: %i(restore_group create new save_table_state
+  before_action :load_vars, except: %i(index restore_group create new save_table_state
                                        inventory_assigning_my_module_filter actions_toolbar)
-  before_action :load_experiment, only: %i(create new)
+  before_action :load_experiment, only: %i(create new index)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_archive_permissions, only: %i(update)
   before_action :check_manage_permissions, only: %i(
@@ -19,14 +19,30 @@ class MyModulesController < ApplicationController
   before_action :check_read_permissions, except: %i(create new update update_description
                                                     inventory_assigning_my_module_filter
                                                     update_protocol_description restore_group
-                                                    save_table_state actions_toolbar)
+                                                    save_table_state actions_toolbar index)
   before_action :check_update_state_permissions, only: :update_state
-  before_action :set_inline_name_editing, only: %i(protocols activities archive)
+  before_action :set_inline_name_editing, only: %i(protocols activities archive index)
   before_action :load_experiment_my_modules, only: %i(protocols activities archive)
-  before_action :set_breadcrumbs_items, only: %i(protocols activities archive)
-  before_action :set_navigator, only: %i(protocols activities archive)
+  before_action :set_breadcrumbs_items, only: %i(protocols activities archive index)
+  before_action :set_navigator, only: %i(protocols activities archive index)
 
   layout 'fluid'.freeze
+
+  def index
+    respond_to do |format|
+      format.json do
+        my_modules = Lists::MyModulesService.new(@experiment.my_modules.readable_by_user(current_user),
+                                                 params.merge(experiment: @experiment),
+                                                 user: current_user).call
+        render json: my_modules, each_serializer: Lists::MyModuleSerializer, user: current_user,
+               meta: pagination_dict(my_modules)
+      end
+      format.html do
+        save_view_type('table')
+        render 'my_modules/index'
+      end
+    end
+  end
 
   def new
     @my_module = @experiment.my_modules.new
@@ -51,7 +67,7 @@ class MyModulesController < ApplicationController
     )
     @my_module.transaction do
       if my_module_tags_params[:tag_ids].present?
-        @my_module.tags << @experiment.project.tags.where(id: JSON.parse(my_module_tags_params[:tag_ids]))
+        @my_module.tags << @experiment.project.tags.where(id: my_module_tags_params[:tag_ids])
       end
       if my_module_designated_users_params[:user_ids].present? && can_designate_users_to_new_task?(@experiment)
         @my_module.designated_users << @experiment.users.where(id: my_module_designated_users_params[:user_ids])
@@ -328,16 +344,22 @@ class MyModulesController < ApplicationController
       end
     end
     if counter == my_modules.size
-      flash[:success] = t('my_modules.restore_group.success_flash_html', number: counter)
+      message = t('my_modules.restore_group.success_flash_html', number: counter)
     elsif counter.positive?
-      flash[:warning] = t('my_modules.restore_group.partial_success_flash_html', number: counter)
+      message = t('my_modules.restore_group.partial_success_flash_html', number: counter)
     else
-      flash[:error] = t('my_modules.restore_group.error_flash')
+      error = t('my_modules.restore_group.error_flash')
     end
 
     if params[:view] == 'table'
-      redirect_to table_experiment_path(experiment, view_mode: :archived)
+      if message
+        render json: { message: message }
+      else
+        render json: { error: error }, status: :unprocessable_entity
+      end
     else
+      flash[:notice] = message if message
+      flash[:error] = error if error
       redirect_to module_archive_experiment_path(experiment)
     end
   end
@@ -348,7 +370,14 @@ class MyModulesController < ApplicationController
       log_activity(:change_status_on_task_flow, @my_module, my_module_status_old: old_status_id,
                    my_module_status_new: @my_module.my_module_status.id)
 
-      render json: { status: :changed }
+      render json: {
+        status: :changed,
+        html: render_to_string(
+          partial: 'my_modules/status_flow/task_flow_button',
+          locals: { my_module: @my_module },
+          formats: :html
+        )
+      }
     else
       render json: { errors: @my_module.errors.messages.values.flatten.join('\n') }, status: :unprocessable_entity
     end
@@ -381,7 +410,7 @@ class MyModulesController < ApplicationController
       actions:
         Toolbars::MyModulesService.new(
           current_user,
-          my_module_ids: params[:my_module_ids].split(',')
+          my_module_ids: JSON.parse(params[:items]).map { |i| i['id'] }
         ).actions
     }
   end
@@ -425,7 +454,8 @@ class MyModulesController < ApplicationController
   end
 
   def load_experiment
-    @experiment = Experiment.preload(user_assignments: %i(user user_role)).find_by(id: params[:id])
+    @experiment = Experiment.preload(user_assignments: %i(user user_role))
+                            .find_by(id: params[:id] || params[:experiment_id])
     render_404 unless @experiment
   end
 
@@ -461,6 +491,19 @@ class MyModulesController < ApplicationController
   end
 
   def set_inline_name_editing
+    if action_name == 'index'
+      return unless can_manage_experiment?(@experiment)
+
+      @inline_editable_title_config = {
+        name: 'title',
+        params_group: 'experiment',
+        item_id: @experiment.id,
+        field_to_udpate: 'name',
+        path_to_update: experiment_path(@experiment)
+      }
+      return
+    end
+
     return unless can_manage_my_module?(@my_module)
 
     @inline_editable_title_config = {
@@ -488,7 +531,7 @@ class MyModulesController < ApplicationController
   end
 
   def my_module_tags_params
-    params.require(:my_module).permit(:tag_ids)
+    params.require(:my_module).permit(tag_ids: [])
   end
 
   def my_module_designated_users_params
@@ -537,6 +580,12 @@ class MyModulesController < ApplicationController
     users.each do |user|
       log_activity(:designate_user_to_my_module, @my_module, { user_target: user.id })
     end
+  end
+
+  def save_view_type(view_type)
+    view_state = @experiment.current_view_state(current_user)
+    view_state.state['my_modules']['view_type'] = view_type
+    view_state.save!
   end
 
   def log_activity(type_of, my_module = nil, message_items = {})
@@ -589,6 +638,15 @@ class MyModulesController < ApplicationController
   end
 
   def set_navigator
+    if action_name == 'index'
+      @navigator = {
+        url: tree_navigator_experiment_path(@experiment),
+        archived: params[:view_mode] == 'archived',
+        id: @experiment.code
+      }
+      return
+    end
+
     @navigator = {
       url: tree_navigator_my_module_path(@my_module),
       archived: params[:view_mode] == 'archived',

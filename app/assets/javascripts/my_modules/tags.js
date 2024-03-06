@@ -146,13 +146,11 @@
     });
     // initialize my_module tab remote loading
     $('#experimentTable, .my-modules-protocols-index, #experiment-canvas')
-      .on('ajax:before', '.edit-tags-link', function() {
-        manageTagsModal.modal('show');
+      .on('click', '.edit-tags-link', function() {
+        if($('#tagsModalComponent').length) {
+          $('#tagsModalComponent').data('tagsModal').open()
+        }
       })
-      .on('ajax:success', '.edit-tags-link', function(e, data) {
-        $('#manage-module-tags-modal-module').text(data.my_module.name);
-        initTagsModalBody(data);
-      });
   }
 
   bindEditTagsAjax();

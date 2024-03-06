@@ -1,8 +1,0 @@
-<% if can_create_reports?(current_team) %>
-  <div class="sci-btn-group">
-    <%= link_to new_report_path, class: 'btn btn-primary', id: 'new-report-btn', title: t("projects.reports.index.new_tooltip") do %>
-      <span class="sn-icon sn-icon-new-task" aria-hidden="true"></span>
-      <span class="hidden-xs"><%= t("projects.reports.index.new") %></span>
-    <% end %>
-  </div>
-<% end %>

@@ -1,0 +1,21 @@
+<div class="content-header sticky-header">
+  <div class="title-row">
+    <i class="sn-icon sn-icon-navigator sci--layout--navigator-open cursor-pointer p-1.5 border rounded border-sn-light-grey mr-4"></i>
+    <h1 class="project-name">
+      <% if @project.archived? %>
+        <span class="whitespace-nowrap"><%= t('labels.archived')%></span>&nbsp;
+      <% end %>
+      <% if @inline_editable_title_config.present? %>
+              <%= render partial: "shared/inline_editing",
+                        locals: {
+                            initial_value: @project.name,
+                            config: @inline_editable_title_config
+                        } %>
+      <% else %>
+        <div class="name-readonly-placeholder">
+          <%= @project.name %>
+        </div>
+      <% end %>
+    </h1>
+  </div>
+</div>

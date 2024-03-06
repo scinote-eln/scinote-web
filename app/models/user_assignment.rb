@@ -39,6 +39,10 @@ class UserAssignment < ApplicationRecord
     user_assignments.none?
   end
 
+  def user_name_with_role
+    "#{user.name} - #{user_role.name}"
+  end
+
   private
 
   def set_assignable_team

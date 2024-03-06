@@ -185,6 +185,9 @@
                 :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
                 :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
               />
+              <div v-if="(index === steps.length - 1) && urls.add_step_url" class="insert-step" @click="addStep(index + 1)">
+                <i class="sn-icon sn-icon-new-task"></i>
+              </div>
             </div>
             <div v-if="steps.length > 0 && urls.add_step_url && inRepository" class="py-5">
               <a
