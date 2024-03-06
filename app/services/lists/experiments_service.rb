@@ -77,7 +77,7 @@ module Lists
         code: 'experiments.id',
         archived_on: 'COALESCE(experiments.archived_on, projects.archived_on)',
         updated_at: 'experiments.updated_at',
-        total_tasks: 'task_count',
+        completed_tasks: 'completed_task_count',
         description: 'experiments.description'
       }
     end
