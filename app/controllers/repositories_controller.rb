@@ -96,7 +96,7 @@ class RepositoriesController < ApplicationController
   end
 
   def shareable_teams
-    teams = current_user.teams - [@repository.team]
+    teams = current_user.teams.order(:name) - [@repository.team]
     render json: teams, each_serializer: ShareableTeamSerializer, repository: @repository
   end
 
