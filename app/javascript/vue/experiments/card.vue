@@ -44,11 +44,11 @@
           <div class="w-full h-1 bg-sn-sleepy-grey">
             <div class="h-full"
                  :class="{
-                   'bg-sn-black': dtComponent.viewMode == 'archived',
-                   'bg-sn-blue': dtComponent.viewMode != 'archived'
+                   'bg-sn-black': params.archived_on,
+                   'bg-sn-blue': !params.archived_on
                  }"
                  :style="{
-                   width: params.completed_tasks / params.total_tasks * 100 + '%'
+                   width: `${progress}%`
                  }"></div>
           </div>
         </div>
@@ -82,5 +82,14 @@ export default {
     Description,
   },
   mixins: [CardSelectorMixin, workflowImgMixin],
+  computed: {
+    progress() {
+      const { completed_tasks: completedTasks, total_tasks: totalTasks } = this.params;
+
+      if (totalTasks === 0) return 0;
+
+      return (completedTasks / totalTasks) * 100;
+    }
+  }
 };
 </script>
