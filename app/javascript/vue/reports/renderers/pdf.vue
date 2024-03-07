@@ -13,6 +13,9 @@
         </a>
       </span>
     </template>
+    <span v-else-if="pdf.processing" class="processing pdf">
+      {{ i18n.t('projects.reports.index.generating') }}
+    </span>
     <template v-else-if="pdf.preview_url">
       <a v-if="pdf.preview_url" href="#"
           class="file-preview-link flex items-center gap-1
@@ -22,9 +25,6 @@
         {{ i18n.t('projects.reports.index.pdf') }}
       </a>
     </template>
-    <span v-else-if="pdf.processing" class="processing pdf">
-      {{ i18n.t('projects.reports.index.generating') }}
-    </span>
     <a v-else class="hidden group-hover:!block" href="#" @click.prevent="generate">
       {{ i18n.t('projects.reports.index.generate') }}
     </a>
@@ -49,6 +49,18 @@ export default {
   mounted() {
     if (this.pdf.processing) {
       setTimeout(this.checkStatus, 3000);
+    }
+  },
+  watch: {
+    'params.data.pdf_file': {
+      handler: function (val) {
+        console.log('watching pdf_file')
+        this.pdf = val;
+        if (val?.processing) {
+          setTimeout(this.checkStatus, 3000);
+        }
+      },
+      deep: true
     }
   },
   methods: {

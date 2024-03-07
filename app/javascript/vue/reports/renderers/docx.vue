@@ -51,6 +51,17 @@ export default {
       setTimeout(this.checkStatus, 3000);
     }
   },
+  watch: {
+    'params.data.docx_file': {
+      handler: function (val) {
+        this.docx = val;
+        if (val?.processing) {
+          setTimeout(this.checkStatus, 3000);
+        }
+      },
+      deep: true
+    }
+  },
   methods: {
     generate() {
       axios.post(this.params.data.urls.generate_docx)

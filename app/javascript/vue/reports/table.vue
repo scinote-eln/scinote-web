@@ -27,7 +27,10 @@
     :columnsUrl="availableColumnsUrl"
     :rowsUrl="availableRowsUrl"
     ref="saveToInventoryModal"/>
-  <UpdateReportModal v-if="promiseToUpdateReport" @confirm="promiseToUpdateReport.then(confirmReportUpdate)" ref="updateReportModal"/>
+  <UpdateReportModal v-if="promiseToUpdateReport"
+                     @confirm="promiseToUpdateReport.then(confirmReportUpdate)"
+                     @dismiss="promiseToUpdateReport = false"
+                     ref="updateReportModal"/>
 </template>
 
 <script>
@@ -164,10 +167,10 @@ export default {
       }
 
       axios.post(url)
-           .then(() => {
-             this.updateTable();
-             HelperModule.flashAlertMsg(this.i18n.t('projects.reports.index.generation.accepted_message'), 'success');
-           });
+        .then(() => {
+          this.updateTable();
+          HelperModule.flashAlertMsg(this.i18n.t('projects.reports.index.generation.accepted_message'), 'success');
+        });
     },
     async deleteReport(event, rows) {
       this.deleteModal.title = this.i18n.t('projects.reports.index.modal_delete.head_title');
