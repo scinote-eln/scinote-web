@@ -43,7 +43,8 @@ Canaid::Permissions.register_for(Project) do
   end
 
   can :read_project_users do |user, project|
-    project.permission_granted?(user, ProjectPermissions::USERS_READ)
+    project.permission_granted?(user, ProjectPermissions::USERS_READ) ||
+      project.team.permission_granted?(user, TeamPermissions::MANAGE)
   end
 
   can :read_project_activities do |user, project|
