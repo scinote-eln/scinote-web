@@ -4,10 +4,11 @@ class RepositoriesExportJob < ApplicationJob
   include StringUtility
   include FailedDeliveryNotifiableJob
 
-  def perform(repository_ids, user_id:, team_id:)
+  def perform(file_type, repository_ids, user_id:, team_id:)
     @user = User.find(user_id)
     @team = Team.find(team_id)
     @repositories = Repository.viewable_by_user(@user, @team).where(id: repository_ids).order(:id)
+    @file_type = file_type.to_sym
     zip_input_dir = FileUtils.mkdir_p(Rails.root.join("tmp/temp_zip_#{Time.now.to_i}")).first
     zip_dir = FileUtils.mkdir_p(Rails.root.join('tmp/zip-ready')).first
 
@@ -32,11 +33,11 @@ class RepositoriesExportJob < ApplicationJob
     team_path = "#{tmp_dir}/#{to_filesystem_name(@team.name)}"
     FileUtils.mkdir_p(team_path)
     @repositories.each_with_index do |repository, idx|
-      save_repository_to_csv(team_path, repository, idx)
+      save_repository_as_file(team_path, repository, idx)
     end
   end
 
-  def save_repository_to_csv(path, repository, idx)
+  def save_repository_as_file(path, repository, idx)
     repository_name = "#{to_filesystem_name(repository.name)} (#{idx})"
 
     # Attachments dir
@@ -44,8 +45,8 @@ class RepositoriesExportJob < ApplicationJob
     attachments_path = "#{path}/#{relative_attachments_path}"
     FileUtils.mkdir_p(attachments_path)
 
-    # CSV file
-    csv_file = FileUtils.touch("#{path}/#{repository_name}.csv").first
+    # File creation
+    file_name = FileUtils.touch("#{path}/#{repository_name}.#{@file_type}").first
 
     # Define headers and columns IDs
     col_ids = [-3, -4, -5, -6, -7, -8]
@@ -66,9 +67,12 @@ class RepositoriesExportJob < ApplicationJob
       return "=HYPERLINK(\"#{relative_path}\", \"#{relative_path}\")"
     end
 
-    # Generate CSV
-    csv_data = RepositoryZipExport.to_csv(repository.repository_rows, col_ids, @user, repository, handle_name_func)
-    File.binwrite(csv_file, csv_data.encode('UTF-8', invalid: :replace, undef: :replace))
+    # Generate CSV / XLSX
+    service = RepositoryExportService
+              .new(@file_type, repository.repository_rows, col_ids, @user, repository, in_module: handle_name_func)
+    exported_data = service.export!
+
+    File.binwrite(file_name, exported_data)
 
     # Save all attachments (it doesn't work directly in callback function
     assets.each do |asset, asset_path|

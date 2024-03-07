@@ -26,6 +26,7 @@ class RepositoriesController < ApplicationController
   before_action :check_copy_permissions, only: %i(copy_modal copy)
   before_action :set_inline_name_editing, only: %i(show)
   before_action :set_breadcrumbs_items, only: %i(index show)
+  before_action :validate_file_type, only: %i(export_repository export_repositories)
 
   layout 'fluid'
 
@@ -343,7 +344,8 @@ class RepositoriesController < ApplicationController
           repository_id: @repository.id,
           row_ids: params[:row_ids],
           header_ids: params[:header_ids]
-        }
+        },
+        file_type: params[:file_type]
       )
       log_activity(:export_inventory_items)
       render json: { message: t('zip_export.export_request_success') }
@@ -356,7 +358,8 @@ class RepositoriesController < ApplicationController
     repositories = Repository.viewable_by_user(current_user, current_team).where(id: params[:repository_ids])
     if repositories.present? && current_user.has_available_exports?
       current_user.increase_daily_exports_counter!
-      RepositoriesExportJob.perform_later(repositories.pluck(:id), user_id: current_user.id, team_id: current_team.id)
+      RepositoriesExportJob
+        .perform_later(params[:file_type], repositories.pluck(:id), user_id: current_user.id, team_id: current_team.id)
       log_activity(:export_inventories, inventories: repositories.pluck(:name).join(', '))
       render json: { message: t('zip_export.export_request_success') }
     else
@@ -572,5 +575,9 @@ class RepositoriesController < ApplicationController
     @breadcrumbs_items.each do |item|
       item[:label] = "(A) #{item[:label]}" if item[:archived]
     end
+  end
+
+  def validate_file_type
+    render json: { message: 'Invalid file type' }, status: :bad_request unless %w(csv xlsx).include?(params[:file_type])
   end
 end
