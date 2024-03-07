@@ -58,7 +58,7 @@
       >
       </ag-grid-vue>
       <div v-if="dataLoading" class="flex absolute top-0 items-center justify-center w-full flex-grow h-full z-10">
-        <img src="/images/medium/loading.svg" alt="Loading" class="p-4 rounded-xl bg-sn-white" />
+        <img src="/images/medium/loading.svg" alt="Loading" class="p-16 rounded-xl bg-sn-white" />
       </div>
       <ActionToolbar
         v-if="selectedRows.length > 0 && actionsUrl"
