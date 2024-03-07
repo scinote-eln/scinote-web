@@ -184,20 +184,29 @@ export default {
   computed: {
     viewModesMenu() {
       return [
-        { text: this.i18n.t('projects.index.active'), url: this.activePageUrl },
-        { text: this.i18n.t('projects.index.archived'), url: this.archivedPageUrl }
+        {
+          text: this.i18n.t('projects.index.active'),
+          url: this.activePageUrl,
+          active: this.currentViewMode === 'active'
+        },
+        {
+          text: this.i18n.t('projects.index.archived'),
+          url: this.archivedPageUrl,
+          active: this.currentViewMode === 'archived'
+        }
       ];
     },
     viewRendersMenu() {
       return this.viewRenders.map((view) => {
         const { type } = view;
+        const active = this.currentViewRender === type;
         switch (type) {
           case 'cards':
-            return { text: this.i18n.t('toolbar.cards_view'), emit: 'setCardsView' };
+            return { text: this.i18n.t('toolbar.cards_view'), emit: 'setCardsView', active };
           case 'table':
-            return { text: this.i18n.t('toolbar.table_view'), emit: 'setTableView' };
+            return { text: this.i18n.t('toolbar.table_view'), emit: 'setTableView', active };
           case 'custom':
-            return { text: view.name, url: view.url };
+            return { text: view.name, url: view.url, active };
           default:
             return view;
         }
