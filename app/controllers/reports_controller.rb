@@ -390,6 +390,8 @@ class ReportsController < ApplicationController
 
     ensure_report_template!
     Reports::PdfJob.perform_later(@report.id, user_id: current_user.id)
+  rescue ActiveRecord::ActiveRecordError => e
+    Rails.logger.error e.message
   end
 
   def ensure_report_template!

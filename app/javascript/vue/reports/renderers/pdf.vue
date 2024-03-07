@@ -54,7 +54,6 @@ export default {
   watch: {
     'params.data.pdf_file': {
       handler: function (val) {
-        console.log('watching pdf_file')
         this.pdf = val;
         if (val?.processing) {
           setTimeout(this.checkStatus, 3000);
