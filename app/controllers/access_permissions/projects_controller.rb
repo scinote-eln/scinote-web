@@ -181,7 +181,7 @@ module AccessPermissions
     end
 
     def check_read_permissions
-      render_403 unless can_read_project?(@project)
+      render_403 unless can_read_project_users?(@project)
     end
 
     def available_users
