@@ -148,7 +148,7 @@ class RepositoryRowConnectionsController < ApplicationController
         name: repository_row.name_with_label,
         code: repository_row.code,
         path: repository_repository_row_path(repository_row.repository, repository_row),
-        repository_name: repository_row.repository.name,
+        repository_name: repository_row.repository.name_with_label,
         repository_path: repository_path(repository_row.repository),
         unlink_path: repository_repository_row_repository_row_connection_path(
           repository_row.repository,
