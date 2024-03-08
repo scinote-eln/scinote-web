@@ -36,6 +36,7 @@
       @open_locally="openLocally"
       @delete="deleteModal = true"
       @rename="renameModal = true"
+      @duplicate="duplicate"
       @viewMode="changeViewMode"
       @move="showMoveModal"
       @menu-visibility-changed="$emit('menu-visibility-changed', $event)"
@@ -86,6 +87,7 @@ import moveAssetModal from '../modal/move.vue';
 import MoveMixin from './mixins/move.js';
 import OpenLocallyMixin from './mixins/open_locally.js';
 import MenuDropdown from '../../menu_dropdown.vue';
+import axios from '../../../../packs/custom_axios.js';
 
 export default {
   name: 'contextMenu',
@@ -174,6 +176,12 @@ export default {
           emit: 'rename'
         });
       }
+      if (this.attachment.attributes.urls.duplicate) {
+        menu.push({
+          text: this.i18n.t('assets.context_menu.duplicate'),
+          emit: 'duplicate'
+        });
+      }
       if (this.attachment.attributes.urls.delete) {
         menu.push({
           text: this.i18n.t('assets.context_menu.delete'),
@@ -204,6 +212,13 @@ export default {
         type: 'PATCH',
         dataType: 'json',
         data: { asset: { view_mode: viewMode } }
+      });
+    },
+    duplicate() {
+      axios.post(this.attachment.attributes.urls.duplicate).then(() => {
+        this.reloadAttachments();
+      }).catch((e) => {
+        console.error(e);
       });
     },
     deleteAttachment() {

@@ -3723,6 +3723,7 @@ en:
       set_view_size: "SET PREVIEW SIZE"
       rename: "Rename"
       delete: "Delete"
+      duplicate: "Duplicate"
       move: "Move"
       inline_html: "Large"
       thumbnail_html: "Thumbnail"
