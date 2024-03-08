@@ -9,6 +9,7 @@
       class="px-3 py-1 border border-solid rounded flex items-center cursor-pointer"
       @click="open"
       :class="[sizeClass, {
+        '!border-sn-delete-red': error,
         '!border-sn-blue': isOpen,
         '!border-sn-light-grey': !isOpen,
         'bg-sn-super-light-grey': disabled
@@ -123,8 +124,10 @@ export default {
     searchable: { type: Boolean, default: false },
     clearable: { type: Boolean, default: false },
     tagsView: { type: Boolean, default: false },
-    urlParams: { type: Object, default: () => ({}) }
+    urlParams: { type: Object, default: () => ({}) },
+    error: { type: String }
   },
+  emits: ['query', 'change'],
   directives: {
     'click-outside': vOnClickOutside
   },
@@ -253,6 +256,7 @@ export default {
     isOpen() {
       if (this.isOpen) {
         this.$nextTick(() => {
+          this.query = '';
           this.setPosition();
           this.$refs.search?.focus();
         });
@@ -260,6 +264,9 @@ export default {
     },
     query() {
       if (this.optionsUrl) this.fetchOptions();
+    },
+    optionsUrl(urlValue) {
+      if (urlValue) this.fetchOptions();
     }
   },
   methods: {
@@ -296,11 +303,10 @@ export default {
         if (this.valueChanged) {
           this.$emit('change', this.newValue);
         }
-        this.query = '';
       });
     },
     setValue(value) {
-      this.query = '';
+      this.$emit('query', this.query);
 
       if (this.multiple) {
         if (this.newValue.includes(value)) {

@@ -62,18 +62,25 @@ en:
         title: "Cannot create."
         description: "As a guest in this team you cannot create anything."
     create_task_modal:
-      title: "Create a new Task"
-      description: "Simply type in the fields below to find or create space for your new task to live in"
-      project: "Project"
-      project_visibility_label: "Visible to"
-      project_visibility_members: "Project members"
-      project_visibility_all: "All team members"
-      experiment: "Experiment"
-      project_placeholder: "Enter project name (New or Existing)"
-      experiment_placeholder: "Enter experiment name (New or Existing)"
-      experiment_disabled_placeholder: "Select Project to enable Experiments"
-      filter_create_new: "Create"
-      create_task: "Create Task"
+      title: "Create new Task"
+      task:
+        label: "Task name"
+        placeholder: "Enter task name"
+        name_too_short_error: "Task name must be at least 2 characters long."
+      project:
+        label: "Project"
+        placeholder: "Select or create project"
+        visibility_label: "Grant access to this project for all team members."
+        name_too_short_error: "Project name must be at least 2 characters long."
+      user_role:
+        label: "User role"
+        placeholder: "Select default user role"
+      experiment:
+        label: "Experiment"
+        placeholder: "Select or create experiment"
+        name_too_short_error: "Experiment name must be at least 2 characters long."
+      create: "Create"
+      cancel: "Cancel"
     recent_work:
       title: "Recent work"
       no_results:

@@ -1,5 +1,7 @@
 <div class="quick-start-buttons" data-e2e="e2e-CO-dashboard-quickStartButtons" >
-  <div class="new-task btn btn-secondary"><i class="sn-icon sn-icon-new-task"></i><%= t("dashboard.quick_start.new_task") %></div>
+   <button class="new-task btn btn-secondary" data-toggle="modal" data-target="#create-new-task-modal">
+    <i class="sn-icon sn-icon-new-task"></i><%= t("dashboard.quick_start.new_task") %>
+  </button>
   <% if can_create_protocols_in_repository?(current_team) %>
     <button data-toggle="modal" data-target="#newProtocolModal" class="btn btn-secondary">
       <i class="sn-icon sn-icon-protocols-templates"></i><%= t("dashboard.quick_start.new_protocol") %>
@@ -11,7 +13,7 @@
     <% end %>
   <% end %>
 </div>
-<%= render "create_task_modal" %>
+<%= render "create_new_task_modal" %>
 
 <%= render partial: "protocols/index/new_protocol_modal", locals: {type: 'new'} %>
 <%= javascript_include_tag "protocols/new_protocol" %>
