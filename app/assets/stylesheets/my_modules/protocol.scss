@@ -102,4 +102,10 @@
   .shareable-link-disclaimer {
     color: var(--sn-grey);
   }
+
+  .sci-input-container-v2 {
+    textarea::placeholder {
+      color: var(--sn-grey);
+    }
+  }
 }

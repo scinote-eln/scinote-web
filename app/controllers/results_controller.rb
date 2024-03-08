@@ -2,6 +2,7 @@
 
 class ResultsController < ApplicationController
   include Breadcrumbs
+  include TeamsHelper
   skip_before_action :verify_authenticity_token, only: %i(create update destroy duplicate)
   before_action :load_my_module
   before_action :load_vars, only: %i(destroy elements assets upload_attachment archive restore destroy
@@ -175,6 +176,7 @@ class ResultsController < ApplicationController
 
   def load_my_module
     @my_module = MyModule.readable_by_user(current_user).find(params[:my_module_id])
+    current_team_switch(@my_module.team) if current_team != @my_module.team
   end
 
   def load_vars

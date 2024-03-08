@@ -34,7 +34,7 @@
               </span>
             </div>
             <div class="teams-list">
-              <% (current_user.teams - [@repository.team]).each do |t| %>
+              <% (current_user.teams.order(:name) - [@repository.team]).each do |t| %>
               <div class="team-container">
                 <div class="team-selector">
                   <span class="sci-checkbox-container">

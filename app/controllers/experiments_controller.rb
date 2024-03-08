@@ -343,6 +343,7 @@ class ExperimentsController < ApplicationController
                          .joins(:my_modules)
                          .where(experiments: { id: viewable_experiments })
                          .where(my_modules: { id: assignable_my_modules })
+                         .order(:name)
                          .distinct
                          .pluck(:id, :name)
 

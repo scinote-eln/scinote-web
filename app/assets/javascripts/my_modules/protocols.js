@@ -8,7 +8,6 @@
 // Currently selected row in "load from protocol" modal
 var selectedRow = null;
 
-
 function initEditMyModuleDescription() {
   var viewObject = $('#my_module_description_view');
   viewObject.on('click', function(e) {
@@ -341,3 +340,11 @@ function init() {
 }
 
 init();
+
+const viewMode = new URLSearchParams(window.location.search).get('view_mode');
+if (['archived', 'locked', 'active'].includes(viewMode)) {
+  setTimeout(() => {
+    const notesContainerEl = document.getElementById('notes-container');
+    window.wrapTables(notesContainerEl);
+  }, 100);
+}

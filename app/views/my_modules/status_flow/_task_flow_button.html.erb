@@ -1,82 +1,84 @@
 <% status = my_module.my_module_status %>
-<div class="status-label">
-  <div class="status-title"><%= t('my_module_statuses.dropdown.status_label') %></div>
-  <div class="status-note">
-    <% if my_module.last_transition_error %>
-      <div class="status-transition-error">
-        <i class="fas fa-exclamation-triangle"></i>
-        <% case my_module.last_transition_error["type"] %>
-        <% when "repository_snapshot" %>
-          <%= t(
-            "my_modules.status_error.repository_snapshot",
-            repository: Repository.find(my_module.last_transition_error["repository_id"]).name
-          ) %>
-        <% else %>
-          <%= t("my_modules.status_error.general") %>
-        <% end %>
-      </div>
-    <% end %>
-  </div>
-</div>
-<div class="status-buttons">
-  <div class="dropdown sci-dropdown status-flow-dropdown"
-      data-status-changing="<%= my_module.status_changing %>"
-      data-status-check-url="<%= status_state_my_module_path(my_module) %>">
-    <button class="btn btn-secondary dropdown-toggle
-    <%= 'disabled' if my_module.status_changing || my_module.archived_branch? %>
-    <%= 'status-light' if status.light_color? %>"
-            type="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="true"
-            style="<%= "background-color: #{status.color}" %>;">
-      <span>
-        <% if my_module.status_changing %>
-          <i class="fas fa-spinner fa-spin"></i>
-          <span><%= t('my_module_statuses.dropdown.status_transitioning_label') %></span>
-        <% end %>
-        <%= status.name %>
-      </span>
-      <span class="sn-icon sn-icon-down"></span>
-    </button>
-    <ul class="dropdown-menu pull-right" aria-labelledby="dropdownTaskFlow" id="dropdownTaskFlowList" data-link-url="<%= update_state_my_module_url(my_module) %>">
-      <% if can_update_my_module_status?(@my_module) %>
-        <% unless status.initial_status? %>
-          <% previous_s = status.previous_status %>
-          <% previous_s_errors = previous_s.conditions_errors(my_module) %>
-          <li data-state-id="<%= previous_s.id %>" id="previousStatusSelector" class="<%= 'disabled' if previous_s_errors.any? %>">
-            <span><%= t('my_module_statuses.dropdown.return_label') %></span>
-            <i class="fas fa-long-arrow-alt-right"></i>
-            <div class="status-container">
-              <div class="status-name <%= 'status-light' if previous_s.light_color? %>"
-                style="<%= "background-color: #{previous_s.color}" %>"><%= previous_s.name %></div>
-            </div>
-          </li>
-          <span class="error-message"><% previous_s_errors.each do |error| %>
-              <%= error %><br>
-            <% end %></span>
-        <% end %>
-
-        <% unless status.final_status? %>
-          <% next_s = status.next_status %>
-          <% next_s_errors = next_s.conditions_errors(my_module) %>
-          <li data-state-id="<%= next_s.id %>" id="nextStatusSelector" class="<%= 'disabled' if next_s_errors.any? %>">
-            <span><%= t('my_module_statuses.dropdown.move_label') %></span>
-            <i class="fas fa-long-arrow-alt-right"></i>
-            <div class="status-container">
-              <div class="status-name" style="<%= "background-color: #{next_s.color}" %>"><%= next_s.name %></div>
-            </div>
-          </li>
-          <span class="error-message" data-errors-for="next-status"><% next_s_errors.each do |error| %>
-              <%= error %><br>
-            <% end %></span>
-        <% end %>
-      <% else %>
-        <span class="error-message permission-error"><%= t('my_module_statuses.dropdown.no_permission_label') %></span>
+<div class='status-flow-container flex items-center gap-2'>
+  <div class="status-label">
+    <div class="status-title"><%= t('my_module_statuses.dropdown.status_label') %></div>
+    <div class="status-note">
+      <% if my_module.last_transition_error %>
+        <div class="status-transition-error">
+          <i class="fas fa-exclamation-triangle"></i>
+          <% case my_module.last_transition_error["type"] %>
+          <% when "repository_snapshot" %>
+            <%= t(
+              "my_modules.status_error.repository_snapshot",
+              repository: Repository.find(my_module.last_transition_error["repository_id"]).name
+            ) %>
+          <% else %>
+            <%= t("my_modules.status_error.general") %>
+          <% end %>
+        </div>
       <% end %>
-      <li id="viewTaskFlow">
-        <%= t('my_module_statuses.dropdown.view_flow_label') %>
-      </li>
-    </ul>
+    </div>
+  </div>
+  <div class="status-buttons">
+    <div class="dropdown sci-dropdown status-flow-dropdown"
+        data-status-changing="<%= my_module.status_changing %>"
+        data-status-check-url="<%= status_state_my_module_path(my_module) %>">
+      <button class="btn btn-secondary dropdown-toggle
+      <%= 'disabled' if my_module.status_changing || my_module.archived_branch? %>
+      <%= 'status-light' if status.light_color? %>"
+              type="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="true"
+              style="<%= "background-color: #{status.color}" %>;">
+        <span>
+          <% if my_module.status_changing %>
+            <i class="fas fa-spinner fa-spin"></i>
+            <span><%= t('my_module_statuses.dropdown.status_transitioning_label') %></span>
+          <% end %>
+          <%= status.name %>
+        </span>
+        <span class="sn-icon sn-icon-down"></span>
+      </button>
+      <ul class="dropdown-menu pull-right" aria-labelledby="dropdownTaskFlow" id="dropdownTaskFlowList" data-link-url="<%= update_state_my_module_url(my_module) %>">
+        <% if can_update_my_module_status?(@my_module) %>
+          <% unless status.initial_status? %>
+            <% previous_s = status.previous_status %>
+            <% previous_s_errors = previous_s.conditions_errors(my_module) %>
+            <li data-state-id="<%= previous_s.id %>" id="previousStatusSelector" class="<%= 'disabled' if previous_s_errors.any? %>">
+              <span><%= t('my_module_statuses.dropdown.return_label') %></span>
+              <i class="fas fa-long-arrow-alt-right"></i>
+              <div class="status-container">
+                <div class="status-name <%= 'status-light' if previous_s.light_color? %>"
+                  style="<%= "background-color: #{previous_s.color}" %>"><%= previous_s.name %></div>
+              </div>
+            </li>
+            <span class="error-message"><% previous_s_errors.each do |error| %>
+                <%= error %><br>
+              <% end %></span>
+          <% end %>
+
+          <% unless status.final_status? %>
+            <% next_s = status.next_status %>
+            <% next_s_errors = next_s.conditions_errors(my_module) %>
+            <li data-state-id="<%= next_s.id %>" id="nextStatusSelector" class="<%= 'disabled' if next_s_errors.any? %>">
+              <span><%= t('my_module_statuses.dropdown.move_label') %></span>
+              <i class="fas fa-long-arrow-alt-right"></i>
+              <div class="status-container">
+                <div class="status-name" style="<%= "background-color: #{next_s.color}" %>"><%= next_s.name %></div>
+              </div>
+            </li>
+            <span class="error-message" data-errors-for="next-status"><% next_s_errors.each do |error| %>
+                <%= error %><br>
+              <% end %></span>
+          <% end %>
+        <% else %>
+          <span class="error-message permission-error"><%= t('my_module_statuses.dropdown.no_permission_label') %></span>
+        <% end %>
+        <li id="viewTaskFlow">
+          <%= t('my_module_statuses.dropdown.view_flow_label') %>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>

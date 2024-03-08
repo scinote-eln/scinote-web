@@ -35,7 +35,7 @@
             'max-h-[4rem]': collapsed,
             'max-h-[40rem]': !collapsed
           }">
-      {{ colVal.toLocaleString('en-US', { timezone: 'UTC' }) }}
+      {{ colval }}
     </div>
     <div v-else
           class="text-sn-dark-grey font-inter text-sm font-normal leading-5">

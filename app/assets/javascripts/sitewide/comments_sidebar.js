@@ -31,6 +31,7 @@ var CommentsSidebar = (function() {
       // Replace the number in comment element
       commentsCounter.text(commentsCounter.text().replace(/[\d\\+]+/g, commentsAmount));
       commentsCounter.removeClass('hidden');
+      commentsCounter.css('display', 'flex');
     }
   }
 

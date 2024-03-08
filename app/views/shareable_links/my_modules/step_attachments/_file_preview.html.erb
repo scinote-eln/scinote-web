@@ -24,7 +24,7 @@
           <% elsif asset.previewable? && asset.large_preview&.image&.attached? %>
             <%= image_tag asset.large_preview.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
                 class: 'asset-image',
-                style: 'opacity: 0' %>
+                style: 'opacity: 1' %>
           <% else %>
             <%= render partial: 'shared/file_preview/file_icon', locals: { asset: asset } %>
           <% end %>
@@ -42,7 +42,7 @@
               <% if previous_asset.previewable? && previous_asset.medium_preview&.image&.attached? %>
                 <%= image_tag previous_asset.medium_preview.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
                     class: 'asset-image',
-                    style: 'opacity: 0' %>
+                    style: 'opacity: 1' %>
               <% else %>
                 <i class="fas <%= file_fa_icon_class(previous_asset) if previous_asset.file_name %>"></i>
               <% end %>
@@ -59,7 +59,7 @@
               <% if next_asset.previewable? && next_asset.medium_preview&.image&.attached? %>
                 <%= image_tag next_asset.medium_preview.url(expires_in: Constants::URL_SHORT_EXPIRE_TIME.minutes),
                     class: 'asset-image',
-                    style: 'opacity: 0' %>
+                    style: 'opacity: 1' %>
               <% else %>
                 <i class="fas <%= file_fa_icon_class(next_asset) if next_asset.file_name %>"></i>
               <% end %>
