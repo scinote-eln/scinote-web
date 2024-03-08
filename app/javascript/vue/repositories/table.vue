@@ -68,7 +68,7 @@ import ShareRepositoryModal from './modals/share.vue';
 import DataTable from '../shared/datatable/table.vue';
 
 export default {
-  name: 'LabelTemplatesTable',
+  name: 'RepositoriesTable',
   components: {
     DataTable,
     ConfirmationModal,
@@ -127,6 +127,11 @@ export default {
         sortable: true,
         notSelectable: true,
         cellRenderer: this.nameRenderer
+      },
+      {
+        field: 'code',
+        headerName: this.i18n.t('libraries.index.table.id'),
+        sortable: true
       },
       {
         field: 'nr_of_rows',
@@ -292,7 +297,8 @@ export default {
       if (shared || ishared) {
         sharedIcon = '<i class="fas fa-users"></i>';
       }
-      return `<a class="hover:no-underline flex items-center gap-1" href="${urls.show}">${sharedIcon}${name}</a>`;
+      return `<a class="hover:no-underline flex items-center gap-1"
+                 title="${name}" href="${urls.show}">${sharedIcon}${name}</a>`;
     }
   }
 };

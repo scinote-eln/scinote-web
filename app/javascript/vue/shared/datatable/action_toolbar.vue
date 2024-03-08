@@ -8,7 +8,7 @@
         {{ i18n.t('action_toolbar.no_actions') }}
       </div>
       <div v-for="action in actions" :key="action.name" class="sn-action-toolbar__action shrink-0">
-        <a :class="`rounded flex gap-2 items-center py-1.5 px-2.5 hover:text-sn-white hover:bg-sn-blue
+        <a :class="`rounded flex gap-2 items-center py-1.5 px-1.5 xl:px-2.5 hover:text-sn-white hover:bg-sn-blue
                   bg-sn-white color-sn-blue hover:no-underline focus:no-underline ${action.button_class}`"
           :href="(['link', 'remote-modal']).includes(action.type) ? action.path : '#'"
           :id="action.button_id"
@@ -16,7 +16,7 @@
           :data-e2e="`e2e-BT-actionToolbar-${action.name}`"
           @click="doAction(action, $event)">
           <i :class="action.icon"></i>
-          <span class="sn-action-toolbar__button-text">{{ action.label }}</span>
+          <span class="tw-hidden xl:inline-block">{{ action.label }}</span>
         </a>
       </div>
     </div>

@@ -11,6 +11,7 @@ class ExperimentsController < ApplicationController
   before_action :load_project, only: %i(index create archive_group restore_group move)
   before_action :load_experiment, except: %i(create archive_group restore_group
                                              inventory_assigning_experiment_filter actions_toolbar index move)
+  before_action :load_experiments, only: :move
   before_action :check_read_permissions, except: %i(index edit archive clone move new
                                                     create archive_group restore_group
                                                     inventory_assigning_experiment_filter actions_toolbar)
@@ -20,7 +21,6 @@ class ExperimentsController < ApplicationController
   before_action :check_update_permissions, only: :update
   before_action :check_archive_permissions, only: :archive
   before_action :check_clone_permissions, only: %i(clone_modal clone)
-  before_action :check_move_permissions, only: %i(move_modal move)
   before_action :set_inline_name_editing, only: %i(index canvas module_archive)
   before_action :set_breadcrumbs_items, only: %i(index canvas module_archive)
   before_action :set_navigator, only: %i(index canvas module_archive)
@@ -231,8 +231,10 @@ class ExperimentsController < ApplicationController
     render json: tags
   end
 
-  # POST: move_experiment(id)
+  # POST: move_experiments(ids)
   def move
+    return render_403 unless @experiments.all? { |e| can_move_experiment?(e) }
+
     @project.transaction do
       @experiments.each do |experiment|
         service = Experiments::MoveToProjectService
@@ -494,10 +496,6 @@ class ExperimentsController < ApplicationController
 
   def check_clone_permissions
     render_403 unless can_clone_experiment?(@experiment)
-  end
-
-  def check_move_permissions
-    render_403 unless @experiments.all? { |e| can_move_experiment?(e) }
   end
 
   def set_inline_name_editing

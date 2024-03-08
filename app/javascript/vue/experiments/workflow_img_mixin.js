@@ -12,7 +12,8 @@ export default {
   data() {
     return {
       workflow_img: null,
-      imageLoading: false
+      imageLoading: false,
+      hasError: false
     };
   },
   methods: {

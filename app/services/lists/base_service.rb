@@ -20,6 +20,10 @@ module Lists
 
     private
 
+    def fetch_records
+      raise NotImplementedError
+    end
+
     def order_params
       @order_params ||= @params.require(:order).permit(:column, :dir).to_h
     end

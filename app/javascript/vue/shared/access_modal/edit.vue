@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="roles.length > 0 && visible" class="p-2 flex items-center gap-2 border-solid border-0 border-b border-b-sn-sleepy-grey">
+    <div v-if="roles.length > 0 && visible && default_role" class="p-2 flex items-center gap-2 border-solid border-0 border-b border-b-sn-sleepy-grey">
       <div>
         <img src="/images/icon/team.png" class="rounded-full w-8 h-8">
       </div>
@@ -31,10 +31,13 @@
         <div>
           <img :src="userAssignment.attributes.user.avatar_url" class="rounded-full w-8 h-8">
         </div>
-        <div>
-          <div>{{ userAssignment.attributes.user.name }}</div>
-          <div class="text-xs text-sn-grey">{{ userAssignment.attributes.inherit_message }}</div>
+        <div class="truncate"
+             :title="userAssignment.attributes.user.name"
+        >{{ userAssignment.attributes.user.name }}</div>
+        <div v-if="userAssignment.attributes.current_user" class="text-nowrap">
+          {{ `(${i18n.t('access_permissions.you')})` }}
         </div>
+        <div class="text-xs text-sn-grey text-nowrap">{{ userAssignment.attributes.inherit_message }}</div>
         <MenuDropdown
           v-if="!userAssignment.attributes.last_owner && params.object.urls.update_access"
           class="ml-auto"
@@ -56,12 +59,11 @@
 
 <script>
 /* global HelperModule */
-
 import MenuDropdown from '../menu_dropdown.vue';
 import axios from '../../../packs/custom_axios.js';
 
 export default {
-  emits: ['modified', 'usersReloaded', 'changeVisibility'],
+  emits: ['modified', 'usersReloaded', 'changeVisibility', 'assigningNewUsers'],
   props: {
     params: {
       type: Object,

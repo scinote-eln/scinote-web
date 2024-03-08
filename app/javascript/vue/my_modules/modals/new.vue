@@ -1,69 +1,71 @@
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <i class="sn-icon sn-icon-close"></i>
-          </button>
-          <h4 class="modal-title truncate !block">
-            {{ i18n.t('experiments.canvas.new_my_module_modal.title') }}
-          </h4>
-        </div>
-        <div class="modal-body">
-          <label class="sci-label">{{ i18n.t('experiments.canvas.new_my_module_modal.name') }}</label>
-          <div class="sci-input-container-v2 mb-4">
-            <input type="text" class="sci-input-field"
-                   v-model="name"
-                   autofocus
-                  :placeholder="i18n.t('experiments.canvas.new_my_module_modal.name_placeholder')">
+      <form @submit.prevent="submit">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <i class="sn-icon sn-icon-close"></i>
+            </button>
+            <h4 class="modal-title truncate !block">
+              {{ i18n.t('experiments.canvas.new_my_module_modal.title') }}
+            </h4>
           </div>
-
-          <label class="sci-label">
-            {{ i18n.t('experiments.canvas.new_my_module_modal.due_date') }}
-          </label>
-          <DateTimePicker
-            @change="setDueDate"
-            mode="datetime"
-            class="mb-4"
-            size="mb"
-            :placeholder="i18n.t('experiments.canvas.new_my_module_modal.due_date_placeholder')"
-            :clearable="true"/>
+          <div class="modal-body">
+            <label class="sci-label">{{ i18n.t('experiments.canvas.new_my_module_modal.name') }}</label>
+            <div class="sci-input-container-v2 mb-4">
+              <input type="text" class="sci-input-field"
+                     v-model="name"
+                     autofocus ref="input"
+                    :placeholder="i18n.t('experiments.canvas.new_my_module_modal.name_placeholder')">
+            </div>
 
             <label class="sci-label">
-              {{ i18n.t('experiments.canvas.new_my_module_modal.assigned_tags_label') }}
+              {{ i18n.t('experiments.canvas.new_my_module_modal.due_date') }}
             </label>
-            <SelectDropdown
+            <DateTimePicker
+              @change="setDueDate"
+              mode="datetime"
               class="mb-4"
-              @change="setTags"
-              :options="formattedTags"
-              :option-renderer="tagsRenderer"
-              :label-renderer="tagsRenderer"
-              :multiple="true"
-              :searchable="true"
-              :placeholder="i18n.t('experiments.canvas.new_my_module_modal.assigned_tags_placeholder')"
-              :tagsView="true" ></SelectDropdown>
+              size="mb"
+              :placeholder="i18n.t('experiments.canvas.new_my_module_modal.due_date_placeholder')"
+              :clearable="true"/>
 
               <label class="sci-label">
-                {{ i18n.t('experiments.canvas.new_my_module_modal.assigned_users') }}
+                {{ i18n.t('experiments.canvas.new_my_module_modal.assigned_tags_label') }}
               </label>
               <SelectDropdown
-                @change="setUsers"
-                :options="formattedUsers"
-                :option-renderer="usersRenderer"
-                :label-renderer="usersRenderer"
+                class="mb-4"
+                @change="setTags"
+                :options="formattedTags"
+                :option-renderer="tagsRenderer"
+                :label-renderer="tagsRenderer"
                 :multiple="true"
                 :searchable="true"
-                :placeholder="i18n.t('experiments.canvas.new_my_module_modal.assigned_users_placeholder')"
+                :placeholder="i18n.t('experiments.canvas.new_my_module_modal.assigned_tags_placeholder')"
                 :tagsView="true" ></SelectDropdown>
+
+                <label class="sci-label">
+                  {{ i18n.t('experiments.canvas.new_my_module_modal.assigned_users') }}
+                </label>
+                <SelectDropdown
+                  @change="setUsers"
+                  :options="formattedUsers"
+                  :option-renderer="usersRenderer"
+                  :label-renderer="usersRenderer"
+                  :multiple="true"
+                  :searchable="true"
+                  :placeholder="i18n.t('experiments.canvas.new_my_module_modal.assigned_users_placeholder')"
+                  :tagsView="true" ></SelectDropdown>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
+            <button type="submit" :disabled="!validName" class="btn btn-primary">
+              {{ i18n.t('experiments.canvas.new_my_module_modal.create') }}
+            </button>
+          </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-          <button type="button" :disabled="!validName" class="btn btn-primary" @click="submit">
-            {{ i18n.t('experiments.canvas.new_my_module_modal.create') }}
-          </button>
-        </div>
-      </div>
+      </form>
     </div>
   </div>
 </template>

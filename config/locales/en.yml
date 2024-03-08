@@ -567,12 +567,15 @@ en:
       comment_placeholder: "Your Message"
       more_comments: "More Comments"
       card:
-        start_date: "Started on"
+        start_date: "Created on"
+        updated_on: "Updated on"
         id: "ID"
         visibility: "Visible to"
         users: "Access"
         name: "Project name"
         archived_date: "Archived on"
+        comments: 'Comments'
+        updated_at: 'Updated on'
       end_of_list_placeholder: 'You’ve reached the end of the list'
       folder:
         description: "%{projects_count} projects | %{folders_count} folders"
@@ -982,6 +985,7 @@ en:
         logo_params_error: 'Failed to parse logo parameters!'
     index:
       head_title: 'Label templates'
+      default_label: "Default label"
       search_templates: 'Search labels'
       thead_name: 'Label name'
       format: 'Format'
@@ -1462,13 +1466,13 @@ en:
     card:
       name: "Experiment name"
       id: "ID"
-      start_date: "Started on"
-      modified_date: "Modified date"
+      start_date: "Created on"
+      modified_date: "Updated on"
       archived_date: "Archived on"
       completed_task: "Completed"
       completed_value: "%{completed}/%{all} tasks"
       description: "Description"
-      more: "more"
+      more: "More"
     index:
       edit_option: "Edit"
       clone_option: "Duplicate"
@@ -2539,6 +2543,7 @@ en:
       head_title_archived: "Archived Inventories"
       table:
         name: "Inventory name"
+        id: "ID"
         number_of_items: "No. of items"
         shared: "Shared"
         ownership: "Owned by"
@@ -2989,6 +2994,18 @@ en:
     draft: "Draft"
     draft_name: "(Draft) %{name}"
     no_text_placeholder: 'No protocol description'
+    table:
+      filters:
+        label_name_and_keywords: 'Name and keywords'
+        published_on: 'Published on'
+        modified_on: 'Modified on'
+        has_draft: 'Has draft'
+        published_by:
+          label: 'Published by'
+          placeholder: 'Select a publisher'
+        members:
+          label: 'Access'
+          placeholder: 'Select who has access'
     reorder_steps:
         button: "Rearrange steps"
         modal:
@@ -3698,6 +3715,7 @@ en:
     remove_access: "Remove access"
     grant_access: "Grant new access"
     you: "you"
+    no_results: "No results"
     create:
       success: "You have successfully granted access to %{member_name}."
       failure: "Something went wrong"
@@ -4100,7 +4118,6 @@ en:
     title: "Filters"
     text:
       label: "Contains text"
-      label_name_and_keywords: "Name and keywords"
       placeholder: "Enter search terms..."
     from_placeholder: "From"
     to_placeholder: "To"

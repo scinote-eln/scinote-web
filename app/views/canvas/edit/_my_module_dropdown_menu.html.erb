@@ -14,9 +14,14 @@
   </li>
 <% end %>
 <li>
-  <%= link_to t('experiments.canvas.edit.task_access'),
-              can_manage_my_module_users?(my_module) ? edit_access_permissions_my_module_path(my_module) : access_permissions_my_module_path(my_module),
-              data: { action: 'remote-modal'} %>
+  <%= link_to t('experiments.canvas.edit.task_access'), nil,
+      class: "openAccessModal",
+      data: {
+        url: my_module_path(@my_module, format: :json),
+        roles_url: user_roles_projects_path
+      }
+   %>
+
 </li>
 <% if can_archive_my_module?(my_module) %>
   <li>

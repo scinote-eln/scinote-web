@@ -57,7 +57,7 @@ import DueDateRenderer from './renderers/due_date.vue';
 import DesignatedUsers from './renderers/designated_users.vue';
 import TagsModal from './modals/tags.vue';
 import TagsRenderer from './renderers/tags.vue';
-import CommentsRenderer from './renderers/comments.vue';
+import CommentsRenderer from '../shared/datatable/renderers/comments.vue';
 import NewModal from './modals/new.vue';
 import EditModal from './modals/edit.vue';
 import MoveModal from './modals/move.vue';
@@ -126,18 +126,18 @@ export default {
       {
         field: 'results',
         headerName: this.i18n.t('experiments.table.column.results_html'),
-        sortable: false,
+        sortable: true,
         cellRenderer: this.resultsRenderer
       },
       {
         field: 'age',
         headerName: this.i18n.t('experiments.table.column.age_html'),
-        sortable: false
+        sortable: true
       },
       {
         field: 'status',
         headerName: this.i18n.t('experiments.table.column.status_html'),
-        sortable: false,
+        sortable: true,
         cellRenderer: this.statusRenderer
       }
     ];
@@ -153,14 +153,14 @@ export default {
     columns.push({
       field: 'designated',
       headerName: this.i18n.t('experiments.table.column.assigned_html'),
-      sortable: false,
+      sortable: true,
       cellRenderer: DesignatedUsers,
       minWidth: 220
     });
     columns.push({
       field: 'tags',
       headerName: this.i18n.t('experiments.table.column.tags_html'),
-      sortable: false,
+      sortable: true,
       cellRenderer: TagsRenderer
     });
     columns.push({
@@ -338,7 +338,7 @@ export default {
     usersFilterRenderer(option) {
       return `<div class="flex items-center gap-2">
                 <img src="${option[2].avatar_url}" class="rounded-full w-6 h-6" />
-                <span>${option[1]}</span>
+                <span title="${option[1]}" class="truncate">${option[1]}</span>
               </div>`;
     }
   }

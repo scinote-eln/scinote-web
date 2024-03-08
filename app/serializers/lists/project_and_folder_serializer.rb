@@ -4,9 +4,11 @@ module Lists
   class ProjectAndFolderSerializer < ActiveModel::Serializer
     include Rails.application.routes.url_helpers
     include Canaid::Helpers::PermissionsHelper
+    include CommentHelper
 
     attributes :name, :code, :created_at, :archived_on, :users, :urls, :folder, :hidden,
-               :folder_info, :default_public_user_role_id, :team, :top_level_assignable
+               :folder_info, :default_public_user_role_id, :team, :top_level_assignable,
+               :comments, :updated_at, :permissions
 
     def team
       object.team.name
@@ -36,6 +38,10 @@ module Lists
       I18n.l(object.created_at, format: :full_date) if project?
     end
 
+    def updated_at
+      I18n.l(object.updated_at, format: :full_date) if project?
+    end
+
     def archived_on
       I18n.l(object.archived_on, format: :full) if project? && object.archived_on
     end
@@ -48,6 +54,16 @@ module Lists
             full_name: ua.user_name_with_role
           }
         end
+      end
+    end
+
+    def comments
+      if project?
+        @user = scope[:user] || @instance_options[:user]
+        {
+          count: object.comments.count,
+          count_unseen: count_unseen_comments(object, @user)
+        }
       end
     end
 
@@ -76,6 +92,12 @@ module Lists
       end
 
       urls_list
+    end
+
+    def permissions
+      {
+        create_comments: project? ? can_create_project_comments?(object) : false
+      }
     end
 
     def folder_info

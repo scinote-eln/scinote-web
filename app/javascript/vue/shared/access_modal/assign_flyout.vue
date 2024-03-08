@@ -3,11 +3,10 @@
     <div class="sci-label mb-2">
       {{ i18n.t('access_permissions.partials.new_assignments_form.grant_access') }}
     </div>
-    <GeneralDropdown @open="$emit('assigningNewUsers', true)" @close="$emit('assigningNewUsers', false)" :fieldOnlyOpen="true">
+    <GeneralDropdown ref="dropdown" @open="$emit('assigningNewUsers', true)" @close="$emit('assigningNewUsers', false)" :fieldOnlyOpen="true" :fixed-width="true">
       <template v-slot:field>
         <div class="sci-input-container-v2 left-icon">
           <input type="text" v-model="query" class="sci-input-field"
-                  autofocus="true"
                   :placeholder="i18n.t('access_permissions.partials.new_assignments_form.find_people_html')" />
           <i class="sn-icon sn-icon-search"></i>
         </div>
@@ -29,15 +28,14 @@
             @setRole="(...args) => this.assignRole('all', ...args)"
           ></MenuDropdown>
         </div>
-        <perfect-scrollbar class="h-80 relative">
-          <div v-for="user in filteredUsers" :key="user.id" class="py-2 flex items-center gap-2">
+        <perfect-scrollbar class="max-h-80 relative">
+          <div v-for="user in filteredUsers" :key="user.id" class="py-2 flex items-center w-full">
             <div>
               <img :src="user.attributes.avatar_url" class="rounded-full w-8 h-8">
             </div>
-            <div>
-              {{
-                `${user.attributes.name}${user.attributes.current_user ? ` (${i18n.t('access_permissions.you')})` : ''}`
-              }}
+            <div class="truncate ml-2" :title="user.attributes.name">{{ user.attributes.name }}</div>
+            <div v-if="user.attributes.current_user" class="text-nowrap">
+              {{ i18n.t('access_permissions.you') }}
             </div>
             <MenuDropdown
               class="ml-auto"
@@ -47,6 +45,9 @@
               :caret="true"
               @setRole="(...args) => this.assignRole(user.id, ...args)"
             ></MenuDropdown>
+          </div>
+          <div v-if="filteredUsers.length === 0" class="p-2 flex items-center w-full">
+            {{ i18n.t('access_permissions.no_results') }}
           </div>
         </perfect-scrollbar>
       </template>
@@ -61,7 +62,7 @@ import GeneralDropdown from '../general_dropdown.vue';
 import axios from '../../../packs/custom_axios.js';
 
 export default {
-  emits: ['modified', 'usersReloaded', 'changeVisibility'],
+  emits: ['modified', 'usersReloaded', 'changeVisibility', 'assigningNewUsers'],
   props: {
     params: {
       type: Object,
@@ -140,6 +141,8 @@ export default {
           this.$emit('modified');
           HelperModule.flashAlertMsg(response.data.message, 'success');
           this.getUnAssignedUsers();
+          this.query = '';
+          this.$refs.dropdown.closeMenu();
 
           if (id === 'all') {
             this.$emit('changeVisibility', true, roleId);

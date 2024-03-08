@@ -238,7 +238,8 @@ export default {
 
         options.push({
           text,
-          emit: 'open_locally'
+          emit: 'open_locally',
+          data_e2e: 'e2e-BT-attachmentOptions-openLocally'
         });
       }
       return options;
@@ -279,12 +280,10 @@ export default {
       await this.fetchLocalAppInfo();
       this.showOptions = true;
     },
-    handleMenuVisibilityChange({ isMenuOpen, showOptions }) {
-      if (isMenuOpen !== null) {
-        this.isMenuOpen = isMenuOpen;
-      }
-      if (showOptions !== null) {
-        this.showOptions = showOptions;
+    handleMenuVisibilityChange(isMenuOpen) {
+      this.isMenuOpen = isMenuOpen;
+      if (isMenuOpen) {
+        this.showOptions = true;
       }
     },
     handleClickOutsideThumbnail(event) {
