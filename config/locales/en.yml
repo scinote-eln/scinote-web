@@ -3641,6 +3641,7 @@ en:
     context_menu:
       set_view_size: "SET PREVIEW SIZE"
       delete: "Delete"
+      duplicate: "Duplicate"
       move: "Move"
       inline_html: "Large"
       thumbnail_html: "Thumbnail"

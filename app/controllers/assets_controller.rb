@@ -17,8 +17,8 @@ class AssetsController < ApplicationController
   helper_method :wopi_file_edit_button_status
 
   before_action :load_vars, except: :create_wopi_file
-  before_action :check_read_permission, except: %i(edit destroy create_wopi_file toggle_view_mode)
-  before_action :check_edit_permission, only: %i(edit destroy toggle_view_mode)
+  before_action :check_read_permission, except: %i(edit destroy duplicate create_wopi_file toggle_view_mode)
+  before_action :check_edit_permission, only: %i(edit destroy duplicate toggle_view_mode)
 
   def file_preview
     render json: { html: render_to_string(
@@ -308,6 +308,23 @@ class AssetsController < ApplicationController
       render json: { flash: I18n.t('assets.file_deleted', file_name: escape_input(@asset.file_name)) }
     else
       render json: {}, status: :unprocessable_entity
+    end
+  end
+
+  def duplicate
+    ActiveRecord::Base.transaction do
+      case @asset.parent
+
+      when Step, Result
+        new_asset = @asset.duplicate(
+          new_name:
+            "#{@asset.file.filename.base} (1).#{@asset.file.filename.extension}"
+        )
+
+        @asset.parent.assets << new_asset
+      end
+
+      render json: new_asset, serializer: AssetSerializer, user: current_user
     end
   end
 
