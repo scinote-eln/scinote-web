@@ -2,11 +2,13 @@
 
 class CreateProjectService
   include Canaid::Helpers::PermissionsHelper
+  attr_reader :errors
 
   def initialize(user, team, params)
     @params = params
     @user = user
     @team = team
+    @errors = {}
   end
 
   def call
@@ -21,6 +23,8 @@ class CreateProjectService
       @project.save!
 
       create_project_activity
+    rescue ActiveRecord::RecordInvalid
+      @errors['project'] = @project.errors.messages
     end
     @project
   end
