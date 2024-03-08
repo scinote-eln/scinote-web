@@ -38,6 +38,16 @@ const DEFAULT_FILTERS = [
   {
     id: 4,
     column: {
+      data_type: 'RepositoryRelationshipValue',
+      id: 'relationships',
+      name: I18n.t('repositories.table.relationships')
+    },
+    data: { operator: 'contains' },
+    isBlank: true
+  },
+  {
+    id: 5,
+    column: {
       data_type: 'RepositoryDateTimeValue',
       id: 'added_on',
       name: I18n.t('repositories.table.added_on')
@@ -46,7 +56,7 @@ const DEFAULT_FILTERS = [
     isBlank: true
   },
   {
-    id: 5,
+    id: 6,
     column: {
       data_type: 'RepositoryUserValue',
       id: 'added_by',
@@ -63,6 +73,7 @@ window.initRepositoryFilter = () => {
     { id: 'assigned', name: I18n.t('repositories.table.assigned_tasks'), data_type: 'RepositoryMyModuleValue' },
     { id: 'row_id', name: I18n.t('repositories.table.id'), data_type: 'RepositoryTextValue' },
     { id: 'row_name', name: I18n.t('repositories.table.row_name'), data_type: 'RepositoryTextValue' },
+    { id: 'relationships', name: I18n.t('repositories.table.relationships'), data_type: 'RepositoryRelationshipValue' },
     { id: 'added_on', name: I18n.t('repositories.table.added_on'), data_type: 'RepositoryDateTimeValue' },
     { id: 'added_by', name: I18n.t('repositories.table.added_by'), data_type: 'RepositoryUserValue' },
     { id: 'archived_by', name: I18n.t('repositories.table.archived_by'), data_type: 'RepositoryUserValue' },
@@ -70,6 +81,7 @@ window.initRepositoryFilter = () => {
   ];
   const app = createApp({
     data: () => ({
+      open: false,
       filters: [],
       defaultFilters: DEFAULT_FILTERS,
       columns: [],
@@ -79,19 +91,29 @@ window.initRepositoryFilter = () => {
       filterName: null
     }),
     created() {
-      this.dataTableElement = $($('#filterContainer').data('datatable-id'));
+      $('#filtersDropdownButton').on('show.bs.dropdown', () => {
+        this.open = true;
+        this.dataTableElement = $($('#filterContainer').data('datatable-id'));
 
-      $.get($('#filterContainer').data('my-modules-url'), (data) => {
-        this.my_modules = data.data;
+        $.get($('#filterContainer').data('my-modules-url'), (data) => {
+          this.my_modules = data.data;
+        });
+
+        $.get($('#filterContainer').data('columns-url'), (data) => {
+          const combinedColumns = data.response.concat(defaultColumns);
+          this.columns = combinedColumns.sort((a, b) => (a.name > b.name ? 1 : -1));
+        });
+
+        $.get($('#filterContainer').data('saved-filters-url'), (data) => {
+          this.savedFilters = data.data;
+        });
+
+        $('#filtersColumnsDropdown, #savedFiltersContainer').removeClass('open');
       });
 
-      $.get($('#filterContainer').data('columns-url'), (data) => {
-        const combinedColumns = data.response.concat(defaultColumns);
-        this.columns = combinedColumns.sort((a, b) => a.name > b.name ? 1 : -1);
-      });
-
-      $.get($('#filterContainer').data('saved-filters-url'), (data) => {
-        this.savedFilters = data.data;
+      $('#filterContainer').on('click', (e) => {
+        $('#filterContainer .dropdown-selector-container').removeClass('open');
+        e.stopPropagation();
       });
     },
     computed: {
@@ -151,13 +173,4 @@ window.initRepositoryFilter = () => {
   app.config.globalProperties.i18n = window.I18n;
   app.config.globalProperties.dateFormat = $('#filterContainer').data('date-format');
   window.repositoryFilterObject = mountWithTurbolinks(app, '#filterContainer');
-
-  $('#filterContainer').on('click', (e) => {
-    $('#filterContainer .dropdown-selector-container').removeClass('open')
-    e.stopPropagation();
-  });
-
-  $('#filtersDropdownButton').on('show.bs.dropdown', () => {
-    $('#filtersColumnsDropdown, #savedFiltersContainer').removeClass('open');
-  });
 };

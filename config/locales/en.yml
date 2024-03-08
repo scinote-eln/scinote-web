@@ -1344,7 +1344,10 @@ en:
         delete: "Delete"
       move_modal:
         search_placeholder: "Enter result name"
-        no_options_placeholder: "No steps available to select"
+        step:
+          no_options_placeholder: "No steps available to select"
+        result:
+          no_options_placeholder: "No results available to select"
       delete_modal:
         title: "Delete result"
         description_1: "You’re about to delete the result. It might contain data you don’t want to lose. You won’t be able to get it back."
@@ -1995,6 +1998,8 @@ en:
             operators:
               contains: "Contains"
               does_not_contain: "Doesn’t contain"
+              contains_relationship: "Contains relationships"
+              does_not_contain_relationship: "Doesn’t contain relationships"
               equal_to: "Equal to"
               unequal_to: "Not equal to"
               greater_than: "Greater than"
@@ -2034,6 +2039,8 @@ en:
                 input_placeholder: "Enter text"
               RepositoryTextValue:
                 input_placeholder: "Enter %{name}"
+              RepositoryRelationshipValue:
+                input_placeholder: "Enter related item ID or name"
               RepositoryNumberValue:
                 input_placeholder: "Enter %{name}"
                 to_placeholder: "To"
