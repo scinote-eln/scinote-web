@@ -15,6 +15,10 @@
     width: var(--comments-sidebar-width);
   }
 
+  .atwho-user-container {
+    white-space: normal;
+  }
+
   .sidebar-content {
     background: $color-concrete;
     border-left: 1px solid $color-white;
