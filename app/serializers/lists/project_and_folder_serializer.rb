@@ -69,7 +69,11 @@ module Lists
 
     def urls
       urls_list = {
-        show: project? ? experiments_path(project_id: object) : project_folder_path(object),
+        show: if project?
+                experiments_path(project_id: object)
+              else
+                project_folder_path(object, view_mode: object.archived ? 'archived' : 'active')
+              end,
         actions: actions_toolbar_projects_path(items: [{ id: object.id,
                                                          type: project? ? 'projects' : 'project_folders' }].to_json)
       }
