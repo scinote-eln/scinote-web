@@ -99,7 +99,7 @@ export default {
     loadUsers() {
       axios.get(`${this.params.data.urls.users_list}?query=${this.query}`)
         .then((response) => {
-          this.allUsers = response.data;
+          this.allUsers = response.data.users;
         });
     },
     closeFlyout() {
