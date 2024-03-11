@@ -4,7 +4,7 @@
       <template v-slot:field>
         <div v-if="!params.data.folder" class="flex items-center gap-1 cursor-pointer h-9" @click="openAccessModal">
           <div v-for="(user, i) in visibleUsers" :key="i" :title="user.full_name">
-            <img :src="user.avatar" class="w-6 h-6 rounded-full" />
+            <img :src="user.avatar" class="w-7 h-7 rounded-full" />
           </div>
           <div v-if="hiddenUsers.length > 0" :title="hiddenUsersTitle"
               class="flex shrink-0 items-center justify-center w-7 h-7 text-xs
