@@ -332,7 +332,7 @@ export default {
           project_folder_ids: rows.filter((row) => row.folder).map((row) => row.id)
         }).then((response) => {
           this.reloadingTable = true;
-          HelperModule.flashAlertMsg(response.data.message, 'success');
+          HelperModule.flashAlertMsg(response.data.flash, 'success');
         }).catch((error) => {
           HelperModule.flashAlertMsg(error.response.data.error, 'danger');
         });
