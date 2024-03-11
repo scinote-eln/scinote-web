@@ -72,7 +72,7 @@ describe ReportsController, type: :controller do
 
   describe 'DELETE destroy' do
     let(:action) { delete :destroy, params: params }
-    let(:params) { { report_ids: "[#{report.id}]" } }
+    let(:params) { { report_ids: [report.id] } }
 
     it 'calls create activity service' do
       expect(Activities::CreateActivityService).to receive(:call)

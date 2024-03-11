@@ -98,7 +98,7 @@ tests-ci:
 						-e ENABLE_WEBHOOKS=true \
 						--rm web bash -c "rake db:create && rake db:migrate && \
 															yarn install && yarn build && yarn build:css && rails tailwindcss:build && \
-															bundle exec rspec ./spec/"
+															bundle exec rspec spec/"
 
 console:
 	@$(MAKE) rails cmd="rails console"
