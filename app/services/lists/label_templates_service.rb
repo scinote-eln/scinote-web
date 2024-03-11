@@ -31,6 +31,22 @@ module Lists
       )
     end
 
+    def sort_records
+      return unless @params[:order]
+
+      sorted_column = sortable_columns[order_params[:column].to_sym]
+
+      # Handle null values in description column
+      if sorted_column == 'label_templates.description'
+        sort_by = "COALESCE(label_templates.description, '') ASC"
+        sort_by = "COALESCE(label_templates.description, '') DESC" if sort_direction(order_params) == 'DESC'
+        @records = @records.order(Arel.sql(sort_by))
+      else
+        sort_by = "#{sorted_column} #{sort_direction(order_params)}"
+        @records = @records.order(sort_by)
+      end
+    end
+
     def sortable_columns
       @sortable_columns ||= {
         default: 'label_templates.default',
