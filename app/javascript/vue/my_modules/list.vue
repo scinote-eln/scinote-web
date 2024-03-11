@@ -314,11 +314,11 @@ export default {
           <span class="flex gap-2 items-center">
             <div title="${this.i18n.t('experiments.duplicate_tasks.duplicating')}"
                  class="loading-overlay w-6 h-6 !relative" data-toggle="tooltip" data-placement="right"></div>
-            ${name}
+            <span class="truncate">${name}</span>
           </span>`;
       }
 
-      return `<a href="${urls.show}" title="${name}" >${name}</a>`;
+      return `<a href="${urls.show}" title="${name}" ><span class="truncate">${name}</span></a>`;
     },
     statusRenderer(params) {
       const { status } = params.data;

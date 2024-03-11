@@ -255,7 +255,7 @@ export default {
                         ${!showUrl ? 'pointer-events-none text-sn-grey' : ''}"
                  title="${params.data.name}">
                 ${params.data.folder ? '<i class="sn-icon mini sn-icon-mini-folder-left"></i>' : ''}
-                ${params.data.name}
+                <span class="truncate">${params.data.name} </span>
               </a>`;
     },
     openComments(_params, rows) {
