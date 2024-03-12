@@ -14,6 +14,7 @@
           <div class="modal-body">
             <SelectDropdown :optionsUrl="experiment.urls.projects_to_clone"
                             :value="targetProject"
+                            :searchable="true"
                             @change="changeProject" />
           </div>
           <div class="modal-footer">

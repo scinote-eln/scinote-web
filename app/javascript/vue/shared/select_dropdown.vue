@@ -342,23 +342,21 @@ export default {
       return true;
     },
     keySelectOptions(e) {
-      if (e.key !== 'Tab') {
-        e.stopPropagation();
-        e.preventDefault();
-      } else {
-        this.close();
+      if (e.key === 'Tab') this.close();
+      if (['ArrowDown', 'ArrowUp', 'Enter'].some((key) => e.key === key)) {
+        if (e.key === 'ArrowDown') {
+          this.focusedOption = this.focusedOption === null ? 0 : this.focusedOption + 1;
+          if (this.focusedOption > this.$refs.options.length - 1) this.focusedOption = 0;
+        } else if (e.key === 'ArrowUp') {
+          this.focusedOption = (this.focusedOption || this.$refs.options.length) - 1;
+          if (this.focusedOption < 0) this.focusedOption = this.$refs.options.length - 1;
+        } else if (e.key === 'Enter' && this.focusedOption !== null) {
+          this.setValue(this.filteredOptions[this.focusedOption][0]);
+        }
       }
-
-      if (e.key === 'ArrowDown') {
-        this.focusedOption = this.focusedOption === null ? 0 : this.focusedOption + 1;
-        if (this.focusedOption > this.$refs.options.length - 1) this.focusedOption = 0;
-      } else if (e.key === 'ArrowUp') {
-        this.focusedOption = (this.focusedOption || this.$refs.options.length) - 1;
-        if (this.focusedOption < 0) this.focusedOption = this.$refs.options.length - 1;
-      } else if (e.key === 'Enter' && this.focusedOption !== null) {
-        this.setValue(this.filteredOptions[this.focusedOption][0]);
+      if (this.$refs.options) {
+        this.$refs.options[this.focusedOption]?.scrollIntoView({ block: 'nearest' });
       }
-      this.$refs.options[this.focusedOption]?.scrollIntoView({ block: 'nearest' });
     }
   }
 };

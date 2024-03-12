@@ -15,6 +15,7 @@
             <p><small>{{ i18n.t("experiments.move.notice") }}</small></p>
             <SelectDropdown :optionsUrl="experiment.urls.projects_to_move"
                             :value="targetProject"
+                            :searchable="true"
                             @change="changeProject" />
           </div>
           <div class="modal-footer">
