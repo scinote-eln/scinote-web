@@ -106,7 +106,9 @@ module Toolbars
       num_of_requests_left = @current_user.exports_left - 1
       team = @items.first.team
 
-      message = "<p>#{I18n.t('projects.export_projects.modal_text_p1_html', num_projects: num_projects, team: team)}</p>
+      message = "<p>#{I18n.t('projects.export_projects.modal_text_p1_html',
+                 num_projects: num_projects,
+                 team: team.name)}</p>
                  <p>#{I18n.t('projects.export_projects.modal_text_p2_html')}</p>"
       unless limit.zero?
         message += "<p><i>#{I18n.t('projects.export_projects.modal_text_p3_html', limit: limit, num: num_of_requests_left)}</i></p>"
