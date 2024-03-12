@@ -298,7 +298,9 @@ export default {
         sharedIcon = '<i class="fas fa-users"></i>';
       }
       return `<a class="hover:no-underline flex items-center gap-1"
-                 title="${name}" href="${urls.show}">${sharedIcon}${name}</a>`;
+                 title="${name}" href="${urls.show}">
+                 <span class="truncate">${sharedIcon}${name}</span>
+              </a>`;
     }
   }
 };
