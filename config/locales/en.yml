@@ -3246,7 +3246,7 @@ en:
         published_on: "Published on"
         created_at: "Created at"
         archived_on: "Archived on"
-        updated_at: "Modified on"
+        updated_at: "Updated on"
       table:
         draft: "Draft"
       preview:
