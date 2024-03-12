@@ -278,6 +278,12 @@ class RepositoriesController < ApplicationController
             items_size: Constants::IMPORT_REPOSITORY_ITEMS_LIMIT)
         )
       else
+        sheet = SpreadsheetParser.open_spreadsheet(import_params[:file])
+        duplicate_ids = SpreadsheetParser.duplicate_ids(sheet)
+        if duplicate_ids.any?
+          @importing_duplicates_warning = t('repositories.import_records.error_message.importing_duplicates', duplicate_ids: duplicate_ids)
+        end
+
         @import_data = parsed_file.data
 
         if @import_data.header.blank? || @import_data.columns.blank?

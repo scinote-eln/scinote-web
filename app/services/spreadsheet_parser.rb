@@ -66,4 +66,12 @@ class SpreadsheetParser
       row.map(&:to_s)
     end
   end
+
+  def self.duplicate_ids(sheet)
+    # Extracting IDs from sheet and removing header row
+    ids = sheet.drop(1).map(&:first)
+
+    # Selecting duplicate IDs
+    ids.group_by { |id| id }.select { |_, group| group.size > 1 }.keys
+  end
 end
