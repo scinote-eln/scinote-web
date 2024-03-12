@@ -3,6 +3,7 @@
     <label v-if="label" class="sci-label" :class="{ 'error': !!inputError }" :for="id">{{ label }}</label>
     <div class="sci-input-container-v2" :class="{ 'error': !!inputError }" :data-error-text="inputError">
       <input ref="input"
+        lang="en-US"
         :type="type"
         :id="id"
         :name="name"
