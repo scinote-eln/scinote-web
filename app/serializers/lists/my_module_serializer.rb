@@ -55,7 +55,7 @@ module Lists
       user = scope[:user] || @instance_options[:user]
 
       urls_list = {
-        show: protocols_my_module_path(object, view_mode: object.archived_branch? ? 'archived' : 'active'),
+        show: protocols_my_module_path(object, view_mode: archived ? 'archived' : 'active'),
         results: my_module_results_path(object),
         assign_tags: my_module_my_module_tags_path(object),
         assigned_tags: assigned_tags_my_module_my_module_tags_path(object),
@@ -86,7 +86,7 @@ module Lists
     end
 
     def due_date_status
-      if (object.archived_branch? || object.completed?) && object.due_date
+      if (archived || object.completed?) && object.due_date
         return :ok
       elsif object.is_one_day_prior? && !object.completed?
         return :one_day_prior
@@ -98,7 +98,7 @@ module Lists
     end
 
     def archived
-      object.archived?
+      object.archived_branch?
     end
 
     def archived_on
@@ -110,7 +110,7 @@ module Lists
     end
 
     def results
-      (object.archived_branch? ? object.results : object.results.active).length
+      (archived ? object.results : object.results.active).length
     end
 
     def status

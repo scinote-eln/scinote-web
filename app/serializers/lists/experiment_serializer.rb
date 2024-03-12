@@ -9,7 +9,7 @@ module Lists
 
     attributes :name, :code, :created_at, :updated_at, :workflow_img, :description, :completed_tasks,
                :total_tasks, :archived_on, :urls, :sa_description, :default_public_user_role_id, :team,
-               :top_level_assignable, :hidden
+               :top_level_assignable, :hidden, :archived
 
     def created_at
       I18n.l(object.created_at, format: :full_date)
@@ -61,7 +61,7 @@ module Lists
 
     def urls
       urls_list = {
-        show: my_modules_path(experiment_id: object),
+        show: my_modules_path(experiment_id: object, view_mode: archived ? 'archived' : 'active'),
         actions: actions_toolbar_experiments_path(items: [{ id: object.id }].to_json),
         projects_to_clone: projects_to_clone_experiment_path(object),
         projects_to_move: projects_to_move_experiment_path(object),
