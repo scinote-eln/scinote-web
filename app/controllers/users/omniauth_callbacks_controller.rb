@@ -83,7 +83,6 @@ module Users
 
     def linkedin
       auth_hash = request.env['omniauth.auth']
-
       @user = User.from_omniauth(auth_hash)
       if @user && @user.current_team_id?
         # User already exists and has been signed up with LinkedIn; just sign in
@@ -98,7 +97,8 @@ module Users
                           :failure,
                           kind: I18n.t('devise.linkedin.provider_name'),
                           reason: I18n.t('devise.linkedin.complete_sign_up'))
-        redirect_to users_sign_up_provider_path(user: @user)
+        sign_in(@user, event: :authentication)
+        redirect_to users_sign_up_provider_path
       elsif User.find_by_email(auth_hash['info']['email'])
         # email is already taken, so sign up with Linked in is not allowed
         set_flash_message(:alert,
@@ -132,7 +132,8 @@ module Users
         end
         # Confirm user
         @user.update!(confirmed_at: @user.created_at)
-        redirect_to users_sign_up_provider_path(user: @user)
+        sign_in(@user, event: :authentication)
+        redirect_to users_sign_up_provider_path
       end
     end
 

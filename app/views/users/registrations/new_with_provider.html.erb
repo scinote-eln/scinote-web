@@ -3,14 +3,17 @@
 <div class="center-block center-block-narrow">
   <h2><%= t 'users.registrations.new_with_provider.head_title' %></h2>
   <div data-hook="sign-up-form-hook">
-  <%= form_for(:team, as: resource_name, url: users_complete_sign_up_provider_path, html: { id: "sign-up-provider-form" } ) do |f| %>
-    <%= hidden_field_tag :user, params['user'] %>
-
+  <%= form_for(@team, url: users_complete_sign_up_provider_path, html: { id: "sign-up-provider-form" } ) do |f| %>
     <% if Rails.configuration.x.new_team_on_signup %>
       <div class="form-group" id="team_name_form">
         <%= f.label :name, t('users.registrations.new.team_name_label') %>
         <%= f.text_field :name, autofocus: true, class: 'form-control',
             placeholder: t('users.registrations.new.team_name_placeholder') %>
+        <% if @team.errors.present? %>
+          <div class="alert alert-danger" id="alert-flash">
+            <%= @team.errors.full_messages.first %>
+          </div>
+        <% end %>
       </div>
     <% end %>
 
@@ -19,15 +22,5 @@
     </div>
   <% end %>
   </div>
-  <%= render 'users/shared/links' %>
 </div>
 
-<% if @team && @team.errors.present? %>
-  <% form_errors = {} %>
-
-  <% @team.errors.each do |err, msg| %>
-    <% form_errors[err] = [msg] %>
-  <% end %>
-  <div class="hidden" id="form-error-data" data-form-errors="<%= form_errors.to_json %>"></div>
-  <%= javascript_include_tag 'users/registrations/new_with_provider' %>
-<% end %>
