@@ -1,75 +1,69 @@
 <template>
-  <div class="relative" :class="fieldClass">
-    <label v-if="showLabel" :class="labelClass" :for="id">{{ label }}</label>
-    <div :class="inputClass">
+  <div class="relative w-full">
+    <label v-if="label" class="sci-label" :class="{ 'error': !!inputError }" :for="id">{{ label }}</label>
+    <div class="sci-input-container-v2" :class="{ 'error': !!inputError }" :data-error-text="inputError">
       <input ref="input"
         :type="type"
         :id="id"
         :name="name"
-        :value="inputValue"
-        :class="`${error ? 'error' : ''}`"
+        :value="value"
+        :class="{ 'error': !!inputError }"
         :placeholder="placeholder"
-        :required="required"
+        inputmode="numeric"
+        :min="min"
+        :max="max"
+        :step="1/Math.pow(10, decimals)"
         @input="updateValue"
       />
-      <div
-        class="mt-2 text-sn-delete-red whitespace-nowrap truncate text-xs font-normal absolute bottom-[-1rem] w-full"
-        :title="error"
-        :class="{ visible: error, invisible: !error}"
-      >
-        {{ error }}
-      </div>
     </div>
   </div>
 </template>
 
 <script>
+
 export default {
   name: 'Input',
   props: {
     id: { type: String, required: false },
-    fieldClass: { type: String, default: '' },
-    inputClass: { type: String, default: '' },
-    labelClass: { type: String, default: '' },
     type: { type: String, default: 'text' },
     name: { type: String, required: true },
     value: { type: [String, Number], required: false },
     decimals: { type: [Number, String], default: 0 },
     placeholder: { type: String, default: '' },
     required: { type: Boolean, default: false },
-    showLabel: { type: Boolean, default: false },
     label: { type: String, required: false },
-    autoFocus: { type: Boolean, default: false },
-    error: { type: String, required: false }
+    error: { type: String, required: false },
+    min: { type: String },
+    max: { type: String },
+    blockInvalidInput: { type: Boolean, default: true }
   },
-  computed: {
-    inputValue() {
-      if (this.type === 'text') return this.value;
-
-      return isNaN(this.value) ? '' : this.value;
+  data() {
+    return {
+      inputError: false,
+      lastValue: this.value
+    };
+  },
+  watch: {
+    value() {
+      this.lastValue = this.value;
     }
   },
   methods: {
     updateValue($event) {
-      switch (this.type) {
-        case 'text':
-          this.$emit('update', $event.target.value);
-          break;
-        case 'number':
-          const newValue = this.formatDecimalValue($event.target.value);
-          this.$refs.input.value = newValue;
-          if (!isNaN(newValue)) this.$emit('update', newValue);
-          break;
-        default:
-          break;
-      }
+      this.checkInputError($event);
+      this.$emit('update', $event.target.value);
     },
-    formatDecimalValue(value) {
-      const decimalValue = value.replace(/[^-0-9.]/g, '');
-      if (this.decimals === '0') {
-        return decimalValue.split('.')[0];
+    checkInputError() {
+      const isValid = this.$refs.input.checkValidity();
+
+      if (isValid) {
+        this.lastValue = this.$refs.input.value;
+      } else if (this.blockInvalidInput) {
+        this.$refs.input.value = this.lastValue;
+        return;
       }
-      return decimalValue.match(new RegExp(`^-?\\d*(\\.\\d{0,${this.decimals}})?`))[0];
+
+      this.inputError = this.error || (!isValid && this.i18n.t('input.errors.invalid_value'));
     }
   }
 };
