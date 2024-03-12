@@ -24,7 +24,7 @@
                 :placeholder="i18n.t('experiments.table.search')" />
         <i class="sn-icon sn-icon-search"></i>
       </div>
-      <perfect-scrollbar class="relative h-64 overflow-y-auto max-w-[280px]">
+      <perfect-scrollbar class="relative max-h-96 overflow-y-auto max-w-[280px]">
         <div v-for="user in allUsers"
             :key="user.value"
             @click="selectUser(user)"
