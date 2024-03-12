@@ -3256,7 +3256,7 @@ en:
         used_in: "Number of tasks linked to this protocol: %{nr}"
         no_linked_children: "This protocol is not linked to any task."
         length_menu: "Show %{number} per page"
-        show_version: "Show version"
+        show_version: "Show version:"
       restore: "Restore"
       restore_flash_html: "<b>%{count} protocol</b> template(s) successfully restored."
       make_private_unauthorized: "You do not have permission to move selected protocols to My protocols."
