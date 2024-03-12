@@ -2122,6 +2122,8 @@ en:
       file_columns: "Imported columns:"
       example_value: "Imported file content:"
       do_not_include_column: "Do not include this column"
+      edit_existing_items_checkbox: "Edit existing items"
+      overwrite_with_empty_cells: "Overwrite with empty cells"
       errors:
         invalid_file: "The file you provided is invalid. Make sure the file is encoded using %{encoding}."
         invalid_extension: "The file has invalid extension."
