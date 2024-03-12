@@ -9,7 +9,7 @@ Canaid::Permissions.register_for(Asset) do
       protocol = object.protocol
       can_read_protocol_in_module?(user, protocol) || can_read_protocol_in_repository?(user, protocol)
     when Result
-      can_read_result?(object)
+      can_read_result?(user, object)
     when RepositoryCell
       can_read_repository?(user, object.repository_column.repository)
     end
