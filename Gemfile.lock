@@ -470,7 +470,7 @@ GEM
       rack-protection
     omniauth-azure-activedirectory-v2 (2.0.1)
       omniauth-oauth2 (~> 1.8)
-    omniauth-linkedin-oauth2 (1.0.0)
+    omniauth-linkedin-oauth2 (1.0.1)
       omniauth-oauth2
     omniauth-oauth2 (1.8.0)
       oauth2 (>= 1.4, < 3)
