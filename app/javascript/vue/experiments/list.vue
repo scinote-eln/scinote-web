@@ -141,7 +141,7 @@ export default {
       }
 
       columns.push({
-        field: 'total_tasks',
+        field: 'completed_tasks',
         headerName: this.i18n.t('experiments.card.completed_task'),
         cellRenderer: CompletedTasksRenderer,
         sortable: true,
