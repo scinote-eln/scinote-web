@@ -66,7 +66,7 @@ export default {
 
       if (window.innerWidth - flyoutRect.right < 0) { // when flyout is out of screen
         flyout.style.left = 'unset';
-        flyout.style.right = '15px';
+        flyout.style.right = `${rightScrollOffset}px`;
       } else if (this.position === 'right') {
         flyout.style.right = `${right - rightScrollOffset}px`;
         flyout.style.left = 'unset';
