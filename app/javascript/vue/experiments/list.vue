@@ -112,23 +112,26 @@ export default {
           flex: 1,
           headerName: this.i18n.t('experiments.card.name'),
           sortable: true,
-          cellRenderer: NameRenderer
+          cellRenderer: NameRenderer,
+          minWidth: 150
         },
         {
           field: 'code',
           headerName: this.i18n.t('experiments.id'),
-          sortable: true
+          sortable: true,
+          minWidth: 80
         },
         {
           field: 'created_at',
           headerName: this.i18n.t('experiments.card.start_date'),
           sortable: true,
-          minWidth: 130
+          minWidth: 110
         },
         {
           field: 'updated_at',
           headerName: this.i18n.t('experiments.card.modified_date'),
-          sortable: true
+          sortable: true,
+          minWidth: 110
         }
       ];
 
@@ -145,7 +148,7 @@ export default {
         headerName: this.i18n.t('experiments.card.completed_task'),
         cellRenderer: CompletedTasksRenderer,
         sortable: true,
-        minWidth: 120
+        minWidth: 110
       });
       columns.push({
         field: 'description',
@@ -153,7 +156,8 @@ export default {
         sortable: true,
         cellStyle: { 'white-space': 'normal' },
         cellRenderer: DescriptionRenderer,
-        autoHeight: true
+        autoHeight: true,
+        minWidth: 110
       });
 
       return columns;
