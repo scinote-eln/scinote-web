@@ -7,9 +7,9 @@
                :toolbarActions="toolbarActions"
                :actionsUrl="actionsUrl"
                @tableReloaded="reloadingTable = false"
-               @update_pdf="updatePdf"
+               @update_pdf="(_event, rows) => prepareReportUpdate('pdf', rows)"
                @delete="deleteReport"
-               @update_docx="updateDocx"
+               @update_docx="(_event, rows) => prepareReportUpdate('docx', rows)"
                @save_pdf_to_repository="savePdfToRepository"
       />
   </div>
@@ -27,6 +27,10 @@
     :columnsUrl="availableColumnsUrl"
     :rowsUrl="availableRowsUrl"
     ref="saveToInventoryModal"/>
+  <UpdateReportModal v-if="promiseToUpdateReport"
+                     @confirm="promiseToUpdateReport.then(confirmReportUpdate)"
+                     @dismiss="promiseToUpdateReport = false"
+                     ref="updateReportModal"/>
 </template>
 
 <script>
@@ -39,6 +43,7 @@ import DocxRenderer from './renderers/docx.vue';
 import PdfRenderer from './renderers/pdf.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
 import SaveToInventoryModal from './modals/save_to_inventory.vue';
+import UpdateReportModal from './modals/update.vue';
 
 export default {
   name: 'ReportsTable',
@@ -47,7 +52,8 @@ export default {
     DocxRenderer,
     PdfRenderer,
     ConfirmationModal,
-    SaveToInventoryModal
+    SaveToInventoryModal,
+    UpdateReportModal
   },
   props: {
     dataSource: {
@@ -79,6 +85,7 @@ export default {
         description: ''
       },
       reportToSave: null,
+      promiseToUpdateReport: null,
       columnDefs: [
         {
           field: 'project_name',
@@ -146,18 +153,23 @@ export default {
     updateTable() {
       this.reloadingTable = true;
     },
-    updatePdf(_event, rows) {
-      const [report] = rows;
-      axios.post(report.urls.generate_pdf)
-        .then(() => {
-          this.updateTable();
-        });
+    prepareReportUpdate(type, rows) {
+      this.promiseToUpdateReport = Promise.resolve([type, rows]);
     },
-    updateDocx(_event, rows) {
+    confirmReportUpdate([type, rows]) {
+      this.promiseToUpdateReport = null;
       const [report] = rows;
-      axios.post(report.urls.generate_docx)
+      let url;
+      if (type === 'pdf') {
+        url = report.urls.generate_pdf;
+      } else if (type === 'docx') {
+        url = report.urls.generate_docx;
+      }
+
+      axios.post(url)
         .then(() => {
           this.updateTable();
+          HelperModule.flashAlertMsg(this.i18n.t('projects.reports.index.generation.accepted_message'), 'success');
         });
     },
     async deleteReport(event, rows) {
