@@ -97,7 +97,7 @@ export default {
       axios.get(`${this.params.data.urls.users_list}?query=${this.query}`)
         .then((response) => {
           if (setSelectedUsers) {
-            this.selectedUsers = response.data.filter((item) => this.users.some((user) => user.id === item.value));
+            this.selectedUsers = response.data.users.filter((item) => this.users.some((user) => user.id === item.value));
             this.allUsers = response.data.users;
             this.flyoutLoaded = true;
           } else {
