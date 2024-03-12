@@ -4008,6 +4008,10 @@ en:
   From: 'From'
   To: 'To'
 
+  input:
+    errors:
+      invalid_value: 'Invalid value'
+
   marvinjs:
     new_sketch: "New chemical drawing"
     new_button: "New chemical drawing"
