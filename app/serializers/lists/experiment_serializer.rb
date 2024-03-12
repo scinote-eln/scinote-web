@@ -9,7 +9,7 @@ module Lists
 
     attributes :name, :code, :created_at, :updated_at, :workflow_img, :description, :completed_tasks,
                :total_tasks, :archived_on, :urls, :sa_description, :default_public_user_role_id, :team,
-               :top_level_assignable, :hidden, :archived
+               :top_level_assignable, :hidden, :archived, :project_id
 
     def created_at
       I18n.l(object.created_at, format: :full_date)
