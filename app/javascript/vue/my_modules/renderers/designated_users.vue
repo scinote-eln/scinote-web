@@ -1,5 +1,5 @@
 <template>
-  <GeneralDropdown @open="loadUsers" @close="closeFlyout">
+  <GeneralDropdown @open="() => loadUsers(true)" @close="closeFlyout">
     <template v-slot:field>
       <div v-if="!params.data.folder" class="flex items-center gap-1 cursor-pointer h-9" @click="openAccessModal">
         <div v-for="(user, i) in visibleUsers" :key="i" :title="user.full_name">
@@ -24,25 +24,25 @@
                 :placeholder="i18n.t('experiments.table.search')" />
         <i class="sn-icon sn-icon-search"></i>
       </div>
-      <div class="h-64 overflow-y-auto">
+      <perfect-scrollbar class="relative h-64 overflow-y-auto max-w-[280px]">
         <div v-for="user in allUsers"
             :key="user.value"
             @click="selectUser(user)"
             :class="{
-              '!bg-sn-super-light-blue': selectedUsers.includes(user.value),
+              '!bg-sn-super-light-blue': selectedUsers.some(({ value }) => value === user.value),
               'cursor-pointer hover:bg-sn-super-light-grey': canManage
             }"
             class="whitespace-nowrap rounded px-3 py-2.5 flex items-center gap-2
                     hover:no-underline leading-5"
           >
             <div class="sci-checkbox-container">
-              <input type="checkbox" class="sci-checkbox" :disabled="!canManage" :checked="selectedUsers.includes(user.value)" />
+              <input type="checkbox" class="sci-checkbox" :disabled="!canManage" :checked="selectedUsers.some(({ value }) => value === user.value)" />
               <label class="sci-checkbox-label"></label>
             </div>
             <img :src="user.params.avatar_url" class="w-7 h-7" />
-            {{ user.label }}
+            <span class="truncate">{{ user.label }}</span>
         </div>
-      </div>
+      </perfect-scrollbar>
     </template>
   </GeneralDropdown>
 </template>
@@ -92,14 +92,18 @@ export default {
       this.loadUsers();
     }
   },
-  created() {
-    this.selectedUsers = this.users.map((user) => (user.id));
-  },
   methods: {
-    loadUsers() {
+    loadUsers(setSelectedUsers = false) {
       axios.get(`${this.params.data.urls.users_list}?query=${this.query}`)
         .then((response) => {
-          this.allUsers = response.data.users;
+          if (setSelectedUsers) {
+            this.selectedUsers = response.data.filter((item) => this.users.some((user) => user.id === item.value));
+            this.allUsers = response.data.users;
+            this.flyoutLoaded = true;
+          } else {
+            const nonAssignedUsers = response.data.users.filter((item) => !this.selectedUsers.some(({ value }) => value === item.value));
+            this.allUsers = this.selectedUsers.concat(nonAssignedUsers);
+          }
         });
     },
     closeFlyout() {
@@ -116,11 +120,11 @@ export default {
 
       this.changed = true;
 
-      if (this.selectedUsers.includes(user.value)) {
+      if (this.selectedUsers.some(({ value }) => value === user.value)) {
         axios.delete(user.params.unassign_url, {
           table: true
         }).then(() => {
-          this.selectedUsers = this.selectedUsers.filter((id) => id !== user.value);
+          this.selectedUsers = this.selectedUsers.filter(({ value }) => value !== user.value);
         });
       } else {
         axios.post(user.params.assign_url, {
@@ -131,7 +135,7 @@ export default {
           }
         }).then((response) => {
           this.allUsers.find((u) => u.value === user.value).params.unassign_url = response.data.unassign_url;
-          this.selectedUsers.push(user.value);
+          this.selectedUsers.push(user);
         });
       }
     }

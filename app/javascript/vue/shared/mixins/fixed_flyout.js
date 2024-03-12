@@ -45,6 +45,7 @@ export default {
       if (!field || !flyout) return;
 
       const rect = field.getBoundingClientRect();
+      const flyoutRect = flyout.getBoundingClientRect();
       const screenHeight = window.innerHeight;
 
       const windowHasScroll = document.documentElement.scrollHeight > document.documentElement.clientHeight;
@@ -63,9 +64,21 @@ export default {
         flyout.style.minWidth = `${width}px`;
       }
       if (this.position === 'right') {
-        flyout.style.right = `${right - rightScrollOffset}px`;
-      } else {
-        flyout.style.left = `${left}px`;
+        if (window.innerWidth - flyoutRect.right < 0) {
+          flyout.style.left = 'unset';
+          flyout.style.right = `${width - Math.abs(right)}px`;
+        } else {
+          flyout.style.right = `${right - rightScrollOffset}px`;
+          flyout.style.left = 'unset';
+        }
+      } else if (this.position === 'left') {
+        if (window.innerWidth - flyoutRect.right < 0) {
+          flyout.style.left = 'unset';
+          flyout.style.right = `${width - Math.abs(right)}px`;
+        } else {
+          flyout.style.left = `${left}px`;
+          flyout.style.right = 'unset';
+        }
       }
       if (bottom < top) {
         flyout.style.bottom = `${bottom}px`;
