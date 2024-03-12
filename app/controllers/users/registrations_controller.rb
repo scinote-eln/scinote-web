@@ -152,29 +152,28 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
-  def new_with_provider; end
+  def new_with_provider
+    return render_403 unless current_user
+    return render_403 unless Rails.configuration.x.new_team_on_signup
+
+    @team = Team.new
+    render layout: 'sign_in_halt'
+  end
 
   def create_with_provider
-    @user = User.find_by_id(user_provider_params['user'])
+    return render_403 unless current_user
+    return render_403 unless Rails.configuration.x.new_team_on_signup
+
     # Create new team for the new user
     @team = Team.new(team_provider_params)
+    @team.created_by = current_user # set created_by for the team
 
-    if @team.valid? && @user && Rails.configuration.x.new_team_on_signup
-      # Set the confirmed_at == created_at IF not using email confirmations
-      unless Rails.configuration.x.enable_email_confirmations
-        @user.update!(confirmed_at: @user.created_at)
-      end
-
-      @team.created_by = @user # set created_by for team
-      @team.save!
-
+    if @team.save
       # set current team to new user
-      @user.current_team_id = @team.id
-      @user.save!
-
-      sign_in_and_redirect @user
+      current_user.update(current_team_id: @team.id)
+      redirect_to root_path
     else
-      render :new_with_provider
+      render :new_with_provider, layout: 'sign_in_halt'
     end
   end
 
