@@ -446,6 +446,9 @@ export default {
     handleInfiniteScroll(response) {
       const newRows = this.rowData.slice();
       this.formatData(response.data.data).forEach((row) => {
+        if (this.currentViewMode === 'active' && row.archived) {
+          return;
+        }
         newRows.push(row);
       });
       this.rowData = newRows;
