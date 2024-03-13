@@ -71,7 +71,7 @@ import axios from '../../../packs/custom_axios.js';
 import modalMixin from '../../shared/modal_mixin';
 
 export default {
-  name: 'NewProtocolModal',
+  name: 'SaveToInventoryModal',
   props: {
     report: Object,
     repositoriesUrl: String,
@@ -129,6 +129,10 @@ export default {
         });
     },
     changeRepository(repository) {
+      if (typeof repository === 'object') {
+        return;
+      }
+
       this.selectedColumn = null;
       this.selectedRepository = null;
       this.selectedRow = null;
