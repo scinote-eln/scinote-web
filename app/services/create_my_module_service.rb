@@ -18,9 +18,10 @@ class CreateMyModuleService
         @params[:experiment][:project] = @params[:project]
         experiment_service = CreateExperimentService.new(@user, @team, @params[:experiment])
         @params[:experiment] = experiment_service.call
+        @errors.merge!(experiment_service.errors) if experiment_service&.errors&.any?
       end
 
-      raise ActiveRecord::RecordInvalid unless @params[:experiment]&.valid? &&
+      raise ActiveRecord::Rollback unless @params[:experiment]&.valid? &&
                                           can_create_experiment_tasks?(@user, @params[:experiment])
 
       @my_module_params[:x] ||= 0
@@ -39,12 +40,10 @@ class CreateMyModuleService
       create_my_module_activity
 
       @my_module.assign_user(@user)
-    rescue ActiveRecord::RecordInvalid
-      @errors['my_module'] = @my_module.errors.messages if @my_module
-      @errors.merge!(experiment_service.errors) if experiment_service&.errors&.any?
     end
-
     @my_module
+  rescue ActiveRecord::RecordInvalid
+    @errors['my_module'] = @my_module.errors.messages if @my_module
   end
 
   private

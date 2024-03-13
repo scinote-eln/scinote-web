@@ -23,9 +23,10 @@ class CreateProjectService
       @project.save!
 
       create_project_activity
-    rescue ActiveRecord::RecordInvalid
-      @errors['project'] = @project.errors.messages
     end
+    @project
+  rescue ActiveRecord::RecordInvalid
+    @errors['project'] = @project.errors.messages
     @project
   end
 
