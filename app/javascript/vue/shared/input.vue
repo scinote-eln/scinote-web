@@ -4,7 +4,7 @@
     <div class="sci-input-container-v2" :class="{ 'error': !!inputError }" :data-error-text="inputError">
       <input ref="input"
         lang="en-US"
-        :type="type"
+        type="text"
         :id="id"
         :name="name"
         :value="value"
@@ -14,6 +14,8 @@
         :min="min"
         :max="max"
         :step="1/Math.pow(10, decimals)"
+        :inputmode="(type === 'number') && 'numeric'"
+        :pattern="pattern"
         @input="updateValue"
       />
     </div>
@@ -41,12 +43,23 @@ export default {
   data() {
     return {
       inputError: false,
-      lastValue: this.value
+      lastValue: this.value || ''
     };
   },
   watch: {
     value() {
       this.lastValue = this.value;
+    }
+  },
+  computed: {
+    pattern() {
+      if (this.type === 'number' && this.decimals) {
+        return `[0-9]+([\\.][0-9]{0,${this.decimals}})?`;
+      } else if (this.type === 'number') {
+        return '[0-9]+';
+      }
+
+      return null;
     }
   },
   methods: {
