@@ -352,6 +352,36 @@ class Asset < ApplicationRecord
     step || result || repository_cell
   end
 
+  def rename_file(new_name)
+    if file.attached?
+      asset_type = file.metadata['asset_type']
+      new_filename = case asset_type
+                     when 'marvinjs'
+                       "#{new_name}.jpg"
+                     when 'gene_sequence'
+                       "#{new_name}.json"
+                     else
+                       new_name
+                     end
+
+      updated_metadata = file.blob.metadata.merge('name' => new_name)
+
+      if %w(marvinjs gene_sequence).include?(asset_type)
+        file.blob.update!(
+          filename: new_filename,
+          metadata: updated_metadata
+        )
+      else
+        file.blob.update!(filename: new_filename)
+      end
+
+      if asset_type == 'gene_sequence' && preview_image.attached?
+        new_image_filename = "#{new_name}.png"
+        preview_image.blob.update!(filename: new_image_filename)
+      end
+    end
+  end
+
   private
 
   def tempdir
