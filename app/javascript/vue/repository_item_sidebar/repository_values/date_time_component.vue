@@ -137,9 +137,11 @@ export default {
     validateValue() {
       this.error = null;
       // Date is not changed
-      if (this.trimSecondsAndMilliseconds(this.defaultStartDate) === this.trimSecondsAndMilliseconds(this.startDate)
-      && this.trimSecondsAndMilliseconds(this.defaultEndDate) === this.trimSecondsAndMilliseconds(this.endDate)) {
-        return false;
+      if (this.defaultStartDate && this.defaultEndDate) {
+        if (this.trimSecondsAndMilliseconds(this.defaultStartDate) === this.trimSecondsAndMilliseconds(this.startDate)
+         && this.trimSecondsAndMilliseconds(this.defaultEndDate) === this.trimSecondsAndMilliseconds(this.endDate)) {
+          return false;
+        }
       }
 
       if (this.range) {
