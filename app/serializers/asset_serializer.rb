@@ -145,7 +145,17 @@ class AssetSerializer < ActiveModel::Serializer
         start_edit_image: start_edit_image_path(object),
         delete: asset_destroy_path(object),
         move_targets: asset_move_tagets_path(object),
-        move: asset_move_path(object)
+        move: asset_move_path(object),
+        rename: if object.file.attached?
+                  case object.file.metadata['asset_type']
+                  when 'marvinjs'
+                    rename_marvin_js_asset_path(object)
+                  when 'gene_sequence'
+                    rename_gene_sequence_asset_path(object)
+                  else
+                    asset_rename_path(object)
+                  end
+                end
       )
     end
     urls[:open_vector_editor_edit] = edit_gene_sequence_asset_path(object.id) if can_manage_asset?(user, object)

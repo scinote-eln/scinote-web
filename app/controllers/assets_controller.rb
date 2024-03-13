@@ -18,7 +18,7 @@ class AssetsController < ApplicationController
 
   before_action :load_vars, except: :create_wopi_file
   before_action :check_read_permission, except: %i(edit destroy create_wopi_file toggle_view_mode)
-  before_action :check_edit_permission, only: %i(edit destroy toggle_view_mode)
+  before_action :check_edit_permission, only: %i(edit destroy toggle_view_mode rename)
 
   def file_preview
     render json: { html: render_to_string(
@@ -309,6 +309,28 @@ class AssetsController < ApplicationController
     else
       render json: {}, status: :unprocessable_entity
     end
+  end
+
+  def rename
+    new_name = params.require(:asset).permit(:name)[:name]
+
+    if new_name.empty?
+      render json: { error: 'File name must be at least 1 character long.' }, status: :unprocessable_entity
+      return
+    elsif new_name.length > Constants::NAME_MAX_LENGTH
+      render json: { error: 'File name is too long (maximum number is 255 characters).' }, status: :unprocessable_entity
+      return
+    end
+
+    ActiveRecord::Base.transaction do
+      @asset.last_modified_by = current_user
+      @asset.rename_file(new_name)
+      @asset.save!
+    end
+
+    render json: @asset, serializer: AssetSerializer, user: current_user
+  rescue ActiveRecord::RecordInvalid
+    render json: @asset.errors, status: :unprocessable_entity
   end
 
   def checksum

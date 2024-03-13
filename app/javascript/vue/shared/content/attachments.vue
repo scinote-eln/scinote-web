@@ -34,6 +34,7 @@
         @attachment:moved="attachmentMoved"
         @attachment:uploaded="$emit('attachment:uploaded')"
         @attachment:changed="$emit('attachment:changed', $event)"
+        @attachment:update="$emit('attachment:update', $event)"
       />
     </div>
   </div>

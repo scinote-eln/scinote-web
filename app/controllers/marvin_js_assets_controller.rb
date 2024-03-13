@@ -45,6 +45,28 @@ class MarvinJsAssetsController < ApplicationController
     end
   end
 
+  def rename
+    new_name = params.require(:asset).permit(:name)[:name]
+
+    if new_name.empty?
+      render json: { error: 'File name must be at least 1 character long.' }, status: :unprocessable_entity
+      return
+    elsif new_name.length > Constants::NAME_MAX_LENGTH
+      render json: { error: 'File name is too long (maximum number is 255 characters).' }, status: :unprocessable_entity
+      return
+    end
+
+    asset = MarvinJsService.update_file_name(new_name, params[:id], current_user, current_team)
+
+    # create_rename_marvinjs_activity(asset, current_user, :TODO)
+
+    if asset
+      render json: asset, serializer: AssetSerializer, user: current_user
+    else
+      render json: { error: t('marvinjs.no_sketches_found') }, status: :unprocessable_entity
+    end
+  end
+
   def start_editing
     create_edit_marvinjs_activity(@asset, current_user, :start_editing)
   end

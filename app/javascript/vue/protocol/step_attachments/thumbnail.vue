@@ -38,6 +38,7 @@
       :attachment="attachment"
       @attachment:viewMode="updateViewMode"
       @attachment:delete="deleteAttachment"
+      @attachment:update="$emit('attachment:update', $event)"
     />
   </div>
 

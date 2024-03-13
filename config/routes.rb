@@ -821,6 +821,7 @@ Rails.application.routes.draw do
     get 'files/:id/move_targets', to: 'assets#move_targets', as: 'asset_move_tagets'
     post 'files/:id/move', to: 'assets#move', as: 'asset_move'
     delete 'files/:id/', to: 'assets#destroy', as: 'asset_destroy'
+    patch 'files/:id/rename', to: 'assets#rename', as: 'asset_rename'
     post 'files/create_wopi_file',
          to: 'assets#create_wopi_file',
          as: 'create_wopi_file'
@@ -1005,6 +1006,7 @@ Rails.application.routes.draw do
     end
     member do
       post :start_editing
+      patch :rename
     end
   end
 
@@ -1023,7 +1025,11 @@ Rails.application.routes.draw do
     post 'wopi/files/:id', to: 'wopi#post_file_endpoint'
   end
 
-  resources :gene_sequence_assets, only: %i(new create edit update)
+  resources :gene_sequence_assets, only: %i(new create edit update) do
+    member do
+      patch :rename
+    end
+  end
 
   if Rails.env.development? || ENV['ENABLE_DESIGN_ELEMENTS'] == 'true'
     resources :design_elements, only: %i(index) do
