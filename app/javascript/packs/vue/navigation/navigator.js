@@ -26,6 +26,8 @@ function addNavigationNavigatorContainer() {
 
         // refresh action toolbar width on navigator toggle, take into account transition time of .4s
         if (window.actionToolbarComponent) setTimeout(window.actionToolbarComponent.setWidth, 401);
+        // set navigator state in table.
+        if (window.resetGridColumns) window.resetGridColumns(newNavigatorState);
       },
       reloadNavigator(withExpandedChildren = false) {
         this.reloadCurrentLevel = true;

@@ -1,5 +1,5 @@
 <template>
-  <div class="px-3 pt-3 pb-4 rounded border-solid border border-sn-gray flex flex-col"
+  <div class="px-3 pt-3 pb-4 rounded border-solid border border-sn-gray flex flex-col h-56 min-w-[340px]"
        :class="{'bg-sn-light-grey': dtComponent.currentViewMode === 'archived'}">
     <div class="flex items-center gap-4 mb-2">
       <div class="sci-checkbox-container">

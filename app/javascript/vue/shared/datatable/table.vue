@@ -28,7 +28,7 @@
       />
       <div v-if="currentViewRender === 'cards'" ref="cardsContainer" @scroll="handleScroll"
            class="flex-grow basis-64 overflow-y-auto overflow-x-visible p-2 -ml-2">
-        <div class="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+        <div class="grid gap-4" :class="gridColsClass">
           <slot v-for="element in rowData" :key="element.id" name="card" :dtComponent="this" :params="element"></slot>
         </div>
       </div>
@@ -189,7 +189,10 @@ export default {
       tableState: null,
       userSettingsUrl: null,
       gridReady: false,
-      windowScrollerSeen: false
+      windowScrollerSeen: false,
+      resetGridCols: false,
+      navigatorCollapsed: false,
+      gridColsClass: ''
     };
   },
   components: {
@@ -286,19 +289,59 @@ export default {
     },
     perPage() {
       this.saveTableState();
+    },
+    resetGridCols() {
+      if (this.resetGridCols) {
+        this.setGridColsClass();
+        this.resetGridCols = false;
+      }
+    },
+    currentViewRender() {
+      if (this.currentViewRender === 'cards') {
+        this.setGridColsClass();
+      }
     }
   },
   created() {
+    window.resetGridColumns = (newNavigatorCollapsed) => {
+      setTimeout(() => {
+        this.navigatorCollapsed = newNavigatorCollapsed;
+        this.setGridColsClass();
+      }, 400);
+    };
     this.userSettingsUrl = document.querySelector('meta[name="user-settings-url"]').getAttribute('content');
     this.fetchTableState();
   },
   mounted() {
+    this.navigatorCollapsed = document.querySelector('.sci--layout').getAttribute('data-navigator-collapsed') === 'true';
+    this.setGridColsClass();
+
     window.addEventListener('resize', this.resize);
   },
   beforeDestroy() {
+    delete window.resetGridColumns;
     window.removeEventListener('resize', this.resize);
   },
   methods: {
+    setGridColsClass() {
+      if (this.currentViewRender !== 'cards') return;
+
+      const availableGridWidth = document.querySelector('.sci--layout-content').offsetWidth;
+      // sci--layout-content left padding + right padding id 32
+      // min card width is 320
+      let maxGridCols = Math.floor((availableGridWidth - 32) / 340) || 1;
+      if (maxGridCols > 1) {
+        // grid gap is 16px
+        const gap = (maxGridCols - 1) * 16;
+        maxGridCols = Math.floor((availableGridWidth - gap - 32) / 340);
+      }
+
+      if (this.navigatorCollapsed) {
+        this.gridColsClass = 'grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4';
+      } else {
+        this.gridColsClass = `grid-cols-${maxGridCols}`;
+      }
+    },
     handleScroll() {
       if (this.scrollMode === 'pages') return;
 
@@ -401,6 +444,7 @@ export default {
     },
     resize() {
       this.windowScrollerSeen = document.documentElement.scrollWidth > document.documentElement.clientWidth;
+      this.setGridColsClass();
       if (this.tableState) return;
 
       this.columnApi?.autoSizeAllColumns();
