@@ -40,8 +40,8 @@
       :class="{ 'text-sn-grey font-normal': isBlank, 'whitespace-pre-line py-1': !singleLine }"
       @click="enableEdit($event)"
     >
-      <span :class="{'truncate': singleLine }" v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
-      <span :class="{'truncate': singleLine}" v-else>{{newValue || placeholder}}</span>
+      <span :class="{'truncate': singleLine }" :title="sa_value || placeholder" v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
+      <span :class="{'truncate': singleLine}" :title="newValue || placeholder" v-else>{{newValue || placeholder}}</span>
     </div>
 
     <div

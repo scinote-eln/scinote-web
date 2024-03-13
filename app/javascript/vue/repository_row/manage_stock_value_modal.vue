@@ -26,45 +26,42 @@
           <form class="flex flex-col gap-6" @submit.prevent novalidate>
             <fieldset class="w-full flex justify-between">
               <div class="flex flex-col w-40">
-                <label class="text-sn-grey text-sm font-normal" for="operations">{{ i18n.t('repository_stock_values.manage_modal.operation') }}</label>
-                <SelectDropdown
+                <label class="sci-label" for="operations">{{ i18n.t('repository_stock_values.manage_modal.operation') }}</label>
+                <Select
                   :disabled="!stockValue?.id"
                   :value="operation"
                   :options="operations"
                   @change="setOperation"
-                />
+                ></Select>
               </div>
               <div class="flex flex-col w-40">
                 <Input
                   @update="value => amount = value"
                   name="stock_amount"
                   id="stock-amount"
-                  :inputClass="`sci-input-container-v2 ${errors.amount ? 'error' : ''}`"
-                  :labelClass="`text-sm font-normal ${errors.amount ? 'text-sn-delete-red' : 'text-sn-grey'}`"
-                  :type="Number(stockValue.decimals) === 0 ? 'number' : 'text'"
+                  type="number"
                   :value="amount"
                   :decimals="stockValue.decimals"
                   :placeholder="i18n.t('repository_stock_values.manage_modal.amount_placeholder_new')"
-                  required
                   :label="i18n.t('repository_stock_values.manage_modal.amount')"
-                  showLabel
-                  autoFocus
+                  :required="true"
+                  :min="0"
                   :error="errors.amount"
                 />
               </div>
               <div class="flex flex-col w-40">
-                <label :class="`text-sm font-normal ${errors.unit ? 'text-sn-delete-red' : 'text-sn-grey'}`" for="stock-unit">
+                <label class="sci-label" :class="{ 'error': !!errors.unit }" for="stock-unit">
                   {{ i18n.t('repository_stock_values.manage_modal.unit') }}
                 </label>
-                <SelectDropdown
+                <Select
                   :disabled="['add', 'remove'].includes(operation)"
                   :value="unit"
                   :options="units"
                   :placeholder="i18n.t('repository_stock_values.manage_modal.unit_prompt')"
                   @change="unit = $event"
                   :className="`${errors.unit ? 'error' : ''}`"
-                />
-                <div class="text-sn-delete-red text-xs" :class="{ visible: errors.unit, invisible: !errors.unit }">
+                ></Select>
+                <div class="text-sn-coral text-xs" :class="{ visible: errors.unit, invisible: !errors.unit }">
                   {{ errors.unit }}
                 </div>
               </div>
@@ -93,24 +90,21 @@
               </div>
               <span class="ml-2">{{ i18n.t('repository_stock_values.manage_modal.create_reminder') }}</span>
             </div>
-            <div v-if="reminderEnabled" class="stock-reminder-value flex gap-2 items-center">
+            <div v-if="reminderEnabled" class="stock-reminder-value flex gap-2 items-center w-40">
               <Input
                   @update="value => lowStockTreshold = value"
                   name="treshold_amount"
                   id="treshold-amount"
-                  fieldClass="flex gap-2"
-                  inputClass="sci-input-container-v2 w-40"
-                  labelClass="text-sm font-normal flex items-center"
-                  :type="Number(stockValue.decimals) === 0 ? 'number' : 'text'"
+                  type="number"
                   :value="lowStockTreshold"
                   :decimals="stockValue.decimals"
                   :placeholder="i18n.t('repository_stock_values.manage_modal.amount_placeholder_new')"
-                  required
+                  :required="true"
                   :label="i18n.t('repository_stock_values.manage_modal.reminder_at')"
-                  showLabel
+                  :min="0"
                   :error="errors.tresholdAmount"
                 />
-              <span class="text-sm font-normal">
+              <span class="text-sm font-normal mt-5">
                 {{ unitLabel }}
               </span>
             </div>
@@ -130,7 +124,7 @@
           <button type='button' class='btn btn-secondary' data-dismiss='modal'>
             {{ i18n.t('general.cancel') }}
           </button>
-          <button class="btn btn-primary" @click="validateAndsaveStockValue">
+          <button class="btn btn-primary" @click="validateAndsaveStockValue" :disabled="isSaving">
             {{ i18n.t('repository_stock_values.manage_modal.save_stock') }}
           </button>
         </div>
@@ -141,13 +135,13 @@
 
 <script>
 import Decimal from 'decimal.js';
-import Input from '../shared/legacy/input.vue';
-import SelectDropdown from '../shared/select_dropdown.vue';
+import Select from '../shared/select.vue';
+import Input from '../shared/input.vue';
 
 export default {
   name: 'ManageStockValueModal',
   components: {
-    SelectDropdown,
+    Select,
     Input
   },
   data() {
@@ -155,12 +149,13 @@ export default {
       operation: null,
       operations: [],
       stockValue: null,
-      amount: '',
+      amount: null,
       repositoryRowName: null,
       stockUrl: null,
       units: null,
       unit: null,
       reminderEnabled: false,
+      isSaving: false,
       lowStockTreshold: null,
       comment: null,
       errors: {}
@@ -176,7 +171,7 @@ export default {
       return unit ? unit[1] : '';
     },
     newAmount() {
-      const currentAmount = new Decimal(this.stockValue?.amount || 0);
+      const currentAmount = this.stockValue?.amount ? new Decimal(this.stockValue?.amount || 0) : null;
       const amount = new Decimal(this.amount || 0);
       let value;
       switch (this.operation) {
@@ -226,7 +221,7 @@ export default {
         success: (result) => {
           this.repositoryRowName = result.repository_row_name;
           this.stockValue = result.stock_value;
-          this.amount = Number(new Decimal(result.stock_value.amount || 0));
+          this.amount = this.stockValue?.amount && Number(new Decimal(this.stockValue.amount));
           this.units = result.stock_value.units;
           this.unit = result.stock_value.unit;
           this.reminderEnabled = result.stock_value.reminder_enabled;
@@ -263,6 +258,7 @@ export default {
       this.errors = newErrors;
 
       if (!$.isEmptyObject(newErrors)) return;
+      this.isSaving = true;
 
       const $this = this;
       $.ajax({
@@ -282,6 +278,7 @@ export default {
         },
         success: (result) => {
           $this.stockValue = null;
+          $this.isSaving = false;
           $this.closeModal();
           $this.closeCallback && $this.closeCallback(result);
         }

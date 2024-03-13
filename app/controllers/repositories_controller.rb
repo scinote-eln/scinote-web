@@ -240,6 +240,16 @@ class RepositoriesController < ApplicationController
       render json: @tmp_repository.errors, status: :unprocessable_entity
     else
       copied_repository = @repository.copy(current_user, @tmp_repository.name)
+      old_repo_stock_column = @repository.repository_columns.find_by(data_type: 'RepositoryStockValue')
+      copied_repo_stock_column = copied_repository.repository_columns.find_by(data_type: 'RepositoryStockValue')
+
+      if old_repo_stock_column && copied_repo_stock_column
+        old_repo_stock_column.repository_stock_unit_items.each do |item|
+          copied_item = item.dup
+          copied_repo_stock_column.repository_stock_unit_items << copied_item
+        end
+        copied_repository.save!
+      end
 
       if !copied_repository
         render json: { name: ['Server error'] }, status: :unprocessable_entity

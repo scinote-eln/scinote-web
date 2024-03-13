@@ -51,3 +51,8 @@ html {
   opacity: 1;
   bottom: 5px;
 }
+
+/* Hide caret in Safari */
+#relationships-section summary::-webkit-details-marker {
+  display: none;
+}
