@@ -7,9 +7,14 @@
       }) }}
       <div class="py-1">
         <div class="w-24 h-1 bg-sn-light-grey">
-          <div class="h-full bg-sn-blue" :style="{
-            width: `${progress}%`
-          }"></div>
+          <div class="h-full"
+               :class="{
+                 'bg-sn-black': params.data.archived_on,
+                 'bg-sn-blue': !params.data.archived_on
+               }"
+               :style="{
+                 width: `${progress}%`
+               }"></div>
         </div>
       </div>
     </div>
