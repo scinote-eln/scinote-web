@@ -6,7 +6,7 @@
               hover:!text-sn-blue hover:no-underline cursor-pointer hover:bg-sn-super-light-grey">
           {{ attachment.attributes.wopi_context.button_text }}
       </a>
-      <button class="btn btn-light" v-if="!editWopiEnabled" style="pointer-events: all;"
+      <button class="btn btn-light" v-else style="pointer-events: all;"
         :title="attachment.attributes.wopi_context.title" disabled="true">
         {{ attachment.attributes.wopi_context.button_text }}
       </button>
