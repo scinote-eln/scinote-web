@@ -101,7 +101,7 @@ module Toolbars
     def export_action
       return unless @items.all? { |item| item.is_a?(Project) ? can_export_project?(item) : true }
 
-      num_projects = @items.length
+      num_projects = count_of_export_projects
       limit = TeamZipExport.exports_limit
       num_of_requests_left = @current_user.exports_left - 1
       team = @items.first.team
@@ -121,6 +121,7 @@ module Toolbars
         icon: 'sn-icon sn-icon-export',
         message: message,
         path: export_projects_team_path(team),
+        number_of_projects: num_projects,
         type: :emit
       }
     end
@@ -204,6 +205,20 @@ module Toolbars
         path: "/global_activities?#{activity_url_params}",
         type: :link
       }
+    end
+
+    def count_of_export_projects
+      @items.sum do |item|
+        if item.is_a?(Project) && can_export_project?(item)
+          1
+        elsif item.respond_to?(:inner_projects)
+          item.inner_projects.visible_to(@current_user, item.team).count do |project|
+            can_export_project?(project)
+          end
+        else
+          0
+        end
+      end
     end
   end
 end
