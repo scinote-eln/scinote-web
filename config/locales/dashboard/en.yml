@@ -61,7 +61,7 @@ en:
       placeholder:
         title: "Cannot create."
         description: "As a guest in this team you cannot create anything."
-    create_task_modal:
+    new_task_modal:
       title: "Create new Task"
       task:
         label: "Task name"
