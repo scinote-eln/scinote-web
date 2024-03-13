@@ -3839,6 +3839,9 @@ en:
   # This section contains general words that can be used in any parts of
   # application.
   datatable:
+    entries:
+      total: "%{total} entries"
+      selected: "%{selected} of %{total} selected"
     show: 'Show:'
     rows: 'rows'
   tiny_mce:

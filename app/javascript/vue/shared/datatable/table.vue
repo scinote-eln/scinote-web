@@ -67,13 +67,6 @@
         @toolbar:action="emitAction" />
     </div>
     <div v-if="scrollMode == 'pages'" class="flex items-center py-4" :class="{'opacity-0': initializing }">
-      <div class="mr-auto">
-        <Pagination
-          :totalPage="totalPage"
-          :currentPage="page"
-          @setPage="setPage"
-        ></Pagination>
-      </div>
       <div class="flex items-center gap-4">
         {{ i18n.t('datatable.show') }}
         <div class="w-36">
@@ -83,6 +76,21 @@
             @change="setPerPage"
           ></SelectDropdown>
         </div>
+        <div>
+          <span v-if="selectedRows.length">
+            {{ i18n.t('datatable.entries.selected', { total: totalEntries, selected: selectedRows.length }) }}
+          </span>
+          <span v-else>
+            {{ i18n.t('datatable.entries.total', { total: totalEntries, selected: selectedRows.length }) }}
+          </span>
+        </div>
+      </div>
+      <div class="ml-auto">
+        <Pagination
+          :totalPage="totalPage"
+          :currentPage="page"
+          @setPage="setPage"
+        ></Pagination>
       </div>
     </div>
   </div>
@@ -167,6 +175,7 @@ export default {
       page: 1,
       order: null,
       totalPage: 0,
+      totalEntries: null,
       selectedRows: [],
       keepSelection: false,
       searchValue: '',
@@ -436,6 +445,7 @@ export default {
             this.handleInfiniteScroll(response);
           }
           this.totalPage = response.data.meta.total_pages;
+          this.totalEntries = response.data.meta.total_count;
           this.$emit('tableReloaded');
           this.dataLoading = false;
           this.restoreSelection();
