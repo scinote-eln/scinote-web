@@ -61,7 +61,7 @@
                   @change="unit = $event"
                   :className="`${errors.unit ? 'error' : ''}`"
                 ></Select>
-                <div class="text-sn-delete-red text-xs" :class="{ visible: errors.unit, invisible: !errors.unit }">
+                <div class="text-sn-coral text-xs" :class="{ visible: errors.unit, invisible: !errors.unit }">
                   {{ errors.unit }}
                 </div>
               </div>
