@@ -33,7 +33,7 @@
         </li>
       </ul>
     </div>
-    <div class="result-toolbar__right flex items-center">
+    <div class="result-toolbar__right flex items-center [&_.sn-icon-filter]:!text-sn-blue">
       <button class="btn btn-secondary mr-3" @click="collapseResults" tabindex="0">
         {{ i18n.t('my_modules.results.collapse_label') }}
       </button>
