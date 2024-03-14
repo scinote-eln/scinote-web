@@ -100,7 +100,8 @@ module Lists
 
     def permissions
       {
-        create_comments: project? ? can_create_project_comments?(object) : false
+        create_comments: project? ? can_create_project_comments?(object) : false,
+        manage_users_assignments: project? ? can_manage_project_users?(object) : false
       }
     end
 
