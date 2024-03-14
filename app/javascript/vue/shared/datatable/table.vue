@@ -76,12 +76,12 @@
             @change="setPerPage"
           ></SelectDropdown>
         </div>
-        <div>
+        <div v-show="!dataLoading">
           <span v-if="selectedRows.length">
-            {{ i18n.t('datatable.entries.selected', { total: totalEntries, selected: selectedRows.length }) }}
+            {{ i18n.t('datatable.entries.selected', { count: totalEntries, selected: selectedRows.length }) }}
           </span>
           <span v-else>
-            {{ i18n.t('datatable.entries.total', { total: totalEntries, selected: selectedRows.length }) }}
+            {{ i18n.t('datatable.entries.total', { count: totalEntries, selected: selectedRows.length }) }}
           </span>
         </div>
       </div>
