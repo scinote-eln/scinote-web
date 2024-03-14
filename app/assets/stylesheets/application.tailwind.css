@@ -61,3 +61,6 @@ html {
 .ag-pinned-left-header .ag-header-cell:last-child .ag-header-cell-resize:after {
   opacity: 0;
 }
+.ag-theme-alpine {
+  --ag-font-family: "SN Inter", "Open Sans", Arial, Helvetica, sans-serif !important;
+}
