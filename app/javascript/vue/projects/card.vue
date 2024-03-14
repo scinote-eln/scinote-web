@@ -1,7 +1,7 @@
 <template>
   <div v-if="!params.folder"
-       :class="{'bg-sn-light-grey': dtComponent.currentViewMode === 'archived'}"
-       class="px-3 pt-3 pb-4 rounded border-solid border border-sn-gray flex flex-col h-56 min-w-[340px]">
+       :class="{ 'bg-sn-light-grey': dtComponent.currentViewMode === 'archived', [cardMinWidth]: true }"
+       class="px-3 pt-3 pb-4 rounded border-solid border border-sn-gray flex flex-col h-56" >
     <div class="flex items-center gap-4 mb-2">
       <div class="sci-checkbox-container">
         <input
@@ -37,10 +37,11 @@
     </div>
   </div>
   <div v-else
-    class="px-3 pt-3 pb-4 rounded border-solid border border-sn-gray flex flex-col h-56 min-w-[340px]"
+    class="px-3 pt-3 pb-4 rounded border-solid border border-sn-gray flex flex-col h-56"
     :class="{
       'bg-sn-light-grey': dtComponent.currentViewMode === 'archived',
-      'bg-sn-super-light-grey': dtComponent.currentViewMode !== 'archived'
+      'bg-sn-super-light-grey': dtComponent.currentViewMode !== 'archived',
+      [cardMinWidth]: true
     }"
   >
     <div class="flex items-center gap-4 mb-2">
@@ -75,6 +76,8 @@
 
 <script>
 
+/* global GLOBAL_CONSTANTS */
+
 import RowMenuRenderer from '../shared/datatable/row_menu_renderer.vue';
 import UsersRenderer from './renderers/users.vue';
 import CardSelectorMixin from '../shared/datatable/mixins/card_selector.js';
@@ -84,6 +87,11 @@ export default {
   props: {
     params: Object,
     dtComponent: Object,
+  },
+  computed: {
+    cardMinWidth() {
+      return `min-w-[${GLOBAL_CONSTANTS.TABLE_CARD_MIN_WIDTH}]px`;
+    }
   },
   components: {
     RowMenuRenderer,
