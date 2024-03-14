@@ -97,6 +97,8 @@
 </template>
 
 <script>
+
+/* global GLOBAL_CONSTANTS */
 import { AgGridVue } from 'ag-grid-vue3';
 import PerfectScrollbar from 'vue3-perfect-scrollbar';
 import axios from '../../../packs/custom_axios.js';
@@ -325,15 +327,14 @@ export default {
   methods: {
     setGridColsClass() {
       if (this.currentViewRender !== 'cards') return;
-
       const availableGridWidth = document.querySelector('.sci--layout-content').offsetWidth;
-      // sci--layout-content left padding + right padding id 32
-      // min card width is 320
-      let maxGridCols = Math.floor((availableGridWidth - 32) / 340) || 1;
+      const { paddingLeft, paddingRight } = getComputedStyle(document.querySelector('.sci--layout-content'));
+      const padding = parseInt(paddingLeft, 10) + parseInt(paddingRight, 10);
+
+      let maxGridCols = Math.floor((availableGridWidth - padding) / GLOBAL_CONSTANTS.TABLE_CARD_MIN_WIDTH) || 1;
       if (maxGridCols > 1) {
-        // grid gap is 16px
-        const gap = (maxGridCols - 1) * 16;
-        maxGridCols = Math.floor((availableGridWidth - gap - 32) / 340);
+        const gap = (maxGridCols - 1) * GLOBAL_CONSTANTS.TABLE_CARD_GAP;
+        maxGridCols = Math.floor((availableGridWidth - gap - padding) / GLOBAL_CONSTANTS.TABLE_CARD_MIN_WIDTH);
       }
 
       if (this.navigatorCollapsed) {
