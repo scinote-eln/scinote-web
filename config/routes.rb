@@ -667,6 +667,7 @@ Rails.application.routes.draw do
         get 'export', to: 'protocols#export'
         get 'protocolsio', to: 'protocols#protocolsio_index'
         get 'actions_toolbar', to: 'protocols#actions_toolbar'
+        get 'user_roles', to: 'protocols#user_roles'
       end
     end
 
