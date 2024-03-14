@@ -15,4 +15,4 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
   - make docker-ci
 script:
-  - travis_wait 30 make tests-ci
+  - make tests-ci
