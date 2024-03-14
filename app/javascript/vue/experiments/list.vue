@@ -11,6 +11,8 @@
     :currentViewMode="currentViewMode"
     :filters="filters"
     :viewRenders="viewRenders"
+    :objectArchived="archived"
+    :hiddenDataMessage="i18n.t('projects.show.empty_state.no_active_experiment_archived_project')"
     scrollMode="infinite"
     @tableReloaded="reloadingTable = false"
     @archive="archive"
@@ -91,7 +93,8 @@ export default {
     archivedPageUrl: { type: String },
     currentViewMode: { type: String, required: true },
     createUrl: { type: String, required: true },
-    userRolesUrl: { type: String, required: true }
+    userRolesUrl: { type: String, required: true },
+    archived: { type: Boolean }
   },
   data() {
     return {

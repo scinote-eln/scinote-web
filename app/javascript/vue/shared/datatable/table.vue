@@ -26,39 +26,44 @@
         @reorderColumns="reorderColumns"
         @resetColumnsToDefault="resetColumnsToDefault"
       />
-      <div v-if="currentViewRender === 'cards'" ref="cardsContainer" @scroll="handleScroll"
-           class="flex-grow basis-64 overflow-y-auto overflow-x-visible p-2 -ml-2">
-        <div class="grid gap-4" :class="gridColsClass">
-          <slot v-for="element in rowData" :key="element.id" name="card" :dtComponent="this" :params="element"></slot>
-        </div>
+      <div v-if="this.objectArchived && this.currentViewMode === 'active'" class="pt-6" >
+        <em> {{ hiddenDataMessage }} </em>
       </div>
-      <ag-grid-vue
-        v-if="currentViewRender === 'table'"
-        class="ag-theme-alpine w-full flex-grow h-full z-10"
-        :class="{'opacity-0': initializing }"
-        :columnDefs="extendedColumnDefs"
-        :rowData="rowData"
-        :defaultColDef="defaultColDef"
-        :rowSelection="'multiple'"
-        :suppressRowTransform="true"
-        :gridOptions="gridOptions"
-        :suppressRowClickSelection="true"
-        :getRowClass="getRowClass"
-        @grid-ready="onGridReady"
-        @first-data-rendered="onFirstDataRendered"
-        @sortChanged="setOrder"
-        @columnResized="onColumnResized"
-        @columnMoved="onColumnMoved"
-        @bodyScroll="handleScroll"
-        @columnPinned="handlePin"
-        @columnVisible="handleVisibility"
-        @rowSelected="setSelectedRows"
-        @cellClicked="clickCell"
-        :CheckboxSelectionCallback="withCheckboxes"
-      >
-      </ag-grid-vue>
-      <div v-if="dataLoading" class="flex absolute top-0 items-center justify-center w-full flex-grow h-full z-10">
-        <img src="/images/medium/loading.svg" alt="Loading" class="p-16 rounded-xl bg-sn-white" />
+      <div v-else class="w-full h-full">
+        <div v-if="currentViewRender === 'cards'" ref="cardsContainer" @scroll="handleScroll"
+            class="flex-grow basis-64 overflow-y-auto overflow-x-visible p-2 -ml-2">
+          <div class="grid gap-4" :class="gridColsClass">
+            <slot v-for="element in rowData" :key="element.id" name="card" :dtComponent="this" :params="element"></slot>
+          </div>
+        </div>
+        <ag-grid-vue
+          v-if="currentViewRender === 'table'"
+          class="ag-theme-alpine w-full flex-grow h-full z-10"
+          :class="{'opacity-0': initializing }"
+          :columnDefs="extendedColumnDefs"
+          :rowData="rowData"
+          :defaultColDef="defaultColDef"
+          :rowSelection="'multiple'"
+          :suppressRowTransform="true"
+          :gridOptions="gridOptions"
+          :suppressRowClickSelection="true"
+          :getRowClass="getRowClass"
+          @grid-ready="onGridReady"
+          @first-data-rendered="onFirstDataRendered"
+          @sortChanged="setOrder"
+          @columnResized="onColumnResized"
+          @columnMoved="onColumnMoved"
+          @bodyScroll="handleScroll"
+          @columnPinned="handlePin"
+          @columnVisible="handleVisibility"
+          @rowSelected="setSelectedRows"
+          @cellClicked="clickCell"
+          :CheckboxSelectionCallback="withCheckboxes"
+        >
+        </ag-grid-vue>
+        <div v-if="dataLoading" class="flex absolute top-0 items-center justify-center w-full flex-grow h-full z-10">
+          <img src="/images/medium/loading.svg" alt="Loading" class="p-16 rounded-xl bg-sn-white" />
+        </div>
       </div>
       <ActionToolbar
         v-if="selectedRows.length > 0 && actionsUrl"
@@ -163,6 +168,13 @@ export default {
     scrollMode: {
       type: String,
       default: 'pages'
+    },
+    objectArchived: {
+      type: Boolean,
+      default: false
+    },
+    hiddenDataMessage: {
+      type: String
     }
   },
   data() {

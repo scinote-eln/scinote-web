@@ -12,6 +12,8 @@
     :currentViewMode="currentViewMode"
     :filters="filters"
     :viewRenders="viewRenders"
+    :objectArchived="archived"
+    :hiddenDataMessage="i18n.t('experiments.empty_state.no_active_modules_archived_branch')"
     scrollMode="infinite"
     @tableReloaded="reloadingTable = false"
     @create="newModalOpen = true"
@@ -90,7 +92,8 @@ export default {
     assignedUsersUrl: { type: String, required: true },
     usersFilterUrl: { type: String, required: true },
     statusesList: { type: Array, required: true },
-    projectName: { type: String }
+    projectName: { type: String },
+    archived: { type: Boolean }
   },
   data() {
     return {
