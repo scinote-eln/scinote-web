@@ -26,7 +26,7 @@ export default {
   },
   computed: {
     shouldTruncateText() {
-      return this.params.data.description.length > 80;
+      return this.params.data.description?.length > 80;
     }
   },
   methods: {
