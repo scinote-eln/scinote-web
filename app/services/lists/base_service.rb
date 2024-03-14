@@ -38,10 +38,9 @@ module Lists
 
     def sort_records
       return unless @params[:order]
-      primary_sortable_column = sortable_columns[order_params[:column].to_sym]
-      id_column = "#{primary_sortable_column.split('.').first}.id"
-      sort_by = "#{primary_sortable_column} #{sort_direction(order_params)}, #{id_column} ASC"
-      @records = @records.order(sort_by)
+
+      sort_by = "#{sortable_columns[order_params[:column].to_sym]} #{sort_direction(order_params)}"
+      @records = @records.order(sort_by).order(:id)
     end
   end
 end

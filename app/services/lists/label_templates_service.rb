@@ -40,10 +40,9 @@ module Lists
       if sorted_column == 'label_templates.description'
         sort_by = "COALESCE(label_templates.description, '') ASC"
         sort_by = "COALESCE(label_templates.description, '') DESC" if sort_direction(order_params) == 'DESC'
-        @records = @records.order(Arel.sql(sort_by))
+        @records = @records.order(Arel.sql(sort_by)).order(:id)
       else
-        sort_by = "#{sorted_column} #{sort_direction(order_params)}"
-        @records = @records.order(sort_by)
+        super
       end
     end
 
