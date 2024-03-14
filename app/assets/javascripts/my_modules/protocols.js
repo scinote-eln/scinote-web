@@ -326,6 +326,17 @@ function initAccessModal() {
     });
   });
 }
+
+function wrapTables() {
+  const viewMode = new URLSearchParams(window.location.search).get('view_mode');
+  if (['archived', 'locked', 'active'].includes(viewMode)) {
+    setTimeout(() => {
+      const notesContainerEl = document.getElementById('notes-container');
+      window.wrapTables(notesContainerEl);
+    }, 100);
+  }
+}
+
 /**
  * Initializes page
  */
@@ -337,14 +348,7 @@ function init() {
   initProtocolSectionOpenEvent();
   initDetailsDropdown();
   initAccessModal();
+  wrapTables();
 }
 
 init();
-
-const viewMode = new URLSearchParams(window.location.search).get('view_mode');
-if (['archived', 'locked', 'active'].includes(viewMode)) {
-  setTimeout(() => {
-    const notesContainerEl = document.getElementById('notes-container');
-    window.wrapTables(notesContainerEl);
-  }, 100);
-}
