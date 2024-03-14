@@ -56,3 +56,8 @@ html {
 #relationships-section summary::-webkit-details-marker {
   display: none;
 }
+
+/* Hide right border of last pined column header. */
+.ag-pinned-left-header .ag-header-cell:last-child .ag-header-cell-resize:after {
+  opacity: 0;
+}
