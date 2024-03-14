@@ -28,7 +28,7 @@
       />
       <div v-if="currentViewRender === 'cards'" ref="cardsContainer" @scroll="handleScroll"
            class="flex-grow basis-64 overflow-y-auto overflow-x-visible p-2 -ml-2">
-        <div class="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+        <div class="grid gap-4" :class="gridColsClass">
           <slot v-for="element in rowData" :key="element.id" name="card" :dtComponent="this" :params="element"></slot>
         </div>
       </div>
@@ -97,6 +97,8 @@
 </template>
 
 <script>
+
+/* global GLOBAL_CONSTANTS */
 import { AgGridVue } from 'ag-grid-vue3';
 import PerfectScrollbar from 'vue3-perfect-scrollbar';
 import axios from '../../../packs/custom_axios.js';
@@ -189,7 +191,10 @@ export default {
       tableState: null,
       userSettingsUrl: null,
       gridReady: false,
-      windowScrollerSeen: false
+      windowScrollerSeen: false,
+      resetGridCols: false,
+      navigatorCollapsed: false,
+      gridColsClass: ''
     };
   },
   components: {
@@ -286,19 +291,58 @@ export default {
     },
     perPage() {
       this.saveTableState();
+    },
+    resetGridCols() {
+      if (this.resetGridCols) {
+        this.setGridColsClass();
+        this.resetGridCols = false;
+      }
+    },
+    currentViewRender() {
+      if (this.currentViewRender === 'cards') {
+        this.setGridColsClass();
+      }
     }
   },
   created() {
+    window.resetGridColumns = (newNavigatorCollapsed) => {
+      setTimeout(() => {
+        this.navigatorCollapsed = newNavigatorCollapsed;
+        this.setGridColsClass();
+      }, 400);
+    };
     this.userSettingsUrl = document.querySelector('meta[name="user-settings-url"]').getAttribute('content');
     this.fetchTableState();
   },
   mounted() {
+    this.navigatorCollapsed = document.querySelector('.sci--layout').getAttribute('data-navigator-collapsed') === 'true';
+    this.setGridColsClass();
+
     window.addEventListener('resize', this.resize);
   },
   beforeDestroy() {
+    delete window.resetGridColumns;
     window.removeEventListener('resize', this.resize);
   },
   methods: {
+    setGridColsClass() {
+      if (this.currentViewRender !== 'cards') return;
+      const availableGridWidth = document.querySelector('.sci--layout-content').offsetWidth;
+      const { paddingLeft, paddingRight } = getComputedStyle(document.querySelector('.sci--layout-content'));
+      const padding = parseInt(paddingLeft, 10) + parseInt(paddingRight, 10);
+
+      let maxGridCols = Math.floor((availableGridWidth - padding) / GLOBAL_CONSTANTS.TABLE_CARD_MIN_WIDTH) || 1;
+      if (maxGridCols > 1) {
+        const gap = (maxGridCols - 1) * GLOBAL_CONSTANTS.TABLE_CARD_GAP;
+        maxGridCols = Math.floor((availableGridWidth - gap - padding) / GLOBAL_CONSTANTS.TABLE_CARD_MIN_WIDTH);
+      }
+
+      if (this.navigatorCollapsed) {
+        this.gridColsClass = 'grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4';
+      } else {
+        this.gridColsClass = `grid-cols-${maxGridCols}`;
+      }
+    },
     handleScroll() {
       if (this.scrollMode === 'pages') return;
 
@@ -401,6 +445,7 @@ export default {
     },
     resize() {
       this.windowScrollerSeen = document.documentElement.scrollWidth > document.documentElement.clientWidth;
+      this.setGridColsClass();
       if (this.tableState) return;
 
       this.columnApi?.autoSizeAllColumns();

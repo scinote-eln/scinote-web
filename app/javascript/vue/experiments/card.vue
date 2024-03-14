@@ -1,6 +1,6 @@
 <template>
-  <div class="px-3 pt-3 pb-4 rounded border-solid border border-sn-gray flex flex-col"
-       :class="{'bg-sn-light-grey': dtComponent.currentViewMode === 'archived'}">
+  <div class="px-3 pt-3 pb-4 rounded border-solid border border-sn-gray flex flex-col h-56"
+       :class="{ 'bg-sn-light-grey': dtComponent.currentViewMode === 'archived', [cardMinWidth]: true}">
     <div class="flex items-center gap-4 mb-2">
       <div class="sci-checkbox-container">
         <input
@@ -66,6 +66,8 @@
 
 <script>
 
+/* global GLOBAL_CONSTANTS */
+
 import RowMenuRenderer from '../shared/datatable/row_menu_renderer.vue';
 import CardSelectorMixin from '../shared/datatable/mixins/card_selector.js';
 import workflowImgMixin from './workflow_img_mixin.js';
@@ -89,6 +91,9 @@ export default {
       if (totalTasks === 0) return 0;
 
       return (completedTasks / totalTasks) * 100;
+    },
+    cardMinWidth() {
+      return `min-w-[${GLOBAL_CONSTANTS.TABLE_CARD_MIN_WIDTH}]px`;
     }
   }
 };
