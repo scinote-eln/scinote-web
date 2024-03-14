@@ -130,12 +130,12 @@ export default {
     },
     manuallyAssignedUsers() {
       return this.assignedUsers.filter((user) => (
-        user.attributes.assigned === 'manually'
+        user.attributes?.assigned === 'manually'
       ));
     },
     autoAssignedUsers() {
       return this.assignedUsers.filter((user) => (
-        user.attributes.assigned === 'automatically'
+        user.attributes?.assigned === 'automatically'
       ));
     }
   },
