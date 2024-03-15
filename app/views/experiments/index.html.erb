@@ -11,6 +11,7 @@
       archived-page-url="<%= experiments_path(project_id: @project, view_mode: :archived) %>"
       current-view-mode="<%= params[:view_mode] || :active %>"
       user-roles-url="<%= user_roles_projects_path %>"
+      :archived="<%= @project.archived?%>"
     />
   </div>
   <%= javascript_include_tag 'vue_experiments_list' %>
