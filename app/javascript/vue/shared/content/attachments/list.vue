@@ -84,12 +84,13 @@ import AttachmentMovedMixin from './mixins/attachment_moved.js';
 import ContextMenuMixin from './mixins/context_menu.js';
 import ContextMenu from './context_menu.vue';
 import MoveMixin from './mixins/move.js';
+import OpenLocallyMixin from './mixins/open_locally.js';
 import MoveAssetModal from '../modal/move.vue';
 import OpenMenu from './open_menu.vue';
 
 export default {
   name: 'listAttachment',
-  mixins: [ContextMenuMixin, AttachmentMovedMixin, MoveMixin],
+  mixins: [ContextMenuMixin, AttachmentMovedMixin, MoveMixin, OpenLocallyMixin],
   components: {
     ContextMenu,
     MoveAssetModal,
