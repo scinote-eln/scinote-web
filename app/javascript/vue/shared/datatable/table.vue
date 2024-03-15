@@ -48,6 +48,7 @@
           :gridOptions="gridOptions"
           :suppressRowClickSelection="true"
           :getRowClass="getRowClass"
+          :enableCellTextSelection="true"
           @grid-ready="onGridReady"
           @first-data-rendered="onFirstDataRendered"
           @sortChanged="setOrder"
