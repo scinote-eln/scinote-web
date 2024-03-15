@@ -60,7 +60,8 @@ const entryList = {
   vue_scinote_edit_download: './app/javascript/packs/vue/scinote_edit_download.js',
   vue_design_system_modals: './app/javascript/packs/vue/design_system/modals.js',
   vue_legacy_tags_modal: './app/javascript/packs/vue/legacy/tags_modal.js',
-  vue_legacy_access_modal: './app/javascript/packs/vue/legacy/access_modal.js'
+  vue_legacy_access_modal: './app/javascript/packs/vue/legacy/access_modal.js',
+  vue_legacy_repository_menu_dropdown: './app/javascript/packs/vue/legacy/repository_menu_dropdown.js'
 };
 
 // Engine pack loading based on https://github.com/rails/webpacker/issues/348#issuecomment-635480949
