@@ -41,7 +41,7 @@ module RepositoryZipExport
           when -1, -2
             next
           when -3
-            csv_row << (repository.is_a?(RepositorySnapshot) ? row.parent_id : row.id)
+            csv_row << (repository.is_a?(RepositorySnapshot) ? row.parent_id : row.code)
           when -4
             csv_row << row.name
           when -5
