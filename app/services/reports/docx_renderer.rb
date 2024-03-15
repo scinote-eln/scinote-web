@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'vips'
+
 module Reports
   class DocxRenderer
     def self.render_p_element(docx, element, options = {})
@@ -39,8 +41,44 @@ module Reports
       node.text ' ' if link_item[:value] != ''
     end
 
+    # IMPORTANT: The output file must be cleaned up outside this method by the caller.
+    def self.convert_svg_to_png(svg_blob)
+      input_file = Tempfile.new(['input', '.svg'])
+      output_file = Tempfile.new(['output', '.png'])
+      output_path = output_file.path
+
+      begin
+        input_file.binmode
+        input_file.write(svg_blob.download)
+        input_file.close
+
+        Vips::Image.svgload(input_file.path).write_to_file(output_path)
+      rescue StandardError => e
+        Rails.logger.error "SVG to PNG Conversion Failed: #{e.message}"
+        nil
+      ensure
+        input_file&.unlink
+      end
+
+      output_path
+    end
+
     def self.render_img_element(docx, element, options = {})
       style = element[:style]
+      png_path = nil
+
+      if element[:blob].content_type == 'image/svg+xml'
+        png_path = convert_svg_to_png(element[:blob])
+
+        if png_path
+          element[:data] = png_path
+          blob_data = File.binread(png_path)
+          dimensions = FastImage.size(png_path)
+          style[:width], style[:height] = dimensions if dimensions
+        end
+      else
+        blob_data = element[:blob].download
+      end
 
       if options[:table]
         max_width = (style[:max_width] / options[:table][:columns].to_f)
@@ -50,12 +88,16 @@ module Reports
         end
       end
 
-      docx.img element[:data] do
-        data element[:blob].download
-        width style[:width]
-        height style[:height]
-        align style[:align] || :left
+      if defined?(blob_data)
+        docx.img element[:data] do
+          data blob_data
+          width style[:width]
+          height style[:height]
+          align style[:align] || :left
+        end
       end
+    ensure
+      File.delete(png_path) if png_path && File.exist?(png_path)
     end
 
     def self.render_list_element(docx, element, options = {})
@@ -161,7 +203,7 @@ module Reports
         x = 300
       end
 
-      blob_data = if asset_preview.instance_of? ActiveStorage::Preview
+      blob_data = if asset.previewable?
                     asset_preview.image.download
                   else
                     asset_preview.blob.download
