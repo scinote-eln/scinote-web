@@ -31,7 +31,7 @@
         <div>
           <img :src="userAssignment.attributes.user.avatar_url" class="rounded-full w-8 h-8">
         </div>
-        <div>
+        <div class="truncate">
           <div class="flex flex-row gap-2">
             <div class="truncate"
                 :title="userAssignment.attributes.user.name"
