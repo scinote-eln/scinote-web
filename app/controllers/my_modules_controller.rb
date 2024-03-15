@@ -474,7 +474,9 @@ class MyModulesController < ApplicationController
   def load_experiment
     @experiment = Experiment.preload(user_assignments: %i(user user_role))
                             .find_by(id: params[:id] || params[:experiment_id])
+
     render_404 unless @experiment
+    render_403 unless can_read_experiment?(@experiment)
   end
 
   def load_experiment_my_modules
