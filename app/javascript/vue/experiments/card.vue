@@ -20,7 +20,7 @@
       {{ params.name }}
     </a>
     <div class="flex gap-4 mb-2.5">
-      <div class="grid grow gap-x-2 gap-y-3 grid-cols-[100px_auto] mt-auto text-xs">
+      <div class="grid grow gap-x-2 gap-y-3 grid-cols-[90px_auto] mt-auto text-xs">
         <span class="text-sn-dark-grey">{{ i18n.t('experiments.card.start_date') }}</span>
         <span class="font-bold">{{ params.created_at }}</span>
 
@@ -93,7 +93,7 @@ export default {
       return (completedTasks / totalTasks) * 100;
     },
     cardMinWidth() {
-      return `min-w-[${GLOBAL_CONSTANTS.TABLE_CARD_MIN_WIDTH}]px`;
+      return `min-w-[${GLOBAL_CONSTANTS.TABLE_CARD_MIN_WIDTH}px]`;
     }
   }
 };
