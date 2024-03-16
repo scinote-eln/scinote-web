@@ -90,7 +90,7 @@ export default {
   },
   computed: {
     cardMinWidth() {
-      return `min-w-[${GLOBAL_CONSTANTS.TABLE_CARD_MIN_WIDTH}]px`;
+      return `min-w-[${GLOBAL_CONSTANTS.TABLE_CARD_MIN_WIDTH}px]`;
     }
   },
   components: {
