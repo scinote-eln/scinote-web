@@ -43,7 +43,9 @@ class ExperimentsController < ApplicationController
   end
 
   def assigned_users
-    render json: User.where(id: @experiment.user_assignments.select(:user_id)), each_serializer: UserSerializer
+    render json: User.where(id: @experiment.user_assignments.select(:user_id)),
+           each_serializer: UserSerializer,
+           user: current_user
   end
 
   def create
