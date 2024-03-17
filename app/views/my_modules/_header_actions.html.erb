@@ -12,6 +12,7 @@
           title="<%= t("nav2.modules.results") %>"
       >
         <%= t("nav2.modules.results") %>
+        <%= "[#{(@my_module.archived_branch? ? @my_module.results : @my_module.results.active).length}]" %>
       </a>
       <a class="p-3 border-b-4 border-transparent hover:no-underline uppercase text-bold capitalize <%= is_module_activities? ? "text-sn-blue" : "text-sn-grey" %>"
           href="<%= activities_my_module_url(@my_module, view_mode: params[:view_mode]) %>"
