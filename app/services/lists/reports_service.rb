@@ -52,6 +52,7 @@ module Lists
         sort_by = "#{sortable_columns[order_params[:column].to_sym]} #{sort_direction(order_params)}"
         @records = @records.order(sort_by)
       end
+      @records = @records.order(:id)
     end
 
     def sortable_columns
