@@ -662,12 +662,12 @@ var RepositoryDatatable = (function(global) {
         class: 'added-by',
         visible: true
       },{
-        // Added by column
+        // Updated on column
         targets: 7,
         class: 'updated-on',
         visible: true
       },{
-        // Added by column
+        // Updated by column
         targets: 8,
         class: 'updated-by',
         visible: true
