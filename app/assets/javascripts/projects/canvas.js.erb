@@ -553,6 +553,11 @@ function handleAnchorClick(event) {
     const targetUrl = event.target.href;
 
     const alertText = $("#update-canvas").attr("data-unsaved-work-text");
+    if (!alertText) {
+      window.location.href = targetUrl;
+      return;
+    }
+
     const exit = confirm(alertText);
 
     if (exit) {
