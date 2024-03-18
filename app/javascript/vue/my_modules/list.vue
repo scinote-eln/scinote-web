@@ -313,11 +313,28 @@ export default {
         roles_path: this.userRolesUrl
       };
     },
+    checkProvisioning(params) {
+      if (params.data.provisioning_status === 'done') return;
+
+      axios.get(params.data.urls.provisioning_status).then((response) => {
+        const provisioningStatus = response.data.provisioning_status;
+        if (provisioningStatus === 'done') {
+          this.reloadingTable = true;
+        } else {
+          setTimeout(() => {
+            this.checkProvisioning(params);
+          }, 5000);
+        }
+      });
+    },
     // Renderers
     nameRenderer(params) {
       const { name, urls } = params.data;
       const provisioningStatus = params.data.provisioning_status;
       if (provisioningStatus === 'in_progress') {
+        setTimeout(() => {
+          this.checkProvisioning(params);
+        }, 5000);
         return `
           <span class="flex gap-2 items-center">
             <div title="${this.i18n.t('experiments.duplicate_tasks.duplicating')}"
