@@ -63,7 +63,8 @@ module Lists
         experiments_to_move: experiments_to_move_experiment_path(object.experiment),
         move: move_modules_experiment_path(object.experiment),
         update: my_module_path(object),
-        show_access: access_permissions_my_module_path(object)
+        show_access: access_permissions_my_module_path(object),
+        provisioning_status: provisioning_status_my_module_url(object)
       }
 
       if can_manage_project_users?(object.experiment.project)
