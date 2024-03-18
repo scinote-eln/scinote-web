@@ -182,12 +182,17 @@ class ExperimentsController < ApplicationController
   def projects_to_clone
     projects = @experiment.project.team.projects.active
                           .with_user_permission(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
+                          .where('trim_html_tags(projects.name) ILIKE ?',
+                                 "%#{ActiveRecord::Base.sanitize_sql_like(params['query'])}%")
                           .map { |p| [p.id, p.name] }
     render json: { data: projects }, status: :ok
   end
 
   def projects_to_move
-    projects = @experiment.movable_projects(current_user).map { |p| [p.id, p.name] }
+    projects = @experiment.movable_projects(current_user)
+                          .where('trim_html_tags(projects.name) ILIKE ?',
+                                 "%#{ActiveRecord::Base.sanitize_sql_like(params['query'])}%")
+                          .map { |p| [p.id, p.name] }
     render json: { data: projects }, status: :ok
   end
 
