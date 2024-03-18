@@ -123,7 +123,11 @@ class MyModulesController < ApplicationController
     if @my_module.last_transition_error && @my_module.last_transition_error['type'] == 'repository_snapshot'
       flash[:repository_snapshot_error] = @my_module.last_transition_error
     end
-    response = { status_changing: @my_module.status_changing? }
+    response = {
+      status_changing: @my_module.status_changing?,
+      reload_page: @my_module.my_module_status.name == 'In review' &&
+                   @my_module.my_module_status.previous_status&.name == 'Completed'
+    }
     unless @my_module.status_changing?
       response[:html] = render_to_string(
         partial: 'my_modules/status_flow/task_flow_button',
@@ -390,6 +394,8 @@ class MyModulesController < ApplicationController
       render json: {
         status: :changed,
         status_changing: @my_module.status_changing?,
+        reload_page: @my_module.my_module_status.name == 'Completed' &&
+                     MyModuleStatus.find_by(id: old_status_id)&.name == 'In review',
         html: render_to_string(
           partial: 'my_modules/status_flow/task_flow_button',
           locals: { my_module: @my_module },

@@ -18,6 +18,8 @@
     $.getJSON($('.status-flow-dropdown').data('status-check-url'), (statusData) => {
       if (statusData.status_changing) {
         setTimeout(() => { checkStatusState(); }, GLOBAL_CONSTANTS.FAST_STATUS_POLLING_INTERVAL);
+      } else if (statusData.reload_page) {
+        window.location.reload();
       } else {
         $('.task-sharing-and-flows .status-flow-container').replaceWith(statusData.html);
       }
@@ -47,6 +49,8 @@
           $('.task-sharing-and-flows .status-flow-container').replaceWith(result.html);
           if (result.status_changing) {
             setTimeout(() => { checkStatusState(); }, GLOBAL_CONSTANTS.FAST_STATUS_POLLING_INTERVAL);
+          } else if (result.reload_page) {
+            window.location.reload();
           }
         },
         error: function(e) {
