@@ -450,7 +450,9 @@ class ExperimentsController < ApplicationController
 
   def load_project
     @project = Project.find_by(id: params[:project_id])
+
     render_404 unless @project
+    render_403 unless can_read_project?(@project)
   end
 
   def experiment_params

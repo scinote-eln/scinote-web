@@ -27,6 +27,8 @@ module Navigator
 
     def load_project
       @project = current_team.projects.find_by(id: params[:id])
+
+      render_404 unless @project
     end
 
     def check_read_permissions
