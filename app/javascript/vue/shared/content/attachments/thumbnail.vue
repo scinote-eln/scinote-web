@@ -39,11 +39,19 @@
         :data-gallery-view-id="parentId"
         :data-preview-url="attachment.attributes.urls.preview"
       >
-        {{ attachment.attributes.file_name }}
+        <div class="truncate overflow-hidden whitespace-break-spaces line-clamp-6 text-sn-blue">
+          {{ attachment.attributes.file_name }}
+        </div>
       </a>
-      <div class="absolute bottom-16 text-sn-grey">
-        {{ attachment.attributes.file_size_formatted }}
+      <div class="absolute bottom-16">
+        <div class="text-sn-grey">
+          {{ attachment.attributes.updated_at_formatted }}
+        </div>
+        <div class="text-sn-grey">
+          {{ attachment.attributes.file_size_formatted }}
+        </div>
       </div>
+
       <div class="absolute bottom-4 w-[184px] grid grid-cols-[repeat(4,_2.5rem)] justify-between">
         <MenuDropdown
             v-if="multipleOpenOptions.length > 1"
@@ -101,7 +109,10 @@
         >
           <i class="sn-icon sn-icon-open"></i>
         </a>
-        <a v-if="attachment.attributes.urls.move" @click.prevent.stop="showMoveModal" class="btn btn-light icon-btn thumbnail-action-btn" :title="i18n.t('attachments.thumbnail.buttons.move')">
+        <a v-if="attachment.attributes.urls.move"
+          @click.prevent.stop="showMoveModal"
+          class="btn btn-light icon-btn thumbnail-action-btn"
+          :title="i18n.t('attachments.thumbnail.buttons.move')">
           <i class="sn-icon sn-icon-move"></i>
         </a>
         <a class="btn btn-light icon-btn thumbnail-action-btn"
@@ -109,26 +120,20 @@
           :href="attachment.attributes.urls.download" data-turbolinks="false">
           <i class="sn-icon sn-icon-export"></i>
         </a>
-        <template v-if="attachment.attributes.urls.delete">
-          <a class="btn btn-light icon-btn thumbnail-action-btn"
-            :title="i18n.t('attachments.thumbnail.buttons.delete')"
-            @click.prevent.stop="deleteModal = true">
-            <i class="sn-icon sn-icon-delete"></i>
-          </a>
-        </template>
+        <ContextMenu
+          v-show="showOptions"
+          :attachment="attachment"
+          @attachment:viewMode="updateViewMode"
+          @attachment:delete="deleteAttachment"
+          @attachment:moved="attachmentMoved"
+          @attachment:uploaded="reloadAttachments"
+          @attachment:changed="$emit('attachment:changed', $event)"
+          @menu-visibility-changed="handleMenuVisibilityChange"
+          :withBorder="true"
+          :customStyle="{ position: 'relative', right: '0', top: '0' }"
+        />
       </div>
     </div>
-    <ContextMenu
-      v-show="showOptions"
-      :attachment="attachment"
-      @attachment:viewMode="updateViewMode"
-      @attachment:delete="deleteAttachment"
-      @attachment:moved="attachmentMoved"
-      @attachment:uploaded="reloadAttachments"
-      @attachment:changed="$emit('attachment:changed', $event)"
-      @menu-visibility-changed="handleMenuVisibilityChange"
-      :withBorder="true"
-    />
     <Teleport to="body">
       <deleteAttachmentModal
         v-if="deleteModal"
