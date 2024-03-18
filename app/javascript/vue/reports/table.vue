@@ -26,6 +26,7 @@
     :repositoriesUrl="availableRepositoriesUrl"
     :columnsUrl="availableColumnsUrl"
     :rowsUrl="availableRowsUrl"
+    @close="reportToSave = false"
     ref="saveToInventoryModal"/>
   <UpdateReportModal v-if="promiseToUpdateReport"
                      @confirm="promiseToUpdateReport.then(confirmReportUpdate)"

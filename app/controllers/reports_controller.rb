@@ -349,7 +349,7 @@ class ReportsController < ApplicationController
     @available_repositories = []
     repositories = Repository.active
                              .accessible_by_teams(current_team)
-                             .name_like(search_params[:q])
+                             .name_like(search_params[:query])
                              .limit(Constants::SEARCH_LIMIT)
     repositories.each do |repository|
       next unless can_manage_repository_rows?(current_user, repository)
@@ -365,7 +365,7 @@ class ReportsController < ApplicationController
   end
 
   def search_params
-    params.permit(:q)
+    params.permit(:query)
   end
 
   def save_pdf_params
