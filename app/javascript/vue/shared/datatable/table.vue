@@ -612,9 +612,11 @@ export default {
     },
     pinColumn(column) {
       this.columnApi.setColumnPinned(column.field, 'left');
+      this.hideLastPinnedResizeCell();
     },
     unPinColumn(column) {
       this.columnApi.setColumnPinned(column.field, null);
+      this.hideLastPinnedResizeCell();
     },
     reorderColumns(columns) {
       this.columnApi.moveColumns(columns, 1);
@@ -643,6 +645,7 @@ export default {
     },
     onColumnMoved(event) {
       if (event.finished) {
+        this.hideLastPinnedResizeCell();
         this.saveTableState();
       }
     },
@@ -650,6 +653,16 @@ export default {
       if (event.finished) {
         this.saveTableState();
       }
+    },
+    hideLastPinnedResizeCell() {
+      $('.ag-pinned-left-header .ag-header-cell .ag-header-cell-resize').css('opacity', 100);
+      let lastPinnedColIndex = 0;
+      // eslint-disable-next-line func-names
+      $('.ag-pinned-left-header .ag-header-cell').each(function () {
+        const colIndex = parseInt($(this).attr('aria-colindex'), 10);
+        if (colIndex > lastPinnedColIndex) lastPinnedColIndex = colIndex;
+      });
+      $(`.ag-pinned-left-header .ag-header-cell[aria-colindex="${lastPinnedColIndex}"] .ag-header-cell-resize`).css('opacity', 0);
     }
   }
 };
