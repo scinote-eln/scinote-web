@@ -88,6 +88,14 @@
   }
 }
 
+.attachments:has(> .list-attachment-container) {
+  grid-row-gap: 10px;
+
+  @media (max-width: 640px) {
+    grid-row-gap: 30px;
+  }
+}
+
 .add-file-modal {
   .file-drop-zone {
     align-items: center;

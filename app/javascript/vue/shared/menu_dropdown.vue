@@ -1,5 +1,5 @@
 <template>
-  <div class="relative" v-if="listItems.length > 0 || alwaysShow" v-click-outside="closeMenu" >
+  <div class="inline" v-if="listItems.length > 0 || alwaysShow" v-click-outside="closeMenu" >
     <button ref="field" :class="btnClasses" :title="title" @click="isOpen = !isOpen">
       <i v-if="btnIcon" :class="btnIcon"></i>
       {{ btnText }}
@@ -9,7 +9,7 @@
     <template v-if="isOpen">
       <teleport to="body">
         <div ref="flyout"
-            class="fixed z-[3000] sn-menu-dropdown bg-sn-white inline-block rounded p-2.5 sn-shadow-menu-sm flex flex-col gap-[1px]"
+            class="fixed z-[3000] sn-menu-dropdown bg-sn-white rounded p-2.5 sn-shadow-menu-sm flex flex-col gap-[1px]"
             :class="{
                 'right-0': position === 'right',
                 'left-0': position === 'left',
