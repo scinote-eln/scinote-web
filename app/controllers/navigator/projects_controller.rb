@@ -2,7 +2,7 @@
 
 module Navigator
   class ProjectsController < BaseController
-    before_action :load_project
+    before_action :load_project, except: :index
     before_action :check_read_permissions, except: :index
 
     def index
