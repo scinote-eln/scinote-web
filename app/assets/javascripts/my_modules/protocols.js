@@ -327,7 +327,7 @@ function initAccessModal() {
   });
 }
 
-function wrapTables() {
+function initWrapTables() {
   const viewMode = new URLSearchParams(window.location.search).get('view_mode');
   if (['archived', 'locked', 'active'].includes(viewMode)) {
     setTimeout(() => {
@@ -348,7 +348,7 @@ function init() {
   initProtocolSectionOpenEvent();
   initDetailsDropdown();
   initAccessModal();
-  wrapTables();
+  initWrapTables();
 }
 
 init();
