@@ -574,6 +574,8 @@ export default {
       if (!this.rowData.find((row) => row.id === e.data.id)) return;
 
       if (e.node.isSelected()) {
+        if (this.selectedRows.find((row) => row.id === e.data.id)) return;
+
         this.selectedRows.push(e.data);
       } else {
         this.selectedRows = this.selectedRows.filter((row) => row.id !== e.data.id);
