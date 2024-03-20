@@ -58,7 +58,7 @@
                   :value="unit"
                   :options="units"
                   :placeholder="i18n.t('repository_stock_values.manage_modal.unit_prompt')"
-                  @change="unit = $event"
+                  @change="unit = $event; validateStockValue()"
                   :className="`${errors.unit ? 'error' : ''}`"
                 ></Select>
                 <div class="text-sn-coral text-xs" :class="{ visible: errors.unit, invisible: !errors.unit }">
@@ -104,27 +104,27 @@
                   :min="0"
                   :error="errors.tresholdAmount"
                 />
-              <span class="text-sm font-normal mt-5">
+              <span class="text-sm font-normal mt-5 shrink-0">
                 {{ unitLabel }}
               </span>
             </div>
-            <div class="sci-input-container flex flex-col" :data-error-text="i18n.t('repository_stock_values.manage_modal.comment_limit')">
-              <label class="text-sn-grey text-sm font-normal" for="stock-value-comment">{{ i18n.t('repository_stock_values.manage_modal.comment') }}</label>
-              <input class="sci-input-field"
-                @input="event => comment = event.target.value"
-                type="text"
-                name="comment"
-                id="stock-value-comment"
-                :placeholder="i18n.t('repository_stock_values.manage_modal.comment_placeholder')"
-              />
-            </div>
+            <Input
+              @input="event => comment = event.target.value"
+              :value="comment"
+              type="text"
+              name="comment"
+              id="stock-value-comment"
+              :label=" i18n.t('repository_stock_values.manage_modal.comment')"
+              :error="errors.comment"
+              :placeholder="i18n.t('repository_stock_values.manage_modal.comment_placeholder')"
+            />
           </form>
         </div>
         <div class="modal-footer">
           <button type='button' class='btn btn-secondary' data-dismiss='modal'>
             {{ i18n.t('general.cancel') }}
           </button>
-          <button class="btn btn-primary" @click="validateAndsaveStockValue" :disabled="isSaving">
+          <button class="btn btn-primary" @click="saveStockValue" :disabled="isSaving">
             {{ i18n.t('repository_stock_values.manage_modal.save_stock') }}
           </button>
         </div>
@@ -244,20 +244,25 @@ export default {
     },
     showModal(stockValueUrl, closeCallback) {
       $(this.$refs.modal).modal('show');
+      this.comment = null;
       this.fetchStockValueData(stockValueUrl);
       this.closeCallback = closeCallback;
     },
-    validateAndsaveStockValue() {
+    validateStockValue() {
       const newErrors = {};
-      this.errors = newErrors;
       if (!this.unit) { newErrors.unit = I18n.t('repository_stock_values.manage_modal.unit_error'); }
       if (!this.amount) { newErrors.amount = I18n.t('repository_stock_values.manage_modal.amount_error'); }
       if (this.amount && this.amount < 0) { newErrors.amount = I18n.t('repository_stock_values.manage_modal.negative_error'); }
       if (this.reminderEnabled && !this.lowStockTreshold) { newErrors.tresholdAmount = I18n.t('repository_stock_values.manage_modal.amount_error'); }
-
+      if (this.comment && this.comment.length > 255) { newErrors.comment = I18n.t('repository_stock_values.manage_modal.comment_limit'); }
       this.errors = newErrors;
+      return newErrors;
+    },
 
-      if (!$.isEmptyObject(newErrors)) return;
+    saveStockValue() {
+      this.validateStockValue();
+
+      if (!$.isEmptyObject(this.errors)) return;
       this.isSaving = true;
 
       const $this = this;
