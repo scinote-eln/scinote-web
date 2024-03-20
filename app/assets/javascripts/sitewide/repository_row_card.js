@@ -104,4 +104,8 @@
       }
     }
   });
+
+  $(document).on('turbolinks:load', () => {
+    $('#itemLandingPagelink').trigger('click');
+  });
 }());

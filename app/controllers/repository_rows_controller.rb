@@ -45,6 +45,8 @@ class RepositoryRowsController < ApplicationController
   def show
     respond_to do |format|
       format.html do
+        return redirect_to repository_path(@repository, row_id: @repository_row.id) if params[:show_card].present?
+
         redirect_to repository_path(@repository)
       end
 

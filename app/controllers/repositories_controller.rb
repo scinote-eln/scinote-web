@@ -25,6 +25,7 @@ class RepositoriesController < ApplicationController
   before_action :check_create_permissions, only: %i(create_modal create)
   before_action :check_copy_permissions, only: %i(copy_modal copy)
   before_action :set_inline_name_editing, only: %i(show)
+  before_action :load_repository_row, only: %i(show)
   before_action :set_breadcrumbs_items, only: %i(index show)
 
   layout 'fluid'
@@ -468,6 +469,13 @@ class RepositoriesController < ApplicationController
 
   def load_repositories_for_restoring
     @repositories = current_team.repositories.archived.where(id: params[:repository_ids])
+  end
+
+  def load_repository_row
+    @repository_row = nil
+    return if params[:row_id].blank?
+
+    @repository_row = @repository.repository_rows.find_by(id: params[:row_id])
   end
 
   def set_inline_name_editing
