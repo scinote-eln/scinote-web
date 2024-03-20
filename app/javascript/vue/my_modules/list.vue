@@ -35,6 +35,7 @@
             :createUrl="createUrl"
             :projectTagsUrl="projectTagsUrl"
             :assignedUsersUrl="assignedUsersUrl"
+            :currentUserId="currentUserId"
             @create="updateTable"
             @close="newModalOpen = false" />
   <EditModal v-if="editModalObject"
@@ -84,6 +85,7 @@ export default {
     activePageUrl: { type: String },
     archivedPageUrl: { type: String },
     currentViewMode: { type: String, required: true },
+    currentUserId: { type: String, required: true },
     createUrl: { type: String, required: true },
     userRolesUrl: { type: String, required: true },
     canvasUrl: { type: String, required: true },
