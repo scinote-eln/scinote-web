@@ -55,6 +55,7 @@
                     :option-renderer="usersRenderer"
                     :label-renderer="usersRenderer"
                     :multiple="true"
+                    :value="users"
                     :searchable="true"
                     :placeholder="i18n.t('experiments.canvas.new_my_module_modal.assigned_users_placeholder')"
                     :tagsView="true" ></SelectDropdown>
@@ -85,7 +86,8 @@ export default {
   props: {
     createUrl: String,
     projectTagsUrl: String,
-    assignedUsersUrl: String
+    assignedUsersUrl: String,
+    currentUserId: { type: String, required: true }
   },
   components: {
     DateTimePicker,
@@ -175,6 +177,7 @@ export default {
 
       axios.get(this.assignedUsersUrl).then((response) => {
         this.allUsers = response.data.data;
+        this.users = [this.currentUserId];
       });
     },
     tagsRenderer(tag) {

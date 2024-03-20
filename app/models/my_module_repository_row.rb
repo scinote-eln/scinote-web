@@ -1,7 +1,7 @@
 class MyModuleRepositoryRow < ApplicationRecord
   include ActionView::Helpers::NumberHelper
 
-  attribute :last_modified_by, :integer
+  attribute :last_modified_by_id, :integer
   attribute :comment, :text
 
   belongs_to :assigned_by,
@@ -28,7 +28,7 @@ class MyModuleRepositoryRow < ApplicationRecord
         stock_consumption: stock_consumption,
         repository_stock_unit_item_id:
           repository_row.repository_stock_value.repository_stock_unit_item_id,
-        last_modified_by: user,
+        last_modified_by_id: user.id,
         comment: comment
       )
       save!
@@ -59,7 +59,7 @@ class MyModuleRepositoryRow < ApplicationRecord
     yield
     stock_value.repository_ledger_records.create!(
       reference: self,
-      user: last_modified_by || assigned_by,
+      user_id: last_modified_by_id || assigned_by_id,
       amount: delta,
       balance: stock_value.amount,
       comment: comment,
