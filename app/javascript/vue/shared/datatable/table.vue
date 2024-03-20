@@ -1,6 +1,9 @@
 <template>
   <div v-if="!stateLoading" class="flex flex-col h-full" :class="{'pb-4': windowScrollerSeen && selectedRows.length === 0}">
-    <div class="relative flex flex-col flex-grow z-10">
+    <div
+      class="relative flex flex-col flex-grow z-10"
+      :class="{'overflow-y-hidden pb-20': currentViewRender === 'cards'}"
+    >
       <Toolbar
         :toolbarActions="toolbarActions"
         @toolbar:action="emitAction"
@@ -31,7 +34,7 @@
       </div>
       <div v-else class="w-full h-full">
         <div v-if="currentViewRender === 'cards'" ref="cardsContainer" @scroll="handleScroll"
-            class="flex-grow basis-64 overflow-y-auto overflow-x-visible p-2 -ml-2">
+            class="flex-grow basis-64 overflow-y-auto h-full overflow-x-visible p-2 -ml-2">
           <div class="grid gap-4" :class="gridColsClass">
             <slot v-for="element in rowData" :key="element.id" name="card" :dtComponent="this" :params="element"></slot>
           </div>
