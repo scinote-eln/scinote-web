@@ -1,7 +1,7 @@
 class MyModuleRepositoryRow < ApplicationRecord
   include ActionView::Helpers::NumberHelper
 
-  attribute :last_modified_by, :integer
+  attribute :last_modified_by
   attribute :comment, :text
 
   belongs_to :assigned_by,
