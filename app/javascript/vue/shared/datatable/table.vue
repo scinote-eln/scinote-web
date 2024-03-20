@@ -32,7 +32,7 @@
       <div v-if="this.objectArchived && this.currentViewMode === 'active'" class="pt-6" >
         <em> {{ hiddenDataMessage }} </em>
       </div>
-      <div v-else class="w-full h-full">
+      <div v-else class="w-full h-full" :class="{ '!h-[calc(100%-68px)]': selectedRows.length > 0 && actionsUrl }">
         <div v-if="currentViewRender === 'cards'" ref="cardsContainer" @scroll="handleScroll"
             class="flex-grow basis-64 overflow-y-auto h-full overflow-x-visible p-2 -ml-2">
           <div class="grid gap-4" :class="gridColsClass">
