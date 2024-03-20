@@ -543,6 +543,7 @@ export default {
         this.gridApi.sizeColumnsToFit();
         this.initializing = false;
       }
+      this.hideLastPinnedResizeCell();
     },
     onFirstDataRendered() {
       this.resize();
@@ -630,6 +631,7 @@ export default {
     resetColumnsToDefault() {
       this.columnApi.resetColumnState();
       this.gridApi.sizeColumnsToFit();
+      this.hideLastPinnedResizeCell();
     },
     getOrder(columnsState) {
       if (!columnsState) return null;
