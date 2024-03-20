@@ -65,12 +65,16 @@
     @apply bg-sn-blue-hover text-sn-white;
   }
 
-  .btn.btn-primary:disabled,
-  .btn.btn-primary.disabled,
   .btn.btn-success:disabled,
   .btn.btn-success.disabled {
     @apply bg-sn-light-grey text-sn-sleepy-grey border-sn-light-grey;
   }
+
+  .btn.btn-primary:disabled,
+  .btn.btn-primary.disabled {
+    @apply bg-sn-super-light-grey text-sn-grey border-sn-grey;
+  }
+
 
   .btn.btn-secondary,
   .btn.btn-default {

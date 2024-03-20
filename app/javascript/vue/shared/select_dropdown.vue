@@ -11,7 +11,7 @@
       :class="[sizeClass, {
         '!border-sn-blue': isOpen,
         '!border-sn-light-grey': !isOpen,
-        'bg-sn-sleepy-grey': disabled
+        'bg-sn-super-light-grey': disabled
       }]"
     >
     <template v-if="!tagsView">
