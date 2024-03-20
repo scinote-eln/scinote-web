@@ -4,7 +4,7 @@
   }
 
   .btn {
-    @apply relative inline-flex items-center text-sm shrink-0 gap-2 justify-center px-4 rounded border border-solid appearance-none whitespace-nowrap cursor-pointer h-[40px] focus:outline-none;
+    @apply relative inline-flex items-center text-sm shrink-0 gap-2 justify-center px-4 rounded border border-solid appearance-none whitespace-nowrap cursor-pointer h-[40px];
     border-color: transparent;
   }
 
@@ -41,7 +41,7 @@
   }
 
   .btn:focus {
-    @apply no-underline outline-none text-sn-white;
+    @apply no-underline outline outline-4 outline-sn-science-blue-hover text-sn-white;
   }
 
   .btn:active {
@@ -56,6 +56,11 @@
   .btn.btn-primary,
   .btn.btn-success {
     @apply bg-sn-blue text-sn-white;
+  }
+
+  .btn.btn-primary:active,
+  .btn.btn-primary.active {
+    @apply bg-sn-blue-click;
   }
 
   .btn.btn-primary:hover,
@@ -77,6 +82,11 @@
 
   .btn.btn-shared {
     @apply bg-sn-science-blue text-sn-white border-sn-white;
+  }
+
+  .btn.btn-secondary:active,
+  .btn.btn-secondary.active {
+    @apply bg-sn-super-light-blue;
   }
 
   .btn.btn-secondary:hover,
@@ -120,6 +130,11 @@
     @apply bg-sn-super-light-grey;
   }
 
+  .btn.btn-light:active,
+  .btn.btn-light.active {
+    @apply bg-sn-grey-100;
+  }
+
   .btn.btn-light:disabled,
   .btn.btn-light.disabled {
     @apply text-sn-sleepy-grey;
@@ -131,6 +146,11 @@
 
   .btn.btn-danger:hover {
     @apply bg-sn-delete-red-hover;
+  }
+
+  .btn.btn-danger:active,
+  .btn.btn-danger.active {
+    @apply bg-sn-delete-red-click;
   }
 
   .btn.btn-danger:disabled,
