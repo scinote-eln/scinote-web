@@ -106,12 +106,16 @@ export default {
         }
       })
         .then((response) => {
+          let result = response.data;
+
+          if (!Array.isArray(result)) result = [];
+
           if (setSelectedUsers) {
-            this.selectedUsers = response.data.users.filter((item) => this.users.some((user) => user.id === item.value));
-            this.allUsers = response.data.users;
+            this.selectedUsers = result.filter((item) => this.users.some((user) => user.id === item.value));
+            this.allUsers = result;
             this.flyoutLoaded = true;
           } else {
-            const nonAssignedUsers = response.data.users.filter((item) => !this.selectedUsers.some(({ value }) => value === item.value));
+            const nonAssignedUsers = result.filter((item) => !this.selectedUsers.some(({ value }) => value === item.value));
             this.allUsers = this.selectedUsers.concat(nonAssignedUsers);
           }
         });

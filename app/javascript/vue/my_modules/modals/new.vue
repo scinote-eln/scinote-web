@@ -45,18 +45,20 @@
                 :placeholder="i18n.t('experiments.canvas.new_my_module_modal.assigned_tags_placeholder')"
                 :tagsView="true" ></SelectDropdown>
 
-                <label class="sci-label">
-                  {{ i18n.t('experiments.canvas.new_my_module_modal.assigned_users') }}
-                </label>
-                <SelectDropdown
-                  @change="setUsers"
-                  :options="formattedUsers"
-                  :option-renderer="usersRenderer"
-                  :label-renderer="usersRenderer"
-                  :multiple="true"
-                  :searchable="true"
-                  :placeholder="i18n.t('experiments.canvas.new_my_module_modal.assigned_users_placeholder')"
-                  :tagsView="true" ></SelectDropdown>
+                <template v-if="this.assignedUsersUrl">
+                  <label class="sci-label">
+                    {{ i18n.t('experiments.canvas.new_my_module_modal.assigned_users') }}
+                  </label>
+                  <SelectDropdown
+                    @change="setUsers"
+                    :options="formattedUsers"
+                    :option-renderer="usersRenderer"
+                    :label-renderer="usersRenderer"
+                    :multiple="true"
+                    :searchable="true"
+                    :placeholder="i18n.t('experiments.canvas.new_my_module_modal.assigned_users_placeholder')"
+                    :tagsView="true" ></SelectDropdown>
+                </template>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
@@ -169,6 +171,8 @@ export default {
       });
     },
     loadUsers() {
+      if (!this.assignedUsersUrl) return;
+
       axios.get(this.assignedUsersUrl).then((response) => {
         this.allUsers = response.data.data;
       });
