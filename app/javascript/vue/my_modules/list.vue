@@ -340,7 +340,7 @@ export default {
         return `
           <span class="flex gap-2 items-center">
             <div title="${this.i18n.t('experiments.duplicate_tasks.duplicating')}"
-                 class="loading-overlay w-6 h-6 !relative" data-toggle="tooltip" data-placement="right"></div>
+                 class="loading-overlay w-6 h-6 !relative shrink-0" data-toggle="tooltip" data-placement="right"></div>
             <span class="truncate">${name}</span>
           </span>`;
       }
