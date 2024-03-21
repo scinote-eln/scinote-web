@@ -42,6 +42,7 @@
                 </span>
                 <div class="flex items-center gap-2 ml-auto">
                   <button v-if="draft.urls.publish" class="btn btn-light" :disabled="updating" @click="publishDraft">
+                    <i class="sn-icon sn-icon-Publish"></i>
                     {{ i18n.t('protocols.index.versions.publish') }}
                   </button>
                   <button v-if="draft.urls.destroy" @click="destroyDraft" :disabled="updating" class="btn btn-light icon-btn">
