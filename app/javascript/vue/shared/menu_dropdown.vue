@@ -90,7 +90,7 @@ export default {
   mixins: [FixedFlyoutMixin],
   watch: {
     isOpen(newValue) {
-      this.$emit('menu-visibility-changed', newValue);
+      this.$emit('menu-toggle', newValue);
     }
   },
   methods: {

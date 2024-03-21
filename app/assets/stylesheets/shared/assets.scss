@@ -212,11 +212,26 @@
     .asset-context-menu {
       margin-left: auto;
     }
+
+    .inline-attachment-action-buttons {
+      display: none;
+    }
   }
 
   .empty-office-file {
     padding: 5em 1em 1em;
     text-align: center;
+  }
+
+  &:hover,
+  &.context-menu-open,
+  &.menu-dropdown-open {
+    .header {
+      .inline-attachment-action-buttons {
+        display: flex;
+        flex-direction: row;
+      }
+    }
   }
 }
 

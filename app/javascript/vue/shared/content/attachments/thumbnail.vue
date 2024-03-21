@@ -52,7 +52,7 @@
             :position="'left'"
             :btnIcon="'sn-icon sn-icon-open'"
             :title="i18n.t('attachments.thumbnail.buttons.open')"
-            @menu-visibility-changed="handleMenuVisibilityChange"
+            @menu-toggle="toggleMenu"
             @open_locally="openLocally"
             @open_scinote_editor="openScinoteEditor"
         ></MenuDropdown>
@@ -126,7 +126,7 @@
       @attachment:moved="attachmentMoved"
       @attachment:uploaded="reloadAttachments"
       @attachment:changed="$emit('attachment:changed', $event)"
-      @menu-visibility-changed="handleMenuVisibilityChange"
+      @menu-toggle="toggleMenu"
       :withBorder="true"
     />
     <Teleport to="body">
@@ -136,7 +136,7 @@
         @confirm="deleteAttachment"
         @cancel="deleteModal = false"
       />
-      <moveAssetModal
+      <MoveAssetModal
         v-if="movingAttachment"
         :parent_type="attachment.attributes.parent_type"
         :targets_url="attachment.attributes.urls.move_targets"
@@ -280,7 +280,7 @@ export default {
       await this.fetchLocalAppInfo();
       this.showOptions = true;
     },
-    handleMenuVisibilityChange(isMenuOpen) {
+    toggleMenu(isMenuOpen) {
       this.isMenuOpen = isMenuOpen;
       if (isMenuOpen) {
         this.showOptions = true;
