@@ -61,7 +61,7 @@ module Lists
 
     def urls
       urls_list = {
-        show: my_modules_path(experiment_id: object, view_mode: archived ? 'archived' : 'active'),
+        show: my_modules_experiment_path(object, view_mode: archived ? 'archived' : 'active'),
         actions: actions_toolbar_experiments_path(items: [{ id: object.id }].to_json),
         projects_to_clone: projects_to_clone_experiment_path(object),
         projects_to_move: projects_to_move_experiment_path(object),
