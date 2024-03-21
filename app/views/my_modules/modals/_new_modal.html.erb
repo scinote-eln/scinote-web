@@ -1,6 +1,6 @@
 <div class="modal" id="new-my-module-modal" tabindex="-1" role="dialog"
      data-create-url="<%= modules_experiment_path(@experiment) %>" data-user-id="<%= current_user.id %>">
-  <%= form_with model: @my_module, url: modules_experiment_path(@experiment), data: { remote: true } do |f| %>
+  <%= form_with model: @my_module, url: modules_experiment_path(@experiment) do |f| %>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
