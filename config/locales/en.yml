@@ -583,7 +583,7 @@ en:
         description: "Give your folder a distinct name to recognize it faster."
         modal_title: "Create folder"
         name: "New folder name"
-        name_placeholder: "Name your folder"
+        name_placeholder: "Enter folder name"
         create: "Create folder"
         success_flash: "Project folder <strong>%{name}</strong> successfully created."
       modal_new_project:
@@ -592,7 +592,7 @@ en:
         name: "Project name"
         name_placeholder: "My project"
         team: "Team"
-        visibility_html: "Make this project visible to all team members <br /> <small class='text-muted'>This will assign all team members to the project with the default role you choose</small>"
+        visibility_html: "Grant access to this project to all team members"
         visibility_hidden: "Project members only"
         visibility_visible: "All team members"
       modal_edit_project:
@@ -1628,7 +1628,7 @@ en:
       new_my_module_modal:
         title: "Create new task"
         name: "Task name"
-        name_placeholder: "Enter…"
+        name_placeholder: "Enter task name"
         due_date: "Due date (optional)"
         due_date_placeholder: "Add due date"
         assigned_tags_label: "Add tags (optional)"

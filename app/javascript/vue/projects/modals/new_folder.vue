@@ -17,7 +17,7 @@
               <div class="sci-input-container-v2" :class="{'error': error}" :data-error="error">
                 <input type="text" v-model="name"
                        class="sci-input-field" autofocus="true" ref="input"
-                       :placeholder="i18n.t('projects.index.modal_new_project.name_placeholder')" />
+                       :placeholder="i18n.t('projects.index.modal_new_project_folder.name_placeholder')" />
               </div>
             </div>
           </div>
