@@ -46,7 +46,7 @@
           :listItems="this.sortMenu"
           :btnClasses="'btn btn-light icon-btn'"
           :position="'right'"
-          :btnIcon="'sn-icon sn-icon-sort'"
+          :btnIcon="'sn-icon sn-icon-sort-down'"
           @sort="setSort"
         ></MenuDropdown>
     </div>
