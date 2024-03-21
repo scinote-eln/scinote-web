@@ -40,6 +40,10 @@ body.navigator-collapsed {
 
     .sci--layout--navigator-open {
       display: inline-block;
+
+      + h1 {
+        max-width: calc(100% - 2.5rem);
+      }
     }
   }
 

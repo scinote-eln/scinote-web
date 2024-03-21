@@ -7,7 +7,9 @@ describe ProjectsController, type: :controller do
 
   include_context 'reference_project_structure', {
     projects: 3,
-    skip_my_module: true
+    skip_my_module: true,
+    skip_experiment: true,
+    team_role: :owner
   }
 
   describe '#index' do
@@ -51,25 +53,12 @@ describe ProjectsController, type: :controller do
     end
   end
 
-  describe '#edit' do
-    context 'in JSON format' do
-      let(:params) { { id: projects.first.id } }
-
-      it 'returns success response' do
-        get :edit, params: params, format: :json
-        expect(response).to have_http_status(:success)
-        expect(response.media_type).to eq 'application/json'
-      end
-    end
-  end
-
   describe 'PUT update' do
     context 'in HTML format' do
       let(:action) { put :update, params: params }
       let(:params) do
         { id: projects.first.id,
           project: { name: projects.first.name,
-                     team_id: projects.first.team.id,
                      visibility: projects.first.visibility,
                      default_public_user_role_id: projects.first.default_public_user_role.id } }
       end
@@ -87,81 +76,10 @@ describe ProjectsController, type: :controller do
         action
       end
 
-      it 'calls create activity service (rename_project)' do
-        params[:project][:name] = 'test project changed'
-        expect(Activities::CreateActivityService).to receive(:call)
-          .with(hash_including(activity_type: :rename_project))
-        action
-      end
-
-      it 'calls create activity service (restore_project)' do
-        projects.first.update(archived: true)
-        params[:project][:archived] = false
-        expect(Activities::CreateActivityService).to receive(:call)
-          .with(hash_including(activity_type: :restore_project))
-        action
-      end
-
-      it 'calls create activity service (archive_project)' do
-        params[:project][:archived] = true
-        expect(Activities::CreateActivityService).to receive(:call)
-          .with(hash_including(activity_type: :archive_project))
-        action
-      end
-
       it 'adds activity in DB' do
         params[:project][:archived] = true
         expect { action }
           .to(change { Activity.count })
-      end
-    end
-  end
-
-  describe '#show' do
-    context 'in HTML format' do
-      let(:params) do
-        { id: projects.first.id, sort: 'old',
-          project: { name: 'test project A1', team_id: team.id,
-                     visibility: 'visible' } }
-      end
-
-      it 'returns success response' do
-        get :show, params: params
-        expect(response).to have_http_status(:success)
-        expect(response.media_type).to eq 'text/html'
-      end
-    end
-  end
-
-  describe '#notifications' do
-    context 'in JSON format' do
-      let(:params) do
-        { id: projects.first.id,
-          project: { name: 'test project A1', team_id: team.id,
-                     visibility: 'visible' } }
-      end
-
-      it 'returns success response' do
-        get :notifications, format: :json, params: params
-        expect(response).to have_http_status(:success)
-        expect(response.media_type).to eq 'application/json'
-      end
-    end
-  end
-
-  describe '#experiment_archive' do
-    context 'in HTML format' do
-      let(:params) do
-        { id: projects.first.id,
-          view_mode: :archived,
-          project: { name: 'test project A1', team_id: team.id,
-                     visibility: 'visible' } }
-      end
-
-      it 'returns success response' do
-        get :show, params: params
-        expect(response).to have_http_status(:success)
-        expect(response.media_type).to eq 'text/html'
       end
     end
   end

@@ -1,44 +1,47 @@
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <i class="sn-icon sn-icon-close"></i>
-          </button>
-          <h4 class="modal-title truncate !block" id="edit-project-modal-label">
-            {{ this.title }}
-          </h4>
-        </div>
-        <div class="modal-body">
-          <div class="mb-4">{{ this.description }}</div>
-          <div class="mb-4">
-            <div class="sci-input-container-v2 left-icon">
-              <input type="text"
-                     v-model="query"
-                     class="sci-input-field"
-                     autofocus="true"
-                     :placeholder="i18n.t('projects.index.modal_move_folder.find_folder')" />
-              <i class="sn-icon sn-icon-search"></i>
+      <form @submit.prevent="submit">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <i class="sn-icon sn-icon-close"></i>
+            </button>
+            <h4 class="modal-title truncate !block" id="edit-project-modal-label">
+              {{ this.title }}
+            </h4>
+          </div>
+          <div class="modal-body">
+            <div class="mb-4">{{ this.description }}</div>
+            <div class="mb-4">
+              <div class="sci-input-container-v2 left-icon">
+                <input type="text"
+                       v-model="query"
+                       class="sci-input-field"
+                       ref="input"
+                       autofocus="true"
+                       :placeholder="i18n.t('projects.index.modal_move_folder.find_folder')" />
+                <i class="sn-icon sn-icon-search"></i>
+              </div>
+            </div>
+            <div class="max-h-80 overflow-y-auto">
+              <div class="p-2 flex items-center gap-2 cursor-pointer text-sn-blue hover:bg-sn-super-light-grey"
+                    @click="selectFolder(null)"
+                   :class="{'!bg-sn-super-light-blue': selectedFolderId == null}">
+                <i class="sn-icon sn-icon-projects"></i>
+                {{ i18n.t('projects.index.modal_move_folder.projects') }}
+              </div>
+              <MoveTree :objects="filteredFoldersTree" :value="selectedFolderId" @selectFolder="selectFolder" />
             </div>
           </div>
-          <div class="max-h-80 overflow-y-auto">
-            <div class="p-2 flex items-center gap-2 cursor-pointer text-sn-blue hover:bg-sn-super-light-grey"
-                  @click="selectFolder(null)"
-                 :class="{'!bg-sn-super-light-blue': selectedFolderId == null}">
-              <i class="sn-icon sn-icon-projects"></i>
-              {{ i18n.t('projects.index.modal_move_folder.projects') }}
-            </div>
-            <MoveTree :objects="filteredFoldersTree" :value="selectedFolderId" @selectFolder="selectFolder" />
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
+            <button class="btn btn-primary" type="submit">
+              {{ i18n.t('projects.index.modal_move_folder.submit') }}
+            </button>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
-          <button class="btn btn-primary" @click="submit" type="submit">
-            {{ i18n.t('projects.index.modal_move_folder.submit') }}
-          </button>
-        </div>
-      </div>
+      </form>
     </div>
   </div>
 </template>

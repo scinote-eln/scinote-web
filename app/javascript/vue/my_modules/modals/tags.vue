@@ -118,7 +118,7 @@
           </template>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
+          <button class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.close') }}</button>
         </div>
       </div>
     </div>

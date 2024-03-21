@@ -1,6 +1,9 @@
 <template>
-  <div class="flex flex-col h-full">
-    <div class="relative flex flex-col flex-grow z-10">
+  <div v-if="!stateLoading" class="flex flex-col h-full" :class="{'pb-4': windowScrollerSeen && selectedRows.length === 0}">
+    <div
+      class="relative flex flex-col flex-grow z-10"
+      :class="{'overflow-y-hidden pb-20': currentViewRender === 'cards'}"
+    >
       <Toolbar
         :toolbarActions="toolbarActions"
         @toolbar:action="emitAction"
@@ -26,39 +29,45 @@
         @reorderColumns="reorderColumns"
         @resetColumnsToDefault="resetColumnsToDefault"
       />
-      <div v-if="currentViewRender === 'cards'" ref="cardsContainer" @scroll="handleScroll"
-           class="flex-grow basis-64 overflow-y-auto overflow-x-visible p-2 -ml-2">
-        <div class="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-          <slot v-for="element in rowData" :key="element.id" name="card" :dtComponent="this" :params="element"></slot>
-        </div>
+      <div v-if="this.objectArchived && this.currentViewMode === 'active'" class="pt-6" >
+        <em> {{ hiddenDataMessage }} </em>
       </div>
-      <ag-grid-vue
-        v-if="currentViewRender === 'table'"
-        class="ag-theme-alpine w-full flex-grow h-full z-10"
-        :class="{'opacity-0': initializing }"
-        :columnDefs="extendedColumnDefs"
-        :rowData="rowData"
-        :defaultColDef="defaultColDef"
-        :rowSelection="'multiple'"
-        :suppressRowTransform="true"
-        :gridOptions="gridOptions"
-        :suppressRowClickSelection="true"
-        :getRowClass="getRowClass"
-        @grid-ready="onGridReady"
-        @first-data-rendered="onFirstDataRendered"
-        @sortChanged="setOrder"
-        @columnResized="onColumnResized"
-        @columnMoved="onColumnMoved"
-        @bodyScroll="handleScroll"
-        @columnPinned="handlePin"
-        @columnVisible="handleVisibility"
-        @rowSelected="setSelectedRows"
-        @cellClicked="clickCell"
-        :CheckboxSelectionCallback="withCheckboxes"
-      >
-      </ag-grid-vue>
-      <div v-if="dataLoading" class="flex absolute top-0 items-center justify-center w-full flex-grow h-full z-10">
-        <img src="/images/medium/loading.svg" alt="Loading" class="p-4 rounded-xl bg-sn-white" />
+      <div v-else class="w-full h-full" :class="{ '!h-[calc(100%-68px)]': selectedRows.length > 0 && actionsUrl }">
+        <div v-if="currentViewRender === 'cards'" ref="cardsContainer" @scroll="handleScroll"
+            class="flex-grow basis-64 overflow-y-auto h-full overflow-x-visible p-2 -ml-2">
+          <div class="grid gap-4" :class="gridColsClass">
+            <slot v-for="element in rowData" :key="element.id" name="card" :dtComponent="this" :params="element"></slot>
+          </div>
+        </div>
+        <ag-grid-vue
+          v-if="currentViewRender === 'table'"
+          class="ag-theme-alpine w-full flex-grow h-full z-10"
+          :class="{'opacity-0': initializing }"
+          :columnDefs="extendedColumnDefs"
+          :rowData="rowData"
+          :defaultColDef="defaultColDef"
+          :rowSelection="'multiple'"
+          :suppressRowTransform="true"
+          :gridOptions="gridOptions"
+          :suppressRowClickSelection="true"
+          :getRowClass="getRowClass"
+          :enableCellTextSelection="true"
+          @grid-ready="onGridReady"
+          @first-data-rendered="onFirstDataRendered"
+          @sortChanged="setOrder"
+          @columnResized="onColumnResized"
+          @columnMoved="onColumnMoved"
+          @bodyScroll="handleScroll"
+          @columnPinned="handlePin"
+          @columnVisible="handleVisibility"
+          @rowSelected="setSelectedRows"
+          @cellClicked="clickCell"
+          :CheckboxSelectionCallback="withCheckboxes"
+        >
+        </ag-grid-vue>
+        <div v-if="dataLoading" class="flex absolute top-0 items-center justify-center w-full flex-grow h-full z-10">
+          <img src="/images/medium/loading.svg" alt="Loading" class="p-16 rounded-xl bg-sn-white" />
+        </div>
       </div>
       <ActionToolbar
         v-if="selectedRows.length > 0 && actionsUrl"
@@ -67,13 +76,6 @@
         @toolbar:action="emitAction" />
     </div>
     <div v-if="scrollMode == 'pages'" class="flex items-center py-4" :class="{'opacity-0': initializing }">
-      <div class="mr-auto">
-        <Pagination
-          :totalPage="totalPage"
-          :currentPage="page"
-          @setPage="setPage"
-        ></Pagination>
-      </div>
       <div class="flex items-center gap-4">
         {{ i18n.t('datatable.show') }}
         <div class="w-36">
@@ -83,12 +85,29 @@
             @change="setPerPage"
           ></SelectDropdown>
         </div>
+        <div v-show="!dataLoading">
+          <span v-if="selectedRows.length">
+            {{ i18n.t('datatable.entries.selected', { count: totalEntries, selected: selectedRows.length }) }}
+          </span>
+          <span v-else>
+            {{ i18n.t('datatable.entries.total', { count: totalEntries, selected: selectedRows.length }) }}
+          </span>
+        </div>
+      </div>
+      <div class="ml-auto">
+        <Pagination
+          :totalPage="totalPage"
+          :currentPage="page"
+          @setPage="setPage"
+        ></Pagination>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+
+/* global GLOBAL_CONSTANTS */
 import { AgGridVue } from 'ag-grid-vue3';
 import PerfectScrollbar from 'vue3-perfect-scrollbar';
 import axios from '../../../packs/custom_axios.js';
@@ -153,6 +172,13 @@ export default {
     scrollMode: {
       type: String,
       default: 'pages'
+    },
+    objectArchived: {
+      type: Boolean,
+      default: false
+    },
+    hiddenDataMessage: {
+      type: String
     }
   },
   data() {
@@ -167,6 +193,7 @@ export default {
       page: 1,
       order: null,
       totalPage: 0,
+      totalEntries: null,
       selectedRows: [],
       keepSelection: false,
       searchValue: '',
@@ -175,11 +202,15 @@ export default {
       currentViewRender: 'table',
       cardCheckboxes: [],
       dataLoading: true,
+      stateLoading: true,
       lastPage: false,
       tableState: null,
       userSettingsUrl: null,
-      fetchedTableState: null,
-      gridReady: false
+      gridReady: false,
+      windowScrollerSeen: false,
+      resetGridCols: false,
+      navigatorCollapsed: false,
+      gridColsClass: ''
     };
   },
   components: {
@@ -206,7 +237,7 @@ export default {
         suppressCellFocus: true,
         rowHeight: 40,
         headerHeight: 40,
-        getRowId: (params) => `e2e-TB-row-${params.data.id}`
+        getRowId: (params) => `e2e-TB-row-${params.data.code || params.data.id}`
       };
     },
     extendedColumnDefs() {
@@ -217,7 +248,7 @@ export default {
           dtComponent: this
         },
         pinned: (column.field === 'name' ? 'left' : null),
-        comparator: () => false
+        comparator: () => null
       }));
 
       if (this.withCheckboxes) {
@@ -269,34 +300,65 @@ export default {
     reloadingTable() {
       if (this.reloadingTable) {
         this.updateTable();
+        this.$nextTick(() => {
+          this.selectedRows = [];
+        });
       }
-    },
-    currentViewRender() {
-      this.columnApi = null;
-      this.gridApi = null;
-      this.saveTableState();
     },
     perPage() {
       this.saveTableState();
     },
-    fetchedTableState(newValue) {
-      if (newValue !== null && this.gridReady) {
-        this.applyTableState(newValue);
+    resetGridCols() {
+      if (this.resetGridCols) {
+        this.setGridColsClass();
+        this.resetGridCols = false;
+      }
+    },
+    currentViewRender() {
+      if (this.currentViewRender === 'cards') {
+        this.setGridColsClass();
       }
     }
   },
   created() {
+    window.resetGridColumns = (newNavigatorCollapsed) => {
+      setTimeout(() => {
+        this.navigatorCollapsed = newNavigatorCollapsed;
+        this.setGridColsClass();
+      }, 400);
+    };
     this.userSettingsUrl = document.querySelector('meta[name="user-settings-url"]').getAttribute('content');
     this.fetchTableState();
   },
   mounted() {
-    this.loadData();
+    this.navigatorCollapsed = document.querySelector('.sci--layout').getAttribute('data-navigator-collapsed') === 'true';
+    this.setGridColsClass();
+
     window.addEventListener('resize', this.resize);
   },
   beforeDestroy() {
+    delete window.resetGridColumns;
     window.removeEventListener('resize', this.resize);
   },
   methods: {
+    setGridColsClass() {
+      if (this.currentViewRender !== 'cards') return;
+      const availableGridWidth = document.querySelector('.sci--layout-content').offsetWidth;
+      const { paddingLeft, paddingRight } = getComputedStyle(document.querySelector('.sci--layout-content'));
+      const padding = parseInt(paddingLeft, 10) + parseInt(paddingRight, 10);
+
+      let maxGridCols = Math.floor((availableGridWidth - padding) / GLOBAL_CONSTANTS.TABLE_CARD_MIN_WIDTH) || 1;
+      if (maxGridCols > 1) {
+        const gap = (maxGridCols - 1) * GLOBAL_CONSTANTS.TABLE_CARD_GAP;
+        maxGridCols = Math.floor((availableGridWidth - gap - padding) / GLOBAL_CONSTANTS.TABLE_CARD_MIN_WIDTH);
+      }
+
+      if (this.navigatorCollapsed) {
+        this.gridColsClass = 'grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4';
+      } else {
+        this.gridColsClass = `grid-cols-${maxGridCols}`;
+      }
+    },
     handleScroll() {
       if (this.scrollMode === 'pages') return;
 
@@ -306,6 +368,9 @@ export default {
       } else {
         target = document.querySelector('.ag-body-viewport');
       }
+
+      if (!target) return;
+
       if (target.scrollTop + target.clientHeight >= target.scrollHeight - 50) {
         if (this.dataLoading || this.lastPage) return;
 
@@ -326,27 +391,26 @@ export default {
       }
       this.saveTableState();
     },
+    // Table states
     fetchTableState() {
       axios.get(this.userSettingsUrl, { params: { key: this.stateKey } })
         .then((response) => {
           if (response.data.data) {
-            this.fetchedTableState = response.data.data;
-            if (this.gridReady && this.fetchedTableState) {
-              this.applyTableState(this.fetchedTableState);
+            this.tableState = response.data.data;
+            this.currentViewRender = this.tableState.currentViewRender;
+            this.perPage = this.tableState.perPage;
+            this.order = this.tableState.order;
+            if (this.currentViewRender === 'cards') {
+              this.initializing = false;
             }
-          } else {
-            this.initializing = false;
-            this.saveTableState();
           }
+          this.stateLoading = false;
+          this.loadData();
         });
     },
-    applyTableState(state) {
-      const { currentViewRender, columnsState, perPage, order } = state;
-      this.tableState = state;
-      this.currentViewRender = currentViewRender;
+    applyTableState() {
+      const { columnsState } = this.tableState;
       this.columnsState = columnsState;
-      this.perPage = perPage;
-      this.order = order;
 
       if (this.order) {
         this.tableState.columnsState.forEach((column) => {
@@ -359,9 +423,28 @@ export default {
         state: this.tableState.columnsState,
         applyOrder: true
       });
+
       setTimeout(() => {
         this.initializing = false;
       }, 200);
+    },
+    saveTableState() {
+      if (this.initializing) {
+        return;
+      }
+      const columnsState = this.columnApi ? this.columnApi.getColumnState() : this.tableState?.columnsState || [];
+      const tableState = {
+        columnsState,
+        order: this.order,
+        currentViewRender: this.currentViewRender,
+        perPage: this.perPage
+      };
+      const settings = {
+        key: this.stateKey,
+        data: tableState
+      };
+      axios.put(this.userSettingsUrl, { settings: [settings] });
+      this.tableState = tableState;
     },
     getRowClass() {
       if (this.currentViewMode === 'archived') {
@@ -377,6 +460,8 @@ export default {
       }));
     },
     resize() {
+      this.windowScrollerSeen = document.documentElement.scrollWidth > document.documentElement.clientWidth;
+      this.setGridColsClass();
       if (this.tableState) return;
 
       this.columnApi?.autoSizeAllColumns();
@@ -421,6 +506,7 @@ export default {
             this.handleInfiniteScroll(response);
           }
           this.totalPage = response.data.meta.total_pages;
+          this.totalEntries = response.data.meta.total_count;
           this.$emit('tableReloaded');
           this.dataLoading = false;
           this.restoreSelection();
@@ -431,6 +517,9 @@ export default {
     handleInfiniteScroll(response) {
       const newRows = this.rowData.slice();
       this.formatData(response.data.data).forEach((row) => {
+        if (this.currentViewMode === 'active' && row.archived) {
+          return;
+        }
         newRows.push(row);
       });
       this.rowData = newRows;
@@ -448,9 +537,13 @@ export default {
       this.gridApi = params.api;
       this.columnApi = params.columnApi;
       this.gridReady = true;
-      if (this.fetchedTableState) {
-        this.applyTableState(this.fetchedTableState);
+      if (this.tableState) {
+        this.applyTableState();
+      } else {
+        this.gridApi.sizeColumnsToFit();
+        this.initializing = false;
       }
+      this.hideLastPinnedResizeCell();
     },
     onFirstDataRendered() {
       this.resize();
@@ -472,24 +565,6 @@ export default {
       this.saveTableState();
       this.reloadTable(false);
     },
-    saveTableState() {
-      if (this.initializing) {
-        return;
-      }
-      const columnsState = this.columnApi ? this.columnApi.getColumnState() : this.tableState?.columnsState || [];
-      const tableState = {
-        columnsState,
-        order: this.order,
-        currentViewRender: this.currentViewRender,
-        perPage: this.perPage
-      };
-      const settings = {
-        key: this.stateKey,
-        data: tableState
-      };
-      axios.put(this.userSettingsUrl, { settings: [settings] });
-      this.tableState = tableState;
-    },
     restoreSelection() {
       if (this.gridApi) {
         this.gridApi.forEachNode((node) => {
@@ -503,6 +578,8 @@ export default {
       if (!this.rowData.find((row) => row.id === e.data.id)) return;
 
       if (e.node.isSelected()) {
+        if (this.selectedRows.find((row) => row.id === e.data.id)) return;
+
         this.selectedRows.push(e.data);
       } else {
         this.selectedRows = this.selectedRows.filter((row) => row.id !== e.data.id);
@@ -526,8 +603,10 @@ export default {
     },
     switchViewRender(view) {
       if (this.currentViewRender === view) return;
-
       this.currentViewRender = view;
+      this.columnApi = null;
+      this.gridApi = null;
+      this.saveTableState();
       this.initializing = true;
       this.selectedRows = [];
     },
@@ -539,9 +618,11 @@ export default {
     },
     pinColumn(column) {
       this.columnApi.setColumnPinned(column.field, 'left');
+      this.hideLastPinnedResizeCell();
     },
     unPinColumn(column) {
       this.columnApi.setColumnPinned(column.field, null);
+      this.hideLastPinnedResizeCell();
     },
     reorderColumns(columns) {
       this.columnApi.moveColumns(columns, 1);
@@ -549,8 +630,8 @@ export default {
     },
     resetColumnsToDefault() {
       this.columnApi.resetColumnState();
-      this.columnApi.autoSizeAllColumns();
-      this.saveTableState();
+      this.gridApi.sizeColumnsToFit();
+      this.hideLastPinnedResizeCell();
     },
     getOrder(columnsState) {
       if (!columnsState) return null;
@@ -571,6 +652,7 @@ export default {
     },
     onColumnMoved(event) {
       if (event.finished) {
+        this.hideLastPinnedResizeCell();
         this.saveTableState();
       }
     },
@@ -578,6 +660,16 @@ export default {
       if (event.finished) {
         this.saveTableState();
       }
+    },
+    hideLastPinnedResizeCell() {
+      $('.ag-pinned-left-header .ag-header-cell .ag-header-cell-resize').css('opacity', 100);
+      let lastPinnedColIndex = 0;
+      // eslint-disable-next-line func-names
+      $('.ag-pinned-left-header .ag-header-cell').each(function () {
+        const colIndex = parseInt($(this).attr('aria-colindex'), 10);
+        if (colIndex > lastPinnedColIndex) lastPinnedColIndex = colIndex;
+      });
+      $(`.ag-pinned-left-header .ag-header-cell[aria-colindex="${lastPinnedColIndex}"] .ag-header-cell-resize`).css('opacity', 0);
     }
   }
 };

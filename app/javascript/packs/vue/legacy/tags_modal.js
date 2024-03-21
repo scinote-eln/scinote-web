@@ -59,10 +59,8 @@ window.initTagsModalComponent = (id) => {
   mountWithTurbolinks(app, id);
 };
 
-document.addEventListener('turbolinks:load', () => {
-  const tagsModalContainers = document.querySelectorAll('.vue-tags-modal:not(.initialized)');
-  tagsModalContainers.forEach((container) => {
-    $(container).addClass('initialized')
-    window.initTagsModalComponent(`#${container.id}`);
-  });
+const tagsModalContainers = document.querySelectorAll('.vue-tags-modal:not(.initialized)');
+tagsModalContainers.forEach((container) => {
+  $(container).addClass('initialized');
+  window.initTagsModalComponent(`#${container.id}`);
 });

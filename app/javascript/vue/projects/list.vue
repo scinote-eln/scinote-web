@@ -44,18 +44,18 @@
     ref="exportModal"
   ></ConfirmationModal>
   <EditProjectModal v-if="editProject" :userRolesUrl="userRolesUrl"
-                    :project="editProject" @close="editProject = null" @update="updateTable" />
+                    :project="editProject" @close="editProject = null" @update="updateTable(); updateNavigator()" />
   <EditFolderModal v-if="editFolder" :folder="editFolder"
-                   @close="editFolder = null" @update="updateTable" />
+                   @close="editFolder = null" @update="updateTable(); updateNavigator()" />
   <NewProjectModal v-if="newProject" :createUrl="createUrl"
                    :currentFolderId="currentFolderId" :userRolesUrl="userRolesUrl"
-                   @close="newProject = false" @create="updateTable" />
+                   @close="newProject = false" @create="updateTable(); updateNavigator()" />
   <NewFolderModal v-if="newFolder" :createFolderUrl="createFolderUrl"
                   :currentFolderId="currentFolderId" :viewMode="currentViewMode"
-                  @close="newFolder = false" @create="updateTable" />
+                  @close="newFolder = false" @create="updateTable(); updateNavigator()" />
   <MoveModal v-if="objectsToMove" :moveToUrl="moveToUrl"
              :selectedObjects="objectsToMove" :foldersTreeUrl="foldersTreeUrl"
-             @close="objectsToMove = null" @move="updateTable" />
+             @close="objectsToMove = null" @move="updateTable(); updateNavigator(true)" />
   <AccessModal v-if="accessModalParams" :params="accessModalParams"
                @close="accessModalParams = null" @refresh="this.reloadingTable = true" />
 </template>
@@ -67,6 +67,7 @@ import axios from '../../packs/custom_axios.js';
 
 import DataTable from '../shared/datatable/table.vue';
 import UsersRenderer from './renderers/users.vue';
+import CommentsRenderer from '../shared/datatable/renderers/comments.vue';
 import ProjectCard from './card.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
 import EditProjectModal from './modals/edit.vue';
@@ -137,11 +138,23 @@ export default {
         sortable: true
       },
       {
+        field: 'updated_at',
+        headerName: this.i18n.t('projects.index.card.updated_at'),
+        sortable: true
+      },
+      {
         field: 'users',
         headerName: this.i18n.t('projects.index.card.users'),
         cellRenderer: 'UsersRenderer',
-        sortable: false,
+        sortable: true,
         minWidth: 210,
+        notSelectable: true
+      },
+      {
+        field: 'comments',
+        headerName: this.i18n.t('projects.index.card.comments'),
+        sortable: true,
+        cellRenderer: CommentsRenderer,
         notSelectable: true
       }];
 
@@ -232,20 +245,21 @@ export default {
     usersFilterRenderer(option) {
       return `<div class="flex items-center gap-2">
                 <img src="${option[2].avatar_url}" class="rounded-full w-6 h-6" />
-                <span>${option[1]}</span>
+                <span title="${option[1]}" class="truncate">${option[1]}</span>
               </div>`;
     },
     nameRenderer(params) {
       const showUrl = params.data.urls.show;
       return `<a href="${showUrl}"
                  class="flex items-center gap-1 hover:no-underline
-                        ${!showUrl ? 'pointer-events-none text-sn-grey' : ''}">
+                        ${!showUrl ? 'pointer-events-none text-sn-grey' : ''}"
+                 title="${params.data.name}">
                 ${params.data.folder ? '<i class="sn-icon mini sn-icon-mini-folder-left"></i>' : ''}
-                ${params.data.name}
+                <span class="truncate">${params.data.name} </span>
               </a>`;
     },
     openComments(_params, rows) {
-      this.$refs.commentButton.dataset.objectId = rows[0].id;
+      $(this.$refs.commentButton).data('objectId', rows[0].id);
       this.$refs.commentButton.click();
     },
     access(event, rows) {
@@ -258,6 +272,7 @@ export default {
       axios.post(event.path, { project_ids: rows.map((row) => row.id) }).then((response) => {
         this.reloadingTable = true;
         HelperModule.flashAlertMsg(response.data.message, 'success');
+        this.updateNavigator(false);
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
@@ -266,6 +281,7 @@ export default {
       axios.post(event.path, { project_ids: rows.map((row) => row.id) }).then((response) => {
         this.reloadingTable = true;
         HelperModule.flashAlertMsg(response.data.message, 'success');
+        this.updateNavigator(false);
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
@@ -291,6 +307,9 @@ export default {
       this.objectsToMove = null;
       this.reloadingTable = true;
     },
+    updateNavigator(withExpanedChildren = false) {
+      window.navigatorContainer.reloadNavigator(withExpanedChildren);
+    },
     async deleteFolder(event, rows) {
       const description = `
         <p>${this.i18n.t('projects.index.modal_delete_folders.description_1_html', { number: rows.length })}</p>
@@ -307,18 +326,22 @@ export default {
       }
     },
     async exportProjects(event, rows) {
-      this.exportDescription = event.message;
-      const ok = await this.$refs.exportModal.show();
-      if (ok) {
-        axios.post(event.path, {
-          project_ids: rows.filter((row) => !row.folder).map((row) => row.id),
-          project_folder_ids: rows.filter((row) => row.folder).map((row) => row.id)
-        }).then((response) => {
-          this.reloadingTable = true;
-          HelperModule.flashAlertMsg(response.data.message, 'success');
-        }).catch((error) => {
-          HelperModule.flashAlertMsg(error.response.data.error, 'danger');
-        });
+      if (event.number_of_projects === 0) {
+        HelperModule.flashAlertMsg(this.i18n.t('projects.export_projects.zero_projects_flash'), 'danger');
+      } else {
+        this.exportDescription = event.message;
+        const ok = await this.$refs.exportModal.show();
+        if (ok) {
+          axios.post(event.path, {
+            project_ids: rows.filter((row) => !row.folder).map((row) => row.id),
+            project_folder_ids: rows.filter((row) => row.folder).map((row) => row.id)
+          }).then((response) => {
+            this.reloadingTable = true;
+            HelperModule.flashAlertMsg(response.data.message, 'success');
+          }).catch((error) => {
+            HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+          });
+        }
       }
     },
     move(event, rows) {

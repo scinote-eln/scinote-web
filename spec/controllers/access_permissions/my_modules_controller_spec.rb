@@ -30,9 +30,9 @@ describe AccessPermissions::MyModulesController, type: :controller do
       expect(response).to have_http_status :success
     end
 
-    it 'renders show template' do
+    it 'returns json' do
       get :show, params: { project_id: project.id, experiment_id: experiment.id, id: my_module.id }, format: :json
-      expect(response).to render_template :show
+      expect(response).to have_http_status(:ok)
     end
   end
 

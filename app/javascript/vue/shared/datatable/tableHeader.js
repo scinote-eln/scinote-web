@@ -1,6 +1,6 @@
 export default {
   template: `
-    <div class="w-full grid items-center gap-2 grid-cols-[auto_1.5rem]"
+    <div class="w-full grid items-center group gap-2 grid-cols-[auto_1.5rem]"
          :class="{'cursor-pointer': params.enableSorting}"
          :data-e2e="'e2e-CO-TableHeader-' + params.column.colId "
          @click="onSortRequested((activeSort == 'asc' ? 'desc' : 'asc'), $event)">
@@ -11,6 +11,9 @@ export default {
       </div>
       <div v-if="activeSort == 'desc'" class="customSortUpLabel text-sn-black">
         <i class="sn-icon sn-icon-sort-down"></i>
+      </div>
+      <div v-if="activeSort == null && params.enableSorting" class="text-sn-black tw-hidden group-hover:block">
+        <i class="sn-icon sn-icon-sort"></i>
       </div>
     </div>
   `,

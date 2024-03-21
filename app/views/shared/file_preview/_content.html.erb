@@ -59,7 +59,7 @@
       <% else %>
         <%= image_tag asset.large_preview,
           class: class_names('asset-image', 'gene-sequence-asset': asset.blob&.metadata["asset_type"] == 'gene_sequence'),
-          style: 'opacity: 0' %>
+          style: 'opacity: 1' %>
       <% end %>
     <% else %>
       <%= render partial: 'shared/file_preview/file_icon', locals: { asset: asset } %>
@@ -79,7 +79,7 @@
           <% if previous_asset.previewable? %>
             <%= image_tag previous_asset.medium_preview,
                 class: 'asset-image',
-                style: 'opacity: 0' %>
+                style: 'opacity: 1' %>
           <% else %>
             <i class="fas <%= file_fa_icon_class(previous_asset) if previous_asset.file_name %>"></i>
           <% end %>
@@ -96,7 +96,7 @@
           <% if next_asset.previewable? %>
             <%= image_tag next_asset.medium_preview,
                 class: 'asset-image',
-                style: 'opacity: 0' %>
+                style: 'opacity: 1' %>
           <% else %>
             <i class="fas <%= file_fa_icon_class(next_asset) if next_asset.file_name %>"></i>
           <% end %>

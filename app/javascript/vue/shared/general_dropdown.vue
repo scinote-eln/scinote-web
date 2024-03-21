@@ -37,7 +37,8 @@ export default {
     alwaysShow: { type: Boolean, default: false },
     closeDropdown: { type: Boolean, default: false },
     fieldOnlyOpen: { type: Boolean, default: false },
-    canOpen: { type: Boolean, default: true }
+    canOpen: { type: Boolean, default: true },
+    fixedWidth: { type: Boolean, default: false }
   },
   data() {
     return {

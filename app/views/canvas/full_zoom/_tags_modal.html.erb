@@ -1,0 +1,25 @@
+<div id="tagsModalContainer-<%= my_module.id %>" class="vue-tags-modal">
+    <div ref="tagsModal" class="tags-modal-component" id="tagsModalComponent-<%= my_module.id %>"></div>
+    <teleport to="body">
+      <tags-modal v-if="tagsModalOpen"
+        :params="<%=
+          {
+            id: my_module.id,
+            permissions: {
+              manage_tags: can_manage_my_module_tags?(my_module)
+            },
+            urls: {
+              assigned_tags: assigned_tags_my_module_my_module_tags_path(my_module),
+              assign_tags: my_module_my_module_tags_path(my_module)
+            }
+          }.to_json
+        %>"
+        :tags-colors="<%= Constants::TAG_COLORS.to_json %>"
+        project-name="<%= my_module.experiment.project.name  %>"
+        project-tags-url="<%= project_tags_path(my_module.experiment.project) %>"
+        @close="close"
+        @tags-loaded="syncTags"
+      />
+    </teleport>
+  </div>
+  <%= javascript_include_tag 'vue_legacy_tags_modal' %>

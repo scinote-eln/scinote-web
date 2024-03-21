@@ -656,7 +656,6 @@ Rails.application.routes.draw do
         put :update_version_comment
       end
       collection do
-        post 'datatable', to: 'protocols#datatable'
         post 'archive', to: 'protocols#archive'
         post 'restore', to: 'protocols#restore'
         post 'clone', to: 'protocols#clone'
@@ -668,6 +667,7 @@ Rails.application.routes.draw do
         get 'export', to: 'protocols#export'
         get 'protocolsio', to: 'protocols#protocolsio_index'
         get 'actions_toolbar', to: 'protocols#actions_toolbar'
+        get 'user_roles', to: 'protocols#user_roles'
       end
     end
 

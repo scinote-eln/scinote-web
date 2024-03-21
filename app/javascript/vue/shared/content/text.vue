@@ -48,7 +48,7 @@
         @editingDisabled="disableEditMode"
         @editingEnabled="enableEditMode"
       />
-      <div class="view-text-element" v-else-if="element.attributes.orderable.text_view" v-html="wrapTables"></div>
+      <div class="view-text-element" v-else-if="element.attributes.orderable.text_view" v-html="wrappedTables"></div>
       <div v-else class="text-sn-grey">
         {{ i18n.t("protocols.steps.text.empty_text") }}
       </div>
@@ -108,21 +108,18 @@ export default {
     if (this.isNew) {
       this.enableEditMode();
     }
-
     this.$nextTick(() => {
-      this.highlightText();
+      const textElements = document.querySelectorAll('.view-text-element');
+      if (textElements.length > 0) {
+        textElements.forEach((textElement) => {
+          this.highlightText(textElement);
+        });
+      }
     });
   },
   computed: {
-    wrapTables() {
-      const container = $(`<span class="text-base">${this.element.attributes.orderable.text_view}</span>`);
-      container.find('table').toArray().forEach((table) => {
-        if ($(table).parent().hasClass('table-wrapper')) return;
-        $(table).css('float', 'none').wrapAll(`
-            <div class="table-wrapper" style="overflow: auto; width: 100%"></div>
-          `);
-      });
-      return container.prop('outerHTML');
+    wrappedTables() {
+      return window.wrapTables(this.element.attributes.orderable.text_view);
     },
     actionMenu() {
       const menu = [];
@@ -184,11 +181,8 @@ export default {
       this.element.attributes.orderable.updated_at = data.attributes.updated_at;
       this.$emit('update', this.element, true);
     },
-    highlightText() {
-      const textElement = $('.results-list')[0];
-      if (textElement) {
-        Prism.highlightAllUnder(textElement);
-      }
+    highlightText(textElToHighlight) {
+      Prism.highlightAllUnder(textElToHighlight);
     }
   }
 };

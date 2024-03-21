@@ -111,7 +111,7 @@
                 @update="updateDescription"
               />
             </div>
-            <div v-else-if="protocol.attributes.description_view" v-html="protocol.attributes.description_view"></div>
+            <div v-else-if="protocol.attributes.description_view" v-html="wrappedTables" class="view-text-element"></div>
             <div v-else class="empty-protocol-description">
               {{ i18n.t("protocols.no_text_placeholder") }}
             </div>
@@ -185,6 +185,9 @@
                 :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
                 :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
               />
+              <div v-if="(index === steps.length - 1) && urls.add_step_url" class="insert-step" @click="addStep(index + 1)">
+                <i class="sn-icon sn-icon-new-task"></i>
+              </div>
             </div>
             <div v-if="steps.length > 0 && urls.add_step_url && inRepository" class="py-5">
               <a
@@ -252,6 +255,9 @@ export default {
   },
   mixins: [UtilsMixin, stackableHeadersMixin, moduleNameObserver, AssetPasteMixin],
   computed: {
+    wrappedTables() {
+      return window.wrapTables(this.protocol.attributes.description_view);
+    },
     inRepository() {
       return this.protocol.attributes.in_repository;
     },

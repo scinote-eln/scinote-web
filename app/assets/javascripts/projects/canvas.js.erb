@@ -545,6 +545,40 @@ function bindTouchDropdowns(selector) {
   });
 }
 
+function handleAnchorClick(event) {
+  event.preventDefault();
+
+  // check if the clicked element is an anchor tag with an href
+  if (event.target.tagName === 'A' && event.target.href) {
+    const targetUrl = event.target.href;
+
+    const alertText = $("#update-canvas").attr("data-unsaved-work-text");
+    if (!alertText) {
+      window.location.href = targetUrl;
+      return;
+    }
+
+    const exit = confirm(alertText);
+
+    if (exit) {
+      // remove unload listeners and navigate to location
+      $(window).off("beforeunload");
+      $(document).off("page:before-change");
+
+      window.location.href = targetUrl;
+    }
+  }
+};
+
+// listen to clicks on links in navigator and leftMenuContainer
+$(document).ready(function() {
+  const navigatorEl = $('.sci--layout-navigation-navigator');
+  const leftMenuContainerEl = $('.sci--layout--left-menu-container');
+
+  navigatorEl.on('click', 'a', handleAnchorClick);
+  leftMenuContainerEl.on('click', 'a', handleAnchorClick);
+});
+
 function bindEditModeCloseWindow() {
   var alertText = $("#update-canvas").attr("data-unsaved-work-text");
 

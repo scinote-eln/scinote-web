@@ -61,6 +61,8 @@ $sn-icon-check: "\e95f";
   background-size: contain;
   height: 1rem;
   width: 1rem;
+  min-height: 1rem;
+  min-width: 1rem;
 
   &.unchecked {
     background-image: asset-url("checkbox/default.svg");

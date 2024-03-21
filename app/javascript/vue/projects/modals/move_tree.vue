@@ -1,5 +1,5 @@
 <template>
-  <div class="pl-6" v-for="object in objects" :key="object.folder.id">
+  <div class="pl-6" v-if="objects.length" v-for="object in objects" :key="object.folder.id">
     <div class="flex items-center">
       <i v-if="object.children.length > 0"
          :class="{'sn-icon-up': opendedFolders[object.folder.id], 'sn-icon-down': !opendedFolders[object.folder.id]}"

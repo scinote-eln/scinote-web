@@ -33,6 +33,7 @@
                     :paddingLeft="24 + paddingLeft"
                     :reloadCurrentLevel="reloadCurrentLevel"
                     :reloadChildrenLevel="reloadChildrenLevel"
+                    :reloadExpandedChildrenLevel="reloadExpandedChildrenLevel"
                     :item="item"
                     :archived="archived" />
     </div>
@@ -52,7 +53,8 @@ export default {
     archived: Boolean,
     paddingLeft: Number,
     reloadCurrentLevel: Boolean,
-    reloadChildrenLevel: Boolean
+    reloadChildrenLevel: Boolean,
+    reloadExpandedChildrenLevel: Boolean
   },
   data() {
     return {
@@ -109,6 +111,11 @@ export default {
     },
     reloadChildrenLevel() {
       if (this.reloadChildrenLevel && this.item.id == this.currentItemId) {
+        this.loadChildren();
+      }
+    },
+    reloadExpandedChildrenLevel() {
+      if (this.reloadExpandedChildrenLevel && this.childrenExpanded) {
         this.loadChildren();
       }
     },

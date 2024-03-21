@@ -3,14 +3,6 @@
 #experimentTable,
 #experiment-canvas,
 #module-archive {
-  .experimnet-name {
-    max-width: calc(100% - 2rem);
-
-    .fas {
-      margin-right: .5em;
-    }
-  }
-
   .toolbar {
     align-items: center;
     column-gap: .5rem;

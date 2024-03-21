@@ -92,9 +92,16 @@ class MyModulesController < ApplicationController
   end
 
   def show
-    render json: {
-      html: render_to_string(partial: 'show')
-    }
+    respond_to do |format|
+      format.html do
+        render json: {
+          html: render_to_string(partial: 'show')
+        }
+      end
+      format.json do
+        render json: @my_module, serializer: Lists::MyModuleSerializer, user: current_user
+      end
+    end
   end
 
   # Description modal window in full-zoom canvas
@@ -426,6 +433,7 @@ class MyModulesController < ApplicationController
 
     my_modules = experiment.my_modules
                            .where(my_modules: { id: assignable_my_modules })
+                           .order(:name)
                            .pluck(:id, :name)
 
     return render plain: [].to_json if my_modules.blank?
@@ -448,7 +456,9 @@ class MyModulesController < ApplicationController
   def load_experiment
     @experiment = Experiment.preload(user_assignments: %i(user user_role))
                             .find_by(id: params[:id] || params[:experiment_id])
+
     render_404 unless @experiment
+    render_403 unless can_read_experiment?(@experiment)
   end
 
   def load_experiment_my_modules

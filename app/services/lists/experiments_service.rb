@@ -75,7 +75,10 @@ module Lists
         created_at: 'experiments.created_at',
         name: 'experiments.name',
         code: 'experiments.id',
-        archived_on: 'COALESCE(experiments.archived_on, projects.archived_on)'
+        archived_on: 'COALESCE(experiments.archived_on, projects.archived_on)',
+        updated_at: 'experiments.updated_at',
+        completed_tasks: 'completed_task_count',
+        description: 'experiments.description'
       }
     end
   end

@@ -23,8 +23,8 @@
     </div>
   </div>
   <div class="report-element-body">
-    <input type="hidden" class="hot-table-contents" value="<%= table.contents_utf_8 %>" />
-    <input type="hidden" class="hot-table-metadata" value="<%= table.metadata.to_json %>" />
+    <input type="hidden" class="hot-table-contents" value="<%= table.contents_utf_8.gsub(/\</, '&lt;').gsub(/\>/, '&gt;') %>" />
+    <input type="hidden" class="hot-table-metadata" value="<%= table.metadata.to_json.gsub(/\</, '&lt;').gsub(/\>/, '&gt;') %>" />
     <div class="hot-table-container"></div>
     <table class="report-common-table-format"></table>
   </div>

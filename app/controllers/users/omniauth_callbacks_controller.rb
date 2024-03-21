@@ -34,7 +34,7 @@ module Users
       user = User.from_omniauth(auth)
 
       # User found in database so just signing in
-      return sign_in_and_redirect(user) if user.present?
+      return sign_in_and_redirect(user, event: :authentication) if user.present?
 
       if email.blank?
         # No email in the token so can not link or create user
@@ -57,12 +57,12 @@ module Users
           user.update!(confirmed_at: user.created_at)
         end
 
-        sign_in_and_redirect(user)
+        sign_in_and_redirect(user, event: :authentication)
       elsif provider_conf['auto_link_on_sign_in']
         # Link to existing local account
         user.user_identities.create!(provider: auth.provider, uid: auth.uid)
         user.update!(confirmed_at: user.created_at) if user.confirmed_at.blank?
-        sign_in_and_redirect(user)
+        sign_in_and_redirect(user, event: :authentication)
       else
         # Cannot do anything with it, so just return an error
         error_message = I18n.t('devise.azure.errors.no_local_user_map')
@@ -84,14 +84,13 @@ module Users
 
     def linkedin
       auth_hash = request.env['omniauth.auth']
-
       @user = User.from_omniauth(auth_hash)
       if @user && @user.current_team_id?
         # User already exists and has been signed up with LinkedIn; just sign in
         set_flash_message(:notice,
                           :success,
                           kind: I18n.t('devise.linkedin.provider_name'))
-        sign_in_and_redirect @user
+        sign_in_and_redirect(@user, event: :authentication)
       elsif @user
         # User already exists and has started sign up with LinkedIn;
         # but doesn't have team (needs to complete sign up - agrees to TOS)
@@ -99,7 +98,8 @@ module Users
                           :failure,
                           kind: I18n.t('devise.linkedin.provider_name'),
                           reason: I18n.t('devise.linkedin.complete_sign_up'))
-        redirect_to users_sign_up_provider_path(user: @user)
+        sign_in(@user, event: :authentication)
+        redirect_to users_sign_up_provider_path
       elsif User.find_by_email(auth_hash['info']['email'])
         # email is already taken, so sign up with Linked in is not allowed
         set_flash_message(:alert,
@@ -133,7 +133,8 @@ module Users
         end
         # Confirm user
         @user.update!(confirmed_at: @user.created_at)
-        redirect_to users_sign_up_provider_path(user: @user)
+        sign_in(@user, event: :authentication)
+        redirect_to users_sign_up_provider_path
       end
     end
 
@@ -141,7 +142,7 @@ module Users
       auth = request.env['omniauth.auth']
       user = User.from_omniauth(auth)
       # User found in database so just signing in
-      return sign_in_and_redirect(user) if user.present?
+      return sign_in_and_redirect(user, event: :authentication) if user.present?
 
       user = User.find_by(email: auth.info.email.downcase)
 
@@ -161,7 +162,7 @@ module Users
         user.user_identities.create!(provider: auth.provider, uid: auth.uid)
         user.update!(confirmed_at: user.created_at) if user.confirmed_at.blank?
       end
-      sign_in_and_redirect(user)
+      sign_in_and_redirect(user, event: :authentication)
     rescue StandardError => e
       Rails.logger.error e.message
       Rails.logger.error e.backtrace.join("\n")

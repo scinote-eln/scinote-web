@@ -55,13 +55,13 @@
   </div>
 
   <div class="toolbar-middle-block">
-      <%= render partial: 'shared/state_view_switch', locals: {
-          disabled: @repository.archived?,
-          switchable: true,
-          archived: params[:archived] || @repository.archived?,
-          active_url: nil,
-          archived_url: nil
-        } %>
+    <div id='repositoryStateMenu' data-behaviour="vue">
+      <repository-state-menu
+        view-mode="<%= view_mode %>"
+        active-url="<%= repository_url(@repository) %>"
+        archived-url="<%= repository_url(@repository, params: { archived: true }) %>">
+      </repository-state-menu>
+    </div>
   </div>
 
   <!-- RIGHT TOOLBAR BLOCK -->
@@ -88,8 +88,10 @@
       <button class="btn btn-light btn-black icon-btn manage-repo-column-index" title="<%= t("libraries.manange_modal_column.button_tooltip") %>"
               data-modal-url="<%= repository_repository_columns_path(@repository) %>"
               data-action="new">
-        <span class="sn-icon sn-icon sn-icon-reports" data-e2e="e2e-BT-invInventoryRT-manageColumns">
+        <span class="sn-icon sn-icon-manage-columns" data-e2e="e2e-BT-invInventoryRT-manageColumns">
       </button>
     </div>
   </div>
 </template>
+
+<%= javascript_include_tag('vue_legacy_repository_menu_dropdown') %>

@@ -11,6 +11,9 @@
           </h4>
         </div>
         <div class="modal-body">
+          <div v-if="updating" class="flex absolute top-0 items-center justify-center w-full flex-grow h-full z-10">
+            <img src="/images/medium/loading.svg" alt="Loading" class="p-4 rounded-xl bg-sn-white" />
+          </div>
           <div class="max-h-[400px] overflow-y-auto">
             <div v-if="draft">
               <div class="flex items-center gap-4">
@@ -38,10 +41,10 @@
                   }}
                 </span>
                 <div class="flex items-center gap-2 ml-auto">
-                  <button v-if="draft.urls.publish" class="btn btn-light" @click="publishDraft">
+                  <button v-if="draft.urls.publish" class="btn btn-light" :disabled="updating" @click="publishDraft">
                     {{ i18n.t('protocols.index.versions.publish') }}
                   </button>
-                  <button v-if="draft.urls.destroy" @click="destroyDraft" class="btn btn-light icon-btn">
+                  <button v-if="draft.urls.destroy" @click="destroyDraft" :disabled="updating" class="btn btn-light icon-btn">
                     <i class="sn-icon sn-icon-delete"></i>
                   </button>
                 </div>
@@ -59,7 +62,7 @@
                 />
             </div>
             <div v-for="version in publishedVersions" :key="version.number">
-              <div class="flex items-center gap-4">
+              <div class="flex items-center gap-4 group min-h-[40px]">
                 <a :href="version.urls.show" class="hover:no-underline cursor-pointer shrink-0">
                   <b>
                     {{ i18n.t('protocols.index.versions.revision', { version: version.number }) }}
@@ -75,10 +78,10 @@
                 </span>
                 <button
                   v-if="version.urls.save_as_draft"
-                  class="btn btn-light icon-btn ml-auto"
+                  class="btn btn-light icon-btn ml-auto tw-hidden group-hover:flex"
                   :title="i18n.t('protocols.index.versions.save_as_draft')"
                   @click="saveAsDraft(version.urls.save_as_draft)"
-                  :disabled="draft"
+                  :disabled="draft || updating"
                 >
                   <i class="sn-icon sn-icon-duplicate"></i>
                 </button>
@@ -117,9 +120,12 @@ import ConfirmationModal from '../../shared/confirmation_modal.vue';
 export default {
   name: 'VersionsModal',
   props: {
-    protocol: Object
+    protocol: {
+      required: true,
+      typr: Object
+    }
   },
-  emits: ['refresh', 'close'],
+  emits: ['refresh', 'close', 'reloadPage', 'redirectToProtocols'],
   mixins: [modalMixin],
   components: {
     SelectDropdown,
@@ -129,7 +135,8 @@ export default {
   data() {
     return {
       draft: null,
-      publishedVersions: []
+      publishedVersions: [],
+      updating: false
     };
   },
   mounted() {
@@ -150,6 +157,8 @@ export default {
     async destroyDraft() {
       const ok = await this.$refs.destroyModal.show();
       if (ok) {
+        if (this.updating) return;
+        this.updating = true;
         axios.post(this.draft.urls.destroy, {
           version_modal: true
         }).then((response) => {
@@ -158,22 +167,33 @@ export default {
           this.$emit('redirectToProtocols');
           this.loadModalData();
           HelperModule.flashAlertMsg(response.data.message, 'success');
+          this.updating = false;
         });
       } else {
         document.body.style.overflow = 'hidden';
       }
     },
     saveAsDraft(url) {
+      if (this.updating) {
+        return;
+      }
+
+      this.updating = true;
       axios.post(url).then((response) => {
         window.location.href = response.data.url;
       }).catch((error) => {
+        this.updating = false;
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
     },
     publishDraft() {
+      if (this.updating) return;
+      this.updating = true;
+
       axios.post(this.draft.urls.publish).then(() => {
         this.loadModalData();
-        this.$emit('reloadPage');
+        this.$emit('refresh');
+        this.updating = false;
       });
     }
   }

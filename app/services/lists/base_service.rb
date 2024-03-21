@@ -20,6 +20,10 @@ module Lists
 
     private
 
+    def fetch_records
+      raise NotImplementedError
+    end
+
     def order_params
       @order_params ||= @params.require(:order).permit(:column, :dir).to_h
     end
@@ -36,7 +40,7 @@ module Lists
       return unless @params[:order]
 
       sort_by = "#{sortable_columns[order_params[:column].to_sym]} #{sort_direction(order_params)}"
-      @records = @records.order(sort_by)
+      @records = @records.order(sort_by).order(:id)
     end
   end
 end

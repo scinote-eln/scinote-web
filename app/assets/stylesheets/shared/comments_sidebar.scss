@@ -15,6 +15,10 @@
     width: var(--comments-sidebar-width);
   }
 
+  .atwho-user-container {
+    white-space: normal;
+  }
+
   .sidebar-content {
     background: $color-concrete;
     border-left: 1px solid $color-white;
@@ -167,6 +171,10 @@
         @include font-main;
         color: $color-volcano;
         padding: .5em 1em;
+      }
+
+      .atwho-user-container {
+        white-space: wrap;
       }
     }
 
