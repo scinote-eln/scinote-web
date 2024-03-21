@@ -37,7 +37,7 @@ module Lists
     end
 
     def sort_records
-      return unless @params[:order]
+      return unless @params[:order] && sortable_columns[order_params[:column].to_sym].present?
 
       sort_by = "#{sortable_columns[order_params[:column].to_sym]} #{sort_direction(order_params)}"
       @records = @records.order(sort_by).order(:id)
