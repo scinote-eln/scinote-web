@@ -166,7 +166,7 @@
       },
       onUnSelect: (id) => {
         $.post(`${$(myModuleTagsSelector).data('update-module-tags-url')}/${id}/destroy_by_tag_id`)
-          .success(function() {
+          .done(() => {
             dropdownSelector.closeDropdown(myModuleTagsSelector);
           })
           .fail(function(r) {
