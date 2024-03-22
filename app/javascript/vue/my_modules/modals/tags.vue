@@ -187,7 +187,7 @@ export default {
     }
   },
   created() {
-    this.loadAlltags();
+    this.loadAlltags(false);
   },
   methods: {
     startEditMode(tag) {
@@ -211,15 +211,15 @@ export default {
         this.updateTag(this.tagToUpdate);
       }
     },
-    loadAlltags() {
+    loadAlltags(emitTagsLoaded = true) {
       this.loadingTags = true;
       axios.get(this.projectTagsUrl).then((response) => {
         this.allTags = response.data.data;
 
-        this.loadAssignedTags();
+        this.loadAssignedTags(emitTagsLoaded);
       });
     },
-    loadAssignedTags() {
+    loadAssignedTags(emitTagsLoaded = true) {
       axios.get(this.params.urls.assigned_tags).then((response) => {
         this.assignedTags = response.data.data;
         this.allTags.forEach((tag) => {
@@ -231,7 +231,9 @@ export default {
             tag.assigned = false;
           }
         });
-        this.$emit('tagsLoaded', this.allTags);
+        if (emitTagsLoaded) {
+          this.$emit('tagsLoaded', this.allTags);
+        }
         this.loadingTags = false;
       });
     },
