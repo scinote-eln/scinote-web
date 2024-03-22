@@ -35,7 +35,7 @@
             </div>
             <div class="truncate ml-2" :title="user.attributes.name">{{ user.attributes.name }}</div>
             <div v-if="user.attributes.current_user" class="text-nowrap">
-              {{ i18n.t('access_permissions.you') }}
+              {{ `(${i18n.t('access_permissions.you')})` }}
             </div>
             <MenuDropdown
               class="ml-auto"
