@@ -1,6 +1,5 @@
 <template>
   <div class="sci--navigation--top-menu-container">
-    <QuickSearch v-if="user" :quickSearchUrl="quickSearchUrl" :searchUrl="searchUrl" :currentTeam="currentTeam"></QuickSearch>
     <div v-if="currentTeam" class="w-64">
       <SelectDropdown
         :value="currentTeam"
@@ -8,6 +7,7 @@
         @change="switchTeam"
       ></SelectDropdown>
     </div>
+    <QuickSearch v-if="user && !hideSearch" :quickSearchUrl="quickSearchUrl" :searchUrl="searchUrl" :currentTeam="currentTeam"></QuickSearch>
     <MenuDropdown
       class="ml-auto"
       v-if="settingsMenu && settingsMenu.length > 0"
@@ -97,7 +97,8 @@ export default {
       helpMenu: null,
       settingsMenu: null,
       userMenu: null,
-      unseenNotificationsCount: 0
+      unseenNotificationsCount: 0,
+      hideSearch: false,
     };
   },
   created() {
@@ -108,10 +109,14 @@ export default {
       this.notificationsOpened = false;
       this.checkUnseenNotifications();
       this.refreshCurrentTeam();
+      this.hideSearch = !!document.getElementById('GlobalSearch');
     });
 
     // Track name update in user profile settings
     $(document).on('inlineEditing::updated', '.inline-editing-container[data-field-to-update="full_name"]', this.fetchData);
+  },
+  mounted() {
+    this.hideSearch = !!document.getElementById('GlobalSearch');
   },
   beforeUnmount() {
     clearTimeout(this.unseenNotificationsTimeout);

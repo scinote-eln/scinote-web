@@ -4,38 +4,45 @@ class SearchController < ApplicationController
   before_action :load_vars, only: :index
 
   def index
-    redirect_to new_search_path unless @search_query
+    respond_to do |format|
+      format.html do
+        redirect_to new_search_path unless @search_query
+      end
+      format.json do
+        redirect_to new_search_path unless @search_query
 
-    @search_id = params[:search_id] ? params[:search_id] : generate_search_id
+        @search_id = params[:search_id] ? params[:search_id] : generate_search_id
 
-    count_search_results
+        count_search_results
 
-    search_projects if @search_category == :projects
-    search_project_folders if @search_category == :project_folders
-    search_experiments if @search_category == :experiments
-    search_modules if @search_category == :modules
-    search_results if @search_category == :results
-    search_tags if @search_category == :tags
-    search_reports if @search_category == :reports
-    search_protocols if @search_category == :protocols
-    search_steps if @search_category == :steps
-    search_checklists if @search_category == :checklists
-    if @search_category == :repositories && params[:repository]
-      search_repository
-    end
-    search_assets if @search_category == :assets
-    search_tables if @search_category == :tables
-    search_comments if @search_category == :comments
+        search_projects if @search_category == :projects
+        search_project_folders if @search_category == :project_folders
+        search_experiments if @search_category == :experiments
+        search_modules if @search_category == :modules
+        search_results if @search_category == :results
+        search_tags if @search_category == :tags
+        search_reports if @search_category == :reports
+        search_protocols if @search_category == :protocols
+        search_steps if @search_category == :steps
+        search_checklists if @search_category == :checklists
+        if @search_category == :repositories && params[:repository]
+          search_repository
+        end
+        search_assets if @search_category == :assets
+        search_tables if @search_category == :tables
+        search_comments if @search_category == :comments
 
-    @search_pages = (@search_count.to_f / Constants::SEARCH_LIMIT.to_f).ceil
-    @start_page = @search_page - 2
-    @start_page = 1 if @start_page < 1
-    @end_page = @start_page + 4
+        @search_pages = (@search_count.to_f / Constants::SEARCH_LIMIT.to_f).ceil
+        @start_page = @search_page - 2
+        @start_page = 1 if @start_page < 1
+        @end_page = @start_page + 4
 
-    if @end_page > @search_pages
-      @end_page = @search_pages
-      @start_page = @end_page - 4
-      @start_page = 1 if @start_page < 1
+        if @end_page > @search_pages
+          @end_page = @search_pages
+          @start_page = @end_page - 4
+          @start_page = 1 if @start_page < 1
+        end
+      end
     end
   end
 
