@@ -11,37 +11,56 @@ class SearchController < ApplicationController
       format.json do
         redirect_to new_search_path unless @search_query
 
-        @search_id = params[:search_id] ? params[:search_id] : generate_search_id
+        case params[:group]
+        when 'projects'
+          @project_search_count = fetch_cached_count Project
+          search_projects
+          if params[:preview] == 'true'
+            results = @project_results.limit(4)
+          else
+            results = @project_results.page(params[:page]).per(Constants::SEARCH_LIMIT)
+          end
 
-        count_search_results
-
-        search_projects if @search_category == :projects
-        search_project_folders if @search_category == :project_folders
-        search_experiments if @search_category == :experiments
-        search_modules if @search_category == :modules
-        search_results if @search_category == :results
-        search_tags if @search_category == :tags
-        search_reports if @search_category == :reports
-        search_protocols if @search_category == :protocols
-        search_steps if @search_category == :steps
-        search_checklists if @search_category == :checklists
-        if @search_category == :repositories && params[:repository]
-          search_repository
+          render json: results,
+                 each_serializer: GlobalSearch::ProjectSerializer,
+                 meta: {
+                  total: @search_count,
+                  next_page: (results.next_page if results.respond_to?(:next_page)),
+                }
+          return
         end
-        search_assets if @search_category == :assets
-        search_tables if @search_category == :tables
-        search_comments if @search_category == :comments
 
-        @search_pages = (@search_count.to_f / Constants::SEARCH_LIMIT.to_f).ceil
-        @start_page = @search_page - 2
-        @start_page = 1 if @start_page < 1
-        @end_page = @start_page + 4
+        #@search_id = params[:search_id] ? params[:search_id] : generate_search_id
+        #
+        #count_search_results
+        #
+        #search_projects if @search_category == :projects
+        #search_project_folders if @search_category == :project_folders
+        #search_experiments if @search_category == :experiments
+        #search_modules if @search_category == :modules
+        #search_results if @search_category == :results
+        #search_tags if @search_category == :tags
+        #search_reports if @search_category == :reports
+        #search_protocols if @search_category == :protocols
+        #search_steps if @search_category == :steps
+        #search_checklists if @search_category == :checklists
+        #if @search_category == :repositories && params[:repository]
+        #  search_repository
+        #end
+        #search_assets if @search_category == :assets
+        #search_tables if @search_category == :tables
+        #search_comments if @search_category == :comments
 
-        if @end_page > @search_pages
-          @end_page = @search_pages
-          @start_page = @end_page - 4
-          @start_page = 1 if @start_page < 1
-        end
+        #@search_pages = (@search_count.to_f / Constants::SEARCH_LIMIT.to_f).ceil
+        #@start_page = @search_page - 2
+        #@start_page = 1 if @start_page < 1
+        #@end_page = @start_page + 4
+
+        #if @end_page > @search_pages
+        #  @end_page = @search_pages
+        #  @start_page = @end_page - 4
+        #  @start_page = 1 if @start_page < 1
+        #end
       end
     end
   end

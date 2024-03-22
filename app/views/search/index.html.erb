@@ -3,6 +3,7 @@
 <div id="GlobalSearch" class="contents">
   <global_search
     :query="'<%= @display_query %>'"
+    :search-url="'<%= search_path(format: :json) %>'"
   />
 </div>
 
