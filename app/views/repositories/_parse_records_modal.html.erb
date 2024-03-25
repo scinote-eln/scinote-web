@@ -84,6 +84,11 @@
           </ul>
         </div>
       </div>
+      <% if @importing_duplicates_warning %>
+        <div class="alert alert-warning">
+          <%= @importing_duplicates_warning %>
+        </div>
+      <% end %>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t('general.cancel')%></button>
         <input type="submit" class="btn btn-success" value="<%= t('repositories.modal_parse.import') %>">
