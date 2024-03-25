@@ -455,6 +455,10 @@ en:
       reports: "Reports"
       more_search_options: "More search options"
       clear_filters: "Clear filters"
+      id: "ID"
+      created_at: "Created on"
+      team: "Team"
+      folder: "Folder"
   comments:
     save_changes: "Save changes"
     empty_state:
