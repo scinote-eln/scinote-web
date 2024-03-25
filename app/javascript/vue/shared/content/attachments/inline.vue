@@ -1,8 +1,11 @@
 <template>
-  <div class="inline-attachment-container asset"
-       :data-asset-id="attachment.id"
+  <div
+    class="inline-attachment-container asset"
+    :class="[{'menu-dropdown-open': isMenuDropdownOpen}, {'context-menu-open': isContextMenuOpen }]"
+    ref="inlineAttachmentContainer"
+    :data-asset-id="attachment.id"
   >
-    <div class="header">
+    <div class="header justify-between">
       <div class="file-info">
         <a :href="attachment.attributes.urls.blob"
           class="file-preview-link file-name"
@@ -20,22 +23,48 @@
         </a>
         <div class="file-metadata">
           <span>
-            {{ i18n.t('assets.placeholder.modified_label') }}
             {{ attachment.attributes.updated_at_formatted }}
           </span>
           <span>
-            {{ i18n.t('assets.placeholder.size_label', {size: attachment.attributes.file_size_formatted}) }}
+            {{ attachment.attributes.file_size_formatted }}
           </span>
         </div>
       </div>
-      <ContextMenu
-        :attachment="attachment"
-        @attachment:viewMode="updateViewMode"
-        @attachment:delete="deleteAttachment"
-        @attachment:moved="attachmentMoved"
-        @attachment:uploaded="reloadAttachments"
-        @attachment:update="$emit('attachment:update', $event)"
-      />
+      <div class="inline-attachment-action-buttons">
+        <!-- open -->
+        <OpenMenu
+          :attachment="attachment"
+          :multipleOpenOptions="multipleOpenOptions"
+          @menu-dropdown-toggle="toggleMenuDropdown"
+          >
+        </OpenMenu>
+
+        <!-- move -->
+        <a v-if="attachment.attributes.urls.move"
+          @click.prevent.stop="showMoveModal"
+          class="btn btn-light icon-btn thumbnail-action-btn"
+          :title="i18n.t('attachments.thumbnail.buttons.move')">
+          <i class="sn-icon sn-icon-move"></i>
+        </a>
+
+        <!-- download -->
+        <a class="btn btn-light icon-btn thumbnail-action-btn"
+          :title="i18n.t('attachments.thumbnail.buttons.download')"
+          :href="attachment.attributes.urls.download" data-turbolinks="false">
+          <i class="sn-icon sn-icon-export"></i>
+        </a>
+
+        <!-- more options -->
+        <ContextMenu
+          :attachment="attachment"
+          @attachment:viewMode="updateViewMode"
+          @attachment:delete="deleteAttachment"
+          @attachment:moved="attachmentMoved"
+          @attachment:uploaded="reloadAttachments"
+          @attachment:update="$emit('attachment:update', $event)"
+          @menu-toggle="toggleContextMenu"
+        />
+      </div>
     </div>
     <template v-if="attachment.attributes.wopi">
       <div v-if="showWopi"
@@ -65,7 +94,14 @@
       </div>
     </template>
   </div>
-
+  <Teleport to="body">
+    <MoveAssetModal
+      v-if="movingAttachment"
+      :parent_type="attachment.attributes.parent_type"
+      :targets_url="attachment.attributes.urls.move_targets"
+      @confirm="moveAttachment($event)" @cancel="closeMoveModal"
+    />
+  </Teleport>
 </template>
 
 <script>
@@ -73,11 +109,20 @@ import AttachmentMovedMixin from './mixins/attachment_moved.js';
 import ContextMenuMixin from './mixins/context_menu.js';
 import ContextMenu from './context_menu.vue';
 import PdfViewer from '../../pdf_viewer.vue';
+import MoveAssetModal from '../modal/move.vue';
+import MoveMixin from './mixins/move.js';
+import OpenLocallyMixin from './mixins/open_locally.js';
+import OpenMenu from './open_menu.vue';
 
 export default {
   name: 'inlineAttachment',
-  mixins: [ContextMenuMixin, AttachmentMovedMixin],
-  components: { ContextMenu, PdfViewer },
+  mixins: [ContextMenuMixin, AttachmentMovedMixin, MoveMixin, OpenLocallyMixin],
+  components: {
+    ContextMenu,
+    PdfViewer,
+    MoveAssetModal,
+    OpenMenu
+  },
   props: {
     attachment: {
       type: Object,
@@ -90,7 +135,9 @@ export default {
   },
   data() {
     return {
-      showWopi: false
+      showWopi: false,
+      isMenuDropdownOpen: false,
+      isContextMenuOpen: false
     };
   },
   mounted() {
@@ -115,6 +162,44 @@ export default {
           }
         }
       });
+    },
+    toggleContextMenu(isOpen) {
+      this.isContextMenuOpen = isOpen;
+    },
+    toggleMenuDropdown(isOpen) {
+      this.isMenuDropdownOpen = isOpen;
+    }
+  },
+  computed: {
+    multipleOpenOptions() {
+      const options = [];
+      if (this.attachment.attributes.wopi && this.attachment.attributes.urls.edit_asset) {
+        options.push({
+          text: this.attachment.attributes.wopi_context.button_text,
+          url: this.attachment.attributes.urls.edit_asset,
+          url_target: '_blank'
+        });
+      }
+      if (this.attachment.attributes.asset_type !== 'marvinjs'
+          && this.attachment.attributes.image_editable
+          && this.attachment.attributes.urls.start_edit_image) {
+        options.push({
+          text: this.i18n.t('assets.file_preview.edit_in_scinote'),
+          emit: 'open_scinote_editor'
+        });
+      }
+      if (this.canOpenLocally) {
+        const text = this.localAppName
+          ? this.i18n.t('attachments.open_locally_in', { application: this.localAppName })
+          : this.i18n.t('attachments.open_locally');
+
+        options.push({
+          text,
+          emit: 'open_locally',
+          data_e2e: 'e2e-BT-attachmentOptions-openLocally'
+        });
+      }
+      return options;
     }
   }
 };
