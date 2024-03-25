@@ -140,7 +140,7 @@
                 HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
               }
             });
-        } else {
+        } else if (lastTag.length > 0) {
           newTag = {
             tag: {
               name: lastTag.find('.tag-label').html(),
