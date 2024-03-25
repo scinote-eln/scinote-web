@@ -35,7 +35,9 @@ class RepositoriesController < ApplicationController
         render 'index'
       end
       format.json do
-        repositories = Lists::RepositoriesService.new(@repositories, params).call
+        repositories = Lists::RepositoriesService.new(@repositories,
+                                                      current_user,
+                                                      params).call
         render json: repositories, each_serializer: Lists::RepositorySerializer, user: current_user,
                meta: pagination_dict(repositories)
       end
