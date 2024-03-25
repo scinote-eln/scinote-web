@@ -34,7 +34,7 @@
               <img :src="user.attributes.avatar_url" class="rounded-full w-8 h-8">
             </div>
             <div class="truncate ml-2" :title="user.attributes.name">{{ user.attributes.name }}</div>
-            <div v-if="user.attributes.current_user" class="text-nowrap">
+            <div v-if="user.attributes.current_user" class="text-nowrap ml-1">
               {{ `(${i18n.t('access_permissions.you')})` }}
             </div>
             <MenuDropdown
