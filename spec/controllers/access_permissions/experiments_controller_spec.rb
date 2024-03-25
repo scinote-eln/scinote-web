@@ -21,18 +21,6 @@ describe AccessPermissions::ExperimentsController, type: :controller do
     create_user_assignment(experiment, viewer_user_role, viewer_user)
   end
 
-  describe 'GET #show' do
-    it 'returns a http success response' do
-      get :show, params: { project_id: project.id, id: experiment.id }, format: :json
-      expect(response).to have_http_status :success
-    end
-
-    it 'renders show template' do
-      get :show, params: { project_id: project.id, id: experiment.id }, format: :json
-      expect(response).to render_template :show
-    end
-  end
-
   describe 'GET #edit' do
     it 'returns a http success response' do
       get :edit, params: { project_id: project.id, id: experiment.id }, format: :json

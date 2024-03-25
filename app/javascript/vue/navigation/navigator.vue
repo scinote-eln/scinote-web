@@ -138,6 +138,7 @@ export default {
     onResizeMove(event) {
       if (event.w > 400) event.w = 400;
       document.documentElement.style.setProperty('--navigator-navigation-width', `${event.w}px`);
+      if (window.resetGridColumns) window.resetGridColumns(false);
     },
     onResizeStart() {
       document.body.style.cursor = 'url(/images/icon_small/Resize.svg) 0 0, auto';

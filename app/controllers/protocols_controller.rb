@@ -7,6 +7,7 @@ class ProtocolsController < ApplicationController
   include ProtocolsIoHelper
   include TeamsHelper
   include ProtocolsExporterV2
+  include UserRolesHelper
 
   before_action :check_create_permissions, only: %i(
     create
@@ -120,18 +121,22 @@ class ProtocolsController < ApplicationController
       records = records.where(parent_id: @protocol.published_versions)
                        .or(records.where(parent_id: @protocol.id))
     end
-    records = records.preload(my_module: { experiment: :project })
+    records = records.preload(my_module: { experiment: { project: :project_folder } })
                      .distinct.order(updated_at: :desc).page(params[:page]).per(10)
 
     render json: {
       data: records.map { |record|
+        project_folder = record.my_module.experiment.project.project_folder
+
         {
           my_module_name: record.my_module.name,
           experiment_name: record.my_module.experiment.name,
           project_name: record.my_module.experiment.project.name,
           my_module_url: protocols_my_module_path(record.my_module),
           experiment_url: my_modules_path(experiment_id: record.my_module.experiment.id),
-          project_url: experiments_path(project_id: record.my_module.experiment.project.id)
+          project_url: experiments_path(project_id: record.my_module.experiment.project.id),
+          project_folder_name: project_folder.present? ? project_folder.name : nil,
+          project_folder_url: project_folder.present? ? project_folder_projects_url(project_folder) : nil
         }
       },
       next_page: records.next_page,
@@ -843,6 +848,10 @@ class ProtocolsController < ApplicationController
     end
     @job = Protocols::DocxImportJob.perform_later(temp_files_ids, user_id: current_user.id, team_id: current_team.id)
     render json: { job_id: @job.job_id }
+  end
+
+  def user_roles
+    render json: { data: user_roles_collection(Protocol.new).map(&:reverse) }
   end
 
   private

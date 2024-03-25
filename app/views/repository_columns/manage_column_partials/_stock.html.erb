@@ -13,7 +13,7 @@
                          class: 'form-control stock-column',
                          data: { min: 0, max: Constants::REPOSITORY_NUMBER_TYPE_MAX_DECIMALS }) %>
 
-    <%= javascript_include_tag 'repository_columns/manage_column_partials/stock' %>
+    <%= javascript_include_tag 'repository_columns/manage_column_partials/stock', nonce: true  %>
   </div>
 </div>
 <div class="form-group">

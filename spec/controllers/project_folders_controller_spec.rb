@@ -37,9 +37,9 @@ describe ProjectFoldersController, type: :controller do
         {
           destination_folder_id: project_folder_1.id,
           movables: [
-            { id: project_1.id, type: :project },
-            { id: project_folder_2.id, type: :project_folder }
-          ].to_json
+            { id: project_1.id, type: :projects },
+            { id: project_folder_2.id, type: :project_folders }
+      ]
         }
       end
 

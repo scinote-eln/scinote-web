@@ -40,33 +40,15 @@ describe ExperimentsController, type: :controller do
       team_role: :normal_user
     }
 
-    it_behaves_like "a controller action with permissions checking", :get, :new do
-      let(:testable) { project }
-      let(:permissions) { [ProjectPermissions::EXPERIMENTS_CREATE] }
-      let(:action_params) { { project_id: project.id } }
-    end
-
     it_behaves_like "a controller action with permissions checking", :post, :create do
       let(:testable) { project }
       let(:permissions) { [ProjectPermissions::EXPERIMENTS_CREATE] }
       let(:action_params) { { project_id: project.id, experiment: { name: 'Test' } } }
     end
 
-    it_behaves_like "a controller action with permissions checking", :get, :show do
-      let(:testable) { experiment }
-      let(:permissions) { [ExperimentPermissions::READ] }
-      let(:action_params) { { id: experiment.id } }
-    end
-
     it_behaves_like "a controller action with permissions checking", :get, :canvas do
       let(:testable) { experiment }
       let(:permissions) { [ExperimentPermissions::READ] }
-      let(:action_params) { { id: experiment.id } }
-    end
-
-    it_behaves_like "a controller action with permissions checking", :get, :edit do
-      let(:testable) { experiment }
-      let(:permissions) { [ExperimentPermissions::MANAGE] }
       let(:action_params) { { id: experiment.id } }
     end
 
@@ -96,22 +78,10 @@ describe ExperimentsController, type: :controller do
       let(:custom_response_status) { :unprocessable_entity }
     end
 
-    it_behaves_like "a controller action with permissions checking", :get, :clone_modal do
-      let(:testable) { experiment }
-      let(:permissions) { [ExperimentPermissions::READ] }
-      let(:action_params) { { id: experiment.id } }
-    end
-
     it_behaves_like "a controller action with permissions checking", :post, :clone do
       let(:testable) { experiment }
       let(:permissions) { [ExperimentPermissions::READ] }
       let(:action_params) { { id: experiment.id } }
-    end
-
-    it_behaves_like "a controller action with permissions checking", :get, :move_modal do
-      let(:testable) { experiment }
-      let(:permissions) { [ExperimentPermissions::MANAGE] }
-      let(:action_params) { { ids: [experiment.id] } }
     end
 
     it_behaves_like "a controller action with permissions checking", :post, :move do
@@ -127,12 +97,6 @@ describe ExperimentsController, type: :controller do
     end
 
     it_behaves_like "a controller action with permissions checking", :get, :fetch_workflow_img do
-      let(:testable) { experiment }
-      let(:permissions) { [ExperimentPermissions::READ] }
-      let(:action_params) { { id: experiment.id } }
-    end
-
-    it_behaves_like "a controller action with permissions checking", :get, :sidebar do
       let(:testable) { experiment }
       let(:permissions) { [ExperimentPermissions::READ] }
       let(:action_params) { { id: experiment.id } }

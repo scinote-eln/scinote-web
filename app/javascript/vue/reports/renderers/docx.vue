@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="group w-full h-full">
     <template v-if="docx.error">
       <span class="flex items-center gap-1 text-sn-delete-red">
         <i class="fas fa-exclamation-triangle"></i>
@@ -25,7 +25,7 @@
         {{ i18n.t('projects.reports.index.docx') }}
       </a>
     </template>
-    <a v-else href="#" @click.prevent="generate">
+    <a v-else class="hidden group-hover:!block" href="#" @click.prevent="generate">
       {{ i18n.t('projects.reports.index.generate') }}
     </a>
   </div>
@@ -49,6 +49,17 @@ export default {
   mounted() {
     if (this.docx.processing) {
       setTimeout(this.checkStatus, 3000);
+    }
+  },
+  watch: {
+    'params.data.docx_file': {
+      handler: function (val) {
+        this.docx = val;
+        if (val?.processing) {
+          setTimeout(this.checkStatus, 3000);
+        }
+      },
+      deep: true
     }
   },
   methods: {

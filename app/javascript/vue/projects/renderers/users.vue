@@ -7,7 +7,8 @@
         class="flex shrink-0 items-center justify-center w-7 h-7 text-xs rounded-full bg-sn-dark-grey text-sn-white">
       +{{ hiddenUsers.length }}
     </div>
-    <div class="flex items-center shrink-0 justify-center w-7 h-7 rounded-full bg-sn-light-grey text-sn-dark-grey">
+    <div v-if="params.data.permissions['manage_users_assignments']"
+        class="flex items-center shrink-0 justify-center w-7 h-7 rounded-full bg-sn-light-grey text-sn-dark-grey">
       <i class="sn-icon sn-icon-new-task"></i>
     </div>
   </div>

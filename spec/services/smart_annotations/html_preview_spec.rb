@@ -18,7 +18,7 @@ describe SmartAnnotations::HtmlPreview do
     it 'returns a html snippet' do
       snippet = subject.html(nil, 'prj', project)
       expect(snippet).to eq(
-        "<a class='sa-link' href='/projects/#{project.id}'>" \
+        "<a class='sa-link' href='/projects/#{project.id}/experiments'>" \
         "<span class='sa-type'>Prj</span>my project</a>"
       )
     end

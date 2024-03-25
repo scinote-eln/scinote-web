@@ -24,8 +24,7 @@ module Lists
                   else
                     @params[:view_mode] || 'active'
                   end
-
-      @records = @records.archived if view_mode == 'archived' && @params[:experiment].active?
+      @records = @records.archived if view_mode == 'archived' && !@params[:experiment].archived_branch?
       @records = @records.active if view_mode == 'active'
     end
 

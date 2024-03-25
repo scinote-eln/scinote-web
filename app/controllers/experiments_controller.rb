@@ -43,7 +43,9 @@ class ExperimentsController < ApplicationController
   end
 
   def assigned_users
-    render json: User.where(id: @experiment.user_assignments.select(:user_id)), each_serializer: UserSerializer
+    render json: User.where(id: @experiment.user_assignments.select(:user_id)),
+           each_serializer: UserSerializer,
+           user: current_user
   end
 
   def create
@@ -180,12 +182,17 @@ class ExperimentsController < ApplicationController
   def projects_to_clone
     projects = @experiment.project.team.projects.active
                           .with_user_permission(current_user, ProjectPermissions::EXPERIMENTS_CREATE)
+                          .where('trim_html_tags(projects.name) ILIKE ?',
+                                 "%#{ActiveRecord::Base.sanitize_sql_like(params['query'])}%")
                           .map { |p| [p.id, p.name] }
     render json: { data: projects }, status: :ok
   end
 
   def projects_to_move
-    projects = @experiment.movable_projects(current_user).map { |p| [p.id, p.name] }
+    projects = @experiment.movable_projects(current_user)
+                          .where('trim_html_tags(projects.name) ILIKE ?',
+                                 "%#{ActiveRecord::Base.sanitize_sql_like(params['query'])}%")
+                          .map { |p| [p.id, p.name] }
     render json: { data: projects }, status: :ok
   end
 
@@ -443,7 +450,9 @@ class ExperimentsController < ApplicationController
 
   def load_project
     @project = Project.find_by(id: params[:project_id])
+
     render_404 unless @project
+    render_403 unless can_read_project?(@project)
   end
 
   def experiment_params

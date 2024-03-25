@@ -117,7 +117,9 @@ class UserMyModulesController < ApplicationController
       user_hash
     end
 
-    render json: users.compact
+    render json: {
+      users: users.compact
+    }
   end
 
   private

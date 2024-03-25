@@ -10,9 +10,7 @@
             {{ experiment.name }}
           </h4>
         </div>
-        <div class="modal-body">
-          {{ experiment.description }}
-        </div>
+        <div class="modal-body" v-html="experiment.sa_description"></div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" data-dismiss="modal">{{ i18n.t('general.close') }}</button>
         </div>
