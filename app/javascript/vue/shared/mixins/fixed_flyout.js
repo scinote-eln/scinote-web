@@ -64,7 +64,7 @@ export default {
         flyout.style.minWidth = `${width}px`;
       }
 
-      if (window.innerWidth - (field.x + flyoutRect.width) < 0) { // when flyout is out of screen
+      if (window.innerWidth - (rect.x + flyoutRect.width) < 0) { // when flyout is out of screen
         flyout.style.left = 'unset';
         flyout.style.right = `${width - Math.abs(right)}px`;
       } else if (this.position === 'right') {
