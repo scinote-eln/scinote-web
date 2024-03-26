@@ -2,7 +2,7 @@
   <create-new-task-modal projects-url="<%= dashboard_quick_start_project_filter_url%>"
     experiments-url="<%= dashboard_quick_start_experiment_filter_url%>"
     create-task-url="<%= dashboard_quick_start_create_task_url%>"
-    user-roles-url="<%= user_roles_projects_url %>"/>
+    user-roles-url="<%= user_roles_projects_url(include_viewer_role: true) %>"/>
 </div>
 
 <%= javascript_include_tag('vue_new_task_modal') %>

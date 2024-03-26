@@ -47,10 +47,10 @@
             <div v-show="visible" class="flex flex-col gap-2">
               <label class="sci-label"> {{ i18n.t('dashboard.new_task_modal.user_role.label') }}</label>
               <div>
-                <SelectDropdown :value="defaultRole"
+                <SelectDropdown :value="role"
                   :options="userRoles"
                   :placeholder="i18n.t('dashboard.new_task_modal.user_role.placeholder')"
-                  @change="defaultRole = $event"
+                  @change="role = $event"
                 />
               </div>
             </div>
@@ -105,9 +105,9 @@ export default {
   watch: {
     visible(newValue) {
       if (newValue) {
-        [this.defaultRole] = this.userRoles.find((role) => role[1] === 'Viewer');
+        this.role = this.defaultRole;
       } else {
-        this.defaultRole = '';
+        this.role = '';
       }
     },
     task() {
@@ -117,14 +117,14 @@ export default {
     },
     projectName() {
       this.$nextTick(() => {
-        if (this.projectName.trim().length > 1) delete this.errors.project;
+        if (this.projectName.trim().length >= GLOBAL_CONSTANTS.NAME_MIN_LENGTH) delete this.errors.project;
         this.experimentId = null;
         this.experimentName = '';
       });
     },
     experimentName() {
       this.$nextTick(() => {
-        if (this.experimentName.trim().length > 1) delete this.errors.experiment;
+        if (this.experimentName.trim().length >= GLOBAL_CONSTANTS.NAME_MIN_LENGTH) delete this.errors.experiment;
       });
     },
     experimentId() {
@@ -152,7 +152,7 @@ export default {
       return this.experimentId || this.experimentId === 0;
     },
     validTask() {
-      return this.task.trim().length > 1;
+      return this.task.trim().length >= GLOBAL_CONSTANTS.NAME_MIN_LENGTH;
     },
     hasErrors() {
       return this.errors.project
@@ -181,7 +181,8 @@ export default {
       visible: false,
       errors: {},
       userRoles: [],
-      defaultRole: '',
+      defaultRole: null,
+      role: null,
       showModal: false,
       isSaving: false
     };
@@ -205,6 +206,7 @@ export default {
         axios.get(this.userRolesUrl)
           .then((response) => {
             this.userRoles = response.data.data;
+            this.defaultRole = response.data.default_viewer_role.id;
           });
       }
     },
@@ -228,10 +230,9 @@ export default {
       await axios.post(this.createTaskUrl, {
         my_module: { name: this.task },
         project: {
-          id: this.projectId,
           name: this.projectName,
           visibility: this.visible ? 1 : 0,
-          default_public_user_role_id: this.defaultRole
+          default_public_user_role_id: this.role
         },
         experiment: { id: this.experimentId, name: this.experimentName }
       }).then((response) => {
@@ -263,7 +264,8 @@ export default {
       this.errors = {};
       this.userRoles = [];
       this.visible = false;
-      this.defaultRole = '';
+      this.defaultRole = null;
+      this.role = null;
       this.showModal = false;
     }
   }
