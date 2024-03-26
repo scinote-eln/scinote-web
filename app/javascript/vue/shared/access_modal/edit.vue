@@ -57,7 +57,7 @@
           <div class="text-xs text-sn-grey text-nowrap">{{ userAssignment.attributes.inherit_message }}</div>
         </div>
         <MenuDropdown
-          v-if="!userAssignment.attributes.last_owner && params.object.urls.update_access"
+          v-if="!userAssignment.attributes.last_owner && params.object.urls.update_access && !(userAssignment.attributes.current_user && userAssignment.attributes.inherit_message)"
           class="ml-auto"
           :listItems="rolesFromatted(userAssignment)"
           :btnText="userAssignment.attributes.user_role.name"
