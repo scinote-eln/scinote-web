@@ -9,8 +9,22 @@ class TeamsController < ApplicationController
   before_action :load_vars, only: %i(sidebar export_projects export_projects_modal
                                      disable_tasks_sharing_modal shared_tasks_toggle)
   before_action :load_current_folder, only: :sidebar
-  before_action :check_read_permissions, except: :view_type
+  before_action :check_read_permissions, except: %i(view_type visible_teams visible_users)
   before_action :check_export_projects_permissions, only: %i(export_projects_modal export_projects)
+
+  def visible_teams
+    teams = current_user.teams
+    render json: teams, each_serializer: TeamSerializer
+  end
+
+  def visible_users
+    teams = current_user.teams
+    if params[:teams].present?
+      teams = teams.where(id: params[:teams])
+    end
+    users = User.where(id: teams.joins(:users).select('users.id')).order(:full_name)
+    render json: users, each_serializer: UserSerializer, user: current_user
+  end
 
   def sidebar
     render json: {

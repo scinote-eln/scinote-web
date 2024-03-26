@@ -24,10 +24,21 @@
           {{ i18n.t('search.index.task_results') }}
         </button>
       </div>
-      <button class="btn btn-light btn-sm">
-        <i class="sn-icon sn-icon-search-options"></i>
-        {{ i18n.t('search.index.more_search_options') }}
-      </button>
+      <GeneralDropdown ref="filterFlyout" position="right">
+        <template v-slot:field>
+          <button class="btn btn-light btn-sm">
+            <i class="sn-icon sn-icon-search-options"></i>
+            {{ i18n.t('search.index.more_search_options') }}
+          </button>
+        </template>
+        <template v-slot:flyout >
+          <SearchFilters
+            :teamsUrl="teamsUrl"
+            :usersUrl="usersUrl"
+            @cancel="this.$refs.container.close()"
+          ></SearchFilters>
+        </template>
+      </GeneralDropdown>
       <template v-if="activeGroup">
         <div class="h-4 w-[1px] bg-sn-grey"></div>
         <button class="btn btn-light btn-sm" @click="activeGroup = null">
@@ -62,6 +73,8 @@ import RepositoryRowsComponent from './groups/repository_rows.vue';
 import ProtocolsComponent from './groups/protocols.vue';
 import LabelTemplatesComponent from './groups/label_templates.vue';
 import ReportsComponent from './groups/reports.vue';
+import SearchFilters from './filters.vue';
+import GeneralDropdown from '../shared/general_dropdown.vue';
 
 export default {
   name: 'GlobalSearch',
@@ -71,6 +84,14 @@ export default {
       required: true
     },
     searchUrl: {
+      type: String,
+      required: true
+    },
+    teamsUrl: {
+      type: String,
+      required: true
+    },
+    usersUrl: {
       type: String,
       required: true
     }
@@ -86,7 +107,9 @@ export default {
     RepositoryRowsComponent,
     ProtocolsComponent,
     LabelTemplatesComponent,
-    ReportsComponent
+    ReportsComponent,
+    SearchFilters,
+    GeneralDropdown
   },
   data() {
     return {
