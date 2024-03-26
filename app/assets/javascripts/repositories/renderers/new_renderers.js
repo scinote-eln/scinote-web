@@ -64,7 +64,7 @@ $.fn.dataTable.render.newRepositoryNumberValue = function(formId, columnId, $cel
   });
 
   $input.on('input', function() {
-    const decimalsRegex = new RegExp(`^\\d*(\\.\\d{0,${decimals}})?`);
+    const decimalsRegex = new RegExp(`^-?\\d*(\\.\\d{0,${decimals}})?`);
     let value = this.value;
     value = value.replace(/[^0-9.]/g, '');
     value = value.match(decimalsRegex)[0];
