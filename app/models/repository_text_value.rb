@@ -36,10 +36,10 @@ class RepositoryTextValue < ApplicationRecord
     new_data != data
   end
 
-  def update_data!(new_data, user)
+  def update_data!(new_data, user, preview: false)
     self.data = new_data
     self.last_modified_by = user
-    save!
+    preview ? validate : save!
   end
 
   def snapshot!(cell_snapshot)

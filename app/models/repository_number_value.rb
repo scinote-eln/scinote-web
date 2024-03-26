@@ -49,10 +49,10 @@ class RepositoryNumberValue < ApplicationRecord
     BigDecimal(new_data.to_s) != data
   end
 
-  def update_data!(new_data, user)
+  def update_data!(new_data, user, preview: false)
     self.data = BigDecimal(new_data.to_s)
     self.last_modified_by = user
-    save!
+    preview ? validate : save!
   end
 
   def snapshot!(cell_snapshot)
