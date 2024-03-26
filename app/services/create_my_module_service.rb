@@ -2,19 +2,23 @@
 
 class CreateMyModuleService
   include Canaid::Helpers::PermissionsHelper
+  attr_reader :errors
 
   def initialize(user, team, params)
     @params = params
     @my_module_params = params[:my_module] || {}
     @user = user
     @team = team
+    @errors = {}
   end
 
   def call
     ActiveRecord::Base.transaction do
       unless @params[:experiment].instance_of?(Experiment)
         @params[:experiment][:project] = @params[:project]
-        @params[:experiment] = CreateExperimentService.new(@user, @team, @params[:experiment]).call
+        experiment_service = CreateExperimentService.new(@user, @team, @params[:experiment])
+        @params[:experiment] = experiment_service.call
+        @errors.merge!(experiment_service.errors) if experiment_service&.errors&.any?
       end
 
       raise ActiveRecord::Rollback unless @params[:experiment]&.valid? &&
@@ -37,8 +41,9 @@ class CreateMyModuleService
 
       @my_module.assign_user(@user)
     end
-
     @my_module
+  rescue ActiveRecord::RecordInvalid
+    @errors['my_module'] = @my_module.errors.messages if @my_module
   end
 
   private
