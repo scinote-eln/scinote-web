@@ -166,7 +166,8 @@ export default {
       field: 'tags',
       headerName: this.i18n.t('experiments.table.column.tags_html'),
       sortable: true,
-      cellRenderer: TagsRenderer
+      cellRenderer: TagsRenderer,
+      minWidth: 180
     });
     columns.push({
       field: 'comments',
