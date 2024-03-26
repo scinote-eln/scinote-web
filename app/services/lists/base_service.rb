@@ -40,7 +40,7 @@ module Lists
       return unless @params[:order]
 
       sort_by = "#{sortable_columns[order_params[:column].to_sym]} #{sort_direction(order_params)}"
-      @records = @records.order(sort_by)
+      @records = @records.order(sort_by).order(:id)
     end
   end
 end

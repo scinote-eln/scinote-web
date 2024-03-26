@@ -57,6 +57,7 @@ module RepositoryImportParser
 
     def import_rows!(can_edit_existing_items, should_overwrite_with_empty_cells)
       errors = false
+      duplicate_ids = SpreadsheetParser.duplicate_ids(@sheet)
 
       @repository.transaction do
         batch_counter = 0
@@ -65,6 +66,9 @@ module RepositoryImportParser
         @rows.each do |row|
           # Skip empty rows
           next if row.blank?
+
+          # Skip duplicates
+          next if duplicate_ids.include?(row.first)
 
           unless @header_skipped
             @header_skipped = true
@@ -82,11 +86,8 @@ module RepositoryImportParser
           incoming_row.each_with_index do |value, index|
             if index == @name_index
 
-              # extract row_id
-              row_id = try_decimal_to_string(value)
-
               # check if row (inventory) already exists
-              existing_row = RepositoryRow.find_by(name: row_id, repository: @repository)
+              existing_row = RepositoryRow.find_by(id: incoming_row[0])
 
               # if it doesn't exist create it
               unless existing_row
@@ -145,7 +146,15 @@ module RepositoryImportParser
     end
 
     def import_batch_to_database(full_row_import_batch, can_edit_existing_items, should_overwrite_with_empty_cells)
+      skipped_rows = []
+
       full_row_import_batch.each do |full_row|
+        # skip archived rows and rows that belong to other repositories
+        if full_row[:repository_row].archived || full_row[:repository_row].repository_id != @repository.id
+          skipped_rows << full_row[:repository_row]
+          next
+        end
+
         full_row[:repository_row].save!(validate: false)
         @new_rows_added += 1
 

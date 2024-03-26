@@ -73,7 +73,7 @@
            locals: { repository: @repository } %>
 
 <%= render partial: 'repository_columns/manage_column_modal', locals: { my_module_page: false } %>
-<%= render partial: "toolbar_buttons" %>
+<%= render partial: "toolbar_buttons", locals: { view_mode: @repository.archived? || params[:archived] ? 'archived' : 'active' } %>
 <%= render partial: "assign_items_to_task_modal" %>
 
 <%= render partial: 'repository_filters' %>

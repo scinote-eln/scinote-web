@@ -4,12 +4,14 @@
       <a class="p-3 border-b-4 border-transparent hover:no-underline uppercase text-bold capitalize <%= is_module_protocols? ? "text-sn-blue" : "text-sn-grey" %>"
           href="<%= protocols_my_module_url(@my_module) %>"
           title="<%= t("nav2.modules.steps") %>"
+          data-e2e="e2e-BT-taskTabs-protocol"
       >
         <%=t "nav2.modules.steps" %>
       </a>
       <a class="p-3 border-b-4 border-transparent hover:no-underline uppercase text-bold capitalize <%= is_module_results? ? "text-sn-blue" : "text-sn-grey" %>"
           href="<%= my_module_results_path(@my_module) %>"
           title="<%= t("nav2.modules.results") %>"
+          data-e2e="e2e-BT-taskTabs-results"
       >
         <%= t("nav2.modules.results") %>
         <%= "[#{(@my_module.archived_branch? ? @my_module.results : @my_module.results.active).size}]" %>
@@ -17,6 +19,7 @@
       <a class="p-3 border-b-4 border-transparent hover:no-underline uppercase text-bold capitalize <%= is_module_activities? ? "text-sn-blue" : "text-sn-grey" %>"
           href="<%= activities_my_module_url(@my_module, view_mode: params[:view_mode]) %>"
           title="<%= t("nav2.modules.activities") %>"
+          data-e2e="e2e-BT-taskTabs-activity"
       >
         <%= t("nav2.modules.activities") %>
       </a>

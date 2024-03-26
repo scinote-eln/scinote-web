@@ -2140,6 +2140,7 @@ en:
       partial_success_flash: "%{nr} of %{total_nr} successfully imported. Other rows contained errors."
       error_message:
         items_limit: "The imported file contains too many rows. Max %{items_size} items allowed to upload at once."
+        importing_duplicates: "Items with duplicates detected: %{duplicate_ids}. These will be ignored on import."
         temp_file_not_found: "This file could not be found. Your session might expire."
         session_expired: "Your session expired. Please try again."
         no_data_to_parse: "There's nothing to be parsed."
@@ -3248,7 +3249,7 @@ en:
         published_on: "Published on"
         created_at: "Created at"
         archived_on: "Archived on"
-        updated_at: "Modified on"
+        updated_at: "Updated on"
       table:
         draft: "Draft"
       preview:
@@ -3258,7 +3259,7 @@ en:
         used_in: "Number of tasks linked to this protocol: %{nr}"
         no_linked_children: "This protocol is not linked to any task."
         length_menu: "Show %{number} per page"
-        show_version: "Show version"
+        show_version: "Show version:"
       restore: "Restore"
       restore_flash_html: "<b>%{count} protocol</b> template(s) successfully restored."
       make_private_unauthorized: "You do not have permission to move selected protocols to My protocols."
@@ -3846,6 +3847,11 @@ en:
   # This section contains general words that can be used in any parts of
   # application.
   datatable:
+    entries:
+      total:
+        one: "%{count} entry"
+        other: "%{count} entries"
+      selected: "%{selected} of %{count} selected"
     show: 'Show:'
     rows: 'rows'
   tiny_mce:
@@ -4092,6 +4098,10 @@ en:
   name: 'name'
   From: 'From'
   To: 'To'
+
+  input:
+    errors:
+      invalid_value: 'Invalid value'
 
   marvinjs:
     new_sketch: "New chemical drawing"

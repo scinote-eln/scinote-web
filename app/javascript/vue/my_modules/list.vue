@@ -12,6 +12,8 @@
     :currentViewMode="currentViewMode"
     :filters="filters"
     :viewRenders="viewRenders"
+    :objectArchived="archived"
+    :hiddenDataMessage="i18n.t('experiments.empty_state.no_active_modules_archived_branch')"
     scrollMode="infinite"
     @tableReloaded="reloadingTable = false"
     @create="newModalOpen = true"
@@ -33,6 +35,7 @@
             :createUrl="createUrl"
             :projectTagsUrl="projectTagsUrl"
             :assignedUsersUrl="assignedUsersUrl"
+            :currentUserId="currentUserId"
             @create="updateTable"
             @close="newModalOpen = false" />
   <EditModal v-if="editModalObject"
@@ -82,6 +85,7 @@ export default {
     activePageUrl: { type: String },
     archivedPageUrl: { type: String },
     currentViewMode: { type: String, required: true },
+    currentUserId: { type: String, required: true },
     createUrl: { type: String, required: true },
     userRolesUrl: { type: String, required: true },
     canvasUrl: { type: String, required: true },
@@ -90,7 +94,8 @@ export default {
     assignedUsersUrl: { type: String, required: true },
     usersFilterUrl: { type: String, required: true },
     statusesList: { type: Array, required: true },
-    projectName: { type: String }
+    projectName: { type: String },
+    archived: { type: Boolean }
   },
   data() {
     return {
@@ -267,10 +272,14 @@ export default {
       this.editModalObject = null;
       this.moveModalObject = null;
     },
+    updateNavigator(withExpanedChildren = false) {
+      window.navigatorContainer.reloadNavigator(withExpanedChildren);
+    },
     async archive(event, rows) {
       axios.post(event.path, { my_modules: rows.map((row) => row.id) }).then((response) => {
         this.reloadingTable = true;
         HelperModule.flashAlertMsg(response.data.message, 'success');
+        this.updateNavigator(true);
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
@@ -279,6 +288,7 @@ export default {
       axios.post(event.path, { my_modules_ids: rows.map((row) => row.id), view: 'table' }).then((response) => {
         this.reloadingTable = true;
         HelperModule.flashAlertMsg(response.data.message, 'success');
+        this.updateNavigator(true);
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
@@ -305,20 +315,37 @@ export default {
         roles_path: this.userRolesUrl
       };
     },
+    checkProvisioning(params) {
+      if (params.data.provisioning_status === 'done') return;
+
+      axios.get(params.data.urls.provisioning_status).then((response) => {
+        const provisioningStatus = response.data.provisioning_status;
+        if (provisioningStatus === 'done') {
+          this.reloadingTable = true;
+        } else {
+          setTimeout(() => {
+            this.checkProvisioning(params);
+          }, 5000);
+        }
+      });
+    },
     // Renderers
     nameRenderer(params) {
       const { name, urls } = params.data;
       const provisioningStatus = params.data.provisioning_status;
       if (provisioningStatus === 'in_progress') {
+        setTimeout(() => {
+          this.checkProvisioning(params);
+        }, 5000);
         return `
           <span class="flex gap-2 items-center">
             <div title="${this.i18n.t('experiments.duplicate_tasks.duplicating')}"
                  class="loading-overlay w-6 h-6 !relative" data-toggle="tooltip" data-placement="right"></div>
-            ${name}
+            <span class="truncate">${name}</span>
           </span>`;
       }
 
-      return `<a href="${urls.show}" title="${name}" >${name}</a>`;
+      return `<a href="${urls.show}" title="${name}" ><span class="truncate">${name}</span></a>`;
     },
     statusRenderer(params) {
       const { status } = params.data;

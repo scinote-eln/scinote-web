@@ -3,6 +3,8 @@ const GLOBAL_CONSTANTS = {
   NAME_MAX_LENGTH: <%= Constants::NAME_MAX_LENGTH %>,
   NAME_MIN_LENGTH: <%= Constants::NAME_MIN_LENGTH %>,
   TEXT_MAX_LENGTH: <%= Constants::TEXT_MAX_LENGTH %>,
+  TABLE_CARD_MIN_WIDTH: 340, <%# pixels %>
+  TABLE_CARD_GAP: 16, <%# pixels %>
   FILENAME_TRUNCATION_LENGTH: <%= Constants::FILENAME_TRUNCATION_LENGTH %>,
   FILE_MAX_SIZE_MB: parseInt($('meta[name="max-file-size"]').attr('content'), 10),
   IS_SAFARI: /^((?!chrome|android).)*safari/i.test(navigator.userAgent),

@@ -8,7 +8,7 @@ class UserAssignmentSerializer < ActiveModel::Serializer
   attribute :current_user
 
   def assigned
-    parent_assignment(parent).assigned
+    parent_assignment(parent)&.assigned
   end
 
   def parent
@@ -35,7 +35,7 @@ class UserAssignmentSerializer < ActiveModel::Serializer
   end
 
   def last_owner
-    parent_assignment(parent).last_with_permission?(ProjectPermissions::USERS_MANAGE, assigned: :manually)
+    parent_assignment(parent)&.last_with_permission?(ProjectPermissions::USERS_MANAGE, assigned: :manually)
   end
 
   def inherit_message
@@ -60,7 +60,7 @@ class UserAssignmentSerializer < ActiveModel::Serializer
   def user_assignment_resource_role_name(user, resource, inherit = '')
     user_assignment = resource.user_assignments.find_by(user: user)
 
-    return '' if [Project, Protocol].include?(resource.class) && inherit.blank?
+    return '' if ([Project, Protocol].include?(resource.class) && inherit.blank?) || user_assignment.blank?
 
     if user_assignment.automatically_assigned? && resource.permission_parent.present?
       parent = resource.permission_parent

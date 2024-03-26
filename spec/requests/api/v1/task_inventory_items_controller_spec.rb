@@ -41,7 +41,7 @@ RSpec.describe 'Api::V1::TasksController', type: :request do
       my_module: @my_module,
       repository_row: @repository_row,
       assigned_by: @user,
-      last_modified_by: @user,
+      last_modified_by_id: @user.id,
       stock_consumption: 5.0
     )
 

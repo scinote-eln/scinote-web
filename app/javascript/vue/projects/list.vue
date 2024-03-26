@@ -255,7 +255,7 @@ export default {
                         ${!showUrl ? 'pointer-events-none text-sn-grey' : ''}"
                  title="${params.data.name}">
                 ${params.data.folder ? '<i class="sn-icon mini sn-icon-mini-folder-left"></i>' : ''}
-                ${params.data.name}
+                <span class="truncate">${params.data.name} </span>
               </a>`;
     },
     openComments(_params, rows) {
@@ -272,6 +272,7 @@ export default {
       axios.post(event.path, { project_ids: rows.map((row) => row.id) }).then((response) => {
         this.reloadingTable = true;
         HelperModule.flashAlertMsg(response.data.message, 'success');
+        this.updateNavigator(false);
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
@@ -280,6 +281,7 @@ export default {
       axios.post(event.path, { project_ids: rows.map((row) => row.id) }).then((response) => {
         this.reloadingTable = true;
         HelperModule.flashAlertMsg(response.data.message, 'success');
+        this.updateNavigator(false);
       }).catch((error) => {
         HelperModule.flashAlertMsg(error.response.data.error, 'danger');
       });
@@ -324,18 +326,22 @@ export default {
       }
     },
     async exportProjects(event, rows) {
-      this.exportDescription = event.message;
-      const ok = await this.$refs.exportModal.show();
-      if (ok) {
-        axios.post(event.path, {
-          project_ids: rows.filter((row) => !row.folder).map((row) => row.id),
-          project_folder_ids: rows.filter((row) => row.folder).map((row) => row.id)
-        }).then((response) => {
-          this.reloadingTable = true;
-          HelperModule.flashAlertMsg(response.data.message, 'success');
-        }).catch((error) => {
-          HelperModule.flashAlertMsg(error.response.data.error, 'danger');
-        });
+      if (event.number_of_projects === 0) {
+        HelperModule.flashAlertMsg(this.i18n.t('projects.export_projects.zero_projects_flash'), 'danger');
+      } else {
+        this.exportDescription = event.message;
+        const ok = await this.$refs.exportModal.show();
+        if (ok) {
+          axios.post(event.path, {
+            project_ids: rows.filter((row) => !row.folder).map((row) => row.id),
+            project_folder_ids: rows.filter((row) => row.folder).map((row) => row.id)
+          }).then((response) => {
+            this.reloadingTable = true;
+            HelperModule.flashAlertMsg(response.data.message, 'success');
+          }).catch((error) => {
+            HelperModule.flashAlertMsg(error.response.data.error, 'danger');
+          });
+        }
       }
     },
     move(event, rows) {

@@ -1,6 +1,6 @@
 <template>
-  <div class="px-3 pt-3 pb-4 rounded border-solid border border-sn-gray flex flex-col"
-       :class="{'bg-sn-light-grey': dtComponent.currentViewMode === 'archived'}">
+  <div class="px-3 pt-3 pb-4 rounded border-solid border border-sn-gray flex flex-col h-56"
+       :class="{ 'bg-sn-light-grey': dtComponent.currentViewMode === 'archived', [cardMinWidth]: true}">
     <div class="flex items-center gap-4 mb-2">
       <div class="sci-checkbox-container">
         <input
@@ -16,11 +16,11 @@
     <a :href="params.urls.show"
        :title="params.name"
        :class="{'pointer-events-none text-sn-grey': !params.urls.show}"
-       class="font-bold mb-4 text-sn-blue hover:no-underline line-clamp-2 hover:text-sn-blue h-10">
+       class="font-bold mb-auto text-sn-blue hover:no-underline line-clamp-2 hover:text-sn-blue h-10">
       {{ params.name }}
     </a>
     <div class="flex gap-4 mb-2.5">
-      <div class="grid grow gap-x-2 gap-y-3 grid-cols-[100px_auto] mt-auto text-xs">
+      <div class="grid grow gap-x-2 gap-y-3 grid-cols-[90px_auto] mt-auto text-xs">
         <span class="text-sn-dark-grey">{{ i18n.t('experiments.card.start_date') }}</span>
         <span class="font-bold">{{ params.created_at }}</span>
 
@@ -44,11 +44,11 @@
           <div class="w-full h-1 bg-sn-sleepy-grey">
             <div class="h-full"
                  :class="{
-                   'bg-sn-black': dtComponent.viewMode == 'archived',
-                   'bg-sn-blue': dtComponent.viewMode != 'archived'
+                   'bg-sn-black': params.archived_on,
+                   'bg-sn-blue': !params.archived_on
                  }"
                  :style="{
-                   width: params.completed_tasks / params.total_tasks * 100 + '%'
+                   width: `${progress}%`
                  }"></div>
           </div>
         </div>
@@ -66,6 +66,8 @@
 
 <script>
 
+/* global GLOBAL_CONSTANTS */
+
 import RowMenuRenderer from '../shared/datatable/row_menu_renderer.vue';
 import CardSelectorMixin from '../shared/datatable/mixins/card_selector.js';
 import workflowImgMixin from './workflow_img_mixin.js';
@@ -82,5 +84,17 @@ export default {
     Description,
   },
   mixins: [CardSelectorMixin, workflowImgMixin],
+  computed: {
+    progress() {
+      const { completed_tasks: completedTasks, total_tasks: totalTasks } = this.params;
+
+      if (totalTasks === 0) return 0;
+
+      return (completedTasks / totalTasks) * 100;
+    },
+    cardMinWidth() {
+      return `min-w-[${GLOBAL_CONSTANTS.TABLE_CARD_MIN_WIDTH}px]`;
+    }
+  }
 };
 </script>

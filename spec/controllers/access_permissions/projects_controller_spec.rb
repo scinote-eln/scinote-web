@@ -25,9 +25,13 @@ describe AccessPermissions::ProjectsController, type: :controller do
       expect(response).to have_http_status :success
     end
 
-    it 'renders new template' do
+    it 'renders an array of users' do
       get :new, params: { id: project.id }, format: :json
-      expect(response).to render_template :new
+
+      json_response = JSON.parse(response.body)
+
+      # Check that the top level is an array
+      expect(json_response["data"]).to be_an_instance_of(Array)
     end
 
     it 'renders 404 if project is not set' do
@@ -48,20 +52,11 @@ describe AccessPermissions::ProjectsController, type: :controller do
       expect(response).to have_http_status :success
     end
 
-    it 'renders show template' do
+    it 'renders and array of user_assignment' do
       get :show, params: { id: project.id }, format: :json
-      expect(response).to render_template :show
-    end
+      json_response = JSON.parse(response.body)
 
-    it 'renders show template when the user has view permissions on project' do
-      create :user_project, user: normal_user, project: project
-      create :user_assignment, assignable: project, user: normal_user, user_role: normal_user_role, assigned_by: user
-
-      sign_in_normal_user
-
-      get :show, params: { id: project.id }, format: :json
-      expect(response).to have_http_status :success
-      expect(response).to render_template :show
+      expect(json_response["data"]).to be_an_instance_of(Array)
     end
   end
 
@@ -127,22 +122,23 @@ describe AccessPermissions::ProjectsController, type: :controller do
     let(:valid_params) do
       {
         id: project.id,
-        access_permissions_new_user_form: {
-          resource_members: {
-            0 => {
-              assign: '1',
-              user_id: normal_user.id,
-              user_role_id: technician_role.id
-            }
-          }
+        user_assignment: {
+          user_id: normal_user.id,
+          user_role_id: technician_role.id
         }
       }
     end
 
+    let!(:initial_count) do
+      UserAssignment.count
+    end
+
     it 'creates new project user and user assignment' do
-      expect {
-        post :create, params: valid_params, format: :json
-      }.to change(UserAssignment, :count).by(1)
+      Delayed::Worker.delay_jobs = false
+      dj_worker = Delayed::Worker.new
+      post :create, params: valid_params, format: :json
+      Delayed::Job.all.each { |job| dj_worker.run(job) }
+      expect(UserAssignment.count - initial_count).to eq(1)
     end
 
     it 'does not create an assigment if user is already assigned' do

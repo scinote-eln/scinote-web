@@ -14,6 +14,7 @@
           <div class="modal-body">
             <SelectDropdown :optionsUrl="my_module.urls.experiments_to_move"
                             :value="targetExperiment"
+                            :seachable="true"
                             @change="changeExperiment" />
           </div>
           <div class="modal-footer">

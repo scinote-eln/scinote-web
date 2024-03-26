@@ -11,6 +11,7 @@
       active-page-url="<%= my_modules_path(experiment_id: @experiment, view_mode: :active) %>"
       archived-page-url="<%= my_modules_path(experiment_id: @experiment, view_mode: :archived) %>"
       current-view-mode="<%= view_mode %>"
+      current-user-id="<%= current_user.id %>"
       assigned-users-url="<%= assigned_users_experiment_path(@experiment) %>"
       users-filter-url="<%= users_filter_projects_path %>"v
       user-roles-url="<%= user_roles_projects_path %>"
@@ -19,6 +20,7 @@
       :statuses-list="<%= MyModuleStatus.all.order(:id).map{ |i| [i.id, i.name] }.to_json %>"
       project-tags-url="<%= project_tags_path(@experiment.project) %>"
       canvas-url="<%= view_mode == 'active' ? canvas_experiment_path(@experiment) : module_archive_experiment_path(@experiment) %>"
+      :archived="<%= @experiment.archived_branch?%>"
     />
   </div>
   <%= javascript_include_tag 'vue_my_modules_list' %>

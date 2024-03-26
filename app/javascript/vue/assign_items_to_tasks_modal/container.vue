@@ -41,6 +41,7 @@
             <SelectDropdown
               :value="selectedProject"
               ref="projectsSelector"
+              :searchable="true"
               @change="changeProject"
               :options="projects"
               :isLoading="projectsLoading"
@@ -69,6 +70,7 @@
             <SelectDropdown
               :value="selectedExperiment"
               :disabled="!selectedProject"
+              :searchable="true"
               ref="experimentsSelector"
               @change="changeExperiment"
               :options="experiments"
@@ -94,6 +96,7 @@
             <SelectDropdown
               :value="selectedTask"
               :disabled="!selectedExperiment"
+              :searchable="true"
               ref="tasksSelector"
               @change="changeTask"
               :options="tasks"

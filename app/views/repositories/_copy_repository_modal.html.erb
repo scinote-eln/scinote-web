@@ -16,10 +16,12 @@
               <div class="form-group  sci-input-container">
                 <label><%= t("repositories.index.modal_copy.name") %></label>
                 <%= f.text_field :name,
-                                 help: t("repositories.index.modal_copy.description"),
                                  autofocus: true,
                                  class: "sci-input-field",
                                  placeholder: t("repositories.index.modal_copy.name_placeholder") %>
+                <div class="text-red-500">
+                  <%= t("repositories.index.modal_copy.description") %>
+                </div>
               </div>
             </div>
           </div>

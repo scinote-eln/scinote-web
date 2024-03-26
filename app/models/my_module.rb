@@ -349,15 +349,15 @@ class MyModule < ApplicationRecord
     rows.find_each do |row|
       row_json = []
       row_json << row.code
-      row_json << (row.archived ? "#{row.name} [#{I18n.t('general.archived')}]" : row.name)
+      row_json << (row.archived ? "#{escape_script_tag(row.name)} [#{I18n.t('general.archived')}]" : escape_script_tag(row.name))
       row_json << I18n.l(row.created_at, format: :full)
-      row_json << row.created_by.full_name
+      row_json << escape_script_tag(row.created_by.full_name)
       if repository.has_stock_management? && repository.has_stock_consumption?
         if repository.is_a?(RepositorySnapshot)
-          consumed_stock = row.repository_stock_consumption_cell&.value&.formatted
+          consumed_stock = escape_script_tag(row.repository_stock_consumption_cell&.value&.formatted)
           row_json << (consumed_stock || 0)
         else
-          row_json << row.row_consumption(row.stock_consumption)
+          row_json << escape_script_tag(row.row_consumption(row.stock_consumption))
         end
       end
       data << row_json
@@ -486,6 +486,10 @@ class MyModule < ApplicationRecord
 
   def create_blank_protocol
     protocols << Protocol.new_blank_for_module(self)
+  end
+
+  def escape_script_tag(value)
+    value&.gsub(/\</, '&lt;')&.gsub(/\>/, '&gt;')
   end
 
   def coordinates_uniqueness_check

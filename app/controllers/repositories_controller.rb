@@ -240,6 +240,16 @@ class RepositoriesController < ApplicationController
       render json: @tmp_repository.errors, status: :unprocessable_entity
     else
       copied_repository = @repository.copy(current_user, @tmp_repository.name)
+      old_repo_stock_column = @repository.repository_columns.find_by(data_type: 'RepositoryStockValue')
+      copied_repo_stock_column = copied_repository.repository_columns.find_by(data_type: 'RepositoryStockValue')
+
+      if old_repo_stock_column && copied_repo_stock_column
+        old_repo_stock_column.repository_stock_unit_items.each do |item|
+          copied_item = item.dup
+          copied_repo_stock_column.repository_stock_unit_items << copied_item
+        end
+        copied_repository.save!
+      end
 
       if !copied_repository
         render json: { name: ['Server error'] }, status: :unprocessable_entity
@@ -278,6 +288,12 @@ class RepositoriesController < ApplicationController
             items_size: Constants::IMPORT_REPOSITORY_ITEMS_LIMIT)
         )
       else
+        sheet = SpreadsheetParser.open_spreadsheet(import_params[:file])
+        duplicate_ids = SpreadsheetParser.duplicate_ids(sheet)
+        if duplicate_ids.any?
+          @importing_duplicates_warning = t('repositories.import_records.error_message.importing_duplicates', duplicate_ids: duplicate_ids)
+        end
+
         @import_data = parsed_file.data
 
         if @import_data.header.blank? || @import_data.columns.blank?

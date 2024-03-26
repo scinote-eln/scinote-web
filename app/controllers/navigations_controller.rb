@@ -40,7 +40,8 @@ class NavigationsController < ApplicationController
     {
       name: current_user.full_name,
       avatar_url: avatar_path(current_user, :icon_small),
-      sign_out_url: destroy_user_session_path
+      sign_out_url: destroy_user_session_path,
+      preferences_url: preferences_url
     }
   end
 

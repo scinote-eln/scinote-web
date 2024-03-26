@@ -96,9 +96,7 @@ tests-ci:
 						-e CORE_API_RATE_LIMIT=1000000 \
 						-e PROTOCOLS_IO_ACCESS_TOKEN=PROTOCOLS_IO_ACCESS_TOKEN \
 						-e ENABLE_WEBHOOKS=true \
-						--rm web bash -c "rake db:create && rake db:migrate && \
-															yarn install && yarn build && yarn build:css && rails tailwindcss:build && \
-															bundle exec rspec ./spec/"
+						--rm web bash -c "rake db:create && rake db:migrate && bundle exec rspec ./spec/"
 
 console:
 	@$(MAKE) rails cmd="rails console"
