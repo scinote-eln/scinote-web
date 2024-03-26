@@ -132,8 +132,8 @@ $.fn.dataTable.render.editRepositoryNumberValue = function(formId, columnId, cel
   });
 
   $input.on('input', function() {
-    const regexp = decimals === 0 ? /[^0-9]/g : /[^0-9.]/g;
-    const decimalsRegex = new RegExp(`^\\d*(\\.\\d{0,${decimals}})?`);
+    const regexp = decimals === 0 ? /[^-0-9]/g : /[^-0-9.]/g;
+    const decimalsRegex = new RegExp(`^-?\\d*(\\.\\d{0,${decimals}})?`);
     let value = this.value;
     value = value.replace(regexp, '');
     value = value.match(decimalsRegex)[0];
