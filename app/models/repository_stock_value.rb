@@ -108,7 +108,7 @@ class RepositoryStockValue < ApplicationRecord
       (new_data[:unit_item_id].present? && new_data[:unit_item_id] != repository_stock_unit_item.id)
   end
 
-  def update_data!(new_data, user)
+  def update_data!(new_data, user, preview: false)
     self.low_stock_threshold = new_data[:low_stock_threshold].presence if new_data[:low_stock_threshold]
     self.repository_stock_unit_item = repository_cell
                                       .repository_column
@@ -127,7 +127,7 @@ class RepositoryStockValue < ApplicationRecord
       unit: repository_stock_unit_item&.data
     )
     self.amount = new_amount
-    save!
+    preview ? validate : save!
   end
 
   def snapshot!(cell_snapshot)

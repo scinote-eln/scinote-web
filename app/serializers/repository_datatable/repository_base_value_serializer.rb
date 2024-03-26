@@ -2,7 +2,9 @@
 
 module RepositoryDatatable
   class RepositoryBaseValueSerializer
-    attr_accessor :value_object, :value_type, :scope
+    attr_accessor :value_object, :value_type, :scope, :changes, :errors
+
+    delegate :changes, :errors, to: :@value_object
 
     def initialize(value, scope:)
       @value_object = value

@@ -56,10 +56,15 @@ class RepositoryDateValue < RepositoryDateTimeValueBase
     value
   end
 
-  def update_data!(new_data, user)
-    self.data = Date.parse(new_data)
+  def update_data!(new_data, user, preview: false)
+    self.data = if new_data.is_a?(String)
+                  Date.parse(new_data)
+                else
+                  new_data.to_time.utc
+                end
+
     self.last_modified_by = user
-    save!
+    preview ? validate : save!
   end
 
   def self.import_from_text(text, attributes, options = {})
