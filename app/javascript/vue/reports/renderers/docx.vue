@@ -25,7 +25,7 @@
         {{ i18n.t('projects.reports.index.docx') }}
       </a>
     </template>
-    <a v-else class="hidden group-hover:!block" href="#" @click.prevent="generate">
+    <a v-else class="opacity-0 group-hover:opacity-100" href="#" @click.prevent="generate">
       {{ i18n.t('projects.reports.index.generate') }}
     </a>
   </div>
