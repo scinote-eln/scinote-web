@@ -257,7 +257,13 @@ class ProjectsController < ApplicationController
   end
 
   def user_roles
-    render json: { data: user_roles_collection(Project.new).map(&:reverse) }
+    response = { data: user_roles_collection(Project.new).map(&:reverse) }
+    if params[:include_viewer_role]
+      viewer_role = UserRole.find_predefined_viewer_role
+      viewer_role && response[:default_viewer_role] = { id: viewer_role.id, name: viewer_role.name }
+    end
+
+    render json: response
   end
 
 
